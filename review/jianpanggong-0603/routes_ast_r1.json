@@ -1,0 +1,1502 @@
+{
+ "tip": "d79a857aee9fa8869d8f276d96898a03406d067a",
+ "lines": 14583,
+ "routes": 175,
+ "gets": 76,
+ "own_all": [],
+ "tr_all": [],
+ "missing_counts": {
+  "2": 14,
+  "3": 57,
+  "1": 5
+ },
+ "near": [
+  883,
+  1830,
+  1979,
+  2029,
+  4870,
+  6704,
+  6856,
+  7053,
+  7339,
+  9732,
+  9857,
+  9981,
+  10030,
+  10136,
+  10156,
+  10536,
+  14380,
+  14450,
+  14570
+ ],
+ "capture": [
+  1979,
+  10030,
+  10136,
+  10156
+ ],
+ "request": [
+  9857
+ ],
+ "rows": [
+  {
+   "line": 883,
+   "end": 904,
+   "path": "/api/v1/health",
+   "name": "health",
+   "called": [],
+   "own_prov": {
+    "provenance": 1
+   },
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {
+    "provenance": 1
+   },
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 908,
+   "end": 909,
+   "path": "/api/v1/agent/tools",
+   "name": "list_agent_tools",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 913,
+   "end": 914,
+   "path": "/api/v1/agent/tools/v2",
+   "name": "list_agent_tools_v2",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 918,
+   "end": 919,
+   "path": "/api/v1/agent/runtime-status",
+   "name": "get_agent_runtime_status",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 923,
+   "end": 926,
+   "path": "/api/v1/agent/hermes/capabilities",
+   "name": "get_native_hermes_capabilities",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 930,
+   "end": 937,
+   "path": "/api/v1/agent/hermes/runs/{run_id}",
+   "name": "get_native_hermes_run",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1073,
+   "end": 1078,
+   "path": "/api/v1/agent/hermes/runs/{run_id}/events",
+   "name": "stream_native_hermes_events",
+   "called": [
+    "_native_event_stream"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1082,
+   "end": 1096,
+   "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}",
+   "name": "get_journey_native_hermes_run",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1100,
+   "end": 1201,
+   "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline",
+   "name": "get_native_hermes_timeline",
+   "called": [
+    "_persist_native_event"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1205,
+   "end": 1213,
+   "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events",
+   "name": "stream_journey_native_hermes_events",
+   "called": [
+    "_native_event_stream"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1694,
+   "end": 1715,
+   "path": "/api/v1/journeys/{journey_id}/guardian/autopilot/status",
+   "name": "get_guardian_autopilot_status",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1743,
+   "end": 1765,
+   "path": "/api/v1/journeys/{journey_id}/guardian/status",
+   "name": "get_guardian_status",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1770,
+   "end": 1779,
+   "path": "/api/v1/journeys/{journey_id}/resilience",
+   "name": "get_journey_resilience",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1770,
+   "end": 1779,
+   "path": "/api/v1/journeys/{journey_id}/guardian/resilience",
+   "name": "get_journey_resilience",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1813,
+   "end": 1826,
+   "path": "/api/v1/journeys/{journey_id}/resilience/counterfactuals",
+   "name": "list_journey_counterfactuals",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1830,
+   "end": 1880,
+   "path": "/api/v1/journeys/{journey_id}/provider-mesh",
+   "name": "get_journey_provider_mesh",
+   "called": [],
+   "own_prov": {
+    "provenance": 2
+   },
+   "own_provider": {
+    "provider_key": 4
+   },
+   "own_dur": {},
+   "tr_prov": {
+    "provenance": 2
+   },
+   "tr_provider": {
+    "provider_key": 4
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 1979,
+   "end": 2025,
+   "path": "/api/v1/journeys/{journey_id}/operations/stream",
+   "name": "journey_operations_stream",
+   "called": [
+    "_audit_projection"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 1
+   },
+   "tr_dur": {},
+   "cap": {
+    "provider_degraded": 2
+   },
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 2029,
+   "end": 2074,
+   "path": "/api/v1/journeys/{journey_id}/agent/runs/{run_id}",
+   "name": "get_agent_run",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {
+    "provider_key": 2
+   },
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 2563,
+   "end": 2564,
+   "path": "/api/v1/travelers/{traveler_id}",
+   "name": "get_traveler",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 2568,
+   "end": 2575,
+   "path": "/api/v1/travelers/{traveler_id}/preferences",
+   "name": "list_preferences",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 2772,
+   "end": 2775,
+   "path": "/api/v1/travelers/{traveler_id}/capabilities",
+   "name": "list_traveler_capabilities",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 2819,
+   "end": 2822,
+   "path": "/api/v1/journeys/{journey_id}/capabilities",
+   "name": "list_journey_capabilities",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 2989,
+   "end": 2993,
+   "path": "/api/v1/travelers/{traveler_id}/traveler-twin",
+   "name": "get_traveler_twin",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 3014,
+   "end": 3039,
+   "path": "/api/v1/journeys/{journey_id}/outcomes",
+   "name": "list_journey_outcomes",
+   "called": [
+    "_json_dict"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 3087,
+   "end": 3092,
+   "path": "/api/v1/travelers/{traveler_id}/agent-policy",
+   "name": "get_agent_policy",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 3244,
+   "end": 3304,
+   "path": "/api/v1/journeys",
+   "name": "list_journeys",
+   "called": [
+    "_journeys_in_tier_order"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 3706,
+   "end": 3730,
+   "path": "/api/v1/recycle-bin/journeys",
+   "name": "list_recycle_bin_journeys",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 3879,
+   "end": 3903,
+   "path": "/api/v1/collections",
+   "name": "list_collections",
+   "called": [
+    "_collection_payloads"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 4027,
+   "end": 4028,
+   "path": "/api/v1/journeys/{journey_id}",
+   "name": "get_journey",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 4114,
+   "end": 4181,
+   "path": "/api/v1/journeys/{journey_id}/calendar.ics",
+   "name": "get_journey_calendar",
+   "called": [
+    "_calendar_activities",
+    "_calendar_journey",
+    "_share_refusal"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 4433,
+   "end": 4470,
+   "path": "/api/v1/journeys/{journey_id}/checkins",
+   "name": "list_journey_checkins",
+   "called": [
+    "_checkin_journey_read"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 4729,
+   "end": 4759,
+   "path": "/api/v1/travelers/{traveler_id}/recycle-bin/journeys",
+   "name": "list_traveler_recycle_bin_journeys",
+   "called": [
+    "_traveler_bin_row"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 4763,
+   "end": 4772,
+   "path": "/api/v1/journeys/{journey_id}/share-grants",
+   "name": "list_share_grants",
+   "called": [
+    "_share_grant_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 4870,
+   "end": 4989,
+   "path": "/api/v1/shared/journeys/{token}",
+   "name": "read_shared_journey",
+   "called": [
+    "_member_is_in_force",
+    "_share_grant_state",
+    "_share_refusal",
+    "_shared_plan_projection"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 1
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5115,
+   "end": 5124,
+   "path": "/api/v1/journeys/{journey_id}/members",
+   "name": "list_journey_members",
+   "called": [
+    "_member_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5155,
+   "end": 5168,
+   "path": "/api/v1/journeys/{journey_id}/acl/roles",
+   "name": "list_journey_role_rules",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5465,
+   "end": 5480,
+   "path": "/api/v1/journeys/{journey_id}/member-role-limits",
+   "name": "read_journey_member_role_limits",
+   "called": [
+    "_member_admin_count_in_force"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5484,
+   "end": 5530,
+   "path": "/api/v1/journeys/{journey_id}/experience",
+   "name": "get_journey_experience",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5569,
+   "end": 5579,
+   "path": "/api/v1/destinations/capability",
+   "name": "destination_capability",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5616,
+   "end": 5626,
+   "path": "/api/v1/catalog-hydrations/{operation_id}",
+   "name": "read_catalog_hydration",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5687,
+   "end": 5695,
+   "path": "/api/v1/journeys/{journey_id}/stay-generations",
+   "name": "list_stay_generations",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5699,
+   "end": 5710,
+   "path": "/api/v1/journeys/{journey_id}/stay-generations/{operation_id}",
+   "name": "read_stay_generation",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5832,
+   "end": 5834,
+   "path": "/api/v1/journeys/{journey_id}/stay-options",
+   "name": "list_stay_journey_options",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5838,
+   "end": 5840,
+   "path": "/api/v1/journeys/{journey_id}/multiday",
+   "name": "get_multiday_journey",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 5844,
+   "end": 5846,
+   "path": "/api/v1/journeys/{journey_id}/stay-mobility/providers",
+   "name": "get_stay_mobility_providers",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6105,
+   "end": 6118,
+   "path": "/api/v1/journeys/{journey_id}/mobility",
+   "name": "list_journey_mobility",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6365,
+   "end": 6372,
+   "path": "/api/v1/journeys/{journey_id}/inbox",
+   "name": "list_journey_inbox",
+   "called": [
+    "_draft_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6376,
+   "end": 6378,
+   "path": "/api/v1/journeys/{journey_id}/memory",
+   "name": "get_journey_memory",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6704,
+   "end": 6730,
+   "path": "/api/v1/journeys/{journey_id}/web-observations",
+   "name": "list_journey_web_observations",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {
+    "provider_key": 2
+   },
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6734,
+   "end": 6748,
+   "path": "/api/v1/journeys/{journey_id}/execution-clock",
+   "name": "get_journey_execution_clock",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6856,
+   "end": 6873,
+   "path": "/api/v1/journeys/{journey_id}/wallet",
+   "name": "get_travel_wallet",
+   "called": [
+    "_commitment_payload",
+    "_reservation_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 6953,
+   "end": 6966,
+   "path": "/api/v1/journeys/{journey_id}/offline-snapshot",
+   "name": "get_offline_journey_snapshot",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7016,
+   "end": 7023,
+   "path": "/api/v1/travelers/{traveler_id}/push-config",
+   "name": "get_push_config",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7027,
+   "end": 7049,
+   "path": "/api/v1/journeys/{journey_id}/notifications",
+   "name": "list_journey_notifications",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7053,
+   "end": 7070,
+   "path": "/api/v1/providers/v9",
+   "name": "get_v9_provider_status",
+   "called": [],
+   "own_prov": {
+    "provenance": 2
+   },
+   "own_provider": {
+    "provider_key": 2
+   },
+   "own_dur": {},
+   "tr_prov": {
+    "provenance": 2
+   },
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7098,
+   "end": 7109,
+   "path": "/api/v1/edge/devices/{device_id}/journey-snapshot",
+   "name": "get_edge_journey_snapshot",
+   "called": [
+    "_authorized_edge"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7215,
+   "end": 7222,
+   "path": "/api/v1/journeys/{journey_id}/constraints",
+   "name": "list_constraints",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7339,
+   "end": 7362,
+   "path": "/api/v1/places",
+   "name": "search_places",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {
+    "provider_key": 1
+   },
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider_key": 1
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7366,
+   "end": 7376,
+   "path": "/api/v1/city-services",
+   "name": "search_services",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7770,
+   "end": 7792,
+   "path": "/api/v1/journeys/{journey_id}/plans",
+   "name": "list_plans",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 7796,
+   "end": 7797,
+   "path": "/api/v1/plans/{plan_version_id}",
+   "name": "get_plan",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 9732,
+   "end": 9853,
+   "path": "/api/v1/demo/scene",
+   "name": "demo_scene",
+   "called": [
+    "_board_supply_block",
+    "_mobility_evidence_coverage"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 1
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 9857,
+   "end": 9877,
+   "path": "/api/v1/journeys/{journey_id}/twin",
+   "name": "get_journey_twin",
+   "called": [
+    "_twin_snapshot"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 3,
+    "provider_key": 1
+   },
+   "tr_dur": {
+    "minutes": 1
+   },
+   "cap": {},
+   "req": {
+    "target_key": 6
+   },
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 9981,
+   "end": 10003,
+   "path": "/api/v1/journeys/{journey_id}/events",
+   "name": "list_journey_events",
+   "called": [],
+   "own_prov": {
+    "provenance": 2
+   },
+   "own_provider": {
+    "provider_key": 2
+   },
+   "own_dur": {},
+   "tr_prov": {
+    "provenance": 2
+   },
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 10007,
+   "end": 10026,
+   "path": "/api/v1/journeys/{journey_id}/events/{event_id}/impact",
+   "name": "get_event_impact",
+   "called": [],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 10030,
+   "end": 10035,
+   "path": "/api/v1/journeys/{journey_id}/history",
+   "name": "journey_history",
+   "called": [
+    "_audit_projection"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 1
+   },
+   "tr_dur": {},
+   "cap": {
+    "provider_degraded": 2
+   },
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 10136,
+   "end": 10152,
+   "path": "/api/v1/journeys/{journey_id}/agent-feed",
+   "name": "journey_agent_feed",
+   "called": [
+    "_audit_projection"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 1
+   },
+   "tr_dur": {},
+   "cap": {
+    "provider_degraded": 2
+   },
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 10156,
+   "end": 10349,
+   "path": "/api/v1/journeys/{journey_id}/reflect",
+   "name": "journey_reflect",
+   "called": [
+    "_audit_projection",
+    "_json_dict"
+   ],
+   "own_prov": {
+    "provenance": 2
+   },
+   "own_provider": {
+    "provider_key": 2
+   },
+   "own_dur": {},
+   "tr_prov": {
+    "provenance": 2
+   },
+   "tr_provider": {
+    "provider": 1,
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {
+    "provider_degraded": 2
+   },
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 10371,
+   "end": 10389,
+   "path": "/api/v1/journeys/{journey_id}/observability/traces",
+   "name": "journey_observability_traces",
+   "called": [
+    "_json_dict"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 10536,
+   "end": 10709,
+   "path": "/api/v1/journeys/{journey_id}/route-evidence",
+   "name": "journey_route_evidence",
+   "called": [
+    "_activity_coordinate",
+    "_disruption_scope_feature",
+    "_frozen_route_for_plan",
+    "_json_dict",
+    "_latest_replan_mobility_snapshot",
+    "_marker_feature",
+    "_proposal_mobility_snapshot",
+    "_route_feature"
+   ],
+   "own_prov": {},
+   "own_provider": {
+    "provider": 3
+   },
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 6
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 13091,
+   "end": 13100,
+   "path": "/api/v1/journeys/{journey_id}/replans",
+   "name": "list_replans",
+   "called": [
+    "_replan_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 13104,
+   "end": 13107,
+   "path": "/api/v1/replans/{proposal_id}",
+   "name": "get_replan",
+   "called": [
+    "_replan_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 14380,
+   "end": 14414,
+   "path": "/api/v1/city-services/{service_id}/booking-slots",
+   "name": "booking_slots",
+   "called": [
+    "_mock_booking_provider"
+   ],
+   "own_prov": {},
+   "own_provider": {
+    "provider": 3,
+    "provider_key": 2
+   },
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider": 4,
+    "provider_key": 5
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 14450,
+   "end": 14454,
+   "path": "/api/v1/bookings/{booking_id}",
+   "name": "get_booking",
+   "called": [
+    "_booking_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 14570,
+   "end": 14574,
+   "path": "/api/v1/transactions/{transaction_id}",
+   "name": "get_transaction",
+   "called": [
+    "_transaction_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {
+    "provider_key": 2
+   },
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  },
+  {
+   "line": 14578,
+   "end": 14582,
+   "path": "/api/v1/commitments/{commitment_id}",
+   "name": "get_commitment",
+   "called": [
+    "_commitment_payload"
+   ],
+   "own_prov": {},
+   "own_provider": {},
+   "own_dur": {},
+   "tr_prov": {},
+   "tr_provider": {},
+   "tr_dur": {},
+   "cap": {},
+   "req": {},
+   "own_all": false,
+   "tr_all": false
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+# ORD-0603 现尖读路由能否承接 route_session_contract（AST 重测）。尖 d79a857aee9fa8869d8f276d96898a03406d067a，backend/app/main.py 共 14583 行、路由 175 枚、其中 GET 76 枚。
+# 尺的形状：ast.get_source_segment 只取被 @app.get 装饰的那枚函数自己的源码段（体内那一列）；连同它调用的本文件私有 helper 一层（span 那一列）。
+# 第一版按「装饰器到下一个装饰器」取段，把中间未装饰的 helper 全吞了进来：route-evidence 因此被量成 2555 行的体，报出假「三样齐」，那是尺坏不是线有。
+# 判据词族：出处 ['provenance', 'route_provenance', 'fact_quality']；供应商 ['provider', 'provider_key']；分钟 ['duration_min', 'minutes']。这三样是 fact_is_eligible_for_live_readiness 真正读的名字（现读 backend/app/execution/route_session_contract.py:93 至 :100）。
+# 总结论：体内三样齐 0 枚；含一层 helper 三样齐 0 枚；缺样分布 缺1=5 缺2=14 缺3=57（合计 76 枚 GET）。
+
+# 一、最接近的 19 枚（连一层 helper 也算上，缺样最少优先）
+main.py:1830-1880 GET /api/v1/journeys/{journey_id}/provider-mesh 函数 get_journey_provider_mesh ｜ 缺：分钟 ｜ 体内 出处={"provenance": 2} 供应商={"provider_key": 4} 分钟={} ｜ 含 helper 出处={"provenance": 2} 供应商={"provider_key": 4} 分钟={} ｜ helper=无
+main.py:7053-7070 GET /api/v1/providers/v9 函数 get_v9_provider_status ｜ 缺：分钟 ｜ 体内 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={} ｜ 含 helper 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={} ｜ helper=无
+main.py:9857-9877 GET /api/v1/journeys/{journey_id}/twin 函数 get_journey_twin ｜ 缺：出处 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 3, "provider_key": 1} 分钟={"minutes": 1} ｜ helper=_twin_snapshot
+main.py:9981-10003 GET /api/v1/journeys/{journey_id}/events 函数 list_journey_events ｜ 缺：分钟 ｜ 体内 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={} ｜ 含 helper 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={} ｜ helper=无
+main.py:10156-10349 GET /api/v1/journeys/{journey_id}/reflect 函数 journey_reflect ｜ 缺：分钟 ｜ 体内 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={} ｜ 含 helper 出处={"provenance": 2} 供应商={"provider": 1, "provider_key": 2} 分钟={} ｜ helper=_audit_projection,_json_dict
+main.py:883-904 GET /api/v1/health 函数 health ｜ 缺：供应商、分钟 ｜ 体内 出处={"provenance": 1} 供应商={} 分钟={} ｜ 含 helper 出处={"provenance": 1} 供应商={} 分钟={} ｜ helper=无
+main.py:1979-2025 GET /api/v1/journeys/{journey_id}/operations/stream 函数 journey_operations_stream ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 1} 分钟={} ｜ helper=_audit_projection
+main.py:2029-2074 GET /api/v1/journeys/{journey_id}/agent/runs/{run_id} 函数 get_agent_run ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={"provider_key": 2} 分钟={} ｜ 含 helper 出处={} 供应商={"provider_key": 2} 分钟={} ｜ helper=无
+main.py:4870-4989 GET /api/v1/shared/journeys/{token} 函数 read_shared_journey ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 1} 分钟={} ｜ helper=_member_is_in_force,_share_grant_state,_share_refusal,_shared_plan_projection
+main.py:6704-6730 GET /api/v1/journeys/{journey_id}/web-observations 函数 list_journey_web_observations ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={"provider_key": 2} 分钟={} ｜ 含 helper 出处={} 供应商={"provider_key": 2} 分钟={} ｜ helper=无
+main.py:6856-6873 GET /api/v1/journeys/{journey_id}/wallet 函数 get_travel_wallet ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider_key": 2} 分钟={} ｜ helper=_commitment_payload,_reservation_payload
+main.py:7339-7362 GET /api/v1/places 函数 search_places ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={"provider_key": 1} 分钟={} ｜ 含 helper 出处={} 供应商={"provider_key": 1} 分钟={} ｜ helper=无
+main.py:9732-9853 GET /api/v1/demo/scene 函数 demo_scene ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 1} 分钟={} ｜ helper=_board_supply_block,_mobility_evidence_coverage
+main.py:10030-10035 GET /api/v1/journeys/{journey_id}/history 函数 journey_history ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 1} 分钟={} ｜ helper=_audit_projection
+main.py:10136-10152 GET /api/v1/journeys/{journey_id}/agent-feed 函数 journey_agent_feed ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 1} 分钟={} ｜ helper=_audit_projection
+main.py:10536-10709 GET /api/v1/journeys/{journey_id}/route-evidence 函数 journey_route_evidence ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={"provider": 3} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 6} 分钟={} ｜ helper=_activity_coordinate,_disruption_scope_feature,_frozen_route_for_plan,_json_dict,_latest_replan_mobility_snapshot,_marker_feature,_proposal_mobility_snapshot,_route_feature
+main.py:14380-14414 GET /api/v1/city-services/{service_id}/booking-slots 函数 booking_slots ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={"provider": 3, "provider_key": 2} 分钟={} ｜ 含 helper 出处={} 供应商={"provider": 4, "provider_key": 5} 分钟={} ｜ helper=_mock_booking_provider
+main.py:14450-14454 GET /api/v1/bookings/{booking_id} 函数 get_booking ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider_key": 2} 分钟={} ｜ helper=_booking_payload
+main.py:14570-14574 GET /api/v1/transactions/{transaction_id} 函数 get_transaction ｜ 缺：出处、分钟 ｜ 体内 出处={} 供应商={} 分钟={} ｜ 含 helper 出处={} 供应商={"provider_key": 2} 分钟={} ｜ helper=_transaction_payload
+
+# 二、classify_capture 那一面（要 explicit_fact / provider_failed / provider_degraded）
+# 76 枚 GET 里，连一层 helper 也算上，出现这三个名字的共 4 枚。
+main.py:1979 GET /api/v1/journeys/{journey_id}/operations/stream 命中 {"provider_degraded": 2}
+main.py:10030 GET /api/v1/journeys/{journey_id}/history 命中 {"provider_degraded": 2}
+main.py:10136 GET /api/v1/journeys/{journey_id}/agent-feed 命中 {"provider_degraded": 2}
+main.py:10156 GET /api/v1/journeys/{journey_id}/reflect 命中 {"provider_degraded": 2}
+
+# 三、RouteRequest 那一面（要 origin_key / target_key / requested_mode / 两枚策略版本 / origin_evidence）
+# 同样口径下命中 1 枚。
+main.py:9857 GET /api/v1/journeys/{journey_id}/twin 命中 {"target_key": 6}
+
+# 四、三样全缺的 57 枚 GET，逐枚行号与路径（这是「无处可接」那半边的一张一张点名）
+main.py:908 GET /api/v1/agent/tools 函数 list_agent_tools
+main.py:913 GET /api/v1/agent/tools/v2 函数 list_agent_tools_v2
+main.py:918 GET /api/v1/agent/runtime-status 函数 get_agent_runtime_status
+main.py:923 GET /api/v1/agent/hermes/capabilities 函数 get_native_hermes_capabilities
+main.py:930 GET /api/v1/agent/hermes/runs/{run_id} 函数 get_native_hermes_run
+main.py:1073 GET /api/v1/agent/hermes/runs/{run_id}/events 函数 stream_native_hermes_events
+main.py:1082 GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id} 函数 get_journey_native_hermes_run
+main.py:1100 GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline 函数 get_native_hermes_timeline
+main.py:1205 GET /api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events 函数 stream_journey_native_hermes_events
+main.py:1694 GET /api/v1/journeys/{journey_id}/guardian/autopilot/status 函数 get_guardian_autopilot_status
+main.py:1743 GET /api/v1/journeys/{journey_id}/guardian/status 函数 get_guardian_status
+main.py:1770 GET /api/v1/journeys/{journey_id}/resilience 函数 get_journey_resilience
+main.py:1770 GET /api/v1/journeys/{journey_id}/guardian/resilience 函数 get_journey_resilience
+main.py:1813 GET /api/v1/journeys/{journey_id}/resilience/counterfactuals 函数 list_journey_counterfactuals
+main.py:2563 GET /api/v1/travelers/{traveler_id} 函数 get_traveler
+main.py:2568 GET /api/v1/travelers/{traveler_id}/preferences 函数 list_preferences
+main.py:2772 GET /api/v1/travelers/{traveler_id}/capabilities 函数 list_traveler_capabilities
+main.py:2819 GET /api/v1/journeys/{journey_id}/capabilities 函数 list_journey_capabilities
+main.py:2989 GET /api/v1/travelers/{traveler_id}/traveler-twin 函数 get_traveler_twin
+main.py:3014 GET /api/v1/journeys/{journey_id}/outcomes 函数 list_journey_outcomes
+main.py:3087 GET /api/v1/travelers/{traveler_id}/agent-policy 函数 get_agent_policy
+main.py:3244 GET /api/v1/journeys 函数 list_journeys
+main.py:3706 GET /api/v1/recycle-bin/journeys 函数 list_recycle_bin_journeys
+main.py:3879 GET /api/v1/collections 函数 list_collections
+main.py:4027 GET /api/v1/journeys/{journey_id} 函数 get_journey
+main.py:4114 GET /api/v1/journeys/{journey_id}/calendar.ics 函数 get_journey_calendar
+main.py:4433 GET /api/v1/journeys/{journey_id}/checkins 函数 list_journey_checkins
+main.py:4729 GET /api/v1/travelers/{traveler_id}/recycle-bin/journeys 函数 list_traveler_recycle_bin_journeys
+main.py:4763 GET /api/v1/journeys/{journey_id}/share-grants 函数 list_share_grants
+main.py:5115 GET /api/v1/journeys/{journey_id}/members 函数 list_journey_members
+main.py:5155 GET /api/v1/journeys/{journey_id}/acl/roles 函数 list_journey_role_rules
+main.py:5465 GET /api/v1/journeys/{journey_id}/member-role-limits 函数 read_journey_member_role_limits
+main.py:5484 GET /api/v1/journeys/{journey_id}/experience 函数 get_journey_experience
+main.py:5569 GET /api/v1/destinations/capability 函数 destination_capability
+main.py:5616 GET /api/v1/catalog-hydrations/{operation_id} 函数 read_catalog_hydration
+main.py:5687 GET /api/v1/journeys/{journey_id}/stay-generations 函数 list_stay_generations
+main.py:5699 GET /api/v1/journeys/{journey_id}/stay-generations/{operation_id} 函数 read_stay_generation
+main.py:5832 GET /api/v1/journeys/{journey_id}/stay-options 函数 list_stay_journey_options
+main.py:5838 GET /api/v1/journeys/{journey_id}/multiday 函数 get_multiday_journey
+main.py:5844 GET /api/v1/journeys/{journey_id}/stay-mobility/providers 函数 get_stay_mobility_providers
+main.py:6105 GET /api/v1/journeys/{journey_id}/mobility 函数 list_journey_mobility
+main.py:6365 GET /api/v1/journeys/{journey_id}/inbox 函数 list_journey_inbox
+main.py:6376 GET /api/v1/journeys/{journey_id}/memory 函数 get_journey_memory
+main.py:6734 GET /api/v1/journeys/{journey_id}/execution-clock 函数 get_journey_execution_clock
+main.py:6953 GET /api/v1/journeys/{journey_id}/offline-snapshot 函数 get_offline_journey_snapshot
+main.py:7016 GET /api/v1/travelers/{traveler_id}/push-config 函数 get_push_config
+main.py:7027 GET /api/v1/journeys/{journey_id}/notifications 函数 list_journey_notifications
+main.py:7098 GET /api/v1/edge/devices/{device_id}/journey-snapshot 函数 get_edge_journey_snapshot
+main.py:7215 GET /api/v1/journeys/{journey_id}/constraints 函数 list_constraints
+main.py:7366 GET /api/v1/city-services 函数 search_services
+main.py:7770 GET /api/v1/journeys/{journey_id}/plans 函数 list_plans
+main.py:7796 GET /api/v1/plans/{plan_version_id} 函数 get_plan
+main.py:10007 GET /api/v1/journeys/{journey_id}/events/{event_id}/impact 函数 get_event_impact
+main.py:10371 GET /api/v1/journeys/{journey_id}/observability/traces 函数 journey_observability_traces
+main.py:13091 GET /api/v1/journeys/{journey_id}/replans 函数 list_replans
+main.py:13104 GET /api/v1/replans/{proposal_id} 函数 get_replan
+main.py:14578 GET /api/v1/commitments/{commitment_id} 函数 get_commitment
+
+# 五、对照臂：非 GET 的路由（写路由）里有 5 枚连一层 helper 三样齐，它们是这枚契约将来真正的落点候选
+main.py:1364-1552 POST /api/v1/journeys/{journey_id}/agent/commands 函数 run_agent_command ｜ 出处={"provenance": 3} 供应商={"provider": 1, "provider_key": 8} 分钟={"duration_min": 2} ｜ helper=_capture_reported_disruption,_copilot_context,_copilot_fallback_or_ai,_native_citynexus_events
+main.py:8755-8764 POST /api/v1/journeys/{journey_id}/trip-studio/accept 函数 trip_studio_accept ｜ 出处={"provenance": 2} 供应商={"provider": 1, "provider_key": 2} 分钟={"duration_min": 5, "minutes": 1} ｜ helper=_trip_studio_accept_impl
+main.py:8755-8764 POST /api/v1/journeys/{journey_id}/plans/accept-reorder 函数 trip_studio_accept ｜ 出处={"provenance": 2} 供应商={"provider": 1, "provider_key": 2} 分钟={"duration_min": 5, "minutes": 1} ｜ helper=_trip_studio_accept_impl
+main.py:10936-13087 POST /api/v1/journeys/{journey_id}/replans 函数 generate_replan ｜ 出处={"provenance": 6, "route_provenance": 4, "fact_quality": 4} 供应商={"provider": 19, "provider_key": 15} 分钟={"duration_min": 14, "minutes": 16} ｜ helper=_activity_routing_key,_envelope_payload,_grounded_recovery_provider_aliases,_grounded_recovery_reserve_snapshot,_incident_mobility_snapshot,_json_object,_mobility_gap_from,_replan_estimate,_replan_payload
+main.py:14183-14376 POST /api/v1/journeys/{journey_id}/copilot/messages 函数 copilot_message ｜ 出处={"provenance": 2} 供应商={"provider": 10, "provider_key": 9} 分钟={"duration_min": 2} ｜ helper=_capture_copilot_disruption,_copilot_answer,_copilot_context,_copilot_fallback_or_ai,_copilot_place_answer,_native_citynexus_events,_verify_copilot_fact

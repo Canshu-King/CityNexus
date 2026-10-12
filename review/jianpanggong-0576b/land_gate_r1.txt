@@ -1,0 +1,13 @@
+现取尖 ls-remote rc=0 tip=8890f22fe37af40d2919db352be47043b1ea6162
+本枝 ls-remote rc=0 读回=尚未投递
+本地 HEAD rev-parse rc=0 = b8c480fdd35407a11b3a4da57ea941786cf8322c
+落地门 merge-tree --write-tree 现尖 本枝 rc=0 预测树=556931eba850abc404a095db59e7b1b3b50e422a 冲突stage行=0
+屏工那枝 ls-remote rc=0 枝尖=
+我已交 main.demoAgentCommand 英文侧与中文侧逐字节相等=True 英文侧长度=42
+草稿名 copilot.defaultMissionCommand 在现尖字典英文侧命中=0 它给的英文长度=203 起字='Traffic control ' 与屏上现字逐字节相等=False
+我已交 main.modeAdvisory 英文侧与中文侧逐字节相等=True 英文侧长度=17
+草稿名 copilot.agentMode.optionAdvisory 在现尖字典英文侧命中=0 它给的英文长度=26 起字='Advisory mode · ' 与屏上现字逐字节相等=False
+我已交 main.modeAssisted 英文侧与中文侧逐字节相等=True 英文侧长度=26
+草稿名 copilot.agentMode.optionAssisted 在现尖字典英文侧命中=0 它给的英文长度=35 起字='Assisted mode · ' 与屏上现字逐字节相等=False
+我已交 main.modeAutonomous 英文侧与中文侧逐字节相等=True 英文侧长度=19
+草稿名 copilot.agentMode.optionAutonomous 在现尖字典英文侧命中=0 它给的英文长度=30 起字='Autonomous mode ' 与屏上现字逐字节相等=False

@@ -1,0 +1,575 @@
+FFFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+____________ test_foreground_location_near_target_is_advisory_only ____________
+
+    def test_foreground_location_near_target_is_advisory_only():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+>       result = presence_projection(
+            _Session(activity=_activity(), place=_place(), location=_location(now)),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BCB9D60>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+_____ test_trusted_location_near_target_is_eligible_not_auto_transitioned _____
+
+    def test_trusted_location_near_target_is_eligible_not_auto_transitioned():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+>       result = presence_projection(
+            _Session(
+                activity=_activity(),
+                place=_place(),
+                location=_location(now, source="DEVICE_ATTESTED"),
+            ),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BCBA720>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+______________________ test_stale_location_fails_closed _______________________
+
+    def test_stale_location_fails_closed():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+        stale = _location(now - timedelta(minutes=10))
+>       result = presence_projection(
+            _Session(activity=_activity(), place=_place(), location=stale),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BCBB830>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+____________________ test_inaccurate_location_fails_closed ____________________
+
+    def test_inaccurate_location_fails_closed():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+        imprecise = _location(now, accuracy=250.0)
+>       result = presence_projection(
+            _Session(activity=_activity(), place=_place(), location=imprecise),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BCBA960>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+_________ test_foreground_location_far_from_target_is_not_an_incident _________
+
+    def test_foreground_location_far_from_target_is_not_an_incident():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+        far = _location(now, latitude=35.1, longitude=135.1)
+>       result = presence_projection(
+            _Session(activity=_activity(), place=_place(), location=far),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BCB9C70>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+____________ test_location_from_another_journey_is_not_considered _____________
+
+    def test_location_from_another_journey_is_not_considered():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+        foreign = _location(now)
+        foreign.journey_id = "some-other-journey"
+>       result = presence_projection(
+            _Session(activity=_activity(), place=_place(), location=foreign),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BD091C0>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+________________ test_activity_without_exact_place_is_unbound _________________
+
+    def test_activity_without_exact_place_is_unbound():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+        unbound = _activity()
+        unbound.place_id = None
+>       result = presence_projection(
+            _Session(activity=unbound, place=_place(), location=_location(now)),
+            _journey(),
+            viewer_member_id="member-1",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BD0A6F0>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+__________ test_unknown_activity_id_is_not_rebound_to_another_place ___________
+
+    def test_unknown_activity_id_is_not_rebound_to_another_place():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+>       result = presence_projection(
+            _Session(activity=_activity(), place=_place(), location=_location(now)),
+            _journey(),
+            viewer_member_id="member-1",
+            target_activity_id="activity-from-another-plan",
+            now=now,
+        )
+
+tests\test_grounded_presence.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BD0BB00>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+________ test_location_projection_requires_the_matching_signed_member _________
+
+    def test_location_projection_requires_the_matching_signed_member():
+        now = datetime(2026, 10, 6, 9, 0, tzinfo=timezone.utc)
+        location = _location(now)
+        session = _Session(activity=_activity(), place=_place(), location=location)
+    
+        unscoped = presence_projection(session, _journey(), now=now)
+>       other_member = presence_projection(
+            session, _journey(), viewer_member_id="member-2", now=now
+        )
+
+tests\test_grounded_presence.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+session = <test_grounded_presence._Session object at 0x000001843BD08A10>
+journey = namespace(id='j1', active_plan_version_id='p1', current_activity_id='a1')
+
+    def presence_projection(
+        session: Session,
+        journey: Journey,
+        *,
+        viewer_member_id: str | None = None,
+        target_activity_id: str | None = None,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Project only the signed viewer's location relative to an exact planned Place."""
+    
+        target = _target_activity(session, journey, target_activity_id)
+        base: dict[str, Any] = {
+            "state": "LOCATION_UNAVAILABLE",
+            "authority": "NONE",
+            "location_observation_id": None,
+            "source": None,
+            "captured_at": None,
+            "age_seconds": None,
+            "accuracy_m": None,
+            "target_activity_id": str(target.id) if target is not None else target_activity_id,
+            "target_place_id": str(target.place_id) if target is not None and target.place_id else None,
+            "distance_to_target_m": None,
+            "maximum_near_distance_m": None,
+            "arrival_transition_allowed": False,
+            "reason_code": "SIGNED_MEMBER_IDENTITY_REQUIRED",
+        }
+        # Location is member-private. System projections, legacy rows without a
+        # bound member, and callers without a signed viewer must never fall back to
+        # the latest Journey-wide observation.
+        if not viewer_member_id:
+            return base
+        latest = session.scalar(
+            select(LocationObservation)
+            .where(
+                LocationObservation.journey_id == journey.id,
+>               LocationObservation.journey_member_id == str(viewer_member_id),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                LocationObservation.source != PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE,
+            )
+            .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
+        )
+E       AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+
+app\execution\presence.py:113: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_grounded_presence.py::test_foreground_location_near_target_is_advisory_only
+FAILED tests/test_grounded_presence.py::test_trusted_location_near_target_is_eligible_not_auto_transitioned
+FAILED tests/test_grounded_presence.py::test_stale_location_fails_closed - At...
+FAILED tests/test_grounded_presence.py::test_inaccurate_location_fails_closed
+FAILED tests/test_grounded_presence.py::test_foreground_location_far_from_target_is_not_an_incident
+FAILED tests/test_grounded_presence.py::test_location_from_another_journey_is_not_considered
+FAILED tests/test_grounded_presence.py::test_activity_without_exact_place_is_unbound
+FAILED tests/test_grounded_presence.py::test_unknown_activity_id_is_not_rebound_to_another_place
+FAILED tests/test_grounded_presence.py::test_location_projection_requires_the_matching_signed_member
+9 failed in 0.62s
