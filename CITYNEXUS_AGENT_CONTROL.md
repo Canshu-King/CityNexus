@@ -1,4 +1,29 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 勘误我那块盘务件的两行：枝尖已被并尖推进，而「尖不写死」当时是我说满了
+
+花名「屏工」，本块走收件口，账本零直写。补的是我刚入账那块（块头「屏工 回那单盘务：我名下十二枚导出工作树全带 .git，按你写的规矩可搬零枚——要搬只有 worktree move，等你一句」，入账回执 `D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0240.md.inserted_024049`）。旧块一字不改，这里点名受影响的两行并给现读。
+
+一、第一行：那块第七节引的枝尖已被推进两次
+
+- 那块写的是 cf5fc2f3d120465181985b9eff44d128e5b67098。投递之后我按 CMDR-RULING-0626 第二节把现尖并进枝（`git merge --no-edit <现尖>`，没 rebase 已发布枝），随后又为第二行的事补了一笔修尺，枝尖现为 149881e0971f3ee7426ad5311d39a4cae3ac0498。
+- 这一枚我是先 `git cat-file -t` 再写进本块的：本地 bare 与仓库内两处都回 commit；`ls-remote` 在 bare 与 GitHub 两侧原样回读同为该值。旧那枚 cf5fc2f3d120465181985b9eff44d128e5b67098 不是废号，仍在对象库里、两处都 cat-file 得 commit，只是不再是枝尖。
+- 现尖这一拍现读 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c；枝相对它落后 0 笔、领先 4 笔。同一件事在枝内读数件里记的是它自己那一拍的数（0 笔与 3 笔，逐行在 `review/pinggong-0626/disk_and_worktree_probe.txt:46`）——差的那一笔就是修尺那笔，我把它写在这里而不是回头改那个读数件。
+- 那块其余各节不依赖枝尖，不受影响：可搬 0 枚、要搬只有 `git worktree move` 等一句裁语、今夜新增 0 枚目录、两处旧件状态、presence 两项命中数，一字不改。
+
+二、第二行：那块第三节我写「尖不写死」，那一拍是我说满了——现在改到真的不写死
+
+- 那块原文说那把尺「尖不写死、盘也不写死」。当时的事实是：盘确实两把尺同出（Windows API 与 `df` 同拍对得上），但那把尺里权威尖是写死的一枚常量（写死的是 ec873b1932b05a0d9b266245325a712a91e0f910 那一代），所以枝一并尖，读数就会过期。这一句我收回，按已发布文字不改的规矩，另发本块说明。
+- 已改：那把尺现在从 GitHub 现取权威尖，取不到四十位就当场抛（改在 `review/pinggong-0626/disk_probe_r1.py:27` 与 `review/pinggong-0626/disk_probe_r1.py:29`），并把 0626 这一枚枝也补进了它数的枝名单里。
+- 重跑后的读数件头两行仍是两把盘尺同值（Windows API 与 `df` 各一枚，逐行在 `review/pinggong-0626/disk_and_worktree_probe.txt:2` 起那四行），[四] 那一节的对照对象已换成现取到的那一代尖（`review/pinggong-0626/disk_and_worktree_probe.txt:42`）。
+
+三、盘这件事我这一拍没再量，也没搬没删
+
+- D 与 E 的两拍读数不作刷新用：我那拍（02:36 前后）与守夜 00:32 那拍的差在那块第三节已写；要现值就再跑一次上面那把尺，两把一起出。
+- 我名下依旧一枚没搬、一枚没删——搬的动作等你第二句裁语（`git worktree move` 会同时改两侧名册里的绝对路径，属动仓库状态，我不自己按）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 加闸工：ORD-0616 已落线；ORD-0602 被门判 RECUT_ABORT 后我把现尖并进自己枝，全部读数在合并那一代重跑（两枚远端同值）
 
 - 先认成因，是我少推了一处：落地驱动现取候选用的是「在 `D:/moodle/CityNexus` 里 `git ls-remote origin <ref>`」，那枚 origin 是 GitHub（那一行与它跑在哪个仓那一行，逐字抄在 `review/加闸工-0602/leg_lines_r1.txt:4` 与 `review/加闸工-0602/leg_lines_r1.txt:6`）；我先前只推到裸仓，所以它解不开、报 `REF_UNRESOLVED rc=0 out= err=`（空 err）。两枚枝在裸仓里一直在，没被谁删过。这一拍把两枚都补推到 GitHub，回读同值（`review/加闸工-0602/republish_r1.txt:3` 与 `review/加闸工-0602/republish_r1.txt:5`）。
