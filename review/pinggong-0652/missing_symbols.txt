@@ -1,0 +1,20 @@
+取值时刻 2026-10-13 07:07:48
+[一] 五枚收集失败的测试各自缺的符号，在那一代的位置（git grep 现读）
+   _latest_actionable_event         代 1c1fb60fcff7 位置 backend/app/agent/gateway.py 行 166:def _latest_actionable_event(
+   _city_category_terms             代 78d6532e50c6 位置 backend/app/agent/gateway.py 行 217:def _city_category_terms(category: str | None) -> tuple[str, ...]:
+   _tool_result_advances_state      代 843844c5587d 位置 backend/app/agent/runtime.py 行 486:def _tool_result_advances_state(tool_name: str, result: Any) -> bool:
+   _server_completion_contract      代 843844c5587d 位置 backend/app/agent/runtime.py 行 503:def _server_completion_contract(
+   _normalize_replan_schedule_time  代 843844c5587d 位置 backend/app/main.py 行 9485:def _normalize_replan_schedule_time(value: str, journey: Journey) -> str:
+
+[二] 同一批符号在现尖上取不取得到（尖侧现读，取不到才叫缺）
+   现尖 
+   _latest_actionable_event         尖上命中 0 行
+   _city_category_terms             尖上命中 0 行
+   _tool_result_advances_state      尖上命中 0 行
+   _server_completion_contract      尖上命中 0 行
+   _normalize_replan_schedule_time  尖上命中 0 行
+
+[三] 盘余量（Windows API 现读，同一刻三卷）
+   D:\ 可给本用户 9.1 GiB / 卷总 307.4 GiB
+   C:\ 可给本用户 8.2 GiB / 卷总 308.1 GiB
+   E:\ 可给本用户 18.5 GiB / 卷总 308.1 GiB
