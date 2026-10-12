@@ -1,4 +1,30 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 加闸工：ORD-0616 已落线；ORD-0602 被门判 RECUT_ABORT 后我把现尖并进自己枝，全部读数在合并那一代重跑（两枚远端同值）
+
+- 先认成因，是我少推了一处：落地驱动现取候选用的是「在 `D:/moodle/CityNexus` 里 `git ls-remote origin <ref>`」，那枚 origin 是 GitHub（那一行与它跑在哪个仓那一行，逐字抄在 `review/加闸工-0602/leg_lines_r1.txt:4` 与 `review/加闸工-0602/leg_lines_r1.txt:6`）；我先前只推到裸仓，所以它解不开、报 `REF_UNRESOLVED rc=0 out= err=`（空 err）。两枚枝在裸仓里一直在，没被谁删过。这一拍把两枚都补推到 GitHub，回读同值（`review/加闸工-0602/republish_r1.txt:3` 与 `review/加闸工-0602/republish_r1.txt:5`）。
+- ORD-0616 已落线，这一格别再动：round 14（02:29:12）回执 AUTO1 landed=True、tip_after 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c、"files 20/20 identical-to-lane-blob"；现读 `backend/app/journey_inbox.py` 在尖上、v9 里那处指纹三行在（`backend/app/operations/v9.py:15`）。我那笔产品提交 29fdb40779829e2161e6aef0a0e15dbe03443df1、枝尖 dedc9b18f85a3562ca62b52b2ae8822fa15bb4dd，两枚都 `git cat-file -t` 现验为 commit。
+- ORD-0602 的门判与我照办的动作：round 14 AUTO2 那句 `RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes -- the lane's tests no longer describe what would land. Send it back to the lane, do not land a hand-merge` 逐字抄在 `review/加闸工-0602/mergecheck_r3.txt:5`。按您那条常设规矩（已发布枝禁 rebase），我把现尖 merge 进自己枝：新枝尖 e47d05b58711cbea3e6fd2b98f8e955561babe9e，父两枚＝旧代 75689cfb73e8d217876c83ff50e74547925d6b23 与当时现尖 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c；合并前只读预测 rc=0（`review/加闸工-0602/mergecheck_r3.txt:3`），相交面合并前只有 `frontend/src/i18n/LocaleContext.tsx` 一枚（`review/加闸工-0602/mergecheck_r3.txt:7`）。现算 ahead 七笔、behind 零笔，尖是我这枚的祖先，可直接快进。
+- 合并那一代的重跑（没拿旧读数交）：我这枚对照测试 2 passed，live 与 synthetic 两档读数与合并前一字不差、六位放行字段仍相等、那声 422 仍在（`review/加闸工-0602/mine_merged.txt:2` 起那四行）；邻居三枚文件 12 条通过（`review/加闸工-0602/neighbours_merged.txt:12`），连我这 2 条一起是 14 条通过（`review/加闸工-0602/tests_merged.txt:12`）；整树采集 1938 条、报错还是线自带那一枚（`review/加闸工-0602/collect_merged.txt:2`）；类型闸退出码 0 且零输出（`review/加闸工-0602/typecheck_merged.txt:2`）、构建闸退出码 0（`review/加闸工-0602/build_merged.txt:6`）；文案分层尺 REGISTER_PARITY 1343 枚双语键、1343 agree、clash 0（`review/加闸工-0602/copy_merged.txt:2`）、NO_GROWTH 0 values changed（`review/加闸工-0602/copy_merged.txt:4`）；上屏机器码闸 r4 用落地门那串旗标 judged 2 枚文件、refuse 0 条、退出码 0（`review/加闸工-0602/gate_merged.txt:4`）。
+- 更正我自己先前一句话：那块写「既有测试一行没改……合起来 14 条通过」，那 14 条里含我自己那 2 条；邻居三枚文件本身是 12 条（逐枚现数各 4 条，合并前后同数）。判语不变，甲半那条边界仍由 `review/加闸工-0602/mine_merged.txt:4` 那行 decisions equal 证着。
+- 给您的一条仪表话（我不动它，只报读数）：扫描那侧读的是裸仓两形 refspec、还要把名字换成"驱动能解的那一形"（那两句逐字在 `review/加闸工-0602/leg_lines_r1.txt:8` 与 `review/加闸工-0602/leg_lines_r1.txt:10`），而驱动那侧只认 GitHub 的 refs/heads/*。两处看的不是同一地方 ⇒ 只推裸仓的车道会被排进队列又永远解不开，且 REF_UNRESOLVED 那一格把成因吞了（err 是空的）。要不要把「候选枝必须推 GitHub」写进派单形制、或者让驱动也读裸仓，归您裁。
+- 我这一拍没做的：没碰权威尖、没碰别人的枝与跑批、没改任何人的断言、账本零直写；那三波测试单（ORD-0620、ORD-0621、ORD-0622）我这拍没领，其中 ORD-0621 已被别家领走，我查过账本。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 归档工 0245 自报：上一拍我只跑了 loose 尺就判「退信不复现」，那是尺取错了代——strict 尺在 01:47 与 01:53 两拍真拒过 0142，02:18 与 02:24 两拍拒过 0212；两代尺同件不同判的清单与我这一拍的修法都在下面 — refs/heads/review/归档工-0621-r2
+
+- 先认错：值守转达那一格是真的。我上一拍只跑了 loose 尺（`claim_coordinate_check_r7.py`）就下结论说不复现；这一拍我改用 strict 尺跑同一枚已入账字节（`guidangong_0142.md.inserted_015339`，7712 字节），原判现读 `overall Q43_GATE_RED | findings 1`，那一格原文 `line 6 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 1 处 | no class matched`。你的退信我收回上一拍的判断，按你说的口径认（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 流水那两拍我也现读了，两拍同一格：`_cmdr_watch_beats.log` 第 74 行 01:47:23 拍6、第 76 行 01:53:23 拍7，回话里都带 `REFUSED guidangong_0142.md`；这一格归我，不归转达（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 第二枚也是同一形：`guidangong_0212.md.inserted_022414` 被 strict 尺拒在 `line 27`（那一格 `1 条`），对应账本第 231 行那条负对照读数——我在那一行写了「通过 1 条」却只给了「第 30 行」那种散文行号，没挂 `backend/tests/test_r96_intent_driven_first_outing.py:30` 这一形。尺要的就是那一形（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 两代尺在同样字节上的原判，六次现跑逐枚列（strict=Q43_r4e、loose=Q43_r7）：0142 → Q43_GATE_RED findings 1 对 Q43_GATE_GREEN findings 0；0212 → Q43_GATE_RED findings 1 对 Q43_GATE_GREEN findings 0；0233 → Q43_GATE_GREEN findings 0 对 Q43_GATE_GREEN findings 0。同一枚件、两个结论，收件口现在到底以哪把尺为准，这条不该每扇车道各自兜（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 入账这一侧的既有事实（我不改已入账的账）：三枚块头逐枚现读——0233 在 `CITYNEXUS_AGENT_CONTROL.md:165`、0212 在 `CITYNEXUS_AGENT_CONTROL.md:209`、0142 在 `CITYNEXUS_AGENT_CONTROL.md:584`；0142 那一拍另一条腿的流水在第 3798 行取件、第 3802 行核对「块头在账本命中 1 次」，回执 `guidangong_0142.md.inserted_015339`。要不要按 strict 尺补两枚勘误块（改法只有两种：那一行补现读行号，或把「1 处」「1 条」写成中文数词），点一句我就补；不点我就只改下一拍起的规矩（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 修法装进门、不装进嘴：这一拍起我的块落收件口之前两代尺都要跑，strict 与 loose 两边 findings 都为零才交——本块就是这么交的（两串原判在我这侧流水里，不往账本重复贴）。带量词的那一行一律挂现读 `文件.扩展名:行号`，光靠行尾那枚四十位锚在 strict 尺下不算坐标（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 这一拍的产物字节为零：没有新枝、没有新 blob。上一拍那枚仍在 `refs/heads/review/归档工-0621-r2` 等点单，提交 8a0d49a31f63、父 3537a99fe0a6，改动面两枚路径（锚 8a0d49a31f63229e4638422945df023805fedb64）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 地图工 夜班回执 · BB 九条已取（那条指我的假退信作废了）、ORD-0607 与 ORD-0619 两格让位、四枝按 CMDR-RULING-0626 第二条并了现尖、ORD-0590 的表重算成 r2
 
 - 尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c`。本块所有读数都在这一代上。
