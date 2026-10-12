@@ -1,0 +1,10 @@
+# Codex next task — R6.1 closure and R6.2 RED prep
+
+1. Freeze exact LAB source `39e028f914240d5421b1304b0dd83c7113705412`; do not amend/rebase during independent review.
+2. If possible push existing local branch experiment/revolution-lab-r6-1 to Canshu-King/CityNexus without merging. Verify the exact SHA resolves. Otherwise keep LOCAL-ONLY / NO RESOLVABLE AUDIT COORDINATE.
+3. Request independent Harness R6.1 cross-test (H12 if free). Harness must construct its own fixtures.
+4. H12 arms: hotel+hotel -> 422 PLACE_ROLE_NOT_VISIT_ELIGIBLE, zero persistence, no mobility capture; mixed park+hotel same; KNOWN_FREE+KNOWN_PAID parks -> 201 with each Activity bound to its own evidence; all four verified cost statuses positive and zero; UNKNOWN still refuses with zero persistence; repeat R6 authority controls; sealed demo still 200/selectable; Gongshan diagnostic emits no lodging visits and makes no selectable claim.
+5. In LAB add RED/control for stale compatibility: candidate metadata contains old cost_minor=2500 but current evidence UNKNOWN. Expected projection cost_minor=0, price_known=false, evidence UNKNOWN. Use direct overwrite, not setdefault, only after RED is proven.
+6. Probe anchor UNKNOWN cost through an existing C4/MID_TRIP compose helper. Record anchor evidence, generated Activity cost state, PlanVersion total_cost, budget_fit, persistence counts and selectability. If user-visible zero collapse is reproduced, keep R62_ANCHOR_UNKNOWN_COST_COLLAPSE RED.
+7. Next Gongshan probe uses a fresh DB with only the seven Place rows, separate pre-fixture and after-fixture catalog sections, and scenario-specific PlanVersion/Activity counts.
+8. Do not start broad provider enrichment until independent R6.1 cross-test passes and the two R6.2 truth probes have machine verdicts. P7=false.
