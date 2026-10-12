@@ -1,4 +1,46 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 接尖工｜复现 ORD-0622 的前置链跑完：`shared_walk` 落下之后失败原因前进一层，还缺一整张 `MemberDraftPocketWalk` 表与第二个配置项（七枚用例逐枚点名，零产品字节）
+
+尖现取 `5c3e98aebe420fe93834a7f4902b987732ccae52`（ls-remote 现读）。这一拍不交模块，只把 ORD-0622 那句「只补配置那一行就报绿是假进度」往前推一格：我在一次性导出树里真把那枚体量大的人造出来跑过一遍，七枚用例的拦路项逐枚点名。
+
+一、现场是怎么搭的（命令形状，谁都能重放）
+
+- 导出：`git archive <现尖> backend data contracts` 解到空目录，文件数现读五百一十九枚（锚 refs/heads/mirror/integration-frontend-apple-pass1）
+- 放模块两枚：`bootstrap_discovery.py` 逐字节取自代表枝，`shared_walk.py` 逐字节取自我自己那枚待点枝 refs/heads/review/接尖工-0612-r1
+- 放测试六枚：`test_r86`、`test_r87`、`test_r88`、`test_r89`、`test_r93`、`test_r95`，全部逐字节取自代表枝 refs/heads/gpt/revolution-r33-open-world-journey-adaptation
+- 补配置只补单文点名的那一行：`traveler_auth_secret`，形制照 `backend/app/core/config.py:33` 那行 vapid 抄（`str | None = os.getenv(...) or None`）
+- 跑测：同一支 CPython 3.12.14 + `-X utf8 -p no:cacheprovider`
+
+二、读数：收集过了，但七枚全红，且红因已经换了
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| `--collect-only` 收到的用例 | 七枚（六份文件，无一份连收集都过不去） | refs/heads/gpt/revolution-r33-open-world-journey-adaptation |
+| 真跑结果 | 七枚全红、零通过 | refs/heads/mirror/integration-frontend-apple-pass1 |
+| 红因一 | `cannot import name 'MemberDraftPocketWalk' from 'app.db.models'` —— 十一次命中，覆盖七枚用例里的绝大部 | backend/app/db/models.py:1 |
+| 红因二 | `'Settings' object has no attribute 'city_search_enabled'` —— 一次命中，落在 `test_r95` 那枚 provenance 用例上 | backend/app/core/config.py:33 |
+| 那张表此刻在不在尖上 | 不在：`git grep -c MemberDraftPocketWalk` 在尖上的 `backend/app/db/models.py` 里零命中 | backend/app/db/models.py:1 |
+| 我放上去的那枚同族依赖 | 尖上仍取不到（我这枚还没被点），所以本轮是我本地补上它才把失败原因推到下一层 | refs/heads/review/接尖工-0612-r1 |
+
+三、这对那张单意味着什么
+
+单文写它「唯一缺的同族依赖是 `execution/shared_walk.py`」，这句在**同族**这个口径下没错——我实测同意：把那一枚补上，收集就过了。但「只差配置那一行」不成立：补完 `traveler_auth_secret` 之后，红因从号令者那一拍的 `ModuleNotFoundError` 前进成两件事——一张从来没上线的表 `MemberDraftPocketWalk`，以及第二个配置项 `city_search_enabled`。也就是说这张单真正的前置链是三节，不是一节：同族模块 → 那四张 `MemberDraft*` 表 → 两个配置项。
+
+我这边能立刻接上的只有同族那一节（已在我 0612 枝里等点单）。表那两节不在我名下任何一张单里，我不自领、也不动 `backend/app/db/models.py` 一字节——它是宿主面，动它要把号。
+
+四、顺带两件状态（不是催活）
+
+我的 ORD-0612 那枝 `4517959f584ba2053c1735549bce7190b513e3bf` 还在等排：上一拍现算它与当时那枚尖合并干净（`git merge-tree` 退出码零），且合并后我那三件东西逐枚 `git rev-parse` 对下来字节仍等于我亲笔那份，所以按上一班通播那句「字节没动过就等排到你这枚」，我没有重切、也没有再推新一代。
+
+另把我上一块那处口径的后续读数补齐：`backend/app/execution/shared_walk.py` 在代表枝 refs/heads/gpt/revolution-r33-open-world-journey-adaptation 上现读是一百二十行（`wc -l` 与 `splitlines()` 两口径同值，我这拍各重跑一遍），我待点那枝 refs/heads/review/接尖工-0612-r1 上同文件也现读一百二十行，与 ORD-0612 单文（账本 `CITYNEXUS_AGENT_CONTROL.md:2929`，这拍现读该行的字面就是「落线：121 行」）写的一百二十一行差一行——那一行就是「换行数 加 一」多出来的行尾空串，跟归档工 ORD-0254 那枚 `config.py` 一百零五行对一百零六行的勘误同形。这条不改谁的账，只把现值摆着。
+
+五、这拍没做的
+
+没碰权威尖、没碰任何人的枝、没改任何既有断言换绿、账本零直写。那六枚测试与那枚模块只存在于我一次性导出树里，树不在仓库内；本轮零产品字节、零新枝。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 盘务工 ORD-0634 回执：口径一搬成一百四十条并逐字节对拍通过，口径二那条腿被 git 当场拒且零损坏，口径四的 C 卷归因表已交 — 除搬运外零删除
 
 花名盘务工；本块走收件口 `D:/moodle/_qoder_ledger_inbox/`，账本零直写；文件名拼写沿用单上那串（盘务工的 ASCII 形）。裁语 CMDR-RULING-0638 四条逐条回报如下，所有读数都落在一枚回执件里并按行挂锚，谁都能 `sed -n` 取回原文。
