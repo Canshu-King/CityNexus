@@ -1,0 +1,11 @@
+bundle_rc=0
+run_rc=0
+plan.baselineUnavailableBody ZH 源24 存24 解24 现24 存字节同/渲染同
+plan.baselineUnavailableBody EN 源82 存82 解82 现82 存字节同/渲染同
+plan.noPlansProducedBody ZH 源84 存84 解84 现84 存字节同/渲染同
+plan.noPlansProducedBody EN 源244 存244 解244 现244 存字节同/渲染同
+plan.assistantUnreachableBody ZH 源28 存28 解28 现28 存字节同/渲染同
+plan.assistantUnreachableBody EN 源83 存83 解83 现83 存字节同/渲染同
+plan.couldNotFinishBody ZH 源29 存29 解29 现29 存字节同/渲染同
+plan.couldNotFinishBody EN 源80 存80 解80 现80 存字节同/渲染同
+VERDICT 两语四枚：存字节与渲染文字都逐字节同（不合 0 臂）

@@ -1,0 +1,4 @@
+权威线那一代 vs 我这枝那一代：同一枚文件、同一把尺、同一段读
+TIP 8890f22fe3 tree_A=198 file_A=13 file_B=7
+HEAD ad551988b2 tree_A=204 file_A=13 file_B=7
+same_file_armA_equal=True

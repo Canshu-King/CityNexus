@@ -191,27 +191,21 @@ export function statusCopy(
   if (s === "COMPLETED" || s === "SUCCEEDED") {
     return {
       title: zh ? `已生成 ${planCount} 个可选方案` : `${planCount} ${englishCountNoun(planCount, "candidate plan")} ready`,
-      body: zh
-        ? "去“今天”对比这几个方案，选一个再继续。"
-        : "Compare them on Today, then choose one to continue.",
+      body: t("plan.plansReadyBody"),
       tone: "ok",
     };
   }
   if (s === "CANCELLED") {
     return {
       title: t("bookings.realtimeCancelled"),
-      body: zh
-        ? "请求已中止，你的行程没有被改动。可以改个说法再来一次。"
-        : "The request was aborted. Your trip is untouched — rephrase and try again.",
+      body: t("plan.cancelledBody"),
       tone: "neutral",
     };
   }
   if (s === "CANCELLED_AFTER_SEND") {
     return {
       title: t("planning.stoppedBeforeVerification"),
-      body: zh
-        ? "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
-        : "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
+      body: t("plan.cancelledAfterSendBody"),
       tone: "warn",
     };
   }
@@ -222,36 +216,28 @@ export function statusCopy(
        counter-examples this branch exists to refuse. */
     return {
       title: t("planning.thisOneSResultIsUnknownNotItDidNotHappen"),
-      body: zh
-        ? "这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。"
-        : "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
+      body: t("plan.keylessWriteDeadlineBody"),
       tone: "warn",
     };
   }
   if (s === "NETWORK") {
     return {
       title: t("planning.theServerCouldNotBeReached"),
-      body: zh
-        ? "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
-        : "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
+      body: t("plan.unreachableBody"),
       tone: "warn",
     };
   }
   if (s === "HTTP_422") {
     return {
       title: t("planning.theRequestWasRefused"),
-      body: zh
-        ? "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。"
-        : "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
+      body: t("plan.refusedRequestBody"),
       tone: "warn",
     };
   }
   if (s.startsWith("HTTP_5")) {
     return {
       title: t("planning.theServerFailedToFinish"),
-      body: zh
-        ? "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。"
-        : "The server errored out — not your request. Your trip is unchanged; retry later and keep the technical detail if it repeats.",
+      body: t("plan.serverErroredBody"),
       tone: "warn",
     };
   }
@@ -260,36 +246,28 @@ export function statusCopy(
       title: zh
         ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
         : `AI did not take part — ${planCount} ${englishCountNoun(planCount, "option")} still assembled`,
-      body: zh
-        ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
-        : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
+      body: t("plan.plansWithoutAiBody"),
       tone: "warn",
     };
   }
   if (s === "BASELINE_UNAVAILABLE") {
     return {
       title: t("planning.weCouldNotConfirmThisRun"),
-      body: zh
-        ? "无法确认本次是否生成了新方案，请重试或刷新页面。"
-        : "We could not confirm whether this run produced new plans. Please retry or refresh.",
+      body: t("plan.baselineUnavailableBody"),
       tone: "warn",
     };
   }
   if (s === "NO_PLANS_PRODUCED") {
     return {
       title: t("planning.noUsablePlansWereProduced"),
-      body: zh
-        ? "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。"
-        : "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
+      body: t("plan.noPlansProducedBody"),
       tone: "warn",
     };
   }
   if (s.includes("SKIPPED_EXTERNAL_DEPENDENCY") || s.includes("EXTERNAL")) {
     return {
       title: t("planning.aIIsUnavailableRightNow"),
-      body: zh
-        ? "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。"
-        : "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
+      body: t("plan.assistantUnreachableBody"),
       tone: "warn",
     };
   }
@@ -302,9 +280,7 @@ export function statusCopy(
   }
   return {
     title: t("planning.couldNotFinishPlanning"),
-    body: zh
-      ? "这次没能生成方案。你的行程没有被改动，可以重试或换个说法。"
-      : "We could not produce plans this time. Your trip is unchanged; retry or rephrase.",
+    body: t("plan.couldNotFinishBody"),
     tone: "warn",
   };
 }
@@ -723,9 +699,7 @@ export function PlanWithAiSheet({
           <div>
             <b id="plan-ai-title">{t("itinerary.planWithAi")}</b>
             <small>
-              {zh
-                ? "用你自己的话描述这趟旅行，越具体越好。"
-                : "Describe the trip in your own words — the more specific the better."}
+              {t("plan.describeTripHint")}
             </small>
           </div>
           <button type="button" className="plan-ai-close" aria-label={t("shell.close")} onClick={leave}>
@@ -806,17 +780,13 @@ export function PlanWithAiSheet({
             data-ai-state={aiState}
           >
             {aiState === "configured_unverified" &&
-              (zh
-                ? "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。"
-                : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
+              (t("plan.aiConfiguredUnverifiedNote"))}
             {aiState === "not_configured" &&
               (t("plan.aiNotConfiguredNote"))}
             {aiState === "disabled_by_ops" &&
               (t("plan.aiDisabledByOpsNote"))}
             {aiState === "provider_refused" &&
-              (zh
-                ? "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。"
-                : "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.")}
+              (t("plan.aiProviderRefusedNote"))}
             {aiState === "unknown" &&
               (t("plan.aiStateUnknownNote"))}
           </p>
