@@ -1,0 +1,14 @@
+加闸工 ORD-0603 读数件 —— 承接面调查 + 一条已真跑过的候选接线，零产品字节，逐行自编号
+1  单：CMDR-ORDER-0602-0604 里那张 ORD-0603（账本第 267 行那块），另两张 ORD-0602、ORD-0604 我没碰、没转派。裁语 CMDR-RULING-0607-UNREACHABLE（账本第 2 行那块）说清了下一次刀是接线不是再落几枚，所以我挑这张。
+2  尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 d79a857aee9fa8869d8f276d96898a03406d067a；本文所有行号都在那一代上现读，交块前再取一次若变了会在块头写明差几代。
+3  结论一句话：现尖 73 枚 GET 路由里，唯一能承这枚判据的是 `backend/app/main.py:6104` 那条 `/journeys/{id}/mobility`；它被别家桩测按字段全集钉住，所以本张单我按「证据表 + 可直接打的补丁 + 差哪一句裁决」交，没有把模块塞进没人调的包。
+4  输入判据是读出来的不是猜的：`fact_is_eligible_for_live_readiness` 本体在 `backend/app/execution/route_session_contract.py:88`，只吃时长（`duration_min`/`minutes`）、出处档（`provenance`/`route_provenance`/`fact_quality`）、服务商键（`provider_key`/`provider`）三样，且 `:109` 与 `:111` 那两处把 mock/夹具/估算/模拟器明判为不合格； MobilityFact 的投影一次就把三样发全（`backend/app/stay_mobility.py:2047`、`:2057`、`:2058`，函数头在 `:2041`）。
+5  分母摊全：9 枚候选逐枚判定（每枚给声明行、三样齐不齐、现尖上有谁钉它键集），原始件 `review/加闸工-0603/survey_r1.txt:1` 起；正式表落 `docs/revolution-archive/ROUTE_CONTRACT_WIRING.md:19` 那一节。两处我第一次算错并改了：中文文件名的测试被 `ls-tree` 转义读成空（要加 `-c core.quotepath=false`），以及只按字面量判输入会把 `fact_payload` 发出来的三样读成"缺 duration_min"。
+6  负结论之前先把现场跑对：我第一次跑别家那 4 条桩测报 3 失败，成因是我导出漏了仓根 `data/`（回话原文 `FileNotFoundError: ...\\data\\mock\\traveler_demo.json`）——那是我的导出毛病不是线上的红；补上 `data/` 之后同一条命令 4 条全过，红没有了（`review/加闸工-0603/stub_baseline.txt`）。
+7  候选接线（临时树真打过、真跑过，线上一字节没改）：`review/加闸工-0603/wiring_candidate_r1.patch` 共 38 行，只加一行 import（落在 `backend/app/main.py:487` 那组之后）+ 把那条门里的 `fact_payload(item)` 就地多算一枚 `live_readiness_eligible`；`patch --dry-run` 在尖那一代上通过。
+8  打上去之后门答的是真值：同为 17 分钟的三条边里，只有真服务商捕获那条 `eligible=True`，`SYNTHETIC_FIXTURE` 与 `mock-emulator` 两条 `False`（逐行打印在 `review/加闸工-0603/probe_wired.txt:2` 起）——判据不是把同一个布尔复述三遍。
+9  挡住它的确凿一句：接了之后别家那 4 条变 1 失败 3 过，失败原文 `Extra items in the left set: 'live_readiness_eligible'`，命中的正是 `backend/tests/test_route_stub_验路工_0559b_r1.py:124` 那枚 `set(item) == FACT_KEYS`（门级钉在同文件 `:112`；原始输出 `review/加闸工-0603/stub_wired.txt`）。我不改别人的断言。
+10 两条看着能走、我判定不走的（写清楚免得下一位再走）：把判语藏进 `evidence` 自由字典（该槽位在契约里是服务商证据袋，出处 `backend/app/stay_mobility.py:2061`，装我方派生判定就是槽位语义不符 + 前端读不到）；或接到 `/route-evidence`——它的 properties 全集就是 `backend/app/main.py:10471` 起那五项，没有时长没有出处档，接上去恒判 False，那是假调用点。
+11 `classify_capture` 这半为什么本张单不接：它要 `explicit_fact` + `provider_failed` + `provider_degraded`（本体 `backend/app/execution/route_session_contract.py:70`），这三个信号只在抓取那一次存在，而抓取在写路径 `backend/app/main.py:6134`（`capture_mobility_facts`），ORD-0603 要的是真读路由，越范围。
+12 临时树已复原：`backend/app/main.py` 复原后与尖上同 blob 4cd1770924227257bad4d2e84ef0c2fc14441035（命令原样 `git rev-parse 尖:backend/app/main.py` 对拍），我的改动只活在补丁里；探针件刻意不放 `backend/tests/`——它会以"断言一个还不存在的键"把整套测试拖红，那正是"改断言换绿"的反面。
+13 边界与自报：权威线我没推、force-push 零次；共享 venv 只借道读、零安装；后端 DB 用临时文件 `_jz0603_*.db`（跑在导出树里，没碰仓根的库文件）；账本零直写，块只走收件口。
