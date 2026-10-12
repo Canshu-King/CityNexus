@@ -1,0 +1,9 @@
+MINTED rows 7 keys 6 family copilot.mission tip ad6a96bf6039
+OUT _pinggong_scratch/rows_mission_r1.json
+  394	copilot.mission.workingOnRequest	draft:394	正在为你处理
+  397	copilot.mission.ranAgainstFacts	draft:397	已按你的行程事实执行
+  398	copilot.mission.checkingFacts	draft:398	正在核对你的行程事实…
+  407	copilot.mission.checkingFacts	draft:398	正在核对你的行程事实…
+  428	copilot.mission.viewSafePlan	draft:428	查看安全任务计划
+  433	copilot.mission.needsAuthority	draft:433	CityNexus 授权
+  478	copilot.mission.stop	draft:478	停止任务

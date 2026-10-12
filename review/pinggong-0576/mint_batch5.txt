@@ -1,0 +1,5 @@
+MINTED gen 49e2f657a9cb family copilot.action rows 2 keys 2 limit 0 out _pinggong_scratch/rows_mix_action_r5.json
+  358-358	copilot.action.stopping	draft:358	guard='zh'
+  362-362	copilot.action.stoppedViaCitynexus	draft:362	guard='zh'
+MINTED gen 49e2f657a9cb family copilot.approval rows 1 keys 1 limit 0 out _pinggong_scratch/rows_mix_approval_r5.json
+  466-466	copilot.approval.modifyReview	draft:468	guard='zh'

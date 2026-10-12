@@ -1,0 +1,40 @@
+{
+ "gen": "724f70d9ca550f41a7e590bf9e8a5ecc556a20af",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.badge 两枚 + copilot.panel 一枚（最严那一档：一轮不超三处）",
+ "rows": [
+  {
+   "start": 17273,
+   "start_line": 449,
+   "end_line": 449,
+   "key": "copilot.badge.protectedCommitment",
+   "zh": "受保护承诺",
+   "en": "Protected commitment",
+   "draft_line": "449",
+   "guard": "zh",
+   "ternary": "zh ? \"受保护承诺\" : \"Protected commitment\""
+  },
+  {
+   "start": 17563,
+   "start_line": 452,
+   "end_line": 452,
+   "key": "copilot.badge.protectedActivity",
+   "zh": "受保护活动",
+   "en": "Protected activity",
+   "draft_line": "452",
+   "guard": "zh",
+   "ternary": "zh ? \"受保护活动\" : \"Protected activity\""
+  },
+  {
+   "start": 37556,
+   "start_line": 878,
+   "end_line": 880,
+   "key": "copilot.panel.factsOnlyPromise",
+   "zh": "回答只依据已核验的行程事实，不会自己改动你的安排。",
+   "en": "Answers use verified journey facts only and never change your plan.",
+   "draft_line": "881",
+   "guard": "locale === \"zh-CN\"",
+   "ternary": "locale === \"zh-CN\"\n                  ? \"回答只依据已核验的行程事实，不会自己改动你的安排。\"\n                  : \"Answers use verified journey facts only and never change your plan.\""
+  }
+ ]
+}

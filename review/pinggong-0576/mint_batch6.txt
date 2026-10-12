@@ -1,0 +1,5 @@
+MINTED gen 724f70d9ca55 family copilot.badge rows 2 keys 2 limit 0 out _pinggong_scratch/rows_mix_badge_r6.json
+  449-449	copilot.badge.protectedCommitment	draft:449	guard='zh'
+  452-452	copilot.badge.protectedActivity	draft:452	guard='zh'
+MINTED gen 724f70d9ca55 family copilot.panel rows 1 keys 1 limit 0 out _pinggong_scratch/rows_mix_panel_r6.json
+  878-880	copilot.panel.factsOnlyPromise	draft:881	guard='locale === "zh-CN"'

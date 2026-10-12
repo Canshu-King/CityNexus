@@ -1,0 +1,40 @@
+{
+ "gen": "49e2f657a9cb4f33e1491b393bb036946601f366",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.action 两枚 + copilot.approval 一枚（最严那一档：一轮不超三处）",
+ "rows": [
+  {
+   "start": 13602,
+   "start_line": 358,
+   "end_line": 358,
+   "key": "copilot.action.stopping",
+   "zh": "正在停止…",
+   "en": "Stopping…",
+   "draft_line": "358",
+   "guard": "zh",
+   "ternary": "zh ? \"正在停止…\" : \"Stopping…\""
+  },
+  {
+   "start": 13767,
+   "start_line": 362,
+   "end_line": 362,
+   "key": "copilot.action.stoppedViaCitynexus",
+   "zh": "已通过 CityNexus 停止",
+   "en": "Stopped through CityNexus",
+   "draft_line": "362",
+   "guard": "zh",
+   "ternary": "zh ? \"已通过 CityNexus 停止\" : \"Stopped through CityNexus\""
+  },
+  {
+   "start": 18312,
+   "start_line": 466,
+   "end_line": 466,
+   "key": "copilot.approval.modifyReview",
+   "zh": "修改 / 审核",
+   "en": "Modify / Review",
+   "draft_line": "468",
+   "guard": "zh",
+   "ternary": "zh ? \"修改 / 审核\" : \"Modify / Review\""
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+MINTED gen 2a9367a13166 family copilot.history rows 1 keys 1 limit 0 out _pinggong_scratch/rows_mix_history_r7.json
+  884-884	copilot.history.emptyHint	draft:888	guard='locale === "zh-CN"'
+MINTED gen 2a9367a13166 family copilot.bubble rows 1 keys 1 limit 0 out _pinggong_scratch/rows_mix_bubble_r7.json
+  887-887	copilot.bubble.youLabel	draft:891	guard='locale === "zh-CN"'

@@ -1,0 +1,18 @@
+{
+ "gen": "2a9367a1316669ac97598857c7c4ac07b9645854",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.history",
+ "rows": [
+  {
+   "start": 37929,
+   "start_line": 884,
+   "end_line": 884,
+   "key": "copilot.history.emptyHint",
+   "zh": "问我为什么这样安排、试算变化，或报告已经确认的中断。",
+   "en": "Ask why, preview a change, or report a confirmed disruption.",
+   "draft_line": "888",
+   "guard": "locale === \"zh-CN\"",
+   "ternary": "locale === \"zh-CN\" ? \"问我为什么这样安排、试算变化，或报告已经确认的中断。\" : \"Ask why, preview a change, or report a confirmed disruption.\""
+  }
+ ]
+}

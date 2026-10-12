@@ -1,0 +1,34 @@
+candidate | zh-CN | copilot.approval.offlineBlocked | 离线时不能确认方案
+candidate | zh-CN | copilot.approval.idMissing | 缺少 CityNexus approval_id，需打开恢复中心审核
+candidate | zh-CN | copilot.approval.recording | 正在记录 CityNexus 确认…
+candidate | zh-CN | copilot.approval.recorded | 确认已记录；仍需由 CityNexus 执行授权
+candidate | zh-CN | copilot.approval.needsConfirmation | 需要你确认
+candidate | zh-CN | copilot.approval.explainer | 任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。
+candidate | zh-CN | copilot.approval.approve | 批准
+candidate | zh-CN | copilot.approval.reject | 拒绝
+candidate | en | copilot.approval.offlineBlocked | Approval is disabled while offline
+candidate | en | copilot.approval.idMissing | CityNexus approval_id is not available; review in Recovery
+candidate | en | copilot.approval.recording | Recording CityNexus approval…
+candidate | en | copilot.approval.recorded | Approval recorded; CityNexus still owns execution authorization
+candidate | en | copilot.approval.needsConfirmation | Needs your confirmation
+candidate | en | copilot.approval.explainer | Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically.
+candidate | en | copilot.approval.approve | Approve
+candidate | en | copilot.approval.reject | Reject
+negtip | zh-CN | copilot.approval.offlineBlocked | copilot.approval.offlineBlocked
+negtip | zh-CN | copilot.approval.idMissing | copilot.approval.idMissing
+negtip | zh-CN | copilot.approval.recording | copilot.approval.recording
+negtip | zh-CN | copilot.approval.recorded | copilot.approval.recorded
+negtip | zh-CN | copilot.approval.needsConfirmation | copilot.approval.needsConfirmation
+negtip | zh-CN | copilot.approval.explainer | copilot.approval.explainer
+negtip | zh-CN | copilot.approval.approve | copilot.approval.approve
+negtip | zh-CN | copilot.approval.reject | copilot.approval.reject
+negtip | en | copilot.approval.offlineBlocked | copilot.approval.offlineBlocked
+negtip | en | copilot.approval.idMissing | copilot.approval.idMissing
+negtip | en | copilot.approval.recording | copilot.approval.recording
+negtip | en | copilot.approval.recorded | copilot.approval.recorded
+negtip | en | copilot.approval.needsConfirmation | copilot.approval.needsConfirmation
+negtip | en | copilot.approval.explainer | copilot.approval.explainer
+negtip | en | copilot.approval.approve | copilot.approval.approve
+negtip | en | copilot.approval.reject | copilot.approval.reject
+CANDIDATE_CELLS 16 NEG_CELLS 16 NEG_BARE_KEY 16 FAILS 0
+VERDICT probe_green keys=8 cells=16

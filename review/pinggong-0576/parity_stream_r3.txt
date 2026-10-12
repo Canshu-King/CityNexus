@@ -1,0 +1,20 @@
+TIP en=1272 zh=1272 only_en=0 only_zh=0
+CAND en=1289 zh=1289 only_en=0 only_zh=0
+NEW_EN 17 NEW_ZH 17 same_set=True
+   NEW copilot.approval.approve
+   NEW copilot.approval.explainer
+   NEW copilot.approval.idMissing
+   NEW copilot.approval.needsConfirmation
+   NEW copilot.approval.offlineBlocked
+   NEW copilot.approval.recorded
+   NEW copilot.approval.recording
+   NEW copilot.approval.reject
+   NEW copilot.mission.checkingFacts
+   NEW copilot.mission.needsAuthority
+   NEW copilot.mission.ranAgainstFacts
+   NEW copilot.mission.stop
+   NEW copilot.mission.viewSafePlan
+   NEW copilot.mission.workingOnRequest
+   NEW copilot.stream.parseError
+   NEW copilot.stream.reconnecting
+   NEW copilot.stream.unavailable

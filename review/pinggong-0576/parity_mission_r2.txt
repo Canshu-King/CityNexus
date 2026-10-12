@@ -1,0 +1,9 @@
+TIP en=1258 zh=1258 only_en=0 only_zh=0
+CAND en=1264 zh=1264 only_en=0 only_zh=0
+NEW_EN 6 NEW_ZH 6 same_set=True
+   NEW copilot.mission.checkingFacts
+   NEW copilot.mission.needsAuthority
+   NEW copilot.mission.ranAgainstFacts
+   NEW copilot.mission.stop
+   NEW copilot.mission.viewSafePlan
+   NEW copilot.mission.workingOnRequest

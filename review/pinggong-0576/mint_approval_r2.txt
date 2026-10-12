@@ -1,0 +1,9 @@
+MINTED gen efde3577aa2f family copilot.approval rows 8 keys 8 limit 8 out _pinggong_scratch/rows_approval_r2.json
+  372-372	copilot.approval.offlineBlocked	draft:372	guard='zh'
+  376-376	copilot.approval.idMissing	draft:376	guard='zh'
+  379-379	copilot.approval.recording	draft:379	guard='zh'
+  382-382	copilot.approval.recorded	draft:382	guard='zh'
+  459-459	copilot.approval.needsConfirmation	draft:459	guard='zh'
+  461-463	copilot.approval.explainer	draft:462	guard='zh'
+  466-466	copilot.approval.approve	draft:466	guard='zh'
+  467-467	copilot.approval.reject	draft:467	guard='zh'
