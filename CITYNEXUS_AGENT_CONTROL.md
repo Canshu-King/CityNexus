@@ -1,4 +1,43 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0587-FIVEYEAR（号令者亲测：revolution 全量吸收五年计划已进权威线）
+
+主人的令：制定新的五年计划，把 revolution lab 全量吸收、一根不少、融会贯通。
+这一笔和车道走同一条门：plumbing 造提交 → 推 review 候选枝 → preflight_and_land_r7 带五臂判 → 绿了才 --land，我没手合。
+
+落地回执（全部现读，尖 1cf2beccb45f）：
+
+| 读数 | 值 | 锚（尖上文件与行号） |
+|---|---|---|
+| 权威尖移动 | 一次 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:5 |
+| 远端 revolution 枝纳入对账 | 41 条 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:9 |
+| 拓扑叉口 | 3 个（族A 31 条／族B 8 条／族C 2 条） | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:10 |
+| 整根落在本族代表之下（不必再落一次） | 6 条 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:11 |
+| 需独立处置 | 35 条 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:12 |
+| 族A 代表对现尖独有的产品码 | 65 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 族A 代表对现尖独有的测试 | 151 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 族A 代表对现尖独有的轮次文档与证据 | 224 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 不计入吸收面的产物 | 21 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 真并行撞面（要逐块裁定的缝） | 族A 88 处、族B 173 处、族C 93 处 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:14 |
+| 族C 相对族A 代表的独有增量 | 0 个（所以不重复落两遍） | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:22 |
+| 逐枚对账表首行与末行 | 第 2 行与第 42 行 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:2 |
+| 常驻吸收尺的退出码语义 | 四档（0 闭合、9 退化、4 推进中、3 取不到数） | live_checks/revolution_absorption_check_r1.py:9 |
+
+亲测三件，不是只看门绿：
+
+1. 尺在落批后的那一代真布局里跑过：自检 assertions=1 failures=0，实跑读现尖并报未吸收 41 条（TO_ABSORB 35 条／CARRIED_BY_REP 6 条），退出码按设计给 4。
+2. 三枚文件的 blob 在尖上逐枚回验过，字节数与本地一致（计划正文 98 行、对账表 42 行、尺 107 行）。
+3. 落地回执经 gated publisher 写入 commander/control 后，API 回读报 IncompleteRead 与 MISMATCH-after-write；我没有把这条当成成功，改用 fetch 那枚 commit 再对文件字节重算 sha1，得到与发布 blob 相同的值才算证真。
+
+计划要点（细节读尖上的计划正文，别在我的转述里读）：
+
+- 第0季把地基钉死：对账表与尺进线、族C 归零确认、族B 的 gpt-assist 评审产物归档。
+- 第一年接契约：按 execution、collective、agent、前端 features 四域串行，一个域绿了才开下一个，撞热文件一律排队。
+- 第二至五年依次是真数据面、多人、自主值守、最后把 revolution 这个词消解进主线语汇。
+- 每季退出判据用那把尺：未吸收面必须降，退化直接报红；计划不许靠把尺调松来交差。
+
+常设约束照旧：权威尖只由号令者经这道门移动；车道只交 review/* 候选并写 _qoder_ledger_inbox；国际服并行不超八个，CN 侧另走零扣费通道。
+
+
 ### 勘误｜早班那一档终值单把整夜报成零：窗口锚在未来，尺已改正并另发更正件
 
 值守现读复核（傍晚这一拍）发现：今早那一档 `_night_verdict_1012_1055.txt` 把窗口写成「今天 18:00→23:00」，而取数那一刻这段还没开始——于是三格都成零：入账那行是「窗口内 0 枚」（出处 live_checks/patrol/_night_verdict_1012_1055.txt:2），提交那行是「窗口内 0 笔」（出处 live_checks/patrol/_night_verdict_1012_1055.txt:4），车队那格还印「当前正处在真暗窗」。这不是没人干活，是尺把日子锚错了。
