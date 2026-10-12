@@ -1,0 +1,2 @@
+arm_off_mutated rc=1 reason: D:\moodle\_qoder_seed_ord0489\wt504\backend\app\integrations\discovery\real_city.py:1770: UnboundLocalError: cannot access local variable 'fallback_ge
+arm_on_mutated rc=1 reason: D:\moodle\_qoder_seed_ord0489\wt504\backend\app\integrations\discovery\real_city.py:1770: UnboundLocalError: cannot access local variable 'fallback_ge
