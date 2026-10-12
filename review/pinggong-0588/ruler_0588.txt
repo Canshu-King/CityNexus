@@ -1,0 +1,3 @@
+revolution 吸收进度尺 | 权威尖 3bf57cc0e15e
+CHECK 对账表 41 枚枝 | 已挂吸收代 0 | 未吸收 41 | 枝对象取不到 0
+CHECK 未吸收面按 verdict 分：TO_ABSORB 35｜CARRIED_BY_REP 6

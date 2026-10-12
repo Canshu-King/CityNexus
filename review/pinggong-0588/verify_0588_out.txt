@@ -1,0 +1,8 @@
+MANIFEST_ROWS 28 源枝并集 28 缺 0 多 0 逐字节不符 7
+  LINES docs/revolution-archive/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md
+  LINES docs/revolution-archive/gpt-assist/20260923-r61/H12_HANDOFF.md
+  LINES docs/revolution-archive/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md
+  LINES docs/revolution-archive/gpt-assist/20260923-r7/CODEX_R71_TASK.md
+  LINES docs/revolution-archive/gpt-assist/20260923-r7/R7_R71_PREP.md
+  LINES docs/revolution-archive/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json
+  LINES docs/revolution-archive/gpt-assist/20260923/R6_H11_R61_PREP.md
