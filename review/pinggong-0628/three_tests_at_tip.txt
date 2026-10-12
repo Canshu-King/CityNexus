@@ -1,0 +1,29 @@
+现尖 a91efcc1a7fc240932f74e1ab1f8788b0735975f｜代表枝 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9
+
+[一] 三枚测试在尖上与枝上的形状（行枚与 blob 逐枚现读）
+   test_guardian_pulse.py                       枝上 105 行｜尖上 没有｜blob 1ff6988b286d
+   test_event_resolution_projection.py          枝上  42 行｜尖上 没有｜blob 0862062fbf10
+   test_r14_terminal_disruption_recovery.py     枝上 168 行｜尖上 没有｜blob 3214622a7a9b
+
+[二] 尖上四处符号面（每条红的落点，逐枚现读命中数与行号）
+   main 侧入口 pulse_journey             backend/app/main.py:无 命中 0 处
+   已存在的实现 pulse_journey               backend/app/agent/autorun.py:258 命中 1 处
+   schema 词表里的 OPPORTUNITY_WINDOW     backend/app/schemas.py:无 命中 0 处
+   配置项 traveler_auth_secret           backend/app/core/config.py:无 命中 0 处
+   建表语句里的 event_type CHECK            backend/db/schema.sql:313 命中 1 处
+
+[三] 逐字节放进尖树跑一次（collect 先报条数，再跑）
+   collect 退出码 0｜尾行 4 tests collected in 3.03s
+   执行退出码 1
+   D:\moodle\_qoder_pinggong_0588\backend\tests\test_guardian_pulse.py:52: AttributeError: <module 'app.main' from 'D:\\moodle\\_qoder_pinggong_0588\\backend\\app\\main.py'> has no attribute 'pulse_journey'
+   D:\moodle\CityNexus\backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) CHECK constraint failed: event_type IN ('TRAFFIC_DELAY','CLOSURE','WEATHER','SCHEDULE_DELAY','SERVICE_UNAVAILABLE','USER_CHANGE','OTHER')
+   D:\moodle\_qoder_pinggong_0588\backend\tests\test_event_resolution_projection.py:24: AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"Request validation failed","message_key":"request.invalid","trace_id":"7d2761bb-8d2c-45c7-aa4f-adbdf6c3e1cf","details":{"errors":[{"loc":["body","event_
+   D:\moodle\_qoder_pinggong_0588\backend\tests\test_r14_terminal_disruption_recovery.py:151: AssertionError: {'journey': {'abort_reason': None, 'aborted_at': None, 'active_plan_version_id': '026fe980-d25f-4aec-9f5c-101cb23ad0e4...rrent_activity_id': 'f556fd26-4c91-4b79-8c5e-b04c223d02e6', 'journey_id'
+   FAILED tests/test_guardian_pulse.py::test_bounded_guardian_pulse_persists_and_reads_latest
+   FAILED tests/test_guardian_pulse.py::test_live_pulse_does_not_promote_opportunity_signal_to_recovery_agent
+   FAILED tests/test_event_resolution_projection.py::test_event_api_exposes_server_resolution_time_and_reason
+   FAILED tests/test_r14_terminal_disruption_recovery.py::test_active_closure_can_accept_terminal_prefix_replan
+   4 failed, 2 warnings in 2.11s
+   判语行：4 failed, 2 warnings in 2.11s
+
+[四] 跑完工作树：测试字节已删，除本目录读数件外未登记改动 0 处
