@@ -1,0 +1,11 @@
+CMD ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> rc=0 -> f85194013ac10202e40b52d7ba2b6b95a7231059	refs/heads/mirror/integration-frontend-apple-pass1
+CMD ls-remote origin refs/heads/review/pinggong-0607-r1 -> rc=0 -> cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8	refs/heads/review/pinggong-0607-r1
+READBACK bare：cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8	refs/heads/review/pinggong-0607-r1
+CMD ls-remote origin refs/heads/review/pinggong-0607-r1 -> rc=0 -> cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8	refs/heads/review/pinggong-0607-r1
+READBACK GitHub：cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8	refs/heads/review/pinggong-0607-r1
+CMD cat-file -t cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8 -> rc=0 -> commit
+CMD cat-file -t cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8 -> rc=0 -> commit
+CMD rev-list --left-right --count f85194013ac10202e40b52d7ba2b6b95a7231059...cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8 -> rc=0 -> 0	1
+CMD merge-tree --write-tree f85194013ac10202e40b52d7ba2b6b95a7231059 cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8 -> rc=0 -> 63821430343deb2345a5c630138d8b4fcd765a3c
+CMD status --porcelain -> rc=0 -> 
+现尖 f85194013ac1｜枝尖 cb657e2cc0b6｜先人位 0	1｜合流预测 rc=0 写树 63821430343d｜工作树未登记改动 0 处

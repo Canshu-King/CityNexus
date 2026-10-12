@@ -1,0 +1,26 @@
+CMD ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 -> rc=0 -> 4f1e6176447d38eb4eb12d65b5ccf926afd06cac	refs/heads/mirror/integration-frontend-apple-pass1
+CMD rev-parse HEAD -> rc=0 -> 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13
+现尖 4f1e6176447d38eb4eb12d65b5ccf926afd06cac｜枝尖 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13
+CMD ls-remote origin refs/heads/review/pinggong-0620-r1 -> rc=0 -> 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13	refs/heads/review/pinggong-0620-r1
+READBACK bare：9ab5ff13f8717675bcc44e21c2e76f0c9c916b13	refs/heads/review/pinggong-0620-r1
+CMD ls-remote origin refs/heads/review/pinggong-0620-r1 -> rc=0 -> 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13	refs/heads/review/pinggong-0620-r1
+READBACK GitHub：9ab5ff13f8717675bcc44e21c2e76f0c9c916b13	refs/heads/review/pinggong-0620-r1
+CMD cat-file -t 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13 -> rc=0 -> commit
+CMD cat-file -t 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13 -> rc=0 -> commit
+CATFILE bare=commit integration=commit
+CMD rev-list --left-right --count 4f1e6176447d38eb4eb12d65b5ccf926afd06cac...9ab5ff13f8717675bcc44e21c2e76f0c9c916b13 -> rc=0 -> 0	1
+CMD merge-tree --write-tree 4f1e6176447d38eb4eb12d65b5ccf926afd06cac 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13 -> rc=0 -> bb0a82e9917cce73ecf79b13975c8d7aa0db0efb
+CMD status --porcelain -> rc=0 -> 
+CMD diff --name-only 4f1e6176447d38eb4eb12d65b5ccf926afd06cac...9ab5ff13f8717675bcc44e21c2e76f0c9c916b13 -> rc=0 -> docs/REVOLUTION_ABSORPTION_MANIFEST.tsv
+live_checks/revolution_absorption_columns_r1.py
+review/pinggong-0620/column_guard_proof.txt
+review/pinggong-0620/duipai_at_cmdr_tip.txt
+review/pinggong-0620/literal_unique_paths.tx
+先人位（左=现尖独有 右=本枝独有）：0	1
+只读合流预测 rc=0 写树=bb0a82e9917cce73ecf79b13975c8d7aa0db0efb
+工作树未登记改动 0 处
+本枝相对现尖改动面 7 枚：docs/REVOLUTION_ABSORPTION_MANIFEST.tsv | live_checks/revolution_absorption_columns_r1.py | review/pinggong-0620/column_guard_proof.txt | review/pinggong-0620/duipai_at_cmdr_tip.txt | review/pinggong-0620/literal_unique_paths.txt | review/pinggong-0620/live_tip_run.txt | review/pinggong-0620/selftest.txt
+CMD rev-parse 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13:docs/REVOLUTION_ABSORPTION_MANIFEST.tsv -> rc=0 -> 47afea81f4409423498cda4fe3e3a321c1b25863
+CMD show 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13:docs/REVOLUTION_ABSORPTION_MANIFEST.tsv -> rc=0 -> name	sha	fork	ahead	behind	prod	test	doc	other	artifact	mod_total	mod_real	carried	verdict	absorbed_on	unique_paths	diff_files
+codex/revolution-qoder-integration-20261010	db6dea9bc30ea907b021befa56da628e5dcc7d43	a6e2cdbf
+入表后那枚对账表的 blob 47afea81f4409423498cda4fe3e3a321c1b25863（6982 字节）

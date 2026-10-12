@@ -1,0 +1,46 @@
+现尖 f85194013ac10202e40b52d7ba2b6b95a7231059｜表内 41 条枝｜列 15 枚
+codex/revolution-qoder-integration-20261010                自改   612｜在线上     8｜carried PART 8/612     ｜absorbed_on -
+codex/revolution-r63-planned-parallel-journey              自改   631｜在线上     8｜carried PART 8/631     ｜absorbed_on -
+codex/revolution-r99-transplant-20261011                   自改   611｜在线上     8｜carried PART 8/611     ｜absorbed_on -
+codex/revolution-realtrip-recovery                         自改   235｜在线上     2｜carried PART 2/235     ｜absorbed_on -
+gpt/revolution-r14-fact-driven-planner-20261001            自改   105｜在线上     0｜carried NO 0/105       ｜absorbed_on -
+gpt/revolution-r15-truth-seeking-operator-20261001         自改   123｜在线上     0｜carried NO 0/123       ｜absorbed_on -
+gpt/revolution-r16-event-driven-guardian-20261001          自改   124｜在线上     0｜carried NO 0/124       ｜absorbed_on -
+gpt/revolution-r17-predictive-self-healing-20261001        自改   126｜在线上     0｜carried NO 0/126       ｜absorbed_on -
+gpt/revolution-r18-anticipatory-resilience-20261001        自改   129｜在线上     0｜carried NO 0/129       ｜absorbed_on -
+gpt/revolution-r19-living-plan-portfolio-20261001          自改   131｜在线上     0｜carried NO 0/131       ｜absorbed_on -
+gpt/revolution-r20-autonomous-branch-arbitration-20261001  自改   131｜在线上     0｜carried NO 0/131       ｜absorbed_on -
+gpt/revolution-r21-autonomous-future-synthesis-20261002    自改   142｜在线上     0｜carried NO 0/142       ｜absorbed_on -
+gpt/revolution-r22-autonomous-opportunity-capture-20261002 自改   150｜在线上     0｜carried NO 0/150       ｜absorbed_on -
+gpt/revolution-r23-adaptive-traveler-twin-20261003         自改   155｜在线上     0｜carried NO 0/155       ｜absorbed_on -
+gpt/revolution-r25-strategic-horizon-steward-20261003      自改   173｜在线上     0｜carried NO 0/173       ｜absorbed_on -
+gpt/revolution-r26-behavioral-closure-20261004             自改   178｜在线上     0｜carried NO 0/178       ｜absorbed_on -
+gpt/revolution-r26-decision-critical-clarification-2026100 自改   175｜在线上     0｜carried NO 0/175       ｜absorbed_on -
+gpt/revolution-r27-agent-collective-live-closure-20261005  自改   192｜在线上     1｜carried PART 1/192     ｜absorbed_on -
+gpt/revolution-r27-collective-closure-20261004             自改   188｜在线上     0｜carried NO 0/188       ｜absorbed_on -
+gpt/revolution-r27-collective-journey-mediator-20261004    自改   184｜在线上     0｜carried NO 0/184       ｜absorbed_on -
+gpt/revolution-r27-truth-mesh-governed-execution-20261005  自改   191｜在线上     0｜carried NO 0/191       ｜absorbed_on -
+gpt/revolution-r28-implementation                          自改   211｜在线上     2｜carried PART 2/211     ｜absorbed_on -
+gpt/revolution-r29-disagreement-mediation                  自改   221｜在线上     2｜carried PART 2/221     ｜absorbed_on -
+gpt/revolution-r30-consent-epoch-shock-recovery            自改   244｜在线上     2｜carried PART 2/244     ｜absorbed_on -
+gpt/revolution-r32-autonomous-recovery-mesh                自改   309｜在线上     2｜carried PART 2/309     ｜absorbed_on -
+gpt/revolution-r33-distributed-execution-fencing           自改   281｜在线上     2｜carried PART 2/281     ｜absorbed_on -
+gpt/revolution-r33-distributed-execution-lease             自改   285｜在线上     2｜carried PART 2/285     ｜absorbed_on -
+gpt/revolution-r33-open-world-journey-adaptation           自改   642｜在线上     8｜carried PART 8/642     ｜absorbed_on -
+gpt/revolution-r34-world-context-bridge                    自改   289｜在线上     2｜carried PART 2/289     ｜absorbed_on -
+gpt/revolution-r38-rebase                                  自改   312｜在线上     2｜carried PART 2/312     ｜absorbed_on -
+gpt/revolution-r6-h11-r61-prep-20260923                    自改  6490｜在线上  6313｜carried PART 6313/6490 ｜absorbed_on a15e1959a551
+gpt/revolution-r61-h12-r62-prep-20260923                   自改  6492｜在线上  6313｜carried PART 6313/6492 ｜absorbed_on a15e1959a551
+gpt/revolution-r62-r63-prep-20260923                       自改  6490｜在线上  6313｜carried PART 6313/6490 ｜absorbed_on a15e1959a551
+gpt/revolution-r7-r71-prep-20260923                        自改  6490｜在线上  6313｜carried PART 6313/6490 ｜absorbed_on a15e1959a551
+gpt/revolution-r71-r72-prep-20260923                       自改  6492｜在线上  6313｜carried PART 6313/6492 ｜absorbed_on a15e1959a551
+gpt/revolution-r72-r73-prep-20260923                       自改  6491｜在线上  6313｜carried PART 6313/6491 ｜absorbed_on a15e1959a551
+gpt/revolution-r73-r74-prep-20260924                       自改  6491｜在线上  6313｜carried PART 6313/6491 ｜absorbed_on a15e1959a551
+gpt/revolution-r74-r75-breakthrough-20260924               自改  6488｜在线上  6313｜carried PART 6313/6488 ｜absorbed_on a15e1959a551
+gpt/revolution-r77-recovery-20260929                       自改     5｜在线上     0｜carried NO 0/5         ｜absorbed_on -
+gpt/revolution-relay-permission-probe-20261005             自改   206｜在线上     2｜carried PART 2/206     ｜absorbed_on -
+gpt/revolution-taskbooks                                   自改   189｜在线上     1｜carried PART 1/189     ｜absorbed_on -
+
+分布：全量在线上 0 条｜部分或未吸收 41 条｜无自改 0 条｜数据不可得 0 条
+既有章原样保留 8 条（这把尺不擦别人的章）
+已写出盖章副本：docs/REVOLUTION_ABSORPTION_MANIFEST.tsv（42 行，只动 carried、absorbed_on 两列）

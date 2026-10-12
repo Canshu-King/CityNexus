@@ -1,0 +1,27 @@
+CMD git rev-parse HEAD -> rc=0 -> b63f700bd7eec2474c471e92f5c3fe4946c7ba08
+CMD git ls-remote origin refs/heads/review/pinggong-0610-r1 -> rc=0 -> b63f700bd7eec2474c471e92f5c3fe4946c7ba08	refs/heads/review/pinggong-0610-r1
+CMD git ls-remote origin refs/heads/review/pinggong-0610-r1 -> rc=0 -> b63f700bd7eec2474c471e92f5c3fe4946c7ba08	refs/heads/review/pinggong-0610-r1
+CMD git cat-file -t b63f700bd7eec2474c471e92f5c3fe4946c7ba08 -> rc=0 -> commit
+CMD git cat-file -t b63f700bd7eec2474c471e92f5c3fe4946c7ba08 -> rc=0 -> commit
+CMD git cat-file -t 8940570c022950b705cc3b37139d1b8f7052c42a -> rc=0 -> commit
+CMD git cat-file -t 8940570c022950b705cc3b37139d1b8f7052c42a -> rc=0 -> commit
+CMD git cat-file -t a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 -> rc=0 -> commit
+CMD git cat-file -t a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 -> rc=0 -> commit
+CMD git cat-file -t 42a66f506493e0b6096fe3f40101d1f5e4ee9411 -> rc=0 -> blob
+CMD git cat-file -t 42a66f506493e0b6096fe3f40101d1f5e4ee9411 -> rc=0 -> blob
+CMD git cat-file -t 197b36f13cd739e2f491d6128f928fada44e8ff6 -> rc=0 -> blob
+CMD git cat-file -t 197b36f13cd739e2f491d6128f928fada44e8ff6 -> rc=0 -> blob
+CMD git rev-list --left-right --count 8940570c022950b705cc3b37139d1b8f7052c42a...b63f700bd7eec2474c471e92f5c3fe4946c7ba08 -> rc=0 -> 0	1
+CMD git merge-tree --write-tree 8940570c022950b705cc3b37139d1b8f7052c42a b63f700bd7eec2474c471e92f5c3fe4946c7ba08 -> rc=0 -> ba621d5ed404c3358a266d5b0471fb2c334ee1d5
+CMD git status --porcelain -> rc=0 -> 
+先人位（左=尖独有 右=本枝独有）: 0	1
+只读合流预测写树: ba621d5ed404c3358a266d5b0471fb2c334ee1d5
+工作树未登记改动 0 处
+CMD git diff --name-only 8940570c022950b705cc3b37139d1b8f7052c42a...b63f700bd7eec2474c471e92f5c3fe4946c7ba08 -> rc=0 -> review/pinggong-0610/presence_real_db_probe.txt
+review/pinggong-0610/presence_suite_on_tip.txt
+review/pinggong-0610/probe_real_db_r1.py
+review/pinggong-0610/recheck_zero_gap_r1.py
+review/pinggong-0610/recheck_zero_gap_run.txt
+review/pinggong-0610/slice_pick_run.txt
+review/pinggong-0610/wiring_survey_r1.txt
+本枝相对现尖改动的文件（逐枚）: review/pinggong-0610/presence_real_db_probe.txt | review/pinggong-0610/presence_suite_on_tip.txt | review/pinggong-0610/probe_real_db_r1.py | review/pinggong-0610/recheck_zero_gap_r1.py | review/pinggong-0610/recheck_zero_gap_run.txt | review/pinggong-0610/slice_pick_run.txt | review/pinggong-0610/wiring_survey_r1.txt

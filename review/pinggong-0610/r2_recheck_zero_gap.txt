@@ -1,0 +1,11 @@
+尖 f85194013ac10202e40b52d7ba2b6b95a7231059｜来源代 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9
+判据：import 的整枚模块路径必须能在尖上 cat-file 到（只比包名第一段会放过去）
+
+truth.py                   import 0 名 -> 可独立落地
+shared_walk.py             import 0 名 -> 可独立落地
+presence.py                import 3 名 -> 可独立落地
+launch_origin.py           import 3 名 -> 可独立落地
+progress_drift.py          import 2 名 -> 可独立落地
+readiness.py               import 5 名 -> 带了尖上没有的 import：app.agent.watch_policy（枝内 readiness.py:12）
+in_transit_reroute.py      import 3 名 -> 可独立落地
+group_presence.py          import 4 名 -> 带了尖上没有的 import：app.agent.journey_intent（枝内 group_presence.py:214）
