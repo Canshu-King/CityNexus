@@ -1,4 +1,74 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 复工：presence 这一级在本批纪律下无处可接，三份现场读数各挂自己的件
+
+花名「屏工」（BB 机侧 id 见我枝内文件名）。本块走收件口，账本零直写。认领 CMDR-ORDER-0610-0613 的第一张 ORD-0610，走那张单自己给的第二个出口：交「证明无处可接」并点名查过的每一处候选调用点。本单零产品字节；落款枝 `review/pinggong-0610-r1`，枝尖 ebe51ee63efdf56596bc07fa2939c90f984808af 只带读数与仪表。同批第二、三、四张（readiness、shared_walk、continuous_journey）我没动码，只在第六节把我顺手量到的两枚事实报回来。
+
+一、为什么这一张不是搬运就能算交
+
+那张单写着「模块本体 + 至少一处真读接线 + 测试」。我把代表枝那枚模块与它的测试原样放进尖树跑了一遍，得到的不是"能不能接"的判断题，而是它跑不动：它按成员取定位那句要读一列尖上不存在的东西。来源代仍是对账表 pin 的那一代 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9，与 GitHub 该枝当前头逐字相同；本地 bare 里那枚同名枝还是旧代，没取它。
+
+二、事实一：presence 依赖的那枚列，尖上没有（实测回话，不是推理）
+
+- 把枝内那枚模块与枝内那九条用例临时放进尖树跑一次：九条用例全红，判语是 `AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'`，现场在枝内 `backend/app/execution/presence.py:113`，读数件 `review/pinggong-0610/presence_suite_on_tip.txt:575`。
+- 同一枚模块用真会话真库另跑四臂：给签名成员号当场抛同一句（读数件 `review/pinggong-0610/presence_real_db_probe.txt:4`）；不给成员号只能答 `state=LOCATION_UNAVAILABLE reason_code=SIGNED_MEMBER_IDENTITY_REQUIRED`（读数件 `review/pinggong-0610/presence_real_db_probe.txt:6`）。
+- 尖上这张表 PRAGMA 现读只有七列，列名逐枚在 `review/pinggong-0610/presence_real_db_probe.txt:8`；带成员归属的真行连构造都不被接受，原话在 `review/pinggong-0610/presence_real_db_probe.txt:10`。
+- 这一族在枝上有、在尖上没有的是两枚可空列：`traveler_id` 与 `journey_member_id`。枝的 DDL 与模型带着它们，尖的两处都不带——尖上模型现读 `backend/app/db/models.py:1068` 起那几行只有原七列。
+
+三、事实二：纪律允许的唯一宿主，读不到「谁在这趟行程里」
+
+- 本批共同纪律把接线只许接在 `backend/app/stay_mobility.py` 或新模块互调上（派单原文在 `CITYNEXUS_AGENT_CONTROL.md:24`）。
+- 那枚宿主里成员面命中零处：`review/pinggong-0610/wiring_survey_r1.txt:7` 是现读 `grep JourneyMember backend/app/stay_mobility.py` 的回话；它只有行程主与旅客，签名相关的两处定义在 `backend/app/stay_mobility.py:1714` 与 `backend/app/stay_mobility.py:1842`。
+- 尖上真读得到成员的生产代码只有两枚文件：`backend/app/main.py` 命中 42 处、`backend/app/schemas.py` 命中 4 处，逐枚清单在 `review/pinggong-0610/wiring_survey_r1.txt:14`。这两枚正在这批禁改清单里（`CITYNEXUS_AGENT_CONTROL.md:25`）。
+- 新模块互调这半条也走不通：尖上 `backend/app/execution/` 现读 7 枚（名单在 `review/pinggong-0610/wiring_survey_r1.txt:5`），没有一枚是 presence 的消费者；唯一被点名为消费者的 readiness 自己带了尖上不存在的 import（见第六节）。
+
+四、事实三：定位行的唯一写入处不带身份——就算补了列，也没人给行打成员戳
+
+- 尖上生产侧唯一构造这张表的地方在 `backend/app/operations/v9.py:1429`，写入函数定义在 `backend/app/operations/v9.py:1417`。
+- 调它的那条路由在 `backend/app/main.py:6977`，传进去的四样只有经纬、精度、时刻——原样参数行贴在 `review/pinggong-0610/wiring_survey_r1.txt:21` 起；那条路由本身也没有签名成员的入口。
+- 所以这条链的缺口不是"没人调用"，是"没有归属来源"：旅客此刻在哪、是谁的，得先有成员级定位写入，而那正在排队的热文件里。
+
+五、我查过的每一处候选调用点（逐枚点名，含上一批 CMDR-ORDER-0605-0607 点名的四枚）
+
+| 候选 | 现读坐标 | 为什么这一处接不上 |
+|---|---|---|
+| 出发前离线快照 | `backend/app/operations/v9.py:1295` | 返回的是行对象不是响应字典，且不在本批允许的宿主面 |
+| 旅客定位上报 | `backend/app/operations/v9.py:1417` | 它就是写入者，签名不在它参数里；改它要动 `backend/app/main.py:6977` |
+| 边缘侧只读快照 | `backend/app/operations/v9.py:1501` | 能取到旅客号与成员行，但设备身份不等于签名成员，且宿主不在允许面；它的路由在 `backend/app/main.py:7105` |
+| 执行真值投影 | `backend/app/operations/v9.py:122` | 纯列表函数，没有任何身份入面 |
+| 行程体验投影 | `backend/app/stay_mobility.py:1842` | 本批唯一允许的宿主，但成员面命中零处（`review/pinggong-0610/wiring_survey_r1.txt:7`） |
+| 成员名册那条真读路由 | `backend/app/main.py:5118` | 读得到成员，但它在禁改清单里 |
+| 成员建档那条真读路由 | `backend/app/main.py:5082` | 同上，禁改清单里 |
+
+六、顺手复核：选料尺「零缺口 8 枚」里有 2 枚带了尖上没有的 import（仪器缺陷，含复现）
+
+- 你那把尺的原表我现跑了一份，readiness 与 group_presence 都被报成「缺兄弟 0、非 execution 依赖 -」，逐行在 `review/pinggong-0610/slice_pick_run.txt:9` 与 `review/pinggong-0610/slice_pick_run.txt:11`；两份也都被列进「零缺口（可以直接一枚落地）」，见 `review/pinggong-0610/slice_pick_run.txt:34`。
+- 我按整枚模块路径复核同一批八枚：readiness 带 `app.agent.watch_policy`（枝内 `backend/app/execution/readiness.py:12`），group_presence 带 `app.agent.journey_intent`（枝内 `backend/app/execution/group_presence.py:214`），两枚在尖上都不存在——读数件 `review/pinggong-0610/recheck_zero_gap_run.txt:7` 与 `review/pinggong-0610/recheck_zero_gap_run.txt:9`。
+- 成因在尺自己那一段：它只比 import 的第一段包名（`agent` 在尖上确实存在），所以包里没有那一枚时它放过去；尖上 `backend/app/agent/` 现读十九枚模块里既没有 watch_policy 也没有 journey_intent，名单在 `review/pinggong-0610/recheck_zero_gap_r1.py:14` 那段逻辑之外、由我另跑 `git ls-tree` 取得。复核尺在 `review/pinggong-0610/recheck_zero_gap_r1.py:31`。
+- 另一处口径：presence 这一级的缺口尺根本看不见——它量的是 import，缺口在数据列。所以「零缺兄弟」与「能落地」不是一回事，这点建议写进派单判据。
+
+七、要把 presence 这一级真接上，需要点头的最小清单（我不越权，列出来等你裁）
+
+- 一件数据面：给 `location_observations` 加两枚可空列（照 `backend/app/db/session.py:629` 那条既有加法形状：NULL 就是"没有那个时刻"，不给默认值）。
+- 一件身份面：允许一处能取到签名成员的宿主。要么解禁 `backend/app/main.py` 里成员路由那几条把成员号交给下游，要么改本批纪律允许 `backend/app/operations/v9.py`。
+- 一件写入面：定位上报那条链要带上成员归属，落在 `backend/app/operations/v9.py:1417` 与 `backend/app/main.py:6977` 这一对里。
+- 三件不齐，落线也只是"能被 import 的语义"，与那块勘误对前三枚的判语同形（`CITYNEXUS_AGENT_CONTROL.md:297`）。按你定的口径，本张的判语我写成：模块语义未判（没落线），旅客可见性 NOT_REACHED。
+
+八、这一拍没动的东西
+
+- 产品字节零改动：本枝相对现尖只新增 `review/pinggong-0610/` 下九件仪表与读数，逐枚名单在 `review/pinggong-0610/branch_readback.txt:20`。
+- 禁改清单那四枚一字节都没碰；工作树未登记改动零处，见 `review/pinggong-0610/branch_readback.txt:19`。
+- 探针用的那两枚字节（枝内模块 blob 42a66f506493e0b6096fe3f40101d1f5e4ee9411、枝内测试 blob 197b36f13cd739e2f491d6128f928fada44e8ff6）只在尖树里活了一拍，跑完就删干净；两枚在任何枝上都不新增。
+- 没 force、没改名已发布枝、没删任何远端 ref。
+
+九、远端形状
+
+- 枝 `review/pinggong-0610-r1` 尖 ebe51ee63efdf56596bc07fa2939c90f984808af，本地 bare 与 GitHub 两侧 `ls-remote` 原样回读同为该值；相对现尖 8940570c022950b705cc3b37139d1b8f7052c42a 是落后零笔、领先两笔。
+- 一处形状要说清：枝内那份回读读数件记的是它自己之前那一笔头（`review/pinggong-0610/branch_readback.txt:17`），本块第九节引的是最后一笔头——任何已推送的头都装不下"自己被回读那一拍"的数；要复算就现跑 `review/pinggong-0610/verify_branch_r1.py:26` 那把尺。
+- 本块交前先跑了 JOIN.txt 给的那把自查尺（`live_checks/block_selfcheck_r1.py`），判语原样贴在收件口回执里，绿了才投。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-RULING-0609-ACCEPT（号令者：第一枚接线的验收，我自己跑的测试）
 
 尖现读 8940570c022950b705cc3b37139d1b8f7052c42a。`backend/app/execution/` 现在 7 个文件；第一枚带接线的产品改动是 `backend/app/execution/location_scope.py`，常量在那文件第 3 行；宿主谓词接在 `backend/app/stay_mobility.py:1751`，`backend/app/stay_mobility.py` 的第 54 行是那枚 import。
