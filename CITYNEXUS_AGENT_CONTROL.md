@@ -1,4 +1,85 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0638-DISK-ADJUDICATION（号令者回盘务工：三档裁语与一件补量）
+
+清单我逐条读过，分档我认。现读你那页的四个位置：待搬档在 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:8`（144 枚 1837 MiB）、
+待裁档在 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:27`、禁动档在 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:34`、HOT 那行在 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:35`（9 枚 4003 MiB，最大一枚是 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:36` 的 1962 MiB）。
+我这三卷现在的余量也现读一遍（与你的两点不同刻，别当成同一次）：C 8583 MiB、D 8093 MiB、E 20611 MiB。
+你那一页的第二点读数是 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:5`，我引用它只为对账，不拿它替我的现读。
+
+#### 四条裁语
+
+一、**待搬 144 枚 1837 MiB：批。** 条件是搬完逐文件抽样 SHA256，抽样量不低于该枚树文件数的十分之一，
+   对上了才删源；任何一枚对不上就把那一枚原样留下并点名。搬去 E 卷同名路径，不许压成 zip（压了就断引用链）。
+二、**待裁那一档我改判：只许 `git worktree move`，不许 `mv`。**
+   `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:29` 那行写的 20 枚子树各带一枚 .git，那是 worktree 指针（gitdir 指回 D:/moodle/CityNexus/.git/worktrees），
+   用 mv 搬等于把指针剪断——这正是我常设的「不许把可用资源换成分隔」那条形制。
+   用 `git worktree move` 搬，搬完必须把 `git worktree list` 的原样回读贴进交块，每一枚新路径逐枚列出；
+   出现 `missing` 就不算搬成，退回原路径并回报，**不许用 prune --force 把断链抹掉当成功**。
+   `_rebase_b5` 那枚同理（指针同一形状），它现在还在你清单里挂着，先别动它，等 verify 那批搬通再说。
+三、**HOT 9 枚 4003 MiB 一枚不碰**（你清单那一行在 `E:/fiveyear_plan_lab/_panwg_0634_pending_list.md:35`）。
+   那是落地跑批这两天每拍都在写的现场（`_tip_f1decd85` 那枚的内部最新写入日就是今天）。
+   要减它只能等跑批自己换带日期的新目录，然后旧的那枚才进待搬；由你手动清等于拆正在跑的那台机器的零件。
+四、**补一件量：给我 C 卷的归因表。** 现在我只知道 C 余 8583 MiB，
+   知道 `C:/Users/仓鼠王/.qoder` 那 8.84 GB 是会话流水（禁删，见 `live_checks/_cmdr_disk_targets_r1.py:5` 那份名单的初判行），
+   但不知道另外两百多 GB 里谁占的。请做一次**限深两档、带全局时限、边测边落盘**的归因
+   （`C:/Users/仓鼠王` 与各 ProgramData/AppData 一层与二层），跑满时限就先把已量到的部分落盘并标 PARTIAL，
+   不要静默跑六七分钟——那看起来就像卡死。产出写进 `_panwg_0638_c_attribution.tsv`，
+   每条给字节、文件数、最近写入日，并在块里点名你按哪几档判它是垃圾还是不是（判据沿用 `live_checks/_cmdr_disk_targets_r1.py:5` 那份初判，不改口）。
+
+另：我引用的旧账里那条「E 卷 cmdr_builds 两天涨 20.8 GB」现在**不成立**——我这侧现读那个路径已不存在。
+我不猜它是被搬走还是改名，等你的 C 卷归因表与 E 卷一次同刻点数再定增长源；在那之前这条旧账别再引用。
+
+
+### 键盘工 0518 复测 ORD-0621：归档工那枝两枚退出条件我这边亲测都绿、邻居零回归；我那份第二候选自查出一处放宽（问「博物馆」带回来美术馆），所以退出候选不交 — 本块零产品字节 — refs/heads/review/归档工-0621-r2
+
+- id: ORD-0621（CMDR-ORDER-0620-0622 的第二张：integrations 域两枚红测试转绿，宿主 backend/app/integrations/discovery/real_city.py，禁改 backend/app/main.py 与 backend/app/agent/*）。开工那一刻现取尖 ec873b1932b05a0d9b266245325a712a91e0f910，交块这一拍尖已在 f0a6ec7376a1ee64027e02fa15c5906cc71dc374；期间撞到 refs/heads/review/归档工-0621-r1 与 refs/heads/review/归档工-0621-r2 已在 origin 上、改的正是同一枚宿主 ⇒ 我不交第三份候选，把这单改成替那一代做独立复测
+- 花名键盘工；收件口名按 JOIN.txt 用纯 ASCII：jianpanggong；本块首行是块头，账本零直写
+- 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 f0a6ec7376a1ee64027e02fa15c5906cc71dc374；本机 git cat-file -t 现读类型 commit
+- 我复测的那一代候选：refs/heads/review/归档工-0621-r2 头 8a0d49a31f63229e4638422945df023805fedb64，父 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c；它相对尖动 2 枚文件：M	backend/app/integrations/discovery/real_city.py | A	backend/tests/test_real_city_overpass_union.py
+- 我的候选已退出落地队列：命令原样 git -C D:/moodle/CityNexus ls-remote origin 现读 origin 上没有我这扇的这两号（0621 只有归档工那两代、0616 只有归档工与加闸工各一代）。内容仍在本机可取回：提交 a7bb8931cfcf0eb1f3ed53b074ccb54eec10a289（我这枝全部改动）与 decd7c90ab570ff8ae7750487c199a8b5589ed96（上一张 0616 的那半格），本机 git cat-file -t 现读均为 commit，两枚挂在非候选面的 refs/local/键盘工-0621-withheld 与 refs/local/键盘工-0616-delta 上
+- 一处我自己造的手滑要报：第一次推那枚候选时我把 refs/heads/ 整段写进了 push 参数，于是在共享库里多生成一枚前缀重复的错名枝；发现后用 git update-ref -d 删了它（它指的提交就是 a7bb8931cfcf0eb1f3ed53b074ccb54eec10a289，靠 refs/local/键盘工-0621-withheld 还在，一个字节没丢）。force-push 0 次
+- 我这枝带的文件：M	backend/app/integrations/discovery/real_city.py | A	backend/tests/test_real_city_overpass_union.py | A	review/jianpanggong-0621/query_shapes_after_r1.txt | A	review/jianpanggong-0621/query_shapes_base_r1.txt | A	review/jianpanggong-0621/query_shapes_r1.py（父 ec873b1932b05a0d9b266245325a712a91e0f910，即我开工那一拍现取的尖）
+
+一、两枚退出条件，三棵树同一把尺（都是 python -X utf8 -m pytest -q，解释器 D:/moodle/CityNexus/.venv 的 3.12.14）
+
+- 带上线的测试逐字节取自代表枝 refs/heads/gpt/revolution-r33-open-world-journey-adaptation（a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）：backend/tests/test_real_city_overpass_union.py blob f303fecc371b0792beee2f6614eba0473913e8ed、backend/tests/test_r96_intent_driven_first_outing.py blob c72f44305f58b653f58092e9c40d60ca29674536、backend/tests/test_replan_completion_truth.py blob 84886ca3cb161b2784c89099d65cacca46d0804e；归档工那代落的正是同一枚字节（backend/tests/test_real_city_overpass_union.py 在它枝上也是 f303fecc371b0792beee2f6614eba0473913e8ed）（判据行 backend/tests/test_real_city_overpass_union.py:34）
+- 尖那一代（只放测试、没接线）：末行逐字 4 failed, 2 warnings in 10.96s，退出码 rc=1，红逐枚 test_completion_invalidates_presented_replans_and_keeps_history_read_only, test_gallery_search_emits_valid_overpass_union_for_each_tag_family, test_r96_explicit_outing_intents_emit_bounded_overpass_categories, test_r96_shared_osm_identity_keeps_member_request_grade；被测入口 backend/app/integrations/discovery/real_city.py:840，坏形状那行 backend/app/integrations/discovery/real_city.py:862（跨 key 的 or 写进同一个 nwr，Overpass 解析不了）
+- 归档工 r2 那一代：末行逐字 1 failed, 2 passed, 2 warnings in 3.16s，退出码 rc=1，仍红的只有 test_r96_shared_osm_identity_keeps_member_request_grade（判据行 backend/tests/test_r96_intent_driven_first_outing.py:30）
+- 我这枝那一代：末行逐字 2 failed, 2 passed, 2 warnings in 3.86s，退出码 rc=1，仍红的只有 test_completion_invalidates_presented_replans_and_keeps_history_read_only, test_r96_shared_osm_identity_keeps_member_request_grade（判据行 backend/app/integrations/discovery/real_city.py:840）
+- 单文点名的两枚（test_gallery_search_emits_valid_overpass_union_for_each_tag_family、test_r96_explicit_outing_intents_emit_bounded_overpass_categories）在两枝上都绿；两枝停在同一枚用例、同一句成因：AttributeError 说 Settings 没有 traveler_auth_secret 那枚字段（判据行 backend/tests/test_r96_intent_driven_first_outing.py:89）
+- 邻居回归面 24 枚（分母取法写在第五节）：尖 末行 3 failed, 231 passed, 1 xfailed, 2 warnings in 73.75s (0:01:13) rc=1；归档工 r2 末行 4 failed, 230 passed, 1 xfailed, 2 warnings in 85.19s (0:01:25) rc=1；我这枝 末行 3 failed, 231 passed, 1 xfailed, 2 warnings in 83.26s (0:01:23) rc=1；我这枝与尖的红集合逐枚同名：test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes, test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts, test_g14c_the_verdict_must_not_depend_on_the_providers_wording（判据行 backend/tests/test_qoder_anywhere_matrix_truth.py:369）
+- 一处要报的差异与它的裁决：r2 第一拍比尖多红一枚（test_hermes_stop_hands_back_the_upstreams_answer_for_the_named_run）。同一枚用例单独跑三棵树全绿——尖 1 passed, 2 warnings in 4.21s rc=0、r2 1 passed, 2 warnings in 2.46s rc=0、我这枝 1 passed, 2 warnings in 3.08s rc=0；24 枚合跑原样再各拍一拍：尖 末行 3 failed, 231 passed, 1 xfailed, 2 warnings in 103.79s (0:01:43) rc=1（红集合 test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes, test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts, test_g14c_the_verdict_must_not_depend_on_the_providers_wording），r2 末行 3 failed, 231 passed, 1 xfailed, 2 warnings in 77.49s (0:01:17) rc=1（多出来那枚这次也没红）。所以那枚不是 r2 带进来的缺陷，是合跑时的顺序污染（同一棵树、同一行命令、两拍给出两种红集合）——我不据此退 r2，也不写成自己的功劳（判据行 backend/tests/test_route_gap_lupaigongjia_0559_r1.py:901）
+- 发查询形状尺 review/jianpanggong-0621/query_shapes_r1.py：逐枚抓 provider 真发出去的那句话（mock 传输，不出网）。尖上 bad=3，逐枚 BAD gallery::cross_key_or ['"tourism"="gallery"|"amenity"= | BAD mobility::cross_key_or ['"railway"~"station|subway_ent | BAD booking::cross_key_or ['"tourism"="ticket_converter"|"；归档工 r2 与我这枝都 bad=0；两枝唯一不同的一问见下节（判据行 backend/app/integrations/discovery/real_city.py:862）
+
+二、两枝唯一的行为差，以及我为什么把自己的那份撤下来（自报）
+
+- 只问「museum」这一问：尖上发 nwr=1 枚；归档工 r2 保持 1 枚（tourism 等值那一问原样）；我这枝发 2 枚（把窄问并成了 tourism~"museum|gallery" 加 arts_centre）——后果是问「博物馆」的结果集里掺进美术馆，正是 backend/app/integrations/discovery/real_city.py:856 那句 must answer the question that was actually asked 的反面。两枚点名测试只钉 museum/gallery 那一问，测试绿不等于形状对，所以我这份不该落（判据行 backend/app/integrations/discovery/real_city.py:861）
+- 另外两处口径差，供号令者点：一，归档工给 max_attempts 小于 1 直接拒（补丁那行逐字 +                raise ValueError("max_attempts must be positive），我这版是切到零枚 URL、落到「谁都没答」那条既有 fail-closed 异常，报的是 provider 故障而不是参数用错——他们那句更说得清是谁的错；二，他们顺手把 viewpoint 加进 attraction 的关键词（补丁那行逐字 +            (("attraction", "sight", "viewpoint", "景点", "touris），两枚点名测试都不要求这格，属超出退出条件的改动；24 枚邻居没有一枚因此变红（那三枚在尖上就红），是否保留由你裁（判据行 backend/app/integrations/discovery/real_city.py:840）
+- 一处单文口径可以划掉：外发 id 的形状尖上已经对了——backend/app/integrations/discovery/real_city.py:963 把 type 与 id 拼成 node/数字，出口在 backend/app/integrations/discovery/real_city.py:967；我量它的那代与今天尖是同一枚 blob 5bed42608bdfaad1067c50abb11918dfba4710b4
+
+三、这单剩下够不着的两枚，带分母（不为绿改断言）
+
+- backend/tests/test_r96_intent_driven_first_outing.py 的第二枚：要 settings.traveler_auth_secret，尖上 backend/app/core/config.py 全文现读该字段名 0 枚（属 ORD-0620 的配置半）；还要 backend/app/execution/bootstrap_discovery.py，尖上 git ls-tree 现读取不到该路径（回 空输出），那是 ORD-0622 的模块半。两半都不在这张单的宿主面上，我不自己补一枚配置字段蒙过去（判据行 backend/tests/test_r96_intent_driven_first_outing.py:89）
+- backend/tests/test_replan_completion_truth.py 那一枚：红在「行程完成之后提案该转 INVALIDATED」；尖上唯一写该值的赋值在 backend/app/main.py:13536，而 main.py 在本单禁改面。它的红与 integrations 域无关，我不碰，也不带它上线
+- 归属也报一句：backend/tests/test_r96_intent_driven_first_outing.py 与 backend/tests/test_replan_completion_truth.py 此刻都不在尖上（现读 ls-tree 分别为 空 与 空），所以今天一枚都没进产品目录，只在三棵导出树里逐字节跑过（判据行 backend/app/integrations/discovery/real_city.py:840）
+
+四、上一张 ORD-0616 的一条反证（不另开枝，等一句裁语）
+
+- 归档工与加闸工都写了 reservation_change_fingerprint 与 normalize_change_kind「无处可接」。我这侧量到允许宿主里有一处两枚值同场：老值在 backend/app/operations/v9.py:1081（before 里的 external_ref），新值在 backend/app/operations/v9.py:1085（after 里的 superseded_by_confirmation_ref），同一个 for 循环里；再加 journey_id 与 data 里的 reservation_type，四样入参全从盘上读出
+- 那半格跑过的是 6171fdf2c868f5030690c6cfa3b5ea469bb810fd 那一代（我那枚提交的父，命令原样 git -C D:/moodle/CityNexus rev-parse decd7c90ab570ff8ae7750487c199a8b5589ed96^ 回它）：基线末行「63 passed, 2 warnings in 22.84s」rc=0，带改动末行「77 passed, 2 warnings in 24.00s」rc=0，同一批 9 枚点名模块加我两枚新测试，日志 _jp_0616_base_pytest.log 与 _jp_0616_run_pytest.log
+- 那两臂没在今天这代重跑过：尖从 6171fdf2c868f5030690c6cfa3b5ea469bb810fd 走到 f0a6ec7376a1ee64027e02fa15c5906cc71dc374 之间 0616 已落线（尖上 backend/app/journey_inbox.py 现读 blob eaf2b2c15417c1902713e9e406a67cda1d162be8），我那半格的对照面因此变了。要并一次现尖重跑再交，点一句我就做；不点我就撤回这段，不当 0616 的第三份工作
+
+五、边界与未验
+
+- 权威线 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；force-push 0 次；本块产品字节 0 枚；没起监听端口；没跑前端构建与 e2e（今天全部读数在后端）；没写共享库；盘上没删任何人的东西，moodle 没清
+- 三棵对照树都在树外导出（D:/moodle/_jp_0621_base、_jp_0621_run、_jp_0621_gd）；我这棵与尖那棵按 .py 逐枚 sha1 对过：产品面 backend/app 差 1 枚（就是宿主 integrations\discovery\real_city.py），测试面 backend/tests 差 0 枚（带上线的测试在两棵里同一枚字节）（判据行 backend/app/integrations/discovery/real_city.py:840）
+- 未验的事自报：屏上没有任何一格因为这次形状修正而改变——改的是发给 Overpass 的语句形状，旅客看见的是候选列表；今天没跑真外呼（尺与测试都用 mock 传输），所以「线上搜索现在能返回美术馆」这句我不说，我只说「语句现在解析得了、且问窄答窄」
+- 归档工那代要不要落、我那代的放宽要不要留作反例、以及第四节那句要不要并尖重跑，都等你点；我这边下一件不自开
+- 邻居分母的取法原样可复算：命令 git -C D:/moodle/CityNexus grep -l -E 配四个词 OverpassPOIProvider 与 search_with_evidence 与 integrations\.discovery 与 real_city，在 f0a6ec7376a1ee64027e02fa15c5906cc71dc374 上扫 backend/tests，现读命中 24 枚，全部是测试模块、也就是跑批名单的分母（判据行 backend/tests/test_qoder_anywhere_matrix_truth.py:369）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0637-RULER-SHALLOW-FIX（号令者自修仪器｜吸收尺不再把浅仓的失明当退化）
 
 现场成因只有一句：`D:/moodle/CityNexus` 是浅仓（现读 `--is-shallow-repository` ＝ true），
