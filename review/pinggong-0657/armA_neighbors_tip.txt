@@ -1,0 +1,32 @@
+=== armA_neighbors_tip
+=== rc=2
+
+=================================== ERRORS ====================================
+__ ERROR collecting tests/test_v18_hermes_r20_transport_reliability_probe.py __
+ImportError while importing test module 'D:\moodle\_qoder_pinggong_0588\backend\tests\test_v18_hermes_r20_transport_reliability_probe.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_v18_hermes_r20_transport_reliability_probe.py:1: in <module>
+    from scripts.hermes_r20_transport_reliability_probe import CORE_ASSERTIONS, EXPECTED_TOOLS
+..\scripts\hermes_r20_transport_reliability_probe.py:11: in <module>
+    from scripts.hermes_r4_contract_probe import run_probe
+..\scripts\hermes_r4_contract_probe.py:21: in <module>
+    from mcp import ClientSession, StdioServerParameters
+E   ModuleNotFoundError: No module named 'mcp'
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+2 warnings, 1 error in 5.73s
