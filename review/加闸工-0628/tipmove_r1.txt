@@ -1,0 +1,12 @@
+# 换代核对：我量读数那代 2899f86f → 交块这一拍现读 a91efcc1
+# 命令：git -C D:/moodle/CityNexus diff --name-only 2899f86fb08cd85602b713c9d5597ddfd7cb0871 a91efcc1a7fc240932f74e1ab1f8788b0735975f
+动了 live_checks/revolution_absorption_check_r1.py
+动了 review/ord0509/INK_SURVEY_ROUTES_R4.md
+# 两代之间后端零改动（上面两枚都不在 backend/ 里），所以我的三对读数照用
+# 四枚词在新代重算命中文件数（命令 git --no-pager grep -al <词> a91efcc1… -- backend）：
+trigger_contract_json  0
+STANDBY                0
+standby_trigger_match  0
+app.agent.standby      0
+# 新代上 standby.py 是否已被别人落线：
+不在（我这张仍是第一枚）

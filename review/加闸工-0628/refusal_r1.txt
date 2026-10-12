@@ -1,0 +1,20 @@
+# 「证明无处可接」的现读依据（命令原样写在每一行前面，结果跟着）
+## 一、四枚词在尖上的命中文件数（git --no-pager grep -al <词> 2899f86fb08cd85602b713c9d5597ddfd7cb0871 -- backend）
+trigger_contract_json  命中文件数=0
+STANDBY                命中文件数=0
+standby_trigger_match  命中文件数=0
+app.agent.standby      命中文件数=0
+## 二、唯一宿主的六个候选点（行号从尖那一代 app/agent/guardian.py 现读，共 878 行）
+13: from app.agent.gateway import AgentToolGateway ｜ 接不上的成因：这一族兄弟 import 里没有 standby 那枚对象可传；
+62: def _open_events(session: Session, journey_id: str) -> lis ｜ 接不上的成因：这里只拿得到 Event，standby 那一行无处来；
+136: def _recovery_mission( ｜ 接不上的成因：造的是 mission 恢复，手上没有 lifecycle=STANDBY 的行；
+491: def scan_guardian(session: Session, journey: Journey) -> d ｜ 接不上的成因：主扫的对象是 Journey/Event/plan，模块第一道判据就要 standby 行；
+669: def run_preemptive_guardian( ｜ 接不上的成因：抢跑那支同样没有 standby 行；
+862: def guardian_status(session: Session, journey: Journey) -> ｜ 接不上的成因：只读投影，不做触发判定；
+## 三、代表枝上真正的两个消费者（本单禁碰，点名留给号令者）
+gateway.py 第 2691 行：match = standby_trigger_match(standby, trigger, current)
+predictive.py 第 870 行：standby_trigger_match(row, event, current).code if event is not None else "UNASSESSED"
+这两枚文件在尖上现读 standby 字样各命中=0 枚（0＝尖上那两枚里一处 standby 都没有）
+## 四、模块本体那两道前置（从落盘那一枚现读）
+standby.py:def standby_trigger_match(standby: Any, event: Any | None, current_plan: Any | None) -> StandbyT
+standby.py:    contract = _load(getattr(standby, "trigger_contract_json", None), {})

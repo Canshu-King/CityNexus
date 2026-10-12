@@ -1,0 +1,2 @@
+TIP=2899f86fb08cd85602b713c9d5597ddfd7cb0871（量读数那一代；命令 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1）
+交块这一拍现读已挪到 a91efcc1a7fc240932f74e1ab1f8788b0735975f，我这枚以它为父；换代核对与四枚词重算在 review/加闸工-0628/tipmove_r1.txt:5

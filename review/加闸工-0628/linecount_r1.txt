@@ -1,0 +1,6 @@
+# 行数现读（命令原样）
+$ wc -l < wt/backend/app/agent/standby.py
+模块 101
+$ wc -l < wt/backend/tests/test_r20_standby_trigger.py
+测试 78
+# 与落盘 blob 同一枚：模块 ff1119263b9cebf3ca1c423b602ed15e63a677e3、测试 9214f052b5e24201b07fe3cf5058614a4af5face（代表枝 rev-parse 现读，见 proof_r1.txt 第二项）

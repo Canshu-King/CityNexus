@@ -1,0 +1,11 @@
+# 逐枚增删对拍：git -C D:/moodle/_qoder_integration_20260919 diff --numstat <现尖> <我这枚>
+# 三列 = 新增行 / 删除行 / 路径（本轮只有两枚新文件，宿主与禁改面全为零）
+101	0	backend/app/agent/standby.py
+78	0	backend/tests/test_r20_standby_trigger.py
+0	0	backend/app/agent/guardian.py
+0	0	backend/app/main.py
+0	0	backend/app/schemas.py
+0	0	backend/app/services.py
+0	0	contracts/openapi.yaml
+0	0	docs/REVOLUTION_ABSORPTION_MANIFEST.tsv
+# 计数：本轮产品新增行数=179、删除行数=0、改动文件数=2

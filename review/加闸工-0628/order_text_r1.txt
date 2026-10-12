@@ -1,0 +1,6 @@
+# 派单原文逐字抄件（这一拍从账本现读，命令 `grep -an '^ORD-0628' D:/moodle/CITYNEXUS_AGENT_CONTROL.md`）
+# 抄这一拍的账本行号：532 起四行；账本被代插腿顶长、行号会漂，所以本件是我这侧的稳定锚
+第 532 行：ORD-0628｜把 `backend/app/agent/standby.py` 落到线：代表枝全文百零二行、app.* 引用零处、缺同族零枚，接线宿主只认 `backend/app/agent/guardian.py:13`。
+第 533 行：  宿主那枚文件现读的第一处兄弟 import 在第 13 行；同域其余宿主本轮一律不许动。
+第 534 行：  禁改：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`，也不碰 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`（那张表现在有两个写者，改它的规矩在号令者那条「清单两个写者」的裁语里）。
+第 535 行：  先跑基线再跑改后，两条读数都要给；接不上就交「证明无处可接」并点名每个候选调用点的 `文件.扩展名:行号`。

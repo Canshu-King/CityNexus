@@ -1,0 +1,9 @@
+加闸工 ORD-0628 证明件 —— 每条都是原样命令跑出来的，raw 全文在同目录
+1 改动范围只有两枚新文件：`backend/app/agent/standby.py` 与 `backend/tests/test_r20_standby_trigger.py`（逐枚增删对拍在 `review/加闸工-0628/diffstat_r1.txt:3` 与 `review/加闸工-0628/diffstat_r1.txt:4`）。除这两枚外零产品字节，宿主 `backend/app/agent/guardian.py` 一字节未动（`review/加闸工-0628/diffstat_r1.txt:5`）。
+2 两枚都逐字节等于代表枝那一枚：模块两侧 blob 同为 ff1119263b9cebf3ca1c423b602ed15e63a677e3，测试两侧 blob 同为 9214f052b5e24201b07fe3cf5058614a4af5face；对拍命令 `git -C D:/moodle/CityNexus rev-parse refs/heads/codex/revolution-sync-894-20261013:<路径>`（出处在 `review/加闸工-0628/readout_r1.txt:3`）。
+3 新落的这枚测试在尖那一代真跑：4 条通过、零失败（`review/加闸工-0628/standby_after.txt:2`）。它只 import `app.agent.standby` 与标准库（`backend/tests/test_r20_standby_trigger.py:12` 那行），所以它绿不依赖任何未上线模块——这一点与单文那句「缺同族零枚」相符。
+4 单文写「代表枝全文百零二行」，同一枚 blob 我 `wc -l` 现读 101 行（`review/加闸工-0628/linecount_r1.txt:3`）、那枚测试现读 78 行（`review/加闸工-0628/linecount_r1.txt:5`）。上一张 ORD-0616 也是同一位差（单文 148、现读 147）。两处都只报现读值，不改文件也不改单文。
+5 接线交第二形「证明无处可接」，依据现读：模块入口那两道前置在 `backend/app/agent/standby.py:39` 与 `backend/app/agent/standby.py:41`（第一道就要 `lifecycle == "STANDBY"`，第二道读 `trigger_contract_json`）；这四枚词在尖上的命中文件数各零枚，命令与结果逐条在 `review/加闸工-0628/refusal_r1.txt:3` 起那四行；唯一宿主六个候选点逐枚摊开与成因在 `review/加闸工-0628/refusal_r1.txt:8` 起那六行。硬接只能我自己造一枚 standby 行——那是造需求，不是接尖。
+6 代表枝上真正的两个消费者本单禁碰，点名留给号令者：`gateway.py` 第 2691 行与 `predictive.py` 第 870 行（两行原话在 `review/加闸工-0628/refusal_r1.txt:15` 与 `review/加闸工-0628/refusal_r1.txt:16`）；这两枚文件在尖上现读连 standby 字样都零命中（`review/加闸工-0628/refusal_r1.txt:17`）。
+7 两臂与采集：邻居基线 25 条通过（`review/加闸工-0628/neighbours_before.txt:12`）、放回两枚之后同批 29 条通过（`review/加闸工-0628/neighbours_after.txt:12`）、整树采集 1938 条 → 1942 条（`review/加闸工-0628/collect_before.txt:2` 与 `review/加闸工-0628/collect_after.txt:2`）；两臂同一枚线自带采集错 `backend/tests/test_v18_hermes_r20_transport_reliability_probe.py:1`。
+8 禁改与不碰四枚加 manifest 逐枚零改动：`review/加闸工-0628/diffstat_r1.txt:6` 起那五行；`backend/app/agent/` 这一族本轮我只加两枚新文件，没动任何一枚既有文件。
