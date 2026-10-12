@@ -12,6 +12,7 @@ from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
+from app.journey_inbox import inbox_artifact_fingerprint
 from app.replanning.commitment_remap import (
     RemapConflict as CommitmentRemapConflict,
     resolve_commitment_target,
@@ -985,7 +986,9 @@ def import_reservation_artifact(
         entity_type="ExternalReservationDraft",
         entity_id=draft.id,
         journey_id=journey.id,
-        after={"status": draft.status, "unresolved_fields": unresolved, "extraction_mode": mode},
+        after={"status": draft.status, "unresolved_fields": unresolved, "extraction_mode": mode,
+               "artifact_fingerprint": inbox_artifact_fingerprint(
+                   source_kind=kind, normalized_text=draft.raw_payload_json)},
     )
     session.flush()
     return draft
