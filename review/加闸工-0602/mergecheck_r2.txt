@@ -1,0 +1,9 @@
+# 只读合并预测 r2：现尖（已含归档工那一笔 execution 接线）对我这枚候选
+# 命令：git -C D:/moodle/_qoder_integration_20260919 merge-tree --write-tree f85194013ac10202e40b52d7ba2b6b95a7231059 4b03da97e3e53da3a553797b348f629595604a26（不写 ref、不动枝）
+merge-tree rc=0（0=干净可合）
+# 归档工那枚枝尖是现尖的祖先吗：
+是（他那张 ORD-0602 已落线）
+# 两代尖之间我碰过的文件有没有被动：
+（上面无输出=三枚都还是同一代）
+# 他动的与我都不同：现尖那一代 v9.py 相对我父代 8 加 2 删
+8	2	backend/app/operations/v9.py
