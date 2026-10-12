@@ -1,0 +1,480 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-nav-layers-census-r1.spec.ts",
+ "arm": "en",
+ "drawer_shape": "390x844",
+ "sidebar_shape": "1280x900",
+ "denominator": {
+  "desktop": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access"
+  ],
+  "mobile": [
+   "hub",
+   "trips",
+   "map",
+   "agent",
+   "me"
+  ],
+  "union": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ]
+ },
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "drawer_marked": [
+   "v8-drawer-entry-hub"
+  ],
+  "drawer_marked_text": [
+   "Today"
+  ]
+ },
+ "drawer_aria_current_rows_total": 0,
+ "sidebar_aria_current_rows_total": 0,
+ "sidebar_contrast_state_rows_total": 15,
+ "drawer_rows": [
+  {
+   "requested": "hub",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-hub"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Today"
+   ]
+  },
+  {
+   "requested": "live",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-live"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Live Journey"
+   ]
+  },
+  {
+   "requested": "map",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-map"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Map"
+   ]
+  },
+  {
+   "requested": "studio",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-studio"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Trip Studio"
+   ]
+  },
+  {
+   "requested": "stay",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-stay"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Stay Explorer"
+   ]
+  },
+  {
+   "requested": "discover",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-discover"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "City Discovery"
+   ]
+  },
+  {
+   "requested": "import",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-import"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Import places"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-bookings"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Travel Wallet"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-footprints"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Footprints"
+   ]
+  },
+  {
+   "requested": "agent",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-agent"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Copilot"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-authoritative"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Recovery"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-intelligence"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Intelligence"
+   ]
+  },
+  {
+   "requested": "twin",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-twin"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Traveler Twin"
+   ]
+  },
+  {
+   "requested": "trash",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-trash"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Recycle bin"
+   ]
+  },
+  {
+   "requested": "access",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-access"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Members and access"
+   ]
+  },
+  {
+   "requested": "trips",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-trips"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Trips"
+   ]
+  },
+  {
+   "requested": "me",
+   "control": false,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-me"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Me"
+   ]
+  },
+  {
+   "requested": "qoder-0577-not-a-route",
+   "control": true,
+   "drawer_rows": 17,
+   "drawer_marked": [
+    "v8-drawer-entry-hub"
+   ],
+   "drawer_aria_current": [],
+   "drawer_contrast_state": [],
+   "drawer_marked_text": [
+    "Today"
+   ]
+  }
+ ],
+ "sidebar_rows": [
+  {
+   "requested": "hub",
+   "rows": 15,
+   "marked_text": [
+    "Today"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Today"
+   ]
+  },
+  {
+   "requested": "live",
+   "rows": 15,
+   "marked_text": [
+    "Live Journey"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Live Journey"
+   ]
+  },
+  {
+   "requested": "map",
+   "rows": 15,
+   "marked_text": [
+    "Map"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Map"
+   ]
+  },
+  {
+   "requested": "studio",
+   "rows": 15,
+   "marked_text": [
+    "Trip Studio"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Trip Studio"
+   ]
+  },
+  {
+   "requested": "stay",
+   "rows": 15,
+   "marked_text": [
+    "Stay Explorer"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Stay Explorer"
+   ]
+  },
+  {
+   "requested": "discover",
+   "rows": 15,
+   "marked_text": [
+    "City Discovery"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "City Discovery"
+   ]
+  },
+  {
+   "requested": "import",
+   "rows": 15,
+   "marked_text": [
+    "Import places"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Import places"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "rows": 15,
+   "marked_text": [
+    "Travel Wallet"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Travel Wallet"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "rows": 15,
+   "marked_text": [
+    "Footprints"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Footprints"
+   ]
+  },
+  {
+   "requested": "agent",
+   "rows": 15,
+   "marked_text": [
+    "Copilot"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Copilot"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "rows": 15,
+   "marked_text": [
+    "Recovery"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Recovery"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "rows": 15,
+   "marked_text": [
+    "Intelligence"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Intelligence"
+   ]
+  },
+  {
+   "requested": "twin",
+   "rows": 15,
+   "marked_text": [
+    "Traveler Twin"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Traveler Twin"
+   ]
+  },
+  {
+   "requested": "trash",
+   "rows": 15,
+   "marked_text": [
+    "Recycle bin"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Recycle bin"
+   ]
+  },
+  {
+   "requested": "access",
+   "rows": 15,
+   "marked_text": [
+    "Members and access"
+   ],
+   "aria_current": [],
+   "contrast_state": [
+    "Members and access"
+   ]
+  },
+  {
+   "requested": "trips",
+   "rows": 15,
+   "marked_text": [],
+   "aria_current": [],
+   "contrast_state": []
+  },
+  {
+   "requested": "me",
+   "rows": 15,
+   "marked_text": [],
+   "aria_current": [],
+   "contrast_state": []
+  }
+ ]
+}

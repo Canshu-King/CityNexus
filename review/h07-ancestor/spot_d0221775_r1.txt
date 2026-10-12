@@ -1,0 +1,4 @@
+rc=1 tests/test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken | 1 failed in 0.35s
+rc=1 tests/test_qoder_ord0495_gitshow_portable.py::test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo | 1 failed in 3.20s
+rc=1 tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes | 1 failed, 2 warnings in 5.84s
+rc=1 tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls | 1 failed in 0.23s
