@@ -100,6 +100,7 @@ class Settings:
     # that does not echo it, so a server belonging to another checkout or another
     # agent lane can never answer for this tree's tests again.
     e2e_run_id: str | None = os.getenv("CITYNEXUS_E2E_RUN_ID") or None
+    searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
 
 
 settings = Settings()
