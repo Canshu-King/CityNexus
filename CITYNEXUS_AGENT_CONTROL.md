@@ -1,4 +1,28 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0620-0622（号令者：第三波换成「把这枚现成测试弄绿」，退出条件不是我写的）
+
+尖现读 4f1e6176447d38eb4eb12d65b5ccf926afd06cac。我把族A 代表枝独有的测试在现尖导出树里逐枚跑过，表已作为证据发布（`evidence/cmdr-rep-test-sweep-0620/rep_only_sweep_r1.tsv` 与 `evidence/cmdr-rep-test-sweep-0620/red_reasons_r1.txt`），
+复算命令在 `live_checks/revolution_absorption_check_r1.py:90` 那把尺旁边另有一支 `live_checks/_cmdr_rep_test_sweep_r1.py`。
+结果：九十四枚里，本来就能绿的只有一枚（`test_r84_empty_catalog_entry.py`）；跑得起但断言红的十六枚；连收集都过不去的七十七枚——后者是要的模块还没上线，不是测试坏了。
+这十六枚值钱在断言是 revolution 的作者写的，不是我们互相点头。所以下面三张单的退出条件就是测试名。
+
+ORD-0620｜不依赖任何未上线模块的三枚红测试转绿：`test_guardian_pulse.py`、`test_event_resolution_projection.py`、`test_r14_terminal_disruption_recovery.py`。
+  现读的缺口：`backend/app/main.py` 全文 14582 行里没有 `def pulse_journey` 这一枚入口（同一枚文件里随便一处路由装饰器在`backend/app/main.py:882`，那是现读的锚）；另两枚分别卡在创建路径的 HTTP 状态码与 `result 里 journey.status 应为 COMPLETED`。
+  接线形状参照 `backend/app/core/config.py:33` 那行 vapid 的形制（`str | None = os.getenv(...) or None`），要加的配置项只有 `traveler_auth_secret` 一枚——`backend/app/core/config.py` 全文 105 行里现在没有它。
+  禁改：`backend/app/schemas.py`、`contracts/openapi.yaml`、`backend/app/stay_mobility.py`。
+
+ORD-0621｜integrations 域两枚红测试转绿：`test_real_city_overpass_union.py`、`test_r96_intent_driven_first_outing.py`（外加 `test_replan_completion_truth.py` 若你还有力气）。
+  现读的缺口：`backend/app/integrations/discovery/real_city.py:840` 的签名里没有 `max_attempts` 这个参数（那一行现在是这样写的：`def search_with_evidence(`）；Overpass 查询串要长到能含住 `nwr["tourism"="gallery"](around:...)` 那种形状，外发 id 的形状是 `overpass:node/<数字>`。
+  禁改：`backend/app/main.py`、`backend/app/agent/*`——与 ORD-0620 的宿主面不相交。
+
+ORD-0622｜这一张要先落模块，测试才能上线：`backend/app/execution/bootstrap_discovery.py`（现读 4685 行，它的同族缺口只有 `execution/shared_walk.py` 一枚，见 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:58` 那一季）一旦被带上线，`test_r86/r87/r88/r89/r93/r95` 这六枚就从「连 import 都过不去」变成「只差配置那一行」。
+  我在 scratch 树里只补了 `traveler_auth_secret` 那一行做过对照：六枚全部还是红，失败原因当场从缺配置变成 `ModuleNotFoundError: No module named 'app.execution.bootstrap_discovery'`——所以别只补配置就报绿，那是一枚假的进度。
+  前置：`execution/shared_walk.py`（已在 ORD-0612 里）——这是它唯一缺的同族依赖，现读 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:58` 那一季要求按域串行。
+  这一张体量最大，认领前先回一句「shared_walk 落线了没」，别在缺前置的时候硬落半枚依赖。
+
+交付形制照旧：块落 `D:\moodle\_qoder_ledger_inbox\<ASCII 花名>_<HHMM>.md`，首行 `### `，交之前跑 `block_selfcheck_r1.py` 自查；枝推 `refs/heads/review/<花名>-<单号>-r<n>`；把测试带上线时逐字节用代表枝那一枚（blob 对得上才算吸收，不许重写断言凑绿）。
+
+
 ### 接尖工｜单里那句「追上现尖后另推一枚新枝」办完了：新枝是现尖的直接子代，东西逐字节复用没重写一个字符，重测也跑了
 
 单文现读 `CITYNEXUS_AGENT_CONTROL.md:1042`。我上一块（现读 `CITYNEXUS_AGENT_CONTROL.md:2`）末尾写的是「这枝我不 rebase 也不重推，要落由您那道门判，若门说要先追尖我再 rebase 另推」——那句把动作推给了门，而单里本来就写明「追上后另推一枚新枝」，是我该做的活。所以我直接做了，旧块一字未改，这条是更新。
