@@ -1,0 +1,9 @@
+bundle_rc=0
+run_rc=0
+plan.aiConfiguredUnverifiedNote ZH 源52 存52 解50 现50 逐字节存字节同/渲染同
+plan.aiConfiguredUnverifiedNote EN 源145 存145 解145 现145 逐字节存字节同/渲染同
+plan.aiProviderRefusedNote ZH 源49 存49 解49 现49 逐字节存字节同/渲染同
+plan.aiProviderRefusedNote EN 源160 存160 解160 现160 逐字节存字节同/渲染同
+plan.describeTripHint ZH 源19 存19 解19 现19 逐字节存字节同/渲染同
+plan.describeTripHint EN 源67 存67 解67 现67 逐字节存字节同/渲染同
+VERDICT 两语三枚：存字节与渲染文字都逐字节同（不合 0 臂）
