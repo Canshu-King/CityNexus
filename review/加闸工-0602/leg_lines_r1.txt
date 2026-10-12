@@ -1,0 +1,10 @@
+# 落地那一跑两枚仪表的原文行（逐字抄自本机 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\，这两枚文件此刻都不在权威线上：现读 git cat-file -e 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c:live_checks/cmdr_batch_land_r1.py 与 …_disjoint_scan_r1.py 都报不存在）
+# 所以本件只是我这句话的出处抄件，不当线上证据
+驱动那侧现取候选用的那一行（cmdr_batch_land_r1.py 第 81 行）：
+        rrc, rout, rerr = git("ls-remote", "origin", ref)
+同一支文件第 19 行写着它跑在哪个仓：
+REPO = "D:/moodle/CityNexus"
+扫描那侧读的是裸仓两形 refspec（_disjoint_scan_r1.py 第 38 行那句说明）：
+    """两条 refspec：裸仓的 heads 与裸仓自己从 GitHub 取回的 remote-tracking。
+扫描把名字换成驱动能解的那一形（同文件第 206 行那句注释）：
+# 名字要换成落地驱动能解的那一形：它用 `git ls-remote origin <ref>` 现取候选，只认远端 refs/heads/*。
