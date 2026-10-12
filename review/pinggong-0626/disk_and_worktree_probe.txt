@@ -1,4 +1,4 @@
-取值时刻 2026-10-13 02:36:58
+取值时刻 2026-10-13 02:38:33
 winapi D:\ 可给本用户 4.8 GiB / 卷总 307.4 GiB
 winapi E:\ 可给本用户 24.2 GiB / 卷总 308.1 GiB
 df D:              308G  303G  4.9G  99% /d
@@ -17,12 +17,12 @@ _qoder_pinggong_0558_ai      文件 .git    目录时刻=10-11 19:46 指向=D:/m
 _qoder_pinggong_0558_b       文件 .git    目录时刻=10-11 00:55 指向=D:/moodle/CityNexus/.git/worktrees/_qoder_pinggong_0558_b
 _qoder_pinggong_0576         文件 .git    目录时刻=10-11 21:53 指向=D:/moodle/_qoder_integration_20260919/.git/worktrees/_qoder_pinggong_0576
 _qoder_pinggong_0588         文件 .git    目录时刻=10-12 20:34 指向=D:/moodle/_qoder_integration_20260919/.git/worktrees/_qoder_pinggong_0588
-_pinggong_scratch            无 .git     目录时刻=10-13 02:31 指向=-
+_pinggong_scratch            无 .git     目录时刻=10-13 02:37 指向=-
 
 [二] 权威枝那侧 worktree 名册里，我名下几枚
    名册总 49 行，我名下 2 行
    D:/moodle/_qoder_pinggong_0576                   6eeebb081 [review/屏工-0576-r1]
-   D:/moodle/_qoder_pinggong_0588                   ec873b193 [review/pinggong-0626-r1]
+   D:/moodle/_qoder_pinggong_0588                   996ca7b31 [review/pinggong-0626-r1]
 
 [三] CityNexus 那侧 worktree 名册里，我名下几枚
    名册总 334 行，我名下 12 行
@@ -43,3 +43,8 @@ _pinggong_scratch            无 .git     目录时刻=10-13 02:31 指向=-
    review/pinggong-0607-r1      13	0
    review/pinggong-0610-r1      12	0
    review/pinggong-0620-r1      0	0
+
+[五] presence 那一面在最新尖上的两项现读
+   backend/app/execution/ 现读 8 枚：__init__.py clock.py departure_activation.py journey_twin.py location_scope.py route_session_contract.py traveler_twin.py truth.py
+   backend/app/db/models.py 里 journey_member_id 命中 0 处
+   backend/app/stay_mobility.py 里 JourneyMember 命中 0 处

@@ -72,6 +72,18 @@ for b in ("review/pinggong-0607-r1", "review/pinggong-0610-r1", "review/pinggong
             "--count", "%s...refs/heads/%s" % (TIP, b)])
     rows.append("   %-28s %s" % (b, (r.stdout or r.stderr).strip()))
 
+rows.append("")
+rows.append("[五] presence 那一面在最新尖上的两项现读")
+listing = sh(["git", "-C", ROOT + "/_qoder_integration_20260919", "ls-tree", "--name-only",
+              "%s:backend/app/execution" % TIP]).stdout.split()
+rows.append("   backend/app/execution/ 现读 %d 枚：%s" % (len(listing), " ".join(sorted(listing))))
+for path, needle in (("backend/app/db/models.py", "journey_member_id"),
+                     ("backend/app/stay_mobility.py", "JourneyMember")):
+    body = sh(["git", "-C", ROOT + "/_qoder_integration_20260919", "show", "%s:%s" % (TIP, path)]).stdout
+    hits = [str(n) for n, line in enumerate(body.split("\n"), start=1) if needle in line]
+    rows.append("   %s 里 %s 命中 %d 处%s" % (path, needle, len(hits),
+                                            ("（行 " + ",".join(hits[:5]) + "）") if hits else ""))
+
 with open(OUT, "w", encoding="utf-8", newline="\n") as handle:
     handle.write("\n".join(rows) + "\n")
 print("\n".join(rows[:6]))
