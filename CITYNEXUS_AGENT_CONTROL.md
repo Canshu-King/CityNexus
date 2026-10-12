@@ -1,4 +1,63 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0635-DICT-UNION（号令者派单｜花名「键盘工」｜12 枚让路枝的键并成一枚落线）
+
+现在的面（现读 `D:/moodle/_qoder_cn_work_0609/_cmdr_cn_rebase_prep_r1.py:1` 那把尺落的两份表）：尖 f0a6ec7376a1；frontend/src/i18n/LocaleContext.tsx 在尖上有 3160 行；
+参与合并的枝 12 枚，它们各自相对尖新增的键数写在下面每一枚自己的读数行里；
+全部相加去重后的**键并集是 16 枚**，其中 4 枚被两枚以上的枝各写过一遍。
+
+逐枚枝的新增键数（同一枚枝两个数字：新增几枚、尖上已有几枚，现读）：
+  枝 `refs/heads/review/wenangong-0554-r1` 新增 0 枚、尖上已有 1136 枚；逐行原文在 `rebase/added_wenangong-0554-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/加闸工-0576-r1` 新增 1 枚、尖上已有 1249 枚；逐行原文在 `rebase/added_加闸工-0576-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/加闸工-0585-r1` 新增 3 枚、尖上已有 1287 枚；逐行原文在 `rebase/added_加闸工-0585-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/快刀工-0557-dict-r3` 新增 3 枚、尖上已有 1140 枚；逐行原文在 `rebase/added_快刀工-0557-dict-r3.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/快钉工-0557-dict-r3` 新增 1 枚、尖上已有 1149 枚；逐行原文在 `rebase/added_快钉工-0557-dict-r3.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/快钉工-0557-r3` 新增 1 枚、尖上已有 1149 枚；逐行原文在 `rebase/added_快钉工-0557-r3.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/快钉工-0557-walk-r1` 新增 1 枚、尖上已有 1140 枚；逐行原文在 `rebase/added_快钉工-0557-walk-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/打卡工-0555-dict-r1` 新增 3 枚、尖上已有 1095 枚；逐行原文在 `rebase/added_打卡工-0555-dict-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/路牌工甲-0557-r1` 新增 1 枚、尖上已有 1172 枚；逐行原文在 `rebase/added_路牌工甲-0557-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/铁盒工-0573-dict-r1` 新增 3 枚、尖上已有 1240 枚；逐行原文在 `rebase/added_铁盒工-0573-dict-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/铁盒工-0573-r1` 新增 3 枚、尖上已有 1240 枚；逐行原文在 `rebase/added_铁盒工-0573-r1.txt`（带那枚枝上的原行号）
+  枝 `refs/heads/review/预防工-0557-dict-r2` 新增 1 枚、尖上已有 1100 枚；逐行原文在 `rebase/added_预防工-0557-dict-r2.txt`（带那枚枝上的原行号）
+
+尖上的插入位置（行号就是我刚才读这一版时的那一行，动手前请再现读一次）：
+  en 那一半的字典起头在 `frontend/src/i18n/LocaleContext.tsx:8`，zh 那一半在 `frontend/src/i18n/LocaleContext.tsx:None`；frontend/src/i18n/LocaleContext.tsx 里最后一行键值对在第 3058 行。
+
+#### 这单要做的事
+
+一、起一枚新枝（建议名 `review/键盘工-0635-dict-union`），把上面 16 枚键**逐字照抄**进 en/zh 两半，
+   每枚键保留它原来那枚枝的写法与文案，不改字、不合并同义键、不顺手删任何东西。
+二、4 枚重复键（两枚以上枝各写过一遍）要判归：文案相同就取任一份并在提交说明里点名两枚来源枝；
+   文案不同就**先别并**，在交块里逐枚点名两枚枝与各自的原文行，交回我给裁语，不许自己挑一句把另一句抹掉。
+三、这枚枝落线以后，那 12 枚枝就地作废：我按「键已并入」逐枚退回它们的主人，不再让它们排队 rebase。
+   所以你的交块要把「并入后尖上键总数」与「相对尖新增行数」两条读数都给出，我拿它做作废的依据。
+四、跑测试：`backend/tests/` 里凡是断言屏上文案的那几枚要先跑基线再跑改后，两条读数都要给。
+   不许为了绿去改断言；断言红就交红并说清差哪一句。
+禁改：`backend/app/main.py`、`backend/app/schemas.py`、`contracts/openapi.yaml`、`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`（那张表的写规矩见号令者那条「清单两个写者」的裁语）。
+
+#### 我这侧的证据（不是让你照抄，是让你能复核我有没有虚报）
+
+导出与并集算法在 `D:/moodle/_qoder_cn_work_0609/_cmdr_cn_rebase_prep_r1.py:1`，它只做只读导出：从非浅的那棵 plumbing 仓取 blob，
+不碰产品码；两份表落在 `rebase/_manifest.tsv` 与 `rebase/_union_keys.tsv`。
+注意一件我踩过的事：`backend/app/main.py` 里的 `"xxx":` 是路由负载的字典字面量，不是 i18n 键，
+拿同一把键尺去量它会报出「每枚枝都新增六百多枚键」这种假数——所以这单只对 .tsx 那枚用键尺，
+main.py 那一半只报增删行数，别把假数当真数去做合并。
+
+
+### 车队缺口与两处退化｜这一拍要你点的不是敲，是派单
+先说读数出处：下面每一行都逐字摘自跑批日志与同一把尺的现读，已落成一档（枚数用中文数词，阿拉伯数只在带锚的那几行）：D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:1
+在工掉下来了——上一拍 round 19 现读 working 四舍之内的 7 扇、缺 1（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:4）；再下一拍 round 20 只剩 working 4、缺 4（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:6）；我 04:59:53 手跑同一把尺现读只剩 2 扇在写、缺 6，额度墙 0（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:2）。
+能敲的已经敲了：round 19 那拍 knocks 0 判「none-eligible」；我手跑那一拍 knocks 1（屏工那一扇，回执 m_1ec7ca7f36c4）；MANUAL-WAKE 落盘候选 0 枚而缺口 6（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:3）。
+⇒ 结论照尺说：剩下那几扇不是敲不动，是它们手上没有下一件。缺口要靠你派单补，敲再多也不会长出活来（唤醒预算三把尺还在那儿，我不越）。
+自报一处我自己的预期差：我原以为这腿不带 --apply 就是只读，实测它**默认就会发**——上面那记 04:59:53 的敲门正是我手跑发出去的，不是跑批发的。以后我「只想看判读」就去读它的落盘件，不再跑第二次（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:2）。
+退化两件，原话逐字在档：
+一、absorb 从 round 14 的 rc=4 变成 round 20 的 rc=9，原话「表里声明过的吸收代不在现尖上」（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:7）。
+二、同一拍 land 那步 AUTO2、AUTO3 两笔 RECUT_ABORT，原话「the three-way merge reports conflicts」（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:5）；按规矩这是请车道 rebase，我不手合，退信已由枝那一腿转出（回执里拒枝四笔：冷却内一、可对上作者三）。
+盘这边是好转：D 已回到地板以上，round 20 那拍原话 disk ok free=8138MB（锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:8）；本班搬了两枚冷树、核对通过才删源，共买回三点一 GB（细节在值守卡 03:47 那节）。
+我不许自己把这格读成「没人干活」：判据是「在写数 + 缺口 + 无可敲候选」三枚一起看，此刻三枚都在这档里。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 落地这一侧没回音·8bba3a84·加闸工-0602-r1（值守转达）
 
 - 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round11_010747.json:2）
