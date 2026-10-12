@@ -1,4 +1,38 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0650-R77-WIRING（号令者派单：两枚红是行为没接上，两枚红是测试绑了没人搬的私有名）
+
+先报我这一拍亲自跑出来的事实（尖 `0cf83ec149f9`，候选 `82ced0f1c7b1`）：两枚产品码已经在线上——
+  `backend/app/fact_acquisition.py` 已上线：全文 1244 行，第一个公开符号在 `backend/app/fact_acquisition.py:58`。
+  `backend/app/replanning/proposal_lifecycle.py` 已上线：全文 52 行，第一个公开符号在 `backend/app/replanning/proposal_lifecycle.py:10`。
+那四枚测试我按两代各跑一遍：基线（现尖）是「测试文件不存在」，改后是 `2 RED（文件在但没绿：2 warnings, 2 errors in 2.8`。
+
+分两类，坏法不同，别混着修：
+
+**甲类＝收集阶段就过不去（import 了不存在的东西）**。这两枚测试从 `app.main` 里取两枚私有名，
+  符号 `_replacement_activity_metadata`：枝上产品侧命中 0 处，只有测试在引它——
+     `tests/test_replan_place_fact_binding.py:6` 写的是 `from app.main import _replacement_activity_metadata`
+     `tests/test_replan_place_fact_binding.py:29` 写的是 `_replacement_activity_metadata(`
+  符号 `_plan_mobility_eligibility_receipts`：枝上产品侧命中 0 处，只有测试在引它——
+     `tests/test_revolution_r77_recovery.py:25` 写的是 `from app.main import _plan_mobility_eligibility_receipts, _provider_mesh_candidate_paylo`
+     `tests/test_revolution_r77_recovery.py:873` 写的是 `result = _plan_mobility_eligibility_receipts(plan, activities)`
+修法不许是把那两枚私有名从旧枝整段抄进 `backend/app/main.py`（那是九枚枝排队的热文件，抄进去就等于再造一次撞车）。
+要这么修：把那两份行为的**公开版本**放进已上线的两枚模块里（`fact_acquisition.py` 或 `replanning/proposal_lifecycle.py`），测试改成 import 那两枚模块的公开名；
+若你认为公开形状应该叫别的名字，就在块里写清为什么，别为了省事保留下划线开头。
+
+**乙类＝跑起来了但断言红**，这两枚是真行为没接上：
+  `backend/tests/test_replan_completion_truth.py::test_completion_invalidates_presented_replans_and_keeps_history_read_only` 红；
+  `backend/tests/test_revolution_r77_public_place_facts.py::test_public_places_projects_identity_and_place_fact_evidence_without_free_coercion` 红。
+这两条断言要的是「完成态让已呈报的 replan 失效而历史只读」与「公开点位投出身份与事实证据、
+且不许被免费额度硬套」。请按本车道老规矩：先贴基线原话计数行，再贴改后原话计数行；
+不许改断言换绿，不许用假数据把测试哄过去。接不上就交「证明无处可接」并点名每个候选调用点的 `文件.扩展名:行号`。
+
+禁改清单：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、
+`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`（那张字典正在并枝，见 ORD-0635），
+以及 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`。
+如果甲类的公开化确实需要 main.py 里加一行调用（不是搬实现），你先把那一行写进块里点名给我，
+我点头以后单独一枚枝只做这一行，别和别的改动混在一枚枝里排队。
+
+
 ### 接尖工｜复现 ORD-0622 的前置链跑完：`shared_walk` 落下之后失败原因前进一层，还缺一整张 `MemberDraftPocketWalk` 表与第二个配置项（七枚用例逐枚点名，零产品字节）
 
 尖现取 `5c3e98aebe420fe93834a7f4902b987732ccae52`（ls-remote 现读）。这一拍不交模块，只把 ORD-0622 那句「只补配置那一行就报绿是假进度」往前推一格：我在一次性导出树里真把那枚体量大的人造出来跑过一遍，七枚用例的拦路项逐枚点名。
