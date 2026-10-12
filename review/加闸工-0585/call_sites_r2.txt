@@ -1,0 +1,19 @@
+调用点与断言者检查（新尖 e82296fa 与合并代 547b99da 各现读一遍）
+
+合并代 retryHint 命中 4 行：
+   frontend/src/features/simulation/simulationAdapter.ts:119
+   frontend/src/features/simulation/simulationAdapter.ts:153
+   frontend/src/features/simulation/simulationAdapter.ts:154
+   frontend/src/i18n/LocaleContext.tsx:1499
+
+新尖 retryHint 命中 2 行：
+   frontend/src/features/simulation/simulationAdapter.ts:119
+   frontend/src/features/simulation/simulationAdapter.ts:152
+
+新尖 frontend/e2e 下 spec 分母：195 枚
+   串面「服务器没说要等多久」在 frontend/e2e 命中 0 行
+   串面「现在就可以再试」在 frontend/e2e 命中 0 行
+   串面「毫秒后再试」在 frontend/e2e 命中 0 行
+   串面「还占着存储」在 frontend/e2e 命中 0 行
+   串面「holds the store」在 frontend/e2e 命中 0 行
+   串面「retryHint」在 frontend/e2e 命中 0 行

@@ -1,0 +1,14 @@
+1  单：账本 CMDR-ORDER-0585-LASTSIX 那格派我 `frontend/src/features/simulation/simulationAdapter.ts`，尺现读 3 条，本行锚 simulationAdapter.ts:122。
+2  基准两次现读：第一次 8890f22fe37af40d2919db352be47043b1ea6162（我据此开枝并跑完一轮）；写这块前再取一次已是 e82296fa3bf8de2530ce25471e2dbf9981ae31b1，中间 23 代，所以本块所有行号都按合并代重读，r1 那套旧行号只留在 r1 证据件里当过程。
+3  那三处（新尖那代，逐字）：simulationAdapter.ts:122「（服务器没说要等多久）」、:123「（现在就可以再试）」、:123 同行的「（约 ${Math.round(ms)} 毫秒后再试）」；对照快照 review/加闸工-0585/adapter_at_tip_r2.ts.txt 与 review/加闸工-0585/tip_retryHint_r2.txt:2。
+4  这三处不是「只是搬字」：retryHint 过去只产一串，同一行同时喂给中文臂与英文臂（新尖那行 simulationAdapter.ts:152），所以英文屏读到的是中文括号串。实测 12 枚用例：中文臂逐字未动 12 条（review/加闸工-0585/byte_proof_r2.txt:3），改前英文臂含汉字 12 条、改后零条（review/加闸工-0585/byte_proof_r2.txt:5）。
+5  键名与同文都先现查过字典再落笔：三枚键名在 8890f22f 那代全 frontend/src 命中零行（anchor_checks_r2.txt:2），在新尖 e82296fa 也零命中；三枚串面文本在新尖各只 simulationAdapter.ts 那一处（anchor_checks_r2.txt:6），字典里没有同文旧键可复用，所以不是我另造一枚同文键。
+6  合并代组件侧坐标：frontend/src/features/simulation/simulationAdapter.ts:2（import 加 dictionaryText 与 type TripLocale）、:119（retryHint 多一枚 locale 形参）、:122、:123、:124（三枚键读）、:153、:154（两臂各取自己语言的提示）、:155（组装）。retryHint 是模块内私有函数，合并代全 frontend/src 命中四行——定义 :119、调用 :153、:154，第四行是我写在字典里的说明文字（LocaleContext.tsx:1499），别无调用点；新尖那代只命中二行（:119、:152），逐条见 review/加闸工-0585/call_sites_r2.txt:3。
+7  合并代字典侧坐标：en 侧 :1501、:1502、:1503（锚行 :1497 的 "simulation.notGiven" 逐字存活，说明块 :1498-:1500）；zh 侧 :2927、:2928、:2929（锚行 :2926 存活）。中文臂逐字照搬，只把第三枚的 ${Math.round(ms)} 换成 {ms} 由 dictionaryText 填洞（本体 :2980，同调用形制的先例 frontend/src/lib/entryLimits.ts:111、键类型形制先例 frontend/src/features/pending/pendingSetCopy.ts:20）。
+8  并尖没吞别家的账：命令原样取两代字典键名集合对拍，现尖 1287 枚、合并代 1290 枚、差集正好我那 3 枚、反向差集零枚（keyset_r2.txt:2、:4）。
+9  谁消费这两臂：frontend/src/features/simulation/SimulationPanel.tsx:755 取 describeFailure 的结果，同一枚面板把那行渲染上屏；本块的读数以尺为准，见 gates_r2.txt:6 的上屏机器码闸。
+10  没有断言被我摘空：新尖 frontend/e2e 下 spec 共 195 枚（分母现读），逐串对「服务器没说要等多久」「现在就可以再试」「毫秒后再试」「还占着存储」「holds the store」「retryHint」命中全零行，六串各零条（review/加闸工-0585/call_sites_r2.txt:9）。
+11  本文件另 24 处汉字串被尺判成成对语区表臂（simulationAdapter.ts:77 起的 TABLE、:322 起的步标签、:214 起四枚 commerce 行），号令者说「成对语区表不动」，我一枚没收。
+12  一处按口径留给下一轮的观察：同文件 :116 与 :158 那两枚全角标点串、:160 的「段」也同时喂给两臂，英文屏会读到全角标点；尺不数它们（非汉字），我不擅自扩面，要收请单独点名。
+13  交付形状：产品提交 9979ed4ffc421894e11e7e5b9b29b99d2105b99a、证据提交 7374fd9f4dc03773f3bfec68d0c47fd998f2fa28、并尖合并提交 547b99da15285fe37a0de74886b0ec3fa55b4f98（父序：先我已发布的头、后现尖，所以推上去是 fast-forward），对象钉 refs/local/jiazagong-0585。
+14  纪律：权威线只由号令者推；我这轮只推 refs/heads/review/加闸工-0585-r1 一枚；force-push 零次；没动别人的断言、没 skip、没为绿改产品码；共享 node_modules 只借道 junction 读，零安装。

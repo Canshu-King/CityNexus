@@ -1,0 +1,7 @@
+本文件的汉字串按尺分成两档（尺本体逐字重放：strip_comments / STRING / is_copy_table_arm 三腿一字未改）
+并尖前那代 e82296fa3bf8：尺计数 3 条 / 成对语区表臂 19 条（表臂按号令者口径不收）
+我这枝 952d31b7239a：尺计数 0 条 / 成对语区表臂 19 条
+成对语区表起点 frontend/src/features/simulation/simulationAdapter.ts:72（zh 臂第一行 :77），步标签那枚表 :322，commerce 那四行起 :214
+按口径留给下一轮的三枚全角标点串：并尖前那代 frontend/src/features/simulation/simulationAdapter.ts:116、:158、:160；我这枝上后两枚在 :160、:162
+文案分层尺那档 inline bilingual pairs 分母：改前 451 条、改后 451 条（review/加闸工-0585/copy_tiers_before_r2.txt:16 与 review/加闸工-0585/copy_tiers_after_r2.txt:16 同行同值）
+两代产品字节对照：38ee5c7f 与 952d31b7 的 adapter blob 同为 b78efff8f87663d2bd4b8c174c60147352fe2567、字典 blob 同为 f6b63cfb6f81f0f9f2b51f0fcfd4ed67fec5d1e3

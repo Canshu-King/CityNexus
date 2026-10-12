@@ -1,0 +1,5 @@
+相对基准动了哪几枚文件（命令原样 git -c core.quotepath=false diff --numstat 现尖..合并提交；不加 quotepath=false 时中文路径会被转义成八进制串，按前缀分类就会认错）
+8	6	frontend/src/features/simulation/simulationAdapter.ts
+9	0	frontend/src/i18n/LocaleContext.tsx
+产品件合计 2 枚；证据件（review/加闸工-0585/）合计 28 枚；两代全部变动 30 枚
+权威线我没推：本枝只推 refs/heads/review/ 一枚；force-push 零次

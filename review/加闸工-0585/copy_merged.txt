@@ -1,0 +1,7 @@
+# 文案分层尺（合并那一代 vs 尖那一代字典件）
+  [MET      ] REGISTER_PARITY          1346 bilingual keys: 1346 agree, 0 clash
+  [MET      ] NO_GROWTH                0 values changed; zh gained chars: 0, en over +8: 0
+          detail: not gated on purpose: a green REGISTER_PARITY below is not a claim about these keys. First five: me.asksBeforeProtectedChange@523
+  [VIOLATION] LADDER_TIER④_EMPTY_ACTION 71 read key(s) in this tier's population, 59 miss the shape (8 unread row(s) counted out, they belong to RENDERED)
+  [VIOLATION] LADDER_TIER⑥_ESTIMATE_PREFIX 15 read key(s) in this tier's population, 8 miss the shape (2 unread row(s) counted out, they belong to RENDERED)
+  [VIOLATION] HARDCODED_FALLBACK       157 files scanned: tier A (language branch in the slot) 2, tier B (bare literal) 79, excluded as machine tokens 205; inline bilingual pairs anywhere = 430 (denominator only -- most are legitimate inline pairs, NOT a defect count)

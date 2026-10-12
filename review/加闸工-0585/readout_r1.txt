@@ -1,0 +1,18 @@
+加闸工 ORD-0585 r1 读数件 —— 现读，逐行自编号
+1  单：账本 CMDR-ORDER-0585-LASTSIX 那格，我名下 `frontend/src/features/simulation/simulationAdapter.ts`，尺现读 3 条，本行锚 simulationAdapter.ts:122。
+2  基准（现取）：git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 = 8890f22fe37af40d2919db352be47043b1ea6162
+3  号令者写那块时那格报的尖是 a368e12313b505d444c871cb79375339f72a6c5c；现读它是 8890f22f 的祖先（git merge-base --is-ancestor 判是），所以线只朝前走了，我开在最新那一代上。
+4  尺的哪三处：_cmdr_inline_literal_cjk_r2.py 的判腿逐枚重放（strip_comments / STRING / is_copy_table_arm 一字未改），本文件命中 3 条，全在 retryHint：
+5    simulationAdapter.ts:122「（服务器没说要等多久）」
+6    simulationAdapter.ts:123「（现在就可以再试）」
+7    simulationAdapter.ts:123「（约 ${Math.round(ms)} 毫秒后再试）」
+8  同文件另 24 处汉字串被尺判成成对语区表臂（TABLE 的 zh/en、ACTIVITY_STEP_LABELS、commerce 那几行），按号令者那句「成对语区表不动」不收；本块不改它们。
+9  为什么这 3 条不是「只是搬字」：retryHint(error) 只产一串，被 describeFailure 同时塞进 hit.zh(...) 与 hit.en(...)，所以英文屏此刻读到的是中文括号串。改前实测 12 枚用例（两枚 code × 6 种 retry_after_ms）里 en 臂含中文 = 12 条，见 byte_proof_r1.txt:4。
+10 键名先现查：git -C D:\moodle\CityNexus grep -c 在现尖全 frontend/src 上，retryWaitNotGiven / retryRightNow / retryInMs 各 0 处 → 三枚都是新键，没抢别人的名字。
+11 同文先现查：现尖 frontend/src 上「服务器没说要等多久」「现在就可以再试」「毫秒后再试」各只 simulationAdapter.ts 一处（:122、:123、:123），字典里没有同文旧键可复用 → 不是造第二枚同文键。
+12 中文臂 = 逐字搬运：三枚键的 zh 值与现尖那三枚字面量同文，第三枚把 ${Math.round(ms)} 换成 {ms} 由 dictionaryText 填（house 形制，见 LocaleContext.tsx:2941 与 lib/entryLimits.ts:111 的同款调用）。
+13 产品改动的行（候选枝那一代现读）：simulationAdapter.ts:2 加 dictionaryText/type TripLocale、:119 retryHint 多一个 locale 形参、:122/:123/:124 三枚键读、:153/:154 两臂各自取自己语言的提示、:155 组装。
+14 字典改动的行：en 侧 LocaleContext.tsx:1486、:1487、:1488（说明块 :1483-:1485）；zh 侧 :2897、:2898、:2899。锚行 :1482 / :2896 都活着，逐字回读见 gates_r1.txt。
+15 谁消费这两臂：SimulationPanel.tsx:755 取 describeFailure 的结果，:937 那一格上屏；retryHint 是模块内私有函数，除 :153/:154 外别无调用点（现读见 gates_r1.txt）。
+16 断言者检查：frontend 全树里没有任何 spec 断言这三串提示，也没有 spec 断言「还占着存储 / holds the store」整句（grep 见 gates_r1.txt），所以改动不会把别人的断言摘空。
+17 尖未动：交块前再取一次，仍是 8890f22f，我这枚产品提交就是它的直接子代，不必 merge 现尖。

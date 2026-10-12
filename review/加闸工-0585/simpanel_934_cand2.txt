@@ -1,0 +1,2 @@
+ABORT frontend/src/features/simulation/SimulationPanel.tsx:934 lacks '{zh ? outcome.zh : outcome.en}'
+      actual: data-outcome={outcome.ok ? "ok" : "refused"}
