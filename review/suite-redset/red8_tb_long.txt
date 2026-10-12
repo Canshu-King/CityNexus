@@ -1,0 +1,63 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo _____
+
+tmp_path = WindowsPath('C:/Users/仓鼠王/AppData/Local/Temp/pytest-of-仓鼠王/pytest-2084/test_G07_the_converted_cell_sk0')
+repo = WindowsPath('D:/moodle/_qoder_seed_ord0489/wt504')
+
+    def test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo(tmp_path: Path, repo: Path) -> None:
+        """把 ORD-0479 的 H07 单独跑在两处：真树里它过，导出树里它是具名 skip——不是失败。
+    
+        "导出"在这里是**工作树里 backend/ 的一份副本，不带 .git**（号令者那侧是 git archive 导出；两者
+        共同点就是对象库取不到，而这正是这单要分开的东西）。副本用工作树而不是 HEAD，是为了量到我正要
+        交的那批字节，不是上一次提交的。
+        """
+        nodeid = "tests/test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken"
+        repo_root = repo
+        in_repo = _git(repo_root, "rev-parse", "HEAD").stdout.strip()
+    
+        export = tmp_path / "export"
+        export.mkdir()
+        shutil.copytree(repo_root / "backend", export / "backend",
+                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".venv", "node_modules"))
+        assert not (export / ".git").exists(), "the copy must not carry a repository"
+        copied = [p.relative_to(export) for p in (export / "backend").rglob("*") if p.is_file()]
+        assert len(copied) > 100, len(copied)
+        for rel in ("backend/tests/test_qoder_ord0479_dictionary_key_shape.py",
+                    "backend/tests/qoder_git_source_r1.py"):
+            assert (export / rel).exists(), rel
+    
+        out = subprocess.run([sys.executable, "-m", "pytest", nodeid, "-q", "-rs",
+                              "--no-header", "-p", "no:cacheprovider"],
+                             cwd=str(export / "backend"), capture_output=True, text=True,
+                             encoding="utf-8", errors="replace")
+        skipped = [l for l in out.stdout.splitlines() if l.startswith("SKIPPED")]
+        assert out.returncode == 0, out.stdout[-900:]
+        assert "1 skipped" in out.stdout, out.stdout[-500:]
+        assert skipped, out.stdout[-500:]
+        assert all(NOT_MEASURED in s for s in skipped), skipped
+    
+        #: and the same nodeid still asserts in the real checkout -- the portability did not mute it
+        again = subprocess.run([sys.executable, "-m", "pytest", nodeid, "-q", "-rs", "--no-header",
+                                "-p", "no:cacheprovider"],
+                               cwd=str(repo_root / "backend"), capture_output=True, text=True,
+                               encoding="utf-8", errors="replace")
+>       assert again.returncode == 0, again.stdout[-600:]
+E       AssertionError: this order never
+E                 #: stood on; read it from git where git can answer, and name the case where it cannot
+E         >       assert require_git_ancestor(ORDER_BASE, "HEAD", GIT_ROOT), \
+E                     "the order's base %s is not an ancestor of HEAD" % ORDER_BASE[:12]
+E         E       AssertionError: the order's base 127ce7b05329 is not an ancestor of HEAD
+E         E       assert False
+E         E        +  where False = require_git_ancestor('127ce7b05329eaa837701cdb93bdbc2e5d64e10f', 'HEAD', WindowsPath('D:/moodle/_qoder_seed_ord0489/wt504'))
+E         
+E         tests\test_qoder_ord0479_dictionary_key_shape.py:315: AssertionError
+E         1 failed in 0.19s
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe', '-m', 'pytest', 'tests/test_qoder_ord0479_...89/wt504\'))\n\ntests\\test_qoder_ord0479_dictionary_key_shape.py:315: AssertionError\n1 failed in 0.19s\n', stderr='').returncode
+
+tests\test_qoder_ord0495_gitshow_portable.py:194: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_ord0495_gitshow_portable.py::test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo
+1 failed in 1.25s

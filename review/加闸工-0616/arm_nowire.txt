@@ -1,0 +1,8 @@
+# 臂一：模块在、两枚测试在、v9 不接线（命令 `python -m pytest tests/test_journey_inbox.py tests/test_jiazagong_0616_inbox_artifact_identity_r1.py -q`，一次性库 _jz0616a.db）
+FAILED tests/test_jiazagong_0616_inbox_artifact_identity_r1.py::test_0616_the_history_door_answers_with_the_modules_identity
+FAILED tests/test_jiazagong_0616_inbox_artifact_identity_r1.py::test_0616_a_second_paste_of_the_same_message_is_one_artefact
+FAILED tests/test_jiazagong_0616_inbox_artifact_identity_r1.py::test_0616_a_different_message_is_a_different_artefact
+FAILED tests/test_jiazagong_0616_inbox_artifact_identity_r1.py::test_0616_structured_import_identity_covers_the_payload_not_the_run
+4 failed, 8 passed, 2 warnings in 1.97s
+# 四条红的成因同一条（第一条断言原文，指纹那格在历史里根本还不存在）：
+E       AssertionError: history answered None, the module computes '64ab66d1583e919dae28d32e9697c71f666adf7d9168e18ef1601c3245bbc861' for the same artefact

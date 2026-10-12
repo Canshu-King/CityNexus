@@ -1,0 +1,5 @@
+collective_mediation.py 源blob 9e9f005ccc7e 枝blob 9e9f005ccc7e 行 584 字节 25721
+test_r27_collective_mediation.py 源blob 1640f25f4c7d 枝blob 1640f25f4c7d 行 71 字节 3100
+candidate_evidence 改动面（相对现尖）：63 0 backend/app/replanning/candidate_evidence.py
+现尖那枚函数原样还在：0 行删除
+新增的两枚 def：56:def _preference_matches_candidate(key: str, tags: set[str]) -> bool: 73:def verified_interest_preference_breakdown( 

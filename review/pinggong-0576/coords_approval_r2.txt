@@ -1,0 +1,18 @@
+CAND 9f42b62f338c5e04d7cd3c5d0d79c0a547f654a8
+KEY_DEFINITIONS 14
+  copilot.approval.approve en=1506 zh=2928 calls=464
+  copilot.approval.explainer en=1505 zh=2927 calls=461
+  copilot.approval.idMissing en=1501 zh=2923 calls=376
+  copilot.approval.needsConfirmation en=1504 zh=2926 calls=459
+  copilot.approval.offlineBlocked en=1500 zh=2922 calls=372
+  copilot.approval.recorded en=1503 zh=2925 calls=382
+  copilot.approval.recording en=1502 zh=2924 calls=379
+  copilot.approval.reject en=1507 zh=2929 calls=465
+  copilot.mission.checkingFacts en=1496 zh=2918 calls=398,407
+  copilot.mission.needsAuthority en=1498 zh=2920 calls=433
+  copilot.mission.ranAgainstFacts en=1495 zh=2917 calls=397
+  copilot.mission.stop en=1499 zh=2921 calls=476
+  copilot.mission.viewSafePlan en=1497 zh=2919 calls=428
+  copilot.mission.workingOnRequest en=1494 zh=2916 calls=394
+UNIQUE_KEYS_CALLED 14 CALL_SITES 15
+INLINE_BILINGUAL_LEFT_IN_FILE 14

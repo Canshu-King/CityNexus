@@ -1,0 +1,37 @@
+尖上 execution 7 枚｜代表枝 30 枚｜待接 23 枚
+
+模块                                            行数 import      缺兄弟  尖上没有的非 execution 依赖
+truth.py                                      62      0        0  -
+shared_walk.py                               121      0        0  -
+presence.py                                  188      3        0  -
+launch_origin.py                             416      3        0  -
+progress_drift.py                            420      2        0  -
+readiness.py                                 464      5        0  -
+in_transit_reroute.py                        668      3        0  -
+group_presence.py                            922      4        0  -
+launch_setup.py                              187      4        1  -
+moment_scout.py                              377      3        1  -
+member_place_group_share.py                  433      3        1  shared_stop_coplanning
+group_recovery_followthrough.py              634      3        1  -
+member_side_quest.py                        1196      7        1  concurrency_guards
+bootstrap_discovery.py                      4685      6        1  -
+continuous_journey.py                        291      3        2  -
+rendezvous_coordination.py                   523      6        2  traveler_principal
+private_buddy_safe_return.py                 936      9        2  concurrency_guards,route_session_operations,traveler_principal
+planned_split_meetup_handshake.py            585      6        3  -
+live_moment_scout.py                         686      7        3  -
+rendezvous_buddy_execution.py                719      7        3  traveler_principal
+rendezvous_buddy_handoff.py                  886      7        3  traveler_principal
+private_buddy_route.py                      1012     12        3  concurrency_guards,route_session_operations,traveler_principal
+member_place_invitation.py                  1969      7        3  shared_stop_coplanning
+
+== 零缺口（可以直接一枚落地，不动别的模块）==
+  truth.py｜62 行｜import 0 处
+  shared_walk.py｜121 行｜import 0 处
+  presence.py｜188 行｜import 3 处
+  launch_origin.py｜416 行｜import 3 处
+  progress_drift.py｜420 行｜import 2 处
+  readiness.py｜464 行｜import 5 处
+  in_transit_reroute.py｜668 行｜import 3 处
+  group_presence.py｜922 行｜import 4 处
+零缺口 8 枚

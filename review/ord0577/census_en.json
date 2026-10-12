@@ -1,0 +1,437 @@
+{
+ "file": "e2e/qoder-8ac89982-ord0577-off-route-bar-census-r1.spec.ts",
+ "arm": "en",
+ "shape": "390x844",
+ "denominator": {
+  "desktop": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access"
+  ],
+  "mobile": [
+   "hub",
+   "trips",
+   "map",
+   "agent",
+   "me"
+  ],
+  "union": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "footprints",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ]
+ },
+ "negative_control": {
+  "requested": "qoder-0577-not-a-route",
+  "answered_as": [
+   "nav-hub"
+  ],
+  "breadcrumb": "Today"
+ },
+ "silent_on_screens": [
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access"
+ ],
+ "requested_keys_whose_address_moved": [],
+ "rows": [
+  {
+   "requested": "hub",
+   "landed": "hub",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "Today",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-hub"
+   ],
+   "state": [
+    "nav-hub"
+   ],
+   "silent": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "live",
+   "landed": "live",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Live Journey",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-map"
+   ],
+   "state": [
+    "nav-map"
+   ],
+   "silent": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "map",
+   "landed": "map",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "Map",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-map"
+   ],
+   "state": [
+    "nav-map"
+   ],
+   "silent": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "studio",
+   "landed": "studio",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Trip Studio",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "stay",
+   "landed": "stay",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Stay Explorer",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "discover",
+   "landed": "discover",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "City Discovery",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "import",
+   "landed": "import",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Import places",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "bookings",
+   "landed": "bookings",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Travel Wallet",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "footprints",
+   "landed": "footprints",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Footprints",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "agent",
+   "landed": "agent",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "Copilot",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-agent"
+   ],
+   "state": [
+    "nav-agent"
+   ],
+   "silent": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "authoritative",
+   "landed": "authoritative",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Recovery",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "intelligence",
+   "landed": "intelligence",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Intelligence",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "twin",
+   "landed": "twin",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Traveler Twin",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "trash",
+   "landed": "trash",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Recycle bin",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "access",
+   "landed": "access",
+   "url_key_unchanged": true,
+   "in_mobile_bar": false,
+   "breadcrumb": "Members and access",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [],
+   "state": [],
+   "silent": true,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "trips",
+   "landed": "trips",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "Trips",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-trips"
+   ],
+   "state": [
+    "nav-trips"
+   ],
+   "silent": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  },
+  {
+   "requested": "me",
+   "landed": "me",
+   "url_key_unchanged": true,
+   "in_mobile_bar": true,
+   "breadcrumb": "Me",
+   "bar_present": true,
+   "bar_label": "Mobile navigation",
+   "buttons": 5,
+   "current": [
+    "nav-me"
+   ],
+   "state": [
+    "nav-me"
+   ],
+   "silent": false,
+   "texts": [
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me"
+   ]
+  }
+ ]
+}

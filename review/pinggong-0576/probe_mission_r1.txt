@@ -1,0 +1,26 @@
+candidate | zh-CN | copilot.mission.workingOnRequest | 正在为你处理
+candidate | zh-CN | copilot.mission.ranAgainstFacts | 已按你的行程事实执行
+candidate | zh-CN | copilot.mission.checkingFacts | 正在核对你的行程事实…
+candidate | zh-CN | copilot.mission.viewSafePlan | 查看安全任务计划
+candidate | zh-CN | copilot.mission.needsAuthority | CityNexus 授权
+candidate | zh-CN | copilot.mission.stop | 停止任务
+candidate | en | copilot.mission.workingOnRequest | Working on your request
+candidate | en | copilot.mission.ranAgainstFacts | Ran against your journey facts
+candidate | en | copilot.mission.checkingFacts | Checking your journey facts…
+candidate | en | copilot.mission.viewSafePlan | View safe mission plan
+candidate | en | copilot.mission.needsAuthority | CityNexus authority
+candidate | en | copilot.mission.stop | Stop mission
+negtip | zh-CN | copilot.mission.workingOnRequest | copilot.mission.workingOnRequest
+negtip | zh-CN | copilot.mission.ranAgainstFacts | copilot.mission.ranAgainstFacts
+negtip | zh-CN | copilot.mission.checkingFacts | copilot.mission.checkingFacts
+negtip | zh-CN | copilot.mission.viewSafePlan | copilot.mission.viewSafePlan
+negtip | zh-CN | copilot.mission.needsAuthority | copilot.mission.needsAuthority
+negtip | zh-CN | copilot.mission.stop | copilot.mission.stop
+negtip | en | copilot.mission.workingOnRequest | copilot.mission.workingOnRequest
+negtip | en | copilot.mission.ranAgainstFacts | copilot.mission.ranAgainstFacts
+negtip | en | copilot.mission.checkingFacts | copilot.mission.checkingFacts
+negtip | en | copilot.mission.viewSafePlan | copilot.mission.viewSafePlan
+negtip | en | copilot.mission.needsAuthority | copilot.mission.needsAuthority
+negtip | en | copilot.mission.stop | copilot.mission.stop
+CANDIDATE_CELLS 12 NEG_CELLS 12 NEG_BARE_KEY 12 FAILS 0
+VERDICT probe_green keys=6 cells=12

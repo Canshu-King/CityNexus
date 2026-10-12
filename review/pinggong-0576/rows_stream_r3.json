@@ -1,0 +1,40 @@
+{
+ "gen": "2b87c8fb575a9cef8559afbb85c4326505eb6c6e",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.stream",
+ "rows": [
+  {
+   "start": 9066,
+   "start_line": 243,
+   "end_line": 243,
+   "key": "copilot.stream.parseError",
+   "zh": "运行事件暂时无法解析",
+   "en": "A runtime event could not be read",
+   "draft_line": "243",
+   "guard": "zh",
+   "ternary": "zh ? \"运行事件暂时无法解析\" : \"A runtime event could not be read\""
+  },
+  {
+   "start": 9476,
+   "start_line": 254,
+   "end_line": 254,
+   "key": "copilot.stream.reconnecting",
+   "zh": "正在重新连接运行事件",
+   "en": "Reconnecting to runtime events",
+   "draft_line": "254",
+   "guard": "zh",
+   "ternary": "zh ? \"正在重新连接运行事件\" : \"Reconnecting to runtime events\""
+  },
+  {
+   "start": 9667,
+   "start_line": 257,
+   "end_line": 257,
+   "key": "copilot.stream.unavailable",
+   "zh": "运行事件流不可用；已保留已收到的事件",
+   "en": "Event stream unavailable; received events are preserved",
+   "draft_line": "257",
+   "guard": "zh",
+   "ternary": "zh ? \"运行事件流不可用；已保留已收到的事件\" : \"Event stream unavailable; received events are preserved\""
+  }
+ ]
+}

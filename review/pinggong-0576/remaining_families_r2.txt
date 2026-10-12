@@ -1,0 +1,10 @@
+TIP 9f42b62f338c FILE frontend/src/features/agent/CopilotDock.tsx TOTAL 14
+CAND_ROWS 14 FAMILIES 8
+FAMILY copilot.action rows 2 lines 358,362
+FAMILY copilot.approval rows 1 lines 466
+FAMILY copilot.badge rows 2 lines 449,452
+FAMILY copilot.bubble rows 1 lines 889
+FAMILY copilot.history rows 1 lines 886
+FAMILY copilot.panel rows 1 lines 879
+FAMILY copilot.proposal rows 3 lines 441,444,445
+FAMILY copilot.stream rows 3 lines 243,254,257

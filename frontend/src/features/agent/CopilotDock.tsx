@@ -240,7 +240,7 @@ export function NativeMissionTimeline({
             source = null;
           }
         } catch {
-          setStreamError(zh ? "运行事件暂时无法解析" : "A runtime event could not be read");
+          setStreamError(t("copilot.stream.parseError"));
         }
       };
       source.addEventListener("message", handleEvent);
@@ -251,10 +251,10 @@ export function NativeMissionTimeline({
         source = null;
         attempts += 1;
         if (attempts <= 3) {
-          setStreamError(zh ? "正在重新连接运行事件" : "Reconnecting to runtime events");
+          setStreamError(t("copilot.stream.reconnecting"));
           retryTimer = window.setTimeout(connect, Math.min(5000, 500 * 2 ** (attempts - 1)));
         } else {
-          setStreamError(zh ? "运行事件流不可用；已保留已收到的事件" : "Event stream unavailable; received events are preserved");
+          setStreamError(t("copilot.stream.unavailable"));
         }
       };
     };
@@ -355,11 +355,11 @@ export function NativeMissionTimeline({
 
   const stop = async () => {
     if (!active) return;
-    setActionState(zh ? "正在停止…" : "Stopping…");
+    setActionState(t("copilot.action.stopping"));
     try {
       await cityNexusApi.stopNativeHermesRun(data.journey.id, run.run_id);
       setRunState("stopped");
-      setActionState(zh ? "已通过 CityNexus 停止" : "Stopped through CityNexus");
+      setActionState(t("copilot.action.stoppedViaCitynexus"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -369,17 +369,17 @@ export function NativeMissionTimeline({
 
   const approve = async () => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
-      setActionState(zh ? "离线时不能确认方案" : "Approval is disabled while offline");
+      setActionState(t("copilot.approval.offlineBlocked"));
       return;
     }
     if (!approvalEvent?.approval_id) {
-      setActionState(zh ? "缺少 CityNexus approval_id，需打开恢复中心审核" : "CityNexus approval_id is not available; review in Recovery");
+      setActionState(t("copilot.approval.idMissing"));
       return;
     }
-    setActionState(zh ? "正在记录 CityNexus 确认…" : "Recording CityNexus approval…");
+    setActionState(t("copilot.approval.recording"));
     try {
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
-      setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
+      setActionState(t("copilot.approval.recorded"));
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -391,11 +391,11 @@ export function NativeMissionTimeline({
     <section className={`cn-native-mission ${compact ? "compact" : ""}`} data-testid="native-hermes-timeline">
       <header className="cn-native-mission-head">
         <div>
-          <b>{zh ? "正在为你处理" : "Working on your request"}</b>
+          <b>{t("copilot.mission.workingOnRequest")}</b>
           <small>
             {executed
-              ? zh ? "已按你的行程事实执行" : "Ran against your journey facts"
-              : zh ? "正在核对你的行程事实…" : "Checking your journey facts…"}
+              ? t("copilot.mission.ranAgainstFacts")
+              : t("copilot.mission.checkingFacts")}
           </small>
         </div>
       </header>
@@ -404,7 +404,7 @@ export function NativeMissionTimeline({
         <AgentRunRail steps={steps} />
       ) : (
         <p className="cn-native-empty">
-          {zh ? "正在核对你的行程事实…" : "Checking your journey facts…"}
+          {t("copilot.mission.checkingFacts")}
         </p>
       )}
 
@@ -425,12 +425,12 @@ export function NativeMissionTimeline({
 
       {run.mission_plan && (
         <details className="cn-native-plan">
-          <summary>{zh ? "查看安全任务计划" : "View safe mission plan"}</summary>
+          <summary>{t("copilot.mission.viewSafePlan")}</summary>
           <ol>
             {run.mission_plan.steps.map((step) => (
               <li key={step.id}>
                 <span>{zh ? localizePlanStep(step.operation) : step.operation}</span>
-                {step.requires_authority && <small>{zh ? "CityNexus 授权" : "CityNexus authority"}</small>}
+                {step.requires_authority && <small>{t("copilot.mission.needsAuthority")}</small>}
               </li>
             ))}
           </ol>
@@ -438,34 +438,32 @@ export function NativeMissionTimeline({
       )}
 
       <div className="cn-native-proposal">
-        <b>{zh ? "建议与受保护安排" : "Suggestions & protected plans"}</b>
+        <b>{t("copilot.proposal.sectionTitle")}</b>
         <span>
           {proposalEvent
-            ? zh ? "已经生成建议，展开高级详情可以看到过程。" : "A suggestion is ready; open advanced detail to see how it was produced."
-            : zh ? "还没有需要你决定的改动。" : "There is nothing for you to decide yet."}
+            ? t("copilot.proposal.ready")
+            : t("copilot.proposal.nothingToDecide")}
         </span>
         <div className="cn-protected-badges">
           {(run.protected_commitments ?? []).map((commitment, index) => (
-            <Badge key={String(commitment.id ?? index)} tone="success" variant="tinted">{zh ? "受保护承诺" : "Protected commitment"}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</Badge>
+            <Badge key={String(commitment.id ?? index)} tone="success" variant="tinted">{t("copilot.badge.protectedCommitment")}{commitment.id ? ` · ${String(commitment.id).slice(0, 8)}` : ""}</Badge>
           ))}
           {!run.protected_commitments?.length && run.mission_plan?.protected_activity_ids.map((id) => (
-            <Badge key={id} tone="success" variant="tinted">{zh ? "受保护活动" : "Protected activity"} · {id.slice(0, 8)}</Badge>
+            <Badge key={id} tone="success" variant="tinted">{t("copilot.badge.protectedActivity")} · {id.slice(0, 8)}</Badge>
           ))}
         </div>
       </div>
 
       {approvalEvent && (
         <div className="cn-copilot-approval" data-testid="native-hermes-approval">
-          <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
+          <b>{t("copilot.approval.needsConfirmation")}</b>
           <span>
-            {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
-              : "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically."}
+            {t("copilot.approval.explainer")}
           </span>
           <div>
-            <button type="button" className="v8-primary" onClick={() => void approve()}>{zh ? "批准" : "Approve"}</button>
-            <button type="button" className="v8-secondary" onClick={() => void stop()}>{zh ? "拒绝" : "Reject"}</button>
-            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{zh ? "修改 / 审核" : "Modify / Review"}</button>
+            <button type="button" className="v8-primary" onClick={() => void approve()}>{t("copilot.approval.approve")}</button>
+            <button type="button" className="v8-secondary" onClick={() => void stop()}>{t("copilot.approval.reject")}</button>
+            <button type="button" className="v8-outline-button" onClick={() => onNavigate("authoritative")}>{t("copilot.approval.modifyReview")}</button>
           </div>
         </div>
       )}
@@ -475,7 +473,7 @@ export function NativeMissionTimeline({
            data-attribution={actionFacts ?? ""}>{actionState}</p>
       )}
       {streamError && <p className="cn-copilot-stream-state" role="status">{streamError}</p>}
-      {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{zh ? "停止任务" : "Stop mission"}</button>}
+      {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{t("copilot.mission.stop")}</button>}
     </section>
   );
 }
@@ -877,18 +875,16 @@ export function CopilotDock({
             <div>
               <b>{t("agent.citynexus")}</b>
               <small>
-                {locale === "zh-CN"
-                  ? "回答只依据已核验的行程事实，不会自己改动你的安排。"
-                  : "Answers use verified journey facts only and never change your plan."}
+                {t("copilot.panel.factsOnlyPromise")}
               </small>
             </div>
             <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>
           </header>
           <div className="cn-copilot-history" aria-live="polite">
-            {messages.length === 0 && <p className="cn-copilot-empty">{locale === "zh-CN" ? "问我为什么这样安排、试算变化，或报告已经确认的中断。" : "Ask why, preview a change, or report a confirmed disruption."}</p>}
+            {messages.length === 0 && <p className="cn-copilot-empty">{t("copilot.history.emptyHint")}</p>}
             {messages.map((item, index) => (
               <article key={`${item.role}-${index}`} className={`cn-copilot-bubble ${item.role}`}>
-                <small>{item.role === "user" ? (locale === "zh-CN" ? "你" : "You") : "CityNexus"}</small>
+                <small>{item.role === "user" ? (t("copilot.bubble.youLabel")) : "CityNexus"}</small>
                 <p>{item.text}</p>
                 {item.response?.intent && (
                   <span className="cn-copilot-chip">{humanIntent(item.response.intent.name, zh, t)}</span>

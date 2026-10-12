@@ -1,0 +1,9 @@
+APPLIED gen 724f70d9ca55 family copilot.badge 两枚 + copilot.panel 一枚（最严那一档：一轮不超三处） rows 3 keys 3
+PRODUCT_BLOB edd6780ef0e6a9711ef35eaad025a18a459cf90b
+DICT_BLOB fcd64faab5033a5c27683f3059132a5c51763f54
+  KEY copilot.badge.protectedCommitment en=1528 zh=2962
+  KEY copilot.badge.protectedActivity en=1529 zh=2963
+  KEY copilot.panel.factsOnlyPromise en=1530 zh=2964
+  CALL copilot.badge.protectedCommitment at lines [449] (改前 449-449)
+  CALL copilot.badge.protectedActivity at lines [452] (改前 452-452)
+  CALL copilot.panel.factsOnlyPromise at lines [878] (改前 878-880)

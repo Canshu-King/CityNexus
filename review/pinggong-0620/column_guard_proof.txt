@@ -1,0 +1,6 @@
+对照的那一代尖 4f1e6176447d38eb4eb12d65b5ccf926afd06cac
+原表 42 行、15 列 -> 新表 42 行、17 列
+新列名：unique_paths、diff_files
+既有 15 列被改动的格数：0
+新行里 unique_paths 为零的 8 条，absorbed_on 也非空的 8 条
+absorbed_on 非空的 8 条里 unique_paths 全为零：True

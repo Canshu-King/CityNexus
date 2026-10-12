@@ -1,0 +1,5 @@
+NEW_LINES 186 分布于 backend/app/main.py:22 行, backend/tests/test_jiazagong_0602_route_truth_r1.py:148 行, frontend/src/app/V8Experience.tsx:10 行, frontend/src/i18n/LocaleContext.tsx:6 行
+FULL_FILE_GATE refuse=43 info=48
+REFUSE_ON_MY_NEW_LINES 0
+REFUSE_CARRIED_BY_FILES frontend/src/app/V8Experience.tsx, frontend/src/i18n/LocaleContext.tsx
+SAMPLE {"file": "frontend/src/app/V8Experience.tsx", "line": 1423, "entry_line": 1423, "token": "AUTONOMOUS", "position": "rendered", "named_by": "server_corpus", "class": "refu

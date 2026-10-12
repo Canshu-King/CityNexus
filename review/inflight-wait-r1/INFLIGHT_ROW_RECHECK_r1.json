@@ -1,0 +1,117 @@
+{
+  "generated_by": "89f2e2d6",
+  "order": "re-check of my own read-an-in-flight-job table, by running it",
+  "tree_head": "13e2b6610c25a3c97a8dbca1c58377c66ceec649",
+  "mirror_tip_read": "4d43f8bc25a1a2f4e4c752afe08851032ab6c71d",
+  "rows": [
+    {
+      "site": "backend/tests/test_qoder_ord197_four_class_receipt.py:470",
+      "site_line_in_table": "470",
+      "nodeid": "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+      "file_blob_at_head": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "prescription": "在 _replay_semantics 之后加一行 `job = _wait_closed(b[\"operation_id\"])` 再断言结论字段",
+      "waiter_to_use": "_wait_closed",
+      "rc": 0,
+      "outcome": "passed",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173211-2df068"
+    },
+    {
+      "site": "backend/tests/test_qoder_ord197_four_class_receipt.py:501",
+      "site_line_in_table": "501",
+      "nodeid": "tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match",
+      "file_blob_at_head": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "prescription": "同一行修法；实测红率见 INFLIGHT_FIX_EXPERIMENT_r1.json",
+      "waiter_to_use": "_wait_closed",
+      "rc": 0,
+      "outcome": "passed",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173214-896eed"
+    },
+    {
+      "site": "backend/tests/test_qoder_anywhere_provider_truth.py:72",
+      "site_line_in_table": "72",
+      "nodeid": "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "file_blob_at_head": "4d952cd51f6874096d60d0704acf0bac07786bc4",
+      "prescription": "POST /catalog-hydrations 之后先 wait_for_operation(operation_id) 再读那份 places 投影",
+      "waiter_to_use": "app.catalog_hydration_operations.wait_for_operation（模块自带，定义在第 1173 行；本文件内无任何等待器）",
+      "rc": 1,
+      "outcome": "red",
+      "count_line": "(no count line)",
+      "assertion_first_200": "E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'c",
+      "run_id": "rowchk-173216-be6b00"
+    },
+    {
+      "site": "backend/tests/test_qoder_anywhere_gates.py:169",
+      "site_line_in_table": "169",
+      "nodeid": "tests/test_qoder_anywhere_gates.py::test_g2_an_existing_journey_becomes_plannable_without_being_recreated",
+      "file_blob_at_head": "fbdff5d636fccd3f2b6934eb519f75c2121bd1ce",
+      "prescription": "202 之后先等终态，再断 `phase`/`status` 与后面那句 `plans/generate` 的前提（注释自陈前提是「水合完成后」）",
+      "waiter_to_use": "app.catalog_hydration_operations.wait_for_operation",
+      "rc": 0,
+      "outcome": "passed",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173219-00942e"
+    },
+    {
+      "site": "backend/tests/test_qoder_ord224_g3_generation_measurement.py:162",
+      "site_line_in_table": "162",
+      "nodeid": "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one",
+      "file_blob_at_head": "73e723c333cb31a78148cde5f25b1916ce808fae",
+      "prescription": "反向依赖：`assert terminal_rows and open_rows` 把「有作业还没关」当判据；改法是后继也走闩锁（parked_worker）而不是靠线程没跑完，或只断「出现了 ≥2 代 operation_id」这一真判据",
+      "waiter_to_use": "本文件已有 parked_worker 形制（:216 与 :264 两处 monkeypatch `_run_operation`）",
+      "rc": 0,
+      "outcome": "passed",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173222-c76240"
+    },
+    {
+      "site": "backend/tests/test_qoder_provider_identity_leg.py:437",
+      "site_line_in_table": "437",
+      "nodeid": "tests/test_qoder_provider_identity_leg.py::test_g7_a_resolved_identity_reaches_the_stored_operation_without_any_pending_token",
+      "file_blob_at_head": "2e79969efe05d6b27fbb3a7ad30c05a380a7ae26",
+      "prescription": "读作业行与投影之前先等终态（该文件里 0 处等待器）",
+      "waiter_to_use": "本文件与模块侧都要现取：`app.catalog_hydration_operations.wait_for_operation`",
+      "rc": 0,
+      "outcome": "passed",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173224-d60726"
+    },
+    {
+      "site": "backend/tests/test_qoder_pending_destination_identity.py:157",
+      "site_line_in_table": "157",
+      "nodeid": "tests/test_qoder_pending_destination_identity.py::test_g1_unresolved_text_never_reaches_the_identity_columns",
+      "file_blob_at_head": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "prescription": "同文件已有 import 与用法（:224 引入、:232→:234 那处真在用），而 :157 与 :373 两枚走的是 _submit 之后直接 _row 断身份列；在断言前加同一次等待即可（:495 不算，它 start_worker=False）",
+      "waiter_to_use": "wait_for_operation",
+      "rc": 4,
+      "outcome": "red",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173227-304f2d"
+    },
+    {
+      "site": "backend/tests/test_qoder_pending_destination_identity.py:373",
+      "site_line_in_table": "373",
+      "nodeid": "tests/test_qoder_pending_destination_identity.py::test_g6_the_stored_label_is_separate_from_the_pending_key",
+      "file_blob_at_head": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "prescription": "同上",
+      "waiter_to_use": "wait_for_operation",
+      "rc": 4,
+      "outcome": "red",
+      "count_line": "(no count line)",
+      "assertion_first_200": "",
+      "run_id": "rowchk-173229-2a9c4b"
+    }
+  ],
+  "summary": {
+    "rows": 8,
+    "still_red": 3,
+    "already_green": 5
+  }
+}

@@ -1,0 +1,4 @@
+尖 f85194013ac10202e40b52d7ba2b6b95a7231059
+backend/app/agent/ 现读 18 枚：__init__.py ai_availability.py approval.py autorun.py contracts.py delegation_policy.py gateway.py guardian.py mission.py mission_plan.py orchestrator.py predictive.py principal.py runtime.py runtime_events.py runtime_identity.py signal_pipeline.py tool_catalog.py
+   watch_policy.py 在尖上：无
+   journey_intent.py 在尖上：无

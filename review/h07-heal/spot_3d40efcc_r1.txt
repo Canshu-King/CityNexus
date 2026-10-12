@@ -1,0 +1,2 @@
+rc=0 tests/test_qoder_ord0479_dictionary_key_shape.py::test_H07_the_two_forbidden_shortcuts_were_not_taken | 1 passed in 0.26s
+rc=0 tests/test_qoder_ord0495_gitshow_portable.py::test_G07_the_converted_cell_skips_in_an_export_and_asserts_in_a_repo | 1 passed in 1.99s

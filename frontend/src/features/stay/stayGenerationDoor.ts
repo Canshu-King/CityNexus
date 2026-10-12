@@ -11,6 +11,8 @@
  * successful call, so the cards a traveller sees are the ones the read door answered with.
  */
 
+import { dictionaryCopy } from "../../i18n/LocaleContext";
+
 export type StayOutcome =
   | "OPTIONS_FOUND"
   | "NOT_APPLICABLE_ZERO_NIGHTS"
@@ -44,9 +46,7 @@ export function stayOutcomeCopy(code: string, zh: boolean): string {
   };
   const hit = table[code];
   if (!hit) {
-    return zh
-      ? "这台服务器报回一个这一屏还没有对应词形的结果名，所以我不替它编一句解释。"
-      : "This server answered with a result name this screen has no wording for, so it is not going to get an invented explanation here.";
+    return dictionaryCopy(zh ? "zh-CN" : "en", "stay.outcome.unnamed");
   }
   return zh ? hit[0] : hit[1];
 }

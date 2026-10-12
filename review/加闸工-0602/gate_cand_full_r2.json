@@ -1,0 +1,874 @@
+{
+ "arm": "codes-on-screen-r4",
+ "ref": "5ed85afea5d86b71be117a6dba80c8f0e24020e9",
+ "base": "8940570c022950b705cc3b37139d1b8f7052c42a",
+ "require_name": true,
+ "only_added": false,
+ "files_judged": 2,
+ "problems": [
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1423,
+   "entry_line": 1423,
+   "token": "AUTONOMOUS",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "mode: \"AUTONOMOUS\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1454,
+   "entry_line": 1454,
+   "token": "STRUCTURED_JSON",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "artifact_type: \"STRUCTURED_JSON\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2838,
+   "entry_line": 2838,
+   "token": "COMPLETED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "![\"COMPLETED\", \"SKIPPED\", \"CANCELLED\"].includes(item.status),"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2838,
+   "entry_line": 2838,
+   "token": "SKIPPED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "![\"COMPLETED\", \"SKIPPED\", \"CANCELLED\"].includes(item.status),"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2838,
+   "entry_line": 2838,
+   "token": "CANCELLED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "![\"COMPLETED\", \"SKIPPED\", \"CANCELLED\"].includes(item.status),"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 3287,
+   "entry_line": 3287,
+   "token": "UNKNOWN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "data-cursor-status={cursorStatus ?? \"UNKNOWN\"}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 3800,
+   "entry_line": 3800,
+   "token": "UNKNOWN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "data-cursor-status={cursorStatus ?? \"UNKNOWN\"}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4303,
+   "entry_line": 4303,
+   "token": "CONFIRMED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "const SERVER_CONFIRMED_STATES = new Set([\"CONFIRMED\", \"FULFILLED\", \"COMPLETED\"]);"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4303,
+   "entry_line": 4303,
+   "token": "FULFILLED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "const SERVER_CONFIRMED_STATES = new Set([\"CONFIRMED\", \"FULFILLED\", \"COMPLETED\"]);"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4303,
+   "entry_line": 4303,
+   "token": "COMPLETED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "const SERVER_CONFIRMED_STATES = new Set([\"CONFIRMED\", \"FULFILLED\", \"COMPLETED\"]);"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4989,
+   "entry_line": 4989,
+   "token": "ADVISORY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "<b>mode</b> <code>{policy?.mode ?? \"ADVISORY\"}</code>"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5128,
+   "entry_line": 5128,
+   "token": "XIAMEN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "厦门: \"XIAMEN\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5129,
+   "entry_line": 5129,
+   "token": "BEIJING",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "北京: \"BEIJING\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5130,
+   "entry_line": 5130,
+   "token": "SHANGHAI",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "上海: \"SHANGHAI\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5131,
+   "entry_line": 5131,
+   "token": "TIANJIN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "天津: \"TIANJIN\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5133,
+   "entry_line": 5133,
+   "token": "GUANGZHOU",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "广州: \"GUANGZHOU\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5134,
+   "entry_line": 5134,
+   "token": "SHENZHEN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "深圳: \"SHENZHEN\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5135,
+   "entry_line": 5135,
+   "token": "CHENGDU",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "成都: \"CHENGDU\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 5136,
+   "entry_line": 5136,
+   "token": "HANGZHOU",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "杭州: \"HANGZHOU\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 120,
+   "entry_line": 120,
+   "token": "SYSTEM",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"nav.groupSystem\": \"SYSTEM\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 336,
+   "entry_line": 336,
+   "token": "SELECTED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"studio.selectedStay\": \"SELECTED STAY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 338,
+   "entry_line": 338,
+   "token": "SELECTED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"studio.noStaySelected\": \"NO STAY SELECTED\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 485,
+   "entry_line": 485,
+   "token": "OFFLINE",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"offline.readOnly\": \"OFFLINE · READ ONLY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 504,
+   "entry_line": 504,
+   "token": "AUTHORIZED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"me.preAuthorized\": \"PRE-AUTHORIZED\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 645,
+   "entry_line": 645,
+   "token": "REPLAY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.sealedReplayReady\": \"SEALED REAL REPLAY READY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 645,
+   "entry_line": 645,
+   "token": "SEALED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.sealedReplayReady\": \"SEALED REAL REPLAY READY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 647,
+   "entry_line": 647,
+   "token": "REPLAY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.demoReplay\": \"DEMO REPLAY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 649,
+   "entry_line": 649,
+   "token": "DISCOVERY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.brand\": \"CN / DISCOVERY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 675,
+   "entry_line": 675,
+   "token": "REPLAY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.sealedReal\": \"SEALED REAL REPLAY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 675,
+   "entry_line": 675,
+   "token": "SEALED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.sealedReal\": \"SEALED REAL REPLAY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 678,
+   "entry_line": 678,
+   "token": "MOBILITY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.mobility\": \"MOBILITY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 684,
+   "entry_line": 684,
+   "token": "DEGRADED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"discovery.mixedDegraded\": \"MIXED / DEGRADED\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 774,
+   "entry_line": 774,
+   "token": "OFFLINE",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.offline\": \"OFFLINE\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 782,
+   "entry_line": 782,
+   "token": "JOURNEY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.authoritativeJourney\": \"AUTHORITATIVE JOURNEY\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 796,
+   "entry_line": 796,
+   "token": "EN_ROUTE",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.markEnRoute\": \"Mark EN_ROUTE\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 797,
+   "entry_line": 797,
+   "token": "ARRIVED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.markArrived\": \"Mark ARRIVED\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 798,
+   "entry_line": 798,
+   "token": "IN_PROGRESS",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.markInProgress\": \"Mark IN_PROGRESS\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 799,
+   "entry_line": 799,
+   "token": "COMPLETED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.markCompleted\": \"Mark COMPLETED\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 811,
+   "entry_line": 811,
+   "token": "JOURNEY",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"exec.liveJourneyPrefix\": \"LIVE JOURNEY ·\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 997,
+   "entry_line": 997,
+   "token": "COMMITMENT",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"intel.commitment\": \"COMMITMENT\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1269,
+   "entry_line": 1269,
+   "token": "PROTECTED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"v14.kickerProtected\": \"PROTECTED\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1285,
+   "entry_line": 1285,
+   "token": "DEGRADED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"v14.gateDegraded\": \"DEGRADED · confirmation\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1286,
+   "entry_line": 1286,
+   "token": "PASSED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"v14.gatePassed\": \"PASSED · provider facts frozen\","
+  }
+ ],
+ "informational": [
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 58,
+   "entry_line": 58,
+   "token": "traveler-twin",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import { TwinPanel } from \"../features/traveler-twin/TwinPanel\";"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1614,
+   "entry_line": 1614,
+   "token": "failure-choose-journey",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-choose-journey\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1623,
+   "entry_line": 1623,
+   "token": "failure-sign-in",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-sign-in\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1634,
+   "entry_line": 1634,
+   "token": "failure-retry-later",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-retry-later\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1644,
+   "entry_line": 1644,
+   "token": "failure-view-current-state",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-view-current-state\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1654,
+   "entry_line": 1654,
+   "token": "failure-read-cached",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-read-cached\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1662,
+   "entry_line": 1662,
+   "token": "failure-retry",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-retry\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2315,
+   "entry_line": 2315,
+   "token": "drawer-entry",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={\"v8-drawer-entry-\" + item.key}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2461,
+   "entry_line": 2461,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id={`trips-tab-${item.key}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2466,
+   "entry_line": 2466,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trips-tab-${item.key}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2493,
+   "entry_line": 2493,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "aria-labelledby={`trips-tab-${tab}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2941,
+   "entry_line": 2941,
+   "token": "today-advisory",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "className={`today-advisory${advisory.tight ? \" tight\" : \"\"}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 3412,
+   "entry_line": 3412,
+   "token": "day-by-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": \"Choose a plan and the day-by-day plan appears here.\"}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4211,
+   "entry_line": 4211,
+   "token": "map-stop",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "className={stop.id === selectedActivityId ? \"v8-map-stop selected\" : \"v8-map-stop\"}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4214,
+   "entry_line": 4214,
+   "token": "map-stop",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`map-stop-${stop.id}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4650,
+   "entry_line": 4650,
+   "token": "booking-state",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "e={`v8-booking-state${serverConfirmed(item.status) && item.commitment_id ? \" safe\" : \"\"}`}"
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 33,
+   "entry_line": 33,
+   "token": "re-ask",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "o way to re-ask with the same key. Refresh and check the result before submitting again.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 131,
+   "entry_line": 131,
+   "token": "read-only",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"shell.offlineMsg\": \"Network unavailable · showing your read-only saved journey.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 229,
+   "entry_line": 229,
+   "token": "leave-now",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": ": \" The route timing here was measured by a provider, so it can carry a leave-now check.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 244,
+   "entry_line": 244,
+   "token": "evidence-backed",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "e-backed journey with the stay, movement, luggage, and protected moments working as one.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 279,
+   "entry_line": 279,
+   "token": "weather-aware",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"hub.weatherAware\": \"weather-aware\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 329,
+   "entry_line": 329,
+   "token": "multi-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"studio.kicker\": \"Trip Studio · multi-day plan\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 363,
+   "entry_line": 363,
+   "token": "multi-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "ub\": \"Compose from the server Trip Studio to create the frozen multi-day execution path.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 370,
+   "entry_line": 370,
+   "token": "leave-by",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\": \"Current step, next protected moment, leave-by guidance, and one clear recovery path.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 427,
+   "entry_line": 427,
+   "token": "re-asks",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "g with the same idempotency key re-asks the same write instead of creating a second one.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 529,
+   "entry_line": 529,
+   "token": "what-if",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "your trip is explained before it is applied, and your confirmed bookings stay protected.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 549,
+   "entry_line": 549,
+   "token": "what-if",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "aceholder\": \"Ask why, try a what-if, find a place, or report a disruption happening now…\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 621,
+   "entry_line": 621,
+   "token": "read-back",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "nt.aiRunUnreadable\": \"That read-back didn't answer, so we won't guess what was produced.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 623,
+   "entry_line": 623,
+   "token": "read-back",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"agent.aiRunNothingLanded\": \"The read-back says no plan was added.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 629,
+   "entry_line": 629,
+   "token": "read-back",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"agent.aiRunNoCurrentPlan\": \"The read-back found no plan in force at all.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 651,
+   "entry_line": 651,
+   "token": "server-known",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " the semantic direction, but only a server-known place can reach the authoritative plan.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 662,
+   "entry_line": 662,
+   "token": "provider-grounded",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " broader place request or a nearby arrival anchor; CityNexus kept the Journey unchanged.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 680,
+   "entry_line": 680,
+   "token": "fact-level",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"discovery.factFallback\": \"fact-level fallback\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 694,
+   "entry_line": 694,
+   "token": "provider-grounded",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"discovery.providerGrounded\": \"provider-grounded\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 705,
+   "entry_line": 705,
+   "token": "rain-friendly",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "indoor culture, low walking, and rain-friendly places near my protected Journey moments.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 741,
+   "entry_line": 741,
+   "token": "mid-run",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"discovery.thisPreparationWasLostMidRun\": \"This preparation was lost mid-run\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 842,
+   "entry_line": 842,
+   "token": "auto-apply",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"inbox.smartApplyFailed\": \"Couldn't auto-apply.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 863,
+   "entry_line": 863,
+   "token": "share-grant",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " share-grant door did not answer, so this screen will not guess what it would have said.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 993,
+   "entry_line": 993,
+   "token": "pre-authorized",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"intel.versionSuffix\": \"· pre-authorized transport envelope\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1109,
+   "entry_line": 1109,
+   "token": "in-app",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"push.unavailable\": \"Push capability unavailable · in-app records remain active.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1111,
+   "entry_line": 1111,
+   "token": "policy-bound",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"push.saved\": \"Web Push subscription saved; policy-bound delivery remains auditable.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1175,
+   "entry_line": 1175,
+   "token": "link-readable",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "readable row, {grant}, and that is the link handed over ({rows} {plural:row:rows} read).\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1195,
+   "entry_line": 1195,
+   "token": "re-syncing",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"recovery.staleTitle\": \"Trip evidence needs re-syncing\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1279,
+   "entry_line": 1279,
+   "token": "auto-accept",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"v14.autoAcceptOn\": \"envelope auto-accept enabled\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1322,
+   "entry_line": 1322,
+   "token": "journey-scoped",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "timate\": \"Per-stop estimates: the store keeps them, no journey-scoped read answers them.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1391,
+   "entry_line": 1391,
+   "token": "straight-line",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"detail.nearbyNoteClose\": \"All within about {n} m, ordered by straight-line distance.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1433,
+   "entry_line": 1433,
+   "token": "day-by-day",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": " yet. Ask the AI to plan it, then pick a plan and the day-by-day itinerary appears here.\","
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "line": 1500,
+   "entry_line": 1500,
+   "token": "sign-in",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"lib.failureAttribution.needsFreshSignIn\": \"This trip needs a fresh sign-in\","
+  }
+ ]
+}

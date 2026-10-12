@@ -1,0 +1,4 @@
+ls-remote GitHub：04ad2df87a10d75acfd681efdc9d272fdfcf6e65
+bare rev-parse：04ad2df87a10d75acfd681efdc9d272fdfcf6e65
+本地 HEAD：04ad2df87a10d75acfd681efdc9d272fdfcf6e65
+bare cat-file=commit int cat-file=commit

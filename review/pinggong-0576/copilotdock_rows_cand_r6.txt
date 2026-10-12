@@ -1,0 +1,6 @@
+TIP 061339c0c61e FILE frontend/src/features/agent/CopilotDock.tsx TOTAL 5
+449	449	? "受保护承诺" : "Protected commitment"
+452	452	? "受保护活动" : "Protected activity"
+879	880	? "回答只依据已核验的行程事实，不会自己改动你的安排。"\n                  : "Answers use verified journey facts only and never change your plan."
+886	886	? "问我为什么这样安排、试算变化，或报告已经确认的中断。" : "Ask why, preview a change, or report a confirmed disruption."
+889	889	? "你" : "You"

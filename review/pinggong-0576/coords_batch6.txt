@@ -1,0 +1,30 @@
+CAND d1b2ac6689667781ee80b08fbbdda2c48db584ec
+KEY_DEFINITIONS 26
+  copilot.action.stoppedViaCitynexus en=1526 zh=2960 calls=362
+  copilot.action.stopping en=1525 zh=2959 calls=358
+  copilot.approval.approve en=1506 zh=2940 calls=464
+  copilot.approval.explainer en=1505 zh=2939 calls=461
+  copilot.approval.idMissing en=1501 zh=2935 calls=376
+  copilot.approval.modifyReview en=1527 zh=2961 calls=466
+  copilot.approval.needsConfirmation en=1504 zh=2938 calls=459
+  copilot.approval.offlineBlocked en=1500 zh=2934 calls=372
+  copilot.approval.recorded en=1503 zh=2937 calls=382
+  copilot.approval.recording en=1502 zh=2936 calls=379
+  copilot.approval.reject en=1507 zh=2941 calls=465
+  copilot.badge.protectedActivity en=1529 zh=2963 calls=452
+  copilot.badge.protectedCommitment en=1528 zh=2962 calls=449
+  copilot.mission.checkingFacts en=1496 zh=2930 calls=398,407
+  copilot.mission.needsAuthority en=1498 zh=2932 calls=433
+  copilot.mission.ranAgainstFacts en=1495 zh=2929 calls=397
+  copilot.mission.stop en=1499 zh=2933 calls=476
+  copilot.mission.viewSafePlan en=1497 zh=2931 calls=428
+  copilot.mission.workingOnRequest en=1494 zh=2928 calls=394
+  copilot.panel.factsOnlyPromise en=1530 zh=2964 calls=878
+  copilot.proposal.nothingToDecide en=1524 zh=2958 calls=445
+  copilot.proposal.ready en=1523 zh=2957 calls=444
+  copilot.proposal.sectionTitle en=1522 zh=2956 calls=441
+  copilot.stream.parseError en=1519 zh=2953 calls=243
+  copilot.stream.reconnecting en=1520 zh=2954 calls=254
+  copilot.stream.unavailable en=1521 zh=2955 calls=257
+UNIQUE_KEYS_CALLED 26 CALL_SITES 27
+INLINE_BILINGUAL_LEFT_IN_FILE 2

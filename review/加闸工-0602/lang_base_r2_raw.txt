@@ -1,0 +1,39 @@
+
+[substitutions: 1 处取尖改为四十位 8940570c0229，2 处临时 ref 改名为 jz0602_base_cp（避开上一趟占用的同名 ref）]
+
+======================================================================
+== 8940570c0229 via jz0602_base_cp, same ruler source
+======================================================================
+TIP 8940570c0229
+SIDE_MARKS const en: Dict@8,const zhCN: Di@1555
+EN_KEYS 1320 | ZH_KEYS 1320 | BOTH 1320
+ONE_SIDED 0
+EN_SIDE_HAS_CJK 1
+CJK_ON_EN copilot.keyless.writeUnknown | en frontend/src/i18n/LocaleContext.tsx:424 | zh frontend/src/i18n/LocaleContext.tsx:1941 | 值 {method} {path} -- 这台设备等到 {seconds} 秒就
+SAME_TEXT 14
+SAME agent.aiBadge | en frontend/src/i18n/LocaleContext.tsx:567 | zh frontend/src/i18n/LocaleContext.tsx:2076 | 值 AI
+SAME agent.brand | en frontend/src/i18n/LocaleContext.tsx:528 | zh frontend/src/i18n/LocaleContext.tsx:2037 | 值 CN / AI
+SAME agent.citynexus | en frontend/src/i18n/LocaleContext.tsx:551 | zh frontend/src/i18n/LocaleContext.tsx:2060 | 值 CityNexus Copilot
+SAME copilot.keyless.writeUnknown | en frontend/src/i18n/LocaleContext.tsx:424 | zh frontend/src/i18n/LocaleContext.tsx:1941 | 值 {method} {path} -- 这台设备等到 {seconds} 秒就
+SAME discovery.deepseek | en frontend/src/i18n/LocaleContext.tsx:667 | zh frontend/src/i18n/LocaleContext.tsx:2171 | 值 DeepSeek
+SAME exec.picEdge | en frontend/src/i18n/LocaleContext.tsx:806 | zh frontend/src/i18n/LocaleContext.tsx:2307 | 值 PIC Edge ·
+SAME intel.cpsat | en frontend/src/i18n/LocaleContext.tsx:984 | zh frontend/src/i18n/LocaleContext.tsx:2476 | 值 CP-SAT
+SAME intel.deepseek | en frontend/src/i18n/LocaleContext.tsx:981 | zh frontend/src/i18n/LocaleContext.tsx:2473 | 值 DeepSeek
+SAME intel.hermes | en frontend/src/i18n/LocaleContext.tsx:982 | zh frontend/src/i18n/LocaleContext.tsx:2474 | 值 Hermes
+SAME mobile.copilot | en frontend/src/i18n/LocaleContext.tsx:124 | zh frontend/src/i18n/LocaleContext.tsx:1662 | 值 Copilot
+SAME nav.agent | en frontend/src/i18n/LocaleContext.tsx:18 | zh frontend/src/i18n/LocaleContext.tsx:1565 | 值 Copilot
+SAME shell.brand | en frontend/src/i18n/LocaleContext.tsx:136 | zh frontend/src/i18n/LocaleContext.tsx:1674 | 值 CityNexus
+PLACEHOLDER_KEYS 143 | DRIFT 0
+ZH_SIDE_LATIN_ONLY 11（这一档只是提示，专名与占位符本来就该一样，不当缺陷）
+LATIN agent.citynexus | zh frontend/src/i18n/LocaleContext.tsx:2060 | 值 CityNexus Copilot
+LATIN discovery.deepseek | zh frontend/src/i18n/LocaleContext.tsx:2171 | 值 DeepSeek
+LATIN exec.picEdge | zh frontend/src/i18n/LocaleContext.tsx:2307 | 值 PIC Edge ·
+LATIN intel.cpsat | zh frontend/src/i18n/LocaleContext.tsx:2476 | 值 CP-SAT
+LATIN intel.deepseek | zh frontend/src/i18n/LocaleContext.tsx:2473 | 值 DeepSeek
+LATIN intel.hermes | zh frontend/src/i18n/LocaleContext.tsx:2474 | 值 Hermes
+LATIN mobile.copilot | zh frontend/src/i18n/LocaleContext.tsx:1662 | 值 Copilot
+LATIN nav.agent | zh frontend/src/i18n/LocaleContext.tsx:1565 | 值 Copilot
+LATIN shell.brand | zh frontend/src/i18n/LocaleContext.tsx:1674 | 值 CityNexus
+LATIN spend.dayHeading | zh frontend/src/i18n/LocaleContext.tsx:2772 | 值 {label}
+LATIN spend.groupHeading | zh frontend/src/i18n/LocaleContext.tsx:2767 | 值 {currency}
+[ruler exit code = 2]

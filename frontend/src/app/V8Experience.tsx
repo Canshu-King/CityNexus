@@ -1385,19 +1385,27 @@ export function V8Experience() {
         executed: boolean;
         after_mode: string;
         reason_codes: string[];
+        route_truth?: { eligible_for_live_readiness: boolean };
       }>(
         `/api/v1/journeys/${data.journey.id}/stay-options/${selected.id}/autopilot/recover`,
         { method: "POST", body: JSON.stringify({ state: "RAIN" }) },
       );
       await load(data.journey.id);
       setMessage(
-        result.executed
+        (result.executed
           ? t("shell.autopilotRecovered", {
               mode: result.after_mode.toLowerCase(),
             })
           : t("shell.autopilotPaused", {
               reasons: result.reason_codes.join(" · "),
-            }),
+            })) +
+        (result.route_truth
+          ? t(
+              result.route_truth.eligible_for_live_readiness
+                ? "shell.autopilotTruthLive"
+                : "shell.autopilotTruthSynthetic",
+            )
+          : ""),
       );
     } finally {
       setBusy(false);

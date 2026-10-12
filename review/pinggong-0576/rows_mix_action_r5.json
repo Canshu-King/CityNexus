@@ -1,0 +1,29 @@
+{
+ "gen": "49e2f657a9cb4f33e1491b393bb036946601f366",
+ "file": "frontend/src/features/agent/CopilotDock.tsx",
+ "family": "copilot.action",
+ "rows": [
+  {
+   "start": 13602,
+   "start_line": 358,
+   "end_line": 358,
+   "key": "copilot.action.stopping",
+   "zh": "正在停止…",
+   "en": "Stopping…",
+   "draft_line": "358",
+   "guard": "zh",
+   "ternary": "zh ? \"正在停止…\" : \"Stopping…\""
+  },
+  {
+   "start": 13767,
+   "start_line": 362,
+   "end_line": 362,
+   "key": "copilot.action.stoppedViaCitynexus",
+   "zh": "已通过 CityNexus 停止",
+   "en": "Stopped through CityNexus",
+   "draft_line": "362",
+   "guard": "zh",
+   "ternary": "zh ? \"已通过 CityNexus 停止\" : \"Stopped through CityNexus\""
+  }
+ ]
+}

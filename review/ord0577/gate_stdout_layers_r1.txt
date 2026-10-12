@@ -1,0 +1,61 @@
+[WebServer] INFO:     127.0.0.1:50138 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50139 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55149 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/agent-feed?limit=50 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61090 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64673 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56209 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51424 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52697 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/members HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60181 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/share-grants HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60183 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/member-role-limits HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60182 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/acl/roles HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59909 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59910 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59911 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/checkins HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59914 - "GET /api/v1/travelers/988ea636-c30b-4661-a53d-2afadda0e48f/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59912 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55441 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55440 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59913 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63141 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50861 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50862 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50863 - "GET /api/v1/travelers/988ea636-c30b-4661-a53d-2afadda0e48f/push-config HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55001 - "GET /api/v1/travelers/988ea636-c30b-4661-a53d-2afadda0e48f/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55520 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49692 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50864 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50865 - "GET /api/v1/journeys/09f26942-7731-4a84-ab01-c76a387c92ab/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55521 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  3 passed (2.4m)
+RUN C:\Program Files\nodejs\npm.cmd run test:e2e -- e2e/qoder-8ac89982-ord0577-nav-layers-census-r1.spec.ts --reporter=line cwd D:\moodle\_qoder_b_ord0417_20260928\hubcut\frontend db D:\moodle\_qoder_b_ord0417_20260928\db\_e2e_ord0577layers_r3.db ports 5206/5207 tree D:\moodle\_qoder_b_ord0417_20260928\hubcut
+GATE_RC=0 RUN_ID=ord0577layers_r3 LOG=D:\moodle\_qoder_b_ord0417_20260928\evidence\ord0512\gate\ord0577layers_r3.log

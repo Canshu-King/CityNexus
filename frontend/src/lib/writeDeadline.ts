@@ -24,6 +24,8 @@
  * is the same attribution mistake ORD-0280 just closed for the label.
  */
 
+import { dictionaryCopy, dictionaryText } from "../i18n/LocaleContext";
+
 export const CLIENT_WRITE_DEADLINE_MS = 60_000;
 export const CLIENT_WRITE_DEADLINE_SECONDS = CLIENT_WRITE_DEADLINE_MS / 1000;
 /** The server's own per-write budget, restated here only so the ordering test has both sides in one file. */
@@ -79,22 +81,15 @@ export function writeDeadlineCopy(
   deadlineMs: number = CLIENT_WRITE_DEADLINE_MS,
 ): { title: string; body: string; seconds: number } {
   const seconds = Math.round(deadlineMs / 1000);
-  return zh
-    ? {
-        title: `这台设备等到 ${seconds} 秒就停了`,
-        body:
-          "服务端没有在这段时间内回答，所以这一笔的结果是未知的——不是「没有发生」。" +
-          "请先刷新核对再决定是否重试；同一把幂等键重试是补问同一笔，不会生成第二份。",
-        seconds,
-      }
-    : {
-        title: `This device stopped waiting after ${seconds} s`,
-        body:
-          "The server did not answer in that time, so the outcome of this write is unknown -- not " +
-          '"did not happen". Refresh and check before deciding to retry; retrying with the same ' +
-          "idempotency key re-asks the same write instead of creating a second one.",
-        seconds,
-      };
+  const locale = zh ? "zh-CN" : "en";
+  return {
+    title: dictionaryText(locale, "recover.writeDeadline.title", { seconds }),
+    body:
+      dictionaryCopy(locale, "recover.writeDeadline.body") +
+      (zh ? "" : " ") +
+      dictionaryCopy(locale, "recover.writeDeadline.retryGuidance"),
+    seconds,
+  };
 }
 
 /** The server budget is the thing we must not cut in front of; exported so the gate can assert the order. */

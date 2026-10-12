@@ -1,0 +1,115 @@
+=== state: state2 现尖那代（未接线、也没有 location_scope 的调用面）
+=== rc=1
+FF.F                                                                     [100%]
+================================== FAILURES ===================================
+___ test_private_newest_position_does_not_reach_the_active_plan_projection ____
+
+    def test_private_newest_position_does_not_reach_the_active_plan_projection() -> None:
+        """A1: the handoff row is the newest one, and the projection must show the ordinary row."""
+    
+        journey_id = _journey()
+>       private = _private_source()
+                  ^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _private_source() -> str:
+        """Read the scope constant off the module that filters with it.
+    
+        Deliberately not a top-of-file import: on a generation whose read path carries no filter,
+        `from app.execution.location_scope import ...` aborts collection for the whole module and
+        the run reports an import error instead of which requirement is unmet.  Resolved here, the
+        failure names the symbol the read path is expected to carry.
+        """
+    
+        from app import stay_mobility as module
+    
+        value = getattr(module, "PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE", None)
+>       assert value is not None, (
+            "app/stay_mobility.py carries no PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE, so the active-plan "
+            "location read has nothing to filter the handed-off route out with"
+        )
+E       AssertionError: app/stay_mobility.py carries no PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE, so the active-plan location read has nothing to filter the handed-off route out with
+E       assert None is not None
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:67: AssertionError
+______ test_a_journey_whose_only_position_is_private_reports_no_position ______
+
+    def test_a_journey_whose_only_position_is_private_reports_no_position() -> None:
+        """A2: with nothing ordinary to fall back to, the projection says absent instead of leaking."""
+    
+        journey_id = _journey()
+>       private = _private_source()
+                  ^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:207: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _private_source() -> str:
+        """Read the scope constant off the module that filters with it.
+    
+        Deliberately not a top-of-file import: on a generation whose read path carries no filter,
+        `from app.execution.location_scope import ...` aborts collection for the whole module and
+        the run reports an import error instead of which requirement is unmet.  Resolved here, the
+        failure names the symbol the read path is expected to carry.
+        """
+    
+        from app import stay_mobility as module
+    
+        value = getattr(module, "PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE", None)
+>       assert value is not None, (
+            "app/stay_mobility.py carries no PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE, so the active-plan "
+            "location read has nothing to filter the handed-off route out with"
+        )
+E       AssertionError: app/stay_mobility.py carries no PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE, so the active-plan location read has nothing to filter the handed-off route out with
+E       assert None is not None
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:67: AssertionError
+_____ test_the_served_stay_options_response_carries_the_filtered_position _____
+
+    def test_the_served_stay_options_response_carries_the_filtered_position() -> None:
+        """A4: the same answer out of a route the client actually calls."""
+    
+        journey_id = _journey()
+>       private = _private_source()
+                  ^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _private_source() -> str:
+        """Read the scope constant off the module that filters with it.
+    
+        Deliberately not a top-of-file import: on a generation whose read path carries no filter,
+        `from app.execution.location_scope import ...` aborts collection for the whole module and
+        the run reports an import error instead of which requirement is unmet.  Resolved here, the
+        failure names the symbol the read path is expected to carry.
+        """
+    
+        from app import stay_mobility as module
+    
+        value = getattr(module, "PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE", None)
+>       assert value is not None, (
+            "app/stay_mobility.py carries no PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE, so the active-plan "
+            "location read has nothing to filter the handed-off route out with"
+        )
+E       AssertionError: app/stay_mobility.py carries no PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE, so the active-plan location read has nothing to filter the handed-off route out with
+E       assert None is not None
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:67: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_ord0602_private_buddy_location_scope.py::test_private_newest_position_does_not_reach_the_active_plan_projection
+FAILED tests/test_qoder_ord0602_private_buddy_location_scope.py::test_a_journey_whose_only_position_is_private_reports_no_position
+FAILED tests/test_qoder_ord0602_private_buddy_location_scope.py::test_the_served_stay_options_response_carries_the_filtered_position
+3 failed, 1 passed, 2 warnings in 4.56s

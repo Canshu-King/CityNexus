@@ -12,6 +12,7 @@ from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
+from app.journey_inbox import inbox_artifact_fingerprint
 from app.replanning.commitment_remap import (
     RemapConflict as CommitmentRemapConflict,
     resolve_commitment_target,
@@ -49,6 +50,7 @@ from app.db.models import (
     TransportReservation,
 )
 from app.execution.clock import execution_clock
+from app.execution.truth import current_execution_truth
 from app.planning.anchors import (
     LOCATION_RESOLVED,
     STRUCTURAL_ANCHOR_KEYS,
@@ -177,6 +179,7 @@ def _execution_truth(
     def compact(item: Activity | None) -> dict[str, Any] | None:
         if item is None:
             return None
+        metadata = _load(item.metadata_json, {})
         return {
             "id": item.id,
             "title": item.title,
@@ -184,11 +187,15 @@ def _execution_truth(
             "start_at": item.start_at,
             "end_at": item.end_at,
             "locked": bool(item.locked),
+            "execution_truth": current_execution_truth(metadata),
         }
 
+    now_payload = compact(now_item)
+    next_payload = compact(next_item)
     return {
-        "now": compact(now_item),
-        "next": compact(next_item),
+        "now": now_payload,
+        "next": next_payload,
+        "execution_truth": now_payload.get("execution_truth") if now_payload else None,
         "now_activity_id": now_item.id if now_item else None,
         "next_activity_id": next_item.id if next_item else None,
         "now_state": now_item.status if now_item else ("STALE_CURSOR" if stale_cursor else "COMPLETE"),
@@ -959,6 +966,12 @@ def import_reservation_artifact(
             "provider_key": "pasted-confirmation",
         }
         mode = "DEEPSEEK_ELIGIBLE_AMBIGUOUS_TEXT"
+    # The same confirmation pasted twice has to land as one artefact, so the audit trail
+    # carries the inbox module's content identity rather than a run id or a timestamp.
+    artifact_fingerprint = inbox_artifact_fingerprint(
+        source_kind=kind,
+        normalized_text=_json(payload) if kind == "STRUCTURED_JSON" else text,
+    )
     unresolved = [field for field in CRITICAL_RESERVATION_FIELDS if not extracted.get(field)]
     draft = ExternalReservationDraft(
         id=str(uuid4()),
@@ -979,7 +992,12 @@ def import_reservation_artifact(
         entity_type="ExternalReservationDraft",
         entity_id=draft.id,
         journey_id=journey.id,
-        after={"status": draft.status, "unresolved_fields": unresolved, "extraction_mode": mode},
+        after={
+            "status": draft.status,
+            "unresolved_fields": unresolved,
+            "extraction_mode": mode,
+            "artifact_fingerprint": artifact_fingerprint,
+        },
     )
     session.flush()
     return draft

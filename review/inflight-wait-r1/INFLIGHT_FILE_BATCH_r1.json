@@ -1,0 +1,90 @@
+{
+  "generated_by": "89f2e2d6",
+  "tree_head": "13e2b6610c25a3c97a8dbca1c58377c66ceec649",
+  "whole_file": [
+    {
+      "file": "tests/test_qoder_ord197_four_class_receipt.py",
+      "file_blob_at_head": "8f96cbf187e3062b8a3d5f2c6d0b145c2a1f59e5",
+      "rc": 0,
+      "run_id": "batchchk-173412-74bb6c",
+      "summary": "6 passed, 1 xfailed, 2 warnings in 3.69s",
+      "failed": [],
+      "errors": []
+    },
+    {
+      "file": "tests/test_qoder_anywhere_gates.py",
+      "file_blob_at_head": "fbdff5d636fccd3f2b6934eb519f75c2121bd1ce",
+      "rc": 1,
+      "run_id": "batchchk-173417-29260a",
+      "summary": "2 failed, 11 passed, 2 warnings in 64.93s (0:01:04)",
+      "failed": [
+        "tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation",
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was"
+      ],
+      "errors": []
+    },
+    {
+      "file": "tests/test_qoder_ord224_g3_generation_measurement.py",
+      "file_blob_at_head": "73e723c333cb31a78148cde5f25b1916ce808fae",
+      "rc": 0,
+      "run_id": "batchchk-173523-310def",
+      "summary": "3 passed, 2 warnings in 2.63s",
+      "failed": [],
+      "errors": []
+    },
+    {
+      "file": "tests/test_qoder_provider_identity_leg.py",
+      "file_blob_at_head": "2e79969efe05d6b27fbb3a7ad30c05a380a7ae26",
+      "rc": 0,
+      "run_id": "batchchk-173527-347eb0",
+      "summary": "17 passed, 2 warnings in 2.73s",
+      "failed": [],
+      "errors": []
+    },
+    {
+      "file": "tests/test_qoder_pending_destination_identity.py",
+      "file_blob_at_head": "725db426ee1bc80fdf01e7719fa494924b050776",
+      "rc": 1,
+      "run_id": "batchchk-173530-fe21fa",
+      "summary": "2 failed, 13 passed, 2 warnings in 2.49s",
+      "failed": [
+        "tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+        "tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+      ],
+      "errors": []
+    },
+    {
+      "file": "tests/test_qoder_anywhere_provider_truth.py",
+      "file_blob_at_head": "4d952cd51f6874096d60d0704acf0bac07786bc4",
+      "rc": 1,
+      "run_id": "batchchk-173534-e942ec",
+      "summary": "1 failed, 3 passed, 2 warnings in 2.18s",
+      "failed": [
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes"
+      ],
+      "errors": []
+    }
+  ],
+  "the_two_named_alone": [
+    {
+      "nodeid": "tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids",
+      "rc": 1,
+      "run_id": "batchchk-173536-4a2b1f",
+      "summary": "1 failed, 2 warnings in 2.67s",
+      "failed": [
+        "tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids"
+      ],
+      "errors": []
+    },
+    {
+      "nodeid": "tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row",
+      "rc": 1,
+      "run_id": "batchchk-173540-b10dfe",
+      "summary": "1 failed, 2 warnings in 2.16s",
+      "failed": [
+        "tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row"
+      ],
+      "errors": []
+    }
+  ]
+}
