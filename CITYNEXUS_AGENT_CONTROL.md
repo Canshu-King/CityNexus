@@ -1,4 +1,49 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 键盘工 2145 ORD-0593 · execution 域第一枚零依赖模块 route_session_contract 连它自己的测试落线（真跑四条：整树导出、插入、venv 真 import、该测试真跑）— refs/heads/review/键盘工-0593-r1
+
+- id: ORD-0593（号令者派单 CMDR-ORDER-0593-0597 第一张：从代表枝 backend/app/execution/ 挑只依赖标准库与现尖已有形状的那一枚，连同它自己的测试落线，证明必须真跑）
+- 花名键盘工；代表枝 refs/heads/gpt/revolution-r33-open-world-journey-adaptation 枝尖现取 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9，我落的两枚都从这一枚逐字节摘出，摘完重算 git 对象哈希与源侧 ls-tree 声明的 blob 相同（记录件 D:/moodle/_jp_0593_land_r1.json:1）
+- 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 b63b364dce4bc1adef9cd02e121df372117b980a；本枝就开在这一枚上，git -C D:/moodle/CityNexus rev-list --left-right --count b63b364dce4bc1adef9cd02e121df372117b980a...d7776c6a7730e05ba32e7cb1e2e733f5099a7433 回尖侧 0 笔、我枝侧 1 笔
+- 本枝 refs/heads/review/键盘工-0593-r1 枝尖 d7776c6a7730e05ba32e7cb1e2e733f5099a7433；命令原样 git -C D:/moodle/CityNexus ls-remote origin "refs/heads/review/键盘工-0593-r1" 现读与本地 git rev-parse HEAD 逐字同值；改动面 git -C D:/moodle/CityNexus diff --name-status b63b364dce4bc1adef9cd02e121df372117b980a d7776c6a7730e05ba32e7cb1e2e733f5099a7433 回 2 行，两行都是 A（新增，零覆盖）
+- 落地门：git -C D:/moodle/CityNexus merge-tree --write-tree b63b364dce4bc1adef9cd02e121df372117b980a d7776c6a7730e05ba32e7cb1e2e733f5099a7433 退出码 rc=0、冲突 stage 行 0 条、预测树 514dea8b42bfe76be62c93b4c3d75f5efec98fb8；工作树 git -C D:/moodle/_qoder_jianpanggong_0555 status --porcelain 回 0 行
+
+一、凭什么是这一枚（零依赖这条判据我用三把尺筛 execution 那 30 枚文件）
+
+- 第一把尺 import 面：这一枚顶层只 import dataclasses, hashlib, json, typing，全是标准库（现读 backend/app/execution/route_session_contract.py:1 起那 7 行）；同一把尺扫下来，整个目录里只剩两枚同样干净，另一枚是 backend/app/execution/departure_activation.py（125 行，只 import __future__/datetime/hashlib/json/typing），我没动它，留给按同一格认领的另一扇或下一张
+- 第二把尺函数体：全文里出现 app. 的行数 0 行（命令原样在导出树上 grep 该模式），也就是没有藏在函数里的延迟 import
+- 第三把尺现尖有没有人已经在用这个名字：命令原样 git -C D:/moodle/CityNexus grep -l -a route_session_contract b63b364dce4bc1adef9cd02e121df372117b980a -- backend 命中 0 个文件，两枚路径 backend/app/execution/route_session_contract.py 与 backend/tests/test_route_session_contract.py 在尖上 git cat-file -e 全部取不到，所以这是净新增而不是把别人在用的文件换掉
+- 形状是否已在尖上：它 import 的每一样都是标准库，不需要现尖的任何形状；它自己交出的形状是 backend/app/execution/route_session_contract.py:9 的两枚策略版本常量、backend/app/execution/route_session_contract.py:12 起的 4 个状态名、backend/app/execution/route_session_contract.py:28 的 RouteRequest、以及 backend/app/execution/route_session_contract.py:55 / backend/app/execution/route_session_contract.py:70 / backend/app/execution/route_session_contract.py:88 三枚纯函数
+
+二、四条真跑读数（都在本块此刻重跑，命令原样）
+
+- 整树导出：git -C D:/moodle/_qoder_integration_20260919 worktree add --detach D:/moodle/_jp_0593_run b63b364dce4bc1adef9cd02e121df372117b980a，导出树 git rev-parse HEAD 现读 b63b364dce4bc1adef9cd02e121df372117b980a，与尖同值；那两枚落进去之后 git -C D:/moodle/_jp_0593_run status --porcelain 只多 2 行（?? 两枚路径），别的字节一枚没动
+- 插入：落盘前后各重算一次哈希，backend/app/execution/route_session_contract.py 记 blob f0e363c4a0e5、重算 f0e363c4a0e5、行 121、字节 3698；backend/tests/test_route_session_contract.py 记 blob d2490a23c55e、重算 d2490a23c55e、行 102、字节 2949（记录件 D:/moodle/_jp_0593_land_r1.json:1）
+- 后端 venv 真 import：cwd D:/moodle/_jp_0593_run/backend，命令原样 D:/moodle/CityNexus/.venv/Scripts/python.exe -c "import app.execution.route_session_contract as m; print(...)"，退出码 rc=0，回话逐字 IMPORT_OK r41-route-truth-v1 22；这颗 python 现读版本 3.12.14
+- 该测试真跑：cwd 同上，命令原样 python.exe -m pytest tests/test_route_session_contract.py -v，退出码 rc=0，末行逐字 ============================== 7 passed in 0.07s ==============================，单文件 collect 先读 7 条；同一刻整目录 collect 两臂对照：带着这枚 1902 条、--ignore 掉它 1895 条，差 7 条正是它自己那几枚（backend/tests/test_route_session_contract.py:1 起）
+- 我没跑整套执行：只跑了这一枚测试文件与两臂 collect。这套件的其余 1895 条本轮一枚没跑，跑出来与否我不代言
+
+三、逐枚坐标（改前在代表枝、改后在线上这枚枝）
+
+- backend/app/execution/route_session_contract.py ｜ 源侧 revolution-r33-open-world-journey-adaptation:backend/app/execution/route_session_contract.py 的 121 行 ｜ 枝上 backend/app/execution/route_session_contract.py:1 同一枚 blob ｜ 关键锚：策略版本 backend/app/execution/route_session_contract.py:9、状态名 backend/app/execution/route_session_contract.py:12、RouteRequest backend/app/execution/route_session_contract.py:28、指纹 backend/app/execution/route_session_contract.py:55、归类 backend/app/execution/route_session_contract.py:70、可核对判 backend/app/execution/route_session_contract.py:88
+- backend/tests/test_route_session_contract.py ｜ 源侧 backend/tests/test_route_session_contract.py 的 102 行 ｜ 枝上同 blob ｜ 唯一外部 import 在 backend/tests/test_route_session_contract.py:3（只引这一枚模块），最后一枚用例在 backend/tests/test_route_session_contract.py:94
+
+四、落了但还没接线——这句必须写在明处
+
+- 现尖上引用这枚模块的文件 0 个；本枝上除它自己与它的测试之外引用它的文件 0 个（命令原样 git -C D:/moodle/CityNexus grep -l -a route_session_contract d7776c6a7730e05ba32e7cb1e2e733f5099a7433 -- backend）
+- 所以它今天不在任何路由、任何响应里出现，旅客看不见它，屏上一个字都没变；这张单要的就是「零依赖模块落线」，接线是下一步的事。要接哪一条请点名：它一旦被 main.py 或 schemas.py 引到，按共同约束那五枚热文件就得排队，我不自己插进去
+- 顺带一条对照读数：另一枚同样干净的 backend/app/execution/departure_activation.py 带 8 个用例（backend/tests/test_route_session_contract.py 现读该文件 def test_ 计数），如果号令者要一次落两枚，我可以下一张交它，但按「一枚文件只给一扇车道」我先不伸手
+
+五、边界与未验
+
+- 权威线 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；只推 refs/heads/review/键盘工-0593-r1 一枚枝；force-push 0 次；既有文件一枚未改（第二节那条 --name-status 全 A 就是这条证据）
+- 没碰 backend/app/main.py、backend/app/schemas.py、contracts/openapi.yaml、frontend/src/api/citynexus.ts、backend/app/agent/runtime.py 这五枚热文件：改动面 2 行里没有它们
+- 没起新监听端口；没跑后端服务；没碰共享库——本轮只跑单文件 pytest 与两臂 --collect-only，没调过任何 demo/reset 路由（该测试文件不 import app.main，backend/tests/test_route_session_contract.py:3 那行是唯一 import）
+- 未验的事自报：一，这枚模块的语义我通读了但没独立判定它对不对（判定要拿真供应商回话对拍，那是 ORD-0596 那一类）；二，除它自己那 7 条用例之外没有任何东西证明它在真实路由里可用，因为它还没有调用点；三，导出树在盘上多占一份现尖工作树 D:/moodle/_jp_0593_run，是我本轮的证据现场，交完这轮就可以回收（回收要点头，我不擅自删别人的树）
+- 过程毛病自报两件：一，我把 venv 路径写成反斜杠相对路径过 cd backend 之后 ../.venv\\Scripts\\python.exe，被这条 shell 吃掉成一条不存在的命令，改成绝对正斜杠才起得来；二，我用 heredoc 传 python 时被反斜杠咬断一次字符串（当场 SyntaxError，一枚文件都没写），改用 Write 落工具脚本再跑才过
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0598-CNDRAFT（号令者：CN 那侧的轮次摘要草稿，已复算后转交）
 
 CN 侧（零扣费那张卡）出了 R14~R26 的轮次摘要，逐行是「轮次｜这轮想让用户做到什么（土话）｜代码文件｜文档」。
