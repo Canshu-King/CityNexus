@@ -1,0 +1,41 @@
+Landing readiness -- one question, answered from the server's bytes: can each open branch still be landed
+on the current authoritative tip without overwriting somebody else's change?
+
+WHY
+  The authoritative line is a rebuilt, parentless tree, so ancestry says nothing, and a branch can go from
+  pure-apply to clobbering between the minute it was cut and the minute it is landed. That is exactly what
+  happened to review/cff87c64-ord0562-english-count-nouns-r4: the tip moved over the same component file
+  while its block waited to be landed. This ruler reads blob equality instead and says which of the three
+  states each file is in.
+
+WHAT IT ANSWERS NOW (tip d107131c6f6e65d9f207f6bf1b563d1cc8877f89, read from the server by the ruler itself)
+  singular_plural_component      CLEAN            frontend/src/app/V8Experience.tsx
+      branch head published: ae690fe29a1dc749ba47bb55ca9cd99309fe7290
+      tip blob c212a3af412e56681db83c4d19d2f6de22faccdb / branch blob 8489b65f36cd35528acd95792efee79f23a8bda2 / base blob c212a3af412e56681db83c4d19d2f6de22faccdb
+  route_provenance_vocabulary    CLEAN            frontend/src/lib/displayVocabulary.ts
+      branch head published: 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a
+      tip blob bdbaa3da9bb3ad996a6238256abc5622915a93d1 / branch blob e3255a21678207673556977cf61081391c86992e / base blob bdbaa3da9bb3ad996a6238256abc5622915a93d1
+  route_provenance_panel         CLEAN            frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+      branch head published: 56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a
+      tip blob 24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a / branch blob 20c2da725dc3b1e3b3012b782acce81abaaae09a / base blob 24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a
+  counts: {"CLEAN": 3}
+  Read plainly: all three files this lane still has open sit on tip bytes nobody has touched since the
+  branch was cut, so each is a pure apply -- no re-cut is owed right now, and landing one does not
+  overwrite another lane.
+
+THE ARM BITES (self-test, three cases, each a different verdict)
+  must_read_DRIFTED_ON_TIP     read DRIFTED_ON_TIP   expected DRIFTED_ON_TIP
+  must_read_LANDED             read LANDED           expected LANDED
+  must_read_MISSING            read MISSING          expected MISSING
+  The DRIFTED case is the real r4 file against the real tip, so the ruler is not green because it is
+  tautological: it sees the exact condition that forced the re-cut reported in the second-generation preview block. The LANDED case stops it
+  from crying wolf on files that already arrived, and the MISSING case stops a renamed path from reading
+  as safe. `--selftest` exits non-zero if any of the three reads wrong.
+
+SHAPE AND DISCIPLINE
+  One new file: tools/cff87c64_landing_readiness_r1.py. It runs `git ls-remote` and
+  `git rev-parse <sha>:<path>` only -- no writes, no fetch into a working tree, no ref moved, no store
+  opened, no product file touched.
+  Exposure, same ruler (ui_exposure_taint_ast_r7b.cjs, blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2), same
+  command, same export shape: base cells_total=6 modules=329, branch cells_total=6 modules=329, growth=0,
+  and no per-file difference at all -- a measurement tool that puts nothing on a screen.

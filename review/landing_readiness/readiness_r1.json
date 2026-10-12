@@ -1,0 +1,80 @@
+{
+ "tip_ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+ "items": [
+  {
+   "name": "singular_plural_component",
+   "path": "frontend/src/app/V8Experience.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r5",
+   "base_tip": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "branch_sha": "ae690fe29a1dc749ba47bb55ca9cd99309fe7290",
+   "tip_blob": "c212a3af412e56681db83c4d19d2f6de22faccdb",
+   "branch_blob": "8489b65f36cd35528acd95792efee79f23a8bda2",
+   "base_blob": "c212a3af412e56681db83c4d19d2f6de22faccdb",
+   "verdict": "CLEAN"
+  },
+  {
+   "name": "route_provenance_vocabulary",
+   "path": "frontend/src/lib/displayVocabulary.ts",
+   "branch": "refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "branch_sha": "56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a",
+   "tip_blob": "bdbaa3da9bb3ad996a6238256abc5622915a93d1",
+   "branch_blob": "e3255a21678207673556977cf61081391c86992e",
+   "base_blob": "bdbaa3da9bb3ad996a6238256abc5622915a93d1",
+   "verdict": "CLEAN"
+  },
+  {
+   "name": "route_provenance_panel",
+   "path": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0568-route-provenance-gloss-r3",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "branch_sha": "56ba5f1916486fc6bef3ee471f8aa01ede5f0a0a",
+   "tip_blob": "24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a",
+   "branch_blob": "20c2da725dc3b1e3b3012b782acce81abaaae09a",
+   "base_blob": "24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a",
+   "verdict": "CLEAN"
+  }
+ ],
+ "selftest": [
+  {
+   "name": "must_read_DRIFTED_ON_TIP",
+   "path": "frontend/src/app/V8Experience.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "branch_sha": "dcc10366e197a35358d3bd0b1b299afb4cc1e23e",
+   "tip_blob": "c212a3af412e56681db83c4d19d2f6de22faccdb",
+   "branch_blob": "3a3591253c5e894d6add545c3636f2ed102e85c4",
+   "base_blob": "e45be179efe713cb8e957640008e1c35347ae335",
+   "verdict": "DRIFTED_ON_TIP"
+  },
+  {
+   "name": "must_read_LANDED",
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "branch_sha": "dcc10366e197a35358d3bd0b1b299afb4cc1e23e",
+   "tip_blob": "20203fee4744513da320387e7923fabbf054d566",
+   "branch_blob": "20203fee4744513da320387e7923fabbf054d566",
+   "base_blob": "20203fee4744513da320387e7923fabbf054d566",
+   "verdict": "LANDED"
+  },
+  {
+   "name": "must_read_MISSING",
+   "path": "frontend/src/i18n/NoSuchFile_r1.tsx",
+   "branch": "refs/heads/review/cff87c64-ord0562-english-count-nouns-r4",
+   "base_tip": "eaf4069e5d07a3dacc1ec33a0be515119208e16e",
+   "tip_sha": "d107131c6f6e65d9f207f6bf1b563d1cc8877f89",
+   "verdict": "MISSING",
+   "reason": "tip blob: rc=128 fatal: path 'frontend/src/i18n/NoSuchFile_r1.tsx' does not exist in 'd107131c6f6e65d9f207f6bf1b563d1cc8877f89'"
+  }
+ ],
+ "counts": {
+  "CLEAN": 3
+ }
+}

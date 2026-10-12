@@ -1,0 +1,22 @@
+readiness, second reading -- the authoritative tip hopped again between the first reading and this one.
+  previous tip: d107131c6f6e65d9f207f6bf1b563d1cc8877f89
+  this tip:     b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c (read from the server by the ruler itself, echoed at the tail of run_r2.txt)
+  files the tip moved between those two generations: 10
+  of those, any path this lane still has open: none
+
+VERDICTS ON THE NEW TIP (same command, same ruler, nothing carried over from the first reading)
+  singular_plural_component      CLEAN            frontend/src/app/V8Experience.tsx
+  route_provenance_vocabulary    CLEAN            frontend/src/lib/displayVocabulary.ts
+  route_provenance_panel         CLEAN            frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+  counts: {"CLEAN": 3}
+  The self-test ran in the same pass and all three discriminating cases still read their required verdict.
+
+THE RULER ITSELF IS A PURE ADD
+  `git rev-parse b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c:tools/cff87c64_landing_readiness_r1.py` exits 128 -- the path is not on the tip,
+  so landing the ruler overwrites nothing.
+
+HOW TO USE IT BEFORE A LANDING (one line, read-only)
+  python tools/cff87c64_landing_readiness_r1.py --selftest
+  Per file it answers LANDED / DRIFTED_ON_TIP / CLEAN. DRIFTED_ON_TIP means landing that file now
+  overwrites somebody else's change and the branch owes a re-cut first. It is only worth running at the
+  moment of landing: a CLEAN from an hour ago is not a promise.

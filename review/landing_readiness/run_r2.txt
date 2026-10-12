@@ -1,0 +1,8 @@
+must_read_DRIFTED_ON_TIP     DRIFTED_ON_TIP   expected=DRIFTED_ON_TIP
+must_read_LANDED             LANDED           expected=LANDED
+must_read_MISSING            MISSING          expected=MISSING
+singular_plural_component      CLEAN            frontend/src/app/V8Experience.tsx
+route_provenance_vocabulary    CLEAN            frontend/src/lib/displayVocabulary.ts
+route_provenance_panel         CLEAN            frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+counts: {"CLEAN": 3}
+b2fccfdf2728bbb025c3c09db36ce5ed9401ee4c
