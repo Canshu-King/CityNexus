@@ -15,12 +15,19 @@ TREES = ["_qoder_pinggong_0555", "_qoder_pinggong_0555_dict", "_qoder_pinggong_0
          "_qoder_pinggong_0557_dict", "_qoder_pinggong_0557_verify", "_qoder_pinggong_0558_ai",
          "_qoder_pinggong_0558_b", "_qoder_pinggong_0576", "_qoder_pinggong_0588",
          "_pinggong_scratch"]
-TIP = "ec873b1932b05a0d9b266245325a712a91e0f910"
+TIP_ARG = sys.argv[1] if len(sys.argv) > 1 else None
 
 
 def sh(args):
     return subprocess.run(args, capture_output=True, text=True, encoding="utf-8",
                           errors="replace", timeout=120)
+
+
+# 权威尖从 GitHub 现取，不写死：写死了就会像上一版那样，枝一并尖读数就过期
+TIP = TIP_ARG or sh(["git", "-C", ROOT + "/CityNexus", "ls-remote", "origin",
+                     "refs/heads/mirror/integration-frontend-apple-pass1"]).stdout.split("\t")[0].strip()
+if len(TIP) != 40:
+    raise SystemExit("ABORT 现尖取不到：%r" % (TIP,))
 
 
 rows = ["取值时刻 %s" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
@@ -67,7 +74,8 @@ rows += ["   " + l for l in mine2]
 
 rows.append("")
 rows.append("[四] 已发布枝相对现尖 %s 的「尖独有/枝独有」" % TIP[:12])
-for b in ("review/pinggong-0607-r1", "review/pinggong-0610-r1", "review/pinggong-0620-r1"):
+for b in ("review/pinggong-0607-r1", "review/pinggong-0610-r1", "review/pinggong-0620-r1",
+            "review/pinggong-0626-r1"):
     r = sh(["git", "-C", ROOT + "/_qoder_integration_20260919", "rev-list", "--left-right",
             "--count", "%s...refs/heads/%s" % (TIP, b)])
     rows.append("   %-28s %s" % (b, (r.stdout or r.stderr).strip()))
