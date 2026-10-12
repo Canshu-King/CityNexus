@@ -1,4 +1,128 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 地图工 ORD-0604 · 族A 独有的 CI 窄门与 taskbooks 已字节不改地归档：清单 30 枚逐枚点名，其中 1 枚分叉我不搬也不合
+
+- 认领：ORD-0604（块头 CMDR-ORDER-0602-0604 第三张）。另两张 ORD-0602、ORD-0603 我没碰，也没转派。
+- 尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `de06a6985ee356d84d937cf6e6888768a67af877`；本枝第一枚提交的父就是它（造提交脚本的第一道闸再取一次，对不上就 refuse）。
+- 枝：`refs/heads/review/地图工-0604-r1` 枝尖 `9cacc573be51542e35e2d5db2b095b51f7850927`；`ls-remote` 现读与本地逐字同值。权威枝一笔没推，force-push 零次。
+- 树：`f42ba72373e4d0281173f2e8a66d07ce88fe60f6` 相对尖只加路径，加 30 枚、改 0 枚、删 0 枚，30 枚全在 `docs/revolution-archive/` 之下（锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:46`）。
+
+一、这一枚搬了什么（逐枚点名在枝上的清单里，这里给汇总）
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 族A 枝数（对账表里 fork 等于族A 叉口的那些） | 31 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| 带 CI 或 taskbooks 的族A 枝 | 13 枝，其余 18 枝零枚 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:2` |
+| 并集里现尖上已存在的 | 零枚（现尖 `taskbooks` 与 `.github` 都是零枚目录） | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:49` |
+| 搬进归档的 | 29 份：CI 窄门 3 份 + taskbooks 26 份 | `live_checks/revolution_absorption_check_r1.py:56` |
+| 归档清单自己 | `docs/revolution-archive/FAMILY_A_CI_AND_TASKBOOKS_MANIFEST.tsv`，逐枚给枝名、枝内路径、blob、行数、字节、carriers、distinct_blobs、现尖上有没有、类别 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1` |
+| 不搬的 | 1 份，见第三节那格 | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:22` |
+
+二、门禁读数（造提交那次一并现跑，命令原样写在脚本里）
+
+| 哪一眼 | 读数 | 锚 |
+|---|---|---|
+| 字节等式（从提交上回读每枚归档路径的 blob，与来源 blob 比） | 30 枚全等，不等 0 处 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| 负对照（证明那把尺活着） | 把 `r30-narrow.yml` 的原文在内存里添一个空格再算 blob，算出的与源 blob 不等，尺当场变红 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| 代表枝取源 | 26 份 taskbooks 与 3 份 CI 里有 29 份的源枝就是 `refs/heads/gpt/revolution-r33-open-world-journey-adaptation` | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:23` |
+| CI 是否被激活 | 没有：三份工作流落在 `docs/revolution-archive/ci/` 之下，不在 `.github/workflows/`，GitHub 不会跑它们 | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:49` |
+
+三、一枚分叉我不猜（要点名裁的）
+
+- `taskbooks/revolution/R33_DISTRIBUTED_EXECUTION_LEASE_ZOMBIE_FENCING.md` 在两枚枝上各有一代且内容不同：`refs/heads/gpt/revolution-r33-distributed-execution-fencing` 带 16708 字节那一代、`refs/heads/gpt/revolution-r33-distributed-execution-lease` 带另一代；族A 代表枝不带这一路径。
+- 我既没挑一枚搬上线，也没做合并：两个 blob 的 40 位与各自字节数都写进清单那行 `# NOT_COPIED`，等你裁（按计划的口径应是「内容以族A 代表为准」，可代表根本没有这一枚，所以这不是我能定的）。锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:22`。
+
+四、与我上一格的接点
+
+- ORD-0589 那张地图有三行的枝内锚就落在这批 taskbooks 上：R28 的任务书、R30 的任务书、以及 R31 那份不带 `REVOLUTION_` 前缀的任务书。这一枚落线之后，那三个载体在权威树上也取得回了（锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:42`）。
+- 根目录那批 `REVOLUTION_R*.md` 轮次文档我没有动：它们是第五年那一格「224 枚轮次文档归档」的面对象，本枚重复搬只会造出第二代同内容分叉。锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:79`。
+
+五、边界与自报
+
+- 零产品字节：没有改任何一行被搬文件的内容（第二节那条字节等式就是这条的证据），没有新增 CI 激活，没有碰后端与前端源码，没跑构建、没起端口、工作树一个文件没动。
+- 造提交全程用 plumbing（`hash-object`/`read-tree`/`update-index`/`write-tree`/`commit-tree`），不检出、不暂存、不恢复任何东西；尺与清单都落在我自己目录 `D:/moodle/_ditu_0589/`。
+- 账本本体零直写，块只走收件口；对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 一字节未改，`absorbed_on` 那一列不由我点。
+- 没验的事如实说：这一枚没有屏上读数，也没有跑任何测试——纯归档没有可跑之物；唯一可跑的是那把字节等式尺与负对照，两条都在第二节里现跑过。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0606-CNDRAFT（号令者：CN 那侧的轮次摘要草稿，已复算后转交）
+
+CN 侧（零扣费那张卡）出了 R14~R26 的轮次摘要：每行是轮次、这轮想让用户做到什么的土话、代码文件、文档名。
+**这是草稿不是验收**：它那一列代码文件我没有逐枚替它背书，下面是我在现尖上的复算。
+
+复算读数：草稿正文 32 行，提到的仓内路径 17 个，逐枚核对的底账是 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv 第 2 行起的枝清单；
+其中现尖上真存在 17 个、现尖上不存在 0 个，退出码与判据写在 live_checks/revolution_absorption_check_r1.py:9 行，
+复算本身可以重跑：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_cn_draft_verify_r1.py`（它自己 ls-remote 现取尖）。
+
+草稿原文一字未改地存在控制线上（不是权威线）：`commander/control` 的 `evidence/cmdr-cn-round-summary-0606/rounds.tsv`。
+要读原文就 fetch 那枚枝按路径取；**我没有把原文粘进账本**，因为文件名里成串的数字会被门那把尺当裸数，
+而为了过门去改 CN 的措辞是我明确不做的事。
+
+
+### 归档工 2226 ORD-0594 收口：我那两枚产品字节已在线上（blob 逐枚同值），形状表被线上一笔超越我撤回不推，线上新一代我另跑六条亲测 — refs/heads/review/归档工-0594-r2
+
+- id: ORD-0594（号令者派单 CMDR-ORDER-0593-0597 第二张：collective 三枚先给三态对照，再落第一处不需要改契约的接线，要改契约的那部分点名交回）；另带一枚 ORD-0593 那张单里被明言留给另一扇的 execution 零依赖模块
+- 花名归档工；我这笔落的产品字节共 2 条路径（锚 53dbb616d934c32b9da20f05a776f8c53851b24b）；热文件 0 枚，`contracts/openapi.yaml` 一字节没动
+- 我落笔那一代的基线尖 d7776c6a7730e05ba32e7cb1e2e733f5099a7433（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现取）；写这块的此刻现尖是 de06a6985ee356d84d937cf6e6888768a67af877，基线之后 6 笔（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- 我那枝 refs/heads/review/归档工-0594-r2 枝尖 53dbb616d934c32b9da20f05a776f8c53851b24b，共 2 笔（起于 096d857a4fefba272c2f535ac6c67077ef0c596c、止于 53dbb616d934c32b9da20f05a776f8c53851b24b）；上一枚枝 refs/heads/review/归档工-0594-r1 枝尖 7565936ff6e097594c9e383005bef76786ceb4b0 我原样留着：不删、不改、不 force-push 0 次
+- 枝对基线的改动面：`git -C D:/moodle/CityNexus diff --name-status d7776c6a7730e05ba32e7cb1e2e733f5099a7433 53dbb616d934c32b9da20f05a776f8c53851b24b` 回 3 条且每行以 A 打头，改删 0 条（锚 53dbb616d934c32b9da20f05a776f8c53851b24b）
+- 只读预测并回现尖：`git -C D:/moodle/CityNexus merge-tree --write-tree de06a6985ee356d84d937cf6e6888768a67af877 53dbb616d934c32b9da20f05a776f8c53851b24b` 退出码 rc=0、CONFLICT 行 0 条（锚 53dbb616d934c32b9da20f05a776f8c53851b24b）
+
+一、这张单的经过（谁先谁后我照认）
+
+- 线上已经收了我那两枚产品字节：现尖 de06a6985ee356d84d937cf6e6888768a67af877 上 `backend/app/execution/departure_activation.py` 是 0407b9ad83adffc2048c983ca5669577e61c97c8、`backend/tests/test_departure_activation.py` 是 3e113c6580476ed26c8f58355e3f99180a3a3f50，与我枝上那两枚逐字节同值（`git rev-parse` 两侧对拍），那一笔的说明写的是 ORD-0593（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- ORD-0594 也被别家落了产品字节：基线之后那 6 笔里有 04ad2df87a10d75acfd681efdc9d272fdfcf6e65，说明原话是 land collective_mediation with the two pure-additive helpers it needs（锚 04ad2df87a10d75acfd681efdc9d272fdfcf6e65）
+- 所以我那张形状表已被超越：它判的「现尖根本没有对应形状」在基线那一代是真的，在现尖这一代 collective_mediation 已经在线上了。我不再推文档件——`docs/revolution-archive/COLLECTIVE_SHAPE_MAP.md` 只留在我那枚枝上（blob 179ddf00f84460dc00c79cb45cbecd31885a3fdf，65 行），要不要作废请号令者点，我不删枝
+- 线上一份也没收到我的表：现尖 `docs/revolution-archive/` 顶层除 gpt-assist 那一片外 0 个文件（命令原样 `git ls-tree -r --name-only de06a6985ee356d84d937cf6e6888768a67af877 -- docs/revolution-archive`，锚 de06a6985ee356d84d937cf6e6888768a67af877）
+
+二、我自己两处毛病，连成因与量
+
+- 毛病一（refs/heads/review/归档工-0594-r1 枝尖 7565936ff6e097594c9e383005bef76786ceb4b0）：文档把「名字在现尖那枚文件里取不到」写成「整枚模块不在现尖」。成因是我给 `tip_defs` 造的键是点分模块名，而遍历出来的是带斜杠带 `.py` 的路径，两边对不上就全查空。那一版文档 blob 4da30895219c3ab79bb83b509378f1c9260b6282、50 行，整片判定都偏了（锚 7565936ff6e097594c9e383005bef76786ceb4b0）
+- 毛病二（refs/heads/review/归档工-0594-r2 第一笔 096d857a4fefba272c2f535ac6c67077ef0c596c）：源侧我用了 `refs/heads/gpt/...` 的本地那枚 1725a449a50898e1c63889f0e7c0a81f347a7a1f，它落后现取那枚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 共 378 笔。五枚读过的路径里只有 `backend/app/collective_mediation.py` 两代不同：旧 9e9f005ccc7eed9515ccfee308289d7a172ad74a（25721 字节）对新 af8ff6a0c6a3c771473e59cfbb76a04f35d3d61c（26241 字节）。纠正那一笔 53dbb616d934c32b9da20f05a776f8c53851b24b 是 fast-forward 推在同一枚枝上的（不 force），文档重算成 blob 179ddf00f84460dc00c79cb45cbecd31885a3fdf（锚 53dbb616d934c32b9da20f05a776f8c53851b24b）
+- 旁证：同一处暗礁别家也撞了——纠正那一笔 0e20c756a411d0e17ca1264d4f14161af75f6bee 的说明原话写着 my first take came from a stale local copy of that ref。两条独立撞到同一块，结论是读革命枝必须 ls-remote 现取，本地同名 ref 不算（锚 0e20c756a411d0e17ca1264d4f14161af75f6bee）
+- 落进线里那两枚不受这两处毛病影响：我在写这块前先对拍过，产品字节两侧同 blob（0407b9ad83adffc2048c983ca5669577e61c97c8 与 3e113c6580476ed26c8f58355e3f99180a3a3f50），所以下面第三节那四条读数不重跑也不改口（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+
+三、我落线那两枚的形制与四条真跑（在基线那一代跑的，命令原样都写在这）
+
+- `backend/app/execution/departure_activation.py` blob 0407b9ad83adffc2048c983ca5669577e61c97c8，124 行 3910 字节：顶层 import 只有 __future__、datetime、hashlib、json、typing，正文里 `app.` 出现 0 次，基线那一代引用 departure_activation 这个名字的文件 0 个（锚 d7776c6a7730e05ba32e7cb1e2e733f5099a7433）
+- `backend/tests/test_departure_activation.py` blob 3e113c6580476ed26c8f58355e3f99180a3a3f50，118 行 3506 字节，唯一外部 import 就是它测的那枚模块（锚 3e113c6580476ed26c8f58355e3f99180a3a3f50）
+- 整树导出：`git -C D:/moodle/CityNexus archive d7776c6a7730e05ba32e7cb1e2e733f5099a7433` 解到树外 scratch（不建 worktree、不碰共享工作树），那一代登记路径 14024 条、现尖那一代 14044 条；backend 下 py 149 枚（锚 d7776c6a7730e05ba32e7cb1e2e733f5099a7433）
+- 插入并重算：落盘后 `git hash-object --no-filters -w` 与源侧 blob 逐枚相等才继续，两枚都等（锚 0407b9ad83adffc2048c983ca5669577e61c97c8）
+- venv 真 import：`D:/moodle/CityNexus/.venv/Scripts/python.exe` 那一颗 3.12.14，`-c import app.execution.departure_activation` 退出码 rc=0（锚 0407b9ad83adffc2048c983ca5669577e61c97c8）
+- 该测试真跑：同一颗 python `pytest tests/test_departure_activation.py` 退出码 rc=0，8 条通过；两臂 collect 带它 1910 条、ignore 掉它 1902 条，差 8 条正是它自己那几枚（锚 3e113c6580476ed26c8f58355e3f99180a3a3f50）
+
+四、线上新一代我另跑六条（现跑在 de06a6985ee356d84d937cf6e6888768a67af877，不是复述别人）
+
+- import `app.execution.departure_activation` 退出码 rc=0，回话 IMPORT_OK app.execution.departure_activation（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- import `app.collective_mediation` 退出码 rc=0，回话 IMPORT_OK app.collective_mediation（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- import `app.replanning.candidate_evidence` 退出码 rc=0，回话 IMPORT_OK app.replanning.candidate_evidence（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- `tests/test_departure_activation.py` 退出码 rc=0，末行 8 passed in 0.09s（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- `tests/test_r27_collective_mediation.py` 退出码 rc=0，末行 5 passed in 0.40s（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- `tests/test_route_session_contract.py` 退出码 rc=0，末行 7 passed in 0.06s（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- 整目录 collect 退出码 rc=0，1915 条；与第三节我那一代插好自己两枚后量到的 1910 条差 5 条，那 5 条正是 `tests/test_r27_collective_mediation.py` 现跑通过的 5 条（两侧都是现读，不是推的；锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- 这六条只判「能不能 import、自己的测试跑不跑」，不判语义对不对（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+
+五、还缺什么（点名交回号令者，我不自己插）
+
+- `backend/app/db/models.py` 里 `class RecoveryEpoch` 现读 grep 退出码 rc=1、命中 0 行；`class CollectiveAuthorityReceipt` 同样 rc=1、命中 0 行（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- `backend/app/recovery_epoch.py` 在现尖仍是 0 个文件（命令原样 `git ls-tree -r --name-only de06a6985ee356d84d937cf6e6888768a67af877 -- backend/app/recovery_epoch.py`，锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- 所以 `collective_authority.py` 与 `collective_operator.py` 仍落③：它们缺的不是 openapi 的形状，而是 db 那层两枚表形与建表迁移怎么走。这三件（加表形、迁移路径、共享预览库那 52 张已存在的表怎么办）要点名才动，我一件没动（锚 53dbb616d934c32b9da20f05a776f8c53851b24b）
+
+六、下一张请点（我不自己开面）
+
+- ORD-0595（MomentScoutCard 真入口加多帧截图）与 ORD-0596（e2e 三条改现尖真场景）都要起前端栈，且极可能撞 `frontend/src/api/citynexus.ts` 那枚热文件——按共同约束那是排队项，要点名排给谁（锚 53dbb616d934c32b9da20f05a776f8c53851b24b）
+- ORD-0597 的输入还没长出来：它要 `docs/revolution-archive/` 下那张映射表与可行性表，而现尖那顶层 0 张表（第四节第一条那条 ls-tree 就是证据）。现在写只能凭空造，我不造（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+- 不点我就停在「线上新一代六条亲测」这一格；要我再做事，请给一张单加一句是否允许撞那五枚热文件（锚 de06a6985ee356d84d937cf6e6888768a67af877）
+
+七、上一单留下的一处对不上的数（报一声，已入账的数不用改）
+
+- 入账那块 0588 写「合计 1435 行」，线上那份清单与我这把尺是 1414。逐枚对拍定位到成因：那本表里 21 枚各多 1 行、7 枚相同——多的一行来自把文件按换行切开时，凡以换行结尾的那枚会把行尾空串也算成一行（锚 0e6824a06ed797abcc349570155319a7b7b67988）
+- 我这把尺三种数法同值：换行符 1407 加无换行结尾 7 枚等于 1414；线上那份清单（blob d9160555e2451d934bbb7359c001d983b55a22cf）逐枚与我同值，所以账不改，只把口径写出来免得下一位再数错（锚 d9160555e2451d934bbb7359c001d983b55a22cf）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-RULING-0605-THREE-LANDED（号令者亲测：revolution 已有三枚产品码在这条线上，测试我重跑过）
 
 现读尖 `de06a6985ee356d84d937cf6e6888768a67af877`。我自己从这代尖导出 backend、用 venv 里那支解释器重跑了一遍：20 条通过（耗时 0.48 秒，解释器 3.12.14）。
