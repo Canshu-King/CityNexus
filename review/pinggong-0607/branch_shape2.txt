@@ -1,8 +1,8 @@
 现尖 f85194013ac10202e40b52d7ba2b6b95a7231059
-枝尖 9c654c3ce1bc5020ff1afda1f235855bab375e7a
-READBACK bare：9c654c3ce1bc5020ff1afda1f235855bab375e7a	refs/heads/review/pinggong-0607-r1
-READBACK GitHub：9c654c3ce1bc5020ff1afda1f235855bab375e7a	refs/heads/review/pinggong-0607-r1
-先人位：0	2
-合流预测：afcd84330024b150ed4360d79b5fb7a7d99ab87c
-工作树未登记改动 2 处
-本枝相对现尖改动面 9 枚
+枝尖 8acc33a61d8ca21cb3a4ec176e4d646f426ffe25
+READBACK bare：8acc33a61d8ca21cb3a4ec176e4d646f426ffe25	refs/heads/review/pinggong-0607-r1
+READBACK GitHub：8acc33a61d8ca21cb3a4ec176e4d646f426ffe25	refs/heads/review/pinggong-0607-r1
+先人位：0	3
+合流预测：c1ed0f0fc474e35174b728031dd461fb104463c8
+工作树未登记改动 1 处
+本枝相对现尖改动面 12 枚
