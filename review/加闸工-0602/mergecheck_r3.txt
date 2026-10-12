@@ -1,0 +1,8 @@
+# 只读合并预测 r3：现尖 3537a99f 对我那枚已发布枝（不写 ref、不动枝）
+# 命令：git -C D:/moodle/_qoder_integration_20260919 merge-tree --write-tree 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c refs/heads/review/加闸工-0602-r1
+merge-tree rc=0（0=干净可合）
+合并后的 tree：7ab5eaea7fbedcbee1d0a0d89c5f15e4f025a75e
+# 合并之前那一拍的门判（round 14 回执里我这枚那一行）：RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes
+# 合并之前的相交面（现尖与旧代 75689cfb73e8d217876c83ff50e74547925d6b23 共同改过的文件，逐枚点名）：
+frontend/src/i18n/LocaleContext.tsx
+# 我这边旧代带的文件数=41｜尖那边=74

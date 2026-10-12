@@ -1,0 +1,7 @@
+# 两枚远端回读（我这一拍补推之后现读，命令逐枚写在下面那两行）
+$ git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/加闸工-0602-r1
+裸仓 de2304c1435d6ef79e81d768cb4869b10b737cc7	refs/heads/review/加闸工-0602-r1
+$ git -C D:/moodle/CityNexus ls-remote git@github.com:Canshu-King/CityNexus.git refs/heads/review/加闸工-0602-r1
+GitHub de2304c1435d6ef79e81d768cb4869b10b737cc7	refs/heads/review/加闸工-0602-r1
+$ 同一形制再看 0616 那枚（它已落线，枝仍在两处在册）
+GitHub dedc9b18f85a3562ca62b52b2ae8822fa15bb4dd	refs/heads/review/加闸工-0616-r1

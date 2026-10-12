@@ -1,0 +1,14 @@
+# A/B on the ruler's abort cause: same sha, same source, only the force flag differs
+# run from D:/moodle/_qoder_integration_20260919, origin = D:/moodle/CityNexus
+
+$ git fetch -q origin 8940570c022950b705cc3b37139d1b8f7052c42a:refs/tmp/cmdr_copylang
+rc=1  (stderr 空)
+
+$ git fetch -q origin +8940570c022950b705cc3b37139d1b8f7052c42a:refs/tmp/cmdr_copylang
+rc=0
+
+# 同一枚四十位、同一个仓、同一个临时 ref 名，只差开头的 +。⇒ 尺在 _cmdr_dict_copy_lang_check_r1.py:37 那条 fetch 用的是不带 + 的固定名 ref，
+# 上一次跑动留下的 refs/tmp/cmdr_copylang 指向别的代时，这一趟被非快进拒绝，尺只打印 err=（空）就退 3。
+# 反证我之前那条猜测（'CityNexus 里没有 mirror 枝所以取不到'）：把尖 pin 成 refs/local/jiazagong-0602-base 之前之后，
+# 不带 + 的同一命令仍是 rc=1；换一个新临时名（jz0602_base_cp）当场 rc=0 出全读数。
+# 尺那一步的原文（本机 _qoder_cmdr_ref_20260921\live_checks\_cmdr_dict_copy_lang_check_r1.py 第 37 行，同样不在线上）: fr = sh(["git", "-C", REPO, "fetch", "-q", "origin", "%s:refs/tmp/cmdr_copylang" % tip])

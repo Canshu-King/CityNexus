@@ -1,0 +1,6 @@
+$ npm run build
+precache  8 entries (2973.13 KiB)
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+VITE_RC=0

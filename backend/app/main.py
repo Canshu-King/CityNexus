@@ -207,6 +207,11 @@ from app.security.credential_literals import (  # ORD-0307: 字面量凭据的�
     startup_report as credential_gate_startup,
 )
 from app.execution.clock import execution_clock
+from app.execution.route_session_contract import (  # ORD-0602 甲半: source of truth, reporting only
+    ROUTE_TRUTH_POLICY_VERSION,
+    classify_capture,
+    fact_is_eligible_for_live_readiness,
+)
 from app.execution.traveler_twin import (
     clear_learned,
     learn_from_journey,
@@ -5975,6 +5980,15 @@ def stay_autopilot_recover(
     )
     if fact is None:
         raise HTTPException(422, f"{requested_mode} is unavailable for this captured leg")
+    # The ruling splits this in two halves: stating where a route fact came from is approved, while
+    # refusing a non-provider fact is not.  So nothing below feeds `authorized`, the gate or the 422.
+    route_truth_fact = fact_payload(fact)
+    route_truth_live = fact_is_eligible_for_live_readiness(route_truth_fact)
+    route_truth_status, route_truth_outcome = classify_capture(
+        explicit_fact=route_truth_fact,
+        provider_failed=False,
+        provider_degraded=not route_truth_live,
+    )
     policy_row = get_or_create_policy(session, journey.traveler_id)
     current_fact = (
         session.scalar(
@@ -6097,6 +6111,14 @@ def stay_autopilot_recover(
             materialized.locked_commitments_preserved if materialized else True
         ),
         "post_action_gate": gate_status,
+        "route_truth": {
+            "policy_version": ROUTE_TRUTH_POLICY_VERSION,
+            "provider": route_truth_fact["provider_key"],
+            "provenance": route_truth_fact["provenance"],
+            "capture_status": route_truth_status,
+            "capture_outcome": route_truth_outcome,
+            "eligible_for_live_readiness": route_truth_live,
+        },
         "option": option_payload(option, offers) if option else None,
     }
 

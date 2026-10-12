@@ -1,0 +1,3 @@
+# 全量类型闸原样命令（树内 node_modules 是指向共享那份的 junction，零安装）
+$ node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+TSC_RC=0

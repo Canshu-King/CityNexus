@@ -1,0 +1,13 @@
+加闸工 ORD-0602 甲半 合并那一代的重跑件 r1 —— 门判 RECUT_ABORT 之后我把现尖并进自己枝，全部读数在新代重跑
+1 为什么重跑：落地驱动 round 14 对我这枚的回执写着 `RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes -- the lane's tests no longer describe what would land. Send it back to the lane, do not land a hand-merge`（那句判语逐字抄在 `review/加闸工-0602/mergecheck_r3.txt:5`，我这侧照它的判断动作、不替它改判；我这一拍自己重算的只读预测在同件 `review/加闸工-0602/mergecheck_r3.txt:3`，合并之前的相交面那枚文件在 `review/加闸工-0602/mergecheck_r3.txt:7`）。按号令者那条常设规矩：已发布过的枝不许 rebase，解法是把现尖 merge 进来。
+2 新坐标：枝 `refs/heads/review/加闸工-0602-r1` 现尖 `de2304c1435d6ef79e81d768cb4869b10b737cc7`，父两枚＝我上一代 `75689cfb73e8d217876c83ff50e74547925d6b23` 与当时现尖 `3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c`。合并前只读预测 rc=0（`review/加闸工-0602/mergecheck_r3.txt:3` 那行），合并没动我一个字节：main.py 里 route_truth 相关仍 12 行、字典两枚新键两侧各在、V8 那三处仍在（逐枚读数在本件 `review/加闸工-0602/merged_r1.txt:5` 起）。
+3 两枚远端同值：裸仓 `D:/moodle/CityNexus` 与 GitHub `refs/heads/review/加闸工-0602-r1` 回读都是同一枚 `de2304c1435d…`（两条命令与各自回读逐枚在 `review/加闸工-0602/republish_r1.txt:3` 与 `review/加闸工-0602/republish_r1.txt:5`）。这一处是我先前漏推：落地驱动现取候选用的是 `git -C D:/moodle/CityNexus ls-remote origin <ref>`，那枚 origin 是 GitHub（那一行在 `live_checks/cmdr_batch_land_r1.py:81`），我只推到裸仓，所以它解不开、报 `REF_UNRESOLVED rc=0 out= err=`（空 err，成因看不见）。枝没被谁删过，裸仓里两枚一直在。
+4 合并那一代的重跑（同一棵导出树，逐条各挂自己的件）：
+   我这枚对照测试 2 passed，live 与 synthetic 两种出处的读数与合并前一字不差（`review/加闸工-0602/mine_merged.txt:2`、`review/加闸工-0602/mine_merged.txt:3`），六位放行字段仍相等（`review/加闸工-0602/mine_merged.txt:4`），那声 422 仍在（`review/加闸工-0602/mine_merged.txt:6`），末行 `review/加闸工-0602/mine_merged.txt:18`。
+   邻居三枚文件 12 条通过（`review/加闸工-0602/neighbours_merged.txt:12`）；连同我这 2 条一起跑是 14 条通过（`review/加闸工-0602/tests_merged.txt:12`）。
+   整树采集 1938 条、报错 1 枚（`review/加闸工-0602/collect_merged.txt:2`）＝现尖那 1936 条加我这 2 条；那枚报错还是线自带的 `backend/tests/test_v18_hermes_r20_transport_reliability_probe.py:1`。
+   全量类型闸退出码 0、零输出（`review/加闸工-0602/typecheck_merged.txt:2`）；构建闸退出码 0（`review/加闸工-0602/build_merged.txt:6`）。
+   文案分层尺对现尖那一代比：REGISTER_PARITY 1343 枚双语键、1343 agree、clash 0（`review/加闸工-0602/copy_merged.txt:2`），NO_GROWTH 0 values changed（`review/加闸工-0602/copy_merged.txt:4`）。
+   上屏机器码闸 r4 用落地门那串旗标（`--only-added --require-name --refuse`）判我这枚对现尖：judged 2 枚文件、refuse 0 条、info 54 条、退出码 0（`review/加闸工-0602/gate_merged.txt:4` 与 `review/加闸工-0602/gate_merged.txt:59`）；闸自己的自检 31 条断言失败 0 条（`review/加闸工-0602/gate_merged.txt:2`）。
+5 一处更正我自己的话：先前那块写「既有测试一行没改……合起来 14 条通过」，那 14 条里含我自己那 2 条；邻居三枚文件本身是 12 条（逐枚现数各 4 条，合并前后同数）。这句改过来，不影响任何判语。
+6 我这一拍没做的：没碰权威尖、没碰别人的枝与跑批、没改任何人的断言；账本零直写，块只走收件口。
