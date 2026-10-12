@@ -1,0 +1,200 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-13T05:38:43+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "a91efcc1a7fc240932f74e1ab1f8788b0735975f",
+ "candidate_ref": "refs/heads/review/加闸工-0628-r1",
+ "candidate_tip": "c980a75ca1eabb5518fb6a391ae8b5c16742dbfe",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "a91efcc1a7fc240932f74e1ab1f8788b0735975f",
+  "line_only_commits": 0,
+  "candidate_only_commits": 2
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/agent/standby.py",
+   "backend/tests/test_r20_standby_trigger.py",
+   "review/加闸工-0628/collect_after.txt",
+   "review/加闸工-0628/collect_before.txt",
+   "review/加闸工-0628/diffstat_r1.txt",
+   "review/加闸工-0628/linecount_r1.txt",
+   "review/加闸工-0628/neighbours_after.txt",
+   "review/加闸工-0628/neighbours_before.txt",
+   "review/加闸工-0628/order_text_r1.txt",
+   "review/加闸工-0628/proof_r1.txt",
+   "review/加闸工-0628/readout_r1.txt",
+   "review/加闸工-0628/refusal_r1.txt",
+   "review/加闸工-0628/standby_after.txt",
+   "review/加闸工-0628/tip.txt",
+   "review/加闸工-0628/tipmove_r1.txt"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/agent/standby.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "bd17dc65a8517937d6706194145f63e170ee55bb",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_053816",
+  "blob_equality": [
+   {
+    "path": "backend/app/agent/standby.py",
+    "candidate_blob": "ff1119263b9cebf3ca1c423b602ed15e63a677e3",
+    "export_blob": "ff1119263b9cebf3ca1c423b602ed15e63a677e3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_r20_standby_trigger.py",
+    "candidate_blob": "9214f052b5e24201b07fe3cf5058614a4af5face",
+    "export_blob": "9214f052b5e24201b07fe3cf5058614a4af5face",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/collect_after.txt",
+    "candidate_blob": "6d51511e46d7e7dc9788f58b0b9d8255ca5f1eca",
+    "export_blob": "6d51511e46d7e7dc9788f58b0b9d8255ca5f1eca",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/collect_before.txt",
+    "candidate_blob": "7a47c9ce29575382e38acd5d6d766d3054d8033a",
+    "export_blob": "7a47c9ce29575382e38acd5d6d766d3054d8033a",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/diffstat_r1.txt",
+    "candidate_blob": "7e6e8f9f31fe0977b6522c45fa2cca197a95d207",
+    "export_blob": "7e6e8f9f31fe0977b6522c45fa2cca197a95d207",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/linecount_r1.txt",
+    "candidate_blob": "b10ea82259cd456bb987a6012820ce488843c568",
+    "export_blob": "b10ea82259cd456bb987a6012820ce488843c568",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/neighbours_after.txt",
+    "candidate_blob": "117b828c5979e8b7b137ea426c1af191840835cb",
+    "export_blob": "117b828c5979e8b7b137ea426c1af191840835cb",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/neighbours_before.txt",
+    "candidate_blob": "95edebfd8b31692fcc7721824fd71b0f81b4b644",
+    "export_blob": "95edebfd8b31692fcc7721824fd71b0f81b4b644",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/order_text_r1.txt",
+    "candidate_blob": "ca1fb7625343e21228f84a824a9814c6d85c5338",
+    "export_blob": "ca1fb7625343e21228f84a824a9814c6d85c5338",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/proof_r1.txt",
+    "candidate_blob": "27c619fcfe85c1a9497de91d1c5b2797c21d3499",
+    "export_blob": "27c619fcfe85c1a9497de91d1c5b2797c21d3499",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/readout_r1.txt",
+    "candidate_blob": "8f7d4fec4b330d41410060d4ebcdd6b0f554b6a3",
+    "export_blob": "8f7d4fec4b330d41410060d4ebcdd6b0f554b6a3",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/refusal_r1.txt",
+    "candidate_blob": "683071d7141292b6243cb284d42135b3287a213a",
+    "export_blob": "683071d7141292b6243cb284d42135b3287a213a",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/standby_after.txt",
+    "candidate_blob": "74c47643b2d9fbb713a7bee567140ce7c6508444",
+    "export_blob": "74c47643b2d9fbb713a7bee567140ce7c6508444",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/tip.txt",
+    "candidate_blob": "8d82232880e797c6db8d5c34bc43cd68e021e17e",
+    "export_blob": "8d82232880e797c6db8d5c34bc43cd68e021e17e",
+    "equal": true
+   },
+   {
+    "path": "review/加闸工-0628/tipmove_r1.txt",
+    "candidate_blob": "fdac55082902874ddf04c9e282b1cb2d52555070",
+    "export_blob": "fdac55082902874ddf04c9e282b1cb2d52555070",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1943,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1943 tests collected in 7.91s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "c980a75ca1eabb5518fb6a391ae8b5c16742dbfe",
+  "branches_route": "c980a75ca1eabb5518fb6a391ae8b5c16742dbfe",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
