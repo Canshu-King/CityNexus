@@ -1,0 +1,467 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-13T05:52:52+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "6b4ae6f34cd62f491d145d6f6744c2fc8f87e58c",
+ "candidate_ref": "refs/heads/review/号令者-0642-artifact-absorb",
+ "candidate_tip": "e100170436fa7424e03fe6e4a0171b1bf77d09d3",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "6b4ae6f34cd62f491d145d6f6744c2fc8f87e58c",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "CODEX_START_HERE_R14.md",
+   "CODEX_START_HERE_R15.md",
+   "CODEX_START_HERE_R16.md",
+   "CODEX_START_HERE_R17.md",
+   "CODEX_START_HERE_R18.md",
+   "CODEX_START_HERE_R19.md",
+   "CODEX_START_HERE_R20.md",
+   "GPT_R14_EXTERNAL_CHECK.md",
+   "GPT_R15_EXTERNAL_CHECK.md",
+   "GPT_R16_EXTERNAL_CHECK.md",
+   "GPT_R17_EXTERNAL_CHECK.md",
+   "GPT_R18_EXTERNAL_CHECK.md",
+   "GPT_R19_EXTERNAL_CHECK.md",
+   "REVOLUTION_R14_AUTONOMOUS_STRATEGY_RESULT.md",
+   "REVOLUTION_R15_TRUTH_SEEKING_OPERATOR_RESULT.md",
+   "REVOLUTION_R16_EVENT_DRIVEN_GUARDIAN_RESULT.md",
+   "REVOLUTION_R17_PREDICTIVE_SELF_HEALING_RESULT.md",
+   "REVOLUTION_R18_ANTICIPATORY_RESILIENCE_RESULT.md",
+   "REVOLUTION_REALTRIP_R10_COLOCATED_UI_RESULT.md",
+   "REVOLUTION_REALTRIP_R11_COMPLETED_JOURNEY_RESULT.md",
+   "REVOLUTION_REALTRIP_R5_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_CURSOR_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_FACT_CONTRACT_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_IDENTITY_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_NODE_ACQUISITION_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_NODE_BFF_FACTS_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_NODE_FACT_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_NODE_WEB_BOUNDARY_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_PENDING_FACTS_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_PENDING_IDENTITY_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_PUBLIC_FACTS_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_SERVICE_IDENTITY_RESULT.md",
+   "REVOLUTION_REALTRIP_R6_WANGSHI_NODE_RESULT.md",
+   "REVOLUTION_REALTRIP_R7_CANONICAL_PROJECTION_RESULT.md",
+   "REVOLUTION_REALTRIP_R8_WINTER_AUTHORITY_RESULT.md",
+   "REVOLUTION_REALTRIP_R9_COLOCATED_EDGE_RESULT.md",
+   "REVOLUTION_REALTRIP_RECOVERY_RESULT.md",
+   "evidence/revolution-realtrip/R77_GONGSHAN_RESULT.md",
+   "evidence/revolution-realtrip/R77_HERMES_TRUTH_REPAIR.md",
+   "evidence/revolution-realtrip/R77_R4_PACKAGE_MANIFEST.md",
+   "evidence/revolution-realtrip/R77_SUZHOU_SELECTABLE_RESULT.md",
+   "evidence/revolution-realtrip/r77_agent_execution_plan_only.json",
+   "evidence/revolution-realtrip/r77_agent_plan_only_rerun.json",
+   "evidence/revolution-realtrip/r77_authority_gate_r4_receipt.json",
+   "evidence/revolution-realtrip/r77_fact_refresh_mirror_receipt.json",
+   "evidence/revolution-realtrip/r77_gongshan_live_receipt.json",
+   "evidence/revolution-realtrip/r77_live_agent_loop_receipt.json",
+   "evidence/revolution-realtrip/r77_replan_recovery_receipt.json",
+   "evidence/revolution-realtrip/r77_round_mirror_recovery_receipt.json",
+   "evidence/revolution-realtrip/r77_status_inspection_repair_receipt.json",
+   "evidence/revolution-realtrip/r77_suzhou_real_selectable_receipt.json",
+   "frontend/output/playwright/r77-suzhou-hub-live-mode-clean.png",
+   "frontend/output/playwright/r77-suzhou-hub-truth-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-evidence-mode-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-executing-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-final-twin-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-frozen-evidence-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-mode-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-mode-unavailable-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-offline-copy-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-pending-mode-count-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-unknown-mode-clean.png",
+   "frontend/output/playwright/r77-suzhou-live-web-source-label-clean.png",
+   "frontend/output/playwright/r77-suzhou-map-frozen-evidence-clean.png",
+   "frontend/output/playwright/r77-suzhou-map-live-mode-clean.png",
+   "frontend/output/playwright/r77-suzhou-map-mobility-unavailable-clean.png",
+   "frontend/output/playwright/r77-suzhou-map-no-route-title-clean.png",
+   "frontend/output/playwright/r77-suzhou-replan-live-deepseek.png",
+   "frontend/output/playwright/r77-suzhou-replan-live-fixed.png",
+   "frontend/output/playwright/r77-suzhou-replan-live.png",
+   "frontend/output/playwright/r77-suzhou-user-visible-after.png",
+   "frontend/output/playwright/r77-suzhou-user-visible-clean.png",
+   "revolution/R14_FACT_DRIVEN_PLANNER_MISSION.md",
+   "revolution/R15_IMPLEMENTATION_SKETCH.md",
+   "revolution/R15_TRUTH_SEEKING_OPERATOR_MISSION.md",
+   "revolution/R16_EVENT_DRIVEN_GUARDIAN_MISSION.md",
+   "revolution/R16_IMPLEMENTATION_SKETCH.md",
+   "revolution/R17_IMPLEMENTATION_SKETCH.md",
+   "revolution/R17_PREDICTIVE_SELF_HEALING_MISSION.md",
+   "revolution/R18_ANTICIPATORY_RESILIENCE_MISSION.md",
+   "revolution/R18_IMPLEMENTATION_SKETCH.md",
+   "revolution/R19_IMPLEMENTATION_SKETCH.md",
+   "revolution/R19_LIVING_PLAN_PORTFOLIO_MISSION.md",
+   "revolution/R20_AUTONOMOUS_BRANCH_ARBITRATION_MISSION.md",
+   "revolution/R20_IMPLEMENTATION_SKETCH.md"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "60d3b8039dca74d9fb09440f3523129d0a5ce6f4",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_055205",
+  "blob_equality": [
+   {
+    "path": "evidence/revolution-realtrip/R77_GONGSHAN_RESULT.md",
+    "candidate_blob": "c854829244a21933418fcb077036520696223149",
+    "export_blob": "c854829244a21933418fcb077036520696223149",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/R77_HERMES_TRUTH_REPAIR.md",
+    "candidate_blob": "67e8d297811fa4f1149171ca3e24319bdd80b59e",
+    "export_blob": "67e8d297811fa4f1149171ca3e24319bdd80b59e",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/R77_R4_PACKAGE_MANIFEST.md",
+    "candidate_blob": "e436daef64c6d9776fdb114efa461444312f4dcf",
+    "export_blob": "e436daef64c6d9776fdb114efa461444312f4dcf",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/R77_SUZHOU_SELECTABLE_RESULT.md",
+    "candidate_blob": "a50d571165a95e9ceac272cd6384ce76ac565ea5",
+    "export_blob": "a50d571165a95e9ceac272cd6384ce76ac565ea5",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_agent_execution_plan_only.json",
+    "candidate_blob": "23d57199cd3e11de83442ffcc8c2cc5b1291f900",
+    "export_blob": "23d57199cd3e11de83442ffcc8c2cc5b1291f900",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_agent_plan_only_rerun.json",
+    "candidate_blob": "8d9c3fbee48e79577fd94471ecbc551abc8938c9",
+    "export_blob": "8d9c3fbee48e79577fd94471ecbc551abc8938c9",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_authority_gate_r4_receipt.json",
+    "candidate_blob": "01340e156de7d5d6b7dbd27d68d6558b9e3e82b9",
+    "export_blob": "01340e156de7d5d6b7dbd27d68d6558b9e3e82b9",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_fact_refresh_mirror_receipt.json",
+    "candidate_blob": "8162bae3fd1a3d24c5430bbb796f80d93f0b6da9",
+    "export_blob": "8162bae3fd1a3d24c5430bbb796f80d93f0b6da9",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_gongshan_live_receipt.json",
+    "candidate_blob": "5541c8ca0fa7e337ac60c4221e57a92d445e0cc2",
+    "export_blob": "5541c8ca0fa7e337ac60c4221e57a92d445e0cc2",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_live_agent_loop_receipt.json",
+    "candidate_blob": "3b173b628f656ef1044381459568acc94e989290",
+    "export_blob": "3b173b628f656ef1044381459568acc94e989290",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_replan_recovery_receipt.json",
+    "candidate_blob": "fa2a7fedc479bca09ea6742aa8d7f736bd9cb71e",
+    "export_blob": "fa2a7fedc479bca09ea6742aa8d7f736bd9cb71e",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_round_mirror_recovery_receipt.json",
+    "candidate_blob": "0e515b5177f425c94d10e0e8b5433665a23383da",
+    "export_blob": "0e515b5177f425c94d10e0e8b5433665a23383da",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_status_inspection_repair_receipt.json",
+    "candidate_blob": "9401113173c331bfecd6b2d93cbc945700832669",
+    "export_blob": "9401113173c331bfecd6b2d93cbc945700832669",
+    "equal": true
+   },
+   {
+    "path": "evidence/revolution-realtrip/r77_suzhou_real_selectable_receipt.json",
+    "candidate_blob": "76bfd8cddde5342ad49b3ea6a42e61e7bed3b9fc",
+    "export_blob": "76bfd8cddde5342ad49b3ea6a42e61e7bed3b9fc",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-hub-live-mode-clean.png",
+    "candidate_blob": "af873ba8d590499d50395cdfda6a9a2bf5d5a9a6",
+    "export_blob": "af873ba8d590499d50395cdfda6a9a2bf5d5a9a6",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-hub-truth-clean.png",
+    "candidate_blob": "95cb9663bc7551c5ee99263bbc97b8ad7eb9daaf",
+    "export_blob": "95cb9663bc7551c5ee99263bbc97b8ad7eb9daaf",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-evidence-mode-clean.png",
+    "candidate_blob": "747b3ef7a556965f114215b9dac78bc03d3922ce",
+    "export_blob": "747b3ef7a556965f114215b9dac78bc03d3922ce",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-executing-clean.png",
+    "candidate_blob": "777b02926cc506ea384126c61eeca8eb1b19fea0",
+    "export_blob": "777b02926cc506ea384126c61eeca8eb1b19fea0",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-final-twin-clean.png",
+    "candidate_blob": "c0e9eb07fb3c5ce57161883d3be966f1d32d7909",
+    "export_blob": "c0e9eb07fb3c5ce57161883d3be966f1d32d7909",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-frozen-evidence-clean.png",
+    "candidate_blob": "1ee9a760ef05348d3b397af2f2c27d24a5ecee31",
+    "export_blob": "1ee9a760ef05348d3b397af2f2c27d24a5ecee31",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-mode-clean.png",
+    "candidate_blob": "51b3ea0dcf66101bee4e6f5d73dad82125f2b8a6",
+    "export_blob": "51b3ea0dcf66101bee4e6f5d73dad82125f2b8a6",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-mode-unavailable-clean.png",
+    "candidate_blob": "cfd565ab205cb7386f6d84473bc15b7ae4e7bd6f",
+    "export_blob": "cfd565ab205cb7386f6d84473bc15b7ae4e7bd6f",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-offline-copy-clean.png",
+    "candidate_blob": "0b6f7f77df806f627889958038de57ee7e22826a",
+    "export_blob": "0b6f7f77df806f627889958038de57ee7e22826a",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-pending-mode-count-clean.png",
+    "candidate_blob": "5e3e3a073490f6a6c60c82e9d11665a666782065",
+    "export_blob": "5e3e3a073490f6a6c60c82e9d11665a666782065",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-unknown-mode-clean.png",
+    "candidate_blob": "7f9a698a2b6a102307f6f0309f91d44774e792bb",
+    "export_blob": "7f9a698a2b6a102307f6f0309f91d44774e792bb",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-live-web-source-label-clean.png",
+    "candidate_blob": "d5526c5b150e81527724341e62e4d72109d283a8",
+    "export_blob": "d5526c5b150e81527724341e62e4d72109d283a8",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-map-frozen-evidence-clean.png",
+    "candidate_blob": "71d2c82b88a756d1db2fd729c5623982fffdfefd",
+    "export_blob": "71d2c82b88a756d1db2fd729c5623982fffdfefd",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-map-live-mode-clean.png",
+    "candidate_blob": "ec51572fd0e93726484814d7ebe87238a36f56f7",
+    "export_blob": "ec51572fd0e93726484814d7ebe87238a36f56f7",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-map-mobility-unavailable-clean.png",
+    "candidate_blob": "e3627e7c86cb03fea03364b5bfa39d18712694ee",
+    "export_blob": "e3627e7c86cb03fea03364b5bfa39d18712694ee",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-map-no-route-title-clean.png",
+    "candidate_blob": "ebe2e493d1065a5c80b3f54ffb5a32a9fb970593",
+    "export_blob": "ebe2e493d1065a5c80b3f54ffb5a32a9fb970593",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-replan-live-deepseek.png",
+    "candidate_blob": "8d3084f71bcc7d7dd50c999947dcf9a146c0327e",
+    "export_blob": "8d3084f71bcc7d7dd50c999947dcf9a146c0327e",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-replan-live-fixed.png",
+    "candidate_blob": "bfa2158b0fd297016dba345bf6a0ddf6ec42c42e",
+    "export_blob": "bfa2158b0fd297016dba345bf6a0ddf6ec42c42e",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-replan-live.png",
+    "candidate_blob": "990b86da6c1ece66836185cfa59ee4716c564e1f",
+    "export_blob": "990b86da6c1ece66836185cfa59ee4716c564e1f",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-user-visible-after.png",
+    "candidate_blob": "2d6f7e86573219f05b113a336ea7eb93f241f92c",
+    "export_blob": "2d6f7e86573219f05b113a336ea7eb93f241f92c",
+    "equal": true
+   },
+   {
+    "path": "frontend/output/playwright/r77-suzhou-user-visible-clean.png",
+    "candidate_blob": "e3469695b3954f782af4b312ca3ca2919f6d9d80",
+    "export_blob": "e3469695b3954f782af4b312ca3ca2919f6d9d80",
+    "equal": true
+   },
+   {
+    "path": "revolution/R14_FACT_DRIVEN_PLANNER_MISSION.md",
+    "candidate_blob": "13b45eec295c411b3ae5b714814f57b55f793e5c",
+    "export_blob": "13b45eec295c411b3ae5b714814f57b55f793e5c",
+    "equal": true
+   },
+   {
+    "path": "revolution/R15_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "ac632bbdc24ba66f5049d9994e7df99503205de3",
+    "export_blob": "ac632bbdc24ba66f5049d9994e7df99503205de3",
+    "equal": true
+   },
+   {
+    "path": "revolution/R15_TRUTH_SEEKING_OPERATOR_MISSION.md",
+    "candidate_blob": "766e9bff59574f2bcb37be9fdbef8613cff454da",
+    "export_blob": "766e9bff59574f2bcb37be9fdbef8613cff454da",
+    "equal": true
+   },
+   {
+    "path": "revolution/R16_EVENT_DRIVEN_GUARDIAN_MISSION.md",
+    "candidate_blob": "1bb1a8ad7cd5f3b218cd9ecd790a767e3fda1a43",
+    "export_blob": "1bb1a8ad7cd5f3b218cd9ecd790a767e3fda1a43",
+    "equal": true
+   },
+   {
+    "path": "revolution/R16_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "7f9b9e5aefcdea9ea485c78730d09c98f67a1e5c",
+    "export_blob": "7f9b9e5aefcdea9ea485c78730d09c98f67a1e5c",
+    "equal": true
+   },
+   {
+    "path": "revolution/R17_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "7ccb0e7df6803c9516d386f875de5df3de6dad32",
+    "export_blob": "7ccb0e7df6803c9516d386f875de5df3de6dad32",
+    "equal": true
+   },
+   {
+    "path": "revolution/R17_PREDICTIVE_SELF_HEALING_MISSION.md",
+    "candidate_blob": "8fa4b96c1ddb37890e338581209e6321965fdbda",
+    "export_blob": "8fa4b96c1ddb37890e338581209e6321965fdbda",
+    "equal": true
+   },
+   {
+    "path": "revolution/R18_ANTICIPATORY_RESILIENCE_MISSION.md",
+    "candidate_blob": "591302a98c71f25d95e69f500cb8c36e6f751664",
+    "export_blob": "591302a98c71f25d95e69f500cb8c36e6f751664",
+    "equal": true
+   },
+   {
+    "path": "revolution/R18_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "077d8396420dba487a7b89c6e0669494be552c72",
+    "export_blob": "077d8396420dba487a7b89c6e0669494be552c72",
+    "equal": true
+   },
+   {
+    "path": "revolution/R19_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "3668eebe9766e2bfbaec7df3624e3c28702d2df3",
+    "export_blob": "3668eebe9766e2bfbaec7df3624e3c28702d2df3",
+    "equal": true
+   },
+   {
+    "path": "revolution/R19_LIVING_PLAN_PORTFOLIO_MISSION.md",
+    "candidate_blob": "d1eb6c4717a6a59e8d5f5760607e0bdd24cb1c59",
+    "export_blob": "d1eb6c4717a6a59e8d5f5760607e0bdd24cb1c59",
+    "equal": true
+   },
+   {
+    "path": "revolution/R20_AUTONOMOUS_BRANCH_ARBITRATION_MISSION.md",
+    "candidate_blob": "53e0778b0d833b0ef278a9b8f711be2fd76bec5c",
+    "export_blob": "53e0778b0d833b0ef278a9b8f711be2fd76bec5c",
+    "equal": true
+   },
+   {
+    "path": "revolution/R20_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "839957704eb81537118650a6969abdd05671411f",
+    "export_blob": "839957704eb81537118650a6969abdd05671411f",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1943,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1943 tests collected in 9.06s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "e100170436fa7424e03fe6e4a0171b1bf77d09d3",
+  "branches_route": "e100170436fa7424e03fe6e4a0171b1bf77d09d3",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
