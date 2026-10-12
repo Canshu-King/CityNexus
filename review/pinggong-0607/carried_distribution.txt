@@ -1,0 +1,5 @@
+来源：交付后的 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 第 13 列（carried）逐条数出来
+表内数据行 41 条
+carried 词形分布：NO 17 条｜PART 24 条
+按「自己的改动里已在线上几成」分桶：九成以上 8 条｜五到九成 0 条｜一到五成 0 条｜不足一成 16 条｜零 17 条
+absorbed_on 非空 8 条

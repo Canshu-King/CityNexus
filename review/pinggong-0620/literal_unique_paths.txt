@@ -1,0 +1,37 @@
+那一代的尖 6171fdf2c868f5030690c6cfa3b5ea469bb810fd（号令者八行读数所在代）
+gpt/revolution-r6-h11-r61-prep-20260923 字面独有 3 枚：evidence/gpt-assist/20260923/R61_MINIMAL_PATCH.diff ; evidence/gpt-assist/20260923/R6_H11_R61_PREP.md ; evidence/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py
+   R61_MINIMAL_PATCH.diff -> 线上同名者 docs/revolution-archive/gpt-assist/20260923/R61_MINIMAL_PATCH.diff
+   R6_H11_R61_PREP.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923/R6_H11_R61_PREP.md
+   proposed_test_r61_explicit_role_boundary.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py
+gpt/revolution-r61-h12-r62-prep-20260923 字面独有 5 枚：evidence/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md ; evidence/gpt-assist/20260923-r61/H12_HANDOFF.md ; evidence/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md ; evidence/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff ; evidence/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py
+   CODEX_NEXT_TASK.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md
+   H12_HANDOFF.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r61/H12_HANDOFF.md
+   R61_EXTERNAL_AUDIT.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md
+   R62_STALE_COMPATIBILITY_MINIMAL.diff -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff
+   proposed_test_r62_cost_truth_edges.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py
+gpt/revolution-r62-r63-prep-20260923 字面独有 3 枚：evidence/gpt-assist/20260923-r62/R62_R63_PREP.md ; evidence/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py ; evidence/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py
+   R62_R63_PREP.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r62/R62_R63_PREP.md
+   proposed_test_r63_anchor_commitment_cost_truth.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py
+   proposed_test_r63_template_budget_fit_truth.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py
+gpt/revolution-r7-r71-prep-20260923 字面独有 3 枚：evidence/gpt-assist/20260923-r7/CODEX_R71_TASK.md ; evidence/gpt-assist/20260923-r7/R7_R71_PREP.md ; evidence/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py
+   CODEX_R71_TASK.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r7/CODEX_R71_TASK.md
+   R7_R71_PREP.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r7/R7_R71_PREP.md
+   r71_catalogue_eligibility_ledger.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py
+gpt/revolution-r71-r72-prep-20260923 字面独有 5 枚：evidence/gpt-assist/20260923-r71/CODEX_R72_TASK.md ; evidence/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md ; evidence/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json ; evidence/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md ; evidence/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py
+   CODEX_R72_TASK.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r71/CODEX_R72_TASK.md
+   R71_EXTERNAL_AUDIT.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md
+   R72_ACQUISITION_FRONTIER.json -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json
+   R72_EVIDENCE_CONTRACT.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md
+   r72_exact_osm_fact_probe.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py
+gpt/revolution-r72-r73-prep-20260923 字面独有 4 枚：evidence/gpt-assist/20260923-r72/CODEX_R73_TASK.md ; evidence/gpt-assist/20260923-r72/R72_R73_PREP.md ; evidence/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md ; evidence/gpt-assist/20260923-r72/r73_provider_candidate_capture.py
+   CODEX_R73_TASK.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r72/CODEX_R73_TASK.md
+   R72_R73_PREP.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r72/R72_R73_PREP.md
+   R73_IDENTITY_CONTRACT.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md
+   r73_provider_candidate_capture.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260923-r72/r73_provider_candidate_capture.py
+gpt/revolution-r73-r74-prep-20260924 字面独有 4 枚：evidence/gpt-assist/20260924-r73/CODEX_R74_TASK.md ; evidence/gpt-assist/20260924-r73/R73_R74_PREP.md ; evidence/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md ; evidence/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py
+   CODEX_R74_TASK.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260924-r73/CODEX_R74_TASK.md
+   R73_R74_PREP.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260924-r73/R73_R74_PREP.md
+   R74_IDENTITY_CORROBORATION_CONTRACT.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md
+   r74_nominatim_exact_identity_probe.py -> 线上同名者 docs/revolution-archive/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py
+gpt/revolution-r74-r75-breakthrough-20260924 字面独有 1 枚：evidence/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md
+   R74_R75_BREAKTHROUGH_PREP.md -> 线上同名者 docs/revolution-archive/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md

@@ -1,0 +1,43 @@
+尖 8940570c022950b705cc3b37139d1b8f7052c42a｜来源代 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9
+
+[一] 尖上 execution/ 现有枚（ls-tree 现读）
+  7 枚：__init__.py clock.py departure_activation.py journey_twin.py location_scope.py route_session_contract.py traveler_twin.py
+
+[二] 纪律允许的唯一宿主 backend/app/stay_mobility.py 里，成员面命中数
+  grep JourneyMember -> 0 行命中
+  该文件里与签名有关的定义处（现读）：
+   1714:def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] | None:
+   1842:def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
+
+[三] 尖上生产侧谁真的读 JourneyMember（按文件计命中数）
+   backend/app/db/models.py:1
+   backend/app/main.py:42
+   backend/app/schemas.py:4
+
+[四] 定位行的唯一生产写入处，以及它带不带身份
+   v9 现读 1429:    row = LocationObservation(
+   main 现读 6977:        row = record_location(
+   路由那一段传给它的参数（main.py:6977 起五行）：
+    6977:         row = record_location(
+    6978:             session,
+    6979:             journey,
+    6980:             latitude=payload.latitude,
+    6981:             longitude=payload.longitude,
+    6982:             accuracy_m=payload.accuracy_m,
+    6983:             captured_at=payload.captured_at.isoformat(),
+    6984:         )
+
+[五] 上一批（CMDR-ORDER-0605-0607）点名的四枚候选落点，尖上现读行号
+   122:def _execution_truth(
+   1295:def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourneySnapshot:
+   1417:def record_location(
+   1501:def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
+   边缘那条真读路由在 main.py 现读：
+   7098:def get_edge_journey_snapshot(
+   7105:        payload = edge_snapshot(session, device)
+
+[六] presence 自己那句按成员取定位的查询，在来源代的那一行
+   枝内 presence.py 113: LocationObservation.journey_member_id == str(viewer_member_id),
+
+[七] 尖上 location_observations 的模型列（现读那一代）
+   models.py 里 journey_member_id 命中 0 行

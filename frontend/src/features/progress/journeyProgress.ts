@@ -23,7 +23,7 @@
  * concurrent edit by other lanes.
  */
 import { TERMINAL_ACTIVITY_STATES } from "../../lib/executionWindow";
-import { englishCountNoun } from "../../lib/plural";
+import { dictionaryCopy, dictionaryText } from "../../i18n/LocaleContext";
 
 export type ProgressActivity = { id: string; status: string };
 export type ProgressDayGroup = { key: string; activityIds: string[] };
@@ -73,33 +73,22 @@ export function journeyProgress(input: {
  */
 export function progressContractCopy(p: JourneyProgress, zh: boolean): string {
   if (p.planned_total === 0) {
-    return zh
-      ? "还没排定任何一站：选定方案之后，这里才写第几天、共几天、走完几处。"
-      : "No stop is scheduled yet: once a plan is chosen this line starts saying which day, of how many, and how far you got.";
+    return dictionaryCopy(zh ? "zh-CN" : "en", "progress.none.scheduled");
   }
   const skipped = p.settled_count - p.completed_count;
   const parts: string[] = [];
   if (p.day_total === null) {
-    parts.push(zh
-      ? "服务端没给出整天数（这一趟的起止排不出序），天数留空。"
-      : "The server gives no whole-day count (this journey's window cannot be ordered), so the day total stays blank.");
+    parts.push(dictionaryCopy(zh ? "zh-CN" : "en", "progress.day.total.blank"));
   } else if (p.day_of === null) {
-    parts.push(zh ? `共 ${p.day_total} 天。` : `${p.day_total} ${englishCountNoun(p.day_total, "day")}.`);
+    parts.push(dictionaryText(zh ? "zh-CN" : "en", "progress.day.total.only", { count: p.day_total }));
   } else {
-    parts.push(zh
-      ? `第 ${p.day_of} 天 / 共 ${p.day_total} 天。`
-      : `day ${p.day_of} of ${p.day_total}.`);
+    parts.push(dictionaryText(zh ? "zh-CN" : "en", "progress.day.of.total", { day: p.day_of, total: p.day_total }));
   }
   if (p.completed_count === 0) {
-    parts.push(zh
-      ? `${p.planned_total} 站还没走完任何一站 —— 站点状态由服务端改，改完这里自己 +1，这里没有给你打勾的地方。`
-      : `none of the ${p.planned_total} ${englishCountNoun(p.planned_total, "stop")} is walked yet -- the server moves a stop's status and this count follows it, so there is nothing here to tick by hand.`);
+    parts.push(dictionaryText(zh ? "zh-CN" : "en", "progress.stop.none.walked", { count: p.planned_total }));
   } else {
-    parts.push(zh
-      ? `已完成 ${p.completed_count}/${p.planned_total} 站`
-        + (skipped > 0 ? `，另有 ${skipped} 站被跳过或取消（不算走完）。` : "。")
-      : `${p.completed_count}/${p.planned_total} ${englishCountNoun(p.planned_total, "stop")} completed`
-        + (skipped > 0 ? `, ${skipped} more skipped or cancelled (not counted as walked).` : "."));
+    parts.push(dictionaryText(zh ? "zh-CN" : "en", "progress.stop.completed", { completed: p.completed_count, total: p.planned_total })
+      + (skipped > 0 ? dictionaryText(zh ? "zh-CN" : "en", "progress.stop.skipped.clause", { count: skipped }) : (zh ? "。" : ".")));
   }
   return parts.join(zh ? "" : " ");
 }
@@ -107,11 +96,6 @@ export function progressContractCopy(p: JourneyProgress, zh: boolean): string {
 /** Why the day position is blank, in the traveller's words rather than a null. */
 export function dayOfGapCopy(p: JourneyProgress, zh: boolean): string | null {
   if (p.day_of !== null || p.planned_total === 0) return null;
-  return p.day_of_basis === "no_cursor"
-    ? zh
-      ? "服务端还没把这一趟定位到某一站，所以「第几天」留空 —— 走到第一站时它会自己出现。"
-      : "The server has not placed this journey on a stop yet, so \"which day\" is blank -- it appears once a stop is underway."
-    : zh
-      ? "服务端给的当前位置不在这一代的任一站上（方案换过一代），所以「第几天」留空。"
-      : "The server's current position names no stop on this plan generation (the plan moved on), so \"which day\" is blank.";
+  return dictionaryCopy(zh ? "zh-CN" : "en",
+    p.day_of_basis === "no_cursor" ? "progress.day.gap.no.cursor" : "progress.day.gap.stale.cursor");
 }
