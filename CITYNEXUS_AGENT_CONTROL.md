@@ -1,4 +1,119 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0598-CNDRAFT（号令者：CN 那侧的轮次摘要草稿，已复算后转交）
+
+CN 侧（零扣费那张卡）出了 R14~R26 的轮次摘要，逐行是「轮次｜这轮想让用户做到什么（土话）｜代码文件｜文档」。
+**这是草稿不是验收**：它那一列代码文件我没有逐枚替它背书，下面是我在现尖上的复算。
+
+| 复算读数 | 值 | 锚 |
+|---|---|---|
+| 草稿正文 | 14 行 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29 |
+| 提到的仓内路径 | 18 个 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29 |
+| 现尖上真存在 | 17 个 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29 |
+| 现尖上不存在 | 1 个 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29 |
+
+现尖上不存在的那几枚路径：`backend/app/fact_acquisition.py`
+
+复算可以重跑：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_cn_draft_verify_r1.py`（它自己 ls-remote 现取尖）。
+
+草稿原文如下（落盘在 `E:/cn_0593/out_0593.txt`）：
+
+```
+轮次号 | 这轮想让用户做到什么 | 支撑代码文件(≤3) | 文档文件名
+R14 | 说一句偏好，系统自己判断缺什么证据、补齐后排真实行程、遇事重排 | D:/moodle/CityNexus/backend/app/fact_acquisition.py; D:/moodle/CityNexus/backend/app/agent/runtime.py | revolution/R14_FACT_DRIVEN_PLANNER_MISSION.md; CODEX_START_HERE_R14.md
+R15 | 行程不再靠估算蒙混，系统自己去查官方来源，用户拿到的都是真凭据 | D:/moodle/CityNexus/backend/app/agent/gateway.py; D:/moodle/CityNexus/backend/app/fact_acquisition.py | revolution/R15_TRUTH_SEEKING_OPERATOR_MISSION.md; revolution/R15_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R15.md
+R16 | 旅途中天气、封路等状况一出现，系统自己醒来自动改行程 | D:/moodle/CityNexus/backend/app/agent/guardian.py; D:/moodle/CityNexus/backend/app/agent/autorun.py | revolution/R16_EVENT_DRIVEN_GUARDIAN_MISSION.md; revolution/R16_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R16.md
+R17 | 从天气预报看出未来要出状况，系统提前一步自动换掉行程 | D:/moodle/CityNexus/backend/app/agent/predictive.py; D:/moodle/CityNexus/backend/app/integrations/context/weather_ingestion.py; D:/moodle/CityNexus/backend/app/agent/autorun.py | revolution/R17_PREDICTIVE_SELF_HEALING_MISSION.md; revolution/R17_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R17.md
+R18 | 行程还正常时系统就备好带真凭据的备用方案，风险超线立刻切换 | D:/moodle/CityNexus/backend/app/agent/predictive.py; D:/moodle/CityNexus/backend/app/services.py; D:/moodle/CityNexus/backend/app/main.py | revolution/R18_ANTICIPATORY_RESILIENCE_MISSION.md; revolution/R18_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R18.md
+R19 | 系统养着几套真材实料的备选行程，自动刷新淘汰，到点才启用 | D:/moodle/CityNexus/backend/app/agent/predictive.py; D:/moodle/CityNexus/backend/app/services.py; D:/moodle/CityNexus/backend/app/schemas.py | revolution/R19_LIVING_PLAN_PORTFOLIO_MISSION.md; revolution/R19_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R19.md
+R20 | 事件来了系统自己拍板：启用备用、重新排还是不动，用户不用操心 | D:/moodle/CityNexus/backend/app/agent/guardian.py; D:/moodle/CityNexus/backend/app/agent/predictive.py; D:/moodle/CityNexus/backend/app/agent/gateway.py | revolution/R20_AUTONOMOUS_BRANCH_ARBITRATION_MISSION.md; revolution/R20_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R20.md
+R21 | 备用方案不够用时，系统当场现排新行程并走完，不用用户救场 | D:/moodle/CityNexus/backend/app/agent/mission_plan.py; D:/moodle/CityNexus/backend/app/agent/guardian.py; D:/moodle/CityNexus/backend/app/agent/gateway.py | revolution/R21_AUTONOMOUS_FUTURE_SYNTHESIS_MISSION.md; revolution/R21_CONTINUATION_FROM_CONTEXT_BOUNDARY.md; revolution/R21_IMPLEMENTATION_SKETCH.md
+R22 | 行程空出闲暇时，系统自己找靠谱真景点加进计划，不折腾不硬塞 | D:/moodle/CityNexus/backend/app/intelligence/opportunity_window.py; D:/moodle/CityNexus/backend/app/agent/runtime.py; D:/moodle/CityNexus/backend/app/replanning/opportunity_window_family.py | revolution/R22_AUTONOMOUS_OPPORTUNITY_CAPTURE_MISSION.md; revolution/R22_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R22.md
+R23 | 系统从你游玩反馈里记住偏好，推荐更对口味，随时可抹掉 | D:/moodle/CityNexus/backend/app/execution/traveler_twin.py; D:/moodle/CityNexus/backend/app/agent/runtime.py; D:/moodle/CityNexus/backend/app/db/models.py | revolution/R23_ADAPTIVE_TRAVELER_TWIN_MISSION.md; revolution/R23_IMPLEMENTATION_SKETCH.md; CODEX_START_HERE_R23.md
+R24 | 偏好记忆会随时间变淡，你明说不要就真避开，手动偏好说了算 | D:/moodle/CityNexus/backend/app/execution/traveler_twin.py; D:/moodle/CityNexus/backend/app/replanning/candidate_evidence.py | GPT_R23_R24_EXTERNAL_CHECK.md; output/revolution-r24-memory-delivery-20261003/REVOLUTION_R23_TWIN_MEMORY_RESULT.md (R24无独立gpt分支，据这两份判定)
+R25 | 通盘比较整段剩余行程，该放掉的空窗先放掉，机会留给更值的 | D:/moodle/CityNexus/backend/app/planning/solver_v2.py; D:/moodle/CityNexus/backend/app/planning/solver_contract.py; D:/moodle/CityNexus/backend/app/execution/traveler_twin.py | revolution/R25_STRATEGIC_HORIZON_STEWARD_MISSION.md; revolution/R25_IMPLEMENTATION_SKETCH.md; revolution/R25_LIVE_CLOSURE_STRIKE.md; CODEX_START_HERE_R25.md
+R26 | 现在玩还是稍后玩拿不准时只问你一句再照办，答案不影响就不问 | D:/moodle/CityNexus/backend/app/agent/gateway.py; D:/moodle/CityNexus/backend/app/agent/runtime.py; D:/moodle/CityNexus/backend/app/schemas.py | revolution/R26_DECISION_CRITICAL_CLARIFICATION_MISSION.md; revolution/R26_BEHAVIORAL_CLOSURE_STRIKE.md; REVOLUTION_R26_DECISION_CRITICAL_CLARIFICATION_RESULT.md
+```
+
+
+### 归档工 2115 ORD-0588 后半张：族B 那二十八路评审纸已在线上，本枚补的是线上一枚都没有的那一份 README——逐枚给来源枝·源路径·行数·当初为什么不在现尖 — refs/heads/review/归档工-0588-r2
+
+- id: ORD-0588（号令者派单块 CMDR-ORDER-0588-0592 第一张；单上四列「来源枝名＋源路径＋行数＋为什么现尖上没有它」里，前三列线上那份清单已有，第四列从没有人写过，本枚交的就是第四列那一整份文档）
+- 花名归档工；产品代码这一轮一行没动，一个已有字节也没改
+- 现取尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 687b98476973eac5744ae07a67c2d639d0ce3de1；本枝起手那一枚就是它（父提交同一枚：687b98476973eac5744ae07a67c2d639d0ce3de1）；本地 tracking 我没当尖用
+- 本枝 refs/heads/review/归档工-0588-r2 枝尖 81a71be9eddd6612b634a460ef45930348448392；命令原样 `git -C D:/moodle/CityNexus ls-remote origin "refs/heads/review/归档工-0588-r2"` 现读同值；权威枝一笔没推，force-push 0 次
+- 这一笔的形状：树模式 readme-only，相对父提交只多 1 条路径（命令原样 `git -C D:/moodle/CityNexus diff --name-status 687b98476973eac5744ae07a67c2d639d0ce3de1 81a71be9eddd6612b634a460ef45930348448392`），改动与删除 0 条，落在 `docs/revolution-archive/` 之外的 0 条；`docs/revolution-archive/gpt-assist/` 那棵子树是从现尖直接继承的同一枚 f9b06d64fb43d50be4057f2226b42cdf9b75d21d，不是我重拼的——所以那 28 枚与随档那份清单一个字节没碰
+
+一、为什么这一枚只有 README（先到先得那一段我照认）
+
+- 搬运那一半已经在线上：落地提交 a15e1959a551b7f47e4af5bd94437b03a38133d5（作者 pinggong，2026-10-12 20:39）把八枚枝的并集 28 枚原枚 blob 放进了 `docs/revolution-archive/gpt-assist/`，随档还带了一份 `docs/revolution-archive/gpt-assist/MANIFEST.tsv`（blob d9160555e2451d934bbb7359c001d983b55a22cf）
+- 我这一趟独立测出的并集与它逐枚同值：五列（来源枝、源路径、blob、行数、字节数）不同 0 处，两边并集互不缺项（他们多 0 项、我多 0 项；交叉尺在 readme_gen_r2.py 的 `reconcile()`，锚 a15e1959a551b7f47e4af5bd94437b03a38133d5）
+- 所以我不重推那 28 枚：同一批 blob 再挂一遍只会造出两代同内容的分叉。本枚只交线上一枚都没有的那份文档：`docs/revolution-archive/README.md`，blob 3cf69407bd256c155116fba6fe7000a2a5bb7bb3，145 行、19201 字节（锚 81a71be9eddd6612b634a460ef45930348448392）
+- 我早先那一枚交枝（refs/heads/review/归档工-0588-r1 枝尖 98a30b51a456f151c586c4907c17c66ee66270d6，父提交是那一刻的尖 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60）是按"整批搬运"那张单做的，做完才发现线已经落了别人的那一半。它我原样留着：不删、不改、不 force；它比本枚多带的那 28 枚与线上同名同 blob，落不落都不产生第二代内容（锚 98a30b51a456f151c586c4907c17c66ee66270d6）
+
+二、逐枚坐标（八节合一表：来源枝 ｜ 仓内归档路径 ｜ 行数 ｜ blob）
+
+- refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 枝尖 187263c67a5348d565adfc5ad8f01877fb56267d 这一档 3 枚
+  · refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923/R61_MINIMAL_PATCH.diff ｜ 32 行 ｜ 1325 字节 ｜ 221e3f5097c3d471497c5ae7287f832f73242419 ｜ 源侧引入提交 187263c67a5348d565adfc5ad8f01877fb56267d
+  · refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923/R6_H11_R61_PREP.md ｜ 51 行 ｜ 3050 字节 ｜ e5894dc3b9c074bccb7d592aeb0ff915a555fbc9 ｜ 源侧引入提交 38a7114982de86321c77f6bff46f2fccda3bc1af
+  · refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py ｜ 131 行 ｜ 4689 字节 ｜ 7dd420b48fe2454a6b53d1031ae028eb099370e6 ｜ 源侧引入提交 af7ad2e22391523fb5e226c73b80a43a6809710d
+- refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 枝尖 9fd3d221214901ba372924d60a8e9e0bfd859938 这一档 5 枚
+  · refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md ｜ 10 行 ｜ 1804 字节 ｜ c6abf15a67b2213997f2a0d9374ddabb53294d95 ｜ 源侧引入提交 c05fb7d4aa3cd1778e7fa04e9c29998bc7398c4e
+  · refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r61/H12_HANDOFF.md ｜ 8 行 ｜ 689 字节 ｜ f83a71553963e2a8a6ee8ee6ebb7b2321e91987f ｜ 源侧引入提交 9fd3d221214901ba372924d60a8e9e0bfd859938
+  · refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md ｜ 29 行 ｜ 2493 字节 ｜ 31395874f3cd0c12b7971e32f025890289359264 ｜ 源侧引入提交 9cddc6428010eb9a4140235947a61dbd4fe55d11
+  · refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff ｜ 9 行 ｜ 320 字节 ｜ 712766624dd40f7cc3b76e72d990c2db9d3900cd ｜ 源侧引入提交 4bc966564c0669b2055fae4026cf09c4aa1fbcb9
+  · refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py ｜ 27 行 ｜ 1136 字节 ｜ 8440f22dc7231d3e0db586817f45b4288b5316de ｜ 源侧引入提交 03557c2409defddaeb500b31e8c6c59297324f65
+- refs/heads/gpt/revolution-r62-r63-prep-20260923 枝尖 1c3a2d019921dbfd2df00ec67085998615780b2e 这一档 3 枚
+  · refs/heads/gpt/revolution-r62-r63-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r62/R62_R63_PREP.md ｜ 56 行 ｜ 3465 字节 ｜ 7022b343e8670086f19fa5ecbca19014c379f7e4 ｜ 源侧引入提交 fec637f42a1d193ec0d604e353bd90c5294fc0ab
+  · refs/heads/gpt/revolution-r62-r63-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py ｜ 170 行 ｜ 6366 字节 ｜ b2ef64dc18f917e3c58c51a74b8a80b7f6688738 ｜ 源侧引入提交 3a5e6ac1420cdca62b6340c3b42e0877cabfe6a6
+  · refs/heads/gpt/revolution-r62-r63-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py ｜ 72 行 ｜ 2583 字节 ｜ 11240128fa63b1a563f8f903e5e59a191edc4b8f ｜ 源侧引入提交 1c3a2d019921dbfd2df00ec67085998615780b2e
+- refs/heads/gpt/revolution-r7-r71-prep-20260923 枝尖 03f8d0e3f0025e6a5c088e87d3ce7d12bc608f4d 这一档 3 枚
+  · refs/heads/gpt/revolution-r7-r71-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r7/CODEX_R71_TASK.md ｜ 39 行 ｜ 1456 字节 ｜ 54f2c64f0eab791a2828f869b9cbb2c1927d8e5e ｜ 源侧引入提交 9720ccc64cc93d3ce2c575f1bb7c94ae843cc582
+  · refs/heads/gpt/revolution-r7-r71-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r7/R7_R71_PREP.md ｜ 60 行 ｜ 3291 字节 ｜ 5184d8c2c78eaa62c08e47a6af9a4ca4abeb8928 ｜ 源侧引入提交 f143ac17c1625180b94a2b091e776d5acb3729ee
+  · refs/heads/gpt/revolution-r7-r71-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py ｜ 93 行 ｜ 3293 字节 ｜ 8372e2c6f0011e5bdcda098152e2dcc9c7c36dc6 ｜ 源侧引入提交 03f8d0e3f0025e6a5c088e87d3ce7d12bc608f4d
+- refs/heads/gpt/revolution-r71-r72-prep-20260923 枝尖 d1a05785839ad08649c65d48080fd70dbd9446aa 这一档 5 枚
+  · refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r71/CODEX_R72_TASK.md ｜ 48 行 ｜ 1981 字节 ｜ 43a99627c9d204b3f89ae3d39be0465186508923 ｜ 源侧引入提交 bd86685e53a52a8e8a708077e1853be203a1a6d0
+  · refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md ｜ 45 行 ｜ 2769 字节 ｜ 145bffb6071f9eb3eb275690db91c87d8c377e87 ｜ 源侧引入提交 2659604a1039472ad10b8af6c2db0425d1d7ac19
+  · refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json ｜ 26 行 ｜ 640 字节 ｜ 8aab38dcff62ffb653af0d9e4d83a46fa5b64513 ｜ 源侧引入提交 6c8e96b3b7685b0d7ab5c8d9a0c29bea01d79758
+  · refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md ｜ 12 行 ｜ 775 字节 ｜ 7e043144ce596bcbde5276fae91c7a74d3463b85 ｜ 源侧引入提交 4d938a57e41b2496085a6e7c8afbc96e67f43bec
+  · refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py ｜ 133 行 ｜ 5102 字节 ｜ f01feb24bd00697c28751242093367406a85df8c ｜ 源侧引入提交 d1a05785839ad08649c65d48080fd70dbd9446aa
+- refs/heads/gpt/revolution-r72-r73-prep-20260923 枝尖 c7c5ccbb7d093a43558a94cdc4072586a2de6a5e 这一档 4 枚
+  · refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r72/CODEX_R73_TASK.md ｜ 23 行 ｜ 1598 字节 ｜ a97a363fafe4da2ed621267fb7eb1a45fd4e1d7b ｜ 源侧引入提交 00ef4ba408c30bdb439eebf8bc4528e020d0fb4f
+  · refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r72/R72_R73_PREP.md ｜ 23 行 ｜ 1685 字节 ｜ 0262abd13d9c11e9b49866f627bf98898fc663e6 ｜ 源侧引入提交 9306a47982ec4968321c55f7ba4990ca61484500
+  · refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md ｜ 20 行 ｜ 861 字节 ｜ cb539de6a4eefb5d434a7b55b31c38615937727b ｜ 源侧引入提交 e1fcf7cb6fdec7728e45f2c581a11c27efd9c71e
+  · refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ docs/revolution-archive/gpt-assist/20260923-r72/r73_provider_candidate_capture.py ｜ 112 行 ｜ 4196 字节 ｜ 8d423101bd79079763daca30b7613c83f9939fc8 ｜ 源侧引入提交 c7c5ccbb7d093a43558a94cdc4072586a2de6a5e
+- refs/heads/gpt/revolution-r73-r74-prep-20260924 枝尖 d4bdbcbc84abf82caf3322ea87b9df9683d78d8c 这一档 4 枚
+  · refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ docs/revolution-archive/gpt-assist/20260924-r73/CODEX_R74_TASK.md ｜ 23 行 ｜ 1290 字节 ｜ 78ee88140bbf7236a3818ae7143d5c62a5f398e5 ｜ 源侧引入提交 987e7ea6096c7bf11763a97fda5aa148822f719f
+  · refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ docs/revolution-archive/gpt-assist/20260924-r73/R73_R74_PREP.md ｜ 30 行 ｜ 2024 字节 ｜ 50b103698aa4cb01f76dc5ff0eef4f70934bce8c ｜ 源侧引入提交 68c567f963ec5129c9cb432c04332dcd42e697a4
+  · refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ docs/revolution-archive/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md ｜ 17 行 ｜ 884 字节 ｜ 87811430e931e318127cce1e9c720d8633b63058 ｜ 源侧引入提交 777e52d9591fcd7153dbf90c8edf15c7e6d9d48e
+  · refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ docs/revolution-archive/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py ｜ 62 行 ｜ 3018 字节 ｜ fcc5d7285858d3a6509da7579757e531f6a0fb17 ｜ 源侧引入提交 d4bdbcbc84abf82caf3322ea87b9df9683d78d8c
+- refs/heads/gpt/revolution-r74-r75-breakthrough-20260924 枝尖 eb165b9737b5ede483a252b2a2e09ac08c669973 这一档 1 枚
+  · refs/heads/gpt/revolution-r74-r75-breakthrough-20260924 ｜ docs/revolution-archive/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md ｜ 53 行 ｜ 2980 字节 ｜ f1b7f2cc98fcf70d915713867f3c7cfc48a65498 ｜ 源侧引入提交 eb165b9737b5ede483a252b2a2e09ac08c669973
+
+合计：28 个文件、1414 行、65763 字节；blob id 两两不同，文件名也不撞车（锚 81a71be9eddd6612b634a460ef45930348448392）
+
+三、门禁读数（本块此刻现跑，命令原样）
+
+- 保真四眼：`python D:/moodle/_qoder_guiandangong_0588_20261012/verify_archive_r1.py 81a71be9eddd6612b634a460ef45930348448392^{tree} 1` ⇒ VERIFY GREEN；归档条目与来源条目 blob 不等 0 处、从对象库现取字节的 sha 不等 0 处、独立走一遍 `git rev-parse <来源枝尖>:<源路径>` 再对一次不等 0 处（锚 81a71be9eddd6612b634a460ef45930348448392）
+- 只多不少：本笔相对父提交加 1 条、改删 0 条、目录外 0 条；新树共 14022 条登记路径（锚 687b98476973eac5744ae07a67c2d639d0ce3de1）
+- 负对照（证明这把尺抓得住）：把 81a71be9eddd6612b634a460ef45930348448392 树里那一枚 `docs/revolution-archive/gpt-assist/20260923/R61_MINIMAL_PATCH.diff` 的原文（blob 见第二节第一行）在内存里加一个换行再算 blob id，算出的那枚与它不等，尺报 `negative_control_differs: true`；那枚改后的 id 本身不写进本块，免得入账后被第二道闸当成不可 cat-file 的坐标（锚 81a71be9eddd6612b634a460ef45930348448392）
+- 文档尺：`python D:/moodle/_qoder_guiandangong_0588_20261012/check_readme_r1.py 81a71be9eddd6612b634a460ef45930348448392` ⇒ DOC CHECK GREEN；README 表里解析出 28 行、8 节，文档与真树对不上 0 处；八枚来源枝名在远端可取回 8 枚；把其中一行行数改成九千九百九十九，尺当场变红（`neg_caught: true`，锚 81a71be9eddd6612b634a460ef45930348448392）
+- 与线上清单的交叉尺：五列逐枚对拍不同 0 处，两边行数各 28 与 28，互不缺项（对面那份表头八列，我只比了这五列；锚 d9160555e2451d934bbb7359c001d983b55a22cf）
+- 两代判据（README 第三节那张表就是我这一趟跑的）：派单那一代 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 四条为 源路径 0 个、先祖 0 枚、内容交集 0 枚、归档已备 0 枚；本代 687b98476973eac5744ae07a67c2d639d0ce3de1 为 0 个、0 枚、28 枚、28 枚（后两条非零正是这一单自己的成果；锚 a15e1959a551b7f47e4af5bd94437b03a38133d5）
+- 吸收尺现跑：`python D:/moodle/_qoder_guiandangong_0588_20261012/live_checks/revolution_absorption_check_r1.py` 退出码 rc=4，末行逐字「CHECK 未吸收面按 verdict 分：TO_ABSORB 35｜CARRIED_BY_REP 6」，未吸收 41 枚那一档（尺本体是从 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 取出的那一枚，未改一行；锚 81a71be9eddd6612b634a460ef45930348448392）
+
+四、边界、未验与自报
+
+- 权威枝 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；只推 refs/heads/review/归档工-0588-r2 一枚枝；既有枝零改写零删除（第三节第二格那条计数就是证据）
+- 我没有给这八枚枝自封 absorbed_on：本枚落上线也不改变尺的口径，未吸收仍是 41 枚那一档；对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 一字节未改（absorbed_on 那一列由号令者点）
+- 本轮没有屏上读数，也没跑后端与测试：零产品字节没有可跑之物；证据全在对象层（blob 等式、树差、文档与树逐枚对拍、两份清单交叉对拍）与一把常驻尺的现跑上（锚 81a71be9eddd6612b634a460ef45930348448392）
+- README 第四节每行末尾那句"当初为什么不在现尖"分八类措辞（协调纸／任务书／审计原文／契约原文／意向补丁／RED 草稿／诊断件／取证记录），是类别不是逐枚新证；每枚的原文就在归档里，逐枚可 `git cat-file blob` 取回，我的转述不是判据（锚 81a71be9eddd6612b634a460ef45930348448392）
+- 一处口径要报备：README 里"这一枚是什么"那一栏是我读了正文之后的转述，与来源枝自己的措辞不逐字相同；逐字引用的只有第三节那三句（coordination 那一句与 RED 草稿那两行），引到该行行尾为止，行号现读（锚 3cf69407bd256c155116fba6fe7000a2a5bb7bb3）
+- 未起新监听端口；未跑构建；工作树一个文件没碰：D:/moodle/CityNexus 此刻带着别人在飞的改动 11 条（命令原样 `git -C D:/moodle/CityNexus status --porcelain`），我全程只在 D:\moodle\_qoder_guiandangong_0588_20261012 里落自己的尺，用 plumbing 造提交、不检出、不暂存、不恢复任何东西（锚 81a71be9eddd6612b634a460ef45930348448392）
+- 若下一跳尖动了：本块尖侧读数整代作废，我按同一把尺现权重算再交，不在旧数上补话
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0593-0597（号令者：第二批切片，要求交出能落线的产品字节）
 
 第一批（CMDR-ORDER-0588-0592 那块）是地基与可行性；这一批要**真落码**。
