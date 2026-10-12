@@ -1,0 +1,18 @@
+（作废读数，留作尺病的证据）这一份是 ORD-0603 第一把尺的输出：它按「装饰器到下一个装饰器」取路由体，把中间未装饰的 helper 全吞了进来，
+（作废读数）因此把 backend/app/main.py:10535 那枚 route-evidence 报成「三样齐」。重测在 review/jianpanggong-0603/routes_ast_r1.txt，尺的形状见同文件第 3 行。
+
+# ORD-0603 现尖读路由能否承接 route_session_contract：逐枚现读 backend/app/main.py（尖 de06a6985ee356d84d937cf6e6888768a67af877，共 14583 行、路由 152 枚、其中 GET 73 枚）。
+# 判据是这枚契约真正读取的字段名：duration_min、explicit_fact、fact_quality、minutes、origin_evidence、origin_key、provenance、provider_degraded、provider_failed、provider_key、provider_policy_version、requested_mode、route_provenance、route_truth_policy_version、target_key。
+# 下面按命中数排序，只列命中过的；零命中的 GET 路由共 61 枚，计数在本行末。
+main.py:10535  GET /api/v1/journeys/{journey_id}/route-evidence  函数 journey_route_evidence（体在 :10536 至 :13089）  命中 60 处  组覆盖 {"classify_capture": "1/3", "fact_is_eligible_for_live_readiness": "6/6", "RouteRequest": "1/6"}  字段 {"duration_min": 12, "fact_quality": 12, "minutes": 16, "origin_key": 2, "provenance": 5, "provider_degraded": 1, "provider_key": 10, "route_provenance": 2}
+main.py:4113  GET /api/v1/journeys/{journey_id}/calendar.ics  函数 get_journey_calendar（体在 :4114 至 :4551）  命中 18 处  组覆盖 {"RouteRequest": "1/6"}  字段 {"target_key": 18}
+main.py:1829  GET /api/v1/journeys/{journey_id}/provider-mesh  函数 get_journey_provider_mesh（体在 :1830 至 :1882）  命中 6 处  组覆盖 {"fact_is_eligible_for_live_readiness": "2/6"}  字段 {"provenance": 2, "provider_key": 4}
+main.py:7052  GET /api/v1/providers/v9  函数 get_v9_provider_status（体在 :7053 至 :7072）  命中 4 处  组覆盖 {"fact_is_eligible_for_live_readiness": "2/6"}  字段 {"provenance": 2, "provider_key": 2}
+main.py:9980  GET /api/v1/journeys/{journey_id}/events  函数 list_journey_events（体在 :9981 至 :10005）  命中 4 处  组覆盖 {"fact_is_eligible_for_live_readiness": "2/6"}  字段 {"provenance": 2, "provider_key": 2}
+main.py:10155  GET /api/v1/journeys/{journey_id}/reflect  函数 journey_reflect（体在 :10156 至 :10351）  命中 4 处  组覆盖 {"fact_is_eligible_for_live_readiness": "2/6"}  字段 {"provenance": 2, "provider_key": 2}
+main.py:2028  GET /api/v1/journeys/{journey_id}/agent/runs/{run_id}  函数 get_agent_run（体在 :2029 至 :2076）  命中 2 处  组覆盖 {"fact_is_eligible_for_live_readiness": "1/6"}  字段 {"provider_key": 2}
+main.py:6703  GET /api/v1/journeys/{journey_id}/web-observations  函数 list_journey_web_observations（体在 :6704 至 :6732）  命中 2 处  组覆盖 {"fact_is_eligible_for_live_readiness": "1/6"}  字段 {"provider_key": 2}
+main.py:10029  GET /api/v1/journeys/{journey_id}/history  函数 journey_history（体在 :10030 至 :10134）  命中 2 处  组覆盖 {"classify_capture": "1/3"}  字段 {"provider_degraded": 2}
+main.py:14379  GET /api/v1/city-services/{service_id}/booking-slots  函数 booking_slots（体在 :14380 至 :14416）  命中 2 处  组覆盖 {"fact_is_eligible_for_live_readiness": "1/6"}  字段 {"provider_key": 2}
+main.py:882  GET /api/v1/health  函数 health（体在 :883 至 :906）  命中 1 处  组覆盖 {"fact_is_eligible_for_live_readiness": "1/6"}  字段 {"provenance": 1}
+main.py:7338  GET /api/v1/places  函数 search_places（体在 :7339 至 :7364）  命中 1 处  组覆盖 {"fact_is_eligible_for_live_readiness": "1/6"}  字段 {"provider_key": 1}
