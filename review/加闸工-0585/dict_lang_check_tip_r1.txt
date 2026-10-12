@@ -1,0 +1,31 @@
+TIP 8890f22fe37a
+SIDE_MARKS const en: Dict@8,const zhCN: Di@1507
+EN_KEYS 1272 | ZH_KEYS 1272 | BOTH 1272
+ONE_SIDED 0
+EN_SIDE_HAS_CJK 0
+SAME_TEXT 13
+SAME agent.aiBadge | en frontend/src/i18n/LocaleContext.tsx:547 | zh frontend/src/i18n/LocaleContext.tsx:2008 | 值 AI
+SAME agent.brand | en frontend/src/i18n/LocaleContext.tsx:508 | zh frontend/src/i18n/LocaleContext.tsx:1969 | 值 CN / AI
+SAME agent.citynexus | en frontend/src/i18n/LocaleContext.tsx:531 | zh frontend/src/i18n/LocaleContext.tsx:1992 | 值 CityNexus Copilot
+SAME discovery.deepseek | en frontend/src/i18n/LocaleContext.tsx:647 | zh frontend/src/i18n/LocaleContext.tsx:2103 | 值 DeepSeek
+SAME exec.picEdge | en frontend/src/i18n/LocaleContext.tsx:786 | zh frontend/src/i18n/LocaleContext.tsx:2239 | 值 PIC Edge ·
+SAME intel.cpsat | en frontend/src/i18n/LocaleContext.tsx:964 | zh frontend/src/i18n/LocaleContext.tsx:2408 | 值 CP-SAT
+SAME intel.deepseek | en frontend/src/i18n/LocaleContext.tsx:961 | zh frontend/src/i18n/LocaleContext.tsx:2405 | 值 DeepSeek
+SAME intel.hermes | en frontend/src/i18n/LocaleContext.tsx:962 | zh frontend/src/i18n/LocaleContext.tsx:2406 | 值 Hermes
+SAME mobile.copilot | en frontend/src/i18n/LocaleContext.tsx:109 | zh frontend/src/i18n/LocaleContext.tsx:1599 | 值 Copilot
+SAME nav.agent | en frontend/src/i18n/LocaleContext.tsx:18 | zh frontend/src/i18n/LocaleContext.tsx:1517 | 值 Copilot
+SAME shell.brand | en frontend/src/i18n/LocaleContext.tsx:121 | zh frontend/src/i18n/LocaleContext.tsx:1611 | 值 CityNexus
+SAME spend.dayHeading | en frontend/src/i18n/LocaleContext.tsx:1282 | zh frontend/src/i18n/LocaleContext.tsx:2704 | 值 {label}
+PLACEHOLDER_KEYS 140 | DRIFT 0
+ZH_SIDE_LATIN_ONLY 11（这一档只是提示，专名与占位符本来就该一样，不当缺陷）
+LATIN agent.citynexus | zh frontend/src/i18n/LocaleContext.tsx:1992 | 值 CityNexus Copilot
+LATIN discovery.deepseek | zh frontend/src/i18n/LocaleContext.tsx:2103 | 值 DeepSeek
+LATIN exec.picEdge | zh frontend/src/i18n/LocaleContext.tsx:2239 | 值 PIC Edge ·
+LATIN intel.cpsat | zh frontend/src/i18n/LocaleContext.tsx:2408 | 值 CP-SAT
+LATIN intel.deepseek | zh frontend/src/i18n/LocaleContext.tsx:2405 | 值 DeepSeek
+LATIN intel.hermes | zh frontend/src/i18n/LocaleContext.tsx:2406 | 值 Hermes
+LATIN mobile.copilot | zh frontend/src/i18n/LocaleContext.tsx:1599 | 值 Copilot
+LATIN nav.agent | zh frontend/src/i18n/LocaleContext.tsx:1517 | 值 Copilot
+LATIN shell.brand | zh frontend/src/i18n/LocaleContext.tsx:1611 | 值 CityNexus
+LATIN spend.dayHeading | zh frontend/src/i18n/LocaleContext.tsx:2704 | 值 {label}
+LATIN spend.groupHeading | zh frontend/src/i18n/LocaleContext.tsx:2699 | 值 {currency}

@@ -1,0 +1,5 @@
+$ npm run build
+files generated
+  dist/v10-sw.js
+  dist/workbox-6923124b.js
+VITE_RC=0

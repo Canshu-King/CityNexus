@@ -1,0 +1,16 @@
+# 并尖前后的距离与只读预测（命令原样写在每行前面）
+$ git -C D:/moodle/CityNexus merge-base <旧头> <尖>  → 8890f22fe37a
+旧头那一代：ahead=29 笔、behind=207 笔
+新头那一代：ahead=30 笔、behind=0 笔（0 behind＝尖是我这枚的祖先，可直接快进）
+$ git -C D:/moodle/_qoder_integration_20260919 merge-tree --write-tree <尖> <旧头>
+只读预测 tree=6076b2f0353ba56a412f315bb95860e18bc33fe8、rc=0（我按它落的合并提交，未手写第三枚树）
+# 我这四处产品字面在合并那一代仍在：
+simulationAdapter.ts:122:  if (ms === null) return dictionaryCopy(locale, "simulation.retryWaitNotGiven");
+simulationAdapter.ts:123:  if (ms <= 0) return dictionaryCopy(locale, "simulation.retryRightNow");
+simulationAdapter.ts:124:  return dictionaryText(locale, "simulation.retryInMs", { ms: Math.round(ms) });
+# 尖那一代同一枚文件的旧形状（对照）：
+  尖: function retryHint(error: unknown): string {
+# 三处点名回读同一枚（第一次那份是用 grep 含 0585 匹配的，误命中别家枝名里带 0585 的 sha，已改成逐枚点名）
+裸仓 059a88cca30f5bf7a724f19f6a40f846d9723211
+裸仓 pin 059a88cca30f5bf7a724f19f6a40f846d9723211
+GitHub 059a88cca30f5bf7a724f19f6a40f846d9723211

@@ -1,5 +1,5 @@
 import { CityNexusApiError } from "../../api/citynexus";
-import { dictionaryCopy } from "../../i18n/LocaleContext";
+import { dictionaryCopy, dictionaryText, type TripLocale } from "../../i18n/LocaleContext";
 import { englishCountNoun } from "../../lib/plural";
 
 /**
@@ -116,11 +116,12 @@ function fieldsOf(error: unknown): string {
   return names.length ? `：${[...new Set(names)].join("、")}` : "";
 }
 
-function retryHint(error: unknown): string {
+function retryHint(error: unknown, locale: TripLocale): string {
   const details = (bodyOf(error)?.error?.details ?? {}) as { retry_after_ms?: unknown };
   const ms = typeof details.retry_after_ms === "number" ? details.retry_after_ms : null;
-  if (ms === null) return "（服务器没说要等多久）";
-  return ms <= 0 ? "（现在就可以再试）" : `（约 ${Math.round(ms)} 毫秒后再试）`;
+  if (ms === null) return dictionaryCopy(locale, "simulation.retryWaitNotGiven");
+  if (ms <= 0) return dictionaryCopy(locale, "simulation.retryRightNow");
+  return dictionaryText(locale, "simulation.retryInMs", { ms: Math.round(ms) });
 }
 
 /** `POST .../replans` answers 422 with the *reason* as a bare machine token in `error.message`
@@ -149,8 +150,9 @@ export function describeFailure(error: unknown): NamedFailure {
   const busy = code === "generation.store_busy" || code === "GENERATION_STORE_BUSY";
   const hit = TABLE[code];
   if (hit) {
-    const extra = busy ? retryHint(error) : fields;
-    return { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) };
+    const zhExtra = busy ? retryHint(error, "zh-CN") : fields;
+    const enExtra = busy ? retryHint(error, "en") : fields;
+    return { code, status, zh: hit.zh(status, zhExtra), en: hit.en(status, enExtra) };
   }
   const mobility = mobilityRefusal(error);
   if (mobility) {

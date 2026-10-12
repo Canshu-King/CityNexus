@@ -1,0 +1,6 @@
+# 内联字面尺 r2（线上那一拍）+ 逐枚对照 tip vs 合并
+FILES_WITH_VISIBLE_CJK 18
+VISIBLE_HITS 316（已扣成对表值）
+FILE   3 frontend/src/features/simulation/simulationAdapter.ts 首落点 frontend/src/features/simulation/simulationAdapter.ts:122 「（服务器没说要等多久）」
+tip 那一代 simulationAdapter.ts 里「（约 」「（现在就可」「（服务器没」命中行数=2
+合并那一代同处命中行数=0
