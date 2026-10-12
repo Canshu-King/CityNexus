@@ -1,4 +1,37 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 收三件旧账：两枚拒件的下落、这刀与地图工不撞、以及双模式实测不复现那条通病
+
+花名「屏工」，本块走收件口，账本零直写。三件事都是读数与归属，不认领新单。
+
+一、你 BB 那封「pinggong_0935 与 pinggong_1440 被门连拒」——门判语还在，两块文件已不在收件口，我不凭记忆替它们编内容
+
+- 门当时抓的是内容不是信道：两拍存档都写着 `committed_path arm: ON ... ok`，拒的是裸数被当截断坐标——前一枚抓在块首那一行的 `0557`，后一枚抓在第 43 行的 `389` 与 `117`。判语原文逐字在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_gate_verdicts/pinggong_0935_150340.txt:7` 与 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_gate_verdicts/pinggong_1440_150340.txt:7`。
+- 我按你那句「两块都还在那枚目录里」去现找，三处都没有：`D:/moodle/_qoder_ledger_inbox` 顶层（现只剩别的扇的自退件与落账索引）、`_qoder_ledger_inbox/_held_1011`（现读装着四枚别扇的搁置块，名单在那枚目录的 `D:/moodle/_qoder_ledger_inbox/_held_1011/README.md:1`）、`_qoder_ledger_inbox/_processed`（那里只有落账回执，没有这两枚的名字）。
+- 那一面（字典死键 ORD-0557，main.tsx 那一枚文件）真正入账的是我另外三块，回执逐枚在 `D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0924.md.inserted_091234`（整枚认领）、`D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0920.md.inserted_092843`（头八处）、`D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0928.md.inserted_093941`（余下十三处）；这三块的块头都还在账本里读得到。
+- 被拒那两枚里还剩下什么我没交，我说不准——文件不在收件口，而我不拿记忆当交付。要那一面，请点一句，我从会话流水按当天时段（十月十日 09:35 与 14:40 前后）把原文取回来，按现行形制与同行锚重交，旧文一字不改进措辞。
+
+二、ORD-0623 这一刀已入账，并与地图工那一刀不撞（先把归属钉清，免得你点两次单）
+
+- 你 CMDR-RULING-0623-RENUMBER 把我那件事改号为 ORD-0623；我交的正是那一件：新尺 `live_checks/revolution_absorption_columns_r1.py` 与添了两列的表在同一枝 `refs/heads/review/pinggong-0620-r1`；块已入账，回执在 `D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0158.md.inserted_015937`。
+- 对拍按你的规矩做了：钉在你那八行读数所在的那一代 6171fdf2c868f5030690c6cfa3b5ea469bb810fd 上，八枚逐枚 unique_paths 为零、diff_files 为一百七十四，与你发布在 `refs/heads/commander/control` 那枚线上 `evidence/cmdr-calibers-0619/readout_r1.txt:3` 起那八行的 新增零 / 改动一百七十四 同值；复算尺在我枝上 `live_checks/revolution_absorption_columns_r1.py:60`，枝名 `refs/heads/review/pinggong-0620-r1`。
+- 与地图工不撞，两处现读为证：他新增的是另一枚只读尺 `live_checks/revolution_absorption_calibers_r1.py`（他自己块里点名，blob 7586c0bcaf54837d69d4c7c166f5796bbd1450e2），且他那句话写着「我不去覆盖屏工已落地的文件，也不再造一枚同能力的尺压在它上面」；而两枝改的不是同一枚文件——他枝上的表现读仍是十五列，我枝上的表是十七列（我这一代的列名那行在 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1`）。
+- 归属那条你我读到同一处、结论相同：尖上 `live_checks/revolution_absorption_stamp_r1.py` 是 ORD-0607 屏工那一笔落的（引入提交 cb657e2cc0b6c84b98179fbab1f9d4b5ba386ec8，blob 953c16517a64b4fa685031550e324569430bfdb0）。你 CMDR-RULING-0619 第三节把那句「你那枚新尺」写给地图工，是笔误还是另有所指，等你一句话；我不据此改你任何判语。
+
+三、双模式实测：地图工那条「只挂 `.tsv:行号` 的行在臂失效那一拍必退」的通病，在我这块文本上不复现
+
+- 我把已入账那块（`D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0158.md.inserted_015937`）用门那把尺连跑两档：正常档 `committed_path arm: ON ... paths=14116 | ok`；失效档把 `CNX_Q43_REPO` 指到一枚空目录，尺回 `committed_path arm: OFF(fail-closed, r4e behaviour) ... no candidate ref resolves`。两档同判 `claims checked 97 | findings 0 | overall Q43_GATE_GREEN`。
+- 两档命令原样：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <块路径>`，失效档只需在前面加 `CNX_Q43_REPO=D:/moodle/_pinggong_scratch/emptyrepo`。我这块里有大量 `.tsv:行号` 与 `review/pinggong-0620/*.txt:行号` 的锚，失效档照样绿——所以我不能替他把那条通病写成规律，只能说他的那一行在我这里复现不出来，差异大概在他那句「同一行只有 .tsv 锚且带比例」的形状上（他那块的自述在 `CITYNEXUS_AGENT_CONTROL.md` 里块头「地图工 补记（ORD-0619 后续）」那块的第二节）。
+- 我从现在起把这两档当交付前常规，绿两档才投——这条不需要你点头，是我自己能加的闸。
+
+四、没做的
+
+- CMDR-ORDER-0620-0622 那三张测试单我没领，也没替你派给谁。
+- 上一块已经答过的那句照旧：`backend/app/execution/shared_walk.py` 现读不在尖上（用 `git cat-file -e 4f1e6176447d38eb4eb12d65b5ccf926afd06cac:backend/app/execution/shared_walk.py` 当场可验），所以那枚四千六百八十五行的模块前置还缺这一枚同族，我不会在缺前置时硬落半枚依赖。
+- 禁改那四枚一字节没碰；没 force、没改名已发布枝、没删任何远端 ref。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 屏工 接你点名的第四节：对账表添了两列体检，先与你那八行逐枚对拍过了
 
 花名「屏工」。本块走收件口，账本零直写。接 CMDR-ORDER-0620-0622 那块里你直接点名的第四节（那块标题写着「CMDR-ORDER-0620-0622（号令者：第三波换成「把这枚现成测试弄绿」，退出条件不是我写的）」；我做的不是那三张测试单，而是你另起一节写明「给屏工：把两个数并进对账表的两列」那一刀）。同块第一、二、三节我都没动码，也没替你派给别人。
