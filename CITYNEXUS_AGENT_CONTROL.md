@@ -1,4 +1,118 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 交第三波第一张的红因图：四枚红各挡在哪一扇门上，其中一扇正是这单禁改的那枚
+
+花名「屏工」，本块走收件口，账本零直写。我没领 CMDR-ORDER-0620-0622 那三张测试单去改产品字节——先量了一刀：把那三枚「作者自己写的现成测试」逐字节放进现尖树跑一次，取每条红的落点。现尖 a91efcc1a7fc240932f74e1ab1f8788b0735975f；本块读数与仪表在 `refs/heads/review/pinggong-0628-r1`，枝尖 70dcd6d960b19a1274a8f09b39a6801fd0b2e03d（两处仓库现读都 cat-file 得 commit，本地 bare 与 GitHub 两侧 ls-remote 原样回读同为该值）。
+
+一、跑出来什么（一把尺，两条命令，退出码都记）
+
+- 三枚测试在尖上都还没有，枝上行枚逐枚现读：`test_guardian_pulse.py` 一百零五行、`test_event_resolution_projection.py` 四十二行、`test_r14_terminal_disruption_recovery.py` 一百六十八行，blob 逐枚在 `review/pinggong-0628/three_tests_at_tip.txt:4` 起那三行。
+- collect 退出码 0、4 tests collected；执行退出码 1、四条全红，判语原文在 `review/pinggong-0628/three_tests_at_tip.txt:16` 与 `review/pinggong-0628/three_tests_at_tip.txt:27`。
+- 跑法照这单的规矩：逐字节 `git show 代表枝:路径 > 路径`，跑完当场删干净——工作树除本目录读数件外未登记改动零处，那一句在 `review/pinggong-0628/three_tests_at_tip.txt:29`。我没改任何一条断言，也没落任何一枚产品字节。
+
+二、四条红各挡在哪扇门（逐枚现读坐标）
+
+| 红 | 当场回话 | 挡在哪一扇门上 |
+|---|---|---|
+| `test_bounded_guardian_pulse_persists_and_reads_latest` | `枝内 backend/tests/test_guardian_pulse.py:52` 要 patch `app.main.pulse_journey`，AttributeError 说尖上 main 没这枚属性 | 实现已经在尖上 `backend/app/agent/autorun.py:258`；缺的只是 main 侧入口（`backend/app/main.py` 里 `def pulse_journey` 现读命中 0 处，读数在 `review/pinggong-0628/three_tests_at_tip.txt:9`） |
+| `test_live_pulse_does_not_promote_opportunity_signal_to_recovery_agent` | `CHECK constraint failed: event_type IN (...)`——它往库里写 `OPPORTUNITY_WINDOW` | 建表语句那一格 `backend/db/schema.sql:313` 的枚举不含它 |
+| `test_event_api_exposes_server_resolution_time_and_reason` | 服务端回 `VALIDATION_ERROR / validation.not_an_option`，`loc` 指着 `body.event_type` | 词表那一格 `backend/app/schemas.py:753`（`class EventCreate` 在 `backend/app/schemas.py:748`），尖上 `OPPORTUNITY_WINDOW` 命中 0 处，读数在 `review/pinggong-0628/three_tests_at_tip.txt:11` |
+| `test_active_closure_can_accept_terminal_prefix_replan` | 断在枝内 `backend/tests/test_r14_terminal_disruption_recovery.py:151`：accept 之后要 `journey.status == "COMPLETED"`，尖树答回的不是它 | 载荷 repr 被 pytest 截断，具体答了哪一格我没取到——不猜；要值我下一步单跑一次把它打出来 |
+
+三、这单自己的禁改清单与退出条件撞上了，撞点就一枚
+
+那张单写「三枚红测试转绿」，又写「禁改 `backend/app/schemas.py`、`contracts/openapi.yaml`、`backend/app/stay_mobility.py`」。按上面第二节的落点：
+
+- 四条红里有两条（上面第二行与第三行）要放行同一个值 `OPPORTUNITY_WINDOW`，而这个值同时被两扇门挡着：`backend/app/schemas.py:753` 的词表（**在禁改清单里**）与 `backend/db/schema.sql:313` 的 CHECK（不清单里，但要动建表语句与既有库的加法补）。
+- 也就是说：**这三枚测试里有两枚，在本单禁改面下无法转绿**——不是难度问题，是那枚值进不了词表。要么解禁 `backend/app/schemas.py` 那一格，要么把这两枚挪出本单、留下一枚（`test_guardian_pulse.py` 的第一条只要 main 侧入口，实现已在线上 `backend/app/agent/autorun.py:258`）。我不替你选，两条路都在上面。
+- 那单点名要加的配置项只有一枚：`traveler_auth_secret`——现读 `backend/app/core/config.py` 命中 0 处，读数在 `review/pinggong-0628/three_tests_at_tip.txt:12`；它不是这四条红的拦路项（这四条一条都没走到用它的那步）。
+
+四、顺两件与我有关的事
+
+- 值守那封 stale-branch 通播点名我两枚枝（`review/屏工-0555-r1`、`review/屏工-0555-dict-r1`）。我按 CMDR-RULING-0626 第二条该做的动作查了一遍：这两枚相对现尖都是**领先零笔**（`git rev-list --left-right --count 现尖...枝` 右半边为 0，另两枚同批的 `-r2`、`-r3` 也是），也就是内容早已全量进线，并尖只会给线上多造一笔无意义合并。给扫描提一条判据建议（决定权在你）：先查「枝领先几笔」，为零就别再列 stale——否则每轮白点名四枚枝，也白占别人读名单的注意力。
+- 盘：D 已跌破落地地板。值守那把尺 02:41 那拍现读三卷同刻：D 余 4924 MB（`D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\disk_free_0241.txt:3`）、C 余 8799 MB（同文件第 2 行）、E 余 24816 MB（同文件第 4 行）；地板本身是 5000 MB，从环境变量 CNX_MIN_FREE_MB 读，写在同文件第 5 行。
+- 真被扣住那一轮的原话也在那份读数里（第 6 行）：00:40:19 那轮 DISK-HOLD，free=4468MB、floor=5000MB、landing skipped——这是设计行为，不是停摆。我这一刀零产品字节，不给落地腿添候选；我那枚盘务枝的内容已全量进线（现读领先零笔），`git worktree move` 那一句仍等你裁，我不会自己按。
+
+五、这一拍的边界
+
+- 只新增一枚枝：`review/pinggong-0628-r1` 里两枚文件（那把尺 `review/pinggong-0628/run_three_tests_r1.py` 与它的读数件），产品字节零改动。
+- 没碰 `backend/app/main.py`、`backend/app/schemas.py`、`contracts/openapi.yaml`、`backend/app/stay_mobility.py`、`backend/app/agent/*`；没 rebase 已发布枝、没 force、没删任何远端 ref。
+- BB 那 10 封（四封裸唤醒与六封落账回执）我逐封 ack 过了；交付照 CMDR-RULING-0623 第二节走账本，不在 BB 上派事。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 接尖工｜认领并交付 ORD-0612：共走那枚落线，配一枚「改坏哪条规则、哪条用例就红」的对照测试；另缝合一处行数口径（两枚单文对同一文件给了两个数）
+
+尖现取 `a91efcc1a7fc240932f74e1ab1f8788b0735975f`，我的枝 `refs/heads/review/接尖工-0612-r1` = commit `4517959f584ba2053c1735549bce7190b513e3bf`，它的父就是上面那枚尖（`git rev-parse <枝>^` 现比对上，故为直接子代、可 fast-forward）。这枚枝是 ORD-0612 的第一代，不是我把 0606 那枝又切了一代。
+
+一、枝里三件东西
+
+| 内容 | 现读 | 锚 |
+|---|---|---|
+| 模块本体 | blob 逐字节取自代表枝，未改一个字符（同 blob `71cba6fc` 对 `71cba6fc`） | refs/heads/gpt/revolution-r33-open-world-journey-adaptation |
+| 对照测试 | 17 枚用例，形状就是单里要的那种 | refs/heads/review/接尖工-0612-r1 |
+| 负对照矩阵读数件 | 逐条判定照抄，含我自己那版尺怎么骗过我的 | review/jiejian/NEGCTRL_0612_MATRIX.md:1 |
+| 提交对尖做了什么 | 三件全为新增、零修改、零删除 | refs/heads/review/接尖工-0612-r1 |
+| 禁碰的宿主 | 未动（`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`backend/app/operations/v9.py` 都不在 diff 里） | backend/app/main.py:1 |
+
+二、这枚模块在尖上此刻是零引用，所以「对照」只能对在自己身上
+
+现读：尖上 `git grep -l shared_walk -- backend` 出 0 枚文件（锚 refs/heads/mirror/integration-frontend-apple-pass1）。也就是说它落线那天还没有调用方，唯一的生产调用方在代表枝的 `bootstrap_discovery.py` 上（引入第 53 行、调用第 1846 与 1847 行，锚 refs/heads/gpt/revolution-r33-open-world-journey-adaptation），而那枚自己还缺四张表与两处构造器签名（现读 `backend/app/integrations/discovery/real_city.py:622` 与 `backend/app/integrations/mobility/valhalla_http.py:44`）。所以单里那句「去掉接线就变红」我落成**去掉模块自身的每条规则就变红**：它一共十条闸门，我给每条配了自己的用例。
+
+跑法与判语：每次只改坏一条规则 → 回读磁盘确认改动真落盘 → 清 `__pycache__` → 只跑认领它的那枚用例。十七次判定里十六次按预期变红，一次是**预期仍绿**（前导零在 URL 路径那一门放宽后，身份构造器那第二门还挡着——这是模块自带纵深防御，不是我的用例虚）。「规则没被锁住」为零。恢复原文后全量 17 passed；再跑引用 v9 的那批回归 87 passed、零破（现读 review/jiejian/NEGCTRL_0612_MATRIX.md:1）。
+
+三、矩阵第一版骗过我一次，这条一起交
+
+第一版矩阵报「三条规则没锁住」。其中一条是**尺在说谎**：它写完改坏版就去跑用例，却没验证字节有没有真落到磁盘，于是那枚用例其实是对旧代码跑的。装上「写后回读比对 + 清缓存 + 区分没选中与仍绿」之后，剩下两条才是我的用例真虚：
+
+| 真缺陷 | 修法 | 锚 |
+|---|---|---|
+| 前导零那枚只测了身份构造器，没测 URL 路径那一门 | 补了走 `normalize_osm_object_url` 与整串粘贴各一句 | refs/heads/review/接尖工-0612-r1 |
+| 数量那枚只测「少一枚」，把 `!= 2` 改成 `< 2` 照样通过 | 补了「多一枚也必须拒」 | refs/heads/review/接尖工-0612-r1 |
+
+两条都是把断言**加严**修好的，没有改任何既有断言换绿。
+
+四、一处口径要缝合：同一枚文件，两枚单文给了两个行数
+
+| 出处 | 写法 | 锚 |
+|---|---|---|
+| ORD-0612 那张写 | 共走那枚 121 行 | CITYNEXUS_AGENT_CONTROL.md:2210 |
+| ORD-0606 那张写 | 同一枚 120 行 | CITYNEXUS_AGENT_CONTROL.md:2297 |
+| 我这侧实测 | `len(splitlines())` 与 `count(换行符)` 都是 120；只有「换行数 + 1」才得 121，而这枚文件末尾就有换行符，那加出来的一格是行尾空串 | review/jiejian/NEGCTRL_0612_MATRIX.md:1 |
+| 同形先例 | 归档工 0254 那枚勘误正是这件事：`backend/app/core/config.py` 现读 105 行、不是 106，尺把行尾空串当成一行 | CITYNEXUS_AGENT_CONTROL.md:364 |
+
+我枝里用 120。若号令者要把 0612 单文那个数改齐，那是您的账，我不动账本，只把实测摆在这里。
+
+五、我名下枝的取舍（免得同文件两代撞门）
+
+`backend/app/execution/shared_walk.py` 此刻同时出现在我两枚枝里：0606-r2 与 0612-r1，blob 相同（同一个 `71cba6fc`）。按值守 02:06 那封通播讲的形状——同一枚文件只要有一枚先落，排在后面那枚合上去的结果就不再等于它自己那份、会被落地门退——**请只点 0612-r1**：它是这张单的完整交付（模块 + 它自己的对照测试 + 矩阵读数件），0606-r2 里那一枚是同一 blob 的重复。两枚我都不删不改，0606 那张单要求的两枚中契约与门面已分别由 0602/0616 落线、我 0606-r2 撤带到只剩这一枚，如今由 0612 正式接走。
+
+六、BB 那头我扫过了，没有欠取
+
+02:10 之后 hub 有 42 条消息，逐条 grep 过「接尖工」与「shared_walk」：没有投给我这扇的（锚 refs/heads/mirror/integration-frontend-apple-pass1 —— 复算命令写在 `agent_bus/bus.jsonl` 的读取里，`read --agent qoder:422c8eba` 侧未取为 0）。顶部那枚「五枚枝卡在 rebase」点名的也不是我（加闸工、路牌工甲、快钉工×3，锚 CITYNEXUS_AGENT_CONTROL.md:149）。
+
+七、我下一件等什么
+
+ORD-0622 的前置就是这一枚（现读 CITYNEXUS_AGENT_CONTROL.md:1173）。我这枚落线之后，它那六枚测试从「连 import 都过不去」进一步到「只差 bootstrap_discovery 本体」——但那枚还缺四张表与两处签名，所以别期望它随我这枚一起绿。REQ-0007 点名的三枚（`progress_drift`、`launch_origin`、`in_transit_reroute`）我现读尖上仍全不存在（锚 refs/heads/mirror/integration-frontend-apple-pass1），它们没有对照测试要求，属于可以直接递的料，但那些单没写我的名，我不自领。本拍我停在这里。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0628 交了：agent/standby 与它自带的四条用例逐字节落线；接线按单文第二形交「证明无处可接」，六个候选点逐枚点名（加闸工）
+
+- 认领与原文：派单那一行逐字抄件在 `review/加闸工-0628/order_text_r1.txt:3` 起四行（单文写「接线宿主只认 `backend/app/agent/guardian.py`」，并给了第二形「接不上就交『证明无处可接』并点名每个候选调用点」）。
+- 坐标：枝 `refs/heads/review/加闸工-0628-r1`，头 c980a75ca1eabb5518fb6a391ae8b5c16742dbfe，pin 同名挂在 `refs/local/jiazagong-0628`；两枚提交＝产品 c97e1703236ed015147763fbdfed1ddf4164d21a 与证据 c980a75ca1eabb5518fb6a391ae8b5c16742dbfe。三枚都 `git cat-file -t` 现验为 commit，两枚远端（裸仓与 GitHub）回读同值——上一张 ORD-0616 我漏推了 GitHub，这一张一次推齐。force-push 零次，账本零直写。
+- 尖：量读数那一代现读 2899f86fb08cd85602b713c9d5597ddfd7cb0871（`review/加闸工-0628/tip.txt:1`），交块这一拍它又挪到 a91efcc1a7fc240932f74e1ab1f8788b0735975f，我这枚以新尖为父；两代之间后端零改动、四枚词在新代重算仍各零枚命中、且新代上还没有人把这枚模块落过（核对在 `review/加闸工-0628/tipmove_r1.txt:5` 与 `review/加闸工-0628/tipmove_r1.txt:12`）。
+- 落了两枚，都是逐字节：模块 `backend/app/agent/standby.py` 与代表枝 `refs/heads/codex/revolution-sync-894-20261013` 那一枚 blob 同为 ff1119263b9cebf3ca1c423b602ed15e63a677e3；它自带的测试 `backend/tests/test_r20_standby_trigger.py` 两侧 blob 同为 9214f052b5e24201b07fe3cf5058614a4af5face（`review/加闸工-0628/diffstat_r1.txt:3` 与 `review/加闸工-0628/diffstat_r1.txt:4` 是逐枚增删，两行删除位都是 0）。我没写第二份同族模块，也没自己另造一枚测试冒充它的。
+- 接线交第二形的依据（负结论带分母）：这枚模块入口第一道判据就要 `lifecycle == "STANDBY"` 那一行、第二道读 `trigger_contract_json` 那一列（两道原话在 `backend/app/agent/standby.py:39` 与 `backend/app/agent/standby.py:41`）。这四枚词在尖上 `git grep -l` 现算各零枚文件：`trigger_contract_json`、`STANDBY`、`standby_trigger_match`、`app.agent.standby`（命令与结果逐条在 `review/加闸工-0628/refusal_r1.txt:3` 起那四行）。唯一宿主六个候选点我逐枚摊开（`backend/app/agent/guardian.py:13`、`backend/app/agent/guardian.py:62`、`backend/app/agent/guardian.py:136`、`backend/app/agent/guardian.py:491`、`backend/app/agent/guardian.py:669`、`backend/app/agent/guardian.py:862`），成因逐条写在 `review/加闸工-0628/refusal_r1.txt:8` 起那六行。结论：尖上没有任何一处能供给它要读的那枚行，硬接只能我自己造一行——那是造需求，不是接尖。
+- 代表枝上真正的两个消费者本单禁碰，点名留给号令者：`gateway.py` 第 2691 行与 `predictive.py` 第 870 行（两行原话在 `review/加闸工-0628/refusal_r1.txt:15` 与 `review/加闸工-0628/refusal_r1.txt:16`）；这两枚文件在尖上现读连 standby 字样都零命中（`review/加闸工-0628/refusal_r1.txt:17`）。要接就得放行这两枚宿主、或者先落带 `trigger_contract_json` 那列的表形——两条都在您的裁面上，我不自己挑。
+- 两臂读数（同一棵导出树、各一枚一次性库）：邻居基线 25 条通过（`review/加闸工-0628/neighbours_before.txt:12`）；放回这两枚之后同批 29 条通过（`review/加闸工-0628/neighbours_after.txt:12`）；单跑新落那枚 4 条通过、零失败（`review/加闸工-0628/standby_after.txt:2`）；整树采集 1938 条 → 1942 条，差 4 条正是它自带的四条用例（`review/加闸工-0628/collect_before.txt:2` 与 `review/加闸工-0628/collect_after.txt:2`）。两臂各带同一枚线自带采集错 `backend/tests/test_v18_hermes_r20_transport_reliability_probe.py:1`，没改它换绿。
+- 禁改与不碰逐枚零改动：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`、`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 五枚加唯一宿主 `backend/app/agent/guardian.py` 全是 0 增 0 删（`review/加闸工-0628/diffstat_r1.txt:5` 起那六行）。
+- 一处位差照报，这是连续第二张：单文写「代表枝全文百零二行」，同一枚 blob 我 `wc -l` 现读 101 行（`review/加闸工-0628/linecount_r1.txt:3`）；上一张 ORD-0616 也是同一位差（单文 148、现读 147）。我怀疑是数法差一枚末行换行，不改文件也不改单文，只把现读值报齐，供您在那把尺上钉一位统一口径。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 归档工 0528 四刀实测回话（0628／0629／0630／0631）：两枚模块自己上线即绿，四枚在单文点名的宿主上都接不出真调用——逐枚逐行点名，另附我名下一次性导出树的逐项字节账 — refs/heads/review/归档工-0621-r2
 
 - id: CMDR-RULING-0627 那批 agent 域四刀（块头现读 `CITYNEXUS_AGENT_CONTROL.md:519`；单文逐枚 `CITYNEXUS_AGENT_CONTROL.md:532`、`CITYNEXUS_AGENT_CONTROL.md:537`、`CITYNEXUS_AGENT_CONTROL.md:542`、`CITYNEXUS_AGENT_CONTROL.md:547`）。这一拍我按单文那句「接不上就交『证明无处可接』并点名每个候选调用点」交，产物字节为零：没推枝、没动权威枝、没删枝、禁改那五面 0 命中（锚 a91efcc1a7fc240932f74e1ab1f8788b0735975f）
