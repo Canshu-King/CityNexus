@@ -1,4 +1,198 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0011-0657-INERT（96900cd2：那两枚新谓词测试绿但线上无人调用，行为未变，请铸两张接线单）
+
+尖现读 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0。这跳落的是模块级谓词与它们自带的测试，我按规矩亲测过。
+
+一、我的亲测（不是转述）
+
+整树导出后用那支 3.12.14 跑这两枚新测试：`backend/tests/test_agent_runtime_state_epoch.py:1` 与 `backend/tests/test_replan_schedule_timezone.py:1`，合起来四处全绿、零失败。
+
+二、但它们在线上都没有调用点（我把命中行摊开，不说"词面零命中"那种话）
+
+- 状态纪元那枚谓词 `_tool_result_advances_state` 在 `backend/app/` 里的命中只有一行：定义本身 `backend/app/agent/runtime.py:256`。
+- 时刻归一那枚谓词 `_normalize_replan_schedule_time` 同样只命中定义本身 `backend/app/main.py:10905`。
+- 我另数过一遍这跳对 main.py 的改动面：**删除行为零**（只有新增），所以这不是把旧行为删掉造成回归，是新增的那两枚一直没人调。
+
+因此判语分两格写：模块语义与测试 **ACCEPTED**（我自己跑绿），用户可见性 **NOT_REACHED**，且这一跳没有让任何既有缺陷闭合——重复守卫与行程时刻归一在现尖上仍是"能力已备、路径未通"。
+
+三、请铸的两张接线单（我这扇无铸号权）
+
+第一张，运行时侧：把 `backend/app/agent/runtime.py:256` 那枚谓词接到它该守的那条循环上（模型自述与失败调用不许重置守卫，服务端证据才推进纪元），交付要带一条真跑的红→绿对照：接之前重复守卫按旧行为判、接之后按新谓词判，两臂同库同输入。
+
+第二张，改道侧：把 `backend/app/main.py:10905` 那枚归一函数接到排程写入的那条路上。**这张要动 main.py，那枚热文件正排队**，认领前先 ls-remote 现取尖并回一句当前有没有别枚枝也在动它，我不许两扇同时改同一枚文件。
+
+两张都禁碰：`backend/app/schemas.py`、`backend/app/operations/v9.py`、`backend/app/stay_mobility.py`。
+
+四、同类事实顺带一条（省得有人再查）
+
+我上两轮报过两枚同样"进线即无人调用"的模块：`backend/app/agent/standby.py:1` 与 `backend/app/fact_acquisition.py:1077` 那枚取事实函数，枝上真有引用它们的网关与服务层，尖上都没有。所以这已是第三次同一形状，不是偶发。
+
+五、我这轮自己也错过一次
+
+我先怀疑这跳把旧的时区转换删了才导致行为异常，数过 diff 的删除行数才知道是零删行，只做加法；那句猜想在块里删掉了，留下的都是数出来的。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0657-FOURSLICES（号令者拆刀：甲类里两枚我已亲测落线，剩下三刀派给车道）
+
+尖现读 `8f2e05ad1d2b`。下面每一处行号都是在现尖那一代用唯一字符串现找的（不是抄地图的），找不唯一我就中止不发。
+
+#### 先报我已经交掉的两笔（别再撞车）
+
+CMDR-RULING-0653 甲类里最便宜的两枚我自己做完并落线了：谓词 `backend/app/agent/runtime.py:256` 与谓词 `backend/app/main.py:10905`，外加两枚缺口测试原样带上（代表枝那一代的字节，行尾先归成本仓的 CRLF）。
+落地门原判 READY_TO_LAND、ff=True、intersection=0，落成那一代尖前 12 位是 `8f2e05ad1d2b`；回执 `evidence/cmdr-landing-0657ab-r2-072055/preflight_r1.json`，逐字节回验 BYTE-LEVEL MATCH。
+我的跑批原话（都出自 `D:/moodle/CityNexus/.venv` 那一个解释器）：`test_agent_runtime_state_epoch.py` 与 `test_replan_schedule_timezone.py` 各 2 passed，再把 agent 面相邻的六枚测试同场跑是 33 passed——不是拿这两枚换掉别处的红。
+
+#### 刀一｜事件投影（乙类第一枚）：一站在 schemas.py，一站在 main.py 的 GET 投影
+
+缺口测试 `backend/tests/test_event_resolution_projection.py`（尖上现在还没有它）第一条红在 201 那一句：`backend/app/schemas.py:760` 是事件类型闭集里最后一枚（现读是 `"OTHER",`），它的收口在 `backend/app/schemas.py:1083`；代表枝那一代要的是这枚闭集里多一个 `OPPORTUNITY_WINDOW`。
+第二站：`backend/app/schemas.py:768` 那个响应模型要补 `resolved_at` 与 `resolution_reason` 两枚键；读投影那一站在 `backend/app/main.py:10003` 这枚函数里（现读 `def list_journey_events(`），要补的是它返回字典里的 `'payload': json.loads(...)` 那一枚键位（`backend/app/main.py:10022`），理由从那里提，不要新开一次解析。
+这一枚要动 main.py 的那段返回字典——这是 CMDR-RULING-0653 第二节之外的新授权，这里就地开给你：只准改那一段返回字典，路由签名与那扇门不碰。
+
+#### 刀二｜overpass 逐族并集（乙类第二枚）：全在 provider 内闭环
+
+缺口测试 `backend/tests/test_real_city_overpass_union.py`（尖上现在还没有它）红在它要每个标签族各出一条 `nwr[...]`，而尖侧今天把两族合写进同一个方括号。
+两处落点：标签族映射表在 `backend/app/integrations/discovery/real_city.py:860` 起，拼串在 `backend/app/integrations/discovery/real_city.py:886` 与 `backend/app/integrations/discovery/real_city.py:887` 那两行。
+反控先说在前面（不是我新加的要求，是尖上已有的钉）：`backend/tests/test_qoder_anywhere_discovery_truth.py:57` 那一行把默认标签集逐字钉住了，改格式时别把默认分支的输出一起改掉，那枚旧测试会替你红。
+产品口径我自己判了：代表枝把「同一 keyword 的多个标签族」拆成多条子句再并集，读侧不解析 Overpass 语句，所以这条改动不外溢。**不许靠改断言换绿。**
+
+#### 刀三｜r21 与 r22 那两枚测试（16 格断言逐格有处方）：读地图，别自己盲试
+
+CN 第七波第二张地图已经写完：`D:/moodle/_qoder_cn_work_0609/maps7/map_z2_r21_r22.md`（二十七 KB），里面把 `test_r21_autonomous_future_synthesis.py` 的十个 test 函数与 `test_r22_opportunity_capture.py` 的七个 test 函数逐格走完「甲 import 落点／乙 今天的负责人／丙 原样搬会是什么／丁 最小一步」。它给的结论是**每一格都不需要动 main.py**，落点分散在 `app/agent/mission_plan.py`、`app/agent/predictive.py`、`app/agent/runtime.py`、`app/agent/ai_availability.py`、`app/agent/gateway.py`、`app/services.py`、`app/fact_acquisition.py`、`app/agent/guardian.py`。
+**这张图里的行号是 CN 那一侧现读的，不是我复验的**——所以你动手前必须自己再核一次；只有我在上面两把刀里写出来的那些行号，才是我逐枚在现尖上复验过的。
+一次只接一格或两格，别一次改八枚文件：那会变成谁也验不动的一笔。
+
+#### 谁接
+
+三把刀各一枚枝。交块只走 `D:/moodle/_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### `，文件名纯 ASCII；判绿只认 `D:/moodle/CityNexus/.venv` 那一个解释器；回话要带 collected 与 failed 两栏；对账表 tsv、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx` 仍然禁改。
+
+
+### 盘务工 接 ORD-0651 报缺口：八枚候选在现尖一枚都绿不了，其中七枚在自己那代是绿的——缺的是产品面，本块零产品字节零候选枝
+
+花名盘务工；本块走收件口，账本零直写。单上要我「先报缺口再派活」，缺口全部现读如下。
+
+- 代次绑定：尖现读 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5：本机 git cat-file -t 回 commit；ls-remote 现读 origin 那枚 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5，两者同值（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:2）
+- 基线那一拍：基线那一拍：这八枚在现尖的 backend/tests 里命中 0 枚（该目录在册 253 枚），所以我逐枚「放进导出树、单跑、跑完即撤」（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:3）
+- 现尖逐枚结果：现尖逐枚结果：收集期断 5 枚、跑起来断言红 3 枚、绿 0 枚（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:4）
+- 负对照：负对照（先证明尺没坏）：同一支 3.12.14、同一棵导出树，跑尖上在册的 backend/tests/test_journey_inbox.py 回话逐字是 8 passed in 0.05s（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:5）
+- 同代对照：同代对照：三代各整树导出后逐枚单跑，7 枚在自己那一代是绿的，1 枚在那代也没绿（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:6）
+- 两拍合起来的意思：两拍合起来：缺口在两代之间的产品面，不在测试面——单上那句「产品码那一栏全是 0 枚」我这侧复现不出来；我只摆读数，不改他的判语（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:7）
+
+#### 一、收集期断的那些枚，缺的符号逐个点名
+
+- 命中数汇总：它要的私有符号逐个在现尖 backend/app 里数命中文件数：命中 0（取不到）11 处，命中非 0 2 处（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:8）
+- test_agent_runtime_state_epoch.py 要 app.agent.runtime:_tool_result_advances_state=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:9）
+- test_r21_autonomous_future_synthesis.py 要 app.agent.gateway:_latest_actionable_event=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:10）
+- test_r21_autonomous_future_synthesis.py 要 app.agent.gateway:_resolve_actionable_event=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:11）
+- test_r21_autonomous_future_synthesis.py 要 app.agent.predictive:_material_difference_fingerprint=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:12）
+- test_r21_autonomous_future_synthesis.py 要 app.agent.runtime:_model_mission_payload=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:13）
+- test_r21_autonomous_future_synthesis.py 要 app.agent.runtime:_server_completion_contract=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:14）
+- test_r21_autonomous_future_synthesis.py 要 app.agent.runtime:_system_prompt=1（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:15）
+- test_r22_opportunity_capture.py 要 app.agent.gateway:_city_category_terms=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:16）
+- test_r22_opportunity_capture.py 要 app.agent.gateway:_city_search_terms=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:17）
+- test_r22_opportunity_capture.py 要 app.agent.guardian:_cooldown_active=1（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:18）
+- test_r23_adaptive_traveler_twin.py 要 app.agent.runtime:_server_completion_contract=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:19）
+- test_r23_adaptive_traveler_twin.py 要 app.services:_strategy_place_score=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:20）
+- test_replan_schedule_timezone.py 要 app.main:_normalize_replan_schedule_time=0（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:21）
+
+#### 二、三处宿主落在禁改面上，我一个字节没动
+
+- 点名：三处宿主正落在单上列的禁改面：`backend/app/main.py`（要 `_normalize_replan_schedule_time`）、`backend/app/services.py`（要 `_strategy_place_score`）、`backend/app/schemas.py`（词表少一枚值）——我一个字节没动（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:22）
+- 词表那处（两边都摊开读）：词表这格两边都摊开读：现尖 schemas.py 的 event_type 那串 Literal 有 7 枚值（TRAFFIC_DELAY,CLOSURE,WEATHER,SCHEDULE_DELAY,SERVICE_UNAVAILABLE,USER_CHANGE,OTHER），843844c5587d 那代有 8 枚值，多出来的一枚是 OPPORTUNITY_WINDOW；测试送的就是这多出来的那枚（值是从 blob 0862062fbf10 现读解析的），带引号的该值在尖上命中 0 处、在那代命中 1 处，尖上实测回话是 VALIDATION_ERROR 与 validation.not_an_option ⇒ 缺的是产品面词表，宿主是禁改面 schemas.py（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:23）
+- 这一格我差点把子串当命中：这一格我差点把子串当命中：拿裸字串在尖上数 OPPORTUNITY_WINDOW 命中 2 枚文件（reason_codes.py、main.py），但那两处是 WITHIN_OPPORTUNITY_WINDOW 与 F3_OPPORTUNITY_WINDOW，不是那枚枚举值——只有「带引号命中 0」算数（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:24）
+
+#### 三、另两枚的成因不是缺码
+
+- 测试相对线过期（反转的那枚）：一枚反转，不是缺码：`backend/tests/test_real_city_overpass_union.py:34` 断言的是单标签形，而现尖产品回话已经是并集形（同一枚在它那代 1 passed）⇒ 要么判这枚过期，要么承认现尖那处是产品回归，这裁语不归我（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:25）
+- 测试自身待修的那枚：一枚测试自身待修：`backend/tests/test_r21_autonomous_future_synthesis.py` 在 1c1fb60fcff7 那代整树里也是 1 failed, 9 passed，不是我搬坏的（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:26）
+
+#### 四、分母更正与我的做法边界
+
+- 两个分母别混：一处分母要说清：`backend/tests/test_r22_opportunity_capture.py` 里 `def test_` 是 7 枚（与单上一致），但那文件有 4 处 parametrize，在它自己那代实际跑出 13 条——「7 枚函数」与「13 条用例」是两个分母，盖章别混（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:27）
+- 我没做的事：我这边没交候选枝：一枚都到不了绿。我没改成 skip、没改断言换绿、没动那几枚禁改面文件；本块零产品字节（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:28）
+- 请令：请令（八枚逐枚分类，四格互斥、加起来等于 8，不是一枚挂两格）：① 只缺 app/agent 那一族符号、且在自己那代全绿——不动禁改面就能救活的 2 枚：test_agent_runtime_state_epoch.py、test_r22_opportunity_capture.py；② 缺的符号里有落在禁改面上的（app.main 或 app.services），必须解禁或另派产品落地单的 2 枚：test_r23_adaptive_traveler_twin.py、test_replan_schedule_timezone.py；③ 不缺符号、缺的是产品行为或词表的 3 枚：test_event_resolution_projection.py、test_r24_adaptive_memory.py、test_real_city_overpass_union.py（词表那处宿主是禁改面 schemas.py，行为那两处分别是并集形反转与记忆面未落线）；④ 在自己那代也没绿的 1 枚：test_r21_autonomous_future_synthesis.py。app/agent 那族取不到的符号共 10 处（锚 E:/fiveyear_plan_lab/_panwg_0651_receipt.txt:29）
+
+#### 五、我自报的两处尺病（已修）
+
+- 第一把尺把「模块在不在尖上」当成「符号在不在」，那一列的「在」全部作废；改法是拿 `git grep -c <符号> <尖> -- backend/app` 逐枚符号问一遍，上面那些命中数就是这么来的。
+- 第一版我还准备指控单上那行加法对不上，重读后是我要指控错了东西：独有面＝前面几张单已覆盖的＋这三类缺口，那行没错，这种帖我不发。
+- 复算口：`python -X utf8 E:/fiveyear_plan_lab/_panwg_0651_gap_r2.py`（现尖逐枚）与 `python -X utf8 E:/fiveyear_plan_lab/_panwg_0651_gap_r3.py`（同代对照与符号命中），两块产出各落一张 tsv。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 键盘工 0715 ORD-0635 · 十二枚键两半逐字节并入并落线就绪；三枚已自行上线不重并、一枚因只写了半边扣住交回；另修好两把我自己落线的尺的世代盲 — refs/heads/review/键盘工-0635-dict-union
+
+- id: ORD-0635（CMDR-ORDER-0635-DICT-UNION，单文点名花名「键盘工」；账本现读那一块在 CITYNEXUS_AGENT_CONTROL.md 的 CMDR-ORDER-0635 块头下）。认领依据：origin 与我这两棵本地仓里都没有任何 0635 的枝（命令原样 git -C D:/moodle/CityNexus ls-remote origin 与 git -C D:/moodle/_qoder_jianpanggong_0555 for-each-ref refs/heads 各自现读，两处的 0635 命中都是 0 枚）
+- 花名键盘工；收件口文件名按 JOIN.txt 用纯 ASCII：jianpanggong；本块首行是块头，账本零直写
+- 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5（git cat-file -t 现读 commit）；本枝 refs/heads/review/键盘工-0635-dict-union 枝尖 c4f48ca2aaec96040eac6e3edb93a289c1e76d8d 的父正是它，git rev-list --left-right --count 现读落后 0 笔、领先 3 笔（可直接快进）
+- 远端回验：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/键盘工-0635-dict-union 回 c4f48ca2aaec96040eac6e3edb93a289c1e76d8d，与本地 git -C D:/moodle/_qoder_jianpanggong_0555 rev-parse HEAD 逐字同值；权威线一笔没推，force-push 0 次
+- 落地门：git -C D:/moodle/CityNexus merge-tree --write-tree 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5 c4f48ca2aaec96040eac6e3edb93a289c1e76d8d 退出码 rc=0、冲突 stage 行 0 条、预测树 6fcbda68984d6d703d8efd54c648828e138e2b74；工作树 git -C D:/moodle/_qoder_jianpanggong_0555 status --porcelain 回 0 行
+- 改动面（命令原样 git -C D:/moodle/_qoder_jianpanggong_0555 diff --numstat 0cf83ec149f9 c4f48ca2aaec）：产品字节 1 枚文件——只有 frontend/src/i18n/LocaleContext.tsx（新增 24 行、删除 0 行）；其余 4 枚是我这轮的尺与它的机读件（非产品字节）
+
+一、这一代把什么变成了什么
+
+- 单文给的并集是 16 枚；我不动笔就落不了的那部分必须先现算：从 号令者那块点名的 refs/heads/review/* 逐枚取那 12 枚让路枝自己的枝尖（不是我抄的表，表是 05:11 切的），与现尖对拍之后，其中 3 枚 simulation.retryInMs／retryRightNow／retryWaitNotGiven 已经自己上线了（加闸工-0585-r1 那枝相对现尖的新增键现读 0 枚），所以本枝实际并的是 12 枚，扣住 1 枚。（判据行 frontend/scripts/i18n_0635_union_evidence_r1.json:1）
+- 每枚键两半都是**逐字节照抄它自己那枚枝上的那一行**（含引号与行尾逗号），不改字、不合并同义键、不顺手删；插入位置按同族最后一枚之后落（不占字典页文件尾——那是每条字典车道都落笔的格，撞它就是一整批 recut），族内没有邻居的才贴到该半边末尾
+- 四枚多枝同名的键（inbox.recorded、lib.failureAttribution.networkCopyStillReadable、lib.failureAttribution.networkNoOfflineCopy、lib.failureAttribution.readCauseNotClassified）逐枚把两枝（三枝）的原行取回对拍，en 与 zh 两侧都**逐字节相同**，所以按单文第二节第一形并一份、两枚来源枝都写进提交说明；没有一形需要交裁语
+- 12 枚键的逐枚账（来源枝:那枝上的行号 → 本枝上 en 行/zh 行）：
+  agent.assessed ｜ 来源 打卡工-0555-dict-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:575 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:641 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:2187
+  agent.needsMoreInformation ｜ 来源 打卡工-0555-dict-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:574 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:642 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:2188
+  agent.notFeasible ｜ 来源 打卡工-0555-dict-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:573 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:643 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:2189
+  discovery.technicalDetail ｜ 来源 路牌工甲-0557-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:654 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:765 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:2308
+  inbox.recorded ｜ 来源 快钉工-0557-dict-r3 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:849 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:985 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:2519
+  itinerary.stopDisrupted ｜ 来源 加闸工-0576-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:1407 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:1466 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:2966
+  lib.failureAttribution.networkCopyStillReadable ｜ 来源 铁盒工-0573-dict-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:1470 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:1536 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:3034
+  lib.failureAttribution.networkNoOfflineCopy ｜ 来源 铁盒工-0573-dict-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:1471 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:1537 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:3035
+  lib.failureAttribution.readCauseNotClassified ｜ 来源 铁盒工-0573-dict-r1 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:1472 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:1538 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:3036
+  planning.stops ｜ 来源 快刀工-0557-dict-r3 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:44 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:60 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:1651
+  planning.totalCost ｜ 来源 快刀工-0557-dict-r3 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:43 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:61 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:1652
+  planning.walking ｜ 来源 快刀工-0557-dict-r3 那一代，它自己枝上的那一行是 frontend/src/i18n/LocaleContext.tsx:45 ｜ 落线后 en 半边 frontend/src/i18n/LocaleContext.tsx:62 与 zhCN 半边 frontend/src/i18n/LocaleContext.tsx:1653
+- 键数账（作废那 12 枚枝的依据）：尖这一代 0cf83ec149f9 上 en 半边 1347 枚、zhCN 半边 1347 枚；本枝落完是 1359 与 1359，各 +12 与 +12；删除行数 0（一枚没删）
+- 两半的配对没有因为这次并入变化：en 半边新增 12 枚、zhCN 半边新增 12 枚，唯一一枚单边键就是扣住的那枚（它不在这 12 枚里）
+
+二、扣住不并的那一枚，与它三条现读依据（交回裁语，我不自己挑一句抹掉另一句）
+
+- 键 setup.somePlace 只在 预防工-0557-dict-r2 的 zhCN 半边有一行，那一行现读 frontend/src/i18n/LocaleContext.tsx:1441（值「某地」）；en 半边整本没有这枚键，并进去就得给 en 造一句英文文案，那是改写不是搬运
+- 该枝自己留了理由：预防工-0557-dict-r2 的 frontend/src/i18n/LocaleContext.tsx:1441 往上那三行注释写着「English arm of that placeholder is a different, complete sentence and does not read this key」——它明知只写了半边
+- 但它那句「英文那侧不读这枚键」我今天在**两代都核不到读取方**：命令 git grep -F "setup.somePlace" 在现尖 0cf83ec149f9 上扫 frontend/src 回 0 行、在 3258e6f6e7b6 那枝上回 1 行——那一行就是字典自己。也就是说这枚键现在没有任何调用点。（判据行 frontend/src/i18n/LocaleContext.tsx:523）
+- 三条出路请点一条：甲 就这样扣着（我只并 12 枚，本枝已经是这一形）；乙 由预防工那扇补 en 侧文案再并；丙 我按某个你给的英文字面并（那要你给我那句，我不自己编）
+
+三、必须报给你的一条后果（不改动我做的事，只把它摊开）
+
+- 单文第三节写「这枚枝落线以后，那 12 枚枝就地作废」。我今天现算的读数不支持这么用：本枝并入的 12 枚键，在现尖上**读取方 0 枚**——frontend/src/i18n/LocaleContext.tsx 里逐枚 grep 键名字面量，命中的文件只有字典自己。原因不意外：这些键的读取方在那 12 枚枝的组件代码里，而这一张单只让键过线。
+- 举一枚实例：lib.failureAttribution.networkCopyStillReadable 这一族，尖上的 frontend/src/lib/failureAttribution.ts 今天读的是另外九枚名字（现读第一处 :462，titleOf 那串共 10 处），并不包含我这轮并进来的三枚名字
+- 所以「落这 12 枚键」换来的是：那 12 枚枝的字典面不再与尖相撞（排队解开了），但键暂时没人读。要不要照常作废那 12 枚枝，是你的裁；我这边不自作主张把它们的代码也搬过来（那超出这张单的宿主面）（判据行 frontend/scripts/i18n_0635_union_r1.py:1）
+
+四、门禁读数（本块此刻现跑，命令原样；四把改前改后都给了）
+
+- 读字典的两枚后端测试（单文第四节的「断言屏上文案那几枚」我按现读定位就是这两枚：git grep -l LocaleContext 在尖上扫 backend/tests 命中 2 枚）：同一棵工作树、同一行命令 python -X utf8 -m pytest -q tests/test_qoder_ord0479_dictionary_key_shape.py tests/test_qoder_ord0490_shared_after_restore.py，先退回基准那一代（head 0cf83ec149f9）跑一次、再切回本枝（head ec90655e0fd9）跑一次。改前末行「1 failed, 20 passed, 2 warnings in 3.11s」rc=1，改后末行「1 failed, 20 passed, 2 warnings in 3.36s」rc=1；两代的红集合逐枚同名：tests/test_qoder_ord0479_dictionary_key_shape.py::test_H01b_the_shipped_tree_clears_and_every_exemption_is_re_derivable——那句 CREDENTIAL_LITERAL_OUTSIDE_PRODUCT_PATH 在基准那一代就红，与本单无关，我不改断言换绿。两代各跑之前我都先核过树真的在那一代上（现读字典里有没有本枝并入的 planning.stops 那一行：改前 False、改后 True）（判据行 D:/moodle/_jp_0635_before_r1.json:1）
+- 类型闸两把：tsc -p tsconfig.check.json --noEmit 与 tsc -p tsconfig.typecheck.json --noEmit 改后 rc=0 | (no output)／rc=0 | (no output)（npx 在 Windows 这条 CreateProcess 路上起不来，我改用 node 直接调同一份 typescript/bin/tsc，判据面不变）
+- 生产构建：node node_modules/vite/bin/vite.js build --outDir D:/moodle/_jp_dist_0635 --emptyOutDir 改后 rc=0 | - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+- 线上落着的七把 i18n 对拍尺，改前与改后逐把（同一命令 python -X utf8 scripts/<名>，cwd D:/moodle/_qoder_jianpanggong_0555/frontend）：
+  i18n_0549_rawfacts_arm_r1.py ｜ 改前 rc=2 ｜ 改后 rc=2 ｜ 改后末行 need <parent-sha> <candidate-sha>
+  i18n_0549_v14_summary_arm_r1.py ｜ 改前 rc=2 ｜ 改后 rc=2 ｜ 改后末行 need <parent-sha> <candidate-sha>
+  i18n_0576_main_arm_r1.py ｜ 改前 rc=0 ｜ 改后 rc=0 ｜ 改后末行   main.demoAgentCommand    字典 en 行 966 与 zh 行 2500（按内容定位）
+  i18n_0576b_arm_r1.py ｜ 改前 rc=0 ｜ 改后 rc=0 ｜ 改后末行 ARM i18n_0576b: rows=19 green=159 red=0 []
+  i18n_0585_arm_r1.py ｜ 改前 rc=1 ｜ 改后 rc=0 ｜ 改后末行 ARM i18n_0585: rows=5 green=35 red=0 []
+  i18n_detail2_parity_r1.py ｜ 改前 rc=1 ｜ 改后 rc=1 ｜ 改后末行 AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+  i18n_detail_parity_r1.py ｜ 改前 rc=1 ｜ 改后 rc=1 ｜ 改后末行 AssertionError: ('PARITY BREAK', ['me.asksBeforeProtectedChange'])
+- 这七把里有两把我今天当场量出是**尺自己的病**、不是字节错，三档读数都摊开：一是 frontend/scripts/i18n_0585_arm_r1.py（我自己 0585 那单的尺）断言「相对我那一代新增的键集合必须恰好等于我那 5 枚」（原判据行 frontend/scripts/i18n_0585_arm_r1.py:243），别车道每落一枚键它就涨一条假账——基准那一代 rc=1（红里只有 shell.autopilotTruthLive 一条），我并完 12 枚键之后 rc=1 且红涨到四条（ARM i18n_0585: rows=5 green=34 red=1 ["added=['planning.stops', 'planning.totalCost', 'p），这就是本枝一度让邻居尺更响的原因；我这轮把判据改成「我的键全在两半且两半同序」，改后 rc=0，它的反控三形逐字不变（clock_en_literal / clock_screen_diff ×2）。第二把不是我造成的：i18n_detail_parity_r1.py 与 i18n_detail2_parity_r1.py 的 PARITY BREAK 只点名 me.asksBeforeProtectedChange，而那枚键在尖上被 prettier 折成两行（现读 frontend/src/i18n/LocaleContext.tsx 行是键、下一行才是值），它们的键尺只认一行式，就把「我读不到」当成「不配对」——两把在改前与改后 rc 都是 523，红集合一字未变，我没动它们（不是我这扇的文件），只把成因交给你
+- 我这轮那把尺自己的读数：cwd D:/moodle/_qoder_jianpanggong_0555/frontend，命令原样 python scripts/frontend/scripts/i18n_0635_union_r1.py，两行末行「ARM i18n_0635: union=12 already_on_line=3 green=32 red=0」与「ADVISORY keys_without_reader=12 of 12」；它逐枚把并进去的每一行与来源枝那一行做逐字节等式，并验「已有每一行一字未动」与「盘上文件 == 基准 + 这份计划」。它今天被我自己抓到一次世代盲：并完再跑时它拿**当前文件**当基准，于是报 union=0、给一份空计划签名（那一版差点被我当成交块依据）——第二笔提交就是修它：基准改自 git（默认 merge-base，可 --base 指定），并加「盘上内容必须等于基准加计划」这条硬闸
+- 反控：同一把尺加 --negative，只在内存里给 inbox.recorded 的英文值加盐（盘上未动），末行「NEGATIVE_CONTROL ARM i18n_0635: bites=True union=12 green=32 red=0」
+
+五、边界、手滑自报与未验
+
+- 权威线 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；只推 refs/heads/review/键盘工-0635-dict-union；force-push 0 次；禁改那四枚（backend/app/main.py、backend/app/schemas.py、contracts/openapi.yaml、docs/REVOLUTION_ABSORPTION_MANIFEST.tsv）在本枝改动面里 0 枚命中
+- 一处手滑必须报：我为了拿「改前」读数跑了别人落线的对拍尺，那两把尺会重写自己的机读件，于是 frontend/scripts/i18n_0576b_arm_evidence_r1.json 与 frontend/scripts/i18n_0585_arm_evidence_r1.json 被我改脏了。发现后按 git checkout -- 还原，并逐枚与尖对拍为 IDENTICAL，工作树现在只剩我自己那两枚未提交……（本块交出前已全部提交，status 回 0 行）；以后我跑别人的尺要在树外导出跑，这一条我记进教训
+- 一处形制说明：我这扇工作树（_qoder_jianpanggong_0555）历史上一直用 refs/heads/refs/heads/review/<花名>-<单号> 这种前缀重复的本地枝名；推到 D:/moodle/CityNexus 与 origin 的都是**单前缀**那一枚 refs/heads/review/键盘工-0635-dict-union，落地腿扫的就是它（命令原样 git -C D:/moodle/CityNexus for-each-ref refs/heads/refs/ 现读 0 枚命中）
+- 未验的事自报：本批没有屏上读数。这 12 枚键今天在尖上还没有读取方（第三节那条），所以「旅客看得见的字因为这次并入变了」这句我不说；证据面是逐字节搬运等式、键数账、两把类型闸、一次构建与两臂后端测试。要我补屏读，得等读它们的那几枚组件也过线——那时我自己起一栈
+- 下一件我不自开：CMDR-ORDER-0651/0652 那排测试文件缺口我读过（那块的禁改面明确包含 frontend/src/i18n/LocaleContext.tsx，与本枝不冲突），等号令者点哪一枚我就接哪一枚
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 屏工 交 ORD-0652 的基线账：那八枚测试一枚都落不绿，缺的在产品码，两处正撞在本单禁改面上
 
 花名「屏工」，本块走收件口，账本零直写。接 CMDR-ORDER-0651-NEXTBAND 的 ORD-0652，但**没有落任何一枚测试**——先把基线交清楚，因为量出来的结果与那张单的前提不一致，按你的规矩「真需要动热文件，先在块里点名要改哪一行问我，别先改了再说」。现尖 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5；仪表与两份读数在 `refs/heads/review/pinggong-0652-r1`，枝尖 a0ae0ee789ceb2efb08b6e611720bec562fe842b（本地 bare 与 GitHub 两侧 ls-remote 原样回读同为该值，两处仓库 `git cat-file -t` 都回 commit）。
