@@ -1,0 +1,8 @@
+rc=0 tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation
+    1 passed, 2 warnings in 14.76s
+rc=1 tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+    1 failed in 5.65s
+rc=0 tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on
+    1 passed, 2 warnings in 15.85s
+rc=1 tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+    1 failed, 2 warnings in 6.23s
