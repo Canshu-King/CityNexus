@@ -1,4 +1,42 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0659-PORTMANIFEST（号令者跑出来的缺符号链原账：这一段可以逐字搬，那一段要写真行为）
+
+尖现读 `8f2e05ad1d2b`；代表枝那一代是 843844c5587d 开头那一代。这张账全部来自我的一轮冷树跑批（`D:/moodle/_qoder_cn_work_0609/_gap9_chain.log`，那棵树是 8f2e05ad1d2b 那一代的 backend 导出副本，我只在里面插字节、没碰 git）。
+做法：把缺口测试放进冷树跑，每报一次 `cannot import name X from mod`，就回代表枝那一代把 X 整枚符号（含装饰器）逐字取出来补进尖侧同名文件，再跑一次。补到不再报 ImportError 为止——剩下来的红才是真需要人写代码的地方。
+
+总账：补了 13 枚模块级符号、合三百三十七行，全部逐字来自代表枝那一代；下面按测试分列。
+  `test_r21_autonomous_future_synthesis.py` 需要 6 枚符号：
+    `backend/app/agent/gateway.py` 的 `_latest_actionable_event`（7 行）
+    `backend/app/agent/gateway.py` 的 `_resolve_actionable_event`（14 行）
+    `backend/app/agent/predictive.py` 的 `_material_difference_fingerprint`（13 行）
+    `backend/app/agent/runtime.py` 的 `_model_mission_payload`（6 行）
+    `backend/app/agent/runtime.py` 的 `reconcile_stale_agent_runs`（59 行）
+    `backend/app/agent/runtime.py` 的 `_server_completion_contract`（64 行）
+    跑到第 六 轮还在报缺符号 ⇒ 这一枚的链没跑完，剩下的缺口我没算出来，别当成全账。
+  `test_r22_opportunity_capture.py` 需要 4 枚符号：
+    `backend/app/agent/gateway.py` 的 `_city_category_terms`（5 行）
+    `backend/app/agent/gateway.py` 的 `_city_search_terms`（10 行）
+    `backend/app/services.py` 的 `plan_authority_blocker`（85 行）
+    `backend/app/services.py` 的 `UNRESOLVED_ACTIVITY_FACTS`（1 行）
+    补完就不再报缺符号（第 五 轮），此时回话：E       assert (<app.db.models.GuardianRun object at 0x000002005E5FE5D0> is None) == True ;; E       assert (<app.db.models.GuardianRun object at 0x00
+  `test_r23_adaptive_traveler_twin.py` 需要 3 枚符号：
+    `backend/app/replanning/candidate_evidence.py` 的 `canonical_place_tags`（9 行）
+    `backend/app/services.py` 的 `_strategy_place_score`（46 行）
+    `backend/app/execution/traveler_twin.py` 的 `evidence_decay_factor`（18 行）
+    补完就不再报缺符号（第 四 轮），此时回话：E        +  where 0 = MissionSpec(objective_codes=(), protected_activity_ids=(), mutable_activity_ids=(), max_cost_delta_minor=0, max_loss_minor=0, ma
+
+#### 这张账怎么用
+
+一、上面列的那些符号是**逐字搬**的活：从代表枝那一代把整枚函数或常量原样取出来，放进尖侧同名文件的模块级（注意本仓 .py 是 CRLF 行尾，搬过去要先归一行尾，否则一棵树两种形状）。搬完那枚测试如果就绿了，回话带 pytest 那一行；如果搬完仍红，把红的 test 名与原话贴回来，别改断言。
+二、`test_r22_opportunity_capture.py` 的读数最说明问题：四枚符号搬完是 9 failed 与 4 passed——这一枚剩下的全是真行为，不是形状问题，别指望搬符号收工。
+三、`test_r23`／`test_r24` 同理：搬完是断言红，`MissionSpec` 那几格与「明示回避压过习得正面」那一条要在尖侧写出真判定才算数。
+四、`test_r21_autonomous_future_synthesis.py` 的链我没跑完（第 六 轮还在报缺符号就停了），所以这一枚不要按本账的全套来——先把它前几枚符号搬掉再重跑，报回来的 ImportError 就是我这一轮没看见的。
+五、集中一句省腿的话：本账里要补进 `backend/app/agent/gateway.py` 的一共 4 处，都可以插在现读 `backend/app/agent/gateway.py:167` 这一枚函数之后（那一行现在读出来是 `def _json(`），同一枚文件连着补会互相顶行号，所以每补一枚就重取一次行号再补下一枚。
+
+禁改面照前面两张号令者块里点名的范围：`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 tsv 不动；`backend/app/main.py` 只准动那两块里逐行点名的两处。
+交块只走 `D:/moodle/_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### `，文件名纯 ASCII；判绿只认 `D:/moodle/CityNexus/.venv` 那一个解释器。
+
+
 ### REQ-0011-0657-INERT（96900cd2：那两枚新谓词测试绿但线上无人调用，行为未变，请铸两张接线单）
 
 尖现读 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0。这跳落的是模块级谓词与它们自带的测试，我按规矩亲测过。
