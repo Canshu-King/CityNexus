@@ -1,4 +1,583 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 交对账腿：新增一枚盖章尺，四十一条枝的真实分布第一次不是空列
+
+花名「屏工」，本块走收件口，账本零直写。认领 CMDR-ORDER-0605-0607 的第三张 ORD-0607（那张单的标题是「#### ORD-0607 对账腿：让吸收尺报出真实分布，而不是整列空着」，交这一拍现读在 `CITYNEXUS_AGENT_CONTROL.md:683`——账本每十几分钟被代插腿顶长一次，行号请以标题为准现寻）。同批第一张我已交，判语是「在本批纪律下无处可接」并附现场读数与勘误；第二张 ORD-0606 写在接尖工名下，我没碰。
+
+一、动了什么、没动什么
+
+- 新增一枚尺：`live_checks/revolution_absorption_stamp_r1.py`。判据、写门、退出码全写在它自己的档首（`live_checks/revolution_absorption_stamp_r1.py:2` 起那段），命令可原样重放。
+- 填了一枚表：`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`，41 条数据行的 carried 逐条改成有主的可重放读数（列名那行在 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1`）。
+- 现有尺一字节没改：`live_checks/` 下本枝只多出上面那一枚新尺，其余全是新增的读数与仪表，改动面逐枚计数在那一拍的形状读数里（`review/pinggong-0607/branch_shape2.txt:8`）。
+- 零产品字节：改动面只在 `live_checks/`、对账表、`review/pinggong-0607/` 三处。
+
+二、判据怎么定的（写死在尺里）
+
+- 现尖从 GitHub 的 `refs/heads/mirror/integration-frontend-apple-pass1` 现取，这一轮是 f85194013ac10202e40b52d7ba2b6b95a7231059。
+- 每枚枝的分叉点用 `git merge-base 现尖 <pin>` 现算，不信表里 fork 那列（那列是十二位短号，只够对账，不够判祖先）。
+- OWN = 枝的树里与分叉点树不同的那些路径（这枚枝自己动过的，含新增与修改）；ON = OWN 里今天在尖上仍是同一枚 blob 的路径。同路径不同内容不算吸收。
+- carried 四形：`YES n/m`、`PART n/m`、`NO 0/m`、`NONE 0/0`；YES/NO 沿用表里既有词，比例是这次新添的读数（分类函数 `live_checks/revolution_absorption_stamp_r1.py:27`）。
+- absorbed_on 只在算出全量在线时新盖，盖前必须 `merge-base --is-ancestor` 通过；表里已有的合法章一律原样保留——这把尺不许擦别人的章（保留那步在 `live_checks/revolution_absorption_stamp_r1.py:173`）。
+- 写门装在写的那一步：`--apply` 前逐列对账，除 carried 与 absorbed_on 之外任何一列变动整份不写并退 9（门函数 `live_checks/revolution_absorption_stamp_r1.py:37`，调用点 `live_checks/revolution_absorption_stamp_r1.py:200`）。
+
+三、真实分布（那张单要的就是这个数）
+
+- 41 条枝里：独有内容全量已在线上的 0 条，部分在线的 24 条，一条都没落进来的 17 条，相对线上没有自己改动的 0 条，数据取不到的 0 条（词形分布逐字在 `review/pinggong-0607/carried_distribution.txt:3`，尺自己那行粗分桶在 `review/pinggong-0607/stamp_final_run.txt:44`）。
+- 按「自己的改动里已在线上几成」分桶：九成以上 8 条、五到九成 0 条、一到五成 0 条、不足一成 16 条、零 17 条（`review/pinggong-0607/carried_distribution.txt:4`，另有一把独立尺重算同一桶，结果同值，在 `review/pinggong-0607/column_guard_and_buckets.txt:4`）。
+- absorbed_on 非空仍 8 条：一条没被擦、这条尺也没新盖出第 9 条（`review/pinggong-0607/carried_distribution.txt:5`）。
+- 所以第0季那条退出判据（`docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:50` 写着要「对账表每枚枝有归属」）今天仍够不到：归属从今天起是可重放的读数，但「每枚都有吸收代」要等内容真落线。
+
+四、自检，以及我自己被推翻的一次
+
+- 尺自带自检：`python live_checks/revolution_absorption_stamp_r1.py --selftest` 这一拍跑出格子 9 个、失败 0 个（函数在 `live_checks/revolution_absorption_stamp_r1.py:64`），覆盖四形分类、写门拒改第三列、写门拒少一行、尾部空列补齐。
+- 我第一版把逐条判据转成表格的那把小尺漏了两条：判据打印把枝名截到 58 字，枝名恰好占满时对齐空格消失，行式子要求两个以上空格就吃不到。改成名字从对账表按行序取、数字从读数件取，并断言两边条数相等才出表——重出后 41 条齐（那条断言在 `review/pinggong-0607/shape_and_table_r1.py:62`）。
+
+五、41 条逐条判据（每条自带它在 `review/pinggong-0607/stamp_final_run.txt` 里的那一行）
+
+| 来源枝 | 判据 | carried 新值 | absorbed_on | 读数行 |
+|---|---|---|---|---|
+| `codex/revolution-qoder-integration-20261010` | 自改 612 个｜在线上 8 个 | PART 8/612 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:2` |
+| `codex/revolution-r63-planned-parallel-journey` | 自改 631 个｜在线上 8 个 | PART 8/631 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:3` |
+| `codex/revolution-r99-transplant-20261011` | 自改 611 个｜在线上 8 个 | PART 8/611 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:4` |
+| `codex/revolution-realtrip-recovery` | 自改 235 个｜在线上 2 个 | PART 2/235 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:5` |
+| `gpt/revolution-r14-fact-driven-planner-20261001` | 自改 105 个｜在线上 0 个 | NO 0/105 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:6` |
+| `gpt/revolution-r15-truth-seeking-operator-20261001` | 自改 123 个｜在线上 0 个 | NO 0/123 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:7` |
+| `gpt/revolution-r16-event-driven-guardian-20261001` | 自改 124 个｜在线上 0 个 | NO 0/124 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:8` |
+| `gpt/revolution-r17-predictive-self-healing-20261001` | 自改 126 个｜在线上 0 个 | NO 0/126 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:9` |
+| `gpt/revolution-r18-anticipatory-resilience-20261001` | 自改 129 个｜在线上 0 个 | NO 0/129 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:10` |
+| `gpt/revolution-r19-living-plan-portfolio-20261001` | 自改 131 个｜在线上 0 个 | NO 0/131 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:11` |
+| `gpt/revolution-r20-autonomous-branch-arbitration-20261001` | 自改 131 个｜在线上 0 个 | NO 0/131 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:12` |
+| `gpt/revolution-r21-autonomous-future-synthesis-20261002` | 自改 142 个｜在线上 0 个 | NO 0/142 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:13` |
+| `gpt/revolution-r22-autonomous-opportunity-capture-20261002` | 自改 150 个｜在线上 0 个 | NO 0/150 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:14` |
+| `gpt/revolution-r23-adaptive-traveler-twin-20261003` | 自改 155 个｜在线上 0 个 | NO 0/155 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:15` |
+| `gpt/revolution-r25-strategic-horizon-steward-20261003` | 自改 173 个｜在线上 0 个 | NO 0/173 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:16` |
+| `gpt/revolution-r26-behavioral-closure-20261004` | 自改 178 个｜在线上 0 个 | NO 0/178 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:17` |
+| `gpt/revolution-r26-decision-critical-clarification-20261004` | 自改 175 个｜在线上 0 个 | NO 0/175 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:18` |
+| `gpt/revolution-r27-agent-collective-live-closure-20261005` | 自改 192 个｜在线上 1 个 | PART 1/192 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:19` |
+| `gpt/revolution-r27-collective-closure-20261004` | 自改 188 个｜在线上 0 个 | NO 0/188 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:20` |
+| `gpt/revolution-r27-collective-journey-mediator-20261004` | 自改 184 个｜在线上 0 个 | NO 0/184 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:21` |
+| `gpt/revolution-r27-truth-mesh-governed-execution-20261005` | 自改 191 个｜在线上 0 个 | NO 0/191 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:22` |
+| `gpt/revolution-r28-implementation` | 自改 211 个｜在线上 2 个 | PART 2/211 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:23` |
+| `gpt/revolution-r29-disagreement-mediation` | 自改 221 个｜在线上 2 个 | PART 2/221 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:24` |
+| `gpt/revolution-r30-consent-epoch-shock-recovery` | 自改 244 个｜在线上 2 个 | PART 2/244 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:25` |
+| `gpt/revolution-r32-autonomous-recovery-mesh` | 自改 309 个｜在线上 2 个 | PART 2/309 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:26` |
+| `gpt/revolution-r33-distributed-execution-fencing` | 自改 281 个｜在线上 2 个 | PART 2/281 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:27` |
+| `gpt/revolution-r33-distributed-execution-lease` | 自改 285 个｜在线上 2 个 | PART 2/285 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:28` |
+| `gpt/revolution-r33-open-world-journey-adaptation` | 自改 642 个｜在线上 8 个 | PART 8/642 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:29` |
+| `gpt/revolution-r34-world-context-bridge` | 自改 289 个｜在线上 2 个 | PART 2/289 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:30` |
+| `gpt/revolution-r38-rebase` | 自改 312 个｜在线上 2 个 | PART 2/312 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:31` |
+| `gpt/revolution-r6-h11-r61-prep-20260923` | 自改 6490 个｜在线上 6313 个 | PART 6313/6490 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:32` |
+| `gpt/revolution-r61-h12-r62-prep-20260923` | 自改 6492 个｜在线上 6313 个 | PART 6313/6492 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:33` |
+| `gpt/revolution-r62-r63-prep-20260923` | 自改 6490 个｜在线上 6313 个 | PART 6313/6490 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:34` |
+| `gpt/revolution-r7-r71-prep-20260923` | 自改 6490 个｜在线上 6313 个 | PART 6313/6490 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:35` |
+| `gpt/revolution-r71-r72-prep-20260923` | 自改 6492 个｜在线上 6313 个 | PART 6313/6492 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:36` |
+| `gpt/revolution-r72-r73-prep-20260923` | 自改 6491 个｜在线上 6313 个 | PART 6313/6491 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:37` |
+| `gpt/revolution-r73-r74-prep-20260924` | 自改 6491 个｜在线上 6313 个 | PART 6313/6491 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:38` |
+| `gpt/revolution-r74-r75-breakthrough-20260924` | 自改 6488 个｜在线上 6313 个 | PART 6313/6488 | 吸收代 a15e1959a551 | `review/pinggong-0607/stamp_final_run.txt:39` |
+| `gpt/revolution-r77-recovery-20260929` | 自改 5 个｜在线上 0 个 | NO 0/5 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:40` |
+| `gpt/revolution-relay-permission-probe-20261005` | 自改 206 个｜在线上 2 个 | PART 2/206 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:41` |
+| `gpt/revolution-taskbooks` | 自改 189 个｜在线上 1 个 | PART 1/189 | 吸收代 空（未全量在线上） | `review/pinggong-0607/stamp_final_run.txt:42` |
+
+六、下一刀的口径（只报事实，不替你裁）
+
+- 九成以上那 8 条全是同一批 prep 枝（如 `gpt/revolution-r6-h11-r61-prep-20260923` 自改 6490 个、在线上 6313 个，判据行号在 `review/pinggong-0607/named_row_lines.txt:1`）：它们的 OWN 大到六千余，是因为分叉点距今已隔整条线，多数路径只是「与其后的线不同」，不是这枚枝真写过。这把尺按字面判据算，没替它们收窄；要收窄就得再加一层「只数这枚枝名义所指那批文件」的口径——那是裁语不是读数，我不自己加。
+- 17 条零落进来的才是真缺口面（如 `gpt/revolution-r77-recovery-20260929` 自改 5 个、在线上 0 个，判据行号在 `review/pinggong-0607/named_row_lines.txt:2`），这比「整列空着」更能指路。
+
+七、远端形状
+
+- 枝 `review/pinggong-0607-r1`，本块引用的枝尖为 7fc3c601f247704bbf32874adbcbe9deb8f5d76d（本地与 GitHub 同名同值）。
+- 枝内那份形状读数记的是它自己之前那一拍 8acc33a61d8ca21cb3a4ec176e4d646f426ffe25：两侧 ls-remote 逐字在 `review/pinggong-0607/branch_shape2.txt:3` 与 `review/pinggong-0607/branch_shape2.txt:4`，对现尖先人位落后 0 笔、领先 3 笔在 `review/pinggong-0607/branch_shape2.txt:5`，只读合流预测在 `review/pinggong-0607/branch_shape2.txt:6`，工作树未登记改动那一拍为 1 处（就是它自己那份新仪表）在 `review/pinggong-0607/branch_shape2.txt:7`。任何已推送的头都装不下「自己被回读那一拍」的数，要复算就现跑 `review/pinggong-0607/finish_readings_r1.py:63` 那一步。
+- 没 force、没改名已发布枝、没删任何远端 ref；禁改清单那四枚一字节没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 地图工 ORD-0607 · 对账腿：新增一枚打印尺，把 carried 与 absorbed_on 算成有主读数——两口径现在差八枚，这八枚要你裁
+
+- 认领：ORD-0607（块头 CMDR-ORDER-0605-0607 第三张）。同块第一张 ORD-0605 与屏工正在交的 ORD-0610 是同一枚 `presence`，我不抢；第二张 ORD-0606 单文里点名是写给「接尖工」那枚枝的，我也没碰、没转派。
+- 尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `f85194013ac10202e40b52d7ba2b6b95a7231059`；本枚全部读数都算在这一代上，发布脚本第一道闸比对这个 40 位，不符就 refuse。
+- 枝：`refs/heads/review/地图工-0607-r1` 枝尖 `a2bd2887acc157ca9bc01961b9d0869e02a91b51`，父提交就是上面那枚尖；`ls-remote` 回读逐字同值。权威枝一笔没推，force-push 零次。
+- 三枚路径（加两枚、改一枚，其余零碰）：新增尺 `live_checks/revolution_absorption_stamp_r1.py`（blob `5b32787772b70a324930d580dfd0fcaddeee7019`）、带日期读数件 `live_checks/patrol/_absorption_stamp_20261013.tsv`、对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`（只动 `carried` 三格）。
+
+一、真实分布（这就是那张单要的「不是整列空着」）
+
+| 读数 | 值 | 判据口径 |
+|---|---|---|
+| 对账表行数 | 41 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1` |
+| `carried` 现算 YES | 6 | 严格祖先于本族代表，与表里 verdict 为 CARRIED_BY_REP 的那六条同集合（内部一致闸，不等就 rc=9） |
+| `carried` 原来空着的 | 3 格，本尺填成 NO | 一枚枝不能携带自己：那三条正是族A 代表、族C 代表与一枚族B prep，判据行见 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:11` |
+| `absorbed_on` 填了值的 | 8（本尺新增零条） | 本尺只在「相对尖零独有内容」时才填，所以绝不批量预填 |
+| 尺口径：已吸收 / 未吸收 | 8 / 33 | 常驻尺按 `absorbed_on` 非空即算已吸收，口径写在 `live_checks/revolution_absorption_check_r1.py:6` |
+| 内容口径：已吸收 / 仍有独有内容 | 0 / 41 | 本尺按 `git diff --name-status <尖> <枝尖>` 的 A/M 逐枚数，判据 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| 两口径之差 | 8 枚 | 那八条都仍有上百枚文件与尖不同，最多的一枚差 784 枚 |
+
+二、这一张暴露的口径问题（要你裁，我不擅自改常驻尺）
+
+- 八枚枝的 `absorbed_on` 已挂上吸收代（都是族B 评审产物归档那一笔，`a15e1959a551b7f47e4af5bd94437b03a38133d5` 那一代），但它们相对尖仍有 175 至 179 枚文件不同。常驻尺只看那列空不空，于是把「局部吸收」记成「已吸收」，未吸收面因此少报八枚。
+- 三条出路请点一条：(甲) 允许局部吸收挂代，但再加一列记剩余独有文件数（本尺的读数件已有这一列，可直接并）；(乙) `absorbed_on` 只许整根吸收时填，局部的先空着；(丙) 新增一档 verdict=PARTIAL，常驻尺的退出码口径同 `live_checks/revolution_absorption_check_r1.py:9` 一起改。本枚选的是不动常驻尺一个字节、只新增一把尺（单的硬约束）。
+
+三、形制闸读数（发布前现跑，命令原样在尺与脚本里）
+
+| 哪一眼 | 读数 | 锚 |
+|---|---|---|
+| 新尺自跑 | 退出码零，退化零枚 | `live_checks/revolution_absorption_stamp_r1.py:2` |
+| 只动该动的列 | 对账表变动三格，全在 `carried`；其余十四列逐行比对未变，表头一字节未动 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1` |
+| 不预填 | `absorbed_on` 非空地条数改前改后同为八 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` |
+| 常驻尺未被改 | 尖上与候选树上逐字节相同（4576 B，原始字节比对，不走 strip） | `live_checks/revolution_absorption_check_r1.py:1` |
+| 树形制 | 加两枚路径、改一枚、删零枚 | `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:50` |
+
+四、边界与自报
+
+- 两处我自己的尺毛病，都已修并如实记：一是 `carried` 我先按「祖先于权威尖」算，得到全表 NO，与表里那六条 CARRIED_BY_REP 对不上——口径错了，改成「严格祖先于本族代表」并加内部一致闸才对上；二是我那把 git 包装对整段输出做了 `strip()`，把对账表末行的结尾空字段吃掉（十五列变十四列），而且差点让「常驻尺字节未变」那条断言用裁过尾换行的文本比——两处都改成原始字节读，`4576 B` 那条现在是裸字节等式。
+- 零产品字节：只碰 `live_checks/` 与对账表那枚文件，没动任何后端或前端源码、没跑 pytest、没起端口、没碰工作树；账本本体零直写，块只走收件口。
+- 尺的判据全部现算，不读缓存；`absorbed_on` 只能填尖的祖先这一条由尺自己验（`live_checks/revolution_absorption_check_r1.py:9`），非祖先即报 rc=9。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守勘误（我自己上一块里的一个错读）：那封假退信不是"只起草未发出"，它已经作为通播投出去了
+
+一、上一块哪里说错了
+- 我此前那块（收件口名 `ditugong_0043.md` 那件的自报块）里写「那封没有发出记录」，出处拿的是 `patrol/relay_state.json` 的 sent 表与 `agent_bus/state.json`。
+  **两处都拿错了文件**：那枚 relay_state 是**转达腿**的账（键形是 `rel@时刻@账本行`），消息正文根本不在里面；`state.json` 只存名册、回执与 seen_topics，也不存正文。
+  拿"我在错的表里搜不到"写成"没发生"，正是我自己反复记的那条：**关键键名搜出来的零只能说词面没有，不能说能力没有**。
+
+二、现读的事实（这轮的读数都出自一枚只读取数腿，不改任何东西）
+- 那封假退信**确实投出去了**：形制是通播（to 是星号、kind 是 note），每个收件框各落一份，现读份数见取数腿输出；发送时刻比该枚块的入账回执晚六秒——也就是门已经放它进去了，我这腿还在往外指控它被门拒。
+- 正文里印的那句「门的回执码=-1」不是任何一道门的退出码：-1 是退信腿读不到码时的占位数。同一段证据行本身写着绿与零条 findings（逐字见捕获落档）。
+- **被冤枉那位的框根本不存在**：那枚块的作者所在车道未接 BB 机，outbox 下没有它的收件框 ⇒ 假话一封没到它手上，反倒通播给了其余在框的车道。这是我今晚最该记下的一件：指控走的是广播，纠错才找到信道。
+- 已撕回：另发一封勘误 note，逐字 reply 到那封假退信，正文说明那是我这侧的仪表故障、块的真实状态、以及"车道什么也不用改"；尾行按常设逐字。发出后回读过，勘误在框里的份数与假那封同数，回读里能看到 reply 目标与证据条。
+
+三、代码侧仍然只有那两处下游改动（未变，列在这里是为了不再"只改一处"）
+- `patrol/_gate_refused_relay_r1.py:229`、`patrol/_inbox_aging_r1.py:94`：两种标签都认，且认不出来一律判"不可得"，不许把仪表故障当门拒转给作者。
+- 还欠的一次实证：真被门拒的那类块，端到端（发出→作者收到→改完重投→入账）今晚仍没走过一次；等下一封真拒出现时按这条回读。
+
+四、边界
+- 产品字节零枚；权威线零移动；账本零直写（本块同样走收件口）；端口零个由我起停；`demo/reset` 未跑；`_preview.db` 未写；盘上一个文件没删，moodle 没清。
+- 别人框里的旧信我不去删不改——勘误发新件，这一条对我自己同样成立。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 勘误（加闸工）：我 0045 那块把单号认错了——交的东西是 CMDR-RULING-0608-WIREHALVES 的甲半，不是 ORD-0602 那张；产品字节与坐标一字未变
+
+- 错在哪：我那块第 1 项、以及读数件第一行 `review/加闸工-0602/readout_r1.txt:1`，都把它写成「ORD-0602 第一张」。现读账本，ORD-0602 那张的派单原文是「从代表枝 `backend/app/execution/` 再挑一枚带接线落」，那张已由归档工交并落线——枝 `refs/heads/review/归档工-0602-r1`、枝尖 82229876934fa7fd4124b726a2f1be2b7821c28d，现读是现尖 f85194013ac10202e40b52d7ba2b6b95a7231059 的祖先（`review/加闸工-0602/mergecheck_r2.txt:5` 那行原话）。我不双领、不重交那张。
+- 我做的到底是什么：CMDR-RULING-0608-WIREHALVES 的甲半——恢复门说清「路线时长是谁给的」，不改任何既有放行/拒绝；乙半一行没做。裁语是通批给车道的、本来不占单号，是我把它按单号认领了。
+- 字节不受影响：枝 `refs/heads/review/加闸工-0602-r1`，头 75689cfb73e8d217876c83ff50e74547925d6b23，pin 同名挂在 `refs/local/jiazagong-0602`。五枚提交：产品 5ed85afea5d86b71be117a6dba80c8f0e24020e9、证据目录 971daf6aad8cf62de72add69360d6303618ac13d、合并预测 0f9643db485c3b84f5971c3d57264410543e2d3e、逐枚增删对拍与坐标自审 4b03da97e3e53da3a553797b348f629595604a26、这次重取的合并预测 75689cfb73e8d217876c83ff50e74547925d6b23。force-push 零次，账本零直写。
+- 跟他那张不撞：现尖里他动的是 `backend/app/operations/v9.py`，相对我父代 8 加 2 删（`review/加闸工-0602/mergecheck_r2.txt:9`）；我动的三枚产品文件在两代尖之间一字未动（同一份第 7 行那句「上面无输出=三枚都还是同一代」就是现读结果）；拿现尖对我这枚重跑只读合并预测回 rc=0（`review/加闸工-0602/mergecheck_r2.txt:3`）。
+- 根因，写死给自己：我读 CMDR-ORDER-0602-0604 那块时只记住了「第一张」这个位置词，没把派单原文那一行抄下来核对；我领 ORD-0603 那块抄了原文，所以没认错。往后认领一律把原文那一行逐字抄进读数件第一行，抄不出来就不领。
+- 请您点的没变：这枚甲半要不要落线；那枚上屏 spec 要不要从证据目录升进 `frontend/e2e/`（它点共享 demo 行程，串行套件里会跟别人抢库）；live 那一档要不要也弄上屏——那要往库里改写事实，属乙半门口，我不自作主张。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守自报：我给捕获腿改的那行标签，把退信腿的解析打断了一个来小时；起的一封假退信没有发出记录；⑳ 也把「枝只在本地」和「门退件」分开了
+
+一、发生过的时序（逐条给现读坐标）
+- 我把捕获腿里那行标签从「门的退出码」改成「尺的退出码」，理由是那个退出码本来就出自 `claim_coordinate_check_r7.py` 那把尺、不等于入账门那道（`live_checks/_gate_verdict_capture_r1.py:36`）。改的时候**没数下游**——这违反我自己立过的那条：改了别人要读的字段名，必须先把下游跑一遍再交。
+- 随后退信腿给一扇车道起草了一封退信，正文把那枚块的「门的回执码」印成负一（起草件全文见 `patrol/_body_relay_8183aabe.txt:1`），而同一封里贴的证据行是 `Q43_GATE_GREEN | findings 0 []`（捕获落档 `live_checks/_gate_verdicts/ditugong_0043_004315.txt:6`），那枚块随后也已入账（代插回执名 `…_qoder_ledger_inbox/_processed/ditugong_0043.md.inserted_004547:1`）。
+- 根因就在下游那式子：`patrol/_gate_refused_relay_r1.py:229` 只认旧标签，匹配不上便吃进负一，于是 `if rc != 0` 把**门绿**的块当成门拒。仪表故障被写成了一句指控。
+
+二、波及面（量出来的，不是估的）
+- 那封**没有发出记录**：`patrol/relay_state.json:1` 那枚 sent 表逐条搜这枚块名，零命中；`agent_bus/state.json:1` 全库递归搜「回执码」加负一那串措辞，零命中。
+- 没查清的一半我先不糊过去：为什么只起草没发出（数真闸拒的、收件人解析失败的、还是中枢那侧拒的），要看中枢那一拍的回执才知道，我接着查。
+- 起草件存在这件事本身就说明：下游解析再偏一点，这封就会真发出去。所以这条按"已经咬到牙齿"记，不按"侥幸没咬着"记。
+
+三、修了什么（两处下游一起改，不再只改一处）
+- `patrol/_gate_refused_relay_r1.py:229`：两种标签都认；并且**认不出来一律返回"不可得"**——不许把"我读不到码"当成"门拒了"。
+- `patrol/_inbox_aging_r1.py:94`：同一条式子同改；码不可得时改成明写一行「码不可得 ⇒ 不判绿也不判拒」，不再用负一蒙。
+- ⑳ 落地门前那格把 `REF_UNRESOLVED` 单独立一档并计入积压，结论行措辞按分档分开说（现读对拍：`git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/*0602*` 只回屏工与归档工两枚，而 `git -C D:/moodle/CityNexus rev-parse refs/heads/review/加闸工-0602-r1` 本地给得出坐标 ⇒ 那枚枝确实没推到远端，是**车道没推**、不是门拒它）。自测从四臂扩到六臂，六行结论逐字打出来当凭据（`patrol/_conclude_undec_selftest_r1.py:1`）。
+
+四、边界（本块自证）
+- 产品字节零枚；权威线零移动；账本零直写（本块走收件口，首行是块头）；端口零个由我起停；`demo/reset` 未跑；`_preview.db` 未写；盘上一个文件没删，moodle 没清。
+- 要车道做的事我一件没替它做：那枚没推上去的枝要它自己推，我不推别人的枝，也不替它改一个字。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-ORDER-0615-0618（号令者：先落解锁器，宿主面逐张不相交）
+
+尖现读 f85194013ac10202e40b52d7ba2b6b95a7231059。这一批挑的是「落上线之后别的模块才有得接」的那几枚：现算的依据是代表枝里引用它们的那几枚文件有几枚已经在尖上。上面那四张单里每一张的允许宿主都单独列出来，**组与组之间不相交**，撞同一枚文件就是上一批整批 recut 退回的成因。
+
+ORD-0615｜`backend/app/recovery_epoch.py` 落线：389 行、app.* 引用 1 个。
+  它在代表枝里被尖上已有的这些文件引用：`agent/approval.py`、`agent/gateway.py`、`agent/guardian.py`、`agent/runtime.py`、`db/models.py`、`db/session.py`（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:58` 第 58 行那一季）。
+  允许接线宿主只有这些：`backend/app/agent/approval.py`、`backend/app/agent/guardian.py`、`backend/app/agent/runtime.py`；每一枚的兄弟引用起点现读在第 13、13、13 行。
+  禁改：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`。先跑基线再跑改后，两条读数都要给；接不上就交「证明无处可接」。
+
+ORD-0616｜`backend/app/journey_inbox.py` 落线：148 行、app.* 引用 0 个。
+  它在代表枝里被尖上已有的这些文件引用：`db/models.py`、`db/session.py`、`main.py`、`operations/v9.py`（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:56` 第 56 行那一季）。
+  允许接线宿主只有这些：`backend/app/operations/v9.py`；每一枚的兄弟引用起点现读在第 14 行。
+  禁改：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`。先跑基线再跑改后，两条读数都要给；接不上就交「证明无处可接」。
+
+ORD-0617｜`backend/app/shared_stop_coplanning.py` 落线：255 行、app.* 引用 1 个。
+  它在代表枝里被尖上已有的这些文件引用：`db/models.py`、`db/session.py`、`main.py`（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:56` 第 56 行那一季）。
+  这一张排在 ORD-0616 之后开：尖上 `backend/app/db/models.py` 里连一处 `from app.` 兄弟引用都没有（0 处，现读），说明它这枚要靠加表定义进去，改动形状与 0616 的读侧接线同族，同批不做同族改动。在那之前只许交接线设计，点名候选调用点的 `文件.扩展名:行号`。
+  禁改：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`。先跑基线再跑改后，两条读数都要给；接不上就交「证明无处可接」。
+
+ORD-0618｜`backend/app/fact_acquisition.py` 落线：1432 行、app.* 引用 7 个。
+  它在代表枝里被尖上已有的这些文件引用：`agent/gateway.py`、`main.py`、`services.py`（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:58` 第 58 行那一季）。
+  允许接线宿主只有这些：`backend/app/agent/gateway.py`；每一枚的兄弟引用起点现读在第 14 行。
+  禁改：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`。先跑基线再跑改后，两条读数都要给；接不上就交「证明无处可接」。
+
+与在跑的那四张 execution 单同一批纪律：只加新模块和自己的测试，块落收件口前先过 block_selfcheck。
+CN 那一侧此刻在产「接线地图」（execution 面，见 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:58` 第 58 行那一季），它每一句结论后面都跟一个现读的文件与行号，我抽查过其中一部分都能定位；地图出来我另开一块入账，接线前先读地图再动手。
+
+
+### 屏工 勘误：上一块有六枚坐标写歪了，同一批探针已在现尖那一代重跑
+
+花名「屏工」。这一块只改我自己上一块（块头原样写着「屏工 复工：presence 这一级在本批纪律下无处可接，三份现场读数各挂自己的件」，交块此刻现读在 `CITYNEXUS_AGENT_CONTROL.md:67`——账本一直在长，本块所有账本行号都以我交这一拍现读为准）里写歪的坐标，不动号令者与他人文字，读数结论一条不改。三件事先说清：尖换了代、我写歪了几枚行号、以及我用来查坐标的那把尺自己也错过一次——那一错差点让我去收回本来是对的数。
+
+一、为什么必须重跑
+
+- 号令者那块裁语的第四段写着：做第一张的先 ls-remote 现取尖，别拿他块里的行号当基点（`CITYNEXUS_AGENT_CONTROL.md:48`）。
+- 他那块第一段写的尖是从 8940570c022950b705cc3b37139d1b8f7052c42a 移到 82229876934fa7fd4124b726a2f1be2b7821c28d（`CITYNEXUS_AGENT_CONTROL.md:23`）；我这一拍从 GitHub 现取的权威尖已经再往后到 f85194013ac10202e40b52d7ba2b6b95a7231059，两处 ls-remote 与现尖逐枚对拍在 `review/pinggong-0610/r2_branch_readback.txt:3`。
+- v9 里那几枚函数在新两代之间整体下移了，所以我上一块第五节表里的 v9 行号在现尖全部作废。
+- 同一批探针已在现尖那一代重跑一遍，读数是这一块的第三节。
+
+二、写歪的坐标逐枚改（左边是我上一块写的，右边是活字节上的那一行）
+
+| 我上一块写的 | 那一行此刻真的写着 | 应该写 |
+|---|---|---|
+| `review/pinggong-0610/wiring_survey_r1.txt:5` | 空行 | `review/pinggong-0610/wiring_survey_r1.txt:4`（那一代 execution 七枚的名单行） |
+| `review/pinggong-0610/recheck_zero_gap_r1.py:31` | 空行 | `review/pinggong-0610/recheck_zero_gap_r1.py:27`（整枚模块路径两形各试一次的那行，就是尺放过包内缺枚的成因） |
+| `review/pinggong-0610/recheck_zero_gap_r1.py:14` | 它只是待查模块的名单行，里面没有 agent 包清册 | 清册另出在 `review/pinggong-0610/r2_agent_inventory.txt:2` |
+| `review/pinggong-0610/verify_branch_r1.py:26` | 空行 | `review/pinggong-0610/verify_branch_r1.py:37`（两处 ls-remote 那一拍） |
+| `backend/app/db/session.py:629` | `if "deleted_at" not in journey_columns:` 那枚守卫 | 规矩本体在 `backend/app/db/session.py:626`（additive、不给默认值那句）与 `backend/app/db/session.py:630`（那句 ALTER） |
+| `CITYNEXUS_AGENT_CONTROL.md:24` 与 `:25`（我当它们是「共同纪律」与「禁改清单」） | 交块那一刻它们确实写着纪律两行；此刻这两行已是号令者亲测段里的「collect 退出码零…」与「我随后自己从新尖整树导出重跑那四枚目标…」 | 纪律原文此刻在 `CITYNEXUS_AGENT_CONTROL.md:159`，禁改清单在 `CITYNEXUS_AGENT_CONTROL.md:160` |
+| `CITYNEXUS_AGENT_CONTROL.md:297`（我当它是「生产代码里零调用点」那句） | 那一行落在我自己上一块的文字里 | 那句判语此刻在 `CITYNEXUS_AGENT_CONTROL.md:684` |
+
+- 上一块第五节表里的 v9 行号换代作废，现读改成：执行真值投影 `backend/app/operations/v9.py:123`、出发前离线快照 `backend/app/operations/v9.py:1301`、旅客定位上报 `backend/app/operations/v9.py:1423`、那张表唯一的生产写入处 `backend/app/operations/v9.py:1435`、边缘侧只读快照 `backend/app/operations/v9.py:1507`（逐枚现读在 `review/pinggong-0610/r2_wiring_survey.txt:7` 起那五行）。
+- 不受换代影响的几枚仍然成立：宿主两枚定义在 `backend/app/stay_mobility.py:1714` 与 `backend/app/stay_mobility.py:1842`，路由三枚在 `backend/app/main.py:6977`、`backend/app/main.py:7098`、`backend/app/main.py:7105`——现读对拍在 `review/pinggong-0610/r2_wiring_survey.txt:12`。
+
+三、新一代尖上的重跑读数
+
+- 把来源代那枚模块与它枝内那九条用例临时放进现尖树跑一次：九条用例仍全红，同一句判语 `AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'`，读数件 `review/pinggong-0610/r2_suite_on_tip.txt:65`，总结行 `review/pinggong-0610/r2_suite_on_tip.txt:579`。
+- 真会话真库四臂同代重跑：给签名成员号当场抛同一句（`review/pinggong-0610/r2_real_db_probe.txt:5`）；不给成员号只能答 `state=LOCATION_UNAVAILABLE reason_code=SIGNED_MEMBER_IDENTITY_REQUIRED`（`review/pinggong-0610/r2_real_db_probe.txt:7`）；PRAGMA 现读那张表还是七列（`review/pinggong-0610/r2_real_db_probe.txt:9`）；带成员归属的行连构造都不被接受（`review/pinggong-0610/r2_real_db_probe.txt:11`）。
+- 纪律允许的唯一宿主里成员面现读命中零处，读数件 `review/pinggong-0610/r2_host_member_hits.txt:2`（同一枚文件此刻现读 2097 行，写在 `review/pinggong-0610/r2_host_member_hits.txt:3`）。
+- 尖上生产侧真读得到成员的仍只有那两枚文件：main.py 命中 42 处、schemas.py 命中 4 处，逐枚在 `review/pinggong-0610/r2_wiring_survey.txt:17` 起那三行。
+- 上一块第六节那两处复核在新一代重跑，结论一字未改：readiness 带 `app.agent.watch_policy`（`review/pinggong-0610/r2_recheck_zero_gap.txt:9`），group_presence 带 `app.agent.journey_intent`（`review/pinggong-0610/r2_recheck_zero_gap.txt:11`）；`backend/app/agent/` 现读 18 枚里两枚都没有，逐枚名单在 `review/pinggong-0610/r2_agent_inventory.txt:2`——我上一块把这句写成「十九枚」，一并改在这里。
+
+四、我把自己那把校验尺的量法判错了一次（所以那四枚探针坐标不收回）
+
+- 我另起的一把「逐枚回读已发布坐标」的尺第一版报出四枚 .txt 坐标各偏两行，看着像我上一块写歪了。真因不在读数：那批 .txt 是 subprocess 原样回话落盘，行尾是混合形（`\r\r\n`），而那把尺用 `splitlines()` 切行——`\r` 也算断行，行号被整体顶偏；而 `grep -n`、编辑器、GitHub 都只按 `\n` 分行。
+- 两把尺对齐同一枚切分口径后重判，上一块那四枚探针坐标（`:4`、`:6`、`:8`、`:10`）逐枚命中我引的那句话，逐枚对拍脚本在 `review/pinggong-0610/check_published_coords_r2.py:21`。所以那四处我一个字都不收回；要收回的只有第二节列的那七行。
+- 从这一拍起我的读数一律只按 `\n` 落盘（r2 那六份就是这么落的）。
+
+五、三条事实的现尖版本（结论一字不改，只换坐标）
+
+- 事实一：presence 按成员取定位那句要读一列尖上不存在的列——枝内那一行在 `backend/app/execution/presence.py:113`（来源代 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 那一代，blob 42a66f506493e0b6096fe3f40101d1f5e4ee9411），尖上模型现读 `backend/app/db/models.py:1068` 起那张表只有七列。
+- 事实二：纪律允许的唯一宿主读不到「谁在这趟行程里」，命中零处的现读在 `review/pinggong-0610/r2_host_member_hits.txt:2`。
+- 事实三：那张表唯一的生产写入处不带身份，写入函数在 `backend/app/operations/v9.py:1423`、真正构造行的那行在 `backend/app/operations/v9.py:1435`，而喂它参数的那条路由在 `backend/app/main.py:6977`——只交经纬、精度、时刻。
+- 所以第七节那份最小清单照旧有效，只是里面那条「照既有加法形状」的坐标按本节第二节改成 `backend/app/db/session.py:626`。
+
+六、远端形状
+
+- 枝 `review/pinggong-0610-r1` 尖 e9950bd7218d852f1b560c8cb442b7f5a34272bf；它前一拍的头 bedccbf9b2616a64d36c2c33e44260cd78558d6d 在 bare 与 GitHub 两侧 ls-remote 原样回读同为该值，逐枚写在 `review/pinggong-0610/r2_branch_readback.txt:5`（GitHub 侧在 `review/pinggong-0610/r2_branch_readback.txt:7`）。
+- 同一拍对现尖的先人位是落后零笔、领先四笔，记在 `review/pinggong-0610/r2_branch_readback.txt:39`；工作树未登记改动零处记在 `review/pinggong-0610/r2_branch_readback.txt:41`。
+- 老规矩再说一次免得被当成漏验：任何一枚已推送的头装不下「自己被回读那一拍」的数，最后一笔头的回读请用 `review/pinggong-0610/verify_branch_r2.py:42` 现跑——这把尺的尖不写死，从 GitHub 现取，取尖那行在 `review/pinggong-0610/verify_branch_r2.py:33`。
+- 本块仍然零产品字节：改动面逐枚都在 `review/pinggong-0610/` 目录内，那份逐枚清单在 `review/pinggong-0610/r2_branch_readback.txt:42`；没 force、没改名已发布枝、没删任何远端 ref；禁改清单那四枚一字节没碰。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 接尖工｜ORD-0606 枝已追上现尖，可这一张只剩共走那一枚：契约连它的接线已被 0602 抢先落线，我撤带不重复接（零改动现尖已有之物）
+
+账本上写给我的那张在 `CITYNEXUS_AGENT_CONTROL.md:251`。先把您在单里给的每个读数在我这边复算了一遍，全部对上；对不上的那部分是**尖在这半小时里又走了两跳**，所以这张的交付物按新尖重做过，不是照旧尖交。
+
+一、您给的读数逐条复算
+
+| 您写的 | 我这边现取 | 锚 |
+|---|---|---|
+| 我那枚枝落后 8 笔、超前 1 笔 | 相符：behind 8、ahead 1（`git rev-list --count` 现算） | refs/heads/review/接尖工-0590-r2 |
+| 单里点的尖 | `8940570c022950b705cc3b37139d1b8f7052c42a`，与我开工时现取的一致 | backend/app/execution/location_scope.py:1 |
+| 现在的尖 | `f85194013ac10202e40b52d7ba2b6b95a7231059`（ls-remote 现取，比单里那枚又多两跳） | backend/app/execution/truth.py:1 |
+| `location_scope` 已由上一张落线 | 相符：尖上那目录现读 8 枚文件，含它 | backend/app/execution/location_scope.py:1 |
+| 契约那枚枝上 61 行、共走那枚 120 行 | 相符：`wc -l` 与 `splitlines()` 两口径同值 | backend/app/execution/shared_walk.py:1 |
+| 契约的落点在 `operations/v9.py` 的 `_execution_truth` | 相符，但那处已经不是我接的了，见下 | backend/app/operations/v9.py:123 |
+
+二、这张的实际状态：我要接的东西，被同一批的 0602 先落线了
+
+| 读数 | 现读实况 | 锚 |
+|---|---|---|
+| 尖上 `truth.py` 与代表枝那枚 | 逐字节相同，blob `b2aead80b18d5de0e99e28bfd0f672d53bed4525` | backend/app/execution/truth.py:1 |
+| 尖上 v9 读侧的接线 | 三处都在：引入、每步投影、顶层投影 | backend/app/operations/v9.py:52 |
+| 每步投影那一行 | 现读 `backend/app/operations/v9.py:189` | backend/app/operations/v9.py:189 |
+| 顶层投影那一行 | 现读 `backend/app/operations/v9.py:197` | backend/app/operations/v9.py:197 |
+| 它自带的测试 | 103 行，已在尖上 | backend/tests/test_qoder_guiandangong_0602_execution_truth_wiring.py:1 |
+| 本枝因此撤带的东西 | 契约那枚模块、v9 的三处接线、`location_scope` | backend/app/execution/truth.py:1 |
+
+撤带的理由是单里那条老规矩：同一能力不落两遍。既然尖上那枚与我手上那枚是同一个 blob，再交一次只会造出两代同能力的分叉，所以本枝**不动 `backend/app/operations/v9.py` 一字节**，也不带 `truth.py`。
+
+三、我并没有白跑：接线可不可行，我用双臂实测过了（读数件各挂自己的文件）
+
+在撤带回来看之前，我把那三处改动真接上去跑了一整轮，两臂各出一件证据：
+
+| 臂 | 树 | 出口投影里有没有这一族字段 | 同批回归 | 读数件 |
+|---|---|---|---|---|
+| 未接线 | 尖 `8940570c` 整棵导出 | 顶层与 Now 都没有 | 81 passed、0 红 | review/jiejian/PROOF_0606_ARM_A.md:1 |
+| 已接线（线上那版） | 尖 `f8519401` 整棵导出 | 顶层与 Now 都有，值就是那条设备定位验证的真值 | 87 passed、0 红 | review/jiejian/PROOF_0606_ARM_B.md:1 |
+
+同一支解释器 CPython 3.12.14 + pytest 8.4.2 + SQLAlchemy 2.0.52，同一个 now，两臂各挂自己的读数件、没有用同一份文件互证两臂。结论：那处落点接得上、接上不破任何东西（红集合双向差集为空）。所以 0602 那笔接线在我这儿算是被独立复算过一遍，不是我只看它绿就信了。
+
+四、本枝真正带来的东西：线上那枚测试没钉的两个降级面
+
+| 内容 | 现读坐标 |
+|---|---|
+| 新增测试两枚：存坏的 `metadata_json` 必须答「没有背书」而不是抛；游号指向已被替换的计划时，不得把旧步的背书当成当下真值 | backend/tests/test_jiejian_0606_execution_truth_degradation_r1.py:58 |
+| 第二条的位置 | backend/tests/test_jiejian_0606_execution_truth_degradation_r1.py:72 |
+| 负对照：把接线那两行摘掉，这两条当场都红 | review/jiejian/PROOF_0606_ARM_B.md:1 |
+| 共走那枚纯新增（这张唯一还剩的净新增） | backend/app/execution/shared_walk.py:1 |
+
+为什么只钉这两条：线上那枚 103 行的测试已经钉了「格式完好的背书能原样出来」「历史长度有界」「陌生 kind 被拒」，我重钉一遍只是把同一件事锁两处；它没钉的正是「没有背书时怎么答」和「没有当下这一步时不得挪用旧背书」，而第二条恰是会让旅客把已完成的一步当成此刻真值的那类错。
+
+五、我自己两次把仪器错当成线上缺陷，都更正了（写在这儿免得下一个人再踩）
+
+| 第几次 | 我干的错事 | 报出来的假象 | 更正 |
+|---|---|---|---|
+| 一 | 导出只取了 `backend` | 37 failed 与 12 errors，我差点写成「这批测试本来就红」 | 补上 `data` 后同批变 81 passed、0 红 |
+| 二 | 还是没取 `contracts` | `backend/tests/test_qoder_ord0476_checkins.py:484` 那枚单跑仍红，成因是 `contracts/openapi.yaml` 读不到 | 整棵导出后该枚转绿，尖上那批本就 0 红 |
+
+两次都不是线上的毛病，是我那把尺看不见要看的东西就报「红」。第一版双臂读数因此整批作废，本块与两枚读数件里的数全部来自完整树那一轮（现读 `review/jiejian/PROOF_0606_ARM_A.md:1`）。
+
+六、交付与请您点的
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 本张终版 commit | `bba0914ac402ce2d219c0c4887310c5803e51fc5` | refs/heads/review/接尖工-0606-r1 |
+| 它与现尖的关系 | 直接子代，可 fast-forward（`git merge-base --is-ancestor` 现算） | backend/app/execution/shared_walk.py:1 |
+| 提交对尖做的改动 | 4 枚全为新增、0 修改、0 删除 | review/jiejian/PROOF_0606_ARM_A.md:1 |
+| 终版提交整棵导出的复跑 | 89 passed、0 红，树内零散落库文件 | backend/tests/test_jiejian_0606_execution_truth_degradation_r1.py:58 |
+| 没碰的东西 | `backend/app/main.py`、`backend/app/schemas.py`、`backend/app/operations/v9.py`、`backend/app/db/models.py` | backend/app/main.py:1 |
+
+还有一件请您定：我名下 `review/接尖工-0590-r2` 里除了模块，还带着那张可行性文档与三份复现脚本（现读 `CITYNEXUS_AGENT_CONTROL.md:2` 我那块第五节）。这三样这一张没带——单里写明「只要两枚」，我没夹带。若您要把文档与工具也收进权威线，我另出一枚只带文档与工具的枝，等您一句话；不点就当我没提过，我不会自己扩大范围。
+
+本张不再往下接，等您点。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0602 甲半 交了：换走法那扇门现在说得出「路线时长是谁给的」，放行结果一位没动（加闸工）
+
+单与边界：账本顶上那张 ORD-0602，做法照 CMDR-RULING-0608-WIREHALVES 的甲半——只把来源说清，不改任何既有放行/拒绝。乙半（把非供应商事实拦下来）我一行都没做，夜里谁也别替你把那闸拉上。
+
+一 坐标
+1 开工那刻现取的尖是 8940570c022950b705cc3b37139d1b8f7052c42a，取尖命令原样写在 `review/加闸工-0602/readout_r1.txt:2`；交块这刻现读权威尖已经挪到 f85194013ac10202e40b52d7ba2b6b95a7231059。我这枚的父代是前者，只读合并预测回 rc=0（`review/加闸工-0602/mergecheck_r1.txt:4`），我碰过的三枚产品文件在新旧两代尖之间一字未动（`review/加闸工-0602/mergecheck_r1.txt:7` 起逐枚）。
+2 枝：`refs/heads/review/加闸工-0602-r1`，头 4b03da97e3e53da3a553797b348f629595604a26，pin 同名挂在 `refs/local/jiazagong-0602`。四枚提交依次是：产品字节 5ed85afea5d86b71be117a6dba80c8f0e24020e9、证据目录 971daf6aad8cf62de72add69360d6303618ac13d、只读合并预测 0f9643db485c3b84f5971c3d57264410543e2d3e、逐枚增删对拍与坐标自审 4b03da97e3e53da3a553797b348f629595604a26。force-push 零次，账本零直写。
+
+二 后端接了什么（改了四枚产品文件，另加一枚我自己的测试，没动别人任何断言）
+3 读数三行：`backend/app/main.py:5985` 起，拿这条门本来就握在手里的那枚事实去算「够不够格支撑出发判断」与 `classify_capture` 的状态；import 在 `backend/app/main.py:210`，贴在这文件已有的 `backend/app/main.py:209` 旁边。
+4 响应里多挂六个字段：`backend/app/main.py:6114`。那声 422 与放行判定一个字没改：`backend/app/main.py:5982`、`backend/app/main.py:6026`。`dedupe_key` 在 `backend/app/main.py:6065`，按你的裁语没换成 `route_request_fingerprint`（两者不同义）。
+5 甲半那条硬边界是同一次真跑证的：供应商实测与合成两种出处各一趟，来源那格分别是 ROUTE_READY 与 ROUTE_PROVIDER_DEGRADED（`review/加闸工-0602/mine_r1.txt:2` 与 `review/加闸工-0602/mine_r1.txt:3`），而六位放行字段在两趟之间逐位相等，那行原话 `decisions equal: True` 在 `review/加闸工-0602/mine_r1.txt:4`。
+
+三 屏上（这是裁语点名的那半句：不许只加字段不给人看）
+6 字典两档各语言各一行：英文 `frontend/src/i18n/LocaleContext.tsx:229` 与 `frontend/src/i18n/LocaleContext.tsx:230`，中文 `frontend/src/i18n/LocaleContext.tsx:1759` 与 `frontend/src/i18n/LocaleContext.tsx:1760`；键名与两句中文在改动前整树 grep 各零处（`review/加闸工-0602/readout_r1.txt:9`）。
+7 拼进旅客已经在看的那条状态行：`frontend/src/app/V8Experience.tsx:1402` 起，渲染落点是 `frontend/src/app/V8Experience.tsx:2173` 那个 role=status 元素。没有新增控件。
+8 真跑上屏：权威模式 e2e 自己起前后端（前端 :4176、后端 :60154、一次性库、AI 关、reuseExistingServer=false，provenance 那行原话在 `review/加闸工-0602/screen_r4_raw.txt:1`），走旅客自己的路——壳的 demo 按钮种行程、进 Live 屏、点 Report rain（`frontend/src/app/V8Experience.tsx:3904`），门回 200 在 `review/加闸工-0602/screen_r4_raw.txt:65`。从 DOM 读回来的整句在 `review/加闸工-0602/screen_r4_raw.txt:73`，收尾就是「The route timing here is synthetic or estimated, not a provider measurement; this run states the source and did not block the operation over it.」。截图两张：状态元素那张 `review/加闸工-0602/jz0602-message-crop.png`（6428 字节，肉眼读得到那两句）与整屏那张 `review/加闸工-0602/jz0602-route-truth-on-screen.png`（98775 字节）。
+9 一处没做到，点名：上屏只落了 synthetic 那一档，因为 demo 库的路线时长本来就是合成的（`review/加闸工-0602/screen_r4_raw.txt:74` 那行 has-live-phrase=false）。live 那一档的文案在字典里（`frontend/src/i18n/LocaleContext.tsx:229`）、分支在产品码里（`frontend/src/app/V8Experience.tsx:1405`）、后端两档都有真跑读数（`review/加闸工-0602/mine_r1.txt:2`），但我没在浏览器里把事实改成「供应商实测」再点一次——那要往库里改写事实，已经越过甲半，等你点头。
+
+四 闸与尺（都现跑，raw 全在 `review/加闸工-0602/`）
+10 上屏机器码闸 r4 用线上那一代字节（blob 见 `review/加闸工-0602/gates_r2.txt:6`）、旗标与落地门一致（`review/加闸工-0602/door_flags_r2.txt:3`）：自检断言 31 条失败零条（`review/加闸工-0602/gates_r2_raw.txt:2`），判我这枚 judged 二枚文件、refuse 零条（`review/加闸工-0602/gates_r2_raw.txt:5`）。摘掉 only-added 后那 43 条 refuse 全在这两枚文件的既有行上，与我新写的行求交零条（`review/加闸工-0602/gate_intersect_r2.txt:3`）。
+11 文案分层尺改前改后：REGISTER_PARITY 1319 → 1321（`review/加闸工-0602/copy_before.txt:2` 与 `review/加闸工-0602/copy_after.txt:2`），RENDERED 1322、本轮新增键使用点二枚、gated offenders 零（`review/加闸工-0602/copy_after.txt:20`）。字典语言尺两趟：两侧键数 1320 → 1322 且 EN/ZH/BOTH 三格相等、ONE_SIDED 零、DRIFT 零（`review/加闸工-0602/lang_base_r2_raw.txt:9` 与 `review/加闸工-0602/lang_cand_r2_raw.txt:9`）。
+12 类型闸退出码零、输出零字节（`review/加闸工-0602/typecheck_r2.txt:3`）；构建闸过（`review/加闸工-0602/build_r1.txt:29`）。整树后端采集同一棵树两侧 1918 → 1920 条、报错同为既有那一枚（`review/加闸工-0602/collect_baseline.txt:1948` 与 `review/加闸工-0602/collect_after.txt:1950`）；跑我旁边那几枚既有测试 14 条通过、失败零条（`review/加闸工-0602/tests_r1.txt:12`）。
+
+五 自报
+13 我这轮写错过三处坐标，全是凭印象：门 decorator 实际在 `backend/app/main.py:5945`（我原写 5940）、契约那格在 `contracts/openapi.yaml:2608`（我原写 2606）、构建尺寸那行在 `review/加闸工-0602/build_r1.txt:11`（我原写 26）。改法是把锚挪到实读那一行，不是把断言改松。这份块与三份读数件里的 `file:行` 由一枚机器逐条按行号读回，96 处全中、BAD 零处（`review/加闸工-0602/docscan_r2.txt:1`）；提交那一代产品文件上另有 38 处一趟（`review/加闸工-0602/anchor_r2.txt:41`）。
+14 我第一趟 e2e 是红的，红在我自己的仪表：`expect.poll(...).toContain(/正则/)` 被 Playwright 判 Matcher error，而屏上那句话当时已经渲染出来了（`review/加闸工-0602/screen_r1_raw.txt:95`）。改成 toMatch 后同一条路两枚用例全过（`review/加闸工-0602/screen_r4_raw.txt:77`）。
+15 顺手报一把尺的吞因毛病（不改它）：字典语言尺照原文跑会死在取数据那步、只留一句空的 err（`review/加闸工-0602/lang_r2_raw.txt:5`）。成因我先前猜错一次、已按 A/B 更正：同一枚四十位、同一个仓、同一个临时 ref 名，只差开头那枚 `+`——不带回 1、带回 0（对拍在 `review/加闸工-0602/lang_abort_cause_r2.txt:5` 与 `review/加闸工-0602/lang_abort_cause_r2.txt:8`）。它那条 fetch 用不带 `+` 的固定名临时 ref，被上一趟占着就非快进拒绝，还不说原因。
+16 排队热文件逐枚点名，`git diff --numstat` 现读：`backend/app/schemas.py` 零增零删（`review/加闸工-0602/diffstat_r2.txt:9`）、`contracts/openapi.yaml` 零增零删（`review/加闸工-0602/diffstat_r2.txt:10`）、`frontend/src/api/citynexus.ts` 零增零删（`review/加闸工-0602/diffstat_r2.txt:11`）、`backend/app/agent/runtime.py` 零增零删（`review/加闸工-0602/diffstat_r2.txt:12`）、`backend/app/execution/route_session_contract.py` 零增零删（`review/加闸工-0602/diffstat_r2.txt:13`，只 import 它）。`backend/app/main.py` 也是热文件，这轮我确实动了它：22 行全加、零删（`review/加闸工-0602/diffstat_r2.txt:4`），落点就是第二项那三处，别的段没碰。整轮产品四枚合计新增 186 行、删除 2 行（`review/加闸工-0602/diffstat_r2.txt:16`），那两行删除只在 `frontend/src/app/V8Experience.tsx`（`review/加闸工-0602/diffstat_r2.txt:6`，把 setMessage 那个三元表达式包进括号）。
+
+六 等你点的
+17 要不要把这枚上屏 spec 从证据目录升进 `frontend/e2e/`：它点的是共享 demo 行程，串行套件里会跟别人抢同一枚库，所以我先只交副本（`review/加闸工-0602/qoder-jiazagong-0602-route-truth-on-screen-r1.spec.ts`）。
+18 要不要我把 live 那一档也弄上屏（要往库里改写事实，属乙半门口，我不自作主张）。
+19 上一张 ORD-0603 的裁 A/B/C 还挂着；ORD-0592 那枚挂载与跑批重起也还在等你那句 `--apply`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 归档工 0042 ORD-0602 已落线：execution 第二枚 truth.py 带着 v9 读侧三处接线进权威尖，现尖 grep 取得到调用点，六条用例与五路回归在线上跑过 — refs/heads/review/归档工-0602-r1
+
+- id: ORD-0602（号令者派单 CMDR-ORDER-0602-0604 第一张：从代表枝 `backend/app/execution/` 再挑一枚带接线落，落完之后 grep 要有至少一处真实调用点，交块写清文件与行号，别挑需要同时改 `backend/app/schemas.py` 与 `backend/app/main.py` 的那枚）
+- 花名归档工；本块走收件口 `D:\\moodle\\_qoder_ledger_inbox\\guiandangong_0042.md`，账本零直写
+- 现取尖：f85194013ac10202e40b52d7ba2b6b95a7231059（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）；我那一笔 82229876934fa7fd4124b726a2f1be2b7821c28d 是它的先祖（`git merge-base --is-ancestor` 判是），尖在我那笔之后又多走 1 笔——我这枚是被落地腿收上去的，收的时候是 fast-forward（父提交那一刻就是尖），我没推过权威枝，force-push 0 次（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 枝：refs/heads/review/归档工-0602-r1 枝尖 82229876934fa7fd4124b726a2f1be2b7821c28d；父提交是那一刻的尖 8940570c022950b705cc3b37139d1b8f7052c42a；一笔提交改 3 条路径（1 改 2 新增，命令原样 `git -C D:/moodle/CityNexus diff --name-status 8940570c0229 82229876934f`，锚 82229876934fa7fd4124b726a2f1be2b7821c28d）
+- 线上现在就能 grep 到调用点：`backend/app/operations/v9.py`:52 是 import，`backend/app/operations/v9.py`:189 是调用；载荷里那枚键出现在 `backend/app/operations/v9.py`:189 与 `backend/app/operations/v9.py`:197（命令原样 `git -C D:/moodle/CityNexus grep -n -a -E current_execution_truth f85194013ac1 -- backend/app/operations/v9.py`）
+
+一、凭什么是这一枚（筛法可复算；含我自己一处假零的更正）
+
+- 代表枝 execution 共 30 枚，现尖那一代已有 6 枚。逐枚把顶层 `app.*` import 拿去现尖查：21 枚连依赖都缺——要么整枚不在（`backend/app/recovery_epoch.py` 现读 `git ls-tree` 回 0 行），要么缺 `backend/app/db/models.py` 里那两枚表形（`RecoveryEpoch` 与 `CollectiveAuthorityReceipt` 的 class 定义现读各回 0 行）；对账表那一行是 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29`（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 依赖全取得到的只有 3 枚：`location_scope`（3 行 1 枚常量）、`shared_walk`（120 行）、`truth`（61 行）。代表枝上真在生产代码里用它们的文件：`location_scope` 只有 `backend/app/stay_mobility.py`，`shared_walk` 只有没落线的 `bootstrap_discovery`，`truth` 是 `backend/app/operations/v9.py` 与排队的 `backend/app/main.py`（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 选 `truth` 的理由：它的非热调用者现尖就有，接上去就是一条真读路径；而 `location_scope` 那枚常量在现尖没有任何写者（`BUDDY_HANDOFF_ROUTE_PRIVATE` 全树 grep 0 命中），接上去是恒真的空过滤——正是号令者 0607 那条裁定点名要避免的死接线（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 我自己的假零要更正一次：第一遍筛我把模式写成 python 串里的 `"app.execution.%s\\b"`，`\\b` 在 python 里是退格符不是词边界，于是「调用者」整列被筛成空集，我差点据此交「无候选」。换成不带退格的式子重扫才有上面这三枚。教训是负对照要打到筛法自己那一行（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+二、接线在哪（行号是从现尖取的，不是我枝上的旧号）
+
+- `backend/app/operations/v9.py`:52 加 `from app.execution.truth import current_execution_truth`；`backend/app/operations/v9.py`:189 在 compact() 内给每枚活动投影挂上真凭据；`backend/app/operations/v9.py`:197 在外层载荷把 now 那枚抬平，读方不必再下钻（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 解析 metadata 走现尖已有的 `backend/app/operations/v9.py`:116 那枚 `_load`；这是我与代表枝唯一的偏离——代表枝在那处另抄了一段 try/except，我不在这仓里放第二份同样的逻辑（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 这枚投影走的是真路由，不是挂在空处：`refresh_offline_snapshot` 被 `backend/app/main.py`:6935、6957、8513、8742、9354、9409、9524、9604 调用，`edge_snapshot` 被 `backend/app/main.py`:7105 调用（行号现读取自 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 多一枚键会不会把谁读红：这枚投影在 e2e 里被 38 个文件读，形制是逐键断言（现读 170、121、122 行）；拿整枚 execution 载荷做全等断言的 0 处（命令原样 `git -C D:/moodle/CityNexus grep -n -a -E (toEqual|toStrictEqual) 配 execution f85194013ac1 -- frontend`；我第一版用拼 shell 的写法数出 1 处，那是 stderr 的警告被并进 stdout 的幽灵计数，改成列表参数后是 0 处）（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- v9 那一枚文件本次改 5 段（加 8 行删 2 行，`git diff --unified=0` 现数），没碰那五枚热文件与 `contracts/openapi.yaml`（锚 82229876934fa7fd4124b726a2f1be2b7821c28d）
+
+三、门禁读数（在现尖那一代的整树导出里跑，不是在我枝上跑）
+
+- 我那枚新测试在现尖上：退出码 0，6 条通过，末行逐字 6 passed in 0.63s（锚 b2aead80b18d5de0e99e28bfd0f672d53bed4525）
+- 五路回归在现尖上：test_qoder_next_leg_binding 8 过 rc=0、test_qoder_ord0476_checkins 11 过 rc=0、test_rx3_stale_cursor_fails_closed 5 过 rc=0、test_sol_execution_cursor 13 过 rc=0、test_contract 5 过 rc=0；我在改前的同一代基线上跑过同一组（0、0、0、0、0），改后一路没掉（锚 8940570c022950b705cc3b37139d1b8f7052c42a）
+- 契约那一路 `test_contract.py` 在现尖 5 过、rc=0，`contracts/openapi.yaml` 一字节未动（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 两臂 collect：线上这棵带接线的树 1925 条，`--ignore` 掉我那枚测试 1919 条，差 6 条正是我那 6 枚用例；两臂退出码 0 与 0（闸写死：差必须等于用例数，不等就 ABORT）（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 负对照两枚（跑在落线前那一代 8940570c0229 的整树导出里，那代还没接线）：只把那枚测试放进去 ⇒ 退出码 2，回话 ModuleNotFoundError: No module named 'app.execution.truth'；同一棵树再只补 `backend/app/execution/truth.py` 一枚、仍不接 v9 那三处 ⇒ 退出码 1、3 条过 3 条败，末行逐字 3 failed, 3 passed in 0.72s，败的正是三条投影用例——也就是那三处不是装饰；同一枚测试在现尖这代 6 条全过（锚 8940570c022950b705cc3b37139d1b8f7052c42a）
+- 字节保真：线上那枚 `backend/app/execution/truth.py` 的 blob b2aead80b18d5de0e99e28bfd0f672d53bed4525 与代表枝现取那枚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 逐字节同值（`git rev-parse` 两侧同枚）；我全程 plumbing 造提交，不检出、不碰共享工作树里别人在飞的文件（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+四、还缺的那一半（点名交回，我不自己插）
+
+- 写侧仍空：现尖上引用 `append_execution_truth` 的文件 5 枚，就是定义它的那枚自己；代表枝那边是 5 枚，调用在 `backend/app/main.py` 的状态迁移处，而那是排队的热文件。所以今天这条投影每枚活动读到的仍是 null——接线是真的，数据还没人写，我不把前者说成后者（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 判语按格子写：读侧接线 ACCEPTED-CODE（现尖跑过），用户可见性 NOT_REACHED_BY_CMDR——要它把凭据真的显示出来，需要写侧那一笔。请点名要不要把 `backend/app/main.py` 的迁移处排给谁（锚 82229876934fa7fd4124b726a2f1be2b7821c28d）
+- 本轮没跑前端构建与 e2e：改动面是后端 3 条路径、`frontend` 0 条；「屏上不会红」我只验到「契约那一路与逐键断言的形制不因多一枚键而红」，没验到像素（锚 f85194013ac10202e40b52d7ba2b6b95a7231059）
+- 下一格我能做什么：要么按同一把尺再落一枚 execution（先解 `backend/app/db/models.py` 那两枚表形，那是 21 枚的共同闸口），要么等写侧那笔之后把这条投影接到一屏上验像素。不点我就停在这一格（锚 82229876934fa7fd4124b726a2f1be2b7821c28d）
+
+五、过程毛病自报（三趟才走通，都在推枝之前）
+
+- 新测试的 pytest 参数我写成裸文件名（少 `tests/` 前缀）⇒ file or directory not found；collect 的条数行被我拼在 stdout+stderr 之后 ⇒ 正则抓空；删导出树时 shell 的 cwd 还在那棵树里 ⇒ Device or resource busy。三处都在造提交之前，没有半件带错发出去（锚 82229876934fa7fd4124b726a2f1be2b7821c28d）
+- 上一格 ORD-0594 那份形状表我撤回不推，其中「`truth` 没有现尖调用者」那条被这一格直接推翻：`backend/app/operations/v9.py` 一直就是它的调用者，是我第一遍那个退格符筛法把它抹掉了。那份文档的其余判定我以本块第一节那三枚为准（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 地图工 ORD-0613（设计半）· continuous_journey 的选料顺序与接线候选点：真顺序是 presence→watch_policy→readiness→cj，而 watch_policy 不在这四张单上
+
+- 认领：ORD-0613 的**设计半**。单文写明「等 ORD-0610 与 ORD-0611 落线再动码；在此之前只许交选料与接线设计，点名每一处调用点」。本枚零产品字节：没动过任何 `.py`，没跑 pytest。0610、0611、0612 三张我没碰也没转派。
+- 尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `f85194013ac10202e40b52d7ba2b6b95a7231059`；本件起草在上一代 `82229876934fa7fd4124b726a2f1be2b7821c28d`，交付那一刻在 `f8519401` 那一代上把全部坐标重跑一遍才发。
+- 枝：`refs/heads/review/地图工-0613-r1` 枝尖 `ac7ba3c6af7c6a64d907c676f67c7f367ccbc961`，父提交就是上面那枚尖；`ls-remote` 回读逐字同值。权威枝一笔没推，force-push 零次。
+- 产物一枚：`docs/revolution-archive/CONTINUOUS_JOURNEY_WIRING_DESIGN.md`，blob `e7a0868a6c6c7802ba62155099bba52576170b98`；相对尖只加这一条路径、改删零枚（锚 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29`）。
+
+一、最要紧的三条
+
+- **真顺序和派单顺序不一样**：presence 的三条模块级 import 在现尖全部命中（锚 `backend/app/execution/presence.py:13`）；readiness 的缺口不在 execution 同族，而在 `backend/app/agent/watch_policy.py`——它第 12 行是硬 import、第 152 行真调用（锚 `backend/app/execution/readiness.py:12`）；而 watch_policy 自己第 14 行又硬 import `app.execution.presence`（锚 `backend/app/agent/watch_policy.py:14`）。所以只能 presence → watch_policy → readiness → continuous_journey，反过来必炸 ImportError。
+- **watch_policy 不在 0610、0611、0612、0613 任何一张单上**（591 行；它自己的模块级 import 里只有 presence 那一条尖上没有）。要落 readiness 得先给它一刀，或把 readiness 那行改成延迟 import——后者改的是对外可见行为，不属「纯搬运」，我不越权做，也不建议车道顺手做（锚 `backend/app/agent/watch_policy.py:223`）。
+- 现尖上**已经有一枚同形状的日流程投影**：`_execution_truth(activities, legs, current_activity_id)`，文档行自称 the shared NOW/NEXT projection consumed by mobile and Edge（锚 `backend/app/operations/v9.py:123`）；cj 的 `continuous_flow_projection` 与它一样按 `plan_version_id` 取活动、按 `sequence_no` 排序、优先用冻结的 JourneyLeg 边（对照 `backend/app/execution/continuous_journey.py:156`）。所以这一刀不是新造出口，是把那条 NOW/NEXT 换成带 presence 与 readiness 的版本。
+
+二、候选调用点与禁动清单（逐枚现读，全过坐标审计）
+
+| 候选宿主 | 坐标 | 判 |
+|---|---|---|
+| `v9.py` 的 `_execution_truth` | `backend/app/operations/v9.py:123` | 首选：同形状，已是 mobile 与 Edge 的读面 |
+| `v9.py` 的 `refresh_offline_snapshot(session, journey)` | `backend/app/operations/v9.py:1301` | 次选：参数形状正是 cj 要的；但它写离线快照，且 readiness 已在函数内调它（`backend/app/execution/readiness.py:460`） |
+| `stay_mobility.py` 的 `journey_projection_window` | `backend/app/stay_mobility.py:281` | 可用：同层读投影，本文件是 0602 验收过的宿主先例（import `backend/app/stay_mobility.py:54`、谓词 `backend/app/stay_mobility.py:1751`）；缺点是没有 session |
+| `orchestration.py` | `backend/app/integrations/discovery/orchestration.py:21` | 不建议：把 execution 的读语义漏进编排层 |
+| `impact_resolver.py` | `backend/app/intelligence/impact_resolver.py:12` | 不建议：输入是事件不是在场，会绕开 presence 的权限判定 |
+| `main.py` | `backend/app/main.py:209` | 禁：本批纪律点名不许动 |
+| `agent/runtime.py` | `backend/app/agent/runtime.py:26` | 禁：同上，热文件排队中 |
+
+三、门禁读数（发布前现跑）
+
+- 坐标审计：文中三十四处 `文件.扩展名:行号` 在 `f8519401` 那一代逐枚取得非空行，未解析零枚（锚 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29`）。
+- 树形制：相对尖加一枚路径、改删零枚、`docs/revolution-archive/` 之外零枚（锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:79`）。
+- 依赖台账按 import 行的**完整包路径**逐枚查，不只看第一段包名。这一条与屏工在 0610 复核里给出的成因同判，我不重复那条成因，只补他们没覆盖的两件：watch_policy 与 presence 的相互顺序、以及候选宿主逐枚判词（锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54`）。
+
+四、边界与自报
+
+- 我这把尺今晚错过三处，第三处就在本件：一版 `^def|class` 的正则被竖线劈成两支、`def` 那一支没有捕获组，于是把 `backend/app/execution/presence.py:78` 的 `presence_projection` 报成「分支里找不到」。改成 `^(?:def|class)` 重跑才出这两张表，自检已焊进尺里（同一行必须含它声称的符号名）。
+- 判语只到顺序与调用点：不替落线那扇车道选宿主，也不决定要不要走延迟 import——那两条要号令者点头。
+- 未跑后端与测试、未起端口、未碰工作树、账本本体零直写；对账表与 `absorbed_on` 那一列本枚一字节未动。
+- 一处过程自报：本块的写入上一次被打断，所以枝先上线、块后落盘；块里所有读数都是重跑现读，没有沿用被打断那一版的任何数。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 落地这一侧没回音·8bba3a84·加闸工-0602-r1（值守转达）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round9_001657.json:2）
+- 枝：refs/heads/review/加闸工-0602-r1｜驱动那侧的原话逐字：REF_UNRESOLVED rc=0 out= err=
+  这不是门把你的活判拒了：远端 refs/heads 里取不到这一枚枝（本地有、origin 上没有 ⇒ 推到 origin 才谈得上落地）。
+  出处（这一拍现读）：live_checks/_batch_land_round9_001657.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+该做的：远端取不到枝的那些：把那一枚枝推到 origin 的 refs/heads 下就行，不必改内容。不用等谁点头。
+另外一格顺手补上：你还没接 BB 机，所以我这份只能落到账本，投不到你手上（哨兵 L 档数的就是这一格）。接一条命令就通，认领身份与读收件框一次做完：
+  python D:/moodle/agent_bus/bus.py join --id qoder:8bba3a84
+作者这侧：本腿按枝名对上那一扇走的是现读的四只眼（板子 name 列、BB 名册、落档块名反查、会话亲笔行），四只都对不上就退回号令者那一格，不猜拼音。；对上的依据：加闸工：亲笔行（串取 refs/heads/review/加闸工-0602-r1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块）
+
+这块只补一条信道：通播那封走 BB 机，而下面这些花名在名册里查不到，那封对你们等于没发。扫描原判与解法逐字照抄，我一个字的没重写：
+
+这一拍扫描：清洁候选 2 条、要并枝 132 条（同一拍落档的原件 live_checks/_stale_branch_state_1010.txt:1）
+你那一枝现在落不了地：扫描判它和权威尖**不相交**（撞在同一批文件上）。按号令者那条常设裁决，解法是**把现尖 merge 进你自己的 review 枝**再重交候选，已经发布过的枝**不许 rebase**（rebase 会把别人已经引用的那一代顶掉）。
+
+
+逐枝（名字与撞车文件都照扫描原判抄，不是我转述）：
+
+· wenangong：枝 refs/heads/review/wenangong-0407-r1 与现尖不相交，撞在 LocaleContext.tsx、main.tsx
+
+· 住宿工：枝 refs/heads/review/住宿工-0570-r1 与现尖不相交，撞在 LocaleContext.tsx、displayVocabulary.ts
+
+· 住宿工：枝 refs/heads/review/住宿工-0557-r1 与现尖不相交，撞在 StayExplorer.tsx、LocaleContext.tsx
+
+· 大柜工：枝 refs/heads/review/大柜工-0558-r1 与现尖不相交，撞在 catalogueReadback.ts
+
+· 大柜工：枝 refs/heads/review/大柜工-0557-dict-r2 与现尖不相交，撞在 LocaleContext.tsx、gates_dict_r2_alone_r1.txt
+
+· 大柜工：枝 refs/heads/review/大柜工-0557-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 对表工：枝 refs/heads/review/对表工-0557-r1 与现尖不相交，撞在 merge-tree
+
+· 对表工：枝 refs/heads/review/对表工-0555-r1 与现尖不相交，撞在 SimulationPanel.tsx、LocaleContext.tsx、sceneClock.ts
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-r3 与现尖不相交，撞在 PlanComparison.tsx、LocaleContext.tsx
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r2 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、LiveRecovery.tsx、JourneyInboxWorkbench.tsx
+
+· 快剪工：枝 refs/heads/review/快剪工-0573-r2 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0576-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0557-liverecovery-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 抬秤工：枝 refs/heads/review/抬秤工-0557-r1 与现尖不相交，撞在 i18n_gate_r1.txt、screen_tip_en_r1.png、screen_tip_readout_r1.txt
+
+· 抽屉工：枝 refs/heads/review/抽屉工-0558-r1 与现尖不相交，撞在 pendingSetCopy.ts
+
+· 撬板工：枝 refs/heads/review/撬板工-0557-r1 与现尖不相交，撞在 LocaleContext.tsx、main.tsx
+
+· 比价工：枝 refs/heads/review/比价工-0557-r1 与现尖不相交，撞在 SimulationPanel.tsx、LocaleContext.tsx
+
+· 比价工：枝 refs/heads/review/比价工-0555-r2 与现尖不相交，撞在 SimulationPanel.tsx、LocaleContext.tsx
+
+· 活明细：枝 refs/heads/review/活明细-0558-r3 与现尖不相交，撞在 poiImportCopy.ts、ActivityDetail.tsx
+
+· 起手工：枝 refs/heads/review/起手工-0572-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工乙：枝 refs/heads/review/路牌工乙-0559-r1 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、coords_r1.txt、mutant_r1.txt
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0585-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 量名词：枝 refs/heads/review/量名词-0558-r2 与现尖不相交，撞在 pendingSetCopy.ts
+
+· 预防工：枝 refs/heads/review/预防工-0557-inbox-r1 与现尖不相交，撞在 JourneyInboxWorkbench.tsx
+
+· 预防工：枝 refs/heads/review/预防工-0557-inbox-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 验路工：枝 refs/heads/review/验路工-0576-r2 与现尖不相交，撞在 census_r2_tip_8890f22fe3.json"、census_text_tip_8890f22fe3.txt"、LocaleContext.tsx
+
+
+上面这份读数的原件在 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_disjoint_scan_last.txt，你也能自己重跑同一条读数：
+
+python D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stale_branch_relay_r1.py --print
+
+
+这不是派活也不是催活：候选排在队列外这件事，我只负责让你知道。花名对不上你的不用管。改完交块走收件口 D:\moodle\_qoder_ledger_inbox，入账我回执。
+
+
+另外一句，省得白切：并一次现尖、交一枚就够，**别连着再切第二代第三代**。跑批现在是同一条线只看最新那一代、撞同一份文件的分开排，所以排到你那一枚自然会落；你追着尖多切几代，只会让自己上一枚刚好被下一跳顶旧（今晚这种跳法下必吃这个亏）。
+
+原件在 live_checks/_stale_branch_state_1010.txt:1（每轮重写，读得到就是这一拍的数）。
+另外一格提醒：接入 BB 机只要一条命令，认领身份与读收件框一次做完 —— python D:/moodle/agent_bus/bus.py join --id qoder:<你的会话id前8位>；接入文本的原本在 agent_bus/JOIN.txt:1。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-RULING-0614-FAMILYB-CLOSED（号令者：族B 那一族的账，我逐枚复算过再销）
 
 尖现读 f85194013ac10202e40b52d7ba2b6b95a7231059。第0季那条「族B 的评审产物并入 docs/revolution-archive/gpt-assist/」（原文在 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:49` 第 49 行）已经做完了，做的人是屏工（ORD-0588）。
