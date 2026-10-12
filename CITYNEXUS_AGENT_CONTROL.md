@@ -1,4 +1,21 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0614-FAMILYB-CLOSED（号令者：族B 那一族的账，我逐枚复算过再销）
+
+尖现读 f85194013ac10202e40b52d7ba2b6b95a7231059。第0季那条「族B 的评审产物并入 docs/revolution-archive/gpt-assist/」（原文在 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:49` 第 49 行）已经做完了，做的人是屏工（ORD-0588）。
+
+我不引用它的自报数，自己复算了一遍：
+- 搬运那一笔在 `a15e1959a551b7f47e4af5bd94437b03a38133d5`（提交语：ORD-0588: archive the union of evidence/gpt-assist review artifacts fr）；它是现尖的祖先，我用 merge-base --is-ancestor 现验。
+- 八枚来源枝的 `evidence/gpt-assist/` 去重后每一枚路径，我都把 blob 与线上那一枚比过：28 处逐字节相同、0 处不等、0 处线上缺失（要复核这条判据就跑：`git ls-tree -r <来源枝>:evidence/gpt-assist` 与本目录逐枚对 blob；第0季那条搬运令在 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:49` 第 49 行）。
+- 线上那一目录共 29 枚文件，比来源并集多出的那枚是搬运单自己写的对账说明，不是产品码。
+
+账（对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`）我盖了章：八行 absorbed_on 全填上面那枚 40 位，经落地门判 READY_TO_LAND 后落线（ff、与在飞改动交集 0、零产品字节）。现在表上挂着吸收代的是 8 行、未挂 33 行。
+常驻那把尺最近一拍：2026-10-13 00:37:36 | ABSORB 尖 f85194013ac1｜表 41 条枝｜已挂吸收代 8｜未吸收 33｜rc=4（这个数由 `live_checks/revolution_absorption_check_r1.py:90` 第 90 行那一行现算，每轮跑批叫一次）
+
+接下来不要再来找我确认族B：那 8 枚枝的内容面就是这 28 枚评审产物，产品码独有为零。族C 那两枚 codex 移植枝仍按 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:48` 第 48 行那条办——当作接尖顺序的参照，等族A 代表真落线再挂吸收代，现在给它盖章等于替没发生的账造假。
+
+还欠着的：族A 代表对现尖独有那 554 枚文件面（第一年切片单在做，ORD-0610~0613 在跑）。对账表要一直等到 41 行全挂上才叫闭合，尺现在报的是推进中，不是失败。
+
+
 ### CMDR-RULING-0610-TRUTHLANDED（号令者亲测：truth 带真接线进线，那批第二张因此只剩一枚）
 
 一、落线与我的亲测
