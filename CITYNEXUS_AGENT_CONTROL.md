@@ -1,4 +1,329 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0593-0597（号令者：第二批切片，要求交出能落线的产品字节）
+
+第一批（CMDR-ORDER-0588-0592 那块）是地基与可行性；这一批要**真落码**。
+共同事实底照旧在尖上：代表枝独有产品码那行是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13`，真并行撞面那行是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:14`，
+代表枝在对账表的行是 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29`（枝名 `refs/heads/gpt/revolution-r33-open-world-journey-adaptation` 可直接取回）。
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 代表枝对现尖独有的产品码 | 65 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 代表枝对现尖独有的测试 | 151 个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:13 |
+| 第一年 Q1 的域 | execution 一个 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54 |
+| 真并行撞面 族A | 88 处 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:14 |
+| 前端承接的组件 | 十四枚，清单列在那行 | docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:41 |
+
+#### ORD-0593 execution 域第一枚零依赖模块落线
+
+从代表枝的 `backend/app/execution/` 里挑**只依赖标准库与现尖已有形状**的那一枚（零依赖 = 不碰 main.py、
+不碰 schemas.py 就能 import 成功），把它连同它自己的后端测试一起落线。
+证明必须是真跑：现尖整树导出 + 插入这一枚 + 后端 venv 真 import + 该测试真跑，三条读数写进交块。
+
+#### ORD-0594 collective 三枚模块的形状对照与第一处接线
+
+`collective_authority.py`、`collective_mediation.py`、`collective_operator.py` 是三枚新文件，
+但它们要的权限形状在现尖 `backend/app/schemas.py` 里未必有。先给三态对照，再落**第一处**不需要改契约的接线；
+需要改契约的那部分单独点名交回我，别自己动 `contracts/openapi.yaml`。
+
+#### ORD-0595 前端 MomentScoutCard 接一条真入口
+
+代表枝独有的前端组件里，`frontend/src/features/execution/MomentScoutCard.tsx` 是旅客看得见的东西。
+本轮要求：它在屏上**有一条走得通的入口**，并交多帧截图证明渲染盒不是 0；不许只把文件搬进来不接。
+
+#### ORD-0596 execution 域 e2e 挑三条改成现尖真场景
+
+代表枝独有的 `frontend/e2e` 那批里挑三条 execution 相关，改成现尖真能跑的场景（真后端、真库副本、
+每枚新 run id）。跑不出来就写跑不出来并把服务端回话原文贴进交块，**不许改断言换绿**。
+
+#### ORD-0597 归档地图的中文导览（CN 侧可做）
+
+把 `docs/revolution-archive/` 下的映射与可行性表加一段导览：每族一句话说明这族带来什么用户能力、
+现在缺什么。CN 侧的零扣费通道可做，产出只当草稿，主线会自己复算。
+
+共同约束：先 `ls-remote` 现取权威尖再 rebase；一枚文件只给一扇车道；撞 `backend/app/main.py`、
+`backend/app/schemas.py`、`contracts/openapi.yaml`、`frontend/src/api/citynexus.ts`、`backend/app/agent/runtime.py` 的一律排队；
+交块写 `_qoder_ledger_inbox/<纯ASCII花名>_<HHMM>.md`，首行 `### `，坐标逐行挂 `文件:行号`。
+
+
+### 加闸工 ORD-0592 · 吸收尺接成落地循环的一腿：每拍量一次、数落进带日期的状态件、面涨了或退化把成因带回账本
+
+花名「加闸工」。本块走收件口 `D:\moodle\_qoder_ledger_inbox\jiazagong_2058.md`，账本零直写。认领的是那张 ORD-0592（账本 CMDR-ORDER-0588-0592 段里第 72 行起那块），另外四张（0588 归档、0589 地图、0590 接尖可行性、0591 测试面三态）我没碰，留给别家按同一格认领。
+
+**一、枝、基准、动了什么（现读）**
+
+- 基准：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 取到 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60，我这枚枝就开在它那一代上。
+- 交块前再取一次：现尖已经是 1965c8a55ed653cd1233ac231179ee63ff943f44——那就是本枝的第一枚提交，落地腿把它直接收上了线（`git merge-base --is-ancestor` 判是，且现尖那条提交的父就是 3bf57cc0）。不是我推的权威线：我只推 `refs/heads/review/加闸工-0592-r1` 一枚，force-push 零次。
+- 枝尖现在回读：命令原样 `ls-remote origin "refs/heads/review/加闸工-0592-r1"` 为 1cd4def47f6f37c8f9a7c33fb9a1d0cedf5daaab，比线上多出的那一枚只是落地时刻体检件 `review/加闸工-0592/landcheck_r1.txt:1`；对象钉了 `refs/local/jiazagong-0592`。
+- 相对基准只增 9 枚文件，产品码零字节：三枚量具件加六枚读数，其中体检件自己那份不在它的计数里（它量的是前 8 枚，段 `review/加闸工-0592/landcheck_r1.txt:3`；现在这枚加进去是第 9 枚，命令原样 `git -c core.quotepath=false diff --name-only 3bf57cc0 1cd4def4` 回 9 行）。尺本体与对账表在枝上与尖上逐字节相同，那一项就记在同段。合那张单的共同判据「不改产品码的对外行为」。
+
+**二、这条腿每拍做什么（三件要求逐件交）**
+
+| 要求 | 落在哪 | 现读锚 |
+|---|---|---|
+| 每拍跑一次尺 | 跑批每轮调它一次；挂载文本 `live_checks/mount_absorption_leg_r1.py:31`，插入后跑批日志形制与别的腿一致（实拍那行 `review/加闸工-0592/proof_r1.txt:92`） | `live_checks/patrol/_absorption_leg_r1.py:326` |
+| 未吸收面写进带日期的状态件 | `live_checks/patrol/_absorption_state_YYYYMMDD.tsv`，日期在文件名里，一拍一行、列含尖／尺退出码／表内枝数／已挂吸收代／未吸收／两档分／取不到数／判语 | `live_checks/patrol/_absorption_leg_r1.py:169` |
+| 涨了或退化把成因带回账本，不只留一行日志 | 交一块到收件口，逐枚点名退化枝与它在对账表的行；整件样例是实跑交出来的，不是手写模板 | `review/加闸工-0592/escalate_sample_r1.md:1` |
+
+- 判据在 `live_checks/patrol/_absorption_leg_r1.py:203`：退出码 9 或退化名单非空 ⇒ 退化；退出码 3 或连尺字节都取不到 ⇒「取不到数」，这条绝不写成没事；未吸收涨、已挂吸收代掉、取不到的枝变多 ⇒ 面涨了／对象取不到；持平 ⇒ 推进中，只落账不报警。上一拍那行从状态件末位读（`live_checks/patrol/_absorption_leg_r1.py:173`）。
+- 冷却与写门装在腿上：同形状的块 240 分钟内不重交（`live_checks/patrol/_absorption_leg_r1.py:393`），但判定变了或更坏立刻绕过——压着一件退化等四小时就是这条腿该死的地方；块落进收件口前先过入账自查（`live_checks/patrol/_absorption_leg_r1.py:313` 调 block_selfcheck_r1.py），不绿就把原稿改名 `.gate_red`、不进收件口。
+- 它只观察：不改 problems、不参与落地判定、不动权威线、不碰账本本体（块只走收件口，LEDGER_SINGLE_WRITER_V1）。
+
+**三、为什么腿是从尖上取尺字节，而不是就地跑本地那份（量出来的，不是猜的）**
+
+号令者的量具工作树检出在 e9efec6bf（09-21 18:31）那一代，`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 与尺字节都不在那代里，逐项在否见 `review/加闸工-0592/wt_truth_r1.txt:3`。尺自己 `live_checks/revolution_absorption_check_r1.py:61` 那行遇到对账表读不到就打「不判」并回退出码 3——就地跑等于每拍得到一个像模像样的红，把哑尺当仪表。所以腿取尖上的尺字节（`live_checks/patrol/_absorption_leg_r1.py:94`）与对账表字节（`:97`）放进 scratch（`:53`）再原样执行（`:87`），判腿一字未改，改的只是它读的是哪一代。这条形制不是我发明的：门上那条注释就是这么写的（工作树 `D:\moodle\_qoder_cmdr_ref_20260921\live_checks\preflight_and_land_r7.py:495`「尺的字节每次从尖上取，免得陈旧副本把现在不肯放的放过去」）。
+
+**四、仪件与闸（一条命令可重放，输出全文在枝上）**
+
+重放：`python live_checks/absorption_leg_proof_r1.py`（件在 `live_checks/absorption_leg_proof_r1.py:40` 起）。它所有写入都在临时目录，跑完自删（末步 `review/加闸工-0592/proof_r1.txt:100`）。
+
+| 哪一步 | 读数 | 输出落在 |
+|---|---|---|
+| 腿自己的自检 | assertions=30、failures=0，退出码零 | `review/加闸工-0592/proof_r1.txt:7` |
+| 尺在现尖那一代的真读数 | 表内 41 枚枝｜已挂吸收代 0｜未吸收 41｜取不到 0，分档 TO_ABSORB 35 条／CARRIED_BY_REP 6 条，退出码 4 | `review/加闸工-0592/proof_r1.txt:23` |
+| --dry 一拍 | 状态目录文件数 0（不落盘） | `review/加闸工-0592/proof_r1.txt:18` |
+| --apply 一拍 | 带日期的状态件落下 1 行，那行原样回读在下一锚 | `review/加闸工-0592/proof_r1.txt:30` |
+| 面涨了（种一行 40 条再跑） | 判语=面涨了、成因从 40 涨到 41（+ 1 枚），交出一块 1725 字节，入账自查 overall Q43_GATE_GREEN、claims checked 4 | `review/加闸工-0592/proof_r1.txt:39` |
+| 冷却 | ABSORB-COOLED（0 分前交过，冷却 240 分），收件口仍 1 块 | `review/加闸工-0592/proof_r1.txt:56` |
+| 负对照（一块没坐标的件喂给写门） | overall Q43_GATE_RED、findings 1 ['NUMBER_WITHOUT_COORDINATE']，原稿改名 `.gate_red` | `review/加闸工-0592/proof_r1.txt:62` |
+| 退化那一拍（绕过冷却） | 判语=退化照样成块并交出去（1960 字节、自查绿），空着的两档写「尺未报」不猜零 | `review/加闸工-0592/proof_r1.txt:69` |
+| 挂载件三态 | DRY 预览可编译、行数 395 到 408（+13）、锚行存活、字节等式过；`--apply` 留时间戳备份；再 `--apply` 报 ALREADY-MOUNTED 不重复插 | `review/加闸工-0592/proof_r1.txt:86` |
+| 挂载块经跑批自己的 run() 真跑 | 日志行 `round 99 absorption ABS-ROW …;; ABS-LEG …;; ABS-QUIET …`，与别的腿同形制 | `review/加闸工-0592/proof_r1.txt:92` |
+
+- 挂载件只做文本插入，且我不重启跑批：在跑那一进程用的是内存里那份旧码，改文件不会让它自己换血（那句话打印在 `live_checks/mount_absorption_leg_r1.py:99`）；真实跑批文件行数仍是 395、我一次没改它，段 `review/加闸工-0592/landcheck_r1.txt:7`。要带上这条腿，您跑 `python live_checks/mount_absorption_leg_r1.py --apply` 再重启跑批——挂载与重启这两步我都留给您，没自己点。
+- 顺手核了一件事以免挂错门：落地驱动调的是工作树那代 r7（`D:\moodle\_qoder_cmdr_ref_20260921\live_checks\cmdr_batch_land_r1.py:168`，codes-on-screen 臂在它 `live_checks/preflight_and_land_r7.py:501` 活着），尖上另有 `live_checks/preflight_and_land_r8.py` 一枚不含那臂。我这条腿挂的是跑批本体，两扇门的判定我都没动。
+
+**五、两处我自己的毛病，摊出来**
+
+- 腿先前会在「退化」那一拍崩：尺在 `live_checks/revolution_absorption_check_r1.py:96` 先 return 9，分档那行在 `:98` 才打，所以报警那一拍那两档必然空着，而我拿整数格式化去打印它——最坏的失败形状（报警的腿自己吞掉报警）。修成「尺未报」（`live_checks/patrol/_absorption_leg_r1.py:139`），自检里钉了两条守它。
+- 挂载件的字节等式起初写成「删掉 INSERTION 等于原文」，而 INSERTION 含锚，删一次连锚一起删，等式永不成立——它当场 ABORT 而没有乱写文件（正确等式在 `live_checks/mount_absorption_leg_r1.py:68`：只删 DELTA）。检查有效这件事本身就记在 `review/加闸工-0592/readout_r1.txt:12`。
+- 上一张单留下的影子枝我已清：`refs/heads/review/jiazagong-0585-r1`（ASCII 那枚本地名）被扫描当成独立候选，跑批 20:27 那拍让它与真枝互相让路、白占一个批内格子；现删掉，只留 `refs/heads/review/加闸工-0585-r1` 与 `refs/local/` 那几枚钉。
+
+**六、我名下三枝的落地形状（交块这一刻现读）**
+
+- 现尖又走了一拍：交块重取时是 51c85756e47d45200bcb98c4a9cfba6775e62606（命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。
+- 0592：本枝第一枚提交 1965c8a55ed653cd1233ac231179ee63ff943f44 **已在线上**（`git merge-base --is-ancestor` 判是），是落地腿收的，不是我推的；枝尖 1cd4def47f6f37c8f9a7c33fb9a1d0cedf5daaab（只多一枚体检件）还没被收，只读预测并回现尖 rc=0、CONFLICT 0 行。线上那份腿的字节现在就在 `live_checks/patrol/_absorption_leg_r1.py:326` 那一拍入口。
+- 0585：仍不在权威线上，只读预测并回现尖 rc=0、CONFLICT 0 行（命令原样 `git merge-tree --write-tree --messages 51c85756 76228499`）；它的交块已在账本第 403 行（回执 `_processed/jiazagong_1950.md.inserted_200420`，账本锚 `D:\moodle\CITYNEXUS_AGENT_CONTROL.md:403`，改的是 `frontend/src/features/simulation/simulationAdapter.ts:122` 那三处）。
+- 0576：仍不在权威线上，只读预测并回现尖 rc=0、CONFLICT 0 行；它与我另外两枝都撞 `frontend/src/i18n/LocaleContext.tsx:1497`，排队让路是应该的，我不催。
+- 这轮之后 ORD-0592 的活已进线，下一拍若您把挂载件 --apply 上并重启跑批，状态件就开始逐拍长；要我把 0591 的测试面三态接着做（execution 域那批），点我就开。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 键盘工 2043 ORD-0588 · 族B 八枚枝的 gpt-assist 评审产物 28 枚搬进 docs/revolution-archive/gpt-assist/，一枚不落（纯搬运，零产品字节）— refs/heads/review/键盘工-0588-r1
+
+- id: ORD-0588（号令者派单 CMDR-ORDER-0588-0592 的第一张：族B 的 gpt-assist 评审产物归档，纯搬运；单上写这八枚枝对现尖独有产品码是 0，自有资产只有 evidence/gpt-assist/ 那一片）
+- 花名键盘工；单上那八枚来源枝我逐枚 ls-remote 现取到枝尖（八枚全在 refs/heads/gpt/ 下取得回，见第二节每行的来源枝），它们在 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv 的行 32 至 39，那八行的 doc 列相加 28，与我这厢逐枝 ls-tree 数到的 28 枚同数
+- 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60；本枝就切在这一枚上（3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 与 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 同一枚），git -C D:/moodle/CityNexus rev-list --left-right --count 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60...547d9f154291052a636eb672967ad962d7bd13be 回尖侧 0 笔、我枝侧 2 笔
+- 本枝 refs/heads/review/键盘工-0588-r1 枝尖 547d9f154291052a636eb672967ad962d7bd13be；命令原样 git -C D:/moodle/CityNexus ls-remote origin "refs/heads/review/键盘工-0588-r1" 现读与本地 git rev-parse HEAD 逐字同值；一笔提交，改动面 git -C D:/moodle/CityNexus diff --name-status 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 547d9f154291052a636eb672967ad962d7bd13be 回 32 行且每行都以 A 打头（全新增，零覆盖）
+- 落地门：git -C D:/moodle/CityNexus merge-tree --write-tree 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 547d9f154291052a636eb672967ad962d7bd13be 退出码 rc=0、冲突 stage 行 0 条、预测树 93513a8f6378735470912826daa668c8cf59dac7；工作树 git -C D:/moodle/_qoder_jianpanggong_0555 status --porcelain 回 0 行
+
+一、搬了什么、按什么规则搬
+
+- 并集 = 28 枚文件、合计 1435 行、合计 65763 字节，落在 docs/revolution-archive/gpt-assist/ 下并按来源枝的子目录原名保留（八个子目录的名字逐枚写在 docs/revolution-archive/gpt-assist/ARCHIVE_MANIFEST.tsv:3 起的第一列里，这里不再抄一遍）；路径映射是把源前缀 evidence/gpt-assist/ 换成 docs/revolution-archive/gpt-assist/，一枚不并、一枚不拆
+- 落盘前后各核一次哈希：读源 blob → 本地按 git 对象头重算 sha1 → 与该枝 ls-tree --long 声明的 blob 逐字相等才写；写完再从盘上读回重算，28 枚全等（搬运器 review/jianpanggong-0588/archive_r1.py:1，判据在它 hash 比对那一行 review/jianpanggong-0588/archive_r1.py:63）
+- 投到远端之后又回核一遍：命令原样 git -C D:/moodle/CityNexus rev-parse 547d9f154291:<归档路径> 与 <来源枝尖>:<源路径> 两两对，28 枚两侧都等于清单里那枚 blob，不符 0 枚
+- 目标路径在线上是空的：逐枚 git -C D:/moodle/CityNexus cat-file -e 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60:<归档路径> 全部取不到（搬运器把这条当作写盘前的硬门，任一取到就 ABORT），所以这不是覆盖别人的归档
+- 随档带两件自述件：清单 docs/revolution-archive/gpt-assist/ARCHIVE_MANIFEST.tsv（表头在第 2 行，七列：来源枝、来源枝尖、源路径、归档路径、行数、字节数、blob；数据 28 行）与机读件 docs/revolution-archive/gpt-assist/archive_evidence_r1.json:1；搬运器本身在 review/jianpanggong-0588/archive_r1.py:1。这三件是我加的，不在单上那 28 枚里，为了让归档离开我的块也能自证来源
+
+二、逐枚（来源枝 ｜ 仓内路径 ｜ 行数 ｜ 归档后行号）
+
+- refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 ｜ evidence/gpt-assist/20260923/R61_MINIMAL_PATCH.diff ｜ 33 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923/R61_MINIMAL_PATCH.diff ｜ 清单第 3 行
+- refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 ｜ evidence/gpt-assist/20260923/R6_H11_R61_PREP.md ｜ 51 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923/R6_H11_R61_PREP.md ｜ 清单第 4 行
+- refs/heads/gpt/revolution-r6-h11-r61-prep-20260923 ｜ evidence/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py ｜ 132 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py ｜ 清单第 5 行
+- refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ evidence/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md ｜ 10 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md ｜ 清单第 6 行
+- refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ evidence/gpt-assist/20260923-r61/H12_HANDOFF.md ｜ 8 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r61/H12_HANDOFF.md ｜ 清单第 7 行
+- refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ evidence/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md ｜ 29 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md ｜ 清单第 8 行
+- refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ evidence/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff ｜ 10 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff ｜ 清单第 9 行
+- refs/heads/gpt/revolution-r61-h12-r62-prep-20260923 ｜ evidence/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py ｜ 28 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py ｜ 清单第 10 行
+- refs/heads/gpt/revolution-r62-r63-prep-20260923 ｜ evidence/gpt-assist/20260923-r62/R62_R63_PREP.md ｜ 57 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r62/R62_R63_PREP.md ｜ 清单第 11 行
+- refs/heads/gpt/revolution-r62-r63-prep-20260923 ｜ evidence/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py ｜ 171 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py ｜ 清单第 12 行
+- refs/heads/gpt/revolution-r62-r63-prep-20260923 ｜ evidence/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py ｜ 73 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py ｜ 清单第 13 行
+- refs/heads/gpt/revolution-r7-r71-prep-20260923 ｜ evidence/gpt-assist/20260923-r7/CODEX_R71_TASK.md ｜ 39 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r7/CODEX_R71_TASK.md ｜ 清单第 14 行
+- refs/heads/gpt/revolution-r7-r71-prep-20260923 ｜ evidence/gpt-assist/20260923-r7/R7_R71_PREP.md ｜ 60 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r7/R7_R71_PREP.md ｜ 清单第 15 行
+- refs/heads/gpt/revolution-r7-r71-prep-20260923 ｜ evidence/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py ｜ 94 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py ｜ 清单第 16 行
+- refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ evidence/gpt-assist/20260923-r71/CODEX_R72_TASK.md ｜ 49 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r71/CODEX_R72_TASK.md ｜ 清单第 17 行
+- refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ evidence/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md ｜ 46 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md ｜ 清单第 18 行
+- refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ evidence/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json ｜ 26 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json ｜ 清单第 19 行
+- refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ evidence/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md ｜ 13 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md ｜ 清单第 20 行
+- refs/heads/gpt/revolution-r71-r72-prep-20260923 ｜ evidence/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py ｜ 134 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py ｜ 清单第 21 行
+- refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ evidence/gpt-assist/20260923-r72/CODEX_R73_TASK.md ｜ 24 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r72/CODEX_R73_TASK.md ｜ 清单第 22 行
+- refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ evidence/gpt-assist/20260923-r72/R72_R73_PREP.md ｜ 24 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r72/R72_R73_PREP.md ｜ 清单第 23 行
+- refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ evidence/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md ｜ 21 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md ｜ 清单第 24 行
+- refs/heads/gpt/revolution-r72-r73-prep-20260923 ｜ evidence/gpt-assist/20260923-r72/r73_provider_candidate_capture.py ｜ 113 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260923-r72/r73_provider_candidate_capture.py ｜ 清单第 25 行
+- refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ evidence/gpt-assist/20260924-r73/CODEX_R74_TASK.md ｜ 24 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260924-r73/CODEX_R74_TASK.md ｜ 清单第 26 行
+- refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ evidence/gpt-assist/20260924-r73/R73_R74_PREP.md ｜ 31 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260924-r73/R73_R74_PREP.md ｜ 清单第 27 行
+- refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ evidence/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md ｜ 18 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md ｜ 清单第 28 行
+- refs/heads/gpt/revolution-r73-r74-prep-20260924 ｜ evidence/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py ｜ 63 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py ｜ 清单第 29 行
+- refs/heads/gpt/revolution-r74-r75-breakthrough-20260924 ｜ evidence/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md ｜ 54 行 ｜ 归档件 docs/revolution-archive/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md ｜ 清单第 30 行
+- 逐枝枚数：r6-h11-r61-prep-20260923 3 枚、r61-h12-r62-prep-20260923 5 枚、r62-r63-prep-20260923 3 枚、r7-r71-prep-20260923 3 枚、r71-r72-prep-20260923 5 枚、r72-r73-prep-20260923 4 枚、r73-r74-prep-20260924 4 枚、r74-r75-breakthrough-20260924 1 枚
+
+三、门禁读数（本块此刻现跑，命令原样）
+
+- 这单零产品字节，i18n 闸没有适用面：命令原样 git -C D:/moodle/CityNexus diff --name-only 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 547d9f154291052a636eb672967ad962d7bd13be -- backend frontend 回 0 行；改到的 32 枚路径全在 docs/revolution-archive/gpt-assist/ 与 review/jianpanggong-0588/ 两个目录下
+- 类型检查两把（本枝上跑，非借用）：cwd D:/moodle/_qoder_jianpanggong_0555/frontend，npx tsc -p tsconfig.check.json --noEmit 退出码 rc=0，npx tsc -p tsconfig.typecheck.json --noEmit 退出码 rc=0，配置面 frontend/tsconfig.check.json:1 与 frontend/tsconfig.typecheck.json:1
+- 生产构建：cwd 同上，命令原样 node node_modules/vite/bin/vite.js build --outDir D:/moodle/_jp_dist_0588 --emptyOutDir，退出码 rc=0，收尾逐字 built in 6.92s，入口定义 frontend/package.json:7
+- 哈希对拍即本批的闸：搬运器写盘前的校验 28 枚全过、写盘后回读 28 枚全过、投递后与源枝回核 28 枚全过，读数件 docs/revolution-archive/gpt-assist/archive_evidence_r1.json:1
+
+四、一条与单上前提出入的读数（只报数，不据此多搬一枚）
+
+- 单上写这八枚枝「对现尖的独有产品码是 0」。我这厢三把尺都跑了一遍，数不一样，原样摊出来：一把是 git -C D:/moodle/CityNexus diff --name-only 3bf57cc0e15e <枝尖>（两点，把线上这几代自己的演化也算进差异），八枚枝各回 217 枚产品路径；一把是 git diff --name-only <merge-base>..<枝尖>（三点，只看这枝自己那几笔），各回 187 枚；第三把再把三点结果逐路径比 blob，与线上字节相同的 111 枚、仍不同的 76 枚（八枚枝各自都是同一批路径，逐枝一行摊在 review/jianpanggong-0588/premise_r1.txt:3 至 :10，表头在 review/jianpanggong-0588/premise_r1.txt:2，三条命令原文在 review/jianpanggong-0588/premise_r1.txt:11 至 :13）
+- docs/REVOLUTION_ABSORPTION_MANIFEST.tsv 行 32 至 39 那八行的 prod 列逐枚现读都是 ['0']，test 列也是 0；也就是说号令者那把尺给的是 0，我这把给的是「相同 111、不同 76」
+- 我没替任何一方背书，也没因为这出入多搬或不搬：本批严格只按单上范围收 evidence/gpt-assist/ 那一片，28 枚一枚不落。若那 76 枚「与线上仍不同」的产品路径里确有该吸收的，那是 ORD-0590/0591 那一类判定活，不是我这张纯搬运单能裁的——要点名我按现读逐路径摊
+
+五、边界、未验与自报
+
+- 权威线 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；只推 refs/heads/review/键盘工-0588-r1 一枚枝；force-push 0 次；既有文件零改（上面第三节那条 --name-status 全 A 就是这条的证据）
+- 未起新监听端口；未跑后端；构建产物落树外 D:/moodle/_jp_dist_0588；搬运器在树外也留了一份原件 D:/moodle/_jp_0588_archive_r1.py，枝上那份是它的副本，两者字节相同
+- 未验的事自报：一，我只核了「这八枚枝上 evidence/gpt-assist/ 之内的并集」，没有去核这八枚枝是否还有别的自有资产（单上断言只有这一片；要我把 diff 全面按目录摊一遍请点名，那是一轮新读数）。二，归档后我没有通读判定这 1435 行文档说了什么、说得对不对（行数记在 docs/revolution-archive/gpt-assist/archive_evidence_r1.json:5，那是计数不是真伪判语），逐枚真伪不在我这张单的要求里。三，零产品字节这判据是靠 --name-status 的全 A 与 backend/frontend 命中 0 行两条一起成立的，不是靠我声明
+- 过程毛病自报：搬运器我第一版把源字节用字符串判 CR（TypeError 当场停，未写一枚盘），改成按字节判才过；另外我最初把搬运器写进了 docs/revolution-archive/gpt-assist/ 里，那会让归档目录混进非产物字节，已挪到 review/jianpanggong-0588/archive_r1.py，归档目录里只剩 28 枚评审产物加两件自述件
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 屏工 占名并交件 ORD-0588 · 族B 八枚枝的 gpt-assist 评审产物并集已搬进 docs/revolution-archive/gpt-assist，二十八枚逐字节与源 blob 对上、清单逐枚带来源
+
+花名「屏工」，八位会话号 d38640a3。占的是「CMDR-ORDER-0588-0592（revolution 吸收第一批切片，五张，按花名自认领）」那张表里 ORD-0588 那一格（格头现读 `CITYNEXUS_AGENT_CONTROL.md:65`）；占名之前数过账本：ORD-0588 这个词在账本里此刻命中两行，一行是令自己、一行是我上一块末尾那句「我下一块按先到先得占 ORD-0588」，没有别的车道占过（读数 `CITYNEXUS_AGENT_CONTROL.md:39`）。占名与交件同块同拍，本块走收件口，文件名 `D:\moodle\_qoder_ledger_inbox\d38640a3_2040.md`，账本零直写。
+
+**一、我按什么取来源**
+
+- 八枚枝名不是我手打的：是现读尖 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 上 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 的第 32 到第 39 行那八行（第一行现读 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32`），每行连枝尖那四十位一起取。
+- 只取 `evidence/gpt-assist/` 那一片，一枚不落：八枝并集去重后是二十八条路径，逐枚都是"只在一枚枝里出现过"，同路径跨枝内容不同的撞面零枚，所以归档按源里的相对子路径平铺即可，没有哪一枚会被另一枚盖掉。读数 `D:/moodle/_pinggong_scratch/ord0588_copy_out.txt:1` 与 :2（那两行分别是并集与写入数）。
+- 每枝几枚：r6-h11 三枚、r61-h12 五枚、r62-r63 三枚、r7-r71 三枚、r71-r72 五枚、r72-r73 四枚、r73-r74 四枚、r74-r75 一枚，合二十八枚，读数 `D:/moodle/_pinggong_scratch/verify_0588_out2.txt:1` 那行同源（每枝分列在 `D:/moodle/_qoder_pinggong_0588/docs/revolution-archive/gpt-assist/MANIFEST.tsv:2` 起二十八行）。
+- 合计面：二十八枚文件共一千四百一十四行、六万五千七百六十三字节，读数 `D:/moodle/_pinggong_scratch/ord0588_copy_out.txt:3`。
+
+**二、逐枚（归档在 `docs/revolution-archive/gpt-assist/` 下那个子路径｜行数｜字节｜来源枝在对账表的行）**
+
+| 归档那枚 | 行数 | 字节数 | 来源枝 | 它在对账表的行 |
+|---|---|---|---|---|
+| `20260923-r61/CODEX_NEXT_TASK.md` | 10 行 | 1804 字节 | r61-h12-r62-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33` |
+| `20260923-r61/H12_HANDOFF.md` | 8 行 | 689 字节 | r61-h12-r62-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33` |
+| `20260923-r61/R61_EXTERNAL_AUDIT.md` | 29 行 | 2493 字节 | r61-h12-r62-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33` |
+| `20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff` | 9 行 | 320 字节 | r61-h12-r62-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33` |
+| `20260923-r61/proposed_test_r62_cost_truth_edges.py` | 27 行 | 1136 字节 | r61-h12-r62-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33` |
+| `20260923-r62/R62_R63_PREP.md` | 56 行 | 3465 字节 | r62-r63-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:34` |
+| `20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py` | 170 行 | 6366 字节 | r62-r63-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:34` |
+| `20260923-r62/proposed_test_r63_template_budget_fit_truth.py` | 72 行 | 2583 字节 | r62-r63-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:34` |
+| `20260923-r7/CODEX_R71_TASK.md` | 39 行 | 1456 字节 | r7-r71-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:35` |
+| `20260923-r7/R7_R71_PREP.md` | 60 行 | 3291 字节 | r7-r71-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:35` |
+| `20260923-r7/r71_catalogue_eligibility_ledger.py` | 93 行 | 3293 字节 | r7-r71-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:35` |
+| `20260923-r71/CODEX_R72_TASK.md` | 48 行 | 1981 字节 | r71-r72-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36` |
+| `20260923-r71/R71_EXTERNAL_AUDIT.md` | 45 行 | 2769 字节 | r71-r72-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36` |
+| `20260923-r71/R72_ACQUISITION_FRONTIER.json` | 26 行 | 640 字节 | r71-r72-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36` |
+| `20260923-r71/R72_EVIDENCE_CONTRACT.md` | 12 行 | 775 字节 | r71-r72-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36` |
+| `20260923-r71/r72_exact_osm_fact_probe.py` | 133 行 | 5102 字节 | r71-r72-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36` |
+| `20260923-r72/CODEX_R73_TASK.md` | 23 行 | 1598 字节 | r72-r73-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:37` |
+| `20260923-r72/R72_R73_PREP.md` | 23 行 | 1685 字节 | r72-r73-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:37` |
+| `20260923-r72/R73_IDENTITY_CONTRACT.md` | 20 行 | 861 字节 | r72-r73-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:37` |
+| `20260923-r72/r73_provider_candidate_capture.py` | 112 行 | 4196 字节 | r72-r73-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:37` |
+| `20260923/R61_MINIMAL_PATCH.diff` | 32 行 | 1325 字节 | r6-h11-r61-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32` |
+| `20260923/R6_H11_R61_PREP.md` | 51 行 | 3050 字节 | r6-h11-r61-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32` |
+| `20260923/proposed_test_r61_explicit_role_boundary.py` | 131 行 | 4689 字节 | r6-h11-r61-prep-20260923 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32` |
+| `20260924-r73/CODEX_R74_TASK.md` | 23 行 | 1290 字节 | r73-r74-prep-20260924 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:38` |
+| `20260924-r73/R73_R74_PREP.md` | 30 行 | 2024 字节 | r73-r74-prep-20260924 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:38` |
+| `20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md` | 17 行 | 884 字节 | r73-r74-prep-20260924 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:38` |
+| `20260924-r73/r74_nominatim_exact_identity_probe.py` | 62 行 | 3018 字节 | r73-r74-prep-20260924 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:38` |
+| `20260924-r74/R74_R75_BREAKTHROUGH_PREP.md` | 53 行 | 2980 字节 | r74-r75-breakthrough-20260924 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:39` |
+
+- 归档根下另有那枚清单 `docs/revolution-archive/gpt-assist/MANIFEST.tsv:1`（表头一行、正文二十八行），每行给「来源枝｜枝尖四十位｜对账表行｜源仓内路径｜归档后路径｜blob｜行数｜字节数」，所以这张表不是我口述，是树上可查的。
+
+**三、复验用的是另一把尺，不认搬运器自己的话**
+
+- 逐枚现读源枝那枚 blob 的原始字节，与树上归档后那枚文件的字节整串比：不等零枚；再对 `git hash-object` 与清单里那四十位 blob：不符零枚；字节数不等零枚；行数不等零枚，判语 `VERDICT ord0588_copy_verified rows=28 union=28` 读数 `D:/moodle/_pinggong_scratch/verify_0588_out2.txt:1` 与 :2。
+- 反向也数了：八枚枝里 `evidence/gpt-assist/` 的路径全集与清单条数相等，缺零枚、多零枚（同件 :1 那行的「缺 0 多 0」）。
+- 我搬的是字节流，不过文本编码那一道（形制写在这个脚本头部 `D:/moodle/_pinggong_scratch/ord0588_copy_r1.py:8`），所以不存在行尾被翻成一串 CRLF 的余地。
+
+**四、闸与尺**
+
+| 量具 | 命令原样 | 退出码 | 判语与本行锚 |
+|---|---|---|---|
+| 窄类型闸 | `node_modules/.bin/tsc -p tsconfig.check.json --noEmit` | 零 | `D:/moodle/_pinggong_scratch/gates_0588.txt:2` |
+| 全量类型闸 | `node_modules/.bin/tsc -p tsconfig.typecheck.json --noEmit` | 零 | `D:/moodle/_pinggong_scratch/gates_0588.txt:4` |
+| 生产构建 | `node_modules/.bin/vite build` | 零 | 同件 :30，构建用时那行 :22 |
+| 吸收进度尺（号令者那把，原样跑在本枝树里） | `python live_checks/revolution_absorption_check_r1.py` | 四 | 四档语义里四是「仍有未吸收枝、推进中，不算失败」，语义行 `live_checks/revolution_absorption_check_r1.py:9`；本拍报对账表四十一枚枝、已挂吸收代零枚、未吸收四十一枚、枝对象取不到零枚，读数 `D:/moodle/_pinggong_scratch/ruler_0588.txt:2` |
+
+- 为什么这枝落下去之前那把尺的数不会动：它读的是权威尖与对账表的 `absorbed_on` 那一列（同一把尺头部那三条判据现读 `live_checks/revolution_absorption_check_r1.py:5`），而我这一批按单里「纯搬运」办，没有去改那张表的吸收代——那张表是你与对账那侧的账，我不替你写。要它从四十一枚往下走，得先落我这枝、再由你那侧挂 `absorbed_on`。
+- 改动面：整枝相对现尖新增三十九枚文件，其中 `docs/` 下二十九枚（二十八枚产物加那枚清单）、`review/pinggong-0588/` 下十枚仪表与读数，其余路径零枚，读数 `D:/moodle/_pinggong_scratch/scope_0588b.txt:2`；产品面那一笔单看是二十九枚新增、非 `docs/` 的零枚，读数同件 :4。产品码、后端、前端测试都没动，所以第四节那三把闸的绿是"没弄坏"的证据，不是"验了产物"的证据——产物本身逐字节对源这件事在第三节。
+
+**五、我自己两处失手，都写出来**
+
+- 第一遍搬运器在写清单那一步崩了（我把列名写成不存在的键），那时二十八枚文件已经落进树、清单没成，现场是个半成品。我没有在它上面补：把整棵 `docs/revolution-archive/` 删掉、改对脚本、重跑一遍，所以现在树上的每一枚都是同一次跑出来的（那次的原话逐字是 `KeyError: 'name'`，崩在 `D:/moodle/_pinggong_scratch/ord0588_copy_r1.py:98` 那一行；失败那次的盘上输出随后被第二次成功跑覆掉了，所以那句话我只能从自己这轮的会话流水里引，给不出一件盘上读数——这一条如实报）。
+- 第二遍我那双复验尺自己的行数判据写歪了，把六枚文件误报成行数不符。我没拿这个当"通过"，也没改判据迁就结果：改成与搬运器同一套行数算法（按换行符数、结尾带换行不多数）再跑，才得到第三节那个零枚。误报那次的原话在 `D:/moodle/_pinggong_scratch/verify_0588_out.txt` 里留着。
+- 一处差点写错的坐标：我一度把枝尖记成另一枚四十位，落块前用 `git rev-parse` 与 `ls-remote` 各重读了一次才发现，所以第五节那枚是从文件里取的不是从记忆里取的。
+
+**六、枝与推后回验**
+
+- 枝 `refs/heads/review/屏工-0588-r1` 从现尖 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 新开（单里那条「先 `ls-remote` 现取权威尖再 rebase」照办，本枝零笔历史包袱）。两笔提交：产品面那笔 a15e1959a551b7f47e4af5bd94437b03a38133d5（二十八枚产物加那枚清单），仪表与读数那笔 957dd0fb75bc722c1ca3aec0d2341e00191d5492（现在这枚枝尖）。
+- 推后三处回验同值：GitHub 的 `ls-remote` 那行、本地 bare 的 `rev-parse` 那行、树里 `git rev-parse HEAD` 那行都是 957dd0fb75bc722c1ca3aec0d2341e00191d5492，读数 `D:/moodle/_pinggong_scratch/push_0588.txt:1`、:2、:3；相对现尖 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 领先两笔、落后零笔（同件 :4）。权威线我零推送、force-push 零次、远端 ref 一枚未删。
+- 工作树 `D:/moodle/_qoder_pinggong_0588`，`frontend/node_modules` 是 junction 指向共享 store（属性现读 LinkType=Junction、目标 `D:\moodle\_qoder_b_ord0435b_20260929\frontend\node_modules`），未装包；`git status --porcelain` 零行。
+- 枝内 `review/pinggong-0588/` 存了这一批的三把工具与读数（并集清点 `gpt_assist_census_r1.py:1`、搬运器 `ord0588_copy_r1.py:1`、复验尺 `verify_0588_r1.py:1`，加 `gates_0588.txt:1` 起、`ruler_0588.txt:1` 起、`scope_0588.txt:1` 起那几件），所以你或不认识我这台机器的人都能一条命令重跑第三节那一句判语。
+- 未起新监听端口；未跑后端；未碰别人名下的文件；那四张新单（0589、0590、0591、0592）我没占，等别的车道或你点。
+- 本车道此刻请求并入的枝两枚：`refs/heads/review/屏工-0576-r1`（助手坞那二十九处已搬完、并代回零，读数在我上一块里）与这一枚 `refs/heads/review/屏工-0588-r1`。
+
+**七、一件形制上的欠（自查）**
+
+- 今天这个花名先前那几块（批三、批四、批五、批六、批七、并代那块）末尾都漏了常设的那条收尾口令，本块起补上，并把上一块也补不了——已入账的件我不改字，只在这里点名：那六块的末尾行缺的是外发常设要求，不是可以省的格式。缺在哪几块、块名逐枚是「屏工 ORD-0576 批三」「屏工 ORD-0576 批四」「屏工 ORD-0576 批五」「屏工 ORD-0576 批六」「屏工 ORD-0576 批七」「屏工 批七那块第五节一条锚钉错了读数件」与「屏工 ORD-0576 收尾」，七块都已入账、我不回去改字；那七块的内容与判据读数不受这件事影响。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 镜像欠账的数变了：从"七十多分钟"变成"二十来小时"，受影响的是 commander/control 上那份账本副本
+
+上一块（10-11 夜里的「账本镜像落后…请点一下推镜像那半（单问）」）里我给的读数是"七十六分钟没追平、领先二百九十七行"。**那组数现在已经过期**，按规矩不改旧块，另发这一枚更新：
+
+- 巡逻 ㉑ 现读（这一拍）：本地领先 488 行、133122 字节（`live_checks/patrol/_mirror_lag_now.txt:2`），按行是 local-only 488、remote-only 0（`live_checks/patrol/_mirror_lag_now.txt:3`）——远端独有仍是零，意思是**没有分叉，只是没人推**。
+- 最近一次追平在 10-12 00:23:21，那拍从 134 行掉到 31 行；此后一路涨回 488（`live_checks/patrol/_mirror_lag_now.txt:4`、走势那行 `live_checks/patrol/_mirror_lag_now.txt:5`）。
+- 把这两行年龄分开说清（我在这格上自己踩过一次混）：代插腿每十五分钟打一拍没问题（同一份件第 6 行 `live_checks/patrol/_mirror_lag_now.txt:6`），但它只在**真插了块**那一拍才跑 mirror 步骤，所以"读数旧"不等于"腿死"；这一次是**推出去那半**没动。
+
+一件事要说准，免得被读成两回事：这里落后的是**账本副本**——`Canshu-King/CityNexus` 里 `commander/control` 那一支上的 `CITYNEXUS_AGENT_CONTROL.md`；跟车道当成现尖基准的那枚产品枝 `refs/heads/mirror/integration-frontend-apple-pass1` 不是同一枚 ref，名字里都有"mirror"纯属撞名。历史上拿这枚账本副本回核行号的块不少（我自己那几枚不算），最近一枚正是号令者今晚那块裁定里提的 `commander/control`。
+
+我现在看的两个地方都已挂上这个数：巡逻每一拍的 ㉑ 那格（超九十分钟没追平且领先超三百行就印红），以及主人那块板顶上一枚「账本镜像 领先 N 行（读数几分前·上次追平何时·件几分前刷）」——板子只转述那份件，没有另算一把尺。
+
+要点的还是那一件，两句原样不动：甲＝号令者点自己那条推镜像的腿追平（我不碰他人进程）；乙＝裁语把 `CNX_MIRROR_LIVE` 交给我这条腿，我按同一道 guard 推、推完回读远端行数并写回那份件。这一拍我不推。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 屏工 ORD-0576 收尾 · 把现尖并回助手坞那枚枝（并代后三把闸、缺键臂、新的同侧键名闸、探针两臂各重跑一遍，该文件内联双语仍现读零）
+
+花名「屏工」，八位会话号 d38640a3。本块走收件口，文件名 `D:\moodle\_qoder_ledger_inbox\d38640a3_2030.md`，账本零直写。这块不带新搬运，只把批七那块之后发生的两件事交干净：一是我那枚枝落后了现尖，二是包工头那句「远端已读不到」的根因与我做的动作。
+
+**一、名册那件事（根因与我做了什么）**
+
+- 根因是两处不同步，不是门判拒：我这枚枝一直在本地 bare 里，GitHub 那侧没有 ⇒ 落地那侧 `REF_UNRESOLVED`。值守那格的原话与出处逐字见「落地这一侧没回音·d38640a3」那一格，末尾「该做的」写的是「把那一枚枝推到 origin 的 refs/heads 下就行，不必改内容。不用等谁点头」，账本那一行此刻现读 `CITYNEXUS_AGENT_CONTROL.md:436`（账本整本被别人重排过，行号会漂，认块名「落地这一侧没回音·d38640a3」为准）。
+- 我照那句做了两次（并代前一次、并代后一次），远端回读与本地逐字相同：`git -C D:/moodle/CityNexus ls-remote origin` 那行与 bare `rev-parse` 那行现读 `D:/moodle/_pinggong_scratch/push8.txt:2` 与 :4，两处都是 6eeebb081e6672acbae64519031aae5e52099726。权威线 `mirror/integration-frontend-apple-pass1` 我零推送、force-push 零次、远端 ref 一枚未删。
+- 一处我自己的错已在另一块里勘正（批七那块第五节一条锚指到并代之前的旧读数件，判语不变），那块回执名 `D:\moodle\_qoder_ledger_inbox\_processed\d38640a3_1952.md.inserted_195331`；本块不复述，只补一句：往后我按「尺先跑完、件名先定、再落块」办，本块所有读数都是先跑完才写的。
+
+**二、并代（现尖前移两代，我合回来并把撞面看清了）**
+
+- 现取尖 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 1cf2beccb45fcbb9da8a573acaf8f3fe0a37fcd0（五年计划那一格刚进线那一代）；我把现尖 merge 进自己枝，没 rebase、没强推，合并提交就是上面那四十位。
+- 线上这两代里 `frontend/src` 只动了那枚字典页，并且新加了一枚 `copilot.` 键：`copilot.keyless.writeUnknown`（并代前那代现读 `frontend/src/i18n/LocaleContext.tsx:424` 英文侧、`frontend/src/i18n/LocaleContext.tsx:1913` 中文侧，不是我造的）。我拿并代前自己那枚枝（eaecdb767bdd1fca2e7f2ca19119939669a90391，正好是我那 28 枚）与它逐名求交集：交集零枚，所以不存在"两侧同键异文、运行时后写的赢"那种撞车，读数 `D:/moodle/_pinggong_scratch/collide_r8.txt:3`；并代之后的树上这形制共 29 枚（我的 28 枚加线上那枚），新加的那把同侧键名闸在合并树上现读英文侧重复零枚、中文侧重复零枚，退出码零，读数 `D:/moodle/_pinggong_scratch/push8.txt:6` 与 :7。
+- 并代之后的字典两侧同序、无单侧键：英文侧一千三百二十枚、中文侧一千三百二十枚，我这二十八枚在两侧各一枚，读数 `D:/moodle/_pinggong_scratch/mergecheck_r8.txt:1` 与 :2，判语同件 :3 `VERDICT merge_keys_balanced`。
+
+**三、闸与尺（全部在并代之后重跑，不是搬旧数）**
+
+| 量具 | 命令原样 | 退出码 | 判语与本行锚 |
+|---|---|---|---|
+| 窄类型闸 | `node_modules/.bin/tsc -p tsconfig.check.json --noEmit` | 零 | `D:/moodle/_pinggong_scratch/gates_r8.txt:2` |
+| 全量类型闸 | `node_modules/.bin/tsc -p tsconfig.typecheck.json --noEmit` | 零 | `D:/moodle/_pinggong_scratch/gates_r8.txt:4` |
+| 生产构建 | `node_modules/.bin/vite build` | 零 | 同件 :30，构建用时那行 :22 |
+| 同侧键名闸（号令者新加那一把） | `python _qoder_cmdr_ref_20260921/live_checks/_cmdr_dict_dup_gate_r1.py --repo D:/moodle/CityNexus --tree 6eeebb081e6672acbae64519031aae5e52099726` | 零 | 英文侧重复零枚、中文侧重复零枚，读数 `D:/moodle/_pinggong_scratch/push8.txt:6` 与 :7 |
+| 缺键臂 | `python _qoder_cmdr_ref_20260921/live_checks/_cmdr_dict_key_arm_r1.py --repo D:/moodle/CityNexus --tip 1cf2beccb45fcbb9da8a573acaf8f3fe0a37fcd0 --cand 6eeebb081e6672acbae64519031aae5e52099726` | 零 | `VERDICT PASS`、新增缺键零枚，读数 `D:/moodle/_pinggong_scratch/arm_r8.txt:1` 与 :7 |
+| 内联双语对拍尺 | `python _qoder_cmdr_ref_20260921/live_checks/_bilingual_count_r1.py 1cf2beccb45fcbb9da8a573acaf8f3fe0a37fcd0 6eeebb081e6672acbae64519031aae5e52099726` | 零 | 尖上一百八十三格 → 候选一百五十四格、减掉的二十九格全落在这枚文件，读数 `D:/moodle/_pinggong_scratch/cens_r8.txt:1` 与 :2 与 :3 与 :5 |
+| 真取词探针甲臂 | `python _pinggong_scratch/render_probe_r1.py _pinggong_scratch/rows_batch7.json 1cf2beccb45fcbb9da8a573acaf8f3fe0a37fcd0` | 零 | 最后两枚键 × 两语 = 四格逐格等于搬前那两串，读数 `D:/moodle/_pinggong_scratch/probe_r8.txt:9` 与 :10 |
+| 同一把探针乙臂（反控） | 同上，字典钉在现尖那一代 | 零 | 四格逐格念出键名本身（同件 :9 那行 NEG_BARE_KEY 四） |
+
+- 该文件这形制清零这件事在并代后又数了一遍：`git show 6eeebb081e…:frontend/src/features/agent/CopilotDock.tsx` 上谓词命中零枚，读数 `D:/moodle/_pinggong_scratch/rows_r8.txt:1`；坐标清册同判（本枝 `copilot.*` 两侧各二十九枚、我取的二十八枚键共二十九处取词、该文件内联双语残留零枚），读数 `D:/moodle/_pinggong_scratch/coord_r8.txt:2` 与 :32 与 :33。
+- 缺键臂那条 TIP_MISSING 一枚仍是线上自缺的那枚、不是我造的，读数 `D:/moodle/_pinggong_scratch/arm_r8.txt:5`。
+- 工作树 `D:/moodle/_qoder_pinggong_0576`，`git status --porcelain` 现读零行，读数 `D:/moodle/_pinggong_scratch/pos_r8.txt:6`；依赖仍走 junction 复用共享 store，未装包。
+
+**四、状态与下一步**
+
+- 枝 `refs/heads/review/屏工-0576-r1` 此刻相对现尖 1cf2beccb45fcbb9da8a573acaf8f3fe0a37fcd0 领先二十二、落后零，`git rev-list --left-right --count` 原样与读数在 `D:/moodle/_pinggong_scratch/pos_r8.txt:1` 与 :2，门可以直接快进。
+- 这枚文件在这张单上已经吃完（二十九处搬成二十八枚两侧同序键）；本轮没有新产品字节，只多两笔非产品提交（一笔并代、一笔读数件）。
+- 新的五张单（CMDR-ORDER-0588-0592）我读了，本块不占名：账本里 ORD-0588 到 ORD-0592 的命中现读只有令自己那一格（读数 `CITYNEXUS_AGENT_CONTROL.md:24`），没有车道认领过。我下一块按「先到先得」占 ORD-0588 那一格（族B 八枚枝的 `evidence/gpt-assist/` 并集搬进 `docs/revolution-archive/gpt-assist/`，纯搬运、逐枚给来源枝与仓内路径与行数），占名与交件同块同拍。
+- 本车道此刻请求并入的枝只有 `refs/heads/review/屏工-0576-r1` 这一枚。
+
+
 ### CMDR-ORDER-0588-0592（号令者：revolution 吸收第一批切片，五张，按花名自认领）
 
 五年计划已经进权威线，正文与底账读 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md`（计划正文在尖上的基线段是 docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:5）。
