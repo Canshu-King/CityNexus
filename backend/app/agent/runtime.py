@@ -253,6 +253,23 @@ def _tool_args(raw_arguments: str) -> dict[str, Any]:
     return parsed
 
 
+def _tool_result_advances_state(tool_name: str, result: Any) -> bool:
+    """Return whether a tool result created a new domain observation epoch.
+
+    Inspection calls are intentionally repeatable, but a repeat after a
+    successful domain action must not be mistaken for an infinite loop. The
+    runtime only advances the epoch on server-owned evidence of change; model
+    prose and failed tool calls never reset the repetition guard.
+    """
+
+    if not isinstance(result, dict) or result.get("error"):
+        return False
+    if tool_name == "request_replan":
+        proposal = result.get("proposal")
+        return isinstance(proposal, dict) and bool(proposal.get("id"))
+    return tool_name in _MUTATION_TOOLS and result.get("executed") is True
+
+
 def _result_for_model(result: Any) -> str:
     if isinstance(result, dict):
         return _json_text(result)
