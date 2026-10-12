@@ -1,4 +1,45 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0637-RULER-SHALLOW-FIX（号令者自修仪器｜吸收尺不再把浅仓的失明当退化）
+
+现场成因只有一句：`D:/moodle/CityNexus` 是浅仓（现读 `--is-shallow-repository` ＝ true），
+浅仓在截断边界外答不出祖先，`merge-base --is-ancestor` 对着真祖先返回非零。
+同一枚吸收代 a15e1959a551 与现尖，两棵仓各判一次，今天现跑的结果是：D:/moodle/CityNexus 里 rc=1、D:/moodle/_qoder_integration_20260919 里 rc=0——
+两把尺打架的成因不是数错了，是其中一把没有那段历史。原先那把尺把「我看不到」报成
+「吸收代不在权威线上」，rc 从 4 跳到 9，于是 04:57 那拍跑批日志里的 ABSORB 退化是假红。
+
+改了什么（已落线，尖现读 a91efcc1a7fc）：祖先与对象判定只在非浅仓里做；两棵候选仓都是浅仓时
+这把尺**不判（rc=3）**而不再退化成 rc=9。三处现读坐标：文件头写死这条规矩的说明在
+`live_checks/revolution_absorption_check_r1.py:11`，浅仓不判那一句在 `live_checks/revolution_absorption_check_r1.py:14`，每拍打印取数仓那行在 `live_checks/revolution_absorption_check_r1.py:174`。
+自测 `live_checks/revolution_absorption_check_r1.py:50` 现场跑：`ABSORB-SELFTEST assertions=4 failures=0`。
+它真造一棵 depth=1 克隆来复现「浅仓答不出祖先」，不是只测函数返回不抛。
+落地门判语：verdict=READY_TO_LAND、ff=True、intersection=0、product introduced 为 none；
+门回执已按逐字节对发布（blob 67ef776ea7f0ea4ce5892fb3b684c8138d1ebcaf，路径 evidence/cmdr-landing-0636-0519/preflight_r1.json）。
+
+修完的现场读数（不是我转述，是吸收腿自己落的档）：
+  `live_checks/_absorb_leg_r1.py:1` 最后一行 → 2026-10-13 05:20:22 | ABSORB 尖 a91efcc1a7fc｜表 41 条枝｜已挂吸收代 8｜未吸收 33｜rc=4
+口径不变：表 41 枚枝、已挂吸收代 1、未吸收 33，rc 现在诚实地停在 4（推进中）。
+对账表本身的 blob 现读 47afea81f4409423498cda4fe3e3a321c1b25863（这单零改表字节，只动那把尺）。
+
+给各车道的常设一句：凡是用 `merge-base --is-ancestor`、`rev-list --ancestry-path`、
+`git log <老代>..<尖>` 判「在不在权威线上」的，先对自己那棵仓跑一次
+`git rev-parse --is-shallow-repository`；读出 true 就等于这把尺没有那段历史，
+结论只能是「不判」，不能是「不在」。`D:/moodle/CityNexus` 是浅的，
+`D:/moodle/_qoder_integration_20260919` 不是——要判祖先请用后者，或像我这样两棵都跑一遍再摊读数。
+
+
+### 五枚枝卡在 rebase｜枝名自带主人，现尖与判语都在档（不用你猜哪一枚）
+读数三条（每条都带自己那枚锚，方便你或车道复算）：
+排队枝 5 条，枝名自带花名（加闸工、路牌工甲、快钉工×3）｜锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:2
+落地回执判红 5 笔：头一笔是「1 file(s) did not merge to the lane's own bytes」，后四笔都是「the three-way merge reports conflicts」｜锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:6 与 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:7
+在写的扇数与缺口各 2 处读自同一把尺那一拍（working 2、short_by 6，额度墙 0）｜锚 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_fleet_gap_0500.txt:2
+现尖（跑批 ls-remote 那枚 ref 现取，不是我抄卡；写出来之前我拿 cat-file 验回类型）：f0a6ec7376a1ee64027e02fa15c5906cc71dc374
+类型原读在 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:3，尖那行在 D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:4
+按既有规矩把这句原样递给三扇主人：**已发布的枝不许 rebase，解法是把现尖 merge 进自己的 review 枝再重推**；我不碰任何人的枝、不合并一个字节，也不手跑 merge 脚本（成功即写账本那条限制还在）。
+通知这一环不缺：本拍枝那腿「回执里拒枝 4 笔＝冷却内 4」，五枚的判语都在作者手上；缺的是有人动手，而车队只剩两扇在写、缺口六扇——补法在上一块「车队缺口」里已经写了（等派单，我不代派、不超唤醒预算）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0635-DICT-UNION（号令者派单｜花名「键盘工」｜12 枚让路枝的键并成一枚落线）
 
 现在的面（现读 `D:/moodle/_qoder_cn_work_0609/_cmdr_cn_rebase_prep_r1.py:1` 那把尺落的两份表）：尖 f0a6ec7376a1；frontend/src/i18n/LocaleContext.tsx 在尖上有 3160 行；
