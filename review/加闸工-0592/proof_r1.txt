@@ -1,0 +1,90 @@
+
+==============================================================================
+1 尺自己的自检（leg --selftest）
+==============================================================================
+  裸数 5 条。
+  
+  ABSORB-LEG-SELFTEST assertions=30 failures=0
+  exit=0
+
+==============================================================================
+2 真跑一拍 --dry（不写盘）
+==============================================================================
+DRY ROW（未落盘）｜未吸收 41 条（TO_ABSORB 35／CARRIED_BY_REP 6）｜判语=首拍无对照｜rc=4
+ABS-LEG 权威尖 3bf57cc0e15e｜尺 rc=4｜判语=首拍无对照｜成因=状态件里还没有上一拍的行，这一拍只落账不报警
+ABS-QUIET｜这一拍不报警（首拍无对照），名单刷进 _absorption_cstate.json
+  exit=0｜状态目录里有几枚文件：0
+
+==============================================================================
+3 真跑一拍 --apply（状态件应落下带日期的一行）
+==============================================================================
+ABS-ROW _absorption_state_20261012.tsv｜1 行｜未吸收 41 条（TO_ABSORB 35／CARRIED_BY_REP 6）｜判语=首拍无对照
+ABS-LEG 权威尖 3bf57cc0e15e｜尺 rc=4｜判语=首拍无对照｜成因=状态件里还没有上一拍的行，这一拍只落账不报警
+ABS-QUIET｜这一拍不报警（首拍无对照），名单刷进 _absorption_cstate.json
+  状态件：['_absorption_state_20261012.tsv']
+   | 时间戳 | 拍号 | 权威尖 | 尺退出码 | 表内枝数 | 已挂吸收代 | 未吸收 | TO_ABSORB | CARRIED_BY_REP | 枝对象取不到 | 判语
+   | 20261012 20:47:02 | p2 | 3bf57cc0e15e | 4 | 41 | 0 | 41 | 35 | 6 | 0 | 首拍无对照
+
+==============================================================================
+4 面涨了：种一行「上一拍 40 条」再跑，应报警并把带坐标的块交进临时收件口
+==============================================================================
+ABS-ROW _absorption_state_20261012.tsv｜3 行｜未吸收 41 条（TO_ABSORB 35／CARRIED_BY_REP 6）｜判语=面涨了
+ABS-LEG 权威尖 3bf57cc0e15e｜尺 rc=4｜判语=面涨了｜成因=未吸收面从 40 涨到 41（+ 1 枚）
+已交：C:\Users\仓鼠王\AppData\Local\Temp\absorb_proof_5hhg_2ce\inbox\cmdr_absorption_2047.md｜1725 B｜自查绿 claims checked 4 | exempt {"DIMENSION": 1} | overall Q43_GATE_GREEN | findings 0 []
+  临时收件口：['cmdr_absorption_2047.md']
+  交出去的块头 8 行：
+    ### 加闸工 ORD-0592 腿的报警（10-12 20:47）：吸收面 面涨了，成因在下面
+    
+    跑批第 p3 拍现读，命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`。
+    
+    | 读数 | 值 | 锚 |
+    |---|---|---|
+    | 权威尖 | 3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60 | live_checks/patrol/_absorption_state_20261012.tsv:3 |
+    | 表内枝数 | 41 枚 | docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:2 |
+
+==============================================================================
+5 冷却：同一形状的块不重交（先把「上一拍 40 条」那行种回末位，让判语仍是面涨了）
+==============================================================================
+  ABS-ROW _absorption_state_20261012.tsv｜5 行｜未吸收 41 条（TO_ABSORB 35／CARRIED_BY_REP 6）｜判语=面涨了
+  ABS-LEG 权威尖 3bf57cc0e15e｜尺 rc=4｜判语=面涨了｜成因=未吸收面从 40 涨到 41（+ 1 枚）
+  ABSORB-COOLED｜同一形状的块 0 分前交过（冷却 240 分）⇒ 这一拍不重交；要强制就删 _absorption_cstate.json
+  临时收件口仍是 1 块（同形状不重交）
+
+==============================================================================
+6 负对照：一块没有坐标的件过不了写门
+==============================================================================
+REFUSE｜自查不绿 ⇒ 原稿挪去 cmdr_absorption_9998.md.gate_red｜claims checked 1 | exempt {} | overall Q43_GATE_RED | findings 1 ['NUMBER_WITHOUT_COORDINATE']
+  post 返回 rc=1 kind=gate_red
+  收件口现在：['cmdr_absorption_2047.md', 'cmdr_absorption_9998.md.gate_red']
+
+==============================================================================
+7 退化那一拍：绕过冷却，且尺没给的分档写「尺未报」而不是猜零
+==============================================================================
+ABS-ROW _absorption_state_20261012.tsv｜2 行｜未吸收 38 条（TO_ABSORB 尺未报／CARRIED_BY_REP 尺未报）｜判语=退化
+ABS-LEG 权威尖 3bf57cc0e15e｜尺 rc=9｜判语=退化｜成因=尺报退化：gpt/revolution-r33-open-world-journey-adaptation:吸收代不在权威线上
+已交：C:\Users\仓鼠王\AppData\Local\Temp\absorb_proof_5hhg_2ce\inbox2\cmdr_absorption_2047.md｜1960 B｜自查绿 claims checked 2 | exempt {"DIMENSION": 1} | overall Q43_GATE_GREEN | findings 0 []
+  退化那拍的块：['cmdr_absorption_2047.md']
+    | 按 verdict 分 | TO_ABSORB 尺未报 条／CARRIED_BY_REP 尺未报 条 | live_checks/patrol/_absorption_state_20261012.tsv:2 |
+    | 尺退出码 | 9（语义见 live_checks/revolution_absorption_check_r1.py:9） | live_checks/patrol/_absorption_state_20261012.tsv:2 |
+    - gpt/revolution-r33-open-world-journey-adaptation:吸收代不在权威线上 —— 它在对账表里那一行：`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:?`
+
+==============================================================================
+8 挂载件：锚、字节等式、可编译、幂等（只动临时副本，绝不碰跑批本体）
+==============================================================================
+  [DRY] exit=0 PREVIEW 可编译｜行数 395 到 408（+13）｜锚行存活=True｜字节等式=过 ⏎ PREVIEW 落在 loop_copy.py.absorption_preview ⏎ DRY｜未改动跑批本体。要挂上：python mount_absorption_leg_r1.py --apply
+  [--apply] exit=0 PREVIEW 可编译｜行数 395 到 408（+13）｜锚行存活=True｜字节等式=过 ⏎ PREVIEW 落在 loop_copy.py.absorption_preview ⏎ MOUNTED｜备份 loop_copy.py.bak_absorb_20261012_204744｜现件行数 408｜这条腿要等跑批重启才带上：在跑的那一进程用的是内存里那份旧码，改文件不会让它自己换血（重启由号令者定，我不碰那一枚 pid）
+  [--apply] exit=0 ALREADY-MOUNTED｜跑批里已经有这条腿了，不重复插
+  行数 395 到 408（+13）；原件行数现在=395（应仍为 395）
+
+==============================================================================
+9 挂载块经跑批自己的 run() 真跑一拍（证的是调用形制，不是我抄的一份）
+==============================================================================
+  LOG: round 99 absorption ABS-ROW _absorption_state_20261012.tsv｜1 行｜未吸收 41 条（TO_ABSORB 35／CARRIED_BY_REP 6）｜判语=首拍无对照 ;; ABS-LEG 权威尖 3bf57cc0e15e｜尺 rc=4｜判语=首拍无对照｜成因=状态件里还没有上一拍的行，这一拍只落账不报警 ;; ABS-QUIET｜这一拍不报警（首拍无对照），名单刷进 _absorption_cstate.json
+  这条腿在部署预览里写出的状态件：['_absorption_state_20261012.tsv']
+   最后一行：20261012 20:47:58	99	3bf57cc0e15e	4	41	0	41	35	6	0	首拍无对照
+
+==============================================================================
+10 收尾：现场都在临时目录，随本次一起清掉
+==============================================================================
+  tmp=C:\Users\仓鼠王\AppData\Local\Temp\absorb_proof_5hhg_2ce
+  清完还在=False

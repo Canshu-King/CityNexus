@@ -1,0 +1,13 @@
+加闸工 ORD-0592 读数件 —— 把吸收尺接成落地循环的一腿，逐行自编号
+1  单：账本 CMDR-ORDER-0588-0592 里那张 ORD-0592（账本第 72 行起那块）。要求三件：每拍跑一次尺；未吸收面写进带日期的状态件；面涨了或报退化要把成因带回账本，不要只留一行日志。
+2  尺的现状（本块不改它一字）：`live_checks/revolution_absorption_check_r1.py` 在尖上 107 行、4576 字节；退出码语义那行是 live_checks/revolution_absorption_check_r1.py:9（0 闭合／9 退化／4 推进中／3 取不到数）；对账表 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv 在尖上 42 行，首行是列名、第 2 行起是枝。
+3  先量到一处会让这条腿变成假活的形状：号令者的量具工作树 `_qoder_cmdr_ref_20260921` 检出在 e9efec6bf（09-21 18:31）那一代，`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 与尺字节都不在那代里，逐项在否见 wt_truth_r1.txt:3、wt_truth_r1.txt:4。尺自己 live_checks/revolution_absorption_check_r1.py:61 那行遇到对账表不在就打「读不到 ⇒ 不判」并回退出码 3——「就地跑本地那份尺」会每拍得到一个像模像样的红，那是把哑尺当仪表。
+4  这条腿因此照落地门已有的形制取字节：门上那条注释（工作树那代 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\preflight_and_land_r7.py:495）写的是「尺的字节每次从尖上取，免得本机陈旧副本把现在不肯放的放过去」。腿从现尖取尺字节（live_checks/patrol/_absorption_leg_r1.py:94）与对账表字节（:97）放进 scratch（:53），再原样执行那把尺（:87），解析它自己打印的那几行——判腿一字未改，改的只是它读的是哪一代。
+5  每拍做什么：跑一拍的入口 live_checks/patrol/_absorption_leg_r1.py:326；这一拍一行追加进带日期的状态件 `live_checks/patrol/_absorption_state_YYYYMMDD.tsv`（文件名带日期，命名在 :169，追加在 :190），列是时间戳／拍号／尖／尺退出码／表内枝数／已挂吸收代／未吸收／TO_ABSORB／CARRIED_BY_REP／枝对象取不到／判语。
+6  报警判据（live_checks/patrol/_absorption_leg_r1.py:203 起）：退出码 9 或退化名单非空 ⇒「退化」；退出码 3 或腿连尺字节都取不到 ⇒「取不到数」——这条绝不写成「没事」；未吸收比上一拍涨、已挂吸收代比上一拍掉、取不到的枝变多 ⇒「面涨了／对象取不到」；持平 ⇒「推进中」，只落账不报警。上一拍那行从状态件末位读（:173）。
+7  成因怎么带：块里逐枚点名——退化名单每一枚给它在对账表里那一行（live_checks/patrol/_absorption_leg_r1.py:277），新落进未吸收面的枝给枝名与行号（名单与行号来自 :148），权威尖／状态件行／尺退出码语义各挂各的锚。整件样例见 escalate_sample_r1.md:1（实跑交出来的那块，不是手写的模板）。
+8  冷却与写门：同一形状的块 240 分钟内不重交（判在 live_checks/patrol/_absorption_leg_r1.py:376 与 :393，冷却钟与上一拍名单存在 `live_checks/patrol/_absorption_cstate.json`）；判定变了或更坏立刻绕过冷却——压着一件退化等四小时就是这条腿该死的地方。块落进收件口之前先过入账自查（:313 调 block_selfcheck_r1.py），不绿就把原稿改名 `.gate_red`、不进收件口：规则装在写它的那扇门上，不靠我记得。
+9  它不参与落地判定：这条腿只观察，不改 problems、不动权威线、不碰账本本体（LEDGER_SINGLE_WRITER_V1，块只走收件口）。顺带核了一件事好知道门到底在哪：落地驱动 live_checks/cmdr_batch_land_r1.py:168 叫的是 preflight_and_land_r7.py（工作树那代，codes-on-screen 臂在它 :493-:501 活着），尖上另有 live_checks/preflight_and_land_r8.py 一枚（它不含那臂）——我这条腿挂的是跑批本体，不是这两扇门，所以不动任何一扇的判定。
+10 挂载件只做文本插入：锚点唯一判在 live_checks/mount_absorption_leg_r1.py:57，已挂过就 ALREADY-MOUNTED 不重复插（:62），字节等式（插进去的那份删掉必须等于原文）判在 :68，预览件编译 :79，`--apply` 才写并留时间戳备份（:92）。我不重启跑批：在跑那一进程用的是内存里那份旧码，改文件不会让它自己换血，重启归号令者（那句话打印在 :99）。
+11 本块零产品字节：只交三枚量具件（腿 live_checks/patrol/_absorption_leg_r1.py、挂载件 live_checks/mount_absorption_leg_r1.py、仪件 live_checks/absorption_leg_proof_r1.py）与读数；`frontend/src` 与 `backend/` 一枚没碰，符合那张单「不改产品码的对外行为」。尺本体与对账表在枝上与尖上逐字节相同（对拍见 gates_r1.txt:9）。
+12 一处我自己写错又被检查拦住的（贴出来是因为它证明那道闸有效）：挂载件最初把等式写成「删掉 INSERTION 等于原文」，而 INSERTION 含锚，删一次就连锚一起删，等式永远不成立——它当场 ABORT 而没有乱写文件（现件用的是删 DELTA 那份正确等式 live_checks/mount_absorption_leg_r1.py:68）。

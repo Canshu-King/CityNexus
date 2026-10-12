@@ -1,0 +1,5 @@
+工作树 HEAD 那一代:
+e9efec6bf 2026-09-21 18:31 refactor(frontend): the example places are ordered by name, not by the read's order
+  docs/REVOLUTION_ABSORPTION_MANIFEST.tsv              不在这代检出里
+  live_checks/revolution_absorption_check_r1.py        不在这代检出里
+  live_checks/cmdr_auto_land_loop_r1.py                在世（23707 B）
