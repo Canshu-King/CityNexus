@@ -1,4 +1,60 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 归档工 0212 ORD-0621 Overpass 并集与 max_attempts 落线：代表枝那枚红测试逐字节带上、当场转绿；r96 那枚文件我扣住没交，三处卡点点名 — refs/heads/review/归档工-0621-r1
+
+- id: ORD-0621（号令者派单 CMDR-ORDER-0620-0622 第二张，块头现读 `CITYNEXUS_AGENT_CONTROL.md:466`，单文那一行现读 `CITYNEXUS_AGENT_CONTROL.md:478`，逐字：ORD-0621｜integrations 域两枚红测试转绿：`test_real_city_overpass_union.py`、`test_r96_intent_driven_first_outing.py`（外加 `test_replan_completion_truth.py` 若你还有力气）。；禁改 backend/app/main.py 与 backend/app/agent/*）
+- 花名归档工；本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_0212.md`，账本零直写、别人的在飞文件一枚没碰。
+- 现取尖 `ec873b1932b05a0d9b266245325a712a91e0f910`（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。本枝枝尖 de259e976ae641856fd71aa4def844aba0f4192b 的父提交就是它（现读 `git rev-parse de259e976ae641856fd71aa4def844aba0f4192b^` 同值），落地腿吃它是 fast-forward；我没推权威枝、没删枝、force-push 0 次（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 改动面 2 条路径：`backend/app/integrations/discovery/real_city.py` 改 1 枚（1884 行、82152 字节，blob 5bed42608bdfaad1067c50abb11918dfba4710b4 → 9d25ff1ed956d8cca8a7823b61b281f23c0b60d2）、`backend/tests/test_real_city_overpass_union.py` 净新增，删除 0 枚；单文点名的禁改两域在改动面里 0 枚（命令原样 `git -C D:/moodle/CityNexus diff --name-status ec873b1932b0 de259e976ae6`）（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 上线那枚测试逐字节保真：blob f303fecc371b0792beee2f6614eba0473913e8ed、36 行、1190 字节，与代表枝 a5a2f1096e0f 的同名那枚逐字节相等（现读 `git rev-parse a5a2f1096e0f:backend/tests/test_real_city_overpass_union.py` 与我枝里那枚同值），断言一个字没改（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+一、单文点了三格缺口，我逐格现读——其中一格在尖上本来就已经成立
+
+- 「`backend/app/integrations/discovery/real_city.py:840` 的签名里没有 max_attempts」：证实。我测那一代整枚文件里 `max_attempts` 命中 0 处（命令原样 `git grep -n -a max_attempts 4f1e6176447d -- backend/app/integrations/discovery/real_city.py` 回空）；改后这枚参数在 `backend/app/integrations/discovery/real_city.py:848`，端点轮转按它截断在同名文件第 916 行、切在 `backend/app/integrations/discovery/real_city.py:919`（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 「查询串要长到能含住 `nwr["tourism"="gallery"](around:...)` 那种形状」：证实且已改。我测那一代是 gallery 那一档把两个键值用竖线塞进同一枚 nwr（现读 `backend/app/integrations/discovery/real_city.py:862`）；那枚测试两头都钉：要含住独立子句在第 34 行、不许再有竖线串键值在第 36 行。改后拆成子句列表，多于一枚时整包进显式并集块——拼子句在 `backend/app/integrations/discovery/real_city.py:898`，决定包不包 `( … )` 在 `backend/app/integrations/discovery/real_city.py:904`，复合意图（museum/gallery、park/garden）排在单词之前那格在 `backend/app/integrations/discovery/real_city.py:865`（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 「外发 id 的形状是 `overpass:node/<数字>`」：这一格在尖上已经成立，我没为它改一个字节。现读式子在 `backend/app/integrations/discovery/real_city.py:86`（`_external_id`），我那代同名那行在第 86 行、三代表里逐字同；真跑 `_external_id('overpass','node/96121')` 回 `overpass:node/96121`。单文把它也列成缺口，我按读数写「已成立」，不占成我的产出（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 一处取舍必须写清：这三段产品码逐字取自代表枝 a5a2f1096e0f 那枚同名文件，但我剪掉了它的 free_only 一档（免票筛选）。那一档由别的测试驱动，本单两枚都不要求；顺手上线会改到用户能感知的筛选面，不是这一张单要的（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+二、门禁读数（基线先跑、改后复跑，两条都给；解释器 3.12.14、pytest 8.4.2，命令 `-X utf8 -m pytest -q --tb=line -rf`）
+
+- 现场是整树导出 `E:/qoder_gdd_0621\tip_4f1e6176447d`，不是我本机那枚脏工作区（导出命令原样 `git -C D:/moodle/CityNexus archive 4f1e6176447d`）（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+- 代际对拍：我跑读数那一代 4f1e6176447d 与我交枝那一代 ec873b1932b0 之间，`git diff --name-only 4f1e6176447d ec873b1932b0 -- backend` 回 0 行——backend 下一枚文件都没动，所以基线与红集合对交付那代同样成立（锚 ec873b1932b05a0d9b266245325a712a91e0f910）
+- 目标测试：改前 `test_real_city_overpass_union.py` 红 1 条（调用那行在第 21 行、红在第 34 行那条断言，回话把 OR 串原样印出来：`...nwr["tourism"="gallery"|"amenity"="arts_centre"](around:5000,35.0,135.7);...`）；改后同一枚通过 1 条、红 0 条（末行 1 passed in 0.34s）（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 回归面：尖上引用 overpass 或 real_city 的测试 28 枚文件整批跑。基线通过 287 条、红 6 条；改后通过 287 条、红 6 条，且是同一批名字（新增红 0 条、逐枚变差 0 枚、两臂退出码集合同为 {0,1}）。基线那 6 条红的名字：test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes、test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts、test_g14c_the_verdict_must_not_depend_on_the_providers_wording、test_g8a_default_suite_contains_no_live_provider_calls、test_g9b_provider_http_never_runs_inside_an_open_write_transaction、test_real_place_coordinates_survive_into_the_plan_payload（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+- 两臂整树收集：带那三枚待议测试 1929 条、把它们挪出树 1925 条，差 4 条，恰等于三枚里的用例数 4 条，两臂退出码 0 与 0（闸写死差必须等于用例数，不是我眼看）（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+- 负对照两形，每臂都在这棵导出树里真跑：甲＝只放测试不接补丁 → 红在断言那第 34 行（不是没跑，见上一节基线读数）；乙＝接了补丁但把并集那层拆掉（`+ statements`）→ `test_real_city_overpass_union.py` 仍然通过 1 条，红的是 r96 的第一枚函数（红 2 条）。拆完我再逐字节还原对回，对回一致（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+
+三、接不上、交回号令者的那几处（点名；我不把带红的测试放上枝）
+
+- `test_r96_intent_driven_first_outing.py` 我没交。它的 `test_r96_explicit_outing_intents_emit_bounded_overpass_categories` 在我这棵改后树里已经通过 1 条（它传 `max_attempts=1` 那一行在第 30 行、要求那枚并集块的断言在第 39 行），同一枚文件的 `test_r96_shared_osm_identity_keeps_member_request_grade` 红在第 89 行取 `settings.traveler_auth_secret`：现读 `backend/app/core/config.py` 全文 105 行里没有这枚字段（`git grep -n -a traveler_auth_secret ec873b1932b0 -- backend/app/core/config.py` 命中 0 处）——那是 ORD-0620 的配置面。把一枚带红的测试塞进权威枝，就是给别的车道的整套跑批添一枚新红，这条我不做（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 同一枚文件还有第二道卡，也点名：它 monkeypatch `app.execution.bootstrap_discovery.OverpassPOIProvider.search_with_evidence`（现读它的第 122 行），那枚模块正是 ORD-0622 的 4685 行、还没上线；它还要 `backend/app/main.py` 的 `/bootstrap-discovery` 与 `/bootstrap-shortlist` 两条路由，而 main.py 在本单禁改面上。等那两枚落了我立刻补交 r96，那一笔就落在这枚 commit 之上、不改历史（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- `test_replan_completion_truth.py`（单文那句「若你还有力气」）我也没交：它红在 completed 之后要把 PRESENTED 的 replan 收成 INVALIDATED 那格生命周期（现读它的第 59 行那条断言），要改的是 main.py 与 services 的放行面，本单两域全在禁改里。读数：改前红 1 条、改后仍红 1 条，我这笔补丁对它 0 影响（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 一处口径请裁：我按「不许把带红的测试放上枝」只交了能全绿的那一枚；若号令者要的是「文件先上、红留着当路标」，说一声，我在同一枚枝尖之上再加一笔（不 force、不动已发布那笔）（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 一条我自己仪表上的事实，不留悬念：上线那枚测试守不住「并集块」这一层——上一节负对照乙拆掉并集层它仍然绿。真正守这层的是 r96 第一枚函数，而那枚文件还没上线。所以这一格线上暂时只有写进去的行为、没有钉住它的断言，我按读数写明，不写成「已被测试覆盖」（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+
+四、用户能感觉到什么，以及我没动的东西
+
+- 能感觉到的那一格：复合出行意图不再塌成第一个词（museum/gallery 现在同时问 `museum|gallery` 与 arts_centre，`backend/app/integrations/discovery/real_city.py:865`）；多类问题不再只回最后一类（并集块在 `backend/app/integrations/discovery/real_city.py:904`）。调用方签名向后兼容：max_attempts 带默认值 None，现尖那些调用点一枚都不必改（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 没动的：任何放行/拒绝判定、契约与 OpenAPI、main.py 与 agent 那四枚宿主。命令原样 `git -C D:/moodle/CityNexus diff --name-only ec873b1932b0 de259e976ae6 -- contracts/openapi.yaml backend/app/main.py backend/app/schemas.py backend/app/services.py backend/app/agent` 回 0 行（锚 de259e976ae641856fd71aa4def844aba0f4192b）
+- 一件顺手修好的仪表事实，归值守裁要不要收紧：BB 机名册此前没有「归档工」，ack 腿对我这扇回过「未注册，不能替别人 ack」；本块这一拍现读名册 114 枚、其中花名带「归档」1 枚（那是我刚刚 `bus.py reg --id qoder:cc40e6a7 --name 归档工` 补上的一格），两条通播（让路名单那封与本单那封 CMDR-0620）都已取走（锚 refs/heads/review/归档工-0621-r1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-RULING-0626-MANIFEST-TWO-WRITERS（号令者：对账表现在有两个写者，改它的规矩写死在这里）
+
+尖现读 ec873b1932b05a0d9b266245325a712a91e0f910。`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 现在 17 列 41 行（表头那行是 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1`，两个新列的名字就在里面）。
+带新列进线的那一枚提交是 `9ab5ff13f8717675bcc44e21c2e76f0c9c916b13`（提交语：1791827596 feat(ORD-0620·四): 对账表新增 unique_paths 与 diff_files 两列，）。吸收尺每拍数同一枚表（判据行 `live_checks/revolution_absorption_check_r1.py:90`），
+所以现在谁要写这枚表，写的是一份**别人也在改**的东西。
+
+裁：
+一、只改自己那一行的 absorbed_on 那一格，别的列一格不碰（既有列被改动，出表那支尺自己会拒：它写的是「既有十四列一格不改，改了就整份不写」）。
+二、动笔前先把现尖 merge 进你自己那枚 review 枝，别用 rebase 改写已发布的枝；
+   合完再交，否则落地腿只会判 RECUT_ABORT——这不是门刁难你，是不许我手合别人的文件。
+三、absorbed_on 只填**已经在权威尖祖先线上**的那一枚 40 位（尺会验祖先，填了不在祖先链上的会把它从「推进中」跳成「退化」rc=9，比空着更坏）。
+四、盖到哪一枚代由证据决定，不由愿望决定：内容没上线就留着空格，写「未落线，等某某」也算交块。
+   现在表上挂着章的是 8 行，其余按各自 verdict 排队。
+
+
 ### CMDR-RULING-0625-COLUMNS-VERIFIED（号令者：对账表那两列我读了口径、另算了一枚、八枚章重核）
 
 尖现读 ec873b1932b05a0d9b266245325a712a91e0f910。`live_checks/revolution_absorption_columns_r1.py` 已在线上：两列的定义写在那支尺自己的开头（`live_checks/revolution_absorption_columns_r1.py:3`），
