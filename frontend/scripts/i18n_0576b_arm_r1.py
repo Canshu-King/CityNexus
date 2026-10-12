@@ -98,6 +98,22 @@ def base_text(path):
     return subprocess.check_output(["git", "-C", TREE, "show", "%s:%s" % (BASE, path)]).decode("utf-8")
 
 
+def show_at(rev, path):
+    return subprocess.check_output(["git", "-C", TREE, "show", "%s:%s" % (rev, path)]).decode("utf-8")
+
+
+def merged_tip():
+    """The tip this branch merged in (HEAD^2), or HEAD itself when nothing was merged."""
+    for spec in ("HEAD^2", "HEAD"):
+        p = subprocess.Popen(["git", "-C", TREE, "rev-parse", "--verify", "--quiet", spec],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, _ = p.communicate()
+        sha = out.decode().strip()
+        if p.returncode == 0 and len(sha) == 40:
+            return sha, spec
+    return "", "none"
+
+
 def work_text(path):
     with io.open(os.path.join(TREE, path.replace("/", os.sep)), encoding="utf-8", newline="") as fh:
         return fh.read()
@@ -312,19 +328,35 @@ def main():
         red.append("parity_gap_changed")
     else:
         green += 1
-    # r2 carries batch one's commit, so relative to the base tip the dictionary gains this
-    # batch's 18 keys plus the four main.* keys shipped in batch one
-    mine = sorted([r["key"] for r in ROWS if not r.get("reuse")] + BATCH_ONE)
+    # Generation-proof version of "only this batch added keys". The old form demanded
+    # added == exactly my keys, which only holds in the generation the branch was cut from:
+    # once the lane merges a newer tip (what the landing gate asks for after RECUT_ABORT),
+    # other lanes' keys appear in the same added set and the check reddens while describing
+    # nothing true. What must hold on any generation: every one of my keys is an addition,
+    # both arms gained the very same list in the same order, and every *other* added key
+    # still carries the bytes the merged-in tip has for it -- i.e. I touched none of them.
+    mine = set([r["key"] for r in ROWS if not r.get("reuse")] + BATCH_ONE)
     added_en = [k for k in w_en if k not in b_en]
     added_zh = [k for k in w_zh if k not in b_zh]
-    if sorted(added_en) != mine or sorted(added_zh) != mine:
-        red.append("added_en=%s added_zh=%s" % (added_en[:3], added_zh[:3]))
-    else:
-        green += 1
-    if added_en != added_zh:
+    missing = sorted(mine - set(added_en)) + sorted(mine - set(added_zh))
+    if missing:
+        red.append("my keys not present as additions: %s" % missing[:3])
+    elif added_en != added_zh:
         red.append("added_order_differs")
     else:
         green += 1
+        rev, rev_src = merged_tip()
+        others = [k for k in added_en if k not in mine]
+        if rev and others:
+            t = dict_arms(show_at(rev, DICTF))
+            moved = sorted(k for k in others if t["en"].get(k, (None,))[0] != w_en[k]
+                           or t["zh"].get(k, (None,))[0] != w_zh[k])
+            if moved:
+                red.append("other lanes' keys changed by this branch: %s" % moved[:3])
+            else:
+                green += 1
+                print("other-added keys left as the merged-in tip has them: %d 枚 (rev %s ← %s)"
+                      % (len(others), rev[:12], rev_src))
 
     def cjk(text):
         n = 0

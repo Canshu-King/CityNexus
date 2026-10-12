@@ -24,6 +24,20 @@ CONST_RE = re.compile(r'const defaultAgentCommand =\n\s*"((?:[^"\\]|\\.)*)";')
 
 ev = json.load(open(EV, encoding="utf-8"))
 BASE, ROWS = ev["base_tip"], ev["items"]
+COORDS = []   # 每枚键在字典两侧被内容定位到的行号，跑完打出来
+
+
+def arm_ranges(lines):
+    """Line numbers belonging to each dictionary arm, so a value that is identical on both
+    sides is still counted once per side."""
+    out = {}
+    for name, marker in (("en", "const en: Dict = {"), ("zh", "const zhCN: Dict = {")):
+        start = lines.index(marker)
+        end = start
+        while lines[end] != "};":
+            end += 1
+        out[name] = set(range(start + 1, end + 1))
+    return out
 
 
 def show(rev, path):
@@ -105,7 +119,12 @@ def run(salt=None):
         "parity_after": set(now[0]) == set(now[1]),
         "keys_absent_at_base": all(k not in base_en and k not in base_zh for k in keys),
         "keys_present_both_sides": all(k in now[0] and k in now[1] for k in keys),
-        "only_this_batch_added": (set(now[0]) - set(base_en)) == (set(now[1]) - set(base_zh)) == set(keys),
+        # generation-proof: after the lane merges a newer tip, the added set legitimately holds
+        # other batches' and other lanes' keys too. What must hold is that my keys are all
+        # additions, both arms gained the same set, and no base text moved (checked next).
+        "this_batches_keys_are_additions": set(keys) <= (set(now[0]) - set(base_en))
+            and set(keys) <= (set(now[1]) - set(base_zh))
+            and (set(now[0]) - set(base_en)) == (set(now[1]) - set(base_zh)),
         "existing_texts_untouched": all(now[0][k] == v for k, v in base_en.items() if k in now[0])
                                     and all(now[1][k] == v for k, v in base_zh.items() if k in now[1]),
         "prefill_const_gone": "defaultAgentCommand" not in now_src,
@@ -123,9 +142,20 @@ def run(salt=None):
         checks[tag + "_site_reads_key"] = 't("%s")' % r["key"] in line
         checks[tag + "_read_once"] = now_src.count('t("%s")' % r["key"]) == 1
         checks[tag + "_literal_not_left_in_source"] = want not in now_src
-        checks[tag + "_dict_line_coordinates"] = (
-            '  "%s": "%s",' % (r["key"], r["en"]) == read(DICT_REL).split("\n")[r["dict_en_line"] - 1]
-            and '  "%s": "%s",' % (r["key"], r["zh"]) == read(DICT_REL).split("\n")[r["dict_zh_line"] - 1])
+        # The old form compared the dictionary line against a number pinned in the evidence
+        # file, which goes stale the moment anyone appends above it -- that is what made four
+        # rows red after a re-cut while the bytes were fine. Locate the entry by content, but
+        # per side: these four keys carry the SAME string on both arms (nothing on screen
+        # differs between locales today), so searching the whole file would always find two
+        # copies and the check would be vacuous in the wrong direction.
+        dict_now = read(DICT_REL).split("\n")
+        side = arm_ranges(dict_now)
+        en_hit = [i + 1 for i, l in enumerate(dict_now)
+                  if i + 1 in side["en"] and l == '  "%s": "%s",' % (r["key"], r["en"])]
+        zh_hit = [i + 1 for i, l in enumerate(dict_now)
+                  if i + 1 in side["zh"] and l == '  "%s": "%s",' % (r["key"], r["zh"])]
+        checks[tag + "_dict_entry_located_once"] = len(en_hit) == 1 and len(zh_hit) == 1
+        COORDS.append((r["key"], en_hit[:1], zh_hit[:1]))
     return [k for k, v in checks.items() if v], [k for k, v in checks.items() if not v]
 
 
@@ -141,6 +171,9 @@ def main():
     green, red = run()
     sys.stdout.write("ARM i18n_0576_main: rows=%d green=%d red=%d %s\n"
                      % (len(ROWS), len(green), len(red), sorted(red)[:8]))
+    for key, en_hit, zh_hit in COORDS:
+        sys.stdout.write("  %-24s 字典 en 行 %s 与 zh 行 %s（按内容定位）\n"
+                         % (key, en_hit[0] if en_hit else "-", zh_hit[0] if zh_hit else "-"))
     sys.exit(1 if red else 0)
 
 
