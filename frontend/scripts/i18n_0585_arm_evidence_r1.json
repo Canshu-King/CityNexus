@@ -6,40 +6,40 @@
    "file": "frontend/src/lib/keylessWriteDeadline.ts",
    "before": "62-64",
    "after": 66,
-   "dict_en": 424,
-   "dict_zh": 1913
+   "dict_en": 431,
+   "dict_zh": 1990
   },
   {
    "key": "recover.writeDeadline.title",
    "file": "frontend/src/lib/writeDeadline.ts",
    "before": "84|91",
    "after": 86,
-   "dict_en": 421,
-   "dict_zh": 1910
+   "dict_en": 428,
+   "dict_zh": 1987
   },
   {
    "key": "recover.writeDeadline.body",
    "file": "frontend/src/lib/writeDeadline.ts",
    "before": "86",
    "after": 88,
-   "dict_en": 422,
-   "dict_zh": 1911
+   "dict_en": 429,
+   "dict_zh": 1988
   },
   {
    "key": "recover.writeDeadline.retryGuidance",
    "file": "frontend/src/lib/writeDeadline.ts",
    "before": "87",
    "after": 90,
-   "dict_en": 423,
-   "dict_zh": 1912
+   "dict_en": 430,
+   "dict_zh": 1989
   },
   {
    "key": "live.evidence.serverWordUnexplained",
    "file": "frontend/src/lib/sceneClock.ts",
    "before": "231",
    "after": 232,
-   "dict_en": 420,
-   "dict_zh": 1909
+   "dict_en": 427,
+   "dict_zh": 1986
   }
  ],
  "cjk_census": {

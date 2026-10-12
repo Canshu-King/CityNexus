@@ -240,8 +240,15 @@ def main():
         green += 1
     added_en = [k for k in w_en if k not in b_en]
     added_zh = [k for k in w_zh if k not in b_zh]
-    if sorted(added_en) != sorted(KEYS) or added_en != added_zh:
-        red.append("added=%s/%s" % (added_en, added_zh))
+    # Generation-proof: the line keeps gaining keys from other lanes, so "the set added since my
+    # base" is not mine alone. What must hold is that every key of this batch is present on both
+    # sides, that both sides gained them in the same order, and (checked above) that no pre-existing
+    # row moved. Asserting the exact set reddens every dictionary landing that follows mine.
+    missing = sorted(set(KEYS) - set(added_en)) or sorted(set(KEYS) - set(added_zh))
+    if missing:
+        red.append("my_keys_not_added=%s" % missing[:3])
+    elif added_en != added_zh:
+        red.append("added_order_differs en=%s zh=%s" % (added_en[:3], added_zh[:3]))
     else:
         green += 1
     gone = 0

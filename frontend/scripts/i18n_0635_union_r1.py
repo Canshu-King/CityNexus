@@ -187,15 +187,30 @@ def main():
     apply_mode = "--apply" in sys.argv
     negative = "--negative" in sys.argv
     tip = git("ls-remote", "origin", LINE_REF)[1].split()[0]
-    head = git("rev-parse", "HEAD", cwd=REPO)[1].strip()  # the worktree, not the library
+    head = git("rev-parse", "HEAD", cwd=REPO)[1].strip()
     green, red = 0, []
-    if head != tip:
-        red.append("HEAD {} is not the freshly read tip {}".format(head[:12], tip[:12]))
+    # The branch must already carry the freshly read tip; otherwise the plan below describes a
+    # generation the line no longer is.
+    if git("merge-base", "--is-ancestor", tip, head, cwd=REPO)[0] != 0:
+        red.append("HEAD {} does not contain the freshly read tip {}".format(head[:12], tip[:12]))
+
+    # The generation to diff against comes from git, never from the file on disk: after this merge
+    # lands, reading the working file as the base would report "nothing new" and certify an empty
+    # plan -- which is exactly what the first re-run did.
+    base = None
+    for position, argument in enumerate(sys.argv):
+        if argument == "--base" and position + 1 < len(sys.argv):
+            base = sys.argv[position + 1]
+    if not base:
+        base = git("merge-base", head, tip, cwd=REPO)[1].strip()
+    if git("cat-file", "-t", base)[1].strip() != "commit":
+        raise SystemExit("base {} is not a commit".format(base))
 
     original = open(LC, encoding="utf-8", newline="").read()
     newline = "\r\n" if "\r\n" in original else "\n"
     work = original.replace("\r\n", "\n")
-    marks, rows, wrapped = parse(work)
+    base_text = git("show", "{}:{}".format(base, LC_REL))[1].replace("\r\n", "\n")
+    marks, rows, wrapped = parse(base_text)
     plan, heads, missing = plan_for(tip, rows["en"], rows["zhCN"])
     table = table_keys()
 
@@ -237,7 +252,7 @@ def main():
             if merged[key][slot]:
                 ordered.append((side, key, merged[key][slot]["row"]))
 
-    candidate = insert_rows(work, ordered)
+    candidate = insert_rows(base_text, ordered)
     cmarks, crows, cwrapped = parse(candidate)
     check = {"tip": tip, "head": head, "newline": "CRLF" if newline == "\r\n" else "LF",
              "tip_key_counts": {"en": len({k for _, k, _, _ in rows["en"]}),
@@ -322,6 +337,11 @@ def main():
         k for k in readers if not readers[k]["outside_dictionary"])
     print("ADVISORY keys_without_reader={} of {}".format(
         len(check["merged_keys_without_a_reader"]), len(merged)))
+    if not apply_mode and candidate != work:
+        red.append("the file on disk is not what this plan produces on base {}".format(base[:12]))
+    else:
+        green += 1
+    check["base"] = base
     check["pre_existing_rows"] = {"en": len(old_en), "zhCN": len(old_zh)}
     check["bytes"] = {"before": len(original.encode("utf-8")), "after": len(candidate.encode("utf-8"))}
     def blob(data):
@@ -345,6 +365,8 @@ def main():
             return 1
         with open(LC, "w", encoding="utf-8", newline=newline) as handle:
             handle.write(candidate.replace("\n", newline))
+        if open(LC, encoding="utf-8", newline="").read().replace("\r\n", "\n") != candidate:
+            raise SystemExit("the write did not land what the plan produced")
         print("APPLIED rows={} bytes {} -> {}".format(len(ordered), check["bytes"]["before"], check["bytes"]["after"]))
     with open(EVIDENCE, "w", encoding="utf-8") as handle:
         json.dump(check, handle, ensure_ascii=False, indent=2)

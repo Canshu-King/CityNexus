@@ -1,19 +1,16 @@
 {
   "tip": "0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5",
-  "head": "0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5",
+  "head": "48c23b29ea06a7286844d25e8c8aef0d1440a850",
   "newline": "LF",
   "tip_key_counts": {
-    "en": 1359,
-    "zhCN": 1359
+    "en": 1347,
+    "zhCN": 1347
   },
   "merged_key_counts": {
     "en": 1359,
     "zhCN": 1359
   },
-  "union": [],
-  "union_size": 0,
-  "table_size": 16,
-  "already_on_line": [
+  "union": [
     "agent.assessed",
     "agent.needsMoreInformation",
     "agent.notFeasible",
@@ -25,12 +22,34 @@
     "lib.failureAttribution.readCauseNotClassified",
     "planning.stops",
     "planning.totalCost",
-    "planning.walking",
+    "planning.walking"
+  ],
+  "union_size": 12,
+  "table_size": 16,
+  "already_on_line": [
     "simulation.retryInMs",
     "simulation.retryRightNow",
     "simulation.retryWaitNotGiven"
   ],
-  "multi": {},
+  "multi": {
+    "inbox.recorded": [
+      "快钉工-0557-dict-r3",
+      "快钉工-0557-r3",
+      "快钉工-0557-walk-r1"
+    ],
+    "lib.failureAttribution.networkCopyStillReadable": [
+      "铁盒工-0573-dict-r1",
+      "铁盒工-0573-r1"
+    ],
+    "lib.failureAttribution.networkNoOfflineCopy": [
+      "铁盒工-0573-dict-r1",
+      "铁盒工-0573-r1"
+    ],
+    "lib.failureAttribution.readCauseNotClassified": [
+      "铁盒工-0573-dict-r1",
+      "铁盒工-0573-r1"
+    ]
+  },
   "zh_only": [
     "setup.somePlace"
   ],
@@ -48,8 +67,259 @@
       "readers_on_tip": 0
     }
   },
-  "both_sides": 0,
-  "insertions": {},
+  "both_sides": 12,
+  "insertions": {
+    "agent.assessed": {
+      "en": {
+        "source_branch": "打卡工-0555-dict-r1",
+        "source_head": "eb48226e2b11",
+        "source_line": 575,
+        "sources": [
+          "打卡工-0555-dict-r1"
+        ],
+        "new_line": 641
+      },
+      "zhCN": {
+        "source_branch": "打卡工-0555-dict-r1",
+        "source_head": "eb48226e2b11",
+        "source_line": 1836,
+        "sources": [
+          "打卡工-0555-dict-r1"
+        ],
+        "new_line": 2187
+      }
+    },
+    "agent.needsMoreInformation": {
+      "en": {
+        "source_branch": "打卡工-0555-dict-r1",
+        "source_head": "eb48226e2b11",
+        "source_line": 574,
+        "sources": [
+          "打卡工-0555-dict-r1"
+        ],
+        "new_line": 642
+      },
+      "zhCN": {
+        "source_branch": "打卡工-0555-dict-r1",
+        "source_head": "eb48226e2b11",
+        "source_line": 1835,
+        "sources": [
+          "打卡工-0555-dict-r1"
+        ],
+        "new_line": 2188
+      }
+    },
+    "agent.notFeasible": {
+      "en": {
+        "source_branch": "打卡工-0555-dict-r1",
+        "source_head": "eb48226e2b11",
+        "source_line": 573,
+        "sources": [
+          "打卡工-0555-dict-r1"
+        ],
+        "new_line": 643
+      },
+      "zhCN": {
+        "source_branch": "打卡工-0555-dict-r1",
+        "source_head": "eb48226e2b11",
+        "source_line": 1834,
+        "sources": [
+          "打卡工-0555-dict-r1"
+        ],
+        "new_line": 2189
+      }
+    },
+    "discovery.technicalDetail": {
+      "en": {
+        "source_branch": "路牌工甲-0557-r1",
+        "source_head": "1efe3e55db9d",
+        "source_line": 654,
+        "sources": [
+          "路牌工甲-0557-r1"
+        ],
+        "new_line": 765
+      },
+      "zhCN": {
+        "source_branch": "路牌工甲-0557-r1",
+        "source_head": "1efe3e55db9d",
+        "source_line": 1995,
+        "sources": [
+          "路牌工甲-0557-r1"
+        ],
+        "new_line": 2308
+      }
+    },
+    "inbox.recorded": {
+      "en": {
+        "source_branch": "快钉工-0557-dict-r3",
+        "source_head": "a4b2128287f6",
+        "source_line": 849,
+        "sources": [
+          "快钉工-0557-dict-r3",
+          "快钉工-0557-r3",
+          "快钉工-0557-walk-r1"
+        ],
+        "new_line": 985
+      },
+      "zhCN": {
+        "source_branch": "快钉工-0557-dict-r3",
+        "source_head": "a4b2128287f6",
+        "source_line": 2155,
+        "sources": [
+          "快钉工-0557-dict-r3",
+          "快钉工-0557-r3",
+          "快钉工-0557-walk-r1"
+        ],
+        "new_line": 2519
+      }
+    },
+    "itinerary.stopDisrupted": {
+      "en": {
+        "source_branch": "加闸工-0576-r1",
+        "source_head": "c0a5c3345659",
+        "source_line": 1407,
+        "sources": [
+          "加闸工-0576-r1"
+        ],
+        "new_line": 1466
+      },
+      "zhCN": {
+        "source_branch": "加闸工-0576-r1",
+        "source_head": "c0a5c3345659",
+        "source_line": 2795,
+        "sources": [
+          "加闸工-0576-r1"
+        ],
+        "new_line": 2966
+      }
+    },
+    "lib.failureAttribution.networkCopyStillReadable": {
+      "en": {
+        "source_branch": "铁盒工-0573-dict-r1",
+        "source_head": "73ff8d6cdb15",
+        "source_line": 1470,
+        "sources": [
+          "铁盒工-0573-dict-r1",
+          "铁盒工-0573-r1"
+        ],
+        "new_line": 1536
+      },
+      "zhCN": {
+        "source_branch": "铁盒工-0573-dict-r1",
+        "source_head": "73ff8d6cdb15",
+        "source_line": 2849,
+        "sources": [
+          "铁盒工-0573-dict-r1",
+          "铁盒工-0573-r1"
+        ],
+        "new_line": 3034
+      }
+    },
+    "lib.failureAttribution.networkNoOfflineCopy": {
+      "en": {
+        "source_branch": "铁盒工-0573-dict-r1",
+        "source_head": "73ff8d6cdb15",
+        "source_line": 1471,
+        "sources": [
+          "铁盒工-0573-dict-r1",
+          "铁盒工-0573-r1"
+        ],
+        "new_line": 1537
+      },
+      "zhCN": {
+        "source_branch": "铁盒工-0573-dict-r1",
+        "source_head": "73ff8d6cdb15",
+        "source_line": 2850,
+        "sources": [
+          "铁盒工-0573-dict-r1",
+          "铁盒工-0573-r1"
+        ],
+        "new_line": 3035
+      }
+    },
+    "lib.failureAttribution.readCauseNotClassified": {
+      "en": {
+        "source_branch": "铁盒工-0573-dict-r1",
+        "source_head": "73ff8d6cdb15",
+        "source_line": 1472,
+        "sources": [
+          "铁盒工-0573-dict-r1",
+          "铁盒工-0573-r1"
+        ],
+        "new_line": 1538
+      },
+      "zhCN": {
+        "source_branch": "铁盒工-0573-dict-r1",
+        "source_head": "73ff8d6cdb15",
+        "source_line": 2851,
+        "sources": [
+          "铁盒工-0573-dict-r1",
+          "铁盒工-0573-r1"
+        ],
+        "new_line": 3036
+      }
+    },
+    "planning.stops": {
+      "en": {
+        "source_branch": "快刀工-0557-dict-r3",
+        "source_head": "0148013389f2",
+        "source_line": 44,
+        "sources": [
+          "快刀工-0557-dict-r3"
+        ],
+        "new_line": 60
+      },
+      "zhCN": {
+        "source_branch": "快刀工-0557-dict-r3",
+        "source_head": "0148013389f2",
+        "source_line": 1395,
+        "sources": [
+          "快刀工-0557-dict-r3"
+        ],
+        "new_line": 1651
+      }
+    },
+    "planning.totalCost": {
+      "en": {
+        "source_branch": "快刀工-0557-dict-r3",
+        "source_head": "0148013389f2",
+        "source_line": 43,
+        "sources": [
+          "快刀工-0557-dict-r3"
+        ],
+        "new_line": 61
+      },
+      "zhCN": {
+        "source_branch": "快刀工-0557-dict-r3",
+        "source_head": "0148013389f2",
+        "source_line": 1394,
+        "sources": [
+          "快刀工-0557-dict-r3"
+        ],
+        "new_line": 1652
+      }
+    },
+    "planning.walking": {
+      "en": {
+        "source_branch": "快刀工-0557-dict-r3",
+        "source_head": "0148013389f2",
+        "source_line": 45,
+        "sources": [
+          "快刀工-0557-dict-r3"
+        ],
+        "new_line": 62
+      },
+      "zhCN": {
+        "source_branch": "快刀工-0557-dict-r3",
+        "source_head": "0148013389f2",
+        "source_line": 1396,
+        "sources": [
+          "快刀工-0557-dict-r3"
+        ],
+        "new_line": 1653
+      }
+    }
+  },
   "wrapped_rows": {
     "before": [
       "me.asksBeforeProtectedChange"
@@ -58,11 +328,74 @@
       "me.asksBeforeProtectedChange"
     ]
   },
-  "readers_on_tip": {},
-  "merged_keys_without_a_reader": [],
+  "readers_on_tip": {
+    "agent.assessed": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "agent.needsMoreInformation": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "agent.notFeasible": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "discovery.technicalDetail": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "inbox.recorded": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "itinerary.stopDisrupted": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "lib.failureAttribution.networkCopyStillReadable": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "lib.failureAttribution.networkNoOfflineCopy": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "lib.failureAttribution.readCauseNotClassified": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "planning.stops": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "planning.totalCost": {
+      "files": [],
+      "outside_dictionary": []
+    },
+    "planning.walking": {
+      "files": [],
+      "outside_dictionary": []
+    }
+  },
+  "merged_keys_without_a_reader": [
+    "agent.assessed",
+    "agent.needsMoreInformation",
+    "agent.notFeasible",
+    "discovery.technicalDetail",
+    "inbox.recorded",
+    "itinerary.stopDisrupted",
+    "lib.failureAttribution.networkCopyStillReadable",
+    "lib.failureAttribution.networkNoOfflineCopy",
+    "lib.failureAttribution.readCauseNotClassified",
+    "planning.stops",
+    "planning.totalCost",
+    "planning.walking"
+  ],
+  "base": "0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5",
   "pre_existing_rows": {
-    "en": 1359,
-    "zhCN": 1359
+    "en": 1347,
+    "zhCN": 1347
   },
   "bytes": {
     "before": 202499,
