@@ -881,10 +881,10 @@ export function CopilotDock({
             <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>
           </header>
           <div className="cn-copilot-history" aria-live="polite">
-            {messages.length === 0 && <p className="cn-copilot-empty">{locale === "zh-CN" ? "问我为什么这样安排、试算变化，或报告已经确认的中断。" : "Ask why, preview a change, or report a confirmed disruption."}</p>}
+            {messages.length === 0 && <p className="cn-copilot-empty">{t("copilot.history.emptyHint")}</p>}
             {messages.map((item, index) => (
               <article key={`${item.role}-${index}`} className={`cn-copilot-bubble ${item.role}`}>
-                <small>{item.role === "user" ? (locale === "zh-CN" ? "你" : "You") : "CityNexus"}</small>
+                <small>{item.role === "user" ? (t("copilot.bubble.youLabel")) : "CityNexus"}</small>
                 <p>{item.text}</p>
                 {item.response?.intent && (
                   <span className="cn-copilot-chip">{humanIntent(item.response.intent.name, zh, t)}</span>

@@ -1528,6 +1528,8 @@ const en: Dict = {
   "copilot.badge.protectedCommitment": "Protected commitment",
   "copilot.badge.protectedActivity": "Protected activity",
   "copilot.panel.factsOnlyPromise": "Answers use verified journey facts only and never change your plan.",
+  "copilot.history.emptyHint": "Ask why, preview a change, or report a confirmed disruption.",
+  "copilot.bubble.youLabel": "You",
 };
 
 const zhCN: Dict = {
@@ -2962,6 +2964,8 @@ const zhCN: Dict = {
   "copilot.badge.protectedCommitment": "受保护承诺",
   "copilot.badge.protectedActivity": "受保护活动",
   "copilot.panel.factsOnlyPromise": "回答只依据已核验的行程事实，不会自己改动你的安排。",
+  "copilot.history.emptyHint": "问我为什么这样安排、试算变化，或报告已经确认的中断。",
+  "copilot.bubble.youLabel": "你",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
