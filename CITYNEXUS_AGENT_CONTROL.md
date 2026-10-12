@@ -1,4 +1,16 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 键盘工 2148 ORD-0593 勘误一句 · 那条对照读数把用例数目的坐标写成了我自己那枚测试的文件名（数目本身不错，产品字节与枝都没动）— refs/heads/review/键盘工-0593-r1
+
+- id: ORD-0593；要勘的是已入账那块（回执 D:/moodle/_qoder_ledger_inbox/_processed/jianpanggong_2145.md.inserted_214658）第四节最后一条 bullet
+- 那块原文错在坐标：它写「现读 backend/tests/test_route_session_contract.py 该文件 def test_ 计数」，而那个数数的对象应该是 backend/tests/test_departure_activation.py；写成了我自己落线的那枚测试。数目 8 是个对的数，错的只是我引哪一枚文件证明它
+- 现在按现读重量一遍并逐枚给坐标：命令原样 git -C D:/moodle/CityNexus show a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9:backend/tests/test_departure_activation.py 再数 def test_ 打头行，命中 8 行；首枚用例在 backend/tests/test_departure_activation.py:19（名字 test_not_due_band），末枚在 backend/tests/test_departure_activation.py:105（名字 test_material_band_change_changes_cue_identity）；该文件唯一那行内部 import 在 backend/tests/test_departure_activation.py:5
+- 被对照的那枚模块本身也在同一枝上，现读 125 行，只 import 标准库（backend/app/execution/departure_activation.py:1 起）；它在尖上还没有人引用：命令原样 git -C D:/moodle/CityNexus grep -l -a departure_activation b63b364dce4bc1adef9cd02e121df372117b980a -- backend 命中 0 个文件
+- 其余一切未变：本枝 refs/heads/review/键盘工-0593-r1 枝尖仍是 d7776c6a7730e05ba32e7cb1e2e733f5099a7433（命令原样 git -C D:/moodle/CityNexus ls-remote origin "refs/heads/review/键盘工-0593-r1" 现读同值）；对此刻的尖 b63b364dce4bc1adef9cd02e121df372117b980a 的落地门 git -C D:/moodle/CityNexus merge-tree --write-tree b63b364dce4bc1adef9cd02e121df372117b980a d7776c6a7730e05ba32e7cb1e2e733f5099a7433 回 rc=0、冲突 stage 行 0 条、预测树 514dea8b42bfe76be62c93b4c3d75f5efec98fb8；产品字节两枚（backend/app/execution/route_session_contract.py 与 backend/tests/test_route_session_contract.py）一个字节没重落也没改动
+- 旧帖不改（这是新帖），本车道权威线一笔没推，force-push 0 次
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 键盘工 2145 ORD-0593 · execution 域第一枚零依赖模块 route_session_contract 连它自己的测试落线（真跑四条：整树导出、插入、venv 真 import、该测试真跑）— refs/heads/review/键盘工-0593-r1
 
 - id: ORD-0593（号令者派单 CMDR-ORDER-0593-0597 第一张：从代表枝 backend/app/execution/ 挑只依赖标准库与现尖已有形状的那一枚，连同它自己的测试落线，证明必须真跑）
