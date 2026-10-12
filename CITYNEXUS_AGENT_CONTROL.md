@@ -1,4 +1,117 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 接尖工｜接 ORD-0654 的 gateway 半边：七枚模块级名字逐字搬进现尖，两枚缺口测试的第一道 ImportError 已走出我这枚文件——但单文要的第二行「test 变绿」我没做到，原因逐枚点名（零测试字节）
+
+尖现取 `4f20a166a9cefdfc49068ef9ae0581802e60cb7e`（命令原样 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，同一枚 `git cat-file -t` 回 commit）。我的枝 `refs/heads/review/接尖工-0654-r1` 头 `703f0ba0f1437645fe09414cc3067cdf8660d473`（`git cat-file -t` 回 commit），它的父逐字等于上面那枚尖 ⇒ 直接子代、可 fast-forward；推前与推后各 `ls-remote` 一次同值。force-push 零次，账本零直写。
+
+一、动手前先现读：甲类那几枚 helper 现在各在谁手里
+
+| helper | 现尖在不在 | 哪一格 | 锚 |
+|---|---|---|---|
+| `_tool_result_advances_state` | 在，落在这枚文件第 256 行 | 号令者 CMDR-DELIVER-0657 自己亲测落线 | backend/app/agent/runtime.py:256 |
+| `_normalize_replan_schedule_time` | 在，落在这枚文件第 10907 行（号令者那块写的是第 10905 行，那是他那一代的现读；这枚文件现在长到一万四千六百三十四行，行号以现读为准） | 同上 | backend/app/main.py:10907 |
+| `_server_completion_contract` | 在，六十四行，落在这枚文件第 274 行；字节逐字等于出处那一代同名文件第 503 到 566 行 | 别人那枝在我量测中途落成（两笔提交的钟点是 07:35 与 07:39），我不重交 | backend/app/agent/runtime.py:274 |
+| gateway 那几枚（见下节） | 全不在：逐枚按 def 名与赋值名现扫，命中零处 | 就是我这一张 | backend/app/agent/gateway.py:1 |
+
+所以我这枝只带一枚产品文件：`git diff --numstat` 对尖只有两行，`91 0` 与 `58 0`——加行两枚、删行零（锚 backend/app/agent/gateway.py:1）。runtime.py 一字节没碰，免得与刚落的那一枚顶行号。
+
+二、搬了哪七枚，出处是哪一枚对象
+
+出处是 `843844c5587da01287faa8f384411915eade9a87`（`git cat-file -t` 回 commit）。它就是 refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 的远端头，也就是 CMDR-DELIVER-0659 写「代表枝那一代」所指的那一枚；不是我早上交 0645 时引的 r33 尖——同一枚 `backend/app/core/config.py` 在 r25 是一百二十三行、`searxng_url` 落在第九十二行，在 r33 是一百五十一行、同一枚字段落在第一百二十行（锚 refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003）。凡引「第几行」必须先说是哪一代，我这拍全部按 r25 那一代重读。
+
+| 名字 | 形制 | 出处那一代的行范围 | 行 | 逐字对拍 | 搬之前尖上命中 | 锚 |
+|---|---|---|---|---|---|---|
+| `_latest_actionable_event` | def | 166 到 172 | 七行 | 是 | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `_resolve_actionable_event` | def | 150 到 163 | 十四行 | 是 | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `_actionable_events` | def | 120 到 137 | 十八行 | 是（上一枚读它，闭包带进来） | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `_city_category_terms` | def | 217 到 221 | 五行 | 是 | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `_CITY_CATEGORY_ALIASES` | assign | 190 到 202 | 十三行 | 是（上一枚读它） | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `_city_search_terms` | def | 205 到 214 | 十行 | 是 | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `_CITY_SEARCH_ALIASES` | assign | 174 到 189 | 十六行 | 是（上一枚读它） | 零处 | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| `import re` | 进口 | 出处那一代该文件第 5 行 | 一行 | 是 | 零处 | backend/app/agent/gateway.py:4 |
+
+那枚文件从现读一千三百八十五行走成一千四百七十六行（锚 backend/app/agent/gateway.py:1）。删除行零、改写行零；除那枚进口插在 `import json` 之后，其余七枚都插在模块级末尾——我这样放是为了不去顶别人引用的行号。
+
+三、闭包那一步不是讲究：只搬单文点名的四枚，尖上会多四处潜伏 NameError
+
+第一遍我只 append 那四枚，`import app.agent.gateway` 照样成功——import 根本不查函数体里的全局名。改用逐符号作用域表（symtable，局部名不可能盖住全局名）之后读数是：`_resolve_actionable_event` 读 `_actionable_events`、`_city_category_terms` 读 `_CITY_CATEGORY_ALIASES`、`_city_search_terms` 读 `_CITY_SEARCH_ALIASES` 与 `re`，而现尖这枚文件四样都没有。这与我一早报的 searxng 那格同一种债：形状上线、它读的东西没上线，import 看着好好的，第一次真调用就炸。所以那三枚跟着逐字搬了，末端再验一次：七枚名字的未解析全局名各为零，模块 import 回 `IMPORT OK`（锚 backend/app/agent/gateway.py:1）。
+
+这里有一次我自己的尺的错，留档不删：第一版闭包腿用「子串在不在文件里」判那枚标准库进口，而 `import re` 恰好是现尖 `backend/app/agent/gateway.py:34` 那句 `from app.core.audit import record_audit` 的子串——于是它报「不需要加」。同一枚出处文件里那样的子串命中有三处（第五、第三十六与第六百六十三行），只有第五行是真进口。改成按模块级绑定名判定之后才抓出来；不修的话，我这枝就带一枚潜伏 NameError 上线。
+
+四、号令者那句「行尾先归成本仓的 CRLF」我没照办，原件在这里
+
+现尖那枚 `.gitattributes` 第一行是注释、第二行是规则：`*.py text eol=lf`，注释逐字说 CRLF 在这条线上造成过整档重基（它写着 ORD-0532 那一次）。我又现读字节：尖上这枚 gateway.py 回车字节数为零（锚 backend/app/agent/gateway.py:1）。照那句建议做等于把整枚一千三百八十五行改成另一种形状，那才是真撞车，所以我按各自文件的形状插，落下来仍是零个回车字节。对照一件：号令者自己落线的那两枚测试是带回车的，现读一枚是十七行带十七个回车（锚 backend/tests/test_agent_runtime_state_epoch.py:1）。这一格要不要归一，归您点，我不顺手改别人的字节。
+
+五、读数（一把尺、一次跑批；解释器 `D:/moodle/CityNexus/.venv` 的 3.12.14，命令 `-X utf8 -m pytest -q -p no:cacheprovider`；树是一次性 `git archive` 导出、文件数现读五百二十四枚，共享工作树零触碰，两枚缺口测试只在那棵树里出现过、没进我的枝）
+
+| 量的是什么 | 搬之前 | 搬之后 | 锚 |
+|---|---|---|---|
+| r21 第一道拦路与计数行 | `cannot import name '_latest_actionable_event' from 'app.agent.gateway'`，`1 error in 0.70s` | `cannot import name '_material_difference_fingerprint' from 'app.agent.predictive'`，`1 error in 0.70s` | refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003 |
+| r22 第一道拦路与计数行 | `cannot import name '_city_category_terms' from 'app.agent.gateway'`，`1 error in 0.69s` | `cannot import name 'plan_authority_blocker' from 'app.services'`，`1 error in 0.72s` | refs/heads/review/接尖工-0654-r1 |
+| 邻面回归：尖上 import 这两枚模块的测试文件，现读九枚 | `1 failed, 54 passed, 2 warnings in 3.07s` | `1 failed, 54 passed, 2 warnings in 3.06s`，红集逐字同名 | backend/app/agent/gateway.py:1 |
+| 那一枚红是谁加的 | 不是本轮加的：搬之前同一枚用例已红（`tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint`） | 同左 | backend/tests/test_v18_3_convergence.py:1 |
+| 整树收集 | `1886 tests collected, 21 errors`（退出码二） | `1886 tests collected, 21 errors`（退出码二）；那 21 处收集错在尖裸树原样存在 | refs/heads/mirror/integration-frontend-apple-pass1 |
+
+表外一件：我把推上去的那枚对象重新导出成第二棵树再跑一遍，七枚名字的逐字对拍全为「是」、未解析全局名全为零、`import app.agent.gateway` 回 `IMPORT OK`，邻面与整树两栏与上表同值（锚 refs/heads/review/接尖工-0654-r1）。
+
+六、单文要的两行原话，我只有一行——另一行按口径写没达到
+
+CMDR-RULING-0653 与 CMDR-DELIVER-0659 都要「ImportError 没了、test 变绿」两行。第一行分两半：gateway 这一面的 ImportError 确实没了，对拍就是上表那两行改后原话。第二行我交不出来——r21 现在红在 `app.agent.predictive`，r22 红在 `app.services`，两枚都不在这张单的文件面里。这一格判语是 NOT_REACHED：我不把「搬完了」说成「绿了」，也不为了凑那一行去把断言改松。
+
+七、下一格在哪，我不占别人的路
+
+CMDR-DELIVER-0659 给 r21 的链里还列了两枚属于 `backend/app/agent/runtime.py` 的名字（`_model_mission_payload`、`reconcile_stale_agent_runs`），现读尖上仍各零处命中（锚 backend/app/agent/runtime.py:274）。我没搬：链现在走不到它们，先搬就是往线上放没有调用方的形状——与今早那格同一种债。您点一句，我就单独一枚枝补。r22 那格要 `plan_authority_blocker`，出处那一代它在 `backend/app/services.py` 的第 691 到 775 行、八十五行（锚 refs/heads/gpt/revolution-r25-strategic-horizon-steward-20261003）——services 是宿主面，不归我这张单，等您开格。predictive 那格同理。
+
+八、这拍没做的
+
+没碰 `backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`backend/app/agent/predictive.py`、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`，也没碰 `backend/app/agent/runtime.py`；没带测试文件（两枚缺口测试现在放上去就是红，我不往线上加红）；没改任何既有断言；没动任何人的枝。枝内那一枚证据件（`review/jiejian/ORD0654_GATEWAY_PORTS_R1.md`）装着本轮逐臂读数与逐枚行范围原件。仍在等点的三枝：本轮 `703f0ba0f1437645fe09414cc3067cdf8660d473`、早上的 `e51ef0d5eaabb2ef005caff14275d13066cac5b8` 与前夜的 `4517959f584ba2053c1735549bce7190b513e3bf`（各 `git cat-file -t` 回 commit；锚 refs/heads/review/接尖工-0654-r1）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0660-PAIRCHECK（号令者对拍：今晚这几笔落地没有造成回归，两枚具名红是旧病；附第二轮缺符号链的账）
+
+尖现读 `4f20a166a9ce`。两把尺同形制：同一棵导出结构（backend＋scripts＋tools＋contracts＋data）、同一个解释器 `D:/moodle/CityNexus/.venv`、同一条 `-k` 选择式，只换那一代。
+
+#### 一、对拍读数（现读自 `_slice_4f20a166.txt` 与 `_slice_8f20a166.txt`）
+
+  那一代尖前 8 位 `4f20a166`：failed 2 枚、passed 290 枚｜红逐枚有坐标：backend/tests/test_gpt_agent_authority_v3.py:35、backend/tests/test_qoder_anywhere_provider_truth.py:70
+  上一代尖前 8 位 `8f20a166`：failed 2 枚、passed 289 枚｜同一批红的坐标：backend/tests/test_gpt_agent_authority_v3.py:35、backend/tests/test_qoder_anywhere_provider_truth.py:70
+  具名红在两代里逐字相同：`test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools`、`test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`
+判语：passed 多出来那几枚是今晚新落线的测试，failed 数与集合都没变 ⇒ **今晚的落地没有把任何一处绿改成红**；那两枚红是旧病，不是新伤。
+
+#### 二、ORD-0661｜两枚旧红要有人认账（不许改断言换绿）
+
+  `test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools`——坐标 `backend/tests/test_gpt_agent_authority_v3.py:35`；
+  `test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`——坐标 `backend/tests/test_qoder_anywhere_provider_truth.py:70`。
+先判一句是哪种病：产品真缺（就该补产品码）、还是断言过期（那要另开一张写清口径变化，由我点裁语再改）。判语必须带两枚坐标：一枚是断言那一行 `文件:行号`，一枚是尖侧今天负责那件事的 `文件:行号`。
+
+#### 三、第二轮缺符号链的账（`_gap9_chain.log`，全部逐字来自代表枝那一代）
+
+这一轮跑的是已经派出去的那六枚测试，合补了 7 枚模块级符号。逐枚：
+
+    补完进断言红（第 一 轮），此时回话：E           assert ([<app.db.models.ReplanProposal object at 0x000001C04D8EA000>] and False) ;; E            +  where False = all(<generator
+  `test_replan_place_fact_binding.py` 补了 1 枚：
+    `backend/app/main.py` 的 `_replacement_activity_metadata`（六十六 行）
+    补完进断言红（第 二 轮），此时回话：E       NameError: name 'canonical_cost_evidence' is not defined ;; 1 failed in 耗时略
+    补完进断言红（第 一 轮），此时回话：E       KeyError: 'external_id' ;; 1 failed, 2 warnings in 耗时略
+    补完进断言红（第 一 轮），此时回话：E       AttributeError: 'Settings' object has no attribute 'searxng_url' ;; E       AttributeError: 'Settings' object has no attribute 'sear
+    补完进断言红（第 一 轮），此时回话：E         - COMPLETED ;; E         + ACTIVE ;; 1 failed, 2 warnings in 耗时略
+  `test_revolution_r77_recovery.py` 补了 6 枚：
+    `backend/app/main.py` 的 `_plan_mobility_eligibility_receipts`（七十二 行）
+    `backend/app/main.py` 的 `_provider_mesh_candidate_payload`（三十七 行）
+    `backend/app/services.py` 的 `COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE`（一 行）
+    `backend/app/services.py` 的 `SEALED_DEMO_AUTHORITY_ENVELOPE`（一 行）
+    `backend/app/services.py` 的 `_mobility_catalogue_place_ids`（三十五 行）
+    `backend/app/stay_mobility.py` 的 `_plan_mobility_projection`（一百二十九 行）
+    链没跑完：第 六 轮还在报缺符号 ⇒ 剩下的缺口我没算出来
+
+#### 四、现在这张桌上还剩什么
+
+已落线并绿：`backend/tests/test_event_resolution_projection.py` 与两枚小的（epoch、schedule_timezone），我在现尖那一代重跑过，回话分别是 1 passed、2 passed、2 passed。
+还开着：overpass 逐族并集那一刀；r21／r22 那十六格（读 `maps7/map_z2_r21_r22.md`）；r23／r24（读 `maps7/map_z3_r23_r24.md`）；r77 recovery 那三十四格（读 `maps8/map_q1_r77_recovery_first_half.md` 与 `maps8/map_q2_r77_recovery_second_half.md`）；小的五枚（读 `maps8/map_q3_small_five.md`）。
+规矩照旧：交块只走 `D:/moodle/_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### `，文件名纯 ASCII；判绿只认 `D:/moodle/CityNexus/.venv`；不许改断言换绿、不许为绿造夹具。
+
+
 ### 地图工 接 CMDR-DELIVER-0657 刀二：overpass 逐族并集，缺口测试从一红转一绿，相邻六枚红集合逐名相同
 
 花名「地图工」，本块走收件口，账本零直写。接的是刀一/刀二/刀三里最自含的那把：拆分只在 provider 内闭环，不碰 `backend/app/main.py`、不碰 `backend/app/schemas.py`。断言一字未改，没加 skip。本会话不给别的车道派单。
