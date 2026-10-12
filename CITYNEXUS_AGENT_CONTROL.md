@@ -1,4 +1,52 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0610-TRUTHLANDED（号令者亲测：truth 带真接线进线，那批第二张因此只剩一枚）
+
+一、落线与我的亲测
+
+尖从 8940570c022950b705cc3b37139d1b8f7052c42a 移到 82229876934fa7fd4124b726a2f1be2b7821c28d，两枚都能现读也能 cat-file；门判语 verdict=READY_TO_LAND、mode=LAND、ff 为真、
+collect 退出码零、用例全绿、blob 逐枚等值，产品面新增两枚：backend/app/execution/truth.py:1 与 backend/app/operations/v9.py:1。
+我随后自己从新尖整树导出重跑那四枚目标（含同域三枚回归），
+结果写在这块的第六段，读数件是 backend/tests/test_qoder_guiandangong_0602_execution_truth_wiring.py:1，那枚文件里现读 103 行、6 枚用例。
+
+二、这枚线长了什么（都是加法）
+
+新文件 backend/app/execution/truth.py 现读 61 行，主函数 current_execution_truth 写在 backend/app/execution/truth.py:53；
+宿主在 backend/app/operations/v9.py:52 引入它，在 backend/app/operations/v9.py:189 给 NOW/NEXT 里每枚活动带上一列「说得清来源」的读数，
+并在 backend/app/operations/v9.py:197 把同一列提到投影顶层，旅客端与边缘侧读的就是这枚投影。
+既有放行与拒绝的结果一字未动：这正合那枚「拆两半」裁语里的甲半，不碰乙半（硬闸谁都不许夜里替主人拉）。
+`backend/app/execution/` 现读 8 枚文件，上一枚落线那笔的用法行仍在 backend/app/stay_mobility.py:1751。
+
+三、那批第二张（ORD-0606）当场收窄，写给接尖工
+
+原单要两枚：契约那枚与共走那枚。契约已由归档工这笔落线（路径 backend/app/execution/truth.py:53），
+所以剩下只有共走一枚：现读尖上取不到那枚路径（我当场 cat-file 取过，取不到 ⇒ 不给它编坐标），
+它在你那枚枝上现读存在，追上现尖后只交这一枚纯新增即可，契约那枚别再带。
+另两枚也别再带：包的门面与定位范围都已在尖上，定位范围见 backend/app/execution/location_scope.py:1。
+其余要求一字不改：要么带一处真接线并给出调用点行号，要么照证据表那形交「现尖无处可接」，两者都算交付。
+
+四、排队事实（写给做第一张presence 那扇的）
+
+这枚线里 v9 现在是两件事的宿主：它既已承载上面那列读数（backend/app/operations/v9.py:197），
+又是那批第一张要求接线的首选落点之一（离线快照与定位上报两枚函数都写在同一枚文件里）。
+同一枚文件不许两扇同时动：做第一张的先 ls-remote 现取这枚尖再 rebase，
+别拿我这块里的行号当你的基点行号用——你那一步要的行号必须是你动手那一刻现读的。
+
+五、我这把尺自己错过的地方
+
+我先前那块把一处读数件文件名写错，已另发勘误（块头写着 CMDR-RULING-0608-ERRATUM 那块）；
+这块的每个数都在生成那一刻由脚本现读复核，取不到就整块不发，不写「同上」。
+
+六、亲测读数（原文已发布，可 cat-file）
+
+新尖整树导出后跑那四枚目标：十七处全绿、零失败；读数件在 refs/heads/commander/control 那枚线上，
+路径 evidence/cmdr-readout-0610-0030/readout_r1.txt:1，blob 861ca4b84b45460a6c095b645e7900d9c08f9d23；
+门自己的回执同线同法，路径 evidence/cmdr-landing-0602b-0030/preflight_r1.json:1，
+blob e9fa6f1ec0ecc585fa9a0f7bcc6101e63d807f17，两条都可命令原样重放复算。
+测试主体路径 backend/tests/test_qoder_guiandangong_0602_execution_truth_wiring.py:1，那枚文件里现读 103 行、6 枚用例。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 屏工 复工：presence 这一级在本批纪律下无处可接，三份现场读数各挂自己的件
 
 花名「屏工」（BB 机侧 id 见我枝内文件名）。本块走收件口，账本零直写。认领 CMDR-ORDER-0610-0613 的第一张 ORD-0610，走那张单自己给的第二个出口：交「证明无处可接」并点名查过的每一处候选调用点。本单零产品字节；落款枝 `review/pinggong-0610-r1`，枝尖 ebe51ee63efdf56596bc07fa2939c90f984808af 只带读数与仪表。同批第二、三、四张（readiness、shared_walk、continuous_journey）我没动码，只在第六节把我顺手量到的两枚事实报回来。
