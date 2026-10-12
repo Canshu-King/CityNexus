@@ -1,0 +1,43 @@
+CMD git rev-parse HEAD
+rc=0
+cb787b45839a34666fa3edfa1258c394758ccebd
+CMD git ls-remote origin refs/heads/review/屏工-0602-r1
+rc=0
+cb787b45839a34666fa3edfa1258c394758ccebd	refs/heads/review/屏工-0602-r1
+READBACK bare: cb787b45839a34666fa3edfa1258c394758ccebd	refs/heads/review/屏工-0602-r1
+CMD git ls-remote origin refs/heads/review/屏工-0602-r1
+rc=0
+cb787b45839a34666fa3edfa1258c394758ccebd	refs/heads/review/屏工-0602-r1
+READBACK GitHub: cb787b45839a34666fa3edfa1258c394758ccebd	refs/heads/review/屏工-0602-r1
+CMD git cat-file -t cb787b45839a34666fa3edfa1258c394758ccebd
+rc=0
+commit
+CATFILE bare: cb787b45839a34666fa3edfa1258c394758ccebd = commit
+CMD git cat-file -t cb787b45839a34666fa3edfa1258c394758ccebd
+rc=0
+commit
+CATFILE integration: cb787b45839a34666fa3edfa1258c394758ccebd = commit
+CMD git rev-parse cb787b45839a34666fa3edfa1258c394758ccebd:backend/app/execution/location_scope.py
+rc=0
+ac4e68246fc36ef6bbc188d32eac3ac8a978fce5
+BLOB 落进来的模块: cb787b45839a:backend/app/execution/location_scope.py = ac4e68246fc36ef6bbc188d32eac3ac8a978fce5
+CMD git rev-parse cb787b45839a34666fa3edfa1258c394758ccebd:backend/app/stay_mobility.py
+rc=0
+5a6bf03557471e3acf5357df3575d37f48eb2592
+BLOB 接线宿主: cb787b45839a:backend/app/stay_mobility.py = 5a6bf03557471e3acf5357df3575d37f48eb2592
+CMD git rev-parse cb787b45839a34666fa3edfa1258c394758ccebd:backend/tests/test_qoder_ord0602_private_buddy_location_scope.py
+rc=0
+bfb0056c1a950f23e9ad17bc9cb83d21bde81104
+BLOB 行为测试: cb787b45839a:backend/tests/test_qoder_ord0602_private_buddy_location_scope.py = bfb0056c1a950f23e9ad17bc9cb83d21bde81104
+CMD git rev-list --left-right --count b68f381712abd9207b5ecd7625d18d0883838459...cb787b45839a34666fa3edfa1258c394758ccebd
+rc=0
+0	1
+先人位（现尖...本轮头，左=尖独有 右=本枝独有）: 0	1
+CMD git merge-tree --write-tree b68f381712abd9207b5ecd7625d18d0883838459 cb787b45839a34666fa3edfa1258c394758ccebd
+rc=0
+8ec9d28f1ac1dbbbfeec10d9ff2d0b679d0dcd00
+MERGE-TREE 对现尖 b68f381712abd9207b5ecd7625d18d0883838459 只读预测写树: 8ec9d28f1ac1dbbbfeec10d9ff2d0b679d0dcd00
+CMD git status --porcelain
+rc=0
+
+工作树未登记改动行数: 0

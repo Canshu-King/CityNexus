@@ -1,0 +1,14 @@
+rc=0
+A0 走真门建一趟行程 http_status=201
+A1 给签名成员号（真会话、真库）：
+   AttributeError: type object 'LocationObservation' has no attribute 'journey_member_id'
+A2 不给成员号：
+   state=LOCATION_UNAVAILABLE reason_code=SIGNED_MEMBER_IDENTITY_REQUIRED
+A3 尖上这张表实际有哪几列（PRAGMA 现读）：
+   ['id', 'journey_id', 'latitude', 'longitude', 'accuracy_m', 'captured_at', 'source']
+A4 一枚真行能不能带上成员归属：
+   TypeError: 'journey_member_id' is an invalid keyword argument for LocationObservation
+
+[stderr]
+D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa

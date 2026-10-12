@@ -1,0 +1,21 @@
+尖 f85194013ac10202e40b52d7ba2b6b95a7231059｜来源代 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9
+
+[一] execution/ 现读 8 枚：__init__.py clock.py departure_activation.py journey_twin.py location_scope.py route_session_contract.py traveler_twin.py truth.py
+
+def experience_payload backend/app/stay_mobility.py:1842 def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
+def _active_plan_payload backend/app/stay_mobility.py:1714 def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] | None:
+def _execution_truth backend/app/operations/v9.py:123 def _execution_truth(
+def refresh_offline_snapshot backend/app/operations/v9.py:1301 def refresh_offline_snapshot(session: Session, journey: Journey) -> OfflineJourneySnapshot:
+def record_location backend/app/operations/v9.py:1423 def record_location(
+row = LocationObservation( backend/app/operations/v9.py:1435 row = LocationObservation(
+def edge_snapshot backend/app/operations/v9.py:1507 def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
+row = record_location( backend/app/main.py:6977 row = record_location(
+payload = edge_snapshot(session, device) backend/app/main.py:7105 payload = edge_snapshot(session, device)
+def get_edge_journey_snapshot backend/app/main.py:7098 def get_edge_journey_snapshot(
+
+[二] 尖上生产侧 JourneyMember 命中（按文件计）：
+   backend/app/db/models.py:1
+   backend/app/main.py:42
+   backend/app/schemas.py:4
+
+journey_member_id == str(viewer_member_id) backend/app/execution/presence.py:113 LocationObservation.journey_member_id == str(viewer_member_id),

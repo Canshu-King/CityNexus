@@ -1,0 +1,143 @@
+......................F.F............................................... [ 42%]
+..............................................F....F.................... [ 84%]
+..........................                                               [100%]
+================================== FAILURES ===================================
+_______ test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEEC148200>
+
+    def test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts(monkeypatch):
+        """N=11 撞 400 时今天已经成立的是「不许留下产物」——守住它别退化成半张矩阵。"""
+    
+        probe = MatrixProbe()
+        result = _capture(monkeypatch, probe, 11)
+        assert probe.matrix_requests, "SETUP 失败：假 provider 一次都没被调用，这条门是空门"
+>       assert result["status"] == "FAILED", (
+            f"期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，"
+            f"那样这条门什么都能通过）；实际：{result['status']}"
+        )
+E       AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+E       assert 'CAPTURED' == 'FAILED'
+E         
+E         - FAILED
+E         + CAPTURED
+
+tests\test_qoder_anywhere_matrix_truth.py:375: AssertionError
+_______ test_g14c_the_verdict_must_not_depend_on_the_providers_wording ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AEEC107FB0>
+
+    def test_g14c_the_verdict_must_not_depend_on_the_providers_wording(monkeypatch):
+        """上限是数字不是句子：换一句文案（并把 "locations" 一词去掉）判定必须一模一样。"""
+    
+        with_locations = MatrixProbe()
+        reworded = MatrixProbe(
+            error_body={"error_code": 150, "status_code": 400, "error": "リクエストが大きすぎます"}
+        )
+        assert "locations" in json.dumps(with_locations.error_body)
+        assert "locations" not in json.dumps(reworded.error_body), "SETUP 失败：两份文案没真正不同"
+        first = _capture(monkeypatch, with_locations, 11)
+        second = _capture(monkeypatch, reworded, 11)
+        assert with_locations.matrix_requests and reworded.matrix_requests, "SETUP 失败：一次请求都没发出"
+        assert [item["cells"] for item in with_locations.matrix_requests] == [
+            item["cells"] for item in reworded.matrix_requests
+        ], "SETUP 失败：两次发出的形状不同，比较无从成立"
+        for key in ("status", "error_type", "supported_modes", "route_provenance", "time_basis"):
+>           assert first[key] == second[key], (
+                   ^^^^^^^^^^
+                f"期望：分类只由 cells 数决定 —— provider 换一句话就换一个结论，等于把可诊断性外包给文案；"
+                f"字段 {key}：{first[key]!r} vs {second[key]!r}"
+            )
+E           KeyError: 'error_type'
+
+tests\test_qoder_anywhere_matrix_truth.py:466: KeyError
+_______________ test_a_party_of_zero_never_reaches_the_division _______________
+
+    def test_a_party_of_zero_never_reaches_the_division() -> None:
+        """Two guards, and only one of them owns the invariant.
+    
+        `journey_trip_contexts.party_size >= 1` is a SQL CHECK, so a stored zero is not a state
+        the projection can be reached in - pinning that here is what keeps the next reader from
+        "fixing" a case that cannot exist.  The clamp inside `derive_budget_reference` is
+        therefore belt-and-braces for a caller that hands it a bad number, not the guarantee.
+        """
+    
+        from sqlalchemy.exc import IntegrityError
+    
+        _traveler()
+        try:
+            _insert_with_window(
+                _at(26, 8).isoformat(), _at(26, 20).isoformat(), party_size=0
+            )
+        except IntegrityError as exc:
+            assert "party_size" in str(exc), exc
+        else:
+            raise AssertionError("the party_size CHECK stopped enforcing; the clamp is now load-bearing")
+    
+>       clamped = derive_budget_reference(
+            day_count=1, budget_amount_minor=20000, budget_currency="CNY", party_size=0
+        )
+
+tests\test_qoder_trip_shape_and_budget_reference.py:273: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+app\core\temporal.py:157: in derive_budget_reference
+    per_person_per_day = _divide_round_half_up(per_day, party) if party is not None else None
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+numerator = 20000, denominator = 0
+
+    def _divide_round_half_up(numerator: int, denominator: int) -> int:
+        """Integer division that reads the way a traveller rounds.
+    
+        Python's built-in `round` is half-to-even (`round(0.5) == 0`), so an allowance landing
+        exactly on a half unit would print differently from every neighbouring amount for no
+        reason the traveller could follow.
+        """
+    
+>       return (numerator * 2 + denominator) // (2 * denominator)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ZeroDivisionError: integer division or modulo by zero
+
+app\core\temporal.py:123: ZeroDivisionError
+___ test_naive_against_offset_anchors_reports_no_count_rather_than_one_day ____
+
+    def test_naive_against_offset_anchors_reports_no_count_rather_than_one_day() -> None:
+        """Cannot order the two instants at all is not the same as a one-day trip."""
+    
+        _traveler()
+        journey_id = _insert_with_window("2026-09-26T08:00:00", "2026-09-26T20:00:00+08:00")
+        shape = _shape_of(journey_id)
+        assert shape["window_status"] == WINDOW_UNCOMPARABLE, shape
+        assert shape["day_count"] is None, shape
+        assert shape["night_count"] is None, shape
+    
+        allowance = _allowance_of(journey_id)
+        assert allowance["available"] is False, allowance
+        assert allowance["reason"] == UNAVAILABLE_SHAPE_UNKNOWN, allowance
+        assert allowance["per_day_minor"] is None, allowance
+        assert allowance["per_person_per_day_minor"] is None, allowance
+        # The raw window is still on the payload: hiding it would leave the traveller with
+        # nothing to check the "unknown" against.
+>       assert _projection(journey_id)["journey"]["start_at"].endswith("08:00:00")
+E       AssertionError: assert False
+E        +  where False = <built-in method endswith of str object at 0x000001AEEBAB9340>('08:00:00')
+E        +    where <built-in method endswith of str object at 0x000001AEEBAB9340> = '2026-09-26T08:00:00+08:00'.endswith
+
+tests\test_qoder_trip_shape_and_budget_reference.py:368: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_a_party_of_zero_never_reaches_the_division
+FAILED tests/test_qoder_trip_shape_and_budget_reference.py::test_naive_against_offset_anchors_reports_no_count_rather_than_one_day
+4 failed, 166 passed, 2 warnings in 30.23s

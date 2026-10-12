@@ -53,8 +53,6 @@ followSystemTheme();
 const journeyStorageKey = "citynexus.demo.journey_id";
 const agentRunStorageKey = "citynexus.demo.agent_run_id";
 const closureOccurredAt = "2026-10-10T13:25:00+08:00";
-const defaultAgentCommand =
-  "下午海河沿线有交通管制，我不想淋雨，游船和晚餐别动，最多多花50元。你自己重新安排。";
 
 // Keep MapLibre and the recovery map out of the non-map first paint. The
 // route chunk is loaded only when this legacy recovery surface renders.
@@ -189,7 +187,7 @@ function LegacyApp() {
   const agentPolicyRef = useRef<AgentPolicy | null>(null);
   const policyUpdateChain = useRef(Promise.resolve());
   const [agentFeed, setAgentFeed] = useState<AgentFeedEntry[]>([]);
-  const [agentCommand, setAgentCommand] = useState(defaultAgentCommand);
+  const [agentCommand, setAgentCommand] = useState(t("main.demoAgentCommand"));
   const [requestedAutonomy, setRequestedAutonomy] = useState<
     "PLAN_ONLY" | "EXECUTE_WITHIN_BOUNDS"
   >("EXECUTE_WITHIN_BOUNDS");
@@ -1294,9 +1292,9 @@ function LegacyApp() {
                 })
               }
             >
-              <option value="ADVISORY">建议模式 · always ask</option>
-              <option value="ASSISTED">协助模式 · bounded auto-accept</option>
-              <option value="AUTONOMOUS">自主模式 · policy-gated</option>
+              <option value="ADVISORY">{t("main.modeAdvisory")}</option>
+              <option value="ASSISTED">{t("main.modeAssisted")}</option>
+              <option value="AUTONOMOUS">{t("main.modeAutonomous")}</option>
             </select>
             <label className="toggle-row">
               <input

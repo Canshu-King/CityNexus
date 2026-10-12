@@ -1,0 +1,38 @@
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -484,6 +484,7 @@
+     validate_plan_feasibility,
+     validate_selected_plan_feasibility,
+ )
++from app.execution.route_session_contract import fact_is_eligible_for_live_readiness  # ORD-0603
+ from app.stay_mobility import (
+     StayItineraryConflict,
+     activity_coordinate,
+@@ -6104,15 +6105,19 @@
+ @app.get("/api/v1/journeys/{journey_id}/mobility")
+ def list_journey_mobility(journey_id: UUID, session: Session = Depends(get_session)):
+     journey = require(session, Journey, str(journey_id), "Journey")
++    modes = []
++    for item in session.scalars(
++        select(MobilityFact)
++        .where(MobilityFact.journey_id == journey.id)
++        .order_by(MobilityFact.from_key, MobilityFact.to_key, MobilityFact.mode)
++    ).all():
++        fact = fact_payload(item)
++        # ORD-0603: the contract decides which route truth may drive a live leave-by; the door says so
++        # instead of leaving every client to guess from a provenance string of its own choosing.
++        fact["live_readiness_eligible"] = fact_is_eligible_for_live_readiness(fact)
++        modes.append(fact)
+     return {
+-        "modes": [
+-            fact_payload(item)
+-            for item in session.scalars(
+-                select(MobilityFact)
+-                .where(MobilityFact.journey_id == journey.id)
+-                .order_by(MobilityFact.from_key, MobilityFact.to_key, MobilityFact.mode)
+-            ).all()
+-        ],
++        "modes": modes,
+         "available_modes": ["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"],
+         "choose_for_me": True,
+     }

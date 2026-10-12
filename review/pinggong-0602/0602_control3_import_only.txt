@@ -1,0 +1,102 @@
+=== state: state3 只落 import、谓词仍缺
+=== rc=1
+FF.F                                                                     [100%]
+================================== FAILURES ===================================
+___ test_private_newest_position_does_not_reach_the_active_plan_projection ____
+
+    def test_private_newest_position_does_not_reach_the_active_plan_projection() -> None:
+        """A1: the handoff row is the newest one, and the projection must show the ordinary row."""
+    
+        journey_id = _journey()
+        private = _private_source()
+        _add_location(journey_id, source=ORDINARY_SOURCE, captured_at="2026-11-03T01:00:00+08:00",
+                      latitude=PUBLIC_LAT, longitude=PUBLIC_LON)
+        _add_location(journey_id, source=private, captured_at="2026-11-03T09:30:00+08:00",
+                      latitude=PRIVATE_LAT, longitude=PRIVATE_LON)
+        assert sorted(_stored_sources(journey_id)) == sorted([ORDINARY_SOURCE, private])
+    
+        user_location = _payload(journey_id)["user_location"]
+        assert user_location is not None, (
+            "the trip has an ordinary %s observation and the projection reported no position: the "
+            "private-source filter dropped more rows than it names" % ORDINARY_SOURCE
+        )
+>       assert user_location["source"] == ORDINARY_SOURCE, (
+            "active_plan.user_location.source came back %r: the newest location_observations row is "
+            "the handed-off private one, so the read reached it" % user_location["source"]
+        )
+E       AssertionError: active_plan.user_location.source came back 'BUDDY_HANDOFF_ROUTE_PRIVATE': the newest location_observations row is the handed-off private one, so the read reached it
+E       assert 'BUDDY_HANDOFF_ROUTE_PRIVATE' == 'FOREGROUND_WEB'
+E         
+E         - FOREGROUND_WEB
+E         + BUDDY_HANDOFF_ROUTE_PRIVATE
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:187: AssertionError
+______ test_a_journey_whose_only_position_is_private_reports_no_position ______
+
+    def test_a_journey_whose_only_position_is_private_reports_no_position() -> None:
+        """A2: with nothing ordinary to fall back to, the projection says absent instead of leaking."""
+    
+        journey_id = _journey()
+        private = _private_source()
+        _add_location(journey_id, source=private, captured_at="2026-11-03T09:30:00+08:00",
+                      latitude=PRIVATE_LAT, longitude=PRIVATE_LON)
+        assert _stored_sources(journey_id) == [private], (
+            "the fixture did not store the private row, so a None below would prove nothing"
+        )
+    
+        user_location = _payload(journey_id)["user_location"]
+>       assert user_location is None, (
+            "the only location_observations row for this trip is source=%r and the projection served "
+            "%r" % (private, dict(user_location or {}).get("source"))
+        )
+E       AssertionError: the only location_observations row for this trip is source='BUDDY_HANDOFF_ROUTE_PRIVATE' and the projection served 'BUDDY_HANDOFF_ROUTE_PRIVATE'
+E       assert {'accuracy_m': 12.0, 'captured_at': '2026-11-03T09:30:00+08:00', 'latitude': 31.2304, 'longitude': 121.4737, ...} is None
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:215: AssertionError
+_____ test_the_served_stay_options_response_carries_the_filtered_position _____
+
+    def test_the_served_stay_options_response_carries_the_filtered_position() -> None:
+        """A4: the same answer out of a route the client actually calls."""
+    
+        journey_id = _journey()
+        private = _private_source()
+        _add_location(journey_id, source=ORDINARY_SOURCE, captured_at="2026-11-03T01:00:00+08:00",
+                      latitude=PUBLIC_LAT, longitude=PUBLIC_LON)
+        _add_location(journey_id, source=private, captured_at="2026-11-03T09:30:00+08:00",
+                      latitude=PRIVATE_LAT, longitude=PRIVATE_LON)
+    
+        response = client.get("/api/v1/journeys/%s/stay-options" % journey_id)
+        assert response.status_code == 200, response.text
+        body = response.json()
+        assert body["active_plan"] is not None, response.text
+        user_location = body["active_plan"]["user_location"]
+        assert user_location is not None, (
+            "GET /api/v1/journeys/{id}/stay-options answered active_plan.user_location = null while "
+            "an ordinary %s observation is stored for the trip" % ORDINARY_SOURCE
+        )
+>       assert user_location["source"] == ORDINARY_SOURCE, (
+            "the served active_plan.user_location.source is %r: a consumer of the stay route receives "
+            "the handed-off private position" % user_location["source"]
+        )
+E       AssertionError: the served active_plan.user_location.source is 'BUDDY_HANDOFF_ROUTE_PRIVATE': a consumer of the stay route receives the handed-off private position
+E       assert 'BUDDY_HANDOFF_ROUTE_PRIVATE' == 'FOREGROUND_WEB'
+E         
+E         - FOREGROUND_WEB
+E         + BUDDY_HANDOFF_ROUTE_PRIVATE
+
+tests\test_qoder_ord0602_private_buddy_location_scope.py:256: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_ord0602_private_buddy_location_scope.py::test_private_newest_position_does_not_reach_the_active_plan_projection
+FAILED tests/test_qoder_ord0602_private_buddy_location_scope.py::test_a_journey_whose_only_position_is_private_reports_no_position
+FAILED tests/test_qoder_ord0602_private_buddy_location_scope.py::test_the_served_stay_options_response_carries_the_filtered_position
+3 failed, 1 passed, 2 warnings in 4.48s

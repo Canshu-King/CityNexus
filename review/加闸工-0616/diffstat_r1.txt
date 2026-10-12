@@ -1,0 +1,24 @@
+# 逐枚增删对拍：git -C D:/moodle/_qoder_integration_20260919 diff --numstat <现尖> <我这枚产品提交>
+# 三列 = 新增行 / 删除行 / 路径
+147	0	backend/app/journey_inbox.py
+13	1	backend/app/operations/v9.py
+129	0	backend/tests/test_jiazagong_0616_inbox_artifact_identity_r1.py
+96	0	backend/tests/test_journey_inbox.py
+## 禁改四枚逐枚点名（0 0 = 一字节未改）
+0	0	backend/app/main.py
+0	0	backend/app/schemas.py
+0	0	backend/app/services.py
+0	0	contracts/openapi.yaml
+## 换代对拍（我量读数的那一代 6171fdf2 → 交块这刻现读 4f1e6176，两侧同一路径的 blob 是否同一枚）
+同代 backend/app/operations/v9.py blob c2026eb723…
+同代 backend/app/main.py blob 4cd1770924…
+同代 backend/app/schemas.py blob 7619b5f636…
+同代 backend/app/services.py blob 526a78d22b…
+同代 contracts/openapi.yaml blob 9f16f37c49…
+## 两代尖之间动了的文件数与所属面
+      5 frontend/scripts
+      1 review/jianpanggong-0576b
+      1 frontend/src/i18n
+      1 frontend/src/features/trip
+      1 frontend/src/features/stay
+      1 frontend/src/features/progress
