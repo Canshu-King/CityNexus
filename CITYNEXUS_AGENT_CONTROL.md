@@ -1,4 +1,71 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 加闸工 ORD-0593 · execution 域第二枚零依赖模块落线：departure_activation 把「该出发了没有」算成带区间的判语，连它自己的八条测试一起真跑过
+
+花名「加闸工」。本块走收件口 `D:\moodle\_qoder_ledger_inbox\jiazagong_2210.md`，账本零直写。认领的是 CMDR-ORDER-0593-0597 里那张 ORD-0593（账本第 16 行那块，锚 `D:\moodle\CITYNEXUS_AGENT_CONTROL.md:16`）；0594／0595／0596／0597 四张我没碰。另说一句：0592 那格我自己重读过账本后确认「跑批本体不在这条权威线上」，是您亲手装上并现读报了数（ABSORB 尖 687b98476973｜未吸收 41 条）——那句我在块里写岔过，以您那条读数为准。
+
+**一、枝、基准、动了什么（现读）**
+
+- 基准：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 取到 d7776c6a7730e05ba32e7cb1e2e733f5099a7433，我这枚枝就是它的直接子代（`git merge-base --is-ancestor` 判是），落地腿吃它是 fast-forward。
+- 中途线走过 3 代：我第一次开跑用的是 687b98476973eac5744ae07a67c2d639d0ce3de1，那 3 代里别家把 `backend/app/execution/route_session_contract.py` 与它的测试落了线（两代之间 backend/ 只变那两枚，现读 `review/加闸工-0593/proof_r1.txt:2`）。我把导出树更新到新尖，四条读数全部重跑到新一代，不拿旧代的数交。
+- 枝尖：命令原样 `ls-remote origin "refs/heads/review/加闸工-0593-r1"` 回 c5ab15f2ff49c5203b07e3f548b114991dd36ad4，与本地逐字相同；对象钉了 `refs/local/jiazagong-0593`。
+- 相对基准只碰 9 枚文件：2 枚产品件 + 7 枚读数件。产品两枚是 `backend/app/execution/departure_activation.py:1`（3910 字节、125 行）与 `backend/tests/test_departure_activation.py:1`（3506 字节、119 行），两枚在基准那一代都不存在（`git cat-file -e` 各回非零，现读 `review/加闸工-0593/proof_r1.txt:3`）。
+- 共同约束里点名排队的五枚热文件（main、schemas、openapi、citynexus.ts、runtime.py）一枚没碰；force-push 零次；权威线我没推。
+
+**二、为什么是这一枚（挑法可复算，不是凭印象）**
+
+- 把代表枝 `backend/app/execution/` 的 15 枚模块逐枚取 import 面，内部 `app.*` 依赖零枚的有 5 枚（clock、departure_activation、journey_twin、route_session_contract、truth），逐枚外部 import 列在 `review/加闸工-0593/proof_r1.txt:4`。
+- 再扫代表枝 271 枚后端测试「哪枚 import 了这枚模块」：这 5 枚里只有 departure_activation 有一枚同名的、只 import 它自己的测试（`review/加闸工-0593/proof_r1.txt:10`）——那条我第一遍写错（拿带 `.py` 的名字去匹配 stem，把 5 枚全数成零），改对之后才是上面这组数，勘误记在 `review/加闸工-0593/proof_r1.txt:10` 同一行里。
+- 它那枚测试自己的 import 面只有三项：`__future__`、`datetime`、app.execution.departure_activation（`backend/tests/test_departure_activation.py:5`），零 fixture、不碰 app.main/testclient/db（现读 `review/加闸工-0593/proof_r1.txt:12`）——这就是那张单要的「不碰 main.py、不碰 schemas.py 就能 import 成功」。
+
+**三、它带来什么用户能力，以及它不声称什么（读代码，不读提交标题）**
+
+- 区间判语：>30 分 NOT_DUE／10-30 分 LEAVE_SOON／-5 到 10 分 DUE_NOW／< -5 OVERDUE（`backend/app/execution/departure_activation.py:84`）；已 EN_ROUTE 走 ALREADY_EN_ROUTE 且推荐 CONTINUE_ROUTE（`backend/app/execution/departure_activation.py:45`）；已到达及之后 ARRIVED_OR_LATER 或 COMPLETE（`backend/app/execution/departure_activation.py:55`）；被挡 BLOCKED 给 CHECK_BLOCKER（`backend/app/execution/departure_activation.py:63`）；`must_leave_by` 缺失或不可解析走 NO_ROUTE（`backend/app/execution/departure_activation.py:75`）。每臂都带 `can_confirm_departure` 与 `authority_required`，`minutes_to_leave` 只在真算出时间时给、round 到 0.1 分（`backend/app/execution/departure_activation.py:99`）。
+- 通知身份：`departure_cue_fingerprint`（`backend/app/execution/departure_activation.py:106`）把 journey／activity／判语／就绪态／阻塞码收进 canonical json 再 sha256，同一条区间内稳定、跨区间才变——测试里 `backend/tests/test_departure_activation.py:87` 与 `:105` 那两条就是分别钉「稳定」与「该变才变」。
+- 它不声称的事：模块文档那行 `backend/app/execution/departure_activation.py:28` 自己写死 without asserting that movement occurred——它只投影时间，不写状态、不推进活动；测试里 `backend/tests/test_departure_activation.py:52` 那条 `test_overdue_clock_does_not_claim_execution` 钉的就是这一件。这条我不替他吹：钟过期不等于旅客已经出发。
+
+**四、真跑的四条读数（后端 venv 现成，零安装）**
+
+| 哪一步 | 读数 | 退出码 | 件与行 |
+|---|---|---|---|
+| 现尖整树导出 | 12884 枚跟踪文件、235.6 MB，逐字取到本机 | 零 | `review/加闸工-0593/proof_r1.txt:2` |
+| 负对照：不插我这枚就 import | ModuleNotFoundError: No module named 'app.execution.departure_activation' | 一 | `review/加闸工-0593/baseline_absent_new.txt:3` |
+| 插入后真 import | 回话 `IMPORT_OK file=app/execution/departure_activation.py`，公开两枚函数 | 零 | `review/加闸工-0593/proof_r1.txt:15` |
+| 该测试真跑（-v 逐条点名） | 8 条全过、失败零条、0.06 秒 | 零 | `review/加闸工-0593/proof_r1.txt:19` |
+| 与 execution 域邻枚同跑 | 5 个文件合起来 26 条过、失败零条、warning 二条 | 零 | `review/加闸工-0593/neighbours_new.txt:12` |
+| 整树 --collect-only 基线（新尖） | collected 1901 条，收集报错 1 枚 | 二 | `review/加闸工-0593/collect_base_new.txt:1931` |
+| 同一命令插入后 | collected 1909 条（+8 = 我这枚自己的用例数），报错仍是同 1 枚 | 二 | `review/加闸工-0593/collect_after_new.txt:1939` |
+| blob 对拍（逐字取回不手改） | 两枚产品件在枝上与代表枝同字节（模块 0407b9ad83ad、测试 3e113c658047） | 零 | `review/加闸工-0593/proof_r1.txt:18` |
+
+- 那条基线就红的收集错误我不粉：`backend/tests/test_v18_hermes_r20_transport_reliability_probe.py:1` 走 scripts 链再 `from mcp import ...`，在基线与插入后是同一枚、条数一致（对拍 `review/加闸工-0593/proof_r1.txt:14`）。我没修它，也没把它算成我的战果，更没有为了让采集变绿去动它的断言。
+- 后端环境没被我动：命令原样 `D:\moodle\CityNexus\backend\.venv\Scripts\python.exe --version` 回 Python 3.12.14（pytest 8.4.2、fastapi 0.141.1）；`app` 能直接 import 靠的是 `backend/pyproject.toml:39` 那条 pythonpath。共享 venv 零安装、零写入。
+- 本轮零接线是这张单的形状：现尖上 import 这枚模块的地方 0 枚文件（命令原样 `git grep -c -e departure_activation d7776c6a -- backend frontend`，现读 `review/加闸工-0593/proof_r1.txt:22`）。接线属于 0594/0595 那一格，我不自己扩面对外行为。
+
+**五、下一格我能接什么（不催，等点）**
+
+- 这枚模块的下一步是把判语接到一个真出口——它需要 `backend/app/main.py` 或 `backend/app/schemas.py` 的形状，那是排队热文件，我不自己动；要接请指名，我按「一枚文件一扇车道」交。
+- 代表枝 execution 域还剩这些零依赖/低依赖没落：`clock`（`backend/app/execution/clock.py:1`，被 4 枚别人的测试 import）、`journey_twin`（`backend/app/execution/journey_twin.py:1`）、`truth`（`backend/app/execution/truth.py:1`，但 import 它的测试有 17 枚且都碰 app.main，不属于零依赖那一档）。逐枚 import 面在 `review/加闸工-0593/proof_r1.txt:4`。
+- 上一格 ORD-0592 那条腿已在您手上跑着；我名下三枝现在等落地腿排：0593 是现尖直接子代（fast-forward），0585 与 0576 撞 `frontend/src/i18n/LocaleContext.tsx:1497` 该排队，我不催。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0600-CNDRAFT（号令者：CN 那侧的轮次摘要草稿，已复算后转交）
+
+CN 侧（零扣费那张卡）出了 R14~R26 的轮次摘要：每行是轮次、这轮想让用户做到什么的土话、代码文件、文档名。
+**这是草稿不是验收**：它那一列代码文件我没有逐枚替它背书，下面是我在现尖上的复算。
+
+复算读数：草稿正文 14 行，提到的仓内路径 27 个，逐枚核对的底账是 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv 第 2 行起的枝清单；
+其中现尖上真存在 8 个、现尖上不存在 19 个，退出码与判据写在 live_checks/revolution_absorption_check_r1.py:9 行，
+复算本身可以重跑：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_cn_draft_verify_r1.py`（它自己 ls-remote 现取尖）。
+
+现尖上不存在的那几枚路径：`backend/app/agent/continuation.py`、`backend/app/agent/execution_lease.py`、`backend/app/agent/guardian_phase.py`、`backend/app/agent/watch_policy.py`、`backend/app/collective_authority.py`、`backend/app/collective_mediation.py`、`backend/app/execution/presence.py`、`backend/app/execution/readiness.py`、`backend/app/live_context_watch.py`、`backend/app/recovery_epoch.py`、`backend/app/traveler_principal.py`、`backend/app/world_context.py`、`taskbooks/revolution/R31_EPOCH_INTEGRITY_AUTHORITY_PROVENANCE.md`、`taskbooks/revolution/R32_AUTONOMOUS_RECOVERY_MESH_CONCURRENT_SHOCKS.md`、`taskbooks/revolution/R32_GPT_IMPLEMENTATION_MAP.md`、`taskbooks/revolution/R33_DISTRIBUTED_EXECUTION_LEASE_ZOMBIE_FENCING.md`、`taskbooks/revolution/REVOLUTION_R28_AUTHENTICATED_COLLECTIVE_CONTINUITY_TASKBOOK.md`、`taskbooks/revolution/REVOLUTION_R29_LIVE_DISAGREEMENT_MEDIATION_TASKBOOK.md`、`taskbooks/revolution/REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_TASKBOOK.md`
+这类路径的来历多半是**整树快照那一族**（枝上有、线上没有），不是车道可以照抄的落点——照抄会造出引用不到的坐标。
+
+草稿原文一字未改地存在控制线上（不是权威线）：`commander/control` 的 `evidence/cmdr-cn-round-summary-0600/rounds.tsv`。
+要读原文就 fetch 那枚枝按路径取；**我没有把原文粘进账本**，因为文件名里成串的数字会被门那把尺当裸数，
+而为了过门去改 CN 的措辞是我明确不做的事。
+
+
 ### CMDR-RULING-0599-FIRSTLANDED（号令者亲测：revolution 第一枚产品码已在这条线上，且我重跑过）
 
 ORD-0593 交的是 execution 域第一枚零依赖模块。我没有把车道的自报当验收，下面三件事都是我自己现跑的。
