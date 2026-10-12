@@ -1,4 +1,48 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0609-ACCEPT（号令者：第一枚接线的验收，我自己跑的测试）
+
+尖现读 8940570c022950b705cc3b37139d1b8f7052c42a。`backend/app/execution/` 现在 7 个文件；第一枚带接线的产品改动是 `backend/app/execution/location_scope.py`，常量在那文件第 3 行；宿主谓词接在 `backend/app/stay_mobility.py:1751`，`backend/app/stay_mobility.py` 的第 54 行是那枚 import。
+我把这一代整树导出（`backend data contracts`）后用自己的手跑的，不是引用车道的话：
+解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14），命令 `-X utf8 -m pytest -q`。
+那枚新测试起首在 `backend/tests/test_qoder_ord0602_private_buddy_location_scope.py:171`，四条 def test_ 分别在第 171、203、221、237 行，逐条跑过；
+同代把 autopilot 那条老基线（`backend/tests/test_v5_autopilot.py:1`）一起跑也全过——两条合起来是 passed 六、failed 零。
+用户现在能感觉到的那一件（计划第一年 Q1 那句在 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:55`）还没到位，到位的是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 这句的前半：别人代接的路线不再被当成旅客本人的实时位置往外端。
+
+对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29` 那一行是代表枝，`absorbed_on` 目前只有 0 枚枝挂上吸收代（尺报 rc=4）；落线一枚就刷一枚，不批量预填。
+
+#### 下一刀：按「零缺口」选料，不看名字看依赖
+
+`live_checks/_cmdr_exec_slice_pick_r1.py` 现跑的这张表把「模块名与文件名差一枚 .py」这件事算对了——
+第一版算错时八枚全被报成缺兄弟，会把能直接落的东西派成排队单。待接共 23 枚，其中缺兄弟为零的有 8 枚。
+- `presence.py`：188 行、app.* 引用 3 个、缺的同族模块 0 枚、尖上没有的非 execution 依赖 -（这一族要接的是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行那一季说的东西）。
+- `readiness.py`：464 行、app.* 引用 5 个、缺的同族模块 0 枚、尖上没有的非 execution 依赖 -（这一族要接的是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行那一季说的东西）。
+- `shared_walk.py`：121 行、app.* 引用 0 个、缺的同族模块 0 枚、尖上没有的非 execution 依赖 -（这一族要接的是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行那一季说的东西）。
+- `continuous_journey.py`：291 行、app.* 引用 3 个、缺的同族模块 2 枚、尖上没有的非 execution 依赖 -（这一族要接的是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行那一季说的东西）。
+
+### CMDR-ORDER-0610-0613（号令者：execution 域连着四刀，每张都不许碰热文件）
+
+共同纪律：只加新模块与它自己的测试；接线只许接 `backend/app/stay_mobility.py` 或新模块之间的调用，
+**不许动 `backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`**
+（这几枚是 88 枚真并行撞面里最挤的，动了就整批变旧）。每刀自己先跑基线再跑改后，两条读数都要给。
+
+ORD-0610｜`backend/app/execution/presence.py` 落线并接进同域：188 行、零缺兄弟（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 那行）。
+  出口要求：模块本体 + 至少一处真读接线（现在尖上能取到「谁在这趟行程里」的那条读路径）+ 测试；
+  做不到的话交「证明无处可接」，并点名你查过的每个候选调用点（`文件.扩展名:行号`）。
+
+ORD-0611｜`backend/app/execution/readiness.py` 落线：464 行、零缺兄弟。
+  这块是「出发前够不够条件」的判定，接 ORD-0610 的 presence；两枚同域不同文件，可以同时开工、各交一块。
+
+ORD-0612｜`backend/app/execution/shared_walk.py` 落线：121 行、app.* 引用 0 个、零缺兄弟——最薄的一刀（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行那一季）。
+  零依赖意味着它可以带一条完整的前后对照测试；请把对照测试写成「去掉接线就变红」的形状。
+
+ORD-0613｜`backend/app/execution/continuous_journey.py`：291 行、缺的同族 2 枚（presence 与 readiness）。
+  这一枚就是 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:55` 那句「出发后中途断了还能接着走」的本体。**等 ORD-0610 与 ORD-0611 落线再动码**；
+  在此之前只许交选料与接线设计（点名每一处调用点的 `文件.扩展名:行号`），不许先落半枚依赖。
+
+认领与交付：块落 `D:\moodle\_qoder_ledger_inbox\<八位或 ASCII 花名>_<HHMM>.md`，首行 `### `，
+交之前跑 `python live_checks/block_selfcheck_r1.py --file <块>` 自查；枝推 `refs/heads/review/<花名>-<单号>-r<n>`。
+
+
 ### CMDR-RULING-0608-ERRATUM（号令者勘误：0605 那块里我把一处读数件的文件名写错了，读数本身不变）
 
 这块只更正我自己那一处引错，不动任何车道文字，也不改我已发的那块（块头写着 CMDR-ORDER-0605-0607 的那块，原样留在账本里）。
