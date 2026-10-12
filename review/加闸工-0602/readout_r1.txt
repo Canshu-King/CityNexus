@@ -1,0 +1,13 @@
+加闸工 ORD-0602 甲半 读数件 —— 恢复流程现在说得出「这条路线时长是谁给的」，放行结果一位没动，逐行自编号
+1  单与裁语：CMDR-ORDER-0602-0604 第一张 ORD-0602（账本第 260 行那块）+ CMDR-RULING-0608-WIREHALVES 的甲半（账本第 56 行那块，现在就批）。乙半（把非供应商事实拦下来）我没做，一行都不做。
+2  尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 8940570c022950b705cc3b37139d1b8f7052c42a。
+3  接的是哪条门：`backend/app/main.py:5945` 的 `POST /api/v1/journeys/{journey_id}/stay-options/{option_id}/autopilot/recover` —— 裁语引的那声 422 就在这条门里（原 `backend/app/main.py:5977`，我插入三行读数后它落到 `backend/app/main.py:5982`）。
+4  为什么挑这条门（不是我顺手挑软的）：上一张 ORD-0603 我查到唯一能承这枚判据的读路由是 mobility GET，但它被 `backend/tests/test_route_stub_验路工_0559b_r1.py:124` 那枚键集钉住；这条恢复门不一样——现尖两枚跑它的测试逐枚读过来只断言具体字段值（`backend/tests/test_v8_stay_mobility.py:190` 起那几行、`backend/tests/test_v9_real_trip_operations.py:165` 起那几行），没有任何一处断言 `set(body) ==`，所以加字段不撬别人的钉。它的响应在契约里也是裸 object（`contracts/openapi.yaml:2608`），加字段不动 `contracts/openapi.yaml`。
+5  后端接了什么：`backend/app/main.py:210` 那三行 import（贴在这文件已有的 `backend/app/main.py:209` 那枚 clock import 旁，形制同源）；`backend/app/main.py:5985`、`backend/app/main.py:5986`、`backend/app/main.py:5987` 用这条门已经拿到的那枚 fact 算出两档读数（够不够格驱动出发、以及 `classify_capture` 给的状态与结果）；`backend/app/main.py:6114` 起把六个字段挂进响应。
+6  甲半的硬约束怎么守：算出来的东西只进响应，不进判定 —— `authorized`（`backend/app/main.py:6026` 那行 `authorization.decision == ALLOW_AUTO` 的判语）、`executed`、`post_action_gate`、那声 422 全都不读它。这不是我说，是同一次测试里拿两种出处对跑证的：见 proof_r1.txt 第 3 行那对 `decisions equal: True`。
+7  屏上接了什么：`frontend/src/app/V8Experience.tsx:1388` 给响应类型补上这一档；`frontend/src/app/V8Experience.tsx:1402` 起把句子拼进旅客已经在看的那条状态消息（渲染落点是 `frontend/src/app/V8Experience.tsx:2173` 那个 `<div className="v8-message" role="status">`）。没有新增控件，没有只加字段不给人看。
+8  屏上那句话不含机器码：两档文案都不把 `provider_key`/`provenance` 原样印给旅客（那是机器标识，上屏就是 ORD-0568 那把闸判的一类），只说人话「供应商实测的」/「合成或估算的」；标识仍留在响应里给程序用。字典行：英文侧 `frontend/src/i18n/LocaleContext.tsx:229`、`:230`，中文侧 `frontend/src/i18n/LocaleContext.tsx:1759`、`:1760`（两侧同序，各一枚新键）。
+9  键名与同文都先现查：命令原样整树 grep `autopilotTruthLive` 与 `autopilotTruthSynthetic` 在改动前各 0 行；两句中文文案（「够格支撑出发判断」「这里只把来源说清」）在全 frontend/src 各 0 行 —— 所以不是造第二枚同文键，也没抢别人的名字。
+10 没碰的东西：`backend/app/schemas.py`、`contracts/openapi.yaml`、`frontend/src/api/citynexus.ts`、`backend/app/agent/runtime.py` 四枚排队热文件一字节未改；`backend/app/execution/route_session_contract.py` 本体一字未改（只 import 它）；`dedupe_key`（`backend/app/main.py:6065`）与 `route_request_fingerprint` 不同义这条我照裁语守着，没替换。
+11 现场边界：全部跑动在临时导出树 `D:/moodle/_jz_0602/wt2/` 里，DB 是树内临时文件、后端 venv 只借道读零安装、共享工作树（11 行别家的活）没动；账本零直写，块只走收件口。
+12 一处自报：我在这棵树上第一次跑整树采集报了 20 枚错，全是同一个原因——我导出漏了 `scripts/` 包（`ModuleNotFoundError: No module named 'scripts'` 20 条），不是我改的码坏了；补进 `scripts/` 后同一棵树基线 1918 条、报错 1 枚，与改后只差我那 2 条用例（对拍 proof_r1.txt 第 5 项）。这是本 session 我第四次栽在"导出漏路径"上，已把"读错误成因再判"当固定动作。

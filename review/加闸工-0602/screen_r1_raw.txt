@@ -1,0 +1,114 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4173 backend=:60151 db=sqlite:///./_e2e_jz0602a.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [48080]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:60151 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:62783 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53473 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=jz0602a frontend=:4173 -> backend=:60151 ai=disabled db=_e2e_jz0602a.db
+
+Running 2 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4173 backend=:60151 db=sqlite:///./_e2e_jz0602a.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:53477 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:49708 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:53477 - "POST /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49708 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53477 - "POST /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/stay-options/9eb86567-23cd-4a61-95ae-cbf4343f3908/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=183a8510-b3e0-4694-8dc2-0a12a349008d options=4 chosen=9eb86567-23cd-4a61-95ae-cbf4343f3908 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:59832 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59835 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60290 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60289 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/plans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, context_json=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-12T16:33:29.632491+00:00', '{"degraded_providers": [], "execution": {"cursor_status": "VALID", "next": {"end_at": "2026-10-09T19:05:00+08:00", "id": "2fe2fdf5-4afb-401f-b6eb-fd2 ... (923 characters truncated) ... raded": false, "provider": "mock-mobility", "snapshot_id": null, "source": "deterministic-offline"}, "opportunity_window": null, "provider_level": 1}', '2026-10-12T16:33:29.632491+00:00', '183a8510-b3e0-4694-8dc2-0a12a349008d')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:59836 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60292 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60291 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53015 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63662 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53016 - "GET /api/v1/travelers/7a81e8f2-a075-4655-92d4-e811f756a02b/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63664 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64436 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63663 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (9.3s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/backend/.venv/Scripts/python.exe frontend=:4173 backend=:60151 db=sqlite:///./_e2e_jz0602a.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:51118 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51119 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59587 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59585 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59588 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59586 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51120 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49689 - "GET /api/v1/travelers/7a81e8f2-a075-4655-92d4-e811f756a02b/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59099 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58775 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59589 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58856 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58855 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60973 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60974 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56188 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56186 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56189 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49873 - "GET /api/v1/travelers/7a81e8f2-a075-4655-92d4-e811f756a02b/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60997 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-12T16:33:36.087475+00:00', '2026-10-12T16:33:36.087475+00:00', '183a8510-b3e0-4694-8dc2-0a12a349008d')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:57878 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60593 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51530 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56187 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63930 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58366 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61575 - "POST /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/stay-options/9eb86567-23cd-4a61-95ae-cbf4343f3908/autopilot/recover HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61402 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50828 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53711 - "GET /api/v1/travelers/7a81e8f2-a075-4655-92d4-e811f756a02b/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53208 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53207 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53209 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61406 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54818 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53440 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53852 - "GET /api/v1/journeys/183a8510-b3e0-4694-8dc2-0a12a349008d/twin HTTP/1.1" 200 OK
+  x  2 [chromium] › e2e\qoder-jiazagong-0602-route-truth-on-screen-r1.spec.ts:16:1 › the rain switch says, on the glass, who measured the route timing (32.3s)
+
+
+  1) [chromium] › e2e\qoder-jiazagong-0602-route-truth-on-screen-r1.spec.ts:16:1 › the rain switch says, on the glass, who measured the route timing 
+
+    Error: the status line never carried a route-source sentence
+
+    expect(Autopilot paused for confirmation · USER_CONFIRMATION_REQUIRED. The route timing here is synthetic or estimated, not a provider measurement; this run states the source and did not block the operation over it.
+    Dismiss).toContain(/measured by a provider|synthetic or estimated/) // indexOf
+
+    Matcher error: expected value must be a string if received value is a string
+
+    Expected has type:  regexp
+    Expected has value: /measured by a provider|synthetic or estimated/
+    Received has type:  string
+    Received has value: "Autopilot paused for confirmation · USER_CONFIRMATION_REQUIRED. The route timing here is synthetic or estimated, not a provider measurement; this run states the source and did not block the operation over it.
+    Dismiss"
+
+    Call Log:
+    - Timeout 30000ms exceeded while waiting on the predicate
+
+      32 |       message: "the status line never carried a route-source sentence",
+      33 |     })
+    > 34 |     .toContain(/measured by a provider|synthetic or estimated/);
+         |      ^
+      35 |
+      36 |   const rendered = await message.first().innerText();
+      37 |   const truth = await page.evaluate(() =>
+        at D:\moodle\_jz_0602\wt2\frontend\e2e\qoder-jiazagong-0602-route-truth-on-screen-r1.spec.ts:34:6
+
+    Error Context: test-results\qoder-jiazagong-0602-route-2b564-o-measured-the-route-timing-chromium\error-context.md
+
+  1 failed
+    [chromium] › e2e\qoder-jiazagong-0602-route-truth-on-screen-r1.spec.ts:16:1 › the rain switch says, on the glass, who measured the route timing 
+  1 passed (54.4s)

@@ -1,0 +1,7 @@
+# whole-generation control, same door flags minus --only-added
+-- tip
+arm codes-on-screen r4 | ref=8940570c022950b705cc3b37139d1b8f7052c42a base=8940570c02 files_judged=0 refuse=0 info=0 require_name=True only_added=False corpus=1302
+TIP_RC=0
+-- candidate
+arm codes-on-screen r4 | ref=5ed85afea5d86b71be117a6dba80c8f0e24020e9 base=8940570c02 files_judged=2 refuse=43 info=48 require_name=True only_added=False corpus=1302
+CAND_RC=0

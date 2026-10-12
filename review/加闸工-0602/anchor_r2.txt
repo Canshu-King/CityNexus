@@ -1,0 +1,41 @@
+== anchors inside committed generation 5ed85afea5d8
+OK   backend/app/main.py:5945  期望含 'autopilot/recover'  实读 '@app.post("/api/v1/journeys/{journey_id}/stay-options/{option_id}/auto'
+OK   backend/app/main.py:209  期望含 'app.execution.clock'  实读 'from app.execution.clock import execution_clock'
+OK   backend/app/main.py:210  期望含 'route_session_contract'  实读 'from app.execution.route_session_contract import (  # ORD-0602 甲半: sou'
+OK   backend/app/main.py:5982  期望含 'HTTPException(422'  实读 'raise HTTPException(422, f"{requested_mode} is unavailable for this ca'
+OK   backend/app/main.py:5985  期望含 'route_truth_fact = fact_payload'  实读 'route_truth_fact = fact_payload(fact)'
+OK   backend/app/main.py:5986  期望含 'fact_is_eligible_for_live_readiness'  实读 'route_truth_live = fact_is_eligible_for_live_readiness(route_truth_fac'
+OK   backend/app/main.py:5987  期望含 'classify_capture'  实读 'route_truth_status, route_truth_outcome = classify_capture('
+OK   backend/app/main.py:6026  期望含 'ALLOW_AUTO'  实读 'authorized = authorization.decision == AuthorizationDecision.ALLOW_AUT'
+OK   backend/app/main.py:6065  期望含 'dedupe_key'  实读 'dedupe_key=f"autopilot:{event.id}:{requested_mode}",'
+OK   backend/app/main.py:6114  期望含 '"route_truth"'  实读 '"route_truth": {'
+OK   frontend/src/i18n/LocaleContext.tsx:229  期望含 'shell.autopilotTruthLive'  实读 '"shell.autopilotTruthLive": " The route timing here was measured by a '
+OK   frontend/src/i18n/LocaleContext.tsx:230  期望含 'shell.autopilotTruthSynthetic'  实读 '"shell.autopilotTruthSynthetic": " The route timing here is synthetic '
+OK   frontend/src/i18n/LocaleContext.tsx:1759  期望含 'shell.autopilotTruthLive'  实读 '"shell.autopilotTruthLive": "这次换走法用的路线时长是供应商实测的，够格支撑出发判断。",'
+OK   frontend/src/i18n/LocaleContext.tsx:1760  期望含 'shell.autopilotTruthSynthetic'  实读 '"shell.autopilotTruthSynthetic": "这次换走法用的路线时长是合成或估算的，不是供应商实测；这里只把来源说清，'
+OK   frontend/src/app/V8Experience.tsx:1388  期望含 'route_truth?'  实读 'route_truth?: { eligible_for_live_readiness: boolean };'
+OK   frontend/src/app/V8Experience.tsx:1402  期望含 '(result.route_truth'  实读 '(result.route_truth'
+OK   frontend/src/app/V8Experience.tsx:1405  期望含 'autopilotTruthLive'  实读 '? "shell.autopilotTruthLive"'
+OK   frontend/src/app/V8Experience.tsx:1406  期望含 'autopilotTruthSynthetic'  实读 ': "shell.autopilotTruthSynthetic",'
+OK   frontend/src/app/V8Experience.tsx:2173  期望含 'className="v8-message"'  实读 '<p className="v8-message" role="status" data-testid="address-no-screen'
+OK   contracts/openapi.yaml:2608  期望含 'type: object'  实读 "'200': {description: Policy-gated autonomous recovery, content: {appli"
+OK   backend/tests/test_v8_stay_mobility.py:190  期望含 'assert body["decision"] == "ALLOW_AUTO"'  实读 'assert body["decision"] == "ALLOW_AUTO"'
+OK   backend/tests/test_v9_real_trip_operations.py:165  期望含 'recover'  实读 'assert recovered["decision"] == "ALLOW_AUTO"'
+OK   backend/tests/test_route_stub_验路工_0559b_r1.py:124  期望含 'set('  实读 'assert set(item) == FACT_KEYS'
+OK   backend/tests/test_jiazagong_0602_route_truth_r1.py:1  期望含 '0602'  实读 '"""ORD-0602 甲半: the recovery door now says where the route timing came'
+== anchors inside my evidence files
+OK   mine_r1.txt:2  期望含 'ROUTE_READY'  实读 "JZ0602 live      : {'policy_version': 'r41-route-truth-v1', 'provider'"
+OK   mine_r1.txt:3  期望含 'ROUTE_PROVIDER_DEGRADED'  实读 "JZ0602 synthetic   : {'policy_version': 'r41-route-truth-v1', 'provide"
+OK   mine_r1.txt:4  期望含 'decisions equal: True'  实读 "JZ0602 decisions equal: True {'decision': 'ALLOW_AUTO', 'executed': Tr"
+OK   mine_r1.txt:6  期望含 ': 422 '  实读 "JZ0602 no-fact door answer: 422 {'error': {'code': 'VALIDATION_ERROR',"
+OK   mine_r1.txt:18  期望含 '2 passed'  实读 '2 passed, 2 warnings in 3.57s'
+OK   tests_r1.txt:12  期望含 '14 passed'  实读 '14 passed, 2 warnings in 6.74s'
+OK   collect_baseline.txt:1948  期望含 '1918'  实读 '1918 tests collected, 1 error in 3.40s'
+OK   collect_after.txt:1950  期望含 '1920'  实读 '1920 tests collected, 1 error in 2.91s'
+OK   copy_before.txt:2  期望含 'REGISTER_PARITY'  实读 '[MET      ] REGISTER_PARITY          1319 bilingual keys: 1319 agree, '
+OK   copy_after.txt:2  期望含 'REGISTER_PARITY'  实读 '[MET      ] REGISTER_PARITY          1321 bilingual keys: 1321 agree, '
+OK   copy_after.txt:20  期望含 'RENDERED'  实读 '[MET      ] RENDERED                 1322 distinct key names (1322 rea'
+OK   copy_after.txt:20  期望含 'gated offenders: 0'  实读 '[MET      ] RENDERED                 1322 distinct key names (1322 rea'
+OK   build_r1.txt:11  期望含 '1.20 kB'  实读 '\x1b[2mdist/\x1b[22m\x1b[32mindex.html                      \x1b[39m\x1b[1m\x1b[2m    1.'
+OK   build_r1.txt:29  期望含 'VITE_RC=0'  实读 'VITE_RC=0'
+TOTAL_BAD 0

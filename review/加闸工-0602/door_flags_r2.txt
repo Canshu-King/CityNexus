@@ -1,0 +1,6 @@
+# 落地门那条 screen-code 腿的原文（本机 _qoder_cmdr_ref_20260921\live_checks\preflight_and_land_r7.py 第 509 到 511 行，逐字抄）
+# 说明：这枚文件此刻不在线上——现读 git cat-file -e 8940570c022950b705cc3b37139d1b8f7052c42a:live_checks/preflight_and_land_r7.py 报不存在，所以这份抄件只作我照旗标的出处，不当线上证据
+                scr = subprocess.run([sys.executable, gate2, "--repo", REPO, "--ref", cand,
+                                      "--base", tip, "--only-added", "--require-name", "--refuse",
+                                      "--json", sj2], capture_output=True, timeout=900)
+# 同一枚腿还先把尺的字节从尖那一代取下来再跑（不是用本机副本），那一行在同文件第 501 行，整条腿从第 496 行起，我在第一项已用 blob 对拍复现了它的要求

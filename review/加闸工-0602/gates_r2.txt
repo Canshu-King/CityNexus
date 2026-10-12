@@ -1,0 +1,31 @@
+加闸工 ORD-0602 甲半 闸与尺读数件 r2 —— 都在这枚候选提交出来的那一刻现跑，raw 全文在同目录
+基准：权威尖 `8940570c022950b705cc3b37139d1b8f7052c42a`，取尖命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`；我这枚候选 `5ed85afea5d86b71be117a6dba80c8f0e24020e9`，落在 `refs/heads/review/加闸工-0602-r1`，pin 为 `refs/local/jiazagong-0602`，对照代 pin 为 `refs/local/jiazagong-0602-base`。
+
+一 上屏机器码闸 r4（ORD-0568 那把）
+1 先证我跑的是线上那一代尺，不是本机陈旧副本：`live_checks/codes_on_screen_gate_r4.py` 在尖那一代的 blob 是 `a8c25b5b1231417adc1e25f2cf2f15800c38707f`，与本机 `_qoder_cmdr_ref_20260921\live_checks\codes_on_screen_gate_r4.py` 逐字节相同（同为 23508 字节，`git show 8940570c022950b705cc3b37139d1b8f7052c42a:live_checks/codes_on_screen_gate_r4.py` 落盘后与本机那份相比无差异）。
+2 落地门用哪串旗标我照抄，不自己挑软的：`--only-added --require-name --refuse`。那三行原话我逐字抄进 `review/加闸工-0602/door_flags_r2.txt:3` 起（来源文件本身不在线上，抄件第 2 行写明了这一点），我这趟回执里也把这串旗标印了出来（`review/加闸工-0602/gates_r2_raw.txt:5` 的 require_name=True only_added=True）。
+3 闸先过自己的自检：断言 31 条、失败 0 条、退出码 0（`review/加闸工-0602/gates_r2_raw.txt:2` 与 `review/加闸工-0602/gates_r2_raw.txt:3`）。
+4 判我这枚：judged 2 枚文件、refuse 0 条、info 48 条、退出码 0（`review/加闸工-0602/gates_r2_raw.txt:5` 与 `review/加闸工-0602/gates_r2_raw.txt:54`）。同一串打在尖自身是 judged 0 枚（`review/加闸工-0602/gates_r2_raw.txt:56`）——这把闸只判差集，两侧同代就没文件可判，这条只当形状说明，不当"线上本来就干净"的证据。
+5 不含糊的自报：那 48 条 info 里有一枚落在我新写的那行文案上——`frontend/src/i18n/LocaleContext.tsx:229` 里的 `leave-now`，class 是 info_slug_only 不是 refuse，闸不拦；我没为了让读数好看去改措辞。
+6 把 `--only-added` 摘掉再看整代：refuse 变 43 条（`review/加闸工-0602/gate_control_r2.txt:6`），全部落在我碰过的那两枚文件的既有行上；把 `git diff` 新行号集合（本轮新写 186 行，`review/加闸工-0602/gate_intersect_r2.txt:1`）与这 43 条求交，交集 0 条（`review/加闸工-0602/gate_intersect_r2.txt:3`）。求交脚本原样在 `review/加闸工-0602/refuse_intersect_r1.py:1` 起，可复跑。
+
+二 字典语言尺（`_cmdr_dict_copy_lang_check_r1.py`）改前 / 改后各一趟
+7 先说清这把尺的身份：它不在线上——`git show 8940570c022950b705cc3b37139d1b8f7052c42a:live_checks/_cmdr_dict_copy_lang_check_r1.py` 报 does not exist，我用的是本机 `_qoder_cmdr_ref_20260921\live_checks\` 那一份。所以这两趟只算我这枚候选的自检，不算线上证据。
+8 照原文第一次跑当场死在取数据那步，只留一句 `ABORT fetch rc=1 err=`（stderr 是空的，`review/加闸工-0602/lang_r2_raw.txt:5`）。成因我先前猜错过一次，这里按 A/B 重定：同一枚四十位、同一个仓、同一个临时 ref 名，只差开头那枚 `+`——不带 `+` 回 1、带 `+` 回 0（对拍逐行在 `review/加闸工-0602/lang_abort_cause_r2.txt:5` 与 `review/加闸工-0602/lang_abort_cause_r2.txt:8`）。也就是说尺那条 fetch 用的是不带 `+` 的固定名临时 ref（那行原话逐字抄在 `review/加闸工-0602/lang_abort_cause_r2.txt:14`，来源文件不在线上，抄件里写明），上一次跑动留下的 `refs/tmp/cmdr_copylang` 指向别的代时这一趟被非快进拒绝，而它把原因吞了（只打印空的 err）。被反证的那条猜测（"CityNexus 里没有 mirror 枝所以取不到"）也写在那份对拍里，我没删。
+9 我怎么跑通它：不改尺的判语与正则，只换两处并逐处打印——把取尖那一段换成写死的四十位、把临时 ref 改名避开上一趟占用的同名。改动清单在 `review/加闸工-0602/lang_base_r2_raw.txt:2`（改前那趟）与 `review/加闸工-0602/lang_cand_r2_raw.txt:2`（我这枚那趟），跑法本身是可复跑的 `review/加闸工-0602/run_lang_r1.py:1` 起。
+10 两趟读数（同尺同形制，只差那一代）：两侧键数 1320 枚 → 1322 枚，且 EN/ZH/BOTH 三格始终相等（`review/加闸工-0602/lang_base_r2_raw.txt:9` 与 `review/加闸工-0602/lang_cand_r2_raw.txt:9`）；ONE_SIDED 0 → 0（`review/加闸工-0602/lang_cand_r2_raw.txt:10`）；EN_SIDE_HAS_CJK 1 → 1、SAME_TEXT 14 → 14、PLACEHOLDER_KEYS 143 → 143、DRIFT 0 → 0（`review/加闸工-0602/lang_cand_r2_raw.txt:11`、`review/加闸工-0602/lang_cand_r2_raw.txt:13`、`review/加闸工-0602/lang_cand_r2_raw.txt:26`）。
+11 那两处红不是我带的：EN_SIDE_HAS_CJK 那枚键是 `copilot.keyless.writeUnknown`，两侧行号 `frontend/src/i18n/LocaleContext.tsx:428` 与 `frontend/src/i18n/LocaleContext.tsx:1947`，改前那趟同样报它（`review/加闸工-0602/lang_base_r2_raw.txt:12`）。尺在两趟都以退出码 2 收尾（"报了东西就 2"是它自己的设计，`review/加闸工-0602/lang_base_r2_raw.txt:39` 与 `review/加闸工-0602/lang_cand_r2_raw.txt:39`），这一位不区分改前改后，别把它读成我这枚坏了。
+12 我这枚的两行文案在尺里是干净的：两侧同序各一枚新键、占位符零枚，所以 DRIFT 那位没涨（`review/加闸工-0602/lang_cand_r2_raw.txt:26`）。
+
+三 坐标自审
+13 这两份读数件与 proof_r1.txt / readout_r1.txt 里每一条 `file:行` 都由一枚机器核对跑过：从提交那一代 `git show` 取原文、按行号读那一行、要求含我声称的内容；证据文件那半在同一次运行里按物理行号读。结果 38 处全中、BAD 0 处（`review/加闸工-0602/anchor_r2.txt:1` 起逐行、`review/加闸工-0602/anchor_r2.txt:41` 的 TOTAL_BAD 0）。核对脚本 `review/加闸工-0602/anchor_check_r1.py:1` 起。
+14 这轮改动之前我把三处旧坐标写错了，都是凭印象：门 decorator 实际在 `backend/app/main.py:5945`（我原写 5940）、契约那格在 `contracts/openapi.yaml:2608`（我原写 2606）、构建尺寸那行在 `review/加闸工-0602/build_r1.txt:11`（我原写 26）。三处已在两份读数件里改成现读值，改的就是"实读那一行含我说的东西"，不是把断言改松。
+
+四 屏上真的看得见（权威模式 e2e，不是假回话）
+15 跑法：`CITYNEXUS_E2E_AUTHORITATIVE=1` 那一档——前端 :4176、后端 :60154 各一枚自己的端口，一枚一次性库，AI 关掉，`reuseExistingServer=false`，provenance 那行原话在 `review/加闸工-0602/screen_r4_raw.txt:1`。这条腿自己把后端与前端起起来，回答问题的是它自己起的那两枚进程。
+16 走的是旅客自己那条路：壳自己的 demo 按钮种出行程，进 Live 屏，点 `Report rain` 那枚控件（`frontend/src/app/V8Experience.tsx:3904`），恢复门回 200（`review/加闸工-0602/screen_r4_raw.txt:65`）。没有 page.route，没有我编的 payload。
+17 那句话是从 DOM 读的，不是我拼的：`.v8-message` 的 innerText 全文在 `review/加闸工-0602/screen_r4_raw.txt:73`，收尾正是 "The route timing here is synthetic or estimated, not a provider measurement; this run states the source and did not block the operation over it."；断言用 expect.poll 一直等到这句话真出现在状态行里，最后两条用例都过（`review/加闸工-0602/screen_r4_raw.txt:77`）。
+18 两张截图为证：状态元素自己那张 `review/加闸工-0602/jz0602-message-crop.png`（6428 字节，肉眼读得到那两句），整屏那张 `review/加闸工-0602/jz0602-route-truth-on-screen.png`（98775 字节）。这里我差点糊过去：消息在折叠层之上，第一张整屏图里根本没有它，得先 scrollIntoViewIfNeeded 再截元素才算"看得见"。
+19 一处没做到，点名：这一趟屏上只落了 synthetic 那一档（demo 库的路线时长本来就是合成的，`review/加闸工-0602/screen_r4_raw.txt:74` 那行 has-live-phrase=false）。live 那一档的文案在字典里（`frontend/src/i18n/LocaleContext.tsx:229`）、分支在产品码里（`frontend/src/app/V8Experience.tsx:1405`），后端两档都有真跑读数（proof_r1.txt 第 3 项），但我没在浏览器里把事实改成"供应商实测"再点一次——那要往库里改写事实，已经越过甲半的边界，等号令者点头。
+20 我这枚仪表先红过一次，也留档：第一次把断言写成 `expect.poll(...).toContain(/正则/)`，Playwright 的 toContain 收到正则直接 Matcher error，而屏上那句话当时已经渲染出来了（`review/加闸工-0602/screen_r1_raw.txt:95` 那行 Received has value（同一处报错在 `review/加闸工-0602/screen_r1_raw.txt:90`） 就是它）。是我这把尺用法错、不是产品红，改成 toMatch 后同一条路两枚用例全过。
+21 这枚 spec 我交在证据目录（`review/加闸工-0602/qoder-jiazagong-0602-route-truth-on-screen-r1.spec.ts:1` 起），没塞进 `frontend/e2e/`：它点的是共享 demo 行程，串行套件里会跟别人抢同一枚库，要不要升进套件归号令者点。
