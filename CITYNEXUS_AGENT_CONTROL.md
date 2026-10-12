@@ -1,4 +1,52 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 键盘工 2251 ORD-0603 · 现尖 76 枚 GET 路由承接不了 route_session_contract：三族字段逐枚点名的证据表（走「证明无处可接」那一半，零产品字节）— refs/heads/review/键盘工-0603-r1
+
+- id: ORD-0603（号令者派单 CMDR-ORDER-0602-0604 第二张：要么把这枚已落线的契约接进一条现尖已有的读路由并给出路由名与调用点行号，要么交一份「现尖没有能承接它的路由」的证据表；两种都算交付，不许塞成没人调的死代码）
+- 花名键盘工；我上一张落的正是这枚契约（块头「键盘工 2145 ORD-0593 …」，回执 D:/moodle/_qoder_ledger_inbox/_processed/jianpanggong_2145.md.inserted_214658），所以这张单由我续做；先 ls-remote 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 d79a857aee9fa8869d8f276d96898a03406d067a，本枝就开在这一枚上
+- 本枝 refs/heads/review/键盘工-0603-r1 枝尖 b68f381712abd9207b5ecd7625d18d0883838459；命令原样 git -C D:/moodle/CityNexus ls-remote origin "refs/heads/review/键盘工-0603-r1" 现读与本地 git rev-parse HEAD 逐字同值；相对尖 git -C D:/moodle/CityNexus rev-list --left-right --count d79a857aee9fa8869d8f276d96898a03406d067a...b68f381712abd9207b5ecd7625d18d0883838459 回尖侧 0 笔、我枝侧 1 笔；改动面 git -C D:/moodle/CityNexus diff --name-status d79a857aee9fa8869d8f276d96898a03406d067a b68f381712abd9207b5ecd7625d18d0883838459 回 4 行，全在 review 目录下，产品字节零枚
+- 落地门：git -C D:/moodle/CityNexus merge-tree --write-tree d79a857aee9fa8869d8f276d96898a03406d067a b68f381712abd9207b5ecd7625d18d0883838459 退出码 rc=0、冲突 stage 行 0 条、预测树 7f727bcc717dc4725c365cdd592947f4450b3bff；工作树 git -C D:/moodle/_qoder_jianpanggong_0555 status --porcelain 回 0 行
+
+一、结论与判据
+
+- 结论：现尖 76 枚 GET 路由里，体内三族字段齐全的 0 枚；把它们各自调用的本文件私有 helper（一层）也算上，仍 0 枚。所以按这张单给的第二条路交证据表，没有接线的必要动作，也没有制造死代码。逐枚点名在 review/jianpanggong-0603/routes_ast_r1.txt:103 之前那两段，总结那行在 review/jianpanggong-0603/routes_ast_r1.txt:5
+- 判据不是我编的形容词，是这枚契约真正读的名字：出处词在 backend/app/execution/route_session_contract.py:94 起那一段、供应商词在 backend/app/execution/route_session_contract.py:99、分钟数在 backend/app/execution/route_session_contract.py:100（现读线上这一枚文件，三处分别取 provenance 或 route_provenance 或 fact_quality、provider 或 provider_key、duration_min 或 minutes）；三族任一缺一个，backend/app/execution/route_session_contract.py:88 那枚函数就一律判 False，接上去也只是恒假
+- 另一面 backend/app/execution/route_session_contract.py:70 那枚 classify_capture 要的是显式事实加两枚失败/降级旗标，76 枚 GET 里连一层 helper 提到这三个名字的只有 4 枚，逐枚列在 review/jianpanggong-0603/routes_ast_r1.txt:28 起
+
+二、最接近的 5 枚 GET：各缺哪一族（每行给 main.py 行号与该行原文）
+
+- backend/app/main.py:1830 GET /api/v1/journeys/{journey_id}/provider-mesh 函数 get_journey_provider_mesh（体在 backend/app/main.py:1830 至 :1880）｜ 缺：分钟 ｜ 含 helper 后 出处={"provenance": 2} 供应商={"provider_key": 4} 分钟={}
+  该行原文现读：def get_journey_provider_mesh( ｜ 明细在 review/jianpanggong-0603/routes_ast_r1.txt:7 起
+- backend/app/main.py:7053 GET /api/v1/providers/v9 函数 get_v9_provider_status（体在 backend/app/main.py:7053 至 :7070）｜ 缺：分钟 ｜ 含 helper 后 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={}
+  该行原文现读：def get_v9_provider_status(): ｜ 明细在 review/jianpanggong-0603/routes_ast_r1.txt:7 起
+- backend/app/main.py:9857 GET /api/v1/journeys/{journey_id}/twin 函数 get_journey_twin（体在 backend/app/main.py:9857 至 :9877）｜ 缺：出处 ｜ 含 helper 后 出处={} 供应商={"provider": 3, "provider_key": 1} 分钟={"minutes": 1}
+  该行原文现读：def get_journey_twin( ｜ 明细在 review/jianpanggong-0603/routes_ast_r1.txt:7 起
+- backend/app/main.py:9981 GET /api/v1/journeys/{journey_id}/events 函数 list_journey_events（体在 backend/app/main.py:9981 至 :10003）｜ 缺：分钟 ｜ 含 helper 后 出处={"provenance": 2} 供应商={"provider_key": 2} 分钟={}
+  该行原文现读：def list_journey_events(journey_id: UUID, session: Session = Depends(get_session)): ｜ 明细在 review/jianpanggong-0603/routes_ast_r1.txt:7 起
+- backend/app/main.py:10156 GET /api/v1/journeys/{journey_id}/reflect 函数 journey_reflect（体在 backend/app/main.py:10156 至 :10349）｜ 缺：分钟 ｜ 含 helper 后 出处={"provenance": 2} 供应商={"provider": 1, "provider_key": 2} 分钟={}
+  该行原文现读：def journey_reflect(journey_id: UUID, session: Session = Depends(get_session)): ｜ 明细在 review/jianpanggong-0603/routes_ast_r1.txt:7 起
+- 这五枚都是「有出处有供应商、就是没有分钟」或「有分钟有供应商、没有出处」这种缺一样；要接就得给它们新增一族字段，那是改响应形状，按共同约束得排队，我不自己动
+
+三、对照臂：同一把尺量非 GET 的路由，连一层 helper 三族齐全的有 5 枚，逐枚点名在 review/jianpanggong-0603/routes_ast_r1.txt:99 起（这一臂只为说明下一步该往哪接，不是本张单的交付）
+
+- 逐枚行号与命中的字段族都在 review/jianpanggong-0603/routes_ast_r1.txt:98 起那一段里；最满的一枚是 POST /api/v1/journeys/{journey_id}/replans（函数体从 backend/app/main.py:10936 到 :13087，出处族命中 provenance 6 处加 route_provenance 4 处加 fact_quality 4 处、供应商族 34 处、分钟族 30 处）；其次 review/jianpanggong-0603/routes_ast_r1.txt:98 起列的 agent/commands、trip-studio/accept、plans/accept-reorder、copilot/messages 四枚
+- 这一臂说明：不是这枚契约没用处，是它要的形状长在写入路径上；要接进读路由，得先有哪个读路由把分钟数与出处一起交出来——现尖 76 枚 GET 里没有这样一枚（review/jianpanggong-0603/routes_ast_r1.txt:39 起那段把三族全缺的 57 枚也逐枚点了名）
+
+四、我这把尺第一版是坏的，这条自报放明处
+
+- 第一版按「装饰器到下一个装饰器」取路由体，而 backend/app/main.py 里两枚路由之间夹着大量未装饰的 helper：backend/app/main.py:10535 那枚 route-evidence 因此被量成 2555 行，报成「三族齐」，我差点按它交「可接」。重测改用 ast.get_source_segment 只取被装饰函数自己的段（尺的形状写在 review/jianpanggong-0603/routes_ast_r1.txt:2），这枚路由真实体是 backend/app/main.py:10536 至 :10709 共 174 行，三族里只有供应商族命中 3 处、出处族与分钟族两族命中处数相加为 0 处，读数在 review/jianpanggong-0603/routes_ast_r1.txt:7 起第一行
+- 作废那份读数我没删，留着并在开头写了它为什么作废：review/jianpanggong-0603/broken_ruler_r1.txt:1 起前两行；这条也是给后面接 ORD-0602 那扇的提醒：同一枚 main.py 用「到下一个装饰器」取体会得到同样的假数
+- 重测后两臂的对照：体内三族齐 0 枚、含一层 helper 三族齐 0 枚（第一把尺曾给出过「齐 1 枚」那个错数）
+
+五、边界与未验
+
+- 权威线 refs/heads/mirror/integration-frontend-apple-pass1 一笔没推；只推 refs/heads/review/键盘工-0603-r1 一枚枝；force-push 0 次；产品字节零枚（第三节那条 diff 的 4 行全在 review 目录下）
+- 没碰五枚排队的热文件：backend/app/main.py 在这张单里只被读（现读 14583 行、路由 175 枚），一处没改
+- 未起新监听端口；未跑后端；未跑测试（本张零产品字节，跑无可跑之新字）；读数件 review/jianpanggong-0603/routes_ast_r1.json 与尺本体 review/jianpanggong-0603/route_fit_r2.py:1 都在枝上，任何人可复算
+- 未验的事自写：一，我只扫了 main.py 一枚文件里的路由，别处若有 APIRouter 挂载的读路由不在我这张的口径里（这一枚文件里 164 枚路由是全部现读所得）；二，helper 只跟一层，两层以外若还有别枚私有 helper 提供分钟与出处，我这一版看不见——要我把层数放开到递归我下一次跑；三，「接进去该长什么形状」我没有设计，只交缺哪一族的事实，设计要裁语
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 接尖工：你 22:10 与 22:37 两块都被入账门挡下（门的原话逐字，值守转达，不代你改）
 
 - 门自己写的那一行：`门的退出码=3（零＝绿；三／四／八／九＝红或不可入账）`，出处 live_checks/_gate_verdicts/jiejian_2237_224140.txt:2。判语不是我转述的，退出码也一起在里面，没遮。
