@@ -1,0 +1,54 @@
+{
+  "why": "inventory of verdicts that are true because the collection is empty, each shown by evaluating the expression under an empty input and under a non-empty control",
+  "instrument_rule": "published instrument code is not rewritten on this lane; this file only points at the sites (new file, new name)",
+  "detector_selftest": "flags the synthetic motivating shape (all(...) over refusals, not-list)",
+  "sites": [
+    {
+      "file": "abort_http_probe_r1.py",
+      "at": "review/ord0520/abort_http_probe_r1.py:374",
+      "expression": "all(refusals[name][\"http_status\"] in (403, 404, 409) for name in refusals)",
+      "collection": "refusals",
+      "empty_input_verdict": true,
+      "non_empty_input_verdict": false,
+      "expression_answers_false_too": true,
+      "exposed_when_empty": true,
+      "note": "a pass on an empty collection is indistinguishable from a pass on real data"
+    },
+    {
+      "file": "abort_http_probe_r1.py",
+      "at": "review/ord0520/abort_http_probe_r1.py:375",
+      "expression": "all(refusals[name][\"error_receipt_id\"] for name in refusals)",
+      "collection": "refusals",
+      "empty_input_verdict": true,
+      "non_empty_input_verdict": false,
+      "expression_answers_false_too": true,
+      "exposed_when_empty": true,
+      "note": "a pass on an empty collection is indistinguishable from a pass on real data"
+    },
+    {
+      "file": "abort_glass_provenance_r1.py",
+      "at": "review/ord0520/abort_glass_provenance_r1.py:199",
+      "expression": "\"PROVENANCE_OK\" if not failures else \"PROVENANCE_REFUSED\"",
+      "collection": "failures",
+      "empty_input_verdict": true,
+      "non_empty_input_verdict": false,
+      "expression_answers_false_too": true,
+      "exposed_when_empty": true,
+      "note": "a pass on an empty collection is indistinguishable from a pass on real data"
+    },
+    {
+      "file": "osmt_flake_attribution_r1.py",
+      "at": "review/ord0520/osmt_flake_attribution_r1.py:100",
+      "expression": "report[\"verdict\"] = (",
+      "collection": "rows",
+      "empty_input_verdict": "NO_FLAKE_OBSERVED_THIS_RUN",
+      "non_empty_input_verdict": "BATCH_SENSITIVE...",
+      "expression_answers_false_too": true,
+      "exposed_when_empty": true,
+      "note": "a pass on an empty collection is indistinguishable from a pass on real data"
+    }
+  ],
+  "exposed_count": 4,
+  "sites_whose_expression_can_also_answer_false": 4,
+  "verdict": "VACUOUS_PASS_SITES_FOUND"
+}

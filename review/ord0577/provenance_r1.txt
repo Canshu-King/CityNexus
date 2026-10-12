@@ -1,0 +1,38 @@
+ORD-0577 off-route bar census -- provenance (lane 8ac89982, 绿化工·小许)
+
+WHAT WAS MEASURED
+  The bottom bar's answer to "where am I" on every screen the route tables declare, in both locales,
+  at 390x844. The denominator is read from the source at run time (desktopRoutes + mobileRoutes in
+  frontend/src/routes/v8Routes.ts), so a screen added later cannot hide from the census.
+
+THE BYTES THE RUN USED (read, not remembered)
+  tip                                  8996eee4fb9fb4e159588305223ef421728c4e72
+  tip frontend/src/app/V8Experience.tsx 5d62f7bc78a58369d871a37c820e0b9a1a6076e6
+  lane tree (hubcut) same path          5d62f7bc78a58369d871a37c820e0b9a1a6076e6
+  -> the two blobs are equal, so the census ran on the authority line's own frontend bytes, not on a
+     lane-only variant.
+
+RUNS (this lane's own stack: own ports, own run id, own database file; :8000/:4781/:4782/:8693 untouched)
+  r1  ports 5194/5195  db db/_e2e_ord0577census_r1.db  -> 2 failed  (the negative control was wrong:
+      it asserted the address changes on an unknown route, and it does not)
+  r2  ports 5196/5197  db db/_e2e_ord0577census_r2.db  -> 3 passed (2 arms + the real-seed setup)
+  r3  ports 5198/5199  db db/_e2e_ord0577census_r3.db  -> 3 passed (denominator completed to the union
+      of both tables, which added the mobile-only keys trips and me)
+  gate stdout: review/ord0577/gate_stdout_r1.txt   (the r3 run)
+  readings:    review/ord0577/census_zh.json, review/ord0577/census_en.json
+
+WHAT THE CENSUS FOUND (identical in both arms)
+  screens measured                     17   (desktop 15 + mobile-only trips, me)
+  screens the bar answers               6   hub -> nav-hub, live -> nav-map, map -> nav-map,
+                                             agent -> nav-agent, trips -> nav-trips, me -> nav-me
+  screens the bar leaves silent        11   studio, stay, discover, import, bookings, footprints,
+                                             authoritative, intelligence, twin, trash, access
+  bar buttons painted on every screen   5  (the bar is present on all 17, so silence is not absence)
+  negative control (a route naming no screen): answered as nav-hub with the address unchanged --
+      measured, and it is why the first version of this ruler was wrong.
+
+WHAT THIS DOES NOT CLAIM
+  no fix is shipped here: the two shapes the order allows (attribute the screen to the nearest main
+  route, or state explicitly that it is not on a main route) each need something this lane does not
+  own -- the first needs a screen-to-bar mapping the product does not carry anywhere machine-readable,
+  the second needs one new user-facing string. Both are rulings, so this branch ships the measurement.
