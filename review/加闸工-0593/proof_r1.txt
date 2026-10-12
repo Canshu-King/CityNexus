@@ -1,0 +1,23 @@
+加闸工 ORD-0593 证明件 —— 每条都是原样命令跑出来的，逐行自编号；raw 全文在同目录另五件里
+1  两代之间 backend/ 只变这几枚（2 枚，别家落的 route_session_contract）：route_session_contract.py、test_route_session_contract.py
+2  本枝相对基准只碰两枚产品件：命令原样 git -c core.quotepath=false diff --name-status 基准..枝尖，读数写在本件末尾第 12 行（交块时再取一次）
+3  代表枝 execution 包 15 枚模块逐枚取 import 面，内部 app.* 依赖零枚的有 5 枚：clock.py、departure_activation.py、journey_twin.py、route_session_contract.py、truth.py
+   零依赖候选 clock.py                     外部 import：__future__, contextlib, contextvars, datetime, typing, zoneinfo
+   零依赖候选 departure_activation.py      外部 import：__future__, datetime, hashlib, json, typing
+   零依赖候选 journey_twin.py              外部 import：__future__, dataclasses, datetime, typing
+   零依赖候选 route_session_contract.py    外部 import：__future__, dataclasses, hashlib, json, typing
+   零依赖候选 truth.py                     外部 import：__future__, typing
+4  代表枝 backend/tests 共 271 枚；逐枚扫「哪枚测试 import 了这枚 execution 模块」（按模块名 stem 匹配；先前我带 .py 去扫把五枚全数成零，那是我的正则毛病不是事实）：clock 被 4 枚测试 import（test_in_transit_reroute.py、test_r55_live_progress_drift_product.py）；departure_activation 被 1 枚测试 import（test_departure_activation.py）；journey_twin 被 0 枚测试 import（无）；route_session_contract 被 2 枚测试 import（test_route_session_contract.py、test_route_session_operations.py）；truth 被 0 枚测试 import（无）
+   五枚零依赖候选里只有 departure_activation 有一枚同名的自己的测试 test_departure_activation.py（119 行）；clock 被别人家的测试 import 但没有它自己那一枚；route_session_contract 已在基准前 3 代由别家落了线
+5  它那枚测试自己的 import 面（119 行）：__future__, app.execution.departure_activation, datetime；fixture 形参：无（所有用例零形参）；有没有碰 app.main/testclient/db：False
+6  模块自己的外部 import：__future__, datetime, hashlib, json, typing；公开符号：_aware, departure_activation_projection, departure_cue_fingerprint
+7  整树 --collect-only 在 d7776c6a 那一代：基线 collected=1901、收集报错 1 枚 ['tests/test_v18_hermes_r20_transport_reliability_probe.py']；插入我这枚后 collected=1909、报错 1 枚 ['tests/test_v18_hermes_r20_transport_reliability_probe.py']；差 8 条=test_departure_activation.py 的用例数，报错集合前后一致=True
+8  真 import（后端 venv Python 3.12.14，cwd=导出树 backend/，命令原样 python -c 'import app.execution.departure_activation'，PYTHONIOENCODING=utf-8）回话原文：IMPORT_OK file=app/execution/departure_activation.py ｜ PUBLIC=departure_activation_projection, departure_cue_fingerprint
+   IMPORT_OK file=app/execution/departure_activation.py
+   PUBLIC=departure_activation_projection, departure_cue_fingerprint
+9  blob 对拍（逐字取回、不手改）：模块 0407b9ad83ad vs 0407b9ad83ad 同=True；测试 3e113c658047 vs 3e113c658047 同=True
+10 该测试真跑（-v 逐条点名，命令原样 pytest tests/test_departure_activation.py -v）：8 条全过、0.06 秒；八条名见同文件末尾第 11 行
+11 与 execution 域邻枚同跑（test_route_session_contract、test_v10_foundations、test_v7_traveler_twin、test_v8_stay_mobility 加我这枚）：26 passed、失败 0 条、退出码零（raw 见 neighbours_new.txt）
+12 负对照：把我这两枚从导出树里拿掉再 import，回话原文「ModuleNotFoundError: No module named 'app.execution.departure_activation'」——说明线是这一枚铺出来的，不是本来就有
+
+13 现尖 d7776c6a 上 import 这枚模块的地方：命令原样 git grep -c -e departure_activation 那一代 -- backend frontend，命中 0 枚文件（本轮只落线不接线，接线属于下一格）
