@@ -1,0 +1,16 @@
+test_event_resolution_projection.py	tests/test_event_resolution_projection.py:1	assert created.status_code == 201, created.text
+test_guardian_pulse.py	tests/test_guardian_pulse.py:1	E   AttributeError: <module 'app.main' from 'E:\\tcheck\\backend\\app\\main.py'> has no attribute 'pulse_journey'
+test_r14_terminal_disruption_recovery.py	tests/test_r14_terminal_disruption_recovery.py:1	assert result["journey"]["status"] == "COMPLETED", result
+test_r24_adaptive_memory.py	tests/test_r24_adaptive_memory.py:1	E   StopIteration
+test_r43_operator_loop.py	tests/test_r43_operator_loop.py:1	assert started.status_code == 200, started.text
+test_r59_collective_group_recovery_plan.py	tests/test_r59_collective_group_recovery_plan.py:1	assert "request_collective_decision" in plan.allowed_tools
+test_r86_first_startable_real_city_journey.py	tests/test_r86_first_startable_real_city_journey.py:1	E   AttributeError: 'Settings' object has no attribute 'traveler_auth_secret'
+test_r87_first_live_city_discovery.py	tests/test_r87_first_live_city_discovery.py:1	E   AttributeError: 'Settings' object has no attribute 'traveler_auth_secret'
+test_r88_real_poi_exploration.py	tests/test_r88_real_poi_exploration.py:1	E   AttributeError: 'Settings' object has no attribute 'traveler_auth_secret'
+test_r89_member_shared_osm_identity.py	tests/test_r89_member_shared_osm_identity.py:1	E   AttributeError: 'Settings' object has no attribute 'traveler_auth_secret'
+test_r93_explicit_city_center_and_private_session.py	tests/test_r93_explicit_city_center_and_private_session.py:1	E   AttributeError: 'Settings' object has no attribute 'traveler_auth_secret'
+test_r95_city_jump_and_provenance.py	tests/test_r95_city_jump_and_provenance.py:1	E   AttributeError: 'Settings' object has no attribute 'traveler_auth_secret'
+test_r96_intent_driven_first_outing.py	tests/test_r96_intent_driven_first_outing.py:1	E   TypeError: OverpassPOIProvider.search_with_evidence() got an unexpected keyword argument 'max_attempts'
+test_real_city_overpass_union.py	tests/test_real_city_overpass_union.py:1	assert 'nwr["tourism"="gallery"](around:5000,35.0,135.7);' in query
+test_replan_completion_truth.py	tests/test_replan_completion_truth.py:1	assert proposals and all(item.status == "INVALIDATED" for item in proposals)
+test_revolution_r77_public_place_facts.py	tests/test_revolution_r77_public_place_facts.py:1	assert row["external_id"] == "overpass:node/4246892594"
