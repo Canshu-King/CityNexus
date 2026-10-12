@@ -224,6 +224,10 @@ const en: Dict = {
   "shell.staySelected": "Stay selected · Journey impact recalculated from captured evidence.",
   "shell.autopilotRecovered": "Autopilot recovered the exposed leg with {mode} · protected commitments preserved.",
   "shell.autopilotPaused": "Autopilot paused for confirmation · {reasons}.",
+  /* ORD-0602 甲半: where the route timing behind this switch came from.  Stating it is approved;
+     blocking on it is not, so the sentence says the system did not stop the operation. */
+  "shell.autopilotTruthLive": " The route timing here was measured by a provider, so it can carry a leave-now check.",
+  "shell.autopilotTruthSynthetic": " The route timing here is synthetic or estimated, not a provider measurement; this run states the source and did not block the operation over it.",
   "shell.autonomyEnabled": "Autonomous recovery is enabled for reversible transport changes inside this envelope.",
   "shell.missionCaptured": "Request saved · the assistant is unavailable right now, so your trip is unchanged.",
   "shell.missionActivated": "Mission activated · CityNexus will monitor the journey inside the current authority envelope.",
@@ -1752,6 +1756,8 @@ const zhCN: Dict = {
   "shell.staySelected": "已选择住宿 · 已从采集证据重新计算行程影响。",
   "shell.autopilotRecovered": "自动驾驶已用 {mode} 恢复暴露路段 · 受保护的承诺已保留。",
   "shell.autopilotPaused": "自动驾驶暂停等待确认 · {reasons}。",
+  "shell.autopilotTruthLive": "这次换走法用的路线时长是供应商实测的，够格支撑出发判断。",
+  "shell.autopilotTruthSynthetic": "这次换走法用的路线时长是合成或估算的，不是供应商实测；这里只把来源说清，本次操作没有因此被拦下。",
   "shell.autonomyEnabled": "自主恢复已启用，仅限权限范围内的可逆交通变更。",
   "shell.missionCaptured": "任务已捕获 · 外部模型不可用，确定性 CityNexus 路径保持活跃。",
   "shell.missionActivated": "任务已激活 · CityNexus 将在当前权限范围内监控行程。",
