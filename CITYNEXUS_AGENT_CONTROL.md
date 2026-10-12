@@ -1,4 +1,60 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 地图工 交 ORD-0629：recovery_discovery 落线候选，两臂读数与「无处可接」证据，宿主零触碰
+
+花名「地图工」，本块走收件口，账本零直写。认领号令者亲测那块之后点的「剩下三刀」第一刀：单文逐字要「先跑基线再跑改后，两条读数都要给；接不上就交『证明无处可接』并点名每个候选调用点的 `文件.扩展名:行号`」。另两刀 ORD-0630 与 ORD-0631 我没碰、也没转派；本会话不给别的车道派单。
+
+#### 交付物（全部现取，逐枚可 `git cat-file` 取回）
+
+| 项 | 读数 | 锚 |
+|---|---|---|
+| 候选枝的父代（就是当时现读的权威尖） | `e100170436fa7424e03fe6e4a0171b1bf77d09d3` | 建枝前后各取一次 `ls-remote`，两读同值才提交 |
+| 交枝 | `refs/heads/review/地图工-0629-r1` | 提交 `dfd7ca65e5be72446ee3ec9d77625f83a811bad4`，diff 形制是两枚纯新增 |
+| 模块 | blob `65f644fa3de4b30bce31001797bed91e83e90dd4` | 枝内 `backend/app/agent/recovery_discovery.py`，代表枝全文一百二十一行，逐字节搬运：`git hash-object` 与 `git rev-parse 代表枝:路径` 同值 |
+| 它的测试 | blob `ca67fb4dc4bdc211aa4de902f1ed6f65cc835142` | 枝内 `backend/tests/test_recovery_discovery.py`，八枚 test 函数，断言一字未改一字未删 |
+| 禁改面 | 零触碰 | `backend/app/main.py:1`、`backend/app/schemas.py` 那枚、`backend/app/services.py:415`、`contracts/openapi.yaml:20`、`backend/app/agent/autorun.py:14`、`backend/app/agent/runtime.py:63` 逐枚验过不在 diff 里 |
+
+#### 两臂读数（现导现跑，venv 是 3.12.14 那一枚，命令 `-X utf8 -m pytest -q tests/test_recovery_discovery.py`）
+
+| 臂 | 树里有什么 | 读数 | 锚与口径 |
+|---|---|---|---|
+| 基线 | 尖那代 + 只放测试 | collection 中断一处：`ModuleNotFoundError: No module named 'app.agent.recovery_discovery'`，rc=2 | 断点就在 `backend/tests/test_recovery_discovery.py:1` 那行 import。口径照号令者亲测那块：这一臂证明的是「这枚文件本来不在尖上」，不证明旧行为本来是坏的 |
+| 改后 | 尖那代 + 模块 + 测试 | `1 failed, 7 passed in 0.88s`，rc=1 | 红的那枚逐字点名：`test_explicit_discovery_tool_has_intent_only_and_no_coordinates`，落点 `backend/tests/test_recovery_discovery.py:124` 的 `StopIteration` |
+| 清场 | 一次性验证导出树 | 本车道自删，实测目录读不回 | 那棵树无 `.git`、可从权威尖整棵复现，删它不动任何人的现场；尖上代码与对象库一字节未改 |
+
+#### 那一枚红不是夹具问题，也不是断言写坏
+
+它要的是工具目录里那枚条目：`citynexus_tool_definitions` 现读在 `backend/app/agent/runtime.py:63`，而尖上 `backend/app` 全域对 `discover_recovery_options` 是零命中；枝上这枚工具活在 `backend/app/agent/gateway.py:772` 的派发表与 `:1771` 的方法里。runtime.py 是 ORD-0630 那刀的宿主、gateway.py 不在本单允许面，所以我不去补那半枚目录——补了就是把别人格子改成我的形状，也把这刀的范围偷偷放大了。
+
+#### 接线：证明无处可接（候选调用点逐枚现读自父代尖）
+
+| 候选 | 那一行现读是什么 | 为什么喂不出它要的载荷 |
+|---|---|---|
+| `backend/app/agent/autorun.py:288` | `signals = refresh_signals(session, journey)` | 只有 degraded 一类的信号状态，没有候选方案列表 |
+| `backend/app/agent/autorun.py:323` | `resilience = build_resilience_snapshot(session, journey)` | 弹性快照，不是可比较的方案集 |
+| `backend/app/agent/autorun.py:348` | `guardian_result = run_preemptive_guardian(` | 返回是一枚 run 摘要 |
+| `backend/app/agent/autorun.py:359` | `evidence = guardian_result.get("evidence") or {}` | 这枚 evidence 来自 `backend/app/agent/guardian.py:335` 的 `json.loads(run.evidence_json or "{}")`，形状由落库方决定，尖上没有一处保证里面有方案列表 |
+| 反控 | `backend/app/agent/autorun.py:14` 那枚兄弟 import 是本单点名的接线位 | 全文对 `option` 词面零命中（尖那代实测），所以不能解释成「我没找到调用点」 |
+
+另外一条同源事实：这枚判定函数在**代表枝上也没有生产调用者**——除自身定义外只有测试引用它，枝侧 `backend/app/agent/gateway.py:1840` 那类命中是审计 action 的字面量、不是调用。所以在 autorun.py 里造一个调用只能是我发明的形状，不是搬运。
+
+#### 判语（我自己不给分）
+
+模块语义：可判 ACCEPTED 那一档——零新增依赖、零 `app.*` 引用、纯叶子方向，落进来就带着它自己的绿（七枚）。能力：NOT_REACHED——用户现在还感觉不到「恢复面不够时先去扩一次世界」，因为调用它的那枚工具目录不在尖上。落线不等于上线，这句话我按单上的口径写在结论里而不是写在附注里。
+
+#### 请令点两处
+
+1. 那枚红的去向：留在候选枝里等 runtime 或 gateway 那枚目录落线（我倾向这项），还是这一刀只落模块不落测试？后者要号令者点名——我自己不会把测试留在枝上，那样这条能力就没有任何可复算的证据了。
+2. CN 那页 `map_n_recovery_discovery_host` 的第四节写「十条断言全部只需把 `recovery_discovery.py` 这枚文件搬上尖即可跑」，我的实测是八枚 test 函数里有一条要工具目录（红因见上）。两份读数都在本块里，要不要我把这条更正回给 CN 那扇由您定；本会话我不派单。
+
+#### 本块自报的边界
+
+- 两臂都测在父代 `e100170436fa7424e03fe6e4a0171b1bf77d09d3` 上；尖再动一代，本候选要先按号令者的并枝规矩并一次、两臂重跑，我不自己点落地。
+- 我只新增两枚路径，没改任何现有文件的字节，包括别人名下的尺与对账表。
+- 静态部分（谁引用它、词面有没有）是 grep 现读；跑动部分是真跑的一次导出树，两臂各挂自己的读数，不互相代证。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 地图工 交 ORD-0591：execution 域测试面逐枚三态判定，零产品字节
 
 花名「地图工」，本块走收件口，账本零直写。认领的是 CMDR-ORDER-0588-0592 段里第五张（单上那一格要求：代表枝独有的测试里先只做 execution 域那批，逐枚判「现尖可跑 / 需改夹具 / 该作废」，不许改断言换绿，判作废要写清现尖为什么跑不了它）。同段另外四张我没碰，也没转派；本会话不给别的车道派单。
