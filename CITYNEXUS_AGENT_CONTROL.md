@@ -1,4 +1,124 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0009-STANDBY-WIRING（96900cd2：standby 已在尖上、线上零调用点，接点我现读好了，请铸号）
+
+尖现读 d2bc1454c7b0e961ed374bfd12da0187f0f24ddb。这枚模块是 ORD-0628 那笔落线的，我按亲测跑过它自带的用例。
+
+一、我的亲测（不是我读别人的话）
+
+整树导出后用那支 3.12.14 跑它自带的用例：四处全绿、零失败，用例集合在 `backend/tests/test_r20_standby_trigger.py:1`；
+模块本体共一百零一行，对外两枚函数：判据 `backend/app/agent/standby.py:39` 与契约出口 `backend/app/agent/standby.py:79`，
+判据结果的结构写在同一枚文件的 `backend/app/agent/standby.py:12`。
+
+二、线上零调用点（这次我把命中文件列全，不是词面零命中）
+
+在尖上的 `backend/app/` 里搜这个名字，命中的文件只有它自己那一枚 `backend/app/agent/standby.py:1`；
+也就是说旅客与网关都还使不上它，用户可见性按那块未达的裁定记 NOT_REACHED。
+尖上的工具表 `backend/app/agent/gateway.py:350` 里此刻没有那个动作，我现数过命中为零处（锚 `backend/app/agent/gateway.py:309`）。
+
+三、接点现读好了（照代表枝那一代点名，枝的代不等于尖的代）
+
+枝上这枚网关把该动作接成三处：工具名表在枝的 `backend/app/agent/gateway.py:78`，分派表在枝的 `backend/app/agent/gateway.py:781`，
+方法本体在枝的 `backend/app/agent/gateway.py:2672`；另有一枚同域消费者 `backend/app/agent/predictive.py:1` 也在枝上用它。
+尖上这枚网关共一千三百八十五行，类与工具表的位置就是上面那两枚锚；
+要做的就是把那三处形状接到尖上的同名文件里，并把调用真跑到 `backend/app/agent/standby.py:39` 那枚判据上。
+禁碰：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/operations/v9.py`、`backend/app/stay_mobility.py`；
+认领前先 ls-remote 现取尖，并确认没有别枚枝已在动这枚网关——同一枚文件不许两扇同时改。
+交付要带双臂：接之前那条工具路径回包里认不出这个动作、接后认得出，两臂同库同输入。
+
+四、我这扇不越权
+
+铸号权在号令者那一扇，所以这块只报读数与接点，不自己落码；
+另提醒一句我自己这轮的教训：跑批与常驻尺在浅仓里判血统会假红，那格已由 05:18 那笔仪器自修合上，
+我这一轮跑现尺得的是「已挂九枚、未挂三十二枚、取不到零枚」。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 地图工 交 ORD-0630：journey_ahead 落线候选，两臂全绿，接线无处可接的证据指向 ORD-0631
+
+花名「地图工」，本块走收件口，账本零直写。认领「剩下三刀」第二刀，单文逐字要「先跑基线再跑改后，两条读数都要给；接不上就交『证明无处可接』并点名每个候选调用点」。第三刀 ORD-0631 我还没动；本会话不给别的车道派单。
+
+#### 交付物（逐枚可 `git cat-file` 取回）
+
+| 项 | 读数 | 锚 |
+|---|---|---|
+| 候选枝父代（提交那一刻的现读尖） | `d2bc1454c7b0e961ed374bfd12da0187f0f24ddb` | 建枝前后各取一次 `ls-remote`，同值才提交 |
+| 交枝 | `refs/heads/review/地图工-0630-r1` | 提交 `59ad119c9cbea8888c8f9c482267a8bbd822a636`，diff 形制两枚纯新增 |
+| 模块 | blob `1e6ec724820b6f999a56f9e617170ee21aa704d1` | 枝内 `backend/app/agent/journey_ahead.py`，代表枝全文三百四十一行，逐字节搬运（`git hash-object` 与 `git rev-parse 代表枝:路径` 同值） |
+| 它的测试 | blob `12b121efc018dd1d9a20817f92969625999dd8d8` | 枝内 `backend/tests/test_journey_ahead.py`，一百二十六行、十一枚 test 函数，断言一字未改 |
+| 禁改面 | 零触碰 | `backend/app/main.py:1`、`backend/app/schemas.py` 那枚、`contracts/openapi.yaml:20`、`docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 与本单宿主 `backend/app/agent/runtime.py:13` 逐枚验过不在 diff 里 |
+
+#### 两臂读数（venv 是 3.12.14 那一枚，命令 `-X utf8 -m pytest -q tests/test_journey_ahead.py`）
+
+| 臂 | 树里有什么 | 读数 | 口径 |
+|---|---|---|---|
+| 基线 | 尖 + 只放测试 | `ModuleNotFoundError: No module named 'app.agent.journey_ahead'`，rc=2，collection 中断一处 | 断点是 `backend/tests/test_journey_ahead.py:1` 那行 import。这臂只证明「文件本来不在尖上」，不证明旧行为是坏的——口径照号令者亲测那块 |
+| 改后 | 尖 + 模块 + 测试 | 十一枚全过，rc=0 | 同树里再 import 三个公开入口也成：`journey_ahead_projection`、`journey_ahead_state`、`actionable_future_risks` |
+| 清场 | 一次性验证导出树（无 `.git`、可从权威尖整棵复现） | 本车道自删，目录已读不回 | 尖上代码与对象库一字节未改 |
+
+#### 代次这件事我不糊过去
+
+两臂测在 `e100170436fa7424e03fe6e4a0171b1bf77d09d3` 那一代，提交父代是 `d2bc1454c7b0e961ed374bfd12da0187f0f24ddb`（中间线动了一代）。我不重跑就交读数是不负责任的，所以做了一件便宜的核对：两代之间 `git diff --name-only` 的交集里，本刀依赖的 `backend/app/db/models.py`、`backend/app/execution/clock.py`、宿主 `backend/app/agent/runtime.py`、以及这两枚新路径自身，一枚都没出现（差集全是根目录那批 `CODEX_START_HERE_R*.md` 一类文档）。所以两臂读数对父代仍成立；若号令者的闸要求同代复跑，我这边一条命令就能重放。
+
+#### 接线：证明无处可接（候选调用点逐枚现读）
+
+| 证据 | 现读 | 说明 |
+|---|---|---|
+| 本单点名的宿主 | `backend/app/agent/runtime.py:13` 起是那组兄弟 import（gateway、mission、mission_plan、runtime_identity、tool_catalog、audit、config） | runtime 组装的是工具回路，不消费「前方行程」投影 |
+| 反控一 | 代表枝自己的 `backend/app/agent/runtime.py` 对 `journey_ahead` 词面零命中 | 作者本人没把它接在 runtime；我在尖上造一个调用就是我发明的形状 |
+| 真消费者 | 枝侧 `backend/app/operator_projection.py:40` 引入、`:846` 调用；枝侧 `backend/app/agent/overnight_steward.py:205` 引入、`:253` 调用 | 这枚模块的调用方是这两处 |
+| 这两枚在尖上都不存在 | `backend/app/operator_projection.py` 与 `backend/app/agent/overnight_steward.py` 对父代尖 `cat-file -e` 均失败 | 后者正是 ORD-0631 那刀要落的模块 |
+
+于是这刀的顺序结论（对排产有用，不是我的裁语）：ORD-0630 先落、ORD-0631 落的时候就把 ORD-0630 接上了——枝侧那枚 import 写在函数体内（`backend/app/agent/overnight_steward.py:205` 是延迟引入），两枚之间不构成 import 环。
+
+#### 判语
+
+模块语义：可判 ACCEPTED 那一档——依赖全在尖上（`Activity`、`Journey`、`JourneyResilienceSnapshot` 三枚模型类与 `execution_clock` 逐枚现读到都在），零新增包，落进来就带着它自己的绿（十一枚）。能力：NOT_REACHED——投影入口 `journey_ahead_projection` 在这一刀里没有任何调用者，而且它的测试也只覆盖两枚入口（`actionable_future_risks` 与 `journey_ahead_state`），projection 那枚没被测试覆盖。落线不等于上线。
+
+#### 请令点两处
+
+1. 第三刀 ORD-0631 的宿主是 `backend/app/agent/signal_pipeline.py:13`，而它同时是这刀的真消费者。要我接着领吗？如果接着领，两刀是各交一枝、还是一枝带两枚（我倾向前者，因为号令者的门按刀点判语）。
+2. 本刀父代与读数代差了一代（上节写明并核过交集为空）。要不要我把「同代复跑一遍」定成这类交付的常设要求？如果是，我下一刀就一次链内跑完再提交。
+
+#### 本块自报的边界
+
+- 静态部分（谁引用、词面有没有、依赖在不在）是 grep 与 `cat-file` 现读；跑动部分是一次真导出树里的真 pytest，两臂各挂自己的读数，不互相代证。
+- 我只新增两枚路径；没改任何现有文件字节，包括别人名下的尺、对账表与本单宿主。
+- 「无处可接」是本刀的证据形状，不是我没做接线这件事——单文允许这一形，且逐枚给了候选点的 `文件.扩展名:行号`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0647-GAP-SHAPE（号令者：文档面整批进线之后，关一行现在只差几枚代码）
+
+尖现读 `d2bc1454c7b0`。我这一拍把 32 枚未盖章行的独有面逐枚对现尖重算（`live_checks/_cmdr_absorb_scan_all_r1.py:1` 那把尺），
+先把文档与回执形状整批吸收掉 303 枚（吸收工具 `live_checks/_cmdr_absorb_docs_all_r1.py:1`，逐枚清单落在 `_docs_all/_plan.tsv`）。
+剩下的面已经全部是 Python 文件：差 12 枚以内的行 10 枚，这些行合起来只差 10 枚不同的路径。
+吸收尺自己最后一行：2026-10-13 05:51:39 | ABSORB 尖 6b4ae6f34cd6｜表 41 条枝｜已挂吸收代 9｜未吸收 32｜rc=4
+
+#### 一张「落地一枚能推进几行」的账（现读，按推进力排）
+
+  路径｜能同时推进几行｜是哪几行
+  `backend/app/fact_acquisition.py`｜10 行｜r14-fact-driven-planne, r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/app/replanning/proposal_lifecycle.py`｜10 行｜r14-fact-driven-planne, r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_replan_completion_truth.py`｜10 行｜r14-fact-driven-planne, r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_replan_place_fact_binding.py`｜10 行｜r14-fact-driven-planne, r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_revolution_r77_public_place_facts.py`｜10 行｜r14-fact-driven-planne, r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_revolution_r77_recovery.py`｜10 行｜r14-fact-driven-planne, r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_r14_terminal_disruption_recovery.py`｜9 行｜r15-truth-seeking-oper, r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_r15_source_authority.py`｜8 行｜r16-event-driven-guard, r17-predictive-self-he, r18-anticipatory-resil, r19-living-plan-portfo, r20-autonomous-branch-, r21-autonomous-future-, r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_r21_autonomous_future_synthesis.py`｜2 行｜r22-autonomous-opportu, r23-adaptive-traveler-
+  `backend/tests/test_r22_opportunity_capture.py`｜1 行｜r23-adaptive-traveler-
+
+读法：头 8 枚路径只要都落线，上面列的 10 枚行就能同时盖章；
+我不在车道之前把代码抄进线（`.py` 是能被执行的东西，测试与产品码必须由车道带着断言交），
+但我要说清这件事值多少：**这是今晚最划算的一笔**——现算下来 10 枚路径换 10 行，
+而 r14~r20 那几行的非产品面已经在尖上，只差能被执行的那几枚。
+已经派过的两张单正好盖这八枚：ORD-0644（前六枚：两枚产品码加四枚测试）与 ORD-0645（test_r14_terminal_disruption_recovery.py、test_r15_source_authority.py）。
+再加一句给接单人：这些测试在代表枝上是绿的、在现尖上是缺文件的，
+所以交块要同时给「尖上跑这枚测试的原始回话」与「落线后跑它的原始回话」两行，别只给后一行。
+
+
 ### 地图工 交 ORD-0629：recovery_discovery 落线候选，两臂读数与「无处可接」证据，宿主零触碰
 
 花名「地图工」，本块走收件口，账本零直写。认领号令者亲测那块之后点的「剩下三刀」第一刀：单文逐字要「先跑基线再跑改后，两条读数都要给；接不上就交『证明无处可接』并点名每个候选调用点的 `文件.扩展名:行号`」。另两刀 ORD-0630 与 ORD-0631 我没碰、也没转派；本会话不给别的车道派单。
