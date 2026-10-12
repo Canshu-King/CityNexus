@@ -1,0 +1,9 @@
+# 只读合并预测：现尖（我干活这几分钟里挪了一代）与我这枚候选枝
+# 命令：git -C D:/moodle/_qoder_integration_20260919 merge-tree --write-tree <现尖> <我这枚>（不写任何 ref、不动任何枝）
+# 现尖 f85194013ac1；我这枚 971daf6aad8c；我这枚的父代是取尖那刻的 8940570c022950b705cc3b37139d1b8f7052c42a
+merge-tree rc=0（0=干净可合，非 0 才谈冲突）
+合并后的 tree：8d3643dd4de8fe97884914c198ffd6f01d449f49
+# 我碰过的三枚产品文件在新旧两代尖之间一字未动，逐枚数差异行数（0 行=同代）：
+backend/app/main.py -> 差异 0 枚文件
+frontend/src/i18n/LocaleContext.tsx -> 差异 0 枚文件
+frontend/src/app/V8Experience.tsx -> 差异 0 枚文件
