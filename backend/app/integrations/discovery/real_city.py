@@ -856,36 +856,42 @@ class OverpassPOIProvider:
         # The provider must answer the question that was actually asked.  A
         # single fixed cafe/restaurant tag set meant "any museums nearby" came
         # back with cafes, which then looked like a relevant answer.
-        tags = '"amenity"~"cafe|restaurant|library|arts_centre|theatre"'
+        tag_clauses = ['"amenity"~"cafe|restaurant|library|arts_centre|theatre"']
         for keywords, candidate_tags in (
-            (("museum", "博物馆"), '"tourism"="museum"'),
-            (("gallery", "美术馆", "画廊"), '"tourism"="gallery"|"amenity"="arts_centre"'),
-            (("theatre", "theater", "剧院", "剧场"), '"amenity"="theatre"'),
-            (("library", "图书馆"), '"amenity"="library"'),
-            (("cafe", "coffee", "咖啡馆", "咖啡"), '"amenity"~"cafe|coffee"'),
-            (("restaurant", "food", "餐厅", "吃饭", "美食"), '"amenity"~"restaurant|food_court"'),
-            (("park", "garden", "公园", "户外", "outdoor"), '"leisure"~"park|garden"'),
-            (("hotel", "住宿", "酒店"), '"tourism"~"hotel|hostel|guest_house"'),
-            (("attraction", "sight", "景点", "tourist"), '"tourism"~"attraction|viewpoint"'),
+            (("museum", "博物馆"), ['"tourism"="museum"']),
+            # Different key/value filters must be emitted as an Overpass union;
+            # joining them with "|" inside one nwr filter is invalid syntax.
+            (("gallery", "美术馆", "画廊"), ['"tourism"="gallery"', '"amenity"="arts_centre"']),
+            (("theatre", "theater", "剧院", "剧场"), ['"amenity"="theatre"']),
+            (("library", "图书馆"), ['"amenity"="library"']),
+            (("cafe", "coffee", "咖啡馆", "咖啡"), ['"amenity"~"cafe|coffee"']),
+            (("restaurant", "food", "餐厅", "吃饭", "美食"), ['"amenity"~"restaurant|food_court"']),
+            (("park", "garden", "公园", "户外", "outdoor"), ['"leisure"~"park|garden"']),
+            (("hotel", "住宿", "酒店"), ['"tourism"~"hotel|hostel|guest_house"']),
+            (("attraction", "sight", "景点", "tourist"), ['"tourism"~"attraction|viewpoint"']),
             # The three coverage categories that used to borrow the default set (g18a/g18b):
             # each asks its own question, so "0 answers" reads as a real zero per category
             # instead of "the default cafe query found nothing".
-            (("nightlife", "夜生活", "酒吧", "夜店"), '"amenity"~"bar|pub|nightclub"'),
+            (("nightlife", "夜生活", "酒吧", "夜店"), ['"amenity"~"bar|pub|nightclub"']),
             (
                 ("mobility", "地铁站", "公交", "交通站点"),
-                '"railway"~"station|subway_entrance"|"amenity"="bus_station"|"highway"="bus_stop"',
+                ['"railway"~"station|subway_entrance"', '"amenity"="bus_station"', '"highway"="bus_stop"'],
             ),
             (
                 ("booking", "门票预约", "票务", "售票"),
-                '"tourism"="ticket_converter"|"amenity"="ticket_office"',
+                ['"tourism"="ticket_converter"', '"amenity"="ticket_office"'],
             ),
         ):
             if any(token in requested for token in keywords):
-                tags = candidate_tags
+                tag_clauses = candidate_tags
                 break
         query_text = (
-            f"[out:json][timeout:10];nwr[{tags}](around:{radius_m},{latitude},{longitude});"
-            "out center tags;"
+            '[out:json][timeout:10];'
+            + ''.join(
+                f"nwr[{clause}](around:{radius_m},{latitude},{longitude});"
+                for clause in tag_clauses
+            )
+            + 'out center tags;'
         )
         # Public Overpass mirrors are individually flaky.  Rotating through
         # them is what keeps a real category question answerable instead of
