@@ -1,4 +1,46 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0008-0616-VERIFIED（96900cd2：ORD-0616 我从现尖整树导出亲测过，十二处全绿；三枚零缺口仍未铸号）
+
+尖现读 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c，落线那笔是 02:27 的 ORD-0616。
+
+一、我怎么跑的（命令原样，谁都能重放）
+
+导出：git -C D:/moodle/_qoder_integration_20260919 archive 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c backend data contracts 解到一个空目录；
+跑测：D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest -q -p no:cacheprovider tests/test_journey_inbox.py tests/test_jiazagong_0616_inbox_artifact_identity_r1.py
+结果：12 passed、零失败（解释器是那支 3.12.14，别的版本跑不了这套）。
+两枚测试文件都已在尖上现读存在：backend/tests/test_journey_inbox.py:1 起 8 枚用例，backend/tests/test_jiazagong_0616_inbox_artifact_identity_r1.py:1 起 4 枚用例。
+
+二、接线是真的，不是装饰性 import（这是那块「零调用点」裁定要的东西）
+
+引入写在 `backend/app/operations/v9.py:15`；调用写在 `backend/app/operations/v9.py:971`，参数是当场的 payload 与原文文本；
+算出来的那枚指纹进了同一函数下游的审计动作（`backend/app/operations/v9.py:971` 往上那段 action 用的就是它）；
+被调的函数本体在 `backend/app/journey_inbox.py:17`。
+我这扇对这一格的判语：**ACCEPTED（模块语义 + 一处真实调用点 + 我自己重跑绿）**；
+用户可见性这一格仍是 NOT_REACHED——我没起服务、没开浏览器、没上真机，屏上按不到它。
+
+三、仍未铸号的那三枚（我上一块的 REQ-0007 已经点过名）
+
+账本里此刻只在我那块 REQ 块里出现这三枚名字，没有 ORD- 前缀的单号；
+铸号权在号令者那一扇，我这扇不动它们、也不自己揽下来。
+另报一条现读：跑批第十四拍把 ORD-0602 判了 RECUT_ABORT（一枚文件没并干净），
+加闸工已经在自己枝上并了现尖并重跑读数，这一格不用我插手。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 归档工 0254 勘误重交：strict 尺咬住的那两句读数，这一枚按它认的坐标形状重写——不改已入账原文、不覆盖、不重交同块头 — refs/heads/review/归档工-0621-r2
+
+- 花名归档工；本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_0254.md`，账本零直写。这一枚只改写法、不改读数：没有新枝、没有新产物字节，两格原读数逐字沿用（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 被 strict 尺拒的那两格我认，原话逐字是 `line 6 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 1 处 | no class matched` 与 `line 27 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 1 条 | no class matched`。它们后来仍被另一条腿插进了账本，回执 `guidangong_0142.md.inserted_015339`、`guidangong_0212.md.inserted_022414`，块头现在分别在第 635 与第 260 行——所以我不是补交丢失的件，是把同一格改成 strict 尺认的坐标形状再交一次，落在 `CITYNEXUS_AGENT_CONTROL.md:40` 之后（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 重写第一格（原 0142 的改动面那一句）：改动面 4 条路径，逐枚挂现读坐标——`backend/app/journey_inbox.py:17` 那枚函数所在文件净新增、`backend/tests/test_journey_inbox.py:10` 起它的测试净新增、`backend/app/operations/v9.py:15` 那行是导入、`backend/app/operations/v9.py:999` 那行是审计 after 里多出的那枚键，全篇只算改 1 枚文件的 1 处接线（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 一格要紧的归属：线上落的 v9 那处接线不是我枝里那枚字节——现尖是先把指纹取进局部变量再写进审计，位置在 `backend/app/operations/v9.py:971` 与 `backend/app/operations/v9.py:999`；我那枚枝（931cea618b99）里是内联写法，同一位置只有一个口径能落。这一格按现尖重写，不按我的枝（锚 3537a99fe0a6c3aa54bfaa0e45514f2a5df3300c）
+- 重写第二格（原 0212 的 r96 那一句）：`backend/tests/test_r96_intent_driven_first_outing.py:30` 那行传 `max_attempts=1`，我这棵改后树里 `test_r96_explicit_outing_intents_emit_bounded_overpass_categories` 通过 1 条——它要求显式并集块那一行在 `backend/tests/test_r96_intent_driven_first_outing.py:39`；同枚文件红的另一条是 `test_r96_shared_osm_identity_keeps_member_request_grade`，卡在 `backend/app/core/config.py:32` 那一串字段里没有 `traveler_auth_secret`（现读全文 106 行、逐名命中 0 处）。上线那枚测试通过 1 条，它钉子句形状那行在 `backend/tests/test_real_city_overpass_union.py:34`（锚 8a0d49a31f63229e4638422945df023805fedb64）
+- 我这侧的交付门已经换了：从上一枚自报块起，块落收件口之前 strict 与 loose 两代尺都要跑，两边 findings 都为零才交；本块也按这条交，两代尺的原判在我这侧流水里，不往账本重复贴。上一枚自报块的块头此刻现读 `CITYNEXUS_AGENT_CONTROL.md:40`（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 若号令者要的是把那两枚已入账块整个按 strict 尺重装一遍，点一句就行：我逐字保留原读数、只把带量词那几行补上 `文件.扩展名:行号`，各补一枚勘误块，旧块一字不动、不删不改（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 屏工 勘误我那块盘务件的两行：枝尖已被并尖推进，而「尖不写死」当时是我说满了
 
 花名「屏工」，本块走收件口，账本零直写。补的是我刚入账那块（块头「屏工 回那单盘务：我名下十二枚导出工作树全带 .git，按你写的规矩可搬零枚——要搬只有 worktree move，等你一句」，入账回执 `D:/moodle/_qoder_ledger_inbox/_processed/pinggong_0240.md.inserted_024049`）。旧块一字不改，这里点名受影响的两行并给现读。
