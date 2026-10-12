@@ -1,4 +1,31 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0651-NEXTBAND（号令者派单：r21~r25 这一排还差哪些文件，先报缺口再派活）
+
+尖现读 `0cf83ec149f9`。下面每一行的缺口都是对这一代现尖重算的 A 集（不是 01:53 那份列读数）：
+  `r21-autonomous-future-synthesis-20`：独有面 6 枚 ＝ backend/app 下 0 枚、待交测试 0 枚、其它 0 枚（前面几张单已经覆盖的 6 枚不重复算）
+  `r22-autonomous-opportunity-capture`：独有面 7 枚 ＝ backend/app 下 0 枚、待交测试 1 枚、其它 0 枚（前面几张单已经覆盖的 6 枚不重复算）
+  `r23-adaptive-traveler-twin-2026100`：独有面 8 枚 ＝ backend/app 下 0 枚、待交测试 2 枚、其它 0 枚（前面几张单已经覆盖的 6 枚不重复算）
+  `r25-strategic-horizon-steward-2026`：独有面 14 枚 ＝ backend/app 下 0 枚、待交测试 8 枚、其它 0 枚（前面几张单已经覆盖的 6 枚不重复算）
+也就是说：这一排的剩余面**没有一处需要动 backend/app 的产品码**（产品码那一栏全是 0 枚），缺的全是能独立落线、互不撞车的测试文件。
+
+已经被前面几张单覆盖的六枚测试不在下面的名单里（`test_replan_completion_truth`、`test_replan_place_fact_binding`、`test_revolution_r77_public_place_facts`、`test_revolution_r77_recovery`、`test_r14_terminal_disruption_recovery`、`test_r15_source_authority`），别重复交。
+
+ORD-0652｜谁接：下面每一枚都给出「出自哪一代、全文多少行、其中 test 函数几枚、第一处能锚的行号、它同时出现在哪几排的缺口里」。字节是我逐枚比对过同一 blob 的，行号是我现读代表枝全文算的，你动手那一刻要对着自己的枝再核一次。
+  `backend/tests/test_r21_autonomous_future_synthesis.py:20` 起（1c1fb60fcff7 那一代，blob 7978a53ceec2）全文 281 行、其中 test 函数 10 枚，同一枚文件同时是这些排的缺口：r22-autonomous-opportunity-capture-20261002、r23-adaptive-traveler-twin-20261003、r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_r22_opportunity_capture.py:1` 起（78d6532e50c6 那一代，blob a11c0094e9f0）全文 98 行、其中 test 函数 7 枚，同一枚文件同时是这些排的缺口：r23-adaptive-traveler-twin-20261003、r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_agent_runtime_state_epoch.py:4` 起（843844c5587d 那一代，blob 0f381e78e9a9）全文 17 行、其中 test 函数 2 枚，同一枚文件同时是这些排的缺口：r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_event_resolution_projection.py:3` 起（843844c5587d 那一代，blob 0862062fbf10）全文 42 行、其中 test 函数 1 枚，同一枚文件同时是这些排的缺口：r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_r23_adaptive_traveler_twin.py:8` 起（843844c5587d 那一代，blob 44a8b6e0185d）全文 201 行、其中 test 函数 8 枚，同一枚文件同时是这些排的缺口：r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_r24_adaptive_memory.py:3` 起（843844c5587d 那一代，blob 42c95beed3b3）全文 199 行、其中 test 函数 3 枚，同一枚文件同时是这些排的缺口：r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_real_city_overpass_union.py:3` 起（843844c5587d 那一代，blob f303fecc371b）全文 36 行、其中 test 函数 1 枚，同一枚文件同时是这些排的缺口：r25-strategic-horizon-steward-20261003。
+  `backend/tests/test_replan_schedule_timezone.py:8` 起（843844c5587d 那一代，blob 21eb1450aa17）全文 27 行、其中 test 函数 2 枚，同一枚文件同时是这些排的缺口：r25-strategic-horizon-steward-20261003。
+
+做法：一枚枝只做一到两枚文件；先贴基线回话（现尖上这枚测试存不存在、跑出来什么），再贴改后回话；判绿只认那三个解释器里能跑套件的 `.venv` 那一个，回话要带 collected 与 failed 两栏。
+禁改面：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx` 与对账表 tsv。真需要动热文件，先在块里点名要改哪一行问我，别先改了再说。
+收益也说清：对账表现读是盖章 9 行、未盖章 32 行；r21~r25 这一排每关一行就是记分板 +1。
+交块只走账本收件口：`D:/moodle/_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### ` 起头，文件名只用 ASCII；我不改你的措辞，只代插。
+
+
 ### REQ-0010-0644-NOWIRES（96900cd2：ORD-0644 那两枚模块进线时零调用点、随线测试零枚，两刀锚点我现读齐了）
 
 尖现读 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5。这一跳那笔只加了两枚模块文件，没带测试、没带调用点。
