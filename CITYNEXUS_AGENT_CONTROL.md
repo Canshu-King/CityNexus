@@ -1,4 +1,24 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0619-TRUTH-AND-MAPS（号令者：execution 第二枚带接线的验收 ＋ CN 接线地图交付）
+
+尖现读 6171fdf2c868f5030690c6cfa3b5ea469bb810fd。`backend/app/execution/truth.py` 已在线上（真值词表 `backend/app/execution/truth.py` 第 9 行），
+而且不是孤枚模块：生产侧消费者是这些文件（每一枚的 import 行现读，逐枚可查）——
+  `backend/app/main.py:270` 就是那枚引用（现读自尖 6171fdf2c868，同一行第 270 行）。
+  `backend/app/operations/v9.py:52` 就是那枚引用（现读自尖 6171fdf2c868，同一行第 52 行）。
+亲测（我自己跑的，导出整树 backend data contracts，用 3.12.14 那个 venv，`-X utf8 -m pytest -q`）：20 passed, 2 warnings in 8.56s；
+跑的是四枚文件：那枚接线测试、上一刀的位置隔离测试，以及绑定与 autopilot 两条老基线，没有被我弄红。
+计划第一年 Q1 那句（`docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行）要求的「出发后中途断了还能接着走」还没到位，现在线上有的是它前面的两步：路线会话契约、真值词表、位置作用域。
+
+#### CN 那侧交来的接线地图（草稿，不进产品码，但每句都带可定位坐标）
+
+我把每张图里的 `文件:行号` 逐枚在我这两棵树里对过（依据 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行那一季的接线要求）：3 张零处行号越界。
+- `map_a_presence_readiness.md`：去重坐标 81 枚我能定位 81 枚，余下 0 枚落在我没导出的树里（我的分母不全，不是它写错）。路径与首行锚 `D:/moodle/_qoder_cn_work_0609/maps/map_a_presence_readiness.md:1`
+- `map_b_walk_drift.md`：去重坐标 124 枚我能定位 124 枚，余下 0 枚落在我没导出的树里（我的分母不全，不是它写错）。路径与首行锚 `D:/moodle/_qoder_cn_work_0609/maps/map_b_walk_drift.md:1`
+- `map_c_reroute_group.md`：去重坐标 139 枚我能定位 138 枚，余下 1 枚落在我没导出的树里（我的分母不全，不是它写错）。路径与首行锚 `D:/moodle/_qoder_cn_work_0609/maps/map_c_reroute_group.md:1`
+读法是本地路径（车道都在这台机器上），不需要 fetch；图里 `rep:` 前缀是族A 代表枝的导出树，`tip:` 前缀是现尖导出树。
+还没写完的那几张（解锁器 recovery_epoch / journey_inbox / fact_acquisition、group_presence 对照、private_buddy 三枚依赖方向）我排在队列里，写完另开一块。
+
+
 ### 接尖工｜勘误我自己上一块的第四节：把没测完的疑问写进了读数行，正确读数现算如下（旧块一字不改）
 
 我 01:19 入账那块（现读 `CITYNEXUS_AGENT_CONTROL.md:2`）第四节里，我写了一行"是尖的八跳之后？否——"这种自问自答，还在同一行给了个没测完的数。形制上错了：读数行只许放实测值，疑问不该进账。按您规矩旧块不动，这条勘误另发，实测在下面。
