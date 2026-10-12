@@ -1,0 +1,260 @@
+{
+ "tip": "3bf57cc0e15ee4defc833e3a3c7463d0be0d2f60",
+ "branches": 8,
+ "files": 28,
+ "total_lines": 1435,
+ "entries": [
+  {
+   "branch": "refs/heads/gpt/revolution-r61-h12-r62-prep-20260923",
+   "sha": "9fd3d221214901ba372924d60a8e9e0bfd859938",
+   "src": "evidence/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r61/CODEX_NEXT_TASK.md",
+   "blob": "c6abf15a67b2213997f2a0d9374ddabb53294d95",
+   "bytes": 1804,
+   "lines": 10
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r61-h12-r62-prep-20260923",
+   "sha": "9fd3d221214901ba372924d60a8e9e0bfd859938",
+   "src": "evidence/gpt-assist/20260923-r61/H12_HANDOFF.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r61/H12_HANDOFF.md",
+   "blob": "f83a71553963e2a8a6ee8ee6ebb7b2321e91987f",
+   "bytes": 689,
+   "lines": 8
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r61-h12-r62-prep-20260923",
+   "sha": "9fd3d221214901ba372924d60a8e9e0bfd859938",
+   "src": "evidence/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r61/R61_EXTERNAL_AUDIT.md",
+   "blob": "31395874f3cd0c12b7971e32f025890289359264",
+   "bytes": 2493,
+   "lines": 29
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r61-h12-r62-prep-20260923",
+   "sha": "9fd3d221214901ba372924d60a8e9e0bfd859938",
+   "src": "evidence/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r61/R62_STALE_COMPATIBILITY_MINIMAL.diff",
+   "blob": "712766624dd40f7cc3b76e72d990c2db9d3900cd",
+   "bytes": 320,
+   "lines": 10
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r61-h12-r62-prep-20260923",
+   "sha": "9fd3d221214901ba372924d60a8e9e0bfd859938",
+   "src": "evidence/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r61/proposed_test_r62_cost_truth_edges.py",
+   "blob": "8440f22dc7231d3e0db586817f45b4288b5316de",
+   "bytes": 1136,
+   "lines": 28
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r62-r63-prep-20260923",
+   "sha": "1c3a2d019921dbfd2df00ec67085998615780b2e",
+   "src": "evidence/gpt-assist/20260923-r62/R62_R63_PREP.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r62/R62_R63_PREP.md",
+   "blob": "7022b343e8670086f19fa5ecbca19014c379f7e4",
+   "bytes": 3465,
+   "lines": 57
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r62-r63-prep-20260923",
+   "sha": "1c3a2d019921dbfd2df00ec67085998615780b2e",
+   "src": "evidence/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_anchor_commitment_cost_truth.py",
+   "blob": "b2ef64dc18f917e3c58c51a74b8a80b7f6688738",
+   "bytes": 6366,
+   "lines": 171
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r62-r63-prep-20260923",
+   "sha": "1c3a2d019921dbfd2df00ec67085998615780b2e",
+   "src": "evidence/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r62/proposed_test_r63_template_budget_fit_truth.py",
+   "blob": "11240128fa63b1a563f8f903e5e59a191edc4b8f",
+   "bytes": 2583,
+   "lines": 73
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r7-r71-prep-20260923",
+   "sha": "03f8d0e3f0025e6a5c088e87d3ce7d12bc608f4d",
+   "src": "evidence/gpt-assist/20260923-r7/CODEX_R71_TASK.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r7/CODEX_R71_TASK.md",
+   "blob": "54f2c64f0eab791a2828f869b9cbb2c1927d8e5e",
+   "bytes": 1456,
+   "lines": 39
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r7-r71-prep-20260923",
+   "sha": "03f8d0e3f0025e6a5c088e87d3ce7d12bc608f4d",
+   "src": "evidence/gpt-assist/20260923-r7/R7_R71_PREP.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r7/R7_R71_PREP.md",
+   "blob": "5184d8c2c78eaa62c08e47a6af9a4ca4abeb8928",
+   "bytes": 3291,
+   "lines": 60
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r7-r71-prep-20260923",
+   "sha": "03f8d0e3f0025e6a5c088e87d3ce7d12bc608f4d",
+   "src": "evidence/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r7/r71_catalogue_eligibility_ledger.py",
+   "blob": "8372e2c6f0011e5bdcda098152e2dcc9c7c36dc6",
+   "bytes": 3293,
+   "lines": 94
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r71-r72-prep-20260923",
+   "sha": "d1a05785839ad08649c65d48080fd70dbd9446aa",
+   "src": "evidence/gpt-assist/20260923-r71/CODEX_R72_TASK.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r71/CODEX_R72_TASK.md",
+   "blob": "43a99627c9d204b3f89ae3d39be0465186508923",
+   "bytes": 1981,
+   "lines": 49
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r71-r72-prep-20260923",
+   "sha": "d1a05785839ad08649c65d48080fd70dbd9446aa",
+   "src": "evidence/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r71/R71_EXTERNAL_AUDIT.md",
+   "blob": "145bffb6071f9eb3eb275690db91c87d8c377e87",
+   "bytes": 2769,
+   "lines": 46
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r71-r72-prep-20260923",
+   "sha": "d1a05785839ad08649c65d48080fd70dbd9446aa",
+   "src": "evidence/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r71/R72_ACQUISITION_FRONTIER.json",
+   "blob": "8aab38dcff62ffb653af0d9e4d83a46fa5b64513",
+   "bytes": 640,
+   "lines": 26
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r71-r72-prep-20260923",
+   "sha": "d1a05785839ad08649c65d48080fd70dbd9446aa",
+   "src": "evidence/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r71/R72_EVIDENCE_CONTRACT.md",
+   "blob": "7e043144ce596bcbde5276fae91c7a74d3463b85",
+   "bytes": 775,
+   "lines": 13
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r71-r72-prep-20260923",
+   "sha": "d1a05785839ad08649c65d48080fd70dbd9446aa",
+   "src": "evidence/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r71/r72_exact_osm_fact_probe.py",
+   "blob": "f01feb24bd00697c28751242093367406a85df8c",
+   "bytes": 5102,
+   "lines": 134
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r72-r73-prep-20260923",
+   "sha": "c7c5ccbb7d093a43558a94cdc4072586a2de6a5e",
+   "src": "evidence/gpt-assist/20260923-r72/CODEX_R73_TASK.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r72/CODEX_R73_TASK.md",
+   "blob": "a97a363fafe4da2ed621267fb7eb1a45fd4e1d7b",
+   "bytes": 1598,
+   "lines": 24
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r72-r73-prep-20260923",
+   "sha": "c7c5ccbb7d093a43558a94cdc4072586a2de6a5e",
+   "src": "evidence/gpt-assist/20260923-r72/R72_R73_PREP.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r72/R72_R73_PREP.md",
+   "blob": "0262abd13d9c11e9b49866f627bf98898fc663e6",
+   "bytes": 1685,
+   "lines": 24
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r72-r73-prep-20260923",
+   "sha": "c7c5ccbb7d093a43558a94cdc4072586a2de6a5e",
+   "src": "evidence/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r72/R73_IDENTITY_CONTRACT.md",
+   "blob": "cb539de6a4eefb5d434a7b55b31c38615937727b",
+   "bytes": 861,
+   "lines": 21
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r72-r73-prep-20260923",
+   "sha": "c7c5ccbb7d093a43558a94cdc4072586a2de6a5e",
+   "src": "evidence/gpt-assist/20260923-r72/r73_provider_candidate_capture.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923-r72/r73_provider_candidate_capture.py",
+   "blob": "8d423101bd79079763daca30b7613c83f9939fc8",
+   "bytes": 4196,
+   "lines": 113
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r6-h11-r61-prep-20260923",
+   "sha": "187263c67a5348d565adfc5ad8f01877fb56267d",
+   "src": "evidence/gpt-assist/20260923/R61_MINIMAL_PATCH.diff",
+   "dst": "docs/revolution-archive/gpt-assist/20260923/R61_MINIMAL_PATCH.diff",
+   "blob": "221e3f5097c3d471497c5ae7287f832f73242419",
+   "bytes": 1325,
+   "lines": 33
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r6-h11-r61-prep-20260923",
+   "sha": "187263c67a5348d565adfc5ad8f01877fb56267d",
+   "src": "evidence/gpt-assist/20260923/R6_H11_R61_PREP.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260923/R6_H11_R61_PREP.md",
+   "blob": "e5894dc3b9c074bccb7d592aeb0ff915a555fbc9",
+   "bytes": 3050,
+   "lines": 51
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r6-h11-r61-prep-20260923",
+   "sha": "187263c67a5348d565adfc5ad8f01877fb56267d",
+   "src": "evidence/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260923/proposed_test_r61_explicit_role_boundary.py",
+   "blob": "7dd420b48fe2454a6b53d1031ae028eb099370e6",
+   "bytes": 4689,
+   "lines": 132
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r73-r74-prep-20260924",
+   "sha": "d4bdbcbc84abf82caf3322ea87b9df9683d78d8c",
+   "src": "evidence/gpt-assist/20260924-r73/CODEX_R74_TASK.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260924-r73/CODEX_R74_TASK.md",
+   "blob": "78ee88140bbf7236a3818ae7143d5c62a5f398e5",
+   "bytes": 1290,
+   "lines": 24
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r73-r74-prep-20260924",
+   "sha": "d4bdbcbc84abf82caf3322ea87b9df9683d78d8c",
+   "src": "evidence/gpt-assist/20260924-r73/R73_R74_PREP.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260924-r73/R73_R74_PREP.md",
+   "blob": "50b103698aa4cb01f76dc5ff0eef4f70934bce8c",
+   "bytes": 2024,
+   "lines": 31
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r73-r74-prep-20260924",
+   "sha": "d4bdbcbc84abf82caf3322ea87b9df9683d78d8c",
+   "src": "evidence/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260924-r73/R74_IDENTITY_CORROBORATION_CONTRACT.md",
+   "blob": "87811430e931e318127cce1e9c720d8633b63058",
+   "bytes": 884,
+   "lines": 18
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r73-r74-prep-20260924",
+   "sha": "d4bdbcbc84abf82caf3322ea87b9df9683d78d8c",
+   "src": "evidence/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py",
+   "dst": "docs/revolution-archive/gpt-assist/20260924-r73/r74_nominatim_exact_identity_probe.py",
+   "blob": "fcc5d7285858d3a6509da7579757e531f6a0fb17",
+   "bytes": 3018,
+   "lines": 63
+  },
+  {
+   "branch": "refs/heads/gpt/revolution-r74-r75-breakthrough-20260924",
+   "sha": "eb165b9737b5ede483a252b2a2e09ac08c669973",
+   "src": "evidence/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md",
+   "dst": "docs/revolution-archive/gpt-assist/20260924-r74/R74_R75_BREAKTHROUGH_PREP.md",
+   "blob": "f1b7f2cc98fcf70d915713867f3c7cfc48a65498",
+   "bytes": 2980,
+   "lines": 54
+  }
+ ]
+}
