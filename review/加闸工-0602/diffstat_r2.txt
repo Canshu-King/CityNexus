@@ -1,0 +1,16 @@
+# 逐枚文件增删行数：git -C D:/moodle/_qoder_integration_20260919 diff --numstat <开工那刻的尖> <我这枚头>
+# 三列 = 新增行 / 删除行 / 路径
+## 产品字节（这轮只碰这四枚，其余全是 review/加闸工-0602/ 下的证据件）
+22	0	backend/app/main.py
+148	0	backend/tests/test_jiazagong_0602_route_truth_r1.py
+10	2	frontend/src/app/V8Experience.tsx
+6	0	frontend/src/i18n/LocaleContext.tsx
+## 排队热文件逐枚点名（0 0 = 一字节未改；main.py 那行是产品那四枚里的一条，见上）
+0	0	backend/app/schemas.py
+0	0	contracts/openapi.yaml
+0	0	frontend/src/api/citynexus.ts
+0	0	backend/app/agent/runtime.py
+0	0	backend/app/execution/route_session_contract.py
+## 计数
+本轮改动文件总数: 38
+产品四枚合计: 新增 186 行、删除 2 行
