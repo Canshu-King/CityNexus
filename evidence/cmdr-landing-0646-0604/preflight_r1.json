@@ -1,0 +1,1092 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-13T06:05:22+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "e100170436fa7424e03fe6e4a0171b1bf77d09d3",
+ "candidate_ref": "refs/heads/review/号令者-0646-docs-all",
+ "candidate_tip": "d2bc1454c7b0e961ed374bfd12da0187f0f24ddb",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "e100170436fa7424e03fe6e4a0171b1bf77d09d3",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "CODEX_START_HERE_R21.md",
+   "CODEX_START_HERE_R22.md",
+   "CODEX_START_HERE_R23.md",
+   "CODEX_START_HERE_R25.md",
+   "CODEX_START_HERE_R25_CLOSURE.md",
+   "CODEX_START_HERE_R26.md",
+   "CODEX_START_HERE_R26_CLOSURE.md",
+   "CODEX_START_HERE_R27.md",
+   "CODEX_START_HERE_R27_AGENT_CLOSURE.md",
+   "CODEX_START_HERE_R27_CLOSURE.md",
+   "CODEX_START_HERE_R27_FINAL.md",
+   "GPT_R20_EXTERNAL_CHECK.md",
+   "GPT_R21_CONTEXT_BOUNDARY_CHECKPOINT.md",
+   "GPT_R21_EXTERNAL_CHECK.md",
+   "GPT_R22_EXTERNAL_CHECK.md",
+   "GPT_R23_R24_EXTERNAL_CHECK.md",
+   "GPT_R25_CHECKPOINT_EXTERNAL_CHECK.md",
+   "GPT_R25_EXTERNAL_CHECK.md",
+   "GPT_R26_EXTERNAL_CHECK.md",
+   "GPT_R27_CHECKPOINT_EXTERNAL_CHECK.md",
+   "GPT_R27_DEEP_EXTERNAL_CHECK.md",
+   "GPT_R27_V3_EXTERNAL_CHECK.md",
+   "REVOLUTION_LAB_PRODUCT_DIRECTION_CHARTER.md",
+   "REVOLUTION_R100_POCKET_TWO_STOP_CITY_WALK_RESULT.md",
+   "REVOLUTION_R100_POCKET_TWO_STOP_CITY_WALK_TASKBOOK.md",
+   "REVOLUTION_R101_SHARED_WALK_TO_MY_PRIVATE_ADVENTURE_RESULT.md",
+   "REVOLUTION_R101_SHARED_WALK_TO_MY_PRIVATE_ADVENTURE_TASKBOOK.md",
+   "REVOLUTION_R102_FIRST_REAL_SHARED_CITY_OUTING_RESULT.md",
+   "REVOLUTION_R102_FIRST_REAL_SHARED_CITY_OUTING_TASKBOOK.md",
+   "REVOLUTION_R103_REAL_TWO_PLACE_SHAREABLE_CITY_DISCOVERY_RESULT.md",
+   "REVOLUTION_R103_REAL_TWO_PLACE_SHAREABLE_CITY_DISCOVERY_TASKBOOK.md",
+   "REVOLUTION_R104_FIRST_GENUINE_TWO_PLACE_CITY_OUTING_RESULT.md",
+   "REVOLUTION_R104_FIRST_GENUINE_TWO_PLACE_CITY_OUTING_TASKBOOK.md",
+   "REVOLUTION_R105_REAL_PROVIDER_READINESS_CITY_DISCOVERY_RESULT.md",
+   "REVOLUTION_R105_REAL_PROVIDER_READINESS_CITY_DISCOVERY_TASKBOOK.md",
+   "REVOLUTION_R106_FIRST_HUMAN_CONSENTED_PUBLIC_DISCOVERY_RESULT.md",
+   "REVOLUTION_R106_FIRST_HUMAN_CONSENTED_PUBLIC_DISCOVERY_TASKBOOK.md",
+   "REVOLUTION_R107_DISCOVERY_TO_MY_POCKET_WALK_RESULT.md",
+   "REVOLUTION_R107_DISCOVERY_TO_MY_POCKET_WALK_TASKBOOK.md",
+   "REVOLUTION_R108_POCKET_WALK_GO_MODE_RESULT.md",
+   "REVOLUTION_R108_POCKET_WALK_GO_MODE_TASKBOOK.md",
+   "REVOLUTION_R109_GO_MODE_SECOND_STOP_RECOVERY_TASKBOOK.md",
+   "REVOLUTION_R109_GO_MODE_STREET_PIVOT_TASKBOOK.md",
+   "REVOLUTION_R19_LIVING_PLAN_PORTFOLIO_RESULT.md",
+   "REVOLUTION_R20_AUTONOMOUS_BRANCH_ARBITRATION_RESULT.md",
+   "REVOLUTION_R21_AUTONOMOUS_FUTURE_SYNTHESIS_RESULT.md",
+   "REVOLUTION_R25_STRATEGIC_HORIZON_STEWARD_RESULT.md",
+   "REVOLUTION_R26_DECISION_CRITICAL_CLARIFICATION_RESULT.md",
+   "REVOLUTION_R27_COLLECTIVE_JOURNEY_MEDIATOR_RESULT.md",
+   "REVOLUTION_R28_AUTHENTICATED_COLLECTIVE_CONTINUITY_RESULT.md",
+   "REVOLUTION_R29_LIVE_DISAGREEMENT_MEDIATION_RESULT.md",
+   "REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_BLOCKER.md",
+   "REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_RESULT.md",
+   "REVOLUTION_R32_AUTONOMOUS_RECOVERY_MESH_RESULT.md",
+   "REVOLUTION_R33_DISTRIBUTED_EXECUTION_LEASE_RESULT.md",
+   "REVOLUTION_R33_OPEN_WORLD_JOURNEY_ADAPTATION_RESULT.md",
+   "REVOLUTION_R33_OPEN_WORLD_JOURNEY_ADAPTATION_TASKBOOK.md",
+   "REVOLUTION_R34_LIVE_CONTEXT_WATCH_RESULT.md",
+   "REVOLUTION_R34_LIVE_CONTEXT_WATCH_TASKBOOK.md",
+   "REVOLUTION_R34_WORLD_CONTEXT_BRIDGE_TASKBOOK.md",
+   "REVOLUTION_R35_OPEN_WORLD_GUARDIAN_FUSION_RESULT.md",
+   "REVOLUTION_R35_OPEN_WORLD_GUARDIAN_FUSION_TASKBOOK.md",
+   "REVOLUTION_R36_ADAPTIVE_JOURNEY_WATCH_RESULT.md",
+   "REVOLUTION_R36_ADAPTIVE_JOURNEY_WATCH_TASKBOOK.md",
+   "REVOLUTION_R37_GROUNDED_PRESENCE_NEXT_MOVE_RESULT.md",
+   "REVOLUTION_R37_GROUNDED_PRESENCE_NEXT_MOVE_TASKBOOK.md",
+   "REVOLUTION_R38_DEPARTURE_READINESS_RESULT.md",
+   "REVOLUTION_R38_DEPARTURE_READINESS_TASKBOOK.md",
+   "REVOLUTION_R39_GROUNDED_JOURNEY_LAUNCH_RESULT.md",
+   "REVOLUTION_R39_GROUNDED_JOURNEY_LAUNCH_TASKBOOK.md",
+   "REVOLUTION_R40_LAUNCH_SETUP_RESULT.md",
+   "REVOLUTION_R40_LAUNCH_SETUP_TASKBOOK.md",
+   "REVOLUTION_R41_ROUTE_SESSION_RESULT.md",
+   "REVOLUTION_R41_ROUTE_SESSION_TASKBOOK.md",
+   "REVOLUTION_R42_DEPARTURE_ACTIVATION_RESULT.md",
+   "REVOLUTION_R42_DEPARTURE_ACTIVATION_TASKBOOK.md",
+   "REVOLUTION_R43_AUTONOMOUS_JOURNEY_OPERATOR_RESULT.md",
+   "REVOLUTION_R43_AUTONOMOUS_JOURNEY_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R44_RESILIENT_OPERATOR_BRAIN_RESULT.md",
+   "REVOLUTION_R44_RESILIENT_OPERATOR_BRAIN_TASKBOOK.md",
+   "REVOLUTION_R45_COLLECTIVE_JOURNEY_OPERATOR_RESULT.md",
+   "REVOLUTION_R45_COLLECTIVE_JOURNEY_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R46_OPEN_WORLD_RECOVERY_DISCOVERY_RESULT.md",
+   "REVOLUTION_R46_OPEN_WORLD_RECOVERY_DISCOVERY_TASKBOOK.md",
+   "REVOLUTION_R47_TRANSACTIONAL_JOURNEY_OPERATOR_RESULT.json",
+   "REVOLUTION_R47_TRANSACTIONAL_JOURNEY_OPERATOR_RESULT.md",
+   "REVOLUTION_R47_TRANSACTIONAL_JOURNEY_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R48_CONTINUOUS_JOURNEY_DAY_OPERATOR_RESULT.md",
+   "REVOLUTION_R48_CONTINUOUS_JOURNEY_DAY_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R49_JOURNEY_AHEAD_PREVENTIVE_OPERATOR_RESULT.md",
+   "REVOLUTION_R49_JOURNEY_AHEAD_PREVENTIVE_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R50_OVERNIGHT_STEWARD_RESULT.md",
+   "REVOLUTION_R50_OVERNIGHT_STEWARD_TASKBOOK.md",
+   "REVOLUTION_R51_LIVE_JOURNEY_INTENT_STEERING_RESULT.md",
+   "REVOLUTION_R51_LIVE_JOURNEY_INTENT_STEERING_TASKBOOK.md",
+   "REVOLUTION_R52_QUIET_OPERATOR_DECISION_INBOX_RESULT.md",
+   "REVOLUTION_R52_QUIET_OPERATOR_DECISION_INBOX_TASKBOOK.md",
+   "REVOLUTION_R53_JOURNEY_INBOX_LIVE_CHANGE_INTAKE_TASKBOOK.md",
+   "REVOLUTION_R53_JOURNEY_INBOX_RESULT.md",
+   "REVOLUTION_R54_REALITY_RECONCILIATION_RESULT.md",
+   "REVOLUTION_R54_REALITY_RECONCILIATION_TASKBOOK.md",
+   "REVOLUTION_R55_LIVE_PROGRESS_DRIFT_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R56_IN_TRANSIT_REROUTE_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R57_MEMBER_PRESENCE_RENDEZVOUS_OPERATOR_TASKBOOK.md",
+   "REVOLUTION_R58_SPLIT_GROUP_RECOVERY_NEGOTIATOR_TASKBOOK.md",
+   "REVOLUTION_R58_SPLIT_GROUP_RECOVERY_RESULT.md",
+   "REVOLUTION_R59_COLLECTIVE_GROUP_RECOVERY_CLOSURE_RESULT.md",
+   "REVOLUTION_R59_COLLECTIVE_GROUP_RECOVERY_CLOSURE_TASKBOOK.md",
+   "REVOLUTION_R60_COLLECTIVE_RECOVERY_COMMIT_RECONSENT_RESULT.md",
+   "REVOLUTION_R60_COLLECTIVE_RECOVERY_COMMIT_RECONSENT_TASKBOOK.md",
+   "REVOLUTION_R61_REGROUNDED_COLLECTIVE_RECOVERY_RESULT.md",
+   "REVOLUTION_R61_REGROUNDED_COLLECTIVE_RECOVERY_TASKBOOK.md",
+   "REVOLUTION_R62_GROUP_RECOVERY_FOLLOW_THROUGH_RESULT.md",
+   "REVOLUTION_R62_GROUP_RECOVERY_FOLLOW_THROUGH_TASKBOOK.md",
+   "REVOLUTION_R63_PLANNED_PARALLEL_GROUP_JOURNEY_RESULT.md",
+   "REVOLUTION_R63_PLANNED_PARALLEL_GROUP_JOURNEY_TASKBOOK.md",
+   "REVOLUTION_R64_MEMBER_SIDE_QUEST_EXECUTION_RESULT.md",
+   "REVOLUTION_R64_MEMBER_SIDE_QUEST_EXECUTION_TASKBOOK.md",
+   "REVOLUTION_R65_TIMEBOXED_PRIVATE_DETOUR_REJOIN_NAVIGATOR_TASKBOOK.md",
+   "REVOLUTION_R66_MOMENT_SCOUT_MICRO_ADVENTURES_TASKBOOK.md",
+   "REVOLUTION_R67_OPEN_WORLD_LIVE_MOMENT_SCOUT_TASKBOOK.md",
+   "REVOLUTION_R68_REAL_WORLD_NAVIGATION_HANDOFF_TASKBOOK.md",
+   "REVOLUTION_R69_RENDEZVOUS_HANDSHAKE_TASKBOOK.md",
+   "REVOLUTION_R70_BRING_EVERYONE_HERE_INVITATION_TASKBOOK.md",
+   "REVOLUTION_R70_BRING_EVERYONE_HERE_RESULT.md",
+   "REVOLUTION_R71_CAN_WE_MAKE_IT_RESULT.md",
+   "REVOLUTION_R71_CAN_WE_MAKE_IT_TASKBOOK.md",
+   "REVOLUTION_R72_DISCOVERY_MICRO_GROUP_RESULT.md",
+   "REVOLUTION_R72_DISCOVERY_MICRO_GROUP_TASKBOOK.md",
+   "REVOLUTION_R73_PROMOTE_DISCOVERY_TO_SHARED_JOURNEY_RESULT.md",
+   "REVOLUTION_R73_PROMOTE_DISCOVERY_TO_SHARED_JOURNEY_TASKBOOK.md",
+   "REVOLUTION_R74_SCOPED_REAL_GROUP_CO_PLANNING_RESULT.md",
+   "REVOLUTION_R74_SCOPED_REAL_GROUP_CO_PLANNING_TASKBOOK.md",
+   "REVOLUTION_R75_ANYONE_CAN_SPARK_GROUP_DISCOVERY_RESULT.md",
+   "REVOLUTION_R75_ANYONE_CAN_SPARK_GROUP_DISCOVERY_TASKBOOK.md",
+   "REVOLUTION_R76_REAL_COMPANION_JOIN_CATCHUP_RESULT.md",
+   "REVOLUTION_R76_REAL_COMPANION_JOIN_CATCHUP_TASKBOOK.md",
+   "REVOLUTION_R77_COMPANION_CATCHUP_NAVIGATOR_RESULT.md",
+   "REVOLUTION_R77_COMPANION_CATCHUP_NAVIGATOR_TASKBOOK.md",
+   "REVOLUTION_R78_MEMBER_RENDEZVOUS_COORDINATION_RESULT.md",
+   "REVOLUTION_R78_MEMBER_RENDEZVOUS_COORDINATION_TASKBOOK.md",
+   "REVOLUTION_R79_BUDDY_RESCUE_HANDOFF_RESULT.md",
+   "REVOLUTION_R79_BUDDY_RESCUE_HANDOFF_TASKBOOK.md",
+   "REVOLUTION_R80_PRIVATE_BUDDY_NAVIGATION_RESULT.md",
+   "REVOLUTION_R80_PRIVATE_BUDDY_NAVIGATION_TASKBOOK.md",
+   "REVOLUTION_R81_REAL_BUDDY_ROUTE_AND_SAFE_RETURN_RESULT.md",
+   "REVOLUTION_R81_REAL_BUDDY_ROUTE_AND_SAFE_RETURN_TASKBOOK.md",
+   "REVOLUTION_R82_BUDDY_ASSIST_EXECUTION_AND_GROUP_REJOIN_RESULT.md",
+   "REVOLUTION_R82_BUDDY_ASSIST_EXECUTION_AND_GROUP_REJOIN_TASKBOOK.md",
+   "REVOLUTION_R83_GPT_REMOTE_REVIEW_ADDENDUM.md",
+   "REVOLUTION_R83_ONE_TAP_LIVE_CITY_ADVENTURE_RESULT.md",
+   "REVOLUTION_R83_ONE_TAP_LIVE_CITY_ADVENTURE_TASKBOOK.md",
+   "REVOLUTION_R84_REAL_CITY_EMPTY_CATALOG_RESULT.md",
+   "REVOLUTION_R84_REAL_CITY_EMPTY_CATALOG_TASKBOOK.md",
+   "REVOLUTION_R85_ZERO_CATALOG_BOOTSTRAP_RESULT.md",
+   "REVOLUTION_R85_ZERO_CATALOG_BOOTSTRAP_TASKBOOK.md",
+   "REVOLUTION_R86_FIRST_STARTABLE_REAL_CITY_JOURNEY_RESULT.md",
+   "REVOLUTION_R86_FIRST_STARTABLE_REAL_CITY_JOURNEY_TASKBOOK.md",
+   "REVOLUTION_R87_FIRST_LIVE_CITY_DISCOVERY_RESULT.md",
+   "REVOLUTION_R87_FIRST_LIVE_CITY_DISCOVERY_TASKBOOK.md",
+   "REVOLUTION_R88_REAL_POI_EXPLORATION_WITHOUT_OPENING_PROOF_RESULT.md",
+   "REVOLUTION_R88_REAL_POI_EXPLORATION_WITHOUT_OPENING_PROOF_TASKBOOK.md",
+   "REVOLUTION_R89_MOBILE_REAL_POI_NEXT_ACTION_RESULT.md",
+   "REVOLUTION_R89_MOBILE_REAL_POI_NEXT_ACTION_TASKBOOK.md",
+   "REVOLUTION_R90_PRIVATE_REAL_CITY_EXPLORATION_BOARD_RESULT.md",
+   "REVOLUTION_R90_PRIVATE_REAL_CITY_EXPLORATION_BOARD_TASKBOOK.md",
+   "REVOLUTION_R91_SHORTLIST_GO_EXPLORE_RESULT.md",
+   "REVOLUTION_R91_SHORTLIST_GO_EXPLORE_TASKBOOK.md",
+   "REVOLUTION_R92_PRIVATE_OUTING_RESUME_RESULT.md",
+   "REVOLUTION_R92_PRIVATE_OUTING_RESUME_TASKBOOK.md",
+   "REVOLUTION_R93_EXPLICIT_CITY_CENTER_AND_PRIVATE_SESSION_RESULT.md",
+   "REVOLUTION_R93_EXPLICIT_CITY_CENTER_AND_PRIVATE_SESSION_TASKBOOK.md",
+   "REVOLUTION_R94_PICK_PUBLIC_CITY_AREA_AND_GO_RESULT.md",
+   "REVOLUTION_R94_PICK_PUBLIC_CITY_AREA_AND_GO_TASKBOOK.md",
+   "REVOLUTION_R95_CITY_JUMP_AND_HONEST_REAL_POI_RESULT.md",
+   "REVOLUTION_R95_CITY_JUMP_AND_HONEST_REAL_POI_TASKBOOK.md",
+   "REVOLUTION_R96_ONE_TAP_FIRST_OUTING_RESULT.md",
+   "REVOLUTION_R96_ONE_TAP_FIRST_OUTING_TASKBOOK.md",
+   "REVOLUTION_R97_TWO_STOP_FIRST_CITY_WALK_RESULT.md",
+   "REVOLUTION_R97_TWO_STOP_FIRST_CITY_WALK_TASKBOOK.md",
+   "REVOLUTION_R98_REAL_WALKABILITY_TWO_STOP_OUTING_RESULT.md",
+   "REVOLUTION_R98_REAL_WALKABILITY_TWO_STOP_OUTING_TASKBOOK.md",
+   "REVOLUTION_R99_ADAPTIVE_SHORT_WALK_RESULT.md",
+   "REVOLUTION_R99_ADAPTIVE_SHORT_WALK_TASKBOOK.md",
+   "REVOLUTION_RELAY_PERMISSION_PROBE.md",
+   "backend/REVOLUTION_R55_LIVE_PROGRESS_DRIFT_OPERATOR_RESULT.md",
+   "backend/output/R32_2C_PROVENANCE_AUDIT.json",
+   "backend/output/R32_MACHINE_VERDICT.json",
+   "backend/output/R32_MACHINE_VERDICT_V2.json",
+   "backend/output/R32_MACHINE_VERDICT_V2B.json",
+   "backend/output/R32_MACHINE_VERDICT_V2C.json",
+   "backend/output/R32_MACHINE_VERDICT_V2C_FRESH.json",
+   "backend/output/R32_POSTREVIEW_CLOSEOUT.json",
+   "backend/output/r32-focused-regression-v2.json",
+   "backend/output/r32-focused-regression-v2.txt",
+   "backend/output/r32-focused-regression-v2b.json",
+   "backend/output/r32-focused-regression-v2b.txt",
+   "backend/output/r32-focused-regression-v2c-fresh.json",
+   "backend/output/r32-focused-regression-v2c-fresh.txt",
+   "backend/output/r32-focused-regression-v2c.json",
+   "backend/output/r32-focused-regression-v2c.txt",
+   "backend/output/r32-focused-regression.json",
+   "backend/output/r32-focused-regression.txt",
+   "backend/output/r32-live-strike-final.json",
+   "backend/output/r32-live-strike-v2.json",
+   "backend/output/r32-live-strike-v2b.json",
+   "backend/output/r32-live-strike-v2c-fresh.json",
+   "backend/output/r32-live-strike-v2c.json",
+   "backend/output/r33-live-strike-v1.json",
+   "backend/output/r34-live-context-watch-v1.json",
+   "backend/output/r35-open-world-guardian-pulse-v1.json",
+   "backend/output/r36-adaptive-journey-watch-v1.json",
+   "backend/output/r37-grounded-presence-next-move-v1.json",
+   "backend/output/r38-departure-readiness-v1.json",
+   "backend/output/r39-grounded-journey-launch-v1.json",
+   "backend/output/r40-launch-setup-v1.json",
+   "backend/output/r41-route-session-v1.json",
+   "backend/output/r42-departure-activation-v1.json",
+   "backend/output/r43-autonomous-journey-operator-v1.json",
+   "backend/output/r44-resilient-operator-brain-v1.json",
+   "backend/output/r45-collective-journey-operator-v1.json",
+   "backend/output/r46-open-world-recovery-discovery-v1.json",
+   "backend/output/r48-continuous-journey-day-operator-v1.json",
+   "backend/output/r49-journey-ahead-preventive-operator-v1.json",
+   "backend/output/r49-journey-ahead-preventive-operator-v1.md",
+   "backend/output/r50-overnight-steward-v1.json",
+   "backend/output/r51-live-journey-intent-steering-v1.json",
+   "backend/output/r52-quiet-operator-decision-inbox-v1.json",
+   "backend/output/r53-journey-inbox-v1.json",
+   "backend/output/r54-reality-reconciliation-v1.json",
+   "backend/output/r55-live-progress-drift-v1.json",
+   "backend/r20-focused-tests.txt",
+   "backend/r21-focused-tests.txt",
+   "docs/REVOLUTION_REAL_CITY_DISCOVERY_RUNBOOK.md",
+   "output/revolution-r22-delivery-20261003/FOCUSED_TESTS.txt",
+   "output/revolution-r22-delivery-20261003/R22_MACHINE_RECEIPT.json",
+   "output/revolution-r22-delivery-20261003/REVOLUTION_R22_AUTONOMOUS_OPPORTUNITY_RESULT.md",
+   "output/revolution-r23-delivery-20261003/FOCUSED_TESTS.txt",
+   "output/revolution-r23-delivery-20261003/R23_MACHINE_RECEIPT.json",
+   "output/revolution-r23-delivery-20261003/REVOLUTION_R23_ADAPTIVE_TRAVELER_TWIN_RESULT.md",
+   "output/revolution-r24-memory-delivery-20261003/FOCUSED_TESTS.txt",
+   "output/revolution-r24-memory-delivery-20261003/R24_MACHINE_RECEIPT.json",
+   "output/revolution-r24-memory-delivery-20261003/REVOLUTION_R23_TWIN_MEMORY_RESULT.md",
+   "output/revolution-r28-live-20261005/R28_MACHINE_VERDICT.json",
+   "output/revolution-r29-live-20261005/R29_MACHINE_VERDICT.json",
+   "output/revolution-r30-live-20261006/R30_FULL_STRIKE_FIRST_FAILURE_20261006T022351Z.json",
+   "output/revolution-r30-live-20261006/R30_FULL_STRIKE_PRECHECK_20261006T1018.json",
+   "output/revolution-r30-live-20261006/R30_FULL_STRIKE_RAW_OUTPUT_20261006T022351Z.meta.json",
+   "output/revolution-r30-live-20261006/R30_LIVE_CHECKPOINT.json",
+   "output/revolution-r30-live-20261006/R30_LIVE_RECEIPT.json",
+   "output/revolution-r30-live-20261006/R30_MACHINE_VERDICT.json",
+   "r25-existing-journey.json",
+   "r25-twin-existing.json",
+   "revolution/R21_AUTONOMOUS_FUTURE_SYNTHESIS_MISSION.md",
+   "revolution/R21_CONTINUATION_FROM_CONTEXT_BOUNDARY.md",
+   "revolution/R21_IMPLEMENTATION_SKETCH.md",
+   "revolution/R22_AUTONOMOUS_OPPORTUNITY_CAPTURE_MISSION.md",
+   "revolution/R22_IMPLEMENTATION_SKETCH.md",
+   "revolution/R23_ADAPTIVE_TRAVELER_TWIN_MISSION.md",
+   "revolution/R23_IMPLEMENTATION_SKETCH.md",
+   "revolution/R25_IMPLEMENTATION_SKETCH.md",
+   "revolution/R25_LIVE_CLOSURE_STRIKE.md",
+   "revolution/R25_STRATEGIC_HORIZON_STEWARD_MISSION.md",
+   "revolution/R26_BEHAVIORAL_CLOSURE_IMPLEMENTATION_SKETCH.md",
+   "revolution/R26_BEHAVIORAL_CLOSURE_STRIKE.md",
+   "revolution/R26_DECISION_CRITICAL_CLARIFICATION_MISSION.md",
+   "revolution/R26_IMPLEMENTATION_SKETCH.md",
+   "revolution/R27_AGENT_COLLECTIVE_LIVE_CLOSURE_STRIKE.md",
+   "revolution/R27_COLLECTIVE_JOURNEY_MEDIATOR_MISSION.md",
+   "revolution/R27_COLLECTIVE_LIVE_CLOSURE_STRIKE.md",
+   "revolution/R27_FINAL_IMPLEMENTATION_DELTA.md",
+   "revolution/R27_IMPLEMENTATION_SKETCH.md",
+   "revolution/R27_SHARED_DECISION_IMPLEMENTATION_SKETCH.md",
+   "revolution/R27_SOURCE_TRUTH_BRIDGE_IMPLEMENTATION_SKETCH.md",
+   "revolution/R27_TRUTH_MESH_GOVERNED_EXECUTION_STRIKE.md",
+   "revolution/r21-context-boundary-live.json",
+   "taskbooks/revolution/R28_RELAY_AFTER_CODEX_VALIDATION_FINAL_LIVE_STRIKE.md",
+   "taskbooks/revolution/R28_RELAY_CHECKPOINT_A_CODEX_VALIDATION.md",
+   "taskbooks/revolution/R28_RELAY_CHECKPOINT_B_CODEX_VALIDATION.md",
+   "taskbooks/revolution/R28_RELAY_CHECKPOINT_C_CODEX_VALIDATION.md",
+   "taskbooks/revolution/R28_RELAY_FINAL_LIVE_CLOSURE_CODEX.md",
+   "taskbooks/revolution/R29_CODEX_NOOP_PUSH_EXECUTE_LIVE_STRIKE.md",
+   "taskbooks/revolution/R29_RELAY_AFTER_CODEX_LIVE_HARNESS_REVIEW.md",
+   "taskbooks/revolution/R29_RELAY_AFTER_CODEX_PHASE3.md",
+   "taskbooks/revolution/R29_RELAY_FINAL_STRIKE_AFTER_UI_VALIDATION.md",
+   "taskbooks/revolution/R30_FINAL_RELAY_RUN_STRIKE_FIX_REAL_FAILURES_CLOSE.md",
+   "taskbooks/revolution/R30_NEXT_KNIFE_AUTONOMOUS_CONVERGENCE_CONTROL_PLANE.md",
+   "taskbooks/revolution/R30_RELAY_AFTER_NOOP_PUSH_GPT_SEMANTIC_EPOCH_SCAFFOLD.md",
+   "taskbooks/revolution/R30_RELAY_AUTHORITY_HARDENED_RUN_NOW.md",
+   "taskbooks/revolution/R30_RELAY_VALIDATE_LIVE_HARNESS_AND_CLOSE.md",
+   "taskbooks/revolution/R30_RELAY_WORLD_EPOCH_CORE_TO_LIVE_STRIKE.md",
+   "taskbooks/revolution/R31_EPOCH_INTEGRITY_AUTHORITY_PROVENANCE.md",
+   "taskbooks/revolution/R32_AUTONOMOUS_RECOVERY_MESH_CONCURRENT_SHOCKS.md",
+   "taskbooks/revolution/R32_GPT_IMPLEMENTATION_MAP.md",
+   "taskbooks/revolution/R32_LIVE_STRIKE_2B_ISOLATED_BLACKBOX_RETRY.md",
+   "taskbooks/revolution/R32_LIVE_STRIKE_2C_EXACT_RUN_CAUSALITY.md",
+   "taskbooks/revolution/R32_LIVE_STRIKE_2C_FRESH_EVIDENCE_RECOVERY.md",
+   "taskbooks/revolution/R32_LIVE_STRIKE_2_PREEMPT_CONVERGE.md",
+   "taskbooks/revolution/R32_LIVE_STRIKE_HANDOFF.md",
+   "taskbooks/revolution/R33_DISTRIBUTED_EXECUTION_LEASE_ZOMBIE_FENCING.md",
+   "taskbooks/revolution/REVOLUTION_R28_AUTHENTICATED_COLLECTIVE_CONTINUITY_TASKBOOK.md",
+   "taskbooks/revolution/REVOLUTION_R29_LIVE_DISAGREEMENT_MEDIATION_TASKBOOK.md",
+   "taskbooks/revolution/REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_TASKBOOK.md"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "ab31b2fa34885a70603888c16827b88ed2b3299d",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_060439",
+  "blob_equality": [
+   {
+    "path": "backend/REVOLUTION_R55_LIVE_PROGRESS_DRIFT_OPERATOR_RESULT.md",
+    "candidate_blob": "7030cb2a554fe438e404befdcd3f6379e4410f0c",
+    "export_blob": "7030cb2a554fe438e404befdcd3f6379e4410f0c",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_2C_PROVENANCE_AUDIT.json",
+    "candidate_blob": "f1c42496f201c8f1fa122fc8a25725ba7d29d287",
+    "export_blob": "f1c42496f201c8f1fa122fc8a25725ba7d29d287",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_MACHINE_VERDICT.json",
+    "candidate_blob": "0b95bef8c1df8b5b4fb4c2ea6151af6674c93a8a",
+    "export_blob": "0b95bef8c1df8b5b4fb4c2ea6151af6674c93a8a",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_MACHINE_VERDICT_V2.json",
+    "candidate_blob": "4a1b8365291d1df7e0cadaae368468beacee8497",
+    "export_blob": "4a1b8365291d1df7e0cadaae368468beacee8497",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_MACHINE_VERDICT_V2B.json",
+    "candidate_blob": "dccc62b2d848bf5b8e08b14b21879d970bf041b3",
+    "export_blob": "dccc62b2d848bf5b8e08b14b21879d970bf041b3",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_MACHINE_VERDICT_V2C.json",
+    "candidate_blob": "e877f7d419371817d0361e8778d2fc92e5287f30",
+    "export_blob": "e877f7d419371817d0361e8778d2fc92e5287f30",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_MACHINE_VERDICT_V2C_FRESH.json",
+    "candidate_blob": "2841d62c9b7beb48d4f64f8a6f17f21c59726141",
+    "export_blob": "2841d62c9b7beb48d4f64f8a6f17f21c59726141",
+    "equal": true
+   },
+   {
+    "path": "backend/output/R32_POSTREVIEW_CLOSEOUT.json",
+    "candidate_blob": "887a87aef43a1dc88702e81221b14ac1373bb43c",
+    "export_blob": "887a87aef43a1dc88702e81221b14ac1373bb43c",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2.json",
+    "candidate_blob": "b5048a94c194dbb4528d818483c31c922c7d4ed3",
+    "export_blob": "b5048a94c194dbb4528d818483c31c922c7d4ed3",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2.txt",
+    "candidate_blob": "93ed5aa7284f2227eb25cde545feb002e659b1f8",
+    "export_blob": "93ed5aa7284f2227eb25cde545feb002e659b1f8",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2b.json",
+    "candidate_blob": "9c211aa0f74c44aae3e490fbb73d2cf22611d2b3",
+    "export_blob": "9c211aa0f74c44aae3e490fbb73d2cf22611d2b3",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2b.txt",
+    "candidate_blob": "17299e7c1407794393479d4a17310a88537d22a2",
+    "export_blob": "17299e7c1407794393479d4a17310a88537d22a2",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2c-fresh.json",
+    "candidate_blob": "a1bfde79d2db09caba9467e2bf18d423be89c691",
+    "export_blob": "a1bfde79d2db09caba9467e2bf18d423be89c691",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2c-fresh.txt",
+    "candidate_blob": "ab380ce3ee237b191c7c5a2cfa928b7f08210f0b",
+    "export_blob": "ab380ce3ee237b191c7c5a2cfa928b7f08210f0b",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2c.json",
+    "candidate_blob": "6a44799ba844479f50b63552e1bad963aa6bc4ed",
+    "export_blob": "6a44799ba844479f50b63552e1bad963aa6bc4ed",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression-v2c.txt",
+    "candidate_blob": "112eb4a44652bf4997c9fcf735b39cd0997b5c7a",
+    "export_blob": "112eb4a44652bf4997c9fcf735b39cd0997b5c7a",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression.json",
+    "candidate_blob": "535f9cb2a25ee3934ef65065be6e451bfaf2ef54",
+    "export_blob": "535f9cb2a25ee3934ef65065be6e451bfaf2ef54",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-focused-regression.txt",
+    "candidate_blob": "5e42550c97eb1086d68fad5f7a168f5c874f783c",
+    "export_blob": "5e42550c97eb1086d68fad5f7a168f5c874f783c",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-live-strike-final.json",
+    "candidate_blob": "ad37fadaa0fd11b9311a852a256a3c36d8e55cc6",
+    "export_blob": "ad37fadaa0fd11b9311a852a256a3c36d8e55cc6",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-live-strike-v2.json",
+    "candidate_blob": "036c3beec92714e70ba609e1efeb61aef6eb98e8",
+    "export_blob": "036c3beec92714e70ba609e1efeb61aef6eb98e8",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-live-strike-v2b.json",
+    "candidate_blob": "6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1",
+    "export_blob": "6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-live-strike-v2c-fresh.json",
+    "candidate_blob": "243adf105dbcc9abb37b3ba04c3bb698eec5a090",
+    "export_blob": "243adf105dbcc9abb37b3ba04c3bb698eec5a090",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r32-live-strike-v2c.json",
+    "candidate_blob": "6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1",
+    "export_blob": "6d06d95ebd8f3d9ababfe79dff63166a52d9a3a1",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r33-live-strike-v1.json",
+    "candidate_blob": "d7a8915421f118f1ac4ecfff65b29b9c2c223d29",
+    "export_blob": "d7a8915421f118f1ac4ecfff65b29b9c2c223d29",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r34-live-context-watch-v1.json",
+    "candidate_blob": "84a293664eaa0a920ab892c46102881c86e049a8",
+    "export_blob": "84a293664eaa0a920ab892c46102881c86e049a8",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r35-open-world-guardian-pulse-v1.json",
+    "candidate_blob": "c299cc7b81f0365e16cfdef9bf20d794f03e84c5",
+    "export_blob": "c299cc7b81f0365e16cfdef9bf20d794f03e84c5",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r36-adaptive-journey-watch-v1.json",
+    "candidate_blob": "a18525a8ea2abf6df67d26cc5a2e4f6417474101",
+    "export_blob": "a18525a8ea2abf6df67d26cc5a2e4f6417474101",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r37-grounded-presence-next-move-v1.json",
+    "candidate_blob": "63f1897ef6cf6564cfd8540a8c1c4d1235dca3c2",
+    "export_blob": "63f1897ef6cf6564cfd8540a8c1c4d1235dca3c2",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r38-departure-readiness-v1.json",
+    "candidate_blob": "daa20c4f0d47ca2405747ec0d658922fc63b2b2a",
+    "export_blob": "daa20c4f0d47ca2405747ec0d658922fc63b2b2a",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r39-grounded-journey-launch-v1.json",
+    "candidate_blob": "4b452dcec3c02be3c5fe20ab1c02db07eee49728",
+    "export_blob": "4b452dcec3c02be3c5fe20ab1c02db07eee49728",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r40-launch-setup-v1.json",
+    "candidate_blob": "1b181f72310f017e32e1bd1f0f072782f5a65f2b",
+    "export_blob": "1b181f72310f017e32e1bd1f0f072782f5a65f2b",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r41-route-session-v1.json",
+    "candidate_blob": "cedb54a13ce3e87a531f06649e48956b85acb4f8",
+    "export_blob": "cedb54a13ce3e87a531f06649e48956b85acb4f8",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r42-departure-activation-v1.json",
+    "candidate_blob": "4b63bf1c7321dc7fe9d31929afe54da894ed3a48",
+    "export_blob": "4b63bf1c7321dc7fe9d31929afe54da894ed3a48",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r43-autonomous-journey-operator-v1.json",
+    "candidate_blob": "d49885bbb7e131428f5baec24bf80cca2353511b",
+    "export_blob": "d49885bbb7e131428f5baec24bf80cca2353511b",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r44-resilient-operator-brain-v1.json",
+    "candidate_blob": "b17a422407211e06e74dd98589ea6bbe06947fd9",
+    "export_blob": "b17a422407211e06e74dd98589ea6bbe06947fd9",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r45-collective-journey-operator-v1.json",
+    "candidate_blob": "d1434fc050c56cb13d74acf3c9edfc740da446da",
+    "export_blob": "d1434fc050c56cb13d74acf3c9edfc740da446da",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r46-open-world-recovery-discovery-v1.json",
+    "candidate_blob": "e908328d93d1ffd29299ec9cf67e7d00219e40d1",
+    "export_blob": "e908328d93d1ffd29299ec9cf67e7d00219e40d1",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r48-continuous-journey-day-operator-v1.json",
+    "candidate_blob": "d9e37b95986cdda4863a0de996d3afc8c7e510af",
+    "export_blob": "d9e37b95986cdda4863a0de996d3afc8c7e510af",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r49-journey-ahead-preventive-operator-v1.json",
+    "candidate_blob": "e0f5e235ce106278735048441d91f297ab074ca9",
+    "export_blob": "e0f5e235ce106278735048441d91f297ab074ca9",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r49-journey-ahead-preventive-operator-v1.md",
+    "candidate_blob": "fd4d723af13b8ba423b1158195814810e3b1c6e1",
+    "export_blob": "fd4d723af13b8ba423b1158195814810e3b1c6e1",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r50-overnight-steward-v1.json",
+    "candidate_blob": "b74a3212282ef5df2acfe3eede858052fb229179",
+    "export_blob": "b74a3212282ef5df2acfe3eede858052fb229179",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r51-live-journey-intent-steering-v1.json",
+    "candidate_blob": "493331dbd2f79455ebcb9ac38ef94382da4540db",
+    "export_blob": "493331dbd2f79455ebcb9ac38ef94382da4540db",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r52-quiet-operator-decision-inbox-v1.json",
+    "candidate_blob": "9a8ed263cf7e2d18b4a15eaaa6584ef77e7ba4da",
+    "export_blob": "9a8ed263cf7e2d18b4a15eaaa6584ef77e7ba4da",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r53-journey-inbox-v1.json",
+    "candidate_blob": "e290cbc295d4bf58131d2b394aaa824bba9c6cc4",
+    "export_blob": "e290cbc295d4bf58131d2b394aaa824bba9c6cc4",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r54-reality-reconciliation-v1.json",
+    "candidate_blob": "25bebb75877b6ce727e594eda28d71052b2a7417",
+    "export_blob": "25bebb75877b6ce727e594eda28d71052b2a7417",
+    "equal": true
+   },
+   {
+    "path": "backend/output/r55-live-progress-drift-v1.json",
+    "candidate_blob": "d8223553732b90e70b01fa222d8684bd128a27aa",
+    "export_blob": "d8223553732b90e70b01fa222d8684bd128a27aa",
+    "equal": true
+   },
+   {
+    "path": "backend/r20-focused-tests.txt",
+    "candidate_blob": "f7dd43ad72772dc6af0aa20902e79e47ae8de391",
+    "export_blob": "f7dd43ad72772dc6af0aa20902e79e47ae8de391",
+    "equal": true
+   },
+   {
+    "path": "backend/r21-focused-tests.txt",
+    "candidate_blob": "339ecfd973cf05112d2eae62c22d3a3282c3031f",
+    "export_blob": "339ecfd973cf05112d2eae62c22d3a3282c3031f",
+    "equal": true
+   },
+   {
+    "path": "docs/REVOLUTION_REAL_CITY_DISCOVERY_RUNBOOK.md",
+    "candidate_blob": "d47dee18b537a505eaa1359ce2359f5f46ac511b",
+    "export_blob": "d47dee18b537a505eaa1359ce2359f5f46ac511b",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r22-delivery-20261003/FOCUSED_TESTS.txt",
+    "candidate_blob": "0b22ef300bc6d743fff6fefc44ab9a9edbba33c7",
+    "export_blob": "0b22ef300bc6d743fff6fefc44ab9a9edbba33c7",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r22-delivery-20261003/R22_MACHINE_RECEIPT.json",
+    "candidate_blob": "b5c05fb1708fb9a841e52aebdb68c76bf9f54e07",
+    "export_blob": "b5c05fb1708fb9a841e52aebdb68c76bf9f54e07",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r22-delivery-20261003/REVOLUTION_R22_AUTONOMOUS_OPPORTUNITY_RESULT.md",
+    "candidate_blob": "79cc48c42aa063115c8abde7cf004308d69a2ade",
+    "export_blob": "79cc48c42aa063115c8abde7cf004308d69a2ade",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r23-delivery-20261003/FOCUSED_TESTS.txt",
+    "candidate_blob": "d7c450890a5b96b051491fedabed05faaae765c1",
+    "export_blob": "d7c450890a5b96b051491fedabed05faaae765c1",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r23-delivery-20261003/R23_MACHINE_RECEIPT.json",
+    "candidate_blob": "23ea3e05d1700e65d2010e161f019e43d4a614c4",
+    "export_blob": "23ea3e05d1700e65d2010e161f019e43d4a614c4",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r23-delivery-20261003/REVOLUTION_R23_ADAPTIVE_TRAVELER_TWIN_RESULT.md",
+    "candidate_blob": "275fc03e4eb14607e1dbbefab361d91e0a758766",
+    "export_blob": "275fc03e4eb14607e1dbbefab361d91e0a758766",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r24-memory-delivery-20261003/FOCUSED_TESTS.txt",
+    "candidate_blob": "aed2769d56aa2306bf87984461f292d5b0037e23",
+    "export_blob": "aed2769d56aa2306bf87984461f292d5b0037e23",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r24-memory-delivery-20261003/R24_MACHINE_RECEIPT.json",
+    "candidate_blob": "587a53a47831a0dff2751ca2eb700c26b75f5677",
+    "export_blob": "587a53a47831a0dff2751ca2eb700c26b75f5677",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r24-memory-delivery-20261003/REVOLUTION_R23_TWIN_MEMORY_RESULT.md",
+    "candidate_blob": "3f48e197f98c3815caf40cbf8838506b99a98612",
+    "export_blob": "3f48e197f98c3815caf40cbf8838506b99a98612",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r28-live-20261005/R28_MACHINE_VERDICT.json",
+    "candidate_blob": "ed69976ad3a869731e789af55eb2fe75cb3a1f8b",
+    "export_blob": "ed69976ad3a869731e789af55eb2fe75cb3a1f8b",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r29-live-20261005/R29_MACHINE_VERDICT.json",
+    "candidate_blob": "0e325bc0b2de58739c106d0fbc7d674c76c75d69",
+    "export_blob": "0e325bc0b2de58739c106d0fbc7d674c76c75d69",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r30-live-20261006/R30_FULL_STRIKE_FIRST_FAILURE_20261006T022351Z.json",
+    "candidate_blob": "56a1a692edca89b915b973e83cee84a72af1872c",
+    "export_blob": "56a1a692edca89b915b973e83cee84a72af1872c",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r30-live-20261006/R30_FULL_STRIKE_PRECHECK_20261006T1018.json",
+    "candidate_blob": "513276575e016d8b00256f255efaaa738c9f633a",
+    "export_blob": "513276575e016d8b00256f255efaaa738c9f633a",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r30-live-20261006/R30_FULL_STRIKE_RAW_OUTPUT_20261006T022351Z.meta.json",
+    "candidate_blob": "48c5a8fbf31dcf9be11a037e7fabe1a838505f4e",
+    "export_blob": "48c5a8fbf31dcf9be11a037e7fabe1a838505f4e",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r30-live-20261006/R30_LIVE_CHECKPOINT.json",
+    "candidate_blob": "d39eecbdfd7572ef09bff1d2cf22887cafd9de2d",
+    "export_blob": "d39eecbdfd7572ef09bff1d2cf22887cafd9de2d",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r30-live-20261006/R30_LIVE_RECEIPT.json",
+    "candidate_blob": "451363fbd7f51c1fa28121895fcbebaafc46e2eb",
+    "export_blob": "451363fbd7f51c1fa28121895fcbebaafc46e2eb",
+    "equal": true
+   },
+   {
+    "path": "output/revolution-r30-live-20261006/R30_MACHINE_VERDICT.json",
+    "candidate_blob": "7422cd2b9ca84bc203aa420e8213a19a9e17b565",
+    "export_blob": "7422cd2b9ca84bc203aa420e8213a19a9e17b565",
+    "equal": true
+   },
+   {
+    "path": "revolution/R21_AUTONOMOUS_FUTURE_SYNTHESIS_MISSION.md",
+    "candidate_blob": "a86a632be2f4db25f566ef3888764fb63ca959b9",
+    "export_blob": "a86a632be2f4db25f566ef3888764fb63ca959b9",
+    "equal": true
+   },
+   {
+    "path": "revolution/R21_CONTINUATION_FROM_CONTEXT_BOUNDARY.md",
+    "candidate_blob": "9b51584d4f6c1384a496ce62b144b337987c54e3",
+    "export_blob": "9b51584d4f6c1384a496ce62b144b337987c54e3",
+    "equal": true
+   },
+   {
+    "path": "revolution/R21_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "f93334ecc476345ebc6871b011ad25f2beb4077c",
+    "export_blob": "f93334ecc476345ebc6871b011ad25f2beb4077c",
+    "equal": true
+   },
+   {
+    "path": "revolution/R22_AUTONOMOUS_OPPORTUNITY_CAPTURE_MISSION.md",
+    "candidate_blob": "c039d1d5cc1acbdb081658ee2610d0f001f4ceb1",
+    "export_blob": "c039d1d5cc1acbdb081658ee2610d0f001f4ceb1",
+    "equal": true
+   },
+   {
+    "path": "revolution/R22_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "348c4b29d43a0a7f0197998a1afa6cd202c208d7",
+    "export_blob": "348c4b29d43a0a7f0197998a1afa6cd202c208d7",
+    "equal": true
+   },
+   {
+    "path": "revolution/R23_ADAPTIVE_TRAVELER_TWIN_MISSION.md",
+    "candidate_blob": "9beb2ad3f690b3f0acf643feefd4d56d79c7337e",
+    "export_blob": "9beb2ad3f690b3f0acf643feefd4d56d79c7337e",
+    "equal": true
+   },
+   {
+    "path": "revolution/R23_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "899b155b1f1684552aa2237fba7062375390a0a7",
+    "export_blob": "899b155b1f1684552aa2237fba7062375390a0a7",
+    "equal": true
+   },
+   {
+    "path": "revolution/R25_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "5b577e2cd50f1d31fa610af93215de9da258bd34",
+    "export_blob": "5b577e2cd50f1d31fa610af93215de9da258bd34",
+    "equal": true
+   },
+   {
+    "path": "revolution/R25_LIVE_CLOSURE_STRIKE.md",
+    "candidate_blob": "973ad421ed17ea7259319a90359ad291207c65c8",
+    "export_blob": "973ad421ed17ea7259319a90359ad291207c65c8",
+    "equal": true
+   },
+   {
+    "path": "revolution/R25_STRATEGIC_HORIZON_STEWARD_MISSION.md",
+    "candidate_blob": "3f85ed631d2febcd2f68c267c65c6da372a126e6",
+    "export_blob": "3f85ed631d2febcd2f68c267c65c6da372a126e6",
+    "equal": true
+   },
+   {
+    "path": "revolution/R26_BEHAVIORAL_CLOSURE_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "d6e7aa52ec223242e95a3d446469ba5137968213",
+    "export_blob": "d6e7aa52ec223242e95a3d446469ba5137968213",
+    "equal": true
+   },
+   {
+    "path": "revolution/R26_BEHAVIORAL_CLOSURE_STRIKE.md",
+    "candidate_blob": "c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0",
+    "export_blob": "c11be2ebdd4d5bcd51c2536c9e74c4f9958b71c0",
+    "equal": true
+   },
+   {
+    "path": "revolution/R26_DECISION_CRITICAL_CLARIFICATION_MISSION.md",
+    "candidate_blob": "ec51c51ccc48a50f888203db2fb869b2b89af110",
+    "export_blob": "ec51c51ccc48a50f888203db2fb869b2b89af110",
+    "equal": true
+   },
+   {
+    "path": "revolution/R26_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "df7b933f53c4bb89aa9aa8cf1e24b07f3d6887ab",
+    "export_blob": "df7b933f53c4bb89aa9aa8cf1e24b07f3d6887ab",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_AGENT_COLLECTIVE_LIVE_CLOSURE_STRIKE.md",
+    "candidate_blob": "351cd55e50fe0329b9c2a59f867e2a89294127bb",
+    "export_blob": "351cd55e50fe0329b9c2a59f867e2a89294127bb",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_COLLECTIVE_JOURNEY_MEDIATOR_MISSION.md",
+    "candidate_blob": "922a263453c504d801648dcec87ed179345b891d",
+    "export_blob": "922a263453c504d801648dcec87ed179345b891d",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_COLLECTIVE_LIVE_CLOSURE_STRIKE.md",
+    "candidate_blob": "570f5c65e1624a9bb66b5e287eebc3a884ff6ef5",
+    "export_blob": "570f5c65e1624a9bb66b5e287eebc3a884ff6ef5",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_FINAL_IMPLEMENTATION_DELTA.md",
+    "candidate_blob": "4fb9dbf5c1a2b2f68c1bc1350a0bc83798c22370",
+    "export_blob": "4fb9dbf5c1a2b2f68c1bc1350a0bc83798c22370",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "db30239b31df1e716f82e33f388e17b3d2e42551",
+    "export_blob": "db30239b31df1e716f82e33f388e17b3d2e42551",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_SHARED_DECISION_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "b4df2606292d9658209fb5076dc49614cb1e763d",
+    "export_blob": "b4df2606292d9658209fb5076dc49614cb1e763d",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_SOURCE_TRUTH_BRIDGE_IMPLEMENTATION_SKETCH.md",
+    "candidate_blob": "dfd09cb6788ad6632a9d70b322f4a1db5378b1d2",
+    "export_blob": "dfd09cb6788ad6632a9d70b322f4a1db5378b1d2",
+    "equal": true
+   },
+   {
+    "path": "revolution/R27_TRUTH_MESH_GOVERNED_EXECUTION_STRIKE.md",
+    "candidate_blob": "6e23b3218f1563a397459bffd4eb486da3847bab",
+    "export_blob": "6e23b3218f1563a397459bffd4eb486da3847bab",
+    "equal": true
+   },
+   {
+    "path": "revolution/r21-context-boundary-live.json",
+    "candidate_blob": "b31b3fc0d38876a6197fe0057ccad4b13ec6308b",
+    "export_blob": "b31b3fc0d38876a6197fe0057ccad4b13ec6308b",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R28_RELAY_AFTER_CODEX_VALIDATION_FINAL_LIVE_STRIKE.md",
+    "candidate_blob": "06e374c480de5bbf79710492b1c7bcfa546ec8a5",
+    "export_blob": "06e374c480de5bbf79710492b1c7bcfa546ec8a5",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R28_RELAY_CHECKPOINT_A_CODEX_VALIDATION.md",
+    "candidate_blob": "a8c24e68d6fe223c63d7055effe7793e219f97d3",
+    "export_blob": "a8c24e68d6fe223c63d7055effe7793e219f97d3",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R28_RELAY_CHECKPOINT_B_CODEX_VALIDATION.md",
+    "candidate_blob": "d9532e0ff7e32faa394af1209ef99c05924813df",
+    "export_blob": "d9532e0ff7e32faa394af1209ef99c05924813df",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R28_RELAY_CHECKPOINT_C_CODEX_VALIDATION.md",
+    "candidate_blob": "08692a3c0067d6d4b520c64f0765dca8a4959234",
+    "export_blob": "08692a3c0067d6d4b520c64f0765dca8a4959234",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R28_RELAY_FINAL_LIVE_CLOSURE_CODEX.md",
+    "candidate_blob": "58029d1d68c25eea073e9e01b0baa7dcd87b9afd",
+    "export_blob": "58029d1d68c25eea073e9e01b0baa7dcd87b9afd",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R29_CODEX_NOOP_PUSH_EXECUTE_LIVE_STRIKE.md",
+    "candidate_blob": "69385e847d105992198e43f7bc3b3a8e04318ad2",
+    "export_blob": "69385e847d105992198e43f7bc3b3a8e04318ad2",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R29_RELAY_AFTER_CODEX_LIVE_HARNESS_REVIEW.md",
+    "candidate_blob": "26833fbb2dc66b996772781e9785286aa5901a72",
+    "export_blob": "26833fbb2dc66b996772781e9785286aa5901a72",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R29_RELAY_AFTER_CODEX_PHASE3.md",
+    "candidate_blob": "92d07d424d595c8b188f0cfb82f246f26a745fa9",
+    "export_blob": "92d07d424d595c8b188f0cfb82f246f26a745fa9",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R29_RELAY_FINAL_STRIKE_AFTER_UI_VALIDATION.md",
+    "candidate_blob": "23874090959eb0be0ad7d41819e157a7d920f757",
+    "export_blob": "23874090959eb0be0ad7d41819e157a7d920f757",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R30_FINAL_RELAY_RUN_STRIKE_FIX_REAL_FAILURES_CLOSE.md",
+    "candidate_blob": "004fd865c017fe03dcd69932531acd2a901cab2b",
+    "export_blob": "004fd865c017fe03dcd69932531acd2a901cab2b",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R30_NEXT_KNIFE_AUTONOMOUS_CONVERGENCE_CONTROL_PLANE.md",
+    "candidate_blob": "5211d83d5598c737c4a6bd111185980ec62b4293",
+    "export_blob": "5211d83d5598c737c4a6bd111185980ec62b4293",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R30_RELAY_AFTER_NOOP_PUSH_GPT_SEMANTIC_EPOCH_SCAFFOLD.md",
+    "candidate_blob": "e08cbac7f091c345c3832cb994a1f95dd8d2af61",
+    "export_blob": "e08cbac7f091c345c3832cb994a1f95dd8d2af61",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R30_RELAY_AUTHORITY_HARDENED_RUN_NOW.md",
+    "candidate_blob": "ea7c1285bbd815ef3e71064f6acc3f53127b4074",
+    "export_blob": "ea7c1285bbd815ef3e71064f6acc3f53127b4074",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R30_RELAY_VALIDATE_LIVE_HARNESS_AND_CLOSE.md",
+    "candidate_blob": "a9a8c42d3d54183b27a91d903fef8709f6f5c9b1",
+    "export_blob": "a9a8c42d3d54183b27a91d903fef8709f6f5c9b1",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R30_RELAY_WORLD_EPOCH_CORE_TO_LIVE_STRIKE.md",
+    "candidate_blob": "891b4899aa7d5ac5be18c662da338b02d7d945b0",
+    "export_blob": "891b4899aa7d5ac5be18c662da338b02d7d945b0",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R31_EPOCH_INTEGRITY_AUTHORITY_PROVENANCE.md",
+    "candidate_blob": "af129ecd4bef6986b14e806ee7b3168467ad0b29",
+    "export_blob": "af129ecd4bef6986b14e806ee7b3168467ad0b29",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_AUTONOMOUS_RECOVERY_MESH_CONCURRENT_SHOCKS.md",
+    "candidate_blob": "08c52b574f5cd37e330c465ccb8b2aee86affad3",
+    "export_blob": "08c52b574f5cd37e330c465ccb8b2aee86affad3",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_GPT_IMPLEMENTATION_MAP.md",
+    "candidate_blob": "df097a6ddd6dd7d79a14a558be8e4cc674823ac6",
+    "export_blob": "df097a6ddd6dd7d79a14a558be8e4cc674823ac6",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_LIVE_STRIKE_2B_ISOLATED_BLACKBOX_RETRY.md",
+    "candidate_blob": "5eeade354a42ffc323352558ef5a104bba7c692b",
+    "export_blob": "5eeade354a42ffc323352558ef5a104bba7c692b",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_LIVE_STRIKE_2C_EXACT_RUN_CAUSALITY.md",
+    "candidate_blob": "eb1deb30ae3ea4091ac0c783b89135f0f97aea39",
+    "export_blob": "eb1deb30ae3ea4091ac0c783b89135f0f97aea39",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_LIVE_STRIKE_2C_FRESH_EVIDENCE_RECOVERY.md",
+    "candidate_blob": "f0e2f2e6c4925b80e188f87077e3a11266f7da0f",
+    "export_blob": "f0e2f2e6c4925b80e188f87077e3a11266f7da0f",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_LIVE_STRIKE_2_PREEMPT_CONVERGE.md",
+    "candidate_blob": "d15cf79beeacd9117cc586e61bfd6a8a753a724e",
+    "export_blob": "d15cf79beeacd9117cc586e61bfd6a8a753a724e",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R32_LIVE_STRIKE_HANDOFF.md",
+    "candidate_blob": "0aae66a7f2a842e4a021d3413f734ba744564543",
+    "export_blob": "0aae66a7f2a842e4a021d3413f734ba744564543",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/R33_DISTRIBUTED_EXECUTION_LEASE_ZOMBIE_FENCING.md",
+    "candidate_blob": "868c6e5d756cabcc5199b132eb3cbdc9fcbfd43a",
+    "export_blob": "868c6e5d756cabcc5199b132eb3cbdc9fcbfd43a",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/REVOLUTION_R28_AUTHENTICATED_COLLECTIVE_CONTINUITY_TASKBOOK.md",
+    "candidate_blob": "9df7170478a2a69165fa8985a538d98ab80701ab",
+    "export_blob": "9df7170478a2a69165fa8985a538d98ab80701ab",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/REVOLUTION_R29_LIVE_DISAGREEMENT_MEDIATION_TASKBOOK.md",
+    "candidate_blob": "66041053623a73a61cd389b09055c02a596e230e",
+    "export_blob": "66041053623a73a61cd389b09055c02a596e230e",
+    "equal": true
+   },
+   {
+    "path": "taskbooks/revolution/REVOLUTION_R30_CONSENT_EPOCH_SHOCK_RECOVERY_TASKBOOK.md",
+    "candidate_blob": "c86f38eb0a50c91bd6495688b1be187275325917",
+    "export_blob": "c86f38eb0a50c91bd6495688b1be187275325917",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1943,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1943 tests collected in 9.66s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "d2bc1454c7b0e961ed374bfd12da0187f0f24ddb",
+  "branches_route": "d2bc1454c7b0e961ed374bfd12da0187f0f24ddb",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
