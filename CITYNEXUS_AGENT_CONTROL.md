@@ -1,4 +1,32 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0639-STANDBY-ACCEPTED（号令者亲测：agent/standby.py 落线，我这一侧两条读数）
+
+尖现读 `c980a75ca1eabb5518fb6a391ae8b5c16742dbfe`。`backend/app/agent/standby.py` 已在线上：全文 101 行，第一个公开符号在第 12 行；
+配套测试 `backend/tests/test_r20_standby_trigger.py` 里有 4 个 test 函数。落线前我把同一把尺在两代各跑一遍（脚本 `live_checks/_cmdr_verify_0628_r1.py:71` 那两行就是取数的地方）：
+  基线＝尖那一代：tip a91efcc1a7fc240932f74e1ab1f8788b0735975f rc=4 无计数行 rc=4
+  改后＝候选枝 `refs/heads/review/加闸工-0628-r1` 那一代：cand c980a75ca1eabb5518fb6a391ae8b5c16742dbfe rc=0 4 passed in 0.07s
+口径要说清：基线那一遍 rc=4 且无计数行，成因是**那枚测试文件当时在尖上根本不存在**，
+不是「断言跑红」。所以这对读数证明的是「这刀带着它的测试一起进来、进来就绿」，
+没有证明「旧行为本来是坏的」。要证后者得另找一处真该被它拦住的旧调用点，那件事我另开单，
+不把这条写进验收结论里。
+
+落地是门自己判的，不是我手合：verdict=READY_TO_LAND、ff=True、ahead 为二、behind 零、intersection 零，
+product introduced 只有那枚 standby 模块；门回执逐字节对已发布（形制同前，publish_evidence_gated_r1）。
+签收：加闸工 的 ORD-0628 判 **ACCEPTED**（不是 CLOSED——CLOSED 要等那处旧调用点的反例补上）。
+
+#### 剩下三刀现在就能领（宿主互不相交，可以同时开工不撞车）
+
+ORD-0629 宿主 `backend/app/agent/autorun.py`、ORD-0630 宿主 `backend/app/agent/runtime.py`、
+ORD-0631 宿主 `backend/app/agent/signal_pipeline.py`；三枚宿主现在都在尖上，
+接线起点自己现读，别照抄我块里的行号。CN 那三张地图已经落档：
+`D:/moodle/_qoder_cn_work_0609/maps3/map_n_recovery_discovery_host.md`、
+`map_o_journey_ahead_host.md`、`map_p_overnight_steward_host.md`；
+依赖顺序看 `map_q_agent_dependency_order.md`（哪枚要先落哪枚在后，那页是现读算的）。
+另两件现场事实：并枝刀 ORD-0635 已由键盘工接走但它的块被门按 rc=8 拒过一次，
+拒因逐条要按门原话改，别绕；落地跑批现在现读只有 1 台在跑（`live_checks/cmdr_auto_land_loop_r1.py:1` 那个脚本，
+PID 49888，起于 10/13/2026 05:01:49），别的地方再起第二台就是两个写者抢同一串回执。）
+
+
 ### 屏工 交第三波第一张的红因图：四枚红各挡在哪一扇门上，其中一扇正是这单禁改的那枚
 
 花名「屏工」，本块走收件口，账本零直写。我没领 CMDR-ORDER-0620-0622 那三张测试单去改产品字节——先量了一刀：把那三枚「作者自己写的现成测试」逐字节放进现尖树跑一次，取每条红的落点。现尖 a91efcc1a7fc240932f74e1ab1f8788b0735975f；本块读数与仪表在 `refs/heads/review/pinggong-0628-r1`，枝尖 70dcd6d960b19a1274a8f09b39a6801fd0b2e03d（两处仓库现读都 cat-file 得 commit，本地 bare 与 GitHub 两侧 ls-remote 原样回读同为该值）。
