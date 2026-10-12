@@ -1,4 +1,5 @@
 import { useQuery, type QueryClient } from "@tanstack/react-query";
+import { dictionaryText } from "../i18n/LocaleContext";
 
 /**
  * ORD-0059 (a) -- the one place the frontend learns "what time is it for this journey", and it
@@ -228,7 +229,7 @@ export function evidenceWord(state: string | null, zh: boolean): string {
   if (state === "NO_FROZEN_EVIDENCE")
     return sceneCopy(zh, "evidenceNoFrozen");
   if (state === "NO_SCENARIO") return sceneCopy(zh, "evidenceNoScenario");
-  return zh ? `服务器报的是 ${state}，我们不替它解释` : `the server reported ${state}; we do not interpret it`;
+  return dictionaryText(zh ? "zh-CN" : "en", "live.evidence.serverWordUnexplained", { state });
 }
 
 /**

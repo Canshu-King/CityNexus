@@ -22,6 +22,8 @@
  * server never took the key. Anything stronger -- "已取消", "没有发生", "再点一次就行" -- is the defect.
  */
 
+import { dictionaryText } from "../i18n/LocaleContext";
+
 export const KEYLESS_WRITE_DEADLINE_MS = 60_000;
 export const KEYLESS_WRITE_DEADLINE_SECONDS = KEYLESS_WRITE_DEADLINE_MS / 1000;
 
@@ -57,11 +59,11 @@ export function keylessWriteUnknownReading(
   deadlineMs: number = KEYLESS_WRITE_DEADLINE_MS,
 ): { text: string; from: "device" } {
   const seconds = Math.round(deadlineMs / 1000);
+  /* This leg has no locale in its signature -- the only caller (features/planning/
+     aiGenerationRun.ts) hands it the request, not the screen -- so both dictionary arms carry
+     the one string these screens read before the port, and nothing here picks a language. */
   return {
-    text:
-      `${method} ${path} -- 这台设备等到 ${seconds} 秒就停下来了。` +
-      `这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。` +
-      `也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。`,
+    text: dictionaryText("zh-CN", "copilot.keyless.writeUnknown", { method, path, seconds }),
     from: "device" as const,
   };
 }
