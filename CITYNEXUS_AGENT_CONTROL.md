@@ -1,4 +1,31 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0616 交了：收件箱那扇导入门现在认得出「同一件东西贴了两次」（加闸工）
+
+- 派单原文逐字（我这侧的锚是抄件 `review/加闸工-0616/order_text_r1.txt:3` 起那三行，不拿会漂的账本行号当锚）：`ORD-0616｜backend/app/journey_inbox.py 落线：148 行、app.* 引用 0 个。`；宿主只许 `backend/app/operations/v9.py`；禁改四枚、先跑基线再跑改后。
+- 尖：开工那刻现读 6171fdf2c868f5030690c6cfa3b5ea469bb810fd（`review/加闸工-0616/tip.txt:1`），交块这刻现读已到 4f1e6176447d38eb4eb12d65b5ccf926afd06cac，我把提交的父换成新尖。换代不是白换的：我碰的与禁碰的五枚路径在两代之间 blob 逐枚相同（`review/加闸工-0616/diffstat_r1.txt:13` 起那五行），两代之间动的全在 frontend 一侧（`review/加闸工-0616/diffstat_r1.txt:19` 起那六行），所以后端那几对读数照用。
+- 枝：`refs/heads/review/加闸工-0616-r1`，头 dedc9b18f85a3562ca62b52b2ae8822fa15bb4dd，pin 同名挂在 `refs/local/jiazagong-0616`。三笔提交：产品字节 29fdb40779829e2161e6aef0a0e15dbe03443df1、证据目录 37dbdb81e89403071d73028fce4cffe73b8f00d3、把两份读数件自己的引用从「第几项」改成物理行号并重跑坐标核对 dedc9b18f85a3562ca62b52b2ae8822fa15bb4dd。force-push 零次，账本零直写。
+- 落了什么：新模块与它自带的八条用例逐字节从代表枝 `refs/heads/codex/revolution-sync-894-20261013` 搬来（模块两侧 blob 同为 eaf2b2c15417c1902713e9e406a67cda1d162be8，测试两侧 blob 同为 2299d9e3e2ab67691fa5afe2bd3ab6402e35d0e1，对拍命令在 `review/加闸工-0616/readout_r1.txt:4`）；接线一处三行：引入 `backend/app/operations/v9.py:15`、算 `backend/app/operations/v9.py:971`、写 `backend/app/operations/v9.py:999`；另加我一枚对照测试（`backend/tests/test_jiazagong_0616_inbox_artifact_identity_r1.py:1` 起）。
+- 接的是哪件真事：这条门原先只往审计写 status、unresolved_fields、extraction_mode 三格，旅客同一条确认贴两次，历史里两行彼此认不出是同一件事；现在写的是模块自己那枚内容指纹，旅客从 `backend/app/main.py:10029` 那道 history 门取回（整格放在 `backend/app/main.py:10131` 那行的 facts 里）。断言读的是出口回来的值，不是我另算一遍对暗号。
+- 两臂读数（这单要的基线与改后，同一棵树各一枚一次性库）：不接线那一臂我四条全红、八条自带用例全过（`review/加闸工-0616/arm_nowire.txt:6` 那行，四条 FAILED 逐枚点名在 `review/加闸工-0616/arm_nowire.txt:2` 起，四条成因同一条在 `review/加闸工-0616/arm_nowire.txt:8`）；打上接线十二枚全过（`review/加闸工-0616/arm_after.txt:2`）。
+- 邻居与采集：十二枚读这条门或这条审计的既有测试，基线与改后都是 213 passed、13 skipped、退出码 0（`review/加闸工-0616/neighbours_before.txt:15` 与 `review/加闸工-0616/neighbours_after.txt:15`）；整树采集 1924 条 → 1936 条，差 12 条正是我带的八枚加我四枚（`review/加闸工-0616/collect_before.txt:3` 与 `review/加闸工-0616/collect_after.txt:3`）；两臂各带同一枚线自带的采集错 `backend/tests/test_v18_hermes_r20_transport_reliability_probe.py:1`，我没去改它换绿。
+- 禁改四枚零改动，逐枚点名：`backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml` 四行都是 0 增 0 删（`review/加闸工-0616/diffstat_r1.txt:8` 起那四行）。
+- 一处我故意没接，带分母：`inbox_provenance_for_source` 在这条门只能答一个值——门接受的 artifact_type 恰是三枚（`backend/app/schemas.py:379` 那行 Literal），而模块那张映射表只有 PASTED_TEXT、IMAGE_UPLOAD、EMAIL_FORWARD_REPLAY、LAB_MESSAGE_FIXTURE 四枚有专属出处（`backend/app/journey_inbox.py:140` 起），三枚门输入全落兜底值，接上去是一枚常量。`classify_inbox_impact`、`reservation_change_fingerprint`、`normalize_change_kind` 在尖上无处可接：代表枝那四处调用点全在禁改的 main.py（逐枚行号在 `review/加闸工-0616/proof_r1.txt:10`）。
+- 一处位差照报：单文写 148 行，同一枚 blob 我用 `wc -l` 现读 147 行（末行带换行），不改文件也不改单文（`review/加闸工-0616/proof_r1.txt:5`）。
+- 顺手量到、不认领的一条：ORD-0613 的前置此刻仍差 presence 与 readiness，而 readiness 依赖的 `backend/app/agent/watch_policy.py` 在尖上现读取不到（这条我只报事实，动码等您排）。
+- 等您点的：这张要不要落线；落线后 v9 那处指纹要不要再往收件箱列表门（`backend/app/main.py:6364`）露一格，那要动 main.py，属禁改面，我不自作主张。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0623-EVIDENCE-REF（勘误：那两枚证据件在哪条线上）
+
+上一块 CMDR-ORDER-0620-0622 写了「表已作为证据发布」，但没写清在哪条线——权威尖 4f1e6176447d38eb4eb12d65b5ccf926afd06cac 的 `evidence/cmdr-rep-test-sweep-0620/` 目录现在确实没有那两枚（现读 `live_checks/revolution_absorption_check_r1.py` 那把尺旁边数出来是 0 枚，零枚属于这次扫描）。
+东西没丢，也不该在权威线上：证据件走的是账本那条镜像线 `commander/control`，读法 `git fetch git@github.com:Canshu-King/CityNexus.git +refs/heads/commander/control:refs/tmp/x` 然后 `git show refs/tmp/x:evidence/cmdr-rep-test-sweep-0620/rep_only_sweep_r1.tsv`。
+那条线现在的提交是 f3e9402353e10738b24970a61ddb33b255768aa8；扫描表那枚 blob cbdf89708c4950587805d19715c87eff47550e86（复算：GREEN 1 行、RED 16 行、COLLECT_ERROR 77 行，三数之和等于总行数 94，这是我刚才现读的）；失败行那枚 blob 2917f95a113d486ce1adbaaf72312579b7cb9102。
+表里的判据行号请以那条线上的文件为准；配置面那枚待加字段的位置在权威线 `backend/app/core/config.py:33` 那行的下面，形制照同一枚文件里 vapid 那一行。
+旧块不改（改了就是替别人重写话）；这一条只是把地址补上。BB 机那条通播（m_d3d7178dfd4c）里已经写了`commander/control`，以那条为准。
+
+
 ### CMDR-ORDER-0620-0622（号令者：第三波换成「把这枚现成测试弄绿」，退出条件不是我写的）
 
 尖现读 4f1e6176447d38eb4eb12d65b5ccf926afd06cac。我把族A 代表枝独有的测试在现尖导出树里逐枚跑过，表已作为证据发布（`evidence/cmdr-rep-test-sweep-0620/rep_only_sweep_r1.tsv` 与 `evidence/cmdr-rep-test-sweep-0620/red_reasons_r1.txt`），
