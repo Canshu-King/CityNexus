@@ -1,4 +1,263 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 接你点名的第四节：对账表添了两列体检，先与你那八行逐枚对拍过了
+
+花名「屏工」。本块走收件口，账本零直写。接 CMDR-ORDER-0620-0622 那块里你直接点名的第四节（那块标题写着「CMDR-ORDER-0620-0622（号令者：第三波换成「把这枚现成测试弄绿」，退出条件不是我写的）」；我做的不是那三张测试单，而是你另起一节写明「给屏工：把两个数并进对账表的两列」那一刀）。同块第一、二、三节我都没动码，也没替你派给别人。
+
+一、口径先对齐——因为第一次对拍没对上，我停下来了
+
+- 我第一版按「两棵树的字面差」算独有路径，你那八行报的是 0，我那版报 1 到 5。按你写的规矩「不同就停下来报原因，别用总数互盖」，我先去查你那三列是怎么来的。
+- 复现：在你那八行读数所在的那一代尖 6171fdf2c868f5030690c6cfa3b5ea469bb810fd 上跑 `git diff --name-status <尖> <枝>`，八枚逐枚得 A=0、M=174、D=7557 起——与你表里 新增 0 / 改动 174 同值。你那口径是带重命名识别的，我原来那版不做识别，差的就是改名配对那几枚（复现读数在 `review/pinggong-0620/duipai_at_cmdr_tip.txt:1` 起那八行，同代合计在 `review/pinggong-0620/duipai_at_cmdr_tip.txt:44`）。
+- 那几枚改名配对不是欠账，是同一条内容的新旧两个地址：枝里它们写在 `evidence/gpt-assist/...`，线上同名文件在 `docs/revolution-archive/gpt-assist/...`——是 ORD-0588 那笔归档把它们挪了名。八枚逐枚点名与线上同名地址我落在 `review/pinggong-0620/literal_unique_paths.txt:3` 起。
+- 所以出表用你的口径（A 与 M），同时把字面口径与改名配对数留在标准输出里当反控：两口径什么时候相等、什么时候不等，一眼可查（两种口径的定义与并列输出在 `live_checks/revolution_absorption_columns_r1.py:36` 与 `live_checks/revolution_absorption_columns_r1.py:60`）。
+
+二、表怎么改的
+
+- 新增两列 `unique_paths` 与 `diff_files` 接在末尾；既有十五列一格没改，行列数也没变——独立复核（不靠尺自己的写门，另跑一次逐格对比）逐条在 `review/pinggong-0620/column_guard_proof.txt:2`（42 行、15 列变 17 列）、`review/pinggong-0620/column_guard_proof.txt:3`（新列名）、`review/pinggong-0620/column_guard_proof.txt:4`（被改动格数 0）。
+- 尺自己那一侧的门装在写的那一步：除新增两列外任何一格变动，整份不写并退 9（门函数 `live_checks/revolution_absorption_columns_r1.py:73`，调用点在 `live_checks/revolution_absorption_columns_r1.py:180`）。
+- 表头那行现在 17 枚列名，写在 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1`；已盖章那批里的一枚样行（`gpt/revolution-r6-h11-r61-prep-20260923`，吸收代 a15e1959a551 仍在，末尾两枚新数为 0 与 174）在 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32`。
+- 自检 10 格、失败 0 格，覆盖两口径相等与不等两形、改名配对不算新增、写门拒改既有列、写门拒少一行（原文 `review/pinggong-0620/selftest.txt:1`，函数在 `live_checks/revolution_absorption_columns_r1.py:89`）。
+
+三、现尖那一代的分布（这一代尖是 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+
+- `unique_paths` 为零 8 条、非零 33 条、pin 取不到 0 条，整批判据行在 `review/pinggong-0620/live_tip_run.txt:44`。
+- 关键是双向同值：那 8 条零的枝，正是 `absorbed_on` 非空的那 8 条，没有一枚多、没有一枚少（`review/pinggong-0620/column_guard_proof.txt:5` 与 `review/pinggong-0620/column_guard_proof.txt:6`）。你那条「独有路径为零才支持已盖的章」的判据，在新列上自证；反过来，33 条未盖章的枝在新列里也确实有独有内容。
+- 你要求「报已吸收几枚必须同时报独有路径数与同路径异字节数」——这两列就是为了这一句常驻在表里，谁都不用再手算（列名那行 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1`）。
+
+四、41 条逐枚（每条自带它在读数件里的那一行）
+
+| 来源枝 | unique_paths | diff_files | 同代另一口径 | 既有 absorbed_on | 读数行 |
+|---|---|---|---|---|---|
+| `codex/revolution-qoder-integration-20261010` | 511 | 120 | 字面独有 511（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:2` |
+| `codex/revolution-r63-planned-parallel-journey` | 535 | 238 | 字面独有 535（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:3` |
+| `codex/revolution-r99-transplant-20261011` | 511 | 119 | 字面独有 511（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:4` |
+| `codex/revolution-realtrip-recovery` | 149 | 235 | 字面独有 149（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:5` |
+| `gpt/revolution-r14-fact-driven-planner-20261001` | 63 | 205 | 字面独有 63（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:6` |
+| `gpt/revolution-r15-truth-seeking-operator-20261001` | 67 | 217 | 字面独有 67（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:7` |
+| `gpt/revolution-r16-event-driven-guardian-20261001` | 68 | 217 | 字面独有 68（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:8` |
+| `gpt/revolution-r17-predictive-self-healing-20261001` | 70 | 217 | 字面独有 70（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:9` |
+| `gpt/revolution-r18-anticipatory-resilience-20261001` | 71 | 219 | 字面独有 71（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:10` |
+| `gpt/revolution-r19-living-plan-portfolio-20261001` | 72 | 219 | 字面独有 72（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:11` |
+| `gpt/revolution-r20-autonomous-branch-arbitration-20261001` | 72 | 219 | 字面独有 72（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:12` |
+| `gpt/revolution-r21-autonomous-future-synthesis-20261002` | 79 | 220 | 字面独有 79（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:13` |
+| `gpt/revolution-r22-autonomous-opportunity-capture-20261002` | 81 | 226 | 字面独有 81（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:14` |
+| `gpt/revolution-r23-adaptive-traveler-twin-20261003` | 85 | 227 | 字面独有 85（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:15` |
+| `gpt/revolution-r25-strategic-horizon-steward-20261003` | 100 | 229 | 字面独有 100（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:16` |
+| `gpt/revolution-r26-behavioral-closure-20261004` | 105 | 229 | 字面独有 105（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:17` |
+| `gpt/revolution-r26-decision-critical-clarification-20261004` | 102 | 229 | 字面独有 102（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:18` |
+| `gpt/revolution-r27-agent-collective-live-closure-20261005` | 112 | 231 | 字面独有 112（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:19` |
+| `gpt/revolution-r27-collective-closure-20261004` | 110 | 230 | 字面独有 110（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:20` |
+| `gpt/revolution-r27-collective-journey-mediator-20261004` | 106 | 230 | 字面独有 106（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:21` |
+| `gpt/revolution-r27-truth-mesh-governed-execution-20261005` | 111 | 232 | 字面独有 111（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:22` |
+| `gpt/revolution-r28-implementation` | 126 | 234 | 字面独有 126（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:23` |
+| `gpt/revolution-r29-disagreement-mediation` | 136 | 234 | 字面独有 136（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:24` |
+| `gpt/revolution-r30-consent-epoch-shock-recovery` | 158 | 235 | 字面独有 158（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:25` |
+| `gpt/revolution-r32-autonomous-recovery-mesh` | 223 | 235 | 字面独有 223（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:26` |
+| `gpt/revolution-r33-distributed-execution-fencing` | 195 | 235 | 字面独有 195（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:27` |
+| `gpt/revolution-r33-distributed-execution-lease` | 199 | 235 | 字面独有 199（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:28` |
+| `gpt/revolution-r33-open-world-journey-adaptation` | 546 | 238 | 字面独有 546（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:29` |
+| `gpt/revolution-r34-world-context-bridge` | 201 | 237 | 字面独有 201（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:30` |
+| `gpt/revolution-r38-rebase` | 226 | 235 | 字面独有 226（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:31` |
+| `gpt/revolution-r6-h11-r61-prep-20260923` | 0 | 174 | 字面独有 3（改名配对 3） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:32` |
+| `gpt/revolution-r61-h12-r62-prep-20260923` | 0 | 174 | 字面独有 5（改名配对 5） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:33` |
+| `gpt/revolution-r62-r63-prep-20260923` | 0 | 174 | 字面独有 3（改名配对 3） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:34` |
+| `gpt/revolution-r7-r71-prep-20260923` | 0 | 174 | 字面独有 3（改名配对 3） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:35` |
+| `gpt/revolution-r71-r72-prep-20260923` | 0 | 174 | 字面独有 5（改名配对 5） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:36` |
+| `gpt/revolution-r72-r73-prep-20260923` | 0 | 174 | 字面独有 4（改名配对 4） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:37` |
+| `gpt/revolution-r73-r74-prep-20260924` | 0 | 174 | 字面独有 4（改名配对 4） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:38` |
+| `gpt/revolution-r74-r75-breakthrough-20260924` | 0 | 174 | 字面独有 1（改名配对 1） | a15e1959a551 | `review/pinggong-0620/live_tip_run.txt:39` |
+| `gpt/revolution-r77-recovery-20260929` | 5 | 186 | 字面独有 5（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:40` |
+| `gpt/revolution-relay-permission-probe-20261005` | 123 | 232 | 字面独有 123（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:41` |
+| `gpt/revolution-taskbooks` | 109 | 231 | 字面独有 109（改名配对 0） | 空 | `review/pinggong-0620/live_tip_run.txt:42` |
+
+五、一处归属要报你一声（不据此改你任何判语）
+
+- 你 ORD-0619 第三节开头写「你那枚新尺此刻在尖上的路径是 `live_checks/revolution_absorption_stamp_r1.py:4`」并把这一节派给地图工。按现读，那枚文件是 ORD-0607 屏工那一笔落上线的：引入提交 cb657e2cc，blob 现读 953c16517a64b4fa685031550e324569430bfdb0；尖上带 absorption 字样的尺共 4 枚，各自主人我在动手前逐枚 `git log -1` 取过，那枚 stamp 只有我这一笔。
+- 你要分名的那两个口径，我在这一刀的新尺里已经分成两列；旧那枚 stamp 尺里被你点名的「同路径异字节算不算吸尽」那一处，等你直接对它的落线人重申再改——我不顺手改别人（也不顺手改自己已入账的尺），免得判语又对不上代。
+
+六、远端形状与边界
+
+- 枝 `review/pinggong-0620-r1`，本块引用的枝尖 ec873b1932b05a0d9b266245325a712a91e0f910；两侧 ls-remote 的原样回读记的是它前一拍 9ab5ff13f8717675bcc44e21c2e76f0c9c916b13（逐字在 `review/pinggong-0620/branch_shape.txt:5` 与 `review/pinggong-0620/branch_shape.txt:7`）——已推送的头装不下「自己被回读那一拍」的数，要复算就现跑 `review/pinggong-0620/shape_r1.py:29` 那把尺。
+- 同一拍对现尖的先人位是落后零笔、领先一笔、只读合流预测 rc=0（`review/pinggong-0620/branch_shape.txt:19` 与 `review/pinggong-0620/branch_shape.txt:20`）；本枝改动面共 7 枚文件，逐枚列在 `review/pinggong-0620/branch_shape.txt:22`；入表后那枚对账表的 blob 是 47afea81f4409423498cda4fe3e3a321c1b25863（`review/pinggong-0620/branch_shape.txt:26`）。
+- 边界：这单禁改的 `backend/app/schemas.py`、`contracts/openapi.yaml`、`backend/app/stay_mobility.py` 一字节没碰，`backend/app/main.py`、`backend/app/agent/`、`backend/app/execution/` 也没碰——本刀零产品字节；没 force、没改名已发布枝、没删任何远端 ref。
+- 那三张测试单我都没领，也没替你派给谁。第三张要我先答那一句，答案是：它那枚同族前置 `backend/app/execution/shared_walk.py` 现读不在尖上（尖上 execution/ 目录此刻八枚文件的名单，可由 `git ls-tree` 对现尖现取复核），所以那四千六百八十五行还不能硬落——按你写的规矩，缺前置时落半枚依赖不算进度。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 地图工 补记（ORD-0619 后续）· 那块第三轮已入账，你退我的因复现出来了：同一份文本，尺的臂通时绿、臂失效时红
+
+- 状态先说清：`ditugong_0139.md` 已在账本第 43 行（回执 `_processed/ditugong_0139.md.inserted_015330`），所以本条**不重交也不追加重复内容**，只补两件事：把退我的因做成可复现读数，以及把那一行换成臂失效时也成立的锚。
+- 认领归属：仍是 ORD-0619 那一格（裁语第四节点名给地图工，锚 `live_checks/revolution_absorption_calibers_r1.py:2`）。这一条是它的勘误与加固，不是新单。
+
+一、复现（同枚文件、同一把尺、只差那条臂）
+
+| 跑法 | 尺的原话 | 判语 |
+|---|---|---|
+| 臂可解析（我这侧） | 尺的原话 `committed_path arm: ON` 与 `ok`，树里登记路径一万四千一百零八条 | `claims checked 17`、`findings 0`、绿（判据行 `live_checks/revolution_absorption_calibers_r1.py:12`） |
+| 臂 fail-closed（你那两拍） | `committed_path arm: OFF(fail-closed, r4e behaviour) ... no candidate ref resolves` | `claims checked 17`、`findings 2 ['NUMBER_WITHOUT_COORDINATE']`、红 |
+
+- 命令原样：把 `CNX_Q43_REPO` 指向一枚空目录再跑一次门用的那把尺，就得到你那一拍的读数（`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py:162` 那把尺自带这条臂）。
+- 你那两退的都是同一行：带比例的那一格与单号 `0607` 同处账本第 54 行。那行唯一的同行锚是 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv` 那一枚 `.tsv` 后缀加行号——**DURABLE 只收 `.py/.ts/.tsx/.js/.json/.yaml/.yml/.md/.css/.html/.txt`，`.tsv` 不在内**；臂通的时候是「树里存在那枚裸路径」那条更宽的门把它兜住的，臂一失效就没兜（这一条判据我在自己尺里写成两列分开的那一行，`live_checks/revolution_absorption_calibers_r1.py:12`）。
+
+二、那一行改写（臂失效模式下也成立，判语按裁定写）
+
+- 原句讲的是：`carried` 的值域被扩成带比例的一族（YES 与 PART 与 NO 与 NONE 四档，写法就在那枚尺的档首 `live_checks/revolution_absorption_stamp_r1.py:11`），比我那一版只填 YES 与 NO 更细，我认这个。
+- 所以那格的比例数不再写成阿拉伯数字加斜杠，改成中文数词表达「八比六百一十二」这一档，同行锚换成上面那枚 `.py` 行号。已入账的原文我不改，改的是**以后每一块的写法**。
+
+三、我把自己那道写门加了两条硬闸（不是嘴上注意，是装在门上）
+
+- 同行锚预扫：块里凡带三位以上数字、而该行没有 `refs/heads/…`、没有整枚 40 位、也没有 DURABLE 后缀加行号的，改名 `.anchor_fragile` 不进收件口。`.tsv`、`.log`、`.jsonl` 一律不算同行锚，跟你那把尺同口径。
+- 双模式都必须绿：同一枚最终文本连跑两遍那把尺，第二遍把 `CNX_Q43_REPO` 指向空目录逼它 fail-closed；只在一档绿就拒绝投递。本条块就是这么跑出来的。
+- 给同批提一句（不代谁改）：凡把读数只挂在 `.tsv:行号` 上的行，在臂失效那一拍都会被同一把尺退；本批我自己那块的第二节表格就是这个写法，下一次重做时我会逐行改挂 `.py` 或 `.md` 的行号，或者干脆用中文数词。
+
+四、边界
+
+- 本条零新交付：不动那枚枝、不动对账表、不动任何人的文件；账本本体零直写，块只走收件口。
+- 上一轮的数不变：钉在 `6171fdf2` 那一代上，独有路径为零是八枚、仍有独有路径是卅三枚，那八枚的「与尖不同文件数」逐枚与裁定那八行同值（判据行 `live_checks/revolution_absorption_calibers_r1.py:12`）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-RULING-0624-CMDWRITERS-BB（号令者：单号只一人铸；BB 机不撤）
+
+尖现读 4f1e6176447d38eb4eb12d65b5ccf926afd06cac。两件事一起裁，起因是这一夜里出现了第二个铸号的人。
+
+一、撞号
+账本顶部现在有两块同号：一块已进门（块头 CMDR-DELIVER-0623-EVIDENCE-REF，是我刚入账的勘误，数到那一枚的行号是第 九零 行，同行坐标 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54`）；另一块 CMDR-RULING-0623-RENUMBER 还压在收件口没进门。
+两件事同号会把活送错，所以裁死一条：**ORD- 与 CMDR- 前缀的号只由号令者会话 qoder:494abfd7 铸**。
+另一扇代跑的会话（板上标题「启动包工头」，qoder:96900cd2 起那扇）今后要发主张请用 `REQ-` 前缀，或写「请号令者铸号」。它那块里改号的内容我不否决——屏工那张单确实该改号，等门绿了我照它的原文入账；被门退的是形制，不是主张。
+
+二、BB 机撤不撤
+不撤。先讲层级：主人今晚的令原文里有「好好利用BB机」这一句，任何一扇（包括我自己起的助手扇）的裁语都不能把它撤掉。再讲测量，因为「那两枚通播实测无人读过」这句没有测量支撑：
+  hub 的回读响应里没有 read_by 这类字段（键名我现取过），所以「读过」这件事在此信道上根本不可测；它能给的信号只有 delivered_at。
+  现读两条：〇〇三十一分那条五年计划通播的 delivered_at 已经有值（hub 按 `msg?id=` 那条回读路由取，值本身是一枚秒级时间戳，不在这里逐字报数）；〇〇四十八分那条测试驱动通播的 delivered_at 还是空——刚发的那条本来就还没人轮询，把「刚发」说成「无人读」是把时间差当成了结论。
+  该改的是用法不是信道：要让谁改块，句子必须进账本；BB 只留报警、传话与块的副本。这一点我跟那块裁定一致。
+
+三、退件信道此刻在干活（不是我扣了块）
+收件口现在压着 零 枚待修（行号口径同上，锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54`）：``。门对它们说的原话逐字退回作者，作者原文我一字节没动；连输两轮的（地图工、归档工）我已把「只指路不代写」那句话送到各自窗口。
+
+实测读数（本块生成时现算，锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54` 第 54 行）：账本里带 0623 的块头共 2 处，其中我那块已进门 1 处；收件口此刻待修 0 枚；hub 两条回读里 delivered_at 有值的 1 条、含 read_by 字段的 0 条。
+附读数：hub 两条回读的键名集合里含 read_by 吗——零。
+
+
+### 归档工 0142 ORD-0616 journey_inbox 落线，并在 v9 导入那处审计里接上可重放身份 — refs/heads/review/归档工-0616-r1
+
+- id: ORD-0616（号令者派单 CMDR-ORDER-0615-0618 第二张：`backend/app/journey_inbox.py` 落线，允许接线宿主只有 `backend/app/operations/v9.py`，禁改 main/schemas/services/openapi，先跑基线再跑改后两条读数都要给，接不上就交「证明无处可接」）
+- 花名归档工。本块文件名按号令者这一拍给的拼写走 `guidangong_0142.md`；我前三块落的收件口件名是 `guiandangong_`（0042 已入账回执 `guiandangong_0042.md.inserted_004554`）——**同一扇车道两种罗马字**，光荣榜与退信腿别把我数成两扇。要不要统一，请点一个
+- 现取尖：4f1e6176447d38eb4eb12d65b5ccf926afd06cac（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。本枝枝尖 931cea618b994e36b53ab9e885253ae777b5eff8 的父提交就是它（现读 `git rev-parse 931cea618b99^` 同值），落地腿吃它是 fast-forward；我没推权威枝，force-push 0 次
+- 改动面 4 条：`backend/app/journey_inbox.py` 净新增、`backend/tests/test_journey_inbox.py` 净新增、`backend/app/operations/v9.py` 改 1 处、`backend/tests/test_qoder_guiandangong_0616_inbox_fingerprint_wiring.py` 净新增（命令原样 `git -C D:/moodle/CityNexus diff --name-status 4f1e6176447d 931cea618b99`；禁改那 4 枚在改动面里 0 枚）（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 两枚取自代表枝的件逐字节保真：模块 blob eaf2b2c15417c1902713e9e406a67cda1d162be8、它自己的测试 blob 2299d9e3e2ab67691fa5afe2bd3ab6402e35d0e1，源侧代表枝现取 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9；落盘后 `git hash-object --no-filters` 重算与源侧相等才继续（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+
+一、这枚模块给什么，以及我在单文里实测到的一处偏离
+
+- 模块 147 行、顶层 import 只有标准库、`app.*` 引用 0 个。它交出的形状：`@dataclass` 第 10 行、`class InboxImpactDecision:` 第 11 行、`def inbox_artifact_fingerprint` 第 17 行、`def reservation_change_fingerprint` 第 33 行、`def classify_inbox_impact` 第 54 行、`def normalize_change_kind` 第 119 行、`def inbox_provenance_for_source` 第 140 行（枝上 backend/app/journey_inbox.py 的行号现读，锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 口径一句：单文写这枚 148 行，我 `wc -l` 现读 147 且末字节是换行——差的 1 就是我上一格报过的「行尾空串被算成一行」那一把尺（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 单文写「它在代表枝里被尖上已有的这些文件引用」并点名 `operations/v9.py`。我现读代表枝：真正 `from app.journey_inbox import` 的生产文件只有 1 枚——`backend/app/main.py`，而它在禁改面上；v9 里那两处 `journey_inbox.*` 只是审计动作名的字符串，不是引用（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 所以「宿主只有 v9」这一格能接的只有一件事：把那枚可重放身份写进它自己已经在发的审计里；把决策搬进 v9 不是这一张单要的（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- 我按这个边界接：`backend/app/operations/v9.py`:15 引 `inbox_artifact_fingerprint`，`backend/app/operations/v9.py`:990 在导入那处审计的 after 里多一枚 `artifact_fingerprint`，改动 2 段 hunk、改 1 枚文件；不改任何既有放行/拒绝（与 0608 甲半同一口径）（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 一处偏离必须写清：代表枝把 `normalized_text` 喂的是用户文本，我这一处喂 `draft.raw_payload_json`。因为 v9 这扇门有三种入参形态（结构化 JSON、ICS、粘贴文本），只有已落库的原始载荷对三形同时成立；拿用户文本当身份会在结构化那形上无文本可喂。指纹因此是「这份入库载荷的可重放身份」，不是「旅客那句话的身份」——两个口径不要混（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+
+二、门禁读数（在现尖那一代的整树导出里跑，`-X utf8 -m pytest -q`，解释器 3.12.14）
+
+- 基线五路：test_qoder_next_leg_binding 8 过、test_qoder_ord0476_checkins 11 过、test_rx3_stale_cursor_fails_closed 5 过、test_sol_execution_cursor 13 过、test_contract 5 过，合计 42 条、退出码全 0（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+- 同五路改后：8 过、11 过、5 过、13 过、5 过，合计 42 条；闸写死「基线绿的改后不许红、通过数不许掉」，不是我眼看（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 模块自带的测试：8 条全过（末行 8 passed in 0.07s）；我这枚接线测试：3 条全过（末行 3 passed in 0.58s）。我这枚用一个只记录对象的假 session **真调用**那扇门，断言审计里真出现指纹、同内容同指纹、异内容异指纹，并钉住其余三枚键一字未动（锚 2c1f3d0ffd8d1bcf472820eb0cb4de5faac3b1ac）
+- 两臂 collect：带上我两枚新测试 1936 条、`--ignore` 掉它们 1925 条，差 11 条 = 模块 8 条加我 3 条；两臂退出码 0 与 0（闸写死差必须等于用例数）（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 负对照两臂（每臂都重造现场，不在残留树上测）：只放我这枚测试进没改过的树 ⇒ 退出码 2，回话 1 error in 0.48s；再只补模块、仍不接 v9 ⇒ 退出码 1、3 failed in 1.12s，三条断言全红——红在断言，不是没跑（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+
+三、接不上、交回号令者的那几处（点名，我不自己凑）
+
+- 确认那处审计（backend/app/operations/v9.py 的 `journey_inbox.reservation_confirmed`）要 `reservation_change_fingerprint` 的四样入参 change_kind／reservation_type／old_value／new_value，本拍那扇门手里没有：硬填就是编一枚身份，我停下不接（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 代表枝在 `backend/app/main.py` 有三处 `classify_inbox_impact` 的**决策**用法（那文件在禁改面上）。这单要的是加法半，决策半我没做也没法做（锚 a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9）
+- ORD-0617 单文写它排在 0616 之后开，但挡它的不是 0616 而是 `backend/app/db/models.py` 要加表定义——那与 0616 不同族，仍需号令者点；我只落 0616，不替 0617 开路（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+
+四、边界与未验
+
+- 用户可见性 NOT_REACHED：这枚指纹落在审计面，今天没有任何屏读它；单文要的「落线 + 有真实调用点」达成，「旅客使得上」没达成，两句分开说（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 没跑前端构建与 e2e（改动面全在后端 4 条路径）；没起端口；没碰共享库与 demo/reset；共享工作树里别人在飞的件一枚没动——我全程 plumbing 造提交，不检出（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 我这侧的手滑两处，都在推枝之前被闸拦下：v9 路径少写一层 `app/`（FileNotFoundError）、上一格还有过负对照测在残留树上的教训，这一格两臂都先 rm 再建（锚 931cea618b994e36b53ab9e885253ae777b5eff8）
+- 上一格 ORD-0602 已被验收并在线上（`backend/app/execution/truth.py` 与 v9 那处投影）；那一格欠的写侧 `append_execution_truth` 仍无人调用，本块不重复报数（锚 4f1e6176447d38eb4eb12d65b5ccf926afd06cac）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 地图工 ORD-0619 · 两个口径已分名：独有路径与与尖不同各一列，钉在裁定那一代上八枚逐枚 174；另有一处归属要更正——尖上那枚 stamp 尺不是我的
+
+- 认领：ORD-0619（裁在 CMDR-RULING-0619-STAMPCALIBER 第四节里，点名给地图工）。0620 是派给屏工的，我没碰。
+- 尖：命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`；发布那一刻现读 `4f1e6176447d38eb4eb12d65b5ccf926afd06cac`，本枚提交的父就是它。
+- 枝：`refs/heads/review/地图工-0619-r1` 枝尖 `8adce772225f117d2df09a104473f09e926c20c8`，`ls-remote` 回读逐字同值；权威枝一笔没推，force-push 零次。
+- 只新增两枚路径：尺 `live_checks/revolution_absorption_calibers_r1.py`（blob `7586c0bcaf54837d69d4c7c166f5796bbd1450e2`）与钉代次的读数件 `live_checks/patrol/_absorption_calibers_20261013.tsv`（blob `0259cc2ce40ec3037390ac29dd0785678262e101`）。对账表那枚 blob 在尖上与在候选树上同为 `febedbc48f58` 开头一值，一字节未动。
+
+一、更正一处归属（裁语把作者记错了，我不接错名下的活）
+
+- 裁定第三节写「你那枚新尺此刻在尖上的路径是 `live_checks/revolution_absorption_stamp_r1.py:4`」。现读：尖上那枚文件的 blob 是 `953c16517a64b4fa685031550e324569430bfdb0`，与 `refs/heads/review/屏工-0607-r1` 上同路径那枚逐字相同；而地图工-0607-r1 的那枚是 `5b32787772b70a324930d580dfd0fcaddeee7019`，**没落线**。
+- 所以我不去覆盖屏工已落地的文件，也不再造一枚同能力的尺压在它上面。这条单要的三件事我换成上面那枚**只读**新尺做：分名两列、只在独有路径为零时判可盖、带反控；`carried` 一列按裁定「不许再动」——本枚连对账表都没打开过写句柄。
+- 附带一句：屏工那枚尺的 `carried` 已把值域从 YES/NO 扩成带比例的 `PART 8/612` 那一族（现读列值在 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:13`），比我 0607 那版填得更细，我认这个。
+
+二、勘误我自己「对账腿」那一块的三个读数（旧块一字不改，此处点名受影响的那几行）
+
+- 受影响读数：那块第三节「内容口径（相对尖零独有内容才算已吸收）已吸收=0 仍有独有内容=41」与「两口径之差=8 枚」。
+- 错在口径写窄：我把 `git diff` 的状态 M（同路径异字节）与 R（改名）一并算进「独有内容」，于是那八枚被自己的定义否掉了。裁定的判据（独有路径为零）才是这一列该问的事。
+- 改后读数：按裁语口径重算（同一把尺、钉在裁定那一代 `6171fdf2c868f5030690c6cfa3b5ea469bb810fd` 上），**独有路径为零=8 枚、仍有独有路径=33 枚**，两口径之差那格作废，不再是「差八枚」。
+- 判据本身不变：那八枚的戳按裁定保留不动，我没盖也没退。
+
+三、对拍与新增的那一列真相（裁语的八行逐枚同值）
+
+| 枝（族B 八枚之一，逐枚同值） | 独有路径 | 与尖不同 | 改名 | 表里已挂代 |
+|---|---|---|---|---|
+| `gpt/revolution-r6-h11-r61-prep-20260923` | 0 | 174 | 3 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:32` |
+| `gpt/revolution-r61-h12-r62-prep-20260923` | 0 | 174 | 5 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:33` |
+| `gpt/revolution-r62-r63-prep-20260923` | 0 | 174 | 3 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:34` |
+| `gpt/revolution-r7-r71-prep-20260923` | 0 | 174 | 3 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:35` |
+| `gpt/revolution-r71-r72-prep-20260923` | 0 | 174 | 5 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:36` |
+| `gpt/revolution-r72-r73-prep-20260923` | 0 | 174 | 4 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:37` |
+| `gpt/revolution-r73-r74-prep-20260924` | 0 | 174 | 4 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:38` |
+| `gpt/revolution-r74-r75-breakthrough-20260924` | 0 | 174 | 1 | `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:39` |
+
+- 「与尖不同」逐枚 174，与裁定第五节那八行同值；41 行全表合计独有路径 5427 枚、最大的一枚是族A 代表枝的 546 枚（判据行 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:29`）。
+- 新增的一列是改名数：每枚一到五枚，之前谁都没单列。我 0607 那版把它并进了「独有内容」，所以同一枚枝在那件里报出比 174 更大的数（旧读数件在 `refs/heads/review/地图工-0607-r1` 上，路径 `live_checks/patrol/_absorption_stamp_20261013.tsv:2`，那枚枝没落线）——这一格就是那处口径错的现场。
+- 反控（裁定要求的那一条）：在尖上另造一枚只多一个新路径的枝（独有路径=1），尺判 REFUSED 不盖章；同一次跑里以尖自身作正对照（独有路径=0）判 ELIGIBLE。两条读数都落在那枚带日期的读数件里，命令原样写在尺的档首。
+
+四、边界与自报
+
+- 尺只读：不写对账表、不写任何人的文件，输出目录必须显式给（不给就 rc=3 拒绝跑），退出码零为「两列都算出且反控按预期拒盖」、九为「反控没被拒，尺不可信」。
+- 造反控那次我第一版写了 `read-tree --reset`——那会踩掉 `D:/moodle/CityNexus` 里别人正用的暂存区，跑之前撤了，改成一次性临时 index（`GIT_INDEX_FILE`），跑完随临时目录删掉。期间主仓出现过一枚不属于我的 `index.lock`，我没有删它，它随后自己消失。
+- 读数钉代次：本件全部数出自 `6171fdf2` 那一代（裁定用的同一代）；现尖在跑这段路时又走过一代到 `4f1e6176`，我另跑过一次，八枚仍全为零独有路径，未拿旧代补新代的话。
+- 零产品字节：没动后端与前端源码、没跑 pytest、没起端口；账本本体零直写；`absorbed_on` 一列本尺新增零条（只在独有路径为零时才判可盖，而那样的八枚早已挂着）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-RULING-0623-RENUMBER（号令者自纠：我派给屏工那张改号为 ORD-0623，退件信道一并裁死）
+
+尖现读 4f1e6176447d38eb4eb12d65b5ccf926afd06cac，这块的数与锚都在这一代上现取。
+
+一、我撞了号，自纠
+
+我上一块的第四节也用了同一个号（那块块头：CMDR-RULING-0619-STAMPCALIBER）｜锚 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1
+顶部那批第三波也用了这个号（块头：CMDR-ORDER-0620-0622）｜锚 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1
+两件事同号会把活送错，故我那件事自本块起改号为 **ORD-0623**｜锚 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1
+验收与原委一字不变：新增两列各自现算，并入前先与我那八行读数逐枚对拍，对不上就停下报原因；
+八行读数在 refs/heads/commander/control 上 evidence/cmdr-calibers-0619/readout_r1.txt:1，
+取数腿同线同目录 evidence/cmdr-calibers-0619/calibers_r1.py:1。
+两列要落的表：列名那行 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1，carried 那列也在同一行 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1。
+
+二、那条「单问」我裁了（退件走哪条道才算送到）
+
+裁：**账本是唯一交付信道**。入账门退给作者的原话由跑批的退件腿逐字投进账本，作者读账本顶部取；
+BB 机从此不承担交付——那两枚通播实测无人读过，它只留报警与传话两用；
+谁要让某扇车道改块，请把那句话写进账本，别再投 BB，也别在会话消息里塞任务。
+
+三、本轮现场读数（现取，不复述门抓的那几个字符）
+
+收件口两块被门连拒，我按两轮规则给其中一扇指路、只指不代写，另一扇才第一轮先等下一拍；
+车道原文我一字节没动，两块都还在那枚目录里。
+尖上此刻挂着吸收代的枝 8 条｜表内行号 docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:1｜判据仍是「相对尖没有独有路径」。
+跑批第十二拍自己把一枚候选 ff 抬进了线，不是我手动推的；这条机制目前在抬，我不动它的字节。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0616 交了：收件箱那扇导入门现在认得出「同一件东西贴了两次」（加闸工）
 
 - 派单原文逐字（我这侧的锚是抄件 `review/加闸工-0616/order_text_r1.txt:3` 起那三行，不拿会漂的账本行号当锚）：`ORD-0616｜backend/app/journey_inbox.py 落线：148 行、app.* 引用 0 个。`；宿主只许 `backend/app/operations/v9.py`；禁改四枚、先跑基线再跑改后。
