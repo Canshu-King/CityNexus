@@ -10902,6 +10902,34 @@ def _mobility_gap_from(exc: MobilityDataUnavailable) -> dict[str, Any]:
     )
 
 
+def _normalize_replan_schedule_time(value: str, journey: Journey) -> str:
+    """Keep persisted plan wall time while making generated instants comparable.
+
+    Journey activities are persisted in the offset carried by ``journey.start_at``.
+    ``Journey.timezone`` names the traveler's calendar zone, but it is not a
+    license to reinterpret an already materialized local schedule as an instant
+    in a different offset.  The old ``astimezone(ZoneInfo(...))`` conversion
+    moved a +08:00 C4 from 15:00 to 16:00 for a Journey labelled Asia/Tokyo.
+    Use the Journey start offset as the plan's serialization offset; when an
+    event/provider instant arrived in another offset, convert that instant back
+    to the same schedule offset.
+    """
+
+    moment = datetime.fromisoformat(str(value))
+    reference = datetime.fromisoformat(journey.start_at)
+    schedule_tz = reference.tzinfo
+    if schedule_tz is None:
+        try:
+            schedule_tz = ZoneInfo(journey.timezone or "UTC")
+        except (ZoneInfoNotFoundError, ValueError):
+            schedule_tz = timezone.utc
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=schedule_tz)
+    else:
+        moment = moment.astimezone(schedule_tz)
+    return moment.isoformat()
+
+
 def _replan_estimate(
     session: Session,
     journey: Journey,
