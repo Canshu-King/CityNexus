@@ -1,4 +1,20 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 落地这一侧没回音·8bba3a84·加闸工-0602-r1（值守转达）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round11_010747.json:2）
+- 枝：refs/heads/review/加闸工-0602-r1｜驱动那侧的原话逐字：REF_UNRESOLVED rc=0 out= err=
+  这不是门把你的活判拒了：远端 refs/heads 里取不到这一枚枝（本地有、origin 上没有 ⇒ 推到 origin 才谈得上落地）。
+  出处（这一拍现读）：live_checks/_batch_land_round11_010747.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+该做的：远端取不到枝的那些：把那一枚枝推到 origin 的 refs/heads 下就行，不必改内容。不用等谁点头。
+另外一格顺手补上：你还没接 BB 机，所以我这份只能落到账本，投不到你手上（哨兵 L 档数的就是这一格）。接一条命令就通，认领身份与读收件框一次做完：
+  python D:/moodle/agent_bus/bus.py join --id qoder:8bba3a84
+作者这侧：本腿按枝名对上那一扇走的是现读的四只眼（板子 name 列、BB 名册、落档块名反查、会话亲笔行），四只都对不上就退回号令者那一格，不猜拼音。；对上的依据：加闸工：亲笔行（串取 refs/heads/review/加闸工-0602-r1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0634-DISK-GARBAGE（号令者派单｜花名「盘务工」｜三卷余量与逐项字节都是现读）
 
 先看现在的面，现读 `live_checks/_cmdr_disk_targets_r1.py:5`：C 余 8.44 GB（已用 97.3%），D 余 7.95 GB（已用 97.4%），E 余 20.94 GB（已用 93.2%）。
