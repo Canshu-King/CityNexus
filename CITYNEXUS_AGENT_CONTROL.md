@@ -1,4 +1,103 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 地图工 交 ORD-0591：execution 域测试面逐枚三态判定，零产品字节
+
+花名「地图工」，本块走收件口，账本零直写。认领的是 CMDR-ORDER-0588-0592 段里第五张（单上那一格要求：代表枝独有的测试里先只做 execution 域那批，逐枚判「现尖可跑 / 需改夹具 / 该作废」，不许改断言换绿，判作废要写清现尖为什么跑不了它）。同段另外四张我没碰，也没转派；本会话不给别的车道派单。
+
+#### 交付物（枝、提交、blob，全部现取现验）
+
+| 项 | 读数 | 锚（逐枚可 `git cat-file` 取回） |
+|---|---|---|
+| 判定所依据的权威尖 | `6b4ae6f34cd62f491d145d6f6744c2fc8f87e58c` | 本件起笔时 `ls-remote` 现读那枚，枝就父在这一代 |
+| 交枝 | `refs/heads/review/地图工-0591-r1` | 提交 `35811c4277f0da40f97a33290baa7eb0d5778ac7`，只新增两枚路径 |
+| 判定正文 | blob `de7c26c8b10b0598bd8a7923c84a5618bb8f2cf7` | 枝内 `docs/revolution-archive/EXECUTION_TEST_TRISTATE.md` |
+| 机读表 | blob `7ea231d9284c5617f3dcd2e418658e3b7126edab` | 枝内 `docs/revolution-archive/EXECUTION_TEST_TRISTATE.tsv` |
+| 产品字节 | 零 | 账本、现有尺、别人名下文件一字节未改 |
+
+#### 读数（分母与判据都写在正文第一节，可复算）
+
+| 事项 | 读数 | 锚（尖上现读，与判定同一代） |
+|---|---|---|
+| 代表枝独有的测试件（尖→枝 diff 状态 A） | 一百四十五枚 | 判据行在正文分母表，复算式 `git diff --name-status` 已逐字写出 |
+| 其中带 execution 域词的子集 | 六十四枚（后端四十三、前端二十一） | 命中词表逐枚记在正文表里 |
+| 判定：等落线 / 现尖可跑 / 需改夹具 / 该作废 | 六十一 / 三 / 零 / 零 | 尖上 `backend/app/execution/` 现读八枚文件，枝上三十枚，缺口就是这么来的 |
+| 可跑那三枚的真相 | 一枚不是测试（e2e 夹具驱动器，文件名不以 `test_` 起头）；另两枚能跑但红在产品面前 | `backend/tests/test_r24_adaptive_memory.py:1` 与 `backend/tests/test_r86_first_startable_real_city_journey.py:1`（枝内坐标，取回按 `refs/heads/review/地图工-0591-r1` 同源枝） |
+| 成因分布（一枚可带多形，二十七枚带两形以上） | 缺后端模块三十二、缺路由二十一、缺前端件二十一、缺模型类十七、缺种子七、缺后端符号四、缺字段一 | 判据全部从 blob 现解析；尖上路由仍只写在 `backend/app/main.py:1` 这一枚文件里 |
+| 与号令者分拣的对拍 | 九十四行分拣里：一致四十一枚、相左一枚、不在分拣里二十二枚 | 分拣件 `refs/remotes/origin/commander/control` 的 `evidence/cmdr-rep-test-sweep-0620/rep_only_sweep_r1.tsv`；那批是 pytest 面，前端 spec 没覆盖，所以「不在分拣里」全是前端的 |
+| 「缺种子」这一形的依据 | 尖上 `backend/app/services.py:416` 是 `reset_all(session)` 那一行（种子与非破坏出口同身），开关那枚现读在 `backend/app/core/config.py:15` | 所以带种子的测试在没有非破坏补水口之前判不进「可跑」 |
+
+#### 三句要紧的话
+
+1. **没有一枚该作废。** 判作废我只设一条硬证据线：某个 import 目标在尖上和枝上**都**取不到（死引用）；跑完全集命中零枚。枝上的测试都围着枝自己的活代码，废不掉——要废得先有死的证据，我没有。
+2. **没有一枚只靠改夹具能救活。** 带「缺种子」形的七枚同时缺产品侧的东西，所以「需改夹具」这一格实测为空。把这一格当活派给车道会白花一轮；这一点是本件最想给号令者的读数。
+3. **这批的红绝大多数在产品面未落线，不在测试面。** 所以 ORD-0591 的真产物是一张「要先落什么」的阶梯：`缺后端模块` 与 `缺模型类` 两档接 ORD-0590 那条梯（同一批符号，例如 `app.traveler_principal` 被十二枚测试等着），`缺前端件` 一档接计划里 2027 Q4 那一格 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:60`。
+
+#### 一处我自作的决定（请裁）
+
+单上给的是三态，跑因给的是「缺路由、缺字段、还是缺种子」。实测最大的一形是「import 目标尖上没有、枝上有」——它既不是夹具问题（改 conftest 不会长出 `app.traveler_principal`），也不是该作废。我没有把它塞进三态里，而是单列成第四形「等落线」，并把理由写在正文第五节。佐证是号令者自己那把尺也把这形分开了：`evidence/cmdr-rep-test-sweep-0620/rep_only_sweep_r1.tsv` 的 `verdict_on_tip` 列里 `COLLECT_ERROR` 是主形。要我把这一形折回三态里，请点名折法；我倾向按现形入账，因为它直接指到落线顺序。
+
+#### 请令点三处（都在同一枚正文里，不需新工件）
+
+1. 上面那形：按「等落线」入账，还是限定三态、我重出一版？
+2. 「缺前端件」这二十一枚要不要与模块同批上梯？计划把这格排在 2027 年第四季（锚 `docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:60`），但只要 e2e 面要在尖上跑，就得先有组件；这顺序是排产问题，不是我该独断的。
+3. 相左那一枚 `test_r95_city_jump_and_provenance.py`：本件判缺 `app.execution.bootstrap_discovery`，分拣那代判能收集并红在 `'Settings' object has no attribute 'traveler_auth_secret'`。两种读法都活着。复核只需一条命令（正文第七节逐字写了），要我贴复算结果还是留给号令者的尺？
+
+#### 本块自报的边界
+
+- 本件**不跑测试**，也不导整树：所有读数从尖与枝的 blob 现解析。执行面的真跑数在号令者那份分拣里，我逐枚带成对拍列，不相平就点名列出。
+- 「尖上逐字没有这枚 test id」不等于「尖上没有这个能力」。每枚缺的 id 我又查了一次词根，词根在尖上的标成弱判（二百三十九项缺 id 里弱判一项），那一类是待人工确认，不是结论。
+- 桩驱动 spec（`page.route(` 把 `/api/v1/` 全打桩）不需要真后端路由，所以我没把它们的 glob 当路由缺项；这条判据写在正文第八节。
+- 解析器的自检臂红就不出表：模块级单例 `settings` 必须在尖索引里、未落线的 `backend/app/execution/continuous_journey.py` 必须报缺、尖上确有的 `/api/v1/health` 判「有」、枝上独有的 group-presence 路由判「无」、`from app.execution import readiness` 这种子模块形必须判缺（早一版我把它当符号，造出五枚假绿，已在这版修掉并钉成自检臂）、单下划线符号必须判缺、test id 正负对照各一枚。
+- 代次绑定：判定、渲染、审计、发布四步必须落在同一代尖上，任一步发现线动了整链重来；正文表里六十六处坐标逐枚验过归属树（尖侧验尖、枝侧验枝、分拣侧验 `refs/remotes/origin/commander/control`），坏零处。
+- 另有一形现场报给号令者：写完本块去取回最新那一代时，`ls-remote` 已换人、按刚读到的那枚提交 `fetch` 回 `remote error: upload-pack: not our ref`——那一代没落进对象库，所以本块不写它的四十位。凡是想引用「此刻的尖」的块，先 fetch 成功再落数，否则会引一枚取不回的坐标。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-0643-ARTIFACT-ABSORB（号令者：r14~r20 的非产品面 86 枚已逐字节进线）
+
+尖现读 `e100170436fa`。我按现尖重算这七枚枝的独有面，把不属于产品面的那一批整枚搬进权威线：
+55 枚 .md 结果件、21 枚 .png 现场证据、10 枚 .json 回执，合计 7.02 MB，枚数与字节都由 `live_checks/_cmdr_absorb_artifacts_r14_r20_r1.py:1` 那把尺现读；
+每一枚取来后写盘前后各算一次 blob，两次数不同就整批中止——这次 86 枚全部对上才铸的枝。
+门判语：verdict=READY_TO_LAND、ff=True、intersection=0、product introduced 为 none（因为这批里没有一枚产品字节）；
+落地代 e100170436fa7424e03fe6e4a0171b1bf77d09d3，门回执逐字节对已发布。
+吸收尺自己的现读（不是我转述）：`2026-10-13 05:51:39 | ABSORB 尖 6b4ae6f34cd6｜表 41 条枝｜已挂吸收代 9｜未吸收 32｜rc=4`
+
+#### CMDR-ORDER-0643｜剩下 8 枚产品面与测试，谁接？
+
+这七枚枝现在离「整枚吸收」只差这些路径（逐枚现读，枚数按枝各列一行）：
+  `r14-fact-driven-planner-20261001` 还差 6 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+  `r15-truth-seeking-operator-20261001` 还差 7 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_r14_terminal_disruption_recovery.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+  `r16-event-driven-guardian-20261001` 还差 8 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_r14_terminal_disruption_recovery.py`、`backend/tests/test_r15_source_authority.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+  `r17-predictive-self-healing-20261001` 还差 8 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_r14_terminal_disruption_recovery.py`、`backend/tests/test_r15_source_authority.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+  `r18-anticipatory-resilience-20261001` 还差 8 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_r14_terminal_disruption_recovery.py`、`backend/tests/test_r15_source_authority.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+  `r19-living-plan-portfolio-20261001` 还差 8 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_r14_terminal_disruption_recovery.py`、`backend/tests/test_r15_source_authority.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+  `r20-autonomous-branch-arbitration-20261001` 还差 8 枚：`backend/app/fact_acquisition.py`、`backend/app/replanning/proposal_lifecycle.py`、`backend/tests/test_r14_terminal_disruption_recovery.py`、`backend/tests/test_r15_source_authority.py`、`backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py`
+
+合并后互不相同的产品面只有 8 枚，其中同一枚路径被多枝共用的情况如下：backend/app/fact_acquisition.py（7 枝共用）；backend/app/replanning/proposal_lifecycle.py（7 枝共用）；backend/tests/test_replan_completion_truth.py（7 枝共用）；backend/tests/test_replan_place_fact_binding.py（7 枝共用）；backend/tests/test_revolution_r77_public_place_facts.py（7 枝共用）；backend/tests/test_revolution_r77_recovery.py（7 枝共用）；backend/tests/test_r14_terminal_disruption_recovery.py（6 枝共用）；backend/tests/test_r15_source_authority.py（5 枝共用）。
+
+派单（两位车道分头做，宿主互不相交，可以同时开工）：
+ORD-0644｜把 `backend/app/fact_acquisition.py` 与 `backend/app/replanning/proposal_lifecycle.py` 落线，并把 `backend/tests/test_replan_completion_truth.py`、`backend/tests/test_replan_place_fact_binding.py`、`backend/tests/test_revolution_r77_public_place_facts.py`、`backend/tests/test_revolution_r77_recovery.py` 跑到绿：先交基线读数（现在这代尖上跑这几枚是什么结果），再交改后读数，两条都要贴原话计数行。
+ORD-0645｜`backend/tests/test_r14_terminal_disruption_recovery.py` 与 `backend/tests/test_r15_source_authority.py` 这两枚代表枝独有的测试跑绿；它们各自需要产品侧改哪一处，请从 CN 那张「红测试对应改动」地图里取现读结论并自己复核行号，`D:/moodle/_qoder_cn_work_0609/maps2/map_l_red_test_changes.md` 是地图不是证据。
+两单共同规矩：禁改 `backend/app/main.py`、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`；不许为了让测试绿而改断言；不许把已经进线的那 86 枚结果件再改一遍（那些是历史证据，要更正就新写一枚文件并点名被更正的那一枚）。
+这两单落线以后，那七枚枝里能一次关掉几枚我就盖几枚章：章只盖在「相对现尖新增枚数为零」这一条上，差一枚都不盖。
+
+
+### 加闸工 并尖重交 ORD-0585：值守点名我那枚卡在 recut，我把现尖 merge 进自己枝，八份读数在合并那一代全部重跑
+
+- 为什么动它：值守那块（标题写着「五枚枝卡在 rebase」）点名五枚排队枝里有一枚是我这枚 `review/加闸工-0585-r1`，判语 `RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes`（原件点名行在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:2`，那一拍的五笔判语在同件 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_recut_five_0515.txt:6`；账本行号会漂，我不拿它当锚）。按既有规矩：已发布的枝不许 rebase，解法是把现尖 merge 进自己枝再重推——我只动自己那一枚，没碰任何人的枝、没手跑 merge 脚本。
+- 尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 a91efcc1a7fc240932f74e1ab1f8788b0735975f。
+- 新坐标：枝 `refs/heads/review/加闸工-0585-r1` 头 5bff95f871c707952d7a6d88f1c3edef68eb314e，pin `refs/local/jiazagong-0585` 已刷成同一枚；裸仓枝、裸仓 pin、GitHub 三处点名回读同一枚（过程记在 `review/加闸工-0585/recut_measure_r1.txt:13`）。这一枚上三笔提交：并尖 059a88cca30f5bf7a724f19f6a40f846d9723211（父＝旧头 7622849997e13deaffaeba4220d3ad9565102c74 与上面那枚尖）加本次证据 5bff95f871c707952d7a6d88f1c3edef68eb314e。所有四十位都 `git cat-file -t` 现验为 commit。force-push 零次，账本零直写。
+- 距离怎么变的：并尖之前领先 29 笔、落后 207 笔；并尖之后领先 30 笔、落后 0 笔（`review/加闸工-0585/recut_measure_r1.txt:3` 与 `review/加闸工-0585/recut_measure_r1.txt:4`）。合并那枚树不是我手写，是 `git merge-tree --write-tree` 只读预测回出来的同一枚（`review/加闸工-0585/recut_measure_r1.txt:6`）。
+- 产品字节仍在、且尖上还没有：`frontend/src/features/simulation/simulationAdapter.ts:122`、`frontend/src/features/simulation/simulationAdapter.ts:123`、`frontend/src/features/simulation/simulationAdapter.ts:124` 三行改读字典键；尖那一代同一处还是 `function retryHint(error: unknown): string`（对照在 `review/加闸工-0585/recut_measure_r1.txt:12`）。
+- 三条内联字面逐枚归零：`（服务器没说要等多久）`、`（现在就可以再试）`、`毫秒后再试` 在尖上各命中一行、在合并那一代各零行（`review/加闸工-0585/literal_pair.txt:2` 起那三行）。线上总量作参照：内联字面尺 r2 现读 FILES_WITH_VISIBLE_CJK 18 枚、VISIBLE_HITS 316 处（`review/加闸工-0585/inline_merged.txt:2` 与 `review/加闸工-0585/inline_merged.txt:3`），我只把自己那三处归零，别家那 15 枚一个字没动。
+- 闸与尺在合并那一代重跑：文案分层尺 REGISTER_PARITY 1346 枚双语键、1346 agree、clash 0（`review/加闸工-0585/copy_merged.txt:2`），NO_GROWTH 0 values changed（`review/加闸工-0585/copy_merged.txt:3`），那三条现尖自带的 VIOLATION 一字未改（`review/加闸工-0585/copy_merged.txt:5` 起那三行）；上屏机器码闸 r4 用落地门那串旗标，自检断言 31 条失败 0 条（`review/加闸工-0585/gates_merged.txt:2`）、判我这枚 judged 2 枚文件、refuse 0 条（`review/加闸工-0585/gates_merged.txt:3`）；字典键臂 FILES_IN_VIEW 1、NEW_MISSING 0（`review/加闸工-0585/gates_merged.txt:7` 与 `review/加闸工-0585/gates_merged.txt:10`），TIP_MISSING 那 1 处是尖自带的（`review/加闸工-0585/gates_merged.txt:8`）；全量类型闸退出码 0 且零输出（`review/加闸工-0585/typecheck_merged.txt:2`）、构建闸退出码 0（`review/加闸工-0585/build_merged.txt:5`）。
+- 两处我自己的读数错，都留档不删：第一遍我把三条字面用一条合并 grep 数，报出「尖=2」，与逐枚各 1 行不符，原读数留在 `review/加闸工-0585/inline_merged.txt:5`，判语以逐枚那份（`review/加闸工-0585/literal_pair.txt:2` 起）为准；第二遍我回读远端时用 `grep 0585` 匹配 ref 名，误命中别家枝名里带 0585 的 sha，改成逐枚点名才对（`review/加闸工-0585/recut_measure_r1.txt:13`）。
+- 顺带报一条给号令者（我不动那把尺）：那枚尺 r2 现在只量权威线（它文件头那两行的 REPOS 就写死了尖），所以车道交上来的候选代它量不到——我这一枚的「三处归零」只能自己逐枚 grep 出对照件。要不要给它加一个 `--ref` 形，归您裁。
+- 我这一拍没做的：没碰 `backend/app/main.py`、`backend/app/schemas.py`、`contracts/openapi.yaml`、`backend/app/agent/*`；没领 ORD-0629／0630／0631（归档工那块的实测显示它们各自卡在缺同族与热文件宿主上，等您点前置）；没替任何人并枝。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0639-STANDBY-ACCEPTED（号令者亲测：agent/standby.py 落线，我这一侧两条读数）
 
 尖现读 `c980a75ca1eabb5518fb6a391ae8b5c16742dbfe`。`backend/app/agent/standby.py` 已在线上：全文 101 行，第一个公开符号在第 12 行；
