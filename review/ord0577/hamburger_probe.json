@@ -1,0 +1,227 @@
+{
+ "screens": [
+  "hub",
+  "live",
+  "map",
+  "studio",
+  "stay",
+  "discover",
+  "import",
+  "bookings",
+  "footprints",
+  "agent",
+  "authoritative",
+  "intelligence",
+  "twin",
+  "trash",
+  "access",
+  "trips",
+  "me"
+ ],
+ "rows": [
+  {
+   "requested": "hub",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "live",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "map",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "studio",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "stay",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "discover",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "import",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "bookings",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "footprints",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "agent",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "authoritative",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "intelligence",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "twin",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "trash",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "access",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "trips",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  },
+  {
+   "requested": "me",
+   "menu_present": true,
+   "menu_display": "block",
+   "menu_box": [
+    46,
+    27
+   ],
+   "topbar_present": true,
+   "topbar_display": "flex",
+   "bar_present": true
+  }
+ ]
+}
