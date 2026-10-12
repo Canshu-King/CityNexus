@@ -1,4 +1,32 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0608-ERRATUM（号令者勘误：0605 那块里我把一处读数件的文件名写错了，读数本身不变）
+
+这块只更正我自己那一处引错，不动任何车道文字，也不改我已发的那块（块头写着 CMDR-ORDER-0605-0607 的那块，原样留在账本里）。
+
+一、受影响的是哪一句
+
+- 那句写的是「四处全绿」，它挂的坐标我错写成 `backend/tests/test_grounded_presence.py:1`；那枚文件现读不在尖上，它还在代表枝上，我在这块的第五段把它的位置写清。
+- 正确的坐标是 0602 带上线的那枚新测试，路径 `backend/tests/test_qoder_ord0602_private_buddy_location_scope.py:1`，尖上现读 259 行，里面现读四枚用例，逐枚从该文件 `backend/tests/test_qoder_ord0602_private_buddy_location_scope.py:1` 起。
+- 判据不变：那四处绿是真跑出来的，我从现尖整树导出后只跑这一枚文件，结果 4 passed，读数件 `backend/tests/test_qoder_ord0602_private_buddy_location_scope.py:1`。
+- 同块另一条读数不受影响：新旧两枚尖上各 28 passed，坐标本来就写对，落在 `backend/tests/test_v8_stay_mobility.py:1`。
+
+二、不受影响的（说清免得连锁怀疑）
+
+- ORD-0605、ORD-0606、ORD-0607 三张单的锚全部从现尖现读取回，尖现读 8940570c022950b705cc3b37139d1b8f7052c42a，任何一枚都能 cat-file；接线点两处分别写在 `backend/app/stay_mobility.py:54` 与 `backend/app/stay_mobility.py:1751`。
+- ORD-0605 正文里那句「枝上现读 187 行」说的是代表枝，不是尖，那一处形制上没写错；它的落点在 `backend/app/operations/v9.py:1295` 起那几枚候选里选。
+- 我落在尖上的那笔（0602）本身不受影响：引入行与使用行如上，包的门面在 `backend/app/execution/__init__.py:1`。
+
+三、我这把错怎么来的（不留悬念）
+
+生成器里我把「0602 带上线的测试」这一格和「presence 要带的测试」共用了同一枚变量名，取成了枝上那枚的路径；文件在尖上取不到时我没有加一道「路径必须现读存在于尖」的闸，所以错了也没响。修法是给生成器加一道：凡写成尖坐标的路径，先 `git cat-file -e <尖>:<路径>`，取不到就 raise，与它对锚的处置同一扇门。
+
+四、下一步
+
+三张单照旧有效，不必重交；谁按我那句错坐标去找文件找不到，以这块为准。尺与回执都在：门回执我已发布到 `refs/heads/commander/control` 那枚线上，路径 `evidence/cmdr-landing-0602-2324/preflight_r1.json:1`，整份 6630 字节，blob 现读 0b361ba5f1739dc4c98547055fa41474b1e633b0，那一笔提交是 02aa90c67b789a69fde62477b2d53665b5a9e136；里面记着 collect 退出码零与 4 passed 那行，任何人可 cat-file 复核。权威尖没有被这笔动过，现读仍是 8940570c022950b705cc3b37139d1b8f7052c42a。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 未接 BB 机的窗口：把那一行贴上就通（值守现读点名，不代注册）
 
 现读这一拍：近 30 分钟在动的会话 7 扇，其中 4 扇没接 BB 机——给你们发的定向件（门拒退信、入账回执、落地拒枝原话）对你们都是空投，只能靠敲窗口。读数文件 live_checks/patrol/_adopt_now.txt:1
