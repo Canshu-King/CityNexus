@@ -1,5 +1,5 @@
 name	sha	fork	ahead	behind	prod	test	doc	other	artifact	mod_total	mod_real	carried	verdict	absorbed_on
-codex/revolution-qoder-integration-20261010	db6dea9bc30ea907b021befa56da628e5dcc7d43	a6e2cdbff94e	1089	283	63	139	204	92	21	117	117		TO_ABSORB	
+codex/revolution-qoder-integration-20261010	db6dea9bc30ea907b021befa56da628e5dcc7d43	a6e2cdbff94e	1089	283	63	139	204	92	21	117	117	NO	TO_ABSORB	
 codex/revolution-r63-planned-parallel-journey	c6396086022abbead5e19df5559b3673c09f4c87	4ee14229f806	1110	1594	65	151	214	92	21	238	216	NO	TO_ABSORB	
 codex/revolution-r99-transplant-20261011	bfe156fb951732d7a7761528ddc7a2b67fb05016	a6e2cdbff94e	1085	283	63	139	204	92	21	116	116	NO	TO_ABSORB	
 codex/revolution-realtrip-recovery	33d433b5f193a5a287377655f9d8779c504063e5	4ee14229f806	466	1594	11	29	65	26	21	234	212	NO	TO_ABSORB	
@@ -26,11 +26,11 @@ gpt/revolution-r30-consent-epoch-shock-recovery	0639d68b1efc5d08d7b12589a2f3a93c
 gpt/revolution-r32-autonomous-recovery-mesh	800079489f4d2c2c984ab3ce102e00469522107c	4ee14229f806	700	1594	16	37	86	66	21	234	212	YES	CARRIED_BY_REP	
 gpt/revolution-r33-distributed-execution-fencing	1e8f3ae04e5eb0b84f0b6a2076a8ed3043ff2932	4ee14229f806	647	1594	13	31	77	56	21	234	212	NO	TO_ABSORB	
 gpt/revolution-r33-distributed-execution-lease	ab166bd2ef89144fe2624308b6b3b75839e119a9	4ee14229f806	655	1594	14	32	78	57	21	234	212	NO	TO_ABSORB	
-gpt/revolution-r33-open-world-journey-adaptation	a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9	4ee14229f806	1219	1594	65	151	224	93	21	238	216		TO_ABSORB	
+gpt/revolution-r33-open-world-journey-adaptation	a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9	4ee14229f806	1219	1594	65	151	224	93	21	238	216	NO	TO_ABSORB	
 gpt/revolution-r34-world-context-bridge	f4724a468ac4d16ce56bcd771e998daf6669506b	4ee14229f806	671	1594	14	32	79	58	21	236	214	NO	TO_ABSORB	
 gpt/revolution-r38-rebase	293dc434fc593fa74469d9f875c77ea1f84c9fa2	4ee14229f806	703	1594	17	38	87	66	21	234	212	YES	CARRIED_BY_REP	
 gpt/revolution-r6-h11-r61-prep-20260923	187263c67a5348d565adfc5ad8f01877fb56267d	7d22cd0eb784	4	2429	0	0	3	0	0	173	138	NO	TO_ABSORB	a15e1959a551b7f47e4af5bd94437b03a38133d5
-gpt/revolution-r61-h12-r62-prep-20260923	9fd3d221214901ba372924d60a8e9e0bfd859938	7d22cd0eb784	6	2429	0	0	5	0	0	173	138		TO_ABSORB	a15e1959a551b7f47e4af5bd94437b03a38133d5
+gpt/revolution-r61-h12-r62-prep-20260923	9fd3d221214901ba372924d60a8e9e0bfd859938	7d22cd0eb784	6	2429	0	0	5	0	0	173	138	NO	TO_ABSORB	a15e1959a551b7f47e4af5bd94437b03a38133d5
 gpt/revolution-r62-r63-prep-20260923	1c3a2d019921dbfd2df00ec67085998615780b2e	7d22cd0eb784	4	2429	0	0	3	0	0	173	138	NO	TO_ABSORB	a15e1959a551b7f47e4af5bd94437b03a38133d5
 gpt/revolution-r7-r71-prep-20260923	03f8d0e3f0025e6a5c088e87d3ce7d12bc608f4d	7d22cd0eb784	4	2429	0	0	3	0	0	173	138	NO	TO_ABSORB	a15e1959a551b7f47e4af5bd94437b03a38133d5
 gpt/revolution-r71-r72-prep-20260923	d1a05785839ad08649c65d48080fd70dbd9446aa	7d22cd0eb784	6	2429	0	0	5	0	0	173	138	NO	TO_ABSORB	a15e1959a551b7f47e4af5bd94437b03a38133d5
