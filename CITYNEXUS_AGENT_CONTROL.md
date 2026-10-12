@@ -1,4 +1,34 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0602-0604（号令者：第一枚落线之后的下一刀，三张，接着派）
+
+现尖上 `backend/app/execution/` 已经有 6 个文件（取回坐标 `backend/app/execution/route_session_contract.py:9` 行那枚就是刚落线的第一枚）；
+它的策略版本写在那文件第 9 行、状态常量在第 12 行；尖现读 de06a6985ee356d84d937cf6e6888768a67af877。
+下面三张是紧接着的刀，不要重复第一枚已经做过的事。
+
+#### ORD-0602 execution 第二枚：带一条真接线的模块
+
+第一枚是纯契约，屏上看不见。这一枚要求**带着接线落**：从代表枝的 `backend/app/execution/` 再挑一枚，
+它必须被现尖上某个已有模块 import（或它被注册进一条真读路由），落完之后
+`grep -rn` 能找到至少一处真实调用点，交块里写清调用点的文件与行号。
+挑之前先读计划里第一年 Q1 那行（`docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:54`），别挑需要同时改 `schemas.py` 与 `main.py` 的那枚——那两枚热文件正排着队。
+
+#### ORD-0603 把已落的第一枚接到一条真读路由上（或证明无处可接）
+
+`route_session_contract` 现在的状态常量在 `backend/app/execution/route_session_contract.py:12` 行这一族里。要么把它接进一条现尖已有的读路由（给出路由名与调用点行号），
+要么交一份「现尖没有能承接它的路由」的证据表：把 `backend/app/main.py` 里同类路由逐枚列出来并说明差在哪个字段。
+两种都算交付；**不许**为了过门把它塞进一个没人调的模块里当死代码。
+
+#### ORD-0604 归档腿收尾：把第0季剩下的两件搬完
+
+计划第0季那行写着族C 归零与族B 归档（`docs/REVOLUTION_ABSORPTION_FIVE_YEAR_PLAN.md:46`）。族B 的评审产物已由 ORD-0588 那路在搬；
+这一张要求把**族A 独有的 CI 工作流与 taskbooks 那批**按对账表逐枚点名：枚枚给「枝名 + 枝内路径 + 现尖上有没有」，
+其中现尖上没有又确实要用的，才搬进 `docs/revolution-archive/`；搬进来的文件一行内容都不许多改。
+对账表在 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv:2` 行起（族A 代表那一行是 29）。
+
+共同约束：一枚文件只给一扇车道；先 `ls-remote` 现取尖再 rebase；交块写 `_qoder_ledger_inbox/<纯ASCII花名>_<HHMM>.md`，
+首行 `### `，读数自己现取现算；权威尖只由号令者经落地门移动，我不手合也不改你们的措辞。
+
+
 ### 加闸工 ORD-0593 · execution 域第二枚零依赖模块落线：departure_activation 把「该出发了没有」算成带区间的判语，连它自己的八条测试一起真跑过
 
 花名「加闸工」。本块走收件口 `D:\moodle\_qoder_ledger_inbox\jiazagong_2210.md`，账本零直写。认领的是 CMDR-ORDER-0593-0597 里那张 ORD-0593（账本第 16 行那块，锚 `D:\moodle\CITYNEXUS_AGENT_CONTROL.md:16`）；0594／0595／0596／0597 四张我没碰。另说一句：0592 那格我自己重读过账本后确认「跑批本体不在这条权威线上」，是您亲手装上并现读报了数（ABSORB 尖 687b98476973｜未吸收 41 条）——那句我在块里写岔过，以您那条读数为准。
