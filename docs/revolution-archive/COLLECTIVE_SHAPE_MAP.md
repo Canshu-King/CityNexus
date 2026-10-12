@@ -1,13 +1,13 @@
 # collective 三枚的形状对照（ORD-0594 第一半）
 
-代表枝 `refs/heads/gpt/revolution-r33-open-world-journey-adaptation`；现尖 `d7776c6a7730e05ba32e7cb1e2e733f5099a7433`，命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`。
+代表枝 `refs/heads/gpt/revolution-r33-open-world-journey-adaptation`（本文件里所有源侧读数都取它的枝尖，那一枚 40 位逐枚写在下面每节的开头）；本枝基线尖 `d7776c6a7730e05ba32e7cb1e2e733f5099a7433`，命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`。
 
 三态口径：**① 能直接接** = 该模块每一枚 `app.*` 依赖在现尖都取到、名字也在；**② 要改哪一枚签名** = 模块与名字都在但形状对不上调用；**③ 现尖根本没有对应形状** = 模块整枚不在，或名字在现尖那枚文件里搜不到。
 
 | 那枚模块 | 行数 | 判定 | 卡在现尖哪一样上 |
 |---|---|---|---|
 | `backend/app/collective_authority.py` | 501 | ③ 现尖根本没有对应形状 | `整枚模块不在现尖：app.recovery_epoch`、`app.db.models.CollectiveAuthorityReceipt` |
-| `backend/app/collective_mediation.py` | 584 | ③ 现尖根本没有对应形状 | `app.replanning.candidate_evidence.verified_interest_preference_breakdown` |
+| `backend/app/collective_mediation.py` | 592 | ③ 现尖根本没有对应形状 | `app.replanning.candidate_evidence.verified_interest_preference_breakdown` |
 | `backend/app/collective_operator.py` | 474 | ③ 现尖根本没有对应形状 | `app.db.models.CollectiveAuthorityReceipt`、`app.db.models.RecoveryEpoch` |
 
 ② 那一档本轮 0 处：凡在现尖取到名字的行都逐枚写在下节，名字对得上就归①；取不到的直接落③。签名级对拍本轮没做，因为三枚都还没走到调用点。
@@ -16,35 +16,35 @@
 
 ### backend/app/collective_authority.py
 
-- 源侧枝尖 `1725a449a50898e1c63889f0e7c0a81f347a7a1f`｜该文件 blob `60a674d04d2d4cc0085cae5d1384e7fa32f61e31`｜501 行 20234 字节
-  - `app.db.models.AuditLog` ⇒ ① 现尖 `backend/app.db.models.py`:569 取得到
-  - `app.db.models.CollectiveAuthorityReceipt` ⇒ ③ 现尖 `backend/app.db.models.py` 里搜不到这个名字
-  - `app.db.models.Journey` ⇒ ① 现尖 `backend/app.db.models.py`:174 取得到
-  - `app.db.models.PlanVersion` ⇒ ① 现尖 `backend/app.db.models.py`:518 取得到
-  - `app.db.models.ReplanProposal` ⇒ ① 现尖 `backend/app.db.models.py`:789 取得到
-  - `from app.recovery_epoch` 源侧第 21 行 ⇒ ③ 现尖没有这枚模块（`backend/app.recovery_epoch.py` 不在树上）
+- 源侧枝尖 `a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9`｜该文件 blob `60a674d04d2d4cc0085cae5d1384e7fa32f61e31`｜501 行 20234 字节
+  - `app.db.models.AuditLog` ⇒ ① 现尖 `backend/db.models.py`:569 取得到
+  - `app.db.models.CollectiveAuthorityReceipt` ⇒ ③ 现尖 `backend/db.models.py` 里搜不到这个名字
+  - `app.db.models.Journey` ⇒ ① 现尖 `backend/db.models.py`:174 取得到
+  - `app.db.models.PlanVersion` ⇒ ① 现尖 `backend/db.models.py`:518 取得到
+  - `app.db.models.ReplanProposal` ⇒ ① 现尖 `backend/db.models.py`:789 取得到
+  - `from app.recovery_epoch` 源侧第 21 行 ⇒ ③ 现尖没有这枚模块（`backend/recovery_epoch.py` 不在树上）
 
 ### backend/app/collective_mediation.py
 
-- 源侧枝尖 `1725a449a50898e1c63889f0e7c0a81f347a7a1f`｜该文件 blob `9e9f005ccc7eed9515ccfee308289d7a172ad74a`｜584 行 25721 字节
-  - `app.db.models.JourneyMission` ⇒ ① 现尖 `backend/app.db.models.py`:209 取得到
-  - `app.db.models.PlanVersion` ⇒ ① 现尖 `backend/app.db.models.py`:518 取得到
-  - `app.db.models.ReplanProposal` ⇒ ① 现尖 `backend/app.db.models.py`:789 取得到
-  - `app.replanning.candidate_evidence.verified_interest_preference_breakdown` ⇒ ③ 现尖 `backend/app.replanning.candidate_evidence.py` 里搜不到这个名字
+- 源侧枝尖 `a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9`｜该文件 blob `af8ff6a0c6a3c771473e59cfbb76a04f35d3d61c`｜592 行 26241 字节
+  - `app.db.models.JourneyMission` ⇒ ① 现尖 `backend/db.models.py`:209 取得到
+  - `app.db.models.PlanVersion` ⇒ ① 现尖 `backend/db.models.py`:518 取得到
+  - `app.db.models.ReplanProposal` ⇒ ① 现尖 `backend/db.models.py`:789 取得到
+  - `app.replanning.candidate_evidence.verified_interest_preference_breakdown` ⇒ ③ 现尖 `backend/replanning.candidate_evidence.py` 里搜不到这个名字
 
 ### backend/app/collective_operator.py
 
-- 源侧枝尖 `1725a449a50898e1c63889f0e7c0a81f347a7a1f`｜该文件 blob `3991a6626507d06b825f5eeec08e938e3306c401`｜474 行 18866 字节
-  - `app.db.models.AuditLog` ⇒ ① 现尖 `backend/app.db.models.py`:569 取得到
-  - `app.db.models.CollectiveAuthorityReceipt` ⇒ ③ 现尖 `backend/app.db.models.py` 里搜不到这个名字
-  - `app.db.models.Journey` ⇒ ① 现尖 `backend/app.db.models.py`:174 取得到
-  - `app.db.models.JourneyMember` ⇒ ① 现尖 `backend/app.db.models.py`:1277 取得到
-  - `app.db.models.JourneyMission` ⇒ ① 现尖 `backend/app.db.models.py`:209 取得到
-  - `app.db.models.JourneyRoleCapability` ⇒ ① 现尖 `backend/app.db.models.py`:1297 取得到
-  - `app.db.models.PlanVersion` ⇒ ① 现尖 `backend/app.db.models.py`:518 取得到
-  - `app.db.models.RecoveryEpoch` ⇒ ③ 现尖 `backend/app.db.models.py` 里搜不到这个名字
-  - `app.db.models.ReplanProposal` ⇒ ① 现尖 `backend/app.db.models.py`:789 取得到
-  - `app.db.models.Traveler` ⇒ ① 现尖 `backend/app.db.models.py`:21 取得到
+- 源侧枝尖 `a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9`｜该文件 blob `3991a6626507d06b825f5eeec08e938e3306c401`｜474 行 18866 字节
+  - `app.db.models.AuditLog` ⇒ ① 现尖 `backend/db.models.py`:569 取得到
+  - `app.db.models.CollectiveAuthorityReceipt` ⇒ ③ 现尖 `backend/db.models.py` 里搜不到这个名字
+  - `app.db.models.Journey` ⇒ ① 现尖 `backend/db.models.py`:174 取得到
+  - `app.db.models.JourneyMember` ⇒ ① 现尖 `backend/db.models.py`:1277 取得到
+  - `app.db.models.JourneyMission` ⇒ ① 现尖 `backend/db.models.py`:209 取得到
+  - `app.db.models.JourneyRoleCapability` ⇒ ① 现尖 `backend/db.models.py`:1297 取得到
+  - `app.db.models.PlanVersion` ⇒ ① 现尖 `backend/db.models.py`:518 取得到
+  - `app.db.models.RecoveryEpoch` ⇒ ③ 现尖 `backend/db.models.py` 里搜不到这个名字
+  - `app.db.models.ReplanProposal` ⇒ ① 现尖 `backend/db.models.py`:789 取得到
+  - `app.db.models.Traveler` ⇒ ① 现尖 `backend/db.models.py`:21 取得到
 
 ## 第一处不需要改契约的接线：现尖这一代没有
 
