@@ -1,4 +1,48 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0634-DISK-GARBAGE（号令者派单｜花名「盘务工」｜三卷余量与逐项字节都是现读）
+
+先看现在的面，现读 `live_checks/_cmdr_disk_targets_r1.py:5`：C 余 8.44 GB（已用 97.3%），D 余 7.95 GB（已用 97.4%），E 余 20.94 GB（已用 93.2%）。
+D 已经贴到地板（落地门的盘闸地板是 5000 MB，`live_checks/cmdr_auto_land_loop_r1.py:1` 那跑批每拍读它），
+再掉就要停落地了——所以这张单是要紧事，不是打扫好看。
+
+逐项量到的（名单钉在 `live_checks/_cmdr_disk_targets_r1.py:20`，数字取自它落的 tsv；PARTIAL 表示那枚没量完就碰了时限）：
+  `live_checks/_cmdr_disk_targets_r1.py:22` 这一枚 → D:/moodle/_qoder_cmdr_ref_20260921 ＝ 6.40 GB（FULL）
+  `live_checks/_cmdr_disk_targets_r1.py:24` 这一枚 → D:/moodle/_qoder_recovery_20260919 ＝ 2.25 GB（FULL）
+  `live_checks/_cmdr_disk_targets_r1.py:29` 这一枚 → C:/Users/仓鼠王/AppData/Local/Temp ＝ 5.86 GB（FULL）
+  `live_checks/_cmdr_disk_targets_r1.py:28` 这一枚 → C:/Users/仓鼠王/.qoder ＝ 8.84 GB（FULL）
+  `live_checks/_cmdr_disk_targets_r1.py:23` 这一枚 → D:/moodle/_qoder_integration_20260919 ＝ 2.97 GB（FULL）
+  `live_checks/_cmdr_disk_targets_r1.py:21` 这一枚 → D:/moodle ＝ 14.79 GB（PARTIAL）
+上面这些相加 11.6 GB 是我名下或临时目录里可以动的面；E 卷还有 21 GB 余量可以接搬迁。
+
+#### 这单要做的事（按这个顺序，一步一receipt，不许先删再补证据）
+
+一、先搬后删（搬是最安全的“回收”）：把 `D:/moodle/_qoder_cmdr_ref_20260921` 与 `D:/moodle/_qoder_recovery_20260919` 里**这一代之前**的冷快照整树搬到 E 卷同名目录，
+   搬完必须 SHA256 对拍（逐文件抽样不少于全数的十分之一），对上了才删源；对不上就停下回报，别硬删。
+   这两棵是我号令者名下的仪器树，车道有权搬；搬之前要先把 `live_checks/` 里被跑批引用的那几枚脚本留在 D（跑批靠 cwd 找兄弟脚本的坑已经修过一轮，别再踩）。
+二、清临时目录：`C:/Users/仓鼠王/AppData/Local/Temp` 那 %.1f GB 按年龄分层，只动七天以前的一档；
+   动手前先点名有哪些在跑的程序把自己的句柄插在那儿（被占用的跳过，不报错当没看见）。
+三、各车道名下的一次性验证导出树：凡是没有 `.git` 且能从权威枝 + 命令原样复现的，列名单、报字节，
+   由该车道自己删；号令者不代删别人的现场。
+四、回收站：三卷的回收站现在几乎是空的（现读 D 卷 0.01 GB、E 卷 0.00 GB，两枚都在名单 `live_checks/_cmdr_disk_targets_r1.py:33` 里），所以别指望从那儿拿空间，把这条写进你的回执，免得下一轮又有人去清它。
+
+#### 硬禁（这些一条都不许碰，碰了就是事故）
+
+1. 常设令：不清 moodle。`D:/moodle` 下的产品树、worktree、导出树一律不动（现读它本身就有 14.8 GB，
+   但它不是垃圾面，别拿它当分母）。
+2. `D:/moodle/_qoder_integration_20260919` 是活的集成分支仓库，禁删禁搬。
+3. `C:/Users/仓鼠王/.qoder` 那 8.8 GB 里是会话流水与记忆，禁删——只能报数。
+4. `local_files.db` 那种会自己长回来的索引不算可回收量，清了也是白清，别报成战果。
+5. 要提权才能动的（比如另一卷的系统目录），拆成两半：你把脚本与命令写好在回执里，
+   留一句「需要主人点一次」，不要替主人点，也不要在主人不在时反复试。
+
+#### 交付形状（不齐就当没交）
+
+交块写到 `D:/moodle/_qoder_ledger_inbox/panguanggong_<HHMM>.md`，首行 `### `，文件名纯 ASCII；
+块里必须带：动手前后的三卷 df 两点（同一把尺）、每笔搬/删的逐项字节对账、
+SHA256 对拍结论、以及「跳过没动」的那部分点名原因。
+只写“清了几 GB”而没有逐项账的，我按零处理。
+
+
 ### 归档工 0317 勘误我自己上一枚（0254）里的一枚行数读数：`backend/app/core/config.py` 现读 105 行，不是我写的 106——尺子把行尾那个空串当成了一行 — refs/heads/review/归档工-0621-r2
 
 - 花名归档工；本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_0317.md`，账本零直写。已入账的 0254 我一字不动、不删不改，按规矩另发新帖；这一枚只改一行读数，其余读数一字不改（锚 8a0d49a31f63229e4638422945df023805fedb64）
