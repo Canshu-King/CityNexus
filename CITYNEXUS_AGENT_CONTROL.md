@@ -1,4 +1,155 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 接尖工｜ORD-0590 execution 域接尖可行性交付：独有的每一枚都判了三态，最小接枝真跑过，终版枝 review/接尖工-0590-r2（零产品行为改动）
+
+先说这张是怎么量出来的：三把独立的尺（依赖闭包、列级属性扫描、构造器与调用签名扫描）各自从两枚尖的 blob 现解析，合成一张表；结论文档由脚本从这些读数生成，文里每个计数在生成那一刻都有一条断言现算复核，断言不过就不出文档。本张干活期间权威尖连续移动过几跳，我每跳都按新尖重算过，不是拿旧读数交差。
+
+现取的坐标：
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 权威尖 ls-remote 现取（写这块的此刻） | d79a857aee9fa8869d8f276d96898a03406d067a | refs/heads/mirror/integration-frontend-apple-pass1 |
+| 本张造提交那一刻现取的尖（r2 的父） | de06a6985ee356d84d937cf6e6888768a67af877 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:183 |
+| 代表枝 ls-remote 现取 | a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9 | refs/heads/gpt/revolution-r33-open-world-journey-adaptation |
+| 两尖共同祖先 | 4ee14229f80691cf8e5ea913375c0caf83ac02ee | git merge-base 现算 |
+| 本张终版交付 commit | d997780158667067a76eb1edc3c9d0f73a050cca | docs/revolution-archive/EXECUTION_FEASIBILITY.md:1 |
+| 本张前一版交付 commit（保留不删，等您处置） | 73fda4f1384b2fb18b01119a50854e64577aa1f2 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:288 |
+
+一、命令里的预设与实测有一处不同：`backend/app/execution/` 不是只在代表枝上
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 权威尖上该目录已有文件 | 6 枚 | backend/app/execution/__init__.py:1 |
+| 代表枝上该目录文件 | 30 枚 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:16 |
+| 代表枝对权威尖独有 | 24 枚，合计 18360 行 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:16 |
+| 两侧同名但权威尖已是更新一代 | 2 枚：`clock.py`、`traveler_twin.py` | backend/app/execution/clock.py:33 |
+| 本张干活期间被别道车道接进权威线的该域模块 | 2 枚：`departure_activation`、`route_session_contract`，逐枚现比与代表枝逐字节相同 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:19 |
+
+`clock.py` 这条要说清：权威尖那代多出 `zone_usage` 与 `now_honest`（现读 backend/app/execution/clock.py:18 与 backend/app/execution/clock.py:33），代表枝那代只有 `now` 与 `freeze`。所以后面接尖时必须保住权威尖这一代，不能被代表枝的旧代盖回去。
+
+二、三态表（独有的逐枚都判了，判据与阻塞根因在文档第 2 节）
+
+| 判定 | 枚数 | 行数 | 锚 |
+|---|---|---|---|
+| ① 能直接接 | 3 枚 | 184 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:28 |
+| ② 改某一行签名就能接 | 1 枚 | 187 | backend/app/db/models.py:1071 |
+| ②③ 两类阻塞都有 | 4 枚 | 7811 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:28 |
+| ③ 权威尖根本没有对应形状 | 16 枚 | 10178 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:122 |
+
+① 那 3 枚是 `truth.py`、`location_scope.py`、`shared_walk.py`。② 那 1 枚是 `presence.py`，它唯一的阻塞是权威尖 `backend/app/db/models.py:1068` 那个类没声明 `traveler_id` 与 `journey_member_id` 两列（调用侧现读 backend/app/execution/presence.py:113 按列名取，构造侧现读 backend/app/execution/private_buddy_route.py:367 也在传这两列）。
+
+三、点名的三枚文件，实测结论
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| `services.py`：本域对它的形状依赖 | 0 文件命中 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:70 |
+| `services.py` 代表枝独有的顶层符号 | 31 个，属 strategy/plan 面，与本域无交集 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:70 |
+| `schemas.py` 权威尖行数 | 1256 | backend/app/schemas.py:1 |
+| `schemas.py` 代表枝独有模型 | 57 枚 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:75 |
+| 其中 execution 路由真会引用、而权威尖没有的 | 13 枚 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:75 |
+| 权威尖上可直接复用、不必新建的 | 2 枚 | backend/app/schemas.py:419 |
+| `main.py` 权威尖现有 execution 引用 | 3 处 | backend/app/main.py:209 |
+| 路由总数 | 权威尖 175 条，代表枝 267 条 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:66 |
+| 代表枝上函数体内接 execution 的路由 | 27 条 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:66 |
+| 其中 method+path 与权威尖相同（真撞面） | 2 条 | backend/app/main.py:9449 |
+| 其中权威尖完全没有的新路由 | 25 条 | backend/app/main.py:10933 |
+
+撞面那两条我不碰，因为它们改的是行为不是形状：权威尖 `backend/app/main.py:9449` 那条 complete 与 `backend/app/main.py:10933` 那条 replans 已有自己的实现，代表枝把它们改接 execution（现读 backend/app/main.py:19220 与 backend/app/main.py:21014 在代表枝上）。这两条要单独裁，不该混在接尖里。
+
+四、把独有的阻塞去重，真实工作量只有三类
+
+| 类别 | 数量 | 锚 |
+|---|---|---|
+| 权威尖整枚没有的兄弟模块（代表枝上都有现成的） | 5 枚 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:122 |
+| 权威尖整张没有的表 | 24 张 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:122 |
+| 只需改权威尖某一行就能解开的签名 | 5 处 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:122 |
+
+那 5 处签名逐个指名（坐标都在权威尖现读）：`backend/app/db/models.py:1071` 补可空两列；`backend/app/integrations/mobility/runtime.py:84` 补一个默认 None 的 `requested_mode`（代表枝同名函数在 backend/app/integrations/mobility/runtime.py:100）；`backend/app/integrations/discovery/real_city.py:622` 与 `backend/app/integrations/mobility/valhalla_http.py:44` 各补一个关键字参数；`backend/app/integrations/discovery/real_city.py:711` 那处是权威尖只有 `PhotonCityAnchor`、没有代表枝用的 `PhotonCityGeocoder`，要裁的是改名还是新类。前四处都是加默认值或加可空列，权威尖现有调用方不受影响。
+
+兄弟模块里 `app/agent/journey_intent.py` 一枚挡住的模块数最多；表那边最集中的四张各挡同样的数（现读 docs/revolution-archive/EXECUTION_FEASIBILITY.md:122）。
+
+五、最小接枝已落枝，并且是真跑过的
+
+| 读数 | 值 | 锚 |
+|---|---|---|
+| 终版提交对权威尖 | 7 枚全为新增，0 改动 0 删除 | review/jiejian/README.md:1 |
+| 接进去的 ① 模块 | 3 枚，blob 逐字节取自代表枝 | backend/app/execution/truth.py:1 |
+| 热文件触碰 | 无（main、schemas、services、db.models 都不在 diff 里） | backend/app/main.py:1 |
+| 基点到现取尖之间的变动 | 1 个文件（`review/ord0509/INK_SURVEY_ROUTES_R5.md`，墨工普查），与本张交付的 7 枚不相交；`git merge-tree --write-tree` 只读预测干净合入 | review/jiejian/README.md:1 |
+| 可行性文档 | 327 行、29821 字节，与本地按 blob 现比相同 | docs/revolution-archive/EXECUTION_FEASIBILITY.md:1 |
+
+双臂对照（同一把探针、同一支解释器 CPython 3.12.14 + SQLAlchemy 2.0.52 + FastAPI 0.141.1，两臂原始读数的整段 JSON 抄在 docs/revolution-archive/EXECUTION_FEASIBILITY.md:228）：
+
+- A 臂（权威尖整棵 `backend` 导出直接跑）：本张判定为 ① 的几枚逐个报 `ModuleNotFoundError`，而 0593 那两枚与权威尖原有的 `clock`/`journey_twin`/`traveler_twin` 一样直接 `OK` —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:192
+- B 臂（同一棵树补进本张那几枚）：import 无一条缺失 —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:228
+- `route_request_fingerprint`：同一请求两次同值，指纹长度 64 —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:252
+- `parse_shared_walk_text`：从一段文本里解析出 `node/1234567` 与 `way/7654321`，这两个标识是探针脚本自己喂进去的测试输入（见 review/jiejian/graft_smoke_r1.py:54 与 review/jiejian/graft_smoke_r1.py:55），不是从权威线任何一处读回来的量 —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:260
+- 超长文本被 `SharedWalkParseError` 拒 —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:259
+- `append_execution_truth`：非法 kind 仍被 `ValueError` 拒 —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:272
+- `location_scope.PRIVATE_BUDDY_ROUTE_LOCATION_SOURCE` 读出 `BUDDY_HANDOFF_ROUTE_PRIVATE` —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:251
+- `departure_activation_projection`：`must_leave_by` 比 `now` 晚半小时那一例读回 `state=LEAVE_SOON`、`minutes_to_leave=30.0` —— docs/revolution-archive/EXECUTION_FEASIBILITY.md:285
+- 交完之后又把终版那枚 commit 整棵导出重跑，import 仍无缺失。
+
+避让的经过要报备：本张开工时 ① 判到 5 枚。随后 0593 那扇车道逐字节把 `route_session_contract` 与 `departure_activation` 接进权威线（现读 docs/revolution-archive/EXECUTION_FEASIBILITY.md:19；`departure_activation` 在它申报枝 `refs/heads/review/加闸工-0593-r1` 上也是同一枚 blob），我按新尖重算后 ① 收成 3 枚，接枝也只交这 3 枚——不是我手动删的，是表跟着尖走的。所以我先推的 `refs/heads/review/接尖工-0590-r1` 里多含一枚 `departure_activation`，那枚已在权威线上；我没有回退或删除它，另推终版 `refs/heads/review/接尖工-0590-r2`（说明抄在 docs/revolution-archive/EXECUTION_FEASIBILITY.md:288），请您点 r2 那版，r1 如何处置听您。
+
+六、我这几把尺自己错过的地方（不留悬念）
+
+签名尺迭代过三代。第一代按类名单键索引，`Place` 在 `backend/app/db/models.py:467` 与 `backend/app/integrations/discovery/real_city.py` 各有一枚，被拿 provider 侧那枚的字段判 ORM 侧，误报 7 个关键字（那一代共 7 条读数，其中 2 条属这类误报）。第二代踩 `@dataclass` 盲区：`DiscoveryCandidate`（权威尖 backend/app/integrations/discovery/real_city.py:587）没有显式 `__init__`，被当成不接受任何参数整类误报。两代都在我复跑时抓出并撤销。
+
+本轮还多出第三条，是两把尺互相咬出来的：入库那把尺为了处理方法调用，无条件去掉函数第一个参数，结果在纯 keyword-only 的 `departure_cue_fingerprint` 上把真参数 `journey_id` 吃掉，报出一条假缺口；与此同时我那把主尺的检查清单是手挑模块列表，恰好漏了 `departure_activation` 这条边（它上线之后才成为边），两边一错一漏正好错过同一处。修法是把入库尺改成只去掉方法的首参、顶层函数一个不减，并把主尺的覆盖面改成从闭包结果自动取。修完两把尺对独有的逐枚同判、终版读数仍是 5 条、4 个根因，其中 `LocationObservation` 那条由列级扫描与构造器扫描两条不同代码路径各自指到 backend/app/db/models.py:1068，互为反控。详见 docs/revolution-archive/EXECUTION_FEASIBILITY.md:299。
+
+七、我名下现在等的事
+
+终版枝 `refs/heads/review/接尖工-0590-r2` 等您点。本轮零产品行为改动，接进去的 3 枚在权威线上暂时无调用方（我没动 `main.py`），属"先接形状、后接行为"，与您写的"不改产品码的对外行为"一致。第二批要不要开，取决于您裁第四节那 5 处签名：`backend/app/db/models.py:1071` 与 `backend/app/integrations/mobility/runtime.py:84` 这两处一落，`presence.py` 立刻从 ② 变成可直接接，`member_side_quest.py` 与 `bootstrap_discovery.py` 的构造面也清到只剩新表。第三批是 5 枚兄弟模块与 24 张表成批进线，那之后 ③ 那 16 枚里大部分只在等它们。本张不再往下接，等您一句话。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 加闸工 ORD-0603 · 承接面调查交回：现尖只有一条真读路由能承这枚判据，而它被别家的字段钉住——候选接线我已真打过真跑过，线上零字节没改
+
+花名「加闸工」。本块走收件口 `D:\moodle\_qoder_ledger_inbox\jiazagong_2311.md`，账本零直写。认领的是 CMDR-ORDER-0602-0604 里那张 ORD-0603（账本第 267 行那块）；ORD-0602、ORD-0604 我没碰。挑这张是因为您那块 CMDR-RULING-0607-UNREACHABLE（账本第 2 行起）把话说死了：下一刀是接线，不是再多落几枚。
+
+**一、尖与枝（现读）**
+
+- 尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 d79a857aee9fa8869d8f276d96898a03406d067a，我这枚枝就是它的直接子代（`git merge-base --is-ancestor` 判是），落地腿吃它是 fast-forward。
+- 枝：`refs/heads/review/加闸工-0603-r1` 回读 b85652c4a4e18ae9dedbcf855589c0eb389446d3，与本地逐字同值；对象钉在 `refs/local/jiazagong-0603`。权威枝一笔没推，force-push 零次。
+- 本枝**零产品字节**：命令原样 `git diff --name-status 尖..枝` 里 `backend/` 与 `frontend/` 命中 0 枚；枝上 `backend/app/main.py` 的 blob 仍是 4cd1770924227257bad4d2e84ef0c2fc14441035，与尖上同值。落的全是调查件与一个可直接打的补丁（新增 9 枚文件逐枚点名在 `review/加闸工-0603/readout_r1.txt:15`）。
+
+**二、结论与它的判据（读代码，不是读提交标题）**
+
+- 一句：现尖 73 枚 GET 路由里，唯一能承 `route_session_contract` 这枚判据的读路由是 `backend/app/main.py:6104` 的 `/api/v1/journeys/{journey_id}/mobility`。
+- 判据是它自己要的三样：`fact_is_eligible_for_live_readiness` 本体在 `backend/app/execution/route_session_contract.py:88`，只读时长、出处档、服务商键，且 `backend/app/execution/route_session_contract.py:109` 与 `:111` 把 mock/夹具/估算/模拟器明判不合格。那条门逐条发 MobilityFact 投影，三样齐全（`backend/app/stay_mobility.py:2047`、`backend/app/stay_mobility.py:2057`、`backend/app/stay_mobility.py:2058`）。
+- 分母摊开：9 枚候选逐枚判定（声明行、三样齐不齐、谁钉它键集）在 `review/加闸工-0603/survey_r1.txt:4` 起；正式表落在 `docs/revolution-archive/ROUTE_CONTRACT_WIRING.md:16` 那一节，世代钉死在尖 d79a857a 那一代。
+- 两处我第一次算错、改了才交：中文文件名的测试被 `ls-tree` 转义读成空（得加 `-c core.quotepath=false`），于是"谁钉这条门"全报无；输入判定只按字面量找 `"duration_min"`，把 `fact_payload` 发出来的三样读成"缺"。两处都写在 `review/加闸工-0603/readout_r1.txt:6`。
+
+**三、挡住它的是一枚别人的钉，我用跑证明，不是用读推测**
+
+| 哪一遍 | 读数 | 件 |
+|---|---|---|
+| 不接线，跑验路工那 4 条桩测 | 4 条全过——这枚钉在现尖是活的 | `review/加闸工-0603/stub_baseline.txt` |
+| 打上候选接线，跑我的探针 | 门答真值：同为 17 分钟三条边里只有真服务商捕获那条 `eligible=True`，`SYNTHETIC_FIXTURE` 与 `mock-emulator` 两条 `False` | `review/加闸工-0603/probe_wired.txt:3` |
+| 打上候选接线，再跑它那 4 条 | 1 失败 3 过，原文 `Extra items in the left set: 'live_readiness_eligible'`，命中 `backend/tests/test_route_stub_验路工_0559b_r1.py:124` 那枚 `set(item) == FACT_KEYS` | `review/加闸工-0603/stub_wired.txt` |
+
+- 中途我自己造过一次假红：第一遍跑那 4 条报 3 失败，成因是我导出漏了仓根 `data/`（原文 `FileNotFoundError: ...data\mock\traveler_demo.json`）。补齐 `data/` 后同一条命令 4 条全过——那次红是我的现场毛病，不记到线上头上，写在 `review/加闸工-0603/readout_r1.txt:7`。
+- 我不改别人的断言，也不绕道造假：把判语塞进那条门已有的自由字段 `evidence`（出处 `backend/app/stay_mobility.py:2061`，它在契约里指服务商证据袋）能躲开键集钉，但那正是裁语点名的"塞进没人调的袋子"，前端照样读不到；接到 `/route-evidence` 也不行——它的 properties 全集就是 `backend/app/main.py:10471` 起那五项，没时长没出处档，接上去恒判 False 是假调用点。两条都写进表里免得下一位再走。
+- `classify_capture` 那半（`backend/app/execution/route_session_contract.py:70`）本张单不接：它要的 `provider_failed`/`provider_degraded` 只在抓取那次成立，而抓取在写路径 `backend/app/main.py:6134`，出这张单范围。
+
+**四、要落地只差一句裁决，补丁已备**
+
+- 候选补丁：`review/加闸工-0603/wiring_candidate_r1.patch` 共 38 行（一行 import 落在 `backend/app/main.py:487` 那组之后 + 那条门里就地多算一枚键），已在尖那一代 `patch --dry-run` 通过；带锚点唯一断式的打件脚本是 `review/加闸工-0603/apply_wiring_r1.py`，探针件 `review/加闸工-0603/wiring_probe_r1.py` 刻意不放 `backend/tests/`——它会以"断言一个还不存在的键"把整套测试拖红，那是"改断言换绿"的反面。
+- 裁 A（最小）：请验路工把 `backend/tests/test_route_stub_验路工_0559b_r1.py:124` 那枚 `FACT_KEYS` 加上 `live_readiness_eligible`；那是他们的断言，您点名我改也行。
+- 裁 B：改走门级新键（值用 `backend/app/execution/route_session_contract.py:9` 那枚策略版本串），要动的是同文件 `:112` 那枚 `DOOR_KEYS`。
+- 裁 C：先不接。那本文就是交付物：除了 `backend/app/main.py:6104` 那一处，现尖没有第二条路承得住这枚判据。
+- 顺带一句同形状的账：我上一张 ORD-0593 落的 `departure_activation`（`backend/app/execution/departure_activation.py:1`）也是零调用点，裁语那三枚里就有它。您若走裁 A，我可以同一趟把它也接到一条读路由上，另开一枚枝，不混进这枚。
+
+**五、现场与边界**
+
+- 全部跑动都在导出树 `D:/moodle/_jz_0603/` 里：DB 用临时文件、后端 venv 只借道读零安装、共享工作树没动；临时树里打过接线的 `main.py` 已复原成尖上同 blob（`review/加闸工-0603/readout_r1.txt:13`）。
+- 账本零直写，块只走收件口；一枚文件只给一扇车道这条我守着——本枝新增的文件里没有任何一枚是别家在改的（`docs/revolution-archive/` 下地图工那批是另一组文件名）。
+- 我这扇仍未接 BB 机，门拒退信与入账回执对我是空投；要接我按 JOIN.txt 第一步给您一行可粘文本，您说一声就行。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 键盘工 2251 ORD-0603 · 现尖 76 枚 GET 路由承接不了 route_session_contract：三族字段逐枚点名的证据表（走「证明无处可接」那一半，零产品字节）— refs/heads/review/键盘工-0603-r1
 
 - id: ORD-0603（号令者派单 CMDR-ORDER-0602-0604 第二张：要么把这枚已落线的契约接进一条现尖已有的读路由并给出路由名与调用点行号，要么交一份「现尖没有能承接它的路由」的证据表；两种都算交付，不许塞成没人调的死代码）
