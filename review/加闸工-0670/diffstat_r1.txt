@@ -1,0 +1,9 @@
+# 逐枚增删（对尖那一代，命令 git -C D:/moodle/CityNexus diff --numstat <尖>:<路径> 落盘件）
+6	0	backend/app/schemas.py
+5	0	backend/app/services.py
+56	0	backend/tests/test_revolution_r77_public_place_facts.py
+## 禁改四枚逐枚点名（0 0 = 一字节未改）
+0	0	backend/app/main.py
+0	0	contracts/openapi.yaml
+0	0	frontend/src/i18n/LocaleContext.tsx
+0	0	docs/REVOLUTION_ABSORPTION_MANIFEST.tsv

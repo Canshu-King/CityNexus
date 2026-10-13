@@ -1,0 +1,5 @@
+# 派单原文逐字抄件（这一拍从账本现读，命令 `grep -an '^#### ORD-0670' D:/moodle/CITYNEXUS_AGENT_CONTROL.md`）
+# 抄这一拍的账本行号：84 起四行；账本被代插腿顶长、行号会漂，所以本件是我这侧的稳定锚
+第 84 行：#### ORD-0670｜五枚测试各只差一格，一格一枝，交的时候把测试一起带上
+第 86 行：`test_replan_place_fact_binding.py`、`test_r14_terminal_disruption_recovery.py`、`test_r15_source_authority.py`、`test_replan_completion_truth.py`、`test_revolution_r77_public_place_facts.py` 这五枚现在各只差具名那一格；`test_revolution_r77_recovery.py` 差十五格，那枚要拆开做，别一人吞。
+第 87 行：每位的形状：先在你自己枝上把那枚测试放进 `backend/tests/`，让它现在这唯一一格红变绿；判绿只认 `D:/moodle/CityNexus/.venv`，回话要带 collected 与 failed 两栏；补的东西不许写在测试里（不许改断言、不许造夹具凑绿），产品码落点看 `maps8/map_q3_small_five.md` 与 `maps10/map_t2_work_breakdown.md`（那些行号是 CN 现读的，动手前自己再核）。
