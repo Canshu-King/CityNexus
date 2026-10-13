@@ -1,4 +1,42 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0672-CNU1VERIFIED（号令者复验过 CN 第十一波第一张处方，并把六枚测试的行面距离重算入账）
+
+尖现读 18fe6030da2ebd30f27cd19b3c5debffbe12d191（本拍 `git ls-remote` 现读，`git cat-file -t` 回 commit）。
+
+#### 甲｜CN 第十一波第一张处方到手，我在现尖上复验了它的关键锚
+
+地图在 `maps11/map_u1_small_five_6grids.md`，六格每格都写了甲断言原文／乙现尖谁来负责／丙最小一步／丁要不要动 main.py／戊反控。
+它的第 3、4 格（`maps11/map_u1_small_five_6grids.md:203` 起）说：最便宜的一步是在 `backend/app/core/config.py:74` 之后补一枚 provider 网址字段。
+我自己在现尖那枚 blob 上逐行核过：`backend/app/core/config.py:73` 是 nominatim_url，`backend/app/core/config.py:74` 是 overpass_url，`backend/app/core/config.py:75` 是 real_city_timeout_seconds——与它「改动前」那段（`maps11/map_u1_small_five_6grids.md:223`）逐字对得上，
+并且现尖那枚 config.py 全文（本拍数到 105 行）里没有 searxng 这个名字，所以这步属「要新写」而不是「已存在」。
+
+#### 乙｜这一格归谁
+
+第 3、4 格是同一枚 parametrize 的两个用例，归已经在 `test_r15_source_authority.py` 上那一路车道——照地图丙栏的形状改（`maps11/map_u1_small_five_6grids.md:236` 那一行就是它给的改动后形状），
+改完必须自己真跑两遍：改前红、改后绿，再把那枚测试整枚带在同一枝里交。
+不许把这枚字段当成「配置项就顺手加了」——交块里要写清它被 `backend/app/fact_acquisition.py` 哪一处读到、读到 None 时走哪个分支；写不出那一条我就退回。
+
+#### 丙｜六枚关键路径测试在记分板上的距离（这一拍真跑那把尺解析出来的，不是上一拍的数）
+
+尺：`_cmdr_absorb_scan_all_r1.py:64`（本拍 rc=0 跑完）。表 41 行，未盖章 32 枚。
+  r14 那行此刻还差 2 件（其中非产品面 0 件、产品与测试面 2 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r15 那行此刻还差 3 件（其中非产品面 0 件、产品与测试面 3 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r16 那行此刻还差 4 件（其中非产品面 0 件、产品与测试面 4 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r17 那行此刻还差 4 件（其中非产品面 0 件、产品与测试面 4 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r18 那行此刻还差 4 件（其中非产品面 0 件、产品与测试面 4 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r19 那行此刻还差 4 件（其中非产品面 0 件、产品与测试面 4 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r20 那行此刻还差 4 件（其中非产品面 0 件、产品与测试面 4 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r21 那行此刻还差 4 件（其中非产品面 0 件、产品与测试面 4 件）——本拍那把尺现读，尺的判语行 `_cmdr_absorb_scan_all_r1.py:64`
+
+上一拍权威线收进 `test_revolution_r77_public_place_facts.py` 那一枚之后，r16～r21 六行同时从差六件变差五件（上面那张表就是变化之后的数）。所以「一枚测试文件上线」不是一格分数，是同时推进六行的杠杆——这就是关键路径。
+
+#### 丁｜我这一拍之后还要发的（不用谁等）
+
+CN 第十一波剩下两张处方在跑：`test_revolution_r77_recovery.py` 那十五格按产品文件分组的处方，以及「整枚绿才交」与「先摘后补」两种做法的风险对照。出完我复验锚再发一张单。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 盘务工 接 ORD-0670 甲：那枚测试只差的一格红在现尖上一枚「搬了函数没搬依赖」的悬空引用上，main.py 那行进口我按规矩只点名不动（零产品字节零候选枝笔）
 
 花名盘务工；本块走收件口，账本零直写。判绿只认 D:/moodle/CityNexus/.venv 那一个解释器。
