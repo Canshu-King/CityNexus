@@ -1,4 +1,107 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0020-DINGSHAPE（96900cd2：我这两格的定位到手了——格 15 是搜索谓词返回空，单搬元数据函数不够）
+
+尖现读 eeb8b8d2fd06。丙节把格 26 加格 15 记在我名下，我把两格的形状先量清，避免有人拿一枚函数交差。
+
+一、格 15 的真实断言面（不是我推测）
+
+那格红在 `backend/tests/test_revolution_r77_recovery.py:732` 之前的等式：它要 `[item["id"] for item in result["places"]] == [place_id]`，现尖实读是**空列表** —— 也就是带事实查询词的按名精查把那条 place 整个滤掉了，不是"结果里少一个键"。
+
+二、枝与尖在网关那枚文件上的差额（现读）
+
+- 枝上：元数据那枚 helper 定义在 `backend/app/agent/gateway.py:274`，被用在同一文件把 metadata 挂上结果的 `backend/app/agent/gateway.py:1763`；枝上该文件共 3605 行。
+- 尖上：同一枚文件只有 1476 行，装配结果的位置在 `backend/app/agent/gateway.py:531` 的 "places" 那一段，**没有** 那枚 helper（我按 def 名单逐枚比过）。
+
+所以格 15 要搬的不止元数据附带，还得把**接受事实查询词的那段匹配谓词**一起搬；只搬 `:274` 那一枚函数会让断言仍拿到空列表——这正是"看着搬了、其实没解"的形状，我先把它标出来。
+
+三、格 26 我照那句提醒去看回执那一族
+
+丙节末句说别只盯布尔值。我这拍只确认了它红在 `backend/tests/test_revolution_r77_recovery.py:1247` 且 `selectable` 实读为真；回归面分母我上一拍已交（5 枚测试文件引用该判据、整文件 13 红 21 绿）。下一步我会顺着目录回退那族把回执一起读，不在这里猜修法。
+
+四、我这拍的边界
+
+没改产品码、没推枝、没动测试。搬运面已经从"两枚函数"校准到"谓词＋附带面"，我下一拍按这个范围做；若换车道接，我把这两处定位直接让出，不双开同一枚文件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-DELIVER-xuxiangong-C1r2（续线工勘误：上一块五处锚指错行，一格读数没变）
+
+车道：续线工。要更正的是我自己 CMDR-DELIVER-xuxiangong-C1（已入账）里的坐标，不是数。逐枚点名受影响的已发布行。
+
+#### 甲｜五处锚写歪，正确坐标如下
+
+- 那句「补数据前后 r77 都是 6 failed / 20 passed」的锚写成同文件 :1，正确是那枚汇总行 :375｜锚 _qoder_xuxiangong_1013/withmock_r77_single_file.txt:375｜被影响的已发布行 CITYNEXUS_AGENT_CONTROL.md:213
+- 那句「`_plan_mobility_eligibility_receipts` 在 app/ 里只有定义 1 处」的正确坐标是枝上的 backend/app/main.py:14773，权威尖同一处在 backend/app/main.py:14763｜锚 backend/app/main.py:14773｜被影响的已发布行 CITYNEXUS_AGENT_CONTROL.md:195
+- 「除我之外最新一笔是键盘工 17:28」在扫描表里是第 2 行而非第 1 行（第 1 行是我自己那笔）｜锚 _qoder_xuxiangong_1013/review_branch_scan.txt:2｜被影响的已发布行 CITYNEXUS_AGENT_CONTROL.md:222；同句量词由「枚」改称「行」，该表 845 行
+- data/mock 十枚合计 19935 字节当时没留出处，现在有了：副本逐枚清点与尖上求和同数｜锚 _qoder_xuxiangong_1013/mock_from_tip_listing.txt:12｜被影响的已发布行 CITYNEXUS_AGENT_CONTROL.md:210
+- 那句里 08:50 的出处是同一枚取证文件第 4 行｜锚 _qoder_xuxiangong_1013/fd141d5f_proof.txt:4｜被影响的已发布行 CITYNEXUS_AGENT_CONTROL.md:188
+
+#### 乙｜判据与读数一格没变，枝也没动
+
+- r77 改后仍是 6 failed / 20 passed（改前 8 failed / 18 passed）｜锚 _qoder_xuxiangong_1013/branch_r77_single_file.txt:853
+- 定向四枚文件仍是 8 红 27 绿，红集合是改前那十枚的真子集｜锚 _qoder_xuxiangong_1013/branch_four_files.txt:3897
+- 整树 collected 前后同数，仍是 1898 格、25 处收集错误｜锚 _qoder_xuxiangong_1013/branch_tree_collect.txt:2214
+- 枝没重做：review/xuxiangong-0685-c-r1 ＝ 602a75e853c1cee6a04c76413442adf939d24262，`git cat-file -t` 回 commit（本车道现读）
+
+#### 丙｜我这一手还等你两句话，都是一格一行的事
+
+- 格十六：权威尖 backend/app/main.py:14811 那枚 `"mode"` 键删不删。删则格十六转绿，实测该文件 5 failed / 21 passed、四枚定向面 7 红 28 绿且无一枚新红｜锚 _qoder_xuxiangong_1013/nomode_four_files.txt:3844
+- 格二十：严格成本门与 ORD-0543 的装箱放宽谁先。我实测把两者凑齐的代价是三枚已绿转红，所以撤下来没交，逐枚名字与栈都在上一块己节
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 盘务工 交 CMDR-DELIVER-0684 丙末条点名那枚无人格：严格目录的窄形已落、已在现尖血缘里——改前八枚红改后七枚红、十三份邻居两臂同绿零新增红；参考代那一形会把 ORD-0543 的放宽打死，请裁摊在两臂数上我不自裁；另把上一张单点名的两枚面（都落在同一张表的末行）的存在性与逐名缺口一并回话
+
+- 花名盘务工；本块走收件口，账本零直写；判绿只认 `D:/moodle/CityNexus/.venv` 那一支解释器（Python 3.12.14），命令原样 `-X utf8 -m pytest -q -p no:cacheprovider --tb=line -rf`
+- 尖现读 eeb8b8d2fd06d90963cf3cb91f6b06feef595df8；`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 与本拍 `git cat-file -t` 回 commit（锚 E:/fiveyear_plan_lab/_panwg_0688_close_r1.txt:1）
+- 交付坐标：枝 `refs/heads/review/盘务工-0684-r77g20-r1`，提交 46ada5a369de5f2acb5bfc20cb55d38bbd350057，父提交就是动手那一刻现读的尖（锚 E:/fiveyear_plan_lab/_panwg_0684_land_receipt.txt:12）
+- 落线判定：命令原样 `git merge-base --is-ancestor 我那枚提交 现尖` 回码 0，0 即已在血缘里；`backend/app/services.py` 我那枚提交与现尖同一个 blob 718c12cafe46a993fa553a0fa9adf72f08893e0a（锚 E:/fiveyear_plan_lab/_panwg_0688_close_r1.txt:4）
+- 改动面：那一枚提交只碰 `backend/app/services.py`，净加三十行删二行（锚 E:/fiveyear_plan_lab/_panwg_0684_land_receipt.txt:15）
+- 硬禁：那一枚提交的 diff 路径里命中 main.py／`contracts/openapi.yaml`／`frontend/src/i18n/LocaleContext.tsx`／对账表 tsv 共 0 处；那枚测试文件我没带上枝，集枝人仍是键盘工（`CITYNEXUS_AGENT_CONTROL.md:1025`）（锚 E:/fiveyear_plan_lab/_panwg_0684_land_receipt.txt:16）
+
+## 一、三臂读数（同一棵只读检出、同一支解释器；那一拍线上那枚文件是 blob 987afdbcbc6e1a823d5b928c302a861c3daefcf4）
+
+- 锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:2 就是上面那个 blob 号的现读出处（同一行还带参考代那枚 blob 12939e327a2639361c076b89932d1560ba24c12f）
+- 改前那一臂（产品字节一字未动，只把那枚测试按参考代字节装进去）：collect-only 取到二十六格，跑出来 rc=1、八枚 failed、十八枚 passed（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:6）
+- 改后那一臂（我落的窄形）：同一命令 rc=1、七枚 failed、十九枚 passed，红名单比改前少的正是具名那一格（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:12）
+- 落线之后我又在现尖那一代重跑一遍：collect-only 二十六格取到，跑出来七枚 failed、十九枚 passed，我这枚格名已不在红名里（锚 E:/fiveyear_plan_lab/_panwg_0688_close_r1.txt:8）
+- 邻居同分母（十三份文件，两臂都不含那枚缺口测试）：改前臂 一百一十七 passed 零红（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:8），改后臂 一百一十七 passed 零红（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:14）——绿格数只增不减，新增红为零
+- 整树 collected：三臂同为 一千九百八十四（锚 E:/fiveyear_plan_lab/_panwg_0684_probe_receipt.txt:4）
+- 现尖那一拍还红的七格名单逐枚（含相邻那格 `test_strict_catalogue_mobility_excludes_unresolved_opening_rows`）：（锚 E:/fiveyear_plan_lab/_panwg_0688_close_r1.txt:9）
+
+## 二、参考代那一形我没落，代价量在两处，请裁就在这里
+
+- 参考代那枚筛选是「每站必须带正向成本证据」：把它逐字装进现尖那一臂，那枚测试是 六枚 failed、二十枚 passed——比我的窄形还多绿一枚，多出来的就是相邻那格（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:18）
+- 同一臂的邻居是 七枚 failed、一百一十枚 passed，也就是线上 ORD-0543 放宽那一族被打死（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:20）
+- 那七枚红名逐枚具名（`test_a_city_without_stated_hours_now_composes_a_day_sequence` 等）：（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:21）
+- 一处夹具假象我先自报，免得那七枚红被读成纯假象：参考代那枚函数体直接读 `place.provider_key`，而 ORD-0543 的夹具没这枚属性，于是臂里有 `AttributeError: 'types.SimpleNamespace' object has no attribute 'provider_key'`（锚 E:/fiveyear_plan_lab/_panwg_0684_receipt.txt:22）
+- 所以我另外把两座城市形状都用带 `provider_key` 的真形状单跑那枚腿：线上那一拍 SHAPE_A（三站、都不声明营业时间、也都不带成本声明）算出三条日序（锚 E:/fiveyear_plan_lab/_panwg_0684_probe_receipt.txt:6），我落的窄形仍算出三条（锚 E:/fiveyear_plan_lab/_panwg_0684_probe_receipt.txt:9），参考代那一形算出零条——放宽被打死这件事不依赖夹具缺陷
+- 请裁一句（这是唯一卡住「整枚文件绿」的地方）：要不要把「严格目录」收紧到「每站必须有正向成本证据」。你点头我就接 ORD-0543 那七枚邻居红，从产品面接、不动它们任何一句断言；那是同一枚函数上的两个契约，不该由车道自己选边
+- 我这格落的窄形只拒「自己声明了成本状态、而该状态不在 KNOWN 集合里（或没带金额）」的行；没声明的行照 ORD-0543 继续排，判据吃的是线上已有的 `KNOWN_COST_EVIDENCE_STATUSES`（锚 backend/app/services.py:710）
+
+## 三、0688 甲节两枚点名面的回话：存在性逐枚现读，我这拍不动那三枚文件
+
+- `backend/tests/test_r21_autonomous_future_synthesis.py`：命令原样 `git cat-file -e 现尖:该路径` 回 128，就是不在尖上（锚 E:/fiveyear_plan_lab/_panwg_0688_close_r1.txt:11）
+- `backend/tests/test_revolution_r77_recovery.py`：同一命令回 128，也还不在尖上，它仍是键盘工集枝那一枚（锚 E:/fiveyear_plan_lab/_panwg_0688_close_r1.txt:13）
+- 同一枚路径在这张表里是两份不同字节：末行那份 blob 3f692ac6623af0277267f26969ad17c7d6667d3e 带十二格（锚 E:/fiveyear_plan_lab/_panwg_0688_r21names_r1.txt:5），只差两枚那行那份 blob 7978a53ceec286b328c1818f80edb1cff6683e2e 带十格（锚 E:/fiveyear_plan_lab/_panwg_0688_r21names_r1.txt:8）——两枚 blob 现读不同值（锚 E:/fiveyear_plan_lab/_panwg_0688_r21base_r1.txt:16），先钉哪一份要你点一句
+- 两版各自的实拍（同一棵现尖只读检出，跑完即删）：装末行那份 → collect rc=2、取到零格、1 error，原文 `ImportError: cannot import name '_guardian_terminal_status' from 'app.agent.guardian'`（锚 E:/fiveyear_plan_lab/_panwg_0688_r21base_r1.txt:13）；装另一份 → 同样 collect rc=2、零格，原文 `cannot import name '_material_difference_fingerprint' from 'app.agent.predictive'`（锚 E:/fiveyear_plan_lab/_panwg_0688_r21base_r1.txt:21）
+- pytest 只报第一枚缺名，我把两版的 import 面逐枚对现尖解析：末行那份被 import 的 `app.*` 名字共二十一枚，取不到五枚，分布在 guardian／predictive／runtime 三枚模块（锚 E:/fiveyear_plan_lab/_panwg_0688_r21names_r1.txt:7）；另一份共十八枚被检，取不到三枚（锚 E:/fiveyear_plan_lab/_panwg_0688_r21names_r1.txt:10）；两版的模块面都零缺（锚 E:/fiveyear_plan_lab/_panwg_0688_r21names_r1.txt:6）
+- 末行整行逐枚存在性：十三枚缺口路径全部判「新增这枚文件」，第一枚与最后一枚的读数各挂在（锚 E:/fiveyear_plan_lab/_panwg_0688_exist_r1.txt:10 与 E:/fiveyear_plan_lab/_panwg_0688_exist_r1.txt:22）
+- 判语：这一面是「补名面」，不是我那格的「绿在断言上」的行为缺口——它要的是 `backend/app/agent/guardian.py`、`backend/app/agent/predictive.py`、`backend/app/agent/runtime.py` 里的模块级名字，且两版待交测试文件本身也还没进线。照 0687 派单里那条「先现读存在性再动码」的门槛，我这拍只交读数，不开第二枝，免得与另一扇空车道撞同名
+
+## 四、我这扇下一拍等两处点名
+
+- 一：正向成本证据那一形要不要收紧（要我就把 ORD-0543 那七枚邻居红从产品面接下去）
+- 二：两枚点名面里要我接哪一枚；若接 `test_r21_autonomous_future_synthesis.py`，先钉 blob 版本（十二格那份还是十格那份），因为两枚字节不同，落地门按文件名判相交而按字节取绿
+- 边界：本块除已落线那一枚提交外零产品字节；没改任何 assert、没造夹具、没加 skip、没动对账表；没推权威线、force-push 零次；键盘工的 `_place_metadata` 与 `_provider_collocated_edge` 那两条路我不碰
+
+复算口：`python -X utf8 E:/fiveyear_plan_lab/_panwg_0684_arms_r1.py`（三臂四拍，收尾原行不带计时）；`python -X utf8 E:/fiveyear_plan_lab/_panwg_0684_probe_r1.py`（collected 与真形状腿）；`python -X utf8 E:/fiveyear_plan_lab/_panwg_0688_exist_r1.py`（存在性逐枚）；`python -X utf8 E:/fiveyear_plan_lab/_panwg_0688_r21names_r1.py`（逐名 census）；`python -X utf8 E:/fiveyear_plan_lab/_panwg_0688_close_r1.py`（血缘回验与现尖那一拍）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 接尖工｜承运人这一拍的重跑与新尖上一处我讲窄了的红：我那八行把我的格弄绿了，但满树两臂稳定差一枚 hermes 测试——它随顺序翻向，我不算我的成因，也不遮；请点一句怎么处置这枚枝
 
 尖现取 `a3b7f7a6ad190ad09d792820d000c13faa4d8874`（命令原样 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，`git cat-file -t` 回 commit；CMDR-DELIVER-0690 甲节点名的就是这一枚，锚 refs/heads/mirror/integration-frontend-apple-pass1）。我的枝仍是 `refs/heads/review/接尖工-0686-collocated-r1` 头 `2fd1d6232fc3c86cb5a2e913c709f6008da181f3`（`git cat-file -t` 回 commit），父 `e1f352030e61b96bbda2c487c3386e8e93b76163`（`git cat-file -t` 回 commit）。
