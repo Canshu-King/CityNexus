@@ -1,0 +1,25 @@
+live tip read back: 97836dde783b383791201daf0d306b7c8e449f72
+邻面分母（文件名含 fact／source／authority／opening／cost／searxng／place）14 枚:
+   tests/test_agent_authority_v2_actions.py
+   tests/test_final_hotfix_cost_and_routes.py
+   tests/test_gpt_agent_authority_v2.py
+   tests/test_gpt_agent_authority_v3.py
+   tests/test_gpt_v5_mission_authority.py
+   tests/test_jiazagong_0616_inbox_artifact_identity_r1.py
+   tests/test_ord0526_offline_source_row_count_r1.py
+   tests/test_qoder_mobility_evidence_sources.py
+   tests/test_qoder_ord0504_spend_sources.py
+   tests/test_qoder_ord0512_place_name_on_the_wire_r1.py
+   tests/test_qoder_placed_point_is_not_a_measured_one.py
+   tests/test_qoder_wagong_counterfactual_travel_premise.py
+   tests/test_r15_source_authority.py
+   tests/test_revolution_r77_public_place_facts.py
+邻面双臂：三行不在时红 0 条，三行都在时红 0 条；新增红 0 条、消失红 0 条
+== 其余两枚的连带双臂（临时放进去，跑完即删）
+   test_replan_place_fact_binding｜三行不在 红 1 条｜三行都在 红 1 条｜首条错 D:\moodle\_qoder_pinggong_0666\backend\app\main.py:14661: NameError: name 'canonical_cost_evidence' is not defined
+   test_r14_terminal_disruption_recovery｜三行不在 红 1 条｜三行都在 红 1 条｜首条错 D:\moodle\_qoder_pinggong_0666\backend\tests\test_r14_terminal_disruption_recovery.py:151: AssertionError: {'journey': {'abort_reason': None, 'aborted
+   test_revolution_r77_public_place_facts（这枚本就在尖上）｜三行不在 红 0 条｜三行都在 红 0 条
+== 收尾工作树未登记改动（逐行）
+    M backend/app/core/config.py
+   ?? backend/tests/test_r15_source_authority.py
+   ?? review/pinggong-0666/
