@@ -1,0 +1,9 @@
+control_no_guard｜rc=1｜1 failed, 2 warnings in 3.50s｜红点 test_r14_terminal_disruption_recovery.py
+control_no_close｜rc=1｜1 failed, 2 warnings in 2.14s｜红点 test_r14_terminal_disruption_recovery.py
+control_no_count｜rc=1｜1 failed, 2 warnings in 2.06s｜红点 test_r14_terminal_disruption_recovery.py
+final_state_green｜rc=0｜1 passed, 2 warnings in 2.05s｜红点 
+改动面 backend/app/main.py numstat: 19	1	backend/app/main.py
+== 逐处改动（hunk 头，行号是终态相对尖的那一代）
+   @@ -13515,0 +13516 @@ def _accept_replan_executing(
+   @@ -13533 +13534,10 @@ def _accept_replan_executing(
+   @@ -13551,0 +13562,8 @@ def _accept_replan_executing(

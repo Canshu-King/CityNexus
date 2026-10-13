@@ -13513,6 +13513,7 @@ def _accept_replan_executing(
         session.get(Activity, journey.current_activity_id) if journey.current_activity_id else None
     )
     replacement_current = None
+    terminal_suffix = False
     if old_current is not None:
         replacement_current = session.scalar(
             select(Activity).where(
@@ -13530,7 +13531,16 @@ def _accept_replan_executing(
                 )
                 .order_by(Activity.sequence_no)
             )
-        if replacement_current is None:
+        if not session.scalar(
+            select(func.count()).select_from(Activity).where(
+                Activity.plan_version_id == proposed.id,
+                Activity.sequence_no >= old_current.sequence_no,
+                Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
+            )
+        ):
+            terminal_suffix = True
+            replacement_current = None
+        if replacement_current is None and not terminal_suffix:
             raise HTTPException(409, "replan does not preserve the current execution position")
 
     decided_at = datetime.now(timezone.utc).isoformat()
@@ -13549,6 +13559,14 @@ def _accept_replan_executing(
     _switch_active_plan_atomically(session, base=base, proposed=proposed, decided_at=decided_at)
     journey.active_plan_version_id = proposed.id
     journey.current_activity_id = replacement_current.id if replacement_current else None
+    if terminal_suffix:
+        old_current.status = "SKIPPED"
+        skipped_metadata = _json_object(old_current.metadata_json, {})
+        skipped_metadata["skipped_at"] = decided_at
+        skipped_metadata["skip_reason"] = "ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED"
+        old_current.metadata_json = json.dumps(skipped_metadata, ensure_ascii=False, sort_keys=True)
+        journey.status = "COMPLETED"
+        journey.updated_at = decided_at
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
     if trigger_event.status == "DETECTED":

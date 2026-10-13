@@ -1,0 +1,18 @@
+=== 缺口测试｜现尖那一代（同一批的对照臂）
+=== rc=1
+F                                                                        [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_pinggong_0679\backend\tests\test_r14_terminal_disruption_recovery.py:151: AssertionError: {'journey': {'abort_reason': None, 'aborted_at': None, 'active_plan_version_id': '830ca03f-b194-4679-a6af-90db829ed375...rrent_activity_id': 'e78a4766-9695-49f7-856d-09fe3bc429bd', 'journey_id': '22222222-2222-4222-8222-222222222222', ...}}
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_r14_terminal_disruption_recovery.py::test_active_closure_can_accept_terminal_prefix_replan
+1 failed, 2 warnings in 2.57s
