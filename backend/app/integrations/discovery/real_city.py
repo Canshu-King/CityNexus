@@ -10,7 +10,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 from uuid import uuid4
 
 import httpx
@@ -200,6 +200,41 @@ def normalize_opening_hours(raw: Any) -> dict[str, Any]:
         "intervals": intervals,
         "weekday_intervals": weekday_intervals,
     }
+
+def _fee_is_explicitly_free(tags: Mapping[str, Any] | None) -> bool:
+    value = (tags or {}).get("fee")
+    return str(value or "").strip().casefold() in {"no", "false", "0", "free", "免费"}
+def canonical_cost_evidence(
+    cost_evidence: Mapping[str, Any] | None,
+    tags: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Normalize an explicit provider free assertion without guessing currency.
+
+    Older catalog rows were written as ``KNOWN / 0 / CNY`` for OSM ``fee=no``.
+    That is not a paid CNY observation and must not make a non-CNY Journey fail
+    with a currency mismatch.  The fee tag is the required provider evidence;
+    a bare zero, compatibility field, or missing tag remains unchanged.
+    """
+
+    evidence = dict(cost_evidence or {})
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    amount = evidence.get("amount_minor")
+    if (
+        _fee_is_explicitly_free(tags)
+        and status in {"KNOWN", "KNOWN_FREE", "VERIFIED_PROVIDER"}
+        and amount is not None
+        and int(amount) == 0
+    ):
+        evidence.update(
+            {
+                "status": "KNOWN",
+                "amount_minor": 0,
+                "currency": None,
+                "currency_agnostic": True,
+                "evidence_basis": "OSM_FEE_NO",
+            }
+        )
+    return evidence
 
 
 def cost_evidence_from_tags(tags: dict[str, Any] | None, *, source: str) -> dict[str, Any]:

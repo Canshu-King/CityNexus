@@ -244,6 +244,7 @@ from app.integrations.china.amap import amap_status, provider_for_region
 from app.integrations.context.open_meteo import OpenMeteoContextProvider
 from app.integrations.context.weather_runtime import refresh_weather_runtime
 from app.integrations.discovery.real_city import (
+    canonical_cost_evidence,
     capture_real_city_candidates,
     live_failure_reason,
     normalize_opening_hours,
@@ -470,6 +471,7 @@ from app.poi_import import (
     resolve as poi_import_resolve,
 )
 from app.services import (
+    KNOWN_COST_EVIDENCE_STATUSES,
     _journey_constraints_with_capabilities,
     checkin_schema,
     collection_folder_schema,
