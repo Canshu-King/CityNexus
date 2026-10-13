@@ -1,0 +1,10 @@
+两代 config.py 的字节哈希：带三行 bfb21324c35c ／ 退掉三行 5df79726de36
+三行占位：backend/app/core/config.py:75-77（backend/app/core/config.py）
+v2_collected_after｜config sha1=bfb21324c35c4f9c07612fa196230f33de3cc0ea｜rc=0｜69 tests collected in 6.47s｜红 0 条
+v2_armA_three_reverted｜config sha1=5df79726de360b4e297cf470bbc1d57f796f12b2｜rc=1｜2 failed, 67 passed, 2 warnings in 26.83s｜红 2 条
+v2_armB_after｜config sha1=bfb21324c35c4f9c07612fa196230f33de3cc0ea｜rc=0｜69 passed, 2 warnings in 32.62s｜红 0 条
+收尾核验：config.py 现在带三行 = True
+收尾工作树未登记改动:
+    M backend/app/core/config.py
+   ?? backend/tests/test_r15_source_authority.py
+   ?? review/pinggong-0666/

@@ -1,0 +1,10 @@
+=== 乙｜只退那三行（其余全同）
+=== rc=1
+...FF                                                                    [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+=========================== short test summary info ===========================
+FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0]
+FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]
+2 failed, 3 passed in 0.70s

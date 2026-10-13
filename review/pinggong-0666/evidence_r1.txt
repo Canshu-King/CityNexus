@@ -1,0 +1,17 @@
+carried block occupies backend/app/core/config.py:75-77
+== 谁在读 settings.searxng_url（现读命中行，含我这三行）
+   D:\moodle\_qoder_pinggong_0666\backend\app/fact_acquisition.py:977:    if not settings.searxng_url:
+   D:\moodle\_qoder_pinggong_0666\backend\app/fact_acquisition.py:1006:    provider = SearXNGSearchProvider(settings.searxng_url, client=client)
+   D:\moodle\_qoder_pinggong_0666\backend\app/fact_acquisition.py:1097:        "search_source": {"provider": "searxng", "status": "UNCONFIGURED" if not s
+== 谁在调用 acquire_place_facts（产品面，不含测试）
+   D:\moodle\_qoder_pinggong_0666\backend\app/fact_acquisition.py:1077:def acquire_place_facts(
+== 谁在调用它（测试面）
+   D:\moodle\_qoder_pinggong_0666\backend\tests/test_r15_source_authority.py:42:        receipt = facts.acquire_place_facts(session, SimpleNamespace(city
+== 这枚字段在配置文件与 .env.example 里的存在
+   backend/app/core/config.py:77:    searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
+退掉三行后 backend/app/core/config.py 还读得到这枚字段名: False
+== 反控原话（红臂那一句 AttributeError）
+   D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+   D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+== 绿臂判语行
+   5 passed in 0.99s

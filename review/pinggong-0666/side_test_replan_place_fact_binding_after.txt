@@ -1,0 +1,7 @@
+=== side_test_replan_place_fact_binding_after｜1 枚｜rc=1
+F                                                                        [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_pinggong_0666\backend\app\main.py:14661: NameError: name 'canonical_cost_evidence' is not defined
+=========================== short test summary info ===========================
+FAILED tests/test_replan_place_fact_binding.py::test_replacement_metadata_uses_candidate_place_facts_only
+1 failed in 2.57s

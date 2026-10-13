@@ -1,0 +1,9 @@
+=== 乙｜改后那一代 collected 栏
+=== rc=0
+tests/test_r15_source_authority.py::test_osm_provider_identity_can_be_rechecked_by_exact_osm_id[overpass:node/1515]
+tests/test_r15_source_authority.py::test_osm_provider_identity_can_be_rechecked_by_exact_osm_id[nominatim:relation/1515]
+tests/test_r15_source_authority.py::test_osm_provider_identity_can_be_rechecked_by_exact_osm_id[photon:way/1515]
+tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0]
+tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]
+
+5 tests collected in 0.44s

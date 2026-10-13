@@ -1,0 +1,20 @@
+邻面名单（引用 fact_acquisition 或 searxng 的在册测试）1 枚:
+   tests/test_r15_source_authority.py
+邻面两臂对照：新增红 0 条、消失红 2 条
+   消失 FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0]
+   消失 FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]
+== 连带：其余四枚只测不带
+   test_r14_terminal_disruption_recovery｜1 failed, 2 warnings in 6.28s｜改后那一代
+      首条错: D:\moodle\_qoder_pinggong_0666\backend\tests\test_r14_terminal_disruption_recovery.py:151: AssertionError: {'journey': {'abort_reason': None, 'aborted
+      跑完已删: backend/tests/test_r14_terminal_disruption_recovery.py exists=False
+   test_replan_completion_truth｜1 failed, 2 warnings in 185.85s (0:03:05)｜改后那一代
+      跑完已删: backend/tests/test_replan_completion_truth.py exists=False
+   test_revolution_r77_public_place_facts｜1 passed, 2 warnings in 3.35s｜改后那一代
+      跑完已删: backend/tests/test_revolution_r77_public_place_facts.py exists=True
+   test_replan_place_fact_binding｜1 failed in 2.68s｜改后那一代
+      首条错: D:\moodle\_qoder_pinggong_0666\backend\app\main.py:14661: NameError: name 'canonical_cost_evidence' is not defined
+      跑完已删: backend/tests/test_replan_place_fact_binding.py exists=False
+== 收尾工作树未登记改动（逐行）
+    M backend/app/core/config.py
+   ?? backend/tests/test_r15_source_authority.py
+   ?? review/pinggong-0666/
