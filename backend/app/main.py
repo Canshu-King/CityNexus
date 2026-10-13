@@ -334,6 +334,7 @@ from app.replanning.provider_snapshots import (
     MobilitySnapshot,
     TravelEstimateFact,
 )
+from app.replanning.proposal_lifecycle import invalidate_pending_replans_for_journey
 from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.verified_scoring import score_replan_candidate
 from app.schemas import (
@@ -9544,6 +9545,12 @@ def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = De
     )
     twin = _twin_snapshot(session, journey)
     if journey.status == "COMPLETED":
+        invalidate_pending_replans_for_journey(
+            session,
+            journey_id=journey.id,
+            decided_at=completed_at,
+            reason="journey_completed",
+        )
         learn_from_journey(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
@@ -9604,6 +9611,12 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
     if next_activity is None:
         journey.current_activity_id = None
         journey.status = "COMPLETED"
+        invalidate_pending_replans_for_journey(
+            session,
+            journey_id=journey.id,
+            decided_at=skipped_at,
+            reason="journey_completed",
+        )
         learn_from_journey(session, journey)
     else:
         next_activity.status = "ACTIVE"
