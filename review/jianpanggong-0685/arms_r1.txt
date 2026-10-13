@@ -1,0 +1,25 @@
+# CMDR-0685 · two arms, the r77 recovery module in two of its own generations
+# baseline tree D:/moodle/_jp0685_base = git -C D:/moodle/CityNexus worktree add --detach <父代 e1f352030e61b96bbda2c487c3386e8e93b76163>
+# after tree    D:/moodle/_qoder_jianpanggong_0680 = my own branch worktree at a3b7f7a6ad190ad09d792820d000c13faa4d8874
+# interpreter Python 3.12.14 | stamp 2026-10-13 20:07:30
+# the module is written into BOTH trees from the named revision and read back byte for byte;
+# it is not committed to my branch - 归档工 owns that file's delivery (账本 0680 丙第二条).
+# command: python -X utf8 -m pytest -q tests/test_revolution_r77_recovery.py (+ --collect-only -q)
+行_sha_那一版 :: blob 496746239242 （46931 字节，取自 21ee4be0d62a）
+   baseline :: rc=1 末行「8 failed, 18 passed, 2 warnings in 2.93s」collected「26 tests collected in 1.59s」
+      failed(8): test_agent_place_search_accepts_exact_name_with_fact_query_terms / test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract / test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_boundary / test_real_catalogue_fallback_is_visible_but_not_selectable / test_selected_plan_projection_exposes_edge_scoped_hard_receipts / test_selected_plan_projection_names_provider_collocated_zero_minute_edge / test_strict_catalogue_mobility_excludes_unresolved_opening_rows / test_strict_catalogue_templates_exclude_unverified_cost_rows
+      NameError 指到的名字: (无)
+   after :: rc=1 末行「8 failed, 18 passed, 2 warnings in 2.39s」collected「26 tests collected in 1.67s」
+      failed(8): test_agent_place_search_accepts_exact_name_with_fact_query_terms / test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract / test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_boundary / test_real_catalogue_fallback_is_visible_but_not_selectable / test_selected_plan_projection_exposes_edge_scoped_hard_receipts / test_selected_plan_projection_names_provider_collocated_zero_minute_edge / test_strict_catalogue_mobility_excludes_unresolved_opening_rows / test_strict_catalogue_templates_exclude_unverified_cost_rows
+      NameError 指到的名字: (无)
+    cleared by my two lines (0): (none)
+    new reds (0): (none)
+0639d68b_那一版 :: blob 19aba4700178 （56539 字节，取自 0639d68b1efc）
+   baseline :: rc=1 末行「13 failed, 21 passed, 2 warnings in 2.41s」collected「34 tests collected in 1.90s」
+      failed(13): test_agent_place_search_accepts_exact_name_with_fact_query_terms / test_coursework_estimate_envelope_is_explicit_and_lab_scoped / test_explicit_provider_catalogue_unknown_cost_becomes_provisional_not_authoritative / test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract / test_real_catalogue_fallback_is_visible_but_not_selectable / test_real_catalogue_treats_theatres_as_visit_stops / test_real_catalogue_treats_verified_gardens_as_visit_stops / test_selected_plan_projection_exposes_edge_scoped_hard_receipts / test_selected_plan_projection_names_provider_collocated_zero_minute_edge / test_strategy_pivots_after_source_path_has_no_structured_facts / test_strategy_voi_prefers_missing_facts_matching_intent / test_strict_catalogue_mobility_excludes_unresolved_opening_rows / test_strict_catalogue_templates_exclude_unverified_cost_rows
+      NameError 指到的名字: (无)
+   after :: rc=1 末行「13 failed, 21 passed, 2 warnings in 2.44s」collected「34 tests collected in 1.70s」
+      failed(13): test_agent_place_search_accepts_exact_name_with_fact_query_terms / test_coursework_estimate_envelope_is_explicit_and_lab_scoped / test_explicit_provider_catalogue_unknown_cost_becomes_provisional_not_authoritative / test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract / test_real_catalogue_fallback_is_visible_but_not_selectable / test_real_catalogue_treats_theatres_as_visit_stops / test_real_catalogue_treats_verified_gardens_as_visit_stops / test_selected_plan_projection_exposes_edge_scoped_hard_receipts / test_selected_plan_projection_names_provider_collocated_zero_minute_edge / test_strategy_pivots_after_source_path_has_no_structured_facts / test_strategy_voi_prefers_missing_facts_matching_intent / test_strict_catalogue_mobility_excludes_unresolved_opening_rows / test_strict_catalogue_templates_exclude_unverified_cost_rows
+      NameError 指到的名字: (无)
+    cleared by my two lines (0): (none)
+    new reds (0): (none)
