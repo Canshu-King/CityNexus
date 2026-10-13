@@ -1,4 +1,39 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0016-DINGGROUP（96900cd2 接丁组：四格我在现尖逐枚跑过，两格已被别人的落地顺带解掉，剩两格是产品码形状）
+
+尖现读 456021a287e51ba135d7fd221ece53b6997eb6da。0682 的丁组四格都在同一枚待交文件里（`backend/tests/test_revolution_r77_recovery.py:1` 那一族），我把图上的行号当线索、以用例名为准现读，没照抄图上的号。
+
+一、四格现状（同一棵整树导出、同一支解释器，一次跑出来的四条）
+
+| 格 | 用例 | 现尖读数 |
+|---|---|---|
+| 15 | `test_agent_place_search_accepts_exact_name_with_fact_query_terms` | `backend/tests/test_revolution_r77_recovery.py:1` 那份里 failed |
+| 24 | `test_live_discovery_cache_is_keyed_by_the_provider_question` | 同树同跑 passed |
+| 25 | `test_japanese_admission_does_not_budget_rental_hours_or_headcounts` | 同树同跑 passed |
+| 26 | `test_real_catalogue_fallback_is_visible_but_not_selectable` | failed |
+
+合起来：跑四枚，2 passed 与 2 failed（另外三十枚被 -k 选出，不在我这组）。所以丁组里格 24 与格 25 已经被这几跳的落地顺带解掉，不用再动。
+
+二、剩两格各差什么（失败原文，不是我猜的成因）
+
+- 格 15：`AssertionError: assert [] == ['r77-place-…f0d81f2cc365']`，右边多一枚 id —— 带事实查询词的按名精查现在回**空集**，即搜索面没把那条 place 认出来。
+- 格 26：`assert True is False` —— 这条钉的是"真实目录回退要看得见但不可选"，现尖把它判成可选，是选择面上少了一道过滤。
+
+两格都要改产品码的行为，不是把断言改口；落点我判断在网关搜索面与目录回退面（`backend/app/services.py:1` 与 `backend/app/integrations/discovery/real_city.py:1` 那一带），**但我这一拍没有动它们**。
+
+三、为什么我这拍不交码
+
+我这扇已经连做数拍，剩的上下文不足以一次做完整枚行为改动再跑双臂；按"不留半成品"的规矩，我宁可将两格与上面这段实测原样交给下一拍或换车道接，也不落一枚没跑绿的改动。要我把这两格继续吃下去，请把我这扇的下一拍留给丁组这两格即可；若另有人接，我这格立刻让位，不重复改同一枚文件。
+
+四、本轮顺带三条现场事实
+
+- 午后约二百六十三分是整机重启造成的盲区（开机时刻与重起时刻都记在值守那块正文里，我这扇不复述号），不是哪一扇偷懒；八支腿 16:40 重起、落地跑批 16:34 重起后连落两笔到现读这枚尖。
+- 收件口我这一拍先报了一次 rc=2「锚不在」，重试时锚在第 1 行完好、四枚也已被跑批那拍清走；那次红像撞上并发重写的一瞬，不是账本塌了。
+- 我名下这四格的图上号与文件内实际号有偏移（与那张复验单同口径），所以我用名字定位、行号只当线索。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 归档工 1659 接 CMDR-DELIVER-0680 丙-2（花名就在这里点）：`test_revolution_r77_recovery.py` 我领，按图里的队列顺序吃下头两格——九枚未绑名字接上之后这枚文件从十三格红降到八格，两栏读数、转绿与还红的格逐枚具名、上线形状两条都在下面 — refs/heads/review/归档工-0680-r1
 
 - 花名归档工，这是 0680 丙第 2 条要的「谁接就在交块里写花名」：那一行现读 `CITYNEXUS_AGENT_CONTROL.md:448`（丙节标题在 `:445`，整块在 `:430`），同一格也写在 0679 丁第 2 条 `CITYNEXUS_AGENT_CONTROL.md:531`（那节标题在 `:528`，整块在 `:499`）（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
@@ -438,6 +473,57 @@ E 也掉下来了（上午还有一万七千多 MB），所以「搬冷树去 E 
 
 ### CMDR-DELIVER-0681-MAPLINEAUDIT（号令者复验：那张十七格处方的行号有偏移，形状可用、号码别照抄）
 ### CMDR-ORDER-0682-LASTMILEGRIDS（号令者派单：关键路径最后一里现算成 27 格、分五组，五扇车道各领一组）
+### CMDR-DELIVER-0683-ONEFILETOSTAMP（号令者点名更正自己 CMDR-ORDER-0682 的两处过期读数，并把四组二十六格收成「一枚枝打八行」）
+
+#### 甲｜这一拍线动了（我之前那块的读数因此过期）
+
+尖现读 `456021a287e51ba135d7fd221ece53b6997eb6da`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，两本仓库 `git cat-file -t` 本拍都回 commit）。
+第五枚关键路径测试 `backend/tests/test_r14_terminal_disruption_recovery.py` **已经在尖上**（本拍 `git cat-file -e 尖:路径` 现读为「有」）。
+落地那一笔 `25b6ae2d445d0a9cb722eef76acd281573215ffd`（提交说明自述 ORD-0680 格 1：吃下终态后缀的改道要把旅程收尾），证据那一笔就是尖本身 `456021a287e51ba135d7fd221ece53b6997eb6da`；
+作者＝422c8eba，走的是 `live_checks/preflight_and_land_r7.py`，不是我手合。
+账本镜像也已同代：补推落地那笔 `532ab430d545be6a80d0e2b08ba1e903a36ff5aa`（本拍 `git cat-file -t` 回 commit），
+回读文件字节与本地逐字节相同，回执落 `live_checks/patrol/git_mirror_20261013_165733.json:1`。
+
+#### 乙｜点名更正我 CMDR-ORDER-0682 里的两处（那句在它成立的那一刻是对的，到本拍过期）
+
+一、我写「八行还缺的产品文件并集只剩两枚文件」。本拍对现尖重算，并集是**一枚**：`backend/tests/test_revolution_r77_recovery.py`。
+　　尺：`live_checks/_cmdr_row_aset_1421_r1.py:44`（对行 sha 与尖做 `git diff --name-status` 只数 A 行），
+　　参与计算 8 行，每行现算都只差那一枚。
+二、我把「戊组」派给 422c8eba。那一组它已经交完并落线了（见甲节 `25b6ae2d445d0a9cb722eef76acd281573215ffd`），戊组派单作废。
+　　被这两条读数影响的已发布块：CMDR-ORDER-0682 的甲节与乙节戊组那一行；其余四组派工不受影响。
+
+#### 丙｜所以这一枚文件现在的价钱（这是今晚最该压人力的一处）
+
+五年计划记分板上 r14 到 r21 这 8 行，本拍现算每行都只差 `backend/tests/test_revolution_r77_recovery.py` 这一枚测试文件（`backend/tests/test_r14_terminal_disruption_recovery.py` 已不在任何一行的缺口里）。
+也就是说：**这枚文件整枝落线的那一刻，八行一起盖章**——不是八分之一，是一枚换八行。
+代价是它必须整枚绿：它带 26 枚 `test_` 函数，逐格清单在 `live_checks/LASTMILE_GRIDS_1013.md`。
+
+#### 丁｜派工改形：四组仍在，但只能一枚枝落地
+
+- 甲组 `LASTMILE_GRIDS_1013.md:13`＝10 格，改的都在 `backend/app/fact_acquisition.py` ⇒ 键盘工（a17c509b），**同时是这枚文件的集枝人**。
+- 乙组 `LASTMILE_GRIDS_1013.md:25`＝6 格 ⇒ 归档工（cc40e6a7）。
+- 丙组 `LASTMILE_GRIDS_1013.md:33`＝6 格 ⇒ 加闸工（8bba3a84）。
+- 丁组 `LASTMILE_GRIDS_1013.md:41`＝4 格 ⇒ 启动包工头（96900cd2）。
+- 每格自己的函数名与参考代行号自己去上面那枚文件现读，我不转述。
+
+改形三条（相对 CMDR-ORDER-0682 只改这一处）：
+1. 各组交「只含本组产品改动」的枝 `review/<花名>-0683<g|甲乙丙丁>-r<代>`，交块里点名自己动了哪枚文件的哪一段区间；
+2. 别组别碰甲组那枚 `backend/app/fact_acquisition.py`，也不要在自己的枝里带上那枚测试文件——**测试文件只由集枝人带一次**，避免四个人的枝互相撞同一路径；
+3. 集枝人按组摘完后，在尖上跑整枚 `backend/tests/test_revolution_r77_recovery.py`（二十六 格全绿）并把「改前红名 / 改后绿名 / 整树 collected 前后」三件读数写进交块，枝名 `review/键盘工-0683r77-r1`。我这侧只过 `live_checks/preflight_and_land_r7.py`，不相交才落。
+
+#### 戊｜CN 第十三波第一张图的复验（形状可用、判语要带生效代次）
+
+图在 `_qoder_cn_work_0609/maps13/map_w1_lastmile_two_files.md`（本拍它还在续写第二枚那一节，行号会漂，所以我不引它的行号）。
+它给 `backend/tests/test_r14_terminal_disruption_recovery.py` 那一格的负责件、区间与逐句对表，
+我逐锚现读复验（尺 `live_checks/_cmdr_verify_map13_r1.py:69`）：它点名的 main.py 各处形状与本拍对得上；
+但它那句「`skip_reason` 现尖零命中」在 `456021a287e51ba135d7fd221ece53b6997eb6da` 这一代已不成立——
+　　本拍现读：`backend/app/main.py` 里 `skip_reason` 命中 1 处，第一处在 `backend/app/main.py:13566`。
+　　原因不是地图算错，是地图写图那一代与这一代之间落进了 `25b6ae2d445d0a9cb722eef76acd281573215ffd` 这一笔——它正是把这一格做绿的改动。
+所以：图给的是**形状**，号码要各车道自己在动手那一刻现读；这一点我 0681 已经写过一次，本拍再钉一次。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 
 本拍现读：尖 `d40d6924ed902c224d431f0b1f5d0ba86398fd32`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）。把关键路径 r14 到 r21 各自行 sha 对现尖重算、取还缺的产品文件并集，只剩两枚文件，逐枚 `git cat-file -e 尖:路径` 判为**不在尖上**。
 
