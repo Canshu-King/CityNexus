@@ -9468,6 +9468,45 @@ def begin_activity(journey_id: UUID, activity_id: UUID, session: Session = Depen
     return _transition_activity_state(journey_id, activity_id, "IN_PROGRESS", "ACTIVITY_IN_PROGRESS", session)
 
 
+def _invalidate_pending_replans_after_completion(
+    session: Session, journey: Journey, decided_at: str
+) -> None:
+    """Close proposals that cannot act after the Journey has finished.
+
+    A completed Journey has no executable cursor left.  Leaving a presented
+    recovery candidate in that Journey's read model makes the UI offer a
+    change that the authority boundary must reject, and repeated agent runs
+    turn that stale offer into a stack of identical advisories.  Keep the
+    proposal row and its evidence for history, but make the terminal state
+    explicit and reject its still-candidate plan.
+    """
+
+    pending = session.scalars(
+        select(ReplanProposalModel).where(
+            ReplanProposalModel.journey_id == journey.id,
+            ReplanProposalModel.status.in_(("GENERATED", "PRESENTED")),
+        )
+    ).all()
+    for proposal in pending:
+        proposal.status = "INVALIDATED"
+        proposal.decided_at = decided_at
+        candidate = session.get(PlanVersion, proposal.proposed_plan_version_id)
+        if candidate is not None and candidate.status == "CANDIDATE":
+            candidate.status = "REJECTED"
+        record_audit(
+            session,
+            action="replan.invalidated",
+            entity_type="ReplanProposal",
+            entity_id=proposal.id,
+            journey_id=journey.id,
+            actor_type="SYSTEM",
+            after={
+                "status": proposal.status,
+                "reason": "journey_completed",
+            },
+        )
+
+
 @app.post(
     "/api/v1/journeys/{journey_id}/activities/{activity_id}/complete",
     response_model=JourneyTwinSchema,
@@ -9542,6 +9581,7 @@ def complete_activity(journey_id: UUID, activity_id: UUID, session: Session = De
     )
     twin = _twin_snapshot(session, journey)
     if journey.status == "COMPLETED":
+        _invalidate_pending_replans_after_completion(session, journey, completed_at)
         learn_from_journey(session, journey)
     refresh_offline_snapshot(session, journey)
     session.commit()
