@@ -2225,3 +2225,13 @@ def _plan_mobility_projection(
         "replayable": bool(plan.mobility_evidence_json),
     }
     return summary, derived_legs
+
+
+def _provider_collocated_edge(fact: dict[str, Any]) -> bool:
+    """Name a real zero-minute edge only when the captured geometry collapses to one point."""
+
+    coordinates = fact.get("route_geometry") or []
+    if fact.get("minutes") != 0 or len(coordinates) < 2:
+        return False
+    first = tuple(coordinates[0])
+    return all(tuple(point) == first for point in coordinates[1:])
