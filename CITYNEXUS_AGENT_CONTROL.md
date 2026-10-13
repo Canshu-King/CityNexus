@@ -1,4 +1,34 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0678-VERDICTRETRACT（号令者勘误：0677 那句「它写了收尾判语」是我松词撞出来的，撤回）
+
+尖现读 446ccdb69f7aefb9000bda0f88f104b41a91f1f8（本拍 `git ls-remote` 现读、`git cat-file -t` 回 commit）。
+
+#### 甲｜受影响的已发布读数（点名到句）
+
+CMDR-DELIVER-0677 的甲栏第二句：「它自己写了收尾判语」——这句撤回。
+判据改成标题级匹配（`^#+` 行里含「收尾／排序／判语／优先级／顺序」）：这一拍在 `maps12/map_v1_remaining_three_grids.md` 里命中 0 行。
+全文出现「收尾」二字的行确有其事，但那是产品语义（讲「把整段旅程收尾」「收尾分支」）而不是判语标题，例：`maps12/map_v1_remaining_three_grids.md:17`、`maps12/map_v1_remaining_three_grids.md:18`、`maps12/map_v1_remaining_three_grids.md:120`。
+结论没变的部分：那张处方仍是未完成件——`MAP-DONE` 完成标此刻不在文件里，格子标题共 13 个（第一个在 `maps12/map_v1_remaining_three_grids.md:11`），最便宜的一格仍由车道按丙栏改动行数自定。
+我这次错在拿「词面出现」当「结构存在」，已把尺换成行首标题匹配；这张卡之后不再用松词判语。
+
+#### 乙｜同一把尺对锚的复算（本拍现算，与 0677 那张的差别来自文件还在长）
+
+产品面坐标去重后共 169 处，逐枚到 `tip13` 对照那一行：167 处指向非空行，可疑 2 处（`backend/app/replanning/provider_snapshots.py:193`（那一行是空行）、`backend/tests/test_revolution_r77_recovery.py:31`（树里没这枚文件））。
+格子标题分布（同一枚文件，本拍现读）：`maps12/map_v1_remaining_three_grids.md:11`、`maps12/map_v1_remaining_three_grids.md:133`、`maps12/map_v1_remaining_three_grids.md:219`、`maps12/map_v1_remaining_three_grids.md:370`、`maps12/map_v1_remaining_three_grids.md:426`、`maps12/map_v1_remaining_three_grids.md:479`。
+
+#### 丙｜三枚目标文件此刻在不在尖上（逐枚 `git cat-file -e` 现读）
+
+  `backend/tests/test_r14_terminal_disruption_recovery.py`｜尖上=取不到
+  `backend/tests/test_replan_completion_truth.py`｜尖上=取不到
+  `backend/tests/test_revolution_r77_recovery.py`｜尖上=取不到
+
+#### 丁｜给车道的一句话
+
+不要因为那句被撤回的判语去等「先做哪一格」的答案：按各自那一枚文件、丙栏改动行数最少先做，改完在现尖那一代重跑改前红／改后绿两臂再交。CMDR-ORDER-0675 那张收口单里的三枚清单仍然有效。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### REQ-0015-R14PRICE（96900cd2 复测：0675 丙第 2 格不是"只差一格搬运"，是一处闭合行为缺口，要您先定落点）
 
 尖现读 446ccdb69f7aefb9000bda0f88f104b41a91f1f8。这格写的是"谁先报花名谁接"，我先把它的真价签量出来，免得有人按搬运的工进来却发现要改状态机。
