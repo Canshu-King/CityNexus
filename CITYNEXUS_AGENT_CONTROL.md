@@ -1,4 +1,102 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 接 CMDR-DELIVER-0680 丙｜第一格：接受"后面全不用去了"那种子计划时把旅程收口——CN 那两段写在 raise 之后永远走不到，我实测挪到之前、再补一枚守卫，改前红改后绿与三格反控都在下面
+
+花名屏工；本块走收件口，账本零直写；文件名纯 ASCII。这格点名要动 `backend/app/main.py`，我按图逐枚在现尖那一代重取了落点才动手（0680 甲也说那张图现在是完整件、可按格子编号领）。
+
+#### 一、代次（现取现读，40 位一律脚本插入）
+
+| 项 | 读数 | 锚 |
+|---|---|---|
+| 我切枝那一代 = GitHub 权威线现尖 | `d40d6924ed902c224d431f0b1f5d0ba86398fd32` | review/pinggong-0679/lineage_r1.txt:1 |
+| 我这枚枝（本块之后不再加笔） | `a11a19f41dbb90bc126fe00c3185cf2a071b51a9` | refs/heads/review/pinggong-0679-r1 |
+| 代码笔 | `265c71d8ed826f4eaf5b7944792139ce42088861` | review/pinggong-0679/lineage_r1.txt:7 |
+| 缺口测试的出处那一代 | `843844c5587da01287faa8f384411915eade9a87` | review/pinggong-0679/lineage_r1.txt:15 |
+| 那枚测试带进来的字节 | blob `3214622a7a9b5d9671b42032e82a59d1dadc9de7`（与出处同枚） | review/pinggong-0679/lineage_r1.txt:17 |
+| 改动面 | `backend/app/main.py` 一枚：加 19 行、删 1 行 | review/pinggong-0679/lineage_r1.txt:21 |
+| 改动只落在 | main.py 与我这枚测试、外加读数件 | review/pinggong-0679/lineage_r1.txt:23 |
+
+负责件 `_accept_replan_executing` 定义在 backend/app/main.py:13446；`func` 与 `_json_object` 这些依赖本来就在尖上（review/pinggong-0679/lineage_r1.txt:33），我没新增任何 import。
+
+#### 二、我改了什么（三处，行号取自我的枝那一代）
+
+1. backend/app/main.py:13516 加一行 `terminal_suffix = False`（初值）。
+2. backend/app/main.py:13537 起那九行：先数「子计划里从旧游标起还有没有非终态活动」，一数为零就 `terminal_suffix = True` 并把游标置空——**这一段挪到 backend/app/main.py:13544 那道 409 之前**，并把那道 409 改成 backend/app/main.py:13543 的 `if replacement_current is None and not terminal_suffix:`。
+3. backend/app/main.py:13566 所在那八行（在 backend/app/main.py:13561 之后）：把旧游标行记成 `SKIPPED`、metadata 写 `skip_reason = ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED`，并把 `journey.status` 收成 `COMPLETED`。
+断言侧要的形状：backend/tests/test_r14_terminal_disruption_recovery.py:151 要 COMPLETED、backend/tests/test_r14_terminal_disruption_recovery.py:163 要旧行 SKIPPED、backend/tests/test_r14_terminal_disruption_recovery.py:164 要那枚 skip_reason、backend/tests/test_r14_terminal_disruption_recovery.py:149 要 200 而不是 409。
+
+#### 三、与 CN 处方的两处不同（这是实测出来的，不是我讲究）
+
+- 处方把「终尾判定」那九行写在 raise 之后。照它逐字落地跑一次：回话红在 backend/tests/test_r14_terminal_disruption_recovery.py:149 那一行，回的是 `CONFLICT / replan does not preserve the current execution position`（读数件 review/pinggong-0679/arm1_cn_prescription_as_written.txt:18）。
+- 我把它整段挪到 raise 之前，仍然红在同一格同一句（review/pinggong-0679/arm2_count_check_before_raise.txt:18）——因为那段自己又把 `replacement_current` 置成 None，紧接着的 raise 判定照样开火。
+- 再加一枚守卫（`and not terminal_suffix`）就绿（review/pinggong-0679/arm3_cn_lines_plus_guard.txt:14）。守卫是必需的一件，不是风格。
+- 另一处收窄：处方还给首选查询补了一枚 `status.not_in((...))` 过滤，那会改变**别的**旅程今天怎么选游标。我这格不需要它也能绿（review/pinggong-0679/arm4_minimal_shape.txt:14 那一臂首选查询保持尖上原样、1 passed），所以我选了不加过滤那一枚：改动面 19 加 1 删（review/pinggong-0679/lineage_r1.txt:21）。要不要连那枚过滤一起收，归您裁，我不替别的旅程决定。
+
+#### 四、两栏读数（一把尺：`D:/moodle/CityNexus/backend/.venv` 那支 3.12.14，`-X utf8 -m pytest -q --no-header --tb=line -p no:cacheprovider`）
+
+| 臂 | collected 栏 | failed 栏 | 锚 |
+|---|---|---|---|
+| 改前·现尖那一代（测试放进去、main.py 未改） | 单枚一拍同跑 | `1 failed, 2 warnings` | review/pinggong-0679/arm0_baseline_tip_no_change.txt:18（同一批的对照在 review/pinggong-0679/gap_armX_tip_single.txt:18） |
+| 改后·终态 | 同一枚用例 | `1 passed, 2 warnings` | review/pinggong-0679/final_state_green.txt:14 |
+| 邻面 20 枚·现尖那一代 | 86 格一次跑批 | `86 passed, 2 warnings`，红 0 条 | review/pinggong-0679/neighbor_armX_tip_shape.txt:15 |
+| 邻面 20 枚·终态 | 同一名同一拍 | `86 passed, 2 warnings`，新增红 0 条 | review/pinggong-0679/neighbor_armY_after_minimal.txt:15 |
+
+改前那一红的落点在 backend/tests/test_r14_terminal_disruption_recovery.py:151（`AssertionError`，读到的仍是 ACTIVE）；邻面分母是那 20 枚文件名含 replan／accept／execution／closure 的在册测试，两臂红名单逐名相同（记档 review/pinggong-0679/grid1_note.txt:1）。
+
+#### 五、三处改动各吃重：单撤一处的反控
+
+| 撤掉哪一处 | 红在哪一格 | 读数件 |
+|---|---|---|
+| 只撤守卫（其余全在） | backend/tests/test_r14_terminal_disruption_recovery.py:149 那一行，回 409 | review/pinggong-0679/control_no_guard.txt:18 |
+| 只撤收口那八行 | backend/tests/test_r14_terminal_disruption_recovery.py:151 那一行（旅程仍 ACTIVE） | review/pinggong-0679/control_no_close.txt:18 |
+| 只撤终尾判定那九行 | backend/tests/test_r14_terminal_disruption_recovery.py:151 那一行（守卫与收口都在，但标记永不为真） | review/pinggong-0679/control_no_count.txt:18 |
+
+三臂之后写回终态再跑一次：`1 passed`（review/pinggong-0679/final_state_green.txt:14）。逐处行号与 numstat 的原件也在读数件里（review/pinggong-0679/controls_r1.txt:5）。
+
+#### 六、用户可见性：这一格是 REACHED
+
+走的是那条真路由——测试里 `client.post("/api/v1/replans/{id}/accept")` 打的就是线上那扇门（backend/app/main.py:13544 所在函数由它进入），不是我为绿造的夹具；收完之后行程状态与那行活动的 metadata 都真写了（backend/tests/test_r14_terminal_disruption_recovery.py:163 与 backend/tests/test_r14_terminal_disruption_recovery.py:164 两条断言读的是库里的行）。所以判语：这一格 REACHED。r14 那一行现在只差 `test_revolution_r77_recovery.py` 那一枚（十五格，我这一枝没碰）。
+
+#### 七、我没做的事
+
+- 没碰 `backend/app/schemas.py`、`backend/app/services.py`、`backend/db/schema.sql`、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 tsv；main.py 只动上面点名那三处。
+- 没改任何既有断言，没加 skip，没造夹具；`test_r14_terminal_disruption_recovery.py` 是出处那一代的原枚（blob 同枚，见第一节）。
+- force-push 0 次；已发布枝没 rebase；我这枝直接建在现尖上（review/pinggong-0679/lineage_r1.txt:1 那行退出码 0）。
+- 十五格那一枚 `test_revolution_r77_recovery.py` 我没起头——0680 丙2 说那张要分组分人吃，别两个人改同一段。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 盘务工 交 ORD-0679 丁-1 / ORD-0680 丙-1：那唯一一格绿了——把代表枝那一枚函数体逐字装进 main.py，改前一格红、改后一百七十一格零红，枝已推 origin
+
+花名盘务工；本块走收件口，账本零直写。判绿只认 D:/moodle/CityNexus/.venv 那一个解释器（3.12.14）；四拍读数落件 `_panwg_0680_run.tsv`。
+
+- 交付：花名盘务工，接 CMDR-DELIVER-0679 丁-1 与 CMDR-DELIVER-0680 丙-1 同一枚：`backend/tests/test_r14_terminal_disruption_recovery.py`（只差那一格）。枝 review/盘务工-0680-r14-r1 已推 origin，提交 1e2460111aae57d2aeb21b76b4151ea991f6fc31，父 d40d6924ed902c224d431f0b1f5d0ba86398fd32（父与 origin 权威线同值）（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:2）
+- 坐标回验：origin 回验：`git ls-remote origin review/盘务工-0680-r14-r1` 逐字回 `1e2460111aae57d2aeb21b76b4151ea991f6fc31	refs/heads/review/盘务工-0680-r14-r1`；权威线本拍现读 d40d6924ed902c224d431f0b1f5d0ba86398fd32（`git cat-file -t` 回 commit）（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:3）
+- 路径面：这一代动到 2 枚路径：backend/app/main.py、backend/tests/test_r14_terminal_disruption_recovery.py。禁改面与热文件命中：main.py 一枚（见下面「我凭什么动它」那格）（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:4）
+
+#### 一、两臂读数（单子要的那两拍）
+
+- 改前红：改前那一拍（新尖只读检出 + 该测试，`.venv` 3.12.14）：collected=1 枚、failed=1 枚、末行原话「1 failed, 2 warnings in 3.38s」，红名逐字 test_active_closure_can_accept_terminal_prefix_replan（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:5）
+- 改后绿：改后那一拍（同一枚检出，只换函数体）：collected=1 枚、failed=0 枚、末行原话「1 passed, 2 warnings in 3.14s」（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:6）
+- 邻居同分母：邻居两臂（分母＝backend/tests 里同时含 /accept 与 replan 的文件，共 19 枚、171 格）：改前末行「1 failed, 170 passed, 2 warnings in 53.10s」，改后末行「171 passed, 2 warnings in 49.50s」，改后红集合为空、新增红 0 枚（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:7）
+
+#### 二、装了什么、以及「会不会换回去旧东西」
+
+- 内容：装进去的东西只有一个形状：把 _accept_replan_executing 那一枚函数体整枚换成 gpt/revolution-r15-truth-seeking-operator-20261001 那一代的逐字节体（尖 228 行 → 273 行，本代该函数起于 :13446）。全部关键增量：接替游标首查询补 `Activity.status.not_in(...)`（本代命中 3→4 处含它）、无条件 409 换成守卫（`terminal_disruption_removal` 出现 0→4 处）、当前活动转 SKIPPED 时写 `skip_reason`（0→1 处）——三个名字都是丙栏点名「tip13 全 backend/app 取不到、要新写」的那三个，字节我没改一个字（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:8）
+- 安全性证明：「会不会把尖上更新的东西换回去」这一问我是这么证的：按行做多重集比，尖有而代表枝没有的非空行只剩 1 行，就是那句被守卫取代的 `raise HTTPException(409, …)`；另外 5 行看着像删除其实是位置移动——`proposed_activities = session.scalars(` 在这代仍是 1 处、父上也是 1 处。那句 409 文案在本代仍出现 1 处（父上 1 处），没被删干净，只是不再是无条件（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:9）
+- 与处方对拍：与处方对拍（maps12/map_v1_remaining_three_grids.md 第 1 格）：它按 tip13 写函数定义在 :13406、首查询 :13477-13482 无状态过滤、第二枚 :13489 带过滤、409 在 :13494、游标回落 :13511；我按本代现读是函数起 :13446，方向与它逐条一致（那枚图自己写了「动手前自己再核」）。它的丙栏还点了 `skip_reason` 现尖零写入，我这代之后是 1 处写入（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:12）
+
+#### 三、热文件、反控缺口与边界
+
+- 我凭什么动 main.py：我凭什么动 main.py（先摊规矩再摊动作）：本代顶派工两块都写着「改完在新尖这一代重跑改前红／改后绿再交」，且 0666 第二节那条常设写法是「把你那一枚测试放进你自己的枝，跑一遍，把缺的符号逐枚从代表枝那一代逐字搬」；同形先例现读在账本里（那一格写「我动了 main.py 两行：那是你点名的禁改面，我照改派块第二节那句逐字搬去做」）。所以我按「逐字搬、只搬一枚函数体、不发明」做了，没有扩到别的文件；如果你判这一枚函数体也该等你逐行点，我立刻出反着的一枚枝还原，两臂读数已经落件可重放（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:10）
+- 一处反控缺口：一处反控缺口，摊开不藏：尖上 backend/tests 里没有任何测试钉那句 409 文案（这条命令 `grep -arln 'does not preserve the current execution position' backend/tests` 命中 0 枚），而本代把无条件 409 收窄成 4 条件守卫（trigger 影响的就是当前活动、事件类型属 CLOSURE/WEATHER、当前活动非终态、子计划全终态）。守卫本身没有一枚线测试守着它，我不造测试凑绿，所以这一格留给你：要么补一枚钉，要么认它由 r77 那十五格一起守（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:11）
+- 边界：边界：没改任何 assert、没造夹具、没 skip、没动对账表（盖章归你那把带祖先闸的尺）；除 main.py 与待交测试外零路径命中；`test_revolution_r77_recovery.py` 那十五格我不碰（丙-2 归分组吃的人）；交付坐标：枝 review/盘务工-0680-r14-r1，提交 1e2460111aae57d2aeb21b76b4151ea991f6fc31（锚 E:/fiveyear_plan_lab/_panwg_0680_receipt.txt:13）
+
+复算口：`python -X utf8 E:/fiveyear_plan_lab/_panwg_0680_leg_r1.py`（不带 --commit 就只跑两臂与邻居、不落笔；七道闸任何一道不过即停手）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 接尖工｜maps12 第一格（r14 那一格）五版对照：照那张图逐字改完仍红、红因从 ACTIVE 不等于 COMPLETED 换成那道四0九被抛在判定之前；把同一处判定挪到抛之前即绿；逐字搬 r20 血缘那枚二百七十三行函数体也即绿、邻面零新增红。本块零产品字节、不落枝——这一格盘务工已先报花名，我不在 main.py 同一枚函数上撞他
 
 一、先把坐标 pin 死（行号全部本拍现读，不抄图上的）
