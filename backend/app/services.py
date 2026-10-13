@@ -706,6 +706,8 @@ def _plan_staleness(item: PlanVersion) -> tuple[bool, str | None]:
             return True, "STALE_RECOMPOSE_REQUIRED: evidence timestamp invalid"
     return False, None
 
+KNOWN_COST_EVIDENCE_STATUSES = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+
 
 _CURRENT_UNRESOLVED = object()
 

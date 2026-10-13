@@ -1,0 +1,67 @@
+{
+ "tip": "97836dde783b383791201daf0d306b7c8e449f72",
+ "rep": "843844c5587da01287faa8f384411915eade9a87",
+ "moves": [
+  {
+   "path": "backend/app/integrations/discovery/real_city.py",
+   "name": "_fee_is_explicitly_free",
+   "rep_range": [
+    244,
+    246
+   ],
+   "rep_lines": 3,
+   "rep_gap_before": 2,
+   "block_blob": "fd6ac8491b23a105e2b8bba62ff9425a32d18800",
+   "anchor_on_tip": "normalize_opening_hours"
+  },
+  {
+   "path": "backend/app/integrations/discovery/real_city.py",
+   "name": "canonical_cost_evidence",
+   "rep_range": [
+    249,
+    279
+   ],
+   "rep_lines": 31,
+   "rep_gap_before": 2,
+   "block_blob": "9562a580f314e7a4a926920981265d82fbf47cc8",
+   "anchor_on_tip": "normalize_opening_hours"
+  },
+  {
+   "path": "backend/app/services.py",
+   "name": "KNOWN_COST_EVIDENCE_STATUSES",
+   "rep_range": [
+    569,
+    569
+   ],
+   "rep_lines": 1,
+   "rep_gap_before": 5,
+   "block_blob": "5ac37b8978c2c8d567dda3b82c5a327908e57ee6",
+   "anchor_on_tip": "_plan_staleness",
+   "insert_at_line": 709
+  }
+ ],
+ "imports": [
+  {
+   "group": "from app.integrations.discovery.real_city import (",
+   "name": "canonical_cost_evidence",
+   "at_line": 247
+  },
+  {
+   "group": "from app.services import (",
+   "name": "KNOWN_COST_EVIDENCE_STATUSES",
+   "at_line": 474
+  }
+ ],
+ "test": {
+  "path": "backend/tests/test_replan_place_fact_binding.py",
+  "bytes": 1494,
+  "blob": "68b6813f0043acaf6d7b5f9a85baae35c165d958",
+  "already_on_tip": false
+ },
+ "typing_line": {
+  "at_line": 13,
+  "before": "from typing import Any",
+  "after": "from typing import Any, Mapping"
+ },
+ "insert_at_line": 204
+}

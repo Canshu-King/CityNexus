@@ -1,0 +1,75 @@
+# CMDR-RULING-0666 survey: the six critical-path tests plus r21/r23, each run in a FULL worktree
+# of the current tip. Nothing on the line was changed by this survey; each test file was written,
+# run, and deleted again (git status --porcelain reads empty before and after).
+# tip fd141d5f2efdde46598d1c626073e7a0292d9482 | worktree D:/moodle/_qoder_jianpanggong_0666 at fd141d5f2efdde46598d1c626073e7a0292d9482 | interpreter Python 3.12.14 | stamp 2026-10-13 08:56:31
+# commands, from <worktree>/backend: python -X utf8 -m pytest -q tests/<file> (and the same with --collect-only -q)
+test_replan_place_fact_binding.py :: bytes=1494 rc=1 红
+   collected: 1 test collected in 1.97s
+   run      : 1 failed in 3.17s
+   failed   : tests/test_replan_place_fact_binding.py::test_replacement_metadata_uses_candidate_place_facts_only
+   E-line   : E       NameError: name 'canonical_cost_evidence' is not defined
+test_r15_source_authority.py :: bytes=2738 rc=1 红
+   collected: 5 tests collected in 0.36s
+   run      : 2 failed, 3 passed in 0.60s
+   failed   : tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0] | tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]
+   E-line   : E       AttributeError: 'Settings' object has no attribute 'searxng_url'
+   E-line   : E       AttributeError: 'Settings' object has no attribute 'searxng_url'
+test_r14_terminal_disruption_recovery.py :: bytes=6965 rc=1 红
+   collected: 1 test collected in 1.95s
+   run      : 1 failed, 2 warnings in 2.28s
+   failed   : tests/test_r14_terminal_disruption_recovery.py::test_active_closure_can_accept_terminal_prefix_replan
+   E-line   : E       AssertionError: {'journey': {'abort_reason': None, 'aborted_at': None, 'active_plan_version_id': '5721882b-64b4-42fa-a99a-fd9bf95735b8...rrent_activity_id': '9231b157-5fe3-4c65-9cf9-dc5649fb4dbf', 'journey_id': '22222222-2222-4222-8222-222222222222', ...}}
+   E-line   : E       assert 'ACTIVE' == 'COMPLETED'
+   E-line   : E         
+   E-line   : E         - COMPLETED
+   E-line   : E         + ACTIVE
+test_replan_completion_truth.py :: bytes=2781 rc=1 红
+   collected: 1 test collected in 1.92s
+   run      : 1 failed, 2 warnings in 2.47s
+   failed   : tests/test_replan_completion_truth.py::test_completion_invalidates_presented_replans_and_keeps_history_read_only
+   E-line   : E           assert ([<app.db.models.ReplanProposal object at 0x000002357F489940>] and False)
+   E-line   : E            +  where False = all(<generator object test_completion_invalidates_presented_replans_and_keeps_history_read_only.<locals>.<genexpr> at 0x000002357F376B50>)
+test_revolution_r77_public_place_facts.py :: bytes=1981 rc=1 红
+   collected: 1 test collected in 1.94s
+   run      : 1 failed, 2 warnings in 2.13s
+   failed   : tests/test_revolution_r77_public_place_facts.py::test_public_places_projects_identity_and_place_fact_evidence_without_free_coercion
+   E-line   : E       KeyError: 'external_id'
+test_revolution_r77_recovery.py :: bytes=56539 rc=1 红
+   collected: 34 tests collected in 2.01s
+   run      : 15 failed, 19 passed, 2 warnings in 2.87s
+   failed   : tests/test_revolution_r77_recovery.py::test_agent_place_search_accepts_exact_name_with_fact_query_terms | tests/test_revolution_r77_recovery.py::test_bound_official_facts_supersede_known_map_tags | tests/test_revolution_r77_recovery.py::test_coursework_estimate_envelope_is_explicit_and_lab_scoped | tests/test_revolution_r77_recovery.py::test_explicit_provider_catalogue_unknown_cost_becomes_provisional_not_authoritative | tests/test_revolution_r77_recovery.py::test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract | tests/test_revolution_r77_recovery.py::test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phases | tests/test_revolution_r77_recovery.py::test_real_catalogue_fallback_is_visible_but_not_selectable | tests/test_revolution_r77_recovery.py::test_real_catalogue_treats_theatres_as_visit_stops | tests/test_revolution_r77_recovery.py::test_real_catalogue_treats_verified_gardens_as_visit_stops | tests/test_revolution_r77_recovery.py::test_selected_plan_projection_exposes_edge_scoped_hard_receipts | tests/test_revolution_r77_recovery.py::test_selected_plan_projection_names_provider_collocated_zero_minute_edge | tests/test_revolution_r77_recovery.py::test_strategy_pivots_after_source_path_has_no_structured_facts | tests/test_revolution_r77_recovery.py::test_strategy_voi_prefers_missing_facts_matching_intent | tests/test_revolution_r77_recovery.py::test_strict_catalogue_mobility_excludes_unresolved_opening_rows | tests/test_revolution_r77_recovery.py::test_strict_catalogue_templates_exclude_unverified_cost_rows
+   E-line   : E           AttributeError: module 'app.services' has no attribute 'settings'
+   E-line   : E           AttributeError: 'module' object at app.services has no attribute 'settings'
+   E-line   : E       NameError: name 'settings' is not defined
+   E-line   : E       AttributeError: 'Settings' object has no attribute 'searxng_url'
+   E-line   : E       AttributeError: 'Settings' object has no attribute 'searxng_url'
+   E-line   : E           AssertionError: assert [] == ['r77-place-2...304ccc741b16']
+   E-line   : E             
+   E-line   : E             Right contains one more item: 'r77-place-2be1de8faec242f091f3304ccc741b16'
+   E-line   : E             Use -v to get more diff
+   E-line   : E           AttributeError: 'MobilitySnapshot' object has no attribute 'fact_for'
+   E-line   : E           NameError: name '_provider_collocated_edge' is not defined
+   E-line   : E       NameError: name '_place_metadata' is not defined
+   E-line   : E       AssertionError: assert ['unknown-cos...known-cost-b'] == ['known-cost-...known-cost-b']
+   E-line   : E         
+   E-line   : E         At index 0 diff: 'unknown-cost' != 'known-cost-a'
+   E-line   : E         Left contains one more item: 'known-cost-b'
+   E-line   : E         Use -v to get more diff
+   E-line   : E       NameError: name '_place_metadata' is not defined
+   E-line   : E       NameError: name '_place_metadata' is not defined
+   E-line   : E       NameError: name 'planning_preference_items' is not defined
+   E-line   : E       NameError: name '_strategy_profile' is not defined
+   E-line   : E       assert True is False
+   E-line   : E       AssertionError: {"error":{"code":"VALIDATION_ERROR","message":"GENERIC_COMPOSE_INFEASIBLE:GENERIC_COMPOSE_UNKNOWN_COST:CN-R77-EXPLICIT-176c99f01c9847eca79de477687a3905-a","message_key":"request.invalid","trace_id":"677b2cf0-74a3-470c-b8f8-28c2650dbbe2","details":{"place_ids":["CN-R77-EXPLICIT-176c99f01c9847eca79de477687a3905-a"],"scopes_tried":1,"city_code":"CN-R77-EXPLICIT-176c99f01c9847eca79de477687a3905","journey_budget_minor":100000},"reason_code":"PLACE_COST_UNVERIFIED","error_receipt_id":"CNX-TF78JNGF"}}
+   E-line   : E       assert 422 == 201
+   E-line   : E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+test_r21_autonomous_future_synthesis.py :: bytes=10097 rc=2 红
+   collected: no tests collected, 1 error in 0.81s
+   run      : 1 error in 0.85s
+   failed   : tests/test_r21_autonomous_future_synthesis.py
+   E-line   : E   ImportError: cannot import name '_material_difference_fingerprint' from 'app.agent.predictive' (D:/moodle/_qoder_jianpanggong_0666/backend/app/agent/predictive.py)
+test_r23_adaptive_traveler_twin.py :: bytes=6984 rc=2 红
+   collected: no tests collected, 1 error in 2.16s
+   run      : 2 warnings, 1 error in 2.21s
+   failed   : tests/test_r23_adaptive_traveler_twin.py
+   E-line   : E   ImportError: cannot import name 'canonical_place_tags' from 'app.replanning.candidate_evidence' (D:/moodle/_qoder_jianpanggong_0666/backend/app/replanning/candidate_evidence.py)
