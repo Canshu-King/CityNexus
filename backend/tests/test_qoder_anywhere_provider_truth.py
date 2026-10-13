@@ -77,7 +77,7 @@ def test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes(
     places = body.get("places") or body.get("catalog") or []
     assert places, (
         f"期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；"
-        f"实际：空，响应键 {sorted(body)[:12]}"
+        f"实际：空，响应键 {sorted(body)}"
     )
 
     def _coordinate(item: dict):
