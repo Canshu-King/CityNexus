@@ -538,6 +538,11 @@ def place_schema(item: Place) -> PlaceSchema:
         provider_key=item.provider_key,
         coordinate_system=item.coordinate_system,
         source_coordinate_system=item.source_coordinate_system,
+        external_id=item.external_id,
+        opening_hours=json.loads(item.opening_hours_json or "{}"),
+        cost_evidence=json.loads(item.metadata_json or "{}").get(
+            "cost_evidence", {"status": "UNKNOWN"}
+        ),
     )
 
 

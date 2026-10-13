@@ -478,6 +478,12 @@ class Place(BaseModel):
     # What the provider actually handed us; None means it was never recorded --
     # which is a different fact from "WGS84" and must not collapse into it.
     source_coordinate_system: str | None
+    # The same rule for the place's own facts: a traveller comparing two entries needs the
+    # identity the provider gave, and opening hours / cost evidence must arrive as the row
+    # holds them.  An unknown cost stays unknown -- it is never folded into zero here.
+    external_id: str
+    opening_hours: dict[str, Any]
+    cost_evidence: dict[str, Any]
 
 
 class CollectionFolderCreate(BaseModel):
