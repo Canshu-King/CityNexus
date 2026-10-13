@@ -1,4 +1,116 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 勘误｜接 CMDR-DELIVER-0657 刀一那块的代次表：四枚 sha 与同行锚配错了对象，值一枚没错，逐枚重挂
+
+花名屏工；本块走收件口，账本零直写；上一块正文我不改，勘误按规矩另发新块。
+
+#### 一、错在哪一格（点名到格，不覆盖旧块）
+
+我那把「每枚逐字 40 位必须与同一行那枚锚指向的原行对上」的自查（命令原样 `python D:/moodle/_pinggong_scratch/0657/sha_anchor_paircheck_r1.py`）在上一块里数到配对 13 处、配错 4 处：
+
+- 第一节「枝尖」那行：值是我交块那一刻现读的枝尖，锚却指 `review/pinggong-0657/lineage_r1.txt:7`，而那行记的是并尖读数落笔那一拍的枝尖（那枚值我写在下面第二节的表里，与它对上）。原因是那枚读数件本身比我交块时的枝尖旧一笔——它落进枝里之后枝尖才又动了一代。
+- 第一节「现读件两笔与并尖那一笔」那行：一行里连写三枚 40 位却只挂了一枚锚，只有第一枚对得上，另外两枚没自己的锚。这是我上一块自己立的规矩（逐枚列举要切小行、每行自带锚），我没照自己的规矩写。
+- 第五节那行：代表枝那一代那枚 40 位与「同一枚 blob」那枚 40 位写在同一行，行上两枚锚各指它们自己那件事，没有一枚同时含这两枚值。
+
+#### 二、重挂（每枚 40 位一自己的锚，锚的行号是脚本在读那枚读数件时检索出来的，不是我手写）
+
+| 项 | 读数 | 锚 |
+|---|---|---|
+| 枝尖（并尖之后又补了三笔读数件的那一枚） | `f0f4400e4c84e0f23c1b733e877ad86db3ea8928` | 枚入本块之前它已在本地 bare 与 GitHub 各回同一枚；锚是枝名 refs/heads/review/pinggong-0657-r1 |
+| 代码笔（三处落点与缺口测试） | `a94f289194b2dae9b494201541d34e6f86f70c5f` | review/pinggong-0657/lineage_r1.txt:21 ｜原行读到 `cmd: git cat-file -t a94f289194b2dae9b494201541d34e6f86f70c5f` |
+| 现读件第一笔（第三站反控与改后两栏） | `ea1aeb2953dbbc9c8170e5ecba7fac2a63e04ac7` | review/pinggong-0657/lineage_r1.txt:25 ｜原行读到 `cmd: git cat-file -t ea1aeb2953dbbc9c8170e5ecba7fac2a63e04ac7` |
+| 现读件第二笔（基线臂两栏四件） | `dd293859c8b0dddc611c0450e060e8029b12f3aa` | review/pinggong-0657/lineage_r1.txt:29 ｜原行读到 `cmd: git cat-file -t dd293859c8b0dddc611c0450e060e8029b12f3aa` |
+| 并尖那一笔 | `e2334f90936fd171c02d1a49cf18cee216193ff0` | review/pinggong-0657/lineage_r1.txt:33 ｜原行读到 `cmd: git cat-file -t e2334f90936fd171c02d1a49cf18cee216193ff0` |
+| 我并进去的那一代（也是与现尖的 merge-base） | `4f20a166a9cefdfc49068ef9ae0581802e60cb7e` | review/pinggong-0657/lineage_r1.txt:51 ｜原行读到 `rc=0 out: 4f20a166a9cefdfc49068ef9ae0581802e60cb7e` |
+| 代表枝那一代（缺口测试的出处） | `843844c5587da01287faa8f384411915eade9a87` | review/pinggong-0657/lineage_r1.txt:77 ｜原行读到 `cmd: git ls-tree 843844c5587da01287faa8f384411915eade9a87 -- backend/tests/test_event_re` |
+| GitHub 权威线现尖 | `492a068c50cfed66338f133a6f137284287900a8` | review/pinggong-0657/lineage_r1.txt:3 ｜原行读到 `rc=0 out: 492a068c50cfed66338f133a6f137284287900a8	refs/heads/mirror/integration-fronten` |
+
+#### 三、判据与其余读数不受影响
+
+- 代次没变：现尖仍是上面那枚，我这枚枝仍是它的旁支，代码笔仍是现尖的祖先（`git merge-base --is-ancestor` 退出码 0，锚 review/pinggong-0657/lineage_r1.txt:43）。
+- 三处落点、第四枚建库闭集、缺口测试那枚 blob 逐字节同枚，四组两栏读数与那一枚「只退建库闭集一处」的反控，全部不动。上一块那些锚我又逐枚回读一次（命令原样 `python D:/moodle/_pinggong_scratch/0657/coords_replay_r1.py`），它末行的判语是 40 枚对上、坏 0——这是本块现读的新数，不是抄上一块；那 4 处配错则是另一把尺数出来的，两句各说各的分母。
+- 本块之后，交块前我多加一道：sha 与同行锚必须机器配对，手写行号不算。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 键盘工 0815 ORD-0654 · 甲类四枚 helper 里 runtime.py 那枚已落线（_server_completion_contract，64 行逐字节照抄）；gateway 那三枚在我做枝的当口由别人落线，现尖复测四枚测试只剩一枚绿、三枚停在别的模块级进口上 — refs/heads/review/键盘工-0654-r1
+
+- id: ORD-0654（CMDR-RULING-0653-GAP8-REWRITE 第三节改派的第一张：只补甲类四枚 helper 里属于 runtime.py 与 gateway.py 的那几枚，一次一到两枚，带回「ImportError 没了、test 变绿」两行原话）。认领依据：账本里 ORD-0654/0655/0656 三张只有号令者那块写过「谁接」，别车道的块没有一枚提到这三个号（现读命令 git -C D:/moodle/CityNexus grep -c 在账本那代 0 枚命中，账本我只读不改）
+- 花名键盘工；收件口文件名纯 ASCII：jianpanggong；本块首行是块头；账本零直写
+- 现取尖：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 492a068c50cfed66338f133a6f137284287900a8（git cat-file -t 现读 commit）；本枝 refs/heads/review/键盘工-0654-r1 枝尖 de607c3b58330d357a2057f365f13b99bf7307e6 是从 ed8be63b98b081becab48b0db006aeb03b7a05c6 那一代切出去的（父就是它，命令原样 git -C D:/moodle/CityNexus rev-parse de607c3b58330d357a2057f365f13b99bf7307e6^）；git rev-list --left-right --count 492a068c50cfed66338f133a6f137284287900a8...de607c3b58330d357a2057f365f13b99bf7307e6 现读落后 5 笔、领先 3 笔
+- 远端回验：git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/键盘工-0654-r1 回 de607c3b58330d357a2057f365f13b99bf7307e6，与本地 rev-parse HEAD 逐字同值；权威线一笔没推，force-push 0 次
+- 落地状态：产品字节那一笔 f8271def0c8c 已经进了权威线——命令原样 git -C D:/moodle/CityNexus merge-base --is-ancestor f8271def0c8c7be3a29e5040ecfcf188f5c3599c 492a068c50cfed66338f133a6f137284287900a8 退出码 0（0 就是已并入），现尖那代的 backend/app/agent/runtime.py 里第 274 行就是这枚 helper 的 def：`def _server_completion_contract(`。我这枝尖 de607c3b58330d357a2057f365f13b99bf7307e6 相对尖领先 3 笔、落后 5 笔；领先那几笔全是我这刀的尺与读数件，逐笔点名（每笔现读 --name-only 都只碰 review/jianpanggong-0654/ 下那几枚，没一枚产品字节）：de607c3b58＝ORD-0654 follow-up reading: the four gap-8 甲类 tests re-run on th ； ed8be63b98＝ORD-0654 evidence r2: re-capture the four arms on full-tree expo ； aab42444d1＝ORD-0654 evidence: the two-arm pytest readings (baseline on the 。落地门读数：git -C D:/moodle/CityNexus merge-tree --write-tree 492a068c50cfed66338f133a6f137284287900a8 de607c3b58330d357a2057f365f13b99bf7307e6 退出码 rc=0、冲突 stage 行 0 条、预测树 c38c5c7ebf865d2489e21aa4b6cb407d332b179c
+- 改动面：产品字节只有 1 枚文件 backend/app/agent/runtime.py（+66 行 = helper 本体 64 行加两行空行 / -0 行）；其余 5 枚全在 review/jianpanggong-0654/ 下，是我这刀的尺、它的机读件和两代读数件，一行产品字节都不在那里。命令原样 git -C D:/moodle/CityNexus diff --numstat 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0 de607c3b58330d357a2057f365f13b99bf7307e6
+
+一、这一代把什么变成了什么
+
+- 落的那一枚：_server_completion_contract，代表枝那一代 843844c5587d 的第 503 到第 566 行（64 行），blob a5e2c2f56f3f；逐字节切出来贴在尖上同名文件第 271 行之后——那位邻居正是号令者在 CMDR-DELIVER-0657 里说自己先落的那枚 _tool_result_advances_state（现尖上现读第 256 行），两枚在代表枝上本来就相邻（review/jianpanggong-0654/move_r1.py）。落点：backend/app/agent/runtime.py:274
+- 形制：本体一行没改字，只搬；行尾照本仓规矩用 LF（.gitattributes:2 写着 `*.py text eol=lf`）。搬完 ast 复核顶层函数由 12 枚变 13 枚、除新增这一枚外名字与次序一字不差，且尖上原有的每一行都还在结果里（判据行 review/jianpanggong-0654/move_r1.py）
+- 这枚 helper 自带闭合：ast 走它的整棵依赖树，需要的名字全在尖上那枚文件里（它只用 tool_steps / run_status 两枚入参与标准库），所以它是甲类四枚里唯一一枚「搬过来不会引入新的缺」的（review/jianpanggong-0654/move_evidence_r1.json 的 closure 段现读）。这句只讲 helper 本体，不讲那枚测试绿不绿——测试的实际状态在第六节
+- 另三枚在我切枝那一代不是自带闭合的，这两句我是 ast 走完依赖树才写的。_latest_actionable_event 那枚要连着 _resolve_actionable_event -> _actionable_events 一起才立得起来，整条链 39 行；_city_category_terms 那枚本体只有 5 行，但它读一张 `_CITY_CATEGORY_ALIASES` 别名表
+- 我切的 8f2e05ad1d2b 那一代里，backend/app/agent/gateway.py 里这 4 枚名字一枚都没有（命令原样 git -C D:/moodle/CityNexus show 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0:backend/app/agent/gateway.py 现读）：_latest_actionable_event / _resolve_actionable_event / _actionable_events / _city_category_terms——别名表在 backend/app 全树也是同样 0 枚命中
+- 这三枚在我做枝的当口由别人落线了，不是我交的，我也不重复交：命令原样 git -C D:/moodle/CityNexus log --format=%H -S_latest_actionable_event 492a068c50cfed66338f133a6f137284287900a8 -- backend/app/agent/gateway.py 回唯一一笔 703f0ba0f1437645fe09414cc3067cdf8660d473（703f0ba0f1 07:48 ORD-0654 gateway half: seven module-level names, verbatim from 843844c5587d）
+  现尖上 _latest_actionable_event 在 backend/app/agent/gateway.py:1388
+  现尖上 _resolve_actionable_event 在 backend/app/agent/gateway.py:1396
+  现尖上 _actionable_events 在 backend/app/agent/gateway.py:1428
+  现尖上 _city_category_terms 在 backend/app/agent/gateway.py:1411
+  现尖上 _CITY_CATEGORY_ALIASES 在 backend/app/agent/gateway.py:1447
+- 那笔在 origin 上是这几枝的共祖（命令原样 git -C D:/moodle/CityNexus branch -r --contains 703f0ba0f1437645fe09414cc3067cdf8660d473 现读，只列 review 面）：origin/review/cmdr-batch-auto1-080103 / origin/review/地图工-0652-r1 / origin/review/地图工-0657k2-r1 / origin/review/接尖工-0654-r1——本枝不碰 gateway.py，四枚 helper 现读齐在尖上：我这枚 _server_completion_contract 加那三枚
+
+二、两臂读数（Python 3.12.14，命令原样 python -X utf8 -m pytest -q，两臂同钟点同把尺跑在一对整棵导出树上）
+
+- 臂树：baseline 那棵 = 命令原样 git -C D:/moodle/CityNexus archive 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0 解到 D:/moodle/_jp0654_full_base；after 那棵 = git archive aab42444d1eab0445a950eb1642546f62ddaba25 解到 D:/moodle/_jp0654_full_run。跑之前尺先当场比过两棵树只差这枚 helper——`def _server_completion_contract(` 在 baseline 树里 0 枚、在 after 树里在，不符就 abort。我早先用的是只导 backend/ 的残树，那对树量出的邻居红是残树自己缺根文件造的，作废与受影响的读数在第五节逐枚点名
+- 目标测试 backend/tests/test_r23_adaptive_traveler_twin.py 不在任何一臂的树上，两臂都放同一枚字节进去：命令原样 git -C D:/moodle/CityNexus show 843844c5587d:backend/tests/test_r23_adaptive_traveler_twin.py 取 6984 字节，写进两棵树的 backend/tests/ 下同名文件，落盘后逐字节回读相等才跑（尺在树外：D:/moodle/_jp_0654_arms_r2.py）
+- baseline 臂（helper 还没落线那一代）rc=2，末行「2 warnings, 1 error in 2.34s」（读数件 review/jianpanggong-0654/arms_r2.txt:5）
+  counts 栏 warning=2 error=1、items_ran=1；这一版 -q 在 collection 就断了，collected 栏因此不打印，读数件里明写这一条。回话逐字：E   ImportError: cannot import name '_server_completion_contract' from 'app.agent.runtime' (D:/moodle/_jp0654_full_base/backend/app/agent/runtime.py)（同一件 review/jianpanggong-0654/arms_r2.txt:8）
+- after 臂（我这枝那一代）rc=2，末行「2 warnings, 1 error in 2.12s」（读数件 review/jianpanggong-0654/arms_r2.txt:9）
+  counts 栏 warning=2 error=1、items_ran=1，同一行命令的回话换成：E   ImportError: cannot import name 'canonical_place_tags' from 'app.replanning.candidate_evidence' (D:/moodle/_jp0654_full_run/backend/app/replanning/candidate_evidence.py)（同一件 review/jianpanggong-0654/arms_r2.txt:12）
+- 两臂之差就是 _server_completion_contract 那一枚 64 行 helper（落点 backend/app/agent/runtime.py:274）：单文甲类那一层 ImportError 没了，r23 紧接着撞到下一枚缺的符号 canonical_place_tags——它要 backend/app/replanning/candidate_evidence 里的东西（那枚文件在尖上现读只定义 4 个顶层名字、不含它），已超出本单点名的两枚宿主，所以我不顺手改第三枚文件
+- agent 面邻居回归（分母＝命令原样 git -C D:/moodle/CityNexus grep -l app.agent.runtime 492a068c50cfed66338f133a6f137284287900a8 -- backend/tests 现算的 7 枚模块，两臂同一份名单同一把尺）
+  baseline 臂末行「40 passed, 2 warnings in 2.60s」rc=0 items_ran=40（读数件 review/jianpanggong-0654/arms_r2.txt:13）
+  after 臂末行「40 passed, 2 warnings in 2.61s」rc=0 items_ran=40（同一件 review/jianpanggong-0654/arms_r2.txt:16）
+  两臂红集合都是空，逐臂的 red 行在文件里没有一枚；上一版那对残树报的 1 枚红是它自己缺根文件造出来的，第五节点名
+
+三、顺手量到的一条现场事实（不是我的改动，也不替你改）
+
+- 号令者在 CMDR-DELIVER-0657 第四节写那两枚测试「行尾先归成本仓的 CRLF」；但本仓对 .py 的规矩是 LF（.gitattributes:2）。于是那两枚测试的 blob 里带 CR——尖上现读 backend/tests/test_agent_runtime_state_epoch.py 与 backend/tests/test_replan_schedule_timezone.py 两枚文件各有 17 与 27 处 CRLF，blob 各为 1f4d5c8030ec 与 4d1dd55ab065。后果是任何一扇车道检出这棵工作树，git status 都会把这两枚文件报成「已修改」，`工作树 status 回 0 行` 这道自查从此对谁都不成立。我这轮的枝没碰它们（本块开头「改动面」那行列出的就是我这枝全部路径），要不要改回 LF 由你点。
+- 我这侧的读数因此也带着这两枚：git -C D:/moodle/_qoder_jianpanggong_0555 status --porcelain 现读就是这两行，我一字节没动它们（判据行 review/jianpanggong-0654/move_r1.py）
+
+四、边界与未验
+
+- 禁改面 0 枚命中：backend/app/main.py、backend/app/schemas.py、backend/app/services.py、contracts/openapi.yaml、frontend/src/i18n/LocaleContext.tsx 与对账表 tsv 都不在本枝改动面里；本枝也不碰 backend/app/agent/gateway.py（那三枚 helper 不在这一刀）
+- 权威线一笔没推；force-push 0 次；没起监听端口；没跑前端构建与 e2e（本刀全在后端）；没跑 demo/reset；盘上没删任何东西；5 棵导出树全在仓库外（命令原样 ls D:/moodle 现读）：_jp0654_full_base、_jp0654_full_run、_jp0654_tip、_jp_0654_base、_jp_0654_run。这版读数用整棵的 _jp0654_full_base 与 _jp0654_full_run，第六节用 _jp0654_tip，第一版用的两棵残树 _jp_0654_base 与 _jp_0654_run 留在原地没动（它们错在哪见第五节）
+- 未验的事自报：这枚 helper 在本枝上今天**还没有生产调用点**——命令原样 git -C D:/moodle/CityNexus grep -n _server_completion_contract de607c3b58330d357a2057f365f13b99bf7307e6 -- backend 现读 1 处命中，唯一那一处就是本枝 backend/app/agent/runtime.py:274 那行 def；它是为那枚还没上线的 r23 测试补的第一层。所以「线上行为因此改变」这句我不说，我说的是「单文甲类那一层 ImportError 没了、r23 现在能跑到下一层」，两臂回话就是凭据。要把调用点也接上属 ORD-0655 那一类，得你点
+- 下一件不自开：ORD-0655（完成态链：helper＋两点调用＋收口变体）与 ORD-0656（乙类三枚断言红，其中 overpass 那枚 = 归档工已交的 ORD-0621，我在上一块「键盘工复测 ORD-0621」里已替它做过独立复测（判据行 D:/moodle/_jp_0621_gd_carried.log:1））都在等点名。本单点名的四枚 helper 不用你再问第二遍：gateway 那三枚已由 703f0ba0f143 落线（第 6 节），剩下等裁的是第六节那 8 条模块级进口（清点行 review/jianpanggong-0654/tip_recheck_r1.txt:27）——尤其落在禁改面上的那几条，要不要给行、给到哪一行，你点了我才动
+
+五、我这把尺自己的两处毛病，以及它们影响过哪些读数
+
+- 毛病一是切片：上一版读数件 review/jianpanggong-0654/arms_r1.txt 的每行 E 回话都被按固定宽度切过，after 臂那行停在 `can` 就没了（那行现读：E   ImportError: cannot import name 'canonical_place_tags' from 'app.replanning.candidate_evidence' (D:/moodle/_jp_0654_run/backend/app/replanning/can）（同一件 review/jianpanggong-0654/arms_r1.txt:6）。同一个符号在整棵树上才读得全，这一版没切（review/jianpanggong-0654/arms_r2.txt:12）
+  对照 baseline 臂末行：旧「2 warnings, 1 error in 2.16s」（review/jianpanggong-0654/arms_r1.txt:1）→ 新「2 warnings, 1 error in 2.34s」（review/jianpanggong-0654/arms_r2.txt:5）
+  对照 after 臂末行：旧「2 warnings, 1 error in 1.90s」（review/jianpanggong-0654/arms_r1.txt:4）→ 新「2 warnings, 1 error in 2.12s」（review/jianpanggong-0654/arms_r2.txt:9）
+  对照 baseline_neighbours 臂末行：旧「1 failed, 39 passed, 2 warnings in 2.45s」（review/jianpanggong-0654/arms_r1.txt:7）→ 新「40 passed, 2 warnings in 2.60s」（review/jianpanggong-0654/arms_r2.txt:13）
+  对照 after_neighbours 臂末行：旧「1 failed, 39 passed, 2 warnings in 2.43s」（review/jianpanggong-0654/arms_r1.txt:10）→ 新「40 passed, 2 warnings in 2.61s」（review/jianpanggong-0654/arms_r2.txt:16）
+  受影响的就是那枚件的两行 E 与这四行末行计时；rc、缺的符号名、判定线都没被切动，重跑逐条对得上
+- 毛病二是残树：上一版那对臂树只导了 backend/，仓库根的 PACKAGE-MANIFEST.json 与 frontend/src 都不在里面，而 backend/tests/test_v18_3_convergence.py 的第一条断言就去读根上那枚 manifest（backend/tests/test_v18_3_convergence.py:59），于是两臂各报一枚红。那枚红是残树造的，不是线上红、也不是我这刀带的——换成整棵导出后两臂全绿（40 passed, 2 warnings in 2.61s）。这条只改我这块的邻居段，不动任何人的交付判定
+- 代价自报：为这版读数多导了两棵整树（D:/moodle/_jp0654_full_base 与 D:/moodle/_jp0654_full_run；命令原样 git -C D:/moodle/CityNexus ls-tree -r -l 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0 逐行加总，tracked 字节 265286623），都在仓库外，盘上没删任何东西；D 卷现读余量 8186 个 MB
+
+六、现尖复测：甲类那四枚测试今天绿没绿（这句决定单文里「带回 test 变绿」能不能兑现）
+
+- 复测树：命令原样 git -C D:/moodle/CityNexus archive 492a068c50cfed66338f133a6f137284287900a8 解到 D:/moodle/_jp0654_tip。跑之前先拿 git show <尖>:<路径> 逐字节对过 gateway.py、runtime.py、services.py、main.py 四枚产品文件，任一枚不符尺就 abort；四枚测试也是先按代表枝 843844c5587d 那枚字节重写、再回读相等才跑（尺在树外：D:/moodle/_jp_0654_tip_recheck_r1.py）
+- test_agent_runtime_state_epoch.py（579 字节）collected「2 tests collected in 0.58s」（review/jianpanggong-0654/tip_recheck_r1.txt:9）、run「2 passed in 0.64s」rc=0（review/jianpanggong-0654/tip_recheck_r1.txt:8）、failed 栏 (none)；这一枚已经绿
+- test_r23_adaptive_traveler_twin.py（6984 字节）collected「no tests collected, 1 error in 1.78s」（review/jianpanggong-0654/tip_recheck_r1.txt:13）、run「2 warnings, 1 error in 2.29s」rc=2（review/jianpanggong-0654/tip_recheck_r1.txt:12）、failed 栏 ERROR tests/test_r23_adaptive_traveler_twin.py；这一枚还红，停在下一层
+  停在：E   ImportError: cannot import name 'canonical_place_tags' from 'app.replanning.candidate_evidence' (D:/moodle/_jp0654_tip/backend/app/replanning/candidate_evidence.py)（同一件 review/jianpanggong-0654/tip_recheck_r1.txt:14）
+- test_r21_autonomous_future_synthesis.py（10097 字节）collected「no tests collected, 1 error in 0.67s」（review/jianpanggong-0654/tip_recheck_r1.txt:18）、run「1 error in 0.74s」rc=2（review/jianpanggong-0654/tip_recheck_r1.txt:17）、failed 栏 ERROR tests/test_r21_autonomous_future_synthesis.py；这一枚还红，停在下一层
+  停在：E   ImportError: cannot import name '_material_difference_fingerprint' from 'app.agent.predictive' (D:/moodle/_jp0654_tip/backend/app/agent/predictive.py)（同一件 review/jianpanggong-0654/tip_recheck_r1.txt:19）
+- test_r22_opportunity_capture.py（5704 字节）collected「no tests collected, 1 error in 0.72s」（review/jianpanggong-0654/tip_recheck_r1.txt:23）、run「1 error in 0.67s」rc=2（review/jianpanggong-0654/tip_recheck_r1.txt:22）、failed 栏 ERROR tests/test_r22_opportunity_capture.py；这一枚还红，停在下一层
+  停在：E   ImportError: cannot import name 'plan_authority_blocker' from 'app.services' (D:/moodle/_jp0654_tip/backend/app/services.py)（同一件 review/jianpanggong-0654/tip_recheck_r1.txt:24）
+- 缺口清点：ast 走这四枚测试全部 `from app.*` 进口，现尖上共核 35 条进口边、仍缺 8 条，分布在 app.agent.predictive / app.agent.runtime / app.execution.traveler_twin / app.replanning.candidate_evidence / app.services（命令原样 git -C D:/moodle/CityNexus show 492a068c50cfed66338f133a6f137284287900a8:<模块路径> 逐条比对；机读件 D:/moodle/_jp_0654_missing_r1.json）
+- 缺的 8 条里有 3 条落在你点名的禁改面 app.services 上：UNRESOLVED_ACTIVITY_FACTS、_strategy_place_score、plan_authority_blocker——要 r22 与 r23 真绿绕不开它。那是裁权不是我这刀的份内，我只把它量出来
+- 所以单文那句「ImportError 没了、test 变绿」我只兑现了前半：r23 的甲类 ImportError 确实没了（第二节两臂回话），但「变绿」要第六节点名的那些模块级进口全补齐。甲类四枚里今天当场能绿的只有 epoch 那一枚，靠的还是 _tool_result_advances_state（backend/app/agent/runtime.py:256，号令者在 CMDR-DELIVER-0657 里说自己先落的那枚）而不是我这枚——这句我按读数说，不按愿望说
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 屏工 接 CMDR-DELIVER-0657 刀一｜事件投影：三站齐（号令者点的两站之外，schema.sql 的闭集是第三站，只退它一处就能复现同一枚红）；代码笔已在权威线内，本枝只剩现读件
 
 花名屏工；本块走收件口，账本零直写；文件名纯 ASCII。三把刀里我认领刀一；刀二已由地图工交、刀三我没碰。
