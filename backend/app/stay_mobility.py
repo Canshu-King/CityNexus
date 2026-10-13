@@ -2096,6 +2096,16 @@ def journey_leg_payload(item: JourneyLeg) -> dict[str, Any]:
         "expires_at": item.expires_at,
     }
 
+
+
+def _provider_collocated_edge(fact: dict[str, Any]) -> bool:
+    """Name a real zero-minute edge only when the captured geometry collapses to one point."""
+
+    coordinates = fact.get("route_geometry") or []
+    if fact.get("minutes") != 0 or len(coordinates) < 2:
+        return False
+    first = tuple(coordinates[0])
+    return all(tuple(point) == first for point in coordinates[1:])
 def _plan_mobility_projection(
     plan: PlanVersion, activities: list[Activity]
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
