@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.execution.traveler_twin import capability_constraint_items
 from app.core.audit import record_audit
 from app.db.models import (

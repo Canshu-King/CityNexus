@@ -1,0 +1,34 @@
+{
+ "tip": "e1f352030e61b96bbda2c487c3386e8e93b76163",
+ "ref": "0639d68b1efc5d08d7b12589a2f3a93cc001624f",
+ "moves": [
+  {
+   "path": "backend/app/core/config.py",
+   "ref_range": [
+    87,
+    91
+   ],
+   "ref_lines": 5,
+   "block_blob": "407b11b80e25614ffae2b2ed2dadac89972aec07",
+   "follows_tip_line": 69,
+   "lands_on_tip_lines": [
+    70,
+    74
+   ]
+  },
+  {
+   "path": "backend/app/services.py",
+   "ref_range": [
+    14,
+    14
+   ],
+   "ref_lines": 1,
+   "block_blob": "533a0393fdb2365de84df84361b86b1b093ea7f7",
+   "follows_tip_line": 14,
+   "lands_on_tip_lines": [
+    15,
+    15
+   ]
+  }
+ ]
+}

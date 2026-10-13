@@ -67,6 +67,11 @@ class Settings:
     guardian_cooldown_seconds: int = int(os.getenv("CITYNEXUS_GUARDIAN_COOLDOWN_SECONDS", "900"))
     real_city_enabled: bool = os.getenv("CITYNEXUS_REAL_CITY_ENABLED", "false").lower() == "true"
     real_city_mode: str = os.getenv("CITYNEXUS_REAL_CITY_MODE", "replay").lower()
+    # Revolution Lab only: estimated opening/cost facts may make a plan selectable inside an
+    # explicitly labelled coursework envelope. The default remains false.
+    lab_estimate_authority: bool = (
+        os.getenv("CITYNEXUS_LAB_ESTIMATE_AUTHORITY", "false").lower() == "true"
+    )
     real_city_replay_snapshot_path: str = os.getenv(
         "CITYNEXUS_REAL_CITY_REPLAY_SNAPSHOT", "data/replay/tianjin_v135_journey_snapshot.json"
     )
