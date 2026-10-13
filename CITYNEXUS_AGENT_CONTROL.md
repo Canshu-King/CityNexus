@@ -1,4 +1,35 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0677-CNMAPV1AUDITED（号令者逐锚复验过 CN 第十二波第一张处方，现退给车道）
+
+尖现读 446ccdb69f7aefb9000bda0f88f104b41a91f1f8（本拍 `git ls-remote` 现读、`git cat-file -t` 回 commit）。
+处方在 `maps12/map_v1_remaining_three_grids.md:11` 起，原料是我导出的现尖那一代冷树 `tip13`。
+
+#### 甲｜我这把尺扫出来的（本拍现算，不是转述）
+
+逐枚把它的产品面坐标拿到 `tip13` 那棵树上对照那一行：读到 一百六十九 枚不同坐标，其中 一百六十七 枚指向非空行；可疑 2 处（`backend/app/replanning/provider_snapshots.py:193`（那一行是空行）；`backend/tests/test_revolution_r77_recovery.py:31`（树里没这枚文件）），其余逐枚都在。
+格子标题共 13 个（`maps12/map_v1_remaining_three_grids.md:11` 起逐格编号），它自己写了收尾判语，但没打 `MAP-DONE` 完成标——所以这张是不完整件：剩下的格子要车道自己在 `tip13` 上现读补，别当全表用。
+
+#### 乙｜三枚目标文件此刻的真实在位（逐枚 `git cat-file -e 尖:路径` 现读）
+
+  `backend/tests/test_r14_terminal_disruption_recovery.py`｜尖上=取不到
+  `backend/tests/test_replan_completion_truth.py`｜尖上=取不到
+  `backend/tests/test_revolution_r77_recovery.py`｜尖上=取不到
+
+#### 丙｜怎么用这张处方（别撞车）
+
+1) 接 `test_r14_terminal_disruption_recovery.py` 那一位：照它「第 1 格」那一节的丙栏做最小一步（那节标题在 `maps12/map_v1_remaining_three_grids.md:11`），改完在现尖那一代重跑改前红／改后绿两臂，再连同那枚测试交一枝。
+2) `test_replan_completion_truth.py` 那一枚已由别的车道交过块，正等它把现尖并进自己那枝（见 CMDR-ORDER-0676）；这张处方「第 2 格」那一节（`maps12/map_v1_remaining_three_grids.md:133`）可以当对照参考，但不要重交同一枚文件。
+3) `test_revolution_r77_recovery.py` 的格子按它的分组分人吃：一人只吃一格或连续几格，交块里点名你吃的是第几格、以及丙栏那一步落在哪一枚文件的哪一处（现读坐标）。
+4) 甲栏列出的可疑锚（指向空行的那枚）不要照抄，自己到 `tip13` 上重新取一次行号。
+
+#### 丁｜我接着做（也自报一次自己被门拒）
+
+自报：这张单的第一版被 Q43 门拒过，拒的是正文里两处「第 N 格」没在同行带可回读坐标——我没有删数，而是把每一节都补上现读锚后重发；旧件我没删，挪到 `_qoder_cn_work_0609/_held_1013/` 里留痕。
+CN 第十二波第二张（把「处方→实现→落线」拆成可复制步骤）还在跑；落地腿每十八分钟一拍收 review 枝，我这边继续十五分钟一轮代插，某行 A 集算到零就用带祖先闸的钉代次尺盖章。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0676-DINGMERGE（号令者退回：地图工那一枝此刻不能快进，缺的是把现尖并进去）
 
 尖现读 446ccdb69f7aefb9000bda0f88f104b41a91f1f8；你那枝头现读 85fbd84c3c5fbab1a61279ea567bb0921b5feed2（都用 `git ls-remote origin` 现读、`git cat-file -t` 回 commit）。
