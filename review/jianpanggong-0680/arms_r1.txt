@@ -1,0 +1,57 @@
+# ORD-0680 第 1 格 · two arms on the same interpreter, same file list, same run
+# tip d40d6924ed902c224d431f0b1f5d0ba86398fd32 | my branch head 25b6ae2d445d0a9cb722eef76acd281573215ffd | interpreter Python 3.12.14 | stamp 2026-10-13 16:44:13
+# baseline tree D:/moodle/_jp0680_base = git -C D:/moodle/CityNexus archive <tip>
+# after tree D:/moodle/_qoder_jianpanggong_0680 = git worktree at branch head
+# the target test is the representative-branch blob, written into both trees and read back
+# command: python -X utf8 -m pytest -q <files>  (and the same with --collect-only -q)
+baseline_target :: files=1 rc=1
+   run      : 1 failed, 2 warnings in 2.82s
+   collected: 1 test collected in 2.29s
+   failed   : tests/test_r14_terminal_disruption_recovery.py::test_active_closure_can_accept_terminal_prefix_replan
+   E-line   : E       AssertionError: {'journey': {'abort_reason': None, 'aborted_at': None, 'active_plan_version_id': 'b8125088-37fa-4c5a-9323-0457996242d8...rrent_activity_id': '6c724fa3-2d67-40d0-962f-b18025965a51', 'journey_id': '22222222-2222-4222-8222-222222222222', ...}}
+   E-line   : E       assert 'ACTIVE' == 'COMPLETED'
+   E-line   : E         
+   E-line   : E         - COMPLETED
+   E-line   : E         + ACTIVE
+after_target :: files=1 rc=0
+   run      : 1 passed, 2 warnings in 3.15s
+   collected: 1 test collected in 2.49s
+   failed   : (none)
+baseline_band :: files=21 rc=0
+   run      : 191 passed, 2 warnings in 68.45s (0:01:08)
+   collected: 191 tests collected in 3.64s
+   failed   : (none)
+after_band :: files=21 rc=0
+   run      : 191 passed, 2 warnings in 51.93s
+   collected: 191 tests collected in 4.28s
+   failed   : (none)
+baseline_whole :: files=0 rc=0
+   run      : 
+   collected: 1958 tests collected in 8.48s
+   failed   : (none)
+after_whole :: files=0 rc=0
+   run      : 
+   collected: 1958 tests collected in 8.39s
+   failed   : (none)
+# band (21 modules) = git -C D:/moodle/CityNexus grep -l /accept <tip> -- backend/tests, plus test_qoder_ord0383_undelete_write_lock.py
+   stateful/test_journey_truth_state_machine.py
+   test_backend_connected_golden_contract.py
+   test_gpt_adversarial_provider_hardening.py
+   test_post_goal_five_defects.py
+   test_provider_runtime_gate.py
+   test_qoder_activity_identity_contract.py
+   test_qoder_mobility_evidence_sources.py
+   test_qoder_ord0383_undelete_write_lock.py
+   test_qoder_ord0478_route_ownership.py
+   test_route_gap_lupaigongyi_0559_r1.py
+   test_rx4_c4_protection_surface_gate.py
+   test_sol_concurrency_and_remap.py
+   test_sol_execution_cursor.py
+   test_solver_runtime_gate.py
+   test_solver_v2_integration.py
+   test_v12_authoritative_trip_execution.py
+   test_v13_integrity.py
+   test_v14_grounded_adaptive_recovery.py
+   test_wp04_hardening_wp05.py
+   test_wp05_integrity_next.py
+   test_wp06_postgate_hardening_next.py
