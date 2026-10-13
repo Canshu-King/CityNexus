@@ -12,7 +12,8 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
-from app.execution.traveler_twin import capability_constraint_items
+from app.core.config import settings
+from app.execution.traveler_twin import capability_constraint_items, planning_preference_items
 from app.core.audit import record_audit
 from app.db.models import (
     Activity,
@@ -41,6 +42,7 @@ from app.replanning.feasibility import (
 from app.replanning.provider_snapshots import MobilitySnapshot
 from app.planning.anchor_schedule import (
     ANCHOR_DURATION_MIN,
+    ANCHOR_PROVIDER_KEY,
     CandidateActivity,
     MID_TRIP_ROLE,
     active_c4_commitments,
@@ -2098,6 +2100,47 @@ COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE = "COURSEWORK_ESTIMATE"
 SEALED_DEMO_AUTHORITY_ENVELOPE = "SEALED_DEMO_FIXTURE"
 
 UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
+
+SYNTHETIC_LIVE_SELECTION_BLOCKED = "SYNTHETIC_LIVE_SELECTION_BLOCKED"
+
+SEALED_AUTHORITY_ENVELOPES = frozenset(
+    {SEALED_DEMO_AUTHORITY_ENVELOPE, COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE}
+)
+
+
+def _place_metadata(place: Place) -> dict[str, Any]:
+    metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+    return metadata if isinstance(metadata, dict) else {}
+
+
+def _place_verified_cost(place: Place) -> int | None:
+    evidence = _place_metadata(place).get("cost_evidence")
+    if not isinstance(evidence, Mapping) or str(evidence.get("status") or "").upper() not in KNOWN_COST_EVIDENCE_STATUSES:
+        return None
+    amount = evidence.get("amount_minor")
+    return None if amount is None else int(amount)
+
+
+def _place_has_unresolved_visit_facts(place: Place) -> bool:
+    if _place_window(place) is None:
+        return True
+    return _place_verified_cost(place) is None
+
+
+def _coursework_facts_cover(place: Place) -> bool:
+    estimate = _place_metadata(place).get("strategy_estimate")
+    if not isinstance(estimate, Mapping):
+        return False
+    hours = estimate.get("opening_hours")
+    cost = estimate.get("cost_evidence")
+    return (
+        isinstance(hours, Mapping)
+        and hours.get("open_minutes") is not None
+        and hours.get("close_minutes") is not None
+        and isinstance(cost, Mapping)
+        and cost.get("amount_minor") is not None
+    )
+
 
 def _mobility_catalogue_place_ids(
     places: Mapping[str, Place],

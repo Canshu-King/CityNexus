@@ -75,6 +75,10 @@ class Settings:
     # Optional sourceful search for fact acquisition. Search results are leads only;
     # they never become authoritative opening or cost facts by themselves.
     searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
+    # Lab-only switch: let an explicitly COURSEWORK_ESTIMATE-marked plan keep its
+    # own agent-side estimates as the authority boundary. Default OFF, so a real
+    # journey can never inherit it.
+    lab_estimate_authority: bool = os.getenv("CITYNEXUS_LAB_ESTIMATE_AUTHORITY", "false").lower() == "true"
     real_city_timeout_seconds: float = float(os.getenv("CITYNEXUS_REAL_CITY_TIMEOUT_SECONDS", "12"))
     real_city_cache_ttl_seconds: int = int(
         os.getenv("CITYNEXUS_REAL_CITY_CACHE_TTL_SECONDS", "900")
