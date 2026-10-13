@@ -945,6 +945,26 @@ def _templates_resting_on_unsourced_hours(
     return total
 
 
+def _catalogue_cost_unverified(place: Place) -> bool:
+    """Whether this catalogue row states that its own cost truth is missing.
+
+    A `cost_evidence` claim outside KNOWN_COST_EVIDENCE_STATUSES (or one that carries no
+    amount) is the row telling us it has no cost truth, so it cannot enter a selectable day
+    sequence.  A row with no claim at all has not been asked: ORD-0543's widened leg still
+    draws those stops, and pricing them would read a nobody-answered number back as fact.
+    """
+
+    metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+    evidence = metadata.get("cost_evidence")
+    if not isinstance(evidence, Mapping):
+        return False
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    return (
+        status not in KNOWN_COST_EVIDENCE_STATUSES
+        or evidence.get("amount_minor") is None
+    )
+
+
 def _catalogue_templates(
     places: Mapping[str, Place],
     travel: Callable[[str, str], int],
@@ -984,7 +1004,11 @@ def _catalogue_templates(
         band = None
 
     ordered = sorted(
-        (place for place in places.values() if _place_window(place)),
+        (
+            place
+            for place in places.values()
+            if _place_window(place) and not _catalogue_cost_unverified(place)
+        ),
         key=lambda place: (_place_window(place) or (0, 0))[0],
     )
     # ORD-0543 (commander ruling: widen this leg): a city whose places do not state opening hours
@@ -994,7 +1018,11 @@ def _catalogue_templates(
     # guess), and strictly inside the band named on the parameters below - the product's own working
     # band, not a claim about the venue. Nothing here writes opening hours back into the store.
     unsourced = sorted(
-        (place for place in places.values() if not _place_window(place)),
+        (
+            place
+            for place in places.values()
+            if not _place_window(place) and not _catalogue_cost_unverified(place)
+        ),
         key=lambda place: str(place.id),
     )
     ordered = ordered + unsourced
