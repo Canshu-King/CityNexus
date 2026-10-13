@@ -1,0 +1,20 @@
+# CMDR-0685 second reading: the failure LOCATION per red, before vs after my two bytes
+# baseline e1f352030e61b96bbda2c487c3386e8e93b76163 (缺这两行) vs after a3b7f7a6ad190ad09d792820d000c13faa4d8874 (含这两行) ｜ 同一枚测试 blob 21ee4be0d62ae85f2e68d4e45cc39524ee56fdd5
+# command: python -X utf8 -m pytest -q --tb=line tests/test_revolution_r77_recovery.py
+# stamp 2026-10-13 20:37:15
+baseline :: rc=1 末行「8 failed, 18 passed, 2 warnings in 2.41s」
+   app/main.py:14803  (AttributeError: 'MobilitySnapshot' object has no attribute 'fact_for')
+   app/services.py:2156  (NameError: name 'settings' is not defined)
+   app/services.py:2238  (NameError: name '_place_metadata' is not defined)
+   app/stay_mobility.py:2155  (NameError: name '_provider_collocated_edge' is not defined)
+   tests/test_revolution_r77_recovery.py:1247  (assert True is False)
+   tests/test_revolution_r77_recovery.py:732  (AssertionError: assert [] == ['r77-place-1...4d86c2a072bb'])
+   tests/test_revolution_r77_recovery.py:909  (AssertionError: assert ['unknown-cos...known-cost-b'] == ['known-cost-...known-cost-b'])
+after :: rc=1 末行「8 failed, 18 passed, 2 warnings in 2.04s」
+   app/main.py:14803  (AttributeError: 'MobilitySnapshot' object has no attribute 'fact_for')
+   app/services.py:2174  (NameError: name 'ANCHOR_PROVIDER_KEY' is not defined)
+   app/services.py:2239  (NameError: name '_place_metadata' is not defined)
+   app/stay_mobility.py:2155  (NameError: name '_provider_collocated_edge' is not defined)
+   tests/test_revolution_r77_recovery.py:1247  (assert True is False)
+   tests/test_revolution_r77_recovery.py:732  (AssertionError: assert [] == ['r77-place-5...4aaa1530bb96'])
+   tests/test_revolution_r77_recovery.py:909  (AssertionError: assert ['unknown-cos...known-cost-b'] == ['known-cost-...known-cost-b'])
