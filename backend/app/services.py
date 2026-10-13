@@ -2085,3 +2085,244 @@ def checkin_schema(
         place_name=place.name if place is not None else None,
         place_category=place.category if place is not None else None,
     )
+
+COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE = "COURSEWORK_ESTIMATE"
+
+SEALED_DEMO_AUTHORITY_ENVELOPE = "SEALED_DEMO_FIXTURE"
+
+UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
+
+def _mobility_catalogue_place_ids(
+    places: Mapping[str, Place],
+    raw_templates: Sequence[Sequence[tuple[str, str, str, str]]],
+    anchors: Sequence[Any],
+) -> tuple[str, ...]:
+    """Return only nodes that can participate in a strict catalogue schedule.
+
+    Unknown opening windows cannot enter ``_catalogue_templates`` and therefore do
+    not need a live edge in the strict matrix.  Keeping them out here bounds the
+    real provider work for a destination whose catalog also contains unresolved
+    rows; the provisional lane captures its own two selected rows later when it
+    is actually needed.
+    """
+
+    if raw_templates:
+        candidate_ids = [
+            place_id
+            for template in raw_templates
+            for place_id, *_ in template
+            if place_id in places
+        ]
+    else:
+        candidate_ids = [
+            place.id
+            for place in places.values()
+            if _place_window(place) and _catalogue_visit_eligible(place)
+        ]
+    return tuple(
+        dict.fromkeys(
+            [
+                *candidate_ids,
+                *(anchor.place_id for anchor in anchors if anchor.place_id in places),
+            ]
+        )
+    )
+
+def plan_authority_blocker(
+    item: PlanVersion,
+    places_by_id: Mapping[str, Place],
+    *,
+    used_place_ids: Sequence[str] | None = None,
+) -> str | None:
+    """Return the shared authority blocker for a plan, if any.
+
+    Only mobility edges actually traversed by the plan participate in the
+    synthetic check.  An unused fallback edge in a complete matrix cannot veto
+    a route whose used edges are live/provider-backed.
+    """
+
+    explanation = json.loads(item.explanation_json or "{}")
+    used = [str(value) for value in (used_place_ids or ()) if value]
+    used_unique = list(dict.fromkeys(used))
+    coursework_places = [places_by_id.get(place_id) for place_id in used_unique]
+    coursework_estimate = (
+        settings.lab_estimate_authority
+        and str(explanation.get("authority_envelope") or "").upper()
+        == COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE
+        and bool(coursework_places)
+        and all(place is not None and _coursework_facts_cover(place) for place in coursework_places)
+    )
+    # Replan candidates can be materialised by a different composition path
+    # and therefore may carry a provisional explanation marker even after the
+    # actual used Places have acquired canonical facts.  The used Place rows
+    # remain the authoritative content boundary: live or provider-backed
+    # UNKNOWN opening/cost facts remain non-selectable.  An explicit sealed
+    # demo/replay envelope is the only exception, so fixtures and captured
+    # replay tests keep their existing contract.
+    used_content_places = [
+        places_by_id[place_id]
+        for place_id in used_unique
+        if place_id in places_by_id
+        and places_by_id[place_id].provider_key != ANCHOR_PROVIDER_KEY
+    ]
+    if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS" and not coursework_estimate:
+        if not used_content_places or any(
+            _place_has_unresolved_visit_facts(place) for place in used_content_places
+        ):
+            return UNRESOLVED_ACTIVITY_FACTS
+    elif explanation.get("authority_state") == "COURSEWORK_ESTIMATED_FACTS" and not coursework_estimate:
+        return UNRESOLVED_ACTIVITY_FACTS
+
+    sealed = bool(used_content_places) and all(
+        str(_place_metadata(place).get("authority_envelope") or "").upper()
+        in SEALED_AUTHORITY_ENVELOPES
+        for place in used_content_places
+    )
+    if used_content_places and not sealed and not coursework_estimate and any(
+        _place_has_unresolved_visit_facts(place) for place in used_content_places
+    ):
+        return UNRESOLVED_ACTIVITY_FACTS
+
+    evidence = json.loads(item.mobility_evidence_json or "{}")
+    if not isinstance(evidence, Mapping):
+        return None
+    facts = [fact for fact in evidence.get("facts", []) if isinstance(fact, Mapping)]
+    used_edges = set(zip(used, used[1:]))
+    used_facts = [
+        fact for fact in facts
+        if (str(fact.get("origin_key")), str(fact.get("destination_key"))) in used_edges
+    ]
+    relevant = used_facts if used_place_ids is not None else facts
+    synthetic = any(
+        str(fact.get("route_provenance") or "").upper() == "SYNTHETIC_FIXTURE"
+        or str(fact.get("fact_quality") or "").upper() == "SYNTHETIC_DEFAULT"
+        for fact in relevant
+    )
+    if not synthetic and used_place_ids is None:
+        provider = str(evidence.get("source_provider") or "").casefold()
+        synthetic = provider.startswith(("mock", "fixture"))
+    if not synthetic:
+        return None
+    content_places = [
+        place for place in places_by_id.values()
+        if place.provider_key != ANCHOR_PROVIDER_KEY
+    ]
+    sealed = bool(content_places) and all(
+        str(_place_metadata(place).get("authority_envelope") or "").upper()
+        in SEALED_AUTHORITY_ENVELOPES
+        for place in content_places
+    )
+    return None if sealed else SYNTHETIC_LIVE_SELECTION_BLOCKED
+
+def _catalogue_visit_eligible(place: Place) -> bool:
+    """Return true only for content that can be a visit stop.
+
+    Lodging, parking and transport rows are useful provider facts, but they are
+    not attractions.  Keeping that role decision here prevents the provisional
+    lane from turning an accommodation row into a generic visit.
+    """
+
+    category = str(place.category or "").casefold()
+    if category in {
+        "hotel", "lodging", "accommodation", "guest_house", "hostel",
+        "parking", "car_park", "bus_station", "train_station", "transit_station",
+    }:
+        return False
+    role = str(_place_metadata(place).get("place_role") or "").casefold()
+    if role in {"lodging", "accommodation", "parking", "transit"}:
+        return False
+    return category in {
+        "aquarium", "attraction", "cafe", "experience", "food", "gallery", "garden",
+        "heritage", "landmark", "library", "museum", "nightlife", "park",
+        "restaurant", "temple", "theatre", "tourism", "viewpoint", "zoo",
+    }
+
+def _strategy_voi_decisions(
+    session: Session, journey: Journey, places: Mapping[str, Place], intent: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Choose the next decision-sensitive fact without promoting it to truth."""
+
+    decisions: list[dict[str, Any]] = []
+    traveler_preferences = planning_preference_items(session, journey.traveler_id, journey.id)
+    for place in places.values():
+        missing: list[str] = []
+        if _place_window(place) is None:
+            missing.append("opening_hours")
+        if _place_verified_cost(place) is None:
+            missing.append("cost")
+        if not missing or not _catalogue_visit_eligible(place):
+            continue
+        metadata = _place_metadata(place)
+        binding = metadata.get("fact_source_binding") if isinstance(metadata, Mapping) else None
+        fact_acquisition = metadata.get("fact_acquisition") if isinstance(metadata, Mapping) else None
+        if not binding and isinstance(fact_acquisition, Mapping):
+            binding = fact_acquisition.get("source_binding")
+        tags = json.loads(place.tags_json or "[]") if place.tags_json else []
+        source_url = None
+        if isinstance(binding, Mapping):
+            source_url = binding.get("source_url")
+        if not source_url and isinstance(tags, Mapping):
+            source_url = tags.get("website") or tags.get("contact:website") or tags.get("url")
+        profile = _strategy_profile(intent)
+        preference_signal = _strategy_place_score(place, profile, traveler_preferences)[0]
+        value = (
+            (3000 if "opening_hours" in missing else 0)
+            + (2000 if "cost" in missing else 0)
+            + preference_signal
+        )
+        decisions.append(
+            {
+                "place_id": place.id,
+                "missing_fact": missing,
+                "value": value,
+                "why": "missing facts can change strict feasibility or ranking",
+                "source_candidate": source_url,
+                "action": "acquire_exact_bound_source" if source_url else "search_and_corroborate_source",
+                "strategy_profile": profile,
+            }
+        )
+    decisions.sort(key=lambda item: (-int(item["value"]), str(item["place_id"])))
+    return decisions[:3]
+
+def _strategy_pivot_decisions(
+    places: Mapping[str, Place],
+    intent: Mapping[str, Any],
+    traveler_preferences: Sequence[Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Record a deliberate pivot after a source path yields no structured facts."""
+
+    profile = _strategy_profile(intent)
+    abandoned: list[Place] = []
+    for place in places.values():
+        if not _place_has_unresolved_visit_facts(place):
+            continue
+        acquisition = _place_metadata(place).get("fact_acquisition")
+        official = acquisition.get("official_web") if isinstance(acquisition, Mapping) else None
+        if isinstance(official, Mapping) and official.get("status") in {
+            "NO_STRUCTURED_FACTS",
+            "UNAVAILABLE",
+        }:
+            abandoned.append(place)
+    if not abandoned:
+        return []
+    replacements = [
+        place
+        for place in places.values()
+        if _catalogue_visit_eligible(place)
+        and _place_window(place) is not None
+        and _place_verified_cost(place) is not None
+        and place not in abandoned
+    ]
+    replacements.sort(
+        key=lambda place: (
+            -_strategy_place_score(place, profile, traveler_preferences)[0],
+            str(place.id),
+        )
+    )
+    return [{
+        "decision": "ABANDON_SOURCE_PATH",
+        "abandoned_place_ids": [place.id for place in abandoned],
+        "replacement_place_ids": [place.id for place in replacements[:3]],
+        "reason": "source returned no structured facts; preserve UNKNOWN and switch to verified catalogue rows",
+        "strategy_profile": profile,
+    }]

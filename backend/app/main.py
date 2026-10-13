@@ -14632,3 +14632,181 @@ def get_commitment(commitment_id: UUID, session: Session = Depends(get_session))
     if item is None:
         raise HTTPException(404, f"Commitment {commitment_id} was not found")
     return _commitment_payload(item)
+
+def _replacement_activity_metadata(
+    candidate_place: Place | None,
+    replacement_choice: Any,
+    *,
+    family: str,
+    replaced_place_id: str | None,
+    reason_codes: tuple[str, ...] | list[str] | None = None,
+    solver_v2_assignment: str | None = None,
+) -> str:
+    """Build replacement metadata from the replacement Place's own facts.
+
+    A replan changes the physical venue. Copying the old activity metadata
+    therefore leaks the old venue's opening hours, coordinates, category, and
+    cost evidence into the new activity. Keep only replan annotations and
+    facts read from the candidate Place itself.
+    """
+
+    place_metadata = _json_object(candidate_place.metadata_json if candidate_place else None)
+    try:
+        opening = json.loads(candidate_place.opening_hours_json or "{}") if candidate_place else {}
+    except (TypeError, ValueError):
+        opening = {}
+    if not isinstance(opening, dict) or not opening:
+        opening = {"status": "UNKNOWN", "raw": None, "intervals": []}
+    raw_cost = place_metadata.get("cost_evidence")
+    cost_evidence = canonical_cost_evidence(
+        raw_cost if isinstance(raw_cost, Mapping) else {},
+        place_metadata.get("tags") if isinstance(place_metadata.get("tags"), Mapping) else {},
+    )
+    if not cost_evidence:
+        cost_evidence = {"status": "UNKNOWN", "amount_minor": None}
+    cost_status = str(cost_evidence.get("status") or "UNKNOWN").upper()
+    known_cost = (
+        cost_status in KNOWN_COST_EVIDENCE_STATUSES
+        and cost_evidence.get("amount_minor") is not None
+    )
+    strategy_estimate = place_metadata.get("strategy_estimate")
+    if not (
+        isinstance(strategy_estimate, Mapping)
+        and str(strategy_estimate.get("status") or "").upper() == "ESTIMATED_AGENT"
+    ):
+        strategy_estimate = None
+    metadata: dict[str, Any] = {
+        "compose_source": "REPLAN_PROVIDER_CATALOGUE",
+        "semantic_key": replacement_choice.place_id,
+        "category": candidate_place.category if candidate_place else None,
+        "opening_state": str(opening.get("status") or "UNKNOWN"),
+        "opening_hours": opening,
+        "cost_evidence": cost_evidence,
+        "cost_status": "KNOWN" if known_cost else "UNKNOWN",
+        "price_known": known_cost,
+        "latitude": candidate_place.latitude if candidate_place else None,
+        "longitude": candidate_place.longitude if candidate_place else None,
+        "crs": candidate_place.coordinate_system if candidate_place else "WGS84",
+        "candidate_family": family,
+        "replan_reason_codes": list(reason_codes or replacement_choice.reason_codes),
+        "replaced_place_id": replaced_place_id,
+    }
+    if strategy_estimate is not None:
+        # Keep the provider-backed opening/cost claims above untouched.  This is
+        # a strategy hint that can be used only when the Revolution Lab explicitly
+        # enables the COURSEWORK_ESTIMATE envelope.
+        metadata["strategy_estimate"] = dict(strategy_estimate)
+    if solver_v2_assignment is not None:
+        metadata["solver_v2_assignment"] = solver_v2_assignment
+    return json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+
+def _plan_mobility_eligibility_receipts(
+    plan: PlanVersion | None,
+    activities: list[Activity],
+) -> dict[str, Any]:
+    """Expose the deterministic hard gate for every actual consecutive plan edge.
+
+    The plan and JourneyTwin already carried the frozen facts, but the agent-facing
+    projection only exposed a hard-eligible count.  That left an agent unable to tell
+    which actual edge was covered without reimplementing the product gate.  These receipts
+    are read-only projections of the persisted plan evidence; they never grant authority.
+    """
+
+    empty = {
+        "used_edge_ids": [],
+        "receipts": [],
+        "all_actual_edges_hard_eligible": False,
+    }
+    if plan is None:
+        return empty
+    evidence = _json_object(plan.mobility_evidence_json, {})
+    raw_facts = evidence.get("facts")
+    facts = [item for item in raw_facts if isinstance(item, dict)] if isinstance(raw_facts, list) else []
+    facts_by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in facts
+        if item.get("origin_key") and item.get("destination_key")
+    }
+    snapshot: MobilitySnapshot | None = None
+    try:
+        snapshot = MobilitySnapshot.from_evidence(evidence)
+    except (KeyError, TypeError, ValueError):
+        pass
+
+    receipts: list[dict[str, Any]] = []
+    for origin_activity, destination_activity in zip(activities, activities[1:]):
+        origin_key = str(_activity_routing_key(origin_activity) or "").strip()
+        destination_key = str(_activity_routing_key(destination_activity) or "").strip()
+        if not origin_key or not destination_key or origin_key == destination_key:
+            continue
+        fact = (
+            snapshot.fact_for(origin_key, destination_key)
+            if snapshot is not None
+            else facts_by_pair.get((origin_key, destination_key))
+        )
+        receipt: dict[str, Any] = {
+            "origin_key": origin_key,
+            "destination_key": destination_key,
+            "provider": _mobility_fact_value(fact, "provider", evidence.get("source_provider")),
+            "mode": _mobility_fact_value(fact, "mode"),
+            "fact_quality": _mobility_fact_value(fact, "fact_quality"),
+            "route_provenance": _mobility_fact_value(fact, "route_provenance"),
+            "degraded": bool(_mobility_fact_value(fact, "degraded", evidence.get("degraded", False))),
+            "persisted_minutes": _mobility_fact_value(fact, "minutes"),
+            "hard_minutes": None,
+            "hard_eligible": False,
+            "decision": "MOBILITY_DATA_UNAVAILABLE" if fact is None else "HARD_INELIGIBLE",
+        }
+        if snapshot is not None and fact is not None:
+            try:
+                receipt["hard_minutes"] = snapshot.hard_minutes(origin_key, destination_key)
+                receipt["hard_eligible"] = True
+                receipt["decision"] = "HARD_ELIGIBLE"
+            except KeyError:
+                pass
+        receipts.append(receipt)
+
+    return {
+        "used_edge_ids": [[item["origin_key"], item["destination_key"]] for item in receipts],
+        "receipts": receipts,
+        "all_actual_edges_hard_eligible": bool(receipts)
+        and all(bool(item["hard_eligible"]) for item in receipts),
+    }
+
+def _provider_mesh_candidate_payload(
+    row: RealPlaceCandidate,
+    canonical_place: Place | None = None,
+) -> dict[str, Any]:
+    """Project current canonical Place facts over a historical discovery capture."""
+
+    captured_opening = json.loads(row.opening_hours_json or "{}")
+    captured_metadata = json.loads(row.metadata_json or "{}")
+    captured_cost = captured_metadata.get("cost_evidence", {"status": "UNKNOWN"})
+    if canonical_place is not None:
+        opening = json.loads(canonical_place.opening_hours_json or "{}")
+        canonical_metadata = json.loads(canonical_place.metadata_json or "{}")
+        cost = canonical_metadata.get("cost_evidence", {"status": "UNKNOWN"})
+        facts_source = "CANONICAL_PLACE"
+        facts_updated_at = canonical_place.updated_at
+    else:
+        opening = captured_opening
+        cost = captured_cost
+        facts_source = "CAPTURED_CANDIDATE"
+        facts_updated_at = row.captured_at
+    return {
+        "id": row.id,
+        "provider_key": row.provider_key,
+        "external_id": row.external_id,
+        "name": row.name,
+        "category": row.category,
+        "location": {"latitude": row.latitude, "longitude": row.longitude},
+        "tags": json.loads(row.tags_json or "[]"),
+        "opening_hours": opening,
+        "cost_evidence": cost,
+        "captured_at": row.captured_at,
+        "expires_at": row.expires_at,
+        "materialized_place_id": row.materialized_place_id,
+        "status": row.status,
+        "facts_source": facts_source,
+        "facts_updated_at": facts_updated_at,
+    }
