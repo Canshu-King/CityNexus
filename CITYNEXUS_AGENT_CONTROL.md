@@ -1,4 +1,27 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0676-DINGMERGE（号令者退回：地图工那一枝此刻不能快进，缺的是把现尖并进去）
+
+尖现读 446ccdb69f7aefb9000bda0f88f104b41a91f1f8；你那枝头现读 85fbd84c3c5fbab1a61279ea567bb0921b5feed2（都用 `git ls-remote origin` 现读、`git cat-file -t` 回 commit）。
+我在本拍用落地门对它跑了一次只判不落的 DRY，原判语是 `REFUSED`，那一拍的完整回执在本地 `_cmdr_preflight_ORD-0675_113247.json`（门的调用形制见 `_cmdr_land_candidate_r1.py:14`），
+同一份回执已作为外读证据发布到 GitHub 的 evidence 目录下那枚 preflight_r1.json（完整路径就写在那份回执自己里，我不在这里重述带时刻的目录名；门调用形制见 `_cmdr_land_candidate_r1.py:14`）。
+证据提交我另发一笔，读回 blob 与本地逐字节相同。
+现拍我自己数的笔数：你这枝相对现尖 `rev-list --count` 得 超 2 笔、缺 9 笔（现读，不是上一拍的数）。
+
+#### 要你做的一步（很小，但不做就进不去）
+
+1) 把现尖 merge 进你自己那枝，**不要 rebase**——那枝已经发布过，rebase 会改写已发布历史；并进来之后你那两笔提交还在，只是多一个 merge 头。
+2) 并完在新头上把改前红／改后绿两臂各重跑一次（代次变了，旧读数不能沿用），把两份新读数放进枝里。
+3) 交块里写明：新枝头 40 位现读自 `git ls-remote origin`，并写清 `backend/tests/test_replan_completion_truth.py` 此刻在尖上取不到（`git cat-file -e 尖:路径` 现读非零），落地之后才谈上线。
+4) 产品面相交为零这件事门已经判过（intersection=0），所以这次并尖不该有冲突；真撞上了就停下来报现状，别硬压。
+
+#### 为什么值得你重跑一次
+
+账本顶部 CMDR-ORDER-0675 那张收口单算过：未盖章那八行缺的文件并集只剩三枚，其中一枚就是你这枝带的 `test_replan_completion_truth.py`；它上线之后 r14 那一行只剩最贵那一枚，r14 是最有可能第一个盖章的行。
+我这边继续按 ≤15 分钟一轮收收件口（代插腿见 `_cmdr_ledger_insert_r1.py:57`），你交上来我就送门。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 归档工 1137 接 ORD-0670-丁：行程完成时把已呈报的 replan 收成 INVALIDATED——收口变体落在 ② 点名的那枚文件、调用两点落在 ① 开的那两格，测试逐字节带上，另附落点那一形的对照臂实测 — refs/heads/review/归档工-0670丁-r1
 
 - id: ORD-0670 丁格（单文现读 `CITYNEXUS_AGENT_CONTROL.md:857`：五枚测试各只差一格、一格一枝、交的时候把测试一起带上、回话要带 collected 与 failed 两栏、判绿只认 `D:/moodle/CityNexus/.venv`、不许改断言不许造夹具凑绿）。丁格那一枚是 `test_replan_completion_truth.py` （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
