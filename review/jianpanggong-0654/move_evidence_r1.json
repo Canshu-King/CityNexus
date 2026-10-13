@@ -1,0 +1,58 @@
+{
+  "tip": "8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0",
+  "head": "8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0",
+  "rep": "843844c5587da01287faa8f384411915eade9a87",
+  "helper": "_server_completion_contract",
+  "rep_range": [
+    503,
+    566
+  ],
+  "rep_lines": 64,
+  "rep_blob": "a5e2c2f56f3fc6b72392706969db3dcd21a5a383",
+  "tip_blob": "2a6be6e8ea4e2d3554949f0a7885252008dea36b",
+  "tip_function_count": 12,
+  "after_function_count": 13,
+  "insert_after_line": 271,
+  "neighbour": "_tool_result_advances_state",
+  "bytes": {
+    "before": 31811,
+    "after": 34376
+  },
+  "sha256_after": "1d7229995c849313",
+  "body_names_borrowed": [
+    "Any",
+    "active_mutations",
+    "any",
+    "approval_pending",
+    "bool",
+    "conclusions",
+    "dict",
+    "executed",
+    "isinstance",
+    "item",
+    "list",
+    "proposal_created",
+    "requested",
+    "run_status",
+    "str",
+    "tool_steps"
+  ],
+  "unresolved_names": [
+    "active_mutations",
+    "approval_pending",
+    "conclusions",
+    "executed",
+    "item",
+    "proposal_created",
+    "requested",
+    "run_status",
+    "tool_steps"
+  ],
+  "line_ending": "LF",
+  "gitattributes_rule": "*.py text eol=lf",
+  "worktree_dirty_not_mine": [
+    "backend/tests/test_agent_runtime_state_epoch.py",
+    "backend/tests/test_replan_schedule_timezone.py"
+  ],
+  "problems": []
+}

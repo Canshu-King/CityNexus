@@ -1,0 +1,31 @@
+现尖 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5（本尺所有「尖上」判断都对着这一代）
+
+test_r21_autonomous_future_synthesis.py        blob 7978a53ceec2｜对得上号令者那枚=是｜281 行、10 枚用例｜尖上=没有
+test_r22_opportunity_capture.py                blob a11c0094e9f0｜对得上号令者那枚=是｜98 行、7 枚用例｜尖上=没有
+test_agent_runtime_state_epoch.py              blob 0f381e78e9a9｜对得上号令者那枚=是｜17 行、2 枚用例｜尖上=没有
+test_event_resolution_projection.py            blob 0862062fbf10｜对得上号令者那枚=是｜42 行、1 枚用例｜尖上=没有
+test_r23_adaptive_traveler_twin.py             blob 44a8b6e0185d｜对得上号令者那枚=是｜201 行、8 枚用例｜尖上=没有
+test_r24_adaptive_memory.py                    blob 42c95beed3b3｜对得上号令者那枚=是｜199 行、3 枚用例｜尖上=没有
+test_real_city_overpass_union.py               blob f303fecc371b｜对得上号令者那枚=是｜36 行、1 枚用例｜尖上=没有
+test_replan_schedule_timezone.py               blob 21eb1450aa17｜对得上号令者那枚=是｜27 行、2 枚用例｜尖上=没有
+
+[跑] 逐枚按原字节放进尖树，各跑一次（collected / failed 两栏）
+   test_r21_autonomous_future_synthesis.py        collect rc=2｜no tests collected, 1 error in 0.93s｜执行 rc=2｜(无判语行)
+       红的一手：E   ImportError: cannot import name '_latest_actionable_event' from 'app.agent.gateway' (D:\moodle\_qoder_pinggong_0588\backend\app\agent\gateway.py)
+   test_r22_opportunity_capture.py                collect rc=2｜no tests collected, 1 error in 0.74s｜执行 rc=2｜(无判语行)
+       红的一手：E   ImportError: cannot import name '_city_category_terms' from 'app.agent.gateway' (D:\moodle\_qoder_pinggong_0588\backend\app\agent\gateway.py)
+   test_agent_runtime_state_epoch.py              collect rc=2｜no tests collected, 1 error in 0.77s｜执行 rc=2｜(无判语行)
+       红的一手：E   ImportError: cannot import name '_tool_result_advances_state' from 'app.agent.runtime' (D:\moodle\_qoder_pinggong_0588\backend\app\agent\runtime.p
+   test_event_resolution_projection.py            collect rc=0｜1 test collected in 1.97s｜执行 rc=1｜1 failed, 2 warnings in 1.83s
+       红的一手：FAILED tests/test_event_resolution_projection.py::test_event_api_exposes_server_resolution_time_and_reason
+   test_r23_adaptive_traveler_twin.py             collect rc=2｜no tests collected, 1 error in 2.10s｜执行 rc=2｜(无判语行)
+       红的一手：E   ImportError: cannot import name '_server_completion_contract' from 'app.agent.runtime' (D:\moodle\_qoder_pinggong_0588\backend\app\agent\runtime.p
+   test_r24_adaptive_memory.py                    collect rc=0｜3 tests collected in 1.84s｜执行 rc=1｜3 failed, 2 warnings in 1.96s
+       红的一手：FAILED tests/test_r24_adaptive_memory.py::test_r24_voluntary_rejection_becomes_bounded_avoidance_evidence
+       红的一手：FAILED tests/test_r24_adaptive_memory.py::test_r24_explicit_interest_overrides_learned_avoidance
+   test_real_city_overpass_union.py               collect rc=0｜1 test collected in 0.34s｜执行 rc=1｜1 failed in 0.34s
+       红的一手：FAILED tests/test_real_city_overpass_union.py::test_gallery_search_emits_valid_overpass_union_for_each_tag_family
+   test_replan_schedule_timezone.py               collect rc=2｜no tests collected, 1 error in 1.99s｜执行 rc=2｜(无判语行)
+       红的一手：E   ImportError: cannot import name '_normalize_replan_schedule_time' from 'app.main' (D:\moodle\_qoder_pinggong_0588\backend\app\main.py)
+
+[清] 跑完工作树除本目录外未登记改动 0 处

@@ -253,6 +253,89 @@ def _tool_args(raw_arguments: str) -> dict[str, Any]:
     return parsed
 
 
+def _tool_result_advances_state(tool_name: str, result: Any) -> bool:
+    """Return whether a tool result created a new domain observation epoch.
+
+    Inspection calls are intentionally repeatable, but a repeat after a
+    successful domain action must not be mistaken for an infinite loop. The
+    runtime only advances the epoch on server-owned evidence of change; model
+    prose and failed tool calls never reset the repetition guard.
+    """
+
+    if not isinstance(result, dict) or result.get("error"):
+        return False
+    if tool_name == "request_replan":
+        proposal = result.get("proposal")
+        return isinstance(proposal, dict) and bool(proposal.get("id"))
+    return tool_name in _MUTATION_TOOLS and result.get("executed") is True
+
+
+
+def _server_completion_contract(
+    tool_steps: list[dict[str, Any]], *, run_status: str
+) -> dict[str, Any]:
+    """Classify recovery completion from persisted server/tool facts only."""
+
+    active_mutations = {
+        "accept_replan",
+        "activate_standby",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+    }
+    executed = any(
+        item.get("tool_name") in active_mutations
+        and isinstance(item.get("result"), dict)
+        and item["result"].get("executed") is True
+        for item in tool_steps
+    )
+    approval_pending = any(
+        isinstance(item.get("result"), dict)
+        and (
+            item["result"].get("decision") in {"REQUIRE_CONFIRMATION", "REQUIRE_STEP_UP"}
+            or item["result"].get("approval_required") is True
+        )
+        for item in tool_steps
+    )
+    # A failed request_replan is an attempted strategy, not a live proposal.
+    # Only a server-created proposal blocks a typed NO_ACTION conclusion.
+    proposal_created = any(
+        item.get("tool_name") == "request_replan"
+        and isinstance(item.get("result"), dict)
+        and isinstance(item["result"].get("proposal"), dict)
+        and bool(item["result"]["proposal"].get("id"))
+        for item in tool_steps
+    )
+    conclusions = [
+        item.get("result", {}).get("requested_outcome")
+        for item in tool_steps
+        if item.get("tool_name") == "conclude_recovery"
+        and isinstance(item.get("result"), dict)
+        and item.get("status") != "TOOL_ERROR"
+    ]
+    requested = conclusions[-1] if conclusions else None
+    if requested == "MUTATION_EXECUTED" and executed:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "APPROVAL_PENDING" and approval_pending:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "NO_ACTION" and not executed and not approval_pending and not proposal_created:
+        return {"kind": requested, "source": "server_trace"}
+    if requested == "UNRESOLVED":
+        return {"kind": requested, "source": "server_trace"}
+    if executed:
+        return {"kind": "MUTATION_EXECUTED", "source": "server_trace"}
+    if approval_pending:
+        return {"kind": "APPROVAL_PENDING", "source": "server_trace"}
+    return {
+        "kind": "UNRESOLVED",
+        "source": "server_trace",
+        "reason_code": "NO_TYPED_RECOVERY_CONCLUSION"
+        if run_status == "COMPLETED"
+        else "RUN_NOT_RESOLVED",
+    }
+
 def _result_for_model(result: Any) -> str:
     if isinstance(result, dict):
         return _json_text(result)
