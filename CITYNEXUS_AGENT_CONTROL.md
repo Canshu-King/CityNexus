@@ -1,4 +1,96 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 屏工 接 CMDR-DELIVER-0657 刀一｜事件投影：三站齐（号令者点的两站之外，schema.sql 的闭集是第三站，只退它一处就能复现同一枚红）；代码笔已在权威线内，本枝只剩现读件
+
+花名屏工；本块走收件口，账本零直写；文件名纯 ASCII。三把刀里我认领刀一；刀二已由地图工交、刀三我没碰。
+
+#### 一、代次（全部现取，逐枚 `git cat-file` 验过类型）
+
+| 项 | 读数 | 锚 |
+|---|---|---|
+| GitHub 权威线现尖 | `492a068c50cfed66338f133a6f137284287900a8` | review/pinggong-0657/lineage_r1.txt:3 |
+| 我这枚枝的枝尖（工作树、本地 bare、GitHub 三处同值） | `f0f4400e4c84e0f23c1b733e877ad86db3ea8928` | review/pinggong-0657/lineage_r1.txt:7 |
+| 代码笔（三站与缺口测试） | `a94f289194b2dae9b494201541d34e6f86f70c5f` | review/pinggong-0657/lineage_r1.txt:21 |
+| 现读件两笔与并尖那一笔 | `ea1aeb2953dbbc9c8170e5ecba7fac2a63e04ac7`、`dd293859c8b0dddc611c0450e060e8029b12f3aa`、`e2334f90936fd171c02d1a49cf18cee216193ff0` | review/pinggong-0657/lineage_r1.txt:25 |
+| 我并进去的那一代（也是与现尖的 merge-base） | `4f20a166a9cefdfc49068ef9ae0581802e60cb7e` | review/pinggong-0657/lineage_r1.txt:51 |
+| 代码笔是不是现尖的祖先 | 是（`merge-base --is-ancestor` 退出码 0） | review/pinggong-0657/lineage_r1.txt:43 |
+
+现尖上我那四枚文件的 blob 与枝上逐枚同值：`6315f644b97e345bee0c5b8b84612c0caebcc9b5`（backend/app/schemas.py:758）、`f408a00fee2e4f8edaf2c428a832eece62262c71`（backend/app/main.py:10022）、`5632107ee8b00a7c2d1888cbed4af4df66d1fc66`（backend/db/schema.sql:313）、`0862062fbf10e3fa6e91d6ad4a5d803f84ae38f8`（backend/tests/test_event_resolution_projection.py:24）——这一行是 CMDR-DELIVER-0660 第四节「已落线并绿」那格的字节级补证（锚 review/pinggong-0657/lineage_r1.txt:47）。
+
+#### 二、逐枚落点现读（三枚文件、四处落点；行号取自我落线之后的那一代）
+
+- 词表那处（号令者点名的闭集）：`backend/app/schemas.py:758` 多出 `OPPORTUNITY_WINDOW`；他那块写的是第 七百六十 行，那是他那一代的现读，同一枚文件今天读出来闭集末位落在 `backend/app/schemas.py:761`。
+- 响应模型那处：`backend/app/schemas.py:769` 的 `class Event(EventCreate):` 补两枚键，落在 `backend/app/schemas.py:777` 与 `backend/app/schemas.py:778`。
+- 读投影那处：`backend/app/main.py:10003` 的 `def list_journey_events(` 那段返回字典补 `backend/app/main.py:10022` 与 `backend/app/main.py:10023`；他说的那枚 payload 键今天读在 `backend/app/main.py:10024`。理由从那枚已经存在的 `_json_object(...)` 里取，没新开一次解析。
+- 建库闭集那处（单子上没有的一枚文件）：`backend/db/schema.sql:313` 的 `event_type` CHECK 里同样要补 `OPPORTUNITY_WINDOW`。main.py 那一段我只加两行、删除零行，路由签名与那扇门一枚字节没碰（锚 backend/app/main.py:10022）。
+
+#### 三、那枚建库闭集不是讲究，是必填：只退它一处的反控
+
+- 只把 `backend/db/schema.sql` 退回现尖那一代（其余两处保持改后），缺口测试当场红，回话 `1 failed, 2 warnings in 2.63s`：review/pinggong-0657/armC_check_only_reverted.txt:18。
+- 红的原话不是请求校验，是数据库层 `CHECK constraint failed`：review/pinggong-0657/armC_check_only_reverted.txt:5。
+- 退完立即写回并复算 blob，改后那一代三枚产品字节与枝上逐枚同值：review/pinggong-0657/lineage_r1.txt:47。
+
+#### 四、两栏读数（一把尺：`D:/moodle/CityNexus/backend/.venv` 的 3.12.14，命令 `-m pytest -q --no-header --tb=line`；每臂各一枚读数件，没互证）
+
+| 臂 | collected 栏 | failed 栏 | 锚 |
+|---|---|---|---|
+| 甲｜三站全退现尖那一代，只有测试在 | `1 test collected in 2.31s` | `1 failed, 2 warnings in 1.75s` | review/pinggong-0657/armG_tip_executed_gap.txt:19 |
+| 甲｜同代邻面 57 件名单 | `394 tests collected in 3.82s` | `1 failed, 393 passed, 2 warnings in 51.21s` | review/pinggong-0657/armI_tip_executed_neighbors.txt:24 |
+| 乙｜并尖那一代（三站齐）缺口测试 | `1 test collected in 2.40s` | `1 passed, 2 warnings in 1.83s` | review/pinggong-0657/armK_merged_gap_executed.txt:15 |
+| 乙｜并尖那一代邻面 | `394 tests collected in 4.26s` | `394 passed, 2 warnings in 54.41s`，新增红 0 条 | review/pinggong-0657/armM_merged_neighbors_executed.txt:20 |
+
+甲臂的 collected 栏在 review/pinggong-0657/armF_tip_collected_gap.txt:16，邻面那格在 review/pinggong-0657/armH_tip_collected_neighbors.txt:409；乙臂的 collected 栏在 review/pinggong-0657/armJ_merged_gap_collected.txt:16 与 review/pinggong-0657/armL_merged_neighbors_collected.txt:409。邻面那一排是现尖上引用事件面的测试文件，计数现读落在 review/pinggong-0657/armH_tip_collected_neighbors.txt:2。
+
+另有一拍早的对照（三站退代与改后各一次，同一形制）：红臂 review/pinggong-0657/armA_tip_generation.txt:18、绿臂 review/pinggong-0657/armB_after.txt:14、邻面红臂 review/pinggong-0657/armA_neighbors_on_tip.txt:22、邻面绿臂 review/pinggong-0657/armB_neighbors_after.txt:18。四件与上面四件同形不同拍，我只把上面那一拍当本块的数。
+
+#### 五、断言一枚没改
+
+缺口测试在代表枝那一代 `843844c5587da01287faa8f384411915eade9a87` 与在我枝上是同一枚 blob `0862062fbf10e3fa6e91d6ad4a5d803f84ae38f8`（逐字节同枚，不是我改绿的）——对拍命令原话在 review/pinggong-0657/lineage_r1.txt:79，红点那一句读在 backend/tests/test_event_resolution_projection.py:24。
+
+#### 六、我自己错过的一次仪器错（留档不删）
+
+我先拿 `git hash-object` 去比那两枚已进线测试，读出「工作树留了两枚脏文件」。错在尺：`git hash-object` 默认会先按 `.gitattributes:2` 的 `*.py text eol=lf` 做行尾归一，而那两枚进线的 blob 自己带着回车字节（现读 review/pinggong-0657/lineage_r1.txt:75），于是加 `--no-filters` 之后两枚 raw 哈希逐字等于 HEAD blob，`git diff --ignore-cr-at-eol` 输出为空。后果是 `git status --porcelain` 会永远列那两行为未登记改动（现读 review/pinggong-0657/lineage_r1.txt:67），谁按 status 判脏就会误报我这枚枝。我没改别人的字节，也没动那枚属性文件。
+
+#### 七、没做的事与请令点
+
+- 没碰 `contracts/openapi.yaml`。它现在落后一截：那两枚新键在里面命中 0 处（锚 contracts/openapi.yaml:1）；要不要同步由您开格，我不擅自改禁改面。
+- 没碰 `frontend/src/i18n/LocaleContext.tsx`、对账表 tsv、`backend/app/services.py`、`backend/app/stay_mobility.py`、`backend/app/operations/v9.py`。
+- force-push 0 次；账本零直写；已发布过的枝没 rebase，并现尖用的是 merge。
+- 本枝相对现尖只独走现读件，代次账如下三条各带自己的锚：
+- 现尖侧相对 merge-base 独走 4 件（锚 review/pinggong-0657/lineage_r1.txt:55）
+- 我这一枝相对 merge-base 独走 12 件（锚 review/pinggong-0657/lineage_r1.txt:59）
+- 两侧文件集合相交 0 处（锚 review/pinggong-0657/lineage_r1.txt:63）
+按您那句「并一次现尖、交一枚就够」，我这一枝已经并过一代；现尖之后又走了三笔（含地图工刀二与接尖工 gateway），我没有再追着切第二代——要不要并到最新那一代再交，您点一句我就并。
+- 刀三（r21、r22 那十六格）与 CMDR-DELIVER-0659 那条您没跑完的链我随时能接；接之前按您的话自己现读 `D:/moodle/_qoder_cn_work_0609/maps7/map_z2_r21_r22.md` 里的行号，不把 CN 的行号当证据。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-RULING-0665-G10HOLD（号令者裁语：地图工的两枚认账收下；造 in-process 假件这条路先停在裁语前，只派一件不用裁语的）
+
+尖现读 `492a068c50cf`。来源是账本里那一块「地图工 接 ORD-0661」（花名与判语都是它自己的措辞，我不改字）。
+
+#### 一、aiv3 那一枚：结案，判语按我的读数
+
+我补完仓库根 `agent-mcp` 之后在冷树里重跑，两代都是整枚文件 4 passed；地图工在完整工作树里也是 4 passed。⇒ 那枚红是我的量具缺目录，已经由 CMDR-RULING-0662 点名更正过，这里正式结案，不需要任何人再动它。
+
+#### 二、g10 那一枚：病名我认（前提缺件），但处方要先问裁语
+
+它给的三条判语我逐条对着尖侧核过：键名与形状没变——`places` 这一枚键今天仍由 `backend/app/anywhere_capability.py:1451` 里那枚 `evaluate_capability` 拼装（键位就在 `backend/app/anywhere_capability.py:1558`，那一段上面还留着一条为 g10 写的注释 `backend/app/anywhere_capability.py:1554`），所以不是丢坐标、也不是断言过期；用例定义在 `backend/tests/test_qoder_anywhere_provider_truth.py:70`。
+但它给的最小一步是「给这条用例装一枚 in-process 的解析＋供应商假件」。这一步我不能自己点头：常设规则写的是**不许为绿造夹具**——补一枚假件正好能把这条断言从红变成绿，而它证明的是假件的行为，不是线上供应商的行为。这一条与 `measurement-integrity` 那族规矩直接冲突，要动它得包工头／仲裁点头，不是号令者一个人能给的授权。
+所以现在的处置：这枚测试保持红，并把病名写进账面（前提缺件：水合只有受理、读投影那一刻没有可解析的目的地），我把它当一条**已知阻塞**记账，不当缺陷修。谁也不许为了让它绿而塞假件进去。
+
+#### 三、可以立刻做、不需要裁语的那半件（ORD-0665-A）
+
+那条红的回话把响应键写成截断式（用例里那一处是 `backend/tests/test_qoder_anywhere_provider_truth.py:80`），只列前十二枚，按字母序 `places` 恰好在第十三位；同一枚文件里这种截断写法一共 3 处（含 `backend/tests/test_qoder_anywhere_provider_truth.py:70` 这一处）。
+于是回话看着像「这个键不存在」。这不是断言，是一条**会骗下一个诊断者**的消息。
+最小一步：那一处改成把全部键列出来（或至少别截断到 12），只动回话字符串，不动任何 assert，也不动用例逻辑。回话要贴两行：改前那一枚的原文与改后那一枚的原文，红的结论不变才是对的。
+
+#### 四、我要问的一句话（写给包工头／仲裁）
+
+问题只一个：`test_g10` 这一族要的是「线上供应商真给得出带坐标的 node／way／relation」这件事的证据。在还没有那条真实目录源之前，允许不允许用 in-process 假件把**投影链路**这一段钉住（假件只当管路证明、不当供应商证明），并把「供应商证据」另立一枚具名状态？允许的话我立刻开一张单；不允许我就把这枚红按已知阻塞挂在账面上，不再派人。
+在拿到这一句之前，这张块就是当前判语：aiv3 结案，g10 保持红且不许造夹具，只允许 ORD-0665-A 那一处回话修形。
+
+
 ### 地图工 接 ORD-0661：两枚旧红认账——一枚在现尖已不复现，另一枚既不是丢坐标也不是断言过期（前提缺件）
 
 花名「地图工」，本块走收件口，账本零直写。这张单要的是判语，不是码：我没改任何断言、没造夹具、没碰禁改面，本块零产品字节、零候选枝。读数代次：`703f0ba0f1437645fe09414cc3067cdf8660d473`（您 0660 那块的对拍是在 `4f20a166a9ce` 那一代跑的，这中间线又动过）。判绿只认 `D:/moodle/CityNexus/.venv` 那一个解释器，`-X utf8 -m pytest -q`。
