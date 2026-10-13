@@ -1,4 +1,40 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0668-ONESYMBOLSHORT（号令者交活：十一枚符号已落线，六枚关键路径测试现在只剩具名那几格）
+
+尖现读 `fd141d5f2efd`。我刚把关键路径的 十二 枚模块级符号逐字搬进线（全部取自代表枝那一代，零行为发明）：
+落地门原判 READY_TO_LAND、ff=True、intersection=0，落成那一代尖前 12 位 `fd141d5f2efd`；回执 `evidence/cmdr-landing-0668syms-085058/preflight_r1.json`，逐字节回验 BYTE-LEVEL MATCH（证据提交 `a82d6624abf7`）。
+搬运原账（哪一枚进了哪一份文件、多少行）：
+  `backend/app/main.py` 的 `_replacement_activity_metadata`（六十六 行）
+  `backend/app/main.py` 的 `_plan_mobility_eligibility_receipts`（七十二 行）
+  `backend/app/main.py` 的 `_provider_mesh_candidate_payload`（三十七 行）
+  `backend/app/services.py` 的 `COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE`（一 行）
+  `backend/app/services.py` 的 `SEALED_DEMO_AUTHORITY_ENVELOPE`（一 行）
+  `backend/app/services.py` 的 `UNRESOLVED_ACTIVITY_FACTS`（一 行）
+  `backend/app/services.py` 的 `_mobility_catalogue_place_ids`（三十五 行）
+  `backend/app/services.py` 的 `plan_authority_blocker`（八十五 行）
+  `backend/app/stay_mobility.py` 的 `_plan_mobility_projection`（一百二十九 行）
+  `backend/app/services.py` 的 `_catalogue_visit_eligible`（二十二 行）
+  `backend/app/services.py` 的 `_strategy_voi_decisions`（四十六 行）
+  `backend/app/services.py` 的 `_strategy_pivot_decisions`（四十二 行）
+
+#### 落线之后同一棵冷树里的真读数（`_gap11_reds.txt`）
+
+六枚关键路径测试合起来跑：二十一 格失败、二十二 格通过。按文件分：
+  `test_r14_terminal_disruption_recovery.py` 还差 1 格（第一格定义在这份待交文件自己的 `backend/tests/test_r14_terminal_disruption_recovery.py:33`，行号取自我手上那份逐字节副本，这枚测试还没上线所以这不是尖上的行）：`test_active_closure_can_accept_terminal_prefix_replan`
+  `test_r15_source_authority.py` 还差 二 格：`test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0]`、`test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]`
+  `test_replan_completion_truth.py` 还差 1 格（第一格定义在这份待交文件自己的 `backend/tests/test_replan_completion_truth.py:16`，行号取自我手上那份逐字节副本，这枚测试还没上线所以这不是尖上的行）：`test_completion_invalidates_presented_replans_and_keeps_history_read_only`
+  `test_replan_place_fact_binding.py` 还差 1 格（第一格定义在这份待交文件自己的 `backend/tests/test_replan_place_fact_binding.py:9`，行号取自我手上那份逐字节副本，这枚测试还没上线所以这不是尖上的行）：`test_replacement_metadata_uses_candidate_place_facts_only`
+  `test_revolution_r77_public_place_facts.py` 还差 1 格（第一格定义在这份待交文件自己的 `backend/tests/test_revolution_r77_public_place_facts.py:13`，行号取自我手上那份逐字节副本，这枚测试还没上线所以这不是尖上的行）：`test_public_places_projects_identity_and_place_fact_evidence_without_free_coercion`
+  `test_revolution_r77_recovery.py` 还差 15 格（第一格定义在这份待交文件自己的 `backend/tests/test_revolution_r77_recovery.py:61`，行号取自我手上那份逐字节副本，这枚测试还没上线所以这不是尖上的行）：`test_coursework_estimate_envelope_is_explicit_and_lab_scoped`、`test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract`、`test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phases`、`test_bound_official_facts_supersede_known_map_tags`、`test_agent_place_search_accepts_exact_name_with_fact_query_terms`、`test_selected_plan_projection_exposes_edge_scoped_hard_receipts`、`test_selected_plan_projection_names_provider_collocated_zero_minute_edge`、`test_strict_catalogue_mobility_excludes_unresolved_opening_rows`、`test_strict_catalogue_templates_exclude_unverified_cost_rows`、`test_real_catalogue_treats_verified_gardens_as_visit_stops`、`test_real_catalogue_treats_theatres_as_visit_stops`、`test_strategy_voi_prefers_missing_facts_matching_intent`、`test_strategy_pivots_after_source_path_has_no_structured_facts`、`test_real_catalogue_fallback_is_visible_but_not_selectable`、`test_explicit_provider_catalogue_unknown_cost_becomes_provisional_not_authoritative`
+
+#### ORD-0670｜五枚测试各只差一格，一格一枝，交的时候把测试一起带上
+
+`test_replan_place_fact_binding.py`、`test_r14_terminal_disruption_recovery.py`、`test_r15_source_authority.py`、`test_replan_completion_truth.py`、`test_revolution_r77_public_place_facts.py` 这五枚现在各只差具名那一格；`test_revolution_r77_recovery.py` 差十五格，那枚要拆开做，别一人吞。
+每位的形状：先在你自己枝上把那枚测试放进 `backend/tests/`，让它现在这唯一一格红变绿；判绿只认 `D:/moodle/CityNexus/.venv`，回话要带 collected 与 failed 两栏；补的东西不许写在测试里（不许改断言、不许造夹具凑绿），产品码落点看 `maps8/map_q3_small_five.md` 与 `maps10/map_t2_work_breakdown.md`（那些行号是 CN 现读的，动手前自己再核）。
+热文件规矩不变：`backend/app/main.py` 只准动 CMDR-RULING-0653 第二节与 CMDR-DELIVER-0657 刀一点名过的两处；`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 tsv 仍然禁改。
+交块走 `D:/moodle/_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### `，文件名纯 ASCII。
+
+
 ### CMDR-RULING-0666-CRITICALPATH（号令者改序：未盖章那一堆其实共享同一组关键路径文件，全部车道收拢到这一组）
 
 尖现读 `15835398bff5`。对账表现读是盖章 九 行、未盖章 三十二 行；下面这些组是我当场对现尖重算 A 集之后按集合签名分出来的，不是引用哪一份旧清单。
