@@ -1,6 +1,6 @@
 label: 现尖 ｜cmd: git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 ｜rc=0 ｜out: e1f352030e61b96bbda2c487c3386e8e93b76163	refs/heads/mirror/integration-frontend-apple-pass1
 
-label: 我这枝（本地现读） ｜cmd: git rev-parse refs/heads/review/pinggong-0679-r1 ｜rc=0 ｜out: 21f8f423eaabada505fc020e8fe292918666b077
+label: 我这枝（本地现读） ｜cmd: git rev-parse refs/heads/review/pinggong-0679-r1 ｜rc=0 ｜out: a39619c858cebb46972fcbce8ff59dbc75b322ff
 
 label: 我那笔产品改动 ｜cmd: git rev-list --max-count=1 refs/heads/review/pinggong-0679-r1 -- backend/app/main.py ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861
 
@@ -10,7 +10,7 @@ label: 抢先落线那一笔（号令者点名） ｜cmd: git cat-file -t 25b6ae
 
 label: 现尖与我这枝的 main.py 两枚 blob ｜cmd: git ls-tree e1f352030e61b96bbda2c487c3386e8e93b76163 -- backend/app/main.py ｜rc=0 ｜out: 100644 blob a2227be857db5bd8f62cda30381b14a52af1675d	backend/app/main.py
 
-label: 我这枝的 main.py 与测试的 blob ｜cmd: git ls-tree 21f8f423eaabada505fc020e8fe292918666b077 -- backend/app/main.py backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: 100644 blob 03e1cad13d17db04e53d2ec13cf7eb458b9aec56	backend/app/main.py ;; 100644 blob 3214622a7a9b5d9671b42032e82a59d1dadc9de7	backend/tests/test_r14_terminal_disruption_recovery.py
+label: 我这枝的 main.py 与测试的 blob ｜cmd: git ls-tree a39619c858cebb46972fcbce8ff59dbc75b322ff -- backend/app/main.py backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: 100644 blob 03e1cad13d17db04e53d2ec13cf7eb458b9aec56	backend/app/main.py ;; 100644 blob 3214622a7a9b5d9671b42032e82a59d1dadc9de7	backend/tests/test_r14_terminal_disruption_recovery.py
 
-label: 现尖相对我这枝独走的文件数 ｜cmd: git rev-list --left-right --count e1f352030e61b96bbda2c487c3386e8e93b76163...21f8f423eaabada505fc020e8fe292918666b077 ｜rc=0 ｜out: 3	7
+label: 现尖相对我这枝独走的文件数 ｜cmd: git rev-list --left-right --count e1f352030e61b96bbda2c487c3386e8e93b76163...a39619c858cebb46972fcbce8ff59dbc75b322ff ｜rc=0 ｜out: 3	8
 
