@@ -1,0 +1,95 @@
+cmd: git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+label: GitHub 权威线现尖
+rc=0 out: 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2	refs/heads/mirror/integration-frontend-apple-pass1
+
+cmd: git ls-remote origin refs/heads/review/pinggong-0666-r1
+label: 我这枚枝（GitHub）
+rc=0 out: 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c	refs/heads/review/pinggong-0666-r1
+
+cmd: git rev-parse refs/heads/review/pinggong-0666-r1
+label: 我这枚枝（本地）
+rc=0 out: 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c
+
+cmd: git rev-parse refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+label: 出处枝 r25 现读
+rc=128 out: refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+stderr: fatal: ambiguous argument 'refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328': unknown revision or path not in the working tree. ;; Use '--' to separate paths from revisions, like this: ;; 'git <command> [<revision>...] -- [<file>...]'
+
+cmd: git cat-file -t 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2
+label: cat-file -t 现尖
+rc=0 out: commit
+
+cmd: git cat-file -t 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c
+label: cat-file -t 枝尖
+rc=0 out: commit
+
+cmd: git cat-file -t 
+label: cat-file -t 代码笔
+rc=128 out: 
+stderr: fatal: Not a valid object name
+
+cmd: git cat-file -t refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+label: cat-file -t 出处代
+rc=128 out: 
+stderr: fatal: Not a valid object name refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+
+cmd: git merge-base --is-ancestor  14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2
+label: 代码笔是不是现尖与枝尖的祖先
+rc=128 out: 
+stderr: fatal: Not a valid object name
+
+cmd: git merge-base 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c
+label: 并进来的那一代（现尖与我枝尖的 merge-base）
+rc=0 out: 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c
+
+cmd: git diff --numstat 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c
+label: 我相对现尖独走哪些文件与几行
+rc=0 out: 
+
+cmd: git ls-tree 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2 -- backend/app/core/config.py backend/tests/test_r15_source_authority.py
+label: 现尖上那两枚文件的 blob
+rc=0 out: 100644 blob 297975497f108adf8ed124d20e3e0d312a8f814f	backend/app/core/config.py ;; 100644 blob a8ef3c5e65d6e6fc27dda3d9b83c4f3f8eb2e1ff	backend/tests/test_r15_source_authority.py
+
+cmd: git ls-tree 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c -- backend/app/core/config.py backend/tests/test_r15_source_authority.py
+label: 我枝上那两枚文件的 blob
+rc=0 out: 100644 blob 297975497f108adf8ed124d20e3e0d312a8f814f	backend/app/core/config.py ;; 100644 blob a8ef3c5e65d6e6fc27dda3d9b83c4f3f8eb2e1ff	backend/tests/test_r15_source_authority.py
+
+cmd: git ls-tree refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328 -- backend/app/core/config.py
+label: 出处 r25 上 config.py 的 blob
+rc=128 out: 
+stderr: fatal: Not a valid object name refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+
+cmd: git ls-tree refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328 -- backend/tests/test_r15_source_authority.py
+label: 出处 r25 上缺口测试的 blob
+rc=128 out: 
+stderr: fatal: Not a valid object name refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+
+cmd: git grep -n -e searxng_url refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328 -- backend/app/core/config.py
+label: 出处那一代被搬的三行（行号是那一代的）
+rc=128 out: 
+stderr: fatal: unable to resolve revision: refs/heads/gpt/revolution-r25-strategic-horizon-steward-20260328
+
+cmd: git grep -n settings\.searxng_url 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2 -- backend/app/fact_acquisition.py
+label: 尖上读这枚字段的产品行
+rc=0 out: 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/app/fact_acquisition.py:977:    if not settings.searxng_url: ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/app/fact_acquisition.py:1006:    provider = SearXNGSearchProvider(settings.searxng_url, client=client) ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/app/fact_acquisition.py:1097:        "search_source": {"provider": "searxng", "status": "UNCONFIGURED" if not settings.searxng_url else "PENDING", "attempted": False, "acquired": 0},
+
+cmd: git grep -n ^def acquire_place_facts 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2 -- backend/app/fact_acquisition.py
+label: 尖上这枚函数的定义行
+rc=0 out: 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/app/fact_acquisition.py:1077:def acquire_place_facts(
+
+cmd: git grep -n acquire_place_facts 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2 -- backend
+label: 尖上谁调用这枚函数（全仓，含测试）
+rc=0 out: 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/app/fact_acquisition.py:1077:def acquire_place_facts( ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r32-live-strike-final.json:160:              "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r32-live-strike-v2c-fresh.json:66:              "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r32-live-strike-v2c-fresh.json:290:              "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r35-open-world-guardian-pulse-v1.json:760:            "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r35-open-world-guardian-pulse-v1.json:10057:                "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r36-adaptive-journey-watch-v1.json:791:            "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r36-adaptive-journey-watch-v1.json:1811:                "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r36-adaptive-journey-watch-v1.json:2838:                  "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r37-grounded-presence-next-move-v1.json:150:        "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r37-grounded-presence-next-move-v1.json:412:          "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r37-grounded-presence-next-move-v1.json:1088:          "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/output/r43-autonomous-journey-operator-v1.json:181:            "acquire_place_facts", ;; 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2:backend/tests/test_r15_source_authority.py:42:        receipt = facts.acquire_place_facts(session, SimpleNamespace(city_code=city, id=uuid4().hex, start_at="2026-10-13T09:00:00+08:00"),
+
+cmd: git grep -n -e overpass_url -e searxng_url 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c -- backend/app/core/config.py
+label: 我枝上 config 那三行的位置
+rc=0 out: 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c:backend/app/core/config.py:74:    overpass_url: str = os.getenv("CITYNEXUS_OVERPASS_URL", "https://overpass-api.de/api") ;; 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c:backend/app/core/config.py:77:    searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
+
+cmd: git grep -n SEARXNG 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2 -- .env.example
+label: env 里有没有出现过这个变量名
+rc=1 out: 
+
+cmd: git diff --name-only 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c 0e7c0baa9cdad0371d7b07603ba2a3ccdccc448c
+label: 两侧文件集合相交（我独走的清单）
+rc=0 out: 
+
