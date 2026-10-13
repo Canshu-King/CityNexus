@@ -1,0 +1,10 @@
+# ORD-0680 第 1 格 · 落线之后的现读（这一版取代交付块里那句「还在门前等点」）
+# 线尖 456021a287e51ba135d7fd221ece53b6997eb6da == 我这枝枝尖 456021a287e51ba135d7fd221ece53b6997eb6da == 远端 refs/heads/review/键盘工-0680-r14 的读数（命令原样 git -C D:/moodle/CityNexus ls-remote origin）
+# 那一刻：2026-10-13 16:58:47 ｜ 解释器 Python 3.12.14
+git cat-file -e 456021a287e51ba135d7fd221ece53b6997eb6da:backend/tests/test_r14_terminal_disruption_recovery.py → 回码 0，原话「(空)」
+三处落点在尖上那代文件的行号（命令原样 git -C D:/moodle/CityNexus grep -n terminal_suffix 456021a287e51ba135d7fd221ece53b6997eb6da -- backend/app/main.py）：
+   backend/app/main.py:13516:    terminal_suffix = False → backend/app/main.py:13516
+   backend/app/main.py:13543:            terminal_suffix = True → backend/app/main.py:13543
+   backend/app/main.py:13562:    if terminal_suffix: → backend/app/main.py:13562
+在尖这一代的工作树里真跑那枚测试：rc=0，末行「1 passed, 2 warnings in 2.38s」，collected 栏「1 test collected in 1.85s」
+受影响的那格交付块：收件口 jianpanggong_1655.md，它写「还在门前等点」在它自己那一刻是对的；线在它之后动过
