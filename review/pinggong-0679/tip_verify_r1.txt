@@ -1,8 +1,8 @@
-tip: 456021a287e51ba135d7fd221ece53b6997eb6da
+tip: e1f352030e61b96bbda2c487c3386e8e93b76163
 export tree files=542
 
-r14              rc=0 1 passed, 2 warnings in 2.48s
-r15              rc=0 5 passed in 0.55s
-completion_truth rc=0 1 passed, 2 warnings in 1.73s
-place_fact       rc=0 1 passed in 1.50s
-r77_public       rc=0 1 passed, 2 warnings in 1.56s
+r14              rc=0 1 passed, 2 warnings in 2.10s
+r15              rc=0 5 passed in 0.69s
+completion_truth rc=0 1 passed, 2 warnings in 1.64s
+place_fact       rc=0 1 passed in 1.46s
+r77_public       rc=0 1 passed, 2 warnings in 1.39s
