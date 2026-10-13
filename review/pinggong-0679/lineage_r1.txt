@@ -2,33 +2,35 @@ label: GitHub 权威线现尖 ｜cmd: git ls-remote origin refs/heads/mirror/int
 
 label: 我切枝那一代就是现尖（退出码 0＝直接子代） ｜cmd: git merge-base --is-ancestor d40d6924ed902c224d431f0b1f5d0ba86398fd32 refs/heads/review/pinggong-0679-r1 ｜rc=0 ｜out: 
 
-label: 我这枚枝（本地现读） ｜cmd: git rev-parse refs/heads/review/pinggong-0679-r1 ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861
+label: 我这枚枝（本地现读） ｜cmd: git rev-parse refs/heads/review/pinggong-0679-r1 ｜rc=0 ｜out: a54d844c18ed41369ac2542c211c060d062e762a
 
-label: 代码笔（本枝唯一一笔） ｜cmd: git rev-list --max-count=1 refs/heads/review/pinggong-0679-r1 ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861
+label: 代码笔（动过 main.py 的那一笔） ｜cmd: git rev-list --max-count=1 refs/heads/review/pinggong-0679-r1 -- backend/app/main.py ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861
+
+label: cat-file -t 代码笔 ｜cmd: git cat-file -t 265c71d8ed826f4eaf5b7944792139ce42088861 ｜rc=0 ｜out: commit
 
 label: cat-file -t 现尖 ｜cmd: git cat-file -t d40d6924ed902c224d431f0b1f5d0ba86398fd32 ｜rc=0 ｜out: commit
 
-label: cat-file -t 枝尖 ｜cmd: git cat-file -t 265c71d8ed826f4eaf5b7944792139ce42088861 ｜rc=0 ｜out: commit
+label: cat-file -t 枝尖 ｜cmd: git cat-file -t a54d844c18ed41369ac2542c211c060d062e762a ｜rc=0 ｜out: commit
 
 label: cat-file -t 出处代 ｜cmd: git cat-file -t 843844c5587da01287faa8f384411915eade9a87 ｜rc=0 ｜out: commit
 
 label: 缺口测试的 blob（出处那一代） ｜cmd: git ls-tree 843844c5587da01287faa8f384411915eade9a87 -- backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: 100644 blob 3214622a7a9b5d9671b42032e82a59d1dadc9de7	backend/tests/test_r14_terminal_disruption_recovery.py
 
-label: 缺口测试与 main.py 的 blob（我枝上） ｜cmd: git ls-tree 265c71d8ed826f4eaf5b7944792139ce42088861 -- backend/app/main.py backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: 100644 blob 03e1cad13d17db04e53d2ec13cf7eb458b9aec56	backend/app/main.py ;; 100644 blob 3214622a7a9b5d9671b42032e82a59d1dadc9de7	backend/tests/test_r14_terminal_disruption_recovery.py
+label: 缺口测试与 main.py 的 blob（我枝上） ｜cmd: git ls-tree a54d844c18ed41369ac2542c211c060d062e762a -- backend/app/main.py backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: 100644 blob 03e1cad13d17db04e53d2ec13cf7eb458b9aec56	backend/app/main.py ;; 100644 blob 3214622a7a9b5d9671b42032e82a59d1dadc9de7	backend/tests/test_r14_terminal_disruption_recovery.py
 
-label: 我这一笔的改动面 ｜cmd: git diff --numstat d40d6924ed902c224d431f0b1f5d0ba86398fd32 265c71d8ed826f4eaf5b7944792139ce42088861 ｜rc=0 ｜out: 19	1	backend/app/main.py ;; 168	0	backend/tests/test_r14_terminal_disruption_recovery.py ;; 18	0	review/pinggong-0679/arm0_baseline_tip_no_change.txt ;; 18	0	review/pinggong-0679/arm1_cn_prescription_as_written.txt ;; 18	0	review/pinggong-0679/arm2_count_check_before_raise.txt ;; 14	0	review/pinggong-0679/arm3_cn_lines_plus_guard.txt ;; 14	0	review/pinggong-0679/arm4_minimal_shape.txt ;; 18	0	revi
+label: 我这一笔的改动面 ｜cmd: git diff --numstat d40d6924ed902c224d431f0b1f5d0ba86398fd32 a54d844c18ed41369ac2542c211c060d062e762a ｜rc=0 ｜out: 19	1	backend/app/main.py ;; 168	0	backend/tests/test_r14_terminal_disruption_recovery.py ;; 18	0	review/pinggong-0679/arm0_baseline_tip_no_change.txt ;; 18	0	review/pinggong-0679/arm1_cn_prescription_as_written.txt ;; 18	0	review/pinggong-0679/arm2_count_check_before_raise.txt ;; 14	0	review/pinggong-0679/arm3_cn_lines_plus_guard.txt ;; 14	0	review/pinggong-0679/arm4_minimal_shape.txt ;; 18	0	revi
 
-label: 改动只落在哪几枚文件 ｜cmd: git diff --name-only d40d6924ed902c224d431f0b1f5d0ba86398fd32 265c71d8ed826f4eaf5b7944792139ce42088861 ｜rc=0 ｜out: backend/app/main.py ;; backend/tests/test_r14_terminal_disruption_recovery.py ;; review/pinggong-0679/arm0_baseline_tip_no_change.txt ;; review/pinggong-0679/arm1_cn_prescription_as_written.txt ;; review/pinggong-0679/arm2_count_check_before_raise.txt ;; review/pinggong-0679/arm3_cn_lines_plus_guard.txt ;; review/pinggong-0679/arm4_minimal_shape.txt ;; review/pinggong-0679/control_no_close.txt ;; 
+label: 改动只落在哪几枚文件 ｜cmd: git diff --name-only d40d6924ed902c224d431f0b1f5d0ba86398fd32 a54d844c18ed41369ac2542c211c060d062e762a ｜rc=0 ｜out: backend/app/main.py ;; backend/tests/test_r14_terminal_disruption_recovery.py ;; review/pinggong-0679/arm0_baseline_tip_no_change.txt ;; review/pinggong-0679/arm1_cn_prescription_as_written.txt ;; review/pinggong-0679/arm2_count_check_before_raise.txt ;; review/pinggong-0679/arm3_cn_lines_plus_guard.txt ;; review/pinggong-0679/arm4_minimal_shape.txt ;; review/pinggong-0679/control_no_close.txt ;; 
 
-label: 负责件定义行（我枝那一代） ｜cmd: git grep -n ^def _accept_replan_executing\( 265c71d8ed826f4eaf5b7944792139ce42088861 -- backend/app/main.py ｜rc=128 ｜out: fatal: command line, '^def _accept_replan_executing\(': Unmatched ( or \(
+label: 负责件定义行（我枝那一代） ｜cmd: git grep -n ^def _accept_replan_executing\( a54d844c18ed41369ac2542c211c060d062e762a -- backend/app/main.py ｜rc=128 ｜out: fatal: command line, '^def _accept_replan_executing\(': Unmatched ( or \(
 
-label: 那道 409 现读在哪一行 ｜cmd: git grep -n replan does not preserve the current execution position 265c71d8ed826f4eaf5b7944792139ce42088861 -- backend/app/main.py ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861:backend/app/main.py:13544:            raise HTTPException(409, "replan does not preserve the current execution position")
+label: 那道 409 现读在哪一行 ｜cmd: git grep -n replan does not preserve the current execution position a54d844c18ed41369ac2542c211c060d062e762a -- backend/app/main.py ｜rc=0 ｜out: a54d844c18ed41369ac2542c211c060d062e762a:backend/app/main.py:13544:            raise HTTPException(409, "replan does not preserve the current execution position")
 
-label: 游标赋值那两行 ｜cmd: git grep -n journey.current_activity_id = replacement_current.id 265c71d8ed826f4eaf5b7944792139ce42088861 -- backend/app/main.py ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861:backend/app/main.py:13561:    journey.current_activity_id = replacement_current.id if replacement_current else None
+label: 游标赋值那两行 ｜cmd: git grep -n journey.current_activity_id = replacement_current.id a54d844c18ed41369ac2542c211c060d062e762a -- backend/app/main.py ｜rc=0 ｜out: a54d844c18ed41369ac2542c211c060d062e762a:backend/app/main.py:13561:    journey.current_activity_id = replacement_current.id if replacement_current else None
 
-label: 新增三段的行号 ｜cmd: git grep -n -e terminal_suffix -e ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED 265c71d8ed826f4eaf5b7944792139ce42088861 -- backend/app/main.py ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861:backend/app/main.py:13516:    terminal_suffix = False ;; 265c71d8ed826f4eaf5b7944792139ce42088861:backend/app/main.py:13541:            terminal_suffix = True ;; 265c71d8ed826f4eaf5b7944792139ce42088861:backend/app/main.py:13543:        if replacement_current is None and not terminal_suffix: ;; 265c71d8ed826f4eaf5b7944792139ce42088861:backend/app/main.py:13
+label: 新增三段的行号 ｜cmd: git grep -n -e terminal_suffix -e ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED a54d844c18ed41369ac2542c211c060d062e762a -- backend/app/main.py ｜rc=0 ｜out: a54d844c18ed41369ac2542c211c060d062e762a:backend/app/main.py:13516:    terminal_suffix = False ;; a54d844c18ed41369ac2542c211c060d062e762a:backend/app/main.py:13541:            terminal_suffix = True ;; a54d844c18ed41369ac2542c211c060d062e762a:backend/app/main.py:13543:        if replacement_current is None and not terminal_suffix: ;; a54d844c18ed41369ac2542c211c060d062e762a:backend/app/main.py:13
 
 label: func 与 _json_object 这些依赖都在尖上 ｜cmd: git grep -n -e ^from sqlalchemy import -e ^def _json_object d40d6924ed902c224d431f0b1f5d0ba86398fd32 -- backend/app/main.py ｜rc=0 ｜out: d40d6924ed902c224d431f0b1f5d0ba86398fd32:backend/app/main.py:23:from sqlalchemy import delete, func, insert, or_, select, update ;; d40d6924ed902c224d431f0b1f5d0ba86398fd32:backend/app/main.py:8794:def _json_object(value: str | None, default: dict[str, Any] | None = None) -> dict[str, Any]:
 
-label: 这枚测试的断言行（我枝那一代） ｜cmd: git grep -n -e result["journey"]["status"] == "COMPLETED" -e skip_reason 265c71d8ed826f4eaf5b7944792139ce42088861 -- backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: 265c71d8ed826f4eaf5b7944792139ce42088861:backend/tests/test_r14_terminal_disruption_recovery.py:164:        assert json.loads(old_current.metadata_json)["skip_reason"] == (
+label: 这枚测试的断言行（我枝那一代） ｜cmd: git grep -n -e result["journey"]["status"] == "COMPLETED" -e skip_reason a54d844c18ed41369ac2542c211c060d062e762a -- backend/tests/test_r14_terminal_disruption_recovery.py ｜rc=0 ｜out: a54d844c18ed41369ac2542c211c060d062e762a:backend/tests/test_r14_terminal_disruption_recovery.py:164:        assert json.loads(old_current.metadata_json)["skip_reason"] == (
 
