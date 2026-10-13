@@ -1,0 +1,23 @@
+=== 乙｜并尖之后 邻面执行｜三行都不在
+=== config.py bytes sha1=5df79726de360b4e297cf470bbc1d57f796f12b2
+=== git head 1a430d85bfda7d7b198debcb9000bff076840fbe
+=== tip 18fe6030da2ebd30f27cd19b3c5debffbe12d191
+=== rc=1
+..................................................................FF..   [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0]
+FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]
+2 failed, 68 passed, 2 warnings in 35.83s

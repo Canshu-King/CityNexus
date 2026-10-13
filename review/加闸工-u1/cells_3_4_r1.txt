@@ -1,0 +1,14 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0 -- D:\moodle\CityNexus\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+ORD-0211 test database: resolved=D:\moodle\_jz_u1\wt\backend\_jzu1e.db | exists=False | declared_by=runner
+rootdir: D:\moodle\_jz_u1\wt\backend
+configfile: pyproject.toml
+plugins: anyio-4.15.1, asyncio-0.26.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 2 items
+
+tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0] PASSED [ 50%]
+tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1] PASSED [100%]
+
+============================== 2 passed in 0.83s ==============================

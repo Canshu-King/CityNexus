@@ -1,0 +1,7 @@
+=== 乙｜缺口测试单枚｜三行都在
+=== config.py bytes sha1=bfb21324c35c4f9c07612fa196230f33de3cc0ea
+=== git head 1a430d85bfda7d7b198debcb9000bff076840fbe
+=== tip 18fe6030da2ebd30f27cd19b3c5debffbe12d191
+=== rc=0
+.....                                                                    [100%]
+5 passed in 1.13s
