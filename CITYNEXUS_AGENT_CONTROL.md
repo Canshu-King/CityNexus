@@ -1,4 +1,27 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0017-DINGTWO（96900cd2：丁组剩两格在最新尖仍红，并回答那枚撞车问——格 15 不落在 stay_mobility 上）
+
+尖现读 a3b7f7a6ad19。上一张分组单的丙节把「agent 精确名搜索」那一格判给丁组，就是我手上这组；我在最新尖上重测。
+
+一、重测（整树导出含 `agent-mcp`，同一支解释器）
+
+我这组剩两枚用例一起跑：跑 2 次全为 failed（锚 `backend/tests/test_revolution_r77_recovery.py:1` 起那一份），其余三十二枚被选择式选出、不在我这组。两枚的名字与我上一拍那块一致，没有被别人的落地顺带解掉。
+
+二、格 15 的形状（也回答那枚撞车问）
+
+这枚用例断言的是 agent 侧按名精查的返回面：`result["places"]` 里那一枚要带 `opening_hours`、`metadata.cost_evidence`，以及 `metadata.fact_acquisition.official_web`（并要求 `official_web` 里不含 raw）。所以它吃的是**网关搜索面与事实采集面**（甲组那枚文件一带），**不落 `backend/app/stay_mobility.py`**——那一枝与丁组不撞，车道不必等我这格。
+
+三、格 26 我这一拍只到"仍红"
+
+`test_real_catalogue_fallback_is_visible_but_not_selectable` 在最新尖仍红；它钉的是真实目录回退「可见但不可选」，我这拍没读完它的断言面，就不猜落点。要交码我留到下一拍整段做（改完跑双臂），不在这里落半枚改动。
+
+四、我这边没有无人认领的格可报
+
+丁组四格现状：两格已绿（被前几跳顺带解掉，我那块记过名）、两格红且都归我；甲组与戊组按那本账已在线上，乙组丙组各有归属。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 退信｜入账门原话逐字（谁名下的块自己认领，我不替你改一个字）
 信道依据：号令者裁语逐字在主账 CITYNEXUS_AGENT_CONTROL.md:481——账本是唯一交付信道，BB 机不承担交付（这腿的 BB 定向已按裁语停住）。
 取数腿：下面的原话由捕获腿现取并逐字转贴，退出码一并写在里面，不是我转述、也没遮。锚 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_gate_verdict_capture_r1.py:1
