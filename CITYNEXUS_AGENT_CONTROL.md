@@ -1132,6 +1132,51 @@ E 也掉下来了（上午还有一万七千多 MB），所以「搬冷树去 E 
 ### CMDR-RULING-0686-FORKANDREASSIGN（号令者裁：判定次序那处分岔按现尖行为为准、要改得先有一格新测试；屏工改领面向用户那一刀）
 ### CMDR-ORDER-0687-NEXTTRANCHE（号令者派单：关键路径之后那一波先算清了——最便宜的一行只差两枚产品文件，两扇空出来的车道现在接）
 ### CMDR-DELIVER-0688-ONECARRIER（号令者收：`_provider_collocated_edge` 的承运人改成接尖工；我自己漏数的两处点名更正；下一波三行有了人）
+### CMDR-DELIVER-0690-PEELNEXT（号令者重跑：搬完 settings 之后那八格换了成因——四格仍是一个名字没绑上，三格是真行为，一格等接尖工的枝）
+
+#### 甲｜我又真跑了一遍（不是引用上午那个数）
+
+尖 `a3b7f7a6ad190ad09d792820d000c13faa4d8874`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`；
+这一代是键盘工 17:28 落的 `CMDR-0685: bind the two names that settings.lab_estimate_authority needs.`）。
+同一棵导出树、同一枚解释器（D:/moodle/CityNexus/.venv，3.12.14）再跑那枚文件：**8 failed, 18 passed**，三点一九秒。
+尺与起法照旧 `live_checks/_cmdr_r77_probe_r1.py:71`，原始输出 `E:/cmdr_tip16_r77probe/_r77_run.txt:1`。
+
+总数没变，但**成因换了**——这说明上午那两格的红确实被 `settings` 那处挡住了，现在露出了下一层：
+
+| 哪格 | 现在的直接成因（现读报错行） | 类型 |
+|---|---|---|
+| 格 1 `test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_boundary` | `backend/app/services.py:2174` 抛 `NameError: name 'ANCHOR_PROVIDER_KEY' is not defined` | 名字没绑 |
+| 格 2 `test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract` | 同一处 `backend/app/services.py:2174` | 名字没绑 |
+| 格 16 `test_selected_plan_projection_exposes_edge_scoped_hard_receipts` | `backend/app/main.py:14803` 要 `MobilitySnapshot.fact_for` | 名字没绑 |
+| 格 17 `test_selected_plan_projection_names_provider_collocated_zero_minute_edge` | `backend/app/stay_mobility.py:2155` 要 `_provider_collocated_edge` | 名字没绑 |
+| 格 19 `test_strict_catalogue_mobility_excludes_unresolved_opening_rows` | `backend/app/services.py:2239` 要 `_place_metadata`（入口在 `backend/app/services.py:2128`） | 名字没绑 |
+| 格 15 `test_agent_place_search_accepts_exact_name_with_fact_query_terms` | 测试第 732 行：实际拿到空列表 | 真行为 |
+| 格 20 `test_strict_catalogue_templates_exclude_unverified_cost_rows` | 测试第 909 行：未核成本的行没被排除 | 真行为 |
+| 格 26 `test_real_catalogue_fallback_is_visible_but_not_selectable` | 测试第 1247 行：`selectable` 实际为真 | 真行为 |
+
+#### 乙｜剩下要绑的名字，正本我逐枚现读到位（都是零发明）
+
+- `ANCHOR_PROVIDER_KEY` 这枚常量**尖上本来就有**，在 `backend/app/planning/anchor_schedule.py:35`，`backend/app/services.py:2174` 与 `backend/app/services.py:2216` 只是没 import 它——
+  和上午 `settings` 那处是同一个形状的漏绑，一行 import 的事。
+- `_place_metadata` 正本在参考代 `backend/app/services.py:577`（两行）；`_strategy_profile` 在同代 `backend/app/services.py:1055`、`_strategy_place_score` 在 `backend/app/services.py:1071`
+  （这两枚现尖上各有一处调用、零处定义，本拍 `git grep` 现读；它们今天还没炸，是因为走到它们之前先炸在前面那行——CN 第十四波第二张图也点了这两个名字）。
+- `fact_for` 正本 `backend/app/replanning/provider_snapshots.py:164`；`_provider_collocated_edge` 正本 `backend/app/stay_mobility.py:1684`，
+  这两枚的承运人分别是续线工与接尖工（接尖工那枝 `refs/heads/review/接尖工-0686-collocated-r1` 我已收下，等落地腿吃它，`backend/app/stay_mobility.py` 现读仍是二千二百二十七行、定义零处）。
+
+#### 丙｜给三条硬要求（本拍新加，只这一处改动）
+
+一、**搬一枚、重跑一次整枚文件**，不要攒着一次交：今天已经两次证明"修好一层露出下一层"（`settings` → `ANCHOR_PROVIDER_KEY`）。交块里请附每一次重跑的 passed/failed 两个数。
+二、格 26 那处改动要**先数清回归面**：`selectable` 这个判据在现尖被大量测试引用（CN 第十四波第二张图实测 grep 到六十枚打到 select 端点的文件；
+   这个数是它那一代读到的，你动手时自己重跑 grep，把它当"至少要复跑这么多"的下限，不要当结论）。
+   同图还点了 `backend/tests/test_v1923_final_code_gate.py:210` 与 `:316` 两枚直接以 `selectable` 为判据的测试——那两枚必须一起复跑。
+三、下一波的排序我也重算了（CN 第十五波那张按文件重排的表 `_qoder_cn_work_0609/maps15/map_w1_next_tranche_by_file.md:256` 丁节）：
+   并列点名最多的是 `test_revolution_r77_recovery.py` 本身（八行），
+   而 `test_r21_autonomous_future_synthesis.py` 虽同为八行，**今天一行也关不掉**——它 import 的四枚符号在尖上全树零命中。
+   所以别把人力分去 r21；先把 r77 打完。归档工/422c8eba/地图工按 CMDR-DELIVER-0688 丙节继续走各自那一行，遇到尖动了先 merge 现尖再交。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 
 #### 甲｜现读尖与一位补漏者
 
