@@ -1,4 +1,28 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 盘务工 接 ORD-0670 甲：那枚测试只差的一格红在现尖上一枚「搬了函数没搬依赖」的悬空引用上，main.py 那行进口我按规矩只点名不动（零产品字节零候选枝笔）
+
+花名盘务工；本块走收件口，账本零直写。判绿只认 D:/moodle/CityNexus/.venv 那一个解释器。
+
+- 代次：现尖现取 97836dde783b383791201daf0d306b7c8e449f72（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`），本机 git cat-file -t 回 commit（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:2）
+- 认领与出处：接 ORD-0670 的甲：`backend/tests/test_replan_place_fact_binding.py`。这枚测试在 r14 与 r15 两排枝上 rev-parse 出来是同一个对象号 68b6813f0043（两枚逐字符相等），现尖上它命中「零枚」（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:3）
+- 基线那一拍：把它按本仓行尾装进现尖的只读检出后真跑一拍：collect-only「1 test collected in 7.73s」；单跑 rc=1，末行「1 failed in 3.38s」（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:4）
+- 红因与位置：红因逐字：E:\fiveyear_plan_lab\_panwg_0670_wt\backend\app\main.py:14661: NameError: name 'canonical_cost_evidence' is not defined。位置在现尖 backend/app/main.py 的调用行 :14661，被 :14636 那枚函数体引用（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:5）
+
+#### 一、为什么是悬空引用（两代对拍）
+
+- 出处对拍：出处对拍：这枚函数的依赖 canonical_cost_evidence 只在 r25 那一代有定义（r25 的 real_city.py :249，函数体 32 行）；r25 的 main.py :230 那行是它的进口。我这侧只能量到这一步：尖上那版函数调的就是 r25 才有的那枚名字，而进口行与定义都没跟着进线 ⇒ 现尖上这是一枚「搬了函数、没搬依赖」的悬空引用（至于是哪一次搬运带的，我不替他归因）（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:6）
+- 炸面：炸面多大：现尖 backend 全仓里 canonical_cost_evidence 命中 1 行（全在那枚函数体内），_replacement_activity_metadata 命中行是 1 —— 除定义那行外调用点 0 处，所以它现在是「一被调用就 NameError」的潜伏态，还没在任何生产路径上炸（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:7）
+
+#### 二、要点的那一格与我为什么不先落
+
+- 请令：请令（一处，只一行）：按 0653 第二节「import 只准加在那一片进口群里」的形制，把这行加进现尖 main.py 的进口群 —— 内容为 r25 那行逐字 `    canonical_cost_evidence,`（挂进已有的 from app.integrations.discovery.real_city import (...) 那一片），并把 r25 real_city.py :249 起那 32 行逐字搬进 backend/app/integrations/discovery/real_city.py（那枚文件不在热文件名单里）。real_city.py 那半我可以先落，但只落它等于落一枚没人 import 的死码，所以我两半都不落，等你点（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:8）
+- 边界：本块边界：零产品字节、零候选枝上笔（review/盘务工-0670-jia-r1 只在本地建了名，没提交也没推）；没改断言、没造夹具、没动 main.py 与那四枚禁改面；我要的下一格读数（另 11 枚已落线符号有没有同类悬空）请点名，那是量具面我不自己扩（锚 E:/fiveyear_plan_lab/_panwg_0670_receipt.txt:9）
+
+复算口：`python -X utf8 E:/fiveyear_plan_lab/_panwg_0670_jia_r1.py`；只读检出在 `E:/fiveyear_plan_lab/_panwg_0670_wt`（现尖那一代 + 那枚测试，未提交）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0671-TIPFACTS（号令者勘误＋摊牌：关键路径六枚此刻只有一枚在权威线上）
 
 尖现读 97836dde783b383791201daf0d306b7c8e449f72（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，当场 `git cat-file -t` 回 commit 才算数）。
