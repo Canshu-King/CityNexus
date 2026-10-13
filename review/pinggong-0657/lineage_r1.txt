@@ -1,0 +1,80 @@
+cmd: git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+label: GitHub 现尖（权威线 mirror 那一枝）
+rc=0 out: 492a068c50cfed66338f133a6f137284287900a8	refs/heads/mirror/integration-frontend-apple-pass1
+
+cmd: git ls-remote origin refs/heads/review/pinggong-0657-r1
+label: GitHub 上我这枚枝
+rc=0 out: 5cf6a2e42c46f3830bd5071c44d1cf46da0e9e2d	refs/heads/review/pinggong-0657-r1
+
+cmd: git rev-parse refs/heads/review/pinggong-0657-r1
+label: 本地 bare 收到那枚枝
+rc=0 out: 5cf6a2e42c46f3830bd5071c44d1cf46da0e9e2d
+
+cmd: git rev-parse HEAD
+label: 工作树 HEAD
+rc=0 out: 5cf6a2e42c46f3830bd5071c44d1cf46da0e9e2d
+
+cmd: git cat-file -t 492a068c50cfed66338f133a6f137284287900a8
+label: cat-file -t 现尖
+rc=0 out: commit
+
+cmd: git cat-file -t a94f289194b2dae9b494201541d34e6f86f70c5f
+label: cat-file -t 代码笔
+rc=0 out: commit
+
+cmd: git cat-file -t ea1aeb2953dbbc9c8170e5ecba7fac2a63e04ac7
+label: cat-file -t 现读件笔一
+rc=0 out: commit
+
+cmd: git cat-file -t dd293859c8b0dddc611c0450e060e8029b12f3aa
+label: cat-file -t 现读件笔二
+rc=0 out: commit
+
+cmd: git cat-file -t e2334f90936fd171c02d1a49cf18cee216193ff0
+label: cat-file -t 并尖那笔
+rc=0 out: commit
+
+cmd: git cat-file -t 5cf6a2e42c46f3830bd5071c44d1cf46da0e9e2d
+label: cat-file -t 枝尖
+rc=0 out: commit
+
+cmd: git merge-base --is-ancestor a94f289194b2dae9b494201541d34e6f86f70c5f 492a068c50cfed66338f133a6f137284287900a8
+label: 代码笔是不是现尖的祖先
+rc=0 out: 
+
+cmd: git ls-tree 492a068c50cfed66338f133a6f137284287900a8 -- backend/app/schemas.py backend/app/main.py backend/db/schema.sql backend/tests/test_event_resolution_projection.py
+label: 现尖上我那四枚文件的 blob
+rc=0 out: 100644 blob f408a00fee2e4f8edaf2c428a832eece62262c71	backend/app/main.py ;; 100644 blob 6315f644b97e345bee0c5b8b84612c0caebcc9b5	backend/app/schemas.py ;; 100644 blob 5632107ee8b00a7c2d1888cbed4af4df66d1fc66	backend/db/schema.sql ;; 100644 blob 0862062fbf10e3fa6e91d6ad4a5d803f84ae38f8	backend/tests/test_event_resolution_projection.py
+
+cmd: git merge-base 492a068c50cfed66338f133a6f137284287900a8 5cf6a2e42c46f3830bd5071c44d1cf46da0e9e2d
+label: merge-base（现尖 与 我枝尖）
+rc=0 out: 4f20a166a9cefdfc49068ef9ae0581802e60cb7e
+
+cmd: git diff --name-only <merge-base> <现尖> 计数
+label: 现尖侧独走文件数
+rc=0 out: 4
+
+cmd: git diff --name-only <merge-base> <我枝尖> 计数
+label: 我这一枝独走文件数
+rc=0 out: 11
+
+cmd: 两侧集合相交（comm -12）
+label: 相交文件清单
+rc=0 out: 交集为空
+
+cmd: git status --porcelain
+label: 工作树未登记改动（逐行）
+rc=0 out:  M backend/tests/test_agent_runtime_state_epoch.py ;;  M backend/tests/test_replan_schedule_timezone.py
+
+cmd: git show 5cf6a2e42c46f3830bd5071c44d1cf46da0e9e2d:.gitattributes
+label: 行尾这件事的成因（.gitattributes 全文）
+rc=0 out: # Python sources on this line are LF; CRLF here produced whole-file rebases (ORD-0532). ;; *.py text eol=lf
+
+cmd: git ls-tree 492a068c50cfed66338f133a6f137284287900a8 -- backend/tests/test_agent_runtime_state_epoch.py backend/tests/test_replan_schedule_timezone.py
+label: 那两枚带 CRLF 的进线测试在现尖上的 blob
+rc=0 out: 100644 blob 1f4d5c8030ecebbef65847de2af0d13ed094e379	backend/tests/test_agent_runtime_state_epoch.py ;; 100644 blob 4d1dd55ab065272e052843fa7575b5787edc61bb	backend/tests/test_replan_schedule_timezone.py
+
+cmd: git ls-tree 843844c5587da01287faa8f384411915eade9a87 -- backend/tests/test_event_resolution_projection.py
+label: 缺口测试 blob 与我枝上是否同枚（代表枝那一代逐字节）
+rc=0 out: 100644 blob 0862062fbf10e3fa6e91d6ad4a5d803f84ae38f8	backend/tests/test_event_resolution_projection.py
+
