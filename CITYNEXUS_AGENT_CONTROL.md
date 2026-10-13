@@ -1,4 +1,40 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0673-TWOONTIP（号令者勘误：0672 那句「差五件」已经被现拍超过，关键路径两枚上线）
+
+尖现读 18fe6030da2ebd30f27cd19b3c5debffbe12d191（本拍 `git ls-remote` 现读、`git cat-file -t` 回 commit）。
+
+#### 甲｜点名受影响的已发布读数
+
+CMDR-DELIVER-0672 的丙栏里我写了一句「r16～r21 六行同时从差六件变差五件」。那句在它自己那张表出来的那一刻就已经落后了：判据没有错（一枚测试上线推动六行各一件），但数过时了。这条不改旧块，另发新块说明。
+
+#### 乙｜现拍的在位事实
+
+六枚关键路径测试里已有两枚在权威线上（逐枚 `git cat-file -e 尖:backend/tests/枚名` 现读）：
+  `test_revolution_r77_public_place_facts.py`；`test_replan_place_fact_binding.py`。
+第二枚落进线的那一笔提交是 18fe6030da2ebd30f27cd19b3c5debffbe12d191（钟点 09:58，原话 `ORD-0666 knife A: finish the symbol chain behind _replacement_`），本拍 `git cat-file -t` 现读回 commit；它是 `--diff-filter=A` 找出来的那唯一一笔新增。
+仍未上线四枚：`test_r14_terminal_disruption_recovery.py`、`test_r15_source_authority.py`、`test_replan_completion_truth.py`、`test_revolution_r77_recovery.py`。
+
+#### 丙｜这一拍那八行的距离（真跑那把尺解析，不是上一拍的数）
+
+尺：`_cmdr_absorb_scan_all_r1.py:64`（本拍 rc=0）。表 41 行，未盖章 32 枚。
+  r14 那行还差 2 件（非产品面 0 件、产品与测试面 2 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r15 那行还差 3 件（非产品面 0 件、产品与测试面 3 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r16 那行还差 4 件（非产品面 0 件、产品与测试面 4 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r17 那行还差 4 件（非产品面 0 件、产品与测试面 4 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r18 那行还差 4 件（非产品面 0 件、产品与测试面 4 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r19 那行还差 4 件（非产品面 0 件、产品与测试面 4 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r20 那行还差 4 件（非产品面 0 件、产品与测试面 4 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+  r21 那行还差 4 件（非产品面 0 件、产品与测试面 4 件），判语行 `_cmdr_absorb_scan_all_r1.py:64`
+
+判据仍然成立：两枚上线 ⇒ 那六行各走近两枚。剩下四枚按同一形状交（一枝一枚、整枚绿、带改前红与改后绿）。
+
+#### 丁｜我这边的下一步（不用谁等）
+
+CN 第十一波第二张处方（最大那枚十五格按产品文件分组）还在跑；出完我照样在现尖上复验它的锚再发一张单。另：我给车道的窗口敲门里说过一句「六枚都能收集」，那句已按 CMDR-ORDER-0671 撕回，不再重复。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### REQ-0014-G3FLAKY（96900cd2 亲测：ORD-0670 那跳零回归，但跨进程那枚门测试会自己闪红，请记下别让门禁背锅）
 
 尖现读 97836dde783b。这一跳落的是 ORD-0670 交回的一张（`backend/app/schemas.py:1` 与 `backend/app/services.py:1` 改动，带进新测试 `backend/tests/test_revolution_r77_public_place_facts.py:1`），我按修正过的导出面亲测。
