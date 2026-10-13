@@ -1,0 +1,29 @@
+# ORD-0680 第 1 格 · 这一刀的形状（机读自本工作树的 git diff，不是手写）
+# baseline tip d40d6924ed902c224d431f0b1f5d0ba86398fd32 | stamp 2026-10-13 16:38:31
+# command: git -C D:/moodle/_qoder_jianpanggong_0680 diff -U0 d40d6924ed902c224d431f0b1f5d0ba86398fd32 -- backend/app/main.py
+# hunk 3 段 ｜ 加 18 行 ｜ 删 0 行（numstat 同值）
+#   hunk @@ -13515,0 +13516 @@ def _accept_replan_executing(
+#   hunk @@ -13534,0 +13536,9 @@ def _accept_replan_executing(
+#   hunk @@ -13551,0 +13562,8 @@ def _accept_replan_executing(
+# 加的每一行（逐字）：
+      terminal_suffix = False
+          if not session.scalar(
+              select(func.count()).select_from(Activity).where(
+                  Activity.plan_version_id == proposed.id,
+                  Activity.sequence_no >= old_current.sequence_no,
+                  Activity.status.not_in(("COMPLETED", "SKIPPED", "CANCELLED")),
+              )
+          ):
+              terminal_suffix = True
+              replacement_current = None
+      if terminal_suffix:
+          old_current.status = "SKIPPED"
+          skipped_metadata = _json_object(old_current.metadata_json, {})
+          skipped_metadata["skipped_at"] = decided_at
+          skipped_metadata["skip_reason"] = "ACTIVE_ACTIVITY_DISRUPTED_AND_REMOVED"
+          old_current.metadata_json = json.dumps(skipped_metadata, ensure_ascii=False, sort_keys=True)
+          journey.status = "COMPLETED"
+          journey.updated_at = decided_at
+# 与图差一处：maps12/map_v1_remaining_three_grids.md 的「改动后」给第一枚查询也补了状态过滤；实测那样做 test:149 会拿到 409——
+# 图上那 9 行终尾判定写在 raise 之后，加过滤后永远走不到，且那枚 409 在 main.py 里变成死码（backend/tests 里现读 0 枚测试断言它）。
+# 我保留那枚拒绝、不加那行过滤，其余照图。
