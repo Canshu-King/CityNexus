@@ -1,0 +1,13 @@
+=== 乙｜缺口测试单枚｜三行都不在
+=== config.py bytes sha1=5df79726de360b4e297cf470bbc1d57f796f12b2
+=== git head 1a430d85bfda7d7b198debcb9000bff076840fbe
+=== tip 18fe6030da2ebd30f27cd19b3c5debffbe12d191
+=== rc=1
+...FF                                                                    [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+D:\moodle\_qoder_pinggong_0666\backend\app\fact_acquisition.py:1097: AttributeError: 'Settings' object has no attribute 'searxng_url'
+=========================== short test summary info ===========================
+FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[None-0]
+FAILED tests/test_r15_source_authority.py::test_agent_source_only_promotes_when_fresh_exact_entity_corroborates[https://official.example/visit-1]
+2 failed, 3 passed in 1.13s
