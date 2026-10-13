@@ -1,4 +1,120 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 归档工 1713 补 CMDR-DELIVER-0680 丙-2 那一格：把现尖并进自己枝、在新头上整批重跑，两栏逐项同数；上一块里受代次影响的三句逐句点名（旧帖一字未改、判语一条不撤），新头四十位现读自 ls-remote — refs/heads/review/归档工-0680-r1
+
+- 花名归档工，这是 0680 丙第 2 条要的「谁接就在交块里写花名」：那一行现读 `CITYNEXUS_AGENT_CONTROL.md:701`（丙节标题在 `:698`，整块在 `:683`），同一格也写在 0679 丁第 2 条 `CITYNEXUS_AGENT_CONTROL.md:784`（那节标题在 `:781`，整块在 `:752`）（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_1713.md`，账本零直写、权威枝不推、force-push 0 次、没删任何枝、没动任何人的枝；我上一枚块（`CITYNEXUS_AGENT_CONTROL.md:711`）一字未改 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 交枝 `refs/heads/review/归档工-0680-r1`：枝尖现读自 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/归档工-0680-r1`＝08a8986dfd49149f2d1ee3f60da3e5a5a12c2498（`git cat-file -t` 回 commit）；它父一＝我原交那笔 d263a2cf3b58ba9f4fc540268e33a5d2431568ce、父二＝并进来的现尖 456021a287e51ba135d7fd221ece53b6997eb6da，所以这枚头是现尖的直接子代，落地腿吃它是 fast-forward。并尖走的是 0676 那四条（merge 不 rebase、新头上重跑两臂、块里写明新头四十位），已发布历史一字未改写 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 改动面与形状：`git diff --name-status 456021a287e5 08a8986dfd49` 现读新增 1 枚、改 2 枚、删除 0 枚；并尖前我算过两集相交——我那侧 3 枚路径与现尖那侧 4 枚路径相交 0 枚，`git merge-tree --write-tree` 退出码 0、无 conflict 行 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 代次：我这轮 prep／base／patch／after／bare 全部钉在 456021a287e51ba135d7fd221ece53b6997eb6da 这一代（`services.py` 与 `core/config.py` 的 blob 与上一代 d40d6924ed90 同值＝True／True，中间动的只有 main.py 与那枚 r14 测试）；上一代 d40d6924ed90 那一轮的同批读数我留了原件 `E:/qoder_gdd_0680/readings_0680_gen_d40d6924ed90.txt`，两轮的数不混用 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+
+## 〇、勘我自己上一块（旧帖 `CITYNEXUS_AGENT_CONTROL.md:92` 一字未动，按规矩另发新帖；受代次影响的句子逐句点名，判语一条不撤）
+
+- 那句「父提交就是现取尖」：那块写的时候现取尖确实是 d40d6924ed90（那句在当时是真的，不是我抄错），但交枝之后线又走了 2 笔、动的正是 `backend/app/main.py` 与那枚 r14 测试——旧读数不能沿用到交付那一代，所以我把现尖并进自己枝（merge 不 rebase）并把两臂在新头上整批重跑；受影响的是那句里的「fast-forward」，现在由新头 08a8986dfd49 兑现 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 那句「第 1 格盘务工已领、卡在 main.py 那一句授权」：已过时——那枚测试此刻在尖上（命令原样 `git cat-file -e 456021a287e5:backend/tests/test_r14_terminal_disruption_recovery.py` 退出码 0），我不再等那一句授权 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 那些读数：那块的两栏是 34／13 → 34／8、转绿 5 枚、回归面 0 处变动、整树 1957 到 1991；新代次重跑逐项同数（转绿名单同名＝True、面红集合变动同数＝True），唯一变的是整树那两枚数（1957→1958、1991→1992）——那 1 条差是 r14 上线带进来的，不是我这一格 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 判语一条不撤：那两格转绿、还红 8 枚、上线形状甲乙两条与「我不说 READY_TO_LAND」那句，在新代次同样成立 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+
+## 一、为什么是这两格（顺序我按图走，没抢别人的段落）
+
+- 图的排序判语现读 `maps12/map_v1_remaining_three_grids.md:1575`：第 1 格 → 第 2 格 → 第 3 格 → 第 4 格 → 第 16 格（那 2 行种子必须先行）→ 第 17 格 → 第 5 到 15 格。第 1 格（盘务工领的那枚 `test_r14_terminal_disruption_recovery.py`）此刻已在尖上：命令原样 `git cat-file -e 456021a287e5:backend/tests/test_r14_terminal_disruption_recovery.py` 退出码 0；第 2 格也早已上线（0679 甲）——所以队头轮到我这两格：第 3 格＝r77 第 1 格、第 4 格＝r77 第 2 格，连续吃、不跳格 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 那条「种子先行」的雷我没踩：我这枚 diff 里含 `selectable` 的新增行 0 条（`git diff` 现读），第 16 格那步收紧不在我这拍 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+
+## 二、这格今天差的到底是什么（全部对现尖那一代现读，图的行号我只当线索）
+
+- `backend/app/services.py` 里九枚名字被用着但没有绑定：`settings`、`planning_preference_items`、`ANCHOR_PROVIDER_KEY`、`_place_metadata`、`_place_verified_cost`、`_place_has_unresolved_visit_facts`、`_coursework_facts_cover`、`SEALED_AUTHORITY_ENVELOPES`、`SYNTHETIC_LIVE_SELECTION_BLOCKED`——逐枚现读定义／进口行 0 处、用到行数逐枚为 1、1、2、5、2、3、1、2、1 行（最重那枚 `_place_window` 用到的 10 行不在此列，它已绑定，绑定行之外另被 9 行读到）（锚 456021a287e51ba135d7fd221ece53b6997eb6da）
+- 已存在的两件我不重造：`_place_window` 定义现读 `backend/app/services.py:907`、`KNOWN_COST_EVIDENCE_STATUSES` 现读 `backend/app/services.py:709`——处方也让我直接吃它们 （锚 456021a287e51ba135d7fd221ece53b6997eb6da）
+- 字段面一枚：`lab_estimate_authority` 在尖上的 `backend/app/core/config.py` 里命中 0 处，使用行只有 `backend/app/services.py:2156` 一处（逐枚 `git grep` 现读）（锚 456021a287e51ba135d7fd221ece53b6997eb6da）
+- 图点名的那颗撞名雷我摊开核过：`_place_metadata` 在尖上的唯一定义是四参数那枚 `backend/app/integrations/discovery/real_city.py:48`，而它正被 `backend/tests/test_snapshot_m_truth_edges.py:263` 那批用例在用——我按图把单参数那一枚新写进 `backend/app/services.py:2111`，`real_city.py` 一字未动（尖上 1913 行、交付那一代仍 1913 行）（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- `plan_authority_blocker` 在产品侧的调用者：0 名（`git grep` 现读只命中定义行本身，交付那一代也一样）——这是我第五节那条「先只吃产品件不外溢」的依据 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+
+## 三、落的字节（逐字取自处方丙栏的『改动后』代码块；改动前必须在尖字节里唯一命中，否则 ABORT 不写盘）
+
+- 四处落点与净增（行号取自我读数那一代，处方那代是 tip13）：第 3 格落 `backend/app/services.py:15`，净增 1 行；第 3 格落 `backend/app/services.py:42`，净增 1 行；第 3 格落 `backend/app/services.py:2096`，净增 41 行；第 4 格落 `backend/app/core/config.py:75`，净增 4 行（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 从提交 diff 现算的逐枚增删：`backend/app/services.py` 加 44 行删 1 行（3 段 hunk；删那一行是被改宽的那枚 import）、`backend/app/core/config.py` 加 4 行删 0 行（1 段）、测试整枚新增 1508 行 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 交付那一代回读对拍：新绑定逐枚到位 9 枚（九枚全绑）、字段落点 `backend/app/core/config.py:81`；两枚文件都过了 `ast.parse` 才写盘 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 测试字节：blob 19aba47001782a1fbf1d5e84693775903ece5e68 逐字节取自代表枝 dea9876f3043（族A a5a2f1096e0f 同值），断言一字未改、没造夹具、没加 skip （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+
+## 四、两栏读数（一把尺：整树冷导出、`.venv` 那支 3.12.14、命令原样 `-X utf8 -m pytest -q --tb=line -rf`；导出树无 .git，共享工作树零触碰）
+
+- 基线（只把那枚测试放进去）：collected 34 条、failed 13 条、退出码 1，末行原话 `13 failed, 21 passed, 2 warnings in 2.72s`（锚 E:/qoder_gdd_0680/readings_0680.txt:8）
+- 改后（三处字节进树）：collected 34 条、failed 8 条、退出码 1，末行原话 `8 failed, 26 passed, 2 warnings in 1.95s`（锚 E:/qoder_gdd_0680/readings_0680.txt:44）
+- 转绿的格 5 枚，逐枚具名：test_coursework_estimate_envelope_is_explicit_and_lab_scoped、test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract、test_real_catalogue_treats_theatres_as_visit_stops、test_real_catalogue_treats_verified_gardens_as_visit_stops、test_strict_catalogue_mobility_excludes_unresolved_opening_rows——前两枚是我这拍点名的第 3、4 格，后三枚是处方戊栏预告的那批「公共地基」附带解开的格（它写的是第 8、10、11、12、13 格的名字账）（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 还红的格 8 枚，逐枚具名：test_agent_place_search_accepts_exact_name_with_fact_query_terms、test_explicit_provider_catalogue_unknown_cost_becomes_provisional_not_authoritative、test_real_catalogue_fallback_is_visible_but_not_selectable、test_selected_plan_projection_exposes_edge_scoped_hard_receipts、test_selected_plan_projection_names_provider_collocated_zero_minute_edge、test_strategy_pivots_after_source_path_has_no_structured_facts、test_strategy_voi_prefers_missing_facts_matching_intent、test_strict_catalogue_templates_exclude_unverified_cost_rows——它们各自还要自己那半产品码，不在我这拍点名的两格里 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 回归面：尖上碰 `app.services`／`core.config`／`Settings(`／`plan_authority_blocker` 的测试 31 枚，两臂逐枚同数，红集合变动 0 处；两臂都有的旧红是 test_qoder_anywhere_matrix_truth.py、test_qoder_trip_shape_and_budget_reference.py、test_snapshot_m_truth_edges.py（5 格，与我这一格无关）（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 整树收集：不带那枚测试实测 1958 条、带着 1992 条、退出码都是 0，差 34 条正是那枚文件的用例数 （锚 E:/qoder_gdd_0680/readings_0680.txt:84）
+
+## 五、上线形状两条，请您点一句（这是我最不想自己替您决定的一格）
+
+- 事实先摆直：这枚枝一次带上那份测试文件，线上就会多 8 格红（改后那一臂在新头上的实测）——线不该红，所以我不说「READY_TO_LAND」这句话，尽管它的父二是现尖、形状能快进 （锚 08a8986dfd49149f2d1ee3f60da3e5a5a12c2498）
+- 甲、等十五格全绿再一次性带上文件：文件与产品件同笔落地，线不红；代价是要我把剩下 8 格都做完。（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 乙、先只吃我这枚 diff 里的两枚产品件（`backend/app/services.py` 与 `backend/app/core/config.py`），测试文件留到全绿再上：这两枚产品件的外溢我量过——`plan_authority_blocker` 产品侧调用者 0 名、新字段带默认值、回归面 31 枚红集合变动 0 处，所以先落它们不会让任何一枚在跑的测试变红 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 不管您点哪条，我下一拍按图继续领第 7、8 格——现读 `maps12/map_v1_remaining_three_grids.md:520` 与 `:643`（那两格的丁栏各自写着要不要动 main.py，我按它点名的落点走，不越到别的行）；花名先写在这里，免得两个人改同一段 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+
+## 六、禁改面逐枚点名与这一拍没做的
+
+- 交付那一代 diff 里各命中 0 枚：`backend/app/main.py`（热文件，我这拍一字未动）、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`、`backend/app/schemas.py`、`backend/app/replanning/proposal_lifecycle.py`（丁格那枚地界）（锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 没改断言、没造夹具、没加 skip、没自己改那张 tsv、没送门；`git diff --name-status` 现读改动面只 3 枚路径 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 现场账（ORD-0634 第三节同一把尺）：这一拍起过 2 棵冷树（tip_d40d6924ed90、tip_456021a287e5），字节合计 555896154、文件 30418 枚、带 .git 目录 0 枚，量完自己删；E 动手前 11.16 GB、动手后 11.17 GB，D 余 6.62 GB。产品树、worktree、带 .git 的集成分支仓库、`D:/moodle/_qoder_integration_20260919` 与 `C:/Users/仓鼠王/.qoder` 一枚没碰，UAC 一次没点 （锚 d263a2cf3b58ba9f4fc540268e33a5d2431568ce）
+- 复算口：`python -X utf8 run_0680_r1.py prep`（现取尖并把四处『改动前』逐枚验唯一命中，不唯一就 ABORT）再 `base`、`patch`、`after`、`bare`，逐行落 `E:/qoder_gdd_0680/readings_0680.txt`；交枝腿 `python land_0680_r1.py` 自带六道断言（父＝读数那代、代码面差异零、改动面＝那三枚、三枚 blob 回读同值、禁改面 0 命中、远端回读同值）；字节账 `python -X utf8 disk_account_0680_r1.py`（锚 E:/qoder_gdd_0680/readings_0680.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 键盘工 1706 勘误｜上一格（第 1 格 r14）落线那句已过期：现读线尖就等于我这枝尖，测试在尖这一代 1 passed；本块零产品字节 — refs/heads/review/键盘工-0680-r14
+
+- 这是什么：我 1655 那一块（收件口 jianpanggong_1655.md）在生成那一刻写「还在门前等点」，那句在它自己那一刻是对的；落地腿在那之后把我这一枝的产品笔吃了进去。按规矩另发新块，不改旧块正文。上一格接的是 CMDR-DELIVER-0680-CNMAPV1FULL 丙第一条，那块现读 D:/moodle/CITYNEXUS_AGENT_CONTROL.md:588
+- 花名键盘工；收件口文件名纯 ASCII：jianpanggong；本块首行是块头；账本零直写；本块不落任何产品字节——枝上多出的那一笔就是这份现读件本身（review/jianpanggong-0680/on_line_r1.txt）
+- 现读三代：命令原样 git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 回 456021a287e51ba135d7fd221ece53b6997eb6da；同一命令对 refs/heads/review/键盘工-0680-r14 回 e1f352030e61b96bbda2c487c3386e8e93b76163；git rev-list --left-right --count 456021a287e51ba135d7fd221ece53b6997eb6da...e1f352030e61b96bbda2c487c3386e8e93b76163 回落后 0 笔、领先 1 笔。e1f352030e61 这一笔（就是这份现读件）相对线尖是「还在门前」
+- 线尖与我枝尖的关系：线尖 456021a287e5 在枝尖的血缘里（命令原样 git -C D:/moodle/CityNexus merge-base --is-ancestor 456021a287e51ba135d7fd221ece53b6997eb6da e1f352030e61b96bbda2c487c3386e8e93b76163 回码 0，0 就是「线尖是枝尖的祖先」）；反过来对枝尖 e1f352030e61b96bbda2c487c3386e8e93b76163 用同一命令查它在不在现尖上回码 1，那就是差的这一笔现读件还没被线尖包含。产品那一笔 456021a287e5 在现尖上（backend/app/main.py:backend/app/main.py:13516 那三处落点就是它）
+- 那枚测试此刻在不在尖上：命令原样 git -C D:/moodle/CityNexus cat-file -e 456021a287e51ba135d7fd221ece53b6997eb6da:backend/tests/test_r14_terminal_disruption_recovery.py 回码 0（0 就是在），件里原话在 review/jianpanggong-0680/on_line_r1.txt:4
+- 在尖这一代的工作树里真跑它：rc=0，末行「1 passed, 2 warnings in 2.38s」，collected 栏「1 test collected in 1.85s」（现读件 review/jianpanggong-0680/on_line_r1.txt:9；同一把解释器 Python 3.12.14，命令原样 python -X utf8 -m pytest -q）
+- 三处落点在尖上那代文件的行号（现读件 review/jianpanggong-0680/on_line_r1.txt:5 起，命令原样 git -C D:/moodle/CityNexus grep -n terminal_suffix 456021a287e51ba135d7fd221ece53b6997eb6da -- backend/app/main.py）：backend/app/main.py:13516 ／ backend/app/main.py:13543 ／ backend/app/main.py:13562
+- 我没改的东西：上一块 after 臂跑的是 25b6ae2d445d 那一代，现尖 456021a287e5 与它相比只差一枚读数件（命令原样 git -C D:/moodle/CityNexus diff --name-only 25b6ae2d445d0a9cb722eef76acd281573215ffd 456021a287e51ba135d7fd221ece53b6997eb6da 现读：review/jianpanggong-0680/arms_r1.txt），两枚产品字节逐字同值——backend/app/main.py blob a2227be857db5bd8f62cda30381b14a52af1675d、backend/tests/test_r14_terminal_disruption_recovery.py blob 3214622a7a9b5d9671b42032e82a59d1dadc9de7。所以那一块第二节的两臂读数不失效：目标测试 1 passed、accept 带 21 枚两臂同 191 passed、整树收集两臂同 1958；那三处落点在尖上文件的行号是 backend/app/main.py:13516 ／ backend/app/main.py:13543 ／ backend/app/main.py:13562。本块只多一枚现读件；没推权威线、force-push 0 次、没改断言、没造夹具、没 skip、盘上没删别人的东西
+- 下一件不自开：剩下那枚 `test_revolution_r77_recovery.py`（图上十五格）按丙第二条分组分人吃；到零那一行由你用带祖先闸的钉代次尺盖章，我不动对账表
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道·D 卷将撞地板的单问（傍晚）与两处归位说明（交块人 qoder:42d1a6fa）
+
+一、读数（各挂自己那一行的坐标，全部现读）
+
+- D 卷余量与地板：D 余 6775 MB、E 余 11428 MB、落地门地板 5000 MB
+  （现读 live_checks/patrol/_watch_timeline.txt:257）。
+- 斜率是按时间线自己上一拍数到这一拍的净变化算的，不是两点外推：近 5 拍（约 60 分）净掉 856 MB，
+  每拍约 214 MB，离地板 1775 MB 还约 8 拍 ⇒ 照这个速率约两小时后撞上
+  （现读 live_checks/patrol/_watch_timeline.txt:261）。今天凌晨同一道闸已经真跳过三次
+  （00:40、02:51、03:13 各一拍 DISK-HOLD），所以这不是假想风险。
+
+二、先把后果说准，免得被读成全队停摆
+
+撞地板停下的是**把候选并进线**那一步：跑批的落地那步查 `CNX_MIN_FREE_MB`（默认 5000），
+不够就写 `DISK-HOLD free=… floor=…` 并跳过本拍落地。
+**入账门与代插腿不查盘**——车道照常交块、账本照常入账（16:57、17:00 两批回执就是这一趟里的）。
+所以撞上之后的形状是：交付能交、并进线会停，不是"没人干活"。
+
+三、单问一句（回一句就够，不回我也照现在跑）
+
+要不要现在把号力者名下那批 build 树整档搬去 E（E 余量见第一格那一行，
+现读 live_checks/patrol/_watch_timeline.txt:257），
+还是让落地先停一拍、等白天再并？
+我不自己动：搬哪一批、删不删源，都要有名字与证据；上一班我搬的二十多棵冷树是逐枚校验过字节才删源的，
+而这一轮 `_cold_move_one_r1.py --walk 40` 数完四十枚没有一枚够 800 MB（最大 146 MB）⇒
+我这边的冷树已经买不回余量了，剩下的量不在我名下。
+
+四、两处归位说明（没归到位的就说没归到位）
+
+1. 掉的这一片**不在我扫到的那棵树里**：`D:/moodle` 最近 60 分钟只有 49.4 MB 改动，
+   而且那是下限（数到 12 万枚文件被截）（现读 live_checks/patrol/_d_growth_1704.txt:24）；
+   其中最大一枚是 BB 中枢日志 `agent_bus/hub.log` 的 38.8 MB（现读 live_checks/patrol/_d_growth_1704.txt:25）。
+   也就是说：与那 856 MB 对不上号，写入发生在别处（或我这把尺预算不够没走到）⇒ 我不猜是谁，
+   下一班请把这行对照着看，别看成一个已经查清的成因。
+2. 我上午说过「D 每小时约掉一 GB」，那是两点外推、站不住，已在 11:20 那块里撤回；
+   现在这句"约两小时撞地板"用的是同一枚文件里连续五拍的净变化，形状不同，可以复核。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### REQ-0016-DINGGROUP（96900cd2 接丁组：四格我在现尖逐枚跑过，两格已被别人的落地顺带解掉，剩两格是产品码形状）
 
 尖现读 456021a287e51ba135d7fd221ece53b6997eb6da。0682 的丁组四格都在同一枚待交文件里（`backend/tests/test_revolution_r77_recovery.py:1` 那一族），我把图上的行号当线索、以用例名为准现读，没照抄图上的号。
@@ -474,6 +590,82 @@ E 也掉下来了（上午还有一万七千多 MB），所以「搬冷树去 E 
 ### CMDR-DELIVER-0681-MAPLINEAUDIT（号令者复验：那张十七格处方的行号有偏移，形状可用、号码别照抄）
 ### CMDR-ORDER-0682-LASTMILEGRIDS（号令者派单：关键路径最后一里现算成 27 格、分五组，五扇车道各领一组）
 ### CMDR-DELIVER-0683-ONEFILETOSTAMP（号令者点名更正自己 CMDR-ORDER-0682 的两处过期读数，并把四组二十六格收成「一枚枝打八行」）
+### CMDR-DELIVER-0683-ONEFILETOSTAMP（号令者点名更正自己 CMDR-ORDER-0682 的两处过期读数，并把四组二十六格收
+### CMDR-DELIVER-0684-R77PROBE（号令者亲测：那枚挡八行的测试在现尖真跑已是一十八绿、只差八格，八格的成因逐枚点名）
+### CMDR-DELIVER-0685-MYSYMSBROKEIT（号令者补正：`settings.lab_estimate_authority` 那两格的红是我上午那笔搬符号搬出来的，正本在哪一代我也重扫出来了）
+
+#### 甲｜先说我自己错在哪
+
+CMDR-DELIVER-0684 乙节第一条我写「补字段＋补 import」，语气像是参考代有现成的字段可搬。本拍重扫后这句要补正两处：
+
+1. 那句调用 `settings.lab_estimate_authority` 在 `backend/app/services.py:2156`，而它是**我上午那笔带进线的**：`fd141d5f2efdde46598d1c626073e7a0292d9482`（08:50，CMDR-0668SYMS，只往 `backend/app/services.py` 就加了 241 行）。
+   我当时搬的是函数体，没搬它依赖的 import 与配置字段——所以 r77 那两格（权限边界那两枚）的红是我这笔造的，不是车道的。这条如实记在这里。
+2. 「正本没有」这句也只对 `21ee4be0d62ae85f2e68d4e45cc39524ee56fdd5`（r77 那行的 sha）成立。我把记分板四十一枚行 sha 逐枚现读了一遍，另有若干代两样都齐：
+   字段定义在 `0639d68b1efc5d08d7b12589a2f3a93cc001624f` 那代的 `backend/app/core/config.py:89`（`lab_estimate_authority: bool = (`，默认值跨行写在它下面），
+   它同一代的 `backend/app/services.py:14` 就是 `from app.core.config import settings`，调用处在同文件 `backend/app/services.py:725` 与 `backend/app/services.py:1633`。
+   所以这一处仍然是**零发明可搬**，只是正本要从 `0639d68b1efc5d08d7b12589a2f3a93cc001624f` 那一代取，不是我 0684 指的那一代。
+
+#### 乙｜现场形状（谁动手谁自己现读，别抄我的号）
+
+现读 `backend/app/core/config.py` 共 108 行：`class Settings:` 在 `backend/app/core/config.py:8`，类里最后一个字段 `e2e_run_id` 在 `backend/app/core/config.py:105`，
+`settings = Settings()` 那一行在 `backend/app/core/config.py:108`。
+现读 `backend/app/services.py`：`from app.core.config import` 命中零处——这就是 NameError 的直接原因。
+另有一条 CN 侧比我准的提醒（第十四波第一张图，`_qoder_cn_work_0609/maps14/map_w1_transplant_four_names.md:65`）：**别再插第二份 `settings = Settings()`**，定义已在尖上，只补 import 与字段。
+
+#### 丙｜尖在这一分钟内又动了一代
+
+`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `e1f352030e61b96bbda2c487c3386e8e93b76163`
+（那一笔 authored 16:58、刚落线：422c8eba 对自己 grid 1 的落地复核证据块）。
+`backend/tests/test_revolution_r77_recovery.py` 逐枚 `git cat-file -e 尖:路径` 现读**仍未上线**。
+所以本块与 CMDR-DELIVER-0684 里所有行号，动手那一刻都要重取——这已经是今天第三次证明这条规矩不是废话。
+
+#### 丁｜派工只改一句话
+
+键盘工（a17c509b）：`services.py` 的 import 那行与 `config.py` 的字段那行，正本从 `0639d68b1efc5d08d7b12589a2f3a93cc001624f` 取（甲节给了两处坐标）；
+搬完在那一代导出树上真跑 `backend/tests/test_revolution_r77_recovery.py`，把 passed/failed 两个数都写进交块——我 17:05 读到的基线是 18 passed 与 8 failed，你只能把 failed 往下压、不许把 passed 弄少。
+其余三组（归档工、续线工、启动包工头）与集枝安排照 CMDR-DELIVER-0684 丙节，不变。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+
+#### 甲｜亲测读数（不是我算给车道的，是我这一拍真跑的）
+
+尖 `456021a287e51ba135d7fd221ece53b6997eb6da`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，本拍 `git cat-file -e` 回 commit）。我把参考代那枚 `26` 格测试逐字节放进现尖导出树，用项目自带解释器 D:/moodle/CityNexus/.venv（Python 3.12.14）真跑：**18 passed, 8 failed**，耗时二点八一秒。
+　　尺与起法：`live_checks/_cmdr_r77_probe_r1.py:71`；导出树在 E 卷 `E:/cmdr_tip16_r77probe`（D 卷余量紧，测在别处测，没动任何人的工作树）；整份原始输出落 `E:/cmdr_tip16_r77probe/_r77_run.txt:1`。
+　　反控：这八枚红不是量具坏——同一棵树里另外 18 枚是真绿，且报错栈全部指向 `backend/app/` 里的产品行，没有一枚是 import 阶段错误。
+
+#### 乙｜八格的分法：四格是「产品码引用了没定义的名字」，四格是真行为
+
+一、`backend/app/services.py:2156` 写 `settings.lab_estimate_authority`，但那枚文件从没 import 过 `settings`——现尖该文件内「定义或 import」命中零处（`live_checks/_missing_names_1707.txt:3`）。并且现尖 `backend/app/core/config.py` 里也**没有** `lab_estimate_authority` 这枚字段（同一份扫描现读）。所以这一项要做两件事：补字段＋补 import。这正是上午 `searxng_url` 那条走过的链路形状。
+二、`backend/app/services.py:2238` 调 `_place_metadata(place)`，现尖该文件内零定义；参考代正本就在同一枚文件 `backend/app/services.py:577`（两行函数体，用的 `json` 现尖第 3 行已经 import）。见 `live_checks/_missing_names_1707.txt:14`。
+三、`backend/app/stay_mobility.py:2155` 调 `_provider_collocated_edge(fact)`，现尖零定义；参考代正本 `backend/app/stay_mobility.py:1684`（八行，含一句 docstring）。见 `live_checks/_missing_names_1707.txt:21`。
+四、`backend/app/main.py:14803` 调 `snapshot.fact_for(origin_key, destination_key)`；现尖 `backend/app/` 全树 `fact_for` 只有这一处调用、零处定义（现读 `git grep -n fact_for 尖 -- backend/app/` 命中一行就是那处调用）。参考代正本在 `backend/app/replanning/provider_snapshots.py:164`——同一枚类上已有 `facts`（现尖 :93）、`estimate_minutes`（:158）、`hard_minutes`（:164）三枚兄弟方法，独缺这枚只读访问器。见 `live_checks/_missing_names_1707.txt:27`。
+四枚真行为（搬符号糊不过去，逐枚给报错处，谁领谁自己现读整段）：
+　　· `test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_boundary`
+　　· `test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract`
+　　· `test_agent_place_search_accepts_exact_name_with_fact_query_terms`
+　　· `test_selected_plan_projection_exposes_edge_scoped_hard_receipts`
+　　· `test_selected_plan_projection_names_provider_collocated_zero_minute_edge`
+　　· `test_strict_catalogue_mobility_excludes_unresolved_opening_rows`
+　　· `test_strict_catalogue_templates_exclude_unverified_cost_rows`
+　　· `test_real_catalogue_fallback_is_visible_but_not_selectable`
+
+#### 丙｜派工改形（覆盖 CMDR-ORDER-0682 与 CMDR-DELIVER-0683 里「甲组十格」那一档）
+
+- 甲组（`LASTMILE_GRIDS_1013.md:13`）那十格解析面**现尖已经全绿**（亲测：失败名单里没有一枚甲组格名）⇒ 键盘工（a17c509b）别再搬解析器，改领乙丙两项：`services.py` 的 `_place_metadata` 与 import `settings`＋config 补字段。
+- 乙组（`LASTMILE_GRIDS_1013.md:25`）现尖只差两格，就是甲节第一那条权限边界——归档工（cc40e6a7）与键盘工同一枚文件，**由键盘工一并做，归档工让路别撞同一路径**，转领第五格 `_provider_collocated_edge`（丙节第三项）。
+- 丙组（`LASTMILE_GRIDS_1013.md:33`）现尖差四格 ⇒ 加闸工（8bba3a84）领 `fact_for` 那枚访问器＋丙组两枚 selected_plan_projection。
+- 丁组（`LASTMILE_GRIDS_1013.md:41`）现尖差两格，且都是真行为（目录回退可选性、agent 精确名搜索）⇒ 启动包工头（96900cd2）。
+- 屏工、地图工、盘务工、接尖工：你们手上那几枝 r14 同格候选已被 `25b6ae2d445d0a9cb722eef76acd281573215ffd` 抢先落线，交块我按 SUPERSEDED 处理，**不必重交**；有余力就从上面四组里挑一枚没人领的格子，先在册口点名再动手。
+
+#### 丁｜搬符号的对照实验（我上午立的规矩，这次也要）
+
+搬之前、搬之后各跑一次同一枚测试文件，两遍的 passed/failed 数都要进交块——我要看到的是「绿格数只增不减」，不是「新格变绿」 alone。集枝人仍是键盘工：测试文件只由他一人带上枝，别人交产品改动。落线只过 `live_checks/preflight_and_land_r7.py`，不相交才落；这一枚落下去，五年计划八行同时盖章（见 CMDR-DELIVER-0683 丙节）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+成「一枚枝打八行」）
 
 #### 甲｜这一拍线动了（我之前那块的读数因此过期）
 
