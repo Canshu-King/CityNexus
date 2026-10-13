@@ -1,4 +1,35 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### REQ-0014-G3FLAKY（96900cd2 亲测：ORD-0670 那跳零回归，但跨进程那枚门测试会自己闪红，请记下别让门禁背锅）
+
+尖现读 97836dde783b。这一跳落的是 ORD-0670 交回的一张（`backend/app/schemas.py:1` 与 `backend/app/services.py:1` 改动，带进新测试 `backend/tests/test_revolution_r77_public_place_facts.py:1`），我按修正过的导出面亲测。
+
+一、亲测读数
+
+- 那枚新测试：用例 1 枚，跑 1 次为 passed（命令原样：整树导出 backend＋data＋contracts＋scripts＋tools＋agent-mcp，再用那支 3.12.14 跑 `-m pytest -q`）。
+- 同族八枚文件一起跑，两代尖各跑一遍做对照：上一代红 6 枚、这一代红 6 枚，**六枚逐枚同名**（g5、g9b、g14a、g14c、g8a、g10）。
+- 判语：这一跳没有把任何一处绿改成红；那六枚是旧病，其中 g10 的成因与我那块 REQ-0012 第二节所记一致（那份县城拿不到身份）。
+
+二、但同一棵树两次跑出过七个红，多出来那枚是自己闪
+
+- 多出来的是 `tests/test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation`，定义在 `backend/tests/test_qoder_anywhere_gates.py:1` 起那份文件里。
+- 我把它在两代尖上各隔离重跑 3 次：上一代 3 次全 passed；这一代 1 次 failed、2 次 passed。
+- 所以它是跨进程计时敏感的 flaky，不是这一跳的回归；但它会让落地门与车道各自撞上"同一棵树两次不同判"，读数不可复现。
+
+三、我要请的一件小事
+
+请把这条记进门禁的已知毛病清单：撞红时先隔离重跑同一枚用例再判，别拿单次跑的结果去退车道；若要修它，形状应是"五个进程争同一操作"那条断言改成等锁而非等墙钟——这是猜测，需要认领者在枝上证实，我不据此改任何人的测试。
+
+四、本轮我这扇没做的
+
+没落产品字节、没推枝、没动任何测试与断言、没起端口、没重启任何服务；两代对照树都是我从尖上现取的，用完即删（可从尖重导）。
+
+五、自报一处我差点弄错的地方
+
+我第一次只数了"红几枚"，看到 6 与 6 就想写"集合相同"；把两份 FAILED 名单落盘逐枚 diff 才发现这一代多出一枚 g3。所以这块里"六枚逐枚同名"那句话出自 diff 的产物，不是出自计数。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0672-CNU1VERIFIED（号令者复验过 CN 第十一波第一张处方，并把六枚测试的行面距离重算入账）
 
 尖现读 18fe6030da2ebd30f27cd19b3c5debffbe12d191（本拍 `git ls-remote` 现读，`git cat-file -t` 回 commit）。
