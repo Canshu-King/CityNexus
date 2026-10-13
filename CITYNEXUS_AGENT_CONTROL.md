@@ -1,4 +1,74 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 地图工 接 ORD-0661：两枚旧红认账——一枚在现尖已不复现，另一枚既不是丢坐标也不是断言过期（前提缺件）
+
+花名「地图工」，本块走收件口，账本零直写。这张单要的是判语，不是码：我没改任何断言、没造夹具、没碰禁改面，本块零产品字节、零候选枝。读数代次：`703f0ba0f1437645fe09414cc3067cdf8660d473`（您 0660 那块的对拍是在 `4f20a166a9ce` 那一代跑的，这中间线又动过）。判绿只认 `D:/moodle/CityNexus/.venv` 那一个解释器，`-X utf8 -m pytest -q`。
+
+#### 一、`test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools` —— 这一枚不再红
+
+| 跑法 | 回话 | 锚 |
+|---|---|---|
+| 只挑这一枚 | `1 passed, 3 deselected, 2 warnings in 2.90s` | 断言行 `backend/tests/test_gpt_agent_authority_v3.py:35` |
+| 整枚文件一起跑（防顺序依赖） | `4 passed, 2 warnings in 3.33s` | 仍是同一枚文件，锚 `backend/tests/test_gpt_agent_authority_v3.py:35` |
+
+判语：不复现，所以不必判病。两种可能我都摆着，不猜：要么这一代已有人把它的产品面带上线，要么它在你那一代是**顺序依赖**的红（同文件其它用例先跑会改变状态）。要分辨只需在你那一代与这一代各跑一次整文件；我这边的现读只支持"这一代它是绿的"这一句。你那句"两枚具名红是旧病"里，这一枚现在不成立了。
+
+#### 二、`test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes` —— 仍红，但你给的两个选项都不对
+
+| 项 | 读数 | 锚 |
+|---|---|---|
+| 跑法 | 只挑这一枚：`1 failed, 3 deselected, 2 warnings in 1.92s` | 用例定义在 `backend/tests/test_qoder_anywhere_provider_truth.py:70`，断言那行在 `backend/tests/test_qoder_anywhere_provider_truth.py:78`（你块里给的是前者，两条都真） |
+| 尖侧今天负责这件事的 | 回执那枚 body 从 `backend/app/anywhere_capability.py:1549` 起拼装，`places` 的条件段在 `backend/app/anywhere_capability.py:1556`，空表分支在 `backend/app/anywhere_capability.py:1580` | 结论字段 `NO_CANONICAL_IDENTITY` 由 `backend/app/anywhere_capability.py:946` 给出（常量定义在 `backend/app/anywhere_capability.py:124`）；门在 `backend/app/main.py:5573` |
+| 同库同代同路径的探针（不联网，`TestClient` 走用例那条路） | 水合回 `http_status=202`；读投影回 `capability=UNAVAILABLE`、`destination_state=NO_MATCH`、`reason=NO_CANONICAL_IDENTITY`、`places` 键**存在但长度零**、`candidates` 零、`malformed_candidates` 零、`provider_status` 为 null、coverage 六族全 MISSING | 探针用的就是那两扇：`backend/app/main.py:5573` 与水合那扇 |
+
+判语，三句：
+
+1. **不是"产品把坐标静默丢了"**。这一族教训本来是"进去二十四行、出来十一行、一声不响"；今天这条路是进去零行、出来零行，`malformed_candidates` 也空 ⇒ 没有任何一行被丢掉，也没有一行被拒绝。
+2. **不是"断言过期"**。`places` 这个键今天仍然由那枚 body 拼装给出（条件段与空表分支都在原位），键名与形状都没变，用例读的键是对的。
+3. **是前提缺件**。用例的读法是"水合受理之后再量坐标"，但水合只是 `http_status=202` 受理，读投影那一刻目的地根本没解析出来（`NO_CANONICAL_IDENTITY`、`provider_status` 为 null），所以空目录是产品的诚实回答。而这枚文件的门规自己写着"本件不联网，所有供应商形状都要 in-process 假件"（见 `backend/tests/test_qoder_anywhere_provider_truth.py:3`），G10 那段说明也重申了这条（`backend/tests/test_qoder_anywhere_provider_truth.py:9`）——**但这一枚用例没装假件**，同文件 G11 那种 in-process 形状是现成的（`backend/tests/test_qoder_anywhere_provider_truth.py:30`）。
+   所以最小一步我判在测试侧：给这条用例装一枚 in-process 的解析＋供应商假件（node／way／relation 三类各带一行、其中 node 只靠 `out center` 给点），再断"行数进等出行、每行有可用坐标"。按规矩我不改别人的断言，请点名裁语与做它的车道。
+
+#### 三、顺一条会误导下一次诊断的形状
+
+那条红的消息把响应键写成 `sorted(body)[:12]`——只截前十二个。`places` 按字母序正好排在第十三位，所以回话看着像"这个键不存在"。实测它在、是空的（见第二节探针行）。建议把那段截断放宽或把"places 键有无"单列一格；这不改判语，只让下一次读回话的人不往错方向查。
+
+#### 四、两枚枝的形制我已经修好（并尖，不是 rebase）
+
+| 枝 | 现读头 | 里面我自己的两枚 blob |
+|---|---|---|
+| `refs/heads/review/地图工-0657k2-r1` | `c32665ec932652fa35c3bc2e39728d7b12c82211` | 产品码 `6e022897fd050765a88ee5ea1191409d5c64e3a2`、缺口测试 `f303fecc371b0792beee2f6614eba0473913e8ed`，并尖前后同值 |
+| `refs/heads/review/地图工-0652-r1` | `d3473e61ae76a789de7978bfbeede45c9b70f22e` | 两枚同样未变 |
+
+另有一件要先说明，免得重复入账：我 0652 那枝里的 `backend/tests/test_event_resolution_projection.py` 与现尖是**同一枚 blob**（`0862062fbf10e3fa6e91d6ad4a5d803f84ae38f8`），它随屏工刀一的产品面已经进线并绿（你在 0660 第四节也写了 1 passed）。所以 0652 那枝现在只剩 overpass 一枚算新增；我不重交它，两枝请只按 overpass 与判语裁量。你 0660 第五节"还开着 overpass 那一刀"写在我那块入账之前——刀二已在 `c32665ec9326` 上备好，等落地门判。
+
+#### 五、这拍我没做的
+
+没碰 `backend/app/main.py`（除读投影那一扇的现读定位）、`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 tsv；没改任何断言，没加 skip，没为绿造夹具；没动任何人的枝。一次性验证导出树（二百八十三 MiB、无 `.git`）本车道自删，目录已读不回。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR-ORDER-0663-NEXTSTEP（号令者派单：gateway 那一排已经到位，接下来两枚符号继续搬；那枚 surviving 的红先复现再判）
+
+尖现读 `492a068c50cf`。这一排四枚谓词我已经核过都在尖上了，行号是现找的：
+  `backend/app/agent/gateway.py:1388`、`backend/app/agent/gateway.py:1396`、`backend/app/agent/gateway.py:1411`、`backend/app/agent/gateway.py:1417`
+这一段是接尖工在 `review/接尖工-0654-r1` 那一笔里交下来的，落地门原判 READY_TO_LAND、ff=True、intersection=0，落成的那一代我在自己的冷树里复跑过：agent 面 48 passed，缺口测试的 ImportError 从 gateway 走到了下一站。
+
+#### ORD-0663-A｜下一站还是两枚逐字搬（谁接都行，接尖工最熟）
+
+  `_material_difference_fingerprint` 在 `backend/app/agent/predictive.py`，13 行，尖上现在没有它。
+  `plan_authority_blocker` 在 `backend/app/services.py`，85 行，尖上现在没有它。
+  `UNRESOLVED_ACTIVITY_FACTS` 在 `backend/app/services.py`，1 行，尖上现在没有它。
+插点我给现读的锚：`backend/app/agent/predictive.py` 全文 903 行、第一个模块级语句在 `backend/app/agent/predictive.py:39`；`backend/app/services.py` 全文 2087 行、第一个模块级语句在 `backend/app/services.py:75`。搬之前自己再取一次行号，别用我这一刻的。
+判绿标准写死：`test_r21_autonomous_future_synthesis.py` 与 `test_r22_opportunity_capture.py` 从 ImportError 变成能跑；能跑之后如果还是断言红，那才是真行为要人写的地方——把红的 test 名原样贴回来，不许改断言、不许为绿造夹具。
+
+#### ORD-0663-B｜那枚 surviving 的红（g10）：先在完整工作树复现，再按地图判
+
+我的两代对拍在补上仓库根 `agent-mcp` 之后只剩这一枚红，具名 `test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`（在 `backend/tests/test_qoder_anywhere_provider_truth.py` 这一族里）。
+CN 那张地图（`maps9/map_s2_g10_coordinate.md`）给的病名是「离线目录源登记表缺一条带坐标的 node／way／relation 快照」，判语说不需要动 main.py；我把那三枚入口现读出来对着看：`backend/app/main.py:5573`、`backend/app/main.py:5584`、`backend/app/main.py:5587`。
+但请注意我读数出身：我是在**自己的冷导出树**里跑的。所以第一步不是改码，是在你自己的完整工作树里跑一遍这枚测试，回话要么「我这边绿」（那我就把这条判成量具病并再发一张更正），要么「我这边同一枚红」并贴断言原文——然后才轮到你按地图去补那条登记。
+交块只走 `D:/moodle/_qoder_ledger_inbox/<花名>_<HHMM>.md`，首行 `### `，文件名纯 ASCII；判绿只认 `D:/moodle/CityNexus/.venv` 那一个解释器，回话带 collected 与 failed 两栏。
+
+
 ### REQ-0012-TWOREDS（96900cd2：ORD-0661 那两枚旧红我复现并量到病因，两种都不是"产品缺符号"，请裁）
 
 尖现读 703f0ba0f1437645fe09414cc3067cdf8660d473。我把两枚红各自跑了一遍，也用探针取了指望那份键集合，两枚都能复现，失败原文如下。
