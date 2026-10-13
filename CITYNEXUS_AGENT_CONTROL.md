@@ -1,4 +1,59 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 归档工 1137 接 ORD-0670-丁：行程完成时把已呈报的 replan 收成 INVALIDATED——收口变体落在 ② 点名的那枚文件、调用两点落在 ① 开的那两格，测试逐字节带上，另附落点那一形的对照臂实测 — refs/heads/review/归档工-0670丁-r1
+
+- id: ORD-0670 丁格（单文现读 `CITYNEXUS_AGENT_CONTROL.md:857`：五枚测试各只差一格、一格一枝、交的时候把测试一起带上、回话要带 collected 与 failed 两栏、判绿只认 `D:/moodle/CityNexus/.venv`、不许改断言不许造夹具凑绿）。丁格那一枚是 `test_replan_completion_truth.py` （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 花名归档工；本块走收件口 `D:\moodle\_qoder_ledger_inbox\guidangong_1137.md`，账本零直写、权威枝不推、force-push 0 次、没删任何枝、没动任何人的枝 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 交枝 `refs/heads/review/归档工-0670丁-r1`：提交 ac49026bf415d887305129cac28a50b40fa4f39c，父提交＝我读数那一代 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2（命令原样 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读是 446ccdb69f7a，我那代是它的直接祖代：`git rev-list --count` 现读两代差 4 笔、两代之间代码面差异路径 0 条、`backend/app` 与 `backend/tests` 两枚子树 oid 逐字节同值（交枝腿现算并逐行出声，原话在 `E:/qoder_gdd_0670d/readings_0670d.txt:101），所以那三条读数对交付这一代同样成立）；按通播那句「字节没动过就等排到你这一枚，别追着重切」我交的是我读数那一代，要我先并到现尖再交您点一句，我一次办完；改动面新增 1 枚、改 2 枚、删 0 枚 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 起手撞单我让路：我先按乙格（`test_r15_source_authority.py`）在 18fe6030da2e 那一代量过一拍（末行原话 `2 failed, 3 passed`，红的两格同名，读数件 `E:/qoder_gdd_0670/readings_0670.txt:34`），读账本见接尖工已认领乙并交了枝、乙那枚字段现也已由别人落线（`backend/app/core/config.py` 现读 `searxng_url` 命中 1 处），按单文那句「不要重复交」当场停手，改领没人碰的丁；乙格那臂的 collected 栏在我那把尺上是 -1（`-q` 不印 collected，修尺之后我没回补那一代），所以乙的计数我不在这块里背书 （锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+
+## 一、这一格在尖上今天差什么（全部对现尖那一代现读，行号不是抄地图的）
+
+- 那枚测试不在尖上：命令原样 `git cat-file -e 14f47d3ce7b4:backend/tests/test_replan_completion_truth.py` 退出码 128；我按单文从代表枝 dea9876f3043 那一代逐字节放进 `backend/tests/`，blob 84886ca3cb161b2784c89099d65cacca46d0804e 与族A 那一代同值（同值判据见上一块 0644 那笔账）（锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 红就是那一句：待交件自己的 `backend/tests/test_replan_completion_truth.py:59` 要该 journey 的提案全部 `INVALIDATED`；尖上完成那两扇今天不碰 `ReplanProposal`——整枚 main.py 里 `INVALIDATED` 命中 1 处（落在 accept 门清兄弟那一处），complete 段 0 处、skip 段 0 处（段界现读 9477–9552 与 9557–9632）（锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+- 现成的按事件失效函数是枚岛：`backend/app/replanning/proposal_lifecycle.py:10` 那枚在尖上的引用者 0 名（`git grep` 只回定义行）（锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+- 它按 `trigger_event_id` 圈提案，那一格要按 journey 圈全部——这就是地图点名的「需要一个收口变体」那一格，处方在 `D:/moodle/_qoder_cn_work_0609/maps8/map_q3_small_five.md:34`（锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+
+## 二、落的三处字节（都在 CMDR-RULING-0653 第二节 ①＋② 开的那几行里：那节现读 `CITYNEXUS_AGENT_CONTROL.md:1979`、① 那一行现读 `CITYNEXUS_AGENT_CONTROL.md:1982`）
+
+- 收口变体一枚：`backend/app/replanning/proposal_lifecycle.py` 追加 `invalidate_pending_replans_for_journey`，起在交付那一代第 54 行、共 44 行；那枚文件从 52 行变 97 行 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 它是复制语义不是发明语义：代表枝 dea9876f3043 那枚 main.py 里已有同形写法 `_invalidate_pending_replans_after_completion`，在那一代第 7678 到第 7716 行；我这段 docstring 非空行 8 行逐字取自它、对不上的 0 行（生成时逐行比对，比对不过 prep 那腿就停手）；相对按事件那一枚只少一枚 `trigger_event_id` 过滤，其余判定式与审计写法同字 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 进口一行：`backend/app/main.py:337` 那行之前，落在号令者点名的 `app.replanning` 进口群里，逐字 `from app.replanning.proposal_lifecycle import invalidate_pending_replans_for_journey` （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 调用两点：complete 那扇在第 9547 行前、skip 那扇在第 9607 行前，各 6 行；`decided_at` 用两枚端点自己已经算好的 `completed_at`／`skipped_at`（现读 `backend/app/main.py:9499` 与 `backend/app/main.py:9585`），`reason` 用代表枝原话 `journey_completed` （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 逐枚增删（从提交 diff 现算）：main.py 加 13 行删 0 行、3 段 hunk；proposal_lifecycle.py 加 45 行删 0 行、1 段；测试整枚新增 66 行删 0 行 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 它落线就不是岛：`git grep` 现读那枚新名字在交付那一代命中 4 行——定义 1 处、进口 1 处、调用 2 处 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+
+## 三、两栏读数（一把尺：整树冷导出、`.venv` 那支 3.12.14、命令原样 `-X utf8 -m pytest -q --tb=line -rf`；导出树无 .git，共享工作树零触碰）
+
+- 基线（只把那枚测试放进去）：collected 1 条、failed 1 条、退出码 1，末行原话 `1 failed, 2 warnings in 3.89s`，红的那格逐字 `test_completion_invalidates_presented_replans_and_keeps_history_read_only`（锚 E:/qoder_gdd_0670d/readings_0670d.txt:6）
+- 改后（三处字节进树）：collected 1 条、failed 0 条、退出码 0，末行原话 `1 passed, 2 warnings in 2.58s`（锚 E:/qoder_gdd_0670d/readings_0670d.txt:38）
+- 回归面：尖上走完成路径或碰 `ReplanProposal`／`INVALIDATED`／`proposal_lifecycle` 的测试共 25 枚，两臂逐枚同数，红集合变动 0 处；唯一那枚旧红 `test_qoder_simulation_mode.py::test_the_reset_route_is_closed_without_the_switch_and_deletes_nothing` 两臂同名同数，不是我这一格加的 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 整树收集：不带那枚测试实测 1956 条、带着 1957 条、退出码都是 0，差 1 条正是我带进来的那一格（锚 E:/qoder_gdd_0670d/readings_0670d.txt:100）
+- 那枚测试在这代线上一共跑 1 条用例、通过 1 条；我不写「全 suite 绿」，只写上面同分母的对拍 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+
+## 四、一处落点请裁（两形我都真跑了一拍）
+
+- ① 那句的字面落点是 `next_activity = session.scalar(` 之前（现读 `backend/app/main.py:9511`）。那一形我也导了一棵冷树真跑：目标格同样转绿（collected 1 条、failed 0 条、末行 `1 passed, 2 warnings in 3.28s`），回归面 25 枚红集合变动 0 处——与交的这一臂逐枚同数（锚 E:/qoder_gdd_0670d/readings_0670d.txt:70）
+- 所以这把尺分不出两形，差别只在语义：按字面落点，完成任意一枚活动就把该 journey 全部已呈报提案作废；按代表枝那一形，只在 journey 已经 `COMPLETED` 时作废。我按「复制语义而不是发明语义」交后者 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 您要是点字面那一形，我出一枚反着着的枝，不改断言也不硬凑；线上没有任何一枚测试钉这件事（那 25 枚里钉完成的都是别的行为），所以我不自己把它选成产品口径 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+
+## 五、禁改面逐枚点名与这一拍没做的
+
+- 交付那一代 diff 里各命中 0 枚的禁改面：`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 `docs/REVOLUTION_ABSORPTION_MANIFEST.tsv`、`backend/app/schemas.py`、`backend/app/services.py`、`backend/app/core/config.py`（config 是乙格的地盘，我没碰）（锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- main.py 我只动上面点名的三格：`git diff --name-status 14f47d3ce7b4 ac49026bf415` 现读只 3 枚路径，①②与 CMDR-DELIVER-0657 刀一之外的那几行一字未动 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 没改断言、没造夹具、没加 skip：测试字节 blob 84886ca3cb16 与代表枝同值，交枝腿在提交里回读对拍过 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 丙格我读明白了但没动手：`test_r14_terminal_disruption_recovery.py` 那一格要把 accept 那记硬 409 换成「child 全终态」分支，落点现读 `backend/app/main.py:13494`——它不在 ①② 开的那几行里，也不在 0657 刀一点名的两处，所以这一拍我不动它，等您点一句 （锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+- 我名下仍在等点的枝（逐枚现算 `git merge-base --is-ancestor` 对现尖）：这一拍新交的是 review/归档工-0670丁-r1；`review/归档工-0644-r1` 已在血缘里不再等；`review/归档工-0665-r1`、`review/归档工-0621-r2`、`review/归档工-0616-r1` 仍未落线，我不重切、不删、不推第二代 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+
+## 六、按 ORD-0634 第三节交我自己名下的现场账（一次性验证导出树：无 .git、可从尖整树复现，由本车道自己删）
+
+- 本轮起过 2 棵冷树（`tip_14f47d3ce7b4` 与 `alt_14f47d3ce7b4`），字节合计 555414016、文件 30396 枚、带 .git 目录 0 枚，量完就删 （锚 ac49026bf415d887305129cac28a50b40fa4f39c）
+- 之前两代留下的 3 棵也已删，逐项：1 棵 277598201 字节／15157 枚文件／.git 目录 0 枚，出处 97836dde783b 那一代；2 棵 555163738 字节／30320 枚文件／.git 目录 0 枚，出处 18fe6030da2e 那一代。两条判据：无 .git、且那一代提交在现尖血缘里，`git archive <那一代>` 可整树复现 （锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+- 两点余量（同一把尺 `shutil.disk_usage`）：动手前 E 余 16.81 GB、动手后 E 余 17.43 GB；D 余 7.84 GB。产品树、worktree、带 .git 的集成分支仓库、`D:/moodle/_qoder_integration_20260919` 与 `C:/Users/仓鼠王/.qoder` 一枚没碰，UAC 一次没点 （锚 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2）
+- 复算口：命令原样 `python -X utf8 run_0670d_r1.py prep`（现取尖并核锚点，锚点不唯一就 ABORT）再依次 `base`、`patch`、`after`、`alt`、`bare`，逐行落 `E:/qoder_gdd_0670d/readings_0670d.txt`；交枝腿 `python land_0670d_r1.py` 自带五道断言（父＝尖、改动面＝那三枚、两枚 blob 回读同值、禁改面 0 命中、远端回读同值）（锚 E:/qoder_gdd_0670d/readings_0670d.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0675-THREEFILESWAY（号令者收口单：未盖章那几行此刻只剩三枚文件，逐枚点名）
 
 尖现读 446ccdb69f7aefb9000bda0f88f104b41a91f1f8（本拍 `git ls-remote` 现读、`git cat-file -t` 回 commit）。
