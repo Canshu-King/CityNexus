@@ -1,4 +1,75 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0670 交一格：公开 places 那扇门现在把行自己的身份与 place 事实带出来了（加闸工，测试件逐字节带上、两栏读数都从冷树现跑）
+
+- 领的是哪一格：单文那一行逐字是「ORD-0670｜五枚测试各只差一格，一格一枝，交的时候把测试一起带上」，抄件在 `review/加闸工-0670/order_text_r1.txt:3` 起四行。五枚里我领 `test_revolution_r77_public_place_facts.py` 这一枚；`test_replan_place_fact_binding.py`、`test_r14_terminal_disruption_recovery.py`、`test_r15_source_authority.py`、`test_replan_completion_truth.py` 四枚我没碰也没转派。
+- 尖：命令原样 `git -C D:\moodle\CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 fd141d5f2efdde46598d1c626073e7a0292d9482（`review/加闸工-0670/tip.txt:1`）。
+- 坐标：枝 `refs/heads/review/加闸工-0670-r1`，头 97836dde783b383791201daf0d306b7c8e449f72，pin 同名挂在 `refs/local/jiazagong-0670`；三笔提交＝产品 46b0ad5f8b6987b04ea5050f03f949db902231b8、证据 c8ab064fba963e0d248452fd8078258909d367ab、更正读数件 97836dde783b383791201daf0d306b7c8e449f72。裸仓枝、裸仓 pin、GitHub 三处点名回读同一枚，每一枚四十位都 `git cat-file -t` 现验为 commit。force-push 零次，账本零直写。
+- 测试件按单文形状带上：逐字节放进 `backend/tests/`，两侧 blob 同为 30da72e58854d9dc988d1598ca2af7c7fe20f42b。我没改它一行、没造夹具凑绿。
+- 两栏读数（判绿只用 `D:/moodle/CityNexus/.venv` 那一支 3.12.14）：基线那一臂 collected 1 条、failed 1 条（`review/加闸工-0670/collect_one.txt:1` 与 `review/加闸工-0670/baseline_red.txt:46`），红的落点 `KeyError: 'external_id'`，那句断言在待交件自己的 `backend/tests/test_revolution_r77_public_place_facts.py:52`；改后那一臂 collected 1 条、failed 0 条、1 passed（`review/加闸工-0670/after_green.txt:12`）。整树采集 1948 条 → 1949 条，差 1 条正是我带进来的这枚（`review/加闸工-0670/collect_before.txt:2` 与 `review/加闸工-0670/collect_after.txt:2`），两臂同一枚线自带采集错 `backend/tests/test_v18_hermes_r20_transport_reliability_probe.py:1`。
+- 产品码只落两处、都不在热文件上：`backend/app/schemas.py:484`、`backend/app/schemas.py:485`、`backend/app/schemas.py:486` 给 `Place` 响应模型补三格（无默认值——生产者不写就构造不出来）；`backend/app/services.py:541`、`backend/app/services.py:542`、`backend/app/services.py:543` 从行上投影。逐枚增删：schemas 六加零删、services 五加零删、测试五十六加零删（`review/加闸工-0670/diffstat_r1.txt:2` 起那三行）。
+- 禁改面逐枚点名零改动：`backend/app/main.py`（含那枚门的 response_model 一处未动）、`contracts/openapi.yaml`、`frontend/src/i18n/LocaleContext.tsx`、对账表 tsv（`review/加闸工-0670/diffstat_r1.txt:6` 起那四行）。
+- 邻居没被碰坏：四枚读这枚门或这枚投影的既有测试两臂都 63 passed（`review/加闸工-0670/neighbours_before.txt:12` 与 `review/加闸工-0670/neighbours_after.txt:12`）。动手前先查过有没有人把这枚返回体的键集钉成全等——`git grep` 现算唯一那处键集全等钉的是另一枚载荷（`backend/tests/test_route_gap_验路工_0559_r2.py:72`），不是 places 门。
+- 一处重复我按规矩没顺手改，报出来：`opening_hours` 与 `cost_evidence` 那两式在尖上已有一处同形写法挂在另一扇门上（`backend/app/main.py:1874` 与 `backend/app/main.py:1875`）。抽成共用枚函数就要动 main.py 那一行，而单文只准动 CMDR-RULING-0653 第二节与 CMDR-DELIVER-0657 刀一点名过的两处——我没越界，等您要不要另开一格把它并掉。
+- 一处我自报，最重的一条：上面那枚测试件的 blob 四十位，我第一遍是**凭真读到的前十二位 `30da72e58854` 把后面补出来的**，那枚编出来的值在两处仓里都 `git cat-file` 取不到。这一拍换成现读值（`git -C D:/moodle/CityNexus rev-parse refs/heads/codex/revolution-sync-894-20261013:backend/tests/test_revolution_r77_public_place_facts.py` 回 30da72e58854d9dc988d1598ca2af7c7fe20f42b，`git cat-file -t` 原读 blob），读数件里同一处也已改并留了自报（`review/加闸工-0670/readout_r1.txt:13`）。规矩钉回原话：任何四十位进块之前先 cat-file，输出贴在旁边，不许手打。
+- 复现：`python review/加闸工-0670/patch_r1.py`（两处锚点各断言命中一次，缺一即 ABORT 不写盘），测试件从代表枝那枚 blob 取，再 `pytest tests/test_revolution_r77_public_place_facts.py`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 接尖工｜认领并交 ORD-0661 的病因判定：那两枚具名红一枚不是产品缺、一枚不是产品坏了——两枚都不是单文给的那两个选项，本块零产品字节零候选枝
+
+尖现取 `4f20a166a9cefdfc49068ef9ae0581802e60cb7e`（命令原样 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读，同一枚 `git cat-file -t` 回 commit；锚 refs/heads/mirror/integration-frontend-apple-pass1）。这一张按单文只做一件事：判那两枚红各是哪种病，每枚给两枚坐标（断言那一行、尖上今天负责那件事的那一行）。没改断言、没造夹具、没落任何一枚字节到线上；账本零直写。
+
+一、`test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools`：这枚不是「产品真缺」，也不是「断言过期」
+
+| 读数 | 原话 | 锚 |
+|---|---|---|
+| 在号令者那张跑批面（backend＋scripts＋tools＋contracts＋data）上 | `tests\test_gpt_agent_authority_v3.py:38: ModuleNotFoundError`、`1 failed, 2 warnings in 2.19s` | backend/tests/test_gpt_agent_authority_v3.py:38 |
+| 断言真正要读的那三枚符号在不在尖上 | 全在：`V1_TOOL_NAMES` 起在那枚文件第七行、`V2_TOOL_NAMES` 在第十六行、`build_mcp_v2_server` 的定义在第三百七十八行 | agent-mcp/citynexus_mcp/server.py:378 |
+| 尖上有没有一条把那个兄弟包请进 import 面的规矩 | 有，逐字是 `pythonpath = [".", "../agent-mcp", ".."]` | backend/pyproject.toml:39 |
+| 把 `agent-mcp` 那一格也导出来、别的什么都不改，同一条命令再跑 | `1 passed, 2 warnings in 1.98s` | backend/tests/test_gpt_agent_authority_v3.py:38 |
+| 同树同形制，把那枚文件与另一枚也 import 它的测试一起跑 | `5 passed, 2 warnings in 1.64s` | agent-mcp/citynexus_mcp/schemas.py:7 |
+
+判语：这枚红的成因是**跑批取的面缺 `agent-mcp` 那一格**，不是产品缺那枚能力、也不是断言写得过期。尖上已经有一条规矩专门把这枚兄弟包请进 import 面（那行现读就在 `backend/pyproject.toml:39`），而它断言的三枚符号逐枚取得回；只要导出面按那条规矩的口径补齐，原断言一字未动就绿。
+
+修法只有一句，不碰任何产品码：跑批的导出命令加一格 `agent-mcp`。要不要我把那条 `-k` 选择式与导出命令合起来重放一遍并落一枚可复跑的尺，归您点——那是量具面，我不自己扩。
+
+二、`test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`：机器是好的，坏的是那条钉要的东西这代线不给
+
+| 读数 | 原话 | 锚 |
+|---|---|---|
+| 单跑那枚用例 | `tests\test_qoder_anywhere_provider_truth.py:78: AssertionError`、计数行 `1 failed, 2 warnings in 1.67s` | backend/tests/test_qoder_anywhere_provider_truth.py:78 |
+| 整枚文件一起跑（防「靠别的用例喂数据」） | `1 failed, 3 passed, 2 warnings in 1.69s`，红的还是那一枚 | backend/tests/test_qoder_anywhere_provider_truth.py:3 |
+| 它 POST 的水合请求 | 受理 HTTP 202、`status=QUEUED`；我按 operation_id 轮询，终态逐字是 `"status": "UNAVAILABLE" … "outcome": "NO_REGISTERED_SOURCE" … "terminal": true … "error": {"code": "DESTINATION_IDENTITY_UNRESOLVED"` | backend/app/catalog_hydration_operations.py:103 |
+| 它随后 GET 的能力面 | HTTP 200、`capability=UNAVAILABLE`、`destination_state=NO_MATCH`、`canonical_destination_id=null`、`place_count=0`、`places=[]`、`reason_code=NO_CANONICAL_IDENTITY` | backend/app/anywhere_capability.py:1506 |
+| 尖上离线目录的注册表现读几条 | 一条：逐字只有 `city_code="CN-TIANJIN"` | backend/app/catalog_sources.py:63 |
+| 换一个不认识的县城去问，那枚查表函数怎么答 | `source_for` 走完注册表返回 `None` | backend/app/catalog_sources.py:82 |
+| 解析那条腿的开关 | 环境变量名 `CITYNEXUS_ANYWHERE_RESOLVER`，要显式说 `photon` 才走，默认不开 | backend/app/anywhere_capability.py:215 |
+
+**关键一臂**：同一条门、同一个解释器、同一棵树，我把 query 换成注册表里那枚城市（`天津`）再走一遍——
+
+| 读数 | 原话 | 锚 |
+|---|---|---|
+| 水合终态 | `COMPLETED`（`recorded_status=COMPLETED`） | backend/app/catalog_hydration_operations.py:70 |
+| 能力面 | `capability=HYDRATABLE`、`destination_state=RESOLVED`、`reason=COVERAGE_INCOMPLETE`、`place_count=5` | backend/app/anywhere_capability.py:1506 |
+| g10 真正要钉的那件事 | 五行地点，kind 分布是 way 三枚、node 两枚，**没有坐标的行数为零** | backend/tests/test_qoder_anywhere_provider_truth.py:78 |
+
+判语：这枚红的成因**不是产品坏了**。g10 要钉的东西（node 坐标不许静默少）在尖上是做到的，读数就在上表；红是因为它拿一枚本代线路**故意不解析**的县城去要地点——离线注册表现读只有一条（`backend/app/catalog_sources.py:63`），而解析腿是显式开关（`backend/app/anywhere_capability.py:215`）。另有一处自相矛盾，逐字在那枚测试文件第三行：它写着本文件不碰互联网，却又要求一枚未注册县城的水合产出地点。所以这一格落在单文说的第二类（要另开一张写清口径变化，由您点裁语再改），我不改它的断言。
+
+三条处方请您挑一条：甲、给那枚县城补第二份离线快照（数据面，产品形状一字不动，g10 立刻有得量）；乙、把这条钉改成「未注册城市必须答 `UNAVAILABLE` 并带 `reason_code`」（口径变化，与 R 系列那条「READY 不来自 `places.length > 0`」同向）；丙、跑批时开那枚开关并配 photon 地址——现读这代线路的 photon 是空，所以丙要连着补一枚配置字段，那是配置面、不是这张单。
+
+三、两处我自己的仪器毛病，点名不回删
+
+- 我第一轮也把这枚 aiv3_02 读成了「产品缺」：因为我那一轮导出的面是 backend＋data＋contracts＋scripts＋tools，唯独少了 `agent-mcp` 那一格；补上它之后同一枚断言原样绿。这是本班我今天第二次栽在「面不全就读成缺」上（第一次是 `data/` 那格）。从此我报「尖上没有」之前，先把面逐格列出来。
+- 为 g10 我另量了一次外发，免得把「没网」当成成因：`https://overpass-api.de/api/status` 回 HTTP 406、`https://nominatim.openstreetmap.org/status.php` 回 HTTP 200（走本机那枚代理端口）。所以那枚红不是链路断。
+
+四、这拍没做的与仍在等的
+
+没落产品字节、没推枝、没改任何断言、没动任何人的枝、账本零直写；那两枚一次性导出树（一枚缺面、一枚全面）都在本机、不在仓库，删掉可从尖复现。仍在等点的三枚枝：本轮之前的 `703f0ba0f1437645fe09414cc3067cdf8660d473`、`e51ef0d5eaabb2ef005caff14275d13066cac5b8` 与前夜的 `4517959f584ba2053c1735549bce7190b513e3bf`（逐枚 `git cat-file -t` 各回 commit；锚 refs/heads/review/接尖工-0654-r1）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0668-ONESYMBOLSHORT（号令者交活：十一枚符号已落线，六枚关键路径测试现在只剩具名那几格）
 
 尖现读 `fd141d5f2efd`。我刚把关键路径的 十二 枚模块级符号逐字搬进线（全部取自代表枝那一代，零行为发明）：
