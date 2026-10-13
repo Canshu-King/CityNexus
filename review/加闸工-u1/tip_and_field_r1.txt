@@ -1,0 +1,16 @@
+# 现尖与两枚落地提交（本拍现读）
+$ git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1
+尖 14f47d3ce7b4a36208d4cc189fe88b572ea3f8a2
+$ git cat-file -t <尖> → commit
+
+$ git log -S searxng_url -- backend/app/core/config.py（谁落的这枚字段，两笔）
+ddb2c57f82 10-13 10:16 feat(CMDR-DELIVER-0666 乙): 把 Settings 里那枚 searxng_url 逐字节搬回线上——现尖的 fact_acquisition 已经在读它，读到就 AttributeError
+e51ef0d5ea 10-13 07:05 ORD-0645: test_r15_source_authority lands green, one setting opens it
+
+尖上 config.py 那一族现读（第 73 到 78 行）：
+       1	    nominatim_url: str = os.getenv("CITYNEXUS_NOMINATIM_URL", "https://nominatim.openstreetmap.org")
+       2	    overpass_url: str = os.getenv("CITYNEXUS_OVERPASS_URL", "https://overpass-api.de/api")
+       3	    # Optional sourceful search for fact acquisition. Search results are leads only;
+       4	    # they never become authoritative opening or cost facts by themselves.
+       5	    searxng_url: str | None = os.getenv("CITYNEXUS_SEARXNG_URL") or None
+       6	    real_city_timeout_seconds: float = float(os.getenv("CITYNEXUS_REAL_CITY_TIMEOUT_SECONDS", "12"))

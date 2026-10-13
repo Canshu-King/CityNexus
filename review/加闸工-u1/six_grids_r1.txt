@@ -1,0 +1,6 @@
+# 六格在本拍现尖上的状态（每格一条命令原样）
+第 1 格 tests/test_replan_place_fact_binding.py：1 passed in 2.05s
+第 2 格 test_r14_terminal_disruption_recovery.py：在树里=否
+第 3、4 格：见 cells_3_4_r1.txt（同一枚 parametrize 的两个用例）
+第 5 格 test_replan_completion_truth.py：在树里=否
+第 6 格 tests/test_revolution_r77_public_place_facts.py：1 passed, 2 warnings in 2.32s
