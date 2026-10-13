@@ -1,0 +1,26 @@
+# ORD-0654 two-arm readings, re-captured on full-tree exports and without clipping (supersedes arms_r1.txt).
+# interpreter Python 3.12.14 | stamp 2026-10-13 07:57:03 | line tip 4f20a166a9cefdfc49068ef9ae0581802e60cb7e
+# baseline tree D:/moodle/_jp0654_full_base = git archive 8f2e05ad1d2ba56b3a5a0bbc851cf122b23640d0 ; after tree D:/moodle/_jp0654_full_run = git archive aab42444d1eab0445a950eb1642546f62ddaba25
+# each arm: cd <tree>/backend && python -X utf8 -m pytest -q <files>   (E-lines verbatim, uncut)
+baseline :: files=1 items_ran=1 rc=2 last=2 warnings, 1 error in 2.34s
+   counts: warning=2 error=1
+   collected: (none: a -q run interrupted during collection prints no collected line)
+   E-line: E   ImportError: cannot import name '_server_completion_contract' from 'app.agent.runtime' (D:/moodle/_jp0654_full_base/backend/app/agent/runtime.py)
+after :: files=1 items_ran=1 rc=2 last=2 warnings, 1 error in 2.12s
+   counts: warning=2 error=1
+   collected: (none: a -q run interrupted during collection prints no collected line)
+   E-line: E   ImportError: cannot import name 'canonical_place_tags' from 'app.replanning.candidate_evidence' (D:/moodle/_jp0654_full_run/backend/app/replanning/candidate_evidence.py)
+baseline_neighbours :: files=7 items_ran=40 rc=0 last=40 passed, 2 warnings in 2.60s
+   counts: passed=40 warning=2
+   collected: (none: a -q run interrupted during collection prints no collected line)
+after_neighbours :: files=7 items_ran=40 rc=0 last=40 passed, 2 warnings in 2.61s
+   counts: passed=40 warning=2
+   collected: (none: a -q run interrupted during collection prints no collected line)
+neighbour denominator (7 modules, computed from tip 4f20a166a9cefdfc49068ef9ae0581802e60cb7e via git grep -l app.agent.runtime -- backend/tests)
+   test_agent_mission_runtime.py
+   test_agent_runtime_state_epoch.py
+   test_qoder_ord0359_ai_state_three_ways.py
+   test_qoder_prompt_tool_grant_is_per_mission.py
+   test_v17_semantic_compiler.py
+   test_v18_2_agent_productization.py
+   test_v18_3_convergence.py

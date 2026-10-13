@@ -1,0 +1,12 @@
+baseline :: files=1 rc=2 last=2 warnings, 1 error in 2.16s
+   command: python -X utf8 -m pytest -q <该臂名单>, cwd=<该臂树的 backend/>
+   E-line: E   ImportError: cannot import name '_server_completion_contract' from 'app.agent.runtime' (D:/moodle/_jp_0654_base/backend/app/agent/runtime.py)
+after :: files=1 rc=2 last=2 warnings, 1 error in 1.90s
+   command: python -X utf8 -m pytest -q <该臂名单>, cwd=<该臂树的 backend/>
+   E-line: E   ImportError: cannot import name 'canonical_place_tags' from 'app.replanning.candidate_evidence' (D:/moodle/_jp_0654_run/backend/app/replanning/can
+baseline_neighbours :: files=7 rc=1 last=1 failed, 39 passed, 2 warnings in 2.45s
+   command: python -X utf8 -m pytest -q <该臂名单>, cwd=<该臂树的 backend/>
+   red: tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged
+after_neighbours :: files=7 rc=1 last=1 failed, 39 passed, 2 warnings in 2.43s
+   command: python -X utf8 -m pytest -q <该臂名单>, cwd=<该臂树的 backend/>
+   red: tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged
