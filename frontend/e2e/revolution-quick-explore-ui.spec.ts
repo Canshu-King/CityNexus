@@ -19,6 +19,8 @@ function json(route: Route, object: object) {
 test("plain Chinese first-user journey preserves separate intentional provider releases", async ({ page }) => {
   let citySearchCalls = 0;
   let poiSearchCalls = 0;
+  let hermesGuideCalls = 0;
+  let tileRequests = 0;
   let saved = false;
   let progressRevision = 0;
   let goState = "NOT_STARTED";
@@ -46,6 +48,25 @@ test("plain Chinese first-user journey preserves separate intentional provider r
       id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
     }));
   }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "HERMES_COMPAT_ENDPOINT", hermes_compat_configured: true,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${root}/trial-ai-discovery`, (route) => {
+    hermesGuideCalls += 1;
+    const payload = route.request().postDataJSON();
+    expect(payload.goal).toContain("连城");
+    return json(route, {
+      status: "MODEL_TOOL_SUGGESTION", category: "park/garden",
+      reason: "想轻松走走，可以先试公园绿地这一类。真实地点仍需公开搜索。",
+      model: "TEST_PROVIDER", evidence: "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE",
+      provider_calls: 0, agent_run_created: false,
+    });
+  });
+  await page.route("https://tile.openstreetmap.org/**", (route) => {
+    tileRequests += 1;
+    return route.abort();
+  });
   await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
     status: "READY", reason_code: "READY", provider: "overpass",
     provider_name: "Playwright fixture", expected_recipient: "TEST_PROVIDER",
@@ -113,19 +134,29 @@ test("plain Chinese first-user journey preserves separate intentional provider r
   await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
   expect(citySearchCalls).toBe(0);
   expect(poiSearchCalls).toBe(0);
+  expect(hermesGuideCalls).toBe(0);
+  expect(tileRequests).toBe(0);
+
+  // A real model-guidance request is only made when the signed user explicitly
+  // submits their own goal. All provider replies in this test are fixtures.
+  await page.getByTestId("rev-quick-consult-ai").click();
+  await expect(page.getByTestId("rev-quick-ai-response")).toBeVisible();
+  expect(hermesGuideCalls).toBe(1);
+  expect(citySearchCalls).toBe(0);
+  expect(poiSearchCalls).toBe(0);
 
   await page.getByTestId("rev-quick-find-city").click();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
   expect(citySearchCalls).toBe(1);
   expect(poiSearchCalls).toBe(0);
 
-  // The geocoder center is CAMERA ONLY. The user must independently select a
-  // public search center, here via a strict OSM link without map tile traffic.
-  await page.getByText("地图打不开？用公开 OpenStreetMap 链接定位").click();
-  await page.locator("#rev-quick-map-link").fill("https://www.openstreetmap.org/#map=13/25.7/116.75");
-  await page.getByTestId("rev-quick-apply-map-link").click();
+  // The chosen TEST_PROVIDER geocoder result is only an approximate public
+  // area. One explicit click is enough to adopt it as a user-directed search
+  // center; no blank MapLibre tiles or physical-position proof are required.
+  await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
   await expect(page.getByTestId("rev-quick-category")).toBeVisible();
   expect(poiSearchCalls).toBe(0);
+  expect(tileRequests).toBe(0);
 
   await page.getByTestId("rev-quick-find-places").click();
   await expect(page.getByTestId("rev-quick-results")).toBeVisible();
