@@ -1,0 +1,40 @@
+name: Revolution trial UX compile gate
+
+on:
+  push:
+    branches:
+      - trial/revolution-first-look-20261014
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: revolution-trial-ux-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trial-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Parse local trial Python without network model calls
+        run: |
+          python -m py_compile trial/try_revolution.py trial/wb2api_agent.py trial/agent_preview_app.py trial/probe_wb2api_agent.py
+          python -m unittest discover -s trial -p 'test_wb2api_agent.py'
+      - name: Install frontend dependencies (upstream lockfile is out of sync)
+        working-directory: frontend
+        run: npm install --no-audit --no-fund
+      - name: Full TypeScript check
+        working-directory: frontend
+        run: npm run typecheck:all
+      - name: Vite production build
+        working-directory: frontend
+        run: npm run build
