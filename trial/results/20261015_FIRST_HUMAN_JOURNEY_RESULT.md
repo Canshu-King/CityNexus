@@ -1,11 +1,11 @@
-用户现在能用：否。修复已推送到分支并开 PR，但尚未进入用户当前启动版本；真实 Provider、真实模型工具和真实用户操作仍未验。明早需要先停掉旧 Uvicorn，再运行下方一次性 PowerShell 命令。
+用户现在能用：否（PR #20 尚未进入用户当前启动版本）。真实 Provider、模型工具和真人可用性仍未验；本机旧试玩占用默认端口，因此已给启动器补独立端口参数和不改 package-lock 的依赖安装路径。下方命令在新隔离 worktree 和新 SQLite 中启动更新版，不停止旧服务。
 
 # Revolution 首次真人旅程修复结果
 
 **Issue**：[#19 — Revolution 真人首次体验卡死](https://github.com/Canshu-King/CityNexus/issues/19)
 **PR**：[Canshu-King/CityNexus#20](https://github.com/Canshu-King/CityNexus/pull/20)
 **分支**：`fix/revolution-first-human-e2e-20261015`
-**修复提交**：`315a71b3f48440722cd2f883d6e0e44376f16683`
+**修复提交**：PR #20 当前修复提交为 `00471cb38f84b288d62eb60b71398ff74cd4108f`；端口隔离跟进提交待本轮验证。
 **基线**：`trial/revolution-first-look-20261014 @ ca00e365025932164a166fae9ca5fe8dedec6556`
 
 ## 结论与原始红条
@@ -65,9 +65,15 @@ npm run build
 
 环境使用 Node 24.14.0；没有找到 Node 22。`npm ci` 因现有 lockfile 与 package.json 不一致失败，依赖只在隔离 worktree 用 `npm install --no-save --no-package-lock` 安装，`package-lock.json` 未修改。
 
-## 明早一次性更新并启动
+## 2026-10-15 启动避让补丁
 
-先在原本服务所在终端按 Ctrl+C 停止旧 Uvicorn（用户原来的 :14173 / :18201）。以下命令只创建新的隔离 worktree；若目标目录已存在就停止，不触碰原 checkout、原数据库、lockfile 或密钥。命令不带 `--agent`，所以不会发 AI 请求；默认 Provider 是 LIVE，启动器需要联系邮箱时只在本机终端输入。
+检查本机时，原试玩仍监听 `127.0.0.1:14173` 和 `127.0.0.1:18201`。没有停止或连接这两个服务。为避免用户更新时撞端口，启动器新增前端、后端及本地 fixture 的独立端口参数，并拒绝重复端口；npm lockfile 不匹配兜底改为 `--no-save --no-package-lock`。
+
+在当前隔离分支用 `--sample --fresh --no-browser`、前端 `14183`、后端 `18211`、城市 fixture `18212`、Overpass fixture `18213` 启动成功。后端健康、`/revolution` 页面和两个本地 fixture 均返回 HTTP 200；随后结束了本次隔离进程。本次只使用 `TEST_PROVIDER` 与新 SQLite，没有联系真实地图服务或模型，也没有触碰原试玩进程和数据库。
+
+## 一次性安全更新并启动
+
+本机现有试玩仍占用默认端口 `14173/18201`。启动器会拒绝接管被占用的端口；下面改用 `14183/18211`，无需停止旧服务。命令只创建新的隔离 worktree，并以 `--fresh` 使用新 SQLite；若目标目录已存在就停止，不触碰原 checkout、原数据库、lockfile 或密钥。命令不带 `--agent`，不会发模型请求；LIVE Provider 只有在用户于页面逐项明确同意后才发请求。启动器要求联系邮箱时只在本机终端输入。
 
 ```powershell
 $repo = 'D:\moodle\CityNexus-Revolution-Trial'
@@ -85,5 +91,7 @@ git -C $repo worktree add --detach $trial "origin/$branch"
 if ($LASTEXITCODE -ne 0) { throw '创建隔离 worktree 失败；未启动试玩版。' }
 
 Set-Location -LiteralPath $trial
-py -3.13 trial\try_revolution.py --fresh
+py -3.13 trial\try_revolution.py --fresh --frontend-port 14183 --backend-port 18211
 ```
+
+启动器的 npm lockfile 不匹配兜底现在使用 `npm install --no-save --no-package-lock`；即使需要安装依赖，也不会改写 `package.json` 或 `package-lock.json`。本机 Node 22 未安装，当前验证环境为 Node 24.14.0。
