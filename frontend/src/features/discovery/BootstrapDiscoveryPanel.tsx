@@ -2216,14 +2216,12 @@ export function BootstrapDiscoveryPanel({
           <section className="journey-membership-map-consent public-city-area-picker-shell" data-testid="bootstrap-public-area-picker" aria-labelledby="bootstrap-public-area-picker-title">
             <h2 id="bootstrap-public-area-picker-title">选择你想逛的地方</h2>
             <p>
-              CityNexus will use one pin as a public discovery center. It will not be treated as your location,
-              presence, route origin, arrival, or a confirmed city relation. Map tiles are a separate provider release.
+              这个地图点只是搜索中心，不代表你当前的位置、行程起点或已经到达。只有你选择加载地图时，才会请求地图瓦片服务。
             </p>
             <div className="public-city-search" data-testid="bootstrap-city-search">
               <h3>搜索城市或县城</h3>
               <p>
-                This makes one bounded request to the configured city-search provider. It can move the camera only;
-                it never chooses a center for you. No request is made on mount or while typing.
+                输入「连城县」搜索位置。系统不会边打字边发送请求，也不会替你自动选择结果。
               </p>
               <label>
                 <input
@@ -2232,11 +2230,11 @@ export function BootstrapDiscoveryPanel({
                   checked={citySearchConsent}
                   onChange={(event) => setCitySearchConsent(event.target.checked)}
                 />
-                I agree to ask the configured city-search provider once (source and uncertainty will be shown).
+                我同意向公开地名搜索服务发送一次查询，并查看返回地点的来源。
               </label>
               <div className="v8-form-grid">
                 <label>
-                  City or area name
+                  城市或地区名称
                   <input
                     data-testid="bootstrap-city-search-query"
                     value={citySearchQuery}
@@ -2248,12 +2246,12 @@ export function BootstrapDiscoveryPanel({
                       setCitySearchMessage(null);
                     }}
                     maxLength={120}
-                    placeholder="Shanghai or Xujiahui"
+                    placeholder="例如：连城县、冠豸山"
                   />
                 </label>
                 <div className="v8-actions">
                   <button type="button" data-testid="bootstrap-city-search-submit" disabled={citySearchBusy} onClick={() => void searchCity()}>
-                    {citySearchBusy ? "Searching…" : "Find my city"}
+                    {citySearchBusy ? "正在搜索…" : "搜索地区"}
                   </button>
                 </div>
               </div>
@@ -2269,13 +2267,13 @@ export function BootstrapDiscoveryPanel({
                           setMapFocusCenter({ latitude: item.latitude, longitude: item.longitude });
                           setMapDraftCenter(null);
                           setMapTileConsent(false);
-                          setMessage("City result selected for camera positioning only. Tap the precise public area next.");
+                          setMessage("已经选中搜索结果。接下来请在地图上点选你想逛的具体位置。");
                         }}
                       >
                         {item.name} · {item.display_name}
                       </button>
                       <small>
-                        source {item.provider} · {item.provider_provenance} · {item.confidence}; tap a public area to confirm
+                        来源 {item.provider} · {item.provider_provenance} · {item.confidence}；还需要在地图上确认位置
                       </small>
                       {safeHttpsSourceUrl(item.source_url ?? undefined) ? (
                         <a
@@ -2300,19 +2298,19 @@ export function BootstrapDiscoveryPanel({
                 disabled={!mapFocusCenter && !mapDraftCenter}
                 onChange={(event) => setMapTileConsent(event.target.checked)}
               />
-              I agree to load OpenStreetMap tiles for this map picker (tiles.openstreetmap.org).
+              我同意加载 OpenStreetMap 地图瓦片（地图服务会收到地图范围信息）。
             </label>
             {mapTileConsent && (mapFocusCenter || mapDraftCenter) ? (
               <PublicCityAreaPicker selectedCenter={mapDraftCenter} focusCenter={mapFocusCenter} onSelect={handlePublicMapTap} />
             ) : (
               <p role="status" data-testid="bootstrap-map-tile-not-loaded">
                 {!mapFocusCenter && !mapDraftCenter
-                  ? "Choose a grounded city result or use the strict OpenStreetMap link below before loading tiles; the map never opens at 0,0."
-                  : "No map tiles will load until this separate disclosure is accepted. The strict link route below works without tiles."}
+                  ? "先搜索并选择一个地区，或者粘贴下方 OpenStreetMap 链接，再加载地图。"
+                  : "地图需要你单独同意加载。也可以不加载地图，直接使用下方的公开地图链接。"}
               </p>
             )}
             <label>
-              Paste an OpenStreetMap map link (offline fallback)
+              或者粘贴 OpenStreetMap 地图链接（可选）
               <input
                 data-testid="bootstrap-osm-map-link"
                 value={mapLink}
@@ -2372,7 +2370,7 @@ export function BootstrapDiscoveryPanel({
               setCityLabelConfirmed(event.target.checked);
             }}
           />
-          I confirm the named city label is <strong>{publicCityLabel}</strong> for this outing. The pin still represents only a public search area.
+          我确认这次想探索的地区是<strong>{publicCityLabel}</strong>，地图点只是公开搜索范围。
         </label>
         {resumeIntent ? (
           <section data-testid="bootstrap-resume" aria-labelledby="bootstrap-resume-title">
@@ -2420,7 +2418,7 @@ export function BootstrapDiscoveryPanel({
         <details className="rev-optional-import" data-testid="rev-optional-import">
           <summary>有朋友分享的路线？点这里导入（可选）</summary>
           <section data-testid="bootstrap-shared-walk-import" aria-labelledby="bootstrap-shared-walk-import-title">
-          <h2 id="bootstrap-shared-walk-import-title">Import a friend's public walk</h2>
+          <h2 id="bootstrap-shared-walk-import-title">导入朋友分享的路线</h2>
           <p>
             Paste the public-only text from a friend. CityNexus reads exactly two canonical OpenStreetMap object links locally;
             names, opening hours, prices, provider labels, walking times, Journey IDs, and private authority in the pasted text are untrusted.
@@ -2635,12 +2633,14 @@ export function BootstrapDiscoveryPanel({
           </div>
           {selectedOutingIntent ? (
             <p data-testid="bootstrap-intent-selected">
-              Selected: <strong>{selectedOutingIntent.label}</strong> · bounded public category <code>{selectedOutingIntent.query}</code> · each result should fit because it is tagged as a {selectedOutingIntent.reason}.
+              已选择：<strong>{selectedOutingIntent.label}</strong>。查询只使用这个公开分类，不推断你的私人偏好。
             </p>
           ) : (
             <p role="status" data-testid="bootstrap-intent-required">先选一个兴趣类别，比如艺术、绿地或咖啡。</p>
           )}
         </section>
+        <details className="rev-manual-coordinates">
+          <summary>地图选不了？手动填写经纬度（可选）</summary>
         <div className="v8-form-grid">
           <label>
             纬度（地图无法操作时才需要手动输入）
@@ -2661,6 +2661,7 @@ export function BootstrapDiscoveryPanel({
             />
           </label>
         </div>
+        </details>
         <label>
           <input
             type="checkbox"
@@ -2687,7 +2688,7 @@ export function BootstrapDiscoveryPanel({
         )}
         <div className="v8-actions">
           <button type="button" data-testid="bootstrap-search" disabled={!searchReady} onClick={() => void search()}>
-            {busy ? "Searching…" : "Search public places"}
+            {busy ? "正在搜索…" : "搜索附近真实地点"}
           </button>
           {onCancel ? (
             <button type="button" data-testid="bootstrap-cancel" onClick={onCancel} disabled={busy}>
