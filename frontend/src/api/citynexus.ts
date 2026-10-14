@@ -2785,6 +2785,33 @@ export const cityNexusApi = {
     return requestJson<AgentRuntimeStatus>("/agent/runtime-status");
   },
 
+  /**
+   * LOCAL REVOLUTION TRIAL ONLY. One explicit signed, read-only Hermes model
+   * tool suggestion. No POI provider call, plan mutation, or AgentRun.
+   * Not included in ordinary Qoder/mainline runtime.
+   */
+  suggestTrialDiscovery(
+    journeyId: string,
+    goal: string,
+  ): Promise<{
+    status: "MODEL_TOOL_SUGGESTION" | "MODEL_NO_TOOL_CALL" | "MODEL_UNVERIFIED";
+    category?: "park/garden" | "museum/gallery" | "cafe" | "library";
+    reason: string;
+    model?: string;
+    evidence?: string;
+    provider_calls?: number;
+    agent_run_created?: boolean;
+  }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/trial-ai-discovery",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ goal }),
+      },
+    );
+  },
+
   runAgentCommand(
     journeyId: string,
     command: string,
