@@ -182,18 +182,17 @@ export function RevolutionFirstLook() {
             ? "受控样本模式：此模式不访问真实地点提供方"
             : "真实公开地图模式：仅在你主动授权后请求外部提供方"}
         </div>
-        <section className="rev-firstlook-agent" data-testid="revolution-agent-runtime">
-          <div className="rev-firstlook-agent-head">
-            <strong>AI Agent 连接状态</strong>
-            <span>{agentCheckError ? "状态未知" : agentConfigured ? "已配置，尚待实际调用验证" : "当前未配置"}</span>
-          </div>
+        <details className="rev-firstlook-agent" data-testid="revolution-agent-runtime">
+          <summary>
+            AI 模型：{agentCheckError ? "状态未知" : agentConfigured ? "网关已配置（可展开查看）" : "当前未启用"}
+          </summary>
           <p>
             {agentCheckError ?? (agentConfigured
-              ? "已发现现有 Hermes 兼容 Agent 运行时。模型将通过本机 wb2api 接口获取，仍需真实工具调用和签名 Journey 来证明有效。"
-              : "此会话未启用外部模型。关闭 AI 不影响城市地点搜索和 GO MODE。")}
+              ? "已配置 Hermes 兼容模型网关，但还没有证明真实 AgentRun。下面的地点搜索由公开地图接口执行，不是模型自主规划。"
+              : "这里可以先直接探索城市。需要完整自主 Agent 时，再明确启用真实 Journey Operator。")}
           </p>
           {agentRuntime && <small>Runtime: {agentRuntime.runtime_identity} · {agentRuntime.ai_state ?? "UNKNOWN"}</small>}
-        </section>
+        </details>
         {!journey ? (
           <section className="rev-firstlook-hero">
             <span className="rev-firstlook-eyebrow">YOUR CITY. YOUR JOURNEY.</span>
