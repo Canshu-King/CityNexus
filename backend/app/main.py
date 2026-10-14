@@ -27139,3 +27139,81 @@ def add_collection_item(
 
     stored = session.get(CollectionItem, identifier)
     return collection_item_schema(stored, session.get(Place, stored.place_id))
+
+# ---------------------------------------------------------------------------
+# NOT FROM eeb8b8d2fd -- fusion extension, one commit, separable and revertable.
+#
+# The ported section above is the whole of what the Qoder tree grew for 收藏, and
+# that whole contains no way to take a shelf away: three doors were measured in the
+# source (POST/GET /api/v1/collections and POST /api/v1/collections/{folder_id}/items),
+# and no PATCH or DELETE exists anywhere in that tree for a folder or a folder row.
+# The work order for this slice asks for a delete step, and a shelf a traveller can
+# fill but never empty is not a usable capability on a phone, so the door is added
+# here rather than claimed as ported.  It is deliberately one door at the shelf level,
+# it reuses the same principal seam and the same named refusals as the doors above,
+# and nothing about the three ported doors changed to accommodate it.
+# ---------------------------------------------------------------------------
+
+
+@app.delete(
+    "/api/v1/collections/{folder_id}",
+    status_code=204,
+    responses={
+        401: {"description": "code = UNAUTHORIZED -- the shelf is still there and nothing was read."},
+        404: {
+            "description": (
+                "error.reason_code = COLLECTION_FOLDER_NOT_FOUND -- this server holds no shelf with "
+                "that id for the authenticated traveller.  An id belonging to somebody else reaches "
+                "the same answer as an id that does not exist, so the door cannot be used to find out "
+                "whether somebody else's shelf exists.  Nothing was deleted either way."
+            )
+        },
+    },
+)
+def delete_collection(
+    folder_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Take one shelf away, and with it the rows that were sitting on it.
+
+    Owner-scoped exactly the way `add_collection_item` is: the lookup answers 404 for a shelf that
+    is not the caller's, so a stranger cannot learn which ids are taken, and cannot empty a shelf
+    they can see the id of.
+
+    The rows go with the shelf through `collection_items.folder_id ... ON DELETE CASCADE`
+    (`backend/db/schema.sql`) rather than through a second DELETE statement, which is the one place
+    in this slice where the cascade that was kept says something: a shelf row whose shelf is gone has
+    no reader, no owner and no way to be named, so leaving it behind would be a leak of another
+    traveller's place list into a table nothing scopes any more.  The shelf's own reference to
+    `travelers` deliberately carries no cascade, and that is a different question -- this door
+    deletes a shelf, not a traveller.
+
+    204 and no body: the answer is the absence, and the list door already renders absence as the
+    empty list rather than as a 404, so a client that re-reads after this gets a shape it can show.
+    """
+
+    principal = _collection_principal(request, session)
+    folder = session.get(CollectionFolder, folder_id)
+    if folder is None or folder.owner_traveler_id != principal.traveler_id:
+        raise _share_refusal(
+            404,
+            f"Collection folder {folder_id} was not found",
+            "COLLECTION_FOLDER_NOT_FOUND",
+            {"folder_id": folder_id},
+        )
+    before = {"id": folder.id, "name": folder.name, "owner_traveler_id": folder.owner_traveler_id}
+    session.delete(folder)
+    session.commit()
+    record_audit(
+        session,
+        action="collection.folder.deleted",
+        entity_type="CollectionFolder",
+        entity_id=folder_id,
+        actor_type="traveler",
+        actor_id=principal.traveler_id,
+        before=before,
+        after=None,
+    )
+    session.commit()
+    return Response(status_code=204)
