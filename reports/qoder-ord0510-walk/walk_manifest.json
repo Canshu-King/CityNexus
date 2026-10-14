@@ -3,8 +3,8 @@
   "width": 390,
   "height": 844
  },
- "backend": "127.0.0.1:8110",
- "journey_id": "9400032e-64b0-49e9-af2b-c273ea5f8e5d",
+ "backend": "127.0.0.1:8111",
+ "journey_id": "9194cb51-ff6f-40d5-9462-f5f91d5ed5b7",
  "frames": [
   {
    "shot": "01_root",
@@ -13,8 +13,8 @@
     "plan-ranking"
    ],
    "painted": "天津之旅",
-   "bytes": 44752,
-   "digest": "858f87065aa5"
+   "bytes": 53450,
+   "digest": "67f5275ae22d"
   },
   {
    "shot": "02_discover",
@@ -25,8 +25,8 @@
     "collection-panel"
    ],
    "painted": "先看这座城能不能规划",
-   "bytes": 77406,
-   "digest": "61499d8f14d2"
+   "bytes": 72342,
+   "digest": "16467a9c21f0"
   },
   {
    "shot": "03_trips_fresh",
@@ -37,8 +37,8 @@
     "footprint-panel"
    ],
    "painted": "3 天行程",
-   "bytes": 45569,
-   "digest": "5e15fe552880"
+   "bytes": 32968,
+   "digest": "dbf0a861e914"
   },
   {
    "shot": "04_trips_stamped",
@@ -48,8 +48,8 @@
     "trip-itinerary"
    ],
    "painted": "3 天行程",
-   "bytes": 41655,
-   "digest": "88d0790ca89a"
+   "bytes": 41668,
+   "digest": "ececcd109168"
   },
   {
    "shot": "05_trips_collected",
@@ -58,8 +58,8 @@
     "collect-result"
    ],
    "painted": "3 天行程",
-   "bytes": 33453,
-   "digest": "ba91cf81adca"
+   "bytes": 33662,
+   "digest": "b8a2893619a2"
   },
   {
    "shot": "06_live",
@@ -68,8 +68,8 @@
     "live-recovery"
    ],
    "painted": "选择你的下一段路程。",
-   "bytes": 67999,
-   "digest": "fe3eae4247da"
+   "bytes": 54007,
+   "digest": "5b92e8ecad8f"
   },
   {
    "shot": "07_me",

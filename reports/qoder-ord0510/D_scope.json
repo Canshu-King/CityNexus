@@ -1,16 +1,12 @@
 {
- "other_traveler_id": "71322231-e65e-422a-9084-73236e055ead",
+ "other_traveler_id": "345ebf7e-d2e5-4638-a90a-7a816a35f88d",
  "collection_requests_with_no_credential": 0,
  "asked_urls": [
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d",
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d/experience",
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d/replans",
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d/plans",
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d/twin",
-  "http://127.0.0.1:4410/api/v1/travelers/aa2d4f2e-16f2-43a3-a31d-1b6327ed17df/agent-policy",
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d/wallet",
-  "http://127.0.0.1:4410/api/v1/journeys/9400032e-64b0-49e9-af2b-c273ea5f8e5d/offline-snapshot",
-  "http://127.0.0.1:4410/api/v1/agent/runtime-status"
+  "http://127.0.0.1:4411/api/v1/journeys/9194cb51-ff6f-40d5-9462-f5f91d5ed5b7",
+  "http://127.0.0.1:4411/api/v1/journeys/9194cb51-ff6f-40d5-9462-f5f91d5ed5b7/experience",
+  "http://127.0.0.1:4411/api/v1/journeys/9194cb51-ff6f-40d5-9462-f5f91d5ed5b7/replans",
+  "http://127.0.0.1:4411/api/v1/journeys/9194cb51-ff6f-40d5-9462-f5f91d5ed5b7/plans",
+  "http://127.0.0.1:4411/api/v1/journeys/9194cb51-ff6f-40d5-9462-f5f91d5ed5b7/twin"
  ],
  "empty_sentence": "还没有旅客身份，所以没问服务器：收藏的读门只认这台设备上的签名凭据，不认点名的 id。"
 }
