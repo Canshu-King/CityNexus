@@ -16,10 +16,11 @@ import { readTravelerBearer, subscribeTravelerBearer } from "../lib/travelerSess
  * A HUMAN-SIZED entry to the exact signed R107/R108 endpoints.
  *
  * The two external HTTP operations are sent only when the user clicks their
- * plainly-labelled release button. City results are CAMERA ONLY, never a
- * confirmed search center: a user must tap the map or provide an exact OSM
- * link to set a manual public center. No GPS, automatic provider calls,
- * disguised fixture, PlanVersion, or AgentRun is invented here.
+ * plainly-labelled release button. A public geocoder result is only an
+ * APPROXIMATE city center. If a user explicitly selects it as a coarse
+ * public search area, this creates a manual search choice, not a claim that
+ * they tapped a map or physically arrived there. No GPS, silent external
+ * requests, disguised fixture, PlanVersion, or AgentRun is invented here.
  */
 type Stage = "area" | "category" | "results" | "walk";
 
@@ -82,6 +83,8 @@ export function RevolutionQuickExplore({
   const [query, setQuery] = useState(cityName);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
+  const [centerBasis, setCenterBasis] = useState<"EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" | null>(null);
   const [tilesEnabled, setTilesEnabled] = useState(false);
   const [selectedPin, setSelectedPin] = useState<PublicCityCenter | null>(null);
   const [mapLink, setMapLink] = useState("");
@@ -119,6 +122,8 @@ export function RevolutionQuickExplore({
       setCenter(null);
       setSelectedPin(null);
       setCityFocus(null);
+      setCityFocusLabel(null);
+      setCenterBasis(null);
       setStage("area");
       setAlert({ type: "neutral", text: "账户已切换，请重新选择公开地图位置。" });
     });
@@ -233,9 +238,10 @@ export function RevolutionQuickExplore({
     });
   };
 
-  const useCenter = (point: PublicCityCenter) => {
+  const useCenter = (point: PublicCityCenter, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" = point.provenance) => {
     if (!Number.isFinite(point.latitude) || !Number.isFinite(point.longitude)) return;
     setCenter(point);
+    setCenterBasis(basis);
     setDiscovery(null);
     setFirst(null);
     setSecond(null);
@@ -253,7 +259,7 @@ export function RevolutionQuickExplore({
       });
       return;
     }
-    useCenter(point);
+    useCenter(point, "OSM_MAP_LINK");
   };
 
   const retryReadiness = () => {
@@ -411,7 +417,7 @@ export function RevolutionQuickExplore({
             <input
               id="rev-quick-search"
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setCityResults([]); setCityFocus(null); setSelectedPin(null); }}
+              onChange={(e) => { setQuery(e.target.value); setCityResults([]); setCityFocus(null); setCityFocusLabel(null); setSelectedPin(null); }}
               placeholder="比如：连城县，福建龙岩"
               maxLength={120}
               disabled={busy}
@@ -431,21 +437,44 @@ export function RevolutionQuickExplore({
                   key={item.result_id}
                   onClick={() => {
                     setCityFocus({ latitude: item.latitude, longitude: item.longitude });
+                    setCityFocusLabel(item.display_name || item.name);
                     setSelectedPin(null);
                     setTilesEnabled(false);
-                    setAlert({ type: "neutral", text: "地图会定位到这个大致区域。你还需要亲自在地图上点选具体搜索范围。" });
+                    setAlert({ type: "neutral", text: "已经选中这一带。可以直接从公开中心附近找，也可以调整地图位置；无需等地图瓦片加载。" });
                   }}
                 >
                   <strong>{item.display_name || item.name}</strong>
-                  <small>{item.provider_provenance === "TEST_PROVIDER" ? "受控测试地点" : "公开地名搜索结果"} · 城市中心可能不精确</small>
-                  <span>查看这个地区 →</span>
+                  <small>{item.provider_provenance === "TEST_PROVIDER" ? "受控测试来源" : "公开地名搜索结果"} · 中心位置仅供参考</small>
+                  <span>选这个地区 →</span>
                 </button>
               ))}
             </div>
           )}
           {cityFocus && (
             <div className="rev-quick-map-step">
-              <h3>在地图上点一下你想探索的位置，马上进入下一步</h3>
+              <h3>已找到：{cityFocusLabel || "当前地区"}</h3>
+              <p className="rev-quick-disclosure">
+                这个位置来自公开地名搜索，是城市或县城的<strong>大致中心</strong>，不是你的 GPS，
+                不保证景点就在这里。你可以立即从附近 2.5 公里查找，或按需调整地图。
+              </p>
+              <button
+                type="button"
+                className="rev-quick-primary rev-quick-continue"
+                data-testid="rev-quick-use-approx-center"
+                onClick={() => {
+                  // This explicit user selection makes a PUBLIC, approximate
+                  // center the user-directed search area. It does NOT invent a
+                  // MAP_TAP provenance or silently send provider requests.
+                  useCenter({
+                    latitude: cityFocus.latitude,
+                    longitude: cityFocus.longitude,
+                    provenance: "MAP_TAP",
+                  }, "EXPLICIT_GEOCODER_APPROX");
+                }}
+              >直接从这片地区附近找 →</button>
+              <details className="rev-quick-optional-map">
+                <summary>想换具体位置？可以打开地图（可选）</summary>
+                <p className="rev-quick-disclosure">加载地图瓦片需要单独点击“显示地图”，地图不显示也不影响上面的快捷入口。</p>
               {!tilesEnabled ? (
                 <button
                   type="button"
@@ -470,10 +499,11 @@ export function RevolutionQuickExplore({
                   />
                 </>
               )}
+              </details>
             </div>
           )}
           <details className="rev-quick-internals">
-            <summary>地图打不开？用公开 OpenStreetMap 链接定位</summary>
+            <summary>想用公开 OpenStreetMap 链接定位？（可选）</summary>
             <label htmlFor="rev-quick-map-link">公开地图链接</label>
             <input
               id="rev-quick-map-link"
@@ -505,8 +535,11 @@ export function RevolutionQuickExplore({
             ))}
           </div>
           <p className="rev-quick-disclosure">
-            点下面的按钮，会向 OpenStreetMap/Overpass 发送这片公开地图中心的坐标、你选择的类别，
-            以及有限范围的一次查询。不会共享 GPS、身份证明或私人行程。
+            {centerBasis === "EXPLICIT_GEOCODER_APPROX"
+              ? "采用你刚才明确选定的公开县城/城市近似中心，查找半径约 2.5 公里。若不合适可返回改选，绝不是你的精确位置。"
+              : "你已选择公开地图位置。"}
+            点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别；
+            不发送 GPS、身份令牌或私人行程。
           </p>
           {readinessStatus !== "ready" && (
             <p className="rev-quick-alert neutral" role="status">
