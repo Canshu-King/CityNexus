@@ -21,6 +21,7 @@ from app.db.models import (
     CollectionItem,
     Commitment,
     Journey,
+    JourneyCheckin,
     JourneyConstraint,
     JourneyMember,
     JourneyMission,
@@ -65,6 +66,7 @@ from app.schemas import CollectionFolder as CollectionFolderSchema
 from app.schemas import CollectionItem as CollectionItemSchema
 from app.schemas import Constraint as ConstraintSchema
 from app.schemas import Journey as JourneySchema
+from app.schemas import JourneyCheckin as JourneyCheckinSchema
 from app.schemas import Money, ScoreBreakdown
 from app.schemas import Place as PlaceSchema
 from app.schemas import PlanVersion as PlanSchema
@@ -122,6 +124,12 @@ def deterministic_id(label: str) -> str:
 def reset_all(session: Session) -> None:
     # Delete children first because the package schema intentionally enables FKs.
     for table in (
+        # ORD-0476: a footprint references a journey, an activity AND a place, so its name has to
+        # come before all three -- otherwise `demo/reset` answers a foreign-key failure having
+        # deleted half the store.  That is the exact shape this project already hit once when a new
+        # table was left out of this list, which is why the ordering is asserted by name in
+        # `backend/tests/test_qoder_ord0476_checkins_fusion.py` rather than trusted.
+        "journey_checkins",
         "edge_actions",
         "edge_observations",
         "edge_devices",
@@ -3194,4 +3202,49 @@ def collection_folder_schema(
         updated_at=folder.updated_at,
         item_count=len(rows),
         items=rows,
+    )
+
+
+# ---------------------------------------------------------------------------
+# fusion import: ORD-0476 slice 1 「打卡」 the footprint projection.
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/services.py -- `checkin_schema` @2096.  Copied without behavioural
+# change, for the same reason the two shelf projections above were: this reads rows,
+# it does not decide ownership.  Who may stamp or read which journey is settled at the
+# door (`app/main.py` -- `_checkin_journey_read`) against the verified principal,
+# before this function is ever reached.
+# ---------------------------------------------------------------------------
+
+
+def checkin_schema(
+    row: JourneyCheckin, activity: Activity | None, place: Place | None
+) -> JourneyCheckinSchema:
+    """One stamp, with its target resolved from the rows rather than copied into the stamp.
+
+    The four `activity_*` / `place_*` fields are read from whatever the target row still holds, so a
+    stamp never shows a name its target has changed or lost.  They are nullable because losing the
+    target is a state the store allows on purpose (`ON DELETE SET NULL`, `backend/db/schema.sql`): a
+    replan removes the activity a traveller stamped, and the footprint is the traveller's own history,
+    so it stays and reads as "the row is gone" rather than as an empty title or an invented one.
+
+    `target_kind` / `target_key` come off the row instead of being re-derived from those two
+    nullable columns, and that is load-bearing: after a cascade there is no target row left to
+    derive from, and a stamp that could no longer say what it was stamped on would be a caption
+    rather than a record.
+    """
+
+    return JourneyCheckinSchema(
+        id=row.id,
+        journey_id=row.journey_id,
+        activity_id=row.activity_id,
+        place_id=row.place_id,
+        target_kind=row.target_kind,
+        target_key=row.target_key,
+        stamped_at=row.stamped_at,
+        note=row.note,
+        source=row.source,
+        activity_title=activity.title if activity is not None else None,
+        activity_type=activity.activity_type if activity is not None else None,
+        place_name=place.name if place is not None else None,
+        place_category=place.category if place is not None else None,
     )

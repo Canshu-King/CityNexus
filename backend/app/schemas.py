@@ -1598,3 +1598,81 @@ class CollectionFolder(BaseModel):
     updated_at: str
     item_count: int
     items: list[CollectionItem]
+
+
+# ---------------------------------------------------------------------------
+# fusion import: ORD-0476 slice 1 「打卡」 the trip footprint.
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/schemas.py -- `JourneyCheckinCreate` @1224, `JourneyCheckin` @1243.
+#
+# Both shapes carry no identity input, and that is the transplant's whole change to
+# them.  The source's doors took their scope from the URL alone (`/journeys/{id}/checkins`
+# resolved by `session.get(Journey, ...)`) and never asked who was calling, so there was
+# nothing in these bodies to remove -- the hole was one level up.  What this branch adds is
+# `extra="forbid"` on the create shape, for the two field names a caller might still believe
+# it controls: a traveller id (which the credential now decides) and `stamped_at` (which the
+# source documented as "deliberately absent" and then silently ignored when sent).
+# ---------------------------------------------------------------------------
+
+
+class JourneyCheckinCreate(BaseModel):
+    """ORD-0476: what stamping a footprint asks for -- one target, optionally a note.
+
+    Exactly one of `activity_id` / `place_id` must be present, and the door refuses both readings of
+    that with a name (`CHECKIN_TARGET_REQUIRED`, `CHECKIN_TARGET_AMBIGUOUS`): the target is what the
+    duplicate promise is keyed on, so "neither" would be a stamp about nothing and "both" would be
+    two stamps pretending to be one.
+
+    There is deliberately no `stamped_at` here, and `extra="forbid"` is what makes that absence a
+    refusal rather than a shrug.  The moment is recorded by the server; a caller-supplied instant
+    would be the traveller's device clock presented as a store fact, which is the shape this project
+    has had to fix more than once.  The source's shape said the same thing in its docstring and then
+    let the field pass through unanswered -- `backend/tests/test_qoder_ord0476_checkins.py` proves it
+    by sending `stamped_at` and asserting 201, i.e. "we ignored that".  Here a client still carrying
+    one is told so at the door instead of being agreed with in silence.  An offline queue that
+    carries its own device time is a different input and arrives as its own named field, with an
+    offset.
+
+    There is no traveller field either, for the same reason the collection doors have none: the
+    footprint's owner is derived from the journey the stamp hangs off, and that journey is resolved
+    against the verified principal.  A body that names a `traveler_id` is refused by the same
+    `extra="forbid"`.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    activity_id: str | None = Field(default=None, min_length=1, max_length=64)
+    place_id: str | None = Field(default=None, min_length=1, max_length=64)
+    note: str | None = Field(default=None, max_length=280)
+
+
+class JourneyCheckin(BaseModel):
+    """One stamp as the server holds it, with the target resolved at read time and never copied.
+
+    `activity_title` / `place_name` come from the rows the stamp points at
+    (`checkin_schema` in `backend/app/services.py`), so a stamp cannot show a name the target no
+    longer carries.  Both are nullable, and that null is a real fact rather than a placeholder:
+    either row can be deleted underneath a stamp (`ON DELETE SET NULL`, `backend/db/schema.sql`), and
+    the footprint survives its target by design.
+
+    `target_kind` and `target_key` are the stored decision the door made, not a re-derivation, so
+    they still say what was stamped after the target is gone.
+
+    `journey_id` is an output, never an input: it is the row's own, and the only way to ask about a
+    journey you do not hold is to name it in the path -- which the door answers as though the trip
+    were not there at all.  No field here is a caller's claim about who is reading.
+    """
+
+    id: str
+    journey_id: str
+    activity_id: str | None
+    place_id: str | None
+    target_kind: Literal["ACTIVITY", "PLACE"]
+    target_key: str
+    stamped_at: str
+    note: str | None
+    source: Literal["FOREGROUND_WEB"]
+    activity_title: str | None
+    activity_type: str | None
+    place_name: str | None
+    place_category: str | None
