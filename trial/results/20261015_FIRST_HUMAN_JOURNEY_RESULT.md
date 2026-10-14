@@ -5,7 +5,7 @@
 **Issue**：[#19 — Revolution 真人首次体验卡死](https://github.com/Canshu-King/CityNexus/issues/19)
 **PR**：[Canshu-King/CityNexus#20](https://github.com/Canshu-King/CityNexus/pull/20)
 **分支**：`fix/revolution-first-human-e2e-20261015`
-**修复提交**：真人旅程修复为 `00471cb38f84b288d62eb60b71398ff74cd4108f`；本轮启动器端口隔离跟进为 `4f27c8b0ed`。
+**修复提交**：真人旅程修复为 `00471cb38f84b288d62eb60b71398ff74cd4108f`；启动器端口隔离跟进为 `4f27c8b0ed`；本轮签名首体验 E2E 与 TEST_PROVIDER 口径修正为 `2b85183f0a`。
 **基线**：`trial/revolution-first-look-20261014 @ ca00e365025932164a166fae9ca5fe8dedec6556`
 
 ## 结论与原始红条
