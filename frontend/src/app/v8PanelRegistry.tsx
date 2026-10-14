@@ -1,6 +1,8 @@
 import { Fragment, type ReactNode } from "react";
 
 import { ActivityDetail } from "../features/trip/ActivityDetail";
+import { PoiImportPanel } from "../features/poiimport/PoiImportPanel";
+/* fusion import: ORD-0437 slice 2: PoiImportPanel import statement */
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
 import { CollectionPanel } from "../features/collections/CollectionPanel";
@@ -178,6 +180,30 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         />
       </>
     ),
+  },
+  {
+    /* ORD-0437: the import screen reads the plan's own first day out of the same projection the
+       trips list uses, because the automatic landing has to be said before it happens. */
+    id: "poi-import",
+    surface: "route",
+    testId: "poi-import",
+    when: (s) => s.route === "import",
+    render: (s) => {
+      const dates = (s.data.active_plan?.activities ?? [])
+        .map((item) => (item.start_at || "").slice(0, 10))
+        .filter(Boolean)
+        .sort();
+      return (
+        <PoiImportPanel
+          journeyId={s.data.journey.id}
+          firstDay={dates[0] ?? (s.data.journey.start_at || "").slice(0, 10) ?? null}
+          onOpenPlan={() => s.navigate("authoritative")}
+          /* ORD-0470: the second door on the nothing-extracted cell is the shell's own navigate to the
+             route the drawer already uses -- no second navigation mechanism is invented here. */
+          onOpenDiscover={() => s.navigate("discover")}
+        />
+      );
+    },
   },
   {
     id: "live",
