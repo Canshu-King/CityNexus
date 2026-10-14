@@ -1,5 +1,17 @@
 # Revolution Lab 真正的首次试用（2026-10-14）
 
+## 2026-10-14 更新：可接本机真实 Agent（仅经用户主动启用）
+
+上一版强调“AI 未启用”，那只是默认启动状态。现在已通过 **真正的 Hermes-compatible 工具 Agent** 接入本机 wb2api：
+- `trial/wb2api_agent.py` 从 `WB2API_KEY` 读取密钥，设置 `CITYNEXUS_HERMES_API_URL=http://127.0.0.1:7865/v1/chat/completions`、`CITYNEXUS_HERMES_MODEL=auto:cheapest`，密钥只传给后端；
+- `py -3.13 trial/try_revolution.py --agent` 显式开启；不写 `--agent` 时 AI 仍关闭；
+- `py -3.13 trial/probe_wb2api_agent.py` 可做一发**可能扣积分**的工具协议探针，**不会执行**任何工具；
+- `/revolution` 显示 `HERMES_COMPAT_ENDPOINT` 后，仅说明配置已被读到；需要选择地点进入正式 ACTIVE Journey 并获得有步骤的 AgentRun 才算 AI 真正工作；
+- 免费优先的 7865 存在可能付费的末端兜底。
+
+操作说明：`trial/REVOLUTION_AGENT_WB2API_CONNECT.md`；
+用户上传教程的安全脱敏版：`docs/LOCAL_WB2API_GATEWAY_GUIDE_20261014_REDACTED.md`。
+
 ## 为什么刚才看到的不是想象中的 Revolution？
 
 之前的启动器故意打开了 `/v8/hub`，它由已有 Qoder/V8 风格产品向导接管。
