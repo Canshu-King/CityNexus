@@ -331,6 +331,11 @@ const en: Dict = {
 
   // ── Offline Journey View ──
   "offline.readOnly": "OFFLINE · READ ONLY",
+
+  // ── Import places ──
+  "poiImport.cardMatched": "Matched",
+  "poiImport.cardAmbiguous": "Needs your choice",
+  "poiImport.cardUnresolved": "Not found here",
   "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
   "offline.saved24h": "Your next 24 hours are saved.",
   "offline.retry": "Try again",
@@ -1266,6 +1271,11 @@ const zhCN: Dict = {
 
   // ── Offline Journey View ──
   "offline.readOnly": "离线 · 只读",
+
+  // ── 导入地点 ──
+  "poiImport.cardMatched": "已对上",
+  "poiImport.cardAmbiguous": "要你选",
+  "poiImport.cardUnresolved": "这里没有",
   "offline.readOnlySnapshot": "本地快照 · 只读",
   "offline.saved24h": "你未来 24 小时已保存。",
   "offline.retry": "重试",
