@@ -323,6 +323,14 @@ const en: Dict = {
   "bookings.authorityExplicit": "Authority remains explicit",
   "bookings.authoritySub": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
 
+  // ── Calendar export (ORD-0496/0525, ported) ──
+  /* These keys have to exist in BOTH dictionaries, because `t()` answers an absent key with the key
+     itself -- a `calendar.refused.bin` on screen would be the machine-word exposure this order's own
+     acceptance forbids.  The 打卡 labels do not live here; see the note in `TripItinerary.tsx`. */
+  "calendar.export": "Export calendar",
+  "calendar.busy": "Exporting…",
+  "calendar.done": "{events} events downloaded — open the file in your calendar app.",
+
   // ── Footprints ──
   /* One key for the screen's eyebrow.  Every other sentence this screen says lives in
      `features/checkin/footprintCopy.ts`, keyed by state name -- so a new refusal arm is one row in
@@ -1271,6 +1279,12 @@ const zhCN: Dict = {
   "bookings.neverInvented": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
   "bookings.authorityExplicit": "权限始终明确",
   "bookings.authoritySub": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+
+  // ── 日历导出（ORD-0496/0525，移植）──
+  // 中文这一本缺任何一条，屏上就会出现键名本身。
+  "calendar.export": "导出日历",
+  "calendar.busy": "正在导出…",
+  "calendar.done": "已下载 {events} 个日程，可在日历 App 里打开那个文件。",
 
   // ── 足迹 ──
   "checkin.title": "足迹",
