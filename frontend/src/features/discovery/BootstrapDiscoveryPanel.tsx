@@ -2171,17 +2171,17 @@ export function BootstrapDiscoveryPanel({
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
       <section className="v8-loading" aria-labelledby="bootstrap-discovery-title">
         <div className="v8-brand-mark">CN</div>
-        <h1 id="bootstrap-discovery-title">Discover your first public place</h1>
+        <h1 id="bootstrap-discovery-title">第一步，看看连城周围有什么</h1>
         <p>
-          This new {cityCode} Journey is still a draft with no plan. Search one public center,
-          review source-linked results, then choose exactly one place.
+          先在公开地图上选一个位置，再按兴趣寻找附近地点。搜到的结果会告诉你来自哪里；你来决定去哪儿。
         </p>
         <p>
-          A manual center is only a public search center. It never becomes your GPS observation,
-          group presence, or route origin. Opening hours, price, and ETA remain UNKNOWN until evidence exists.
+          地图上的点只用来搜索，不会获取你现在的 GPS，也不代表你已到达。营业时间、费用和步行时长没有可靠信息时会写「未知」。
         </p>
-        <section data-testid="bootstrap-discovery-readiness" aria-labelledby="bootstrap-discovery-readiness-title">
-          <h2 id="bootstrap-discovery-readiness-title">Public discovery readiness</h2>
+        <details className="rev-technical-details" data-testid="rev-technical-details">
+          <summary>查看地图服务状态和技术详情</summary>
+          <section data-testid="bootstrap-discovery-readiness" aria-labelledby="bootstrap-discovery-readiness-title">
+          <h2 id="bootstrap-discovery-readiness-title">地图服务与来源详情</h2>
           <p>
             Expected recipient: <strong>{readiness?.expected_recipient ?? "OpenStreetMap/Overpass public map data service"}</strong>.
             No provider request is made by this readiness check, on mount, while typing, or for an invalid center.
@@ -2201,6 +2201,7 @@ export function BootstrapDiscoveryPanel({
           ) : null}
           {readiness?.test_only ? <p>Controlled test endpoint only. Any returned evidence remains TEST_PROVIDER.</p> : null}
         </section>
+        </details>
         <div className="v8-actions">
           <button
             type="button"
@@ -2208,18 +2209,18 @@ export function BootstrapDiscoveryPanel({
             aria-pressed={sourceKind === "MANUAL_PUBLIC_CENTER"}
             onClick={openPublicAreaPicker}
           >
-            Choose public area on map
+            在地图上选个位置
           </button>
         </div>
         {mapPickerOpen ? (
           <section className="journey-membership-map-consent public-city-area-picker-shell" data-testid="bootstrap-public-area-picker" aria-labelledby="bootstrap-public-area-picker-title">
-            <h2 id="bootstrap-public-area-picker-title">Choose a public search area</h2>
+            <h2 id="bootstrap-public-area-picker-title">选择你想逛的地方</h2>
             <p>
               CityNexus will use one pin as a public discovery center. It will not be treated as your location,
               presence, route origin, arrival, or a confirmed city relation. Map tiles are a separate provider release.
             </p>
             <div className="public-city-search" data-testid="bootstrap-city-search">
-              <h3>Find my city (optional)</h3>
+              <h3>搜索城市或县城</h3>
               <p>
                 This makes one bounded request to the configured city-search provider. It can move the camera only;
                 it never chooses a center for you. No request is made on mount or while typing.
@@ -2416,7 +2417,9 @@ export function BootstrapDiscoveryPanel({
             </div>
           </section>
         ) : null}
-        <section data-testid="bootstrap-shared-walk-import" aria-labelledby="bootstrap-shared-walk-import-title">
+        <details className="rev-optional-import" data-testid="rev-optional-import">
+          <summary>有朋友分享的路线？点这里导入（可选）</summary>
+          <section data-testid="bootstrap-shared-walk-import" aria-labelledby="bootstrap-shared-walk-import-title">
           <h2 id="bootstrap-shared-walk-import-title">Import a friend's public walk</h2>
           <p>
             Paste the public-only text from a friend. CityNexus reads exactly two canonical OpenStreetMap object links locally;
@@ -2608,11 +2611,11 @@ export function BootstrapDiscoveryPanel({
             </div>
           ) : null}
         </section>
+        </details>
         <section data-testid="bootstrap-outing-intents" aria-labelledby="bootstrap-outing-intents-title">
-          <h2 id="bootstrap-outing-intents-title">What would make this first outing feel good?</h2>
+          <h2 id="bootstrap-outing-intents-title">你想逛什么？</h2>
           <p>
-            Choose one preference you are declaring for this search. CityNexus sends only the fixed public category below;
-            it does not infer a preference or invent a venue.
+            选择一个喜欢的类型。我们会按这个类别查询真实公开地点，不凭空编造景点。
           </p>
           <div className="v8-actions" role="radiogroup" aria-label="First outing preference">
             {OUTING_INTENTS.map((item) => (
@@ -2635,12 +2638,12 @@ export function BootstrapDiscoveryPanel({
               Selected: <strong>{selectedOutingIntent.label}</strong> · bounded public category <code>{selectedOutingIntent.query}</code> · each result should fit because it is tagged as a {selectedOutingIntent.reason}.
             </p>
           ) : (
-            <p role="status" data-testid="bootstrap-intent-required">Choose one preference before the one deliberate public discovery action.</p>
+            <p role="status" data-testid="bootstrap-intent-required">先选一个兴趣类别，比如艺术、绿地或咖啡。</p>
           )}
         </section>
         <div className="v8-form-grid">
           <label>
-            Latitude (WGS84) · accessible fallback
+            纬度（地图无法操作时才需要手动输入）
             <input
               data-testid="bootstrap-latitude"
               inputMode="decimal"
@@ -2649,7 +2652,7 @@ export function BootstrapDiscoveryPanel({
             />
           </label>
           <label>
-            Longitude (WGS84) · accessible fallback
+            经度（地图无法操作时才需要手动输入）
             <input
               data-testid="bootstrap-longitude"
               inputMode="decimal"
@@ -2665,8 +2668,23 @@ export function BootstrapDiscoveryPanel({
             checked={providerConsent}
             onChange={(event) => setProviderConsent(event.target.checked)}
           />
-          I agree that one search sends the fixed category{selectedOutingIntent ? ` ${selectedOutingIntent.query}` : ""}, city label {publicCityLabel}, and exact public coordinates{hasValidSearchCenter ? ` ${parsedLatitude.toFixed(6)}, ${parsedLongitude.toFixed(6)}` : ""} to the expected public provider. Foreground GPS is not used.
+          我同意本次查询：将所选类别{selectedOutingIntent ? `（${selectedOutingIntent.query}）` : ""}、地区名称“{publicCityLabel}”和我选择的公开地图坐标{hasValidSearchCenter ? `（${parsedLatitude.toFixed(6)}, ${parsedLongitude.toFixed(6)}）` : ""}发送至 OpenStreetMap/Overpass 服务。不会读取当前 GPS，也不会自动再次查询。
         </label>
+        {!searchReady && !busy && (
+          <p className="rev-next-action" role="status" data-testid="revolution-next-action">
+            {sourceKind !== "MANUAL_PUBLIC_CENTER" || !hasValidSearchCenter
+              ? "还差一步：点击上面的「在地图上选个位置」，确认地图上的公开位置。"
+              : !cityLabelConfirmed
+                ? "请勾选确认：这次要搜索的是上面显示的地区。"
+                : !selectedOutingIntent
+                  ? "还差一步：从上面选一个兴趣类别。"
+                  : !providerConsent
+                    ? "最后一步：勾选本次公开数据查询授权，才能开始搜索。"
+                    : readiness?.status !== "READY"
+                      ? "地图查询服务暂时不可用，请打开技术详情查看原因，或稍后再试。"
+                      : "请确认表单中的设置。"}
+          </p>
+        )}
         <div className="v8-actions">
           <button type="button" data-testid="bootstrap-search" disabled={!searchReady} onClick={() => void search()}>
             {busy ? "Searching…" : "Search public places"}
@@ -2729,7 +2747,7 @@ export function BootstrapDiscoveryPanel({
           <>
             {result.candidates.length >= 2 ? (
               <section data-testid="bootstrap-discovery-pocket-walk" aria-labelledby="bootstrap-discovery-pocket-walk-title">
-                <h2 id="bootstrap-discovery-pocket-walk-title">Make these discoveries my private Pocket Walk</h2>
+                <h2 id="bootstrap-discovery-pocket-walk-title">挑两个喜欢的地方，保存一条散步路线</h2>
                 <p>
                   Choose two current results from this signed manual public-center receipt and set their order. The save creates two private shortlist identities and one ordered Pocket Walk in one transaction; the source, observation time, opening, price, access, and walking ETA remain visible with their stated uncertainty.
                 </p>
@@ -3010,7 +3028,7 @@ export function BootstrapDiscoveryPanel({
           </>
         ) : null}
         <section data-testid="bootstrap-shortlist">
-          <h2>Your private draft shortlist</h2>
+          <h2>我的收藏地点</h2>
           <p>
             {shortlistLoading
               ? "Restoring your saved public places…"
