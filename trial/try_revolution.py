@@ -81,9 +81,30 @@ def prepare_frontend() -> str:
     vite = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
     if not vite.exists():
         print("[setup] Running npm ci in frontend (trial branch only) ...", flush=True)
-        subprocess.run([npm, "ci"], cwd=FRONTEND, check=True)
+        installed = subprocess.run([npm, "ci", "--no-audit", "--no-fund"],
+                                   cwd=FRONTEND, text=True, capture_output=True)
+        if installed.returncode:
+            output = installed.stdout + "\n" + installed.stderr
+            # Revolution's pre-existing package-lock.json is missing three type
+            # packages. Only this known npm EUSAGE mismatch may be repaired in
+            # the disposable trial checkout. Do not hide network/permission errors.
+            mismatched_lock = (
+                ("EUSAGE" in output or "npm ci can only install" in output or
+                 "can only install packages when" in output)
+                and ("lock file" in output or "in sync" in output)
+            )
+            if not mismatched_lock:
+                print(output[-6000:], file=sys.stderr)
+                raise RuntimeError(
+                    "npm ci failed for a reason other than a mismatched lockfile; "
+                    "inspect the printed npm error."
+                )
+            print("[setup] Existing Revolution npm lockfile is out of sync; "
+                  "repairing it ONLY in this isolated trial worktree ...", flush=True)
+            subprocess.run([npm, "install", "--no-audit", "--no-fund"],
+                           cwd=FRONTEND, check=True)
     if not vite.exists():
-        raise RuntimeError("Vite was not installed. Check frontend/npm ci output.")
+        raise RuntimeError("Vite was not installed. Check frontend npm output.")
     return node
 
 
