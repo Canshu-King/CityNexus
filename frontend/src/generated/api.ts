@@ -445,6 +445,35 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/checkins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * @description ORD-0476 slice 1: this trip's footprints, oldest stamp first, each carrying its target read back from the row it points at.  Nothing is copied into a stamp: `activity_title`, `activity_type`, `place_name` and `place_category` resolve from `activities` and `places` on every read (`backend/app/services.py` -- `checkin_schema`), so a stamp cannot show a name its target no longer holds.  Those four are nullable and the null is a fact rather than a blank: both target rows can be deleted underneath a live stamp (`ON DELETE SET NULL` in `backend/db/schema.sql`, triggered in practice by the replan path at `backend/app/main.py`), and the footprint is the traveller's own history, so it outlives them and says so instead of inventing a title.
+         *     A trip with no stamps answers `[]` -- absence is a list, not a 404.  No pagination, no filter, no date window, and there is no permanent-delete door for a stamp on this server.
+         *     WHO IS ASKED, and this is the fusion transplant's change to the door.  The trip is scoped to the authenticated traveller through `journeys.traveler_id`; there is no `traveler_id` parameter here to name, and sending one is a named 422 rather than a read of somebody else's history.  The source declared neither: it resolved `session.get(Journey, id)` and answered whoever supplied an id, so this read was an unsigned cross-member read by design.
+         */
+        get: operations["listJourneyCheckins"];
+        put?: never;
+        /**
+         * @description ORD-0476 slice 1: stamp one target of this trip.  Exactly one of `activity_id` / `place_id` must be named, and both ways of getting that wrong are refused by name (`CHECKIN_TARGET_REQUIRED`, `CHECKIN_TARGET_AMBIGUOUS`) rather than guessed, because the target is what the duplicate promise is keyed on.
+         *     `stamped_at` is the server's instant and the request body has no time field at all: a device clock must not arrive dressed as a store fact.  An offline queue that carries its own moment is a named input requiring an offset, not this door widening its own.  `source` carries one value today (`FOREGROUND_WEB`) and the store CHECKs it, so a second channel has to arrive as a contract change instead of free text.  The source's shape said the same thing and then accepted a body that sent `stamped_at`, ignoring it with a 201; here `additionalProperties: false` refuses it, so a client is told rather than quietly disagreed with.
+         *     A replayed tap is not a second success.  The door names the row that already won (`CHECKIN_DUPLICATE_STAMP` with `existing_checkin_id` and `existing_stamped_at`), and `UNIQUE (journey_id, target_key)` is the durable half of that sentence across workers -- the loser of the race is converted into the same named refusal, not a 500.  No idempotency key is taken here because the target already is one.  Nothing else is written: no activity completed, no plan version touched, no day moved, which is what separates this door from 完成 and 加进计划.
+         *     The trip is the authenticated traveller's own, resolved before anything is written; the source stamped whatever trip the path named, for any caller.
+         */
+        post: operations["createJourneyCheckin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/share-grants": {
         parameters: {
             query?: never;
@@ -978,6 +1007,46 @@ export interface paths {
         put?: never;
         /** @description Compile a natural-language one-run Journey Mission and execute it through the server-owned Agent Gateway. */
         post: operations["runAgentCommand"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/missions/{mission_id}/clarification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Apply one server-derived human-value answer and create a bounded child mission. */
+        post: operations["answerJourneyClarification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/missions/{mission_id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Resume a server-created clarification child through the configured Agent runtime. */
+        post: operations["resumeJourneyMission"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2612,6 +2681,62 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/collections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description ORD-0444: one traveller's collection shelves, each with the rows on it.  The 收藏 exit of the POI capture chain needed a container to land in; before this order the product had no such object at all (`collection`/`favorite`/收藏 named nothing but GeoJSON FeatureCollection). One door answers both halves because a screen that had to ask per shelf could not tie a count to the rows beneath it: `item_count` here is the length of that same answer's `items` array (`backend/app/services.py` -- `collection_folder_schema`). Scoped by the authenticated traveller and by nothing else: there is no pagination, no sort parameter and no way to name somebody else.  A request that still carries the source's `traveler_id` query parameter is answered 422 with `error.reason_code = COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED` rather than ignored, because silently dropping the parameter that used to open this door is how a hole survives a refactor.  「我的收藏」 is a claim the row carries and the credential verifies.  A traveller holding no shelf is answered `[]` -- absence is a list, not a 404. */
+        get: operations["listCollections"];
+        put?: never;
+        /** @description ORD-0444: name a shelf.  `name` is bounded exactly as `TravelerCreate.display_name` is (1..120 characters) and stored verbatim -- there is no rename door on this server yet, so what is written here is what the shelf reads for as long as it exists.  Two shelves may share a name; the id addresses one. The body carries no owner, and that is the difference this import makes.  The source's `CollectionFolderCreate` required `owner_traveler_id` and validated only that some traveller carried it (`404 MEMBER_TRAVELER_UNKNOWN`), which proves an id is real and never proves the caller is it -- so any caller could write a shelf onto anybody's account.  Here the owner column is written from the authenticated principal, and because the shape is `additionalProperties: false` a client that still sends an owner is refused 422 (`validation.unknown_field`) instead of being silently agreed with. The response is the shelf as `listCollections` answers it, read back through the same helper (`backend/app/main.py` -- `_collection_rows_by_folder`), so a new shelf reports `item_count` 0 because the read found no rows, not because the door typed a zero. */
+        post: operations["createCollection"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/collections/{folder_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Take one shelf away, and with it the rows that were sitting on it (`collection_items.folder_id ... ON DELETE CASCADE` in `backend/db/schema.sql`). Owner-scoped exactly as `addCollectionItem` is: a shelf that belongs to somebody else is answered the same 404 COLLECTION_FOLDER_NOT_FOUND as a shelf that does not exist, so this door cannot be used to find out which shelf ids are taken or whose they are. Success is 204 with no body -- the list door already renders absence as `[]` rather than as a 404, so a client that re-reads after this gets a shape it can show. */
+        delete: operations["deleteCollection"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/collections/{folder_id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0444: put one place on one shelf.  The row stores a *reference* to `places`, not a copy: the name, category, city code and coordinate in the answer are resolved from that row on every read, so a shelf cannot show a place the store no longer holds under it.  No plan, activity or day is written -- that is the 加进计划 door's job, and the reason 收藏 is a separate exit at all. `folder_id` is a plain string rather than a uuid-formatted parameter, and that is what makes the counter-case answerable: a shelf this server does not hold for you is `404 COLLECTION_FOLDER_NOT_FOUND`, a place it does not hold is `404 PLACE_NOT_FOUND`, and a place already on that shelf is `409 PLACE_ALREADY_IN_COLLECTION` naming the row that won. None of the three is a 500 and none is the generic `require()` not-found, because the three conditions need three different sentences on a screen. One shelf holds a place once, enforced by `UNIQUE(folder_id, place_id)` (`backend/db/schema.sql`) so two workers taking two taps of the same place cannot both write.  In `eeb8b8d2fd` this door looked the shelf up by id alone, which let anyone holding or guessing an id write onto a stranger's shelf; here the same lookup also requires the shelf to belong to the authenticated traveller, and answers the shelf-absent 404 either way. */
+        post: operations["addCollectionItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2809,7 +2934,17 @@ export interface components {
             reason_code: string;
             user_summary: string;
             recommended_action: string;
+        } & {
             [key: string]: unknown;
+        };
+        ClarificationAnswer: {
+            clarification_id: string;
+            option_key: string;
+            /**
+             * @default THIS_JOURNEY
+             * @enum {string}
+             */
+            scope: "THIS_JOURNEY" | "REMEMBER_FOR_FUTURE_TRIPS";
         };
         AgentRunResponse: {
             /** Format: uuid */
@@ -3065,12 +3200,8 @@ export interface components {
             provider_key: string;
             coordinate_system: string;
             source_coordinate_system: string | null;
-            opening_hours: {
-                [key: string]: unknown;
-            };
-            cost_evidence: {
-                [key: string]: unknown;
-            };
+            opening_hours: Record<string, never>;
+            cost_evidence: Record<string, never>;
         };
         RealCityDiscoveryCandidate: {
             id: string;
@@ -3600,6 +3731,58 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
+        CollectionFolderCreate: {
+            name: string;
+        };
+        CollectionItemCreate: {
+            place_id: string;
+            note?: string | null;
+        };
+        CollectionItem: {
+            id: string;
+            folder_id: string;
+            place_id: string;
+            name: string;
+            category: string;
+            city_code: string;
+            location: components["schemas"]["GeoPoint"];
+            provider_key: string;
+            coordinate_system: string;
+            note: string | null;
+            added_at: string;
+        };
+        CollectionFolder: {
+            id: string;
+            name: string;
+            owner_traveler_id: string;
+            created_at: string;
+            updated_at: string;
+            item_count: number;
+            items: components["schemas"]["CollectionItem"][];
+        };
+        JourneyCheckinCreate: {
+            activity_id?: string;
+            place_id?: string;
+            note?: string | null;
+        };
+        JourneyCheckin: {
+            id: string;
+            journey_id: string;
+            activity_id: string | null;
+            place_id: string | null;
+            /** @enum {string} */
+            target_kind: "ACTIVITY" | "PLACE";
+            target_key: string;
+            /** Format: date-time */
+            stamped_at: string;
+            note: string | null;
+            /** @enum {string} */
+            source: "FOREGROUND_WEB";
+            activity_title: string | null;
+            activity_type: string | null;
+            place_name: string | null;
+            place_category: string | null;
+        };
     };
     responses: {
         /** @description Not found */
@@ -3650,6 +3833,7 @@ export interface components {
     };
     parameters: {
         DemoResetToken: string;
+        CollectionFolderId: string;
         TravelerId: string;
         JourneyId: string;
         ActivityId: string;
@@ -4454,6 +4638,126 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecycleBinJourney"][];
+                };
+            };
+        };
+    };
+    listJourneyCheckins: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description This trip's stamps in the order they were taken */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyCheckin"][];
+                };
+            };
+            /** @description HTTP 401, rendered by this server's envelope as `code` = REQUEST_ERROR with `message_key` = error.request_error -- no bearer credential, or one this server cannot verify, or one whose traveller no longer exists.  Nothing was read.  In `eeb8b8d2fd` this same request returned 200 and the trip's whole footprint */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_JOURNEY_UNKNOWN -- this server holds no such trip *for the authenticated traveller*.  A trip that exists and belongs to somebody else gives the identical answer, so this door cannot be used to find out whose journeys exist */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN -- the trip is in the bin, and the same rule holds at the write door so a screen cannot read footprints of a trip `GET /api/v1/journeys` refuses to list */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED -- the request carries a `traveler_id` query parameter.  Refused by name rather than ignored, because honouring or silently dropping either one would leave a cross-member read reachable */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    createJourneyCheckin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyCheckinCreate"];
+            };
+        };
+        responses: {
+            /** @description The stamp as this server now holds it, with its target resolved */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyCheckin"];
+                };
+            };
+            /** @description HTTP 401 (`code` = REQUEST_ERROR, `message_key` = error.request_error) -- no credential, or one this server cannot verify.  Nothing was stamped. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_JOURNEY_UNKNOWN / CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind is the caller's to stamp.  A trip that exists and is somebody else's answers as a trip that is not there, so the door is not an id oracle; the two target refusals stay named apart because they are two different facts for a traveller to hear about */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN / CHECKIN_ACTIVITY_NOT_IN_JOURNEY / CHECKIN_DUPLICATE_STAMP -- the trip is in the bin (409, not 404: the row exists and 找回 puts it back), the activity lives under another trip's plan version, or that target is already stamped here */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_TARGET_REQUIRED / CHECKIN_TARGET_AMBIGUOUS / CHECKIN_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED, or `code` = VALIDATION_ERROR with `message_key` = validation.unknown_field when the body carries a field this door does not take (`stamped_at`, `traveler_id`) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };
@@ -5350,6 +5654,64 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    answerJourneyClarification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClarificationAnswer"];
+            };
+        };
+        responses: {
+            /** @description Answered parent mission and resumable child mission */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["ValidationError"];
+        };
+    };
+    resumeJourneyMission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                mission_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Persisted child mission and AgentRun result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["ValidationError"];
+        };
+    };
     putGuardianMission: {
         parameters: {
             query?: never;
@@ -6235,31 +6597,6 @@ export interface operations {
             };
         };
     };
-    runRealCityIntelligence: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                journey_id: components["parameters"]["JourneyId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": Record<string, never>;
-            };
-        };
-        responses: {
-            /** @description DeepSeek-curated */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            422: components["responses"]["ValidationError"];
-        };
-    };
     acquireJourneyPlaceFacts: {
         parameters: {
             query?: never;
@@ -6288,12 +6625,38 @@ export interface operations {
                     };
                 };
             };
+            /** @description Provider acquisition unavailable */
             502: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
+        };
+    };
+    runRealCityIntelligence: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description DeepSeek-curated */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ValidationError"];
         };
     };
     streamJourneyOperations: {
@@ -7667,6 +8030,195 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    listCollections: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description That traveller's shelves, oldest created first, each carrying its rows in add order */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionFolder"][];
+                };
+            };
+            /** @description HTTP 401, rendered by this tree's existing envelope as `code` = REQUEST_ERROR with `message_key` = error.request_error.  No bearer credential, one this server cannot verify, or one whose traveller no longer exists.  Nothing was read. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The request still carries `traveler_id` (COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED). This code is reachable without credentials too, but only as 401 -- the credential is checked before the query string is read. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    createCollection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectionFolderCreate"];
+            };
+        };
+        responses: {
+            /** @description The shelf as this server now holds it, with no rows on it yet */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionFolder"];
+                };
+            };
+            /** @description HTTP 401, rendered by this tree's existing envelope as `code` = REQUEST_ERROR with `message_key` = error.request_error.  No usable credential; no shelf is stored. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The credential verified but is not accepted for this door.  No shelf is stored. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Name missing or outside its bounds, or the body names an owner this door no longer takes */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    deleteCollection: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The shelf is gone and its rows went with it.  No body. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description HTTP 401 (`code` = REQUEST_ERROR).  No usable credential; nothing was deleted. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description COLLECTION_FOLDER_NOT_FOUND -- no shelf with that id is held for the authenticated traveller, whether the id is absent or belongs to someone else. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    addCollectionItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder_id: components["parameters"]["CollectionFolderId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CollectionItemCreate"];
+            };
+        };
+        responses: {
+            /** @description The row as this server now holds it, with the place resolved */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionItem"];
+                };
+            };
+            /** @description HTTP 401 (`code` = REQUEST_ERROR).  No usable credential; nothing was read and nothing was written. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description COLLECTION_FOLDER_NOT_FOUND (no such shelf for this traveller -- absent or somebody else's, not distinguished), or PLACE_NOT_FOUND -- which one is in `reason_code` */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description PLACE_ALREADY_IN_COLLECTION; `details` names the row that is already there */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Body outside the declared bounds */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };
