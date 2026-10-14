@@ -1,0 +1,39 @@
+{
+ "journey_id": "38f45a0d-679c-447e-85a2-93c4cd31d66f",
+ "plan_rows_before": 9,
+ "first_day": "2026-10-09",
+ "target_day": "2026-10-10",
+ "resolve_probe": [
+  "Five Great Avenues=RESOLVED"
+ ],
+ "target": {
+  "id": "e2fa09d2-a4f5-5062-813d-2503692bdb00",
+  "name": "Five Great Avenues"
+ },
+ "card_words": {
+  "matched": "已对上",
+  "unresolved": "这里没有",
+  "unresolved_why": "这座城市的地点里没有能对上这一行的，所以不能添加。",
+  "phrase": "你写的是：Five Great Avenues",
+  "line_counter": "第 1 行",
+  "select": "选中",
+  "deselect": "✓\n已选中——点一下取消"
+ },
+ "after_add": {
+  "plan_rows": 10,
+  "added_activity_id": "aba6af54-e783-4176-b3fe-63928a310e22",
+  "added_start_at": "2026-10-09T09:00:00+08:00",
+  "junk_rows": 0
+ },
+ "after_replay": {
+  "plan_rows": 10
+ },
+ "shelf": {
+  "id": "c8edff0f-03d5-4cf5-a26a-52b326d9ffe9",
+  "name": "导入架子",
+  "item_count": 1,
+  "holds_target": true
+ },
+ "nav_landed_on": "/v8/discover",
+ "stamps_after_import": 3
+}
