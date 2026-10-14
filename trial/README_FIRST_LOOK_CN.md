@@ -42,6 +42,30 @@ py -3.13 trial\try_revolution.py --fresh
 
 The browser's old localStorage may still point to a different previous Journey. Use a fresh Chrome profile/browser session or remove the old trial site's local data when starting `--fresh`; do not clear Qoder's existing site data.
 
+## Existing frontend lock mismatch (known and safely handled)
+
+The source Revolution `frontend/package.json` has `@types/react` and `@types/react-dom` but its `package-lock.json` root does not list them, and the lock omits these packages plus `csstype`. Plain `npm ci` exits with `EUSAGE`. As of the trial launcher fix, `try_revolution.py` detects **that precise** mismatch, and runs `npm install --no-audit --no-fund` only inside this isolated trial checkout. This updates only its local frontend lockfile, not the Revolution/Qoder remote source. Other npm failures are **not** silently ignored.
+
+If using a previously fetched, older launcher, the immediate workaround is:
+
+```powershell
+cd D:\moodle\CityNexus-Revolution-Trial\frontend
+npm install --no-audit --no-fund
+cd ..
+py -3.13 trial\try_revolution.py
+```
+
+To bring only the fixed launcher into an existing detached worktree, without discarding a locally repaired package-lock or changing the worktree branch:
+
+```powershell
+cd D:\moodle\CityNexus-Revolution-Trial
+git fetch origin
+git restore --source origin/trial/revolution-first-look-20261014 -- trial/try_revolution.py
+py -3.13 trial\try_revolution.py
+```
+
+The pip upgrade notice is unrelated to the npm EUSAGE problem.
+
 ## First-time hands-on user journey (recommended)
 
 1. Open the URL above. The app should show an onboarding wizard if this origin has no saved Journey. Create a **new Journey** for **Shanghai / 上海**, choose a future date range and reasonable budget. The launcher creates signed traveler identity through the **real product wizard**, not a console-injected token.
