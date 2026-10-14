@@ -88,7 +88,7 @@ export function RevolutionQuickExplore({
   const [tilesEnabled, setTilesEnabled] = useState(false);
   const [selectedPin, setSelectedPin] = useState<PublicCityCenter | null>(null);
   const [mapLink, setMapLink] = useState("");
-  const [center, setCenter] = useState<PublicCityCenter | null>(null);
+  const [center, setCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [category, setCategory] = useState<(typeof categories)[number]["value"]>("park/garden");
   const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
   const [readinessStatus, setReadinessStatus] = useState<"checking" | "ready" | "blocked" | "error">("checking");
@@ -238,7 +238,7 @@ export function RevolutionQuickExplore({
     });
   };
 
-  const useCenter = (point: PublicCityCenter, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" = point.provenance) => {
+  const useCenter = (point: { latitude: number; longitude: number }, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK") => {
     if (!Number.isFinite(point.latitude) || !Number.isFinite(point.longitude)) return;
     setCenter(point);
     setCenterBasis(basis);
@@ -468,7 +468,6 @@ export function RevolutionQuickExplore({
                   useCenter({
                     latitude: cityFocus.latitude,
                     longitude: cityFocus.longitude,
-                    provenance: "MAP_TAP",
                   }, "EXPLICIT_GEOCODER_APPROX");
                 }}
               >直接从这片地区附近找 →</button>
@@ -494,7 +493,7 @@ export function RevolutionQuickExplore({
                       // center selection. Don't demand a second "confirm" click.
                       // No Overpass request occurs until the next explicit action.
                       setSelectedPin(point);
-                      useCenter(point);
+                      useCenter(point, "MAP_TAP");
                     }}
                   />
                 </>
