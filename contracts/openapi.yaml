@@ -2218,8 +2218,9 @@ paths:
                 items: {$ref: '#/components/schemas/CollectionFolder'}
         '401':
           description: >-
-            No bearer credential, one this server cannot verify, or one whose traveller no longer
-            exists.  Nothing was read.
+            HTTP 401, rendered by this tree's existing envelope as `code` = REQUEST_ERROR with
+            `message_key` = error.request_error.  No bearer credential, one this server cannot
+            verify, or one whose traveller no longer exists.  Nothing was read.
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
@@ -2260,7 +2261,9 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/CollectionFolder'}
         '401':
-          description: No usable credential.  No shelf is stored.
+          description: HTTP 401, rendered by this tree's existing envelope as `code` =
+            REQUEST_ERROR with `message_key` = error.request_error.  No usable credential; no shelf
+            is stored.
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
@@ -2295,7 +2298,8 @@ paths:
         '204':
           description: The shelf is gone and its rows went with it.  No body.
         '401':
-          description: No usable credential.  Nothing was deleted.
+          description: HTTP 401 (`code` = REQUEST_ERROR).  No usable credential; nothing was
+            deleted.
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
@@ -2340,7 +2344,8 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/CollectionItem'}
         '401':
-          description: No usable credential.  Nothing was read and nothing was written.
+          description: HTTP 401 (`code` = REQUEST_ERROR).  No usable credential; nothing was read
+            and nothing was written.
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}

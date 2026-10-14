@@ -26882,8 +26882,9 @@ def _collection_payloads(session: Session, owner_traveler_id: str) -> list[Colle
     # and that swap is the authentication retrofit rather than an oversight.
     responses={
         401: {
-            "description": "code = UNAUTHORIZED -- no bearer credential, or one this server cannot "
-            "verify, or one whose traveller no longer exists.  No shelf is stored."
+            "description": "HTTP 401, rendered by this tree's existing envelope as `code` = "
+            "REQUEST_ERROR with `message_key` = error.request_error -- no bearer credential, or one "
+            "this server cannot verify, or one whose traveller no longer exists.  No shelf is stored."
         },
         403: {
             "description": "The credential verified but is not accepted for this door.  No shelf is stored."
@@ -26958,8 +26959,8 @@ def create_collection(
     response_model=list[CollectionFolderSchema],
     responses={
         401: {
-            "description": "code = UNAUTHORIZED -- the shelf list is answered to a credential and "
-            "never to a name typed beside it.  Without one, nothing is read."
+            "description": "HTTP 401 (`code` = REQUEST_ERROR) -- the shelf list is answered to a "
+            "credential and never to a name typed beside it.  Without one, nothing is read."
         },
         422: {
             "description": "error.reason_code = COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED -- the "
@@ -27017,7 +27018,8 @@ def list_collections(
     # crash.  The descriptions name the tokens the door can emit, so nothing has to be guessed from
     # the status code alone.
     responses={
-        401: {"description": "code = UNAUTHORIZED -- nothing was read and nothing was written."},
+        401: {"description": "HTTP 401 (`code` = REQUEST_ERROR) -- nothing was read and nothing "
+            "was written."},
         404: {
             "description": (
                 "Refused with a named code in error.reason_code: COLLECTION_FOLDER_NOT_FOUND when "
@@ -27159,7 +27161,8 @@ def add_collection_item(
     "/api/v1/collections/{folder_id}",
     status_code=204,
     responses={
-        401: {"description": "code = UNAUTHORIZED -- the shelf is still there and nothing was read."},
+        401: {"description": "HTTP 401 (`code` = REQUEST_ERROR) -- the shelf is still there and "
+            "nothing was read."},
         404: {
             "description": (
                 "error.reason_code = COLLECTION_FOLDER_NOT_FOUND -- this server holds no shelf with "
