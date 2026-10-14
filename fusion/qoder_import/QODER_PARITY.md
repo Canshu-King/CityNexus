@@ -1,0 +1,158 @@
+# QODER_PARITY — 融合分支上的能力对账（2026-10-14）
+
+命令依据：`fusion/QODER_EXECUTION_ORDER.md` 第 2、3、7 条与交付节。
+配套明细：`QODER_FEATURES_r1.csv`（32 行 × 10 列，逐行带 `文件:行号` 证据）、`MERGE_RISK_r1.md`、
+`PHASE0_BASELINE_r1.md`、`slice1/ACCEPTANCE_RUBRIC_r1.md`、`QODER_HANDOFF_CODEX_r1.md`。
+本文件只写结论与判定尺；数字全部本机亲测，凡引用他人之处都标了出处。
+
+## 0. 基线与口径（先钉住可复跑的数）
+
+| 项 | 融合基线 `594f9a4e75` | Qoder 产品树 `eeb8b8d2fd` | 量法 |
+|---|---|---|---|
+| 后端能否起 | **能**，health 200 | **能**，health 200 | 同一枚 `CityNexus/.venv` 3.12.14，无新建环境 |
+| `/openapi.json` 路径数 | **249** | **159** | 活口拉文档，非正则抓源码 |
+| 空库自举表数 | **93** | （切片尺里另记） | `sqlite_master`，同一支探针两棵树对跑 |
+| `frontend/src` ts/tsx 文件 | **124** | **157** | `git ls-tree -r` |
+| `tsc -p tsconfig.typecheck.json --noEmit` | **0 error** | **0 error** | 各塞一枚坏文件做反向对照，均立刻报 TS2322 ⇒ 绿是真的 |
+| 全量套件 | 见 §5 前值 | **1921 passed / 18 failed / 2 errors / 309.28s** | 移植源自带 2 枚 ERROR 在 `test_qoder_boli_party_size_divisor.py` |
+| 两叉真实差量 | 6839 files（6378 A / 241 M / 220 D） | | `git diff --shortstat`，非 GitHub 截断 300 |
+
+**路由集合差（活口 openapi，纠正我先前口径）**：Qoder-only **11** 条 / 融合基线独有 **101** 条。
+先前我报过「12 条」，其中 `{journey_id}/experience` 是误计——它来自 `main.py:8546` 函数体里的 f-string，
+真路由在 `main.py:5490`，两棵树都已注册。⇒ 「谁文件长抄谁」在路由层同样错：基线比 Qoder 多 90 条路径。
+
+11 条 Qoder-only：`collections`、`collections/{folder_id}/items`、`demo/scene/ensure`、
+`journeys/{id}/abort`、`calendar.ics`、`checkins`、`member-role-limits`、`members/self-exit`、
+`members/{member_id}/role`、`poi-import/add`、`poi-import/parse`。
+
+## 1. **融合树上**彻底没有用户入口的 7 条（parity-A 逐条给到注册表 + 路由表 + 词典 + testid 四层证据）
+
+> **措辞更正（19:05，我自己写的那句会误导）**：这一节判的是**融合分支**那一侧。移植源不是这样——源树 `eeb8b8d2fd` 里收藏与打卡/足迹两条**有界面且已注册**（`v8PanelRegistry.tsx:6/:246/:30/:420`、`TripItinerary.tsx:24/:586`；`features/collections/` 5 枚文件、`features/checkin/` 6 枚），台上树与权威尖 `f6e936c8e85e` 同样有。融合基线这两处目录命中 0、注册表 grep 命中 0，所以「没有入口」只对融合成立。CSV 的 `state` 列按源树记的 `LIVE_IN_UI` 与此不冲突。
+> 更要紧的是这带出一条冲突面：源树界面按「调用者自报身份」写（`collections.ts:63` 拼 `?traveler_id=`，`:45` 不带 `Authorization`），而我这轮把后端那扇门改成了只认签名令牌、且**不接受点名**。原样搬必红两次（401 与 422）。三处非改不可的接法在 `SLICE1_UI_PORT_SEAM_r1.md`。
+
+打卡 check-in、足迹 footprint、收藏 collections、导入地点 POI import、日历 .ics 导出、行程长图 poster、中止行程 abort。
+判定方式不是我猜文件夹：`v8PanelRegistry.tsx` 无该项、`routes/v8Routes.ts` 无该项、`LocaleContext.tsx` 词典无该 Tab、`data-testid` 不出现在 render 里。
+
+半缺 2 条（后端在、前端不读）：
+- 分享接收方：融合 `main.py:6546/6617/6663` 门在，前端只有 `generated/api.ts:488` 的类型，**零组件读** ⇒ `BACKEND_ONLY`
+- pending 落位/采纳：融合 `PendingSetPanel.tsx:332` 自印 `pending-no-place-door`
+
+## 2. 建表机制（本轮最贵的一条，任何人做移植都会踩）
+
+融合树这条路径上**没有 `Base.metadata.create_all`、也不靠 alembic**：
+`backend/app/db/session.py:19` `SCHEMA_PATH = ROOT/"db"/"schema.sql"`，`ROOT = parents[2]` ⇒ 真文件是 **`backend/db/schema.sql`**（不在 `app/` 下），
+`session.py:741 ensure_schema()` 用 `raw.executescript(sql)`，执行前还跑 5 个历史清理函数。
+`backend/db/schema.sql`：融合 **89 个 CREATE TABLE / 90150 B**，Qoder **61 / 56773 B**，融合里 `collection` 字样命中 **0**。
+
+**已实测（21:46 复跑，删库重启，同一支探针打两棵树）**：空库上调 `ensure_schema()` ⇒ 融合基线 **93 张**、我这枚 import 尖 **96 张**，
+新增的三张正是 `collection_folders`、`collection_items`、`journey_checkins`，`REMOVED_TABLES = []`（移植没有吃掉任何一张既有表）；
+索引同步 **228 → 236**。`UNIQUE (folder_id, place_id)` 在 `collection_items` 的 DDL 里（并另生两枚 `sqlite_autoindex_collection_items_1/2`），
+`journey_checkins` 的耐久约束是 `UNIQUE (journey_id, target_key)`（不是可被 SET NULL 级联洗掉的 `activity_id`），
+命名索引 `idx_journey_checkins_journey_stamped`、`idx_collection_items_folder_added`、`idx_collection_folders_owner` 都在；
+`git grep create_all` 于 `backend/app` 仍 **0 命中**。
+⇒ 基线 93 张 + 这三枚 = 96，建表这条腿只从 `schema.sql` 走通，不靠 ORM。原始输出：`parity/_boot_tables_r6.txt`。
+
+⇒ **只加 ORM 模型类不会长出表**；只 `git diff` 挑「谁新」会一次删掉对方 28 张表。
+
+## 3. 鉴权口径：移植必须升级，不许照抄 —— **已在 import 分支活口量到「读不到」**
+
+细节与布景拆分见 `SLICE1_AUTH_ACCEPT_r1.md`（证据 `parity/_auth_accept_r1.json`，18:26 在 8122 上现读）。
+一句话：`GET /api/v1/collections?traveler_id=<别人的 uuid>` 不带凭据，源树 `eeb8b8d2fd` 回 **200**（18:05 实测泄漏过
+`names=["WeekendShelf"]`），import 分支 `6a734148f0` 回 **401**；B 持自己的合法凭据列架回 **200 / count=0**，
+`B_sees_A_shelf = false`；拿 A 的凭据去点名 B 回 **422** —— 因为门上**已经没有 `traveler_id` 这个入参**
+（`app/main.py:26973 def list_collections(request, session)`；`traveler_id: str = Query` 在 import 树命中 **0**，源树 1），
+是结构性无法点名，不只是被拦。
+
+四处源证据仍然成立（说明这不是我误读源树）：
+1. `traveler_id: str = Query` 计数：融合 main.py **0** / Qoder main.py **1**（唯一那次就是 `GET /api/v1/collections`）
+2. docstring：`What this version does *not* do is authenticate it -- the id is asserted by whoever calls`
+3. DDL 注释：`asserted, not authenticated; the anonymous read is still this product's default`
+4. **活口实测**：8123 上完全不带 `Authorization`，只把别人的 uuid 写进 query ⇒ **200 / count=1 / names=["WeekendShelf"]**
+
+而 charter 的 non-negotiable stop condition 写着 `unsigned cross-member read/write succeeds`；
+融合树自带缝：`app/traveler_principal.py: resolve_journey_member_principal(...)→principal.traveler_id`、`member_has_capability(...)`
+（`main.py:2035-2042`、`:2184` 在用），且融合 `core/config.py` 有 `traveler_auth_secret`（Qoder config 命中 **0**）。
+
+**未决判定（不许沉默）**：源树 `test_a_shelf_is_answered_to_its_owner_and_to_nobody_else`
+（`tests/test_qoder_ord0444_collections.py:414`，第 419/423 行都断言 200）把未鉴权写进了契约。
+融合版必须**改写并加强**成「B 点名 A 的 uuid 也拿不到」，**不许删断言凑绿**。
+
+consent 落差一并记：`consent` 命中 融合 185 / Qoder 4，`provider_consent` 17 / 0。
+融合树 consent 没有独立路由（openapi `consent` 前缀 0 条），是请求体字段 + 模块级强制。
+
+## 4. 覆盖危险面（11 个点名文件全是 M）
+
+「整文件覆盖」在任何一侧都错：基线独有如 main **175 个 handler**、models **35**、schemas **57**、`citynexus.ts` **93 个符号**、
+`AgentToolGateway` 基线 2998 行 vs Qoder 1078 行、`ensure_schema` 1685 vs 1123；
+反向 `openapi` 生成物与 `V8Experience.tsx` 是 **Qoder 更长**。同名不同行为的真冲突集中在
+`generate_replan` −585、`_accept_replan_executing` −284、`seed_demo` −146。
+Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突源。
+`core/config.py` 采「**反向不移植**」：真实城市腿与签名默认值基线更实（`traveler_auth_secret`/`city_search_*`/`live_valhalla_test_provider` 只有基线有），
+四项 `real_city_enabled=false / live_valhalla_url=None / real_city_mode=replay / IMPACT_TIMEOUT_SECONDS=10` 两树逐字一致。
+
+## 5. 我的命令第 7 条（R107/R108 导入后还得在、还得能用）——当前触达真值
+
+存活（8121 活口 openapi）：`pocket-walk` 4 条、`pocket-walk/go` 1 条、`walk` 8、`guardian` 14、`operator` 10、`discovery` 6。
+`LiveRecovery` 确有壳内入口：`v8PanelRegistry.tsx:181-198` `id:"live"`、`surface:"route"`、`testId:"live-recovery"`、`when: s.route==="live"`。
+
+**但 GO MODE 只有半条腿**（详见 `QODER_HANDOFF_CODEX_r1.md` §一）：
+全 `frontend/src` 提到 `pocket-walk` 的只有 2 个文件；`GoMode` 组件命中 **0**；
+写门 `transitionBootstrapPocketWalkGo` 只有 `BootstrapDiscoveryPanel.tsx` 一个调用者；
+**读门 `getBootstrapPocketWalkGo` 零调用点**；`go_progress` 只挂在 `BootstrapPocketWalkResponse`（save 的响应，`citynexus.ts:1878/:1892`）；
+而该面板唯一渲染点 `V8Experience.tsx:1644-1650` 的注释自认它故意在 `.v8-product-shell` 之外、无底部主导航（`Amendment F #1`）。
+⇒ charter Phase 4(B) 的 `reload to see persisted state` 在当前 UI 不可能通过；Journey 一旦 ACTIVE 就没有 GO 入口，与 `no hidden test-only route` 冲突。
+判责：这属 Codex 的 `fusion/codex-journey-20261014` 管辖，我不在 import 分支顺手改；已在交接件里给出接线建议。
+
+## 6. 我这一侧的残差风险
+
+台上演示树 `cca117cf1a` 与命令指定的移植源 `eeb8b8d2fd` **不是同一棵**：mirror 领先 48 提交、台上领先 18 提交，
+`git diff --numstat eeb8b8d2fd cca117cf1a -- backend/app frontend/src` = **+3091 / −10956**（`englishCountNoun` mirror 27 / stage 10）
+⇒ mirror 更前进，选它作源是对的。但台上独有 3091 行集中在
+`stay_mobility.py` +2056/−2227（带 `party_size` 行为回归臂）、`V8Experience.tsx` +110/−208、`PlanWithAiSheet.tsx`、`JourneyTrialSetup.tsx`、`CopilotDock.tsx`、`main.tsx`。
+**待主人裁定**：这 18 枚要不要一并进 fusion，还是只认 mirror。按 charter `never overwrite their newer product fixes`，默认应按可评审 cherry-pick 补进 fusion 而非丢弃。
+
+## 7. 移植顺序（按端到端用户价值降序，每片=路由+API+schema+UI+一条测试）
+
+| 序 | 切片 | 为什么先 | 状态 |
+|---|---|---|---|
+| 1 | **Collections 收藏 + Check-in 打卡/足迹** | 融合侧 0 命中、纯加法（3 模型 + 20 schema + 9 service + 37 路由），一次恢复两条 Tab；但必须做鉴权升级与 `schema.sql` 建表 | **已落地**：后端 + 手契约 + 表 + 前端 + 守门测试，行为数见 §9 |
+| 2 | POI import 导入地点 | `poi_import.py` 是零内部依赖的叶子模块，前端 `features/poiimport/` 4 文件；入口在 discover（与 1 共用唯一入口） | 待 1 |
+| 3 | Calendar .ics 导出 + abort | `calendar_export.py` 同样零依赖叶子；`abort` 只 1 路由 | 待 |
+| 4 | 成员角色三件套（role-limits / self-exit / role） | 动权限，需与融合 `member_has_capability` 对齐，风险高、价值中 | 待 |
+| 5 | `demo/scene/ensure` | **HOLD**：这是布景/维护工具，不是产品能力；且需 demo token（本机空库实测 **403**）。按 charter `distinguish product additions from evidence-only` 不进产品 | 判定为不移植 |
+| 6 | 生成物（openapi/`generated/api.ts`） | 放最后靠合并后重生成，不手抄 | 待 |
+
+## 8. 我不能确认的（不写成就绪）
+
+- 融合基线全量套件红面**前值**正在跑（`_pytest_fusion_base.db`，8121 那棵干净 worktree）；出数前任何「无回归」都不作数。
+- 融合树的 `vite build` / 真机 PWA 在 fusion 上还没跑过（磁盘 4585 MB、node_modules 799 MB，目前靠 junction 只读借用，未验证可写场景）。
+- parity-A 的 `LIVE_IN_UI` 全是**静态**四层证明（路由表∧注册表∧词典∧testid 落在 render），没开页没点按钮；
+  `when` 门在真数据上能否为真未验（收藏需 `traveler_id` 非空、长图入口需 `activities.length>0`）。
+- precache 8 条名单我无法复现（`v10-sw.js` 是构建产物，命令禁 build），只引主人今日实测与 `vite.config.ts:52-56` 自记。
+- `catalog_hydration_operations.py` 两侧是否改同一函数没读完 ⇒ 导入地点的合并冲突强度是未知项。
+
+## 9. 切片1 前端落地（2026-10-14 21:46，import 尖 `85b48a27d7`）
+
+**先认一条我报错的**：板上 §四 我写过「这两片的界面不需要动 app 词典」。不成立。
+`FootprintPanel.tsx` 读 `t("checkin.title")`，所以融合词典必须有一枚键。亲测口径：`grep -c '"checkin.title"' frontend/src/i18n/LocaleContext.tsx` = **2**
+（一枚键 × 两个语种），提交形状 = **1 键 / 1 commit**（`9a723b35c2`），符合号令者 10-10「字典单独一枝、一杖最多三枚键」。
+其余句子一律待在这片的私有词表里（`checkinCopy.ts` / `collectionCopy.ts` / `footprintCopy.ts`），与 `features/access/accessCopy.ts` 同法——
+这不是偏好，是为了不再让每条车道在同一枚串行化点上排队重写。
+
+| 尺 | 数 | 复跑命令 |
+|---|---|---|
+| 这尖上超出基线的提交 | **18** | `git rev-list --count 594f9a4e75..HEAD` |
+| 前端移植件 | **10 文件 / 1623 行** | `git show --stat 2231d7b6cc` |
+| app 词典键 | **1 键 / 2 语种行** | `grep -c '"checkin.title"' frontend/src/i18n/LocaleContext.tsx` |
+| 类型闸 | 两份配置各 **RC=0** | `npx tsc --noEmit -p tsconfig.check.json`、`-p tsconfig.typecheck.json` |
+| 界面守门 | **5 passed（布景 1 + 四条腿 4）/ 21.6s / RC=0** | 见 `reports/qoder-ord0510/*.json`，跑法在 `SLICE1_UI_PORT_SEAM.md` §4 |
+
+四条腿各自钉住的一件事（数值取自当轮输出，不是推算）：
+1. **足迹行来自读门**：`stamps_on_server_before=0 → 1`，屏上 `21:43 Arrival 没写备注 网页端打的`，日区 `Asia/Shanghai`；
+2. **重复打卡只说不写**：门回 **409**，句子带服务器自己的时刻（`10月14日 21:43`）而**无 uuid、无 reason_code**，屏上数目 `2 枚` 前后不动，服务器侧 `2 → 2`；
+3. **收藏以读门为准**：首按 `已收在 收藏架 r3` 且 `items_after_first_tap=1`，再按 `这一枚已经在这个架子上。 · 已收在 收藏架 r3` 而 `item_count_after_repeat=1`；
+4. **归属由凭据决定**：换旅客只见空态；**无凭据时收藏读门请求数 = 0**（不是请求被拒，是根本没问）。
+
+**还没接通的两条腿（别按「就绪」读）**：`footprintRead.ts` 未移植——它要 `mapPanelCopy.ts` 里 6 枚 `footprint*` 键，融合树没有，且只有地图面读它；
+`vite build` / 真机 PWA 在这条分支上从没跑过。§1 那句「融合侧没有入口」现在只剩 **4 条**成立（导入地点 POI import、日历 `.ics` 导出、行程长图 poster、中止行程 abort）——
+打卡、足迹、收藏三条已由本节接通（`checkin`/`collections` 两条目录在树上命中不再为 0，注册表各多一枚 `route` 面板，`TripItinerary` 挂上两条写腿）。
