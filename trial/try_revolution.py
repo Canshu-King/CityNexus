@@ -5,7 +5,8 @@ Run on Windows from the repository root:
 
 Default: REAL public OpenStreetMap/Overpass data after explicit UI consent.
 Use --sample only if you intentionally want controlled offline locations.
-The backend remains isolated on localhost; AI, booking and payment remain disabled.
+The backend remains isolated on localhost; AI is opt-in via --agent.
+Mock booking/payment and user approval boundaries remain unchanged.
 """
 from __future__ import annotations
 
@@ -25,6 +26,8 @@ import venv
 import webbrowser
 from datetime import datetime
 from pathlib import Path
+
+from wb2api_agent import agent_settings, router_health
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,7 +139,7 @@ def isolated_environment(db_name: str, *, sample: bool, contact_email: str | Non
     # session must not turn a local trial into a live AI/provider deployment.
     for key in list(env):
         if key.startswith(("CITYNEXUS_", "REV_TRIAL_")) or key in {
-            "DEEPSEEK_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY",
+            "DEEPSEEK_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "WB2API_KEY",
         }:
             env.pop(key, None)
     secret_path = RUNTIME / "traveler_auth_secret.txt"
@@ -204,6 +207,10 @@ def main() -> int:
                         help="Use a new isolated database without deleting your previous trial data")
     parser.add_argument("--sample", action="store_true",
                         help="Explicitly choose controlled local fake places instead of live public map search")
+    parser.add_argument("--agent", action="store_true",
+                        help="Explicitly connect the existing Hermes tool-loop to local wb2api 7865/auto:cheapest")
+    parser.add_argument("--agent-direct-model", default=None,
+                        help="Use exact wb2api 7863 model, e.g. global:deepseek-v4.1-flash (may incur charges)")
     parser.add_argument("--no-browser", action="store_true",
                         help="Print the local URL without auto-opening desktop browser")
     args = parser.parse_args()
@@ -219,6 +226,31 @@ def main() -> int:
         contact_email = input("Nominatim contact email: ").strip()
         if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", contact_email):
             raise RuntimeError("A valid contact email is required for LIVE search. Use --sample to run offline.")
+    agent_enabled = bool(args.agent or args.agent_direct_model)
+    agent_config: dict[str, str] = {}
+    agent_label = "DISABLED"
+    if agent_enabled:
+        print("\nREVOLUTION REAL AGENT / WB2API LOCAL GATEWAY")
+        print("An external model may receive your submitted Journey facts and prompts.")
+        print("The 7865 free-first router currently includes a potentially PAID final fallback.")
+        print("Do not assume that any model request is guaranteed to cost zero.")
+        print("AI tool calls remain subject to CityNexus signed user authority and approval.")
+        consent = input("Enable external-model Journey Agent for this LOCAL trial? [y/N]: ").strip().lower()
+        if consent not in {"y", "yes"}:
+            raise RuntimeError("Agent authorization declined; run without --agent for no AI")
+        if not args.agent_direct_model:
+            healthy, state = router_health()
+            if not healthy:
+                raise RuntimeError("Local free-router 7865 not ready: " + state + ". Start WorkBuddy2API/FreeRouter.")
+        try:
+            agent_config, agent_label = agent_settings(direct_model=args.agent_direct_model)
+        except ValueError as exc:
+            raise RuntimeError(str(exc)) from exc
+        print("Agent route:", agent_label)
+        print("Model:", agent_config["CITYNEXUS_HERMES_MODEL"])
+        print("Credential: loaded into isolated backend memory only (value hidden)")
+        print("Runtime: Hermes-compatible tool-calling, not DeepSeek /responses or native Hermes MCP")
+        print("NOTE: configuration is NOT successful Agent tool use; run trial/probe_wb2api_agent.py if needed.")
     RUNTIME.mkdir(parents=True, exist_ok=True)
     for port in ((FRONT_PORT, BACK_PORT, CITY_PORT, OVERPASS_PORT)
                  if args.sample else (FRONT_PORT, BACK_PORT)):
@@ -233,11 +265,12 @@ def main() -> int:
     children: list[tuple[str, subprocess.Popen]] = []
     handles = []
 
-    def start(name: str, executable: str, argv: list[str], cwd: Path) -> subprocess.Popen:
+    def start(name: str, executable: str, argv: list[str], cwd: Path,
+              child_env: dict[str, str] | None = None) -> subprocess.Popen:
         out = (RUNTIME / f"{name}.out.log").open("w", encoding="utf-8")
         err = (RUNTIME / f"{name}.err.log").open("w", encoding="utf-8")
         handles.extend([out, err])
-        proc = subprocess.Popen([executable, *argv], cwd=str(cwd), env=env,
+        proc = subprocess.Popen([executable, *argv], cwd=str(cwd), env=child_env or env,
                                 stdout=out, stderr=err)
         children.append((name, proc))
         return proc
@@ -251,7 +284,7 @@ def main() -> int:
 
         api = start("backend", str(python),
                     ["-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
-                     "--port", str(BACK_PORT)], BACKEND)
+                     "--port", str(BACK_PORT)], BACKEND, {**env, **agent_config})
         wait_for("backend", f"http://127.0.0.1:{BACK_PORT}/api/v1/health", api)
 
         vite_script = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
@@ -263,7 +296,9 @@ def main() -> int:
         print("OPEN:", address)
         print("SOURCE:", "CONTROLLED TEST_PROVIDER (not real places)" if args.sample
               else "REAL PUBLIC OSM PROVIDERS (network access after specific user consent)")
-        print("AI: OFF. Payment/booking: mock only. Backend bound to localhost.")
+        print("Agent:", "CONFIGURED_UNVERIFIED (" + agent_label + ")" if agent_enabled else "OFF")
+        print("AI tool-use requires an ACTIVE Journey and a real AgentRun; Pocket Walk alone is not an AgentRun.")
+        print("Payment/booking: mock only. Backend bound to localhost.")
         print("DB:", db)
         print("For Android USB Chrome (ADB installed): adb reverse tcp:14173 tcp:14173")
         print("Then on phone visit: http://localhost:14173/revolution")
