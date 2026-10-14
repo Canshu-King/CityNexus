@@ -75,12 +75,16 @@ function messageForError(error: unknown): string {
 export function RevolutionQuickExplore({
   journeyId,
   cityName,
+  agentConfigured = false,
 }: {
   journeyId: string;
   cityName: string;
+  agentConfigured?: boolean;
 }) {
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
+  const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
+  const [aiAdvice, setAiAdvice] = useState<{ category: string | null; reason: string; verifiedTool: boolean; model: string | null } | null>(null);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
@@ -124,6 +128,7 @@ export function RevolutionQuickExplore({
       setCityFocus(null);
       setCityFocusLabel(null);
       setCenterBasis(null);
+      setAiAdvice(null);
       setStage("area");
       setAlert({ type: "neutral", text: "账户已切换，请重新选择公开地图位置。" });
     });
@@ -207,6 +212,34 @@ export function RevolutionQuickExplore({
     }
   };
 
+  const consultHermes = () => {
+    const goal = aiGoal.trim();
+    if (!agentConfigured) {
+      setAlert({ type: "neutral", text: "当前 AI 尚未接入这个会话，直接查城市也能继续。需要先用 --agent 启动本地服务。" });
+      return;
+    }
+    if (goal.length < 4 || goal.length > 360) {
+      setAlert({ type: "error", text: "用一句话告诉 AI 你想玩什么（4 到 360 个字）。" });
+      return;
+    }
+    void run(async (stillCurrent) => {
+      const suggestion = await cityNexusApi.suggestTrialDiscovery(journeyId, goal);
+      if (!stillCurrent()) return;
+      const verified = suggestion.status === "MODEL_TOOL_SUGGESTION";
+      const matched = verified ? categories.find((item) => item.value === suggestion.category) : null;
+      if (matched) setCategory(matched.value);
+      setAiAdvice({
+        category: matched?.name ?? null,
+        reason: suggestion.reason,
+        verifiedTool: verified && !!matched,
+        model: suggestion.model ?? null,
+      });
+      setAlert(verified && matched
+        ? { type: "good", text: "AI 已根据你说的话建议了一个探索方向。地点仍要从真实公开地图查找。" }
+        : { type: "neutral", text: "模型这次没有返回可验证的工具建议。你仍然可以手动选择地区和兴趣。" });
+    });
+  };
+
   const cityLookup = () => {
     const cityQuery = query.trim();
     if (cityQuery.length < 2 || cityQuery.length > 120) {
@@ -234,7 +267,7 @@ export function RevolutionQuickExplore({
       setCityFocus(null);
       setSelectedPin(null);
       setTilesEnabled(false);
-      setAlert({ type: "good", text: "找到位置了。选一个结果，然后在地图上点选具体想逛的区域。" });
+      setAlert({ type: "good", text: "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。" });
     });
   };
 
@@ -393,7 +426,7 @@ export function RevolutionQuickExplore({
         <div className="rev-quick-kicker">CITYNEXUS / EXPLORE</div>
         <h2>{stage === "walk" ? "你的私人散步路线" : "想去哪儿逛逛？"}</h2>
         <p>
-          {stage === "area" && "输入地区名称，找到它，然后在地图上选一个想探索的位置。"}
+          {stage === "area" && "你可以先告诉 AI 想怎么玩，再找地方。地图打不开也能继续。"}
           {stage === "category" && "位置已选好。挑一种兴趣，我们会查找附近的公开地点。"}
           {stage === "results" && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你控制进度，我们不冒充 GPS 到场。"}
@@ -412,6 +445,41 @@ export function RevolutionQuickExplore({
 
       {stage === "area" && (
         <div className="rev-quick-pane" data-testid="rev-quick-area">
+          <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
+            <div className="rev-quick-ai-title">
+              <strong>先跟 AI 说一句</strong>
+              <small>{agentConfigured ? "Hermes 模型已配置，可请求真实建议" : "模型尚未接通，不影响手动探索"}</small>
+            </div>
+            <label htmlFor="rev-quick-ai-prompt">你想怎么玩？</label>
+            <textarea
+              id="rev-quick-ai-prompt"
+              value={aiGoal}
+              maxLength={360}
+              rows={3}
+              onChange={(event) => setAiGoal(event.target.value)}
+              placeholder="例如：我在连城，今晚三个小时，想吃点当地特色，再轻松散散步。"
+              disabled={busy}
+            />
+            <div className="rev-quick-ai-actions">
+              <button
+                type="button"
+                onClick={consultHermes}
+                disabled={busy || !agentConfigured}
+                data-testid="rev-quick-consult-ai"
+              >{busy ? "正在请教 AI…" : "让 AI 帮我想想 →"}</button>
+              <span>点击后才会把上面这句话发给本机 wb2api 连接的外部模型，可能消耗积分；不会自动搜索地图或预订。</span>
+            </div>
+            {aiAdvice && (
+              <div className="rev-quick-ai-response" role="status" data-testid="rev-quick-ai-response">
+                <strong>{aiAdvice.verifiedTool ? "AI 给你的探索建议" : "模型这次未完成工具建议"}</strong>
+                <p>{aiAdvice.reason}</p>
+                {aiAdvice.category && <span>建议兴趣：{aiAdvice.category}（可以修改）</span>}
+                <small>{aiAdvice.verifiedTool
+                  ? "来自真实模型的只读工具建议，不是已规划路线，也没有发生 AgentRun。"
+                  : "没有得到可校验的工具调用，不能当作 AI 规划已完成。"}{aiAdvice.model ? ` · ${aiAdvice.model}` : ""}</small>
+              </div>
+            )}
+          </section>
           <label htmlFor="rev-quick-search">城市或地区</label>
           <div className="rev-quick-inline">
             <input
