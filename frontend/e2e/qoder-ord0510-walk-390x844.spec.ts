@@ -154,6 +154,18 @@ test("qoder-ord0510-walk — 390x844 一路走查，每一屏自己作证", asyn
      across the routes this walk can reach is the honest form of "does it still appear". */
   const goReachable = await page.getByTestId("bootstrap-discovery").count();
 
+  /* Slice 2 joins the walk as the eighth screen: the order's proof is a saved walkthrough, and a
+     screen that only ever appears in a behaviour arm is a screen the walkthrough does not show.
+     The two phrases below are read from the panel's OWN copy table (`features/poiimport/poiImportCopy.ts`
+     :390 and :174), not from the app dictionary -- measured: `grep 从文本导入地点 frontend/src/i18n/
+     LocaleContext.tsx` is empty. So this frame proves the slice-2 sentences reach the glass at
+     390x844; the candidate card's dictionary rows are proved by the behaviour arm, which is the only
+     place one is ever rendered -- measured there as seven of the nine words, the two that need two of
+     our places answering one pasted line (要你选 and its reason) stay proved at the door. */
+  await page.goto("/v8/import", { waitUntil: "load", timeout: 90_000 });
+  await shoot(page, "08_import", "/v8/import",
+    ["poi-import", "poi-import-parse"], ["从文本导入地点", "本地解析，不打开链接"]);
+
   await close();
 
   const digests = frames.map((f) => f.digest);

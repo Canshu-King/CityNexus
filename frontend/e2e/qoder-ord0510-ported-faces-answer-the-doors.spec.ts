@@ -123,10 +123,15 @@ test("qoder-ord0510-b — 再按一次只对它那一站说，数目不动", asy
   // number the read door gives, whatever it is, not against a hand-written one.
   const onServerBefore = (await ask(request, "GET", checkinsPath(s.journeyId), { token: s.token })).length;
   await page.getByTestId("footprint-retry").click();
-  await expect(page.getByTestId("footprint-tally")).toContainText(
-    `${onServerBefore} 枚足迹`,
-    { timeout: 20_000 },
-  );
+  /* Pinned on the rows, not on the tally's own text. Measured on `slice2r1`: the panel clears its list
+     while the re-read is in flight, so `toContainText("2 枚足迹")` was satisfied by the render that was
+     already on the glass and the `innerText()` one statement later caught the blanking one --
+     "这次行程共有 2 枚足迹。 分成 1 天。" -> "这次行程共有 0 枚足迹。". The row count is a bound the same
+     render must satisfy, and it makes the blank a condition this arm waits out instead of a number it
+     can read by accident. Run 6x alone on the same tip (`armb6r1`): 6 passed, so nothing here depends
+     on the ordering of the arms. */
+  await expect(page.getByTestId("footprint-row"), node(ID, "the re-read never filled the list"))
+    .toHaveCount(onServerBefore, { timeout: 20_000 });
   const tallyBefore = flat(await page.getByTestId("footprint-tally").innerText());
 
   await entry.click(); // the door answers 409 for this stop
@@ -151,10 +156,8 @@ test("qoder-ord0510-b — 再按一次只对它那一站说，数目不动", asy
     node(ID, `the duplicate tap wrote a stamp: ${onServerBefore} -> ${onServerAfter}`),
   ).toBe(onServerBefore);
   await page.getByTestId("footprint-retry").click();
-  await expect(page.getByTestId("footprint-tally")).toContainText(
-    `${onServerBefore} 枚足迹`,
-    { timeout: 20_000 },
-  );
+  await expect(page.getByTestId("footprint-row"), node(ID, "the duplicate tap emptied the list"))
+    .toHaveCount(onServerBefore, { timeout: 20_000 });
   const tallyAfter = flat(await page.getByTestId("footprint-tally").innerText());
   expect(
     tallyAfter,
