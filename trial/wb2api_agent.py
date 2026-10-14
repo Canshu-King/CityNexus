@@ -73,7 +73,9 @@ def router_health(timeout: float = 3.0) -> tuple[bool, str]:
     """Free-router metadata only. No credentials, model billing, or tool calls."""
     req = urllib.request.Request("http://127.0.0.1:7865/router/status")
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as response:
+        # Loopback health must never be redirected through a system HTTP proxy.
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(req, timeout=timeout) as response:
             if response.status != 200:
                 return False, f"ROUTER_HTTP_{response.status}"
             data = json.load(response)
