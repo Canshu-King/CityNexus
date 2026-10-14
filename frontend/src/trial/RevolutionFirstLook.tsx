@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
+import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
+import { LiveRecovery } from "../features/execution/LiveRecovery";
+import { cityNexusApi, type AgentRuntimeStatus } from "../api/citynexus";
 import {
   clearTravelerBearer,
   readTravelerBearer,
@@ -13,6 +16,7 @@ type TrialJourney = {
   id: string;
   cityCode: string;
   cityName: string;
+  status: "DRAFT" | "ACTIVE";
 };
 
 function loadRecentJourney(): TrialJourney | null {
@@ -24,7 +28,8 @@ function loadRecentJourney(): TrialJourney | null {
     const value = raw ? JSON.parse(raw) as Partial<TrialJourney> : null;
     if (!value || typeof value.id !== "string" || typeof value.cityCode !== "string" ||
         typeof value.cityName !== "string") return null;
-    return { id: value.id, cityCode: value.cityCode, cityName: value.cityName };
+    return { id: value.id, cityCode: value.cityCode, cityName: value.cityName,
+             status: value.status === "ACTIVE" ? "ACTIVE" : "DRAFT" };
   } catch {
     return null;
   }
@@ -65,7 +70,23 @@ export function RevolutionFirstLook() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
+  const [agentRuntime, setAgentRuntime] = useState<AgentRuntimeStatus | null>(null);
+  const [agentCheckError, setAgentCheckError] = useState<string | null>(null);
   const sample = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
+
+  useEffect(() => {
+    let cancelled = false;
+    void cityNexusApi.getAgentRuntimeStatus().then((state) => {
+      if (!cancelled) setAgentRuntime(state);
+    }).catch(() => {
+      if (!cancelled) setAgentCheckError("无法读取后端 Agent 状态，尚未证明模型连接可用。");
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const agentConfigured = agentRuntime?.runtime_identity === "HERMES_COMPAT_ENDPOINT"
+    && agentRuntime.hermes_compat_configured;
 
   const start = async () => {
     const label = cityName.trim();
@@ -104,7 +125,7 @@ export function RevolutionFirstLook() {
         party_size: 1,
       });
       if (!created.id) throw new Error("服务器未返回 Journey ID。");
-      const next = { id: created.id, cityCode, cityName: label };
+      const next: TrialJourney = { id: created.id, cityCode, cityName: label, status: "DRAFT" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setJourney(next);
     } catch (caught) {
@@ -122,6 +143,17 @@ export function RevolutionFirstLook() {
     setJourney(null);
     setError(null);
     setNotice(null);
+    setCandidateForJourney(null);
+  };
+
+  const finishStartingJourney = async () => {
+    if (!journey) return;
+    const next: TrialJourney = { ...journey, status: "ACTIVE" };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem("citynexus.v8.journey_id", next.id);
+    setCandidateForJourney(null);
+    setJourney(next);
+    setNotice("正式 Journey 已启动。这里是原生 Journey Operator；点击照看行程后，再由你提交需求或处理事件。模型配置不代表已经发生 AgentRun。");
   };
 
   return (
@@ -146,6 +178,18 @@ export function RevolutionFirstLook() {
             ? "受控样本模式：此模式不访问真实地点提供方"
             : "真实公开地图模式：仅在你主动授权后请求外部提供方"}
         </div>
+        <section className="rev-firstlook-agent" data-testid="revolution-agent-runtime">
+          <div className="rev-firstlook-agent-head">
+            <strong>AI Agent 连接状态</strong>
+            <span>{agentCheckError ? "状态未知" : agentConfigured ? "已配置，尚待实际调用验证" : "当前未配置"}</span>
+          </div>
+          <p>
+            {agentCheckError ?? (agentConfigured
+              ? "已发现现有 Hermes 兼容 Agent 运行时。模型将通过本机 wb2api 接口获取，仍需真实工具调用和签名 Journey 来证明有效。"
+              : "此会话未启用外部模型。关闭 AI 不影响城市地点搜索和 GO MODE。")}
+          </p>
+          {agentRuntime && <small>Runtime: {agentRuntime.runtime_identity} · {agentRuntime.ai_state ?? "UNKNOWN"}</small>}
+        </section>
         {!journey ? (
           <section className="rev-firstlook-hero">
             <span className="rev-firstlook-eyebrow">YOUR CITY. YOUR JOURNEY.</span>
@@ -200,17 +244,46 @@ export function RevolutionFirstLook() {
               </button>
             </section>
             {notice && <p className="rev-firstlook-notice" role="status">{notice}</p>}
-            <section className="rev-firstlook-real-ui" aria-label="Revolution 真实城市探索与 GO MODE">
-              <BootstrapDiscoveryPanel
-                key={journey.id}
-                journeyId={journey.id}
-                cityCode={journey.cityCode}
-                cityName={journey.cityName}
-                onCompleted={async () => {
-                  setNotice("已选择公开地点。Pocket Walk 仍是独立的私人草稿，不会在这里冒充已启动的正式行程。");
-                }}
-              />
-            </section>
+            {journey.status === "DRAFT" && candidateForJourney && (
+              <section className="rev-firstlook-start-plan" data-testid="revolution-agent-start-journey">
+                <h2>进入正式的 Agent 旅行</h2>
+                <p>
+                  你已选择一个实际返回的公开地点。现在可以明确确认未知费用，
+                  生成并启动正式 Journey。这不同于私人的 DRAFT Pocket Walk，
+                  正式 Journey 才能交给 Journey Operator 处理。
+                </p>
+                <BootstrapJourneyStartPanel
+                  journeyId={journey.id}
+                  placeId={candidateForJourney}
+                  onStarted={finishStartingJourney}
+                  onCancel={() => setCandidateForJourney(null)}
+                />
+              </section>
+            )}
+            {journey.status === "DRAFT" ? (
+              <section className="rev-firstlook-real-ui" aria-label="Revolution 真实城市探索与 GO MODE">
+                <BootstrapDiscoveryPanel
+                  key={journey.id}
+                  journeyId={journey.id}
+                  cityCode={journey.cityCode}
+                  cityName={journey.cityName}
+                  onCompleted={async (placeId) => {
+                    setCandidateForJourney(placeId);
+                    setNotice("公开地点已按真实后端选择。你可以继续在草稿里体验私人 GO MODE，或确认未知费用进入正式 Journey。");
+                  }}
+                />
+              </section>
+            ) : (
+              <section className="rev-firstlook-real-ui" aria-label="Revolution Journey Operator" data-testid="revolution-real-operator">
+                <div className="rev-firstlook-operator-intro">
+                  <h2>真正的 Journey Operator</h2>
+                  <p>此界面复用 Revolution 原生的 Operator、Agent、审批与恢复 API。
+                  外部模型只在实际触发 AgentRun 时调用；请留意是否出现真实模型执行结果及工具记录。</p>
+                  <a href="/v8/live">查看完整实时行程和 Agent 工作台 ↗</a>
+                </div>
+                <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
+              </section>
+            )}
           </>
         )}
       </main>
