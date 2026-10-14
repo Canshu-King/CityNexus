@@ -333,6 +333,9 @@ const en: Dict = {
   "calendar.refused.bin": "This trip is in the recycle bin, so there is no calendar to export. Bring it back first.",
   "calendar.refused.not_found": "This trip is not on the server, so there is no calendar to export.",
   "calendar.refused.unreadable": "This trip has no active plan yet, so there is nothing to export.",
+  "calendar.refused.not_calendar": "The server answered, but not with a calendar file, so nothing was downloaded.",
+  "calendar.refused.unknown": "The calendar could not be exported, so nothing was downloaded.",
+  "calendar.unreachable": "The server could not be reached, so nothing was downloaded.",
 
   // ── Footprints ──
   /* One key for the screen's eyebrow.  Every other sentence this screen says lives in
@@ -1291,6 +1294,9 @@ const zhCN: Dict = {
   "calendar.refused.bin": "这个行程在回收站里，所以现在没有可导出的日历。先把它找回来。",
   "calendar.refused.not_found": "服务器上找不到这个行程，所以现在没有可导出的日历。",
   "calendar.refused.unreadable": "这个行程还没有生效的方案，所以没有可导出的内容。",
+  "calendar.refused.not_calendar": "服务器有回应，但回的不是日历文件，所以没有下载任何东西。",
+  "calendar.refused.unknown": "日历没能导出，所以没有下载任何东西。",
+  "calendar.unreachable": "连不上服务器，所以没有下载任何东西。",
 
   // ── 足迹 ──
   "checkin.title": "足迹",
