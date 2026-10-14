@@ -1,112 +1,80 @@
-# CityNexus Revolution Lab — first HUMAN trial (2026-10-14)
+# Revolution Lab 真正的首次试用（2026-10-14）
 
-**This is not the fusion product.** This branch comes straight from Revolution `a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9`. The only additions are an isolated first-look launcher, a labelled local provider emulator, and this guide. It does not modify Qoder, Commander, the fusion work, or any deployed site.
+## 为什么刚才看到的不是想象中的 Revolution？
 
-## What is actually built
+之前的启动器故意打开了 `/v8/hub`，它由已有 Qoder/V8 风格产品向导接管。
+用户输入“连城”后，那个向导询问的是服务器内置 destination/canonical catalog 的身份，而非 Revolution 后期新建的“用户选择公开城市中心 -> 外部 POI 发现”路径。它只认识有限地名，和普通人想找新城市的需求脱节。此前默认的 `TEST_PROVIDER` 也只提供上海虚构样本，不能冒充真实地理探索。这个错误是试玩交付设计的问题，不是用户输错了地名。
 
-- The modern React/Vite UI boots through `frontend/src/main.tsx -> app/V8Experience.tsx`. Direct page: `/v8/hub`; the old `/legacy` page is not the normal entry.
-- Revolution capabilities have user interfaces inside the existing V8 shell, not a wholly redesigned Revolution home. The most direct unique experience is a **zero-catalogue DRAFT Journey** -> `BootstrapDiscoveryPanel` -> R107 private two-stop Pocket Walk -> R108 GO MODE with stop navigation, self-reported progress, pause/resume/undo and reload.
-- `frontend/src/features/execution/LiveRecovery.tsx` contains Journey Operator controls for ACTIVE Journey workflows.
-- R107/R108 reported signed 390x844 Chromium runs and `npm run build` / typecheck passing on Codex's environment. GPT-only R108 reviewer fixes at Revolution HEAD were **not yet rerun** on that same environment. None of these reports establishes present-day device behavior.
-- The UI reuses much of the earlier V8 shell. There are many English strings in the Revolution-specific surfaces. This is a usable developer preview candidate, **not proof of finished visual polish or a real-phone release**.
-- A plain static HTML export is insufficient: backend API, signed identity, database and live server are needed.
+当前独立试玩分支只增加新入口和启动配置，不更改 Revolution/R108 领域授权机制，也不合并 Qoder 主线。
 
-## Windows quick start — isolated local developer preview
+## 本次更改
 
-Prerequisites: Git, Python 3.12+ (3.13 recommended and used by prior Codex tests), Node.js 22 LTS + npm. Network may be needed on first run to install Python/npm dependencies.
+- **直接从 `http://127.0.0.1:14173/revolution` 进入 Revolution Lab 体验入口**。
+- 不经过 V8 的“支持城市”判断。输入任意你想探索的中文/英文地区名（比如连城）创建服务器真实的带签名 DRAFT Journey；自定义名称是用户意图，随机 draft city_code 不是宣称地理身份真实已解析。
+- 创建后挂载原生 `BootstrapDiscoveryPanel`：独立的公开地区搜索、人工中心确认、用户授权的 OSM/Overpass 查询、R107 的私人 Pocket Walk 和 R108 GO MODE（含暂停、恢复、自我报告及刷新后恢复）。
+- 之前的 V8 大壳仍然存在于 `/v8/hub`，可以比较；这个新门口并不意味着 Revolution 已经完成整套全新 UI。后续探索细节页面仍含英文和开发者术语，需要 Codex 后续改善。
+- 默认使用真实公开地图查询。**只有用户明确传 `--sample` 才会启用本地虚构服务**。
+- 真实查询严格遵守 provider/user consent：本地启动时输入自己的联系人邮箱用于 Nominatim 官方服务 User-Agent；不会保存进仓库或日志，但发送给外部地图服务。没有有效联系人邮箱时不启用真实公开地点查询。
+- AI/Hermes/DeepSeek 没有自动开启；交易与支付仍然 mock。**不能把真实 POI 搜索误称为自主 Agent 的完整演示**。
 
-From your already-cloned repository on Windows PowerShell (replace path if yours differs):
+## Windows PowerShell：更新你已有的试玩工作目录（不用重装 Python）
 
-```powershell
-cd D:\moodle\CityNexus
-git fetch origin
-git worktree add --detach D:\moodle\CityNexus-Revolution-Trial origin/trial/revolution-first-look-20261014
-cd D:\moodle\CityNexus-Revolution-Trial
-py -3.13 trial\try_revolution.py
-```
-
-The launcher:
-1. Creates its OWN `trial/.runtime/python-venv`; installs the dependencies declared in `backend/pyproject.toml` on first setup; installs `frontend/node_modules` via `npm ci` if absent;
-2. Starts an explicitly **CONTROLLED TEST_PROVIDER** city service and Overpass-shaped provider, both on `127.0.0.1`; never calls the public geocoder or Overpass for its demo discovery;
-3. Starts a separate local backend with `backend/_revolution_hands_on.db`, distinct random persisted signing secret, `CITYNEXUS_AI_ENABLED=false`, mock booking/payment, and no Guardian autorun;
-4. Starts the actual Vite frontend with a same-origin API proxy, then opens **http://127.0.0.1:14173/v8/hub**;
-5. Leaves everything running until you press Enter in the launcher console. Services bind localhost only. Logs are in `trial/.runtime/*.log`.
-
-This uses the real Revolution React frontend and application API, not a screenshot or synthetic UI. **The external city/OSM results are controlled fake samples, clearly labelled TEST_PROVIDER**. Do not walk to, share as factual, or rely on their returned coordinates/POI identities.
-
-If you prefer a fresh database for a later trial without deleting an old one:
-
-```powershell
-py -3.13 trial\try_revolution.py --fresh
-```
-
-The browser's old localStorage may still point to a different previous Journey. Use a fresh Chrome profile/browser session or remove the old trial site's local data when starting `--fresh`; do not clear Qoder's existing site data.
-
-## Existing frontend lock mismatch (known and safely handled)
-
-The source Revolution `frontend/package.json` has `@types/react` and `@types/react-dom` but its `package-lock.json` root does not list them, and the lock omits these packages plus `csstype`. Plain `npm ci` exits with `EUSAGE`. As of the trial launcher fix, `try_revolution.py` detects **that precise** mismatch, and runs `npm install --no-audit --no-fund` only inside this isolated trial checkout. This updates only its local frontend lockfile, not the Revolution/Qoder remote source. Other npm failures are **not** silently ignored.
-
-If using a previously fetched, older launcher, the immediate workaround is:
-
-```powershell
-cd D:\moodle\CityNexus-Revolution-Trial\frontend
-npm install --no-audit --no-fund
-cd ..
-py -3.13 trial\try_revolution.py
-```
-
-To bring only the fixed launcher into an existing detached worktree, without discarding a locally repaired package-lock or changing the worktree branch:
+**先返回原来正在运行启动器的 PowerShell，按 Enter 停止旧的 3 个/4 个服务。** 然后执行：
 
 ```powershell
 cd D:\moodle\CityNexus-Revolution-Trial
 git fetch origin
-git restore --source origin/trial/revolution-first-look-20261014 -- trial/try_revolution.py
+git restore --source origin/trial/revolution-first-look-20261014 -- trial/try_revolution.py frontend/src/main.tsx frontend/src/trial/RevolutionFirstLook.tsx frontend/src/trial/RevolutionFirstLook.css
 py -3.13 trial\try_revolution.py
 ```
 
-The pip upgrade notice is unrelated to the npm EUSAGE problem.
+这条命令仅更新本次四个功能文件，不覆盖你已经通过 `npm install` 修好的 `frontend/package-lock.json`，也不动 Qoder/Commander、融合分支或现有真实行程数据库。
 
-## First-time hands-on user journey (recommended)
+启动器会让你在 **本机终端** 输入联系邮箱，以便 Nominatim 合规识别请求。不要把联系方式发给 ChatGPT；本地填入即可。之后浏览器会打开：
 
-1. Open the URL above. The app should show an onboarding wizard if this origin has no saved Journey. Create a **new Journey** for **Shanghai / 上海**, choose a future date range and reasonable budget. The launcher creates signed traveler identity through the **real product wizard**, not a console-injected token.
-2. If that city has no native catalogue places, the shell enters **first-place discovery** (`BootstrapDiscoveryPanel`). This is intentional. **Do not select or start a formal PlanVersion yet:** Pocket Walk is deliberately DRAFT-only.
-3. Choose the **manual/public city center** source. Search `Shanghai` after reading its distinct city-search consent. The local test provider returns `Shanghai, China (CONTROLLED TEST RESPONSE)`.
-4. Paste the safe test public map-center URL `https://www.openstreetmap.org/#map=13/31.2304/121.4737`; apply/confirm the map center and city label. This URL encodes a PUBLIC map position, not a private home/GPS reading.
-5. Choose **Art and history** and give its separate provider consent. Press **Search public places** once. The local emulator should return at least two `SAMPLE ONLY - Revolution ...` named records with `TEST_PROVIDER` grade. Opening/price/ETA should remain UNKNOWN. If none appear, see logs; do not invent actual OSM identity.
-6. Pick two of the current results as first and second stop, set order/budget if offered, confirm the private save. Your **Pocket Walk** card should appear.
-7. Use **GO MODE**: start -> optionally ask for destination navigation with its **separate consent** -> return -> **self-report first stop** -> head to second -> pause/resume -> self-report done -> reload to see persisted state. A map launch is NOT physical arrival proof.
-8. The ordinary `/v8` shell's **Live Journey / Recovery** routes are also worth inspecting once you have an ACTIVE Journey, but AI is deliberately OFF here. Do not mistake a truthful `EXTERNAL_AGENT_BLOCKED`/unavailable state for an autonomous AI success.
+`http://127.0.0.1:14173/revolution`
 
-**Product limitation:** This is based on previously reported automated E2E paths, not a live hands-on validation of the new launcher on your Windows machine. If the normal wizard cannot create a Shanghai Journey or the discovery panel remains inaccessible, that is a genuine first-user blocker. Capture the exact screen and logs; do not solve it by faking browser sessionStorage without explicit disclosure. Codex should fix the user entry on this trial branch first.
-
-## Real Android phone without public deployment
-
-An Android phone with Chrome, USB debugging and Android SDK platform-tools can use the SAME LOCAL PREVIEW via ADB reverse (no Cloudflare tunnel or public credentials required). Keep the trial launcher running on the PC:
+若不想联网，只想看虚构交互，则明确改用：
 
 ```powershell
-adb devices
+py -3.13 trial\try_revolution.py --sample
+```
+
+建议先在浏览器新的隐身窗口使用新的 `/revolution` URL，避免旧 `/v8` 路由和已缓存旧 Service Worker 干扰。
+
+## 真实“连城”探索流程
+
+1. Revolution 首页输入 **连城**，点击 **开始真实探索**。这只在本地后端创建你的个人草稿，**不会向外部地图服务提交地名**。
+2. 在“Discover your first public place”面板里选择 `Choose public area on map`，在独立授权复选框里同意请求一次 Nominatim 查询。可以搜索 `连城县 福建 龙岩` 或 `Liancheng County, Longyan, Fujian, China`。城市搜索只会给地图一个公开定位候选，不能代表这个地方已经完成 CityNexus 的官方城市身份归档。
+3. 选返回的城市候选后，在公开地图上选择明确地区或者贴 **https://www.openstreetmap.org/#map=12/<纬度>/<经度>** 形态的公开地图位置链接。坐标来源由你亲自确认，不能当作 GPS 或家庭地址。正常网页提供选点、手动坐标与 OSM 链接选项。
+4. 选 `Art and history`、`Quiet green walk`、`Coffee and a short stroll` 等类别，确认 Overpass 数据服务的第二次独立授权，再查询公开地点。
+5. 如果 LIVE_PROVIDER 返回了两个以上真实公开地点，可选第一站和第二站，建立成员私有 Pocket Walk，进入 GO MODE；导航到外部地图前再次单独确认。路线开始不代表你已经走过，完成进度是你自己点击报告。
+6. 重开网页应在当前浏览器签名会话有效期间恢复私人 Pocket Walk/GO。如果真正外部服务超时、没有地点、或服务临时不可用，应看到来源和失败状态；不能把样本伪装成 LIVE 让它变绿。
+
+### 对真实 AI 的诚实预期
+
+此版本默认禁用外部 AI，专门验证“真实用户 -> 真实公开地图 -> 私人两站探索/GO”。旧主产品有 Live Recovery / Journey Operator 的 UI，但它们依赖另一条正式 ACTIVE Journey 和代理服务配置。**仍需要 Codex 的真实 API 配置、端到端接入和本机验收，才能声称可供普通用户连续体验自主 Agent。** 这不是已完成的部分。
+
+## Android 手机
+
+PC 的启动器要一直运行；Android USB 调试并安装 ADB 后：
+
+```powershell
 adb reverse tcp:14173 tcp:14173
 ```
 
-On the Android phone open **http://localhost:14173/v8/hub** in Chrome. The browser sees its own localhost as a potentially trustworthy origin. The phone uses the Vite proxy for backend APIs; the backend remains on the PC localhost. The localhost fixture stays TEST_PROVIDER. This is a suggested physical-device route, not a verified phone run.
+手机 Chrome 访问 `http://localhost:14173/revolution`，仍使用 PC 的同一独立 API 和真实公网地图服务。真实 provider 是否可达取决于你电脑的网络。iPhone 需要独立可信的 HTTPS origin。
 
-For iPhone or a non-USB full PWA trial, ask Codex to set up a **separate access-controlled HTTPS staging origin** that proxies the exact same-origin frontend and API, with no production database or leaked credentials. Do not publish port 18201 or both test provider ports. Never put private traveler tokens into links or chat.
+## 诊断与安全
 
-## Quick health check / troubleshooting
+- `http://127.0.0.1:14173/api/v1/health` 应返回 200。
+- 新入口 URL 是 `/revolution` 而**不是** `/v8/hub`。
+- 如果只有旧页面，确认代码已更新、启动脚本输出的新地址正确、浏览器缓存/SW 已清除（推荐隐身窗口）。
+- 日志在 `trial/.runtime/backend.err.log` 和 `frontend.err.log`。
+- 外部地图地理标签、开放时间、价格、交通 ETA 不具有无法证明的硬保证；未知必须显示未知。
+- 保持 localhost 服务，不要直接开放数据库、backend 端口、fixture 端口到公网。
+- 当前变更只经过 GitHub 源码核验，没有在你的 Windows 设备上运行或者在你的手机上确认过完整互动；首次体验中遇到的错误要按实际错误修复，不造假的“全部通过”。
 
-- Frontend via proxy: `http://127.0.0.1:14173/api/v1/health` should return HTTP 200 with JSON.
-- Direct backend: `http://127.0.0.1:18201/api/v1/health` should answer.
-- Test city provider: `http://127.0.0.1:18202/status` says `TEST_PROVIDER`.
-- Test Overpass provider: `http://127.0.0.1:18203/status` says `TEST_PROVIDER`.
-- Port already in use: stop conflicting process, do not borrow an existing Qoder backend. The trial refuses to reuse any of its four ports.
-- Dependencies fail to install: inspect terminal output, or have Codex run setup in its known Python 3.13 worktree.
-- Backend/frontend fails to start: inspect `trial/.runtime/backend.err.log`, `frontend.err.log`, `fixtures.err.log`.
-- Existing Journey reopens incorrectly after `--fresh`: new Chrome profile/site storage, since `localStorage` may hold an old Journey id. Do not reset a genuine production Journey.
-- Some map tiles and link previews may require internet even though this **controlled discovery service** does not query real public providers.
+## 完成标准
 
-## What to tell Codex, only if first launch fails
-
-"Check `trial/revolution-first-look-20261014`, run `py -3.13 trial/try_revolution.py` on Windows, visit the actual V8 onboarding UI as a human without injecting auth manually, complete a fresh Shanghai DRAFT -> controlled TEST_PROVIDER -> two-stop Pocket Walk -> R108 GO/refresh, fix ONLY the concrete first-user blockers on this trial branch, and give me the actual usable URL/device steps and screenshots. No new R110 work and no fusion or broad verifier campaign."
-
-### Strict evidence language
-`RUNBOOK/LAUNCHER PREPARED` does not equal `LOCAL_RUN_PASS`. `LOCAL_RUN_PASS` does not equal `REAL_PHONE_PASS`. `TEST_PROVIDER` does not equal `LIVE_PROVIDER`. `USER_REPORTED_PROGRESS` does not equal `PHYSICAL_ARRIVAL_PROVEN`.
+不是“通过几百个 verifier”。是你本人打开 `/revolution`，无需理解 canonical ID 或配置数据库，输入连城，主动授权真实地理位置搜索，在城市里找到两个 sourceful 地点，保存个人 Pocket Walk，打开 GO 模式，并体验刷新恢复。若外部 provider 真的不可用，必须明确报告失败，而非替换成假成功。
