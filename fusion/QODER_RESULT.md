@@ -88,6 +88,7 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
    移植源树 `eeb8b8d2fd` 里同样存在，两边全量都错 ⇒ 早于本轮移植；要修的是布景状态，不是这两片能力。
 10. **r87 那枚翻脸的因也定位了，同样不在本尖修**：一次 discovery 写入的多枚候选共享同一个 `captured_at`，
     而返回列表按 `captured_at, id` 排序，`id` 是 `str(uuid4())` ⇒ 次序由随机数决定；测试又是
-    `unknown, grounded = candidates` 按位置解包，于是接近半概率红（实测基线 6 趟 3 红、本尖 6 趟 1 红，
-    钉死 `PYTHONHASHSEED` 锁不住）。要修的是断言形态（按 `selection_state` 取，不按位置），
+    `unknown, grounded = candidates` 按位置解包，于是接近半概率红。单跑 6 趟重复，**这一趟的分布**是基线 3 红、
+    本尖 1 红（命令本身不确定，重跑数字会变，所以它只用来证明「会翻」，不用来证明比例；
+    钉死 `PYTHONHASHSEED` 锁不住，同一种子先绿后红）。要修的是断言形态（按 `selection_state` 取，不按位置），
     归属 r87 那条车道，我不顺手改别人的测试。
