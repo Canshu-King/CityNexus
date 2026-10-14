@@ -116,7 +116,7 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 | 序 | 切片 | 为什么先 | 状态 |
 |---|---|---|---|
 | 1 | **Collections 收藏 + Check-in 打卡/足迹** | 融合侧 0 命中、纯加法（3 模型 + 20 schema + 9 service + 37 路由），一次恢复两条 Tab；但必须做鉴权升级与 `schema.sql` 建表 | **已落地**：后端 + 手契约 + 表 + 前端 + 守门测试，行为数见 §9 |
-| 2 | POI import 导入地点 | `poi_import.py` 是零内部依赖的叶子模块，前端 `features/poiimport/` 4 文件；入口在 discover（与 1 共用唯一入口） | 待 1 |
+| 2 | POI import 导入地点 | `poi_import.py` 是零内部依赖的叶子模块，前端 `features/poiimport/` 4 文件；入口在 discover（与 1 共用唯一入口） | **已落地**（2026-10-15 00:06，见 §11）。**更正这行的「入口在 discover」**：源树那个入口是 discover 面板上的 `onOpenPreparePlaces` 触发腿，本片没搬（还要改另一片面板），融合树上这扇门的来路只有抽屉/URL |
 | 3 | Calendar .ics 导出 + abort | `calendar_export.py` 同样零依赖叶子；`abort` 只 1 路由 | 待 |
 | 4 | 成员角色三件套（role-limits / self-exit / role） | 动权限，需与融合 `member_has_capability` 对齐，风险高、价值中 | 待 |
 | 5 | `demo/scene/ensure` | **HOLD**：这是布景/维护工具，不是产品能力；且需 demo token（本机空库实测 **403**）。按 charter `distinguish product additions from evidence-only` 不进产品 | 判定为不移植 |
@@ -126,14 +126,23 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 
 - ~~融合基线全量套件红面**前值**正在跑~~ ⇒ **已取到**（22:31，同一枚 `CityNexus/.venv` 解释器、各自新库、同机）：
   基线 `594f9a4e75` **272 failed / 1901 passed / 7 errors / 510.23s**，import 尖 **156 / 2055 / 7 / 415.30s**。
-  两枚数**不能直接比大小**（已用同根单跑证明红面主要是测试互踩：`test_solver_runtime_gate.py` 整套红 15、单跑 20 全绿），
-  可比的只有 `FAILED` 名集合的差：**1 枚**，而那枚在两棵树单跑都红 ⇒ 本轮移植未引入新失败。详见 `QODER_RESULT.md` §1。
+  两枚数**不能直接比大小**（已用同根单跑证明红面主要是测试互踩：`test_solver_runtime_gate.py` 整套红 15、单跑 20 全绿）。
+  **本条原先写的「可比的是名集合差：1 枚，而那枚两棵树单跑都红」已经被实测推翻两次并在此更正**：
+  那 1 枚（r87）单跑会翻面（基线 6 趟 3 红 3 绿），而**同一枚尖**跑两趟时红名集合自己就动了 2 枚
+  （`SAME_TIP_SAMPLES_FLIPPED 2`）。所以尺换成两趟稳定差集：`RED_ONLY_IN_SLICE2_STABLE_IN_BOTH_SAMPLES 0`
+  ⇒ 可说的仍是「移植没有引入新的失败」，但依据是「两趟都没有稳定多出来的红名」，不是任何一枚单趟读数。详见 `QODER_RESULT.md` §1。
 - 融合树的 `vite build` / 真机 PWA 在 fusion 上还没跑过（磁盘 4585 MB、node_modules 799 MB，目前靠 junction 只读借用，未验证可写场景）。
-- parity-A 的 `LIVE_IN_UI` 是**静态**四层证明（路由表∧注册表∧词典∧testid 落在 render）。
-  其中收藏与打卡/足迹两条已由 §9 的界面守门**在真数据上点开并写通过**（`when` 门为真、`collect-entry` 在非空 plan 上可用）；
-  其余五条（POI 导入、`.ics`、长图、abort、成员角色）仍是静态层，没开页没点按钮。
+- parity-A 的 `LIVE_IN_UI` 是**静态**四层证明（路由表∧注册表词典∧testid 落在 render）。
+  其中收藏、打卡/足迹两条已由 §9 的界面守门**在真数据上点开并写通过**，导入地点一条已由 §11 的活口点开并写通过
+  （`when` 门为真、`collect-entry` 在非空 plan 上可用）；
+  其余四条（`.ics` 导出、行程长图 poster、abort、成员角色）仍是静态层，没开页没点按钮。
 - precache 8 条名单我无法复现（`v10-sw.js` 是构建产物，命令禁 build），只引主人今日实测与 `vite.config.ts:52-56` 自记。
-- `catalog_hydration_operations.py` 两侧是否改同一函数没读完 ⇒ 导入地点的合并冲突强度是未知项。
+- ~~`catalog_hydration_operations.py` 两侧是否改同一函数没读完 ⇒ 导入地点的合并冲突强度是未知项。~~
+  ⇒ **本片已把它打掉一半**：该文件在两棵树上都存在，而整条分支的 `backend/app` 面只有 5 枚文件、**全是纯插入**
+  （`git diff --stat 594f9a4e75..HEAD -- backend/app` ⇒ `db/models.py +138`、`main.py +1206`、`poi_import.py +244`、`schemas.py +245`、`services.py +128`，`1961 insertions(+), 0 deletions(-)`），
+  里面**没有** `catalog_hydration_operations.py`。切片 2 自己那一份是 `main.py +251 / −0`、`schemas.py +67 / −0` 与两枚新文件。
+  ⇒ 与 codex 那条车道合并时的冲突面只剩 `main.py` 里的插入点本身。
+  该文件与导入是否共享函数，仍属未读，但已不是本片的未知项。
 
 ## 9. 切片1 前端落地（2026-10-14 21:46，import 尖 `85b48a27d7`）
 
@@ -175,3 +184,24 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 
 三条量具教训（都红在我这边，不对产品负责的部分见 `SLICE1_UI_PORT_SEAM.md` §5）：PNG 摘要必须互异、
 `filter({ has: [data-state="fresh"] })` 是自我作废的定位器、spec 不在项目类型闸里（补了一行 `tsc` 并做了反向对照）。
+
+## 11. 切片2 落地：从文本导入地点（2026-10-15 00:30，尖 `9a3b7ff0fb`，本片共 11 枚提交已入库）
+
+细节与接缝推理在 `qoder_import/SLICE2_POI_IMPORT_SEAM.md`，数值在 `QODER_RESULT.md` §6。这里只记对**本文件口径**有影响的部分：
+
+| 尺 | 数 | 复跑 |
+|---|---|---|
+| 后端 | `poi_import.py` 244 行纯函数 + 两扇门（`main.py:27714` parse / `:27795` add）+ 6 枚契约（`schemas.py:1690` 起）；`main.py +251/−0`、`schemas.py +67/−0` ⇒ **纯插入** | `pytest -q tests/test_qoder_ord0437_poi_import.py` ⇒ **9 passed / RC=0**（本趟 2.63s；耗时每趟会变，计数不会） |
+| 前端 | 面板 **837** 行 + 私有词表 426 行 + 候选卡 131 行 + css 87 行；其中**三枚逐字相同**（`diff` 0 行），面板只有 `travelerId` 那一处改动 | `npx tsc -p tsconfig.check.json --noEmit` 等三枚 **各 0 错误行** |
+| app 词典 | **9 枚 `poiImport.card*` + 1 枚 `nav.import`**（两语各 10 行），分 4 枚「一杖最多三枚键」的词典枝提交。源树另有 4 枚（`favoriteNotWired`/`newJourney`/`newJourneyNotWired`/`readBackError`）**在源树自己没有读者**（实测 grep 命中 0）⇒ 不搬 | `_slice2_dict_closure_r2.py` ⇒ `WANTED_KEYS 9 / MISSING_KEY_COUNT 0 / PRESENT_KEYS 822`；玻璃上实测 **7 枚**（`ARM_FILE_CARD_KEYS_PROVEN_ON_GLASS 7`、`…_DOOR_ONLY 2`） |
+| 依赖闭包 | 13 枚节点，融合树缺文件 **0**，与源树不同 **7**（都是本树已有的共享件：collections 两件、`LocaleContext`、`errorReceipt`、`plural`、`rejectionFacts`、面板自身） | `_slice2_closure_r1.py` |
+| 活口 | 权威栈 **7 passed / 28.1s**（`slice2r5`，存档那趟），另两趟独立新库 `slice2r2` 7 passed / 32.1s、`slice2r3` 7 passed / 28.3s；红面留在名单里：`slice2r1` 2 failed / 5 passed、`slice2r4` 1 failed / 6 passed。走查从 7 屏变 **8 屏 / 8 枚互异摘要** | `bash _run_e2e_slice2_r1.sh <RUN_ID>` |
+| 回归 | 同一尖跑**两趟**：`SAME_TIP_SAMPLES_FLIPPED 2`、`RED_ONLY_IN_SLICE2_STABLE_IN_BOTH_SAMPLES 0`（单趟那枚 `RED_ONLY_IN_SLICE2 1` 在第二趟翻回绿，另有一枚绿翻红）；47 枚自有测试在三趟整套里 0 红。r44 那枚固定演示行程上的 `AgentRun` 计数，两棵树单跑各 **3 passed** | `python _slice2_failed_nameset_r1.py`（自带 reader 自检，且现在读两枚样本） |
+| 落地面 | `git merge-base --is-ancestor 594f9a4e75 HEAD` ⇒ **YES**（不是入账工 12:53 通播里那种「不相交」）；codex 车道枝超基线 **0** 枚；远端三枚 fusion 尖现读全部 `594f9a4e75` ⇒ **没推** | `_slice2_landed_r1.py` 的 `BASELINE_IS_ANCESTOR_OF_HEAD` / `CODEX_LANE_COMMITS_OVER_BASELINE` / `REMOTE_FUSION_TIPS_LIVE_LINES 3` |
+| 产品代码面 | **27 文件 / +8086 / −32**（pathspec `backend/app backend/tests frontend/src`，不含 `frontend/e2e`）——**必须在提交之后取**；上一版在未跟踪状态取到 21/+6092，少算 6 枚新文件 | `git diff --stat 594f9a4e75 -- backend/app backend/tests frontend/src` |
+
+三条**必须带走**的口径结论：
+
+1. **`GET /api/v1/places` 不是导入用的那份目录。** 读门带 `provider_key.notin_(_SERVER_OWNED_PLACE_PROVIDERS)`（`main.py:16206`，元组 `:17901`），解析门只排结构类目（`main.py:27749`，注释在 `:27742` 自认这是故意的）。实测种子城 `CN-TIANJIN` 的 9 枚 `Place` 全带 `citynexus-v9-domain` ⇒ 读门对这座城 **0 行**。谁要写导入相关的测试，布景词汇不能从那扇读门取。
+2. **`travelerId` 这条 prop 在本树没有门可用**，删它连带删掉一枚空态分支（见 `SLICE2_POI_IMPORT_SEAM.md` §3）。这是切片 1 那三处改动的第四条同款后果。
+3. **`MISSING_EXPORT_COUNT 1`（`dictionaryText`）不是破口**：要它的是**源树**的 `errorReceipt.ts:20`，本树那枚文件没有任何 import，本树词典也不导出它。它记的是「源树那枚文件不能整枚盖过来」，切片 3/4 会用到。
