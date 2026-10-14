@@ -217,6 +217,7 @@ export function RevolutionQuickExplore({
   agentConfigured?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
 }) {
+  const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
   const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
@@ -709,7 +710,11 @@ export function RevolutionQuickExplore({
               {busy ? "查询中…" : "查找位置 →"}
             </button>
           </div>
-          <p className="rev-quick-disclosure">点「查找位置」才会把这次输入的地名发送给公开 Nominatim 地图服务。不会读取手机 GPS。</p>
+          <p className="rev-quick-disclosure">
+            {sampleProviderMode
+              ? "点「查找位置」时只把地名发送给本机受控测试服务（TEST_PROVIDER），不会访问公开 Nominatim。不会读取手机 GPS。"
+              : "点「查找位置」才会把这次输入的地名发送给公开 Nominatim 地图服务。不会读取手机 GPS。"}
+          </p>
           {cityResults.length > 0 && (
             <div className="rev-quick-results" data-testid="rev-quick-city-results">
               <h3>是这些地方吗？</h3>
@@ -826,7 +831,9 @@ export function RevolutionQuickExplore({
             {centerBasis === "EXPLICIT_GEOCODER_APPROX"
               ? "采用你刚才明确选定的公开县城/城市近似中心，查找半径约 2.5 公里。若不合适可返回改选，绝不是你的精确位置。"
               : "你已选择公开地图位置。"}
-            点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别；
+            {sampleProviderMode
+              ? "点击下面的搜索按钮时，只向本机受控测试地点服务（TEST_PROVIDER）发送已选公开区域和类别。"
+              : "点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别。"}
             不发送 GPS、身份令牌或私人行程。
           </p>
           {readinessStatus !== "ready" && (
@@ -944,10 +951,9 @@ export function RevolutionQuickExplore({
 
       <details className="rev-quick-internals">
         <summary>技术信息（不影响正常使用）</summary>
-        <p>城市结果仅用于移动公开地图视角，必须由用户在地图上点选或粘贴明确的 OSM 位置链接。</p>
+        <p>城市结果提供公开地区的大致中心。点选结果即可继续；地图和 OSM 链接都是可选项。</p>
         <p>数据状态：{discovery?.status ?? "尚未搜索"} · {sourceKind ?? "来源未确定"}</p>
-        <p>AI 模型可在另一个正式 Journey Operator 流程中使用。这里不会把普通地点搜索说成 Agent 自主推理。</p>
-        <p>当前 Journey: {journeyId}</p>
+        <p>普通地点搜索不等于 Agent 自主推理。私人路线和进度由当前签名会话从服务器读取。</p>
       </details>
     </section>
   );
