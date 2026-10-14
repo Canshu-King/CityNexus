@@ -1811,8 +1811,19 @@ function App() {
   );
 }
 
+/* A copied Markdown link may include one or two literal '*' at its end.
+   Route users back into Revolution rather than silently showing the unrelated V8
+   "New Journey" wizard. Keep the match narrow so existing V8 routes are intact. */
+function normalizeRevolutionTrialUrl(): void {
+  const path = window.location.pathname;
+  if (!/^\/revolution(?:\*{1,2}|(?:%2A){1,2})\/?$/i.test(path)) return;
+  const { search, hash } = window.location;
+  window.history.replaceState(window.history.state, "", "/revolution" + search + hash);
+}
+
 /* Once per document, before anything mounts: the reference has to exist by the time the shell's boot
    chooses which journey to read, and a render-phase write would re-run on every re-render. */
+normalizeRevolutionTrialUrl();
 adoptJourneyReferenceFromUrl();
 
 createRoot(document.getElementById("root")!).render(
