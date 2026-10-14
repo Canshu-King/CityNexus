@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
-import { RevolutionGuide } from "./RevolutionGuide";
+import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { cityNexusApi, type AgentRuntimeStatus } from "../api/citynexus";
@@ -11,6 +11,7 @@ import {
 } from "../lib/travelerSession";
 import "./RevolutionFirstLook.css";
 import "./RevolutionUsability.css";
+import "./RevolutionQuickExplore.css";
 
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 
@@ -73,6 +74,7 @@ export function RevolutionFirstLook() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const [agentRuntime, setAgentRuntime] = useState<AgentRuntimeStatus | null>(null);
   const [agentCheckError, setAgentCheckError] = useState<string | null>(null);
   const sample = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
@@ -240,7 +242,7 @@ export function RevolutionFirstLook() {
                 <span className="rev-firstlook-eyebrow">EXPLORE · DRAFT JOURNEY</span>
                 <h1>{journey.cityName}，从这里开始。</h1>
                 <p>
-                  先选择一个地方，再找好玩的地点。其余步骤我会在下面告诉你。
+                  旅行草稿已经建好了。直接找地点就行，不需要研究经纬度和计划版本。
                 </p>
               </div>
               <button type="button" onClick={switchCity} className="rev-firstlook-reset">
@@ -266,19 +268,29 @@ export function RevolutionFirstLook() {
             )}
             {journey.status === "DRAFT" ? (
               <section className="rev-firstlook-real-ui" aria-label="Revolution 真实城市探索与 GO MODE">
-                <RevolutionGuide cityName={journey.cityName} />
-                <details className="rev-discovery-details">
-                  <summary>展开探索操作</summary>
-                <BootstrapDiscoveryPanel
+                <RevolutionQuickExplore
                   key={journey.id}
                   journeyId={journey.id}
-                  cityCode={journey.cityCode}
                   cityName={journey.cityName}
-                  onCompleted={async (placeId) => {
-                    setCandidateForJourney(placeId);
-                    setNotice("公开地点已按真实后端选择。你可以继续在草稿里体验私人 GO MODE，或确认未知费用进入正式 Journey。");
-                  }}
                 />
+                <details
+                  className="rev-discovery-details"
+                  open={advancedOpen}
+                  onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
+                >
+                  <summary>更多功能：手动地图、路线分享与专业设置（可选）</summary>
+                  {advancedOpen && (
+                    <BootstrapDiscoveryPanel
+                      key={journey.id + "-advanced"}
+                      journeyId={journey.id}
+                      cityCode={journey.cityCode}
+                      cityName={journey.cityName}
+                      onCompleted={async (placeId) => {
+                        setCandidateForJourney(placeId);
+                        setNotice("已从高级界面选择地点。可以确认进入正式 Journey。");
+                      }}
+                    />
+                  )}
                 </details>
               </section>
             ) : (
