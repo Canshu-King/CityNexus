@@ -504,16 +504,22 @@ export function RevolutionQuickExplore({
                   className="rev-quick-city-option"
                   key={item.result_id}
                   onClick={() => {
+                    // User chooses the geocoder's APPROXIMATE public area.
+                    // This does NOT assert map tap, GPS, or physical arrival.
+                    // Overpass is still only called on next explicit button.
                     setCityFocus({ latitude: item.latitude, longitude: item.longitude });
                     setCityFocusLabel(item.display_name || item.name);
                     setSelectedPin(null);
                     setTilesEnabled(false);
-                    setAlert({ type: "neutral", text: "已经选中这一带。可以直接从公开中心附近找，也可以调整地图位置；无需等地图瓦片加载。" });
+                    useCenter({
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                    }, "EXPLICIT_GEOCODER_APPROX");
                   }}
                 >
                   <strong>{item.display_name || item.name}</strong>
                   <small>{item.provider_provenance === "TEST_PROVIDER" ? "受控测试来源" : "公开地名搜索结果"} · 中心位置仅供参考</small>
-                  <span>选这个地区 →</span>
+                  <span>就从这个公开地区中心附近找（约2.5公里） →</span>
                 </button>
               ))}
             </div>
