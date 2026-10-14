@@ -153,6 +153,16 @@ function errorDiagnostics(phase: ExplorePhase, error: unknown): ErrorDiagnostics
 
 function messageForError(phase: ExplorePhase, error: unknown): string {
   if (phase === "请教 AI") {
+    if (error instanceof CityNexusApiError) {
+      if (error.status === 401) return "登录会话已过期，AI 引导没有完成；你仍可跳过 AI，继续手动探索。";
+      if (error.status === 403) return "当前会话没有使用 AI 引导的权限；你仍可跳过 AI，继续手动探索。";
+      if (error.status === 404) return "AI 引导接口当前不可用；你可以跳过 AI，继续手动探索。";
+      if (error.status === 422) return "AI 引导没有接受这次输入；可以换一种说法，也可以跳过 AI 手动探索。";
+      if (error.status === 429) return "AI 引导暂时受到请求限制；稍后再试或跳过 AI，继续手动探索。";
+      if (error.status >= 500) return "AI 服务刚才没有响应；没有自动重试或额外模型调用，你可以跳过 AI 手动探索。";
+      return "AI 引导没有完成（HTTP " + error.status + "）；你仍可跳过 AI，继续手动探索。";
+    }
+    if (isReadDeadlineMissed(error)) return "等待 AI 引导超时，没有自动重试；你可以跳过 AI，继续手动探索。";
     return "AI 建议这一步没有完成；没有自动重试或额外模型调用。你仍可跳过 AI，继续手动选择地区和地点。";
   }
   if (error instanceof CityNexusApiError) {
@@ -386,7 +396,10 @@ export function RevolutionQuickExplore({
       setAlert(verified && matched
         ? { type: "good", text: "AI 已根据你说的话建议了一个探索方向。地点仍要从真实公开地图查找。" }
         : { type: "neutral", text: "模型这次没有返回可验证的工具建议。你仍然可以手动选择地区和兴趣。" });
-    }, { label: "继续手动探索", action: () => setAlert({ type: "neutral", text: "AI 建议未完成；可以直接查找公开地名并手动挑选两处地点。" }) });
+    }, () => ({
+      label: "继续手动探索",
+      action: () => setAlert({ type: "neutral", text: "AI 建议未完成；可以直接查找公开地名并手动挑选两处地点。" }),
+    }));
   };
 
   const cityLookup = () => {
@@ -490,6 +503,36 @@ export function RevolutionQuickExplore({
       setFirst(null);
       setSecond(null);
       enter("results");
+      if (response.status === "PROVIDER_UNAVAILABLE") {
+        setAlert({
+          type: "error",
+          text: "公开地点服务刚才没有响应。附近是否有地点尚未确认，这次没有保存路线；你可以稍后手动重试。",
+          recovery: { label: "重新搜索附近地点", action: () => discover() },
+        });
+        return;
+      }
+      if (response.status === "PROVIDER_DISABLED") {
+        setAlert({
+          type: "error",
+          text: "当前试玩环境没有启用公开地点搜索，没有发出地点查询，也没有保存地点。",
+          recovery: {
+            label: "重新检查地图服务",
+            action: () => {
+              enter("category");
+              retryReadiness();
+            },
+          },
+        });
+        return;
+      }
+      if (response.status === "RATE_LIMITED") {
+        setAlert({
+          type: "error",
+          text: "地图服务限制了这次查询。稍等后可以手动重试；本次没有保存地点。",
+          recovery: { label: "稍后重新搜索附近地点", action: () => discover() },
+        });
+        return;
+      }
       if (response.status !== "LIVE_RESULTS" || response.candidates.length === 0) {
         setAlert({ type: "neutral", text: "这次没有找到可用的公开地点。可以换类别或位置再试，不会偷偷用样本替换。" });
       } else {
@@ -875,7 +918,13 @@ export function RevolutionQuickExplore({
                 ? "地点名称和坐标来自实际公开服务。是否营业、门票和路线时间仍须自行核实。"
                 : "数据来源未能验证，不要把这些地点当作已确认事实。"}
           </p>
-          {discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
+          {discovery?.status === "PROVIDER_UNAVAILABLE" ? (
+            <p>公开地点服务没有回答，附近情况尚未确认。</p>
+          ) : discovery?.status === "PROVIDER_DISABLED" ? (
+            <p>当前试玩环境尚未启用公开地点搜索。</p>
+          ) : discovery?.status === "RATE_LIMITED" ? (
+            <p>地图服务限制了这次请求，暂时不能判断附近地点。</p>
+          ) : discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
             <p>暂时没有找到符合条件的地点。可以换个类别，或重新选一个区域再试。</p>
           ) : (
             <>

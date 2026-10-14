@@ -1596,6 +1596,12 @@ class PaymentTransaction(Base):
 
 class ProviderCall(Base):
     __tablename__ = "provider_calls"
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('SUCCESS','FAILURE','TIMEOUT','DEGRADED')",
+            name="ck_provider_calls_status",
+        ),
+    )
     id: Mapped[str] = mapped_column(String, primary_key=True)
     provider_key: Mapped[str] = mapped_column(String)
     operation: Mapped[str] = mapped_column(String)

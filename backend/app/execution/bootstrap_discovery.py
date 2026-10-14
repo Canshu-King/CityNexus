@@ -625,6 +625,16 @@ def _provider_call(
     provider_key: str = "overpass",
     operation: str = "bootstrap_city_discovery",
 ) -> None:
+    # `response.status` keeps the operation's domain outcome (for example,
+    # PROVIDER_UNAVAILABLE). The persisted ProviderCall.status is a narrower
+    # audit enum enforced by schema.sql; never write those domain outcomes into
+    # that column or a provider outage will become a database 500.
+    audit_status = {
+        "UNAVAILABLE": "FAILURE",
+        "DISABLED": "DEGRADED",
+    }.get(status, status)
+    if audit_status not in {"SUCCESS", "FAILURE", "TIMEOUT", "DEGRADED"}:
+        raise ValueError("unsupported provider-call audit status")
     session.add(
         ProviderCall(
             id=str(uuid4()),
@@ -632,7 +642,7 @@ def _provider_call(
             operation=operation,
             request_json=_json(request),
             response_json=_json(response),
-            status=status,
+            status=audit_status,
             latency_ms=None,
             created_at=created_at,
         )

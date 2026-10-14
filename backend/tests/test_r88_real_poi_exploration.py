@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
@@ -219,6 +220,11 @@ def test_r88_unknown_opening_has_consent_bound_public_map_preview(monkeypatch):
             row = session.get(RealPlaceCandidate, candidate["candidate_id"])
             assert row is not None
             row.expires_at = "2020-01-01T00:00:00+00:00"
+            evidence = json.loads(row.evidence_json or "{}")
+            for scope in evidence.get("bootstrap_scopes", []):
+                if scope.get("receipt_id") == body["receipt_id"]:
+                    scope["expires_at"] = "2020-01-01T00:00:00+00:00"
+            row.evidence_json = json.dumps(evidence)
             session.commit()
         stale = client.post(
             preview_path,
@@ -249,3 +255,68 @@ def test_r88_unknown_opening_has_consent_bound_public_map_preview(monkeypatch):
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
         object.__setattr__(settings, "real_city_enabled", previous_enabled)
         object.__setattr__(settings, "real_city_mode", previous_mode)
+
+
+def test_r88_overpass_504_is_recorded_as_failure_not_database_500(monkeypatch):
+    previous_secret = settings.traveler_auth_secret
+    previous_enabled = settings.real_city_enabled
+    previous_mode = settings.real_city_mode
+    previous_overpass_url = settings.overpass_url
+    object.__setattr__(settings, "traveler_auth_secret", TEST_SECRET)
+    object.__setattr__(settings, "real_city_enabled", True)
+    object.__setattr__(settings, "real_city_mode", "live")
+    object.__setattr__(settings, "overpass_url", "https://overpass-api.de/api")
+
+    def upstream_timeout(_self, _query, **kwargs):
+        assert kwargs["max_attempts"] == 1
+        error = RuntimeError("simulated upstream timeout")
+        error.provider_attempts = [
+            {
+                "endpoint": "https://overpass-api.de/api/interpreter",
+                "answered": False,
+                "http_status": 504,
+                "elements": 0,
+            }
+        ]
+        raise error
+
+    monkeypatch.setattr(
+        "app.execution.bootstrap_discovery._bootstrap_live_endpoint_block_reason",
+        lambda: None,
+    )
+    monkeypatch.setattr(
+        "app.execution.bootstrap_discovery.OverpassPOIProvider.search_with_evidence",
+        upstream_timeout,
+    )
+    try:
+        owner = _new_traveler("R88 provider outage owner")
+        journey = _new_journey(owner["id"])
+        journey_id = journey["id"]
+        owner_headers = {"Authorization": f"Bearer {owner['access_token']}"}
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/bootstrap-discovery",
+            headers=owner_headers,
+            json=_discovery_payload(),
+        )
+
+        assert response.status_code == 200, response.text
+        body = response.json()
+        assert body["status"] == "PROVIDER_UNAVAILABLE"
+        assert body["failure_code"] == "PROVIDER_UNAVAILABLE"
+        assert body["attempts"][0]["http_status"] == 504
+        assert body["candidates"] == []
+
+        with SessionLocal() as session:
+            calls = session.scalars(
+                select(ProviderCall).where(
+                    ProviderCall.operation == "bootstrap_city_discovery",
+                    ProviderCall.request_json.like(f"%{journey_id}%"),
+                )
+            ).all()
+            assert len(calls) == 1
+            assert calls[0].status == "FAILURE"
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+        object.__setattr__(settings, "real_city_enabled", previous_enabled)
+        object.__setattr__(settings, "real_city_mode", previous_mode)
+        object.__setattr__(settings, "overpass_url", previous_overpass_url)
