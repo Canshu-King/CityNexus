@@ -88,6 +88,7 @@ export function RevolutionQuickExplore({
   const [center, setCenter] = useState<PublicCityCenter | null>(null);
   const [category, setCategory] = useState<(typeof categories)[number]["value"]>("park/garden");
   const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
+  const [readinessStatus, setReadinessStatus] = useState<"checking" | "ready" | "blocked" | "error">("checking");
   const [discovery, setDiscovery] = useState<BootstrapDiscoveryResponse | null>(null);
   const [first, setFirst] = useState<string | null>(null);
   const [second, setSecond] = useState<string | null>(null);
@@ -138,8 +139,16 @@ export function RevolutionQuickExplore({
     }
     const valid = () => mounted.current && generation.current === generationAtStart && readTravelerBearer() === identity;
     void cityNexusApi.getBootstrapDiscoveryReadiness(journeyId)
-      .then((next) => { if (valid()) setReadiness(next); })
-      .catch(() => { if (valid()) setReadiness(null); });
+      .then((next) => {
+        if (!valid()) return;
+        setReadiness(next);
+        setReadinessStatus(next.status === "READY" ? "ready" : "blocked");
+      })
+      .catch(() => {
+        if (!valid()) return;
+        setReadiness(null);
+        setReadinessStatus("error");
+      });
     void cityNexusApi.getBootstrapShortlist(journeyId).then((state) => {
       if (!valid()) return;
       if (state.pocket_walk) {
@@ -245,6 +254,18 @@ export function RevolutionQuickExplore({
       return;
     }
     useCenter(point);
+  };
+
+  const retryReadiness = () => {
+    void run(async (stillCurrent) => {
+      const next = await cityNexusApi.getBootstrapDiscoveryReadiness(journeyId);
+      if (!stillCurrent()) return;
+      setReadiness(next);
+      setReadinessStatus(next.status === "READY" ? "ready" : "blocked");
+      setAlert(next.status === "READY"
+        ? { type: "good", text: "地图服务已准备好，可以发起一次明确授权的查询。" }
+        : { type: "error", text: "地图服务仍不可用。你可以查看服务状态，但不会虚构地点。" });
+    });
   };
 
   const discover = () => {
@@ -491,8 +512,19 @@ export function RevolutionQuickExplore({
             点下面的按钮，会向 OpenStreetMap/Overpass 发送这片公开地图中心的坐标、你选择的类别，
             以及有限范围的一次查询。不会共享 GPS、身份证明或私人行程。
           </p>
-          {readiness?.status === "BLOCKED" && (
-            <p className="rev-quick-alert error">公开地点服务当前不可用（{readiness.reason_code}）。没有向外部发起查询。</p>
+          {readinessStatus !== "ready" && (
+            <p className="rev-quick-alert neutral" role="status">
+              {readinessStatus === "checking"
+                ? "正在检查地图服务是否可用（这一步不发起公开地点查询）…"
+                : readinessStatus === "blocked"
+                  ? "公开地点服务暂时不可用，不会擅自发送请求或假装找到地点。"
+                  : "刚才无法检查地图服务。你可以重新检查，不需要重建旅程。"}
+              {readinessStatus !== "checking" && (
+                <button type="button" className="rev-quick-secondary" onClick={retryReadiness} disabled={busy}>
+                  重新检查服务
+                </button>
+              )}
+            </p>
           )}
           <div className="rev-quick-actions">
             <button
