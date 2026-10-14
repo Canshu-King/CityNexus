@@ -9,8 +9,8 @@
 | 尺 | 数 |
 |---|---|
 | 分支 | `fusion/qoder-import-20261014` |
-| 产品尖 | **`fbca9536d3`**（本文件这枚 docs 提交在它之后） |
-| 超出融合基线 `594f9a4e75` 的提交 | **20**（`git rev-list --count 594f9a4e75..HEAD`） |
+| 产品尖 | **`8f65324554`**（写本行时的 `git rev-parse --short HEAD`；本文件的 docs 提交之后它会再前进，现读用同一条命令） |
+| 超出融合基线 `594f9a4e75` 的提交 | **22**（`git rev-list --count 594f9a4e75..HEAD`） |
 | 产品代码面 diff（`backend/app backend/db frontend/src`） | **19 文件 / +3924 / −32** |
 | 远端 | **没推**。`git ls-remote` 现读三枚 fusion 尖仍是 `594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66` |
 
@@ -21,7 +21,7 @@
 | 闸 | 数 | 复跑 |
 |---|---|---|
 | 后端这两片 | **38 passed / 5.70s / RC=0**（collections 20 + checkins 18） | `pytest -q tests/test_qoder_ord0444_collections_fusion.py tests/test_qoder_ord0476_checkins_fusion.py` |
-| 界面守门 + 走查，同一条权威栈 | **6 passed / 24.0s / RC=0**（布景 1 + 四条腿 4 + 走查 1，runId `uiportr10`） | `SLICE1_UI_PORT_SEAM.md` §4–§5 |
+| 界面守门 + 走查，同一条权威栈 | **6 passed / 24.0s**（runId `uiportr10`）与 **6 passed / 23.2s**（`uiportr11`）两趟独立新库，各自 7 张截图摘要两两不同；仓库里存的证据是 `uiportr11` | `SLICE1_UI_PORT_SEAM.md` §4–§5 |
 | 类型闸 | `tsconfig.check.json`、`tsconfig.typecheck.json`、外加覆盖 spec 的那一行 `tsc` 三枚 **各 0 错误行** | `SLICE1_UI_PORT_SEAM.md` §5 |
 | 全量套件单变量 A/B | 基线 `594f9a4e75` **272 failed / 1901 passed / 7 errors / 510.23s**；本尖 **156 failed / 2055 passed / 7 errors / 415.30s** | 同一枚解释器 `CityNexus/.venv`、各自新库、`-p no:cacheprovider` |
 
@@ -29,8 +29,14 @@ A/B 的结论只认集合不认总数，因为总数在这两棵树里主要由*
 
 - `FAILED` 名集合比差：**只有 1 枚**在本尖红而基线整套不红——
   `test_r87_first_live_city_discovery.py::test_r87_live_discovery_keeps_member_receipts_private_and_blocks_ungrounded_opening`。
-  单独把这枚文件在两棵树各跑一次：**两边都红**（基线 1 failed / 本尖 1 failed）⇒ 它在整套里的翻转是执行顺序变了
-  （我这轮往字母序里插了两枚测试文件），不是移植改了行为。
+  我先前把它写成「两棵树单独跑都红，所以是执行顺序变了」——**那句是错的，已被实测推翻并在此更正**：
+  同一棵树、同一份代码、单跑、每次自己的临时库，它会翻。6 趟重复：**基线 3 红 3 绿**，**本尖 1 红 5 绿**；
+  把 `PYTHONHASHSEED` 钉成同一个值也锁不住（同一种子先绿后红，所以不是哈希序）。断言原文两边同一形状：
+  `assert 'READY_FOR_NATIVE_PLAN' == 'OPENING_UNVERIFIED'`，即那两个候选的位置换了。
+  机制读自代码：候选按 `captured_at, id` 排序，而 `id` 是随机 uuid，两枚候选时间戳一致时次序由随机数决定；
+  测试用 `unknown, grounded = candidates` 按位置解包，于是接近半概率红。
+  ⇒ 这 1 枚不是移植引入的回归，但它是**基线里一条真实的测试卫生缺陷**，我没有顺手改它（改了会盖掉那条测试所属车道对同一枚的观察）。
+  复跑：`python _r87_flake_root_r2.py`。
 - 反向对照（证明「基线那 117 枚不红」也不是我的功劳）：`test_solver_runtime_gate.py` 基线整套红 **15**，同根单独跑 **20 passed**；
   `test_v1923_final_code_gate.py` 整套红 **13**，单独跑 **13 passed**；`test_v192_shadow_trial_gate.py` 单独 **61 passed**。
   `test_v13_integrity.py` 基线整套红 22 / 本尖 14（本尖单独跑仍是 14，即这 14 枚是结构性的、两边共有）。
@@ -80,3 +86,8 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
 9. **那 7 枚 ERROR 的因已定位、不在本尖修**：fixture 对封存演示行程 `22222222-…` 调 `/demo/start`，门回
    **409 `DEMO_START_REFUSED`**（`journey must be PLANNED with a selected plan`）。该文件来自 `20bce7c843`（09-29，ORD-0415），
    移植源树 `eeb8b8d2fd` 里同样存在，两边全量都错 ⇒ 早于本轮移植；要修的是布景状态，不是这两片能力。
+10. **r87 那枚翻脸的因也定位了，同样不在本尖修**：一次 discovery 写入的多枚候选共享同一个 `captured_at`，
+    而返回列表按 `captured_at, id` 排序，`id` 是 `str(uuid4())` ⇒ 次序由随机数决定；测试又是
+    `unknown, grounded = candidates` 按位置解包，于是接近半概率红（实测基线 6 趟 3 红、本尖 6 趟 1 红，
+    钉死 `PYTHONHASHSEED` 锁不住）。要修的是断言形态（按 `selection_state` 取，不按位置），
+    归属 r87 那条车道，我不顺手改别人的测试。
