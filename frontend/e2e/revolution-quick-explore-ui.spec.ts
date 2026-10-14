@@ -172,3 +172,146 @@ test("plain Chinese first-user journey preserves separate intentional provider r
   await expect(page.getByTestId("rev-quick-walk")).toBeVisible();
   await expect(page.getByText("正前往第一站", { exact: false })).toBeVisible();
 });
+
+test("AI route 404 can be skipped without restarting the user's journey", async ({ page }) => {
+  let aiCalls = 0;
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "HERMES_COMPAT_ENDPOINT", hermes_compat_configured: true,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+    status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER",
+  }));
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/trial-ai-discovery`, async (route) => {
+    aiCalls += 1;
+    await route.fulfill({
+      status: 404,
+      contentType: "application/json",
+      body: JSON.stringify({ error: { code: "NOT_FOUND", reason_code: "TRIAL_AI_ROUTE_NOT_LOADED" } }),
+    });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-quick-consult-ai").click();
+  await expect(page.getByRole("alert")).toContainText("AI 引导接口当前不可用");
+  await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("继续手动探索");
+  expect(aiCalls).toBe(1);
+
+  await page.getByTestId("rev-quick-error-recovery").click();
+  await expect(page.getByRole("status")).toContainText("可以直接查找公开地名");
+  await expect(page.getByTestId("rev-quick-find-city")).toBeEnabled();
+  expect(aiCalls).toBe(1);
+});
+
+test("AI authentication expiry explains itself and still allows manual exploration", async ({ page }) => {
+  let aiCalls = 0;
+  let readinessCalls = 0;
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "HERMES_COMPAT_ENDPOINT", hermes_compat_configured: true,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => {
+    readinessCalls += 1;
+    return json(route, {
+      status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER",
+    });
+  });
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/trial-ai-discovery`, async (route) => {
+    aiCalls += 1;
+    await route.fulfill({
+      status: 401,
+      contentType: "application/json",
+      body: JSON.stringify({ error: { code: "UNAUTHENTICATED", reason_code: "TRAVELER_SESSION_EXPIRED" } }),
+    });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-quick-consult-ai").click();
+  await expect(page.getByRole("alert")).toContainText("登录会话已过期");
+  await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("继续手动探索");
+  expect(aiCalls).toBe(1);
+  const readinessCallsBeforeSkip = readinessCalls;
+
+  await page.getByTestId("rev-quick-error-recovery").click();
+  await expect(page.getByRole("status")).toContainText("可以直接查找公开地名");
+  await expect(page.getByTestId("rev-quick-find-city")).toBeEnabled();
+  expect(readinessCalls).toBe(readinessCallsBeforeSkip);
+  expect(aiCalls).toBe(1);
+});
+
+test("Overpass outage is distinguished from zero places and retries only on a clear click", async ({ page }) => {
+  let citySearchCalls = 0;
+  let poiSearchCalls = 0;
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "UNCONFIGURED", hermes_compat_configured: false,
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+    status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "LIVE_CAPABLE",
+    external_request_allowed: true, test_only: false,
+  }));
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/bootstrap-city-search`, async (route) => {
+    citySearchCalls += 1;
+    await json(route, {
+      journey_id: journey, status: "CITY_RESULTS", query: "连城", provider_attempts: [],
+      results: [{
+        result_id: "city-live-fixture", name: "连城县", display_name: "连城县，龙岩市，福建省，中国",
+        provider: "test", provider_provenance: "TEST_PROVIDER",
+        latitude: 25.7, longitude: 116.75, coordinate_system: "WGS84",
+        confidence: "CITY_CENTROID_UNCERTAIN", selection_state: "CAMERA_ONLY_TAP_REQUIRED",
+      }],
+    });
+  });
+  await page.route(`${root}/bootstrap-discovery`, async (route) => {
+    poiSearchCalls += 1;
+    await json(route, {
+      journey_id: journey, status: "PROVIDER_UNAVAILABLE", result_state: "UNAVAILABLE",
+      failure_code: "PROVIDER_UNAVAILABLE", provider: "overpass", provider_provenance: "UNVERIFIED",
+      source_kind: "MANUAL_PUBLIC_CENTER", receipt_id: null, expires_at: null,
+      attempts: [{ answered: false, http_status: 504 }], candidates: [],
+    });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-quick-find-city").click();
+  await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
+  expect(citySearchCalls).toBe(1);
+  await page.getByTestId("rev-quick-city-results").locator("button").first().click();
+  await page.getByTestId("rev-quick-find-places").click();
+  await expect(page.getByTestId("rev-quick-results")).toBeVisible();
+  await expect(page.getByRole("alert")).toContainText("公开地点服务刚才没有响应");
+  await expect(page.getByTestId("rev-quick-results")).toContainText("公开地点服务没有回答，附近情况尚未确认");
+  await expect(page.getByTestId("rev-quick-results")).not.toContainText("暂时没有找到符合条件的地点");
+  await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("重新搜索附近地点");
+  expect(poiSearchCalls).toBe(1);
+
+  await page.getByTestId("rev-quick-error-recovery").click();
+  await expect(page.getByRole("alert")).toContainText("公开地点服务刚才没有响应");
+  expect(poiSearchCalls).toBe(2);
+});

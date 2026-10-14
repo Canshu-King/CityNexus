@@ -2495,21 +2495,35 @@ export class CityNexusApiError extends Error {
     readonly status: number,
     readonly body: unknown,
     message: string,
+    readonly requestMethod?: string,
+    readonly requestPath?: string,
   ) {
     super(message);
   }
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const requestMethod = (init?.method ?? "GET").toUpperCase();
   const releaseInFlight = beginNonIdempotentRequest(init?.method);
   try {
     return await requestJsonInner<T>(path, init);
+  } catch (error) {
+    // Preserve the exact call site when transport/deadline errors have no HTTP response.
+    if (error instanceof Error && !(error instanceof CityNexusApiError)) {
+      try {
+        Object.assign(error, { requestMethod, requestPath: path });
+      } catch {
+        // Frozen third-party errors still retain their original classification.
+      }
+    }
+    throw error;
   } finally {
     releaseInFlight();
   }
 }
 
 async function requestJsonInner<T>(path: string, init?: RequestInit): Promise<T> {
+  const requestMethod = (init?.method ?? "GET").toUpperCase();
   const response = await fetchWithReadDeadline("/api/v1" + path, {
     ...init,
     headers: {
@@ -2539,6 +2553,8 @@ async function requestJsonInner<T>(path: string, init?: RequestInit): Promise<T>
       response.status,
       body,
       "CityNexus API " + response.status + ": " + path,
+      requestMethod,
+      path,
     );
   }
   if (parseFailed || (emptyAnswer && response.status !== 204)) {

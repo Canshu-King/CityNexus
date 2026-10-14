@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  CityNexusApiError,
   cityNexusApi,
   type BootstrapCitySearchResult,
   type BootstrapDiscoveryCandidate,
@@ -11,6 +12,9 @@ import {
 import { parsePublicMapLink } from "../features/discovery/BootstrapDiscoveryPanel";
 import { PublicCityAreaPicker, type PublicCityCenter } from "../features/discovery/PublicCityAreaPicker";
 import { readTravelerBearer, subscribeTravelerBearer } from "../lib/travelerSession";
+import { isOriginResponseUnusable } from "../lib/failureAttribution";
+import { isReadDeadlineMissed } from "../lib/readDeadline";
+import { isWriteDeadlineMissed } from "../lib/writeDeadline";
 
 /**
  * A HUMAN-SIZED entry to the exact signed R107/R108 endpoints.
@@ -41,6 +45,25 @@ const goCopy: Record<BootstrapPocketWalkGoState, string> = {
 };
 
 type AlertKind = "neutral" | "error" | "good";
+type QuickRecovery = { label: string; action: () => void };
+type QuickAlert = { type: AlertKind; text: string; recovery?: QuickRecovery };
+type ExplorePhase =
+  | "请教 AI"
+  | "查找地名"
+  | "检查地图服务"
+  | "搜索附近真实地点"
+  | "选择正式路线地点"
+  | "保存私人散步"
+  | "更新散步进度"
+  | "读取服务端路线";
+type ErrorDiagnostics = {
+  phase: ExplorePhase | "读取服务端路线";
+  classification: string;
+  method: string | null;
+  path: string | null;
+  status: number | null;
+  reasonCode: string | null;
+};
 
 function candidateSource(value: string | null): string | null {
   if (!value) return null;
@@ -58,18 +81,139 @@ function candidateSource(value: string | null): string | null {
   }
 }
 
-function messageForError(error: unknown): string {
-  // Error text can contain server internals. Keep it only in an optional
-  // developer detail, never silently substitute sample locations as LIVE.
-  if (error instanceof Error) {
-    if (/401|403|AUTH|UNAUTHORIZED/i.test(error.message)) {
-      return "登录会话可能已失效。请重新进入 Revolution，再试一次。";
-    }
-    if (/429|RATE_LIMIT/i.test(error.message)) {
-      return "公开地图服务请求太频繁。稍等一会儿再试。";
-    }
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function safeReasonCode(error: unknown): string | null {
+  if (!(error instanceof CityNexusApiError)) return null;
+  const root = asRecord(error.body);
+  const envelope = asRecord(root?.error);
+  const detail = asRecord(root?.detail);
+  const candidates = [
+    envelope?.reason_code,
+    envelope?.code,
+    root?.reason_code,
+    root?.code,
+    detail?.reason_code,
+    detail?.code,
+  ];
+  return candidates.find(
+    (value): value is string => typeof value === "string" && /^[A-Z][A-Z0-9_]{1,63}$/.test(value),
+  ) ?? null;
+}
+
+function safeRequestPath(value: unknown): string | null {
+  if (typeof value !== "string" || !value) return null;
+  let pathname = value;
+  try {
+    pathname = new URL(value, window.location.origin).pathname;
+  } catch {
+    pathname = value.split(/[?#]/, 1)[0];
   }
-  return "这一步没有完成。请检查网络后重试，已保存的行程不会因此消失。";
+  pathname = pathname.replace(/^\/api\/v1(?=\/)/, "");
+  return pathname.replace(
+    /\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?=\/|$)/gi,
+    "/:id",
+  );
+}
+
+function errorDiagnostics(phase: ExplorePhase, error: unknown): ErrorDiagnostics {
+  const metadata = error instanceof Error
+    ? error as Error & { requestMethod?: unknown; requestPath?: unknown; method?: unknown; path?: unknown; status?: unknown }
+    : null;
+  const methodValue = error instanceof CityNexusApiError
+    ? error.requestMethod
+    : metadata?.requestMethod ?? metadata?.method;
+  const pathValue = error instanceof CityNexusApiError
+    ? error.requestPath
+    : metadata?.requestPath ?? metadata?.path;
+  const statusValue = error instanceof CityNexusApiError
+    ? error.status
+    : isOriginResponseUnusable(error) ? error.status : null;
+  const method = typeof methodValue === "string" && /^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)$/i.test(methodValue)
+    ? methodValue.toUpperCase()
+    : null;
+  let classification = "页面校验未通过";
+  if (error instanceof CityNexusApiError) classification = "HTTP 应答";
+  else if (isOriginResponseUnusable(error)) classification = "HTTP 成功，但响应格式不可用";
+  else if (isReadDeadlineMissed(error) || isWriteDeadlineMissed(error)) classification = "本机等待期限已到";
+  else if (error instanceof TypeError || (error instanceof Error && error.name === "AbortError")) classification = "未收到 HTTP 应答";
+  return {
+    phase,
+    classification,
+    method,
+    path: safeRequestPath(pathValue),
+    status: typeof statusValue === "number" ? statusValue : null,
+    reasonCode: safeReasonCode(error),
+  };
+}
+
+function messageForError(phase: ExplorePhase, error: unknown): string {
+  if (phase === "请教 AI") {
+    if (error instanceof CityNexusApiError) {
+      if (error.status === 401) return "登录会话已过期，AI 引导没有完成；你仍可跳过 AI，继续手动探索。";
+      if (error.status === 403) return "当前会话没有使用 AI 引导的权限；你仍可跳过 AI，继续手动探索。";
+      if (error.status === 404) return "AI 引导接口当前不可用；你可以跳过 AI，继续手动探索。";
+      if (error.status === 422) return "AI 引导没有接受这次输入；可以换一种说法，也可以跳过 AI 手动探索。";
+      if (error.status === 429) return "AI 引导暂时受到请求限制；稍后再试或跳过 AI，继续手动探索。";
+      if (error.status >= 500) return "AI 服务刚才没有响应；没有自动重试或额外模型调用，你可以跳过 AI 手动探索。";
+      return "AI 引导没有完成（HTTP " + error.status + "）；你仍可跳过 AI，继续手动探索。";
+    }
+    if (isReadDeadlineMissed(error)) return "等待 AI 引导超时，没有自动重试；你可以跳过 AI，继续手动探索。";
+    return "AI 建议这一步没有完成；没有自动重试或额外模型调用。你仍可跳过 AI，继续手动选择地区和地点。";
+  }
+  if (error instanceof CityNexusApiError) {
+    const status = error.status;
+    if (status === 401) return phase + "需要有效的签名会话。回到 Revolution 重新进入后再试。";
+    if (status === 403) return "当前会话没有执行「" + phase + "」的权限。请回到 Revolution 重新进入这趟行程。";
+    if (status === 404) return "服务器找不到当前行程或对应资源，「" + phase + "」没有完成。回到 Revolution 重新开始。";
+    if (status === 409) return "服务器上的行程状态已经变化；「" + phase + "」没有覆盖新状态。先重新读取路线状态。";
+    if (status === 422) return "服务器拒绝了「" + phase + "」提交的数据。检查位置、类别或所选地点后再试。";
+    if (status === 429) return "服务端对「" + phase + "」进行了限流。稍等片刻，再明确点一次恢复操作。";
+    if (status >= 500) {
+      const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
+      return writes
+        ? phase + "遇到服务端故障（HTTP " + status + "）。请求结果需要先从服务器读取核对。"
+        : phase + "遇到服务端故障（HTTP " + status + "）。可以稍后再明确试一次。";
+    }
+    return "服务器拒绝了「" + phase + "」（HTTP " + status + "）。检查当前输入后再试。";
+  }
+  if (isOriginResponseUnusable(error)) {
+    return "服务器已回答 HTTP " + error.status + "，但响应内容无法用于「" + phase + "」，本页没有采用这份响应。";
+  }
+  if (isReadDeadlineMissed(error) || isWriteDeadlineMissed(error)) {
+    const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
+    return writes
+      ? "等待「" + phase + "」的答复超时，服务器可能已经处理这次请求。先读取服务器路线状态，再决定是否重试。"
+      : "等待「" + phase + "」的答复超时，没有收到 HTTP 状态。你可以明确重试这一步。";
+  }
+  if (error instanceof TypeError || (error instanceof Error && error.name === "AbortError")) {
+    const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
+    return writes
+      ? "「" + phase + "」没有收到 HTTP 答复，服务器可能已经处理请求。先读取服务器路线状态，再决定是否重试。"
+      : "「" + phase + "」没有收到 HTTP 答复。检查连接后可以明确重试这一步。";
+  }
+  return "「" + phase + "」返回的内容未通过本页校验，没有采用。先读取服务器状态或返回检查所选内容。";
+}
+
+function recoveryForError(
+  error: unknown,
+  fallback: QuickRecovery,
+  invalidInputFallback?: QuickRecovery,
+): QuickRecovery {
+  if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
+    return { label: "回到 Revolution 重新进入", action: () => window.location.assign("/revolution") };
+  }
+  if (error instanceof CityNexusApiError && error.status === 404) {
+    return { label: "回到 Revolution 重新开始", action: () => window.location.assign("/revolution") };
+  }
+  if (error instanceof CityNexusApiError && error.status === 422 && invalidInputFallback) {
+    return invalidInputFallback;
+  }
+  return fallback;
 }
 
 export function RevolutionQuickExplore({
@@ -83,6 +227,7 @@ export function RevolutionQuickExplore({
   agentConfigured?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
 }) {
+  const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
   const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
@@ -103,8 +248,8 @@ export function RevolutionQuickExplore({
   const [second, setSecond] = useState<string | null>(null);
   const [walk, setWalk] = useState<BootstrapPocketWalkResponse | null>(null);
   const [busy, setBusy] = useState(false);
-  const [alert, setAlert] = useState<{ type: AlertKind; text: string } | null>(null);
-  const [rawError, setRawError] = useState<string | null>(null);
+  const [alert, setAlert] = useState<QuickAlert | null>(null);
+  const [errorDetails, setErrorDetails] = useState<ErrorDiagnostics | null>(null);
   const generation = useRef(0);
   const currentOperation = useRef(0);
   const mounted = useRef(true);
@@ -181,11 +326,19 @@ export function RevolutionQuickExplore({
     });
   };
 
-  const run = async (task: (stillCurrent: () => boolean) => Promise<void>) => {
+  const run = async (
+    phase: ExplorePhase,
+    task: (stillCurrent: () => boolean) => Promise<void>,
+    recovery: QuickRecovery | ((error: unknown) => QuickRecovery),
+  ) => {
     if (busyRef.current) return;
     const identity = readTravelerBearer();
     if (!identity) {
-      setAlert({ type: "error", text: "没有有效登录会话，请重新进入 Revolution。" });
+      setAlert({
+        type: "error",
+        text: "没有有效登录会话，请重新进入 Revolution。",
+        recovery: { label: "回到 Revolution 重新进入", action: () => window.location.assign("/revolution") },
+      });
       return;
     }
     busyRef.current = true;
@@ -198,13 +351,17 @@ export function RevolutionQuickExplore({
       readTravelerBearer() === identity;
     setBusy(true);
     setAlert(null);
-    setRawError(null);
+    setErrorDetails(null);
     try {
       await task(stillCurrent);
     } catch (error) {
       if (stillCurrent()) {
-        setAlert({ type: "error", text: messageForError(error) });
-        setRawError(error instanceof Error ? error.message.slice(0, 350) : "UNKNOWN");
+        setAlert({
+          type: "error",
+          text: messageForError(phase, error),
+          recovery: typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery),
+        });
+        setErrorDetails(errorDiagnostics(phase, error));
       }
     } finally {
       if (currentOperation.current === runId) {
@@ -224,7 +381,7 @@ export function RevolutionQuickExplore({
       setAlert({ type: "error", text: "用一句话告诉 AI 你想玩什么（4 到 360 个字）。" });
       return;
     }
-    void run(async (stillCurrent) => {
+    void run("请教 AI", async (stillCurrent) => {
       const suggestion = await cityNexusApi.suggestTrialDiscovery(journeyId, goal);
       if (!stillCurrent()) return;
       const verified = suggestion.status === "MODEL_TOOL_SUGGESTION";
@@ -239,7 +396,10 @@ export function RevolutionQuickExplore({
       setAlert(verified && matched
         ? { type: "good", text: "AI 已根据你说的话建议了一个探索方向。地点仍要从真实公开地图查找。" }
         : { type: "neutral", text: "模型这次没有返回可验证的工具建议。你仍然可以手动选择地区和兴趣。" });
-    });
+    }, () => ({
+      label: "继续手动探索",
+      action: () => setAlert({ type: "neutral", text: "AI 建议未完成；可以直接查找公开地名并手动挑选两处地点。" }),
+    }));
   };
 
   const cityLookup = () => {
@@ -248,7 +408,7 @@ export function RevolutionQuickExplore({
       setAlert({ type: "error", text: "请输入至少两个字的城市或地区，例如「连城县」。" });
       return;
     }
-    void run(async (stillCurrent) => {
+    void run("查找地名", async (stillCurrent) => {
       // The button explicitly announces that this ONE request sends the
       // entered public city label to Nominatim. No passive or typing request.
       const response = await cityNexusApi.bootstrapCitySearch(journeyId, {
@@ -270,7 +430,11 @@ export function RevolutionQuickExplore({
       setSelectedPin(null);
       setTilesEnabled(false);
       setAlert({ type: "good", text: "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。" });
-    });
+    }, (error) => recoveryForError(
+      error,
+      { label: "再次查找地名", action: () => cityLookup() },
+      { label: "检查并编辑地名", action: () => document.getElementById("rev-quick-search")?.focus() },
+    ));
   };
 
   const useCenter = (point: { latitude: number; longitude: number }, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK") => {
@@ -298,7 +462,7 @@ export function RevolutionQuickExplore({
   };
 
   const retryReadiness = () => {
-    void run(async (stillCurrent) => {
+    void run("检查地图服务", async (stillCurrent) => {
       const next = await cityNexusApi.getBootstrapDiscoveryReadiness(journeyId);
       if (!stillCurrent()) return;
       setReadiness(next);
@@ -306,7 +470,7 @@ export function RevolutionQuickExplore({
       setAlert(next.status === "READY"
         ? { type: "good", text: "地图服务已准备好，可以发起一次明确授权的查询。" }
         : { type: "error", text: "地图服务仍不可用。你可以查看服务状态，但不会虚构地点。" });
-    });
+    }, { label: "重新检查地图服务", action: () => retryReadiness() });
   };
 
   const discover = () => {
@@ -321,7 +485,7 @@ export function RevolutionQuickExplore({
     }
     const selection = center;
     const chosenCategory = category;
-    void run(async (stillCurrent) => {
+    void run("搜索附近真实地点", async (stillCurrent) => {
       // The explicitly labelled button is the ONE-use provider consent.
       const response = await cityNexusApi.bootstrapDiscovery(journeyId, {
         query: chosenCategory,
@@ -339,6 +503,36 @@ export function RevolutionQuickExplore({
       setFirst(null);
       setSecond(null);
       enter("results");
+      if (response.status === "PROVIDER_UNAVAILABLE") {
+        setAlert({
+          type: "error",
+          text: "公开地点服务刚才没有响应。附近是否有地点尚未确认，这次没有保存路线；你可以稍后手动重试。",
+          recovery: { label: "重新搜索附近地点", action: () => discover() },
+        });
+        return;
+      }
+      if (response.status === "PROVIDER_DISABLED") {
+        setAlert({
+          type: "error",
+          text: "当前试玩环境没有启用公开地点搜索，没有发出地点查询，也没有保存地点。",
+          recovery: {
+            label: "重新检查地图服务",
+            action: () => {
+              enter("category");
+              retryReadiness();
+            },
+          },
+        });
+        return;
+      }
+      if (response.status === "RATE_LIMITED") {
+        setAlert({
+          type: "error",
+          text: "地图服务限制了这次查询。稍等后可以手动重试；本次没有保存地点。",
+          recovery: { label: "稍后重新搜索附近地点", action: () => discover() },
+        });
+        return;
+      }
       if (response.status !== "LIVE_RESULTS" || response.candidates.length === 0) {
         setAlert({ type: "neutral", text: "这次没有找到可用的公开地点。可以换类别或位置再试，不会偷偷用样本替换。" });
       } else {
@@ -347,7 +541,11 @@ export function RevolutionQuickExplore({
           text: `找到 ${response.candidates.length} 个公开地点。现在可以查看并挑选两站。`,
         });
       }
-    });
+    }, (error) => recoveryForError(
+      error,
+      { label: "再次搜索附近地点", action: () => discover() },
+      { label: "返回修改搜索条件", action: () => enter("category") },
+    ));
   };
 
   const choose = (id: string) => {
@@ -375,7 +573,7 @@ export function RevolutionQuickExplore({
       return;
     }
     const receiptId = discovery.receipt_id;
-    void run(async (stillCurrent) => {
+    void run("选择正式路线地点", async (stillCurrent) => {
       const response = await cityNexusApi.selectBootstrapCandidate(journeyId, receiptId, candidateId);
       if (!stillCurrent()) return;
       if (response.journey_id !== journeyId || !response.selected_place_id) {
@@ -383,7 +581,22 @@ export function RevolutionQuickExplore({
       }
       onFormalCandidateSelected(response.selected_place_id);
       setAlert({ type: "good", text: "地点已按服务器事实选定。现在由你确认正式计划，随后可使用真正的 Journey Operator。" });
-    });
+    }, { label: "回到 Revolution 重新读取行程", action: () => window.location.assign("/revolution") });
+  };
+
+  const refreshSavedWalk = () => {
+    void run("读取服务端路线", async (stillCurrent) => {
+      const state = await cityNexusApi.getBootstrapShortlist(journeyId);
+      if (!stillCurrent()) return;
+      if (state.pocket_walk) {
+        setWalk(state.pocket_walk);
+        enter("walk");
+        setAlert({ type: "good", text: "已从服务器重新读取路线状态；显示的是当前签名行程保存的事实。" });
+      } else {
+        setWalk(null);
+        setAlert({ type: "neutral", text: "服务器当前没有已保存的私人散步。原路线没有被本页假定为已保存；可以回到结果页再决定是否保存。" });
+      }
+    }, { label: "重新读取路线状态", action: () => refreshSavedWalk() });
   };
 
   const saveWalk = () => {
@@ -394,7 +607,7 @@ export function RevolutionQuickExplore({
     const receipt = discovery.receipt_id;
     const firstId = first;
     const secondId = second;
-    void run(async (stillCurrent) => {
+    void run("保存私人散步", async (stillCurrent) => {
       const saved = await cityNexusApi.saveBootstrapDiscoveryPocketWalk(journeyId, {
         receipt_id: receipt,
         first_candidate_id: firstId,
@@ -410,13 +623,17 @@ export function RevolutionQuickExplore({
       setWalk(saved.pocket_walk);
       enter("walk");
       setAlert({ type: "good", text: "两站路线已保存到你的私人探索草稿。刷新页面也能恢复。" });
-    });
+    }, (error) => recoveryForError(
+      error,
+      { label: "重新读取已保存路线", action: () => refreshSavedWalk() },
+      { label: "返回检查所选地点", action: () => enter("results") },
+    ));
   };
 
   const go = (action: "START" | "REPORT_FIRST_DONE" | "START_SECOND" | "REPORT_WALK_DONE" | "PAUSE" | "RESUME") => {
     if (!walk) return;
     const saved = walk;
-    void run(async (stillCurrent) => {
+    void run("更新散步进度", async (stillCurrent) => {
       const response = await cityNexusApi.transitionBootstrapPocketWalkGo(journeyId, {
         action,
         expected_revision: saved.go_progress.progress_revision,
@@ -432,7 +649,7 @@ export function RevolutionQuickExplore({
       }
       setWalk(response.pocket_walk);
       setAlert({ type: "good", text: "状态已保存。到达与完成由你报告，不是手机 GPS 证明。" });
-    });
+    }, { label: "重新读取路线进度", action: () => refreshSavedWalk() });
   };
 
   const stageNumber = { area: 1, category: 2, results: 3, walk: 4 }[stage];
@@ -461,8 +678,29 @@ export function RevolutionQuickExplore({
         </div>
       </header>
 
-      {alert && <p className={`rev-quick-alert ${alert.type}`} role="status">{alert.text}</p>}
-      {rawError && <details className="rev-quick-internals"><summary>查看这次错误的技术详情</summary><code>{rawError}</code></details>}
+      {alert && (
+        <p className={"rev-quick-alert " + alert.type} role={alert.type === "error" ? "alert" : "status"}>
+          {alert.text}
+          {alert.recovery && (
+            <>
+              <br />
+              <button type="button" className="rev-quick-secondary" onClick={alert.recovery.action} data-testid="rev-quick-error-recovery">
+                {alert.recovery.label}
+              </button>
+            </>
+          )}
+        </p>
+      )}
+      {alert?.type === "error" && errorDetails && (
+        <details className="rev-quick-internals" data-testid="rev-quick-error-details">
+          <summary>技术详情（已隐藏原始响应和行程标识）</summary>
+          <p>操作阶段：{errorDetails.phase}</p>
+          <p>请求：{errorDetails.method ?? "未知"} {errorDetails.path ?? "未能确定路径"}</p>
+          <p>HTTP 状态：{errorDetails.status ?? "未收到 HTTP 状态"}</p>
+          <p>服务端原因码：{errorDetails.reasonCode ?? "响应未提供可安全显示的原因码"}</p>
+          <p>归类：{errorDetails.classification}</p>
+        </details>
+      )}
 
       {stage === "area" && (
         <div className="rev-quick-pane" data-testid="rev-quick-area">
@@ -515,7 +753,11 @@ export function RevolutionQuickExplore({
               {busy ? "查询中…" : "查找位置 →"}
             </button>
           </div>
-          <p className="rev-quick-disclosure">点「查找位置」才会把这次输入的地名发送给公开 Nominatim 地图服务。不会读取手机 GPS。</p>
+          <p className="rev-quick-disclosure">
+            {sampleProviderMode
+              ? "点「查找位置」时只把地名发送给本机受控测试服务（TEST_PROVIDER），不会访问公开 Nominatim。不会读取手机 GPS。"
+              : "点「查找位置」才会把这次输入的地名发送给公开 Nominatim 地图服务。不会读取手机 GPS。"}
+          </p>
           {cityResults.length > 0 && (
             <div className="rev-quick-results" data-testid="rev-quick-city-results">
               <h3>是这些地方吗？</h3>
@@ -632,7 +874,9 @@ export function RevolutionQuickExplore({
             {centerBasis === "EXPLICIT_GEOCODER_APPROX"
               ? "采用你刚才明确选定的公开县城/城市近似中心，查找半径约 2.5 公里。若不合适可返回改选，绝不是你的精确位置。"
               : "你已选择公开地图位置。"}
-            点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别；
+            {sampleProviderMode
+              ? "点击下面的搜索按钮时，只向本机受控测试地点服务（TEST_PROVIDER）发送已选公开区域和类别。"
+              : "点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别。"}
             不发送 GPS、身份令牌或私人行程。
           </p>
           {readinessStatus !== "ready" && (
@@ -674,7 +918,13 @@ export function RevolutionQuickExplore({
                 ? "地点名称和坐标来自实际公开服务。是否营业、门票和路线时间仍须自行核实。"
                 : "数据来源未能验证，不要把这些地点当作已确认事实。"}
           </p>
-          {discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
+          {discovery?.status === "PROVIDER_UNAVAILABLE" ? (
+            <p>公开地点服务没有回答，附近情况尚未确认。</p>
+          ) : discovery?.status === "PROVIDER_DISABLED" ? (
+            <p>当前试玩环境尚未启用公开地点搜索。</p>
+          ) : discovery?.status === "RATE_LIMITED" ? (
+            <p>地图服务限制了这次请求，暂时不能判断附近地点。</p>
+          ) : discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
             <p>暂时没有找到符合条件的地点。可以换个类别，或重新选一个区域再试。</p>
           ) : (
             <>
@@ -750,10 +1000,9 @@ export function RevolutionQuickExplore({
 
       <details className="rev-quick-internals">
         <summary>技术信息（不影响正常使用）</summary>
-        <p>城市结果仅用于移动公开地图视角，必须由用户在地图上点选或粘贴明确的 OSM 位置链接。</p>
+        <p>城市结果提供公开地区的大致中心。点选结果即可继续；地图和 OSM 链接都是可选项。</p>
         <p>数据状态：{discovery?.status ?? "尚未搜索"} · {sourceKind ?? "来源未确定"}</p>
-        <p>AI 模型可在另一个正式 Journey Operator 流程中使用。这里不会把普通地点搜索说成 Agent 自主推理。</p>
-        <p>当前 Journey: {journeyId}</p>
+        <p>普通地点搜索不等于 Agent 自主推理。私人路线和进度由当前签名会话从服务器读取。</p>
       </details>
     </section>
   );

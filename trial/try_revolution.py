@@ -41,6 +41,16 @@ CITY_PORT = 18202
 OVERPASS_PORT = 18203
 
 
+def parse_port(value: str) -> int:
+    try:
+        port = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("port must be an integer") from exc
+    if not 1024 <= port <= 65535:
+        raise argparse.ArgumentTypeError("port must be between 1024 and 65535")
+    return port
+
+
 def require_open_port(port: int) -> None:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as check:
         check.settimeout(0.5)
@@ -92,8 +102,8 @@ def prepare_frontend() -> str:
         if installed.returncode:
             output = installed.stdout + "\n" + installed.stderr
             # Revolution's pre-existing package-lock.json is missing three type
-            # packages. Only this known npm EUSAGE mismatch may be repaired in
-            # the disposable trial checkout. Do not hide network/permission errors.
+            # packages. Work around only this known npm EUSAGE mismatch without
+            # writing package.json or package-lock.json. Do not hide network/permission errors.
             mismatched_lock = (
                 ("EUSAGE" in output or "npm ci can only install" in output or
                  "can only install packages when" in output)
@@ -106,8 +116,9 @@ def prepare_frontend() -> str:
                     "inspect the printed npm error."
                 )
             print("[setup] Existing Revolution npm lockfile is out of sync; "
-                  "repairing it ONLY in this isolated trial worktree ...", flush=True)
-            subprocess.run([npm, "install", "--no-audit", "--no-fund"],
+                  "installing dependencies without changing package files ...", flush=True)
+            subprocess.run([npm, "install", "--no-audit", "--no-fund",
+                            "--no-save", "--no-package-lock"],
                            cwd=FRONTEND, check=True)
     if not vite.exists():
         raise RuntimeError("Vite was not installed. Check frontend npm output.")
@@ -133,7 +144,15 @@ def wait_for(name: str, url: str, process: subprocess.Popen, seconds: int = 70) 
     raise RuntimeError(f"{name} did not become healthy at {url}; inspect trial/.runtime/{name}.err.log")
 
 
-def isolated_environment(db_name: str, *, sample: bool, contact_email: str | None) -> dict[str, str]:
+def isolated_environment(
+    db_name: str,
+    *,
+    sample: bool,
+    contact_email: str | None,
+    backend_port: int = BACK_PORT,
+    city_port: int = CITY_PORT,
+    overpass_port: int = OVERPASS_PORT,
+) -> dict[str, str]:
     env = os.environ.copy()
     # Remove inherited external credentials/configuration. An existing Qoder
     # session must not turn a local trial into a live AI/provider deployment.
@@ -164,7 +183,7 @@ def isolated_environment(db_name: str, *, sample: bool, contact_email: str | Non
         "CITYNEXUS_BOOKING_PROVIDER": "mock-booking",
         "CITYNEXUS_PAYMENT_PROVIDER": "mock-payment",
         "CITYNEXUS_CONTEXT_PROVIDER": "mock-context",
-        "CITYNEXUS_BACKEND_PORT": str(BACK_PORT),
+        "CITYNEXUS_BACKEND_PORT": str(backend_port),
         "VITE_REV_TRIAL_MODE": "sample" if sample else "live",
         "NO_PROXY": "127.0.0.1,localhost,::1",
         "no_proxy": "127.0.0.1,localhost,::1",
@@ -176,11 +195,11 @@ def isolated_environment(db_name: str, *, sample: bool, contact_email: str | Non
             "CITYNEXUS_CITY_SEARCH_ENABLED": "true",
             "CITYNEXUS_CITY_SEARCH_PROVIDER": "nominatim",
             "CITYNEXUS_CITY_SEARCH_TEST_PROVIDER": "true",
-            "CITYNEXUS_CITY_SEARCH_BASE_URL": f"http://127.0.0.1:{CITY_PORT}",
-            "CITYNEXUS_NOMINATIM_URL": f"http://127.0.0.1:{CITY_PORT}",
-            "CITYNEXUS_OVERPASS_URL": f"http://127.0.0.1:{OVERPASS_PORT}/api",
-            "REV_TRIAL_CITY_PORT": str(CITY_PORT),
-            "REV_TRIAL_OVERPASS_PORT": str(OVERPASS_PORT),
+            "CITYNEXUS_CITY_SEARCH_BASE_URL": f"http://127.0.0.1:{city_port}",
+            "CITYNEXUS_NOMINATIM_URL": f"http://127.0.0.1:{city_port}",
+            "CITYNEXUS_OVERPASS_URL": f"http://127.0.0.1:{overpass_port}/api",
+            "REV_TRIAL_CITY_PORT": str(city_port),
+            "REV_TRIAL_OVERPASS_PORT": str(overpass_port),
         })
     else:
         if not contact_email:
@@ -213,7 +232,19 @@ def main() -> int:
                         help="Use exact wb2api 7863 model, e.g. global:deepseek-v4.1-flash (may incur charges)")
     parser.add_argument("--no-browser", action="store_true",
                         help="Print the local URL without auto-opening desktop browser")
+    parser.add_argument("--frontend-port", type=parse_port, default=FRONT_PORT,
+                        help=f"Use a separate frontend port (default: {FRONT_PORT})")
+    parser.add_argument("--backend-port", type=parse_port, default=BACK_PORT,
+                        help=f"Use a separate backend port (default: {BACK_PORT})")
+    parser.add_argument("--city-port", type=parse_port, default=CITY_PORT,
+                        help=f"Use a separate local city fixture port with --sample (default: {CITY_PORT})")
+    parser.add_argument("--overpass-port", type=parse_port, default=OVERPASS_PORT,
+                        help=f"Use a separate local Overpass fixture port with --sample (default: {OVERPASS_PORT})")
     args = parser.parse_args()
+    front_port = args.frontend_port
+    back_port = args.backend_port
+    city_port = args.city_port
+    overpass_port = args.overpass_port
 
     contact_email = None
     if not args.sample:
@@ -255,15 +286,25 @@ def main() -> int:
         print("Runtime: Hermes-compatible tool-calling, not DeepSeek /responses or native Hermes MCP")
         print("NOTE: configuration is NOT successful Agent tool use; run trial/probe_wb2api_agent.py if needed.")
     RUNTIME.mkdir(parents=True, exist_ok=True)
-    for port in ((FRONT_PORT, BACK_PORT, CITY_PORT, OVERPASS_PORT)
-                 if args.sample else (FRONT_PORT, BACK_PORT)):
+    ports = ((front_port, back_port, city_port, overpass_port)
+             if args.sample else (front_port, back_port))
+    if len(set(ports)) != len(ports):
+        raise RuntimeError("Each selected service must use a distinct port.")
+    for port in ports:
         require_open_port(port)
 
     python = prepare_python()
     node = prepare_frontend()
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     db = f"_revolution_hands_on_{stamp}.db" if args.fresh else "_revolution_hands_on.db"
-    env = isolated_environment(db, sample=args.sample, contact_email=contact_email)
+    env = isolated_environment(
+        db,
+        sample=args.sample,
+        contact_email=contact_email,
+        backend_port=back_port,
+        city_port=city_port,
+        overpass_port=overpass_port,
+    )
 
     children: list[tuple[str, subprocess.Popen]] = []
     handles = []
@@ -281,8 +322,8 @@ def main() -> int:
     try:
         if args.sample:
             fixtures = start("fixtures", sys.executable, [str(TRIAL / "controlled_provider.py")], ROOT)
-            wait_for("fixtures", f"http://127.0.0.1:{CITY_PORT}/status", fixtures)
-            if not health(f"http://127.0.0.1:{OVERPASS_PORT}/status"):
+            wait_for("fixtures", f"http://127.0.0.1:{city_port}/status", fixtures)
+            if not health(f"http://127.0.0.1:{overpass_port}/status"):
                 raise RuntimeError("Overpass test fixture has not started; inspect fixtures.err.log")
 
         # Trial-only FastAPI wrapper adds the authenticated read-only Hermes
@@ -292,14 +333,14 @@ def main() -> int:
         api = start("backend", str(python),
                     ["-m", "uvicorn", "--app-dir", str(TRIAL),
                      "agent_preview_app:app", "--host", "127.0.0.1",
-                     "--port", str(BACK_PORT)], BACKEND, {**env, **agent_config})
-        wait_for("backend", f"http://127.0.0.1:{BACK_PORT}/api/v1/health", api)
+                     "--port", str(back_port)], BACKEND, {**env, **agent_config})
+        wait_for("backend", f"http://127.0.0.1:{back_port}/api/v1/health", api)
 
         vite_script = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
         ui = start("frontend", node, [str(vite_script), "--host", "127.0.0.1",
-                                      "--port", str(FRONT_PORT), "--strictPort"], FRONTEND)
-        wait_for("frontend", f"http://127.0.0.1:{FRONT_PORT}/api/v1/health", ui)
-        address = f"http://127.0.0.1:{FRONT_PORT}/revolution"
+                                      "--port", str(front_port), "--strictPort"], FRONTEND)
+        wait_for("frontend", f"http://127.0.0.1:{front_port}/api/v1/health", ui)
+        address = f"http://127.0.0.1:{front_port}/revolution"
         print("\nRevolution browser trial is ready (isolated from Qoder and fusion).")
         print("OPEN:", address)
         print("SOURCE:", "CONTROLLED TEST_PROVIDER (not real places)" if args.sample
@@ -308,8 +349,8 @@ def main() -> int:
         print("AI tool-use requires an ACTIVE Journey and a real AgentRun; Pocket Walk alone is not an AgentRun.")
         print("Payment/booking: mock only. Backend bound to localhost.")
         print("DB:", db)
-        print("For Android USB Chrome (ADB installed): adb reverse tcp:14173 tcp:14173")
-        print("Then on phone visit: http://localhost:14173/revolution")
+        print(f"For Android USB Chrome (ADB installed): adb reverse tcp:{front_port} tcp:{front_port}")
+        print(f"Then on phone visit: http://localhost:{front_port}/revolution")
         print("For iPhone/full HTTPS PWA trial, configure a separate authenticated HTTPS staging origin.")
         print("Logs:", RUNTIME)
         print("\nKeep this terminal open while trying the UI.")

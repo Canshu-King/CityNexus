@@ -625,6 +625,16 @@ def _provider_call(
     provider_key: str = "overpass",
     operation: str = "bootstrap_city_discovery",
 ) -> None:
+    # `response.status` keeps the operation's domain outcome (for example,
+    # PROVIDER_UNAVAILABLE). The persisted ProviderCall.status is a narrower
+    # audit enum enforced by schema.sql; never write those domain outcomes into
+    # that column or a provider outage will become a database 500.
+    audit_status = {
+        "UNAVAILABLE": "FAILURE",
+        "DISABLED": "DEGRADED",
+    }.get(status, status)
+    if audit_status not in {"SUCCESS", "FAILURE", "TIMEOUT", "DEGRADED"}:
+        raise ValueError("unsupported provider-call audit status")
     session.add(
         ProviderCall(
             id=str(uuid4()),
@@ -632,7 +642,7 @@ def _provider_call(
             operation=operation,
             request_json=_json(request),
             response_json=_json(response),
-            status=status,
+            status=audit_status,
             latency_ms=None,
             created_at=created_at,
         )
@@ -2470,6 +2480,30 @@ def save_bootstrap_discovery_pocket_walk(
                 refreshed_pocket,
                 {str(row.id): row for row in rows},
             ) or {}
+    # save_bootstrap_pocket_walk returns the route without the member's GO
+    # projection. Re-read that projection here so a retry of the identical save
+    # cannot make an in-progress walk look NOT_STARTED in the response.
+    persisted_pocket = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == locked_journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    if persisted_pocket is not None:
+        progress_row = session.scalar(
+            select(MemberDraftPocketWalkProgress).where(
+                MemberDraftPocketWalkProgress.journey_id == locked_journey.id,
+                MemberDraftPocketWalkProgress.member_id == str(member.id),
+                MemberDraftPocketWalkProgress.traveler_id == str(traveler_id),
+                MemberDraftPocketWalkProgress.pocket_walk_id == persisted_pocket.id,
+            )
+        )
+        pocket = _pocket_walk_payload(
+            persisted_pocket,
+            {str(row.id): row for row in rows},
+            _go_progress_payload(progress_row, persisted_pocket),
+        ) or {}
     return {
         "pocket_walk": pocket,
         "items": [_shortlist_payload(row) for row in rows],
