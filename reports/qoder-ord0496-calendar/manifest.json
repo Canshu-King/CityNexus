@@ -1,0 +1,57 @@
+{
+  "order": "ORD-0496 slice 3 (.ics export)",
+  "spec": "e2e/qoder-ord0496-calendar-export-390x844.spec.ts",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/v8/trips",
+  "run": {
+    "id": "slice3base022320",
+    "authoritative": true,
+    "backend_db": "sqlite:///D:/moodle/_qoder_fusion_import/_e2e_slice3base022320.db"
+  },
+  "journeyId": "d746ac1b-ca9f-451a-8366-b57296f3b549",
+  "button_label": "导出日历",
+  "exported": {
+    "suggested_filename": "Tianjin · stay-aware weekend--d746ac1b-ca9f-451a-8366-b57296f3b549.ics",
+    "bytes": 2879,
+    "sha256": "2d3eb7cea9c2456e",
+    "vevents_counted_from_bytes": 9,
+    "door_header_events": 9,
+    "door_header_activities": 9,
+    "door_header_skipped_no_clock": 0,
+    "door_header_skipped_no_stamps": 0,
+    "notice": "已下载 9 个日程，可在日历 App 里打开那个文件。",
+    "file": "reports/qoder-ord0496-calendar/exported.ics"
+  },
+  "grammar": {
+    "crlf_pairs": 88,
+    "bare_line_feeds": 0,
+    "physical_lines_nonempty": 88,
+    "lines_over_75_octets": 0,
+    "longest_line_octets": 75,
+    "folded_continuation_lines": 0,
+    "dtstart": 9,
+    "dtend": 9,
+    "uid": 9,
+    "dtstamp": 9,
+    "dtstamp_values": [
+      "DTSTAMP:20261014T182330Z"
+    ],
+    "run_dependent_fields": [
+      "UID (the staged row's own id)",
+      "DTSTAMP (the row's updated_at)"
+    ]
+  },
+  "anonymous": {
+    "notice": "日历没能导出，所以没有下载任何东西。",
+    "downloads_written": 0,
+    "door_status": 401
+  },
+  "shots": [
+    "01_exported.png",
+    "02_refused.png"
+  ],
+  "recordedAt": "2026-10-14T18:23:36.766Z"
+}

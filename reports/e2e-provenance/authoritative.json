@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "r107-discovery-pocket-20261012-d",
-  "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
-  "pythonResolved": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
-  "frontendPort": 4292,
-  "backendPort": 8292,
-  "databaseUrl": "sqlite:///./_r107-discovery-pocket-20261012-d.db",
+  "runId": "slice3ctl0223202",
+  "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "frontendPort": 4433,
+  "backendPort": 5033,
+  "databaseUrl": "sqlite:///D:/moodle/_qoder_fusion_import/_e2e_slice3ctl0223202.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-10-11T19:31:08.800Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe frontend=:4292 backend=:8292 db=sqlite:///./_r107-discovery-pocket-20261012-d.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-10-14T18:24:49.305Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4433 backend=:5033 db=sqlite:///D:/moodle/_qoder_fusion_import/_e2e_slice3ctl0223202.db ai=disabled reuseExistingServer=false"
 }
