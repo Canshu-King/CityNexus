@@ -322,6 +322,12 @@ const en: Dict = {
   "bookings.authorityExplicit": "Authority remains explicit",
   "bookings.authoritySub": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
 
+  // ── Footprints ──
+  /* One key for the screen's eyebrow.  Every other sentence this screen says lives in
+     `features/checkin/footprintCopy.ts`, keyed by state name -- so a new refusal arm is one row in
+     that table, not a dictionary append that waits on this shared file. */
+  "checkin.title": "Footprints",
+
   // ── Offline Journey View ──
   "offline.readOnly": "OFFLINE · READ ONLY",
   "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
@@ -1252,6 +1258,9 @@ const zhCN: Dict = {
   "bookings.neverInvented": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
   "bookings.authorityExplicit": "权限始终明确",
   "bookings.authoritySub": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+
+  // ── 足迹 ──
+  "checkin.title": "足迹",
 
   // ── Offline Journey View ──
   "offline.readOnly": "离线 · 只读",
