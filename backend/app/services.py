@@ -17,6 +17,8 @@ from app.core.audit import record_audit
 from app.db.models import (
     Activity,
     CityService,
+    CollectionFolder,
+    CollectionItem,
     Commitment,
     Journey,
     JourneyConstraint,
@@ -59,6 +61,8 @@ from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.reference_replanner import WEIGHTS
 from app.schemas import Activity as ActivitySchema
 from app.schemas import CityService as CityServiceSchema
+from app.schemas import CollectionFolder as CollectionFolderSchema
+from app.schemas import CollectionItem as CollectionItemSchema
 from app.schemas import Constraint as ConstraintSchema
 from app.schemas import Journey as JourneySchema
 from app.schemas import Money, ScoreBreakdown
@@ -177,6 +181,17 @@ def reset_all(session: Session) -> None:
         "plan_versions",
         "constraints",
         "city_services",
+        # fusion import (ORD-0444, from eeb8b8d2fd backend/app/services.py:194-210): the collection
+        # shelf is cleared with the rest of the scene, and it has to be cleared *before* `places`,
+        # because `collection_items.place_id` references `places(id)` with no `ON DELETE` clause and
+        # `PRAGMA foreign_keys=ON` is set on every connection (`backend/app/db/session.py`).
+        # Without these two lines a shelf holding one place makes `POST /api/v1/demo/reset` answer
+        # 500 with `sqlite3.IntegrityError: FOREIGN KEY constraint failed` -- and that door is the
+        # fixture reset this tree's test suites and demo stage share, so an unemptyable container
+        # would break them the first time a traveller favourites anything.  Children before parents,
+        # which is the rule this function's own opening comment states.
+        "collection_items",
+        "collection_folders",
         "places",
         "journeys",
         "preferences",
@@ -3120,3 +3135,63 @@ def generate_plans(
     )
     session.commit()
     return created
+
+
+# ---------------------------------------------------------------------------
+# fusion import: ORD-0444 the 「收藏」 projections.
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/services.py -- `collection_item_schema` @550, `collection_folder_schema` @580.
+# Copied without behavioural change: these two read rows, they do not decide
+# ownership.  Who may read which shelf is settled at the door (`app/main.py`),
+# before either of these is ever reached.
+# ---------------------------------------------------------------------------
+
+
+def collection_item_schema(item: CollectionItem, place: Place) -> CollectionItemSchema:
+    """One shelf row as the shelf answers it -- the place resolved, never copied.
+
+    Every place-shaped field on the way out is read from the `places` row at answer time, which is
+    the whole reason the shelf row stores a reference rather than the name it happened to have when
+    it was collected: a shelf cannot show a place name the store no longer holds.
+
+    There is no `address` in this shape and none is derived: `places` has no address column, and the
+    demo rows' `metadata_json` hold `cost_minor`/`duration_min`/`accessibility_evidence` and nothing
+    address-shaped.
+    """
+
+    return CollectionItemSchema(
+        id=item.id,
+        folder_id=item.folder_id,
+        place_id=item.place_id,
+        name=place.name,
+        category=place.category,
+        city_code=place.city_code,
+        location={"latitude": place.latitude, "longitude": place.longitude},
+        provider_key=place.provider_key,
+        coordinate_system=place.coordinate_system,
+        note=item.note,
+        added_at=item.added_at,
+    )
+
+
+def collection_folder_schema(
+    folder: CollectionFolder, items: list[tuple[CollectionItem, Place]]
+) -> CollectionFolderSchema:
+    """A shelf and its rows, where `item_count` is counted out of the same array `items` becomes.
+
+    The count is a length of the payload rather than a number from a second query on purpose: a
+    shelf that reported 4 next to 3 rows would be reporting two different reads as one answer.
+    `items` arrives in `added_at` order from the list door, and nothing here re-sorts it -- the
+    order a traveller reads is the order the server chose.
+    """
+
+    rows = [collection_item_schema(item, place) for item, place in items]
+    return CollectionFolderSchema(
+        id=folder.id,
+        name=folder.name,
+        owner_traveler_id=folder.owner_traveler_id,
+        created_at=folder.created_at,
+        updated_at=folder.updated_at,
+        item_count=len(rows),
+        items=rows,
+    )

@@ -1499,3 +1499,102 @@ class JourneyRoleRule(BaseModel):
     role: MemberRole
     capabilities: list[JourneyCapability]
     scope_message_key: str
+
+
+# ---------------------------------------------------------------------------
+# fusion import: ORD-0444 the 「收藏」 doors' shapes.
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/schemas.py -- `CollectionFolderCreate` @489, `CollectionItemCreate`
+# @506, `CollectionItem` @519, `CollectionFolder` @542.
+#
+# Two of the four are NOT a copy, and the difference is the authentication retrofit
+# rather than a tidy-up.  The source's create shape carried `owner_traveler_id` in
+# the request body and its list door took `traveler_id` as a query parameter, both
+# of which the server only *checked existed*.  Here the owner is written from the
+# signed principal and can be neither asserted nor asked for, so both of those
+# inputs are gone and `extra="forbid"` refuses a caller who still sends one.
+# ---------------------------------------------------------------------------
+
+
+class CollectionFolderCreate(BaseModel):
+    """ORD-0444: what creating a shelf asks for -- its name, and nothing else.
+
+    The name's bounds copy `TravelerCreate.display_name` above rather than inventing a third rule,
+    and the name is stored verbatim: this version has no rename door, so what is written here is
+    what the shelf reads for as long as it exists.
+
+    There is deliberately no `owner_traveler_id` field, and `extra="forbid"` is what makes that
+    absence a refusal instead of a shrug.  The source shape took the owner from the body and
+    answered `MEMBER_TRAVELER_UNKNOWN` when no traveller carried it -- which validates that an id
+    is *real*, never that the caller *is* it.  The shelf's owner is now the traveller the server
+    resolved from the request's signed credentials, so a body that names an owner is describing a
+    different person than the one making the call and must not be quietly dropped on the floor.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=120)
+
+
+class CollectionItemCreate(BaseModel):
+    """Which place goes on which shelf, and the note its owner wrote with it.
+
+    `place_id` is a string because `places.id` is a string column, not a UUID
+    (`backend/app/db/models.py` -- `Place.id`), and a UUID-typed parameter would answer a real
+    place with `validation.not_an_id`.  `note` is optional and stays optional: "no note was
+    written" must not be flattened into "an empty note".
+
+    The shelf's owner is not part of this request either -- `extra="forbid"` refuses an attempt to
+    name one, and the door puts the row on the caller's own shelf or answers 404.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    place_id: str = Field(min_length=1, max_length=64)
+    note: str | None = Field(default=None, max_length=280)
+
+
+class CollectionItem(BaseModel):
+    """One place as the shelf answers it -- the reference resolved, not copied.
+
+    `name`, `category`, `city_code`, `location`, `provider_key` and `coordinate_system` are read
+    from the `places` row at answer time by `collection_item_schema`, so a shelf cannot show a
+    name that the place row no longer holds.  There is no `address` field here, and there is no
+    cover image: `places` has neither column nor metadata key for one, so a screen that displayed
+    「地址」 would be displaying a label over nothing.
+    """
+
+    id: str
+    folder_id: str
+    place_id: str
+    name: str
+    category: str
+    city_code: str
+    location: GeoPoint
+    provider_key: str
+    coordinate_system: str
+    note: str | None
+    added_at: str
+
+
+class CollectionFolder(BaseModel):
+    """A shelf and everything on it, in one answer, because the list screen needs both.
+
+    `item_count` is computed from the `items` array of this same payload (`collection_folder_schema`
+    in `backend/app/services.py`), so the number a traveller reads cannot describe a different read
+    from the rows under it.
+
+    `owner_traveler_id` is an *output*: the traveller the server authenticated when the shelf was
+    made, read off the row.  It is carried out so a screen can say whose shelf this is, and it is
+    not an input anywhere on these doors -- the read is scoped by the credential, not by a parameter
+    beside it.  There is still no pagination and no sort parameter, and this shape advertises
+    neither.
+    """
+
+    id: str
+    name: str
+    owner_traveler_id: str
+    created_at: str
+    updated_at: str
+    item_count: int
+    items: list[CollectionItem]

@@ -2750,3 +2750,67 @@ class JourneyRoleCapability(Base):
     capability: Mapped[str] = mapped_column(String, primary_key=True)
     scope_message_key: Mapped[str] = mapped_column(String)
     created_at: Mapped[str] = mapped_column(String)
+
+
+# ---------------------------------------------------------------------------
+# fusion import: ORD-0444 the 「收藏」 container.
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/db/models.py -- `CollectionFolder` @1354, `CollectionItem` @1378.
+#
+# These classes declare the rows the door reads; they do not create the tables.
+# In this tree tables come only from `backend/db/schema.sql` via
+# `app/db/session.py::ensure_schema`, and the two DDL statements landed in the
+# preceding commit.  The docstrings below are rewritten, not copied: the source
+# described `owner_traveler_id` as an id "asserted by the creating caller", which
+# stopped being true the moment the door was put behind the fusion principal
+# seam -- see the collections routes in `app/main.py`.
+# ---------------------------------------------------------------------------
+
+
+class CollectionFolder(Base):
+    """ORD-0444: a named shelf a traveller keeps places on -- the 「收藏」 container.
+
+    Three columns carry the shelf itself: its name, whose it is, and the two moments.  The owner is
+    `NOT NULL` on purpose.  A nullable `traveler_id` would have been worse than none at all -- it
+    would look like ownership while nothing wrote it, and 「我的收藏」 would then be a claim the row
+    cannot support.  Here that owner is written from the *authenticated* principal the server
+    resolved for the request, never from a value the caller asserted, so the column is a fact the
+    credential establishes rather than a name someone typed.
+
+    `name` is not unique.  Two shelves can both read 「周末」, so the id is what addresses one, and
+    the door that adds a place takes the id and never a name.
+
+    The reference to `travelers` carries no `ON DELETE` clause -- see the DDL comment in
+    `backend/db/schema.sql` for why removing a traveller must not silently take their shelves.
+    """
+
+    __tablename__ = "collection_folders"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    owner_traveler_id: Mapped[str] = mapped_column(
+        ForeignKey("travelers.id"), nullable=False
+    )
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class CollectionItem(Base):
+    """One place on one shelf, plus the note its owner wrote about it.
+
+    The row stores a *reference* to `places` and no copy of the place's fields, so a shelf cannot
+    show a name that the place row has since changed.  `note` is nullable because "no note was
+    written" is a fact a screen has to be able to tell apart from "an empty note".
+
+    `UNIQUE(folder_id, place_id)` is the durable half of the duplicate refusal: two workers
+    handling two taps of the same place onto the same shelf cannot both win, which a
+    select-then-insert check inside one process could not promise.
+    """
+
+    __tablename__ = "collection_items"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    folder_id: Mapped[str] = mapped_column(ForeignKey("collection_folders.id", ondelete="CASCADE"))
+    place_id: Mapped[str] = mapped_column(ForeignKey("places.id"))
+    note: Mapped[str | None] = mapped_column(String, nullable=True)
+    added_at: Mapped[str] = mapped_column(String)
+
+    __table_args__ = (UniqueConstraint("folder_id", "place_id"),)
