@@ -1,0 +1,161 @@
+/* Revolution's first-user doorway, isolated from the Qoder V8 shell.
+   Existing BootstrapDiscoveryPanel remains the genuine R107/R108 product UI. */
+.rev-firstlook {
+  --rev-ink: #e9f6ef;
+  --rev-muted: #abc1b8;
+  --rev-panel: #14342b;
+  --rev-accent: #c8f56e;
+  min-height: 100vh;
+  color: var(--rev-ink);
+  background: radial-gradient(circle at 85% 0%, #2c5745, transparent 43%),
+    linear-gradient(158deg, #061912 0%, #0c2720 55%, #091912 100%);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.rev-firstlook * { box-sizing: border-box; }
+.rev-firstlook-header {
+  max-width: 1160px;
+  margin: auto;
+  min-height: 84px;
+  padding: 20px clamp(18px, 5vw, 56px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.rev-firstlook-brand { display: flex; align-items: center; gap: 12px; }
+.rev-firstlook-mark {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-weight: 900;
+  font-size: 24px;
+  background: var(--rev-accent);
+  color: #0a251a;
+}
+.rev-firstlook-brand strong { display: block; font-weight: 750; letter-spacing: .02em; }
+.rev-firstlook-brand small { color: var(--rev-muted); }
+.rev-firstlook-quiet { color: var(--rev-muted); font-size: 13px; text-decoration: none; }
+.rev-firstlook-quiet:hover { color: var(--rev-ink); text-decoration: underline; }
+.rev-firstlook-content { max-width: 1160px; padding: 12px clamp(18px, 5vw, 56px) 72px; margin: 0 auto; }
+.rev-firstlook-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border-radius: 30px;
+  border: 1px solid #527767;
+  color: #d8ebe2;
+  font-size: 12px;
+}
+.rev-firstlook-pulse {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #caf47d;
+  box-shadow: 0 0 0 4px #caf47d22;
+}
+.rev-firstlook-pulse.is-sample { background: #ffd26e; box-shadow: 0 0 0 4px #ffd26e22; }
+.rev-firstlook-hero { padding-top: clamp(40px, 7vw, 100px); }
+.rev-firstlook-eyebrow { display: block; color: var(--rev-accent); font-size: 12px; font-weight: 750; letter-spacing: .18em; }
+.rev-firstlook-hero h1 {
+  margin: 17px 0 20px;
+  font-size: clamp(37px, 6.3vw, 75px);
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: 1.2;
+  color: #f7fff8;
+}
+.rev-firstlook-hero > p { max-width: 720px; color: #c9dfd3; font-size: 15px; line-height: 1.9; }
+.rev-firstlook-hero form { max-width: 780px; margin-top: 36px; }
+.rev-firstlook-hero label { display: block; margin-bottom: 10px; font-weight: 700; color: #e8ffeb; }
+.rev-firstlook-form-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.rev-firstlook-form-row input {
+  flex: 1 1 250px;
+  min-width: 0;
+  background: #fff;
+  color: #13221a;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 16px 18px;
+  font-size: 18px;
+  min-height: 60px;
+}
+.rev-firstlook-form-row input:focus { border-color: #c8f56e; outline: 3px solid #c8f56555; }
+.rev-firstlook-form-row button {
+  min-height: 60px;
+  padding: 14px 24px;
+  border-radius: 16px;
+  border: 1px solid #d9ff97;
+  background: var(--rev-accent);
+  color: #082318;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+.rev-firstlook-form-row button:disabled { cursor: wait; opacity: .66; }
+.rev-firstlook-error {
+  background: #6a2726;
+  border: 1px solid #fd9590;
+  padding: 12px;
+  border-radius: 10px;
+  color: #fff;
+  max-width: 780px;
+}
+.rev-firstlook-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); max-width: 930px; gap: 13px; margin-top: 58px; }
+.rev-firstlook-cards article {
+  min-height: 146px;
+  border: 1px solid #416b56;
+  border-radius: 20px;
+  background: #ffffff0b;
+  padding: 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rev-firstlook-cards article span { font-size: 12px; font-weight: 700; color: var(--rev-accent); }
+.rev-firstlook-cards article b { color: #f4fdf2; font-size: 16px; }
+.rev-firstlook-cards article small { color: var(--rev-muted); }
+.rev-firstlook-hero .rev-firstlook-limit { color: #a6c0b4; font-size: 12px; margin-top: 32px; max-width: 850px; }
+.rev-firstlook-journey {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 46px 0 22px;
+}
+.rev-firstlook-journey h1 { font-size: clamp(27px, 4vw, 45px); letter-spacing: -.03em; color: #fff; margin: 10px 0; }
+.rev-firstlook-journey p { max-width: 760px; color: #bfd7ca; line-height: 1.8; }
+.rev-firstlook-reset {
+  flex: none;
+  border-radius: 12px;
+  border: 1px solid #9ebba8;
+  background: transparent;
+  color: #ecfff0;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.rev-firstlook-notice { background: #214836; color: #d3ffb3; padding: 12px; border-radius: 10px; }
+.rev-firstlook-real-ui {
+  background: #f7f9f5;
+  color: #1c3026;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 10px;
+}
+.rev-firstlook-real-ui .v8-join-entry { max-width: 100%; }
+.rev-firstlook-footer { color: var(--rev-muted); font-size: 12px; text-align: center; padding: 12px 24px 34px; }
+@media (max-width: 650px) {
+  .rev-firstlook-header { padding-top: 16px; padding-bottom: 16px; }
+  .rev-firstlook-brand strong { font-size: 13px; }
+  .rev-firstlook-brand small { font-size: 11px; }
+  .rev-firstlook-quiet { font-size: 11px; }
+  .rev-firstlook-cards { grid-template-columns: 1fr; gap: 9px; margin-top: 32px; }
+  .rev-firstlook-cards article { min-height: 82px; gap: 5px; }
+  .rev-firstlook-journey { flex-direction: column; margin-top: 30px; }
+  .rev-firstlook-real-ui { padding: 4px; border-radius: 12px; }
+  .rev-firstlook-form-row button { width: 100%; }
+}
