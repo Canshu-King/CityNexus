@@ -159,3 +159,43 @@
   .rev-firstlook-real-ui { padding: 4px; border-radius: 12px; }
   .rev-firstlook-form-row button { width: 100%; }
 }
+
+/* Agent health is a server projection, NEVER an assertion that the model has
+   already completed a tool call. A true run is shown only by LiveRecovery. */
+.rev-firstlook-agent {
+  border: 1px solid #4c7661;
+  border-radius: 15px;
+  background: #123128;
+  max-width: 940px;
+  margin-top: 18px;
+  padding: 16px 20px;
+}
+.rev-firstlook-agent-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.rev-firstlook-agent-head strong { color: #eaffee; }
+.rev-firstlook-agent-head span { color: #c7f383; font-size: 12px; }
+.rev-firstlook-agent p { color: #c6dfd0; font-size: 13px; line-height: 1.6; }
+.rev-firstlook-agent small { color: #b9d2c2; font-size: 11px; }
+.rev-firstlook-start-plan {
+  padding: 20px;
+  margin: 16px 0 20px;
+  border: 1px solid #7cae7b;
+  border-radius: 16px;
+  background: #f0f7e8;
+  color: #174128;
+}
+.rev-firstlook-start-plan h2 { font-size: 22px; }
+.rev-firstlook-start-plan p { line-height: 1.7; }
+.rev-firstlook-operator-intro {
+  padding: 18px;
+  background: #e1f4e7;
+  border-radius: 16px;
+  color: #193627;
+}
+.rev-firstlook-operator-intro a { color: #135b35; font-weight: 700; }
+.rev-firstlook-operator-intro p { line-height: 1.7; }
