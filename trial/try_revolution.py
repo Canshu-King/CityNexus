@@ -282,8 +282,13 @@ def main() -> int:
             if not health(f"http://127.0.0.1:{OVERPASS_PORT}/status"):
                 raise RuntimeError("Overpass test fixture has not started; inspect fixtures.err.log")
 
+        # Trial-only FastAPI wrapper adds the authenticated read-only Hermes
+        # discovery guide. The existing app.main routers/lifespan remain intact.
+        # The non-agent run also imports this wrapper, but its AI route fails
+        # closed unless settings.ai_enabled AND Hermes credentials are present.
         api = start("backend", str(python),
-                    ["-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
+                    ["-m", "uvicorn", "--app-dir", str(TRIAL),
+                     "agent_preview_app:app", "--host", "127.0.0.1",
                      "--port", str(BACK_PORT)], BACKEND, {**env, **agent_config})
         wait_for("backend", f"http://127.0.0.1:{BACK_PORT}/api/v1/health", api)
 
