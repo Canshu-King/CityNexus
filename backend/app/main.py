@@ -141,6 +141,8 @@ from app.db.models import (
     AutopilotEnrollment,
     CityService,
     CitySignalFixture,
+    CollectionFolder,
+    CollectionItem,
     CollectiveAuthorityReceipt,
     CounterfactualSimulation,
     EdgeDevice,
@@ -486,6 +488,10 @@ from app.schemas import (
     AgentToolCall,
     BookingCreate,
     CitySignalFixtureRequest,
+    CollectionFolder as CollectionFolderSchema,
+    CollectionFolderCreate,
+    CollectionItem as CollectionItemSchema,
+    CollectionItemCreate,
     ConstraintInput,
     EdgeActionRequest,
     EdgeDeviceCreateRequest,
@@ -625,6 +631,8 @@ from app.services import (
     _coursework_estimate_covers,
     _place_has_unresolved_visit_facts,
     _journey_constraints_with_capabilities,
+    collection_folder_schema,
+    collection_item_schema,
     constraint_schema,
     dump,
     generate_plans,
@@ -26727,3 +26735,407 @@ def get_commitment(commitment_id: UUID, session: Session = Depends(get_session))
     if item is None:
         raise HTTPException(404, f"Commitment {commitment_id} was not found")
     return _commitment_payload(item)
+
+
+# ===========================================================================
+# fusion import: ORD-0444 「收藏」 the collection doors, moved behind the fusion
+# principal seam.
+#
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/main.py -- the collections section runs 3746-4030 and is:
+#   _collection_shelves        @3746
+#   _collection_rows_by_folder @3766
+#   _collection_payloads       @3800
+#   create_collection          @3826  (POST /api/v1/collections)
+#   list_collections           @3885  (GET  /api/v1/collections)
+#   add_collection_item        @3913  (POST /api/v1/collections/{folder_id}/items)
+# The section boundary was read rather than assumed: grepping every
+# "/api/v1/collections" literal in that tree returns exactly those three paths, and
+# add_collection_item is followed by GET /api/v1/journeys/{journey_id} at @4033.
+# That source grew NO PATCH and NO DELETE door for a shelf or a shelf row -- the
+# "紧随的 PATCH/DELETE" this import was briefed on does not exist there, and it is
+# reported as absent rather than invented inside this port commit.
+#
+# WHAT CHANGED AND WHY IT HAD TO.  The source's two identity inputs --
+# CollectionFolderCreate.owner_traveler_id in the create body, and the required
+# traveler_id QUERY PARAMETER on the list door -- were checked for existence but
+# never for provenance.  Three places in that tree say so out loud: the create
+# docstring ("asserted by the caller and validated against travelers, not
+# authenticated"), the list docstring ("What this version does *not* do is
+# authenticate it -- the id is asserted by whoever calls"), and the DDL comment in
+# its schema.sql ("asserted, not authenticated; the anonymous read is still this
+# product's default").  Copying them into the fusion tree would have installed a
+# door where an unsigned cross-member read succeeds, which
+# fusion/UNIFIED_FUSION_CHARTER.md names as a non-negotiable stop condition.  Both
+# inputs are therefore gone and the owner is read off the server-resolved principal.
+# Those two docstring sentences are rewritten below rather than left in place to
+# mislead the next reader.
+# ===========================================================================
+
+
+def _collection_principal(request: Request, session: Session):
+    """The traveller these shelves will be answered for, or a refusal that wrote nothing.
+
+    app/traveler_principal.py::resolve_traveler_principal is this tree's identity seam: it verifies
+    the bearer token's HMAC against settings.traveler_auth_secret, rejects a token whose traveller
+    row is gone, and hands back the id the credential carries rather than the id the caller typed.
+
+    Unlike several older fusion doors, this helper is NOT wrapped in "if settings.traveler_auth_secret:"
+    -- those doors fall through to an unauthenticated path when no secret is configured, which is
+    precisely the behaviour the collection door is here to stop having.  With no secret set,
+    resolve_traveler_principal raises 503 and every shelf stays shut: the door fails closed, so an
+    unconfigured deployment reads as "these doors do not answer" and never as "anyone may read them".
+
+    Collections are traveller-scoped, not journey-scoped: a shelf is not a place on somebody's plan,
+    so there is no Journey to be a member of, and resolve_journey_member_principal /
+    member_has_capability would invent a journey the product does not have here.  The plain traveler
+    principal is the matching seam -- and it is the same one resolve_journey_member_principal calls
+    itself before it does any membership lookup.
+    """
+
+    from app.traveler_principal import resolve_traveler_principal
+
+    return resolve_traveler_principal(request, session)
+
+
+#: ORD-0444: the two reads the shelf doors share, each in exactly one SELECT.
+#:
+#: Both are helpers rather than inline queries because the create door and the list door have to
+#: answer the same shelf the same way: a shelf that read its rows one way when the traveller made
+#: it and another way when they listed it would give the screen two different numbers for one
+#: container.
+def _collection_shelves(session: Session, owner_traveler_id: str) -> list[CollectionFolder]:
+    """Every shelf one traveller's id is written on, oldest first.
+
+    Ordered by created_at with the id behind it so two shelves written in the same instant still
+    come back in a stable order.  The scope is a column, not a convention: owner_traveler_id is
+    NOT NULL on the row (backend/db/schema.sql), so there is no shelf this filter can silently
+    miss, and 「我的收藏」 is a claim the row itself carries.  In this tree the id it scopes by is
+    supplied by _collection_principal and never by the request, which is what turns 「only my
+    shelves」 from a parameter a caller can point anywhere into a server fact.
+    There is still no pagination or sort parameter, and that absence is said here rather than left
+    to be discovered by trying one.
+    """
+
+    return list(
+        session.scalars(
+            select(CollectionFolder)
+            .where(CollectionFolder.owner_traveler_id == owner_traveler_id)
+            .order_by(CollectionFolder.created_at, CollectionFolder.id)
+        ).all()
+    )
+
+
+def _collection_rows_by_folder(
+    session: Session,
+    owner_traveler_id: str,
+) -> dict[str, list[tuple[CollectionItem, Place]]]:
+    """Every shelf row on every shelf one traveller owns, grouped by shelf, in two reads or fewer.
+
+    The join is against places rather than a lookup per row, so listing ten shelves costs two
+    statements and not eleven.  It is an INNER join, and that is load-bearing rather than
+    incidental: collection_items.place_id references places(id) with no ON DELETE clause
+    (backend/db/schema.sql), and PRAGMA foreign_keys=ON is set on every connection
+    (backend/app/db/session.py), so a place a shelf points at cannot be deleted underneath it.  A
+    shelf row therefore always has a place to resolve to, and the join cannot quietly drop a row and
+    leave item_count short of what was asked for.
+
+    The collection_folders leg is here so a scoped read never pulls another traveller's rows into
+    memory to filter them out afterwards; it costs nothing on the statement count and it keeps
+    "whose shelf" one fact rather than two.
+
+    The order is the shelf's own: first put on, first read.  Nothing downstream re-sorts it, so the
+    order the screen renders is the order the server chose.
+    """
+
+    grouped: dict[str, list[tuple[CollectionItem, Place]]] = {}
+    for item, place in session.execute(
+        select(CollectionItem, Place)
+        .join(CollectionFolder, CollectionFolder.id == CollectionItem.folder_id)
+        .join(Place, Place.id == CollectionItem.place_id)
+        .where(CollectionFolder.owner_traveler_id == owner_traveler_id)
+        .order_by(CollectionItem.added_at, CollectionItem.id)
+    ).all():
+        grouped.setdefault(item.folder_id, []).append((item, place))
+    return grouped
+
+
+def _collection_payloads(session: Session, owner_traveler_id: str) -> list[CollectionFolderSchema]:
+    """Shelves and rows together, so no door can answer a shelf without its contents."""
+
+    rows = _collection_rows_by_folder(session, owner_traveler_id)
+    return [
+        collection_folder_schema(folder, rows.get(folder.id, []))
+        for folder in _collection_shelves(session, owner_traveler_id)
+    ]
+
+
+@app.post(
+    "/api/v1/collections",
+    response_model=CollectionFolderSchema,
+    status_code=201,
+    # The refusal codes this door can actually answer, declared so /openapi.json carries them
+    # (ORD-0395's rule in this file: a code the decorator does not name never reaches the served
+    # document).  The source declared 404 MEMBER_TRAVELER_UNKNOWN here because its body named an
+    # owner that might not exist.  This door takes no owner from the body, and a credential whose
+    # traveller row is gone is refused inside _collection_principal -- so 401/403 replaced that 404,
+    # and that swap is the authentication retrofit rather than an oversight.
+    responses={
+        401: {
+            "description": "code = UNAUTHORIZED -- no bearer credential, or one this server cannot "
+            "verify, or one whose traveller no longer exists.  No shelf is stored."
+        },
+        403: {
+            "description": "The credential verified but is not accepted for this door.  No shelf is stored."
+        },
+    },
+)
+def create_collection(
+    payload: CollectionFolderCreate,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """ORD-0444: make a named shelf, written to the traveller who asked for it.
+
+    A name goes in; an id, an owner and two timestamps come out.  The name is stored verbatim,
+    exactly as POST /api/v1/travelers stores display_name verbatim, and there is no rename door on
+    this server yet -- so what a traveller types here is what the shelf reads for as long as it
+    exists, which is why the length bound is the one CollectionFolderCreate copies from that door.
+
+    owner_traveler_id is written from the authenticated principal (_collection_principal), and that
+    is the difference this import makes to the source.  In eeb8b8d2fd the same column was filled
+    from the request body after a session.get(Traveler, ...) had proved the id existed -- which
+    answers "is this a real traveller" and never answers "is that you", so any caller could write a
+    shelf onto anybody's account.  There is no owner field in the body here at all, and
+    CollectionFolderCreate is extra="forbid", so a client that still sends one is refused 422
+    validation.unknown_field rather than being silently agreed with.
+
+    created_at and updated_at are written equal and updated_at is then *not* touched by adding or
+    removing a row: it records when this shelf row was last written, and adding a place writes a
+    collection_items row, not this one.  Leaving it alone is what keeps the column true; bumping it
+    would put a second, contradicting account of the shelf next to created_at.
+
+    The response is the shelf read back through the same helper GET /api/v1/collections uses, not an
+    object assembled from the request.  An empty shelf is therefore reported as the server now holds
+    it -- item_count 0 and items [] both come out of the read -- rather than from a literal someone
+    typed because a new shelf is surely empty.
+    """
+
+    principal = _collection_principal(request, session)
+    identifier = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    owner = principal.traveler_id
+    session.add(
+        CollectionFolder(
+            id=identifier,
+            name=payload.name,
+            owner_traveler_id=owner,
+            created_at=now,
+            updated_at=now,
+        )
+    )
+    session.commit()
+    record_audit(
+        session,
+        action="collection.folder.created",
+        entity_type="CollectionFolder",
+        entity_id=identifier,
+        # The audit row records the principal the server verified, not a caller's claim, so
+        # actor_type/actor_id say who acted in the same words every other fusion write does.
+        actor_type="traveler",
+        actor_id=owner,
+        after={"name": payload.name, "owner_traveler_id": owner},
+    )
+    session.commit()
+    return collection_folder_schema(
+        session.get(CollectionFolder, identifier),
+        _collection_rows_by_folder(session, owner).get(identifier, []),
+    )
+
+
+@app.get(
+    "/api/v1/collections",
+    response_model=list[CollectionFolderSchema],
+    responses={
+        401: {
+            "description": "code = UNAUTHORIZED -- the shelf list is answered to a credential and "
+            "never to a name typed beside it.  Without one, nothing is read."
+        },
+        422: {
+            "description": "error.reason_code = COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED -- the "
+            "request still carries the source's traveler_id query parameter.  Named rather than "
+            "ignored, because that parameter is exactly the cross-member read this door no longer "
+            "offers."
+        },
+    },
+)
+def list_collections(
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """ORD-0444: one traveller's shelves and every row on them, in one answer.
+
+    One door for both halves on purpose.  A screen that had to ask per shelf to learn what was on it
+    would render a count it could not tie to the rows under it -- and the count here is the length of
+    the same items array the rows are drawn from (collection_folder_schema,
+    backend/app/services.py), so the number a traveller reads and the list beneath it cannot describe
+    two different reads.
+
+    Empty is a real answer and is answered as one: a shelf with nothing on it comes back with
+    item_count 0 and items [], and a traveller holding no shelf comes back as the empty list -- not a
+    404.  Nothing in this payload is inferred from absence; the fields are read from rows.
+
+    The scope is the credential.  The source's docstring said, in its own words, that this version
+    did *not* authenticate traveler_id and that 「我的收藏」 was therefore "a statement about which
+    row the shelf belongs to, not a statement about who is allowed to look".  That sentence is
+    replaced by this one: the id is read off the verified principal, so a caller cannot ask for
+    another traveller's shelves at all -- not by passing their id, and not by passing no id.  A
+    request that still sends traveler_id is refused by name rather than quietly ignored, because
+    dropping the one parameter that used to open the door without saying so is how a hole survives a
+    refactor.
+    """
+
+    principal = _collection_principal(request, session)
+    if "traveler_id" in request.query_params:
+        raise _share_refusal(
+            422,
+            "The shelf list is scoped by your credentials, not by a traveller id in the query.",
+            "COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED",
+            {"field": "traveler_id"},
+        )
+    return _collection_payloads(session, principal.traveler_id)
+
+
+@app.post(
+    "/api/v1/collections/{folder_id}/items",
+    response_model=CollectionItemSchema,
+    status_code=201,
+    # ORD-0444, following ORD-0395's rule in this file: the refusal is behaviour this door exists to
+    # have, so the application's own served spec has to say it.  The hand contract declared the 404
+    # and the 409; without this block /openapi.json would show only 201 and 422, and a consumer of
+    # the served document could not see that a shelf it does not hold is an answer rather than a
+    # crash.  The descriptions name the tokens the door can emit, so nothing has to be guessed from
+    # the status code alone.
+    responses={
+        401: {"description": "code = UNAUTHORIZED -- nothing was read and nothing was written."},
+        404: {
+            "description": (
+                "Refused with a named code in error.reason_code: COLLECTION_FOLDER_NOT_FOUND when "
+                "this server holds no shelf with that id *for the authenticated traveller* -- an id "
+                "that is not uuid-shaped reaches the same answer, because the path parameter is a "
+                "plain string, and so does an id that belongs to somebody else.  A shelf you are not "
+                "allowed to see is not distinguished from one that does not exist: telling them "
+                "apart would turn this door into a shelf-enumeration oracle.  PLACE_NOT_FOUND when "
+                "the shelf is yours but the place does not exist.  Nothing was written in either case."
+            )
+        },
+        409: {
+            "description": (
+                "PLACE_ALREADY_IN_COLLECTION -- that place is already on that shelf.  error.details "
+                "names the row that won (existing_item_id, existing_added_at), and the duplicate "
+                "refusal holds across workers because UNIQUE(folder_id, place_id) is in the table."
+            )
+        },
+    },
+)
+def add_collection_item(
+    folder_id: str,
+    payload: CollectionItemCreate,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """ORD-0444: put one place on one shelf.  The write the 「收藏」 exit of the chain needs.
+
+    folder_id is a plain string, not a UUID, and that is the whole of the difference between a named
+    refusal and a validation error on the counter-case.  A shelf id this server does not hold is
+    answered 404 COLLECTION_FOLDER_NOT_FOUND; a place id it does not hold is answered 404
+    PLACE_NOT_FOUND.  Neither is allowed to become a 500, and neither is allowed to come back as the
+    generic resource.not_found that require() answers with, because the two conditions need different
+    sentences on a screen: 「这个收藏夹不在这台服务器上」 and 「这个地点不在这台服务器上」 are not
+    the same failure, and the traveller did the second one by tapping a place that is no longer there.
+
+    The owner check is the one addition to the body of the source's door.  In eeb8b8d2fd the lookup
+    was session.get(CollectionFolder, folder_id) alone, so anyone who knew or guessed a shelf id
+    could write onto a stranger's shelf -- an unauthenticated cross-member *write*, not only a read.
+    Here the same lookup answers 404 when the row exists and is not the caller's, reusing the refusal
+    shape the source already had for an absent shelf so the answer stays un-enumerable.
+
+    A duplicate is refused by name too.  UNIQUE(folder_id, place_id) (backend/db/schema.sql) is what
+    makes that hold across two workers -- a select-then-insert check would let two taps of the same
+    place both write, and the second shelf row would be a silent nothing that the count still
+    reported.  The loser's IntegrityError is rolled back and re-read, so the 409 can name the row
+    that is already there instead of the one this tap tried to make.
+
+    The reference is stored, not the place's fields: name, category, city_code and the coordinate
+    come back resolved from places on every read.  No plan, activity or day is touched -- that is
+    the 「加进计划」 door's job, and the reason 收藏 is a separate exit at all.
+    """
+
+    principal = _collection_principal(request, session)
+    folder = session.get(CollectionFolder, folder_id)
+    if folder is None or folder.owner_traveler_id != principal.traveler_id:
+        raise _share_refusal(
+            404,
+            f"Collection folder {folder_id} was not found",
+            "COLLECTION_FOLDER_NOT_FOUND",
+            {"folder_id": folder_id},
+        )
+    place = session.get(Place, payload.place_id)
+    if place is None:
+        # ORD-0513: the sentence names the condition, not the identifier.  The ids a technician needs
+        # are already in error.details two lines below, and the reason token is this branch's machine
+        # handle; a uuid inside the human line reaches the traveller twice and says nothing the token
+        # does not already say.
+        raise _share_refusal(
+            404,
+            "That place is not held by this server, so nothing was collected.",
+            "PLACE_NOT_FOUND",
+            {"folder_id": folder_id, "place_id": payload.place_id},
+        )
+
+    identifier = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    try:
+        session.add(
+            CollectionItem(
+                id=identifier,
+                folder_id=folder.id,
+                place_id=place.id,
+                note=payload.note,
+                added_at=now,
+            )
+        )
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        already = session.execute(
+            select(CollectionItem).where(
+                CollectionItem.folder_id == folder.id,
+                CollectionItem.place_id == place.id,
+            )
+        ).scalars().first()
+        raise _share_refusal(
+            409,
+            "This place is already on that shelf, so nothing new was written.",
+            "PLACE_ALREADY_IN_COLLECTION",
+            {
+                "folder_id": folder_id,
+                "place_id": payload.place_id,
+                "existing_item_id": already.id if already is not None else None,
+                "existing_added_at": already.added_at if already is not None else None,
+            },
+        )
+
+    record_audit(
+        session,
+        action="collection.item.added",
+        entity_type="CollectionItem",
+        entity_id=identifier,
+        actor_type="traveler",
+        actor_id=principal.traveler_id,
+        after={"folder_id": folder.id, "place_id": place.id, "note": payload.note},
+    )
+    session.commit()
+
+    stored = session.get(CollectionItem, identifier)
+    return collection_item_schema(stored, session.get(Place, stored.place_id))
