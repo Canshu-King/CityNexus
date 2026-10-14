@@ -1,0 +1,92 @@
+{
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "backend": "127.0.0.1:8110",
+ "journey_id": "9400032e-64b0-49e9-af2b-c273ea5f8e5d",
+ "frames": [
+  {
+   "shot": "01_root",
+   "route": "/v8/hub",
+   "markers": [
+    "plan-ranking"
+   ],
+   "painted": "天津之旅",
+   "bytes": 44752,
+   "digest": "858f87065aa5"
+  },
+  {
+   "shot": "02_discover",
+   "route": "/v8/discover",
+   "markers": [
+    "prep-panel",
+    "v13-discovery",
+    "collection-panel"
+   ],
+   "painted": "先看这座城能不能规划",
+   "bytes": 77406,
+   "digest": "61499d8f14d2"
+  },
+  {
+   "shot": "03_trips_fresh",
+   "route": "/v8/trips",
+   "markers": [
+    "trip-itinerary",
+    "trips-tabs",
+    "footprint-panel"
+   ],
+   "painted": "3 天行程",
+   "bytes": 45569,
+   "digest": "5e15fe552880"
+  },
+  {
+   "shot": "04_trips_stamped",
+   "route": "/v8/trips",
+   "markers": [
+    "footprint-row",
+    "trip-itinerary"
+   ],
+   "painted": "3 天行程",
+   "bytes": 41655,
+   "digest": "88d0790ca89a"
+  },
+  {
+   "shot": "05_trips_collected",
+   "route": "/v8/trips",
+   "markers": [
+    "collect-result"
+   ],
+   "painted": "3 天行程",
+   "bytes": 33453,
+   "digest": "ba91cf81adca"
+  },
+  {
+   "shot": "06_live",
+   "route": "/v8/live",
+   "markers": [
+    "live-recovery"
+   ],
+   "painted": "选择你的下一段路程。",
+   "bytes": 67999,
+   "digest": "fe3eae4247da"
+  },
+  {
+   "shot": "07_me",
+   "route": "/v8/me",
+   "markers": [
+    "v8-me"
+   ],
+   "painted": "我的行程与偏好",
+   "bytes": 43744,
+   "digest": "c51ef6b2e014"
+  }
+ ],
+ "stop_rows": 3,
+ "stamped_row": 2,
+ "stamped_stop": "Overnight · Haihe Riverside Hotel",
+ "r107_discovery_console": "v13-discovery",
+ "go_bootstrap_reachable_by_url": false,
+ "go_bootstrap_note": "state-gated at V8Experience.tsx:1212 (a new journey whose city holds no catalogue places); no URL route, so this walk records absence rather than pretending a click path",
+ "stamps_on_server": 3
+}
