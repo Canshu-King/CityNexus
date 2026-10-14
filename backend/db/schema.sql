@@ -2024,3 +2024,70 @@ CREATE INDEX IF NOT EXISTS idx_collection_items_folder_added
 -- traveller id; a table with no owner column would have had no use for it.
 CREATE INDEX IF NOT EXISTS idx_collection_folders_owner
     ON collection_folders(owner_traveler_id, created_at);
+
+-- ============================================================================
+-- fusion import: ORD-0476 slice 1 「打卡」 the trip footprint -- a stamp saying a
+-- traveller was at one target of one journey.
+-- Source: `origin/mirror/integration-frontend-apple-pass1` (= `eeb8b8d2fd`),
+-- `backend/db/schema.sql` lines 1131-1168.  Verbatim except the section header and
+-- the ownership note below; no column, CHECK, FK direction or index was changed,
+-- because `backend/tests/test_qoder_ord0476_checkins.py` reads this shape out of
+-- `PRAGMA table_info` / `foreign_key_list` / `index_list` and its assertions are the
+-- contract this transplant has to meet.
+--
+-- Additive, and `IF NOT EXISTS` throughout: this file is applied with `executescript()`
+-- on every boot (`app/db/session.py` -- `ensure_schema`), so it is the only thing that
+-- creates a table on this branch (no `Base.metadata.create_all`, no alembic), and a
+-- destructive form would be a charter violation.
+--
+-- ONE THING THE SOURCE DOES NOT HAVE, AND WHERE IT LIVES INSTEAD.  This table carries no
+-- owner column.  It does not need one, and adding one would have been worse than useless:
+-- the source's doors (`backend/app/main.py`, `create_journey_checkin` @4327 /
+-- `list_journey_checkins` @4440 in that tree) looked the journey up by id alone --
+-- `session.get(Journey, str(journey_id))`, with no provenance check on the caller -- so a
+-- nullable `traveler_id` here would have been a second, unwritten account of ownership
+-- contradicting `journeys.traveler_id`, which is already `NOT NULL REFERENCES travelers(id)`
+-- three tables up.  Ownership of a footprint is therefore derived through `journey_id` and
+-- enforced at the door against the verified principal
+-- (`app/traveler_principal.py::resolve_traveler_principal`), which is exactly the shape
+-- `collection_items` avoids by having its folder carry an owner.  `idx_journey_checkins_
+-- journey_stamped` below is the scan the doors actually run.
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS journey_checkins (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    -- Why these two are `ON DELETE SET NULL` rather than RESTRICT or CASCADE.  Both are deleted by
+    -- doors that already exist on this branch too: `generate_replan` in `backend/app/main.py` and
+    -- `materialize_stay_option` in `backend/app/operations/v9.py` remove `activities` rows when a
+    -- plan version is superseded, and the catalog prunes `places`.  A footprint is the traveller's
+    -- own history, so it must outlive the row it pointed at -- a RESTRICT would turn those two
+    -- replan doors into failures, which is the same class of defect this project already met once
+    -- with `demo/reset` and a new table's foreign key, and a CASCADE would let a replan erase the
+    -- history the traveller tapped for.
+    activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    place_id TEXT REFERENCES places(id) ON DELETE SET NULL,
+    -- Which column the stamp was taken against, as the door decided it -- not re-derived at read
+    -- time, because after a cascade there is nothing left to derive it from.
+    target_kind TEXT NOT NULL CHECK (target_kind IN ('ACTIVITY','PLACE')),
+    -- The durable half of 重复打卡, and deliberately NOT derived from the two nullable columns:
+    -- `UNIQUE (journey_id, activity_id)` with a NULL in that column is not a constraint SQLite
+    -- enforces (NULLs are distinct), and a SET NULL cascade could mint or erase a duplicate long
+    -- after the tap.  The door writes one immutable key -- `activity:<id>` or `place:<id>` -- and
+    -- this table's UNIQUE is what makes two workers taking two taps at the same target impossible
+    -- without any read-then-write check inside a process.
+    target_key TEXT NOT NULL,
+    -- The moment the server recorded the stamp.  This door takes no caller-supplied instant: an
+    -- offline queue's device clock is a different fact and would arrive as its own named field.
+    stamped_at TEXT NOT NULL,
+    -- NULL means no note was written, which a screen must tell apart from an empty one.
+    note TEXT,
+    -- One channel exists today: the traveller's own front-end tap.  A CHECK rather than free text,
+    -- so a second channel has to arrive as a contract change instead of smuggling a value in.
+    source TEXT NOT NULL DEFAULT 'FOREGROUND_WEB' CHECK (source IN ('FOREGROUND_WEB')),
+    UNIQUE (journey_id, target_key)
+);
+
+-- The read door answers one journey's stamps oldest-stamped first; this is that scan.
+CREATE INDEX IF NOT EXISTS idx_journey_checkins_journey_stamped
+    ON journey_checkins(journey_id, stamped_at);

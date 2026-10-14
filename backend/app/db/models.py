@@ -2814,3 +2814,77 @@ class CollectionItem(Base):
     added_at: Mapped[str] = mapped_column(String)
 
     __table_args__ = (UniqueConstraint("folder_id", "place_id"),)
+
+
+# ---------------------------------------------------------------------------
+# fusion import: ORD-0476 slice 1 「打卡」 the trip footprint.
+# Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+# backend/app/db/models.py -- `JourneyCheckin` @1311.
+#
+# Same rule as the collections classes above: this class declares the rows the doors read, it does
+# not create the table.  On this branch `backend/db/schema.sql` is the only thing that creates
+# tables (`app/db/session.py` resolves `SCHEMA_PATH` to it and `ensure_schema()` applies it with
+# `executescript()` on every boot); nothing builds storage from the ORM metadata on this path, and
+# there is no alembic.  The `UniqueConstraint` below is therefore the mirror of the DDL's
+# `UNIQUE (journey_id, target_key)`, not the thing that enforces it -- the same discipline
+# `CollectionItem` follows.
+#
+# WHAT THIS CLASS DOES NOT CHANGE, AND WHY.  The source class carries no owner column, because it
+# did not need one: its doors resolved the journey by id alone and answered whoever asked.  Adding
+# a `traveler_id` here would have been the source's identity bug written into the storage layer --
+# a second, nullable account of ownership contradicting `journeys.traveler_id`, which the row
+# already carries through a NOT NULL foreign key.  Ownership is therefore *derived* at the door,
+# from the journey this stamp hangs off, and enforced by
+# `_checkin_journey_read` in `app/main.py` against the verified traveler principal.  A footprint
+# inherits its owner the same way every other journey child does: through `journey_id`.
+# ---------------------------------------------------------------------------
+
+
+class JourneyCheckin(Base):
+    """ORD-0476: one footprint stamp -- a traveller was at one target of one journey.
+
+    Built from zero on this branch too: the word `check_in` existed on this layer only as
+    :attr:`Stay.check_in_at` -- an accommodation arrival time, a different fact about a different
+    thing -- so nothing here inherits a shape.
+
+    The two target columns are nullable *and* cascade to NULL, and that pair of choices is the
+    measured one: `activities` rows are deleted when a plan version is superseded
+    (`backend/app/main.py`, `backend/app/operations/v9.py`) and `places` rows are pruned by the
+    catalog.  A RESTRICT would have made those doors fail, and a CASCADE would have let a replan
+    erase the traveller's own history.  So the stamp outlives its target and keeps saying which one
+    it was, through `target_kind` and `target_key`, which the door writes once and nothing later
+    re-derives -- after a cascade there is no row left to derive from.
+
+    `target_key` is also what makes 重复打卡 durable.  A `UNIQUE (journey_id, activity_id)` over a
+    NULL-able column is not a constraint SQLite enforces, because NULLs are distinct, and a SET NULL
+    cascade could mint or remove a duplicate long after the tap.  One immutable key per stamp,
+    unique per journey, is the half a second uvicorn worker cannot race past.
+
+    `source` has one value today (`FOREGROUND_WEB`): the traveller's own front-end tap.  It is a
+    column rather than an assumption because a location ping, an offline queue and a watch are each a
+    different channel with a different provenance story, and a CHECK in `backend/db/schema.sql` means
+    the second one has to arrive as a contract change instead of smuggling a value in.
+    """
+
+    __tablename__ = "journey_checkins"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE")
+    )
+    activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    place_id: Mapped[str | None] = mapped_column(
+        ForeignKey("places.id", ondelete="SET NULL"), nullable=True
+    )
+    target_kind: Mapped[str] = mapped_column(String)
+    target_key: Mapped[str] = mapped_column(String)
+    stamped_at: Mapped[str] = mapped_column(String)
+    note: Mapped[str | None] = mapped_column(String, nullable=True)
+    source: Mapped[str] = mapped_column(
+        String, default="FOREGROUND_WEB", server_default="FOREGROUND_WEB"
+    )
+
+    # Only the UNIQUE is declared here, as on the sibling container tables: the scan index belongs
+    # to `backend/db/schema.sql`, which is what `ensure_schema()` actually applies.
+    __table_args__ = (UniqueConstraint("journey_id", "target_key"),)
