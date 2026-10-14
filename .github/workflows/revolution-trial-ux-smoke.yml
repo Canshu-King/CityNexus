@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - trial/revolution-first-look-20261014
+      - fix/revolution-first-human-e2e-20261015
   workflow_dispatch:
 
 permissions:
