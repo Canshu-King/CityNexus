@@ -21,6 +21,7 @@ import {
 } from "../checkin/checkinCopy";
 import "../checkin/footprint.css";
 import { CollectInto } from "../collections/CollectInto";
+import { calendarRefusalKey, exportJourneyCalendar } from "./calendarExport";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
 import {
   dayOfGapCopy,
@@ -96,7 +97,7 @@ export function TripItinerary({
   onOpenCopilot: () => void;
   onOpenActivity: (activityId: string) => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const zh = locale.startsWith("zh");
   const plan = data.active_plan;
   const tz = data.journey.timezone || "UTC";
@@ -120,6 +121,29 @@ export function TripItinerary({
   /* One notice per stop, keyed by the stop that was pressed.  A single screen-wide string here made a
      double tap on one stop say "already stamped" under every stop on the day. */
   const [stopNotices, setStopNotices] = useState<Record<string, string>>({});
+
+  /* ORD-0496/0525, ported.  Unlike the 打卡 labels two blocks above, these nine sentences go through
+     the app dictionary (`calendar.*`), because `calendarExport.ts` hands the screen a *key*
+     (`calendarRefusalKey`) rather than a sentence -- switching a refusal to an inline ternary here
+     would mean rewriting that module and its test arms.  The keys were added in their own dictionary
+     branches, so none of them can answer with a raw key: `t()` echoing an absent key is exactly the
+     defect the 打卡 note above records. */
+  const [calendarNotice, setCalendarNotice] = useState<string | null>(null);
+  const [calendarPending, setCalendarPending] = useState(false);
+
+  const exportCalendar = async () => {
+    setCalendarPending(true);
+    setCalendarNotice(null);
+    const answer = await exportJourneyCalendar(journeyId);
+    if (answer.kind === "exported") {
+      setCalendarNotice(t("calendar.done", { events: answer.events }));
+    } else if (answer.kind === "refused") {
+      setCalendarNotice(t(calendarRefusalKey(answer.refusal)));
+    } else {
+      setCalendarNotice(t("calendar.unreachable"));
+    }
+    setCalendarPending(false);
+  };
 
   const reloadStamps = useCallback(async () => {
     const answer = await readCheckins(journeyId);
@@ -262,6 +286,23 @@ export function TripItinerary({
           {dayOfGapCopy(progress, zh) && (
             <p className="v8-lede" data-testid="trip-progress-daygap">
               {dayOfGapCopy(progress, zh)}
+            </p>
+          )}
+          {/* ORD-0525: the itinerary's own way out to a calendar app.  A quiet button rather than a
+             primary one on purpose -- this screen already carries the traveller's primary calls to
+             action, and a download is not louder than choosing what to do next. */}
+          <button
+            type="button"
+            className="v8-quiet-button"
+            data-testid="calendar-export"
+            disabled={calendarPending}
+            onClick={() => void exportCalendar()}
+          >
+            {calendarPending ? t("calendar.busy") : t("calendar.export")}
+          </button>
+          {calendarNotice && (
+            <p className="v8-lede" data-testid="calendar-export-notice">
+              {calendarNotice}
             </p>
           )}
         </div>
