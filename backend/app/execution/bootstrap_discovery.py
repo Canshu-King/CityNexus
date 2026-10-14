@@ -2470,6 +2470,30 @@ def save_bootstrap_discovery_pocket_walk(
                 refreshed_pocket,
                 {str(row.id): row for row in rows},
             ) or {}
+    # save_bootstrap_pocket_walk returns the route without the member's GO
+    # projection. Re-read that projection here so a retry of the identical save
+    # cannot make an in-progress walk look NOT_STARTED in the response.
+    persisted_pocket = session.scalar(
+        select(MemberDraftPocketWalk).where(
+            MemberDraftPocketWalk.journey_id == locked_journey.id,
+            MemberDraftPocketWalk.member_id == str(member.id),
+            MemberDraftPocketWalk.traveler_id == str(traveler_id),
+        )
+    )
+    if persisted_pocket is not None:
+        progress_row = session.scalar(
+            select(MemberDraftPocketWalkProgress).where(
+                MemberDraftPocketWalkProgress.journey_id == locked_journey.id,
+                MemberDraftPocketWalkProgress.member_id == str(member.id),
+                MemberDraftPocketWalkProgress.traveler_id == str(traveler_id),
+                MemberDraftPocketWalkProgress.pocket_walk_id == persisted_pocket.id,
+            )
+        )
+        pocket = _pocket_walk_payload(
+            persisted_pocket,
+            {str(row.id): row for row in rows},
+            _go_progress_payload(progress_row, persisted_pocket),
+        ) or {}
     return {
         "pocket_walk": pocket,
         "items": [_shortlist_payload(row) for row in rows],
