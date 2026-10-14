@@ -3,12 +3,15 @@
 Run on Windows from the repository root:
     py -3.13 trial/try_revolution.py
 
-This tool never publishes an external endpoint and never enables AI or payments.
+Default: REAL public OpenStreetMap/Overpass data after explicit UI consent.
+Use --sample only if you intentionally want controlled offline locations.
+The backend remains isolated on localhost; AI, booking and payment remain disabled.
 """
 from __future__ import annotations
 
 import argparse
 import os
+import re
 import secrets
 import shutil
 import socket
@@ -127,7 +130,7 @@ def wait_for(name: str, url: str, process: subprocess.Popen, seconds: int = 70) 
     raise RuntimeError(f"{name} did not become healthy at {url}; inspect trial/.runtime/{name}.err.log")
 
 
-def isolated_environment(db_name: str) -> dict[str, str]:
+def isolated_environment(db_name: str, *, sample: bool, contact_email: str | None) -> dict[str, str]:
     env = os.environ.copy()
     # Remove inherited external credentials/configuration. An existing Qoder
     # session must not turn a local trial into a live AI/provider deployment.
@@ -145,33 +148,53 @@ def isolated_environment(db_name: str) -> dict[str, str]:
     env.update({
         "CITYNEXUS_ENV": "development",
         "CITYNEXUS_DATABASE_URL": "sqlite:///./" + db_name,
-        "CITYNEXUS_DEMO_MODE": "true",
+        "CITYNEXUS_DEMO_MODE": "false",
         "CITYNEXUS_AI_ENABLED": "false",
         "CITYNEXUS_GUARDIAN_AUTORUN": "false",
         "CITYNEXUS_PREDICTIVE_AUTOPILOT_ENABLED": "false",
         "CITYNEXUS_TRAVELER_AUTH_SECRET": secret,
         "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": "86400",
-        # LIVE is a required internal switch for this code path, but the exact
-        # loopback endpoints below are independently graded TEST_PROVIDER.
         "CITYNEXUS_REAL_CITY_ENABLED": "true",
         "CITYNEXUS_REAL_CITY_MODE": "live",
-        "CITYNEXUS_CITY_SEARCH_ENABLED": "true",
-        "CITYNEXUS_CITY_SEARCH_PROVIDER": "nominatim",
-        "CITYNEXUS_CITY_SEARCH_TEST_PROVIDER": "true",
-        "CITYNEXUS_CITY_SEARCH_BASE_URL": f"http://127.0.0.1:{CITY_PORT}",
-        "CITYNEXUS_NOMINATIM_URL": f"http://127.0.0.1:{CITY_PORT}",
         "CITYNEXUS_CITY_PROVIDER": "mock-city",
         "CITYNEXUS_MOBILITY_PROVIDER": "mock-mobility",
         "CITYNEXUS_BOOKING_PROVIDER": "mock-booking",
         "CITYNEXUS_PAYMENT_PROVIDER": "mock-payment",
         "CITYNEXUS_CONTEXT_PROVIDER": "mock-context",
-        "CITYNEXUS_OVERPASS_URL": f"http://127.0.0.1:{OVERPASS_PORT}/api",
         "CITYNEXUS_BACKEND_PORT": str(BACK_PORT),
-        "REV_TRIAL_CITY_PORT": str(CITY_PORT),
-        "REV_TRIAL_OVERPASS_PORT": str(OVERPASS_PORT),
+        "VITE_REV_TRIAL_MODE": "sample" if sample else "live",
         "NO_PROXY": "127.0.0.1,localhost,::1",
         "no_proxy": "127.0.0.1,localhost,::1",
     })
+    if sample:
+        # No network provider is used for sample searches. Every test result
+        # is explicitly graded TEST_PROVIDER by the existing backend.
+        env.update({
+            "CITYNEXUS_CITY_SEARCH_ENABLED": "true",
+            "CITYNEXUS_CITY_SEARCH_PROVIDER": "nominatim",
+            "CITYNEXUS_CITY_SEARCH_TEST_PROVIDER": "true",
+            "CITYNEXUS_CITY_SEARCH_BASE_URL": f"http://127.0.0.1:{CITY_PORT}",
+            "CITYNEXUS_NOMINATIM_URL": f"http://127.0.0.1:{CITY_PORT}",
+            "CITYNEXUS_OVERPASS_URL": f"http://127.0.0.1:{OVERPASS_PORT}/api",
+            "REV_TRIAL_CITY_PORT": str(CITY_PORT),
+            "REV_TRIAL_OVERPASS_PORT": str(OVERPASS_PORT),
+        })
+    else:
+        if not contact_email:
+            raise RuntimeError("Real public geocoding requires a provider contact email.")
+        env.update({
+            "CITYNEXUS_CITY_SEARCH_ENABLED": "true",
+            "CITYNEXUS_CITY_SEARCH_PROVIDER": "nominatim",
+            "CITYNEXUS_CITY_SEARCH_TEST_PROVIDER": "false",
+            "CITYNEXUS_CITY_SEARCH_BASE_URL": "https://nominatim.openstreetmap.org",
+            "CITYNEXUS_NOMINATIM_URL": "https://nominatim.openstreetmap.org",
+            # Nominatim requires an operator-identifying User-Agent.
+            # The email is typed locally and is sent ONLY as a provider header;
+            # it is never stored in a checkout, database or printed in logs.
+            "CITYNEXUS_CITY_SEARCH_USER_AGENT":
+                "CityNexus-RevolutionFirstLook/1.0 (mailto:" + contact_email + ")",
+            "CITYNEXUS_OVERPASS_URL": "https://overpass-api.de/api",
+        })
     return env
 
 
@@ -179,19 +202,33 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--fresh", action="store_true",
                         help="Use a new isolated database without deleting your previous trial data")
+    parser.add_argument("--sample", action="store_true",
+                        help="Explicitly choose controlled local fake places instead of live public map search")
     parser.add_argument("--no-browser", action="store_true",
                         help="Print the local URL without auto-opening desktop browser")
     args = parser.parse_args()
 
+    contact_email = None
+    if not args.sample:
+        print("\nREVOLUTION REAL CITY EXPERIENCE")
+        print("External geocoding: OpenStreetMap Nominatim; places: Overpass.")
+        print("Nothing is sent while typing; the UI separately asks for each provider consent.")
+        print("Nominatim requires an identifying contact email in its User-Agent.")
+        print("Enter your own contact email locally. It will be sent to Nominatim,")
+        print("but never put in the Git repository or printed in the logs.")
+        contact_email = input("Nominatim contact email: ").strip()
+        if not re.fullmatch(r"[^@\\s]+@[^@\\s]+\\.[^@\\s]+", contact_email):
+            raise RuntimeError("A valid contact email is required for LIVE search. Use --sample to run offline.")
     RUNTIME.mkdir(parents=True, exist_ok=True)
-    for port in (FRONT_PORT, BACK_PORT, CITY_PORT, OVERPASS_PORT):
+    for port in ((FRONT_PORT, BACK_PORT, CITY_PORT, OVERPASS_PORT)
+                 if args.sample else (FRONT_PORT, BACK_PORT)):
         require_open_port(port)
 
     python = prepare_python()
     node = prepare_frontend()
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     db = f"_revolution_hands_on_{stamp}.db" if args.fresh else "_revolution_hands_on.db"
-    env = isolated_environment(db)
+    env = isolated_environment(db, sample=args.sample, contact_email=contact_email)
 
     children: list[tuple[str, subprocess.Popen]] = []
     handles = []
@@ -206,10 +243,11 @@ def main() -> int:
         return proc
 
     try:
-        fixtures = start("fixtures", sys.executable, [str(TRIAL / "controlled_provider.py")], ROOT)
-        wait_for("fixtures", f"http://127.0.0.1:{CITY_PORT}/status", fixtures)
-        if not health(f"http://127.0.0.1:{OVERPASS_PORT}/status"):
-            raise RuntimeError("Overpass test fixture has not started; inspect fixtures.err.log")
+        if args.sample:
+            fixtures = start("fixtures", sys.executable, [str(TRIAL / "controlled_provider.py")], ROOT)
+            wait_for("fixtures", f"http://127.0.0.1:{CITY_PORT}/status", fixtures)
+            if not health(f"http://127.0.0.1:{OVERPASS_PORT}/status"):
+                raise RuntimeError("Overpass test fixture has not started; inspect fixtures.err.log")
 
         api = start("backend", str(python),
                     ["-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
@@ -220,14 +258,15 @@ def main() -> int:
         ui = start("frontend", node, [str(vite_script), "--host", "127.0.0.1",
                                       "--port", str(FRONT_PORT), "--strictPort"], FRONTEND)
         wait_for("frontend", f"http://127.0.0.1:{FRONT_PORT}/api/v1/health", ui)
-        address = f"http://127.0.0.1:{FRONT_PORT}/v8/hub"
-        print("\nRevolution browser trial is ready (isolated from Qoder).")
+        address = f"http://127.0.0.1:{FRONT_PORT}/revolution"
+        print("\nRevolution browser trial is ready (isolated from Qoder and fusion).")
         print("OPEN:", address)
-        print("SOURCE: CONTROLLED TEST_PROVIDER. Places are samples, NOT verified real locations.")
+        print("SOURCE:", "CONTROLLED TEST_PROVIDER (not real places)" if args.sample
+              else "REAL PUBLIC OSM PROVIDERS (network access after specific user consent)")
         print("AI: OFF. Payment/booking: mock only. Backend bound to localhost.")
         print("DB:", db)
         print("For Android USB Chrome (ADB installed): adb reverse tcp:14173 tcp:14173")
-        print("Then on phone visit: http://localhost:14173/v8/hub")
+        print("Then on phone visit: http://localhost:14173/revolution")
         print("For iPhone/full HTTPS PWA trial, configure a separate authenticated HTTPS staging origin.")
         print("Logs:", RUNTIME)
         print("\nKeep this terminal open while trying the UI.")
