@@ -10,6 +10,7 @@ import {
   storeTravelerBearer,
 } from "../lib/travelerSession";
 import "./RevolutionFirstLook.css";
+import "./RevolutionUsability.css";
 
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 
