@@ -330,6 +330,9 @@ const en: Dict = {
   "calendar.export": "Export calendar",
   "calendar.busy": "Exporting…",
   "calendar.done": "{events} events downloaded — open the file in your calendar app.",
+  "calendar.refused.bin": "This trip is in the recycle bin, so there is no calendar to export. Bring it back first.",
+  "calendar.refused.not_found": "This trip is not on the server, so there is no calendar to export.",
+  "calendar.refused.unreadable": "This trip has no active plan yet, so there is nothing to export.",
 
   // ── Footprints ──
   /* One key for the screen's eyebrow.  Every other sentence this screen says lives in
@@ -1285,6 +1288,9 @@ const zhCN: Dict = {
   "calendar.export": "导出日历",
   "calendar.busy": "正在导出…",
   "calendar.done": "已下载 {events} 个日程，可在日历 App 里打开那个文件。",
+  "calendar.refused.bin": "这个行程在回收站里，所以现在没有可导出的日历。先把它找回来。",
+  "calendar.refused.not_found": "服务器上找不到这个行程，所以现在没有可导出的日历。",
+  "calendar.refused.unreadable": "这个行程还没有生效的方案，所以没有可导出的内容。",
 
   // ── 足迹 ──
   "checkin.title": "足迹",
