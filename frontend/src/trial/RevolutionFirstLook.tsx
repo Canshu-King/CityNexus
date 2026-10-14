@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
+import { RevolutionGuide } from "./RevolutionGuide";
 import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { cityNexusApi, type AgentRuntimeStatus } from "../api/citynexus";
@@ -238,8 +239,7 @@ export function RevolutionFirstLook() {
                 <span className="rev-firstlook-eyebrow">EXPLORE · DRAFT JOURNEY</span>
                 <h1>{journey.cityName}，从这里开始。</h1>
                 <p>
-                  已创建你自己的签名探索草稿。现在通过公开城市搜索或手动地图中心选择位置，
-                  再选择类别寻找地点。探索不会自动创建付费预订，也不会确认你到达过任何地方。
+                  先选择一个地方，再找好玩的地点。其余步骤我会在下面告诉你。
                 </p>
               </div>
               <button type="button" onClick={switchCity} className="rev-firstlook-reset">
@@ -265,6 +265,9 @@ export function RevolutionFirstLook() {
             )}
             {journey.status === "DRAFT" ? (
               <section className="rev-firstlook-real-ui" aria-label="Revolution 真实城市探索与 GO MODE">
+                <RevolutionGuide cityName={journey.cityName} />
+                <details className="rev-discovery-details">
+                  <summary>展开探索操作</summary>
                 <BootstrapDiscoveryPanel
                   key={journey.id}
                   journeyId={journey.id}
@@ -275,6 +278,7 @@ export function RevolutionFirstLook() {
                     setNotice("公开地点已按真实后端选择。你可以继续在草稿里体验私人 GO MODE，或确认未知费用进入正式 Journey。");
                   }}
                 />
+                </details>
               </section>
             ) : (
               <section className="rev-firstlook-real-ui" aria-label="Revolution Journey Operator" data-testid="revolution-real-operator">
