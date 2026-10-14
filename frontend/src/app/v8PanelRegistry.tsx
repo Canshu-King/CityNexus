@@ -3,8 +3,10 @@ import { Fragment, type ReactNode } from "react";
 import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
+import { CollectionPanel } from "../features/collections/CollectionPanel";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
+import { FootprintPanel } from "../features/checkin/FootprintPanel";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { JourneyInboxWorkbench } from "../features/inbox/JourneyInboxWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
@@ -322,6 +324,36 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     testId: "access-panel",
     when: (s) => s.route === "access",
     render: () => <AccessPanel />,
+  },
+  {
+    /* Transplanted from the Qoder product tree (ORD-0444): the 收藏 container, read through this
+       branch's doors.  It shares 城市探索 rather than taking a nav key of its own -- a new route key
+       would paint the literal `nav.collections`, because the nav strip resolves
+       `t("nav." + key)` and `t()` answers an absent key with the key itself.
+       No traveller id reaches this line on purpose: the door reads the scope out of the signed
+       credential, so the mount site has no way to name somebody else's shelf. */
+    id: "collections",
+    surface: "route",
+    testId: "collection-panel",
+    when: (s) => s.route === "discover",
+    render: () => <CollectionPanel />,
+  },
+  {
+    /* ORD-0476 slice 2: the footprint screen.  The source tree mounted it on a `footprints` route of
+       its own; this branch has no such key and adding one is the same nav-label trap as above, so it
+       rides the trip workspace -- which is where the trip it reads is already the subject.
+       The timezone travels with the journey id: the day a stamp belongs to is the server's instant
+       read in THIS trip's zone, and passing the zone is what keeps the screen off the device clock. */
+    id: "footprints",
+    surface: "route",
+    testId: "footprint-panel",
+    when: (s) => s.route === "trips" && !s.detailActivity && Boolean(s.data?.journey?.id),
+    render: (s) => (
+      <FootprintPanel
+        journeyId={s.data.journey?.id ?? null}
+        timezone={s.data.journey?.timezone ?? null}
+      />
+    ),
   },
 ];
 
