@@ -9,8 +9,18 @@
  * (design corrections §8).  Missing data is shown as missing.
  */
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { readCheckins, stampStop } from "../checkin/checkins";
+import type { CheckinRefusalFacts } from "../checkin/checkins";
+import {
+  CHECKIN_COPY,
+  CHECKIN_REFUSAL_COPY,
+  formatStampedMoment,
+  wordsFor,
+} from "../checkin/checkinCopy";
+import "../checkin/footprint.css";
+import { CollectInto } from "../collections/CollectInto";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
 import {
   dayOfGapCopy,
@@ -90,6 +100,82 @@ export function TripItinerary({
   const zh = locale.startsWith("zh");
   const plan = data.active_plan;
   const tz = data.journey.timezone || "UTC";
+
+  /* Ported from the Qoder tree (ORD-0476 slice 2 + ORD-0500 + ORD-0510), with this screen's own
+     vocabulary: the button's two words stay inline here, as every other label on this screen does,
+     instead of going through `t("checkin.*")`.  This branch's app dictionary carries no 打卡 keys,
+     and `t()` answers an absent key with the key itself -- which would paint `checkin.buttonAria`
+     on a Chinese screen.  The refusal sentences come from `checkinCopy.ts`, which is keyed by state
+     name and interpolates the label defined two lines below, so a sentence can only ever name a word
+     the traveller actually sees. */
+  const stampButtonLabel = zh ? "打卡" : "Check in";
+  const stampedButtonLabel = zh ? "已打卡" : "Stamped";
+
+  /* Which stops already carry a footprint is read from `GET /api/v1/journeys/{id}/checkins`, never
+     remembered from a tap: a stop shows 已打卡 only because the read returned that row.  The map is
+     keyed by the door's own `target_key` so this screen holds no second copy of a stamp. */
+  const journeyId = data.journey.id;
+  const [stamped, setStamped] = useState<Record<string, string>>({});
+  const [pendingStop, setPendingStop] = useState<string | null>(null);
+  /* One notice per stop, keyed by the stop that was pressed.  A single screen-wide string here made a
+     double tap on one stop say "already stamped" under every stop on the day. */
+  const [stopNotices, setStopNotices] = useState<Record<string, string>>({});
+
+  const reloadStamps = useCallback(async () => {
+    const answer = await readCheckins(journeyId);
+    if (answer.kind !== "read") return;
+    const next: Record<string, string> = {};
+    for (const stamp of answer.stamps) next[stamp.target_key] = stamp.id;
+    setStamped(next);
+  }, [journeyId]);
+
+  useEffect(() => {
+    void reloadStamps();
+  }, [reloadStamps]);
+
+  /** The words for one refusal, in this screen's own vocabulary, never the server's token. */
+  const refusalWords = (facts: CheckinRefusalFacts): string => {
+    if (facts.refusal === "CHECKIN_DUPLICATE_STAMP") {
+      /* Point at the stamp that won.  The door sends the instant; the uuid it also sends is a machine
+         word and stays off this screen. */
+      return facts.existingStampedAt
+        ? wordsFor(CHECKIN_COPY.duplicateAt, zh, {
+            moment: formatStampedMoment(facts.existingStampedAt, zh),
+          })
+        : wordsFor(CHECKIN_COPY.duplicateNoMoment, zh);
+    }
+    const key = CHECKIN_REFUSAL_COPY[facts.refusal];
+    if (key) return wordsFor(CHECKIN_COPY[key], zh, { button: stampButtonLabel });
+    if (facts.status === 0) return wordsFor(CHECKIN_COPY.unreachable, zh);
+    return wordsFor(CHECKIN_COPY.unexpected, zh, { status: String(facts.status) });
+  };
+
+  const stampThisStop = async (activityId: string) => {
+    setPendingStop(activityId);
+    setStopNotices((current) => {
+      const next = { ...current };
+      delete next[activityId];
+      return next;
+    });
+    const answer = await stampStop(journeyId, activityId);
+    if (answer.kind === "stamped") {
+      setStamped((current) => ({ ...current, [answer.stamp.target_key]: answer.stamp.id }));
+      // Read back rather than trusting the 201's own body for what the trip now holds.
+      await reloadStamps();
+    } else if (answer.kind === "refused") {
+      /* The server's answer taken as the fact it is: 409 means a stamp is already on file, so the row
+         is re-read and shown instead of overwritten -- and said in this screen's words, because a
+         reason code on a Chinese screen is the defect this project keeps having to fix. */
+      setStopNotices((current) => ({ ...current, [activityId]: refusalWords(answer.facts) }));
+      await reloadStamps();
+    } else {
+      setStopNotices((current) => ({
+        ...current,
+        [activityId]: wordsFor(CHECKIN_COPY.unreachable, zh),
+      }));
+    }
+    setPendingStop(null);
+  };
 
   const days = useMemo<DayGroup[]>(() => {
     const activities = plan?.activities ?? [];
@@ -287,9 +373,62 @@ export function TripItinerary({
                       {isCurrent && (
                         <span className="trip-stop-current">{zh ? "当前" : "Now"}</span>
                       )}
-                      <span className="trip-stop-more" aria-hidden="true">
+                      {/* This was decoration (`aria-hidden`) inside a row that claims `role="button"`
+                          while itself containing real controls -- nested interactive content, which a
+                          keyboard and a screen reader both refuse.  The row still answers a tap;
+                          「详情」 is now the control it always read as. */}
+                      <button
+                        type="button"
+                        className="trip-stop-more"
+                        data-testid="trip-stop-details"
+                        aria-label={`${zh ? "查看详情" : "View details"}: ${activity.title}`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onOpenActivity(activity.id);
+                        }}
+                      >
                         {zh ? "详情 ›" : "Details ›"}
-                      </span>
+                      </button>
+                      {/* The tap that makes a footprint.  It stops propagation because the row around it
+                          is itself an entry point, and a control whose click is swallowed by its own row
+                          is not an entry a traveller reaches.  Its state comes from the read above, not
+                          from local optimism. */}
+                      <button
+                        type="button"
+                        className="cn-stop-checkin"
+                        data-testid="stop-checkin"
+                        data-state={stamped[`activity:${activity.id}`] ? "stamped" : "fresh"}
+                        disabled={pendingStop === activity.id}
+                        aria-label={`${
+                          stamped[`activity:${activity.id}`] ? stampedButtonLabel : stampButtonLabel
+                        }: ${activity.title}`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          void stampThisStop(activity.id);
+                        }}
+                      >
+                        {stamped[`activity:${activity.id}`] ? stampedButtonLabel : stampButtonLabel}
+                      </button>
+                    </div>
+                    {stopNotices[activity.id] ? (
+                      <p
+                        className="cn-stop-checkin__notice"
+                        data-testid="stop-checkin-notice"
+                        role="status"
+                      >
+                        {stopNotices[activity.id]}
+                      </p>
+                    ) : null}
+                    {/* The way into the container: the wrapper, not the control, stops propagation.
+                        Nothing here remembers the write -- the line under it is drawn from a fresh
+                        `GET /api/v1/collections`, the way the footprint above it is.  The shelf scope
+                        comes from this device's signed credential, so no traveller id is passed. */}
+                    <div
+                      className="cn-stop-collect-host"
+                      onClick={(event) => event.stopPropagation()}
+                      onKeyDown={(event) => event.stopPropagation()}
+                    >
+                      <CollectInto placeId={activity.place_id ?? null} placeTitle={activity.title} />
                     </div>
                   </div>
                 </article>
