@@ -275,6 +275,10 @@ export function RevolutionFirstLook() {
                   onFormalCandidateSelected={(placeId) => {
                     setCandidateForJourney(placeId);
                     setNotice("已选择有来源的公开地点。下一步需要你确认正式计划，随后才能启动真正的 Journey Operator。");
+                    window.requestAnimationFrame(() => {
+                      document.querySelector('[data-testid="revolution-agent-start-journey"]')
+                        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    });
                   }}
                 />
                 <details
