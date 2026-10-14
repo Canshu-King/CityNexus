@@ -26,7 +26,7 @@ py -3.13 trial\try_revolution.py
 ```
 
 The launcher:
-1. Creates its OWN `trial/.runtime/python-venv`; runs `pip install -e backend` only on first setup; installs `frontend/node_modules` via `npm ci` if absent;
+1. Creates its OWN `trial/.runtime/python-venv`; installs the dependencies declared in `backend/pyproject.toml` on first setup; installs `frontend/node_modules` via `npm ci` if absent;
 2. Starts an explicitly **CONTROLLED TEST_PROVIDER** city service and Overpass-shaped provider, both on `127.0.0.1`; never calls the public geocoder or Overpass for its demo discovery;
 3. Starts a separate local backend with `backend/_revolution_hands_on.db`, distinct random persisted signing secret, `CITYNEXUS_AI_ENABLED=false`, mock booking/payment, and no Guardian autorun;
 4. Starts the actual Vite frontend with a same-origin API proxy, then opens **http://127.0.0.1:14173/v8/hub**;
