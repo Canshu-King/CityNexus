@@ -94,3 +94,46 @@
   .rev-firstlook .rev-quick-city-option{grid-template-columns:1fr!important}
   .rev-firstlook .rev-quick-city-option span{grid-column:1;grid-row:auto;margin-top:7px}
 }
+
+
+/* One conversational request BEFORE anyone has to understand maps. */
+.rev-firstlook .rev-quick-ai{
+  padding:clamp(16px,2.4vw,26px);
+  margin-bottom:25px;
+  background:linear-gradient(140deg,#e4f5e8,#f0f9f1);
+  border:1px solid #c1dfca;
+  border-radius:16px;
+}
+.rev-firstlook .rev-quick-ai-title{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;
+}
+.rev-firstlook .rev-quick-ai-title strong{font-size:20px!important;color:#14432e!important}
+.rev-firstlook .rev-quick-ai-title small{font-size:12px;color:#3b7e56}
+.rev-firstlook .rev-quick-ai label{display:block!important;font-size:13px!important;margin-bottom:9px!important;font-weight:700!important;color:#214b34!important}
+.rev-firstlook .rev-quick-ai textarea{
+  display:block;width:100%!important;max-width:100%!important;min-height:92px!important;
+  resize:vertical;border:1px solid #abcbb5!important;border-radius:12px!important;
+  padding:14px!important;background:#fff!important;color:#163a28!important;
+  font-size:15px!important;line-height:1.7!important;
+}
+.rev-firstlook .rev-quick-ai textarea:focus-visible{outline:3px solid #a2e7b5}
+.rev-firstlook .rev-quick-ai-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px}
+.rev-firstlook .rev-quick-ai-actions>button{
+  flex:0 0 auto!important;background:#176b46!important;border:1px solid #176b46!important;
+  color:#fff!important;min-height:46px!important;
+}
+.rev-firstlook .rev-quick-ai-actions>span{flex:1 1 200px;font-size:11px;color:#567c62;line-height:1.7}
+.rev-firstlook .rev-quick-ai-response{
+  padding:15px 18px;margin-top:16px;background:#fff;border:1px solid #a9d3b4;border-left:4px solid #298153;border-radius:12px;
+}
+.rev-firstlook .rev-quick-ai-response strong{color:#17623e!important;font-size:16px!important}
+.rev-firstlook .rev-quick-ai-response p{font-size:14px!important;color:#315b41!important;line-height:1.7!important}
+.rev-firstlook .rev-quick-ai-response span{display:block;color:#1b7046;font-weight:700;font-size:13px}
+.rev-firstlook .rev-quick-ai-response small{display:block;margin-top:8px;color:#688477;font-size:11px;line-height:1.6}
+.rev-firstlook .rev-quick-optional-map{margin-top:16px;color:#52715d}
+.rev-firstlook .rev-quick-optional-map>summary{cursor:pointer;font-size:13px;color:#287350;padding:9px 0;font-weight:650}
+.rev-firstlook .rev-quick-continue{margin:9px 0!important}
+@media(max-width:640px){
+.rev-firstlook .rev-quick-ai-actions{flex-direction:column;align-items:stretch}
+.rev-firstlook .rev-quick-ai-actions>button{width:100%!important}
+}
