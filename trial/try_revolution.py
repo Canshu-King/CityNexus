@@ -223,7 +223,9 @@ def main() -> int:
         print("Nominatim requires an identifying contact email in its User-Agent.")
         print("Enter your own contact email locally. It will be sent to Nominatim,")
         print("but never put in the Git repository or printed in the logs.")
-        contact_email = input("Nominatim contact email: ").strip()
+        contact_email = (os.environ.get("CITYNEXUS_NOMINATIM_CONTACT_EMAIL") or "").strip()
+        if not contact_email:
+            contact_email = input("Nominatim contact email: ").strip()
         if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", contact_email):
             raise RuntimeError("A valid contact email is required for LIVE search. Use --sample to run offline.")
     agent_enabled = bool(args.agent or args.agent_direct_model)
@@ -235,9 +237,10 @@ def main() -> int:
         print("The 7865 free-first router currently includes a potentially PAID final fallback.")
         print("Do not assume that any model request is guaranteed to cost zero.")
         print("AI tool calls remain subject to CityNexus signed user authority and approval.")
-        consent = input("Enable external-model Journey Agent for this LOCAL trial? [y/N]: ").strip().lower()
-        if consent not in {"y", "yes"}:
-            raise RuntimeError("Agent authorization declined; run without --agent for no AI")
+        # --agent is an explicit local operator choice; this step configures
+        # the model but DOES NOT invoke it. Each actual AI text submission in
+        # the browser is an independent explicit request with cost disclosure.
+        print("AI is configured only. No model call occurs until you ask in the UI.")
         if not args.agent_direct_model:
             healthy, state = router_health()
             if not healthy:
