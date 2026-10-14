@@ -445,7 +445,7 @@ export function RevolutionQuickExplore({
           )}
           {cityFocus && (
             <div className="rev-quick-map-step">
-              <h3>在地图上点一下你想探索的位置</h3>
+              <h3>在地图上点一下你想探索的位置，马上进入下一步</h3>
               {!tilesEnabled ? (
                 <button
                   type="button"
@@ -460,18 +460,14 @@ export function RevolutionQuickExplore({
                   <PublicCityAreaPicker
                     selectedCenter={selectedPin}
                     focusCenter={cityFocus}
-                    onSelect={setSelectedPin}
+                    onSelect={(point) => {
+                      // A deliberate public map tap is already the user's manual
+                      // center selection. Don't demand a second "confirm" click.
+                      // No Overpass request occurs until the next explicit action.
+                      setSelectedPin(point);
+                      useCenter(point);
+                    }}
                   />
-                  {selectedPin && (
-                    <button
-                      type="button"
-                      className="rev-quick-primary"
-                      onClick={() => useCenter(selectedPin)}
-                      data-testid="rev-quick-confirm-center"
-                    >
-                      就在这里找附近的地方 →
-                    </button>
-                  )}
                 </>
               )}
             </div>
