@@ -98,12 +98,10 @@ export function RevolutionFirstLook() {
         timezone: "Asia/Shanghai",
         start_at: startAt,
         end_at: endAt,
+        // This DRAFT is for open-ended discovery. Don't manufacture a
+        // physical arrival/departure anchor just to satisfy the old wizard.
         budget: { amount_minor: 100000, currency: "CNY" },
-        stay_budget: { amount_minor: 40000, currency: "CNY" },
         party_size: 1,
-        occupancy: { adults: 1, rooms: 1 },
-        arrival_anchor: { at: startAt, location: "未确认出发地点" },
-        departure_anchor: { at: endAt, location: "未确认离开地点" },
       });
       if (!created.id) throw new Error("服务器未返回 Journey ID。");
       const next = { id: created.id, cityCode, cityName: label };
