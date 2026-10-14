@@ -76,10 +76,12 @@ export function RevolutionQuickExplore({
   journeyId,
   cityName,
   agentConfigured = false,
+  onFormalCandidateSelected,
 }: {
   journeyId: string;
   cityName: string;
   agentConfigured?: boolean;
+  onFormalCandidateSelected?: (placeId: string) => void;
 }) {
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
@@ -363,6 +365,25 @@ export function RevolutionQuickExplore({
       return;
     }
     setSecond(id);
+  };
+
+  const chooseFormalJourney = (candidateId: string) => {
+    if (!discovery?.receipt_id || !onFormalCandidateSelected) return;
+    const selected = discovery.candidates.find((item) => item.candidate_id === candidateId);
+    if (!selected || selected.selection_state !== "READY_FOR_NATIVE_PLAN") {
+      setAlert({ type: "neutral", text: "这个地点暂时还没有足够的营业状态证据，不能用它启动正式 Journey。可以先保存私人散步。" });
+      return;
+    }
+    const receiptId = discovery.receipt_id;
+    void run(async (stillCurrent) => {
+      const response = await cityNexusApi.selectBootstrapCandidate(journeyId, receiptId, candidateId);
+      if (!stillCurrent()) return;
+      if (response.journey_id !== journeyId || !response.selected_place_id) {
+        throw new Error("地点选择未绑定当前的签名 Journey。");
+      }
+      onFormalCandidateSelected(response.selected_place_id);
+      setAlert({ type: "good", text: "地点已按服务器事实选定。现在由你确认正式计划，随后可使用真正的 Journey Operator。" });
+    });
   };
 
   const saveWalk = () => {
@@ -677,6 +698,15 @@ export function RevolutionQuickExplore({
                         <a href={source} rel="noopener noreferrer" target="_blank">
                           查看 OSM 原始来源（会打开外部网站） ↗
                         </a>
+                      )}
+                      {onFormalCandidateSelected && candidate.selection_state === "READY_FOR_NATIVE_PLAN" && (
+                        <button
+                          type="button"
+                          className="rev-quick-formal"
+                          disabled={busy}
+                          onClick={() => chooseFormalJourney(candidate.candidate_id)}
+                          data-testid={`rev-quick-formal-${candidate.candidate_id}`}
+                        >想让 AI 继续照看正式行程？从这里开始（需要你确认计划）</button>
                       )}
                     </article>
                   );
