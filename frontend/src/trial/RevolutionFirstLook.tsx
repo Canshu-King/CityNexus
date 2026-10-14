@@ -271,6 +271,7 @@ export function RevolutionFirstLook() {
                   key={journey.id}
                   journeyId={journey.id}
                   cityName={journey.cityName}
+                  agentConfigured={Boolean(agentConfigured)}
                 />
                 <details
                   className="rev-discovery-details"
