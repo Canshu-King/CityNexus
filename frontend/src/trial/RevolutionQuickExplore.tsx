@@ -96,6 +96,7 @@ export function RevolutionQuickExplore({
   const [alert, setAlert] = useState<{ type: AlertKind; text: string } | null>(null);
   const [rawError, setRawError] = useState<string | null>(null);
   const generation = useRef(0);
+  const currentOperation = useRef(0);
   const mounted = useRef(true);
   const busyRef = useRef(false);
   const currentBearer = useRef(readTravelerBearer());
@@ -106,6 +107,9 @@ export function RevolutionQuickExplore({
       // Never display signed member A's private route to member B.
       currentBearer.current = bearer;
       generation.current += 1;
+      currentOperation.current += 1;
+      busyRef.current = false;
+      setBusy(false);
       setCityResults([]);
       setDiscovery(null);
       setWalk(null);
@@ -120,6 +124,7 @@ export function RevolutionQuickExplore({
     return () => {
       mounted.current = false;
       generation.current += 1;
+      currentOperation.current += 1;
       stop();
     };
   }, []);
@@ -155,7 +160,7 @@ export function RevolutionQuickExplore({
     });
   };
 
-  const run = async (task: () => Promise<void>) => {
+  const run = async (task: (stillCurrent: () => boolean) => Promise<void>) => {
     if (busyRef.current) return;
     const identity = readTravelerBearer();
     if (!identity) {
@@ -163,21 +168,27 @@ export function RevolutionQuickExplore({
       return;
     }
     busyRef.current = true;
-    const requestGeneration = ++generation.current;
+    const requestGeneration = generation.current;
+    const runId = ++currentOperation.current;
+    const stillCurrent = () =>
+      mounted.current &&
+      generation.current === requestGeneration &&
+      currentOperation.current === runId &&
+      readTravelerBearer() === identity;
     setBusy(true);
     setAlert(null);
     setRawError(null);
     try {
-      await task();
+      await task(stillCurrent);
     } catch (error) {
-      if (mounted.current && requestGeneration === generation.current && readTravelerBearer() === identity) {
+      if (stillCurrent()) {
         setAlert({ type: "error", text: messageForError(error) });
         setRawError(error instanceof Error ? error.message.slice(0, 350) : "UNKNOWN");
       }
     } finally {
-      busyRef.current = false;
-      if (mounted.current && requestGeneration === generation.current && readTravelerBearer() === identity) {
-        setBusy(false);
+      if (currentOperation.current === runId) {
+        busyRef.current = false;
+        if (stillCurrent()) setBusy(false);
       }
     }
   };
@@ -188,12 +199,13 @@ export function RevolutionQuickExplore({
       setAlert({ type: "error", text: "请输入至少两个字的城市或地区，例如「连城县」。" });
       return;
     }
-    void run(async () => {
+    void run(async (stillCurrent) => {
       // The button explicitly announces that this ONE request sends the
       // entered public city label to Nominatim. No passive or typing request.
       const response = await cityNexusApi.bootstrapCitySearch(journeyId, {
         query: cityQuery, provider_consent: true, limit: 3,
       });
+      if (!stillCurrent()) return;
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
         setAlert({
@@ -247,7 +259,7 @@ export function RevolutionQuickExplore({
     }
     const selection = center;
     const chosenCategory = category;
-    void run(async () => {
+    void run(async (stillCurrent) => {
       // The explicitly labelled button is the ONE-use provider consent.
       const response = await cityNexusApi.bootstrapDiscovery(journeyId, {
         query: chosenCategory,
@@ -260,6 +272,7 @@ export function RevolutionQuickExplore({
         coordinate_system: "WGS84",
         mode: "live",
       });
+      if (!stillCurrent()) return;
       setDiscovery(response);
       setFirst(null);
       setSecond(null);
@@ -300,13 +313,14 @@ export function RevolutionQuickExplore({
     const receipt = discovery.receipt_id;
     const firstId = first;
     const secondId = second;
-    void run(async () => {
+    void run(async (stillCurrent) => {
       const saved = await cityNexusApi.saveBootstrapDiscoveryPocketWalk(journeyId, {
         receipt_id: receipt,
         first_candidate_id: firstId,
         second_candidate_id: secondId,
         max_walk_minutes: null,
       });
+      if (!stillCurrent()) return;
       if (saved.pocket_walk.journey_id !== journeyId ||
           saved.pocket_walk.plan_version_id !== null ||
           saved.pocket_walk.go_progress.physical_arrival_state !== "NOT_PHYSICAL_ARRIVAL_PROVEN") {
@@ -321,13 +335,14 @@ export function RevolutionQuickExplore({
   const go = (action: "START" | "REPORT_FIRST_DONE" | "START_SECOND" | "REPORT_WALK_DONE" | "PAUSE" | "RESUME") => {
     if (!walk) return;
     const saved = walk;
-    void run(async () => {
+    void run(async (stillCurrent) => {
       const response = await cityNexusApi.transitionBootstrapPocketWalkGo(journeyId, {
         action,
         expected_revision: saved.go_progress.progress_revision,
         pocket_walk_revision: saved.revision,
         idempotency_key: crypto.randomUUID(),
       });
+      if (!stillCurrent()) return;
       if (response.pocket_walk.pocket_walk_id !== saved.pocket_walk_id ||
           response.pocket_walk.revision !== saved.revision ||
           response.go_progress.physical_arrival_state !== "NOT_PHYSICAL_ARRIVAL_PROVEN" ||
