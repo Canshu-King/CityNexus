@@ -76,7 +76,10 @@ def run_probe(direct_model: str | None) -> int:
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=135) as response:
+        # Local wb2api should not traverse HTTP_PROXY, and a proxy must never
+        # receive the user's wb2api Authorization header.
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(req, timeout=135) as response:
             output = json.load(response)
             used_model = response.headers.get("x-free-router-model") or output.get("model") or "UNREPORTED"
     except urllib.error.HTTPError as exc:
