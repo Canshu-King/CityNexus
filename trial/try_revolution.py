@@ -217,7 +217,7 @@ def main() -> int:
         print("Enter your own contact email locally. It will be sent to Nominatim,")
         print("but never put in the Git repository or printed in the logs.")
         contact_email = input("Nominatim contact email: ").strip()
-        if not re.fullmatch(r"[^@\\s]+@[^@\\s]+\\.[^@\\s]+", contact_email):
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", contact_email):
             raise RuntimeError("A valid contact email is required for LIVE search. Use --sample to run offline.")
     RUNTIME.mkdir(parents=True, exist_ok=True)
     for port in ((FRONT_PORT, BACK_PORT, CITY_PORT, OVERPASS_PORT)
