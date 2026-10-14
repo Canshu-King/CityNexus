@@ -50,6 +50,12 @@ from app.agent.delegation_policy import (
     update_policy,
 )
 from app.agent.gateway import AgentToolGateway
+from app.calendar_export import (
+    ICS_MEDIA_TYPE,
+    CalendarActivity,
+    build_calendar,
+    content_disposition,
+)
 from app.concurrency_guards import journey_write_lock
 from app.replanning.commitment_remap import (
     RemapConflict as CommitmentRemapConflict,
@@ -27234,6 +27240,228 @@ def delete_collection(
     )
     session.commit()
     return Response(status_code=204)
+
+
+# ===========================================================================
+# fusion import: ORD-0496 slice 1 + ORD-0525 slice 2 -- one trip's own schedule leaves this
+# server as an RFC 5545 calendar.
+#
+# Source: `eeb8b8d2fd` (origin/mirror/integration-frontend-apple-pass1), backend/app/main.py:
+#   _calendar_journey     @4043   -> rebuilt (see the conflict below)
+#   _calendar_activities  @4075   -> carried verbatim
+#   get_journey_calendar  @4120   -> one added parameter, the rest verbatim
+# plus the pure module `backend/app/calendar_export.py`, copied BYTE-IDENTICAL (351 lines, LF,
+# sha1 9fceab781c).  That module holds the iCalendar grammar and none of the HTTP, which is why
+# it needed no fusion change at all; everything below is the HTTP, and the HTTP is the part that
+# had to be re-seamed.
+#
+# THE ONE CONFLICT THIS TRANSPLANT HAD TO SETTLE -- the same one ORD-0476 settles two sections
+# below, settled the same way.  The source door resolved the trip with `require(...)` and looked
+# at no credential: in `eeb8b8d2fd` an anonymous request that named a journey id downloaded that
+# trip's WHOLE plan -- its title, every activity's start and end, place names, costs -- as a file
+# a phone imports into its calendar.  That is the unsigned cross-traveller read the charter names
+# as a stop condition, in its widest form, so the door was rebuilt in front of
+# `app/traveler_principal.py::resolve_traveler_principal` before its behaviour was ported.
+#
+# WHAT THE SEAM CHANGED IN THE ANSWER, AND WHAT IT DID NOT.
+#   404 `JOURNEY_NOT_FOUND` now carries two facts -- "this server has no such trip" and "it holds
+#     one and it is not yours" -- and both are the SAME response, built by one code path rather
+#     than by prose.  Its wording is `require`'s on purpose, so the answer stays identical to the
+#     trip read authority's; `test_an_unknown_trip_gets_the_read_authoritys_own_404_plus_the_name`
+#     compares against a live `GET /api/v1/journeys/{missing}` and would fail on drift.  A distinct
+#     403 would make an export door into an oracle for which journey ids exist and who owns them,
+#     which is the reasoning `_checkin_journey_read` records for the footprint doors.
+#   Carried unchanged because they are the product: 409 `CALENDAR_JOURNEY_IN_RECYCLE_BIN`, 409
+#     `CALENDAR_SOURCE_UNREADABLE` with its three `reason` values, the six `X-CityNexus-Ics-*`
+#     counts and their arithmetic, the UTC-only instants, the byte-determinism of two exports.
+# `GET /api/v1/journeys/{journey_id}` is NOT touched by this section.  Its anonymity is recorded in
+# this file as a daylight decision (ORD-0434's note above `_share_refusal`); a port commit does not
+# get to tighten a neighbour on the side.
+# ===========================================================================
+
+
+def _calendar_principal(request: Request, session: Session):
+    """The traveller whose calendar this may be, or a refusal that wrote nothing.
+
+    The same seam the 打卡 and shelf doors use: it verifies the bearer token's HMAC against
+    `settings.traveler_auth_secret`, rejects a token whose traveller row is gone, and with no
+    secret configured it fails closed with 503 rather than reading as "anyone may export".
+    """
+
+    from app.traveler_principal import resolve_traveler_principal
+
+    return resolve_traveler_principal(request, session)
+
+
+def _calendar_scope_param(request: Request) -> None:
+    """Refuse by name a request that tries to say whose calendar to export.
+
+    This door never had a `traveler_id` parameter to remove -- its source scoped by the path id
+    alone -- so this is the statement that no spelling of "and also for this other person" is
+    accepted.  Ignoring such a parameter would be the worst answer: the caller would believe it
+    had been honoured.  The credential is still refused first.
+    """
+
+    if "traveler_id" in request.query_params:
+        raise _share_refusal(
+            422,
+            "A calendar is scoped by your credentials, not by a traveller id in the query.",
+            "CALENDAR_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED",
+            {"field": "traveler_id"},
+        )
+
+
+def _calendar_journey_not_found(journey_id: str) -> HTTPException:
+    """The one 404 this door can answer, worded exactly as the trip read authority words it."""
+
+    refused = HTTPException(404, f"Journey {journey_id} was not found")
+    refused.reason_code = "JOURNEY_NOT_FOUND"
+    refused.error_details = {"journey_id": journey_id}
+    return refused
+
+
+def _calendar_journey(session: Session, journey_id: str, principal) -> Journey:
+    """This trip, or the single answer that names no other traveller.
+
+    THREE FACTS, TWO ANSWERS.  A trip this server does not hold and a trip it holds that belongs to
+    somebody else are the same response and the same code path, so neither can be used to learn
+    that an id exists.  A trip in the recycle bin is 409, not 404: the row is there and 找回 puts it
+    back, and `list_journeys` keeps its `deleted_at IS NULL` promise, so a binned trip must not hand
+    out its schedule either -- the same reasoning the footprint doors state.
+    """
+
+    journey = session.get(Journey, str(journey_id))
+    if journey is None or journey.traveler_id != principal.traveler_id:
+        raise _calendar_journey_not_found(journey_id)
+    if journey.deleted_at is not None:
+        raise _share_refusal(
+            409,
+            "This trip is in the recycle bin. 找回 it before exporting its calendar.",
+            "CALENDAR_JOURNEY_IN_RECYCLE_BIN",
+            {"journey_id": journey.id, "deleted_at": journey.deleted_at},
+        )
+    return journey
+
+
+def _calendar_activities(session: Session, plan_version_id: str) -> list[CalendarActivity]:
+    """The activity rows of one plan version, in the plan's own order, with nothing added.
+
+    Order is `sequence_no` because that is the durable column -- `activities` carries
+    `UNIQUE(plan_version_id, sequence_no)` -- and ordering by `start_at` would compare two ISO
+    strings with different offsets as if they were one timeline.  A calendar client sorts by
+    `DTSTART` itself; what this door promises is only that it does not reorder the plan's rows by
+    guessing.
+
+    Every field is a column value.  A `place_id` that names no row yields no `LOCATION` rather than
+    a name this server made up, and a row whose `updated_at` is unusable offers `created_at` as its
+    `DTSTAMP` candidate -- still the row's own moment, never the request's.
+    """
+
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == plan_version_id)
+        .order_by(Activity.sequence_no, Activity.id)
+    ).all()
+    names: dict[str, str | None] = {}
+    for row in rows:
+        if row.place_id and row.place_id not in names:
+            place = session.get(Place, row.place_id)
+            names[row.place_id] = place.name if place is not None else None
+    return [
+        CalendarActivity(
+            uid=row.id,
+            summary=row.title,
+            location=names.get(row.place_id) if row.place_id else None,
+            description="\n".join(
+                (
+                    f"sequence={row.sequence_no}",
+                    f"type={row.activity_type}",
+                    f"status={row.status}",
+                    f"cost_minor={row.estimated_cost_minor} {row.currency}",
+                )
+            ),
+            start_at=row.start_at,
+            end_at=row.end_at,
+            stamp_at=row.updated_at or row.created_at,
+        )
+        for row in rows
+    ]
+
+
+@app.get("/api/v1/journeys/{journey_id}/calendar.ics")
+def get_journey_calendar(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+) -> Response:
+    """The trip's active plan as a `.ics` download, generated from the rows this server holds.
+
+    Where the schedule comes from: `journeys.active_plan_version_id`, then that plan version's
+    `activities` rows.  The same pointer every other plan door reads, so an export cannot show a
+    schedule the product does not consider active.  Three refusals name the states in which there is
+    no schedule to export -- no such trip for this traveller, in the recycle bin, and a pointer that
+    does not resolve.  The last one is `CALENDAR_SOURCE_UNREADABLE` carrying which of its three
+    conditions it is, because "the trip has no plan", "the plan row is gone" and "that plan is
+    another trip's" are three different facts and a screen has to say one of them rather than
+    "nothing scheduled".
+
+    What is *not* a refusal: a plan whose rows carry no usable clock.  Those activities are skipped
+    and counted in `X-CityNexus-Ics-Skipped-No-Clock`, and the arithmetic in the headers is the
+    proof that nothing went missing on the way -- `activities = events + skipped_no_clock +
+    skipped_no_stamp`.  An empty calendar with `events=0` is the honest answer for a plan that holds
+    no clocked activity, and the counts say so out loud.
+
+    `Cache-Control: no-cache` follows the three streaming doors that already carry it, so a phone
+    that re-exports after editing the trip revalidates instead of reopening a stale file.
+    """
+
+    principal = _calendar_principal(request, session)
+    _calendar_scope_param(request)
+    journey = _calendar_journey(session, str(journey_id), principal)
+    plan_id = journey.active_plan_version_id
+    if plan_id is None:
+        raise _share_refusal(
+            409,
+            "This trip has no active plan, so there is no schedule here to export.",
+            "CALENDAR_SOURCE_UNREADABLE",
+            {"journey_id": journey.id, "reason": "ACTIVE_PLAN_NOT_DECLARED"},
+        )
+    plan = session.get(PlanVersion, plan_id)
+    if plan is None:
+        raise _share_refusal(
+            409,
+            "The active plan this trip points at is not on this server any more.",
+            "CALENDAR_SOURCE_UNREADABLE",
+            {"journey_id": journey.id, "reason": "ACTIVE_PLAN_ROW_ABSENT", "plan_version_id": plan_id},
+        )
+    if plan.journey_id != journey.id:
+        raise _share_refusal(
+            409,
+            "The active plan this trip points at belongs to a different trip.",
+            "CALENDAR_SOURCE_UNREADABLE",
+            {
+                "journey_id": journey.id,
+                "reason": "ACTIVE_PLAN_BELONGS_TO_ANOTHER_JOURNEY",
+                "plan_version_id": plan.id,
+                "plan_journey_id": plan.journey_id,
+            },
+        )
+
+    document = build_calendar(journey.title, _calendar_activities(session, plan.id))
+    return Response(
+        content=document.body,
+        media_type=ICS_MEDIA_TYPE,
+        headers={
+            "Content-Disposition": content_disposition(journey.title, journey.id),
+            "Cache-Control": "no-cache",
+            "X-CityNexus-Ics-Events": str(document.events),
+            "X-CityNexus-Ics-Skipped-No-Clock": str(document.skipped_no_clock),
+            "X-CityNexus-Ics-Skipped-No-Stamps": str(document.skipped_no_stamp),
+            "X-CityNexus-Ics-Cross-Day": str(document.cross_day_events),
+            "X-CityNexus-Ics-Activities": str(document.activities),
+            "X-CityNexus-Ics-Whitespace-Trimmed": str(document.trimmed_values),
+        },
+    )
 
 
 # ===========================================================================
