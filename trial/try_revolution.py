@@ -15,6 +15,7 @@ import socket
 import subprocess
 import sys
 import time
+import tomllib
 import urllib.error
 import urllib.request
 import venv
@@ -53,9 +54,13 @@ def prepare_python() -> Path:
     if first_run:
         print("[setup] Creating isolated trial Python environment ...", flush=True)
         venv.EnvBuilder(with_pip=True, clear=False).create(str(venv_dir))
+    # The backend pyproject intentionally has no build-system. Install its declared
+    # dependencies rather than trying 'pip install -e backend' (which may try to
+    # package source/data/output directories as a distribution).
+    requirements = tomllib.loads((BACKEND / "pyproject.toml").read_text(encoding="utf-8"))["project"]["dependencies"]
     if first_run:
-        print("[setup] Installing backend dependencies ...", flush=True)
-        subprocess.run([str(py), "-m", "pip", "install", "-e", str(BACKEND)],
+        print("[setup] Installing backend runtime dependencies ...", flush=True)
+        subprocess.run([str(py), "-m", "pip", "install", *requirements],
                        cwd=ROOT, check=True)
     else:
         # If a partially installed venv exists, repair it rather than borrow host Python.
@@ -63,7 +68,7 @@ def prepare_python() -> Path:
                                cwd=BACKEND, capture_output=True, text=True)
         if probe.returncode:
             print("[setup] Repairing incomplete isolated backend environment ...", flush=True)
-            subprocess.run([str(py), "-m", "pip", "install", "-e", str(BACKEND)],
+            subprocess.run([str(py), "-m", "pip", "install", *requirements],
                            cwd=ROOT, check=True)
     return py
 
