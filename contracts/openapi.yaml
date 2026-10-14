@@ -2175,6 +2175,192 @@ paths:
       operationId: createEdgeObservation
       responses:
         '201': {description: Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}}}
+  # ---------------------------------------------------------------------------
+  # fusion import: ORD-0444 「收藏」 the collection doors.
+  # Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+  # contracts/openapi.yaml -- /collections @1263, /collections/{folder_id}/items @1336,
+  # components/parameters/CollectionFolderId @2836, and the four Collection* schemas @3595-3635.
+  #
+  # Three of these declarations are NOT copies, and every difference is the authentication
+  # retrofit that `backend/app/main.py` implements: the source's `GET /collections` required a
+  # `traveler_id` query parameter and its `CollectionFolderCreate` carried `owner_traveler_id` in
+  # the body, both of which that tree documents as asserted rather than authenticated.  A contract
+  # that kept them would be advertising the cross-member read this port refuses.
+  # The `DELETE /collections/{folder_id}` door is not from the source at all -- see the note on it.
+  # ---------------------------------------------------------------------------
+  /collections:
+    get:
+      operationId: listCollections
+      # No parameters, and that absence is the security property rather than an oversight: the
+      # source declared a required `traveler_id` here, which answered any shelf list the caller
+      # named.  The scope is now the bearer credential, so there is nothing left to declare.
+      description: >-
+        ORD-0444: one traveller's collection shelves, each with the rows on it.  The 收藏 exit
+        of the POI capture chain needed a container to land in; before this order the product had no
+        such object at all (`collection`/`favorite`/收藏 named nothing but GeoJSON FeatureCollection).
+        One door answers both halves because a screen that had to ask per shelf could not tie a
+        count to the rows beneath it: `item_count` here is the length of that same answer's `items`
+        array (`backend/app/services.py` -- `collection_folder_schema`).
+        Scoped by the authenticated traveller and by nothing else: there is no pagination, no sort
+        parameter and no way to name somebody else.  A request that still carries the source's
+        `traveler_id` query parameter is answered 422 with
+        `error.reason_code = COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED` rather than ignored,
+        because silently dropping the parameter that used to open this door is how a hole survives a
+        refactor.  「我的收藏」 is a claim the row carries and the credential verifies.  A traveller
+        holding no shelf is answered `[]` -- absence is a list, not a 404.
+      responses:
+        '200':
+          description: That traveller's shelves, oldest created first, each carrying its rows in add order
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/CollectionFolder'}
+        '401':
+          description: >-
+            No bearer credential, one this server cannot verify, or one whose traveller no longer
+            exists.  Nothing was read.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: >-
+            The request still carries `traveler_id` (COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED).
+            This code is reachable without credentials too, but only as 401 -- the credential is
+            checked before the query string is read.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+    post:
+      operationId: createCollection
+      description: >-
+        ORD-0444: name a shelf.  `name` is bounded exactly as `TravelerCreate.display_name` is
+        (1..120 characters) and stored verbatim -- there is no rename door on this server yet, so
+        what is written here is what the shelf reads for as long as it exists.  Two shelves may
+        share a name; the id addresses one.
+        The body carries no owner, and that is the difference this import makes.  The source's
+        `CollectionFolderCreate` required `owner_traveler_id` and validated only that some traveller
+        carried it (`404 MEMBER_TRAVELER_UNKNOWN`), which proves an id is real and never proves the
+        caller is it -- so any caller could write a shelf onto anybody's account.  Here the owner
+        column is written from the authenticated principal, and because the shape is
+        `additionalProperties: false` a client that still sends an owner is refused 422
+        (`validation.unknown_field`) instead of being silently agreed with.
+        The response is the shelf as `listCollections` answers it, read back through the same helper
+        (`backend/app/main.py` -- `_collection_rows_by_folder`), so a new shelf reports
+        `item_count` 0 because the read found no rows, not because the door typed a zero.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CollectionFolderCreate'}
+      responses:
+        '201':
+          description: The shelf as this server now holds it, with no rows on it yet
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectionFolder'}
+        '401':
+          description: No usable credential.  No shelf is stored.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '403':
+          description: The credential verified but is not accepted for this door.  No shelf is stored.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: Name missing or outside its bounds, or the body names an owner this door no longer takes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /collections/{folder_id}:
+    parameters:
+      - {$ref: '#/components/parameters/CollectionFolderId'}
+    delete:
+      operationId: deleteCollection
+      # NOT FROM eeb8b8d2fd -- see the header comment on `delete_collection` in
+      # `backend/app/main.py`: the imported tree grew three collection doors and no way to take a
+      # shelf away.  Declared here because a code the contract does not name is a code a consumer
+      # of this artifact cannot plan for.
+      description: >-
+        Take one shelf away, and with it the rows that were sitting on it
+        (`collection_items.folder_id ... ON DELETE CASCADE` in `backend/db/schema.sql`).
+        Owner-scoped exactly as `addCollectionItem` is: a shelf that belongs to somebody else is
+        answered the same 404 COLLECTION_FOLDER_NOT_FOUND as a shelf that does not exist, so this
+        door cannot be used to find out which shelf ids are taken or whose they are.
+        Success is 204 with no body -- the list door already renders absence as `[]` rather than as
+        a 404, so a client that re-reads after this gets a shape it can show.
+      responses:
+        '204':
+          description: The shelf is gone and its rows went with it.  No body.
+        '401':
+          description: No usable credential.  Nothing was deleted.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: >-
+            COLLECTION_FOLDER_NOT_FOUND -- no shelf with that id is held for the authenticated
+            traveller, whether the id is absent or belongs to someone else.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /collections/{folder_id}/items:
+    parameters:
+      - {$ref: '#/components/parameters/CollectionFolderId'}
+    post:
+      operationId: addCollectionItem
+      description: >-
+        ORD-0444: put one place on one shelf.  The row stores a *reference* to `places`, not a copy:
+        the name, category, city code and coordinate in the answer are resolved from that row on
+        every read, so a shelf cannot show a place the store no longer holds under it.  No plan,
+        activity or day is written -- that is the 加进计划 door's job, and the reason 收藏 is a
+        separate exit at all.
+        `folder_id` is a plain string rather than a uuid-formatted parameter, and that is what makes
+        the counter-case answerable: a shelf this server does not hold for you is
+        `404 COLLECTION_FOLDER_NOT_FOUND`, a place it does not hold is `404 PLACE_NOT_FOUND`, and a
+        place already on that shelf is `409 PLACE_ALREADY_IN_COLLECTION` naming the row that won.
+        None of the three is a 500 and none is the generic `require()` not-found, because the three
+        conditions need three different sentences on a screen.
+        One shelf holds a place once, enforced by `UNIQUE(folder_id, place_id)`
+        (`backend/db/schema.sql`) so two workers taking two taps of the same place cannot both
+        write.  In `eeb8b8d2fd` this door looked the shelf up by id alone, which let anyone holding
+        or guessing an id write onto a stranger's shelf; here the same lookup also requires the
+        shelf to belong to the authenticated traveller, and answers the shelf-absent 404 either way.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CollectionItemCreate'}
+      responses:
+        '201':
+          description: The row as this server now holds it, with the place resolved
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectionItem'}
+        '401':
+          description: No usable credential.  Nothing was read and nothing was written.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: >-
+            COLLECTION_FOLDER_NOT_FOUND (no such shelf for this traveller -- absent or somebody
+            else's, not distinguished), or PLACE_NOT_FOUND -- which one is in `reason_code`
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: PLACE_ALREADY_IN_COLLECTION; `details` names the row that is already there
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: Body outside the declared bounds
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
 components:
   parameters:
     DemoResetToken:
@@ -2185,6 +2371,17 @@ components:
       in: header
       required: false
       schema: {type: string}
+    CollectionFolderId:
+      # fusion import (ORD-0444, from eeb8b8d2fd contracts/openapi.yaml:2836-2845): a shelf id, and
+      # deliberately NOT `format: uuid`.  The door reads the string as it arrived and answers a shelf
+      # this server does not hold with `404 COLLECTION_FOLDER_NOT_FOUND`.  Declaring a uuid here would
+      # turn that same traveller action into a transport-level 422 and take the named refusal away --
+      # the ids this door hands out are uuid4 strings, but the shape of a wrong one is a 404 with a
+      # name, not a parse error.
+      name: folder_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 64}
     TravelerId:
       name: traveler_id
       in: path
@@ -3247,3 +3444,83 @@ components:
         recommendations:
           type: array
           items: {type: object, additionalProperties: true}
+    # -------------------------------------------------------------------------
+    # fusion import: ORD-0444 the 「收藏」 shapes.
+    # Source: origin/mirror/integration-frontend-apple-pass1 (== eeb8b8d2fd),
+    # contracts/openapi.yaml -- CollectionFolderCreate @3575, CollectionItemCreate @3585,
+    # CollectionItem @3593, CollectionFolder @3615.
+    # `CollectionFolderCreate` and the reading of `CollectionFolder.owner_traveler_id` are the
+    # authentication retrofit; the other two are ported unchanged.
+    # -------------------------------------------------------------------------
+    CollectionFolderCreate:
+      # ORD-0444: what creating a shelf asks for -- its name, and nothing else.  The name's bounds
+      # are copied from `TravelerCreate`'s `display_name` rather than invented, and the name is
+      # stored verbatim -- there is no rename door yet, so this is the name the shelf reads for its
+      # whole life.
+      #
+      # The source declared `required: [name, owner_traveler_id]` and validated the owner against
+      # `travelers` at the door.  That column is no longer an input: the shelf's owner is the
+      # traveller the server authenticated, so an owner in the body describes a different person
+      # than the one calling.  `additionalProperties: false` is what makes that a refusal rather
+      # than a silent ignore -- a shape that dropped a field which used to decide ownership would
+      # be the same hole with a quieter interface.
+      type: object
+      additionalProperties: false
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 120}
+    CollectionItemCreate:
+      # `place_id` is a plain string because `places.id` is a string column, not a UUID: a
+      # uuid-formatted parameter would answer a real place with `validation.not_an_id`.
+      # Forbidding extras here too, so a place cannot be posted with an owner name attached to it.
+      type: object
+      additionalProperties: false
+      required: [place_id]
+      properties:
+        place_id: {type: string, minLength: 1, maxLength: 64}
+        note: {type: [string, 'null'], maxLength: 280}
+    CollectionItem:
+      # One shelf row with the place behind it resolved from `places` at answer time.
+      # There is no `address` and no cover image, and that is a measured gap rather than an
+      # omission: `places` has no address column among its 14, and its `metadata_json` holds
+      # `cost_minor` / `duration_min` / `accessibility_evidence` and nothing address-shaped.
+      # A screen that printed 「地址」 would be printing a label over nothing.
+      type: object
+      required: [id, folder_id, place_id, name, category, city_code, location,
+                 provider_key, coordinate_system, note, added_at]
+      properties:
+        id: {type: string}
+        folder_id: {type: string}
+        place_id: {type: string}
+        name: {type: string}
+        category: {type: string}
+        city_code: {type: string}
+        location: {$ref: '#/components/schemas/GeoPoint'}
+        provider_key: {type: string}
+        coordinate_system: {type: string}
+        # null means no note was ever written -- a different fact from an empty one.
+        note: {type: [string, 'null']}
+        added_at: {type: string}
+    CollectionFolder:
+      # A shelf and its rows in one answer.  `item_count` is the length of this same payload's
+      # `items` array (`backend/app/services.py` -- `collection_folder_schema`), so the number and
+      # the rows beneath it cannot describe two different reads.
+      #
+      # `owner_traveler_id` is an OUTPUT here.  In `eeb8b8d2fd` it was both an output and the thing
+      # the caller asserted, and its own contract said "no promise that the id was authenticated --
+      # asserting it is what this version does".  On this server the value is written from the
+      # verified principal at creation and read off the row afterwards, so a screen can say whose
+      # shelf it is and no caller can choose the answer.
+      type: object
+      required: [id, name, owner_traveler_id, created_at, updated_at, item_count, items]
+      properties:
+        id: {type: string}
+        name: {type: string}
+        owner_traveler_id: {type: string}
+        # Written equal at creation and left alone afterwards: adding a row writes
+        # `collection_items`, not this row, so `updated_at` stays "when this shelf row was last
+        # written" instead of becoming a second, contradicting account of the shelf.
+        created_at: {type: string}
+        updated_at: {type: string}
+        item_count: {type: integer}
+        items: {type: array, items: {$ref: '#/components/schemas/CollectionItem'}}
