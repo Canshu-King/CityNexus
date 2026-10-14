@@ -1,0 +1,16 @@
+{
+ "other_traveler_id": "cd73d0b6-e033-4311-8608-b2563d4ef286",
+ "collection_requests_with_no_credential": 0,
+ "asked_urls": [
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551",
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551/experience",
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551/replans",
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551/plans",
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551/twin",
+  "http://127.0.0.1:4405/api/v1/travelers/d3f53550-4862-4e3a-a681-cc1ad74706e1/agent-policy",
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551/wallet",
+  "http://127.0.0.1:4405/api/v1/journeys/1b1c82be-daab-48fc-9ec6-2c01b1108551/offline-snapshot",
+  "http://127.0.0.1:4405/api/v1/agent/runtime-status"
+ ],
+ "empty_sentence": "还没有旅客身份，所以没问服务器：收藏的读门只认这台设备上的签名凭据，不认点名的 id。"
+}
