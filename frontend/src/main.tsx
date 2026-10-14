@@ -36,6 +36,7 @@ import {
 } from "./demo/goldenScenario";
 import { journeyModeMachine } from "./state/journeyModeMachine";
 import { V8Experience } from "./app/V8Experience";
+import { RevolutionFirstLook } from "./trial/RevolutionFirstLook";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
 import { LocaleProvider } from "./i18n/LocaleContext";
 import { applyTheme, followSystemTheme } from "./theme";
@@ -1800,6 +1801,9 @@ function App() {
   // first-time user never lands on the legacy surface (see PHASE 2).
   const path = window.location.pathname;
   if (path.startsWith("/legacy")) return <LegacyApp />;
+  if (path === "/revolution" || path.startsWith("/revolution/")) {
+    return <ProductErrorBoundary><RevolutionFirstLook /></ProductErrorBoundary>;
+  }
   return (
     <ProductErrorBoundary>
       <V8Experience />
