@@ -224,8 +224,11 @@ export function RevolutionFirstLook() {
               <article><span>03</span><b>保存 Pocket Walk</b><small>GO MODE、导航与状态恢复</small></article>
             </div>
             <p className="rev-firstlook-limit">
-              此独立入口只解决首次进入 Revolution 的问题。外部 AI Agent 当前未启用，
-              不能把 Pocket Walk 等同于完整自主 Agent。地点开放情况、费用和行走时长如无证据均为未知。
+              此独立入口只解决首次进入 Revolution 的问题。
+              {agentConfigured
+                ? " 后端已配置真实模型网关，但当前页面的 DRAFT Pocket Walk 不等于 Agent 自主执行；请在选择有来源的地点后显式进入正式 Journey，再检查 AgentRun。"
+                : " 外部 AI Agent 当前未启用；需要从本机启动器明确使用 --agent。"}
+              地点开放情况、费用和行走时长如无证据均为未知。
             </p>
           </section>
         ) : (
