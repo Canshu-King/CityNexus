@@ -124,10 +124,14 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 
 ## 8. 我不能确认的（不写成就绪）
 
-- 融合基线全量套件红面**前值**正在跑（`_pytest_fusion_base.db`，8121 那棵干净 worktree）；出数前任何「无回归」都不作数。
+- ~~融合基线全量套件红面**前值**正在跑~~ ⇒ **已取到**（22:31，同一枚 `CityNexus/.venv` 解释器、各自新库、同机）：
+  基线 `594f9a4e75` **272 failed / 1901 passed / 7 errors / 510.23s**，import 尖 **156 / 2055 / 7 / 415.30s**。
+  两枚数**不能直接比大小**（已用同根单跑证明红面主要是测试互踩：`test_solver_runtime_gate.py` 整套红 15、单跑 20 全绿），
+  可比的只有 `FAILED` 名集合的差：**1 枚**，而那枚在两棵树单跑都红 ⇒ 本轮移植未引入新失败。详见 `QODER_RESULT.md` §1。
 - 融合树的 `vite build` / 真机 PWA 在 fusion 上还没跑过（磁盘 4585 MB、node_modules 799 MB，目前靠 junction 只读借用，未验证可写场景）。
-- parity-A 的 `LIVE_IN_UI` 全是**静态**四层证明（路由表∧注册表∧词典∧testid 落在 render），没开页没点按钮；
-  `when` 门在真数据上能否为真未验（收藏需 `traveler_id` 非空、长图入口需 `activities.length>0`）。
+- parity-A 的 `LIVE_IN_UI` 是**静态**四层证明（路由表∧注册表∧词典∧testid 落在 render）。
+  其中收藏与打卡/足迹两条已由 §9 的界面守门**在真数据上点开并写通过**（`when` 门为真、`collect-entry` 在非空 plan 上可用）；
+  其余五条（POI 导入、`.ics`、长图、abort、成员角色）仍是静态层，没开页没点按钮。
 - precache 8 条名单我无法复现（`v10-sw.js` 是构建产物，命令禁 build），只引主人今日实测与 `vite.config.ts:52-56` 自记。
 - `catalog_hydration_operations.py` 两侧是否改同一函数没读完 ⇒ 导入地点的合并冲突强度是未知项。
 
@@ -145,7 +149,7 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 | 前端移植件 | **10 文件 / 1623 行** | `git show --stat 2231d7b6cc` |
 | app 词典键 | **1 键 / 2 语种行** | `grep -c '"checkin.title"' frontend/src/i18n/LocaleContext.tsx` |
 | 类型闸 | 两份配置各 **RC=0** | `npx tsc --noEmit -p tsconfig.check.json`、`-p tsconfig.typecheck.json` |
-| 界面守门 | **5 passed（布景 1 + 四条腿 4）/ 21.6s / RC=0** | 见 `reports/qoder-ord0510/*.json`，跑法在 `SLICE1_UI_PORT_SEAM.md` §4 |
+| 界面守门 | **5 passed（布景 1 + 四条腿 4）/ 21.6s / RC=0** | 见 `reports/qoder-ord0510/*.json`，跑法在 `qoder_import/SLICE1_UI_PORT_SEAM.md` §4 |
 
 四条腿各自钉住的一件事（数值取自当轮输出，不是推算）：
 1. **足迹行来自读门**：`stamps_on_server_before=0 → 1`，屏上 `21:43 Arrival 没写备注 网页端打的`，日区 `Asia/Shanghai`；
@@ -156,3 +160,18 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 **还没接通的两条腿（别按「就绪」读）**：`footprintRead.ts` 未移植——它要 `mapPanelCopy.ts` 里 6 枚 `footprint*` 键，融合树没有，且只有地图面读它；
 `vite build` / 真机 PWA 在这条分支上从没跑过。§1 那句「融合侧没有入口」现在只剩 **4 条**成立（导入地点 POI import、日历 `.ics` 导出、行程长图 poster、中止行程 abort）——
 打卡、足迹、收藏三条已由本节接通（`checkin`/`collections` 两条目录在树上命中不再为 0，注册表各多一枚 `route` 面板，`TripItinerary` 挂上两条写腿）。
+
+## 10. 走查落盘 + 交付件归位（2026-10-14 22:11，import 尖 `fbca9536d3`）
+
+号令者 Deliverables 要的两件都在**指定路径**上了：本文件 `fusion/QODER_PARITY.md`（原先错放在
+`fusion/qoder_import/` 下，已 `git mv` 归位，命令写的是路径不是目录），和 `fusion/QODER_RESULT.md`
+（SHA / 受影响的测试 / 界面入口 / 新旧动作 / 还欠什么）。
+
+| 尺 | 数 | 复跑 |
+|---|---|---|
+| 界面守门 + 走查（同一条权威栈） | **6 passed / 24.0s / RC=0**，runId `uiportr10`，库 `_e2e_uiportr10.db`，后端 :8110 | `SLICE1_UI_PORT_SEAM.md` §4–§5 |
+| 走查存档 | 7 枚 390×844 PNG + `walk_manifest.json`（每屏字节 + sha256 前 12 位）；7 枚摘要互不相同是**断言**，不是备注 | `reports/qoder-ord0510-walk/` |
+| 全量 A/B（同解释器、各自新库） | 基线 **272F/1901P/7E/510.23s**，本尖 **156F/2055P/7E/415.30s** ⇒ 只认 `FAILED` 名集合差：**1 枚**，两棵树单跑都红 | `QODER_RESULT.md` §1 |
+
+三条量具教训（都红在我这边，不对产品负责的部分见 `SLICE1_UI_PORT_SEAM.md` §5）：PNG 摘要必须互异、
+`filter({ has: [data-state="fresh"] })` 是自我作废的定位器、spec 不在项目类型闸里（补了一行 `tsc` 并做了反向对照）。
