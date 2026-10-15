@@ -14,8 +14,8 @@
 | 尺 | 数 |
 |---|---|
 | 分支 | `fusion/qoder-import-20261014` |
-| 产品尖 / 现读尖 | 最后一枚带产品改动的尖 **`41fbb9c731`**；`git rev-parse --short HEAD` 现读 **`d466082b1e`**（其后 **4** 枚只进 `fusion/` 与 `review/`：`cf9a1899ce`、`69d25fcb7b`、`ade3b4dfdf`、`d466082b1e`）。本文件所有「diff 面」的数都在提交之后重取——见 §7 第 5 次那条口径。**读法**：这枚表取于上列那枚尖；改这张表的那枚提交只会让尖往前走、不会让产品面的数变，所以你重跑那条命令看到尖不同是预期内的，数的口径以命令现读为准 |
-| 超出融合基线 `594f9a4e75` 的提交 | **47**（`git rev-list --count 594f9a4e75..HEAD`），分两段现读：`594f9a4e75..f9abba3fde` **37** 枚（切片 1 与切片 2，其中词典枝 4 枚）、`f9abba3fde..HEAD` **10** 枚（切片 3 的产品与词典 6 枚 + 其后的 docs 与量具 4 枚，逐枚点名用 `git log --oneline f9abba3fde..HEAD`） |
+| 产品尖 / 现读尖 | 最后一枚带产品改动的尖 **`41fbb9c731`**；其后全是 docs 与量具提交（**取值这一行时 5 枚**，`git rev-list --count 41fbb9c731..HEAD` 现读）。**改这张表的那枚提交本身会让枚数多一枚、把表里的「现读」作废**——那正是 §7 第 5 次的形状，所以你重跑看到尖号与枚数不同是预期内的，只有产品面那几个数不受影响（同数与否也由命令现读，见下两行） |
+| 超出融合基线 `594f9a4e75` 的提交 | 取这行时 **48**（`git rev-list --count 594f9a4e75..HEAD`），分两段现读：`594f9a4e75..f9abba3fde` **37** 枚（切片 1 与切片 2，其中词典枝 4 枚）、`f9abba3fde..HEAD` **11** 枚（切片 3 的产品与词典 6 枚 + 其后的 docs 与量具 5 枚，逐枚点名用 `git log --oneline f9abba3fde..HEAD`） |
 | 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33**（docs 与量具那几枚提交不碰产品面，所以它与上一版同数——同数本身是现读出来的，不是假设） |
 | 含证据面（再加 `frontend/e2e reports review fusion`） | **66 文件 / +13785 / −41**（上一版是 `65 / +13694 / −41`；多的那一枚文件、那 91 行就是 `bb_letter_precheck_r1.py` 自身。这一枚每次加提交都会动，所以它只作为「现读」报，不作为基线报） |
 | 远端 | **没推**。`git ls-remote` 现读三枚 fusion 尖仍是 `594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66` |
