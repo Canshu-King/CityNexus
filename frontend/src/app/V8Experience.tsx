@@ -587,6 +587,16 @@ function greetingFor(hour: number, t: (key: string) => string) {
   return t("hub.greeting.evening");
 }
 
+/** The sky behind the Today intro.  Same hour boundaries as `greetingFor` on
+ *  purpose: the words and the light are one statement about the same clock, so
+ *  they can never disagree (a "晚上好" under a noon sky is a truth defect). */
+function pulsePhaseFor(hour: number) {
+  if (hour < 5) return "night";
+  if (hour < 12) return "dawn";
+  if (hour < 18) return "day";
+  return "dusk";
+}
+
 function cityFromCode(code: string) {
   const segments = code.split("-");
   const raw = (
@@ -2840,7 +2850,7 @@ function Hub({
   })();
 
   return (
-    <section className="v8-page">
+    <section className="v8-page" data-pulse-phase={pulsePhaseFor(new Date().getHours())}>
       <div className="v8-page-intro">
         <div>
           <p className="v8-kicker">{greetingFor(new Date().getHours(), t)}</p>

@@ -42,6 +42,9 @@ import { LocaleProvider, useT } from "./i18n/LocaleContext";
 import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
 import "./design-tokens.css";
+/* The pulse layer loads last on purpose: it is the surface contract, and it has
+   to be able to beat a legacy literal without reaching for `!important`. */
+import "./cn-pulse.css";
 
 /* Resolve the theme root contract before the first paint.  The stylesheets key their dark
    tables off `:root[data-theme]`, so the attribute must exist by the time anything is

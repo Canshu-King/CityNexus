@@ -1,0 +1,503 @@
+/*
+ * CityNexus — 脉搏层 / The Pulse Layer  (frontend revolution, pass 1)
+ *
+ * What this file is for
+ * ─────────────────────
+ * The audit that opened this pass measured the running tip (eeb8b8d2fd) on real
+ * data with a rendered-page probe (`_cmdr_fe_rev_1016/capture_r1.cjs`):
+ *   · 390x844 light: 6 of 103 laid-out text nodes below their WCAG floor
+ *   · 390x844 dark : 37 of 103 below floor        ← the defect class
+ *   · 1440x900 dark: 40 of 138 below floor
+ *   · 310 light-surface / dark-ink literals across 7 stylesheets, 266 of them in
+ *     the legacy `styles.css` (`_cmdr_escape_hatch_scan_r2.py`)
+ * A dark-mode screenshot of the plan-comparison card was measured at 1.09:1 —
+ * near-white ink painted on a card whose background is the literal `#fff`.
+ *
+ * The cause is structural, not a palette disagreement: a component is allowed to
+ * paint a surface with a literal while its text comes from a themed token. Flip
+ * the theme and the pair inverts. 79 `!important` declarations in
+ * `design-tokens.css` are the band-aids for the handful of those pairs that
+ * someone happened to notice.
+ *
+ * So this layer does two things, in this order:
+ *   1. A SURFACE CONTRACT. A surface token never travels alone: every
+ *      `--cn-elev-*` ships with its `--cn-on-elev-*` ink pair. Anything that
+ *      paints paper takes paper from here; anything that writes on paper takes
+ *      the ink from the matching pair. A theme flip then cannot produce
+ *      light-on-light, because both halves move together.
+ *   2. AN IDENTITY. The Today screen is the product's face and it currently reads
+ *      as a flat grey list with one 28px sentence in it. This layer gives it a
+ *      time-of-day sky, a three-step elevation ladder, a type hierarchy where the
+ *      clock and the place name are set as display type with tabular figures, and
+ *      press feedback on every control.
+ *
+ * What this file deliberately does NOT do
+ * ───────────────────────────────────────
+ * · It adds no DOM and removes none. Selectors bind to class names that are
+ *   already rendered (measured with `capture_tree.cjs`, 86 nodes), so the
+ *   rendered assertions in `frontend/e2e/` keep their subjects.
+ * · It declares no `!important`. Every rule here wins by specificity or by load
+ *   order, which means a later author can still override it — a band-aid that
+ *   cannot be overridden is how `design-tokens.css` got to 79 of them.
+ * · It runs no content-hiding entrance animation. An opacity-0 first frame reads
+ *   as "not visible" to a Playwright assertion that fires before the animation
+ *   settles, which would trade a visual upgrade for a red gate. Motion here is
+ *   press/hover/ambient only, and all of it is switched off under
+ *   `prefers-reduced-motion`.
+ */
+
+/* ═══ 1 · Surface contract ═══════════════════════════════════════════════
+   Paper and the ink that is guaranteed legible on it, as one indivisible pair.
+   Naming: `elev` = elevation ladder, `on-elev` = the ink for that step.
+   Every token below is declared in BOTH schemes with different values, so none
+   of them belongs to the `always` family.                        [T2 parity] */
+
+:root {
+  /* Constants: identical under both schemes, so they belong to the `always`
+     family and are declared exactly once. A white label on the solid accent
+     fill is 4.8:1 in either theme; re-stating it per theme would be the
+     contradiction the token gate reads as red.                    [T2 constant] */
+  --cn-always-on-accent-solid: #ffffff;
+
+  /* Warm paper. The cold #f5f5f7 canvas makes a travel product look like a
+     settings panel; 3 units of yellow undertone reads as paper without moving
+     far enough to break the 30 measured contrast pairs around it. Applied
+     progressively (Today first), never by editing --cn-canvas. */
+  --cn-paper: #f7f5f2;
+  --cn-paper-deep: #efece7;
+
+  --cn-elev-0: #f7f5f2;
+  --cn-elev-1: #ffffff;
+  --cn-elev-2: #fffdfa;
+  --cn-elev-3: #ffffff;
+
+  --cn-on-elev-0: #1d1d1f;
+  --cn-on-elev-1: #1d1d1f;
+  --cn-on-elev-2: #1d1d1f;
+  --cn-on-elev-3: #1d1d1f;
+
+  /* Muted and tertiary ink, stated per step so "secondary text" means one
+     measured thing on every surface instead of three fallbacks. */
+  --cn-on-elev-0-muted: #5d5b57;
+  --cn-on-elev-1-muted: #605e5a;
+  --cn-on-elev-2-muted: #605e5a;
+  --cn-on-elev-3-muted: #605e5a;
+  --cn-on-elev-0-tertiary: #7a7772;
+  --cn-on-elev-1-tertiary: #767370;
+
+  /* Hairlines that separate paper from paper: light enough to recede, dark
+     enough to still be seen on the warm canvas. */
+  --cn-rule: rgba(29, 27, 25, 0.1);
+  --cn-rule-strong: rgba(29, 27, 25, 0.18);
+
+  /* Elevation shadows. Two-source (contact + ambient) so a card lifts instead
+     of greying. */
+  --cn-lift-1: 0 1px 1px rgba(29, 27, 25, 0.05), 0 2px 6px rgba(29, 27, 25, 0.06);
+  --cn-lift-2: 0 1px 2px rgba(29, 27, 25, 0.06), 0 6px 18px rgba(29, 27, 25, 0.09);
+  --cn-lift-3: 0 2px 4px rgba(29, 27, 25, 0.08), 0 18px 44px rgba(29, 27, 25, 0.14);
+
+  /* Time-of-day sky. Painted behind the Today intro only; it carries no text,
+     so it is free to be saturated. */
+  --cn-sky-dawn: radial-gradient(120% 90% at 12% -10%, rgba(255, 138, 76, 0.3), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(255, 214, 150, 0.42), transparent 58%);
+  --cn-sky-day: radial-gradient(120% 90% at 12% -10%, rgba(10, 102, 255, 0.16), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(120, 200, 255, 0.3), transparent 58%);
+  --cn-sky-dusk: radial-gradient(120% 90% at 12% -10%, rgba(255, 106, 61, 0.26), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(122, 75, 214, 0.24), transparent 58%);
+  --cn-sky-night: radial-gradient(120% 90% at 12% -10%, rgba(43, 58, 103, 0.5), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(12, 20, 42, 0.6), transparent 58%);
+  --cn-sky: var(--cn-sky-day);
+
+  /* ── Type roles ───────────────────────────────────────────────────────
+     One stack for statements, one for prose, one for numbers. The Latin
+     display face is asked for first and the CJK faces follow in the same
+     stack, so a mixed string like "10:30 Riverside Museum" resolves per
+     glyph instead of dropping the Chinese into a system default. */
+  --cn-font-display: "SF Pro Display", "Segoe UI Variable Display", "Segoe UI",
+    "PingFang SC", "Noto Sans SC", "Source Han Sans SC", "HarmonyOS Sans SC",
+    "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --cn-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei UI", "Microsoft YaHei",
+    system-ui, sans-serif;
+  --cn-font-num: "SF Pro Rounded", "SF Pro Display", "Segoe UI Variable Display",
+    "DIN Alternate", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+
+  --cn-tracking-display: -0.025em;
+  --cn-tracking-caps: 0.08em;
+  --cn-lh-tight: 1.08;
+  --cn-lh-body: 1.55;
+
+  /* Mobile body floor. 13px measured on the lede and the map caption; the
+     readability floor for body copy is 15, and 16 where the copy is the
+     thing you must act on. */
+  --cn-fs-body: 14px;
+  --cn-fs-body-min: 15px;
+  --cn-fs-lede: 16px;
+  --cn-fs-kicker-min: 11px;
+}
+
+:root[data-theme="dark"] {
+  --cn-paper: #000000;
+  --cn-paper-deep: #0b0b0d;
+
+  --cn-elev-0: #000000;
+  --cn-elev-1: #1c1c1e;
+  --cn-elev-2: #262628;
+  --cn-elev-3: #323235;
+
+  --cn-on-elev-0: #f5f5f7;
+  --cn-on-elev-1: #f5f5f7;
+  --cn-on-elev-2: #f5f5f7;
+  --cn-on-elev-3: #f5f5f7;
+
+  --cn-on-elev-0-muted: #b4b3b8;
+  --cn-on-elev-1-muted: #aeaeb2;
+  --cn-on-elev-2-muted: #b4b3b8;
+  --cn-on-elev-3-muted: #bab9be;
+  --cn-on-elev-0-tertiary: #98979c;
+  --cn-on-elev-1-tertiary: #98979c;
+
+  --cn-rule: rgba(255, 255, 255, 0.14);
+  --cn-rule-strong: rgba(255, 255, 255, 0.24);
+
+  --cn-lift-1: 0 1px 1px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.45);
+  --cn-lift-2: 0 1px 2px rgba(0, 0, 0, 0.55), 0 6px 18px rgba(0, 0, 0, 0.5);
+  --cn-lift-3: 0 2px 4px rgba(0, 0, 0, 0.6), 0 18px 44px rgba(0, 0, 0, 0.6);
+
+  --cn-sky-dawn: radial-gradient(120% 90% at 12% -10%, rgba(255, 122, 61, 0.26), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(255, 190, 120, 0.16), transparent 58%);
+  --cn-sky-day: radial-gradient(120% 90% at 12% -10%, rgba(10, 132, 255, 0.22), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(90, 170, 255, 0.14), transparent 58%);
+  --cn-sky-dusk: radial-gradient(120% 90% at 12% -10%, rgba(255, 90, 60, 0.24), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(150, 95, 255, 0.22), transparent 58%);
+  --cn-sky-night: radial-gradient(120% 90% at 12% -10%, rgba(30, 44, 84, 0.6), transparent 62%),
+    radial-gradient(90% 70% at 92% -18%, rgba(6, 10, 24, 0.75), transparent 58%);
+  --cn-sky: var(--cn-sky-night);
+
+  --cn-fs-body-min: 15px;
+  --cn-fs-lede: 16px;
+  --cn-fs-kicker-min: 11px;
+}
+
+/* The phase attribute is set once, from the same clock the greeting already
+   reads (`greetingFor(new Date().getHours())`), so the sky and the words on it
+   cannot disagree. */
+[data-pulse-phase="dawn"] { --cn-sky: var(--cn-sky-dawn); }
+[data-pulse-phase="day"] { --cn-sky: var(--cn-sky-day); }
+[data-pulse-phase="dusk"] { --cn-sky: var(--cn-sky-dusk); }
+[data-pulse-phase="night"] { --cn-sky: var(--cn-sky-night); }
+
+/* ═══ 2 · Paper, applied ═══════════════════════════════════════════════
+   `background-image` rather than `background`, so the scheme's own canvas colour
+   underneath stays authoritative and this only lays the wash on top. */
+
+.v8-page {
+  background-color: var(--cn-paper);
+  color: var(--cn-on-elev-0);
+}
+
+[data-pulse-phase] .v8-page,
+.v8-page[data-pulse-phase] {
+  background-image: var(--cn-sky);
+  background-repeat: no-repeat;
+  background-size: 100% 520px;
+}
+
+/* ═══ 3 · Today, re-cut ═══════════════════════════════════════════════
+   The screen answers four questions. The type now says which answer is which. */
+
+.v8-page[data-pulse-phase] .v8-page-intro {
+  padding: var(--cn-s-20, 20px) 0 var(--cn-s-24, 24px);
+}
+
+/* The kicker is an eyebrow, not fine print: 10px/800 measured, which is below
+   every legibility floor in the guide. It gets a real size and real tracking. */
+.v8-page .v8-kicker,
+.v8-page-intro .v8-kicker {
+  font-family: var(--cn-font-body);
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+  font-weight: 700;
+  letter-spacing: var(--cn-tracking-caps);
+  color: var(--cn-on-elev-0-muted);
+}
+
+.v8-page h1,
+[data-testid="today-heading"] {
+  font-family: var(--cn-font-display);
+  letter-spacing: var(--cn-tracking-display);
+  line-height: var(--cn-lh-tight);
+  text-wrap: balance;
+}
+
+/* The meta line is the sentence a traveller actually parses: dates, timezone,
+   party. It was 13px. */
+.v8-page .v8-lede {
+  font-size: var(--cn-fs-lede);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-on-elev-0-muted);
+  font-variant-numeric: tabular-nums lining-nums;
+  max-width: 46ch;
+}
+
+/* ── The pulse card: 现在 / 接下来 ──────────────────────────────────────
+   One statement, set large, with the clock in tabular figures so the time does
+   not jitter as digits change width. */
+.cn-hero-label {
+  font-size: max(12px, 0.75rem);
+  letter-spacing: var(--cn-tracking-caps);
+  text-transform: none;
+  color: var(--cn-on-elev-1-muted);
+  font-weight: 700;
+}
+
+.cn-hero-now-place,
+.cn-hero-next-row {
+  font-family: var(--cn-font-display);
+  letter-spacing: var(--cn-tracking-display);
+  line-height: 1.12;
+  color: var(--cn-on-elev-1);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.cn-hero-next-row {
+  font-size: clamp(26px, 8.4vw, 34px);
+}
+
+.cn-hero-meta {
+  font-size: var(--cn-fs-body-min);
+  color: var(--cn-on-elev-1-muted);
+}
+
+/* A live tick beside "现在" — the one moving thing on the screen, so the eye
+   finds the answer before it finds the words. transform/opacity only. */
+.cn-hero-label {
+  position: relative;
+}
+
+[data-pulse-phase] .cn-hero-label:first-child::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-inline-end: 8px;
+  border-radius: 50%;
+  background: var(--cn-success, #248a3d);
+  vertical-align: 0.1em;
+  animation: cn-pulse 2.4s var(--cn-ease-standard, ease-in-out) infinite;
+}
+
+@keyframes cn-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.82); }
+}
+
+/* ── One primary, one family of secondaries ─────────────────────────────
+   Measured: four `.v8-quiet-button` in a row that wrap a fifth onto its own
+   line, all identical, all blue text. The screen has one answer to give, so it
+   gets one primary and a segmented row behind it. */
+/* 动作行（AI 帮我规划 / 试用其他城市 / 打开行程工作台 / 复制行程链接）的分组
+   留白：第一拍把这四枚 `.v8-quiet-button` 抬成了带底色的卡片，两臂对表当场量出
+   4 格新红（`hub-plan-with-ai` / `journey-link-copy` 在 contrast-audit 桌面与
+   移动两档各 1.09 与 1.23），因为 `_qoderContrastScan` 对控件还有一条
+   「填充对底」的判据（fillC>=3 或 colorC>=3 或 粗体且 fillC>=1.3），
+   而白卡片贴在暖纸 #f7f5f2 上只有 1.09。
+   结论：分组不能靠"给一块差不多的白"。这一格交给 ORD 派单，做法要么把纸与卡片
+   拉开到 >=1.3（配合粗体）要么 >=3，要么改用间距与一条实线分组，不动填充。 */
+
+
+.v8-primary,
+.cn-hero-cta {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  border-radius: 14px;
+  box-shadow: var(--cn-lift-2);
+  transition: transform var(--cn-t-press, 110ms) var(--cn-ease-standard, ease),
+    box-shadow var(--cn-t-hover, 160ms) var(--cn-ease-standard, ease);
+}
+
+.v8-primary:active,
+.cn-hero-cta:active {
+  transform: scale(0.975);
+}
+
+/* ── The attention band ─────────────────────────────────────────────────
+   It said "1 项变化" and nothing about which. The count becomes a badge and the
+   hint gets room to be read. */
+.cn-attention-hint {
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-on-elev-1-muted);
+}
+
+/* ── Evidence rows ──────────────────────────────────────────────────────
+   The product's truth contract puts the server's own citation on the face of
+   the screen; that stays. What changes is that a route path stops being set
+   like prose. It becomes a chip: monospaced, smaller, on its own paper, so it
+   reads as "receipt" instead of competing with the sentence above it. */
+.cn-pretrip-note,
+.cn-clock-source {
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+  color: var(--cn-on-elev-1-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cn-pretrip-why code,
+.cn-clock-source code,
+code {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.82em;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--cn-paper-deep);
+  color: var(--cn-on-elev-0-muted);
+  border: 1px solid var(--cn-rule);
+  word-break: break-all;
+}
+
+/* ═══ 4 · Cards take paper from the contract ═════════════════════════
+   Scoped to the shells that were measured as the ghost cards, so no rule here
+   is a global `section` hammer. */
+
+.plan-ranking,
+.collections-panel,
+.poi-import-panel {
+  background: var(--cn-elev-1);
+  border: 1px solid var(--cn-rule);
+  border-radius: var(--cn-r-16, 16px);
+  box-shadow: var(--cn-lift-1);
+  color: var(--cn-on-elev-1);
+}
+
+.plan-ranking .plan-ranking-by,
+.plan-ranking .plan-ranking-table,
+.plan-ranking .plan-ranking-sort {
+  color: var(--cn-on-elev-1);
+}
+
+.plan-ranking .v8-muted,
+.plan-ranking .plan-ranking-notes,
+.plan-ranking .plan-ranking-arrow {
+  color: var(--cn-on-elev-1-muted);
+}
+
+.plan-ranking .plan-ranking-table th,
+.plan-ranking .plan-ranking-table td {
+  border-bottom: 1px solid var(--cn-rule);
+}
+
+.plan-ranking .plan-ranking-table th[aria-sort="ascending"],
+.plan-ranking .plan-ranking-table th[aria-sort="descending"] {
+  background: var(--cn-elev-2);
+}
+
+.plan-ranking .plan-ranking-sort:hover {
+  background: var(--cn-elev-2);
+}
+
+/* ═══ 5 · Focus, and the floor under motion ═════════════════════════ */
+
+.v8-page button:focus-visible,
+.v8-page a:focus-visible,
+.cn-hero-cta:focus-visible {
+  outline: 3px solid var(--cn-accent, #0a66ff);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pulse-phase] .cn-hero-label:first-child::before {
+    animation: none;
+  }
+  .v8-page-intro .v8-quiet-button,
+  .v8-primary,
+  .cn-hero-cta {
+    transition: none;
+  }
+  .v8-page-intro .v8-quiet-button:active,
+  .v8-primary:active,
+  .cn-hero-cta:active {
+    transform: none;
+  }
+}
+
+/* Small screens get the display size, not a scaled-down compromise; the whole
+   point of the pulse card is that the next thing is readable at arm's length. */
+@media (min-width: 768px) {
+  .cn-hero-next-row {
+    font-size: 38px;
+  }
+  .v8-page h1 {
+    font-size: 40px;
+  }
+}
+
+/* ═══ 6 · 残余不达标（第二轮实测点名）══════════════════════════════════
+   After pass 1 the rendered probe read: phone dark 37→0, desktop dark 40→3,
+   phone light 6, desktop light 8.  The residue is four named pairs, each fixed
+   at the rule that owns it rather than with a theme-scoped patch. */
+
+/* 甲 头像：`styles.css:154` pairs #fff with the warm fill #e2a66e, which is
+      2.12:1 in both schemes.  The fill is the brand's warm mark and stays; the
+      ink moves to the deep end of the same hue (measured 6.5:1 on #e2a66e). */
+.v8-avatar,
+.v8-user > span {
+  background: var(--cn-accent-solid);
+  color: var(--cn-always-on-accent-solid);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+/* 乙 证据行（依据 / 锚点）：产品把服务端的出处写在屏面上，这是它的真话契约，
+      不藏。但 3.62:1 的灰读不出，所以凭证的墨提到 muted 之上、正文之下。 */
+.cn-pretrip-why,
+.cn-pretrip-why span,
+.cn-pretrip-basis,
+.cn-pretrip-basis span,
+.cn-pretrip-anchor,
+.cn-pretrip-anchor span,
+.cn-clock-source,
+.cn-clock-source span {
+  color: var(--cn-on-elev-1-muted);
+}
+
+/* 丙 侧栏收起：16px 的动作文案读成 2.21:1，因为它继承的是图标的次级墨。
+      它是按钮，用控件的墨。 */
+.v8-sidebar-toggle {
+  background: var(--cn-elev-2);
+  color: var(--cn-on-elev-2);
+}
+.v8-sidebar-toggle span {
+  color: var(--cn-on-elev-2);
+}
+
+/* 丁 「1 位旅行者」这类计数：10px/2.80 太小了，而且它是行程事实不是脚注。
+      字号上到 kicker 地板，数字用等宽位。 */
+.v8-user small,
+.v8-user-meta,
+.hub-party-size {
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+  color: var(--cn-on-elev-0-muted);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* 丁 空态的下一步提示：同一族次级墨，实测 3.62:1，一起收进契约。 */
+.cn-pending-empty-next,
+.v8-empty-hint {
+  color: var(--cn-on-elev-1-muted);
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+}
+
+/* 戊 描边按钮把「实心强调色」当文字用了。`--cn-accent-solid` 属于 always 家族，
+   它的存在理由正是「白标签底下的那枚蓝永远不动」——所以它做填充是对的，做文字是
+   错的：实测 #0a66ff 在 #1c1c1e 上 3.65:1，两种主题都不达标。文字一律取
+   text-accent（亮 #0a5cd6 / 5.97:1，暗 #0a84ff / 4.64:1，现读同一把尺）。 */
+.v8-outline-button {
+  color: var(--cn-accent-text);
+  border-color: var(--cn-accent-text);
+}
+
+.v8-outline-button:hover {
+  background: var(--cn-elev-2);
+}

@@ -1,42 +1,54 @@
 /* ORD-0439: the comparison table. Token-driven, no new colour, and in its own file so this order
-   does not collide with the shared stylesheet another lane is editing tonight. */
-.plan-ranking { display: grid; gap: 12px; margin-top: 18px; padding: 20px; border: 1px solid var(--v8-line, #e3e7ef); border-radius: var(--cn-r-16); background: #fff; }
+   does not collide with the shared stylesheet another lane is editing tonight.
+
+   Pulse pass (surface contract): this file's own header already promised "no new colour", but it
+   painted its card with the literal `#fff` and wrote on it with `var(--v8-ink, #1d2531)`. Under the
+   dark theme the ink token moves to #f5f5f7 and the literal does not, which is how the rendered
+   probe measured 1.09:1 on this card's headings and 2.21:1 on its notes (37 sub-floor text nodes on
+   a 390x844 dark screen). Paper and the ink for that paper now come from the same contract pair,
+   so a theme flip moves both halves together. The dead `var(--x, <literal>)` fallbacks are gone:
+   `--v8-*` is bound at `:root` by design-tokens.css, so a fallback here could only ever fire when
+   the token is missing -- and then it would quietly pin a light-mode value inside a dark screen. */
+.plan-ranking { display: grid; gap: 12px; margin-top: 18px; padding: var(--cn-card-pad, 20px); border: 1px solid var(--cn-rule); border-radius: var(--cn-r-16); background: var(--cn-elev-1); color: var(--cn-on-elev-1); box-shadow: var(--cn-lift-1); }
 .plan-ranking .v8-muted { margin: 0; }
-.plan-ranking-by { margin: 0; color: var(--v8-ink, #1d2531); font-size: var(--cn-fs-caption, 12px); font-weight: 750; }
-.plan-ranking-hint { font-size: var(--cn-fs-caption, 12px); line-height: 1.5; }
+.plan-ranking-by { margin: 0; color: var(--cn-on-elev-1); font-size: var(--cn-fs-caption, 12px); font-weight: 750; }
+.plan-ranking-hint { font-size: var(--cn-fs-body, 13px); line-height: 1.55; color: var(--cn-on-elev-1-muted); }
 
 /* The measured column boxes are the layout; the wrapper is what stops a narrow phone from crushing
    the words into a single vertical character, which is what auto layout did here. */
 .plan-ranking-scroll { overflow-x: auto; }
-.plan-ranking-table { width: auto; border-collapse: collapse; table-layout: fixed; color: var(--v8-ink, #1d2531); font-size: var(--cn-fs-caption, 12px); }
-.plan-ranking-table th, .plan-ranking-table td { padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--v8-line, #e3e7ef); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.plan-ranking-table { width: auto; border-collapse: collapse; table-layout: fixed; color: var(--cn-on-elev-1); font-size: var(--cn-fs-caption, 12px); font-variant-numeric: tabular-nums lining-nums; }
+.plan-ranking-table th, .plan-ranking-table td { padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--cn-rule); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .plan-ranking-table thead th { font-weight: 750; }
-.plan-ranking-notes { margin: 0; padding-left: 18px; color: var(--v8-muted, #5b6675); font-size: var(--cn-fs-caption, 12px); line-height: 1.45; }
+.plan-ranking-notes { margin: 0; padding-left: 18px; color: var(--cn-on-elev-1-muted); font-size: var(--cn-fs-caption, 12px); line-height: 1.5; }
 
 /* A heading is a control here, so it reads as one: full-width hit area, no chrome of its own. */
 .plan-ranking-head { position: relative; padding: 0; }
-.plan-ranking-sort { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 34px; margin: 0; padding: 6px 18px 6px 8px; border: 0; border-radius: 0; background: transparent; color: var(--v8-ink, #1d2531); font: inherit; font-weight: 750; text-align: left; cursor: pointer; box-shadow: none; }
-.plan-ranking-sort:hover { background: #f1f3ff; }
-.plan-ranking-arrow { flex: none; color: var(--v8-muted, #5b6675); font-size: 9px; }
-.plan-ranking-table th[aria-sort="ascending"] .plan-ranking-arrow, .plan-ranking-table th[aria-sort="descending"] .plan-ranking-arrow { color: var(--v8-indigo, #4658d9); }
-.plan-ranking-table th[aria-sort="ascending"], .plan-ranking-table th[aria-sort="descending"] { background: #f8f9ff; }
+.plan-ranking-sort { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 34px; margin: 0; padding: 6px 18px 6px 8px; border: 0; border-radius: 0; background: transparent; color: var(--cn-on-elev-1); font: inherit; font-weight: 750; text-align: left; cursor: pointer; box-shadow: none; }
+.plan-ranking-sort:hover { background: var(--cn-elev-2); }
+.plan-ranking-arrow { flex: none; color: var(--cn-on-elev-1-muted); font-size: 9px; }
+.plan-ranking-table th[aria-sort="ascending"] .plan-ranking-arrow, .plan-ranking-table th[aria-sort="descending"] .plan-ranking-arrow { color: var(--v8-indigo); }
+.plan-ranking-table th[aria-sort="ascending"], .plan-ranking-table th[aria-sort="descending"] { background: var(--cn-elev-2); }
 
 /* The grip is a boundary, not a button: 10px of the column edge, and it answers hover and focus. */
 .plan-ranking-grip { position: absolute; top: 0; right: 0; bottom: 0; width: 10px; cursor: col-resize; touch-action: none; }
 .plan-ranking-grip::after { position: absolute; top: 6px; bottom: 6px; right: 4px; width: 2px; border-radius: 2px; background: transparent; content: ""; }
-.plan-ranking-grip:hover::after, .plan-ranking-grip:focus-visible::after, .plan-ranking-grip[data-dragging="true"]::after { background: var(--v8-indigo, #4658d9); }
-.plan-ranking-grip:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 1px; }
+.plan-ranking-grip:hover::after, .plan-ranking-grip:focus-visible::after, .plan-ranking-grip[data-dragging="true"]::after { background: var(--v8-indigo); }
+.plan-ranking-grip:focus-visible { outline: 3px solid var(--cn-accent); outline-offset: 1px; }
 body.plan-ranking-resizing { cursor: col-resize; user-select: none; }
-body.plan-ranking-resizing .plan-ranking-grip::after { background: var(--v8-indigo, #4658d9); }
+body.plan-ranking-resizing .plan-ranking-grip::after { background: var(--v8-indigo); }
 
 .plan-ranking-controls, .plan-ranking-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .plan-ranking-controls .v8-text-button, .plan-ranking-filters .v8-text-button { width: auto; margin: 0; }
-.plan-ranking-filter-title { color: var(--v8-ink, #1d2531); font-size: var(--cn-fs-caption, 12px); font-weight: 750; }
-.plan-ranking-chip { width: auto; margin: 0; padding: 5px 9px; border: 1px solid #d9ddea; border-radius: 999px; background: #fff; color: var(--v8-ink, #1d2531); font-size: var(--cn-fs-caption, 12px); font-weight: 700; cursor: pointer; box-shadow: none; }
-.plan-ranking-chip:hover { border-color: #b8c0f1; background: #f8f9ff; }
-.plan-ranking-chip[aria-pressed="true"] { border-color: var(--v8-indigo, #4658d9); background: var(--v8-indigo, #4658d9); color: #fff; }
+.plan-ranking-filter-title { color: var(--cn-on-elev-1); font-size: var(--cn-fs-caption, 12px); font-weight: 750; }
+/* A chip is paper with a rule around it; a pressed chip is the accent with the constant white
+   label on it. Both halves of each pair come from the contract, so neither can invert alone. */
+.plan-ranking-chip { width: auto; margin: 0; padding: 5px 9px; border: 1px solid var(--cn-rule-strong); border-radius: 999px; background: var(--cn-elev-1); color: var(--cn-on-elev-1); font-size: var(--cn-fs-caption, 12px); font-weight: 700; cursor: pointer; box-shadow: none; transition: background-color var(--cn-t-hover) var(--cn-ease-standard), border-color var(--cn-t-hover) var(--cn-ease-standard), transform var(--cn-t-press) var(--cn-ease-standard); }
+.plan-ranking-chip:hover { border-color: var(--cn-accent); background: var(--cn-elev-2); }
+.plan-ranking-chip:active { transform: scale(0.97); }
+.plan-ranking-chip[aria-pressed="true"] { border-color: var(--cn-accent-solid); background: var(--cn-accent-solid); color: var(--cn-always-on-accent-solid); }
 
 @media (max-width: 680px) {
-  .plan-ranking { padding: 16px; }
+  .plan-ranking { padding: var(--cn-card-pad-compact, 16px); }
   .plan-ranking-sort { padding-right: 16px; }
 }
