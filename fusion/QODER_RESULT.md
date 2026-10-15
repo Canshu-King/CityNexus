@@ -14,10 +14,10 @@
 | 尺 | 数 |
 |---|---|
 | 分支 | `fusion/qoder-import-20261014` |
-| 产品尖 | **`cf9a1899ce`**（docs + 量具那枚提交之后**重取**的 `git rev-parse --short HEAD`；本文件所有「diff 面」的数都是这枚提交之后取的——见 §7 第 5 次那条口径） |
-| 超出融合基线 `594f9a4e75` 的提交 | **44**（`git rev-list --count 594f9a4e75..HEAD`）。切片 2 占 **11** 枚（**4** 枚只动词典），切片 3 占 **7** 枚（**3** 枚只动词典，第 7 枚是本轮 docs+量具 `cf9a1899ce`：`git log --oneline f9abba3fde..HEAD` 逐枚点名） |
-| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33**（这枚 docs 提交不碰产品面，所以它与上一版同数——同数本身是现读出来的，不是假设） |
-| 含证据面（再加 `frontend/e2e reports review fusion`） | **65 文件 / +13694 / −41** |
+| 产品尖 / 现读尖 | 最后一枚带产品改动的尖 **`41fbb9c731`**；`git rev-parse --short HEAD` 现读 **`d466082b1e`**（其后 **4** 枚只进 `fusion/` 与 `review/`：`cf9a1899ce`、`69d25fcb7b`、`ade3b4dfdf`、`d466082b1e`）。本文件所有「diff 面」的数都在提交之后重取——见 §7 第 5 次那条口径。**读法**：这枚表取于上列那枚尖；改这张表的那枚提交只会让尖往前走、不会让产品面的数变，所以你重跑那条命令看到尖不同是预期内的，数的口径以命令现读为准 |
+| 超出融合基线 `594f9a4e75` 的提交 | **47**（`git rev-list --count 594f9a4e75..HEAD`），分两段现读：`594f9a4e75..f9abba3fde` **37** 枚（切片 1 与切片 2，其中词典枝 4 枚）、`f9abba3fde..HEAD` **10** 枚（切片 3 的产品与词典 6 枚 + 其后的 docs 与量具 4 枚，逐枚点名用 `git log --oneline f9abba3fde..HEAD`） |
+| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33**（docs 与量具那几枚提交不碰产品面，所以它与上一版同数——同数本身是现读出来的，不是假设） |
+| 含证据面（再加 `frontend/e2e reports review fusion`） | **66 文件 / +13785 / −41**（上一版是 `65 / +13694 / −41`；多的那一枚文件、那 91 行就是 `bb_letter_precheck_r1.py` 自身。这一枚每次加提交都会动，所以它只作为「现读」报，不作为基线报） |
 | 远端 | **没推**。`git ls-remote` 现读三枚 fusion 尖仍是 `594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66` |
 | 落地面（与「绿不绿」是两回事） | `git merge-base --is-ancestor 594f9a4e75 HEAD` ⇒ **YES**，本尖是基线的后代、不是入账工 12:53 通播里那种「不相交」枝；codex 车道枝 `fusion/codex-journey-20261014` 超基线 **0** 枚 ⇒ 现在合并的冲突面只有我这批纯插入的插入点本身 |
 | 号令者的字典规矩（「字典单独一枝、一杖最多三枚键」） | 动 `LocaleContext.tsx` 的提交 **8** 枚，逐枚新增**不同键**数是 **3,3,3,3,3,3,1,1** ⇒ 全部 ≤3，且每枚只进一个命名空间（`calendar.` 三枚 / `poiImport.` 三枚 / `nav.import` 与 `checkin.title` 各一枚）。逐枚审计在 `slice3_gates_r1.py::dictionary_branch_audit`（打印 `DICTIONARY_BRANCH_COMMITS 8 / KEYS_ADDED_TOTAL 20 / OVER_3_KEYS 0 / DICT_BRANCH_READER_SELF_CHECK PASS`），它按提交 diff 现算而不是按我数过；反向对照 `--run-control dictclass` 见 §1 表那一行 |
