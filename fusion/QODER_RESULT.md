@@ -1,67 +1,120 @@
-# QODER_RESULT — 融合分支上现在真能用什么（2026-10-15 00:50）
+# QODER_RESULT — 融合分支上现在真能用什么（2026-10-15 02:50）
 
 按 `fusion/QODER_EXECUTION_ORDER.md` 的 Deliverables 写这一份：SHA、受影响的测试、正常界面入口、
 新增动作 vs 之前、以及还欠什么。数全部是本轮现读；口径与复跑命令在
-`fusion/QODER_PARITY.md`、`fusion/qoder_import/SLICE1_UI_PORT_SEAM.md`（切片 1）与
-`fusion/qoder_import/SLICE2_POI_IMPORT_SEAM.md`（切片 2，§6 的数出自这里）。
+`fusion/QODER_PARITY.md`、`fusion/qoder_import/SLICE1_UI_PORT_SEAM.md`（切片 1）、
+`fusion/qoder_import/SLICE2_POI_IMPORT_SEAM.md`（切片 2）与
+`fusion/qoder_import/SLICE3_CALENDAR_EXPORT_SEAM.md`（切片 3，§6/§7 的数出自它）。
+**切片 3 的每一枚数现在有一条同根的复跑命令**：`python review/ord0496/slice3_gates_r1.py`（本仓库内），
+它把 §0、§1 的 git 面、词典闭包、一杖三枚键的分枝审计、玻璃回执、四趟全量的名字差一次打全；反过来能红的证明在
+`review/ord0496/glass_can_go_red_r1.py`（三枚反向对照）与同脚本的 `--run-control crlf`。
 
 ## 0. 哪一枚尖，推到哪儿了
 
 | 尺 | 数 |
 |---|---|
 | 分支 | `fusion/qoder-import-20261014` |
-| 产品尖 | **`9a3b7ff0fb`**（写本行时的 `git rev-parse --short HEAD`；本文件的 docs 提交之后它会再前进，现读用同一条命令） |
-| 超出融合基线 `594f9a4e75` 的提交 | **35**（`git rev-list --count 594f9a4e75..HEAD`；切片 2 占 **11** 枚，其中 **4** 枚只动词典文件——`rev-list --count fbe0d41cbc^..HEAD -- frontend/src/i18n/LocaleContext.tsx`） |
-| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **27 文件 / +8086 / −32** |
+| 产品尖 | **`41fbb9c731`**（写本行时的 `git rev-parse --short HEAD`；本文件的 docs 提交之后它会再前进，现读用同一条命令） |
+| 超出融合基线 `594f9a4e75` 的提交 | **43**（`git rev-list --count 594f9a4e75..HEAD`）。切片 2 占 **11** 枚（**4** 枚只动词典），切片 3 占 **6** 枚（**3** 枚只动词典：`git log --oneline f9abba3fde..HEAD` 逐枚点名） |
+| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33** |
+| 含证据面（再加 `frontend/e2e reports review fusion`） | **61 文件 / +12506 / −41** |
 | 远端 | **没推**。`git ls-remote` 现读三枚 fusion 尖仍是 `594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66` |
 | 落地面（与「绿不绿」是两回事） | `git merge-base --is-ancestor 594f9a4e75 HEAD` ⇒ **YES**，本尖是基线的后代、不是入账工 12:53 通播里那种「不相交」枝；codex 车道枝 `fusion/codex-journey-20261014` 超基线 **0** 枚 ⇒ 现在合并的冲突面只有我这批纯插入的插入点本身 |
+| 号令者的字典规矩（「字典单独一枝、一杖最多三枚键」） | 动 `LocaleContext.tsx` 的提交 **8** 枚，逐枚新增**不同键**数是 **3,3,3,3,3,3,1,1** ⇒ 全部 ≤3，且每枚只进一个命名空间（`calendar.` 三枚 / `poiImport.` 三枚 / `nav.import` 与 `checkin.title` 各一枚）。逐枚审计在 `slice3_gates_r1.py` 的 `LOCALECONTEXT_COMMITS_WITH_MORE_THAN_3_KEYS_ADDED` 那一段，它按提交 diff 现算而不是按我数过 |
+
 
 **先认一条我自己报错的数**：上一版这一格写的是 **21 文件 / +6092**。那条 `git diff --stat` 是在切片 2 的文件**还没 `git add`** 的时候取的，`git diff` 不看未跟踪文件，所以少算了 6 枚新文件（`poi_import.py`、它的测试、`PoiCandidateCard.tsx`、`features/poiimport/` 三枚）＝**−6 文件 / −1994 行**。提交之后重跑同一条命令才是 27 / +8086。教训记在 `SLICE2_POI_IMPORT_SEAM.md` §7。
 
 ⇒ 号令者要的「publish PR into canonical」这一步**没做**，推与 PR 都要主人点头（charter 还要求交叉评审 owner），所以本尖目前只在本地。
 
-## 1. 受影响的测试（本轮现读，四道闸）
+## 1. 受影响的测试（本轮现读，八道闸）
 
 | 闸 | 数 | 复跑 |
 |---|---|---|
-| 后端这三片 | collections + checkins **38 passed / 7.07s / RC=0**；POI 导入 **9 passed / 2.63s / RC=0** | `pytest -q tests/test_qoder_ord0444_collections_fusion.py tests/test_qoder_ord0476_checkins_fusion.py`、`pytest -q tests/test_qoder_ord0437_poi_import.py` |
-| `import app.main`（收集期闸，这棵树咬过我两次） | **COLLECT_OK / RC=0** | 同一枚解释器 `CityNexus/.venv` |
-| 界面守门 + 走查 + 导入活口，同一条权威栈 | 当前存档那趟是 **7 passed / 28.1s**（`slice2r5`，`reports/**` 的证据就出自它）。同一支上另有 `slice2r2` **7 passed / 32.1s**、`slice2r3` **7 passed / 28.3s** 两趟独立新库；红面也留在名单里：`slice2r1` **2 failed / 5 passed**（两枚红都红在我的 spec 上，见 `SLICE2_POI_IMPORT_SEAM.md` §7）、`slice2r4` **1 failed / 6 passed**（红在我新加的候选卡断言上：按下之后的按钮文字实为 `✓已选中——点一下取消`，`toHaveText` 精确比不下，改 `toContainText` 后绿） | `_run_e2e_slice2_r1.sh <RUN_ID>` |
-| 类型闸 | `tsconfig.check.json`、`tsconfig.typecheck.json`、外加覆盖三枚 spec 的那一行 `tsc` 三枚 **各 0 错误行**。spec 那枚闸做过反向对照：把 `toHaveText` 写成 `toHaveTextx` ⇒ 唯一一条 `error TS2551`，改回 ⇒ 0（`_tsc_specs_r2.txt`） | `SLICE2_POI_IMPORT_SEAM.md` §6 |
-| 词典闭包（切片 2 补的漏） | 面板要 **9** 枚 `poiImport.card*`，缺失 **0**，词典共 822 枚键；**上玻璃的是 7 枚**，另 2 枚（`要你选` 与其 reason）要两枚自家地点被同一行对上才出现，本城布景给不出，所以只在门上证明 | `_slice2_dict_closure_r2.py`、`ARM_FILE_CARD_KEYS_PROVEN_ON_GLASS` |
-| 行尾漂移闸 | **CRLF_DRIFT_FILES 0**（故意翻坏一枚 `v8Routes.ts` 时它打印 1 并点名，之后修回） | `_slice2_landed_r1.py` |
-| 全量套件单变量 A/B（同根**两枚样本**） | 基线 `594f9a4e75` **272 failed / 1901 passed / 7 errors / 510.23s**；上一尖（切片 1 落地时）**156 failed / 2055 passed / 7 errors / 415.30s**；本尖跑了**两趟**：**155 failed / 2065 passed / 7 errors / 367.76s** 与 **155 / 2065 / 7 errors / 392.17s** | 同一枚解释器 `CityNexus/.venv`、各自新库、`-p no:cacheprovider`；样本二存在 `_pytest_import_slice2_full_r2.log` |
-| 翻转那枚的地板（切片 2 补的第三条腿） | 两枚文件**各自单跑 20 趟**：r44 `0 / 20`、我的 POI `0 / 20`；**同一进程连跑**累计 **53 趟里 1 趟红**，且那趟没留日志 ⇒ 记为**未结** | `SOLO_REPEAT_*`、`POI_THEN_R44_*` |
+| 后端这四片 | collections + checkins + POI 导入 **47 passed / 6.02s / RC=0**（20 + 18 + 9），日历导出 **17 passed / 2.52s / RC=0** ⇒ 我这轮移植自带的测试共 **64** 枚 | `pytest -q tests/test_qoder_ord0444_collections_fusion.py tests/test_qoder_ord0476_checkins_fusion.py tests/test_qoder_ord0437_poi_import.py`、`pytest -q tests/test_qoder_ord0496_calendar_export.py` |
+| `import app.main`（收集期闸，这棵树咬过我两次） | **COLLECT_OK / RC=0**，`app/main.py` 现读 **28163** 行 | 同一枚解释器 `CityNexus/.venv` |
+| 界面守门（切片 3 的 `.ics` 那一屏） | BASELINE 趟 **rc=0 / 2 passed**（runId `slice3base022320`，`reports/qoder-ord0496-calendar/**` 的证据就出自它）。三枚反向对照各自 **rc=1 / failed=1 / passed=1** ⇒ `CONTROLS_RAN=3 CONTROLS_THAT_BIT=3`，被改的源文件事后**逐字节修回** | `python review/ord0496/glass_can_go_red_r1.py` |
+| 界面守门（切片 1+2 那五屏 + 走查 + 导入活口） | 存档那趟 **7 passed / 28.1s**（`slice2r5`）；同支另有 `slice2r2` **7 passed / 32.1s**、`slice2r3` **7 passed / 28.3s** 两趟独立新库；红面留在名单里：`slice2r1` **2 failed / 5 passed**、`slice2r4` **1 failed / 6 passed**（都在我的 spec 的断言上，见 `SLICE2_POI_IMPORT_SEAM.md` §7） | `bash D:/moodle/_qoder_fusion_import/_run_e2e_slice2_r1.sh <RUN_ID>` |
+| 类型闸 | `tsconfig.check.json`、`tsconfig.typecheck.json`、外加覆盖 e2e 那三族 spec 的手工 `tsc` 一行，三枚 **各 RC=0 / 0 错误行**。手工闸的反向对照：把 `census.bare_line_feeds` 写成 `census.bare_line_feeds_typo` ⇒ 唯一一条 `error TS2551`，改回 ⇒ 0（日志 `D:/moodle/_qoder_fusion_import/_tsc_specs_slice3_tamper_r1.txt`）。**注意这枚闸不在任何工程配置里**：`tsconfig.check.json` 只点名 5 枚文件、`tsconfig.typecheck.json` 只管 `src/**`，`e2e/**` 谁都不覆盖——这条是本轮现读的，别再当成配置替你把关 | `SLICE3_CALENDAR_EXPORT_SEAM.md` §6 |
+| 词典闭包（切片 3 的 9 枚） | 面板与导出客户端要 **9** 枚 `calendar.*`，词典里 **9** 枚，缺失 **0**，「同一枚键被定义不止一次」也 **0**，词典里总出现次数 **18**（每枚一次定义、两处语言包）。九枚的**出处逐枚打印**（`TripItinerary:139/143/301` 的 `t()` 调用、`calendarExport:63-67` 的拒绝映射），逐枚带行号、可点验 | `python review/ord0496/slice3_gates_r1.py` 的 `CALENDAR_KEYS_*` 段 |
+| 「字典单独一枝、一杖最多三枚键」（号令者的规矩，现由脚本核） | **8 枚词典枝提交、逐枝 3,3,3,3,3,3,1,1 枚键、超 3 枚的枝 0 枝、累计新增 20 枚键**（切片 3 的 9 + 切片 2 的 10 + 切片 1 的 1；逐枚键名由脚本自己打印，不是我数给你看）。这枚 leg 自带**合成自检**：reader 若读不出 `calendar.refused.not_found` 这种带下划线的键，就打印 `DICT_BRANCH_READER_SELF_CHECK BROKEN` 并以退出码 1 结束。反向对照 `--run-control dictclass` **在进程内把字符类换成我这轮真写错的那枚**（`[A-Za-z.]`，不含 `_`）⇒ 总数 **20 → 18**、两枝被读成 2 枚键、`OVER_3_KEYS` 仍是 0（**少报看着像更守规矩**，所以没有自检它永远不会被发现）、自检 BROKEN、`BITE rc= 1`；改回 ⇒ `PASS`，全程**不改磁盘上任何文件** | `python review/ord0496/slice3_gates_r1.py` 的 `DICTIONARY_BRANCH_*` 段；对照：`... --run-control dictclass` |
+| 行尾漂移闸 | **CRLF_DRIFT_FILES 0**；故意翻坏一枚 `v8Routes.ts` 时它打印 **1** 并点名，之后按原字节修回 | `python review/ord0496/slice3_gates_r1.py --run-control crlf` |
+| 全量套件单变量 A/B（同根**每尖两趟**，共四趟） | 见下表的四行；本尖 **156 failed / 2081 passed / 7 errors / 388.73s** 与 **155 / 2082 / 7 / 427.20s** | `python review/ord0496/slice3_gates_r1.py` 的 `SAMPLE` / `MEMBERSHIP_TABLE` 段（日志 `_pytest_import_slice{2,3}_full*.log` 在仓库外同盘 `_qoder_fusion_import/`） |
+| 那枚 xproc 闸的地板 | 见 §1b | `python review/ord0496/xproc_floor_r1.py --repeat 8` |
 
-A/B 的结论只认集合不认总数，因为总数在这两棵树里主要由**测试互相踩**决定，不是代码。**这一条本轮被我自己的第二枚样本推翻过一次，先认**：上一版写的是「`RED_ONLY_IN_SLICE2 0`」，那是一枚样本的读数；本尖再跑一趟，红名集合就动了 2 枚，所以那个 0 从来不是「零回归」的证据。现在的尺换成「同一尖跑两趟，差集稳不稳定」：
 
-- **本尖两趟之间的红名差**：`SAME_TIP_SAMPLES_FLIPPED 2`。
-  `test_r44_resilient_operator_brain.py::test_operator_brain_blocked_lineage_reuses_incident_then_resumes` 样本一**红**、样本二**绿**；
-  `test_qoder_g3_xproc_http.py::…` 样本一**绿**、样本二**红**。
-  ⇒ 单趟那 1 枚「只有切片 2 红」（`RED_ONLY_IN_SLICE2 1`）**在两枚样本面前不成立**：
-  `RED_ONLY_IN_SLICE2_STABLE_IN_BOTH_SAMPLES 0`——没有一枚在本尖两趟都红、而上一尖不红。这才是可说的说法。
-- r44 那枚的机制不是猜的，读了代码：它数的是**固定演示行程** `22222222-2222-4222-8222-222222222222` 上的 `AgentRun` 行数（`== 1`），实报错文是 `assert 2 == 1`；
-  而这枚 id 被本树 **5** 份测试文件写死共用（现读 `test_wp01_wp03.py`、`test_qoder_ord0219_*` 两枚、`v191/v192_harness.py`），`demo/reset` 还会停掉**进程级** guardian worker。
-  同根单变量对照拆成三档：
-  ① **各跑各的**：本尖单跑 **3 passed**、基线单跑 **3 passed**（`R44_SOLO_*`），且**各自重复 20 趟红面 0**——我这枚新 POI 文件单跑也是 **0 / 20**（`SOLO_REPEAT_*`），所以「0」是这两枚文件自己的地板，不是我把谁跑绿了。
-  ② **同一进程连跑**（我的 POI 文件在前、r44 在后）：当前这趟 **12 passed**，但累计 **53 次同进程尝试里有 1 次红**（汇总行 `1 failed, 11 passed`）——
-     **那一次我没留日志，说不出红的是哪一枚**。之后 26 次手写重复全绿，脚本自己还内建 10 趟计数（`POI_THEN_R44_REPEAT_*`，每次复跑刷新）。
-     ⇒ 这一条我按**未结**记，不按结论记；①的地板加上「那一次抓不到名字」意味着我不能把它写成「我的文件不会踩到别人」。
-  ③ 它在整套里红、单跑绿，配合 ① ⇒ 共用库＋进程级 worker 的时序踩，不是移植引入的。我没改它（它属于别的车道），也没把它算成我的功劳。
-- 上一版还错过一次：我把「只有 1 枚比基线红」那枚名字写成了 r87，并断言「两棵树单跑都红，所以是执行顺序变了」——**那句当时就被实测推翻并已更正**：
-  同一棵树、同一份代码、单跑、每次自己的临时库，它会翻。6 趟重复：**基线 3 红 3 绿**，**本尖 1 红 5 绿**；钉 `PYTHONHASHSEED` 也锁不住。
-  断言原文两边同一形状：`assert 'READY_FOR_NATIVE_PLAN' == 'OPENING_UNVERIFIED'`，即两个候选的位置换了。
-  机制读自代码：候选按 `captured_at, id` 排序，而 `id` 是随机 uuid，时间戳一致时次序由随机数决定；测试用 `unknown, grounded = candidates` 按位置解包，于是接近半概率红。
-  ⇒ 它是**基线里一条真实的测试卫生缺陷**，我没顺手改（改了会盖掉那条测试所属车道对同一枚的观察）。复跑：`python _r87_flake_root_r2.py`。
-- 我这 **47** 枚（collections 20 + checkins 18 + POI 9）在三趟全量里都不在失败名单：`MY_TEST_FILES_RED_IN_FULL_RUN 0`——是在整套里，不是只单独跑绿。
-- 反向对照（证明「基线那 117 枚不红」也不是我的功劳）：`test_solver_runtime_gate.py` 基线整套红 **15**，同根单独跑 **20 passed**；
-  `test_v1923_final_code_gate.py` 整套红 **13**，单独跑 **13 passed**；`test_v192_shadow_trial_gate.py` 单独 **61 passed**。
-  `test_v13_integrity.py` 基线整套红 22 / 本尖 14（本尖单独跑仍是 14，即这 14 枚是结构性的、两边共有）。
-- 7 枚 ERROR 两边同一枚文件（`test_qoder_mobility_evidence_sources.py`，出在 setup 期而非断言期），与移植无关。
-- ~~我这 38 枚在**整套里**也没出现在失败名单（`grep -c` 命中 **0**）~~ ⇒ 已由上面那条替代：现在是 **47 枚**（collections 20 + checkins 18 + POI 9），`MY_TEST_FILES_RED_IN_FULL_RUN 0`，同样是在整套里而不是只单独跑绿。
+A/B 的结论只认集合不认总数，因为总数在这两棵树里主要由**测试互相踩**决定，不是代码。
 
-⇒ 可说的说法：**同一尖的两趟样本之间没有稳定差集，本轮移植没有引入新的失败**；不能说的说法：**这套件全绿**、拿 156 与 272 直接比大小、或把任何**单趟**红名差当结论。
-复跑：`python _slice2_landed_r1.py`（快腿，已经把两趟样本的名字差并进来，不再需要 `--full`；长腿 `--full` 才会再花 6 分钟重跑整套）。名字差本身在 `python _slice2_failed_nameset_r1.py`，它自带 reader 自检：解析出的红名数 ≠ 汇总行自己写的数就退出。
+**先认一条本轮又错给自己的地方**：上一版给这枚差集起的名字是 `RED_ONLY_IN_SLICE3_STABLE_IN_BOTH_SAMPLES 1`，
+它算的是「本尖两趟都红」**减去**「上一尖两趟的交集」——而 `g3_xproc` 那枚在上一尖的**第二趟**里也红过，
+所以「1 枚新红」这句话是量具的标签骗人，不是差集本身骗人。现在四行标签各自描述自己的算法，并把逐趟归属打成表：
+
+| 趟 | 汇总行 | 红名数 | reader 自检 |
+|---|---|---|---|
+| 上一尖（切片 2 落地时）样本一 | 155 failed / 2065 passed / 7 errors / 367.76s | 162 | 与汇总行一致（162 = 155+7） |
+| 上一尖样本二 | 155 / 2065 / 7 / 392.17s | 162 | 一致 |
+| 本尖（切片 3 落地）样本一 | **156 / 2081 / 7 / 388.73s** | 163 | 一致 |
+| 本尖样本二 | **155 / 2082 / 7 / 427.20s** | 162 | 一致 |
+
+`MEMBERSHIP_TABLE 3 varying names`（列序＝上一尖#1、上一尖#2、本尖#1、本尖#2）：
+
+```
+- Y Y Y   slice2 1/2  slice3 2/2   tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+Y - - -   slice2 1/2  slice3 0/2   tests/test_r44_resilient_operator_brain.py::test_operator_brain_blocked_lineage_reuses_incident_then_resumes
+- - Y -   slice2 0/2  slice3 1/2   tests/test_r87_first_live_city_discovery.py::test_r87_live_discovery_keeps_member_receipts_private_and_blocks_ungrounded_opening
+```
+
+四行差集按新标签现读：`RED_IN_BOTH_SLICE3_AND_IN_NEITHER_SLICE2_SAMPLE **0**`、
+`RED_IN_BOTH_SLICE3_BUT_ALREADY_FLAKY_ON_SLICE2 **1**`（就是 `g3_xproc`，见 §1b）、
+`RED_IN_BOTH_SLICE2_AND_IN_NEITHER_SLICE3_SAMPLE **0**`、`RED_IN_BOTH_SLICE2_BUT_NOW_FLAKY_ON_SLICE3 **0**`，
+`SAME_TIP_SAMPLES_FLIPPED **1**`（本尖两趟之间翻面的只有 r87），`SLICE3_OWN_TESTS_RED **0**`。
+⇒ 四趟里**没有一枚**是「本尖两趟都红、而上一尖两趟都不红」。
+
+- 我这 **64** 枚自带的测试（collections 20 + checkins 18 + POI 9 + calendar 17）在**四趟全量里都不在失败名单**：
+  `SLICE3_OWN_TESTS_RED 0` 是本尖两趟的交集，上面那张逐趟表里也没有任何 `ord0496` 名字——是在整套里，不是只单独跑绿。
+- **156 与 272 不能直接比大小**：272/1901 那趟是基线树在自己的根里跑的，跨根的红面主因（测试互踩的形态）不同根就不同；
+  只有同一根内的单变量 A/B 可比。这条在 `tip16` 那轮已经实测过一次（拷贝树 19/22 vs 活树 14/14，同一份代码）。
+- 反向对照（证明「基线那批不红」也不是我的功劳，切片 2 那轮现读，本轮未重跑）：
+  `test_solver_runtime_gate.py` 基线整套红 **15**、同根单独跑 **20 passed**；`test_v1923_final_code_gate.py` 整套红 **13**、
+  单独跑 **13 passed**；`test_v192_shadow_trial_gate.py` 单独 **61 passed**；`test_v13_integrity.py` 基线整套红 22 / 本尖 14
+  （本尖单独跑仍是 14 ⇒ 这 14 枚是结构性的、两边共有）。
+- 7 枚 ERROR 两边同一枚文件（`test_qoder_mobility_evidence_sources.py`，出在 setup 期而非断言期），与移植无关；
+  因由定位在 §5 第 9 条。
+- 上面表里那两枚历史翻面者的机制，都是**读了代码**而不是猜的：
+  r44 数的是固定演示行程 `22222222-2222-4222-8222-222222222222` 上的 `AgentRun` 行数（`== 1`，实报 `assert 2 == 1`），
+  而这枚 id 被本树 **5** 份测试文件写死共用，`demo/reset` 还会停掉**进程级** guardian worker；
+  它的地板实测是**各跑各的 0/20 红**（本尖与基线各自单跑 20 趟），同一进程连跑累计 53 趟里 1 趟红**且那次没留日志**，
+  所以那一档我至今按**未结**记，不按结论记。
+  r87 是候选按 `captured_at, id` 排序而 `id` 是随机 uuid，测试又按位置解包 `unknown, grounded = candidates` ⇒ 近半概率红；
+  钉 `PYTHONHASHSEED` 锁不住。两枚都不属于我的车道，我都没顺手改（改了会盖掉那条车道对同一枚的观察）。
+  ⇒ 它是**基线里一条真实的测试卫生缺陷**，我没顺手改（改了会盖掉那条测试所属车道对同一枚的观察）。
+  复跑：`python D:/moodle/_qoder_613907d0_demo1014/parity/_r87_flake_root_r2.py`（2150 字节，本轮现读它在那儿）。
+
+⇒ 可说的说法：**同一尖的两趟样本之间没有稳定差集，本轮移植没有引入新的失败**；不能说的说法：**这套件全绿**、
+拿 156 与 272 直接比大小、把任何**单趟**红名差当结论，或者把「两趟都红」当成「新红」——那还得看上一尖的两趟里有没有它。
+
+### 1b. `g3_xproc` 那枚为什么本尖两趟都红（现读，不是我猜的）
+
+`test_qoder_g3_xproc_http.py` 是 ORD-0224 车道的闸（两枚真 uvicorn worker 共用一个库）。它在我这轮的回归表里
+是唯一一枚「本尖两趟都红」的名字，所以必须单独量，不能靠"它以前也翻过"搪塞。`python review/ord0496/xproc_floor_r1.py --repeat 8`：
+
+| 尺 | 读数 |
+|---|---|
+| 这轮移植有没有碰过这枚闸的代码 | `XPROC_ARM_DIFF_VS_BASELINE (empty)`；同一枚文件在两棵树里 `sha256` 前 16 位都是 **`07fdf6c97187a6dd`** ⇒ **一字没动** |
+| 洞在哪 | 直接调它自己的 `_http` 打一枚没人听的端口：两棵树都打印 `PROBE ESCAPED as urllib.error.URLError … -> the poll loop cannot survive this`。`_http` 只捕 `HTTPError`（该文件注释自陈「4xx/5xx 是读数不是异常」），于是**首枚就绪轮询**的连接失败直接逃出 `_wait_for_serving`（`:401 → :195 → :84`），`READY_DEADLINE_S = 120.0` 的重试窗与「子进程先退了」那条分支都轮不到说话 |
+| 安静机器上的地板（同一条命令跑了两批） | 每批每棵树各 8 趟单跑：**第一批 tip 0/8、baseline 0/8**；**第二批 tip 1/8、baseline 2/8** ——红的那三趟失败帧全是同一形状 `frame[401 195 84]`、各自 `refusal_frames=2`、`1 failed in 3.49s / 3.61s / 3.82s`，绿的那些中位 **6.8–6.9s**。**基线尖（没有我一行代码的那棵树）点火次数比本尖还多一次**，两批合计 tip 1/16、baseline 2/16 |
+| 点火过的证据 | 仓库外同盘存着 **7 枚**历史单跑红日志（`_xproc_solo_red_1..7.log`，每枚 `1 failed in ~4s`），本轮另存 16+16 趟带自述表头的日志（每枚日志第一行写 `# tree=<tip|baseline> sha=<那棵树的尖> target=… db=…`，因为 `pytest -q` 不打印 rootdir——上一版我就用「文件名里有树名」当身份，结果两棵树同名互相覆盖）；四趟全量里它 上一尖 1/2、本尖 2/2 |
+
+
+⇒ 结论口径：**不是切片 3 引入的失败**——同一枚文件在两棵树里逐字节相同、失败帧同一形状（`:401 → :195 → :84`），
+且**没有我代码的那棵树点火更多**（1/16 vs 2/16）；洞在「首枚就绪轮询让 `URLError` 逃出重试窗」这三行里，读得出来。
+但也不能反过来说「与我无关」：子进程 `import app.main`，我的移植把它推到 **28163** 行，绑定端口更晚，
+理论上会抬高点火概率——**这一批样本没能让这个方向成立，也没能把它打掉**，两批合计 32 趟里只有 3 趟红。
+要它变成结论，得同一台机器上几百趟、或把它放到负载可控的 CI 里跑；那是 ORD-0224 车道的账。
+**修法是一行**（在轮询里 `except urllib.error.URLError: time.sleep(0.1); continue`），
+**我没改它**——那是别人车道正在读的闸，改了会替他们抹掉他们那侧的观察。这条已经写进 §8 给号令者的待决清单，等他裁定要我改还是让原车道改。
+
+
 
 ## 2. 走查落在哪儿（号令者要的 "one saved 390x844 walkthrough"）
 
@@ -77,18 +130,27 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
 理由写在 manifest 里——它在 `V8Experience.tsx:1212` 是状态门，没有 URL，所以这里记「不在这儿」，不假装有条点击路径。
 另有一条同样的诚实记录：`/v8/import` 在 390×844 是**地址直达**，底栏五格（`mobileRoutes`）里没有它，源树也一样只把它放在 `desktopRoutes`。
 
+第二枚存档的**玻璃回执**不是那八屏，是切片 3 那一枚单独的证据：`reports/qoder-ord0496-calendar/`
+（runId `slice3base022320`）＝ `manifest.json` + `exported.ics`（**2879 字节、9 枚 VEVENT**）+ 两枚 PNG。
+它满足的是号令者那句「界面守门在 390×844 真点一次导出并留字节数/事件数回执」——下载只有文件能证明，
+所以这里数的是 **Chromium 自己接受下来的那枚文件**，没有第二条腿去重访那扇门冒充导出。
+manifest 现在自带 `run`（runId / 权威栈标记 / 那趟后端的库路径）与 `grammar`（CRLF 对数、裸 LF、超 75 octet 的行数、
+最长行、`DTSTART/DTEND/UID/DTSTAMP` 各 9 枚）两块，回执因此能自己作证，不靠我复述；逐枚数值由
+`python review/ord0496/slice3_gates_r1.py` 从存档件重新读出来（它同时校验 manifest 里写的字节数/sha 与文件真身一致）。
+
+
 ## 3. 正常界面入口（不是 testid 门，是这台手机上真要点的地方）
 
 | 屏幕 | 地址 | 这一片给了什么 |
 |---|---|---|
 | 城市探索 | `/v8/discover`（底部主导航「城市探索」） | 自己的**收藏架**列表面板：架子名、`N 枚地点`、每枚地点行（没写备注就写「没写备注」）；R107/R108 的城市发现控制台仍在这屏 |
-| 行程 | `/v8/trips`（底部主导航「行程」→ 行程工作区） | 每一站两枚控件：**打卡**（只盖这一站）与**收入架子**（在自己的架子之间挑一枚）；列表下方是**足迹**面板：按天分组、当天时区、`共 N 枚足迹`、每行的备注与来源 |
-| 无凭据时 | 同上两屏 | 两片面都只说一句「还没有旅客身份，所以没问服务器」，实测收藏读门的请求数 = **0**（是没问，不是被拒） |
+| 行程 | `/v8/trips`（底部主导航「行程」→ 行程工作区，默认子页就是「行程」那枚 tab，`V8Experience.tsx:2312`） | 每一站两枚控件：**打卡**（只盖这一站）与**收入架子**（在自己的架子之间挑一枚）；列表下方是**足迹**面板：按天分组、当天时区、`共 N 枚足迹`、每行的备注与来源。**切片 3 新增**：面板顶部一句人话旁边一枚**导出日历**按钮，按一次落一个 `.ics` 文件，屏上回「已下载 N 个日程…」 |
+| 无凭据时 | 同上两屏 + 导出那一格 | 两片面都只说一句「还没有旅客身份，所以没问服务器」，实测收藏读门的请求数 = **0**（是没问，不是被拒）；导出这一格实测**下载数 0**、门回 **401**，屏上说「日历没能导出，所以没有下载任何东西。」——这句话本身也在词典里，不是裸键 |
 | 导入地点 | `/v8/import`（**抽屉/地址直达**：`import` 只在 `desktopRoutes`，390 宽底栏五格里没有它） | 贴一段文字 → 逐行回「读出了什么、对上了几个、哪几个要你选、哪几个没找到」→ 三条出口（加进计划 / 存进架子 / 只存不排）；截图那一格今天只登记形态不识别 |
 
 ## 4. 新增的用户动作 vs 基线
 
-| 动作 | 基线 `594f9a4e75` | 本尖 `9a3b7ff0fb`（`slice2r5` 那趟现读） | 证据 |
+| 动作 | 基线 `594f9a4e75` | 本尖 `41fbb9c731`（切片 1/2 那两趟走查 + 切片 3 的 `slice3base022320` 现读） | 证据 |
 |---|---|---|---|
 | 把一处收进自己的架子 | **做不到**：`features/collections/` 0 文件、注册表 grep 0、库里没有 `collection_*` 表 | 挑架子 → 写门 → 重读 → `已收在 收藏架 r3`；重复按只说不写（`item_count_after_repeat=1`） | 走查 `05` / `C_collect.json` |
 | 看自己有哪些架子、里面有什么 | 做不到 | 架卡 + 地点行 + 计数 | 走查 `02` / `D_scope.json` |
@@ -103,7 +165,13 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
 | 贴一条纯链接 | 做不到 | 具名形态 `LINK_ONLY` + 具名主机 `xiaohongshu.com`，且**编造出的候选行数 = 0**（不打开链接这条写在徽章上：本地解析，不打开链接） | 同上 |
 | 导入会不会顺手造足迹 | 无从谈起 | 活口在导入全程结束后读打卡门：**3 枚**，与同一趟走查 manifest 的 `stamps_on_server` 同一数（两处读的是同一枚 journey）。**这条只是读数，不是前后对照**——它说明导入没把足迹面搅乱，不构成「结构上不能盖章」的证明 | 同上 |
 
+| 把整趟行程导成日历文件（`.ics`） | **做不到**，基线树四枚位置现读全空：`backend/app/calendar_export.py` 不存在、`app/main.py` 里 `calendar.ics` 命中 **0**、`TripItinerary.tsx` 里 `calendar-export` 命中 **0**、`LocaleContext.tsx` 里 `"calendar.` 键 **0** 枚 | 390×844 按一次 ⇒ 真下载一枚 **2879 字节**、文件名 `Tianjin · stay-aware weekend--d746ac1b-….ics`（带行程自己的标题），体内 **9 枚 VEVENT**、`DTSTART/DTEND/UID/DTSTAMP` 各 9 枚、**88 对 CRLF**、裸 LF **0**、超 75 octet 的行 **0**、最长行正好 **75**；屏上那句「已下载 9 个日程…」数的就是字节里那个 9 | `reports/qoder-ord0496-calendar/`、`slice3_gates_r1.py` 的 `GLASS_*` 段 |
+| 没有旅客身份时按导出 | 无从谈起 | **下载数 0**，门回 **401**，屏上「日历没能导出，所以没有下载任何东西。」——这句话是词典值不是裸键（反向对照 `notice_prints_a_raw_key` 实测能红） | `glass_can_go_red_r1.py` |
+
 ⇒ 一句话口径：**这扇门在融合树上只有「抽屉/URL」这一条来路**（源树挂在 discover 面板与 AI 规划 sheet 上的两条触发腿 `onOpenPreparePlaces`/`onImportPlaces` 都没搬，融合树 `grep` 命中 0），说「导入已接通」必须带上这句。
+⇒ 切片 3 的一句话口径：**导出这条腿在台上真点得动、文件真落得下，但它还没进契约**——`contracts/openapi.yaml` 与
+`frontend/src/generated/api.ts` 都没有 `calendar.ics`（本轮现读：两枚文件里 grep 命中 **0**），所以「移植完成」不包含契约面；
+把它接进契约要让生成客户端一起重跑，那是一刀独立的改动（§5 第 11 条）。
 
 ## 5. 还欠什么（不沉默）
 
@@ -112,9 +180,10 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
    「reload to see persisted state」在当前界面不可能过。判责在 Codex 的 `fusion/codex-journey-20261014`，我没顺手改。
 3. **`footprintRead.ts` 未移植**：它要 `mapPanelCopy.ts` 里 6 枚 `footprint*` 键，融合树没有，且只有地图面读它 ⇒ 地图上的足迹这条腿没接。
 4. **`vite build` / 真机 PWA 在这条分支一次都没跑过**（`node_modules` 是只读 junction，构建会写盘）。
-5. **切片 3–4 未开工**：`.ics` 导出 + abort、成员角色三件套。切片 2 已落地（§6），但它带着三条**没接的腿**：
-   discover 面板上的 `onOpenPreparePlaces`、AI 规划 sheet 上的 `onImportPlaces`（源树 `v8PanelRegistry.tsx:195`、`V8Experience.tsx:2214`），
-   以及 390 宽底栏里的那一格——接它们要动别的屏或 494 行以外的 `V8Experience.tsx`，按切片 1 立的规矩另开一刀。
+5. **切片 3 已落地（§8），切片 3b 与切片 4 未开工**。切片 2 落地时带着三条**没接的腿**（discover 面板上的
+   `onOpenPreparePlaces`、AI 规划 sheet 上的 `onImportPlaces`，源树 `v8PanelRegistry.tsx:195`、`V8Experience.tsx:2214`，
+   以及 390 宽底栏里的那一格）；切片 3 复用同一枚规矩：它接进行程面板的默认子页，所以**没有**新的「点不到」缺口，
+   但见下面第 11、12 条两笔欠账。
 6. **party_size 那两枚台上树改动仍等裁定**（`stay_mobility.py` +2056/−2227 那批），默认按可评审 cherry-pick 补进而非丢弃。
 7. **`demo/scene/ensure` 判定不移植**：布景/维护工具，不是产品能力（本机空库实测 403），按 charter 那句「区分产品新增与证据专用」。
 8. **两棵树的红面主因是测试互踩**，本轮已用同根单跑取证；但**没有**任何「整套绿」的说法可引——
@@ -128,6 +197,28 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
     本尖 1 红（命令本身不确定，重跑数字会变，所以它只用来证明「会翻」，不用来证明比例；
     钉死 `PYTHONHASHSEED` 锁不住，同一种子先绿后红）。要修的是断言形态（按 `selection_state` 取，不按位置），
     归属 r87 那条车道，我不顺手改别人的测试。
+11. **契约面（openapi / 生成客户端）里日历这条路是 0 命中**——不是「文件不存在」，是我这次**先按新规矩核过存在性**再数的：
+    `contracts/openapi.yaml` 167236 B、`frontend/src/generated/api.ts` 265557 B 两枚都在，
+    而 `calendar|\.ics|vevent` 大小写不敏感命中各为 **0**（`grep -c` 回 0、退出码 1＝零命中，两回事）。
+    ⇒ 切片 3 的产品能力是**后端路由 + 手写契约测试 + 活口**三层落地的，生成物那一层按 §7 移植顺序表第 6 条
+    「放最后靠合并后重生成，不手抄」处理。**耦合点记下**：重生成时这棵树的客户端会一起带上别的车道已经埋进
+    契约面的键（如 `x-citynexus-max-administrators-per-journey`），所以生成腿必须在合并后跑，不能在本尖跑。
+12. **切片 3b（abort）的闭包比我先前说的窄，也比它宽**。
+    **先认一条我这轮读错过的数**：我先前写「融合树没有 `backend/app/services.py` 这枚文件」——那是我把 `grep -c` 的
+    退出码 1（零命中）当成了「文件不存在」；现读三棵树这枚文件**都在**：融合尖 132459 B、融合基线尖 125832 B、源树 96762 B。
+    真正为 0 的是里面的内容（同命令现读，非记忆）：
+
+    | 尺 | 融合尖 | 融合基线 | 移植源树 `eeb8b8d2fd` |
+    |---|---|---|---|
+    | `backend/app/services.py` 里 `live_view` | **0** | **0** | **2**（定义在 `services.py:461 def journey_live_view(item: Journey) -> JourneyLiveView`） |
+    | `class JourneyLiveView` | **0** | **0** | **1** |
+    | `backend/app/main.py` 里 `live_view` | **0** | **0** | **5** |
+    | `backend/db/schema.sql` 里 `aborted_at` / `abort_reason` | **0 / 0** | **0 / 0** | **1 / 1** |
+    | `backend/app/main.py` 里 `abort` 命中 | — | — | 45（`_abort_refusal` 在 `:3499`、`abort_journey` 在 `:3529`） |
+
+    ⇒ 切片 3b 的最小闭包是「**两列 DDL + 一枚融合树没有的 schema 类 + `services.py` 里那枚投影函数 + `main.py` 五处接线**」，
+    而不是我上一版写的「搬一枚不存在的文件」。`services.py` 是**已跟踪、两尖都有、体量差 6657 B** 的共用文件
+    ⇒ 这一片的合并冲突面从「未知」变成「一枚具体的、双方都改过的文件」，这是可评的差，不是盲搬。
 
 ## 6. 切片 2（从文本导入地点）的活口数值（2026-10-15 00:28，runId `slice2r5`）
 
@@ -156,7 +247,18 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
    解析门故意不带（`main.py:27742` 的注释自认）。种子城 `CN-TIANJIN` 的 9 枚 `Place` 全带 `citynexus-v9-domain`
    ⇒ 那扇读门对这座城返回 **0 行**。这就是本片的布景词汇必须来自行程投影的原因。
 
-## 7. 本轮我自己的量具红过七次（1–3 的细节在 `SLICE2_POI_IMPORT_SEAM.md` §7）
+## 7. 本轮我自己的量具红过十六次
+
+第 1–7 条的细节在 `SLICE2_POI_IMPORT_SEAM.md` §7；第 8–16 条那一轮的机器细节在 `SLICE3_CALENDAR_EXPORT_SEAM.md` §4。
+**两份列表颗粒度不同、编号不对应**：那份按仪器逐条写（含本份没单列的「反向对照瞄错门」与「贪婪 `.` 把 156 读成 6」），
+本份按我这侧的读数写（含那份没单列的「引用被自己覆盖掉的工件」「字段点数全 0」「缺失工件点查」），
+本份第 13、15、16 条在两份里都有。
+
+第 1–7 条引到的那批脚本**在仓库外**：`D:/moodle/_qoder_613907d0_demo1014/parity/`（本轮逐字节点过：
+`_slice2_landed_r1.py` 19083 B、`_slice2_failed_nameset_r1.py` 4316 B、`_r87_flake_root_r2.py` 2150 B、
+`_tsc_specs_r2.txt`、`_auth_accept_r1.json` 1033 B、`_boot_tables_r6.txt` 5783 B 全在）。
+文档里以前只写了裸文件名没写目录，这不算假、但不可复跑——切片 3 起，引用的量具一律**放进仓库**
+（`review/ord0496/`），这一条本身就是下面第 15 条的教训。
 
 1. **汇总读法会把红跑打印成绿跑**：`_slice2_landed_r1.py` 取「最后一行含 passed」，而 Playwright 的 line reporter 把
    `2 failed` 与 `5 passed (49.1s)` 写在两行、中间夹失败名 ⇒ `slice2r1` 那趟两红在这里显示成 `5 passed`。
@@ -183,3 +285,92 @@ GO 那一屏按实测记：`go_bootstrap_reachable_by_url: false`（`bootstrap-d
    而同一尖跑两趟就有 2 枚名字翻面。口径改成一句话：**回归结论最少两趟样本**，且只认「在两趟里都稳定差集」的名字；
    这条现在写在量具里（`_slice2_failed_nameset_r1.py` 会读 `_pytest_import_slice2_full_r2.log` 并打印 `SAME_TIP_SAMPLES_FLIPPED`），
    不再只写在我脑子里。
+
+切片 3 那一轮又加了九次，**九次全在我这侧**（产品的字节没动过）：
+
+8. **CRLF 的「对数」和「分段数」我混过一次**：文档里写「89 对 CRLF」，那是
+   `len(bytes.split(b"\r\n"))` ——文件以 CRLF 收尾时分段数必然比对数 **多 1**，真数是 **88 对**。
+   现在 `grammarCensus()` 直接数成对字节，并把 `bare_line_feeds === 0` 写成断言（裸 LF 有枚就该红），
+   `slice3_gates_r1.py` 从存档 `.ics` 重读时也对这两个数各打一行。
+9. **我引用了自己刚覆盖掉的证据**：那一版 §5 引的 sha `3eb676d3…`、journeyId `d27f4079…`、runId `slice3r1`
+   都在我下一次跑玻璃时被同名覆盖——存档件被覆写之后再引旧读数，等于引用一枚不存在的东西。
+   口径改成：**回执落进 `reports/**` 才算数**，且 manifest 现在自带 `run`（runId / 权威栈 / 那趟的库路径），
+   读数与它自己那趟同源；这一版的数出自 `slice3base022320`。
+10. **我自己的 `.ics` 字段点数全是 0**：写了 `b.count(b + k + b":")`，`b` 是整份文件，于是每枚字段都数成 0。
+    改成按字段名逐行数（`DTSTART/DTEND/UID/DTSTAMP` 各 **9**），并且加了「`DTSTAMP` 去重后仍是 9 枚不同值」这种
+    形状检查——否则「全 0」和「全 9」在只看总数时都可能被读成合理。
+11. **词典闭包把文件名兜底当成了键**：`calendarExport.ts:143` 有一句 `... : "calendar.ics"`（下载失败时的
+    兜底文件名），我的第一版闭包把任意引号里的 `calendar.` 都算成请求，于是打 `ASKED 10 / MISSING 1`。
+    虚报的破口与漏报的破口一样贵：现在只认两种形状——`t("calendar.x")` 的实参，和拒绝映射的值，
+    并**逐枚打印出处行号**（§1 那九行 `ASKED … <- …` 就是它）。
+12. **「这句话是不是词典值」用整句包含去比，假红过一次**：屏上的句子是插值后的
+    「已下载 9 个日程…」，词典值是「已下载 {events} 个日程…」，直接 `in` 永远不成立。
+    现在先把数字与 `{placeholder}` 折成同一形状再比，两枚回执句各自打印 `…_IS_A_DICTIONARY_VALUE True`。
+13. **差集那枚标签骗了我自己**（§1 开头的更正）：`…_STABLE_IN_BOTH_SAMPLES` 减的是上一尖两趟的**交集**，
+    于是「上一尖只红过一趟」的名字被报成「新且稳定」；同一次改动里我还把 `set().intersection(*sets.values())`
+    当交集用——那是**空集**去 intersection，恒为空，「逐趟归属表」当场把整片红面（一百多枚）当差集打了出来。
+    两条一起修：四行标签各自描述自己的算法（`…_AND_IN_NEITHER_…` / `…_BUT_ALREADY_FLAKY_ON_…`），
+    交集改用 `set.intersection(*sets)`，并补了那张 3 行 `MEMBERSHIP_TABLE`。
+    **这一条是本轮最值钱的一次**：如果没有那张表，`1` 这个数字会顺理成章地读成「切片 3 带来一枚新红」，
+    而它是上一尖也红过的那枚 xproc；§1b 才是要写进信里的东西。
+14. **我的「缺失工件点查」本身是错的**：正则 `_slice2_[a-z_]*\.py` 不吃数字，而且只在仓库里找——
+    于是把 7 枚在仓库外、确确实实存在的脚本判成「当时只是 heredoc，没落盘」。我差点把「引用没写目录」
+    升级成「我编过复跑命令」，并已经把那句假认定写进了两份文档才撤掉。
+    口径改成：**判「不存在」之前必须先在文件系统里找一遍**，且引用外部脚本要带绝对路径（本节开头那条就是补这个）。
+
+15. **我把 `grep -c` 的退出码 1 读成了「文件不存在」**：第 14 条刚立完「判不存在之前先在文件系统里找一遍」的规矩，
+    我就在同一轮里用 `grep -c live_view backend/app/services.py || echo "NO FILE"` 写出「融合树没有 `services.py` 这枚文件」，
+    并把它写进了 §5 当作切片 3b 的未知项。零命中和没这枚文件是两件事：**`grep -c` 找不到匹配时回 0 并退出码 1**，
+    文件在不在要用 `test -f` / `stat` 说。现读三棵树这枚文件都在（融合尖 132459 B / 融合基线 125832 B / 源树 96762 B），
+    为 0 的是里面的 `live_view`——§5 第 12 条那张表就是改完的版本。
+    这条与第 6 条同形状（`rc=0` 的空读数像「远端没动」），差别只在于这次是我把**非零码**读成了不存在：
+    退出码是**关于命中**的，不是**关于文件**的，凡靠退出码分支的判断都要自带一枚存在性腿。
+
+16. **我用来核「一杖最多三枚键」的那条 bash 正则，把带下划线的键整枚吃掉**：`grep -oP '^\+\s+"[a-zA-Z.]+"(?=:)'`
+    的字符类里没有 `_`，于是 `calendar.refused.not_found` 与 `calendar.refused.not_calendar` 两枚键**凭空消失**，
+    中间那枝被读成「2 枚键」（真数 3 枚）。这次的错方向是**少报**，看着像更守规矩，所以不会有人去查它；
+    真正贵的是同一个字符类若长在 ASKED 那一侧，闭包会因为「不问了」而绿。
+    ⇒ 已经把这条审计从我的记忆搬进仓库（`slice3_gates_r1.py::dictionary_branch_audit`），字符类写成
+    `[A-Za-z0-9_.]+`，并**自带一枚合成自检**：拿 `+  "calendar.refused.not_found": "x",` 喂给 reader，
+    读不出完整键名就打印 `DICT_BRANCH_READER_SELF_CHECK BROKEN` 并退出码 1。
+    反向对照也进了仓库（`--run-control dictclass`，**进程内换类、一个字节都不落盘**）：换成我这轮真写错的
+    那枚 `[A-Za-z.]` ⇒ 总数 **20 → 18**、两枝被读成 2 枚键、`OVER_3_KEYS` 仍是 **0**（少报会伪装成守规矩，
+    这正是没有自检它永远不会被发现的原因）、自检 BROKEN、`CONTROL dictclass BITE rc= 1`；
+    改回 ⇒ `DICTIONARY_BRANCH_COMMITS 8 / KEYS_ADDED_TOTAL 20 / OVER_3_KEYS 0 / SELF_CHECK PASS`，
+    逐枝键名由脚本打印（3,3,3,3,3,3,1,1），不再靠我数给你看。
+
+⇒ 这十六次的形状是同一枚：**读数没毛病，读数的读法或标签有毛病**。所以本轮起的规矩是
+「每一枚被文档引用的数，都要有一枚在仓库里的脚本能重新打出来；每一枚绿闸，都要有一枚反向对照证明它咬得住」。
+§1 表里那八行「复跑」现在全部指向 `review/` 里在库的脚本，不再指向我的记忆。
+
+## 8. 切片 3（`.ics` 日历导出）的数值与给号令者的待决清单（2026-10-15 03:00，runId `slice3base022320`）
+
+| 尺 | 数 | 这一行钉住的是 |
+|---|---|---|
+| 玻璃上真点一次 | **1 次按下 ⇒ 1 枚下载**，`2879 B`，文件名 `Tianjin · stay-aware weekend--d746ac1b-….ics`（标题来自行程自己，不是写死） | 下载只有文件能证明；没有第二条腿重访那扇门冒充导出 |
+| 文件自己数自己 | **9 枚 VEVENT** / `DTSTART` 9 / `DTEND` 9 / `UID` 9 / `DTSTAMP` 9（去重仍 9）/ **88 对 CRLF** / 裸 LF **0** / 超 75 octet 的行 **0** / 最长行 **75** | RFC 5545 §3.1 的两条硬限是断言不是注释；反向对照 `screen_stops_sending_the_credential`、`notice_prints_a_raw_key`、`button_loses_its_testid` 三枚各能红 |
+| 门上的算术与字节对得上 | `activities=9 events=9 no_clock=0 no_stamp=0 sums=True` | 屏上那句「已下载 9 个日程」数的就是字节里那个 9，两处不是各说各话 |
+| 回执跨趟稳不稳 | 三趟独立新库里**字节数 2879 与事件数 9 相同**（控制台读），但 **sha256 逐趟不同**（`7fb59c4d…` → `2d3eb7ce…`）：`UID` 是布景那枚行自己的 id、`DTSTAMP` 是行自己的 `updated_at`，所以哈希跨趟动是**设计如此**，不是内容漂 | 别把 sha 当回归闸；这一格把「哪两枚字段是 run-dependent」写进 manifest 的 `run_dependent_fields` |
+| 无凭据那一腿 | 下载 **0** 枚、门 **401**、屏上「日历没能导出，所以没有下载任何东西。」 | 「它拒了」不能靠一句 grep：这一腿单独断言**没有出现裸键** |
+| 后端这三片 | 日历 **17 passed / 2.52s**；collections+checkins+POI **47 passed / 6.02s** ⇒ 自带 **64** 枚，四趟全量里 `SLICE3_OWN_TESTS_RED 0` | 是在整套里不红，不是只单跑绿 |
+| 契约面 | **0 处**（`contracts/openapi.yaml`、`frontend/src/generated/api.ts` 各 grep `calendar` 命中 0） | 明确没接的腿，见 §5 第 11 条 |
+
+给号令者的待决清单（每一条都是我能动但**不该我单独定**的）：
+
+1. **推不推**：三枚远端 fusion 尖现在仍是基线 `594f9a4e75a…`，本尖 43 枚提交只在本地。要推/开 PR 需要点头，
+   charter 还要交叉评审 owner 才算落 canonical。
+2. **`g3_xproc` 那一行谁改**（§1b）：`_wait_for_serving` 的首枚轮询让 `URLError` 逃出重试窗；基线尖 2/16、本尖 1/16 同帧红。
+   我不改别人车道的闸；要我改请明说。
+3. **契约 + 生成客户端这一刀什么时候开**：`.ics` 与切片 4 的成员三件套都要它（后者自带一枚契约键
+   `x-citynexus-max-administrators-per-journey`，源树那枚测试还**去读生成客户端的文本**）。我按 80% 功能优先把它排在后面。
+4. **第 10 枚 `calendar.` 键要不要**：`401` 现在落到 `calendar.refused.unknown` 这句「日历没能导出」，
+   语义正确但不说「你没身份」。源树同样是 unknown 兜底；加一枚专门的键要多占一枝（号令者的「一杖最多三枚键」），所以我没加。
+5. **`GET /api/v1/places` 与解析门口径不同**（§6 第 3 条，实测两座城都这样）：读门带 provider 过滤、解析门故意不带。
+   这不是移植引入的，但它是「界面上能选到的地点」与「贴文本能对上」不一致的根因，等裁要不要合流。
+6. **codex 车道**：`fusion/codex-journey-20261014` 超基线 **0** 枚提交（现读），GO MODE 的读腿还在那边欠着（§5 第 2 条）。
+7. **切片 4（成员角色三件套）要不要开工**：我已把它的依赖闭包量完——**schema 差集为 0**（三件套写的列在融合库全在，
+   `journey_role_capabilities` 还是超集），但两枚写门要做与日历门同一类的**鉴权接缝改写**（源树把 actor 当请求体里的自称，
+   融合树只认签名令牌），而且融合树的 `access` 前端比源树小得多（`AccessPanel.tsx` 357 行 vs 1087 行、
+   `accessDoors.ts` 119 行且**没有任何写函数**、roster 相关 grep 命中 **0**）——前端那半是新建子系统，不是一枚 diff。
+   按「80% 投功能」我打算先开工两枚写门 + 门上测试，前端另立一刀；等他定优先级。
+

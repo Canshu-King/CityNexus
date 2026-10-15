@@ -25,13 +25,24 @@
 `journeys/{id}/abort`、`calendar.ics`、`checkins`、`member-role-limits`、`members/self-exit`、
 `members/{member_id}/role`、`poi-import/add`、`poi-import/parse`。
 
-## 1. **融合树上**彻底没有用户入口的 7 条（parity-A 逐条给到注册表 + 路由表 + 词典 + testid 四层证据）
+## 1. **融合树上**彻底没有用户入口的 7 条（parity-A 扫描时判的 7 条；**本尖现读只剩 2 条成立**，见本节末尾的计数更正）
 
 > **措辞更正（19:05，我自己写的那句会误导）**：这一节判的是**融合分支**那一侧。移植源不是这样——源树 `eeb8b8d2fd` 里收藏与打卡/足迹两条**有界面且已注册**（`v8PanelRegistry.tsx:6/:246/:30/:420`、`TripItinerary.tsx:24/:586`；`features/collections/` 5 枚文件、`features/checkin/` 6 枚），台上树与权威尖 `f6e936c8e85e` 同样有。融合基线这两处目录命中 0、注册表 grep 命中 0，所以「没有入口」只对融合成立。CSV 的 `state` 列按源树记的 `LIVE_IN_UI` 与此不冲突。
 > 更要紧的是这带出一条冲突面：源树界面按「调用者自报身份」写（`collections.ts:63` 拼 `?traveler_id=`，`:45` 不带 `Authorization`），而我这轮把后端那扇门改成了只认签名令牌、且**不接受点名**。原样搬必红两次（401 与 422）。三处非改不可的接法在 `SLICE1_UI_PORT_SEAM_r1.md`。
 
 打卡 check-in、足迹 footprint、收藏 collections、导入地点 POI import、日历 .ics 导出、行程长图 poster、中止行程 abort。
 判定方式不是我猜文件夹：`v8PanelRegistry.tsx` 无该项、`routes/v8Routes.ts` 无该项、`LocaleContext.tsx` 词典无该 Tab、`data-testid` 不出现在 render 里。
+
+> **计数更正（2026-10-15 03:20，import 尖 `41fbb9c731`）**：这七条到本尖只剩 **2 条**成立——行程长图 poster、中止行程 abort。
+> 收藏 / 打卡 §9 接通，导入地点 §11 接通，**日历 `.ics` 导出 §12 接通**。
+> 两条量法上的要紧事：
+> 1. **日历这条按上面那四层判会永远判成「没入口」**——它不是 Tab，是行程面板默认子页里的一枚按钮，
+>    现读融合树：`v8PanelRegistry.tsx` 命中 **0**、`v8Routes.ts` 命中 **0**，而词典 **20** 行、带 `calendar` 的文件 **10** 枚。
+>    ⇒ 「注册表里有」是入口的**一种**形状，不是唯一形状；切片 4 那三件套要按形状分别量，不能一条 grep 通吃。
+> 2. **`abort` 这枚 token 在本树有 13 枚文件的命中，但没有一枚是中止行程**——全是 `AbortError` / `AbortController`
+>    （`journeyContinuation.ts:161`、`V8Experience.tsx:373-375` 等）。精确 token `journey-abort` / `abortJourney` 命中 **0**，
+>    而源树两处都在（`v8PanelRegistry.tsx:450` 的 `testId: "journey-abort"`、`features/abort/` 四枚文件）。
+>    ⇒ 判「abort 有入口」必须先打掉同名 token；这条与 §7 那条「`grep -c` 退出码」是同一类读数错法。
 
 半缺 2 条（后端在、前端不读）：
 - 分享接收方：融合 `main.py:6546/6617/6663` 门在，前端只有 `generated/api.ts:488` 的类型，**零组件读** ⇒ `BACKEND_ONLY`
@@ -117,7 +128,7 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 |---|---|---|---|
 | 1 | **Collections 收藏 + Check-in 打卡/足迹** | 融合侧 0 命中、纯加法（3 模型 + 20 schema + 9 service + 37 路由），一次恢复两条 Tab；但必须做鉴权升级与 `schema.sql` 建表 | **已落地**：后端 + 手契约 + 表 + 前端 + 守门测试，行为数见 §9 |
 | 2 | POI import 导入地点 | `poi_import.py` 是零内部依赖的叶子模块，前端 `features/poiimport/` 4 文件；入口在 discover（与 1 共用唯一入口） | **已落地**（2026-10-15 00:06，见 §11）。**更正这行的「入口在 discover」**：源树那个入口是 discover 面板上的 `onOpenPreparePlaces` 触发腿，本片没搬（还要改另一片面板），融合树上这扇门的来路只有抽屉/URL |
-| 3 | Calendar .ics 导出 + abort | `calendar_export.py` 同样零依赖叶子；`abort` 只 1 路由 | 待 |
+| 3 | Calendar .ics 导出 + abort | `calendar_export.py` 同样零依赖叶子；`abort` 只 1 路由 | **导出这一半已落地**（2026-10-15 03:20，尖 `41fbb9c731`，见 §12）：`calendar_export.py` 逐字搬、门从匿名改成认签名令牌、玻璃真点一次出 2879 B / 9 VEVENT。**`abort` 这一半我没并进本片**，判成切片 3b 独立走：它不是「1 路由」那么小——门上要 `live_view`（融合两枚尖该字段命中 **0**、源树 `main.py` **5** 处 / `services.py` **2** 处 / `class JourneyLiveView` 源树 1 枚融合 0 枚 / `schema.sql` 两列 `aborted_at`+`abort_reason` 融合 **0**），且 `v8PanelRegistry.tsx:445-447` 的注释自认「面板读服务器的 `live_view`，绝不从 `status` 自己推状态」⇒ 只搬路由会搬出一枚说谎的按钮。前端闭包量过：`features/abort/` **4 枚文件全缺**（Panel 10894 B / ts 2690 B / Copy 7720 B / css 1871 B），依赖里 `rawFacts.ts`、`v8Formatting.ts` **逐字相同**，`CnxMeasuredFacts.tsx`（2839 vs 4676）、`v8Types.ts`（6721 vs 7938）、`LocaleContext.tsx`（113918 vs 202499）**存在但不同** ⇒ 又是 r77 那种「窄抄漏依赖闭包」的形状，先按文件比再抄。**加分项**：本片在共享词典里需要的键是 **0**（源树 `LocaleContext.tsx` 里 `abort.` 命中 0，句子在自家 `journeyAbortCopy.ts`），号令者「一杖最多三枚键」那条在这里根本不触发 |
 | 4 | 成员角色三件套（role-limits / self-exit / role） | 动权限，需与融合 `member_has_capability` 对齐，风险高、价值中 | 待 |
 | 5 | `demo/scene/ensure` | **HOLD**：这是布景/维护工具，不是产品能力；且需 demo token（本机空库实测 **403**）。按 charter `distinguish product additions from evidence-only` 不进产品 | 判定为不移植 |
 | 6 | 生成物（openapi/`generated/api.ts`） | 放最后靠合并后重生成，不手抄 | 待 |
@@ -135,7 +146,9 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 - parity-A 的 `LIVE_IN_UI` 是**静态**四层证明（路由表∧注册表词典∧testid 落在 render）。
   其中收藏、打卡/足迹两条已由 §9 的界面守门**在真数据上点开并写通过**，导入地点一条已由 §11 的活口点开并写通过
   （`when` 门为真、`collect-entry` 在非空 plan 上可用）；
-  其余四条（`.ics` 导出、行程长图 poster、abort、成员角色）仍是静态层，没开页没点按钮。
+  其余三条（行程长图 poster、abort、成员角色）仍是静态层，没开页没点按钮。
+  ~~`.ics` 导出~~ ⇒ **已由 §12 打掉这一格**：390×844 Chromium 上真按一次、Chromium 自己收下文件
+  （`2879 B` / 9 枚 VEVENT / 88 对 CRLF），另有一腿无凭据 **401 且下载 0 枚**；回执在 `reports/qoder-ord0496-calendar/`。
 - precache 8 条名单我无法复现（`v10-sw.js` 是构建产物，命令禁 build），只引主人今日实测与 `vite.config.ts:52-56` 自记。
 - ~~`catalog_hydration_operations.py` 两侧是否改同一函数没读完 ⇒ 导入地点的合并冲突强度是未知项。~~
   ⇒ **本片已把它打掉一半**：该文件在两棵树上都存在，而整条分支的 `backend/app` 面只有 5 枚文件、**全是纯插入**
@@ -204,4 +217,38 @@ Workbox `public/sw.js` 两树 211 行**完全相同** ⇒ 离线腿不是冲突�
 
 1. **`GET /api/v1/places` 不是导入用的那份目录。** 读门带 `provider_key.notin_(_SERVER_OWNED_PLACE_PROVIDERS)`（`main.py:16206`，元组 `:17901`），解析门只排结构类目（`main.py:27749`，注释在 `:27742` 自认这是故意的）。实测种子城 `CN-TIANJIN` 的 9 枚 `Place` 全带 `citynexus-v9-domain` ⇒ 读门对这座城 **0 行**。谁要写导入相关的测试，布景词汇不能从那扇读门取。
 2. **`travelerId` 这条 prop 在本树没有门可用**，删它连带删掉一枚空态分支（见 `SLICE2_POI_IMPORT_SEAM.md` §3）。这是切片 1 那三处改动的第四条同款后果。
-3. **`MISSING_EXPORT_COUNT 1`（`dictionaryText`）不是破口**：要它的是**源树**的 `errorReceipt.ts:20`，本树那枚文件没有任何 import，本树词典也不导出它。它记的是「源树那枚文件不能整枚盖过来」，切片 3/4 会用到。
+3. **`MISSING_EXPORT_COUNT 1`（`dictionaryText`）不是破口**：要它的是**源树**的 `errorReceipt.ts:20`，本树那枚文件没有任何 import，本树词典也不导出它。它记的是「源树那枚文件不能整枚盖过来」。
+   **切片 3 已把这条读干净（03:20 现读，绝对路径逐树数，不再用一条 `cd` 后的相对 grep）**：`dictionaryText` 在
+   源树 `frontend/src` 命中 **30** 处、在融合尖与融合基线各命中 **0** 处（`i18n/LocaleContext.tsx` 也不导出它）。
+   ⇒ 日历这一片**没用到它**（本尖 `features/trip/` 与 `lib/` 命中 0），所以它不是切片 3 的依赖；
+   仍是切片 4 的口径：**源树的组件 import 面比融合树的导出面宽**，整枚文件盖过来会红在收集期。
+   **顺带记一枚我这轮的量具错**：第一次核这条时我在同一条命令里 `cd` 到源树后又用相对路径读「融合树」，
+   于是同一枚 30 被打印了两遍、看着像两棵树相同。凡是「两棵树对拍」的数，每条腿必须自带绝对路径。
+
+## 12. 切片 3 落地：日历 `.ics` 导出（2026-10-15 03:25，尖 `41fbb9c731`，本片 6 枚提交、3 枚只动词典）
+
+细节在 `qoder_import/SLICE3_CALENDAR_EXPORT_SEAM.md`，逐条数值在 `QODER_RESULT.md` §8。这里只记对**本文件口径**有影响的部分。
+**切片 3 起，被引用的量具全在仓库里**：`review/ord0496/slice3_gates_r1.py`（一条命令打全 §0/§1 的数）、
+`glass_can_go_red_r1.py`（三枚玻璃反向对照）、`xproc_floor_r1.py`（别人那枚闸的空白对照）——不再出现「裸文件名不带目录」的引用。
+
+| 尺 | 数 | 复跑 |
+|---|---|---|
+| 后端 | `backend/app/calendar_export.py` **351 行、与源树逐字节相同**（纯函数、零内部依赖）；门 `@app.get("/api/v1/journeys/{journey_id}/calendar.ics")` 落在 `main.py:27391`，本片 `main.py +228 / −0` ⇒ **纯插入**；源树那三枚 helper 不是整枚盖过来：`_calendar_journey` **重建**、`_calendar_activities` 与 `get_journey_calendar` **逐字搬 + 加一枚参数**，出处自记在 `main.py:27250-27253` | `pytest -q backend/tests/test_qoder_ord0496_calendar_export.py` ⇒ **17 passed / 2.52s** |
+| 鉴权口径 | 源树那扇门**匿名可读**（谁点到都能拿走别人的整份日历）；按 §3「移植必须升级」改成只认签名令牌，并且**不接受 `?traveler_id=` 点名**（`_calendar_scope_param` 在 `main.py:27296` 就是为拒这一次而存在） | 活口两腿：带凭据 ⇒ 下载 **1** 枚；无凭据 ⇒ **401 且下载 0 枚** |
+| 前端 | 行程面板默认子页挂导出按钮（`TripItinerary.tsx +42/−1`，`--numstat` 现读）+ 客户端 `calendarExport.ts` **160 行**。**没有新 Tab、没有新路由** ⇒ §1 那四层判据在这条上必然读成「注册表 0 / 路由 0」，入口形状不同（见 §1 计数更正第 1 条） | 三枚 `tsc` 闸 **各 0 错误行** |
+| app 词典 | **9 枚 `calendar.*`**（两语各 9 行 = 18 行），分 **3 枝**「一杖最多三枚键」提交（3,3,3）。全枝审计 `DICTIONARY_BRANCH_COMMITS 8 / KEYS_ADDED_TOTAL 20 / OVER_3_KEYS 0`，逐枝 3,3,3,3,3,3,1,1 | `python review/ord0496/slice3_gates_r1.py`；反向对照 `--run-control dictclass`（进程内换字符类 ⇒ 总数 20→18、自检 BROKEN、rc=1，**不落盘**） |
+| 玻璃 390×844 | **真按一次 ⇒ 浏览器收下文件**：`2879 B`、**9 枚 VEVENT**、`DTSTART/DTEND/UID/DTSTAMP` 各 9、**88 对 CRLF**、裸 LF **0**、超 75 octet 的行 **0**、最长行 **75**；文件名带行程自己的标题。存档 `reports/qoder-ord0496-calendar/`（manifest 自带 `run` 与 `grammar`） | `python review/ord0496/glass_can_go_red_r1.py` ⇒ BASELINE `rc=0 / 2 passed`；三枚对照各 `rc=1` ⇒ `CONTROLS_RAN=3 CONTROLS_THAT_BIT=3`；被改文件逐字节修回 |
+| 回归 | 同根**每尖两趟**共四趟：切片 2 尖 `155/2065/7`、`155/2065/7`；本尖 `156/2081/7`、`155/2082/7`。差集 `RED_IN_BOTH_SLICE3_AND_IN_NEITHER_SLICE2_SAMPLE **0**`，`SAME_TIP_SAMPLES_FLIPPED 1`；唯一那枚在两趟都红的 `g3_xproc` 经空白对照判定**与本尖无关**（臂文件两树同 sha `07fdf6c97187a6dd`、基线 **2/16** 红反而多于本尖 **1/16**） | `python review/ord0496/slice3_gates_r1.py` 的 `SAMPLE`/`MEMBERSHIP_TABLE`；`python review/ord0496/xproc_floor_r1.py --repeat 8` |
+| 契约面 | **0 处**：`contracts/openapi.yaml`（167236 B）与 `frontend/src/generated/api.ts`（265557 B）各 grep `calendar\|\.ics\|vevent` 命中 **0**（两枚文件都在，命中为零——与 §11 第 3 条同一条规矩） | `grep -c -i -E 'calendar\|\.ics\|vevent' <file>`，先 `test -f` 再数 |
+| 产品代码面 | 本片 **6 文件 / +1988 / −1**（pathspec `backend/app backend/tests frontend/src`，提交之后取）；整条分支到本尖 **30 文件 / +10074 / −33**，含证据件 **61 / +12506 / −41** | `git diff --stat f9abba3fde..HEAD -- backend/app backend/tests frontend/src`；`git diff --stat 594f9a4e75..HEAD …` |
+
+三条**必须带走**的口径结论：
+
+1. **入口有两种形状，parity 的四层判据只认第一种。** 日历这条是「面板内按钮」：注册表 0、路由 0、词典 20 行、含 `calendar` 的文件 10 枚。
+   谁继续用 §1 那张尺判切片 4，会把「已接通」判成「没入口」。
+2. **`abort` 这枚 token 会骗人**：融合树 13 枚文件命中，全是 `AbortError`/`AbortController`；精确 `journey-abort`/`abortJourney` **0**。
+   源树两处都在（`v8PanelRegistry.tsx:450`、`features/abort/` 四枚文件）。
+3. **切片 3b（abort）不是「1 路由」那么小**：`v8PanelRegistry.tsx:445-447` 自认「面板读服务器的 `live_view`，绝不从 `status` 自己推状态」，
+   而 `live_view` 在两棵融合树命中 **0**（源树 `main.py` 5 处 / `services.py` 2 处 / `class JourneyLiveView` 1 枚 / `schema.sql` 两列）。
+   ⇒ 只搬路由会搬出一枚说谎的按钮；前端闭包另需 `features/abort/` **4 枚文件**，其中 3 枚依赖文件两树不同（`CnxMeasuredFacts` 2839 vs 4676、`v8Types` 6721 vs 7938、`LocaleContext` 113918 vs 202499）。
+   **共享词典键需求 0 枚**（源树句子在自家 `journeyAbortCopy.ts`）⇒ 「一杖三枚键」那条在这里不触发。
