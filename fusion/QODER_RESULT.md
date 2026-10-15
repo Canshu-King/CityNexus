@@ -14,13 +14,13 @@
 | 尺 | 数 |
 |---|---|
 | 分支 | `fusion/qoder-import-20261014` |
-| 产品尖 | **`41fbb9c731`**（写本行时的 `git rev-parse --short HEAD`；本文件的 docs 提交之后它会再前进，现读用同一条命令） |
-| 超出融合基线 `594f9a4e75` 的提交 | **43**（`git rev-list --count 594f9a4e75..HEAD`）。切片 2 占 **11** 枚（**4** 枚只动词典），切片 3 占 **6** 枚（**3** 枚只动词典：`git log --oneline f9abba3fde..HEAD` 逐枚点名） |
-| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33** |
-| 含证据面（再加 `frontend/e2e reports review fusion`） | **61 文件 / +12506 / −41** |
+| 产品尖 | **`cf9a1899ce`**（docs + 量具那枚提交之后**重取**的 `git rev-parse --short HEAD`；本文件所有「diff 面」的数都是这枚提交之后取的——见 §7 第 5 次那条口径） |
+| 超出融合基线 `594f9a4e75` 的提交 | **44**（`git rev-list --count 594f9a4e75..HEAD`）。切片 2 占 **11** 枚（**4** 枚只动词典），切片 3 占 **7** 枚（**3** 枚只动词典，第 7 枚是本轮 docs+量具 `cf9a1899ce`：`git log --oneline f9abba3fde..HEAD` 逐枚点名） |
+| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33**（这枚 docs 提交不碰产品面，所以它与上一版同数——同数本身是现读出来的，不是假设） |
+| 含证据面（再加 `frontend/e2e reports review fusion`） | **65 文件 / +13694 / −41** |
 | 远端 | **没推**。`git ls-remote` 现读三枚 fusion 尖仍是 `594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66` |
 | 落地面（与「绿不绿」是两回事） | `git merge-base --is-ancestor 594f9a4e75 HEAD` ⇒ **YES**，本尖是基线的后代、不是入账工 12:53 通播里那种「不相交」枝；codex 车道枝 `fusion/codex-journey-20261014` 超基线 **0** 枚 ⇒ 现在合并的冲突面只有我这批纯插入的插入点本身 |
-| 号令者的字典规矩（「字典单独一枝、一杖最多三枚键」） | 动 `LocaleContext.tsx` 的提交 **8** 枚，逐枚新增**不同键**数是 **3,3,3,3,3,3,1,1** ⇒ 全部 ≤3，且每枚只进一个命名空间（`calendar.` 三枚 / `poiImport.` 三枚 / `nav.import` 与 `checkin.title` 各一枚）。逐枚审计在 `slice3_gates_r1.py` 的 `LOCALECONTEXT_COMMITS_WITH_MORE_THAN_3_KEYS_ADDED` 那一段，它按提交 diff 现算而不是按我数过 |
+| 号令者的字典规矩（「字典单独一枝、一杖最多三枚键」） | 动 `LocaleContext.tsx` 的提交 **8** 枚，逐枚新增**不同键**数是 **3,3,3,3,3,3,1,1** ⇒ 全部 ≤3，且每枚只进一个命名空间（`calendar.` 三枚 / `poiImport.` 三枚 / `nav.import` 与 `checkin.title` 各一枚）。逐枚审计在 `slice3_gates_r1.py::dictionary_branch_audit`（打印 `DICTIONARY_BRANCH_COMMITS 8 / KEYS_ADDED_TOTAL 20 / OVER_3_KEYS 0 / DICT_BRANCH_READER_SELF_CHECK PASS`），它按提交 diff 现算而不是按我数过；反向对照 `--run-control dictclass` 见 §1 表那一行 |
 
 
 **先认一条我自己报错的数**：上一版这一格写的是 **21 文件 / +6092**。那条 `git diff --stat` 是在切片 2 的文件**还没 `git add`** 的时候取的，`git diff` 不看未跟踪文件，所以少算了 6 枚新文件（`poi_import.py`、它的测试、`PoiCandidateCard.tsx`、`features/poiimport/` 三枚）＝**−6 文件 / −1994 行**。提交之后重跑同一条命令才是 27 / +8086。教训记在 `SLICE2_POI_IMPORT_SEAM.md` §7。
