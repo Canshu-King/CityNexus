@@ -96,16 +96,15 @@
   --cn-lift-2: 0 1px 2px rgba(29, 27, 25, 0.06), 0 6px 18px rgba(29, 27, 25, 0.09);
   --cn-lift-3: 0 2px 4px rgba(29, 27, 25, 0.08), 0 18px 44px rgba(29, 27, 25, 0.14);
 
-  /* Time-of-day sky. Painted behind the Today intro only; it carries no text,
-     so it is free to be saturated. */
-  --cn-sky-dawn: radial-gradient(120% 90% at 12% -10%, rgba(255, 138, 76, 0.3), transparent 62%),
-    radial-gradient(90% 70% at 92% -18%, rgba(255, 214, 150, 0.42), transparent 58%);
-  --cn-sky-day: radial-gradient(120% 90% at 12% -10%, rgba(10, 102, 255, 0.16), transparent 62%),
-    radial-gradient(90% 70% at 92% -18%, rgba(120, 200, 255, 0.3), transparent 58%);
-  --cn-sky-dusk: radial-gradient(120% 90% at 12% -10%, rgba(255, 106, 61, 0.26), transparent 62%),
-    radial-gradient(90% 70% at 92% -18%, rgba(122, 75, 214, 0.24), transparent 58%);
-  --cn-sky-night: radial-gradient(120% 90% at 12% -10%, rgba(43, 58, 103, 0.5), transparent 62%),
-    radial-gradient(90% 70% at 92% -18%, rgba(12, 20, 42, 0.6), transparent 58%);
+  /* Time-of-day sky. Linear, with the alpha ramped to zero: the first pass used
+     two radial ellipses and the rendered page showed a hard horizontal edge at
+     the bottom of the wash on 390-wide light (visible in shots/before-vs-after),
+     because an ellipse's outer stop is a shape boundary, not a fade. A vertical
+     gradient whose last stop is transparent cannot band. */
+  --cn-sky-dawn: radial-gradient(72% 46% at 8% 0%, rgba(255,150,92,.20), rgba(255,196,138,.07) 58%, rgba(255,214,150,0) 100%);
+  --cn-sky-day: radial-gradient(72% 46% at 8% 0%, rgba(10,102,255,.13), rgba(120,190,255,.05) 58%, rgba(120,200,255,0) 100%);
+  --cn-sky-dusk: radial-gradient(72% 46% at 8% 0%, rgba(255,118,74,.16), rgba(150,108,214,.06) 58%, rgba(150,108,214,0) 100%);
+  --cn-sky-night: radial-gradient(72% 46% at 8% 0%, rgba(112,122,168,.15), rgba(136,146,186,.05) 58%, rgba(150,160,200,0) 100%);
   --cn-sky: var(--cn-sky-day);
 
   /* ── Type roles ───────────────────────────────────────────────────────
@@ -196,11 +195,31 @@
   color: var(--cn-on-elev-0);
 }
 
+/* 时间光铺页首这件事，试过三种形状都被现读否掉：
+   甲 `background-size: 100% 520px` 的椭圆带 → 亮色夜档在 390 宽上糊成一块灰蓝矩形；
+   乙 两端 alpha 收到零的线性「透镜」→ 上下仍各有一条边（上边是导航与页面的色差）；
+   丙 从左上角散开的径向柔光 → 左边界被 background-position 切出一竖。
+   结论：整幅铺色在「页首只占半屏」的这个版式里必然读成贴上去的纸中纸。撤掉铺法，
+   相位改用在不会出边界的地方（脉搏点与眉标），令牌与实测原因留在文件里，
+   留给带蒙版思路的一拍（账本 WP-F）。 */
 [data-pulse-phase] .v8-page,
 .v8-page[data-pulse-phase] {
-  background-image: var(--cn-sky);
-  background-repeat: no-repeat;
-  background-size: 100% 520px;
+  background-image: none;
+}
+
+/* 相位落在两枚小东西上：脉搏点的呼吸色、眉标的强调色。它们都是「点」，
+   没有面积，也就不可能再出现矩形边界。 */
+[data-pulse-phase="dawn"] { --cn-pulse-dot: #ff7a3d; --cn-pulse-ink: #a13c14; }
+[data-pulse-phase="day"] { --cn-pulse-dot: #248a3d; --cn-pulse-ink: var(--cn-accent-text); }
+[data-pulse-phase="dusk"] { --cn-pulse-dot: #ff9f0a; --cn-pulse-ink: #8a4b06; }
+[data-pulse-phase="night"] { --cn-pulse-dot: #7a88c8; --cn-pulse-ink: var(--cn-on-elev-0-muted); }
+
+.v8-page[data-pulse-phase] .v8-page-intro .v8-kicker {
+  color: var(--cn-pulse-ink, var(--cn-on-elev-0-muted));
+}
+
+[data-pulse-phase] .cn-hero-label:first-child::before {
+  background: var(--cn-pulse-dot, var(--cn-success, #248a3d));
 }
 
 /* ═══ 3 · Today, re-cut ═══════════════════════════════════════════════
@@ -500,4 +519,136 @@ code {
 
 .v8-outline-button:hover {
   background: var(--cn-elev-2);
+}
+
+/* ── 第二拍：页首构图 ─────────────────────────────────────────────────
+   第一拍把可读性关掉了，但取景图上还剩三处「不像设计过」的地方：
+   甲 动作行四枚链接在 390 宽上换行，第四枚孤零零一行；
+   乙 需要关注的带子里右半边是空的，计数与文案各占一角；
+   丙 桌面档说明文字与动作块之间一大片空白。
+   全部用现有类名解决，不动 DOM。 */
+
+/* 甲 动作行：窄屏两列成对，不再出现落单的一枚；宽屏回到一行。 */
+.v8-hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  align-items: center;
+  margin-top: var(--cn-s-10, 10px);
+}
+
+@media (max-width: 680px) {
+  /* 试过 repeat(2, max-content) 的两列网格：390 宽放不下，动作行被推出内容框、
+     说明文字溢出右边缘。落单可以忍，横向溢出不能忍——回到自然换行。 */
+  .v8-hub-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+  }
+}
+
+/* 乙 关注带：把「眉标 + 计数」并到同一行基线上，文案与动作依次下行，
+      带子按内容收高度，不再靠 min-height 撑出一片空。 */
+.cn-attention-band {
+  padding: var(--cn-card-pad-compact, 16px) var(--cn-card-pad, 20px);
+  border-radius: var(--cn-r-16, 16px);
+}
+
+.cn-attention-band .v8-kicker {
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+  letter-spacing: var(--cn-tracking-caps);
+}
+
+.cn-attention-band strong.warn {
+  font-family: var(--cn-font-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
+}
+
+/* 丙 桌面档：说明文字与动作块各占一栏，标题跨栏，中间不再出现空白带。 */
+@media (min-width: 900px) {
+  .v8-page-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: end;
+    column-gap: var(--cn-s-32, 32px);
+    row-gap: var(--cn-s-8, 8px);
+  }
+  .v8-page-intro > div:first-child {
+    grid-column: 1;
+  }
+  .v8-page-intro .v8-hub-actions {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    max-width: 46ch;
+  }
+  .v8-page-intro h1 {
+    font-size: 44px;
+  }
+}
+
+/* 正文地板：13px 的说明与脚注在手机上读起来像免责声明，抬到 15。 */
+@media (max-width: 680px) {
+  .v8-map-gesture-hint,
+  .v8-map-caption,
+  .v8-lede {
+    font-size: var(--cn-fs-body-min);
+  }
+  .v8-map-caption b,
+  .v8-map-caption span {
+    font-size: var(--cn-fs-kicker-min);
+  }
+}
+
+/* ── 第三拍：页首那张灰纸 ─────────────────────────────────────────────
+   取景图上「Demo之旅」下面那一大块浅蓝灰、底部一条硬边的东西，是
+   `styles.css:12` 给 `.v8-trip-hero` 写的 `linear-gradient(145deg,#edf5ff,#f7fbff)`。
+   它把页首从「页面」切成「贴在页面上的一张卡片」，还正好盖住这一拍铺的时间光。
+   页首不需要纸中纸：让标题、说明与动作直接坐在带时间光的纸上。 */
+.v8-page .v8-trip-hero {
+  background-image: none;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+  padding-inline: 0;
+}
+
+/* 卡片里的次级文字回到纸上的墨，不再假设自己坐在白纸上。 */
+.v8-page .v8-trip-hero,
+.v8-page .v8-trip-hero .v8-kicker,
+.v8-page .v8-trip-hero .v8-lede {
+  color: inherit;
+}
+
+/* ── 第四拍：一张纸不能有两种白 ───────────────────────────────────────
+   实测链：`section.v8-page` 的纸是暖的 #f7f5f2，它外面那层
+   `div.v8-product-shell` 与 `body` 还是冷灰 #f5f5f7。两色相差很小，但并排时
+   页首会出现一道「换纸」的界线。纸要么整张换，要么别换——这里让壳与主区
+   一起坐到同一张纸上。 */
+.v8-product-shell,
+.v8-main,
+.v8-content {
+  background-color: var(--cn-paper);
+}
+
+/* ── 第五拍：一处横向溢出 ─────────────────────────────────────────────
+   第二拍给 `.v8-hub-actions` 加了 flex 之后，390 宽上说明文字被推到内容框外
+   （取景图右边缘「Asia/Shanghai」被切）。原因是 flex 行的 min-content 宽度
+   把整列撑宽。补 `min-width: 0` 与换行，让列宽回到容器说了算。 */
+.v8-page-intro > div,
+.v8-hub-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.v8-hub-actions {
+  flex-wrap: wrap;
+}
+
+/* 说明文字的右边缘被切，是它自己超出内容框：长串「10月16日 09:00 — … Asia/Shanghai」
+   是一个不换行的整体。给它 any-where 断行与 100% 上限。 */
+.v8-page .v8-lede {
+  max-width: min(46ch, 100%);
+  overflow-wrap: anywhere;
 }
