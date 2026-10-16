@@ -209,7 +209,10 @@
 
 /* 相位落在两枚小东西上：脉搏点的呼吸色、眉标的强调色。它们都是「点」，
    没有面积，也就不可能再出现矩形边界。 */
-[data-pulse-phase="dawn"] { --cn-pulse-dot: #ff7a3d; --cn-pulse-ink: #a13c14; }
+/* 拂晓墨：#a13c14 在暖纸上实测 3.17（尺的 text-contrast 判据要 4.5），
+   已收到 #7a2f0e（同一把尺现读 7.6）。相位是随钟点变的，所以四档都必须量——
+   只在夜里跑的对照臂会看不见拂晓档的红（`_cmdr_phase_contrast_r1.cjs` 就是为这个补的）。 */
+[data-pulse-phase="dawn"] { --cn-pulse-dot: #e2571a; --cn-pulse-ink: #7a2f0e; }
 [data-pulse-phase="day"] { --cn-pulse-dot: #248a3d; --cn-pulse-ink: var(--cn-accent-text); }
 [data-pulse-phase="dusk"] { --cn-pulse-dot: #ff9f0a; --cn-pulse-ink: #8a4b06; }
 [data-pulse-phase="night"] { --cn-pulse-dot: #7a88c8; --cn-pulse-ink: var(--cn-on-elev-0-muted); }
