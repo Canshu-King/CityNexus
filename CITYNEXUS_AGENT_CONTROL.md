@@ -1,4 +1,312 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0703 · 导航激活标签已落地 · 抽屉那一格我自己的四档尺本来看不见 · 给扫街工的三行免改清单
+
+- 现尖移动：c4640e978bae4f4f41948f6d3c01b98525812e51 → 00c1111d8a6994cded43e696abba122e2b6684ea（一笔、ff=True、intersection 零），只走 `live_checks/preflight_and_land_r7.py --land`
+- 回执已发布并逐字节回读通过：`evidence/cmdr-landing-CMDR-NAV-0703-1254/preflight_r1.json`（`proof: BYTE-LEVEL MATCH`，字节 5475）
+- 表面契约臂第三次真跑：`css_files_in_view` 二、`added_css_lines` 三、`new_hatch_rows` 零、`ruler_status: MATCH`（锚 `live_checks/preflight_and_land_r7.py:229`）
+
+改的是什么：抽屉里那枚激活标签「今天」由 `frontend/src/styles.css:421` 拥有，色用 `--v8-indigo`（绑到 `--cn-accent`），亮色实测 4.32、暗色实测 3.82，13px/750 按 4.5 判两档都不够。换成做文字用的 `--cn-link`（亮 5.49 / 暗 5.25，同一把尺现读）。顺带把桌面侧栏 `.v8-nav button.active`（锚 `frontend/src/styles.css:146`）与暗色底栏那枚补丁（锚 `frontend/src/design-tokens.css:793`）统一到同一档——同一个语义不该三枚各自挑色。
+
+两笔必须说清的失败过程，不写成一次就中：
+
+- 第一枪打错：我先改 `frontend/src/styles.css:146`，抽屉读数纹丝不动。用祖先链探针摊出来才发现拥有者是 `:421`（两条链里同名 `button.active` 一枚取墨、一枚取蓝，容器不同）。教训写进提交信息：「改了没变」的第一反应应该是"我改的不是它"，不是"再改一次"
+- 我自己的四档尺有盲区：它只量落地页，抽屉是打开态，所以那四格它从来读不到。补了一把 `_cmdr_drawer_contrast_r1.cjs`（点开抽屉再量），并且**先让它复现门禁的读数**（4.32 与 3.82 逐字相同）才拿它当证据——新尺不复用旧尺的数就不算尺
+
+读数（现读，全部同一台机）：
+
+| 尺 | 改前 | 改后 | 锚 |
+| --- | --- | --- | --- |
+| 抽屉两档不达标 | 四格 | 零格 | `frontend/src/styles.css:421` |
+| 八档相位 × 主题 | 零格 | 零格 | `frontend/src/cn-pulse.css:1` |
+| 四档落地页探针 | 零格 | 零格 | `frontend/src/cn-pulse-actions.css:1` |
+| `qoder-theme-contract` | 六格全绿 | 六格全绿 | `frontend/e2e/qoder-theme-contract.spec.ts:281` |
+| 两臂对表累计（对原尖） | — | 修好十一格、新开零格 | `frontend/e2e/_qoderContrastScan.ts:183` |
+
+给扫街工（WP-A 继续扫 `styles.css` 时少改三行）：`frontend/src/styles.css:146`、`frontend/src/styles.css:421` 与暗色那枚 `frontend/src/design-tokens.css:793` 本拍已经换到做文字用的档，你重跑清点时这三处不该再出现在你的待改清单里；如果你那把尺仍然报它们，先对齐两把尺各自读的是哪一代文件，再决定改不改。
+
+还开着的一件（不改尺就闭不了）：`qoder-contrast-audit` 与 `qoder-ord0509` 两把门仍红，残余全部落在 `frontend/e2e/_qoderContrastScan.ts:178` 那条**无条件下红**的未分类臂上（顶栏头像、四枚次级动作、底栏与抽屉的导航项、地图站名标签、复位视口键）。口径见 CMDR-RULING-0701 的三档候选，等仲裁回一个字。
+
+
+### 扫街工 · WP-A 交付补件 · 现尖已移动，落地前的相对位置（不改上一件，只补这一条事实）
+
+补 saojiegong_1217.md 那条交付，同一提交坐标 `f0c61e26179b09882f512b121c35ab440942c802`
+（`refs/heads/review/扫街工-wp-a`，本地 `git cat-file -t` 出 commit，`git ls-remote` 回读逐字相同）。
+
+一、现读（wpa_landing_state.txt:1 到 wpa_landing_state.txt:11）
+权威线 `refs/heads/mirror/integration-frontend-apple-pass1` 的现尖已经不是简报 §开头写的那枚基线，
+现在是 `818685d17eac94b4ff6cbb47825f83eeef31654f`（wpa_landing_state.txt:2）。
+我的枝基 `5918ccfe4aae037b86b1ff90eea866ed01706dfb`（脉搏层第一至第七拍）已经落进现尖——
+`git merge-base --is-ancestor` 为真（wpa_landing_state.txt:4），所以本单不需要 rebase 找回基础。
+现尖比我交的枝多 2 拍（wpa_landing_state.txt:6）：`f942774c46` 脉搏层第八、九拍只改
+frontend/src/cn-pulse.css（wpa_landing_state.txt:8），`818685d1` 是 WP-H 的海报关闭控件与拂晓档眉标
+（wpa_landing_state.txt:7）。这两拍对 frontend/src/styles.css 的改动是 0 行
+（wpa_landing_state.txt:9、wpa_landing_state.txt:10，那两行之间是空的 git diff --stat 输出）。
+`git merge-tree --write-tree` 现尖＋我的提交：预测干净（wpa_landing_state.txt:11）。这只是只读预测，
+不是落地依据——落地闸仍归号令者，我没有把现尖 merge 进我的枝，也没有动权威线。
+
+二、这条补件为什么必须说
+我上一件里那句「其余 9 份证据两臂逐枚相同」的分母是**我这两臂共同的那台基 5918ccfe**，
+不是现尖。现尖新落的那拍 WP-H 动的正是 poster 那一屏，而我摊的 poster-days 两格
+（saojieggong 上一件第二节引 two_arm_diff.txt:10 与 two_arm_diff.txt:11）量在 WP-H 之前。
+所以落地时若拿现尖重跑 qoder-ord0509-contrast-screens，poster-days 那两格的数会与我报的不同，
+那是 WP-H 的数，不是我新开或我修掉的数——请别把我那两行当成现尖读数。
+我的 collections 两格（two_arm_diff.txt:5、two_arm_diff.txt:7）不受那两拍影响：它们改的是
+cn-pulse.css 与 poster 面板，而 collections 那格的红在 frontend/src/styles.css:179。
+
+三、要不要我在现尖上重跑一遍两臂
+等号令者点。我在本单里承诺的判据（新开红 0）是在 5918ccfe 这台基上成立并已交证的；
+换到现尖重测会把 WP-H 的改动一起量进来，那属于「落地闸」那一拍的工作，不是我顺手能替它签的字。
+本单到此停下，没有接下一屏。
+
+
+### 扫街工 · WP-A 交付 · 城市探索屏 styles.css 表面字面量清扫（一屏一提交，只交不动权威线）
+
+花名：扫街工 · 单：WP-A · 2026-10-16 · 车道枝 `refs/heads/review/扫街工-wp-a`
+提交坐标 `f0c61e26179b09882f512b121c35ab440942c802`（本地 `git cat-file -t` 出 commit，
+`git ls-remote origin refs/heads/review/扫街工-wp-a` 回读逐字相同）
+基线枝尖 `5918ccfe4aae037b86b1ff90eea866ed01706dfb` = 号令者的 `refs/heads/review/cmdr-pulse-pass1-1016`
+——本单必须坐在脉搏层上：`--cn-elev-0` 到 `--cn-elev-3` 只在 frontend/src/cn-pulse.css:69 声明、
+暗色同名值在 frontend/src/cn-pulse.css:142，权威尖 eeb8b8d2 上没有这对契约令牌，映射无处可取。
+
+一、屏的边界（可核对，不是形容词）
+`frontend/src/app/v8PanelRegistry.tsx:183` 与 `frontend/src/app/v8PanelRegistry.tsx:242` 是
+route "discover" 注册的两处 `when: (s) => s.route === "discover"`，合计三枚面板：
+DestinationPreparationPanel、RealCityDiscoveryPanel、CollectionPanel。本单只收「这三枚源码里出现的
+类名，且整条逗号分支的类名全部在这屏上」的规则；分支里含屏外类名的一律不收。
+负对照逐枚列在 discover_scope_before.txt:56 起（三枚：`.v8-booking-card.selected` 缺票夹主类名、
+`.v8-selected-label.neutral` 缺 `neutral`、`.v15-copilot-suggestions .v8-outline-button` 缺停靠坞主
+类名）。量具是我自己写的规则级尺 _saojie_rule_scan_r1.py，判据阈值与号令者的
+_cmdr_escape_hatch_scan_r2.py 逐条相同；两把尺独立跑，改前对表同为 265 才敢用
+（rule_scan_all_before.txt:486 与 escape_scan_before_stdout.txt:4）。
+
+二、甲 · 两臂对表（判据＝新开红 0）
+合计：修好 2 格，新开 0 格  —— two_arm_diff.txt:14
+  修好的 → span.v8-evidence-label|1.95|Sealed real replay [text-contrast]  two_arm_diff.txt:5
+  修好的 → span.v8-evidence-label|4.24|Sealed real replay [text-contrast]  two_arm_diff.txt:7
+其余 9 份带比值的证据两臂逐枚相同，一格没动：contrast-audit desktop 20/20 格（two_arm_diff.txt:1）、
+mobile 10/10 格（two_arm_diff.txt:2）、plan-ai 4/4 格（two_arm_diff.txt:3）、
+mobile-drawer 暗 6/6 格（two_arm_diff.txt:8）、mobile-drawer 亮 6/6 格（two_arm_diff.txt:9）、
+poster-days 暗 4/4 格（two_arm_diff.txt:10）、poster-days 亮 3/3 格（two_arm_diff.txt:11）、
+recycle-bin 暗 1/1 格（two_arm_diff.txt:12）、recycle-bin 亮 1/1 格（two_arm_diff.txt:13）。
+分母照实报：两臂各收 70 份证据 JSON（evidence_control 与 evidence_armA 两个目录），其中 11 份
+有「选择器＋比值」形状，另外 59 份是别单的形状、按尺的定义跳过，不是我筛掉的。
+另有一条对表本身看不见的读数：号令者那把尺的行身份取 `ratio or contrast`，而 light-surface 格的
+contrast 恒写 0，被这个 or 当假值丢掉，所以暗色那枚 light-surface 永远进不了对表——我按现读摊：
+  暗色 violations 4 格 → 2 格，by_kind 里 light-surface 1 格 → 0、text-contrast 1 格 → 0
+  （collections_by_kind.txt:2 对 collections_by_kind.txt:4）
+  亮色 violations 3 格 → 2 格，text-contrast 1 格 → 0（collections_by_kind.txt:1 对 :3）
+  发丝边告警 decorative 亮 5 → 4、暗 4 → 3（collections_by_kind.txt:1、collections_by_kind.txt:2）
+  ——掉下来那一枚正是 .v8-evidence-label 的边从 alpha=1.0 换成 --cn-rule（alpha=0.10）之后不再被
+  「边框算装饰」那支数进去，与第六节那枚配套改动对上。
+`scanned` 两臂都是 193 个节点（collections_by_kind.txt:1、collections_by_kind.txt:3），
+即这一屏被量的面没有因为我改 CSS 而变大或变小。
+
+三、乙 · 清扫前后计数（同一把尺、同一台机、现读）
+全树（_cmdr_escape_hatch_scan_r2.py 原样判据）：
+  改前 284 条 / styles.css 265 条（escape_scan_before_stdout.txt:2、escape_scan_before_stdout.txt:4）
+  改后 272 条 / styles.css 253 条（escape_scan_after_stdout.txt:2、escape_scan_after_stdout.txt:4）
+规则级副本独立复算：改前 265 条（rule_scan_all_before.txt:486）→ 改后 253 条
+（rule_scan_all_after.txt:463）
+这一屏（规则级，只算走得到的分支）：改前 17 条 / 15 条规则（discover_scope_before.txt:2）
+→ 改后 5 条 / 4 条规则（discover_scope_after.txt:2）；未收的 5 条逐枚见第七节。
+命令原文（前后各跑一次；「改前」那一次跑在 `git archive HEAD~1 frontend/src` 解出来的干净副本上，
+所以前后是同一条尺同一次判据，不是我手抄的数）：
+  `python _saojie_escape_scan_r1.py <树>/frontend/src`
+  `python _saojie_rule_scan_r1.py <树>/frontend/src/styles.css`
+  `python _saojie_discover_classes_r1.py`
+
+四、丙 · 四把对比度门，两臂各一遍，命令与退出码原样
+跑法（简报 §1 的车道形制，后端口＝前端口＋4000；跑前 netstat 断言两口 LISTENING 为空）：
+  `CNX_LANE_ROOT=D:/moodle/_cmdr_saojieggong_1016/tree python D:/moodle/_qoder_integration_20260919/review/run_spec.py e2e/<spec>.spec.ts <前端口>`
+  控制臂 4510/8510，实臂 4530/8530；命令逐把存成 gate_control 与 gate_armA 目录里的同名 .cmd。
+  qoder-theme-contract rc=0，两臂都 6 passed（gate_control/qoder-theme-contract.txt:14、gate_armA/qoder-theme-contract.txt:14）
+  qoder-contrast-audit rc=1，两臂都 2 failed 加 3 passed（gate_control/qoder-contrast-audit.txt:82、gate_armA/qoder-contrast-audit.txt:82）
+  qoder-ord0509-contrast-screens rc=1，两臂都 10 failed 加 2 passed（gate_control/qoder-ord0509-contrast-screens.txt:66、gate_armA/qoder-ord0509-contrast-screens.txt:66）
+  qoder-plan-ai-contrast rc=0，两臂都 4 passed（gate_control/qoder-plan-ai-contrast.txt:12、gate_armA/qoder-plan-ai-contrast.txt:12）
+退出码那行也逐把现读（gate_control/qoder-theme-contract.txt:19、gate_control/qoder-contrast-audit.txt:92、
+gate_control/qoder-ord0509-contrast-screens.txt:92、gate_control/qoder-plan-ai-contrast.txt:17）。
+那两把 rc=1 是本枝自带的红，不是我开出来的：控制臂（未改一字节）就是同样的 2 failed 与 10 failed，
+逐枚点名见第二节，两臂的失败集合同名同数。
+run-*.log 与 review/ 下的证据产物在取完对表之后按约束 `git checkout -- review/` 丢弃，所以
+gate_*/*.txt 里指的那些 log 路径现已不在树上——留下的是这两份 stdout 捕获与树外的两臂快照。
+
+五、丁 · 栈读数
+  `tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、输出 0 行（wpa_build_readings.txt:2）
+  `vite build` 退出码 0（wpa_build_readings.txt:5），2042 个模块变换（wpa_build_readings.txt:6），
+  css 产物 260.86 kB（wpa_build_readings.txt:7）
+两把都在改后的树上各跑一次，没有 --collect-only 充数。
+
+六、逐枚（行号未动：全是同行等值替换，styles.css 行数保持 1962，所以前后可按行直接比）
+frontend/src/styles.css:175 `.v8-status-pill`：底 #effaf5 → var(--cn-elev-1)；墨 var(--v8-green)
+  → var(--cn-success-text)。现读 4.12 → 6.96 亮、1.89 → 8.42 暗（wpa_pair_ratios.txt:2、:3、:4、:5）。
+  暗色渲染本次不变：frontend/src/design-tokens.css:833 的 !important 早就把这条压在下面，
+  改前改后同一格。
+frontend/src/styles.css:179 `.v8-evidence-label`：底 #f7fcfa → var(--cn-elev-1)；墨同上；边 → var(--cn-rule)。
+  这是四把门里唯一现读为红的两格（亮 4.24、暗 1.95，见 wpa_pair_ratios.txt:14、:15），改后两格从
+  证据里消失（two_arm_diff.txt:5、two_arm_diff.txt:7），计算值 6.96 与 8.42
+  （wpa_pair_ratios.txt:18、:19）。
+  边为什么也动：这把尺看不见 `border:` 简写（它只读 background/color/fill/border-color），而那圈
+  淡绿是为字面量 #f7fcfa 那张纸调的；纸进了契约、边留在亮色值里，暗色就是一圈发光的白边——那是
+  我这个改动自己造的新缺陷，所以按同一条判据手工收进来。
+frontend/src/styles.css:179 `.v8-selected-label`：同 .v8-status-pill 那一对（现读 4.12/1.89 → 6.96/8.42，
+  wpa_pair_ratios.txt:6、:7、:8、:9），差别在它没有 !important 兜着，所以暗色是真变。
+frontend/src/styles.css:179 `.v8-stay-impact b, em`：墨 #68758a → var(--cn-on-elev-1-muted)
+  （暗值 frontend/src/cn-pulse.css:153），底 #f3f4f7 → var(--cn-elev-2)；现读 4.24 → 6.37 亮、
+  4.24 → 6.83 暗（wpa_pair_ratios.txt:24、:25、:26、:27）。
+frontend/src/styles.css:179 `.v8-stay-impact em`：底 #eff1ff → var(--cn-elev-3)（比兄弟那枚的
+  elev-2 高一档，层级不许倒置），墨 var(--cn-accent-text) → var(--cn-link)。为什么连墨也动：
+  只换纸时它在暗色只剩 3.50（wpa_pair_ratios.txt:35，改前是 3.25 见 :29），而 --cn-link 在亮色
+  就是 --cn-accent-text 的同一个值（frontend/src/design-tokens.css:40 写的就是 var(--cn-accent-text)），
+  所以亮色 5.97 逐字等价（wpa_pair_ratios.txt:36）、暗色 4.87（wpa_pair_ratios.txt:37）。
+frontend/src/styles.css:179 `.v8-stay-card`：底 #fff → var(--cn-elev-1)。亮色同一个字节 #ffffff
+  （frontend/src/cn-pulse.css:70），亮色零改变；暗色原来是一块合成亮度 1.000 的白纸坐在黑底上
+  （填充对底 21.00，见 wpa_pair_ratios.txt:39），现在回 elev-1（frontend/src/cn-pulse.css:143）。
+  卡内不随主题的小字一并变好：.v8-stay-card p 暗色 3.40 → 5.00、.v8-intel-facts small 3.20 → 5.32
+  （wpa_card_body_ratios.txt:4、:5）；亮色那一档我没动，它本来就低于 4.5，属于墨色清扫不属于本单。
+frontend/src/styles.css:181 `.v8-intel-facts > div`：底 #fff → var(--cn-elev-1)，同上，亮色零改变
+  （16.83 不动，暗色字面量白纸见 wpa_pair_ratios.txt:39，改后 wpa_pair_ratios.txt:41）。
+frontend/src/styles.css:181 `.v8-twin-card, .v8-boundary-card`：底 #fff → var(--cn-elev-1)，亮色零改变
+  （wpa_pair_ratios.txt:42 对 :44，暗色 :43 对 :45）。共享说明：这条分支的 .v8-twin-card 属于旅行
+  孪生面板，和 boundary-card 同一条声明摘不开，它拿到的也是「亮色逐字不变／暗色回契约」；孪生卡内
+  小字暗色 3.03 → 5.61 与 2.55 → 6.68（wpa_card_body_ratios.txt:6、:7）。
+frontend/src/styles.css:189 与 frontend/src/styles.css:349 `.v8-lede`（同一条声明出现两次，两行都得改，
+  只改前一行等于没改）：墨 #5f6c80 → var(--cn-on-elev-0-muted)。这枚只有墨是字面量，底跟着主题走
+  （脉搏层把壳坐到 --cn-paper，其值就是 frontend/src/cn-pulse.css:69 的 #f7f5f2）。现读
+  4.89 → 6.22 亮、3.94 → 10.08 暗（wpa_pair_ratios.txt:56、:57、:58、:59）；暗色实际渲染还被
+  frontend/src/design-tokens.css:855 压着，本次不变，兜底摘掉之后才归令牌说。
+frontend/src/styles.css:1490 `.role-alert`：墨 #b03a3a → var(--cn-danger)。这枚没有自己的底（底继承），
+  所以配对墨就是危险色的主题令牌（亮 frontend/src/design-tokens.css:51、暗 :209）。现读
+  5.49 → 4.94 亮、3.51 → 6.16 暗（wpa_pair_ratios.txt:60、:61、:62、:63）。
+  亮色观感要如实报：这是唯一一枚亮色肉眼能看出差别的（砖红 → 更亮更饱和的红），仍在 4.5 门槛上，
+  点单时想否掉请只否这一行。共用范围：.role-alert 还被 LiveRecovery、HotelsPanel 与
+  frontend/src/app/V8Experience.tsx 用着，本单是替它们一起改的，回执里点明不装看不见。
+
+七、这一屏没收的 5 条，逐枚点名（discover_scope_after.txt:2 的分母就是这 5 条）
+`.v8-status-pill.violet`（frontend/src/styles.css:175）与 `.v8-boundary-card`、
+`.v8-boundary-card p`（frontend/src/styles.css:181）——它们的墨 var(--v8-violet) 只在
+frontend/src/styles.css:127 的 :root 里定义过一次，frontend/src/design-tokens.css 没给暗色值，
+是主题常量。单独换纸的现读：violet 那枚 3.97 → 亮 4.48／暗 3.79（wpa_pair_ratios.txt:52、:54、:55），
+boundary-card 那枚 4.10 → 亮 4.48／暗 3.79（wpa_pair_ratios.txt:46、:48、:49）——暗色都比现状更低。
+也就是「把纸收进契约」会让它们更看不清。这三支要先有一枚随主题走的紫（成对令牌，不是我能在这单
+里定的颜色）。
+`.v8-message`（frontend/src/styles.css:183）——#8e5f32 与 #fffaf4 与那圈 #f0d1b5 是三枚一组自洽的
+琥珀通知条：底和墨都是字面量，主题一翻它们一起翻，所以暗色没有正负反转，只有 light-surface 一格
+（现读 5.28 亮、5.28 暗、light-surface 成立，见 wpa_pair_ratios.txt:64、:65）。按 WP-A 的映射只能
+整组换成白纸＋次级墨（6.37 亮／7.25 暗，见 wpa_pair_ratios.txt:66、:67），那等于取消这屏唯一一条
+「我是通知」的颜色语义，而且 .v8-message 被 7 枚组件共用（含 frontend/src/app/V8Experience.tsx）。
+它需要的是「通知底色／通知墨」成对令牌。建议这三族一起挂给 WP-C（成对令牌推广那一单），我不动别人的层。
+
+八、配套改动的账（超出「只换字面量」的部分，逐枚点名，可单独否掉）
+本单换了 4 处本来就是令牌的墨：三处 --v8-green → --cn-success-text、一处 --cn-accent-text →
+--cn-link。理由只有一条可核对的判据：只换纸不换墨时那三枚绿牌在亮色都是 4.40、离 4.5 还差 0.1
+而仍然红（wpa_pair_ratios.txt:10、:12、:16），换成「文字」令牌后是 6.96 与 8.42。
+--cn-success 是标记色、--cn-success-text 才是文字色，frontend/src/design-tokens.css:48 与
+frontend/src/design-tokens.css:49 本来就是分开的两枚。如果号令者认为这四处必须原样留着，请点回，
+我就只交纸的那一半，并且如实把「亮色那三格仍差 0.1」报成未修——两臂对表也会因此从「新开 0」变成
+同一格比值挪动的假「新开」，那是尺把 sel|ratio|text 当身份的结果，我会逐枚摊开说明。
+另有一处边框（.v8-evidence-label 的 #dcefe7 → --cn-rule）理由见第六节，也请一并裁。
+
+九、这条尺的既有限制（不是本单的产物，供立单）
+_cmdr_evidence_diff_r1.py 的行身份取 `node.get("ratio") or node.get("contrast")`，而 light-surface
+与部分 unclassified-control 的 contrast 写 0，会被这个 or 当假值丢掉——所以「暗色还剩几块白纸」
+这种最该被看见的格子进不了对表。本单我用现读把这一支单独摊在第二节，没改那把尺（它是共享量具，
+改它要另开单并带自测与负对照）。我自己的副本 _saojie_evidence_diff_r1.py 只把 TIP/HERE 指到我的树，
+格子身份仍是 sel|ratio|text 三段，kind 只在打印时附注、不进身份。
+
+十、硬约束回读
+DOM 与 data-testid 零改动（只动 CSS 值）；没改任何人的断言；没有 skip；没有新造夹具；
+`--collect-only` 使用 0 次；`demo/reset` 执行 0 次；受保护端口 :8000/:4781/:4782/:8693 与共享库
+_preview.db 一字未碰；权威线移动 0 次，本枝只在 refs/heads/review/扫街工-wp-a，force-push 0 次；
+review/evidence 与 review/ord0509 的产物在对表取完之后 `git checkout -- review/` 丢弃，
+已发布证据未改一字节。
+口径与限制：演示链（:8121/:8011/demo_tip.db）是号令者私有副本，本单没有用它；两臂都是我自己的
+隔离树（D:/moodle/_cmdr_saojieggong_1016/tree）＋ run_spec.py 起的 fresh 库，ai=disabled。
+所有读数文件与两臂快照在该目录的同级 D:/moodle/_cmdr_saojieggong_1016/；量具
+_saojie_rule_scan_r1.py、_saojie_discover_classes_r1.py、_saojie_evidence_diff_r1.py、
+_saojie_contrast_calc_r1.py、_saojie_wp_a_edit_r1.py（替换前把「每处应出现几次」钉成断言，
+数不对整批 ABORT）都在那里。
+本屏四档现读没做：capture_r1.cjs 需要号令者那条演示链上的真行程日期才拿得到「今天这一屏」的内容，
+而简报 §6 写明那是取景条件不是产品事实，我没有借用他的链；这一屏的现读改由
+qoder-ord0509-contrast-screens 的 collections 两档（亮／暗）出，逐格见第二与三节。
+
+
+### 排工｜WP-B 首屏动作行分组重做 · 两臂对表修好零格新开零格 · 交在 review/排工-wp-b
+
+车道花名：排工（本会话 d6fe0f95）· 单：WP-B · 权威线一字未动，只在 review/排工-wp-b 交付
+交付坐标：fb3879ccef4d6289b5089bc8c13dfd4034feec6d，本地 `git cat-file -t` 出 commit，锚 frontend/src/main.tsx:51
+落地面只有两处：新增 frontend/src/cn-pulse-actions.css:1 一枚，与 frontend/src/main.tsx:51 一行 import
+载入位放在 `import "./cn-pulse.css";` 之后（锚 frontend/src/main.tsx:47），靠载入序赢，本层零 `!important`
+基线：现尖 f942774c4627981ef969485cdadcc980affb7dac（本拍从它上面长出来，behind 零）
+
+甲 · 两臂对表（逐枚点名，判据＝新开红零格；只看 passed/failed 总数不算）
+
+- 尺：`_paigong_evidence_diff.py`（号令者 `_cmdr_evidence_diff_r1.py` 的形制副本，只把树根换成我这棵），control＝把 frontend/src/main.tsx:51 那行注释掉的现尖、armA＝开着同一行的同一棵树，同一台机、同一相位档
+- 两臂各收七十份证据，逐枚对表合计：**修好零格、新开零格**（每一枚选择器的比值两臂字节相同）
+- 分布：contrast-audit 移动档十一格对十一格、桌面档十格对十格，亮暗各半（锚 frontend/e2e/qoder-contrast-audit.spec.ts:211）
+- 我名下四枚控件的逐枚读数：`hub-plan-with-ai` 与 `journey-link-copy` 两臂都是 unclassified-control 0.00（锚 frontend/e2e/_qoderContrastScan.ts:178）；`试用其他城市` 与 `打开行程工作台` 两臂都不在尺的名单里（无 data-testid、无 role，锚 frontend/src/app/V8Experience.tsx:3127）
+- 请号令者裁的一句：那两枚带 testid 的控件缺 `data-contrast-role`，:178 那条是**无条件下红**，不动 DOM 就永远绿不了；本拍不动它，两臂读数原样相等
+- 相位警告（既不是我开的、也不是我修好的）：control 首跑落在 11:44 的 dawn 档，theme-contract 因此红一格（`p.v8-kicker` 3.17/4.5，锚 frontend/e2e/qoder-theme-contract.spec.ts:281），成因是 dawn 的眉标墨 #a13c14 贴在黑纸上（锚 frontend/src/cn-pulse.css:212）；两臂随后都重跑到 day 档，theme-contract 两臂六格全绿
+
+乙 · 四档渲染探针（改前改后各一份）与横向溢出证明
+
+- 尺：`_paigong_probe.cjs`，用 `capture_r1.cjs` 同一把 WCAG 相对亮度式，另加控件的 fillC/borderC/colorC 与行形；读数落 `D:/moodle/_qoder_paigong_wp_b/_paigong_data/{control,armA}/probe.json`
+- control 四档四百八十六枚已布局文字节点、不达标零零零零；armA 四百八十五枚、不达标零零零零（锚 frontend/src/cn-pulse-actions.css:94）
+- 横向溢出：五档宽度 320/360/390/430/1440 上 `document.documentElement.scrollWidth == innerWidth` 两臂全真，无一档溢出（锚 frontend/src/cn-pulse-actions.css:94）
+- 行形（「最后一枚落单」这一条）：control 在 320/360/390 三档都是 [3,1]，armA 同三档都是 [1,3]；430 与 1440 两臂都是 [4]（锚 frontend/src/cn-pulse-actions.css:105）
+- 截图：`_paigong_data/{control,armA}/phone_light_full.png` 等八张整屏、五张宽度图，外加 `armA/clip_actions_light.png`、`armA/clip_band_light.png`、`armA/clip_hero_light.png` 与暗档同三张
+
+丙 · 两枚「查看实时行程」的可见层级差（几何 + 对底实测，祖先链取色与尺同源）
+
+- 改前：页内主行动 16px/400 尺寸 129x44 实心蓝，关注带那枚 16px/400 尺寸 96x44 只描字——同字号、同字重、同一枚蓝（锚 frontend/src/app/V8Experience.tsx:3231）
+- 改后：主行动 16px/750 尺寸 129x44（锚 frontend/src/cn-pulse-actions.css:186），关注带那枚降到 13px/600 尺寸 78x44，归进次级族（锚 frontend/src/cn-pulse-actions.css:197）
+- 对底实测：主行动的白标签对它自己的 #0a66ff 蓝底两臂都 4.82，地板 4.5（锚 frontend/src/cn-pulse-actions.css:185）；关注带的蓝墨对它那张 #1c1c1e 亮 5.97 / 暗 4.66，改字号不改墨（锚 frontend/src/design-tokens.css:1008）
+- 为什么原尖是 400：`.v8-product-shell button { font: inherit }` 以 (0,1,1) 压过 `.v8-primary` 的 (0,1,0)，把 12px/750 抹平了（锚 frontend/src/styles.css:129）；本拍用双类 (0,2,0) 收口，只收页首这一枚，不动那条全app规则
+- 四枚次级的层级：lead 15px/700 宽 89.9 高 44，peers 三枚 13px/600 宽 78 高 44（锚 frontend/src/cn-pulse-actions.css:107），墨对纸实测亮 5.49 / 暗 5.76，两臂同值（锚 frontend/src/cn-pulse-actions.css:99）
+- 44px 触摸地板一档没降，四枚在 390 上实测高度都是 44（锚 frontend/src/styles.css:282）
+- 分组为什么不给填充：白卡片那一版在这里建过也量过，现读撤回——`--cn-paper-deep` 亮 #efece7 对它替换的纸只差 1.08、暗 #0b0b0d 只差 1.07，卡片看不出来却吃掉四枚字的余量（亮 5.49→5.07、暗 5.76→5.39），且落单那行右边在 390 上留下约二百像素空带（锚 frontend/src/cn-pulse-actions.css:99）；同一棵树里 `cn-pulse.css:604` 已为同一个理由撤掉过页首的纸中纸（锚 frontend/src/cn-pulse.css:604）
+
+丁 · 四把门两臂逐把（命令与退出码原样，不遮）
+
+```
+$ CNX_LANE_ROOT=D:/moodle/_qoder_paigong_wp_b python D:/moodle/_qoder_integration_20260919/review/run_spec.py e2e/qoder-theme-contract.spec.ts 4710
+control exit=0    armA exit=0
+$ CNX_LANE_ROOT=D:/moodle/_qoder_paigong_wp_b python D:/moodle/_qoder_integration_20260919/review/run_spec.py e2e/qoder-contrast-audit.spec.ts 4710
+control exit=1    armA exit=1
+$ CNX_LANE_ROOT=D:/moodle/_qoder_paigong_wp_b python D:/moodle/_qoder_integration_20260919/review/run_spec.py e2e/qoder-ord0509-contrast-screens.spec.ts 4710
+control exit=1    armA exit=1
+$ CNX_LANE_ROOT=D:/moodle/_qoder_paigong_wp_b python D:/moodle/_qoder_integration_20260919/review/run_spec.py e2e/qoder-plan-ai-contrast.spec.ts 4710
+control exit=0    armA exit=0
+```
+
+- 两臂逐把同码：theme-contract 零、contrast-audit 一、ord0509 一、plan-ai 零。红着的两把在 control 也红，armA 的红集合与它逐枚相等（相等，不是子集，依据见甲）
+- 跑前两端口现读：`netstat | grep LISTENING` 对 `:4710`/`:8710` 计数零才起；这轮是权威栈，本就禁止复用别人的进程（锚 frontend/playwright.config.ts:76）
+- 一次作废的重跑要点名：头一轮 armA 撞上上一轮残留的 `:8710`（playwright 报 already used）整轮崩在启动、四把退出码全不可信，已按上面的空闲断言重跑，崩掉那轮不作数
+
+戊 · 类型、构建与坐标回读
+
+- `npx tsc -p tsconfig.typecheck.json --noEmit` exit=0，输出零行（锚 frontend/package.json:8）
+- `npx vite build` exit=0，产物 `dist/assets/index-CaHiNFvR.css` 里现读到本层的 `repeat(3,minmax(0,1fr))` 与 `border-top:1px solid var(--cn-rule-strong)`（锚 frontend/src/cn-pulse-actions.css:99）
+- `git ls-remote` 现读 `refs/heads/review/排工-wp-b` 就是 fb3879ccef4d6289b5089bc8c13dfd4034feec6d；同一枚在 `D:/moodle/CityNexus` 里 `git cat-file -t` 出 commit（本车道已把那枝 fetch 进去，门才摸得到）
+- 那枚新文件的 blob 1f3370317994d20a7a579a8bb98829a91e62c212 在同一棵仓库 `git cat-file -t` 出 blob（锚 frontend/src/cn-pulse-actions.css:1）
+- force-push 零次；跑完门已 `git checkout -- review/` 把门产物丢弃，工作树与推上去那笔一字不差
+
+口径与限制（照简报 §6 抄，加上本车道那一截）
+
+- 取景用隔离栈：vite `:4610` → uvicorn `:8610` → `demo_tip.db` 的私有副本（行程日期被挪到今天，好让「今天这一屏」有真内容）。这是取景条件，不是产品事实
+- 受保护端口 `:8000`/`:4781`/`:4782`/`:8693` 与共享库 `_preview.db` 一字未动，`demo/reset` 未执行
+- 两臂的渲染探针与门都在同一相位档（day）内跑，跨档的读数（尤其 dawn 的眉标那一格）不可互比
+
+要号令者点头的三件（本拍都没动，只点名）
+
+- 那两枚带 testid 的控件要不要开一格 DOM 授权补 `data-contrast-role`，否则它们在任何一次对表里都是常红
+- dawn 档眉标 3.17 那格归 frontend/src/cn-pulse.css:212，不在这张单里
+- `.v8-primary` 的 12px/750 被 frontend/src/styles.css:129 抹平是全app的病，本拍只收了页首这一枚，其余屏要不要一起收请裁
+
+本单做完即停，没接别的单。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-RULING-0702 · ff=False 且 intersection=0 时唯一解法是作者自己并现尖（不是号令者手合）· 附两笔落地闸实测
 
 - 触发：扫街工 的 WP-A 交付（枝 `refs/heads/review/扫街工-wp-a`，提交 `f0c61e26179b09882f512b121c35ab440942c802`）走干跑，判语 `verdict=REFUSED mode=DRY_RUN ff=False ahead=1 behind=2 intersection=0`（回执落 `D:/moodle/_cmdr_fe_rev_1016/land_wpa_dry.json`，字节 5322）
