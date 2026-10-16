@@ -1,4 +1,8 @@
+HUMAN_CAN_USE = PARTIAL
+
 # Issue #21：手机优先版验收结果
+
+本文件的 2026-10-16 记录保留为历史快照；最新情况见文末 2026-10-17 检查点。
 
 截至 2026-10-16。分支：`design/revolution-mobile-first-v1`；PR #23 目标：`fix/revolution-first-human-e2e-20261015`（draft）。手机体验提交：`9fc03490a8b1043fe1b9ac9bfba14bc4fe46a39e`；地图轻触修复：`29cebe264a910cb7157b7b6036b03bc9cf2f3290`。
 
@@ -60,3 +64,12 @@ Revolution 手机外壳包含「探索 / 行程 / 我的」三栏。探索页提
 3. 在真实 Android 手机检查软键盘、底部导航遮挡、地图拖动与缩放，并做真人读屏与颜色对比复核。
 4. 处理现有前端 lockfile 安装不一致，并评估代码分包以降低目前的 bundle 体积警告。
 5. M1 下一步：将网络请求、身份和探索状态移入 hook/controller。
+
+## 2026-10-17 检查点
+
+- PR #23 当前提交：`f94d188a280e622008932349e2ac39afd73da7b5`，`trial-build` 正在运行。
+- 首次进入时 Explore / Trips / Me 三栏都可用；空行程和“我的”页面能回到探索。切换栏位不会发送地点、AI 或支付请求。
+- AI 状态查询期间显示“正在连接 AI…”，收到已配置响应后才开放 AI 建议按钮。
+- `npm.cmd run typecheck:all`：通过。`playwright.mobile-trial.config.ts` 的两个 390×844 定向 UI 用例：2/2 通过，使用签名 UI fixture。
+- 本机 wb2api 的签名 DRAFT 只读建议已真实返回，详见 `20261017_MOBILE_FIRST_P0_INCREMENT.md`。
+- 两处真实地点 → Pocket Walk → GO → 刷新恢复仍待真实地点服务成功；持久化 ACTIVE Hermes `AgentRun` 与 Android 实机验收也待完成。
