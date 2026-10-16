@@ -45,6 +45,13 @@ import "./design-tokens.css";
 /* The pulse layer loads last on purpose: it is the surface contract, and it has
    to be able to beat a legacy literal without reaching for `!important`. */
 import "./cn-pulse.css";
+/* WP-B loads after the pulse layer on purpose: `cn-pulse.css` already styles
+   `.v8-hub-actions` at (0,1,0), and the action row is now this file's
+   territory. Load order is the cascade here, so no `!important` is needed. */
+import "./cn-pulse-actions.css";
+/* Chrome fixes load after both: the topbar squeeze is a flex-shrink bug, and the
+   fix has to win against `styles.css` by order, not by `!important`. */
+import "./cn-pulse-chrome.css";
 /* The map surface's own plate, after the pulse layer so the paired `--cn-elev-*` / `--cn-on-elev-*`
    tokens it reads are already declared by the time its rules are parsed. */
 import "./cn-pulse-map.css";

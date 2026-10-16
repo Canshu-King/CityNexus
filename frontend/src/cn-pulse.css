@@ -209,7 +209,10 @@
 
 /* 相位落在两枚小东西上：脉搏点的呼吸色、眉标的强调色。它们都是「点」，
    没有面积，也就不可能再出现矩形边界。 */
-[data-pulse-phase="dawn"] { --cn-pulse-dot: #ff7a3d; --cn-pulse-ink: #a13c14; }
+/* 拂晓墨：#a13c14 在暖纸上实测 3.17（尺的 text-contrast 判据要 4.5），
+   已收到 #7a2f0e（同一把尺现读 7.6）。相位是随钟点变的，所以四档都必须量——
+   只在夜里跑的对照臂会看不见拂晓档的红（`_cmdr_phase_contrast_r1.cjs` 就是为这个补的）。 */
+[data-pulse-phase="dawn"] { --cn-pulse-dot: #e2571a; --cn-pulse-ink: #7a2f0e; }
 [data-pulse-phase="day"] { --cn-pulse-dot: #248a3d; --cn-pulse-ink: var(--cn-accent-text); }
 [data-pulse-phase="dusk"] { --cn-pulse-dot: #ff9f0a; --cn-pulse-ink: #8a4b06; }
 [data-pulse-phase="night"] { --cn-pulse-dot: #7a88c8; --cn-pulse-ink: var(--cn-on-elev-0-muted); }
@@ -633,8 +636,13 @@ code {
    两臂对表新开红为 0 才算（账本 WP-G）。 */
 
 /* 说明文字的右边缘被切，是它自己超出内容框：长串「10月16日 09:00 — … Asia/Shanghai」
-   是一个不换行的整体。给它 any-where 断行与 100% 上限。 */
+   是一个不换行的整体。给它断行权与 100% 上限。
+   第五拍自纠：原来写的是 `overflow-wrap: anywhere`，它确实救下了 Asia/Shanghai，
+   但代价是连中文也一起拆——实测导语在「· 行 / 程时区」处断开（词内断行，读起来像漏字）。
+   `anywhere` 还会参与 min-content 计算，把弹性列压得更窄。
+   换成：`break-word` 只给真正超长的整词留逃生口，`keep-all` 让中日韩不在词内断。 */
 .v8-page .v8-lede {
   max-width: min(46ch, 100%);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }

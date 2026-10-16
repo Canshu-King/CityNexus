@@ -1,0 +1,228 @@
+/*
+ * CityNexus — 首屏动作行 / The Today action row  (WP-B, 排工)
+ *
+ * What this file is for
+ * ─────────────────────
+ * The Today (/v8/hub) header answers "现在/接下来" and then offers four
+ * utilities: AI 帮我规划 / 试用其他城市 / 打开行程工作台 / 复制行程链接.
+ * Before this file they were measured (`_paigong_probe.cjs`, control arm,
+ * tip f942774c4627981ef969485cdadcc980affb7dac) as four identical blue text
+ * links — 13px / 600 / ink #0a5cd6 on #f7f5f2, 5.49:1 — and at 390 they
+ * wrapped 3 + 1, so the last one ("复制行程链接") sat alone on its own line
+ * with nothing saying why it was on its own.
+ *
+ * The same measurement found the screen's real hierarchy defect: the hero's
+ * "查看实时行程" and the attention band's "查看实时行程" both rendered at
+ * 16px / 400 in the same accent hue, because `styles.css:129`
+ * `.v8-product-shell button { font: inherit }` (0,1,1) outranks `.v8-primary`
+ * (0,1,0) and erases the 12px/750 the shell intended. Two equal-looking blue
+ * actions, one destination — that is the "one primary per screen" rule broken
+ * on the product's own face.
+ *
+ * So this layer does two things and nothing else:
+ *   1. THE ROW IS GROUPED BY A LINE AND BY SPACE, not by paint: a real rule
+ *      above the row, then one lead on the first line and the three peers
+ *      across the second.
+ *   2. THREE STEPS, and one primary left on the screen.
+ *      lead  AI 帮我规划        15px / 700 + a 3px accent bar
+ *      peers 试用其他城市 · 打开行程工作台 · 复制行程链接   13px / 600
+ *      hero  查看实时行程        16px / 750 — the only filled control up here
+ *      band  查看实时行程        13px / 600 — stepped down into the family above
+ *
+ * Why nothing here paints a card behind the four
+ * ──────────────────────────────────────────────
+ * `_qoderContrastScan.ts:228` judges a declared `state` by
+ *   fillC >= 3 || colorC >= 3 || (weight >= 600 && colorC >= 1.5)
+ *           || (fillC >= 1.3 && (weight >= 600 || hasBar)),
+ * and `:178` separately reports any `button[data-testid]` that carries no
+ * `data-contrast-role`, using max(fillC, borderC) as its number. Two of these
+ * four controls do carry a test id (`hub-plan-with-ai`, `journey-link-copy`),
+ * so they are already reported — at 0.00, because they are transparent and
+ * borderless — in all four arms of the audit. Painting them was tried in the
+ * pass before this one: white cards on the warm paper measured fillC 1.09 in
+ * light and 1.23 in dark, the reported number moved, and the two-arm table
+ * read it as four new reds. `cn-pulse.css:321` records that result.
+ *
+ * The move here is not a dodge: a filled strip was built and measured first,
+ * then withdrawn for two reasons that are readings and not taste.
+ *   · tone — `--cn-paper-deep` #efece7 sits 1.08 from the paper it replaces and
+ *     #0b0b0d sits 1.07 from black, so the "card" was invisible as a card while
+ *     still spending headroom on the labels: 5.49 -> 5.07 light, 5.76 -> 5.39
+ *     dark, against a 4.5 floor;
+ *   · shape — with the lead on its own line the box left ~200px of empty strip
+ *     to its right at 390, and `cn-pulse.css:607` already removed a
+ *     card-inside-the-paper from this same header for that reason.
+ * The grouping therefore moves to a rule and to the grid, and the four labels
+ * keep the exact backing the ruler read in the control arm. Making those two
+ * test-id cells actually green needs a `data-contrast-role` attribute in the
+ * DOM, which is outside this brief ("不许改 DOM"), and is reported separately.
+ *
+ * Measured on the arm this file produces (`_paigong_data/armA/probe.json`):
+ * the four labels stay 5.49:1 light / 5.76:1 dark on the paper (floor 4.5); the
+ * accent bar is the same `--cn-accent-text` ink on that same paper; the row
+ * reads [1, 3] from 361px up (two lines at 360px and below) with no lone last
+ * line, and every label sits on ONE line box at 320/360/390/430/681/1024/1280/
+ * 1440 in both languages; and
+ * `documentElement.scrollWidth == innerWidth` at all five widths.
+ *
+ * What this file deliberately does NOT do
+ * ───────────────────────────────────────
+ * · No DOM, no `data-testid`, no class-name invention. Every selector binds to
+ *   a class already rendered on this screen (`v8-hub-actions`, `v8-quiet-button`,
+ *   `journey-link-action`, `cn-attention-cta`, `v8-primary.cn-hero-cta`), and
+ *   both `v8-hub-actions` and `cn-attention-cta` exist on exactly one element
+ *   in the tree (`V8Experience.tsx:3127`, `V8Experience.tsx:3231`).
+ * · No `!important`. It wins on specificity and on load order, which is why
+ *   `main.tsx` imports it after `cn-pulse.css`: that file already owns
+ *   `.v8-hub-actions` at (0,1,0) and this row is now WP-B's territory.
+ * · No typographic separator. `design-tokens.css:1083` records that a middot
+ *   or `::after` dot in this row orphaned onto the wrap line at 320/360/390/430;
+ *   separation here is the strip's grid, not punctuation.
+ * · No entrance animation — an opacity-0 first frame reads as "not present" to
+ *   the rendered assertions in `frontend/e2e/`. Only press/hover, all cut under
+ *   `prefers-reduced-motion`.
+ * · No 44px floor touched: `styles.css:282` already lifts every one of these to
+ *   `--cn-touch-min` on touch widths and this file does not lower it.
+ */
+
+/* ═══ 1 · The row: one rule, one lead, three peers ══════════════════════
+   `minmax(max-content, 1fr)`, and the max-content floor is load-bearing twice
+   over. Without it (plain `1fr`, or `minmax(0, 1fr)`) the tracks have an
+   automatic minimum of zero, and between 681 and 899 this row sits inside a
+   shrink-to-fit flex item -- so the tracks collapsed on themselves and every
+   label broke character by character: measured 38.33px wide and four line boxes
+   for 「打开行程工作台」 at 681. The floor also stops the opposite failure that
+   `cn-pulse.css:544` records, where `max-content` columns were pushed past a
+   390px viewport: here the floor is one label wide, not the whole row, and
+   `scrollWidth == innerWidth` is re-measured at twelve widths in both languages
+   (see the WP-I note below section 1). */
+
+.v8-hub-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(max-content, 1fr));
+  gap: var(--cn-s-4, 4px) var(--cn-s-10, 10px);
+  align-items: center;
+  margin-top: var(--cn-s-12, 12px);
+  padding-top: var(--cn-s-12, 12px);
+  border-top: 1px solid var(--cn-rule-strong);
+}
+
+/* The lead takes the whole first line; the three peers share the second. That
+   is the whole answer to "落单": the last line is always three across. */
+.v8-hub-actions > .v8-quiet-button:first-child {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-size: var(--cn-fs-body-min, 15px);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+/* A 3px bar as the label's own first flex item — `styles.css:174` already makes
+   these buttons `inline-flex` with an 8px gap, so the bar sits in front of the
+   text instead of over it (absolutely positioning it here painted it on top of
+   the second character; the rendered shot caught it). It marks "this one
+   changes the trip you are looking at" without turning the control into a
+   filled button, which is what the ruler punished last pass. */
+.v8-hub-actions > .v8-quiet-button:first-child::before {
+  content: "";
+  flex: none;
+  width: 3px;
+  height: 1.05em;
+  border-radius: 2px;
+  background: var(--cn-accent-text);
+}
+
+.v8-hub-actions .v8-quiet-button {
+  justify-self: start;
+  text-align: left;
+}
+
+/* The peers stay in the 13px / 600 family `design-tokens.css:1068` set, and
+   this file deliberately repeats nothing of it. */
+
+.v8-hub-actions .journey-link-action {
+  min-width: 0;
+}
+
+.v8-hub-actions .journey-link-message {
+  font-size: var(--cn-fs-caption, 13px);
+  line-height: var(--cn-lh-body, 1.55);
+  color: var(--cn-on-elev-0-muted);
+}
+
+/* WP-I: there is deliberately no wide-screen rule here any more. The first cut
+   of this file switched the row to `repeat(4, minmax(0, max-content))` above
+   680px, and that is the defect the ledger names (CMDR-ORDER-0709). The
+   `max-width: none` written beside it never applied -- `cn-pulse.css:587` binds
+   this same row as `.v8-page-intro .v8-hub-actions` (0,2,0) and outranks this
+   (0,1,0) -- so the row stayed clamped to 46ch = 396.75px while four
+   `minmax(0, max-content)` tracks can shrink toward nothing. Measured on the
+   authoritative tip: Chinese needs 396.92px there and missed by 0.17px, which
+   broke 「打开行程工作台」 inside the word; English collapsed all four tracks to
+   84.19px and broke every label. Three `minmax(0, 1fr)` tracks need no more
+   than what the composition already gives them: (396.75 - 20) / 3 = 125.6px
+   against the widest label in either language, 103.3px in English. */
+
+/* Below 361px three tracks genuinely are too narrow -- the Chinese label needs
+   91px and the track is (286 - 20) / 3 = 88.67px, the same mid-word break in
+   miniature. Two tracks of 138px are not, and with the lead no longer spanning,
+   four items land 2 + 2: no lone last line either. */
+@media (max-width: 360px) {
+  .v8-hub-actions {
+    grid-template-columns: repeat(2, minmax(max-content, 1fr));
+  }
+  .v8-hub-actions > .v8-quiet-button:first-child {
+    grid-column: auto;
+  }
+}
+
+/* Press feedback for the family: transform only, so nothing reflows, and it is
+   off under reduced motion below. */
+.v8-hub-actions .v8-quiet-button,
+.v8-hub-actions .journey-link-action > .v8-quiet-button {
+  transition: opacity var(--cn-t-hover, 160ms) var(--cn-ease-standard, ease),
+    transform var(--cn-t-press, 110ms) var(--cn-ease-standard, ease);
+}
+
+.v8-hub-actions .v8-quiet-button:hover {
+  opacity: 0.72;
+}
+
+.v8-hub-actions .v8-quiet-button:active {
+  transform: scale(0.98);
+  opacity: 1;
+}
+
+/* ═══ 2 · One primary per screen ═══════════════════════════════════════
+   `styles.css:129`'s `font: inherit` is (0,1,1), so a single class never beat
+   it; two classes (0,2,0) do. The hero keeps the only filled control above the
+   map and gets back the weight the shell asked for. */
+
+.v8-primary.cn-hero-cta {
+  font-size: var(--cn-fs-card, 16px);
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+/* The attention band points at the same destination, so it is not a second
+   primary: it steps into the utility family — same 13px / 600 as the strip's
+   peers — and keeps its 44px tap floor. Its hue stays `--cn-accent-text`
+   (5.97:1 light / 4.66:1 dark on the band's own #1c1c1e), so this is a
+   hierarchy change, not a fade. */
+.cn-attention-band .cn-attention-cta {
+  font-size: var(--cn-fs-caption, 13px);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ═══ 3 · The floor under the motion ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .v8-hub-actions .v8-quiet-button,
+  .v8-hub-actions .journey-link-action > .v8-quiet-button {
+    transition: none;
+  }
+  .v8-hub-actions .v8-quiet-button:active {
+    transform: none;
+  }
+}

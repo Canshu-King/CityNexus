@@ -30,9 +30,14 @@
   font: inherit;
   font-size: var(--cn-fs-secondary);
   font-weight: 600;
-  color: var(--cn-accent-text);
+  /* WP-H 甲类两格（现读）：这枚按钮唯一的可辨线索就是它的描边，而 `--cn-hairline`
+     是「纸与纸之间的发丝线」（暗色下一成白，实测 control-boundary 1.22 / 亮色 1.12，
+     判据要 >=3）；文字 `--cn-accent-text` 在这层 `--cn-secondary` 面板底上实测
+     3.82，低于 4.5。边界换成实测过 3:1 的 `--cn-control-border`（亮 3.22 / 暗 3.40），
+     文字换成这层底色该用的链接档 `--cn-link`（亮 5.24 / 暗 5.25，同一把尺现读）。 */
+  color: var(--cn-link);
   background: var(--cn-secondary);
-  border: var(--cn-divider-w) solid var(--cn-hairline);
+  border: var(--cn-divider-w) solid var(--cn-control-border);
   border-radius: var(--cn-r-button);
   cursor: pointer;
 }

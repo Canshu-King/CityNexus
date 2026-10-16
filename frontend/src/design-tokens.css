@@ -790,7 +790,7 @@
     border-top-color: var(--cn-hairline) !important;
   }
   :root[data-theme="dark"] .v8-product-shell .v8-mobile-nav button { color: var(--cn-ink-secondary) !important; }
-  :root[data-theme="dark"] .v8-product-shell .v8-mobile-nav button.active { color: var(--cn-accent) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-mobile-nav button.active { color: var(--cn-link) !important; }
   :root[data-theme="dark"] .v8-product-shell .cn-copilot-edge {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;

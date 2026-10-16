@@ -2170,6 +2170,7 @@ export function V8Experience() {
             <button
               className="v8-avatar"
               data-testid="topbar-avatar"
+              data-contrast-role="control"
               aria-label={t("nav.me")}
               onClick={() => navigate("me")}
             >
