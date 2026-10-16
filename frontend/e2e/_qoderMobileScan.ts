@@ -131,11 +131,18 @@ export interface MobileGeometry {
 }
 
 /** Controls that a thumb has to hit deliberately, on these four screens. */
+/* CMDR 10-17 04:5x 实测更正：这一列原来靠 `.v8-rain-button` 圈「报告降雨」那颗按钮，
+   而这个类名在改名之后就没人再画了——现读 `document.querySelectorAll('[data-testid="live-report-rain"]')`
+   在实时行程屏上有 1 枚（祖先链 BUTTON.v8-quiet-button → DIV.cn-live-toolbar → SECTION.v8-page），
+   它在 320/360/390/430 × 两档 8 个组合里都是 79×44、中心命中就是自己、无 ≥5% 重叠，
+   但同一时刻这一整列只圈到 11 枚，把这枚换进来才回到 12。
+   也就是说：那支尺一直在漏测它，而漏测的形态是"绿色通过"——比红更贵。
+   改的是尺，不是断言的门槛：MIN_TOUCH_PX 与遮挡判据一字未动。 */
 export const PRIMARY_CONTROL_SELECTOR = [
   ".v8-primary",
   ".v8-primary-button",
   ".v8-outline-button",
-  ".v8-rain-button",
+  '[data-testid="live-report-rain"]',
   ".v8-mobile-nav button",
   ".v8-mode-chips button",
   ".v8-compare-button",
