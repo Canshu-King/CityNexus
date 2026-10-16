@@ -1,4 +1,72 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0726·第十七笔（脉搏眉标拂晓与黄昏两档补上暗档那一手：2.24 与 3.09 回到 6.16 与 10.22）（号令者亲测·10-17 05 时代插）
+
+**一、这一笔移动了权威线，并且是今晚第一次把一条活红修掉**
+
+- 换代一次，fast-forward only：候选尖 `night17_readings.txt:10`（f3242427f68f2bdbe544cef83db30aeb2e263427），落地后同尖见 `night17_readings.txt:1`，回执与两路由同尖见 `night17_readings.txt:11`，problems 为空见 `night17_readings.txt:12`；只动一枚文件见 `night17_readings.txt:16`。
+- 逐字节对拍的 blob 见 `night17_readings.txt:15`（c9d88deb6233fbe54629c623f0c50f6e735b4ba3 现读 cat-file 回 blob）。
+- 表面契约臂：PASS、css_files_in_view 一枚、added_css_lines 十一、**new_hatch_rows 为零**、ruler_status MATCH、violations 空，见 `night17_readings.txt:13`；套尺 collect_exit 与收到 1958 条见 `night17_readings.txt:14`。
+- 外读证据：本机账 `land_ink.json:1`；已发布枝上的 commit effc709b4a3e934ab6e80296aa3b009c6b695ea4 与其中 blob 7b163d79b6a0397f0885b2f73f33bfbb0cccee01（现读 cat-file 分别为 commit 与 blob，发布器判语 BYTE-LEVEL MATCH）。
+
+**二、缺陷本体与两枚仪表的同数**
+
+- 成因：`frontend/src/cn-pulse.css:215` 的拂晓墨与 `frontend/src/cn-pulse.css:217` 的黄昏墨是写死的亮档字面量，而 `frontend/src/cn-pulse.css:216` 与 `frontend/src/cn-pulse.css:218` 走的是随主题翻的令牌——同一段里两种写法并存，翻档时只有令牌那一半翻了。
+- 改前读数（八格真像素表：裁片众数色当纸、最远色簇当墨）：暗档拂晓 2.24、暗档黄昏 3.09，判据 4.5；其余六格本来就过。逐格数字与"不过两格"的点名见 `night15_readings.txt:20` 与 `night15_readings.txt:21`。
+- 同数验证：产品里那把对比尺在拂晓窗口自己报出了同一条——`p.v8-kicker`、text-contrast 2.24、rgb(122,47,14)、required 4.5、字号 11 加粗（读数 `_gate_real_hon5.json:1`）。两枚互不相干的仪表给同一个数，才敢说这不是探针造的假红。
+- 为什么之前几轮没见它：对比尺跑的是"当前钟点的那一格"，相位随钟点变（`frontend/src/cn-pulse.css:212` 的注释早就写明四档都要量）；夜里跑的对照臂看不见拂晓档的红。这一条不是判据被放宽，是覆盖面窄——八格仪表 `_cmdr_phase_pixel_r1.cjs:1` 就是为补这一面写的。
+
+**三、改法（没有新增一个颜色字面量）**
+
+- 补的是"暗档另写一手"，与 `frontend/src/map-selection.css:220` 同一成对做法：`frontend/src/cn-pulse.css:228` 给拂晓借 `--cn-danger`，`frontend/src/cn-pulse.css:229` 给黄昏借 `--cn-warning`。
+- 这两枚本来就是成对令牌，不是新名字：亮档 `frontend/src/design-tokens.css:51` 与 `frontend/src/design-tokens.css:50`，暗档 `frontend/src/design-tokens.css:209` 与 `frontend/src/design-tokens.css:208`。
+- 点色 `--cn-pulse-dot` 一字未动（`frontend/src/cn-pulse.css:215` 与 `frontend/src/cn-pulse.css:217` 的前半）：它是状态指示，不是正文墨，归 state 那一族判据管。
+
+**四、改后两跑对表**
+
+- 八格重跑：`frontend/src/cn-pulse.css:228` 与 `:229` 生效后，暗档拂晓 6.16、暗档黄昏 10.22，其余六格与改前逐格相同（亮档拂晓 8.61、亮档昼 5.49、亮档黄昏 6.25、亮档夜 6.23、暗档昼 5.76、暗档夜 10.08）——逐格见 `night17_readings.txt:18`，不过的格数见 `night17_readings.txt:19`（零）。
+- 对比尺同钟窗对照（改前 `_gate_real_hon5.json:1`、改后 `_gate_real_hon6.json:1`，相隔约四分钟）：选择器集合新开红为零、修好一枚，修好的那枚就是 `p.v8-kicker` 的 text-contrast 行，见 `night17_readings.txt:21` 与 `night17_readings.txt:23`；dark 的 kinds 从「text-contrast 一、unclassified-control 九」回到「unclassified-control 九」，light 两跑相同见 `night17_readings.txt:20`。
+- 顺带说一句判据口径：那把尺的 warnings 是个计数整字段，不等于违规行数（本例两跑都是同一数而 kinds 少了一行），所以账本里我只引 kinds 与选择器集合，不引那个整数。
+
+**五、与车道面的关系（把撞车的代价说明白）**
+
+- 黄昏档那枚墨本来在 脉搏工 待并枝的 WP-C 面里，那一枝还落后现尖二十多格。我这一笔把暗档两格一起修掉了，代价是他的枝要往新尖上 rebase 一次；他原来那份"暗档黄昏"的修法如果与这里的令牌选择不冲突，直接作废那半截即可，亮档侧若另有实测读数仍要继续交。
+- 这一条属于"活红现在就在屏上、而早晨正是给人看的那一档"的取舍：我选择先修，再把让路成本写进账本点名，不让他猜。
+
+**六、剩下没做的**
+
+- 拂晓与黄昏的**点色**（`#e2571a` 与 `#ff9f0a`）仍与主题无关，我没有一并改：状态点的判据不是 4.5 的正文墨判据，要换得先有那一条判据的读数，不能顺手。
+- 顶栏与其余屏的"空读被说得像事实"那一族，除控制塔之外一律未动（清单在 CMDR-DELIVER-0718 的第四节）。
+- 真债仍有 241 条字面量（现读 `escape_hatch.tsv:1`），其中 `frontend/src/styles.css:1` 仍占绝大多数。
+
+
+### CMDR-DELIVER-0724·第十六笔（v10.css 死码清理：十个零读者的类名，分母 249 降到 241）（号令者亲测·10-17 05 时代插）
+
+**一、这一笔移动了权威线**
+
+- 换代一次，fast-forward only：候选尖 `night17_readings.txt:3`（a82d1b4b2b7bdbed0b08ec2d1763e52a8a7af110），回执与两路由同尖见 `night17_readings.txt:4`，problems 为空见 `night17_readings.txt:5`；只动一枚文件见 `night17_readings.txt:9`。
+- 逐字节对拍的 blob 见 `night17_readings.txt:8`（dea187a937fbe051d4536d091fded9e84b7f87ad 现读 cat-file 回 blob）。
+- 表面契约臂：PASS、css_files_in_view 一枚、added_css_lines 六、**new_hatch_rows 为零**、ruler_status MATCH、violations 空，见 `night17_readings.txt:6`；套尺 collect_exit 与收到 1958 条见 `night17_readings.txt:7`。
+- 外读证据：本机账 `land_sweep.json:1`；已发布枝上的 commit ba4b75149bde12334ae886826204d691be1dda4e 与其中 blob 25bd5f2ece12802c2b49cd1bf8c159f44860a666（现读 cat-file 分别为 commit 与 blob，发布器判语 BYTE-LEVEL MATCH）。
+
+**二、删的是什么，凭什么说它是死码**
+
+- 十个类名：`.v8-trial-setup`、`.v8-trial-setup-head`、`.v8-trial-card`、`.v8-trial-copy`、`.v8-trial-notice`、`.v8-trial-form`、`.v8-trial-row`、`.v8-trial-actions`、`.v8-trial-language`、`.v8-home-language`——逐枚在 `frontend/src` 的 ts/tsx 里数读者、再在 `frontend/e2e` 里数一遍，两路都是零（清点在 `_cmdr_v10_dead_sweep_r1.py:1`，读者计数是逐枚 grep 现算，不是"看起来没有"）。
+- 它们占着逃逸口分母里的八条主题字面量：分母从 249 条（`night15_readings.txt:29`）降到 241 条（`escape_hatch.tsv:1` 重扫现读），涉及文件从四枚减到三枚（`night15_readings.txt:22` 是改前的文件分布）。
+- 唯一活着的那枚 `.v8-hub-actions` 原来和死码并排写在同一枚选择器里（旧 `frontend/src/v10.css:61`），所以这一笔是**先拆行、再删死的那半**：声明文本逐字照搬，840 那一档的 `justify-content: flex-start` 本来就只写它，原样保留（现读 `frontend/src/v10.css:53` 与 `frontend/src/v10.css:55`）。这正是 CMDR-DELIVER-0722 里我写给"下一个删死码的人"的安全提示，我自己先按它做了。
+
+**三、渲染不变性怎么证的（这里换了尺）**
+
+- 先试像素对表，立刻发现它在这块屏上不能用：同一代源码、同一台机、连截两次自比就有约 12000 个不同点的噪声地板（地图瓦片与呼吸点在动，`struct` 之前那一轮 `_cmdr_pixel_contrast_r1.py:1` 的两跑读数），改前 vs 改后读到 93768 点差异里绝大部分是这个地板，不能当证据。
+- 于是改用**结构对表**：可见元素签名集合（标签、主类名、testid、盒位置尺寸、computed 的色/底/字号/字重）——改前 299 枚、改后 299 枚，两侧签名差集为零，带 v8-trial / home-language 的元素两跑都是零，见 `night17_readings.txt:17`（原始台账 `struct_before.json:1` 与 `struct_after.json:1`）。
+- 对比尺同钟窗对照（改前 `frontend/e2e/_qoderContrastScan.ts:1` 跑出的 hon5 读数 `_gate_real_hon5.json:1`，改后同代跑出 `_gate_real_hon3.json:1`，相隔 43 秒）：两档选择器集合新开红为零、修好为零、kinds 与 warnings 两跑一字不差（light 九条 unclassified-control、dark 十条含一条 text-contrast 的拂晓档红）。那条 text-contrast 与本笔无关，两跑都在——它是相位墨的暗档缺配对，下一笔处理，见 CMDR-DELIVER-0726。
+
+**四、剩下没做的**
+
+- 乙账里另外六条死码仍在 `frontend/src/styles.css`：`frontend/src/styles.css:190` 与 `frontend/src/styles.css:350` 的 `.v8-rain-button`、`frontend/src/styles.css:452` 的 `.cn-copilot-runtime`、`frontend/src/styles.css:481` 的 `.cn-native-status`（两枚修饰态同死）。这些行归扫街工的面，我不跨面动。
+- 另有五行要先拆行才能定责：都挤在 `frontend/src/styles.css:180` 那一枚压缩行里，同行既有零读者的 `.v8-live-grid` 也有活着的 `.v8-live-main`（读者 `frontend/src/app/V8Experience.tsx:3797`）；尺是按行取选择器的，所以这五行两向都可能判错，我没有替谁猜。
+- 分母还有 241 条（`escape_hatch.tsv:1`），减下来的只有这一族的八条。
+
+
 ### CMDR-DELIVER-0722·第十五笔（移动端主控件那把尺补回失灵的一枚）＋八格相位实测＋逃逸口分母三镜头重排（号令者亲测·10-17 05 时代插）
 
 **一、这一笔移动了权威线，且是零产品字节**
