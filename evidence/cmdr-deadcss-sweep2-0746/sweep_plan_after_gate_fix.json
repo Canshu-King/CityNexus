@@ -1,0 +1,391 @@
+{
+ "verdict": {
+  "v8-anchor-row": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-trip-metrics": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "cn-no-motion": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-strength": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-trip-hero-head": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "anchor-line": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "cn-access-picker": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-cta": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-live-grid": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v9-live-actions": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "cnx-select__empty": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "collections-panel": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "poi-import-panel": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-empty-hint": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-hero-title": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-home-language": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  },
+  "v8-user-meta": {
+   "arm_a_readers": 0,
+   "arm_a_examples": [],
+   "arm_b": null,
+   "arm_c_hits": 0,
+   "deletable": true
+  }
+ },
+ "allow": [
+  "v8-anchor-row",
+  "v8-trip-metrics",
+  "cn-no-motion",
+  "v8-strength",
+  "v8-trip-hero-head",
+  "anchor-line",
+  "cn-access-picker",
+  "v8-cta",
+  "v8-live-grid",
+  "v9-live-actions",
+  "cnx-select__empty",
+  "collections-panel",
+  "poi-import-panel",
+  "v8-empty-hint",
+  "v8-hero-title",
+  "v8-home-language",
+  "v8-user-meta"
+ ],
+ "drop_lines": [],
+ "drop_blocks": [
+  {
+   "file": "features/access/access.css",
+   "line": 40,
+   "through": 45,
+   "tokens": [
+    "cn-access-picker"
+   ],
+   "text": ".cn-access-picker {",
+   "picked_up_lines": 0
+  },
+  {
+   "file": "features/access/access.css",
+   "line": 52,
+   "through": 61,
+   "tokens": [
+    "cn-access-picker"
+   ],
+   "text": ".cn-access-picker select {",
+   "picked_up_lines": 0
+  },
+  {
+   "file": "components/cnx-select.css",
+   "line": 211,
+   "through": 215,
+   "tokens": [
+    "cnx-select__empty"
+   ],
+   "text": ".cnx-select__empty {",
+   "picked_up_lines": 0
+  }
+ ],
+ "strip_branches": [
+  {
+   "file": "design-tokens.css",
+   "line": 294,
+   "token": "v8-hero-title",
+   "remove_branches": [
+    ".v8-hero-title"
+   ],
+   "text": ".v8-page h1, .v8-hero-title { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tigh"
+  }
+ ],
+ "leftover": [
+  {
+   "file": "styles.css",
+   "line": 175,
+   "token": "v8-anchor-row",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-hero-grid { display: grid; grid-template-columns: minmax(0, 1.14fr) minmax(340px, .86fr); gap: 18px; }.v8-trip-hero "
+  },
+  {
+   "file": "styles.css",
+   "line": 175,
+   "token": "v8-trip-metrics",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-hero-grid { display: grid; grid-template-columns: minmax(0, 1.14fr) minmax(340px, .86fr); gap: 18px; }.v8-trip-hero "
+  },
+  {
+   "file": "styles.css",
+   "line": 175,
+   "token": "v8-trip-hero-head",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-hero-grid { display: grid; grid-template-columns: minmax(0, 1.14fr) minmax(340px, .86fr); gap: 18px; }.v8-trip-hero "
+  },
+  {
+   "file": "styles.css",
+   "line": 175,
+   "token": "anchor-line",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-hero-grid { display: grid; grid-template-columns: minmax(0, 1.14fr) minmax(340px, .86fr); gap: 18px; }.v8-trip-hero "
+  },
+  {
+   "file": "styles.css",
+   "line": 180,
+   "token": "v8-live-grid",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-live-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr); gap: 18px; }.v8-live-main { "
+  },
+  {
+   "file": "styles.css",
+   "line": 181,
+   "token": "v8-strength",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-intelligence-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr); gap: 18px; }.v8-inte"
+  },
+  {
+   "file": "styles.css",
+   "line": 184,
+   "token": "v8-live-grid",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "@media (max-width: 960px) { .v8-sidebar { --sb-width: 205px; }.v8-content { padding: 32px 26px 70px; }.v8-topbar { paddi"
+  },
+  {
+   "file": "styles.css",
+   "line": 185,
+   "token": "v8-anchor-row",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: var(--cn-nav-clearance); }.v8-sidebar { "
+  },
+  {
+   "file": "styles.css",
+   "line": 185,
+   "token": "v8-trip-metrics",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: var(--cn-nav-clearance); }.v8-sidebar { "
+  },
+  {
+   "file": "styles.css",
+   "line": 185,
+   "token": "v8-trip-hero-head",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: var(--cn-nav-clearance); }.v8-sidebar { "
+  },
+  {
+   "file": "styles.css",
+   "line": 278,
+   "token": "v9-live-actions",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "@media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { "
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 437,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page button:not(.cn-no-motion):active,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 439,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page button:not(.cn-no-motion),"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 440,
+   "token": "v8-cta",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page a.v8-cta,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 459,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page .trial-back-link:not(.cn-no-motion),"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 460,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page .trial-missing-jump:not(.cn-no-motion),"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 461,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page .trial-review-edit:not(.cn-no-motion),"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 476,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "  .v8-page .trial-back-link:not(.cn-no-motion):hover,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 477,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "  .v8-page .trial-missing-jump:not(.cn-no-motion):hover,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 478,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "  .v8-page .trial-review-edit:not(.cn-no-motion):hover,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 485,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page .trial-back-link:not(.cn-no-motion):active,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 486,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page .trial-missing-jump:not(.cn-no-motion):active,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 487,
+   "token": "cn-no-motion",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-page .trial-review-edit:not(.cn-no-motion):active,"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 514,
+   "token": "v8-cta",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": "  .v8-page button, .v8-page a.v8-cta, .v8-page .v8-card {"
+  },
+  {
+   "file": "design-tokens.css",
+   "line": 982,
+   "token": "v8-home-language",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-home-language {"
+  },
+  {
+   "file": "cn-pulse.css",
+   "line": 396,
+   "token": "collections-panel",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".collections-panel,"
+  },
+  {
+   "file": "cn-pulse.css",
+   "line": 397,
+   "token": "poi-import-panel",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".poi-import-panel {"
+  },
+  {
+   "file": "cn-pulse.css",
+   "line": 510,
+   "token": "v8-user-meta",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-user-meta,"
+  },
+  {
+   "file": "cn-pulse.css",
+   "line": 514,
+   "token": "v8-empty-hint",
+   "kind": "压缩行、多行选择器表或 :not() 里的形状",
+   "text": ".v8-empty-hint {"
+  }
+ ]
+}
