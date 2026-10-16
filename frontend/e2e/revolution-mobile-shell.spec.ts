@@ -115,9 +115,9 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await signedMockJourney(page, true);
     await page.goto("/revolution");
     await page.getByTestId("rev-mobile-tab-trips").click();
-    await expect(page.getByText("TEST ONLY - 第一站")).toBeVisible();
-    await expect(page.getByText("TEST ONLY - 第二站")).toBeVisible();
-    await expect(page.getByText("正在前往第二站")).toBeVisible();
+    await expect(page.getByTestId("rev-mobile-screen-trips").getByText("TEST ONLY - 第一站")).toBeVisible();
+    await expect(page.getByTestId("rev-mobile-screen-trips").getByText("TEST ONLY - 第二站")).toBeVisible();
+    await expect(page.getByTestId("rev-mobile-screen-trips").getByText("正在前往第二站")).toBeVisible();
     await page.getByRole("button", { name: "查看路线并继续 GO" }).click();
     await expect(page.getByTestId("rev-quick-walk")).toBeVisible();
   });
