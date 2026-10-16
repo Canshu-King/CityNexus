@@ -8,8 +8,13 @@
  * of the pin so it cannot land on the date badge underneath.
  *
  * Colours come only from the tokens `.v8-map-stamp-date` already uses, so the dark-scheme audit has
- * nothing new to fail on; the chip is legible on a pale raster because it carries the same surface
- * fill the badge does.
+ * nothing new to fail on. The claim this file used to make in the same breath -- that the chip is
+ * legible on a raster because it carries the badge's surface fill -- was measured and is only half
+ * true: a fill separates a name from the picture only where the picture is pale. Against a deliberately
+ * worst-case black/white tile field the hairline measured 1.03–1.16 versus the imagery, and between 33%
+ * and 96% of the pixels ringing a shown name fell under 3:1. The outline is therefore a control border
+ * (3.63 on white, 4.03 on black), which is what keeps the name readable on a dark tile too.
+ * Instrument: `_butugong_imagery_contrast_r1.py`, arm A9 of the WP-D spec.
  *
  * `.label-hidden` is `visibility`, never removal: the node stays in the document so the gates that
  * count labels can tell "no room for this word at this zoom" apart from "this stop has no name", and
@@ -18,7 +23,7 @@
 
 .v8-map-panel .v8-map-stop-label {
   padding: 1px 6px;
-  border: 1px solid var(--cn-hairline);
+  border: 1px solid var(--v8-ink);
   border-radius: var(--cn-r-control);
   background: var(--cn-surface);
   color: var(--v8-ink);

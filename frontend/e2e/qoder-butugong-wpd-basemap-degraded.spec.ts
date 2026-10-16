@@ -51,7 +51,18 @@ const push = (id: string, detail: unknown) => {
   node(id, detail);
 };
 
-type Arm = "aborted" | "answered";
+type Arm = "aborted" | "answered" | "worstcase";
+
+/* A 2x2 black/white checkerboard served as the tile: at 256 px per tile this puts a pure-white patch
+   and a pure-black patch next to everything that floats on the glass. CMDR-DELIVER-0706 assigned
+   `map-viewport-reset` and `v8-map-stop-label` to this branch with the reason that the gate's
+   `backgroundUnder` walks DOM ancestors and therefore cannot see the picture behind them -- so the
+   gate's green is not a visual conclusion, and A9 measures the picture instead. This is a measurement
+   rig, not a product asset: nothing in `src/` ships it. */
+const WORSTCASE_TILE_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAE0lEQVR4nGNgYGD4//8/GDMwAAAp5AX71ZPZmwAAAABJRU5ErkJggg==",
+  "base64",
+);
 
 /** Put one arm of the tile network in place, then land on the map with a real journey behind it. */
 async function openMapWithTiles(page: Page, arm: Arm) {
@@ -66,7 +77,11 @@ async function openMapWithTiles(page: Page, arm: Arm) {
       await route.abort();
     } else {
       requests.push({ url, failed: false, status: 200 });
-      await route.fulfill({ status: 200, contentType: "image/png", body: PNG_1PX });
+      await route.fulfill({
+        status: 200,
+        contentType: "image/png",
+        body: arm === "worstcase" ? WORSTCASE_TILE_PNG : PNG_1PX,
+      });
     }
   });
   page.on("requestfailed", (req) => {
@@ -510,6 +525,60 @@ test("A8-wrapped-rows — at 320 the two exits must not share a hit box", async 
     expect(e.minus21, `${e.testId} reachable 21 px above its centre`).toBe(e.testId);
     expect(e.plus21, `${e.testId} reachable 21 px below its centre`).toBe(e.testId);
   }
+});
+
+test("A9-on-the-imagery — what the DOM ruler cannot see, the pixels can", async ({ page }) => {
+  test.setTimeout(240_000);
+  const out: Record<string, unknown> = {};
+  for (const scheme of ["light", "dark"] as const) {
+    await page.setViewportSize(VIEWPORT);
+    await page.emulateMedia({ colorScheme: scheme, media: "screen" });
+    await openMapWithTiles(page, "worstcase");
+    const boxes = await page.evaluate(() => {
+      const panel = document.querySelector<HTMLElement>(".v8-map-panel");
+      if (!panel) return null;
+      const pr = panel.getBoundingClientRect();
+      /* Clip-relative coordinates: the sampler opens the PNG of this clip, so image px == page px minus
+         the clip origin. `deviceScaleFactor` is 1 here (the default), which is what makes that true. */
+      const rel = (el: HTMLElement) => {
+        const r = el.getBoundingClientRect();
+        const cs = getComputedStyle(el);
+        return {
+          x: Math.round(r.left - pr.left),
+          y: Math.round(r.top - pr.top),
+          w: Math.round(r.width),
+          h: Math.round(r.height),
+          background: cs.backgroundColor,
+          borderTop: cs.borderTopWidth + " " + cs.borderTopStyle + " " + cs.borderTopColor,
+          color: cs.color,
+        };
+      };
+      const control = document.querySelector<HTMLElement>("[data-testid='map-viewport-reset']");
+      const chips = Array.from(
+        document.querySelectorAll<HTMLElement>(".v8-map-panel [data-testid='v8-map-stop-label']"),
+      ).filter((el) => el.getAttribute("data-placement") === "shown");
+      return {
+        panel: { x: Math.round(pr.left), y: Math.round(pr.top), w: Math.round(pr.width), h: Math.round(pr.height) },
+        control: control ? rel(control) : null,
+        chips: chips.map(rel),
+        themeAttr: document.documentElement.getAttribute("data-theme"),
+      };
+    });
+    expect(boxes, `${scheme}: the panel and the floating control must exist to be sampled`).not.toBeNull();
+    const shot = `A9_worstcase_${scheme}.png`;
+    await page.screenshot({ path: evidencePath("butugong-wpd", shot), clip: { x: boxes!.panel.x, y: boxes!.panel.y, width: boxes!.panel.w, height: boxes!.panel.h } });
+    out[scheme] = { shot, ...boxes };
+    /* No assertion on the ratios here: the sampler reads the PNG and the numbers go into the receipt as
+       measurements. Asserting a threshold before measuring would be writing the conclusion first. */
+  }
+  rows["A9-on-the-imagery"] = out;
+  node("A9-on-the-imagery", {
+    light_control: out.light && (out.light as any).control,
+    dark_control: out.dark && (out.dark as any).control,
+    chips_light: ((out.light as any)?.chips ?? []).length,
+    chips_dark: ((out.dark as any)?.chips ?? []).length,
+  });
+  writeFileSync(evidencePath("butugong-wpd", "A9_boxes.json"), JSON.stringify(out, null, 1), "utf8");
 });
 
 test.afterAll(() => {

@@ -27,7 +27,15 @@
   gap: var(--cn-s-8);
   min-height: 32px;
   padding: var(--cn-s-8) var(--cn-s-12);
-  border: 1px solid var(--cn-hairline);
+  /* The boundary is a control border, not a hairline, and the reason is a pixel measurement rather than
+     the token rule. This button floats on maplibre's canvas, so what stands behind its outline is tile
+     imagery the gate's `backgroundUnder` cannot see (it walks DOM ancestors). Sampled against a
+     deliberately worst-case black/white tile field, the hairline measured 1.03–1.19 against the picture
+     and the button's own edge was indistinguishable over 82% of the surrounding pixels in the dark
+     scheme; `--cn-control-border` is 3.63 against white and 4.03 against black, so the outline survives
+     both extremes. Instrument: `_butugong_imagery_contrast_r1.py`, arm A9 of
+     `e2e/qoder-butugong-wpd-basemap-degraded.spec.ts` (CMDR-DELIVER-0706 assigned this testid here). */
+  border: 1px solid var(--v8-ink);
   border-radius: var(--cn-r-control);
   background: var(--cn-surface);
   color: var(--v8-ink);
