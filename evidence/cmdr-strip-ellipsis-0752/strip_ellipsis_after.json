@@ -1,0 +1,602 @@
+{
+ "tag": "after",
+ "desktop": {
+  "vw": 1280,
+  "doc_scroll": 1280,
+  "doc_client": 1280,
+  "bar_top": null,
+  "rows": [
+   {
+    "full": "还没有选定",
+    "shown": 75,
+    "need": 75,
+    "hidden_pct": 0,
+    "h": 20,
+    "lines": 1,
+    "rects": [
+     [
+      916,
+      75
+     ]
+    ],
+    "bottom": 936
+   },
+   {
+    "full": "10月16日 09:00 · Asia/Shanghai · 行程时区",
+    "shown": 281,
+    "need": 281,
+    "hidden_pct": 0,
+    "h": 20,
+    "lines": 1,
+    "rects": [
+     [
+      916,
+      100
+     ],
+     [
+      916,
+      181
+     ]
+    ],
+    "bottom": 936
+   },
+   {
+    "full": "10月16日 19:00 · Asia/Shanghai · 行程时区",
+    "shown": 279,
+    "need": 279,
+    "hidden_pct": 0,
+    "h": 20,
+    "lines": 1,
+    "rects": [
+     [
+      916,
+      98
+     ],
+     [
+      916,
+      181
+     ]
+    ],
+    "bottom": 936
+   }
+  ]
+ },
+ "narrow": [
+  {
+   "width": 320,
+   "locale": "zh-CN",
+   "vw": 320,
+   "doc_scroll": 320,
+   "doc_client": 320,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "还没有选定",
+     "shown": 75,
+     "need": 75,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1262,
+       75
+      ]
+     ],
+     "bottom": 1282
+    },
+    {
+     "full": "10月16日 09:00 · Asia/Shanghai · 行程时区",
+     "shown": 252,
+     "need": 252,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1309,
+       100
+      ],
+      [
+       1309,
+       151
+      ],
+      [
+       1329,
+       30
+      ]
+     ],
+     "bottom": 1349
+    },
+    {
+     "full": "10月16日 19:00 · Asia/Shanghai · 行程时区",
+     "shown": 252,
+     "need": 252,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1376,
+       98
+      ],
+      [
+       1376,
+       151
+      ],
+      [
+       1396,
+       30
+      ]
+     ],
+     "bottom": 1416
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "locale": "en",
+   "vw": 320,
+   "doc_scroll": 320,
+   "doc_client": 320,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "Not chosen yet",
+     "shown": 103,
+     "need": 103,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1258,
+       103
+      ]
+     ],
+     "bottom": 1278
+    },
+    {
+     "full": "16 Oct, 09:00 · Asia/Shanghai · journey time z",
+     "shown": 252,
+     "need": 252,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1305,
+       87
+      ],
+      [
+       1305,
+       117
+      ],
+      [
+       1325,
+       123
+      ]
+     ],
+     "bottom": 1345
+    },
+    {
+     "full": "16 Oct, 19:00 · Asia/Shanghai · journey time z",
+     "shown": 252,
+     "need": 252,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1372,
+       85
+      ],
+      [
+       1372,
+       117
+      ],
+      [
+       1392,
+       123
+      ]
+     ],
+     "bottom": 1412
+    }
+   ]
+  },
+  {
+   "width": 360,
+   "locale": "zh-CN",
+   "vw": 360,
+   "doc_scroll": 360,
+   "doc_client": 360,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "还没有选定",
+     "shown": 75,
+     "need": 75,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1198,
+       75
+      ]
+     ],
+     "bottom": 1218
+    },
+    {
+     "full": "10月16日 09:00 · Asia/Shanghai · 行程时区",
+     "shown": 281,
+     "need": 281,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1245,
+       100
+      ],
+      [
+       1245,
+       181
+      ]
+     ],
+     "bottom": 1265
+    },
+    {
+     "full": "10月16日 19:00 · Asia/Shanghai · 行程时区",
+     "shown": 279,
+     "need": 279,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1292,
+       98
+      ],
+      [
+       1292,
+       181
+      ]
+     ],
+     "bottom": 1312
+    }
+   ]
+  },
+  {
+   "width": 360,
+   "locale": "en",
+   "vw": 360,
+   "doc_scroll": 360,
+   "doc_client": 360,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "Not chosen yet",
+     "shown": 103,
+     "need": 103,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1217,
+       103
+      ]
+     ],
+     "bottom": 1237
+    },
+    {
+     "full": "16 Oct, 09:00 · Asia/Shanghai · journey time z",
+     "shown": 292,
+     "need": 292,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1264,
+       87
+      ],
+      [
+       1264,
+       173
+      ],
+      [
+       1284,
+       67
+      ]
+     ],
+     "bottom": 1304
+    },
+    {
+     "full": "16 Oct, 19:00 · Asia/Shanghai · journey time z",
+     "shown": 292,
+     "need": 292,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1331,
+       85
+      ],
+      [
+       1331,
+       173
+      ],
+      [
+       1351,
+       67
+      ]
+     ],
+     "bottom": 1371
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "locale": "zh-CN",
+   "vw": 390,
+   "doc_scroll": 390,
+   "doc_client": 390,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "还没有选定",
+     "shown": 75,
+     "need": 75,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1204,
+       75
+      ]
+     ],
+     "bottom": 1224
+    },
+    {
+     "full": "10月16日 09:00 · Asia/Shanghai · 行程时区",
+     "shown": 281,
+     "need": 281,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1251,
+       100
+      ],
+      [
+       1251,
+       181
+      ]
+     ],
+     "bottom": 1271
+    },
+    {
+     "full": "10月16日 19:00 · Asia/Shanghai · 行程时区",
+     "shown": 279,
+     "need": 279,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1298,
+       98
+      ],
+      [
+       1298,
+       181
+      ]
+     ],
+     "bottom": 1318
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "locale": "en",
+   "vw": 390,
+   "doc_scroll": 390,
+   "doc_client": 390,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "Not chosen yet",
+     "shown": 103,
+     "need": 103,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1223,
+       103
+      ]
+     ],
+     "bottom": 1243
+    },
+    {
+     "full": "16 Oct, 09:00 · Asia/Shanghai · journey time z",
+     "shown": 322,
+     "need": 322,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1270,
+       87
+      ],
+      [
+       1270,
+       207
+      ],
+      [
+       1290,
+       33
+      ]
+     ],
+     "bottom": 1310
+    },
+    {
+     "full": "16 Oct, 19:00 · Asia/Shanghai · journey time z",
+     "shown": 322,
+     "need": 322,
+     "hidden_pct": 0,
+     "h": 40,
+     "lines": 2,
+     "rects": [
+      [
+       1337,
+       85
+      ],
+      [
+       1337,
+       207
+      ],
+      [
+       1357,
+       33
+      ]
+     ],
+     "bottom": 1377
+    }
+   ]
+  },
+  {
+   "width": 430,
+   "locale": "zh-CN",
+   "vw": 430,
+   "doc_scroll": 430,
+   "doc_client": 430,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "还没有选定",
+     "shown": 75,
+     "need": 75,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1168,
+       75
+      ]
+     ],
+     "bottom": 1188
+    },
+    {
+     "full": "10月16日 09:00 · Asia/Shanghai · 行程时区",
+     "shown": 281,
+     "need": 281,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1215,
+       100
+      ],
+      [
+       1215,
+       181
+      ]
+     ],
+     "bottom": 1235
+    },
+    {
+     "full": "10月16日 19:00 · Asia/Shanghai · 行程时区",
+     "shown": 279,
+     "need": 279,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1262,
+       98
+      ],
+      [
+       1262,
+       181
+      ]
+     ],
+     "bottom": 1282
+    }
+   ]
+  },
+  {
+   "width": 430,
+   "locale": "en",
+   "vw": 430,
+   "doc_scroll": 430,
+   "doc_client": 430,
+   "bar_top": 744,
+   "rows": [
+    {
+     "full": "Not chosen yet",
+     "shown": 103,
+     "need": 103,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1188,
+       103
+      ]
+     ],
+     "bottom": 1208
+    },
+    {
+     "full": "16 Oct, 09:00 · Asia/Shanghai · journey time z",
+     "shown": 331,
+     "need": 331,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1235,
+       87
+      ],
+      [
+       1235,
+       244
+      ]
+     ],
+     "bottom": 1255
+    },
+    {
+     "full": "16 Oct, 19:00 · Asia/Shanghai · journey time z",
+     "shown": 329,
+     "need": 329,
+     "hidden_pct": 0,
+     "h": 20,
+     "lines": 1,
+     "rects": [
+      [
+       1282,
+       85
+      ],
+      [
+       1282,
+       244
+      ]
+     ],
+     "bottom": 1302
+    }
+   ]
+  }
+ ]
+}
