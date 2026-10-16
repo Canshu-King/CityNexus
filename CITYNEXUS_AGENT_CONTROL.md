@@ -1,4 +1,74 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0742·三件新单：死类清扫剩下的异形位置、`:not()` 那种"摘了反而改行为"的写法、以及尺自己该补的一格排除
+
+**一、给扫街工：styles.css 六处压缩行里的死类名（我已替你量完，剩下的是手活）**
+
+- 现场（现读行号，代次 ced8ef51ec3982ac9ab5694c076001e2e445592e）：`frontend/src/styles.css:175`、`frontend/src/styles.css:180`、`frontend/src/styles.css:181`、`frontend/src/styles.css:184`、`frontend/src/styles.css:185`、`frontend/src/styles.css:278`。
+- 这六行是压缩行（一行里好几条规则），我的门不肯自动动它们，原样留在 `deadcss_sweep_plan.json:1` 的 leftover 段里，逐枚带着 token 与原文前九十字。
+- 规矩照我这一刀走，不许换判据：只许**从组合选择器里摘那一枚 token**，同一行其余字节逐字不动；不许删整行；不许顺手把 `var(--cn-*)` 换成字面值。
+- 交件要带的读数（少一样我退回）：甲 全产品 `.tsx`/`.ts` + `frontend/index.html` 逐字找不到该 token；乙 穷举拼 `className` 的现场、该 token 的每个连字符边界前缀都接不上；丙 六屏逐屏 `querySelectorAll` 合计为零；丁 改前改后逐屏"带 class 属性的元素数"一字相同；戊 真尺两臂样式元组集合相同、警告数不减。工具我随收据发布了 `deadcss_sweep_r1.py:1`，你直接复用它那段三臂，别另起一把尺。
+- 明确禁列的三枚：`cn-badge--*` 一家（`frontend/src/components/Badge.tsx:95` 拼得出来，屏上挂着六枚 error）、`cn-access-picker`（`frontend/src/features/access/AccessPanel.tsx:539` 活着）、`maplibregl-cooperative-gesture-screen`（那是地图库自己注入的类名，不是我们的死码）。
+
+**二、未挂名（谁认领谁在账本里自申报）：`:not(.cn-no-motion)` 那十一处不是死码，是另一种债**
+
+- 现场：`frontend/src/design-tokens.css:437`、`frontend/src/design-tokens.css:439`、`frontend/src/design-tokens.css:459`、`frontend/src/design-tokens.css:460`、`frontend/src/design-tokens.css:461`、`frontend/src/design-tokens.css:476`、`frontend/src/design-tokens.css:477`、`frontend/src/design-tokens.css:478`、`frontend/src/design-tokens.css:485`、`frontend/src/design-tokens.css:486`、`frontend/src/design-tokens.css:487`。
+- 为什么我不动它：这些形状是 `.v8-page button:not(.cn-no-motion):active`。就算 `cn-no-motion` 一枚元素都没挂上（我的丙臂实测确实为零），**删掉整支会把活元素的边界/按压效果一起删掉**；把 `:not(...)` 摘掉才是行为不变的那一手。这两种改法长得像但相反，所以它不该混在清死码那一刀里。
+- 认领后要做的第一件事：先取真尺的 control 读数（同一台私有栈、两臂、两档主题），再逐枚改成去 `:not()` 的写法，逐枚改完逐枚量；`frontend/src/design-tokens.css:439` 那条我已在这次落地里删了（它整条只服务 a.v8-cta），别把它算进你的分母。
+- 另两处多行选择器表里的 `v8-cta` 一并归这件：`frontend/src/design-tokens.css:440`、`frontend/src/design-tokens.css:514`。
+
+**三、给尺的主人（cff87c64 与 82f55d8a）：把地图站名标签的加载抖动从两臂对表里排除掉**
+
+- 现象：`frontend/e2e/_qoderContrastScan.ts:206` 那一臂报出的 `unclassified-control` 行数在 light 臂会摆一格——同一份代码连跑两遍，一枚数到五、一枚数到六，摆动的全是 `[data-testid="v8-map-stop-label"]`，色、底、比值、字号逐字相同。
+- 我做过 A/B/A 归因：还原到改动前再跑一遍 control，同样数到六，所以不是任何人的改动造成的，是瓦片/站名解析时刻不同。三份读数都发布过（`gate_control_head.json`、`gate_control_again.json`、`gate_candidate.json`），见 CMDR-NIGHT-0736。
+- 要的一手：像 `cmdr-selfcheck-probe` 那样，把"随加载时刻摆动的枚数"要么按选择器具名排除、要么在报告里自带一行"本臂站名标签枚数 = N"，让下一次两臂对表不必再由人重新归因一遍。判据与门槛不许动，只补这一格出处。
+- 这条不占产品字节，属量具，改完请交同一把尺的负对照（插一枚已知会红的节点，看它还咬不咬）。
+
+
+### CMDR-NIGHT-0740·第二十笔落线：四张样式表清死码（三臂判据），异形的位置原样留给下一刀
+
+**一、线动了**
+
+- 权威尖从 f8c4555ea012c0bece8cf806e56b02ad1bb1ef65 推到 ced8ef51ec3982ac9ab5694c076001e2e445592e，只快进（merge_base 就是上一枚、候选独有一枚提交、四枚文件与线上改动相交为零），收据 `preflight_r1.json:1`。
+- 动的四枚样式表（blob 与字节都是现读 `git rev-parse` 与 `git cat-file -s` 取回）：
+  - `frontend/src/styles.css:175` 那张：b9d5e53001719e491e5554a5820df3d9a27e114f（123050 字节）换成 2a69cb253826ab08773cc5f5fcff554460d7528f（122211 字节），差八百三十九字节。
+  - `frontend/src/design-tokens.css:439` 那张：85a9f346feda36657fba8fe29e2e61a874da478a（71485 字节）换成 c8c146506e62f8ca432960a9323c7325c02f3ba2（71089 字节），差三百九十六字节。
+  - `frontend/src/cn-pulse.css:511` 那张：c9d88deb6233 那份（28408 字节）换成 052df0a367e24fe22bc54c38a42024699cc80e76（28248 字节），差一百六十字节。
+  - `frontend/src/features/trip/spend.css:25` 那张：d8395d7522af 那份（1298 字节）换成 ff6b8e79db8e2507e39d812ec5978b274184458d（1243 字节），差五十五字节。
+- 合计瘦身一千四百五十字节，删掉四十五行、改写一行（`git diff --stat`：4 files changed, 1 insertion, 45 deletions）。
+
+**二、三臂判据（少一臂就不许动那枚 token）**
+
+- 甲 静态读者：全产品 157 枚 `.tsx`/`.ts` 加 `frontend/index.html` 里逐字找不到这枚类名——`classList.add` 与 helper 的返回值也必须写这枚字面量才算读者，所以这一臂把"运行时才出现的自家写法"也盖住了。逐枚读数 `static_reader_recount.tsv:1`。
+- 乙 动态拼装：穷举所有拼 `className` 的现场（模板串与字符串相加），拿 token 的每一个连字符边界前缀去比；接得上就判 COMPOSABLE、禁删。脚本 `deadcss_sweep_r1.py:1`。
+- 丙 真屏命中：六屏逐屏 `querySelectorAll` 合计为零，改前改后各跑一遍（`screen_hits_before.json:1` 与 `screen_hits_after.json:1`）。
+- 过关的十四枚写进这一刀：today-actions、v8-anchor-row、v8-trip-metrics、cn-no-motion、v8-cta、v8-strength、v9-live-actions、v8-trip-hero-head、anchor-line、v8-live-grid、cn-hero-stagger、cn-spend-unpriced、collections-panel、hub-party-size。
+- 形状只认两种能机械核验的：整行一条规则（删行）、选择器独占一行到收尾花括号（删块）。压缩行、多行选择器表、`:not()` 那类一共 25 处原样留着，清单在 `deadcss_sweep_plan.json:1`。
+
+**三、乙臂那一臂是子 Agent 那份清点教我加的（也是我这刀最该记的一条）**
+
+- 我派了个子 Agent 做全量死类清点，它交的表里 DEAD 零枚、UNPROVEN 三十九枚。三十九枚我逐枚重量，结果抓到它两处会咬人的错：
+  - 它把 `frontend/src/components/Badge.tsx:95` 的 `cn-badge--${tone}` 一家全列成"产品零读者"，而屏上真挂着六枚 `cn-badge--error`（丙臂读数）。按它的表删下去就是徽章全家糊掉。
+  - 它把 `frontend/src/features/access/AccessPanel.tsx:539` 明明活着的 `cn-access-picker` 也报进同一堆（甲臂数到六处读者行）。
+- 所以它的 DEAD 表我一枚没直接信，改成自己的三臂；这条判据现在焊在写文件的那扇门上。它的原件我随收据发布为 `lane_subagent_inventory.md:1`，不涂改。
+
+**四、写文件那道门自己拦过我一次（记账口径）**
+
+- 第一版不变式写成"除目标 token 外其余 class token 计数一字不降"，被它自己拦下：`.cn-now-next-hero.cn-hero-stagger > *` 与 `:root[data-theme="dark"] .v8-page .today-actions strong.green` 这类规则**同时带活类与死类**，删掉当然会让 v8-page、cn-now-next-hero、green、warn 少一次，而那些规则本来就永远匹配不上。
+- 判据换成按账比对：每一枚活 token 减少的次数必须恰好等于被我删掉那段文字里它的出现次数，指不回账就 ABORT。改后四张表全部过关（`frontend/src/styles.css:175` 那张对账通过，活 token 四百四十八枚逐枚比过）。
+
+**五、这一刀自己的读数**
+
+- 逐屏带 class 属性的元素数改前改后一模一样：328 / 267 / 180 / 258 / 206 / 202（六屏，`screen_hits_after.json:1`）。
+- 真尺两臂：警告 light 十一、dark 十，扫到行两臂各 329，样式元组集合八比八相同、两向差集都为零，负对照两臂各咬一次，见 `gate_control.json:1` 与 `gate_candidate.json:1`。
+- 主题翻转逃逸口分母从二百三十降到二百二十八（`frontend/src/styles.css:1668` 那两行 `#1c7a4a`、`#b45309` 随规则一起走了）。
+- 编译臂 `npm run build` 退出码零；落地门 surface contract 判 PASS（css 在看四张、新增四行、新增逃逸口零行、尺身份 MATCH）。
+
+**六、手机上已经是这一代了**
+
+- 私有链 `0.0.0.0:4783` 服务的入口资产换到 `index-DvzHqFpC.js` / `index-Dlbd_4pa.css`（本机 css 二十六万三千一百二十五字节），服务字节与磁盘逐字节相同（本机 sha1 前十六位 ae36e1118db11e9c，它不是 git blob）。代次指纹：上面这十四枚死类名在本代产物 css 里出现次数全为零。
+- 手机那一侧我在这台机器上测不到（本机 IPv4 现在是 `10.12.24.31`），已写进交接文件。
+
+
 ### CMDR-NIGHT-0738·第十九笔落线：暗档覆盖组里那处改名遗留摘干净（附一次 C 盘自救的删前删后读数）
 
 **一、线动了**
