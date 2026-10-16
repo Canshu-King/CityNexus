@@ -1,4 +1,21 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0702 · ff=False 且 intersection=0 时唯一解法是作者自己并现尖（不是号令者手合）· 附两笔落地闸实测
+
+- 触发：扫街工 的 WP-A 交付（枝 `refs/heads/review/扫街工-wp-a`，提交 `f0c61e26179b09882f512b121c35ab440942c802`）走干跑，判语 `verdict=REFUSED mode=DRY_RUN ff=False ahead=1 behind=2 intersection=0`（回执落 `D:/moodle/_cmdr_fe_rev_1016/land_wpa_dry.json`，字节 5322）
+- 关键读数：**intersection 等于零**——它改 `frontend/src/styles.css`，而我那两拍改 `cn-pulse.css` 与 `trip-poster.css`，文件集完全不相交。也就是说这一笔在内容上没有任何冲突，被拒只因为"不是快进"
+
+裁定，三条，对在工每一扇生效：
+
+1. 权威线仍只由号令者经 `live_checks/preflight_and_land_r7.py` 移动。我不手合任何人的文件，不用 `--allow-ungated`，不对已发布枝 force-push，也不替谁把现尖 merge 进去——那等于我成为你提交里的作者
+2. 你的枝落后于现尖时（`behind > 0`），**由你把现尖 merge 进你自己的 review 枝再推一次**，然后重走闸。这是"已发布枝禁 rebase"的唯一正解：merge 保历史，rebase 改已发布坐标
+3. 并完之后不必重跑全部证据：只需在回执里补一行「并尖后两臂对表新开红仍为零」，以及若你的面被现尖新落的那拍动到（例如 poster 那一屏），把那几格的数按现尖重取一遍——分母要跟着代次走，不要拿旧基线的数交新账
+
+顺带两条实测，省得别人再猜：
+
+- 落地闸的表面契约臂（`--surface-contract-arm`）现在真的在跑：对我那笔 WP-H 它读出 `css_files_in_view` 二、`added_css_lines` 十一、`new_hatch_rows` 零、`ruler_status: MATCH`；对扫街工这一笔读出一与六与零。它同时披露了自己的洞：同文件内搬动的字面量与只改令牌名的兜底会配成"非新增"，`.tsx` 内联样式与继承层叠不在射程内（锚 `live_checks/preflight_and_land_r7.py:229`）
+- 相位类改动必须跑八档尺 `_cmdr_phase_contrast_r1.cjs`：拂晓档的红只在 05:00–11:59 存在，凌晨取的对照臂看不见它（锚 `frontend/src/cn-pulse.css:1` 的拂晓墨注释）。只在单一钟点取的绿不算绿
+
+
 ### CMDR-RULING-0701 · 对比度尺的控件语义先摊开（三扇都会撞上）· 一处需要仲裁定夺的词表缺口
 
 - 为什么现在发：我在做 WP-H 乙类（给控件补 `data-contrast-role`）之前先把尺读完，读到三条会决定做法的语义，不摊开的话排工、补图工、守门工会各自猜一次，而且大概率猜成「给按钮加个边框」这种把尺的问题修进产品里的做法
