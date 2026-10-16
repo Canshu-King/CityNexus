@@ -157,12 +157,12 @@ export function MemberPlaceInvitationPanel({
       );
       await onUpdated();
       setMessage(zh
-        ? "已提交共享站点提议；路线核验和全体成员批准后可应用。"
-        : "Shared-stop proposal submitted. Apply after route checks and approval from every member.");
+        ? "已提交共享站点提议，等待全体成员确认。"
+        : "Shared-stop proposal submitted. Waiting for every member to approve.");
     } catch {
       setMessage(zh
-        ? "方案暂不可执行，请刷新查看路线证据和恢复状态。"
-        : "Proposal is not ready. Refresh to review route evidence and recovery status.");
+        ? "提议暂不可用，请刷新后重试。"
+        : "Proposal unavailable. Refresh and try again.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -185,7 +185,7 @@ export function MemberPlaceInvitationPanel({
         ? (zh ? "同行者名单已更新，请刷新并重新确认分享范围。" : "The Journey audience changed. Refresh and confirm who can see the place.")
         : code === "GROUP_SHARE_REQUIRES_ACCEPTED_INVITEE"
           ? (zh ? "先等待至少一位受邀同行者接受，再发起全组分享。" : "Wait for an invited companion to accept before sharing with the whole Journey.")
-          : (zh ? "分享预览暂不可用，地点仍只对受邀同行者可见。" : "Sharing preview unavailable; the Place remains visible only to invited companions."));
+          : (zh ? "分享预览暂不可用；地点仍仅对受邀者可见。" : "Sharing preview unavailable; the Place remains visible to invitees."));
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -260,7 +260,7 @@ export function MemberPlaceInvitationPanel({
         : "A one-stop co-planning offer was sent. The collaborator must accept it with their own signed identity.");
     } catch {
       setMessage(zh
-        ? "授权状态待确认，请刷新邀请和成员状态。"
+        ? "授权状态未更新，请刷新。"
         : "Offer status is unconfirmed. Refresh the invitation and membership.");
       await onUpdated();
     } finally {
@@ -350,7 +350,7 @@ export function MemberPlaceInvitationPanel({
         `r73-apply-${crypto.randomUUID()}`,
       );
       await onUpdated();
-      setMessage(zh ? "已通过集体授权应用新的共享 PlanVersion。" : "The new shared PlanVersion was applied after collective authorization.");
+      setMessage(zh ? "已将新方案加入共同旅程。" : "New plan added to the shared Journey.");
     } catch {
       setMessage(zh
         ? "行程或恢复状态已更新，请刷新提案后重试。"
@@ -389,7 +389,7 @@ export function MemberPlaceInvitationPanel({
       <strong>{zh ? "把发现加入共同旅程？" : "Promote this discovery to the shared Journey?"}</strong>
       <small>
         {zh
-          ? "新集体计划提议将复核服务器中的地点、路线与承诺信息。所有当前成员需分别同意，之后才可应用新计划。"
+          ? "新方案会重新核对地点、路线和承诺；所有行程成员分别确认后，再由成员应用。"
           : "Every Journey member must approve this proposal. A member then applies it; the server checks the place, route, and confirmed bookings again."}
       </small>
       {canPropose && coPlanningOptions.length > 0 && (
@@ -464,7 +464,7 @@ export function MemberPlaceInvitationPanel({
       {canUpdate && !canPropose && (
         <small data-testid="member-place-promotion-share-blocked">
           {zh
-            ? `原分享者需授权全组后才能提议（${groupShareStatus}）。`
+            ? `等待分享者开放全组分享（${groupShareStatus}）。`
             : `Full-Journey sharing needs approval from the original Place sharer (${groupShareStatus}).`}
         </small>
       )}

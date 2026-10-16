@@ -149,13 +149,13 @@ function inviteFailureCopy(code: string, zh: boolean): string {
     return zh ? "旅伴接受邀请后即可加入。" : "The traveller must accept the invitation to join.";
   }
   if (code.includes("MEMBER_MANAGE")) {
-    return zh ? "只有当前有成员管理权限的旅伴可以发出邀请。" : "Only a current Journey member with member-management authority can invite someone.";
+    return zh ? "你当前没有邀请权限。" : "You do not have permission to invite companions.";
   }
   if (code.includes("ALREADY_PENDING")) {
     return zh ? "这位旅伴已有一个待处理邀请。" : "This traveller already has a pending invitation.";
   }
   if (code.includes("ACTIVE_JOURNEY")) {
-    return zh ? "行程开始并选定当前计划后，才能邀请旅伴加入。" : "Invite a companion after the Journey is active with a selected plan.";
+    return zh ? "请先开始行程并选择方案。" : "Start the Journey and choose a plan first.";
   }
   return zh ? "邀请结果待确认，请刷新成员名单。" : "Invitation status unconfirmed. Refresh the member list.";
 }
@@ -856,8 +856,8 @@ export function JourneyMembershipPanel({
       popup.location.href = url;
       setBuddyDirectionsConsent(null);
       setBuddyMessage(zh
-        ? "已将双方同意的目的地交给 Google Maps；路线和 ETA 由地图应用提供。"
-        : "The agreed destination was sent to Google Maps; the map app provides directions and ETA.");
+        ? "已在 Google Maps 打开目的地。"
+        : "Destination opened in Google Maps.");
     } catch {
       popup.close();
       setBuddyDirectionsConsent(null);
@@ -1002,8 +1002,8 @@ export function JourneyMembershipPanel({
           return;
         }
         setMessage(zh
-          ? "你已作为 COLLABORATOR 加入这趟行程。现有地点分享或待决策可能因成员名单变化而需要重新确认。"
-          : "You joined as a collaborator. Existing Place shares and pending decisions may need renewed consent because the member set changed.");
+          ? "已加入行程；请重新确认待处理的地点分享和决定。"
+          : "Joined the Journey. Reconfirm pending Place shares and decisions.");
       } else {
         setMessage(zh ? "已谢绝邀请。" : "Invitation declined.");
       }
@@ -1202,7 +1202,7 @@ export function JourneyMembershipPanel({
             <article key={invitation.invitation_id} data-testid="journey-membership-invitation">
               <strong>{invitation.inviter_display_name} {zh ? "邀请你加入" : "invited you to join"} {invitation.journey_title}</strong>
               <p>
-                {invitation.city_code} · {invitation.approximate_start_date} · COLLABORATOR
+                {invitation.city_code} · {invitation.approximate_start_date} · {zh ? "同行者" : "Collaborator"}
               </p>
               <small>
                 {zh ? "接受前显示行程概况和建议角色 · 有效期至 " : "Journey summary and suggested role · Expires "}
@@ -1253,10 +1253,10 @@ export function JourneyMembershipPanel({
           </div>
           <small>
             {zh
-              ? "邀请仅授予 COLLABORATOR。只有收件人本人签名接受后才会加入；邀请 24 小时后失效。"
-              : "The invitation offers COLLABORATOR only. Membership begins after the recipient’s own signed acceptance; the invitation expires in 24 hours."}
+              ? "邀请 24 小时内有效；对方接受后以同行者身份加入。"
+              : "The invitation lasts 24 hours. The recipient joins as a companion after accepting."}
           </small>
-          {!active && <small>{zh ? "启动行程并选择方案后即可邀请同行者。" : "Start the Journey and choose a plan to invite companions."}</small>}
+          {!active && <small>{zh ? "请先开始行程并选择方案。" : "Start the Journey and choose a plan first."}</small>}
           {sent.filter((item) => item.state === "OFFERED").map((invitation) => (
             <article key={invitation.invitation_id} data-testid="journey-membership-sent-invitation">
               <span>{invitation.target_display_name} · {zh ? "待接受" : "Awaiting acceptance"}</span>

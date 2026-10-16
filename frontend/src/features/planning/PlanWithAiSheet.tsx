@@ -108,18 +108,18 @@ const BLOCKED_BY_CODE: Record<
     action: "another-city",
   },
   CATALOG_INSUFFICIENT: {
-    zh: "这座城我们手上的地点太少，配不平一天的行程。",
+    zh: "这座城可用地点太少，换个城市试试。",
     en: "We have too few places for this city to balance a day's itinerary.",
     action: "another-city",
   },
   PLACES_NOT_IN_CATALOG: {
-    zh: "要排的地点不在我们的目录里，所以排不出行程。",
+    zh: "当前城市目录中没有这些地点，换一组地点或城市试试。",
     en: "The places this was asked to plan are not in our catalogue, so no itinerary could be built.",
     action: "another-city",
   },
   PLACE_COST_UNVERIFIED: {
-    zh: "地点已找到 · 核实费用后可生成预算方案。",
-    en: "Places found · check prices to create a budgeted plan.",
+    zh: "地点已找到；补充价格后可生成预算方案。",
+    en: "Places found. Add prices to create a budgeted plan.",
     action: "retry",
   },
   PLACE_OUTSIDE_JOURNEY_WINDOW: {
@@ -128,8 +128,8 @@ const BLOCKED_BY_CODE: Record<
     action: "another-city",
   },
   MOBILITY_DATA_UNAVAILABLE: {
-    zh: "这趟的出行数据缺了一段（站与站之间的时间没读到），所以没排出来。",
-    en: "Part of this trip's mobility data is missing, so nothing could be scheduled.",
+    zh: "路段时间数据暂缺，请稍后重试。",
+    en: "Route timing is unavailable. Try again later.",
     action: "retry",
   },
 };

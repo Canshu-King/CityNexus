@@ -99,7 +99,7 @@ export function MomentScoutCard({
       setLiveReceipt(null);
       setLiveSelectedCandidateId("");
       setMessage(zh
-        ? "这组实时地点线索已过期；如需继续，请再次明确同意并搜索。"
+        ? "地点搜索已过期，请重新授权后搜索。"
         : "These live place leads expired. Give consent again to run a new search.");
     }, delay);
     return () => window.clearTimeout(timeout);
@@ -252,7 +252,7 @@ export function MomentScoutCard({
         setLiveReceipt(null);
         setLiveSelectedCandidateId("");
         setMessage(zh
-          ? "这组实时地点线索或共同会合安排已过期；请刷新后重新查找并再次同意外部搜索。"
+          ? "地点或会合安排已过期，请刷新并重新授权搜索。"
           : "These live leads or the shared rendezvous expired. Refresh, search again, and give consent again.");
       } else if (detail.includes("Start the Journey Operator before planning a side trip")) {
         setMessage(zh

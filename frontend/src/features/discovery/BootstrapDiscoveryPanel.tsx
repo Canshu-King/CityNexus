@@ -2179,7 +2179,6 @@ export function BootstrapDiscoveryPanel({
         <p>
           先在公开地图上选一个位置，再按兴趣寻找附近地点。搜到的结果会告诉你来自哪里；你来决定去哪儿。
         </p>
-        <p>搜索范围来自你选定的地图位置；营业、费用和步行信息显示来源。</p>
         <details className="rev-technical-details" data-testid="rev-technical-details">
           <summary>查看地图服务状态和技术详情</summary>
           <section data-testid="bootstrap-discovery-readiness" aria-labelledby="bootstrap-discovery-readiness-title">
@@ -2679,7 +2678,7 @@ export function BootstrapDiscoveryPanel({
                   : !providerConsent
                     ? "最后一步：勾选本次公开数据查询授权，才能开始搜索。"
                     : readiness?.status !== "READY"
-                      ? "地图查询服务暂时不可用，请打开技术详情查看原因，或稍后再试。"
+                      ? "地图查询暂不可用，请稍后再试。"
                       : "请确认表单中的设置。"}
           </p>
         )}
