@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { Activity, AlertCircle, Check, ChevronDown, CircleDashed, Send, Wrench } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { Activity, AlertCircle, Check, CircleDashed, Send, Wrench, X } from "lucide-react";
 import { CityNexusApiError, cityNexusApi, type NativeRuntimeEvent } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { mergeNativeEvents, statusForNativeEvent, useNativeHermesTimeline, type NativeHermesRun as NativeHermesRunData } from "../../features/agent/nativeHermesTimeline";
@@ -31,6 +31,10 @@ const EVENT_LABELS: Record<string, string> = {
 };
 
 type RequestState = "idle" | "sending" | "ready" | "unauthorized" | "error";
+
+function terminalRun(status: string) {
+  return /^(completed|succeeded|failed|error|stopped|cancelled|canceled)$/i.test(status);
+}
 
 function safeEventLabel(event: NativeRuntimeEvent) {
   if (event.tool_name) {
@@ -68,7 +72,9 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
   const [reply, setReply] = useState<string | null>(null);
   const [replyMode, setReplyMode] = useState<"AI" | "FALLBACK" | null>(null);
   const [run, setRun] = useState<NativeHermesRunData | null>(null);
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const [stopState, setStopState] = useState<"idle" | "sending" | "requested" | "failed">("idle");
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [failure, setFailure] = useState<string | null>(null);
   const [bearerEpoch, setBearerEpoch] = useState(0);
   const timeline = useNativeHermesTimeline({ journeyId, run, enabled: true });
@@ -79,6 +85,24 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
   const orderedEvents = actualEvents.filter((event) =>
     event.event_type.startsWith("tool.") || Object.hasOwn(EVENT_LABELS, event.event_type),
   );
+  const reasoningSummary = run?.mission_id && typeof run.reasoning_summary === "string" && run.reasoning_summary.trim()
+    ? run.reasoning_summary
+    : null;
+  const pendingApproval = [...actualEvents].reverse().find((event) =>
+    event.event_type === "approval.required"
+    && Boolean(event.approval_id)
+    && String(event.approval_status ?? "PENDING").toUpperCase() === "PENDING",
+  );
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (expanded && run && timeline.authState !== "unauthorized") {
+      if (!dialog.open) dialog.showModal();
+    } else if (dialog.open) {
+      dialog.close();
+    }
+  }, [expanded, run?.run_id, timeline.authState]);
 
   useEffect(() => {
     const startingBearer = readTravelerBearer();
@@ -86,6 +110,8 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
       setRun(null);
       setReply(null);
       setReplyMode(null);
+      setExpanded(false);
+      setStopState("idle");
       setRequestState("unauthorized");
       return;
     }
@@ -95,6 +121,8 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
       setRun(null);
       setReply(null);
       setReplyMode(null);
+      setExpanded(false);
+      setStopState("idle");
       setFailure(null);
       setRequestState("unauthorized");
       setBearerEpoch((epoch) => epoch + 1);
@@ -117,6 +145,8 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
     setReply(null);
     setReplyMode(null);
     setRun(null);
+    setExpanded(false);
+    setStopState("idle");
     try {
       const response = await cityNexusApi.sendCopilotMessage(journeyId, message, "zh");
       if (readTravelerBearer() !== startingBearer) return;
@@ -127,6 +157,7 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
         ? response.agent_run
         : null;
       setRun(actualRun);
+      setExpanded(Boolean(actualRun));
       setRequestState("ready");
     } catch (caught) {
       if (readTravelerBearer() !== startingBearer) return;
@@ -137,6 +168,29 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
       } else {
         setRequestState("error");
         setFailure("请求没有完成；没有创建可展示的 Hermes 运行。请检查行程连接后重试。");
+      }
+    }
+  };
+
+  const stopRun = async () => {
+    if (!run || timeline.authState !== "authorized" || terminalRun(timeline.runState) || stopState === "sending" || stopState === "requested") return;
+    const startingBearer = readTravelerBearer();
+    if (!startingBearer) return;
+    setStopState("sending");
+    try {
+      await cityNexusApi.stopNativeHermesRun(journeyId, run.run_id);
+      if (readTravelerBearer() !== startingBearer) return;
+      // The POST only acknowledges a request; the run remains active in this UI
+      // until the authenticated server timeline reports a terminal event.
+      setStopState("requested");
+    } catch (caught) {
+      if (readTravelerBearer() !== startingBearer) return;
+      if (caught instanceof CityNexusApiError && [401, 403, 404].includes(caught.status)) {
+        setStopState("failed");
+        setFailure("当前签名成员没有这条运行的停止权限；运行状态仍以服务器记录为准。");
+      } else {
+        setStopState("failed");
+        setFailure("CityNexus 没有确认停止请求；运行状态仍以服务器记录为准。");
       }
     }
   };
@@ -202,37 +256,86 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
               type="button"
               className="rev-mobile-hermes-toggle"
               aria-expanded={expanded}
-              aria-label={expanded ? "收起运行详情" : "展开运行详情"}
+              aria-label={expanded ? "收起轨迹面板" : "查看工作过程"}
               onClick={() => setExpanded((value) => !value)}
-            ><ChevronDown size={18} aria-hidden="true" /></button>
+            >{expanded ? <X size={18} aria-hidden="true" /> : "查看工作过程"}</button>
           </div>
-          {expanded && timeline.authState !== "unauthorized" && (
-            <>
-              {orderedEvents.length > 0 ? (
-                <ol className="rev-mobile-hermes-events" aria-label="Hermes 工具调用记录" aria-live="polite">
-                  {orderedEvents.slice(-12).map((event, index) => {
-                    const status = statusForNativeEvent(event);
-                    return (
-                      <li key={`${event.sequence ?? ""}|${event.event_id ?? ""}|${event.event_type}|${index}`} className={"is-" + status}>
-                        <span className="rev-mobile-hermes-event-mark" aria-hidden="true">
-                          {status === "done" ? <Check size={14} /> : status === "active" ? <CircleDashed size={14} /> : <AlertCircle size={14} />}
-                        </span>
-                        <span className="rev-mobile-hermes-event-label">{safeEventLabel(event)}</span>
-                        {event.duration_ms != null && Number.isFinite(Number(event.duration_ms)) && <small>{Number(event.duration_ms)} ms</small>}
-                        {eventTime(event.timestamp) && <time dateTime={typeof event.timestamp === "string" ? event.timestamp : undefined}>{eventTime(event.timestamp)}</time>}
-                      </li>
-                    );
-                  })}
-                </ol>
-              ) : (
-                <p className="rev-mobile-hermes-empty"><CircleDashed size={15} aria-hidden="true" />{timeline.connection === "unavailable" ? "当前拿不到服务器运行事件；不会补造进度。" : "服务端尚未返回工具事件，等待真实运行记录。"}</p>
+          <dialog
+            ref={dialogRef}
+            className="rev-mobile-hermes-sheet"
+            aria-labelledby="rev-mobile-hermes-sheet-title"
+            onCancel={(event) => { event.preventDefault(); setExpanded(false); }}
+            onClose={() => setExpanded(false)}
+            data-testid="rev-mobile-hermes-sheet"
+          >
+            <header className="rev-mobile-hermes-sheet-head">
+              <div>
+                <span className="rev-mobile-hermes-eyebrow">真实服务器运行记录</span>
+                <h3 id="rev-mobile-hermes-sheet-title">Hermes 工作过程</h3>
+              </div>
+              <button type="button" className="rev-mobile-hermes-close" aria-label="关闭工作过程" onClick={() => setExpanded(false)}>
+                <X size={19} aria-hidden="true" />
+              </button>
+            </header>
+            <div className="rev-mobile-hermes-sheet-body">
+              {timeline.authState !== "unauthorized" && (
+                <p className="rev-mobile-hermes-sheet-status" role="status">
+                  {stateText(timeline.runState, timeline.connection, actualEvents)}
+                </p>
               )}
-              {timeline.connection === "unavailable" && orderedEvents.length > 0 && (
-                <p className="rev-mobile-hermes-message">实时连接中断；已收到的记录仅保留在本页内存中。</p>
+              {timeline.authState !== "unauthorized" && (
+                <>
+                  <section className="rev-mobile-hermes-reason" aria-label="工作思路与判断依据">
+                    <b>工作思路 / 判断依据</b>
+                    <p>{reasoningSummary ?? "暂无可公开判断说明"}</p>
+                    <small>只显示与本次签名运行绑定的服务器安全摘要，不包含模型私有思维链。</small>
+                  </section>
+                  {pendingApproval && (
+                    <p className="rev-mobile-hermes-approval" role="status">
+                      此运行有一项待确认操作。请在下方行程恢复中心查看并授权；此轨迹面板不会替你审批。
+                    </p>
+                  )}
+                  {stopState !== "idle" && (
+                    <p className="rev-mobile-hermes-action" role="status">
+                      {stopState === "sending" ? "正在向 CityNexus 发送停止请求…"
+                        : stopState === "requested" ? "停止请求已送达；等待服务器事件确认最终状态。"
+                          : "停止请求未确认；当前状态仍以服务器记录为准。"}
+                    </p>
+                  )}
+                  {orderedEvents.length > 0 ? (
+                    <ol className="rev-mobile-hermes-events" aria-label="Hermes 工具调用记录" aria-live="polite">
+                      {orderedEvents.slice(-12).map((event, index) => {
+                        const status = statusForNativeEvent(event);
+                        return (
+                          <li key={`${event.sequence ?? ""}|${event.event_id ?? ""}|${event.event_type}|${index}`} className={"is-" + status}>
+                            <span className="rev-mobile-hermes-event-mark" aria-hidden="true">
+                              {status === "done" ? <Check size={14} /> : status === "active" ? <CircleDashed size={14} /> : <AlertCircle size={14} />}
+                            </span>
+                            <span className="rev-mobile-hermes-event-label">{safeEventLabel(event)}</span>
+                            {event.duration_ms != null && Number.isFinite(Number(event.duration_ms)) && <small>{Number(event.duration_ms)} ms</small>}
+                            {eventTime(event.timestamp) && <time dateTime={typeof event.timestamp === "string" ? event.timestamp : undefined}>{eventTime(event.timestamp)}</time>}
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  ) : (
+                    <p className="rev-mobile-hermes-empty"><CircleDashed size={15} aria-hidden="true" />{timeline.connection === "unavailable" ? "当前拿不到服务器运行事件；不会补造进度。" : "服务端尚未返回工具事件，等待真实运行记录。"}</p>
+                  )}
+                  {timeline.connection === "unavailable" && orderedEvents.length > 0 && (
+                    <p className="rev-mobile-hermes-message">实时连接中断；已收到的记录仅保留在本页内存中。</p>
+                  )}
+                  {timeline.connection === "retrying" && <p className="rev-mobile-hermes-message">连接中断，正在重新连接并与服务器历史记录合并。</p>}
+                  {timeline.authState === "authorized" && timeline.runState.toLowerCase() !== "unknown" && !terminalRun(timeline.runState) && (
+                    <button type="button" className="rev-mobile-hermes-stop" disabled={stopState === "sending" || stopState === "requested"} onClick={() => void stopRun()}>
+                      {stopState === "sending" ? "正在停止…" : stopState === "requested" ? "已请求停止" : "停止本次运行"}
+                    </button>
+                  )}
+                  <p className="rev-mobile-hermes-footnote">显示服务器返回的 Hermes 事件和安全名称；不显示工具参数或原始返回。运行仅可提出建议，不会自动预订、付款或修改行程。</p>
+                </>
               )}
-            </>
-          )}
-          <p className="rev-mobile-hermes-footnote">显示服务器返回的 Hermes 事件和安全名称；不显示模型思维链、工具参数或原始返回。运行仅可提出建议，不会自动预订、付款或修改行程。</p>
+              {timeline.authState === "unauthorized" && <p className="rev-mobile-hermes-message error">签名成员权限已变化，私人运行详情已清除。</p>}
+            </div>
+          </dialog>
         </div>
       )}
       {requestState === "unauthorized" && <p className="rev-mobile-hermes-message error"><AlertCircle size={15} aria-hidden="true" />此功能只对当前签名行程成员开放。</p>}

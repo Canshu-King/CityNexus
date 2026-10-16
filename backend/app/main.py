@@ -26608,6 +26608,7 @@ async def copilot_message(
                     "provider_key": "hermes-native",
                     "model_key": settings.hermes_native_model or f"profile:{settings.hermes_native_profile}",
                     "mission_id": native_mission.id,
+                    "reasoning_summary": native_mission.reasoning_summary,
                     "events_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/events",
                     "timeline_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/timeline",
                     "mission_plan": native_plan,

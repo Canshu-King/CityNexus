@@ -2293,6 +2293,7 @@ export interface CopilotResponse {
     events_url?: string;
     timeline_url?: string;
     mission_id?: string;
+    reasoning_summary?: string | null;
     model_key?: string;
     mission_plan?: AgentMissionPlan;
     initial_events?: NativeRuntimeEvent[];

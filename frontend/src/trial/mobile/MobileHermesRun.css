@@ -162,20 +162,168 @@
 }
 
 .rev-mobile-hermes-toggle {
-  display: grid;
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
-  place-items: center;
-  border: 1px solid #d9e5da;
+  display: inline-flex;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid #cfe0d1;
   border-radius: 13px;
-  color: #315943;
-  background: #f8fbf8;
+  color: #24573a;
+  background: #f1f8f2;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
   touch-action: manipulation;
 }
 
-.rev-mobile-hermes-toggle[aria-expanded="false"] svg {
-  transform: rotate(-90deg);
+.rev-mobile-hermes-sheet {
+  position: fixed;
+  inset: auto 0 0;
+  display: block;
+  box-sizing: border-box;
+  width: min(100vw, 680px);
+  max-width: none;
+  max-height: min(84dvh, 760px);
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 24px 24px 0 0;
+  color: #203d2b;
+  background: #f7fbf7;
+  box-shadow: 0 -16px 46px rgba(15, 43, 25, .2);
+}
+
+.rev-mobile-hermes-sheet:not([open]) {
+  display: none;
+}
+
+.rev-mobile-hermes-sheet::backdrop {
+  background: rgba(15, 30, 20, .42);
+  backdrop-filter: blur(2px);
+}
+
+.rev-mobile-hermes-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid #e3ece4;
+  background: #fbfdfb;
+}
+
+.rev-mobile-hermes-sheet-head h3 {
+  margin: 3px 0 0;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.rev-mobile-hermes-close {
+  display: grid;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid #d9e5da;
+  border-radius: 14px;
+  color: #315943;
+  background: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.rev-mobile-hermes-sheet-body {
+  max-height: calc(min(84dvh, 760px) - 76px);
+  padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rev-mobile-hermes-reason {
+  margin-bottom: 12px;
+  padding: 13px 14px;
+  border: 1px solid #e0ebe1;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.rev-mobile-hermes-sheet-status {
+  margin: 0 0 12px;
+  color: #254b33;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.rev-mobile-hermes-reason b {
+  color: #365a41;
+  font-size: 13px;
+}
+
+.rev-mobile-hermes-reason p {
+  margin: 7px 0 0;
+  color: #294834;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rev-mobile-hermes-reason small {
+  display: block;
+  margin-top: 8px;
+  color: #738579;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.rev-mobile-hermes-approval,
+.rev-mobile-hermes-action {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: 14px;
+  color: #745414;
+  background: #fff7e5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.rev-mobile-hermes-action {
+  color: #315943;
+  background: #edf6ee;
+}
+
+.rev-mobile-hermes-stop {
+  display: flex;
+  min-height: 48px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0;
+  border: 1px solid #d8baba;
+  border-radius: 14px;
+  color: #8a3737;
+  background: #fffafa;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.rev-mobile-hermes-stop:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.rev-mobile-hermes-sheet :focus-visible {
+  outline: 3px solid #71b681;
+  outline-offset: 2px;
 }
 
 .rev-mobile-hermes-events {
@@ -236,7 +384,7 @@
 
 .rev-mobile-hermes-footnote {
   margin: 0;
-  padding: 0 13px 12px;
+  padding: 10px 13px 4px;
   color: #77877a;
   font-size: 10px;
   line-height: 1.5;
@@ -246,4 +394,6 @@
   .rev-mobile-hermes { padding: 15px; }
   .rev-mobile-hermes-mode { font-size: 10px; padding: 5px 7px; }
   .rev-mobile-hermes-events li { grid-template-columns: 22px minmax(0, 1fr) auto; gap: 6px; }
+  .rev-mobile-hermes-sheet { max-height: 88dvh; }
+  .rev-mobile-hermes-sheet-body { max-height: calc(88dvh - 76px); padding-inline: 13px; }
 }

@@ -443,6 +443,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
           runtime_identity: "HERMES_NATIVE_MCP",
           provider_key: "TEST_FIXTURE",
           mission_id: "test-mission",
+          reasoning_summary: "TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。",
           events_url: `${prefix}/agent/hermes/runs/${runId}/events`,
           timeline_url: `${prefix}/agent/hermes/runs/${runId}/timeline`,
           initial_events: [],
@@ -483,13 +484,19 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await page.getByTestId("rev-mobile-hermes-submit").click();
     const run = page.getByTestId("rev-mobile-hermes-run");
     await expect(run).toBeVisible();
-    await expect(run.getByText("已完成", { exact: true })).toBeVisible();
-    await expect(run.getByText("正在检查当前行程")).toBeVisible();
-    await expect(run.getByText("检查当前行程：已完成")).toBeVisible();
-    await expect(run.getByText("850 ms")).toBeVisible();
-    await expect(run.getByText(/不显示模型思维链/)).toBeVisible();
+    const sheet = page.getByTestId("rev-mobile-hermes-sheet");
+    await expect(sheet).toBeVisible();
+    await expect(sheet.getByText("已完成", { exact: true })).toBeVisible();
+    await expect(sheet.getByText("TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。")).toBeVisible();
+    await expect(sheet.getByText("正在检查当前行程")).toBeVisible();
+    await expect(sheet.getByText("检查当前行程：已完成")).toBeVisible();
+    await expect(sheet.getByText("850 ms")).toBeVisible();
+    await expect(sheet.getByText(/不显示工具参数或原始返回/)).toBeVisible();
     await expect(run.getByText("inspect_journey")).toHaveCount(0);
-    await run.scrollIntoViewIfNeeded();
+    await page.getByRole("button", { name: "关闭工作过程" }).click();
+    await expect(sheet).not.toBeVisible();
+    await page.getByRole("button", { name: "查看工作过程" }).click();
+    await expect(sheet).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-TEST-FIXTURE-390x844.png"), fullPage: false });
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
