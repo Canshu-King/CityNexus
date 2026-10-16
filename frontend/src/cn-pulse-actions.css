@@ -41,7 +41,7 @@
  * borderless — in all four arms of the audit. Painting them was tried in the
  * pass before this one: white cards on the warm paper measured fillC 1.09 in
  * light and 1.23 in dark, the reported number moved, and the two-arm table
- * read it as four new reds. `cn-pulse.css:317` records that result.
+ * read it as four new reds. `cn-pulse.css:321` records that result.
  *
  * The move here is not a dodge: a filled strip was built and measured first,
  * then withdrawn for two reasons that are readings and not taste.
@@ -50,7 +50,7 @@
  *     still spending headroom on the labels: 5.49 -> 5.07 light, 5.76 -> 5.39
  *     dark, against a 4.5 floor;
  *   · shape — with the lead on its own line the box left ~200px of empty strip
- *     to its right at 390, and `cn-pulse.css:604` already removed a
+ *     to its right at 390, and `cn-pulse.css:607` already removed a
  *     card-inside-the-paper from this same header for that reason.
  * The grouping therefore moves to a rule and to the grid, and the four labels
  * keep the exact backing the ruler read in the control arm. Making those two
@@ -92,7 +92,7 @@
    shrink-to-fit flex item -- so the tracks collapsed on themselves and every
    label broke character by character: measured 38.33px wide and four line boxes
    for 「打开行程工作台」 at 681. The floor also stops the opposite failure that
-   `cn-pulse.css:541` records, where `max-content` columns were pushed past a
+   `cn-pulse.css:544` records, where `max-content` columns were pushed past a
    390px viewport: here the floor is one label wide, not the whole row, and
    `scrollWidth == innerWidth` is re-measured at twelve widths in both languages
    (see the WP-I note below section 1). */
@@ -153,7 +153,7 @@
 /* WP-I: there is deliberately no wide-screen rule here any more. The first cut
    of this file switched the row to `repeat(4, minmax(0, max-content))` above
    680px, and that is the defect the ledger names (CMDR-ORDER-0709). The
-   `max-width: none` written beside it never applied -- `cn-pulse.css:584` binds
+   `max-width: none` written beside it never applied -- `cn-pulse.css:587` binds
    this same row as `.v8-page-intro .v8-hub-actions` (0,2,0) and outranks this
    (0,1,0) -- so the row stayed clamped to 46ch = 396.75px while four
    `minmax(0, max-content)` tracks can shrink toward nothing. Measured on the
