@@ -73,6 +73,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
     await expect(page.getByTestId("rev-firstlook-city")).toHaveValue("连城");
     await expect(page.getByTestId("rev-firstlook-start")).toBeVisible();
+    const destinationBounds = await page.getByTestId("rev-firstlook-city").boundingBox();
+    expect(destinationBounds?.height ?? 999).toBeLessThanOrEqual(64);
     await page.screenshot({ path: testInfo.outputPath("mobile-welcome-TEST-FIXTURE.png"), fullPage: true });
     await expect(page.getByTestId("rev-mobile-bottom-nav")).toHaveCount(0);
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
@@ -92,6 +94,9 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(bar).toBeVisible();
     await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+    await expect(page.getByTestId("rev-quick-find-city")).toBeVisible();
+    const searchBounds = await page.getByTestId("rev-quick-find-city").boundingBox();
+    expect((searchBounds?.y ?? 9999) + (searchBounds?.height ?? 0)).toBeLessThan(820);
     await page.screenshot({ path: testInfo.outputPath("mobile-explore-TEST-FIXTURE.png"), fullPage: true });
 
     for (const tab of ["trips", "me", "explore"] as const) {
@@ -179,6 +184,164 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(signedOperatorReads).toBeGreaterThan(0);
     expect(unrequestedModelWrites).toBe(0);
     await page.screenshot({ path: testInfo.outputPath("mobile-active-operator-TEST-FIXTURE.png"), fullPage: true });
+  });
+
+  test("public place cards show provenance, uncertainty and a source link using TEST_PROVIDER data", async ({ page }, testInfo) => {
+    await signedMockJourney(page);
+    await page.route(`**/api/v1/journeys/${journeyId}/bootstrap-city-search`, (route) => fulfill(route, {
+      journey_id: journeyId,
+      status: "CITY_RESULTS",
+      query: "连城",
+      provider_provenance: "TEST_PROVIDER",
+      provider_attempts: [],
+      results: [{
+        result_id: "fixture-area-1",
+        name: "连城县",
+        display_name: "连城县, 龙岩市",
+        provider: "test",
+        provider_provenance: "TEST_PROVIDER",
+        osm_type: "node",
+        osm_id: "10001",
+        source_url: "https://www.openstreetmap.org/node/10001",
+        latitude: 25.71,
+        longitude: 116.75,
+        coordinate_system: "WGS84",
+        confidence: "CITY_CENTROID_UNCERTAIN",
+        selection_state: "CAMERA_ONLY_TAP_REQUIRED",
+        uncertainty: "TEST ONLY",
+      }],
+    }));
+    await page.route(`**/api/v1/journeys/${journeyId}/bootstrap-discovery/readiness`, (route) => fulfill(route, {
+      journey_id: journeyId,
+      provider: "overpass",
+      provider_name: "Controlled fixture provider",
+      expected_recipient: "TEST_PROVIDER",
+      status: "READY",
+      reason_code: "READY",
+      provider_grade: "TEST_PROVIDER",
+      capability_state: "TEST_CAPABLE",
+      external_request_allowed: false,
+      test_only: true,
+    }));
+    await page.route(`**/api/v1/journeys/${journeyId}/bootstrap-discovery`, (route) => fulfill(route, {
+      journey_id: journeyId,
+      status: "LIVE_RESULTS",
+      result_state: "FOUND_2+",
+      receipt_id: "test-only-receipt",
+      expires_at: "2099-01-01T00:00:00+00:00",
+      source_kind: "MANUAL_PUBLIC_CENTER",
+      provider: "overpass",
+      provider_provenance: "TEST_PROVIDER",
+      attempts: [],
+      candidates: [{
+        candidate_id: "test-place-1",
+        name: "TEST ONLY · 连城步道",
+        category: "park/garden",
+        external_id: "overpass:node/10001",
+        osm_type: "node",
+        osm_id: "10001",
+        source_url: "https://www.openstreetmap.org/node/10001",
+        latitude: 25.71,
+        longitude: 116.75,
+        coordinate_system: "WGS84",
+        distance_m: 420,
+        opening_state: "UNKNOWN",
+        selection_state: "OPENING_UNVERIFIED",
+        selection_action: null,
+        availability_confidence: "UNVERIFIED",
+        price_state: "UNKNOWN",
+        eta_state: "UNKNOWN",
+        tags: [],
+        opening_hours: {},
+        opening_observed_at: "2026-10-16T00:00:00+00:00",
+        opening_source: "TEST_PROVIDER",
+        opening_claim: "NO_OPENING_TAG",
+        opening_verification_state: "EXTERNAL_NOT_ATTESTED",
+        opening_verification_action: "OPEN_SOURCE_PAGE",
+        source_tags: {},
+        public_access_state: "PUBLIC_ACCESS_UNVERIFIED",
+        provider_provenance: "TEST_PROVIDER",
+      }],
+    }));
+
+    await page.goto("/revolution");
+    await page.getByTestId("rev-quick-find-city").click();
+    await page.getByText("连城县, 龙岩市").click();
+    await page.getByTestId("rev-quick-use-approx-center").click();
+    await page.getByTestId("rev-quick-find-places").click();
+    const card = page.getByTestId("rev-quick-place-card");
+    await expect(card).toContainText("TEST ONLY · 连城步道");
+    await expect(card).toContainText("测试地点");
+    await expect(card).toContainText("营业与费用需自行核实");
+    await expect(card.getByRole("link", { name: "查看 OpenStreetMap 来源" })).toHaveAttribute(
+      "href",
+      "https://www.openstreetmap.org/node/10001",
+    );
+    const chooseBounds = await card.getByRole("button", { name: /选择地点/ }).boundingBox();
+    expect(chooseBounds?.height ?? 0).toBeGreaterThanOrEqual(44);
+    await card.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: testInfo.outputPath("mobile-place-card-TEST-PROVIDER-390x844.png"),
+      fullPage: false,
+    });
+  });
+
+  test("map tiles are opt-in, touch places a pin, and the approximate-area action remains available", async ({ page }) => {
+    await signedMockJourney(page);
+    let discoveryCalls = 0;
+    await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
+    await page.route(`**/api/v1/journeys/${journeyId}/bootstrap-city-search`, (route) => fulfill(route, {
+      journey_id: journeyId,
+      status: "CITY_RESULTS",
+      query: "连城",
+      provider_provenance: "TEST_PROVIDER",
+      provider_attempts: [],
+      results: [{
+        result_id: "fixture-area-1",
+        name: "连城县",
+        display_name: "连城县, 龙岩市",
+        provider: "test",
+        provider_provenance: "TEST_PROVIDER",
+        osm_type: "node",
+        osm_id: "10001",
+        source_url: "https://www.openstreetmap.org/node/10001",
+        latitude: 25.71,
+        longitude: 116.75,
+        coordinate_system: "WGS84",
+        confidence: "CITY_CENTROID_UNCERTAIN",
+        selection_state: "CAMERA_ONLY_TAP_REQUIRED",
+        uncertainty: "TEST ONLY",
+      }],
+    }));
+    await page.route(`**/api/v1/journeys/${journeyId}/bootstrap-discovery`, async (route) => {
+      discoveryCalls += 1;
+      await fulfill(route, { status: "PROVIDER_DISABLED", candidates: [] });
+    });
+
+    await page.goto("/revolution");
+    await page.getByTestId("rev-quick-find-city").click();
+    await page.getByText("连城县, 龙岩市").click();
+    await expect(page.getByTestId("rev-quick-use-approx-center")).toBeVisible();
+    await page.getByText("想换具体位置？可以打开地图（可选）").click();
+    await expect(page.getByTestId("rev-quick-load-map")).toBeVisible();
+    await page.getByTestId("rev-quick-load-map").click();
+    await expect(page.getByTestId("bootstrap-public-map-canvas")).toBeVisible();
+    await expect(page.getByTestId("rev-quick-use-approx-center")).toBeVisible();
+    await page.waitForFunction(() => {
+      const host = document.querySelector<HTMLDivElement>("[data-testid='bootstrap-public-map-canvas']");
+      const map = (host as (HTMLDivElement & { citynexusMap?: { isStyleLoaded?: () => boolean } }) | null)?.citynexusMap;
+      return typeof map?.isStyleLoaded === "function" && map.isStyleLoaded();
+    });
+    const mapCanvas = page.getByTestId("bootstrap-public-map-canvas");
+    await mapCanvas.scrollIntoViewIfNeeded();
+    const mapBounds = await mapCanvas.boundingBox();
+    expect(mapBounds).not.toBeNull();
+    await page.touchscreen.tap(
+      (mapBounds?.x ?? 0) + (mapBounds?.width ?? 0) / 2,
+      (mapBounds?.y ?? 0) + (mapBounds?.height ?? 0) / 2,
+    );
+    await expect(page.getByTestId("rev-quick-category")).toBeVisible();
+    expect(discoveryCalls).toBe(0);
   });
 
   test("trip tab reflects only a saved TEST fixture, never a fabricated itinerary", async ({ page }) => {

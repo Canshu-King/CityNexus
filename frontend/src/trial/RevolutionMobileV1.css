@@ -409,12 +409,39 @@
   .rev-mobile-v1 .rev-firstlook-hero { padding-top: 28px; }
   .rev-mobile-v1 .rev-firstlook-hero h1 { font-size: 36px !important; }
   .rev-mobile-v1 .rev-firstlook-form-row { flex-direction: column; }
+  .rev-mobile-v1 .rev-firstlook-form-row input {
+    flex: 0 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 52px;
+  }
   .rev-mobile-v1 .rev-firstlook-form-row button { width: 100% !important; }
   .rev-mobile-v1 .rev-firstlook-journey {
     gap: 12px !important;
   }
   .rev-mobile-v1 .rev-firstlook-journey > .rev-firstlook-reset { min-height: 38px; }
   .rev-mobile-v1 .rev-mobile-panel { padding: 20px; }
+  .rev-mobile-v1 .rev-quick-map-step .rev-quick-optional-map > summary {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #edf6ef;
+  }
+  .rev-mobile-v1 .rev-quick-map-step .public-city-area-picker {
+    min-height: clamp(280px, 44svh, 380px);
+    border-radius: 16px;
+    touch-action: pan-x pan-y;
+  }
+  .rev-mobile-v1 .public-city-area-picker .maplibregl-ctrl-group button {
+    width: 44px;
+    height: 44px;
+  }
+  .rev-mobile-v1 .rev-quick-map-step [data-testid="rev-quick-load-map"] {
+    min-height: 48px;
+    width: 100%;
+  }
   .rev-mobile-v1 .rev-mobile-bottom-nav {
     width: 100%;
     border-radius: 16px 16px 0 0;

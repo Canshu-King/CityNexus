@@ -15,6 +15,8 @@ import { readTravelerBearer, subscribeTravelerBearer } from "../lib/travelerSess
 import { isOriginResponseUnusable } from "../lib/failureAttribution";
 import { isReadDeadlineMissed } from "../lib/readDeadline";
 import { isWriteDeadlineMissed } from "../lib/writeDeadline";
+import { DiscoveryPlaceCard } from "./mobile/DiscoveryPlaceCard";
+import { MobileAiPrompt, type MobileAiAdvice } from "./mobile/MobileAiPrompt";
 
 /**
  * A HUMAN-SIZED entry to the exact signed R107/R108 endpoints.
@@ -64,22 +66,6 @@ type ErrorDiagnostics = {
   status: number | null;
   reasonCode: string | null;
 };
-
-function candidateSource(value: string | null): string | null {
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    if (
-      url.protocol !== "https:" ||
-      !["www.openstreetmap.org", "openstreetmap.org"].includes(url.hostname) ||
-      url.username || url.password ||
-      !/^\/(node|way|relation)\/[1-9][0-9]*$/.test(url.pathname)
-    ) return null;
-    return url.toString();
-  } catch {
-    return null;
-  }
-}
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -233,7 +219,7 @@ export function RevolutionQuickExplore({
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
   const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
-  const [aiAdvice, setAiAdvice] = useState<{ category: string | null; reason: string; verifiedTool: boolean; model: string | null } | null>(null);
+  const [aiAdvice, setAiAdvice] = useState<MobileAiAdvice | null>(null);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
@@ -672,7 +658,7 @@ export function RevolutionQuickExplore({
         <div className="rev-quick-kicker">CITYNEXUS / EXPLORE</div>
         <h2>{stage === "walk" ? "你的私人散步路线" : "想去哪儿逛逛？"}</h2>
         <p>
-          {stage === "area" && "你可以先告诉 AI 想怎么玩，再找地方。地图打不开也能继续。"}
+          {stage === "area" && "先选地区，再挑兴趣和地点。AI 只在你点击后参与；地图打不开也能继续。"}
           {stage === "category" && "位置已选好。挑一种兴趣，我们会查找附近的公开地点。"}
           {stage === "results" && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你控制进度，我们不冒充 GPS 到场。"}
@@ -712,41 +698,8 @@ export function RevolutionQuickExplore({
 
       {stage === "area" && (
         <div className="rev-quick-pane" data-testid="rev-quick-area">
-          <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
-            <div className="rev-quick-ai-title">
-              <strong>先跟 AI 说一句</strong>
-              <small>{agentConfigured ? "Hermes 模型已配置，可请求真实建议" : "模型尚未接通，不影响手动探索"}</small>
-            </div>
-            <label htmlFor="rev-quick-ai-prompt">你想怎么玩？</label>
-            <textarea
-              id="rev-quick-ai-prompt"
-              value={aiGoal}
-              maxLength={360}
-              rows={3}
-              onChange={(event) => setAiGoal(event.target.value)}
-              placeholder="例如：我在连城，今晚三个小时，想吃点当地特色，再轻松散散步。"
-              disabled={busy}
-            />
-            <div className="rev-quick-ai-actions">
-              <button
-                type="button"
-                onClick={consultHermes}
-                disabled={busy || !agentConfigured}
-                data-testid="rev-quick-consult-ai"
-              >{busy ? "正在请教 AI…" : "让 AI 帮我想想 →"}</button>
-              <span>点击后才会把上面这句话发给本机 wb2api 连接的外部模型，可能消耗积分；不会自动搜索地图或预订。</span>
-            </div>
-            {aiAdvice && (
-              <div className="rev-quick-ai-response" role="status" data-testid="rev-quick-ai-response">
-                <strong>{aiAdvice.verifiedTool ? "AI 给你的探索建议" : "模型这次未完成工具建议"}</strong>
-                <p>{aiAdvice.reason}</p>
-                {aiAdvice.category && <span>建议兴趣：{aiAdvice.category}（可以修改）</span>}
-                <small>{aiAdvice.verifiedTool
-                  ? "来自真实模型的只读工具建议，不是已规划路线，也没有发生 AgentRun。"
-                  : "没有得到可校验的工具调用，不能当作 AI 规划已完成。"}{aiAdvice.model ? ` · ${aiAdvice.model}` : ""}</small>
-              </div>
-            )}
-          </section>
+          <h3 className="rev-quick-area-title">先选一个地区</h3>
+          <p className="rev-quick-area-intro">搜索公开地点中心，再选择附近范围；不读取手机 GPS。</p>
           <label htmlFor="rev-quick-search">城市或地区</label>
           <div className="rev-quick-inline">
             <input
@@ -782,10 +735,10 @@ export function RevolutionQuickExplore({
                     setCityFocusLabel(item.display_name || item.name);
                     setSelectedPin(null);
                     setTilesEnabled(false);
-                    useCenter({
-                      latitude: item.latitude,
-                      longitude: item.longitude,
-                    }, "EXPLICIT_GEOCODER_APPROX");
+                    setAlert({
+                      type: "good",
+                      text: "已选中公开地区的大致中心。你可以直接从附近查找，也可以先打开地图微调。",
+                    });
                   }}
                 >
                   <strong>{item.display_name || item.name}</strong>
@@ -833,6 +786,7 @@ export function RevolutionQuickExplore({
                   <PublicCityAreaPicker
                     selectedCenter={selectedPin}
                     focusCenter={cityFocus}
+                    mobileFirst
                     onSelect={(point) => {
                       // A deliberate public map tap is already the user's manual
                       // center selection. Don't demand a second "confirm" click.
@@ -858,6 +812,14 @@ export function RevolutionQuickExplore({
             />
             <button type="button" onClick={applyLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
           </details>
+          <MobileAiPrompt
+            value={aiGoal}
+            busy={busy}
+            configured={agentConfigured}
+            advice={aiAdvice}
+            onChange={setAiGoal}
+            onSubmit={() => { void consultHermes(); }}
+          />
         </div>
       )}
 
@@ -940,33 +902,16 @@ export function RevolutionQuickExplore({
               <div className="rev-quick-place-list">
                 {discovery.candidates.map((candidate: BootstrapDiscoveryCandidate) => {
                   const chosenAs = first === candidate.candidate_id ? "第一站" : second === candidate.candidate_id ? "第二站" : null;
-                  const source = candidateSource(candidate.source_url);
                   return (
-                    <article className={chosenAs ? "is-picked" : ""} key={candidate.candidate_id}>
-                      <button
-                        type="button"
-                        onClick={() => choose(candidate.candidate_id)}
-                        data-testid={`rev-quick-select-${candidate.candidate_id}`}
-                      >
-                        <span className="rev-quick-pick">{chosenAs ?? "＋ 选择"}</span>
-                        <strong>{candidate.name}</strong>
-                        <small>{candidate.category} · {candidate.provider_provenance === "TEST_PROVIDER" ? "测试数据" : "OpenStreetMap 公开地点"}</small>
-                      </button>
-                      {source && (
-                        <a href={source} rel="noopener noreferrer" target="_blank">
-                          查看 OSM 原始来源（会打开外部网站） ↗
-                        </a>
-                      )}
-                      {onFormalCandidateSelected && candidate.selection_state === "READY_FOR_NATIVE_PLAN" && (
-                        <button
-                          type="button"
-                          className="rev-quick-formal"
-                          disabled={busy}
-                          onClick={() => chooseFormalJourney(candidate.candidate_id)}
-                          data-testid={`rev-quick-formal-${candidate.candidate_id}`}
-                        >想让 AI 继续照看正式行程？从这里开始（需要你确认计划）</button>
-                      )}
-                    </article>
+                    <DiscoveryPlaceCard
+                      key={candidate.candidate_id}
+                      candidate={candidate}
+                      chosenAs={chosenAs}
+                      busy={busy}
+                      canStartJourney={Boolean(onFormalCandidateSelected)}
+                      onChoose={choose}
+                      onStartJourney={chooseFormalJourney}
+                    />
                   );
                 })}
               </div>

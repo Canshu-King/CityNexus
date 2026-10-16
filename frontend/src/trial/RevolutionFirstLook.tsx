@@ -42,9 +42,13 @@ function loadRecentJourney(): TrialJourney | null {
 }
 
 async function postJson<T>(path: string, payload: object): Promise<T> {
+  const bearer = readTravelerBearer();
   const response = await fetch("/api/v1" + path, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}),
+    },
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
