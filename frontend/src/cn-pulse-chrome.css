@@ -45,3 +45,11 @@
 .v8-runtime {
   min-width: max-content;
 }
+
+/* 顶栏主题键实测把「亮色」拆成了两行：Range.getClientRects() 回两枚各 16 像素宽的盒
+   （语言键「EN」只有一枚 20 像素，所以不是整簇控件的问题，是这一枚自己的 min-content
+   被 44 像素的触控地板顶不住）。`min-width: max-content` 只让它长到一行放得下，
+   不参与上一版那种「整份语言清单撑到 307 像素」的灾难——那枚是列表，这枚是两字。 */
+[data-testid="topbar-theme"] {
+  min-width: max-content;
+}

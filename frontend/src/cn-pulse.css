@@ -636,8 +636,13 @@ code {
    两臂对表新开红为 0 才算（账本 WP-G）。 */
 
 /* 说明文字的右边缘被切，是它自己超出内容框：长串「10月16日 09:00 — … Asia/Shanghai」
-   是一个不换行的整体。给它 any-where 断行与 100% 上限。 */
+   是一个不换行的整体。给它断行权与 100% 上限。
+   第五拍自纠：原来写的是 `overflow-wrap: anywhere`，它确实救下了 Asia/Shanghai，
+   但代价是连中文也一起拆——实测导语在「· 行 / 程时区」处断开（词内断行，读起来像漏字）。
+   `anywhere` 还会参与 min-content 计算，把弹性列压得更窄。
+   换成：`break-word` 只给真正超长的整词留逃生口，`keep-all` 让中日韩不在词内断。 */
 .v8-page .v8-lede {
   max-width: min(46ch, 100%);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
