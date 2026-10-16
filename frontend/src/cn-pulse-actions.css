@@ -41,7 +41,7 @@
  * borderless — in all four arms of the audit. Painting them was tried in the
  * pass before this one: white cards on the warm paper measured fillC 1.09 in
  * light and 1.23 in dark, the reported number moved, and the two-arm table
- * read it as four new reds. `cn-pulse.css:317` records that result.
+ * read it as four new reds. `cn-pulse.css:321` records that result.
  *
  * The move here is not a dodge: a filled strip was built and measured first,
  * then withdrawn for two reasons that are readings and not taste.
@@ -50,7 +50,7 @@
  *     still spending headroom on the labels: 5.49 -> 5.07 light, 5.76 -> 5.39
  *     dark, against a 4.5 floor;
  *   · shape — with the lead on its own line the box left ~200px of empty strip
- *     to its right at 390, and `cn-pulse.css:604` already removed a
+ *     to its right at 390, and `cn-pulse.css:607` already removed a
  *     card-inside-the-paper from this same header for that reason.
  * The grouping therefore moves to a rule and to the grid, and the four labels
  * keep the exact backing the ruler read in the control arm. Making those two
@@ -60,7 +60,9 @@
  * Measured on the arm this file produces (`_paigong_data/armA/probe.json`):
  * the four labels stay 5.49:1 light / 5.76:1 dark on the paper (floor 4.5); the
  * accent bar is the same `--cn-accent-text` ink on that same paper; the row
- * reads [1, 3] at 320/360/390/430 and [4] at 1440 with no lone last line; and
+ * reads [1, 3] from 361px up (two lines at 360px and below) with no lone last
+ * line, and every label sits on ONE line box at 320/360/390/430/681/1024/1280/
+ * 1440 in both languages; and
  * `documentElement.scrollWidth == innerWidth` at all five widths.
  *
  * What this file deliberately does NOT do
@@ -84,14 +86,20 @@
  */
 
 /* ═══ 1 · The row: one rule, one lead, three peers ══════════════════════
-   Narrow first. `minmax(0, 1fr)` tracks cannot be pushed past the viewport the
-   way `max-content` could (that attempt is recorded at `cn-pulse.css:541`), so
-   the row cannot cause horizontal overflow, and a long English label wraps
-   inside its own track instead of widening the page. */
+   `minmax(max-content, 1fr)`, and the max-content floor is load-bearing twice
+   over. Without it (plain `1fr`, or `minmax(0, 1fr)`) the tracks have an
+   automatic minimum of zero, and between 681 and 899 this row sits inside a
+   shrink-to-fit flex item -- so the tracks collapsed on themselves and every
+   label broke character by character: measured 38.33px wide and four line boxes
+   for 「打开行程工作台」 at 681. The floor also stops the opposite failure that
+   `cn-pulse.css:544` records, where `max-content` columns were pushed past a
+   390px viewport: here the floor is one label wide, not the whole row, and
+   `scrollWidth == innerWidth` is re-measured at twelve widths in both languages
+   (see the WP-I note below section 1). */
 
 .v8-hub-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(max-content, 1fr));
   gap: var(--cn-s-4, 4px) var(--cn-s-10, 10px);
   align-items: center;
   margin-top: var(--cn-s-12, 12px);
@@ -142,18 +150,26 @@
   color: var(--cn-on-elev-0-muted);
 }
 
-/* Above phone width the family goes back to one line: four tracks sized to
-   their own labels, so nothing can wrap and nothing can orphan. The first cut
-   of this file used a wrapping flex row here and the rendered probe measured
-   the last item alone again at 1440 (`per=[3,1]`), because the strip is capped
-   at 46ch by `cn-pulse.css:584` and the four labels need wider than that. The
-   cap is lifted here for the same reason the box exists: a strip that is
-   narrower than its own tracks stops being a strip. */
-@media (min-width: 681px) {
+/* WP-I: there is deliberately no wide-screen rule here any more. The first cut
+   of this file switched the row to `repeat(4, minmax(0, max-content))` above
+   680px, and that is the defect the ledger names (CMDR-ORDER-0709). The
+   `max-width: none` written beside it never applied -- `cn-pulse.css:587` binds
+   this same row as `.v8-page-intro .v8-hub-actions` (0,2,0) and outranks this
+   (0,1,0) -- so the row stayed clamped to 46ch = 396.75px while four
+   `minmax(0, max-content)` tracks can shrink toward nothing. Measured on the
+   authoritative tip: Chinese needs 396.92px there and missed by 0.17px, which
+   broke 「打开行程工作台」 inside the word; English collapsed all four tracks to
+   84.19px and broke every label. Three `minmax(0, 1fr)` tracks need no more
+   than what the composition already gives them: (396.75 - 20) / 3 = 125.6px
+   against the widest label in either language, 103.3px in English. */
+
+/* Below 361px three tracks genuinely are too narrow -- the Chinese label needs
+   91px and the track is (286 - 20) / 3 = 88.67px, the same mid-word break in
+   miniature. Two tracks of 138px are not, and with the lead no longer spanning,
+   four items land 2 + 2: no lone last line either. */
+@media (max-width: 360px) {
   .v8-hub-actions {
-    grid-template-columns: repeat(4, minmax(0, max-content));
-    gap: var(--cn-s-4, 4px) var(--cn-s-20, 20px);
-    max-width: none;
+    grid-template-columns: repeat(2, minmax(max-content, 1fr));
   }
   .v8-hub-actions > .v8-quiet-button:first-child {
     grid-column: auto;
