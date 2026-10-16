@@ -305,6 +305,7 @@ class BootstrapDiscoveryRequest(BaseModel):
     limit: int = Field(default=3, ge=1, le=3)
     source_kind: Literal["FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"]
     provider_consent: bool = False
+    consented_provider: Literal["overpass", "photon"]
     latitude: float
     longitude: float
     coordinate_system: Literal["WGS84"] = "WGS84"

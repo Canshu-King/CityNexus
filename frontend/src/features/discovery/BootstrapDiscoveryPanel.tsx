@@ -999,7 +999,7 @@ export function BootstrapDiscoveryPanel({
       return;
     }
     if (!providerConsent) {
-      setMessage("Confirm the OpenStreetMap/Overpass provider disclosure before searching.");
+      setMessage(`Confirm the ${readiness.expected_recipient} provider disclosure before searching.`);
       return;
     }
     if (parsedLatitude === null || parsedLongitude === null) {
@@ -1021,6 +1021,7 @@ export function BootstrapDiscoveryPanel({
         limit: 3,
         source_kind: fence.sourceKind,
         provider_consent: true,
+        consented_provider: readiness.provider,
         latitude: requestLatitude,
         longitude: requestLongitude,
         coordinate_system: "WGS84",
@@ -1046,7 +1047,7 @@ export function BootstrapDiscoveryPanel({
       } else if (next.status === "PROVIDER_DISABLED") {
          setMessage(`Live discovery unavailable (${next.failure_code ?? "PROVIDER_DISABLED"}).`);
       } else if (next.status === "LIVE_ZERO_RESULTS") {
-        setMessage("No named public places were returned for that center.");
+        setMessage("这个位置附近暂时没有可用的公共地点。");
       }
     } catch (error) {
       if (isCurrentDiscovery(fence)) {
@@ -2665,7 +2666,7 @@ export function BootstrapDiscoveryPanel({
             checked={providerConsent}
             onChange={(event) => setProviderConsent(event.target.checked)}
           />
-          我同意将所选类别、地区和地图中心发送至 OpenStreetMap/Overpass 搜索。
+          我同意将所选类别、地区和地图中心发送至 {readiness?.expected_recipient ?? "公开地图服务"} 搜索。
         </label>
         {!searchReady && !busy && (
           <p className="rev-next-action" role="status" data-testid="revolution-next-action">

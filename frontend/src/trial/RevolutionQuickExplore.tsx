@@ -480,6 +480,7 @@ export function RevolutionQuickExplore({
     }
     const selection = center;
     const chosenCategory = category;
+    const consentedProvider = readiness.provider;
     void run("搜索附近真实地点", async (stillCurrent) => {
       // The explicitly labelled button is the ONE-use provider consent.
       const response = await cityNexusApi.bootstrapDiscovery(journeyId, {
@@ -488,6 +489,7 @@ export function RevolutionQuickExplore({
         limit: 3,
         source_kind: "MANUAL_PUBLIC_CENTER",
         provider_consent: true,
+        consented_provider: consentedProvider,
         latitude: selection.latitude,
         longitude: selection.longitude,
         coordinate_system: "WGS84",
@@ -741,7 +743,7 @@ export function RevolutionQuickExplore({
           onMapSelect={(point) => {
             // A deliberate public map tap is already the user's manual
             // center selection. Don't demand a second "confirm" click.
-            // No Overpass request occurs until the next explicit action.
+            // No public POI request occurs until the next explicit action.
             setSelectedPin(point);
             useCenter(point, "MAP_TAP");
           }}
@@ -758,6 +760,7 @@ export function RevolutionQuickExplore({
           category={category}
           centerBasis={centerBasis}
           sampleProviderMode={sampleProviderMode}
+          expectedRecipient={readiness?.expected_recipient ?? null}
           readinessStatus={readinessStatus}
           readinessReady={readiness?.status === "READY"}
           busy={busy}

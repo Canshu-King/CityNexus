@@ -1670,6 +1670,7 @@ export interface ProviderMeshResponse {
 
 export interface BootstrapDiscoveryCandidate {
   candidate_id: string;
+  provider_key: "overpass" | "photon";
   name: string;
   category: string;
   external_id: string;
@@ -1705,7 +1706,7 @@ export interface BootstrapDiscoveryResponse {
   receipt_id: string | null;
   expires_at: string | null;
   source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
-  provider: "overpass";
+  provider: "overpass" | "photon";
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   attempts: Array<Record<string, unknown>>;
   candidates: BootstrapDiscoveryCandidate[];
@@ -1715,7 +1716,7 @@ export interface BootstrapDiscoveryResponse {
 
 export interface BootstrapDiscoveryReadinessResponse {
   journey_id?: string;
-  provider: "overpass";
+  provider: "overpass" | "photon";
   provider_name: string;
   expected_recipient: string;
   status: "READY" | "BLOCKED";
@@ -1729,6 +1730,8 @@ export interface BootstrapDiscoveryReadinessResponse {
 export interface BootstrapSelectionResponse {
   journey_id: string;
   selected_place_id: string;
+  provider_key: "overpass" | "photon";
+  external_id: string;
   plan_version_id: string | null;
   journey_status: string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
@@ -1788,7 +1791,7 @@ export interface BootstrapMapPreviewResponse {
   receipt_id: string;
   candidate_id: string;
   expires_at: string | null;
-  provider: "overpass";
+  provider: "overpass" | "photon";
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   destination: {
     name: string;
@@ -1822,7 +1825,7 @@ export interface BootstrapMapPreviewResponse {
 export interface BootstrapShortlistItem {
   shortlist_id: string;
   journey_id: string;
-  provider_key: "overpass";
+  provider_key: "overpass" | "photon";
   external_id: string;
   name: string;
   category: string;
@@ -1863,6 +1866,7 @@ export interface BootstrapShortlistResumeIntent {
 export interface BootstrapPocketWalkStop {
   position: 1 | 2;
   shortlist_id: string;
+  provider_key: "overpass" | "photon";
   name: string;
   category: string;
   external_id: string;
@@ -3162,6 +3166,7 @@ export const cityNexusApi = {
       limit: number;
       source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
       provider_consent: boolean;
+      consented_provider: "overpass" | "photon";
       latitude: number;
       longitude: number;
       coordinate_system: "WGS84";

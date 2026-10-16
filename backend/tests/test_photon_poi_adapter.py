@@ -1,0 +1,213 @@
+from __future__ import annotations
+
+import math
+
+import httpx
+import pytest
+
+from app.integrations.discovery.photon_poi import (
+    MAX_LIMIT,
+    OSM_ATTRIBUTION,
+    OSM_ATTRIBUTION_URL,
+    PHOTON_REVERSE_URL,
+    PhotonPOIProvider,
+    UnsupportedPhotonQuery,
+)
+
+
+def _feature(
+    *,
+    osm_type: str = "W",
+    osm_id: int = 123,
+    osm_key: str = "tourism",
+    osm_value: str = "museum",
+    name: str = "Offline Museum",
+    lon: float = 135.7,
+    lat: float = 35.0,
+    extra: dict | None = None,
+) -> dict:
+    properties = {
+        "osm_type": osm_type,
+        "osm_id": osm_id,
+        "osm_key": osm_key,
+        "osm_value": osm_value,
+        "name": name,
+        "countrycode": "jp",
+    }
+    if extra is not None:
+        properties["extra"] = extra
+    return {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [lon, lat]},
+        "properties": properties,
+    }
+
+
+def _provider(handler, *, timeout_s: float = 2.0) -> tuple[PhotonPOIProvider, list[httpx.Request]]:
+    requests: list[httpx.Request] = []
+
+    def capture(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return handler(request)
+
+    client = httpx.Client(transport=httpx.MockTransport(capture), follow_redirects=False)
+    return PhotonPOIProvider(client=client, timeout_s=timeout_s), requests
+
+
+def test_museum_gallery_query_uses_one_offline_reverse_request_and_keeps_osm_provenance():
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200, json={"features": [_feature(extra={"opening_hours": "Mo-Fr 09:00-18:00"})]}
+        )
+
+    provider, requests = _provider(handler)
+    try:
+        candidates, attempts = provider.search_with_evidence(
+            "museum/gallery",
+            latitude=35.0,
+            longitude=135.7,
+            radius_m=2500,
+            limit=8,
+        )
+        request = requests[0]
+        query = request.url.params
+        timeout = request.extensions["timeout"]
+    finally:
+        provider.close()
+
+    assert len(requests) == 1
+    assert str(request.url).startswith(PHOTON_REVERSE_URL)
+    assert query["include"] == "osm.tourism.museum,osm.tourism.gallery,osm.amenity.arts_centre"
+    assert query["radius"] == "2.5"
+    assert query["limit"] == "8"
+    assert timeout["connect"] == 2.0 and timeout["read"] == 2.0
+    assert len(candidates) == 1
+    candidate = candidates[0]
+    assert candidate.provider_key == "photon"
+    assert candidate.external_id == "photon:W/123"
+    assert candidate.name == "Offline Museum"
+    assert candidate.category == "museum"
+    assert candidate.metadata["source_status"] == "LIVE_PROVIDER"
+    assert candidate.metadata["source_url"] == "https://www.openstreetmap.org/way/123"
+    assert candidate.metadata["attribution"] == OSM_ATTRIBUTION
+    assert candidate.metadata["attribution_url"] == OSM_ATTRIBUTION_URL
+    assert candidate.opening_hours["status"] == "NORMALIZED_VALID"
+    assert candidate.cost_evidence["status"] == "UNKNOWN"
+    assert attempts[0]["answered"] is True and attempts[0]["http_status"] == 200
+    assert attempts[0]["source_status"] == "LIVE_PROVIDER"
+
+
+def test_response_is_category_checked_radius_checked_and_finite():
+    wrong_category = _feature(osm_key="amenity", osm_value="cafe", osm_id=124)
+    outside_radius = _feature(osm_id=125, lon=135.8)
+    malformed_identity = _feature(osm_id=0)
+    valid = _feature(osm_id=126, extra={"fee": "no"})
+
+    provider, requests = _provider(
+        lambda _request: httpx.Response(
+            200,
+            json={"features": [wrong_category, outside_radius, malformed_identity, valid]},
+        )
+    )
+    try:
+        candidates, attempts = provider.search_with_evidence(
+            "museum", latitude=35.0, longitude=135.7, radius_m=5000, limit=99
+        )
+        params = requests[0].url.params
+    finally:
+        provider.close()
+
+    assert len(requests) == 1
+    assert params["limit"] == str(MAX_LIMIT)
+    assert [item.external_id for item in candidates] == ["photon:W/126"]
+    assert candidates[0].cost_evidence == {
+        "status": "KNOWN",
+        "amount_minor": 0,
+        "currency": None,
+        "currency_agnostic": True,
+        "evidence_basis": "OSM_FEE_NO",
+        "source": "photon",
+    }
+    assert attempts[0]["elements"] == attempts[0]["features"] == 4
+    assert attempts[0]["returned"] == 1
+    assert attempts[0]["result_status"] == "LIVE_RESULTS"
+    assert math.isfinite(candidates[0].distance_m)
+
+
+def test_empty_success_is_live_zero_while_failure_is_runtime_and_never_retried():
+    empty_provider, empty_requests = _provider(
+        lambda _request: httpx.Response(200, json={"features": []})
+    )
+    try:
+        candidates, attempts = empty_provider.search_with_evidence(
+            "museum", latitude=35, longitude=135, radius_m=5000, limit=4
+        )
+    finally:
+        empty_provider.close()
+    assert candidates == []
+    assert len(empty_requests) == 1 and attempts[0]["answered"] is True
+    assert attempts[0]["result_status"] == "LIVE_ZERO_RESULTS"
+
+    failing_provider, failing_requests = _provider(
+        lambda _request: httpx.Response(503, json={"message": "down"})
+    )
+    try:
+        with pytest.raises(httpx.HTTPStatusError) as exc_info:
+            failing_provider.search_with_evidence(
+                "museum", latitude=35, longitude=135, radius_m=5000, limit=4
+            )
+    finally:
+        failing_provider.close()
+    assert len(failing_requests) == 1
+    assert exc_info.value.provider_attempts[0]["source_status"] == "RUNTIME_FAILURE"
+    assert exc_info.value.provider_attempts[0]["http_status"] == 503
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"latitude": float("nan"), "longitude": 135, "radius_m": 1000, "limit": 5},
+        {"latitude": 35, "longitude": 181, "radius_m": 1000, "limit": 5},
+        {"latitude": 35, "longitude": 135, "radius_m": 0, "limit": 5},
+        {"latitude": 35, "longitude": 135, "radius_m": 1000, "limit": 0},
+    ],
+)
+def test_invalid_input_fails_before_any_provider_request(kwargs):
+    provider, requests = _provider(lambda _request: httpx.Response(200, json={"features": []}))
+    try:
+        with pytest.raises(ValueError):
+            provider.search_with_evidence("museum", **kwargs)
+    finally:
+        provider.close()
+    assert requests == []
+
+
+def test_unsupported_fee_filter_and_multi_attempt_request_fail_closed_offline():
+    provider, requests = _provider(lambda _request: httpx.Response(200, json={"features": []}))
+    try:
+        with pytest.raises(UnsupportedPhotonQuery, match="free-entry"):
+            provider.search_with_evidence(
+                "free museum", latitude=35, longitude=135, radius_m=1000, limit=5
+            )
+        with pytest.raises(ValueError, match="exactly one request"):
+            provider.search_with_evidence(
+                "museum", latitude=35, longitude=135, radius_m=1000, limit=5, max_attempts=2
+            )
+    finally:
+        provider.close()
+    assert requests == []
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "http://photon.komoot.io",
+        "https://user@photon.komoot.io",
+        "https://photon.komoot.io/path",
+        "https://example.test",
+        "https://photon.komoot.io/?next=https://example.test",
+    ],
+)
+def test_only_the_official_photon_https_origin_is_accepted(base_url):
+    with pytest.raises(ValueError, match="official HTTPS Photon host"):
+        PhotonPOIProvider(base_url=base_url)

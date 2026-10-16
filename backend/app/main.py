@@ -3955,6 +3955,7 @@ def bootstrap_journey_discovery(
             limit=payload.limit,
             source_kind=payload.source_kind,
             provider_consent=payload.provider_consent,
+            consented_provider=payload.consented_provider,
             latitude=payload.latitude,
             longitude=payload.longitude,
             accuracy_m=payload.accuracy_m,

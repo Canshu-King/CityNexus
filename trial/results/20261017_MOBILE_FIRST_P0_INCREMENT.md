@@ -1,5 +1,6 @@
 HUMAN_CAN_USE = PARTIAL
-LIVE_PROVIDER = BLOCKED
+LIVE_PROVIDER = PHOTON_HTTP_200_ZERO_USABLE
+TWO_POI_FLOW = NOT_REACHED
 WB2API_TOOL = PASSED (SIGNED_DRAFT_READ_ONLY_SUGGESTION)
 SIGNED_AGENT_RUN = NOT_CREATED
 ANDROID_PHONE = NOT_TESTED
@@ -28,6 +29,9 @@ ANDROID_PHONE = NOT_TESTED
 
 - Nominatim：此前一次真实查询返回厦门位置结果。
 - Overpass：此前唯一一次真实 POI 查询返回 HTTP 502，没有重试。
+- Photon：2026-10-17 在签名 DRAFT 页面完成一次真实搜索；Photon HTTP 200，返回 2 个要素，CityNexus 的公共地点校验保留 0 个可用地点，结果为 `LIVE_ZERO_RESULTS`。没有重试或切换来源。
+- 当前没有可选的两个地点，因此 Pocket Walk 保存、GO 和刷新恢复没有进入执行。
+- 手机实测截图：`trial/results/assets/20261017-live-photon-zero-result-390x844.png`。
 - 因此两处真实 POI、Pocket Walk 保存、GO、刷新恢复仍未完成；本轮 AI 建议不能替代地点来源或实际营业时间验证。
 
 ## 验证
@@ -48,7 +52,7 @@ ANDROID_PHONE = NOT_TESTED
 
 ## 尚未验收
 
-- `LIVE_PROVIDER = BLOCKED`：两处真实 POI、保存、GO 和刷新恢复缺少可用的 Overpass 响应。
+- `TWO_POI_FLOW = NOT_REACHED`：Photon 返回 HTTP 200，但本次没有可用候选；两站保存、GO 和刷新恢复还没跑到。
 - `SIGNED_AGENT_RUN = NOT_CREATED`：本次使用 DRAFT 只读建议入口，不代表 ACTIVE Journey 中已创建或持久化 AgentRun。
 - `ANDROID_PHONE = NOT_TESTED`：当前为浏览器视口验收，尚无实体手机验收。
 

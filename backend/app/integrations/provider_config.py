@@ -21,6 +21,9 @@ class ExternalProviderSettings:
     open_meteo_enabled: bool = _flag("CITYNEXUS_OPEN_METEO_ENABLED")
     photon_enabled: bool = _flag("CITYNEXUS_PHOTON_ENABLED")
     photon_base_url: str = os.getenv("CITYNEXUS_PHOTON_BASE_URL", "https://photon.komoot.io")
+    poi_discovery_provider: str = os.getenv(
+        "CITYNEXUS_POI_DISCOVERY_PROVIDER", "overpass"
+    ).strip().lower()
 
     # Public-provider network policy (docs/NETWORK_POLICY.md).
     #   AUTO      - honour the environment/proxy configuration first, then a

@@ -9,6 +9,7 @@ type InterestPickerProps<TCategory extends InterestPickerOption> = {
   category: TCategory["value"];
   centerBasis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" | null;
   sampleProviderMode: boolean;
+  expectedRecipient: string | null;
   readinessStatus: "checking" | "ready" | "blocked" | "error";
   readinessReady: boolean;
   busy: boolean;
@@ -23,6 +24,7 @@ export function InterestPicker<TCategory extends InterestPickerOption,>({
   category,
   centerBasis,
   sampleProviderMode,
+  expectedRecipient,
   readinessStatus,
   readinessReady,
   busy,
@@ -54,7 +56,7 @@ export function InterestPicker<TCategory extends InterestPickerOption,>({
           : "你已选择公开地图位置。"}
         {sampleProviderMode
           ? "搜索时将所选区域和类别发送至 TEST_PROVIDER。"
-          : "搜索时将所选区域和类别发送至 OpenStreetMap/Overpass。"}
+          : `搜索时将所选区域和类别发送至 ${expectedRecipient || "公开地图服务"}。`}
         搜索按你选择的区域进行，手机定位需单独授权。
       </p>
       {readinessStatus !== "ready" && (
