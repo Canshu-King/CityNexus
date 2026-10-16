@@ -1,0 +1,130 @@
+[
+ {
+  "width": 320,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "路线证据",
+   "drawer_open": true
+  },
+  "control": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "keep_all": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  }
+ },
+ {
+  "width": 360,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "路线证据",
+   "drawer_open": true
+  },
+  "control": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "keep_all": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  }
+ },
+ {
+  "width": 390,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "路线证据",
+   "drawer_open": true
+  },
+  "control": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "keep_all": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  }
+ },
+ {
+  "width": 430,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "路线证据",
+   "drawer_open": true
+  },
+  "control": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "keep_all": {
+   "widths": [
+    40
+   ],
+   "lines": 1,
+   "box": 40,
+   "now": [
+    "keep-all",
+    "normal"
+   ]
+  }
+ }
+]
