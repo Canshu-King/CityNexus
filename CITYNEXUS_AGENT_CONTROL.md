@@ -1,4 +1,28 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0730·仪器更正：「后一手压掉」这一镜头我连做两版都不可信，撤下不用（带反例）
+
+**一、要更正的是什么**
+
+- CMDR-DELIVER-0722 与 CMDR-DELIVER-0724 的派单口径是三镜头：可达性（`_cmdr_escape_hatch_scan_r3.py:1`）、暗档配对（`_cmdr_escape_hatch_scan_r4.py:1`）、逐枚手工核实。那一套里的每个数我都能指出原文。**这一条要加进来试的第四镜头（"这条字面量被后载入的另一手压掉了，所以不上屏"）我做了两版，两版都不可信，现在撤下，不进任何派单口径。**
+
+**二、两版各自怎么错的（反例写在这里，别让下一个人重踩）**
+
+- 第一版（`_cmdr_escape_hatch_scan_r6.py:1` 初版）按"同一个类名在后面的规则里又出现，且特异度不低于我"判惰性。反例是 `frontend/src/styles.css:35` 那条 `.v8-runtime-card { color: #172033 }` 被 `frontend/src/styles.css:43` 的 `.v8-runtime-card small` 判成"压掉"——两句话画的根本不是同一种元素（一个是卡片本身，一个是卡片里的 `<small>`）。同一枚错误形状还把共享修饰词 `.active`、`.protected` 当成同一个元素，一次造出几十枚假惰性行。
+- 第二版（`_cmdr_escape_hatch_triage_r1.py:1`）改判"最右复合选择器的类集合要一致"，方向对了，但踩了另一处：这份 styles.css 大量把多条规则压在同一物理行上，我的选择器回溯在压缩行里取错段——判据分布从"作用于一切"两行（`escape_hatch_paired.tsv:1` 那一版）跳到 82 条（`escape_hatch_triage.tsv:1` 现读），一次反向的膨胀说明取的是解析噪声而不是规则真实形状。
+
+**三、所以现在的口径是什么**
+
+- 分母仍按 v2 的亮度判据现读：241 条（`escape_hatch.tsv:1`）。
+- 可达性那一镜头我保留，因为它的每一枚结论我都回原文对过：真债 225 条、可确证零读者 14 条、需拆行才能定责 5 条、只在 Storybook 一枚、暗档已配对两枚（逐条见 CMDR-DELIVER-0722 第四节与 `night15_readings.txt:31`、`night15_readings.txt:32`）。
+- 我手工核实、且唯一敢写进账的"后一手压掉"只有一处：`frontend/src/styles.css:190` 与 `frontend/src/styles.css:350` 是同一条 `.v8-rain-button` 规则被复制两遍（后一份生效，两遍都零读者）——它属于 CMDR-DELIVER-0724 乙账点名的死码，我没有替扫街工删。
+
+**四、未做与不做**
+
+- 未做：第四镜头若要可用，得先把 styles.css 的压缩行拆开再谈"规则的先后"，或换成浏览器实测计算样式（`getComputedStyle` 逐元素取真值，而不是解析源码）。这条我没做，也不许别人拿我那两版的输出当依据。
+- 未做：`.v8-rain-button`、`.cn-copilot-runtime`、`.cn-native-status` 那几枚死码仍未删（`frontend/src/styles.css:190`、`frontend/src/styles.css:350`、`frontend/src/styles.css:452`、`frontend/src/styles.css:481`），因为它们是别人的面，且删前要按 CMDR-DELIVER-0724 第三节的"先拆行再逐枚删选择器"走。
+- 没变坏：权威线自 CMDR-DELIVER-0726 之后 0 移动（现尖 f3242427f68f2bdbe544cef83db30aeb2e263427，见 `night17_readings.txt:1`），本条只写仪器与判据，不含任何产品字节。
+
+
 ### CMDR-DELIVER-0726·第十七笔（脉搏眉标拂晓与黄昏两档补上暗档那一手：2.24 与 3.09 回到 6.16 与 10.22）（号令者亲测·10-17 05 时代插）
 
 **一、这一笔移动了权威线，并且是今晚第一次把一条活红修掉**
