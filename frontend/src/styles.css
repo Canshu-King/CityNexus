@@ -357,6 +357,12 @@ button.v8-avatar { padding: 0; font-size: 10px; font-weight: 800; letter-spacing
 .v9-evidence-summary > small { color: #5d6878; }
 .v8-mobile-nav button { color: #5d6878; }
 .v9-evidence-drawer { padding: 0; overflow: hidden; }.v9-evidence-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px; color: var(--v8-ink); cursor: pointer; list-style: none; }.v9-evidence-summary::-webkit-details-marker { display: none; }.v9-evidence-summary::after { content: "+"; color: var(--v8-indigo); font-size: 18px; font-weight: 400; }.v9-evidence-summary small { margin-left: auto; color: #7f8a99; font-size: 10px; }.v9-evidence-drawer[open] .v9-evidence-summary { border-bottom: 1px solid #edf0f4; }.v9-evidence-drawer[open] .v9-evidence-summary::after { content: "−"; }.v9-evidence-drawer > .v8-aside-heading, .v9-evidence-drawer > .v8-route-row, .v9-evidence-drawer > small { margin-left: 20px; margin-right: 20px; }
+/* 中文词内不断行。06:56 在 320/360/390/430 四档宽度上亲测：「证据」被挤成 证/据（320），
+   「路线证据」被劈成 路线证/据（四档全中），预订卡徽章「模拟承诺」被劈（360），
+   行程记忆里的「中途」被劈成 中/途（320）。同一手已用在 .v8-lede 上（cn-pulse.css 那一段注释）。
+   只加这一条、不动父层的 overflow-wrap：ORD-0146 那道长参考号仍可断。 */
+.v9-evidence-summary > span, .v9-evidence-drawer > .v8-aside-heading span,
+.v8-booking-card .v8-selected-label, .v13-2-memory-panel strong { word-break: keep-all; }
 .v9-evidence-summary > small { color: #5d6878; }
 
 /* Mobile navigation drawer (hamburger in the topbar) */
