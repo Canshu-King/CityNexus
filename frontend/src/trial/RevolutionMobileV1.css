@@ -419,7 +419,7 @@
   .rev-mobile-v1 .rev-firstlook-journey {
     gap: 12px !important;
   }
-  .rev-mobile-v1 .rev-firstlook-journey > .rev-firstlook-reset { min-height: 38px; }
+  .rev-mobile-v1 .rev-firstlook-journey > .rev-firstlook-reset { min-height: 44px; }
   .rev-mobile-v1 .rev-mobile-panel { padding: 20px; }
   .rev-mobile-v1 .rev-quick-map-step .rev-quick-optional-map > summary {
     display: flex;
