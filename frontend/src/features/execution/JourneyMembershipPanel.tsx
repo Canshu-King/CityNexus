@@ -1315,8 +1315,8 @@ export function JourneyMembershipPanel({
                   <strong>{zh ? "为这个共同会合点协调" : "Coordinate around this shared stop"}</strong>
                   <small>
                     {zh
-                      ? "路线检查与状态分享是分开的。只有你明确确认后，当前同行者才会看到这条自报状态；它不代表真实到场。"
-                      : "Route checks and status sharing are separate. Current companions see a status only after your explicit confirmation; it is not proof of arrival."}
+                      ? "路线检查与状态分享分开；确认后才会共享自报状态。"
+                      : "Route checks and status sharing are separate. Your status is shared only after confirmation."}
                   </small>
                   <div className="journey-membership-actions">
                     <button
@@ -1352,8 +1352,8 @@ export function JourneyMembershipPanel({
                           {signal.acknowledgement && (
                             <small data-testid="journey-rendezvous-help-acknowledgement">
                               {zh
-                                ? `${signal.acknowledgement.display_name} 已用本人身份回应这次求助；这不是现场等待或会合确认。`
-                                : `${signal.acknowledgement.display_name} acknowledged this request with their own identity; this is not a promise to wait there or an arrival confirmation.`}
+                                ? `${signal.acknowledgement.display_name} 已回应求助。`
+                                : `${signal.acknowledgement.display_name} responded to the request.`}
                             </small>
                           )}
                           {signal.signal_kind === "NEEDS_COORDINATION"
@@ -1803,7 +1803,7 @@ export function JourneyMembershipPanel({
                                   )}
                                   <small>{zh
                                     ? "路线、位置观察 ID 和精确起点只返回给当前本人；不会共享给另一位成员或 B。路线结果不证明已出发、到场或见面；本请求不会修改计划或触发 Guardian。"
-                                    : "The route, observation ID, and precise origin are returned only to you, never to the other member or B. A route is not proof of departure, arrival, or reunion; this request does not change the plan or trigger Guardian."}</small>
+                                    : "Your route and origin are visible only to you. This request does not change the plan or trigger Guardian."}</small>
                                 </article>
                               )}
                             </>

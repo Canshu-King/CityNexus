@@ -955,7 +955,7 @@ export function MemberPlaceInvitationPanel({
                     ? (zh ? "没有新鲜本人位置或可靠路线证据；没有估算到达时间。你可以在明确知情后继续。" : "There is no fresh personal location or qualifying route evidence, so no arrival time is estimated. You may continue only after acknowledging that timing is unverified.")
                     : feasibility?.state === "BLOCKED"
                       ? (zh ? "受保护安排或你现有的支线与此选择冲突；共享计划未改变。" : "A protected commitment or your existing side trip conflicts with this choice; the shared plan is unchanged.")
-                      : (zh ? "这是路线建议，不是实际到达证明；预览不会改动共享计划。" : "This is route guidance, not proof of physical arrival. The preview does not change the shared plan.")}
+                      : (zh ? "路线建议 · 尚未记录到达" : "Route guidance · arrival not recorded")}
                 </small>
               </section>
             )}
