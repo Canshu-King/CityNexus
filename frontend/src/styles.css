@@ -143,7 +143,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v8-nav button svg { flex: none; width: var(--cn-nav-icon-size); height: var(--cn-nav-icon-size); }
 .v8-nav button > span { display: block; min-width: 0; max-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; opacity: 1; transition: opacity var(--cn-motion-fast) linear, max-width var(--cn-motion-base) var(--cn-ease-standard); }
 .v8-nav button:hover, .v8-nav button.active { color: var(--v8-ink); background: #f1f3ff; }
-.v8-nav button.active { color: var(--v8-indigo); font-weight: 750; }
+.v8-nav button.active { color: var(--cn-accent-text); font-weight: 750; }
 .v8-nav button.active:before { position: absolute; left: calc(var(--sb-pad) * -1); top: 8px; bottom: 8px; width: 3px; border-radius: var(--cn-r-0) var(--cn-r-4) var(--cn-r-4) var(--cn-r-0); background: var(--v8-indigo); content: ""; }
 .v8-nav button i { width: 6px; height: 6px; margin-left: auto; border-radius: var(--cn-r-circle); background: #e4a55d; }
 .v8-sidebar-bottom { margin-top: auto; }
@@ -418,7 +418,7 @@ body:has(#v8-nav-drawer) { overflow: hidden; }
    Excluding the class keeps the 14 rows styled and leaves the head control to its own rule. */
 #v8-nav-drawer button svg { width: var(--cn-nav-icon-size); height: var(--cn-nav-icon-size); }
 #v8-nav-drawer button:not(.v8-quiet-button):hover, #v8-nav-drawer button:not(.v8-quiet-button).active { color: var(--v8-ink); background: var(--cn-secondary); }
-#v8-nav-drawer button:not(.v8-quiet-button).active { color: var(--v8-indigo); font-weight: 750; }
+#v8-nav-drawer button:not(.v8-quiet-button).active { color: var(--cn-link); font-weight: 750; }
 
 /* V18 traveler-first Copilot dock and state-driven motion. */
 :root {
