@@ -1013,6 +1013,12 @@ const en: Dict = {
   "intel.runtimeUnknown": "Runtime status unavailable",
   "intel.nativeMcpProven": "Native Hermes MCP proof recorded",
   "intel.nativeMcpNotProven": "Native Hermes MCP is not claimed without a verified proof run",
+  /* CMDR 10-17 04:3x 诚实面第三态：控制塔原先把「没读到」并进一句确定的断言（空读的策略显示成
+     Advisory、证明没读过显示成「未宣称」、没有读数也说「Guardian 就绪」）。这三行只补「读不到」
+     这一态，措辞沿用同族已有的 intel.runtimeUnknown，不带运行时专名，也不写全大写。 */
+  "intel.policyUnknown": "Policy status unavailable",
+  "intel.guardianUnknown": "Guardian status unavailable",
+  "intel.proofUnknown": "Proof status unavailable",
 
   // ── Mobility Sheet ──
   "mobility.kicker": "Next leg · evidence comparison",
@@ -2547,6 +2553,10 @@ const zhCN: Dict = {
   "intel.runtimeUnknown": "运行时状态不可用",
   "intel.nativeMcpProven": "已记录原生 Hermes MCP 证明",
   "intel.nativeMcpNotProven": "未完成可验证证明，因此不宣称原生 Hermes MCP",
+  /* 与英文臂同批：策略、守护、证明三格的「没读到」态，措辞对齐同族的「运行时状态不可用」。 */
+  "intel.policyUnknown": "策略状态不可用",
+  "intel.guardianUnknown": "守护状态不可用",
+  "intel.proofUnknown": "证明状态不可用",
 
   // ── 出行对比 ──
   "mobility.kicker": "下一段路程 · 证据对比",
