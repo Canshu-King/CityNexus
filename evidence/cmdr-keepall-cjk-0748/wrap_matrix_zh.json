@@ -1,0 +1,778 @@
+[
+ {
+  "width": 320,
+  "target": "A",
+  "word": "证据",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "证据"
+  },
+  "control": {
+   "n_rects": 1,
+   "n_lines": 1,
+   "widths": [
+    32
+   ],
+   "text": "证据",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "width": 320,
+  "target": "B",
+  "word": "路线证据",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 320,
+  "target": "C",
+  "word": "模拟承诺",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "B",
+   "cls": "",
+   "text": "· 模拟承诺"
+  },
+  "control": {
+   "n_rects": 2,
+   "n_lines": 1,
+   "widths": [
+    8,
+    36
+   ],
+   "text": "· 模拟承诺",
+   "style_now": [
+    "keep-all",
+    "anywhere"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 2,
+     "n_lines": 1,
+     "widths": [
+      8,
+      36
+     ],
+     "text": "· 模拟承诺",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 320,
+  "target": "E",
+  "word": "生效中",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 320,
+  "target": "D",
+  "word": "中途",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "STRONG",
+   "cls": "",
+   "text": "Nexus River Cruise Pier · "
+  },
+  "control": {
+   "n_rects": 3,
+   "n_lines": 2,
+   "widths": [
+    174,
+    9,
+    32
+   ],
+   "text": "Nexus River Cruise Pie",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 3,
+     "n_lines": 2,
+     "widths": [
+      174,
+      9,
+      32
+     ],
+     "text": "Nexus River Cruise Pie",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "target": "A",
+  "word": "证据",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "证据"
+  },
+  "control": {
+   "n_rects": 1,
+   "n_lines": 1,
+   "widths": [
+    32
+   ],
+   "text": "证据",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "target": "B",
+  "word": "路线证据",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "target": "C",
+  "word": "模拟承诺",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "B",
+   "cls": "",
+   "text": "· 模拟承诺"
+  },
+  "control": {
+   "n_rects": 2,
+   "n_lines": 2,
+   "widths": [
+    5,
+    36
+   ],
+   "text": "· 模拟承诺",
+   "style_now": [
+    "keep-all",
+    "anywhere"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 2,
+     "n_lines": 2,
+     "widths": [
+      5,
+      36
+     ],
+     "text": "· 模拟承诺",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "target": "E",
+  "word": "生效中",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 360,
+  "target": "D",
+  "word": "中途",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "STRONG",
+   "cls": "",
+   "text": "Nexus River Cruise Pier · "
+  },
+  "control": {
+   "n_rects": 3,
+   "n_lines": 1,
+   "widths": [
+    174,
+    13,
+    32
+   ],
+   "text": "Nexus River Cruise Pie",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 3,
+     "n_lines": 1,
+     "widths": [
+      174,
+      13,
+      32
+     ],
+     "text": "Nexus River Cruise Pie",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 390,
+  "target": "A",
+  "word": "证据",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "证据"
+  },
+  "control": {
+   "n_rects": 1,
+   "n_lines": 1,
+   "widths": [
+    32
+   ],
+   "text": "证据",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "width": 390,
+  "target": "B",
+  "word": "路线证据",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 390,
+  "target": "C",
+  "word": "模拟承诺",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "B",
+   "cls": "",
+   "text": "· 模拟承诺"
+  },
+  "control": {
+   "n_rects": 2,
+   "n_lines": 1,
+   "widths": [
+    8,
+    36
+   ],
+   "text": "· 模拟承诺",
+   "style_now": [
+    "keep-all",
+    "anywhere"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 2,
+     "n_lines": 1,
+     "widths": [
+      8,
+      36
+     ],
+     "text": "· 模拟承诺",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 390,
+  "target": "E",
+  "word": "生效中",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 390,
+  "target": "D",
+  "word": "中途",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "STRONG",
+   "cls": "",
+   "text": "Nexus River Cruise Pier · "
+  },
+  "control": {
+   "n_rects": 3,
+   "n_lines": 1,
+   "widths": [
+    174,
+    13,
+    32
+   ],
+   "text": "Nexus River Cruise Pie",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 3,
+     "n_lines": 1,
+     "widths": [
+      174,
+      13,
+      32
+     ],
+     "text": "Nexus River Cruise Pie",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 430,
+  "target": "A",
+  "word": "证据",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "SPAN",
+   "cls": "",
+   "text": "证据"
+  },
+  "control": {
+   "n_rects": 1,
+   "n_lines": 1,
+   "widths": [
+    32
+   ],
+   "text": "证据",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": {
+     "n_rects": 1,
+     "n_lines": 1,
+     "widths": [
+      32
+     ],
+     "text": "证据",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "width": 430,
+  "target": "B",
+  "word": "路线证据",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 430,
+  "target": "C",
+  "word": "模拟承诺",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "B",
+   "cls": "",
+   "text": "· 模拟承诺"
+  },
+  "control": {
+   "n_rects": 2,
+   "n_lines": 1,
+   "widths": [
+    8,
+    36
+   ],
+   "text": "· 模拟承诺",
+   "style_now": [
+    "keep-all",
+    "anywhere"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 2,
+     "n_lines": 1,
+     "widths": [
+      8,
+      36
+     ],
+     "text": "· 模拟承诺",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 430,
+  "target": "E",
+  "word": "生效中",
+  "found": false,
+  "meta": {
+   "found": false,
+   "why": "该屏上找不到含这枚词的叶子节点（可能这一代没渲染这个状态）"
+  },
+  "control": null,
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": null
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ },
+ {
+  "width": 430,
+  "target": "D",
+  "word": "中途",
+  "found": true,
+  "meta": {
+   "found": true,
+   "tag": "STRONG",
+   "cls": "",
+   "text": "Nexus River Cruise Pier · "
+  },
+  "control": {
+   "n_rects": 3,
+   "n_lines": 1,
+   "widths": [
+    174,
+    13,
+    32
+   ],
+   "text": "Nexus River Cruise Pie",
+   "style_now": [
+    "keep-all",
+    "normal"
+   ]
+  },
+  "tries": [
+   {
+    "name": "keep-all",
+    "m": {
+     "n_rects": 3,
+     "n_lines": 1,
+     "widths": [
+      174,
+      13,
+      32
+     ],
+     "text": "Nexus River Cruise Pie",
+     "style_now": [
+      "keep-all",
+      "normal"
+     ]
+    }
+   },
+   {
+    "name": "keep-all only",
+    "m": null
+   }
+  ]
+ }
+]
