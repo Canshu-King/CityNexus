@@ -679,12 +679,12 @@ export function MemberPlaceInvitationPanel({
           ? `共同会合点：${rendezvousTitle}。停留时长为计划估算。`
           : `Shared rendezvous: ${rendezvousTitle}. Stop duration is a plan estimate.`}
       </small>
-      <small>{zh ? "仅显示已加入者主动分享的粗略状态。" : "Only statuses shared by joined members appear here."}</small>
+      <small>{zh ? "同行者共享的状态。" : "Status shared by joined members."}</small>
       {parentState && parentState !== "OPEN" && (
         <small>
           {zh
-            ? "邀请已过期、撤回或失效，不再接受新加入；已加入成员的独立支线与历史自愿报告保留。"
-            : "This invitation is expired, withdrawn, or stale and cannot accept new members; joined members’ own trips and prior voluntary reports remain."}
+            ? "邀请已结束，新成员入口已关闭。已加入者仍可查看各自行程与自愿报告。"
+            : "Invitation closed. Joined members can still view their trips and voluntary reports."}
         </small>
       )}
       <ul>

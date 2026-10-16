@@ -325,7 +325,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
             </div> : waiting ? <>
               <h4>{zh ? "这次旅行，你更看重哪一个？" : "What matters more for this trip?"}</h4>
               <p>{question.question}</p>
-              <small>{zh ? "仅用于本次行程。" : "For this journey only."}</small>
+              <small>{zh ? "用于完善本次行程。" : "Used to shape this trip."}</small>
               <div className="cn-clarification-options">
                 {question.option_keys?.map((key) => <button key={key} type="button" className="v8-secondary"
                   disabled={busy || staleIds.includes(mission.id)} onClick={() => void act(item, key)}>

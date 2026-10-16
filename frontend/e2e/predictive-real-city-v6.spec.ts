@@ -263,7 +263,7 @@ test("a forecast is prevented before the failure happens, and the traveller can 
 
   const run = preventive as unknown as GuardianRun;
   expect(run.action_status, "the preventive run never executed").toBe("EXECUTED");
-  expect(run.evidence?.observation?.forecast_before_hard_failure, "the run does not claim to be pre-failure")
+  expect(run.evidence?.observation?.forecast_before_hard_failure, "forecast timing matches the recorded evidence")
     .toBe(true);
   expect(
     run.evidence?.prediction?.status,
@@ -331,11 +331,10 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     )}`,
   ).toBe(true);
 
-  /* `trigger_kind=PREDICTIVE` is not proof of a grounded prediction, so the run's
-     own evidence is checked: it must name recorded provider observations, and every
-     one of them must be REPLAY rather than a mock default that got laundered into a
-     hard fact.  Measured on this journey: open-meteo-replay (CITY_SIGNAL) and
-     city-signal-fixture (MOBILITY), both provenance REPLAY. */
+  /* `trigger_kind=PREDICTIVE` names the initiating event. Grounding is recorded in
+     the run evidence: provider observations must be present and each must be REPLAY.
+     Measured on this journey: open-meteo-replay (CITY_SIGNAL) and city-signal-fixture
+     (MOBILITY), both provenance REPLAY. */
   const evidenceProvenance = run.evidence?.prediction?.evidence_provenance ?? [];
   expect(
     evidenceProvenance.length,

@@ -1392,17 +1392,14 @@ export function JourneyTrialSetup({
         </div>
       )}
       {stoppedWaiting && !busy && message && (
-        /* Giving up on the wait is not a failure and not a cancel: the request this screen
-           stopped is described by what actually happened to it. */
+        /* The stopped-wait outcome records the request's current state. */
         <div className="trial-wait-outcome" data-testid="trial-wait-outcome" role="status">
           <strong>{zh ? "已停止等待" : "Stopped waiting"}</strong>
           <span>{message}</span>
         </div>
       )}
       {blockedNow && (
-        /* A greyed-out "Next" with no reason is the same silence as a create that dies
-           quietly, so name what is missing.  Stable id: the blocked button describes itself
-           with this element, so the relation cannot dangle between keystrokes. */
+        /* Explain the missing prerequisite and keep the hint linked to Next while fields change. */
         <p
           className="trial-required-hint"
           id="trial-required-hint"

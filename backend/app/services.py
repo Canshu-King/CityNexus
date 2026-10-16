@@ -1723,7 +1723,7 @@ def _provisional_catalogue_plan(
             COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
         ),
         "authority_note": (
-            "Coursework-only selection using explicit Agent estimates; this is not a LIVE provider-ready result."
+            "Coursework estimate based on explicit Agent-provided costs."
             if coursework_authority
             else None
         ),

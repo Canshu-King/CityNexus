@@ -6760,11 +6760,9 @@ def create_share_grant(
 def list_traveler_recycle_bin_journeys(traveler_id: UUID, session: Session = Depends(get_session)):
     """ORD-0434 step 2: the same bin rows, scoped to one owner.
 
-    This is its own door rather than a parameter on `GET /api/v1/recycle-bin/journeys` because that
-    one carries a tested promise to advertise no filter, no scope and no page - a promise this order
-    has no business bending.  Naming an owner in a path is not proof of who is asking; binding the
-    caller to the name is the daylight decision step 2 does not make.  Rows and ordering are the same
-    schema and the same `deleted_at` newest-first rule, so the two doors cannot disagree about a row.
+    The dedicated route keeps `GET /api/v1/recycle-bin/journeys` unfiltered, unscoped and
+    unpaginated. `traveler_id` selects the owner; caller identity binding remains a follow-up
+    authorization requirement. Rows share the same schema and `deleted_at` newest-first ordering.
     """
     items = session.scalars(
         select(Journey)
@@ -23480,7 +23478,7 @@ def generate_replan(
                     COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
                 ),
                 "authority_note": (
-                    "Coursework-only recovery using explicit Agent estimates; this is not a LIVE provider-ready result."
+                    "Coursework recovery estimate based on explicit Agent-provided costs."
                     if coursework_authority
                     else None
                 ),

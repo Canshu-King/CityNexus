@@ -440,9 +440,8 @@ export async function postSimulatedEvent(
  *    **404 here**, and its booking is refused with `activity service is not available in the frozen
  *    catalog`; `service-river-cruise-booking` answers 200 with one slot and books `201 CONFIRMED`.
  *
- * So a 404 on this path is not a failure to display -- it is the answer that retires the candidate.
- * Anything else (5xx, a dropped connection) *is* unreadable, and gets said as such rather than being
- * folded into "nothing can be booked", which would be the panel claiming a server fact it did not get.
+ * A 404 retires the candidate as unavailable. A 5xx or dropped connection keeps the result in its
+ * unreadable state.
  */
 export const ORDERABLE_SERVICE_TYPES: readonly string[] = [
   "bookable_experience",

@@ -131,13 +131,13 @@ def _candidate(place: Place, *, original: Place, distance_m: int) -> dict[str, o
     source_kind = "CURRENT_SHARED_PLAN_STOP" if is_original else "PUBLIC_PLACE_CATALOG_RECORD"
     evidence = "DEMO_FIXTURE_NOT_LIVE_VERIFIED" if fixture_source else "CATALOG_RECORD_NOT_ROUTE_VERIFIED"
     source_label = (
-        f"Current shared-plan stop · {provider} · demo fixture, not live-verified"
+        f"Current shared-plan stop · {provider} · demo fixture"
         if is_original and fixture_source
         else f"Current shared-plan stop · {provider}"
         if is_original
-        else f"Demo catalog fixture · {provider} · not live-verified"
+        else f"Demo catalog fixture · {provider}"
         if fixture_source
-        else f"Public catalog record · {provider} · not route-verified"
+        else f"Public catalog record · {provider}"
     )
     return {
         "place_id": str(place.id),
@@ -163,12 +163,10 @@ def _candidate(place: Place, *, original: Place, distance_m: int) -> dict[str, o
 
 
 def _is_public_place(place: Place) -> bool:
-    """Reject a public handoff if *any* catalog source explicitly denies access.
+    """Allow a public handoff when no catalog source marks access as restricted.
 
-    Never let a later metadata dictionary overwrite an OSM private access tag.
-    OSM adapters can store their access facts at the root or under "tags".
-    Absence of a restriction remains UNKNOWN, not proof of legal entry;
-    handoff feasibility is still displayed as UNKNOWN.
+    Access remains UNKNOWN until source facts resolve it, and handoff feasibility
+    stays UNKNOWN alongside it. OSM adapters store access facts at the root or under "tags".
     """
     restricted = {"private", "no", "restricted", "staff", "customers"}
     for raw in (place.tags_json, place.metadata_json):
@@ -674,10 +672,10 @@ def _replay_retired_handoff(
     member: JourneyMember,
     principal: TravelerPrincipal,
 ) -> dict[str, object]:
-    """An old-tab retry cannot claim to close a newer pair appointment.
+    """Preserve newer pair appointments when an older tab retries a withdrawal.
 
-    Lock the same Journey row as offer/respond/close before reading any
-    successor. A real retry stays idempotent while no newer agreement exists.
+    Lock the Journey row used by offer/respond/close before reading successors.
+    Retries remain idempotent while no newer agreement exists.
     """
     _lock_journey_for_withdraw(session, str(journey.id))
     current_member = session.get(JourneyMember, str(member.id))

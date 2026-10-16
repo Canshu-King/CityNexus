@@ -418,7 +418,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description ORD-0434 step 2: the recycle bin scoped to one owner.  A separate door rather than a query parameter on `/recycle-bin/journeys`, because that door's contract carries a tested promise to advertise no filter, no scope and no pagination, and this order does not get to bend it.  The rows are the same `RecycleBinJourney` shape in the same `deleted_at` newest-first order, so the two doors cannot disagree about a trip.  Naming an owner in a path is not proof of who is asking - binding a caller to a name is the daylight decision this step leaves open. */
+        /** @description ORD-0434 step 2: the recycle bin scoped to one owner.  The dedicated route keeps `/recycle-bin/journeys` unfiltered, unscoped and unpaginated.  `traveler_id` selects the owner; caller identity binding remains a follow-up authorization requirement.  Rows share the same `RecycleBinJourney` shape and `deleted_at` newest-first ordering. */
         get: operations["listTravelerRecycleBinJourneys"];
         put?: never;
         post?: never;

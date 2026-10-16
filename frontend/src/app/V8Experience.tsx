@@ -3001,8 +3001,7 @@ function Hub({
             </>
           )}
           {continuation.kind === "unconfirmable" && (
-            /* ORD-0269 cell 3: a marker exists but the feed cannot confirm the mission (read failed
-               or the ascending capped page excluded it).  Named state, never silence. */
+            /* ORD-0269 cell 3: the feed read failed or its capped page omitted the marker's mission. */
             <p className="today-continuation-unconfirmable" data-testid="continuation-unconfirmable">
               {t("hub.continuationUnconfirmable")}
             </p>

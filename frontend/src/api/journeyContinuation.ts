@@ -6,16 +6,14 @@
  * agent-feed events for that exact mission_id. Field names are pinned from a real payload
  * (review/evidence/ord0269-real-envelope-fields.json) — never guessed.
  *
- * Named coverage boundary: the marker is device-local. A different device (or cleared storage)
- * shows nothing — that is the named boundary, not a failure (clause 3).
+ * The marker is device-local; another device or cleared storage has no marker to read (clause 3).
  *
- * Status discipline: the feed carries agent.run.completed with facts.status, but mission terminal
- * status is NOT a feed field today, so nothing here claims "mission terminal is readable".
+ * The feed carries agent.run.completed with facts.status. This module reports feed-backed states;
+ * mission terminal status is not present in the feed schema.
  *
  * Pagination (R-6): the feed route defaults to limit=100 and orders ascending, so the newest
- * aborted round can be pushed out of the page. Callers pass limit=200, and this module treats
- * "page does not contain the marker's mission" as UNCONFIRMABLE — a named cell-3 state, never a
- * silent pass and never a timestamp-based guess.
+ * aborted round can be pushed out of the page. Callers pass limit=200; a page without the marker's
+ * mission returns UNCONFIRMABLE, and timestamps do not substitute for the missing row.
  */
 
 export type ContinuationState =

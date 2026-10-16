@@ -1163,8 +1163,7 @@ def attach_member_side_quest_projection(
                     return_report=current_report_for(viewer_quest),
                 )
             continue
-        # A scheduled stop is not proof of departure. Finishing it is not
-        # proof that the traveller has started returning to the group.
+        # Scheduled stops remain planned; a completed stop enters the return state after a traveler report.
         if quest.state in {"DESTINATION_UNRESOLVED", "READY"}:
             summary_state = "PLANNED"
         elif quest.state in {"EN_ROUTE", "ARRIVED"}:

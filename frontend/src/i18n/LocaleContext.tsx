@@ -238,8 +238,7 @@ const en: Dict = {
   "live.reportRain": "Report rain",
   "live.now": "NOW",
   "live.awaitingPlan": "Awaiting plan",
-  // A cursor that names an activity the active plan does not contain is a
-  // different fact from "no plan yet"; the UI must not claim the latter.
+  // Keep an unresolved activity cursor distinct from the empty-plan state.
   "live.unresolvedStep": "Execution position unresolved",
   "live.unresolvedStepHint": "The saved position points at a step this plan no longer contains, so no current or next step can be shown honestly.",
   /* ORD-0370: the accept path's own last-resort line, read from here rather than from a
@@ -652,7 +651,7 @@ const en: Dict = {
   "inbox.pasteHint": "Paste rail, flight, hotel, or venue confirmation text",
   "inbox.extractText": "Extract text draft",
   "inbox.screenshot": "Confirmation screenshot",
-  "inbox.imageHint": "Image bytes are sent only for this extraction request.",
+  "inbox.imageHint": "Image used to draft booking details.",
   "inbox.extractImage": "Extract image draft",
   "inbox.authoritativeMemory": "AUTHORITATIVE MEMORY",
   "inbox.journeyMemory": "Saved trip facts",
@@ -818,7 +817,7 @@ const en: Dict = {
   "twin.explicitSub": "Applied directly to the current plan objective.",
   "twin.learned": "LEARNED_SOFT",
   "twin.learnedFrom": "From completed Journey outcomes",
-  "twin.learnedSub": "Ranking input only · expires with evidence freshness.",
+  "twin.learnedSub": "Shapes rankings · expires when evidence goes stale.",
   "twin.authorityBoundary": "How preferences are used",
   "twin.boundarySub": "Preferences adjust route and stay rankings. Booking and payment choices stay with you.",
   "twin.provenance": "Inspectable provenance available",
@@ -1575,7 +1574,7 @@ const zhCN: Dict = {
   "inbox.pasteHint": "粘贴铁路、航班、酒店或场地确认文本",
   "inbox.extractText": "提取文本草稿",
   "inbox.screenshot": "确认截图",
-  "inbox.imageHint": "图片字节仅用于此次提取请求。",
+  "inbox.imageHint": "图片用于提取预订信息。",
   "inbox.extractImage": "提取图片草稿",
   "inbox.authoritativeMemory": "权威记忆",
   "inbox.journeyMemory": "已保存的行程事实",
@@ -1731,7 +1730,7 @@ const zhCN: Dict = {
   "twin.explicitSub": "直接应用于当前方案目标。",
   "twin.learned": "学习到的软信号",
   "twin.learnedFrom": "来自已完成的行程结果",
-  "twin.learnedSub": "仅用于排序 · 随证据新鲜度过期。",
+  "twin.learnedSub": "影响行程排序 · 证据过期后失效。",
   "twin.authorityBoundary": "偏好的使用方式",
   "twin.boundarySub": "偏好用于调整路线和住宿排序；预订与付款由你决定。",
   "twin.provenance": "可检查的溯源可用",

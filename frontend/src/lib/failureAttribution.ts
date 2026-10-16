@@ -402,8 +402,7 @@ export function copyFor(
               ? `服务器处理失败（HTTP ${attribution.http_status}）。稍后重试。`
               : `Server error (HTTP ${attribution.http_status}). Try again later.`,
           };
-    /* ORD-0263 fifth state: an answer arrived, so the sentence may not claim one did not.  The status
-       and media type quoted here are the ones this response actually carried. */
+    /* ORD-0263 fifth state: record the HTTP status and media type carried by the received response. */
     case "failure.originInvalidResponse":
       return detail.hasCachedCopy
         ? {

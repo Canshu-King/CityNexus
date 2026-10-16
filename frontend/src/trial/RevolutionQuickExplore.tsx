@@ -21,12 +21,9 @@ import { MobileAiPrompt, type MobileAiAdvice } from "./mobile/MobileAiPrompt";
 /**
  * A HUMAN-SIZED entry to the exact signed R107/R108 endpoints.
  *
- * The two external HTTP operations are sent only when the user clicks their
- * plainly-labelled release button. A public geocoder result is only an
- * APPROXIMATE city center. If a user explicitly selects it as a coarse
- * public search area, this creates a manual search choice, not a claim that
- * they tapped a map or physically arrived there. No GPS, silent external
- * requests, disguised fixture, PlanVersion, or AgentRun is invented here.
+ * The labeled buttons send the two external HTTP operations. Geocoder results
+ * provide approximate city centers; selecting one sets a manual coarse public
+ * search area for the discovery request.
  */
 type Stage = "area" | "category" | "results" | "walk";
 

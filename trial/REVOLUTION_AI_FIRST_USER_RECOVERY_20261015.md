@@ -14,7 +14,7 @@
   - 若某候选的 `selection_state=READY_FOR_NATIVE_PLAN`，用户可选“让 AI 继续照看正式行程”，经真实 `selectBootstrapCandidate` 和原 `BootstrapJourneyStartPanel` 再转到正式 Journey Operator；未验证营业等必备事实时不放行。
 - `trial/agent_preview_app.py`：仅在**本地试玩启动器**下，把新 `POST /api/v1/journeys/{id}/trial-ai-discovery` 添加到原 FastAPI app；HMAC bearer + 当前 in-force Journey membership + DRAFT + 主人权限验证；每用户 15 秒间隔、每半小时最多 5 次模型请求；拒绝非 loopback 7863/7865 网关 URL，不存密钥、不打印模型原始输出、不接收前端传入 API Key，不自动调用公开地点 API、不写入真实 Journey 状态。
   - 依靠 `CITYNEXUS_HERMES_API_URL`、`CITYNEXUS_HERMES_API_KEY`、`CITYNEXUS_HERMES_MODEL`（来自 `trial/wb2api_agent.py`）发送**真实 OpenAI-compatible tools 请求**。只有提供 `propose_public_discovery` 结构化 tool_calls 且满足严格类别白名单，才返回 `MODEL_TOOL_SUGGESTION`。
-  - 这是**模型在引导期的真实只读工具建议**，**不是完整 HermesJourneyAgent 的 AgentToolGateway / 已持久化 AgentRun**。完整自主 Agent 仍在真实 ACTIVE Journey Operator 流程，绝不把前者包装成后者。
+  - 这是引导期的只读模型工具建议。完整 HermesJourneyAgent 通过 ACTIVE Journey Operator 调用 AgentToolGateway，并保存 AgentRun。
 - `trial/try_revolution.py`：后台 Uvicorn 加载 `trial/agent_preview_app.py` wrapper；原 `app.main` 其他所有路由和权限机制保持不变。使用 `--agent` 就是明确选择启用 AI 配置，不再多问一遍 “y”；但**真正产生外部模型请求**仍只有网页里点“让 AI 帮我想想”时发生。支持已有本地环境变量 `CITYNEXUS_NOMINATIM_CONTACT_EMAIL`，减少重复输入。
 - `frontend/src/api/citynexus.ts`：增加 `suggestTrialDiscovery()`，使用正常本机代理及浏览器现有签名 token，密钥只在后端。
 - `frontend/src/trial/RevolutionFirstLook.tsx`：把 AI 配置状态交给真正的引导页；若用户明确从可信结果启动正式计划，自动滚到原计划确认组件。

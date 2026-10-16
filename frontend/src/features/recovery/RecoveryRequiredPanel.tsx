@@ -148,9 +148,8 @@ export function RecoveryRequiredPanel({ journeyId, recovery, flags, onRefresh }:
       });
       onRefresh();
     } catch (error) {
-      /* Only a transport exception may say the request never arrived; and even then the channel
-         that decides it is shared with the rest of the app, so this card cannot claim a network
-         cause the shell would contradict. */
+      /* Shared read-failure attribution keeps this card's transport, origin, and parse states
+         aligned with the rest of the app. */
       const attribution = classifyReadFailure(error);
       recordAttribution(attribution, "recovery.generate");
       setNotice({

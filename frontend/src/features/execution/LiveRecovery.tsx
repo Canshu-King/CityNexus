@@ -443,7 +443,7 @@ export function LiveRecovery({
     const activation = departureReadiness?.departure_activation;
     const activityId = activation?.activity_id ?? departureReadiness?.target_activity_id;
     if (!activityId || activation?.can_confirm_departure !== true || activation.state === "BLOCKED") {
-      setMessage(zh ? "现在还不能确认出发，请先检查行程提示。" : "You cannot confirm departure yet. Check the trip guidance first.");
+      setMessage(zh ? "请先查看行程提示，再确认出发。" : "Review trip guidance before confirming departure.");
       return;
     }
     setBusy("departure");

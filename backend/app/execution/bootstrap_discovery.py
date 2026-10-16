@@ -413,13 +413,10 @@ def _provider_provenance(attempts: list[dict[str, Any]], *, configured_url: str 
         host = (parsed.hostname or "").lower()
     except ValueError:
         return "UNVERIFIED"
-    # The authoritative browser suite binds its provider boundary to loopback;
-    # a loopback answer is useful evidence, but it is not a public OSM answer.
+    # Loopback endpoints are classified as TEST_PROVIDER by the browser suite.
     if host in {"127.0.0.1", "localhost", "::1"} or host.endswith(".local"):
         return "TEST_PROVIDER"
-    # Source grading cannot claim a verified public endpoint over plaintext
-    # HTTP (or from a URL with embedded credentials).  Local test fixtures
-    # remain TEST_PROVIDER regardless of scheme, above.
+    # Public endpoint grades require HTTPS and credential-free URLs. Local fixtures keep TEST_PROVIDER above.
     if parsed.scheme.lower() != "https" or parsed.username or parsed.password:
         return "UNVERIFIED"
     if host in {

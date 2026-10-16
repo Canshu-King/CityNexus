@@ -80,7 +80,7 @@ adb reverse tcp:14173 tcp:14173
 ## 诊断与安全
 
 - `http://127.0.0.1:14173/api/v1/health` 应返回 200。
-- 新入口 URL 是 `/revolution` 而**不是** `/v8/hub`。
+- 打开 `/revolution` 进入手机版体验；`/v8/hub` 是旧页面。
 - 如果只有旧页面，确认代码已更新、启动脚本输出的新地址正确、浏览器缓存/SW 已清除（推荐隐身窗口）。
 - 日志在 `trial/.runtime/backend.err.log` 和 `frontend.err.log`。
 - 地理标签、开放时间、价格和交通 ETA 暂无来源时显示“未知”。
@@ -89,4 +89,4 @@ adb reverse tcp:14173 tcp:14173
 
 ## 完成标准
 
-不是“通过几百个 verifier”。是你本人打开 `/revolution`，无需理解 canonical ID 或配置数据库，输入连城，主动授权真实地理位置搜索，在城市里找到两个 sourceful 地点，保存个人 Pocket Walk，打开 GO 模式，并体验刷新恢复。若外部 provider 真的不可用，必须明确报告失败，而非替换成假成功。
+用户打开 `/revolution`，输入连城并授权地点搜索，找到两个有明确来源的地点，保存个人 Pocket Walk，开启 GO，再刷新页面确认行程恢复。若地点服务不可用，页面显示实际失败状态和原因。

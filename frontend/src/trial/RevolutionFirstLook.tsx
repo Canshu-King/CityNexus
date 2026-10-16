@@ -70,8 +70,7 @@ async function postJson<T>(path: string, payload: object): Promise<T> {
 }
 
 function freshCityCode(): string {
-  // The arbitrary DRAFT code is a private application namespace, NOT a claim
-  // that the supplied place has a canonical city identity or verified catalog.
+  // DRAFT codes are private application keys; the catalog resolver supplies canonical city identity.
   return "CN-RV-" + crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
 }
 

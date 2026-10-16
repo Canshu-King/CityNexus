@@ -70,9 +70,7 @@ function examplesFor(
   placeNames: string[],
   zh: boolean,
 ): Array<{ zh: string; en: string }> {
-  /* Ordered by name rather than by the order the read happened to return, so this cannot become a
-     second `slice(0, 8)` in disguise (R7): which two places appear in an *example sentence* must not
-     be decided by a provider's row order, because that order is not a claim about the trip. */
+  /* Alphabetical ordering makes the example sentence independent of provider row order (R7). */
   const picked = placeNames
     .filter((name) => name.trim().length > 0)
     .sort((a, b) => a.localeCompare(b, zh ? "zh-CN" : "en"))

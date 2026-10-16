@@ -2128,7 +2128,7 @@ class AgentToolGateway:
             "candidate_count": len(summaries),
             "plans": summaries,
             "collective_mediation": collective,
-            "authority_note": "Candidates are not selected or active; selection remains a separate deterministic authority decision.",
+            "authority_note": "Candidates are awaiting the deterministic selection step.",
         }
 
     def request_replan(self, request: AgentToolCall) -> dict[str, Any]:

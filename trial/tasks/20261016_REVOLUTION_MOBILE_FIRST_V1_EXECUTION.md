@@ -89,7 +89,7 @@
 
 `输入连城 → （可选）一句话告诉 AI → 地名搜索 → 点真实地名卡片 → 选兴趣 → 搜真实地点 → 看来源 → 选两站 → 保存 → GO → 刷新恢复。`
 
-逐项保存响应截图和网络/服务器日志。至少有一个实际签名 backend E2E，不是只有 `page.route` 全拦截的 fake test。真实 live Provider 失败就标 BLOCKED，别用 TEST_PROVIDER 冒充。
+逐项保存响应截图和网络/服务器日志。至少运行一个签名用户的 backend E2E，覆盖前端请求到后端响应的完整路径；测试结果记录 PASS/BLOCKED，provider 来源单独标记 TEST_PROVIDER 或真实服务。
 
 如 REAL AI 测试一次，需要本机合法的 `WB2API_KEY`、用户启用 `--agent` 和已有计费权限；最多一次受控请求，不公开 key、完整用户文本或 token。 `MODEL_TOOL_SUGGESTION` 只能报“模型给出工具建议”；真实持久化 AgentRun 需要进一步 ACTIVE Journey Operator。
 
