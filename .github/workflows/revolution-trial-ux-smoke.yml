@@ -40,3 +40,21 @@ jobs:
       - name: Vite production build
         working-directory: frontend
         run: npm run build
+      - name: Install Chromium for isolated mobile UI fixtures
+        if: github.ref == 'refs/heads/design/revolution-mobile-first-v1'
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Mobile UI real Chromium fixture smoke (NO live API or Agent)
+        if: github.ref == 'refs/heads/design/revolution-mobile-first-v1'
+        working-directory: frontend
+        run: npx playwright test --config playwright.mobile-trial.config.ts
+      - name: Upload labeled fixture screenshots and browser traces
+        if: always() && github.ref == 'refs/heads/design/revolution-mobile-first-v1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: revolution-mobile-ui-TEST-FIXTURE
+          path: |
+            frontend/mobile-ui-results/
+            frontend/mobile-ui-report/
+          if-no-files-found: ignore
+          retention-days: 7
