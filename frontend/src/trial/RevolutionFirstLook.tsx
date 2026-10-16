@@ -5,6 +5,7 @@ import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourn
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
+import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
 import {
   clearTravelerBearer,
   readTravelerBearer,
@@ -315,6 +316,7 @@ export function RevolutionFirstLook() {
                     <h2>当前行程</h2>
                     <p>这里连接原生 Journey Operator。只有真实产生的 AgentRun 和审批记录，才能算 AI 已执行。</p>
                   </section>
+                  <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
                   <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
                 </section>
               ) : (
