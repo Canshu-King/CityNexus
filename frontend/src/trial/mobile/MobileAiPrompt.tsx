@@ -11,6 +11,7 @@ export function MobileAiPrompt({
   value,
   busy,
   configured,
+  checking = false,
   advice,
   onChange,
   onSubmit,
@@ -18,6 +19,7 @@ export function MobileAiPrompt({
   value: string;
   busy: boolean;
   configured: boolean;
+  checking?: boolean;
   advice: MobileAiAdvice | null;
   onChange: (value: string) => void;
   onSubmit: () => void;
@@ -31,7 +33,7 @@ export function MobileAiPrompt({
     <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
       <div className="rev-quick-ai-title">
         <strong>想让 AI 帮你想玩法？</strong>
-        <small>{configured ? "可请求 AI 建议" : "AI 建议暂不可用 · 可手动选地点"}</small>
+        <small>{checking ? "正在连接 AI…" : configured ? "可请求 AI 建议" : "AI 建议暂不可用 · 可手动选地点"}</small>
       </div>
       <form onSubmit={submit}>
         <label htmlFor="rev-quick-ai-prompt">写下你的想法</label>
@@ -47,9 +49,9 @@ export function MobileAiPrompt({
         <div className="rev-quick-ai-actions">
           <button
             type="submit"
-            disabled={busy || !configured || value.trim().length < 4}
+            disabled={busy || checking || !configured || value.trim().length < 4}
             data-testid="rev-quick-consult-ai"
-          >{busy ? "正在请教 AI…" : "问问 AI →"}</button>
+          >{busy ? "正在请教 AI…" : checking ? "正在连接 AI…" : "问问 AI →"}</button>
           <span>点击后发送这段文字。</span>
         </div>
       </form>

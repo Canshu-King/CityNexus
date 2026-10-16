@@ -77,6 +77,28 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(fits).toBeTruthy();
   });
 
+  test("does not call AI disabled while the local runtime check is still loading", async ({ page }) => {
+    await signedMockJourney(page);
+    let releaseRuntime!: () => void;
+    const runtimeGate = new Promise<void>((resolve) => { releaseRuntime = resolve; });
+    await page.route("**/api/v1/agent/runtime-status", async (route) => {
+      await runtimeGate;
+      await fulfill(route, {
+        runtime_identity: "HERMES_COMPAT_ENDPOINT",
+        hermes_compat_configured: true,
+        ai_state: "CONFIGURED_UNVERIFIED",
+      });
+    });
+    await page.goto("/revolution");
+    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("正在连接 AI…");
+    await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("正在连接 AI…");
+    await expect(page.getByTestId("rev-quick-consult-ai")).toBeDisabled();
+    releaseRuntime();
+    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 网关已配置");
+    await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("可请求 AI 建议");
+    await expect(page.getByTestId("rev-quick-consult-ai")).toBeEnabled();
+  });
+
   test("three bottom tabs are tappable without submitting requests", async ({ page }, testInfo) => {
     await signedMockJourney(page);
     let upstreamCalls = 0;

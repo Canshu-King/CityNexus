@@ -109,7 +109,10 @@ export function RevolutionFirstLook() {
     agentRuntime?.runtime_identity === "HERMES_COMPAT_ENDPOINT"
     && agentRuntime.hermes_compat_configured
   );
-  const agentStatusTitle = nativeHermesReady
+  const agentStatusChecking = !agentRuntime && !agentCheckError;
+  const agentStatusTitle = agentStatusChecking
+    ? "正在连接 AI…"
+    : nativeHermesReady
     ? "Hermes 工具已就绪"
     : agentCheckError
       ? "AI 状态未知"
@@ -118,7 +121,9 @@ export function RevolutionFirstLook() {
         : agentConfigured
           ? "AI 网关已配置"
           : "AI 未启用";
-  const agentStatusDetail = nativeHermesReady
+  const agentStatusDetail = agentStatusChecking
+    ? "正在读取本机 AI 服务状态。"
+    : nativeHermesReady
     ? "可以提交行程需求并查看助手记录。"
     : nativeHermesConfigured
       ? "助手工具暂不可用，可先浏览行程。"
@@ -287,6 +292,7 @@ export function RevolutionFirstLook() {
                     journeyId={journey.id}
                     cityName={journey.cityName}
                     agentConfigured={Boolean(agentConfigured)}
+                    agentChecking={agentStatusChecking}
                     onPocketWalkChange={setPocketWalk}
                     onFormalCandidateSelected={(placeId) => {
                       setCandidateForJourney(placeId);
@@ -384,7 +390,7 @@ export function RevolutionFirstLook() {
                   <span>公开地点</span><strong>{sample ? "受控样本模式" : "真实公开地图接口"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
-                  <span>AI 助手</span><strong>{nativeHermesReady ? "Hermes 工具已就绪" : agentConfigured ? "网关已配置" : "当前未配置"}</strong>
+                  <span>AI 助手</span><strong>{agentStatusChecking ? "正在连接" : nativeHermesReady ? "Hermes 工具已就绪" : agentConfigured ? "网关已配置" : "当前未配置"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>

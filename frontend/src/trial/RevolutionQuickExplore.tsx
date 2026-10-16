@@ -205,12 +205,14 @@ export function RevolutionQuickExplore({
   journeyId,
   cityName,
   agentConfigured = false,
+  agentChecking = false,
   onFormalCandidateSelected,
   onPocketWalkChange,
 }: {
   journeyId: string;
   cityName: string;
   agentConfigured?: boolean;
+  agentChecking?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
   onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
 }) {
@@ -362,6 +364,10 @@ export function RevolutionQuickExplore({
 
   const consultHermes = () => {
     const goal = aiGoal.trim();
+    if (agentChecking) {
+      setAlert({ type: "neutral", text: "AI 正在连接，稍等一下再提交。" });
+      return;
+    }
     if (!agentConfigured) {
       setAlert({ type: "neutral", text: "AI 建议暂不可用，可直接搜索地点。" });
       return;
@@ -708,6 +714,7 @@ export function RevolutionQuickExplore({
           mapLink={mapLink}
           aiGoal={aiGoal}
           agentConfigured={agentConfigured}
+          agentChecking={agentChecking}
           aiAdvice={aiAdvice}
           onQueryChange={(value) => {
             setQuery(value);

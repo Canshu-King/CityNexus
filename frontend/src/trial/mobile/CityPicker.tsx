@@ -14,6 +14,7 @@ type CityPickerProps = {
   mapLink: string;
   aiGoal: string;
   agentConfigured: boolean;
+  agentChecking?: boolean;
   aiAdvice: MobileAiAdvice | null;
   onQueryChange: (value: string) => void;
   onCityLookup: () => void;
@@ -42,6 +43,7 @@ export function CityPicker({
   mapLink,
   aiGoal,
   agentConfigured,
+  agentChecking = false,
   aiAdvice,
   onQueryChange,
   onCityLookup,
@@ -155,6 +157,7 @@ export function CityPicker({
         value={aiGoal}
         busy={busy}
         configured={agentConfigured}
+        checking={agentChecking}
         advice={aiAdvice}
         onChange={onAiGoalChange}
         onSubmit={onAskAi}
