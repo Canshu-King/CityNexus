@@ -1,0 +1,133 @@
+产品源码文件数 (.tsx/.ts): 157
+
+臂甲 · className 表达式普查（配对括号扫描）
+  静态字符串处: 794（去重 token 794 枚）
+  表达式处: 64，其中模板串 16 处、非模板表达式 48 处
+  模板串逐枚列（这就是运行时拼 class 的全部现场）:
+    app/V8Experience.tsx:2952  `today-advisory${advisory.tight ? " tight" : ""}`
+    app/V8Experience.tsx:4661  `v8-booking-state${serverConfirmed(item.status) && item.commitment_id ? " safe" : ""}`
+    features/agent/AgentRunRail.tsx:17  `cn-agent-step ${step.status}`
+    features/agent/CopilotDock.tsx:391  `cn-native-mission ${compact ? "compact" : ""}`
+    features/agent/CopilotDock.tsx:844  `cn-copilot-dock ${expanded ? "open" : "collapsed"}${yieldToSurface ? " yield-to-surface" : ""}${idleCompact ? " idle-co
+    features/agent/CopilotDock.tsx:886  `cn-copilot-bubble ${item.role}`
+    features/discovery/DestinationPreparationPanel.tsx:569  `prep-job ${job.terminal ? "terminal" : "running"}`
+    features/execution/V12AuthoritativeJourneyPanel.tsx:133  `v12-activity-row ${item.id === now?.id ? "current" : ""}`
+    features/execution/V12AuthoritativeJourneyPanel.tsx:136  `v12-activity-status state-${(item.status ?? "NOT_STARTED").toLowerCase()}`
+    features/execution/V12StatePrimitives.tsx:39  `v12-impact-card ${passed ? "passed" : "blocked"}`
+    features/execution/V12StatePrimitives.tsx:43  `v12-risk-banner risk-${risk.toLowerCase()}`
+    features/planning/PlanComparison.tsx:191  `plan-cmp-band ${costKnown ? band.key : "unknown"}`
+    features/planning/PlanWithAiSheet.tsx:778  `plan-ai-preflight ${aiPreflightClass(aiState)}`
+    features/planning/PlanWithAiSheet.tsx:918  `plan-ai-result ${copy.tone}`
+    features/stay/HotelsPanel.tsx:219  `hotel-card${isChosen ? " chosen" : ""}`
+    features/trip/TripItinerary.tsx:478  `trip-stop${activity.protected ? " protected" : ""}${
+                    isCurrent ? " current" : ""
+                  
+  插值表达式去重逐枚列:
+    (item.status ?? "NOT_STARTED").toLowerCase()
+    activity.protected ? " protected" : ""
+    advisory.tight ? " tight" : ""
+    aiPreflightClass(aiState)
+    compact ? "compact" : ""
+    copy.tone
+    costKnown ? band.key : "unknown"
+    disrupted ? " disrupted" : ""
+    expanded ? "open" : "collapsed"
+    idleCompact ? " idle-compact" : ""
+    isChosen ? " chosen" : ""
+    isCurrent ? " current" : ""
+    item.id === now?.id ? "current" : ""
+    item.role
+    job.terminal ? "terminal" : "running"
+    passed ? "passed" : "blocked"
+    risk.toLowerCase()
+    serverConfirmed(item.status) && item.commitment_id ? " safe" : ""
+    step.status
+    yieldToSurface ? " yield-to-surface" : ""
+    yieldsAtRest ? " yield-at-rest" : ""
+  插值/三元里出现的字符串常量 token 去重逐枚列:
+    CONFIRMED
+    NOT_STARTED
+    active
+    all
+    blocked
+    checked
+    chosen
+    cn-pending-chip
+    cn-pending-chip--on
+    cn-pending-tick
+    cn-pending-tick--on
+    cn-poster-outcome
+    cn-poster-outcome--failed
+    cn-poster-page
+    cn-sim-outcome
+    cn-sim-refusal
+    cnx-select
+    cnx-select--listbox
+    collapsed
+    compact
+    current
+    disrupted
+    done
+    family-chip
+    green
+    idle-compact
+    is-current
+    live
+    map
+    open
+    passed
+    plan
+    poi-import-select-all
+    protected
+    provider-ready
+    quiet
+    running
+    safe
+    screenshot
+    selected
+    shelf
+    store-only
+    terminal
+    text
+    tight
+    timeline-item
+    unknown
+    user
+    v10-inbox-clear
+    v10-inbox-warning
+    v15-copilot-message
+    v8-activity
+    v8-exit
+    v8-map-stop
+    v8-mode-option
+    v8-pick-box
+    v8-primary-button
+    v8-quiet-button
+    v8-status-pill
+    v8-stay-card
+    violet
+    warn
+    yield-at-rest
+    yield-to-surface
+
+臂乙 · 三枚死类逐枚判
+  v8-rain-button
+    字面出现: 0 处  （0 文件）
+    能到达 className 的 token 集合里有没有: 没有
+    词根 'rain' 能到达的活 token: 无
+    含该词根的表达式处数: 0；含该词根的插值处数: 0
+  cn-copilot-runtime
+    字面出现: 0 处  （0 文件）
+    能到达 className 的 token 集合里有没有: 没有
+    词根 'runtime' 能到达的活 token: v8-runtime, v8-runtime-card
+    含该词根的表达式处数: 0；含该词根的插值处数: 0
+  cn-native-status
+    字面出现: 0 处  （0 文件）
+    能到达 className 的 token 集合里有没有: 没有
+    词根 'native-status' 能到达的活 token: 无
+    含该词根的表达式处数: 0；含该词根的插值处数: 0
+
+臂丙 · e2e 侧还引用这三枚类的地方（测试选择器，不是产品读者）
+  v8-rain-button -> e2e/_qoderMobileScan.ts:134
+  cn-copilot-runtime -> 0 处
+  cn-native-status -> 0 处
