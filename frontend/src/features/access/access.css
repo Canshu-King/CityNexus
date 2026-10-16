@@ -37,28 +37,12 @@
   gap: 8px;
 }
 
-.cn-access-picker {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
 
 .cn-access-picker-label {
   font-size: 12px;
   opacity: 0.75;
 }
 
-.cn-access-picker select {
-  min-height: 44px;
-  width: 100%;
-  max-width: 420px;
-  padding: 10px 12px;
-  border-radius: var(--cn-r-12);
-  background: rgb(255 255 255 / 4%);
-  color: inherit;
-  font: inherit;
-}
 
 .cn-access-ladder,
 .cn-access-sentences,

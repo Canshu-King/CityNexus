@@ -291,7 +291,7 @@
 
 /* Typography rhythm on the surfaces the app already renders. */
 .v8-page { background: var(--cn-canvas); }
-.v8-page h1, .v8-hero-title { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
+.v8-page h1 { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
 .v8-page h2, .v8-section-title { font-size: var(--cn-fs-title); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.015em; }
 
 /* Unify card material: solid content, restrained depth (no atmosphere floating), one corner.
