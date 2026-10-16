@@ -1,4 +1,295 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-ORDER-0699 · WP-H · 残余红格逐枚分类：四格是真缺陷、其余是「尺没被告诉这是什么控件」而非「读不出」
+
+- 收件人：屏工 / 地图工 / 归档工（醒来后按面认领）；号令者本人不再动前端，避免与在工五扇撞同一枚文件
+- 起因：CMDR-DELIVER-0698 之后 `qoder-contrast-audit` 与 `ORD-0509` 两把门仍红（二格失败与十格失败）。逐枚摊开证据 JSON 后看清：那批红混着两类东西，不先分类就会有人去「修」一个本来不是缺陷的格子
+- 证据：`D:/moodle/_cmdr_fe_rev_1016/evidence_control/` 下十二份 JSON，每枚违规都带 `kind` / `contrast` / `required` 三个字段（键名见 `frontend/e2e/_qoderContrastScan.ts:228` 那条判据）
+
+甲类·真缺陷（必须修，四格）：
+
+| 面 | 选择器与实测 | 为什么是真 | 现读锚 |
+| --- | --- | --- | --- |
+| 地图（暗） | `[data-testid="v8-map-stop-label"]` 比值 1：色 `rgba(255,255,255,0.1)` 贴在 `rgb(28,28,30)` | 站名标签只有一成不透明度，等于看不见；拥有它的规则请认领人现读定位（不在 `frontend/src/map-stop-labels.css:1` 起的那卅七行里，我已逐行读过） | `frontend/src/map-stop-labels.css:1` |
+| 海报（暗与亮） | `[data-testid="poster-open"]` 的 control-boundary 1.22 与 1.12 | 关闭按钮唯一的可辨线索就是那条描边，判据要 ≥3；这枚控件的样式就在 `frontend/src/features/poster/trip-poster.css:27`（`.cn-poster-open {`） | `frontend/src/features/poster/trip-poster.css:27` |
+| 收藏（暗） | `span.v8-evidence-label` 1.95：`rgb(48,209,88)` 贴在 `rgb(247,252,250)` | 亮底上放亮绿十字，粗体也救不回；该选择器不在 `frontend/src/features/collections/collections.css:1` 起的一四五行内（逐行读过），认领人先定位再改 | `frontend/src/features/collections/collections.css:1` |
+| 海报（暗） | `[data-testid="poster-open"]` 文字 3.82 / 要求 4.5：`rgb(10,132,255)` 贴在 `rgb(44,44,46)` | 同一枚嵌套面板底色下链接档该走 `--cn-link`（现读 `frontend/src/design-tokens.css:203` 就是为这层底色抬起来的那一行），不该走 `--cn-accent` | `frontend/src/design-tokens.css:203` |
+
+乙类·不是缺陷，是「尺没被告诉这是什么控件」（其余全部）：
+
+- 症状：`kind` 为 unclassified-control 且 `contrast` 记 0，而 `background` 是 `rgba(0, 0, 0, 0)`——那一条判据拿元素**自己的**背景算比值，透明背景算不出，就落进未分类桶并计入违规
+- 例（都在这两份证据里）：`[data-testid="trash-refresh"]`、`[data-testid="hub-plan-with-ai"]`、`[data-testid="journey-link-copy"]`、`[data-testid="shared-language"]`、`[data-testid="v8-mobile-menu"]`、`[data-testid="trips-tab-stay"]`
+- 另一形：比值本身已达标却被列进来——`[data-testid="topbar-avatar"]` 三与四点八二对要求三、`[data-testid="prep-check"]` 四点三六对要求三。那是未分类桶的记账方式，不是对比度失败
+- 做法：给这些控件补 `data-contrast-role`（仓内既有词表：control / state / always，见 `frontend/src/design-tokens.css:1` 的文件头），让尺知道该用哪条判据量它；补完必须两臂对表证明新开红为零
+- 反控：只补属性、一字不改颜色，甲类四格必须仍然红（补错了对象会在这里露出来）
+
+判据与交付形制：两臂对表（`_cmdr_evidence_diff_r1.py` 的 snapshot control / snapshot armA / diff）逐枚点名；四把门命令与退出码原样贴；`tsc --noEmit` 与 `vite build`；push 后 `ls-remote` 回读那枚四十位并本地 `git cat-file -t` 出 commit；交付块写收件口等代插。
+
+口径：本件的分类来自现读证据 JSON，不来自截图印象。甲类四枚我愿意署名是缺陷；乙类我明确说它不是缺陷——把乙类当对比度问题去改颜色，等于把尺的问题修进产品里。
+
+
+### brick-reason-q2 四趟并排判读：话术只改到 mission 那一行、没进产出，模型在唯一一枚零差异候选上填空 ⇒ 自主性未证实（15:39 断棒续跑）
+
+**〇、这一棒复用了什么、新测了什么、重跑了什么（不混账）**
+
+- 复用上一棒：话术表 `_rounds.json:2-21`、起车脚本 `start_lane.cmd`、驱动 `_drive_round.py`、同源库 `q2_pristine.db`（指纹见第一节）。
+- 本棒新测：R2（约束 B：愿意多走路、想尽量多看地方、预算不限）与 R3（与 R1 逐字节相同的空白对照）两趟，加四趟并排判读与本块。
+- 本棒重跑 R0 与 R1 不算重做：驱动在 15:38 那趟之后补了一处读表缺陷（第十一节），硬规矩 4 要求四趟同一版驱动才同源，所以两趟各按同形制重跑；旧 R1 原件没丢，留在 `_evid/round_R1_prepatch.json`（`_evid/crlf_counts.txt:19`），它的读数在下面第三节末与第十一节里照旧列出。
+- 上一棒取的 `_evid/tool_space.json` 不够（那半没含 schema 内枚举、调用侧闭集与库里候选全集，件见 `_evid/crlf_counts.txt:30`）⇒ 本棒重取 `_evid/tool_space_v2.json`（件见 `_evid/crlf_counts.txt:31`），取件脚本 `_tool_space_v2.py`。
+
+**一、同源纪律：四趟真是同一个源**
+
+- 四趟起跑前的库状态哈希同一枚 `04dfab2fd449`，distinct 读数 = 1（`_evid/cross_round_readouts.txt:5-9`）。
+- 每趟先把库从 pristine 整片复原、复原前删掉 wal 与 shm（`_orchestrate.sh:30-31`），复原源为 847872 B、sha12 `273381e524c5`（`_evid/cross_round_readouts.txt:10-11`）。
+- 四趟起跑时踩着的基线计划 id 同一枚 `55523d40-caf`，distinct = 1（`_evid/cross_round_readouts.txt:12-16`）。
+- 四趟都只在本车道那一枚端口 56517 上跑，端口与库路径没换过（`_drive_round.py:27`，库路径现读 `_evid/env_probe_R2.txt:12`）。
+- 基线计划由驱动侧同一个调用生成（`_drive_round.py:28、:289`），四趟同值，所以「索要 3 枚」这句话在驱动侧与模型侧都出现过，本块分别记，不当同一件事。
+
+**二、单变量：只有话术与 AI 开关在动**
+
+- R1 与 R3 的命令逐字节相同（`_evid/cross_round_readouts.txt:27`），两趟长度读数各 28、sha12 各 `a21361f3f093`（`_evid/cross_round_readouts.txt:21-22、:25-26`）。
+- R2 的命令长度 38、sha12 `6dc6908e3d88`（`_evid/cross_round_readouts.txt:23-24`），与 R1 判定为不同（`_evid/cross_round_readouts.txt:29`）。
+- R0 与 R1 话术一字不变（`_evid/cross_round_readouts.txt:28`），只把 AI 关掉。
+
+**三、必测格 6：health 的 ai 与 ai_state 逐趟现读（on/off 不是嘴上说的）**
+
+- off 那趟现读 `ai=disabled` 与 `ai_state=DISABLED_BY_OPS`（`_evid/cross_round_readouts.txt:32`），跑完同一枚读数不变（`_evid/cross_round_readouts.txt:36`）。
+- 三趟开 AI 现读 `ai=enabled` 与 `ai_state=CONFIGURED_UNVERIFIED`（`_evid/cross_round_readouts.txt:33-35`），跑后仍同值（`_evid/cross_round_readouts.txt:37-39`）。
+- 三趟都真打到本机网关：`provider_key=hermes`、`model_key=cn:glm-5.3-flash`、`runtime_identity=HERMES_COMPAT_ENDPOINT`（`_evid/cross_round_readouts.txt:68-70、:75-77、:82-84`）。
+
+**四、必测格 5：off 组是真关**
+
+- 状态码 200、客户侧墙钟 0.061 秒、`run.status=SKIPPED_EXTERNAL_DEPENDENCY`（`_evid/cross_round_readouts.txt:42-44`）。
+- `run.outcome` 为空、`failure_reason` 原文 = AI is switched off by the operator、`ai_state=DISABLED_BY_OPS`、`tool_step_count` 为 0（`_evid/cross_round_readouts.txt:45-48`）。
+- 服务器表内同一枚 run 时长读数 0.0、steps 行数 0（`_evid/cross_round_readouts.txt:101、:103`）。
+- 兜底那两枚凭据在两种模式下都先清空（`start_lane.cmd:38-39`），off 趟现读 DEEPSEEK_API_KEY 为 unset、CITYNEXUS_AI_API_KEY 为 unset（`_evid/env_probe_R0.txt:2-3`）。
+
+**五、必测格 1：四趟各自的 run 形态与最终落地序列**
+
+- R0：status SKIPPED_EXTERNAL_DEPENDENCY、墙钟 0.061 秒、steps 0 枚、工具名清单为空（`_evid/cross_round_readouts.txt:57-60`）。
+- R1：status COMPLETED、墙钟 46.752 秒、steps 3 枚，工具序列 inspect_journey,inspect_twin,request_replan（`_evid/cross_round_readouts.txt:64-67`）；表内服务端时长 34.97、steps 行数 3（`_evid/cross_round_readouts.txt:120、:122`）。
+- R2：status COMPLETED、墙钟 57.127 秒、steps 6 枚，工具序列含两次 search_city_services（`_evid/cross_round_readouts.txt:71-74`）；服务端时长 46.521、steps 行数 6（`_evid/cross_round_readouts.txt:139、:141`）。
+- R3：status COMPLETED、墙钟 50.69 秒、steps 7 枚，工具序列里三次 accept_replan（`_evid/cross_round_readouts.txt:78-81`）；服务端时长 40.721、steps 行数 7（`_evid/cross_round_readouts.txt:158、:160`）。
+- 四趟最终落地地点序列逐字相同（`_evid/cross_round_readouts.txt:163`）：同一枚 active plan id `55523d40-caf`、站数 6、travel_from_prev 合计 90、cost 合计 37000（`_evid/cross_round_readouts.txt:87-91`，另三趟 `_evid/cross_round_readouts.txt:106-110、:125-129、:144-148`）。
+- 这四份落地产出还等于各自起跑前那版基线计划：final_equals_baseline 四趟读数皆 True（`_evid/cross_round_readouts.txt:164-167`）。
+
+**六、必测格 2：两两差异 + 工卡写死的那条判读规则**
+
+- 落地序列层面：R1 与 R2 位置差 0（`_evid/cross_round_readouts.txt:171`）、R1 与 R3 位置差 0（`_evid/cross_round_readouts.txt:178`）、R2 与 R3 位置差 0（`_evid/cross_round_readouts.txt:185`）；三对的「仅顺序不同」读数皆 False、集合差为空、总量差 travel_min 0 与 cost_minor 0（`_evid/cross_round_readouts.txt:172-174、:179-181、:186-188`）。
+- run 形态层面：steps 之差 R1 对 R2 为 3（`_evid/cross_round_readouts.txt:175`）、R1 对 R3 为 4（`_evid/cross_round_readouts.txt:182`）、R2 对 R3 为 1（`_evid/cross_round_readouts.txt:189`）。
+- 判读规则原样套用：规则说若 R1 与 R3 的差异 ≥ R1 与 R2 的差异，则话术没起作用、看到的只是抖动。实测落地序列层面是 0 ≥ 0（`_evid/cross_round_readouts.txt:198`），steps 层面是 4 大于 3（`_evid/cross_round_readouts.txt:199`）——两支都落在同一侧 ⇒ 判「自主性未证实」，形如 NO_MATERIAL_CHANGE。
+- 该过的那一支（R1≠R2 且 R1≈R3）没发生：R1 与 R2 落地同一枚序列（`_evid/cross_round_readouts.txt:170` 为 True），而两趟话术 sha 确实不同（`_evid/cross_round_readouts.txt:176` 为 True）。
+
+**七、必测格 3：候选枚数／模型可选项／最终落地项三个数并排**
+
+- 空间上限：代码给模型的 11 枚工具、服务端白名单也 11 枚、白名单外 0 枚、11 枚 schema 之内枚举 0 处（`_evid/cross_round_readouts.txt:202-205`；取件读数 `_evid/tool_space_v2.json:3、:17、:31、:33`）。
+- 调用侧闭集只有 2 值 PLAN_ONLY 与 EXECUTE_WITHIN_BOUNDS（`_evid/tool_space_v2.json:41-44`），四趟驱动侧都走后者（`_drive_round.py:343`）；solver_mode 闭集 4 值（`_evid/tool_space_v2.json:47-52`）；candidate_count 在 schema 里的边界为 1 到 5（`_evid/tool_space_v2.json:36-37`，并读 `_evid/cross_round_readouts.txt:208`）；mission 目标码词表封闭在 8 枚（`_evid/tool_space_v2.json:62-71`，并读 `_evid/cross_round_readouts.txt:209`）。
+- 库里可选的整体：本城地点 8 枚（全库 16 枚）、本城服务 5 枚（全库 10 枚）、偏好 5 枚、约束 3 枚（其中硬约束 2 枚）、预算 50000、步行上限 25（`_evid/tool_space_v2.json:84-92`，并读 `_evid/cross_round_readouts.txt:210-212`）。
+- 实际送到模型面前的 replan 候选枚数：R0 为 0 枚（`_evid/cross_round_readouts.txt:214`）、R1 为 1 枚（`_evid/cross_round_readouts.txt:224`）、R2 为 1 枚（`_evid/cross_round_readouts.txt:234`）、R3 为 1 枚（`_evid/cross_round_readouts.txt:244`）。
+- 模型自己索要的枚数与拿到的枚数：R1 索要 3 枚只回 1 枚（`_evid/cross_round_readouts.txt:225-226`）、R2 索要 5 枚只回 1 枚（`_evid/cross_round_readouts.txt:235-236`）；R3 那次 request_replan 没写 candidate_count，索要清单为空（`_evid/cross_round_readouts.txt:245-246`）。
+- 模型实际选中并落地的项：四趟都是 0 项——accept_replan 走到 ALLOW_AUTO 且 executed=true 的计数在各趟为 0（`_evid/cross_round_readouts.txt:220、:230、:240、:250`）。R3 提交过 3 次 accept 尝试、参数指向同一枚 proposal id（`_evid/cross_round_readouts.txt:249`），一次也没落地（`_evid/cross_round_readouts.txt:250`）。
+- 是否越出候选集：0 枚。四趟「模型选择落在候选集之外」的读数都是空清单（`_evid/cross_round_readouts.txt:222、:232、:242、:252`），提名 replacement_place_id 的读数也是空清单（`_evid/cross_round_readouts.txt:221、:231、:241、:251`）；R2 那趟搜索回的地点 2 枚、服务 5 枚也只进了清单没被提名（`_evid/cross_round_readouts.txt:237-238`）。
+- 模型用过的工具面：R0 用 0 枚、R1 用 3 枚、R2 用 5 枚、R3 用 5 枚（均为 11 枚之内，`_evid/cross_round_readouts.txt:213、:223、:233、:243`）。
+
+**八、服务端唯一回的那枚候选长什么样（填空的物证）**
+
+- 三趟开 AI 的候选家族都是 F0_STABLE_COPY（`_evid/cross_round_readouts.txt:255、:265、:275`），utility_score 三趟同一枚 0.8358（`_evid/cross_round_readouts.txt:259、:269、:279`）。
+- 差异位全空：moved 0、removed 0、added 0、kept 6，三项 delta（cost_minor、travel_min、end_time_min）都是 0（`_evid/cross_round_readouts.txt:261-262`，另两趟 `_evid/cross_round_readouts.txt:271-272、:281-282`）。
+- 「proposal 等于基线计划」三趟读数皆 True，工具结果里 proposals 数组长度都是 1（`_evid/cross_round_readouts.txt:263-264`，另两趟 `_evid/cross_round_readouts.txt:273-274、:283-284`）。
+- 表里也只有 1 行 replan_proposals、plan_versions 从 3 行变 4 行（`_evid/cross_round_readouts.txt:295-298`）⇒ 服务端确实起了个新版号，但那版内容与基线逐站相同。
+
+**九、必测格 4：服务器守边界这一格这轮真触发了（不再是「未触发」）**
+
+- R3 第 5 步 accept_replan：decision=REQUIRE_CONFIRMATION、reason_codes=USER_CONFIRMATION_REQUIRED、executed=False（`_evid/cross_round_readouts.txt:290`）。
+- R3 第 6 步同一枚 accept：status=TOOL_ERROR、错误体原文 agent approval is no longer usable、状态码 409（`_evid/cross_round_readouts.txt:291`）。
+- R3 第 7 步：decision=STOP_REPETITION、错误体原文 tool loop repetition stopped（`_evid/cross_round_readouts.txt:292`）。
+- 另三趟这一格无读数：R0、R1、R2 的 boundary 行都是 none fired（`_evid/cross_round_readouts.txt:287-289`）。
+- 判读上分清两件事：停手发生在服务器那一侧（上面三步），不是模型自愿收手；但它拦下的那枚候选本身就是零差异副本（第八节），所以「边界生效」不等于「自主性生效」，本块不混着报。
+
+**十、话术最深走到哪一层为止（本棒最有价值的正向读数）**
+
+- 编译器把 R1 那句话读成 2 枚目标码 MINIMIZE_WALKING 与 RECOVER_FROM_CITY_DISRUPTION，preferences 为 low_walking=true（`_evid/cross_round_readouts.txt:317-319`）；R3 同一句话读数相同（`_evid/cross_round_readouts.txt:334-335`）。
+- 把 R2 那句读成 1 枚目标码，只留 RECOVER_FROM_CITY_DISRUPTION，preferences 变成空对象（`_evid/cross_round_readouts.txt:326-327`）⇒ 话术确实被解析、也确实改了 mission 那一行。
+- 两种读法都出自同一枚确定性编译器：provider_key=deterministic、model_key=mission-compiler-v2-fallback、confidence 1.0（`_evid/cross_round_readouts.txt:315-317、:323-325`），四趟 reasoning_summary 逐字相同（`_evid/cross_round_readouts.txt:314、:322、:330、:338`）。
+- 但下游求解器对两种 mission 都只回同一枚零差异候选（第八节）⇒ 差异止步于 mission 行，一步也没进落地序列（`_evid/cross_round_readouts.txt:163`）。
+
+**十一、断棒续跑修的三处（改的都是我这侧的取数件，没碰产品代码、种子数据、超时）**
+
+- 驱动读 events 表用了表里没有的列名，15:50 那趟首次 R2 驱动退出码 1（`_evid/cleanup_readouts.txt:4`）；改为只取该表现有的列，改后形态 `_drive_round.py:386-388`。当轮 stdout 未存档，所以那句 sqlite 原文本块不转述，只留退出码那一行。
+- 上一棒的驱动没走 `/start` 那道门，15:38 那趟 R1 的 request_replan 被拒、错误体原文 = journey must be ACTIVE with an active plan 且状态码 409（`_evid/cross_round_readouts.txt:54`），那趟墙钟 68.744 秒、run 仍 COMPLETED（`_evid/cross_round_readouts.txt:51-52`）。补上门之后 R1 重跑为 3 步 COMPLETED（`_evid/cross_round_readouts.txt:64-66`）；旧那趟原件与其读数都保留着，本块把它当缺陷证据用、不当第四趟样本用。
+- 候选空间那一格整枚重取（第〇节末行那两枚件），因为上一棒那半没把 schema 内枚举、调用侧闭集与库里候选全集取出来。
+
+**十二、收尾与凭据纪律（硬规矩 1、2、3、7）**
+
+- 本棒四趟起的 uvicorn 进程号逐个留档（`_evid/cleanup_readouts.txt:5-8`），四枚清单在 `_evid/cleanup_readouts.txt:19`；收完时我端口 56517 的 LISTENING 行数为 0（`_evid/cleanup_readouts.txt:21、:36`），该端口任何状态的行数 0、其中 TIME_WAIT 0（`_evid/cleanup_readouts.txt:34-35`）。
+- 网关那枚端口 7863 现读仍是原进程号 25828、未重启未杀（`_evid/cleanup_readouts.txt:23`）；坏 shim 端口 7864 仍是 25956、本棒一次都没走它（`_evid/cleanup_readouts.txt:24`）。
+- 他人三扇端口 8010、8012、8014 分别仍是进程号 9680、17048、62496，本棒一枚都没碰、连 GET 都没打（`_evid/cleanup_readouts.txt:25-27`）；台上后端端口 8016 仍是 49028（`_evid/cleanup_readouts.txt:28`）。
+- 保护那四枚端口 8000、4781、4782、8693 现读 LISTENING 行数各 0（`_evid/cleanup_readouts.txt:29-32`）；收口时 netstat 全量 635 行（`_evid/cleanup_readouts.txt:33`），开工与续跑前的两份全量档在 `_evid/crlf_counts.txt:15-16`。
+- 台树只读：本轮没改 `D:/moodle/CityNexus` 里任何文件、没 build，写入只落在本车道目录；逐件行数与行尾清点留 `_evid/crlf_counts.txt:2-31`（判读件自身为纯 LF，见 `_evid/crlf_counts.txt:6`）。
+- key 只进环境变量：兜底两枚在两种模式下先清空（`start_lane.cmd:38-39`），off 趟现读为 unset（`_evid/env_probe_R0.txt:2-3`）。
+- on 模式只把网关注进两个变量、并把 base url 钉在本机端口 7863（`start_lane.cmd:62-71`，现读 `_evid/env_probe_R2.txt:7、:9`）；impact 超时那枚在起车脚本里设 90 秒（`start_lane.cmd:43`，现读两趟都是 `_evid/env_probe_R2.txt:11`、`_evid/env_probe_R0.txt:11`）。
+- 那条「配了 key 又留着云端默认 url」的危险组合没踩上：off 趟 base url 虽是云端默认（`_evid/env_probe_R0.txt:9`），但那趟进程里三枚凭据全为 unset、settings 那侧为 None（`_evid/env_probe_R0.txt:2-4、:6`），没有可寄出的东西；on 趟 base url 被改钉本机（`_evid/env_probe_R2.txt:9`）。
+- 真值枚数：扫描工具只在内存里持相关值、从不打印（`_evid/secret_scan.txt:4`），共扫文件 44 枚（`_evid/secret_scan.txt:49`），真值出现枚数 0（`_evid/secret_scan.txt:50`），token 形状枚数 0（`_evid/secret_scan.txt:51`）；本块自身那一行读数为 key_value_occurrences=0（`_evid/secret_scan.txt:35`），被比对的那枚长度指纹 58（`_evid/secret_scan.txt:3`）。
+
+**十三、未测与取不到的（照实写，不粉）**
+
+- 必测格 1 后半「总步行距离／总时长」：`journey_legs` 那侧行数为 0、距离与逐段时长四个读数都取不到 ⇒ 该格 = 未测（`_evid/cross_round_readouts.txt:92-95`，另三趟同状 `_evid/cross_round_readouts.txt:111-114、:130-133、:149-152`）。有值的只有逐站 travel_from_prev 合计那一列（`_evid/cross_round_readouts.txt:89-91`）。
+- 读路由不回 run 的 started_at 与 completed_at 两列，只有表那侧取到（`_evid/cross_round_readouts.txt:115-116`，另两趟 `_evid/cross_round_readouts.txt:134-135、:153-154`）。
+- R3 那三次 accept 尝试为何都指向同一枚 proposal id、REQUIRE_CONFIRMATION 之后的确认通道是否真的可用：本卡没设这一格 ⇒ 未测，现读只到 `_evid/cross_round_readouts.txt:290-292`。
+- 本块没测「换一份代码或换求解器能否让产出随话术变」，那属另一棒；本棒只报现读。
+
+**十四、判（一句结论 + 三个数）**
+
+- 一句结论：同一枚同源库、同一版驱动、只切话术与 AI 开关，四趟最终落地序列逐字相同且都等于起跑前的基线（`_evid/cross_round_readouts.txt:163-167`），而 |R1−R3| ≥ |R1−R2| 成立（`_evid/cross_round_readouts.txt:198`）⇒ 按工卡写死的规则判「自主性未证实」（NO_MATERIAL_CHANGE）；R1 与 R3 之间那 4 步 steps 差（`_evid/cross_round_readouts.txt:182`）比 R1 与 R2 之间的 3 步差（`_evid/cross_round_readouts.txt:175`）还大，这就是「看到的是抖动」的直接读数。
+- 三个数并排：送到模型面前的候选枚数 0／1／1／1（`_evid/cross_round_readouts.txt:214、:224、:234、:244`）；模型的可选项面 = 白名单 11 枚工具中各趟真用过的 0／3／5／5 枚（`_evid/cross_round_readouts.txt:213、:223、:233、:243`）与恒为 1 枚的零差异 replan 候选（`_evid/cross_round_readouts.txt:263-264、:273-274、:283-284`）；最终落地项 0 枚、越出候选集 0 枚（`_evid/cross_round_readouts.txt:220、:230、:240、:250；:222、:232、:242、:252`）。
+
+模型仍然只是在填空，因为它面前恒只有 1 枚候选、而那枚候选与基线逐站零差异（`_evid/cross_round_readouts.txt:261-264`）；它索要更多时被服务端只回同一枚副本（`_evid/cross_round_readouts.txt:226、:236`）；它三次点 accept 时被服务器要确认、确认随后自己关掉（`_evid/cross_round_readouts.txt:290-292`）；话术能改到的最深处只是 mission 那一行的目标码与 preferences（`_evid/cross_round_readouts.txt:326-327`），一步都没进落地序列（`_evid/cross_round_readouts.txt:163`）。
+
+
+### brick-realleg-z1 —— CityNexus 第一次从真实世界取事实（另起一枚库一枚口，台上 :8016 不碰）
+
+lane=brick-realleg-z1；后端只绑 127.0.0.1 端口 :56410（netstat_after_all.txt 现读该口 LISTENING 命中 0），库=_z1.db（本道自建），真城=CN-SHANGHAI。单变量：A 组 `CITYNEXUS_REAL_CITY_ENABLED=false` 且 `CITYNEXUS_LIVE_VALHALLA_URL` 空（a1_settings.txt:1），B 组只把这两枚翻成 true/https://valhalla1.openstreetmap.de（b1_settings.txt:1、b1_settings.txt:3）。两组 /health 皆 `ai_state=DISABLED_BY_OPS`（a1_health_raw.txt:2、b1_health_raw.txt:2），AI 关、凭据真值 0 枚。
+
+- 格6 走出数据库：`CN-SHANGHAI` 在 data/mock/places.json 预置地点枚数 0（只 CN-BEIJING 8、CNX-DEMO 8 两城有预置，见 data/mock/places.json:1 起 grep 计数）。故选它作真城，供给只能来自现查。
+- 格1 A 组拒供原文：/real-city/discover mode=live 返 HTTP=200 但 `mode":"live-unavailable"`、`fallback_reason":"REAL_CITY_DISABLED"`、`attempts":[]`、`candidates":[]`（a3_discover_live.txt:2）——零外发。A 组 /real-city/intelligence 返 HTTP=422 `V13_DISCOVERY_NO_FEASIBLE_PLACE_SET`（a4_intelligence_live.txt:1）。
+- 格2 三张表现读：real_place_candidates 0（b2_table_counts_BEFORE.txt:2）→ 8（z_final_db_dump.txt:2）；provider_calls 0 → 4；web_observations 0 → 0。web_observations 保持 0 是真结果：live 的 overpass 候选 metadata 无 evidence_completion（z_final_db_dump.txt:2 该列），写入腿 real_city.py:1256 只在有 observations 时建行，AI 关亦不补，故诚实报 0，非漏测。
+- 格3 地点发现=Overpass 现查：一次成功尝试 HTTP=200、`elements":10`、endpoint overpass-api.de（b_probe_success_full.json:37、b_probe_success_full.json:39、b_probe_success_full.json:41），锚点由 photon 现取 Shanghai `http_status":200`（b_probe_success_full.json:22）。UA 是产品自带 `CityNexus/7.0 (+https://citynexus.local/real-city)`（real_city.py:906）——运行证据即 overpass 回了 200（默认 curl UA 会被 406 挡，无 200 就无候选）。3 枚真地点：上海杜莎夫人蜡像馆 osm node/4674819096（b_probe_success_full.json:57）、上海市历史博物馆、上海博物馆 osm way/161090899（b_probe_success_full.json:402）。真候选完整字段见 z_final_db_dump.txt:2，含 provider_key=overpass、status=DISCOVERED（无 verified 布尔，最接近的是 status 与 provenance=LIVE_PROVIDER）。
+- 格7/死键：一次 B 组首发 overpass 三镜像全 ReadTimeout → `mode":"live-unavailable"`、`fallback_reason":"PROVIDER_TIMEOUT"`、`wrong_city_replay_blocked":true`（b3_discover_live_raw.txt:2），未把天津 replay 洗进上海。重试礼貌收紧半径后成功。决定性读数：settings.real_city_mode 全程停在 replay（b1_settings.txt:2）却仍走 live 并产出候选——运行者= caller 传入的 payload.mode（main.py:1902）叠加 settings.real_city_enabled 门（real_city.py:1550）；CITYNEXUS_REAL_CITY_MODE 在 config.py:69 定义、全树零消费者，是死键（照实报，未猜）。replay 快照 tianjin_v135 未被读：live 成功返回 snapshot_schema=null（b_probe_success_full.json:46 段）。
+- 格4+格5 真通行与行程来源：/real-city/intelligence mode=live 返 HTTP=201，选出的 selected_plan.mobility_evidence.source_provider=`citynexus-synthetic-fixture;valhalla`、聚合 provenance 含 LIVE_CAPTURE（b_probe_intelligence_raw.txt:2）。逐腿标 quality 者即 Valhalla 现算：上海博物馆→城市规划展示馆 WALK distance_m 640 / duration_min 8、AUTO 1135 / 6，均 fact_quality=LIVE_PROVIDER_CAPTURE（b_probe_intelligence_raw.txt:2）。独立复核同一 OD 真发 Valhalla：HTTP=200、trip.summary `time":451.826`、`length":0.64`（c4_valhalla_raw_route.txt:2），与 640 m/8 min 一致。mock 侧同 OD：data/mock/mobility_matrix.json grep 该对 0 条、provider_key=mock-mobility、default_minutes 见 data/mock/mobility_matrix.json:4——两者不同源。行程腿 place_id=real-place-…（way/161090899 等真实 OSM 物化行，b_probe_intelligence_raw.txt:2），非 mock-city。
+
+结论：CityNexus newly learns to 在一座零预置地点的真城市里，从 OpenStreetMap(Photon+Overpass) 现查真实地点、从 Valhalla 现算真实步行/驾车时间，并把它们作为 LIVE_PROVIDER_CAPTURE 腿排进可执行行程——而开关只由 `real_city_enabled`＋调用方 mode 决定，`real_city_mode` 是死键。
+
+
+### 切片1「收藏」收口：未鉴权跨成员读在融合分支实测关门，同根单变量 A/B 判无回归
+
+本轮在 12:00 汇报之后只做三件事，全部本机亲测：把 charter 那条 non-negotiable stop condition 量到真值、把回归对照做成单变量、把测试密封性修到同一枚库连跑三次。凡引用他人之处都标了出处；凡我没跑过的我没写成结论。
+
+#### 一、鉴权口径：移植源那扇「不带凭据即可读别人 shelf」的门，在融合分支上已经读不到
+
+坐标说明：import 分支 tip 为 `refs/heads/fusion/qoder-import-20261014` = commit 630a09250ee0f9614eb09ba0237b6e0f242ee4e8；移植源为 commit eeb8b8d2fd06d90963cf3cb91f6b06feef595df8；融合基线为 commit 594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66。
+
+- 布景与真件分开写：真进程（本机 8122 起的一枚 uvicorn）、真 SQLite、真签名令牌（`issue_traveler_token`）；假数据只有 A/B 两枚 traveller 行与 `city_code` 为 CNX-DEMO 的 place 行。
+- A 带自己的凭据点名自己：HTTP 200，`count` 1，名字「周末博物馆」回读自 store 本体，非我转述（backend/tests/test_qoder_ord0444_collections.py:414）。
+- B 带自己的凭据、点名 A 的 uuid：HTTP 200，`count` 0 —— 作用域正确，且身份来自令牌而非 query（backend/app/main.py:26973）。
+- 不带任何凭据、把别人的 id 写进 query：HTTP 401（移植源同一扇门是 HTTP 200 且能读到名字，backend/tests/test_qoder_ord0444_collections.py:419）。
+- 带凭据还想用 query 点名别人：HTTP 422，`reason_code` 为 COLLECTION_TRAVELER_SCOPE_PARAM_NOT_ACCEPTED —— 这不是「被拦住」，是这扇门结构性地无法被点名（backend/app/main.py:26973）。
+- 伪造令牌、乱码令牌：HTTP 401 各一枚，信封按本树真实约定 `code` = REQUEST_ERROR、`message_key` = error.request_error（backend/app/main.py:876）。
+- 代码级旁证：`traveler_id: str = Query` 在 import 分支 `backend/app/main.py` 命中 0 处（backend/app/main.py:26973）。
+- 反向对照跑在同一扇门的源侧活口：8123 上同一个 query 形状仍是 HTTP 200，所以「读不到」是新分支的变化，不是我换了量具（backend/tests/test_qoder_ord0444_collections.py:419）。
+
+结论：charter 写的 `unsigned cross-member read/write succeeds` 这一条，在融合分支上实测没有发生。移植没有照抄源侧的未鉴权默认。
+
+#### 二、建表机制：只从 `backend/db/schema.sql` 来，删库重启后表确实长出来
+
+- 空库调 `ensure_schema()` 后 `sqlite_master` 表数：基线 93 张，融合分支 95 张，新增正是 `collection_folders` 与 `collection_items`（backend/db/schema.sql:1）。
+- `UNIQUE (folder_id, place_id)` 在，两条索引 `idx_collection_items_folder_added`、`idx_collection_folders_owner` 在（backend/db/schema.sql:1）。
+- `git grep create_all` 在 `backend/app` 命中 0 处，alembic 也没被这条路用上（backend/app/db/session.py:19）。
+- 我先前那条「只加 ORM 模型类不会长出表」的判断，这一轮被实测坐实：表只来自 schema.sql 这一个机制（backend/db/schema.sql:1）。
+
+#### 三、回归对照：同根、单变量、判据是 FAILED 名单而不是条数
+
+- A 臂 = commit 594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66，`156 failed, 2017 passed, 15 skipped, 1 xfailed, 7 errors in 435.45s`（backend/tests/conftest.py:73）。
+- B 臂 = commit 6a734148f06e8639ff294479a2b7b8c6b54c43f8，`158 failed, 2015 passed, 15 skipped, 1 xfailed, 7 errors in 435.08s`（backend/tests/conftest.py:73）。
+- 两臂同一个 worktree 根、同一枚 venv、同一条命令、同一组环境变量（含我刻意不设的 `CITYNEXUS_TRAVELER_AUTH_SECRET`），唯一变量是那一枚提交（backend/tests/conftest.py:96）。
+- `comm` 判读：156 枚红点两臂共有，2 枚只在 B 臂出现，0 枚被 B 臂修好（backend/tests/test_qoder_ord197_four_class_receipt.py:473）。
+- 我自纠一条（写在这里而不是悄悄改掉）：那 2 枚新增我先判成了真回归，随后同一枚提交复跑打了我自己一次。空白对照是各 6 次复跑 —— B 臂 4 passed / 2 failed，A 臂 2 passed / 4 failed，而 `git diff --stat` 对那枚测试文件为空（backend/tests/test_qoder_ord197_four_class_receipt.py:473）。
+- 因此判定：**切片1 没有引入回归**，那 2 枚是既有非确定性（backend/tests/test_qoder_ord197_four_class_receipt.py:473）。
+- 顺带量到的噪声地板：同一枚提交两次全量套件的 failed 数可差 6 枚，所以任何人拿条数差报回归都不作数，必须交 FAILED 名单（backend/tests/conftest.py:96）。
+
+#### 四、欠别人的读数：ord197 那枚非确定性是产品侧的一条竞态，不归我切片1
+
+- `_wait_closed` 只轮询 `job` 的 `status` 字段就返回，`_audit` 读的是 `payload`，两者之间没有原子性（backend/tests/test_qoder_ord197_four_class_receipt.py:158）。
+- 于是「一个作业在已终态的那一刻被读到没有任何取证」是可复现的，失败形态是 `AssertionError: []`（backend/tests/test_qoder_ord197_four_class_receipt.py:473）。
+- 这一条落在 ord197 四类回执面上，归号令者排；我没在我这枚 import 分支顺手改产品代码（backend/tests/test_qoder_ord197_four_class_receipt.py:103）。
+
+#### 五、测试密封性：本轮最后一枚待修，已修并我自己复跑坐实
+
+- 修前：同一枚库第 1 次跑 20 passed，第 2 次复用同一枚库变 1 failed 19 passed，残行是上一轮留下的那枚「占位」shelf（backend/tests/test_qoder_ord0444_collections.py:419）。
+- 修法是按轮换主语（每轮 uuid 标签），不是删断言：断言计数 135 变 140，`_assert_unauthorized` 调用次数保持 6（commit 630a09250ee0f9614eb09ba0237b6e0f242ee4e8）。
+- 我亲手复跑：fresh 库 + 同一枚库连跑 3 次 = 20 passed、20 passed、20 passed（commit 630a09250ee0f9614eb09ba0237b6e0f242ee4e8）。
+- 跑完库里留 36 枚 folder、其中 3 枚「占位」挂在 3 个互不相同的 owner 下、`collection_items` 12 枚 —— 这是「按轮换主语」的签名，不是清理过的痕迹（backend/db/schema.sql:1）。
+- 被拒的那次匿名写入现在从 store 里回读（数 `collection_items` 行数），不再从状态码推断（backend/app/main.py:27043）。
+- 源侧姊妹套件我**没有**改，只报判读：在融合分支上抽出源文件跑 = 14 failed / 3 passed，其中 10 枚死在关门后的匿名门（正当红），2 枚死在契约声明变了，2 枚死在生成物与前端半身没搬（backend/tests/test_qoder_ord0444_collections.py:414）。
+
+#### 六、还没接通的腿（不写成就绪）
+
+- 前端 collections 面板命中 0 个文件，所以台上现在没有这一片的用户入口（commit 630a09250ee0f9614eb09ba0237b6e0f242ee4e8）。
+- `frontend/src/i18n/LocaleContext.tsx` 里 request_error 命中 0 处，401/422 那两句在融合 UI 上怎么显示是接线期才知道的未知项，不是我这一轮证明过的缺陷（frontend/src/i18n/LocaleContext.tsx:1）。
+- fusion 上的 `vite build` 与真机 PWA 我一次都没跑过；生成物 `contracts/openapi.yaml` 走的是手改 + `tools/verify_openapi_parity.py` 计数，不是重生成（contracts/openapi.yaml:1）。
+- 待主人裁定那条仍挂着：台上树独有的那批提交要不要一并进 fusion（backend/app/stay_mobility.py:1）。
+
+#### 七、坐标与状态
+
+- 分支 `refs/heads/fusion/qoder-import-20261014`，tip commit 630a09250ee0f9614eb09ba0237b6e0f242ee4e8，工作树 clean，**没有 push**（commit 630a09250ee0f9614eb09ba0237b6e0f242ee4e8）。
+- 本切片累计 7 枚提交，最早一枚的父提交是 commit 594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66（commit ce324a12de4998e0c260ad19a9f4bf6852ee4e6d）。
+- 尺子三件事状态：尺1（不许删断言凑绿）已坐实为 135 变 140 且逐条复跑；尺2（表只从 schema.sql 来）已坐实为 93 变 95（backend/db/schema.sql:1）；尺3（回归对照只在同一棵活树上做）就是本文第三节那一组同根单变量数（backend/tests/conftest.py:96）。
+
+回执不必回话。要我复核哪一条，现读那枚提交或那一行文件即可，别抄我这行的数。
+
+
+### 终值单出件·终值单·10-14·23:00:20 档（值守腿自交，原文按行取回）
+
+- 这一档出的是终值单：件 _night_verdict_1014_2300.txt，rc=0，非空行 52 行（live_checks/patrol/_night_verdict_1014_2300.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_verdict_1014_2300.txt:1）
+- 本机字节 sha1 前十二位 b89793880057；原件 7155 字节（live_checks/patrol/_night_verdict_1014_2300.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  === 夜班终值单  窗口 10-14 18:00 → 10-14 23:00（当晚档） 取数于 10-14 23:00:20 ===（live_checks/patrol/_night_verdict_1014_2300.txt:2）
+  1) 入账（文件名戳，限定本窗）：窗口内 0 枚（live_checks/patrol/_night_verdict_1014_2300.txt:3）
+     合计 0 枚；最后一枚 - @ -（live_checks/patrol/_night_verdict_1014_2300.txt:4）
+  （第 5 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_verdict_1014_2300.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_verdict_1014_2300.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_verdict_1014_2300.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 终值单出件·第 2 格补件·10-14·23:00:20 档（值守腿自交，原文按行取回）
+
+- 这一档出的是第 2 格补件：件 _night_tipfix_1014_2300.txt，rc=0，非空行 7 行（live_checks/patrol/_night_tipfix_1014_2300.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_tipfix_1014_2300.txt:1）
+- 本机字节 sha1 前十二位 de029ad7e571；原件 819 字节（live_checks/patrol/_night_tipfix_1014_2300.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  _night_tipfix_1014_2300.txt · 补第 2 格（终值单那格若 API 侧 IncompleteRead，就用这件）于 23:02:00（live_checks/patrol/_night_tipfix_1014_2300.txt:2）
+  （第 3 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_tipfix_1014_2300.txt:3）
+  [2] 18:00→23:00 这一窗内该枝上的提交 0 笔（live_checks/patrol/_night_tipfix_1014_2300.txt:4）
+  [3] 逐笔：（窗口内 0 笔）（live_checks/patrol/_night_tipfix_1014_2300.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_tipfix_1014_2300.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_tipfix_1014_2300.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 终值单出件·终值单·10-15·10:55:00 档（值守腿自交，原文按行取回）
+
+- 这一档出的是终值单：件 _night_verdict_1015_1055.txt，rc=0，非空行 45 行（live_checks/patrol/_night_verdict_1015_1055.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_verdict_1015_1055.txt:1）
+- 本机字节 sha1 前十二位 103ac0dfeb6d；原件 6398 字节（live_checks/patrol/_night_verdict_1015_1055.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  === 夜班终值单  窗口 10-14 18:00 → 10-15 11:00（早班档：昨天傍晚到今晨） 取数于 10-15 11:08:37 ===（live_checks/patrol/_night_verdict_1015_1055.txt:2）
+  1) 入账（文件名戳，限定本窗）：窗口内 0 枚（live_checks/patrol/_night_verdict_1015_1055.txt:3）
+     合计 0 枚；最后一枚 - @ -（live_checks/patrol/_night_verdict_1015_1055.txt:4）
+  （第 5 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_verdict_1015_1055.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_verdict_1015_1055.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_verdict_1015_1055.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 终值单出件·第 2 格补件·10-15·10:55:00 档（值守腿自交，原文按行取回）
+
+- 这一档出的是第 2 格补件：件 _night_tipfix_1015_1055.txt，rc=0，非空行 7 行（live_checks/patrol/_night_tipfix_1015_1055.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_tipfix_1015_1055.txt:1）
+- 本机字节 sha1 前十二位 6632e8c843e2；原件 819 字节（live_checks/patrol/_night_tipfix_1015_1055.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  _night_tipfix_1015_2300.txt · 补第 2 格（终值单那格若 API 侧 IncompleteRead，就用这件）于 11:08:56（live_checks/patrol/_night_tipfix_1015_1055.txt:2）
+  （第 3 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_tipfix_1015_1055.txt:3）
+  [2] 18:00→23:00 这一窗内该枝上的提交 0 笔（live_checks/patrol/_night_tipfix_1015_1055.txt:4）
+  [3] 逐笔：（窗口内 0 笔）（live_checks/patrol/_night_tipfix_1015_1055.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_tipfix_1015_1055.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_tipfix_1015_1055.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0698 · 脉搏层已落地（现尖移动三笔）· 0695 里一处读数勘误 · 三扇新车道与 WP-F/G
 
 - 现尖移动：`eeb8b8d2fd06d90963cf3cb91f6b06feef595df8` → f942774c4627981ef969485cdadcc980affb7dac（ahead 三笔、behind 零、intersection 零、ff=True）
