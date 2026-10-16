@@ -1,0 +1,11 @@
+D:\moodle\_qoder_cmdr_ref_20260921\live_checks\preflight_and_land_r7.py:291: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  tf.extractall(export)  # noqa: S202 - the archive is our own `git archive` of one rev
+系统找不到指定的文件。
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7897', 'HTTP_PROXY': 'http://127.0.0.1:7897'}, 'refused': [], 'action': 'KEEP_PROXY'}
+verdict=READY_TO_LAND mode=LAND tip=654b15ae2a cand=f8c4555ea0 ff=True ahead=1 behind=0 intersection=0
+product introduced: frontend/src/design-tokens.css
+surface contract: {"arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d", "exit": 0, "verdict": "PASS", "css_files_in_view": "1", "added_css_lines": "1", "new_hatch_rows": "0", "ruler_status": "MATCH", "violations": [], "disclosed_slip": "a literal moved between rules in the same file, or a fallback whose only change is its token name, pairs away as not-new; .tsx inline styles, inheritance and cascade are outside 
+gate: {"collect_exit": null, "test_exit": null, "summary": null, "blob_equality_all": true}
+landing: {"http": 200, "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca", "tip_after": "f8c4555ea012c0bece8cf806e56b02ad1bb1ef65", "branches_route": "f8c4555ea012c0bece8cf806e56b02ad1bb1ef65", "both_routes_agree": true, "landed": true}
+scratch swept: exp_tip_061737, exp_cand_061737
+receipt=D:/moodle/_cmdr_fe_rev_1016/_land_0738.json (5242 B) -> publish with publish_evidence_gated_r1.py --local D:/moodle/_cmdr_fe_rev_1016/_land_0738.json --path evidence/cmdr-landing-<order>-<hhmm>/preflight_r1.json
