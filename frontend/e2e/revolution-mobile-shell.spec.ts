@@ -63,7 +63,7 @@ async function signedMockJourney(page: Page, saved = false) {
 test.describe("Revolution Mobile-First UI fixture", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
-  test("an unstarted visitor sees a clean, usable destination CTA", async ({ page }) => {
+  test("an unstarted visitor sees a clean, usable destination CTA", async ({ page }, testInfo) => {
     await page.route("**/api/v1/agent/runtime-status", (r) => fulfill(r, {
       runtime_identity: "UNAVAILABLE",
       hermes_compat_configured: false,
@@ -73,12 +73,13 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
     await expect(page.getByTestId("rev-firstlook-city")).toHaveValue("连城");
     await expect(page.getByTestId("rev-firstlook-start")).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath("mobile-welcome-TEST-FIXTURE.png"), fullPage: true });
     await expect(page.getByTestId("rev-mobile-bottom-nav")).toHaveCount(0);
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
   });
 
-  test("three bottom tabs are tappable and never submit provider or model requests", async ({ page }) => {
+  test("three bottom tabs are tappable and never submit provider or model requests", async ({ page }, testInfo) => {
     await signedMockJourney(page);
     let upstreamCalls = 0;
     page.on("request", (request) => {
@@ -91,6 +92,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(bar).toBeVisible();
     await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath("mobile-explore-TEST-FIXTURE.png"), fullPage: true });
 
     for (const tab of ["trips", "me", "explore"] as const) {
       const button = page.getByTestId("rev-mobile-tab-" + tab);
@@ -99,6 +101,9 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       await button.click();
       await expect(button).toHaveAttribute("aria-current", "page");
       await expect(page.getByTestId("rev-mobile-screen-" + tab)).toBeVisible();
+      if (tab === "trips" || tab === "me") {
+        await page.screenshot({ path: testInfo.outputPath("mobile-" + tab + "-TEST-FIXTURE.png"), fullPage: true });
+      }
     }
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
     expect(upstreamCalls).toBe(0);
