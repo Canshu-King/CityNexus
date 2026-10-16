@@ -252,7 +252,7 @@ export function NativeMissionTimeline({
           <ol>
             {run.mission_plan.steps.map((step) => (
               <li key={step.id}>
-                <span>{zh ? localizePlanStep(step.operation) : step.operation}</span>
+                <span>{localizePlanStep(step.operation, zh)}</span>
                 {step.requires_authority && <small>{zh ? "CityNexus 授权" : "CityNexus authority"}</small>}
               </li>
             ))}
@@ -303,7 +303,10 @@ export function NativeMissionTimeline({
   );
 }
 
-function localizePlanStep(operation: string) {
+function localizePlanStep(operation: string, zh: boolean) {
+  if (operation === "Proposal only; no mutation without user approval") {
+    return zh ? "待你确认" : "Awaiting your confirmation";
+  }
   const values: Record<string, string> = {
     "Inspect current Journey": "检查当前行程",
     "Inspect JourneyTwin": "核对我的行程事实",
@@ -313,9 +316,8 @@ function localizePlanStep(operation: string) {
     "Evaluate candidates against constraints": "按约束评估候选项",
     "Request a deterministic replan proposal": "请求调整方案",
     "Inspect proposal trade-offs": "检查方案权衡",
-    "Proposal only; no mutation without user approval": "待用户确认",
   };
-  return values[operation] ?? operation;
+  return zh ? values[operation] ?? operation : operation;
 }
 
 // Traveller-facing labels.  Intent enums, verification states and action
