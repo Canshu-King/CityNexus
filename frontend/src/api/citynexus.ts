@@ -2854,6 +2854,7 @@ export const cityNexusApi = {
   ): Promise<CopilotResponse> {
     return requestJson<CopilotResponse>("/journeys/" + journeyId + "/copilot/messages", {
       method: "POST",
+      headers: travelerAuthHeaders(),
       body: JSON.stringify({ message, locale }),
     });
   },
@@ -2861,6 +2862,7 @@ export const cityNexusApi = {
   getNativeHermesRun(journeyId: string, runId: string): Promise<Record<string, unknown>> {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 
@@ -2883,13 +2885,14 @@ export const cityNexusApi = {
   }> {
     return requestJson(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId) + "/timeline",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 
   stopNativeHermesRun(journeyId: string, runId: string): Promise<Record<string, unknown>> {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId) + "/stop",
-      { method: "POST" },
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 

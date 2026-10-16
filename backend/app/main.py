@@ -1156,6 +1156,79 @@ def _persist_native_event(event: dict[str, Any], *, journey_id: str | None = Non
         event_session.commit()
 
 
+def _require_native_hermes_run_member(
+    request: Request,
+    session: Session,
+    *,
+    journey_id: str,
+    run_id: str,
+) -> tuple[Any, Any, AuditLog]:
+    """Require the signed Journey member recorded when this native run was created."""
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    binding = session.scalar(
+        select(AuditLog).where(
+            AuditLog.action == "agent.native_hermes.run_bound",
+            AuditLog.entity_type == "HermesNativeRun",
+            AuditLog.entity_id == run_id,
+            AuditLog.journey_id == str(journey.id),
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+        ).order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    if binding is None:
+        # Do not distinguish another member's run from an unknown run id.
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+    try:
+        record = json.loads(binding.after_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        record = {}
+    mission_id = str(record.get("mission_id") or "") if isinstance(record, dict) else ""
+    if (
+        not mission_id
+        or record.get("traveler_id") != principal.traveler_id
+        or record.get("member_id") != member.id
+    ):
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+    mission = session.get(JourneyMission, mission_id)
+    if mission is None or mission.journey_id != str(journey.id):
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+    return principal, member, binding
+
+
+def _require_unscoped_native_hermes_run_member(
+    request: Request,
+    session: Session,
+    *,
+    run_id: str,
+) -> str:
+    """Resolve the Journey for a signed owner before serving the legacy run stream."""
+    from app.traveler_principal import resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    binding = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "agent.native_hermes.run_bound",
+            AuditLog.entity_type == "HermesNativeRun",
+            AuditLog.entity_id == run_id,
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    if binding is None or not binding.journey_id:
+        raise HTTPException(404, "native Hermes run is not available to this traveler")
+    _require_native_hermes_run_member(
+        request, session, journey_id=binding.journey_id, run_id=run_id
+    )
+    return binding.journey_id
+
+
 def _native_citynexus_events(
     *,
     run_id: str,
@@ -1251,9 +1324,16 @@ def _native_event_stream(run_id: str, journey_id: str | None = None):
 
 
 @app.get("/api/v1/agent/hermes/runs/{run_id}/events")
-def stream_native_hermes_events(run_id: str) -> StreamingResponse:
+def stream_native_hermes_events(
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+) -> StreamingResponse:
+    journey_id = _require_unscoped_native_hermes_run_member(
+        request, session, run_id=run_id
+    )
     return StreamingResponse(
-        _native_event_stream(run_id),
+        _native_event_stream(run_id, journey_id),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
@@ -1261,9 +1341,14 @@ def stream_native_hermes_events(run_id: str) -> StreamingResponse:
 
 @app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}")
 def get_journey_native_hermes_run(
-    journey_id: UUID, run_id: str, session: Session = Depends(get_session)
+    journey_id: UUID,
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
 ) -> dict[str, Any]:
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     client = HermesNativeClient()
     try:
         payload = client.get_run(run_id)
@@ -1281,10 +1366,13 @@ def get_journey_native_hermes_run(
 def get_native_hermes_timeline(
     journey_id: UUID,
     run_id: str,
+    request: Request,
     limit: int = Query(default=100, ge=1, le=250),
     session: Session = Depends(get_session),
 ) -> dict[str, Any]:
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     rows = session.scalars(
         select(AuditLog)
         .where(
@@ -1384,9 +1472,14 @@ def get_native_hermes_timeline(
 
 @app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events")
 def stream_journey_native_hermes_events(
-    journey_id: UUID, run_id: str, session: Session = Depends(get_session)
+    journey_id: UUID,
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
 ) -> StreamingResponse:
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     return StreamingResponse(
         _native_event_stream(run_id, str(journey_id)),
         media_type="text/event-stream",
@@ -1395,9 +1488,16 @@ def stream_journey_native_hermes_events(
 
 
 @app.post("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop")
-def stop_native_hermes_run(journey_id: UUID, run_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
+def stop_native_hermes_run(
+    journey_id: UUID,
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
     """Stop a native run through CityNexus; Hermes is never called directly by the UI."""
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     client = HermesNativeClient()
     try:
         return client.stop(run_id)
@@ -26335,7 +26435,10 @@ def _verify_copilot_fact(
 
 @app.post("/api/v1/journeys/{journey_id}/copilot/messages")
 async def copilot_message(
-    journey_id: UUID, body: dict[str, Any], session: Session = Depends(get_session)
+    journey_id: UUID,
+    body: dict[str, Any],
+    request: Request,
+    session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     message = str(body.get("message") or "").strip()
@@ -26431,6 +26534,16 @@ async def copilot_message(
     ):
         native_status = native_hermes_status()
         if native_status.get("ready"):
+            if not settings.traveler_auth_secret:
+                raise HTTPException(
+                    503,
+                    "signed Journey member verification is required before starting a native Hermes run",
+                )
+            from app.traveler_principal import resolve_journey_member_principal
+
+            requester, requester_member = resolve_journey_member_principal(
+                request, session, journey_id=str(journey.id)
+            )
             native = HermesNativeClient()
             trigger_event_id = str(event.get("id")) if isinstance(event, dict) and event.get("id") else None
             native_mission = create_mission(
@@ -26467,6 +26580,20 @@ async def copilot_message(
                 )
                 native_mission.status = "RUNNING"
                 native_mission.started_at = datetime.now(timezone.utc).isoformat()
+                record_audit(
+                    session,
+                    action="agent.native_hermes.run_bound",
+                    entity_type="HermesNativeRun",
+                    entity_id=native_run.run_id,
+                    journey_id=journey.id,
+                    actor_type="TRAVELER",
+                    actor_id=requester.traveler_id,
+                    after={
+                        "mission_id": native_mission.id,
+                        "member_id": requester_member.id,
+                        "traveler_id": requester.traveler_id,
+                    },
+                )
                 session.commit()
                 initial_events = _native_citynexus_events(
                     run_id=native_run.run_id,

@@ -6,6 +6,7 @@ import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
+import { MobileHermesRun } from "./mobile/MobileHermesRun";
 import {
   clearTravelerBearer,
   readTravelerBearer,
@@ -98,8 +99,32 @@ export function RevolutionFirstLook() {
     return () => { cancelled = true; };
   }, []);
 
-  const agentConfigured = agentRuntime?.runtime_identity === "HERMES_COMPAT_ENDPOINT"
-    && agentRuntime.hermes_compat_configured;
+  const nativeHermesConfigured = agentRuntime?.runtime_identity === "HERMES_NATIVE_MCP"
+    && agentRuntime.hermes_native_gateway?.configured === true;
+  const nativeHermesReady = nativeHermesConfigured
+    && agentRuntime?.hermes_native_gateway?.ready === true
+    && agentRuntime.hermes_native_gateway.runs
+    && agentRuntime.hermes_native_gateway.events;
+  const agentConfigured = nativeHermesConfigured || (
+    agentRuntime?.runtime_identity === "HERMES_COMPAT_ENDPOINT"
+    && agentRuntime.hermes_compat_configured
+  );
+  const agentStatusTitle = nativeHermesReady
+    ? "Hermes 工具已就绪"
+    : agentCheckError
+      ? "AI 状态未知"
+      : nativeHermesConfigured
+        ? "Hermes 暂不可用"
+        : agentConfigured
+          ? "AI 网关已配置"
+          : "AI 未启用";
+  const agentStatusDetail = nativeHermesReady
+    ? "原生 Hermes 工具网关已就绪；这只代表连接准备好，不代表已经发生运行。"
+    : nativeHermesConfigured
+      ? "已发现原生 Hermes 工具网关，但当前未确认可用；页面只会显示服务器实际返回的运行记录。"
+      : agentConfigured
+        ? "模型网关已配置，但尚不代表真正执行过 AgentRun。公开地点搜索也不是 AI 自主规划。"
+        : "你可以先探索真实公开地点，不需要先配置 AI。";
 
   const start = async () => {
     const label = cityName.trim();
@@ -203,12 +228,10 @@ export function RevolutionFirstLook() {
         </div>
         <details className="rev-firstlook-agent" data-testid="revolution-agent-runtime">
           <summary>
-            {agentCheckError ? "AI 状态未知" : agentConfigured ? "AI 网关已配置" : "AI 未启用"}
+            {agentStatusTitle}
           </summary>
           <p>
-            {agentCheckError ?? (agentConfigured
-              ? "模型网关已配置，但尚不代表真正执行过 AgentRun。公开地点搜索也不是 AI 自主规划。"
-              : "你可以先探索真实公开地点，不需要先配置 AI。")}
+            {agentCheckError ?? agentStatusDetail}
           </p>
           {agentRuntime && <small>{agentRuntime.runtime_identity} · {agentRuntime.ai_state ?? "UNKNOWN"}</small>}
         </details>
@@ -321,6 +344,7 @@ export function RevolutionFirstLook() {
                     <p>这里连接原生 Journey Operator。只有真实产生的 AgentRun 和审批记录，才能算 AI 已执行。</p>
                   </section>
                   <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
+                  <MobileHermesRun journeyId={journey.id} />
                   <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
                 </section>
               ) : (
@@ -359,7 +383,7 @@ export function RevolutionFirstLook() {
                   <span>公开地点</span><strong>{sample ? "受控样本模式" : "真实公开地图接口"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
-                  <span>AI 助手</span><strong>{agentConfigured ? "网关已配置，执行待验证" : "当前未配置"}</strong>
+                  <span>AI 助手</span><strong>{nativeHermesReady ? "Hermes 工具已就绪，运行待验证" : agentConfigured ? "网关已配置，运行待验证" : "当前未配置"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>
