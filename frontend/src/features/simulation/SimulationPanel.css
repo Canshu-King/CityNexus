@@ -35,7 +35,10 @@
   width: 48px;
   height: 48px;
   padding: 0;
-  border: 1px solid var(--cn-hairline, rgba(0, 0, 0, 0.16));
+  /* 1px solid var(--cn-hairline) measured 1.09:1 (light) / 1.23:1 (dark) against the page, i.e. the
+     ring was decorative and the ball had no boundary at all: --cn-control-border is the token this
+     repo already reserves for "the border IS the affordance" (>=3:1 in both schemes). */
+  border: 1px solid var(--cn-control-border);
   border-radius: var(--cn-r-circle);
   color: var(--v8-ink);
   background: var(--cn-surface);

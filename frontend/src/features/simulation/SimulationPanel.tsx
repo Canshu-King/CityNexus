@@ -1134,6 +1134,7 @@ export function SimulationEntry({
         type="button"
         className="cn-sim-ball"
         data-testid="sim-ball"
+        data-contrast-role="control"
         data-scene-phase={scene.phase}
         aria-expanded={open}
         aria-controls="cn-sim-pop"

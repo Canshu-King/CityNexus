@@ -15,7 +15,7 @@ import type { Page } from "@playwright/test";
 
 export interface Violation {
   kind: "text-contrast" | "light-surface" | "control-boundary" | "state-indicator"
-    | "unclassified-control";
+    | "unclassified-control" | "unknown-contrast-role";
   selector: string;
   testId: string | null;
   text: string;
@@ -165,6 +165,28 @@ export async function scanContrast(
       const style = getComputedStyle(el);
       const bg = backgroundUnder(el);
       const role = el.getAttribute("data-contrast-role");
+      /* ORD-0509's other half: the arm below makes *not* declaring a role cost something, but a
+       * closed gate is worth nothing unless the vocabulary is closed too. Any value the tiers below
+       * do not understand would opt a control out of the boundary and state tests while still
+       * reading as "declared" to every human reviewing the DOM -- an escape hatch wearing the uniform.
+       * `control` and `state` are the only legal values; a third intent has to be ruled into the
+       * vocabulary here first, not improvised in a component. An empty attribute counts as absent,
+       * so `""` falls through to the unclassified arm instead of escaping both. */
+      if (role && role !== "control" && role !== "state") {
+        rows.push({
+          kind: "unknown-contrast-role",
+          selector: describe(el),
+          testId: el.getAttribute("data-testid"),
+          text: role.slice(0, 40),
+          color: style.color,
+          background: style.backgroundColor,
+          fontSizePx: parseFloat(style.fontSize),
+          bold: false,
+          contrast: 0,
+          required: 0,
+        });
+        continue;
+      }
       const isControl = role === "control" || el.classList.contains("v8-outline-button");
       const isState = role === "state";
       const parentBg = el.parentElement ? backgroundUnder(el.parentElement) : bg;
