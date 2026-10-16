@@ -45,6 +45,9 @@ import "./design-tokens.css";
 /* The pulse layer loads last on purpose: it is the surface contract, and it has
    to be able to beat a legacy literal without reaching for `!important`. */
 import "./cn-pulse.css";
+/* The map surface's own plate, after the pulse layer so the paired `--cn-elev-*` / `--cn-on-elev-*`
+   tokens it reads are already declared by the time its rules are parsed. */
+import "./cn-pulse-map.css";
 
 /* Resolve the theme root contract before the first paint.  The stylesheets key their dark
    tables off `:root[data-theme]`, so the attribute must exist by the time anything is

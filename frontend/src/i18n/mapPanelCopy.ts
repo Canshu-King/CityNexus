@@ -52,7 +52,19 @@ export type MapCopyKey =
   | "footprintNotAsked"
   | "footprintBadgeAria"
   | "footprintFilterLabel"
-  | "footprintFilterClear";
+  | "footprintFilterClear"
+  /* WP-D — the basemap degradation surface. `tileNotice` was already honest about the fact ("底图未加载")
+     but it was the whole of the answer: nothing named WHICH host refused, nothing said the trip itself
+     survived, and there was no exit. The keys below are the three things a traveller needs from a failed
+     basemap -- the cause, the evidence that nothing was lost, and the way to act. Named separately from
+     `tileNotice` because that sentence is quoted verbatim on the accepted line and stays byte-identical.
+     Register follows the house rule (an English "could not" pairs with a Chinese 「没能」, never 「失败」). */
+  | "degradedHeadline"
+  | "degradedHeadlineNoStops"
+  | "degradedRetried"
+  | "degradedRetry"
+  | "degradedStopsOpen"
+  | "degradedStopsClose";
 
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
@@ -150,6 +162,33 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      filter is already on tells the traveller nothing about what the next press gives back. */
   footprintFilterLabel: { zh: "只看打过", en: "Stamped only" },
   footprintFilterClear: { zh: "看全部站", en: "Show every stop" },
+  /* WP-D. ONE line, because the panel leaves the camera 153 px of glass (measured: the pins occupy
+     relative 59..187 of a 392 px panel, the bottom 139 px is the caption band and the named control the
+     top 61 px). A plate that spent two rows on its own prose covered seven of the nine pins it was
+     standing in front of; one row, plus a reframe that tells the camera the rest, leaves the journey
+     whole. It therefore carries the three things that cannot be deferred -- what did not arrive, that
+     the trip is not what failed, and how many stops are still plotted -- and the detail goes into the
+     list, which is the same claim made row by row.
+     The tile host is NOT spelled out here: it is already permanently on the glass on the ORD-A
+     attribution line, and it rides in `data-cnx-basemap-host` for the gates. A second copy of the host
+     in this sentence is what pushed the English arm past the plate's height budget. */
+  degradedHeadline: {
+    zh: "底图没接上（网络或瓦片源）：%s 个站照常画着",
+    en: "No basemap (network or tiles): %s stops still plotted.",
+  },
+  /* The arm the counted sentence cannot speak: a journey with route geometry and no located stop is not
+     a trip whose stops are "still plotted", and saying it anyway would be the plate inventing a comfort
+     the data did not hand it. */
+  degradedHeadlineNoStops: {
+    zh: "底图没接上（网络或瓦片源）：这一趟没有带位置的站",
+    en: "No basemap (network or tiles): no located stop to plot.",
+  },
+  degradedRetried: { zh: "已再取过 %s 次，仍没接上。", en: "Reloaded %s times — still no answer." },
+  /* Two arms per control, in the direction of what the press does (ORD-0403's rule for a state-bearing
+     control). Short on purpose: they share their line with the plate's one sentence. */
+  degradedRetry: { zh: "再取底图", en: "Reload" },
+  degradedStopsOpen: { zh: "站点清单", en: "Stops" },
+  degradedStopsClose: { zh: "收起清单", en: "Hide" },
 };
 
 /** Same locale rule the component used inline: anything starting with zh takes the Chinese arm. */
