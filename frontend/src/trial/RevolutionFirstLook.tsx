@@ -3,7 +3,8 @@ import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscover
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
-import { cityNexusApi, type AgentRuntimeStatus } from "../api/citynexus";
+import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
+import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
 import {
   clearTravelerBearer,
   readTravelerBearer,
@@ -12,6 +13,7 @@ import {
 import "./RevolutionFirstLook.css";
 import "./RevolutionUsability.css";
 import "./RevolutionQuickExplore.css";
+import "./RevolutionMobileV1.css";
 
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 
@@ -75,6 +77,8 @@ export function RevolutionFirstLook() {
   const [notice, setNotice] = useState<string | null>(null);
   const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<RevolutionMobileTab>("explore");
+  const [pocketWalk, setPocketWalk] = useState<BootstrapPocketWalkResponse | null>(null);
   const [agentRuntime, setAgentRuntime] = useState<AgentRuntimeStatus | null>(null);
   const [agentCheckError, setAgentCheckError] = useState<string | null>(null);
   const sample = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
@@ -132,6 +136,8 @@ export function RevolutionFirstLook() {
       const next: TrialJourney = { id: created.id, cityCode, cityName: label, status: "DRAFT" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setJourney(next);
+      setActiveTab("explore");
+      setPocketWalk(null);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "创建探索草稿失败。");
     } finally {
@@ -148,6 +154,8 @@ export function RevolutionFirstLook() {
     setError(null);
     setNotice(null);
     setCandidateForJourney(null);
+    setPocketWalk(null);
+    setActiveTab("explore");
   };
 
   const finishStartingJourney = async () => {
@@ -157,53 +165,58 @@ export function RevolutionFirstLook() {
     localStorage.setItem("citynexus.v8.journey_id", next.id);
     setCandidateForJourney(null);
     setJourney(next);
+    setActiveTab("trips");
     setNotice("正式 Journey 已启动。这里是原生 Journey Operator；点击照看行程后，再由你提交需求或处理事件。模型配置不代表已经发生 AgentRun。");
   };
 
+  const goSummary = (state: string) => {
+    switch (state) {
+      case "NOT_STARTED": return "已保存，等待你出发";
+      case "HEADING_TO_FIRST": return "正在前往第一站";
+      case "FIRST_STOP_DONE_SELF_REPORTED": return "第一站已由你确认完成";
+      case "HEADING_TO_SECOND": return "正在前往第二站";
+      case "WALK_DONE_SELF_REPORTED": return "两站完成（自行报告）";
+      case "PAUSED": return "已暂停，可以继续";
+      default: return "由服务器保存的私人路线";
+    }
+  };
+
+  const navigateMobile = (tab: RevolutionMobileTab) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className="rev-firstlook" data-testid="revolution-first-look">
+    <div className="rev-firstlook rev-mobile-v1" data-testid="revolution-first-look">
       <header className="rev-firstlook-header">
         <div className="rev-firstlook-brand">
-          <span className="rev-firstlook-mark">R</span>
+          <span className="rev-firstlook-mark" aria-hidden="true">C</span>
           <div>
-            <strong>CityNexus Revolution Lab</strong>
-            <small>独立体验 · 真实产品 API</small>
+            <strong>CityNexus</strong>
+            <small>你的智能旅行伙伴</small>
           </div>
-        </div>
-        <a className="rev-firstlook-quiet" href="/v8/hub" title="旧产品界面，仅用于比较">
-          原有 V8 界面 ↗
-        </a>
-      </header>
-
-      <main className="rev-firstlook-content">
-        <div className="rev-firstlook-mode">
-          <span className={"rev-firstlook-pulse " + (sample ? "is-sample" : "is-live")} />
-          {sample
-            ? "受控样本模式：此模式不访问真实地点提供方"
-            : "真实公开地图模式：仅在你主动授权后请求外部提供方"}
         </div>
         <details className="rev-firstlook-agent" data-testid="revolution-agent-runtime">
           <summary>
-            AI 模型：{agentCheckError ? "状态未知" : agentConfigured ? "网关已配置（可展开查看）" : "当前未启用"}
+            {agentCheckError ? "AI 状态未知" : agentConfigured ? "AI 网关已配置" : "AI 未启用"}
           </summary>
           <p>
             {agentCheckError ?? (agentConfigured
-              ? "已配置 Hermes 兼容模型网关，但还没有证明真实 AgentRun。下面的地点搜索由公开地图接口执行，不是模型自主规划。"
-              : "这里可以先直接探索城市。需要完整自主 Agent 时，再明确启用真实 Journey Operator。")}
+              ? "模型网关已配置，但尚不代表真正执行过 AgentRun。公开地点搜索也不是 AI 自主规划。"
+              : "你可以先探索真实公开地点，不需要先配置 AI。")}
           </p>
-          {agentRuntime && <small>Runtime: {agentRuntime.runtime_identity} · {agentRuntime.ai_state ?? "UNKNOWN"}</small>}
+          {agentRuntime && <small>{agentRuntime.runtime_identity} · {agentRuntime.ai_state ?? "UNKNOWN"}</small>}
         </details>
+      </header>
+
+      <main className="rev-firstlook-content">
         {!journey ? (
-          <section className="rev-firstlook-hero">
-            <span className="rev-firstlook-eyebrow">YOUR CITY. YOUR JOURNEY.</span>
-            <h1>别选演示城市。<br />告诉我，你想去哪儿。</h1>
-            <p>
-              这是 Revolution 已实现的城市探索入口。可以输入连城、厦门或任何你关心的地区，
-              无须先通过旧版「支持的目的地」目录。地名只是你的探索意图，
-              具体位置要由你在下一步确认，不能冒充已验证的城市身份。
-            </p>
+          <section className="rev-firstlook-hero" data-testid="rev-mobile-welcome">
+            <span className="rev-firstlook-eyebrow">CITYNEXUS / DISCOVER</span>
+            <h1>想去哪儿，<br />就从那里开始。</h1>
+            <p>输入一个城市或地区，接下来可以用自然语言告诉 AI 你想怎么玩。</p>
             <form onSubmit={(event) => { event.preventDefault(); void start(); }}>
-              <label htmlFor="rev-firstlook-city">我想探索</label>
+              <label htmlFor="rev-firstlook-city">目的地</label>
               <div className="rev-firstlook-form-row">
                 <input
                   id="rev-firstlook-city"
@@ -216,107 +229,156 @@ export function RevolutionFirstLook() {
                   data-testid="rev-firstlook-city"
                 />
                 <button disabled={busy} type="submit" data-testid="rev-firstlook-start">
-                  {busy ? "正在创建…" : "开始真实探索 →"}
+                  {busy ? "正在准备…" : "开始探索 →"}
                 </button>
               </div>
             </form>
             {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
-            <div className="rev-firstlook-cards">
-              <article><span>01</span><b>自己选一个地区</b><small>无需内部城市目录</small></article>
-              <article><span>02</span><b>发现公开地点</b><small>检查来源与不确定性</small></article>
-              <article><span>03</span><b>保存 Pocket Walk</b><small>GO MODE、导航与状态恢复</small></article>
-            </div>
-            <p className="rev-firstlook-limit">
-              此独立入口只解决首次进入 Revolution 的问题。
-              {agentConfigured
-                ? " 后端已配置真实模型网关，但当前页面的 DRAFT Pocket Walk 不等于 Agent 自主执行；请在选择有来源的地点后显式进入正式 Journey，再检查 AgentRun。"
-                : " 外部 AI Agent 当前未启用；需要从本机启动器明确使用 --agent。"}
-              地点开放情况、费用和行走时长如无证据均为未知。
+            <p className="rev-mobile-truth">
+              地名只是你输入的探索方向，系统不会因此断言你的实际位置。公开数据与 AI 请求仅在你主动操作后发生。
             </p>
           </section>
         ) : (
           <>
-            <section className="rev-firstlook-journey">
-              <div>
-                <span className="rev-firstlook-eyebrow">EXPLORE · DRAFT JOURNEY</span>
-                <h1>{journey.cityName}，从这里开始。</h1>
-                <p>
-                  旅行草稿已经建好了。直接找地点就行，不需要研究经纬度和计划版本。
-                </p>
-              </div>
-              <button type="button" onClick={switchCity} className="rev-firstlook-reset">
-                换一个地区
-              </button>
-            </section>
-            {notice && <p className="rev-firstlook-notice" role="status">{notice}</p>}
-            {journey.status === "DRAFT" && candidateForJourney && (
-              <section className="rev-firstlook-start-plan" data-testid="revolution-agent-start-journey">
-                <h2>进入正式的 Agent 旅行</h2>
-                <p>
-                  你已选择一个实际返回的公开地点。现在可以明确确认未知费用，
-                  生成并启动正式 Journey。这不同于私人的 DRAFT Pocket Walk，
-                  正式 Journey 才能交给 Journey Operator 处理。
-                </p>
-                <BootstrapJourneyStartPanel
-                  journeyId={journey.id}
-                  placeId={candidateForJourney}
-                  onStarted={finishStartingJourney}
-                  onCancel={() => setCandidateForJourney(null)}
-                />
+            <section className="rev-mobile-tabpanel" hidden={activeTab !== "explore"} data-testid="rev-mobile-screen-explore">
+              <section className="rev-firstlook-journey">
+                <div>
+                  <span className="rev-firstlook-eyebrow">正在探索</span>
+                  <h1>{journey.cityName}</h1>
+                  <p>想怎么走？先聊一句，再从真实地点中选择。</p>
+                </div>
+                <button type="button" onClick={switchCity} className="rev-firstlook-reset">
+                  换地区
+                </button>
               </section>
-            )}
-            {journey.status === "DRAFT" ? (
-              <section className="rev-firstlook-real-ui" aria-label="Revolution 真实城市探索与 GO MODE">
-                <RevolutionQuickExplore
-                  key={journey.id}
-                  journeyId={journey.id}
-                  cityName={journey.cityName}
-                  agentConfigured={Boolean(agentConfigured)}
-                  onFormalCandidateSelected={(placeId) => {
-                    setCandidateForJourney(placeId);
-                    setNotice("已选择有来源的公开地点。下一步需要你确认正式计划，随后才能启动真正的 Journey Operator。");
-                    window.requestAnimationFrame(() => {
-                      document.querySelector('[data-testid="revolution-agent-start-journey"]')
-                        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    });
-                  }}
-                />
-                <details
-                  className="rev-discovery-details"
-                  open={advancedOpen}
-                  onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
-                >
-                  <summary>更多功能：手动地图、路线分享与专业设置（可选）</summary>
-                  {advancedOpen && (
-                    <BootstrapDiscoveryPanel
-                      key={journey.id + "-advanced"}
-                      journeyId={journey.id}
-                      cityCode={journey.cityCode}
-                      cityName={journey.cityName}
-                      onCompleted={async (placeId) => {
-                        setCandidateForJourney(placeId);
-                        setNotice("已从高级界面选择地点。可以确认进入正式 Journey。");
-                      }}
-                    />
+              {notice && <p className="rev-firstlook-notice" role="status">{notice}</p>}
+              {journey.status === "DRAFT" ? (
+                <section className="rev-firstlook-real-ui" aria-label="地点探索与私人散步">
+                  <RevolutionQuickExplore
+                    key={journey.id}
+                    journeyId={journey.id}
+                    cityName={journey.cityName}
+                    agentConfigured={Boolean(agentConfigured)}
+                    onPocketWalkChange={setPocketWalk}
+                    onFormalCandidateSelected={(placeId) => {
+                      setCandidateForJourney(placeId);
+                      setNotice("已选中有来源的地点。请在行程页面确认正式计划。");
+                      navigateMobile("trips");
+                    }}
+                  />
+                  <details
+                    className="rev-discovery-details"
+                    open={advancedOpen}
+                    onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
+                  >
+                    <summary>高级功能：地图坐标、分享与技术详情</summary>
+                    {advancedOpen && (
+                      <BootstrapDiscoveryPanel
+                        key={journey.id + "-advanced"}
+                        journeyId={journey.id}
+                        cityCode={journey.cityCode}
+                        cityName={journey.cityName}
+                        onCompleted={async (placeId) => {
+                          setCandidateForJourney(placeId);
+                          setNotice("已选择有来源的地点。请在行程页面确认正式计划。");
+                          navigateMobile("trips");
+                        }}
+                      />
+                    )}
+                  </details>
+                </section>
+              ) : (
+                <section className="rev-mobile-panel">
+                  <h2>行程已经启动</h2>
+                  <p>实时进度、变更建议和 Agent 审批现在都在「行程」里。</p>
+                  <button type="button" onClick={() => navigateMobile("trips")}>查看当前行程 →</button>
+                </section>
+              )}
+            </section>
+
+            <section className="rev-mobile-tabpanel" hidden={activeTab !== "trips"} data-testid="rev-mobile-screen-trips">
+              {journey.status === "DRAFT" && candidateForJourney && (
+                <section className="rev-firstlook-start-plan" data-testid="revolution-agent-start-journey">
+                  <h2>确认正式行程</h2>
+                  <p>这会经过原有的计划与授权流程；未知费用仍然是未知，不会自动预订或付款。</p>
+                  <BootstrapJourneyStartPanel
+                    journeyId={journey.id}
+                    placeId={candidateForJourney}
+                    onStarted={finishStartingJourney}
+                    onCancel={() => setCandidateForJourney(null)}
+                  />
+                </section>
+              )}
+              {journey.status === "ACTIVE" ? (
+                <section className="rev-firstlook-real-ui" aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
+                  <section className="rev-mobile-panel">
+                    <h2>当前行程</h2>
+                    <p>这里连接原生 Journey Operator。只有真实产生的 AgentRun 和审批记录，才能算 AI 已执行。</p>
+                  </section>
+                  <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
+                </section>
+              ) : (
+                <section className="rev-mobile-panel">
+                  <span className="rev-firstlook-eyebrow">YOUR TRIP</span>
+                  <h2>我的行程</h2>
+                  {pocketWalk ? (
+                    <>
+                      <p>以下两站来自当前签名成员保存在服务器的私人路线。</p>
+                      <div className="rev-mobile-stop"><b>01</b><span>{pocketWalk.first_stop.name}</span></div>
+                      <div className="rev-mobile-stop"><b>02</b><span>{pocketWalk.second_stop.name}</span></div>
+                      <p>当前进度：<strong>{goSummary(pocketWalk.go_progress.state)}</strong></p>
+                      <small className="rev-mobile-truth">完成进度由你手动报告，不等于 GPS 到场证明。</small>
+                      <button type="button" onClick={() => navigateMobile("explore")}>
+                        查看路线并继续 GO →
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p>还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。</p>
+                      <button type="button" onClick={() => navigateMobile("explore")}>去发现地点 →</button>
+                    </>
                   )}
+                </section>
+              )}
+            </section>
+
+            <section className="rev-mobile-tabpanel" hidden={activeTab !== "me"} data-testid="rev-mobile-screen-me">
+              <section className="rev-mobile-panel">
+                <span className="rev-firstlook-eyebrow">CITYNEXUS</span>
+                <h2>我的</h2>
+                <div className="rev-mobile-account-line">
+                  <span>探索地区</span><strong>{journey.cityName}</strong>
+                </div>
+                <div className="rev-mobile-account-line">
+                  <span>公开地点</span><strong>{sample ? "受控样本模式" : "真实公开地图接口"}</strong>
+                </div>
+                <div className="rev-mobile-account-line">
+                  <span>AI 助手</span><strong>{agentConfigured ? "网关已配置，执行待验证" : "当前未配置"}</strong>
+                </div>
+                <div className="rev-mobile-account-line">
+                  <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>
+                </div>
+                <p>你的私人进度以服务器签名身份为准。本页面不会把样本地点、模型配置或自报到达说成现实证明。</p>
+                <button type="button" className="rev-mobile-secondary" onClick={switchCity}>探索其他地区</button>
+                <details className="rev-discovery-details">
+                  <summary>关于技术来源与旧版界面</summary>
+                  <p>AI 推理、公开地图查询和路线进度有独立的数据来源与授权。</p>
+                  <a className="rev-firstlook-quiet" href="/v8/hub">查看旧版 V8 界面 ↗</a>
                 </details>
               </section>
-            ) : (
-              <section className="rev-firstlook-real-ui" aria-label="Revolution Journey Operator" data-testid="revolution-real-operator">
-                <div className="rev-firstlook-operator-intro">
-                  <h2>真正的 Journey Operator</h2>
-                  <p>此界面复用 Revolution 原生的 Operator、Agent、审批与恢复 API。
-                  外部模型只在实际触发 AgentRun 时调用；请留意是否出现真实模型执行结果及工具记录。</p>
-                  <a href="/v8/live">查看完整实时行程和 Agent 工作台 ↗</a>
-                </div>
-                <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
-              </section>
-            )}
+            </section>
           </>
         )}
       </main>
+      {journey && (
+        <RevolutionMobileNav
+          active={activeTab}
+          onSelect={navigateMobile}
+          hasSavedWalk={Boolean(pocketWalk)}
+        />
+      )}
       <footer className="rev-firstlook-footer">
-        Revolution Lab 独立首体验 · 真实业务代码 · 不代表实地到达或 AI 自动完成
+        CityNexus · 真实数据以提供方回复为准，探索进度不代表实地到场
       </footer>
     </div>
   );
