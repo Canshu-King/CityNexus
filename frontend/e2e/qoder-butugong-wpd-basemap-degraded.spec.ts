@@ -455,6 +455,63 @@ test("A7-glass-still-owned — a drag on the map while the plate is up moves the
   expect(drag.moved, `a one-finger drag at the centre must move the camera: ${JSON.stringify(drag)}`).toBe(true);
 });
 
+test("A8-wrapped-rows — at 320 the two exits must not share a hit box", async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.setViewportSize({ width: 320, height: 653 });
+  await openMapWithTiles(page, "aborted");
+  const read = await page.evaluate(() => {
+    const row = document.querySelector<HTMLElement>(".v8-map-panel .v8-map-degraded-actions");
+    const b = Array.from(document.querySelectorAll<HTMLElement>(".v8-map-panel .v8-map-degraded-btn")).map((el) => {
+      const r = el.getBoundingClientRect();
+      return { testId: el.getAttribute("data-testid"), top: Math.round(r.top), bottom: Math.round(r.bottom), left: Math.round(r.left), right: Math.round(r.right) };
+    });
+    if (b.length < 2) return { b, wrapped: false, hitOverlapPx2: null, rowGap: null, each: [] };
+    /* The hit box is the paint box grown to 44 px tall about its centre (that is what the ::before
+       does); horizontally it does not grow. Two buttons collide only if those boxes intersect, which is
+       the question -- not whether this particular width happens to wrap. */
+    const hit = (x: (typeof b)[number]) => {
+      const paintH = x.bottom - x.top;
+      const grow = Math.max(0, (44 - paintH) / 2);
+      return { x0: x.left, x1: x.right, y0: x.top - grow, y1: x.bottom + grow };
+    };
+    const [p, q] = [hit(b[0]), hit(b[1])];
+    const w = Math.min(p.x1, q.x1) - Math.max(p.x0, q.x0);
+    const h = Math.min(p.y1, q.y1) - Math.max(p.y0, q.y0);
+    const wrapped = b[1].top >= b[0].bottom;
+    const cx = Math.max(b[0].left, b[1].left) + 10;
+    const cy = Math.round((b[0].bottom + b[1].top) / 2);
+    const betweenEl = wrapped ? document.elementFromPoint(cx, cy) : null;
+    return {
+      b,
+      wrapped,
+      hitOverlapPx2: w > 0 && h > 0 ? Math.round(w * h) : 0,
+      rowGap: row ? getComputedStyle(row).rowGap : null,
+      columnGap: row ? getComputedStyle(row).columnGap : null,
+      between: wrapped ? (betweenEl?.closest("button")?.getAttribute("data-testid") ?? "not-a-button") : "single row",
+      each: b.map((x) => {
+        const probe = (dy: number) => {
+          const e = document.elementFromPoint(Math.round((x.left + x.right) / 2), x.top + Math.round((x.bottom - x.top) / 2) + dy);
+          return e?.closest("button")?.getAttribute("data-testid") ?? (e ? "not-a-button" : "nothing");
+        };
+        return { testId: x.testId, minus21: probe(-21), plus21: probe(21) };
+      }),
+    };
+  });
+  await page.screenshot({ path: evidencePath("butugong-wpd", "A8_hit_boxes_320x653.png") });
+  push("A8-wrapped-rows", read);
+
+  /* The spacing rule the interface guide states is 8 px between touchables; with a 44 px hit box around
+     a 32 px paint, a wrapped row would put 6 px of each button's reach into that gap and the two would
+     overlap by 4 px. The row-gap is 16 px for exactly that reason, and this is the arm that says so --
+     measured as an intersection of the hit boxes rather than as a claim about the CSS. */
+  expect(read.hitOverlapPx2, "the two exits' hit boxes may not intersect").toBe(0);
+  expect(read.rowGap, "the wrapped-row gap has to clear both 6 px reaches").toBe("16px");
+  for (const e of read.each) {
+    expect(e.minus21, `${e.testId} reachable 21 px above its centre`).toBe(e.testId);
+    expect(e.plus21, `${e.testId} reachable 21 px below its centre`).toBe(e.testId);
+  }
+});
+
 test.afterAll(() => {
   writeFileSync(evidencePath("butugong-wpd", "readings.json"), JSON.stringify({ file: FILE, rows }, null, 1), "utf8");
 });

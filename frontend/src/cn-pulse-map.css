@@ -80,7 +80,12 @@
 .v8-map-panel .v8-map-degraded-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--cn-s-8);
+  /* Row-gap 16, column-gap 8. The 8 px is the floor the interface guide states for two touchables
+     (`--domain web "safe-areas touch targets"`, Touch Spacing), but these buttons carry a hit box that
+     is 44 px tall around a 32 px paint -- 6 px of that reach above and below the paint. At 320 px the
+     row wraps, and with a plain 8 px row-gap the two rows' hit boxes overlapped by 4 px: a press aimed
+     at the gap could land on the button you did not mean. 16 px leaves the extension 6 px clear. */
+  gap: var(--cn-s-16) var(--cn-s-8);
   pointer-events: none;
 }
 
