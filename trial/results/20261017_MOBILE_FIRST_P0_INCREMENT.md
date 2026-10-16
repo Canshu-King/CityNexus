@@ -40,6 +40,7 @@ ANDROID_PHONE = NOT_TESTED
 - `npm.cmd run typecheck`：退出码 0。
 - `npm.cmd run typecheck:all`：UI 组件拆分后退出码 0。
 - GitHub PR #23 提交 `286e70657a19de7c144ef9fd8699a47b189d583e` 与 `255c6c1e50e0e4b61b7cf4b190c31cfaa28595ce` 的 `trial-build`：PASS。
+- GitHub PR #23 当前提交 `9b0690937ea57baf7e74452bbccee2844a7a6771` 的 `trial-build`：PASS（Actions run [38979911296](https://github.com/Canshu-King/CityNexus/actions/runs/38979911296)；TypeScript、Vite build、Chromium mobile fixture 均通过）。
 - 此报告中的新 AI 实测来自真实本机页面请求；上述 pytest 与既有手机截图仍分别按其 fixture / 浏览器证据等级理解。
 
 ## 2026-10-17 后续移动端检查
