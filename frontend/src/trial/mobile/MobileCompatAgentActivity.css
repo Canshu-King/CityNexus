@@ -1,0 +1,149 @@
+.rev-mobile-compat-agent {
+  margin: 0 0 14px;
+  padding: 14px;
+  border: 1px solid #d9e8df;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f8fcf9, #edf7f0);
+  color: #183b2c;
+}
+
+.rev-mobile-compat-agent-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rev-mobile-compat-agent-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #dff1e5;
+  color: #24784b;
+}
+
+.rev-mobile-compat-agent-title {
+  display: grid;
+  flex: 1;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rev-mobile-compat-agent-title > span {
+  color: #547462;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.rev-mobile-compat-agent-title strong {
+  color: #183b2c;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.rev-mobile-compat-agent-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  color: #526d5e;
+  font-size: 12px;
+}
+
+.rev-mobile-compat-agent-controls button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 11px;
+  padding: 0 13px;
+  background: #2f8757;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  touch-action: manipulation;
+}
+
+.rev-mobile-compat-agent-controls button:disabled {
+  opacity: .62;
+}
+
+.rev-mobile-compat-agent-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-top: 1px solid #d9e8df;
+  margin-top: 10px;
+  padding: 10px 0 0;
+  background: transparent;
+  color: #315a43;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+}
+
+.rev-mobile-compat-agent-toggle span {
+  margin-left: auto;
+  color: #718578;
+}
+
+.rev-mobile-compat-agent-events {
+  padding-top: 8px;
+}
+
+.rev-mobile-compat-agent-events > small {
+  color: #718578;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.rev-mobile-compat-agent-events ol {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rev-mobile-compat-agent-events li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: #315a43;
+  font-size: 12px;
+}
+
+.rev-mobile-compat-agent-events li svg {
+  color: #2f8757;
+  flex: none;
+}
+
+.rev-mobile-compat-agent-events li time {
+  margin-left: auto;
+  color: #718578;
+  font-size: 11px;
+}
+
+.rev-mobile-compat-agent-events p,
+.rev-mobile-compat-agent-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  color: #60766a;
+  font-size: 12px;
+}
+
+.rev-mobile-compat-agent-message {
+  color: #a2473a;
+}

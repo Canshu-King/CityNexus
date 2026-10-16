@@ -44,6 +44,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         *,
         client: httpx.Client | None = None,
         model_chain: tuple[str, ...] | None = None,
+        allow_budget_retry: bool = True,
+        tool_allowlist: frozenset[str] | None = None,
     ):
         if not settings.hermes_api_url or not settings.hermes_api_key:
             raise AgentRuntimeUnavailable("Hermes runtime endpoint is not configured")
@@ -54,6 +56,8 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         self._model_index = 0
         self.model_key = self._model_chain[0]
         self.external_attempts: list[dict] = []
+        self._allow_budget_retry = allow_budget_retry
+        self._tool_allowlist = tool_allowlist
         bounded_timeout = max(5.0, float(settings.impact_timeout_seconds))
         self._client = client or httpx.Client(
             timeout=httpx.Timeout(
@@ -72,14 +76,21 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             model = self._model_chain[self._model_index]
             started = time.perf_counter()
             try:
+                tool_definitions = __import__(
+                    "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
+                ).citynexus_tool_definitions()
+                if self._tool_allowlist is not None:
+                    tool_definitions = [
+                        item
+                        for item in tool_definitions
+                        if item.get("function", {}).get("name") in self._tool_allowlist
+                    ]
                 payload = {
                     "model": model,
                     "temperature": 0,
                     "max_tokens": self._initial_max_tokens,
                     "messages": messages,
-                    "tools": __import__(
-                        "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
-                    ).citynexus_tool_definitions(),
+                    "tools": tool_definitions,
                     "tool_choice": "auto",
                     # WB2API's SSE bridge can leave a large tool-schema turn
                     # open after it has emitted reasoning.  JSON mode gives
@@ -119,7 +130,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                         or finish_reason == "length"
                         or bool(message.get("reasoning_content"))
                     )
-                    if retryable_budget_exhaustion:
+                    if retryable_budget_exhaustion and self._allow_budget_retry:
                         retry_payload = {
                             **payload,
                             "stream": False,
@@ -216,12 +227,22 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
 
 
 def configured_journey_agent(
-    *, native_factory: Callable[[], JourneyAgentRuntime] = DeepSeekJourneyAgent
+    *,
+    native_factory: Callable[[], JourneyAgentRuntime] = DeepSeekJourneyAgent,
+    force_compat: bool = False,
+    allow_budget_retry: bool = True,
+    tool_allowlist: frozenset[str] | None = None,
 ) -> JourneyAgentRuntime:
     """Prefer configured Hermes and otherwise use the native DeepSeek loop."""
 
     if settings.hermes_api_url and settings.hermes_api_key:
-        return HermesJourneyAgent()
+        return HermesJourneyAgent(
+            model_chain=(settings.hermes_model,) if force_compat else None,
+            allow_budget_retry=allow_budget_retry,
+            tool_allowlist=tool_allowlist,
+        )
+    if force_compat:
+        raise AgentRuntimeUnavailable("Hermes compatibility endpoint is not configured")
     return native_factory()
 
 

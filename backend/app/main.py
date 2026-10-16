@@ -479,6 +479,7 @@ from app.schemas import (
     AgentApprovalRequest,
     AgentCommandResponse,
     AgentCommandRequest,
+    MobileCompatAgentRunStartRequest,
     AgentRunResponse,
     ClarificationAnswer,
     CollectiveClarificationAnswer,
@@ -1399,6 +1400,307 @@ def get_latest_journey_native_hermes_run(
     return {"journey_id": str(journey.id), "run": current_run}
 
 
+_MOBILE_COMPAT_READ_TOOLS = frozenset(
+    {"inspect_journey", "inspect_twin", "list_replans"}
+)
+
+
+def _mobile_compat_run_id(journey_id: str, member_id: str, request_id: str) -> str:
+    return str(
+        uuid5(
+            NAMESPACE_URL,
+            f"citynexus-mobile-compat:{journey_id}:{member_id}:{request_id}",
+        )
+    )
+
+
+def _mobile_compat_binding(
+    session: Session,
+    *,
+    journey_id: str,
+    traveler_id: str,
+    member_id: str,
+    run_id: str,
+) -> dict[str, Any] | None:
+    row = session.scalar(
+        select(AuditLog).where(
+            AuditLog.action == "agent.mobile_compat.run_bound",
+            AuditLog.entity_type == "AgentRun",
+            AuditLog.entity_id == run_id,
+            AuditLog.journey_id == journey_id,
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == traveler_id,
+            AuditLog.after_json.contains(member_id),
+        )
+    )
+    if row is None:
+        return None
+    try:
+        payload = json.loads(row.after_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        return None
+    if (
+        not isinstance(payload, dict)
+        or payload.get("run_id") != run_id
+        or payload.get("traveler_id") != traveler_id
+        or payload.get("member_id") != member_id
+        or payload.get("runtime_identity") != "HERMES_COMPAT_ENDPOINT"
+        or payload.get("provider_consent") is not True
+    ):
+        return None
+    return payload
+
+
+def _mobile_compat_run_projection(
+    session: Session,
+    *,
+    journey: Journey,
+    traveler_id: str,
+    member_id: str,
+    request_id: str,
+) -> dict[str, Any]:
+    run_id = _mobile_compat_run_id(str(journey.id), member_id, request_id)
+    binding = _mobile_compat_binding(
+        session,
+        journey_id=str(journey.id),
+        traveler_id=traveler_id,
+        member_id=member_id,
+        run_id=run_id,
+    )
+    run = session.get(AgentRun, run_id)
+    mission = session.get(JourneyMission, run.mission_id) if run is not None else None
+    if (
+        binding is None
+        or binding.get("request_id") != request_id
+        or run is None
+        or run.journey_id != str(journey.id)
+        or mission is None
+        or mission.journey_id != str(journey.id)
+    ):
+        raise HTTPException(404, "Agent run was not found")
+
+    steps = session.scalars(
+        select(AgentRunStep)
+        .where(AgentRunStep.run_id == run.id)
+        .order_by(AgentRunStep.sequence_no)
+    ).all()
+    projected_steps: list[dict[str, Any]] = []
+    for step in steps:
+        if step.tool_name not in _MOBILE_COMPAT_READ_TOOLS:
+            continue
+        try:
+            result = json.loads(step.result_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            result = {}
+        failed = not isinstance(result, dict) or bool(result.get("error"))
+        projected_steps.append(
+            {
+                "sequence_no": step.sequence_no,
+                "tool_name": step.tool_name,
+                "status": "FAILED" if failed else "COMPLETED",
+                "created_at": step.created_at,
+                "completed_at": step.completed_at,
+            }
+        )
+
+    status_allowlist = {
+        "RUNNING",
+        "COMPLETED",
+        "PARTIAL",
+        "FAILED_EXTERNAL",
+        "WAITING_FOR_APPROVAL",
+        "SKIPPED_EXTERNAL_DEPENDENCY",
+        "SUPERSEDED",
+    }
+    status = run.status if run.status in status_allowlist else "UNKNOWN"
+    return {
+        "request_id": request_id,
+        "run_id": run.id,
+        "mission_id": mission.id,
+        "runtime_identity": "HERMES_COMPAT_ENDPOINT",
+        "status": status,
+        "tool_call_recorded": bool(projected_steps),
+        "verification": (
+            "WB2API_TOOL_CALL_RECORDED" if projected_steps else "MODEL_NOT_VERIFIED"
+        ),
+        "tool_steps": projected_steps,
+        "created_at": run.created_at,
+        "started_at": run.started_at,
+        "completed_at": run.completed_at,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/mobile-compat-runs/latest")
+def get_latest_mobile_compat_run(
+    journey_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    rows = session.scalars(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "agent.mobile_compat.run_bound",
+            AuditLog.entity_type == "AgentRun",
+            AuditLog.journey_id == str(journey.id),
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+            AuditLog.after_json.contains(member.id),
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        .limit(20)
+    ).all()
+    current_run: dict[str, Any] | None = None
+    for row in rows:
+        try:
+            binding = json.loads(row.after_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if not isinstance(binding, dict):
+            continue
+        if (
+            binding.get("traveler_id") != principal.traveler_id
+            or binding.get("member_id") != member.id
+            or binding.get("run_id") != row.entity_id
+        ):
+            continue
+        request_id = str(binding.get("request_id") or "")
+        try:
+            request_id = str(UUID(request_id))
+        except (TypeError, ValueError):
+            continue
+        try:
+            current_run = _mobile_compat_run_projection(
+                session,
+                journey=journey,
+                traveler_id=principal.traveler_id,
+                member_id=member.id,
+                request_id=request_id,
+            )
+        except HTTPException:
+            continue
+        break
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    configured = bool(settings.ai_enabled and settings.hermes_api_url and settings.hermes_api_key)
+    return {
+        "runtime_identity": "HERMES_COMPAT_ENDPOINT" if configured else "NOT_CONFIGURED",
+        "configured": configured,
+        "run": current_run,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/mobile-compat-runs/{request_id}")
+def get_mobile_compat_run(
+    journey_id: UUID,
+    request_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return _mobile_compat_run_projection(
+        session,
+        journey=journey,
+        traveler_id=principal.traveler_id,
+        member_id=member.id,
+        request_id=str(request_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/mobile-compat-runs")
+def start_mobile_compat_run(
+    journey_id: UUID,
+    body: MobileCompatAgentRunStartRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    if not body.provider_consent:
+        raise HTTPException(403, "provider consent is required")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "Agent runs are available for active Journeys")
+    if not settings.ai_enabled or not settings.hermes_api_url or not settings.hermes_api_key:
+        raise HTTPException(503, "wb2api Agent is not configured")
+
+    request_id = str(body.request_id)
+    run_id = _mobile_compat_run_id(str(journey.id), member.id, request_id)
+    existing = session.get(AgentRun, run_id)
+    if existing is not None:
+        return _mobile_compat_run_projection(
+            session,
+            journey=journey,
+            traveler_id=principal.traveler_id,
+            member_id=member.id,
+            request_id=request_id,
+        )
+    binding = {
+        "traveler_id": principal.traveler_id,
+        "member_id": member.id,
+        "request_id": request_id,
+    }
+    request.state.citynexus_mobile_compat_run = {
+        "run_id": run_id,
+        "binding": binding,
+        "max_steps": 1,
+    }
+    try:
+        try:
+            run_agent_command(
+                journey_id=journey_id,
+                payload=AgentCommandRequest(
+                    command=(
+                        "只读检查当前行程。先检查服务器保存的行程事实，再用简短结果概括；"
+                        "不要搜索地点、提交方案、修改安排或执行任何写入。"
+                    ),
+                    requested_autonomy="PLAN_ONLY",
+                ),
+                request=request,
+                session=session,
+            )
+        except IntegrityError:
+            # A concurrent duplicate with the same signed request id reaches
+            # the unique AgentRun key before any second provider call.
+            session.rollback()
+            winner = session.get(AgentRun, run_id)
+            if winner is None:
+                raise
+    finally:
+        try:
+            del request.state.citynexus_mobile_compat_run
+        except AttributeError:
+            pass
+    return _mobile_compat_run_projection(
+        session,
+        journey=journey,
+        traveler_id=principal.traveler_id,
+        member_id=member.id,
+        request_id=request_id,
+    )
+
+
 @app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}")
 def get_journey_native_hermes_run(
     journey_id: UUID,
@@ -1612,6 +1914,8 @@ def run_agent_command(
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    mobile_compat_run = getattr(request.state, "citynexus_mobile_compat_run", None)
+    mobile_compat_enabled = isinstance(mobile_compat_run, dict)
     start_request_budget(SCENARIO_AGENT_COMMANDS)
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
@@ -1626,7 +1930,11 @@ def run_agent_command(
             now=now_dt,
         )
     context = _copilot_context(session, journey)
-    interpretation = _copilot_fallback_or_ai(payload.command, context)
+    interpretation = (
+        classify_copilot_message(payload.command)
+        if mobile_compat_enabled
+        else _copilot_fallback_or_ai(payload.command, context)
+    )
     if _is_live_journey_intent_request(payload.command, interpretation):
         return _run_live_journey_intent(
             request=request,
@@ -1723,6 +2031,7 @@ def run_agent_command(
             command=payload.command,
             requested_autonomy=payload.requested_autonomy,
             trigger_event_id=event.id if event else None,
+            use_model_draft=not mobile_compat_enabled,
         )
         record_audit(
             session,
@@ -1740,7 +2049,7 @@ def run_agent_command(
         )
         commit_within_budget(session, SCENARIO_AGENT_COMMANDS)
     native_status = native_hermes_status()
-    if native_status.get("ready"):
+    if native_status.get("ready") and not mobile_compat_enabled:
         native = HermesNativeClient()
         try:
             native_plan = mission_plan_for_model(mission)
@@ -1816,9 +2125,30 @@ def run_agent_command(
             "event_id": event.id if event else None,
             "run": run,
         }
-    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    runtime = configured_journey_agent(
+        native_factory=DeepSeekJourneyAgent,
+        force_compat=mobile_compat_enabled,
+        allow_budget_retry=not mobile_compat_enabled,
+        tool_allowlist=(
+            _MOBILE_COMPAT_READ_TOOLS if mobile_compat_enabled else None
+        ),
+    )
     try:
-        run = runtime.run(session, journey=journey, mission=mission)
+        run_options = (
+            {
+                "max_steps": int(mobile_compat_run.get("max_steps") or 1),
+                "run_id": str(mobile_compat_run["run_id"]),
+                "signed_member_binding": dict(mobile_compat_run["binding"]),
+            }
+            if mobile_compat_enabled
+            else {}
+        )
+        run = runtime.run(
+            session,
+            journey=journey,
+            mission=mission,
+            **run_options,
+        )
     except AgentRuntimeUnavailable as exc:
         failed_run = session.scalar(
             select(AgentRun)

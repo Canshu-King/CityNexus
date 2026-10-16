@@ -7,6 +7,7 @@ import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
 import { MobileHermesRun } from "./mobile/MobileHermesRun";
+import { MobileCompatAgentActivity } from "./mobile/MobileCompatAgentActivity";
 import {
   clearTravelerBearer,
   readTravelerBearer,
@@ -343,6 +344,7 @@ export function RevolutionFirstLook() {
                     <p>这里显示行程监测、助手运行记录和待确认操作。</p>
                   </section>
                   <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
+                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab === "trips"} />
                   <MobileHermesRun journeyId={journey.id} visible={activeTab === "trips"} />
                   <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
                 </section>

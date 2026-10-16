@@ -202,6 +202,13 @@ class AgentCommandRequest(BaseModel):
     requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
 
 
+class MobileCompatAgentRunStartRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    request_id: UUID
+    provider_consent: Literal[True]
+
+
 class AgentRunOutcome(BaseModel):
     model_config = ConfigDict(extra="allow")
 

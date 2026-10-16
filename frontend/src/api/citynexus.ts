@@ -2195,6 +2195,34 @@ export interface NativeHermesRunReference {
   initial_events?: NativeRuntimeEvent[];
 }
 
+export interface MobileCompatAgentToolStep {
+  sequence_no: number;
+  tool_name: "inspect_journey" | "inspect_twin" | "list_replans";
+  status: "COMPLETED" | "FAILED";
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface MobileCompatAgentRun {
+  request_id: string;
+  run_id: string;
+  mission_id: string;
+  runtime_identity: "HERMES_COMPAT_ENDPOINT";
+  status: string;
+  tool_call_recorded: boolean;
+  verification: "WB2API_TOOL_CALL_RECORDED" | "MODEL_NOT_VERIFIED";
+  tool_steps: MobileCompatAgentToolStep[];
+  created_at: string;
+  started_at: string;
+  completed_at: string | null;
+}
+
+export interface MobileCompatAgentLatest {
+  runtime_identity: string;
+  configured: boolean;
+  run: MobileCompatAgentRun | null;
+}
+
 export interface AgentCommandResponse {
   mission: AgentMission;
   event_id: string | null;
@@ -2883,6 +2911,31 @@ export const cityNexusApi = {
   }> {
     return requestJson(
       "/journeys/" + encodeURIComponent(journeyId) + "/agent/hermes/latest-run",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getLatestMobileCompatRun(journeyId: string): Promise<MobileCompatAgentLatest> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/mobile-compat-runs/latest",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  startMobileCompatRun(journeyId: string, requestId: string): Promise<MobileCompatAgentRun> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/mobile-compat-runs",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ request_id: requestId, provider_consent: true }),
+      },
+    );
+  },
+
+  getMobileCompatRun(journeyId: string, requestId: string): Promise<MobileCompatAgentRun> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/mobile-compat-runs/" + encodeURIComponent(requestId),
       { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
