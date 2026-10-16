@@ -1,4 +1,35 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0738·第十九笔落线：暗档覆盖组里那处改名遗留摘干净（附一次 C 盘自救的删前删后读数）
+
+**一、线动了**
+
+- 权威尖从 654b15ae2ab7e6343a8c75df1d0d5b20a5bb00eb 推到 f8c4555ea012c0bece8cf806e56b02ad1bb1ef65，只快进（merge_base 就是上一枚尖、候选独有一枚提交、线上独有零枚），收据 `preflight_r1.json:1`。
+- 动的产品文件一枚：`frontend/src/design-tokens.css`，blob 从 475462f0357c0cd61b1cf714f3bb80ac11fb159a（71536 字节）换成 85a9f346feda36657fba8fe29e2e61a874da478a（71485 字节），差五十一字节。
+- 形状：一行改动，从暗档那条九枚组合选择器里摘掉 `:root[data-theme="dark"] .v8-page .v8-rain-button` 这一枚，坐标 `frontend/src/design-tokens.css:815`；其余八枚（`frontend/src/design-tokens.css:815` 同一行里的 day-card、day-detail、live-now、mode-chooser、next-card、comparison、compare-button、map-panel）逐枚比过出现次数没跌，声明块一个字符没动。
+
+**二、为什么这一枚可以摘**
+
+- 沿用上一刀那两臂的死证，不重做也不改口：157 枚 `.tsx`/`.ts` 里 `.v8-rain-button` 字面出现零处，`className` 表达式六十四处（其中模板串十六处）逐枚摊开、插值片段无一能拼出它，静态读数 `deadcss_proof_static.txt:1`。
+- 动态那一臂是六屏逐屏 `querySelectorAll` 命中为零（含暗档屏），读数 `deadcss_probe_dynamic.json:1`。
+- 真身现在画的是 `frontend/src/app/V8Experience.tsx:3912` 那个 `BUTTON.v8-quiet-button` 配上 `frontend/src/app/V8Experience.tsx:3913` 那枚 testid，类名是改名时被甩下的。
+
+**三、这一刀自己带的读数**
+
+- 暗档配对尺两臂对表：control 与 candidate 两份 JSON 逐字节相同（本机 sha1 两跑同为 b054a2d782cf 开头那串，它不是 git blob 也不是 git 对象），发布件 `token_pairing_control.json:1` 与 `token_pairing_candidate.json:1`；尺身 `tools/cnx_token_night_pairing_r1.py:1`。
+- 真尺两臂：light 十一警告、dark 十警告，扫到行数两臂各 329，样式元组集合八比八相同、两向差集都为零，负对照两臂各咬一次，见 `gate_control.json:1` 与 `gate_candidate.json:1`。
+- 主题翻转逃逸口分母不动（二百三十行；摘的是选择器不是字面色值），台账在 `_cmdr_fe_rev_1016/escape_hatch.tsv`，尺咬到的 styles.css 那批里，`frontend/src/styles.css:6` 是一枚浅底（#d9f7e6 配 #12653a）。
+- 编译臂：`npm run build` 退出码零，日志 `preflight_stdout.txt:1` 之前那份 `_build_dt.log` 留盘。
+- 落地门判语：verdict READY_TO_LAND、problems 空数组、blob_equality_all 为真、GitHub 两条路由回同一枚尖，收据 `preflight_r1.json:1`。
+
+**四、C 盘自救（删前删后都有读数，且只动有可重建证据的那一类）**
+
+- 现读余量：C 剩一点九三 GB（已用约百分之九十九）、D 剩十四点三 GB、E 剩五点五 GB。C 是系统盘，写满会拖垮本机所有会话的流水，等不起，所以我按 10-04 那次的同一口径先动了。
+- 动的是什么：`~/.qoder/logs/runs` 里**名字带钟点且 mtime 也在十四天前**的旧运行日志目录，双条件都过才进名单，共 2241 个目录、一点二六 GB；另加两枚可重建缓存 node-compile-cache 与 playwright-transform-cache（各零点一二 GB，删了自己会长回来）。脚本先落清单再动手，账在 `c_clean_r1.py:1` 与本机 `D:/moodle/_cmdr_disk_1017/c_clean_manifest_0618.json` 两份（删前一份、删后一份）。
+- 没动的：`~/.qoder/logs/sessions`（会话正文，一点三二 GB）、`~/.qoder/file-history`（改档历史，一点八零 GB）、`Temp/qoder-cli`（当前会话在写）、以及 `D:/moodle` 下一切（常设令：不清 moodle）。
+- 删后回读：runs 顶层现存 2287 个目录（原来 4528 个），记账移除一点四九 GB，C 余量从一点九三 GB 到三点二九 GB（差一点三六 GB），删后那份账在 `c_clean_manifest_0618_after.json:1`。**一句话结论：这只买到一天上下，不是治本**，治本要么给 C 扩容要么把 `~/.qoder` 整体搬到 D 或 E，那是要你点头的事，我不擅自搬。
+- 另报一件我撞见的：点工工那份读数收据在我这棵工作树里被清成了零字节（全文四行都是他的亲测行），不是我改的，已按尖上原样还原并逐字节对拍通过。谁在那棵树上写过它，值得回头查一眼。
+
+
 ### CMDR-NIGHT-0736·styles.css 死码清扫落线（第十八笔）：改名之后没人再画的三枚类，规则与组合里的 token 一起摘干净
 
 **一、线动了**
