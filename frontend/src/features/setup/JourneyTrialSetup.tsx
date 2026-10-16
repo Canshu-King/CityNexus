@@ -257,8 +257,8 @@ function verdictWords(row: DestinationReading, zh: boolean): string {
   if (!row.answered) {
     return row.failure
       ? zh
-        ? "这一轮没读到服务器的判定（读不到不等于服务器说不知道）"
-        : "no server verdict was read this round (a failed read is not the server saying it does not know)"
+        ? "暂时无法读取服务器判定。"
+        : "Could not read the server response."
       : zh
         ? "还没问过服务器"
         : "the server has not been asked yet";
@@ -622,10 +622,9 @@ export function JourneyTrialSetup({
   };
 
   const [advanced, setAdvanced] = useState(false);
-  /* createJourney catches its own failure and does not rethrow, so a resolved
-     `await onCreate()` here does not mean a journey exists.  Its success path closes this
-     wizard (V8Experience.tsx:577 setSetupOpen(false)), so still being mounted once the
-     await settles is the deterministic signal that the step did not complete. */
+  /* createJourney handles failures internally. A successful creation closes this wizard
+     (V8Experience.tsx:577 setSetupOpen(false)); if it remains mounted after onCreate settles,
+     the step still needs attention. */
   const [createAttemptFailed, setCreateAttemptFailed] = useState(false);
   /* ORD-0066 (甲): a tap on a button that cannot advance has to answer out loud.  A live
      region only announces a *change*, so the region is cleared before the same sentence is
@@ -924,8 +923,8 @@ export function JourneyTrialSetup({
               role="status"
             >
               {zh
-                ? `没认出「${draft.cityName.trim()}」：已退回中立口径 ${basisWords.country} / ${basisWords.currency}（${basisWords.currencyCode}）/ ${basisWords.timezone} 规划，不沿用上一次识别到的城市。换个写法，或在"看支持的目的地"里挑一个。`
-                : `"${draft.cityName.trim()}" is not recognised: planning falls back to the neutral basis ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}, and does not keep the city you last recognised. Try another spelling, or pick one from "See supported destinations".`}
+                ? `暂未识别「${draft.cityName.trim()}」：当前按 ${basisWords.country} / ${basisWords.currency}（${basisWords.currencyCode}）/ ${basisWords.timezone} 规划。请换种写法，或从“查看支持的目的地”中选择。`
+                : `Could not recognize "${draft.cityName.trim()}". Planning uses ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}. Try another spelling or choose a supported destination.`}
             </p>
           )}
           <details
@@ -1357,11 +1356,11 @@ export function JourneyTrialSetup({
           <strong>
             {journeyCreated
               ? zh
-                ? "这一步没有成功——行程已创建，但住宿搜索没有完成。"
-                : "This step did not complete — the trip was created, but the stay search did not."
+                ? "行程已创建，住宿搜索失败。"
+                : "Trip created. Stay search failed."
               : zh
-                ? "这一步没有成功，行程还没有创建。"
-                : "This step did not complete — no journey was created."}
+                ? "行程尚未创建。"
+                : "Journey not created."}
           </strong>
           {message ? <span>{message}</span> : null}
           {/* ORD-0353: the phone gate counted zero <details> blocks on this failure, which left the
@@ -1474,8 +1473,8 @@ export function JourneyTrialSetup({
           </p>
           <p className="trial-wait-note">
             {zh
-              ? "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。"
-              : "A cold city's first search measured about two minutes. The server reports nothing until it finishes, so this is measured seconds — not an invented number."}
+              ? "首次搜索可能需要约两分钟。"
+              : "A first search may take about two minutes."}
           </p>
           {onStopWaiting && (
             <button
@@ -1489,8 +1488,8 @@ export function JourneyTrialSetup({
           )}
           <p className="trial-wait-hint">
             {zh
-              ? "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。"
-              : "Stopping the wait only closes this view: the server keeps going, and nothing you typed is lost."}
+              ? "任务会在后台继续，你可以先离开此页。"
+              : "The task continues in the background. You can leave this page."}
           </p>
         </div>
       )}

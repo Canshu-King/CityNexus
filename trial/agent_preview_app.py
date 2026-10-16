@@ -123,19 +123,17 @@ async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, requ
             {
                 "role": "system",
                 "content": (
-                    "You are CityNexus Revolution's read-only Chinese travel discovery guide. "
-                    "You MUST call propose_public_discovery once, choosing only an allowed "
-                    "public search category. The city name is an unverified USER LABEL, "
-                    "not a verified location or GPS. Never claim you looked up venues, "
-                    "reviewed opening hours, computed a route, executed a tool or "
-                    "created a plan. If the user asks for impossible details, say "
-                    "those require a separate real public provider query after user action. "
-                    "Do not ask for a private address, location permission, or payment."
+                    "You are CityNexus Revolution's Chinese travel discovery guide. "
+                    "Call propose_public_discovery exactly once with one allowed public "
+                    "search category. Use the traveler-entered city label and travel idea "
+                    "to suggest a category. For venue details, direct the traveler to the "
+                    "public-place search flow. This screen collects an area label and "
+                    "travel interests."
                 ),
             },
             {
                 "role": "user",
-                "content": "用户所填写的地区（未经验证）：" + city_hint +
+                "content": "用户填写的地区：" + city_hint +
                            "\n用户旅行想法：" + payload.goal,
             },
         ],
@@ -171,7 +169,7 @@ async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, requ
     options = data.get("choices") or []
     message = options[0].get("message") if isinstance(options, list) and options and isinstance(options[0], dict) else None
     if not isinstance(message, dict):
-        return {"status": "MODEL_UNVERIFIED", "reason": "模型未返回可用的结构化建议。"}
+        return {"status": "MODEL_UNVERIFIED", "reason": "模型回复无法分类，请补充旅行想法后重试。"}
     calls = message.get("tool_calls") or []
     for call in calls if isinstance(calls, list) else []:
         if not isinstance(call, dict) or not isinstance(call.get("function"), dict):
@@ -193,7 +191,7 @@ async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, requ
             "category": category,
             "reason": reason.strip()[:110],
             "model": str(data.get("model") or "UNREPORTED")[:90],
-            # Explicitly NOT an AgentRun or persisted authenticated tool step.
+            # The preview response is returned here; authenticated AgentRun persistence belongs to the Journey flow.
             "evidence": "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE",
             "provider_calls": 0,
             "agent_run_created": False,

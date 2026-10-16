@@ -63,12 +63,12 @@ export function MemberPlaceInvitationPanel({
       await cityNexusApi.respondToMemberPlaceInvitation(journeyId, invitationId, decision, feasibility);
       await onUpdated();
       setMessage(decision === "ACCEPT"
-        ? (zh ? "已为你创建独立支线；共享行程未改变，也没有自动打开地图。" : "Your own side trip is ready. The shared plan is unchanged and no map was opened.")
+        ? (zh ? "已创建个人支线。" : "Personal side trip created.")
         : (zh ? "已谢绝这个地点邀请。" : "Place invitation declined."));
     } catch {
       setMessage(zh
-        ? "邀请已失效、你的行程状态有冲突，或暂时无法完成；没有覆盖你现有的支线。刷新后可查看状态。"
-        : "The invitation may be stale or your current trip state conflicts. Your existing side trip was not replaced; refresh to review the status.");
+        ? "邀请状态待确认，请刷新查看。"
+        : "Invitation status is unconfirmed. Refresh to review.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -96,8 +96,8 @@ export function MemberPlaceInvitationPanel({
         return next;
       });
       setMessage(zh
-        ? "路线检查未完成，不能把请求失败当作已确认的“时间未核实”结果。请刷新重试；如不愿共享位置，可在同意弹窗中主动选择跳过。"
-        : "The route check failed; this is not a verified UNKNOWN preview. Refresh and retry, or explicitly skip location sharing in the consent dialog.");
+        ? "路线检查失败。刷新后重试，或跳过位置共享。"
+        : "Route check failed. Refresh to retry or skip location sharing.");
     } finally {
       setBusyId(null);
     }
@@ -120,8 +120,8 @@ export function MemberPlaceInvitationPanel({
       );
       await onUpdated();
       setMessage(action.startsWith("SHARE_")
-        ? (zh ? "已向本次邀请中已加入的同行者分享你的自述；它不是 GPS 验证。" : "Your self-report is shared with members who joined this invitation; it is not GPS verified.")
-        : (zh ? "已停止在后续视图中分享；此前已看见的信息无法撤回。" : "Future views no longer show this report; information already seen cannot be recalled."));
+        ? (zh ? "已分享给本次邀请的同行者。" : "Shared with members of this invitation.")
+        : (zh ? "已停止后续分享。" : "Future sharing stopped."));
     } catch (error) {
       const body = error instanceof CityNexusApiError && error.body && typeof error.body === "object"
         ? error.body as { detail?: unknown; error?: { message?: unknown } }
@@ -130,14 +130,14 @@ export function MemberPlaceInvitationPanel({
       if (detail === "PLACE_INVITATION_PROGRESS_AUDIENCE_CHANGED") {
         setProgressConsent(null);
         setMessage(zh
-          ? "邀请中的成员名单刚有变化。为避免把自述分享给你尚未确认的对象，本次分享已取消；请查看刷新后的名单并重新确认。"
+          ? "同行者名单已更新，分享已取消。刷新后重新确认对象。"
           : "The invitation audience changed. This share was cancelled so you can review the updated members and confirm again.");
         await onUpdated();
         return;
       }
       setMessage(zh
-        ? "无法更新分享状态。你的行程没有被更改；刷新后可查看当前进度。"
-        : "The sharing status could not be updated. Your Journey was not changed; refresh to review progress.");
+        ? "分享状态未更新，请刷新重试。"
+        : "Could not update sharing status. Refresh and retry.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -157,12 +157,12 @@ export function MemberPlaceInvitationPanel({
       );
       await onUpdated();
       setMessage(zh
-        ? "已提交共享站点提议；只有路线与承诺核验通过、所有当前成员各自同意后，才可由成员应用到共享行程。"
-        : "Shared-stop proposal submitted. It can be applied only after route and commitment checks pass and every current member approves independently.");
+        ? "已提交共享站点提议；路线核验和全体成员批准后可应用。"
+        : "Shared-stop proposal submitted. Apply after route checks and approval from every member.");
     } catch {
       setMessage(zh
-        ? "提议未能进入可执行状态。共享行程未改变；请刷新查看具体路线证据或当前恢复状态。"
-        : "The proposal did not become executable. The shared Journey is unchanged; refresh to review route evidence or an active recovery.");
+        ? "方案暂不可执行，请刷新查看路线证据和恢复状态。"
+        : "Proposal is not ready. Refresh to review route evidence and recovery status.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -182,10 +182,10 @@ export function MemberPlaceInvitationPanel({
         : null;
       const code = String(body?.detail ?? body?.error?.message ?? "");
       setMessage(code === "AUDIENCE_CHANGED"
-        ? (zh ? "同行成员名单发生变化；没有扩大分享。请刷新后重新查看名单。" : "The Journey audience changed. Nothing was shared; refresh and review the current list.")
+        ? (zh ? "同行者名单已更新，请刷新并重新确认分享范围。" : "The Journey audience changed. Refresh and confirm who can see the place.")
         : code === "GROUP_SHARE_REQUIRES_ACCEPTED_INVITEE"
           ? (zh ? "先等待至少一位受邀同行者接受，再发起全组分享。" : "Wait for an invited companion to accept before sharing with the whole Journey.")
-          : (zh ? "无法创建当前分享预览；地点仍只对原邀请对象可见。" : "The current sharing preview is unavailable; the Place remains visible only to the original invitees."));
+          : (zh ? "分享预览暂不可用，地点仍只对受邀同行者可见。" : "Sharing preview unavailable; the Place remains visible only to invited companions."));
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -213,12 +213,12 @@ export function MemberPlaceInvitationPanel({
       const code = String(body?.detail ?? body?.error?.message ?? "");
       setGroupSharePreviewById((current) => ({ ...current, [invitationId]: null }));
       setMessage(code === "AUDIENCE_CHANGED"
-        ? (zh ? "名单在确认前变化；没有分享。请重新打开预览核对新名单。" : "The audience changed before confirmation; nothing was shared. Reopen the preview to review the new list.")
+        ? (zh ? "成员名单已变化，请重新核对分享对象。" : "Membership changed. Review the sharing audience again.")
         : code === "PLAN_CHANGED"
-          ? (zh ? "共享计划或当前执行点已变化；本次分享没有生效。" : "The shared plan or current execution cursor changed; this share was not applied.")
+          ? (zh ? "行程状态已变化，请重新预览分享。" : "Journey status changed. Preview the share again.")
           : code === "INVITER_SPLIT_STALE"
-            ? (zh ? "你的独立探索或会合信息已变化；本次分享没有生效。" : "Your private split or rendezvous context changed; this share was not applied.")
-            : (zh ? "分享未生效；原行程和成员权限没有改变。" : "The share was not applied; the Journey plan and member roles are unchanged."));
+            ? (zh ? "你的支线或会合信息已变化，请重新预览分享。" : "Your side trip or rendezvous changed. Preview the share again.")
+            : (zh ? "分享状态待确认，请刷新行程和成员权限。" : "Share status is unconfirmed. Refresh the Journey and member permissions."));
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -233,10 +233,10 @@ export function MemberPlaceInvitationPanel({
       await cityNexusApi.withdrawMemberPlaceGroupShare(journeyId, invitationId);
       await onUpdated();
       setMessage(zh
-        ? "已停止后续投影和新提议；此前已经看到地点的成员无法被当作从未见过。"
-        : "Future projections and new proposals are disabled. Members who already saw the Place cannot be treated as if they never saw it.");
+        ? "已停止后续共享和新提议；成员仍可查看此前收到的地点。"
+        : "Future sharing and proposals stopped. Members can still view places they already received.");
     } catch {
-      setMessage(zh ? "无法撤回全组分享；刷新查看当前状态。" : "The group share could not be withdrawn; refresh to review its current state.");
+      setMessage(zh ? "全组分享未撤回，请刷新查看状态。" : "Group sharing remains active. Refresh to check its status.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -260,8 +260,8 @@ export function MemberPlaceInvitationPanel({
         : "A one-stop co-planning offer was sent. The collaborator must accept it with their own signed identity.");
     } catch {
       setMessage(zh
-        ? "授权未发出；行程和权限没有变化。请刷新检查邀请、当前计划和成员状态。"
-        : "The offer was not issued; Journey and role permissions are unchanged. Refresh to review the invitation, plan, and member state.");
+        ? "授权状态待确认，请刷新邀请和成员状态。"
+        : "Offer status is unconfirmed. Refresh the invitation and membership.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -284,12 +284,12 @@ export function MemberPlaceInvitationPanel({
       );
       await onUpdated();
       setMessage(decision === "ACCEPT"
-        ? (zh ? "已接受这个地点的一次共同规划；你的全局角色权限没有改变。" : "You accepted one co-planning round for this Place. Your global role permissions did not change.")
+        ? (zh ? "已接受此地点的一次共同规划授权。" : "Accepted one co-planning grant for this Place.")
         : (zh ? "已拒绝这次共同规划授权。" : "You declined this co-planning offer."));
     } catch {
       setMessage(zh
-        ? "授权邀请已过期或当前计划已变化；没有扩大你的权限。请刷新查看。"
-        : "The offer expired or the active plan changed. No broader permission was granted; refresh to review.");
+        ? "授权已过期或行程已变化，请刷新查看。"
+        : "Offer expired or Journey changed. Refresh to review.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -307,7 +307,7 @@ export function MemberPlaceInvitationPanel({
       );
       await onUpdated();
     } catch {
-      setMessage(zh ? "授权无法撤回或已不再有效；请刷新查看。" : "The grant could not be revoked or is no longer active; refresh to review.");
+      setMessage(zh ? "授权已失效或已撤回，请刷新查看。" : "Grant expired or was revoked. Refresh to view its status.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -331,7 +331,7 @@ export function MemberPlaceInvitationPanel({
       await onUpdated();
     } catch {
       setMessage(zh
-        ? "决策轮可能已经过期或行程事实发生变化；共享计划未被本次操作切换。请刷新查看新状态。"
+        ? "决策轮已过期或行程已更新，请刷新后重试。"
         : "This decision round may be stale or Journey facts may have changed. This action did not switch the shared plan; refresh to review its status.");
       await onUpdated();
     } finally {
@@ -353,7 +353,7 @@ export function MemberPlaceInvitationPanel({
       setMessage(zh ? "已通过集体授权应用新的共享 PlanVersion。" : "The new shared PlanVersion was applied after collective authorization.");
     } catch {
       setMessage(zh
-        ? "应用前复核发现计划、成员、路线或恢复状态已变化；没有应用过期提案。请刷新并重新检查。"
+        ? "行程或恢复状态已更新，请刷新提案后重试。"
         : "The plan, membership, route, or recovery state changed before apply. The stale proposal was not applied; refresh and review it.");
       await onUpdated();
     } finally {
@@ -389,8 +389,8 @@ export function MemberPlaceInvitationPanel({
       <strong>{zh ? "把发现加入共同旅程？" : "Promote this discovery to the shared Journey?"}</strong>
       <small>
         {zh
-          ? "这是新的集体计划提议。系统会用服务器掌握的公开地点、路线与承诺证据重新核验；所有当前成员（包括未加入临时小队的成员）都要分别同意。原计划只会在全体同意后由成员明确应用时切换。"
-          : "This is a collective plan proposal. The server rechecks the canonical public Place, route, and protected commitments. Every current Journey member, including people outside this micro-group, must approve independently. The plan switches only after unanimous approval and an explicit member apply."}
+          ? "新集体计划提议将复核服务器中的地点、路线与承诺信息。所有当前成员需分别同意，之后才可应用新计划。"
+          : "Every Journey member must approve this proposal. A member then applies it; the server checks the place, route, and confirmed bookings again."}
       </small>
       {canPropose && coPlanningOptions.length > 0 && (
         <section data-testid="member-place-coplanning-manager">
@@ -431,7 +431,7 @@ export function MemberPlaceInvitationPanel({
           )}
           {!coPlanningReady && (
             <small data-testid="member-place-coplanning-pending">
-              {zh ? "每位普通协作者都需先用自己的身份接受；未接受前不创建候选计划。" : "Each read-only collaborator must accept with their own identity before a candidate plan is created."}
+              {zh ? "协作者接受后创建候选计划。" : "A candidate plan is created after collaborators accept."}
             </small>
           )}
         </section>
@@ -457,15 +457,15 @@ export function MemberPlaceInvitationPanel({
       {!canUpdate && (
         <small data-testid="member-place-promotion-role-blocked">
           {zh
-            ? "你当前的 Journey 成员角色没有 JOURNEY_UPDATE 权限，因此不能提交共享计划变更提议。请由有权限的成员发起；系统不会借用其他人的身份。"
-            : "Your current Journey role lacks JOURNEY_UPDATE authority, so you cannot submit a shared-plan change. A member with this authority must propose it; CityNexus will not act as another member."}
+            ? "当前角色没有行程更新权限，请由有权限的成员发起。"
+            : "Your role cannot update the Journey. Ask a member with permission to propose the change."}
         </small>
       )}
       {canUpdate && !canPropose && (
         <small data-testid="member-place-promotion-share-blocked">
           {zh
-            ? `原地点分享者尚未向全组授权，或授权已失效（${groupShareStatus}）；请由分享者确认后再提议。`
-            : `The original Place sharer has not authorized full-Journey disclosure, or that consent is stale (${groupShareStatus}). The sharer must confirm before a proposal can be sponsored.`}
+            ? `原分享者需授权全组后才能提议（${groupShareStatus}）。`
+            : `Full-Journey sharing needs approval from the original Place sharer (${groupShareStatus}).`}
         </small>
       )}
       <button
@@ -498,7 +498,7 @@ export function MemberPlaceInvitationPanel({
       AUDIENCE_CHANGED: zh ? "成员名单变化已使之前的分享失效。" : "A membership change invalidated the previous sharing snapshot.",
       PLAN_CHANGED: zh ? "共享计划或执行点变化已使之前的分享失效。" : "A plan or execution-cursor change invalidated the previous sharing snapshot.",
       INVITER_SPLIT_STALE: zh ? "独立探索或会合上下文变化已使分享失效。" : "The inviter's split or rendezvous context invalidated the previous share.",
-      INVITER_CONSENT_WITHDRAWN: zh ? "你已撤回全组分享；已经看过的人无法被视为从未见过。" : "You withdrew full-Journey sharing; people who already saw the Place cannot be made to unsee it.",
+      INVITER_CONSENT_WITHDRAWN: zh ? "已撤回全组分享；已查看成员仍保留此前内容。" : "Group sharing withdrawn. Members retain content they already viewed.",
       INVITER_CONSENT_EXPIRED: zh ? "全组分享已过期；需要重新核对并确认。" : "The group-share consent expired and needs a fresh review.",
     };
     return (
@@ -550,7 +550,7 @@ export function MemberPlaceInvitationPanel({
           : promotion.state === "APPLIED"
             ? (zh ? "已加入共享行程" : "Added to the shared Journey")
             : promotion.state === "DECLINED"
-              ? (zh ? "有成员不同意；共享计划保持原样" : "A member declined; the shared plan stayed unchanged")
+              ? (zh ? "有成员不同意，方案未应用" : "A member declined; proposal not applied")
               : promotion.state === "STALE"
                 ? (zh ? "计划或成员事实已变化；需要重新提议" : "Plan or membership changed; a new proposal is needed")
                 : (zh ? "当前证据不足，不能切换共享计划" : "Current evidence is insufficient; the shared plan cannot change");
@@ -580,16 +580,16 @@ export function MemberPlaceInvitationPanel({
             </small>
             <small>
               {zh
-                ? `路线证据来源：${promotion.tradeoff.route_provider}；证据类别：${promotion.tradeoff.route_fact_qualities.join(", ") || "未标注"}。这是候选估计，不是实时到场证明，应用前仍会复核。`
-                : `Route evidence: ${promotion.tradeoff.route_provider}; fact classes: ${promotion.tradeoff.route_fact_qualities.join(", ") || "unspecified"}. These are candidate estimates, not physical-arrival proof; the server rechecks before apply.`}
+                ? `路线估算来源：${promotion.tradeoff.route_provider}；信息类别：${promotion.tradeoff.route_fact_qualities.join(", ") || "未标注"}。应用前会复核。`
+                : `Route estimate: ${promotion.tradeoff.route_provider}; details: ${promotion.tradeoff.route_fact_qualities.join(", ") || "unspecified"}. The server checks again before applying.`}
             </small>
           </section>
         )}
         {promotion.state === "BLOCKED" && promotion.state_detail.feasibility === "FEASIBILITY_UNKNOWN" && (
           <small data-testid="member-place-promotion-unknown">
             {zh
-              ? `没有足够的服务器路线/时间证据（${promotion.state_detail.code ?? "UNKNOWN"}）；状态为 NEEDS_ROUTE_EVIDENCE，不创建绿色候选，原计划不变。`
-              : `The server has no qualifying route/timing evidence (${promotion.state_detail.code ?? "UNKNOWN"}). Status is NEEDS_ROUTE_EVIDENCE; no green candidate was created and the current plan remains unchanged.`}
+              ? `缺少路线或时间数据（${promotion.state_detail.code ?? "UNKNOWN"}）。补充数据后再生成候选。`
+              : `Route or timing data is missing (${promotion.state_detail.code ?? "UNKNOWN"}). Add the data before generating a candidate.`}
           </small>
         )}
         {promotion.responses.length > 0 && (
@@ -606,7 +606,7 @@ export function MemberPlaceInvitationPanel({
           </ul>
         )}
         {promotion.viewer_decision && (
-          <small>{zh ? `你已${promotion.viewer_decision === "APPROVE" ? "同意" : "拒绝"}；本轮不能替其他成员决策。` : `You ${promotion.viewer_decision.toLowerCase()}; this does not decide for anyone else.`}</small>
+          <small>{zh ? `你已${promotion.viewer_decision === "APPROVE" ? "同意" : "拒绝"}；其他成员分别决定。` : `Your decision is recorded; other members decide separately.`}</small>
         )}
         {promotion.viewer_scoped_authority_expires_at && (
           <small data-testid="member-place-promotion-scoped-authority">
@@ -631,7 +631,7 @@ export function MemberPlaceInvitationPanel({
           </button>
         )}
         {promotion.state !== "APPLIED" && promotion.state !== "BLOCKED" && promotion.state !== "DECLINED" && (
-          <small>{zh ? "共享计划在成功应用前保持不变；本流程不会预订、下单或付款。" : "The shared plan remains unchanged until apply succeeds. This flow does not book, order, or pay."}</small>
+          <small>{zh ? "应用后更新共享行程；预订与付款需另行完成。" : "Apply updates the shared Journey. Bookings and payments are separate."}</small>
         )}
       </article>
     );
@@ -647,7 +647,7 @@ export function MemberPlaceInvitationPanel({
     const shareAudienceToken = ownProgress.share_audience_token;
     if (!shareAudienceToken) {
       setMessage(zh
-        ? "无法取得当前邀请成员名单。请刷新后再查看和确认分享对象。"
+        ? "无法读取当前邀请名单，请刷新后确认分享对象。"
         : "The current invitation audience is unavailable. Refresh before reviewing and confirming who will see this report.");
       return;
     }
@@ -676,10 +676,10 @@ export function MemberPlaceInvitationPanel({
       <strong>{title} · {placeName}</strong>
       <small>
         {zh
-          ? `共同会合点：${rendezvousTitle}。停留时长只是计划估计；本进度板不验证路线或准时情况，时间按未核实处理。`
-          : `Shared rendezvous: ${rendezvousTitle}. Visit duration is a plan estimate; this board does not verify route or arrival timing, so timing remains unverified here.`}
+          ? `共同会合点：${rendezvousTitle}。停留时长为计划估算。`
+          : `Shared rendezvous: ${rendezvousTitle}. Stop duration is a plan estimate.`}
       </small>
-      <small>{zh ? "仅显示已加入者主动分享的粗粒度状态；所有报告均为成员自述，未经 GPS 验证。" : "Only coarse statuses explicitly shared by joined members appear here. Every status is member-reported and not GPS verified."}</small>
+      <small>{zh ? "仅显示已加入者主动分享的粗略状态。" : "Only statuses shared by joined members appear here."}</small>
       {parentState && parentState !== "OPEN" && (
         <small>
           {zh
@@ -698,7 +698,7 @@ export function MemberPlaceInvitationPanel({
               <small>
                 {zh ? "报告已到达 · " : "Reported here · "}
                 {new Date(participant.at_invited_place.reported_at).toLocaleString(locale)}
-                {zh ? " · 自述，非 GPS 验证" : " · self-reported, not GPS verified"}
+                {zh ? " · 成员报告" : " · member report"}
               </small>
             ) : (
               <small>{zh ? "尚无已分享的到达报告" : "No arrival report shared"}</small>
@@ -707,7 +707,7 @@ export function MemberPlaceInvitationPanel({
               <small>
                 {zh ? "报告正在返回 · " : "Reported heading back · "}
                 {new Date(participant.heading_back.reported_at).toLocaleString(locale)}
-                {zh ? " · 自述，非 GPS 验证" : " · self-reported, not GPS verified"}
+                {zh ? " · 成员报告" : " · member report"}
               </small>
             )}
           </li>
@@ -853,8 +853,8 @@ export function MemberPlaceInvitationPanel({
               <strong>{grant.place.name}</strong>
               <small>
                 {zh
-                  ? `${grant.grantor_name} 邀请 ${grant.grantee_name} 共同规划这一站。授权只绑定此地点、当前计划与一次集体决策，24 小时后过期；不会增加 JOURNEY_UPDATE 或预订权限。`
-                  : `${grant.grantor_name} invited ${grant.grantee_name} to co-plan this one stop. The grant binds this Place, the current plan, and one collective decision; it expires after 24 hours and adds no JOURNEY_UPDATE or booking permission.`}
+                  ? `${grant.grantor_name} 邀请 ${grant.grantee_name} 共同规划这一站。授权限此地点、当前计划和一次集体决策，有效 24 小时；不含改行程或预订权限。`
+                  : `${grant.grantor_name} invited ${grant.grantee_name} to co-plan this stop. The grant covers this Place, the current plan, and one decision for 24 hours; it excludes Journey updates and bookings.`}
               </small>
               <small>{zh ? `状态：${grant.state}；会合点：${grant.rendezvous.title}。` : `State: ${grant.state}; rendezvous: ${grant.rendezvous.title}.`}</small>
               {grant.viewer_can_respond && (
@@ -900,13 +900,13 @@ export function MemberPlaceInvitationPanel({
             </small>
             <small>
               {zh
-                ? "先检查能否赶上共同会合；没有可靠证据时不会显示绿色结论。接受后只创建你的独立支线，共享行程保持不变。"
-                : "Check whether the detour fits before accepting. Missing evidence never appears green. Acceptance creates only your own side trip; the shared Journey stays unchanged."}
+                ? "接受前检查能否赶上会合。接受后只创建个人支线，不改共享行程。"
+                : "Check the rendezvous timing before accepting. Acceptance creates a personal side trip without changing the shared Journey."}
             </small>
             <small>
               {zh
-                ? "路线检查会单独征求同意：获取一次前台位置并记录为本人 Journey 位置观察，用于路线估算。它可能更新其他成员可见的粗粒度团队状态，但不会把精确坐标直接显示给同行者。地图导航仍需另行确认。"
-                : "A route check asks separately: it records one foreground location observation on your Journey for route estimation. This may update coarse group-presence status seen by companions, but does not show them your exact coordinates. Map navigation needs separate consent."}
+                ? "路线检查会读取并保存一次前台位置；同行者只看到队伍大致状态。打开地图需单独确认。"
+                : "A route check saves one foreground location. Companions see coarse group status. Map navigation needs separate consent."}
             </small>
             {canRespond && !completing && (
               <button
@@ -932,7 +932,7 @@ export function MemberPlaceInvitationPanel({
                       ? (zh ? "时间缓冲较紧" : "Timing is at risk")
                       : feasibility?.state === "BLOCKED"
                         ? (zh ? "当前安排不允许安全接受" : "Current commitments block a safe acceptance")
-                        : (zh ? "时间尚未核实" : "Timing is unverified")}
+                        : (zh ? "时间待确认" : "Timing pending")}
                 </strong>
                 {feasibility?.travel_duration_min !== null && feasibility?.travel_duration_min !== undefined && (
                   <small>
@@ -952,10 +952,10 @@ export function MemberPlaceInvitationPanel({
                 )}
                 <small>
                   {feasibility?.state === "UNKNOWN"
-                    ? (zh ? "没有新鲜本人位置或可靠路线证据；没有估算到达时间。你可以在明确知情后继续。" : "There is no fresh personal location or qualifying route evidence, so no arrival time is estimated. You may continue only after acknowledging that timing is unverified.")
+                    ? (zh ? "路线资料暂不可用。确认后可继续。" : "Route data is unavailable. Confirm to continue.")
                     : feasibility?.state === "BLOCKED"
-                      ? (zh ? "受保护安排或你现有的支线与此选择冲突；共享计划未改变。" : "A protected commitment or your existing side trip conflicts with this choice; the shared plan is unchanged.")
-                      : (zh ? "这是路线建议，不是实际到达证明；预览不会改动共享计划。" : "This is route guidance, not proof of physical arrival. The preview does not change the shared plan.")}
+                      ? (zh ? "与受保护安排或现有支线冲突，无法加入共享行程。" : "Conflicts with a protected commitment or existing side trip; cannot join the shared Journey.")
+                      : (zh ? "路线建议预览；确认后更新共享计划。" : "Route preview; confirm to update the shared plan.")}
                 </small>
               </section>
             )}
@@ -993,12 +993,12 @@ export function MemberPlaceInvitationPanel({
                         : feasibility?.state === "AT_RISK"
                           ? (zh ? "我了解时间风险，仍要接受" : "Accept despite the timing risk")
                           : feasibility?.state === "UNKNOWN"
-                            ? (zh ? "接受，且知晓时间未核实" : "Accept knowing timing is unverified")
+                            ? (zh ? "按当前时间信息接受" : "Accept with current timing")
                             : (zh ? "接受并添加到我的私人支线" : "Accept and add to my side trip")}
                   </button>
                 )}
                 {feasibility?.state === "BLOCKED" && (
-                  <small>{zh ? "无法安全接受；请保留现有安排或先解决冲突。" : "Acceptance is blocked. Keep your current plans or resolve the conflict first."}</small>
+                  <small>{zh ? "请先解决与现有安排的冲突。" : "Resolve the conflict with your current plans first."}</small>
                 )}
                 {!completing && (
                   <button
@@ -1016,10 +1016,10 @@ export function MemberPlaceInvitationPanel({
                 {invitation.state === "EXPIRED"
                   ? (zh ? "邀请已过期。" : "This invitation expired.")
                   : invitation.state === "STALE"
-                    ? (zh ? "来源支线或共同会合安排已变化，不能再接受。" : "The source stop or shared rendezvous changed; this invitation can no longer be accepted.")
+                    ? (zh ? "来源支线或共同会合点已更新，请刷新邀请。" : "Source stop or rendezvous updated. Refresh the invitation.")
                     : invitation.state === "WITHDRAWN"
                       ? (zh ? "邀请已撤回。" : "This invitation was withdrawn.")
-                      : (zh ? "当前无法响应此邀请。" : "This invitation can no longer be answered.")}
+                      : (zh ? "邀请当前无法响应。" : "This invitation is unavailable.")}
               </small>
             )}
           </article>
@@ -1039,8 +1039,8 @@ export function MemberPlaceInvitationPanel({
           </strong>
           <p>
             {zh
-              ? "同意后，CityNexus 会记录一条与你的身份绑定的 Journey 前台位置观察，并把起点、公开地点和会合点交给已配置的路线服务估算。其他成员不会在团队视图中看到你的精确坐标或私有路线，但可能看到更新后的粗粒度团队状态。不会改动共享计划；拒绝定位或缺少路线证据时结果是“时间未核实”。"
-              : "If you agree, CityNexus records one identity-bound foreground location observation on your Journey and sends your origin, the public Place, and rendezvous to the configured route service for this estimate. Companions do not see your exact coordinates or private route in the group view, but their coarse group-presence status may update. The shared plan is unchanged. Denied location or missing route evidence means unverified timing."}
+              ? "授权后读取并保存一次前台位置，将起点、公开地点和会合点发送至路线服务估时。同行者看到队伍概况；精确位置和路线仅你可见。"
+              : "Consent saves one foreground location and sends your origin, the public Place, and rendezvous to the route provider. Companions see coarse group status; your exact location and route remain private."}
           </p>
           <label htmlFor="member-place-invitation-dwell">
             {zh ? "你计划在这里停留多久？" : "How long would you stay?"}
@@ -1081,7 +1081,7 @@ export function MemberPlaceInvitationPanel({
                 setRouteConsentId(null);
               }}
             >
-              {zh ? "不分享位置，按未核实继续…" : "Skip location sharing; continue unverified…"}
+              {zh ? "跳过位置共享" : "Skip location sharing"}
             </button>
             <button type="button" onClick={() => setRouteConsentId(null)}>
               {zh ? "取消" : "Cancel"}
@@ -1099,8 +1099,8 @@ export function MemberPlaceInvitationPanel({
           <strong id="member-place-invitation-pin-title">{zh ? "将公开地点坐标发送给 OpenStreetMap？" : "Send the public Place coordinates to OpenStreetMap?"}</strong>
           <p>
             {zh
-              ? "只会打开已分享地点的精确地图标记；不会发送你的起点或设备位置。OpenStreetMap 可能按浏览器自己的权限访问位置。此操作不会接受邀请或报告到达。"
-              : "Only the shared Place’s exact pin is opened. Your origin and device location are not sent by CityNexus. OpenStreetMap may use location under your browser’s own permissions. This does not accept the invitation or report arrival."}
+              ? "将打开已分享地点的地图标记；设备定位由浏览器权限管理。"
+              : "Opens the shared Place pin. Device location follows browser permissions."}
           </p>
           <div className="journey-side-quest-actions">
             <button
@@ -1130,8 +1130,8 @@ export function MemberPlaceInvitationPanel({
           </strong>
           <p>
             {zh
-              ? "你将为“" + progressConsent.placeName + "”分享这一粗粒度状态。内容是你自己的报告，不是 GPS 到场验证，也不含坐标或路线。你可以停止后续展示；别人已经看见的信息无法撤回。"
-              : "You are sharing a coarse status for “" + progressConsent.placeName + "”. It is your report, not GPS-verified presence, and contains no coordinates or route. You can stop future projections; information already seen cannot be recalled."}
+              ? "将向已加入者分享“" + progressConsent.placeName + "”的粗略状态，不含坐标或路线。你可随时停止后续分享。"
+              : "Share a coarse status for “" + progressConsent.placeName + "” with joined members. It includes no coordinates or route, and you can stop future sharing at any time."}
           </p>
           <p data-testid="member-place-progress-consent-audience">
             {zh

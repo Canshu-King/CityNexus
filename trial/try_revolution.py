@@ -343,10 +343,10 @@ def main() -> int:
         address = f"http://127.0.0.1:{front_port}/revolution"
         print("\nRevolution browser trial is ready (isolated from Qoder and fusion).")
         print("OPEN:", address)
-        print("SOURCE:", "CONTROLLED TEST_PROVIDER (not real places)" if args.sample
+        print("SOURCE:", "CONTROLLED TEST_PROVIDER (sample places)" if args.sample
               else "REAL PUBLIC OSM PROVIDERS (network access after specific user consent)")
-        print("Agent:", "CONFIGURED_UNVERIFIED (" + agent_label + ")" if agent_enabled else "OFF")
-        print("AI tool-use requires an ACTIVE Journey and a real AgentRun; Pocket Walk alone is not an AgentRun.")
+        print("Agent:", "CONFIGURED (" + agent_label + ")" if agent_enabled else "OFF")
+        print("To try AI tools: run an active Journey with the Agent enabled.")
         print("Payment/booking: mock only. Backend bound to localhost.")
         print("DB:", db)
         print(f"For Android USB Chrome (ADB installed): adb reverse tcp:{front_port} tcp:{front_port}")

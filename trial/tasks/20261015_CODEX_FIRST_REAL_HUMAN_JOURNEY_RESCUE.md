@@ -13,7 +13,7 @@
 1. **多层许可和阻断**：第一次需要填大量 WGS84、城市标签、类别、多个勾选框，点很久仍留在首屏。
 2. **旧页面误路由**：用户粘贴 `/revolution**` 后退回原版 V8「新建行程」；已有窄修但路由必须仍测试。
 3. **地名搜索成功、地图却空白**：Nominatim 返回 `连城县，龙岩市，福建省，中国` 等公开结果后，地图区域只有灰色方块（可见 OSM attribution），任何点击均无法可靠继续；把 OSM URL 输入框当作正常用户的后备操作同样失败。
-4. **AI 脱离主流程**：仅显示 `HERMES_COMPAT_ENDPOINT · CONFIGURED_UNVERIFIED` 不代表调用成功。后续已经新增试用版只读 Hermes tool guide，但未有用户实机证明。
+4. **AI 脱离主流程**：`HERMES_COMPAT_ENDPOINT · CONFIGURED_UNVERIFIED` 显示配置状态；模型响应需由真实请求记录。后续已新增试用版只读 Hermes 工具指南，用户实机结果待记录。
 5. **最新致命反馈**：页面出现红色横幅 **「这一步没有完成。请检查网络后重试，已保存的行程不会因此消失。」**，用户仍无法完成一次探索。该通用文案源于 `frontend/src/trial/RevolutionQuickExplore.tsx::messageForError`（除 401/403/429 外所有失败归为同一句），**用户不知到底哪一步坏了**。源码旁有 `rawError` 折叠技术详情，但用户不应承担读栈和修网关的责任。
 
 **不要臆断这个错误是 AI、Nominatim、Overpass、404、422、身份或 CORS 导致。现在截图不能定位阶段。** 需要以浏览器 Network 里的具体 `method/path/status`、脱敏响应 detail、同次后端日志和前端阶段为证据确定故障原因。一次失败一次定位，不要无边界重试外部服务。
@@ -23,7 +23,7 @@
 - `frontend/src/api/citynexus.ts`: `requestJsonInner` 对非 2xx 抛 `CityNexusApiError(status, body, message)`，UI 目前没有针对请求阶段+服务器原因给人能看懂的区别；`suggestTrialDiscovery`、`bootstrapCitySearch`、`bootstrapDiscovery`、`saveBootstrapDiscoveryPocketWalk`、`transitionBootstrapPocketWalkGo` 都要核对。
 - `trial/agent_preview_app.py`: 本地限定的 `POST /api/v1/journeys/{id}/trial-ai-discovery`，签名、DRAFT、成员、rate limit，并通过 7865/7863 OpenAI-compatible `tools` 向 Hermes 模型请求**只读**兴趣建议。**不是完整 AgentRun**。
 - `trial/try_revolution.py`: 试玩版 backend 需用 `--app-dir trial agent_preview_app:app` 完整重启，光 Vite HMR **不会加载新 Python 模块**。不要破坏 `trial/.runtime/` 数据、私钥或本地修复过的 `package-lock.json`。
-- `frontend/e2e/revolution-quick-explore-ui.spec.ts`: 当前测试使用假数据 + 模拟 token，不是 signed Journey 和真正 API 执行证明。它可以做 UI 断言，**不能给整个实机流程盖章**。
+- `frontend/e2e/revolution-quick-explore-ui.spec.ts`: 测试使用模拟数据和 token，覆盖界面动作；signed Journey 与真实 API 流程需单独验收。
 - `.github/workflows/revolution-trial-ux-smoke.yml`: 最新流水线 `38608162269` 已 **success**，只跑了 Python 语法/离线配置、TS typecheck、Vite build。**绿 CI + 用户红屏正是当前要解决的鸿沟。**
 
 ## 2. 施工策略：只修人实际会碰的闭环
@@ -41,7 +41,7 @@
 **目标最短用户动作**（不用清数据）：
 
 1. `/revolution` 一进入，正文顶部可以直接写「我在连城，今晚有三小时，想轻松走走」，点击 `让 AI 帮我想想`，这是一次明确的外部模型请求。模型不给 `tool_calls`、模型冷却、失去凭据或返回纯文字，都要友好解释且继续**手动**流程，不应卡住。
-2. `连城` → **查找位置（一次清楚的 Nominatim 请求）** → 点击“连城县，龙岩市”整个结果卡片 → **自动进入下一屏**。不要求地图 tiles、不要求用户粘 OSM URL、不填写 WGS84，不额外重复“确认城市”和重复勾选。县城 geocoder 数据是 **APPROXIMATE CAMERA CENTER**；点击卡片只代表用户显式选择“从近似公开区域周边查”，必须与服务端 provenance 协议一致，不能假造 `MAP_TAP` 或 `GPS`。若该 backend 目前只允许地图点选，则补真正的用户选择近似区域合同/错误处理，不以关闭 provenance gate 换成功。
+2. `连城` → **查找位置（一次 Nominatim 请求）** → 点击“连城县，龙岩市”结果卡片 → **进入下一屏**。地图加载期间也可继续，不需输入坐标或粘贴 OSM 链接。县城 geocoder 数据标记为 **APPROXIMATE CAMERA CENTER**；服务端记录该来源类型。若后端当前仅接收地图点选，补充近似区域来源合同后再接通。
 3. AI 建议/人手选类别 → **搜索附近地点**：只在用户明确点击后向 Overpass 送出已披露类别、约 2.5km 公开中心。无 LIVE_PROVIDER 结果就给有意义的结果状态和能继续的选项，**不得**引入 TEST_PROVIDER 冒充实地可去地点。
 4. 真正收到至少 2 个同一次 `receipt_id` 的不同真实候选 → 选两站 → 服务端保存成员私有 Pocket Walk → 进入 GO MODE → 自报第一站 → 继续第二站 → 刷新保持服务器同一成员进度；无 route/travel-time 真值不得编造 ETA。
 5. 遇到未验证营业、未知费用或地址，界面说人话，不把服务端 metadata/内部英文 protocol 枚举抛给用户。只在完全独立的高级调试区露出。
@@ -58,10 +58,10 @@
 - Windows Python 3.13、Node 22，`py -3.13 trial/try_revolution.py --agent`（或独立的同构测试服务）可真实启动；端口/URL/进程来源有证据。包含后端 `agent_preview_app:app`，而不是误以为只是 Vite 改了。
 - `npm run typecheck:all`、`npm run build`、`python -m py_compile trial/agent_preview_app.py trial/try_revolution.py`。
 - 浏览器 1440x900 + 390x844 真正截图/录屏；测试**不看 JSX 假想完成，测试鼠标/手指实际操作**。从打开页面到“看见真实/诚实的地点搜索结果、选择、保存、GO、刷新”的连续交互，报告每一环的用户可见文字。
-- **独立的 contract-backed browser E2E**：在本次测试自己启动的 backend、SQLite 和签名登录凭证上操作（不能只拦截 fetch 把全部接口伪造成成功）；另保留 UI-only TEST_PROVIDER fixture 测按钮。至少验证真实服务器收回并验证 Pocket Walk 的成员身份、状态和 revision；拒绝其他成员读取。
+- **独立的 contract-backed browser E2E**：由测试启动 backend、SQLite 和签名身份，并调用真实接口；UI-only `TEST_PROVIDER` fixture 保留用于按钮状态。验证服务器保存 Pocket Walk 的成员身份、状态和 revision，并检查另一成员读取时返回拒绝状态。
 - 地图瓦片强制 abort，点城市卡片仍能进入下一屏。没有提前点“查找位置”不能发 Nominatim；没有主动点“搜索附近地点”不能发 Overpass；不点击 AI 按钮不能请求模型。
 - 失败注入：404（忘了重启旧后端）、401 token、422（API 合同错）、502/503（模型/公开服务）、429（冷却）、超时。**分别出现区别清楚的中文提示及可操作的恢复动作**，不会停在万能红条。一个按钮点了有响应/等待/错误终态。
-- 模型协议可在本地 mock 客户端上跑“有真实 tool_calls / 纯文本无 tool_calls / 错误 / 迟到 / 双击”测试；**真实 wb2api 只在本地有密钥、经用户原有授权并有成本/上限前提下执行至多一次有边界的只读试用**。在不知道 7865 是否仍有付费候选时不要自动大量扣费。不上传 key，不公布完整 prompt。
+- 模型协议可用本地 mock 客户端覆盖 `tool_calls`、纯文本、错误、迟到响应和双击。真实 wb2api 只运行一次有界只读请求，并沿用用户授权与费用上限；密钥和完整 prompt 保留在本机。
 - 触摸、键盘、对比度、布局：一屏只有一个突出“下一步”，页面文本主要为自然中文。关闭 PWA/Service Worker 缓存干扰，用干净上下文与更新已有体验两种方式都试。
 - 真 LIVE Overpass 实际不可达或者县城附近根本没 2 个可信点时，报告如实 BLOCKED，而非改 fixture 让它绿色。需演示时应选择有公开数据、具名来源的其他用户可选地区，不替用户偷偷换城市。
 - **明确分档**：COMPILE_PASS、UI_FIXTURE_PASS、SIGNED_BACKEND_PASS、REAL_PROVIDER_PASS、MODEL_TOOL_PASS、HUMAN_USABILITY_PASS、FULL_OPERATOR_PASS。没有证据的项必须写 NOT_VERIFIED/BLOCKED，不能捆绑成总成功。
@@ -70,7 +70,7 @@
 
 1. 在 `fix/revolution-first-human-e2e-20261015` 实现真实修复，提交并 push。按需小步改，不得长期占住不提交，附明确 commit SHA。
 2. 开一个以 `trial/revolution-first-look-20261014` 为 base 的**修复 PR**（不要对 Qoder 主线 PR），内容包括修复根因、最短用户体验结果、3 张真正的截图（desktop、mobile、错误恢复）、测试执行命令与成功/失败数量。
-3. 更新 `trial/tasks/20261015_CODEX_FIRST_REAL_HUMAN_JOURNEY_RESCUE.md` 旁的 `trial/results/20261015_FIRST_HUMAN_JOURNEY_RESULT.md`。文档开头就写 **「用户现在能用：是/否，阻塞在哪，明天用户要不要运行任何命令」**，不要先写 50 页框架证明。
+3. 更新 `trial/results/20261015_FIRST_HUMAN_JOURNEY_RESULT.md`。首屏写清 **「用户现在能用：是/否，阻塞在哪，明天用户要不要运行任何命令」**，随后列实际证据和下一步。
 4. 提供一个 Windows PowerShell **一次性、安全更新+启动命令**，只覆盖必要的产品源码，不删 `trial/.runtime`、SQLite、本机授权、`WB2API_KEY`、`frontend/package-lock.json`；明确停止旧 Uvicorn 进程才能生效。不能再要求用户手动输入坐标或消化英文错误码。
 5. 任何需要 Qoder 改共享后端的缺口，由 Codex 在 PR 明确列出“具体服务端合同+最小补丁”，**Qoder 只接该项**，不启动跨分支全量融合。
 6. 产品成功的最终闸门不是 test count，而是用户自己打开同一页面能走完连续的操作。**没有浏览器可用性证据，不得宣称 DONE。**

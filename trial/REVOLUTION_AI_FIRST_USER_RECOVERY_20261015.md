@@ -7,7 +7,7 @@
 - 在独立的 `trial/revolution-first-look-20261014` 分支直接改前后端，不触碰 Qoder、Commander、Revolution Lab 主工作分支。
 - `frontend/src/trial/RevolutionQuickExplore.tsx`：
   - 用户点击 Nominatim 某条**公开近似中心**结果时，**立即进入兴趣选择**；不需要灰色地图、不需要再确认一次、不需要经纬度或 OSM 链接。
-  - 页面明确标注：地名中心是 `CITY_CENTROID_UNCERTAIN` 的**约 2.5 km 范围的近似公开搜索区**，不是精确到场、更不是实时 GPS。前端记录 `EXPLICIT_GEOCODER_APPROX`，没有冒充 `MAP_TAP`。真实公开 POI API 要等用户点“搜索附近地点”时才调用。
+  - 页面将地名中心标为 `CITY_CENTROID_UNCERTAIN`，覆盖约 2.5 km 的公开搜索区。前端记录 `EXPLICIT_GEOCODER_APPROX`；地图点选记录为 `MAP_TAP`。用户点击“搜索附近地点”后才调用公开 POI API。
   - 仍可自愿展开手动地图，决定精确搜索区。若地图瓦片为空白，不再堵住前进。
   - 顶部加一句自然语言（可修改），例如“我在连城，今天下午三小时，想轻松逛逛”，一键请求真实 Hermes 兼容模型给出**只读的兴趣类别工具建议**；模型不给出有效 `tool_calls` 时如实报告。
   - 搜索公开地点仍需要点击明确说明接收方的按钮；真正返回两条以上 sourceful POI 后可保存私人 Pocket Walk，使用原有带版本戳的 GO MODE，刷新恢复。没有结果不会创造假景点。
@@ -48,10 +48,10 @@ py -3.13 trial\try_revolution.py --agent
 
 ## 模型/地点隐私与费用
 
-- `--agent` = 明确配置模型，并不等于自动提交用户内容。用户在页面点击 AI 按钮时才向模型发送已展示的文字和行程地名。浏览器没有 wb2api Key。
-- `7865 auto:cheapest` 免费优先但**最后候选可能收费**。有 15 秒请求间隔和 5 次/半小时的简单本地试用限流，**不是保证零收费**。
-- “点击查找位置”只发送公开地名给 Nominatim；“点击搜索附近地点”只发送用户确认的公开大致坐标、类别和范围给 Overpass；地图瓦片按需单独加载。**没有隐藏发 GPS、私址或群成员身份**。
-- MODEL_TOOL_SUGGESTION = 模型真的给出了一个 `propose_public_discovery` 工具建议，**尚未执行地点查询**；MODEL_NO_TOOL_CALL = 模型没按协议给建议；AgentRun 和正式权限执行仍需真实 ACTIVE Journey 的用户确认和工具步骤。
+- `--agent` 加载模型配置。用户点击 AI 按钮后，页面才把已显示的文字和行程地名发送给模型；浏览器不保存 WB2API Key。
+- `7865 auto:cheapest` 优先选择免费候选，最后回退项可能收费。请求间隔为 15 秒，每半小时最多 5 次。
+- Nominatim 接收公开地名，Overpass 接收用户确认的公开坐标、类别和范围，OSM 按需接收瓦片请求。查询不发送 GPS、私址或群成员身份。
+- MODEL_TOOL_SUGGESTION = 模型返回 `propose_public_discovery` 建议；地点查询仍由用户点击启动。MODEL_NO_TOOL_CALL = 模型未返回工具建议。AgentRun 使用真实 ACTIVE Journey、用户确认和服务器工具步骤。
 - AI 超时或地图不可达应显示中文错误和可继续路径，而不是不停要求用户多签一次。
 
 ## 给 Codex 的下一棒：只关一个真正的首次用户闭环
@@ -60,7 +60,7 @@ py -3.13 trial\try_revolution.py --agent
 
 1. 在 Python 3.13 Windows 下 `py -3.13 trial/try_revolution.py --agent`，真实 7865 网关可达但绝不在自动 E2E 中调用付费模型。先 `npm run typecheck:all` 和 `npm run build`，修真正 compile blocker。
 2. 用桌面 1440px 和手机 390x844 访问 `/revolution`。重复用户 screenshot：Nominatim 给出“连城县”后，地图瓦片全阻断仍然可以**点结果直达兴趣选择**，不输入任何 WGS84、不粘 OSM URL。
-3. 一次明确模型点击检验 `/trial-ai-discovery` 使用真实签名 Journey 和 wb2api，不把“已配置”冒充返回 `tool_calls`，控制调用费用并记录模型实际反馈为隐私安全的摘要。不让 Agent 自动调用公开服务。
+3. 用户点击 AI 后，用真实签名 Journey 和 wb2api 检查 `/trial-ai-discovery` 的模型响应及 `tool_calls`，记录费用和安全摘要。公开地点查询仍由用户单独启动。
 4. Overpass 成功才显示真实 sourced POI，失败则友好停在下一步可返回；两站保存要落服务器、GO 要刷新恢复，成员 token 切换不能串。
 5. 有合格 native-plan sourced candidate 时可选择进入正式 Journey，必须经过原 `BootstrapJourneyStartPanel` 的授权/计划创建，Operator 必须显示真正工具/审批结果；若 Provider 无可行事实则明确 UNAVAILABLE，不掺假。
 6. 把**用户能走通的连续点击**作为结案标准，不再让用户读代码、帮忙输入坐标和反复点同意。

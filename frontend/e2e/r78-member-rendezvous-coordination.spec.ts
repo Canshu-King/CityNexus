@@ -158,7 +158,7 @@ test("R78 closes a signed, audience-bound rendezvous help loop without location 
     await expect(consent).toContainText("Current companions who can see this");
     await expect(consent).toContainText("R78 Existing Companion");
     await expect(consent).toContainText("GPS origin");
-    await expect(consent).toContainText("not evidence of route danger, physical arrival");
+    await expect(consent).toContainText("your exact location and private route are visible only to you");
     await consent.getByRole("button", { name: "Cancel" }).click();
 
     const firstSharePromise = companion.page.waitForResponse((response) =>
@@ -271,7 +271,7 @@ test("R78 closes a signed, audience-bound rendezvous help loop without location 
     await expect(companion.page.getByTestId("journey-rendezvous-help-acknowledgement"))
       .toContainText(acknowledgement.responder_display_name);
     await expect(companion.page.getByTestId("journey-rendezvous-help-acknowledgement"))
-      .toContainText("not a promise to wait there");
+      .toContainText("acknowledged this request.");
     await companion.page.reload({ waitUntil: "domcontentloaded" });
     await expect(companion.page.getByTestId("journey-rendezvous-help-acknowledgement"))
       .toContainText(acknowledgement.responder_display_name);

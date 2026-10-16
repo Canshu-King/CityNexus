@@ -62,8 +62,8 @@ const NEUTRAL_PLACEHOLDER = {
    example as an example, because that is exactly what makes an empty box look answerable.  No number
    here: the length floor lives in one place in code, and prose that repeats it goes stale. */
 const REQUEST_TOO_SHORT = {
-  zh: "还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。",
-  en: "We still need it in your own words. The grey example above is a hint, not a request we can plan from.",
+  zh: "写一句你这趟想怎么安排。",
+  en: "Add a sentence about how you want this trip arranged.",
 };
 
 function examplesFor(
@@ -105,8 +105,8 @@ const BLOCKED_BY_CODE: Record<
   { zh: string; en: string; action: "another-city" | "retry" | "none" }
 > = {
   CATALOG_EMPTY: {
-    zh: "这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。",
-    en: "We hold no place data for this city yet, so nothing about your wording failed — there was nothing to assemble a trip from.",
+    zh: "这座城暂无地点数据，换一座城市继续。",
+    en: "No place data is available for this city. Try another city.",
     action: "another-city",
   },
   CATALOG_INSUFFICIENT: {
@@ -120,8 +120,8 @@ const BLOCKED_BY_CODE: Record<
     action: "another-city",
   },
   PLACE_COST_UNVERIFIED: {
-    zh: "地点有了，但费用我们没能核实，所以没有给出带价格的方案。",
-    en: "The places were found but their costs could not be verified, so no priced plan was offered.",
+    zh: "地点已找到 · 核实费用后可生成预算方案。",
+    en: "Places found · check prices to create a budgeted plan.",
     action: "retry",
   },
   PLACE_OUTSIDE_JOURNEY_WINDOW: {
@@ -160,14 +160,14 @@ export function statusCopy(
     const code = s.slice("BLOCKED:".length);
     const known = BLOCKED_BY_CODE[code];
     return {
-      title: zh ? "这次排不出方案：数据不够，不是你说的不对" : "No plan this time: the data is short, not your wording",
+      title: zh ? "暂无可用方案" : "No plan available",
       body: known
         ? zh
           ? `${known.zh}（服务器给的原因编号：${code}）`
           : `${known.en} (server reason code: ${code})`
         : zh
-          ? `服务器回的原因编号是 ${code || "（没给编号）"}，这条我们还没有本地文案，所以不替你解释它——原话在"技术详情"里。`
-          : `The server's reason code is ${code || "(none given)"} and we have no wording for it, so we quote rather than explain — the sentence is under "Technical detail".`,
+          ? `服务器原因：${code || "未提供"}。打开技术信息查看详情。`
+          : `Server reason: ${code || "not provided"}. Open Technical details.`,
       tone: "warn",
       action: known ? known.action === "another-city" ? "another-city" : "retry" : "retry",
     };
@@ -185,8 +185,8 @@ export function statusCopy(
     return {
       title: zh ? "已取消" : "Cancelled",
       body: zh
-        ? "请求已中止，你的行程没有被改动。可以改个说法再来一次。"
-        : "The request was aborted. Your trip is untouched — rephrase and try again.",
+        ? "请求已取消。修改需求后重试。"
+        : "Request cancelled. Edit your request and try again.",
       tone: "neutral",
     };
   }
@@ -194,8 +194,8 @@ export function statusCopy(
     return {
       title: zh ? "已中止后续核对" : "Stopped before verification",
       body: zh
-        ? "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
-        : "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
+        ? "请求已发送并中止等待。先刷新方案列表，再决定是否重试。"
+        : "The request was sent before waiting stopped. Refresh the plan list before retrying.",
       tone: "warn",
     };
   }
@@ -205,10 +205,10 @@ export function statusCopy(
        the same key because the server never took a key here.  「已取消」/「没有发生」/「再点一次」 are the
        counter-examples this branch exists to refuse. */
     return {
-      title: zh ? "这一笔的结果未知（不是没发生）" : "This one's result is unknown (not: it did not happen)",
+      title: zh ? "请求结果待确认" : "Request status needs checking",
       body: zh
-        ? "这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。"
-        : "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
+        ? "结果待确认 · 刷新状态后再重试。"
+        : "Result pending · refresh status before retrying.",
       tone: "warn",
     };
   }
@@ -216,8 +216,8 @@ export function statusCopy(
     return {
       title: zh ? "连不上服务端" : "The server could not be reached",
       body: zh
-        ? "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
-        : "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
+        ? "网络或服务端暂时无响应。检查连接后重试。"
+        : "The network or server is not responding. Check your connection and retry.",
       tone: "warn",
     };
   }
@@ -225,8 +225,8 @@ export function statusCopy(
     return {
       title: zh ? "这个要求被明确拒绝" : "The request was refused",
       body: zh
-        ? "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。"
-        : "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
+        ? "服务端已拒绝请求，原因见技术信息。调整条件后重试。"
+        : "The server refused the request. See Technical details, adjust your request, and try again.",
       tone: "warn",
     };
   }
@@ -234,28 +234,28 @@ export function statusCopy(
     return {
       title: zh ? "服务端处理失败" : "The server failed to finish",
       body: zh
-        ? "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。"
-        : "The server errored out — not your request. Your trip is unchanged; retry later and keep the technical detail if it repeats.",
+        ? "服务端暂时出错。稍后重试；重复出现时查看技术信息。"
+        : "The server encountered an error. Try again later; open Technical details if it repeats.",
       tone: "warn",
     };
   }
   if (s === "PLANS_WITHOUT_AI") {
     return {
       title: zh
-        ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
-        : `AI did not take part — ${planCount} options were still assembled`,
+        ? `城市目录 · ${planCount} 个备选`
+        : `City catalog · ${planCount} options`,
       body: zh
-        ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
-        : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
+        ? "再次提交可请求 AI 参与规划。"
+        : "Submit again to request AI planning.",
       tone: "warn",
     };
   }
   if (s === "BASELINE_UNAVAILABLE") {
     return {
-      title: zh ? "无法确认这次的结果" : "We could not confirm this run",
+      title: zh ? "结果暂不可用" : "Result unavailable",
       body: zh
-        ? "无法确认本次是否生成了新方案，请重试或刷新页面。"
-        : "We could not confirm whether this run produced new plans. Please retry or refresh.",
+        ? "刷新页面查看最新方案。"
+        : "Refresh to load the latest plans.",
       tone: "warn",
     };
   }
@@ -263,8 +263,8 @@ export function statusCopy(
     return {
       title: zh ? "没有生成可行方案" : "No usable plans were produced",
       body: zh
-        ? "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。"
-        : "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
+        ? "服务器未找到可行方案。查看技术信息，调整条件或更换城市后重试。"
+        : "The server found no feasible plan. See Technical details, adjust your request, or try another city.",
       tone: "warn",
     };
   }
@@ -272,8 +272,8 @@ export function statusCopy(
     return {
       title: zh ? "AI 暂时不可用" : "AI is unavailable right now",
       body: zh
-        ? "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。"
-        : "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
+        ? "规划助手暂时无法连接。稍后重试。"
+        : "The planning assistant is unavailable. Try again later.",
       tone: "warn",
     };
   }
@@ -287,8 +287,8 @@ export function statusCopy(
   return {
     title: zh ? "暂时无法完成规划" : "Could not finish planning",
     body: zh
-      ? "这次没能生成方案。你的行程没有被改动，可以重试或换个说法。"
-      : "We could not produce plans this time. Your trip is unchanged; retry or rephrase.",
+      ? "暂时无法生成方案。调整需求后重试。"
+      : "Plans could not be generated. Edit your request and try again.",
     tone: "warn",
   };
 }
@@ -734,24 +734,24 @@ export function PlanWithAiSheet({
           >
             {aiState === "configured_unverified" &&
               (zh
-                ? "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。"
-                : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
+                ? "AI 网关已配置。提交需求后可确认是否可用。"
+                : "AI is configured. Submit a request to check availability.")}
             {aiState === "not_configured" &&
               (zh
-                ? "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"
-                : "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.")}
+                ? "服务器尚未配置 AI。"
+                : "AI is not configured on this server.")}
             {aiState === "disabled_by_ops" &&
               (zh
-                ? "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。"
-                : "The AI switch on this server is switched off. That is an operator setting, not something you did. It names the switch, not the cause of any one failure.")}
+                ? "AI 服务目前由管理员关闭。"
+                : "AI is currently disabled by the operator.")}
             {aiState === "provider_refused" &&
               (zh
-                ? "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。"
-                : "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.")}
+                ? "模型拒绝了这次生成。详情见技术信息。"
+                : "The model refused this request. See technical details.")}
             {aiState === "unknown" &&
               (zh
-                ? "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。"
-                : "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.")}
+                ? "暂时无法读取 AI 服务状态。"
+                : "AI status is temporarily unavailable.")}
           </p>
         )}
 
@@ -768,11 +768,6 @@ export function PlanWithAiSheet({
               <span>
                 {phaseLabel} · {zh ? `已等待 ${elapsed} 秒` : `waiting ${elapsed}s`}
               </span>
-            </p>
-            <p className="plan-ai-live-note">
-              {zh
-                ? "后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。"
-                : "The backend reports nothing until it finishes, so this is measured waiting time — no percentage, no guessing."}
             </p>
             {/* Whose ask this is, quoted back from the run rather than from the box: the traveller who
                 walked away and came back has to be able to tell two rounds apart. */}
@@ -1017,11 +1012,11 @@ export function PlanWithAiSheet({
                     >
                       {(result?.summaryOrigin ?? "not_stated") === "no_model"
                         ? zh
-                          ? "服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）"
-                          : "The server's own summary (the AI switch on this deployment is off, so no model wrote this)"
+                          ? "服务器摘要"
+                          : "Server summary"
                         : zh
-                          ? "模型原始输出（未翻译，不代表本界面的结论）"
-                          : "Model's own words (not translated, not this screen's conclusion)"}
+                          ? "模型原文"
+                          : "Model output"}
                     </span>
                     <code data-testid="plan-ai-model-output">{result.summary}</code>
                   </>

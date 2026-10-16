@@ -1,4 +1,4 @@
-用户现在能用：否（PR #20 尚未合并，当前 14173/18201 试玩仍运行旧代码）。本轮已确认并修复一个真实 `bootstrap-discovery` HTTP 500 根因；原红条截图与具体请求之间仍缺 request ID，不能断言它就是这条 500。用户无需碰旧数据库；如要先试修复分支，文末的隔离启动命令会用新端口和新 SQLite。
+当前状态：PR #20 尚未合并；`14173/18201` 试玩仍运行旧代码。本轮修复 `bootstrap-discovery` HTTP 500。原红条截图未记录 request ID。
 
 # Revolution 首次真人旅程修复结果
 
@@ -10,13 +10,13 @@
 
 ## 结论与原始红条
 
-原红条截图没有 request ID，无法和单条请求一一关联；但试玩后端日志里确实捕获到一次可复现的失败链：用户提交附近地点搜索后，`POST /api/v1/journeys/:id/bootstrap-discovery` 返回 HTTP 500。该请求收到 Overpass HTTP 504，业务响应本应为 `PROVIDER_UNAVAILABLE`；持久化代码却把 `UNAVAILABLE` 写进 `provider_calls.status`，而实际 SQLite CHECK 只允许 `SUCCESS`、`FAILURE`、`TIMEOUT`、`DEGRADED`，因此提交时抛出 `CHECK constraint failed: status`，把上游超时放大成后端 500。
+试玩后端日志记录到一条失败链：用户提交附近地点搜索后，`POST /api/v1/journeys/:id/bootstrap-discovery` 返回 HTTP 500。Overpass 返回 HTTP 504；业务响应应为 `PROVIDER_UNAVAILABLE`，但持久化代码写入 `UNAVAILABLE`，违反 SQLite CHECK 约束（仅允许 `SUCCESS`、`FAILURE`、`TIMEOUT`、`DEGRADED`），最终导致 500。原截图未记录 request ID。
 
-本次修复将审计状态映射为 `UNAVAILABLE → FAILURE`、`DISABLED → DEGRADED`，保留业务层的 `PROVIDER_UNAVAILABLE`，并让 UI 清楚说明“服务没有回答、地点情况未确认”，只在用户点击时重试，不误报成零结果。日志另有数次 `POST /api/v1/journeys/:id/trial-ai-discovery` HTTP 404，是旧后端未加载试玩 AI 路由的独立问题；AI 404 现在可原行程跳过并继续手动探索。因为没有关联 ID，不能证明哪条请求产生了截图中的那一条红条。
+修复将审计状态映射为 `UNAVAILABLE → FAILURE`、`DISABLED → DEGRADED`，业务层保留 `PROVIDER_UNAVAILABLE`。地点搜索失败时可手动继续探索。日志还记录数次试玩 AI 路由 HTTP 404；现在可跳过 AI 并继续探索。
 
-此前一次隔离试跑因漏配本机 TEST_PROVIDER 配置而得到 HTTP 200 / `CITY_NO_RESULTS`；这是测试环境配置问题，不是原始红条证据。补齐仅指向 loopback 的提供方配置后，签名浏览器 E2E 使用本机 geocoder 和 Overpass 夹具走通地点、保存和 GO。503 恢复截图是人为注入的错误，只验证界面如何显示和恢复，不是原始故障证据。
+此前一次隔离试跑因漏配本机 TEST_PROVIDER 配置而得到 HTTP 200 / `CITY_NO_RESULTS`；补齐仅指向 loopback 的提供方配置后，签名浏览器 E2E 使用本机 geocoder 和 Overpass 夹具走通地点、保存和 GO。503 恢复截图展示的是模拟故障流程。
 
-已把万能错误文案改为按操作阶段和 HTTP 状态显示中文原因与一个恢复动作。技术详情只保留脱敏的 method/path/status 和 allowlisted reason code，不显示原始响应、访问令牌、trace 或完整 Journey ID。重复提交相同两站时，后端现在会重新投影当前成员的 GO 进度，避免把正在前往第一站的状态返回成 `NOT_STARTED`。
+错误提示现在按操作阶段和 HTTP 状态显示原因与恢复动作。错误详情显示脱敏 method/path/status 和原因码。重复提交相同两站时，后端会返回当前成员的 GO 进度。
 
 ## 验收分档
 
@@ -25,11 +25,11 @@
 | COMPILE_PASS | PASS | 本轮 `npm run typecheck:all`、独立输出目录的 Vite build、Python 3.13 `py_compile` 均通过。 |
 | UI_FIXTURE_PASS | PASS | 本轮 Node 22.22.2 authoritative Playwright 共 13 项通过：连续中文 fixture 流程、AI 401/404 可手动跳过、Overpass 504 恢复，以及 9 项 HTTP/超时错误矩阵。 |
 | SIGNED_BACKEND_PASS | PASS | 既有 authoritative 签名浏览器流程通过；本轮 `test_r88_real_poi_exploration.py` 的两个后端用例通过，新增 504 回归验证 HTTP 200 + `PROVIDER_UNAVAILABLE` + 审计状态 `FAILURE`。 |
-| REAL_PROVIDER_PASS | BLOCKED | 已观察到一次真实 Overpass HTTP 504；本轮不重复请求，真实 Nominatim / Overpass 当前仍未得到成功结果。 |
-| MODEL_TOOL_PASS | NOT_VERIFIED | AI 保持关闭，没有发起可能计费的 Hermes 请求。 |
-| HUMAN_USABILITY_PASS | NOT_VERIFIED | 自动化浏览器跑通；真实用户尚未亲自确认。 |
-| FULL_OPERATOR_PASS | NOT_VERIFIED | 没有伪造 ACTIVE PlanVersion、AgentRun、GPS 到场或正式 Operator 结果。 |
-| ORIGINAL_RED_BAR_ROOT_CAUSE | PARTIAL | 已确认一条真实地点查询 500 的根因；原截图与该请求的精确关联仍 UNKNOWN（日志无 request ID）。 |
+| REAL_PROVIDER_PASS | BLOCKED | Overpass 返回 HTTP 504；Nominatim / Overpass 成功响应待验。 |
+| MODEL_TOOL_PASS | PENDING | AI 关闭，未发起 Hermes 请求。 |
+| HUMAN_USABILITY_PASS | PENDING | 自动化浏览器通过；真人验收待做。 |
+| FULL_OPERATOR_PASS | PENDING | ACTIVE PlanVersion、AgentRun、GPS 到场和 Operator 流程待验。 |
+| ORIGINAL_RED_BAR_ROOT_CAUSE | PARTIAL | 已确认地点查询 500 根因；原截图无 request ID。 |
 
 ## 已运行的命令和结果
 
@@ -76,7 +76,7 @@ npm run build
 # passed；Vite 输出既有的大 chunk 提示
 ```
 
-本轮最终 UI 回归在 Node 22.22.2 authoritative 模式下启动独立 backend（`:18221`）、frontend（`:4181`）、临时 SQLite 和仓库外证据目录；AI 关闭，UI 文件中的 provider/AI 请求均由 Playwright fixture 截获，没有访问真实地图/模型服务：
+本轮 UI 回归使用 Node 22.22.2、独立 backend（`:18221`）、frontend（`:4181`）、临时 SQLite 和仓库外证据目录；AI 关闭，provider/AI 请求由 Playwright fixture 接管。
 
 ```powershell
 $nodeDir = 'C:\Users\仓鼠王\.workbuddy\binaries\node\versions\22.22.2-3'
@@ -111,13 +111,13 @@ Signed E2E 视口为精确的 1440×900 和 390×844。后端 Network 只记录�
 
 ## 2026-10-15 启动避让补丁
 
-检查本机时，原试玩仍监听 `127.0.0.1:14173` 和 `127.0.0.1:18201`。没有停止或连接这两个服务。为避免用户更新时撞端口，启动器新增前端、后端及本地 fixture 的独立端口参数，并拒绝重复端口；npm lockfile 不匹配兜底改为 `--no-save --no-package-lock`。
+检查时，原试玩监听 `127.0.0.1:14173` 和 `127.0.0.1:18201`。启动器新增前端、后端及本地 fixture 独立端口参数，并拒绝重复端口；lockfile 不匹配时使用 `--no-save --no-package-lock`。
 
-在当前隔离分支用 `--sample --fresh --no-browser`、前端 `14183`、后端 `18211`、城市 fixture `18212`、Overpass fixture `18213` 启动成功。后端健康、`/revolution` 页面和两个本地 fixture 均返回 HTTP 200；随后结束了本次隔离进程。本次只使用 `TEST_PROVIDER` 与新 SQLite，没有联系真实地图服务或模型，也没有触碰原试玩进程和数据库。
+隔离分支以 `--sample --fresh --no-browser` 启动：前端 `14183`、后端 `18211`、城市 fixture `18212`、Overpass fixture `18213`。健康检查、`/revolution` 和两个 fixture 均返回 HTTP 200，之后结束隔离进程。数据源为 `TEST_PROVIDER`，数据库为新 SQLite。
 
 ## 一次性安全更新并启动
 
-本机现有试玩仍占用默认端口 `14173/18201`。要让原地址 `http://127.0.0.1:14173/revolution` 加载新代码，必须先停止旧 Uvicorn/启动器，再从新分支重启；下面的推荐命令改用 `14183/18211` 开独立实例，因此不需要停止旧服务，只需访问新地址。命令只创建新的隔离 worktree，并以 `--fresh` 使用新 SQLite；若目标目录已存在就停止，不触碰原 checkout、原数据库、lockfile 或密钥。命令不带 `--agent`，不会发模型请求；LIVE Provider 只有在用户于页面逐项明确同意后才发请求。启动器要求联系邮箱时只在本机终端输入。
+原试玩占用默认端口 `14173/18201`。新分支使用 `14183/18211` 启动独立实例，访问 `http://127.0.0.1:14183/revolution`。命令创建隔离 worktree 并以 `--fresh` 使用新 SQLite；不带 `--agent`。启用 LIVE Provider 时，页面会逐项请求用户授权。启动器要求联系邮箱时，在本机终端输入。
 
 ```powershell
 $repo = 'D:\moodle\CityNexus-Revolution-Trial'
@@ -138,4 +138,4 @@ Set-Location -LiteralPath $trial
 py -3.13 trial\try_revolution.py --fresh --frontend-port 14183 --backend-port 18211
 ```
 
-启动器的 npm lockfile 不匹配兜底现在使用 `npm install --no-save --no-package-lock`；即使需要安装依赖，也不会改写 `package.json` 或 `package-lock.json`。自动化签名 E2E 不会证明真人已可用，也没有连接真实地图服务或 Hermes。
+启动器使用 `npm install --no-save --no-package-lock` 处理 lockfile 不匹配。签名 E2E 使用 `TEST_PROVIDER`；真实地图服务、Hermes 和真人手机尚未验收。

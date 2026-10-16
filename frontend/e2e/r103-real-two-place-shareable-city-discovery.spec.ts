@@ -183,7 +183,7 @@ test("R103 ordinary travelers discover, share, verify, and save two public city 
     const shared = await senderPage.evaluate(() => (window as Window & { __r103SharePayloads?: Array<{ text?: string }> }).__r103SharePayloads ?? []);
     expect(shared).toHaveLength(1);
     const shareText = shared[0].text ?? "";
-    expect(shareText).toContain("sample/unverified location");
+    expect(shareText).toContain("Sample places");
     expect(shareText).toContain("R103 Shanghai Museum");
     expect(shareText).toContain("R103 Shanghai Gallery");
     for (const privateValue of [senderJourney.id, sender.id, sender.access_token]) expect(shareText).not.toContain(privateValue);
@@ -219,7 +219,7 @@ test("R103 ordinary travelers discover, share, verify, and save two public city 
     });
     await importPanel.getByTestId("bootstrap-shared-walk-textarea").fill(shareText);
     await importPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
-    await expect(importPanel.getByTestId("bootstrap-shared-walk-preview")).toContainText("UNVERIFIED_SHARED_REFERENCE");
+    await expect(importPanel.getByTestId("bootstrap-shared-walk-preview")).toContainText("待核验");
     expect(provider.overpassCalls).toHaveLength(1);
     await importPanel.getByTestId("bootstrap-shared-walk-lookup-consent").check();
     await importPanel.getByTestId("bootstrap-shared-walk-lookup").click();

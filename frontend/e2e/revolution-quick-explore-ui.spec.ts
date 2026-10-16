@@ -1,9 +1,8 @@
 import { expect, test, type Route } from "@playwright/test";
 
 /**
- * UI-only consent / navigation regression. All provider responses are isolated
- * Playwright TEST_PROVIDER fixtures. This does NOT prove live OSM, an AgentRun,
- * a signed backend mutation, or physical arrival. Those require separate runs.
+ * UI consent / navigation flow with Playwright TEST_PROVIDER fixtures. Live OSM,
+ * AgentRun, signed backend mutations, and device flow use separate acceptance runs.
  */
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 

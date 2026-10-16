@@ -8,14 +8,14 @@ type RequestState = "loading" | "ready" | "offline" | "unauthorized";
 type OperatorState = JourneyOperatorProjection["state"];
 
 const stateCopy: Record<OperatorState, { title: string; explanation: string }> = {
-  OFF: { title: "行程照看尚未开启", explanation: "目前没有启动中的行程监测。" },
-  WATCHING: { title: "正在留意行程变化", explanation: "系统正在监测行程，不代表模型正在调用工具。" },
-  INVESTIGATING: { title: "正在核对行程变化", explanation: "发现了需要调查的情况，等待后端提供下一步事实。" },
-  WAITING_FOR_APPROVAL: { title: "需要你确认下一步", explanation: "已有待审核操作，请在下方行程审核界面处理。" },
-  APPLYING: { title: "正在执行已授权操作", explanation: "已进入操作阶段；实际结果仍以服务器回执为准。" },
-  RECOVERED: { title: "最近的行程问题已处理", explanation: "可以展开查看实际记录，已处理不等于到达目的地。" },
-  NEEDS_ATTENTION: { title: "有情况需要你关注", explanation: "请在下方正式行程界面查看具体原因。" },
-  DEGRADED: { title: "部分服务暂时受限", explanation: "暂时无法保证后续动作，请查看最新的服务端记录。" },
+  OFF: { title: "行程照看未开启", explanation: "开启后会留意行程变化。" },
+  WATCHING: { title: "正在留意行程变化", explanation: "行程监测中。" },
+  INVESTIGATING: { title: "正在核对行程变化", explanation: "正在收集下一步所需信息。" },
+  WAITING_FOR_APPROVAL: { title: "需要你确认下一步", explanation: "有操作待审核。" },
+  APPLYING: { title: "正在执行已授权操作", explanation: "操作进行中。" },
+  RECOVERED: { title: "行程问题已处理", explanation: "可展开查看处理记录。" },
+  NEEDS_ATTENTION: { title: "有情况需要你关注", explanation: "查看行程动态了解原因。" },
+  DEGRADED: { title: "部分服务暂不可用", explanation: "查看最新服务状态。" },
 };
 
 const auditCopy: Record<string, string> = {
@@ -147,14 +147,14 @@ export function AgentWorkStatus({
       </div>
       {requestState === "offline" && (
         <p className="rev-agent-work-note" role="status">
-          {snapshot ? "下方是上次成功读取的记录，连接未恢复前不会声称仍在执行。" : "无法获取服务器状态。原行程数据不会在这里被改动。"}
+          {snapshot ? "显示上次读取记录；当前无法连接服务器。" : "服务器暂不可用。"}
         </p>
       )}
       {requestState === "ready" && snapshot && (
         <p className="rev-agent-work-note">{copy?.explanation}</p>
       )}
       {pending && requestState === "ready" && (
-        <p className="rev-agent-work-approval"><ShieldCheck size={16} aria-hidden="true" />有操作需要批准。请使用下方正式行程审核界面，不能在此直接替你确认。</p>
+        <p className="rev-agent-work-approval"><ShieldCheck size={16} aria-hidden="true" />有操作待审核，请在下方确认。</p>
       )}
       <details
         className="rev-agent-work-detail"
@@ -178,18 +178,14 @@ export function AgentWorkStatus({
           </ol>
         ) : (
           <p className="rev-agent-work-empty">
-            {snapshot ? "服务器暂时没有可以展示的操作记录。" : "需要先连接当前签名行程，才能读取真实工作记录。"}
+            {snapshot ? "暂无操作记录。" : "连接行程后查看工作记录。"}
           </p>
         )}
         {snapshot?.operations && (
           <p className="rev-agent-work-evidence">
-            服务器操作状态：{snapshot.operations.completed_action_count} / {snapshot.operations.planned_action_count} 项，
-            当前仅为行程执行计划记录，不代表 Hermes 模型工具调用已经完成。
+            行程操作：{snapshot.operations.completed_action_count} / {snapshot.operations.planned_action_count} 项
           </p>
         )}
-        <p className="rev-agent-work-footnote">
-          这里显示的是有来源的行程监测与审计状态，不是模型原始思维链。Hermes 每次工具调用的详细记录需要绑定实际 AgentRun 后单独展示。
-        </p>
       </details>
       {requestState === "unauthorized" && <p className="rev-agent-work-note"><CircleAlert size={14} aria-hidden="true" />请返回探索页重新登录当前行程。</p>}
     </section>

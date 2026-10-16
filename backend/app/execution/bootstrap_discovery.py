@@ -4135,8 +4135,8 @@ def preview_bootstrap_two_stop_walkability(
         "route_time_state": "PROVIDER_CAPTURED",
         "route_distance_state": "PROVIDER_CAPTURED",
         "route_caveats": [
-            "This is advisory provider evidence, not proof of safety, accessibility, opening, arrival, or a guaranteed ETA.",
-            "Opening hours and price remain UNKNOWN from this route check.",
+            "Estimated walk · check local access and conditions before departure.",
+            "Opening hours and prices · check with the venue.",
         ],
         "shared_fields": shared_fields,
         "withheld_fields": withheld_fields,
@@ -4361,8 +4361,8 @@ def preview_bootstrap_adaptive_short_walk(
             "route_time_state": "PROVIDER_CAPTURED",
             "route_distance_state": "PROVIDER_CAPTURED",
             "route_caveats": [
-                "This is advisory provider evidence, not proof of safety, accessibility, opening, arrival, or a guaranteed ETA.",
-                "Opening hours and price remain UNKNOWN from this route check.",
+                "Estimated walk · check local access and conditions before departure.",
+                "Opening hours and prices · check with the venue.",
             ],
         }
 

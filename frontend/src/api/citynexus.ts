@@ -21,7 +21,7 @@ export interface Activity {
   end_at: string;
   travel_from_prev_min: number;
   estimated_cost: Money;
-  /** KNOWN_FREE / KNOWN_PAID / UNKNOWN; compatibility amount 0 is not proof of free. */
+  /** KNOWN_FREE / KNOWN_PAID / UNKNOWN; amount 0 leaves the status UNKNOWN unless marked KNOWN_FREE. */
   cost_status?: string;
   metadata?: Record<string, unknown>;
   status: string;

@@ -39,10 +39,10 @@ const categories = [
 
 const goCopy: Record<BootstrapPocketWalkGoState, string> = {
   NOT_STARTED: "路线已经保存。想出发时，点击下面的「开始散步」。",
-  HEADING_TO_FIRST: "正前往第一站。到达后请自己确认，系统不会假装知道你的实时位置。",
+  HEADING_TO_FIRST: "正前往第一站。到达后请确认进度。",
   FIRST_STOP_DONE_SELF_REPORTED: "第一站完成（由你手动报告）。可以出发去第二站了。",
   HEADING_TO_SECOND: "正前往第二站。完成后你可以自己报告。",
-  WALK_DONE_SELF_REPORTED: "散步完成。这个状态是你的报告，不是系统证明你真实到达。",
+  WALK_DONE_SELF_REPORTED: "两站散步已完成。",
   PAUSED: "路线已暂停，稍后可以继续。",
 };
 
@@ -140,49 +140,49 @@ function errorDiagnostics(phase: ExplorePhase, error: unknown): ErrorDiagnostics
 function messageForError(phase: ExplorePhase, error: unknown): string {
   if (phase === "请教 AI") {
     if (error instanceof CityNexusApiError) {
-      if (error.status === 401) return "登录会话已过期，AI 引导没有完成；你仍可跳过 AI，继续手动探索。";
-      if (error.status === 403) return "当前会话没有使用 AI 引导的权限；你仍可跳过 AI，继续手动探索。";
-      if (error.status === 404) return "AI 引导接口当前不可用；你可以跳过 AI，继续手动探索。";
-      if (error.status === 422) return "AI 引导没有接受这次输入；可以换一种说法，也可以跳过 AI 手动探索。";
-      if (error.status === 429) return "AI 引导暂时受到请求限制；稍后再试或跳过 AI，继续手动探索。";
-      if (error.status >= 500) return "AI 服务刚才没有响应；没有自动重试或额外模型调用，你可以跳过 AI 手动探索。";
-      return "AI 引导没有完成（HTTP " + error.status + "）；你仍可跳过 AI，继续手动探索。";
+      if (error.status === 401) return "登录已过期，请重新进入行程。";
+      if (error.status === 403) return "当前账号无权使用 AI 引导。";
+      if (error.status === 404) return "AI 引导服务不可用，可继续手动探索。";
+      if (error.status === 422) return "AI 没能理解这句话，换个说法试试。";
+      if (error.status === 429) return "AI 请求太频繁，稍后再试。";
+      if (error.status >= 500) return "AI 服务暂时没有响应，请稍后重试。";
+      return "AI 引导失败（HTTP " + error.status + "）。";
     }
-    if (isReadDeadlineMissed(error)) return "等待 AI 引导超时，没有自动重试；你可以跳过 AI，继续手动探索。";
-    return "AI 建议这一步没有完成；没有自动重试或额外模型调用。你仍可跳过 AI，继续手动选择地区和地点。";
+    if (isReadDeadlineMissed(error)) return "AI 建议超时，请稍后重试。";
+    return "AI 建议未生成。";
   }
   if (error instanceof CityNexusApiError) {
     const status = error.status;
-    if (status === 401) return phase + "需要有效的签名会话。回到 Revolution 重新进入后再试。";
-    if (status === 403) return "当前会话没有执行「" + phase + "」的权限。请回到 Revolution 重新进入这趟行程。";
-    if (status === 404) return "服务器找不到当前行程或对应资源，「" + phase + "」没有完成。回到 Revolution 重新开始。";
-    if (status === 409) return "服务器上的行程状态已经变化；「" + phase + "」没有覆盖新状态。先重新读取路线状态。";
-    if (status === 422) return "服务器拒绝了「" + phase + "」提交的数据。检查位置、类别或所选地点后再试。";
-    if (status === 429) return "服务端对「" + phase + "」进行了限流。稍等片刻，再明确点一次恢复操作。";
+    if (status === 401) return "登录已过期，请重新进入行程。";
+    if (status === 403) return "当前账号无权执行「" + phase + "」。";
+    if (status === 404) return "找不到当前行程，请重新进入。";
+    if (status === 409) return "行程状态已更新，请刷新后继续。";
+    if (status === 422) return "检查位置、类别或所选地点后重试。";
+    if (status === 429) return "操作太频繁，请稍后重试。";
     if (status >= 500) {
       const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
       return writes
-        ? phase + "遇到服务端故障（HTTP " + status + "）。请求结果需要先从服务器读取核对。"
-        : phase + "遇到服务端故障（HTTP " + status + "）。可以稍后再明确试一次。";
+        ? phase + "暂时失败，请刷新行程确认状态。"
+        : phase + "暂时失败，请稍后重试。";
     }
-    return "服务器拒绝了「" + phase + "」（HTTP " + status + "）。检查当前输入后再试。";
+    return "「" + phase + "」失败（HTTP " + status + "），检查输入后重试。";
   }
   if (isOriginResponseUnusable(error)) {
-    return "服务器已回答 HTTP " + error.status + "，但响应内容无法用于「" + phase + "」，本页没有采用这份响应。";
+    return "服务器返回内容异常，请刷新后重试「" + phase + "」。";
   }
   if (isReadDeadlineMissed(error) || isWriteDeadlineMissed(error)) {
     const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
     return writes
-      ? "等待「" + phase + "」的答复超时，服务器可能已经处理这次请求。先读取服务器路线状态，再决定是否重试。"
-      : "等待「" + phase + "」的答复超时，没有收到 HTTP 状态。你可以明确重试这一步。";
+      ? "「" + phase + "」请求超时，请刷新行程确认结果。"
+      : "「" + phase + "」请求超时，请稍后重试。";
   }
   if (error instanceof TypeError || (error instanceof Error && error.name === "AbortError")) {
     const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
     return writes
-      ? "「" + phase + "」没有收到 HTTP 答复，服务器可能已经处理请求。先读取服务器路线状态，再决定是否重试。"
-      : "「" + phase + "」没有收到 HTTP 答复。检查连接后可以明确重试这一步。";
+      ? "「" + phase + "」连接中断，请刷新行程确认结果。"
+      : "「" + phase + "」连接中断，请检查网络后重试。";
   }
-  return "「" + phase + "」返回的内容未通过本页校验，没有采用。先读取服务器状态或返回检查所选内容。";
+  return "「" + phase + "」暂时无法完成，请检查所选内容后重试。";
 }
 
 function recoveryForError(
@@ -364,7 +364,7 @@ export function RevolutionQuickExplore({
   const consultHermes = () => {
     const goal = aiGoal.trim();
     if (!agentConfigured) {
-      setAlert({ type: "neutral", text: "当前 AI 尚未接入这个会话，直接查城市也能继续。需要先用 --agent 启动本地服务。" });
+      setAlert({ type: "neutral", text: "AI 建议暂不可用，可直接搜索地点。" });
       return;
     }
     if (goal.length < 4 || goal.length > 360) {
@@ -384,11 +384,11 @@ export function RevolutionQuickExplore({
         model: suggestion.model ?? null,
       });
       setAlert(verified && matched
-        ? { type: "good", text: "AI 已根据你说的话建议了一个探索方向。地点仍要从真实公开地图查找。" }
-        : { type: "neutral", text: "模型这次没有返回可验证的工具建议。你仍然可以手动选择地区和兴趣。" });
+        ? { type: "good", text: "AI 建议已生成 · 下一步从公开地图选地点。" }
+        : { type: "neutral", text: "已切换到手动选地点。" });
     }, () => ({
       label: "继续手动探索",
-      action: () => setAlert({ type: "neutral", text: "AI 建议未完成；可以直接查找公开地名并手动挑选两处地点。" }),
+      action: () => setAlert({ type: "neutral", text: "已切换到手动选地点。" }),
     }));
   };
 
@@ -411,7 +411,7 @@ export function RevolutionQuickExplore({
           type: "neutral",
           text: response.status === "GEOCODER_RATE_LIMITED"
             ? "地图服务正在限流，稍等后重试；也可以粘贴公开 OpenStreetMap 地图链接。"
-            : "没有找到足够可靠的地名结果。可以换更完整的地名，或粘贴公开地图链接。",
+            : "没有匹配地区。换个名称或粘贴公开地图链接。",
         });
         return;
       }
@@ -444,7 +444,7 @@ export function RevolutionQuickExplore({
     if (!point) {
       setAlert({
         type: "error",
-        text: "请粘贴 OpenStreetMap 的公开地图链接（例如 https://www.openstreetmap.org/#map=13/25.7/116.75），不要粘贴私人地址。",
+        text: "请粘贴公开 OpenStreetMap 地图链接，勿填私人地址。",
       });
       return;
     }
@@ -459,7 +459,7 @@ export function RevolutionQuickExplore({
       setReadinessStatus(next.status === "READY" ? "ready" : "blocked");
       setAlert(next.status === "READY"
         ? { type: "good", text: "地图服务已准备好，可以发起一次明确授权的查询。" }
-        : { type: "error", text: "地图服务仍不可用。你可以查看服务状态，但不会虚构地点。" });
+        : { type: "error", text: "地图服务暂不可用，请检查服务状态或稍后重试。" });
     }, { label: "重新检查地图服务", action: () => retryReadiness() });
   };
 
@@ -470,7 +470,7 @@ export function RevolutionQuickExplore({
       return;
     }
     if (!readiness || readiness.status !== "READY") {
-      setAlert({ type: "error", text: "地图服务暂时无法搜索。没有发送请求，也不会虚构结果。" });
+      setAlert({ type: "error", text: "地图服务暂不可用，请稍后重试。" });
       return;
     }
     const selection = center;
@@ -496,7 +496,7 @@ export function RevolutionQuickExplore({
       if (response.status === "PROVIDER_UNAVAILABLE") {
         setAlert({
           type: "error",
-          text: "公开地点服务刚才没有响应。附近是否有地点尚未确认，这次没有保存路线；你可以稍后手动重试。",
+          text: "地点服务未响应，本次没有找到地点。稍后再试。",
           recovery: { label: "重新搜索附近地点", action: () => discover() },
         });
         return;
@@ -504,7 +504,7 @@ export function RevolutionQuickExplore({
       if (response.status === "PROVIDER_DISABLED") {
         setAlert({
           type: "error",
-          text: "当前试玩环境没有启用公开地点搜索，没有发出地点查询，也没有保存地点。",
+          text: "公开地点搜索尚未开启。",
           recovery: {
             label: "重新检查地图服务",
             action: () => {
@@ -518,13 +518,13 @@ export function RevolutionQuickExplore({
       if (response.status === "RATE_LIMITED") {
         setAlert({
           type: "error",
-          text: "地图服务限制了这次查询。稍等后可以手动重试；本次没有保存地点。",
+          text: "地点查询次数已达限制，请稍后重试。",
           recovery: { label: "稍后重新搜索附近地点", action: () => discover() },
         });
         return;
       }
       if (response.status !== "LIVE_RESULTS" || response.candidates.length === 0) {
-        setAlert({ type: "neutral", text: "这次没有找到可用的公开地点。可以换类别或位置再试，不会偷偷用样本替换。" });
+        setAlert({ type: "neutral", text: "没找到地点，调整类别或位置后再试。" });
       } else {
         setAlert({
           type: "good",
@@ -559,7 +559,7 @@ export function RevolutionQuickExplore({
     if (!discovery?.receipt_id || !onFormalCandidateSelected) return;
     const selected = discovery.candidates.find((item) => item.candidate_id === candidateId);
     if (!selected || selected.selection_state !== "READY_FOR_NATIVE_PLAN") {
-      setAlert({ type: "neutral", text: "这个地点暂时还没有足够的营业状态证据，不能用它启动正式 Journey。可以先保存私人散步。" });
+      setAlert({ type: "neutral", text: "营业信息不足，暂不能启动行程；可先保存私人散步。" });
       return;
     }
     const receiptId = discovery.receipt_id;
@@ -586,14 +586,14 @@ export function RevolutionQuickExplore({
       } else {
         setWalk(null);
         onPocketWalkChange?.(null);
-        setAlert({ type: "neutral", text: "服务器当前没有已保存的私人散步。原路线没有被本页假定为已保存；可以回到结果页再决定是否保存。" });
+        setAlert({ type: "neutral", text: "暂无已保存的私人散步。返回结果页保存路线。" });
       }
     }, { label: "重新读取路线状态", action: () => refreshSavedWalk() });
   };
 
   const saveWalk = () => {
     if (!discovery?.receipt_id || !first || !second || first === second) {
-      setAlert({ type: "neutral", text: "先挑两个不同的真实地点。" });
+      setAlert({ type: "neutral", text: "请选择两个不同地点。" });
       return;
     }
     const receipt = discovery.receipt_id;
@@ -642,7 +642,7 @@ export function RevolutionQuickExplore({
       }
       setWalk(response.pocket_walk);
       onPocketWalkChange?.(response.pocket_walk);
-      setAlert({ type: "good", text: "状态已保存。到达与完成由你报告，不是手机 GPS 证明。" });
+      setAlert({ type: "good", text: "进度已保存。" });
     }, { label: "重新读取路线进度", action: () => refreshSavedWalk() });
   };
 
@@ -661,7 +661,7 @@ export function RevolutionQuickExplore({
           {stage === "area" && "先选地区，再挑兴趣和地点。AI 只在你点击后参与；地图打不开也能继续。"}
           {stage === "category" && "位置已选好。挑一种兴趣，我们会查找附近的公开地点。"}
           {stage === "results" && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
-          {stage === "walk" && "保存了两个公开地点。你控制进度，我们不冒充 GPS 到场。"}
+          {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
         </p>
         <div className="rev-quick-progress" aria-label="当前步骤">
           {["选地方", "选兴趣", "看结果", "去散步"].map((label, i) => (
@@ -687,11 +687,11 @@ export function RevolutionQuickExplore({
       )}
       {alert?.type === "error" && errorDetails && (
         <details className="rev-quick-internals" data-testid="rev-quick-error-details">
-          <summary>技术详情（已隐藏原始响应和行程标识）</summary>
+          <summary>技术详情</summary>
           <p>操作阶段：{errorDetails.phase}</p>
           <p>请求：{errorDetails.method ?? "未知"} {errorDetails.path ?? "未能确定路径"}</p>
           <p>HTTP 状态：{errorDetails.status ?? "未收到 HTTP 状态"}</p>
-          <p>服务端原因码：{errorDetails.reasonCode ?? "响应未提供可安全显示的原因码"}</p>
+          <p>服务端原因码：{errorDetails.reasonCode ?? "未知"}</p>
           <p>归类：{errorDetails.classification}</p>
         </details>
       )}
@@ -699,7 +699,7 @@ export function RevolutionQuickExplore({
       {stage === "area" && (
         <div className="rev-quick-pane" data-testid="rev-quick-area">
           <h3 className="rev-quick-area-title">先选一个地区</h3>
-          <p className="rev-quick-area-intro">搜索公开地点中心，再选择附近范围；不读取手机 GPS。</p>
+          <p className="rev-quick-area-intro">使用所选区域搜索附近地点。</p>
           <label htmlFor="rev-quick-search">城市或地区</label>
           <div className="rev-quick-inline">
             <input
@@ -716,8 +716,8 @@ export function RevolutionQuickExplore({
           </div>
           <p className="rev-quick-disclosure">
             {sampleProviderMode
-              ? "点「查找位置」时只把地名发送给本机受控测试服务（TEST_PROVIDER），不会访问公开 Nominatim。不会读取手机 GPS。"
-              : "点「查找位置」才会把这次输入的地名发送给公开 Nominatim 地图服务。不会读取手机 GPS。"}
+              ? "点击后将地名发送至本机 TEST_PROVIDER。"
+              : "点击后将地名发送至 Nominatim，按所选区域搜索。"}
           </p>
           {cityResults.length > 0 && (
             <div className="rev-quick-results" data-testid="rev-quick-city-results">
@@ -728,9 +728,8 @@ export function RevolutionQuickExplore({
                   className="rev-quick-city-option"
                   key={item.result_id}
                   onClick={() => {
-                    // User chooses the geocoder's APPROXIMATE public area.
-                    // This does NOT assert map tap, GPS, or physical arrival.
-                    // Overpass is still only called on next explicit button.
+                    // Keep the geocoder's approximate-area source distinct from
+                    // map taps, GPS, and arrival; Overpass starts on the next button.
                     setCityFocus({ latitude: item.latitude, longitude: item.longitude });
                     setCityFocusLabel(item.display_name || item.name);
                     setSelectedPin(null);
@@ -742,7 +741,7 @@ export function RevolutionQuickExplore({
                   }}
                 >
                   <strong>{item.display_name || item.name}</strong>
-                  <small>{item.provider_provenance === "TEST_PROVIDER" ? "受控测试来源" : "公开地名搜索结果"} · 中心位置仅供参考</small>
+                  <small>{item.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "公开地点"} · 搜索中心</small>
                   <span>就从这个公开地区中心附近找（约2.5公里） →</span>
                 </button>
               ))}
@@ -752,8 +751,7 @@ export function RevolutionQuickExplore({
             <div className="rev-quick-map-step">
               <h3>已找到：{cityFocusLabel || "当前地区"}</h3>
               <p className="rev-quick-disclosure">
-                这个位置来自公开地名搜索，是城市或县城的<strong>大致中心</strong>，不是你的 GPS，
-                不保证景点就在这里。你可以立即从附近 2.5 公里查找，或按需调整地图。
+                搜索中心取自公开地名结果，范围约 2.5 公里。你可以从附近查找或调整地图。
               </p>
               <button
                 type="button"
@@ -771,7 +769,7 @@ export function RevolutionQuickExplore({
               >直接从这片地区附近找 →</button>
               <details className="rev-quick-optional-map">
                 <summary>想换具体位置？可以打开地图（可选）</summary>
-                <p className="rev-quick-disclosure">加载地图瓦片需要单独点击“显示地图”，地图不显示也不影响上面的快捷入口。</p>
+                <p className="rev-quick-disclosure">可选：点击下方按钮加载地图。</p>
               {!tilesEnabled ? (
                 <button
                   type="button"
@@ -779,7 +777,7 @@ export function RevolutionQuickExplore({
                   onClick={() => setTilesEnabled(true)}
                   data-testid="rev-quick-load-map"
                 >
-                  显示地图（仅此次向 OpenStreetMap 加载地图瓦片）
+                  加载 OpenStreetMap 地图
                 </button>
               ) : (
                 <>
@@ -842,20 +840,20 @@ export function RevolutionQuickExplore({
           </div>
           <p className="rev-quick-disclosure">
             {centerBasis === "EXPLICIT_GEOCODER_APPROX"
-              ? "采用你刚才明确选定的公开县城/城市近似中心，查找半径约 2.5 公里。若不合适可返回改选，绝不是你的精确位置。"
+              ? "使用你选择的区域中心搜索，范围约 2.5 公里。可返回更换区域。"
               : "你已选择公开地图位置。"}
             {sampleProviderMode
-              ? "点击下面的搜索按钮时，只向本机受控测试地点服务（TEST_PROVIDER）发送已选公开区域和类别。"
-              : "点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别。"}
-            不发送 GPS、身份令牌或私人行程。
+              ? "搜索时将所选区域和类别发送至 TEST_PROVIDER。"
+              : "搜索时将所选区域和类别发送至 OpenStreetMap/Overpass。"}
+            搜索按你选择的区域进行，手机定位需单独授权。
           </p>
           {readinessStatus !== "ready" && (
             <p className="rev-quick-alert neutral" role="status">
               {readinessStatus === "checking"
-                ? "正在检查地图服务是否可用（这一步不发起公开地点查询）…"
+              ? "正在检查地图服务…"
                 : readinessStatus === "blocked"
-                  ? "公开地点服务暂时不可用，不会擅自发送请求或假装找到地点。"
-                  : "刚才无法检查地图服务。你可以重新检查，不需要重建旅程。"}
+                  ? "公开地点服务暂不可用。"
+                  : "无法读取地图服务状态，请稍后重试。"}
               {readinessStatus !== "checking" && (
                 <button type="button" className="rev-quick-secondary" onClick={retryReadiness} disabled={busy}>
                   重新检查服务
@@ -883,19 +881,19 @@ export function RevolutionQuickExplore({
           <h3>这些地方怎么样？</h3>
           <p className="rev-quick-disclosure">
             {sourceKind === "TEST_PROVIDER"
-              ? "以下全部是测试来源，不能当作实地开放的景点。"
+              ? "示例地点（测试来源）。"
               : sourceKind === "LIVE_PROVIDER"
-                ? "地点名称和坐标来自实际公开服务。是否营业、门票和路线时间仍须自行核实。"
-                : "数据来源未能验证，不要把这些地点当作已确认事实。"}
+                ? "来源：公开地名服务 · 营业、票价和路线信息待补充。"
+                : "地点来源待确认。"}
           </p>
           {discovery?.status === "PROVIDER_UNAVAILABLE" ? (
-            <p>公开地点服务没有回答，附近情况尚未确认。</p>
+            <p>地点服务暂未返回结果。</p>
           ) : discovery?.status === "PROVIDER_DISABLED" ? (
             <p>当前试玩环境尚未启用公开地点搜索。</p>
           ) : discovery?.status === "RATE_LIMITED" ? (
             <p>地图服务限制了这次请求，暂时不能判断附近地点。</p>
           ) : discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
-            <p>暂时没有找到符合条件的地点。可以换个类别，或重新选一个区域再试。</p>
+            <p>没有匹配地点。换个类别或搜索区域。</p>
           ) : (
             <>
               <p>点击卡片选择两站，先点的是第一站。</p>
@@ -947,15 +945,15 @@ export function RevolutionQuickExplore({
           {goState && !["NOT_STARTED", "WALK_DONE_SELF_REPORTED", "PAUSED"].includes(goState) && (
             <button type="button" className="rev-quick-secondary" disabled={busy} onClick={() => go("PAUSE")}>暂停散步</button>
           )}
-          <p className="rev-quick-disclosure">进度由你本人报告并保存在服务器中，不等于 GPS 已证明到场。地图导航、支付和正式 AI Journey 是独立授权的功能。</p>
+          <p className="rev-quick-disclosure">到访进度由你确认；导航和支付需单独授权。</p>
         </div>
       )}
 
       <details className="rev-quick-internals">
-        <summary>技术信息（不影响正常使用）</summary>
+        <summary>技术信息</summary>
         <p>城市结果提供公开地区的大致中心。点选结果即可继续；地图和 OSM 链接都是可选项。</p>
         <p>数据状态：{discovery?.status ?? "尚未搜索"} · {sourceKind ?? "来源未确定"}</p>
-        <p>普通地点搜索不等于 Agent 自主推理。私人路线和进度由当前签名会话从服务器读取。</p>
+        <p>地点来源：{sourceKind ?? "待确定"}。私人路线与进度来自当前行程。</p>
       </details>
     </section>
   );

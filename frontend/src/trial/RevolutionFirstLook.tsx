@@ -94,7 +94,7 @@ export function RevolutionFirstLook() {
     void cityNexusApi.getAgentRuntimeStatus().then((state) => {
       if (!cancelled) setAgentRuntime(state);
     }).catch(() => {
-      if (!cancelled) setAgentCheckError("无法读取后端 Agent 状态，尚未证明模型连接可用。");
+      if (!cancelled) setAgentCheckError("无法读取后端 Agent 状态。");
     });
     return () => { cancelled = true; };
   }, []);
@@ -119,12 +119,12 @@ export function RevolutionFirstLook() {
           ? "AI 网关已配置"
           : "AI 未启用";
   const agentStatusDetail = nativeHermesReady
-    ? "原生 Hermes 工具网关已就绪；这只代表连接准备好，不代表已经发生运行。"
+    ? "可以提交行程需求并查看助手记录。"
     : nativeHermesConfigured
-      ? "已发现原生 Hermes 工具网关，但当前未确认可用；页面只会显示服务器实际返回的运行记录。"
+      ? "助手工具暂不可用，可先浏览行程。"
       : agentConfigured
-        ? "模型网关已配置，但尚不代表真正执行过 AgentRun。公开地点搜索也不是 AI 自主规划。"
-        : "你可以先探索真实公开地点，不需要先配置 AI。";
+        ? "AI 网关已配置，可在行程页提交需求。"
+        : "AI 未启用，可先探索公开地点。";
 
   const start = async () => {
     const label = cityName.trim();
@@ -157,8 +157,8 @@ export function RevolutionFirstLook() {
         timezone: "Asia/Shanghai",
         start_at: startAt,
         end_at: endAt,
-        // This DRAFT is for open-ended discovery. Don't manufacture a
-        // physical arrival/departure anchor just to satisfy the old wizard.
+        // Open-ended discovery starts from user intent; arrival/departure
+        // anchors belong to a later confirmed plan.
         budget: { amount_minor: 100000, currency: "CNY" },
         party_size: 1,
       });
@@ -196,7 +196,7 @@ export function RevolutionFirstLook() {
     setCandidateForJourney(null);
     setJourney(next);
     setActiveTab("trips");
-    setNotice("正式 Journey 已启动。这里是原生 Journey Operator；点击照看行程后，再由你提交需求或处理事件。模型配置不代表已经发生 AgentRun。");
+    setNotice("Journey 已启动。前往「行程」提交需求或查看动态。");
   };
 
   const goSummary = (state: string) => {
@@ -263,7 +263,7 @@ export function RevolutionFirstLook() {
             </form>
             {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
             <p className="rev-mobile-truth">
-              地名只是你输入的探索方向，系统不会因此断言你的实际位置。公开数据与 AI 请求仅在你主动操作后发生。
+              输入城市名开始探索；公开地点和 AI 请求会在你点击后发送。
             </p>
           </section>
         ) : (
@@ -328,7 +328,7 @@ export function RevolutionFirstLook() {
               {journey.status === "DRAFT" && candidateForJourney && (
                 <section className="rev-firstlook-start-plan" data-testid="revolution-agent-start-journey">
                   <h2>确认正式行程</h2>
-                  <p>这会经过原有的计划与授权流程；未知费用仍然是未知，不会自动预订或付款。</p>
+                  <p>费用信息未知；预订和付款需另行确认。</p>
                   <BootstrapJourneyStartPanel
                     journeyId={journey.id}
                     placeId={candidateForJourney}
@@ -341,7 +341,7 @@ export function RevolutionFirstLook() {
                 <section className="rev-firstlook-real-ui" aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
                   <section className="rev-mobile-panel">
                     <h2>当前行程</h2>
-                    <p>这里连接原生 Journey Operator。只有真实产生的 AgentRun 和审批记录，才能算 AI 已执行。</p>
+                    <p>这里显示行程监测、助手运行记录和待确认操作。</p>
                   </section>
                   <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
                   <MobileHermesRun journeyId={journey.id} visible={activeTab === "trips"} />
@@ -357,7 +357,7 @@ export function RevolutionFirstLook() {
                       <div className="rev-mobile-stop"><b>01</b><span>{pocketWalk.first_stop.name}</span></div>
                       <div className="rev-mobile-stop"><b>02</b><span>{pocketWalk.second_stop.name}</span></div>
                       <p>当前进度：<strong>{goSummary(pocketWalk.go_progress.state)}</strong></p>
-                      <small className="rev-mobile-truth">完成进度由你手动报告，不等于 GPS 到场证明。</small>
+                      <small className="rev-mobile-truth">到达状态由你确认。</small>
                       <button type="button" onClick={() => navigateMobile("explore")}>
                         查看路线并继续 GO →
                       </button>
@@ -383,12 +383,12 @@ export function RevolutionFirstLook() {
                   <span>公开地点</span><strong>{sample ? "受控样本模式" : "真实公开地图接口"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
-                  <span>AI 助手</span><strong>{nativeHermesReady ? "Hermes 工具已就绪，运行待验证" : agentConfigured ? "网关已配置，运行待验证" : "当前未配置"}</strong>
+                  <span>AI 助手</span><strong>{nativeHermesReady ? "Hermes 工具已就绪" : agentConfigured ? "网关已配置" : "当前未配置"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>
                 </div>
-                <p>你的私人进度以服务器签名身份为准。本页面不会把样本地点、模型配置或自报到达说成现实证明。</p>
+                <p>进度属于当前行程；地点来源见卡片，到达由你确认。</p>
                 <button type="button" className="rev-mobile-secondary" onClick={switchCity}>探索其他地区</button>
                 <details className="rev-discovery-details">
                   <summary>关于技术来源与旧版界面</summary>
@@ -408,7 +408,7 @@ export function RevolutionFirstLook() {
         />
       )}
       <footer className="rev-firstlook-footer">
-        CityNexus · 真实数据以提供方回复为准，探索进度不代表实地到场
+        CityNexus · 地点来源见卡片，到达状态由你确认
       </footer>
     </div>
   );

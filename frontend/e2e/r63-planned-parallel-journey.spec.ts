@@ -213,7 +213,7 @@ test("R63 shows a planned split without recovery, then exposes only the trusted-
     await expect(adminSplit).not.toContainText("Secret side-trip destination");
     await expect(ownerPage.getByTestId("journey-group-recovery")).toHaveCount(0);
     await expect(adminPage.getByTestId("journey-group-recovery")).toHaveCount(0);
-    await expect(ownerSplit.getByTestId("journey-planned-separation-plan-unchanged")).toContainText("shared Journey is unchanged");
+    await expect(ownerSplit.getByTestId("journey-planned-separation-plan-unchanged")).toContainText("Update your status after rejoining.");
 
     phase = "trusted-risk";
     await Promise.all([ownerPage.reload(), adminPage.reload()]);

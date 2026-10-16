@@ -159,13 +159,10 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
         <div>
           <span className="v8-kicker">V14 · BEFORE REALITY CHANGED</span>
           <h2>Preventive recovery</h2>
-          <small>
-            A forecast, not a failure, triggered this. Reactive recoveries are owned by the
-            grounded adaptive recovery panel below.
-          </small>
+          <small>This action was triggered by a forecast.</small>
         </div>
         <span className="v8-status-pill" data-testid="v14-preventive-timing" data-pre-failure={preFailure}>
-          {preFailure ? "acted before the failure" : "acted after a failure"}
+          {preFailure ? "forecast-triggered" : "event-triggered"}
         </span>
       </header>
 
@@ -215,7 +212,7 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
           >
             {planChanged
               ? `recomposed ${run.active_plan_before_id?.slice(0, 8)}… → ${run.active_plan_after_id?.slice(0, 8)}…`
-              : "unchanged · action stayed inside the envelope"}
+              : "Within the approved scope"}
           </b>
         </div>
         <div>

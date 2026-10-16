@@ -21,7 +21,7 @@
 export const planVersionHistoryCopy = {
   en: {
     "history.title": "Plan versions on this trip",
-    "history.sub": "Every version the server still holds, newest last. This list is read-only.",
+    "history.sub": "Plan versions, ordered by creation time.",
     "history.version": "Version",
     "history.sourceInitial": "first generation",
     "history.sourceReplan": "from a replan",
@@ -31,16 +31,16 @@ export const planVersionHistoryCopy = {
     "history.parent": "from version",
     "history.noParent": "no parent version",
     "history.createdMissing": "no write time recorded",
-    "history.retention": "No retention limit is applied: this trip currently holds {n} versions and all of them are listed here. Nothing is dropped as newer versions are written.",
+    "history.retention": "{n} versions listed",
     "history.count": "{n} versions listed",
-    "history.noRestore": "There is no revert here on purpose. Going back to an older version would replace the plan you are travelling on, so it is not offered as a tap on a list.",
+    "history.noRestore": "Restore is unavailable here.",
     "history.empty": "This trip has no plan version yet.",
     "history.loading": "Reading the version list…",
-    "history.failed": "The version list could not be read from this server. Your current plan is unchanged.",
+    "history.failed": "Could not load plan versions.",
   },
   "zh-CN": {
     "history.title": "这趟行程的方案版本",
-    "history.sub": "服务器上还留着的每一份版本，按写入先后排。这一屏只读。",
+    "history.sub": "按创建时间排列的方案版本。",
     "history.version": "版本",
     "history.sourceInitial": "首次生成",
     "history.sourceReplan": "来自一次重规划",
@@ -56,12 +56,12 @@ export const planVersionHistoryCopy = {
        returned* (`backend/app/main.py:9787`, `backend/app/operations/v9.py:733`). Measured against
        real writes: 7 generate rounds left 21 rows, version_no 1..21 with no hole
        (backend/tests/test_qoder_ord0386_plan_version_history.py, test_3). */
-    "history.retention": "这台服务器没有设保留上限：目前这趟共有 {n} 份版本，这里全部列出。写新版本不会丢掉旧的。",
+    "history.retention": "共列出 {n} 份版本。",
     "history.count": "共列出 {n} 份版本",
-    "history.noRestore": "这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。",
+    "history.noRestore": "版本还原入口暂不可用。",
     "history.empty": "这趟行程还没有方案版本。",
     "history.loading": "正在读版本列表…",
-    "history.failed": "版本列表没有从这台服务器读到。你当前的方案没有变化。",
+    "history.failed": "无法读取方案版本。",
   },
 } as const;
 

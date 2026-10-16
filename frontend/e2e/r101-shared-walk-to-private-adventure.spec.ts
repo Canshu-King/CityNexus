@@ -107,7 +107,7 @@ test("R101 recipient imports a public walk into an independent private adventure
     }, sender.access_token);
     const senderShare = [
       "CityNexus public Pocket Walk",
-      "sample/unverified location - not real-world verified",
+      "Sample places",
       `1. ${senderSaved[0].name}`,
       `   OSM source: ${senderSaved[0].source_url}`,
       `   Source: ${senderSaved[0].source_provenance}; captured ${senderSaved[0].captured_at}`,
@@ -115,7 +115,7 @@ test("R101 recipient imports a public walk into an independent private adventure
       `   OSM source: ${senderSaved[1].source_url}`,
       `   Source: ${senderSaved[1].source_provenance}; captured ${senderSaved[1].captured_at}`,
       "Walking budget: 20 minutes (human-declared)",
-      "Opening, cost, accessibility, arrival, and guaranteed ETA remain unknown.",
+      "Opening hours, price, access and ETA: pending.",
     ].join("\n");
     expect(senderShare).not.toContain(senderJourney.id);
     expect(senderShare).not.toContain(sender.access_token);
@@ -130,7 +130,7 @@ test("R101 recipient imports a public walk into an independent private adventure
     await senderPage.goto("/v8/hub", { waitUntil: "domcontentloaded" });
     await expect(senderPage.getByTestId("bootstrap-pocket-share-preview")).toContainText("R101 Public");
     const displayedSenderShare = await senderPage.getByTestId("bootstrap-pocket-share-preview").innerText();
-    expect(displayedSenderShare).toContain("sample/unverified location");
+    expect(displayedSenderShare).toContain("Sample places");
     expect(displayedSenderShare).not.toContain(senderJourney.id);
     await senderPage.close();
 
@@ -148,13 +148,13 @@ test("R101 recipient imports a public walk into an independent private adventure
     await expect(recipientPage.getByTestId("bootstrap-shortlist")).toContainText("Saved 0 of 3");
     await importPanel.getByTestId("bootstrap-shared-walk-textarea").fill(displayedSenderShare);
     await importPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
-    await expect(importPanel.locator('div[data-testid="bootstrap-shared-walk-preview"]')).toContainText("UNVERIFIED_SHARED_REFERENCE");
+    await expect(importPanel.locator('div[data-testid="bootstrap-shared-walk-preview"]')).toContainText("待核验");
     expect(fixture.requestBodies).toHaveLength(providerBeforeRecipient);
     await recipientPage.reload({ waitUntil: "domcontentloaded" });
     expect(fixture.requestBodies).toHaveLength(providerBeforeRecipient);
     await importPanel.getByTestId("bootstrap-shared-walk-textarea").fill(displayedSenderShare);
     await importPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
-    await expect(importPanel.locator('div[data-testid="bootstrap-shared-walk-preview"]')).toContainText("UNVERIFIED_SHARED_REFERENCE");
+    await expect(importPanel.locator('div[data-testid="bootstrap-shared-walk-preview"]')).toContainText("待核验");
     await importPanel.getByTestId("bootstrap-shared-walk-lookup-consent").check();
     await importPanel.getByTestId("bootstrap-shared-walk-lookup").click();
     await expect(importPanel.getByTestId("bootstrap-shared-walk-results")).toContainText("R101 Public Museum");

@@ -11,21 +11,21 @@
 ## 新用户流程（真实原生 API）
 
 1. 已经创建的签名 DRAFT Journey 自动进入“城市或地区”。一个主要按钮“查找位置”。只有用户点击时才一次性把所输入地名发送至 Nominatim，`provider_consent:true`。
-2. 城市结果只是 **CAMERA_ONLY_TAP_REQUIRED** 的镜头定位，不会变成已证明的坐标。选择结果后用户显式点击“显示地图”，这次操作告知加载 OSM 地图瓦片。然后用户在地图上**亲自点一次**具体区域，立即进入下一步（省掉以前多余的二次确认）。也可以使用经过 `parsePublicMapLink` 严格校验的 OpenStreetMap 公共链接，不加载瓦片。**前景 GPS 永不启用**。
+2. 城市候选用于地图定位。选中候选后点击“显示地图”加载 OSM 瓦片，再在地图上选择具体区域进入下一步；也可粘贴经 `parsePublicMapLink` 校验的 OpenStreetMap 公共链接。页面使用你选择的公开地图位置，不读取 GPS。
 3. “你想逛什么？”只有四张兴趣选择卡。一个主要按钮“搜索附近地点”，旁边明示本次将发送公开坐标和类别给 Overpass；只有主动点击才调用 `bootstrapDiscovery`，保留服务端 `provider_consent:true`、固定半径与受限候选数。
-4. 真正的 provider 返回候选后展示简单中文卡片，显示 `LIVE_PROVIDER` / `TEST_PROVIDER` 来源，选择两个**不同的当前候选**，通过原生 `saveBootstrapDiscoveryPocketWalk` 保存成员私有两站路线。没有两个真实返回的地点则不能伪造路线。保存按钮本身就是明确的私人保存确认，不再加毫无意义的重复勾选。
+4. Provider 返回候选后显示中文卡片和 `LIVE_PROVIDER` / `TEST_PROVIDER` 来源。选择两个不同候选，通过 `saveBootstrapDiscoveryPocketWalk` 保存成员私有两站路线；真实结果少于两处时，页面显示当前结果数。点击保存即确认私人保存。
 5. 进入原生 `transitionBootstrapPocketWalkGo`：开始/自报第一站完成/前往第二站/自报完成/暂停/恢复。通过 `getBootstrapShortlist` 按签名成员恢复现有私人 Pocket Walk，刷新后可以继续。
-6. 出错不留在灰色不可点状态。服务不可用会展示中文原因，并提供“重新检查服务”，不会切到虚构地点，也不会无限重试外部模型。技术信息均折叠，AI 后端只显示“已配置”而非“已自主决策”。
+6. 服务不可用时显示中文原因和“重新检查服务”。地点查询失败会保留当前步骤；技术信息折叠显示。AI 状态显示“已配置”。
 
 ## 真实边界
 
 - 采用真实的签名 Journey API，保留读写鉴权、幂等、版本戳、TEST/LIVE 来源标签。
-- 外部 Nominatim、OSM 瓦片和 Overpass 是三个不同的数据接收方，各自需要明确的用户动作；这里没有静默发送 GPS 或自动代点。
-- 技术上通过“清楚的按钮文字 + 附近的披露说明 + 仅点击才发送”实现逐次主动同意，不再强迫用户同意复选框再点击同一个操作。
-- 系统依然**不会**将地点发现或 Pocket Walk 虚构为真实 AgentRun；要证明 Hermes Agent 还需实际模型工具调用与签名 Journey Operator 记录。
-- 没有两个 LIVE_PROVIDER 结果就不能报“真实地点路线已完成”；测试模式只能显示“TEST_PROVIDER”。营业、开放、成本、ETA 没有依据时均为未知。
-- 城市查找依照后端定义只用于镜头定位，需用户实际点击地图或明确粘贴地图链接，不能以地理编码中心偷偷变成“用户现场位置”。
-- 如果签名成员或 Journey 切换，未结束的 HTTP 响应有本地 epoch/bearer guard，私有路线不会跨用户显示。
+- Nominatim 接收地名，OSM 接收瓦片请求，Overpass 接收已确认的公开坐标和类别；每项都由对应按钮触发。
+- 每个服务的用途和发送内容显示在操作按钮旁，用户点击后才发送请求。
+- 地点发现与 Pocket Walk 显示为地点探索；真实 AgentRun 以模型工具调用和签名 Journey Operator 记录展示。
+- 卡片标明 `LIVE_PROVIDER` 或 `TEST_PROVIDER`。营业、开放、价格、ETA 暂无依据时显示“未知”。
+- 城市候选用于地图定位；最终区域由用户在地图点选或粘贴公开地图链接确定。
+- 签名成员或 Journey 切换时，本地 epoch/bearer guard 会拦截旧请求对当前页面的更新。
 
 ## Windows 已有工作目录的**最小**升级操作
 
@@ -39,13 +39,13 @@ git restore --source origin/trial/revolution-first-look-20261014 -- frontend/src
 
 浏览器访问 `http://127.0.0.1:14173/revolution`，Ctrl+Shift+R 强制刷新。现在应该首先看到“想去哪儿逛逛？”和四个步骤，只显示**当前一步**。
 
-如本地改过同名文件，先保存自己的改动，因为 `git restore --source` 会覆盖**列出的三个文件**。不会触及用户本地 lockfile、wb2api key、sqlite、原 Qoder 工作树。
+如本地改过同名文件，先另存自己的版本；命令只恢复上面列出的三个文件。
 
-## 工程验收状态（诚实）
+## 当前验收
 
-这轮远程 GitHub 提交与源码静态检查已完成。**我没有运行用户 Windows 的 Vite、实际地理服务，也没有在此轮实际执行 `npm run typecheck:all`、Playwright 或真实手机操作。**
+本轮已完成远程 GitHub 提交和源码静态检查。尚未在用户 Windows 上运行 Vite、真实地理服务、`npm run typecheck:all`、Playwright 或手机操作。
 
-附有专门的 UI 单元式 Playwright 路由/网络 fixture `frontend/e2e/revolution-quick-explore-ui.spec.ts`，模拟 `TEST_PROVIDER` 只验证浏览器在用户按钮之前**不发外部 provider 请求**、页面阶段切换、保存和 GO 刷新恢复。**它是 UI fixture，不等于真实 provider 或 Agent 已通过。**
+Playwright UI fixture `frontend/e2e/revolution-quick-explore-ui.spec.ts` 使用 `TEST_PROVIDER`，覆盖点击前的请求状态、页面阶段切换、保存和 GO 刷新恢复。真实 Provider 与 AgentRun 需分别完成现场验收。
 
 在已有 Node/npm 项目中执行：
 

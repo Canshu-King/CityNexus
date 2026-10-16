@@ -213,7 +213,7 @@ test("R100 Pocket Walk persists two public stops, authorizes each map separately
     await expect(pocketCard.getByTestId("bootstrap-pocket-walk-stops")).toContainText("2. R100 Shanghai Gallery");
     await expect(panel.getByTestId("bootstrap-pocket-share-preview")).toContainText("TEST_PROVIDER");
     const initialPreview = await panel.getByTestId("bootstrap-pocket-share-preview").innerText();
-    expect(initialPreview).toContain("sample/unverified location");
+    expect(initialPreview).toContain("Sample places");
     for (const privateValue of [journey.id, owner.id, owner.access_token]) expect(initialPreview).not.toContain(privateValue);
 
     // Stop 1 navigation is a destination-only release with its own consent.

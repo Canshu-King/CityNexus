@@ -190,7 +190,7 @@ export function MemberSideQuestCard({
       }
       if (!target.navigation_available) {
         setMessage(zh
-          ? "这个地点没有可用的 WGS84 精确坐标，无法安全打开地图；你仍可按支线手动前往。"
+          ? "地点缺少精确坐标，无法打开地图。可手动前往。"
           : "Exact WGS84 coordinates are unavailable, so maps cannot open safely. You can still follow the stop manually.");
         return;
       }
@@ -240,14 +240,14 @@ export function MemberSideQuestCard({
         : buildOpenStreetMapPinUrl(target);
       setNavigationConsent(null);
       setMessage(zh
-        ? "已打开外部地图。路线与路况由地图服务提供；这不会报告到达、返程或已与大家会合。"
-        : "External maps opened. Its route and traffic are separate; this does not report arrival, return, or reunion.");
+        ? "已打开外部地图。返回行程页更新到达或会合状态。"
+        : "External map opened. Return to the Journey to update arrival or meetup status.");
     } catch {
       popup.close();
       setNavigationConsent(null);
       setMessage(zh
-        ? "共同计划或导航目标刚刚变化；没有打开旧地点，请刷新后重新确认。"
-        : "The plan or target just changed. No stale destination was opened; refresh and review it again.");
+        ? "行程已更新，地图未打开。请刷新后重试。"
+        : "Journey updated; map was not opened. Refresh and try again.");
       await onUpdated();
     } finally {
       setNavigationBusy(false);
@@ -288,7 +288,7 @@ export function MemberSideQuestCard({
       await onUpdated();
     } catch {
       setInvitationMessage(zh
-        ? "无法发送邀请；来源支线或同行者名单可能已变化。刷新后可重新确认。"
+        ? "邀请未发送，请刷新后重试。"
         : "The invitation could not be sent; the source stop or companion list may have changed. Refresh and review again.");
       await onUpdated();
     } finally {
@@ -329,12 +329,12 @@ export function MemberSideQuestCard({
         ? (zh
           ? "已私下保存这个地点描述；请选择一个精确的已知地点后才能开始导航。"
           : "That description is saved privately. Choose an exact known place before starting the stop.")
-        : (zh ? "私人支线已准备好；共享行程没有改变。" : "Your private stop is ready. The shared Journey is unchanged."));
+        : (zh ? "私人停留已准备好。" : "Private stop is ready."));
       await onUpdated();
     } catch {
       setMessage(zh
-        ? "无法保存这条私人支线；请刷新后重试。共享行程没有改变。"
-        : "The private stop could not be saved. Refresh and try again; the shared Journey is unchanged.");
+        ? "无法保存私人停留，请刷新后重试。"
+        : "Could not save the private stop. Refresh to check its status.");
     } finally {
       setBusy(false);
     }
@@ -348,11 +348,11 @@ export function MemberSideQuestCard({
       await cityNexusApi.advanceMemberSideQuest(journeyId, sideQuest.id, action);
       await onUpdated();
       setMessage(action === "complete" || action === "cancel"
-        ? (zh ? "私人停留已结束；请返回共同会合点。共享行程没有改变。" : "The personal stop has ended. Return to the shared rendezvous; the shared Journey is unchanged.")
+        ? (zh ? "私人停留已结束，请返回共同会合点。" : "Private stop ended. Return to the shared rendezvous.")
         : null);
     } catch {
       setMessage(zh
-        ? "这项支线操作已失效或暂时无法保存；我刷新了当前状态。"
+        ? "支线状态已更新，请刷新查看。"
         : "That side-quest action is stale or could not be saved. Current state was refreshed.");
       await onUpdated();
     } finally {
@@ -377,8 +377,8 @@ export function MemberSideQuestCard({
       setFitPreviewReceipt({ key: previewContextKey, value: result });
     } catch {
       setMessage(zh
-        ? "暂时无法确认这条支线是否赶得上；共享行程没有改变。你仍可按原计划手动执行，或直接返回共同会合点。"
-        : "We can't confirm whether this stop fits right now. The shared Journey is unchanged; you can continue manually or head back to the rendezvous.");
+        ? "暂时无法判断是否赶得上。可手动安排或返回会合点。"
+        : "Could not check whether this private stop fits. Continue manually or return to the shared rendezvous.");
     } finally {
       setBusy(false);
     }
@@ -396,7 +396,7 @@ export function MemberSideQuestCard({
       const observationId = await onRefreshLocation();
       if (!observationId) {
         setMessage(zh
-          ? "没有取得这一次的位置；私人导航不可用，支线仍可手动执行。"
+          ? "未获取位置，无法生成私人导航。可手动执行支线。"
           : "No one-time location was available. Private navigation is unavailable; you can still follow the stop manually.");
         return;
       }
@@ -407,8 +407,8 @@ export function MemberSideQuestCard({
       );
       setPrivateRouteReceipt({ key: routeContextKey, value: result });
       setMessage(result.status === "COMPLETED"
-        ? (zh ? "已取得只对你显示的私人路线；共享行程没有改变。" : "A private route is ready for you; the shared Journey is unchanged.")
-        : (zh ? "路线服务没有可靠结果；你仍可手动前往，计划没有改变。" : "No reliable route is available. You can still go manually; the plan is unchanged."));
+        ? (zh ? "已生成仅你可见的私人路线。" : "Private route ready for you.")
+        : (zh ? "暂无可靠路线；你仍可手动前往。" : "No reliable route; you can still go manually."));
     } catch {
       setMessage(zh
         ? "私人路线暂时不可用；请刷新状态或按原计划手动前往。"
@@ -437,16 +437,16 @@ export function MemberSideQuestCard({
       }
       setMessage(route?.status === "COMPLETED" && route.route.duration_min != null
         ? (zh
-          ? `已记录你本人开始返程的报告；到「${route.target.place_name}」约 ${route.route.duration_min} 分钟（${route.route.provenance ?? route.route.provider ?? "来源已记录"}）。这不是定位证明。`
-          : `Your return report is saved; about ${route.route.duration_min} min to ${route.target.place_name} (${route.route.provenance ?? route.route.provider ?? "source recorded"}). This does not verify your location.`)
+          ? `返程状态已记录；到「${route.target.place_name}」约 ${route.route.duration_min} 分钟（${route.route.provenance ?? route.route.provider ?? "路线估算"}）。`
+          : `Return reported; about ${route.route.duration_min} min to ${route.target.place_name} (${route.route.provenance ?? route.route.provider ?? "source recorded"}).`)
         : (zh
-          ? `已记录你本人开始返程的报告；目前没有可靠路线或定位。共同会合点仍是「${displayedRendezvous?.place_name ?? "当前会合点"}」，这不是定位证明。`
-          : `Your return report is saved, but no reliable location or route is available. The shared rendezvous is ${displayedRendezvous?.place_name ?? "unchanged"}; this does not verify your location.`));
+          ? `返程状态已记录；暂无可用路线。共同会合点：「${displayedRendezvous?.place_name ?? "当前会合点"}」。`
+          : `Return reported. No route is available; shared rendezvous: ${displayedRendezvous?.place_name ?? "current stop"}.`));
       await onUpdated();
     } catch {
       setMessage(zh
-        ? "无法保存返程报告；未请求位置或路线。请刷新后重试。"
-        : "The return report could not be saved. No location or route was requested; refresh and retry.");
+        ? "返程报告未保存，请刷新后重试。"
+        : "Return report failed. Refresh before trying again.");
       await onUpdated();
     } finally {
       setBusy(false);
@@ -457,8 +457,8 @@ export function MemberSideQuestCard({
     if (returnState === "ON_TRACK") return zh ? "返程状态：当前路线可按时到达会合点。" : "Return status: the current route reaches the rendezvous in time.";
     if (returnState === "LOW_BUFFER") return zh ? "返程缓冲较少，建议尽快返回。" : "Return status: the safety buffer is low; head back soon.";
     if (returnState === "RETURN_RISK") return zh ? "可信实时路线显示共同会合可能受影响。" : "Trusted live route evidence shows the shared rendezvous may be at risk.";
-    if (returnState.startsWith("ADVISORY")) return zh ? "返程判断仅供参考，不会据此修改共享行程。" : "The return estimate is advisory and cannot change the shared Journey.";
-    return zh ? "返程状态未知：目前没有可靠的返程路线证据。" : "Return status unknown: no reliable route evidence is available yet.";
+    if (returnState.startsWith("ADVISORY")) return zh ? "返程路线为参考信息。" : "Advisory return route.";
+    return zh ? "返程路线待确认。" : "Return route pending.";
   };
 
   return (
@@ -467,7 +467,7 @@ export function MemberSideQuestCard({
       <small data-testid="member-side-quest-rendezvous">
         {zh ? `共同会合点：${displayedRendezvous.place_name}${scheduledLabel ? ` · ${scheduledLabel}` : ""}` : `Shared rendezvous: ${displayedRendezvous.place_name}${scheduledLabel ? ` · ${scheduledLabel}` : ""}`}
       </small>
-      <small>{zh ? "私人停留不会改变共享行程计划。" : "This private stop does not change the shared Journey."}</small>
+      <small>{zh ? "这是个人支线。" : "Personal side quest."}</small>
 
       {sideQuest && (
         <div data-testid="member-side-quest-owner-state">
@@ -475,7 +475,7 @@ export function MemberSideQuestCard({
           <small>
             {zh ? `状态：${state}` : `State: ${state}`}
             {sideQuest.destination.authority === "DESCRIPTIVE_ONLY"
-              ? (zh ? " · 地点尚未精确匹配" : " · destination is not an exact known Place yet")
+              ? (zh ? " · 地点匹配待确认" : " · place match pending")
               : ""}
           </small>
           {(state === "COMPLETED" || state === "CANCELLED") && (
@@ -485,16 +485,16 @@ export function MemberSideQuestCard({
           )}
           {state === "ARRIVED" && (
             <small data-testid="member-side-quest-arrival-boundary">
-              {zh ? "这是你本人报告已到达，不是设备定位证明。" : "This is your report of arrival, not device-verified physical presence."}
+              {zh ? "你已报告到达。" : "You reported arrival."}
             </small>
           )}
           <small data-testid="member-side-quest-return-state">
             {sideQuest.return_report?.status === "RETURN_STARTED_REPORTED"
-              ? (zh ? "你已报告开始返程；这不是定位或实际会合证明。" : "You reported heading back; this does not verify your location or reunion.")
+              ? (zh ? "你已报告开始返程。" : "You reported heading back.")
               : returnCopy(sideQuest.return_state)}
           </small>
           {state === "INVALIDATED" && (
-            <small>{zh ? "共同会合安排已变化；这条支线保留为历史，不能继续执行。" : "The shared rendezvous changed. This side quest remains as history and can no longer be executed."}</small>
+            <small>{zh ? "会合安排已更新，此支线已归档。" : "Rendezvous updated. This side trip is archived."}</small>
           )}
         </div>
       )}
@@ -515,7 +515,7 @@ export function MemberSideQuestCard({
           )}
           {!selectedPlaceId && query.trim() && (
             <small data-testid="member-side-quest-descriptive-boundary">
-              {zh ? "这是地点描述，尚未匹配到精确地点；保存后仍需选中已知地点才能开始。" : "This is only a place description; select an exact known Place before the stop can start."}
+              {zh ? "地点描述尚未匹配目录，请先选择已知地点。" : "Place description is not matched yet. Select a known Place to continue."}
             </small>
           )}
           <input
@@ -602,7 +602,7 @@ export function MemberSideQuestCard({
               : (zh ? "打开步行导航" : "Open walking directions")}
           </button>
           <small>{zh ? "路线与最晚离开时间是单次快照，会很快过期；路况变化后请重新检查。" : "Routes and leave-by times are one-time snapshots that expire shortly. Check again when conditions change."}</small>
-          <small>{zh ? "外部地图使用自己的路线和定位权限；CityNexus 不会为此发送你的起点。" : "External maps use their own routing and location permissions. CityNexus does not send your origin for this handoff."}</small>
+          <small>{zh ? "外部地图按自己的权限提供路线与定位。" : "External maps use their own routing and location permissions."}</small>
         </div>
       )}
       {fitPreview && (
@@ -613,12 +613,12 @@ export function MemberSideQuestCard({
               : fitPreview.state === "TIGHT_RETURN"
                 ? fitPreview.authority === "ADVISORY_PROTECTED_COMMITMENT"
                   ? (fitPreview.safety_buffer_minutes
-                    ? (zh ? "路线估算仍赶得上受保护会合点，但没有达到规定的安全缓冲。" : "The route estimate reaches the protected rendezvous but leaves less than its required safety buffer.")
-                    : (zh ? "路线估算赶得上受保护会合点；该承诺没有额外安全缓冲，因此仍需谨慎。" : "The route estimate reaches the protected rendezvous, but no additional safety buffer is configured."))
-                  : (zh ? "按当前路线估算能赶上计划会合时间，但没有受保护的安全缓冲；这只是参考。" : "Current route estimates fit before the planned rendezvous, but there is no protected safety buffer; this is advisory.")
+                    ? (zh ? "预计能赶上会合点，缓冲不足。" : "Estimated to reach the meetup; buffer is short.")
+                    : (zh ? "预计可赶上会合点，建议预留缓冲。" : "Estimated to reach the meetup; leave a safety buffer."))
+                  : (zh ? "预计可赶上会合时间，建议预留缓冲。" : "Estimated to arrive before the meetup; leave a safety buffer.")
                 : fitPreview.state === "DOES_NOT_FIT"
                   ? (zh ? "按当前路线估算，这段私人停留赶不上会合时间。" : "The current route estimate does not fit before the rendezvous.")
-                  : (zh ? "无法确认这条私人支线是否赶得上；共享行程保持不变。" : "We can't confirm whether this private stop fits. The shared Journey is unchanged.")}
+                  : (zh ? "这条私人停留的时间暂不可用。" : "Timing for this private stop is unavailable.")}
           </strong>
           {fitPreview.recommended_leave_by && (
             <small data-testid="member-side-quest-leave-by">
@@ -654,7 +654,7 @@ export function MemberSideQuestCard({
             </>
           )}
           {!privateRoute.route && (
-            <small>{zh ? "没有可靠路线；私人支线仍可手动执行。" : "No reliable route is available; you can still follow the stop manually."}</small>
+            <small>{zh ? "路线暂不可用，可手动前往。" : "Route unavailable. Continue manually."}</small>
           )}
         </div>
       )}
@@ -739,8 +739,8 @@ export function MemberSideQuestCard({
               </small>
               <small>
                 {zh
-                  ? "不会分享你的设备位置、原始搜索坐标、私人备注、路线或浏览历史。接受邀请不会更改共享行程，也不会自动打开地图。"
-                  : "Your device location, original search coordinates, private note, route, and browsing history are not shared. Accepting will not change the shared Journey or open a map automatically."}
+                  ? "邀请仅分享你选择的公开地点，不含个人路线、定位或备注。接收后可自行打开地图。"
+                  : "Only the selected public place is shared. Your location, search, note and route stay private. Map navigation needs separate confirmation."}
               </small>
               <div className="journey-side-quest-actions">
                 {validInvitationPreview.recipient_count > 0 ? (
@@ -782,7 +782,7 @@ export function MemberSideQuestCard({
                   disabled={invitationBusy}
                   onClick={() => void withdrawPlaceInvitation(invitation.invitation_id)}
                 >
-                  {zh ? "撤回尚未接受的邀请" : "Withdraw invitations not yet accepted"}
+                  {zh ? "撤回待处理邀请" : "Withdraw pending invitations"}
                 </button>
               )}
             </article>
@@ -811,8 +811,8 @@ export function MemberSideQuestCard({
           </strong>
           <p>
             {zh
-              ? "所选地点的精确坐标会发送给地图服务；CityNexus 不会在导航链接中发送地点名称或你的起点。地图服务可能按自己的权限使用设备位置。打开地图不代表到达、已返程或已与大家会合。"
-              : "The selected destination's exact coordinates will be sent to your chosen maps provider. CityNexus does not include the place name or your origin in the link; that provider may use device location under its own permissions. Opening maps does not report arrival, return, or reunion."}
+              ? "地图服务会收到所选地点坐标；导航链接不含你的起点。设备定位由地图应用管理。"
+              : "The chosen map receives the destination pin. Device location follows its permissions. Return to CityNexus to update arrival or reunion status."}
           </p>
           <div className="journey-side-quest-actions">
             <button

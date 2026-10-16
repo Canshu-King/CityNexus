@@ -28,7 +28,7 @@ export function BootstrapJourneyStartPanel({
   const start = async () => {
     if (!acceptUnknownCost) {
       setMessage(
-        "Confirm that the admission price is unknown and will not be included before starting this native journey.",
+        "Confirm that the admission price is unknown and excluded from the total.",
       );
       return;
     }
@@ -60,13 +60,9 @@ export function BootstrapJourneyStartPanel({
       <section className="v8-loading" aria-labelledby="bootstrap-native-start-title">
         <div className="v8-brand-mark">CN</div>
         <h1 id="bootstrap-native-start-title">Start this native Journey</h1>
+        <p>Selected public place: {placeId}.</p>
         <p>
-          You selected one source-linked public place ({placeId}). The native plan will use only
-          facts the provider gave us and will not invent a catalogue or a ticket price.
-        </p>
-        <p>
-          The admission price is currently UNKNOWN. It is not FREE, it is not included in the
-          known subtotal, and this step cannot book or charge it.
+          Admission price: unknown. It is excluded from the total; booking and payment are unavailable here.
         </p>
         <label>
           <input
@@ -75,7 +71,7 @@ export function BootstrapJourneyStartPanel({
             checked={acceptUnknownCost}
             onChange={(event) => setAcceptUnknownCost(event.target.checked)}
           />
-          I understand that the price is unknown, excluded from the total, and not bookable here.
+          I understand that the admission price is unknown and excluded from the total.
         </label>
         {message ? <p role="status" data-testid="bootstrap-native-start-message">{message}</p> : null}
         <div className="v8-actions">

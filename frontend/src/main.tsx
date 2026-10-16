@@ -1735,7 +1735,7 @@ function LegacyApp() {
           </p>
           <p data-testid={testIds.replanDiff}>{proposalDiffText(selectedProposal, plan)}</p>
           <p data-testid={testIds.replanDeltas}>
-            {proposalDeltaText(selectedProposal, planCurrency)} · protected commitments unchanged
+            {proposalDeltaText(selectedProposal, planCurrency)} · confirmed arrangements kept
           </p>
           <div className="replan-actions">
             <button

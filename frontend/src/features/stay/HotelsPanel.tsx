@@ -152,8 +152,8 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             <h1>{zh ? "暂时没有可比较的住宿" : "No stays to compare yet"}</h1>
             <p className="v8-lede">
               {zh
-                ? "这个城市还没有拿到可用的住宿数据。换个城市或稍后再试——我们不会编造酒店。"
-                : "No provider-backed accommodation is available for this city yet. Try again later — we will not invent hotels."}
+                ? "这个城市暂时没有住宿选项。换个城市或稍后再试。"
+                : "No stays available in this city. Try another city or come back later."}
             </p>
           </div>
         </div>
@@ -169,8 +169,8 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
           <h1>{zh ? "选一家住的地方" : "Choose where to stay"}</h1>
           <p className="v8-lede">
             {zh
-              ? `按与行程的关系排序的 ${options.length} 家住宿。价格未知时我们如实说明。`
-              : `${options.length} stays ranked by how they fit your itinerary. Where price is unknown we say so.`}
+              ? `按行程匹配度排序，共 ${options.length} 家。`
+              : `${options.length} stays, ranked by fit with your itinerary.`}
           </p>
         </div>
       </div>
@@ -226,8 +226,8 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                     ? `与行程冲突最少，步行负担 ${option.walking_min} 分钟，预留缓冲 ${option.protected_margin_min} 分钟。`
                     : `Fewest itinerary conflicts, ${option.walking_min} min walking, ${option.protected_margin_min} min protected margin.`
                   : zh
-                    ? "与当前硬约束存在冲突，仅供参考。"
-                    : "Conflicts with current hard constraints; shown for reference only."}
+                    ? "与当前行程要求冲突。"
+                    : "Conflicts with current journey requirements."}
               </p>
               <button
                 type="button"

@@ -36,7 +36,7 @@ export function DiscoveryPlaceCard({
     ? "测试地点"
     : candidate.provider_provenance === "LIVE_PROVIDER"
       ? "公开地图来源"
-      : "来源未验证";
+      : "来源待确认";
   const distance = typeof candidate.distance_m === "number" && Number.isFinite(candidate.distance_m)
     ? candidate.distance_m < 1000
       ? `约 ${Math.max(10, Math.round(candidate.distance_m / 10) * 10)} 米`
@@ -63,7 +63,7 @@ export function DiscoveryPlaceCard({
           {candidate.category}{distance ? ` · ${distance}` : ""}
         </span>
         <span className="rev-quick-place-facts">
-          营业与费用需自行核实
+          营业与费用信息待补充
         </span>
       </button>
       {source && (

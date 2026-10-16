@@ -82,17 +82,12 @@ export function writeDeadlineCopy(
   return zh
     ? {
         title: `这台设备等到 ${seconds} 秒就停了`,
-        body:
-          "服务端没有在这段时间内回答，所以这一笔的结果是未知的——不是「没有发生」。" +
-          "请先刷新核对再决定是否重试；同一把幂等键重试是补问同一笔，不会生成第二份。",
+        body: "服务端尚未返回结果。刷新查看状态后再决定是否重试。",
         seconds,
       }
     : {
         title: `This device stopped waiting after ${seconds} s`,
-        body:
-          "The server did not answer in that time, so the outcome of this write is unknown -- not " +
-          '"did not happen". Refresh and check before deciding to retry; retrying with the same ' +
-          "idempotency key re-asks the same write instead of creating a second one.",
+        body: "The server has not returned a result. Refresh to check the status before retrying.",
         seconds,
       };
 }

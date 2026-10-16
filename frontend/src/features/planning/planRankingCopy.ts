@@ -26,7 +26,7 @@ export const planRankingCopy = {
     "rank.none": "No plan is available to compare right now.",
     "rank.evidenceNote": "{hard} of {total} legs on this plan rest on evidence the gate accepts as hard; the rest are {quality}.",
     "rank.loading": "Reading the plans\u2026",
-    "rank.failed": "The plan list could not be read from this server. Nothing about your trip was changed.",
+    "rank.failed": "Could not load the plan list. Try again later.",
   },
   "zh-CN": {
     "rank.title": "把这趟能选的方案摆在一屏上比",
@@ -48,7 +48,7 @@ export const planRankingCopy = {
     "rank.none": "现在没有可比的方案。",
     "rank.evidenceNote": "这一版 {total} 段里有 {hard} 段的证据是闸门认可能当硬依据的，其余是 {quality}。",
     "rank.loading": "正在读方案\u2026",
-    "rank.failed": "方案列表没有从这台服务器读到。你行程上的任何东西都没有被改动。",
+    "rank.failed": "暂时无法读取方案列表，请稍后重试。",
   },
 } as const;
 

@@ -70,16 +70,16 @@ function stateText(status: string, connection: string, events: NativeRuntimeEven
   if (/^(failed|error)$/i.test(status)) return "运行失败";
   if (/^(stopped|cancelled|canceled)$/i.test(status)) return "已停止";
   if (events.some((event) => event.event_type === "approval.required")) return "等待你确认";
-  if (connection === "connecting" || connection === "retrying") return "正在连接真实运行事件";
+  if (connection === "connecting" || connection === "retrying") return "正在同步运行记录";
   const lastToolEvent = [...events].reverse().find((event) => event.event_type.startsWith("tool."));
   if (lastToolEvent?.event_type === "tool.started") return "正在处理行程请求";
-  if (lastToolEvent) return "等待服务器更新运行状态";
+  if (lastToolEvent) return "等待运行状态更新";
   if (connection === "unavailable") return "事件连接暂不可用";
-  return "Hermes 已启动，等待首条工具事件";
+  return "已启动，等待工具事件";
 }
 
 export function MobileHermesRun({ journeyId, visible }: { journeyId: string; visible: boolean }) {
-  const [prompt, setPrompt] = useState("请检查当前行程和受保护安排，并给出安全的调整建议；只生成方案，不预订、不付款，也不修改行程。");
+  const [prompt, setPrompt] = useState("请检查当前行程，发现问题时给出处理建议。");
   const [requestState, setRequestState] = useState<RequestState>(() => readTravelerBearer() ? "idle" : "unauthorized");
   const [restoreState, setRestoreState] = useState<RestoreState>("idle");
   const [reply, setReply] = useState<string | null>(null);
@@ -178,11 +178,11 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
         setRun(null);
         setRestoreState("failed");
         setRequestState("unauthorized");
-        setFailure("当前签名成员无权恢复这条运行记录；已隐藏运行详情。");
+        setFailure("无权读取这条运行记录。");
         return;
       }
       setRestoreState("failed");
-      setFailure("暂时无法恢复上一条运行记录；没有因此启动新的 AI 任务。");
+      setFailure("上一条助手记录读取失败，请刷新重试。");
     });
     return () => {
       if (restoreEpoch.current === epoch) restoreEpoch.current += 1;
@@ -196,7 +196,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
     const message = prompt.trim();
     if (!startingBearer) {
       setRequestState("unauthorized");
-      setFailure("当前行程没有有效的签名成员会话，请重新进入行程后再试。");
+      setFailure("请重新进入行程后使用助手。");
       return;
     }
     if (!message || message.length > 1200 || requestState === "sending") return;
@@ -227,11 +227,11 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
         setRun(null);
         setRestoreState("failed");
         setRequestState("unauthorized");
-        setFailure("服务器没有确认当前签名成员身份，已隐藏本次运行记录。");
+        setFailure("无法读取这条运行记录。");
       } else {
         setRestoreState("failed");
         setRequestState("error");
-        setFailure("请求没有完成；没有创建可展示的 Hermes 运行。请检查行程连接后重试。");
+        setFailure("请求结果待确认，请刷新运行记录。");
       }
     }
   };
@@ -251,10 +251,10 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
       if (readTravelerBearer() !== startingBearer) return;
       if (caught instanceof CityNexusApiError && [401, 403, 404].includes(caught.status)) {
         setStopState("failed");
-        setFailure("当前签名成员没有这条运行的停止权限；运行状态仍以服务器记录为准。");
+        setFailure("无法停止这次运行。");
       } else {
         setStopState("failed");
-        setFailure("CityNexus 没有确认停止请求；运行状态仍以服务器记录为准。");
+        setFailure("停止状态待确认，请刷新查看。");
       }
     }
   };
@@ -270,7 +270,6 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
           <span className="rev-mobile-hermes-eyebrow">CITYNEXUS · AI 助手</span>
           <h2>让助手检查当前行程</h2>
         </div>
-        <span className="rev-mobile-hermes-mode">仅生成建议</span>
       </div>
       <form className="rev-mobile-hermes-form" onSubmit={(event) => { void submit(event); }}>
         <label htmlFor="rev-mobile-hermes-prompt">你希望它检查什么</label>
@@ -294,15 +293,14 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
         <p className="rev-mobile-hermes-empty" role="status" data-testid="rev-mobile-hermes-empty-state">
           <CircleDashed size={15} aria-hidden="true" />
           {restoreState === "checking"
-            ? "正在查看这趟行程是否有可恢复的助手运行。"
-            : "当前没有正在执行的 Hermes 任务。连接就绪不代表任务已经开始；只有服务器创建了真实运行后，这里才会显示工具轨迹。"}
+            ? "正在读取行程助手记录。"
+            : "暂无助手运行记录。"}
         </p>
       )}
       {reply && (
         <div className="rev-mobile-hermes-reply" data-testid="rev-mobile-hermes-reply">
           <b>{replyMode === "AI" ? "助手回复" : "规则回退回复"}</b>
           <p>{reply}</p>
-          {!run && <small>本次没有创建 Hermes 工具运行，因此下面不会显示为 AgentRun。</small>}
         </div>
       )}
 
@@ -315,13 +313,13 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
             <div>
               <strong role="status">
                 {timeline.authState === "unauthorized"
-                  ? "签名会话已变化，已清除运行详情"
+                  ? "成员会话已变化，运行详情已清除"
                   : stateText(timeline.runState, timeline.connection, actualEvents)}
               </strong>
               <small>
                 {timeline.authState === "unauthorized"
-                  ? "重新登录后才能读取本次行程的私人运行记录。"
-                  : `${toolCount} 条${isFixtureRun ? "测试夹具工具事件" : "服务器工具事件"}${latestEvent && eventTime(latestEvent.timestamp) ? ` · 更新于 ${eventTime(latestEvent.timestamp)}` : ""}`}
+                  ? "重新登录以查看运行记录。"
+                  : `${toolCount} 条${isFixtureRun ? "示例事件" : "工具事件"}${latestEvent && eventTime(latestEvent.timestamp) ? ` · 更新于 ${eventTime(latestEvent.timestamp)}` : ""}`}
               </small>
             </div>
             <button
@@ -342,7 +340,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
           >
             <header className="rev-mobile-hermes-sheet-head">
               <div>
-                <span className="rev-mobile-hermes-eyebrow">{isFixtureRun ? "TEST_FIXTURE · 仅用于界面验收" : "签名服务器运行记录"}</span>
+                <span className="rev-mobile-hermes-eyebrow">{isFixtureRun ? "测试数据" : "助手运行记录"}</span>
                 <h3 id="rev-mobile-hermes-sheet-title">Hermes 工作过程</h3>
               </div>
               <button type="button" className="rev-mobile-hermes-close" aria-label="关闭工作过程" onClick={() => setExpanded(false)}>
@@ -359,19 +357,18 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
                 <>
                   <section className="rev-mobile-hermes-reason" aria-label="工作思路与判断依据">
                     <b>工作思路 / 判断依据</b>
-                    <p>{reasoningSummary ?? "暂无可公开判断说明"}</p>
-                    <small>只显示与本次签名运行绑定的服务器安全摘要，不包含模型私有思维链。</small>
+                    <p>{reasoningSummary ?? "暂无判断摘要"}</p>
                   </section>
                   {pendingApproval && (
                     <p className="rev-mobile-hermes-approval" role="status">
-                      此运行有一项待确认操作。请在下方行程恢复中心查看并授权；此轨迹面板不会替你审批。
+                      有操作待确认，前往行程恢复中心审核。
                     </p>
                   )}
                   {stopState !== "idle" && (
                     <p className="rev-mobile-hermes-action" role="status">
-                      {stopState === "sending" ? "正在向 CityNexus 发送停止请求…"
-                        : stopState === "requested" ? "停止请求已送达；等待服务器事件确认最终状态。"
-                          : "停止请求未确认；当前状态仍以服务器记录为准。"}
+                      {stopState === "sending" ? "正在发送停止请求…"
+                        : stopState === "requested" ? "停止请求已提交，等待状态更新。"
+                          : "停止状态待确认；刷新查看。"}
                     </p>
                   )}
                   {orderedEvents.length > 0 ? (
@@ -392,30 +389,25 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
                       })}
                     </ol>
                   ) : (
-                    <p className="rev-mobile-hermes-empty"><CircleDashed size={15} aria-hidden="true" />{timeline.connection === "unavailable" ? "当前拿不到服务器运行事件；不会补造进度。" : "服务端尚未返回工具事件，等待真实运行记录。"}</p>
+                    <p className="rev-mobile-hermes-empty"><CircleDashed size={15} aria-hidden="true" />{timeline.connection === "unavailable" ? "运行记录暂不可用，请刷新。" : "暂无工具事件。"}</p>
                   )}
                   {timeline.connection === "unavailable" && orderedEvents.length > 0 && (
-                    <p className="rev-mobile-hermes-message">实时连接中断；已收到的记录仅保留在本页内存中。</p>
+                    <p className="rev-mobile-hermes-message">实时连接中断；当前显示已收到的事件。</p>
                   )}
-                  {timeline.connection === "retrying" && <p className="rev-mobile-hermes-message">连接中断，正在重新连接并与服务器历史记录合并。</p>}
+                  {timeline.connection === "retrying" && <p className="rev-mobile-hermes-message">正在重新连接并同步运行记录…</p>}
                   {timeline.authState === "authorized" && timeline.runState.toLowerCase() !== "unknown" && !terminalRun(timeline.runState) && (
                     <button type="button" className="rev-mobile-hermes-stop" disabled={stopState === "sending" || stopState === "requested"} onClick={() => void stopRun()}>
                       {stopState === "sending" ? "正在停止…" : stopState === "requested" ? "已请求停止" : "停止本次运行"}
                     </button>
                   )}
-                  <p className="rev-mobile-hermes-footnote">
-                    {isFixtureRun
-                      ? "当前事件来自界面测试夹具，不能证明真实 Hermes 已运行。正式运行只显示服务器事件和安全名称，不展示工具参数或原始返回。"
-                      : "显示签名服务器返回的 Hermes 事件和安全名称；不显示工具参数或原始返回。运行仅可提出建议，不会自动预订、付款或修改行程。"}
-                  </p>
                 </>
               )}
-              {timeline.authState === "unauthorized" && <p className="rev-mobile-hermes-message error">签名成员权限已变化，私人运行详情已清除。</p>}
+              {timeline.authState === "unauthorized" && <p className="rev-mobile-hermes-message error">成员会话已变化，运行详情已清除。</p>}
             </div>
           </dialog>
         </div>
       )}
-      {requestState === "unauthorized" && <p className="rev-mobile-hermes-message error"><AlertCircle size={15} aria-hidden="true" />此功能只对当前签名行程成员开放。</p>}
+      {requestState === "unauthorized" && <p className="rev-mobile-hermes-message error"><AlertCircle size={15} aria-hidden="true" />运行记录仅对当前行程成员开放。</p>}
     </section>
   );
 }

@@ -241,13 +241,13 @@ class V8Rejection extends Error {
 function refusalSentence(error: unknown, zh: boolean, fallback: string): string {
   if (error instanceof V8Rejection) {
     return zh
-      ? `服务器拒绝了这一步（HTTP ${error.status}）。你的行程没有因此改变，可以检查后重试。`
-      : `The server refused this step (HTTP ${error.status}). Your trip is unchanged; check the details and try again.`;
+      ? `服务器拒绝了这一步（HTTP ${error.status}）。检查条件后重试。`
+      : `The server refused this step (HTTP ${error.status}). Review the conditions and try again.`;
   }
   if (isOriginResponseUnusable(error)) {
     return zh
-      ? `服务器答了 HTTP ${error.status}，可带回来的不是这一屏能用的数据（Content-Type: ${error.content_type ?? "未知"}）。`
-      : `The server answered HTTP ${error.status}, but not with data this screen can use (Content-Type: ${error.content_type ?? "unknown"}).`;
+      ? `服务器返回 HTTP ${error.status}，数据格式无法读取（${error.content_type ?? "未知类型"}）。`
+      : `HTTP ${error.status}: unreadable response format (${error.content_type ?? "unknown type"}).`;
   }
   if (isReadDeadlineMissed(error) || error instanceof TypeError) {
     return zh
@@ -353,20 +353,20 @@ function stayOutcomeLine(outcome: string | null, zh: boolean): string {
   switch (outcome) {
     case "NO_OFFERS_FROM_PROVIDER":
       return zh
-        ? "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。"
-        : "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.";
+        ? "住宿服务本次未返回可比较选项。稍后重试。"
+        : "No comparable stays returned. Try again later.";
     case "ALL_CANDIDATES_REJECTED":
       return zh
         ? "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。"
         : "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).";
     case "NOT_APPLICABLE_ZERO_NIGHTS":
       return zh
-        ? "这趟行程不过夜，所以没有住宿可搜。"
-        : "This trip has no overnight stay, so there is nothing to search for.";
+        ? "这趟行程无需过夜。"
+        : "No overnight stay is planned.";
     default:
       return zh
-        ? "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。"
-        : "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.";
+        ? "暂无可比较的住宿。稍后再试或更换城市。"
+        : "No comparable stays. Try again later or choose another city.";
   }
 }
 
@@ -996,11 +996,11 @@ export function V8Experience() {
         setSealedDemoUnavailable(
           !scene.demo_mode
             ? locale === "zh-CN"
-              ? "这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。"
-              : "This deployment is not a demo stage (demo_mode=false), so there is no sealed demo to enter."
+              ? "封存演示当前关闭，你可以新建自己的行程。"
+              : "Sealed demo is off here. Create your own trip."
             : locale === "zh-CN"
-              ? "服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。"
-              : "The server currently names no usable sealed demo journey, so this entry is closed. Try again later, or create your own trip.",
+              ? "暂无封存演示行程。你可以新建自己的行程。"
+              : "No sealed demo journey is available. Create your own trip.",
         );
         return;
       }
@@ -1250,7 +1250,7 @@ export function V8Experience() {
               : "已停止等待，行程还没有创建。"
             : tripWritten
               ? "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result."
-              : "Stopped waiting — no journey was created.",
+              : "Stopped waiting. No journey exists yet.",
         );
       } else {
         setMessage(
@@ -1656,8 +1656,8 @@ export function V8Experience() {
           setBootstrapJourney(null);
           setMessage(
             locale.startsWith("zh")
-              ? "已取消首地点发现；尚未向公共提供方发起请求。"
-              : "First-place discovery was cancelled; no public-provider request was made.",
+              ? "已取消首地点搜索。"
+              : "First-place search cancelled.",
           );
           if (data) navigate("hub");
           else setSetupOpen(true);
@@ -1677,8 +1677,8 @@ export function V8Experience() {
             navigate("hub");
             setMessage(
               locale.startsWith("zh")
-                ? "原生行程已选择并启动；未知门票价格仍未计入，也未发生预订或扣款。"
-                : "The native Journey is selected and active; the unknown admission price remains excluded and no booking or charge was made.",
+                ? "行程已启动 · 门票价格未知 · 未预订或扣款。"
+                : "Journey started · admission price unknown · no booking or charge.",
             );
           } catch (error) {
             setMessage(
@@ -1693,8 +1693,8 @@ export function V8Experience() {
           setBootstrapPlan(null);
           setMessage(
             locale.startsWith("zh")
-              ? "已取消原生行程启动；已选地点仍保留，未生成计划或产生预订。"
-              : "Native Journey start was cancelled; the selected place remains and no plan or booking was created.",
+              ? "已取消行程创建，所选地点已保留。"
+              : "Journey creation cancelled. Selected place kept.",
           );
           navigate("hub");
         }}
@@ -2475,9 +2475,9 @@ function budgetMoney(
    English arm is pinned too because it was measured on screen: `resolveLocale` falls through to
    `navigator.language`, so a non-Chinese browser renders English by default. */
 const TIGHT_CAVEAT_ZH =
-  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
+  "按当前预算估算，住宿、交通和餐饮可能超出计划。调整预算，或确认继续。";
 const TIGHT_CAVEAT_EN =
-  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.";
+  "At this budget, lodging, transport and food may exceed the plan. Adjust the budget or confirm to continue.";
 
 function budgetAdvisory(
   reference: V8Data["trip"]["budget_reference"],
@@ -2517,11 +2517,11 @@ function budgetAdvisory(
         : TIGHT_CAVEAT_EN
       : reference.floor_comparable
         ? zh
-          ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
-          : "This is your own budget averaged out, not a final cost. Real prices come from providers."
+          ? "预算均摊参考值；最终费用以供应商报价为准。"
+          : "Average budget reference; final costs come from provider quotes."
         : zh
-          ? `这是按你的预算平均下来的参考值（以 ${currency} 计），不是最终花费；真实价格以供应商为准。`
-          : `This is your own budget averaged out, in ${currency}, not a final cost. Real prices come from providers.`,
+          ? `预算均摊参考值（${currency}）；最终费用以供应商报价为准。`
+          : `Average budget reference (${currency}); final costs come from provider quotes.`,
   };
 }
 
@@ -2802,8 +2802,8 @@ function Hub({
               </strong>
               <span>
                 {zh
-                  ? "服务器不会中途汇报进度，这里只有真实等待时间。第一次搜索一个城市可能要一两分钟。"
-                  : "The server reports nothing until it finishes, so this is measured waiting time. A city's first search can take a minute or two."}
+                  ? "首次搜索新城市约需一两分钟。"
+                  : "A first search in a new city may take a minute or two."}
               </span>
             </div>
           )}
@@ -2948,8 +2948,8 @@ function Hub({
                          borrowing one. */
                       <span data-testid="continuation-resume-no-server-reason">
                         {zh
-                          ? "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。"
-                          : "The server sent no reason text -- this sentence is ours, not the server's."}
+                          ? "服务器未提供原因文字。"
+                          : "The server provided no reason text."}
                       </span>
                     )}
                   </>
@@ -3265,8 +3265,8 @@ function Hub({
                 const cursorNote =
                   cursorStatus && cursorStatus !== "VALID"
                     ? zh
-                      ? "。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读"
-                      : ". The server gave no execution cursor for this minute, so this screen reads time by the journey's window"
+                       ? "。执行游标暂不可用，时间按行程窗口显示"
+                       : ". Execution cursor unavailable; time follows the journey window"
                     : "";
                 const stationNote = useProjection
                   ? zh
@@ -3274,11 +3274,11 @@ function Hub({
                     : " · now/next come from the server's execution projection"
                   : cursorStatus === "STALE"
                     ? zh
-                      ? " · 服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标"
-                      : " · the server does not trust its own cursor, so this screen reads the stations by time window, not by cursor"
+                      ? " · 执行游标已过期，站点按行程时间窗显示"
+                      : " · execution cursor expired; stations follow the journey time window"
                     : zh
-                      ? " · 服务器的执行投影还没到，这一屏没有按游标定位"
-                      : " · the server's execution projection has not arrived, so no station is claimed from the cursor";
+                      ? " · 执行位置待更新，站点按行程时间窗显示"
+                      : " · execution position pending; stations follow the journey time window";
                 return zh
                   ? `“现在”取自服务器场景（${basis}${cursorNote}）：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`
                   : `"now" comes from the server's scenario (${basis}${cursorNote}): ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`;
@@ -3345,7 +3345,7 @@ function Hub({
       {!hasChosenPlan && selected && (
         <p className="v8-muted" data-testid="hub-glance-caveat">
           {zh
-            ? `以下只是其中一个候选方案的预览，你还没有采用它。`
+            ? `候选方案 · 尚未采用`
             : `Preview of one candidate option — you have not chosen a plan yet.`}
         </p>
       )}
@@ -3355,7 +3355,7 @@ function Hub({
           <p>
             {zh
               ? "下面是已采用的真实行程；住宿方案仍未选择。"
-              : "This is the selected real itinerary; no stay option has been chosen."}
+              : "Choose a stay option for this itinerary."}
           </p>
           <p data-testid="hub-active-plan-mode">
             {activePlanHasKnownMode
@@ -3473,7 +3473,7 @@ function Studio({
           {!chosen && selected && (
             <p className="v8-muted" data-testid="studio-preview-caveat">
               {locale.startsWith("zh")
-                ? "以下只是候选方案的预览，你还没有采用它。"
+                ? "候选方案 · 尚未采用"
                 : "This is a preview of a candidate option - you have not chosen a plan yet."}
             </p>
           )}
@@ -4741,7 +4741,7 @@ function Me({
           <p>
             {bookings.length
               ? zh
-                ? "受保护的预订，不会被自动改动。"
+                ? "受保护预订；变更需先确认。"
                 : "Protected bookings; they are never changed automatically."
               : zh
                 ? "在「行程 · 预订」里导入你的票或确认单。"

@@ -161,8 +161,8 @@ export function PublicCityAreaPicker({
       ) : null}
       <p className="public-city-area-hint" data-testid="bootstrap-public-map-hint">
         {mobileFirst
-          ? "可先拖动、缩放地图，再轻触一次放置公开搜索点。它不是你的手机位置，也不是路线起点。"
-          : "Tap or click once to place one public search pin. Pan and zoom first if needed; this pin is not your location or route origin."}
+          ? "轻触地图设置公开搜索点。手机定位需单独授权。"
+          : "Tap the map to set a public search point. Device location needs separate consent."}
       </p>
     </div>
   );

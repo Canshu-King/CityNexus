@@ -37,7 +37,7 @@ export function MemberMeetupHandshakePanel({
       setConfirmingReport(false);
       await onUpdated();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : (zh ? "暂时无法提交会合报告。" : "The meetup report could not be submitted."));
+      setMessage(error instanceof Error ? error.message : (zh ? "提交失败，请重试。" : "Submission failed. Try again."));
     } finally {
       setBusyId(null);
     }
@@ -50,7 +50,7 @@ export function MemberMeetupHandshakePanel({
       await cityNexusApi.decideMemberMeetupHandshake(journeyId, handshakeId, decision);
       await onUpdated();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : (zh ? "暂时无法提交确认。" : "The confirmation could not be submitted."));
+      setMessage(error instanceof Error ? error.message : (zh ? "提交失败，请重试。" : "Submission failed. Try again."));
     } finally {
       setBusyId(null);
     }
@@ -86,13 +86,13 @@ export function MemberMeetupHandshakePanel({
             <small>{zh ? `请求有效至 ${new Date(owner.expires_at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}。` : `Request expires at ${new Date(owner.expires_at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}.`}</small>
           )}
           {owner.blocked_reason === "R62_REJOIN_REQUIRED" && (
-            <small>{zh ? "请在当前群体返场流程中确认到达；此请求不会替代该流程。" : "Confirm arrival in the active group recovery flow; this request cannot replace it."}</small>
+            <small>{zh ? "请在群体返场流程中确认到达。" : "Confirm arrival in the group rejoin flow."}</small>
           )}
           {owner.blocked_reason === "NO_PEER_AVAILABLE" && (
             <small>{zh ? "目前没有其他有效同行者可回应；你仍可使用原有方式结束自己的分离行动。" : "No other current member is available to respond; you can still end your own split using the existing Journey control."}</small>
           )}
           {owner.state === "INVALIDATED" && (
-            <small>{zh ? "当前支线或会合点已变化；请先核对现在的行程与支线，之后再提交新的本人报告。" : "The side trip or meetup changed. Review the current Journey and side trip before making a new report."}</small>
+            <small>{zh ? "行程已更新；请刷新后提交新报告。" : "Journey updated. Refresh before sending a new report."}</small>
           )}
           {canShowReport && (
             <div className="journey-side-quest-actions">
@@ -117,8 +117,8 @@ export function MemberMeetupHandshakePanel({
                   </strong>
                   <p>
                     {zh
-                      ? "我报告自己已到达这个共同会合点。这是我的本人报告，不是 GPS、设备定位或实际在场证明；共享行程不会改变。"
-                      : "I’m reporting that I reached the exact shared rendezvous. This is my report, not GPS, device-location, or physical-presence proof; the shared Journey will not change."}
+                      ? "我已报告到达这个共同会合点。"
+                      : "I’m reporting that I reached the shared meetup."}
                   </p>
                   <div className="journey-side-quest-actions">
                     <button
@@ -144,7 +144,7 @@ export function MemberMeetupHandshakePanel({
           )}
           {owner.state === "PEER_ACKNOWLEDGED" && (
             <small data-testid="member-meetup-no-physical-proof">
-              {zh ? "这是对你本人报告的同行者回应，不是设备定位或实际在场证明；共享行程未改变。" : "This is a peer response to your report, not device-location or physical-presence proof. The shared Journey is unchanged."}
+              {zh ? "同行者已回应你的到达报告。" : "Your traveller responded to your arrival report."}
             </small>
           )}
         </div>
@@ -157,7 +157,7 @@ export function MemberMeetupHandshakePanel({
               : `${request.owner_display_name} reports reaching the shared meetup`}
           </strong>
           <small>{zh ? `会合点：${request.rendezvous.place_name}` : `Meetup: ${request.rendezvous.place_name}`}</small>
-          <small>{zh ? "请只根据你自己的情况回应；这不会验证设备位置。" : "Respond based on what you know; this does not verify device location."}</small>
+          <small>{zh ? "请按你的实际情况回应。" : "Respond based on your own situation."}</small>
           <div className="journey-side-quest-actions">
             <button
               type="button"
@@ -186,13 +186,13 @@ export function MemberMeetupHandshakePanel({
                 ? `你和${result.owner_display_name}都报告在「${result.rendezvous.place_name}」会合；其分开行动已结束，共同行程可以继续。`
                 : `You and ${result.owner_display_name} reported meeting at ${result.rendezvous.place_name}. Their planned side trip ended; the shared Journey can continue.`)
               : (zh
-                ? `${result.owner_display_name}和${result.responder_display_name}双方报告在「${result.rendezvous.place_name}」会合；只是这两位成员的报告，其他同行者并未确认。`
-                : `${result.owner_display_name} and ${result.responder_display_name} reported meeting at ${result.rendezvous.place_name}. Only those two travellers reported this meeting; other group members have not confirmed.`)}
+                ? `${result.owner_display_name}和${result.responder_display_name}已报告在「${result.rendezvous.place_name}」会合。`
+                : `${result.owner_display_name} and ${result.responder_display_name} reported meeting at ${result.rendezvous.place_name}.`)}
           </strong>
           <small>
             {zh
-              ? `回应者：${result.responder_display_name}。这是双方本人报告，不是设备定位或全员会合证明；共享计划未改变。`
-              : `Acknowledged by ${result.responder_display_name}. These are member reports, not device-location or all-group proof; the shared plan is unchanged.`}
+              ? `回应者：${result.responder_display_name}。双方到达报告已记录。`
+              : `Meetup report received from ${result.responder_display_name}.`}
           </small>
         </article>
       ))}

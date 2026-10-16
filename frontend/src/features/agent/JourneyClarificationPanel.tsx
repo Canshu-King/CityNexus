@@ -44,14 +44,14 @@ function candidateTradeoff(option: CollectiveCandidateOption, zh: boolean): stri
 function completionLabel(run: AgentRun, zh: boolean): string {
   const kind = run.completion_contract?.kind;
   if (kind === "MUTATION_EXECUTED") return zh ? "服务器已确认执行变化。" : "The server confirmed an execution change.";
-  if (kind === "NO_ACTION") return zh ? "服务器确认本次不改动行程。" : "The server confirmed no change for this decision.";
+  if (kind === "NO_ACTION") return zh ? "行程未更改。" : "Journey unchanged.";
   if (kind === "APPROVAL_PENDING" || run.status === "WAITING_FOR_APPROVAL") {
     return zh ? "助手已停在批准边界，等待有权限的人确认。" : "The assistant is paused at the approval boundary.";
   }
   if (run.status === "FAILED_EXTERNAL" || run.status === "UNAVAILABLE") {
-    return zh ? "答案已保存，但模型未完成后续任务。" : "Your answer was saved, but the model did not finish the follow-up.";
+    return zh ? "答案已保存 · 后续任务未完成。" : "Answer saved · follow-up incomplete.";
   }
-  return zh ? "答案已保存，服务器尚未确认这次决策已解决。" : "Your answer was saved; the server has not confirmed this decision is resolved.";
+  return zh ? "答案已保存；决策仍待处理。" : "Answer saved; decision pending.";
 }
 
 function apiStatus(cause: unknown): number | null {
@@ -92,8 +92,8 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
         const status = apiStatus(cause);
         setError(
           status === 401
-            ? (zh ? "这个设备没有有效的同行者身份，暂时只能等重新建立成员会话。" : "This device has no valid traveler identity for the shared decision.")
-            : (zh ? "暂时读不到待回答任务，可重试读取。" : "Pending decisions could not be loaded. Retry the read."),
+            ? (zh ? "同行者会话已失效，请重新登录。" : "Traveler session expired. Sign in again.")
+            : (zh ? "待回答任务加载失败，请重试。" : "Could not load pending decisions. Try again."),
         );
       },
     );
@@ -138,9 +138,9 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
       const detail = body?.detail ?? body?.error?.message ?? null;
       if (detail === "CLARIFICATION_STALE_RECOMPUTE_REQUIRED") {
         setStaleIds((current) => [...current, item.mission.id]);
-        setError(zh ? "行程或证据已变化，这道旧问题不能再作答。请按当前行程重新发起决策。" : "The journey or evidence changed. This question is stale; start a decision against the current journey.");
+        setError(zh ? "行程信息已更新，请按当前行程重新回答。" : "Journey details changed. Answer again for the current journey.");
       } else {
-        setError(zh ? "暂时未得到继续执行的确认。请刷新任务状态，已保存的答案不会重复提交。" : "Continuation was not confirmed. Refresh the task status; saved answers are not resubmitted.");
+        setError(zh ? "任务继续状态待确认，请刷新任务。" : "Task status is unconfirmed. Refresh the task.");
       }
       await refresh().catch(() => undefined);
     } finally {
@@ -166,7 +166,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
       if (answer.child_mission) {
         const mediating = answer.status === "MEDIATION_REQUIRED";
         setNotice(mediating
-          ? (zh ? "成员的选择不同。助手不会替任何人拍板，正在寻找双方都能接受的折中。" : "The travelers chose differently. The assistant will not pick a winner; it is looking for a grounded compromise.")
+          ? (zh ? "成员选择不同，助手正在寻找双方都能接受的方案。" : "The travelers chose differently. The assistant is seeking a solution both can accept.")
           : (zh ? "所有相关成员已经回答。助手正在继续处理共同选择。" : "All required travelers answered. The assistant is continuing the shared choice."));
         await resume(answer.child_mission.id);
       } else {
@@ -179,10 +179,10 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
         status === 401
           ? (zh ? "成员身份已失效，请重新建立同行者会话后再回答。" : "Your traveler identity expired. Re-establish the member session before answering.")
           : status === 403
-            ? (zh ? "服务器确认这个身份不能替该成员作答。" : "The server confirmed this identity cannot answer for that member.")
+            ? (zh ? "请切换到该成员账号后作答。" : "Switch to that member's account to answer.")
             : status === 409
               ? (zh ? "这个共同决策已经变化或失效，请刷新后按当前状态作答。" : "This shared decision changed or became stale. Refresh before answering.")
-              : (zh ? "共同选择没有保存成功，请读取最新状态后重试。" : "The shared choice was not saved. Read the latest state and try again."),
+              : (zh ? "共同选择结果待确认，请刷新状态。" : "Shared choice is unconfirmed. Refresh the status."),
       );
       await refresh().catch(() => undefined);
     } finally {
@@ -213,7 +213,7 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
           ? (zh ? "批准身份已失效，请重新建立成员会话。" : "Your approval identity expired. Re-establish the member session.")
           : status === 403
             ? (zh ? "这个成员没有权限批准这次行程变更。" : "This member is not allowed to approve this Journey change.")
-            : (zh ? "批准没有得到服务器确认；请刷新，系统不会重复执行已经完成的变化。" : "Approval was not confirmed. Refresh; an already completed mutation will not be executed twice."),
+            : (zh ? "批准状态待确认，请刷新任务。" : "Approval status is unconfirmed. Refresh the task."),
       );
       await refresh().catch(() => undefined);
     } finally {
@@ -228,7 +228,6 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
         <div className="cn-collective-viewer" data-member-id={viewer.member_id}>
           <span>{zh ? "当前成员" : "Current member"}</span>
           <b>{roleLabel(viewer.role, zh)}</b>
-          <small>{zh ? "身份由服务器签名会话解析，不由页面选择。" : "Identity is resolved from the signed server session, not selected by this page."}</small>
         </div>
       )}
 
@@ -293,16 +292,16 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
               {!item.collective!.viewer_member_id && (
                 <small className="cn-collective-session-note">
                   {zh
-                    ? "当前浏览器没有服务器确认的成员身份，因此这里只显示共同决策状态，不提供代替成员作答的按钮。"
-                    : "This browser has no server-confirmed member identity, so the group state is read-only here."}
+                    ? "当前账号为只读；登录同行成员账号后可提交答复。"
+                    : "Read-only account · sign in as a Journey member to answer."}
                 </small>
               )}
             </div> : approvalWaiting ? <div data-testid="collective-approval">
               <div className="cn-approval-wait">
                 <h4>{zh ? "共同选择已形成，助手正在等批准" : "The group choice is ready; the assistant is waiting for approval"}</h4>
                 <p>{zh
-                  ? "原 Agent 任务没有结束。批准后服务器会从已保存的 pending action 自动续跑，不会让模型重新猜一次。"
-                  : "The original Agent task is still suspended. Approval resumes its saved pending action without asking the model to decide again."}</p>
+                  ? "批准后将继续已保存的助手任务。"
+                  : "Approval resumes the saved assistant task."}</p>
                 <small>{zh
                   ? `批准状态：${item.continuation!.approval_status ?? "UNKNOWN"} · 任务状态：${item.continuation!.pending_status}`
                   : `Approval: ${item.continuation!.approval_status ?? "UNKNOWN"} · continuation: ${item.continuation!.pending_status}`}</small>
@@ -311,22 +310,22 @@ export function JourneyClarificationPanel({ journeyId, refreshKey, zh, onJourney
                     {zh ? "批准并让助手继续" : "Approve and let the assistant continue"}
                   </button>
                 ) : (
-                  <small>{zh ? "当前成员不能批准这次变更；系统会继续等待有权限的成员。" : "This member cannot approve the change. The assistant will keep waiting for an authorized traveler."}</small>
+                  <small>{zh ? "请由有权限的成员确认这次变更。" : "An authorized member must approve this change."}</small>
                 )}
               </div>
               {item.run && <small>{completionLabel(item.run, zh)}</small>}
             </div> : mediationReady ? <div data-testid="collective-mediation">
               <h4>{zh ? "你们意见不同，助手正在做调解" : "You disagree; the assistant is mediating"}</h4>
               <p>{zh
-                ? `第 ${mediationRound} 轮调解不会多数表决，也不会替任何成员改偏好。助手会先找有事实依据的折中；如果仍有价值冲突，会把新的选择重新交给相关成员。`
-                : `Mediation round ${mediationRound} does not use majority voting or rewrite anyone's preferences. The assistant will seek a grounded compromise first and return any remaining value trade-off to the relevant travelers.`}</p>
+                 ? `第 ${mediationRound} 轮：助手先寻找有事实依据的折中，未解决的取舍交由相关成员选择。`
+                 : `Round ${mediationRound}: the assistant seeks a fact-based compromise, then returns open trade-offs to the relevant travelers.`}</p>
               <button type="button" className="v8-primary" disabled={busy} onClick={() => void act(item)}>
                 {zh ? "继续调解" : "Continue mediation"}
               </button>
             </div> : waiting ? <>
               <h4>{zh ? "这次旅行，你更看重哪一个？" : "What matters more for this trip?"}</h4>
               <p>{question.question}</p>
-              <small>{zh ? "只用于本次行程；答案会交给助手继续验证和执行，不会扩大权限。" : "This journey only. The assistant continues through normal verification and authority boundaries."}</small>
+              <small>{zh ? "仅用于本次行程。" : "For this journey only."}</small>
               <div className="cn-clarification-options">
                 {question.option_keys?.map((key) => <button key={key} type="button" className="v8-secondary"
                   disabled={busy || staleIds.includes(mission.id)} onClick={() => void act(item, key)}>

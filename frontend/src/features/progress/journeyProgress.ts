@@ -80,8 +80,8 @@ export function progressContractCopy(p: JourneyProgress, zh: boolean): string {
   const parts: string[] = [];
   if (p.day_total === null) {
     parts.push(zh
-      ? "服务端没给出整天数（这一趟的起止排不出序），天数留空。"
-      : "The server gives no whole-day count (this journey's window cannot be ordered), so the day total stays blank.");
+      ? "行程天数暂不可用。"
+      : "Journey day count unavailable.");
   } else if (p.day_of === null) {
     parts.push(zh ? `共 ${p.day_total} 天。` : `${p.day_total} days.`);
   } else {

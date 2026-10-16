@@ -44,11 +44,9 @@ export async function saveOfflineJourney(snapshot: OfflineJourney): Promise<void
 }
 
 /**
- * ORD-0178 ③: "已保存" may only be claimed when the row was written **and read back**.  A `put()`
- * that resolves is not evidence the copy is on the device -- a blocked or evicted store resolves
- * differently, and the sentence was previously printed from in-memory state alone.  This returns
- * whether the copy is genuinely there, so the caller can gate the sentence and the read-only action
- * on a measurement rather than on a hope.
+ * ORD-0178 ③: show "已保存" after writing and reading the row back. This returns whether the
+ * device-local copy is present, so the caller can show the saved state and read-only action from
+ * the stored row.
  */
 export async function saveOfflineJourneyVerified(snapshot: OfflineJourney): Promise<boolean> {
   try {

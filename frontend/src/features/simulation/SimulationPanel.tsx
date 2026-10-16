@@ -29,10 +29,8 @@ import "./SimulationPanel.css";
 /**
  * ORD-0059 (b) -- the visible Simulation entry.
  *
- * What this screen is allowed to know comes from two server reads and nothing else: the stage
- * (`GET /demo/scene`) and the journey's twin.  It owns no scenario state, no clock, and no
- * lifecycle of its own -- every row below is one existing product endpoint, and the line the
- * traveller gets afterwards is what the server answered, not a promise this screen made.
+ * This screen reads the stage (`GET /demo/scene`) and the journey's twin. Each row and status line
+ * comes from those server responses.
  *
  * So the disabled states are the design, not decoration.  A stage where "推进一个活动" is greyed
  * out because the seeded journey has no cursor yet must say why in the traveller's language and
@@ -378,12 +376,12 @@ export function SimulationPanel({
     openActivities.length > 0
       ? bookableRead.data.withOrderableService === 0
         ? {
-            zh: `服务器说这座城的目录里，这趟 ${openActivities.length} 个还没结束的活动没有一个挂着可下单的服务类型，所以现在建不了硬承诺。要改这一趟，请用下面「请求重规划」。`,
-            en: `The server says none of this journey's ${openActivities.length} open activities carries an orderable service type in this city's catalogue, so there is nothing to build a hard commitment on. To change the journey, use "Request a replan" below.`,
+            zh: `当前 ${openActivities.length} 个未完成活动都没有可预订服务。要调整行程，请提交重规划请求。`,
+            en: `None of the ${openActivities.length} open activities supports booking. Request a replan to change the journey.`,
           }
         : {
-            zh: `服务器说这趟有 ${bookableRead.data.withOrderableService} 个活动带着可下单的服务类型，但逐个按它自己的时间问时段时，一个都没给${bookableRead.data.unreadable ? `（另有 ${bookableRead.data.unreadable} 次没读到，那不是"没有时段"）` : ""}，所以现在建不了硬承诺。`,
-            en: `The server says ${bookableRead.data.withOrderableService} of this journey's activities carry an orderable service type, but asked for each one's own window it returned no slot at all${bookableRead.data.unreadable ? ` (${bookableRead.data.unreadable} reads did not answer, which is not the same as "no slot")` : ""}, so there is nothing to book right now.`,
+            zh: `有 ${bookableRead.data.withOrderableService} 个活动关联可预订服务，但未返回可用时段${bookableRead.data.unreadable ? `；${bookableRead.data.unreadable} 项查询未完成` : ""}。`,
+            en: `${bookableRead.data.withOrderableService} activities have bookable services, but no available time slots were returned${bookableRead.data.unreadable ? `; ${bookableRead.data.unreadable} availability checks did not finish` : ""}.`,
           }
       : null;
 
@@ -431,8 +429,8 @@ export function SimulationPanel({
         }
         if (!advance) {
           return {
-            zh: `服务器回的是 ${result.status}，但没有报上推进结果，所以这一步到底到没到可执行状态，我们不说。`,
-            en: `The server answered ${result.status} with no advance report, so whether the stage is executable is not claimed here.`,
+            zh: `服务器返回 ${result.status}；推进结果待确认。`,
+            en: `Server returned ${result.status}; advance result pending.`,
           };
         }
         if (refused) {
@@ -467,11 +465,11 @@ export function SimulationPanel({
         return {
           refused,
           zh: refused
-            ? `服务器拒绝了这一步（具名 ${report.code}），行程状态仍是 ${report.journeyStatus ?? "未知"}。`
-            : `服务器已把计划放上舞台：状态 ${report.journeyStatus ?? "未知"} · 计划 ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}。`,
+            ? `该步骤被服务器拒绝（${report.code}） · 当前状态 ${report.journeyStatus ?? "未知"}。`
+            : `计划已放上舞台 · 状态 ${report.journeyStatus ?? "未知"} · 计划 ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}。`,
           en: refused
-            ? `The server refused this step (code ${report.code}); the journey is still ${report.journeyStatus ?? "unknown"}.`
-            : `The server put a plan on the stage: status ${report.journeyStatus ?? "unknown"} · plan ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}.`,
+            ? `Step refused by server (${report.code}) · current state ${report.journeyStatus ?? "unknown"}.`
+            : `Plan staged · status ${report.journeyStatus ?? "unknown"} · plan ${shortId(report.planVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}.`,
         };
       },
     },
@@ -538,11 +536,11 @@ export function SimulationPanel({
         return {
           refused,
           zh: refused
-            ? `服务器拒绝了这一步（具名 ${report.code}），行程状态仍是 ${report.journeyStatus ?? "未知"}。`
-            : `服务器说这趟开始执行了：状态 ${report.journeyStatus ?? "未知"} · 用时 ${report.advance?.totalMs ?? 0}ms。游标在哪一站，由它下面那行说。`,
+            ? `该步骤被服务器拒绝（${report.code}） · 当前状态 ${report.journeyStatus ?? "未知"}。`
+            : `行程已开始 · 状态 ${report.journeyStatus ?? "未知"} · 用时 ${report.advance?.totalMs ?? 0}ms。`,
           en: refused
-            ? `The server refused this step (code ${report.code}); the journey is still ${report.journeyStatus ?? "unknown"}.`
-            : `The server put the journey into execution: status ${report.journeyStatus ?? "unknown"} · ${report.advance?.totalMs ?? 0}ms. Where the cursor sits is its line to say, not mine.`,
+            ? `Step refused by server (${report.code}) · current state ${report.journeyStatus ?? "unknown"}.`
+            : `Journey started · status ${report.journeyStatus ?? "unknown"} · ${report.advance?.totalMs ?? 0}ms.`,
         };
       },
     },
@@ -647,8 +645,8 @@ export function SimulationPanel({
         (proposalId
           ? null
           : {
-              zh: "服务器还没有给出方案（它回的列表是空的），所以这里没有可接受的东西。",
-              en: "The server has not offered a proposal (its list is empty), so there is nothing to accept.",
+              zh: "当前没有可接受的方案。",
+              en: "No proposal is available to accept.",
             }),
       run: async () => {
         const accepted = await cityNexusApi.acceptReplan(
@@ -673,8 +671,8 @@ export function SimulationPanel({
         (proposalId
           ? null
           : {
-              zh: "服务器还没有给出方案（它回的列表是空的），所以这里没有可拒绝的东西。",
-              en: "The server has not offered a proposal (its list is empty), so there is nothing to reject.",
+              zh: "当前没有待处理的方案。",
+              en: "No proposal is waiting for a decision.",
             }),
       run: async () => {
         const rejected = await cityNexusApi.rejectReplan(
@@ -682,8 +680,8 @@ export function SimulationPanel({
           keyFor(`reject:${proposalId}`),
         );
         return {
-          zh: `服务器记下了拒绝 ${shortId(rejected.id)}，原计划不变。`,
-          en: `The server recorded the rejection of ${shortId(rejected.id)}; the plan stands.`,
+          zh: `已拒绝方案 ${shortId(rejected.id)}。`,
+          en: `Proposal ${shortId(rejected.id)} declined.`,
         };
       },
     },
@@ -698,8 +696,8 @@ export function SimulationPanel({
           "OUTAGE",
         );
         return {
-          zh: `服务器把信号夹具设为 OUTAGE${fixture?.state ? `（现值 ${fixture.state}）` : ""}。这只影响这台演示舞台，不是真实世界变了。`,
-          en: `The server set the signal fixture to OUTAGE${fixture?.state ? ` (now ${fixture.state})` : ""}. This moves the stage only, not the real world.`,
+          zh: `演示信号已设为 OUTAGE${fixture?.state ? `（现值 ${fixture.state}）` : ""}。`,
+          en: `Simulation signal: OUTAGE${fixture?.state ? ` (${fixture.state})` : ""}.`,
         };
       },
     },
@@ -800,13 +798,13 @@ export function SimulationPanel({
         {scene.phase === "ready" &&
           scene.scene?.demoMode &&
           (zh
-            ? `这是教学模拟场景，不是真实出行提醒 · 屏幕上的“现在”由服务器给定：${sceneInstant(scene.scene.effectiveNow)}`
-            : `This is a teaching simulation, not live travel advice · the server supplies "now": ${sceneInstant(scene.scene.effectiveNow)}`)}
+            ? `教学模拟 · 场景时间 ${sceneInstant(scene.scene.effectiveNow)}`
+            : `Teaching simulation · scenario time ${sceneInstant(scene.scene.effectiveNow)}`)}
         {scene.phase === "ready" &&
           !scene.scene?.demoMode &&
           (zh
-            ? "这台部署没有开模拟舞台，下面的动作不会被执行"
-            : "This deployment has no simulation stage switched on, so the actions below will not run")}
+            ? "此部署未开放模拟舞台"
+            : "Simulation stage unavailable in this deployment")}
       </p>
       {/* The flag itself stays available -- the declaration may be in human words, but a lane that
           needs to know which switch the server answered must not have to guess. */}
@@ -940,8 +938,8 @@ export function SimulationPanel({
       {outcome && !outcome.ok && (
         <p className="cn-sim-outcome-note" data-testid="sim-outcome-note">
           {zh
-            ? "界面没有替服务器圆场：这一步没有发生，行程保持原样。"
-            : "Nothing is smoothed over: this step did not happen and the trip is unchanged."}
+            ? "提交失败，请检查条件后重试。"
+            : "Submission failed. Review the conditions and try again."}
         </p>
       )}
     </section>
@@ -1078,11 +1076,11 @@ export function SimulationEntry({
           : `The stage state could not be read: ${scene.reason ?? "unknown"}`
         : scene.scene?.demoMode
           ? zh
-            ? `教学模拟舞台 · 屏幕上的“现在”由服务器给定：${sceneInstant(scene.scene.effectiveNow)}`
-            : `teaching simulation stage · the server supplies "now": ${sceneInstant(scene.scene.effectiveNow)}`
+            ? `教学模拟 · 场景时间 ${sceneInstant(scene.scene.effectiveNow)}`
+            : `Teaching simulation · scenario time ${sceneInstant(scene.scene.effectiveNow)}`
           : zh
-            ? "这台部署没有开模拟舞台"
-            : "this deployment has no simulation stage switched on";
+            ? "此部署未开放模拟舞台"
+            : "Simulation stage unavailable in this deployment";
   const dotState =
     scene.phase === "loading"
       ? "CHECKING"

@@ -44,7 +44,7 @@ export function PretripChecklistPanel({ sources, onNavigate }: Props) {
       <div className="cn-pretrip-head">
         <div>
           <span className="v8-kicker">{zh ? "行前清单" : "Before you go"}</span>
-          <h2>{zh ? "服务端报出的两类待办" : "The two things the server reports as outstanding"}</h2>
+          <h2>{zh ? "待办事项" : "Items to review"}</h2>
         </div>
         {/* ORD-0401 ①: the note explains a list that is not on screen. With nothing outstanding it is
             dropped, and the empty state becomes one row -- the heading above, one sentence, the
@@ -52,8 +52,8 @@ export function PretripChecklistPanel({ sources, onNavigate }: Props) {
         {items.length > 0 && (
           <p className="cn-pretrip-note">
             {zh
-              ? "这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及等待你决定的恢复方案。完成状态由服务端事实自己消失，不需要你打勾；没跑过的检查不会被打勾，也不会出现在这里。"
-              : "Only the two checks whose fields the contract declares live here: feasibility failures on this plan generation, and a recovery awaiting your decision. Items disappear when the server's fact changes -- nothing is ticked by hand, and a check that was not run is never shown as passed and never shown at all."}
+              ? "显示行程可行性问题和待你批准的恢复方案；状态随服务端更新。"
+              : "Shows journey feasibility issues and recovery plans awaiting your approval. Status follows the server."}
           </p>
         )}
       </div>

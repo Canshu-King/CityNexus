@@ -135,8 +135,8 @@ export function humanReplanReason(raw: string, zh: boolean): string {
   const code = String(raw ?? "");
   if (code.includes("MOBILITY_DATA_UNAVAILABLE")) {
     return zh
-      ? "暂时无法获取这段路线的可靠通行时间，因此没有自动修改你的行程。你可以稍后重试，或手动选择替代地点。"
-      : "We could not get a reliable travel time for this leg, so your trip was not changed automatically. You can retry later or pick a replacement place yourself.";
+      ? "路线数据暂不可用。你可以稍后再试，或手动选择替代地点。"
+      : "Route data is unavailable. Try again later or choose a replacement place.";
   }
   if (code.includes("REPLAN_NO_ALTERNATIVE")) {
     return zh
@@ -287,7 +287,7 @@ export function LiveRecovery({
       setOperator(next);
       const blocked = next.intent_clarification_result?.outcome === "DECISION_INBOX_BRAIN_BLOCKED_AFTER_RESPONSE";
       setMessage(blocked
-        ? (zh ? "已记录你的选择；规划 Agent 暂不可用，原行程保持不变。" : "Your answer is saved. The planning Agent is unavailable; your current trip is unchanged.")
+        ? (zh ? "已记录你的选择；行程助手暂不可用。" : "Answer saved · journey assistant unavailable.")
         : (zh ? "已记住你的选择，CityNexus 正在继续处理。" : "Got it. CityNexus is continuing with your Journey."));
       await loadOperator();
       onAccepted?.();
@@ -753,7 +753,7 @@ export function LiveRecovery({
           await Promise.all([loadOperator(), loadProposals()]);
           setMessage(code === "GROUP_RECOVERY_REPLAN_REQUIRED"
             ? (zh
-              ? "共同选择仍作为历史保留，但这个具体方案已不再安全可执行；CityNexus 需要先重新规划，而不是让大家对同一个失效方案再投一次。"
+              ? "共同选择已存档。该方案已失效，请重新规划后再发起集体决定。"
               : "The group’s earlier choice is preserved, but this concrete plan is no longer safe to execute. CityNexus needs a fresh grounded recovery rather than asking everyone to vote on the same invalid plan again.")
             : (zh
               ? "原来的共同选择已过期或现实已变化；我刷新了当前状态，没有重复应用旧方案。"
@@ -769,8 +769,8 @@ export function LiveRecovery({
         // Keep the key across an ambiguous transport failure so a retry reads
         // the durable result instead of spending the same consent twice.
         setMessage(zh
-          ? "暂时没有收到服务器确认；重试会查询同一提交结果，不会再花一次同意。"
-          : "No server confirmation arrived. Retrying will reuse the same idempotency key.");
+          ? "提交状态待更新，请刷新行程查看。"
+          : "Submission status is pending. Refresh the Journey to check.");
       }
     } finally {
       setBusy(null);
@@ -798,10 +798,10 @@ export function LiveRecovery({
       onAccepted?.();
     } catch (error) {
       if (error instanceof CityNexusApiError && (error.status === 401 || error.status === 403)) {
-        setMessage(zh ? "请用自己的有效 Journey 成员账号确认；不能替其他同行者确认。" : "Sign in as yourself to confirm; you cannot report for another traveller.");
+        setMessage(zh ? "请切换到自己的行程成员账号。" : "Sign in with your own Journey member account.");
       } else if (error instanceof CityNexusApiError && error.status === 409) {
         await loadOperator();
-        setMessage(zh ? "行程或成员状态已经变化，我刷新了当前会合状态；旧确认没有被套用。" : "The Journey or membership changed. Current rejoin state was refreshed; no stale confirmation was applied.");
+        setMessage(zh ? "行程或成员状态已更新，当前会合信息已刷新。" : "The Journey or membership changed. Current rejoin details were refreshed.");
       } else {
         setMessage(zh ? "暂时无法记录会合确认，请刷新后重试。" : "Could not save the rejoin confirmation. Refresh and try again.");
       }
@@ -828,16 +828,16 @@ export function LiveRecovery({
     try {
       const result = await requestFreshGroupRoute();
       if (!result) {
-        setMessage(zh ? "没有取得这一次的位置；共同会合点保持不变。" : "No one-time location was available; the shared rendezvous is unchanged.");
+        setMessage(zh ? "未取得位置，无法计算会合路线。" : "Location unavailable; rendezvous route not calculated.");
         return;
       }
       setMessage(
         result.status === "COMPLETED" && result.route.duration_min != null
-          ? (zh ? `到「${result.target.title}」约 ${result.route.duration_min} 分钟；位置只用于这次路线，行程计划未变。` : `About ${result.route.duration_min} min to ${result.target.title}. This one-time location was used for routing; your plan is unchanged.`)
-          : (zh ? "路线服务暂时没有可靠结果；没有修改行程计划。" : "No reliable route is available yet. Your plan was not changed."),
+          ? (zh ? `到「${result.target.title}」约 ${result.route.duration_min} 分钟 · 本次位置用于路线计算` : `About ${result.route.duration_min} min to ${result.target.title} · one-time location used for routing`)
+          : (zh ? "暂时没有可靠路线。" : "No reliable route available yet."),
       );
     } catch {
-      setMessage(zh ? "暂时无法计算到集合点的路线；计划没有改变。" : "Could not calculate a route to the rendezvous. Your plan is unchanged.");
+      setMessage(zh ? "暂时无法计算会合路线。" : "Could not calculate the rendezvous route.");
     } finally {
       setBusy(null);
     }
@@ -864,11 +864,11 @@ export function LiveRecovery({
       await loadOperator();
       setMessage(
         result.status === "RECOVERY_EXTERNAL_AGENT_BLOCKED"
-          ? (zh ? "Agent 暂时不可用；当前全组行程没有改变。" : "The Agent is unavailable; the shared plan is unchanged.")
-          : (zh ? "已交给 CityNexus 准备一个受治理的全组方案；它不会自行改行程。" : "CityNexus is preparing a governed group option; it will not change the trip by itself."),
+          ? (zh ? "Agent 服务暂不可用。" : "Agent service unavailable.")
+          : (zh ? "CityNexus 正在准备全组方案，需成员批准后应用。" : "CityNexus is preparing a group option for member approval."),
       );
     } catch {
-      setMessage(zh ? "暂时无法启动分组恢复；当前行程没有改变。" : "Could not start group recovery; the shared plan is unchanged.");
+      setMessage(zh ? "暂时无法启动分组恢复。" : "Could not start group recovery.");
     } finally {
       setBusy(null);
     }
@@ -889,16 +889,16 @@ export function LiveRecovery({
       onAccepted?.();
       setMessage(
         result.status === "COMPLETED" && result.reroute_state !== "IN_TRANSIT_CONTEXT_STALE"
-          ? (zh ? "已从刚才的位置重新计算路线；原计划没有改变。" : "A route was recalculated from your current location. Your plan is unchanged.")
+          ? (zh ? "已按当前位置重新计算路线。" : "Route recalculated from your current location.")
           : result.reroute_state === "IN_TRANSIT_CONTEXT_STALE"
-            ? (zh ? "路线计算期间行程状态已变化；这条路线没有作为当前行程建议。" : "The trip changed while the route was being calculated, so this route was not presented as current advice.")
-            : (zh ? "暂时无法从当前位置取得可靠路线，行程计划未变。" : "A reliable route is not available from here yet. Your plan is unchanged."),
+            ? (zh ? "行程状态已更新，请重新计算路线。" : "Journey updated. Recalculate the route.")
+            : (zh ? "当前位置暂无可靠路线。" : "No reliable route from this location yet."),
       );
     } catch {
       setMessage(
         zh
-          ? "暂时无法重新计算路线；你仍可按原计划前往，行程没有改变。"
-          : "We couldn't recalculate the route yet. Your plan is unchanged.",
+          ? "暂时无法重新计算路线。请按原计划前往或返回共同会合点。"
+          : "Could not recalculate the route yet. Follow your current guidance.",
       );
     } finally {
       setBusy(null);
@@ -1050,9 +1050,9 @@ export function LiveRecovery({
                   : (zh ? `正在前往：${transit.activity_title ?? "下一站"}` : `Heading to ${transit.activity_title ?? "your next stop"}`)}
             </strong>
             {transit.state === "ROUTE_SHAPE_UNAVAILABLE" || !transit.route_shape_available ? (
-              <small>{zh ? "目前没有可比对的原路线形状；不会据此判定偏航，但仍可从你现在的位置重新算路。" : "The original route shape is unavailable, so CityNexus won't claim you are off route. You can still recalculate from your current location."}</small>
+              <small>{zh ? "原路线数据暂不可用。你可以从当前位置重新规划。" : "Original route data is unavailable. Replan from your current location."}</small>
             ) : transit.state === "ADVISORY_DEVIATION" ? (
-              <small>{zh ? "这只是浏览器位置提示，不会触发 Guardian 或修改行程。" : "This browser location is advisory only. It does not trigger Guardian or change your trip."}</small>
+              <small>{zh ? "浏览器位置仅供路线参考。" : "Browser location is used for route estimates."}</small>
             ) : transit.location_fresh === false ? (
               <small>{zh ? "位置数据已过时；重新计算时会先获取新位置。" : "The saved location is stale. Recalculation will request a fresh location first."}</small>
             ) : null}
@@ -1071,8 +1071,8 @@ export function LiveRecovery({
             {transitReroute?.status === "COMPLETED" && transitReroute.reroute_state !== "IN_TRANSIT_CONTEXT_STALE" && transitReroute.result?.duration_min != null && (
               <small data-testid="journey-transit-reroute-result">
                 {zh
-                  ? `新路线约 ${transitReroute.result.duration_min} 分钟 · ${transitReroute.provenance_statement ?? transitReroute.result.provenance ?? "来源已记录"} · 原计划未变`
-                  : `New route: about ${transitReroute.result.duration_min} min · ${transitReroute.provenance_statement ?? transitReroute.result.provenance ?? "provenance recorded"} · plan unchanged`}
+                  ? `新路线约 ${transitReroute.result.duration_min} 分钟 · ${transitReroute.provenance_statement ?? transitReroute.result.provenance ?? "来源已记录"}`
+                  : `New route: about ${transitReroute.result.duration_min} min · ${transitReroute.provenance_statement ?? transitReroute.result.provenance ?? "source recorded"}`}
               </small>
             )}
             {transitReroute?.commitment_risk && transitReroute.reroute_state !== "IN_TRANSIT_CONTEXT_STALE" && (
@@ -1080,13 +1080,13 @@ export function LiveRecovery({
                 {transitReroute.commitment_risk.state === "COMMITMENT_AT_RISK"
                   ? (zh ? `按当前位置路线估算，后续已确认安排「${transitReroute.commitment_risk.next_commitment?.title ?? "下一项承诺"}」可能赶不上；这是${transitReroute.commitment_risk.authority === "ADVISORY_ROUTE" ? "参考位置" : "当前定位"}判断，后续路段沿用已保存的计划时间。` : `The route estimate may put “${transitReroute.commitment_risk.next_commitment?.title ?? "the next protected stop"}” at risk. This uses ${transitReroute.commitment_risk.authority === "ADVISORY_ROUTE" ? "advisory location" : "trusted location"} and frozen planned times for later legs.`)
                   : transitReroute.commitment_risk.state === "WITHIN_BUFFER" || transitReroute.commitment_risk.state === "LOW_BUFFER"
-                    ? (zh ? `后续已确认安排「${transitReroute.commitment_risk.next_commitment?.title ?? "下一项承诺"}」预计还剩 ${transitReroute.commitment_risk.slack_after_buffer_min ?? "未知"} 分钟缓冲；后续路段按已保存计划估算，不代表实时路况。` : `Estimated buffer before “${transitReroute.commitment_risk.next_commitment?.title ?? "the next protected stop"}”: ${transitReroute.commitment_risk.slack_after_buffer_min ?? "unknown"} min. Later legs use the saved plan, not live traffic.`)
+                    ? (zh ? `后续已确认安排「${transitReroute.commitment_risk.next_commitment?.title ?? "下一项承诺"}」预计还剩 ${transitReroute.commitment_risk.slack_after_buffer_min ?? "未知"} 分钟缓冲；后续路段按已保存计划估算。` : `Estimated buffer before “${transitReroute.commitment_risk.next_commitment?.title ?? "the next protected stop"}”: ${transitReroute.commitment_risk.slack_after_buffer_min ?? "unknown"} min. Later legs use the saved plan.`)
                     : null}
               </small>
             )}
             {transitReroute && (transitReroute.status !== "COMPLETED" || transitReroute.reroute_state === "IN_TRANSIT_CONTEXT_STALE") && (
               <small data-testid="journey-transit-reroute-result">
-                {zh ? "路线服务暂时没有可靠结果；没有修改原计划。" : "The route provider returned no reliable route. Your original plan was not changed."}
+                {zh ? "路线服务暂不可用。" : "Route service unavailable."}
               </small>
             )}
           </section>
@@ -1130,7 +1130,7 @@ export function LiveRecovery({
                       ? (zh ? "有同行者的位置已经过时或精度不足。" : "Some member locations are stale or too imprecise.")
                       : groupPresence.state === "MEMBER_LOCATION_MISSING"
                         ? (zh ? "正在等待同行者主动分享一次当前位置。" : "Waiting for travellers to share a fresh location.")
-                        : (zh ? "目前还不能可靠判断队伍是否在一起。" : "There is not enough current evidence to classify the group yet.")}
+                        : (zh ? "队伍位置待确认。" : "Group location is unconfirmed.")}
             </strong>
             {groupPresence.members.some((member) => member.is_viewer)
               && !["EN_ROUTE", "ARRIVED", "COMPLETED"].includes(operator?.member_side_quest?.state ?? "") && (
@@ -1173,9 +1173,9 @@ export function LiveRecovery({
                           : member.return_state === "RETURN_RISK"
                             ? (zh ? "可信的当前位置与实时路线显示会合承诺可能受影响。" : "Trusted current location and live route evidence show the rendezvous may be at risk.")
                             : member.return_state === "ADVISORY_RETURN_RISK"
-                              ? (zh ? "参考定位路线提示时间可能紧张；这不是可信设备位置。" : "An advisory browser route suggests time may be tight; it is not trusted device location.")
+                              ? (zh ? "参考定位路线提示时间可能紧张。" : "Advisory route estimate suggests time may be tight.")
                               : member.return_state === "ADVISORY_ROUTE_ONLY"
-                                ? (zh ? "当前只有参考路线；它不代表可信位置，也不会单独触发 Guardian。" : "Only an advisory route is available; it is not trusted location and cannot trigger Guardian by itself.")
+                                ? (zh ? "当前为参考路线；Guardian 状态见下方可信位置记录。" : "Advisory route; see the trusted location record below for Guardian status.")
                               : (zh ? "返程状态未知：目前没有可靠路线 ETA。" : "Return status unknown: no reliable route ETA is available.")}
                     </small>
                     {member.is_viewer && member.rendezvous && (
@@ -1194,7 +1194,7 @@ export function LiveRecovery({
                   </div>
                 ))}
                 <small data-testid="journey-planned-separation-plan-unchanged">
-                  {zh ? "共享行程保持不变；分开行动不等于已经重新会合。" : "The shared Journey is unchanged. Ending a side trip does not itself prove physical reunion."}
+                  {zh ? "重新会合后请更新状态。" : "Update your status after rejoining."}
                 </small>
               </div>
             )}
@@ -1205,7 +1205,7 @@ export function LiveRecovery({
                     ? (zh ? "位置较新 · 可能与队伍分开" : "Recent · may be separated")
                     : member.group_state === "WITH_GROUP"
                       ? (zh ? "位置较新 · 与队伍接近" : "Recent · near the group")
-                      : (zh ? "位置较新 · 尚不能判断是否同行" : "Recent · group proximity unknown")
+                      : (zh ? "位置较新 · 队伍状态待确认" : "Recent · group status unconfirmed")
                   : member.location_state === "STALE"
                     ? (zh ? "位置已过时" : "Location is stale")
                     : member.location_state === "IMPRECISE"
@@ -1219,17 +1219,17 @@ export function LiveRecovery({
                       : member.personal_stop.state === "ACTIVE_SELF_REPORTED"
                         ? (zh ? " · 本人已报告开始私人停留（地点仅本人可见）" : " · has reported starting a personal stop (destination visible only to them)")
                         : member.personal_stop.state === "RETURN_STARTED_REPORTED"
-                          ? (zh ? " · 本人已报告开始返程（未验证当前位置或实际会合）" : " · has reported heading back (location and reunion are unverified)")
+                          ? (zh ? " · 本人已报告开始返程" : " · return reported")
                           : (zh ? " · 私人停留已结束，尚未确认开始返程" : " · personal stop ended; return has not been confirmed")}
                   </span>
                 )}
                 {member.route_eta_minutes != null ? ` · ${zh ? `到集合点约 ${member.route_eta_minutes} 分钟` : `about ${member.route_eta_minutes} min to rendezvous`}` : ""}
                 {member.route_eta_minutes != null && member.route_eta_provenance
                   ? ` · ${member.route_eta_state === "CAPTURED_REPLAY"
-                    ? (zh ? `路线来源 ${member.route_eta_provenance}（回放，不代表当前实时路况）` : `route ${member.route_eta_provenance} (replay, not current live traffic)`)
+                    ? (zh ? `路线来源：${member.route_eta_provenance}（回放）` : `Route source: ${member.route_eta_provenance} (replay)`)
                     : (zh ? `路线来源 ${member.route_eta_provenance}` : `route ${member.route_eta_provenance}`)}`
                   : member.route_eta_state && member.route_eta_state !== "ROUTE_NOT_CAPTURED"
-                    ? ` · ${zh ? `路线证据不可用于产品判断：${member.route_eta_state}` : `route evidence unavailable for product decisions: ${member.route_eta_state}`}`
+                     ? ` · ${zh ? "路线时间待确认" : "Route timing unconfirmed"}`
                     : ""}
               </small>
             ))}
@@ -1238,10 +1238,10 @@ export function LiveRecovery({
             )}
             <small>
               {groupPresence.authority === "TRUSTED_MEMBER_LOCATION"
-                ? (zh ? "只显示同行者是否接近，不共享他人的精确坐标；可信位置仍沿正常权限边界处理。" : "Only coarse together/split status is shown; exact coordinates stay private, and trusted location still follows normal authority boundaries.")
+                ? (zh ? "显示同行者粗略位置；精确坐标仅本人可见。" : "Shows coarse group location; exact coordinates stay private.")
                 : groupPresence.authority === "MIXED_MEMBER_LOCATION_AUTHORITY"
-                  ? (zh ? "部分位置是参考定位、部分来自可信来源；这里只显示粗粒度队伍状态，不共享他人的精确坐标。" : "Location authority is mixed. This view shows only coarse group state and never exposes another traveller’s exact coordinates.")
-                  : (zh ? "只显示同行者是否接近，不共享他人的精确坐标。浏览器定位仅用于参考，不会单独触发 Guardian 或改计划。" : "Only coarse together/split status is shown; other travellers’ exact coordinates are never shared. Browser location is advisory and cannot by itself trigger Guardian or change the plan.")}
+                  ? (zh ? "位置来源不同；此处显示队伍概况。" : "Location sources vary; this view shows group status.")
+                  : (zh ? "显示同行者的粗略位置；浏览器定位供路线参考。" : "Shows coarse group location; browser location is used for route estimates.")}
             </small>
             {groupPresence.can_guide && groupPresence.rendezvous && (
               <button type="button" disabled={busy !== null} data-testid="journey-guide-to-group" onClick={() => void guideToGroup()}>
@@ -1251,14 +1251,14 @@ export function LiveRecovery({
             {groupRoute?.status && (
               <small data-testid="journey-group-route-result">
                 {groupRoute.status === "COMPLETED" && groupRoute.route.duration_min != null
-                  ? (zh ? `约 ${groupRoute.route.duration_min} 分钟 · ${groupRoute.route.provenance ?? groupRoute.route.provider ?? "路线来源已记录"} · 行程计划未变` : `About ${groupRoute.route.duration_min} min · ${groupRoute.route.provenance ?? groupRoute.route.provider ?? "route source recorded"} · plan unchanged`)
-                  : (zh ? "当前没有可靠路线；行程计划未变。" : "No reliable route is available; the plan is unchanged.")}
+                  ? (zh ? `约 ${groupRoute.route.duration_min} 分钟 · ${groupRoute.route.provenance ?? groupRoute.route.provider ?? "路线来源已记录"}` : `About ${groupRoute.route.duration_min} min · ${groupRoute.route.provenance ?? groupRoute.route.provider ?? "route source recorded"}`)
+                  : (zh ? "当前没有可靠路线。" : "No reliable route is available.")}
               </small>
             )}
             {groupRoute?.shared_commitment_risk?.state === "COMMITMENT_AT_RISK" && (
               <small data-testid="journey-group-commitment-risk">
                 {zh
-                  ? `按这位成员当前路线估算，「${groupRoute.shared_commitment_risk.next_commitment?.title ?? "下一项共同安排"}」可能赶不上。${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "浏览器位置只作参考，不会因此触发 Guardian。" : "这是可信成员位置形成的风险事实，已沿现有 Guardian 边界处理。"}`
+                  ? `按当前路线估算，可能赶不上「${groupRoute.shared_commitment_risk.next_commitment?.title ?? "下一项共同安排"}」。${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "路线估算基于浏览器位置。" : "风险已交由 Guardian 处理。"}`
                   : `This member's current route may miss “${groupRoute.shared_commitment_risk.next_commitment?.title ?? "the next shared commitment"}”. ${groupRoute.authority === "ADVISORY_FOREGROUND_LOCATION" ? "Browser location is advisory and cannot trigger Guardian." : "This risk is grounded in trusted member location and follows the existing Guardian boundary."}`}
               </small>
             )}
@@ -1298,8 +1298,8 @@ export function LiveRecovery({
                     {recoveryFollowthrough.membership_reconfirmation_required && (
                       <small data-testid="group-recovery-membership-change">
                         {zh
-                          ? "成员或角色在恢复过程中发生变化；为避免漏掉同行者，系统不会自动关闭这次恢复。"
-                          : "Membership or role changed during recovery. CityNexus will not close it while a traveller may be missing."}
+                          ? "成员或角色已变化，请重新确认恢复方案。"
+                          : "Membership or role changed. Review the recovery before closing it."}
                       </small>
                     )}
                     {recoveryFollowthrough.evidence_level === "AUTHENTICATED_ACTIVITY_EXECUTION_TRUTH" && (
@@ -1307,8 +1307,8 @@ export function LiveRecovery({
                         {zh
                           ? (recoveryFollowthrough.physical_presence_verified
                             ? "每位同行者通过自己的账号完成到达确认；本次还包含设备验证的位置证据。"
-                            : "每位同行者通过自己的账号完成行程到达确认；路线、预计时间或普通浏览器定位不会被当成到场证明。")
-                          : "Each traveller uses their own authenticated Journey arrival action. ETA, route data, and ordinary browser location are not proof of presence."}
+                            : "到达由每位同行者用自己的账号确认。")
+                          : "Each traveller confirms arrival from their own signed-in account."}
                       </small>
                     )}
                     {recoveryFollowthrough.viewer_has_confirmed && recoveryFollowthrough.state !== "RECOVERY_CLOSED" && (
@@ -1331,7 +1331,7 @@ export function LiveRecovery({
                     {recoveryFollowthrough.state === "RECOVERY_CLOSED" && (
                       <small data-testid="group-recovery-closed">
                         {zh
-                          ? "这次恢复已关闭，原行程计划没有因关闭动作再次变化；下面继续显示当前 Journey。"
+                          ? "恢复已关闭，当前行程计划如下。"
                           : "This recovery is closed. Closing it did not change the active plan; the current Journey continues below."}
                       </small>
                     )}
@@ -1341,36 +1341,36 @@ export function LiveRecovery({
                 {groupRecovery.old_decision && groupRecovery.state.startsWith("RECOVERY_REGROUND") && (
                   <small data-testid="journey-group-recovery-old-decision">
                     {zh
-                      ? "之前的共同选择仍保留在历史中，但旧方案和旧回答已不能用于当前行程；当前 Journey 没有改变。"
-                      : "The earlier group choice remains in history, but its proposal and answers cannot be reused for the current trip. The Journey is unchanged."}
+                      ? "历史选择已保留；当前行程需重新确认。"
+                      : "Earlier group choice saved in history. Confirm a new choice for this journey."}
                   </small>
                 )}
                 {groupRecovery.state === "RECOVERY_REPLAN_REQUIRED" && (
                   <small data-testid="journey-group-recovery-replan-required">
                     {zh
-                      ? "旧决定已停止生效；当前状态没有允许自动重新规划，因此不会重复询问或套用旧方案。"
-                      : "The old decision is no longer spendable. Current conditions do not permit an automatic re-ground, so no old option or answer will be reused."}
+                      ? "旧决定已失效，请根据当前情况重新选择。"
+                      : "Earlier choice expired. Choose again for current conditions."}
                   </small>
                 )}
                 {groupRecovery.state === "RECOVERY_REGROUNDING" && (
                   <small data-testid="journey-group-recovery-regrounding">
                     {zh
-                      ? "CityNexus 正在按当前行程和当前事实重新找方案；这一步不会应用计划。"
-                      : "CityNexus is checking the current Journey and current evidence for new options. This planning step cannot apply a plan."}
+                      ? "CityNexus 正在根据当前行程寻找新方案。"
+                      : "CityNexus is finding options for the current journey."}
                   </small>
                 )}
                 {groupRecovery.state === "RECOVERY_REGROUND_NO_FEASIBLE_OPTION" && (
                   <small data-testid="journey-group-recovery-no-feasible">
                     {zh
-                      ? "暂时找不到满足当前保护承诺与现实证据的共享调整；大家仍可按现有集合指引继续会合。"
-                      : "No shared adjustment currently satisfies the protected commitments and available evidence. The existing rendezvous guidance remains available."}
+                      ? "暂时没有符合承诺和实时证据的调整方案。请按当前指引会合。"
+                      : "No shared adjustment is available. Follow the current rendezvous guidance."}
                   </small>
                 )}
                 {groupRecovery.reground_result?.state === "RECOVERY_REGROUNDED_DOMINANT" && (
                   <small data-testid="journey-group-recovery-regrounded-option">
                     {zh
-                      ? `已按当前现实重新核验出 ${groupRecovery.reground_result.grounded_feasible_proposal_ids?.length ?? 0} 个可行共享方案${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).length ? `：${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).join("、")}` : ""}。行程尚未改变；这只是新方案，不会自动应用，后续仍走现有集体授权。`
-                      : `${groupRecovery.reground_result.grounded_feasible_proposal_ids?.length ?? 0} grounded shared option(s) were rechecked against the current trip${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).length ? `: ${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).join(", ")}` : ""}. The Journey is unchanged; this is a proposal, not an automatic plan change, and existing collective authority still applies.`}
+                      ? `已找到 ${groupRecovery.reground_result.grounded_feasible_proposal_ids?.length ?? 0} 个可行共享方案${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).length ? `：${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).join("、")}` : ""}。等待成员确认后应用。`
+                      : `${groupRecovery.reground_result.grounded_feasible_proposal_ids?.length ?? 0} group option(s) are ready for member approval${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).length ? `: ${groupRecovery.reground_result.current_options?.flatMap((option) => option.place_names).join(", ")}` : ""}.`}
                   </small>
                 )}
                 {groupRecovery.affected_member && groupRecovery.shared_commitment && (
@@ -1379,7 +1379,7 @@ export function LiveRecovery({
                       ? `${groupRecovery.affected_member.display_name} 到「${groupRecovery.shared_commitment.title}」约需 ${groupRecovery.affected_member.eta_minutes} 分钟；安全缓冲 ${groupRecovery.shared_commitment.slack_after_buffer_min ?? "未知"} 分钟。`
                       : `${groupRecovery.affected_member.display_name} needs about ${groupRecovery.affected_member.eta_minutes} min to reach “${groupRecovery.shared_commitment.title}”; buffer after the safety margin: ${groupRecovery.shared_commitment.slack_after_buffer_min ?? "unknown"} min.`}
                     {groupRecovery.affected_member.route_evidence_state === "CAPTURED_REPLAY"
-                      ? (zh ? " 这条路线是回放证据，不是当前实时路况。" : " This is replay route evidence, not current live traffic.")
+                      ? (zh ? " 路线数据来源：回放。" : " Route source: replay.")
                       : ""}
                   </small>
                 )}
@@ -1400,7 +1400,7 @@ export function LiveRecovery({
                 {groupRecovery.mission && (
                   <small data-testid="journey-group-recovery-agent-status">
                     {groupRecovery.mission.status === "FAILED_EXTERNAL"
-                      ? (zh ? "Agent 暂时不可用；没有自动改动行程。" : "The Agent could not start; no trip change was made.")
+                      ? (zh ? "Agent 服务暂不可用。" : "Agent service unavailable.")
                       : groupRecovery.mission.status === "RUNNING"
                         ? (zh ? "CityNexus 正在准备方案；原行程仍然有效。" : "CityNexus is preparing options; the current plan remains active.")
                         : (zh ? `恢复任务状态：${groupRecovery.mission.status}` : `Recovery task: ${groupRecovery.mission.status}`)}
@@ -1410,23 +1410,23 @@ export function LiveRecovery({
                   <small data-testid="journey-group-recovery-collective-state">
                     {groupRecovery.collective_decision.state === "WAITING_FOR_MEMBERS"
                       ? (zh
-                        ? `共享恢复选择已开放：${groupRecovery.collective_decision.response_count}/${groupRecovery.collective_decision.required_count} 位相关同行者已回答。${groupRecovery.collective_decision.viewer_has_responded ? "你的选择已记录，正在等其他人。" : "请在下方共享决策区只提交你自己的选择。"} 行程尚未改变。`
-                        : `The shared recovery choice is open: ${groupRecovery.collective_decision.response_count}/${groupRecovery.collective_decision.required_count} affected travellers have answered. ${groupRecovery.collective_decision.viewer_has_responded ? "Your choice is recorded; CityNexus is waiting for the others." : "Choose only for yourself in the shared decision room below."} The Journey has not changed.`)
+                        ? `共享恢复方案待同行者决定：${groupRecovery.collective_decision.response_count}/${groupRecovery.collective_decision.required_count} 已回答。${groupRecovery.collective_decision.viewer_has_responded ? "你的选择已记录，正在等待其他人。" : "请在下方提交你的选择。"}`
+                        : `Shared recovery awaits travellers: ${groupRecovery.collective_decision.response_count}/${groupRecovery.collective_decision.required_count} have answered. ${groupRecovery.collective_decision.viewer_has_responded ? "Your choice is recorded; waiting for others." : "Submit your choice below."}`)
                       : groupRecovery.collective_decision.state === "MEDIATING"
-                        ? (zh ? "同行者的选择有分歧；CityNexus 保留分歧并继续寻找可接受的下一步，尚未修改行程。" : "The travellers disagree. CityNexus is preserving that disagreement while looking for an acceptable next step; the Journey is unchanged.")
+                        ? (zh ? "同行者的选择有分歧；正在寻找可接受的下一步。" : "The travellers disagree. Looking for an acceptable next step.")
                         : groupRecovery.collective_decision.state === "COLLECTIVE_AUTHORIZED"
                           ? (zh
-                            ? `服务器已为“${groupRecovery.collective_decision.selected_option_label ?? "选定方案"}”记录当前集体授权；这不等于方案已应用。`
-                            : `The server has current group authorization for “${groupRecovery.collective_decision.selected_option_label ?? "the selected option"}”; it has not been applied yet.`)
+                            ? `“${groupRecovery.collective_decision.selected_option_label ?? "选定方案"}”已获集体授权，待应用。`
+                            : `“${groupRecovery.collective_decision.selected_option_label ?? "The selected option"}” has group approval and is ready to apply.`)
                           : groupRecovery.collective_decision.state === "COLLECTIVE_STALE"
                             ? (zh ? "行程、成员或方案事实已经变化，旧选择按钮已失效；需要重新计算。" : "The trip, membership, or proposal facts changed. Old choices are no longer valid and must be recomputed.")
-                            : (zh ? "成员回答已记录，但当前没有可用于推进此方案的集体授权。行程尚未改变。" : "Member responses are recorded, but there is no current collective authority to carry this proposal forward. The Journey is unchanged.")}
+                            : (zh ? "成员回答已记录，仍需集体授权。" : "Member responses are recorded; group approval is still needed.")}
                   </small>
                 )}
                 {groupRecovery.collective_decision?.reconsent_required && (
                   <small data-testid="journey-group-recovery-reconsent">
                     {zh
-                      ? "之前的共同选择因行程或事实变化而过期；现在是新一轮决定，旧回答不会自动沿用。"
+                      ? "行程或事实已变化，请在新一轮决定中重新选择。"
                       : "The previous shared choice expired after the Journey or its facts changed. This is a fresh decision round; earlier answers do not carry over."}
                   </small>
                 )}
@@ -1545,7 +1545,7 @@ export function LiveRecovery({
               <span>
                 {operator.brain.recovery_resume.safe_to_resume
                   ? (zh ? "问题已记住，规划 AI 恢复后会继续处理。" : "I remembered the problem and will continue when planning is available.")
-                  : (zh ? "这次恢复已保留，需要安全地回到原来的处理链。" : "I kept this recovery safe and will not switch brains blindly.")}
+                  : (zh ? "恢复任务暂不可用，请稍后再试。" : "Recovery task unavailable. Try again later.")}
               </span>
             )}
           </div>
@@ -1557,13 +1557,13 @@ export function LiveRecovery({
               {operator.collective.state === "MEDIATING"
                 ? (zh ? "大家的选择不同，CityNexus 正在寻找兼顾彼此的方案。" : "Your choices differ. CityNexus is looking for a compromise that protects everyone.")
                 : operator.collective.state === "COLLECTIVE_AUTHORIZED"
-                  ? (zh ? "服务器已记录此方案所需的集体授权；行程仍须经过正常审批与接受边界。" : "The server recorded collective authority for this proposal; normal approval and acceptance boundaries still apply.")
+                  ? (zh ? "方案已获集体授权，等待应用。" : "The proposal has group approval and is ready to apply.")
                   : operator.collective.state === "COLLECTIVE_STALE"
                     ? (zh ? "行程情况已变化，需要重新确认。" : "The trip changed, so this group decision needs to be renewed.")
                     : operator.collective.state === "WAITING_FOR_MEMBERS"
-                      ? (zh ? `共享恢复方案正在等同行者决定：${operator.collective.response_count}/${operator.collective.required_count} 已回答；行程尚未改变。` : `The shared recovery is waiting for travellers: ${operator.collective.response_count}/${operator.collective.required_count} have answered; the Journey is unchanged.`)
+                      ? (zh ? `共享恢复方案待同行者决定：${operator.collective.response_count}/${operator.collective.required_count} 已回答。` : `Shared recovery awaits travellers: ${operator.collective.response_count}/${operator.collective.required_count} have answered.`)
                       : operator.collective.state === "COLLECTIVE_READY"
-                        ? (zh ? "相关同行者都已回答；服务器仍在核对当前权限，行程没有自动改变。" : "All required travellers have answered; the server is still checking current authority. The Journey has not changed automatically.")
+                        ? (zh ? "相关同行者都已回答；服务器正在核对权限。" : "All required travellers have answered; the server is checking authority.")
                     : (zh
                       ? `这次变化影响 ${operator.collective.required_count} 位同行者，已回答 ${operator.collective.response_count} 位。`
                       : `This change affects ${operator.collective.required_count} travellers; ${operator.collective.response_count} have responded.`)}
@@ -1600,7 +1600,7 @@ export function LiveRecovery({
               {operator.discovery.state === "DISCOVERY_IN_PROGRESS"
                 ? (zh ? "已知选择不够，我正在附近寻找新的可能性。" : "The known choices are too narrow, so I’m looking nearby for new possibilities.")
                 : operator.discovery.state === "DISCOVERY_DEGRADED"
-                  ? (zh ? "暂时无法连接城市发现服务，已有行程选项保持不变。" : "City discovery is temporarily unavailable; your existing recovery options are unchanged.")
+                  ? (zh ? "城市发现服务暂不可用。" : "City discovery is temporarily unavailable.")
                   : (zh ? "我已经找过附近的替代方案，但还没有更多可靠选择。" : "I looked nearby, but I still don’t have another grounded recovery.")}
             </strong>
           </div>
@@ -1830,7 +1830,7 @@ export function LiveRecovery({
             </small>
           )}
           {routeOperation?.status === "UNAVAILABLE" && (
-            <small>{zh ? "CityNexus 暂时无法获取这段路线的可靠结果。" : "CityNexus could not get a reliable route for this leg."}</small>
+            <small>{zh ? "这段路线暂不可用。" : "This route is unavailable."}</small>
           )}
           {routeOperation?.status === "FAILED" && (
             <small>{zh ? "路线服务暂时不可用。" : "The route provider is unavailable right now."}</small>
@@ -1946,7 +1946,7 @@ export function LiveRecovery({
       {acknowledgedOnly.length > 0 && (
         <p className="v8-muted" data-testid="live-acknowledged">
           {zh
-            ? "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。"
+            ? "已查看变化，待选择新安排。"
             : "Seen, still open: you have seen these changes but have not chosen a new arrangement yet."}
         </p>
       )}
@@ -2001,8 +2001,8 @@ export function LiveRecovery({
               <p className="live-unchanged" data-testid="live-unchanged">
                 {proposal.locked_commitments_preserved
                   ? zh
-                    ? "已确认的预订和到达/离开时间保持不变。"
-                    : "Confirmed bookings and your arrival/departure stay unchanged."
+                    ? "已确认预订和到达/离开安排已保留。"
+                    : "Confirmed bookings and arrival/departure times are preserved."
                   : zh
                     ? "注意：部分已确认内容会受影响。"
                     : "Note: some confirmed items are affected."}
@@ -2093,8 +2093,8 @@ export function LiveRecovery({
       {(handled.length > 0 || handledDisruptions.length > 0) && openDisruptions.length === 0 && (
         <p className="live-handled" data-testid="live-handled">
           {zh
-            ? "刚才的行程变化已经处理好，已确认的预订保持不变。"
-            : "The earlier disruption has been handled; your confirmed bookings are unchanged."}
+            ? "行程变化已处理，已确认预订已保留。"
+            : "Disruption handled; confirmed bookings are preserved."}
         </p>
       )}
 

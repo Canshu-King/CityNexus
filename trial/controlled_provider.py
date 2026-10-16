@@ -1,6 +1,6 @@
-"""Loopback-only source-labelled TEST_PROVIDER for a human Revolution first look.
+"""Local sample-place TEST_PROVIDER for a human Revolution first look.
 
-Not a live provider and not real OSM proof. Never bind to a public interface.
+Bind the provider to loopback and label returned places as samples.
 """
 from __future__ import annotations
 

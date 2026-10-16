@@ -189,36 +189,36 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         return {
           title: zh ? "这个目的地已经准备好了" : "This destination is ready",
           body: zh
-            ? "服务器说这座城需要的事实都在，而且是新的，可以直接规划。"
-            : "The server says the facts this city needs are present and current, so planning can start.",
+            ? "资料已准备好，可以开始规划。"
+            : "Ready to plan.",
         };
       case "COVERAGE_INCOMPLETE":
         return {
           title: zh ? "这个目的地还没准备过" : "This destination has not been prepared",
           body: zh
-            ? `服务器说还缺 ${missing.length} 类事实（${missing.join("、")}），所以现在直接规划会缺依据。可以先准备。`
-            : `The server reports ${missing.length} categories missing (${missing.join(", ")}), so planning now would lack evidence. You can prepare it first.`,
+            ? `还缺 ${missing.length} 类资料（${missing.join("、")}），先准备再规划。`
+            : `${missing.length} information categories are missing (${missing.join(", ")}). Prepare them before planning.`,
         };
       case "CATALOG_STALE":
         return {
           title: zh ? "这个目的地的事实过期了" : "This destination's facts have aged",
           body: zh
-            ? "服务器说需要的事实都在，但已经不新了。直接规划会用到过季的资料，建议先刷新。"
-            : "The server says nothing is missing but what it holds has aged; planning would use last season's facts. Refreshing first is the honest route.",
+            ? "资料已过期，请刷新后再规划。"
+            : "Information is out of date. Refresh before planning.",
         };
       case "DESTINATION_AMBIGUOUS":
         return {
           title: zh ? "这个名字对不上一个地方" : "That name does not name one place",
           body: zh
-            ? `服务器说「${capability.query}」能对上不止一个候选，它没有替你选。请从下面挑一个。`
-            : `The server says "${capability.query}" matches more than one candidate and did not choose for you. Pick one below.`,
+            ? `「${capability.query}」匹配多个地点，请选择一个。`
+            : `"${capability.query}" matches several places. Choose one below.`,
         };
       case "NO_CANONICAL_IDENTITY":
         return {
-          title: zh ? "这个目的地这个名字认不出来" : "This destination cannot be named from a traceable source",
+          title: zh ? "找不到这个目的地" : "Destination not found",
           body: zh
-            ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`
-            : `The server says "${capability.pending_destination_label ?? capability.query}" cannot be resolved to a destination from any traceable source. This is not a network problem: the server just answered. Try another spelling, or choose another place.`,
+            ? `「${capability.pending_destination_label ?? capability.query}」暂无可追溯来源。换个名称或选择其他地点。`
+            : `No source found for "${capability.pending_destination_label ?? capability.query}". Try another name or choose another place.`,
         };
       case "PROVIDER_RATE_LIMITED":
       case "PROVIDER_TIMEOUT":
@@ -228,8 +228,8 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         return {
           title: zh ? "提供方这次没能回答" : "A provider could not answer this time",
           body: zh
-            ? `服务器说这是提供方一侧的一次临时失败（${reasonCode}），可以重试；这不是「这个地方不存在」。`
-            : `The server reports a transient failure on a provider's side (${reasonCode}); retrying is right, and this is not "the place does not exist".`,
+            ? "地点服务暂时不可用，请稍后重试或换个地点。"
+            : "Place service unavailable. Try again later or choose another place.",
         };
       case "DESTINATION_RESOLVER_UNAVAILABLE":
         /* ORD-0203: the fourth cell.  Measured live (resolver on, Photon unreachable):
@@ -241,15 +241,15 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         return {
           title: zh ? "没人回答我们" : "Nobody answered us",
           body: zh
-            ? `服务器说这一问没有拿到答复（${reasonCode}）——是它去问的那一头没答话，不是「这个地方不能规划」，也不是「这城市还要灌数据」。这两句服务器都没说。可以稍后重试。`
-            : `The server reports that nothing answered this request (${reasonCode}). That is not "this place cannot be planned" and not "this city still needs data loaded" -- the server said neither. Trying again later is the route.`,
+            ? "地点服务没有返回结果，请稍后重试。"
+            : "Place service returned no result. Try again later.",
         };
       default:
         return {
           title: zh ? `服务器判定：${verdict}` : `Server verdict: ${verdict}`,
           body: zh
-            ? `服务器给了这个结论（${reasonCode}），本地还没有对应文案，所以照它说的给，不替它解释。`
-            : `The server returned this verdict (${reasonCode}); there is no local copy for it, so it is shown as-is rather than explained away.`,
+            ? `状态：${reasonCode || "待确认"}。请稍后重试。`
+            : `Status: ${reasonCode || "pending"}. Try again later.`,
         };
     }
   };
@@ -268,8 +268,8 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             ? "正在准备这个目的地"
             : "Preparing this destination",
         body: zh
-          ? `服务器说现在在「${job.phase}」这一步，已经跑了 ${Math.round(job.elapsed_ms / 1000)} 秒（${elapsedCell}）。进度不按百分比报——服务器不给这个数，因为队列它自己看不到。`
-          : `The server reports it is inside "${job.phase}", running ${Math.round(job.elapsed_ms / 1000)}s (${elapsedCell}). No percentage is shown because the server does not publish one -- it cannot see the queue.`,
+          ? `准备阶段：${job.phase} · 已运行 ${Math.round(job.elapsed_ms / 1000)} 秒（${elapsedCell}）。`
+          : `Stage: ${job.phase} · running ${Math.round(job.elapsed_ms / 1000)}s (${elapsedCell}).`,
       };
     }
     switch (String(job.outcome ?? "")) {
@@ -277,39 +277,39 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         return {
           title: zh ? "准备好了，可以去规划" : "Prepared -- you can go and plan",
           body: zh
-            ? "服务器说这座城需要的事实已经落库。现在规划会用到它们。"
-            : "The server says the facts this city needs are now stored, so planning will use them.",
+            ? "资料已保存，可以开始规划。"
+            : "Information saved. Ready to plan.",
         };
       case "ALREADY_CURRENT":
         return {
-          title: zh ? "本来就是新的，没有改动" : "Already current -- nothing was changed",
+          title: zh ? "资料已是最新" : "Already up to date",
           body: zh
-            ? "服务器说这份资料已经是新的，所以这次准备什么也没做。这不是失败。"
-            : "The server says this material was already current, so this run changed nothing. That is not a failure.",
+            ? "无需准备。"
+            : "No preparation needed.",
         };
       case "NO_REGISTERED_SOURCE":
         return {
-          title: zh ? "这个目的地没有可追溯的来源" : "No traceable source for this destination",
+          title: zh ? "目的地暂无可追溯来源" : "No traceable source",
           body: zh
-            ? "服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。"
-            : "The server says it has no traceable source for this destination, so it cannot prepare it. That is a fact about the place, not a network or server fault. Choose another destination.",
+            ? "请换个地点。"
+            : "Choose another destination.",
         };
       case "ABANDONED_BY_TRAVELLER":
         return {
           title: zh ? "你已经停止这次准备" : "You stopped this preparation",
-          body: zh ? "服务器记下了你的停止，它不再用这次的结果。" : "The server recorded the stop and will not use this run's result.",
+          body: zh ? "准备已停止。" : "Preparation stopped.",
         };
       case "RESOLVER_RUNTIME_FAILURE":
         return {
           title: zh ? "解析这次运行失败了" : "The resolver failed at runtime",
           body: zh
-            ? "服务器说这是它那边的一次运行性失败（可以重试），不是「这个地方不存在」。"
-            : "The server reports a runtime failure on its side (retryable), not that the place does not exist.",
+            ? "准备失败，请稍后重试。"
+            : "Preparation failed. Try again later.",
         };
       case "WORKER_LOST":
         return {
           title: zh ? "这次准备中途丢了" : "This preparation was lost mid-run",
-          body: zh ? "服务器说执行它的工作进程没了，这次不算数。可以再来一次。" : "The server says the worker running it disappeared, so this attempt does not count. Starting again is the route.",
+          body: zh ? "准备已中断，请重新开始。" : "Preparation stopped. Start again when ready.",
         };
       default:
         return {

@@ -1,10 +1,6 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
 
-/**
- * UI FIXTURE ONLY: verifies the new mobile shell/navigation semantics.
- * Every returned Journey is an explicitly fake TEST_PROVIDER stub.
- * This cannot prove signed backend access, physical arrival, real POI or AI.
- */
+/** Mobile shell UI coverage using explicit TEST_PROVIDER fixtures. */
 const journeyId = "00000000-0000-4000-8000-000000000117";
 const prefix = `**/api/v1/journeys/${journeyId}`;
 
@@ -81,7 +77,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(fits).toBeTruthy();
   });
 
-  test("three bottom tabs are tappable and never submit provider or model requests", async ({ page }, testInfo) => {
+  test("three bottom tabs are tappable without submitting requests", async ({ page }, testInfo) => {
     await signedMockJourney(page);
     let upstreamCalls = 0;
     page.on("request", (request) => {
@@ -116,7 +112,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(fits).toBeTruthy();
   });
 
-  test("ACTIVE Journey shows signed server Operator status and audited actions, not invented AgentRun", async ({ page }, testInfo) => {
+  test("ACTIVE Journey shows signed Operator status and actions", async ({ page }, testInfo) => {
     await page.addInitScript((id) => {
       window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
       window.localStorage.setItem("citynexus.locale", "zh-CN");
@@ -179,7 +175,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const card = page.getByTestId("rev-mobile-agent-work");
     await expect(card).toBeVisible();
     await expect(card.getByText("正在留意行程变化")).toBeVisible();
-    await expect(card.getByText("正在监测行程，不代表模型正在调用工具。")).toBeVisible();
+    await expect(card.getByText("行程监测中。")).toBeVisible();
     await card.getByText("查看最近工作记录").click();
     await expect(card.getByText("行程监测已启动")).toBeVisible();
     expect(signedOperatorReads).toBeGreaterThan(0);
@@ -273,7 +269,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const card = page.getByTestId("rev-quick-place-card");
     await expect(card).toContainText("TEST ONLY · 连城步道");
     await expect(card).toContainText("测试地点");
-    await expect(card).toContainText("营业与费用需自行核实");
+    await expect(card).toContainText("营业与费用信息待补充");
     await expect(card.getByRole("link", { name: "查看 OpenStreetMap 来源" })).toHaveAttribute(
       "href",
       "https://www.openstreetmap.org/node/10001",
@@ -347,7 +343,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(discoveryCalls).toBe(0);
   });
 
-  test("trip tab reflects only a saved TEST fixture, never a fabricated itinerary", async ({ page }) => {
+  test("trip tab displays a saved TEST fixture itinerary", async ({ page }) => {
     await signedMockJourney(page, true);
     await page.goto("/revolution");
     await page.getByTestId("rev-mobile-tab-trips").click();
@@ -358,7 +354,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(page.getByTestId("rev-quick-walk")).toBeVisible();
   });
 
-  test("ACTIVE mobile shows only the signed Hermes run and server tool events returned for this request", async ({ page }, testInfo) => {
+  test("ACTIVE mobile shows the signed Hermes run and returned tool events", async ({ page }, testInfo) => {
     const pageErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error.message));
     page.on("console", (message) => { if (message.type() === "error") pageErrors.push(message.text()); });
@@ -444,7 +440,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
         runtime_identity: "HERMES_NATIVE_MCP",
         provider_key: "TEST_FIXTURE",
         mission_id: "test-mission",
-        reasoning_summary: "TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。",
+        reasoning_summary: "正在检查行程安排。",
         events_url: `${prefix}/agent/hermes/runs/${runId}/events`,
         timeline_url: `${prefix}/agent/hermes/runs/${runId}/timeline`,
         initial_events: [],
@@ -494,26 +490,25 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     }
     await page.getByTestId("rev-mobile-tab-trips").click();
     await expect.poll(() => latestRunReads).toBe(1);
-    await expect(page.getByTestId("rev-mobile-hermes-empty-state")).toContainText("当前没有正在执行的 Hermes 任务");
+    await expect(page.getByTestId("rev-mobile-hermes-empty-state")).toContainText("暂无助手运行记录");
     await page.getByTestId("rev-mobile-hermes-submit").click();
     const run = page.getByTestId("rev-mobile-hermes-run");
     await expect(run).toBeVisible();
     const sheet = page.getByTestId("rev-mobile-hermes-sheet");
     await expect(sheet).toBeVisible();
-    await expect(sheet.getByText("TEST_FIXTURE · 仅用于界面验收")).toBeVisible();
+    await expect(sheet.getByText("测试数据")).toBeVisible();
     await expect(sheet.getByText("已完成", { exact: true })).toBeVisible();
-    await expect(sheet.getByText("TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。")).toBeVisible();
+    await expect(sheet.getByText("正在检查行程安排。")).toBeVisible();
     await expect(sheet.getByText("已理解你的需求")).toBeVisible();
     await expect(sheet.getByText("已形成执行计划")).toBeVisible();
     await expect(sheet.getByText("正在检查当前行程")).toBeVisible();
     await expect(sheet.getByText("检查当前行程：已完成")).toBeVisible();
     await expect(sheet.getByText("850 毫秒")).toBeVisible();
-    await expect(sheet.getByText(/不能证明真实 Hermes 已运行/)).toBeVisible();
-    await expect(sheet.getByText(/不展示工具参数或原始返回/)).toBeVisible();
     await expect(run.getByText("inspect_journey")).toHaveCount(0);
+    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-TEST-FIXTURE-390x844.png"), fullPage: false });
     await page.getByRole("button", { name: "关闭工作过程" }).click();
     await expect(sheet).not.toBeVisible();
-    await expect(run).toContainText(/\d+ 条测试夹具工具事件/);
+    await expect(run).toContainText(/\d+ 条示例事件/);
     await page.getByRole("button", { name: "查看工作过程" }).click();
     await expect(sheet).toBeVisible();
 
@@ -528,7 +523,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(restoredSheet.getByText("检查当前行程：已完成")).toBeVisible();
     await expect(restoredSheet.getByRole("button", { name: "停止本次运行" })).toHaveCount(0);
     expect(copilotPosts).toBe(1);
-    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-restored-truthful-evidence-TEST-FIXTURE-390x844.png"), fullPage: false });
+    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-resume-TEST-FIXTURE-390x844.png"), fullPage: false });
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
   });

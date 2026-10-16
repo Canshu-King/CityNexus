@@ -371,8 +371,8 @@ export function copyFor(
         kicker: zh ? "连接正常" : "Connection is fine",
         title: zh ? "这台服务器上没有这一趟行程了" : "This trip is not on this server",
         body: zh
-          ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
-          : `This device remembered trip ${id}, and the server answered plainly that it does not exist (http_status=${attribution.http_status}). This is not a network problem: the server just answered. Your other trips are untouched.`,
+          ? `服务器找不到行程 ${id}（HTTP ${attribution.http_status}）。返回列表后重新选择。`
+          : `Trip ${id} was not found (HTTP ${attribution.http_status}). Return to the list and choose another trip.`,
       };
     case "failure.networkUnavailable":
       return {
@@ -380,11 +380,11 @@ export function copyFor(
         title: zh ? "网络不可用" : "Network unavailable",
         body: detail.hasCachedCopy
           ? zh
-            ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。"
-            : "This request could not travel and nothing came back, so this is a network problem. Your trip data has not been lost and the saved read-only copy is still available. Check your connection and try again."
+            ? "网络连接失败。可查看已保存的本地行程；连接恢复后重试。"
+            : "Network unavailable. View the saved trip offline, then retry when connected."
           : zh
-            ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。"
-            : "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
+            ? "网络连接失败。连接恢复后重试。"
+            : "Network unavailable. Try again when connected.",
       };
     case "failure.serverError":
       return detail.hasCachedCopy
@@ -392,15 +392,15 @@ export function copyFor(
             kicker: zh ? "服务器" : "Server",
             title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
             body: zh
-              ? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `服务器处理失败（HTTP ${attribution.http_status}）。可打开本地行程快照，或稍后重试。`
+              : `Server error (HTTP ${attribution.http_status}). Open the saved trip snapshot or retry later.`,
           }
         : {
             kicker: zh ? "服务器" : "Server",
             title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
             body: zh
-              ? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
-              : `The server reported an error of its own (http_status=${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
+              ? `服务器处理失败（HTTP ${attribution.http_status}）。稍后重试。`
+              : `Server error (HTTP ${attribution.http_status}). Try again later.`,
           };
     /* ORD-0263 fifth state: an answer arrived, so the sentence may not claim one did not.  The status
        and media type quoted here are the ones this response actually carried. */
@@ -408,21 +408,17 @@ export function copyFor(
       return detail.hasCachedCopy
         ? {
             kicker: zh ? "服务器" : "The origin",
-            title: zh
-              ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
-              : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+            title: zh ? "行程数据无法读取" : "Trip data could not be read",
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `服务器返回的数据无法解析（HTTP ${attribution.http_status ?? "2xx"}，${attribution.content_type ?? "未知"}）。可打开本地行程快照，或稍后重试。`
+              : `The server response could not be parsed as trip data (HTTP ${attribution.http_status ?? "2xx"}, ${attribution.content_type ?? "unknown"}). Open the saved snapshot or retry later.`,
           }
         : {
             kicker: zh ? "服务器" : "The origin",
-            title: zh
-              ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
-              : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+            title: zh ? "行程数据无法读取" : "Trip data could not be read",
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
-              : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
+              ? `服务器返回的数据无法解析（HTTP ${attribution.http_status ?? "2xx"}，${attribution.content_type ?? "未知"}）。稍后重试。`
+              : `The server response could not be parsed as trip data (HTTP ${attribution.http_status ?? "2xx"}, ${attribution.content_type ?? "unknown"}). Try again later.`,
           };
     /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
        whether the request travelled is not something this screen knows, so the sentence does not
@@ -433,39 +429,37 @@ export function copyFor(
             kicker: zh ? "没有回音" : "No reply",
             title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
             body: zh
-              ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。`
-              : `This read reached its deadline with no answer at all: the server neither refused nor agreed, it simply said nothing. Your trip has not been lost — this device holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+              ? "可打开已保存的本地行程，或重新读取。"
+              : "Open the saved trip snapshot or try reading again.",
           }
         : {
             kicker: zh ? "没有回音" : "No reply",
             title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
-            body: zh
-              ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。`
-              : `This read reached its deadline with no answer at all: the server neither refused nor agreed. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
+            body: zh ? "请检查连接后重新读取。" : "Check your connection and try reading again.",
           };
     case "failure.unauthorized":
       return {
         kicker: zh ? "身份" : "Identity",
         title: zh ? "这一趟需要重新登录才能读" : "This trip needs a fresh sign-in",
         body: zh
-          ? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`
-          : `The server refused this read (http_status=${attribution.http_status}). Your trip is still there once you sign in.`,
+          ? `登录后即可查看行程（HTTP ${attribution.http_status}）。`
+          : `Sign in to view this trip (HTTP ${attribution.http_status}).`,
       };
     case "failure.forbidden":
       return {
         kicker: zh ? "权限" : "Permission",
-        title: zh ? "这一步这台服务器不允许" : "This server will not allow this step",
+        title: zh ? "当前账户无权执行此操作" : "This account cannot perform this action",
         body: zh
-          ? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
-          : `The server knows who you are and still refused this step (http_status=${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
+          ? `服务端拒绝了此操作（HTTP ${attribution.http_status}${attribution.server_code ? `，${attribution.server_code}` : ""}）。返回行程列表后选择其他行程。`
+          : `The server refused this action (HTTP ${attribution.http_status}${attribution.server_code ? `, ${attribution.server_code}` : ""}). Return to the trip list to choose another trip.`,
       };
     default:
       return {
         kicker: zh ? "读取" : "Read",
         title: zh ? "这一次没读到" : "This read failed",
         body: zh
-          ? "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。"
-          : "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",
+          ? "读取失败，原因待确认。请稍后重试。"
+          : "Read failed. Try again later.",
       };
   }
 }

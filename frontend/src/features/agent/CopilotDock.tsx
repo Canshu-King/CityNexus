@@ -103,7 +103,7 @@ export function NativeMissionTimeline({
     : connection === "retrying"
       ? zh ? "正在重新连接运行事件" : "Reconnecting to runtime events"
       : connection === "unavailable"
-        ? zh ? "运行事件流不可用；仅保留当前内存中的记录" : "Event stream unavailable; only in-memory events remain"
+        ? zh ? "事件流中断，显示已收到的记录" : "Event stream interrupted; showing received events"
         : null;
 
   const executed = useMemo(
@@ -192,17 +192,17 @@ export function NativeMissionTimeline({
 
   const approve = async () => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
-      setActionState(zh ? "离线时不能确认方案" : "Approval is disabled while offline");
+      setActionState(zh ? "网络恢复后可确认方案" : "Reconnect to approve the proposal");
       return;
     }
     if (!approvalEvent?.approval_id) {
-      setActionState(zh ? "缺少 CityNexus approval_id，需打开恢复中心审核" : "CityNexus approval_id is not available; review in Recovery");
+      setActionState(zh ? "缺少确认编号，请前往恢复中心审核" : "Approval ID missing. Review in Recovery.");
       return;
     }
     setActionState(zh ? "正在记录 CityNexus 确认…" : "Recording CityNexus approval…");
     try {
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
-      setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
+      setActionState(zh ? "已提交确认，等待行程授权" : "Confirmation submitted; awaiting Journey authorization");
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -282,8 +282,8 @@ export function NativeMissionTimeline({
           <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
           <span>
             {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
-              : "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically."}
+              ? "影响已确认预订或受保护安排的改动，需要你批准。"
+              : "Changes to confirmed bookings or protected plans need your approval."}
           </span>
           <div>
             <button type="button" className="v8-primary" onClick={() => void approve()}>{zh ? "批准" : "Approve"}</button>
@@ -307,13 +307,13 @@ function localizePlanStep(operation: string) {
   const values: Record<string, string> = {
     "Inspect current Journey": "检查当前行程",
     "Inspect JourneyTwin": "核对我的行程事实",
-    "Inspect protected commitments": "检查受保护承诺",
+    "Inspect protected commitments": "检查已确认安排",
     "Inspect affected activities": "检查受影响活动",
     "Search candidate places and services": "搜索候选地点和服务",
     "Evaluate candidates against constraints": "按约束评估候选项",
     "Request a deterministic replan proposal": "请求调整方案",
     "Inspect proposal trade-offs": "检查方案权衡",
-    "Proposal only; no mutation without user approval": "仅方案；未经确认不修改",
+    "Proposal only; no mutation without user approval": "待用户确认",
   };
   return values[operation] ?? operation;
 }
@@ -337,8 +337,8 @@ const VERIFICATION_LABELS: Record<string, { zh: string; en: string }> = {
   VERIFIED: { zh: "已核验", en: "Verified" },
   PARTIALLY_VERIFIED: { zh: "部分核验", en: "Partly verified" },
   UNVERIFIED: { zh: "未核验", en: "Unverified" },
-  FAILED_EXTERNAL: { zh: "暂时无法核验", en: "Could not verify" },
-  NOT_CONFIGURED: { zh: "暂不支持核验", en: "Verification unavailable" },
+  FAILED_EXTERNAL: { zh: "核验失败", en: "Verification failed" },
+  NOT_CONFIGURED: { zh: "未连接", en: "Not connected" },
 };
 
 const ACTION_LABELS: Record<string, { zh: string; en: string }> = {
@@ -689,8 +689,8 @@ export function CopilotDock({
               <b>{t("agent.citynexus")}</b>
               <small>
                 {locale === "zh-CN"
-                  ? "回答只依据已核验的行程事实，不会自己改动你的安排。"
-                  : "Answers use verified journey facts only and never change your plan."}
+                  ? "基于已核验的行程事实回答。"
+                  : "Answers use verified journey facts."}
               </small>
             </div>
             <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>
