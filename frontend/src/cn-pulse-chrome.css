@@ -1,0 +1,55 @@
+/*
+ * CityNexus — 顶栏与外壳的小面积修补 (chrome layer, pass 1)
+ *
+ * 为什么单独一枚文件：`cn-pulse.css` 归脉搏工（WP-C 正在改）、`cn-pulse-actions.css`
+ * 归排工（WP-B 的领地）、`styles.css` 归扫街工（WP-A 的领地）。这一枚只装顶栏与
+ * 外壳的修补，谁都不撞；载入位放在最后，靠层叠赢，零 `!important`。
+ *
+ * 起因是取景图上那处一眼就能看见的缺陷（1440x900 亮色，落地页右上角）：
+ * 「行程事实就绪」被压成一列竖排的单字。它不是设计，是被挤出来的——
+ * `styles.css:167` 的 `.v8-topbar` 是 `display:flex; justify-content:space-between`
+ * 且高度写死 65px，而 `.v8-runtime` 没有 `flex` 声明，于是 flex 子项默认
+ * `flex-shrink:1`，右侧控件一多，它就被压到自己的 min-content；中日韩文本的
+ * min-content 是「一个字宽」，所以竖排。锚：`frontend/src/styles.css:167`。
+ */
+
+/* 右侧那一簇不许被挤：语言、主题、头像、铃铛都是要点的控件，
+   它们的宽度不该由面包屑来让。 */
+.v8-top-actions,
+.v8-runtime {
+  flex: 0 0 auto;
+}
+
+.v8-runtime {
+  white-space: nowrap;
+}
+
+/* 让位的是面包屑：它有省略号的能力，右侧控件没有。 */
+.v8-breadcrumb {
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* 第一版这里写成 `.v8-runtime, .v9-language, .v8-avatar { white-space: nowrap }`，
+   实测把语言键撑到 307 像素宽（它里面装的是整份语言清单，靠换行收起），
+   1440 视口下 `scrollWidth` 变 1921——我修掉一列竖字、造出一页横向溢出。
+   收窄到只有 runtime 一枚不许换行，其余交给它们自己的宽度。 */
+
+/* 顶栏里出现「一列竖字」是可观测的排版事故，不该靠肉眼发现。
+   这条不改变任何正常宽度下的渲染：只有当元素被压到不足两个汉字宽时，
+   才强制它保持一行——把缺陷变成看得见的行为，而不是隐藏它。 */
+.v8-runtime {
+  min-width: max-content;
+}
+
+/* 顶栏主题键实测把「亮色」拆成了两行：Range.getClientRects() 回两枚各 16 像素宽的盒
+   （语言键「EN」只有一枚 20 像素，所以不是整簇控件的问题，是这一枚自己的 min-content
+   被 44 像素的触控地板顶不住）。`min-width: max-content` 只让它长到一行放得下，
+   不参与上一版那种「整份语言清单撑到 307 像素」的灾难——那枚是列表，这枚是两字。 */
+[data-testid="topbar-theme"] {
+  min-width: max-content;
+}
