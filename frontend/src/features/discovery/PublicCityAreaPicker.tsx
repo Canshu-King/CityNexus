@@ -72,7 +72,10 @@ export function PublicCityAreaPicker({
           return;
         }
         if (!markerRef.current) {
-          markerRef.current = new maplibregl.Marker({ color: mobileFirst ? "#176b46" : "#0a66ff" }).addTo(mapInstance);
+          markerRef.current = new maplibregl.Marker({ color: mobileFirst ? "#176b46" : "#0a66ff" })
+            .setLngLat([longitude, latitude])
+            .addTo(mapInstance);
+          return;
         }
         markerRef.current.setLngLat([longitude, latitude]);
       };
