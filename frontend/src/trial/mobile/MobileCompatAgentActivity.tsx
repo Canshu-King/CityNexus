@@ -168,7 +168,7 @@ export function MobileCompatAgentActivity({
       {loadState === "ready" && snapshot?.configured && (
         <div className="rev-mobile-compat-agent-controls">
           <span>点击后将本行程信息发送给 WB2API</span>
-          <button type="button" onClick={() => void startRun()} disabled={sending || Boolean(run && !isTerminal(run.status)} || loadState !== "ready"} data-testid="rev-mobile-compat-agent-start">
+          <button type="button" onClick={() => void startRun()} disabled={sending || Boolean(run && !isTerminal(run.status)) || loadState !== "ready"} data-testid="rev-mobile-compat-agent-start">
             {sending ? <CircleDashed size={15} aria-hidden="true" /> : <Send size={15} aria-hidden="true" />}
             {sending ? "正在请求" : "检查行程"}
           </button>
