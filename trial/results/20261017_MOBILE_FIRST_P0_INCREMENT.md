@@ -15,11 +15,12 @@ ANDROID_PHONE = NOT_TESTED
 
 ## 本机真实 AI 实测
 
-- 在隔离试玩环境从 `/revolution` 页面发起两次签名 DRAFT AI 请求，均由 CityNexus 后端转发至本机 wb2api 网关，HTTP 200。
+- 在隔离试玩环境从 `/revolution` 页面发起三次签名 DRAFT AI 请求，均由 CityNexus 后端转发至本机 wb2api 网关并返回经过校验的建议。
 - 请求使用 `auto:cheapest`；网关本轮实际选择 `deepseek-v4.1-flash`。
 - 第二次覆盖情侣夜间活动到很晚、次日午后轻松出门的场景。模型返回经过服务端白名单校验的 `propose_public_discovery` 工具建议，类别为 `park/garden`，并提示实际开放时间须查公开地点来源。
 - 真实 `tools` 协议探针返回 `inspect_journey` 工具调用帧；实际模型为 `global:deepseek-v4.1-flash`，`usage.credit=0`。这条探针只确认网关返回工具帧，没有执行工具或写入行程。
 - 这证明 DRAFT 只读探索建议的真实模型工具调用已通。没有查询 POI provider，也没有创建持久化 AgentRun；响应中的 `provider_calls=0` 和 `agent_run_created=false` 与本次范围一致。
+- 2026-10-17 本轮又从浏览器发起一次真实请求：页面显示「AI 建议已生成」，模型为 `deepseek-v4.1-flash`，后端返回 `park/garden` 类别的探索建议。请求没有访问地点服务、没有保存路线，也没有创建 ACTIVE 行程的 AgentRun。
 - 390×844 实际页面截图：`trial/results/assets/20261017-live-ai-couple-draft-390x844.png`。
 - 本机运行页：`http://127.0.0.1:14173/revolution`；本机 UI 与 API 健康检查均为 HTTP 200。
 
