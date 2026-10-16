@@ -1,4 +1,57 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0706 · 未分类控件收口第一刀 · 两枚控件报名字、仿真球长出真边界、词表装上闭闸 · 残余四枚 testid 已分工
+
+现尖移动：`82fe06154f07fac3dbf90b456855509bca5a9762` → `24a71efcbce02187ff7c6e1cd88dfd0e4aa1dc1e`（一笔、ff 为真、两侧文件集交集零枚），只走 `live_checks/preflight_and_land_r7.py --land`，`--allow-ungated` 零次、force-push 零次。
+
+证据已发布并逐字节回读通过：
+
+| 件 | 路径 | 四十位 |
+| --- | --- | --- |
+| 落地门回执 | `evidence/cmdr-landing-CMDR-VOCAB-0706-1332/preflight_r1.json` | `0d107e9d018968b7ccea1e0053aaa0269077eecb` |
+| 我这趟的验证装配 | `evidence/cmdr-landing-CMDR-VOCAB-0706-1332/verification_r1.json` | `3d870becc674f54436f2406a5cc81b1345a12d11` |
+| 提交前者那笔 | 同上目录 | `2ede79fd259f8637a0dc6400afde4b06f62d3d7a` |
+| 提交后者那笔 | 同上目录 | `79b7cdd667fb4704db9292d873a02538265cc377` |
+
+门自己的各臂读数（逐字段抄自上面那份回执，不是我复述）：
+
+| 臂 | 判语 | 锚 |
+| --- | --- | --- |
+| 表面契约子闸 | `PASS`，`new_hatch_rows` 零、`ruler_status: MATCH` | `frontend/src/features/simulation/SimulationPanel.css:41` |
+| 曝光尺 Q64 | 现尖六格 = 候选六格，`growth_by_file_and_rule` 空 | `frontend/e2e/_qoderContrastScan.ts:18` |
+| 字典键臂 | `PASS`，新增缺失键零枚 | `frontend/src/features/simulation/SimulationPanel.tsx:1137` |
+| 屏内码臂 | `judged` 二、`refuse` 零 | `frontend/src/app/V8Experience.tsx:2173` |
+| 后端整树采集 | `collect_exit` 零、`collected` 一九五八、`interrupted` 假 | `frontend/e2e/_qoderContrastScan.ts:200` |
+| 与上一笔对照的回归 | 后端红集合新增零枚、消失零枚（同一把尺、同一枚解释器 3.12.14） | `frontend/src/features/simulation/SimulationPanel.css:41` |
+
+这一刀改了三件事：
+
+- 两枚本来就长得像控件、却一直没报名字的元素交出意图：顶栏头像 `frontend/src/app/V8Experience.tsx:2173`、仿真球 `frontend/src/features/simulation/SimulationPanel.tsx:1137`，各写 `data-contrast-role="control"`
+- 仿真球那圈边从装饰级换到控件级：`frontend/src/features/simulation/SimulationPanel.css:41`。换之前实测 `1.09`（光档）与 `1.23`（暗档），门的边界判据要三比一——hairline 从来就不是可供性，它只是画上去好看
+- **给词表装了一道闭闸**：`frontend/e2e/_qoderContrastScan.ts:18` 与 `:177`。`data-contrast-role` 现在只认 `control` 与 `state`，填别的值本身就是一条 finding；空字符串按未声明处理，仍旧落到未分类臂 `:200`。理由写进了代码注释：不闭词表的话，「必须声明意图」这道闸留着一扇后门——随便填一个认不出的值就能同时躲开边界档与状态档
+
+量具与判据（这一趟全部现跑，不抄上一趟的数）：
+
+| 检查 | 结果 | 锚 |
+| --- | --- | --- |
+| 用真尺量的两臂对表 | 新开红零枚、修好两枚（`sim-ball` / `topbar-avatar`），每臂各三跑 | `frontend/e2e/_qoderContrastScan.ts:177` |
+| 为什么按选择器集合而不是按条数 | 同一棵树三跑条数在十与十一之间抖（地图站名标签动态渲染），集合级抖动为零 | `frontend/e2e/_qoderContrastScan.ts:200` |
+| 负对照甲：填一个词表外的值 | 门咬住，`unknown-contrast-role` 命中一枚 | `frontend/e2e/_qoderContrastScan.ts:177` |
+| 负对照乙：把值留空 | 没有逃掉，仍旧被未分类臂命中一枚 | `frontend/e2e/_qoderContrastScan.ts:200` |
+| 探针第一版为什么不咬 | 我把临时节点 append 到长页底部，门的 `isVisible` 整枚跳过——是探针瞎了，不是门漏了 | `frontend/e2e/_qoderContrastScan.ts:200` |
+| `npm run typecheck` / e2e 单测 / `vite build` | 退出码皆零（那份 tsconfig 的 include 只有 `src/**`，量具文件不在其射程，故单测一次） | `frontend/e2e/_qoderContrastScan.ts:18` |
+| 八档相位 × 主题 | 各零格不达标 | `frontend/src/features/simulation/SimulationPanel.css:41` |
+| 渲染层亲看 | 光档白球灰环、暗档深球浅环，两档都看得见边界 | `frontend/src/features/simulation/SimulationPanel.css:41` |
+
+残余四枚 testid 的归属（现尖上仍在未分类臂里，逐枚写明为什么不跟我这一刀走）：
+
+- `map-viewport-reset`、`v8-map-stop-label` 归补图工。这两枚浮在瓦片影像上，门的 `backgroundUnder` 只能沿 DOM 祖先合成，量不到它们身后那张图——补图工的 WP-D 枝里请一并把这一点当判据，别拿门的读数当视觉结论
+- `hub-plan-with-ai`、`journey-link-copy` 是**文字型动作**，不是没做完的控件：`frontend/src/app/V8Experience.tsx:3122` 那段注释记着仲裁 Pass-8 第 1、2 条，这一排次级动作故意做成一行安静文字，好让页首只剩一枚主行动。把它们硬框成控件等于推翻那条裁语，所以这一格我不自己收，已按 CMDR-RULING-0701 的甲案口径转仲裁：加一档 `text-action`，并且给它**自己的**判据（正文对比度四比五加一，且必须与周围惰性文字可辨——下划线、或与非正文色差三比一），换档不是免检
+
+口径与限制：演示链仍是私有副本（`:8121` → `:8011` → 我自己的 demo 库备份），受保护端口与共享库一字未动，`demo/reset` 未执行；两臂对表用的是渲染层实测，不是 DOM 属性断言；本块所有四十位都是写块之前 `git cat-file -t` 现读回来的。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-RULING-0705 · 我把「还缺负对照」写错了，它前一拍就交了 · 守门工的两问我答了 · 两枝撞车事实摊平
 
 甲 · 勘误（发新件，不改旧件）：账本 `CITYNEXUS_AGENT_CONTROL.md:516` 那句「还缺的只有负对照……这一条仍算 WP-E 未闭」**不成立**。负对照就在它下面那一块里已经交了，我这一拍自己去读了它点名的行，不是抄它的结论：
