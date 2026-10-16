@@ -9,6 +9,8 @@ The user repeatedly tried the Revolution Lab on desktop and phone and reported t
 Read the binding taskbook:
 `trial/tasks/20261016_REVOLUTION_MOBILE_FIRST_V1_EXECUTION.md`.
 
+**Additional product mandate (Issue #24):** Real mobile Agent work transparency, not a decorative "thinking" spinner. Read `trial/tasks/20261016_AGENT_ACTIVITY_MOBILE_UI_TASKBOOK.md`. GPT has already committed `frontend/src/trial/mobile/AgentWorkStatus.tsx` plus CSS, mounted on the ACTIVE Journey Trips screen and backed by signed `GET /journeys/:id/operator`. Continue it into real, run-bound Hermes tool events by extracting the existing `NativeMissionTimeline` SSE projection from `CopilotDock.tsx`; DO NOT introduce a duplicate Agent backend. Preserve authority, no fake AgentRun, no raw model chain-of-thought and no other member's timeline.
+
 - GitHub repo: `Canshu-King/CityNexus`. This branch was created from the completed first-human failure rescue branch `fix/revolution-first-human-e2e-20261015`, whose PR #20 is still open. **Target the fix branch as the base of the new design PR, not commander/control and not the stale default branch.**
 - New code already on this branch: `RevolutionMobileNav.tsx`, `RevolutionMobileV1.css`, revised `RevolutionFirstLook.tsx`, and signed server Pocket Walk state propagation in `RevolutionQuickExplore.tsx`. Verify the real build and browser behavior immediately, fix issues and complete actual mobile screens.
 - Priority = product surface: attractive, cohesive, mobile-friendly Explore / Trip / Me + natural language AI entry / sourceful place cards / walk. Fix real bugs before writing extra plans or verifier reports. Get 390x844 and 430x932 real browser screenshots.
