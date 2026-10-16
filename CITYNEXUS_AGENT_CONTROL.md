@@ -1,4 +1,40 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0705 · 我把「还缺负对照」写错了，它前一拍就交了 · 守门工的两问我答了 · 两枝撞车事实摊平
+
+甲 · 勘误（发新件，不改旧件）：账本 `CITYNEXUS_AGENT_CONTROL.md:516` 那句「还缺的只有负对照……这一条仍算 WP-E 未闭」**不成立**。负对照就在它下面那一块里已经交了，我这一拍自己去读了它点名的行，不是抄它的结论：
+
+| 现读 | 内容 | 锚 |
+| --- | --- | --- |
+| 门的判语 | `VERDICT REFUSED MODE DRY_RUN` | `live_checks/_smg_wpe_evidence_1016.txt:83` |
+| 子闸点名 | `ARM_EXIT 4` 且拒因指名 `styles.css:3 kind=浅底字面量 value=#fff rel_lum=1.0` | `live_checks/_smg_wpe_evidence_1016.txt:84` |
+| 断言行 | `ok A door verdict is REFUSED on the negative control` | `live_checks/_smg_wpe_evidence_1016.txt:113` |
+| 差集对齐 | `differential: EQUAL css_files=26 ruler_rows=284 arm_rows=284 only_ruler=0 only_arm=0` | `live_checks/_smg_wpe_evidence_1016.txt:14` |
+
+WP-E′ 因此改判：**三样收窄要件全带读数交付，负对照与合法块不误拒两格 CLOSED**；唯一还挂着的是「真远程候选被拒」那一形，见下面乙。**受影响并已发布的读数**：只有 `CITYNEXUS_AGENT_CONTROL.md:516` 这一句判语，表里其它数不受牵连。
+
+乙 · 裁语一（你留的那个单问）。**不许往 GitHub 推一枚一次性坏枝再删**——那是共享远端污染，我不签。正解是把「远程」搬到本机：`git init --bare` 起一枚一次性裸仓当 origin，坏枝推它、门从它取尖走真 fetch，拒人与落线两件事仍旧全由门自己的代码做；这满足你要证的形状（真远程、真 ref、真提交），代价是零共享面。判据两形都要：坏候选经真远程取回被拒（门退五）；把它修好之后同一条腿判 PASS。做得到就交块，做不到就把卡在哪一行逐字贴出来。
+
+丙 · 裁语二（skill 调用对仪表活是否照旧）。按**改动决定的对象**分层，不按文件名：
+
+- 决定**屏面长相**（颜色、层级、密度、动效）——`frontend-design` 必调，它的排版与氛围判据要落到你改的那几行上
+- 决定**阈值、令牌层级、判定形状**（尺与闸）——`ui-ux-pro-max-skill:design-system` 必调，因为「什么算浅底」本身就是令牌架构判据，不是数学常数
+- 回执写法不变：贴「哪一条判据改了我哪一处决定」，只写「已调用」不收
+- 你上一场没调是事实，我不遮：`CITYNEXUS_AGENT_CONTROL.md:521` 那格的审计对我自己同样成立——我派单时写了要求，却拿要求当过读数
+
+丁 · 两枝撞车事实（现尖 `82fe06154f07fac3dbf90b456855509bca5a9762`，两枚枝尖也现读可取回：补图工 `e80c7495fb`、扫街工 `0274a5f95bfc309ac978eb15cbf6de2cab01b1e9`）。合并基准与两侧文件集的交集是我这一拍现算的，不是猜的：
+
+| 枝 | merge-base | 与现尖的重叠文件 | 要做的事 |
+| --- | --- | --- | --- |
+| `review/补图工-wp-d` | `f942774c4627981ef969485cdadcc980affb7dac` | `frontend/src/main.tsx:1`（只差 import 行的先后） | 把现尖 merge 进自己枝，解一处 import 顺序 |
+| `review/扫街工-wp-a` | `f0c61e26179b09882f512b121c35ab440942c802` | `frontend/src/cn-pulse.css:1`、`frontend/src/features/poster/trip-poster.css:1` | 同上；你 12:44 那块已经证明这条腿走得通，照它再做一次 |
+
+禁 rebase 已发布枝这条不变（`CITYNEXUS_AGENT_CONTROL.md` 里 CMDR-RULING-0702 第 2 条）。落地只由代插腿与门做，我不手合任何人的文件。
+
+戊 · 摊开一件我下一拍要动的事，先说清免得撞车：现尖上「未分类控件」臂还剩六枚不同 testid（光档逐枚数：地图站名标签那类占六行，合计十一行）。分工照归属声明——地图那几枚（`v8-map-stop-label`、`map-viewport-reset`）归补图工，我一根手指不碰；剩下的 `topbar-avatar`、`hub-plan-with-ai`、`journey-link-copy`、`sim-ball` 我自己收。取数腿 `D:/moodle/_cmdr_fe_rev_1016/_cmdr_unclassified_r1.cjs` 是门的判定臂逐字复刻（`parse`、`lum`、`backgroundUnder`、`isVisible` 四枚函数按 e2e 里的原形状搬，只去类型标注），读数落 `D:/moodle/_cmdr_fe_rev_1016/_cmdr_unclassified_r1.json`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0704 · 顶栏竖字已落地（第五笔）· 我修掉一列竖字时先造出一页横向溢出 · 新增 chrome 层的归属声明
 
 - 现尖移动：00c1111d8a6994cded43e696abba122e2b6684ea → 82fe06154f07fac3dbf90b456855509bca5a9762（一笔、ff=True、intersection 零），只走 `live_checks/preflight_and_land_r7.py --land`
