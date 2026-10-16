@@ -96,8 +96,8 @@ export function MemberPlaceInvitationPanel({
         return next;
       });
       setMessage(zh
-        ? "路线检查未完成，不能把请求失败当作已确认的“时间未核实”结果。请刷新重试；如不愿共享位置，可在同意弹窗中主动选择跳过。"
-        : "The route check failed; this is not a verified UNKNOWN preview. Refresh and retry, or explicitly skip location sharing in the consent dialog.");
+        ? "路线检查失败。请重试，或跳过位置共享。"
+        : "Route check failed. Retry or skip location sharing.");
     } finally {
       setBusyId(null);
     }
@@ -157,12 +157,12 @@ export function MemberPlaceInvitationPanel({
       );
       await onUpdated();
       setMessage(zh
-        ? "已提交共享站点提议；只有路线与承诺核验通过、所有当前成员各自同意后，才可由成员应用到共享行程。"
-        : "Shared-stop proposal submitted. It can be applied only after route and commitment checks pass and every current member approves independently.");
+        ? "已提交共享站点提议，等待全体成员确认。"
+        : "Shared-stop proposal submitted. Waiting for every member to approve.");
     } catch {
       setMessage(zh
-        ? "提议未能进入可执行状态。共享行程未改变；请刷新查看具体路线证据或当前恢复状态。"
-        : "The proposal did not become executable. The shared Journey is unchanged; refresh to review route evidence or an active recovery.");
+        ? "提议暂不可用，请刷新后重试。"
+        : "Proposal unavailable. Refresh and try again.");
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -182,10 +182,10 @@ export function MemberPlaceInvitationPanel({
         : null;
       const code = String(body?.detail ?? body?.error?.message ?? "");
       setMessage(code === "AUDIENCE_CHANGED"
-        ? (zh ? "同行成员名单发生变化；没有扩大分享。请刷新后重新查看名单。" : "The Journey audience changed. Nothing was shared; refresh and review the current list.")
+        ? (zh ? "成员名单已变化，分享范围未扩大。请刷新。" : "The member list changed. Sharing was not expanded; refresh to review.")
         : code === "GROUP_SHARE_REQUIRES_ACCEPTED_INVITEE"
           ? (zh ? "先等待至少一位受邀同行者接受，再发起全组分享。" : "Wait for an invited companion to accept before sharing with the whole Journey.")
-          : (zh ? "无法创建当前分享预览；地点仍只对原邀请对象可见。" : "The current sharing preview is unavailable; the Place remains visible only to the original invitees."));
+          : (zh ? "分享预览暂不可用；地点仍仅对原受邀者可见。" : "Sharing preview unavailable; the Place remains visible to the original invitees."));
       await onUpdated();
     } finally {
       setBusyId(null);
@@ -350,7 +350,7 @@ export function MemberPlaceInvitationPanel({
         `r73-apply-${crypto.randomUUID()}`,
       );
       await onUpdated();
-      setMessage(zh ? "已通过集体授权应用新的共享 PlanVersion。" : "The new shared PlanVersion was applied after collective authorization.");
+      setMessage(zh ? "已将新方案加入共同旅程。" : "New plan added to the shared Journey.");
     } catch {
       setMessage(zh
         ? "应用前复核发现计划、成员、路线或恢复状态已变化；没有应用过期提案。请刷新并重新检查。"
@@ -389,8 +389,8 @@ export function MemberPlaceInvitationPanel({
       <strong>{zh ? "把发现加入共同旅程？" : "Promote this discovery to the shared Journey?"}</strong>
       <small>
         {zh
-          ? "这是新的集体计划提议。系统会用服务器掌握的公开地点、路线与承诺证据重新核验；所有当前成员（包括未加入临时小队的成员）都要分别同意。原计划只会在全体同意后由成员明确应用时切换。"
-          : "This is a collective plan proposal. The server rechecks the canonical public Place, route, and protected commitments. Every current Journey member, including people outside this micro-group, must approve independently. The plan switches only after unanimous approval and an explicit member apply."}
+          ? "新方案会重新核对地点、路线和承诺；所有行程成员分别确认后，再由成员应用。"
+          : "The new plan rechecks Places, routes, and commitments. Every Journey member approves before a member applies it."}
       </small>
       {canPropose && coPlanningOptions.length > 0 && (
         <section data-testid="member-place-coplanning-manager">
@@ -457,15 +457,15 @@ export function MemberPlaceInvitationPanel({
       {!canUpdate && (
         <small data-testid="member-place-promotion-role-blocked">
           {zh
-            ? "你当前的 Journey 成员角色没有 JOURNEY_UPDATE 权限，因此不能提交共享计划变更提议。请由有权限的成员发起；系统不会借用其他人的身份。"
-            : "Your current Journey role lacks JOURNEY_UPDATE authority, so you cannot submit a shared-plan change. A member with this authority must propose it; CityNexus will not act as another member."}
+            ? "你没有共享计划修改权限，请由有权限的成员发起。"
+            : "You do not have permission to change the shared plan. Ask an authorized member to propose it."}
         </small>
       )}
       {canUpdate && !canPropose && (
         <small data-testid="member-place-promotion-share-blocked">
           {zh
-            ? `原地点分享者尚未向全组授权，或授权已失效（${groupShareStatus}）；请由分享者确认后再提议。`
-            : `The original Place sharer has not authorized full-Journey disclosure, or that consent is stale (${groupShareStatus}). The sharer must confirm before a proposal can be sponsored.`}
+            ? `等待分享者开放全组分享（${groupShareStatus}）。`
+            : `Waiting for the original sharer to allow whole-Journey sharing (${groupShareStatus}).`}
         </small>
       )}
       <button
@@ -606,7 +606,7 @@ export function MemberPlaceInvitationPanel({
           </ul>
         )}
         {promotion.viewer_decision && (
-          <small>{zh ? `你已${promotion.viewer_decision === "APPROVE" ? "同意" : "拒绝"}；本轮不能替其他成员决策。` : `You ${promotion.viewer_decision.toLowerCase()}; this does not decide for anyone else.`}</small>
+          <small>{zh ? `你的${promotion.viewer_decision === "APPROVE" ? "同意" : "拒绝"}已记录，等待其他成员确认。` : `Your decision is recorded. Waiting for other members.`}</small>
         )}
         {promotion.viewer_scoped_authority_expires_at && (
           <small data-testid="member-place-promotion-scoped-authority">
@@ -631,7 +631,7 @@ export function MemberPlaceInvitationPanel({
           </button>
         )}
         {promotion.state !== "APPLIED" && promotion.state !== "BLOCKED" && promotion.state !== "DECLINED" && (
-          <small>{zh ? "共享计划在成功应用前保持不变；本流程不会预订、下单或付款。" : "The shared plan remains unchanged until apply succeeds. This flow does not book, order, or pay."}</small>
+          <small>{zh ? "应用前共享计划保持不变；此流程不含预订或付款。" : "The shared plan stays unchanged until applied. No booking or payment is made here."}</small>
         )}
       </article>
     );
@@ -676,8 +676,8 @@ export function MemberPlaceInvitationPanel({
       <strong>{title} · {placeName}</strong>
       <small>
         {zh
-          ? `共同会合点：${rendezvousTitle}。停留时长只是计划估计；本进度板不验证路线或准时情况，时间按未核实处理。`
-          : `Shared rendezvous: ${rendezvousTitle}. Visit duration is a plan estimate; this board does not verify route or arrival timing, so timing remains unverified here.`}
+          ? `共同会合点：${rendezvousTitle}。停留时长为计划估计，路线和到达时间待确认。`
+          : `Shared rendezvous: ${rendezvousTitle}. Visit duration is an estimate; route and arrival time need confirmation.`}
       </small>
       <small>{zh ? "仅显示已加入者主动分享的粗粒度状态；所有报告均为成员自述，未经 GPS 验证。" : "Only coarse statuses explicitly shared by joined members appear here. Every status is member-reported and not GPS verified."}</small>
       {parentState && parentState !== "OPEN" && (
@@ -900,8 +900,8 @@ export function MemberPlaceInvitationPanel({
             </small>
             <small>
               {zh
-                ? "先检查能否赶上共同会合；没有可靠证据时不会显示绿色结论。接受后只创建你的独立支线，共享行程保持不变。"
-                : "Check whether the detour fits before accepting. Missing evidence never appears green. Acceptance creates only your own side trip; the shared Journey stays unchanged."}
+                ? "确认绕行时间后再接受；接受后只添加私人支线，不改共享行程。"
+                : "Confirm the detour timing before accepting. Acceptance adds a private side trip without changing the shared Journey."}
             </small>
             <small>
               {zh

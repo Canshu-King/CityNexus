@@ -146,35 +146,35 @@ function routeEvidenceClass(result: GroupRendezvousRouteResult): "LIVE" | "REPLA
 
 function inviteFailureCopy(code: string, zh: boolean): string {
   if (code.includes("RECIPIENT_ACCEPTANCE_REQUIRED")) {
-    return zh ? "旅伴必须亲自接受后才会加入；没有写入任何成员。" : "The traveller must accept before joining. No membership was added.";
+    return zh ? "请先接受邀请。" : "Accept the invitation first.";
   }
   if (code.includes("MEMBER_MANAGE")) {
-    return zh ? "只有当前有成员管理权限的旅伴可以发出邀请。" : "Only a current Journey member with member-management authority can invite someone.";
+    return zh ? "你当前没有邀请权限。" : "You do not have permission to invite companions.";
   }
   if (code.includes("ALREADY_PENDING")) {
     return zh ? "这位旅伴已有一个待处理邀请。" : "This traveller already has a pending invitation.";
   }
   if (code.includes("ACTIVE_JOURNEY")) {
-    return zh ? "行程开始并选定当前计划后，才能邀请旅伴加入。" : "Invite a companion after the Journey is active with a selected plan.";
+    return zh ? "请先开始行程并选择方案。" : "Start the Journey and choose a plan first.";
   }
-  return zh ? "邀请没有完成；成员名单没有改变，请刷新后重试。" : "The invitation did not complete. The member set is unchanged; refresh and retry.";
+  return zh ? "邀请失败，请刷新后重试。" : "Invitation failed. Refresh and try again.";
 }
 
 function coordinationFailureCopy(code: string, zh: boolean): string {
   if (code.includes("WITHDRAW_TARGET_STALE")) {
     return zh
-      ? "你先前看到的状态已被替换、过期或撤回。它不代表当前状态已停止分享；请查看刚刷新后的团队状态。"
-      : "The previously displayed status was replaced, expired, or revoked. This does not stop a newer status; check the refreshed team view.";
+      ? "此前的状态已过期，请刷新查看当前状态。"
+      : "This status expired. Refresh to see the latest update.";
   }
   if (code.includes("CONTEXT_CHANGED") || code.includes("TARGET_CHANGED")) {
     return zh
-      ? "共享计划或会合点刚刚变化。状态没有分享，请刷新后重新确认对象。"
-      : "The shared plan or rendezvous changed. Nothing was shared; refresh and confirm the current stop.";
+      ? "共享计划或会合点已变化，请刷新并重新确认。"
+      : "The shared plan or meetup changed. Refresh and confirm.";
   }
   if (code.includes("GROUP_RECOVERY_FOLLOWTHROUGH_ACTIVE")) {
     return zh
-      ? "团队正在完成已批准的恢复会合；此状态暂不可替代恢复确认。"
-      : "The group is completing an approved recovery rendezvous. This self-report cannot replace its confirmation.";
+      ? "团队会合恢复进行中，请等待状态更新。"
+      : "Group meetup recovery is in progress. Wait for the updated status.";
   }
   if (code.includes("PLANNED_SPLIT_TARGET_UNSUPPORTED")) {
     return zh
@@ -590,18 +590,18 @@ export function JourneyMembershipPanel({
       );
       setBuddyMessage(receipt.status === "MUTUALLY_ACKNOWLEDGED"
         ? (zh
-          ? "双方已分别签名确认接应协作完成。应用记录的是双方自报，不是设备验证的物理到场。"
-          : "Both members independently confirmed the assist. This records their self-reports, not device-verified physical presence.")
+          ? "双方已提交接应确认。"
+          : "Both members submitted assist confirmations.")
         : receipt.status === "REPLAN_REQUIRED"
-          ? (zh ? "已记录你无法在此接应；不会把旧意向当作完成，可重新协调或返回当前共同会合点。" : "Your inability to meet was recorded. The old intention is not marked complete; you can replan or return to the current shared stop.")
+          ? (zh ? "已记录。可重新协调，或返回共同会合点。" : "Recorded. Recoordinate or return to the shared meetup.")
           : receipt.status === "CANCELLED"
-            ? (zh ? "已记录你退出这次接应；对方的状态不会替你确认，仍可单独导航回当前共同会合点。" : "Your participation was cancelled. The other member cannot confirm for you; you may navigate back to the current shared stop.")
-            : (zh ? "已记录你的本人自报；仍需对方独立确认。" : "Your personal self-report was recorded; the other member must confirm independently."));
+            ? (zh ? "已退出接应。可单独返回共同会合点。" : "Assist cancelled. You can return to the shared meetup.")
+            : (zh ? "已记录，等待对方确认。" : "Recorded. Waiting for the other member."));
       await refreshGroupPresence();
     } catch {
       setBuddyMessage(zh
-        ? "自报没有写入；接应窗口可能已过期或计划已变化。刷新核对当前状态后再决定。"
-        : "The self-report was not recorded. The window may have expired or the plan changed; refresh before deciding again.");
+        ? "无法提交，请刷新后重试。"
+        : "Could not submit. Refresh and try again.");
       await refreshGroupPresence();
     } finally {
       setBuddyActionBusy(false);
@@ -970,8 +970,8 @@ export function JourneyMembershipPanel({
       );
       setTargetTravelerId("");
       setMessage(zh
-        ? `已邀请这位旅伴作为 COLLABORATOR。TA 接受前不会出现在成员名单中。有效期至 ${new Date(created.expires_at).toLocaleString(locale)}。`
-        : `Collaborator invitation sent. They will not enter the member set until they accept. Expires ${new Date(created.expires_at).toLocaleString(locale)}.`);
+        ? `已发送同行者邀请，有效期至 ${new Date(created.expires_at).toLocaleString(locale)}。`
+        : `Companion invitation sent. Expires ${new Date(created.expires_at).toLocaleString(locale)}.`);
       await refresh();
     } catch (error) {
       const text = error instanceof Error ? error.message : "";
@@ -1004,8 +1004,8 @@ export function JourneyMembershipPanel({
           return;
         }
         setMessage(zh
-          ? "你已作为 COLLABORATOR 加入这趟行程。现有地点分享或待决策可能因成员名单变化而需要重新确认。"
-          : "You joined as a collaborator. Existing Place shares and pending decisions may need renewed consent because the member set changed.");
+          ? "已加入行程；请重新确认待处理的地点分享和决定。"
+          : "Joined the Journey. Reconfirm pending Place shares and decisions.");
       } else {
         setMessage(zh ? "已谢绝邀请；成员名单没有改变。" : "Invitation declined. The member set is unchanged.");
       }
@@ -1204,7 +1204,7 @@ export function JourneyMembershipPanel({
             <article key={invitation.invitation_id} data-testid="journey-membership-invitation">
               <strong>{invitation.inviter_display_name} {zh ? "邀请你加入" : "invited you to join"} {invitation.journey_title}</strong>
               <p>
-                {invitation.city_code} · {invitation.approximate_start_date} · COLLABORATOR
+                {invitation.city_code} · {invitation.approximate_start_date} · {zh ? "同行者" : "Collaborator"}
               </p>
               <small>
                 {zh ? "仅显示行程概况和建议角色；接受前不会显示地点、成员名单或路线。邀请有效期至 " : "This preview omits Places, the member roster, and routes. Expires "}
@@ -1255,10 +1255,10 @@ export function JourneyMembershipPanel({
           </div>
           <small>
             {zh
-              ? "邀请仅授予 COLLABORATOR。只有收件人本人签名接受后才会加入；邀请 24 小时后失效。"
-              : "The invitation offers COLLABORATOR only. Membership begins after the recipient’s own signed acceptance; the invitation expires in 24 hours."}
+              ? "邀请 24 小时内有效；对方接受后以同行者身份加入。"
+              : "The invitation lasts 24 hours. The recipient joins as a companion after accepting."}
           </small>
-          {!active && <small>{zh ? "此 Journey 尚未开始或没有当前计划，暂不能邀请加入。" : "This Journey must be active with a selected plan before inviting a companion."}</small>}
+          {!active && <small>{zh ? "请先开始行程并选择方案。" : "Start the Journey and choose a plan first."}</small>}
           {sent.filter((item) => item.state === "OFFERED").map((invitation) => (
             <article key={invitation.invitation_id} data-testid="journey-membership-sent-invitation">
               <span>{invitation.target_display_name} · {zh ? "待接受" : "Awaiting acceptance"}</span>

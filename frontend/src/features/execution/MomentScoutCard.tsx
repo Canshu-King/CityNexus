@@ -99,8 +99,8 @@ export function MomentScoutCard({
       setLiveReceipt(null);
       setLiveSelectedCandidateId("");
       setMessage(zh
-        ? "这组实时地点线索已过期；如需继续，请再次明确同意并搜索。"
-        : "These live place leads expired. Give consent again to run a new search.");
+        ? "地点搜索已过期，请重新授权后搜索。"
+        : "Place search expired. Authorize a new search to continue.");
     }, delay);
     return () => window.clearTimeout(timeout);
   }, [liveReceipt, zh]);
@@ -228,8 +228,8 @@ export function MomentScoutCard({
       setLiveReceipt(null);
       setLiveSelectedCandidateId("");
       setMessage(zh
-        ? "已把你确认的 OSM 地点加入公共地点目录，并准备好本人可见的私人停留；路线和返程时间仍未核实。"
-        : "Your confirmed OSM place is in the public place catalog and your private stop is ready. Route and return time remain unverified.");
+        ? "地点已加入公共目录，私人停留已准备好。路线和返程时间待确认。"
+        : "Place added to the public catalog. Your private stop is ready; route and return time need confirmation.");
       try {
         await onUpdated();
       } catch {
@@ -246,14 +246,14 @@ export function MomentScoutCard({
         setLiveReceipt(null);
         setLiveSelectedCandidateId("");
         setMessage(zh
-          ? "共同会合时间已过，不能继续创建私人停留；请先跟进当前共享行程。"
-          : "The shared rendezvous time has passed. Don't start a new private stop; check the current shared Journey.");
+          ? "会合时间已过，请先更新共同计划。"
+          : "The meetup time has passed. Update the shared plan first.");
       } else if (detail.includes("SCOUT_EXPIRED")) {
         setLiveReceipt(null);
         setLiveSelectedCandidateId("");
         setMessage(zh
-          ? "这组实时地点线索或共同会合安排已过期；请刷新后重新查找并再次同意外部搜索。"
-          : "These live leads or the shared rendezvous expired. Refresh, search again, and give consent again.");
+          ? "地点或会合安排已过期，请刷新并重新授权搜索。"
+          : "Places or meetup details expired. Refresh and authorize a new search.");
       } else if (detail.includes("Start the Journey Operator before planning a side trip")) {
         setMessage(zh
           ? "请先点击「照看这趟行程」开启 Journey Operator，再确认这条私人支线。实时地点回执仍保留。"
@@ -294,8 +294,8 @@ export function MomentScoutCard({
       setReceipt(null);
       setSelectedPlaceId("");
       setMessage(zh
-        ? "私人停留已准备好；路线时间仍未核实。共同会合点和共享计划未改变。"
-        : "Your private stop is ready. Route time remains unverified; the rendezvous and shared plan are unchanged.");
+        ? "私人停留已准备好，路线时间待确认。"
+        : "Your private stop is ready. Route timing needs confirmation.");
       try {
         await onUpdated();
       } catch {
@@ -468,21 +468,21 @@ export function MomentScoutCard({
         <div data-testid="moment-scout-results" data-state={receipt.value.scout_state}>
           <small>
             {zh
-              ? `共同会合点：${receipt.value.rendezvous.place_name}${rendezvousTime ? ` · ${rendezvousTime}` : ""} · ${receipt.value.budget_minutes} 分钟仅作个人偏好。`
-              : `Rejoin at ${receipt.value.rendezvous.place_name}${rendezvousTime ? ` · ${rendezvousTime}` : ""} · ${receipt.value.budget_minutes} min is a personal preference.`}
+              ? `共同会合点：${receipt.value.rendezvous.place_name}${rendezvousTime ? ` · ${rendezvousTime}` : ""}`
+              : `Rejoin at ${receipt.value.rendezvous.place_name}${rendezvousTime ? ` · ${rendezvousTime}` : ""}`}
           </small>
           {rendezvous?.time_state === "UNKNOWN" && (
             <small role="status" data-testid="moment-scout-rendezvous-time-warning">
               {zh
-                ? "共同会合时间未知；离开前请核对共享计划。路线时间也未核实。"
-                : "The shared rendezvous time is unknown. Check the shared plan before leaving; route time is also unverified."}
+                ? "会合时间未知，出发前请查看共享计划。"
+                : "Meetup time is unknown. Check the shared plan before leaving."}
             </small>
           )}
           {rendezvous?.time_state === "PAST" && (
             <small role="alert" data-testid="moment-scout-rendezvous-time-warning">
               {zh
-                ? "下一共同会合时间已过，不能创建私人停留；请继续共同计划。"
-                : "The next shared rendezvous time has passed, so a private stop cannot be started. Continue the shared plan."}
+                ? "会合时间已过，请先更新共同计划。"
+                : "The meetup time has passed. Update the shared plan first."}
             </small>
           )}
           {rendezvous?.time_state === "AVAILABLE" && shortWindow && (
@@ -502,7 +502,7 @@ export function MomentScoutCard({
                 {candidate.place_provenance === "DEMO_FIXTURE"
                   ? (zh ? "来源：演示 / 夹具地点" : "Source: demo / fixture place")
                   : `Source: ${candidate.place_provenance.replace("CITY_PLACE_CATALOG:", "")}`}
-                {zh ? " · 营业状态未知 · 会合适配未核实" : " · opening status unknown · return fit unverified"}
+                {zh ? " · 营业状态待确认 · 路线待确认" : " · hours and route need confirmation"}
               </small>
               <button
                 type="button"
@@ -521,8 +521,8 @@ export function MomentScoutCard({
             <div data-testid="moment-scout-confirmation">
               <small>
                 {zh
-                  ? `确认先去「${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}」，再回到「${receipt.value.rendezvous.place_name}」${rendezvousTime ? `（${rendezvousTime}）` : ""}会合。${rendezvous?.time_state === "UNKNOWN" ? "会合时间未知，请核对共享计划。" : shortWindow ? `剩余时间少于 ${receipt.value.budget_minutes} 分钟偏好。` : ""}路线时间尚未核实。`
-                  : `Go to ${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}, then rejoin at ${receipt.value.rendezvous.place_name}${rendezvousTime ? ` (${rendezvousTime})` : ""}.${rendezvous?.time_state === "UNKNOWN" ? " Rendezvous time is unknown; check the shared plan." : shortWindow ? ` Less than your ${receipt.value.budget_minutes}-minute preference remains.` : ""} Route time is unverified.`}
+                  ? `先去「${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}」，再回到「${receipt.value.rendezvous.place_name}」${rendezvousTime ? `（${rendezvousTime}）` : ""}会合。${rendezvous?.time_state === "UNKNOWN" ? "会合时间未知，请查看共享计划。" : shortWindow ? `剩余时间少于 ${receipt.value.budget_minutes} 分钟。` : ""}`
+                  : `Visit ${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}, then rejoin at ${receipt.value.rendezvous.place_name}${rendezvousTime ? ` (${rendezvousTime})` : ""}.${rendezvous?.time_state === "UNKNOWN" ? " Meetup time is unknown; check the shared plan." : shortWindow ? ` Less than ${receipt.value.budget_minutes} minutes remain.` : ""}`}
               </small>
               <button
                 type="button"
@@ -538,7 +538,7 @@ export function MomentScoutCard({
               </button>
             </div>
           )}
-          <small>{zh ? "选项是附近地点线索，不代表营业、可达或能按时返回。" : "These are nearby place leads, not proof of opening, route access, or an on-time return."}</small>
+          <small>{zh ? "附近地点建议 · 营业和路线信息待确认" : "Nearby suggestions · hours and routes need confirmation"}</small>
         </div>
       )}
       {liveReceipt && (
@@ -585,8 +585,8 @@ export function MomentScoutCard({
               </small>
               <small>
                 {candidate.osm_type}/{candidate.osm_id} · {zh
-                  ? "营业状态未知 · 费用未知 · 路线和会合适配未核实"
-                  : "opening and cost unknown · route and return fit unverified"}
+                  ? "营业、费用和路线信息待确认"
+                  : "Hours, costs and routes need confirmation"}
               </small>
               <a href={candidate.source_url} target="_blank" rel="noreferrer">
                 {zh ? "查看 OpenStreetMap 来源" : "View OpenStreetMap source"}
@@ -608,8 +608,8 @@ export function MomentScoutCard({
             <div data-testid="moment-scout-live-confirmation">
               <small>
                 {zh
-                  ? `确认去「${liveReceipt.candidates.find((item) => item.candidate_id === liveSelectedCandidateId)?.name}」，然后返回当前共同会合点「${liveReceipt.rendezvous.place_name}」。营业、路线和按时返回能力都尚未核实。`
-                  : `Confirm the place, then return to the current shared rendezvous at ${liveReceipt.rendezvous.place_name}. Opening, route and on-time return are unverified.`}
+                  ? `前往「${liveReceipt.candidates.find((item) => item.candidate_id === liveSelectedCandidateId)?.name}」，再返回共同会合点「${liveReceipt.rendezvous.place_name}」。营业和路线信息待确认。`
+                  : `Visit ${liveReceipt.candidates.find((item) => item.candidate_id === liveSelectedCandidateId)?.name}, then return to the shared meetup at ${liveReceipt.rendezvous.place_name}. Hours and route details need confirmation.`}
               </small>
               <button
                 type="button"

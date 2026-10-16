@@ -62,8 +62,8 @@ const NEUTRAL_PLACEHOLDER = {
    example as an example, because that is exactly what makes an empty box look answerable.  No number
    here: the length floor lives in one place in code, and prose that repeats it goes stale. */
 const REQUEST_TOO_SHORT = {
-  zh: "还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。",
-  en: "We still need it in your own words. The grey example above is a hint, not a request we can plan from.",
+  zh: "写一句你这趟想怎么安排。",
+  en: "Add a sentence about how you want this trip arranged.",
 };
 
 function examplesFor(
@@ -105,23 +105,23 @@ const BLOCKED_BY_CODE: Record<
   { zh: string; en: string; action: "another-city" | "retry" | "none" }
 > = {
   CATALOG_EMPTY: {
-    zh: "这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。",
-    en: "We hold no place data for this city yet, so nothing about your wording failed — there was nothing to assemble a trip from.",
+    zh: "这座城暂无地点数据。试试其他城市。",
+    en: "No place data is available for this city. Try another city.",
     action: "another-city",
   },
   CATALOG_INSUFFICIENT: {
-    zh: "这座城我们手上的地点太少，配不平一天的行程。",
+    zh: "这座城可用地点太少，换个城市试试。",
     en: "We have too few places for this city to balance a day's itinerary.",
     action: "another-city",
   },
   PLACES_NOT_IN_CATALOG: {
-    zh: "要排的地点不在我们的目录里，所以排不出行程。",
+    zh: "当前城市目录中没有这些地点，换一组地点或城市试试。",
     en: "The places this was asked to plan are not in our catalogue, so no itinerary could be built.",
     action: "another-city",
   },
   PLACE_COST_UNVERIFIED: {
-    zh: "地点有了，但费用我们没能核实，所以没有给出带价格的方案。",
-    en: "The places were found but their costs could not be verified, so no priced plan was offered.",
+    zh: "地点已找到；补充价格后可生成预算方案。",
+    en: "Places found. Add prices to create a budgeted plan.",
     action: "retry",
   },
   PLACE_OUTSIDE_JOURNEY_WINDOW: {
@@ -130,8 +130,8 @@ const BLOCKED_BY_CODE: Record<
     action: "another-city",
   },
   MOBILITY_DATA_UNAVAILABLE: {
-    zh: "这趟的出行数据缺了一段（站与站之间的时间没读到），所以没排出来。",
-    en: "Part of this trip's mobility data is missing, so nothing could be scheduled.",
+    zh: "路段时间数据暂缺，请稍后重试。",
+    en: "Route timing is unavailable. Try again later.",
     action: "retry",
   },
 };
