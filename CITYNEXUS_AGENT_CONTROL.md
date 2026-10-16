@@ -1,4 +1,44 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0736·styles.css 死码清扫落线（第十八笔）：改名之后没人再画的三枚类，规则与组合里的 token 一起摘干净
+
+**一、线动了**
+
+- 权威尖从 f3242427f68f2bdbe544cef83db30aeb2e263427 推到 654b15ae2ab7e6343a8c75df1d0d5b20a5bb00eb，只快进（门判 ff_possible=True，候选独有一枚提交、线上独有零枚、文件集相交为零），落地后 GitHub 两条路由都回这同一枚尖，见收据 `_land_0736.json:1`。
+- 改的产品文件只有一枚 `frontend/src/styles.css`：字节从 123934 减到 123050（−884），blob 从 ff8f5d8e600c3f73df7ff24b564b76bf80f3ff67 换成 b9d5e53001719e491e5554a5820df3d9a27e114f。
+- 摘掉的三枚类名：`.v8-rain-button`、`.cn-copilot-runtime`、`.cn-native-status`（含它的 `.active` 与 `.terminal` 两枚派生态）。
+
+**二、动手前的两臂证明（删 CSS 不能只靠"看着没人用"）**
+
+- 静态臂：157 枚 `.tsx`/`.ts` 里这三枚类名字面出现零处；`className` 带表达式的现场共 64 处、其中模板串 16 处，我把 16 处的定长前缀与全部插值片段逐枚摊出来核过，没有任何一枚能拼出这三枚类名，读数落盘 `_cmdr_deadcss_proof_r2.py:1` 与 `deadcss_proof_static.txt`。
+- 真身在哪：那颗「报告降雨」的按钮现在画的是 `BUTTON.v8-quiet-button` + `data-testid="live-report-rain"`，见 `frontend/src/app/V8Experience.tsx:3912` 与 `frontend/src/app/V8Experience.tsx:3913`——也就是说类名是被改名甩下的，不是我没找到用法。
+- 动态臂：六屏（今天 / Live / Copilot / 票夹 / 地图 / 我的）逐屏 `querySelectorAll` 命中全为零，带 class 属性的元素逐屏 180 到 328 枚，读数落盘 `deadcss_probe_dynamic.json:1`。
+- 这一臂是重做的。上一版走屏拿 `#nav-agent` 之类的串去点，而那些名字是 data-testid 不是 id，五枚里四枚超时、每一"屏"其实都停在同一页——那一份"签名差为零"是空判据，我不拿它当证据。新版加了"六屏指纹必须互不相同，否则整臂判 VACUOUS 并以 rc=3 退出"这道闸，实测过闸才承认（判据写在 `_cmdr_deadcss_dom_probe_r1.cjs:1`）。
+
+**三、A/B/A：把尺自己的抖动与我的改动分开**
+
+- 第一遍对照（control=改动前 / candidate=改动后）出现过一格不等：light 臂 `unclassified-control` 八行变九行。逐行拆开看，多出来的那一行是 `v8-map-stop-label`，颜色 rgb(29, 29, 31)、底 rgb(255, 255, 255)、比值 13.68、字号 13 与既有各行逐字相同，只是多渲染了一枚站名，见尺本体 `frontend/e2e/_qoderContrastScan.ts:206`。
+- 我不肯把"这是瓦片加载时序"当结论，就把文件还原成改动前那一版又跑了一遍 control：light 臂同样读成九行、站名同样六枚，与 candidate 一致，读数三份都发布了（`gate_control_head.json`、`gate_control_again.json`、`gate_candidate.json`）。
+- 所以那九减八不是我的改动造成的，是这把尺的行数随地图站名加载时刻摆一格。两臂比较按样式元组（主题、臂、选择器、色、底、比值、字号）判：control 与 candidate 的样式集合大小相等、两个方向的差集都为零。
+- 顺带一条给尺的主：这个"多一枚站名标签"的摆幅应当像 `cmdr-selfcheck-probe` 那样被排除或具名，否则每次两臂对表都要人重新归因一遍。
+
+**四、删的行与摘的 token（形状改动，不是删整行）**
+
+- 整条删除七行：两条 `.v8-rain-button { color: #8a4f1d; }`（`frontend/src/styles.css:190` 与 `frontend/src/styles.css:350` 两份同话）、`.cn-copilot-runtime` 那条（`frontend/src/styles.css:452`）、`.cn-native-status` 三条（`frontend/src/styles.css:481`、`frontend/src/styles.css:482`、`frontend/src/styles.css:483`），再加 `frontend/src/styles.css:174` 压缩行里那条自带 `#fffaf4` 浅底的 `.v8-rain-button` 规则。
+- 组合选择器里摘 token 四处，同一压缩行其余部分逐字未动：`frontend/src/styles.css:174` 那组、`frontend/src/styles.css:185` 的窄屏外边距组、`frontend/src/styles.css:282` 的 44px 触达地板组、`frontend/src/styles.css:446` 的 `.cn-copilot-*` 组。
+- 自检：花括号左右各 1079 枚配平；`npm run typecheck` 与 `npm run build` 各自退出码零；清扫脚本从尖上取原文重放、任何一处预期次数对不上就 ABORT 且不写一个字节，同一份产物两次跑出同一个本机 sha1（9d79313ad44a 开头那串，它不是 git blob），脚本随收据发布为 `styles_dead_sweep_r3.py:1`。
+- 主题翻转逃逸口分母：这把尺量的字面浅底/深字行数从 241 降到 230（`frontend/src/styles.css` 自身从 239 降到 228），台账在 `_cmdr_fe_rev_1016/escape_hatch.tsv`，锚 `frontend/src/styles.css:174`。
+
+**五、门读到的与我留下的下一刀**
+
+- 门的表面对照臂判 PASS：在看的 css 一枚、新增 css 行四、新增逃逸口行零，尺身份 MATCH，见收据 `gate.surface_contract`。
+- 还剩一枚同名的：`frontend/src/design-tokens.css:815` 的暗档覆盖组里仍有 `.v8-page .v8-rain-button`。这一刀我故意不顺手带上——那枚文件有它自己那把暗档配对尺（`tools/cnx_token_night_pairing_r1.py`），要动它得先取那把尺的 control 读数，不然两臂对表就不干净。下一刀单独量单独落。
+
+**六、我自己的勘误（写在这里不涂改旧件）**
+
+- 静态臂第一版 `_cmdr_deadcss_proof_r1.py` 报"带表达式的 className 48 处、其中含模板串的 0 处"。那个"零"是解析没看见，不是没有：它用 `[^{}()]` 截表达式，一遇 `${}` 就断，而 `frontend/src/features/agent/CopilotDock.tsx:391` 与 `frontend/src/features/agent/CopilotDock.tsx:844` 明明白白是模板串。v1 里"字面读者为零"那一臂仍成立（整行 substring 匹配，不依赖解析），但"动态片段为零"那一格作废，v2 用配对括号扫描重做并据此落线。
+- 另外我在自己这份工作树里发现点工工那份读数收据被清成了零字节（它落在 `review` 目录下那枚 `AFTER_READING.txt`，全文四行都是他的亲测行）。不是我改的，但在我这棵树里被我撞见：已按尖上原样还原，还原后与 HEAD 逐字节相等。谁在那棵树上写过它，值得回头查一眼，我不替别人猜。
+
+
 ### CMDR-NIGHT-0732·我自己那条"未定"结掉了：三枚 trial-* 走不到 Tab 是探针造的假缺陷（附两跑读数）
 
 **一、结掉的那件**
