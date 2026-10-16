@@ -39,7 +39,42 @@ function terminalRun(status: string) {
   return /^(completed|succeeded|failed|error|stopped|cancelled|canceled)$/i.test(status);
 }
 
+function approvalStateForEvent(event: NativeRuntimeEvent): "pending" | "approved" | "closed" | "unknown" {
+  const status = String(event.approval_status ?? "").trim().toUpperCase();
+  if (status === "PENDING" || status === "APPROVAL_REQUIRED") return "pending";
+  if (status === "APPROVED" || status === "CONSUMED") return "approved";
+  if (["REJECTED", "EXPIRED", "CANCELLED", "CANCELED", "REVOKED"].includes(status)) return "closed";
+  return "unknown";
+}
+
+function pendingApprovalEvent(events: NativeRuntimeEvent[]) {
+  const seen = new Set<string>();
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index];
+    if (event.event_type !== "approval.required" || !event.approval_id || seen.has(event.approval_id)) continue;
+    seen.add(event.approval_id);
+    if (approvalStateForEvent(event) === "pending") return event;
+  }
+  return null;
+}
+
+function statusForMobileEvent(event: NativeRuntimeEvent) {
+  if (event.event_type !== "approval.required") return statusForNativeEvent(event);
+  const approvalState = approvalStateForEvent(event);
+  if (approvalState === "pending") return "approval";
+  if (approvalState === "approved") return "done";
+  if (approvalState === "closed") return "failed";
+  return "active";
+}
+
 function safeEventLabel(event: NativeRuntimeEvent) {
+  if (event.event_type === "approval.required") {
+    const approvalState = approvalStateForEvent(event);
+    if (approvalState === "pending") return "等待你确认";
+    if (approvalState === "approved") return "操作已获批准";
+    if (approvalState === "closed") return "审批已结束";
+    return "审批状态待确认";
+  }
   if (event.tool_name) {
     const tool = TOOL_LABELS[event.tool_name] ?? "执行一个行程工具步骤";
     if (event.event_type === "tool.started") return `正在${tool}`;
@@ -65,11 +100,26 @@ function eventDuration(value: NativeRuntimeEvent["duration_ms"]) {
   return `${Number(seconds.toFixed(seconds >= 10 ? 0 : 1))} 秒`;
 }
 
-function stateText(status: string, connection: string, events: NativeRuntimeEvent[]) {
+function stateText(
+  status: string,
+  connection: string,
+  events: NativeRuntimeEvent[],
+  stopState: "idle" | "sending" | "requested" | "failed" = "idle",
+) {
   if (/^(completed|succeeded)$/i.test(status)) return "已完成";
   if (/^(failed|error)$/i.test(status)) return "运行失败";
   if (/^(stopped|cancelled|canceled)$/i.test(status)) return "已停止";
-  if (events.some((event) => event.event_type === "approval.required")) return "等待你确认";
+  if (stopState === "sending") return "正在发送停止请求";
+  if (stopState === "requested") return "停止请求已提交，等待状态更新";
+  if (stopState === "failed") return "停止状态待确认";
+  const latestApproval = [...events].reverse().find((event) => event.event_type === "approval.required");
+  if (latestApproval) {
+    const approvalState = approvalStateForEvent(latestApproval);
+    if (approvalState === "pending") return "等待你确认";
+    if (approvalState === "approved") return "操作已获批准";
+    if (approvalState === "closed") return "审批已结束";
+    return "审批状态待确认";
+  }
   if (connection === "connecting" || connection === "retrying") return "正在同步运行记录";
   const lastToolEvent = [...events].reverse().find((event) => event.event_type.startsWith("tool."));
   if (lastToolEvent?.event_type === "tool.started") return "正在处理行程请求";
@@ -82,16 +132,16 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
   const [prompt, setPrompt] = useState("请检查当前行程，发现问题时给出处理建议。");
   const [requestState, setRequestState] = useState<RequestState>(() => readTravelerBearer() ? "idle" : "unauthorized");
   const [restoreState, setRestoreState] = useState<RestoreState>("idle");
-  const [reply, setReply] = useState<string | null>(null);
-  const [replyMode, setReplyMode] = useState<"AI" | "FALLBACK" | null>(null);
   const [run, setRun] = useState<NativeHermesRunData | null>(null);
+  const [runJourneyId, setRunJourneyId] = useState<string | null>(null);
+  const currentRun = runJourneyId === journeyId ? run : null;
   const [expanded, setExpanded] = useState(false);
   const [stopState, setStopState] = useState<"idle" | "sending" | "requested" | "failed">("idle");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [failure, setFailure] = useState<string | null>(null);
   const [bearerEpoch, setBearerEpoch] = useState(0);
   const restoreEpoch = useRef(0);
-  const timeline = useNativeHermesTimeline({ journeyId, run, enabled: visible });
+  const timeline = useNativeHermesTimeline({ journeyId, run: currentRun, enabled: visible });
   const actualEvents = useMemo(
     () => mergeNativeEvents(timeline.events.filter((event) => event.source === "HERMES_NATIVE")),
     [timeline.events],
@@ -99,33 +149,36 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
   const orderedEvents = actualEvents.filter((event) =>
     event.event_type.startsWith("tool.") || Object.hasOwn(EVENT_LABELS, event.event_type),
   );
-  const isFixtureRun = Boolean(run?.provider_key && /^(test|fixture)(?:[_-]|$)/i.test(run.provider_key));
-  const reasoningSummary = run?.mission_id && typeof run.reasoning_summary === "string" && run.reasoning_summary.trim()
-    ? run.reasoning_summary
+  const isFixtureRun = Boolean(currentRun?.provider_key && /^(test|fixture)(?:[_-]|$)/i.test(currentRun.provider_key));
+  const reasoningSummary = currentRun?.mission_id && typeof currentRun.reasoning_summary === "string" && currentRun.reasoning_summary.trim()
+    ? currentRun.reasoning_summary
     : null;
-  const pendingApproval = [...actualEvents].reverse().find((event) =>
-    event.event_type === "approval.required"
-    && Boolean(event.approval_id)
-    && String(event.approval_status ?? "PENDING").toUpperCase() === "PENDING",
-  );
+  const pendingApproval = pendingApprovalEvent(actualEvents);
 
+  useEffect(() => {
+    if (runJourneyId && runJourneyId !== journeyId) {
+      setRun(null);
+      setRunJourneyId(null);
+      setExpanded(false);
+      setStopState("idle");
+    }
+  }, [journeyId, runJourneyId]);
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (expanded && run && timeline.authState !== "unauthorized") {
+    if (expanded && currentRun && timeline.authState !== "unauthorized") {
       if (!dialog.open) dialog.showModal();
     } else if (dialog.open) {
       dialog.close();
     }
-  }, [expanded, run?.run_id, timeline.authState]);
+  }, [expanded, currentRun?.run_id, timeline.authState]);
 
   useEffect(() => {
     const startingBearer = readTravelerBearer();
     if (!startingBearer) {
       setRun(null);
+      setRunJourneyId(null);
       setRestoreState("idle");
-      setReply(null);
-      setReplyMode(null);
       setExpanded(false);
       setStopState("idle");
       setRequestState("unauthorized");
@@ -135,9 +188,8 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
     const unsubscribe = subscribeTravelerBearer((bearer) => {
       if (bearer === startingBearer) return;
       setRun(null);
+      setRunJourneyId(null);
       setRestoreState("idle");
-      setReply(null);
-      setReplyMode(null);
       setExpanded(false);
       setStopState("idle");
       setFailure(null);
@@ -156,6 +208,9 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
     void cityNexusApi.getLatestNativeHermesRun(journeyId).then((response) => {
       if (restoreEpoch.current !== epoch || readTravelerBearer() !== startingBearer) return;
       if (response.journey_id !== journeyId) {
+        setRun(null);
+        setRunJourneyId(null);
+        setExpanded(false);
         setRestoreState("failed");
         setFailure("服务器返回的运行记录与当前行程不匹配；已隐藏该记录。");
         return;
@@ -163,10 +218,13 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
       const latest = response.run;
       if (!latest || latest.runtime_identity !== "HERMES_NATIVE_MCP" || !latest.run_id) {
         setRun(null);
+        setRunJourneyId(null);
+        setExpanded(false);
         setRestoreState("empty");
         return;
       }
       setRun(latest);
+      setRunJourneyId(journeyId);
       setRestoreState("available");
       setRequestState("ready");
       // Restored history stays collapsed; a fresh signed Copilot response
@@ -174,8 +232,10 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
       setExpanded(false);
     }).catch((caught) => {
       if (restoreEpoch.current !== epoch || readTravelerBearer() !== startingBearer) return;
-      if (caught instanceof CityNexusApiError && [401, 403].includes(caught.status)) {
+      if (caught instanceof CityNexusApiError && [401, 403, 404].includes(caught.status)) {
         setRun(null);
+        setRunJourneyId(null);
+        setExpanded(false);
         setRestoreState("failed");
         setRequestState("unauthorized");
         setFailure("无权读取这条运行记录。");
@@ -203,28 +263,28 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
     setRequestState("sending");
     setRestoreState("checking");
     setFailure(null);
-    setReply(null);
-    setReplyMode(null);
     setRun(null);
+    setRunJourneyId(null);
     setExpanded(false);
     setStopState("idle");
     try {
       const response = await cityNexusApi.sendCopilotMessage(journeyId, message, "zh");
       if (readTravelerBearer() !== startingBearer) return;
-      setReply(response.message);
-      setReplyMode(response.mode);
       const actualRun = response.agent_run?.runtime_identity === "HERMES_NATIVE_MCP"
         && Boolean(response.agent_run.run_id)
         ? response.agent_run
         : null;
       setRun(actualRun);
+      setRunJourneyId(actualRun ? journeyId : null);
       setRestoreState(actualRun ? "available" : "empty");
       setExpanded(Boolean(actualRun));
       setRequestState("ready");
     } catch (caught) {
       if (readTravelerBearer() !== startingBearer) return;
-      if (caught instanceof CityNexusApiError && (caught.status === 401 || caught.status === 403)) {
+      if (caught instanceof CityNexusApiError && (caught.status === 401 || caught.status === 403 || caught.status === 404)) {
         setRun(null);
+        setRunJourneyId(null);
+        setExpanded(false);
         setRestoreState("failed");
         setRequestState("unauthorized");
         setFailure("无法读取这条运行记录。");
@@ -237,12 +297,12 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
   };
 
   const stopRun = async () => {
-    if (!run || timeline.authState !== "authorized" || terminalRun(timeline.runState) || stopState === "sending" || stopState === "requested") return;
+    if (!currentRun || timeline.authState !== "authorized" || terminalRun(timeline.runState) || stopState === "sending" || stopState === "requested") return;
     const startingBearer = readTravelerBearer();
     if (!startingBearer) return;
     setStopState("sending");
     try {
-      await cityNexusApi.stopNativeHermesRun(journeyId, run.run_id);
+      await cityNexusApi.stopNativeHermesRun(journeyId, currentRun.run_id);
       if (readTravelerBearer() !== startingBearer) return;
       // The POST only acknowledges a request; the run remains active in this UI
       // until the authenticated server timeline reports a terminal event.
@@ -289,7 +349,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
       </form>
 
       {failure && <p className="rev-mobile-hermes-message error" role="alert"><AlertCircle size={15} aria-hidden="true" />{failure}</p>}
-      {visible && !run && requestState !== "sending" && requestState !== "unauthorized" && (restoreState === "checking" || restoreState === "empty") && (
+      {visible && !currentRun && requestState !== "sending" && requestState !== "unauthorized" && (restoreState === "checking" || restoreState === "empty") && (
         <p className="rev-mobile-hermes-empty" role="status" data-testid="rev-mobile-hermes-empty-state">
           <CircleDashed size={15} aria-hidden="true" />
           {restoreState === "checking"
@@ -297,14 +357,8 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
             : "暂无助手运行记录。"}
         </p>
       )}
-      {reply && (
-        <div className="rev-mobile-hermes-reply" data-testid="rev-mobile-hermes-reply">
-          <b>{replyMode === "AI" ? "助手回复" : "规则回退回复"}</b>
-          <p>{reply}</p>
-        </div>
-      )}
 
-      {run && (
+      {currentRun && (
         <div className="rev-mobile-hermes-run" data-testid="rev-mobile-hermes-run">
           <div className="rev-mobile-hermes-run-top">
             <span className="rev-mobile-hermes-run-symbol" aria-hidden="true">
@@ -314,7 +368,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
               <strong role="status">
                 {timeline.authState === "unauthorized"
                   ? "成员会话已变化，运行详情已清除"
-                  : stateText(timeline.runState, timeline.connection, actualEvents)}
+                  : stateText(timeline.runState, timeline.connection, actualEvents, stopState)}
               </strong>
               <small>
                 {timeline.authState === "unauthorized"
@@ -350,7 +404,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
             <div className="rev-mobile-hermes-sheet-body">
               {timeline.authState !== "unauthorized" && (
                 <p className="rev-mobile-hermes-sheet-status" role="status">
-                  {stateText(timeline.runState, timeline.connection, actualEvents)}
+                  {stateText(timeline.runState, timeline.connection, actualEvents, stopState)}
                 </p>
               )}
               {timeline.authState !== "unauthorized" && (
@@ -374,7 +428,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
                   {orderedEvents.length > 0 ? (
                     <ol className="rev-mobile-hermes-events" aria-label="Hermes 工具调用记录" aria-live="polite">
                       {orderedEvents.slice(-12).map((event, index) => {
-                        const status = statusForNativeEvent(event);
+                        const status = statusForMobileEvent(event);
                         const duration = eventDuration(event.duration_ms);
                         return (
                           <li key={`${event.sequence ?? ""}|${event.event_id ?? ""}|${event.event_type}|${index}`} className={"is-" + status}>
