@@ -1,0 +1,20 @@
+宽度 320 | 文档横向溢出 false (scrollW 320 视口 320 )
+    A {"present":true,"text":"EVIDENCE","lines":1,"rects":[72],"self_overflow":false,"scroll_w":72,"client_w":72,"right":130,"vw":320,"over_viewport":false,"wb":"keep-all"}
+    B {"present":true,"text":"ROUTE EVIDENCE","lines":2,"rects":[36,53],"self_overflow":false,"scroll_w":60,"client_w":60,"right":118,"vw":320,"over_viewport":false,"wb":"keep-all"}
+    C {"present":true,"text":"Booking · Protected anch","lines":7,"rects":[37,5,76,5,28,8,44,57,8,44,57],"self_overflow":false,"scroll_w":0,"client_w":0,"right":183,"vw":320,"over_viewport":false,"wb":"keep-all"}
+    D {"present":true,"text":"Nexus River Cruise Pier ","lines":3,"rects":[174,9,63],"self_overflow":false,"scroll_w":0,"client_w":0,"right":257,"vw":320,"over_viewport":false,"wb":"keep-all"}
+宽度 360 | 文档横向溢出 false (scrollW 360 视口 360 )
+    A {"present":true,"text":"EVIDENCE","lines":1,"rects":[72],"self_overflow":false,"scroll_w":72,"client_w":72,"right":130,"vw":360,"over_viewport":false,"wb":"keep-all"}
+    B {"present":true,"text":"ROUTE EVIDENCE","lines":2,"rects":[36,53],"self_overflow":false,"scroll_w":65,"client_w":65,"right":123,"vw":360,"over_viewport":false,"wb":"keep-all"}
+    C {"present":true,"text":"Booking · Protected anch","lines":9,"rects":[37,8,43,30,5,3,28,8,44,57,8,44,57],"self_overflow":false,"scroll_w":0,"client_w":0,"right":219,"vw":360,"over_viewport":false,"wb":"keep-all"}
+    D {"present":true,"text":"Nexus River Cruise Pier ","lines":4,"rects":[174,13,36,27],"self_overflow":false,"scroll_w":0,"client_w":0,"right":298,"vw":360,"over_viewport":false,"wb":"keep-all"}
+宽度 390 | 文档横向溢出 false (scrollW 390 视口 390 )
+    A {"present":true,"text":"EVIDENCE","lines":1,"rects":[72],"self_overflow":false,"scroll_w":72,"client_w":72,"right":130,"vw":390,"over_viewport":false,"wb":"keep-all"}
+    B {"present":true,"text":"ROUTE EVIDENCE","lines":2,"rects":[36,53],"self_overflow":false,"scroll_w":67,"client_w":67,"right":125,"vw":390,"over_viewport":false,"wb":"keep-all"}
+    C {"present":true,"text":"Booking · Protected anch","lines":6,"rects":[37,8,76,5,28,8,103,8,103],"self_overflow":false,"scroll_w":0,"client_w":0,"right":247,"vw":390,"over_viewport":false,"wb":"keep-all"}
+    D {"present":true,"text":"Nexus River Cruise Pier ","lines":3,"rects":[174,13,63],"self_overflow":false,"scroll_w":0,"client_w":0,"right":325,"vw":390,"over_viewport":false,"wb":"keep-all"}
+宽度 430 | 文档横向溢出 false (scrollW 430 视口 430 )
+    A {"present":true,"text":"EVIDENCE","lines":1,"rects":[72],"self_overflow":false,"scroll_w":72,"client_w":72,"right":130,"vw":430,"over_viewport":false,"wb":"keep-all"}
+    B {"present":true,"text":"ROUTE EVIDENCE","lines":2,"rects":[36,53],"self_overflow":false,"scroll_w":70,"client_w":70,"right":128,"vw":430,"over_viewport":false,"wb":"keep-all"}
+    C {"present":true,"text":"Booking · Protected anch","lines":7,"rects":[37,8,76,5,3,28,5,103,5,103],"self_overflow":false,"scroll_w":0,"client_w":0,"right":271,"vw":430,"over_viewport":false,"wb":"keep-all"}
+    D {"present":true,"text":"Nexus River Cruise Pier ","lines":3,"rects":[174,13,63],"self_overflow":false,"scroll_w":0,"client_w":0,"right":325,"vw":430,"over_viewport":false,"wb":"keep-all"}
