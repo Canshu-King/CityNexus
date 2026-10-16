@@ -4,7 +4,9 @@
 .poi-import-exit-why {
   display: block;
   margin-top: 4px;
-  color: #786d99;
+  /* 11 像素的解释行以前是写死的 #786d99：暗档那张卡上是深底，这枚紫灰坐上去就掉到
+     四比五以下。取配对的静默墨，主题翻转时跟着纸面一起移。 */
+  color: var(--cn-on-elev-1-muted);
   font-size: 11px;
   line-height: 1.5;
 }
@@ -34,8 +36,12 @@
 }
 .v8-exit.chosen {
   border-color: var(--cn-accent);
-  color: var(--cn-accent-text);
-  background: #eff1ff;
+  /* 实测：暗档 `--cn-accent-text` 落在抬起来的这层纸上只有 3.5 对 4.5。
+     链接档在两套主题里各自更亮（暗 #4da3ff），且光档与原来同值，故取它。 */
+  color: var(--cn-link);
+  /* 选中态的浅靛底是写死的 #eff1ff：暗档那张卡上它比卡片还亮，"选中"就变成一块反光。
+     抬一层纸面就够——这一档真正的可供性是上面那两行（描边与字色），底只是辅助。 */
+  background: var(--cn-elev-3);
 }
 .v8-shelf-radiogroup {
   display: grid;
