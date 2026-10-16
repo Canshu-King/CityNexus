@@ -614,7 +614,12 @@
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  /* 原来这里是 `white-space: nowrap`：首屏时间带在窄屏上把句尾吃掉——
+     07:24 现读：320 档中文藏 10%、英文藏 24%，360 档英文仍藏 12%。
+     被吃掉的正是「行程时区 / journey time zone」那半句，而全屏只有这一处说它（逐枚比对：
+     同一枚完整串在 DOM 里再出现 0 次）。改成允许换行：宽屏放得下就不折，窄屏折第二行也不丢字。
+     省略号仍留着——真出现单个超长不可断的词时，还是按原设计截。 */
+  white-space: normal;
 }
 
 .cn-attention-band {
