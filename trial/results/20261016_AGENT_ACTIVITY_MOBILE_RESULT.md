@@ -46,3 +46,15 @@ VISIBLE_VERIFIED_RUN = PARTIAL
 - backend/app/main.py
 - backend/tests/test_mobile_hermes_run_binding.py
 - frontend/e2e/revolution-mobile-shell.spec.ts
+
+## 2026-10-16 手机界面增量：状态与证据标识
+
+- 继续复用 `MobileHermesRun` 和共享 `useNativeHermesTimeline`，没有重做 AgentWorkStatus、没有另建运行或事件模型。
+- ACTIVE 行程尚无服务器运行时，页面明确显示“当前没有正在执行的 Hermes 任务”；并说明“Hermes 工具已就绪”不代表任务已经开始。恢复失败和未登录仍走各自错误提示，不伪装成空运行。
+- 为服务端返回的 `semantic.interpreted`、`mission.planned` 增加中文事件名称；工具事件耗时改成“850 毫秒”或“1.2 秒”格式。
+- 运行记录带有 `TEST_*` / `FIXTURE_*` provider 标记时，抽屉明确显示 `TEST_FIXTURE · 仅用于界面验收`，并说明夹具不能证明真实 Hermes 已运行；折叠状态也标成测试夹具事件。正常运行标为“签名服务器运行记录”。
+- 新增手机抽屉截图：`assets/20261016-mobile-hermes-trace-truthful-TEST-FIXTURE-390x844.png`；SHA-256：`E08C9710820065D32F5D05577FDC0DD508D165A71F4BB678E18747B9225AC50E`。这是 390×844 Chromium TEST_FIXTURE 画面，不是实体手机或真实模型运行截图。
+- 本次增量验证：`npm.cmd run typecheck:all` 通过；`npm.cmd run build` 通过，已有的大 bundle 提示未变；聚焦 Playwright Hermes 手机用例 1 passed；后端签名 Run 绑定测试 1 passed，使用隔离临时 SQLite。以上证据不构成 LIVE_PROVIDER 或真实 Hermes 工具调用证明。
+- 没有可安全使用的真实 Hermes 签名运行配置，本次未发起上游 AI/工具调用；真实签名 Run、两名用户隔离的手机浏览器验收及实体设备验收仍待完成。
+
+因此状态继续保持 `VISIBLE_VERIFIED_RUN = PARTIAL`。需要在受控隔离服务上由签名用户真正启动 Hermes Run，并验证服务器事件和成员隔离后，才能升级真实运行验收结论。

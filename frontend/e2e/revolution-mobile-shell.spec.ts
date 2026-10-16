@@ -419,10 +419,12 @@ test.describe("Revolution Mobile-First UI fixture", () => {
 
     const runId = "hermes-test-run-21";
     const events = [
-      { event_type: "run.started", run_id: runId, event_id: "evt-1", sequence: 1, tool_name: null, friendly_label: "Hermes runtime", status: "started", timestamp: "2026-10-16T07:10:00Z", source: "HERMES_NATIVE" },
-      { event_type: "tool.started", run_id: runId, event_id: "evt-2", sequence: 2, tool_name: "inspect_journey", friendly_label: "Inspect current Journey", status: "started", timestamp: "2026-10-16T07:10:01Z", source: "HERMES_NATIVE" },
-      { event_type: "tool.completed", run_id: runId, event_id: "evt-3", sequence: 3, tool_name: "inspect_journey", friendly_label: "Inspect current Journey", status: "completed", timestamp: "2026-10-16T07:10:02Z", duration_ms: 850, source: "HERMES_NATIVE" },
-      { event_type: "run.completed", run_id: runId, event_id: "evt-4", sequence: 4, tool_name: null, friendly_label: "Hermes runtime", status: "completed", timestamp: "2026-10-16T07:10:03Z", source: "HERMES_NATIVE" },
+      { event_type: "semantic.interpreted", run_id: runId, event_id: "evt-0", sequence: 0, tool_name: null, friendly_label: "Interpret traveler request", status: "completed", timestamp: "2026-10-16T07:09:59Z", source: "HERMES_NATIVE" },
+      { event_type: "mission.planned", run_id: runId, event_id: "evt-1", sequence: 1, tool_name: null, friendly_label: "Mission plan prepared", status: "completed", timestamp: "2026-10-16T07:09:59Z", source: "HERMES_NATIVE" },
+      { event_type: "run.started", run_id: runId, event_id: "evt-2", sequence: 2, tool_name: null, friendly_label: "Hermes runtime", status: "started", timestamp: "2026-10-16T07:10:00Z", source: "HERMES_NATIVE" },
+      { event_type: "tool.started", run_id: runId, event_id: "evt-3", sequence: 3, tool_name: "inspect_journey", friendly_label: "Inspect current Journey", status: "started", timestamp: "2026-10-16T07:10:01Z", source: "HERMES_NATIVE" },
+      { event_type: "tool.completed", run_id: runId, event_id: "evt-4", sequence: 4, tool_name: "inspect_journey", friendly_label: "Inspect current Journey", status: "completed", timestamp: "2026-10-16T07:10:02Z", duration_ms: 850, source: "HERMES_NATIVE" },
+      { event_type: "run.completed", run_id: runId, event_id: "evt-5", sequence: 5, tool_name: null, friendly_label: "Hermes runtime", status: "completed", timestamp: "2026-10-16T07:10:03Z", source: "HERMES_NATIVE" },
     ];
     let latestRun: NonNullable<import("../src/api/citynexus").CopilotResponse["agent_run"]> | null = null;
     let latestRunReads = 0;
@@ -492,20 +494,26 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     }
     await page.getByTestId("rev-mobile-tab-trips").click();
     await expect.poll(() => latestRunReads).toBe(1);
+    await expect(page.getByTestId("rev-mobile-hermes-empty-state")).toContainText("当前没有正在执行的 Hermes 任务");
     await page.getByTestId("rev-mobile-hermes-submit").click();
     const run = page.getByTestId("rev-mobile-hermes-run");
     await expect(run).toBeVisible();
     const sheet = page.getByTestId("rev-mobile-hermes-sheet");
     await expect(sheet).toBeVisible();
+    await expect(sheet.getByText("TEST_FIXTURE · 仅用于界面验收")).toBeVisible();
     await expect(sheet.getByText("已完成", { exact: true })).toBeVisible();
     await expect(sheet.getByText("TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。")).toBeVisible();
+    await expect(sheet.getByText("已理解你的需求")).toBeVisible();
+    await expect(sheet.getByText("已形成执行计划")).toBeVisible();
     await expect(sheet.getByText("正在检查当前行程")).toBeVisible();
     await expect(sheet.getByText("检查当前行程：已完成")).toBeVisible();
-    await expect(sheet.getByText("850 ms")).toBeVisible();
-    await expect(sheet.getByText(/不显示工具参数或原始返回/)).toBeVisible();
+    await expect(sheet.getByText("850 毫秒")).toBeVisible();
+    await expect(sheet.getByText(/不能证明真实 Hermes 已运行/)).toBeVisible();
+    await expect(sheet.getByText(/不展示工具参数或原始返回/)).toBeVisible();
     await expect(run.getByText("inspect_journey")).toHaveCount(0);
     await page.getByRole("button", { name: "关闭工作过程" }).click();
     await expect(sheet).not.toBeVisible();
+    await expect(run).toContainText(/\d+ 条测试夹具工具事件/);
     await page.getByRole("button", { name: "查看工作过程" }).click();
     await expect(sheet).toBeVisible();
 
@@ -520,7 +528,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(restoredSheet.getByText("检查当前行程：已完成")).toBeVisible();
     await expect(restoredSheet.getByRole("button", { name: "停止本次运行" })).toHaveCount(0);
     expect(copilotPosts).toBe(1);
-    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-restored-TEST-FIXTURE-390x844.png"), fullPage: false });
+    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-restored-truthful-evidence-TEST-FIXTURE-390x844.png"), fullPage: false });
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
   });

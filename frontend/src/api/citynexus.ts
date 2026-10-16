@@ -2189,6 +2189,7 @@ export interface NativeHermesRunReference {
   run_id: string;
   status?: string;
   runtime_identity: string;
+  provider_key?: string;
   mission_id?: string;
   reasoning_summary?: string | null;
   initial_events?: NativeRuntimeEvent[];
