@@ -18,6 +18,7 @@ ANDROID_PHONE = NOT_TESTED
 - 在隔离试玩环境从 `/revolution` 页面发起两次签名 DRAFT AI 请求，均由 CityNexus 后端转发至本机 wb2api 网关，HTTP 200。
 - 请求使用 `auto:cheapest`；网关本轮实际选择 `deepseek-v4.1-flash`。
 - 第二次覆盖情侣夜间活动到很晚、次日午后轻松出门的场景。模型返回经过服务端白名单校验的 `propose_public_discovery` 工具建议，类别为 `park/garden`，并提示实际开放时间须查公开地点来源。
+- 真实 `tools` 协议探针返回 `inspect_journey` 工具调用帧；实际模型为 `global:deepseek-v4.1-flash`，`usage.credit=0`。这条探针只确认网关返回工具帧，没有执行工具或写入行程。
 - 这证明 DRAFT 只读探索建议的真实模型工具调用已通。没有查询 POI provider，也没有创建持久化 AgentRun；响应中的 `provider_calls=0` 和 `agent_run_created=false` 与本次范围一致。
 - 390×844 实际页面截图：`trial/results/assets/20261017-live-ai-couple-draft-390x844.png`。
 - 本机运行页：`http://127.0.0.1:14173/revolution`；本机 UI 与 API 健康检查均为 HTTP 200。
@@ -32,8 +33,17 @@ ANDROID_PHONE = NOT_TESTED
 
 - `uv run --project backend pytest -q backend/tests/test_mobile_compat_agent_run.py`：1 passed，覆盖签名、成员隔离、DRAFT 拒绝、请求去重、输出隐藏和越权工具拒绝。
 - `npm.cmd run typecheck`：退出码 0。
-- GitHub PR #23 当前提交 `286e70657a19de7c144ef9fd8699a47b189d583e` 的 `trial-build`：PASS。
+- `npm.cmd run typecheck:all`：UI 组件拆分后退出码 0。
+- GitHub PR #23 提交 `286e70657a19de7c144ef9fd8699a47b189d583e` 与 `255c6c1e50e0e4b61b7cf4b190c31cfaa28595ce` 的 `trial-build`：PASS。
 - 此报告中的新 AI 实测来自真实本机页面请求；上述 pytest 与既有手机截图仍分别按其 fixture / 浏览器证据等级理解。
+
+## 2026-10-17 后续移动端检查
+
+- 「换地区」按钮触摸高度从 38px 调整为 44px；浏览器快照在 375px 视口宽度下测得按钮为 112×44px。
+- 点击切换「行程」→「我的」→「探索」后，没有新增地点搜索、AI 或支付请求。
+- 城市选择和兴趣选择已拆成独立手机组件；首次进入页的按钮说明改为「点击后先创建行程草稿」。
+- 390×844 浏览器初屏实测无横向溢出（文档宽度 390px）；只读取运行状态，没有发地点、模型或支付请求。
+- 代码已推到 PR #23；最新改动正在本地验证。
 
 ## 尚未验收
 

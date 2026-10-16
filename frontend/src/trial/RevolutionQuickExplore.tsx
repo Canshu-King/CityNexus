@@ -10,13 +10,15 @@ import {
   type BootstrapPocketWalkGoState,
 } from "../api/citynexus";
 import { parsePublicMapLink } from "../features/discovery/BootstrapDiscoveryPanel";
-import { PublicCityAreaPicker, type PublicCityCenter } from "../features/discovery/PublicCityAreaPicker";
+import { type PublicCityCenter } from "../features/discovery/PublicCityAreaPicker";
 import { readTravelerBearer, subscribeTravelerBearer } from "../lib/travelerSession";
 import { isOriginResponseUnusable } from "../lib/failureAttribution";
 import { isReadDeadlineMissed } from "../lib/readDeadline";
 import { isWriteDeadlineMissed } from "../lib/writeDeadline";
+import { CityPicker } from "./mobile/CityPicker";
 import { DiscoveryPlaceCard } from "./mobile/DiscoveryPlaceCard";
-import { MobileAiPrompt, type MobileAiAdvice } from "./mobile/MobileAiPrompt";
+import { InterestPicker } from "./mobile/InterestPicker";
+import type { MobileAiAdvice } from "./mobile/MobileAiPrompt";
 
 /**
  * A HUMAN-SIZED entry to the exact signed R107/R108 endpoints.
@@ -694,183 +696,69 @@ export function RevolutionQuickExplore({
       )}
 
       {stage === "area" && (
-        <div className="rev-quick-pane" data-testid="rev-quick-area">
-          <h3 className="rev-quick-area-title">先选一个地区</h3>
-          <p className="rev-quick-area-intro">使用所选区域搜索附近地点。</p>
-          <label htmlFor="rev-quick-search">城市或地区</label>
-          <div className="rev-quick-inline">
-            <input
-              id="rev-quick-search"
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); setCityResults([]); setCityFocus(null); setCityFocusLabel(null); setSelectedPin(null); }}
-              placeholder="比如：连城县，福建龙岩"
-              maxLength={120}
-              disabled={busy}
-            />
-            <button type="button" onClick={cityLookup} disabled={busy} data-testid="rev-quick-find-city">
-              {busy ? "查询中…" : "查找位置 →"}
-            </button>
-          </div>
-          <p className="rev-quick-disclosure">
-            {sampleProviderMode
-              ? "点击后将地名发送至本机 TEST_PROVIDER。"
-              : "点击后将地名发送至 Nominatim，按所选区域搜索。"}
-          </p>
-          {cityResults.length > 0 && (
-            <div className="rev-quick-results" data-testid="rev-quick-city-results">
-              <h3>是这些地方吗？</h3>
-              {cityResults.map((item) => (
-                <button
-                  type="button"
-                  className="rev-quick-city-option"
-                  key={item.result_id}
-                  onClick={() => {
-                    // Keep the geocoder's approximate-area source distinct from
-                    // map taps, GPS, and arrival; Overpass starts on the next button.
-                    setCityFocus({ latitude: item.latitude, longitude: item.longitude });
-                    setCityFocusLabel(item.display_name || item.name);
-                    setSelectedPin(null);
-                    setTilesEnabled(false);
-                    setAlert({
-                      type: "good",
-                      text: "已选中公开地区的大致中心。你可以直接从附近查找，也可以先打开地图微调。",
-                    });
-                  }}
-                >
-                  <strong>{item.display_name || item.name}</strong>
-                  <small>{item.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "公开地点"} · 搜索中心</small>
-                  <span>就从这个公开地区中心附近找（约2.5公里） →</span>
-                </button>
-              ))}
-            </div>
-          )}
-          {cityFocus && (
-            <div className="rev-quick-map-step">
-              <h3>已找到：{cityFocusLabel || "当前地区"}</h3>
-              <p className="rev-quick-disclosure">
-                搜索中心取自公开地名结果，范围约 2.5 公里。你可以从附近查找或调整地图。
-              </p>
-              <button
-                type="button"
-                className="rev-quick-primary rev-quick-continue"
-                data-testid="rev-quick-use-approx-center"
-                onClick={() => {
-                  // This explicit user selection makes a PUBLIC, approximate
-                  // center the user-directed search area. It does NOT invent a
-                  // MAP_TAP provenance or silently send provider requests.
-                  useCenter({
-                    latitude: cityFocus.latitude,
-                    longitude: cityFocus.longitude,
-                  }, "EXPLICIT_GEOCODER_APPROX");
-                }}
-              >直接从这片地区附近找 →</button>
-              <details className="rev-quick-optional-map">
-                <summary>想换具体位置？可以打开地图（可选）</summary>
-                <p className="rev-quick-disclosure">可选：点击下方按钮加载地图。</p>
-              {!tilesEnabled ? (
-                <button
-                  type="button"
-                  className="rev-quick-secondary"
-                  onClick={() => setTilesEnabled(true)}
-                  data-testid="rev-quick-load-map"
-                >
-                  加载 OpenStreetMap 地图
-                </button>
-              ) : (
-                <>
-                  <PublicCityAreaPicker
-                    selectedCenter={selectedPin}
-                    focusCenter={cityFocus}
-                    mobileFirst
-                    onSelect={(point) => {
-                      // A deliberate public map tap is already the user's manual
-                      // center selection. Don't demand a second "confirm" click.
-                      // No Overpass request occurs until the next explicit action.
-                      setSelectedPin(point);
-                      useCenter(point, "MAP_TAP");
-                    }}
-                  />
-                </>
-              )}
-              </details>
-            </div>
-          )}
-          <details className="rev-quick-internals">
-            <summary>想用公开 OpenStreetMap 链接定位？（可选）</summary>
-            <label htmlFor="rev-quick-map-link">公开地图链接</label>
-            <input
-              id="rev-quick-map-link"
-              type="url"
-              value={mapLink}
-              onChange={(e) => setMapLink(e.target.value)}
-              placeholder="https://www.openstreetmap.org/#map=13/25.7/116.75"
-            />
-            <button type="button" onClick={applyLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
-          </details>
-          <MobileAiPrompt
-            value={aiGoal}
-            busy={busy}
-            configured={agentConfigured}
-            advice={aiAdvice}
-            onChange={setAiGoal}
-            onSubmit={() => { void consultHermes(); }}
-          />
-        </div>
+        <CityPicker
+          query={query}
+          cityResults={cityResults}
+          cityFocus={cityFocus}
+          cityFocusLabel={cityFocusLabel}
+          selectedPin={selectedPin}
+          busy={busy}
+          sampleProviderMode={sampleProviderMode}
+          tilesEnabled={tilesEnabled}
+          mapLink={mapLink}
+          aiGoal={aiGoal}
+          agentConfigured={agentConfigured}
+          aiAdvice={aiAdvice}
+          onQueryChange={(value) => {
+            setQuery(value);
+            setCityResults([]);
+            setCityFocus(null);
+            setCityFocusLabel(null);
+            setSelectedPin(null);
+          }}
+          onCityLookup={cityLookup}
+          onCityResultSelect={(item) => {
+            // Keep the geocoder's approximate-area source distinct from
+            // map taps, GPS, and arrival; Overpass starts on the next button.
+            setCityFocus({ latitude: item.latitude, longitude: item.longitude });
+            setCityFocusLabel(item.display_name || item.name);
+            setSelectedPin(null);
+            setTilesEnabled(false);
+            setAlert({
+              type: "good",
+              text: "已选中公开地区的大致中心。你可以直接从附近查找，也可以先打开地图微调。",
+            });
+          }}
+          onUseCenter={useCenter}
+          onEnableTiles={() => setTilesEnabled(true)}
+          onMapSelect={(point) => {
+            // A deliberate public map tap is already the user's manual
+            // center selection. Don't demand a second "confirm" click.
+            // No Overpass request occurs until the next explicit action.
+            setSelectedPin(point);
+            useCenter(point, "MAP_TAP");
+          }}
+          onMapLinkChange={setMapLink}
+          onApplyMapLink={applyLink}
+          onAiGoalChange={setAiGoal}
+          onAskAi={() => { void consultHermes(); }}
+        />
       )}
 
       {stage === "category" && (
-        <div className="rev-quick-pane" data-testid="rev-quick-category">
-          <h3>这次想看些什么？</h3>
-          <div className="rev-quick-categories">
-            {categories.map((item) => (
-              <button
-                type="button"
-                className={category === item.value ? "is-chosen" : ""}
-                key={item.value}
-                onClick={() => setCategory(item.value)}
-                disabled={busy}
-                aria-pressed={category === item.value}
-              >
-                <strong>{item.name}</strong><small>{item.subtitle}</small>
-              </button>
-            ))}
-          </div>
-          <p className="rev-quick-disclosure">
-            {centerBasis === "EXPLICIT_GEOCODER_APPROX"
-              ? "使用你选择的区域中心搜索，范围约 2.5 公里。可返回更换区域。"
-              : "你已选择公开地图位置。"}
-            {sampleProviderMode
-              ? "搜索时将所选区域和类别发送至 TEST_PROVIDER。"
-              : "搜索时将所选区域和类别发送至 OpenStreetMap/Overpass。"}
-            搜索按你选择的区域进行，手机定位需单独授权。
-          </p>
-          {readinessStatus !== "ready" && (
-            <p className="rev-quick-alert neutral" role="status">
-              {readinessStatus === "checking"
-              ? "正在检查地图服务…"
-                : readinessStatus === "blocked"
-                  ? "公开地点服务暂不可用。"
-                  : "无法读取地图服务状态，请稍后重试。"}
-              {readinessStatus !== "checking" && (
-                <button type="button" className="rev-quick-secondary" onClick={retryReadiness} disabled={busy}>
-                  重新检查服务
-                </button>
-              )}
-            </p>
-          )}
-          <div className="rev-quick-actions">
-            <button
-              type="button"
-              className="rev-quick-primary"
-              onClick={discover}
-              disabled={busy || readiness?.status !== "READY"}
-              data-testid="rev-quick-find-places"
-            >
-              {busy ? "正在寻找真实地点…" : "搜索附近地点 →"}
-            </button>
-            <button type="button" className="rev-quick-text-btn" onClick={() => enter("area")}>换一个位置</button>
-          </div>
-        </div>
+        <InterestPicker
+          categories={categories}
+          category={category}
+          centerBasis={centerBasis}
+          sampleProviderMode={sampleProviderMode}
+          readinessStatus={readinessStatus}
+          readinessReady={readiness?.status === "READY"}
+          busy={busy}
+          onCategoryChange={setCategory}
+          onRetryReadiness={retryReadiness}
+          onDiscover={discover}
+          onChangeArea={() => enter("area")}
+        />
       )}
 
       {stage === "results" && (

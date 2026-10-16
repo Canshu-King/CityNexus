@@ -1,0 +1,164 @@
+import { PublicCityAreaPicker, type PublicCityCenter } from "../../features/discovery/PublicCityAreaPicker";
+import type { BootstrapCitySearchResult } from "../../api/citynexus";
+import { MobileAiPrompt, type MobileAiAdvice } from "./MobileAiPrompt";
+
+type CityPickerProps = {
+  query: string;
+  cityResults: BootstrapCitySearchResult[];
+  cityFocus: { latitude: number; longitude: number } | null;
+  cityFocusLabel: string | null;
+  selectedPin: PublicCityCenter | null;
+  busy: boolean;
+  sampleProviderMode: boolean;
+  tilesEnabled: boolean;
+  mapLink: string;
+  aiGoal: string;
+  agentConfigured: boolean;
+  aiAdvice: MobileAiAdvice | null;
+  onQueryChange: (value: string) => void;
+  onCityLookup: () => void;
+  onCityResultSelect: (item: BootstrapCitySearchResult) => void;
+  onUseCenter: (
+    point: { latitude: number; longitude: number },
+    basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK",
+  ) => void;
+  onEnableTiles: () => void;
+  onMapSelect: (point: PublicCityCenter) => void;
+  onMapLinkChange: (value: string) => void;
+  onApplyMapLink: () => void;
+  onAiGoalChange: (value: string) => void;
+  onAskAi: () => void;
+};
+
+export function CityPicker({
+  query,
+  cityResults,
+  cityFocus,
+  cityFocusLabel,
+  selectedPin,
+  busy,
+  sampleProviderMode,
+  tilesEnabled,
+  mapLink,
+  aiGoal,
+  agentConfigured,
+  aiAdvice,
+  onQueryChange,
+  onCityLookup,
+  onCityResultSelect,
+  onUseCenter,
+  onEnableTiles,
+  onMapSelect,
+  onMapLinkChange,
+  onApplyMapLink,
+  onAiGoalChange,
+  onAskAi,
+}: CityPickerProps) {
+  return (
+    <div className="rev-quick-pane" data-testid="rev-quick-area">
+      <h3 className="rev-quick-area-title">先选一个地区</h3>
+      <p className="rev-quick-area-intro">使用所选区域搜索附近地点。</p>
+      <label htmlFor="rev-quick-search">城市或地区</label>
+      <div className="rev-quick-inline">
+        <input
+          id="rev-quick-search"
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          placeholder="比如：连城县，福建龙岩"
+          maxLength={120}
+          disabled={busy}
+        />
+        <button type="button" onClick={onCityLookup} disabled={busy} data-testid="rev-quick-find-city">
+          {busy ? "查询中…" : "查找位置 →"}
+        </button>
+      </div>
+      <p className="rev-quick-disclosure">
+        {sampleProviderMode
+          ? "点击后将地名发送至本机 TEST_PROVIDER。"
+          : "点击后将地名发送至 Nominatim，按所选区域搜索。"}
+      </p>
+      {cityResults.length > 0 && (
+        <div className="rev-quick-results" data-testid="rev-quick-city-results">
+          <h3>是这些地方吗？</h3>
+          {cityResults.map((item) => (
+            <button
+              type="button"
+              className="rev-quick-city-option"
+              key={item.result_id}
+              onClick={() => onCityResultSelect(item)}
+            >
+              <strong>{item.display_name || item.name}</strong>
+              <small>{item.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "公开地点"} · 搜索中心</small>
+              <span>就从这个公开地区中心附近找（约2.5公里） →</span>
+            </button>
+          ))}
+        </div>
+      )}
+      {cityFocus && (
+        <div className="rev-quick-map-step">
+          <h3>已找到：{cityFocusLabel || "当前地区"}</h3>
+          <p className="rev-quick-disclosure">
+            搜索中心取自公开地名结果，范围约 2.5 公里。你可以从附近查找或调整地图。
+          </p>
+          <button
+            type="button"
+            className="rev-quick-primary rev-quick-continue"
+            data-testid="rev-quick-use-approx-center"
+            onClick={() => {
+              // This explicit user selection makes a PUBLIC, approximate
+              // center the user-directed search area. It does NOT invent a
+              // MAP_TAP provenance or silently send provider requests.
+              onUseCenter({
+                latitude: cityFocus.latitude,
+                longitude: cityFocus.longitude,
+              }, "EXPLICIT_GEOCODER_APPROX");
+            }}
+          >直接从这片地区附近找 →</button>
+          <details className="rev-quick-optional-map">
+            <summary>想换具体位置？可以打开地图（可选）</summary>
+            <p className="rev-quick-disclosure">可选：点击下方按钮加载地图。</p>
+            {!tilesEnabled ? (
+              <button
+                type="button"
+                className="rev-quick-secondary"
+                onClick={onEnableTiles}
+                data-testid="rev-quick-load-map"
+              >
+                加载 OpenStreetMap 地图
+              </button>
+            ) : (
+              <>
+                <PublicCityAreaPicker
+                  selectedCenter={selectedPin}
+                  focusCenter={cityFocus}
+                  mobileFirst
+                  onSelect={onMapSelect}
+                />
+              </>
+            )}
+          </details>
+        </div>
+      )}
+      <details className="rev-quick-internals">
+        <summary>想用公开 OpenStreetMap 链接定位？（可选）</summary>
+        <label htmlFor="rev-quick-map-link">公开地图链接</label>
+        <input
+          id="rev-quick-map-link"
+          type="url"
+          value={mapLink}
+          onChange={(e) => onMapLinkChange(e.target.value)}
+          placeholder="https://www.openstreetmap.org/#map=13/25.7/116.75"
+        />
+        <button type="button" onClick={onApplyMapLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
+      </details>
+      <MobileAiPrompt
+        value={aiGoal}
+        busy={busy}
+        configured={agentConfigured}
+        advice={aiAdvice}
+        onChange={onAiGoalChange}
+        onSubmit={onAskAi}
+      />
+    </div>
+  );
+}

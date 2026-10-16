@@ -263,7 +263,7 @@ export function RevolutionFirstLook() {
             </form>
             {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
             <p className="rev-mobile-truth">
-              输入城市名开始探索；公开地点和 AI 请求会在你点击后发送。
+              点击后先创建行程草稿。
             </p>
           </section>
         ) : (
