@@ -1,4 +1,32 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0715 · 盘通了，四笔落地并逐笔亲测 · 第三例 flex 塌陷写成规矩 · 一条被时钟照出来的既有红（不是这批改出来的）
+
+**盘与跑批**：D 卷现读余量 15217MB，落地门地板 5000MB 之上；四腿跑批已用一键起复脚本重起到明早十一点（PID 现读 37728，`live_checks/_loop_restart_r1.py:1`），19:44 到 22:41 这段空窗是它停摆造成的，不是车道停手。
+
+**权威线今天第十二笔**：`d61c24507ad5898615ca33d3498774edc3844b34` → `8e561c954fc89e6e6b71806209dd45b05aa960d7`（一笔、ff 为真、problems 空）。门回执已发布并逐字节回读通过：`evidence/cmdr-landing-CMDR-COLLAPSE-0715-2255/preflight_r1.json` 的四十位是 `1cdd5881c5c541631af8d7b65d3314013271b4a6`，那笔提交是 `579ce5ca89364617083c02c564f82bccb0cee845`；表面契约子闸判 PASS、`new_hatch_rows` 零、`ruler_status: MATCH`（锚 `frontend/src/cn-pulse-chrome.css:67`）。
+
+这一拍连着落了四笔（前两笔由跑批的落地腿自己带走，后两笔我逐笔亲测过）：
+
+| 笔 | 内容 | 亲测读数 | 锚 |
+| --- | --- | --- | --- |
+| 扫街工 WP-A′ | 票夹屏表面字面量清扫（styles.css 三枚） | 暗档 `.v8-booking-card` 底色从白变成 rgb(28,28,30)，文字比 15.63；`aside.v9-inbox` 同 | `frontend/src/styles.css:340` |
+| 排工 WP-I | 次级动作行不再词内断行 | 九档宽 × 两语言共十八组，四枚按钮多行枚数全为零，横向溢出零档 | `frontend/src/cn-pulse-actions.css:102` |
+| 我的复用契约 | Issue #22 审查文档（只新增一份 md，产品码零字节） | 不参与渲染，无需读数 | `frontend/docs/QODER_REUSE_CONTRACT_20261016.md:1` |
+| 页首塌陷修复 | 681–899 的第三例 flex 塌陷 | 修复前 681 档标题 127 像素断两行、导语 127 像素断六行；修复后同一档标题 424 像素一行、导语 397 像素两行，840 与 899 两档同样一行 | `frontend/src/cn-pulse-chrome.css:67` |
+
+**写成规矩的那条**：flex 行里的中日韩文本，只要没有 `min-width` 纪律，就会被压到自己的 min-content——一个字宽。今天咬到第三处（顶栏 runtime、WP-B 的动作行轨道、这里是页首 `.v8-page-intro`，`frontend/src/styles.css:173`）。三处同根，不是三个 bug。
+
+我这次先试的是"给它两列网格"，实测**放弃**：动作行的 max-content 要 337 像素，在 681 档仍把标题列挤到 87 像素——放不下两列就得承认放不下，所以把已有的单列堆叠从 680 以下延到 899，超过 900 才交给两列网格（这一带的上下界就写在这条媒体查询里：`frontend/src/cn-pulse-chrome.css:67`）。这条取舍写进了文件注释，不只写在这里。
+
+**一条被时钟照出来的既有红，我没遮**：现在这个钟点（23:0x）进入 dusk 档，门的文字档报出 `p.v8-kicker`「晚上好」暗档 3.09 对四比五——色值是 `#8a4b06`，我在第一拍写的**单主题字面量**（`frontend/src/cn-pulse.css:217`），和上午那条拂晓红同一族病。同刻 A/B 已证与这拍改动无关：把这笔改动 stash 掉再跑一次真尺，light 四行对四行、dark 五行对五行，新开零、消失零（读数 `D:/moodle/_cmdr_fe_rev_1016/_gate_real_preTip1.json:1`）。这一格**脉搏工的 WP-C 已经按主题各给一枚**，等它并尖落地即闭；我不在自己的枝上抢它的活。
+
+**两扇还差一次并尖**（现尖 `8e561c954fc89e6e6b71806209dd45b05aa960d7`，behind/ahead 现算）：补图工 `953e641c30` behind 十七 ahead 二；脉搏工 `7f1524545e` behind 十八 ahead 一。禁 rebase 已发布枝不变，把现尖 merge 进自己枝即可；跑批的落地腿会在它们成为现尖后代后自动带走，我不手合。
+
+**未做的**：`text-action` 那一档仍等仲裁（CMDR-ORDER-0712）；地图浮层控件在瓦片影像上的真实可读性这把尺量不到，本拍仍未解；页首右列在九百以上仍是"标题 + 一行安静动作"的构图，我只量了尺寸没动它。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0712 · `text-action` 词表提案成件（请仲裁回一个符号）· 附四枚必须先跑出的负对照
 
 提案全文：`D:/moodle/_cmdr_fe_rev_1016/TEXT_ACTION_VOCABULARY_PROPOSAL_r1.md`（本拍新写，逐条判据都在里面）。这里是给仲裁看的最小形状。
