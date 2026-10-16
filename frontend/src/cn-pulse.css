@@ -66,6 +66,15 @@
   --cn-paper: #f7f5f2;
   --cn-paper-deep: #efece7;
 
+  /* The map's own ground, as a pair. This is NOT paper: it is the surface under
+     a raster, and the stop chips are measured against it. WP-C first tried
+     `--cn-paper-deep` here and the two-arm table caught it: the chips moved
+     1.23 -> 1.18 (15 rows, worse in both schemes). A ground you intend to read
+     chips against gets its own paired token instead of borrowing paper.
+     Light keeps the measured status quo (#dfeae8, `styles.css:176`); dark takes
+     the value the `!important` patch at `design-tokens.css:815` was supplying. */
+  --cn-map-ground: #dfeae8;
+
   --cn-elev-0: #f7f5f2;
   --cn-elev-1: #ffffff;
   --cn-elev-2: #fffdfa;
@@ -84,6 +93,14 @@
   --cn-on-elev-3-muted: #605e5a;
   --cn-on-elev-0-tertiary: #7a7772;
   --cn-on-elev-1-tertiary: #767370;
+
+  /* State-chip ink, as a pair with the chip's own paper (elev-2). The hue carries
+     the product's promise state, so it cannot be dropped — but a hue that only
+     clears AA on one sheet is the §2-1 defect wearing a brand colour. Both arms
+     are measured (`pair_calc_r1.py`): light #8a4b06 = 6.69 on elev-2, dark
+     #ffb35c = 8.53 on elev-2.                                   [T2 parity] */
+  --cn-on-elev-2-warn: #8a4b06;
+  --cn-on-elev-2-safe: #16714b;
 
   /* Hairlines that separate paper from paper: light enough to recede, dark
      enough to still be seen on the warm canvas. */
@@ -139,6 +156,10 @@
   --cn-paper: #000000;
   --cn-paper-deep: #0b0b0d;
 
+  /* Dark arm of the map ground: the value the theme patch used to supply, now
+     declared where it belongs. Different from the light arm, so it travels. */
+  --cn-map-ground: #1c1c1e;
+
   --cn-elev-0: #000000;
   --cn-elev-1: #1c1c1e;
   --cn-elev-2: #262628;
@@ -155,6 +176,10 @@
   --cn-on-elev-3-muted: #bab9be;
   --cn-on-elev-0-tertiary: #98979c;
   --cn-on-elev-1-tertiary: #98979c;
+
+  /* The dark arm of the two state-chip pairs above. */
+  --cn-on-elev-2-warn: #ffb35c;
+  --cn-on-elev-2-safe: #30d158;
 
   --cn-rule: rgba(255, 255, 255, 0.14);
   --cn-rule-strong: rgba(255, 255, 255, 0.24);
@@ -208,11 +233,24 @@
 }
 
 /* 相位落在两枚小东西上：脉搏点的呼吸色、眉标的强调色。它们都是「点」，
-   没有面积，也就不可能再出现矩形边界。 */
-[data-pulse-phase="dawn"] { --cn-pulse-dot: #ff7a3d; --cn-pulse-ink: #a13c14; }
-[data-pulse-phase="day"] { --cn-pulse-dot: #248a3d; --cn-pulse-ink: var(--cn-accent-text); }
-[data-pulse-phase="dusk"] { --cn-pulse-dot: #ff9f0a; --cn-pulse-ink: #8a4b06; }
-[data-pulse-phase="night"] { --cn-pulse-dot: #7a88c8; --cn-pulse-ink: var(--cn-on-elev-0-muted); }
+   没有面积，也就不可能再出现矩形边界。
+   WP-C 在这一节修一处继承来的缺陷：第一拍把 dawn/dusk 的墨写成了**单主题字面量**
+   （`#a13c14` / `#8a4b06`），于是相位自己就成了 §2 第 1 条说的那种逃逸口——
+   表面跟着主题走、墨不跟。实测（本机 11:4x，相位=dawn，pinned dark on a light OS）：
+   `p.v8-kicker` 拿到 rgb(161,60,20) 坐在 rgb(0,0,0) 的纸上 = 3.17/4.5，
+   `qoder-theme-contract` 因此 1 failed。现在每一档都按主题各给一枚值，
+   每枚都过 pair_calc_r1.py 现量：在其所属主题的纸/ elev-1 / elev-2 三层上
+   墨 >=4.5、点 >=3.0。 */
+[data-pulse-phase="dawn"] { --cn-pulse-dot: #c2481a; --cn-pulse-ink: #a13c14; }
+[data-pulse-phase="day"] { --cn-pulse-dot: #248a3d; --cn-pulse-ink: #0a4fd0; }
+[data-pulse-phase="dusk"] { --cn-pulse-dot: #a35b00; --cn-pulse-ink: #8a4b06; }
+[data-pulse-phase="night"] { --cn-pulse-dot: #6d7ab8; --cn-pulse-ink: var(--cn-on-elev-0-muted); }
+
+:root[data-theme="dark"] [data-pulse-phase="dawn"] { --cn-pulse-dot: #ff7a3d; --cn-pulse-ink: #ff9a5c; }
+:root[data-theme="dark"] [data-pulse-phase="day"] { --cn-pulse-dot: #30d158; --cn-pulse-ink: #4da3ff; }
+:root[data-theme="dark"] [data-pulse-phase="dusk"] { --cn-pulse-dot: #ff9f0a; --cn-pulse-ink: #ffb35c; }
+:root[data-theme="dark"] [data-pulse-phase="night"] { --cn-pulse-dot: #7a88c8; }
+
 
 .v8-page[data-pulse-phase] .v8-page-intro .v8-kicker {
   color: var(--cn-pulse-ink, var(--cn-on-elev-0-muted));
@@ -225,7 +263,11 @@
 /* ═══ 3 · Today, re-cut ═══════════════════════════════════════════════
    The screen answers four questions. The type now says which answer is which. */
 
-.v8-page[data-pulse-phase] .v8-page-intro {
+/* WP-C: narrowed to `:not(.compact)`. 实时行程 / 地图 / 票夹 三面的页首用的是
+   `.v8-page-intro.compact`，相位一推广就会连带吃到这枚 padding——而页首的垂直留白
+   在本仓是有承重的（ORD-0338 那 229px 空带就长在这种 padding 上）。留白只在 Today
+   那一屏给，别的屏的构图归各自的单。 */
+.v8-page[data-pulse-phase] .v8-page-intro:not(.compact) {
   padding: var(--cn-s-20, 20px) 0 var(--cn-s-24, 24px);
 }
 
@@ -429,6 +471,7 @@ code {
     animation: none;
   }
   .v8-page-intro .v8-quiet-button,
+  .v8-mode-chips button,
   .v8-primary,
   .cn-hero-cta {
     transition: none;
@@ -652,3 +695,350 @@ code {
   max-width: min(46ch, 100%);
   overflow-wrap: anywhere;
 }
+
+/* ═══ 7 · WP-C：四面收进契约（实时行程 / 地图 / 票夹 / 行前清单）════════
+   这一节判的不是"更好看"，是简报 §2 第 1 条那条结构性缺陷：组件用字面量画底、
+   用主题令牌写字，主题一翻正负就反转。
+
+   基线读数（control 臂 = 5918ccfe4a 原样，`_maibogong_wp_c/tools/capture_lane_r1.cjs control`，
+   时钟钉在 2026-10-16T11:30+08（相位 dawn），四面 × 手机/桌面 × 亮/暗 = 16 场景、
+   1332 枚已布局文字节点，不达标 44 格）：
+     票夹 手机亮 8 / 手机暗 13 / 桌面亮 8 / 桌面暗 13 = 42 格；
+     Today 暗色 1 格 × 两档 = 2 格（`p.v8-kicker` 3.17/4.5——相位墨的单主题字面量）；
+     实时行程 0 格、地图 0 格。
+   live 与 map 之所以是 0，靠的是 `design-tokens.css:815` 与 `:855` 那两枚
+   `:root[data-theme="dark"] … !important` 补丁替九枚选择器代写暗色——那是绷带，不是契约。
+   本节把这四面自己的底与墨写成成对令牌；**这一拍不摘绷带**：那九枚里有
+   `.v8-day-card` / `.v8-day-detail` / `.v8-compare-button` / `.v8-rain-button` 四枚
+   属于 trips/studio，不在本单的四面之内，一次摘全会把别人的面拖进来。
+   已逐枚核对同值（暗色 `--cn-elev-1` = #1c1c1e = `--cn-surface`，
+   `--cn-on-elev-1` = #f5f5f7 = `--cn-ink`），所以摘除对本四面已无风险，等一笔点名。
+
+   本节零 `!important`。规则赢在特异度（`.v8-page .x` = 0,2,0 > `styles.css` 的 0,1,0）
+   与加载顺序（本文件在 `main.tsx` 最后）。 */
+
+/* ── 7.1 实时行程 ───────────────────────────────────────────────────────
+   `.v8-live-now` / `.v8-mode-chooser` / `.v8-comparison` 在 styles.css:180 是 `#fff`，
+   `.v8-next-card` 是 `#f5fbf7`。底走 elev，字走配对的 on-elev。 */
+.v8-page .v8-live-now,
+.v8-page .v8-mode-chooser,
+.v8-page .v8-comparison {
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  border: 1px solid var(--cn-rule);
+  box-shadow: var(--cn-lift-1);
+}
+
+/* 「接下来」这一张是同一列里的第二层信息，给它 elev-2 而不是另一种白——
+   一张纸不能有两种白（第四拍那条），层级差必须由 elev 台阶表达。 */
+.v8-page .v8-next-card {
+  background: var(--cn-elev-2);
+  color: var(--cn-on-elev-2);
+  border: 1px solid var(--cn-rule);
+  box-shadow: var(--cn-lift-1);
+}
+
+.v8-live-now h2,
+.v8-next-card h3,
+.v8-mode-chooser b {
+  color: var(--cn-on-elev-1);
+  font-family: var(--cn-font-display);
+  letter-spacing: var(--cn-tracking-display);
+}
+
+.v8-next-card h3 { color: var(--cn-on-elev-2); }
+.v8-mode-chooser b { font-size: var(--cn-fs-body-min); }
+
+/* 次级说明：实测 #8590a0/#718b7f/#7e968a/#a0a9b5 在白卡上分别是
+   3.23 / 3.51 / 3.51 / 2.38，全部低于 4.5；字号 9–11px 又低于地板。
+   墨收进 on-elev-muted，字号上到 15（正文）与 11（片语）两级。 */
+.v8-live-now p,
+.v8-next-card p,
+.v8-comparison > small,
+.v8-route-row span,
+.v9-offline > p,
+.v9-offline > small,
+.v9-offline article span {
+  color: var(--cn-on-elev-1-muted);
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+}
+
+.v8-eta span,
+.v8-mode-chooser span,
+.v8-route-row b {
+  color: var(--cn-on-elev-1-muted);
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+  letter-spacing: var(--cn-tracking-caps);
+}
+
+/* 时间是行程事实，不是脚注：等宽位 + 数字角色。 */
+.v8-live-now > strong,
+.v8-eta strong {
+  color: var(--cn-on-elev-1);
+  font-family: var(--cn-font-num);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* 出行方式芯片是控件——控件的可辨性只有那条边，所以边必须走 --cn-control-border
+   （§2 第 3 条），不能用发丝线。选中态用一枚强调环 + 强调字色表达，
+   不再靠 #eff1ff 那种"另一种白"。
+   几何一律不碰：`styles.css:282` 在 ≤680px 给这枚芯片 `min-height: var(--cn-touch-min)`（44px），
+   而本文件加载在后——在这里写任何 min-height 都会把 44 的地板压掉，那是把无障碍改坏。 */
+.v8-mode-chips button {
+  border: 1px solid var(--cn-control-border);
+  color: var(--cn-on-elev-1-muted);
+  background: var(--cn-elev-1);
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+  font-weight: 700;
+  transition: border-color var(--cn-t-hover, 160ms) var(--cn-ease-standard, ease),
+    color var(--cn-t-hover, 160ms) var(--cn-ease-standard, ease);
+}
+
+.v8-mode-chips button:hover { color: var(--cn-on-elev-1); }
+
+.v8-mode-chips button.active {
+  border-color: var(--cn-accent);
+  color: var(--cn-accent-text);
+  background: var(--cn-elev-1);
+  box-shadow: inset 0 0 0 1px var(--cn-accent);
+}
+
+/* 相位落在实时行程的眉标上。这里特意**不**动 `.status-dot`：
+   那颗点是「当前/风险」的真话指示灯（coral/green 有产品语义），
+   把一天里的时刻色混进一枚承重状态色是撒谎。时刻只在眉标上说话。 */
+.v8-page[data-pulse-phase] .v8-live-label {
+  color: var(--cn-pulse-ink, var(--cn-on-elev-1-muted));
+}
+
+/* 离线兜底那张也是实时行程的一体：#fff + 主题字，同样会翻。 */
+.v8-page .v9-offline {
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  border: 1px solid var(--cn-rule);
+}
+
+.v9-offline article { border-top: 1px solid var(--cn-rule); }
+
+/* ── 7.2 地图 ───────────────────────────────────────────────────────────
+   地图是四面唯一真有面积的载体，但**铺时间光不在这一拍**：`[data-pulse-phase]`
+   只把时刻交给眉标，底色仍按 elev 走。瓦片取不到时的降级面归 WP-D，
+   `.v8-map-caption`（浮在影像上的白芯片）与 `.v8-map-tile-notice` 也不在本节改——
+   它们不是"纸中纸"，改它们要先有 WP-D 的那个面。 */
+.v8-page .v8-map-panel {
+  background: var(--cn-map-ground);
+  color: var(--cn-on-elev-0);
+  border: 1px solid var(--cn-rule-strong);
+}
+
+.v8-page .v8-map-facts {
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  border: 1px solid var(--cn-rule);
+  box-shadow: var(--cn-lift-1);
+}
+
+.v8-map-facts h2 { color: var(--cn-on-elev-1); }
+.v8-map-facts > small,
+.v8-map-caption b,
+.v8-map-selected-type {
+  color: var(--cn-on-elev-1-muted);
+}
+
+/* 空态用 `opacity: .78` 把字调淡（styles.css:810）——淡度不是令牌，
+   它跟着底走但不跟着主题走。换成成对墨。 */
+.v8-map-empty-body p {
+  opacity: 1;
+  color: var(--cn-on-elev-0-muted);
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+}
+
+.v8-map-empty-body b {
+  color: var(--cn-on-elev-0);
+  font-family: var(--cn-font-display);
+}
+
+/* 控件边界：`.v8-map-viewport-control` 的边只有 1px 发丝线（map-controls.css:30），
+   §2 第 3 条点名的那种"读不出边界"。只换边色，不动尺寸——
+   它的 32px 高度是 MapPanel.tsx:809 那段 fitBounds padding 的输入，动它是另一个单。 */
+.v8-map-panel .v8-map-viewport-control {
+  border-color: var(--cn-control-border);
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+}
+
+.v8-map-panel .v8-map-viewport-control:hover { border-color: var(--cn-accent); }
+
+/* ── 7.3 票夹 ───────────────────────────────────────────────────────────
+   四面的全部 42 格红都在这张屏上（styles.css:340 的 `#fff` 卡 + 主题墨）。
+   实测：暗色 `article.v8-booking-card h2` = 1.09（#f5f5f7 坐在 #fff 上）。 */
+.v8-page .v8-booking-card {
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  border: 1px solid var(--cn-rule);
+  box-shadow: var(--cn-lift-1);
+}
+
+.v8-page .v8-booking-card.selected {
+  background: var(--cn-elev-2);
+  color: var(--cn-on-elev-2);
+  border-color: var(--cn-control-border);
+}
+
+.v8-booking-card h2 {
+  color: inherit;
+  font-family: var(--cn-font-display);
+  letter-spacing: var(--cn-tracking-display);
+}
+
+.v8-booking-card p {
+  color: var(--cn-on-elev-1-muted);
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+}
+
+.v8-booking-card strong {
+  color: inherit;
+  font-size: var(--cn-fs-caption);
+  font-family: var(--cn-font-num);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* 图标块：#eef0ff 那种浅字面量在暗色就是一块发光板（尺的 light-surface 档）。 */
+.v8-booking-icon {
+  color: var(--cn-accent-text);
+  background: var(--cn-elev-2);
+}
+
+.v8-booking-icon.muted { color: var(--cn-on-elev-1-muted); }
+
+/* 状态片：9px 既低于地板、#8e6b34/#fff6e8 又是单主题一对。
+   底走 elev-2（两主题都有值），墨走本节新配的两枚成对状态墨。
+   色相保留，因为「待确认/已确认」是这个产品的真话；但色相不再是唯一通道——
+   片上本来就是词。
+   特异度：变体类（`.safe` / `.muted` / `.neutral`）在 styles.css 里是 0,2,0，
+   所以本体与变体都要带 `.v8-page` 前缀写成 0,3,0，否则暗色会拿到我的墨、
+   却留着 #effaf5 那块奶油底——实测 armA 就因此留下 1.89/4.5 一格。 */
+.v8-page .v8-selected-label,
+.v8-page .v8-selected-label.neutral,
+.v8-page .v8-booking-state,
+.v8-page .v8-booking-state.safe,
+.v8-page .v8-booking-icon,
+.v8-page .v8-booking-icon.muted {
+  background: var(--cn-elev-2);
+  border: 1px solid var(--cn-rule);
+}
+
+.v8-page .v8-selected-label,
+.v8-page .v8-booking-state,
+.v8-page .v8-booking-icon {
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.v8-page .v8-selected-label,
+.v8-page .v8-selected-label.neutral {
+  color: var(--cn-on-elev-1-muted);
+}
+
+.v8-page .v8-booking-state { color: var(--cn-on-elev-2-warn); }
+.v8-page .v8-booking-state.safe { color: var(--cn-on-elev-2-safe); }
+.v8-page .v8-booking-icon.muted { color: var(--cn-on-elev-1-muted); }
+
+.v8-page .v8-no-payment {
+  border: 1px solid var(--cn-rule);
+  background: var(--cn-elev-2);
+  color: var(--cn-on-elev-2);
+}
+
+.v8-no-payment b { color: var(--cn-on-elev-2-safe); }
+.v8-no-payment span { color: var(--cn-on-elev-1-muted); font-size: var(--cn-fs-body-min); }
+
+/* 票夹的收件侧栏：`styles.css:268` 的 `background: #fff` 是 armA 现场尺点名的最后一位画主
+   （`aside.v9-inbox` 上 `span.v8-kicker` 2.08、`p.v8-lede` 2.21）。
+   它的 textarea 是控件，边必须走 --cn-control-border（§2 第 3 条），
+   原来的 #cfd5df 在暖纸/黑纸上都读不出边界。 */
+.v8-page .v9-inbox {
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  border: 1px solid var(--cn-rule);
+  box-shadow: var(--cn-lift-1);
+}
+
+.v8-page .v9-inbox label {
+  color: var(--cn-on-elev-1);
+  font-size: var(--cn-fs-body-min);
+}
+
+.v8-page .v9-inbox small {
+  color: var(--cn-on-elev-1-muted);
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+  overflow-wrap: anywhere;
+}
+
+.v8-page .v9-inbox textarea {
+  border: 1px solid var(--cn-control-border);
+  background: var(--cn-elev-2);
+  color: var(--cn-on-elev-2);
+  font-size: var(--cn-fs-body-min);
+}
+
+/* ── 7.4 行前清单 ───────────────────────────────────────────────────────
+   这一面挂在 Today 之下（v8PanelRegistry.tsx:611 hubAnchorPanels），
+   所以它本来就在 `[data-pulse-phase]` 里面；缺的是底与墨的成对与台阶。 */
+.v8-page .cn-pretrip {
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  border: 1px solid var(--cn-rule);
+  box-shadow: var(--cn-lift-1);
+}
+
+.cn-pretrip-head h2 {
+  color: var(--cn-on-elev-1);
+  font-family: var(--cn-font-display);
+  letter-spacing: var(--cn-tracking-display);
+}
+
+.cn-pretrip-note {
+  color: var(--cn-on-elev-1-muted);
+  font-size: var(--cn-fs-body-min);
+  line-height: var(--cn-lh-body);
+}
+
+.v8-page .cn-pretrip-list li {
+  background: var(--cn-elev-2);
+  color: var(--cn-on-elev-2);
+  border: 1px solid var(--cn-rule);
+}
+
+.cn-pretrip-title { color: var(--cn-on-elev-2); font-size: var(--cn-fs-body-min); }
+.cn-pretrip-why { color: var(--cn-on-elev-1-muted); }
+
+/* 抬到 elev-2 的那一层上，动作字必须换链接阶梯的那一枚。
+   实测：`--cn-accent-text` 暗 #0a84ff 坐在 elev-2 #262628 上 = 4.14/4.5——
+   第一拍把清单行抬起一层，就会把行内的「去看方案」推进红区（armA 现场抓到过这一格）。
+   `--cn-link`（亮 #0a5cd6 / 暗 #4da3ff）在同一枚纸上量到 5.88 / 5.75，
+   这正是 design-tokens.css 给链接「随台阶抬一档」的既有逻辑，本节把它延伸到抬起的卡面。 */
+.v8-next-card .v8-quiet-button,
+.v8-next-card .v8-text-button,
+.cn-pretrip-list li .v8-quiet-button,
+.v8-page .v8-booking-card.selected .v8-quiet-button {
+  color: var(--cn-link);
+}
+
+/* 依据行与锚点行是凭证文字，第一拍 §6 乙 只收了它们的 span，
+   这一面把元素本体一起收进同一枚墨。 */
+.cn-pretrip-basis,
+.cn-pretrip-anchor,
+.cn-pretrip-empty {
+  color: var(--cn-on-elev-1-muted);
+  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
+}
+
+/* 相位交给清单的眉标：它在 Today 的版心里，理应和「早上好」说同一句话。 */
+[data-pulse-phase] .cn-pretrip-head .v8-kicker {
+  color: var(--cn-pulse-ink, var(--cn-on-elev-1-muted));
+}
+

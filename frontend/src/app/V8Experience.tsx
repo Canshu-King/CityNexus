@@ -3780,7 +3780,7 @@ function Live({
     cursorStatus,
   } = liveActivityWindow(data.active_plan ?? null);
   return (
-    <section className="v8-page" data-testid="v8-live-journey">
+    <section className="v8-page" data-testid="v8-live-journey" data-pulse-phase={pulsePhaseFor(new Date().getHours())}>
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">
@@ -3892,7 +3892,7 @@ function LiveSecondary({
         : `https://www.google.com/maps/dir/?api=1&destination=${nextAt.latitude},${nextAt.longitude}`
       : null;
   return (
-    <section className="v8-page" data-testid="v8-live-secondary">
+    <section className="v8-page" data-testid="v8-live-secondary" data-pulse-phase={pulsePhaseFor(new Date().getHours())}>
       {/* Pass-8 ruling #3: Live reads Current -> Map -> Disruption/Replan ->
           these utilities -> mode/evidence. They are location and weather
           reporting, not decisions, so they no longer sit above "Current" as two
@@ -4135,7 +4135,7 @@ function MapPage({
     selectedHeadingRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [selectedActivityId]);
   return (
-    <section className="v8-page">
+    <section className="v8-page" data-pulse-phase={pulsePhaseFor(new Date().getHours())}>
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("map.kicker")}</p>
@@ -4557,7 +4557,7 @@ function Bookings({
     setInput("");
   };
   return (
-    <section className="v8-page" data-testid="v8-bookings">
+    <section className="v8-page" data-testid="v8-bookings" data-pulse-phase={pulsePhaseFor(new Date().getHours())}>
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("bookings.kicker")}</p>
