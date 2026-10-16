@@ -1,0 +1,69 @@
+/* Scoped mobile status view. No global CSS, no backend work triggered by UI. */
+.rev-mobile-v1 .rev-agent-work-status {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border: 1px solid #d8e7df;
+  border-radius: 18px;
+  background: #f6fbf7;
+  color: #183929;
+  box-shadow: 0 8px 24px rgba(32, 77, 48, .035);
+}
+.rev-mobile-v1 .rev-agent-work-top { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.rev-mobile-v1 .rev-agent-work-symbol {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px;
+  border-radius: 13px; color: #1a7349; background: #e0f1e5;
+}
+.rev-mobile-v1 .rev-agent-work-title { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 4px; }
+.rev-mobile-v1 .rev-agent-work-eyebrow { font-weight: 700; font-size: 10px; letter-spacing: .075em; color: #3c7853; }
+.rev-mobile-v1 .rev-agent-work-title strong { font-size: 15px; line-height: 1.4; color: #183c2c; overflow-wrap: anywhere; }
+.rev-mobile-v1 .rev-agent-work-state {
+  font-size: 10px; font-weight: 700; color: #2a6944; border-radius: 999px;
+  padding: 7px 9px; background: #ddefe2; white-space: nowrap;
+}
+.rev-mobile-v1 .rev-agent-work-state.needs-approval { color: #865011; background: #fff1d6; }
+.rev-mobile-v1 .rev-agent-work-note {
+  margin: 12px 0 7px 52px; color: #557363; font-size: 12px;
+  line-height: 1.65; display: flex; align-items: center; gap: 5px;
+}
+.rev-mobile-v1 .rev-agent-work-approval {
+  color: #795019; background: #fff7e8; border: 1px solid #f4e2bc;
+  border-radius: 11px; padding: 12px; margin: 12px 0 2px;
+  display: flex; align-items: center; gap: 9px; font-size: 12px; line-height: 1.6;
+}
+.rev-mobile-v1 .rev-agent-work-detail { border-top: 1px solid #e3ede5; margin-top: 13px; padding-top: 9px; }
+.rev-mobile-v1 .rev-agent-work-detail > summary {
+  display: flex; align-items: center; gap: 7px; list-style: none; cursor: pointer;
+  color: #266b47; font-weight: 720; font-size: 12px;
+  min-height: 39px;
+}
+.rev-mobile-v1 .rev-agent-work-detail > summary::-webkit-details-marker { display: none; }
+.rev-mobile-v1 .rev-agent-work-chevron { margin-left: auto; transition: transform .15s; }
+.rev-mobile-v1 .rev-agent-work-detail[open] .rev-agent-work-chevron { transform: rotate(180deg); }
+.rev-mobile-v1 .rev-agent-work-timeline {
+  list-style: none; padding: 2px 0 0 3px; margin: 0 0 11px;
+}
+.rev-mobile-v1 .rev-agent-work-timeline li {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  padding: 12px 0; color: #294736; font-size: 12px;
+  border-bottom: 1px solid #e8f0e9;
+}
+.rev-mobile-v1 .rev-agent-work-timeline li > svg { flex: none; color: #23834f; }
+.rev-mobile-v1 .rev-agent-work-timeline li > span { flex: 1 1 180px; }
+.rev-mobile-v1 .rev-agent-work-timeline li > small {
+  font-size: 10px; display: flex; align-items: center; gap: 4px; color: #7b9082;
+}
+.rev-mobile-v1 .rev-agent-work-empty,
+.rev-mobile-v1 .rev-agent-work-evidence,
+.rev-mobile-v1 .rev-agent-work-footnote {
+  color: #688173; font-size: 11px; line-height: 1.7; padding: 6px 0; margin: 0;
+}
+.rev-mobile-v1 .rev-agent-work-evidence { font-weight: 650; color: #3d7452; }
+.rev-mobile-v1 .rev-agent-work-footnote { border-top: 1px solid #e5ede6; margin-top: 8px; }
+@media(max-width:520px) {
+  .rev-mobile-v1 .rev-agent-work-status { padding: 14px 13px; }
+  .rev-mobile-v1 .rev-agent-work-state { font-size: 9px; }
+  .rev-mobile-v1 .rev-agent-work-note { margin-left: 0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .rev-mobile-v1 .rev-agent-work-chevron { transition: none; }
+}
