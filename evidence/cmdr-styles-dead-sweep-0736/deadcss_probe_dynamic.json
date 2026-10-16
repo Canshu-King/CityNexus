@@ -1,0 +1,150 @@
+{
+ "ok_screens_distinct": true,
+ "distinct_sigs": 6,
+ "rows": [
+  {
+   "screen": "hub",
+   "click": "n/a (首屏)",
+   "mark": {
+    "heading": "Demo之旅",
+    "n_testid": 29,
+    "sig": "nav-agent,nav-hub,nav-map,nav-me,nav-trips,today-attention,today-attention-band,today-clock-source,today-heading,today-hero,today-hero-cta,today-next"
+   },
+   "counts": {
+    "elements_with_class_attr": 328,
+    "v8-rain-button": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-copilot-runtime": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-native-status": {
+     "selector": 0,
+     "attribute": 0
+    }
+   }
+  },
+  {
+   "screen": "live",
+   "click": "clicked [data-testid=\"today-hero-cta\"] tag=BUTTON",
+   "mark": {
+    "heading": "选择你的下一段路程。",
+    "n_testid": 33,
+    "sig": "live-affected,live-disruption,live-disruption-summary,live-journey-current,live-leave-by,live-next,live-no-proposal,live-recovery,live-report-rain,live-toolbar-actions,live-update-location,nav-agent"
+   },
+   "counts": {
+    "elements_with_class_attr": 267,
+    "v8-rain-button": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-copilot-runtime": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-native-status": {
+     "selector": 0,
+     "attribute": 0
+    }
+   }
+  },
+  {
+   "screen": "copilot",
+   "click": "clicked [data-testid=\"nav-agent\"] tag=BUTTON",
+   "mark": {
+    "heading": "你想改什么？",
+    "n_testid": 11,
+    "sig": "nav-agent,nav-hub,nav-map,nav-me,nav-trips,v15-copilot,v15-copilot-input,v15-copilot-submit,v18-copilot-dock,v8-alert-badge,v8-mobile-menu"
+   },
+   "counts": {
+    "elements_with_class_attr": 180,
+    "v8-rain-button": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-copilot-runtime": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-native-status": {
+     "selector": 0,
+     "attribute": 0
+    }
+   }
+  },
+  {
+   "screen": "trips",
+   "click": "clicked [data-testid=\"nav-trips\"] tag=BUTTON",
+   "mark": {
+    "heading": "1 天行程",
+    "n_testid": 8,
+    "sig": "nav-agent,nav-hub,nav-map,nav-me,nav-trips,v18-copilot-dock,v8-alert-badge,v8-mobile-menu"
+   },
+   "counts": {
+    "elements_with_class_attr": 258,
+    "v8-rain-button": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-copilot-runtime": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-native-status": {
+     "selector": 0,
+     "attribute": 0
+    }
+   }
+  },
+  {
+   "screen": "map",
+   "click": "clicked [data-testid=\"nav-map\"] tag=BUTTON",
+   "mark": {
+    "heading": "整座城市，行程叠加其上。",
+    "n_testid": 20,
+    "sig": "nav-agent,nav-hub,nav-map,nav-me,nav-trips,v18-copilot-dock,v8-alert-badge,v8-map-attribution,v8-map-footprint-filter,v8-map-footprint-state,v8-map-gesture-hint,v8-map-stop-label"
+   },
+   "counts": {
+    "elements_with_class_attr": 206,
+    "v8-rain-button": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-copilot-runtime": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-native-status": {
+     "selector": 0,
+     "attribute": 0
+    }
+   }
+  },
+  {
+   "screen": "me",
+   "click": "clicked [data-testid=\"nav-me\"] tag=BUTTON",
+   "mark": {
+    "heading": "我的行程与偏好",
+    "n_testid": 9,
+    "sig": "nav-agent,nav-hub,nav-map,nav-me,nav-trips,v18-copilot-dock,v8-alert-badge,v8-me,v8-mobile-menu"
+   },
+   "counts": {
+    "elements_with_class_attr": 202,
+    "v8-rain-button": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-copilot-runtime": {
+     "selector": 0,
+     "attribute": 0
+    },
+    "cn-native-status": {
+     "selector": 0,
+     "attribute": 0
+    }
+   }
+  }
+ ]
+}
