@@ -2,7 +2,7 @@ HUMAN_CAN_USE = PARTIAL
 
 # Issue #21：手机优先版验收结果
 
-截至 2026-10-16。当前代码在 `design/revolution-mobile-first-v1`，功能提交为 `9fc03490a8b1043fe1b9ac9bfba14bc4fe46a39e`，PR #23 的目标分支仍是 `fix/revolution-first-human-e2e-20261015`。本报告记录可复现的本地结果；不代表已合入 Qoder 主线。
+截至 2026-10-16。当前代码在 `design/revolution-mobile-first-v1`；手机体验提交为 `9fc03490a8b1043fe1b9ac9bfba14bc4fe46a39e`，地图首次轻触修复为 `29cebe264a910cb7157b7b6036b03bc9cf2f3290`。PR #23 的目标分支仍是 `fix/revolution-first-human-e2e-20261015`。本报告记录可复现结果；不代表已合入 Qoder 主线。
 
 ## 给普通用户的结论
 
@@ -16,6 +16,7 @@ HUMAN_CAN_USE = PARTIAL
 - 将探索页中的 AI 输入和地点卡片拆成 `MobileAiPrompt`、`DiscoveryPlaceCard` 两个组件。AI 只在用户点击时才请求；当前未配置，所以按钮正确保持禁用，没有发模型请求，也没有声称发生 AgentRun。
 - 地点卡片显示来源状态、可用距离和“营业与费用需自行核实”，只展示通过 OpenStreetMap 主机与路径校验的来源链接；选地点按钮达到 44px 触摸高度。
 - 地图改成显式同意后才加载公开瓦片；地图说明、不可用提示和标记颜色适配中文手机页面，主要触摸控件至少 44px。真实触摸测试中，轻触地图会放置点位并进入兴趣步骤，不会自动发起 Overpass 搜索。
+- 修复地图首次轻触的真实运行时错误：此前首次创建 MapLibre 标记时先 `addTo`、后设置经纬度，会报 `Cannot read properties of undefined (reading 'lng')` 并中断进入兴趣步骤；现先设置坐标再挂载。失败追踪复现该错误，修复后单项与完整手机 Chromium 用例均通过。
 - 新建本地 Journey 后，后续 POST 会带上服务端签发的 traveler bearer；没有把 bearer、Journey ID 或个人行程写进截图和报告。
 - 继承并保留了远端 PR #23 已有的签名 Journey Operator 状态面板；本轮没有改 Qoder 主线、`/v8/hub`、`commander/control` 或默认分支。
 
@@ -31,7 +32,7 @@ HUMAN_CAN_USE = PARTIAL
 | 实际地名搜索 | 页面显示“没有找到足够可靠的地名结果” | 隔离后端未配置可用的实时 Nominatim/Overpass 来源；本轮没有向外部地理服务伪造或补种地点 |
 | AI / AgentRun | 未验证、未执行 | 隔离运行时显示 AI 未启用；没有模型请求，也没有 AgentRun 成功声明 |
 | 真人手机、Android 软键盘、读屏器和完整对比度验收 | 未验证 | Chromium 视口与触摸模拟不能替代真实手机和读屏验收 |
-| GitHub CI | 初次推送后查询时 `trial-build` 仍为 pending | 以 PR #23 当前 checks 为准；不是本地测试结果 |
+| GitHub CI | run `38868901954`（代码提交 `29cebe264a910cb7157b7b6036b03bc9cf2f3290`）通过：TypeScript、Vite build、Chromium UI smoke | 仍是受控 `TEST_PROVIDER` 夹具；不包含 live API 或 Agent 验收 |
 
 前端安装时，`npm ci` 因仓库 lockfile 缺少 `@types/react@19.3.0`、`@types/react-dom@19.3.0`、`csstype@3.2.3` 而报 `EUSAGE`。为继续验证，使用了 `npm install --no-save --package-lock=false`；没有改 `package.json` 或 `package-lock.json`。
 
