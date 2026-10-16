@@ -1,4 +1,54 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-DELIVER-0722·第十五笔（移动端主控件那把尺补回失灵的一枚）＋八格相位实测＋逃逸口分母三镜头重排（号令者亲测·10-17 05 时代插）
+
+**一、这一笔移动了权威线，且是零产品字节**
+
+- 换代一次，fast-forward only：落地前尖 `night15_readings.txt:4`（246db75386303651b5e4d47ecc0efe1eb5ec19d1），落地后尖 `night15_readings.txt:3`（2a0dd441b1855664213de5870a51df6fe86418e6），回执与两路由同尖见 `night15_readings.txt:5`，problems 为空见 `night15_readings.txt:6`。
+- 只改一枚文件、且是尺不是产品：`frontend/e2e/_qoderMobileScan.ts:138`（改动前的 `".v8-rain-button"` 换成 `[data-testid="live-report-rain"]`）；因此表面契约臂与曝光臂都是"无 frontend/src 文件改动"跳过，见 `night15_readings.txt:8` 与 `night15_readings.txt:9`；逐字节对拍的 blob 见 `night15_readings.txt:10`（c36fa8f6159df53e9903353520e0b7ff8b97f442 现读 cat-file 回 blob）。
+- 套尺：collect_exit 见 `night15_readings.txt:7`，收到 1958 条同处；playwright 侧 `--list` 回 936 条测试 / 198 个文件（`collect_mobile.log:1`），typecheck rc 为零（`tc_mobile.log:1`）。
+- 外读证据：本机账 `land_mobile.json:1`；已发布枝上的 commit 7f12e3cd30031b1d7215b3a2cc06381af90681ed，其内 blob 46a84d4c2358f2996d4b0abf24e969b664dc940f，发布器判语 BYTE-LEVEL MATCH（两枚现读 cat-file 分别为 commit 与 blob）。
+
+**二、为什么这是"尺失灵"而不是"产品新开红"**
+
+- 那枚按钮真的存在：现读 `[data-testid="live-report-rain"]` 在实时行程屏上有 1 枚，祖先链是 BUTTON.v8-quiet-button → DIV.cn-live-toolbar → SECTION.v8-page（`night15_readings.txt:15`）——它不在页首里，所以清单里 `.v8-page-intro button` 也圈不到它。
+- 同一时刻、同一屏、同一份 DOM：shipped 清单圈到 11 枚（`night15_readings.txt:12`），把失灵那条换成真身之后圈到 12 枚（`night15_readings.txt:13`），差集就是这颗"报告降雨"（`night15_readings.txt:14` 前=0 后=1）。漏测的形态是绿色通过，比红贵。
+- 换进来之前先按这把尺自己的判据量了它：四档宽 × 两档主题共 8 个组合全清（`night15_readings.txt:16` 与 `night15_readings.txt:17`），形状 79×44、与任何浮层重叠面积最大为零（`night15_readings.txt:18`）。MIN_TOUCH_PX 与遮挡判据一字未动——不是把门槛放宽换来的绿。
+
+**三、八格相位实测：眉标在暗档的两格是真的不合格**
+
+- 读数（真像素：裁片众数色当纸、最远色簇当墨；台账 `phase_pixel_contrast.json:1`，逐格见 `night15_readings.txt:21`）：亮档四格 8.61 / 5.49 / 6.25 / 6.23 全过；暗档 day 5.76、night 10.08 过，**dawn 2.24 与 dusk 3.09 不过**（`night15_readings.txt:20`）。
+- 成因是成对缺失，不是选错颜色：`frontend/src/cn-pulse.css:215` 的拂晓墨与 `frontend/src/cn-pulse.css:217` 的黄昏墨是写死的字面量，而 `frontend/src/cn-pulse.css:216` 与 `frontend/src/cn-pulse.css:218` 走的是会随主题翻的令牌——同一段里两种写法并存，翻档时只有令牌那一半翻了。
+- 为什么对比尺没报：那把尺跑的是"当前钟点的那一格"，而相位随钟点变，`frontend/src/cn-pulse.css:212` 的注释早就写明四档都必须量；这是覆盖面的限制，不是判据被放宽。八格仪表 `_cmdr_phase_pixel_r1.cjs:1` 就是为补这一面写的。
+- 归口：黄昏档那枚墨在 脉搏工 待并枝的 WP-C 面里（我这边不动 `cn-pulse.css` 以免撞枝）。**要点名催的是**：WP-C 只覆盖了 `:217`，`:215` 那枚同病的拂晓墨还在原地，2.24 比 3.09 更差；并枝请两枚一起做，交块带八格两跑对表。
+
+**四、逃逸口分母换成三个镜头重排（我先撤掉自己派出去的假账）**
+
+- 分母仍是 249 条（`night15_readings.txt:29`），初判交叉分布见 `night15_readings.txt:23`；加上"可达性"和"暗档是否另有配对那一手"两把镜头、再用子 Agent 的拼装核查复算之后，最终账是（逐枚从 `escape_hatch_paired.tsv:1` 现算，加总回到 249 见 `night15_readings.txt:36`）：
+  甲 真债 225 条（可达、且暗档没有配对那一手）见 `night15_readings.txt:30`——除 `frontend/src/design-tokens.css:1018` 与 `frontend/src/map-selection.css:213` 之外全部集中在 `frontend/src/styles.css:1`，派单不变，仍归扫街工；
+  乙 可确证的死码 14 条见 `night15_readings.txt:31`：`frontend/src/v10.css:50`、`frontend/src/v10.css:52`、`frontend/src/v10.css:55`、`frontend/src/v10.css:57`、`frontend/src/v10.css:58` 的 `.v8-trial-*` 一族（共 8 条；这一族在整个 src 里零读者，`.v8-trial-setup`/`.v8-trial-card`/`.v8-trial-notice`/`.v8-trial-form` 四个类名逐枚查过），加 `frontend/src/styles.css:190` 与 `frontend/src/styles.css:350` 的 `.v8-rain-button`（各 1 条），加 `frontend/src/styles.css:452` 的 `.cn-copilot-runtime`（2 条）与 `frontend/src/styles.css:481` 的 `.cn-native-status`（2 条）；
+  丙 需先拆行才能定责 5 条见 `night15_readings.txt:32`：都在 `frontend/src/styles.css:180` 那一枚压缩行里，同一行既有没读者的 `.v8-live-grid`，也有活着的 `.v8-live-main`（读者在 `frontend/src/app/V8Experience.tsx:3797`）——尺是按"行"取选择器的，所以这一行的判定两头都可能错；
+  丁 改判为"只在 Storybook"1 条见 `night15_readings.txt:33`：`frontend/src/styles.css:223` 的 `.v12-story-grid`，读者是 `frontend/src/stories/V12ExecutionStates.stories.tsx:57`——我的尺把 src/stories 排除在"读者"之外，于是把它误报成死码；它既不是产品债也不算活债；
+  戊 配对假债 2 条已摘除见 `night15_readings.txt:34`：`frontend/src/map-selection.css:213` 的浅档渐变在 `frontend/src/map-selection.css:220` 有暗档那一手；`frontend/src/design-tokens.css:1018` 的绿墨实测暗档已是 rgb(123,216,143)（同一元素亮档 6.96、暗档 9.77 都过）。这两条若按原分母派下去就是打不存在的仗。
+- 更正一（我自己上一条块的口径）：`frontend/src/styles.css:220` 与 `frontend/src/styles.css:221` 那两条 `state-*` **不是死码**——类名由 `frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:136` 用模板拼出（`state-${item.status.toLowerCase()}`），枚举举于 `frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:9`；词面 grep 找不到是尺的盲区，这两条已升进甲账（合并后的甲账逐枚现算见 `night15_readings.txt:30`，原判的交叉分布留在 `night15_readings.txt:23` 供对账）。
+- 更正二：`frontend/src/styles.css:188` 与 `frontend/src/styles.css:348` 是同一段 AA 覆写被复制两遍（后者生效），两遍都被后载入的 `frontend/src/design-tokens.css:231` 用令牌压掉——载入次序见 `frontend/src/main.tsx:43` 与 `frontend/src/main.tsx:44`，而 `frontend/src/design-tokens.css:224` 的注释本身就把这件事写明了。所以这几行是惰性声明：不该算债，也不该由别人顺手删。
+- 安全提示（给真要删死码的那一位）：删必须逐枚删选择器，不许按行删——`frontend/src/styles.css:180` 与 `frontend/src/styles.css:446` 这种压缩行里死活混排（`:446` 那一行的另外两枚 `.cn-copilot-head`/`.cn-copilot-form` 是活的，读者在 `frontend/src/features/agent/CopilotDock.tsx:874` 与 `frontend/src/features/agent/CopilotDock.tsx:919`）。交块要带"删后同一行剩余选择器仍在屏上"的实测。
+
+**五、车队实况（说清缺多少，不含糊）**
+
+- 板上在册 3 扇（1 在写、2 静默四十五分钟内），读数 `night15_readings.txt:26`、`night15_readings.txt:27`；与"时刻在工 ≥8"的常设令相差 8 扇。
+- 唤醒腿这一轮只找到 1 枚可寻址候选，已敲 1 记（`_cmdr_needs_manual_wake.json:1`）。剩下的缺口不是"叫不动"，是**在册名单里根本没有可叫的对象**：退休线与限额线把其余都滤掉了。要真把在工拉回 8，需要重新开区间的新车道，这一件要主人点头，我不自开。
+
+**六、待裁（延续 CMDR-DELIVER-0718，不重复展开）**
+
+- 控制塔「可行」「受保护」两格与写入按钮在无读数时的措辞；「Guardian 就绪」由一条 policy 读数支撑够不够。
+
+**七、什么没改善**
+
+- 暗档拂晓与黄昏两格眉标仍然不合格（2.24 与 3.09），我没有替 脉搏工 改 `cn-pulse.css`，避免撞他待并的枝。
+- 真债一条未减（甲账逐枚见 `night15_readings.txt:30`），死码也只是点名未删（乙账与需拆行的丙账见 `night15_readings.txt:31` 与 `night15_readings.txt:32`，删要先拆行，按上面的安全提示走）。
+- 在工扇数没有变化；本笔是尺的修复，产品像素一个字节没动。
+
+
 ### CMDR-DELIVER-0718·第十四笔（控制塔把"没读到"从断言里摘出来）＋"空读被说得像事实"这一族的现场全表（号令者亲测·10-17 04 时代插）
 
 **一、这一笔移动了权威线**
