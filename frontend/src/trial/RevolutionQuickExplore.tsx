@@ -221,11 +221,13 @@ export function RevolutionQuickExplore({
   cityName,
   agentConfigured = false,
   onFormalCandidateSelected,
+  onPocketWalkChange,
 }: {
   journeyId: string;
   cityName: string;
   agentConfigured?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
+  onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
 }) {
   const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
@@ -268,6 +270,7 @@ export function RevolutionQuickExplore({
       setCityResults([]);
       setDiscovery(null);
       setWalk(null);
+      onPocketWalkChange?.(null);
       setFirst(null);
       setSecond(null);
       setCenter(null);
@@ -308,6 +311,7 @@ export function RevolutionQuickExplore({
       });
     void cityNexusApi.getBootstrapShortlist(journeyId).then((state) => {
       if (!valid()) return;
+      onPocketWalkChange?.(state.pocket_walk ?? null);
       if (state.pocket_walk) {
         setWalk(state.pocket_walk);
         setStage("walk");
@@ -590,10 +594,12 @@ export function RevolutionQuickExplore({
       if (!stillCurrent()) return;
       if (state.pocket_walk) {
         setWalk(state.pocket_walk);
+        onPocketWalkChange?.(state.pocket_walk);
         enter("walk");
         setAlert({ type: "good", text: "已从服务器重新读取路线状态；显示的是当前签名行程保存的事实。" });
       } else {
         setWalk(null);
+        onPocketWalkChange?.(null);
         setAlert({ type: "neutral", text: "服务器当前没有已保存的私人散步。原路线没有被本页假定为已保存；可以回到结果页再决定是否保存。" });
       }
     }, { label: "重新读取路线状态", action: () => refreshSavedWalk() });
@@ -621,6 +627,7 @@ export function RevolutionQuickExplore({
         throw new Error("服务端未返回符合当前 Journey 权限和事实等级的私人散步。");
       }
       setWalk(saved.pocket_walk);
+      onPocketWalkChange?.(saved.pocket_walk);
       enter("walk");
       setAlert({ type: "good", text: "两站路线已保存到你的私人探索草稿。刷新页面也能恢复。" });
     }, (error) => recoveryForError(
@@ -648,6 +655,7 @@ export function RevolutionQuickExplore({
         throw new Error("收到不符合当前用户或路线版本的进度，未采用结果。");
       }
       setWalk(response.pocket_walk);
+      onPocketWalkChange?.(response.pocket_walk);
       setAlert({ type: "good", text: "状态已保存。到达与完成由你报告，不是手机 GPS 证明。" });
     }, { label: "重新读取路线进度", action: () => refreshSavedWalk() });
   };
