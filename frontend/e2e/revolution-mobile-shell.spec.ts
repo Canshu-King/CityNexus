@@ -332,14 +332,16 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       const map = (host as (HTMLDivElement & { citynexusMap?: { isStyleLoaded?: () => boolean } }) | null)?.citynexusMap;
       return typeof map?.isStyleLoaded === "function" && map.isStyleLoaded();
     });
-    const mapCanvas = page.getByTestId("bootstrap-public-map-canvas");
+    const mapCanvas = page.locator("[data-testid='bootstrap-public-map-canvas'] canvas.maplibregl-canvas").first();
     await mapCanvas.scrollIntoViewIfNeeded();
     const mapBounds = await mapCanvas.boundingBox();
     expect(mapBounds).not.toBeNull();
-    await page.touchscreen.tap(
-      (mapBounds?.x ?? 0) + (mapBounds?.width ?? 0) / 2,
-      (mapBounds?.y ?? 0) + (mapBounds?.height ?? 0) / 2,
-    );
+    await mapCanvas.tap({
+      position: {
+        x: (mapBounds?.width ?? 0) / 2,
+        y: (mapBounds?.height ?? 0) / 2,
+      },
+    });
     await expect(page.getByTestId("rev-quick-category")).toBeVisible();
     expect(discoveryCalls).toBe(0);
   });
