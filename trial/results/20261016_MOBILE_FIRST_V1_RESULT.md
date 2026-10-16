@@ -73,3 +73,9 @@ Revolution 手机外壳包含「探索 / 行程 / 我的」三栏。探索页提
 - `npm.cmd run typecheck:all`：通过。`playwright.mobile-trial.config.ts` 的两个 390×844 定向 UI 用例：2/2 通过，使用签名 UI fixture。
 - 本机 wb2api 的签名 DRAFT 只读建议已真实返回，详见 `20261017_MOBILE_FIRST_P0_INCREMENT.md`。
 - 两处真实地点 → Pocket Walk → GO → 刷新恢复仍待真实地点服务成功；持久化 ACTIVE Hermes `AgentRun` 与 Android 实机验收也待完成。
+## 2026-10-17 本机 AI 实际调用
+
+- 在手机 Explore 的签名 DRAFT 页面点击「问问 AI」，服务端 `trial-ai-discovery` 返回经过 schema 校验的真实模型工具建议：`MODEL_TOOL_SUGGESTION`，类别 `park/garden`，模型 `deepseek-v4.1-flash`。这是 DRAFT 只读建议，不创建 `AgentRun`，也没有查询真实 POI。
+- 随后从本机教程读取 key 并直连 `127.0.0.1:7865/v1/chat/completions`，使用 `auto:cheapest` 发出一次受限工具调用：HTTP 200、`finish_reason=tool_calls`、1 次 `report_probe`，`usage.credit=0`，路由到 `global:deepseek-v4.1-flash`。请求 ID：`ef47b48a4e6d6f22ae5077f3241a9e4f`。
+- key 未写入仓库、前端或报告；没有改动本机运行配置或数据库。
+- 未完成：真实 POI 结果 → Pocket Walk → GO → 刷新恢复；ACTIVE Journey 的持久化 Hermes `AgentRun` 工具轨迹；Android 实机验收。
