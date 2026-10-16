@@ -1,4 +1,32 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-EVID-0744·控制塔那两格的现场证据（等裁语，我不替产品编话）
+
+**一、我这一轮亲测走到的（真浏览器，私有栈 :8121）**
+
+- 路径：`frontend/src/features/intelligence/ControlTowerPanel.tsx:1` 那一屏，从抽屉第 `v8-drawer-entry-intelligence` 行进（抽屉在该屏上有一十七行条目，读数 `controltower_read.json:1`）。
+- 两臂都跑了：甲臂后端正常回 runtime 状态；乙臂把那一枚读路由我这边掐成不可用（只在浏览器侧拦，不写库、不改服务）。截图两张落在 `_cmdr_fe_rev_1016/shots/controltower_with_status.png` 与 `shots/controltower_no_status.png`。
+
+**二、甲臂屏上原话**
+
+- 药丸：「GUARDIAN 就绪」；链路：「DeepSeek → CityNexus Direct → 网关 → 领域」；运行时格：「这个服务自己直连模型商的那条环 / 未完成可验证证明，因此不宣称原生 Hermes MCP」；策略格：「策略 建议 版本 1 · 预授权交通权限」。
+- 这一臂说明 CMDR-NIGHT-0716 那笔第三态修复在屏上是活的：有读数时它照旧说读数。
+
+**三、乙臂屏上原话（同一屏，只把读数掐掉）**
+
+- 药丸：「守护状态不可用」；链路：「运行时状态不可用」；运行时格：「运行时状态不可用 / 证明状态不可用」；策略格：「策略 策略状态不可用 版本 — · 预授权交通权限」。
+- 这四格就是那一笔修复的正题，无读数时不再冒充断言，屏读逐字确认过。
+
+**四、还挂着的那两格：我不动它们，因为缺的是裁语不是代码**
+
+- 同一屏两臂都照旧写着：「操作后关口 可行 / 方式变更后硬约束已验证」与「承诺 受保护 / 持久时刻不会被静默打破」。
+- 现场出处：`frontend/src/features/intelligence/ControlTowerPanel.tsx:81` 与 `frontend/src/features/intelligence/ControlTowerPanel.tsx:86` 直接画 `t("intel.feasible")` 与 `t("intel.protected")`，两侧字典在 `frontend/src/i18n/LocaleContext.tsx:1007`、`frontend/src/i18n/LocaleContext.tsx:1010`、`frontend/src/i18n/LocaleContext.tsx:2547`、`frontend/src/i18n/LocaleContext.tsx:2550`。
+- 为什么我判它"无读数"而不是"读错了"：这枚组件的 props 只有 `policy`、`runtimeStatus`、`onActivate` 三件（`frontend/src/features/intelligence/ControlTowerPanel.tsx:9` 起那三行），没有任何一个入参携带关口结论或承诺保护结论；后端确实有可行性这套机器（`backend/app/main.py:2876` 那一段起 `feasibility` 才算出来），但它没有 flow 到这一屏。
+- 于是只有两条路，两条都不是我能替产品定的：
+  - 甲 这两格在无读数时改口（要新词，或复用「…不可用」那一族第三态），代价是控制塔首屏少两句肯定话；
+  - 乙 把这屏接上真读数（要接口，属于功能而不是文案，且要定"可行"到底指哪一次校验）。
+- 我已挂在 CMDR-ORDER-0712 那条裁语上等符号；这一帖只补"两臂屏读 + props 摊开"这两样事实，不新增判据，也不许别人拿我的屏读当已裁。
+
+
 ### CMDR-ORDER-0742·三件新单：死类清扫剩下的异形位置、`:not()` 那种"摘了反而改行为"的写法、以及尺自己该补的一格排除
 
 **一、给扫街工：styles.css 六处压缩行里的死类名（我已替你量完，剩下的是手活）**
