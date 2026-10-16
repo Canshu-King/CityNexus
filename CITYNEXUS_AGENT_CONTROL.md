@@ -1,4 +1,33 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0707 · 脉搏工两处更正我收下（我那把两臂尺会把同一格记两次）· 三枝待并的交集逐枚点名 · 词表已闭合请车道照新规矩写
+
+甲 · 我接受两处对我的更正，都是现读复核过的，不是照抄它的说法：
+
+- 我的两臂对表尺按 `selector|ratio|text` 当行身份，于是「同一格从 1.00 涨到 4.10」会被同时记成修好一格与新开一格。脉搏工另造的那把按 `required` 跨阈值判位移，才是「新开红为零」该有的判法。这条不是风格差别，是我那把尺会把**改善**报成回归。它的尺与两侧合计行都在 `D:/moodle/_maibogong_wp_c/evidence/two_arm_status_diff_1016.txt:12`
+- 我在第一拍写进权威线的拂晓墨 `#7a2f0e` 是**一枚值扛两主题**：亮档我量过达标，暗档没量。这条正是我自己立的两半同移契约（表面与文字必须成对换值）被我自己破了一次。脉搏工按主题各给一枚，亮档那枚的过用色对账行在 `D:/moodle/_maibogong_wp_c/evidence/palette_gate_output_1016.txt:12`，暗档那枚在 `D:/moodle/_maibogong_wp_c/evidence/palette_gate_output_1016.txt:25`（两行我都现读过，值分别是 `#a13c14` 与 `#ff9a5c`，各自 worst 达标）
+- 顺带把「改完读数不动」那条规矩再钉一次：它先修的是自己那处单主题字面量，而不是在我的行号上再改一遍
+
+乙 · 词表已经闭合，车道写角色时照新规矩：`data-contrast-role` 现在只有 `control` 与 `state` 两个合法值，填别的值本身就是一条 finding（`frontend/e2e/_qoderContrastScan.ts:177`），空字符串按未声明处理、仍旧落未分类臂（`frontend/e2e/_qoderContrastScan.ts:200`）。所以**不要**为了躲开边界判据临时发明 `link`、`text`、`quiet` 这类值——那正是这道闭闸要拦的东西。文字型动作那一档我按 CMDR-RULING-0701 甲案转仲裁了，仲裁点头之前它不存在。
+
+丙 · 三枝待并，交集逐枚点名（现尖 `24a71efcbce02187ff7c6e1cd88dfd0e4aa1dc1e`，枝尖与 merge-base 都现读可 `git cat-file -t` 出 commit）：
+
+| 枝 | 枝尖 | 与现尖的重叠文件 | 要做的事 |
+| --- | --- | --- | --- |
+| `review/maibogong-wp-c-1016` | `7f1524545e` | `frontend/src/cn-pulse.css:1`、`frontend/src/app/V8Experience.tsx:1` | 把现尖 merge 进自己枝；我那两枚角色声明在 `:2173` 与 `:1137`，跟你的相位推广不在同一处，冲突面很小 |
+| `review/补图工-wp-d` | `e80c7495fb` | `frontend/src/main.tsx:1` | 同上；现尖上 main.tsx 已有五行 import，你那行 `cn-pulse-map.css` 放最后即可 |
+| `review/扫街工-wp-a` | `0274a5f95b` | `frontend/src/cn-pulse.css:1`、`frontend/src/features/poster/trip-poster.css:1` | 同上；你 12:44 那块已经走过一次这条腿 |
+
+禁 rebase 已发布枝不变。落地仍旧只由代插腿与门做：我不手合任何人的文件，也不替谁把话说成"已经并好了"。
+
+丁 · 我把三件我这一拍看清了但没做的事记在这里，免得被当成已完成：
+
+- 补图工自己点出的那条我确认成立并转给所有人：门的 `backgroundUnder` 只沿 DOM 祖先合成，**量不到浮层身后那张瓦片图**，所以 `map-viewport-reset` 与 `v8-map-stop-label` 在门里的读数不是视觉结论；降级面该由谁的尺判，本拍未定
+- 顶栏头像那一枚我只交出意图、没改外观（它本来就是实色填充，实测亮 4.82、暗 3.53，过三比一）。它"看不见边界"这件事在渲染层是否成立，我看了截图但没有另立判据，本拍未量
+- 脉搏工报的票夹白底根因 `frontend/src/styles.css:340` 与 `aside.v9-inbox` 的 `frontend/src/styles.css:268` 归扫街工的 WP-A 面，它这枝只在自己枝里收进 `cn-pulse.css`——两枝并尖之后谁留谁撤，我没判，等两枝都到现尖上再按现读定
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-DELIVER-0706 · 未分类控件收口第一刀 · 两枚控件报名字、仿真球长出真边界、词表装上闭闸 · 残余四枚 testid 已分工
 
 现尖移动：`82fe06154f07fac3dbf90b456855509bca5a9762` → `24a71efcbce02187ff7c6e1cd88dfd0e4aa1dc1e`（一笔、ff 为真、两侧文件集交集零枚），只走 `live_checks/preflight_and_land_r7.py --land`，`--allow-ungated` 零次、force-push 零次。
