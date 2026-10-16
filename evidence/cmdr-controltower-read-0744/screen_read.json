@@ -1,0 +1,178 @@
+{
+ "with_status": {
+  "opened": "clicked v8-mobile-menu",
+  "drawer_rows": 17,
+  "rows": [
+   {
+    "tid": "v8-drawer-entry-hub",
+    "text": "今天"
+   },
+   {
+    "tid": "v8-drawer-entry-live",
+    "text": "实时行程"
+   },
+   {
+    "tid": "v8-drawer-entry-map",
+    "text": "地图"
+   },
+   {
+    "tid": "v8-drawer-entry-studio",
+    "text": "行程工作台"
+   },
+   {
+    "tid": "v8-drawer-entry-stay",
+    "text": "住宿选择"
+   },
+   {
+    "tid": "v8-drawer-entry-discover",
+    "text": "城市探索"
+   },
+   {
+    "tid": "v8-drawer-entry-import",
+    "text": "导入地点"
+   },
+   {
+    "tid": "v8-drawer-entry-bookings",
+    "text": "旅行票夹"
+   },
+   {
+    "tid": "v8-drawer-entry-footprints",
+    "text": "足迹"
+   },
+   {
+    "tid": "v8-drawer-entry-agent",
+    "text": "Copilot"
+   },
+   {
+    "tid": "v8-drawer-entry-authoritative",
+    "text": "恢复与执行"
+   },
+   {
+    "tid": "v8-drawer-entry-intelligence",
+    "text": "智能守护"
+   },
+   {
+    "tid": "v8-drawer-entry-twin",
+    "text": "旅行者画像"
+   },
+   {
+    "tid": "v8-drawer-entry-trash",
+    "text": "回收站"
+   },
+   {
+    "tid": "v8-drawer-entry-access",
+    "text": "成员与权限"
+   },
+   {
+    "tid": "v8-drawer-entry-trips",
+    "text": "行程"
+   },
+   {
+    "tid": "v8-drawer-entry-me",
+    "text": "我的"
+   }
+  ],
+  "clicked": "clicked v8-drawer-entry-intelligence",
+  "read": {
+   "heading": "判断前置。硬事实在关口。",
+   "pill": "GUARDIAN 就绪",
+   "chain": "DeepSeek→ CityNexus Direct→ 网关→ 领域",
+   "runtimeCard": "智能体运行时来源 这个服务自己直连模型商的那条环 未完成可验证证明，因此不宣称原生 Hermes MCP",
+   "facts": [
+    "策略 建议 版本 1 · 预授权交通权限",
+    "操作后关口 可行 方式变更后硬约束已验证",
+    "承诺 受保护 持久时刻不会被静默打破"
+   ],
+   "drawerRows": [],
+   "hasDrawer": false
+  }
+ },
+ "no_status": {
+  "opened": "clicked v8-mobile-menu",
+  "drawer_rows": 17,
+  "rows": [
+   {
+    "tid": "v8-drawer-entry-hub",
+    "text": "今天"
+   },
+   {
+    "tid": "v8-drawer-entry-live",
+    "text": "实时行程"
+   },
+   {
+    "tid": "v8-drawer-entry-map",
+    "text": "地图"
+   },
+   {
+    "tid": "v8-drawer-entry-studio",
+    "text": "行程工作台"
+   },
+   {
+    "tid": "v8-drawer-entry-stay",
+    "text": "住宿选择"
+   },
+   {
+    "tid": "v8-drawer-entry-discover",
+    "text": "城市探索"
+   },
+   {
+    "tid": "v8-drawer-entry-import",
+    "text": "导入地点"
+   },
+   {
+    "tid": "v8-drawer-entry-bookings",
+    "text": "旅行票夹"
+   },
+   {
+    "tid": "v8-drawer-entry-footprints",
+    "text": "足迹"
+   },
+   {
+    "tid": "v8-drawer-entry-agent",
+    "text": "Copilot"
+   },
+   {
+    "tid": "v8-drawer-entry-authoritative",
+    "text": "恢复与执行"
+   },
+   {
+    "tid": "v8-drawer-entry-intelligence",
+    "text": "智能守护"
+   },
+   {
+    "tid": "v8-drawer-entry-twin",
+    "text": "旅行者画像"
+   },
+   {
+    "tid": "v8-drawer-entry-trash",
+    "text": "回收站"
+   },
+   {
+    "tid": "v8-drawer-entry-access",
+    "text": "成员与权限"
+   },
+   {
+    "tid": "v8-drawer-entry-trips",
+    "text": "行程"
+   },
+   {
+    "tid": "v8-drawer-entry-me",
+    "text": "我的"
+   }
+  ],
+  "clicked": "clicked v8-drawer-entry-intelligence",
+  "read": {
+   "heading": "判断前置。硬事实在关口。",
+   "pill": "守护状态不可用",
+   "chain": "运行时状态不可用",
+   "runtimeCard": "智能体运行时来源 运行时状态不可用 证明状态不可用",
+   "facts": [
+    "策略 策略状态不可用 版本 — · 预授权交通权限",
+    "操作后关口 可行 方式变更后硬约束已验证",
+    "承诺 受保护 持久时刻不会被静默打破"
+   ],
+   "drawerRows": [],
+   "hasDrawer": false
+  }
+ }
+}
