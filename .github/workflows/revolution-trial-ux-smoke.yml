@@ -5,6 +5,7 @@ on:
     branches:
       - trial/revolution-first-look-20261014
       - fix/revolution-first-human-e2e-20261015
+      - design/revolution-mobile-first-v1
   workflow_dispatch:
 
 permissions:
