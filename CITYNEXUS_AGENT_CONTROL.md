@@ -1,4 +1,68 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0748·第二十二笔落线：窄屏上中文不再被劈成两半（四枚读数标签，手机上看得出来的那一类）
+
+**一、这一笔用户能直接看到什么**
+
+手机横屏或系统字号放大之外，最窄那档（三百二十像素）打开这站产品时，有四句读数是**被劈开**的：「证据」画成 证 / 据 两行、「路线证据」画成 路线证 / 据、预订卡上的「模拟承诺」画成 模拟 / 承诺、行程记忆里「中途」画成 中 / 途。这一笔之后它们各自是一整块。
+
+**二、线动了**
+
+- 权威尖从 2afb6af745fb044aa5ba71d714e7c0ce27f24c29 推到 4c2f9501c4f06b426b00f13bf6be5aebeedacb53，只快进（候选独有一枚提交、线上独有零枚、相交为零），收据 `preflight_r1.json:1`。
+- 动的产品文件只有一枚 `frontend/src/styles.css`：blob 从 2a69cb253826ab08773cc5f5fcff554460d7528f（122211 字节）换成 2012bda3bcb3d2e7a18e59df20203343d732e1d6（122839 字节）。形状是加一段（六行：五行注释加一行规则），删掉零行；规则本体在 `frontend/src/styles.css:365`，四个分支各自只作用在那枚读数元素上。
+
+**三、动手前后同一页上的行盒（Range.getClientRects，不是我估的）**
+
+- 「证据」：改前在三百二十档是两个 16 像素的行盒，改后是一个 32 像素行盒一行；三百六、三百九、四百三本来就好，改后不动，读数 `wrap_matrix_zh.json:1`。
+- 「路线证据」：改前四档全是 30 加 10 两个行盒（路线证 / 据），改后四档都是 40 一个行盒一行，读数 `wrap_route_evidence.json:1`。这一枚比我 06:26 那版探针更严重——四档都劈，不只三档。
+- 「模拟承诺」：改前在三百六档是 8 / 18 / 18（词被劈成两半），改后是 5 与 36——「模拟承诺」四字整块，只有前面那枚间隔点自己换行；三百二十、三百九、四百三各是一行，见 `wrap_matrix_zh.json:1`。
+- 「中途」：改前在三百二十档是 174 / 13 / 16 / 16（两个 16＝中 与 途），改后是 174 / 9 / 32（一整块 32），锚 `frontend/src/styles.css:365`。
+- 一枚没测到的：徽章「生效中」这一代在这三档屏上根本没渲染出来（探针报"找不到含这枚词的叶子节点"），我不把"没找到"写成"没问题"，它挂在 `wrap_matrix_zh.json:1` 的 found=false 格里。
+
+**四、我不动别人的东西，也要证明没弄坏别人的东西**
+
+- 这一族旁边就是 ORD-0146 那道护栏（注释在 `frontend/src/styles.css:331`：一张卡里长参考号曾把行撑到 508 像素塞进 360 视口）。我只加 `word-break: keep-all`，父层 `overflow-wrap` 一个字节没动（那条规则仍在 `frontend/src/styles.css:335`）。
+- 护栏重跑：把一枚 59 字符的假参考号塞回卡里再量——卡片右缘仍是 373 未变、文档 scrollWidth 等于视口、那串字符仍断成若干 47 像素的段，见 `ord0146_guard_probe.cjs:1` 的读数。塞进去的文本测完就还原，不落任何产品字节。
+- 英文臂定点复查（四档、locale 种子用 `en` 不用 `en-US`，`frontend/src/i18n/LocaleContext.tsx:4` 只认这两个值）：四枚元素同样带上 keep-all，仍在空格处正常换行（ROUTE / EVIDENCE 两行是正常换词），自身不溢出、右缘不越视口、文档无横向溢出，读数 `wrap_en_spot.txt:1`。
+- 真尺两臂：样式元组集合八比八相同、两向差集为零，警告 light 十一 / dark 十、扫到 329 / 329，负对照两臂各咬一次，见 `gate_control.json:1` 与 `gate_candidate.json:1`。
+- 编译臂 `npm run build` 退出码零；落地门表面对照判 PASS（新增 css 行六、新增逃逸口行零）。
+
+**五、改法不是我发明的**
+
+仓库自己已经这么修过一次：`frontend/src/cn-pulse.css:644` 那段注释（现读：说明在 :644-649，规则在 `frontend/src/cn-pulse.css:653`）写着 `anywhere` 救下了 Asia/Shanghai 但把中文一起拆，换成 `break-word` 加 `keep-all`。那一手当时只落在了导语 `.v8-lede` 上；这四枚是同一族里没被照顾到的。另外，"按宽度打补丁"（比如只给三百二十档写一条）我刻意没做——那样每加一档宽度或每改一句文案都要重来一遍。
+
+
+### CMDR-NIGHT-0746·第二十一笔落线（第二批死类）＋一处我自己的勘误＋我那把门被真尺咬出的两个洞
+
+**一、线动了**
+
+- 权威尖从 ced8ef51ec3982ac9ab5694c076001e2e445592e 推到 2afb6af745fb044aa5ba71d714e7c0ce27f24c29，只快进（merge_base 即上一枚、候选独有一枚提交、与线上改动相交为零），收据 `preflight_r1.json:1`。
+- 动的三枚文件（blob 现读自 git）：
+  - `frontend/src/features/access/access.css:40` 那张：f91c797e7bb9 起，现 8750c297c673（9247 字节）。删掉 `.cn-access-picker` 与 `.cn-access-picker select` 两块——产品只画 `cn-access-picker-label` / `-hint`（`frontend/src/features/access/AccessPanel.tsx:539` 现读）。
+  - `frontend/src/components/cnx-select.css:211` 那张：637fd9cf6325 起，现 952b97299dc3（4884 字节）。删掉 `.cnx-select__empty`——组件的空态早就改用 `data-empty` 挂在 `.cnx-select__list` 上（`frontend/src/components/CnxSelect.tsx:298` 起那一段），这块是旧标记遗留。
+  - `frontend/src/design-tokens.css:294` 那张：c8c146506e62 起，现 5c47311efbf7（71073 字节）。只从组里摘掉 `.v8-hero-title` 一枚分支。
+- 形状：删三块、摘一枚分支，共 22 行删、一行改写；主题翻转逃逸口分母仍是二百二十八（`frontend/src/styles.css:174` 那批未受这一刀影响）。
+
+**二、我上一帖里有一枚判错了，这里勘误（旧帖不涂改）**
+
+- CMDR-NIGHT-0740 第三节与 CMDR-ORDER-0742 第一节里我都写了「`cn-access-picker` 是活的（`frontend/src/features/access/AccessPanel.tsx:539` 数到六处读者行）」。那句错了。
+- 错在我的甲臂当时用**子串**匹配：那六处命中全是 `cn-access-picker-label` / `-hint`，不是 `cn-access-picker` 自己。换成边界匹配（前后不许有 `-`、`_`、字母或数字）后，全产品只剩 CSS 自己两处（`frontend/src/features/access/access.css:40` 与 `frontend/src/features/access/access.css:52`）——所以它是死类，这一刀就把它删了。
+- 影响范围说清：我先前那十四枚删的是"子串都找不到读者"的，边界匹配只会更少不可能更多，所以已落的两笔不受这枚误判影响；受影响的只是我"这枚别删"的错误禁令。CMDR-ORDER-0742 第一节那份禁列清单里，`cn-badge--*` 与 `maplibregl-cooperative-gesture-screen` 两条仍然成立（前者 `frontend/src/components/Badge.tsx:95` 真拼得出来、屏上挂着六枚 error；后者是地图库自己注入的），只有 `cn-access-picker` 这一条作废。
+
+**三、真尺咬出来的两个洞（这两个洞比落地本身值钱）**
+
+- 洞甲 多行选择器表。我那把门只看带 `{` 的那一行，把 `frontend/src/design-tokens.css:981` 的 `.v9-language,` 与 `frontend/src/design-tokens.css:982` 的 `.v8-home-language {` 当成两件事，判成"整块只服务死类"删了。真尺当场报 light 臂多出两枚 `control-boundary`：`topbar-language` 与 `topbar-theme`，白底 rgb(255, 255, 255) 配 rgb(223, 228, 237)、比值 1.28——顶栏两颗按钮的边界被我删没了。这一刀整体还原，判据补上"往前回溯以逗号收尾的行"，收不齐就交人工。
+- 洞乙 `:not(.死类)` 那种形状。类名一枚元素都没挂（丙臂实测为零），可 `button:not(.cn-no-motion)` 作用于**所有**按钮，删整支是改行为不是清死码。现在这种形状一律进人工清单，等的是"去掉 :not()"那一手；本次因此被拦下的是 `frontend/src/design-tokens.css:437`、`frontend/src/design-tokens.css:459`、`frontend/src/design-tokens.css:476`、`frontend/src/design-tokens.css:485` 四组。
+- 洞丙（判据方向偏保守那处）就是第二节的子串匹配，已改边界匹配。
+- 这一版被拦下没删的：`frontend/src/cn-pulse.css:396` 的 `.poi-import-panel`、`frontend/src/cn-pulse.css:514` 的 `.v8-empty-hint`、`frontend/src/design-tokens.css:982` 的 `.v8-home-language`（都因为多行表里还有活分支）。人工清单现读二十九处（`sweep_plan_after_gate_fix.json:1`）。
+
+**四、这一刀自己的读数**
+
+- 真尺两臂：样式元组集合八比八相同、两向差集都为零，警告 light 十一 / dark 十、扫到 329 / 329，负对照两臂各咬一次（`gate_control.json:1` 与 `gate_candidate.json:1`）。
+- 逐屏带 class 属性的元素数与上一代一字相同（三百二十八、二百六十七、一百八十、二百五十八、二百零六、二百零二，六屏，`screen_hits_after.json:1` 同尺重跑）。
+- 编译臂 `npm run build` 退出码零；落地门表面对照判 PASS（在看的 css 三枚、新增一行、新增逃逸口零行、尺身份 MATCH）。
+- 子 Agent 那份 06:43 的清点（DEAD 十七枚 / UNPROVEN 十八枚）我逐枚重量后才用，原件随上一批收据发布为 `lane_subagent_inventory.md:1`，这一刀的脚本发布为 `deadcss_sweep_r2.py:1`。
+
+
 ### CMDR-EVID-0744·控制塔那两格的现场证据（等裁语，我不替产品编话）
 
 **一、我这一轮亲测走到的（真浏览器，私有栈 :8121）**
