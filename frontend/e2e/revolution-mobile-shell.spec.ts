@@ -59,7 +59,13 @@ async function signedMockJourney(page: Page, saved = false) {
 test.describe("Revolution Mobile-First UI fixture", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
-  test("an unstarted visitor sees a clean, usable destination CTA", async ({ page }, testInfo) => {
+  test("an unstarted visitor can reach all three mobile tabs", async ({ page }, testInfo) => {
+    let providerOrAiPosts = 0;
+    page.on("request", (request) => {
+      if (request.method() === "POST" && /bootstrap-city-search|trial-ai-discovery|bootstrap-discovery/.test(request.url())) {
+        providerOrAiPosts += 1;
+      }
+    });
     await page.route("**/api/v1/agent/runtime-status", (r) => fulfill(r, {
       runtime_identity: "UNAVAILABLE",
       hermes_compat_configured: false,
@@ -72,7 +78,17 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const destinationBounds = await page.getByTestId("rev-firstlook-city").boundingBox();
     expect(destinationBounds?.height ?? 999).toBeLessThanOrEqual(64);
     await page.screenshot({ path: testInfo.outputPath("mobile-welcome-TEST-FIXTURE.png"), fullPage: true });
-    await expect(page.getByTestId("rev-mobile-bottom-nav")).toHaveCount(0);
+    const nav = page.getByTestId("rev-mobile-bottom-nav");
+    await expect(nav).toBeVisible();
+    await page.getByTestId("rev-mobile-tab-trips").click();
+    await expect(page.getByTestId("rev-mobile-empty-trips")).toBeVisible();
+    await page.getByTestId("rev-mobile-empty-start").click();
+    await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
+    await page.getByTestId("rev-mobile-tab-me").click();
+    await expect(page.getByTestId("rev-mobile-empty-me")).toBeVisible();
+    await page.getByTestId("rev-mobile-tab-explore").click();
+    await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
+    expect(providerOrAiPosts).toBe(0);
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
   });

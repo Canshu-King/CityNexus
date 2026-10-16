@@ -244,33 +244,51 @@ export function RevolutionFirstLook() {
 
       <main className="rev-firstlook-content">
         {!journey ? (
-          <section className="rev-firstlook-hero" data-testid="rev-mobile-welcome">
-            <span className="rev-firstlook-eyebrow">CITYNEXUS / DISCOVER</span>
-            <h1>想去哪儿，<br />就从那里开始。</h1>
-            <p>输入一个城市或地区，接下来可以用自然语言告诉 AI 你想怎么玩。</p>
-            <form onSubmit={(event) => { event.preventDefault(); void start(); }}>
-              <label htmlFor="rev-firstlook-city">目的地</label>
-              <div className="rev-firstlook-form-row">
-                <input
-                  id="rev-firstlook-city"
-                  autoComplete="off"
-                  value={cityName}
-                  maxLength={60}
-                  disabled={busy}
-                  placeholder="例如：连城、厦门、杭州"
-                  onChange={(event) => setCityName(event.target.value)}
-                  data-testid="rev-firstlook-city"
-                />
-                <button disabled={busy} type="submit" data-testid="rev-firstlook-start">
-                  {busy ? "正在准备…" : "开始探索 →"}
-                </button>
+          activeTab === "explore" ? (
+            <section className="rev-firstlook-hero" data-testid="rev-mobile-welcome">
+              <span className="rev-firstlook-eyebrow">CITYNEXUS / DISCOVER</span>
+              <h1>想去哪儿，<br />就从那里开始。</h1>
+              <p>输入一个城市或地区，接下来可以用自然语言告诉 AI 你想怎么玩。</p>
+              <form onSubmit={(event) => { event.preventDefault(); void start(); }}>
+                <label htmlFor="rev-firstlook-city">目的地</label>
+                <div className="rev-firstlook-form-row">
+                  <input
+                    id="rev-firstlook-city"
+                    autoComplete="off"
+                    value={cityName}
+                    maxLength={60}
+                    disabled={busy}
+                    placeholder="例如：连城、厦门、杭州"
+                    onChange={(event) => setCityName(event.target.value)}
+                    data-testid="rev-firstlook-city"
+                  />
+                  <button disabled={busy} type="submit" data-testid="rev-firstlook-start">
+                    {busy ? "正在准备…" : "开始探索 →"}
+                  </button>
+                </div>
+              </form>
+              {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
+              <p className="rev-mobile-truth">点击后先创建行程草稿。</p>
+            </section>
+          ) : activeTab === "trips" ? (
+            <section className="rev-mobile-panel" data-testid="rev-mobile-empty-trips">
+              <span className="rev-firstlook-eyebrow">TRIPS</span>
+              <h2>行程</h2>
+              <p>开始探索一个地区后，你保存的路线和出发进度会显示在这里。</p>
+              <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
+                开始探索 →
+              </button>
+            </section>
+          ) : (
+            <section className="rev-mobile-panel" data-testid="rev-mobile-empty-me">
+              <span className="rev-firstlook-eyebrow">CITYNEXUS</span>
+              <h2>我的</h2>
+              <p>开始探索后，这里会显示你的地区和助手状态。</p>
+              <div className="rev-mobile-account-line">
+                <span>AI 助手</span><strong>{agentStatusChecking ? "正在连接" : nativeHermesReady ? "Hermes 工具已就绪" : agentConfigured ? "网关已配置" : "当前未配置"}</strong>
               </div>
-            </form>
-            {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
-            <p className="rev-mobile-truth">
-              点击后先创建行程草稿。
-            </p>
-          </section>
+            </section>
+          )
         ) : (
           <>
             <section className="rev-mobile-tabpanel" hidden={activeTab !== "explore"} data-testid="rev-mobile-screen-explore">
@@ -407,13 +425,11 @@ export function RevolutionFirstLook() {
           </>
         )}
       </main>
-      {journey && (
-        <RevolutionMobileNav
-          active={activeTab}
-          onSelect={navigateMobile}
-          hasSavedWalk={Boolean(pocketWalk)}
-        />
-      )}
+      <RevolutionMobileNav
+        active={activeTab}
+        onSelect={navigateMobile}
+        hasSavedWalk={Boolean(pocketWalk)}
+      />
       <footer className="rev-firstlook-footer">
         CityNexus · 地点来源见卡片，到达状态由你确认
       </footer>
