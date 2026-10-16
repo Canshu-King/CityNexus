@@ -90,6 +90,7 @@ def test_native_hermes_timeline_is_bound_to_signed_member_and_journey(monkeypatc
                     trigger_event_id=None,
                     use_model_draft=False,
                 )
+                mission_id = mission.id
                 run_id = "hermes-mobile-" + uuid4().hex
                 record_audit(
                     session,
@@ -105,12 +106,58 @@ def test_native_hermes_timeline_is_bound_to_signed_member_and_journey(monkeypatc
                         "traveler_id": owner["id"],
                     },
                 )
+                collaborator_mission = create_mission(
+                    session,
+                    journey,
+                    command="Review the collaborator's route evidence",
+                    requested_autonomy="PLAN_ONLY",
+                    trigger_event_id=None,
+                    use_model_draft=False,
+                )
+                collaborator_mission_id = collaborator_mission.id
+                collaborator_run_id = "hermes-mobile-" + uuid4().hex
+                collaborator_member = session.scalar(
+                    select(JourneyMember).where(
+                        JourneyMember.journey_id == journey_id,
+                        JourneyMember.traveler_id == collaborator["id"],
+                    )
+                )
+                assert collaborator_member is not None
+                record_audit(
+                    session,
+                    action="agent.native_hermes.run_bound",
+                    entity_type="HermesNativeRun",
+                    entity_id=collaborator_run_id,
+                    journey_id=journey_id,
+                    actor_type="TRAVELER",
+                    actor_id=collaborator["id"],
+                    after={
+                        "mission_id": collaborator_mission_id,
+                        "member_id": collaborator_member.id,
+                        "traveler_id": collaborator["id"],
+                    },
+                )
                 session.commit()
 
             path = f"/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline"
             owner_headers = {"Authorization": f"Bearer {owner['access_token']}"}
             collaborator_headers = {"Authorization": f"Bearer {collaborator['access_token']}"}
             outsider_headers = {"Authorization": f"Bearer {outsider['access_token']}"}
+
+            latest_path = f"/api/v1/journeys/{journey_id}/agent/hermes/latest-run"
+            owner_latest = client.get(latest_path, headers=owner_headers)
+            assert owner_latest.status_code == 200, owner_latest.text
+            assert owner_latest.json()["journey_id"] == journey_id
+            assert owner_latest.json()["run"]["run_id"] == run_id
+            assert owner_latest.json()["run"]["mission_id"] == mission_id
+            assert owner_latest.json()["run"]["runtime_identity"] == "HERMES_NATIVE_MCP"
+            assert client.get(latest_path).status_code == 401
+            assert client.get(latest_path, headers=outsider_headers).status_code == 403
+            # A collaborator sees their own current-member run, never the owner's.
+            collaborator_latest = client.get(latest_path, headers=collaborator_headers)
+            assert collaborator_latest.status_code == 200, collaborator_latest.text
+            assert collaborator_latest.json()["run"]["run_id"] == collaborator_run_id
+            assert collaborator_latest.json()["run"]["mission_id"] == collaborator_mission_id
 
             owner_response = client.get(path, headers=owner_headers)
             assert owner_response.status_code == 200, owner_response.text

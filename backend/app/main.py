@@ -1339,6 +1339,66 @@ def stream_native_hermes_events(
     )
 
 
+@app.get("/api/v1/journeys/{journey_id}/agent/hermes/latest-run")
+def get_latest_journey_native_hermes_run(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    """Return only this signed member's latest server-bound native run reference.
+
+    This read-only projection lets a mobile client restore an existing trace after
+    navigation or reload. It does not ask Hermes to start a run or call the
+    provider. The run id is selected from the durable binding created by the
+    authenticated Copilot response, never from client storage or a global latest.
+    """
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    binding = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "agent.native_hermes.run_bound",
+            AuditLog.entity_type == "HermesNativeRun",
+            AuditLog.journey_id == str(journey.id),
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+            # A traveler can have a new membership after a leave/rejoin cycle.
+            # Select only bindings that could belong to this exact signed member,
+            # then validate the decoded record below before exposing it.
+            AuditLog.after_json.contains(member.id),
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        .limit(1)
+    )
+    current_run: dict[str, Any] | None = None
+    if binding is not None:
+        try:
+            record = json.loads(binding.after_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            record = {}
+        mission_id = str(record.get("mission_id") or "") if isinstance(record, dict) else ""
+        if (
+            mission_id
+            and record.get("traveler_id") == principal.traveler_id
+            and record.get("member_id") == member.id
+        ):
+            mission = session.get(JourneyMission, mission_id)
+            if mission is not None and mission.journey_id == str(journey.id):
+                summary = str(mission.reasoning_summary or "").strip()
+                current_run = {
+                    "run_id": str(binding.entity_id),
+                    "mission_id": mission_id,
+                    "runtime_identity": "HERMES_NATIVE_MCP",
+                    "status": "unknown",
+                    "reasoning_summary": summary[:600] or None,
+                }
+    return {"journey_id": str(journey.id), "run": current_run}
+
+
 @app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}")
 def get_journey_native_hermes_run(
     journey_id: UUID,

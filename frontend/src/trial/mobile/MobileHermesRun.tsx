@@ -66,7 +66,7 @@ function stateText(status: string, connection: string, events: NativeRuntimeEven
   return "Hermes 已启动，等待首条工具事件";
 }
 
-export function MobileHermesRun({ journeyId }: { journeyId: string }) {
+export function MobileHermesRun({ journeyId, visible }: { journeyId: string; visible: boolean }) {
   const [prompt, setPrompt] = useState("请检查当前行程和受保护安排，并给出安全的调整建议；只生成方案，不预订、不付款，也不修改行程。");
   const [requestState, setRequestState] = useState<RequestState>(() => readTravelerBearer() ? "idle" : "unauthorized");
   const [reply, setReply] = useState<string | null>(null);
@@ -77,7 +77,8 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [failure, setFailure] = useState<string | null>(null);
   const [bearerEpoch, setBearerEpoch] = useState(0);
-  const timeline = useNativeHermesTimeline({ journeyId, run, enabled: true });
+  const restoreEpoch = useRef(0);
+  const timeline = useNativeHermesTimeline({ journeyId, run, enabled: visible });
   const actualEvents = useMemo(
     () => mergeNativeEvents(timeline.events.filter((event) => event.source === "HERMES_NATIVE")),
     [timeline.events],
@@ -130,8 +131,39 @@ export function MobileHermesRun({ journeyId }: { journeyId: string }) {
     return unsubscribe;
   }, [journeyId, bearerEpoch]);
 
+  useEffect(() => {
+    if (!visible) return;
+    const startingBearer = readTravelerBearer();
+    if (!startingBearer) return;
+    const epoch = ++restoreEpoch.current;
+    void cityNexusApi.getLatestNativeHermesRun(journeyId).then((response) => {
+      if (restoreEpoch.current !== epoch || readTravelerBearer() !== startingBearer) return;
+      if (response.journey_id !== journeyId) return;
+      const latest = response.run;
+      if (!latest || latest.runtime_identity !== "HERMES_NATIVE_MCP" || !latest.run_id) return;
+      setRun(latest);
+      setRequestState("ready");
+      // Restored history stays collapsed; a fresh signed Copilot response
+      // opens the trace drawer for the run that it just bound.
+      setExpanded(false);
+    }).catch((caught) => {
+      if (restoreEpoch.current !== epoch || readTravelerBearer() !== startingBearer) return;
+      if (caught instanceof CityNexusApiError && [401, 403].includes(caught.status)) {
+        setRun(null);
+        setRequestState("unauthorized");
+        setFailure("当前签名成员无权恢复这条运行记录；已隐藏运行详情。");
+        return;
+      }
+      setFailure("暂时无法恢复上一条运行记录；没有因此启动新的 AI 任务。");
+    });
+    return () => {
+      if (restoreEpoch.current === epoch) restoreEpoch.current += 1;
+    };
+  }, [journeyId, visible, bearerEpoch]);
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    restoreEpoch.current += 1;
     const startingBearer = readTravelerBearer();
     const message = prompt.trim();
     if (!startingBearer) {

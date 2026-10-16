@@ -344,7 +344,7 @@ export function RevolutionFirstLook() {
                     <p>这里连接原生 Journey Operator。只有真实产生的 AgentRun 和审批记录，才能算 AI 已执行。</p>
                   </section>
                   <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
-                  <MobileHermesRun journeyId={journey.id} />
+                  <MobileHermesRun journeyId={journey.id} visible={activeTab === "trips"} />
                   <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
                 </section>
               ) : (

@@ -424,9 +424,29 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       { event_type: "tool.completed", run_id: runId, event_id: "evt-3", sequence: 3, tool_name: "inspect_journey", friendly_label: "Inspect current Journey", status: "completed", timestamp: "2026-10-16T07:10:02Z", duration_ms: 850, source: "HERMES_NATIVE" },
       { event_type: "run.completed", run_id: runId, event_id: "evt-4", sequence: 4, tool_name: null, friendly_label: "Hermes runtime", status: "completed", timestamp: "2026-10-16T07:10:03Z", source: "HERMES_NATIVE" },
     ];
+    let latestRun: NonNullable<import("../src/api/citynexus").CopilotResponse["agent_run"]> | null = null;
+    let latestRunReads = 0;
+    let copilotPosts = 0;
+    await page.route(`${prefix}/agent/hermes/latest-run`, async (route) => {
+      expect(route.request().headers()["authorization"]).toBe("Bearer TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+      latestRunReads += 1;
+      await fulfill(route, { journey_id: journeyId, run: latestRun });
+    });
     await page.route(`${prefix}/copilot/messages`, async (route) => {
       expect(route.request().headers()["authorization"]).toBe("Bearer TEST_ONLY_SIGNED_FIXTURE_TOKEN");
       expect(route.request().method()).toBe("POST");
+      copilotPosts += 1;
+      latestRun = {
+        run_id: runId,
+        status: "running",
+        runtime_identity: "HERMES_NATIVE_MCP",
+        provider_key: "TEST_FIXTURE",
+        mission_id: "test-mission",
+        reasoning_summary: "TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。",
+        events_url: `${prefix}/agent/hermes/runs/${runId}/events`,
+        timeline_url: `${prefix}/agent/hermes/runs/${runId}/timeline`,
+        initial_events: [],
+      };
       await fulfill(route, {
         message: "TEST FIXTURE：本次工具事件用于界面验证。",
         mode: "AI",
@@ -437,17 +457,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
         event: null,
         verification: null,
         discovery: null,
-        agent_run: {
-          run_id: runId,
-          status: "running",
-          runtime_identity: "HERMES_NATIVE_MCP",
-          provider_key: "TEST_FIXTURE",
-          mission_id: "test-mission",
-          reasoning_summary: "TEST_FIXTURE：先核对当前行程事实，再检查受保护安排。",
-          events_url: `${prefix}/agent/hermes/runs/${runId}/events`,
-          timeline_url: `${prefix}/agent/hermes/runs/${runId}/timeline`,
-          initial_events: [],
-        },
+        agent_run: latestRun,
         protected_commitments: [],
         evidence: { fixture: true },
         recommendations: [],
@@ -459,18 +469,18 @@ test.describe("Revolution Mobile-First UI fixture", () => {
         run_id: runId,
         journey_id: journeyId,
         runtime_identity: "HERMES_NATIVE_MCP",
-        events,
+        events: [],
         observability: {
           run_id: runId, runtime_identity: "HERMES_NATIVE_MCP", current_mission: "test-mission",
-          tool_count: 1, current_tool: null, completion_status: "completed",
-          gateway_decision: null, guardian_decision: null, total_duration_ms: 850,
+          tool_count: 0, current_tool: "inspect_journey", completion_status: "running",
+          gateway_decision: null, guardian_decision: null, total_duration_ms: 0,
         },
       });
     });
     await page.route(`${prefix}/agent/hermes/runs/${runId}/events`, async (route) => {
       expect(route.request().headers()["authorization"]).toBe("Bearer TEST_ONLY_SIGNED_FIXTURE_TOKEN");
       const body = events.map((event) =>
-        `event: ${event.event_type}\ndata: ${JSON.stringify(event)}\n\n`,
+        `event: ${event.event_type}\r\ndata: ${JSON.stringify(event)}\r\n\r\n`,
       ).join("");
       await route.fulfill({ status: 200, contentType: "text/event-stream", body });
     });
@@ -481,6 +491,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       throw new Error("Mobile shell mounted its error boundary: " + (pageErrors.join(" | ") || "no pageerror captured"));
     }
     await page.getByTestId("rev-mobile-tab-trips").click();
+    await expect.poll(() => latestRunReads).toBe(1);
     await page.getByTestId("rev-mobile-hermes-submit").click();
     const run = page.getByTestId("rev-mobile-hermes-run");
     await expect(run).toBeVisible();
@@ -497,7 +508,19 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(sheet).not.toBeVisible();
     await page.getByRole("button", { name: "查看工作过程" }).click();
     await expect(sheet).toBeVisible();
-    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-TEST-FIXTURE-390x844.png"), fullPage: false });
+
+    await page.reload();
+    await page.getByTestId("rev-mobile-tab-trips").click();
+    await expect.poll(() => latestRunReads).toBe(2);
+    await expect(page.getByTestId("rev-mobile-hermes-run")).toBeVisible();
+    const restoredSheet = page.getByTestId("rev-mobile-hermes-sheet");
+    await expect(restoredSheet).not.toBeVisible();
+    await page.getByRole("button", { name: "查看工作过程" }).click();
+    await expect(restoredSheet).toBeVisible();
+    await expect(restoredSheet.getByText("检查当前行程：已完成")).toBeVisible();
+    await expect(restoredSheet.getByRole("button", { name: "停止本次运行" })).toHaveCount(0);
+    expect(copilotPosts).toBe(1);
+    await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-restored-TEST-FIXTURE-390x844.png"), fullPage: false });
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
     expect(fits).toBeTruthy();
   });

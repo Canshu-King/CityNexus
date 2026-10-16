@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { CityNexusApiError, cityNexusApi, type CopilotResponse, type NativeRuntimeEvent } from "../../api/citynexus";
+import { CityNexusApiError, cityNexusApi, type NativeHermesRunReference, type NativeRuntimeEvent } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer, travelerAuthHeaders } from "../../lib/travelerSession";
 
-export type NativeHermesRun = NonNullable<CopilotResponse["agent_run"]>;
+export type NativeHermesRun = NativeHermesRunReference;
 export type NativeTimelineAuth = "checking" | "authorized" | "unauthorized";
 export type NativeTimelineConnection = "idle" | "connecting" | "connected" | "retrying" | "unavailable" | "complete";
 
@@ -125,6 +125,7 @@ export function useNativeHermesTimeline({
     let cancelled = false;
     let ended = false;
     let denied = false;
+    let terminalStatus: string | null = null;
     let attempts = 0;
     let controller: AbortController | null = null;
     let retryTimer: number | undefined;
@@ -194,12 +195,16 @@ export function useNativeHermesTimeline({
         }
         append(payload.events ?? []);
         if (payload.observability?.completion_status) {
-          setRunState(payload.observability.completion_status);
-          if (isTerminal(payload.observability.completion_status)) {
+          const status = payload.observability.completion_status;
+          if (isTerminal(status)) {
+            terminalStatus = status;
+            setRunState(status);
             ended = true;
             setConnection("complete");
             controller?.abort();
             if (pollTimer != null) window.clearInterval(pollTimer);
+          } else if (!terminalStatus) {
+            setRunState(status);
           }
         }
       } catch (error) {
@@ -233,7 +238,6 @@ export function useNativeHermesTimeline({
             return;
           }
           if (!response.ok || !response.body) throw new Error("event_stream_unavailable");
-          attempts = 0;
           setConnection("connected");
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
@@ -242,13 +246,28 @@ export function useNativeHermesTimeline({
             const next = await reader.read();
             if (next.done) break;
             buffer += decoder.decode(next.value, { stream: true });
-            let boundary = buffer.indexOf("\n\n");
-            while (boundary >= 0) {
-              const frame = buffer.slice(0, boundary);
-              buffer = buffer.slice(boundary + 2);
+            let boundary = /\r?\n\r?\n/.exec(buffer);
+            while (boundary) {
+              const frame = buffer.slice(0, boundary.index);
+              buffer = buffer.slice(boundary.index + boundary[0].length);
               const event = eventFromFrame(frame);
-              if (event?.run_id === run.run_id && event.source === "HERMES_NATIVE") append([event]);
-              boundary = buffer.indexOf("\n\n");
+              if (event?.run_id === run.run_id && event.source === "HERMES_NATIVE") {
+                append([event]);
+                const eventTerminalStatus = event.event_type === "run.completed"
+                  ? (event.status === "succeeded" ? "succeeded" : "completed")
+                  : event.event_type === "run.failed"
+                    ? (event.status === "error" ? "error" : "failed")
+                    : event.event_type === "run.stopped" ? "stopped" : null;
+                if (eventTerminalStatus) {
+                  terminalStatus = eventTerminalStatus;
+                  setRunState(eventTerminalStatus);
+                  ended = true;
+                  setConnection("complete");
+                  controller?.abort();
+                  if (pollTimer != null) window.clearInterval(pollTimer);
+                }
+              }
+              boundary = /\r?\n\r?\n/.exec(buffer);
             }
           }
           if (!ended && current()) throw new Error("event_stream_closed");

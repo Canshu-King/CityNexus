@@ -2185,6 +2185,15 @@ export interface NativeRuntimeEvent {
   approval_method?: string | null;
 }
 
+export interface NativeHermesRunReference {
+  run_id: string;
+  status?: string;
+  runtime_identity: string;
+  mission_id?: string;
+  reasoning_summary?: string | null;
+  initial_events?: NativeRuntimeEvent[];
+}
+
 export interface AgentCommandResponse {
   mission: AgentMission;
   event_id: string | null;
@@ -2863,6 +2872,16 @@ export const cityNexusApi = {
   getNativeHermesRun(journeyId: string, runId: string): Promise<Record<string, unknown>> {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getLatestNativeHermesRun(journeyId: string): Promise<{
+    journey_id: string;
+    run: NativeHermesRunReference | null;
+  }> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/hermes/latest-run",
       { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
