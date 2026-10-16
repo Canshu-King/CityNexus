@@ -508,11 +508,6 @@ code {
       字号上到 kicker 地板，数字用等宽位。 */
 .v8-user small,
 .v8-user-meta,
-.hub-party-size {
-  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
-  color: var(--cn-on-elev-0-muted);
-  font-variant-numeric: tabular-nums lining-nums;
-}
 
 /* 丁 空态的下一步提示：同一族次级墨，实测 3.62:1，一起收进契约。 */
 .cn-pending-empty-next,

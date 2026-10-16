@@ -436,7 +436,6 @@
 /* Restrained press + hover feedback (transform only, no rotate / big shadow). */
 .v8-page button:not(.cn-no-motion):active,
 .v8-page [role="button"]:active,
-.v8-page a.v8-cta:active { transform: scale(0.985); transition: transform var(--cn-t-press) var(--cn-ease-standard); }
 .v8-page button:not(.cn-no-motion),
 .v8-page a.v8-cta,
 .v8-page .v8-card { transition: transform var(--cn-t-hover) var(--cn-ease-standard), box-shadow var(--cn-t-hover) var(--cn-ease-standard); }
@@ -507,7 +506,7 @@
 .v10-evidence-row:active b { color: var(--cn-link-active); }
 
 /* Touch targets >=44px on primary controls. */
-.v8-page button, .v8-page a.v8-cta, .v8-nav button { min-height: 44px; }
+.v8-page button, .v8-nav button { min-height: 44px; }
 
 @media (prefers-reduced-motion: reduce) {
   .v8-page,
@@ -588,7 +587,6 @@
   min-height: 50px;
 }
 /* The whole card reveals once; do not stagger its Now/Next/CTA children. */
-.cn-now-next-hero.cn-hero-stagger > * { animation: none; }
 
 /* Stay / anchors step down into a compact secondary strip beneath the hero. */
 .cn-hero-strip {
@@ -899,8 +897,6 @@
   :root[data-theme="dark"] .v8-product-shell .v8-user small { color: var(--cn-ink-secondary) !important; }
 
   /* Today hero attention status: was a hard-coded green/amber. */
-  :root[data-theme="dark"] .v8-page .today-actions strong.green { color: #7bd88f !important; }
-  :root[data-theme="dark"] .v8-page .today-actions strong.warn { color: var(--cn-warning) !important; }
 
   /* Live next-card green accents: hard-coded dark-on-light greens now sit on a
      dark card surface, so they fall below AA. */
