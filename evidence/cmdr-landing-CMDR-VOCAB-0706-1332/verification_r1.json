@@ -1,0 +1,497 @@
+{
+ "typecheck_src": {
+  "cmd": "npm.cmd run typecheck",
+  "rc": 0,
+  "stdout_tail": [
+   "> typecheck",
+   "> tsc -p tsconfig.typecheck.json --noEmit"
+  ],
+  "stderr_tail": []
+ },
+ "typecheck_e2e": {
+  "cmd": "npx.cmd tsc --noEmit --skipLibCheck --module esnext --target es2020 --moduleResolution bundler e2e/_qoderContrastScan.ts e2e/qoder-contrast-audit.spec.ts e2e/qoder-live-structure.spec.ts e2e/qoder-ord0509-contrast-screens.spec.ts e2e/qoder-simulation-scene.spec.ts",
+  "rc": 0,
+  "stdout_tail": [],
+  "stderr_tail": []
+ },
+ "vite_build": {
+  "cmd": "npx.cmd vite build",
+  "rc": 0,
+  "stdout_tail": [
+   "files generated",
+   "  dist/v10-sw.js",
+   "  dist/workbox-6923124b.js"
+  ],
+  "stderr_tail": [
+   "- Using dynamic import() to code-split the application",
+   "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+   "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+  ]
+ },
+ "two_arm_real_gate": {
+  "light": {
+   "control_union": [
+    [
+     "unclassified-control",
+     "[data-testid=\"hub-plan-with-ai\"]",
+     "hub-plan-with-ai"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"journey-link-copy\"]",
+     "journey-link-copy"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"map-viewport-reset\"]",
+     "map-viewport-reset"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"sim-ball\"]",
+     "sim-ball"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"topbar-avatar\"]",
+     "topbar-avatar"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"v8-map-stop-label\"]",
+     "v8-map-stop-label"
+    ]
+   ],
+   "arm_union": [
+    [
+     "unclassified-control",
+     "[data-testid=\"hub-plan-with-ai\"]",
+     "hub-plan-with-ai"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"journey-link-copy\"]",
+     "journey-link-copy"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"map-viewport-reset\"]",
+     "map-viewport-reset"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"v8-map-stop-label\"]",
+     "v8-map-stop-label"
+    ]
+   ],
+   "opened_new": [],
+   "fixed": [
+    [
+     "unclassified-control",
+     "[data-testid=\"sim-ball\"]",
+     "sim-ball"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"topbar-avatar\"]",
+     "topbar-avatar"
+    ]
+   ],
+   "control_jitter": [],
+   "arm_stable_residual": [
+    [
+     "unclassified-control",
+     "[data-testid=\"hub-plan-with-ai\"]",
+     "hub-plan-with-ai"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"journey-link-copy\"]",
+     "journey-link-copy"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"map-viewport-reset\"]",
+     "map-viewport-reset"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"v8-map-stop-label\"]",
+     "v8-map-stop-label"
+    ]
+   ]
+  },
+  "dark": {
+   "control_union": [
+    [
+     "unclassified-control",
+     "[data-testid=\"hub-plan-with-ai\"]",
+     "hub-plan-with-ai"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"journey-link-copy\"]",
+     "journey-link-copy"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"map-viewport-reset\"]",
+     "map-viewport-reset"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"sim-ball\"]",
+     "sim-ball"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"topbar-avatar\"]",
+     "topbar-avatar"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"v8-map-stop-label\"]",
+     "v8-map-stop-label"
+    ]
+   ],
+   "arm_union": [
+    [
+     "unclassified-control",
+     "[data-testid=\"hub-plan-with-ai\"]",
+     "hub-plan-with-ai"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"journey-link-copy\"]",
+     "journey-link-copy"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"map-viewport-reset\"]",
+     "map-viewport-reset"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"v8-map-stop-label\"]",
+     "v8-map-stop-label"
+    ]
+   ],
+   "opened_new": [],
+   "fixed": [
+    [
+     "unclassified-control",
+     "[data-testid=\"sim-ball\"]",
+     "sim-ball"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"topbar-avatar\"]",
+     "topbar-avatar"
+    ]
+   ],
+   "control_jitter": [],
+   "arm_stable_residual": [
+    [
+     "unclassified-control",
+     "[data-testid=\"hub-plan-with-ai\"]",
+     "hub-plan-with-ai"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"journey-link-copy\"]",
+     "journey-link-copy"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"map-viewport-reset\"]",
+     "map-viewport-reset"
+    ],
+    [
+     "unclassified-control",
+     "[data-testid=\"v8-map-stop-label\"]",
+     "v8-map-stop-label"
+    ]
+   ]
+  }
+ },
+ "kinds_three_runs_sum": {
+  "control": {
+   "light/unclassified-control": 32,
+   "dark/unclassified-control": 32
+  },
+  "arm": {
+   "light/unclassified-control": 25,
+   "dark/unclassified-control": 25
+  }
+ },
+ "negative_control_runs": [
+  {
+   "run": "ctl1",
+   "theme": "light",
+   "kinds": {
+    "unclassified-control": 11
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "ctl1",
+   "theme": "dark",
+   "kinds": {
+    "unclassified-control": 10
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "arm1",
+   "theme": "light",
+   "kinds": {
+    "unclassified-control": 9
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "arm1",
+   "theme": "dark",
+   "kinds": {
+    "unclassified-control": 8
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "arm2",
+   "theme": "light",
+   "kinds": {
+    "unclassified-control": 8
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "arm2",
+   "theme": "dark",
+   "kinds": {
+    "unclassified-control": 9
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "arm3",
+   "theme": "light",
+   "kinds": {
+    "unclassified-control": 8
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "run": "arm3",
+   "theme": "dark",
+   "kinds": {
+    "unclassified-control": 8
+   },
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  }
+ ],
+ "landing_receipt": {
+  "order": "CMDR-VOCAB-0706",
+  "candidate_ref": "refs/heads/review/cmdr-pulse-pass1-1016",
+  "verdict": "READY_TO_LAND",
+  "mode": "LAND",
+  "tip_before": "82fe06154f07fac3dbf90b456855509bca5a9762",
+  "tip_after": "24a71efcbce02187ff7c6e1cd88dfd0e4aa1dc1e",
+  "landed": true,
+  "both_routes_agree": true,
+  "http_status": 200,
+  "genealogy": {
+   "ff_possible_rc": 0,
+   "ff_possible": true,
+   "merge_base": "82fe06154f07fac3dbf90b456855509bca5a9762",
+   "line_only_commits": 0,
+   "candidate_only_commits": 1
+  },
+  "file_sets_intersection": [],
+  "problems": [],
+  "exposure": {
+   "ruler_blob": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 3,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "dict_keys": {
+   "exit": 0,
+   "verdict": "PASS",
+   "tip_missing": "1",
+   "called_in_view": "255",
+   "new_missing": []
+  },
+  "screen_code": {
+   "exit": 0,
+   "judged": 2,
+   "refuse": 0,
+   "tokens": []
+  },
+  "surface_contract": {
+   "arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d",
+   "exit": 0,
+   "verdict": "PASS",
+   "css_files_in_view": "1",
+   "added_css_lines": "4",
+   "new_hatch_rows": "0",
+   "ruler_status": "MATCH",
+   "violations": [],
+   "disclosed_slip": "a literal moved between rules in the same file, or a fallback whose only change is its token name, pairs away as not-new; .tsx inline styles, inheritance and cascade are outside this arm"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1958,
+   "interrupted": false
+  },
+  "whole_suite_error_lines": [
+   "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+   "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+   "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+  ],
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/_qoderContrastScan.ts",
+    "candidate_blob": "2771f3c0e0f61e1e02bf15e0dcf3f832ee2eb18b",
+    "export_blob": "2771f3c0e0f61e1e02bf15e0dcf3f832ee2eb18b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "070cf054e61f5987e6acc2d1c0afee3c8057e968",
+    "export_blob": "070cf054e61f5987e6acc2d1c0afee3c8057e968",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/simulation/SimulationPanel.css",
+    "candidate_blob": "e48b947a206d1fa1a45e21f3b8545def036e92fa",
+    "export_blob": "e48b947a206d1fa1a45e21f3b8545def036e92fa",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/simulation/SimulationPanel.tsx",
+    "candidate_blob": "d3601a950179b044b50e2dd3810db81b9f45bea0",
+    "export_blob": "d3601a950179b044b50e2dd3810db81b9f45bea0",
+    "equal": true
+   }
+  ]
+ },
+ "backend_suite_regression_vs_previous_landing": {
+  "previous_error_lines": [
+   "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+   "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+   "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+  ],
+  "this_error_lines": [
+   "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+   "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+   "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+  ],
+  "new": [],
+  "gone": []
+ },
+ "phase_sweep": [
+  {
+   "theme": "light",
+   "ph": "dawn",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "light",
+   "ph": "day",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "light",
+   "ph": "dusk",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "light",
+   "ph": "night",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "dark",
+   "ph": "dawn",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "dark",
+   "ph": "day",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "dark",
+   "ph": "dusk",
+   "fails": 0,
+   "sample": []
+  },
+  {
+   "theme": "dark",
+   "ph": "night",
+   "fails": 0,
+   "sample": []
+  }
+ ]
+}
