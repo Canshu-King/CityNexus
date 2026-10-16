@@ -1,0 +1,255 @@
+{
+ "at": "2026-10-16T22:05:33.201Z",
+ "label": "control_again",
+ "src_blob_note": "D:/moodle/_cmdr_fe_rev_1016/tip/frontend/e2e/_qoderContrastScan.ts",
+ "scenes": [
+  {
+   "theme": "light",
+   "count": 329,
+   "warnings": 11,
+   "kinds": {
+    "unclassified-control": 9
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"hub-plan-with-ai\"]",
+     "testId": "hub-plan-with-ai",
+     "text": "AI 帮我规划",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 15,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"journey-link-copy\"]",
+     "testId": "journey-link-copy",
+     "text": "复制行程链接",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Old Town Gate",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Riverside Museum",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Central Food Hall",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Tech Art Center",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Nexus River Cruise Pier",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Skyline Dinner House",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    }
+   ],
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  },
+  {
+   "theme": "dark",
+   "count": 329,
+   "warnings": 10,
+   "kinds": {
+    "unclassified-control": 9
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"hub-plan-with-ai\"]",
+     "testId": "hub-plan-with-ai",
+     "text": "AI 帮我规划",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 15,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"journey-link-copy\"]",
+     "testId": "journey-link-copy",
+     "text": "复制行程链接",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Old Town Gate",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Riverside Museum",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Central Food Hall",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Tech Art Center",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Nexus River Cruise Pier",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Skyline Dinner House",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    }
+   ],
+   "negative_control": {
+    "unknown_role_fires": 1,
+    "empty_role_still_unclassified": 1,
+    "probe_testid": "cmdr-selfcheck-probe",
+    "injected_then_removed": true
+   }
+  }
+ ]
+}
