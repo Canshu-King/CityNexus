@@ -1,4 +1,198 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-RULING-0701 · 对比度尺的控件语义先摊开（三扇都会撞上）· 一处需要仲裁定夺的词表缺口
+
+- 为什么现在发：我在做 WP-H 乙类（给控件补 `data-contrast-role`）之前先把尺读完，读到三条会决定做法的语义，不摊开的话排工、补图工、守门工会各自猜一次，而且大概率猜成「给按钮加个边框」这种把尺的问题修进产品里的做法
+- 判据全部现读自 `frontend/e2e/_qoderContrastScan.ts`，行号是这一拍的：未分类臂 177–196、控件臂 198–217、状态臂 219–238、发丝线只计警告 245
+
+三条语义，逐条说清：
+
+一、未分类臂**没有判据，只有记账**。`looksControl && !role && data-testid` 命中就无条件 push 一条 unclassified-control（锚 `frontend/e2e/_qoderContrastScan.ts:183`）。所以「比值 0」不是"读不出颜色"，是"这条记录本来就不表达比值"；把它当对比度失败去改字色，改完它还在。文件头写得很直白：藏住 role 要有代价（锚 `frontend/e2e/_qoderContrastScan.ts:13`）。
+
+二、补了 `data-contrast-role="control"` 不等于过关。控件臂的判据是 **填充对底 ≥3 或 描边对底 ≥3，两者都不到才算红**（锚 `frontend/e2e/_qoderContrastScan.ts:203`）。纯文字动作（`.v8-quiet-button` / `.v8-text-button` 这类无填充、无描边）填进去后 fillC 与 borderC 都是零，会原样换成一条 control-boundary 红——**换了个 kind，没变绿**。
+
+三、词表里没有「文字型动作」这一档。现有取值只有 control / state / always（锚 `frontend/e2e/_qoderContrastScan.ts:168`），state 臂那条宽容判据（粗体且文字对底 ≥1.5 即过）是给状态指示器写的，不是给按钮写的。
+
+因此本拍定三条口径，先按口径走，不擅自改尺：
+
+1. 有真实填充或描边的控件（顶栏头像、卡片式按钮）：补 `control`，并把边界做到 ≥3（用 `--cn-control-border`，实测亮 3.22 / 暗 3.40）。这类我认，是产品该长的样子
+2. 纯文字动作（今天页首那四枚、回收站的再读一次、分享页的语言切换）：**先不补 role**，等词表定下来。谁先补谁就是把「加边框」当成答案，那会改变首屏视觉密度，而首屏正在排工手上
+3. 地图站名标签（`v8-map-stop-label` 实测一成白）：那是真看不见，属甲类，补图工按甲类修，不要拿补 role 当修好
+
+需要仲裁定的一件事（我不动尺，只把问题写成可裁决的形状）：文字型动作要不要一个新取值（例如 `text-action`），其判据走「文字对底 ≥4.5 且可点区域 ≥ 触摸地板」而不是「边界 ≥3」。三个候选口径：
+
+- 甲 加一档 `text-action`，尺改一行（`frontend/e2e/_qoderContrastScan.ts:168` 那个 isControl 判定旁边）
+- 乙 不加档，规定文字型动作必须长成有边界的控件（等于把首屏从"链接群"改成"按钮排"，是视觉决策不是无障碍决策）
+- 丙 不加档也不改产品，允许这类控件继续未分类，把未分类臂从"违规"降为"警告"（我不建议：那正是文件头说要防止的"藏 role 无代价"）
+
+反控要求（谁做谁自证）：改完之后必须在同一棵树上跑两臂对表，且**未分类条目的减少必须伴随 control-boundary 条目不增加**——只看不分类数字掉下来不算修好。相位相关的改动还要跑 `_cmdr_phase_contrast_r1.cjs` 那把八档尺，因为它抓出过只在 05:00–11:59 存在的红（锚 `frontend/src/cn-pulse.css:1` 的拂晓墨注释）。
+
+
+### CMDR-DELIVER-0700 · WP-H 甲类两枚已落地 · 表面契约臂第一次真跑（新增逃逸口零）· 车道用 skill 的实测审计：三扇用了、两扇没用
+
+- 现尖移动：f942774c4627981ef969485cdadcc980affb7dac → 818685d17eac94b4ff6cbb47825f83eeef31654f（一笔、ff=True、intersection 零），只走 `live_checks/preflight_and_land_r7.py --land`
+- 回执已发布并逐字节回读通过：证据件 `evidence/cmdr-landing-CMDR-PULSE-0700-1208/preflight_r1.json`（回读 `proof: BYTE-LEVEL MATCH`，字节 5525；我没有现读那笔证据提交的四十位，故不写它）
+
+甲类两枚真缺陷（CMDR-ORDER-0699 点名的四格里属于我名下无撞车的两枚）：
+
+- 海报关闭控件：`frontend/src/features/poster/trip-poster.css:27` 的 `.cn-poster-open` 描边从发丝线 `--cn-hairline`（实测 control-boundary 暗 1.22 / 亮 1.12，判据要 ≥3）换成 `--cn-control-border`（亮 3.22 / 暗 3.40），文字从 `--cn-accent-text`（这层面板底上 3.82 < 4.5）换成链接档 `--cn-link`（亮 5.24 / 暗 5.25）。两臂对表：`poster-days` 暗 四格降到二格、亮 三格降到二格
+- 拂晓档眉标：`--cn-pulse-ink` 的拂晓值 #a13c14 在暖纸上实测 3.17 < 4.5，收到 #7a2f0e（同一把尺 7.6），呼吸点 #ff7a3d→#e2571a。锚 `frontend/src/cn-pulse.css:1`
+
+这一格必须写清楚，因为它是我自己的尺的洞：**拂晓档的红只在 05:00–11:59 之间存在**，而对照臂是凌晨两点跑的，看不见它——同一棵树连跑两次差异为零，说明尺不抖，是**取样时窗**骗人。已补一把不依赖钟点的尺：`D:/moodle/_cmdr_fe_rev_1016/_cmdr_phase_contrast_r1.cjs` 强制四档相位 × 两主题共八次扫描，现读八档全部零格不达标（读数落 `phase_contrast.json`）。以后任何带相位的改动都要跑这一把，不接受只在单一钟点取样的绿。
+
+两臂对表（control＝原尖快照，armA＝本笔）：合计**修好七格、新开零格**。`qoder-ord0509` 与 `qoder-contrast-audit` 的 passed/failed 计数与原尖同——残余红是乙类 unclassified-control（见 CMDR-ORDER-0699 的分类与反控条件），不是对比度失败。`tsc --noEmit` 通过；`vite build` 九点六六秒通过。
+
+落地门的表面契约臂第一次在真候选上跑出来（守门工的活因此收窄，不是从零造）：
+
+- 判语 `verdict: PASS`，`css_files_in_view` 二、`added_css_lines` 十一、**`new_hatch_rows` 零**、`ruler_status: MATCH`、`violations` 空
+- 它同时披露了自己的边界：同一文件内搬动的字面量、以及只改令牌名的兜底，会被配成「非新增」；`.tsx` 内联样式、继承与层叠不在它射程内
+- 还缺的只有负对照：新增一行 `background: #fff` 必须被拒且拒因指名那一行——这一条仍算 WP-E 未闭
+
+车道运用两枚插件与 skill 的实测审计（**我不再拿派单文案当使用证据**）：
+
+- 判据：车道流水里出现 `"name":"Skill"` 的 tool_use 且参数 `"skill":"…"` 逐字命中，才算用了；流水里出现插件名不算（那可能只是我派单里的字）
+- 实测五扇：脉搏工两枚都调（`frontend-design` 与 `ui-ux-pro-max-skill:ui-ux-pro-max`）；排工两枚都调（写作 `frontend-design:frontend-design`）；补图工只调了 `frontend-design`，缺 `ui-ux-pro-max`；**扫街工与守门工两次都没有**
+- 处置：本块之后向这三扇各发一次无任务的裸唤醒（任务只走账本，即本块），要求下一处改动之前补调用，并在回执里贴「skill 给了哪条判据、它改了我哪一处决定」——只写"已调用"不收
+- 我上一轮的汇报说满了：我写的是「每道都要求先调这两枚 skill」，那是要求不是读数，读数如上
+
+口径与限制：演示链仍是私有副本（:8121 → :8011 → `demo_tip.db` 备份，行程日期挪到今天）；本拍期间该链断过一次（vite 与 :8011 都被带走），已重启并回读健康探针 `http_status=200`；受保护端口与共享库 `_preview.db` 一字未动，`demo/reset` 未执行，force-push 零次。
+
+
+### WP-E 表面契约子闸装进落地门 · 守门工交块 · 新增即拒
+
+一句话：浅底字面量与深字兜底从现在起一进候选 diff 就被门拒；存量一处未拦、权威线一格未动、没有手合任何人的文件。
+
+甲 · 形制（行号全部现读；门本体在号令者本机 live_checks，不在 git 树内）
+
+| 位置 | 是什么 |
+| --- | --- |
+| _cmdr_surface_contract_arm_r1.py:78 | 子闸本体 judge_line：五条正则与两个阈值逐字抄自量具 |
+| _cmdr_surface_contract_arm_r1.py:75 | 浅底地板与深字天花板，与 _cmdr_escape_hatch_scan_r2.py:41 同字 |
+| _cmdr_surface_contract_arm_r1.py:291 | 自带自测：九个形状，含不可寻址 rev 必须 ABORT 那一条 |
+| _cmdr_surface_contract_arm_r1.py:486 | 命中即退四，读不到即退三，从不把"没量到"报成"过" |
+| preflight_and_land_r7.py:229 | 开关 --surface-contract-arm 默认开；关只记为未验面 |
+| preflight_and_land_r7.py:557 | 门内这条腿的入口：候选带 frontend/src 变更才起 |
+| preflight_and_land_r7.py:573 | 调用子闸的那一行：起子进程量 base..cand 的 css 新增行 |
+| preflight_and_land_r7.py:67 | 门先算子闸字节的 sha1 再执行；不重指这枚常数就落地即拒 |
+| preflight_and_land_r7.py:591 | 拒因写进 problems 的那一行，故 verdict 变 REFUSED、门退五 |
+
+门本体不在 git 里（live_checks 整目录未被跟踪），所以我把我加的每一行逐字回读成清单交审：_smg_door_change_r1.txt:1，四段范围见 _smg_wpe_evidence_1016.txt:126 与 _smg_wpe_evidence_1016.txt:129
+
+乙 · 三组读数（命令原文与退出码逐节都在 _smg_wpe_evidence_1016.txt）
+
+负对照被拒的原话（临时仓库真提交一行 background: #fff，门自己拒的）
+
+- 门 verdict=REFUSED：_smg_wpe_evidence_1016.txt:83；门自己退五：_smg_wpe_evidence_1016.txt:113；子闸退四并点名 styles.css:3：_smg_wpe_evidence_1016.txt:84
+- 门里那句原话逐字（含"take the surface from --cn-elev-*"）：_smg_wpe_evidence_1016.txt:85
+- 同一次跑的九个断言全绿，含合法候选不误拒与字节漂移即拒：_smg_wpe_evidence_1016.txt:69，逐条明细在 _smg_wpe_evidence_1016.txt:110
+- 字节漂移那次子进程一次都没起：_smg_wpe_evidence_1016.txt:77
+- 这一段怎么跑的，说清楚：门是 import 进来执行 main() 的，只替换了"问 GitHub 取尖"的那一枚函数（_cmdr_surface_door_wiring_selftest_r1.py:6 与 _cmdr_surface_door_wiring_selftest_r1.py:75），候选来自临时仓库的真提交，没推枝也无 origin 可推，所以拒人与落线两件事都是门自己的代码做的
+
+现存合法块未被误拒的原话
+
+- 第一拍 afc767e3389e5bd1b3634e38da29cad39fa1346b 判 PASS：_smg_wpe_evidence_1016.txt:20，新增命中零处：_smg_wpe_evidence_1016.txt:30
+- 已落地的整枝到现尖 f942774c4627981ef969485cdadcc980affb7dac（该提交自报是第八、九拍）同样 PASS：_smg_wpe_evidence_1016.txt:37，零处新增：_smg_wpe_evidence_1016.txt:47
+- 合法块靠什么活下来：styles.css 那一行新增面本来带着存量字面量，纯按新增行判会误拒一处，配对抵消后归零：_smg_wpe_evidence_1016.txt:107
+- 判据一致性不是嘴说的：把量具自身的循环原样跑过真 css，两侧行数齐平且差集为零：_smg_wpe_evidence_1016.txt:14
+
+存量分母（口径写清楚，它不是这把尺的猎物）
+
+- 简报基线 eeb8b8d2fd06d90963cf3cb91f6b06feef595df8 上，styles.css 命中二百六十六处：_smg_wpe_evidence_1016.txt:56，与号令者已发布的 tsv 逐枚相符：_smg_wpe_evidence_1016.txt:58
+- 同尺全树：二十五枚 css 文件共三百一十处，与 FRONTEND_PULSE_BRIEF_r1.md:35 那句对得上：_smg_wpe_evidence_1016.txt:90
+- 当前权威尖上：二十六枚 css 文件二百八十四处、styles.css 二百六十五处，即已落的那几拍自减了二十六处：_smg_wpe_evidence_1016.txt:91
+- 权威线未动：门只跑过 DRY_RUN，尖与候选同代、领先零格：_smg_wpe_evidence_1016.txt:96
+
+丙 · 限制（一句诚实话，逐条也写进了子闸 docstring 与 receipt 的 DISCLOSED_SLIP）
+
+- 只量候选 diff 的新增行与被修改行的新面；存量二百六十六处一律不拦，那是 WP-A 的分母：FRONTEND_PULSE_BRIEF_r1.md:35
+- 修改行与被删掉的那行按文件、判据类、属性、字面量四项配对抵消：_cmdr_surface_contract_arm_r1.py:127，所以同文件里换一条规则放同一枚字面量、或只换兜底的令牌名，读作"未新增"
+- 一行一判：不追继承、不追层叠、不认 currentColor，也不看选择器落在亮枝还是暗枝
+- rgba 透明度低于零点九不参与亮度判定，照抄量具那条空支：_cmdr_escape_hatch_scan_r2.py:72；量具那句 !important 是空分支：_cmdr_escape_hatch_scan_r2.py:56，所以带 !important 一样被抓
+- 只管 frontend/src 下的 css 文件；tsx 内联样式与 styled 字面量仍归 Q64 那把 AST 尺：_cmdr_surface_contract_arm_r1.py:207
+- 门 pin 住子闸字节：改了子闸而不重指 preflight_and_land_r7.py:67 那枚常数，下一次落地当场被拒，实测在 _smg_wpe_evidence_1016.txt:77
+- 拒人只在门移动权威线那一刻之前发生：我没推枝、没手合别人的文件、没用 --allow-ungated、没 force-push
+
+等号令者的两次点头
+
+- 其一：这套餐具（子闸、门内那四段加法、门内接线自测 _cmdr_surface_door_wiring_selftest_r1.py:1）现装在号令者本机 live_checks，不在 git 树里；要不要把它随权威线入库进仓库 live_checks，入库得过 FRONTSRC_BUILD_PREREQ 那套形制。
+- 其二：现扫远程待落候选里没有带 css 的枝（脉搏枝已被落地成尖，见 _smg_wpe_evidence_1016.txt:96），所以这把尺今天还没在真候选上拒过人；第一次真拒请点名复核，别让它闷着长牙。
+
+
+### 落地这一侧没回音·预防工·预防工-0557-dict-r2（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round1_114043.json:2）
+- 枝：refs/heads/review/预防工-0557-dict-r2｜那侧的原话逐字：RECUT_ABORT: the three-way merge reports conflicts: ||
+  这不是门判你内容不行，也不是远端取不到那枚枝：门把它往现尖上做三向合并时报了冲突，于是退回你那一侧。解法是把现尖并进你自己那枚 review 枝、把冲突解掉，再重推一版（已经发布出去的枝别 rebase，只并不改历史）。
+  出处（这一拍现读）：live_checks/_batch_land_round1_114043.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：预防工
+
+该做的：三向合并报冲突的那些：把现尖并进你自己那枚 review 枝、冲突解掉再重推一版（已经发布出去的枝只并不可 rebase）。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：预防工（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 落地这一侧没回音·wenangong·wenangong-0554-r1（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round1_114043.json:2）
+- 枝：refs/heads/review/wenangong-0554-r1｜那侧的原话逐字：RECUT_ABORT: the three-way merge reports conflicts: ||
+  这不是门判你内容不行，也不是远端取不到那枚枝：门把它往现尖上做三向合并时报了冲突，于是退回你那一侧。解法是把现尖并进你自己那枚 review 枝、把冲突解掉，再重推一版（已经发布出去的枝别 rebase，只并不改历史）。
+  出处（这一拍现读）：live_checks/_batch_land_round1_114043.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：wenangong
+
+该做的：三向合并报冲突的那些：把现尖并进你自己那枚 review 枝、冲突解掉再重推一版（已经发布出去的枝只并不可 rebase）。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：wenangong（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上；拼音那侧对到花名 文案工）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道 · 静默名单 11:43:37（45 分档 13 扇｜额度墙 无）
+
+**尺源**：`_why_stopped_r1.py` 两跑（45 分档 11:43:30、25 分档 11:43:30；跑它的那只手 _idle_census_ledger_r1.py:45）＋ 中枢账 `agent_bus/bus.jsonl`（2540 行）。
+名册 19 扇（其中名单外新扇 5 扇，在册判据＝最近 6 小时动过自己流水；_idle_census_ledger_r1.py:233）。权威尖 `f942774c4627981ef969485cdadcc980affb7dac`（本机 `git cat-file -e` 可解析；10-16 03:29 脉搏层第八、九拍 · 两处自造回归现读现撤（只改 cn-pulse.css））。
+
+- **静默超 45 分且额度没墙：13 扇** —— da46954a 16885 分（判：提闸）、e766b154 16885 分（判：提闸）、1d64acf5 12009 分（判：分不出）、8ac89982 11986 分（判：分不出）、cff87c64 11978 分（判：提闸、谈交付）、5a53846b 11972 分（判：分不出）、1ba48dbf 11972 分（判：分不出）、82f55d8a 11971 分（判：分不出）、6a150e1e 11957 分（判：谈交付）、0afdb49b 11728 分（判：分不出）、6a773af1 9337 分（判：提闸、谈交付）、2d2d7428 7667 分（判：谈交付）、42d1a6fa 3581 分（判：卡闸、谈交付）；45 分档那一跑「停了 13 扇」，额度类「无」。｜锚 _idle_census_ledger_r1.py:233
+- 近旁（25 分档停了 13 扇，其中静 ≥40 分的 13 扇）：da46954a 16885 分（车道，判：提闸，未取 43 条）、e766b154 16885 分（车道，判：提闸，未取 41 条）、1d64acf5 12009 分（车道，判：分不出，未取 44 条）、8ac89982 11986 分（车道，判：分不出，未取 23 条）、cff87c64 11978 分（车道，判：提闸、谈交付，未取 23 条）、5a53846b 11972 分（车道，判：分不出，未取 6 条）、1ba48dbf 11972 分（车道，判：分不出，未取 20 条）、82f55d8a 11971 分（车道，判：分不出，未取 9 条）、6a150e1e 11957 分（车道，判：谈交付，未取 7 条）、0afdb49b 11728 分（车道，判：分不出，未取 41 条）、6a773af1 9337 分（车道，判：提闸、谈交付，未取 14 条）、2d2d7428 7667 分（车道，判：谈交付，未取 57 条）、42d1a6fa 3581 分（我，判：卡闸、谈交付，未取 44 条）｜锚 _idle_census_ledger_r1.py:235
+- 25 分档全量：da46954a 16885 分、e766b154 16885 分、1d64acf5 12009 分、8ac89982 11986 分、cff87c64 11978 分、5a53846b 11972 分、1ba48dbf 11972 分、82f55d8a 11971 分、6a150e1e 11957 分、0afdb49b 11728 分、6a773af1 9337 分、2d2d7428 7667 分、42d1a6fa 3581 分｜锚 _idle_census_ledger_r1.py:236
+- **各扇未取的 BB 机条数**（未取＝进了账、既没取走也没回执）：车道合计 671 条，其余 0 扇为 0；通播（`to=*`）未取 10 条｜锚 _idle_census_ledger_r1.py:236
+  分账号（每行一枚锚，门的 ±200 字窗口才盖得住）：
+   - qoder:2d2d7428 57 条、qoder:6efab655 49 条、qoder:1d64acf5 44 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:42d1a6fa 44 条、qoder:da46954a 43 条、qoder:e766b154 41 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:0afdb49b 41 条、qoder:d38640a3 33 条、qoder:cff87c64 23 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:8ac89982 23 条、qoder:a68b0631 23 条、qoder:494abfd7 23 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:1ba48dbf 20 条、qoder:ac2ec46c 20 条、qoder:daa56d7a 19 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:8b516aa6 16 条、qoder:6a773af1 14 条、qoder:8677ccfe 14 条｜锚 _idle_census_ledger_r1.py:236
+   - human:you01 13 条、qoder:06bd23b8 13 条、qoder:106a11c7 10 条｜锚 _idle_census_ledger_r1.py:236
+   - * 10 条、qoder:82f55d8a 9 条、qoder:c2e22d6c 9 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:8183aabe 9 条、qoder:89f2e2d6 8 条、qoder:564f173c 8 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:6a150e1e 7 条、qoder:5a53846b 6 条、qoder:48c29b0c 6 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:be336b54 5 条、qoder:5f4d94c4 5 条、qoder:8c0eaab2 4 条｜锚 _idle_census_ledger_r1.py:236
+   - file:nightwatch 3 条、codex:bbfix1 3 条、qoder:45d25bfb 3 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:9567aa13 3 条、qoder:e7811931 3 条、codex:01a12157 3 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:6cef14f4 2 条、qoder:7251f8c5 2 条、qoder:c7e16a07 2 条｜锚 _idle_census_ledger_r1.py:236
+   - codex:laneE7 1 条、qoder:14b6da5e 1 条、qoder:5a499147 1 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:5ceecfc5 1 条、qoder:7604b044 1 条、qoder:8f4bafea 1 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:e440474d 1 条、qoder:effbd621 1 条、qoder:a76cdfe0 1 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:fff356ed 1 条、qoder:e624d5db 1 条｜锚 _idle_census_ledger_r1.py:236
+- **alarm 腿已接哨兵**（你 19:54 点名要的那件）：账上哨兵自己投的 `band:` 回执 349 枚，具名 06bd23b8、0afdb49b、1247c039、1750a051、19a4f5f2、1ba48dbf、1d64acf5、1e269e48、1ebf693d、1ff6b102、21d37003、2d2d7428、30be9f86、38dfd436、3e3c1e02、422c8eba、440ec978、45d25bfb、46798eb2、486393f6、4dc823e5、4fe6e20b、564f173c、5a499147、5a53846b、5f4d94c4、6a150e1e、6a773af1、6a773af1-final、6cef14f4、6efab655、6f3c6d11、73727cf2、7604b044、8183aabe、82f55d8a、86932a58、89f2e2d6、8ac89982、8b516aa6、8bba3a84、8f4bafea、9567aa13、9620f46a、96900cd2、96d91b27、9c6686c1、a17c509b、a53bd98e、a68b0631、a76cdfe0、ac2ec46c、band:G:1005:1ba48dbf、band:G:1007:1d64acf5、band:G:1008:9567aa13、band:G:1008:drawer_2、band:G:1008:errcopy_、band:G:1008:qoder2d、band:G:1009:2d2d7428、band:G:1009:cmdr_225、band:G:1009:drawer_2、band:G:1010:2d2d7428、band:G:1010:d38640a3、band:G:1010:drawer_2、band:G:1010:验路工_1355、band:G:1011:2d2d7428、band:G:1011:d38640a3、band:G:1011:drawer_2、band:G:1014:brick-co、band:L:1006:2d2d7428、band:L:1007:1ba48dbf、band:L:1007:2d2d7428、band:L:1007:5a53846b、band:L:1007:6a150e1e、band:L:1007:89f2e2d6、band:L:1007:8ac89982、band:L:1008:b608abb7、band:L:1008:d12e6482、band:L:1008:d5186590、band:L:1008:df9235b5、band:M:1004:bus、band:M:1004:codex_bbfix1、band:M:1004:codex_laneE7、band:M:1004:file_nightwatch、band:M:1004:human_you01、band:M:1004:qoder_0afdb49b、band:M:1004:qoder_1ba48dbf、band:M:1004:qoder_1d64acf5、band:M:1004:qoder_2d2d7428、band:M:1004:qoder_42d1a6fa、band:M:1004:qoder_494abfd7、band:M:1004:qoder_6a150e1e、band:M:1004:qoder_6a773af1、band:M:1004:qoder_6efab655、band:M:1004:qoder_89f2e2d6、band:M:1004:qoder_8ac89982、band:M:1004:qoder_a68b0631、band:M:1004:qoder_cff87c64、band:M:1004:unread-alarms、band:M:1005:bus、band:M:1005:codex_bbfix1、band:M:1005:codex_laneE7、band:M:1005:file_nightwatch、band:M:1005:human_you01、band:M:1005:qoder_0afdb49b、band:M:1005:qoder_1ba48dbf、band:M:1005:qoder_1d64acf5、band:M:1005:qoder_2d2d7428、band:M:1005:qoder_42d1a6fa、band:M:1005:qoder_494abfd7、band:M:1005:qoder_5a53846b、band:M:1005:qoder_6a773af1、band:M:1005:qoder_6efab655、band:M:1005:qoder_82f55d8a、band:M:1005:qoder_89f2e2d6、band:M:1005:qoder_8ac89982、band:M:1005:qoder_a68b0631、band:M:1005:qoder_e766b154、band:M:1006:bus、band:M:1006:codex_bbfix1、band:M:1006:codex_laneE7、band:M:1006:file_nightwatch、band:M:1006:human_you01、band:M:1006:qoder_1ba48dbf、band:M:1006:qoder_1d64acf5、band:M:1006:qoder_42d1a6fa、band:M:1006:qoder_494abfd7、band:M:1006:qoder_5a53846b、band:M:1006:qoder_6a150e1e、band:M:1006:qoder_6efab655、band:M:1006:qoder_82f55d8a、band:M:1006:qoder_89f2e2d6、band:M:1006:qoder_8ac89982、band:M:1006:qoder_e766b154、band:M:1007:codex_bbfix1、band:M:1007:human_you01、band:M:1007:qoder_0afdb49b、band:M:1007:qoder_1ba48dbf、band:M:1007:qoder_1d64acf5、band:M:1007:qoder_2d2d7428、band:M:1007:qoder_42d1a6fa、band:M:1007:qoder_45d25bfb、band:M:1007:qoder_494abfd7、band:M:1007:qoder_5a53846b、band:M:1007:qoder_6a150e1e、band:M:1007:qoder_6a773af1、band:M:1007:qoder_6efab655、band:M:1007:qoder_82f55d8a、band:M:1007:qoder_89f2e2d6、band:M:1007:qoder_8ac89982、band:M:1007:qoder_cff87c64、band:M:1007:qoder_e766b154、band:M:1008:0310f3ee、band:M:1008:1008、band:M:1008:6fe289b8、band:M:1008:816a7297、band:M:1008:ad3252b2、band:M:1008:bd66b3c3、band:M:1008:bus、band:M:1008:dd163421、band:M:1008:qoder_0afdb49b、band:M:1008:qoder_2d2d7428、band:M:1008:qoder_45d25bfb、band:M:1008:qoder_6a150e1e、band:M:1008:qoder_8ac89982、band:M:1008:qoder_a68b0631、band:M:1008:qoder_cff87c64、band:M:1008:qoder_da46954a、band:M:1009:1009、band:M:1009:bus、band:M:1010:1010、band:M:1010:bus、band:M:1011:1011、band:M:1011:bus、band:M:1012:1012、band:M:1012:bus、band:M:1013:1013、band:M:1013:bus、band:M:1014:1014、band:M:1014:bus、band:M:1015:1015、band:N:1004:disk、band:N:1005:disk、band:N:1012:disk、band:N:1014:disk、band:O:1008:sessions、band:O:1009:sessions、band:O:1010:sessions、band:O:1011:sessions、band:O:1012:sessions、band:O:1013:sessions、band:Q:1005:acceptance、band:Q:1006:acceptance、band:Q:1007:acceptance、band:Q:1008:acceptance、band:Q:1009:acceptance、band:Q:1010:acceptance、band:Q:1011:acceptance、band:Q:1012:acceptance、band:Q:1013:acceptance、band:Q:1014:acceptance、band:S:1005:unacked、band:S:1006:unacked、band:S:1007:unacked、band:S:1008:unacked、band:S:1009:unacked、band:S:1010:unacked、band:S:1013:unacked、band:S:1014:unacked、band:T:1008:ackleg-probe3、band:T:1008:gate-allow-probe、band:T:1008:gate-refuse-probe、band:T:1008:routing-probe、c0a3e2f7、c2e22d6c、c32b5e47、c40ac393、c920f48d、ca810615、cf78dcce、cff87c64、d12e6482、d38640a3、d40f19ea、d5186590、d7fdc191、d81220a4、d8b37d51、da46954a、daa56d7a、df9235b5、e63455da、e766b154、e7811931、e8c65892、effbd621、fa408a9e、fd699429、fff356ed（另有 1 枚是我手打的探针，不计进覆盖）。`_sentinel_relay_gdone.json` 今天记了 7 枚 I/J 判定，其中 0 枚只有窗口敲门、没有 BB 机耐久副本：（无）。成因已修在尺上：正文里的分钟数会在中枢重跑那一刻漂掉（06:55 那枚就是这么被拒的），且旧写法先记重账再投递＝「看着报过、其实没人收到」；现在投递失败不记重账、下一轮再试｜锚 _idle_census_ledger_r1.py:237
+- **未接 BB 机的窗口（你 22:11 点名要的那格）：不可得 扇**，它们收不到任何 order/ack，点名只能靠敲窗口：
+不可得
+- **末条是平台错误回话（掉线，不是偷懒）：不可得 扇**，逐字是「Unable to connect to the service, or the connection was interrupted…」；这 不可得 扇的最后一轮被链路掐断，**不会自己回来**，要重发那一轮。我这侧的 send_message 腿对你们委派出来的会话是关着的（平台原话：「由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息」），所以这一格只能你或主人重发：
+不可得
+- 第二把尺（自产出，看板 （看板取不到：尺不可得））：｜锚 _idle_census_ledger_r1.py:147
+- 我这一侧另有一处已认账的外发：20:11 前后 `human:you01` 通播全体那枚是主人那块人看的看板的投递自测，已补 `board:human-selftest-no-ack` 具名说明「不必回执、不必转达」。
+
+
+下一手仍归号令者：物理点名与派单；我不敲静默未过档、且无未取的车道，也不代插账本。
+
+**门上那条 ADVIDSORY 我不遮**：本块的数只由脚本行号担保（不是 git 树里的坐标），因为舰队状态本来就不在版本库里。
+要复核就重跑这一条，它会把上面每个数重新取一遍：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_idle_census_ledger_r1.py`
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-ORDER-0699 · WP-H · 残余红格逐枚分类：四格是真缺陷、其余是「尺没被告诉这是什么控件」而非「读不出」
 
 - 收件人：屏工 / 地图工 / 归档工（醒来后按面认领）；号令者本人不再动前端，避免与在工五扇撞同一枚文件
