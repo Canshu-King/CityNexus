@@ -1,0 +1,2290 @@
+[
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "打开「实时行程」查看并处理这些变化。",
+  "cut": 15,
+  "left": "变",
+  "right": "化",
+  "tag": "P",
+  "cls": "cn-attention-hint",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   244,
+   47
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "“现在”取自服务器场景（执行游标）：10月16日 09:00",
+  "cut": 46,
+  "left": "投",
+  "right": "影",
+  "tag": "SMALL",
+  "cls": "cn-clock-source",
+  "tid": "today-clock-source",
+  "widths": [
+   6,
+   15,
+   15,
+   6,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   286,
+   70
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 20,
+  "left": "页",
+  "right": "就",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   286,
+   60
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "服务端报出的两类待办",
+  "cut": 8,
+  "left": "待",
+  "right": "办",
+  "tag": "H2",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   28,
+   28,
+   28,
+   28,
+   28,
+   28,
+   28,
+   28
+  ],
+  "box": [
+   256,
+   60
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及",
+  "cut": 16,
+  "left": "这",
+  "right": "一",
+  "tag": "P",
+  "cls": "cn-pretrip-note",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   256,
+   116
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "服务端在这一代方案上列出了 3 条可行性失败，最新一条是「L",
+  "cut": 17,
+  "left": "可",
+  "right": "行",
+  "tag": "P",
+  "cls": "cn-pretrip-why",
+  "tid": "",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   230,
+   84
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "每一天，紧密相连。",
+  "cut": 6,
+  "left": "相",
+  "right": "连",
+  "tag": "H2",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   28,
+   28,
+   28,
+   28,
+   28,
+   28,
+   28,
+   28
+  ],
+  "box": [
+   215,
+   60
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一",
+  "cut": 14,
+  "left": "算",
+  "right": "得",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   252,
+   63
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "点一列的标题就按它排。没有这一维数据的方案会排在有数的方案后",
+  "cut": 17,
+  "left": "据",
+  "right": "的",
+  "tag": "SPAN",
+  "cls": "v8-muted plan-ranking-hint",
+  "tid": "rank-sort-hint",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   252,
+   65
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 21,
+  "left": "可",
+  "right": "能",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   234,
+   59
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 21,
+  "left": "可",
+  "right": "能",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   234,
+   59
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴",
+  "cut": 16,
+  "left": "一",
+  "right": "程",
+  "tag": "P",
+  "cls": "cn-pending-empty-next",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   256,
+   70
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "选择你的下一段路程。",
+  "cut": 4,
+  "left": "下",
+  "right": "一",
+  "tag": "H1",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33
+  ],
+  "box": [
+   286,
+   73
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 20,
+  "left": "页",
+  "right": "就",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   286,
+   60
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "服务器摘要：需要复核 · 有重大变动没处理",
+  "cut": 17,
+  "left": "动",
+  "right": "没",
+  "tag": "P",
+  "cls": "live-disruption-summary",
+  "tid": "live-disruption-summary",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   256,
+   42
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "供应商路线、时效、费用和可行性",
+  "cut": 12,
+  "left": "可",
+  "right": "行",
+  "tag": "SMALL",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10
+  ],
+  "box": [
+   136,
+   28
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动",
+  "cut": 36,
+  "left": "应",
+  "right": "用",
+  "tag": "P",
+  "cls": "v8-lede",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   286,
+   99
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "使用自然语言。你的明确预算和受保护时刻在每一步都可见。",
+  "cut": 17,
+  "left": "时",
+  "right": "刻",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   238,
+   40
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你",
+  "cut": 17,
+  "left": "确",
+  "right": "认",
+  "tag": "P",
+  "cls": "v8-agent-reassure",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   238,
+   40
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "在不改动已选方案的前提下，预览时间和成本变化。",
+  "cut": 20,
+  "left": "变",
+  "right": "化",
+  "tag": "SPAN",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10
+  ],
+  "box": [
+   224,
+   28
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里—",
+  "cut": 14,
+  "left": "行",
+  "right": "程",
+  "tag": "P",
+  "cls": "cn-abort__explains",
+  "tid": "journey-abort-explains",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   252,
+   130
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "整座城市，行程叠加其上。",
+  "cut": 5,
+  "left": "行",
+  "right": "程",
+  "tag": "H1",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33
+  ],
+  "box": [
+   286,
+   73
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "采集的路线几何和供应商事实在你穿越行程时始终可见。",
+  "cut": 16,
+  "left": "越",
+  "right": "行",
+  "tag": "P",
+  "cls": "v8-lede",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   286,
+   50
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 20,
+  "left": "页",
+  "right": "就",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   286,
+   60
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成",
+  "cut": 17,
+  "left": "以",
+  "right": "这",
+  "tag": "P",
+  "cls": "v8-map-footprint-state",
+  "tid": "v8-map-footprint-state",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   240,
+   34
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "me",
+  "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。",
+  "cut": 20,
+  "left": "都",
+  "right": "会",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12
+  ],
+  "box": [
+   252,
+   37
+  ]
+ },
+ {
+  "width": 320,
+  "locale": "zh-CN",
+  "screen": "me",
+  "text": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台",
+  "cut": 20,
+  "left": "行",
+  "right": "程",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12
+  ],
+  "box": [
+   252,
+   37
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 23,
+  "left": "地",
+  "right": "图",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   326,
+   60
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及",
+  "cut": 18,
+  "left": "代",
+  "right": "方",
+  "tag": "P",
+  "cls": "cn-pretrip-note",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   296,
+   116
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "服务端在这一代方案上列出了 3 条可行性失败，最新一条是「L",
+  "cut": 20,
+  "left": "失",
+  "right": "败",
+  "tag": "P",
+  "cls": "cn-pretrip-why",
+  "tid": "",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   270,
+   84
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "每一天，紧密相连。",
+  "cut": 6,
+  "left": "相",
+  "right": "连",
+  "tag": "H2",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   28,
+   28,
+   28,
+   28,
+   28,
+   28,
+   28,
+   28
+  ],
+  "box": [
+   245,
+   60
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一",
+  "cut": 17,
+  "left": "的",
+  "right": "数",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   292,
+   63
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "点一列的标题就按它排。没有这一维数据的方案会排在有数的方案后",
+  "cut": 19,
+  "left": "方",
+  "right": "案",
+  "tag": "SPAN",
+  "cls": "v8-muted plan-ranking-hint",
+  "tid": "rank-sort-hint",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   292,
+   65
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 24,
+  "left": "硬",
+  "right": "依",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   274,
+   59
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 24,
+  "left": "硬",
+  "right": "依",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   274,
+   59
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这台服务器说这些地点属于这一程，还没排在任何一天。",
+  "cut": 17,
+  "left": "没",
+  "right": "排",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   296,
+   42
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴",
+  "cut": 18,
+  "left": "的",
+  "right": "地",
+  "tag": "P",
+  "cls": "cn-pending-empty-next",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   296,
+   47
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "选择你的下一段路程。",
+  "cut": 4,
+  "left": "下",
+  "right": "一",
+  "tag": "H1",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33
+  ],
+  "box": [
+   326,
+   73
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 23,
+  "left": "地",
+  "right": "图",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   326,
+   60
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "服务器摘要：需要复核 · 有重大变动没处理",
+  "cut": 19,
+  "left": "处",
+  "right": "理",
+  "tag": "P",
+  "cls": "live-disruption-summary",
+  "tid": "live-disruption-summary",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   296,
+   42
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "使用自然语言。你的明确预算和受保护时刻在每一步都可见。",
+  "cut": 20,
+  "left": "每",
+  "right": "一",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   278,
+   40
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你",
+  "cut": 20,
+  "left": "订",
+  "right": "的",
+  "tag": "P",
+  "cls": "v8-agent-reassure",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   278,
+   40
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那",
+  "cut": 20,
+  "left": "这",
+  "right": "块",
+  "tag": "P",
+  "cls": "cn-poster-bar-note",
+  "tid": "",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   300,
+   43
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里—",
+  "cut": 18,
+  "left": "它",
+  "right": "仍",
+  "tag": "P",
+  "cls": "cn-abort__explains",
+  "tid": "journey-abort-explains",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   292,
+   113
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "整座城市，行程叠加其上。",
+  "cut": 5,
+  "left": "行",
+  "right": "程",
+  "tag": "H1",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33
+  ],
+  "box": [
+   326,
+   73
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "采集的路线几何和供应商事实在你穿越行程时始终可见。",
+  "cut": 19,
+  "left": "时",
+  "right": "始",
+  "tag": "P",
+  "cls": "v8-lede",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   326,
+   50
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 23,
+  "left": "地",
+  "right": "图",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   326,
+   60
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成",
+  "cut": 20,
+  "left": "趟",
+  "right": "在",
+  "tag": "P",
+  "cls": "v8-map-footprint-state",
+  "tid": "v8-map-footprint-state",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   280,
+   34
+  ]
+ },
+ {
+  "width": 360,
+  "locale": "zh-CN",
+  "screen": "me",
+  "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。",
+  "cut": 23,
+  "left": "征",
+  "right": "得",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12
+  ],
+  "box": [
+   292,
+   37
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 25,
+  "left": "以",
+  "right": "外",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   356,
+   60
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及",
+  "cut": 20,
+  "left": "案",
+  "right": "的",
+  "tag": "P",
+  "cls": "cn-pretrip-note",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   326,
+   93
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一",
+  "cut": 39,
+  "left": "用",
+  "right": "它",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   322,
+   63
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "点一列的标题就按它排。没有这一维数据的方案会排在有数的方案后",
+  "cut": 22,
+  "left": "排",
+  "right": "在",
+  "tag": "SPAN",
+  "cls": "v8-muted plan-ranking-hint",
+  "tid": "rank-sort-hint",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   322,
+   65
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 26,
+  "left": "据",
+  "right": "的",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   304,
+   39
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 26,
+  "left": "据",
+  "right": "的",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   304,
+   39
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这台服务器说这些地点属于这一程，还没排在任何一天。",
+  "cut": 19,
+  "left": "在",
+  "right": "任",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   326,
+   42
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴",
+  "cut": 19,
+  "left": "地",
+  "right": "点",
+  "tag": "P",
+  "cls": "cn-pending-empty-next",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   326,
+   47
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "下一步 · Riverside Museum · 公交地铁 ",
+  "cut": 33,
+  "left": "长",
+  "right": "待",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   11,
+   11,
+   11,
+   3,
+   2,
+   3,
+   7,
+   3
+  ],
+  "box": [
+   217,
+   30
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 25,
+  "left": "以",
+  "right": "外",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   356,
+   60
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "使用自然语言。你的明确预算和受保护时刻在每一步都可见。",
+  "cut": 22,
+  "left": "步",
+  "right": "都",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   308,
+   40
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你",
+  "cut": 22,
+  "left": "操",
+  "right": "作",
+  "tag": "P",
+  "cls": "v8-agent-reassure",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   308,
+   40
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那",
+  "cut": 22,
+  "left": "屏",
+  "right": "上",
+  "tag": "P",
+  "cls": "cn-poster-bar-note",
+  "tid": "",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   330,
+   43
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里—",
+  "cut": 20,
+  "left": "留",
+  "right": "在",
+  "tag": "P",
+  "cls": "cn-abort__explains",
+  "tid": "journey-abort-explains",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   322,
+   97
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "整座城市，行程叠加其上。",
+  "cut": 5,
+  "left": "行",
+  "right": "程",
+  "tag": "H1",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33
+  ],
+  "box": [
+   356,
+   73
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "采集的路线几何和供应商事实在你穿越行程时始终可见。",
+  "cut": 21,
+  "left": "终",
+  "right": "可",
+  "tag": "P",
+  "cls": "v8-lede",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   356,
+   50
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 25,
+  "left": "以",
+  "right": "外",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   356,
+   60
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成",
+  "cut": 22,
+  "left": "图",
+  "right": "上",
+  "tag": "P",
+  "cls": "v8-map-footprint-state",
+  "tid": "v8-map-footprint-state",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   310,
+   34
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "me",
+  "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你同意。",
+  "cut": 25,
+  "left": "你",
+  "right": "同",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12
+  ],
+  "box": [
+   322,
+   37
+  ]
+ },
+ {
+  "width": 390,
+  "locale": "zh-CN",
+  "screen": "me",
+  "text": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台",
+  "cut": 25,
+  "left": "会",
+  "right": "弹",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12
+  ],
+  "box": [
+   322,
+   37
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "“现在”取自服务器场景（执行游标）：10月16日 09:00",
+  "cut": 33,
+  "left": "现",
+  "right": "在",
+  "tag": "SMALL",
+  "cls": "cn-clock-source",
+  "tid": "today-clock-source",
+  "widths": [
+   6,
+   15,
+   15,
+   6,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   396,
+   47
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 28,
+  "left": "地",
+  "right": "方",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   396,
+   60
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及",
+  "cut": 23,
+  "left": "行",
+  "right": "性",
+  "tag": "P",
+  "cls": "cn-pretrip-note",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   366,
+   93
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "服务端在这一代方案上列出了 3 条可行性失败，最新一条是「L",
+  "cut": 25,
+  "left": "一",
+  "right": "条",
+  "tag": "P",
+  "cls": "cn-pretrip-why",
+  "tid": "",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   340,
+   63
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一",
+  "cut": 21,
+  "left": "有",
+  "right": "方",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   362,
+   63
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "点一列的标题就按它排。没有这一维数据的方案会排在有数的方案后",
+  "cut": 24,
+  "left": "有",
+  "right": "数",
+  "tag": "SPAN",
+  "cls": "v8-muted plan-ranking-hint",
+  "tid": "rank-sort-hint",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   362,
+   43
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 29,
+  "left": "其",
+  "right": "余",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   344,
+   39
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其",
+  "cut": 29,
+  "left": "其",
+  "right": "余",
+  "tag": "LI",
+  "cls": "",
+  "tid": "rank-note",
+  "widths": [
+   13,
+   13,
+   13,
+   4,
+   7,
+   7,
+   4,
+   13
+  ],
+  "box": [
+   344,
+   39
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "这台服务器说这些地点属于这一程，还没排在任何一天。",
+  "cut": 21,
+  "left": "何",
+  "right": "一",
+  "tag": "P",
+  "cls": "v8-muted",
+  "tid": "",
+  "widths": [
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16,
+   16
+  ],
+  "box": [
+   366,
+   42
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "hub",
+  "text": "想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴",
+  "cut": 23,
+  "left": "者",
+  "right": "到",
+  "tag": "P",
+  "cls": "cn-pending-empty-next",
+  "tid": "",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   366,
+   47
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "live",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 28,
+  "left": "地",
+  "right": "方",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   396,
+   60
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "使用自然语言。你的明确预算和受保护时刻在每一步都可见。",
+  "cut": 24,
+  "left": "可",
+  "right": "见",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   348,
+   40
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "copilot",
+  "text": "我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你",
+  "cut": 25,
+  "left": "都",
+  "right": "会",
+  "tag": "P",
+  "cls": "v8-agent-reassure",
+  "tid": "",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   348,
+   40
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那",
+  "cut": 25,
+  "left": "经",
+  "right": "排",
+  "tag": "P",
+  "cls": "cn-poster-bar-note",
+  "tid": "",
+  "widths": [
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14,
+   14
+  ],
+  "box": [
+   370,
+   43
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "trips",
+  "text": "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里—",
+  "cut": 23,
+  "left": "的",
+  "right": "行",
+  "tag": "P",
+  "cls": "cn-abort__explains",
+  "tid": "journey-abort-explains",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   15
+  ],
+  "box": [
+   362,
+   81
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "整座城市，行程叠加其上。",
+  "cut": 5,
+  "left": "行",
+  "right": "程",
+  "tag": "H1",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33,
+   33
+  ],
+  "box": [
+   396,
+   73
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "cut": 28,
+  "left": "地",
+  "right": "方",
+  "tag": "P",
+  "cls": "v8-map-gesture-hint",
+  "tid": "v8-map-gesture-hint",
+  "widths": [
+   15,
+   15,
+   15,
+   15,
+   15,
+   15,
+   4,
+   3
+  ],
+  "box": [
+   396,
+   60
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "map",
+  "text": "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成",
+  "cut": 25,
+  "left": "站",
+  "right": "全",
+  "tag": "P",
+  "cls": "v8-map-footprint-state",
+  "tid": "v8-map-footprint-state",
+  "widths": [
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13,
+   13
+  ],
+  "box": [
+   350,
+   34
+  ]
+ },
+ {
+  "width": 430,
+  "locale": "zh-CN",
+  "screen": "me",
+  "text": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台",
+  "cut": 29,
+  "left": "台",
+  "right": "设",
+  "tag": "P",
+  "cls": "",
+  "tid": "",
+  "widths": [
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12,
+   12
+  ],
+  "box": [
+   362,
+   37
+  ]
+ }
+]
