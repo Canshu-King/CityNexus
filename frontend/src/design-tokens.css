@@ -814,8 +814,12 @@
     color: #fff !important;
   }
 
-  /* 4. Content cards / rows that kept a light fill inside .v8-page. */
-  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel {
+  /* 4. Content cards / rows that kept a light fill inside .v8-page.
+     07:52 两主题对拍（_cmdr_dark_pair_scan_r1.cjs，只比浏览器最后算出来的那一手）抓到两枚漏在这组之外的：
+     `.v8-me-card`（「我的」那五张卡）与 `.v8-agent-progress`（Copilot 那屏的进度块）——
+     它们在暗档仍是 rgb(255,255,255) 白底，而卡片自己的 color 已经是暗档墨 rgb(245,245,247)，
+     于是白底配白字，比值 1.09：那两屏的文字在暗档下是看不见的。补进同一组，不新造判据。 */
+  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
