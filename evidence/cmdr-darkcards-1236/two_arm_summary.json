@@ -1,0 +1,155 @@
+{
+ "at_local": "2026-10-17 12:36",
+ "instrument": "_cmdr_muted_scan_r2.cjs 的十七屏扩展",
+ "judgement": "合成到不透明底层后的 WCAG 4.5",
+ "tip_before": "dc4e95049114fb6bc5924a56e0ded2c904a8cfba",
+ "tip_after": "8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf",
+ "before": {
+  "name": "before",
+  "loads": 68,
+  "readings": 4472,
+  "below_4_5_rows": 241,
+  "below_4_5_keys": 195,
+  "distinct_kinds": 60,
+  "by_theme_width_rows": {
+   "dark@390": 66,
+   "dark@1280": 66,
+   "light@390": 46,
+   "light@1280": 63
+  },
+  "by_screen_rows": {
+   "authoritative": 125,
+   "studio": 39,
+   "twin": 31,
+   "intelligence": 21,
+   "trips": 9,
+   "hub": 3,
+   "agent": 3,
+   "live": 1,
+   "map": 1,
+   "stay": 1,
+   "discover": 1,
+   "import": 1,
+   "bookings": 1,
+   "footprints": 1,
+   "trash": 1,
+   "access": 1,
+   "me": 1
+  },
+  "sha1_of_receipt": "fb939ebff70faf13117f3ce0f381e2fd2142d962"
+ },
+ "after": {
+  "name": "after",
+  "loads": 68,
+  "readings": 4472,
+  "below_4_5_rows": 143,
+  "below_4_5_keys": 121,
+  "distinct_kinds": 47,
+  "by_theme_width_rows": {
+   "dark@390": 18,
+   "dark@1280": 18,
+   "light@390": 45,
+   "light@1280": 62
+  },
+  "by_screen_rows": {
+   "authoritative": 49,
+   "twin": 31,
+   "intelligence": 21,
+   "studio": 17,
+   "trips": 9,
+   "hub": 3,
+   "agent": 3,
+   "live": 1,
+   "map": 1,
+   "stay": 1,
+   "discover": 1,
+   "import": 1,
+   "bookings": 1,
+   "footprints": 1,
+   "trash": 1,
+   "access": 1,
+   "me": 1
+  },
+  "sha1_of_receipt": "a9422c2020851177bed8022649e91f40edb8beb6"
+ },
+ "keys_fixed": 74,
+ "keys_new": 0,
+ "keys_both": 121,
+ "fixed_by_screen": {
+  "authoritative": 52,
+  "studio": 22
+ },
+ "new_by_screen": {},
+ "still_failing_by_screen": {
+  "intelligence": 21,
+  "twin": 31,
+  "map": 1,
+  "authoritative": 33,
+  "studio": 17,
+  "import": 1,
+  "agent": 3,
+  "discover": 1,
+  "hub": 3,
+  "trips": 3,
+  "stay": 1,
+  "live": 1,
+  "me": 1,
+  "bookings": 1,
+  "access": 1,
+  "footprints": 1,
+  "trash": 1
+ },
+ "positive_control_after": {
+  "hub_sidebar_em": {
+   "expected_ratio": 2.18,
+   "found": [
+    {
+     "w": 1280,
+     "theme": "light",
+     "ratio": 2.18,
+     "text": "•••"
+    },
+    {
+     "w": 1280,
+     "theme": "dark",
+     "ratio": 7.79,
+     "text": "•••"
+    }
+   ],
+   "reproduced": true
+  },
+  "agent_violet_status_pill": {
+   "expected_ratio": 3.97,
+   "found": [
+    {
+     "w": 1280,
+     "theme": "light",
+     "ratio": 3.97,
+     "text": "画像上下文就绪"
+    },
+    {
+     "w": 390,
+     "theme": "light",
+     "ratio": 3.97,
+     "text": "画像上下文就绪"
+    },
+    {
+     "w": 1280,
+     "theme": "dark",
+     "ratio": 9.74,
+     "text": "画像上下文就绪"
+    },
+    {
+     "w": 390,
+     "theme": "dark",
+     "ratio": 9.74,
+     "text": "画像上下文就绪"
+    }
+   ],
+   "reproduced": true
+  }
+ },
+ "controls_ok_after": true,
+ "nav_failed_after": [],
+ "intermediate_note": "first cut (three containers only) left 16 keys worse on authoritative dark; the two companion colour rules in the same landing removed them again. That intermediate receipt is kept as contrast_arm2_partial_fix1.json."
+}
