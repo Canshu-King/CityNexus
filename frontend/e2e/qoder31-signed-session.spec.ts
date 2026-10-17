@@ -17,6 +17,12 @@
  *   5. 反控臂：不带凭证的请求行为逐字不变（共享预览不会因为开身份而变黑）。
  */
 import { expect, test, type Page } from "@playwright/test";
+import { mkdirSync } from "node:fs";
+
+/* 图文教程（Issue #31 C 要求的"真实截图"）用的图就落在这个目录里：屏幕上是真渲染出来的，
+ * 不是我贴上去的形状。目录先建，因为 Playwright 写图之前不会替你建目录。 */
+const DOC_ASSETS = "docs/assets";
+mkdirSync(DOC_ASSETS, { recursive: true });
 
 const JOURNEY_POINTER = "citynexus.v8.journey_id";
 const SESSION_POINTER = "citynexus.v8.traveler.session";
@@ -369,5 +375,136 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     }
     const outcome = refused ? "被拒+可重试" : empty ? "没找到+可重试" : "有可选住宿";
     console.log(`Today 打开耗时 ${waited} 毫秒 | 查询在跑时看得见搜索中=${searching} | 终态=${outcome}`);
+  });
+
+  test("Issue #31 C：Today 上的「AI 工作动态」打开的是这台服务器关于这一趟的事件流", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    await page.screenshot({ path: `${DOC_ASSETS}/01-trip-setup.png`, fullPage: true });
+    const journeyId = await createAndAwaitJourney(page);
+    await expect(page.getByTestId("hub-secondary-actions"), "Today 没打开").toBeVisible({ timeout: 20_000 });
+    await page.screenshot({ path: `${DOC_ASSETS}/02-today.png`, fullPage: true });
+
+    /* 先把"服务器到底回了什么"单独读一遍，再拿屏上去对：
+     * 这一臂要拦的是"面板写了一个服务器没给过的数"，所以对照的是两个独立来源，不是自己看自己。 */
+    const session = JSON.parse((await readBack(page, SESSION_POINTER, "session")) as string) as { token: string };
+    const headers = { Authorization: `Bearer ${session.token}` };
+    const feed = await (await page.request.get(
+      `${baseOf()}/api/v1/journeys/${journeyId}/agent-feed?limit=30`, { headers })).json();
+    const runtime = await (await page.request.get(
+      `${baseOf()}/api/v1/agent/runtime-status`, { headers })).json();
+    const serverEvents = Array.isArray(feed.events) ? feed.events.length : -1;
+
+    /* 整套件跑到这一臂时，这一臂曾把 180 秒耗在 `hub-ai-work` 的 click 上（单独跑它是绿的）。
+     * 诊断读数给出了成因，而且是产品的事实：可选住宿真有结果时，AI 规划抽屉会自动打开，
+     * 它的 `v8-sheet-backdrop` 整片盖住 Today —— 中心点命中的是那片遮罩，不是我新加的入口。
+     * `plan-ai-sheet` 自动打开是别人钉着的基线（e2e/qoder-ai-sheet-blocked.spec.ts:583 与 :705
+     * 同一件事），我不去改那条行为；这一臂先把抽屉按正常方式合上，再量"合上之后入口点得动"。
+     * 这条被遮挡的事实本身要写进交块，因为它同样盖住 Today 上任何其他入口。 */
+    const sheetOpen = await page.getByTestId("plan-ai-sheet").isVisible().catch(() => false);
+    if (sheetOpen) {
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(400);
+      if (await page.getByTestId("plan-ai-sheet").isVisible().catch(() => false)) {
+        await page.mouse.click(6, 6);
+        await page.waitForTimeout(400);
+      }
+    }
+    await expect(page.getByTestId("plan-ai-sheet"), "遮罩合不掉").toBeHidden({ timeout: 10_000 });
+    await page.waitForTimeout(600);
+    const hubDiag = await page.evaluate(() => {
+      const name = (node: Element | null) =>
+        node
+          ? `${node.tagName.toLowerCase()}.${node.getAttribute("class") ?? ""}#${node.getAttribute("data-testid") ?? ""}`
+          : "none";
+      const button = document.querySelector('[data-testid="hub-ai-work"]');
+      const r = button ? button.getBoundingClientRect() : null;
+      return {
+        matches: document.querySelectorAll('[data-testid="hub-ai-work"]').length,
+        buttonBox: r ? [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)] : null,
+        hit: r ? name(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)) : "none",
+        viewport: [window.innerWidth, window.innerHeight],
+        docHeight: document.documentElement.scrollHeight,
+      };
+    });
+    console.log(
+      `Today 入口诊断 抽屉自动打开=${sheetOpen ? "是" : "否"} 合上之后 ${JSON.stringify(hubDiag)}`,
+    );
+    await page.getByTestId("hub-ai-work").click({ timeout: 20_000 });
+    const panel = page.getByTestId("agent-work-feed");
+    await expect(panel, "入口点不开面板").toBeVisible({ timeout: 15_000 });
+    await expect(panel).toHaveAttribute("data-feed-state", "ready", { timeout: 20_000 });
+    await expect(panel).toHaveAttribute("data-feed-events", String(serverEvents));
+    await expect(panel).toHaveAttribute("data-feed-source", String(feed.source));
+    const rows = await page.locator(".cn-agent-rail li").count();
+    expect(rows, "轨迹条的行数与服务器给的事件数对不上（面板最多显 12 行）")
+      .toBe(Math.min(12, Math.max(0, serverEvents)));
+    if (serverEvents === 0) {
+      await expect(page.getByTestId("agent-work-empty"), "没有记录时没有老实说'还没有记录'").toBeVisible();
+    }
+    /* AI 可用性那一格必须写服务器自报的那个词，而不是页面猜的。 */
+    await expect(page.locator('[data-testid="agent-work-facts"] dd').first())
+      .toHaveAttribute("data-ai-state", String(runtime.ai_state ?? "NOT_READ"));
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: `${DOC_ASSETS}/03-ai-work-today.png`, fullPage: true });
+    console.log(`Today 面板：服务器事件 ${serverEvents} 条 | 轨迹条 ${rows} 行 | source=${feed.source} | ai_state=${runtime.ai_state}`);
+  });
+
+  test("Issue #31 C：行程页的入口在行程之上，不是滚过整份行程才够得着", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    const journeyId = await createAndAwaitJourney(page);
+    await page.goto("/v8/trips", { waitUntil: "load" });
+    const tab = page.getByTestId("trips-tab-itinerary");
+    if (!(await page.getByTestId("agent-work-entry-trip").isVisible().catch(() => false))) {
+      await tab.click();
+    }
+    const entry = page.getByTestId("agent-work-entry-trip");
+    await expect(entry, "行程页上没有 AI 工作动态的入口").toBeVisible({ timeout: 20_000 });
+    /* 上一版这一臂没有失败在断言上，而是失败在"点不下去/量不到"：`scrollIntoViewIfNeeded`、
+     * `boundingBox`、`click` 这些会自动等"元素稳定"的定位器动作一起拖到 180 秒超时。
+     * 这个形状有两种常见成因（这一屏在反复重渲染 / 按钮被别的东西盖住），所以先用
+     * 不问稳定性的 `page.evaluate` 把事实摊开：几枚、按钮盒在哪、400 毫秒之内会不会动、
+     * 按钮中心点处命中的是谁。不许用 `force` 把任何一种可能糊过去。 */
+    await page.waitForTimeout(1200);
+    const diag = await page.evaluate(async () => {
+      const name = (node: Element | null) =>
+        node
+          ? `${node.tagName.toLowerCase()}.${node.getAttribute("class") ?? ""}#${node.getAttribute("data-testid") ?? ""}`
+          : "none";
+      const rect = (node: Element | null) => {
+        if (!node) return null;
+        const r = node.getBoundingClientRect();
+        return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)];
+      };
+      const entries = Array.from(document.querySelectorAll('[data-testid="agent-work-entry-trip"]'));
+      const button = entries[0]?.querySelector("button") ?? null;
+      const first = rect(button);
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      const second = rect(button);
+      const plan =
+        document.querySelector('[data-testid="trip-itinerary"]') ??
+        document.querySelector('[data-testid="trip-itinerary-empty"]');
+      const bb = button ? button.getBoundingClientRect() : null;
+      return {
+        matches: entries.length,
+        buttonBox: first,
+        buttonMoved: JSON.stringify(first) !== JSON.stringify(second),
+        buttonHit: name(bb ? document.elementFromPoint(bb.x + bb.width / 2, bb.y + bb.height / 2) : null),
+        planBox: rect(plan),
+        planTestId: plan?.getAttribute("data-testid") ?? "none",
+        viewport: [window.innerWidth, window.innerHeight],
+      };
+    });
+    console.log(`行程页入口诊断 ${JSON.stringify(diag)}`);
+    await page.getByTestId("trip-ai-work").click({ timeout: 15_000 });
+    const panel = page.getByTestId("agent-work-feed");
+    await expect(panel).toBeVisible({ timeout: 15_000 });
+    await expect(panel).toHaveAttribute("data-feed-state", "ready", { timeout: 20_000 });
+    await page.screenshot({ path: `${DOC_ASSETS}/04-ai-work-trip.png`, fullPage: true });
+    if (diag.buttonBox && diag.planBox) {
+      expect(diag.buttonBox[1], "入口排在整份行程之下").toBeLessThan(diag.planBox[1]);
+    }
+    console.log(`行程页入口 y=${diag.buttonBox ? diag.buttonBox[1] : "n/a"} | ${diag.planTestId} y=${diag.planBox ? diag.planBox[1] : "n/a"} | 面板已开=${await panel.isVisible()}`);
   });
 });

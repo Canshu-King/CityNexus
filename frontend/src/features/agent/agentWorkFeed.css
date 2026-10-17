@@ -1,0 +1,93 @@
+/* Issue #31 C：「AI 工作动态」这一格。
+ *
+ * 只新造必要的形状，颜色与字号一律取既有令牌——`design-tokens.css` 与暗档对比度闸是别的
+ * 车道在改的（同一文件里那些裸十六进制就是被拦下来的原因之一），这里不加新的裸色，
+ * 也就不新增一档需要在暗档里重新证明的对比。轨迹条本体（`cn-agent-rail` / `cn-agent-step`）
+ * 复用 `AgentRunRail` 已有的样式，这里只包外层与那排事实。
+ */
+
+.cn-agent-work {
+  display: grid;
+  gap: var(--cn-s-8, 8px);
+  margin: var(--cn-s-12, 12px) 0 0;
+  padding: var(--cn-s-12, 12px);
+  border: 1px solid var(--cn-rule-strong);
+  border-radius: var(--cn-r-lg, 14px);
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-0);
+}
+
+.cn-agent-work.compact {
+  padding: var(--cn-s-8, 8px) var(--cn-s-10, 10px);
+}
+
+.cn-agent-work-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cn-s-8, 8px);
+}
+
+.cn-agent-work-head b {
+  display: block;
+  font-size: var(--cn-fs-body-min, 15px);
+  font-weight: 700;
+  color: var(--cn-on-elev-0);
+}
+
+.cn-agent-work-head small {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--cn-fs-caption, 13px);
+  color: var(--cn-on-elev-0-muted);
+}
+
+.cn-agent-work-state,
+.cn-agent-work-empty {
+  margin: 0;
+  font-size: var(--cn-fs-caption, 13px);
+  color: var(--cn-on-elev-0-muted);
+}
+
+.cn-agent-work-empty b {
+  display: block;
+  font-size: var(--cn-fs-body-min, 15px);
+  color: var(--cn-on-elev-0);
+}
+
+.cn-agent-work-empty small {
+  display: block;
+  margin-top: 4px;
+}
+
+/* 四格事实：一行两列，窄档不横着溢出（390 那一档是主人手机的实际宽度）。 */
+.cn-agent-work-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--cn-s-6, 6px) var(--cn-s-10, 10px);
+  margin: 0;
+}
+
+.cn-agent-work-facts > div {
+  min-width: 0;
+}
+
+.cn-agent-work-facts dt {
+  font-size: var(--cn-fs-micro, 11px);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--cn-on-elev-0-muted);
+}
+
+.cn-agent-work-facts dd {
+  margin: 2px 0 0;
+  font-size: var(--cn-fs-caption, 13px);
+  color: var(--cn-on-elev-0);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 720px) {
+  .cn-agent-work-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

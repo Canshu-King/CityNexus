@@ -12,6 +12,7 @@ import { mapCopy } from "../i18n/mapPanelCopy";
 import { footprintWords, useFootprints } from "../features/checkin/footprintRead";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
+import { AgentWorkEntry } from "../features/agent/AgentWorkFeedPanel";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
 import { PlanAiRunStrip } from "../features/planning/PlanAiRunStrip";
 import { TripItinerary } from "../features/trip/TripItinerary";
@@ -3254,6 +3255,9 @@ function Hub({
               second primary button competing with the hero (Pass-8 ruling #1/#2 above stays intact). */}
           <JourneyLinkAction journeyId={data.journey.id} variant="quiet" />
         </div>
+        {/* Issue #31 C：「AI 工作动态」的 Today 入口。放在这一排之后、而不是塞进那一排，是因为
+            这一排是 1/3 网格，展开的面板会被压进一格里；入口本身仍然是那颗安静的文字按钮。 */}
+        <AgentWorkEntry journeyId={data.journey.id} surface="today" />
       </div>
       {/* ORD-0059: the Simulation entry belongs on Today, because Today is the screen whose
           "now" is being staged.  Whether this deployment is a stage is the server's answer
