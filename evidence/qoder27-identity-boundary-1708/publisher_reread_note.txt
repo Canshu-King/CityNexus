@@ -1,0 +1,3 @@
+publish_evidence_gated_r1.py 的读回腿改法：PUT 成功之后立刻读 ref，可能读到提交前的状态（GitHub 的分支引用会落后于自己的提交几秒）。旧腿把这一眼读成 MISMATCH-after-write，且不说它读到的是什么。
+新腿：最多读五眼，逐眼比对 blob 与字节；仍不一致时把 reads/exists/remote_blob/want 一起报出来，判语不再吞掉成因。
+触发这次改动的一次真读数：after-403-arm-dock.png 当场报 MISMATCH-after-write，隔了几秒独立回读时 sha256 与 git blob 都一致。
