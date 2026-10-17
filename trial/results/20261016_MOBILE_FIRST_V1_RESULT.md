@@ -85,4 +85,4 @@ Revolution 手机外壳包含「探索 / 行程 / 我的」三栏。探索页提
 - 真实本机 WB2API DRAFT 建议已返回；本地 Chat Completions 探针收到真实 tool_calls 帧。这两项都没有在签名 ACTIVE Journey 中执行并落库，SIGNED_AGENT_RUN=NOT_CREATED。
 - 连城当前中心的 Photon 实际请求：park/garden 2 个原始要素、0 个可选地点；museum/gallery 0 个；cafe 1 个原始要素、0 个可选地点；library 1 个原始要素、0 个可选地点。服务端均返回 HTTP 200；无地点入库，也没有再次请求同一类别。
 - TWO_POI_FLOW=NOT_REACHED：没有两处可选真实 POI，因此 Pocket Walk、GO 和刷新恢复仍未执行。错误状态显示已改正，并已由定向 Chromium 4 个状态用例、前端全量类型检查和 PR CI 验证。
-- PR #23 最新提交 cafb65566a09e616a6def8f8f331e80a9a92e553 的 trial-build 已通过（Actions run 38985169696）。本轮最新搜索结果已在 20261017_MOBILE_FIRST_P0_INCREMENT.md 记录。
+- PR #23 代码提交 cafb65566a09e616a6def8f8f331e80a9a92e553 的 trial-build 通过（Actions run 38985169696）；报告提交 80fb64fa5058c7b41b0b576772a402df38baf8c1 的 trial-build 也通过（Actions run 38986589161）。本轮最新搜索结果已在 20261017_MOBILE_FIRST_P0_INCREMENT.md 记录。
