@@ -1,4 +1,46 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-1055·第三十一笔落线：Copilot 那排建议 chip 在手机上补回 44 的触摸契约（契约本来就在，是被一枚更具体的规则压掉的）＋一件必须报的自误：我误开了别人的 stash
+
+**一、这一笔用户看到什么**
+
+手机上（三百二与三百九两档）打开 Copilot，那三枚建议 chip「为什么这样安排？」「如果我多待 60 分钟会怎样？」「找附近的室内地点」原来只有 32 像素高——拇指按的是它们，契约要的是 44。现在实测 44×102、44×148、44×102，宽度一字未变。
+
+**二、病根不是"没人写过契约"，是契约被压掉了**
+
+- 契约早就在：`frontend/src/styles.css:279` 那一格 `@media (max-width: 680px)` 明写着 `.v8-outline-button { min-height: var(--cn-touch-min); }`，`--cn-touch-min` 是 44px（`frontend/src/design-tokens.css:260`）
+- 压掉它的是同一文件里更靠后、更具体的一条：`frontend/src/styles.css:546` 写 `.v15-copilot-suggestions .v8-outline-button { min-height: 32px; ... }`，两枚类名压一枚，后者赢
+- 我先试的是往 `frontend/src/v10.css:42` 那一格加选择器——加了之后屏上仍读 32，因为那格只写类名、且 v10.css 在 styles.css 之前加载，两头都输。这一格走不通是量出来的，不是猜的：那次候选臂普查仍是六条读数、去重两种，与改前一字不差，见 `touch_census_v10_attempt.json:1`
+- 所以本笔把补的规矩放在压它的那两枚规则之后（`frontend/src/styles.css:554` 与 `frontend/src/styles.css:555`），同一祖先类、同 specificity、位置在后 ⇒ 赢。注释在 `frontend/src/styles.css:547`
+- 顺带收进同一格的 `.v15-copilot-action .v8-secondary`（`frontend/src/styles.css:546` 那行末尾写着 33px）是同一处病的第二枚，这一版演示数据没把它渲染出来，所以它只有代码位、没有屏上读数
+
+**三、线动了**
+
+- 权威尖从 41130d39a9a0addc0a66e14069e5333c898f9720 推到 838fefc86d9e3c91fd58eee91801eb66094521eb，只快进（收据 `preflight_r1.json:1`）
+- 动的产品文件一枚：styles.css blob 从 28d80d0417c8afc38b4df3ce9a4654138dd4f58a（现读 122883 字节）换成 36cd29cf175d24e12dee8a81853b0fa87b594e36（现读 123791 字节），新增十行里九行是注释与那一格媒体查询
+
+**四、读数（判据全部来自出厂那把手机几何尺，一字未改）**
+
+- 尺：`frontend/e2e/_qoderMobileScan.ts` 的 `probeMobileGeometry`，控件清单用它的 `PRIMARY_CONTROL_SELECTOR`，地板 44；跑法是把这把尺搬到六屏 × 320/390（`instrument_touch_census_r1.cjs:1`）
+- 改前：十二个场景里六条小目标读数、去重两种，全在 Copilot 那一屏，见 `touch_census_before.json:1`
+- 改后：十二个场景零条小目标读数，溢出仍是零行，见 `touch_census_after.json:1`
+- 逐枚盒高：改前三枚都是 32 高（102、148、102 宽），改后三枚都是 44 高（宽一字未变），见 `chip_heights_before.json:1` 与 `chip_heights_after.json:1`
+- 图两张：`chips_390_before.png:1` 与 `chips_390_after.png:1`
+- 对比度那把尺两臂不变：unclassified-control 一百七十八、text-contrast 二、control-boundary 四，见 `gate_narrow_candidate.json:1`
+- 落地门 READY_TO_LAND、新增逃逸口零行、尺身份 MATCH、构建臂 rc 零；外读证据在 `evidence/cmdr-landing-CMDR-NIGHT-1050-1053/`，共十五件，逐件 BYTE-LEVEL MATCH
+
+**五、必须报的自误：我把别人的 stash 开进了自己的工作树**
+
+- 发生：取"改前"那张图时我用了 `git stash push -- frontend/src/styles.css`，可那一刻 styles.css 已经提交、没有本地改动 ⇒ git 什么都没存（`-q` 把"No local changes to save"咽掉了），紧跟的 `git stash pop` 就把栈顶那一枚**别人的** stash 应用进来了：`stash@{0}` 是 Codex 在 codex/revolution-r63 那枝上留的「preserve local R65 stale-preview checks before GPT R66 sync」
+- 后果：我的 `review/cmdr-copilot-chips-touch-1017` 工作树里三处冲突（一枚 spec、一枚 tsx、`reports/e2e-provenance/authoritative.json`），当场可见，没有提交、没有推送、没有落进权威线
+- 处置：`git reset --hard HEAD` 只清我这棵工作树；stash 条目本身 git 在有冲突时不会删，前后各取一次指纹核对，都是 f49972e9e728a4851b1d830276cc872af6b6e8b0（现读 `git cat-file -t` 回 commit），对方那一枚原样还在栈里
+- 一条被这次救回来的假证据：那次 pop 之后我跑了一枚标着 before 的读数，它其实量的是改后（44 高）。我没有把它当"改前"发出去，而是把文件改名成 `DONOTUSE_chips_390_before1046_actually_after.*` 留着不删；真正那份改前读数与图是更早一次（提交之前）跑的 32 高，见 `chip_heights_before.json:1`
+- 规矩要改在哪：以后取两臂一律用 `git checkout <具名commit> -- <路径>` 与 `git checkout <另一具名commit> -- <路径>`（今天前几笔都是这么跑的、都成立），不再在这棵树上用 stash——`refs/stash` 是整个仓库共享的，我 pop 的从来不是"我自己的"那一枚，而是"栈顶那一枚"
+
+**六、下一步（不是本笔内容）**
+
+压缩行里那 29 处死类名，剥离方案已经备好并且自带自检：二十五条规则整条摘、一处从五枚选择器的组里摘掉 `.v8-live-grid`、改动行恰好是那六行、其余 1922 行逐字节不变、死类在输出里零命中，读数在 `subagent_strip_manifest.json:1`。我按本块第五节那条新规矩来落它：在现尖上重跑那把尺，而不是把它的输出文件整枚贴过去。
+
+
 ### CMDR-NIGHT-1025·第三十笔落线：七枚死选择器从多选择器组里摘干净（压缩行那一族仍然交车道，我不顺手做）
 
 **一、这一笔用户看到什么**
