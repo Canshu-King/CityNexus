@@ -1344,6 +1344,7 @@ def stream_native_hermes_events(
 def get_latest_journey_native_hermes_run(
     journey_id: UUID,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ) -> dict[str, Any]:
     """Return only this signed member's latest server-bound native run reference.
@@ -1353,11 +1354,18 @@ def get_latest_journey_native_hermes_run(
     provider. The run id is selected from the durable binding created by the
     authenticated Copilot response, never from client storage or a global latest.
     """
-    from app.traveler_principal import resolve_journey_member_principal
+    from app.traveler_principal import (
+        member_has_capability,
+        resolve_journey_member_principal,
+    )
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     principal, member = resolve_journey_member_principal(
         request, session, journey_id=str(journey_id)
     )
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
     journey = require(session, Journey, str(journey_id), "Journey")
     binding = session.scalar(
         select(AuditLog)
@@ -4764,8 +4772,24 @@ def journey_operations_stream(
 def get_agent_run(
     journey_id: UUID,
     run_id: UUID,
+    request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import (
+            member_has_capability,
+            resolve_journey_member_principal,
+        )
+
+        _principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if not member_has_capability(session, member, "JOURNEY_READ"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+
     journey = require(session, Journey, str(journey_id), "Journey")
     run = session.get(AgentRun, str(run_id))
     if run is None or run.journey_id != journey.id:

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Activity, CircleAlert, CircleCheck, CircleDashed, Send, Wrench } from "lucide-react";
 import {
   CityNexusApiError,
@@ -57,6 +57,8 @@ export function MobileCompatAgentActivity({
   const [message, setMessage] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [bearerEpoch, setBearerEpoch] = useState(0);
+  const visibleRef = useRef(visible);
+  visibleRef.current = visible;
 
   useEffect(() => {
     const startingBearer = readTravelerBearer();
@@ -80,6 +82,12 @@ export function MobileCompatAgentActivity({
       setSending(false);
       setBearerEpoch((epoch) => epoch + 1);
     });
+    if (!visible) {
+      return () => {
+        cancelled = true;
+        unsubscribe();
+      };
+    }
     void cityNexusApi.getLatestMobileCompatRun(journeyId).then((latest) => {
       if (cancelled || readTravelerBearer() !== startingBearer) return;
       setSnapshot(latest);
@@ -95,7 +103,7 @@ export function MobileCompatAgentActivity({
       cancelled = true;
       unsubscribe();
     };
-  }, [journeyId, bearerEpoch]);
+  }, [journeyId, bearerEpoch, visible]);
 
   useEffect(() => {
     if (!visible || !run || run.status !== "RUNNING") return;
@@ -133,6 +141,10 @@ export function MobileCompatAgentActivity({
       } else {
         // The server commits the run binding before the provider request. A read
         // can recover the exact run after a browser timeout without sending again.
+        if (!visibleRef.current) {
+          setMessage("AI 请求没有完成。");
+          return;
+        }
         try {
           const latest = await cityNexusApi.getLatestMobileCompatRun(journeyId);
           if (readTravelerBearer() === startingBearer && latest.run) {

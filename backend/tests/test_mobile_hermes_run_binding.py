@@ -147,6 +147,8 @@ def test_native_hermes_timeline_is_bound_to_signed_member_and_journey(monkeypatc
             latest_path = f"/api/v1/journeys/{journey_id}/agent/hermes/latest-run"
             owner_latest = client.get(latest_path, headers=owner_headers)
             assert owner_latest.status_code == 200, owner_latest.text
+            assert owner_latest.headers["cache-control"] == "private, no-store, max-age=0"
+            assert owner_latest.headers["vary"] == "Authorization, X-CityNexus-Traveler-Token"
             assert owner_latest.json()["journey_id"] == journey_id
             assert owner_latest.json()["run"]["run_id"] == run_id
             assert owner_latest.json()["run"]["mission_id"] == mission_id
@@ -169,5 +171,46 @@ def test_native_hermes_timeline_is_bound_to_signed_member_and_journey(monkeypatc
             assert client.get(path, headers=outsider_headers).status_code == 403
             # A member of the same Journey still cannot read another member's private run.
             assert client.get(path, headers=collaborator_headers).status_code == 404
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
+def test_native_hermes_latest_run_rejects_member_without_journey_read(monkeypatch):
+    previous_secret = settings.traveler_auth_secret
+    object.__setattr__(settings, "traveler_auth_secret", uuid4().hex + uuid4().hex)
+    try:
+        with TestClient(main_module.app) as client:
+            owner = _traveler(client, f"No-read member {uuid4().hex[:6]}")
+            journey_response = client.post(
+                "/api/v1/journeys",
+                json={
+                    "traveler_id": owner["id"],
+                    "title": "Latest run read capability gate",
+                    "city_code": f"CN-RD-{uuid4().hex[:8].upper()}",
+                    "timezone": "Asia/Shanghai",
+                    "start_at": "2026-10-18T10:00:00+08:00",
+                    "end_at": "2026-10-19T18:00:00+08:00",
+                    "budget": {"amount_minor": 10000, "currency": "CNY"},
+                },
+            )
+            assert journey_response.status_code == 201, journey_response.text
+            journey_id = journey_response.json()["id"]
+            latest_path = f"/api/v1/journeys/{journey_id}/agent/hermes/latest-run"
+
+            def _deny_journey_read(_session, _member, capability):
+                assert capability == "JOURNEY_READ"
+                return False
+
+            with monkeypatch.context() as permission_patch:
+                permission_patch.setattr(
+                    "app.traveler_principal.member_has_capability",
+                    _deny_journey_read,
+                )
+                response = client.get(
+                    latest_path,
+                    headers={"Authorization": f"Bearer {owner['access_token']}"},
+                )
+
+            assert response.status_code == 403, response.text
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)

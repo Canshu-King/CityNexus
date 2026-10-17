@@ -2985,6 +2985,7 @@ export const cityNexusApi = {
   getAgentRun(journeyId: string, runId: string): Promise<AgentRun> {
     return requestJson<AgentRun>(
       "/journeys/" + journeyId + "/agent/runs/" + runId,
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 

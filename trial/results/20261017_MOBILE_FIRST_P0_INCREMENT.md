@@ -113,3 +113,10 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 - 聚焦命令：`uv run --offline --project . pytest -p no:cacheprovider tests/test_signed_journey_start.py -q`；结果 `2 passed`。数据库使用进程内 SQLite。
 - 两项用例覆盖匿名请求拒绝、非成员拒绝、具备能力的成员访问 ACTIVE 快照，以及缺少启动能力时拒绝。
 - 这些是路由授权回归，测试使用合成数据库记录；它们不代表创建了真实 ACTIVE 行程或 AgentRun。真实签名 ACTIVE Journey 与持久化 Hermes 轨迹仍待真实 Pocket Walk / Journey 启动流程闭环。
+## 2026-10-17 手机行程与 Hermes 读取
+
+- 签名旅客读取指定 AgentRun 和最新 Hermes 运行记录时，服务端校验 Journey 成员身份及 `JOURNEY_READ`；成功响应带 `private, no-store` 与身份相关的 `Vary`。前端读取指定 AgentRun 时携带旅客 bearer，并使用 `no-store`。
+- 手机启动页只在服务端返回 `ACTIVE` 后切到行程页；返回 `PLANNED` 时保留启动确认页。Hermes 最近记录只在“行程”页读取；页面刷新后回到“行程”会重新读取服务端记录。
+- 后端聚焦测试：`tests/test_signed_journey_start.py`、`tests/test_agent_run_signed_member_read.py`、`tests/test_mobile_hermes_run_binding.py`，`6 passed`，使用进程内 SQLite。
+- 手机浏览器聚焦测试：`agent-run-restoration-auth-cache.spec.ts`、`revolution-mobile-compat-agent-activity.spec.ts`、`r86-first-startable-real-city-journey.spec.ts`，390×844 Chromium `3 passed`。该组浏览器测试使用 `TEST_FIXTURE` API 响应和隔离 SQLite；没有调用地点服务或 AI provider。前端 `typecheck:all` 通过，当前改动的 `git diff --check` 通过。
+- 这些结果验证签名读取门禁、缓存控制和手机界面状态切换；测试中的 ACTIVE Journey 与轨迹是隔离测试数据。当前真实流程仍没有满足本地库中的两处 POI、Pocket Walk 实际保存、GO 后刷新恢复；没有真实签名 ACTIVE Journey 或服务端 Hermes AgentRun，因此持久化 Hermes 轨迹仍未验收。

@@ -46,7 +46,10 @@ export function BootstrapJourneyStartPanel({
         throw new Error("The server returned no startable native plan.");
       }
       await cityNexusApi.selectPlan(journeyId, plan.id);
-      await cityNexusApi.startJourney(journeyId);
+      const startedJourney = await cityNexusApi.startJourney(journeyId);
+      if (startedJourney?.context?.journey_status !== "ACTIVE") {
+        throw new Error("行程尚未启动。");
+      }
       await onStarted();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The native journey could not be started.");
