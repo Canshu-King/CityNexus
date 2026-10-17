@@ -1,0 +1,842 @@
+[
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "hub",
+    "headings": [
+      "H1:Demo之旅",
+      "H2:服务端报出的两类待办",
+      "H2:每一天，紧密相连。"
+    ],
+    "heading_n": 3,
+    "focusable_signed": 63,
+    "tab_stops": 58,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "live",
+    "headings": [
+      "H1:选择你的下一段路程。",
+      "H2:Old Town Gate",
+      "H3:Riverside Museum",
+      "H3:当前正在发生什么"
+    ],
+    "heading_n": 4,
+    "focusable_signed": 47,
+    "tab_stops": 41,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "map",
+    "headings": [
+      "H1:整座城市，行程叠加其上。",
+      "H2:Riverside Museum"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 45,
+    "tab_stops": 39,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "studio",
+    "headings": [
+      "H1:围绕重要的事塑造行程。"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 24,
+    "tab_stops": 24,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "stay",
+    "headings": [
+      "H1:选择锚点，看见行程。"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 23,
+    "tab_stops": 23,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "discover",
+    "headings": [
+      "H1:先看这座城能不能规划",
+      "H1:说出你真正想要的城市一天。",
+      "H2:塑造城市停留",
+      "H2:这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。"
+    ],
+    "heading_n": 4,
+    "focusable_signed": 28,
+    "tab_stops": 28,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "import",
+    "headings": [
+      "H1:从文本导入地点",
+      "H2:两条入口"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 26,
+    "tab_stops": 25,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "bookings",
+    "headings": [
+      "H1:你的真实预订，受保护。",
+      "H2:未选择住宿",
+      "H2:服务器没有给这项承诺的名字",
+      "H2:将确认带入行程",
+      "H3:已保存的行程事实"
+    ],
+    "heading_n": 5,
+    "focusable_signed": 34,
+    "tab_stops": 32,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "footprints",
+    "headings": [
+      "H2:这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 24,
+    "tab_stops": 24,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "agent",
+    "headings": [
+      "H1:你想改什么？",
+      "H2:需要改变什么？"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 27,
+    "tab_stops": 26,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "authoritative",
+    "headings": [
+      "H1:权威行程执行。",
+      "H2:从方案到边缘的单一真相",
+      "H2:调整权威行程",
+      "H2:有据可依的自适应恢复"
+    ],
+    "heading_n": 4,
+    "focusable_signed": 33,
+    "tab_stops": 31,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "intelligence",
+    "headings": [
+      "H1:判断前置。硬事实在关口。",
+      "H2:自主恢复保持在权限范围内。"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 23,
+    "tab_stops": 23,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "twin",
+    "headings": [
+      "H1:有边界的个性化。",
+      "H2:文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水",
+      "H3:能力需求",
+      "H2:没有习得信号",
+      "H3:习得的能力状态"
+    ],
+    "heading_n": 5,
+    "focusable_signed": 22,
+    "tab_stops": 22,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "trash",
+    "headings": [],
+    "heading_n": 0,
+    "focusable_signed": 24,
+    "tab_stops": 24,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "access",
+    "headings": [
+      "H3:这条行程上发生过什么",
+      "H3:每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+      "H3:可见性每一档，后果就在同一句里",
+      "H3:私到公、公到私，各写一句对方会怎样",
+      "H3:改权限之前，屏会先这样问",
+      "H3:邀请",
+      "H3:发一条带有效期的邀请",
+      "H3:这条行程发出去的邀请",
+      "H3:这条行程的成员，按成员门答的"
+    ],
+    "heading_n": 9,
+    "focusable_signed": 37,
+    "tab_stops": 33,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "trips",
+    "headings": [
+      "H1:1 天行程"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 49,
+    "tab_stops": 46,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 1280,
+    "theme": "light",
+    "mode": "normal",
+    "key": "me",
+    "headings": [
+      "H1:我的行程与偏好"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 25,
+    "tab_stops": 25,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "hub",
+    "headings": [
+      "H1:Demo之旅",
+      "H2:服务端报出的两类待办",
+      "H2:每一天，紧密相连。"
+    ],
+    "heading_n": 3,
+    "focusable_signed": 47,
+    "tab_stops": 46,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "live",
+    "headings": [
+      "H1:选择你的下一段路程。",
+      "H2:Old Town Gate",
+      "H3:Riverside Museum",
+      "H3:当前正在发生什么"
+    ],
+    "heading_n": 4,
+    "focusable_signed": 29,
+    "tab_stops": 29,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "map",
+    "headings": [
+      "H1:整座城市，行程叠加其上。",
+      "H2:Riverside Museum"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 32,
+    "tab_stops": 27,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "studio",
+    "headings": [
+      "H1:围绕重要的事塑造行程。"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 12,
+    "tab_stops": 12,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "stay",
+    "headings": [
+      "H1:选择锚点，看见行程。"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 11,
+    "tab_stops": 11,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "discover",
+    "headings": [
+      "H1:先看这座城能不能规划",
+      "H1:说出你真正想要的城市一天。",
+      "H2:塑造城市停留",
+      "H2:这些架子上写着它们属于哪位旅客，屏上读到的就是那一行。"
+    ],
+    "heading_n": 4,
+    "focusable_signed": 16,
+    "tab_stops": 16,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "import",
+    "headings": [
+      "H1:从文本导入地点",
+      "H2:两条入口"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 14,
+    "tab_stops": 13,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "bookings",
+    "headings": [
+      "H1:你的真实预订，受保护。",
+      "H2:未选择住宿",
+      "H2:服务器没有给这项承诺的名字",
+      "H2:将确认带入行程",
+      "H3:已保存的行程事实"
+    ],
+    "heading_n": 5,
+    "focusable_signed": 22,
+    "tab_stops": 20,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "footprints",
+    "headings": [
+      "H2:这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 12,
+    "tab_stops": 12,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "agent",
+    "headings": [
+      "H1:你想改什么？",
+      "H2:需要改变什么？"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 15,
+    "tab_stops": 14,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "authoritative",
+    "headings": [
+      "H1:权威行程执行。",
+      "H2:从方案到边缘的单一真相",
+      "H2:调整权威行程",
+      "H2:有据可依的自适应恢复"
+    ],
+    "heading_n": 4,
+    "focusable_signed": 21,
+    "tab_stops": 19,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 1,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "intelligence",
+    "headings": [
+      "H1:判断前置。硬事实在关口。",
+      "H2:自主恢复保持在权限范围内。"
+    ],
+    "heading_n": 2,
+    "focusable_signed": 11,
+    "tab_stops": 11,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "twin",
+    "headings": [
+      "H1:有边界的个性化。",
+      "H2:文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水",
+      "H3:能力需求",
+      "H2:没有习得信号",
+      "H3:习得的能力状态"
+    ],
+    "heading_n": 5,
+    "focusable_signed": 10,
+    "tab_stops": 10,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "trash",
+    "headings": [],
+    "heading_n": 0,
+    "focusable_signed": 12,
+    "tab_stops": 12,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "access",
+    "headings": [
+      "H3:这条行程上发生过什么",
+      "H3:每一档能做什么，按这台服务器自己的 ACL 行读出来的",
+      "H3:可见性每一档，后果就在同一句里",
+      "H3:私到公、公到私，各写一句对方会怎样",
+      "H3:改权限之前，屏会先这样问",
+      "H3:邀请",
+      "H3:发一条带有效期的邀请",
+      "H3:这条行程发出去的邀请",
+      "H3:这条行程的成员，按成员门答的"
+    ],
+    "heading_n": 9,
+    "focusable_signed": 25,
+    "tab_stops": 16,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "trips",
+    "headings": [
+      "H1:1 天行程"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 37,
+    "tab_stops": 34,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  },
+  {
+    "w": 390,
+    "theme": "light",
+    "mode": "normal",
+    "key": "me",
+    "headings": [
+      "H1:我的行程与偏好"
+    ],
+    "heading_n": 1,
+    "focusable_signed": 13,
+    "tab_stops": 13,
+    "no_indicator": 0,
+    "indeterminate": 0,
+    "trunc_n": 0,
+    "trunc_excluded": {
+      "sr_only": 0,
+      "clipped_box": 0,
+      "ellipsis": 0
+    },
+    "errs": [],
+    "no_ind_list": [],
+    "trunc_list": []
+  }
+]
