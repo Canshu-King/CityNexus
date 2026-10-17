@@ -1,0 +1,204 @@
+{
+ "scanned": 1820,
+ "failing_readings": 30,
+ "distinct_kinds": 9,
+ "no_opaque_base_rows": 0,
+ "kinds": [
+  {
+   "sel": "em",
+   "tid": "",
+   "color": "rgb(169, 176, 187)",
+   "effective_bg": "rgb(255, 255, 255)",
+   "ratio": 2.18,
+   "nearest_bg": "rgba(255, 255, 255, 1)",
+   "nearest_bg_owner_sel": "aside.v8-sidebar",
+   "base_owner_sel": "aside.v8-sidebar",
+   "font_size": "16px",
+   "font_weight": "400",
+   "occurrences": 6,
+   "screens": {
+    "1280/light/hub": 1,
+    "1280/light/live": 1,
+    "1280/light/copilot": 1,
+    "1280/light/trips": 1,
+    "1280/light/map": 1,
+    "1280/light/me": 1
+   },
+   "samples": [
+    "•••",
+    "•••",
+    "•••"
+   ]
+  },
+  {
+   "sel": "summary",
+   "tid": "",
+   "color": "rgb(126, 140, 161)",
+   "effective_bg": "rgb(247, 245, 242)",
+   "ratio": 3.14,
+   "nearest_bg": "rgba(247, 245, 242, 1)",
+   "nearest_bg_owner_sel": "section.v8-page",
+   "base_owner_sel": "section.v8-page",
+   "font_size": "11px",
+   "font_weight": "700",
+   "occurrences": 2,
+   "screens": {
+    "390/light/me": 1,
+    "1280/light/me": 1
+   },
+   "samples": [
+    "高级详情",
+    "高级详情"
+   ]
+  },
+  {
+   "sel": "span",
+   "tid": "",
+   "color": "rgb(132, 144, 160)",
+   "effective_bg": "rgb(255, 255, 255)",
+   "ratio": 3.24,
+   "nearest_bg": "rgba(255, 255, 255, 1)",
+   "nearest_bg_owner_sel": "div.v8-agent-progress",
+   "base_owner_sel": "div.v8-agent-progress",
+   "font_size": "10px",
+   "font_weight": "400",
+   "occurrences": 4,
+   "screens": {
+    "390/light/copilot": 2,
+    "1280/light/copilot": 2
+   },
+   "samples": [
+    "在不改动已选方案的前提下，预览时间和成本变化。",
+    "到达 / 出发锚点 · 未发起支付",
+    "在不改动已选方案的前提下，预览时间和成本变化。"
+   ]
+  },
+  {
+   "sel": "button.v8-secondary",
+   "tid": "",
+   "color": "rgb(10, 102, 255)",
+   "effective_bg": "rgb(28, 28, 30)",
+   "ratio": 3.53,
+   "nearest_bg": "rgba(28, 28, 30, 1)",
+   "nearest_bg_owner_sel": "button.v8-secondary",
+   "base_owner_sel": "button.v8-secondary",
+   "font_size": "16px",
+   "font_weight": "400",
+   "occurrences": 2,
+   "screens": {
+    "390/dark/me": 1,
+    "1280/dark/me": 1
+   },
+   "samples": [
+    "启用 Web Push",
+    "启用 Web Push"
+   ]
+  },
+  {
+   "sel": "summary",
+   "tid": "",
+   "color": "rgb(134, 134, 139)",
+   "effective_bg": "rgb(255, 255, 255)",
+   "ratio": 3.62,
+   "nearest_bg": "rgba(255, 255, 255, 1)",
+   "nearest_bg_owner_sel": "section.cn-pending",
+   "base_owner_sel": "section.cn-pending",
+   "font_size": "13px",
+   "font_weight": "400",
+   "occurrences": 2,
+   "screens": {
+    "390/light/hub": 1,
+    "1280/light/hub": 1
+   },
+   "samples": [
+    "技术详情",
+    "技术详情"
+   ]
+  },
+  {
+   "sel": "span.v8-status-pill.violet",
+   "tid": "",
+   "color": "rgb(128, 99, 215)",
+   "effective_bg": "rgb(243, 239, 255)",
+   "ratio": 3.97,
+   "nearest_bg": "rgba(243, 239, 255, 1)",
+   "nearest_bg_owner_sel": "span.v8-status-pill.violet",
+   "base_owner_sel": "span.v8-status-pill.violet",
+   "font_size": "10px",
+   "font_weight": "800",
+   "occurrences": 2,
+   "screens": {
+    "390/light/copilot": 1,
+    "1280/light/copilot": 1
+   },
+   "samples": [
+    "画像上下文就绪",
+    "画像上下文就绪"
+   ]
+  },
+  {
+   "sel": "span.trip-stop-current",
+   "tid": "",
+   "color": "rgb(10, 102, 255)",
+   "effective_bg": "rgb(5, 5, 5)",
+   "ratio": 4.23,
+   "nearest_bg": "rgba(127, 127, 127, 0.04)",
+   "nearest_bg_owner_sel": "article.trip-stop.current",
+   "base_owner_sel": "section.v8-page",
+   "font_size": "10px",
+   "font_weight": "700",
+   "occurrences": 2,
+   "screens": {
+    "390/dark/trips": 1,
+    "1280/dark/trips": 1
+   },
+   "samples": [
+    "当前",
+    "当前"
+   ]
+  },
+  {
+   "sel": "span.trip-stop-current",
+   "tid": "",
+   "color": "rgb(10, 102, 255)",
+   "effective_bg": "rgb(242, 240, 237)",
+   "ratio": 4.25,
+   "nearest_bg": "rgba(127, 127, 127, 0.04)",
+   "nearest_bg_owner_sel": "article.trip-stop.current",
+   "base_owner_sel": "section.v8-page",
+   "font_size": "10px",
+   "font_weight": "700",
+   "occurrences": 2,
+   "screens": {
+    "390/light/trips": 1,
+    "1280/light/trips": 1
+   },
+   "samples": [
+    "当前",
+    "当前"
+   ]
+  },
+  {
+   "sel": "button.cn-stop-checkin",
+   "tid": "stop-checkin",
+   "color": "rgb(110, 110, 115)",
+   "effective_bg": "rgb(242, 240, 237)",
+   "ratio": 4.47,
+   "nearest_bg": "rgba(127, 127, 127, 0.04)",
+   "nearest_bg_owner_sel": "article.trip-stop.current",
+   "base_owner_sel": "section.v8-page",
+   "font_size": "10px",
+   "font_weight": "400",
+   "occurrences": 8,
+   "screens": {
+    "390/light/trips": 4,
+    "1280/light/trips": 4
+   },
+   "samples": [
+    "打卡",
+    "打卡",
+    "打卡"
+   ]
+  }
+ ]
+}
