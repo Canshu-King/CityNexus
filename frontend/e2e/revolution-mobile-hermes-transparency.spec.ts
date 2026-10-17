@@ -265,9 +265,9 @@ test("TEST_FIXTURE DRAFT activity clearly has no formal AgentRun and reads no na
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
   const activity = page.getByTestId("rev-draft-agent-activity");
-  await expect(activity).toContainText("当前是探索草稿。");
+  await expect(activity).toContainText("当前是探索草稿，");
   await expect(activity).toContainText("尚无正式 AgentRun。");
-  await expect(activity).toContainText("确认行程后，Agent 就会开始工作。");
+  await expect(activity).toContainText("选好地点并确认后，可在「行程」查看助手动态。");
   expect(nativeRunReads).toBe(0);
 });
 

@@ -295,10 +295,10 @@ function DraftAgentActivity({
       </div>
       <p>
         {!hasJourney
-          ? "先开始探索，选好地点并确认行程后，Agent 就会开始工作。当前尚无正式 AgentRun。"
+          ? "尚未开始正式行程。开始探索并确认后，可在「行程」查看助手动态。"
           : hasSelectedPlace
-            ? "地点已选好。确认正式行程后，Agent 就会开始工作。当前草稿尚无正式 AgentRun。"
-            : "当前是探索草稿。选好地点并确认行程后，Agent 就会开始工作。当前尚无正式 AgentRun。"}
+            ? "地点已选好。当前仍是草稿，尚无正式 AgentRun；确认后可在「行程」查看助手动态。"
+            : "当前是探索草稿，尚无正式 AgentRun。选好地点并确认后，可在「行程」查看助手动态。"}
       </p>
     </section>
   );
