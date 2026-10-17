@@ -401,12 +401,17 @@ export function NativeMissionTimeline({
     <section className={`cn-native-mission ${compact ? "compact" : ""}`} data-testid="native-hermes-timeline">
       <header className="cn-native-mission-head">
         <div>
-          <b>{t("copilot.mission.workingOnRequest")}</b>
-          <small>
-            {executed
-              ? t("copilot.mission.ranAgainstFacts")
-              : t("copilot.mission.checkingFacts")}
-          </small>
+          {/* Issue #27 的另一半：被拒绝之后，块头也不能再写「正在为你处理 / 已按你的行程事实执行」。
+           * 那一列工具行属于这位查看者自己这一趟，留着是对的；错的是块头替服务器宣布还在跑。
+           * 用的是两本书里都已有的句子，不新造词表键。 */}
+          <b>{historyError ? t("copilot.stream.unavailable") : t("copilot.mission.workingOnRequest")}</b>
+          {historyError ? null : (
+            <small>
+              {executed
+                ? t("copilot.mission.ranAgainstFacts")
+                : t("copilot.mission.checkingFacts")}
+            </small>
+          )}
         </div>
       </header>
 
