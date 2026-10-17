@@ -1,0 +1,77 @@
+{
+ "rows_scanned": 608,
+ "unpaired": [
+  {
+   "screen": "copilot",
+   "sel": "div.v8-agent-progress",
+   "tid": "",
+   "text": "我的理解 试算一次改动 在不改动已选",
+   "dark_bg": "rgb(255, 255, 255)",
+   "bg_lum": 1,
+   "dark_color": "rgb(245, 245, 247)",
+   "color_lum": 0.91,
+   "与亮档同一手": true,
+   "contrast": 1.09
+  },
+  {
+   "screen": "me",
+   "sel": "article.v8-me-card",
+   "tid": "",
+   "text": "这趟行程 演示城市 1 位旅行者 ·",
+   "dark_bg": "rgb(255, 255, 255)",
+   "bg_lum": 1,
+   "dark_color": "rgb(245, 245, 247)",
+   "color_lum": 0.91,
+   "与亮档同一手": true,
+   "contrast": 1.09
+  },
+  {
+   "screen": "me",
+   "sel": "article.v8-me-card",
+   "tid": "",
+   "text": "住宿 还没有选定 在「行程 · 住宿",
+   "dark_bg": "rgb(255, 255, 255)",
+   "bg_lum": 1,
+   "dark_color": "rgb(245, 245, 247)",
+   "color_lum": 0.91,
+   "与亮档同一手": true,
+   "contrast": 1.09
+  },
+  {
+   "screen": "me",
+   "sel": "article.v8-me-card",
+   "tid": "",
+   "text": "已确认的预订 还没有 在「行程 · ",
+   "dark_bg": "rgb(255, 255, 255)",
+   "bg_lum": 1,
+   "dark_color": "rgb(245, 245, 247)",
+   "color_lum": 0.91,
+   "与亮档同一手": true,
+   "contrast": 1.09
+  },
+  {
+   "screen": "me",
+   "sel": "article.v8-me-card",
+   "tid": "",
+   "text": "改动偏好 仅提供建议 任何会影响已确",
+   "dark_bg": "rgb(255, 255, 255)",
+   "bg_lum": 1,
+   "dark_color": "rgb(245, 245, 247)",
+   "color_lum": 0.91,
+   "与亮档同一手": true,
+   "contrast": 1.09
+  },
+  {
+   "screen": "me",
+   "sel": "article.v8-me-card",
+   "tid": "push-capability",
+   "text": "通知 只记录，不发推送 服务器没有配",
+   "dark_bg": "rgb(255, 255, 255)",
+   "bg_lum": 1,
+   "dark_color": "rgb(245, 245, 247)",
+   "color_lum": 0.91,
+   "与亮档同一手": true,
+   "contrast": 1.09
+  }
+ ]
+}
