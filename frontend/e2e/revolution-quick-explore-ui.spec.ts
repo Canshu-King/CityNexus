@@ -85,7 +85,8 @@ test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the 
 
   await page.goto("/revolution");
   await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
-  await expect(page.getByTestId("rev-quick-area")).toContainText("服务器当前选择的公开地名服务");
+  await expect(page.getByTestId("rev-quick-area")).toContainText(/服务器当前选择的公开地名服务|点击后使用演示地点数据/);
+  await expect(page.getByTestId("rev-quick-area")).not.toContainText("TEST_PROVIDER");
   await expect(page.getByTestId("rev-quick-area")).not.toContainText("Nominatim");
   const cityButton = page.getByTestId("rev-quick-find-city");
   const aiButton = page.getByTestId("rev-quick-consult-ai");

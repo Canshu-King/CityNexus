@@ -103,7 +103,7 @@ export function CityPicker({
             : cityProviderKey === null
               ? "本次查询未调用地名服务。"
               : sampleProviderMode
-                ? "点击后将地名发送至本机 TEST_PROVIDER。"
+                ? "点击后使用演示地点数据。"
                 : "点击后将地名发送至服务器当前选择的公开地名服务。"}
       </p>
       {photonFallbackAvailable && !sampleProviderMode && (
