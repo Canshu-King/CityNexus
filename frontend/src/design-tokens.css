@@ -829,8 +829,9 @@
      判据没有新增：这三枚都是 `closest('.v8-page')` 为真、自己的 color 已是暗档墨，
      与上面三例同一形状，所以并入本组而不是另起一套。
      13:0x 第三型，也是这一组第一次抓不到的那一型：`section.v12-authoritative-panel`
-     （`frontend/src/styles.css:201`）的浅色不写在 background-color 上，而写在
-     `background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250,.9))` 上。
+     （`frontend/src/styles.css:201`）的浅色不写在 background-color 上，而写在一层 145 度的
+     浅渐变 background-image 上（那两枚色标的字面量留在它自己那一行里，不在这里重述——
+     上一版我把它们抄进了注释，被出厂的 surface-contract 尺按"新增浅底字面量"拒了一次）。
      合成尺只沿 backgroundColor 爬链，于是把 `.v8-page` 的黑底当成它的底，替这张卡判了绿；
      真相反证是手机暗档 412 那张截图（`shots/phone_dark_authoritative_1246.png`）。
      换了一把会把 background-image 色标也压进底色的尺重测十七屏，这一屏在暗档两档宽度上
