@@ -112,6 +112,21 @@ function safeOsmSource(value: string | null): string | null {
   }
 }
 
+function selectionReadinessMessage(candidate: BootstrapDiscoveryCandidate, hasSource: boolean): string | null {
+  if (candidate.selection_state === "READY_FOR_NATIVE_PLAN") return null;
+
+  const labels: Record<string, string> = {
+    OPENING_UNVERIFIED: "营业时间",
+    COST_UNKNOWN: "费用",
+    COST_UNVERIFIED: "费用",
+    ACCESS_UNVERIFIED: "开放状态",
+  };
+  const missing = [...new Set((candidate.selection_blockers ?? []).map((item) => labels[item]).filter(Boolean))];
+  const facts = missing.length > 0 ? `${missing.join("、")}信息` : "地点资料";
+  const nextStep = hasSource ? "查看 OpenStreetMap 来源，或换个地点" : "换个地点";
+  return `正式行程还缺${facts}。${nextStep}；私人散步仍可保存。`;
+}
+
 export function DiscoveryPlaceCard({
   candidate,
   chosenAs,
@@ -136,6 +151,7 @@ export function DiscoveryPlaceCard({
   const openingHours = formatOpeningHours(candidate.opening_hours);
   const hoursLabel = openingHours ? `营业时间：${openingHours}` : "营业时间未知";
   const costLabel = formatCost(candidate);
+  const readinessMessage = selectionReadinessMessage(candidate, Boolean(source));
   const distance = typeof candidate.distance_m === "number" && Number.isFinite(candidate.distance_m)
     ? candidate.distance_m < 1000
       ? `约 ${Math.max(10, Math.round(candidate.distance_m / 10) * 10)} 米`
@@ -165,6 +181,11 @@ export function DiscoveryPlaceCard({
           {hoursLabel} · {costLabel}
         </span>
       </button>
+      {readinessMessage && (
+        <p className="rev-quick-place-blocker" role="status" data-testid={`rev-quick-place-blocker-${candidate.candidate_id}`}>
+          {readinessMessage}
+        </p>
+      )}
       {source && (
         <a href={source} rel="noopener noreferrer" target="_blank" className="rev-quick-place-source">
           查看 OpenStreetMap 来源 ↗

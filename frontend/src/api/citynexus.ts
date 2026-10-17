@@ -1684,6 +1684,7 @@ export interface BootstrapDiscoveryCandidate {
   opening_state: string;
   selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
   selection_action: string | null;
+  selection_blockers?: string[];
   availability_confidence: "UNVERIFIED";
   price_state: "UNKNOWN" | "FREE" | "KNOWN" | "VERIFIED_PROVIDER" | "OFFICIAL_WEB_VERIFIED";
   eta_state: "UNKNOWN";
