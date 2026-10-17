@@ -996,6 +996,17 @@
     background: var(--cn-tint-white-10) !important;
     color: var(--cn-ink) !important;
   }
+  /* 序号小圆片自己没有 color，跟着行继承；它在两档里都是浅底，暗档就必须换底，
+     否则"行"改暗而"片"还亮着，片上那枚数字会从 5.05 掉到 1.88（这是第二臂量出来的，不是猜的）。
+     底用厂内那枚暗向洗色 token，字用暗档主墨；「当前」那一行的片再深一档，
+     免得和它自己那行的高亮撞成一片。 */
+  :root[data-theme="dark"] .v8-page .v12-activity-index {
+    background: var(--cn-tint-black-40) !important;
+    color: var(--cn-ink) !important;
+  }
+  :root[data-theme="dark"] .v8-page .v12-activity-row.current .v12-activity-index {
+    background: var(--cn-tint-black-60) !important;
+  }
 
   :root[data-theme="dark"] .v8-page .live-proposal {
     background: var(--cn-surface) !important;
