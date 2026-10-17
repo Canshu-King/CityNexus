@@ -60,3 +60,12 @@ ANDROID_PHONE = NOT_TESTED
 ## 下一步
 
 推进真实地点搜索与 Pocket Walk 两站保存、GO、刷新恢复；只有实际 ACTIVE Journey 可用时再验证服务端持久化 Hermes 轨迹。地点、开放时间和运行轨迹都以服务端或真实来源为准。
+
+## 2026-10-17 本轮继续施工
+
+- 本机 wb2api key 已直接用于隔离试玩页的真实 AI 请求。双人偏好冲突场景返回公园/绿地建议，截图为 `trial/results/assets/20261017-ai-conflicting-preferences-result-390x844.jpg`，SHA-256 `83FAB076E00878F07CE3CCED0AA87FEBBAE496A323EF1DB018A6E89324BED916`。这是 DRAFT 建议，不是已保存的 AgentRun。
+- 本轮两次公开地名搜索都收到 Nominatim `ConnectTimeout`，没有地点结果。此前页面把服务连接失败显示成“没有匹配地区”，容易让人以为确实搜不到。
+- 已修改 `frontend/src/trial/RevolutionQuickExplore.tsx`：真实无匹配、地名服务不可用、搜索未启用、限流分别显示对应结果；搜索失败后保留地名，用户可换地区或粘贴公开地图链接。
+- 新增四种状态的 Chromium UI 回归。命令：`npm.cmd run test:e2e -- --project=chromium --workers=1 --grep 'city search explains'`；隔离运行 `geocoderstatus20261017b`，端口 4191/18241，独立 SQLite，AI 关闭、地名服务由测试响应拦截。结果 `5 passed`，包括 1 项套件初始化和 4 项地名状态断言；无真实地点请求。随后只修正测试响应里的 provider 状态字段以匹配各自结果，没有改产品逻辑。
+- 最终工作树执行 `npm.cmd run typecheck:all -- --pretty false`：退出码 0。
+- 本轮代码只修正错误反馈，没有伪造地点。`TWO_POI_FLOW` 仍是 `NOT_REACHED`：目前未能拿到两处真实地点，Pocket Walk 保存、GO 和刷新恢复仍待真实来源支持；`SIGNED_AGENT_RUN` 仍是 `NOT_CREATED`。

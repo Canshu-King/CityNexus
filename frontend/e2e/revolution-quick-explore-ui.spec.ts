@@ -172,6 +172,71 @@ test("plain Chinese first-user journey preserves separate intentional provider r
   await expect(page.getByText("正前往第一站", { exact: false })).toBeVisible();
 });
 
+for (const outcome of [
+  {
+    status: "CITY_NO_RESULTS",
+    message: "没有匹配地区。换个名称或粘贴公开地图链接。",
+    forbidden: "地名服务暂时连不上",
+  },
+  {
+    status: "GEOCODER_UNAVAILABLE",
+    message: "地名服务暂时连不上。换个地区，或粘贴公开地图链接。",
+    forbidden: "没有匹配地区",
+  },
+  {
+    status: "GEOCODER_DISABLED",
+    message: "当前环境未开启公开地名搜索。可粘贴公开地图链接。",
+    forbidden: "没有匹配地区",
+  },
+  {
+    status: "GEOCODER_RATE_LIMITED",
+    message: "地图服务正在限流，稍后重试或粘贴公开地图链接。",
+    forbidden: "没有匹配地区",
+  },
+] as const) {
+  test(`city search explains ${outcome.status} accurately`, async ({ page }) => {
+    let searchCalls = 0;
+    await page.addInitScript((id) => {
+      window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+      window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+        id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+      }));
+    }, journey);
+    await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+      runtime_identity: "UNCONFIGURED", hermes_compat_configured: false,
+    }));
+    await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+      status: "READY", reason_code: "READY", provider: "nominatim", provider_grade: "TEST_PROVIDER",
+    }));
+    await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+      journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+    }));
+    await page.route(`${root}/bootstrap-city-search`, async (route) => {
+      searchCalls += 1;
+      await json(route, {
+        journey_id: journey,
+        status: outcome.status,
+        query: "连城",
+        provider_attempts: outcome.status === "CITY_NO_RESULTS"
+          ? [{ provider: "nominatim", answered: true, http_status: 200 }]
+          : outcome.status === "GEOCODER_RATE_LIMITED"
+            ? [{ provider: "nominatim", answered: true, http_status: 429 }]
+            : outcome.status === "GEOCODER_DISABLED"
+              ? []
+              : [{ provider: "nominatim", answered: false, error: "ConnectTimeout" }],
+        results: [],
+      });
+    });
+
+    await page.goto("/revolution");
+    await page.getByTestId("rev-quick-find-city").click();
+    await expect(page.getByRole("status")).toContainText(outcome.message);
+    await expect(page.getByRole("status")).not.toContainText(outcome.forbidden);
+    await expect(page.locator("#rev-quick-search")).toHaveValue("连城");
+    expect(searchCalls).toBe(1);
+  });
+}
+
 test("AI route 404 can be skipped without restarting the user's journey", async ({ page }) => {
   let aiCalls = 0;
   await page.addInitScript((id) => {

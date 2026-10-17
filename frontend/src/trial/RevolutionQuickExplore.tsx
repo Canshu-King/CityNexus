@@ -412,11 +412,16 @@ export function RevolutionQuickExplore({
       if (!stillCurrent()) return;
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
+        const message = response.status === "GEOCODER_RATE_LIMITED"
+          ? "地图服务正在限流，稍后重试或粘贴公开地图链接。"
+          : response.status === "GEOCODER_UNAVAILABLE"
+            ? "地名服务暂时连不上。换个地区，或粘贴公开地图链接。"
+            : response.status === "GEOCODER_DISABLED"
+              ? "当前环境未开启公开地名搜索。可粘贴公开地图链接。"
+              : "没有匹配地区。换个名称或粘贴公开地图链接。";
         setAlert({
           type: "neutral",
-          text: response.status === "GEOCODER_RATE_LIMITED"
-            ? "地图服务正在限流，稍等后重试；也可以粘贴公开 OpenStreetMap 地图链接。"
-            : "没有匹配地区。换个名称或粘贴公开地图链接。",
+          text: message,
         });
         return;
       }
