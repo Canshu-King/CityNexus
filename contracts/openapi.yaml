@@ -164,6 +164,33 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/Traveler'}
         '422': {$ref: '#/components/responses/ValidationError'}
+  /travelers/session:
+    get:
+      operationId: getTravelerSession
+      # ORD-0685: the only door that answers "who is the traveller this request speaks for".
+      # It verifies a signed bearer token; it never mints one and never guesses a traveller.
+      responses:
+        '200':
+          description: The authenticated traveller principal
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerSession'}
+        '401':
+          description: >-
+            No signed traveller credentials, or they are expired, invalid, or name a traveller who
+            no longer exists. The body is the shared error envelope; `error.reason_code` names
+            which of those it was (TRAVELER_CREDENTIALS_MISSING / _INVALID / _EXPIRED /
+            TRAVELER_PRINCIPAL_NOT_FOUND).
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '503':
+          description: >-
+            The verifier has no usable secret configured (TRAVELER_AUTH_NOT_CONFIGURED). The door
+            refuses rather than accepting an identity it cannot verify.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /travelers/{traveler_id}:
     parameters:
       - {$ref: '#/components/parameters/TravelerId'}
@@ -2951,6 +2978,18 @@ components:
         ai_state:
           type: string
           enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+    TravelerSession:
+      # ORD-0685: the signed principal behind a request. `traveler_id` is the server's own
+      # identity for the person -- it is never read from a request body, and a caller who
+      # presents no verifiable token gets a named 401 instead of somebody else's identity.
+      type: object
+      required: [traveler_id, auth_method, expires_at]
+      properties:
+        traveler_id: {type: string, format: uuid}
+        auth_method: {type: string, const: SIGNED_HMAC_BEARER}
+        expires_at:
+          type: integer
+          description: Unix seconds at which the presented token stops being accepted
     ErrorEnvelope:
       type: object
       required: [error]

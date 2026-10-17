@@ -206,6 +206,7 @@ from app.error_receipt import (  # ORD-0332: 一枚可复述回执号，唯一�
 from app.security.credential_literals import (  # ORD-0307: 字面量凭据的常驻启动门
     startup_report as credential_gate_startup,
 )
+from app.traveler_principal import resolve_traveler_principal
 from app.execution.clock import execution_clock
 from app.execution.route_session_contract import (  # ORD-0602 甲半: source of truth, reporting only
     ROUTE_TRUTH_POLICY_VERSION,
@@ -2564,6 +2565,30 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
     return traveler_schema(traveler)
+
+
+@app.get("/api/v1/travelers/session")
+def get_traveler_session(request: Request, session: Session = Depends(get_session)):
+    """ORD-0685: the signed traveller this request speaks for.
+
+    Registered before `/travelers/{traveler_id}` on purpose -- that route takes a UUID, so the
+    literal `session` would otherwise be parsed as a malformed id and answer 422 instead of
+    reaching this door at all.
+    """
+
+    principal = resolve_traveler_principal(request, session)
+    answer = JSONResponse(
+        {
+            "traveler_id": principal.traveler_id,
+            "auth_method": principal.auth_method,
+            "expires_at": principal.expires_at,
+        }
+    )
+    # A principal is per-person and per-request: no shared cache may keep it, and a proxy must
+    # key on the header that carried it.
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
 
 
 @app.get("/api/v1/travelers/{traveler_id}")
