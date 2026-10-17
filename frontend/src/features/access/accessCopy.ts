@@ -299,7 +299,7 @@ export const accessCopy = {
     "access.noAuthorityLine": "你的档位在这台服务器上没有成员管理权，所以这里不列改角色的按钮。",
     "access.memberScopeLine": "这一档能做什么：",
     "access.roleDetailsBody":
-      "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除，这条由服务器拒绝，而不是让旅行者自己撞上才知道。",
+    "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除。",
     "access.visibilityHeading": "可见性每一档，后果就在同一句里",
     "access.visPrivate": "仅个人",
     "access.visPrivateConsequence": "别人打不开，拿到链接也打不开。",
@@ -345,9 +345,9 @@ export const accessCopy = {
     "access.actionUnknown": "这台服务器报了一个本屏说不出人话的动作：{token}。",
     "access.doorLoading": "正在问这台服务器还有谁能到达这条行程…",
     "access.doorAbsent":
-      "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+    "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是每一档的含义。",
     "access.doorPartial":
-      "这台服务器只答了共享那几扇门里的一部分，还没答的是 {paths}。下面写的是每档将要意味着什么，不是这条行程现在的状态。",
+    "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。下面写的是每一档的含义。",
     "access.doorPresent":
       "这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。",
     "access.rosterHeading": "这条行程的成员，按成员门答的",
