@@ -1,0 +1,5 @@
+    Error: the `@media (max-width: 680px)` block must give `.v8-message button` a `min-height: var(--cn-touch-min)` — the hole the banner dismiss fell into
+      106 |     "the `@media (max-width: 680px)` block must give `.v8-message button` a `min-height: var(--cn-touch-min)` — the hole the banner dismiss fell into"
+  2 failed
+  2 passed (820ms)
+MUTANT_RC=1
