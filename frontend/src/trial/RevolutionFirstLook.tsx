@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
@@ -8,6 +8,13 @@ import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobil
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
 import { MobileHermesRun } from "./mobile/MobileHermesRun";
 import { MobileCompatAgentActivity } from "./mobile/MobileCompatAgentActivity";
+import { fetchWithReadDeadline, READ_DEADLINE_MS, ReadDeadlineMissed } from "../lib/readDeadline";
+import {
+  CLIENT_WRITE_DEADLINE_MS,
+  CLIENT_WRITE_DEADLINE_SECONDS,
+  fetchWithWriteDeadline,
+  WriteDeadlineMissed,
+} from "../lib/writeDeadline";
 import {
   clearTravelerBearer,
   readTravelerBearer,
@@ -21,6 +28,141 @@ import "./RevolutionMobileV1.css";
 
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 const RECENT_JOURNEYS_KEY = "citynexus.revolution.firstlook.recent-journeys";
+const START_WRITE_STATUS_KEY = "citynexus.revolution.firstlook.start-write";
+
+type StartWritePhase = "traveler" | "journey";
+type StartWriteState = {
+  phase: StartWritePhase;
+  state: "pending" | "unknown" | "partial";
+  reason?: "client-deadline" | "traveler-created" | "journey-created";
+  receiptKey?: string;
+  cityName: string;
+  cityCode?: string;
+};
+
+function readStartWriteState(): StartWriteState | null {
+  let raw: string | null;
+  try {
+    raw = localStorage.getItem(START_WRITE_STATUS_KEY);
+  } catch {
+    return null;
+  }
+  if (!raw) return null;
+  try {
+    const value = JSON.parse(raw) as Partial<StartWriteState>;
+    const phase: StartWritePhase = value.phase === "traveler" ? "traveler" : "journey";
+    const cityName = typeof value.cityName === "string" && value.cityName.length <= 60
+      ? value.cityName
+      : "连城";
+    const cityCode = typeof value.cityCode === "string" ? value.cityCode : undefined;
+    const receiptKey = typeof value.receiptKey === "string" && /^[0-9a-f]{64}$/.test(value.receiptKey)
+      ? value.receiptKey
+      : undefined;
+    const common = { cityName, ...(cityCode ? { cityCode } : {}), ...(receiptKey ? { receiptKey } : {}) };
+    if (value.state === "partial" &&
+        (value.reason === "traveler-created" || value.reason === "journey-created")) {
+      return { phase, state: "partial", reason: value.reason, ...common };
+    }
+    // A pending marker left by reload or tab close has no confirmed outcome.
+    return {
+      phase,
+      state: "unknown",
+      ...(value.reason === "client-deadline" ? { reason: "client-deadline" as const } : {}),
+      ...common,
+    };
+  } catch {
+    // A malformed marker still means one of the writes may have been sent.
+    return { phase: "journey", state: "unknown", cityName: "连城" };
+  }
+}
+
+function persistStartWriteState(state: StartWriteState): boolean {
+  try {
+    localStorage.setItem(START_WRITE_STATUS_KEY, JSON.stringify(state));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function clearStartWriteState(): void {
+  try {
+    localStorage.removeItem(START_WRITE_STATUS_KEY);
+  } catch {
+    // The in-memory lock still protects the current page.
+  }
+}
+
+function createStartWriteReceiptKey(): string {
+  const bytes = new Uint8Array(32);
+  window.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function startWriteMessage(status: StartWriteState): string {
+  if (status.state === "pending") {
+    return status.phase === "traveler"
+      ? "仍在创建登录会话，结果尚未确认。请勿重复提交。"
+      : "仍在创建行程草稿，结果尚未确认。请勿重复提交。";
+  }
+  if (status.state === "partial" && status.reason === "traveler-created") {
+    return "登录会话已创建，但行程未完成。原身份和输入已保留；请勿重新提交。";
+  }
+  if (status.state === "partial" && status.reason === "journey-created") {
+    return "行程已创建，但页面未完成保存。原身份和输入已保留；请勿重新提交。";
+  }
+  if (status.reason === "client-deadline") {
+    const write = status.phase === "traveler" ? "登录会话" : "行程草稿";
+    return `${write}等待 ${CLIENT_WRITE_DEADLINE_SECONDS} 秒后停止，服务器结果未知。请勿重复提交。`;
+  }
+  return "这次写入结果未知。原身份和输入已保留；请勿重复提交。";
+}
+
+class StartWriteHttpError extends Error {
+  readonly status: number;
+
+  constructor(status: number) {
+    super(`HTTP ${status}：服务器未能完成请求`);
+    this.name = "StartWriteHttpError";
+    this.status = status;
+  }
+}
+
+function hasConfirmedWriteRejection(error: unknown): boolean {
+  return error instanceof StartWriteHttpError && error.status >= 400 && error.status < 500 &&
+    ![408, 409, 425, 429].includes(error.status);
+}
+
+async function readJsonBeforeWriteDeadline<T>(response: Response, path: string, deadlineAt: number): Promise<T> {
+  const remainingMs = deadlineAt - performance.now();
+  if (remainingMs <= 0) throw new WriteDeadlineMissed("POST", path, CLIENT_WRITE_DEADLINE_MS);
+  let timer: number | undefined;
+  const deadline = new Promise<never>((_resolve, reject) => {
+    timer = window.setTimeout(
+      () => reject(new WriteDeadlineMissed("POST", path, CLIENT_WRITE_DEADLINE_MS)),
+      remainingMs,
+    );
+  });
+  try {
+    return await Promise.race([response.json() as Promise<T>, deadline]);
+  } finally {
+    if (timer !== undefined) window.clearTimeout(timer);
+  }
+}
+
+async function readJsonBeforeReadDeadline<T>(response: Response, deadlineAt: number): Promise<T> {
+  const remainingMs = deadlineAt - performance.now();
+  if (remainingMs <= 0) throw new ReadDeadlineMissed(READ_DEADLINE_MS);
+  let timer: number | undefined;
+  const deadline = new Promise<never>((_resolve, reject) => {
+    timer = window.setTimeout(() => reject(new ReadDeadlineMissed(READ_DEADLINE_MS)), remainingMs);
+  });
+  try {
+    return await Promise.race([response.json() as Promise<T>, deadline]);
+  } finally {
+    if (timer !== undefined) window.clearTimeout(timer);
+  }
+}
 
 type TrialJourney = {
   id: string;
@@ -104,33 +246,30 @@ function rememberJourney(journey: TrialJourney): TrialJourney[] {
   return recent;
 }
 
-async function postJson<T>(path: string, payload: object, bearerOverride?: string): Promise<T> {
+async function postJson<T>(
+  path: string,
+  payload: object,
+  bearerOverride: string | undefined,
+  receiptKey: string,
+): Promise<T> {
   // Use the fresh token for the new Journey without replacing the existing
   // browser session until the entire create flow has succeeded.
   const bearer = bearerOverride === undefined ? readTravelerBearer() : bearerOverride;
-  const response = await fetch("/api/v1" + path, {
+  const requestPath = "/api/v1" + path;
+  const deadlineAt = performance.now() + CLIENT_WRITE_DEADLINE_MS;
+  const response = await fetchWithWriteDeadline(requestPath, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Idempotency-Key": receiptKey,
       ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}),
     },
     body: JSON.stringify(payload),
-  });
+  }, CLIENT_WRITE_DEADLINE_MS);
   if (!response.ok) {
-    // Do not surface hidden tokens or the entire server response as UI copy.
-    let reason = "服务器未能完成请求";
-    try {
-      const json: unknown = await response.json();
-      if (json && typeof json === "object" && "detail" in json) {
-        const detail = (json as { detail?: unknown }).detail;
-        if (typeof detail === "string") reason = detail.slice(0, 240);
-      }
-    } catch {
-      // The status still names the failure when upstream returns non-JSON.
-    }
-    throw new Error("HTTP " + response.status + "：" + reason);
+    throw new StartWriteHttpError(response.status);
   }
-  return response.json() as Promise<T>;
+  return readJsonBeforeWriteDeadline<T>(response, requestPath, deadlineAt);
 }
 
 function freshCityCode(): string {
@@ -166,11 +305,19 @@ function DraftAgentActivity({
 }
 
 export function RevolutionFirstLook() {
-  const [cityName, setCityName] = useState("连城");
+  const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "连城");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
   const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
   const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [startWriteStatus, setStartWriteStatus] = useState<StartWriteState | null>(readStartWriteState);
+  const [startRecoveryIdentity, setStartRecoveryIdentity] = useState<{ bearer: string; travelerId: string } | null>(null);
+  const [startRecoveryBusy, setStartRecoveryBusy] = useState(false);
+  const [startRecoveryMessage, setStartRecoveryMessage] = useState<string | null>(null);
+  const [receiptBusy, setReceiptBusy] = useState(false);
+  const [receiptMessage, setReceiptMessage] = useState<string | null>(null);
+  const startRequestInFlightRef = useRef(false);
+  const startWriteBlockedRef = useRef(startWriteStatus !== null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [legacyRestoreFailed, setLegacyRestoreFailed] = useState(false);
@@ -181,6 +328,9 @@ export function RevolutionFirstLook() {
   const [agentRuntime, setAgentRuntime] = useState<AgentRuntimeStatus | null>(null);
   const [agentCheckError, setAgentCheckError] = useState<string | null>(null);
   const sample = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
+  const startWriteBlocked = startWriteStatus !== null;
+  const canCheckCurrentStartDrafts = startWriteStatus?.phase === "journey" &&
+    Boolean(startWriteStatus.cityCode && (startRecoveryIdentity?.bearer || readTravelerBearer()));
 
   useEffect(() => {
     let cancelled = false;
@@ -193,6 +343,7 @@ export function RevolutionFirstLook() {
   }, []);
 
   useEffect(() => {
+    if (readStartWriteState()) return;
     const bearer = readTravelerBearer();
     const pairedIdentity = readTravelerIdentity();
     const pointer = readLegacyJourneyPointer();
@@ -273,38 +424,130 @@ export function RevolutionFirstLook() {
                 ? "配置已读到，模型回复尚未验证。"
                 : "可继续手动探索地点。";
 
+  const markStartWriteUnknown = (marker: StartWriteState, reason?: "client-deadline") => {
+    const unknown: StartWriteState = {
+      ...marker,
+      state: "unknown",
+      ...(reason ? { reason } : {}),
+    };
+    persistStartWriteState(unknown);
+    startWriteBlockedRef.current = true;
+    setStartWriteStatus(unknown);
+    return unknown;
+  };
+
+  const clearStartWriteMarker = (receiptKey: string) => {
+    const current = readStartWriteState();
+    if (current?.receiptKey && current.receiptKey !== receiptKey) return;
+    clearStartWriteState();
+    setStartWriteStatus(null);
+    startWriteBlockedRef.current = false;
+  };
+
+  const postStartWrite = async <T,>(
+    phase: StartWritePhase,
+    path: string,
+    payload: object,
+    bearerOverride: string | undefined,
+    label: string,
+    cityCode?: string,
+  ): Promise<{ value: T; marker: StartWriteState }> => {
+    const marker: StartWriteState = {
+      phase,
+      state: "pending",
+      receiptKey: createStartWriteReceiptKey(),
+      cityName: label,
+      ...(cityCode ? { cityCode } : {}),
+    };
+    setReceiptMessage(null);
+    setStartRecoveryMessage(null);
+    if (!persistStartWriteState(marker) || readStartWriteState()?.receiptKey !== marker.receiptKey) {
+      clearStartWriteState();
+      setStartWriteStatus(null);
+      startWriteBlockedRef.current = false;
+      throw new Error("无法保存本次写入核验凭据，因此未发送请求。");
+    }
+    startWriteBlockedRef.current = true;
+    setStartWriteStatus(marker);
+    try {
+      const value = await postJson<T>(path, payload, bearerOverride, marker.receiptKey!);
+      return { value, marker };
+    } catch (caught) {
+      if (hasConfirmedWriteRejection(caught)) {
+        clearStartWriteMarker(marker.receiptKey!);
+      } else {
+        markStartWriteUnknown(
+          marker,
+          caught instanceof WriteDeadlineMissed ? "client-deadline" : undefined,
+        );
+      }
+      throw caught;
+    }
+  };
+
   const start = async (cityNameOverride?: string, options: { freshSession?: boolean } = {}) => {
+    const savedWrite = readStartWriteState();
+    if (startRequestInFlightRef.current || startWriteBlockedRef.current || savedWrite) {
+      if (savedWrite) {
+        startWriteBlockedRef.current = true;
+        setStartWriteStatus(savedWrite);
+      }
+      return;
+    }
     const label = (cityNameOverride ?? cityName).trim();
     if (label.length < 2 || label.length > 60) {
       setError("请输入 2 至 60 个字符的城市或地区名称，例如连城、厦门或杭州。");
       return;
     }
+    startRequestInFlightRef.current = true;
     setBusy(true);
     setError(null);
     setNotice(null);
+    setLegacyRestoreFailed(false);
+    setStartRecoveryMessage(null);
+    let writePostDispatched = false;
+    let travelerCreatedThisAttempt = false;
+    let travelerReceiptKey: string | undefined;
+    let journeyCreatedThisAttempt = false;
+    let journeyReceiptKey: string | undefined;
+    let journeyCityCode: string | undefined;
     try {
       // Keep one signed traveler while the person starts Journeys in other
       // cities. A new traveler is issued only when this browser has no paired
       // signed session; both session fields commit after Journey creation.
       const existingBearer = options.freshSession ? null : readTravelerBearer();
       const existingIdentity = options.freshSession ? null : readTravelerIdentity();
-      const traveler = existingBearer
-        ? { id: (await cityNexusApi.getTravelerSession()).traveler_id, access_token: existingBearer }
-        : await postJson<{ id: string; access_token?: string }>("/travelers", {
+      let traveler: { id: string; access_token?: string };
+      if (existingBearer) {
+        traveler = { id: (await cityNexusApi.getTravelerSession()).traveler_id, access_token: existingBearer };
+      } else {
+        writePostDispatched = true;
+        const travelerResult = await postStartWrite<{ id: string; access_token?: string }>("traveler", "/travelers", {
           display_name: "Revolution Lab explorer",
           locale: "zh-CN",
           timezone: "Asia/Shanghai",
-        }, "");
+        }, "", label);
+        traveler = travelerResult.value;
+        travelerReceiptKey = travelerResult.marker.receiptKey;
+        if (typeof traveler.id !== "string" || !traveler.id || typeof traveler.access_token !== "string" || !traveler.access_token) {
+          markStartWriteUnknown(travelerResult.marker);
+          throw new Error("服务器未能确认登录会话信息，请勿重复提交。");
+        }
+        travelerCreatedThisAttempt = true;
+        clearStartWriteMarker(travelerResult.marker.receiptKey!);
+      }
       if (!traveler.access_token) {
         throw new Error("服务器没有发放可用于私人探索的签名会话，请检查本地鉴权配置。");
       }
+      setStartRecoveryIdentity({ bearer: traveler.access_token, travelerId: traveler.id });
       const startAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
       const endAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
-      const cityCode = freshCityCode();
-      const created = await postJson<{ id: string }>("/journeys", {
+      journeyCityCode = freshCityCode();
+      writePostDispatched = true;
+      const journeyResult = await postStartWrite<{ id: string }>("journey", "/journeys", {
         traveler_id: traveler.id,
         title: label + " · Revolution Explore",
-        city_code: cityCode,
+        city_code: journeyCityCode,
         timezone: "Asia/Shanghai",
         start_at: startAt,
         end_at: endAt,
@@ -312,14 +555,20 @@ export function RevolutionFirstLook() {
         // anchors belong to a later confirmed plan.
         budget: { amount_minor: 100000, currency: "CNY" },
         party_size: 1,
-      }, traveler.access_token);
-      if (!created.id) throw new Error("服务器未返回 Journey ID。");
+      }, traveler.access_token, label, journeyCityCode);
+      journeyReceiptKey = journeyResult.marker.receiptKey;
+      const created = journeyResult.value;
+      if (typeof created.id !== "string" || !created.id) {
+        markStartWriteUnknown(journeyResult.marker);
+        throw new Error("服务器未能确认行程编号，请勿重复提交。");
+      }
+      journeyCreatedThisAttempt = true;
       if (!existingIdentity || existingIdentity.travelerId !== traveler.id) {
         storeTravelerIdentity(traveler.access_token, traveler.id);
       }
       const next: TrialJourney = {
         id: created.id,
-        cityCode,
+        cityCode: journeyCityCode!,
         cityName: label,
         status: "DRAFT",
         ownerTravelerId: traveler.id,
@@ -329,15 +578,126 @@ export function RevolutionFirstLook() {
       setJourney(next);
       setActiveTab("explore");
       setPocketWalk(null);
+      clearStartWriteMarker(journeyResult.marker.receiptKey!);
+      startWriteBlockedRef.current = false;
+      setStartRecoveryIdentity(null);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "创建探索草稿失败。");
-      if (readTravelerBearer()) setLegacyRestoreFailed(true);
+      if (journeyCreatedThisAttempt || (!startWriteBlockedRef.current && travelerCreatedThisAttempt)) {
+        const partial: StartWriteState = {
+          phase: journeyCreatedThisAttempt ? "journey" : "traveler",
+          state: "partial",
+          reason: journeyCreatedThisAttempt ? "journey-created" : "traveler-created",
+          receiptKey: journeyCreatedThisAttempt ? journeyReceiptKey : travelerReceiptKey,
+          cityName: label,
+          ...(journeyCityCode ? { cityCode: journeyCityCode } : {}),
+        };
+        persistStartWriteState(partial);
+        startWriteBlockedRef.current = true;
+        setStartWriteStatus(partial);
+        setError(null);
+      } else if (startWriteBlockedRef.current) {
+        setError(null);
+      } else {
+        setError(caught instanceof Error ? caught.message : "创建探索草稿失败。");
+        if (!writePostDispatched && readTravelerBearer()) setLegacyRestoreFailed(true);
+      }
     } finally {
       setBusy(false);
+      startRequestInFlightRef.current = false;
+    }
+  };
+
+  const checkStartWriteReceipt = async () => {
+    const marker = readStartWriteState();
+    if (!marker?.receiptKey || !startWriteBlocked || receiptBusy) return;
+    setReceiptBusy(true);
+    setReceiptMessage(null);
+    try {
+      const deadlineAt = performance.now() + READ_DEADLINE_MS;
+      const response = await fetchWithReadDeadline(
+        `/api/v1/start-write-receipts/${marker.phase}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "X-CityNexus-Write-Receipt-Key": marker.receiptKey,
+          },
+          cache: "no-store",
+        },
+        READ_DEADLINE_MS,
+      );
+      if (!response.ok) {
+        setReceiptMessage("暂时无法读取这次写入回执。结果仍未知；原启动标记保留，请勿重复提交。");
+        return;
+      }
+      const value: unknown = await readJsonBeforeReadDeadline(response, deadlineAt);
+      const receipt = value && typeof value === "object" ? value as Record<string, unknown> : null;
+      if (!receipt || receipt.operation !== marker.phase ||
+          !["pending", "committed", "unknown"].includes(String(receipt.state))) {
+        setReceiptMessage("回执内容无法核验。结果仍未知；原启动标记保留，请勿重复提交。");
+      } else if (receipt.state === "pending") {
+        setReceiptMessage("服务器仍将这次写入标记为处理中。结果尚未确认；请勿重复提交。");
+      } else if (receipt.state === "committed" && marker.phase === "traveler") {
+        setReceiptMessage("服务器回执确认登录会话已创建；当前页面没有收到会话凭据。请勿重新提交。");
+      } else if (receipt.state === "committed") {
+        setReceiptMessage("服务器回执确认行程草稿已创建；页面尚未恢复该行程。请勿重新提交。");
+      } else {
+        setReceiptMessage("服务器当前没有可核验的这次写入回执。结果仍未知；请勿重复提交。");
+      }
+    } catch {
+      setReceiptMessage("暂时无法读取这次写入回执。结果仍未知；原启动标记保留，请勿重复提交。");
+    } finally {
+      setReceiptBusy(false);
+    }
+  };
+
+  const checkCurrentTravelerDrafts = async () => {
+    const marker = readStartWriteState();
+    const recovery = startRecoveryIdentity;
+    const bearer = recovery?.bearer ?? readTravelerBearer();
+    if (!marker?.cityCode || marker.phase !== "journey" || !startWriteBlocked || !bearer || startRecoveryBusy) return;
+    const storedBearerAtStart = readTravelerBearer();
+    const storedTravelerIdAtStart = readTravelerIdentity()?.travelerId ?? null;
+    setStartRecoveryBusy(true);
+    setStartRecoveryMessage(null);
+    try {
+      const deadlineAt = performance.now() + READ_DEADLINE_MS;
+      const response = await fetchWithReadDeadline("/api/v1/journeys/session/recent-drafts", {
+        headers: { Authorization: `Bearer ${bearer}`, Accept: "application/json" },
+        cache: "no-store",
+      }, READ_DEADLINE_MS);
+      if (!response.ok) {
+        setStartRecoveryMessage("当前签名身份暂时无法读取草稿。结果仍未知；未重发写入。");
+        return;
+      }
+      const value: unknown = await readJsonBeforeReadDeadline(response, deadlineAt);
+      if (!Array.isArray(value)) {
+        setStartRecoveryMessage("服务器草稿列表无法核验。结果仍未知；未重发写入。");
+        return;
+      }
+      if (readTravelerBearer() !== storedBearerAtStart ||
+          (readTravelerIdentity()?.travelerId ?? null) !== storedTravelerIdAtStart ||
+          (recovery && startRecoveryIdentity?.bearer !== recovery.bearer)) {
+        setStartRecoveryMessage("核验期间签名身份已变化。结果仍未知；未重发写入。");
+        return;
+      }
+      const matchingDraft = value.some((item) => {
+        if (!item || typeof item !== "object") return false;
+        const record = item as Record<string, unknown>;
+        return record.status === "DRAFT" && record.city_code === marker.cityCode &&
+          typeof record.id === "string" && record.id.length > 0;
+      });
+      setStartRecoveryMessage(matchingDraft
+        ? "当前签名身份下已找到与本次地区对应的草稿。结果已确认；原身份和行程保留，未重发写入。"
+        : "当前签名身份下未找到与本次地区匹配的草稿。结果仍未知；原启动标记保留，未重发写入。");
+    } catch {
+      setStartRecoveryMessage("暂时无法读取当前签名身份的草稿。结果仍未知；未重发写入。");
+    } finally {
+      setStartRecoveryBusy(false);
     }
   };
 
   const restartWithNewSession = () => {
+    if (startRequestInFlightRef.current || startWriteBlockedRef.current) return;
     const pointer = readLegacyJourneyPointer();
     setJourney(null);
     setPocketWalk(null);
@@ -348,6 +708,7 @@ export function RevolutionFirstLook() {
   };
 
   const resumeRecentJourney = (saved: TrialJourney) => {
+    if (startWriteBlockedRef.current) return;
     const identity = readTravelerIdentity();
     if (!identity || identity.travelerId !== saved.ownerTravelerId) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
@@ -366,7 +727,7 @@ export function RevolutionFirstLook() {
     // Journey. Clear only the navigation pointer after an explicit user tap.
     // The database Journey is untouched; no permission bypass or silent
     // reassignment takes place.
-    if (!journey) return;
+    if (!journey || startWriteBlockedRef.current) return;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       const stored = saved ? JSON.parse(saved) as Partial<TrialJourney> : null;
@@ -387,6 +748,7 @@ export function RevolutionFirstLook() {
   };
 
   const switchCity = (nextCityName?: string) => {
+    if (startWriteBlockedRef.current) return;
     if (journey) setRecentJourneys(rememberJourney(journey));
     // Keep the signed traveler and the previous Journey in the recent list.
     localStorage.removeItem(STORAGE_KEY);
@@ -449,6 +811,44 @@ export function RevolutionFirstLook() {
       </header>
 
       <main className="rev-firstlook-content">
+        {startWriteStatus && (
+          <section
+            className="rev-firstlook-notice"
+            role="status"
+            aria-live="polite"
+            data-testid="rev-start-write-status"
+          >
+            <p>{startWriteMessage(startWriteStatus)}</p>
+            {startWriteBlocked && startWriteStatus.state !== "pending" && (
+              <div className="rev-firstlook-recovery" data-testid="rev-start-write-checks">
+                {startWriteStatus.receiptKey && (
+                  <button
+                    type="button"
+                    className="rev-mobile-secondary"
+                    disabled={receiptBusy}
+                    onClick={() => void checkStartWriteReceipt()}
+                    data-testid="rev-firstlook-query-write-receipt"
+                  >
+                    {receiptBusy ? "正在查询写入回执…" : "手动查询本次写入回执"}
+                  </button>
+                )}
+                {canCheckCurrentStartDrafts && (
+                  <button
+                    type="button"
+                    className="rev-mobile-secondary"
+                    disabled={startRecoveryBusy}
+                    onClick={() => void checkCurrentTravelerDrafts()}
+                    data-testid="rev-firstlook-check-start-draft"
+                  >
+                    {startRecoveryBusy ? "正在查询当前身份的草稿…" : "手动查找本次行程草稿"}
+                  </button>
+                )}
+                {receiptMessage && <p data-testid="rev-start-write-receipt-result">{receiptMessage}</p>}
+                {startRecoveryMessage && <p data-testid="rev-start-write-draft-result">{startRecoveryMessage}</p>}
+              </div>
+            )}
+          </section>
+        )}
         {!journey ? (
           activeTab === "explore" ? (
             <section className="rev-firstlook-hero" data-testid="rev-mobile-welcome">
@@ -463,13 +863,13 @@ export function RevolutionFirstLook() {
                     autoComplete="off"
                     value={cityName}
                     maxLength={60}
-                    disabled={busy}
+                    disabled={busy || startWriteBlocked}
                     placeholder="例如：连城、厦门、杭州"
                     onChange={(event) => setCityName(event.target.value)}
                     data-testid="rev-firstlook-city"
                   />
-                  <button disabled={busy} type="submit" data-testid="rev-firstlook-start">
-                    {busy ? "正在准备…" : "开始探索 →"}
+                  <button disabled={busy || startWriteBlocked} type="submit" data-testid="rev-firstlook-start">
+                    {busy ? "正在准备…" : startWriteBlocked ? "结果待确认" : "开始探索 →"}
                   </button>
                 </div>
               </form>
@@ -481,6 +881,7 @@ export function RevolutionFirstLook() {
                       key={saved.id}
                       type="button"
                       className="rev-mobile-secondary"
+                      disabled={busy || startWriteBlocked}
                       aria-label={`打开${saved.cityName}行程`}
                       onClick={() => resumeRecentJourney(saved)}
                     >
@@ -491,11 +892,11 @@ export function RevolutionFirstLook() {
                 </div>
               )}
               {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
-              {legacyRestoreFailed && (
+              {legacyRestoreFailed && !startWriteBlocked && (
                 <button
                   type="button"
                   className="rev-mobile-secondary"
-                  disabled={busy}
+                  disabled={busy || startWriteBlocked}
                   onClick={restartWithNewSession}
                   data-testid="rev-firstlook-new-session"
                 >

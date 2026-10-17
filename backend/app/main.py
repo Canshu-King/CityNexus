@@ -6103,8 +6103,131 @@ def demo_start_scenario(session: Session = Depends(get_session)):
 
 
 
+START_WRITE_RECEIPT_RETENTION_DAYS = 365
+
+
+def _start_write_receipt_storage_key(operation: str, raw_key: str) -> str:
+    if operation not in {"traveler", "journey"}:
+        raise HTTPException(404, "start-write receipt not found")
+    if re.fullmatch(r"[0-9a-f]{64}", raw_key) is None:
+        raise HTTPException(422, "write receipt key must be 256-bit lowercase hex")
+    digest = hashlib.sha256(raw_key.encode("ascii")).hexdigest()
+    return f"revolution.start.{operation}:{digest}"
+
+
+def _claim_start_write_receipt(
+    session: Session,
+    *,
+    operation: str,
+    payload: Any,
+    raw_key: str | None,
+) -> IdempotencyKey | None:
+    if raw_key is None:
+        return None
+    storage_key = _start_write_receipt_storage_key(operation, raw_key)
+    request_hash = canonical_request_signature(payload)
+    existing = session.get(IdempotencyKey, storage_key)
+    if existing is not None:
+        existing_operation = existing.operation
+        existing_request_hash = existing.request_hash
+        session.rollback()
+        if existing_operation != f"revolution.start.{operation}" or existing_request_hash != request_hash:
+            raise HTTPException(409, "start-write receipt key is already bound to another request")
+        raise HTTPException(409, "start-write receipt key has already been used")
+
+    now = datetime.now(timezone.utc)
+    row = IdempotencyKey(
+        key=storage_key,
+        operation=f"revolution.start.{operation}",
+        request_hash=request_hash,
+        response_status=None,
+        response_json=None,
+        created_at=now.isoformat(),
+        expires_at=(now + timedelta(days=START_WRITE_RECEIPT_RETENTION_DAYS)).isoformat(),
+        claim_token=secrets.token_urlsafe(24),
+        claim_deadline=_lease_deadline(now),
+    )
+    session.add(row)
+    try:
+        # Commit the pending receipt before creation. The entity and committed receipt
+        # are then written together so a missing browser response remains queryable.
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raise HTTPException(409, "start-write receipt key has already been used") from exc
+    return row
+
+
+def _complete_start_write_receipt(
+    session: Session,
+    receipt: IdempotencyKey | None,
+    *,
+    record_id: str,
+) -> None:
+    if receipt is None:
+        return
+    completed = session.execute(
+        update(IdempotencyKey)
+        .where(
+            IdempotencyKey.key == receipt.key,
+            IdempotencyKey.claim_token == receipt.claim_token,
+            IdempotencyKey.response_json.is_(None),
+        )
+        .values(
+            response_status=201,
+            response_json=json.dumps({"record_id": record_id}, separators=(",", ":")),
+            claim_token=None,
+            claim_deadline=None,
+        )
+        .execution_options(synchronize_session=False)
+    )
+    if completed.rowcount != 1:
+        raise HTTPException(409, "start-write receipt claim is no longer current")
+
+
+@app.get("/api/v1/start-write-receipts/{operation}")
+def get_start_write_receipt(
+    operation: str,
+    response: Response,
+    receipt_key: str = Header(alias="X-CityNexus-Write-Receipt-Key"),
+    session: Session = Depends(get_session),
+):
+    """Return only the state of one client-held write receipt capability."""
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "X-CityNexus-Write-Receipt-Key"
+    storage_key = _start_write_receipt_storage_key(operation, receipt_key)
+    row = session.get(IdempotencyKey, storage_key)
+    state = "unknown"
+    if row is not None and row.operation == f"revolution.start.{operation}":
+        if row.response_json is None:
+            try:
+                claim_deadline = datetime.fromisoformat(row.claim_deadline or "")
+                if claim_deadline > datetime.now(timezone.utc):
+                    state = "pending"
+            except (TypeError, ValueError):
+                state = "unknown"
+        elif row.response_status == 201:
+            try:
+                receipt_body = json.loads(row.response_json)
+                UUID(str(receipt_body.get("record_id", "")))
+                state = "committed"
+            except (AttributeError, TypeError, ValueError, json.JSONDecodeError):
+                state = "unknown"
+    return {"operation": operation, "state": state}
+
+
 @app.post("/api/v1/travelers", status_code=201)
-def create_traveler(payload: TravelerCreate, session: Session = Depends(get_session)):
+def create_traveler(
+    payload: TravelerCreate,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    receipt = _claim_start_write_receipt(
+        session,
+        operation="traveler",
+        payload=payload.model_dump(mode="json"),
+        raw_key=idempotency_key,
+    )
     identifier = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
     traveler = Traveler(
@@ -6130,6 +6253,7 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
             updated_at=now,
         )
     )
+    _complete_start_write_receipt(session, receipt, record_id=traveler.id)
     session.commit()
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
@@ -6744,7 +6868,11 @@ def suggested_room_count(party_size: int) -> int:
 
 
 @app.post("/api/v1/journeys", status_code=201)
-def create_journey(payload: JourneyCreate, session: Session = Depends(get_session)):
+def create_journey(
+    payload: JourneyCreate,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
     require(session, Traveler, str(payload.traveler_id), "Traveler")
     now = datetime.now(timezone.utc).isoformat()
     occupancy = dict(payload.occupancy)
@@ -6803,6 +6931,12 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     # cannot accept a window that `/stay-options/generate` would later reject.  The raised
     # `V13_…` becomes a named 422 in `temporal_rejection` above.
     journey_temporal_shape(trip_context, journey)
+    receipt = _claim_start_write_receipt(
+        session,
+        operation="journey",
+        payload=payload.model_dump(mode="json"),
+        raw_key=idempotency_key,
+    )
     session.add(journey)
     session.add(trip_context)
     # A shared Journey has an explicit owner member from birth.  Keeping the
@@ -6823,6 +6957,7 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
             updated_at=now,
         )
     )
+    _complete_start_write_receipt(session, receipt, record_id=journey.id)
     session.commit()
     record_audit(
         session,
@@ -6833,6 +6968,31 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     )
     session.commit()
     return journey_schema(journey)
+
+
+@app.get("/api/v1/journeys/session/recent-drafts")
+def list_recent_signed_draft_journeys(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    """Return a small private recovery window for the signed traveler's DRAFT journeys."""
+    from app.traveler_principal import resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    items = session.scalars(
+        select(Journey)
+        .where(
+            Journey.traveler_id == principal.traveler_id,
+            Journey.status == "DRAFT",
+            Journey.deleted_at.is_(None),
+        )
+        .order_by(Journey.created_at.desc(), Journey.id.desc())
+        .limit(5)
+    ).all()
+    return [{"id": item.id, "city_code": item.city_code, "status": item.status} for item in items]
 
 
 @app.get("/api/v1/journeys", response_model=list[JourneySchema])
