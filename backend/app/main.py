@@ -206,7 +206,15 @@ from app.error_receipt import (  # ORD-0332: 一枚可复述回执号，唯一�
 from app.security.credential_literals import (  # ORD-0307: 字面量凭据的常驻启动门
     startup_report as credential_gate_startup,
 )
-from app.traveler_principal import resolve_traveler_principal
+from app.traveler_principal import (
+    REASON_JOURNEY_NOT_SCOPED,
+    REASON_TRAVELER_NOT_PRINCIPAL,
+    SESSION_STATE_SIGNED,
+    issue_traveler_token,
+    presented_principal,
+    resolve_traveler_principal,
+    signing_state,
+)
 from app.execution.clock import execution_clock
 from app.execution.route_session_contract import (  # ORD-0602 甲半: source of truth, reporting only
     ROUTE_TRUTH_POLICY_VERSION,
@@ -399,6 +407,7 @@ from app.schemas import (
 from app.schemas import (
     AgentPolicy as AgentPolicySchema,
 )
+from app.schemas import TravelerWithSession
 from app.schemas import (
     Booking as BookingSchema,
 )
@@ -2534,7 +2543,7 @@ def demo_start_scenario(session: Session = Depends(get_session)):
 
 
 
-@app.post("/api/v1/travelers", status_code=201)
+@app.post("/api/v1/travelers", status_code=201, response_model=TravelerWithSession)
 def create_traveler(payload: TravelerCreate, session: Session = Depends(get_session)):
     identifier = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
@@ -2564,7 +2573,27 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     session.commit()
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
-    return traveler_schema(traveler)
+    body = traveler_schema(traveler).model_dump(mode="json")
+    # ORD-0687: hand the person who just arrived a credential they can be recognised by.
+    # The token is signed for the id this function generated, from nothing the caller supplied
+    # -- `payload` has no id field, and no route anywhere trades a bare traveller_id for a
+    # token.  When the verifier is not configured the answer says so by name rather than
+    # staying silent, because "this build has no identity" and "identity is broken" have to be
+    # two different things on the screen.  The token goes nowhere else: not a log, not an error
+    # message, not an audit row.
+    body["access_token"] = None
+    body["session_state"] = signing_state()
+    if body["session_state"] == SESSION_STATE_SIGNED:
+        try:
+            body["access_token"] = issue_traveler_token(traveler.id)
+        except HTTPException:
+            # Race against a config reload: still create the person, still refuse to sign.
+            body["session_state"] = "MISCONFIGURED"
+    answer = JSONResponse(status_code=201, content=body)
+    # A credential is per-person and per-session; a shared cache holding it is a leak.
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
 
 
 @app.get("/api/v1/travelers/session")
@@ -3175,8 +3204,63 @@ def suggested_room_count(party_size: int) -> int:
     return max(3, (party_size + 2) // 3)
 
 
+def _authorize_journey_read(request: Request, session: Session, journey: Journey) -> None:
+    """Refuse a signed request that is pointing at somebody else's trip (ORD-0687).
+
+    The device, not the person, used to decide what the shell could open: `citynexus.v8.journey_id`
+    in `localStorage` is a uuid the previous traveller left behind, and every read door took the
+    uuid on faith.  Once a credential is presented the server -- not the pointer -- answers whose
+    trip this is.  An anonymous request is unchanged: no token, no claim about who is asking.
+
+    Ownership or an in-force seat, read through `_member_state`, so a withdrawn or lapsed seat
+    stops counting here at exactly the moment it stops counting at the member doors.
+    """
+
+    principal = presented_principal(request, session)
+    if principal is None:
+        return
+    if journey.traveler_id == principal.traveler_id:
+        return
+    now = datetime.now(timezone.utc)
+    for member in session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == principal.traveler_id,
+        )
+    ).all():
+        if _member_state(member, now) == "MEMBER_IN_FORCE":
+            return
+    refused = HTTPException(403, "this credential does not speak for that journey")
+    refused.reason_code = REASON_JOURNEY_NOT_SCOPED
+    raise refused
+
+
+def _authorize_journey_write(
+    request: Request, session: Session, traveler_id: str
+) -> None:
+    """A signed traveller may only open trips for themselves (ORD-0687).
+
+    `POST /api/v1/journeys` takes a `traveler_id` in the body, and that is still what a
+    server-side process (seeding, the demo scene) uses.  But when the caller presents a
+    credential, the body's claim has to agree with the signature: otherwise one signed person
+    could mint trips in a stranger's name and hand that stranger a pointer to clean up.
+    """
+
+    principal = presented_principal(request, session)
+    if principal is None or principal.traveler_id == traveler_id:
+        return
+    refused = HTTPException(
+        403, "a signed traveller cannot open a journey for somebody else"
+    )
+    refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+    raise refused
+
+
 @app.post("/api/v1/journeys", status_code=201)
-def create_journey(payload: JourneyCreate, session: Session = Depends(get_session)):
+def create_journey(
+    payload: JourneyCreate, request: Request, session: Session = Depends(get_session)
+):
+    _authorize_journey_write(request, session, str(payload.traveler_id))
     require(session, Traveler, str(payload.traveler_id), "Traveler")
     now = datetime.now(timezone.utc).isoformat()
     occupancy = dict(payload.occupancy)
@@ -4056,8 +4140,11 @@ def add_collection_item(
 
 
 @app.get("/api/v1/journeys/{journey_id}")
-def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
-    return journey_schema(require(session, Journey, str(journey_id), "Journey"))
+def get_journey(journey_id: UUID, request: Request, session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0687: same rule as /experience -- a presented credential has to speak for this trip.
+    _authorize_journey_read(request, session, journey)
+    return journey_schema(journey)
 
 
 # ORD-0496 slice 1: a trip's own schedule leaves this server as an RFC 5545 calendar.  This slice is
@@ -5513,8 +5600,13 @@ def read_journey_member_role_limits(journey_id: UUID, session: Session = Depends
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")
-def get_journey_experience(journey_id: UUID, session: Session = Depends(get_session)):
+def get_journey_experience(
+    journey_id: UUID, request: Request, session: Session = Depends(get_session)
+):
     journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0687: the phone's saved pointer is not an authorisation.  A signed request that names
+    # somebody else's trip is refused here, which is the door every screen in the shell opens.
+    _authorize_journey_read(request, session, journey)
     payload = experience_payload(session, journey)
     # Surface the durable recovery state (and, if the plan is still ACTIVE,
     # re-check feasibility so a stale plan cannot look healthy to the phone).

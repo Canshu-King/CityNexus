@@ -42,6 +42,10 @@ REASON_CREDENTIALS_MISSING = "TRAVELER_CREDENTIALS_MISSING"
 REASON_CREDENTIALS_INVALID = "TRAVELER_CREDENTIALS_INVALID"
 REASON_CREDENTIALS_EXPIRED = "TRAVELER_CREDENTIALS_EXPIRED"
 REASON_PRINCIPAL_UNKNOWN = "TRAVELER_PRINCIPAL_NOT_FOUND"
+# ORD-0687: the credential was fine, the trip it is being used on was not this person's.
+# Two different facts from two different doors, so the screen can say which one happened.
+REASON_JOURNEY_NOT_SCOPED = "JOURNEY_POINTER_NOT_OURS"
+REASON_TRAVELER_NOT_PRINCIPAL = "TRAVELER_NOT_PRINCIPAL"
 
 
 @dataclass(frozen=True)
@@ -57,6 +61,27 @@ def _refuse(status: int, message: str, reason_code: str) -> HTTPException:
     exc = HTTPException(status, message)
     exc.reason_code = reason_code
     return exc
+
+
+SESSION_STATE_SIGNED = "SIGNED"
+SESSION_STATE_NOT_CONFIGURED = "NOT_CONFIGURED"
+SESSION_STATE_MISCONFIGURED = "MISCONFIGURED"
+
+
+def signing_state() -> str:
+    """Can this process sign a traveller at all -- decided in one place, not per caller.
+
+    The create door (ORD-0687) and the verifier must agree: a short secret is an operator
+    mistake that has to look different, on the screen and in a test, from "this build never
+    turned identity on".  Anything that asks twice will eventually answer twice differently.
+    """
+
+    configured = (settings.traveler_auth_secret or "").strip()
+    if not configured:
+        return SESSION_STATE_NOT_CONFIGURED
+    if len(configured.encode("utf-8")) < 32:
+        return SESSION_STATE_MISCONFIGURED
+    return SESSION_STATE_SIGNED
 
 
 def _b64encode(raw: bytes) -> str:
@@ -116,6 +141,27 @@ def _presented_token(request: Request) -> str | None:
         return value.strip()
     explicit = request.headers.get("X-CityNexus-Traveler-Token")
     return explicit.strip() if explicit and explicit.strip() else None
+
+
+def presented_principal(
+    request: Request,
+    session: Session,
+    *,
+    now: int | None = None,
+) -> TravelerPrincipal | None:
+    """The signed traveller behind this request, or `None` when nobody presented a credential.
+
+    This is the seam the journey doors use (ORD-0687).  Today an anonymous request keeps working
+    exactly as it did -- this build has no password wall to switch on -- but the moment a token
+    *is* presented it stops being optional: a token that fails verification refuses by name, and
+    a token that verifies narrows what that request may see.  That is the smallest rule that
+    closes the real defect ("the phone still holds the previous traveller's journey uuid, so show
+    it") without turning identity on for every other caller in one leap.
+    """
+
+    if _presented_token(request) is None:
+        return None
+    return resolve_traveler_principal(request, session, now=now)
 
 
 def resolve_traveler_principal(
