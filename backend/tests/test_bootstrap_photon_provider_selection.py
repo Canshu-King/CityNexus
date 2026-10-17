@@ -3,10 +3,12 @@ from __future__ import annotations
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
+import httpx
 import pytest
 
 from app.core.config import settings
 from app.execution import bootstrap_discovery as discovery
+from app.integrations.discovery.photon_poi import PhotonPOIProvider
 
 
 def _set(name: str, value):
@@ -236,3 +238,60 @@ def test_osm_identity_accepts_photon_ids_and_rejects_provider_mismatch():
     assert discovery._osm_identity(
         SimpleNamespace(provider_key="overpass", external_id="photon:way/8123")
     ) is None
+
+
+@pytest.mark.parametrize(
+    ("osm_type", "expected_kind"),
+    [("N", "node"), ("W", "way"), ("R", "relation")],
+)
+def test_photon_osm_identity_normalization_preserves_source_url(osm_type, expected_kind):
+    feature = {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [121.4, 31.2]},
+        "properties": {
+            "osm_type": osm_type,
+            "osm_id": 8123,
+            "osm_key": "tourism",
+            "osm_value": "museum",
+            "name": "Fixture Museum",
+            "countrycode": "cn",
+        },
+    }
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(200, json={"features": [feature]})
+
+    client = httpx.Client(
+        transport=httpx.MockTransport(handler),
+        follow_redirects=False,
+    )
+    provider = PhotonPOIProvider(client=client)
+    try:
+        candidates, _attempts = provider.search_with_evidence(
+            "museum",
+            latitude=31.2,
+            longitude=121.4,
+            radius_m=2500,
+            limit=1,
+        )
+    finally:
+        provider.close()
+
+    assert len(requests) == 1
+    assert len(candidates) == 1
+    candidate = candidates[0]
+    external_id = f"photon:{expected_kind}/8123"
+    source_url = f"https://www.openstreetmap.org/{expected_kind}/8123"
+    assert candidate.external_id == external_id
+    assert candidate.metadata["source_url"] == source_url
+    assert discovery._osm_identity(candidate) == (expected_kind, "8123")
+    scope = discovery._candidate_scope_observation(
+        candidate,
+        captured_at="2026-10-17T00:00:00+00:00",
+        provider_provenance="TEST_PROVIDER",
+        expires_at="2026-10-17T01:00:00+00:00",
+        source_kind="MANUAL_PUBLIC_CENTER",
+    )
+    assert scope["source_url"] == source_url

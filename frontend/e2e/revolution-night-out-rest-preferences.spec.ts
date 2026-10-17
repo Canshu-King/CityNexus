@@ -86,6 +86,11 @@ test("390x844 keeps late-start and rest preferences when returning to Explore", 
   await expect(prompt).toBeVisible();
   await expect(askAi).toBeEnabled();
 
+  await page.getByTestId("rev-quick-ask-ai-shortcut").click();
+  await expect(prompt).toBeFocused();
+  await expect(prompt).toBeInViewport();
+  expect(suggestionCalls).toBe(0);
+
   await prompt.fill(goal);
   await expect(prompt).toHaveValue(goal);
   await page.getByTestId("rev-mobile-tab-trips").click();

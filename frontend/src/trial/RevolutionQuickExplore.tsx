@@ -683,6 +683,18 @@ export function RevolutionQuickExplore({
   const secondPlace = discovery?.candidates.find((item) => item.candidate_id === second);
   const goState = walk?.go_progress.state;
 
+  const focusAiPrompt = () => {
+    const prompt = quickExploreRef.current?.querySelector<HTMLTextAreaElement>("#rev-quick-ai-prompt");
+    if (!prompt) return;
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    prompt.scrollIntoView({
+      behavior: reducedMotion ? "instant" : "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+    prompt.focus({ preventScroll: true });
+  };
+
   return (
     <section ref={quickExploreRef} className="rev-quick" data-testid="rev-quick-explore">
       <header className="rev-quick-header">
@@ -694,6 +706,16 @@ export function RevolutionQuickExplore({
           {stage === "results" && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
         </p>
+        {stage === "area" && (
+          <button
+            type="button"
+            className="rev-quick-text-btn"
+            data-testid="rev-quick-ask-ai-shortcut"
+            onClick={focusAiPrompt}
+          >
+            问 AI
+          </button>
+        )}
         <div className="rev-quick-progress" aria-label="当前步骤">
           {["选地方", "选兴趣", "看结果", "去散步"].map((label, i) => (
             <span key={label} className={i + 1 === stageNumber ? "is-active" : i + 1 < stageNumber ? "is-done" : ""}>

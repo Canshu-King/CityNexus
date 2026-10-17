@@ -130,3 +130,12 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 - 夜间场景在 Explore 输入“成年情侣、今晚较晚、次日中午起床、13:00 后出门、留足休息时间”，切到 Trips 再返回后文字仍保留。用例把请求留在 TEST_FIXTURE，确认用户输入到达本地测试路由；没有调用真实 AI、地点服务、保存、GO 或付款。这个截图展示页面排版，不作为 AI 执行凭据。
 - 截图：assets/20261017-ui-fixture-late-night-rest-preferences-390x844.png，SHA-256 48839FDC426DA09275C6BA89B0758AC3BFD9C4698E88F0E0A1771C0EE8438350。前端 npm.cmd run typecheck:all -- --pretty false 退出码 0。
 - 本轮没有发地点搜索或 AI 请求。当前 P0 仍未完成真实两处 POI → Pocket Walk 保存 → GO → 刷新恢复；真实签名 ACTIVE Journey 和服务端持久化 Hermes AgentRun 仍未创建。
+
+## 2026-10-17 本轮：手机触控与问 AI 快捷入口
+
+- 探索页的“问 AI”入口会滚动并聚焦现有输入框，不会自动发起请求；晚出发偏好页面的浏览器回归验证了该行为。
+- 首次空结果页的“更换地点类型”“更换搜索中心”按钮均加入 44px 最小高度；R87 浏览器断言检查了两个按钮的实际宽高。
+- Photon OSM 身份映射补了 node / way / relation 的参数化契约测试，检查 external_id 与 OpenStreetMap 来源链接。该测试使用 MockTransport，没有连接 Photon。
+- 验证：后端 `uv run --offline --project . pytest -p no:cacheprovider tests/test_bootstrap_candidate_filter_summary.py tests/test_bootstrap_photon_provider_selection.py tests/test_bootstrap_photon_draft_exploration.py -q`，15 passed；`npm.cmd run typecheck:all -- --pretty false` 退出码 0；Chromium `r87-first-live-city-discovery.spec.ts` 与 `revolution-night-out-rest-preferences.spec.ts`，3 passed。
+- 浏览器验收使用隔离运行 `mobilep0_20261017_1151`（前端 4202、后端 18302、临时 SQLite）；API 由 TEST_FIXTURE 响应，AI 关闭，没有请求地点服务、模型或支付。现有 390×844 页面截图为 `assets/20261017-ui-fixture-late-night-rest-preferences-390x844.png`（SHA-256 `48839FDC426DA09275C6BA89B0758AC3BFD9C4698E88F0E0A1771C0EE8438350`）；本轮未单独截图快捷入口。
+- 本轮没有真实地点搜索、Pocket Walk 保存或 GO；当前仍缺两处可用真实地点，所以刷新恢复闭环尚未到达。已有模型响应仍是 DRAFT 建议，当前试用库没有真实签名 ACTIVE Journey 或持久化 AgentRun。

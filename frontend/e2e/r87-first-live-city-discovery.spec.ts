@@ -173,7 +173,11 @@ test("R87 keeps an ungrounded live candidate out of native start and leaves a gr
   await panel.getByTestId("bootstrap-search").click();
   const zeroResultGuidance = panel.getByTestId("bootstrap-zero-result-guidance");
   await expect(zeroResultGuidance.locator('[role="status"]')).toHaveText("附近暂时没有合适的地点，试试更换地点类型。");
-  await expect(zeroResultGuidance.getByTestId("bootstrap-zero-result-change-category")).toHaveText("更换地点类型");
+  const categoryAction = zeroResultGuidance.getByTestId("bootstrap-zero-result-change-category");
+  await expect(categoryAction).toHaveText("更换地点类型");
+  const categoryActionBounds = await categoryAction.boundingBox();
+  expect(categoryActionBounds?.width ?? 0).toBeGreaterThanOrEqual(44);
+  expect(categoryActionBounds?.height ?? 0).toBeGreaterThanOrEqual(44);
   await expect(panel.getByTestId("revolution-next-action")).toHaveCount(0);
   await expect(panel.getByTestId("bootstrap-discovery-outcome")).toHaveCount(0);
   expect(discoveryCalls).toBe(1);
@@ -186,7 +190,11 @@ test("R87 keeps an ungrounded live candidate out of native start and leaves a gr
   await panel.getByTestId("bootstrap-search").click();
   const centerGuidance = panel.getByTestId("bootstrap-zero-result-guidance");
   await expect(centerGuidance.locator('[role="status"]')).toHaveText("附近暂时没有合适的地点，试试更换搜索中心。");
-  await expect(centerGuidance.getByTestId("bootstrap-zero-result-change-center")).toHaveText("更换搜索中心");
+  const centerAction = centerGuidance.getByTestId("bootstrap-zero-result-change-center");
+  await expect(centerAction).toHaveText("更换搜索中心");
+  const centerActionBounds = await centerAction.boundingBox();
+  expect(centerActionBounds?.width ?? 0).toBeGreaterThanOrEqual(44);
+  expect(centerActionBounds?.height ?? 0).toBeGreaterThanOrEqual(44);
   expect(discoveryCalls).toBe(2);
   await centerGuidance.getByTestId("bootstrap-zero-result-change-center").click();
   expect(discoveryCalls).toBe(2);

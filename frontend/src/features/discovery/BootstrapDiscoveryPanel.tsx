@@ -2727,7 +2727,7 @@ export function BootstrapDiscoveryPanel({
         </div>
         {message ? <p role="status">{message}</p> : null}
         {zeroResultGuidance ? (
-          <section data-testid="bootstrap-zero-result-guidance" aria-live="polite">
+          <section className="bootstrap-zero-result-guidance" data-testid="bootstrap-zero-result-guidance" aria-live="polite">
             <p role="status">{zeroResultGuidance.message}</p>
             <button
               type="button"

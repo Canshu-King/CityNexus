@@ -292,6 +292,7 @@
 
 /* Touch targets >=44px on primary controls. */
 .v8-page button, .v8-page a.v8-cta, .v8-nav button { min-height: 44px; }
+.v8-join-entry .bootstrap-zero-result-guidance > button { min-height: 44px; }
 
 @media (prefers-reduced-motion: reduce) {
   .v8-page,
