@@ -392,9 +392,7 @@ code {
    Scoped to the shells that were measured as the ghost cards, so no rule here
    is a global `section` hammer. */
 
-.plan-ranking,
-.collections-panel,
-.poi-import-panel {
+.plan-ranking {
   background: var(--cn-elev-1);
   border: 1px solid var(--cn-rule);
   border-radius: var(--cn-r-16, 16px);
@@ -507,11 +505,9 @@ code {
 /* 丁 「1 位旅行者」这类计数：10px/2.80 太小了，而且它是行程事实不是脚注。
       字号上到 kicker 地板，数字用等宽位。 */
 .v8-user small,
-.v8-user-meta,
 
 /* 丁 空态的下一步提示：同一族次级墨，实测 3.62:1，一起收进契约。 */
-.cn-pending-empty-next,
-.v8-empty-hint {
+.cn-pending-empty-next {
   color: var(--cn-on-elev-1-muted);
   font-size: var(--cn-fs-body-min);
   line-height: var(--cn-lh-body);

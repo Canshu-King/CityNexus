@@ -437,7 +437,6 @@
 .v8-page button:not(.cn-no-motion):active,
 .v8-page [role="button"]:active,
 .v8-page button:not(.cn-no-motion),
-.v8-page a.v8-cta,
 .v8-page .v8-card { transition: transform var(--cn-t-hover) var(--cn-ease-standard), box-shadow var(--cn-t-hover) var(--cn-ease-standard); }
 @media (hover: hover) {
   .v8-page .v8-card:hover { transform: translateY(-1px); box-shadow: var(--cn-shadow-raised); }
@@ -511,7 +510,7 @@
 @media (prefers-reduced-motion: reduce) {
   .v8-page,
   .v8-page > *,
-  .v8-page button, .v8-page a.v8-cta, .v8-page .v8-card {
+  .v8-page button, .v8-page .v8-card {
     animation: none !important;
     transition: none !important;
     transform: none !important;
@@ -1013,8 +1012,7 @@
 .v8-page .v9-language {
   color: var(--cn-ink);
 }
-.v9-language,
-.v8-home-language {
+.v9-language {
   border-color: var(--cn-control-border);
 }
 
