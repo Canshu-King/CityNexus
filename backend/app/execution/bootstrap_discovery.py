@@ -78,6 +78,16 @@ _BOOTSTRAP_GROUNDED_OPENING = frozenset(
     {"NORMALIZED_VALID", "VERIFIED_PROVIDER", "OFFICIAL_WEB_VERIFIED"}
 )
 _BOOTSTRAP_GROUNDED_COST = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+_BOOTSTRAP_FILTER_REJECTION_REASONS = (
+    "provider_mismatch",
+    "invalid_identity",
+    "missing_name",
+    "invalid_coordinates",
+    "invalid_distance",
+    "out_of_radius",
+    "restricted_access",
+    "duplicate",
+)
 _MAX_QUERY = 120
 _MAX_SHORTLIST_ITEMS = 3
 _BOOTSTRAP_RATE_LIMIT_SECONDS = 5
@@ -455,25 +465,68 @@ def _candidate_scope_observation(
     }
 
 
-def _public_candidate(candidate: DiscoveryCandidate, *, radius_m: int) -> bool:
+def _public_candidate_rejection_reason(
+    candidate: DiscoveryCandidate, *, radius_m: int
+) -> str | None:
     if _osm_identity(candidate) is None:
-        return False
+        return "invalid_identity"
     tags = _candidate_tags(candidate)
     name = str(tags.get("name") or candidate.name or "").strip()
     if not name or name.casefold().startswith("osm "):
-        return False
+        return "missing_name"
     if _candidate_coordinates(candidate) is None:
-        return False
+        return "invalid_coordinates"
     if candidate.distance_m is not None:
         try:
             distance = float(candidate.distance_m)
         except (TypeError, ValueError, OverflowError):
-            return False
-        if not math.isfinite(distance) or distance < 0 or distance > radius_m:
-            return False
+            return "invalid_distance"
+        if not math.isfinite(distance) or distance < 0:
+            return "invalid_distance"
+        if distance > radius_m:
+            return "out_of_radius"
     if _public_access_state(tags) == "RESTRICTED":
-        return False
-    return True
+        return "restricted_access"
+    return None
+
+
+def _candidate_filter_rejection_reason(
+    candidate: DiscoveryCandidate, *, provider_key: str, radius_m: int
+) -> str | None:
+    if candidate.provider_key != provider_key:
+        return "provider_mismatch"
+    return _public_candidate_rejection_reason(candidate, radius_m=radius_m)
+
+
+def _public_candidate(candidate: DiscoveryCandidate, *, radius_m: int) -> bool:
+    return _public_candidate_rejection_reason(candidate, radius_m=radius_m) is None
+
+
+def _bootstrap_filter_summary(
+    candidates: list[DiscoveryCandidate], *, provider_key: str, radius_m: int
+) -> dict[str, Any]:
+    """Return counts only; accepted_count is unique eligible rows before output limiting."""
+
+    rejected_by_reason = {reason: 0 for reason in _BOOTSTRAP_FILTER_REJECTION_REASONS}
+    seen: set[str] = set()
+    accepted_count = 0
+    for candidate in candidates:
+        reason = _candidate_filter_rejection_reason(
+            candidate, provider_key=provider_key, radius_m=radius_m
+        )
+        if reason is None:
+            if candidate.external_id in seen:
+                reason = "duplicate"
+            else:
+                seen.add(candidate.external_id)
+                accepted_count += 1
+        if reason is not None:
+            rejected_by_reason[reason] += 1
+    return {
+        "raw_count": len(candidates),
+        "accepted_count": accepted_count,
+        "rejected_by_reason": rejected_by_reason,
+    }
 
 
 def _attempts(value: Any, *, provider_key: str = "overpass") -> list[dict[str, Any]]:
@@ -1879,11 +1932,15 @@ def discover_bootstrap_candidates(
     finally:
         provider.close()
 
+    raw_candidates = list(candidates)
+    filter_summary = _bootstrap_filter_summary(
+        raw_candidates, provider_key=provider_key, radius_m=radius_m
+    )
     provider_provenance = _provider_provenance(attempts, configured_url=configured_provider_url)
 
     usable: list[DiscoveryCandidate] = []
     seen: set[str] = set()
-    for candidate in candidates:
+    for candidate in raw_candidates:
         if (
             candidate.provider_key != provider_key
             or not _public_candidate(candidate, radius_m=radius_m)
@@ -2020,6 +2077,7 @@ def discover_bootstrap_candidates(
             "count": len(usable),
             "provider_provenance": provider_provenance,
             "provider": provider_key,
+            "filter_summary": filter_summary,
         },
         status="SUCCESS",
         created_at=_iso(captured_at),
@@ -2036,6 +2094,7 @@ def discover_bootstrap_candidates(
         "provider": provider_key,
         "provider_provenance": provider_provenance,
         "attempts": attempts,
+        "filter_summary": filter_summary,
         "candidates": [
             _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
             for row in session.scalars(

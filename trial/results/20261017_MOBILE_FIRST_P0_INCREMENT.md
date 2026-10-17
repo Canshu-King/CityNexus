@@ -120,3 +120,13 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 - 后端聚焦测试：`tests/test_signed_journey_start.py`、`tests/test_agent_run_signed_member_read.py`、`tests/test_mobile_hermes_run_binding.py`，`6 passed`，使用进程内 SQLite。
 - 手机浏览器聚焦测试：`agent-run-restoration-auth-cache.spec.ts`、`revolution-mobile-compat-agent-activity.spec.ts`、`r86-first-startable-real-city-journey.spec.ts`，390×844 Chromium `3 passed`。该组浏览器测试使用 `TEST_FIXTURE` API 响应和隔离 SQLite；没有调用地点服务或 AI provider。前端 `typecheck:all` 通过，当前改动的 `git diff --check` 通过。
 - 这些结果验证签名读取门禁、缓存控制和手机界面状态切换；测试中的 ACTIVE Journey 与轨迹是隔离测试数据。当前真实流程仍没有满足本地库中的两处 POI、Pocket Walk 实际保存、GO 后刷新恢复；没有真实签名 ACTIVE Journey 或服务端 Hermes AgentRun，因此持久化 Hermes 轨迹仍未验收。
+
+## 2026-10-17 本轮：零结果引导与晚出发偏好
+
+- 探索页现在能区分“服务返回了地点，但都不适合当前筛选”和“服务没有返回地点”。第一种情况按过滤原因给出一个下一步：更换搜索中心或更换地点类型；按钮只带用户回到对应选择区，不会自动再次搜索。
+- 后端回执新增计数汇总：原始条数、可用条数、以及坐标、距离、重复项、访问限制等过滤原因的数量。回执和 ProviderCall 记录都只保存计数，不保存地点名称、坐标、原始标签或服务附加字段。筛选规则与候选地点门槛未变。
+- 后端聚焦测试命令：uv run --offline --project . pytest -p no:cacheprovider tests/test_bootstrap_candidate_filter_summary.py tests/test_bootstrap_photon_provider_selection.py tests/test_bootstrap_photon_draft_exploration.py -q；工作目录 backend；结果 12 passed in 0.74s。
+- 手机验收环境：Playwright authoritative run mobilep0_20261017_1043，前端端口 4201、后端端口 18301，隔离 SQLite C:\Users\仓鼠王\AppData\Local\Temp\_mobilep0_20261017_1043.db，AI disabled，未复用已有服务。R87 零结果引导和 390×844 夜间晚出发场景的 Chromium 用例均通过；最新截图运行包含 seed setup 1 项和夜间场景 1 项，共 2 passed (15.2s)。
+- 夜间场景在 Explore 输入“成年情侣、今晚较晚、次日中午起床、13:00 后出门、留足休息时间”，切到 Trips 再返回后文字仍保留。用例把请求留在 TEST_FIXTURE，确认用户输入到达本地测试路由；没有调用真实 AI、地点服务、保存、GO 或付款。这个截图展示页面排版，不作为 AI 执行凭据。
+- 截图：assets/20261017-ui-fixture-late-night-rest-preferences-390x844.png，SHA-256 48839FDC426DA09275C6BA89B0758AC3BFD9C4698E88F0E0A1771C0EE8438350。前端 npm.cmd run typecheck:all -- --pretty false 退出码 0。
+- 本轮没有发地点搜索或 AI 请求。当前 P0 仍未完成真实两处 POI → Pocket Walk 保存 → GO → 刷新恢复；真实签名 ACTIVE Journey 和服务端持久化 Hermes AgentRun 仍未创建。

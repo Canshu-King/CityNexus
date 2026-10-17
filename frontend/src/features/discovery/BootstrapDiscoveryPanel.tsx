@@ -1047,7 +1047,7 @@ export function BootstrapDiscoveryPanel({
       } else if (next.status === "PROVIDER_DISABLED") {
          setMessage(`Live discovery unavailable (${next.failure_code ?? "PROVIDER_DISABLED"}).`);
       } else if (next.status === "LIVE_ZERO_RESULTS") {
-        setMessage("这个位置附近暂时没有可用的公共地点。");
+        setMessage((next.filter_summary?.raw_count ?? 0) > 0 ? null : "这个位置附近暂时没有可用的公共地点。");
       }
     } catch (error) {
       if (isCurrentDiscovery(fence)) {
@@ -2076,6 +2076,23 @@ export function BootstrapDiscoveryPanel({
     setMessage(null);
   };
 
+  const returnToSearchCenterPicker = () => {
+    openPublicAreaPicker();
+    window.requestAnimationFrame(() => {
+      document.querySelector('[data-testid="bootstrap-public-area-picker"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const returnToCategoryPicker = () => {
+    setProviderConsent(false);
+    invalidateDiscovery();
+    setOutingIntent(null);
+    setMessage(null);
+    window.requestAnimationFrame(() => {
+      document.querySelector('[data-testid="bootstrap-outing-intents"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   const cancelPublicAreaPicker = () => {
     setMapPickerOpen(false);
     setMapTileConsent(false);
@@ -2170,6 +2187,21 @@ export function BootstrapDiscoveryPanel({
           : result.candidates.length >= 2 ? "FOUND_2+"
             : result.candidates.length === 1 ? "PARTIAL_1" : "ZERO"
     )
+    : null;
+  const zeroResultFilterSummary = result?.status === "LIVE_ZERO_RESULTS" ? result.filter_summary : undefined;
+  const zeroResultRejections = zeroResultFilterSummary?.rejected_by_reason;
+  const centerRejectionCount = (zeroResultRejections?.invalid_coordinates ?? 0) +
+    (zeroResultRejections?.invalid_distance ?? 0) +
+    (zeroResultRejections?.out_of_radius ?? 0);
+  const categoryRejectionCount = (zeroResultRejections?.provider_mismatch ?? 0) +
+    (zeroResultRejections?.invalid_identity ?? 0) +
+    (zeroResultRejections?.missing_name ?? 0) +
+    (zeroResultRejections?.restricted_access ?? 0) +
+    (zeroResultRejections?.duplicate ?? 0);
+  const zeroResultGuidance = (zeroResultFilterSummary?.raw_count ?? 0) > 0
+    ? centerRejectionCount > categoryRejectionCount
+      ? { target: "center" as const, message: "附近暂时没有合适的地点，试试更换搜索中心。" }
+      : { target: "category" as const, message: "附近暂时没有合适的地点，试试更换地点类型。" }
     : null;
 
   return (
@@ -2668,7 +2700,7 @@ export function BootstrapDiscoveryPanel({
           />
           我同意将所选类别、地区和地图中心发送至 {readiness?.expected_recipient ?? "公开地图服务"} 搜索。
         </label>
-        {!searchReady && !busy && (
+        {!searchReady && !busy && !zeroResultGuidance && (
           <p className="rev-next-action" role="status" data-testid="revolution-next-action">
             {sourceKind !== "MANUAL_PUBLIC_CENTER" || !hasValidSearchCenter
               ? "还差一步：点击上面的「在地图上选个位置」，确认地图上的公开位置。"
@@ -2694,7 +2726,19 @@ export function BootstrapDiscoveryPanel({
           ) : null}
         </div>
         {message ? <p role="status">{message}</p> : null}
-        {result && discoveryOutcome ? (
+        {zeroResultGuidance ? (
+          <section data-testid="bootstrap-zero-result-guidance" aria-live="polite">
+            <p role="status">{zeroResultGuidance.message}</p>
+            <button
+              type="button"
+              data-testid={zeroResultGuidance.target === "center" ? "bootstrap-zero-result-change-center" : "bootstrap-zero-result-change-category"}
+              onClick={zeroResultGuidance.target === "center" ? returnToSearchCenterPicker : returnToCategoryPicker}
+            >
+              {zeroResultGuidance.target === "center" ? "更换搜索中心" : "更换地点类型"}
+            </button>
+          </section>
+        ) : null}
+        {result && discoveryOutcome && !zeroResultGuidance ? (
           <section data-testid="bootstrap-discovery-outcome" aria-live="polite">
             <h2>Discovery outcome: {discoveryOutcome}</h2>
             <p>
@@ -2905,7 +2949,7 @@ export function BootstrapDiscoveryPanel({
                 </p>
                 {candidate.selection_state !== "READY_FOR_NATIVE_PLAN" ? (
                   <p role="status" data-testid={`bootstrap-opening-blocker-${candidate.candidate_id}`}>
-                    Opening hours need review. Check the source or map before adding this place to a Journey.
+                    Check opening times before choosing this place.
                   </p>
                 ) : null}
                 <p>

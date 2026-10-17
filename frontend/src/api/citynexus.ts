@@ -1707,6 +1707,21 @@ export interface BootstrapDiscoveryCandidate {
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
 }
 
+export interface BootstrapDiscoveryFilterSummary {
+  raw_count: number;
+  accepted_count: number;
+  rejected_by_reason: {
+    provider_mismatch: number;
+    invalid_identity: number;
+    missing_name: number;
+    invalid_coordinates: number;
+    invalid_distance: number;
+    out_of_radius: number;
+    restricted_access: number;
+    duplicate: number;
+  };
+}
+
 export interface BootstrapDiscoveryResponse {
   journey_id: string;
   status: "LIVE_RESULTS" | "LIVE_ZERO_RESULTS" | "PROVIDER_DISABLED" | "PROVIDER_UNAVAILABLE" | "RATE_LIMITED";
@@ -1718,6 +1733,7 @@ export interface BootstrapDiscoveryResponse {
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   attempts: Array<Record<string, unknown>>;
   candidates: BootstrapDiscoveryCandidate[];
+  filter_summary?: BootstrapDiscoveryFilterSummary;
   failure_code?: string;
   readiness?: BootstrapDiscoveryReadinessResponse;
 }
