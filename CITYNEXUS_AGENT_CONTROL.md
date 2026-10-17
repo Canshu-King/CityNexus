@@ -1,4 +1,41 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜Issue #33 Q1 第二笔：教程多了第九屏，画具补了两道机制
+
+同一棒里的第二笔落地。上一块（`qoder_0556.md`）交的是产品码；这一块交的是"读者看得见的第九屏"，
+以及做这一屏时在自己画具里发现并修掉的两个毛病。权威线现读 = `2ed81d01fe572f5e8a3acbda83b18aa8b56671ef`
+（这一枚可现取回：`git cat-file -t` 回 commit；它是 `301bf3bdad15108d637eb2439c75ce02d4d001f4` 的下一代，
+落地门两次都给 `ff=True behind=0 intersection=0`，无 force-push，未碰共享库）。
+
+| 交了什么 | 坐标（行号现读） |
+| --- | --- |
+| 教程正文多出的第九屏一节 | `frontend/docs/QODER_FIRST_TRIP_ILLUSTRATED_CN.md:101` |
+| 清单里第九张的条目 | `frontend/docs/assets/manifest.json:248` |
+| 用例断言九屏齐了 | `frontend/e2e/qoder31-first-trip-guide.spec.ts:337` |
+| 画具新加的折行函数 | `frontend/scripts/annotate_first_trip_guide_r1.py:57` |
+
+两个毛病都不是产品缺陷，是我自己那把尺与那个画具的，报出来比悄悄绕过有用：
+
+一、**圈到了位置，画出来却是空的一屏。** 截图取的是视口（三百九十乘八百四十四），而
+`locator.boundingBox()` 给的是文档坐标——第九格在文档 y=860 起，本来就在这张图之外。
+上一版因此产出了一张"没有这一格的向导"，而用例还是绿着（它只检查量到了盒子）。
+现在拍之前先把这一格滚进视口再等半秒，坐标与画面才在同一个系里，见
+`frontend/e2e/qoder31-first-trip-guide.spec.ts:320`。
+
+二、**说明带按"标题不会超宽"写死。** 第八张以前的标题恰好都放得下，那不是机制：第九张的标题
+比屏幕长，右半边被裁掉了。现在标题、逐行说明、顶部提示带都按画布宽度折行，折行函数在
+`frontend/scripts/annotate_first_trip_guide_r1.py:57`。
+
+读数：这一屏的图由真用例在真后端上跑出（`guide 09 名单里的行程 2 枚`，量到 1/1），
+落地门内后端聚焦七条通过、整套收集零错，两笔收据均已 BYTE-LEVEL MATCH 发布
+（`evidence/cmdr-landing-qoder33q1-0551/preflight_r1.json` 与
+`evidence/cmdr-landing-qoder33q1docs-0617/preflight_r1.json`）。
+
+唯一 blocker：无。同源入口 `http://127.0.0.1:8172/v8` 现在带着签名能力在跑这一代产物，
+第九屏在入口上也能真的走到（先建一趟，再清掉设备上的行程指针，回到新建那一屏就能看到）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜只关尾行：上一块 Q1 交付补上逐字口令，读数不动
 
 补的形状问题，不改任何一个读数。上一块在这里：`qoder_0556.md`，正文里的坐标逐条可取回，落地代是那块的 40 位（`backend/app/main.py:2626` 那扇门随它进的权威线）。这一格只补口令缺的那一行，所以正文只带一条读数与它自己的坐标。
