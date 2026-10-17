@@ -1,0 +1,122 @@
+{
+ "label": "1036",
+ "at": "2026-10-17T02:37:55.564Z",
+ "control_selector": ".v8-primary, .v8-primary-button, .v8-outline-button, [data-testid=\"live-report-rain\"], .v8-mobile-nav button, .v8-mode-chips button, .v8-compare-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button",
+ "min_touch_px": 44,
+ "scenes": [
+  {
+   "screen": "hub",
+   "w": 320,
+   "heading": "Demo之旅",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "live",
+   "w": 320,
+   "heading": "选择你的下一段路程。",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "copilot",
+   "w": 320,
+   "heading": "你想改什么？",
+   "small": 3,
+   "overflow": 0
+  },
+  {
+   "screen": "trips",
+   "w": 320,
+   "heading": "1 天行程",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "map",
+   "w": 320,
+   "heading": "整座城市，行程叠加其上。",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "me",
+   "w": 320,
+   "heading": "我的行程与偏好",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "hub",
+   "w": 390,
+   "heading": "Demo之旅",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "live",
+   "w": 390,
+   "heading": "选择你的下一段路程。",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "copilot",
+   "w": 390,
+   "heading": "你想改什么？",
+   "small": 3,
+   "overflow": 0
+  },
+  {
+   "screen": "trips",
+   "w": 390,
+   "heading": "1 天行程",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "map",
+   "w": 390,
+   "heading": "整座城市，行程叠加其上。",
+   "small": 0,
+   "overflow": 0
+  },
+  {
+   "screen": "me",
+   "w": 390,
+   "heading": "我的行程与偏好",
+   "small": 0,
+   "overflow": 0
+  }
+ ],
+ "readings": 6,
+ "distinct": 2,
+ "kinds": [
+  {
+   "selector": "button.v8-outline-button",
+   "testId": null,
+   "h": 32,
+   "w": 102,
+   "text": "为什么这样安排？",
+   "where": [
+    "320/copilot",
+    "320/copilot",
+    "390/copilot",
+    "390/copilot"
+   ],
+   "n": 4
+  },
+  {
+   "selector": "button.v8-outline-button",
+   "testId": null,
+   "h": 32,
+   "w": 148,
+   "text": "如果我多待 60 分钟会怎样？",
+   "where": [
+    "320/copilot",
+    "390/copilot"
+   ],
+   "n": 2
+  }
+ ]
+}
