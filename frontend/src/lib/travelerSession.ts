@@ -86,8 +86,17 @@ export function restoreSignedSession(): SignedSession | null {
 export function adoptSignedSession(answer: unknown): SignedSession | null {
   if (!answer || typeof answer !== "object") return null;
   const body = answer as Record<string, unknown>;
-  const travelerId = typeof body.id === "string" ? body.id : null;
+  /* Two doors hand a credential to this tab: the create door names the person `id`, the renewal
+     door names them `traveler_id` -- the same shape its own `GET .../session` answer uses. Reading
+     one spelling would make the second door look like a refusal. */
+  const travelerId =
+    typeof body.id === "string"
+      ? body.id
+      : typeof body.traveler_id === "string"
+        ? body.traveler_id
+        : null;
   const token = typeof body.access_token === "string" ? body.access_token : null;
+  const expiresAt = typeof body.expires_at === "number" ? body.expires_at : null;
   // Compared against, never quoted: the server's own spelling only ever appears on the left
   // of an `===` here, which is a name handed to the machine, not a sentence.
   const state = typeof body.session_state === "string" ? body.session_state : "";
@@ -98,10 +107,69 @@ export function adoptSignedSession(answer: unknown): SignedSession | null {
     // code mistakes "we know a uuid" for "the server vouched for this person".
     return current;
   }
-  current = { travelerId, token, expiresAt: null };
+  current = { travelerId, token, expiresAt };
   lastVerdict = "signed";
   store()?.setItem(SESSION_KEY, JSON.stringify(current));
   return current;
+}
+
+/** How much window the credential has left, in whole seconds; `null` when the server did not say. */
+export function sessionSecondsLeft(now = Date.now()): number | null {
+  const expiresAt = restoreSignedSession()?.expiresAt;
+  return expiresAt === null || expiresAt === undefined ? null : Math.floor((expiresAt * 1000 - now) / 1000);
+}
+
+/**
+ * The margin under which a live session is worth sliding forward: a third of the door's default
+ * window, rounded to a minute.  Renewing earlier would be a request every page view for no gain;
+ * renewing later risks the credential dying while a traveller is mid-form.
+ */
+export const RENEWAL_MARGIN_SECONDS = 300;
+
+/**
+ * Slide the credential forward, for a tab that still holds a live one.
+ *
+ * This is the whole of what "keep me signed in" can honestly mean on a build with no password:
+ * the renewal door signs a fresh window for whoever's credential is on the request, and refuses
+ * by name when there is none.  A lapsed credential cannot be exchanged here -- that would be the
+ * bare-id back door -- so `false` from this function is the truthful "your session ended", and the
+ * screen that gets it must offer the wizard, not a restore that cannot work.
+ *
+ * `ask` is injected for the same reason `verifySignedSession` takes one: this module stays free of
+ * the shell's fetch wrapper, and a test can drive every branch without a network.
+ */
+export async function renewSignedSession(
+  ask: (headers: Record<string, string>) => Promise<{ status: number; body: unknown }>,
+): Promise<SignedSession | null> {
+  const session = restoreSignedSession();
+  if (!session) return null;
+  const answer = await ask(signedBearerHeaders());
+  if (answer.status === 200) {
+    const renewed = adoptSignedSession(answer.body);
+    if (renewed && renewed.travelerId !== session.travelerId) {
+      // A renewal that changed hands is not a renewal; drop it the way a mismatched verify is dropped.
+      clearSignedSession("switched");
+      lastVerdict = "refused";
+      return null;
+    }
+    return renewed;
+  }
+  if (answer.status === 401 || answer.status === 403) {
+    observeRejection(answer.status, refusalReasonCode(answer.body));
+    return null;
+  }
+  // 503 (this build cannot sign) and anything unanswered leave the credential alone.
+  return session;
+}
+
+/** Renew when the window is short; a session with no stated expiry is left untouched rather than
+ *  refreshed on a timer nobody asked for. */
+export async function renewSignedSessionIfShort(
+  ask: (headers: Record<string, string>) => Promise<{ status: number; body: unknown }>,
+): Promise<SignedSession | null> {
+  const left = sessionSecondsLeft();
+  if (left === null || left > RENEWAL_MARGIN_SECONDS) return restoreSignedSession();
+  return renewSignedSession(ask);
 }
 
 export function signedTravelerId(): string | null {
@@ -134,8 +202,9 @@ export function clearSignedSession(reason: "signed-out" | "refused" | "expired" 
        credential is gone, leaving the pointer behind would put the request back in the
        anonymous shape this server still answers -- which is exactly how the previous
        traveller's trip reappears on a shared phone.  So the pointer goes with it.
-       (The missing piece this exposes is a "reopen my trips" door after re-auth; there is no
-       such door on this line yet, and saying so is better than pretending the wipe is free.) */
+       With a live credential the traveller gets back in through `features/trip/MyTripsEntry.tsx`,
+       which lists the trips this credential speaks for; with a lapsed one there is nothing to
+       list, because this build has no way to prove who is holding the phone. */
     window.localStorage.removeItem(JOURNEY_POINTER_KEY);
   } catch {
     /* nothing to forget: memory is already cleared, which is the part that matters */

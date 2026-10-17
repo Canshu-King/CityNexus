@@ -15,6 +15,11 @@
  *      第二个人登出——错的是上一位留下的指针，不是她；
  *   4. 凭证本身无效时令牌与 Agent 记录一起擦；
  *   5. 反控臂：不带凭证的请求行为逐字不变（共享预览不会因为开身份而变黑）。
+ *
+ * Issue #33 Q1 在这个 runner 里再加两臂（同一台真后端，同一次启动）：
+ *   6. 指针被擦之后，向导旁边的「我的行程」能把名下的行程列出来并真的打开它；
+ *   7. 窗口将尽的会话由页面自己去 `/travelers/session/refresh` 续上——人和行程都不掉
+ *      （只有 `CNX_QODER31_TTL=60` 起的那一台才跑，见 config 里那行 TTL）。
  */
 import { expect, test, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
@@ -534,4 +539,103 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     }
     console.log(`行程页入口 y=${diag.buttonBox ? diag.buttonBox[1] : "n/a"} | ${diag.planTestId} y=${diag.planBox ? diag.planBox[1] : "n/a"} | 面板已开=${await panel.isVisible()}`);
   });
+
+  /* Issue #33 Q1 的两臂。共同的前提是：这一台后端是真签名的，所以"续上了"与"找回来了"都是
+   * 服务器的事实，不是页面的自我感觉。 */
+
+  test("Issue #33 Q1：指针被擦之后，向导旁边能把名下的行程找回来", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tangshan", "Tangshan Station", "Tangshan South Station");
+    const journeyId = await createAndAwaitJourney(page);
+    /* 复刻 ORD-0687 的清除：设备上那枚指针不是了（换人、被拒都会走到这一步），会话还在——
+     * 还是同一个标签页、同一个人。以前这种状态只剩"新建一趟"一条路，而屏幕上的按钮写着「选一趟行程」。 */
+    await page.evaluate(() => localStorage.removeItem("citynexus.v8.journey_id"));
+    await page.goto("/v8", { waitUntil: "load" });
+
+    const panel = page.getByTestId("my-trips");
+    await expect(panel, "向导旁边没有「我的行程」这一格").toBeVisible({ timeout: 25_000 });
+    await expect(page.getByTestId("my-trips-list")).toBeVisible({ timeout: 20_000 });
+    const listed = await page
+      .getByTestId("my-trips-list")
+      .locator("li[data-cnx-journey]")
+      .evaluateAll((nodes) => nodes.map((n) => n.getAttribute("data-cnx-journey") ?? ""));
+    /* 这份名单是带凭证读出来的：里面只该有这台服务器认给这个人的行程。 */
+    expect(listed.length, "名下的行程一枚都没列出来").toBeGreaterThan(0);
+    expect(listed, `刚建的那趟不在名单里：${JSON.stringify(listed)}`).toContain(journeyId);
+    await page.screenshot({ path: `${DOC_EVIDENCE}/05-my-trips-restore.png`, fullPage: true });
+
+    await page.getByTestId("my-trips-open").first().click();
+    await expect
+      .poll(() => readBack(page, JOURNEY_POINTER, "local"), { timeout: 25_000 })
+      .toBe(listed[0]);
+    await expect(page.getByTestId("trial-setup"), "点了「打开这趟」还停在向导上").toBeHidden({
+      timeout: 20_000,
+    });
+    /* 进了行程之内才算数：这枚 testid 只在壳层（有行程可读）里出现。 */
+    await expect(page.getByTestId("hub-new-journey"), "打开之后没有落到行程里").toBeVisible({
+      timeout: 25_000,
+    });
+    const stillSigned = await readBack(page, SESSION_POINTER, "session");
+    expect(stillSigned, "找回行程的过程中把人丢了").not.toBeNull();
+    console.log(`找回旧行程：名单 ${listed.length} 枚，指针→${listed[0]}，本次新建的是 ${journeyId}`);
+  });
+
+  test(
+    "Issue #33 Q1：窗口将尽的会话自己续上，人不被请出去",
+    async ({ page }) => {
+      /* 这一臂要的是"服务器给的窗口本来就短"，而那由部署的 TTL 决定，不由测试编造：
+       * 只有用 `CNX_QODER31_TTL=60` 起的那一台才成立（60 秒 < 前端 300 秒的续期余量）。
+       * 默认那一台里它正确地跳过——没有短窗口就没有该触发的续期，硬造一个只会测到我的桩。 */
+      test.skip(
+        process.env.CNX_QODER31_TTL !== "60",
+        "需要 CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS=60 的那一台（CNX_QODER31_TTL=60）",
+      );
+      await seedPhone(page);
+      await walkTheWizard(page, "Qinhuangdao", "Qinhuangdao Station", "Qinhuangdao Beidaihe Airport");
+      const journeyId = await createAndAwaitJourney(page);
+      const firstRaw = await readBack(page, SESSION_POINTER, "session");
+      expect(firstRaw, "创建之后没有签名会话可续").not.toBeNull();
+      const first = JSON.parse(firstRaw as string) as {
+        travelerId: string;
+        token: string;
+        expiresAt: number | null;
+      };
+
+      /* 这枚签名是逐秒确定的（`{v,aud,sub,iat,exp}` + HMAC，没有随机数）：同一秒里续出来的
+       * 那枚与原样逐字节相同。这不是缺陷——窗口不会倒退，也不会凭空多出一秒——但它意味着要
+       * 观察"窗口往前走了"就必须真的跨过一秒，所以我等的是钟，不是桩。 */
+      await page.waitForTimeout(1_500);
+      const refreshed = page.waitForResponse(
+        (res) =>
+          res.request().method() === "POST" &&
+          /\/api\/v1\/travelers\/session\/refresh$/.test(res.url()),
+        { timeout: 40_000 },
+      );
+      await page.goto("/v8", { waitUntil: "load" });
+      const answer = await refreshed;
+      expect(answer.status(), await answer.text()).toBe(200);
+      const body = await answer.json();
+      await page.screenshot({ path: `${DOC_EVIDENCE}/06-session-renewed.png`, fullPage: true });
+
+      const secondRaw = await readBack(page, SESSION_POINTER, "session");
+      expect(secondRaw, "续期之后这一页没有会话了").not.toBeNull();
+      const second = JSON.parse(secondRaw as string) as typeof first;
+      /* 续期买到的只有"更晚的到期"：人还是那个人，指针还是那趟。 */
+      expect(second.travelerId, "续期换了人").toBe(first.travelerId);
+      expect(body.traveler_id).toBe(first.travelerId);
+      expect(second.token, "续期没有给出新凭据").not.toBe(first.token);
+      expect(typeof body.expires_at).toBe("number");
+      expect(second.expiresAt).toBe(body.expires_at);
+      if (first.expiresAt !== null) expect(body.expires_at).toBeGreaterThan(first.expiresAt);
+      expect(await readBack(page, JOURNEY_POINTER, "local"), "续期把行程指针弄丢了").toBe(journeyId);
+      /* 新凭据真的被后续请求用上——不是存起来好看。 */
+      const bearer = await page.evaluate(
+        () => (sessionStorage.getItem("citynexus.v8.traveler.session") ?? ""),
+      );
+      expect(JSON.parse(bearer).token).toBe(second.token);
+      console.log(
+        `会话续期：窗口 ${first.expiresAt}→${second.expiresAt} 秒（TTL 60），旅行者 ${first.travelerId.slice(0, 8)}… 未变`,
+      );
+    },
+  );
 });

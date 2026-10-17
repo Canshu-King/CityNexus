@@ -45,6 +45,7 @@ import {
   adoptSignedSession,
   observeRejection,
   refusalReasonCode,
+  renewSignedSessionIfShort,
   signedBearerHeaders,
   signedTravelerId,
   verifySignedSession,
@@ -68,6 +69,7 @@ import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
+import { MyTripsEntry } from "../features/trip/MyTripsEntry";
 import { useDemoScene } from "../lib/sceneClock";
 import { SharedJourneyScreen } from "../features/shared/SharedJourneyPanel";
 import { SharedPosterScreen } from "../features/poster/SharedPosterScreen";
@@ -295,20 +297,23 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 /**
- * `GET /api/v1/travelers/session` read as a fact, not as a throw.
+ * The traveller's own two doors read as facts, not as throws -- `GET .../session` and
+ * `POST .../session/refresh`, which differ only in method and path.
  *
  * The verifier has to be able to tell four answers apart -- the door agreed, the credential was
  * refused, this build has no identity configured (503), the network blinked -- and the shell's
  * own channel raises on every one of them.  Status `0` means "nothing answered", which is
- * deliberately not the same thing as "this person is no who they say": a wifi dropout must not
+ * deliberately not the same thing as "this person is not who they say": a wifi dropout must not
  * sign somebody out.
  */
-async function askTravelerSession(
+async function askSessionDoor(
+  path: string,
+  method: "GET" | "POST",
   headers: Record<string, string>,
   signal?: AbortSignal,
 ): Promise<{ status: number; body: unknown }> {
   try {
-    const response = await fetchWithReadDeadline("/api/v1/travelers/session", { headers, signal });
+    const response = await fetchWithReadDeadline(path, { method, headers, signal });
     const raw = await response.text();
     let body: unknown = null;
     if (raw.trim() !== "") {
@@ -322,6 +327,28 @@ async function askTravelerSession(
   } catch {
     return { status: 0, body: null };
   }
+}
+
+async function askTravelerSession(
+  headers: Record<string, string>,
+  signal?: AbortSignal,
+): Promise<{ status: number; body: unknown }> {
+  return askSessionDoor("/api/v1/travelers/session", "GET", headers, signal);
+}
+
+/**
+ * `POST /api/v1/travelers/session/refresh`, read the same way.
+ *
+ * The door carries no identity in its body or path on purpose -- it signs a fresh window for
+ * whoever's credential is on the request -- so this call sends headers and nothing else.  A
+ * `status: 0` here means "nothing answered" and leaves the session alone; only a named refusal
+ * ends it, which is decided inside `travelerSession`.
+ */
+async function askTravelerSessionRefresh(
+  headers: Record<string, string>,
+  signal?: AbortSignal,
+): Promise<{ status: number; body: unknown }> {
+  return askSessionDoor("/api/v1/travelers/session/refresh", "POST", headers, signal);
 }
 
 /**
@@ -380,7 +407,14 @@ async function ensureSignedTraveler(
 ): Promise<string> {
   if (signedTravelerId()) {
     const verified = await verifySignedSession((headers) => askTravelerSession(headers, signal));
-    if (verified) return verified.travelerId;
+    if (verified) {
+      /* Issue #33 Q1: a credential about to lapse is slid forward here, on the way to creating --
+         one extra round trip only inside the last five minutes of its window, and never on a tab
+         that has plenty of time left.  Awaiting it is deliberate: a create that died on an expiry
+         mid-flight would come back as a refusal the wizard has no way to explain. */
+      await renewSignedSessionIfShort((headers) => askTravelerSessionRefresh(headers, signal));
+      return verified.travelerId;
+    }
   }
   const answer = await v8Request<TravelerAnswer>("/api/v1/travelers", {
     method: "POST",
@@ -988,7 +1022,11 @@ export function V8Experience() {
      credential, the trip pointer and every Agent record with it, inside `travelerSession`. */
   useEffect(() => {
     if (!signedTravelerId()) return;
-    void verifySignedSession((headers) => askTravelerSession(headers));
+    void verifySignedSession((headers) => askTravelerSession(headers))
+      /* The same check that drops a dead credential also slides a living-but-short one forward,
+         so a tab reopened five minutes before expiry does not die on the person's first tap. */
+      .then(() => renewSignedSessionIfShort(askTravelerSessionRefresh))
+      .catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -1273,6 +1311,36 @@ export function V8Experience() {
     } finally {
       setSetupBusy(false);
     }
+  };
+  /**
+   * Issue #33 Q1 -- open a trip this credential already owns.
+   *
+   * Before this the shell had one door for a tab whose pointer was wiped: the create form.  So the
+   * recovery button the classifier names 「选一趟行程」 (`choose-journey`) led a traveller to a form
+   * and never to the trips they already had.  This is the other half of that label -- the same four
+   * steps `enterSealedDemo` walks (write the pointer, read the journey, close the wizard, land where
+   * the address asked), with no new state and no second copy of a sentence: a read that fails goes
+   * through the same classifier as every other read on this line.
+   */
+  const openExistingJourney = (journeyId: string) => {
+    setSetupBusy(true);
+    setMessage(null);
+    void (async () => {
+      try {
+        localStorage.setItem("citynexus.v8.journey_id", journeyId);
+        await load(journeyId);
+        setFailure(null);
+        setSetupOpen(false);
+        navigate(deepLink.kind === "screen" ? deepLink.route : "hub");
+      } catch (error) {
+        const attribution = classifyReadFailure(error);
+        recordAttribution(attribution, "wizard.myTrips.open");
+        setFailure({ attribution, journeyId });
+        setSetupOpen(false);
+      } finally {
+        setSetupBusy(false);
+      }
+    })();
   };
   /**
    * One stay search, one honest outcome.  Cold cities measured 114.98s here and came back
@@ -1949,6 +2017,10 @@ export function V8Experience() {
             state that needs it had no way to reach it, and measured wizard -> wizard.  Collapsed
             here so the wizard keeps the screen. */}
         <SimulationEntry defaultOpen={false} />
+        {/* Issue #33 Q1: the trips this credential already owns, listed beside the form that would
+            otherwise be the only way out of this screen.  Renders nothing on a fresh tab with no
+            credential -- see features/trip/MyTripsEntry.tsx for why that state stays empty. */}
+        <MyTripsEntry onOpen={openExistingJourney} askRefresh={askTravelerSessionRefresh} />
       </>
     );
   if (busy && !data)

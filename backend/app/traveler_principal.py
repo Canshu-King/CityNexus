@@ -105,6 +105,15 @@ def _secret() -> bytes:
     return encoded
 
 
+def _token_ttl(ttl_seconds: int | None) -> int:
+    """One place decides how long a window is, so nothing can be told a second different expiry."""
+
+    ttl = int(settings.traveler_auth_ttl_seconds if ttl_seconds is None else ttl_seconds)
+    if ttl <= 0 or ttl > 86_400:
+        raise ValueError("traveller token ttl must be between 1 and 86400 seconds")
+    return ttl
+
+
 def issue_traveler_token(
     traveler_id: str,
     *,
@@ -119,9 +128,7 @@ def issue_traveler_token(
     """
 
     clock = int(time.time() if now is None else now)
-    ttl = int(ttl_seconds if ttl_seconds is not None else settings.traveler_auth_ttl_seconds)
-    if ttl <= 0 or ttl > 86_400:
-        raise ValueError("traveller token ttl must be between 1 and 86400 seconds")
+    ttl = _token_ttl(ttl_seconds)
     payload = {
         "v": _TOKEN_VERSION,
         "aud": _TOKEN_AUDIENCE,
@@ -132,6 +139,24 @@ def issue_traveler_token(
     body = _b64encode(json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8"))
     signature = _b64encode(hmac.new(_secret(), body.encode("ascii"), hashlib.sha256).digest())
     return f"{body}.{signature}"
+
+
+def renew_traveler_session(
+    traveler_id: str,
+    *,
+    ttl_seconds: int | None = None,
+    now: int | None = None,
+) -> tuple[str, int]:
+    """Sign a fresh window *and* return the expiry the signature actually carries.
+
+    Why this is here instead of `issue_traveler_token` plus arithmetic in the route: a renewal
+    answer has to tell the client how long it has, and a second computation of `now + ttl` would
+    be a number the token never promised.  One call, one clock, both halves from the same tick.
+    """
+
+    clock = int(time.time() if now is None else now)
+    token = issue_traveler_token(traveler_id, ttl_seconds=ttl_seconds, now=clock)
+    return token, clock + _token_ttl(ttl_seconds)
 
 
 def _presented_token(request: Request) -> str | None:

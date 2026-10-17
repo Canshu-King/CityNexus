@@ -57,6 +57,10 @@ export default defineConfig({
         CITYNEXUS_E2E_RUN_ID: RUN_ID,
         // 值只到这里的子进程环境；不进文件、不进打印、不进收据。
         CITYNEXUS_TRAVELER_AUTH_SECRET: SECRET,
+        // Issue #33 Q1：会话续期那一臂需要"服务器给的窗口本来就短"，而这只能由部署的 TTL 决定。
+        // 默认 900（与产品配置同值）；`CNX_QODER31_TTL=60` 起的那一台才把窗口缩短到 300 秒余量之下，
+        // 于是测试测的是产品自己会不会去续，而不是我把到期字段改短了。
+        CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS: process.env.CNX_QODER31_TTL ?? "900",
         PYTHONIOENCODING: "utf-8",
       },
       url: `http://127.0.0.1:${BACKEND_PORT}/api/v1/health`,

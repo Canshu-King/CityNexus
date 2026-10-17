@@ -214,6 +214,7 @@ from app.traveler_principal import (
     TravelerPrincipal,
     issue_traveler_token,
     presented_principal,
+    renew_traveler_session,
     resolve_traveler_principal,
     signing_state,
 )
@@ -2617,6 +2618,70 @@ def get_traveler_session(request: Request, session: Session = Depends(get_sessio
     )
     # A principal is per-person and per-request: no shared cache may keep it, and a proxy must
     # key on the header that carried it.
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+@app.post("/api/v1/travelers/session/refresh")
+async def refresh_traveler_session(
+    request: Request, session: Session = Depends(get_session)
+):
+    """Issue #33 Q1 -- slide an existing session forward; never mint a token from a claim.
+
+    One property worth knowing before reading the refusals: the signature is deterministic per
+    second (`{v,aud,sub,iat,exp}` over the shared secret, no nonce), so a renewal asked for inside
+    the same second as the credential it replaces answers with the same token and the same window.
+    That is a no-op, not a bug -- the window never moves backwards -- and it is why the front end
+    renews on a margin (a third of the window) rather than on every mount.
+
+    The night order's condition was explicit: without a real authentication step, no door may
+    trade a bare `traveler_id` or uuid for a credential.  This door is built so that the question
+    cannot be asked: it takes no identity parameter, resolves whoever is *already* speaking
+    through the same verifier every other door uses, and signs the new token for that principal's
+    own id.  A body that tries to name somebody is refused before anything is signed -- and that
+    refusal is asserted by a test, so the property is checked rather than asserted in prose.
+
+    Why it exists: a traveller's credential is short-lived on purpose (default 900 s), and the
+    honest gap Issue #31 left open was that once it lapsed the tab had no way back -- the trips
+    were still theirs, but nothing could say so.  Renewal is the smallest door that closes that
+    gap without inventing a second identity system.
+    """
+
+    raw = await request.body()
+    if raw and raw.strip():
+        try:
+            claimed = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, ValueError):
+            # Unparseable is not a claim about anybody; it is simply nothing to check.  The
+            # credential below still has to stand up on its own.
+            claimed = None
+        if isinstance(claimed, dict) and any(
+            claimed.get(field) is not None for field in ("traveler_id", "sub", "id")
+        ):
+            refused = HTTPException(
+                400,
+                "a refreshed session is signed for the credential on this request, "
+                "not for an id handed in a body",
+            )
+            refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+            raise refused
+
+    principal = resolve_traveler_principal(request, session)
+    renewed_from = principal.expires_at
+    token, expires_at = renew_traveler_session(principal.traveler_id)
+    answer = JSONResponse(
+        {
+            "traveler_id": principal.traveler_id,
+            "auth_method": principal.auth_method,
+            "session_state": SESSION_STATE_SIGNED,
+            "access_token": token,
+            "expires_at": expires_at,
+            # The window the old credential had, so a client can tell a renewal from a re-login
+            # and keep the person where they were instead of bouncing them to the wizard.
+            "renewed_from_expires_at": renewed_from,
+        }
+    )
     answer.headers["Cache-Control"] = "private, no-store"
     answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return answer
