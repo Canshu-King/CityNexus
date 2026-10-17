@@ -1,0 +1,253 @@
+[
+  {
+    "class": "anchor-line",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".anchor-line",
+    "selector_after_or_null": null,
+    "decl_bytes": 42,
+    "chars_removed": 59
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row",
+    "selector_after_or_null": null,
+    "decl_bytes": 65,
+    "chars_removed": 84
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row b",
+    "selector_after_or_null": null,
+    "decl_bytes": 61,
+    "chars_removed": 82
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row div:not(.anchor-line)",
+    "selector_after_or_null": null,
+    "decl_bytes": 13,
+    "chars_removed": 54
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row small",
+    "selector_after_or_null": null,
+    "decl_bytes": 99,
+    "chars_removed": 124
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row span, .v8-anchor-row small",
+    "selector_after_or_null": null,
+    "decl_bytes": 70,
+    "chars_removed": 116
+  },
+  {
+    "class": "v8-trip-hero-head",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-hero-head",
+    "selector_after_or_null": null,
+    "decl_bytes": 57,
+    "chars_removed": 80
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics",
+    "selector_after_or_null": null,
+    "decl_bytes": 164,
+    "chars_removed": 185
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics span, .v8-trip-metrics small",
+    "selector_after_or_null": null,
+    "decl_bytes": 48,
+    "chars_removed": 98
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics strong",
+    "selector_after_or_null": null,
+    "decl_bytes": 95,
+    "chars_removed": 123
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 175,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics strong.green",
+    "selector_after_or_null": null,
+    "decl_bytes": 23,
+    "chars_removed": 57
+  },
+  {
+    "class": "v8-live-grid",
+    "line": 180,
+    "action": "drop_rule",
+    "selector_before": ".v8-live-grid",
+    "selector_after_or_null": null,
+    "decl_bytes": 86,
+    "chars_removed": 104
+  },
+  {
+    "class": "v8-strength",
+    "line": 181,
+    "action": "drop_rule",
+    "selector_before": ".v8-strength",
+    "selector_after_or_null": null,
+    "decl_bytes": 133,
+    "chars_removed": 150
+  },
+  {
+    "class": "v8-strength",
+    "line": 181,
+    "action": "drop_rule",
+    "selector_before": ".v8-strength b",
+    "selector_after_or_null": null,
+    "decl_bytes": 51,
+    "chars_removed": 70
+  },
+  {
+    "class": "v8-strength",
+    "line": 181,
+    "action": "drop_rule",
+    "selector_before": ".v8-strength span",
+    "selector_after_or_null": null,
+    "decl_bytes": 91,
+    "chars_removed": 113
+  },
+  {
+    "class": "v8-strength",
+    "line": 181,
+    "action": "drop_rule",
+    "selector_before": ".v8-strength.learned span",
+    "selector_after_or_null": null,
+    "decl_bytes": 29,
+    "chars_removed": 59
+  },
+  {
+    "class": "v8-live-grid",
+    "line": 184,
+    "action": "drop_list_member",
+    "selector_before": ".v8-hero-grid, .v8-studio-layout, .v8-stay-layout, .v8-live-grid, .v8-intelligence-grid",
+    "selector_after_or_null": ".v8-hero-grid, .v8-studio-layout, .v8-stay-layout, .v8-intelligence-grid",
+    "decl_bytes": 27,
+    "chars_removed": 15
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row",
+    "selector_after_or_null": null,
+    "decl_bytes": 9,
+    "chars_removed": 28
+  },
+  {
+    "class": "v8-anchor-row",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-anchor-row small",
+    "selector_after_or_null": null,
+    "decl_bytes": 17,
+    "chars_removed": 42
+  },
+  {
+    "class": "v8-trip-hero-head",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-hero-head",
+    "selector_after_or_null": null,
+    "decl_bytes": 15,
+    "chars_removed": 38
+  },
+  {
+    "class": "v8-trip-hero-head",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-hero-head .v8-quiet-button",
+    "selector_after_or_null": null,
+    "decl_bytes": 17,
+    "chars_removed": 57
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics",
+    "selector_after_or_null": null,
+    "decl_bytes": 9,
+    "chars_removed": 30
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics small",
+    "selector_after_or_null": null,
+    "decl_bytes": 18,
+    "chars_removed": 45
+  },
+  {
+    "class": "v8-trip-metrics",
+    "line": 185,
+    "action": "drop_rule",
+    "selector_before": ".v8-trip-metrics strong",
+    "selector_after_or_null": null,
+    "decl_bytes": 16,
+    "chars_removed": 44
+  },
+  {
+    "class": "v9-live-actions",
+    "line": 278,
+    "action": "drop_rule",
+    "selector_before": ".v9-live-actions",
+    "selector_after_or_null": null,
+    "decl_bytes": 45,
+    "chars_removed": 66
+  },
+  {
+    "class": "v9-live-actions",
+    "line": 278,
+    "action": "drop_rule",
+    "selector_before": ".v9-live-actions button",
+    "selector_after_or_null": null,
+    "decl_bytes": 27,
+    "chars_removed": 55
+  },
+  {
+    "summary": {
+      "rules_dropped": 25,
+      "members_dropped": 1,
+      "rules_kept_because_ancestor_live": 0,
+      "kept_because_not_of_live_ancestor": 0,
+      "chars_removed_total": 1978,
+      "changed_lines": [
+        175,
+        180,
+        181,
+        184,
+        185,
+        278
+      ]
+    }
+  }
+]
