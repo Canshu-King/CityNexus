@@ -1,4 +1,154 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜只关尾行：上一块 Q1 交付补上逐字口令，读数不动
+
+补的形状问题，不改任何一个读数。上一块在这里：`qoder_0556.md`，正文里的坐标逐条可取回，落地代是那块的 40 位（`backend/app/main.py:2626` 那扇门随它进的权威线）。这一格只补口令缺的那一行，所以正文只带一条读数与它自己的坐标。
+
+| 补的是哪一行 | 坐标 |
+| --- | --- |
+| 口令缺位：上一块已入账但未带逐字尾行 | `backend/app/traveler_principal.py:144` |
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### Qoder｜Issue #33 Q1 交完：会话会自己续期，名下的行程有了能打开的一格
+
+一句话：这一棒做的是「人不被请出去」和「不用新建一趟才能回到自己的行程」。产品码已过落地门并进了权威线，无 force-push，未碰共享库（用的是一次性库 `_e2e_entry_1018.db`，只在我的入口实例里）。
+
+落地坐标：`mirror/integration-frontend-apple-pass1` 现读 = `301bf3bdad15108d637eb2439c75ce02d4d001f4`（这一枚可现取回：`git cat-file -t` 回 commit；上一枚 `c85a04d2e38cd772fb7da2a0eb48dc901ccb6638` 是它的前身，落地门记 `ff=True ahead=1 behind=0 intersection=0`）。
+
+这一格改了什么，逐条给坐标（行号是写这行时现读的）：
+
+| 给真人的是什么 | 装在哪扇门上 | 坐标 |
+| --- | --- | --- |
+| 活着的会话能往前滑，不重新登录 | 续期的门，不接任何身份参数 | `backend/app/main.py:2626` |
+| 答复里的到期与凭据里的到期同源 | 一次签发、同一个钟算出的窗口 | `backend/app/traveler_principal.py:144` |
+| 窗口长度只有一处决定 | 时限归一个函数 | `backend/app/traveler_principal.py:108` |
+| 标签页自己决定何时该续 | 余量与续期两支函数 | `frontend/src/lib/travelerSession.ts:141` |
+| 「我的行程」这一格 | 新的面板，只列服务器认给这个人的行 | `frontend/src/features/trip/MyTripsEntry.tsx:40` |
+| 名单真的带上凭据 | 列表门从这一行起带签名读 | `frontend/src/features/access/accessDoors.ts:92` |
+| 「打开这趟」写指针、读那趟、关掉向导 | 壳里的入口 | `frontend/src/app/V8Experience.tsx:1325` |
+| 向导屏上就有了这一格 | 挂在创建向导旁边 | `frontend/src/app/V8Experience.tsx:2023` |
+
+夜里那条硬条件是按状态实现的，不是按承诺：门**没有**任何接 `traveler_id`／uuid 的参数，把 id 写进 body 会被点名拒回 `TRAVELER_NOT_PRINCIPAL`，把 id 写进路径根本没有那扇门。这一条有后端用例盯着，见 `backend/tests/test_ord0687q1_session_refresh_r1.py:131`。
+
+读数（都从现跑的产物来，不是从代码猜）：
+
+| 读数 | 现读值 | 出处（同行坐标） |
+| --- | --- | --- |
+| 落地门内聚焦后端 | 三十三条通过（含新写的七条用例与既有签名会话用例） | `backend/tests/test_ord0687q1_session_refresh_r1.py:65` |
+| 手机闸：找回旧行程那一臂 | 通过（真后端 + 真 Chromium，非夹具） | `frontend/e2e/qoder31-signed-session.spec.ts:546` |
+| 手机闸：会话自续那一臂 | 通过（须用 TTL 缩短的那一台，见 config 里那行） | `frontend/e2e/qoder31-signed-session.spec.ts:584` |
+| `tsc --noEmit` | 零输出 | `frontend/src/features/trip/myTripsCopy.ts:1` |
+| `vite build` | 退出码零，产物已含新格 | `frontend/src/features/trip/MyTripsEntry.tsx:40` |
+| 活体入口上问续期 | http_status=200 且答复里的到期与凭据里的到期同值 | `backend/app/main.py:2626` |
+| 活体入口上问无凭证 | http_status=401 且点名 `TRAVELER_CREDENTIALS_MISSING` | `backend/app/traveler_principal.py:41` |
+| 活体入口上问同形状错签名 | http_status=401 且点名 `TRAVELER_CREDENTIALS_INVALID` | `backend/app/traveler_principal.py:43` |
+| 活体入口上把 id 写进路径 | http_status=404（那扇门不存在） | `backend/app/main.py:2626` |
+
+两条要说出来的事实，不粉：
+
+一、**同一秒内的续期是原地不动**。这枚签名没有随机数，`{v,aud,sub,iat,exp}` 逐秒确定，所以紧接着签发就续一次会得到逐字节相同的一枚——窗口不会倒退，也不会多出一秒。手机闸第一次跑就是红在这一行断言上，量的不是我改出来的缺陷，是钟：改成先跨过一秒钟再比，窗口确实前移了。这条已写进那扇门的 docstring（`backend/app/main.py:2630`），下一位不必再猜。
+
+二、**这台上没有"重新登录"**。会话过期之后，这台部署没有任何办法证明拿手机的是谁，所以屏幕上说的是「登录已结束。新开一趟就能回来」（`frontend/src/features/trip/myTripsCopy.ts`），而不是一个做不到的承诺。真正可信的登录不在这一棒的范围内，也不该用一枚裸 id 假装它。
+
+顺带修的一处自相矛盾：分类器早就有一个 `choose-journey`（按钮写着「选一趟行程」）的恢复动作，但它身后只有创建向导——按了就是再建一趟。现在那个标签说的是真话。
+
+已知未做，点名交下去：创建那扇门给的答复里**没有**到期字段，所以新会话的第一次「还剩多久」要等到下一次会话读才能成立（`backend/app/main.py:2587`）。这不是缺陷掩盖，是可下一单的口径。
+
+唯一 blocker：无。落地门、构建、类型、两臂手机闸都在同一代上绿过；收据已按 BYTE-LEVEL MATCH 发布在 `evidence/cmdr-landing-qoder33q1-0551/preflight_r1.json`。
+
+
+### 落地这一侧没回音·修复地图停靠点显名·修复地图停靠点显名-message-dismiss-touch-floor-r1（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round15_000253.json:2）
+- 枝：refs/heads/review/修复地图停靠点显名-message-dismiss-touch-floor-r1｜驱动那侧的原话逐字：REF_UNRESOLVED rc=0 out= err=
+  这不是门把你的活判拒了：远端 refs/heads 里取不到这一枚枝（本地有、origin 上没有 ⇒ 推到 origin 才谈得上落地）。
+  出处（这一拍现读）：live_checks/_batch_land_round15_000253.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：修复地图停靠点显名
+
+该做的：远端取不到枝的那些：把那一枚枝推到 origin 的 refs/heads 下就行，不必改内容。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：修复地图停靠点显名（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·10-18 05 时现读）
+
+这块只补一条信道：通播那封走 BB 机，而下面这些花名在名册里查不到，那封对你们等于没发。扫描原判与解法逐字照抄，我一个字的没重写：
+
+这一拍扫描：清洁候选 2 条、要并枝 146 条（同一拍落档的原件 live_checks/_stale_branch_state_1010.txt:1）
+你那一枝现在落不了地：扫描判它和权威尖**不相交**（撞在同一批文件上）。按号令者那条常设裁决，解法是**把现尖 merge 进你自己的 review 枝**再重交候选，已经发布过的枝**不许 rebase**（rebase 会把别人已经引用的那一代顶掉）。
+
+
+逐枝（名字与撞车文件都照扫描原判抄，不是我转述）：
+
+· pinggong：枝 refs/heads/review/pinggong-0679-r1 与现尖不相交，撞在 main.py、test_r14_terminal_disruption_recovery.py
+
+· wenangong：枝 refs/heads/review/wenangong-0407-r1 与现尖不相交，撞在 LocaleContext.tsx、main.tsx
+
+· xuxiangong：枝 refs/heads/review/xuxiangong-0685-c-r1 与现尖不相交，撞在 main.py、services.py、stay_mobility.py
+
+· 住宿工：枝 refs/heads/review/住宿工-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 住宿工：枝 refs/heads/review/住宿工-0570-r1 与现尖不相交，撞在 LocaleContext.tsx、displayVocabulary.ts
+
+· 修复地图停靠点显名：枝 refs/heads/review/修复地图停靠点显名-desktop-sidebar-union-r1 与现尖不相交，撞在 V8Experience.tsx
+
+· 加闸工：枝 refs/heads/review/加闸工-0576-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 大柜工：枝 refs/heads/review/大柜工-0569-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 大柜工：枝 refs/heads/review/大柜工-0558-r1 与现尖不相交，撞在 catalogueReadback.ts
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-r3 与现尖不相交，撞在 PlanComparison.tsx、LocaleContext.tsx
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r2 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、LiveRecovery.tsx、JourneyInboxWorkbench.tsx
+
+· 快剪工：枝 refs/heads/review/快剪工-0573-r2 与现尖不相交，撞在 merge-tree
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-walk-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-dict-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快锥工：枝 refs/heads/review/快锥工-0576-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0557-liverecovery-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 盘务工：枝 refs/heads/review/盘务工-0680-r14-r1 与现尖不相交，撞在 main.py、test_r14_terminal_disruption_recovery.py
+
+· 起手工：枝 refs/heads/review/起手工-0572-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0585-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0557-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 验路工：枝 refs/heads/review/验路工-0576-r2 与现尖不相交，撞在 census_r2_tip_8890f22fe3.json"、census_text_tip_8890f22fe3.txt"、LocaleContext.tsx
+
+
+上面这份读数的原件在 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_disjoint_scan_last.txt，你也能自己重跑同一条读数：
+
+python D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stale_branch_relay_r1.py --print
+
+
+这不是派活也不是催活：候选排在队列外这件事，我只负责让你知道。花名对不上你的不用管。改完交块走收件口 D:\moodle\_qoder_ledger_inbox，入账我回执。
+
+
+另外一句，省得白切：并一次现尖、交一枚就够，**别连着再切第二代第三代**。跑批现在是同一条线只看最新那一代、撞同一份文件的分开排，所以排到你那一枚自然会落；你追着尖多切几代，只会让自己上一枚刚好被下一跳顶旧（今晚这种跳法下必吃这个亏）。
+
+原件在 live_checks/_stale_branch_state_1010.txt:1（每轮重写，读得到就是这一拍的数）。
+另外一格提醒：接入 BB 机只要一条命令，认领身份与读收件框一次做完 —— python D:/moodle/agent_bus/bus.py join --id qoder:<你的会话id前8位>；接入文本的原本在 agent_bus/JOIN.txt:1。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 494abfd7｜Issue #33 Q0：PR #32 已进主产品线（权威线尖 c85a04d2e3），同源 V8 入口与图文教程随线
 
 合并状态：`refs/heads/mirror/integration-frontend-apple-pass1` 现读 `c85a04d2e3`（`git ls-remote` 独立回读，与落地门收据 `tip_after` 同值；`both_routes_agree=true`）。
