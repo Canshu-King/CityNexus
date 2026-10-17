@@ -56,7 +56,7 @@ export const accessCopy = {
     "access.orderBroken":
           "The order breaks at row {row}. Below is the order the server sent.",
     "access.orderUnverifiable":
-      "This screen cannot check this order from the rows it was given ({reason}), so it does not claim the list is in it. The rows below are in the order they arrived.",
+      "This screen cannot check this order from the rows it was given ({reason}). The rows below are in the order they arrived.",
     /* Why the check compared what it compared, or why it compared nothing.  These are the whole
        sentence's one variable, and the reason lives here rather than in `journeyOrderVerdict.ts`: the
        module knows facts, this file knows the traveller's language.  The stored column names
@@ -254,8 +254,8 @@ export const accessCopy = {
        就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
     "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
     "access.orderBroken":
-          "顺序对不上：从第 {row} 行起不是你要的那个序。下面按服务器发来的样子列。",
-    "access.orderUnverifiable": "这一档这一屏核不了（{reason}），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。",
+          "顺序对不上：从第 {row} 行起断了。下面按服务器发来的样子列。",
+    "access.orderUnverifiable": "这一档这一屏核不了（{reason}）；下面写的就是行收到的样子。",
     "access.orderReasonStartAt": "核的是每一程的出发时间",
     "access.orderReasonNoRows": "一行行程都没有回来",
     "access.orderReasonTitle": "核的是行程名",

@@ -35,7 +35,7 @@ export const planVersionHistoryCopy = {
     "history.createdMissing": "no write time recorded",
     "history.retention": "No retention limit is applied: this trip currently holds {n} {plural:version} and all of them are listed here. Nothing is dropped as newer versions are written.",
     "history.count": "{n} {plural:version} listed",
-    "history.noRestore": "There is no revert here on purpose. Going back to an older version would replace the plan you are travelling on, so it is not offered as a tap on a list.",
+    "history.noRestore": "No revert here: going back to an older version would replace the plan you are travelling on.",
     "history.empty": "This trip has no plan version yet.",
     "history.loading": "Reading the version list…",
     "history.failed": "The version list could not be read from this server. Your current plan is unchanged.",
@@ -60,7 +60,7 @@ export const planVersionHistoryCopy = {
        (backend/tests/test_qoder_ord0386_plan_version_history.py, test_3). */
     "history.retention": "这台服务器没有设保留上限：目前这趟共有 {n} 份版本，这里全部列出。写新版本不会丢掉旧的。",
     "history.count": "共列出 {n} 份版本",
-    "history.noRestore": "这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。",
+    "history.noRestore": "这里不做还原：回到旧版本会替换你正在执行的方案。",
     "history.empty": "这趟行程还没有方案版本。",
     "history.loading": "正在读版本列表…",
     "history.failed": "版本列表没有从这台服务器读到。你当前的方案没有变化。",

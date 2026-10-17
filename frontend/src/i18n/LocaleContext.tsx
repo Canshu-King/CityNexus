@@ -25,7 +25,7 @@ const en: Dict = {
   "plan.aiDisabledByOpsNote":
         "The AI switch on this server is off — an operator setting, nothing you did.",
   "plan.aiStateUnknownNote": "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.",
-  "plan.aiConfiguredUnverifiedNote": "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.",
+  "plan.aiConfiguredUnverifiedNote": "This server has an AI credential configured; it has not been verified to work.",
   "plan.aiProviderRefusedNote": "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.",
   "plan.describeTripHint": "Describe the trip in your own words — the more specific the better.",
   "plan.plansReadyBody": "Compare them on Today, then choose one to continue.",
@@ -145,7 +145,7 @@ const en: Dict = {
   "trial.title": "Start a real journey, not only the sealed demo.",
   "trial.lede": "Choose your destination and travel anchors. Cities with no sealed replay use live city providers when enabled; CityNexus will not quietly substitute another city's replay data for the one you asked for.",
   "trial.liveTitle": "Generic-city trial",
-  "trial.liveNote": "For cities without a sealed replay, use live providers. If providers are unavailable, CityNexus will tell you instead of inventing facts about the city.",
+  "trial.liveNote": "For cities without a sealed replay, use live providers. If a provider is unavailable, this screen says so.",
   /* ORD-0216 ④: no city name here, on purpose.  `GET /api/v1/demo/scene` picks the sealed journey
      from server data -- the one an ACTIVE plan points at, else the most recently seeded one
      (backend/app/main.py) -- so the entry cannot know which city it hands over until the
@@ -1631,7 +1631,7 @@ const zhCN: Dict = {
   "plan.aiDisabledByOpsNote":
         "这台的 AI 开关由运营侧关闭，与你的操作无关。",
   "plan.aiStateUnknownNote": "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。",
-  "plan.aiConfiguredUnverifiedNote": "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。",
+  "plan.aiConfiguredUnverifiedNote": "这台服务配了一个 AI 凭据，但没有验证过它能用。",
   "plan.aiProviderRefusedNote": "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。",
   "plan.describeTripHint": "用你自己的话描述这趟旅行，越具体越好。",
   "plan.plansReadyBody": "去“今天”对比这几个方案，选一个再继续。",
@@ -1742,7 +1742,7 @@ const zhCN: Dict = {
   "trial.title": "创建真实行程，不只局限于封存演示。",
   "trial.lede": "选择目的地和出发/返程锚点。没有封存数据的城市会用实时数据源，不会拿别的城市冒充。",
   "trial.liveTitle": "通用城市试用",
-  "trial.liveNote": "没有封存回放的城市应使用实时数据源。若数据源不可用，系统会明确告诉你，而不是编造这座城市的资料。",
+  "trial.liveNote": "没有封存回放的城市用实时数据源。数据源不可用时，这一屏会直接告诉你。",
   /* ORD-0216 ④：这里刻意不写城市名。封存演示是哪一趟由服务器的 /api/v1/demo/scene 决定（有 ACTIVE
      方案的那趟，否则最近 seed 的那趟，backend/app/main.py），入口在服务器回答之前无从知道
      城市。HJ-P1 在封存那趟为广州的舞台上读到「使用封存的天津演示」（`ord0216-scene-city.json` 复现了

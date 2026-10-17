@@ -50,8 +50,7 @@ export const journeyAbortCopy = {
     "abort.gone":
       "This trip is no longer on this server, so there is nothing here to abort. Nothing was written.",
     "abort.contested":
-      "This trip changed while the request was running, so nothing was written. Nothing on screen is " +
-      "claiming otherwise.",
+      "This trip changed while the request was running, so nothing was written.",
     "abort.emptyReason":
           "There has to be a reason; an empty box is refused.",
     "abort.refused":
@@ -86,7 +85,7 @@ export const journeyAbortCopy = {
     "abort.notYours": "这次请求点名的身份不是这趟行程的主人，所以服务器没有写入。",
     "abort.gone": "这趟已经不在这台服务器上了，这里没有可中止的东西。服务器没有写入。",
     "abort.contested":
-      "请求在跑的时候这趟行程被改动过，所以这次没有写入。屏上也不会装作它成功了。",
+      "请求在跑的时候这趟行程被改动过，所以这次没有写入。",
     "abort.emptyReason":
           "必须写原因，空着会被拒绝。",
     "abort.refused":
