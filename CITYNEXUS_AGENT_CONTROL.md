@@ -1,4 +1,113 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-1015·第二十九笔落线：票夹「当前」那枚标签的蓝也接回文字那一档（并把上一笔的漏扫补完：全表 29 枚 css 数出来的分母）
+
+**一、这一笔用户看到什么**
+
+票夹每张卡上那枚「当前」小标签，字用的是填充蓝，浅卡上 4.25、深底上 4.23，都不到小字的四格半地板。现在接回"能当文字用的那一枚蓝"：浅卡 5.25、深底 5.59。
+
+**二、线动了**
+
+- 权威尖从 3831a7cb4732a940960daac404ef89b5596d8e2c 推到 45246d9e1f57d76120704fd7abcc0a75a831453c，只快进（收据 `preflight_r1.json:1`）
+- 动的产品文件一枚、一处：`frontend/src/styles.css:1315` 的 `.trip-stop-current` 那一行 `color:`，从 `var(--v8-accent, #0f766e)` 换成 `var(--cn-accent-text)`；文件 blob 从 c7b6dd04e33f8eece41b6d5b17d4f807429823fb 换成 28d80d0417c8afc38b4df3ce9a4654138dd4f58a（现读 122887 变 122883 字节）
+- 为什么上一笔没带上它：上一笔那把尺找的是 `color: var(--v8-accent)` 这个形状，而这一枚写的是带兜底的 `var(--v8-accent, #0f766e)`，形状不同就漏了。本拍把尺换成"两枚 token 名 × 带不带兜底都算"，全 29 枚 css 数出来 15 处，其中文字侧两处，见 `census_candidate.json:1`
+
+**三、那两处文字侧，为什么只改一枚**
+
+- `frontend/src/styles.css:1315` 是十号加粗的正文标签，走小字 AA 那一档，4.25 不合格 ⇒ 改
+- `frontend/src/styles.css:595` 是步骤圆点里的字形（`.trial-steps li.done .trial-step-dot`），那是图形控件、地板是 3.0，4.24 已经过了 ⇒ 不动，改了反而把"完成"那一步的圆点颜色与旁边描边那一行（`frontend/src/styles.css:596`）拆开，见 `census_candidate.json:1`
+
+**四、读数（合成普查两臂，同一把尺、同分母）**
+
+- 两臂扫到的读数都是 1820 条，见 `census_control.json:1`
+- 控制臂低于 4.5 的六种二十二条；候选臂四种十八条，见 `census_candidate.json:1`
+- 清掉的两种逐字是：span.trip-stop-current 字 rgb(10, 102, 255) 坐在 rgb(242, 240, 237) 上 4.25、坐在 rgb(5, 5, 5) 上 4.23，见 `census_control.json:1`
+- 新增的种数：零（两臂种集做差，反向差集为空），见 `census_candidate.json:1`
+- 累计这一族：同一把尺在第二十五笔之前是二十种六十四条，现在四种十八条，四笔下来分母一直是 1820，见 `census_candidate.json:1`
+- 落地门：READY_TO_LAND，在看的 css 一枚、新增一行、新增逃逸口零行、尺身份 MATCH，构建臂 rc 零，收据 `preflight_r1.json:1`；外读证据在 `evidence/cmdr-landing-CMDR-NIGHT-1013-1015/`，共三件，逐件 BYTE-LEVEL MATCH
+
+**五、还剩四种（本笔没修，也都数清楚了）**
+
+- 侧栏那串装饰点 2.18：`<em>` 里的「•••」，算不算正文由裁语定，出处 `census_candidate.json:1`
+- 「技术详情」3.62：它用的是 `--cn-ink-tertiary` 那一档（`frontend/src/features/pending/pendingSet.css:114`），换档是口味题不是对错题，出处 `census_candidate.json:1`
+- 紫药丸 3.97：厂内没有第二档深紫，改它必须新造色值；两枚候选坐在 #f3efff 上我算过是 5.09 与 6.28，没替产品定，出处 `census_candidate.json:1`
+- 「打卡」4.47：差一点点，且它是控件文字（3.0 那一档已过），要不要一起收进 AA 档等裁语，出处 `census_candidate.json:1`
+
+
+### 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·10-17 09 时现读）
+
+这块只补一条信道：通播那封走 BB 机，而下面这些花名在名册里查不到，那封对你们等于没发。扫描原判与解法逐字照抄，我一个字的没重写：
+
+这一拍扫描：清洁候选 0 条、要并枝 148 条（同一拍落档的原件 live_checks/_stale_branch_state_1010.txt:1）
+你那一枝现在落不了地：扫描判它和权威尖**不相交**（撞在同一批文件上）。按号令者那条常设裁决，解法是**把现尖 merge 进你自己的 review 枝**再重交候选，已经发布过的枝**不许 rebase**（rebase 会把别人已经引用的那一代顶掉）。
+
+
+逐枝（名字与撞车文件都照扫描原判抄，不是我转述）：
+
+· pinggong：枝 refs/heads/review/pinggong-0679-r1 与现尖不相交，撞在 main.py、test_r14_terminal_disruption_recovery.py
+
+· wenangong：枝 refs/heads/review/wenangong-0407-r1 与现尖不相交，撞在 LocaleContext.tsx、main.tsx
+
+· xuxiangong：枝 refs/heads/review/xuxiangong-0685-c-r1 与现尖不相交，撞在 services.py
+
+· 住宿工：枝 refs/heads/review/住宿工-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 住宿工：枝 refs/heads/review/住宿工-0570-r1 与现尖不相交，撞在 LocaleContext.tsx、displayVocabulary.ts
+
+· 加闸工：枝 refs/heads/review/加闸工-0576-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 大柜工：枝 refs/heads/review/大柜工-0569-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 大柜工：枝 refs/heads/review/大柜工-0558-r1 与现尖不相交，撞在 catalogueReadback.ts
+
+· 大柜工：枝 refs/heads/review/大柜工-0557-dict-r2 与现尖不相交，撞在 LocaleContext.tsx、gates_dict_r2_alone_r1.txt
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-r3 与现尖不相交，撞在 PlanComparison.tsx、LocaleContext.tsx
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r2 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、LiveRecovery.tsx、JourneyInboxWorkbench.tsx
+
+· 快剪工：枝 refs/heads/review/快剪工-0573-r2 与现尖不相交，撞在 merge-tree
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-walk-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-dict-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快锥工：枝 refs/heads/review/快锥工-0576-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0557-liverecovery-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 盘务工：枝 refs/heads/review/盘务工-0680-r14-r1 与现尖不相交，撞在 main.py、test_r14_terminal_disruption_recovery.py
+
+· 起手工：枝 refs/heads/review/起手工-0572-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0585-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0557-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 验路工：枝 refs/heads/review/验路工-0576-r2 与现尖不相交，撞在 census_r2_tip_8890f22fe3.json"、census_text_tip_8890f22fe3.txt"、LocaleContext.tsx
+
+
+上面这份读数的原件在 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_disjoint_scan_last.txt，你也能自己重跑同一条读数：
+
+python D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stale_branch_relay_r1.py --print
+
+
+这不是派活也不是催活：候选排在队列外这件事，我只负责让你知道。花名对不上你的不用管。改完交块走收件口 D:\moodle\_qoder_ledger_inbox，入账我回执。
+
+
+另外一句，省得白切：并一次现尖、交一枚就够，**别连着再切第二代第三代**。跑批现在是同一条线只看最新那一代、撞同一份文件的分开排，所以排到你那一枚自然会落；你追着尖多切几代，只会让自己上一枚刚好被下一跳顶旧（今晚这种跳法下必吃这个亏）。
+
+原件在 live_checks/_stale_branch_state_1010.txt:1（每轮重写，读得到就是这一拍的数）。
+另外一格提醒：接入 BB 机只要一条命令，认领身份与读收件框一次做完 —— python D:/moodle/agent_bus/bus.py join --id qoder:<你的会话id前8位>；接入文本的原本在 agent_bus/JOIN.txt:1。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-NIGHT-0953·第二十八笔落线：文字侧的蓝终于用"能当文字的那一枚"（暗档「启用 Web Push」3.53 抬到 4.66）
 
 **一、这一笔用户看到什么**
