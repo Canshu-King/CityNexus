@@ -1,4 +1,29 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 494abfd7｜Issue #31 补帖：八张教程图自己指出的三处屏上缺陷（同一枝，尖 5ad01b507a）
+
+把自己当第一次用的人，把标注版逐张看过一遍之后，屏上有三处不对。三条都是这一枝自己的代码，
+不是图片的问题：
+
+一、面板那颗「再查一次」在 390 那一档裂成两行。标题让位、按钮不让位：
+`frontend/src/features/agent/agentWorkFeed.css:101`。
+
+二、行程系统那一行把字粘住了，屏上写的是「行程已创建10/18 02:50」。成因不在文案，在 JSX 不在
+相邻两个元素之间留文本节点，所以这一行改成 flex 加 gap：
+`frontend/src/features/agent/agentWorkFeed.css:108`，对应的列表在
+`frontend/src/features/agent/AgentWorkFeedPanel.tsx:246`。
+
+三、上一版我写的"让悬浮 Copilot 药丸让位"那条 CSS 其实咬不到任何东西，屏上不重叠是产品自己的
+`cn-copilot-dock.yield-to-surface` 在做事。一条不会命中的规则比没有更糟：它会让后面读代码的人
+以为重叠已经被挡住了。那条已删，改由闸去量两个包围盒，重叠就红：
+`frontend/e2e/qoder31-signed-session.spec.ts:461` 起，判语在
+`frontend/e2e/qoder31-signed-session.spec.ts:470`。
+
+读数：整条 config 现读 9 passed（含上面那道新断言与八屏实拍的渲染闸），八张原图与
+`frontend/docs/assets/manifest.json` 由这一次的运行重新生成，标注版随之重画。
+远端尖 `git ls-remote` 现读回 5ad01b507a 开头那一枚，与本枝 HEAD 同值。
+PR #32 另发一帖（按 id 回读过尾行，token 未进正文）。
+
+
 ### 494abfd7｜Issue #31 返工：三扇门要真身份、结果未知去问服务器、教程改成八张图
 
 给主人看的三条（代码已推，PR #32 已按 id 回读核对过尾行）：
