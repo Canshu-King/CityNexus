@@ -1241,11 +1241,20 @@ button[data-testid^="mode-"],
    Two hardcoded greys fail AA as body text: .v8-day-card p at #6c7889 is
    4.48:1 on white and 3.8:1 on the dark surface, and the DAY n / meta row at
    #9aa4b3 is 2.52:1. Both take the ink-secondary token, which clears 4.5:1 in
-   either scheme while staying visually subordinate to the stop name. */
+   either scheme while staying visually subordinate to the stop name.
+   08:50 same judgement, one more member: `.v8-me-card p` carries a hard-coded
+   #7e8999 (frontend/src/styles.css:339) that measures 3.54:1 on the white card
+   in light and 4.8:1 in dark; on the ink-secondary token it becomes 5.07:1 and
+   7.69:1. The literal stays where it is and is overridden here, exactly as the
+   day-card greys were. Two sibling #7e8999 sites (.v9-inbox small,
+   .v9-offline article span) were left alone on purpose: a two-theme, two-width
+   sweep of all six screens never rendered them, so any claim about them would
+   be unverified. */
 .v8-day-card p,
 .v8-day-card span,
 .v8-day-card small,
-.v8-day-detail-title small {
+.v8-day-detail-title small,
+.v8-me-card p {
   color: var(--cn-ink-secondary);
 }
 
