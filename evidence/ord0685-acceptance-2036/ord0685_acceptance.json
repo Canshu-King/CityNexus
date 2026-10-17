@@ -1,0 +1,132 @@
+{
+  "at_local": "2026-10-17 20:35:00",
+  "port": 8012,
+  "cases": [
+    {
+      "case": "A credential-present-but-no-secret: status",
+      "expected": 503,
+      "observed": 503,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "A credential-present-but-no-secret: reason_code",
+      "expected": "TRAVELER_AUTH_NOT_CONFIGURED",
+      "observed": "TRAVELER_AUTH_NOT_CONFIGURED",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B no credentials: status",
+      "expected": 401,
+      "observed": 401,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B no credentials: reason_code",
+      "expected": "TRAVELER_CREDENTIALS_MISSING",
+      "observed": "TRAVELER_CREDENTIALS_MISSING",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B create traveler: status",
+      "expected": 201,
+      "observed": 201,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B create traveler: carries access_token",
+      "expected": true,
+      "observed": false,
+      "ok": false,
+      "note": "the V8 client has no way to obtain a credential unless the create door hands one over"
+    },
+    {
+      "case": "B bearer token: status",
+      "expected": 200,
+      "observed": 200,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B bearer token: traveler_id matches",
+      "expected": "40b49b75-3649-49a1-9097-564174837489",
+      "observed": "40b49b75-3649-49a1-9097-564174837489",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B bearer token: Cache-Control",
+      "expected": "private, no-store",
+      "observed": "private, no-store",
+      "ok": true,
+      "note": "header keys on the wire: cache-control, connection, content-length, content-type, date, server, vary"
+    },
+    {
+      "case": "B bearer token: Vary names the header",
+      "expected": true,
+      "observed": true,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B header alias: status",
+      "expected": 200,
+      "observed": 200,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B tampered token: status",
+      "expected": 401,
+      "observed": 401,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B tampered token: reason_code",
+      "expected": "TRAVELER_CREDENTIALS_INVALID",
+      "observed": "TRAVELER_CREDENTIALS_INVALID",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B expired token: status",
+      "expected": 401,
+      "observed": 401,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B expired token: reason_code",
+      "expected": "TRAVELER_CREDENTIALS_EXPIRED",
+      "observed": "TRAVELER_CREDENTIALS_EXPIRED",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B unknown principal: status",
+      "expected": 401,
+      "observed": 401,
+      "ok": true,
+      "note": ""
+    },
+    {
+      "case": "B unknown principal: reason_code",
+      "expected": "TRAVELER_PRINCIPAL_NOT_FOUND",
+      "observed": "TRAVELER_PRINCIPAL_NOT_FOUND",
+      "ok": true,
+      "note": ""
+    }
+  ],
+  "all_ok": false,
+  "n_cases": 17,
+  "n_red": 1,
+  "server_log_sha256": {
+    "ord0685_server_A.log": "90d160beb627191d",
+    "ord0685_server_B.log": "9755bb7792d8766b"
+  }
+}
