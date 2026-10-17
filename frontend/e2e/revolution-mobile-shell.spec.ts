@@ -128,7 +128,9 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const draftActivity = page.getByTestId("rev-draft-agent-activity");
     await expect(draftActivity).toBeVisible();
     await expect(draftActivity).toContainText("AI 建议可试");
-    await expect(draftActivity).toContainText("保存两站并出发后，这里会显示 AI 动态。");
+    await expect(draftActivity).toContainText("当前是探索草稿，正式行程尚未启动。");
+    await expect(draftActivity).toContainText("选定真实地点并确认正式行程，就能启动助手。");
+    await expect(draftActivity).toContainText("启动助手后，实际工作记录会显示在这里。");
   });
 
   test("three bottom tabs are tappable without submitting requests", async ({ page }, testInfo) => {

@@ -279,12 +279,10 @@ function freshCityCode(): string {
 
 function DraftAgentActivity({
   status,
-  hasJourney,
   hasSelectedPlace,
   hasSavedPocketWalk,
 }: {
   status: string;
-  hasJourney: boolean;
   hasSelectedPlace: boolean;
   hasSavedPocketWalk: boolean;
 }) {
@@ -295,14 +293,14 @@ function DraftAgentActivity({
       <div className="rev-mobile-account-line">
         <span>AI 服务</span><strong>{status}</strong>
       </div>
+      <p>当前是探索草稿，正式行程尚未启动。</p>
       <p>
-        {!hasJourney
-          ? "开始行程后，这里会显示 AI 动态。"
-          : hasSelectedPlace
-            ? "地点已选好。开始行程后，这里会显示 AI 动态。"
-            : hasSavedPocketWalk
-              ? "两站已保存。开始行程后，这里会显示 AI 动态。"
-              : "保存两站并出发后，这里会显示 AI 动态。"}
+        {hasSelectedPlace
+          ? "已选定地点，请在上方确认正式行程。"
+          : hasSavedPocketWalk
+            ? "散步路线已保存。选定正式行程地点并确认后，就能启动助手。"
+            : "选定真实地点并确认正式行程，就能启动助手。"}
+        启动助手后，实际工作记录会显示在这里。
       </p>
     </section>
   );
@@ -1045,7 +1043,6 @@ export function RevolutionFirstLook() {
                   </section>
                   <DraftAgentActivity
                     status={agentStatusTitle}
-                    hasJourney
                     hasSelectedPlace={Boolean(candidateForJourney)}
                     hasSavedPocketWalk={Boolean(pocketWalk)}
                   />

@@ -128,15 +128,26 @@ test("地名搜索超时显示没有 HTTP 回答，并保留准确请求路径",
   await expect(page.getByTestId("rev-quick-error-details")).toContainText("HTTP 状态：未收到 HTTP 状态");
 });
 
-test("地名服务不可用时可打开 OpenStreetMap 手选区域，再进入兴趣选择", async ({ page }) => {
+test.describe("地名服务失败后的 390x844 触控地图回退", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, serviceWorkers: "block" });
+
+test("打开地图后地图与兴趣选择都处于可操作视区", async ({ page }) => {
   let cityCalls = 0;
   let tileCalls = 0;
+  const unexpectedProviderRequests: string[] = [];
+  let releaseCitySearch!: () => void;
+  const citySearchGate = new Promise<void>((resolve) => { releaseCitySearch = resolve; });
   await page.addInitScript((id) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-error-fixture-token");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
       id, cityCode: "CN-RV-ERROR-TEST", cityName: "连城", status: "DRAFT",
     }));
   }, journey);
+  await page.route("**/api/v1/travelers/session", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ traveler_id: "00000000-0000-4000-8000-000000000120" }),
+  }));
   await page.route("**/api/v1/agent/runtime-status", (route) => route.fulfill({
     status: 200,
     contentType: "application/json",
@@ -154,6 +165,7 @@ test("地名服务不可用时可打开 OpenStreetMap 手选区域，再进入�
   }));
   await page.route(root + "/bootstrap-city-search", async (route) => {
     cityCalls += 1;
+    await citySearchGate;
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -174,22 +186,71 @@ test("地名服务不可用时可打开 OpenStreetMap 手选区域，再进入�
       "base64",
     ) });
   });
+  await page.route(/(?:nominatim|photon|overpass)/i, async (route) => {
+    unexpectedProviderRequests.push(route.request().url());
+    await route.abort();
+  });
 
   await page.goto("/revolution");
-  await page.getByTestId("rev-quick-find-city").click();
+  const cityButton = page.getByTestId("rev-quick-find-city");
+  await cityButton.tap();
+  try {
+    await expect(cityButton).toHaveText("查询中…");
+    const aiButton = page.getByTestId("rev-quick-consult-ai");
+    await expect(aiButton).toHaveText("问问 AI →");
+    await expect(aiButton).toBeDisabled();
+  } finally {
+    releaseCitySearch();
+  }
   await expect(page.getByRole("status")).toContainText("地名查找暂时连不上");
   await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("打开 OpenStreetMap 地图手选 →");
   await expect(page.getByText("点击后会加载 OpenStreetMap 地图底图；不会使用设备定位。")).toBeVisible();
   expect(cityCalls).toBe(1);
   expect(tileCalls).toBe(0);
 
-  await page.getByTestId("rev-quick-error-recovery").click();
+  await page.getByTestId("rev-quick-error-recovery").tap();
   const map = page.getByTestId("rev-quick-map-fallback");
   await expect(map).toBeVisible();
   await expect(map).toContainText("不会读取设备定位，也不代表地名搜索结果");
   await expect(map.getByTestId("bootstrap-public-map-canvas")).toBeVisible();
+  await expect.poll(async () => {
+    const [mapBox, headerBox, navBox] = await Promise.all([
+      map.boundingBox(),
+      page.locator(".rev-mobile-v1 .rev-firstlook-header").boundingBox(),
+      page.locator(".rev-mobile-v1 .rev-mobile-bottom-nav").boundingBox(),
+    ]);
+    return Boolean(
+      mapBox && headerBox && navBox &&
+      mapBox.y >= headerBox.y + headerBox.height &&
+      mapBox.y + mapBox.height <= navBox.y,
+    );
+  }).toBe(true);
+  const [mapBox, headerBox, navBox] = await Promise.all([
+    map.boundingBox(),
+    page.locator(".rev-mobile-v1 .rev-firstlook-header").boundingBox(),
+    page.locator(".rev-mobile-v1 .rev-mobile-bottom-nav").boundingBox(),
+  ]);
+  expect(mapBox).not.toBeNull();
+  expect(headerBox).not.toBeNull();
+  expect(navBox).not.toBeNull();
+  expect(mapBox!.y).toBeGreaterThanOrEqual(headerBox!.y + headerBox!.height);
+  expect(mapBox!.y + mapBox!.height).toBeLessThanOrEqual(navBox!.y);
   await expect.poll(() => tileCalls).toBeGreaterThan(0);
-  await map.locator("canvas").click({ position: { x: 120, y: 100 } });
-  await expect(page.getByTestId("rev-quick-category")).toBeVisible();
+  await map.locator("canvas").tap({ position: { x: 120, y: 100 } });
+  const category = page.getByTestId("rev-quick-category");
+  await expect(category).toBeVisible();
+  await expect(category.getByText("这次想看些什么？")).toBeInViewport();
+  const firstCategory = category.locator(".rev-quick-categories button").first();
+  await firstCategory.tap();
+  await expect(firstCategory).toHaveAttribute("aria-pressed", "true");
+  const primaryAction = category.getByTestId("rev-quick-find-places");
+  await primaryAction.scrollIntoViewIfNeeded();
+  const [primaryBox, navAfterScroll] = await Promise.all([primaryAction.boundingBox(), page.locator(".rev-mobile-v1 .rev-mobile-bottom-nav").boundingBox()]);
+  expect(primaryBox).not.toBeNull();
+  expect(navAfterScroll).not.toBeNull();
+  expect(primaryBox!.height).toBeGreaterThanOrEqual(44);
+  expect(primaryBox!.y + primaryBox!.height).toBeLessThanOrEqual(navAfterScroll!.y);
   expect(cityCalls).toBe(1);
+  expect(unexpectedProviderRequests).toEqual([]);
+});
 });

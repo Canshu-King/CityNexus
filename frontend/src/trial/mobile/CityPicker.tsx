@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PublicCityAreaPicker, type PublicCityCenter } from "../../features/discovery/PublicCityAreaPicker";
 import type { BootstrapCitySearchResponse, BootstrapCitySearchResult } from "../../api/citynexus";
 import { MobileAiPrompt, type MobileAiAdvice } from "./MobileAiPrompt";
@@ -66,8 +66,22 @@ export function CityPicker({
   onAskAi,
 }: CityPickerProps) {
   const [pendingAction, setPendingAction] = useState<"city-lookup" | "ai-request" | null>(null);
+  const mapFallbackRef = useRef<HTMLDivElement | null>(null);
   const cityLookupPending = busy && pendingAction === "city-lookup";
   const aiRequestPending = busy && pendingAction === "ai-request";
+
+  useEffect(() => {
+    if (!mapFallbackOpen) return;
+    const frame = window.requestAnimationFrame(() => {
+      const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+      mapFallbackRef.current?.scrollIntoView({
+        behavior: reducedMotion ? "instant" : "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [mapFallbackOpen]);
 
   return (
     <div className="rev-quick-pane" data-testid="rev-quick-area">
@@ -188,7 +202,7 @@ export function CityPicker({
         </div>
       )}
       {mapFallbackOpen && !cityFocus && (
-        <div className="rev-quick-map-step" data-testid="rev-quick-map-fallback">
+        <div className="rev-quick-map-step" data-testid="rev-quick-map-fallback" ref={mapFallbackRef}>
           <h3>在地图上选区域</h3>
           <p className="rev-quick-disclosure">
             地图底图来自 OpenStreetMap。拖动到你所在区域，再轻触地图确定搜索中心；这不会读取设备定位，也不代表地名搜索结果。
