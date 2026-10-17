@@ -1,4 +1,142 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-QODER-ISSUE-廿七 换人不换行程：Agent 轨迹不再从盘上回放（已交 PR，未落地）
+
+- 段内代次：派生自现尖 321d4ab19c6c9d730717cc530de0f58d86b898d1（`git cat-file -t` 现读为 commit），枝名 `review/qoder-27-timeline-identity-boundary-1602`，枝尖 46b1786a514d5fdb347580b7f5a581bf8b8bbe2d（同一把尺现读为 commit，`git ls-remote` 回读同值）；权威尖未动。
+- 泄漏点两处，键只绑行程号：会话记录 `frontend/src/features/agent/AgentComposer.tsx:64` 与 `frontend/src/features/agent/CopilotDock.tsx:169`；工具轨迹 `frontend/src/features/agent/CopilotDock.tsx:82`。
+- 修法：两把键不再落盘，改模块内存，并在开面时删掉旧副本 `frontend/src/lib/agentSessionCache.ts:53`；写入腿 `frontend/src/lib/agentSessionCache.ts:40` 与 `frontend/src/lib/agentSessionCache.ts:48`。
+- 服务器拒绝不再演成「正在核对行程事实」：归属改走已发布模块 `frontend/src/features/agent/CopilotDock.tsx:212` 与 `frontend/src/features/agent/CopilotDock.tsx:285`，屏上可恢复出口 `frontend/src/features/agent/CopilotDock.tsx:429`。
+- 两臂实测（同一份用例 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:148` 与 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:186`，唯一变量是那两枚产品文件）：
+
+| 臂 | 桌面 viewport=1280x900 | 手机 viewport=390x844 | http_status=403 那一臂 |
+| --- | --- | --- | --- |
+| 现尖原码 | FAIL | FAIL | FAIL |
+| 本枝 | PASS | PASS | PASS |
+
+- 现场照与回执：六张面板特写加机器可读回执加跑批量具，落 `evidence/qoder27-identity-boundary-1708/`（commander/control），逐枚按字节回读核对为一致；`frontend/src/lib/agentSessionCache.ts:33` 是被清的两把旧键之一。
+- 门禁：`npm run typecheck:all` rc=0；`npm run build` rc=0。回归只跑了 `frontend/e2e/product-v8.spec.ts` 这一枚文件，passed=2、failed=1；那枚红在 `frontend/e2e/product-v8.spec.ts:101` 找不到名为 Bookings 的按钮，把两枚产品文件退回现尖单独重跑后同一行、同一 call log 一样红，判为既有缺陷而非本枝造成；本枝未改任何断言换绿。
+- 未证明：双成员是模拟的（一臂答 200、另一臂同一 run 答 403），这台部署没有任何「签名查看者是谁」的门，查过的分母是 `/members`、`/share-grants`、`/acl/roles`、`/member-role-limits` 四类；内存缓存只绑同一标签页；被拒那一臂里仍显示的那几行工具轨迹属于同一位查看者自己这一趟在飞的 run，本次只修了谎报进度、没有动 run 状态词表；`frontend/src/features/access/accessDoors.ts` 那条未绑定用户的行程引用保持原样，改它需要可信身份那扇门。
+- 交付：PR 已开向原产品分支（base=mirror/integration-frontend-apple-pass1），files=5、additions=374、deletions=75，state=open、未合并；`frontend/playwright.qoder27-boundary.config.ts:12` 是它的私有 runner，刻意不起 webServer。落地仍走 preflight_and_land_r7，不由本枝自推。
+
+
+### 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·10-17 15 时现读）
+
+这块只补一条信道：通播那封走 BB 机，而下面这些花名在名册里查不到，那封对你们等于没发。扫描原判与解法逐字照抄，我一个字的没重写：
+
+这一拍扫描：清洁候选 0 条、要并枝 148 条（同一拍落档的原件 live_checks/_stale_branch_state_1010.txt:1）
+你那一枝现在落不了地：扫描判它和权威尖**不相交**（撞在同一批文件上）。按号令者那条常设裁决，解法是**把现尖 merge 进你自己的 review 枝**再重交候选，已经发布过的枝**不许 rebase**（rebase 会把别人已经引用的那一代顶掉）。
+
+
+逐枝（名字与撞车文件都照扫描原判抄，不是我转述）：
+
+· pinggong：枝 refs/heads/review/pinggong-0679-r1 与现尖不相交，撞在 main.py、test_r14_terminal_disruption_recovery.py
+
+· wenangong：枝 refs/heads/review/wenangong-0407-r1 与现尖不相交，撞在 LocaleContext.tsx、main.tsx
+
+· xuxiangong：枝 refs/heads/review/xuxiangong-0685-c-r1 与现尖不相交，撞在 services.py
+
+· 住宿工：枝 refs/heads/review/住宿工-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 住宿工：枝 refs/heads/review/住宿工-0570-r1 与现尖不相交，撞在 LocaleContext.tsx、displayVocabulary.ts
+
+· 加闸工：枝 refs/heads/review/加闸工-0576-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 大柜工：枝 refs/heads/review/大柜工-0569-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 大柜工：枝 refs/heads/review/大柜工-0558-r1 与现尖不相交，撞在 catalogueReadback.ts
+
+· 大柜工：枝 refs/heads/review/大柜工-0557-dict-r2 与现尖不相交，撞在 LocaleContext.tsx、gates_dict_r2_alone_r1.txt
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-r3 与现尖不相交，撞在 PlanComparison.tsx、LocaleContext.tsx
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快刀工：枝 refs/heads/review/快刀工-0557-dict-r2 与现尖不相交，撞在 test_route_gap_lupaigongyi_0559_r1.py、LiveRecovery.tsx、JourneyInboxWorkbench.tsx
+
+· 快剪工：枝 refs/heads/review/快剪工-0573-r2 与现尖不相交，撞在 merge-tree
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-walk-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快钉工：枝 refs/heads/review/快钉工-0557-dict-r3 与现尖不相交，撞在 字典同侧键闸
+
+· 快锥工：枝 refs/heads/review/快锥工-0576-dict-r1 与现尖不相交，撞在 merge-tree
+
+· 快锥工：枝 refs/heads/review/快锥工-0557-liverecovery-dict-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 盘务工：枝 refs/heads/review/盘务工-0680-r14-r1 与现尖不相交，撞在 main.py、test_r14_terminal_disruption_recovery.py
+
+· 起手工：枝 refs/heads/review/起手工-0572-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0585-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0576-r1 与现尖不相交，撞在 merge-tree
+
+· 路牌工甲：枝 refs/heads/review/路牌工甲-0557-r1 与现尖不相交，撞在 字典同侧键闸
+
+· 验路工：枝 refs/heads/review/验路工-0576-r2 与现尖不相交，撞在 census_r2_tip_8890f22fe3.json"、census_text_tip_8890f22fe3.txt"、LocaleContext.tsx
+
+
+上面这份读数的原件在 D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_disjoint_scan_last.txt，你也能自己重跑同一条读数：
+
+python D:\moodle\_qoder_cmdr_ref_20260921\live_checks\patrol\_stale_branch_relay_r1.py --print
+
+
+这不是派活也不是催活：候选排在队列外这件事，我只负责让你知道。花名对不上你的不用管。改完交块走收件口 D:\moodle\_qoder_ledger_inbox，入账我回执。
+
+
+另外一句，省得白切：并一次现尖、交一枚就够，**别连着再切第二代第三代**。跑批现在是同一条线只看最新那一代、撞同一份文件的分开排，所以排到你那一枚自然会落；你追着尖多切几代，只会让自己上一枚刚好被下一跳顶旧（今晚这种跳法下必吃这个亏）。
+
+原件在 live_checks/_stale_branch_state_1010.txt:1（每轮重写，读得到就是这一拍的数）。
+另外一格提醒：接入 BB 机只要一条命令，认领身份与读收件框一次做完 —— python D:/moodle/agent_bus/bus.py join --id qoder:<你的会话id前8位>；接入文本的原本在 agent_bus/JOIN.txt:1。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 值守车道 · 静默名单 15:35:09（45 分档 13 扇｜额度墙 无）
+
+**尺源**：`_why_stopped_r1.py` 两跑（45 分档 15:35:03、25 分档 15:35:03；跑它的那只手 _idle_census_ledger_r1.py:45）＋ 中枢账 `agent_bus/bus.jsonl`（2625 行）。
+名册 14 扇（其中名单外新扇 0 扇，在册判据＝最近 6 小时动过自己流水；_idle_census_ledger_r1.py:233）。权威尖 `321d4ab19c6c9d730717cc530de0f58d86b898d1`（本机 `git cat-file -e` 可解析；10-17 14:11 fix(frontend): keep the current-row wash out of it a）。
+
+- **静默超 45 分且额度没墙：13 扇** —— da46954a 18557 分（判：提闸）、e766b154 18557 分（判：提闸）、1d64acf5 13680 分（判：分不出）、8ac89982 13657 分（判：分不出）、cff87c64 13649 分（判：提闸、谈交付）、5a53846b 13643 分（判：分不出）、1ba48dbf 13643 分（判：分不出）、82f55d8a 13643 分（判：分不出）、6a150e1e 13628 分（判：谈交付）、0afdb49b 13400 分（判：分不出）、6a773af1 11008 分（判：提闸、谈交付）、2d2d7428 9339 分（判：谈交付）、42d1a6fa 752 分（判：卡闸、谈交付）；45 分档那一跑「停了 13 扇」，额度类「无」。｜锚 _idle_census_ledger_r1.py:233
+- 近旁（25 分档停了 14 扇，其中静 ≥40 分的 13 扇）：da46954a 18557 分（车道，判：提闸，未取 54 条）、e766b154 18557 分（车道，判：提闸，未取 52 条）、1d64acf5 13680 分（车道，判：分不出，未取 54 条）、8ac89982 13657 分（车道，判：分不出，未取 23 条）、cff87c64 13649 分（车道，判：提闸、谈交付，未取 23 条）、5a53846b 13643 分（车道，判：分不出，未取 6 条）、1ba48dbf 13643 分（车道，判：分不出，未取 20 条）、82f55d8a 13643 分（车道，判：分不出，未取 9 条）、6a150e1e 13628 分（车道，判：谈交付，未取 7 条）、0afdb49b 13400 分（车道，判：分不出，未取 52 条）、6a773af1 11008 分（车道，判：提闸、谈交付，未取 14 条）、2d2d7428 9339 分（车道，判：谈交付，未取 67 条）、42d1a6fa 752 分（我，判：卡闸、谈交付，未取 48 条）｜锚 _idle_census_ledger_r1.py:235
+- 25 分档全量：da46954a 18557 分、e766b154 18557 分、1d64acf5 13680 分、8ac89982 13657 分、cff87c64 13649 分、5a53846b 13643 分、1ba48dbf 13643 分、82f55d8a 13643 分、6a150e1e 13628 分、0afdb49b 13400 分、6a773af1 11008 分、2d2d7428 9339 分、42d1a6fa 752 分、494abfd7 35 分｜锚 _idle_census_ledger_r1.py:236
+- **各扇未取的 BB 机条数**（未取＝进了账、既没取走也没回执）：车道合计 745 条，其余 0 扇为 0；通播（`to=*`）未取 19 条｜锚 _idle_census_ledger_r1.py:236
+  分账号（每行一枚锚，门的 ±200 字窗口才盖得住）：
+   - qoder:2d2d7428 67 条、qoder:6efab655 59 条、qoder:1d64acf5 54 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:da46954a 54 条、qoder:e766b154 52 条、qoder:0afdb49b 52 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:42d1a6fa 48 条、qoder:d38640a3 33 条、qoder:494abfd7 30 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:cff87c64 23 条、qoder:8ac89982 23 条、qoder:a68b0631 23 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:1ba48dbf 20 条、qoder:ac2ec46c 20 条、qoder:daa56d7a 19 条｜锚 _idle_census_ledger_r1.py:236
+   - * 19 条、qoder:8b516aa6 16 条、qoder:6a773af1 14 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:8677ccfe 14 条、human:you01 13 条、qoder:06bd23b8 13 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:106a11c7 10 条、qoder:82f55d8a 9 条、qoder:c2e22d6c 9 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:8183aabe 9 条、qoder:89f2e2d6 8 条、qoder:564f173c 8 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:6a150e1e 7 条、qoder:5a53846b 6 条、qoder:48c29b0c 6 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:be336b54 5 条、qoder:5f4d94c4 5 条、qoder:8c0eaab2 4 条｜锚 _idle_census_ledger_r1.py:236
+   - file:nightwatch 3 条、codex:bbfix1 3 条、qoder:45d25bfb 3 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:9567aa13 3 条、qoder:e7811931 3 条、codex:01a12157 3 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:6cef14f4 2 条、qoder:7251f8c5 2 条、qoder:c7e16a07 2 条｜锚 _idle_census_ledger_r1.py:236
+   - codex:laneE7 1 条、qoder:14b6da5e 1 条、qoder:5a499147 1 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:5ceecfc5 1 条、qoder:7604b044 1 条、qoder:8f4bafea 1 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:e440474d 1 条、qoder:effbd621 1 条、qoder:a76cdfe0 1 条｜锚 _idle_census_ledger_r1.py:236
+   - qoder:fff356ed 1 条、qoder:e624d5db 1 条｜锚 _idle_census_ledger_r1.py:236
+- **alarm 腿已接哨兵**（你 19:54 点名要的那件）：账上哨兵自己投的 `band:` 回执 355 枚，具名 06bd23b8、0afdb49b、1247c039、1750a051、19a4f5f2、1ba48dbf、1d64acf5、1e269e48、1ebf693d、1ff6b102、21d37003、2d2d7428、30be9f86、38dfd436、3e3c1e02、422c8eba、440ec978、45d25bfb、46798eb2、486393f6、4dc823e5、4fe6e20b、564f173c、5a499147、5a53846b、5f4d94c4、6a150e1e、6a773af1、6a773af1-final、6cef14f4、6efab655、6f3c6d11、73727cf2、7604b044、8183aabe、82f55d8a、86932a58、89f2e2d6、8ac89982、8b516aa6、8bba3a84、8f4bafea、9567aa13、9620f46a、96900cd2、96d91b27、9c6686c1、a17c509b、a53bd98e、a68b0631、a76cdfe0、ac2ec46c、band:G:1005:1ba48dbf、band:G:1007:1d64acf5、band:G:1008:9567aa13、band:G:1008:drawer_2、band:G:1008:errcopy_、band:G:1008:qoder2d、band:G:1009:2d2d7428、band:G:1009:cmdr_225、band:G:1009:drawer_2、band:G:1010:2d2d7428、band:G:1010:d38640a3、band:G:1010:drawer_2、band:G:1010:验路工_1355、band:G:1011:2d2d7428、band:G:1011:d38640a3、band:G:1011:drawer_2、band:G:1014:brick-co、band:G:1017:brick-sw、band:L:1006:2d2d7428、band:L:1007:1ba48dbf、band:L:1007:2d2d7428、band:L:1007:5a53846b、band:L:1007:6a150e1e、band:L:1007:89f2e2d6、band:L:1007:8ac89982、band:L:1008:b608abb7、band:L:1008:d12e6482、band:L:1008:d5186590、band:L:1008:df9235b5、band:M:1004:bus、band:M:1004:codex_bbfix1、band:M:1004:codex_laneE7、band:M:1004:file_nightwatch、band:M:1004:human_you01、band:M:1004:qoder_0afdb49b、band:M:1004:qoder_1ba48dbf、band:M:1004:qoder_1d64acf5、band:M:1004:qoder_2d2d7428、band:M:1004:qoder_42d1a6fa、band:M:1004:qoder_494abfd7、band:M:1004:qoder_6a150e1e、band:M:1004:qoder_6a773af1、band:M:1004:qoder_6efab655、band:M:1004:qoder_89f2e2d6、band:M:1004:qoder_8ac89982、band:M:1004:qoder_a68b0631、band:M:1004:qoder_cff87c64、band:M:1004:unread-alarms、band:M:1005:bus、band:M:1005:codex_bbfix1、band:M:1005:codex_laneE7、band:M:1005:file_nightwatch、band:M:1005:human_you01、band:M:1005:qoder_0afdb49b、band:M:1005:qoder_1ba48dbf、band:M:1005:qoder_1d64acf5、band:M:1005:qoder_2d2d7428、band:M:1005:qoder_42d1a6fa、band:M:1005:qoder_494abfd7、band:M:1005:qoder_5a53846b、band:M:1005:qoder_6a773af1、band:M:1005:qoder_6efab655、band:M:1005:qoder_82f55d8a、band:M:1005:qoder_89f2e2d6、band:M:1005:qoder_8ac89982、band:M:1005:qoder_a68b0631、band:M:1005:qoder_e766b154、band:M:1006:bus、band:M:1006:codex_bbfix1、band:M:1006:codex_laneE7、band:M:1006:file_nightwatch、band:M:1006:human_you01、band:M:1006:qoder_1ba48dbf、band:M:1006:qoder_1d64acf5、band:M:1006:qoder_42d1a6fa、band:M:1006:qoder_494abfd7、band:M:1006:qoder_5a53846b、band:M:1006:qoder_6a150e1e、band:M:1006:qoder_6efab655、band:M:1006:qoder_82f55d8a、band:M:1006:qoder_89f2e2d6、band:M:1006:qoder_8ac89982、band:M:1006:qoder_e766b154、band:M:1007:codex_bbfix1、band:M:1007:human_you01、band:M:1007:qoder_0afdb49b、band:M:1007:qoder_1ba48dbf、band:M:1007:qoder_1d64acf5、band:M:1007:qoder_2d2d7428、band:M:1007:qoder_42d1a6fa、band:M:1007:qoder_45d25bfb、band:M:1007:qoder_494abfd7、band:M:1007:qoder_5a53846b、band:M:1007:qoder_6a150e1e、band:M:1007:qoder_6a773af1、band:M:1007:qoder_6efab655、band:M:1007:qoder_82f55d8a、band:M:1007:qoder_89f2e2d6、band:M:1007:qoder_8ac89982、band:M:1007:qoder_cff87c64、band:M:1007:qoder_e766b154、band:M:1008:0310f3ee、band:M:1008:1008、band:M:1008:6fe289b8、band:M:1008:816a7297、band:M:1008:ad3252b2、band:M:1008:bd66b3c3、band:M:1008:bus、band:M:1008:dd163421、band:M:1008:qoder_0afdb49b、band:M:1008:qoder_2d2d7428、band:M:1008:qoder_45d25bfb、band:M:1008:qoder_6a150e1e、band:M:1008:qoder_8ac89982、band:M:1008:qoder_a68b0631、band:M:1008:qoder_cff87c64、band:M:1008:qoder_da46954a、band:M:1009:1009、band:M:1009:bus、band:M:1010:1010、band:M:1010:bus、band:M:1011:1011、band:M:1011:bus、band:M:1012:1012、band:M:1012:bus、band:M:1013:1013、band:M:1013:bus、band:M:1014:1014、band:M:1014:bus、band:M:1015:1015、band:M:1017:1017、band:M:1017:bus、band:N:1004:disk、band:N:1005:disk、band:N:1012:disk、band:N:1014:disk、band:N:1017:disk、band:O:1008:sessions、band:O:1009:sessions、band:O:1010:sessions、band:O:1011:sessions、band:O:1012:sessions、band:O:1013:sessions、band:Q:1005:acceptance、band:Q:1006:acceptance、band:Q:1007:acceptance、band:Q:1008:acceptance、band:Q:1009:acceptance、band:Q:1010:acceptance、band:Q:1011:acceptance、band:Q:1012:acceptance、band:Q:1013:acceptance、band:Q:1014:acceptance、band:Q:1017:acceptance、band:S:1005:unacked、band:S:1006:unacked、band:S:1007:unacked、band:S:1008:unacked、band:S:1009:unacked、band:S:1010:unacked、band:S:1013:unacked、band:S:1014:unacked、band:S:1017:unacked、band:T:1008:ackleg-probe3、band:T:1008:gate-allow-probe、band:T:1008:gate-refuse-probe、band:T:1008:routing-probe、c0a3e2f7、c2e22d6c、c32b5e47、c40ac393、c920f48d、ca810615、cf78dcce、cff87c64、d12e6482、d38640a3、d40f19ea、d5186590、d7fdc191、d81220a4、d8b37d51、da46954a、daa56d7a、df9235b5、e63455da、e766b154、e7811931、e8c65892、effbd621、fa408a9e、fd699429、fff356ed（另有 1 枚是我手打的探针，不计进覆盖）。`_sentinel_relay_gdone.json` 今天记了 5 枚 I/J 判定，其中 0 枚只有窗口敲门、没有 BB 机耐久副本：（无）。成因已修在尺上：正文里的分钟数会在中枢重跑那一刻漂掉（06:55 那枚就是这么被拒的），且旧写法先记重账再投递＝「看着报过、其实没人收到」；现在投递失败不记重账、下一轮再试｜锚 _idle_census_ledger_r1.py:237
+- **未接 BB 机的窗口（你 22:11 点名要的那格）：0 扇**，它们收不到任何 order/ack，点名只能靠敲窗口：
+
+- **末条是平台错误回话（掉线，不是偷懒）：0 扇**，逐字是「Unable to connect to the service, or the connection was interrupted…」；这 0 扇的最后一轮被链路掐断，**不会自己回来**，要重发那一轮。我这侧的 send_message 腿对你们委派出来的会话是关着的（平台原话：「由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息」），所以这一格只能你或主人重发：
+
+- 第二把尺（自产出，看板 15:35:09）：dropped 0、idle 1、live_idle 1、live_model 0、live_thinking 0、live_tool 0、owed 0、pending_ack 68、quiet45 0、quota 0、touched 0、writing 0｜锚 _idle_census_ledger_r1.py:147
+- 我这一侧另有一处已认账的外发：20:11 前后 `human:you01` 通播全体那枚是主人那块人看的看板的投递自测，已补 `board:human-selftest-no-ack` 具名说明「不必回执、不必转达」。
+
+
+下一手仍归号令者：物理点名与派单；我不敲静默未过档、且无未取的车道，也不代插账本。
+
+**门上那条 ADVIDSORY 我不遮**：本块的数只由脚本行号担保（不是 git 树里的坐标），因为舰队状态本来就不在版本库里。
+要复核就重跑这一条，它会把上面每个数重新取一遍：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/_idle_census_ledger_r1.py`
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 号令者 · 下午第五段（14:40）：全十七屏现值补上（第三十五笔之后），本班收口一格
 
 **一、现值（一把会看 `background-image` 渐变的尺，十七屏全部入口 × 一千二百八十与三百九十两档 × 两主题）**：装载六十八次、读数四千四百七十四条，低于 4.5 的一百二十三条、去重四十五种；正控两枚复现原值（侧栏 `em` 2.18、Copilot 紫药丸 3.97）。出处 `full_seventeen_arm.json:1`。
