@@ -1,4 +1,23 @@
-# Revolution Lab 真正的首次试用（2026-10-14）
+# Revolution 手机版试用
+
+先看 [13 步图文教程：开始一次两站散步](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)。每一步都有 Revolution 新版真实截图和按钮原文。
+
+当前本机新版入口：[http://127.0.0.1:14332/revolution](http://127.0.0.1:14332/revolution)。当前运行记录和版本见 [2026-10-18 中文实测报告](results/20261018_CHROME_USE_C0_C1_RESULT.md)。
+
+需要自己启动时，在 `design/revolution-mobile-first-v1` 的工作目录打开 PowerShell：
+
+```powershell
+py -3.13 trial\try_revolution.py --fresh --frontend-port 14332 --backend-port 18501
+```
+
+保留启动终端，按终端提示输入地图服务联系邮箱，再按页面按钮逐次确认查询。端口已占用时，使用正在运行的入口，或选择另一组空闲端口。
+
+想离线看示例界面时添加 `--sample`；想配置本机 AI 时添加 `--agent`，接入方式见 [本机 WB2API 说明](REVOLUTION_AGENT_WB2API_CONNECT.md)。当前 14332 实例可完成真实公开地点、两站保存和 GO，AI 未启用。
+
+<details>
+<summary>历史启动记录（2026-10-14；旧端口和旧分支命令不适用于上面的新版实例）</summary>
+
+## Revolution Lab 首次试用历史记录
 
 ## 2026-10-14 更新：可接本机真实 Agent（仅经用户主动启用）
 
@@ -90,3 +109,5 @@ adb reverse tcp:14173 tcp:14173
 ## 完成标准
 
 用户打开 `/revolution`，输入连城并授权地点搜索，找到两个有明确来源的地点，保存个人 Pocket Walk，开启 GO，再刷新页面确认行程恢复。若地点服务不可用，页面显示实际失败状态和原因。
+
+</details>
