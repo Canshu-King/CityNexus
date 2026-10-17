@@ -30,3 +30,11 @@
 - `npm.cmd run typecheck:all`：通过，退出码 0。
 - `git diff --check -- frontend/src/trial/RevolutionFirstLook.tsx`：通过。
 - `USER_VERIFIED=PENDING`；本轮没有真实模型调用、ACTIVE Journey 或 AgentRun 证据。
+
+## 手机地点卡后续更新｜PR #23 commit `47840179289afc8b47ac6b0b7e939f8e56d17161`
+
+地点卡现在会按服务端返回的缺项说明营业时间、费用或开放状态；用户能直接查看 OpenStreetMap 来源或换个地点，私人散步仍可保存。正式行程门槛与后端逻辑没有改动。
+
+- `npm.cmd run typecheck:all`：PASS；`git diff --check`：PASS。
+- GitHub Actions [39069856420](https://github.com/Canshu-King/CityNexus/actions/runs/39069856420)：PASS（Chromium 部分为 fixture）。
+- 新页面已打开，但任务专用 Chrome 是干净会话，没有所选地点可检查这条提示；没有重新请求地点或模型。已知隔离库仍为 DRAFT 1、私人散步 1、AgentRun 0。`USER_VERIFIED=PENDING`。
