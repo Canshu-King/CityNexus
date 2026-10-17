@@ -68,6 +68,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/travelers/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getTravelerSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/travelers/{traveler_id}": {
         parameters: {
             query?: never;
@@ -2832,6 +2848,14 @@ export interface components {
             /** @enum {string} */
             ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
         };
+        TravelerSession: {
+            /** Format: uuid */
+            traveler_id: string;
+            /** @constant */
+            auth_method: "SIGNED_HMAC_BEARER";
+            /** @description Unix seconds at which the presented token stops being accepted */
+            expires_at: number;
+        };
         ErrorEnvelope: {
             error: {
                 code: string;
@@ -3735,6 +3759,9 @@ export interface components {
             successful_place_ids: string[];
             failed_place_ids: string[];
             degraded: boolean;
+            used_timezone: string | null;
+            timezone_honoured: boolean;
+            attribution_skipped_reason_codes: string[];
             snapshots: {
                 [key: string]: unknown;
             }[];
@@ -4162,6 +4189,44 @@ export interface operations {
                 };
             };
             422: components["responses"]["ValidationError"];
+        };
+    };
+    getTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The authenticated traveller principal */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSession"];
+                };
+            };
+            /** @description No signed traveller credentials, or they are expired, invalid, or name a traveller who no longer exists. The body is the shared error envelope; `error.reason_code` names which of those it was (TRAVELER_CREDENTIALS_MISSING / _INVALID / _EXPIRED / TRAVELER_PRINCIPAL_NOT_FOUND). */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret configured (TRAVELER_AUTH_NOT_CONFIGURED). The door refuses rather than accepting an identity it cannot verify. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
         };
     };
     getTraveler: {
