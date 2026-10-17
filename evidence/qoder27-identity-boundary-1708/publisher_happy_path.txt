@@ -1,0 +1,1 @@
+happy-path 复测：改完读回腿与直连退路之后，真发一枚文件，判语仍是 BYTE-LEVEL MATCH。
