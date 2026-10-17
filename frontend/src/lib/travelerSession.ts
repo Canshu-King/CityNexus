@@ -126,10 +126,24 @@ export function clearSignedSession(reason: "signed-out" | "refused" | "expired" 
   lastVerdict = reason === "expired" ? "EXPIRED" : "UNSIGNED";
   try {
     store()?.removeItem(SESSION_KEY);
+    /* The journey this tab was looking at was opened *under* this credential.  Once the
+       credential is gone, leaving the pointer behind would put the request back in the
+       anonymous shape this server still answers -- which is exactly how the previous
+       traveller's trip reappears on a shared phone.  So the pointer goes with it.
+       (The missing piece this exposes is a "reopen my trips" door after re-auth; there is no
+       such door on this line yet, and saying so is better than pretending the wipe is free.) */
+    window.localStorage.removeItem(JOURNEY_POINTER_KEY);
   } catch {
     /* nothing to forget: memory is already cleared, which is the part that matters */
   }
-  void import("./agentSessionCache").then(({ clearAgentSessionCaches }) => clearAgentSessionCaches()).catch(() => undefined);
+  void import("./agentSessionCache")
+    .then(({ clearAgentSessionCaches, dropAllLegacyDiskCopies }) => {
+      // Sweep every journey's Agent copies, not just the one currently on screen: the person who
+      // just left may have opened several trips on this device.
+      dropAllLegacyDiskCopies();
+      clearAgentSessionCaches();
+    })
+    .catch(() => undefined);
 }
 
 /** The shell's saved pointer -- "which trip to open on this device" (`app/V8Experience.tsx`). */
@@ -175,7 +189,10 @@ export function observeRejection(status: number, reasonCode: string | null): voi
       /* a pointer we could not remove is still refused by the server, which is the real gate */
     }
     void import("./agentSessionCache")
-      .then(({ clearAgentSessionCaches }) => clearAgentSessionCaches())
+      .then(({ clearAgentSessionCaches, dropAllLegacyDiskCopies }) => {
+        dropAllLegacyDiskCopies();
+        clearAgentSessionCaches();
+      })
       .catch(() => undefined);
     return;
   }

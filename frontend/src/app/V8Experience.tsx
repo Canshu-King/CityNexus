@@ -946,6 +946,17 @@ export function V8Experience() {
     setCachedCopySaved(await saveOfflineJourneyVerified(nextOffline));
   };
 
+  /* Issue #31 A(4): a credential this tab is holding gets checked the moment the shell mounts,
+     not lazily at the next create.  "Token 失效就清除" is only a rule if it runs before anybody
+     reads the screen the old session was still holding -- otherwise a phone handed over shows the
+     previous traveller's trip until the person happens to press something.  A transport failure
+     deliberately keeps the session (the wifi blinking is not a logout), and a refusal wipes the
+     credential, the trip pointer and every Agent record with it, inside `travelerSession`. */
+  useEffect(() => {
+    if (!signedTravelerId()) return;
+    void verifySignedSession((headers) => askTravelerSession(headers));
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     async function boot() {
@@ -3226,6 +3237,7 @@ function Hub({
           <button
             type="button"
             className="v8-quiet-button"
+            data-testid="hub-new-journey"
             onClick={onNewJourney}
           >
             {t("trial.newJourney")}
