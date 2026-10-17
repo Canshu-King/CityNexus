@@ -21,10 +21,10 @@ export const journeyAbortCopy = {
   en: {
     "abort.title": "Abort this trip",
     "abort.explains":
-      "After you abort it: this trip leaves “Live trips”, it stays in your trip list -- aborting is " +
-      "not discarding, and the recycle bin is the only place that discards -- and the reason you " +
-      "write is stored with the trip, so any later screen can read it back. There is no way back: " +
-      "this server has no door that un-aborts a trip, so travelling it again means starting a new one.",
+      "After you abort it: this trip no longer appears in “Live trips”. It stays in your trip list -- " +
+      "aborting is not discarding; to discard it, use the recycle bin. The reason you write is stored " +
+      "with the trip, so any later screen can read it back. There is no way back: this server has no " +
+      "door that un-aborts a trip, so travelling this route again means starting a new one.",
     "abort.reasonLabel": "Why you are calling it off (stored with the trip)",
     "abort.reasonPlaceholder": "e.g. something came up at home and we are not going this time",
     "abort.action": "Abort this trip",
@@ -70,7 +70,9 @@ export const journeyAbortCopy = {
   "zh-CN": {
     "abort.title": "中止这趟行程",
     "abort.explains":
-      "中止之后：这趟不再进入「实时行程」；它仍留在你的行程列表里——中止不等于丢弃，只有回收站那两扇门管丢弃；你写下的原因会和这趟行程一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有把中止撤回的门，想再走这条路只能新开一趟。",
+      "中止之后：这趟不再进入「实时行程」。它仍留在你的行程列表里——中止不等于丢弃，要丢弃请去回收站。" +
+      "你写下的原因会和这趟一起存下来，之后任何一屏都能读回。不能回头：这台服务器没有撤回中止的门，" +
+      "想再走这条路只能新开一趟。",
     "abort.reasonLabel": "中止的原因（会随行程一起存下）",
     "abort.reasonPlaceholder": "例如：家里临时有事，这趟先不去了",
     "abort.action": "中止这趟行程",

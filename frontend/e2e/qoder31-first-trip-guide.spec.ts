@@ -34,6 +34,8 @@ type Shot = {
   note?: string;
   viewportWidth: number;
   targets: Target[];
+  /** 这一屏真的印出来的点号机器键（`catalog.count.zero` 那一类）；教程要求它恒为空。 */
+  paintedKeys: string[];
 };
 
 const shots: Shot[] = [];
@@ -87,11 +89,21 @@ async function shoot(
     });
   await page.waitForTimeout(250);
   const viewportWidth = await page.evaluate(() => window.innerWidth);
+  /* 这一屏上真的印出来的点号机器键（`catalog.count.zero` 那一类）必须为空。上一版第 ⑥ 张就是
+   * 把字典缺键直接拍进了教程，靠人眼看图才发现——所以把它变成一条尺，而不是靠谁去盯。 */
+  const paintedKeys = await page.evaluate(() => {
+    const visible = document.body ? document.body.innerText.replace(/\s+/g, " ") : "";
+    return Array.from(new Set(visible.match(/[a-z][a-z0-9]*\.[a-z][a-z0-9]*\.[a-z0-9]+/g) || []));
+  });
+  if (paintedKeys.length) {
+    console.log(`guide ${id} 屏上印着机器键 ${paintedKeys.join(" | ")}`);
+  }
   const recorded: Shot = {
     id,
     file,
     headline,
     viewportWidth,
+    paintedKeys,
     ...(note ? { note } : {}),
     targets: [],
   };
@@ -154,10 +166,12 @@ test.describe("Issue #31 C 返工：第一次出行的八屏实拍", () => {
     // 上一版用天津，第一屏就挂着"这座城市还没准备好"，读者会以为自己做错了什么）。
     await page.goto("/v8", { waitUntil: "load" });
     await expect(page.getByTestId("trial-setup")).toBeVisible({ timeout: 25_000 });
-    await page.getByTestId("trial-city").fill("Beijing");
+    await page.getByTestId("trial-city").fill("北京");
     await shoot(page, "01", "city", "① 先说要去的城市", [
+      /* 这一屏只圈城市格，不圈「下一步」：那一颗此刻还是灰的（三项填齐前 opacity 实测 0.45），
+       * GPT 逐张看图判它是"照着点会没反应"的假出口。被圈的东西必须真的能点，所以「下一步」留到
+       * 第 ② 张——那时三格都填完、按钮是亮的。 */
       { testId: "trial-city", action: "填城市" },
-      { testId: "trial-next", action: "填完点这里" },
       /* 试过把下面那段"这座城市还没准备过"也圈上（`trial-city-warning`）：它在向导自己的
        * 滚动容器里，`boundingBox()` 为它滚视口会一直不 settle，整条用例被拖到超时。
        * 那句话本来就在屏上看得见，教程正文里解释它说什么，不靠圈。 */
@@ -268,7 +282,7 @@ test.describe("Issue #31 C 返工：第一次出行的八屏实拍", () => {
      * （空白），也可能直接停在「确认创建」（记得答案）。两种屏都得走到创建，否则 ⑧ 会去等一格
      * 本来就不在这张屏上的输入框——上一版就是这么超时在 `trial-city` 上的。 */
     if ((await page.getByTestId("trial-city").count()) > 0) {
-      await page.getByTestId("trial-city").fill("Beijing");
+      await page.getByTestId("trial-city").fill("北京");
       await page.getByTestId("trial-arrival").fill("北京南站");
       await page.getByTestId("trial-departure").fill("大兴国际机场");
       await page.waitForTimeout(400);
@@ -314,6 +328,8 @@ test.describe("Issue #31 C 返工：第一次出行的八屏实拍", () => {
           `${shot.id} 的 ${target.testId} 在截图那一刻没画全：${JSON.stringify(paint)}`,
         ).toEqual([true, true, true]);
       }
+      /* 每一张都不许把字典缺键拍进教程：这一条正是第 ⑥ 张 `catalog.count.zero` 换来的。 */
+      expect(shot.paintedKeys, `${shot.id} 这张屏上印着机器键`).toEqual([]);
     }
   });
 });

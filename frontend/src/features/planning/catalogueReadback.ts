@@ -15,7 +15,29 @@
  *    evidence panel's job under 技术详情, not the copy's.
  */
 
-import { dictionaryCopy, dictionaryText } from "../../i18n/LocaleContext";
+/**
+ * The three sentences, owned here.  They used to be fetched with `dictionaryCopy("…", "catalog.count.zero")`
+ * -- and no dictionary on this line ever defined `catalog.count.*`, so the fallback in
+ * `LocaleContext.tsx:3112` handed back the key itself and the trip page printed
+ * `catalog.count.zero` to a traveller.  That is exactly what the header of this file forbids, so the
+ * copy now lives beside the rule it serves (same shape as `abort/journeyAbortCopy.ts`), and a missing
+ * string can no longer degrade into an identifier.
+ */
+const CATALOGUE_COPY = {
+  en: {
+    zero: "This city has no places on this server yet.",
+    unreadable: "This server has not answered how many places this city holds.",
+    some: "This city has {count} places to plan with on this server.",
+  },
+  "zh-CN": {
+    zero: "这座城在这台服务器上还没有可排的地点。",
+    unreadable: "这台服务器还没答上来：这座城有多少个地点。",
+    some: "这座城在这台服务器上有 {count} 个可排的地点。",
+  },
+} as const;
+
+export const UNREADABLE_SENTENCE_ZH = CATALOGUE_COPY["zh-CN"].unreadable;
+export const UNREADABLE_SENTENCE_EN = CATALOGUE_COPY.en.unreadable;
 export type CatalogueReadback = {
   /** `server` only when the door answered with a readable list; `unreadable` is a real state. */
   source: "server" | "unreadable";
@@ -24,9 +46,6 @@ export type CatalogueReadback = {
   /** The status we actually saw, so an unreadable reading can name itself. */
   httpStatus: number | null;
 };
-
-export const UNREADABLE_SENTENCE_ZH = dictionaryCopy("zh-CN", "catalog.count.unreadable");
-export const UNREADABLE_SENTENCE_EN = dictionaryCopy("en", "catalog.count.unreadable");
 
 export async function readCityCatalogue(
   cityCode: string | undefined,
@@ -68,8 +87,9 @@ export function catalogueCountSentence(
     return zh ? UNREADABLE_SENTENCE_ZH : UNREADABLE_SENTENCE_EN;
   }
   const count = readback.placeCount;
+  const table = zh ? CATALOGUE_COPY["zh-CN"] : CATALOGUE_COPY.en;
   if (count === 0) {
-    return dictionaryCopy(zh ? "zh-CN" : "en", "catalog.count.zero");
+    return table.zero;
   }
-  return dictionaryText(zh ? "zh-CN" : "en", "catalog.count.some", { count });
+  return table.some.replace("{count}", String(count));
 }

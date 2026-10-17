@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-10-17T18:59:29.516Z",
+  "generatedAt": "2026-10-17T20:35:19.632Z",
   "shots": [
     {
       "id": "01",
       "file": "01-city.png",
       "headline": "① 先说要去的城市",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "trial-city",
@@ -20,24 +21,7 @@
             "opacity": "1",
             "visibility": "visible",
             "color": "rgb(29, 29, 31)",
-            "paintedText": "Beijing",
-            "fadedBy": []
-          }
-        },
-        {
-          "testId": "trial-next",
-          "action": "填完点这里",
-          "box": {
-            "x": 20,
-            "y": 788,
-            "width": 350,
-            "height": 44
-          },
-          "paint": {
-            "opacity": "0.45",
-            "visibility": "visible",
-            "color": "rgb(255, 255, 255)",
-            "paintedText": "下一步",
+            "paintedText": "北京",
             "fadedBy": []
           }
         }
@@ -48,13 +32,14 @@
       "file": "02-anchors.png",
       "headline": "② 再填抵达和离开",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "trial-arrival",
           "action": "从哪儿到",
           "box": {
             "x": 41,
-            "y": 650.796875,
+            "y": 630.5,
             "width": 308,
             "height": 44
           },
@@ -71,7 +56,7 @@
           "action": "从哪儿走",
           "box": {
             "x": 41,
-            "y": 726.796875,
+            "y": 706.5,
             "width": 308,
             "height": 44
           },
@@ -107,6 +92,7 @@
       "file": "03-confirm.png",
       "headline": "③ 核对无误，点这里创建",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "trial-create",
@@ -132,6 +118,7 @@
       "file": "04-today.png",
       "headline": "④ 点这里看 AI 做过什么",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "hub-ai-work",
@@ -157,6 +144,7 @@
       "file": "05-ai-panel.png",
       "headline": "⑤ 这里只写服务器确证过的事",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "note": "测试环境 AI 未启用；当前没有真实运行",
       "targets": [
         {
@@ -183,6 +171,7 @@
       "file": "06-trip-entry.png",
       "headline": "⑥ 行程页也有同一颗入口",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "trip-ai-work",
@@ -208,6 +197,7 @@
       "file": "07-trip-panel.png",
       "headline": "⑦ 不确定就点这里再查",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "agent-work-retry",
@@ -233,6 +223,7 @@
       "file": "08-stay-retry.png",
       "headline": "⑧ 查不到时点这里重试",
       "viewportWidth": 390,
+      "paintedKeys": [],
       "targets": [
         {
           "testId": "hub-stay-retry",

@@ -152,7 +152,10 @@ def annotate(frontend):
             )
             draw.rounded_rectangle(frame, radius=radius_box, outline=INK, width=stroke)
 
-            cx, cy = badge_spot(frame, canvas.size, radius, w > 180 * scale)
+            # 框够宽（放得下角标又不压字）就把角标放进框内右端：那里通常是留白。
+            # 阈值按角标直径算，不按像素写死——第 ⑥ 张那颗小入口曾被外置角标压住下面那行
+            # 「行程」标签。
+            cx, cy = badge_spot(frame, canvas.size, radius, w > radius * 6)
             glyph_w, glyph_h = text_width(draw, glyph, badge_font)
             if len(glyph) == 1:
                 draw.ellipse(
