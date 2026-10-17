@@ -69,3 +69,19 @@ ANDROID_PHONE = NOT_TESTED
 - 新增四种状态的 Chromium UI 回归。命令：`npm.cmd run test:e2e -- --project=chromium --workers=1 --grep 'city search explains'`；隔离运行 `geocoderstatus20261017b`，端口 4191/18241，独立 SQLite，AI 关闭、地名服务由测试响应拦截。结果 `5 passed`，包括 1 项套件初始化和 4 项地名状态断言；无真实地点请求。随后只修正测试响应里的 provider 状态字段以匹配各自结果，没有改产品逻辑。
 - 最终工作树执行 `npm.cmd run typecheck:all -- --pretty false`：退出码 0。
 - 本轮代码只修正错误反馈，没有伪造地点。`TWO_POI_FLOW` 仍是 `NOT_REACHED`：目前未能拿到两处真实地点，Pocket Walk 保存、GO 和刷新恢复仍待真实来源支持；`SIGNED_AGENT_RUN` 仍是 `NOT_CREATED`。
+## 2026-10-17 Photon follow-up
+
+已按页面公开说明和单次授权，对连城当前公开中心各执行一次不同类别的真实 Photon 请求；没有重试同一类别：
+
+| 类别 | Photon HTTP | Photon 原始要素 / adapter 返回 | CityNexus 可选地点 |
+|---|---:|---:|---:|
+| park/garden（此前同页请求） | 200 | 2 / 2 | 0 |
+| museum/gallery | 200 | 0 / 0 | 0 |
+| cafe | 200 | 1 / 1 | 0 |
+| library | 200 | 1 / 1 | 0 |
+
+cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapter 形成候选，但最终 shortlist 为 0。原始 tag 没有进入安全回执，故不声称知道被筛掉的具体标签；没有任何地点写入收藏。四次都是 LIVE_PROVIDER 响应，当前连城查询结果仍为 LIVE_ZERO_RESULTS。页面授权在每次请求后复位。
+
+已核实 Photon 官方 API 文档允许 /reverse 按 OSM 分类过滤；本次 200/零可选地点不能归因于端点错误。Photon 文档也说明其是地名检索服务，公共索引不承诺覆盖所有 POI 分类。来源：[Photon API](https://github.com/komoot/photon/blob/master/docs/api-v1.md)、[Photon 分类过滤](https://github.com/komoot/photon/blob/master/docs/categories.md)。
+
+当前 TWO_POI_FLOW=NOT_REACHED：真实结果仍不足两处，Pocket Walk、GO、刷新恢复尚未运行。没有改成放宽受限地点过滤，也没有用测试地点顶替真实结果。

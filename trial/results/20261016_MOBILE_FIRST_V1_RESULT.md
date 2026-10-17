@@ -79,3 +79,10 @@ Revolution 手机外壳包含「探索 / 行程 / 我的」三栏。探索页提
 - 随后从本机教程读取 key 并直连 `127.0.0.1:7865/v1/chat/completions`，使用 `auto:cheapest` 发出一次受限工具调用：HTTP 200、`finish_reason=tool_calls`、1 次 `report_probe`，`usage.credit=0`，路由到 `global:deepseek-v4.1-flash`。请求 ID：`ef47b48a4e6d6f22ae5077f3241a9e4f`。
 - key 未写入仓库、前端或报告；没有改动本机运行配置或数据库。
 - 未完成：真实 POI 结果 → Pocket Walk → GO → 刷新恢复；ACTIVE Journey 的持久化 Hermes `AgentRun` 工具轨迹；Android 实机验收。
+
+## 2026-10-17 最新 P0 结果
+
+- 真实本机 WB2API DRAFT 建议已返回；本地 Chat Completions 探针收到真实 tool_calls 帧。这两项都没有在签名 ACTIVE Journey 中执行并落库，SIGNED_AGENT_RUN=NOT_CREATED。
+- 连城当前中心的 Photon 实际请求：park/garden 2 个原始要素、0 个可选地点；museum/gallery 0 个；cafe 1 个原始要素、0 个可选地点；library 1 个原始要素、0 个可选地点。服务端均返回 HTTP 200；无地点入库，也没有再次请求同一类别。
+- TWO_POI_FLOW=NOT_REACHED：没有两处可选真实 POI，因此 Pocket Walk、GO 和刷新恢复仍未执行。错误状态显示已改正，并已由定向 Chromium 4 个状态用例、前端全量类型检查和 PR CI 验证。
+- PR #23 最新提交 cafb65566a09e616a6def8f8f331e80a9a92e553 的 trial-build 已通过（Actions run 38985169696）。本轮最新搜索结果已在 20261017_MOBILE_FIRST_P0_INCREMENT.md 记录。
