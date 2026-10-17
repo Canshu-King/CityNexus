@@ -1,4 +1,15 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-QODER-ISSUE-廿七第二笔落地 块头不再替服务器宣布还在跑
+
+- 现尖推进第三笔：16c2ebffaff1f5c366ddf6195185e17a041448f6，落地门判语 READY_TO_LAND、ff-only、回执 `_batch_land_round3_182921.json`；GitHub 侧 PR 编号卅 已 merged。前两笔是本单第一半的产品改动与那枚用例的验收配置补丁。
+- 改的是什么：PR 编号廿八把空态那句改成可恢复说明了，但块头照旧写「正在为你处理 / 已按你的行程事实执行」——无论服务器答 200 还是 403。现在被拒时块头改念词表里已有的那句「运行事件流不可用；已保留已收到的事件」，副句整条撤下：块头 `frontend/src/features/agent/CopilotDock.tsx:407`、副句 `frontend/src/features/agent/CopilotDock.tsx:411`、可恢复出口 `frontend/src/features/agent/CopilotDock.tsx:434`。没有新造词表键，那一列属于查看者自己这一趟的工具行保持不动。
+- 两臂对表（同一份用例，唯一变量是那两枚产品文件）：现尖上一笔那一臂桌面 PASS、手机 PASS、被拒那一臂 FAIL；本笔三臂全 PASS。被拒那一臂的断言 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:254` 同时禁三句（空态、块头、副句，中英各一版），但故意不禁「正在处理」——那一列每行本来就写着它自己那条事件的用时。
+- 现场照与回执已按字节外读核对：`evidence/qoder27-rail-head-1822/`（commander/control，改前改后各一张加机器可读回执）。
+- 一次自曝，写进常设做法：本枝第一枚提交其实只带了用例改动——两臂跑批在每一臂前会把产品文件从 HEAD 取回，而我在改动还没提交的时候跑了它，那次编辑被它冲掉，两臂量了同一份代码、双双报红。第二枚提交才是产品改动，且先在现场验证过再对表。规矩补一句：跑两臂之前，被量的那一版必须已经提交，否则量的不是你以为的那份代码。
+- 门禁：`npm run typecheck:all` rc=0；`npm run build` rc=0；手机链 :4783 现读已在服务带这句新文案的构建产物（`assets/index-BKsKk3CD.js` 内读得到该句）。
+- 没有变好的：舰队这一拍仍 working 0、short_by 8；`frontend/e2e/product-v8.spec.ts:101` 那枚既有红未碰；裁语队列仍在等点头。
+
+
 ### CMDR-量具修腿 外读证据发布器的读回腿改成带重试并报成因
 
 - 触发它的一次假红：Issue 廿七 那一臂的 after-403-arm-dock.png 当场被判 MISMATCH-after-write，而几秒后我另起一把尺按字节回读，sha256 与 git blob 都一致。判语说"写坏了"，实情是"读早了"——分支引用会落后于它自己的提交几秒。
