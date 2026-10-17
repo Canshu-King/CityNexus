@@ -1,4 +1,44 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 号令者 · 下午第四段（14:21）：第三十五笔落线，以及一版我自己拦下来没落的改动
+
+**一、第三十五笔已落线**：尖从 `1bedf97e8e983ed0ca33007e00dbedc472abf89c` 前进到 `321d4ab19c6c9d730717cc530de0f58d86b898d1`（ff-only，ahead 三格、behind 零、与候选枝不相交；`git cat-file -t` 回读为 commit，两路读数同为那枚尖一致为真，回执 `preflight_r1.json:1`）。落线那一眼 `surface_contract` 为 PASS、新增逃逸底档零行、动的是十八条新行（`preflight_r1.json:1`）。
+
+**二、这一笔改的两条**（都在暗档那组里，亮档一字未动）：`design-tokens.css:994` 把活动列表"非当前行"的死灰接回 `--cn-ink-secondary`；`design-tokens.css:1000` 给序号小圆片一枚暗向底（厂内那枚 `--cn-tint-black-40`）配暗档主墨。
+
+**三、两臂（分母这次是窄的，理由写在下面）**：改动只命中活动列表那一族，而十七屏里只有「权威行程执行」渲染它，所以两臂都按"三屏 × 两档宽度 × 两主题＝十二次装载"跑，分母两臂相同（一千三百零六条读数对一千三百零六条）；旁证是另外两屏（今天、实时行程）两臂各三条与一条一字不差，说明没有波及。出处 `two_arm_narrow.json:1`。
+
+- 低于 4.5 的读数：改前五十三条，改后三十三条 ｜ `two_arm_narrow.json:1`
+- 逐行对账（键＝宽度＋主题＋屏＋选择器＋testid＋文字）：修好十二键，新增零键，两臂都失败二十五键 ｜ `two_arm_narrow.json:1`
+- 去重种类：十三种 → 十一种 ｜ `two_arm_narrow.json:1`
+- 修好的形状（暗档两档同值）：`span.v12-activity-title` 与 `span.v12-activity-status.state-planned` 2.87 → 7.69 ｜ `two_arm_narrow.json:1`
+- 正控在改前改后都复现原值：侧栏 `em`「•••」2.18 ｜ `two_arm_narrow.json:1`
+- 这一屏暗档剩下的两条：`span` 4.36 与 `.state-active` 状态蓝 2.43，出处 `two_arm_narrow.json:1` 的 `after.by_screen`
+
+**四、有一版我拦下来没落**：同一处改动的第一版把「当前行」那整块浅洗色也换成了暗向高亮，两臂量出来是修好十二键、同时新增十二键——序号片跟着行的新墨落到浅底上，片上那个数字从 5.05 掉到 1.88。净零，所以不落；我把跟随规则补上、并把「当前行」的浅洗色退回原样，才得到上面"新增零键"那一版。中间那版的完整收据留着不外读当交付，只作过程件（`contrast_arm2_partial_fix1.json` 是上一笔同类的过程件）。
+
+**五、出厂闸这一笔又拦了我一次**：第一版被 `surface-contract` 判"新增浅底"拒（它把 `--cn-tint-white-10` 按定义处的白色算相对亮度，判 1.0；指 `design-tokens.css:996` 那一行），拒因原文与两次落地回执一并外读：`preflight_refused_tint_white.json:1`。我没有用 `--allow-ungated`，也没有关那一眼。这里要点名一句：那枚 token 在暗档段里就是发丝线用的那一枚，尺按它在亮档的定义判——这是尺的一处理解偏差，但**结论我认**：暗档里用"往白里提"做高亮本来就不是这个厂的语言（厂内的高亮是描边与洗色），退回原样是更好的做法，不是被迫的做法。
+
+**六、还欠裁语的（这一笔新添两格）**：其一，暗档里"当前那一行"该不该是一整块亮底——现在是，且它自己的深青墨在浅底上是 9.53（及格），所以这不是缺陷，是层级口味；其二，序号小圆片在暗档我压成了深底浅字，若产品要保留浅色片，需要一枚配得上的深色数字档（现厂内没有第二档）。加上前面已经点名的：状态蓝 `#3f6f92` 一族要暗档第二档蓝、`aside.v8-boundary-card` 要暗档紫、紫药丸 3.97、装饰点 2.18、「技术详情」3.62、「打卡」4.47。
+
+**七、手机侧**：`npm run build` rc 零，链上（:4783，手机真正访问的地址）端出的样式换成 `index-Dp85xHds.css`；这一笔之前那两笔的手机上屏证据在 `evidence/cmdr-gradpanel-1329/phone_dark_before.png` 与 `phone_dark_after.png`（同一屏、同一档、同一宽度）。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 落地这一侧没回音·cmdr-activityrow·cmdr-activityrow-1335（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round22_135718.json:2）
+- 枝：refs/heads/review/cmdr-activityrow-1335｜那把尺的判语逐字：refused: SURFACE_CONTRACT: this candidate ADDS 1 escape hatch(h) to frontend/src stylesheets -- frontend/src/design-tokens.css:996 kind=浅底关键字 prop=background value=var(--cn-tint-white-10) !important rel_lum=1.0.  A light surface (relative luminance >0.72) or a dark ink literal painted beside a theme token reverses sign when <html data-theme> flips; take the surface from --cn-elev-* and the ink fro
+  出处（这一拍现读）：live_checks/_batch_land_round22_135718.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：cmdr-activityrow
+
+该做的：被门拒的那些：把点名的码走字典或标签（别让大写字母码出现在旅客读的句子位上），再在自己那枝上重推一版。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：cmdr-activityrow（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 号令者 · 下午第二段（13:31）：第三十四笔——暗档漏掉的那一型是"渐变刷的浅底"，先把尺的盲区补上再改产品
 
 **一、第三十四笔已落线**：尖从 `8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf` 前进到 `1bedf97e8e983ed0ca33007e00dbedc472abf89c`（ff-only，ahead 两格、behind 零、与候选枝不相交；落地回执 `preflight_r1.json:1`）。改的是一枚容器进组：`section.v12-authoritative-panel`（这枚类被权威行程、V14 预防、V14 恢复真相三张面板共用，出处 `design-tokens.css:840`）。
