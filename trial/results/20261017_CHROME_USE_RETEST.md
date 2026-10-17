@@ -4,7 +4,7 @@
 
 **浏览器：** Chrome-use headed 独立测试档，手机视口 390×844，DPR 2
 
-**页面：** `http://127.0.0.1:14173/revolution`
+**首次复测页面：** `http://127.0.0.1:14173/revolution`
 
 ## 手动操作
 
@@ -29,6 +29,19 @@ PR 既有 `trial-build` 在 94e1b146 上有 7 个手机夹具用例失败：测�
 
 命令：`$env:CITYNEXUS_MOBILE_UI_PORT='14573'; npm.cmd exec -- playwright test --config playwright.mobile-trial.config.ts --reporter=line --output C:\Users\仓鼠王\AppData\Local\Temp\citynexus-mobile-ui-ci-retest-20261017-isolated`
 结果：12 passed，17.1 秒；视口 390×844，TEST_FIXTURE 数据，无真实地点服务、模型调用或 AgentRun。GitHub Actions 的 `trial-build` 在提交 `a4a8663d1b9c480cc74fead1eabe972314e77d54` 上通过：[run 39021241474](https://github.com/Canshu-King/CityNexus/actions/runs/39021241474)。
+
+## 顶部布局修复后复测
+
+在当前 PR 工作树的 Vite 页面 `http://127.0.0.1:14574/revolution` 再开一个 Chrome-use 干净 headed 测试档，设置 390×844、DPR 2。AI 状态接口由 Chrome-use 网络拦截返回 `HERMES_COMPAT_ENDPOINT / CONFIGURED_UNVERIFIED`；这个值只用于展示布局。
+
+- CSS 改为手机窄屏下品牌与 AI 状态上下排列，展开说明允许随屏宽换行。
+- 再次点击“探索 / 行程 / 我的”，三栏均切换成功；用真实键盘输入“厦门”，输入框值更新。
+- 展开 AI 状态卡后，品牌标题、副标题和状态说明各自占行，没有重叠。网络记录只有一条被拦截的 `GET /api/v1/agent/runtime-status`；没有地点、行程写入或模型请求。
+- 首次安装拦截规则前，浏览器曾向隔离占位端口 `18501` 请求两次状态读取，均因没有服务监听而连接失败；之后重载命中模拟响应。
+
+修复后截图：
+
+![Chrome-use 修复后 AI 状态卡与标题分行显示](assets/chrome-use-20261017/ai-status-no-overlap-390x844.png)
 
 ## 截图
 

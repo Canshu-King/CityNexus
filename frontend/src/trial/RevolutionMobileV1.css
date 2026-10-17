@@ -426,9 +426,19 @@
 }
 @media (max-width: 680px) {
   .rev-mobile-v1 .rev-firstlook-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 8px;
     min-height: 61px;
     padding: 10px 16px;
   }
+  .rev-mobile-v1 .rev-firstlook-brand { width: 100%; }
+  .rev-mobile-v1 .rev-firstlook-agent { width: 100%; }
+  .rev-mobile-v1 .rev-firstlook-agent > summary { display: inline-flex; max-width: 100%; white-space: normal; }
+  .rev-mobile-v1 .rev-firstlook-agent > p,
+  .rev-mobile-v1 .rev-firstlook-agent > small { max-width: 100%; overflow-wrap: anywhere; }
   .rev-mobile-v1 .rev-firstlook-quiet { display: none; }
   .rev-mobile-v1 .rev-firstlook-content {
     padding: 21px 14px 70px !important;
