@@ -8,7 +8,7 @@ import { defineConfig } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: /revolution-mobile-shell\.spec\.ts$/,
+  testMatch: /revolution-(?:mobile-shell|human-session-recovery)\.spec\.ts$/,
   timeout: 45_000,
   expect: { timeout: 9_000 },
   workers: 1,
