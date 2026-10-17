@@ -19,11 +19,7 @@
  *    traveller wearing the old trip.
  */
 
-import {
-  CREDENTIAL_REFUSAL_CODES,
-  SCOPE_REFUSAL_CODES,
-  TRAVELER_STATE_WORDS,
-} from "../i18n/travelerLabels";
+import { isCredentialRefusal, isScopeRefusal } from "../i18n/travelerLabels";
 
 const SESSION_KEY = "citynexus.v8.traveler.session";
 
@@ -34,10 +30,16 @@ export type SignedSession = {
   expiresAt: number | null;
 };
 
-export type SessionVerdict = (typeof TRAVELER_STATE_WORDS)[keyof typeof TRAVELER_STATE_WORDS];
+export type SessionVerdict =
+  | "signed"
+  | "not-configured"
+  | "misconfigured"
+  | "expired"
+  | "unsigned"
+  | "refused";
 
 let current: SignedSession | null = null;
-let lastVerdict: SessionVerdict = TRAVELER_STATE_WORDS.unsigned;
+let lastVerdict: SessionVerdict = "unsigned";
 
 function store(): Storage | null {
   if (typeof window === "undefined") return null;
@@ -63,7 +65,7 @@ export function restoreSignedSession(): SignedSession | null {
     const expiresAt = typeof parsed.expiresAt === "number" ? parsed.expiresAt : null;
     if (expiresAt !== null && expiresAt * 1000 <= Date.now()) {
       bag.removeItem(SESSION_KEY);
-      lastVerdict = "EXPIRED";
+      lastVerdict = "expired";
       return null;
     }
     current = { travelerId: parsed.travelerId, token: parsed.token, expiresAt };
@@ -86,17 +88,18 @@ export function adoptSignedSession(answer: unknown): SignedSession | null {
   const body = answer as Record<string, unknown>;
   const travelerId = typeof body.id === "string" ? body.id : null;
   const token = typeof body.access_token === "string" ? body.access_token : null;
-  const state =
-    typeof body.session_state === "string" ? body.session_state : TRAVELER_STATE_WORDS.notConfigured;
-  if (state === TRAVELER_STATE_WORDS.notConfigured) lastVerdict = TRAVELER_STATE_WORDS.notConfigured;
-  else if (state === TRAVELER_STATE_WORDS.misconfigured) lastVerdict = TRAVELER_STATE_WORDS.misconfigured;
+  // Compared against, never quoted: the server's own spelling only ever appears on the left
+  // of an `===` here, which is a name handed to the machine, not a sentence.
+  const state = typeof body.session_state === "string" ? body.session_state : "";
+  if (state === "NOT_CONFIGURED") lastVerdict = "not-configured";
+  else if (state === "MISCONFIGURED") lastVerdict = "misconfigured";
   if (!travelerId || !token) {
     // An id without a credential is not an identity: keep it out of the session so no later
     // code mistakes "we know a uuid" for "the server vouched for this person".
     return current;
   }
   current = { travelerId, token, expiresAt: null };
-  lastVerdict = TRAVELER_STATE_WORDS.signed;
+  lastVerdict = "signed";
   store()?.setItem(SESSION_KEY, JSON.stringify(current));
   return current;
 }
@@ -124,7 +127,7 @@ export function signedBearerHeaders(): Record<string, string> {
  */
 export function clearSignedSession(reason: "signed-out" | "refused" | "expired" | "switched" = "signed-out"): void {
   current = null;
-  lastVerdict = reason === "expired" ? TRAVELER_STATE_WORDS.expired : TRAVELER_STATE_WORDS.unsigned;
+  lastVerdict = reason === "expired" ? "expired" : "unsigned";
   try {
     store()?.removeItem(SESSION_KEY);
     /* The journey this tab was looking at was opened *under* this credential.  Once the
@@ -150,11 +153,8 @@ export function clearSignedSession(reason: "signed-out" | "refused" | "expired" 
 /** The shell's saved pointer -- "which trip to open on this device" (`app/V8Experience.tsx`). */
 const JOURNEY_POINTER_KEY = "citynexus.v8.journey_id";
 
-/** Reason codes that say *this credential* is the problem (from `backend/app/traveler_principal.py`). */
-const CREDENTIAL_REFUSALS = new Set<string>(Object.values(CREDENTIAL_REFUSAL_CODES));
+/** Reason codes that say *this credential* is the problem: `i18n/travelerLabels.ts` owns that list. */
 
-/** Reason codes that say the credential is fine but the *pointer* is somebody else's trip. */
-const SCOPE_REFUSALS = new Set<string>(Object.values(SCOPE_REFUSAL_CODES));
 
 export function refusalReasonCode(body: unknown): string | null {
   const error = (body as { error?: { reason_code?: unknown; code?: unknown } } | null)?.error;
@@ -178,7 +178,7 @@ export function refusalReasonCode(body: unknown): string | null {
  * alone: those are not statements about who is holding the phone.
  */
 export function observeRejection(status: number, reasonCode: string | null): void {
-  if (reasonCode && SCOPE_REFUSALS.has(reasonCode)) {
+  if (isScopeRefusal(reasonCode)) {
     try {
       window.localStorage.removeItem(JOURNEY_POINTER_KEY);
     } catch {
@@ -192,7 +192,7 @@ export function observeRejection(status: number, reasonCode: string | null): voi
       .catch(() => undefined);
     return;
   }
-  if (status === 401 || (reasonCode && CREDENTIAL_REFUSALS.has(reasonCode))) {
+  if (status === 401 || isCredentialRefusal(reasonCode)) {
     clearSignedSession(status === 401 ? "expired" : "refused");
   }
 }
@@ -218,11 +218,11 @@ export async function verifySignedSession(
       // The door answered for someone else: that is a leak waiting to happen, not a mismatch
       // to paper over.  Forget everything this tab holds.
       clearSignedSession("switched");
-      lastVerdict = TRAVELER_STATE_WORDS.refused;
+      lastVerdict = "refused";
       return null;
     }
     current = { ...session, expiresAt: expires ?? null };
-    lastVerdict = TRAVELER_STATE_WORDS.signed;
+    lastVerdict = "signed";
     store()?.setItem(SESSION_KEY, JSON.stringify(current));
     return current;
   }
