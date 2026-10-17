@@ -1,0 +1,158 @@
+{
+ "stage": "intermediate: 三枚容器进组之后、两条跟随色之前",
+ "loads": 68,
+ "readings": 4472,
+ "below_rows": 163,
+ "keys_fixed_vs_before": 70,
+ "keys_new_vs_before": 16,
+ "new_by_theme_width_screen": {
+  "dark@390/authoritative": 8,
+  "dark@1280/authoritative": 8
+ },
+ "new_rows": [
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Central Food Hal"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Nexus River Crui"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Old Town Gate"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Riverside Museum"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Skyline Dinner H"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Tech Art Center"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span.v12-state-kicker",
+   "ratio": 3.22,
+   "before_ratio": 4.99,
+   "text": "下一步"
+  },
+  {
+   "theme": "dark",
+   "w": 390,
+   "screen": "authoritative",
+   "sel": "span.v12-state-kicker",
+   "ratio": 3.22,
+   "before_ratio": 5.02,
+   "text": "现在"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Central Food Hal"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Nexus River Crui"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Old Town Gate"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Riverside Museum"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Skyline Dinner H"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span",
+   "ratio": 3.65,
+   "before_ratio": 4.67,
+   "text": "Tech Art Center"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span.v12-state-kicker",
+   "ratio": 3.22,
+   "before_ratio": 4.99,
+   "text": "下一步"
+  },
+  {
+   "theme": "dark",
+   "w": 1280,
+   "screen": "authoritative",
+   "sel": "span.v12-state-kicker",
+   "ratio": 3.22,
+   "before_ratio": 5.02,
+   "text": "现在"
+  }
+ ]
+}
