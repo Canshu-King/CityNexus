@@ -1,0 +1,288 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-18T05:51:51+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "c85a04d2e38cd772fb7da2a0eb48dc901ccb6638",
+ "candidate_ref": "refs/heads/review/qoder31a-signed-session-2235",
+ "candidate_tip": "301bf3bdad15108d637eb2439c75ce02d4d001f4",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "c85a04d2e38cd772fb7da2a0eb48dc901ccb6638",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/main.py",
+   "backend/app/traveler_principal.py",
+   "backend/tests/test_ord0687q1_session_refresh_r1.py",
+   "frontend/docs/assets/manifest.json",
+   "frontend/docs/assets/raw/04-today.png",
+   "frontend/docs/assets/raw/05-ai-panel.png",
+   "frontend/docs/assets/raw/07-trip-panel.png",
+   "frontend/docs/assets/raw/08-stay-retry.png",
+   "frontend/e2e/qoder31-signed-session.spec.ts",
+   "frontend/playwright.qoder31-session.config.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/access/accessDoors.ts",
+   "frontend/src/features/trip/MyTripsEntry.tsx",
+   "frontend/src/features/trip/myTrips.css",
+   "frontend/src/features/trip/myTripsCopy.ts",
+   "frontend/src/lib/travelerSession.ts"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/main.py",
+   "backend/app/traveler_principal.py",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/access/accessDoors.ts",
+   "frontend/src/features/trip/MyTripsEntry.tsx",
+   "frontend/src/features/trip/myTrips.css",
+   "frontend/src/features/trip/myTripsCopy.ts",
+   "frontend/src/lib/travelerSession.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "b91614c753ffb2915a008937923b7d26c3d63383",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_ord0687q1_session_refresh_r1.py",
+   "backend/tests/test_ord0687_signed_session_on_create_r1.py",
+   "backend/tests/test_ord0685_traveler_session_r1.py",
+   "backend/tests/test_operations_context_race_r1.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "33 passed, 2 warnings in 3.07s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_055038",
+  "blob_equality": [
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "1217fe51d9bf0e6643485fce2efc7b056a0212ba",
+    "export_blob": "1217fe51d9bf0e6643485fce2efc7b056a0212ba",
+    "equal": true
+   },
+   {
+    "path": "backend/app/traveler_principal.py",
+    "candidate_blob": "44bebec43dc5eba704b52b3d482f902d1615e3f7",
+    "export_blob": "44bebec43dc5eba704b52b3d482f902d1615e3f7",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_ord0687q1_session_refresh_r1.py",
+    "candidate_blob": "c529c0dbd48f229ed984539e37cccae620097f27",
+    "export_blob": "c529c0dbd48f229ed984539e37cccae620097f27",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/manifest.json",
+    "candidate_blob": "fd2d034b93a1b0ca5b17714b341e7e9c381a55dd",
+    "export_blob": "fd2d034b93a1b0ca5b17714b341e7e9c381a55dd",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/04-today.png",
+    "candidate_blob": "8881b86cafd04fca738d4a10918638f15718b16f",
+    "export_blob": "8881b86cafd04fca738d4a10918638f15718b16f",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/05-ai-panel.png",
+    "candidate_blob": "12d43fd4f98028b07ef0532ea35e2b47628ab296",
+    "export_blob": "12d43fd4f98028b07ef0532ea35e2b47628ab296",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/07-trip-panel.png",
+    "candidate_blob": "6fe5c8b7216a48e479b864fb1da11a76d3839f1b",
+    "export_blob": "6fe5c8b7216a48e479b864fb1da11a76d3839f1b",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/08-stay-retry.png",
+    "candidate_blob": "602b4029aebf1ef5ec89cd1feff925da3de1c290",
+    "export_blob": "602b4029aebf1ef5ec89cd1feff925da3de1c290",
+    "equal": true
+   },
+   {
+    "path": "frontend/e2e/qoder31-signed-session.spec.ts",
+    "candidate_blob": "d8574e8089fef4597c90ea8700fd0ae710ea5236",
+    "export_blob": "d8574e8089fef4597c90ea8700fd0ae710ea5236",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.qoder31-session.config.ts",
+    "candidate_blob": "7b3c36a86b93f119aa4f440b4a70b175bea1a902",
+    "export_blob": "7b3c36a86b93f119aa4f440b4a70b175bea1a902",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "be6ce9e712ddff88c7e08ce18da431d0122b3343",
+    "export_blob": "be6ce9e712ddff88c7e08ce18da431d0122b3343",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/access/accessDoors.ts",
+    "candidate_blob": "a6951b1c7cd37e460372e92048454ac79786a723",
+    "export_blob": "a6951b1c7cd37e460372e92048454ac79786a723",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trip/MyTripsEntry.tsx",
+    "candidate_blob": "a94c2508c21c3d01e68fea1d5882f752af90de16",
+    "export_blob": "a94c2508c21c3d01e68fea1d5882f752af90de16",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trip/myTrips.css",
+    "candidate_blob": "996605fe96528a7dc9570ab994522bb2d2c58215",
+    "export_blob": "996605fe96528a7dc9570ab994522bb2d2c58215",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trip/myTripsCopy.ts",
+    "candidate_blob": "4d1898da5ce1fc19d1092d55634e985451f65d1b",
+    "export_blob": "4d1898da5ce1fc19d1092d55634e985451f65d1b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/lib/travelerSession.ts",
+    "candidate_blob": "7f5eef607f95573ec94963ab7eb1f4d2ab12dd84",
+    "export_blob": "7f5eef607f95573ec94963ab7eb1f4d2ab12dd84",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1991,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1991 tests collected in 7.42s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "33 tests collected in 2.46s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_ord0687q1_session_refresh_r1.py",
+    "backend/tests/test_ord0687_signed_session_on_create_r1.py",
+    "backend/tests/test_ord0685_traveler_session_r1.py",
+    "backend/tests/test_operations_context_race_r1.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "33 passed, 2 warnings in 2.99s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 6,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "dict_keys": {
+   "exit": 0,
+   "verdict": "PASS",
+   "tip_missing": "1",
+   "called_in_view": "243",
+   "new_missing": []
+  },
+  "screen_code": {
+   "exit": 0,
+   "judged": 5,
+   "refuse": 0,
+   "tokens": []
+  },
+  "surface_contract": {
+   "arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d",
+   "exit": 0,
+   "verdict": "PASS",
+   "css_files_in_view": "1",
+   "added_css_lines": "35",
+   "new_hatch_rows": "0",
+   "ruler_status": "MATCH",
+   "violations": [],
+   "disclosed_slip": "a literal moved between rules in the same file, or a fallback whose only change is its token name, pairs away as not-new; .tsx inline styles, inheritance and cascade are outside this arm"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-D284ZyRE.js",
+    "/assets/index-Dc3JK9dk.css"
+   ],
+   "live_tree": "b91614c753ffb2915a008937923b7d26c3d63383",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_301bf3b_info.json",
+   "build_tail": [
+    "\u001b[33m[plugin vite:reporter] ",
+    "src/features/agent/AgentComposer.tsx, D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_301bf3b/frontend/src/features/agent/CopilotDock.tsx, dynamic import will not move module into another chunk.",
+    "\u001b[39m",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ],
+   "error_lines": []
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "301bf3bdad15108d637eb2439c75ce02d4d001f4",
+  "branches_route": "301bf3bdad15108d637eb2439c75ce02d4d001f4",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
