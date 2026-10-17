@@ -1,4 +1,53 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0845·第二十五笔落线：票夹那两张语义卡在暗档不再是白底白字（时间、地点名、时长、详情全都看不见的那种）
+
+**一、这一笔用户看到什么**
+
+暗色模式打开「行程票夹」：标着「地点临时关闭」那张卡里的时间「10:30」、地点名「Riverside Museum」、时长「1 小时 15 分」和「详情 ›」全是暖白卡配近白字，「已受保护」那张是浅绿卡配近白字——四样东西实测比值 1.02，等于没印。现在两张卡都换成暗档该有的那一手（琥珀语义洗色 / 深底），字全部读得出来；亮档逐字不变。
+
+**二、线动了**
+
+- 权威尖从 f2e5081077629433d4e163409e8f786a5eae759f 推到 35ce480f9bfd4925d5b3a65decef69a678814d8a，只快进（收据 `preflight_r1.json:1`）。
+- 动的产品文件一枚：`frontend/src/design-tokens.css:825` 那一组里加了 `.trip-stop.protected`；`frontend/src/design-tokens.css:941` 起新增 `.trip-stop.disrupted` 的暗档一手；`frontend/src/design-tokens.css:946` 与 `frontend/src/design-tokens.css:947` 是两枚语义标签的暗档一手。注释在 :817 起那一段。
+- 文件 blob 从 ff0072b18aa5b8fe843117c2c74f6bcfb42fb624 换成 98ac1480f918864ffceafa5974e1b79ab79e9a3c（现读 72209 变 74167 字节，同一次 `git cat-file -s`）。
+- 没有新造判据，两处一手都是抄厂内已有的先例：浅琥珀底那张卡与 `.live-disruption` 是同一个字面色 #fff6ee（`frontend/src/styles.css:1275` 与 `frontend/src/styles.css:1500`），暗档那一手在 `frontend/src/design-tokens.css:918` 已经写死；浅绿卡与 `.v8-next-card` 同族，走 :825 那一组。
+
+**三、量法（三把尺，两臂各跑一遍）**
+
+- 合成尺：沿祖先链把每一层 (色, alpha) 自下而上合成到不透明，再算 WCAG 比值——不问 CSS 写了什么，只问眼睛最后看到那一手。尺身 `instrument_muted_scan_r2.cjs:1`，两臂读数 `muted_census_before.json:1` 与 `muted_census_after.json:1`。
+- 直读尺：票夹那几张卡逐枚报自己的底、自己的字、边框、标签色与合成比值，并各截一张元素图。尺身 `instrument_tripstop_read_r1.cjs:1`，两臂读数 `tripstop_read_before.json:1` 与 `tripstop_read_after.json:1`。
+- 出厂尺两臂：`gate_narrow_candidate.json:1` 与上一笔的 `gate_narrow_landed0807.json:1` 逐字段相同（四种种数、八条 text-contrast），也就是这一刀它一条都没报——原因是那把尺按 `data-contrast-role` 取意图（`frontend/e2e/_qoderContrastScan.ts:13`），票夹这几张卡没有挂 role，所以永远不在它的分母里。这条我记成尺的覆盖面缺口，见本块第六节。
+
+**四、读数**
+
+- 改前 · 临时关闭那张：卡底 rgb(255, 246, 238)，卡字 rgb(245, 245, 247)，时间比值 1.02，见 `tripstop_read_before.json:1`
+- 改后 · 同一张：卡底 rgba(255, 159, 10, 0.12) 合成后约 rgb(55, 44, 28)，时间比值 16.75，琥珀标签比值 8.87，见 `tripstop_read_after.json:1`
+- 改前 · 已受保护那张：卡底 rgb(238, 250, 242)，卡字 rgb(245, 245, 247)，时间比值 1.02，见 `tripstop_read_before.json:1`
+- 改后 · 同一张：卡底 rgb(28, 28, 30)，时间比值 15.63，绿标签比值 8.42，见 `tripstop_read_after.json:1`
+- 亮档没动：受保护标签 4.98、临时关闭标签 4.70、卡字 15.7 与 15.76，两臂同一手，见 `tripstop_read_after.json:1`
+- 全六屏合成普查：低于 4.5 的读数从六十四条降到四十条，去重种数从二十种降到十种，扫到的读数都是 1820 条，见 `muted_census_before.json:1` 与 `muted_census_after.json:1`
+- 两臂分母一字未动（同宽、同屏、同卡序），所以这不是"改后少扫到东西"；截图四张逐枚对看：`tripstop_disrupted_before_dark.png:1` 与 `tripstop_disrupted_after_dark.png:1`
+- 编译臂 `npm run build` 退出码零；落地门表面对照判 PASS（在看的 css 一枚、新增二十八行、新增逃逸口零行、尺身份 MATCH，收据 `preflight_r1.json:1`）
+- 外读证据包在 `evidence/cmdr-landing-CMDR-NIGHT-0842-0844/`，共十五件（落地收据、两把尺的尺身三件、被撤的那件、两臂普查、两臂直读、候选臂真尺、四张逐枚截图、子 Agent 的读数与尺身），逐件回核 BYTE-LEVEL MATCH。
+
+**五、子 Agent 的独立复核（以及它替我找出的两处尺的机制漏口）**
+
+我另派了一路只量"两主题对拍"的子 Agent，换掉我上一把我自己承认的对拍键（那把按文本对齐）。它独立报出同一族：`article.trip-stop.disrupted` 比值 1.02、`article.protected` 比值 1.016，两枚都在"暗档仍浅底"与"两主题同一手底"两张名单里，读数 `subagent_dark_pair_v2_readings.json:1`，尺身 `subagent_dark_pair_v2_instrument.cjs:1`。它还量出我那把对拍尺为什么漏：其一把视口外的元素裁掉了（每档宽度有 292 到 365 个配对元素在视口外，票夹那几张卡三档全在视口外）；另一把的主题切换按钮标签本身就是双语（亮色/暗色），这串文本会往上冒到 topbar 与 shell，于是那些容器整片掉出配对集。两处都是尺的缺陷，不是产品的。
+
+一条我自己的错要点名：我给它的"反控"设计得不对——同主题两臂去比，"两主题底不同"这一格按定义恒为零，它如实报了做不到为空并拒绝假绿，这是它的判断对、我的题面错。另一条：它这一路跑在我改码的时间窗里（它的读盘时刻与我的 stash 有重叠），所以它的结论我一律不直接采信——上面第四节那些数全部是我在两臂上自己重跑的。
+
+**六、上一块（CMDR-NIGHT-0809）的口径要收窄一句**
+
+那块里我写的"暗档仍浅底 0"，量的是视口内那一片；票夹屏视口外那两张卡当时仍是 1.02，本笔才补上。那句话不算说错（它带的就是那个分母），但读者容易读成"整页清零"，所以在此把口径钉清：那把尺的判据范围是视口内，本笔之后我又另建了合成尺与全页直读，两把才盖得住整页。
+
+**七、剩下的（本笔没修，也不假装修了）**
+
+- 合成尺还剩十种低于 4.5：侧栏那串「•••」2.18、「高级详情」3.14、Copilot 那屏小字 3.24、「启用 Web Push」3.53、「我的」卡正文 3.54、「技术详情」3.62、紫药丸 3.97、「当前」4.23 与 4.25、「打卡」4.47，逐条读数在 `muted_census_after.json:1`
+- 其中「我的」卡正文那一枚我下一笔就修：厂内已有同判据的先例（`frontend/src/design-tokens.css:1249` 把两枚不合格的死灰换成 `--cn-ink-secondary`），同一族字面量 #7e8999 在 `frontend/src/styles.css:339` 与 :268 与 :273 与 :180
+- 剩下那些多数要的是"给这些面挂 `data-contrast-role`"，那是产品 DOM 的形状、也是出厂尺的分母本身，按规矩归车道并要裁语，我不在落线里顺手替产品定词表
+- 「打卡」那枚在暗档浅底上量到 4.18（本笔把它从 2.06 抬上来的），仍差一点 AA；它是控件文字，要不要连它一起收进 role 那一刀，等裁语
+
+
 ### CMDR-NIGHT-0809·第二十四笔落线：暗档下「我的」与 Copilot 那两屏的白底白字（文字比值一点零九，等于看不见）
 
 **一、这一笔用户看到什么**
