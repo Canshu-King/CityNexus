@@ -1,4 +1,56 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜Issue #33 这一轮：轨道不替服务器造句、屏上不再自我辩护、药丸给面板让位（三笔已落地）
+
+主人这条令是"把前端 UI 改简洁，删掉不必要的车轱辘、防御性和不必要的声明"，加上 #33 里 Q1 那一棒。这一轮三笔都进了 `refs/heads/mirror/integration-frontend-apple-pass1`，逐笔过同一道落地门（`ff=True`、`behind=0`、`intersection=0`、`problems=[]`、http 200、`both_routes_agree=true`），无 force-push、无 --allow-ungated。
+
+| 第几笔 | 做了什么 | 落地那一枚（`git cat-file -t` 现取回 = commit） | 落地回执（已发布，blob 现取回） |
+| --- | --- | --- | --- |
+| 一 | Agent 轨道不再把服务器派生的那句当人话铺上屏 | 2682a0e8bd291fec942039970bd57695a1574d6c | `305002682bc038e53a0ffa2e7c9b643c941ceaaa` |
+| 二 | 八个屏的句子不再替自己辩护（中英同句一起改短） | 189ee06acf8cc591a2f019ed8bc04d0f0589fb6c | `8e17bfd0c9d05d67c04f64399b11dbe995e72a60` |
+| 三 | AI 工作动态面板打开时，那颗 Copilot 药丸整枚离开这一屏；九屏图解在新尖上重拍重圈 | 4f421a33021f43d02318889c83e1c1867492ce45 | `bd1683c7000ca4c9c74373e1a5ccc5248ea65f1e` |
+
+**第一笔**：审计行没带摘要时，服务器的投影会把事件类型本身当摘要发回来（`journey.created` → "Journey.created"）。轨道优先信 `summary`，下面那份行程动态走词表，于是同一块面板里同一件事两种说法，中文屏上还混进一串英文散文。判的是形状、不是"信不过服务器"：按服务器那条派生规则逐字比对，认出来就当我们没有这句 frontend/src/features/agent/AgentWorkFeedPanel.tsx:64；真写过人话的行原样保留 frontend/src/features/agent/AgentWorkFeedPanel.tsx:212。手机那一臂用**贴了标签的夹具**把两种行各喂一条，一红一绿成对：派生的那句必须被词表顶掉，人写的那句必须原样在屏上 frontend/e2e/qoder31-signed-session.spec.ts:538。这台部署 AI 是关的（`ai_state=DISABLED_BY_OPS`），真 Agent 行跑不出来，所以这一臂量的是**屏上怎么显示**；服务器会不会这么答，先前已在活体入口上量过。
+
+**第二笔**：换的尺不量长度，量"产品在屏幕上替自己辩护"——一句话里从第一个"不是／而非／不代表／而不是"开始的段落。同一支尺、同一个 `--min-tail 12`，改前改后各跑一次：
+
+| 读数 | 改前 | 改后 | 出处 |
+| --- | --- | --- | --- |
+| 带自我辩护的句子 | 十六条 | 八条 | `_issue33_ui_readings_0755.txt:2` |
+| 辩护段合计字数 | 三百零七字 | 一百八十八字 | `_issue33_ui_readings_0755.txt:3` |
+| 四十字以上的中文句子 | 一百零四条 | 九十九条 | `_issue33_ui_readings_0755.txt:5` |
+
+删掉的原话举五条：「屏上也不会装作它成功了」frontend/src/features/abort/journeyAbortCopy.ts:87、「所以它不敢说这一列就是这个序」frontend/src/features/access/accessCopy.ts:258、「这不是这座城不能规划」（两处）、「屏上没有改成别的结论」frontend/src/features/discovery/prepFailureCopy.ts:50、「不是结算单」frontend/src/features/estimation/estimationLadderCopy.ts:69、「这里故意不做还原……所以它不是一张列表上的一下点击」frontend/src/features/studio/planVersionHistoryCopy.ts:63。留着的那八条逐条都在报一件真事（「不是日历文件，所以没有下载任何东西」「不是这趟行程的主人，所以服务器没有写入」），删了就少一个事实，所以不删。
+
+三条边界：别的车道钉着的断言一个字没动——`e2e/qoder-89f2e2d6-ord0520-abort-on-the-glass-r1.spec.ts:191` 要「中止不等于丢弃」在屏上，那句留着；`e2e/qoder-ord0310-keyless-write-deadline.spec.ts` 要「不是没发生」，留着；`e2e/qoder-ord0357-journey-link.spec.ts:40` 要「不是安全上下文」，留着。回收站那一格的「中止不等于丢弃」是同一句的第二遍，删掉后那句只剩「这趟在回收站里，先把它找回，再中止」frontend/src/features/abort/journeyAbortCopy.ts:83。
+
+**第三笔（这一笔要先认一个错）**：手机套里"面板与药丸不许重叠"那一格，式子里把 `panelBox.height` 写成了 `dockBox.height` —— 于是它**从写下那天起就只能绿**。把两枚盒子放进同一次 `page.evaluate` 现读（390x844）：面板 17,473 起 356x398，药丸让位成边条之后停在 215,706 的 165x54，四个半平面全成立 —— **重叠是真的**，教程第 ⑤ 张实拍里它就压在面板那句说明上 `_issue33_ui_readings_0755.txt:8`。手机宽下"面板之外"没有可停的位置，所以这块面板打开时请药丸整枚离开这一屏（`SURFACES` 记数，两块面板同时挂也不打架；关掉就回来）frontend/src/features/agent/AgentWorkFeedPanel.tsx:194 frontend/src/features/agent/agentWorkFeed.css:122 frontend/src/features/agent/CopilotDock.tsx:628。判语本身拆成四格具名布尔逐条打印 frontend/e2e/qoder31-signed-session.spec.ts:502，并做了负对照：摘掉那条规则该格 rc=1、四格 true,true,true,true；装回后文件与摘前逐字相同 `_issue33_ui_readings_0755.txt:9`。九屏图解在新尖上重拍、重新圈注 `_issue33_ui_readings_0755.txt:10`，屏上的句子改了，图就跟着一张张重照，不留旧图配新话。
+
+**没做、点名交给下一棒的**：
+
+- 演示台那颗浮球 `sim-float` 在面板打开时仍压在面板上（现读坐标 `_issue33_ui_readings_0755.txt:11`）；它归 simulation 车道，且这台是 `CITYNEXUS_DEMO_MODE=true` 才有的东西，不替它判。
+- 「知道了」那颗关闭键在 390 宽上折成两行（`frontend/src/app/V8Experience.tsx:2449` 用的 frontend/src/i18n/LocaleContext.tsx:229），要动的是应用壳的样式，那枚文件有别的车道在改。
+- 服务器替审计行造句这件事本身还在：投影里那条 `event_type.replace("_", " ").capitalize()` 没改，契约把 `summary` 钉成必填字符串，改它要连带动 `AgentFeedEntry`/`ActivityEvent` 两处类型——这一轮是在屏那一侧挡住，根上那一刀留给契约棒。
+- 建人那一扇门仍不回 `expires_at`，壳要多问一次会话才拿到窗口；补它要给 http_status=201 那份响应单独定形状（现在契约里那一格指的是 `Traveler`，而 `access_token`/`session_state` 本来就没写进契约）。
+- **我自己新写的两支尺有一支不可信**：无引用键普查报三百六十六处"没人引用"，其中 `PROVIDER_UNREACHABLE`、`abort.refused` 这些其实是被 `arm[named.code]` 这类动态查表用的——键名字面量不出现在别处，尺就看不见它 `_issue33_ui_readings_0755.txt:7`。所以这一轮**没有据此删过任何一个键**。要清死键，先把这支尺修得认动态查表再说。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 落地这一侧没回音·qoder33-ui-plain·qoder33-ui-plain-0719（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round32_072925.json:2）
+- 枝：refs/heads/review/qoder33-ui-plain-0719｜那把尺的判语逐字：refused: candidate does not COMPILE: vite_build rc=0 dist=True index=False -- refusing to land a frontend the bundler rejects.  why=(no matching error line; see tail)  tail=  "globDirectory": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_189ee06\\frontend\\dist", |   "globPattern": "**/*.{js,wasm,css,html}", |   "globIgnores": [ |     "**/node_modules/**/*", |     "v10-sw.js", |     "
+  出处（这一拍现读）：live_checks/_batch_land_round32_072925.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：qoder33-ui-plain
+
+该做的：被门拒的那些：把点名的码走字典或标签（别让大写字母码出现在旅客读的句子位上），再在自己那枝上重推一版。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：qoder33-ui-plain（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜主人点名的 UI 简洁这一轮：屏上不再跟读者辩论（已落地 b4f854158c）
 
 主人这条令是"删掉不必要的车轱辘和防御性、不必要的声明"。上一轮删的是最长的那批（十八句，一千三百七十七字降到九百零五字）；这一轮换了尺——**不量长度，量"产品在屏幕上替自己辩护"**：一句话里从第一个"不是／而非／不代表／而不是"开始的段落，多数不是在报事实，是在解释"我们为什么没做另一件事"。
