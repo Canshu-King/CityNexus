@@ -27,9 +27,7 @@ export function BootstrapJourneyStartPanel({
 
   const start = async () => {
     if (!acceptUnknownCost) {
-      setMessage(
-        "Confirm that the admission price is unknown and excluded from the total.",
-      );
+      setMessage("先确认费用信息再启动行程。");
       return;
     }
     setBusy(true);
@@ -43,29 +41,33 @@ export function BootstrapJourneyStartPanel({
       });
       const plan = generated[0];
       if (!plan?.id) {
-        throw new Error("The server returned no startable native plan.");
+        throw new Error("没有生成可启动的行程方案。");
       }
       await cityNexusApi.selectPlan(journeyId, plan.id);
       const startedJourney = await cityNexusApi.startJourney(journeyId);
       if (startedJourney?.context?.journey_status !== "ACTIVE") {
-        throw new Error("行程尚未启动。");
+        throw new Error("行程还没有启动。");
       }
       await onStarted();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "The native journey could not be started.");
+      const knownMessage = error instanceof Error && [
+        "没有生成可启动的行程方案。",
+        "行程还没有启动。",
+      ].includes(error.message);
+      setMessage(knownMessage && error instanceof Error ? error.message : "启动失败，草稿已保留。");
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <main className="v8-join-entry" data-testid="bootstrap-native-start">
+    <section className="v8-join-entry" data-testid="bootstrap-native-start">
       <section className="v8-loading" aria-labelledby="bootstrap-native-start-title">
         <div className="v8-brand-mark">CN</div>
-        <h1 id="bootstrap-native-start-title">Start this native Journey</h1>
-        <p>Selected public place: {placeId}.</p>
+        <h1 id="bootstrap-native-start-title">启动正式行程</h1>
+        <p>已选择 1 个地点。</p>
         <p>
-          Admission price: unknown. It is excluded from the total; booking and payment are unavailable here.
+          门票价格未知，未计入金额；预订或付款需另行确认。
         </p>
         <label>
           <input
@@ -74,7 +76,7 @@ export function BootstrapJourneyStartPanel({
             checked={acceptUnknownCost}
             onChange={(event) => setAcceptUnknownCost(event.target.checked)}
           />
-          I understand that the admission price is unknown and excluded from the total.
+          确认以上费用信息。
         </label>
         {message ? <p role="status" data-testid="bootstrap-native-start-message">{message}</p> : null}
         <div className="v8-actions">
@@ -85,7 +87,7 @@ export function BootstrapJourneyStartPanel({
             disabled={busy}
             onClick={() => void start()}
           >
-            {busy ? "Starting…" : "Generate and start Journey"}
+            {busy ? "正在启动…" : "生成并启动行程"}
           </button>
           <button
             type="button"
@@ -94,11 +96,11 @@ export function BootstrapJourneyStartPanel({
             disabled={busy}
             onClick={onCancel}
           >
-            Cancel
+            返回探索
           </button>
         </div>
       </section>
-    </main>
+    </section>
   );
 }
 

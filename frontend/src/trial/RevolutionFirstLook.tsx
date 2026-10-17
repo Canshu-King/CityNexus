@@ -138,6 +138,33 @@ function freshCityCode(): string {
   return "CN-RV-" + crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
 }
 
+function DraftAgentActivity({
+  status,
+  hasJourney,
+  hasSelectedPlace,
+}: {
+  status: string;
+  hasJourney: boolean;
+  hasSelectedPlace: boolean;
+}) {
+  return (
+    <section className="rev-mobile-panel" data-testid="rev-draft-agent-activity">
+      <span className="rev-firstlook-eyebrow">AI 助手</span>
+      <h2>AI 工作动态</h2>
+      <div className="rev-mobile-account-line">
+        <span>AI 服务</span><strong>{status}</strong>
+      </div>
+      <p>
+        {!hasJourney
+          ? "先开始探索，选好地点并确认行程后，Agent 就会开始工作。"
+          : hasSelectedPlace
+            ? "地点已选好。确认正式行程后，Agent 就会开始工作。"
+            : "当前是探索草稿。选好地点并确认行程后，Agent 就会开始工作。"}
+      </p>
+    </section>
+  );
+}
+
 export function RevolutionFirstLook() {
   const [cityName, setCityName] = useState("连城");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
@@ -211,26 +238,40 @@ export function RevolutionFirstLook() {
     && agentRuntime.hermes_compat_configured
   );
   const agentStatusChecking = !agentRuntime && !agentCheckError;
+  const runtimeAiState = agentRuntime?.ai_state?.toUpperCase();
+  const aiDisabled = runtimeAiState === "DISABLED" || runtimeAiState === "DISABLED_BY_OPS";
+  const aiNotConfigured = runtimeAiState === "NOT_CONFIGURED";
+  const agentCanRequestSuggestion = agentConfigured && !aiDisabled && !aiNotConfigured;
   const agentStatusTitle = agentStatusChecking
-    ? "正在连接 AI…"
-    : nativeHermesReady
-    ? "Hermes 工具已就绪"
+    ? "正在读取 AI 状态"
     : agentCheckError
-      ? "AI 状态未知"
-      : nativeHermesConfigured
-        ? "Hermes 暂不可用"
-        : agentConfigured
-          ? "AI 网关已配置"
-          : "AI 未启用";
+      ? "AI 状态暂不可用"
+      : aiDisabled
+        ? "AI 未启用"
+        : nativeHermesReady
+          ? "AI 工具可用"
+          : nativeHermesConfigured
+            ? "AI 工具暂不可用"
+            : aiNotConfigured || !agentConfigured
+              ? "AI 未配置"
+              : runtimeAiState === "PROVIDER_REFUSED"
+                ? "AI 服务刚才拒绝了请求"
+                : "AI 尚未验证";
   const agentStatusDetail = agentStatusChecking
-    ? "正在读取本机 AI 服务状态。"
-    : nativeHermesReady
-    ? "可以提交行程需求并查看助手记录。"
-    : nativeHermesConfigured
-      ? "助手工具暂不可用，可先浏览行程。"
-      : agentConfigured
-        ? "AI 网关已配置，可在行程页提交需求。"
-        : "AI 未启用，可先探索公开地点。";
+    ? "正在读取状态。"
+    : agentCheckError
+      ? "暂时无法读取状态。"
+      : aiDisabled
+        ? "可继续手动探索地点。"
+        : nativeHermesReady
+          ? "正式行程启动后可使用 Agent。"
+          : nativeHermesConfigured
+            ? "工具服务当前不可用。"
+            : runtimeAiState === "PROVIDER_REFUSED"
+              ? "可继续手动探索地点。"
+              : agentCanRequestSuggestion
+                ? "配置已读到，模型回复尚未验证。"
+                : "可继续手动探索地点。";
 
   const start = async (cityNameOverride?: string, options: { freshSession?: boolean } = {}) => {
     const label = (cityNameOverride ?? cityName).trim();
@@ -404,7 +445,6 @@ export function RevolutionFirstLook() {
           <p>
             {agentCheckError ?? agentStatusDetail}
           </p>
-          {agentRuntime && <small>{agentRuntime.runtime_identity} · {agentRuntime.ai_state ?? "UNKNOWN"}</small>}
         </details>
       </header>
 
@@ -472,6 +512,10 @@ export function RevolutionFirstLook() {
               <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
                 开始探索 →
               </button>
+              <div className="rev-mobile-account-line">
+                <span>AI 服务</span><strong>{agentStatusTitle}</strong>
+              </div>
+              <p>选好地点并确认行程后，Agent 就会开始工作。</p>
             </section>
           ) : (
             <section className="rev-mobile-panel" data-testid="rev-mobile-empty-me">
@@ -479,7 +523,7 @@ export function RevolutionFirstLook() {
               <h2>我的</h2>
               <p>开始探索后，这里会显示你的地区和助手状态。</p>
               <div className="rev-mobile-account-line">
-                <span>AI 助手</span><strong>{agentStatusChecking ? "正在连接" : nativeHermesReady ? "Hermes 工具已就绪" : agentConfigured ? "网关已配置" : "当前未配置"}</strong>
+                <span>AI 助手</span><strong>{agentStatusTitle}</strong>
               </div>
             </section>
           )
@@ -506,7 +550,7 @@ export function RevolutionFirstLook() {
                     onExplorationCenterLabelChange={(label) => {
                       setExplorationTitle({ journeyId: journey.id, label });
                     }}
-                    agentConfigured={Boolean(agentConfigured)}
+                    agentConfigured={Boolean(agentCanRequestSuggestion)}
                     agentChecking={agentStatusChecking}
                     onPocketWalkChange={setPocketWalk}
                     onMemberAccessDenied={recoverDeniedJourney}
@@ -571,27 +615,34 @@ export function RevolutionFirstLook() {
                   <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
                 </section>
               ) : (
-                <section className="rev-mobile-panel">
-                  <span className="rev-firstlook-eyebrow">YOUR TRIP</span>
-                  <h2>我的行程</h2>
-                  {pocketWalk ? (
-                    <>
-                      <p>以下两站来自当前签名成员保存在服务器的私人路线。</p>
-                      <div className="rev-mobile-stop"><b>01</b><span>{pocketWalk.first_stop.name}</span></div>
-                      <div className="rev-mobile-stop"><b>02</b><span>{pocketWalk.second_stop.name}</span></div>
-                      <p>当前进度：<strong>{goSummary(pocketWalk.go_progress.state)}</strong></p>
-                      <small className="rev-mobile-truth">到达状态由你确认。</small>
-                      <button type="button" onClick={() => navigateMobile("explore")}>
-                        查看路线并继续 GO →
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <p>还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。</p>
-                      <button type="button" onClick={() => navigateMobile("explore")}>去发现地点 →</button>
-                    </>
-                  )}
-                </section>
+                <>
+                  <section className="rev-mobile-panel">
+                    <span className="rev-firstlook-eyebrow">YOUR TRIP</span>
+                    <h2>我的行程</h2>
+                    {pocketWalk ? (
+                      <>
+                        <p>以下两站来自当前签名成员保存在服务器的私人路线。</p>
+                        <div className="rev-mobile-stop"><b>01</b><span>{pocketWalk.first_stop.name}</span></div>
+                        <div className="rev-mobile-stop"><b>02</b><span>{pocketWalk.second_stop.name}</span></div>
+                        <p>当前进度：<strong>{goSummary(pocketWalk.go_progress.state)}</strong></p>
+                        <small className="rev-mobile-truth">到达状态由你确认。</small>
+                        <button type="button" onClick={() => navigateMobile("explore")}>
+                          查看路线并继续 GO →
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p>还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。</p>
+                        <button type="button" onClick={() => navigateMobile("explore")}>去发现地点 →</button>
+                      </>
+                    )}
+                  </section>
+                  <DraftAgentActivity
+                    status={agentStatusTitle}
+                    hasJourney
+                    hasSelectedPlace={Boolean(candidateForJourney)}
+                  />
+                </>
               )}
             </section>
 
@@ -606,7 +657,7 @@ export function RevolutionFirstLook() {
                   <span>公开地点</span><strong>{sample ? "受控样本模式" : "真实公开地图接口"}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
-                  <span>AI 助手</span><strong>{agentStatusChecking ? "正在连接" : nativeHermesReady ? "Hermes 工具已就绪" : agentConfigured ? "网关已配置" : "当前未配置"}</strong>
+                  <span>AI 助手</span><strong>{agentStatusTitle}</strong>
                 </div>
                 <div className="rev-mobile-account-line">
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>

@@ -216,7 +216,7 @@ test("TEST_FIXTURE on /revolution switches only after the signed start response 
   await startPanel.getByTestId("bootstrap-unknown-cost-ack").check();
   await startPanel.getByTestId("bootstrap-native-start-submit").click();
   await expect(startPanel.getByTestId("bootstrap-native-start-message")).toHaveText(
-    "行程尚未启动。",
+    "行程还没有启动。",
   );
   await expect(startPanel).toBeVisible();
 
