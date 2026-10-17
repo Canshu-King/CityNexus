@@ -85,3 +85,10 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 已核实 Photon 官方 API 文档允许 /reverse 按 OSM 分类过滤；本次 200/零可选地点不能归因于端点错误。Photon 文档也说明其是地名检索服务，公共索引不承诺覆盖所有 POI 分类。来源：[Photon API](https://github.com/komoot/photon/blob/master/docs/api-v1.md)、[Photon 分类过滤](https://github.com/komoot/photon/blob/master/docs/categories.md)。
 
 当前 TWO_POI_FLOW=NOT_REACHED：真实结果仍不足两处，Pocket Walk、GO、刷新恢复尚未运行。没有改成放宽受限地点过滤，也没有用测试地点顶替真实结果。
+
+## 2026-10-17 本机 AI 直连复核
+
+- 按用户授权，本机进程直接读取 `WB2API_KEY` 调用 `http://127.0.0.1:7865/v1/chat/completions`，使用 `auto:cheapest`。本次 HTTP 200，网关选择 `deepseek-v4.1-flash`，返回 `finish_reason=tool_calls` 和 1 个 `save_trip_preferences` 工具提议。凭据未写入代码、仓库或输出；这次直连只验证模型返回工具提议，没有在 CityNexus 执行该工具或写入行程。
+- 390×844 签名 DRAFT 页面又完成一次真实 CityNexus AI 请求：`POST /api/v1/journeys/{private-id}/trial-ai-discovery` 返回 HTTP 200，页面显示来自 `deepseek-v4.1-flash` 的晚出发、次日上午不早起场景建议。实测截图：`trial/results/assets/20261017-live-ai-late-date-390x844.png`，SHA-256 `332E8AF6B3B741852CAAAF667816BA34EC10D549CB84FBC61BF90895170AF55E`。
+- 隔离后端 `/api/v1/agent/runtime-status` 返回 HTTP 200，身份为 `HERMES_COMPAT_ENDPOINT`，`hermes_compat_configured=true`。当前签名会话的“行程”页显示还没有保存的私人路线；服务端 AgentRun 入口要求路线状态为 `ACTIVE`，所以本轮没有创建 AgentRun，也没有制造 ACTIVE 数据。`SIGNED_AGENT_RUN=NOT_CREATED`；当前差的是真实 ACTIVE 行程。
+- 真实地点流程状态不变：Photon 尚无可用的两处 POI，`TWO_POI_FLOW=NOT_REACHED`；Pocket Walk 保存、GO 和刷新恢复还没进入执行。
