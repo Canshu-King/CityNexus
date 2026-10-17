@@ -1,4 +1,37 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-1025·第三十笔落线：七枚死选择器从多选择器组里摘干净（压缩行那一族仍然交车道，我不顺手做）
+
+**一、这一笔用户看到什么**
+
+看不见任何变化——这正是这一笔要证的：摘掉的是七枚没有任何读者、没有任何拼装能产出、六屏上零命中的选择器。所以判据不是"编译过了"，而是"出厂尺在两臂看到的每一行一模一样"。
+
+**二、线动了**
+
+- 权威尖从 45246d9e1f57d76120704fd7abcc0a75a831453c 推到 41130d39a9a0addc0a66e14069e5333c898f9720，只快进（收据 `preflight_r1.json:1`）
+- 动的产品文件两枚。design-tokens.css：`frontend/src/design-tokens.css:439` 那一组里摘掉整行 `.v8-page a.v8-cta,`、`frontend/src/design-tokens.css:513` 那组中段摘掉同一枚、`frontend/src/design-tokens.css:1015` 把 `.v8-home-language` 那枚组尾摘掉并把 `{` 挪回 `.v9-language` 那一行
+- cn-pulse.css：`frontend/src/cn-pulse.css:395` 那组从三枚收成只剩 `.plan-ranking`（`collections-panel`、`poi-import-panel` 两枚一起走）、`frontend/src/cn-pulse.css:507` 那组中段摘掉 `v8-user-meta`、`frontend/src/cn-pulse.css:510` 把组尾 `v8-empty-hint` 摘掉并把 `{` 挪回 `.cn-pending-empty-next`
+- 两枚文件 blob：design-tokens.css 从 68075b26dc7b152bb06a170eb6eb30ab641b8b54（现读 74751 字节）换成 9b79e9ad52fc2bf16fcecc2d3fc3b2d38286e46f（现读 74694 字节）；cn-pulse.css 从 052df0a367e24fe22bc54c38a42024699cc80e76（现读 28248 字节）换成 75bf262c1f4deb0fc81d12db4bfe43a0b4b0ab43（现读 28178 字节）
+
+**三、三臂（少一臂我不动那一枚）**
+
+- 甲 静态读者：`src` 内 157 枚 `.tsx/.ts` 加 `frontend/index.html` 逐字零命中，`src` 之外另 427 枚也零命中，边界正则、禁子串，出处 `subagent_deadcss_plan.md:1`
+- 乙 动态拼装：141 处拼 className 的现场（其中 31 处真落到 class 属性）零命中；正对照当场咬住 `frontend/src/components/Badge.tsx:95` 的 `cn-badge--${tone}`，出处 `subagent_deadcss_plan.json:1`
+- 丙 真屏：六屏逐枚数 class 命中，七枚全零；正对照 v8-page 命中八、v8-me-card 命中七、trip-stop 命中六，出处 `arm_c_dom_readings.json:1`
+- 丙臂跑之前先过树身份自检：本地 454 枚 css/ts/tsx 里 29 枚 css 与服务端逐字节相等、不等零枚，六屏标志六枚互异，出处 `instrument_arm_c_dom_probe_r2.cjs:1`
+
+**四、"摘了没改行为"怎么证的**
+
+- 出厂尺两臂行集逐字相同：两臂都是 24 个场景、184 行，把（宽度、主题、kind、选择器、testid、前景、背景、比值）整行拉平做集合比较，两向差集都是零，出处 `gate_rows_control.json:1`
+- 候选臂与对照臂的累计 kinds 都是 unclassified-control 一百七十八、text-contrast 二、control-boundary 四，出处 `gate_rows_candidate.json:1`
+- 结构自检装在写的那扇门里：摘完扫一遍"行首是逗号 / 双逗号 / 整行只剩花括号 / 逗号后同行出现花括号"四种形状，两枚文件都判干净才写，出处 `instrument_shape_strip_r1.py:1`
+- 构建臂 `npm run build` 退出码零（这次不带管道，直接取退出码）；落地门 READY_TO_LAND、尺身份 MATCH、新增逃逸口零行，收据 `preflight_r1.json:1`
+- 外读证据在 `evidence/cmdr-landing-CMDR-NIGHT-1022-1024/`，共四件（收据、两臂行集、剥离尺身），逐件 BYTE-LEVEL MATCH
+
+**五、没做的部分要说清**
+
+styles.css 那六枚压缩行里的 29 处同族死类名，本笔一处没动：一行里挤好几条规则，逐条摘规则是我这一轮最容易失手的形状（06:2x 那次多行表摘断，真尺当场咬出两行新红）。那份工单连同三臂读数在 CMDR-NIGHT-0926 第五节，谁认领谁按那三条硬规矩做，交件要带两臂对表。
+
+
 ### CMDR-NIGHT-1015·第二十九笔落线：票夹「当前」那枚标签的蓝也接回文字那一档（并把上一笔的漏扫补完：全表 29 枚 css 数出来的分母）
 
 **一、这一笔用户看到什么**
