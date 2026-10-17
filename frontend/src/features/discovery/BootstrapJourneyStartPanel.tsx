@@ -1,5 +1,41 @@
 import { useState } from "react";
-import { cityNexusApi } from "../../api/citynexus";
+import { CityNexusApiError, cityNexusApi } from "../../api/citynexus";
+
+function planStartFailureMessage(error: unknown): string {
+  if (error instanceof CityNexusApiError && error.body && typeof error.body === "object") {
+    const body = error.body as Record<string, unknown>;
+    const nestedError = body.error && typeof body.error === "object"
+      ? body.error as Record<string, unknown>
+      : undefined;
+    const detail = body.detail && typeof body.detail === "object"
+      ? body.detail as Record<string, unknown>
+      : undefined;
+    const reasonCode = [body.reason_code, nestedError?.reason_code, detail?.reason_code]
+      .find((value): value is string => typeof value === "string");
+    if (reasonCode === "UNRESOLVED_ACTIVITY_FACTS") {
+      return "营业时间没有可靠来源，暂时无法生成行程。查看地点信息或更换地点后再试。";
+    }
+    if (reasonCode === "PLACE_COST_UNVERIFIED") {
+      return "费用信息还没核实，暂时不能生成正式行程。查看来源或更换地点后再试。";
+    }
+    if (reasonCode === "PLACES_NOT_IN_CATALOG") {
+      return "这个地点已不在当前列表里。回到探索重新选择。";
+    }
+    if (error.status === 409) {
+      return "行程信息刚有变化，刷新后再试。";
+    }
+    if (error.status === 401 || error.status === 403) {
+      return "当前行程已无法访问。重新开始探索。";
+    }
+  }
+  if (error instanceof Error && error.message === "没有生成可启动的行程方案。") {
+    return "还没有生成行程方案。请补齐地点信息或更换地点。";
+  }
+  if (error instanceof Error && error.message === "行程还没有启动。") {
+    return "行程还没启动成功。请稍后再试。";
+  }
+  return "没有启动成功。行程草稿还在，可以返回探索更换地点或重试。";
+}
 
 /**
  * The first native journey action after zero-catalogue discovery.
@@ -50,11 +86,7 @@ export function BootstrapJourneyStartPanel({
       }
       await onStarted();
     } catch (error) {
-      const knownMessage = error instanceof Error && [
-        "没有生成可启动的行程方案。",
-        "行程还没有启动。",
-      ].includes(error.message);
-      setMessage(knownMessage && error instanceof Error ? error.message : "启动失败，草稿已保留。");
+      setMessage(planStartFailureMessage(error));
     } finally {
       setBusy(false);
     }

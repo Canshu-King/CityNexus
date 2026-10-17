@@ -1003,7 +1003,10 @@ export function RevolutionFirstLook() {
                     journeyId={journey.id}
                     placeId={candidateForJourney}
                     onStarted={finishStartingJourney}
-                    onCancel={() => setCandidateForJourney(null)}
+                    onCancel={() => {
+                      setCandidateForJourney(null);
+                      navigateMobile("explore");
+                    }}
                   />
                 </section>
               )}

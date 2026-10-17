@@ -6,7 +6,11 @@ const planId = "TEST_FIXTURE_PLAN_R86";
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
-async function createSignedJourney(request: APIRequestContext): Promise<{ journeyId: string; bearer: string }> {
+async function createSignedJourney(request: APIRequestContext): Promise<{
+  journeyId: string;
+  travelerId: string;
+  bearer: string;
+}> {
   const response = await request.post(`${API}/api/v1/travelers`, {
     data: {
       display_name: `TEST_FIXTURE R86 ${Date.now()}`,
@@ -40,7 +44,7 @@ async function createSignedJourney(request: APIRequestContext): Promise<{ journe
   if (!journey.id) {
     throw new Error("TEST_FIXTURE Journey response did not include an id.");
   }
-  return { journeyId: journey.id, bearer: traveler.access_token };
+  return { journeyId: journey.id, travelerId: traveler.id, bearer: traveler.access_token };
 }
 
 async function fulfill(route: Route, value: unknown): Promise<void> {
@@ -54,21 +58,28 @@ async function fulfill(route: Route, value: unknown): Promise<void> {
 async function useSignedFixtureJourney(
   page: Page,
   journeyId: string,
+  travelerId: string,
   bearer: string,
-): Promise<(status: "PLANNED" | "ACTIVE") => void> {
+): Promise<{
+  setStartJourneyStatus: (status: "PLANNED" | "ACTIVE") => void;
+  setPlanSelectionFailure: (reasonCode: string | null) => void;
+}> {
   const journeyPath = `/api/v1/journeys/${journeyId}`;
-  await page.addInitScript(({ journeyId, bearer }) => {
+  await page.addInitScript(({ journeyId, travelerId, bearer }) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", bearer);
+    window.sessionStorage.setItem("citynexus.traveler.session-id", travelerId);
     window.localStorage.setItem("citynexus.locale", "zh-CN");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
       id: journeyId,
       cityCode: "CN-TEST-FIXTURE",
       cityName: "连城",
       status: "DRAFT",
+      ownerTravelerId: travelerId,
     }));
-  }, { journeyId, bearer });
+  }, { journeyId, travelerId, bearer });
 
   let startJourneyStatus: "PLANNED" | "ACTIVE" = "PLANNED";
+  let planSelectionFailure: string | null = null;
   await page.route("**/api/v1/**", async (route) => {
     const { pathname } = new URL(route.request().url());
 
@@ -162,10 +173,24 @@ async function useSignedFixtureJourney(
       return;
     }
     if (pathname === `${journeyPath}/plans/generate`) {
-      await fulfill(route, [{ id: planId }]);
+      await fulfill(route, [{ id: planId, selectable: !planSelectionFailure }]);
       return;
     }
     if (pathname === `${journeyPath}/plans/${planId}/select`) {
+      if (planSelectionFailure) {
+        await route.fulfill({
+          status: 409,
+          contentType: "application/json",
+          body: JSON.stringify({
+            error: {
+              code: "PLAN_NOT_SELECTABLE",
+              reason_code: planSelectionFailure,
+              message: "TEST_FIXTURE plan refusal",
+            },
+          }),
+        });
+        return;
+      }
       await fulfill(route, { journey_id: journeyId, status: "PLANNED" });
       return;
     }
@@ -190,14 +215,19 @@ async function useSignedFixtureJourney(
     });
   });
 
-  return (status) => {
-    startJourneyStatus = status;
+  return {
+    setStartJourneyStatus: (status) => {
+      startJourneyStatus = status;
+    },
+    setPlanSelectionFailure: (reasonCode) => {
+      planSelectionFailure = reasonCode;
+    },
   };
 }
 
 test("TEST_FIXTURE on /revolution switches only after the signed start response is ACTIVE", async ({ page, request }) => {
-  const { journeyId, bearer } = await createSignedJourney(request);
-  const setStartJourneyStatus = await useSignedFixtureJourney(page, journeyId, bearer);
+  const { journeyId, travelerId, bearer } = await createSignedJourney(request);
+  const controls = await useSignedFixtureJourney(page, journeyId, travelerId, bearer);
 
   await page.goto("/revolution");
   const quickExplore = page.getByTestId("rev-quick-explore");
@@ -216,12 +246,38 @@ test("TEST_FIXTURE on /revolution switches only after the signed start response 
   await startPanel.getByTestId("bootstrap-unknown-cost-ack").check();
   await startPanel.getByTestId("bootstrap-native-start-submit").click();
   await expect(startPanel.getByTestId("bootstrap-native-start-message")).toHaveText(
-    "行程还没有启动。",
+    "行程还没启动成功。请稍后再试。",
   );
   await expect(startPanel).toBeVisible();
 
-  setStartJourneyStatus("ACTIVE");
+  controls.setStartJourneyStatus("ACTIVE");
   await startPanel.getByTestId("bootstrap-native-start-submit").click();
   await expect(startPanel).toBeHidden();
   await expect(page.getByTestId("revolution-real-operator")).toBeVisible();
+});
+test("TEST_FIXTURE opening-hours refusal gives a clear next step and returns to Explore", async ({ page, request }) => {
+  const { journeyId, travelerId, bearer } = await createSignedJourney(request);
+  const controls = await useSignedFixtureJourney(page, journeyId, travelerId, bearer);
+  controls.setPlanSelectionFailure("UNRESOLVED_ACTIVITY_FACTS");
+
+  await page.goto("/revolution");
+  const quickExplore = page.getByTestId("rev-quick-explore");
+  await expect(quickExplore).toBeVisible();
+  await quickExplore.locator("details").filter({ hasText: "公开 OpenStreetMap 链接定位" }).locator("summary").click();
+  await quickExplore.getByLabel("公开地图链接").fill("https://www.openstreetmap.org/#map=13/39.12/117.2");
+  await quickExplore.getByTestId("rev-quick-apply-map-link").click();
+  await quickExplore.getByTestId("rev-quick-find-places").click();
+  await expect(page.getByTestId("rev-quick-results")).toContainText("TEST_FIXTURE Gallery");
+  await quickExplore.getByTestId("rev-quick-formal-TEST_FIXTURE_PLACE_R86").click();
+
+  const startPanel = page.getByTestId("bootstrap-native-start");
+  await startPanel.getByTestId("bootstrap-unknown-cost-ack").check();
+  await startPanel.getByTestId("bootstrap-native-start-submit").click();
+  await expect(startPanel.getByTestId("bootstrap-native-start-message")).toHaveText(
+    "营业时间没有可靠来源，暂时无法生成行程。查看地点信息或更换地点后再试。",
+  );
+
+  await startPanel.getByTestId("bootstrap-native-start-cancel").click();
+  await expect(startPanel).toBeHidden();
+  await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
 });
