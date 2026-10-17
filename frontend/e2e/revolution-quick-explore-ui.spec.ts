@@ -15,7 +15,7 @@ function json(route: Route, object: object) {
   return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(object) });
 }
 
-test("TEST_FIXTURE city and AI requests keep their own pending labels under the shared action lock", async ({ page }) => {
+test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the server-selected source", async ({ page }) => {
   let citySearchCalls = 0;
   let aiCalls = 0;
   let releaseCitySearch!: () => void;
@@ -56,13 +56,16 @@ test("TEST_FIXTURE city and AI requests keep their own pending labels under the 
   }));
   await page.route(`${root}/bootstrap-city-search`, async (route) => {
     citySearchCalls += 1;
+    const payload = route.request().postDataJSON();
+    expect(payload.provider_consent).toBe(true);
+    expect(payload.provider).toBeUndefined();
     markCitySearchStarted();
     await citySearchGate;
     await json(route, {
-      journey_id: journey, status: "CITY_RESULTS", query: "连城", provider_attempts: [],
+      journey_id: journey, status: "CITY_RESULTS", query: "连城", provider_key: "photon", provider_attempts: [],
       results: [{
         result_id: "TEST_FIXTURE-city", name: "连城县", display_name: "连城县（测试地名结果）",
-        provider: "test", provider_provenance: "TEST_PROVIDER",
+        provider: "photon", provider_provenance: "TEST_PROVIDER",
         latitude: 25.7, longitude: 116.75, coordinate_system: "WGS84",
         confidence: "CITY_CENTROID_UNCERTAIN", selection_state: "CAMERA_ONLY_TAP_REQUIRED",
       }],
@@ -82,6 +85,8 @@ test("TEST_FIXTURE city and AI requests keep their own pending labels under the 
 
   await page.goto("/revolution");
   await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+  await expect(page.getByTestId("rev-quick-area")).toContainText("服务器当前选择的公开地名服务");
+  await expect(page.getByTestId("rev-quick-area")).not.toContainText("Nominatim");
   const cityButton = page.getByTestId("rev-quick-find-city");
   const aiButton = page.getByTestId("rev-quick-consult-ai");
   await page.getByLabel("城市或地区").fill("连城");
@@ -93,6 +98,7 @@ test("TEST_FIXTURE city and AI requests keep their own pending labels under the 
   await expect(aiButton).toHaveText("问问 AI →");
   releaseCitySearch();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
+  await expect(page.getByTestId("rev-quick-area")).toContainText("本次地名搜索服务：Photon。");
   await expect(cityButton).toBeEnabled();
   await expect(cityButton).toHaveText("查找位置 →");
 

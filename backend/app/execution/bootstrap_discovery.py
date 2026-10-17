@@ -1616,6 +1616,7 @@ def search_bootstrap_city(
             "journey_id": journey.id,
             "status": "GEOCODER_DISABLED",
             "query": query,
+            "provider_key": None,
             "provider_attempts": [],
             "results": [],
             "provider_provenance": "UNVERIFIED",
@@ -1627,6 +1628,7 @@ def search_bootstrap_city(
             "journey_id": journey.id,
             "status": str(cached.get("status") or "CITY_RESULTS"),
             "query": query,
+            "provider_key": provider_name,
             "provider_provenance": str(cached.get("provider_provenance") or "UNVERIFIED"),
             "provider_attempts": [],
             "cache_hit": True,
@@ -1661,6 +1663,7 @@ def search_bootstrap_city(
             "journey_id": journey.id,
             "status": "GEOCODER_RATE_LIMITED",
             "query": query,
+            "provider_key": None,
             "provider_provenance": "UNVERIFIED",
             "provider_attempts": [],
             "cache_hit": False,
@@ -1719,6 +1722,7 @@ def search_bootstrap_city(
     )
     payload = {
         "status": status,
+        "provider_key": provider_name,
         "provider_provenance": provenance,
         "results": [_city_result_payload(item, provenance=provenance) for item in selected],
     }
@@ -1743,6 +1747,7 @@ def search_bootstrap_city(
         "journey_id": journey.id,
         "status": status,
         "query": query,
+        "provider_key": provider_name,
         "provider_provenance": provenance,
         "provider_attempts": attempts,
         "cache_hit": False,

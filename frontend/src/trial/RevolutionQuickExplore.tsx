@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   CityNexusApiError,
   cityNexusApi,
+  type BootstrapCitySearchResponse,
   type BootstrapCitySearchResult,
   type BootstrapDiscoveryCandidate,
   type BootstrapDiscoveryReadinessResponse,
@@ -234,6 +235,7 @@ export function RevolutionQuickExplore({
   const quickExploreRef = useRef<HTMLElement>(null);
   const pendingAiAdviceReveal = useRef(false);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
+  const [cityProviderKey, setCityProviderKey] = useState<BootstrapCitySearchResponse["provider_key"] | undefined>(undefined);
   const [photonFallbackAvailable, setPhotonFallbackAvailable] = useState(false);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
@@ -478,15 +480,16 @@ export function RevolutionQuickExplore({
     action: openMapFallback,
   };
 
-  const cityLookup = (provider: "nominatim" | "photon" = "nominatim") => {
+  const cityLookup = (provider?: "nominatim" | "photon") => {
     const cityQuery = query.trim();
     if (cityQuery.length < 2 || cityQuery.length > 120) {
       setAlert({ type: "error", text: "请输入至少两个字的城市或地区，例如「连城县」。" });
       return;
     }
+    setCityProviderKey(undefined);
     void run("查找地名", async (stillCurrent) => {
-      // The button explicitly announces that this ONE request sends the
-      // entered public city label to Nominatim. No passive or typing request.
+      // One explicit action sends the entered public city label to the
+      // server-selected geocoder. There is no passive or typing request.
       const response = await cityNexusApi.bootstrapCitySearch(journeyId, {
         query: cityQuery,
         provider_consent: true,
@@ -494,10 +497,11 @@ export function RevolutionQuickExplore({
         ...(provider === "photon" ? { provider } : {}),
       });
       if (!stillCurrent()) return;
+      setCityProviderKey(response.provider_key);
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
         setPhotonFallbackAvailable(
-          provider === "nominatim" && (
+          response.provider_key === "nominatim" && (
             response.status === "GEOCODER_UNAVAILABLE" ||
             response.status === "GEOCODER_RATE_LIMITED" ||
             response.status === "CITY_NO_RESULTS"
@@ -876,6 +880,7 @@ export function RevolutionQuickExplore({
             photonFallbackAvailable={photonFallbackAvailable}
             selectedPin={selectedPin}
             busy={busy}
+            cityProviderKey={cityProviderKey}
             sampleProviderMode={sampleProviderMode}
             tilesEnabled={tilesEnabled}
             mapLink={mapLink}
@@ -886,6 +891,7 @@ export function RevolutionQuickExplore({
             onQueryChange={(value) => {
               setQuery(value);
               setCityResults([]);
+              setCityProviderKey(undefined);
               setPhotonFallbackAvailable(false);
               setCityFocus(null);
               setCityFocusLabel(null);

@@ -1783,6 +1783,7 @@ export interface BootstrapCitySearchResponse {
   journey_id: string;
   status: "CITY_RESULTS" | "CITY_NO_RESULTS" | "GEOCODER_DISABLED" | "GEOCODER_UNAVAILABLE" | "GEOCODER_RATE_LIMITED";
   query: string;
+  provider_key: "nominatim" | "photon" | null;
   provider_provenance?: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   provider_attempts: Array<Record<string, unknown>>;
   cache_hit?: boolean;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PublicCityAreaPicker, type PublicCityCenter } from "../../features/discovery/PublicCityAreaPicker";
-import type { BootstrapCitySearchResult } from "../../api/citynexus";
+import type { BootstrapCitySearchResponse, BootstrapCitySearchResult } from "../../api/citynexus";
 import { MobileAiPrompt, type MobileAiAdvice } from "./MobileAiPrompt";
 
 type CityPickerProps = {
@@ -12,6 +12,7 @@ type CityPickerProps = {
   photonFallbackAvailable: boolean;
   selectedPin: PublicCityCenter | null;
   busy: boolean;
+  cityProviderKey?: BootstrapCitySearchResponse["provider_key"] | undefined;
   sampleProviderMode: boolean;
   tilesEnabled: boolean;
   mapLink: string;
@@ -44,6 +45,7 @@ export function CityPicker({
   photonFallbackAvailable,
   selectedPin,
   busy,
+  cityProviderKey,
   sampleProviderMode,
   tilesEnabled,
   mapLink,
@@ -94,9 +96,15 @@ export function CityPicker({
         </button>
       </div>
       <p className="rev-quick-disclosure">
-        {sampleProviderMode
-          ? "点击后将地名发送至本机 TEST_PROVIDER。"
-          : "点击后将地名发送至 Nominatim，按所选区域搜索。"}
+        {cityProviderKey === "nominatim"
+          ? "本次地名搜索服务：Nominatim。"
+          : cityProviderKey === "photon"
+            ? "本次地名搜索服务：Photon。"
+            : cityProviderKey === null
+              ? "本次查询未调用地名服务。"
+              : sampleProviderMode
+                ? "点击后将地名发送至本机 TEST_PROVIDER。"
+                : "点击后将地名发送至服务器当前选择的公开地名服务。"}
       </p>
       {photonFallbackAvailable && !sampleProviderMode && (
         <div className="rev-quick-photon-fallback" data-testid="rev-quick-photon-fallback">
