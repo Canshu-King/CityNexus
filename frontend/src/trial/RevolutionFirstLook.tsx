@@ -346,7 +346,6 @@ export function RevolutionFirstLook() {
                     }}
                     agentConfigured={Boolean(agentConfigured)}
                     agentChecking={agentStatusChecking}
-                    onRestartExplore={(nextCityName) => switchCity(nextCityName)}
                     onPocketWalkChange={setPocketWalk}
                     onMemberAccessDenied={recoverDeniedJourney}
                     onFormalCandidateSelected={(placeId) => {
