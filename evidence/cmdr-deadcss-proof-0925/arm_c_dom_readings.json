@@ -1,0 +1,99 @@
+{
+ "label": "arm13_0910",
+ "at": "2026-10-17T01:11:03.887Z",
+ "tree_identity": {
+  "css_equal": 29,
+  "css_diff": [],
+  "files": 454
+ },
+ "headings": [
+  "Demo之旅",
+  "选择你的下一段路程。",
+  "你想改什么？",
+  "1 天行程",
+  "整座城市，行程叠加其上。",
+  "我的行程与偏好"
+ ],
+ "rows": [
+  {
+   "token": "v8-anchor-row",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-trip-metrics",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-trip-hero-head",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "anchor-line",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-live-grid",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-strength",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v9-live-actions",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-cta",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-home-language",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "collections-panel",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "poi-import-panel",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-user-meta",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-empty-hint",
+   "dom_hits_total": 0,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=0"
+  },
+  {
+   "token": "v8-page",
+   "dom_hits_total": 8,
+   "per_screen": "hub=1,live=3,copilot=1,trips=1,map=1,me=1"
+  },
+  {
+   "token": "v8-me-card",
+   "dom_hits_total": 7,
+   "per_screen": "hub=0,live=0,copilot=0,trips=0,map=0,me=7"
+  },
+  {
+   "token": "trip-stop",
+   "dom_hits_total": 6,
+   "per_screen": "hub=0,live=0,copilot=0,trips=6,map=0,me=0"
+  }
+ ]
+}
