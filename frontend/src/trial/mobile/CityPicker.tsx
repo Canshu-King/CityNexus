@@ -63,7 +63,9 @@ export function CityPicker({
   onAiGoalChange,
   onAskAi,
 }: CityPickerProps) {
-  const [cityLookupPending, setCityLookupPending] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"city-lookup" | "ai-request" | null>(null);
+  const cityLookupPending = busy && pendingAction === "city-lookup";
+  const aiRequestPending = busy && pendingAction === "ai-request";
 
   return (
     <div className="rev-quick-pane" data-testid="rev-quick-area">
@@ -82,13 +84,13 @@ export function CityPicker({
         <button
           type="button"
           onClick={() => {
-            setCityLookupPending(true);
+            setPendingAction("city-lookup");
             onCityLookup();
           }}
           disabled={busy}
           data-testid="rev-quick-find-city"
         >
-          {busy && cityLookupPending ? "查询中…" : "查找位置 →"}
+          {cityLookupPending ? "查询中…" : "查找位置 →"}
         </button>
       </div>
       <p className="rev-quick-disclosure">
@@ -105,13 +107,13 @@ export function CityPicker({
             type="button"
             className="rev-quick-secondary"
             onClick={() => {
-              setCityLookupPending(true);
+              setPendingAction("city-lookup");
               onPhotonCityLookup();
             }}
             disabled={busy}
             data-testid="rev-quick-photon-search"
           >
-            {busy && cityLookupPending ? "正在用 Photon 查找…" : "改用 Photon 地名查找 →"}
+            {cityLookupPending ? "正在用 Photon 查找…" : "改用 Photon 地名查找 →"}
           </button>
         </div>
       )}
@@ -206,13 +208,13 @@ export function CityPicker({
       <MobileAiPrompt
         value={aiGoal}
         busy={busy}
-        requestPending={busy && !cityLookupPending}
+        requestPending={aiRequestPending}
         configured={agentConfigured}
         checking={agentChecking}
         advice={aiAdvice}
         onChange={onAiGoalChange}
         onSubmit={() => {
-          setCityLookupPending(false);
+          setPendingAction("ai-request");
           onAskAi();
         }}
       />

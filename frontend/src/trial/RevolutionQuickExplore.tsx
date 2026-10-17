@@ -210,6 +210,7 @@ export function RevolutionQuickExplore({
   cityName,
   agentConfigured = false,
   agentChecking = false,
+  onOpenAgentActivity,
   onFormalCandidateSelected,
   onPocketWalkChange,
   onExplorationCenterLabelChange,
@@ -219,6 +220,7 @@ export function RevolutionQuickExplore({
   cityName: string;
   agentConfigured?: boolean;
   agentChecking?: boolean;
+  onOpenAgentActivity: () => void;
   onFormalCandidateSelected?: (placeId: string) => void;
   onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
   onExplorationCenterLabelChange?: (label: string) => void;
@@ -864,60 +866,70 @@ export function RevolutionQuickExplore({
       )}
 
       {stage === "area" && (
-        <CityPicker
-          query={query}
-          cityResults={cityResults}
-          cityFocus={cityFocus}
-          cityFocusLabel={cityFocusLabel}
-          mapFallbackOpen={mapFallbackOpen}
-          photonFallbackAvailable={photonFallbackAvailable}
-          selectedPin={selectedPin}
-          busy={busy}
-          sampleProviderMode={sampleProviderMode}
-          tilesEnabled={tilesEnabled}
-          mapLink={mapLink}
-          aiGoal={aiGoal}
-          agentConfigured={agentConfigured}
-          agentChecking={agentChecking}
-          aiAdvice={aiAdvice}
-          onQueryChange={(value) => {
-            setQuery(value);
-            setCityResults([]);
-            setPhotonFallbackAvailable(false);
-            setCityFocus(null);
-            setCityFocusLabel(null);
-            setSelectedPin(null);
-            setMapFallbackOpen(false);
-            setTilesEnabled(false);
-          }}
-          onCityLookup={cityLookup}
-          onPhotonCityLookup={() => cityLookup("photon")}
-          onCityResultSelect={(item) => {
-            // Keep the geocoder's approximate-area source distinct from
-            // map taps, GPS, and arrival; Overpass starts on the next button.
-            setCityFocus({ latitude: item.latitude, longitude: item.longitude });
-            setCityFocusLabel(item.display_name || item.name);
-            setSelectedPin(null);
-            setTilesEnabled(false);
-            setAlert({
-              type: "good",
-              text: "已选中公开地区的大致中心。你可以直接从附近查找，也可以先打开地图微调。",
-            });
-          }}
-          onUseCenter={useCenter}
-          onEnableTiles={() => setTilesEnabled(true)}
-          onMapSelect={(point) => {
-            // A deliberate public map tap is already the user's manual
-            // center selection. Don't demand a second "confirm" click.
-            // No public POI request occurs until the next explicit action.
-            setSelectedPin(point);
-            useCenter(point, "MAP_TAP");
-          }}
-          onMapLinkChange={setMapLink}
-          onApplyMapLink={applyLink}
-          onAiGoalChange={setAiGoal}
-          onAskAi={() => { void consultHermes(); }}
-        />
+        <>
+          <CityPicker
+            query={query}
+            cityResults={cityResults}
+            cityFocus={cityFocus}
+            cityFocusLabel={cityFocusLabel}
+            mapFallbackOpen={mapFallbackOpen}
+            photonFallbackAvailable={photonFallbackAvailable}
+            selectedPin={selectedPin}
+            busy={busy}
+            sampleProviderMode={sampleProviderMode}
+            tilesEnabled={tilesEnabled}
+            mapLink={mapLink}
+            aiGoal={aiGoal}
+            agentConfigured={agentConfigured}
+            agentChecking={agentChecking}
+            aiAdvice={aiAdvice}
+            onQueryChange={(value) => {
+              setQuery(value);
+              setCityResults([]);
+              setPhotonFallbackAvailable(false);
+              setCityFocus(null);
+              setCityFocusLabel(null);
+              setSelectedPin(null);
+              setMapFallbackOpen(false);
+              setTilesEnabled(false);
+            }}
+            onCityLookup={cityLookup}
+            onPhotonCityLookup={() => cityLookup("photon")}
+            onCityResultSelect={(item) => {
+              // Keep the geocoder's approximate-area source distinct from
+              // map taps, GPS, and arrival; Overpass starts on the next button.
+              setCityFocus({ latitude: item.latitude, longitude: item.longitude });
+              setCityFocusLabel(item.display_name || item.name);
+              setSelectedPin(null);
+              setTilesEnabled(false);
+              setAlert({
+                type: "good",
+                text: "已选中公开地区的大致中心。你可以直接从附近查找，也可以先打开地图微调。",
+              });
+            }}
+            onUseCenter={useCenter}
+            onEnableTiles={() => setTilesEnabled(true)}
+            onMapSelect={(point) => {
+              // A deliberate public map tap is already the user's manual
+              // center selection. Don't demand a second "confirm" click.
+              // No public POI request occurs until the next explicit action.
+              setSelectedPin(point);
+              useCenter(point, "MAP_TAP");
+            }}
+            onMapLinkChange={setMapLink}
+            onApplyMapLink={applyLink}
+            onAiGoalChange={setAiGoal}
+            onAskAi={() => { void consultHermes(); }}
+          />
+          <button
+            type="button"
+            className="rev-quick-secondary"
+            data-testid="rev-quick-open-agent-activity"
+            onClick={onOpenAgentActivity}
+          >
+            AI 工作动态 →
+          </button>
+        </>
       )}
 
       {stage === "category" && (

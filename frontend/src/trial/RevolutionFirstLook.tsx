@@ -953,6 +953,7 @@ export function RevolutionFirstLook() {
                     }}
                     agentConfigured={Boolean(agentCanRequestSuggestion)}
                     agentChecking={agentStatusChecking}
+                    onOpenAgentActivity={() => navigateMobile("trips")}
                     onPocketWalkChange={setPocketWalk}
                     onMemberAccessDenied={recoverDeniedJourney}
                     onFormalCandidateSelected={(placeId) => {

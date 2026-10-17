@@ -240,8 +240,10 @@ test("TEST_FIXTURE running trace shows server state, timestamp, and tool identit
   await expect.poll(() => signedReads.events).toBeGreaterThan(0);
 });
 
-test("TEST_FIXTURE DRAFT activity clearly has no formal AgentRun and reads no native run", async ({ page }) => {
+test("TEST_FIXTURE DRAFT activity entry opens status without creating a run or API request", async ({ page }, testInfo) => {
   let nativeRunReads = 0;
+  const apiRequests: string[] = [];
+  const startupReads = { runtime: 0, readiness: 0, shortlist: 0, citySearch: 0 };
   await page.addInitScript((id) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_FIXTURE_MEMBER_24");
     window.sessionStorage.setItem("citynexus.traveler.session-id", "TEST_FIXTURE_TRAVELER_24");
@@ -252,23 +254,79 @@ test("TEST_FIXTURE DRAFT activity clearly has no formal AgentRun and reads no na
     }));
   }, journeyId);
   await page.route("**/api/v1/**", (route) => route.abort());
-  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
-    runtime_identity: "TEST_FIXTURE", hermes_native_gateway: { configured: true },
-    hermes_compat_configured: false, ai_state: "DISABLED",
-  }));
+  await page.route("**/api/v1/agent/runtime-status", async (route) => {
+    startupReads.runtime += 1;
+    await json(route, {
+      runtime_identity: "TEST_FIXTURE", hermes_native_gateway: { configured: true },
+      hermes_compat_configured: false, ai_state: "DISABLED",
+    });
+  });
+  await page.route(`${journeyRoot}/bootstrap-discovery/readiness`, async (route) => {
+    startupReads.readiness += 1;
+    await json(route, {
+      status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER",
+    });
+  });
+  await page.route(`${journeyRoot}/bootstrap-shortlist`, async (route) => {
+    startupReads.shortlist += 1;
+    await json(route, {
+      journey_id: journeyId, limit: 3, items: [], resume: null, pocket_walk: null,
+    });
+  });
+  let releaseCityLookup: () => void = () => {};
+  const cityLookupResponse = new Promise<void>((resolve) => {
+    releaseCityLookup = resolve;
+  });
+  await page.route(`${journeyRoot}/bootstrap-city-search`, async (route) => {
+    startupReads.citySearch += 1;
+    await cityLookupResponse;
+    await json(route, {
+      journey_id: journeyId, status: "CITY_NO_RESULTS", query: "测试地区",
+      provider_provenance: "TEST_PROVIDER", provider_attempts: [], results: [],
+    });
+  });
   page.on("request", (request) => {
-    if (request.url().includes("/agent/hermes/latest-run") || request.url().includes("/agent/hermes/runs/")) {
+    const requestUrl = new URL(request.url());
+    if (requestUrl.pathname.startsWith("/api/v1/")) {
+      apiRequests.push(`${request.method()} ${requestUrl.pathname}`);
+    }
+    if (requestUrl.pathname.includes("/agent/hermes/latest-run") || requestUrl.pathname.includes("/agent/hermes/runs/")) {
       nativeRunReads += 1;
     }
   });
 
   await page.goto("/revolution");
-  await page.getByTestId("rev-mobile-tab-trips").click();
+  await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
+  const activityEntry = page.getByTestId("rev-quick-open-agent-activity");
+  await expect(activityEntry).toHaveText("AI 工作动态 →");
+  await expect.poll(() => startupReads.runtime).toBeGreaterThan(0);
+  await expect.poll(() => startupReads.readiness).toBeGreaterThan(0);
+  await expect.poll(() => startupReads.shortlist).toBeGreaterThan(0);
+
+  await page.getByLabel("城市或地区").fill("测试地区");
+  const cityLookup = page.getByTestId("rev-quick-find-city");
+  await cityLookup.click();
+  await expect(cityLookup).toBeDisabled();
+  await expect(cityLookup).toHaveText("查询中…");
+  await expect(page.getByTestId("rev-quick-consult-ai")).toHaveText("问问 AI →");
+  await expect.poll(() => startupReads.citySearch).toBe(1);
+  releaseCityLookup();
+  await expect(cityLookup).toBeEnabled();
+
+  const apiRequestsBeforeClick = apiRequests.length;
+  await activityEntry.click();
+  await expect(page.getByTestId("rev-mobile-screen-trips")).toBeVisible();
   const activity = page.getByTestId("rev-draft-agent-activity");
   await expect(activity).toContainText("当前是探索草稿，");
   await expect(activity).toContainText("尚无正式 AgentRun。");
   await expect(activity).toContainText("选好地点并确认后，可在「行程」查看助手动态。");
+  expect(apiRequests).toHaveLength(apiRequestsBeforeClick);
   expect(nativeRunReads).toBe(0);
+  await page.screenshot({
+    path: testInfo.outputPath("issue24-draft-agent-activity-entry-390x844.png"),
+    fullPage: false,
+    animations: "disabled",
+  });
 });
 
 test("TEST_FIXTURE pending approval opens the existing Journey authorization area", async ({ page }) => {
