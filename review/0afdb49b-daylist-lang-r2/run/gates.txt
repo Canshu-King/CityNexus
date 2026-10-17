@@ -1,0 +1,4 @@
+npm run typecheck (tsconfig.typecheck.json) rc=0
+npm run build rc=0 bundle=assets/index-BFyzJnFN.js
+../run/tip1017_build_after.log:BUILD_RC=0
+../run/tip1017_typecheck_after.log:TYPECHECK_RC=0

@@ -10,6 +10,7 @@
  */
 
 import { dictionaryCopy } from "../i18n/LocaleContext";
+import { humanizeToken, roleLabel } from "../i18n/travelerLabels";
 
 type Label = { zh: string; en: string };
 
@@ -271,4 +272,24 @@ export function summaryHeldLabel(zh?: boolean | string | null): string {
  *  labelled as the server's word: a method we cannot name is not a method we may describe. */
 export function evidenceSourceLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(EVIDENCE_SOURCE, value, zh);
+}
+
+/** Words for one plan day's activity line, which upstream builds as `role · place · role · place`.
+ *
+ *  A whole-line humanizer is not enough: the line mixes a routing token with a place name, and a place
+ *  name is not a token this factory owns.  So each `·` segment is asked separately, and a segment the
+ *  role table does not know keeps its own bytes -- `roleLabel`'s fallback lowercases, which would turn
+ *  「Temple of Heaven」 into a claim about a temple we never named. */
+export function activityWordLabel(value: unknown, zh?: boolean | string | null): string {
+  const raw = String(value ?? "").trim();
+  if (!raw) return raw;
+  return raw
+    .split("·")
+    .map((segment) => {
+      const part = segment.trim();
+      if (!part) return part;
+      const mapped = roleLabel(part, zh);
+      return mapped !== humanizeToken(part) ? mapped : part;
+    })
+    .join(" · ");
 }
