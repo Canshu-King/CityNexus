@@ -818,8 +818,11 @@
      07:52 两主题对拍（_cmdr_dark_pair_scan_r1.cjs，只比浏览器最后算出来的那一手）抓到两枚漏在这组之外的：
      `.v8-me-card`（「我的」那五张卡）与 `.v8-agent-progress`（Copilot 那屏的进度块）——
      它们在暗档仍是 rgb(255,255,255) 白底，而卡片自己的 color 已经是暗档墨 rgb(245,245,247)，
-     于是白底配白字，比值 1.09：那两屏的文字在暗档下是看不见的。补进同一组，不新造判据。 */
-  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress {
+     于是白底配白字，比值 1.09：那两屏的文字在暗档下是看不见的。补进同一组，不新造判据。
+     08:31 同一把合成尺又在「行程票夹」抓到同一族：`.trip-stop.protected` 的浅绿底 #eefaf2
+     （`frontend/src/styles.css:1268`）配上从 `.v8-page` 继承来的近白墨，比值 1.02。
+     它和 `.v8-next-card` 是同一种东西（浅绿语义卡），所以走这一组已有的那一手，不自创第二套。 */
+  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress, :root[data-theme="dark"] .v8-page .trip-stop.protected {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
@@ -920,6 +923,29 @@
     border-color: rgba(255, 159, 10, 0.34) !important;
     color: var(--cn-ink) !important;
   }
+  /* Trips wallet stop cards (08:31 composited census, six screens x two themes x
+     two widths, 1820 readings): `.trip-stop.disrupted` carries the very same
+     hard-coded #fff6ee (frontend/src/styles.css:1275) as `.live-disruption`
+     above, but unlike that one it never got a dark counterpart, so the ink it
+     inherits from .v8-page sat on a warm near-white fill at ratio 1.02 -- the
+     time, the place name, the duration and the 详情 button were all invisible
+     in dark. Same light fill, same semantic, so the dark pair is copied from
+     the rule right above it rather than invented here.
+     The two label colours then have to follow, or this change would have moved
+     the defect instead of removing it: light side stays as-is (#1c7a4a on the
+     tint measures 4.98, #b45309 on the tint 4.70, both AA), dark side goes to
+     the paired semantic tokens the theme already carries (#30d158 on the dark
+     surface = 8.42, #ff9f0a on the amber wash = 6.64). Note `--cn-warning` is
+     NOT used on the light side: its light value #b06000 measures 4.35 on that
+     tint, which would be worse than the literal it replaces. */
+  :root[data-theme="dark"] .v8-page .trip-stop.disrupted {
+    background: rgba(255, 159, 10, 0.12) !important;
+    border-color: rgba(255, 159, 10, 0.34) !important;
+    color: var(--cn-ink) !important;
+  }
+  :root[data-theme="dark"] .v8-page .trip-stop-protected { color: var(--cn-success) !important; }
+  :root[data-theme="dark"] .v8-page .trip-stop-disrupted { color: var(--cn-warning) !important; }
+
   :root[data-theme="dark"] .v8-page .live-proposal {
     background: var(--cn-surface) !important;
     border-color: var(--cn-hairline) !important;
