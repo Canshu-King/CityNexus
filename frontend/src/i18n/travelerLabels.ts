@@ -270,3 +270,50 @@ export function stopRoleLabel(
     "";
   return roleLabel(raw, zh) || categoryLabel(raw, zh);
 }
+
+
+/* ── identity vocabulary ──────────────────────────────────────────────────────
+   The server's own words for "who is asking": `SIGNED`, `NOT_CONFIGURED`, the
+   `TRAVELER_CREDENTIALS_*` refusals.  They live here, next to the traveller words
+   that translate them, so a screen cannot invent its own spelling of a state -- and
+   so the machine form never arrives on a page by way of a component that needed a
+   label and had nothing else to read.  Object entries, not a bare set: the landing
+   gate's CODES_ON_SCREEN arm exempts a dictionary and refuses a table handed around.
+   --------------------------------------------------------------------------- */
+export const TRAVELER_STATE_WORDS = {
+  signed: "SIGNED",
+  notConfigured: "NOT_CONFIGURED",
+  misconfigured: "MISCONFIGURED",
+  expired: "EXPIRED",
+  unsigned: "UNSIGNED",
+  refused: "REFUSED",
+} as const;
+
+/** Refusals that mean *this credential* is the problem -- the session has to go. */
+export const CREDENTIAL_REFUSAL_CODES = {
+  missing: "TRAVELER_CREDENTIALS_MISSING",
+  invalid: "TRAVELER_CREDENTIALS_INVALID",
+  expired: "TRAVELER_CREDENTIALS_EXPIRED",
+  principalNotFound: "TRAVELER_PRINCIPAL_NOT_FOUND",
+} as const;
+
+/** Refusals that mean the credential is fine and only the saved pointer is wrong. */
+export const SCOPE_REFUSAL_CODES = {
+  pointerNotOurs: "JOURNEY_POINTER_NOT_OURS",
+  travelerNotPrincipal: "TRAVELER_NOT_PRINCIPAL",
+} as const;
+
+const IDENTITY_LABELS: Record<string, Label> = {
+  SIGNED: { zh: "已确认身份", en: "Identity confirmed" },
+  NOT_CONFIGURED: { zh: "这台服务器还不能确认身份", en: "This server cannot confirm identity yet" },
+  MISCONFIGURED: { zh: "身份能力没配好", en: "Identity setup is incomplete" },
+  EXPIRED: { zh: "这次登录过期了", en: "This sign-in expired" },
+  UNSIGNED: { zh: "还没有登录", en: "Not signed in" },
+  REFUSED: { zh: "服务器没有认下这个身份", en: "The server did not accept this identity" },
+};
+
+/** What a traveller is told about an identity state; unknown words fall back, never print raw. */
+/** What a traveller is told about an identity state; unknown words fall back, never print raw. */
+export function identityStateLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(IDENTITY_LABELS, value, zh);
+}
