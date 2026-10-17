@@ -70,7 +70,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         for index, name in enumerate(("R95 Gallery", "R95 Library"), start=1):
             candidates.append(
                 DiscoveryCandidate(
-                    provider_key="TEST_PROVIDER",
+                    provider_key="overpass",
                     external_id=f"overpass:node/95{index:03d}",
                     name=name,
                     category="gallery" if index == 1 else "library",
@@ -80,7 +80,18 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
                     opening_hours={"status": "NORMALIZED_VALID", "raw": "10:00-18:00"},
                     metadata={"osm_id": f"node/95{index:03d}", "tags": {"name": name}},
                     distance_m=100.0 + index,
-                    cost_evidence={"status": "UNKNOWN", "source": "TEST_PROVIDER"},
+                    cost_evidence=(
+                        {
+                            "status": "KNOWN",
+                            "amount_minor": 0,
+                            "currency": None,
+                            "currency_agnostic": True,
+                            "evidence_basis": "OSM_FEE_NO",
+                            "source": "TEST_PROVIDER",
+                        }
+                        if index == 2
+                        else {"status": "UNKNOWN", "source": "TEST_PROVIDER"}
+                    ),
                 )
             )
         return candidates, [{"endpoint": "http://127.0.0.1:8211/interpreter", "answered": True, "http_status": 200, "elements": 2}]
@@ -141,6 +152,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": True,
+                "consented_provider": "overpass",
                 "latitude": 31.2304,
                 "longitude": 121.4737,
                 "coordinate_system": "WGS84",
@@ -151,7 +163,8 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         body = discovery.json()
         assert body["provider_provenance"] == "TEST_PROVIDER"
         assert all(item["provider_provenance"] == "TEST_PROVIDER" for item in body["candidates"])
-        first, second = body["candidates"][:2]
+        first = next(item for item in body["candidates"] if item["external_id"] == "overpass:node/95001")
+        second = next(item for item in body["candidates"] if item["external_id"] == "overpass:node/95002")
 
         saved = client.post(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",

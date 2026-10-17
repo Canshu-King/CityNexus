@@ -1,5 +1,101 @@
 import type { BootstrapDiscoveryCandidate } from "../../api/citynexus";
 
+const WEEKDAYS: Record<string, string> = {
+  Mo: "周一",
+  Tu: "周二",
+  We: "周三",
+  Th: "周四",
+  Fr: "周五",
+  Sa: "周六",
+  Su: "周日",
+};
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function isTime(value: unknown, allowEndOfDay = false): value is string {
+  return typeof value === "string" && (
+    /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value) || (allowEndOfDay && value === "24:00")
+  );
+}
+
+function formatDays(value: unknown): string | null {
+  if (!Array.isArray(value) || value.some((day) => typeof day !== "string")) return null;
+  const days = value as string[];
+  if (days.length === 0) return null;
+  if (days.length === 1 && days[0] === "*") return "每天";
+  if (days.length === 5 && days.join(",") === "Mo,Tu,We,Th,Fr") return "周一至周五";
+  if (days.length === 2 && days.join(",") === "Sa,Su") return "周末";
+  if (days.some((day) => !WEEKDAYS[day])) return null;
+  return days.map((day) => WEEKDAYS[day]).join("、");
+}
+
+function formatInterval(value: unknown): string | null {
+  const interval = asRecord(value);
+  if (!interval || !isTime(interval.open) || !isTime(interval.close, true)) return null;
+  return `${interval.open}–${interval.close}`;
+}
+
+function formatOpeningHours(value: unknown): string | null {
+  const opening = asRecord(value);
+  if (!opening) return null;
+  if (opening.status === "CLOSED") return "来源标记为关闭";
+  if (opening.status !== "NORMALIZED_VALID") return null;
+
+  const weekdayIntervals = opening.weekday_intervals;
+  if (Array.isArray(weekdayIntervals) && weekdayIntervals.length > 0) {
+    const groups = weekdayIntervals.map((entry) => {
+      const group = asRecord(entry);
+      if (!group || !Array.isArray(group.intervals)) return null;
+      const days = formatDays(group.days);
+      const ranges = group.intervals.map(formatInterval);
+      if (days === null || ranges.length === 0 || ranges.some((range) => range === null)) return null;
+      return [days, ranges.join("、")].filter(Boolean).join(" ");
+    });
+    return groups.every((group) => group !== null) ? groups.join("；") : null;
+  }
+
+  const intervals = opening.intervals;
+  if (Array.isArray(intervals) && intervals.length === 1) {
+    const interval = asRecord(intervals[0]);
+    const range = formatInterval(interval);
+    const days = interval && interval.days !== undefined ? formatDays(interval.days) : "";
+    if (range && days !== null) return [days, range].filter(Boolean).join(" ");
+  }
+  if (Array.isArray(intervals) && intervals.length > 1) return null;
+
+  if (isTime(opening.open) && isTime(opening.close, true)) {
+    if (opening.open === "00:00" && opening.close === "24:00") return "全天";
+    return `${opening.open}–${opening.close}`;
+  }
+  return null;
+}
+
+function formatCost(candidate: BootstrapDiscoveryCandidate): string {
+  if (candidate.price_state === "FREE") return "免费";
+  const evidence = candidate.cost_evidence;
+  const amountMinor = evidence?.amount_minor;
+  const grounded = evidence?.status === "KNOWN" || evidence?.status === "VERIFIED_PROVIDER";
+  if (!grounded || typeof amountMinor !== "number" || !Number.isSafeInteger(amountMinor) || amountMinor < 0) {
+    return "费用未知";
+  }
+  if (amountMinor === 0) {
+    return evidence.evidence_basis === "OSM_FEE_NO" || evidence.status === "VERIFIED_PROVIDER" ? "免费" : "费用未知";
+  }
+  if (typeof evidence.currency !== "string" || !/^[A-Z]{3}$/.test(evidence.currency)) return "费用未知";
+
+  try {
+    const formatter = new Intl.NumberFormat("zh-CN", { style: "currency", currency: evidence.currency });
+    const digits = formatter.resolvedOptions().maximumFractionDigits;
+    return `费用：${formatter.format(amountMinor / 10 ** digits)}`;
+  } catch {
+    return "费用未知";
+  }
+}
+
 function safeOsmSource(value: string | null): string | null {
   if (!value) return null;
   try {
@@ -37,6 +133,9 @@ export function DiscoveryPlaceCard({
     : candidate.provider_provenance === "LIVE_PROVIDER"
       ? "公开地图来源"
       : "来源待确认";
+  const openingHours = formatOpeningHours(candidate.opening_hours);
+  const hoursLabel = openingHours ? `营业时间：${openingHours}` : "营业时间未知";
+  const costLabel = formatCost(candidate);
   const distance = typeof candidate.distance_m === "number" && Number.isFinite(candidate.distance_m)
     ? candidate.distance_m < 1000
       ? `约 ${Math.max(10, Math.round(candidate.distance_m / 10) * 10)} 米`
@@ -63,13 +162,21 @@ export function DiscoveryPlaceCard({
           {candidate.category}{distance ? ` · ${distance}` : ""}
         </span>
         <span className="rev-quick-place-facts">
-          营业与费用信息待补充
+          {hoursLabel} · {costLabel}
         </span>
       </button>
       {source && (
         <a href={source} rel="noopener noreferrer" target="_blank" className="rev-quick-place-source">
           查看 OpenStreetMap 来源 ↗
         </a>
+      )}
+      {(candidate.provider_key === "overpass" || candidate.provider_key === "photon") && (
+        <a
+          href="https://www.openstreetmap.org/copyright"
+          rel="noopener noreferrer"
+          target="_blank"
+          className="rev-quick-place-attribution"
+        >© OpenStreetMap contributors</a>
       )}
       {canStartJourney && candidate.selection_state === "READY_FOR_NATIVE_PLAN" && (
         <button

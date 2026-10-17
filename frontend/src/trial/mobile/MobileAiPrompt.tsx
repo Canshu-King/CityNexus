@@ -44,7 +44,6 @@ export function MobileAiPrompt({
           rows={2}
           onChange={(event) => onChange(event.target.value)}
           placeholder="比如：今晚想吃点当地特色，再轻松散散步。"
-          disabled={busy}
         />
         <div className="rev-quick-ai-actions">
           <button

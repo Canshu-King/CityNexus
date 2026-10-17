@@ -52,7 +52,7 @@ def _new_journey(traveler_id: str) -> dict:
     return response.json()
 
 
-def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(monkeypatch):
+def test_r85_signed_zero_catalog_keeps_unknown_cost_private_and_unmaterialized(monkeypatch):
     previous_secret = settings.traveler_auth_secret
     previous_enabled = settings.real_city_enabled
     previous_mode = settings.real_city_mode
@@ -75,7 +75,11 @@ def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(m
                     latitude=39.1205,
                     longitude=117.2005,
                     tags=("cafe", "real_city"),
-                    opening_hours={},
+                    opening_hours={
+                        "status": "VERIFIED_PROVIDER",
+                        "open": "09:00",
+                        "close": "20:00",
+                    },
                     metadata={"osm_id": "node/85101", "tags": {"name": "R85 Public Cafe", "amenity": "cafe"}},
                     distance_m=80.0,
                     cost_evidence={"status": "UNKNOWN", "source": "overpass"},
@@ -116,6 +120,7 @@ def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(m
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": False,
+                "consented_provider": "overpass",
                 "latitude": 39.12,
                 "longitude": 117.20,
                 "coordinate_system": "WGS84",
@@ -135,6 +140,7 @@ def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(m
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": True,
+                "consented_provider": "overpass",
                 "latitude": 39.12,
                 "longitude": 117.20,
                 "coordinate_system": "WGS84",
@@ -145,6 +151,11 @@ def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(m
         body = discovery.json()
         assert body["status"] == "LIVE_RESULTS"
         assert len(body["candidates"]) == 2
+        unknown_cost = next(
+            item for item in body["candidates"] if item["external_id"] == "overpass:node/85101"
+        )
+        assert unknown_cost["selection_state"] != "READY_FOR_NATIVE_PLAN"
+        assert unknown_cost["selection_blockers"] == ["COST_UNKNOWN"]
         assert provider_calls == 1
         rate_limited = client.post(
             f"/api/v1/journeys/{journey['id']}/bootstrap-discovery",
@@ -155,6 +166,7 @@ def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(m
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": True,
+                "consented_provider": "overpass",
                 "latitude": 39.12,
                 "longitude": 117.20,
                 "coordinate_system": "WGS84",
@@ -195,43 +207,28 @@ def test_r85_signed_zero_catalog_preplan_selection_is_private_and_single_place(m
         )
         assert forbidden.status_code == 403, forbidden.text
 
-        selected_id = body["candidates"][0]["candidate_id"]
+        selected_id = unknown_cost["candidate_id"]
         selection = client.post(
             f"/api/v1/journeys/{journey['id']}/bootstrap-discovery/select",
             headers=owner_headers,
             json={"receipt_id": body["receipt_id"], "candidate_id": selected_id},
         )
-        assert selection.status_code == 200, selection.text
-        place_id = selection.json()["selected_place_id"]
+        assert selection.status_code == 422, selection.text
+        assert selection.json()["error"]["reason_code"] == "BOOTSTRAP_COST_UNVERIFIED"
+        assert selection.json()["error"]["details"]["price_state"] == "UNKNOWN"
         places = client.get("/api/v1/places?city_code=CN-R85-EMPTY").json()
-        assert [item["id"] for item in places] == [place_id]
+        assert places == []
         mesh_after = client.get(f"/api/v1/journeys/{journey['id']}/provider-mesh").json()
-        assert len(mesh_after["real_place_candidates"]) == 1
-        assert mesh_after["real_place_candidates"][0]["materialized_place_id"] == place_id
-
-        repeated = client.post(
-            f"/api/v1/journeys/{journey['id']}/bootstrap-discovery/select",
-            headers=owner_headers,
-            json={"receipt_id": body["receipt_id"], "candidate_id": selected_id},
-        )
-        assert repeated.status_code == 200
-        assert repeated.json()["selected_place_id"] == place_id
-
-        blocked = client.post(
-            f"/api/v1/journeys/{journey['id']}/plans/generate",
-            json={"place_ids": [place_id], "candidate_count": 1, "allow_single_place": True},
-        )
-        assert blocked.status_code == 422, blocked.text
-        assert "PLACE_COST_UNVERIFIED" in blocked.text
+        assert mesh_after["real_place_candidates"] == []
 
         with SessionLocal() as session:
-            assert session.scalar(select(func.count(Place.id)).where(Place.city_code == "CN-R85-EMPTY")) == 1
+            assert session.scalar(select(func.count(Place.id)).where(Place.city_code == "CN-R85-EMPTY")) == 0
             assert session.scalar(select(func.count(PlanVersion.id)).where(PlanVersion.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(LocationObservation.id)).where(LocationObservation.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(MemberLiveMomentScoutReceipt.id)).where(MemberLiveMomentScoutReceipt.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(AgentRun.id)).where(AgentRun.journey_id == journey["id"])) == 0
             rows = session.scalars(select(RealPlaceCandidate).where(RealPlaceCandidate.journey_id == journey["id"])).all()
-            assert sum(row.materialized_place_id is not None for row in rows) == 1
+            assert sum(row.materialized_place_id is not None for row in rows) == 0
             calls = session.scalars(select(ProviderCall).where(ProviderCall.operation == "bootstrap_city_discovery")).all()
             assert len(calls) == 1
             assert json.loads(calls[0].request_json)["source_kind"] == "MANUAL_PUBLIC_CENTER"

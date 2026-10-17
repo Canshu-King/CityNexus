@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   CityNexusApiError,
   cityNexusApi,
@@ -221,6 +221,8 @@ export function RevolutionQuickExplore({
   const [query, setQuery] = useState(cityName);
   const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
   const [aiAdvice, setAiAdvice] = useState<MobileAiAdvice | null>(null);
+  const quickExploreRef = useRef<HTMLElement>(null);
+  const pendingAiAdviceReveal = useRef(false);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
@@ -239,6 +241,21 @@ export function RevolutionQuickExplore({
   const [busy, setBusy] = useState(false);
   const [alert, setAlert] = useState<QuickAlert | null>(null);
   const [errorDetails, setErrorDetails] = useState<ErrorDiagnostics | null>(null);
+
+  // Reveal each accepted reply once; scrolling never moves keyboard focus.
+  useLayoutEffect(() => {
+    if (!aiAdvice || !pendingAiAdviceReveal.current) return;
+    pendingAiAdviceReveal.current = false;
+    const resultCard = quickExploreRef.current?.querySelector<HTMLElement>(".rev-quick-ai-response");
+    if (!resultCard) return;
+
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    resultCard.scrollIntoView({
+      behavior: reducedMotion ? "instant" : "smooth",
+      block: "nearest",
+      inline: "nearest",
+    });
+  }, [aiAdvice]);
   const generation = useRef(0);
   const currentOperation = useRef(0);
   const mounted = useRef(true);
@@ -254,6 +271,7 @@ export function RevolutionQuickExplore({
       currentOperation.current += 1;
       busyRef.current = false;
       setBusy(false);
+      pendingAiAdviceReveal.current = false;
       setCityResults([]);
       setDiscovery(null);
       setWalk(null);
@@ -382,6 +400,7 @@ export function RevolutionQuickExplore({
       const verified = suggestion.status === "MODEL_TOOL_SUGGESTION";
       const matched = verified ? categories.find((item) => item.value === suggestion.category) : null;
       if (matched) setCategory(matched.value);
+      pendingAiAdviceReveal.current = true;
       setAiAdvice({
         category: matched?.name ?? null,
         reason: suggestion.reason,
@@ -665,7 +684,7 @@ export function RevolutionQuickExplore({
   const goState = walk?.go_progress.state;
 
   return (
-    <section className="rev-quick" data-testid="rev-quick-explore">
+    <section ref={quickExploreRef} className="rev-quick" data-testid="rev-quick-explore">
       <header className="rev-quick-header">
         <div className="rev-quick-kicker">CITYNEXUS / EXPLORE</div>
         <h2>{stage === "walk" ? "你的私人散步路线" : "想去哪儿逛逛？"}</h2>

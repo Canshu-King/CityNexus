@@ -164,9 +164,11 @@ def test_photon_failure_is_one_call_without_overpass_fallback(monkeypatch):
         def __init__(self):
             self.calls = 0
             self.closed = False
+            self.attempt_limits: list[int | None] = []
 
         def search_with_evidence(self, *args, **kwargs):
             self.calls += 1
+            self.attempt_limits.append(kwargs.get("max_attempts"))
             error = RuntimeError("fixture timeout")
             error.provider_attempts = [
                 {
@@ -217,6 +219,7 @@ def test_photon_failure_is_one_call_without_overpass_fallback(monkeypatch):
         assert result["status"] == "PROVIDER_UNAVAILABLE"
         assert result["provider"] == "photon"
         assert provider.calls == 1
+        assert provider.attempt_limits == [1]
         assert provider.closed is True
         overpass_factory.assert_not_called()
         audit = session.add.call_args.args[0]

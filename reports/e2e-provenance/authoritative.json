@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "r107-discovery-pocket-20261012-d",
+  "runId": "place_card_attr_20261017_01",
   "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
   "pythonResolved": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
-  "frontendPort": 4292,
-  "backendPort": 8292,
-  "databaseUrl": "sqlite:///./_r107-discovery-pocket-20261012-d.db",
+  "frontendPort": 14185,
+  "backendPort": 18205,
+  "databaseUrl": "sqlite:///D:/moodle/_backups/citynexus-mobile-first-p0-live-20261017/test-results/frontend/_place_card_attr_20261017_01.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-10-11T19:31:08.800Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe frontend=:4292 backend=:8292 db=sqlite:///./_r107-discovery-pocket-20261012-d.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-10-17T01:46:59.154Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe frontend=:14185 backend=:18205 db=sqlite:///D:/moodle/_backups/citynexus-mobile-first-p0-live-20261017/test-results/frontend/_place_card_attr_20261017_01.db ai=disabled reuseExistingServer=false"
 }

@@ -77,10 +77,11 @@ def _candidate(
     expires_at: str | None = "2099-01-01T00:00:00+00:00",
     latitude: float = 31.2304,
     longitude: float = 121.4737,
+    provider_key: str = "overpass",
     external_id: str | None = None,
 ) -> str:
     candidate_id = str(uuid4())
-    external_id = external_id or f"overpass:node/{osm_id}"
+    external_id = external_id or f"{provider_key}:node/{osm_id}"
     name = f"R107 public place {osm_id}"
     captured_at = "2026-10-12T08:00:00+00:00"
     scope = {
@@ -88,6 +89,7 @@ def _candidate(
         "traveler_id": traveler_id,
         "receipt_id": receipt_id,
         "source_kind": source_kind,
+        "distance_m": 120.0,
         "expires_at": expires_at,
         "provider_provenance": "TEST_PROVIDER",
         "observed_name": name,
@@ -106,7 +108,7 @@ def _candidate(
             RealPlaceCandidate(
                 id=candidate_id,
                 journey_id=journey_id,
-                provider_key="overpass",
+                provider_key=provider_key,
                 external_id=external_id,
                 city_code="CN-R107",
                 name=name,
@@ -164,6 +166,7 @@ def test_r107_manual_discovery_to_private_pocket_walk_is_atomic_and_source_bound
             traveler_id=owner["id"],
             receipt_id=receipt_id,
             osm_id=107001,
+            provider_key="photon",
         )
         second_id = _candidate(
             journey_id=journey_id,
@@ -186,15 +189,27 @@ def test_r107_manual_discovery_to_private_pocket_walk_is_atomic_and_source_bound
         )
         assert response.status_code == 200, response.text
         saved = response.json()
-        assert saved["pocket_walk"]["first_stop"]["external_id"] == "overpass:node/107001"
+        assert saved["pocket_walk"]["first_stop"]["external_id"] == "photon:node/107001"
         assert saved["pocket_walk"]["second_stop"]["external_id"] == "overpass:node/107002"
         assert saved["pocket_walk"]["max_walk_minutes"] == 20
+        first_stop = saved["pocket_walk"]["first_stop"]
+        assert first_stop["opening_state"] == "UNKNOWN"
+        assert first_stop["price_state"] == "UNKNOWN"
+        assert first_stop["cost_evidence"]["status"] == "UNKNOWN"
+        assert first_stop["source_attribution"] == "© OpenStreetMap contributors"
+        assert first_stop["source_attribution_url"] == "https://www.openstreetmap.org/copyright"
+        assert first_stop["distance_m"] == 120.0
+        assert first_stop["route_eta_state"] == "UNKNOWN"
         assert {item["source_provenance"] for item in saved["items"]} == {"TEST_PROVIDER"}
         assert _owner_count(journey_id, owner["id"]) == 2
 
         restored = client.get(f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=owner_headers)
         assert restored.status_code == 200, restored.text
-        assert restored.json()["pocket_walk"]["first_stop"]["external_id"] == "overpass:node/107001"
+        restored_first = restored.json()["pocket_walk"]["first_stop"]
+        assert restored_first["external_id"] == "photon:node/107001"
+        assert restored_first["opening_state"] == "UNKNOWN"
+        assert restored_first["price_state"] == "UNKNOWN"
+        assert restored_first["source_attribution"] == "© OpenStreetMap contributors"
         collaborator_read = client.get(f"/api/v1/journeys/{journey_id}/bootstrap-shortlist", headers=collaborator_headers)
         assert collaborator_read.status_code == 200, collaborator_read.text
         assert collaborator_read.json()["items"] == []
@@ -343,7 +358,7 @@ def test_r107_manual_discovery_to_private_pocket_walk_is_atomic_and_source_bound
         assert refreshed_body["pocket_walk"]["first_stop"]["name"] == "R107 updated public museum"
         assert refreshed_body["pocket_walk"]["first_stop"]["source_provenance"] == "TEST_PROVIDER"
         assert refreshed_body["pocket_walk"]["max_walk_minutes"] == 30
-        refreshed_first = next(item for item in refreshed_body["items"] if item["external_id"] == "overpass:node/107001")
+        refreshed_first = next(item for item in refreshed_body["items"] if item["external_id"] == "photon:node/107001")
         assert refreshed_first["latitude"] == 31.2504
         assert refreshed_first["longitude"] == 121.4937
         assert refreshed_first["captured_at"] == "2026-10-14T08:00:00+00:00"

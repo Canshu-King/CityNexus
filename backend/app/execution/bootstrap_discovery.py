@@ -43,6 +43,8 @@ from app.integrations.discovery.real_city import (
     PhotonCityGeocoder,
 )
 from app.integrations.discovery.photon_poi import (
+    OSM_ATTRIBUTION,
+    OSM_ATTRIBUTION_URL,
     PhotonPOIProvider,
     _validate_base_url as _validate_photon_base_url,
 )
@@ -75,6 +77,7 @@ _PRIVATE_ACCESS = {
 _BOOTSTRAP_GROUNDED_OPENING = frozenset(
     {"NORMALIZED_VALID", "VERIFIED_PROVIDER", "OFFICIAL_WEB_VERIFIED"}
 )
+_BOOTSTRAP_GROUNDED_COST = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
 _MAX_QUERY = 120
 _MAX_SHORTLIST_ITEMS = 3
 _BOOTSTRAP_RATE_LIMIT_SECONDS = 5
@@ -95,6 +98,17 @@ class BootstrapDiscoveryError(ValueError):
         self.code = code
         self.status_code = status_code
         self.details = details or {}
+
+
+def _cost_evidence_is_grounded(cost: dict[str, Any]) -> bool:
+    status = str(cost.get("status") or "UNKNOWN").upper()
+    amount_minor = cost.get("amount_minor")
+    return (
+        status in _BOOTSTRAP_GROUNDED_COST
+        and isinstance(amount_minor, int)
+        and not isinstance(amount_minor, bool)
+        and amount_minor >= 0
+    )
 
 
 def _bootstrap_overpass_provider_config() -> dict[str, str]:
@@ -436,6 +450,8 @@ def _candidate_scope_observation(
         "osm_tags": tags,
         "public_access_state": _public_access_state(tags),
         "source_url": source_url,
+        "source_attribution": OSM_ATTRIBUTION,
+        "source_attribution_url": OSM_ATTRIBUTION_URL,
     }
 
 
@@ -627,6 +643,12 @@ def _scope_observation(row: RealPlaceCandidate, scope: dict[str, Any] | None) ->
             or _public_access_state(dict(tags))
         ),
         "source_url": str(candidate_scope.get("source_url") or "") or None,
+        "source_attribution": str(
+            candidate_scope.get("source_attribution") or OSM_ATTRIBUTION
+        ),
+        "source_attribution_url": str(
+            candidate_scope.get("source_attribution_url") or OSM_ATTRIBUTION_URL
+        ),
     }
 
 
@@ -637,9 +659,9 @@ def _candidate_payload(
     traveler_id: str | None = None,
 ) -> dict[str, Any]:
     evidence = json.loads(row.evidence_json or "{}")
-    kind = str(evidence.get("osm_type") or "node")
-    osm_id = str(evidence.get("osm_id") or "")
-    source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
+    osm = _osm_identity(row)
+    kind, osm_id = osm if osm is not None else (None, None)
+    source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm else None
     scope_distance = None
     viewer_scope = None
     viewer_scope_entries = _bootstrap_scope_entries(evidence)
@@ -664,6 +686,43 @@ def _candidate_payload(
     }
     opening = observation["opening_hours"]
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
+    cost = observation["cost_evidence"]
+    cost_status = str(cost.get("status") or "UNKNOWN").upper()
+    selection_blockers: list[str] = []
+    if opening_status not in _BOOTSTRAP_GROUNDED_OPENING:
+        selection_blockers.append("OPENING_UNVERIFIED")
+    if not _cost_evidence_is_grounded(cost):
+        selection_blockers.append(
+            "COST_UNKNOWN" if cost_status == "UNKNOWN" else "COST_UNVERIFIED"
+        )
+    if observation["public_access_state"] == "INDOOR_ACCESS_UNVERIFIED":
+        selection_blockers.append("ACCESS_UNVERIFIED")
+    selection_ready = not selection_blockers
+    if selection_blockers == ["OPENING_UNVERIFIED"]:
+        selection_action = "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers == ["COST_UNKNOWN"]:
+        selection_action = "VERIFY_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers == ["COST_UNVERIFIED"]:
+        selection_action = "VERIFY_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers == ["ACCESS_UNVERIFIED"]:
+        selection_action = "VERIFY_PUBLIC_ACCESS_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers:
+        selection_action = "VERIFY_OPENING_AND_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    else:
+        selection_action = None
+    valid_private_scope = (
+        viewer_scope is not None
+        and viewer_scope.get("source_kind") == "MANUAL_PUBLIC_CENTER"
+        and not _scope_expired(viewer_scope)
+        and row.status == "BOOTSTRAP_PRIVATE"
+        and row.materialized_place_id is None
+    )
+    has_source_identity = bool(osm and source_url)
+    pocket_walk_eligible = (
+        has_source_identity
+        and valid_private_scope
+        and observation["public_access_state"] != "RESTRICTED"
+    )
     if scope_distance is None and len(viewer_scope_entries) <= 1:
         scope_distance = row.distance_m
     return {
@@ -675,23 +734,19 @@ def _candidate_payload(
         "osm_type": kind,
         "osm_id": osm_id,
         "source_url": source_url,
+        "source_attribution": observation["source_attribution"],
+        "source_attribution_url": observation["source_attribution_url"],
         "latitude": observation["latitude"],
         "longitude": observation["longitude"],
         "coordinate_system": "WGS84",
         "distance_m": scope_distance,
         "opening_state": opening_status,
-        "selection_state": (
-            "READY_FOR_NATIVE_PLAN"
-            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
-            else "OPENING_UNVERIFIED"
-        ),
-        "selection_action": (
-            None
-            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
-            else "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
-        ),
+        "selection_state": "READY_FOR_NATIVE_PLAN" if selection_ready else "OPENING_UNVERIFIED",
+        "selection_action": selection_action,
+        "selection_blockers": selection_blockers,
         "availability_confidence": "UNVERIFIED",
-        "price_state": "UNKNOWN",
+        "price_state": cost_status,
+        "cost_evidence": cost,
         "eta_state": "UNKNOWN",
         "tags": json.loads(row.tags_json or "[]"),
         "opening_hours": opening,
@@ -715,6 +770,14 @@ def _candidate_payload(
         "source_tags": source_tags,
         "public_access_state": observation["public_access_state"],
         "provider_provenance": _row_provider_provenance(row, scope=viewer_scope),
+        "draft_exploration": {
+            "state": "DRAFT_EXPLORE_ONLY",
+            "viewable": has_source_identity,
+            "pocket_walk_eligible": pocket_walk_eligible,
+            "formal_selection_eligible": selection_ready,
+            "plan_version_id": None,
+            "selected_place_id": None,
+        },
     }
 
 
@@ -775,10 +838,13 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
         "longitude": row.longitude,
         "coordinate_system": row.coordinate_system,
         "source_url": row.source_url,
+        "source_attribution": OSM_ATTRIBUTION,
+        "source_attribution_url": OSM_ATTRIBUTION_URL,
         "source_provenance": row.source_provenance,
         "captured_at": row.captured_at,
         "opening_hours": opening,
         "opening_state": str(opening.get("status") or "UNKNOWN").upper(),
+        "cost_evidence": cost,
         "price_state": str(cost.get("status") or "UNKNOWN").upper(),
         "eta_state": "UNKNOWN",
         "source_tags": source_tags,
@@ -794,17 +860,25 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
 def _resume_payload(intent: MemberDraftResumeIntent, item: MemberDraftShortlistItem) -> dict[str, Any]:
     """Return public identity only; ownership is enforced by the signed lookup."""
 
+    saved = _shortlist_payload(item)
     return {
-        "shortlist_id": item.id,
-        "journey_id": item.journey_id,
-        "name": item.name,
-        "category": item.category,
-        "latitude": item.latitude,
-        "longitude": item.longitude,
-        "coordinate_system": item.coordinate_system,
-        "source_url": item.source_url,
-        "source_provenance": item.source_provenance,
-        "captured_at": item.captured_at,
+        "shortlist_id": saved["shortlist_id"],
+        "journey_id": saved["journey_id"],
+        "name": saved["name"],
+        "category": saved["category"],
+        "latitude": saved["latitude"],
+        "longitude": saved["longitude"],
+        "coordinate_system": saved["coordinate_system"],
+        "source_url": saved["source_url"],
+        "source_attribution": saved["source_attribution"],
+        "source_attribution_url": saved["source_attribution_url"],
+        "source_provenance": saved["source_provenance"],
+        "captured_at": saved["captured_at"],
+        "opening_hours": saved["opening_hours"],
+        "opening_state": saved["opening_state"],
+        "cost_evidence": saved["cost_evidence"],
+        "price_state": saved["price_state"],
+        "distance_m": saved["distance_m"],
         "selected_at": intent.selected_at,
         "status": "CHOSEN",
     }
@@ -820,12 +894,18 @@ def _pocket_stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[s
         "category": item["category"],
         "external_id": item["external_id"],
         "source_url": item["source_url"],
+        "source_attribution": item["source_attribution"],
+        "source_attribution_url": item["source_attribution_url"],
         "source_provenance": item["source_provenance"],
         "captured_at": item["captured_at"],
         "coordinate_system": item["coordinate_system"],
         "public_access_state": item["public_access_state"],
+        "opening_hours": item["opening_hours"],
         "opening_state": item["opening_state"],
+        "cost_evidence": item["cost_evidence"],
         "price_state": item["price_state"],
+        "distance_m": item["distance_m"],
+        "distance_basis": item["distance_basis"],
         "route_eta_state": "UNKNOWN",
     }
 
@@ -969,6 +1049,8 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         "osm_tags": raw.get("osm_tags"),
                         "public_access_state": raw.get("public_access_state"),
                         "source_url": raw.get("source_url"),
+                        "source_attribution": raw.get("source_attribution"),
+                        "source_attribution_url": raw.get("source_attribution_url"),
                     }
                 )
     if scopes:
@@ -996,6 +1078,8 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 "osm_tags": evidence.get("osm_tags"),
                 "public_access_state": evidence.get("public_access_state"),
                 "source_url": evidence.get("source_url"),
+                "source_attribution": evidence.get("source_attribution"),
+                "source_attribution_url": evidence.get("source_attribution_url"),
             }
         ]
     return []
@@ -2512,7 +2596,8 @@ def save_bootstrap_discovery_pocket_walk(
     # identical save must not erase a traveler’s in-progress GO MODE.
     source_keys = (
         "name", "category", "latitude", "longitude", "coordinate_system",
-        "source_url", "source_provenance", "captured_at", "opening_hours",
+        "source_url", "source_attribution", "source_attribution_url",
+        "source_provenance", "captured_at", "opening_hours",
         "price_state", "source_tags", "public_access_state",
         "distance_m", "distance_basis",
     )
@@ -2816,7 +2901,7 @@ def preview_bootstrap_candidate(
         "receipt_id": str(receipt_id),
         "candidate_id": row.id,
         "expires_at": matching_scope.get("expires_at") or row.expires_at,
-        "provider": "overpass",
+        "provider": row.provider_key,
         "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
         "destination": {
             "name": observation["name"],
@@ -2827,6 +2912,8 @@ def preview_bootstrap_candidate(
             "longitude": observation["longitude"],
             "coordinate_system": "WGS84",
             "source_url": source_url,
+            "source_attribution": observation["source_attribution"],
+            "source_attribution_url": observation["source_attribution_url"],
             "map_url": map_url,
             "public_access_state": observation["public_access_state"],
         },
@@ -2834,7 +2921,11 @@ def preview_bootstrap_candidate(
             "state": opening_status,
             "raw": opening.get("raw") or source_tags.get("opening_hours"),
             "source_tags": source_tags,
-            "source": "OpenStreetMap/Overpass",
+            "source": (
+                "OpenStreetMap via Photon"
+                if row.provider_key == "photon"
+                else "OpenStreetMap/Overpass"
+            ),
             "observed_at": observation["captured_at"],
             "claim": "OSM_TAG_CLAIM" if source_tags.get("opening_hours") else "NO_OPENING_TAG",
             "verification_state": (
@@ -3809,6 +3900,9 @@ def preview_bootstrap_shortlist_item(
     opening = json.loads(row.opening_hours_json or "{}")
     if not isinstance(opening, dict):
         opening = {"status": "UNKNOWN"}
+    cost = json.loads(row.cost_evidence_json or "{}")
+    if not isinstance(cost, dict):
+        cost = {"status": "UNKNOWN"}
     source_tags = json.loads(row.source_tags_json or "{}")
     if not isinstance(source_tags, dict):
         source_tags = {}
@@ -3827,6 +3921,8 @@ def preview_bootstrap_shortlist_item(
             "name": row.name,
             "external_id": row.external_id,
             "source_url": row.source_url,
+            "source_attribution": OSM_ATTRIBUTION,
+            "source_attribution_url": OSM_ATTRIBUTION_URL,
             "latitude": row.latitude,
             "longitude": row.longitude,
             "coordinate_system": "WGS84",
@@ -3843,6 +3939,8 @@ def preview_bootstrap_shortlist_item(
             "verification_state": "EXTERNAL_NOT_ATTESTED" if opening_status not in _BOOTSTRAP_GROUNDED_OPENING else "PROVIDER_GROUNDED",
             "verification_action": "OPEN_SOURCE_PAGE",
         },
+        "cost_evidence": cost,
+        "price_state": str(cost.get("status") or "UNKNOWN").upper(),
         "explore_state": "DRAFT_EXPLORE_ONLY",
         "shared_fields": ["public_destination", "osm_id", "source_url"],
         "withheld_fields": ["origin", "foreground_gps", "query_center", "member_id", "traveler_id", "receipt_id"],
@@ -4765,6 +4863,22 @@ def select_bootstrap_candidate(
                 "next_actions": ["VERIFY_OPENING_SOURCE", "CHOOSE_ANOTHER_CANDIDATE"],
             },
         )
+    cost = observation["cost_evidence"]
+    cost_status = str(cost.get("status") or "UNKNOWN").upper()
+    if not _cost_evidence_is_grounded(cost):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_COST_UNVERIFIED",
+            "OpenStreetMap did not provide grounded admission-cost evidence; save a private Pocket Walk or choose another candidate",
+            status_code=422,
+            details={
+                "price_state": cost_status,
+                "source_url": source_url,
+                "next_actions": ["VERIFY_COST_SOURCE", "CHOOSE_ANOTHER_CANDIDATE"],
+                "explore_state": "DRAFT_EXPLORE_ONLY",
+                "plan_version_id": None,
+                "selected_place_id": None,
+            },
+        )
     if row.materialized_place_id and row.status == "BOOTSTRAP_SELECTED":
         return {
             "journey_id": journey.id,
@@ -4831,6 +4945,8 @@ def select_bootstrap_candidate(
                     "cost_evidence": cost,
                     "price_known": str(cost.get("status") or "UNKNOWN").upper() in {"KNOWN", "VERIFIED_PROVIDER"},
                     "source_url": source_url,
+                    "source_attribution": observation["source_attribution"],
+                    "source_attribution_url": observation["source_attribution_url"],
                     "selected_member_observed_at": observation["captured_at"],
                     "public_access_state": observation["public_access_state"],
                 }

@@ -50,6 +50,7 @@ def _discovery_payload(query: str = "gallery") -> dict:
         "limit": 3,
         "source_kind": "MANUAL_PUBLIC_CENTER",
         "provider_consent": True,
+        "consented_provider": "overpass",
         "latitude": 39.12,
         "longitude": 117.20,
         "coordinate_system": "WGS84",
@@ -107,7 +108,14 @@ def test_r87_live_discovery_keeps_member_receipts_private_and_blocks_ungrounded_
                         "tags": {"name": f"{prefix} OSM Gallery Grounded Hours", "tourism": "gallery"},
                     },
                     distance_m=120.0,
-                    cost_evidence={"status": "UNKNOWN", "source": "overpass"},
+                    cost_evidence={
+                        "status": "KNOWN",
+                        "amount_minor": 0,
+                        "currency": None,
+                        "currency_agnostic": True,
+                        "evidence_basis": "OSM_FEE_NO",
+                        "source": "overpass",
+                    },
                 ),
             ],
             [
@@ -157,17 +165,25 @@ def test_r87_live_discovery_keeps_member_receipts_private_and_blocks_ungrounded_
         assert first.status_code == 200, first.text
         first_body = first.json()
         assert first_body["status"] == "LIVE_RESULTS"
-        assert first_body["attempts"] == [
-            {
-                "endpoint": "https://overpass-api.de/api/interpreter",
-                "answered": True,
-                "http_status": 200,
-                "elements": 2,
-            }
-        ]
-        unknown, grounded = first_body["candidates"]
+        assert len(first_body["attempts"]) == 1
+        assert first_body["attempts"][0]["provider_key"] == "overpass"
+        assert first_body["attempts"][0]["endpoint"] == "https://overpass-api.de/api/interpreter"
+        assert first_body["attempts"][0]["answered"] is True
+        assert first_body["attempts"][0]["http_status"] == 200
+        assert first_body["attempts"][0]["elements"] == 2
+        unknown = next(item for item in first_body["candidates"] if "Unknown Hours" in item["name"])
+        grounded = next(item for item in first_body["candidates"] if "Grounded Hours" in item["name"])
         assert unknown["selection_state"] == "OPENING_UNVERIFIED"
+        assert unknown["price_state"] == "UNKNOWN"
+        assert unknown["selection_blockers"] == ["OPENING_UNVERIFIED", "COST_UNKNOWN"]
+        assert unknown["draft_exploration"]["state"] == "DRAFT_EXPLORE_ONLY"
+        assert unknown["draft_exploration"]["pocket_walk_eligible"] is True
+        assert unknown["draft_exploration"]["plan_version_id"] is None
+        assert unknown["draft_exploration"]["selected_place_id"] is None
+        assert unknown["source_attribution"] == "© OpenStreetMap contributors"
+        assert unknown["source_attribution_url"] == "https://www.openstreetmap.org/copyright"
         assert grounded["selection_state"] == "READY_FOR_NATIVE_PLAN"
+        assert grounded["price_state"] == "KNOWN"
         assert client.get("/api/v1/places?city_code=CN-R87-LIVE-DISCOVERY").json() == []
 
         viewer_receipt = client.post(

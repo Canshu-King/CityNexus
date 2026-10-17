@@ -15,6 +15,113 @@ function json(route: Route, object: object) {
   return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(object) });
 }
 
+test("one AI suggestion is revealed in view without repeat requests or stealing editing focus", async ({ page }) => {
+  let aiCalls = 0;
+  let citySearchCalls = 0;
+  let poiSearchCalls = 0;
+  let releaseSuggestion!: () => void;
+  let markSuggestionRequestStarted!: () => void;
+  const suggestionRequestStarted = new Promise<void>((resolve) => {
+    markSuggestionRequestStarted = resolve;
+  });
+  const suggestionResponseGate = new Promise<void>((resolve) => {
+    releaseSuggestion = resolve;
+  });
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript((id) => {
+    const browserWindow = window as Window & {
+      __quickExploreScrollCalls?: Array<{ behavior?: ScrollBehavior }>;
+    };
+    browserWindow.__quickExploreScrollCalls = [];
+    const originalScrollIntoView = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = function (options?: boolean | ScrollIntoViewOptions) {
+      const normalized = typeof options === "boolean" ? {} : options ?? {};
+      browserWindow.__quickExploreScrollCalls?.push(normalized);
+      originalScrollIntoView.call(this, options);
+    };
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id,
+      cityCode: "CN-RV-TEST",
+      cityName: "连城",
+      status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "HERMES_COMPAT_ENDPOINT",
+    hermes_compat_configured: true,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+    status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER",
+  }));
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/trial-ai-discovery`, async (route) => {
+    aiCalls += 1;
+    markSuggestionRequestStarted();
+    expect(route.request().postDataJSON().goal).toContain("连城");
+    await suggestionResponseGate;
+    return json(route, {
+      status: "MODEL_TOOL_SUGGESTION",
+      category: "park/garden",
+      reason: "公园或园林适合慢慢散步，具体地点请再用公开地图搜索。",
+      model: "TEST_PROVIDER",
+      evidence: "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE",
+      provider_calls: 0,
+      agent_run_created: false,
+    });
+  });
+  await page.route(`${root}/bootstrap-city-search`, (route) => {
+    citySearchCalls += 1;
+    return route.abort();
+  });
+  await page.route(`${root}/bootstrap-discovery`, (route) => {
+    poiSearchCalls += 1;
+    return route.abort();
+  });
+
+  await page.goto("/revolution");
+  const prompt = page.getByLabel("写下你的想法");
+  const askAi = page.getByTestId("rev-quick-consult-ai");
+  const suggestion = page.getByTestId("rev-quick-ai-response");
+  await expect(prompt).toBeEnabled();
+  await expect(askAi).toBeEnabled();
+  await expect(suggestion).toHaveCount(0);
+
+  await askAi.focus();
+  await askAi.press("Enter");
+  await suggestionRequestStarted;
+  await expect(askAi).toBeDisabled();
+  expect(aiCalls).toBe(1);
+
+  // The request uses its submitted text; editing remains available while it waits.
+  await prompt.fill("我在连城，下午想再轻松走走。");
+  await expect(prompt).toBeFocused();
+  releaseSuggestion();
+
+  await expect(suggestion).toBeVisible();
+  await expect(suggestion).toContainText("AI 给你的探索建议");
+  await expect(suggestion).toContainText("建议兴趣：公园和绿地");
+  await expect(suggestion).toBeInViewport();
+  await expect(prompt).toBeFocused();
+  await expect(prompt).toHaveValue("我在连城，下午想再轻松走走。");
+  await expect(prompt).toBeEnabled();
+  await prompt.fill("我还想改一下兴趣描述。");
+  expect(aiCalls).toBe(1);
+
+  const scrollCalls = await page.evaluate(() => (window as Window & {
+    __quickExploreScrollCalls?: Array<{ behavior?: ScrollBehavior }>;
+  }).__quickExploreScrollCalls ?? []);
+  expect(scrollCalls).toHaveLength(1);
+  expect(scrollCalls[0]?.behavior).toBe("instant");
+  expect(aiCalls).toBe(1);
+  expect(citySearchCalls).toBe(0);
+  expect(poiSearchCalls).toBe(0);
+});
+
 test("plain Chinese first-user journey preserves separate intentional provider releases", async ({ page }) => {
   let citySearchCalls = 0;
   let poiSearchCalls = 0;

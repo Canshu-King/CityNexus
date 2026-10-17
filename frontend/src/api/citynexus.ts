@@ -1685,16 +1685,24 @@ export interface BootstrapDiscoveryCandidate {
   selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
   selection_action: string | null;
   availability_confidence: "UNVERIFIED";
-  price_state: "UNKNOWN";
+  price_state: "UNKNOWN" | "FREE" | "KNOWN" | "VERIFIED_PROVIDER" | "OFFICIAL_WEB_VERIFIED";
   eta_state: "UNKNOWN";
   tags: string[];
   opening_hours: Record<string, unknown>;
+  cost_evidence?: {
+    status?: string;
+    amount_minor?: number | null;
+    currency?: string | null;
+    evidence_basis?: string;
+  };
   opening_observed_at: string;
   opening_source: string;
   opening_claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
   opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
   opening_verification_action: "OPEN_SOURCE_PAGE";
   source_tags: Record<string, string>;
+  source_attribution?: string;
+  source_attribution_url?: string;
   public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
 }

@@ -3,7 +3,7 @@
 Run on Windows from the repository root:
     py -3.13 trial/try_revolution.py
 
-Default: REAL public OpenStreetMap/Overpass data after explicit UI consent.
+Default: REAL public OpenStreetMap/Photon data after explicit UI consent.
 Use --sample only if you intentionally want controlled offline locations.
 The backend remains isolated on localhost; AI is opt-in via --agent.
 Mock booking/payment and user approval boundaries remain unchanged.
@@ -178,6 +178,8 @@ def isolated_environment(
         "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": "86400",
         "CITYNEXUS_REAL_CITY_ENABLED": "true",
         "CITYNEXUS_REAL_CITY_MODE": "live",
+        "CITYNEXUS_PHOTON_ENABLED": "false",
+        "CITYNEXUS_POI_DISCOVERY_PROVIDER": "overpass",
         "CITYNEXUS_CITY_PROVIDER": "mock-city",
         "CITYNEXUS_MOBILITY_PROVIDER": "mock-mobility",
         "CITYNEXUS_BOOKING_PROVIDER": "mock-booking",
@@ -198,6 +200,9 @@ def isolated_environment(
             "CITYNEXUS_CITY_SEARCH_BASE_URL": f"http://127.0.0.1:{city_port}",
             "CITYNEXUS_NOMINATIM_URL": f"http://127.0.0.1:{city_port}",
             "CITYNEXUS_OVERPASS_URL": f"http://127.0.0.1:{overpass_port}/api",
+            # The sample path remains isolated on the local Overpass fixture.
+            "CITYNEXUS_PHOTON_ENABLED": "false",
+            "CITYNEXUS_POI_DISCOVERY_PROVIDER": "overpass",
             "REV_TRIAL_CITY_PORT": str(city_port),
             "REV_TRIAL_OVERPASS_PORT": str(overpass_port),
         })
@@ -210,6 +215,8 @@ def isolated_environment(
             "CITYNEXUS_CITY_SEARCH_TEST_PROVIDER": "false",
             "CITYNEXUS_CITY_SEARCH_BASE_URL": "https://nominatim.openstreetmap.org",
             "CITYNEXUS_NOMINATIM_URL": "https://nominatim.openstreetmap.org",
+            "CITYNEXUS_PHOTON_ENABLED": "true",
+            "CITYNEXUS_POI_DISCOVERY_PROVIDER": "photon",
             # Nominatim requires an operator-identifying User-Agent.
             # The email is typed locally and is sent ONLY as a provider header;
             # it is never stored in a checkout, database or printed in logs.
@@ -249,7 +256,7 @@ def main() -> int:
     contact_email = None
     if not args.sample:
         print("\nREVOLUTION REAL CITY EXPERIENCE")
-        print("External geocoding: OpenStreetMap Nominatim; places: Overpass.")
+        print("External geocoding: OpenStreetMap Nominatim; places: Photon.")
         print("Nothing is sent while typing; the UI separately asks for each provider consent.")
         print("Nominatim requires an identifying contact email in its User-Agent.")
         print("Enter your own contact email locally. It will be sent to Nominatim,")
