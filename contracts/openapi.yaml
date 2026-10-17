@@ -4021,12 +4021,18 @@ components:
         - attributions
         - event_ids
         - created_event_ids
+        - used_timezone
+        - timezone_honoured
+        - attribution_skipped_reason_codes
       properties:
         provider: {type: string, const: open-meteo}
         queried_place_ids: {type: array, items: {type: string}}
         successful_place_ids: {type: array, items: {type: string}}
         failed_place_ids: {type: array, items: {type: string}}
         degraded: {type: boolean}
+        used_timezone: {type: [string, 'null']}
+        timezone_honoured: {type: boolean}
+        attribution_skipped_reason_codes: {type: array, items: {type: string}}
         snapshots: {type: array, items: {type: object, additionalProperties: true}}
         attributions: {type: array, items: {type: object, additionalProperties: true}}
         event_ids: {type: array, items: {type: string, format: uuid}}
