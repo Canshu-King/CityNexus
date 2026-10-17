@@ -173,11 +173,28 @@ def _place_facts(place: Place) -> tuple[int, int, str]:
     return int(raw_cost), max(15, int(metadata.get("duration_min", 60))), status
 
 
-def _opening_window(place: Place) -> tuple[int, int] | None:
-    """Return a captured opening window without treating UNKNOWN as all-day."""
+_UNKNOWN_OPENING_STATUSES = frozenset(
+    {
+        "UNKNOWN",
+        "RAW_UNPARSED",
+        "CONFLICTING",
+        "ESTIMATED",
+        "ESTIMATED_AGENT",
+        "UNVERIFIED",
+        "NOT_VERIFIED",
+        "STALE",
+        "EXPIRED",
+        "NOT_CAPTURED",
+        "PENDING",
+    }
+)
 
-    opening = _load(place.opening_hours_json, {})
+
+def _opening_window_from_value(opening: Any) -> tuple[int, int] | None:
     if not isinstance(opening, dict):
+        return None
+    status = str(opening.get("status") or "").strip().upper()
+    if status == "CLOSED" or status in _UNKNOWN_OPENING_STATUSES:
         return None
     if opening.get("always_available") is True:
         return 0, 24 * 60
@@ -189,6 +206,26 @@ def _opening_window(place: Place) -> tuple[int, int] | None:
     except (IndexError, TypeError, ValueError):
         return None
     return (start, end) if 0 <= start < end <= 24 * 60 else None
+
+
+def _opening_window(place: Place) -> tuple[int, int] | None:
+    """Return an explicit opening window; UNKNOWN and CLOSED stay non-open."""
+
+    return _opening_window_from_value(_load(place.opening_hours_json, {}))
+
+
+def _require_known_opening_window(place_id: str, opening: Any) -> tuple[int, int]:
+    status = (
+        str(opening.get("status") or "").strip().upper()
+        if isinstance(opening, dict)
+        else ""
+    )
+    if status == "CLOSED":
+        raise ValueError(f"V13_PLACE_CLOSED:{place_id}")
+    window = _opening_window_from_value(opening)
+    if window is None:
+        raise ValueError(f"V13_OPENING_STATUS_UNKNOWN:{place_id}")
+    return window
 
 
 def _truthy_strategy_value(raw: Any) -> bool:
@@ -1030,6 +1067,7 @@ def _schedule_nodes(
             if end >= departure_at - timedelta(minutes=30):
                 raise ValueError(f"V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW:{place_id}")
             opening = metadata.get("opening_hours") or _load(place.opening_hours_json, {})
+            _require_known_opening_window(place_id, opening)
             if isinstance(opening, dict) and opening.get("open"):
                 hour, minute = (int(part) for part in str(opening["open"]).split(":", 1))
                 opening_start = datetime.combine(start.date(), time(hour, minute), tzinfo=start.tzinfo)

@@ -90,6 +90,37 @@ def _text(value: str) -> str:
     return value.casefold()
 
 
+def _indoor_rain_preferences(value: str) -> tuple[bool, bool]:
+    conditional_tokens = (
+        "若",
+        "如果",
+        "假如",
+        "要是",
+        "万一",
+        "下雨时",
+        "雨天时",
+        "才用",
+        "才选",
+        "only if it rains",
+        "if it rains",
+        "when it rains",
+        "in case of rain",
+    )
+    clauses = re.split(r"[，,；;。.!?？]+", value)
+    conditional_backup = False
+    indoor_without_weather_condition = False
+    for clause in clauses:
+        if not preference_is_positive(clause, ("室内", "indoor")):
+            continue
+        rain = any(token in clause for token in ("下雨", "雨天", "rain"))
+        conditional = any(token in clause for token in conditional_tokens)
+        if rain and conditional:
+            conditional_backup = True
+        else:
+            indoor_without_weather_condition = True
+    return conditional_backup, indoor_without_weather_condition
+
+
 def _parse_number(value: str) -> float:
     """Parse Arabic or ordinary Chinese cardinal numbers without locale guessing."""
 
@@ -254,6 +285,13 @@ def compile_mission(
         elif preference_is_positive(normalized, aliases):
             preferences[category] = True
     capabilities = extract_capabilities_from_text(command, scope="JOURNEY")
+    indoor_backup_if_raining, indoor_without_weather_condition = _indoor_rain_preferences(
+        normalized
+    )
+    if indoor_backup_if_raining and not indoor_without_weather_condition:
+        capabilities = tuple(
+            item for item in capabilities if item.get("code") != "INDOOR_PREFERRED"
+        )
     if capabilities:
         objectives.add("CAPABILITY_AWARE")
         preferences["capabilities"] = [dict(item) for item in capabilities]
@@ -261,8 +299,11 @@ def compile_mission(
     if rhythm is not None:
         objectives.add("RESPECT_DAY_RHYTHM")
         preferences["day_rhythm"] = rhythm.as_dict()
-    if any(token in normalized for token in ("淋雨", "下雨", "rain")) or preference_is_positive(
-        normalized, ("室内", "indoor")
+    if indoor_backup_if_raining:
+        preferences["indoor_backup_if_raining"] = True
+    if indoor_without_weather_condition or (
+        not indoor_backup_if_raining
+        and any(token in normalized for token in ("淋雨", "下雨", "rain"))
     ):
         objectives.add("PREFER_INDOOR")
         preferences["indoor"] = True

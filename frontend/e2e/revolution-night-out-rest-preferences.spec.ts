@@ -4,6 +4,7 @@ test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, serviceWorkers
 
 const journeyId = "00000000-0000-4000-8000-000000000238";
 const travelerId = "TEST_FIXTURE_TRAVELER_238";
+const localViteOrigin = `http://127.0.0.1:${process.env.CITYNEXUS_MOBILE_UI_PORT ?? "14276"}`;
 const root = `**/api/v1/journeys/${journeyId}`;
 const goal = "情侣凌晨03:00入睡，次日13:30醒；一人体力较低，午后按下雨场景规划两站。";
 const restPreference = "时间窗：次日14:30后出发；上午不排活动，留足休息。";
@@ -50,7 +51,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   // Serve only from this isolated Vite origin; external network requests are always blocked.
   await page.route("**/*", (route) => {
     const url = new URL(route.request().url());
-    if (url.origin === "http://127.0.0.1:14276") return route.continue();
+    if (url.origin === localViteOrigin) return route.continue();
     blockedExternalRequests += 1;
     return route.abort();
   });
