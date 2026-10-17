@@ -41,6 +41,14 @@ import {
 } from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import {
+  adoptSignedSession,
+  observeRejection,
+  refusalReasonCode,
+  signedBearerHeaders,
+  signedTravelerId,
+  verifySignedSession,
+} from "../lib/travelerSession";
+import {
   clearPendingContinuation,
   continuePendingPlan,
   type ContinuationOutcome,
@@ -285,10 +293,85 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 }
 
+/**
+ * `GET /api/v1/travelers/session` read as a fact, not as a throw.
+ *
+ * The verifier has to be able to tell four answers apart -- the door agreed, the credential was
+ * refused, this build has no identity configured (503), the network blinked -- and the shell's
+ * own channel raises on every one of them.  Status `0` means "nothing answered", which is
+ * deliberately not the same thing as "this person is no who they say": a wifi dropout must not
+ * sign somebody out.
+ */
+async function askTravelerSession(
+  headers: Record<string, string>,
+  signal?: AbortSignal,
+): Promise<{ status: number; body: unknown }> {
+  try {
+    const response = await fetchWithReadDeadline("/api/v1/travelers/session", { headers, signal });
+    const raw = await response.text();
+    let body: unknown = null;
+    if (raw.trim() !== "") {
+      try {
+        body = JSON.parse(raw);
+      } catch {
+        body = null;
+      }
+    }
+    return { status: response.status, body };
+  } catch {
+    return { status: 0, body: null };
+  }
+}
+
+interface TravelerAnswer {
+  id: string;
+  access_token?: string | null;
+  session_state?: string;
+}
+
+/**
+ * The traveller this new trip belongs to: the one the server already vouched for if there is one,
+ * a fresh one otherwise (ORD-0687).
+ *
+ * Before this, every wizard run minted a brand-new anonymous traveller, so "who is on this phone"
+ * was answered by a uuid nobody authenticated and a second trip was a second stranger.  Now the
+ * tab's signed session is re-checked against the server and reused: the same person can open as
+ * many journeys as they like, and a stale credential that the door refuses cannot keep opening
+ * trips in a name nobody is signed in to.
+ */
+async function ensureSignedTraveler(
+  localeTag: string,
+  timezone: string,
+  signal?: AbortSignal,
+): Promise<string> {
+  if (signedTravelerId()) {
+    const verified = await verifySignedSession((headers) => askTravelerSession(headers, signal));
+    if (verified) return verified.travelerId;
+  }
+  const answer = await v8Request<TravelerAnswer>("/api/v1/travelers", {
+    method: "POST",
+    signal,
+    body: JSON.stringify({
+      display_name: "City traveler",
+      locale: localeTag,
+      timezone,
+    }),
+  });
+  adoptSignedSession(answer);
+  return answer.id;
+}
+
 async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
+  /* ORD-0687: the shell's own channel now speaks for the signed traveller when this tab has one.
+     Headers are merged instead of being replaced by `...init`, so a call site that adds its own
+     header (an idempotency key) keeps it and still carries the credential. */
   const response = await fetchWithReadDeadline(path, {
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+      ...signedBearerHeaders(),
+    },
   });
   /* Parsed by hand rather than `response.json().catch(() => null)`: that one line turned three
      different answers -- zero bytes, an HTML document, a plain sentence -- into the same `null`, and
@@ -306,6 +389,9 @@ async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
   }
   const contentType = response.headers.get("content-type");
   if (!response.ok) {
+    // ORD-0687: a credential refusal or a foreign-pointer refusal is acted on the moment it is
+    // read, before any screen has a chance to keep showing what the last traveller was told.
+    observeRejection(response.status, refusalReasonCode(body));
     throw new V8Rejection(
       rejectionReason(body, response.status),
       response.status,
@@ -1245,21 +1331,17 @@ export function V8Experience() {
         draft.timezone.trim(),
       );
       setCreatePhase("traveler");
-      const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
-        method: "POST",
-        signal: controller.signal,
-        body: JSON.stringify({
-          display_name: "City traveler",
-          locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
-          timezone: draft.timezone.trim(),
-        }),
-      });
+      const travelerId = await ensureSignedTraveler(
+        locale === "zh-CN" ? "zh-CN" : "en-GB",
+        draft.timezone.trim(),
+        controller.signal,
+      );
       setCreatePhase("journey");
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
         signal: controller.signal,
         body: JSON.stringify({
-          traveler_id: traveler.id,
+          traveler_id: travelerId,
           title: `${cityName} · journey`,
           city_code: cityCode,
           timezone: draft.timezone.trim(),
@@ -1293,33 +1375,40 @@ export function V8Experience() {
          from her interests, so there is nothing to unsay -- what the server actually holds is what
          the gate reads back.  It must not block creating the trip either: the journey is real. */
       try {
-        await syncStatedInterests(traveler.id, draft.interests ?? []);
+        await syncStatedInterests(travelerId, draft.interests ?? []);
       } catch {
         /* left un-stated on purpose; see the gate `ord0238-2-…` */
       }
-      const stayCount = await searchStayOptions(
-        journey.id,
-        `${cityName} stay-aware journey`,
-        controller.signal,
-      );
       setCreatePhase("experience");
       await load(journey.id);
       setSetupOpen(false);
       // Land on Today and open the planning entry: the next thing a traveller
       // wants after creating a trip is a plan, not a discovery console.
       navigate("hub");
-      if (stayCount === 0) {
-        /* An empty search is not a success to announce: Today carries the empty block with
-           its own retry, and opening the planner on top of nothing is the same lie. */
-        setMessage(null);
-      } else {
-        setPlanAiOpen(true);
-        setMessage(
-          locale.startsWith("zh")
-            ? "行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。"
-            : "Trip created. Tell the AI how you like to travel and it will build candidate plans.",
-        );
-      }
+      /* Issue #31 B: the optional stay search used to sit *between* "the trip is written" and
+         "the traveller gets a screen", so an external provider being slow -- or the AI offer
+         generator being off -- held a finished journey behind a spinner.  It is started here and
+         awaited nowhere: Today already carries 搜索中 / 没找到 / 失败 with its own 再查一次, and the
+         shell's state machine keeps updating from that screen.  The one thing the traveller is
+         told immediately is the one thing that is already true -- the trip exists and is open. */
+      setMessage(
+        locale.startsWith("zh")
+          ? "行程已创建，现在可以安排今天。住宿搜索结果稍后会出现在这一页。"
+          : "Trip created — Today is ready to plan. Stay results will appear on this screen.",
+      );
+      void searchStayOptions(
+        journey.id,
+        `${cityName} stay-aware journey`,
+        controller.signal,
+      )
+        .then((stayCount) => {
+          // Only a real answer opens the planner: an empty or failed search is Today's to show,
+          // with its own retry, not a sheet floating over nothing.
+          if (stayCount > 0) setPlanAiOpen(true);
+        })
+        .catch(() => {
+          /* `searchStayOptions` already set 失败 and Today renders it with 再查一次. */
+        });
     } catch (error) {
       if (isAbort(error)) {
         // No endpoint cancels this search, so say what the traveller gave up on instead.
