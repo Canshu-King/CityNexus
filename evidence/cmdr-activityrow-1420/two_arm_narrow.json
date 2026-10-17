@@ -1,0 +1,175 @@
+{
+ "at_local": "2026-10-17 13:15",
+ "ruler": "_cmdr_grad_scan_r1.cjs",
+ "tip_before": "8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf",
+ "before": {
+  "name": "before",
+  "loads": 12,
+  "readings": 1306,
+  "low_with_gradient": 53,
+  "low_color_only": 53,
+  "blind_spots": 0,
+  "distinct_kinds": 13,
+  "by_screen": {
+   "authoritative": 49,
+   "hub": 3,
+   "live": 1
+  },
+  "positive_control_em": {
+   "color_only": 2.18,
+   "with_grad": 2.18
+  },
+  "positive_control_pill": null,
+  "sha1_of_receipt": "4f1eb37e5dec38d3010f68356301983254d136a1"
+ },
+ "after": {
+  "name": "after",
+  "loads": 12,
+  "readings": 1306,
+  "low_with_gradient": 33,
+  "low_color_only": 33,
+  "blind_spots": 0,
+  "distinct_kinds": 11,
+  "by_screen": {
+   "authoritative": 29,
+   "hub": 3,
+   "live": 1
+  },
+  "positive_control_em": {
+   "color_only": 2.18,
+   "with_grad": 2.18
+  },
+  "positive_control_pill": null,
+  "sha1_of_receipt": "360bc178f5755df45e59376e90310eb156697b06"
+ },
+ "denominator_equal": false,
+ "keys_fixed": 12,
+ "keys_new": 0,
+ "keys_both": 25,
+ "fixed_by_screen": {
+  "authoritative": 12
+ },
+ "new_by_screen": {},
+ "fixed_rows": [
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-status.state-planned",
+   "text": "计划中",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Central Food Hall",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Nexus River Cruise",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Riverside Museum",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Skyline Dinner Hou",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Tech Art Center",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-status.state-planned",
+   "text": "计划中",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Central Food Hall",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Nexus River Cruise",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Riverside Museum",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Skyline Dinner Hou",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v12-activity-title",
+   "text": "Tech Art Center",
+   "before": 2.87,
+   "after": 7.69,
+   "after_color_only": 7.69
+  }
+ ]
+}
