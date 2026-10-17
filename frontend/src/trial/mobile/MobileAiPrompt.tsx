@@ -27,6 +27,7 @@ export type MobileAiAdvice = {
 export function MobileAiPrompt({
   value,
   busy,
+  requestPending = busy,
   configured,
   checking = false,
   advice,
@@ -35,6 +36,7 @@ export function MobileAiPrompt({
 }: {
   value: string;
   busy: boolean;
+  requestPending?: boolean;
   configured: boolean;
   checking?: boolean;
   advice: MobileAiAdvice | null;
@@ -116,7 +118,7 @@ export function MobileAiPrompt({
             type="submit"
             disabled={busy || checking || !configured || value.trim().length < 4}
             data-testid="rev-quick-consult-ai"
-          >{busy ? "正在请教 AI…" : checking ? "正在连接 AI…" : "问问 AI →"}</button>
+          >{requestPending ? "正在请教 AI…" : checking && !busy ? "正在连接 AI…" : "问问 AI →"}</button>
           <span>点击后发送这段文字。</span>
         </div>
       </form>

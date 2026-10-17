@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PublicCityAreaPicker, type PublicCityCenter } from "../../features/discovery/PublicCityAreaPicker";
 import type { BootstrapCitySearchResult } from "../../api/citynexus";
 import { MobileAiPrompt, type MobileAiAdvice } from "./MobileAiPrompt";
@@ -58,6 +59,8 @@ export function CityPicker({
   onAiGoalChange,
   onAskAi,
 }: CityPickerProps) {
+  const [cityLookupPending, setCityLookupPending] = useState(false);
+
   return (
     <div className="rev-quick-pane" data-testid="rev-quick-area">
       <h3 className="rev-quick-area-title">先选一个地区</h3>
@@ -72,8 +75,16 @@ export function CityPicker({
           maxLength={120}
           disabled={busy}
         />
-        <button type="button" onClick={onCityLookup} disabled={busy} data-testid="rev-quick-find-city">
-          {busy ? "查询中…" : "查找位置 →"}
+        <button
+          type="button"
+          onClick={() => {
+            setCityLookupPending(true);
+            onCityLookup();
+          }}
+          disabled={busy}
+          data-testid="rev-quick-find-city"
+        >
+          {busy && cityLookupPending ? "查询中…" : "查找位置 →"}
         </button>
       </div>
       <p className="rev-quick-disclosure">
@@ -172,11 +183,15 @@ export function CityPicker({
       <MobileAiPrompt
         value={aiGoal}
         busy={busy}
+        requestPending={busy && !cityLookupPending}
         configured={agentConfigured}
         checking={agentChecking}
         advice={aiAdvice}
         onChange={onAiGoalChange}
-        onSubmit={onAskAi}
+        onSubmit={() => {
+          setCityLookupPending(false);
+          onAskAi();
+        }}
       />
     </div>
   );

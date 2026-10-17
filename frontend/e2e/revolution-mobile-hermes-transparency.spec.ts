@@ -137,15 +137,18 @@ async function installRunFixture(page: Page, fixture: RunFixture) {
   const sseBody = allEvents.map((event) =>
     `event: ${event.event_type}\r\ndata: ${JSON.stringify(event)}\r\n\r\n`,
   ).join("");
+  const signedReads = { latestRun: 0, timeline: 0, events: 0 };
 
   await page.addInitScript((id) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_FIXTURE_MEMBER_24");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "TEST_FIXTURE_TRAVELER_24");
     window.localStorage.setItem("citynexus.locale", "zh-CN");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
       id,
       cityCode: "CN-RV-HERMES-TEST-FIXTURE",
       cityName: "测试地区",
       status: "ACTIVE",
+      ownerTravelerId: "TEST_FIXTURE_TRAVELER_24",
     }));
   }, journeyId);
 
@@ -157,33 +160,42 @@ async function installRunFixture(page: Page, fixture: RunFixture) {
     hermes_compat_configured: false,
     ai_state: "DISABLED",
   }));
-  await page.route(`${journeyRoot}/agent/hermes/latest-run`, (route) => json(route, {
-    journey_id: journeyId,
-    run,
-  }));
-  await page.route(`${journeyRoot}/agent/hermes/runs/${runId}/timeline`, (route) => json(route, {
-    run_id: runId,
-    journey_id: journeyId,
-    runtime_identity: "HERMES_NATIVE_MCP",
-    events: timelineEvents,
-    observability: {
+  await page.route(`${journeyRoot}/agent/hermes/latest-run`, async (route) => {
+    expect(route.request().method()).toBe("GET");
+    expect(route.request().headers().authorization).toBe("Bearer TEST_FIXTURE_MEMBER_24");
+    signedReads.latestRun += 1;
+    await json(route, { journey_id: journeyId, run });
+  });
+  await page.route(`${journeyRoot}/agent/hermes/runs/${runId}/timeline`, async (route) => {
+    expect(route.request().method()).toBe("GET");
+    expect(route.request().headers().authorization).toBe("Bearer TEST_FIXTURE_MEMBER_24");
+    signedReads.timeline += 1;
+    await json(route, {
       run_id: runId,
+      journey_id: journeyId,
       runtime_identity: "HERMES_NATIVE_MCP",
-      current_mission: "TEST_FIXTURE-only",
-      tool_count: timelineEvents.filter((event) => event.event_type.startsWith("tool.")).length,
-      current_tool: null,
-      completion_status: status,
-      gateway_decision: null,
-      guardian_decision: null,
-      total_duration_ms: 0,
-    },
-  }));
-  await page.route(`${journeyRoot}/agent/hermes/runs/${runId}/events`, (route) => route.fulfill({
-    status: 200,
-    contentType: "text/event-stream",
-    body: sseBody,
-  }));
+      events: timelineEvents,
+      observability: {
+        run_id: runId,
+        runtime_identity: "HERMES_NATIVE_MCP",
+        current_mission: "TEST_FIXTURE-only",
+        tool_count: timelineEvents.filter((event) => event.event_type.startsWith("tool.")).length,
+        current_tool: null,
+        completion_status: status,
+        gateway_decision: null,
+        guardian_decision: null,
+        total_duration_ms: 0,
+      },
+    });
+  });
+  await page.route(`${journeyRoot}/agent/hermes/runs/${runId}/events`, async (route) => {
+    expect(route.request().method()).toBe("GET");
+    expect(route.request().headers().authorization).toBe("Bearer TEST_FIXTURE_MEMBER_24");
+    signedReads.events += 1;
+    await route.fulfill({ status: 200, contentType: "text/event-stream", body: sseBody });
+  });
   await page.route(`${journeyRoot}/operator`, (route) => json(route, operatorFixture(Boolean(fixture.operatorApproval))));
+  return signedReads;
 }
 
 async function openRunTrace(page: Page) {
@@ -201,7 +213,7 @@ async function openRunTrace(page: Page) {
 
 test("TEST_FIXTURE running trace shows server state, timestamp, and tool identity without reasoning summary", async ({ page }) => {
   const runId = "TEST_FIXTURE-running-24";
-  await installRunFixture(page, {
+  const signedReads = await installRunFixture(page, {
     runId,
     status: "running",
     timelineEvents: [
@@ -223,6 +235,40 @@ test("TEST_FIXTURE running trace shows server state, timestamp, and tool identit
   await expect(startedAt).toBeVisible();
   await expect(startedAt).toHaveText(/\d{1,2}.*\d{1,2}.*\d{2}:\d{2}:\d{2}/);
   await expect(page.getByText("TEST_FIXTURE_REASONING_CANARY_DO_NOT_RENDER", { exact: true })).toHaveCount(0);
+  await expect.poll(() => signedReads.latestRun).toBeGreaterThan(0);
+  await expect.poll(() => signedReads.timeline).toBeGreaterThan(0);
+  await expect.poll(() => signedReads.events).toBeGreaterThan(0);
+});
+
+test("TEST_FIXTURE DRAFT activity clearly has no formal AgentRun and reads no native run", async ({ page }) => {
+  let nativeRunReads = 0;
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_FIXTURE_MEMBER_24");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "TEST_FIXTURE_TRAVELER_24");
+    window.localStorage.setItem("citynexus.locale", "zh-CN");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-DRAFT-TEST-FIXTURE", cityName: "测试地区", status: "DRAFT",
+      ownerTravelerId: "TEST_FIXTURE_TRAVELER_24",
+    }));
+  }, journeyId);
+  await page.route("**/api/v1/**", (route) => route.abort());
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "TEST_FIXTURE", hermes_native_gateway: { configured: true },
+    hermes_compat_configured: false, ai_state: "DISABLED",
+  }));
+  page.on("request", (request) => {
+    if (request.url().includes("/agent/hermes/latest-run") || request.url().includes("/agent/hermes/runs/")) {
+      nativeRunReads += 1;
+    }
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-mobile-tab-trips").click();
+  const activity = page.getByTestId("rev-draft-agent-activity");
+  await expect(activity).toContainText("当前是探索草稿。");
+  await expect(activity).toContainText("尚无正式 AgentRun。");
+  await expect(activity).toContainText("确认行程后，Agent 就会开始工作。");
+  expect(nativeRunReads).toBe(0);
 });
 
 test("TEST_FIXTURE pending approval opens the existing Journey authorization area", async ({ page }) => {

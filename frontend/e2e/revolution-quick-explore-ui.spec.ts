@@ -15,6 +15,101 @@ function json(route: Route, object: object) {
   return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(object) });
 }
 
+test("TEST_FIXTURE city and AI requests keep their own pending labels under the shared action lock", async ({ page }) => {
+  let citySearchCalls = 0;
+  let aiCalls = 0;
+  let releaseCitySearch!: () => void;
+  let markCitySearchStarted!: () => void;
+  const citySearchGate = new Promise<void>((resolve) => {
+    releaseCitySearch = resolve;
+  });
+  const citySearchStarted = new Promise<void>((resolve) => {
+    markCitySearchStarted = resolve;
+  });
+  let releaseAi!: () => void;
+  let markAiStarted!: () => void;
+  const aiGate = new Promise<void>((resolve) => {
+    releaseAi = resolve;
+  });
+  const aiStarted = new Promise<void>((resolve) => {
+    markAiStarted = resolve;
+  });
+
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "TEST_FIXTURE_TRAVELER_CITY_AI");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+      ownerTravelerId: "TEST_FIXTURE_TRAVELER_CITY_AI",
+    }));
+  }, journey);
+  await page.route("**/api/v1/**", (route) => route.abort());
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "HERMES_COMPAT_ENDPOINT", hermes_compat_configured: true,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+    status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER",
+  }));
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/bootstrap-city-search`, async (route) => {
+    citySearchCalls += 1;
+    markCitySearchStarted();
+    await citySearchGate;
+    await json(route, {
+      journey_id: journey, status: "CITY_RESULTS", query: "连城", provider_attempts: [],
+      results: [{
+        result_id: "TEST_FIXTURE-city", name: "连城县", display_name: "连城县（测试地名结果）",
+        provider: "test", provider_provenance: "TEST_PROVIDER",
+        latitude: 25.7, longitude: 116.75, coordinate_system: "WGS84",
+        confidence: "CITY_CENTROID_UNCERTAIN", selection_state: "CAMERA_ONLY_TAP_REQUIRED",
+      }],
+    });
+  });
+  await page.route(`${root}/trial-ai-discovery`, async (route) => {
+    aiCalls += 1;
+    markAiStarted();
+    await aiGate;
+    await json(route, {
+      status: "MODEL_TOOL_SUGGESTION", category: "park/garden",
+      reason: "TEST_FIXTURE: 可以先试公园绿地这一类。",
+      model: "TEST_FIXTURE", evidence: "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE",
+      provider_calls: 0, agent_run_created: false,
+    });
+  });
+
+  await page.goto("/revolution");
+  await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+  const cityButton = page.getByTestId("rev-quick-find-city");
+  const aiButton = page.getByTestId("rev-quick-consult-ai");
+  await page.getByLabel("城市或地区").fill("连城");
+  await cityButton.click();
+  await citySearchStarted;
+  await expect(cityButton).toBeDisabled();
+  await expect(cityButton).toHaveText("查询中…");
+  await expect(aiButton).toBeDisabled();
+  await expect(aiButton).toHaveText("问问 AI →");
+  releaseCitySearch();
+  await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
+  await expect(cityButton).toBeEnabled();
+  await expect(cityButton).toHaveText("查找位置 →");
+
+  await page.getByLabel("写下你的想法").fill("想轻松走走");
+  await expect(aiButton).toBeEnabled();
+  await aiButton.click();
+  await aiStarted;
+  await expect(aiButton).toBeDisabled();
+  await expect(aiButton).toHaveText("正在请教 AI…");
+  await expect(cityButton).toBeDisabled();
+  await expect(cityButton).toHaveText("查找位置 →");
+  releaseAi();
+  await expect(page.getByTestId("rev-quick-ai-response")).toBeVisible();
+  expect(citySearchCalls).toBe(1);
+  expect(aiCalls).toBe(1);
+});
+
 test("one AI suggestion is revealed in view without repeat requests or stealing editing focus", async ({ page }) => {
   let aiCalls = 0;
   let citySearchCalls = 0;
