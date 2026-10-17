@@ -1,4 +1,31 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 号令者 · 下午第二段（13:31）：第三十四笔——暗档漏掉的那一型是"渐变刷的浅底"，先把尺的盲区补上再改产品
+
+**一、第三十四笔已落线**：尖从 `8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf` 前进到 `1bedf97e8e983ed0ca33007e00dbedc472abf89c`（ff-only，ahead 两格、behind 零、与候选枝不相交；落地回执 `preflight_r1.json:1`）。改的是一枚容器进组：`section.v12-authoritative-panel`（这枚类被权威行程、V14 预防、V14 恢复真相三张面板共用，出处 `design-tokens.css:840`）。
+
+**二、为什么前一笔的两臂普查抓不到它**：它的浅色不写在 `background-color` 上，而写在一层 145 度的浅渐变 `background-image` 上（`styles.css:201`）。我那把沿祖先链合成底色的尺只爬 `backgroundColor`，于是把 `.v8-page` 的黑底当成这张卡的底，替它判了绿——两臂四百余条读数里这张卡一条都没有。反证不是推理，是手机暗档 412 那张截图：`phone_dark_before.png:1` 上「从方案到边缘的单一真相」整行等于没印。
+
+**三、先修尺，再修产品**（新尺 `grad_scan_r1.cjs:1`，把祖先链上每一层 `background-image` 的色标也各压一次，比值取最差那一枚）：
+
+- 两臂同一把尺、同样六十八次装载、同样四千四百七十四条读数、去重键四千一百一十四对四千一百一十四 ｜ `two_arm_summary.json:1`
+- 只看 `backgroundColor` 的低值：改前一臂与改后一臂都是 143 条，与上一笔那把尺的读数一字不差（两把尺互相反控） ｜ `two_arm_summary.json:1`
+- 算上渐变的低值：改前一百五十五条，改后一百四十三条 ｜ `two_arm_summary.json:1`
+- 渐变才暴露出来的：改前十二条（全部在权威行程那一屏，两档宽度各六条），改后零条 ｜ `two_arm_summary.json:1`
+- 逐行对账：修好十二键，新增零键，两臂都失败一百二十一键 ｜ `two_arm_summary.json:1`
+- 修好的形状（暗档 1280 与 390 同值）：`h2`「从方案到边缘的单一真相」与「有据可依的自适应恢复」1.02 → 15.63，`span.v8-kicker`「权威行程」「V14 · 现实变了」1.95 → 8.17，`p.v8-muted` 2.06 → 7.69，`span`「服务端执行真相 · 可审计」3.5 → 4.54 ｜ `two_arm_summary.json:1`
+- 正控两枚在新尺上仍复现原值：侧栏 `em` 2.18、Copilot 紫药丸 3.97 ｜ `two_arm_summary.json:1`
+- 两臂键数相等但各有四枚不同，成因是「实时行程」那屏有一枚页面自己的钟（`strong` 显示 HH:MM），两臂各取到当时那一刻；四枚全在那一屏，与本次改动无关，逐枚列在汇总件的 `key_set_delta` 段 ｜ `two_arm_summary.json:1`
+
+**四、出厂闸咬了我一次，我按它的话改**：第一次推的候选被 `surface-contract` 那一眼拒了（exit 4，`new_hatch_rows` 两行，指 `design-tokens.css:833`），拒因原文是我把那张卡原来的两枚浅色标抄进了注释里，尺按"新增浅底字面量"算——它分不清注释与声明。我没有用 `--allow-ungated`，也没有关掉那一眼，而是把注释里的色值改成描述并指回它自己那一行，重推一次过闸（被拒的那份回执一并外读：`preflight_first_attempt_refused.json:1`）。
+
+**五、手机侧（:4783 就是手机真正访问的那个地址）**：`npm run build` rc 零，端出的样式换成 `index-Q7cKvHzG.css`；同一枚面板的计算值现在是 `bg=rgb(28, 28, 30)`、`background-image: none`；改后截图 `phone_dark_after.png:1`，与改前那张同一屏、同一档、同一宽度。
+
+**六、这一屏还剩什么**：暗档仍有十三处低于 4.5（两档同值），全是另外两型——`span.v12-activity-title` 与 `.state-planned` 那族死灰 3.54（灰配深底，走 `--cn-ink-secondary` 那条既有规则就够，但要把每一枚选择器逐枚量过才敢加），以及 `.state-active` 一族的状态蓝 `#3f6f92` 在 2.2 与 3.54（它坐在 `rgb(158,168,167)` 那块中调底上，换深一档蓝是色值决定，属裁语）。出处 `two_arm_summary.json:1` 的 `after.by_screen`。
+
+**七、派给车道（只写账本，按 LANE_PROTOCOL）**：把"祖先链要把 `background-image` 的色标压进底色"这一条并进厂内那两把尺（`frontend/e2e/_qoderContrastScan.ts` 与 `_qoderMobileScan.ts` 现在都只看 `backgroundColor`）；并附一条硬要求：新尺必须自带"把渐变那一层拿掉就读不到"的正反两读，否则又一枚哑尺。我这两把尺的原件与收据都在 `evidence/cmdr-gradpanel-1329/`（六枚全部回核 BYTE-LEVEL MATCH）。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 号令者 · 下午第一段（12:45）：暗档白卡收进组（第三十三笔），十七屏键盘焦点普查首次有了分母
 
 **一、第三十三笔已落线**：尖从 `dc4e95049114fb6bc5924a56e0ded2c904a8cfba` 前进到 `8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf`（ff-only，ahead 一格、behind 零、与候选枝不相交；落地回执 `land_darkcards_1230.json:1`，两路读数同为那枚尖一致为真）。这一笔动的是同一个文件里的四段：三枚一直在暗档留着浅底的容器并入既有的暗档覆盖组（`design-tokens.css:831`），一枚语义洗色块改按其自己的色值压成暗档洗色（`design-tokens.css:961`），两枚跟着掉下去的标签文字接回 `--cn-ink-secondary`（`design-tokens.css:975`、`design-tokens.css:976`），以及一枚两档都不及格的死灰进那条两档共用的灰字规则（`design-tokens.css:1290`）。判据没有新增一条：组是厂内那条组，洗色是 `.trip-stop.disrupted` 已经落地的那一手，灰字接 token 是 `design-tokens.css:1243` 那段注释里写着的那一条。
