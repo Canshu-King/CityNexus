@@ -51,6 +51,21 @@ export function markOf(eventType: string): AgentRailStep["status"] {
   return "done";
 }
 
+/**
+ * 审计行没带摘要时，服务器的投影把事件类型本身当摘要发回来（`journey.created` → "Journey.created"）。
+ * 这一格下面那份行程动态走词表，只有这条轨道优先信 `summary`，于是同一件事在一块面板里两种说法，
+ * 中文屏上还混进一串英文散文。
+ *
+ * 判的是形状：按服务器那条派生规则逐字比对，认出来就当我们没有这句，交给词表；真写过人话的行原样保留。
+ */
+function humanSummary(eventType: string, summary: string | null | undefined): string | null {
+  const text = (summary ?? "").trim();
+  if (!text) return null;
+  const derived = [eventType.replace(/_/g, " "), eventType];
+  if (derived.some((shape) => shape.toLowerCase() === text.toLowerCase())) return null;
+  return text;
+}
+
 /** 服务器写的事件类型 → 人读的一句话。词表外的一律回 null，屏上就不假装看懂了。 */
 function eventGloss(locale: string, eventType: string): string | null {
   const zh = locale.startsWith("zh");
@@ -176,7 +191,7 @@ export function AgentWorkFeedPanel({
       id: item.id,
       // 服务器写了人话就用服务器的人话；没写就用它的类型查词表；词表也没有就不铺裸码。
       label:
-        (item.summary && item.summary.trim()) ||
+        humanSummary(item.event_type, item.summary) ||
         eventGloss(locale, item.event_type) ||
         agentWorkCopy(locale, "unlistedEvent"),
       status: markOf(item.event_type),

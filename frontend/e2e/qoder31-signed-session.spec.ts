@@ -482,6 +482,78 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     );
   });
 
+  test("Issue #33 Q1：轨道不替服务器造句——派生出来的那句要被人话顶掉", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    const journeyId = await createAndAwaitJourney(page);
+    /* 这一臂用的是**贴了标签的夹具**：审计行没带摘要时，服务器的投影会把事件类型本身当成摘要发回来
+     * （`journey.created` → "Journey.created"，这台部署上现量到过）。这台部署 AI 是关的，跑不出真的
+     * Agent 行，所以把那条假设有凭据的样子喂进去，量的是**屏上怎么显示**，不是服务器会不会这么答——
+     * 后者已经量过了。 */
+    await page.route(`**/api/v1/journeys/${journeyId}/agent-feed*`, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          journey_id: journeyId,
+          source: "audit_log",
+          events: [
+            {
+              id: "11111111-1111-4111-8111-111111111111",
+              timestamp: "2026-10-18T09:12:00+08:00",
+              event_type: "agent_tool_requested",
+              type: "agent_tool_requested",
+              // 服务器在没有真摘要时发出的就是这一串：类型的换形。
+              summary: "Agent tool requested",
+              actor_type: "agent",
+              actor_id: null,
+              tool: "replan",
+              journey_id: journeyId,
+              proposal_id: null,
+              entity_type: null,
+              entity_id: null,
+              decision: null,
+              reason_codes: [],
+              trace_id: "qoder33-fixture-derived",
+              source: "audit_log",
+              facts: {},
+            },
+            {
+              id: "22222222-2222-4222-8222-222222222222",
+              timestamp: "2026-10-18T09:13:00+08:00",
+              event_type: "replan_requested",
+              type: "replan_requested",
+              summary: "已经把明天上午的出发时间往前挪了一小时",
+              actor_type: "agent",
+              actor_id: null,
+              tool: null,
+              journey_id: journeyId,
+              proposal_id: null,
+              entity_type: null,
+              entity_id: null,
+              decision: null,
+              reason_codes: [],
+              trace_id: "qoder33-fixture-human",
+              source: "audit_log",
+              facts: {},
+            },
+          ],
+        }),
+      }),
+    );
+    await page.goto("/v8", { waitUntil: "load" });
+    await page.getByTestId("hub-ai-work").click();
+    const rail = page.locator(".cn-agent-rail");
+    await expect(rail, "轨道没有画出来").toBeVisible({ timeout: 20_000 });
+    const labels = (await rail.locator("li b").allInnerTexts()).map((text) => text.trim());
+    await page.screenshot({ path: `${DOC_EVIDENCE}/07-rail-no-derived-prose.png`, fullPage: true });
+    /* 一红一绿成对：第一行不许是那句英文换形，第二行必须原样保留人写的摘要。
+     * 只满足其中一条的改法（比如"永远不显示 summary"）会红在另一条上。 */
+    expect(labels[0], `派生出来的句子被当成人话铺上屏了：${labels[0]}`).toBe("AI 请求使用一个工具");
+    expect(labels[1], "服务器真写过的摘要被顶掉了").toBe("已经把明天上午的出发时间往前挪了一小时");
+    console.log(`轨道两行读数：${JSON.stringify(labels)}`);
+  });
+
   test("Issue #31 C：行程页的入口在行程之上，不是滚过整份行程才够得着", async ({ page }) => {
     await seedPhone(page);
     await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
