@@ -125,6 +125,16 @@ async function replayKeysOnDisk(page: Page) {
       /^citynexus\.(copilot\.history|native-hermes\.timeline)\./.test(k)));
 }
 
+/* 一张整屏照 + 一张 copilot 面板自己的照。
+ * 只有整屏照会漏证：面板在窄视口里落在折叠线以下，第一版我截到的"改前现场"
+ * 其实看不见被回放的那几行工具轨迹 —— 断言红了，图却是干净的，这种图不能交。 */
+async function shoot(page: Page, name: string) {
+  await page.screenshot({ path: `e2e/${name}.png`, fullPage: true });
+  const dock = page.getByTestId("v15-copilot");
+  await dock.scrollIntoViewIfNeeded();
+  await dock.screenshot({ path: `e2e/${name}-dock.png` });
+}
+
 test.describe("Issue #27 换人不换行程：Agent 轨迹不得从盘上回放到第二个人", () => {
   test.setTimeout(180_000);
 
@@ -146,7 +156,7 @@ test.describe("Issue #27 换人不换行程：Agent 轨迹不得从盘上回放�
       await expect(pA.getByText(`${A_TOKEN}-1`)).toBeVisible();
       /* 记下这一臂有没有往盘上落东西：改前它是 > 0（缺陷的载体），改后它必须是 0。 */
       const keysAfterA = await replayKeysOnDisk(pA);
-      await pA.screenshot({ path: `e2e/.qoder27-memberA-${profile.name.slice(0, 2)}.png` });
+      await shoot(pA, `.qoder27-memberA-${profile.name.slice(0, 2)}`);
       const deviceState = await ctxA.storageState();
       await ctxA.close();
 
@@ -157,12 +167,16 @@ test.describe("Issue #27 换人不换行程：Agent 轨迹不得从盘上回放�
       await stubAsMemberB(ctxB);
       const pB = await ctxB.newPage();
       await openCopilot(pB);
+      /* 截图必须断在断言之前：断言一红，用例当场中止，那张"改前屏上真的放着 A 的行"
+         的现场照就永远留不下来（第一版我把截图放在断言之后，于是改前那一臂留下的
+         memberB 图其实是改后那一次没被覆盖的旧图 —— 现场证据不能靠文件没被覆盖）。 */
+      await pB.waitForTimeout(1500);
+      await shoot(pB, `.qoder27-memberB-${profile.name.slice(0, 2)}`);
       /* B 什么都没发。任何一行 A 的记号出现在屏上，都是这一条要拦的事。 */
       for (const seq of [1, 2, 3]) {
         await expect(pB.getByText(`${A_TOKEN}-${seq}`), `成员 B 看到了成员 A 的第 ${seq} 行工具轨迹`)
           .toHaveCount(0);
       }
-      await pB.screenshot({ path: `e2e/.qoder27-memberB-${profile.name.slice(0, 2)}.png` });
       await ctxB.close();
 
       expect(keysAfterA.length, "A 那一臂本不该把会话与事件表写到 localStorage").toBe(0);
@@ -188,12 +202,15 @@ test.describe("Issue #27 换人不换行程：Agent 轨迹不得从盘上回放�
     await p.waitForTimeout(900);
     await enterDrawerTarget(p, "agent");
     await p.waitForTimeout(1600);
+    /* 同一条规矩：现场照先落，再断言。 */
+    await shoot(p, ".qoder27-forbidden");
     const body = await p.locator('[data-testid="v15-copilot"]').innerText();
     expect(body, "被拒绝之后仍写着「正在核对行程事实」，等于把 403 报成还在分析").not.toMatch(/正在核对|checking/i);
     /* 正面断言：这一臂必须真把可恢复的说明摆出来。只有"没有那句错话"是不够的——
      * 那可以靠一片空白通过。 */
     await expect(p.getByTestId("agent-history-error"), "服务器拒绝之后屏上没有可恢复的说明").toBeVisible();
-    await p.screenshot({ path: "e2e/.qoder27-forbidden.png" });
+    /* 那句说明必须说清是谁拒的：只写"出错了"的兜底既不可恢复，也不区分 403 与断网。 */
+    await expect(p.getByTestId("agent-history-error")).toContainText("403");
     await ctx.close();
   });
 });
