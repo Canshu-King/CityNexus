@@ -78,6 +78,7 @@ function freshCityCode(): string {
 export function RevolutionFirstLook() {
   const [cityName, setCityName] = useState("连城");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
+  const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -170,6 +171,7 @@ export function RevolutionFirstLook() {
       if (!created.id) throw new Error("服务器未返回 Journey ID。");
       const next: TrialJourney = { id: created.id, cityCode, cityName: label, status: "DRAFT" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      setExplorationTitle(null);
       setJourney(next);
       setActiveTab("explore");
       setPocketWalk(null);
@@ -185,6 +187,7 @@ export function RevolutionFirstLook() {
     // alter any production data. Server-side privacy still gates old boards.
     localStorage.removeItem(STORAGE_KEY);
     clearTravelerBearer();
+    setExplorationTitle(null);
     setJourney(null);
     setError(null);
     setNotice(null);
@@ -295,7 +298,7 @@ export function RevolutionFirstLook() {
               <section className="rev-firstlook-journey">
                 <div>
                   <span className="rev-firstlook-eyebrow">正在探索</span>
-                  <h1>{journey.cityName}</h1>
+                  <h1>{explorationTitle?.journeyId === journey.id ? explorationTitle.label : journey.cityName}</h1>
                   <p>想怎么走？先聊一句，再从真实地点中选择。</p>
                 </div>
                 <button type="button" onClick={switchCity} className="rev-firstlook-reset">
@@ -309,6 +312,9 @@ export function RevolutionFirstLook() {
                     key={journey.id}
                     journeyId={journey.id}
                     cityName={journey.cityName}
+                    onExplorationCenterLabelChange={(label) => {
+                      setExplorationTitle({ journeyId: journey.id, label });
+                    }}
                     agentConfigured={Boolean(agentConfigured)}
                     agentChecking={agentStatusChecking}
                     onPocketWalkChange={setPocketWalk}

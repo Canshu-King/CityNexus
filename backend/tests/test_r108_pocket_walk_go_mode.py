@@ -94,6 +94,14 @@ def test_r108_go_mode_is_revision_bound_idempotent_and_self_report_only() -> Non
         start_key = str(uuid4())
         started = go("START", 0, start_key)
         assert started.status_code == 200, started.text
+        assert {"private", "no-store"} <= {
+            directive.strip().casefold()
+            for directive in started.headers["cache-control"].split(",")
+        }
+        assert {"authorization", "x-citynexus-traveler-token"} <= {
+            field.strip().casefold()
+            for field in started.headers["vary"].split(",")
+        }
         assert started.json()["go_progress"]["state"] == "HEADING_TO_FIRST"
         assert started.json()["go_progress"]["revision"] == 1
 
@@ -436,6 +444,14 @@ def test_r108_go_status_get_does_not_issue_journey_update() -> None:
             event.remove(engine, "before_cursor_execute", record_sql)
 
         assert status.status_code == 200, status.text
+        assert {"private", "no-store"} <= {
+            directive.strip().casefold()
+            for directive in status.headers["cache-control"].split(",")
+        }
+        assert {"authorization", "x-citynexus-traveler-token"} <= {
+            field.strip().casefold()
+            for field in status.headers["vary"].split(",")
+        }
         assert status.json()["go_progress"]["state"] == "NOT_STARTED"
         assert status.json()["go_progress"]["physical_arrival_state"] == "NOT_PHYSICAL_ARRIVAL_PROVEN"
         assert journey_updates == [], "a GO status GET must never acquire a Journey write lock"

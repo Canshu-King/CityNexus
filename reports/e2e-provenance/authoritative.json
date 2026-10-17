@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "mobilep0_20261017_1151",
+  "runId": "mobile_p0_20261017_140020_cca4be1d",
   "python": "D:\\moodle\\_codex_workers\\citynexus-mobile-first-p0-live-20261016\\backend\\.venv\\Scripts\\python.exe",
   "pythonResolved": "D:\\moodle\\_codex_workers\\citynexus-mobile-first-p0-live-20261016\\backend\\.venv\\Scripts\\python.exe",
-  "frontendPort": 4202,
-  "backendPort": 18302,
-  "databaseUrl": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/_mobilep0_20261017_1151.db",
+  "frontendPort": 43618,
+  "backendPort": 19618,
+  "databaseUrl": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/_mobile_p0_20261017_140020_cca4be1d.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-10-17T04:46:40.996Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\_codex_workers\\citynexus-mobile-first-p0-live-20261016\\backend\\.venv\\Scripts\\python.exe frontend=:4202 backend=:18302 db=sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/_mobilep0_20261017_1151.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-10-17T06:00:26.033Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\_codex_workers\\citynexus-mobile-first-p0-live-20261016\\backend\\.venv\\Scripts\\python.exe frontend=:43618 backend=:19618 db=sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/_mobile_p0_20261017_140020_cca4be1d.db ai=disabled reuseExistingServer=false"
 }

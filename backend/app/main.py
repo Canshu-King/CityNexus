@@ -4076,10 +4076,13 @@ def save_bootstrap_discovery_pocket_walk_route(
     journey_id: UUID,
     payload: BootstrapDiscoveryPocketWalkSaveRequest,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Atomically save two current manual-center discoveries privately."""
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
 
@@ -4175,16 +4178,19 @@ def preview_bootstrap_journey_candidate(
 def get_bootstrap_shortlist(
     journey_id: UUID,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Return only the signed member's public-only draft shortlist."""
 
-    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     from app.traveler_principal import resolve_journey_member_principal
 
     principal, member = resolve_journey_member_principal(
-        request, session, journey_id=str(journey.id)
+        request, session, journey_id=str(journey_id)
     )
+    journey = require(session, Journey, str(journey_id), "Journey")
     try:
         return list_bootstrap_shortlist_items(
             session,
@@ -4507,10 +4513,13 @@ def save_bootstrap_pocket_walk_intent(
 def get_bootstrap_pocket_walk_go_mode(
     journey_id: UUID,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Read this signed member's latest server-verified self-reported progress."""
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
 
@@ -4533,10 +4542,13 @@ def transition_bootstrap_pocket_walk_go_mode(
     journey_id: UUID,
     payload: BootstrapPocketWalkGoTransitionRequest,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Persist one conditional GO MODE self-report without creating arrival facts."""
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
 

@@ -45,6 +45,7 @@ from app.integrations.discovery.real_city import (
 from app.integrations.discovery.photon_poi import (
     OSM_ATTRIBUTION,
     OSM_ATTRIBUTION_URL,
+    PHOTON_REJECTION_REASONS,
     PhotonPOIProvider,
     _validate_base_url as _validate_photon_base_url,
 )
@@ -536,31 +537,39 @@ def _attempts(value: Any, *, provider_key: str = "overpass") -> list[dict[str, A
     for item in value[:4]:
         if not isinstance(item, dict):
             continue
-        result.append(
-            {
-                "provider_key": provider_key,
-                "endpoint": str(item.get("endpoint") or "")[:240],
-                "answered": bool(item.get("answered")),
-                "http_status": item.get("http_status"),
-                "elements": item.get("elements"),
-                "features": item.get("features"),
-                "returned": item.get("returned"),
-                "elapsed_ms": item.get("elapsed_ms"),
-                "source_status": str(item.get("source_status") or "")[:40] or None,
-                "result_status": str(item.get("result_status") or "")[:40] or None,
-                "attribution": (
-                    "© OpenStreetMap contributors"
-                    if item.get("attribution") == "© OpenStreetMap contributors"
-                    else None
-                ),
-                "attribution_url": (
-                    "https://www.openstreetmap.org/copyright"
-                    if item.get("attribution_url") == "https://www.openstreetmap.org/copyright"
-                    else None
-                ),
-                "error": str(item.get("error") or "")[:160] or None,
-            }
-        )
+        attempt = {
+            "provider_key": provider_key,
+            "endpoint": str(item.get("endpoint") or "")[:240],
+            "answered": bool(item.get("answered")),
+            "http_status": item.get("http_status"),
+            "elements": item.get("elements"),
+            "features": item.get("features"),
+            "returned": item.get("returned"),
+            "elapsed_ms": item.get("elapsed_ms"),
+            "source_status": str(item.get("source_status") or "")[:40] or None,
+            "result_status": str(item.get("result_status") or "")[:40] or None,
+            "attribution": (
+                "© OpenStreetMap contributors"
+                if item.get("attribution") == "© OpenStreetMap contributors"
+                else None
+            ),
+            "attribution_url": (
+                "https://www.openstreetmap.org/copyright"
+                if item.get("attribution_url") == "https://www.openstreetmap.org/copyright"
+                else None
+            ),
+            "error": str(item.get("error") or "")[:160] or None,
+        }
+        raw_rejection_counts = item.get("rejected_by_reason")
+        if provider_key == "photon" and isinstance(raw_rejection_counts, dict):
+            safe_rejection_counts: dict[str, int] = {}
+            for reason in PHOTON_REJECTION_REASONS:
+                count = raw_rejection_counts.get(reason)
+                safe_rejection_counts[reason] = (
+                    count if type(count) is int and count >= 0 else 0
+                )
+            attempt["rejected_by_reason"] = safe_rejection_counts
+        result.append(attempt)
     return result
 
 

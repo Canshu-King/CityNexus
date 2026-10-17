@@ -139,3 +139,24 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 - 验证：后端 `uv run --offline --project . pytest -p no:cacheprovider tests/test_bootstrap_candidate_filter_summary.py tests/test_bootstrap_photon_provider_selection.py tests/test_bootstrap_photon_draft_exploration.py -q`，15 passed；`npm.cmd run typecheck:all -- --pretty false` 退出码 0；Chromium `r87-first-live-city-discovery.spec.ts` 与 `revolution-night-out-rest-preferences.spec.ts`，3 passed。
 - 浏览器验收使用隔离运行 `mobilep0_20261017_1151`（前端 4202、后端 18302、临时 SQLite）；API 由 TEST_FIXTURE 响应，AI 关闭，没有请求地点服务、模型或支付。现有 390×844 页面截图为 `assets/20261017-ui-fixture-late-night-rest-preferences-390x844.png`（SHA-256 `48839FDC426DA09275C6BA89B0758AC3BFD9C4698E88F0E0A1771C0EE8438350`）；本轮未单独截图快捷入口。
 - 本轮没有真实地点搜索、Pocket Walk 保存或 GO；当前仍缺两处可用真实地点，所以刷新恢复闭环尚未到达。已有模型响应仍是 DRAFT 建议，当前试用库没有真实签名 ACTIVE Journey 或持久化 AgentRun。
+## 2026-10-17 本轮：新地图中心地点搜索
+
+- 在签名 DRAFT 页面通过公开 OSM 链接选择杭州西湖附近地图中心，并选择“博物馆和艺术”；页面在查询前说明地点区域与类别会发送给 Photon。浏览器视口为 1058×676，本次不是手机验收。
+- 城市搜索内部接口返回 HTTP 200，但状态为 `GEOCODER_UNAVAILABLE`；Nominatim 回执为 `ConnectTimeout`、0 个地区结果。没有重试。
+- Photon 接口返回 HTTP 200，服务端 attempt 记录 3 个原始要素、adapter 返回 3 个候选；CityNexus 响应为 `LIVE_ZERO_RESULTS`，0 个可选候选，未进入 Pocket Walk 保存或 GO。没有重试。
+- 页面标题仍显示原行程城市“连城”，而新查询使用刚确认的杭州地图中心。这个标题需要改为当前探索中心，避免与实际搜索区域不一致。
+- 实际 HTTP JSON 未包含 `filter_summary`。当前工作树的发现函数会生成该字段，并由无 `response_model` 的路由直接返回；活动服务代码版本或实际请求路径尚未绑定到当前 checkout，缺字段原因未定。
+
+P0 仍未闭环：两处真实 POI、Pocket Walk 保存、GO 后刷新恢复；真实签名 ACTIVE Journey 与持久化 Hermes AgentRun 也未创建。
+
+## 2026-10-17 本轮：上海咖啡馆查询界面与手机回归
+
+- 在 390×844 手机视口的签名 DRAFT 页面，先展示 Photon 公共地点服务与查询区域说明，再从公开 OSM 地图链接选择上海人民广场附近中心（31.2304, 121.4737），外层标题显示地图中心坐标；Journey 私有 cityName 仍为“连城”。
+- 用户点选“咖啡馆”后只发起一次查询。本机 CityNexus 的 bootstrap-discovery 返回 HTTP 200，页面响应标记 LIVE_PROVIDER / LIVE_ZERO_RESULTS、0 个候选；响应没有 filter_summary。页面没有可保存地点。
+- 同一页面的健康检查 e2e_run_id 与 e2e_database_id 均为空，且未取得 Photon 出站请求轨迹；LIVE_PROVIDER 标签未绑定到当前隔离 checkout，不能作为 Photon 实际调用证据。没有保存、GO、刷新恢复或新截图。
+- 后端聚焦命令：uv run --offline --project . pytest -p no:cacheprovider tests/test_photon_poi_adapter.py tests/test_bootstrap_photon_draft_exploration.py tests/test_bootstrap_filter_summary_route.py tests/test_bootstrap_shortlist_private_cache_headers.py tests/test_r108_pocket_walk_go_mode.py -q；backend 工作目录；结果 33 passed、4 warnings。测试数据库为本机临时 SQLite，完成后已删除本次数据库文件与 WAL sidecars。
+- 手机 UI 回归使用 authoritative 隔离运行 mobile_p0_20261017_135806_71515f0e，前端/后端端口 43617/19617、独立临时 SQLite、AI disabled。首跑有 3 项测试断言沿用旧坐标/旧空结果文案而失败；只改测试期望后重跑，地图中心标签、过滤计数、单候选提示和 TEST_FIXTURE 刷新恢复共 6 passed。该运行没有访问 Photon、AI 或真实保存接口；临时数据库与 sidecars 已清理，端口已关闭。
+- 另一组独立 authoritative TEST_FIXTURE 运行 mobile_p0_20261017_140020_cca4be1d（端口 43618/19618，AI disabled）验证 Springfield 城市歧义需要用户选择、晚出发偏好跨页保留且只在点击后发送；2 passed，没有调用地名、POI、AI 或付款服务。该临时数据库与 sidecars 已清理。
+- 前端 npm.cmd run typecheck:all -- --pretty false 退出码 0。
+
+P0 仍未闭环：当前页面没有两处可用真实 POI，Pocket Walk 保存、GO 与刷新恢复尚未完成；真实签名 ACTIVE Journey 和持久化 Hermes AgentRun 仍不存在。

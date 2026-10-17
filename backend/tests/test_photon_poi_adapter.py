@@ -1,15 +1,17 @@
 from __future__ import annotations
 
+import json
 import math
 
 import httpx
 import pytest
 
-from app.execution.bootstrap_discovery import _osm_identity
+from app.execution.bootstrap_discovery import _attempts, _osm_identity
 from app.integrations.discovery.photon_poi import (
     MAX_LIMIT,
     OSM_ATTRIBUTION,
     OSM_ATTRIBUTION_URL,
+    PHOTON_REJECTION_REASONS,
     PHOTON_REVERSE_URL,
     PhotonPOIProvider,
     UnsupportedPhotonQuery,
@@ -155,8 +157,121 @@ def test_response_is_category_checked_radius_checked_and_finite():
     }
     assert attempts[0]["elements"] == attempts[0]["features"] == 4
     assert attempts[0]["returned"] == 1
+    assert attempts[0]["rejected_by_reason"] == {
+        "malformed_structure": 0,
+        "missing_osm_identity": 1,
+        "missing_name": 0,
+        "category_mismatch": 1,
+        "invalid_coordinates": 0,
+        "out_of_range": 1,
+    }
     assert attempts[0]["result_status"] == "LIVE_RESULTS"
     assert math.isfinite(candidates[0].distance_m)
+
+
+@pytest.mark.parametrize(
+    ("feature", "reason", "private_marker"),
+    [
+        pytest.param(
+            {
+                "type": "Feature",
+                "properties": {"name": "PRIVATE_BAD_STRUCTURE_MARKER"},
+                "geometry": None,
+            },
+            "malformed_structure",
+            "PRIVATE_BAD_STRUCTURE_MARKER",
+            id="bad-structure",
+        ),
+        pytest.param(
+            _feature(osm_id=0, name="PRIVATE_IDENTITY_MARKER"),
+            "missing_osm_identity",
+            "PRIVATE_IDENTITY_MARKER",
+            id="missing-osm-identity",
+        ),
+        pytest.param(
+            _feature(name="", extra={"private_note": "PRIVATE_NAME_MARKER"}),
+            "missing_name",
+            "PRIVATE_NAME_MARKER",
+            id="missing-name",
+        ),
+        pytest.param(
+            _feature(
+                osm_key="amenity",
+                osm_value="cafe",
+                name="PRIVATE_CATEGORY_MARKER",
+            ),
+            "category_mismatch",
+            "PRIVATE_CATEGORY_MARKER",
+            id="category-mismatch",
+        ),
+        pytest.param(
+            _feature(lon="not-a-coordinate", name="PRIVATE_COORDINATE_MARKER"),
+            "invalid_coordinates",
+            "PRIVATE_COORDINATE_MARKER",
+            id="invalid-coordinates",
+        ),
+        pytest.param(
+            _feature(lon=135.8, name="PRIVATE_RANGE_MARKER"),
+            "out_of_range",
+            "PRIVATE_RANGE_MARKER",
+            id="out-of-range",
+        ),
+    ],
+)
+def test_rejection_reason_counts_are_isolated_and_count_only(
+    feature: dict, reason: str, private_marker: str
+):
+    provider, requests = _provider(
+        lambda _request: httpx.Response(200, json={"features": [feature]})
+    )
+    try:
+        candidates, attempts = provider.search_with_evidence(
+            "museum", latitude=35.0, longitude=135.7, radius_m=1000, limit=5
+        )
+    finally:
+        provider.close()
+
+    expected = {key: int(key == reason) for key in PHOTON_REJECTION_REASONS}
+    assert len(requests) == 1
+    assert candidates == []
+    assert attempts[0]["elements"] == attempts[0]["features"] == 1
+    assert attempts[0]["returned"] == 0
+    assert attempts[0]["rejected_by_reason"] == expected
+    assert set(attempts[0]["rejected_by_reason"]) == set(PHOTON_REJECTION_REASONS)
+    assert private_marker not in json.dumps(attempts)
+
+
+def test_bootstrap_attempts_allowlist_only_fixed_photon_rejection_counts():
+    attempts = _attempts(
+        [
+            {
+                "endpoint": PHOTON_REVERSE_URL,
+                "answered": True,
+                "http_status": 200,
+                "rejected_by_reason": {
+                    "malformed_structure": 1,
+                    "missing_osm_identity": True,
+                    "missing_name": -2,
+                    "category_mismatch": 2,
+                    "invalid_coordinates": 3,
+                    "out_of_range": 4,
+                    "private_detail": "PRIVATE_ATTEMPT_MARKER",
+                },
+                "private_detail": "PRIVATE_ATTEMPT_MARKER",
+            }
+        ],
+        provider_key="photon",
+    )
+
+    assert attempts[0]["rejected_by_reason"] == {
+        "malformed_structure": 1,
+        "missing_osm_identity": 0,
+        "missing_name": 0,
+        "category_mismatch": 2,
+        "invalid_coordinates": 3,
+        "out_of_range": 4,
+    }
+    assert "PRIVATE_ATTEMPT_MARKER" not in json.dumps(attempts)
 
 
 def test_empty_success_is_live_zero_while_failure_is_runtime_and_never_retried():

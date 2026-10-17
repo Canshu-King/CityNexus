@@ -37,6 +37,14 @@ DEFAULT_TIMEOUT_SECONDS = 3.0
 MAX_TIMEOUT_SECONDS = 5.0
 MAX_LIMIT = 20
 MAX_RADIUS_METERS = 5_000_000
+PHOTON_REJECTION_REASONS = (
+    "malformed_structure",
+    "missing_osm_identity",
+    "missing_name",
+    "category_mismatch",
+    "invalid_coordinates",
+    "out_of_range",
+)
 
 
 class UnsupportedPhotonQuery(ValueError):
@@ -188,46 +196,46 @@ def _osm_identity(properties: Mapping[str, Any]) -> tuple[str, str] | None:
     return kind, identifier
 
 
-def _feature_candidate(
+def _feature_candidate_with_rejection(
     feature: Any,
     *,
     center_latitude: float,
     center_longitude: float,
     radius_m: float,
     allowed_categories: frozenset[tuple[str, str]],
-) -> DiscoveryCandidate | None:
+) -> tuple[DiscoveryCandidate | None, str | None]:
     if not isinstance(feature, dict):
-        return None
+        return None, "malformed_structure"
     properties = feature.get("properties")
     geometry = feature.get("geometry")
     if not isinstance(properties, dict) or not isinstance(geometry, dict):
-        return None
+        return None, "malformed_structure"
     osm_identity = _osm_identity(properties)
     if osm_identity is None:
-        return None
+        return None, "missing_osm_identity"
     osm_type, osm_id = osm_identity
     name = properties.get("name")
     if not isinstance(name, str) or not name.strip():
-        return None
+        return None, "missing_name"
     osm_key = str(properties.get("osm_key") or "").strip().casefold()
     osm_value = str(properties.get("osm_value") or "").strip().casefold()
     if (osm_key, osm_value) not in allowed_categories:
-        return None
+        return None, "category_mismatch"
     coordinates = geometry.get("coordinates")
     if not isinstance(coordinates, (list, tuple)) or len(coordinates) < 2:
-        return None
+        return None, "invalid_coordinates"
     try:
         longitude = float(coordinates[0])
         latitude = float(coordinates[1])
     except (TypeError, ValueError, OverflowError):
-        return None
+        return None, "invalid_coordinates"
     if not math.isfinite(latitude) or not math.isfinite(longitude):
-        return None
+        return None, "invalid_coordinates"
     if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
-        return None
+        return None, "invalid_coordinates"
     distance = _distance_m(center_latitude, center_longitude, latitude, longitude)
     if distance > radius_m:
-        return None
+        return None, "out_of_range"
 
     extra = properties.get("extra")
     source_tags = dict(extra) if isinstance(extra, Mapping) else {}
@@ -235,29 +243,32 @@ def _feature_candidate(
     source_tags.setdefault(osm_key, osm_value)
     source_url = f"https://www.openstreetmap.org/{_OSM_TYPES[osm_type]}/{osm_id}"
     category = osm_value
-    return DiscoveryCandidate(
-        provider_key="photon",
-        external_id=f"photon:{_OSM_TYPES[osm_type]}/{osm_id}",
-        name=name.strip(),
-        category=category,
-        latitude=latitude,
-        longitude=longitude,
-        tags=tuple(
-            sorted({category, "real_city", "indoor" if osm_key != "leisure" else "outdoor"})
+    return (
+        DiscoveryCandidate(
+            provider_key="photon",
+            external_id=f"photon:{_OSM_TYPES[osm_type]}/{osm_id}",
+            name=name.strip(),
+            category=category,
+            latitude=latitude,
+            longitude=longitude,
+            tags=tuple(
+                sorted({category, "real_city", "indoor" if osm_key != "leisure" else "outdoor"})
+            ),
+            opening_hours=normalize_opening_hours(source_tags.get("opening_hours")),
+            metadata={
+                "osm_id": f"{_OSM_TYPES[osm_type]}/{osm_id}",
+                "tags": source_tags,
+                "photon_type": properties.get("type"),
+                "countrycode": properties.get("countrycode"),
+                "source_status": "LIVE_PROVIDER",
+                "source_url": source_url,
+                "attribution": OSM_ATTRIBUTION,
+                "attribution_url": OSM_ATTRIBUTION_URL,
+            },
+            distance_m=distance,
+            cost_evidence=cost_evidence_from_tags(source_tags, source="photon"),
         ),
-        opening_hours=normalize_opening_hours(source_tags.get("opening_hours")),
-        metadata={
-            "osm_id": f"{_OSM_TYPES[osm_type]}/{osm_id}",
-            "tags": source_tags,
-            "photon_type": properties.get("type"),
-            "countrycode": properties.get("countrycode"),
-            "source_status": "LIVE_PROVIDER",
-            "source_url": source_url,
-            "attribution": OSM_ATTRIBUTION,
-            "attribution_url": OSM_ATTRIBUTION_URL,
-        },
-        distance_m=distance,
-        cost_evidence=cost_evidence_from_tags(source_tags, source="photon"),
+        None,
     )
 
 
@@ -377,20 +388,21 @@ class PhotonPOIProvider:
             raise
 
         features = payload["features"]
-        candidates = [
-            candidate
-            for feature in features
-            if (
-                candidate := _feature_candidate(
-                    feature,
-                    center_latitude=center_lat,
-                    center_longitude=center_lon,
-                    radius_m=radius,
-                    allowed_categories=allowed,
-                )
+        candidates: list[DiscoveryCandidate] = []
+        rejected_by_reason = {reason: 0 for reason in PHOTON_REJECTION_REASONS}
+        for feature in features:
+            candidate, rejection_reason = _feature_candidate_with_rejection(
+                feature,
+                center_latitude=center_lat,
+                center_longitude=center_lon,
+                radius_m=radius,
+                allowed_categories=allowed,
             )
-            is not None
-        ][:effective_limit]
+            if rejection_reason is not None:
+                rejected_by_reason[rejection_reason] += 1
+            elif candidate is not None:
+                candidates.append(candidate)
+        candidates = candidates[:effective_limit]
         attempt = {
             "endpoint": PHOTON_REVERSE_URL,
             "answered": True,
@@ -399,6 +411,7 @@ class PhotonPOIProvider:
             "elements": len(features),
             "features": len(features),
             "returned": len(candidates),
+            "rejected_by_reason": rejected_by_reason,
             "source_status": "LIVE_PROVIDER",
             "result_status": "LIVE_RESULTS" if candidates else "LIVE_ZERO_RESULTS",
             "attribution": OSM_ATTRIBUTION,

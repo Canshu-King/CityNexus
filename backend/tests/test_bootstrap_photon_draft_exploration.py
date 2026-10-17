@@ -120,3 +120,122 @@ def test_unknown_photon_cost_cannot_materialize_formal_candidate():
     assert exc.value.details["explore_state"] == "DRAFT_EXPLORE_ONLY"
     session.execute.assert_not_called()
     session.add.assert_not_called()
+
+
+def test_single_photon_candidate_returns_partial_live_result_without_fabricating_another(monkeypatch):
+    provider_candidate = discovery.DiscoveryCandidate(
+        provider_key="photon",
+        external_id="photon:way/8123",
+        name="Photon public gallery",
+        category="gallery",
+        latitude=31.2304,
+        longitude=121.4737,
+        tags=("gallery",),
+        opening_hours={"status": "UNKNOWN"},
+        metadata={"tags": {"name": "Photon public gallery", "tourism": "gallery"}},
+        distance_m=84.0,
+        cost_evidence={"status": "UNKNOWN"},
+    )
+
+    class _PhotonFixture:
+        # This local fake covers the LIVE_RESULTS response contract only.
+        base_url = "http://127.0.0.1:8765"
+        closed = False
+
+        def search_with_evidence(self, *_args, **kwargs):
+            assert kwargs["max_attempts"] == 1
+            return [provider_candidate], [
+                {
+                    "endpoint": f"{self.base_url}/reverse",
+                    "answered": True,
+                    "http_status": 200,
+                    "features": 1,
+                }
+            ]
+
+        def close(self):
+            self.closed = True
+
+    provider = _PhotonFixture()
+    session = MagicMock()
+    session.scalar.return_value = None
+    private_rows_query = MagicMock()
+    private_rows_query.all.return_value = []
+    result_rows_query = MagicMock()
+    result_rows_query.all.side_effect = lambda: [
+        call.args[0]
+        for call in session.add.call_args_list
+        if isinstance(call.args[0], discovery.RealPlaceCandidate)
+    ]
+    session.scalars.side_effect = [private_rows_query, result_rows_query]
+    monkeypatch.setattr(
+        discovery,
+        "_bootstrap_discovery_provider_config",
+        lambda: {
+            "provider": "photon",
+            "provider_name": "Photon POI search",
+            "expected_recipient": "Photon by Komoot public geocoding service",
+            "base_url": provider.base_url,
+        },
+    )
+    monkeypatch.setattr(
+        discovery,
+        "bootstrap_discovery_readiness",
+        lambda **_kwargs: {
+            "provider": "photon",
+            "provider_name": "Photon POI search",
+            "expected_recipient": "Photon by Komoot public geocoding service",
+            "external_request_allowed": True,
+            "test_only": True,
+            "capability_state": "TEST_ONLY",
+            "status": "READY",
+            "reason_code": "READY",
+            "provider_grade": "TEST_PROVIDER",
+        },
+    )
+    monkeypatch.setattr(
+        discovery, "_bootstrap_live_endpoint_block_reason", lambda *_args, **_kwargs: None
+    )
+    monkeypatch.setattr(
+        discovery, "_bootstrap_rate_limited", lambda *_args, **_kwargs: False
+    )
+    monkeypatch.setattr(discovery, "PhotonPOIProvider", lambda **_kwargs: provider)
+
+    result = discovery.discover_bootstrap_candidates(
+        session,
+        SimpleNamespace(
+            id="journey-photon-draft",
+            status="DRAFT",
+            active_plan_version_id=None,
+            city_code="CN-PHOTON-DRAFT",
+        ),
+        member=SimpleNamespace(id="member-photon-draft"),
+        traveler_id="traveler-photon-draft",
+        query="public gallery",
+        radius_m=2500,
+        limit=10,
+        source_kind="MANUAL_PUBLIC_CENTER",
+        provider_consent=True,
+        consented_provider="photon",
+        latitude=31.2304,
+        longitude=121.4737,
+        accuracy_m=None,
+    )
+
+    private_candidate_rows = [
+        call.args[0]
+        for call in session.add.call_args_list
+        if isinstance(call.args[0], discovery.RealPlaceCandidate)
+    ]
+    assert result["status"] == "LIVE_RESULTS"
+    assert result["result_state"] == "PARTIAL_1"
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["external_id"] == "photon:way/8123"
+    assert (
+        result["candidates"][0]["draft_exploration"]["state"]
+        == "DRAFT_EXPLORE_ONLY"
+    )
+    assert result["filter_summary"]["accepted_count"] == 1
+    assert len(private_candidate_rows) == 1
+    assert private_candidate_rows[0].status == "BOOTSTRAP_PRIVATE"
+    assert provider.closed is True

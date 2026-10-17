@@ -208,6 +208,7 @@ export function RevolutionQuickExplore({
   agentChecking = false,
   onFormalCandidateSelected,
   onPocketWalkChange,
+  onExplorationCenterLabelChange,
 }: {
   journeyId: string;
   cityName: string;
@@ -215,6 +216,7 @@ export function RevolutionQuickExplore({
   agentChecking?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
   onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
+  onExplorationCenterLabelChange?: (label: string) => void;
 }) {
   const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
@@ -227,6 +229,7 @@ export function RevolutionQuickExplore({
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
   const [centerBasis, setCenterBasis] = useState<"EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" | null>(null);
+  const [explorationCenterLabel, setExplorationCenterLabel] = useState<string | null>(null);
   const [tilesEnabled, setTilesEnabled] = useState(false);
   const [selectedPin, setSelectedPin] = useState<PublicCityCenter | null>(null);
   const [mapLink, setMapLink] = useState("");
@@ -460,6 +463,13 @@ export function RevolutionQuickExplore({
     if (!Number.isFinite(point.latitude) || !Number.isFinite(point.longitude)) return;
     setCenter(point);
     setCenterBasis(basis);
+    const nextCenterLabel = basis === "EXPLICIT_GEOCODER_APPROX"
+      ? cityFocusLabel || "已选地区中心"
+      : basis === "OSM_MAP_LINK"
+        ? `地图中心已选 · ${point.latitude.toFixed(3)}, ${point.longitude.toFixed(3)}`
+        : "地图中心已选";
+    setExplorationCenterLabel(nextCenterLabel);
+    onExplorationCenterLabelChange?.(nextCenterLabel);
     setDiscovery(null);
     setFirst(null);
     setSecond(null);
@@ -477,6 +487,9 @@ export function RevolutionQuickExplore({
       });
       return;
     }
+    setQuery("");
+    setCityFocus(null);
+    setCityFocusLabel(null);
     useCenter(point, "OSM_MAP_LINK");
   };
 
@@ -556,6 +569,8 @@ export function RevolutionQuickExplore({
       }
       if (response.status !== "LIVE_RESULTS" || response.candidates.length === 0) {
         setAlert({ type: "neutral", text: "没找到地点，调整类别或位置后再试。" });
+      } else if (response.candidates.length === 1) {
+        setAlert(null);
       } else {
         setAlert({
           type: "good",
@@ -679,6 +694,16 @@ export function RevolutionQuickExplore({
 
   const stageNumber = { area: 1, category: 2, results: 3, walk: 4 }[stage];
   const sourceKind = discovery?.provider_provenance;
+  const isPartialLiveResult = discovery?.status === "LIVE_RESULTS" && discovery.candidates.length === 1;
+  const filterSummary = discovery?.filter_summary;
+  const safeFilterSummary = filterSummary &&
+    Number.isSafeInteger(filterSummary.raw_count) &&
+    filterSummary.raw_count >= 0 &&
+    Number.isSafeInteger(filterSummary.accepted_count) &&
+    filterSummary.accepted_count >= 0 &&
+    filterSummary.accepted_count <= filterSummary.raw_count
+    ? filterSummary
+    : null;
   const firstPlace = discovery?.candidates.find((item) => item.candidate_id === first);
   const secondPlace = discovery?.candidates.find((item) => item.candidate_id === second);
   const goState = walk?.go_progress.state;
@@ -699,11 +724,17 @@ export function RevolutionQuickExplore({
     <section ref={quickExploreRef} className="rev-quick" data-testid="rev-quick-explore">
       <header className="rev-quick-header">
         <div className="rev-quick-kicker">CITYNEXUS / EXPLORE</div>
-        <h2>{stage === "walk" ? "你的私人散步路线" : "想去哪儿逛逛？"}</h2>
+        <h2>
+          {stage === "walk"
+            ? "你的私人散步路线"
+            : center && explorationCenterLabel
+              ? `本次探索位置：${explorationCenterLabel}`
+              : "想去哪儿逛逛？"}
+        </h2>
         <p>
           {stage === "area" && "先选地区，再挑兴趣和地点。AI 只在你点击后参与；地图打不开也能继续。"}
           {stage === "category" && "位置已选好。挑一种兴趣，我们会查找附近的公开地点。"}
-          {stage === "results" && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
+          {stage === "results" && !isPartialLiveResult && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
         </p>
         {stage === "area" && (
@@ -834,10 +865,22 @@ export function RevolutionQuickExplore({
           ) : discovery?.status === "RATE_LIMITED" ? (
             <p>地图服务限制了这次请求，暂时不能判断附近地点。</p>
           ) : discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
-            <p>没有匹配地点。换个类别或搜索区域。</p>
+            safeFilterSummary && discovery?.status === "LIVE_ZERO_RESULTS" && safeFilterSummary.accepted_count === 0 ? (
+              <p role="status" data-testid="rev-quick-filter-result">
+                地图返回 {safeFilterSummary.raw_count} 条，符合条件 {safeFilterSummary.accepted_count} 处。
+              </p>
+            ) : (
+              <p>没有匹配地点。换个类别或搜索区域。</p>
+            )
           ) : (
             <>
-              <p>点击卡片选择两站，先点的是第一站。</p>
+              {isPartialLiveResult ? (
+                <p role="status" data-testid="rev-quick-partial-result">
+                  已找到 1 处；换类别或地图位置继续找第二处。
+                </p>
+              ) : (
+                <p>点击卡片选择两站，先点的是第一站。</p>
+              )}
               <div className="rev-quick-place-list">
                 {discovery.candidates.map((candidate: BootstrapDiscoveryCandidate) => {
                   const chosenAs = first === candidate.candidate_id ? "第一站" : second === candidate.candidate_id ? "第二站" : null;
@@ -894,6 +937,11 @@ export function RevolutionQuickExplore({
         <summary>技术信息</summary>
         <p>城市结果提供公开地区的大致中心。点选结果即可继续；地图和 OSM 链接都是可选项。</p>
         <p>数据状态：{discovery?.status ?? "尚未搜索"} · {sourceKind ?? "来源未确定"}</p>
+        {safeFilterSummary && (
+          <p data-testid="rev-quick-filter-summary">
+            原始候选：{safeFilterSummary.raw_count} 条 · 可用地点：{safeFilterSummary.accepted_count} 处
+          </p>
+        )}
         <p>地点来源：{sourceKind ?? "待确定"}。私人路线与进度来自当前行程。</p>
       </details>
     </section>
