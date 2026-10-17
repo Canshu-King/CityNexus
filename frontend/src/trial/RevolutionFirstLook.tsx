@@ -43,8 +43,10 @@ function loadRecentJourney(): TrialJourney | null {
   }
 }
 
-async function postJson<T>(path: string, payload: object): Promise<T> {
-  const bearer = readTravelerBearer();
+async function postJson<T>(path: string, payload: object, bearerOverride?: string): Promise<T> {
+  // Use the fresh token for the new Journey without replacing the existing
+  // browser session until the entire create flow has succeeded.
+  const bearer = bearerOverride === undefined ? readTravelerBearer() : bearerOverride;
   const response = await fetch("/api/v1" + path, {
     method: "POST",
     headers: {
@@ -148,11 +150,10 @@ export function RevolutionFirstLook() {
         display_name: "Revolution Lab explorer",
         locale: "zh-CN",
         timezone: "Asia/Shanghai",
-      });
+      }, "");
       if (!traveler.access_token) {
         throw new Error("服务器没有发放可用于私人探索的签名会话，请检查本地鉴权配置。");
       }
-      storeTravelerBearer(traveler.access_token);
       const startAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
       const endAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
       const cityCode = freshCityCode();
@@ -167,8 +168,12 @@ export function RevolutionFirstLook() {
         // anchors belong to a later confirmed plan.
         budget: { amount_minor: 100000, currency: "CNY" },
         party_size: 1,
-      });
+      }, traveler.access_token);
       if (!created.id) throw new Error("服务器未返回 Journey ID。");
+      // Commit the newly issued member identity only once the Journey exists.
+      // A failed Journey POST must never strand the previous private Journey
+      // under a different, newly-created traveler.
+      storeTravelerBearer(traveler.access_token);
       const next: TrialJourney = { id: created.id, cityCode, cityName: label, status: "DRAFT" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setExplorationTitle(null);
@@ -180,6 +185,29 @@ export function RevolutionFirstLook() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const recoverDeniedJourney = () => {
+    // A stale local pointer is NOT proof that the current bearer owns a
+    // Journey. Clear only the navigation pointer after an explicit user tap.
+    // The database Journey is untouched; no permission bypass or silent
+    // reassignment takes place.
+    if (!journey) return;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const stored = saved ? JSON.parse(saved) as Partial<TrialJourney> : null;
+      if (stored?.id === journey.id) localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+    setCityName(journey.cityName);
+    setJourney(null);
+    setExplorationTitle(null);
+    setCandidateForJourney(null);
+    setPocketWalk(null);
+    setActiveTab("explore");
+    setNotice(null);
+    setError("这次登录无法访问之前的行程。你可以重新开始探索，原行程不会因此被删除。");
   };
 
   const switchCity = () => {
@@ -318,6 +346,7 @@ export function RevolutionFirstLook() {
                     agentConfigured={Boolean(agentConfigured)}
                     agentChecking={agentStatusChecking}
                     onPocketWalkChange={setPocketWalk}
+                    onMemberAccessDenied={recoverDeniedJourney}
                     onFormalCandidateSelected={(placeId) => {
                       setCandidateForJourney(placeId);
                       setNotice("已选中有来源的地点。请在行程页面确认正式计划。");

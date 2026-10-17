@@ -209,6 +209,7 @@ export function RevolutionQuickExplore({
   onFormalCandidateSelected,
   onPocketWalkChange,
   onExplorationCenterLabelChange,
+  onMemberAccessDenied,
 }: {
   journeyId: string;
   cityName: string;
@@ -217,6 +218,7 @@ export function RevolutionQuickExplore({
   onFormalCandidateSelected?: (placeId: string) => void;
   onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
   onExplorationCenterLabelChange?: (label: string) => void;
+  onMemberAccessDenied?: () => void;
 }) {
   const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
@@ -312,10 +314,19 @@ export function RevolutionQuickExplore({
         setReadiness(next);
         setReadinessStatus(next.status === "READY" ? "ready" : "blocked");
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         if (!valid()) return;
         setReadiness(null);
         setReadinessStatus("error");
+        if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
+          setAlert({
+            type: "error",
+            text: "当前登录无法访问这段行程，请重新建立探索。原来的行程记录不会因此被删除。",
+            recovery: onMemberAccessDenied
+              ? { label: "重新开始探索", action: onMemberAccessDenied }
+              : undefined,
+          });
+        }
       });
     void cityNexusApi.getBootstrapShortlist(journeyId).then((state) => {
       if (!valid()) return;
@@ -324,9 +335,19 @@ export function RevolutionQuickExplore({
         setWalk(state.pocket_walk);
         setStage("walk");
       }
-    }).catch(() => {
-      // No saved walk or an unavailable backend is not permission to display
-      // fabricated state. First-time users can still start a fresh search.
+    }).catch((error: unknown) => {
+      // A denied member can never re-authorize itself by reloading the same
+      // URL; offer a human action instead of an endless 403 / reload loop.
+      if (!valid()) return;
+      if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
+        setAlert({
+          type: "error",
+          text: "这次登录没有权限读取旧行程。你可以重新开始，服务器原记录不会被清除。",
+          recovery: onMemberAccessDenied
+            ? { label: "重新开始探索", action: onMemberAccessDenied }
+            : undefined,
+        });
+      }
     });
   }, [journeyId]);
 
@@ -368,10 +389,15 @@ export function RevolutionQuickExplore({
       await task(stillCurrent);
     } catch (error) {
       if (stillCurrent()) {
+        const sessionDenied = error instanceof CityNexusApiError && [401, 403].includes(error.status);
         setAlert({
           type: "error",
-          text: messageForError(phase, error),
-          recovery: typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery),
+          text: sessionDenied
+            ? "当前登录无法继续访问这段行程；重新开始不会删除服务器上的旧记录。"
+            : messageForError(phase, error),
+          recovery: sessionDenied && onMemberAccessDenied
+            ? { label: "重新开始探索", action: onMemberAccessDenied }
+            : typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery),
         });
         setErrorDetails(errorDiagnostics(phase, error));
       }
