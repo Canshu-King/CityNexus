@@ -1,4 +1,42 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0902·第二十六笔落线：「我的」卡正文那串死灰换上配对好的墨色 token（亮档 3.54 抬到 5.07，暗档 4.80 抬到 7.69）
+
+**一、这一笔用户看到什么**
+
+亮档「我的」那五张卡里的正文（「1 位旅行者 · ¥500.00」、「在「行程 · 住宿」里挑选」这类十二号小字）是浅灰配白卡，实测比值 3.54，AA 不合格；暗档同一处 4.80。现在两处都走主题配对好的次要墨色：亮档 5.07、暗档 7.69，字仍然比标题轻，但读得清。
+
+**二、线动了**
+
+- 权威尖从 35ce480f9bfd4925d5b3a65decef69a678814d8a 推到 167d0c3722127963b8f9f3a71fb901f4f4558e88，只快进（收据 `preflight_r1.json:1`）。
+- 动的产品文件一枚：`frontend/src/design-tokens.css:1257` 往厂内已有那条"死灰换 token"的规则里加了 `.v8-me-card p` 一枚选择器，同一规则 :1258 就是 `color: var(--cn-ink-secondary)`。注释记在 `frontend/src/design-tokens.css:1245`。
+- 文件 blob 从 98ac1480f918864ffceafa5974e1b79ab79e9a3c 换成 421d39b19025c4f8a5feff3ae7d88dabc740e3d4（现读 74167 变 74746 字节）。
+- 没有新造判据：这条规则本身就是厂内先例（`frontend/src/design-tokens.css:1241` 写着两枚死灰 4.48 与 2.52 不合格、一并换 `--cn-ink-secondary`），我按它原本的形状加了一枚同病症的选择器。`frontend/src/styles.css:339` 那枚字面量留在原处被这一条压住——先例里那两枚也是这么留的。
+
+**三、量法（三把尺，两臂各跑）**
+
+- 逐枚直读：四枚同色字面量的现场（在不在屏上、自己的字色、沿祖先链合成后的底、比值），尺身 `instrument_muted_sites_read_r1.cjs:1`，两臂 `muted_sites_read_before.json:1` 与 `muted_sites_read_after.json:1`
+- 全页合成普查：六屏 × 两主题 × 两档宽度，只报合成后仍低于 4.5 的，尺身 `instrument_muted_scan_r2.cjs:1`，改后臂 `muted_census_after_26.json:1`，改前臂在上一笔的 `muted_census_after.json:1`
+- 出厂真尺两臂：`gate_narrow_control.json:1` 与 `gate_narrow_candidate.json:1`
+
+**四、读数**
+
+- 「我的」卡正文 · 亮档：改前 3.54（八条读数），改后 5.07（同样八条），见 `muted_sites_read_before.json:1`
+- 同一处 · 暗档：改前 4.80，改后 7.69，见 `muted_sites_read_after.json:1`
+- 出厂尺：text-contrast 从八条降到两条，降掉的正是那六条 3.54；紫药丸那两条 3.97 两臂都在（本笔没碰它）；unclassified-control 一百七十八、control-boundary 四条两臂一字不变，见 `gate_narrow_candidate.json:1`
+- 全页普查：低于 4.5 的读数从四十条降到三十条，去重种数从十种降到九种，两臂扫到的都是 1820 条读数，见 `muted_census_after_26.json:1`
+- 落地门：verdict READY_TO_LAND，在看的 css 一枚、新增十一行、新增逃逸口零行、尺身份 MATCH，构建臂 builder_rc 零且 vite_build_rc 零，收据 `preflight_r1.json:1`
+- 外读证据包在 `evidence/cmdr-landing-CMDR-NIGHT-0859-0901/`，共七件（落地收据、两臂直读、直读尺身、改后普查、真尺两臂），逐件回核 BYTE-LEVEL MATCH；上一笔的 `evidence/cmdr-landing-CMDR-NIGHT-0759-0806/` 里那件 `muted_census_after.json:1` 就是本笔的改前臂。
+
+**五、两枚我量了但故意没改的**
+
+- 同一串 #7e8999 还在 `frontend/src/styles.css:268` 与 `frontend/src/styles.css:273`（`.v9-inbox small`、`.v9-offline article span`）。两档宽度 × 两主题 × 六屏扫下来这两处一次都没渲染出来（屏上读不到那两枚选择器，见 `muted_sites_read_before.json:1`），改它们我就拿不出"改前是什么"的读数，所以不动，只在此点名。
+- `frontend/src/styles.css:180` 那处 `.v8-mode-chips button` 也写着同一串字面量，但屏上直读到的计算色是 rgb(94, 107, 125)（亮档 5.42）与 rgb(174, 174, 178)（暗档 7.69）——那枚字面量早已被后面的规则压住，是死值；动它等于改不到任何人的眼睛，所以也不动。这条是"字面量出现次数"与"实际生效处数"不是一回事的现场例子。
+
+**六、剩下的（本笔没修）**
+
+合成普查还剩九种低于 4.5：侧栏「•••」2.18、「高级详情」3.14、Copilot 小字 3.24、「启用 Web Push」3.53、「技术详情」3.62、紫药丸 3.97、「当前」4.23 与 4.25、「打卡」4.47，逐条在 `muted_census_after_26.json:1`。其中三枚（高级详情、技术详情、Copilot 小字）与本笔同一病症——死灰配浅底——可以照这条规则继续加选择器；「启用 Web Push」与「当前」是蓝配深底那一族，要的是 accent 的填充/文字分档，属裁语，我不自己定。
+
+
 ### CMDR-NIGHT-0845·第二十五笔落线：票夹那两张语义卡在暗档不再是白底白字（时间、地点名、时长、详情全都看不见的那种）
 
 **一、这一笔用户看到什么**
