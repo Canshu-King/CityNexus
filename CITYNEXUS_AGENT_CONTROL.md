@@ -1,4 +1,38 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 号令者 · 下午第一段（12:45）：暗档白卡收进组（第三十三笔），十七屏键盘焦点普查首次有了分母
+
+**一、第三十三笔已落线**：尖从 `dc4e95049114fb6bc5924a56e0ded2c904a8cfba` 前进到 `8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf`（ff-only，ahead 一格、behind 零、与候选枝不相交；落地回执 `land_darkcards_1230.json:1`，两路读数同为那枚尖一致为真）。这一笔动的是同一个文件里的四段：三枚一直在暗档留着浅底的容器并入既有的暗档覆盖组（`design-tokens.css:831`），一枚语义洗色块改按其自己的色值压成暗档洗色（`design-tokens.css:961`），两枚跟着掉下去的标签文字接回 `--cn-ink-secondary`（`design-tokens.css:975`、`design-tokens.css:976`），以及一枚两档都不及格的死灰进那条两档共用的灰字规则（`design-tokens.css:1290`）。判据没有新增一条：组是厂内那条组，洗色是 `.trip-stop.disrupted` 已经落地的那一手，灰字接 token 是 `design-tokens.css:1243` 那段注释里写着的那一条。
+
+**二、两臂同一把尺、同一个分母**（`two_arm_summary.json:1`）：
+
+- 尺＝`_cmdr_muted_scan_r2.cjs` 的十七屏扩展（`dark_owner_r1.cjs:1` 是我另取的三屏复算尺，只用于定位白底持有者），装载六十八次、读数四千四百七十二，两臂一字不差 ｜ `two_arm_summary.json:1`
+- 低于 4.5 的读数：改前二百四十一条，改后一百四十三条 ｜ `two_arm_summary.json:1`
+- 去重后的种类：改前六十七种，改后四十七种 ｜ `two_arm_summary.json:1`
+- 逐行对账（键＝宽度＋主题＋屏＋选择器＋testid＋文字）：修好七十四键，新增零键，两臂都失败一百二十一键 ｜ `intermediate_diff.json:1`
+- 修好分布在两处：权威行程执行那屏五十二键、行程工作台那屏二十二键 ｜ `two_arm_summary.json:1`
+- 正控两枚在改后仍复现原值（侧栏 `•••` 于 1280 亮档 2.18、Copilot 紫药丸 3.97），`controls_ok` 为真、导航失败零 ｜ `two_arm_summary.json:1`
+
+**三、有一件必须自己报**：这三枚容器进组之后、两条跟随色之前，我先把十六处量坏了。`span` 的站名从 4.67 掉到 3.65、`span.v12-state-kicker` 从 5.02 与 4.99 掉到 3.22（`intermediate_diff.json:1`，那一拍的中间收据留作 `contrast_arm2_partial_fix1.json`，本块没把它的数当交付数用）。原因是我把容器底色换暗，而容器里两枚"本来就只比及格线高一点"的死灰跟着继承了暗档墨。这就是厂内那条注释写着的"不动它们的话这次改动只是把缺陷挪个位置"，我自己撞进去一次。修法并进同一笔，落地前的最后一臂才是上面那组数；如果我只发中间那一拍的"七十四减十六"，口径就反了。
+
+**四、十七屏键盘焦点与标题的普查第一次有分母**（`focus_trunc_light.json:1`；尺身 `focus_trunc_r2.cjs:1`）：
+
+- 分母＝抽屉里全部十七枚入口 × 一千二百八十与三百九十两档＝三十四面，逐面 Tab 走完整焦点环，共八百三十九个停点 ｜ `focus_trunc_light.json:1`
+- 无可见焦点指示的停点：零 ｜ `focus_trunc_light.json:1`
+- 这枚零不是哑尺读出来的：同一次运行注入一条把 `outline` 与 `box-shadow` 抹平的 CSS，两臂必须反向——正常档零，杀指示档在九十九个停点里报出九十六处无指示 ｜ `sig_stability.txt:1`
+- 差项分布（键盘连走十九站）：一站是 `outlineStyle + outlineWidth + outlineColor` 三项同变，十八站是 `outlineStyle + outlineColor + outlineOffset`；把外框与投影都杀掉后仅剩 `outlineOffset` 一项变化，所以第三版尺把 `outlineOffset` 从签名里摘掉了——只看位移不算看得见 ｜ `sig_stability.txt:1`
+- 文字被吃掉（截断）：零。第一版报出八处，逐条查都是 `span.v8-sr-only`（屏幕阅读专用、本就靠 clip 藏起来），属假阳性，第二版加了视觉隐藏排除项并把排除条数一起出声 ｜ `focus_trunc_r2.cjs:1`
+- 一处新的结构缺陷：回收站那一屏在 1280 与 390 两档都数不到任何 `h1`～`h6`（标题数零），其余十六屏都有可见标题 ｜ `focus_trunc_light.json:1`
+
+**五、还欠裁语的（我不自己定，也不需要代码）**：紫药丸 3.97 缺第二档深紫（候选比值 5.09 与 6.28 早算好）；`aside.v8-boundary-card` 暗档仍是浅紫底，它的 `b` 1.01、`small` 2.77、`span` 4.1、`p` 4.31，改它必须新造一枚暗档紫；状态蓝 `#3f6f92` 一族在暗档 2.2 与 3.54；「技术详情」3.62 是不是故意的 tertiary；侧栏那串装饰点 2.18 要不要按正文算；「打卡」4.47 差的那一点。逐条在 `two_arm_summary.json:1` 的 `still_failing_by_screen` 段里。
+
+**六、派给车道（按 LANE_PROTOCOL，只写账本）**：其一，把 `frontend/e2e/_qoderContrastScan.ts` 与 `_qoderMobileScan.ts` 的分母从六屏扩到抽屉十七枚入口、并按屏导航（我这两把尺已经证明出厂尺看不见这一面：它按 `data-contrast-role` 取意图、只在单一宽度跑、不导航）；其二，回收站那一屏补一个真 `h1`（结构缺陷，不是口味题）；其三，`_cmdr_focus_trunc_r2.cjs` 那把尺如果要做成常设闸，判据必须自带"杀指示"负对照档，否则一枚零不算证明。三件都要两臂同尺、分母相等，交块按 JOIN.txt 的形制四道门。
+
+**七、我这侧下一手**：先把上面第三节的形状（换底色必须同笔跟随标签色）立成自查项，再按第五节那六道裁语等点单；期间继续把十七屏剩下的面（暗档那一臂的焦点与触摸、以及子 Agent 报的一百零六处横向溢出——那组数我还没自己复算，所以本块不转述它的成因）。
+
+（尺身与收据的外读证据：`evidence/cmdr-darkcards-1236/`（preflight_r1.json、two_arm_summary.json、intermediate_diff.json、dark_owner_r1.cjs）与 `evidence/cmdr-coverage-17screens-1236/`（focus_trunc_r2.cjs、focus_trunc_light.json、sig_stability.txt），七枚全部回核 BYTE-LEVEL MATCH；`commander/control` 那一眼读回的两臂汇总 blob 为 `a96a619ce5d7524bfc727a3c70a3e8a88ba6db50`。）
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 值守车道 · 静默名单 11:31:06（45 分档 13 扇｜额度墙 无）
 
 **尺源**：`_why_stopped_r1.py` 两跑（45 分档 11:31:01、25 分档 11:31:01；跑它的那只手 _idle_census_ledger_r1.py:45）＋ 中枢账 `agent_bus/bus.jsonl`（2594 行）。
