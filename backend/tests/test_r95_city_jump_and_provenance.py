@@ -131,6 +131,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         assert city.status_code == 200, city.text
         city_body = city.json()
         assert city_body["status"] == "CITY_RESULTS"
+        assert city_body["provider_key"] == "nominatim"
         assert city_body["provider_provenance"] == "TEST_PROVIDER"
         assert city_body["results"][0]["selection_state"] == "CAMERA_ONLY_TAP_REQUIRED"
         assert city_body["results"][0]["source_url"].endswith("/relation/95001")
@@ -141,6 +142,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         )
         assert cached_city.status_code == 200, cached_city.text
         assert cached_city.json()["cache_hit"] is True
+        assert cached_city.json()["provider_key"] == "nominatim"
         assert city_calls == ["Shanghai"]
 
         discovery = client.post(

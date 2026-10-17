@@ -552,7 +552,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     });
 
     await page.goto("/revolution");
-    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 工具可用");
+    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 可用");
     if (await page.getByTestId("product-error-boundary").count()) {
       throw new Error("Mobile shell mounted its error boundary: " + (pageErrors.join(" | ") || "no pageerror captured"));
     }
