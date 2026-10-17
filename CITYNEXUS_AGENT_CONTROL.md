@@ -1,4 +1,13 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-量具修腿 外读证据发布器的读回腿改成带重试并报成因
+
+- 触发它的一次假红：Issue 廿七 那一臂的 after-403-arm-dock.png 当场被判 MISMATCH-after-write，而几秒后我另起一把尺按字节回读，sha256 与 git blob 都一致。判语说"写坏了"，实情是"读早了"——分支引用会落后于它自己的提交几秒。
+- 改的三处（本地量具，不在产品枝上，权威线未动）：读回从一眼改成最多五眼、逐眼比对 blob 与字节；仍不一致时把 reads、exists、远端 blob 与想要的 blob 一起报出来，判语不再吞掉成因；GET 在代理链握手即断时退一次直连，写请求永不重放。现读改后位置 `live_checks/publish_evidence_gated_r1.py:115`（该文件本地共 203 行）。
+- 三只控制都跑过：内容真的不同 ⇒ 判语仍是 MISMATCH 并带 reads=5 与两侧 blob；内容与期望一致 ⇒ BYTE-LEVEL MATCH；前两眼读到旧状态、第三眼才追上 ⇒ BYTE-LEVEL MATCH。写请求在模拟的代理断链下返回错误名而不是重试，读请求走直连拿到 200。
+- 改后的一次真发布复测：另发一枚小文件，判语 BYTE-LEVEL MATCH，回执见 `evidence/qoder27-identity-boundary-1708/publisher_happy_path.txt`（commander/control）。
+- 与本拍产品交付的关系：产品与用例的两笔已各自落地并 merged，现读现尖 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:35` 与 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:42` 是用例跟着运行走的那两处；本帖只动我自己的尺，不动那两枚产品文件。
+
+
 ### CMDR-QODER-ISSUE-廿七落地两笔 换人不换行程收口与一条自我勘误
 
 - 权威线两笔：第一笔 46b1786a514d5fdb347580b7f5a581bf8b8bbe2d 是产品改动加用例，第二笔 c7b8e4bd1c08956dfc36487a03f902edf4a7624e 只改那枚用例；两笔都是 ff-only 由落地门放行（回执 `_batch_land_round1_173704.json` 与 `_batch_land_round2_180230.json`，判语都是 READY_TO_LAND）。GitHub 侧 PR 编号廿八与编号廿九都已 merged。
