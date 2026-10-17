@@ -1,4 +1,48 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0926·第二十七笔落线：三枚写死的浅灰换上配对墨色，另附十三枚死类名的三臂证明与一张能手执行的工单
+
+**一、这一笔用户看到什么**
+
+亮档三处小字原来读不清：「我的」那屏的「高级详情」折叠标题 3.14、Copilot 进度块里的说明小字 3.24、原始回执那个八号的折叠标题 3.41。现在三处都走主题配对好的次要墨色：亮档 4.66 与 5.07，暗档从 4.99 与 5.25 抬到 7.69。字还是比标题轻，但不刺眼了。
+
+**二、线动了**
+
+- 权威尖从 167d0c3722127963b8f9f3a71fb901f4f4558e88 推到 9a3c5fb8f9ecb9184d32b36a2ff5de04c0401375，只快进（收据 `preflight_r1.json:1`）。
+- 动的产品文件一枚：`frontend/src/styles.css:338` 的 `.v8-agent-progress span`、`frontend/src/styles.css:488` 的 `.cn-agent-raw summary`、`frontend/src/styles.css:1662` 的 `.v8-advanced > summary`，三处 `color:` 的字面量换成 `var(--cn-ink-secondary)`，其余声明逐字未动。
+- 文件 blob 从 2012bda3bcb3d2e7a18e59df20203343d732e1d6 换成 c7b6dd04e33f8eece41b6d5b17d4f807429823fb（现读 122839 变 122887 字节，净增四十八字节，三枚各加十六字节，尺身 `instrument_grey_swap_r1.py:1` 逐枚断言"这一串在本文件只出现一次"）。
+- 判据不是我新造的：`frontend/src/design-tokens.css:1241` 那段注释就是厂内这条规矩的原文（不合格的死灰一律取 `--cn-ink-secondary`，两档都过 4.5）。
+
+**三、读数（合成尺两臂 + 出厂尺）**
+
+- 合成普查两臂扫到的读数都是 1820 条，分母一字未动，见 `muted_census_control.json:1`
+- 控制臂低于 4.5 的有三十条、去重九种；候选臂降到二十四条、七种，见 `muted_census_candidate.json:1`
+- 清掉的两种逐枚是：summary 的 rgb(126, 140, 161) 在 rgb(247, 245, 242) 上 3.14，span 的 rgb(132, 144, 160) 在白底上 3.24，见 `muted_census_control.json:1`
+- 新增的种数：零（两臂种集做差，反向差集为空），见 `muted_census_candidate.json:1`
+- 出厂真尺候选臂：unclassified-control 一百七十八、text-contrast 两条、control-boundary 四条，与上一笔落线后一字不差，见 `gate_narrow_candidate.json:1`
+- 出厂尺这两行都不报本笔那三枚：它按 `data-contrast-role` 取意图（`frontend/e2e/_qoderContrastScan.ts:13`），这三处没挂 role。所以本笔的判据全部来自我那把合成尺，我不假装真尺认了。
+- 落地门：READY_TO_LAND，在看的 css 一枚、新增三行、新增逃逸口零行、尺身份 MATCH，构建臂 rc 零，收据 `preflight_r1.json:1`
+
+**四、十三枚死类名：三臂现在齐了（这一节是工单，不是落地）**
+
+CMDR-ORDER-0742 第一节派出去的那批"压缩行里的死类名"，甲乙两臂当时就过，丙臂一直缺。这一轮补齐：
+
+- 甲（静态读者）：子 Agent 在 f2e5081 的冻结导出上重跑，边界正则、禁子串，`src` 内 157 枚 `.tsx/.ts` 加 `frontend/index.html` 全零命中，另 427 枚 `src` 之外也是零，原件 `subagent_deadcss_plan.md:1`
+- 乙（动态拼装）：同一棵树上穷举 141 处拼 className 的现场，其中 31 处真能落到 class 属性，十三枚 token 零命中；它的正对照当场咬住 `Badge.tsx:95` 的 `cn-badge--${tone}`，见 `subagent_deadcss_plan.json:1`
+- 丙（真屏）：我自己重跑，尺身 `instrument_arm_c_dom_probe_r2.cjs:1`，读数 `arm_c_dom_readings.json:1`。这一臂跑之前先做树身份自检：本地 454 枚 css/ts/tsx 里 29 枚 css 与服务端逐字节相等、不等零枚，六屏标志六枚互异，正对照 v8-page 命中八、v8-me-card 命中七、trip-stop 命中六，十三枚 token 每枚在六屏都是零命中
+- 丙臂为什么以前不敢跑：子 Agent 比出服务端那棵树与快照有三枚文件不等（其中一枚正是要改的 css），于是它按规矩拒绝出证而不是借一个零命中。这条纪律我收下，写进本块。
+
+**五、给扫街工的工单（三臂已齐，剩下的纯是手活）**
+
+十三枚 token 在样式表里共 36 处出现，逐枚位置：`subagent_deadcss_plan.json:1`
+
+- styles.css:175 一行里就有十四处（`v8-anchor-row` 六、`v8-trip-metrics` 五、`v8-trip-hero-head` 一、`anchor-line` 二），见 `arm_c_dom_readings.json:1`
+- styles.css:185 七处、:180 一处、:181 四处、:184 一处、:278 两处，同一把尺数出来的，见 `arm_c_dom_readings.json:1`
+- design-tokens.css:440 与 :514 各一枚 `v8-cta`；:1017 一枚 `v8-home-language`；cn-pulse.css:396 与 :397 与 :510 与 :514 各一枚，见 `arm_c_dom_readings.json:1`
+- 三条硬规矩：一 `anchor-line` 有两枚，其中一枚在 `.v8-anchor-row div:not(.anchor-line)` 里，只许整条规则一起删，不许去碰 `:not()` 本身；二 一行多规则的压缩行只许摘"选择器整条都是这枚死类或其子孙"的那些规则，别的字节一字不动；三 摘完必须拿两臂对表（出厂尺 + 合成尺）证明零差异才算交，不许拿"编译过了"当证据。
+- 我为什么自己不顺手做完：这 36 处里 29 处挤在 styles.css 的六枚压缩行里，手工逐条摘规则是我这一轮最容易出事的形状（同一族错误我 06:2x 犯过一次，多行选择器表被摘断导致两行新红）。派单归派单，我先把三臂证明交清。
+- 外读证据：本笔落地包在 `evidence/cmdr-landing-CMDR-NIGHT-0922-0925/`（五件：收据、两臂普查、候选臂真尺、换色尺身），死类名三臂证明在 `evidence/cmdr-deadcss-proof-0925/`（四件：丙臂读数、丙臂尺身、子 Agent 的工单原件与机读表），逐件回核 BYTE-LEVEL MATCH。
+
+
 ### CMDR-NIGHT-0902·第二十六笔落线：「我的」卡正文那串死灰换上配对好的墨色 token（亮档 3.54 抬到 5.07，暗档 4.80 抬到 7.69）
 
 **一、这一笔用户看到什么**
