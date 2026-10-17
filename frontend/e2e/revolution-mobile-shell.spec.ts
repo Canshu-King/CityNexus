@@ -59,6 +59,17 @@ async function signedMockJourney(page: Page, saved = false) {
 test.describe("Revolution Mobile-First UI fixture", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/v1/**", (route) => route.fulfill({
+      status: 404,
+      contentType: "application/json",
+      body: JSON.stringify({ detail: "TEST_FIXTURE_ENDPOINT_NOT_SEEDED" }),
+    }));
+    await page.route("**/api/v1/travelers/session", (route) => fulfill(route, {
+      traveler_id: "fixture-traveler-117",
+    }));
+  });
+
   test("an unstarted visitor can reach all three mobile tabs", async ({ page }, testInfo) => {
     let providerOrAiPosts = 0;
     page.on("request", (request) => {
@@ -158,6 +169,13 @@ test.describe("Revolution Mobile-First UI fixture", () => {
         id, cityCode: "CN-RV-TEST", cityName: "连城", status: "ACTIVE",
       }));
     }, journeyId);
+
+    await page.route(`${prefix}/bootstrap-shortlist`, (route) => fulfill(route, {
+      journey_id: journeyId,
+      items: [],
+      resume: null,
+      pocket_walk: null,
+    }));
 
     let signedOperatorReads = 0;
     let unrequestedModelWrites = 0;
@@ -403,6 +421,12 @@ test.describe("Revolution Mobile-First UI fixture", () => {
         id, cityCode: "CN-RV-TEST", cityName: "连城", status: "ACTIVE",
       }));
     }, journeyId);
+    await page.route(`${prefix}/bootstrap-shortlist`, (route) => fulfill(route, {
+      journey_id: journeyId,
+      items: [],
+      resume: null,
+      pocket_walk: null,
+    }));
     await page.route("**/api/v1/agent/runtime-status", (route) => fulfill(route, {
       runtime_identity: "HERMES_NATIVE_MCP",
       hermes_native_gateway: { configured: true, reachable: true, ready: true, runs: true, events: true },
