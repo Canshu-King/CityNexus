@@ -11,11 +11,13 @@ export type PublicCityCenter = {
 export function PublicCityAreaPicker({
   selectedCenter,
   focusCenter,
+  fallbackCameraCenter,
   onSelect,
   mobileFirst = false,
 }: {
   selectedCenter: PublicCityCenter | null;
   focusCenter?: { latitude: number; longitude: number } | null;
+  fallbackCameraCenter?: { latitude: number; longitude: number } | null;
   onSelect: (center: PublicCityCenter) => void;
   mobileFirst?: boolean;
 }) {
@@ -38,7 +40,9 @@ export function PublicCityAreaPicker({
         ? [selectedCenter.longitude, selectedCenter.latitude]
         : focusCenter
           ? [focusCenter.longitude, focusCenter.latitude]
-          : [0, 0];
+          : fallbackCameraCenter
+            ? [fallbackCameraCenter.longitude, fallbackCameraCenter.latitude]
+            : [0, 0];
       const mapInstance = new maplibregl.Map({
         container: hostRef.current,
         style: {
@@ -57,7 +61,7 @@ export function PublicCityAreaPicker({
           ],
         },
         center,
-        zoom: selectedCenter || focusCenter ? 11 : 1.5,
+        zoom: selectedCenter || focusCenter ? 11 : fallbackCameraCenter ? 3.5 : 1.5,
         attributionControl: false,
         interactive: true,
         dragRotate: false,

@@ -127,3 +127,69 @@ test("地名搜索超时显示没有 HTTP 回答，并保留准确请求路径",
   );
   await expect(page.getByTestId("rev-quick-error-details")).toContainText("HTTP 状态：未收到 HTTP 状态");
 });
+
+test("地名服务不可用时可打开 OpenStreetMap 手选区域，再进入兴趣选择", async ({ page }) => {
+  let cityCalls = 0;
+  let tileCalls = 0;
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-error-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-ERROR-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ runtime_identity: "UNCONFIGURED", hermes_compat_configured: false }),
+  }));
+  await page.route(root + "/bootstrap-discovery/readiness", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ status: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER" }),
+  }));
+  await page.route(root + "/bootstrap-shortlist", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null }),
+  }));
+  await page.route(root + "/bootstrap-city-search", async (route) => {
+    cityCalls += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        journey_id: journey,
+        status: "GEOCODER_UNAVAILABLE",
+        query: "连城",
+        provider_attempts: [{ provider: "nominatim", answered: false, error: "ConnectTimeout" }],
+        results: [],
+        provider_provenance: "UNVERIFIED",
+      }),
+    });
+  });
+  await page.route("https://tile.openstreetmap.org/**", (route) => {
+    tileCalls += 1;
+    return route.fulfill({ status: 200, contentType: "image/png", body: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jB8sAAAAASUVORK5CYII=",
+      "base64",
+    ) });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-quick-find-city").click();
+  await expect(page.getByRole("status")).toContainText("地名查找暂时连不上");
+  await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("打开 OpenStreetMap 地图手选 →");
+  await expect(page.getByText("点击后会加载 OpenStreetMap 地图底图；不会使用设备定位。")).toBeVisible();
+  expect(cityCalls).toBe(1);
+  expect(tileCalls).toBe(0);
+
+  await page.getByTestId("rev-quick-error-recovery").click();
+  const map = page.getByTestId("rev-quick-map-fallback");
+  await expect(map).toBeVisible();
+  await expect(map).toContainText("不会读取设备定位，也不代表地名搜索结果");
+  await expect(map.getByTestId("bootstrap-public-map-canvas")).toBeVisible();
+  await expect.poll(() => tileCalls).toBeGreaterThan(0);
+  await map.locator("canvas").click({ position: { x: 120, y: 100 } });
+  await expect(page.getByTestId("rev-quick-category")).toBeVisible();
+  expect(cityCalls).toBe(1);
+});

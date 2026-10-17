@@ -46,7 +46,7 @@ const goCopy: Record<BootstrapPocketWalkGoState, string> = {
 };
 
 type AlertKind = "neutral" | "error" | "good";
-type QuickRecovery = { label: string; action: () => void };
+type QuickRecovery = { label: string; action: () => void; disclosure?: string };
 type QuickAlert = { type: AlertKind; text: string; recovery?: QuickRecovery };
 type ExplorePhase =
   | "请教 AI"
@@ -231,6 +231,7 @@ export function RevolutionQuickExplore({
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
+  const [mapFallbackOpen, setMapFallbackOpen] = useState(false);
   const [centerBasis, setCenterBasis] = useState<"EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" | null>(null);
   const [explorationCenterLabel, setExplorationCenterLabel] = useState<string | null>(null);
   const [tilesEnabled, setTilesEnabled] = useState(false);
@@ -448,6 +449,23 @@ export function RevolutionQuickExplore({
     }));
   };
 
+  const openMapFallback = () => {
+    setMapFallbackOpen(true);
+    setTilesEnabled(true);
+    setSelectedPin(null);
+    setErrorDetails(null);
+    setAlert({
+      type: "neutral",
+      text: "地图底图来自 OpenStreetMap。轻触地图确定公开搜索区域；不会读取设备定位。",
+    });
+  };
+
+  const mapFallbackRecovery: QuickRecovery = {
+    label: "打开 OpenStreetMap 地图手选 →",
+    disclosure: "点击后会加载 OpenStreetMap 地图底图；不会使用设备定位。",
+    action: openMapFallback,
+  };
+
   const cityLookup = () => {
     const cityQuery = query.trim();
     if (cityQuery.length < 2 || cityQuery.length > 120) {
@@ -464,28 +482,35 @@ export function RevolutionQuickExplore({
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
         const message = response.status === "GEOCODER_RATE_LIMITED"
-          ? "地图服务正在限流，稍后重试或粘贴公开地图链接。"
+          ? "地名查找正在限流。你可以在地图上手选区域，或稍后再查。"
           : response.status === "GEOCODER_UNAVAILABLE"
-            ? "地名服务暂时连不上。换个地区，或粘贴公开地图链接。"
+            ? "地名查找暂时连不上。你可以在地图上手选区域。"
             : response.status === "GEOCODER_DISABLED"
-              ? "当前环境未开启公开地名搜索。可粘贴公开地图链接。"
-              : "没有匹配地区。换个名称或粘贴公开地图链接。";
+              ? "当前环境未开启地名查找。你可以在地图上手选区域。"
+              : "没找到这个地区。试试更完整的名称，或在地图上手选区域。";
         setAlert({
           type: "neutral",
           text: message,
+          recovery: mapFallbackRecovery,
         });
         return;
       }
       setCityResults(response.results);
       setCityFocus(null);
       setSelectedPin(null);
+      setMapFallbackOpen(false);
       setTilesEnabled(false);
       setAlert({ type: "good", text: "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。" });
-    }, (error) => recoveryForError(
+    }, (error) => {
+      if (error instanceof CityNexusApiError && error.status === 429) {
+        return mapFallbackRecovery;
+      }
+      return recoveryForError(
         error,
-        { label: "再次查找地名", action: () => cityLookup() },
+        mapFallbackRecovery,
         { label: "检查并编辑地名", action: () => document.getElementById("rev-quick-search")?.focus() },
-      ));
+      );
+    });
   };
 
   const useCenter = (point: { latitude: number; longitude: number }, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK") => {
@@ -504,6 +529,7 @@ export function RevolutionQuickExplore({
     setSecond(null);
     setCityResults([]);
     setAlert({ type: "good", text: "公开搜索区域已确认。接下来选一个你感兴趣的类别。" });
+    setMapFallbackOpen(false);
     enter("category");
   };
 
@@ -790,7 +816,9 @@ export function RevolutionQuickExplore({
           {alert.text}
           {alert.recovery && (
             <>
-              <br />
+              {alert.recovery.disclosure && (
+                <small className="rev-quick-recovery-disclosure">{alert.recovery.disclosure}</small>
+              )}
               <button type="button" className="rev-quick-secondary" onClick={alert.recovery.action} data-testid="rev-quick-error-recovery">
                 {alert.recovery.label}
               </button>
@@ -815,6 +843,7 @@ export function RevolutionQuickExplore({
           cityResults={cityResults}
           cityFocus={cityFocus}
           cityFocusLabel={cityFocusLabel}
+          mapFallbackOpen={mapFallbackOpen}
           selectedPin={selectedPin}
           busy={busy}
           sampleProviderMode={sampleProviderMode}
@@ -830,6 +859,8 @@ export function RevolutionQuickExplore({
             setCityFocus(null);
             setCityFocusLabel(null);
             setSelectedPin(null);
+            setMapFallbackOpen(false);
+            setTilesEnabled(false);
           }}
           onCityLookup={cityLookup}
           onCityResultSelect={(item) => {

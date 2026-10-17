@@ -7,6 +7,7 @@ type CityPickerProps = {
   cityResults: BootstrapCitySearchResult[];
   cityFocus: { latitude: number; longitude: number } | null;
   cityFocusLabel: string | null;
+  mapFallbackOpen: boolean;
   selectedPin: PublicCityCenter | null;
   busy: boolean;
   sampleProviderMode: boolean;
@@ -36,6 +37,7 @@ export function CityPicker({
   cityResults,
   cityFocus,
   cityFocusLabel,
+  mapFallbackOpen,
   selectedPin,
   busy,
   sampleProviderMode,
@@ -139,6 +141,20 @@ export function CityPicker({
               </>
             )}
           </details>
+        </div>
+      )}
+      {mapFallbackOpen && !cityFocus && (
+        <div className="rev-quick-map-step" data-testid="rev-quick-map-fallback">
+          <h3>在地图上选区域</h3>
+          <p className="rev-quick-disclosure">
+            地图底图来自 OpenStreetMap。拖动到你所在区域，再轻触地图确定搜索中心；这不会读取设备定位，也不代表地名搜索结果。
+          </p>
+          <PublicCityAreaPicker
+            selectedCenter={selectedPin}
+            fallbackCameraCenter={{ latitude: 35, longitude: 105 }}
+            mobileFirst
+            onSelect={onMapSelect}
+          />
         </div>
       )}
       <details className="rev-quick-internals">
