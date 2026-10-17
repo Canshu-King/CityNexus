@@ -427,21 +427,40 @@
 @media (max-width: 680px) {
   .rev-mobile-v1 .rev-firstlook-header {
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
     min-height: 61px;
     padding: 10px 16px;
   }
-  .rev-mobile-v1 .rev-firstlook-brand { width: 100%; }
-  .rev-mobile-v1 .rev-firstlook-agent { width: 100%; }
-  .rev-mobile-v1 .rev-firstlook-agent > summary { display: inline-flex; max-width: 100%; white-space: normal; }
+  .rev-mobile-v1 .rev-firstlook-brand { flex: 1; width: auto; }
+  .rev-mobile-v1 .rev-firstlook-agent { flex: none; width: auto; }
+  .rev-mobile-v1 .rev-firstlook-agent > summary {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    max-width: 100%;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
   .rev-mobile-v1 .rev-firstlook-agent > p,
-  .rev-mobile-v1 .rev-firstlook-agent > small { max-width: 100%; overflow-wrap: anywhere; }
+  .rev-mobile-v1 .rev-firstlook-agent > small {
+    position: absolute;
+    top: 100%;
+    left: 14px;
+    right: 14px;
+    max-width: none;
+    padding: 12px;
+    border: 1px solid var(--m-border);
+    border-radius: 12px;
+    background: var(--m-card);
+    overflow-wrap: anywhere;
+  }
   .rev-mobile-v1 .rev-firstlook-quiet { display: none; }
   .rev-mobile-v1 .rev-firstlook-content {
-    padding: 21px 14px 70px !important;
+    padding: 14px 14px 70px !important;
   }
   .rev-mobile-v1 .rev-firstlook-hero { padding-top: 28px; }
   .rev-mobile-v1 .rev-firstlook-hero h1 { font-size: 36px !important; }
@@ -454,9 +473,18 @@
   }
   .rev-mobile-v1 .rev-firstlook-form-row button { width: 100% !important; }
   .rev-mobile-v1 .rev-firstlook-journey {
-    gap: 12px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center !important;
+    gap: 8px !important;
+    padding-bottom: 12px;
   }
+  .rev-mobile-v1 .rev-firstlook-journey p { display: none; }
   .rev-mobile-v1 .rev-firstlook-journey > .rev-firstlook-reset { min-height: 44px; }
+  .rev-mobile-v1 :is(button, input, textarea, summary, a) {
+    scroll-margin-block-start: 84px;
+    scroll-margin-block-end: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
   .rev-mobile-v1 .rev-mobile-panel { padding: 20px; }
   .rev-mobile-v1 .rev-quick-map-step .rev-quick-optional-map > summary {
     display: flex;

@@ -38,8 +38,8 @@
 .rev-firstlook .rev-optional-import{border-top:1px solid #d3e4d8;padding-top:14px;margin-top:18px}
 @media(max-width:720px){
 .rev-firstlook .rev-firstlook-content{padding-inline:14px!important}
-.rev-firstlook .rev-firstlook-journey{grid-template-columns:minmax(0,1fr)!important}
-.rev-firstlook .rev-firstlook-journey>.rev-firstlook-reset{justify-self:start}
+.rev-firstlook:not(.rev-mobile-v1) .rev-firstlook-journey{grid-template-columns:minmax(0,1fr)!important}
+.rev-firstlook:not(.rev-mobile-v1) .rev-firstlook-journey>.rev-firstlook-reset{justify-self:start}
 .rev-firstlook .rev-guide-steps{grid-template-columns:1fr}
 .rev-firstlook .rev-guide-steps>button{min-height:106px!important}
 .rev-firstlook .rev-firstlook-real-ui{padding:12px!important}
