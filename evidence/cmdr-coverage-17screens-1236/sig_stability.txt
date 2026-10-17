@@ -1,0 +1,15 @@
+可聚焦 63 枚｜两次未聚焦读数不一致的 0 枚
+签名样本："none|3px|rgb(29, 29, 31)|none|rgb(29, 29, 31)|0px|rgb(241, 243, 255)|0px"
+（下面这组只是字段名对照，用假 class 触发不会命中 :focus，应当全是空差项）
+   0:今天 => 
+   1:实时行程 => 
+   2:地图 => 
+   3:行程工作台 => 
+   4:住宿选择 => 
+   5:城市探索 => 
+   6:导入地点 => 
+   7:旅行票夹 => 
+   8:足迹 => 
+   9:Copilot => 
+键盘走 19 站，聚焦后与未聚焦基线的差项分布：{"outlineStyle,outlineWidth,outlineColor":1,"outlineStyle,outlineColor,outlineOffset":18}
+杀指示后键盘走 20 站，差项分布：{"outlineOffset":18,"boxShadow,outlineOffset":2}
