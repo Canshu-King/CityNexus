@@ -1,0 +1,70 @@
+{
+ "arm": "ctrl",
+ "at": "2026-10-17T00:13:07.367Z",
+ "widths": [
+  {
+   "viewport_w": 320,
+   "nav_box": {
+    "x": 191,
+    "y": 725,
+    "width": 62,
+    "height": 48
+   },
+   "dom": {
+    "count": 1,
+    "visible": 1,
+    "boxes": [
+     [
+      286,
+      201
+     ]
+    ],
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(245, 245, 247)",
+    "heading": "你想改什么？",
+    "hamburger": false
+   }
+  },
+  {
+   "viewport_w": 390,
+   "nav_box": {
+    "x": 233,
+    "y": 725,
+    "width": 76,
+    "height": 48
+   },
+   "dom": {
+    "count": 1,
+    "visible": 1,
+    "boxes": [
+     [
+      356,
+      187
+     ]
+    ],
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(245, 245, 247)",
+    "heading": "你想改什么？",
+    "hamburger": false
+   }
+  },
+  {
+   "viewport_w": 1280,
+   "nav_box": null,
+   "dom": {
+    "count": 1,
+    "visible": 1,
+    "boxes": [
+     [
+      936,
+      119
+     ]
+    ],
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(245, 245, 247)",
+    "heading": "你想改什么？",
+    "hamburger": false
+   }
+  }
+ ]
+}
