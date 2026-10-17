@@ -455,6 +455,21 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     /* AI 可用性那一格必须写服务器自报的那个词（在 data 上），而不是页面猜的。 */
     await expect(page.locator('[data-testid="agent-work-facts"] dd').first())
       .toHaveAttribute("data-ai-state", String(runtime.ai_state ?? "NOT_READ"));
+    /* 面板与那颗悬浮的 Copilot 药丸不许叠在一起。这里量的是两个盒子，不是靠一条 CSS 把药丸
+     * 藏掉再宣称没问题——药丸自己会 `yield-to-surface`，那就让它真的让开，让不开就红。 */
+    const panelBox = await panel.boundingBox();
+    const dockBox = await page.getByTestId("v18-copilot-dock").boundingBox().catch(() => null);
+    if (panelBox && dockBox) {
+      const overlaps =
+        dockBox.x < panelBox.x + panelBox.width &&
+        panelBox.x < dockBox.x + dockBox.width &&
+        dockBox.y < panelBox.y + dockBox.height &&
+        panelBox.y < dockBox.y + dockBox.height;
+      expect(
+        overlaps,
+        `面板与 Copilot 药丸重叠 panel=${JSON.stringify(panelBox)} dock=${JSON.stringify(dockBox)}`,
+      ).toBe(false);
+    }
     await page.waitForTimeout(400);
     await page.screenshot({ path: `${DOC_EVIDENCE}/03-ai-work-today.png` });
     console.log(

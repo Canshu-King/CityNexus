@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T18:32:32.825Z",
+  "generatedAt": "2026-10-17T18:51:19.128Z",
   "shots": [
     {
       "id": "01",
@@ -213,10 +213,10 @@
           "testId": "agent-work-retry",
           "action": "再查一次",
           "box": {
-            "x": 316.046875,
+            "x": 298,
             "y": 432.125,
-            "width": 45.953125,
-            "height": 52
+            "width": 64,
+            "height": 44
           },
           "paint": {
             "opacity": "1",

@@ -92,10 +92,27 @@
   }
 }
 
-/* 截图上真实暴露的缺陷（Issue #31 教程否决第 4 张）：那颗悬浮的 CityNexus Copilot 药丸
- * 是 `position: fixed`，在 390 那一档正好压在面板右下角。这一格展开时它本来就是多余的
- * ——它开的是同一个 Copilot——所以让它让位，而不是在图上把问题圈过去。
- * 规则只活在本文件里：`styles.css` 与那条药丸的归属在别的车道手上。 */
-body:has(.cn-agent-work) .cn-copilot-dock {
-  display: none;
+/* 面板头部那一排：右边那颗「再查一次」在 390 那一档被左边的标题挤成两行
+ * （教程第 ⑦ 张实拍就是这个样子）。标题可以换行，按钮不能——它是这一屏要点的动作。 */
+.cn-agent-work-head > div {
+  min-width: 0;
 }
+
+.cn-agent-work-head > button {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* 行程系统动态那一行：`<b>` 与 `<span>` 之间 JSX 不会留空格，屏上就粘成
+ * 「行程已创建10/18 02:26」。用 flex 的 gap 分开，不往 JSX 里塞占位空格。 */
+.cn-agent-work-trip li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--cn-s-8, 8px);
+}
+
+/* 那颗悬浮的 CityNexus Copilot 药丸与这一格的让位，是产品自己的
+ * `cn-copilot-dock.yield-to-surface` 在管（教程第 ⑤ 张实拍里它已经缩成边上的小块）。
+ * 这里不再叠一条 `display: none`：那条规则实测咬不到东西，留着只会让人以为重叠是它挡住的。
+ * 两格不许重叠由 e2e 的 C 臂按包围盒判，不靠注释。 */
