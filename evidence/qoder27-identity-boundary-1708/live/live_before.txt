@@ -1,0 +1,9 @@
+health http_status=200 ai=disabled
+copilot visible=true
+keys_after_real_send=["citynexus.copilot.history.22222222-2222-4222-8222-222222222222"]
+reply_rendered=yes
+keys_after_reload=["citynexus.copilot.history.22222222-2222-4222-8222-222222222222"]
+transcript_survives_reload=yes (缺陷)
+dock_text_after_reload="随时问关于这趟行程的任何事 你想改什么？ 可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。 画像上下文就绪 CN / AI 需要改变什么？ 使用自然语言。你的明确预算和受保护时刻在每一步都可见。 我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。 消息 行程 · One Day in Nexus City 询问 Copilot 为什么这样安排？ 如果我多待 60 分钟会怎样？ 找附近的室内地点 你 帮我核对今天的安排 CITYNEXUS COP"
+claims_still_working=false
+done at 2026-10-17T09:32:27.941Z
