@@ -1,0 +1,150 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-17T13:15:08+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf",
+ "candidate_ref": "refs/heads/review/cmdr-gradpanel-1315",
+ "candidate_tip": "c84ea9fea099a076a27fa8306cb23aef1de23e7b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/design-tokens.css"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/design-tokens.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "9b54d2d99ed774ae948a355a6a925e46bd803323",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_131417",
+  "blob_equality": [
+   {
+    "path": "frontend/src/design-tokens.css",
+    "candidate_blob": "3a0818951c2e4c104cb9f4d622d3b718bbc5805e",
+    "export_blob": "3a0818951c2e4c104cb9f4d622d3b718bbc5805e",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1958,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1958 tests collected in 7.18s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "dict_keys": {
+   "exit": 0,
+   "verdict": "NO_FRONTEND_FILES",
+   "tip_missing": "1",
+   "called_in_view": "0",
+   "new_missing": []
+  },
+  "screen_code": {
+   "exit": 0,
+   "judged": 0,
+   "refuse": 0,
+   "tokens": []
+  },
+  "surface_contract": {
+   "arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d",
+   "exit": 4,
+   "verdict": "REFUSE",
+   "css_files_in_view": "1",
+   "added_css_lines": "10",
+   "new_hatch_rows": "2",
+   "ruler_status": "MATCH",
+   "violations": [
+    "frontend/src/design-tokens.css:833 kind=浅底字面量(rgba) prop=background value=linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250, rel_lum=1.0",
+    "frontend/src/design-tokens.css:833 kind=浅底字面量(rgba) prop=background value=linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250, rel_lum=0.923"
+   ],
+   "disclosed_slip": "a literal moved between rules in the same file, or a fallback whose only change is its token name, pairs away as not-new; .tsx inline styles, inheritance and cascade are outside this arm"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CMutdKuU.js",
+    "/assets/index-Q7cKvHzG.css"
+   ],
+   "live_tree": "9b54d2d99ed774ae948a355a6a925e46bd803323",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_c84ea9f_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ],
+   "error_lines": []
+  }
+ },
+ "problems": [
+  "SURFACE_CONTRACT: this candidate ADDS 2 escape hatch(h) to frontend/src stylesheets -- frontend/src/design-tokens.css:833 kind=浅底字面量(rgba) prop=background value=linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250, rel_lum=1.0 | frontend/src/design-tokens.css:833 kind=浅底字面量(rgba) prop=background value=linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250, rel_lum=0.923.  A light surface (relative luminance >0.72) or a dark ink literal painted beside a theme token reverses sign when <html data-theme> flips; take the surface from --cn-elev-* and the ink from the paired --cn-on-elev-*, and never keep a literal as a var() fallback (FRONTEND_PULSE_BRIEF_r1.md §2.1)"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: SURFACE_CONTRACT: this candidate ADDS 2 escape hatch(h) to frontend/src stylesheets -- frontend/src/design-tokens.css:833 kind=浅底字面量(rgba) prop=background value=linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250, rel_lum=1.0 | frontend/src/design-tokens.css:833 kind=浅底字面量(rgba) prop=background value=linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250, rel_lum=0.923.  A light surface (relative luminance >0.72) or a dark ink literal painted beside a theme token reverses sign when <html data-theme> flips; take the surface from --cn-elev-* and the ink from the paired --cn-on-elev-*, and never keep a literal as a var() fallback (FRONTEND_PULSE_BRIEF_r1.md §2.1)",
+ "derived_result": null
+}
