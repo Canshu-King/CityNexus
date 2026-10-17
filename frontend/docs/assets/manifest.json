@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T18:51:19.128Z",
+  "generatedAt": "2026-10-17T18:59:29.516Z",
   "shots": [
     {
       "id": "01",
@@ -157,7 +157,7 @@
       "file": "05-ai-panel.png",
       "headline": "⑤ 这里只写服务器确证过的事",
       "viewportWidth": 390,
-      "note": "测试环境 AI 未启用；当前没有真实 AgentRun",
+      "note": "测试环境 AI 未启用；当前没有真实运行",
       "targets": [
         {
           "testId": "agent-work-no-run",
@@ -172,7 +172,7 @@
             "opacity": "1",
             "visibility": "visible",
             "color": "rgb(93, 91, 87)",
-            "paintedText": "暂无真实 AgentRun这一格不推断：服务器没有确证过一次运行之前，这里就照实",
+            "paintedText": "暂无真实运行这一格不推断：服务器没有确证过一次运行之前，这里就照实说没有，不摆步",
             "fadedBy": []
           }
         }

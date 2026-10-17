@@ -443,8 +443,8 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     expect(rows, "轨迹条行数与服务器给的 Agent/工具事件数对不上（面板最多显 12 行）")
       .toBe(Math.min(12, agentEvents.length));
     if (agentEvents.length === 0) {
-      await expect(page.getByTestId("agent-work-no-run"), "没有真实运行时没有老实说'暂无真实 AgentRun'")
-        .toContainText("暂无真实 AgentRun");
+      await expect(page.getByTestId("agent-work-no-run"), "没有真实运行时没有老实说'暂无真实运行'")
+        .toContainText("暂无真实运行");
     }
     /* 落地门那条 `CODES_ON_SCREEN` 的同一类：人读的正文里不许铺内部机器码。
      * 码本身留在 `data-*` 与可展开的「技术详情」里，读的人不必看。 */

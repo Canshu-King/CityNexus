@@ -211,7 +211,7 @@ test.describe("Issue #31 C 返工：第一次出行的八屏实拍", () => {
       "ai-panel",
       "⑤ 这里只写服务器确证过的事",
       [{ testId: "agent-work-no-run", action: "暂无真实运行" }],
-      "测试环境 AI 未启用；当前没有真实 AgentRun",
+      "测试环境 AI 未启用；当前没有真实运行",
     );
 
     // ⑥ 底栏「行程」→ 该页入口
