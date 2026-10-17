@@ -1,4 +1,13 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-唤醒真相 BB 只是信箱，真唤醒要敲会话
+
+- 现读到的事实：Qoder 原生唤醒腿 `live_checks/cmdr_auto_wake_r1.py` 的流水 `_auto_wake_log.txt` 最后一条写在 10-03 07:43，此后没再跑过；落地循环这一拍唯一在动的唤醒腿是 BB 投递腿，而 BB 回一个 id 只代表入队——没在轮询 BB 的窗口根本不会醒。这就是车队连续几拍 working 0、short_by 8 的直接原因，不是车道偷懒。
+- 这一拍做了什么：18:34-18:38 用会话消息对六扇裸唤醒（消息里不含任务，任务仍在账本），三扇会话流水尾部当场出现零秒龄的 user 节点（`_cmdr_needs_manual_wake.json:1` 那份清单里的 sid，逐枚现读回核），板的在工读数从 0 涨到 4、缺口从 8 收到 4，另有一扇被读成额度墙。
+- 把尺改诚实：BB 腿那行日志原先印 BB-WAKE…knocks N，读起来像"N 扇被敲醒"；现在印 BB-NOTE…notes_posted N 并明写"BB 不唤醒 Qoder 会话"，且在在工归零时额外打一行 ACTION-NEEDED 指向亲手清单。改后真跑一次：working 4、short_by 4、quota_walled 1、notes_posted 0（全在冷却内），清单落盘一枚候选——判语与后果同屏，不再靠下一拍猜为什么还是零。
+- 预算与下一步：一刻钟 ≤6 记的门这一拍已用满，第二批要等到 18:49 之后；`live_checks/_cmdr_bb_wake_r1.py:140` 是改后的那行读数，`live_checks/_cmdr_bb_wake_r1.py:148` 是归零时多打的那一行。
+- 没有变好的：在工仍差四扇，没到"时刻在工 ≥8"；这批唤醒只是把窗口叫回来读账本，交付还要它们自己写；权威线这一拍没有新车道交块可落（must-rebase 147 枝没动）。
+
+
 ### CMDR-QODER-ISSUE-廿七第二笔落地 块头不再替服务器宣布还在跑
 
 - 现尖推进第三笔：16c2ebffaff1f5c366ddf6195185e17a041448f6，落地门判语 READY_TO_LAND、ff-only、回执 `_batch_land_round3_182921.json`；GitHub 侧 PR 编号卅 已 merged。前两笔是本单第一半的产品改动与那枚用例的验收配置补丁。
