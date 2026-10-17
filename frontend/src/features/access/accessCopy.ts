@@ -54,7 +54,7 @@ export const accessCopy = {
        both halves are known and disagree. */
     "access.orderChecked": "Checked row by row: these rows are in this order ({reason}).",
     "access.orderBroken":
-      "These rows are NOT in the order this screen asked for -- the order breaks at row {row}. The list below is what the server sent, not what the button says.",
+          "The order breaks at row {row}. Below is the order the server sent.",
     "access.orderUnverifiable":
       "This screen cannot check this order from the rows it was given ({reason}), so it does not claim the list is in it. The rows below are in the order they arrived.",
     /* Why the check compared what it compared, or why it compared nothing.  These are the whole
@@ -121,7 +121,7 @@ export const accessCopy = {
       "Your role does not hold member management on this server, so this screen lists no role-change control.",
     "access.memberScopeLine": "What this role can do: ",
     "access.roleDetailsBody":
-      "A role is what this server lets that person do on this trip, not what a screen shows them. Removing the last owner is refused by the server rather than left for a traveller to discover.",
+          "A role is what this server lets that person do on this trip. The last owner cannot be removed.",
     "access.visibilityHeading": "Each visibility level, with its consequence said in the same breath",
     "access.visPrivate": "Only me",
     "access.visPrivateConsequence": "No one else can open it, not even holding the link.",
@@ -253,7 +253,8 @@ export const accessCopy = {
     /* ORD-0518: 两句而不是一句。这一屏要了什么、服务器答了什么，是两件事；把它们并成一句，
        就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
     "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
-    "access.orderBroken": "这些行不是这一屏要的那个顺序——从第 {row} 行起对不上。下面列的是服务器发来的样子，不是按钮说的那个序。",
+    "access.orderBroken":
+          "顺序对不上：从第 {row} 行起不是你要的那个序。下面按服务器发来的样子列。",
     "access.orderUnverifiable": "这一档这一屏核不了（{reason}），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。",
     "access.orderReasonStartAt": "核的是每一程的出发时间",
     "access.orderReasonNoRows": "一行行程都没有回来",
@@ -299,7 +300,7 @@ export const accessCopy = {
     "access.noAuthorityLine": "你的档位在这台服务器上没有成员管理权，所以这里不列改角色的按钮。",
     "access.memberScopeLine": "这一档能做什么：",
     "access.roleDetailsBody":
-    "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除。",
+          "角色说的是服务器允许这个人在这条行程上做什么。最后一个所有者不能被移除。",
     "access.visibilityHeading": "可见性每一档，后果就在同一句里",
     "access.visPrivate": "仅个人",
     "access.visPrivateConsequence": "别人打不开，拿到链接也打不开。",

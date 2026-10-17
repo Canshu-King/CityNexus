@@ -41,12 +41,10 @@ export const journeyAbortCopy = {
     "abort.readbackMissing":
       "this server did not read back the abort moment or the reason for this trip",
     "abort.liveExcluded":
-      "This trip was aborted, so “Live trips” does not show it. That decision came from the server's " +
-      "own field, not from this device filtering the status.",
+          "This trip was aborted, so “Live trips” does not show it.",
 
     "abort.inBin":
-      "This trip is in the recycle bin, so it cannot be aborted. Aborting is not discarding: bring it " +
-      "back into your trip list first, then abort it.",
+          "This trip is in the recycle bin, so it cannot be aborted. Bring it back first, then abort it.",
     "abort.notYours":
       "The traveller this request named does not own that trip, so nothing was written.",
     "abort.gone":
@@ -55,8 +53,7 @@ export const journeyAbortCopy = {
       "This trip changed while the request was running, so nothing was written. Nothing on screen is " +
       "claiming otherwise.",
     "abort.emptyReason":
-      "There has to be a reason. An empty box is refused instead of storing a trip that ended for no " +
-      "stated reason.",
+          "There has to be a reason; an empty box is refused.",
     "abort.refused":
       "The server refused this attempt. Your trip is unchanged -- it is still live and still in your " +
       "trip list.",
@@ -82,15 +79,16 @@ export const journeyAbortCopy = {
     "abort.storedAt": "中止于 {when}",
     "abort.readbackMissing": "这台服务器没有回读这趟行程的中止时间或原因",
     "abort.liveExcluded":
-      "这趟行程已被中止，所以「实时行程」不展示它。这个判定来自服务器给出的字段，不是这台设备自己按状态筛的。",
+          "这趟已中止，所以不进「实时行程」。",
 
     "abort.inBin":
-      "这趟在回收站里，所以不能中止。中止不等于丢弃：先把它找回你的行程列表，再中止。",
+          "这趟在回收站里，不能中止。中止不等于丢弃：先找回你的行程列表，再中止。",
     "abort.notYours": "这次请求点名的身份不是这趟行程的主人，所以服务器没有写入。",
     "abort.gone": "这趟已经不在这台服务器上了，这里没有可中止的东西。服务器没有写入。",
     "abort.contested":
       "请求在跑的时候这趟行程被改动过，所以这次没有写入。屏上也不会装作它成功了。",
-    "abort.emptyReason": "必须写原因。空着会被拒绝，而不是存下一趟「不知道为什么就结束」的行程。",
+    "abort.emptyReason":
+          "必须写原因，空着会被拒绝。",
     "abort.refused":
       "服务器拒绝了这次中止。你的行程没有变化：它仍在实时行程里，也仍在你的行程列表里。",
     "abort.unnamed":

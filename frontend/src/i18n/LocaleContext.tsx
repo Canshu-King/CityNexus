@@ -22,7 +22,8 @@ const en: Dict = {
   "planai.tripRequest": "Trip request",
   "planai.importPlacesCta": "Paste your own places and import them into this trip",
   "plan.aiNotConfiguredNote": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.",
-  "plan.aiDisabledByOpsNote": "The AI switch on this server is switched off. That is an operator setting, not something you did. It names the switch, not the cause of any one failure.",
+  "plan.aiDisabledByOpsNote":
+        "The AI switch on this server is off — an operator setting, nothing you did.",
   "plan.aiStateUnknownNote": "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.",
   "plan.aiConfiguredUnverifiedNote": "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.",
   "plan.aiProviderRefusedNote": "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.",
@@ -33,8 +34,10 @@ const en: Dict = {
   "plan.keylessWriteDeadlineBody": "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
   "plan.unreachableBody": "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
   "plan.refusedRequestBody": "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
-  "plan.serverErroredBody": "The server errored out — not your request. Your trip is unchanged; retry later and keep the technical detail if it repeats.",
-  "plan.plansWithoutAiBody": "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
+  "plan.serverErroredBody":
+        "The server errored; your trip is unchanged. Retry later, and keep the technical detail if it repeats.",
+  "plan.plansWithoutAiBody":
+        "These came from places already found for this city, not from your words. Retry to plan from what you typed — reason under “Technical detail”.",
   "plan.baselineUnavailableBody": "We could not confirm whether this run produced new plans. Please retry or refresh.",
   "plan.noPlansProducedBody": "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
   "plan.assistantUnreachableBody": "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
@@ -230,7 +233,8 @@ const en: Dict = {
   /* ORD-0602 甲半: where the route timing behind this switch came from.  Stating it is approved;
      blocking on it is not, so the sentence says the system did not stop the operation. */
   "shell.autopilotTruthLive": " The route timing here was measured by a provider, so it can carry a leave-now check.",
-  "shell.autopilotTruthSynthetic": " The route timing here is synthetic or estimated, not a provider measurement; this run states the source and did not block the operation over it.",
+  "shell.autopilotTruthSynthetic":
+        " The route timing here is synthetic or estimated, not a provider measurement.",
   "shell.autonomyEnabled": "Autonomous recovery is enabled for reversible transport changes inside this envelope.",
   "shell.missionCaptured": "Request saved · the assistant is unavailable right now, so your trip is unchanged.",
   "shell.missionActivated": "Mission activated · CityNexus will monitor the journey inside the current authority envelope.",
@@ -856,7 +860,8 @@ const en: Dict = {
   "inbox.copyJourneyLink": "Copy journey link",
   "inbox.journeyLinkCopied": "Journey link copied to this device's clipboard.",
   "inbox.journeyLinkNoJourney": "No journey is open here, so there is no journey link to copy.",
-  "inbox.journeyLinkInsecureContext": "This address is not a secure context, so the browser will not let the link be copied. The journey is intact — it copies over HTTPS or on this machine.",
+  "inbox.journeyLinkInsecureContext":
+        "This address is not a secure context, so the browser will not copy the link. It copies over HTTPS or on this machine.",
   "inbox.journeyLinkClipboardUnavailable": "This device refused the clipboard write, so the link was not copied. The journey is intact and the link still works.",
   /* ORD-0447: ORD-0385 shrank this sentence to "anyone with the link can open it". With ORD-0434's grant
      doors answering, the copy fact and the authorization fact are separable: the key above now states
@@ -1348,7 +1353,8 @@ const en: Dict = {
   "shared.loading": "Reading the link you were given…",
   "shared.noTokenTitle": "This address carries no share token",
   "shared.noTokenInAddress": "Nothing was sent to the server, because there was nothing in the address to send. Ask whoever shared this trip to send the whole link again.",
-  "shared.noTokenWhy": "This is what this device saw in the address. It is not the server's verdict -- no read was made, so there is no answer to quote.",
+  "shared.noTokenWhy":
+        "No read was made, so there is no server verdict to quote.",
   "shared.refresh": "Read it again",
   "shared.refusedTokenUnknown": "This server has never heard of that link, so there is no trip behind it to open.",
   "shared.refusedRevoked": "Whoever shared this trip took the link back. It opened before, and it will not open now.",
@@ -1380,7 +1386,8 @@ const en: Dict = {
   /* ORD-0542: the finding was that this page printed "trip length unknown" on one line and "2 days" on
      the next. Both facts are true -- the share door sends no length projection -- so one sentence now
      carries the number and the next one says what kind of number it is. */
-  "sharedPoster.countedWhy": "That is a count of the days this link sent, not the trip's own length projection: the share door answers no projection.",
+  "sharedPoster.countedWhy":
+        "That counts the days this link sent, not the trip's length projection.",
   "sharedPoster.formNote": "This link opens the trip's long picture: one block per day, and nothing here you can act on. The trip itself and its map open from the same link in its other shape.",
   "sharedPoster.download": "Save this picture",
   "sharedPoster.made": "Saved as a PNG.",
@@ -1583,8 +1590,10 @@ const en: Dict = {
   "hub.stayOutcomeZeroNights": "This trip has no overnight stay, so there is nothing to search for.",
   "hub.stayOutcomeUnknown": "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.",
   "hub.budgetTightCaveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.",
-  "hub.budgetReferenceHint": "This is your own budget averaged out, not a final cost. Real prices come from providers.",
-  "hub.budgetReferenceHintCurrency": "This is your own budget averaged out, in {currency}, not a final cost. Real prices come from providers.",
+  "hub.budgetReferenceHint":
+        "Your budget averaged out; real prices come from providers.",
+  "hub.budgetReferenceHintCurrency":
+        "Your budget averaged out, in {currency}; real prices come from providers.",
   "hub.tripToCity": "Trip to {cityLabel}",
   "copilot.stream.parseError": "A runtime event could not be read",
   "copilot.stream.reconnecting": "Reconnecting to runtime events",
@@ -1619,7 +1628,8 @@ const zhCN: Dict = {
   "planai.tripRequest": "旅行需求",
   "planai.importPlacesCta": "粘贴你自己的地点，导入这趟行程",
   "plan.aiNotConfiguredNote": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。",
-  "plan.aiDisabledByOpsNote": "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。",
+  "plan.aiDisabledByOpsNote":
+        "这台的 AI 开关由运营侧关闭，与你的操作无关。",
   "plan.aiStateUnknownNote": "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。",
   "plan.aiConfiguredUnverifiedNote": "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。",
   "plan.aiProviderRefusedNote": "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。",
@@ -1630,8 +1640,10 @@ const zhCN: Dict = {
   "plan.keylessWriteDeadlineBody": "这台设备停止等待了，而请求已经发出，服务器可能还在做。这条路线不收幂等键，先刷新核对结果，不要重复提交。",
   "plan.unreachableBody": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
   "plan.refusedRequestBody": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
-  "plan.serverErroredBody": "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。",
-  "plan.plansWithoutAiBody": "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。",
+  "plan.serverErroredBody":
+        "服务端出错，行程未被改动。可稍后重试；反复出现请保留“技术详情”。",
+  "plan.plansWithoutAiBody":
+        "这些方案是按城里已找到的地点排的，没读你刚才那段话。要按你的话重排，请重试；原因在“技术详情”里。",
   "plan.baselineUnavailableBody": "无法确认本次是否生成了新方案，请重试或刷新页面。",
   "plan.noPlansProducedBody": "服务器说这次没排出可行方案，也没给原因编号。你的行程没有被改动，原因原文在「技术详情」里；可以再试一次或换一座城市。",
   "plan.assistantUnreachableBody": "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。",
@@ -1806,7 +1818,8 @@ const zhCN: Dict = {
   "shell.autopilotRecovered": "自动驾驶已用 {mode} 恢复暴露路段 · 受保护的承诺已保留。",
   "shell.autopilotPaused": "自动驾驶暂停等待确认 · {reasons}。",
   "shell.autopilotTruthLive": "这次换走法用的路线时长是供应商实测的，够格支撑出发判断。",
-  "shell.autopilotTruthSynthetic": "这次换走法用的路线时长是合成或估算的，不是供应商实测；这里只把来源说清，本次操作没有因此被拦下。",
+  "shell.autopilotTruthSynthetic":
+        "这次换走法用的路线时长是合成或估算的，不是供应商实测。",
   "shell.autonomyEnabled": "自主恢复已启用，仅限权限范围内的可逆交通变更。",
   "shell.missionCaptured": "任务已捕获 · 外部模型不可用，确定性 CityNexus 路径保持活跃。",
   "shell.missionActivated": "任务已激活 · CityNexus 将在当前权限范围内监控行程。",
@@ -2405,7 +2418,8 @@ const zhCN: Dict = {
   "inbox.copyJourneyLink": "复制行程链接",
   "inbox.journeyLinkCopied": "行程链接已复制到本机剪贴板。",
   "inbox.journeyLinkNoJourney": "这里没有打开的行程，所以没有可复制的行程链接。",
-  "inbox.journeyLinkInsecureContext": "当前地址不是安全上下文，浏览器不允许复制这条链接。行程本身没有丢，走 HTTPS 或本机地址就能复制。",
+  "inbox.journeyLinkInsecureContext":
+        "当前地址不是安全上下文，浏览器不让复制这条链接。走 HTTPS 或本机地址就能复制。",
   "inbox.journeyLinkClipboardUnavailable": "这台设备拒绝了剪贴板写入，链接没有复制成功。行程本身没有丢，这条链接依然有效。",
   /* ORD-0447：上面那句原本还附带一个不加条件的可达主张，现由 ORD-0385 之外的一枚事实替代——ORD-0434 的授权门会答。
      所以那句只说本机做了什么，下面每一条只说服务端答了什么：档位、它记的时刻，或它没答。 */
@@ -2864,7 +2878,8 @@ const zhCN: Dict = {
   "shared.loading": "正在按你拿到的这条链接读取…",
   "shared.noTokenTitle": "这个地址里没有分享暗号",
   "shared.noTokenInAddress": "这台服务器没有收到任何请求，因为地址里本来就没有可发送的东西。请让分享这趟行程的人把完整链接再发一次。",
-  "shared.noTokenWhy": "这一句是这台设备在地址里看到的事实，不是服务器给的判定：没有发出读取，也就没有结果可以引用。",
+  "shared.noTokenWhy":
+        "没有发出读取，所以没有结果可引用。",
   "shared.refresh": "再读一次",
   "shared.refusedTokenUnknown": "这台服务器从来没有过这条链接，所以它背后没有可以打开的行程。",
   "shared.refusedRevoked": "分享这趟行程的人已经收回了这条链接。它以前能打开，现在不能。",
@@ -2890,7 +2905,8 @@ const zhCN: Dict = {
   "shared.mapHeading": "这些站在图上的位置",
   "sharedPoster.kicker": "别人分享给你的行程长图",
   "sharedPoster.counted": "{city} · 按这条链接读到的内容数出 {days} 天 · {stops} 站",
-  "sharedPoster.countedWhy": "上面那个天数是数出来的，不是这趟旅行的长度投影：分享那一扇门不答投影，投影只在旅行者自己那扇门上。",
+  "sharedPoster.countedWhy":
+        "上面那个天数是数出来的，不是这趟行程的长度投影。",
   "sharedPoster.formNote": "这一屏是这趟旅行的长图：一天一块，可以存成图片。它不改动任何人的行程。",
   "sharedPoster.download": "存下这张图",
   "sharedPoster.made": "已存为 PNG。",
@@ -3082,8 +3098,10 @@ const zhCN: Dict = {
   "hub.stayOutcomeZeroNights": "这趟行程不过夜，所以没有住宿可搜。",
   "hub.stayOutcomeUnknown": "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。",
   "hub.budgetTightCaveat": "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。",
-  "hub.budgetReferenceHint": "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。",
-  "hub.budgetReferenceHintCurrency": "这是按你的预算平均下来的参考值（以 {currency} 计），不是最终花费；真实价格以供应商为准。",
+  "hub.budgetReferenceHint":
+        "按你的预算平均出来的参考值；实付以供应商为准。",
+  "hub.budgetReferenceHintCurrency":
+        "按你的预算平均出来的参考值（{currency}）；实付以供应商为准。",
   "hub.tripToCity": "{cityLabel}之旅",
   "copilot.stream.parseError": "运行事件暂时无法解析",
   "copilot.stream.reconnecting": "正在重新连接运行事件",
