@@ -6,7 +6,7 @@ const journeyId = "00000000-0000-4000-8000-000000000238";
 const travelerId = "TEST_FIXTURE_TRAVELER_238";
 const root = `**/api/v1/journeys/${journeyId}`;
 const goal = "情侣凌晨03:00入睡，次日13:30醒；一人体力较低，午后按下雨场景规划两站。";
-const restPreference = "时间窗：次日14:00后出发；上午不排活动，留足休息。";
+const restPreference = "时间窗：次日14:30后出发；上午不排活动，留足休息。";
 const shortWalkPreference = "偏好：低体力同行，少走路，优先短路线。";
 const rainConflictPreference = "只排已核实开放且可达的两站；未知标待核实。先核实午后雨情，下雨给室内备选；冲突先问我改计划。";
 

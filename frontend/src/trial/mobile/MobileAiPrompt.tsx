@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 
-const NEXT_DAY_REST_PREFERENCE = "时间窗：次日14:00后出发；上午不排活动，留足休息。";
+const NEXT_DAY_REST_PREFERENCE = "时间窗：次日14:30后出发；上午不排活动，留足休息。";
 const SHORT_WALK_PREFERENCE = "偏好：低体力同行，少走路，优先短路线。";
 const RAIN_CONFLICT_PREFERENCE = "只排已核实开放且可达的两站；未知标待核实。先核实午后雨情，下雨给室内备选；冲突先问我改计划。";
 
@@ -84,7 +84,7 @@ export function MobileAiPrompt({
           >
             {restPreferenceAdded
               ? "已加入：不排上午 · 留足休息（点按移除）"
-              : "加上时间窗：13:30 起床 · 14:00 后出发"}
+              : "加上时间窗：13:30 起床 · 14:30 后出发"}
           </button>
           <button
             type="button"
