@@ -92,3 +92,10 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 - 390×844 签名 DRAFT 页面又完成一次真实 CityNexus AI 请求：`POST /api/v1/journeys/{private-id}/trial-ai-discovery` 返回 HTTP 200，页面显示来自 `deepseek-v4.1-flash` 的晚出发、次日上午不早起场景建议。实测截图：`trial/results/assets/20261017-live-ai-late-date-390x844.png`，SHA-256 `332E8AF6B3B741852CAAAF667816BA34EC10D549CB84FBC61BF90895170AF55E`。
 - 隔离后端 `/api/v1/agent/runtime-status` 返回 HTTP 200，身份为 `HERMES_COMPAT_ENDPOINT`，`hermes_compat_configured=true`。当前签名会话的“行程”页显示还没有保存的私人路线；服务端 AgentRun 入口要求路线状态为 `ACTIVE`，所以本轮没有创建 AgentRun，也没有制造 ACTIVE 数据。`SIGNED_AGENT_RUN=NOT_CREATED`；当前差的是真实 ACTIVE 行程。
 - 真实地点流程状态不变：Photon 尚无可用的两处 POI，`TWO_POI_FLOW=NOT_REACHED`；Pocket Walk 保存、GO 和刷新恢复还没进入执行。
+
+## 2026-10-17 聚焦后端回归
+
+- 命令：`uv run --project . python -m pytest -q tests/test_bootstrap_photon_provider_selection.py tests/test_bootstrap_photon_draft_exploration.py tests/test_r107_discovery_to_my_pocket_walk.py tests/test_r85_zero_catalog_bootstrap.py tests/test_r86_first_startable_real_city_journey.py tests/test_r87_first_live_city_discovery.py tests/test_r95_city_jump_and_provenance.py`
+- 结果：退出码 0，`16 passed, 4 warnings in 4.49s`。
+- 覆盖 Photon provider 选择、DRAFT 探索、R107 Pocket Walk 保存/恢复、R85-R87 首次地点发现和 R95 来源信息。
+- 本轮只执行隔离 pytest；没有发起真实地点服务请求，也没有完成浏览器端双 POI、GO 或刷新恢复。
