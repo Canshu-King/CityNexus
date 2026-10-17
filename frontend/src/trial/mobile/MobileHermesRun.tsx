@@ -32,6 +32,8 @@ const EVENT_LABELS: Record<string, string> = {
   "run.stopped": "Hermes 本次运行已停止",
 };
 
+const RUN_MILESTONE_EVENTS = new Set(["run.started", "run.completed", "run.failed", "run.stopped"]);
+
 type RequestState = "idle" | "sending" | "ready" | "unauthorized" | "error";
 type RestoreState = "idle" | "checking" | "empty" | "available" | "failed";
 
@@ -84,11 +86,23 @@ function safeEventLabel(event: NativeRuntimeEvent) {
   return EVENT_LABELS[event.event_type] ?? "收到一条 Hermes 运行事件";
 }
 
+function safeToolName(value: string | null) {
+  const name = value?.trim() ?? "";
+  return /^[a-zA-Z][a-zA-Z0-9_.-]{0,63}$/.test(name) ? name : null;
+}
+
 function eventTime(value: NativeRuntimeEvent["timestamp"]) {
   if (typeof value !== "string" && typeof value !== "number") return null;
   const parsed = typeof value === "number" ? value : Date.parse(value);
   if (!Number.isFinite(parsed)) return null;
-  return new Intl.DateTimeFormat("zh-CN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(parsed);
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(parsed);
 }
 
 function eventDuration(value: NativeRuntimeEvent["duration_ms"]) {
@@ -120,6 +134,12 @@ function stateText(
     if (approvalState === "closed") return "审批已结束";
     return "审批状态待确认";
   }
+  if (/^(queued|pending|created)$/i.test(status)) return "等待运行";
+  if (/^(running|in_progress|started)$/i.test(status)) {
+    return connection === "connecting" || connection === "retrying"
+      ? "运行中 · 正在同步事件"
+      : "正在运行";
+  }
   if (connection === "connecting" || connection === "retrying") return "正在同步运行记录";
   const lastToolEvent = [...events].reverse().find((event) => event.event_type.startsWith("tool."));
   if (lastToolEvent?.event_type === "tool.started") return "正在处理行程请求";
@@ -142,18 +162,31 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
   const [bearerEpoch, setBearerEpoch] = useState(0);
   const restoreEpoch = useRef(0);
   const timeline = useNativeHermesTimeline({ journeyId, run: currentRun, enabled: visible });
+  const initialNativeEvents = useMemo(
+    () => currentRun
+      ? currentRun.initial_events?.filter((event) =>
+        event.source === "HERMES_NATIVE" && event.run_id === currentRun.run_id,
+      ) ?? []
+      : [],
+    [currentRun],
+  );
   const actualEvents = useMemo(
-    () => mergeNativeEvents(timeline.events.filter((event) => event.source === "HERMES_NATIVE")),
-    [timeline.events],
+    () => mergeNativeEvents(
+      timeline.events.filter((event) => event.source === "HERMES_NATIVE"),
+      initialNativeEvents,
+    ),
+    [timeline.events, initialNativeEvents],
   );
   const orderedEvents = actualEvents.filter((event) =>
     event.event_type.startsWith("tool.") || Object.hasOwn(EVENT_LABELS, event.event_type),
   );
-  const isFixtureRun = Boolean(currentRun?.provider_key && /^(test|fixture)(?:[_-]|$)/i.test(currentRun.provider_key));
-  const reasoningSummary = currentRun?.mission_id && typeof currentRun.reasoning_summary === "string" && currentRun.reasoning_summary.trim()
-    ? currentRun.reasoning_summary
-    : null;
   const pendingApproval = pendingApprovalEvent(actualEvents);
+  const visibleEvents = orderedEvents.filter((event, index) =>
+    index >= orderedEvents.length - 12 ||
+    RUN_MILESTONE_EVENTS.has(event.event_type) ||
+    event === pendingApproval,
+  );
+  const isFixtureRun = Boolean(currentRun?.provider_key && /^(test|fixture)(?:[_-]|$)/i.test(currentRun.provider_key));
 
   useEffect(() => {
     if (runJourneyId && runJourneyId !== journeyId) {
@@ -409,14 +442,11 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
               )}
               {timeline.authState !== "unauthorized" && (
                 <>
-                  <section className="rev-mobile-hermes-reason" aria-label="工作思路与判断依据">
-                    <b>工作思路 / 判断依据</b>
-                    <p>{reasoningSummary ?? "暂无判断摘要"}</p>
-                  </section>
                   {pendingApproval && (
-                    <p className="rev-mobile-hermes-approval" role="status">
-                      有操作待确认，前往行程恢复中心审核。
-                    </p>
+                    <div className="rev-mobile-hermes-approval" role="status">
+                      <span>有操作待确认。</span>
+                      <a href="#journey-operator-operations">前往行程操作与授权审核 →</a>
+                    </div>
                   )}
                   {stopState !== "idle" && (
                     <p className="rev-mobile-hermes-action" role="status">
@@ -425,19 +455,32 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
                           : "停止状态待确认；刷新查看。"}
                     </p>
                   )}
-                  {orderedEvents.length > 0 ? (
-                    <ol className="rev-mobile-hermes-events" aria-label="Hermes 工具调用记录" aria-live="polite">
-                      {orderedEvents.slice(-12).map((event, index) => {
+                  {visibleEvents.length > 0 ? (
+                    <ol className="rev-mobile-hermes-events" aria-label="Hermes 运行轨迹" aria-live="polite">
+                      {visibleEvents.map((event, index) => {
                         const status = statusForMobileEvent(event);
                         const duration = eventDuration(event.duration_ms);
+                        const timestamp = eventTime(event.timestamp);
+                        const toolName = safeToolName(event.tool_name);
                         return (
                           <li key={`${event.sequence ?? ""}|${event.event_id ?? ""}|${event.event_type}|${index}`} className={"is-" + status}>
                             <span className="rev-mobile-hermes-event-mark" aria-hidden="true">
                               {status === "done" ? <Check size={14} /> : status === "active" ? <CircleDashed size={14} /> : <AlertCircle size={14} />}
                             </span>
-                            <span className="rev-mobile-hermes-event-label">{safeEventLabel(event)}</span>
-                            {duration && <small>{duration}</small>}
-                            {eventTime(event.timestamp) && <time dateTime={typeof event.timestamp === "string" ? event.timestamp : undefined}>{eventTime(event.timestamp)}</time>}
+                            <div className="rev-mobile-hermes-event-body">
+                              <span className="rev-mobile-hermes-event-label">{safeEventLabel(event)}</span>
+                              {toolName && <code className="rev-mobile-hermes-tool-name">{toolName}</code>}
+                              {(duration || timestamp) && (
+                                <span className="rev-mobile-hermes-event-meta">
+                                  {timestamp && (
+                                    <time dateTime={typeof event.timestamp === "string" ? event.timestamp : undefined}>
+                                      {timestamp}
+                                    </time>
+                                  )}
+                                  {duration && <small>{duration}</small>}
+                                </span>
+                              )}
+                            </div>
                           </li>
                         );
                       })}

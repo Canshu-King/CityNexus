@@ -1,5 +1,7 @@
 import type { FormEvent } from "react";
 
+const NEXT_DAY_REST_PREFERENCE = "偏好：次日中午后出发，留足休息时间。";
+
 export type MobileAiAdvice = {
   category: string | null;
   reason: string;
@@ -28,6 +30,20 @@ export function MobileAiPrompt({
     event.preventDefault();
     onSubmit();
   };
+  const restPreferenceAdded = value.includes(NEXT_DAY_REST_PREFERENCE);
+  const restPreferenceFits = restPreferenceAdded ||
+    value.length + (value.trim() ? 1 : 0) + NEXT_DAY_REST_PREFERENCE.length <= 360;
+
+  const toggleRestPreference = () => {
+    if (restPreferenceAdded) {
+      const appendedPreference = `\n${NEXT_DAY_REST_PREFERENCE}`;
+      onChange(value.endsWith(appendedPreference)
+        ? value.slice(0, -appendedPreference.length)
+        : value.replace(NEXT_DAY_REST_PREFERENCE, ""));
+      return;
+    }
+    onChange(`${value}${value.trim() ? "\n" : ""}${NEXT_DAY_REST_PREFERENCE}`);
+  };
 
   return (
     <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
@@ -45,6 +61,20 @@ export function MobileAiPrompt({
           onChange={(event) => onChange(event.target.value)}
           placeholder="比如：今晚想吃点当地特色，再轻松散散步。"
         />
+        <div className="rev-quick-ai-preferences">
+          <button
+            type="button"
+            className="rev-quick-secondary"
+            aria-pressed={restPreferenceAdded}
+            disabled={busy || !restPreferenceFits}
+            onClick={toggleRestPreference}
+            data-testid="rev-quick-ai-rest-preference"
+          >
+            {restPreferenceAdded
+              ? "已加入：中午后出发 · 留足休息（点按移除）"
+              : "加上偏好：次日中午后出发 · 留足休息"}
+          </button>
+        </div>
         <div className="rev-quick-ai-actions">
           <button
             type="submit"

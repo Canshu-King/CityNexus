@@ -349,6 +349,65 @@ for (const outcome of [
   });
 }
 
+test("TEST_FIXTURE AI gateway 502 preserves the draft and recovers manually without another AI call", async ({ page }) => {
+  let aiCalls = 0;
+  let citySearchCalls = 0;
+  let poiSearchCalls = 0;
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "HERMES_COMPAT_ENDPOINT", hermes_compat_configured: true,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+    status: "READY", reason_code: "READY", provider: "overpass", provider_grade: "TEST_PROVIDER",
+  }));
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/trial-ai-discovery`, async (route) => {
+    aiCalls += 1;
+    expect(route.request().postDataJSON().goal).toBe("我在连城，想找个安静的地方散步。");
+    return route.fulfill({
+      status: 502,
+      contentType: "application/json",
+      body: JSON.stringify({ error: { code: "BAD_GATEWAY", reason_code: "UPSTREAM_UNAVAILABLE" } }),
+    });
+  });
+  await page.route(`${root}/bootstrap-city-search`, (route) => {
+    citySearchCalls += 1;
+    return route.abort();
+  });
+  await page.route(`${root}/bootstrap-discovery`, (route) => {
+    poiSearchCalls += 1;
+    return route.abort();
+  });
+
+  await page.goto("/revolution");
+  const prompt = page.getByLabel("写下你的想法");
+  const goal = "我在连城，想找个安静的地方散步。";
+  await prompt.fill(goal);
+  await page.getByTestId("rev-quick-consult-ai").click();
+
+  const alert = page.getByRole("alert");
+  await expect(alert).toContainText(/^AI 服务暂不可用。/);
+  await expect(prompt).toHaveValue(goal);
+  await expect(page.getByTestId("rev-quick-error-recovery")).toHaveCount(1);
+  expect(aiCalls).toBe(1);
+
+  await page.getByTestId("rev-quick-error-recovery").click();
+  await expect(page.getByRole("status")).toContainText("可以直接查找公开地名");
+  await expect(page.locator("#rev-quick-search")).toBeFocused();
+  await expect(prompt).toHaveValue(goal);
+  expect(aiCalls).toBe(1);
+  expect(citySearchCalls).toBe(0);
+  expect(poiSearchCalls).toBe(0);
+});
+
 test("AI route 404 can be skipped without restarting the user's journey", async ({ page }) => {
   let aiCalls = 0;
   await page.addInitScript((id) => {
@@ -378,7 +437,7 @@ test("AI route 404 can be skipped without restarting the user's journey", async 
 
   await page.goto("/revolution");
   await page.getByTestId("rev-quick-consult-ai").click();
-  await expect(page.getByRole("alert")).toContainText("AI 引导接口当前不可用");
+  await expect(page.getByRole("alert")).toContainText("AI 引导暂不可用");
   await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("继续手动探索");
   expect(aiCalls).toBe(1);
 

@@ -141,14 +141,17 @@ function messageForError(phase: ExplorePhase, error: unknown): string {
     if (error instanceof CityNexusApiError) {
       if (error.status === 401) return "登录已过期，请重新进入行程。";
       if (error.status === 403) return "当前账号无权使用 AI 引导。";
-      if (error.status === 404) return "AI 引导服务不可用，可继续手动探索。";
+      if (error.status === 404) return "AI 引导暂不可用。";
       if (error.status === 422) return "AI 没能理解这句话，换个说法试试。";
-      if (error.status === 429) return "AI 请求太频繁，稍后再试。";
-      if (error.status >= 500) return "AI 服务暂时没有响应，请稍后重试。";
+      if (error.status === 429) return "AI 当前繁忙。";
+      if (error.status >= 500) return "AI 服务暂不可用。";
       return "AI 引导失败（HTTP " + error.status + "）。";
     }
-    if (isReadDeadlineMissed(error)) return "AI 建议超时，请稍后重试。";
-    return "AI 建议未生成。";
+    if (isReadDeadlineMissed(error)) return "等待 AI 超时。";
+    if (error instanceof TypeError || (error instanceof Error && error.name === "AbortError")) {
+      return "AI 连接中断。";
+    }
+    return "AI 建议暂未生成。";
   }
   if (error instanceof CityNexusApiError) {
     const status = error.status;
@@ -428,6 +431,8 @@ export function RevolutionQuickExplore({
       return;
     }
     void run("请教 AI", async (stillCurrent) => {
+      pendingAiAdviceReveal.current = false;
+      setAiAdvice(null);
       const suggestion = await cityNexusApi.suggestTrialDiscovery(journeyId, goal);
       if (!stillCurrent()) return;
       const verified = suggestion.status === "MODEL_TOOL_SUGGESTION";
@@ -445,7 +450,11 @@ export function RevolutionQuickExplore({
         : { type: "neutral", text: "已切换到手动选地点。" });
     }, () => ({
       label: "继续手动探索",
-      action: () => setAlert({ type: "neutral", text: "已切换到手动选地点。" }),
+      action: () => {
+        setErrorDetails(null);
+        setAlert({ type: "neutral", text: "可以直接查找公开地名，或在地图上手选区域。" });
+        document.getElementById("rev-quick-search")?.focus();
+      },
     }));
   };
 

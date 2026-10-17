@@ -4,7 +4,8 @@ test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, serviceWorkers
 
 const journeyId = "00000000-0000-4000-8000-000000000238";
 const root = `**/api/v1/journeys/${journeyId}`;
-const goal = "成年情侣晚间活动较晚，次日睡到中午，不安排早起";
+const goal = "今晚想轻松逛当地，不用安排早起";
+const restPreference = "偏好：次日中午后出发，留足休息时间。";
 
 function json(route: Route, value: object) {
   return route.fulfill({
@@ -94,10 +95,26 @@ test("390x844 TEST_FIXTURE challenge submits the complete late-night rest reques
 
   await prompt.fill(goal);
   await expect(prompt).toHaveValue(goal);
+  const restPreferenceButton = page.getByTestId("rev-quick-ai-rest-preference");
+  await expect(restPreferenceButton).toBeVisible();
+  await expect(restPreferenceButton).toBeInViewport();
+  await expect(restPreferenceButton).toHaveAttribute("aria-pressed", "false");
+  await restPreferenceButton.tap();
+  await expect(restPreferenceButton).toHaveAttribute("aria-pressed", "true");
+  await expect(prompt).toHaveValue(`${goal}\n${restPreference}`);
+  expect(suggestionCalls).toBe(0);
+
+  await restPreferenceButton.tap();
+  await expect(restPreferenceButton).toHaveAttribute("aria-pressed", "false");
+  await expect(prompt).toHaveValue(goal);
+  expect(suggestionCalls).toBe(0);
+
+  await restPreferenceButton.tap();
+  await expect(prompt).toHaveValue(`${goal}\n${restPreference}`);
   await page.getByTestId("rev-mobile-tab-trips").click();
   await expect(page.getByTestId("rev-mobile-screen-trips")).toBeVisible();
   await page.getByTestId("rev-mobile-tab-explore").click();
-  await expect(prompt).toHaveValue(goal);
+  await expect(prompt).toHaveValue(`${goal}\n${restPreference}`);
   const screenshotPath = process.env.CITYNEXUS_SCREENSHOT_PATH?.trim();
   if (screenshotPath) {
     await prompt.scrollIntoViewIfNeeded();
@@ -113,6 +130,6 @@ test("390x844 TEST_FIXTURE challenge submits the complete late-night rest reques
   await expect(page.getByTestId("rev-quick-ai-response")).toBeVisible();
   await expect(page.getByTestId("rev-quick-ai-response")).toContainText("TEST_FIXTURE · 明天中午后再出发，留足休息时间。");
   expect(suggestionCalls).toBe(1);
-  expect(submittedGoal).toBe(goal);
+  expect(submittedGoal).toBe(`${goal}\n${restPreference}`);
   expect(providerCalls).toBe(0);
 });
