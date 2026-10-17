@@ -102,22 +102,32 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     await expect(page.getByRole("alert")).toContainText("401");
     await expect(page.getByTestId("rev-firstlook-new-session")).toBeVisible();
 
+    let travelerCreates = 0;
     await page.route("**/api/v1/travelers", async (route) => {
+      travelerCreates += 1;
       expect(route.request().headers()["authorization"]).toBeUndefined();
       await json(route, 201, { id: "fixture-traveler-2", access_token: "NEW_BUT_NOT_COMMITTED" });
     });
+    let journeyCreates = 0;
     await page.route("**/api/v1/journeys", async (route) => {
+      journeyCreates += 1;
       expect(route.request().headers()["authorization"]).toBe("Bearer NEW_BUT_NOT_COMMITTED");
       await json(route, 503, { detail: "TEST_ONLY_BACKEND_UNAVAILABLE" });
     });
     await page.getByTestId("rev-firstlook-new-session").click();
-    await expect(page.getByRole("alert")).toContainText("HTTP 503");
+    await expect(page.getByTestId("rev-start-write-status")).toContainText("结果未知");
+    await expect(page.getByTestId("rev-firstlook-start")).toBeDisabled();
+    await page.locator("form").evaluate((form) => (form as HTMLFormElement).requestSubmit());
     const result = await page.evaluate(() => ({
       pointer: localStorage.getItem("citynexus.revolution.firstlook.journey"),
       bearer: sessionStorage.getItem("citynexus.traveler.bearer"),
+      marker: JSON.parse(localStorage.getItem("citynexus.revolution.firstlook.start-write") ?? "null"),
     }));
     expect(result.pointer).toBeNull();
     expect(result.bearer).toBe("ORIGINAL_SIGNED_FIXTURE");
+    expect(result.marker).toMatchObject({ phase: "journey", state: "unknown" });
+    expect(travelerCreates).toBe(1);
+    expect(journeyCreates).toBe(1);
   });
 
   test("one signed traveler starts and reopens Journeys in multiple cities", async ({ page }) => {
