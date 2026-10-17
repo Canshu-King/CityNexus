@@ -307,7 +307,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const card = page.getByTestId("rev-quick-place-card");
     await expect(card).toContainText("TEST ONLY · 连城步道");
     await expect(card).toContainText("测试地点");
-    await expect(card).toContainText("营业与费用信息待补充");
+    await expect(card).toContainText("营业时间未知");
+    await expect(card).toContainText("费用未知");
     await expect(card.getByRole("link", { name: "查看 OpenStreetMap 来源" })).toHaveAttribute(
       "href",
       "https://www.openstreetmap.org/node/10001",
