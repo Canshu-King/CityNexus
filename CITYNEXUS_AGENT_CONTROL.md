@@ -1,4 +1,36 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 6efab655 · 副号令者·夜班 · 交裁语欠的那件反控臂：把 SYNTHETIC_DEFAULT 那一行从词表里剪掉，屏面上就会漏出机词（现尖上跑的，三判据全真）
+
+**〇、接班现读（我静默的是 10-05 到 10-17 这一整段，旧读数全部作废，一切按现读重取）**
+
+- 权威尖现读 `16c2ebffaff1f5c366ddf6195185e17a041448f6`（`git ls-remote --refs origin refs/heads/mirror/integration-frontend-apple-pass1` 逐字）。我 10-05 那枚 `aac1142e…` 早已不是尖，那之后的读数我不再引用。
+- 盘：D 卷余十四 GB（曾跌到三点四 GB，值守把冷树搬去 E 之后回到安全线）；BB 机我名下三十封全是 10-05 的旧积压（cff87c64 那几封的 r2/r3/r4 枝名话题），现尖已跑到它们之后，我按常设回账本取最新块，不回去追旧线程。
+- 账本 `## ORDERS` 段前四枚块头现读依次是「廿七第二笔落地」「量具修腿」「廿七落地两笔」「ORD-零六八六」，段内没有一枚点名给我这一扇的未闭单；所以本块走常设自申报：把裁语欠我这一扇的那一件交掉。
+
+**一、裁语要的那件：反控臂（不是再证一次"有词表行"，是证"这行有用"）**
+
+- 判据形状：同一枚输入、同一枚函数、唯一变量是那一行词表。中文臂与英文臂各两趟——甲趟用现尖上原样的词表，乙趟把 `SYNTHETIC_DEFAULT` 那一行剪掉再跑同一枚函数。
+- 现尖上的读数（逐字，件 blob `c56f895c10f5fb2009c90ac2517e1b918d54dc72`，985 字节）：甲趟答「合成默认值，不是供应商给的」与 "a synthetic default, not a provider reading"；乙趟同一枚调用答「这台服务器写的：SYNTHETIC_DEFAULT」与 "as this server wrote it: SYNTHETIC_DEFAULT"。
+- 三判据全真：甲趟用人话（机词零枚上屏）、乙趟漏出机词本身、两趟对"词表里本就没有的名字"答得逐字相同（证明唯一变量确实是那一行）。整臂退出码零。
+- 臂本体已发布可重跑：`evidence/synth-counter-example-20261017/cmdr_0500synth_counter_example_arm_r2.mjs`，blob `2eb4978fb6af30db1603431e7dce7d8c79256e3f`，5264 字节；跑法是 `node 那枚件 <四十位现尖>`——它按 rev 自己取源，不读工作树，所以别人在工作树里改东西不会污染它的代次。
+- 顺带把我 10-06 那条裁语在现尖上重证一遍（不是引用旧结论）：`pick()` 的未命中支照旧走 `rawChannel` 那句包装语（上面乙趟逐字就是它答出来的），所以"把查找闭合、未命中不回吐入参"那一枝**仍然不该**进落地门；进门的仍是覆盖判据。覆盖臂在现尖上重跑：`RUNTIME_IDENTITY` 后端可写四条对词表四行、`MOBILITY_FACT_QUALITY` 后端可写三条对词表三行，缺行零枚，判 PASS；摘掉 `RUNTIME_IDENTITY` 的 `NOT_CONFIGURED` 一行后判 FAIL 并点名那一行，`arm_discriminates: true`（件 blob `c0ba3c2677260095d852fc0c69d9acb57a7bff81`，789 字节）。
+
+**二、自报两处我自己修掉的仪器错（都带"该红的那一次"）**
+
+- 第一处：臂最初用 `node_modules/.bin/esbuild.cmd` 起子进程，node 廿四 下直接 `EINVAL` 拒起（Windows 不再裸起 .cmd）。改成 `require` esbuild 的 JS 接口 `buildSync` 才跑通——这一条红是我自己的调用形制，不是产品。
+- 第二处更要紧：我把 `process.exit()` 写在 `try` 里，而 node 的 `process.exit` **不跑 `finally`**，于是四枚临时件（`_cmdrSynthArm_tip.ts`、`_cmdrSynthArm_mutant.ts` 与两枚 `.cjs`）落在了产品树 `frontend/src/lib/` 里。当场清干净：该目录里 `_cmdrSynthArm` 前缀的条目现读零枚、`git status --porcelain frontend/src/lib` 里我名下零枚。修法是把退出码收到变量里、`finally` 之后再 `process.exit`，改后复跑一次，收尾计数仍是零枚。
+- 具名一条边界：`frontend/src/lib/displayVocabulary.ts` 在工作树里本来就有六行加八行删的未提交改动（不是我写的，且不含 `SYNTHETIC_DEFAULT` 或那张质量表的任何行），我一字未碰、未 `checkout`、未 `stash`。
+
+**三、没改善的部分（具名）**
+
+- 本块零产品字节、零 ref 移动：反控臂只是把"这行词表有用"变成可重跑的判据，屏上今天没有任何东西因此变好。
+- 我没有跑任何用例（只跑了两把纯函数尺与一次收集之外的读数），所以"全套测试绿"这句话我这扇不能说；`frontend/e2e/product-v8.spec.ts:101` 那枚既有红我没碰。
+- 舰队这一拍 working 零、short_by 八（块头「廿七第二笔落地」末行现读同口径），我这一扇的唤醒不在本块范围内，也没偷偷去敲别人的进程。
+- 我 10-05 名下那几格仍未闭：ORD-0575 那枚被正文盖住的提交键、ORD-0577 底栏在非主路由屏的所在感、闭合查找尺接进门（本轮再次裁定为"不接"，理由见第一节）；这些若已被别扇闭掉，以账本为准，我下轮先数账本再动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-唤醒真相 BB 只是信箱，真唤醒要敲会话
 
 - 现读到的事实：Qoder 原生唤醒腿 `live_checks/cmdr_auto_wake_r1.py` 的流水 `_auto_wake_log.txt` 最后一条写在 10-03 07:43，此后没再跑过；落地循环这一拍唯一在动的唤醒腿是 BB 投递腿，而 BB 回一个 id 只代表入队——没在轮询 BB 的窗口根本不会醒。这就是车队连续几拍 working 0、short_by 8 的直接原因，不是车道偷懒。
