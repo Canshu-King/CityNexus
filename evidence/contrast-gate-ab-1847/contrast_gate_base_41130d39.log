@@ -1,0 +1,626 @@
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4178 backend=:8478 db=sqlite:///./_cmdr_contrast_base.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     Started server process [32476]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8478 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:62664 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+Running 5 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4178 backend=:8478 db=sqlite:///./_cmdr_contrast_base.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     127.0.0.1:62144 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:62145 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:62144 - "POST /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62145 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62144 - "POST /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/stay-options/258e4158-030a-43cf-9b35-e5d6a6973012/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=fd6aeec2-b33f-4ed4-b295-daba37c844ee options=4 chosen=258e4158-030a-43cf-9b35-e5d6a6973012 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:53440 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53441 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60502 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51009 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51008 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51011 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57105 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57107 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57108 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51010 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51133 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57109 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57106 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (6.2s)
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4178 backend=:8478 db=sqlite:///./_cmdr_contrast_base.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     127.0.0.1:59909 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59910 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59911 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51181 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51180 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51178 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61872 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51179 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59124 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51182 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58883 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54769 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58884 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64344 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64345 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54784 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53663 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64346 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53662 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64347 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54785 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51747 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65058 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56932 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65057 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63819 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50257 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50258 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57414 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57412 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57415 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:46:45.122352+00:00', '2026-10-17T10:46:45.122352+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:55201 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50259 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52595 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52593 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52594 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57413 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57335 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63227 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63107 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63108 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63109 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51640 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63110 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54507 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51639 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56430 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53887 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51281 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51134 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52788 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49323 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55850 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55851 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64988 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51005 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64989 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58415 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:46:48.881234+00:00', '2026-10-17T10:46:48.881234+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:51004 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56977 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60729 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55852 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64987 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51122 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49407 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+
+=== today/mobile/dark — scanned 279 nodes, 9 violation(s), 8 decorative-border warning(s) ===
+  -- unclassified-control: 9
+     [data-testid="v8-mobile-menu"] "Menu" fg=rgb(245, 245, 247) bg=rgba(0, 0, 0, 0) c=0/3 16px
+     [data-testid="hub-plan-with-ai"] "Plan my trip with AI" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 15px
+     [data-testid="journey-link-copy"] "Copy journey link" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="nav-trips"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-map"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-agent"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-me"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+
+=== live/mobile/dark — scanned 291 nodes, 10 violation(s), 10 decorative-border warning(s) ===
+  -- unclassified-control: 10
+     [data-testid="v8-mobile-menu"] "Menu" fg=rgb(245, 245, 247) bg=rgba(0, 0, 0, 0) c=0/3 16px
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Five Great Avenues" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="live-update-location"] "Update location" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="live-report-rain"] "Report rain" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-hub"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-trips"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-agent"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-me"] "" fg=rgb(174, 174, 178) bg=rgba(0, 0, 0, 0) c=0/3 13px
+
+=== today/mobile/light — scanned 279 nodes, 9 violation(s), 9 decorative-border warning(s) ===
+  -- unclassified-control: 9
+     [data-testid="v8-mobile-menu"] "Menu" fg=rgb(29, 29, 31) bg=rgba(0, 0, 0, 0) c=0/3 16px
+     [data-testid="hub-plan-with-ai"] "Plan my trip with AI" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 15px
+     [data-testid="journey-link-copy"] "Copy journey link" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="nav-trips"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-map"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-agent"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-me"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+
+=== live/mobile/light — scanned 291 nodes, 10 violation(s), 12 decorative-border warning(s) ===
+  -- unclassified-control: 10
+     [data-testid="v8-mobile-menu"] "Menu" fg=rgb(29, 29, 31) bg=rgba(0, 0, 0, 0) c=0/3 16px
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Five Great Avenues" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="live-update-location"] "Update location" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="live-report-rain"] "Report rain" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-hub"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-trips"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-agent"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="nav-me"] "" fg=rgb(93, 104, 120) bg=rgba(0, 0, 0, 0) c=0/3 13px
+  x  2 [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile) (8.5s)
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4178 backend=:8478 db=sqlite:///./_cmdr_contrast_base.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     127.0.0.1:51909 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51910 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51911 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51002 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51009 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51006 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51007 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51003 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51008 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64617 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60403 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60404 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60405 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56174 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56175 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56176 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56180 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56177 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56179 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56178 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49809 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51875 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51874 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51873 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51876 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59668 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53407 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53408 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63472 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63471 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63469 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50846 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56136 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63770 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61701 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:46:54.209312+00:00', '2026-10-17T10:46:54.209312+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:52610 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63470 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55681 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51216 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55618 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55619 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50343 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54277 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54276 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55620 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50085 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55911 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55345 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55344 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63118 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57145 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50086 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49683 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49685 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64803 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64804 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64801 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52205 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57237 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52015 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64302 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:46:57.347714+00:00', '2026-10-17T10:46:57.347714+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:49698 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64802 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56811 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65440 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+  ok 3 [chromium] › e2e\qoder-contrast-audit.spec.ts:214:5 › Qoder contrast audit (Today + Live, light + dark) › focus indicators clear 3:1 on Today/Live, light + dark (mobile) (7.6s)
+[WebServer] INFO:     127.0.0.1:64609 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64610 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64072 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64074 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64075 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64611 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64073 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64078 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64076 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53456 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53457 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61467 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53458 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51184 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51185 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51186 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51187 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62826 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62825 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58605 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65243 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59851 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61598 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62452 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61599 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62827 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54611 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54612 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56975 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56974 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56976 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54613 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51815 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61728 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63515 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63514 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50398 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51320 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58421 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51318 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58015 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58016 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53130 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58017 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53129 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56565 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49732 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49734 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49731 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53743 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65288 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49733 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57240 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57241 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52085 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52087 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52089 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:47:05.490645+00:00', '2026-10-17T10:47:05.490645+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:54335 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57242 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54337 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54336 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52898 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52086 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57033 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51166 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+
+=== today/desktop/dark — scanned 279 nodes, 8 violation(s), 12 decorative-border warning(s) ===
+  -- unclassified-control: 8
+     [data-testid="hub-plan-with-ai"] "Plan my trip with AI" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 15px
+     [data-testid="journey-link-copy"] "Copy journey link" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Five Great Avenues" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Museum" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Eye" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Departure" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+
+=== live/desktop/dark — scanned 291 nodes, 10 violation(s), 11 decorative-border warning(s) ===
+  -- unclassified-control: 10
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Check in · Haihe Riverside Hotel" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Overnight · Haihe Riverside Hotel" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Five Great Avenues" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Museum" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Eye" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="v8-map-stop-label"] "Departure" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(245, 245, 247) bg=rgb(28, 28, 30) c=15.63/3 13px
+     [data-testid="live-update-location"] "Update location" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="live-report-rain"] "Report rain" fg=rgb(10, 132, 255) bg=rgba(0, 0, 0, 0) c=0/3 13px
+
+=== today/desktop/light — scanned 279 nodes, 8 violation(s), 13 decorative-border warning(s) ===
+  -- unclassified-control: 8
+     [data-testid="hub-plan-with-ai"] "Plan my trip with AI" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 15px
+     [data-testid="journey-link-copy"] "Copy journey link" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Five Great Avenues" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Museum" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Eye" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Departure" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+
+=== live/desktop/light — scanned 291 nodes, 10 violation(s), 13 decorative-border warning(s) ===
+  -- unclassified-control: 10
+     [data-testid="v8-map-stop-label"] "Arrival" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Check in · Haihe Riverside Hotel" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Overnight · Haihe Riverside Hotel" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Five Great Avenues" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Museum" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Tianjin Eye" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="v8-map-stop-label"] "Departure" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="map-viewport-reset"] "" fg=rgb(29, 29, 31) bg=rgb(255, 255, 255) c=13.68/3 13px
+     [data-testid="live-update-location"] "Update location" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 13px
+     [data-testid="live-report-rain"] "Report rain" fg=rgb(10, 92, 214) bg=rgba(0, 0, 0, 0) c=0/3 13px
+  x  4 [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (desktop) (8.4s)
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4178 backend=:8478 db=sqlite:///./_cmdr_contrast_base.db ai=inherited from the environment reuseExistingServer=true
+[WebServer] INFO:     127.0.0.1:57440 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57441 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53002 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52999 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53001 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57442 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53000 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53174 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53003 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54152 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61282 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64196 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53909 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60059 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60060 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60061 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58132 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60062 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61008 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61007 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64198 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58133 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53808 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53807 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59733 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53809 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53387 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53388 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52261 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52264 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52263 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63058 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:47:10.428486+00:00', '2026-10-17T10:47:10.428486+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:53389 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58554 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52212 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58555 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52262 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54804 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53679 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64306 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64307 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64309 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62804 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62803 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63442 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64308 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52172 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52171 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52948 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62802 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56943 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53401 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62861 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62862 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55253 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51284 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55254 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56176 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50206 - "GET /api/v1/travelers/00b8f543-d0b5-4593-b8bf-a8725ee34351/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51075 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64774 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/plans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-17T10:47:13.510948+00:00', '2026-10-17T10:47:13.510948+00:00', 'fd6aeec2-b33f-4ed4-b295-daba37c844ee')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:62863 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55252 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58689 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50826 - "GET /api/v1/journeys/fd6aeec2-b33f-4ed4-b295-daba37c844ee/experience HTTP/1.1" 200 OK
+  ok 5 [chromium] › e2e\qoder-contrast-audit.spec.ts:214:5 › Qoder contrast audit (Today + Live, light + dark) › focus indicators clear 3:1 on Today/Live, light + dark (desktop) (7.1s)
+
+
+  1) [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile) 
+
+    Error: contrast violations (mobile):
+    today/mobile/dark: unclassified-control [data-testid="v8-mobile-menu"] "Menu"
+    today/mobile/dark: unclassified-control [data-testid="hub-plan-with-ai"] "Plan my trip with AI"
+    today/mobile/dark: unclassified-control [data-testid="journey-link-copy"] "Copy journey link"
+    today/mobile/dark: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    today/mobile/dark: unclassified-control [data-testid="map-viewport-reset"] ""
+    today/mobile/dark: unclassified-control [data-testid="nav-trips"] ""
+    today/mobile/dark: unclassified-control [data-testid="nav-map"] ""
+    today/mobile/dark: unclassified-control [data-testid="nav-agent"] ""
+    today/mobile/dark: unclassified-control [data-testid="nav-me"] ""
+    live/mobile/dark: unclassified-control [data-testid="v8-mobile-menu"] "Menu"
+    live/mobile/dark: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    live/mobile/dark: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    live/mobile/dark: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/mobile/dark: unclassified-control [data-testid="live-update-location"] "Update location"
+    live/mobile/dark: unclassified-control [data-testid="live-report-rain"] "Report rain"
+    live/mobile/dark: unclassified-control [data-testid="nav-hub"] ""
+    live/mobile/dark: unclassified-control [data-testid="nav-trips"] ""
+    live/mobile/dark: unclassified-control [data-testid="nav-agent"] ""
+    live/mobile/dark: unclassified-control [data-testid="nav-me"] ""
+    today/mobile/light: unclassified-control [data-testid="v8-mobile-menu"] "Menu"
+    today/mobile/light: unclassified-control [data-testid="hub-plan-with-ai"] "Plan my trip with AI"
+    today/mobile/light: unclassified-control [data-testid="journey-link-copy"] "Copy journey link"
+    today/mobile/light: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    today/mobile/light: unclassified-control [data-testid="map-viewport-reset"] ""
+    today/mobile/light: unclassified-control [data-testid="nav-trips"] ""
+    today/mobile/light: unclassified-control [data-testid="nav-map"] ""
+    today/mobile/light: unclassified-control [data-testid="nav-agent"] ""
+    today/mobile/light: unclassified-control [data-testid="nav-me"] ""
+    live/mobile/light: unclassified-control [data-testid="v8-mobile-menu"] "Menu"
+    live/mobile/light: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    live/mobile/light: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    live/mobile/light: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/mobile/light: unclassified-control [data-testid="live-update-location"] "Update location"
+    live/mobile/light: unclassified-control [data-testid="live-report-rain"] "Report rain"
+    live/mobile/light: unclassified-control [data-testid="nav-hub"] ""
+    live/mobile/light: unclassified-control [data-testid="nav-trips"] ""
+    live/mobile/light: unclassified-control [data-testid="nav-agent"] ""
+    live/mobile/light: unclassified-control [data-testid="nav-me"] ""
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 40
+
+    - Array []
+    + Array [
+    +   "today/mobile/dark: unclassified-control [data-testid=\"v8-mobile-menu\"] \"Menu\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"hub-plan-with-ai\"] \"Plan my trip with AI\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"journey-link-copy\"] \"Copy journey link\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"nav-trips\"] \"\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"nav-map\"] \"\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"nav-agent\"] \"\"",
+    +   "today/mobile/dark: unclassified-control [data-testid=\"nav-me\"] \"\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"v8-mobile-menu\"] \"Menu\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"live-update-location\"] \"Update location\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"live-report-rain\"] \"Report rain\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"nav-hub\"] \"\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"nav-trips\"] \"\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"nav-agent\"] \"\"",
+    +   "live/mobile/dark: unclassified-control [data-testid=\"nav-me\"] \"\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"v8-mobile-menu\"] \"Menu\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"hub-plan-with-ai\"] \"Plan my trip with AI\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"journey-link-copy\"] \"Copy journey link\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"nav-trips\"] \"\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"nav-map\"] \"\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"nav-agent\"] \"\"",
+    +   "today/mobile/light: unclassified-control [data-testid=\"nav-me\"] \"\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"v8-mobile-menu\"] \"Menu\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"live-update-location\"] \"Update location\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"live-report-rain\"] \"Report rain\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"nav-hub\"] \"\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"nav-trips\"] \"\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"nav-agent\"] \"\"",
+    +   "live/mobile/light: unclassified-control [data-testid=\"nav-me\"] \"\"",
+    + ]
+
+      209 |       console.log(summarise(reports));
+      210 |       const all = reports.flatMap((r) => r.violations.map((v) => `${r.screen}: ${v.kind} ${v.selector} "${v.text}"`));
+    > 211 |       expect(all, `contrast violations (${vp.name}):\n${all.slice(0, 40).join("\n")}`).toEqual([]);
+          |                                                                                        ^
+      212 |     });
+      213 |
+      214 |     test(`focus indicators clear 3:1 on Today/Live, light + dark (${vp.name})`, async ({ page }) => {
+        at D:\moodle\_cmdr_fe_rev_1016\tip\frontend\e2e\qoder-contrast-audit.spec.ts:211:88
+
+    Error Context: test-results\qoder-contrast-audit-Qoder-9b307-day-Live-light-dark-mobile--chromium\error-context.md
+
+  2) [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (desktop) 
+
+    Error: contrast violations (desktop):
+    today/desktop/dark: unclassified-control [data-testid="hub-plan-with-ai"] "Plan my trip with AI"
+    today/desktop/dark: unclassified-control [data-testid="journey-link-copy"] "Copy journey link"
+    today/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    today/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    today/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Museum"
+    today/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    today/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    today/desktop/dark: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Check in · Haihe Riverside Hotel"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Overnight · Haihe Riverside Hotel"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Museum"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    live/desktop/dark: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/dark: unclassified-control [data-testid="live-update-location"] "Update location"
+    live/desktop/dark: unclassified-control [data-testid="live-report-rain"] "Report rain"
+    today/desktop/light: unclassified-control [data-testid="hub-plan-with-ai"] "Plan my trip with AI"
+    today/desktop/light: unclassified-control [data-testid="journey-link-copy"] "Copy journey link"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Museum"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    today/desktop/light: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Check in · Haihe Riverside Hotel"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Overnight · Haihe Riverside Hotel"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Museum"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    live/desktop/light: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/light: unclassified-control [data-testid="live-update-location"] "Update location"
+    live/desktop/light: unclassified-control [data-testid="live-report-rain"] "Report rain"
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 38
+
+    - Array []
+    + Array [
+    +   "today/desktop/dark: unclassified-control [data-testid=\"hub-plan-with-ai\"] \"Plan my trip with AI\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"journey-link-copy\"] \"Copy journey link\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Check in · Haihe Riverside Hotel\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Overnight · Haihe Riverside Hotel\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"live-update-location\"] \"Update location\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"live-report-rain\"] \"Report rain\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"hub-plan-with-ai\"] \"Plan my trip with AI\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"journey-link-copy\"] \"Copy journey link\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Check in · Haihe Riverside Hotel\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Overnight · Haihe Riverside Hotel\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"live-update-location\"] \"Update location\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"live-report-rain\"] \"Report rain\"",
+    + ]
+
+      209 |       console.log(summarise(reports));
+      210 |       const all = reports.flatMap((r) => r.violations.map((v) => `${r.screen}: ${v.kind} ${v.selector} "${v.text}"`));
+    > 211 |       expect(all, `contrast violations (${vp.name}):\n${all.slice(0, 40).join("\n")}`).toEqual([]);
+          |                                                                                        ^
+      212 |     });
+      213 |
+      214 |     test(`focus indicators clear 3:1 on Today/Live, light + dark (${vp.name})`, async ({ page }) => {
+        at D:\moodle\_cmdr_fe_rev_1016\tip\frontend\e2e\qoder-contrast-audit.spec.ts:211:88
+
+    Error Context: test-results\qoder-contrast-audit-Qoder-5688e-ay-Live-light-dark-desktop--chromium\error-context.md
+
+  2 failed
+    [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile) 
+    [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (desktop) 
+  3 passed (53.3s)
