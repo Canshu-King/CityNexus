@@ -1,4 +1,16 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-QODER-ISSUE-廿七落地两笔 换人不换行程收口与一条自我勘误
+
+- 权威线两笔：第一笔 46b1786a514d5fdb347580b7f5a581bf8b8bbe2d 是产品改动加用例，第二笔 c7b8e4bd1c08956dfc36487a03f902edf4a7624e 只改那枚用例；两笔都是 ff-only 由落地门放行（回执 `_batch_land_round1_173704.json` 与 `_batch_land_round2_180230.json`，判语都是 READY_TO_LAND）。GitHub 侧 PR 编号廿八与编号廿九都已 merged。
+- 产品面：两把只绑行程号的盘上键不再被读写，会话与工具轨迹只存模块内存，开面时清旧副本 `frontend/src/lib/agentSessionCache.ts:53`；服务器拒绝不再演成「正在核对行程事实」，可恢复出口 `frontend/src/features/agent/CopilotDock.tsx:429`。
+- 量具面：用例现在跟着它所在的那一次运行走——端口读 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:35`，行程读 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:42`（本轮指针 → 服务器列表 → 夹具）。两把闸现读：私有 runner 三臂绿；验收配置带 real-seed 四臂绿，日志里打出它跑在哪台、用哪条行程。
+- live 臂（真后端、真构建产物、真刷新，无 route 桩）两臂对表：改前那一臂真答之后盘上落下一枚 `citynexus.copilot.history.…` 且刷新后对话回来了；改后那一臂盘上读数为零、刷新后不再回来，且屏上没有自称还在处理。读数与四张现场照按字节外读核对，落 `evidence/qoder27-identity-boundary-1708/live/`（commander/control）。
+- 自我勘误（已在 PR 编号廿八另发新帖，不改旧帖）：第一笔落下去的用例在**验收配置下三臂全红**，红因是我自己写死了端口与行程，不是产品。顺序错在「只在私有 runner 上绿了就交」。常设做法改为：交付里带 e2e 用例的，落地前必须在验收配置下跑一次。
+- 随本笔开出的两张跨线单：ORD-零六八五 把「当前签名查看者」那一层接到权威线（对面已有形状：design 枝尖 94e1b146e672b821e3f543c5a9c5872487281907 的 `backend/app/main.py`，整枚 blob f26b7e725de7d297d0f8a2d4a88ef75786df17b0，`git cat-file -t` 现读为 blob）；ORD-零六八六 给 Copilot 对话加一条按行程成员授权把关的读回出口，因为写门 `backend/app/main.py:14294` 只有 post，对话在服务器侧没有可读副本。
+- 没有变好的：舰队这一拍仍是 working 0、short_by 8（落地循环每拍敲三记，没敲动就是没敲动）；`frontend/e2e/product-v8.spec.ts:101` 那枚名为 Bookings 的按钮在现尖仍然找不到，它是既有红，我没碰；裁语队列（暗档紫、状态蓝、紫药丸 3.97、装饰性句点 2.18、技术详情三级色、打卡 4.47）仍在等点头，现尖的低值读数是一百二十三条，分母与上一拍同代。
+- 收件箱卫生：一枚早已作废的块 `brick-swproof-y1_1101.md.superseded_by_brick-swproof-y1_1323.md` 因文件名以 .md 结尾被代插腿每拍重读每拍拒，已挪进 `_held_1017/`，现在扫描面上待插块读数为零。
+
+
 ### ORD-零六八六 给 Copilot 对话加一条按行程成员授权把关的读回出口
 
 - 为什么开：Issue 廿七 的修法（PR 编号廿八）把会话缓存从 localStorage 收进模块内存之后，换人不再泄漏，但同一位旅客刷新页面也看不见自己刚才那段对话了。这不是可以靠改键名绕过去的：写门 `backend/app/main.py:14294` 只有 `post`，现读 `openapi.json` 里与对话相关的读门为零，最接近的 `backend/app/main.py:10096` 回的是行程事件表，其 `event_type` 词表里没有任何对话类型。
