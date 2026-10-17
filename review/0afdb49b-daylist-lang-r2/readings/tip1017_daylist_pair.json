@@ -1,0 +1,292 @@
+{
+ "schema": "CNX_DAYLIST_LANGUAGE_PAIR_R1",
+ "role_table_rows": 53,
+ "instrument_schema": "CNX_BUILDING_MANUAL_DAYLIST_R2",
+ "base_before": "http://127.0.0.1:4894",
+ "base_after": "http://127.0.0.1:4894",
+ "verdict_before": "MIXED_LANGUAGE_ON_ZH_SCREEN",
+ "verdict_after": "MIXED_LANGUAGE_ON_ZH_SCREEN",
+ "before": {
+  "lines": 3,
+  "lines_with_leak": 3,
+  "leak_segments": 4,
+  "translated_segments": 0,
+  "unknown_segments": 8
+ },
+ "after": {
+  "lines": 3,
+  "lines_with_leak": 0,
+  "leak_segments": 0,
+  "translated_segments": 4,
+  "unknown_segments": 8
+ },
+ "rows_before": [
+  {
+   "text": "Check out · Beijing South Courtyard · 天安门",
+   "site": "hub_day_card",
+   "seen_at_stops": [
+    "stay_after_generate"
+   ],
+   "segments": [
+    {
+     "segment": "Check out",
+     "kind": "ROUTING_TOKEN_LEAK",
+     "table_zh": "退房",
+     "latin": true
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "天安门",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": false
+    }
+   ],
+   "leaks": [
+    "Check out"
+   ],
+   "translated": [],
+   "unknown": [
+    "Beijing South Courtyard",
+    "天安门"
+   ]
+  },
+  {
+   "text": "National Museum of China · Overnight · Beijing South Courtyard",
+   "site": "hub_day_card",
+   "seen_at_stops": [
+    "stay_after_generate"
+   ],
+   "segments": [
+    {
+     "segment": "National Museum of China",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "Overnight",
+     "kind": "ROUTING_TOKEN_LEAK",
+     "table_zh": "过夜",
+     "latin": true
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    }
+   ],
+   "leaks": [
+    "Overnight"
+   ],
+   "translated": [],
+   "unknown": [
+    "National Museum of China",
+    "Beijing South Courtyard"
+   ]
+  },
+  {
+   "text": "北京站 · Check in · Beijing South Courtyard · Temple of Heaven · Overnight · Beijing South Courtyard",
+   "site": "hub_day_card",
+   "seen_at_stops": [
+    "stay_after_generate"
+   ],
+   "segments": [
+    {
+     "segment": "北京站",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": false
+    },
+    {
+     "segment": "Check in",
+     "kind": "ROUTING_TOKEN_LEAK",
+     "table_zh": "入住",
+     "latin": true
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "Temple of Heaven",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "Overnight",
+     "kind": "ROUTING_TOKEN_LEAK",
+     "table_zh": "过夜",
+     "latin": true
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    }
+   ],
+   "leaks": [
+    "Check in",
+    "Overnight"
+   ],
+   "translated": [],
+   "unknown": [
+    "北京站",
+    "Beijing South Courtyard",
+    "Temple of Heaven",
+    "Beijing South Courtyard"
+   ]
+  }
+ ],
+ "rows_after": [
+  {
+   "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+   "site": "hub_day_card",
+   "seen_at_stops": [
+    "after_create",
+    "stay_after_generate",
+    "stay_first"
+   ],
+   "segments": [
+    {
+     "segment": "National Museum of China",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "过夜",
+     "kind": "ROUTING_TOKEN_IN_CHINESE",
+     "table_zh": "过夜",
+     "latin": false
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    }
+   ],
+   "leaks": [],
+   "translated": [
+    "过夜"
+   ],
+   "unknown": [
+    "National Museum of China",
+    "Beijing South Courtyard"
+   ]
+  },
+  {
+   "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+   "site": "hub_day_card",
+   "seen_at_stops": [
+    "after_create",
+    "stay_after_generate",
+    "stay_first"
+   ],
+   "segments": [
+    {
+     "segment": "北京站",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": false
+    },
+    {
+     "segment": "入住",
+     "kind": "ROUTING_TOKEN_IN_CHINESE",
+     "table_zh": "入住",
+     "latin": false
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "Temple of Heaven",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "过夜",
+     "kind": "ROUTING_TOKEN_IN_CHINESE",
+     "table_zh": "过夜",
+     "latin": false
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    }
+   ],
+   "leaks": [],
+   "translated": [
+    "入住",
+    "过夜"
+   ],
+   "unknown": [
+    "北京站",
+    "Beijing South Courtyard",
+    "Temple of Heaven",
+    "Beijing South Courtyard"
+   ]
+  },
+  {
+   "text": "退房 · Beijing South Courtyard · 天安门",
+   "site": "hub_day_card",
+   "seen_at_stops": [
+    "after_create",
+    "stay_after_generate",
+    "stay_first"
+   ],
+   "segments": [
+    {
+     "segment": "退房",
+     "kind": "ROUTING_TOKEN_IN_CHINESE",
+     "table_zh": "退房",
+     "latin": false
+    },
+    {
+     "segment": "Beijing South Courtyard",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": true
+    },
+    {
+     "segment": "天安门",
+     "kind": "NOT_IN_ROLE_TABLE",
+     "table_zh": null,
+     "latin": false
+    }
+   ],
+   "leaks": [],
+   "translated": [
+    "退房"
+   ],
+   "unknown": [
+    "Beijing South Courtyard",
+    "天安门"
+   ]
+  }
+ ],
+ "place_names_still_english": [
+  "Beijing South Courtyard",
+  "National Museum of China",
+  "Temple of Heaven"
+ ],
+ "method": "segment classification against ROLE_LABELS parsed from the product source; a segment the table does not know is a place name, not a defect claim",
+ "not_claimed": "this pair says nothing about whether the place names themselves should be localised, and nothing about screens this walk did not reach"
+}

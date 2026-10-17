@@ -1,0 +1,1401 @@
+{
+ "schema": "CNX_BUILDING_MANUAL_DAYLIST_R2",
+ "base": "http://127.0.0.1:4894",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Sat Oct 17 2026 19:46:23 GMT+0800 (中国标准时间)",
+ "steps": [
+  {
+   "tag": "first_screen",
+   "path": "/",
+   "day_cards": [],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": null,
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-show-advanced",
+     "words": "高级设置",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-missing-jump",
+     "words": "目的地",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-missing-jump",
+     "words": "抵达地点",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-missing-jump",
+     "words": "离开地点",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-tianjin-demo",
+     "words": "使用封存的演示行程",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-next",
+     "words": "下一步",
+     "disabled": true,
+     "h": 44
+    },
+    {
+     "testid": "sim-ball",
+     "words": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [],
+   "zh_chars": 111,
+   "body_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示行程 下一步"
+  },
+  {
+   "tag": "after_fields",
+   "path": "/",
+   "day_cards": [],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": null,
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-show-advanced",
+     "words": "高级设置",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-tianjin-demo",
+     "words": "使用封存的演示行程",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-next",
+     "words": "下一步",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "sim-ball",
+     "words": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [],
+   "zh_chars": 149,
+   "body_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 这座城还没准备过：服务器认得「北京」，但还缺 2 类事实（nightlife、lodging），所以现在直接规划会缺依据。可以先准备。 已自动设置：中国 · 人民币 · 中国标准时间 看支持的目的地 抵达北京 离开北京 抵达时间 离开时间 高级设置 高级设置 使用封存的演示行程 下一步"
+  },
+  {
+   "tag": "wizard1",
+   "path": "/",
+   "day_cards": [],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": null,
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-show-advanced",
+     "words": "高级设置",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-tianjin-demo",
+     "words": "使用封存的演示行程",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-next",
+     "words": "下一步",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "sim-ball",
+     "words": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [],
+   "zh_chars": 149,
+   "body_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 这座城还没准备过：服务器认得「北京」，但还缺 2 类事实（nightlife、lodging），所以现在直接规划会缺依据。可以先准备。 已自动设置：中国 · 人民币 · 中国标准时间 看支持的目的地 抵达北京 离开北京 抵达时间 离开时间 高级设置 高级设置 使用封存的演示行程 下一步"
+  },
+  {
+   "tag": "wizard2",
+   "path": "/",
+   "day_cards": [],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": null,
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-pace-relaxed",
+     "words": "轻松",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-pace-balanced",
+     "words": "适中",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-pace-packed",
+     "words": "紧凑",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-interest-food",
+     "words": "美食",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-interest-nature",
+     "words": "自然",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-interest-culture",
+     "words": "人文",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-interest-seaside",
+     "words": "海边",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-interest-shopping",
+     "words": "购物",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-interest-family",
+     "words": "亲子",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-tianjin-demo",
+     "words": "使用封存的演示行程",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-back",
+     "words": "返回",
+     "disabled": false,
+     "h": 56
+    },
+    {
+     "testid": "trial-next",
+     "words": "下一步",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "sim-ball",
+     "words": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [],
+   "zh_chars": 125,
+   "body_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN ✓ 目的地与时间 2 人数与偏好 3 确认创建 旅行人数（必填 · 1-20 人） 房间数（建议值，可调整）（选填 · 1-20 间） 总预算（必填 · 1 元起） 住宿预算（选填 · 0 元起） 旅行节奏 轻松 适中 紧凑 兴趣 美食 自然 人文 海边 购物 亲子 特殊要求 使用封存的演示行程 返回 下一步"
+  },
+  {
+   "tag": "wizard3",
+   "path": "/",
+   "day_cards": [],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": null,
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-city",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-arrival",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-departure",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-party",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-budget",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-pace",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-interests",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-special",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "review-edit-auto-set",
+     "words": "改这一项",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-tianjin-demo",
+     "words": "使用封存的演示行程",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "trial-back",
+     "words": "返回",
+     "disabled": false,
+     "h": 56
+    },
+    {
+     "testid": "trial-create",
+     "words": "确认创建",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "sim-ball",
+     "words": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：202",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [],
+   "zh_chars": 156,
+   "body_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN ✓ 目的地与时间 ✓ 人数与偏好 3 确认创建 目的地改这一项 北京 抵达改这一项 北京站 · 2026-10-18 10:00 离开改这一项 天安门 · 2026-10-20 20:00 人数 / 房间改这一项 2 · 1 · 我们替你填的 总预算 / 住宿改这一项 CNY 3000 / 1000 · 我们替你填的 节奏改这一项 轻松 · 我们替你填的 兴趣改这一项 — 特殊要求改这一项 — 自动设置改这一项 CN · CNY · Asia/Shanghai 使用封存的演示行程 返回 确认创建"
+  },
+  {
+   "tag": "after_create",
+   "path": "/v8/hub",
+   "day_cards": [
+    {
+     "site": "hub_day_card",
+     "heading": "星期日",
+     "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+     "latin": [
+      "Beijing South Courtyard",
+      "Temple of Heaven"
+     ],
+     "small": "骑行 抵达锚点"
+    },
+    {
+     "site": "hub_day_card",
+     "heading": "星期一",
+     "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+     "latin": [
+      "National Museum of China",
+      "Beijing South Courtyard"
+     ],
+     "small": "公交地铁 住宿锚点"
+    },
+    {
+     "site": "hub_day_card",
+     "heading": "星期二",
+     "text": "退房 · Beijing South Courtyard · 天安门",
+     "latin": [
+      "Beijing South Courtyard"
+     ],
+     "small": "驾车 离开锚点"
+    }
+   ],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": "v8-mobile-menu",
+     "words": "菜单",
+     "disabled": false,
+     "h": 27
+    },
+    {
+     "testid": "topbar-theme",
+     "words": "跟随系统",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "topbar-language",
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "topbar-avatar",
+     "words": "BE",
+     "disabled": false,
+     "h": 28
+    },
+    {
+     "testid": null,
+     "words": "知道了",
+     "disabled": false,
+     "h": 14
+    },
+    {
+     "testid": "hub-plan-with-ai",
+     "words": "AI 帮我规划",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "试用其他城市",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "打开行程工作台",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "journey-link-copy",
+     "words": "复制行程链接",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "1",
+     "disabled": false,
+     "h": 34
+    },
+    {
+     "testid": "map-viewport-reset",
+     "words": "回到行程视野",
+     "disabled": false,
+     "h": 36
+    },
+    {
+     "testid": "pretrip-empty-action",
+     "words": "去看这一代方案",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "对比住宿 →",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "第 1 天 星期日 北京站 · 入住 · Beijing South Court",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": null,
+     "words": "第 2 天 星期一 National Museum of China · 过夜 ",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": null,
+     "words": "第 3 天 星期二 退房 · Beijing South Courtyard ·",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": "rank-none-retry",
+     "words": "再读一次",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-filter-open",
+     "words": "筛选",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-empty-action",
+     "words": "去城市探索",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-empty-import",
+     "words": "导入地点",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-reread",
+     "words": "再读一次",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "disabled": false,
+     "h": 42
+    },
+    {
+     "testid": null,
+     "words": "×",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "我想去Houhai Lake Bar Street (后海酒吧街)和Huguo ",
+     "disabled": false,
+     "h": 79
+    },
+    {
+     "testid": null,
+     "words": "Houhai Lake Bar Street (后海酒吧街)排在下午，Huguo",
+     "disabled": false,
+     "h": 79
+    },
+    {
+     "testid": "plan-ai-dismiss",
+     "words": "稍后",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "plan-ai-submit",
+     "words": "开始规划",
+     "disabled": true,
+     "h": 44
+    },
+    {
+     "testid": "nav-hub",
+     "words": "今天",
+     "disabled": false,
+     "h": 48
+    },
+    {
+     "testid": "nav-trips",
+     "words": "行程",
+     "disabled": false,
+     "h": 48
+    },
+    {
+     "testid": "nav-map",
+     "words": "地图",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [
+    {
+     "testid": "v8-mobile-menu",
+     "words": "菜单",
+     "h": 27
+    },
+    {
+     "testid": "topbar-avatar",
+     "words": "BE",
+     "h": 28
+    },
+    {
+     "testid": null,
+     "words": "知道了",
+     "h": 14
+    },
+    {
+     "testid": null,
+     "words": "1",
+     "h": 34
+    },
+    {
+     "testid": "map-viewport-reset",
+     "words": "回到行程视野",
+     "h": 36
+    },
+    {
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "h": 42
+    }
+   ],
+   "zh_chars": 626,
+   "body_text": "菜单 / 今天 跟随系统 EN BE 行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。 知道了 晚上好 北京之旅 10月18日 10:00 — 10月20日 20:00 · Asia/Shanghai · 行程时区 · 2 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 今天 还没有安排 “现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 7 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月18日 10:00 · Asia/Shanghai · 行程时区 出发 10月20日 20:00 · Asia/Shanghai · 行程时区 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 以下只是其中一个候选方案的预览，你还没有采用它。 第 1 天 星期日 北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard 骑行 抵达锚点 第 2 天 星期一 National Museum of China · 过夜 · Beijing South Courtyard 公交地铁 住宿锚点 第 3 天 星期二 退房 · Beijing South Courtyard · 天安门 驾车 离开锚点 现在没有可比的方案。 这趟一旦出现两个以上可选方案，这里就会摆出来。 再读一次 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 这台服务器还没有选定方案，所以没有「哪一天」可比。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴一段文字。 去城市探索 导入地点 再读一次 技术详情 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Houhai Lake Bar Street (后海酒吧街)和Huguo Temple Snacks (护国寺小吃)，节奏轻松一点，再找点当地吃的。 Houhai Lake Bar Street (后海酒吧街)排在下午，Huguo Temple Snacks (护国寺小吃)放在傍晚，别排太满。 这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。 稍后 开始规划 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "tag": "stay_first",
+   "path": "/v8/hub",
+   "day_cards": [
+    {
+     "site": "hub_day_card",
+     "heading": "星期日",
+     "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+     "latin": [
+      "Beijing South Courtyard",
+      "Temple of Heaven"
+     ],
+     "small": "骑行 抵达锚点"
+    },
+    {
+     "site": "hub_day_card",
+     "heading": "星期一",
+     "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+     "latin": [
+      "National Museum of China",
+      "Beijing South Courtyard"
+     ],
+     "small": "公交地铁 住宿锚点"
+    },
+    {
+     "site": "hub_day_card",
+     "heading": "星期二",
+     "text": "退房 · Beijing South Courtyard · 天安门",
+     "latin": [
+      "Beijing South Courtyard"
+     ],
+     "small": "驾车 离开锚点"
+    }
+   ],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": "v8-mobile-menu",
+     "words": "菜单",
+     "disabled": false,
+     "h": 27
+    },
+    {
+     "testid": "topbar-theme",
+     "words": "跟随系统",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "topbar-language",
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "topbar-avatar",
+     "words": "BE",
+     "disabled": false,
+     "h": 28
+    },
+    {
+     "testid": null,
+     "words": "知道了",
+     "disabled": false,
+     "h": 14
+    },
+    {
+     "testid": "hub-plan-with-ai",
+     "words": "AI 帮我规划",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "试用其他城市",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "打开行程工作台",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "journey-link-copy",
+     "words": "复制行程链接",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "1",
+     "disabled": false,
+     "h": 34
+    },
+    {
+     "testid": "map-viewport-reset",
+     "words": "回到行程视野",
+     "disabled": false,
+     "h": 36
+    },
+    {
+     "testid": "pretrip-empty-action",
+     "words": "去看这一代方案",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "对比住宿 →",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "第 1 天 星期日 北京站 · 入住 · Beijing South Court",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": null,
+     "words": "第 2 天 星期一 National Museum of China · 过夜 ",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": null,
+     "words": "第 3 天 星期二 退房 · Beijing South Courtyard ·",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": "rank-none-retry",
+     "words": "再读一次",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-filter-open",
+     "words": "筛选",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-empty-action",
+     "words": "去城市探索",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-empty-import",
+     "words": "导入地点",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-reread",
+     "words": "再读一次",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "disabled": false,
+     "h": 42
+    },
+    {
+     "testid": null,
+     "words": "×",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "我想去Houhai Lake Bar Street (后海酒吧街)和Huguo ",
+     "disabled": false,
+     "h": 79
+    },
+    {
+     "testid": null,
+     "words": "Houhai Lake Bar Street (后海酒吧街)排在下午，Huguo",
+     "disabled": false,
+     "h": 79
+    },
+    {
+     "testid": "plan-ai-dismiss",
+     "words": "稍后",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "plan-ai-submit",
+     "words": "开始规划",
+     "disabled": true,
+     "h": 44
+    },
+    {
+     "testid": "nav-hub",
+     "words": "今天",
+     "disabled": false,
+     "h": 48
+    },
+    {
+     "testid": "nav-trips",
+     "words": "行程",
+     "disabled": false,
+     "h": 48
+    },
+    {
+     "testid": "nav-map",
+     "words": "地图",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [
+    {
+     "testid": "v8-mobile-menu",
+     "words": "菜单",
+     "h": 27
+    },
+    {
+     "testid": "topbar-avatar",
+     "words": "BE",
+     "h": 28
+    },
+    {
+     "testid": null,
+     "words": "知道了",
+     "h": 14
+    },
+    {
+     "testid": null,
+     "words": "1",
+     "h": 34
+    },
+    {
+     "testid": "map-viewport-reset",
+     "words": "回到行程视野",
+     "h": 36
+    },
+    {
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "h": 42
+    }
+   ],
+   "zh_chars": 626,
+   "body_text": "菜单 / 今天 跟随系统 EN BE 行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。 知道了 晚上好 北京之旅 10月18日 10:00 — 10月20日 20:00 · Asia/Shanghai · 行程时区 · 2 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 今天 还没有安排 “现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 7 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月18日 10:00 · Asia/Shanghai · 行程时区 出发 10月20日 20:00 · Asia/Shanghai · 行程时区 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 以下只是其中一个候选方案的预览，你还没有采用它。 第 1 天 星期日 北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard 骑行 抵达锚点 第 2 天 星期一 National Museum of China · 过夜 · Beijing South Courtyard 公交地铁 住宿锚点 第 3 天 星期二 退房 · Beijing South Courtyard · 天安门 驾车 离开锚点 现在没有可比的方案。 这趟一旦出现两个以上可选方案，这里就会摆出来。 再读一次 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 这台服务器还没有选定方案，所以没有「哪一天」可比。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴一段文字。 去城市探索 导入地点 再读一次 技术详情 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Houhai Lake Bar Street (后海酒吧街)和Huguo Temple Snacks (护国寺小吃)，节奏轻松一点，再找点当地吃的。 Houhai Lake Bar Street (后海酒吧街)排在下午，Huguo Temple Snacks (护国寺小吃)放在傍晚，别排太满。 这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。 稍后 开始规划 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "tag": "stay_after_generate",
+   "path": "/v8/hub",
+   "day_cards": [
+    {
+     "site": "hub_day_card",
+     "heading": "星期日",
+     "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+     "latin": [
+      "Beijing South Courtyard",
+      "Temple of Heaven"
+     ],
+     "small": "骑行 抵达锚点"
+    },
+    {
+     "site": "hub_day_card",
+     "heading": "星期一",
+     "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+     "latin": [
+      "National Museum of China",
+      "Beijing South Courtyard"
+     ],
+     "small": "公交地铁 住宿锚点"
+    },
+    {
+     "site": "hub_day_card",
+     "heading": "星期二",
+     "text": "退房 · Beijing South Courtyard · 天安门",
+     "latin": [
+      "Beijing South Courtyard"
+     ],
+     "small": "驾车 离开锚点"
+    }
+   ],
+   "activity_rows": [],
+   "stay_cards": [],
+   "stay_state": [],
+   "pressables": [
+    {
+     "testid": "v8-mobile-menu",
+     "words": "菜单",
+     "disabled": false,
+     "h": 27
+    },
+    {
+     "testid": "topbar-theme",
+     "words": "跟随系统",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "topbar-language",
+     "words": "EN",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "topbar-avatar",
+     "words": "BE",
+     "disabled": false,
+     "h": 28
+    },
+    {
+     "testid": null,
+     "words": "知道了",
+     "disabled": false,
+     "h": 14
+    },
+    {
+     "testid": "hub-plan-with-ai",
+     "words": "AI 帮我规划",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "试用其他城市",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "打开行程工作台",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "journey-link-copy",
+     "words": "复制行程链接",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "1",
+     "disabled": false,
+     "h": 34
+    },
+    {
+     "testid": "map-viewport-reset",
+     "words": "回到行程视野",
+     "disabled": false,
+     "h": 36
+    },
+    {
+     "testid": "pretrip-empty-action",
+     "words": "去看这一代方案",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "对比住宿 →",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "第 1 天 星期日 北京站 · 入住 · Beijing South Court",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": null,
+     "words": "第 2 天 星期一 National Museum of China · 过夜 ",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": null,
+     "words": "第 3 天 星期二 退房 · Beijing South Courtyard ·",
+     "disabled": false,
+     "h": 155
+    },
+    {
+     "testid": "rank-none-retry",
+     "words": "再读一次",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-filter-open",
+     "words": "筛选",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-empty-action",
+     "words": "去城市探索",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-empty-import",
+     "words": "导入地点",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "pending-reread",
+     "words": "再读一次",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "disabled": false,
+     "h": 42
+    },
+    {
+     "testid": null,
+     "words": "×",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": null,
+     "words": "我想去Houhai Lake Bar Street (后海酒吧街)和Huguo ",
+     "disabled": false,
+     "h": 79
+    },
+    {
+     "testid": null,
+     "words": "Houhai Lake Bar Street (后海酒吧街)排在下午，Huguo",
+     "disabled": false,
+     "h": 79
+    },
+    {
+     "testid": "plan-ai-dismiss",
+     "words": "稍后",
+     "disabled": false,
+     "h": 44
+    },
+    {
+     "testid": "plan-ai-submit",
+     "words": "开始规划",
+     "disabled": true,
+     "h": 44
+    },
+    {
+     "testid": "nav-hub",
+     "words": "今天",
+     "disabled": false,
+     "h": 48
+    },
+    {
+     "testid": "nav-trips",
+     "words": "行程",
+     "disabled": false,
+     "h": 48
+    },
+    {
+     "testid": "nav-map",
+     "words": "地图",
+     "disabled": false,
+     "h": 48
+    }
+   ],
+   "tap_targets_under_44": [
+    {
+     "testid": "v8-mobile-menu",
+     "words": "菜单",
+     "h": 27
+    },
+    {
+     "testid": "topbar-avatar",
+     "words": "BE",
+     "h": 28
+    },
+    {
+     "testid": null,
+     "words": "知道了",
+     "h": 14
+    },
+    {
+     "testid": null,
+     "words": "1",
+     "h": 34
+    },
+    {
+     "testid": "map-viewport-reset",
+     "words": "回到行程视野",
+     "h": 36
+    },
+    {
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "h": 42
+    }
+   ],
+   "zh_chars": 626,
+   "body_text": "菜单 / 今天 跟随系统 EN BE 行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。 知道了 晚上好 北京之旅 10月18日 10:00 — 10月20日 20:00 · Asia/Shanghai · 行程时区 · 2 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 一切正常 今天 还没有安排 “现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 1 回到行程视野 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 7 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 还没有选定 到达 10月18日 10:00 · Asia/Shanghai · 行程时区 出发 10月20日 20:00 · Asia/Shanghai · 行程时区 行前清单 服务端报出的两类待办 这一代都没有报出。 去看这一代方案 方案概览 每一天，紧密相连。 对比住宿 → 以下只是其中一个候选方案的预览，你还没有采用它。 第 1 天 星期日 北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard 骑行 抵达锚点 第 2 天 星期一 National Museum of China · 过夜 · Beijing South Courtyard 公交地铁 住宿锚点 第 3 天 星期二 退房 · Beijing South Courtyard · 天安门 驾车 离开锚点 现在没有可比的方案。 这趟一旦出现两个以上可选方案，这里就会摆出来。 再读一次 待规划 这台服务器说这些地点属于这一程，还没排在任何一天。 这台服务器还没有选定方案，所以没有「哪一天」可比。 0 个地点没有排在某一天 筛选 这一程没有待规划的地点。 想收进新的地点，去城市探索捕获这一程的地点，或者到导入地点贴一段文字。 去城市探索 导入地点 再读一次 技术详情 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Houhai Lake Bar Street (后海酒吧街)和Huguo Temple Snacks (护国寺小吃)，节奏轻松一点，再找点当地吃的。 Houhai Lake Bar Street (后海酒吧街)排在下午，Huguo Temple Snacks (护国寺小吃)放在傍晚，别排太满。 这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。 稍后 开始规划 今天 行程 地图 Copilot 我的"
+  }
+ ],
+ "presses": [
+  {
+   "tag": "wizard_press1",
+   "pressed": true,
+   "hit": {
+    "w": 350,
+    "h": 44,
+    "disabled": false,
+    "landed": true,
+    "label": "下一步"
+   }
+  },
+  {
+   "tag": "wizard_press2",
+   "pressed": true,
+   "hit": {
+    "w": 288,
+    "h": 44,
+    "disabled": false,
+    "landed": true,
+    "label": "下一步"
+   }
+  },
+  {
+   "tag": "wizard_press3",
+   "pressed": true,
+   "hit": {
+    "w": 288,
+    "h": 44,
+    "disabled": false,
+    "landed": true,
+    "label": "确认创建"
+   }
+  },
+  {
+   "tag": "open_stay",
+   "pressed": false,
+   "why": "HIT_TEST_MISSED",
+   "hit": {
+    "w": 82,
+    "h": 44,
+    "disabled": false,
+    "landed": false,
+    "label": "对比住宿 →"
+   }
+  },
+  {
+   "tag": "generate_stay",
+   "pressed": false,
+   "why": "NO_SUCH_TESTID"
+  }
+ ],
+ "fields": [
+  {
+   "testid": "trial-city",
+   "filled": true,
+   "box": {
+    "w": 308,
+    "h": 44,
+    "tag": "INPUT",
+    "type": null,
+    "visible": true
+   },
+   "readback": "北京"
+  },
+  {
+   "testid": "trial-arrival",
+   "filled": true,
+   "box": {
+    "w": 308,
+    "h": 44,
+    "tag": "INPUT",
+    "type": null,
+    "visible": true
+   },
+   "readback": "北京站"
+  },
+  {
+   "testid": "trial-departure",
+   "filled": true,
+   "box": {
+    "w": 308,
+    "h": 44,
+    "tag": "INPUT",
+    "type": null,
+    "visible": true
+   },
+   "readback": "天安门"
+  }
+ ],
+ "findings": [
+  {
+   "site": "hub_day_card",
+   "heading": "星期日",
+   "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+   "latin": [
+    "Beijing South Courtyard",
+    "Temple of Heaven"
+   ],
+   "small": "骑行 抵达锚点",
+   "stop": "after_create",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期一",
+   "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+   "latin": [
+    "National Museum of China",
+    "Beijing South Courtyard"
+   ],
+   "small": "公交地铁 住宿锚点",
+   "stop": "after_create",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期二",
+   "text": "退房 · Beijing South Courtyard · 天安门",
+   "latin": [
+    "Beijing South Courtyard"
+   ],
+   "small": "驾车 离开锚点",
+   "stop": "after_create",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期日",
+   "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+   "latin": [
+    "Beijing South Courtyard",
+    "Temple of Heaven"
+   ],
+   "small": "骑行 抵达锚点",
+   "stop": "stay_first",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期一",
+   "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+   "latin": [
+    "National Museum of China",
+    "Beijing South Courtyard"
+   ],
+   "small": "公交地铁 住宿锚点",
+   "stop": "stay_first",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期二",
+   "text": "退房 · Beijing South Courtyard · 天安门",
+   "latin": [
+    "Beijing South Courtyard"
+   ],
+   "small": "驾车 离开锚点",
+   "stop": "stay_first",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期日",
+   "text": "北京站 · 入住 · Beijing South Courtyard · Temple of Heaven · 过夜 · Beijing South Courtyard",
+   "latin": [
+    "Beijing South Courtyard",
+    "Temple of Heaven"
+   ],
+   "small": "骑行 抵达锚点",
+   "stop": "stay_after_generate",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期一",
+   "text": "National Museum of China · 过夜 · Beijing South Courtyard",
+   "latin": [
+    "National Museum of China",
+    "Beijing South Courtyard"
+   ],
+   "small": "公交地铁 住宿锚点",
+   "stop": "stay_after_generate",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  },
+  {
+   "site": "hub_day_card",
+   "heading": "星期二",
+   "text": "退房 · Beijing South Courtyard · 天安门",
+   "latin": [
+    "Beijing South Courtyard"
+   ],
+   "small": "驾车 离开锚点",
+   "stop": "stay_after_generate",
+   "class": "LATIN_RUN_ON_ZH_SCREEN"
+  }
+ ],
+ "page_errors": [],
+ "console_errors": [],
+ "verdict": "MIXED_LANGUAGE_ON_ZH_SCREEN",
+ "outcome": "READ",
+ "shots": [
+  {
+   "name": "01_first_screen",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\01_first_screen.png",
+   "bytes": 109249
+  },
+  {
+   "name": "02_wizard_1",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\02_wizard_1.png",
+   "bytes": 117676
+  },
+  {
+   "name": "02_wizard_2",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\02_wizard_2.png",
+   "bytes": 129693
+  },
+  {
+   "name": "02_wizard_3",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\02_wizard_3.png",
+   "bytes": 569570
+  },
+  {
+   "name": "03_after_create",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\03_after_create.png",
+   "bytes": 574282
+  },
+  {
+   "name": "04_stay_first",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\04_stay_first.png",
+   "bytes": 716353
+  },
+  {
+   "name": "05_stay_after_generate",
+   "file": "D:\\moodle\\_qoder_phone_ord0485_20260930\\evidence\\tip1017_manual_r2_after\\05_stay_after_generate.png",
+   "bytes": 716499
+  }
+ ],
+ "created_screen": {
+  "path": "/v8/hub",
+  "zh": 626,
+  "day_cards": 3,
+  "stay_cards": 0,
+  "has_creation_word": true,
+  "has_blocked_word": true
+ },
+ "line_count": 9,
+ "latin_line_count": 9,
+ "tap_targets_under_44": [
+  {
+   "testid": "v8-mobile-menu",
+   "words": "菜单",
+   "h": 27,
+   "stop": "after_create"
+  },
+  {
+   "testid": "topbar-avatar",
+   "words": "BE",
+   "h": 28,
+   "stop": "after_create"
+  },
+  {
+   "testid": null,
+   "words": "知道了",
+   "h": 14,
+   "stop": "after_create"
+  },
+  {
+   "testid": null,
+   "words": "1",
+   "h": 34,
+   "stop": "after_create"
+  },
+  {
+   "testid": "map-viewport-reset",
+   "words": "回到行程视野",
+   "h": 36,
+   "stop": "after_create"
+  },
+  {
+   "testid": null,
+   "words": "✦ CityNexus Copilot",
+   "h": 42,
+   "stop": "after_create"
+  }
+ ],
+ "finished": "Sat Oct 17 2026 19:46:43 GMT+0800 (中国标准时间)"
+}
