@@ -1,6 +1,21 @@
 import type { FormEvent } from "react";
 
-const NEXT_DAY_REST_PREFERENCE = "偏好：次日中午后出发，留足休息时间。";
+const NEXT_DAY_REST_PREFERENCE = "时间窗：次日14:00后出发；上午不排活动，留足休息。";
+const SHORT_WALK_PREFERENCE = "偏好：低体力同行，少走路，优先短路线。";
+const RAIN_CONFLICT_PREFERENCE = "只排已核实开放且可达的两站；未知标待核实。先核实午后雨情，下雨给室内备选；冲突先问我改计划。";
+
+function togglePromptPreference(value: string, preference: string) {
+  const lines = value.split("\n");
+  if (lines.includes(preference)) {
+    return lines.filter((line) => line !== preference).join("\n");
+  }
+  return `${value}${value.trim() ? "\n" : ""}${preference}`;
+}
+
+function preferenceFits(value: string, preference: string) {
+  return value.split("\n").includes(preference) ||
+    value.length + (value.trim() ? 1 : 0) + preference.length <= 360;
+}
 
 export type MobileAiAdvice = {
   category: string | null;
@@ -30,20 +45,16 @@ export function MobileAiPrompt({
     event.preventDefault();
     onSubmit();
   };
-  const restPreferenceAdded = value.includes(NEXT_DAY_REST_PREFERENCE);
-  const restPreferenceFits = restPreferenceAdded ||
-    value.length + (value.trim() ? 1 : 0) + NEXT_DAY_REST_PREFERENCE.length <= 360;
-
-  const toggleRestPreference = () => {
-    if (restPreferenceAdded) {
-      const appendedPreference = `\n${NEXT_DAY_REST_PREFERENCE}`;
-      onChange(value.endsWith(appendedPreference)
-        ? value.slice(0, -appendedPreference.length)
-        : value.replace(NEXT_DAY_REST_PREFERENCE, ""));
-      return;
-    }
-    onChange(`${value}${value.trim() ? "\n" : ""}${NEXT_DAY_REST_PREFERENCE}`);
-  };
+  const restPreferenceAdded = value.split("\n").includes(NEXT_DAY_REST_PREFERENCE);
+  const shortWalkPreferenceAdded = value.split("\n").includes(SHORT_WALK_PREFERENCE);
+  const restPreferenceFits = preferenceFits(value, NEXT_DAY_REST_PREFERENCE);
+  const shortWalkPreferenceFits = preferenceFits(value, SHORT_WALK_PREFERENCE);
+  const rainPreferenceAdded = value.split("\n").includes(RAIN_CONFLICT_PREFERENCE);
+  const rainPreferenceFits = preferenceFits(value, RAIN_CONFLICT_PREFERENCE);
+  const promptRows = Math.min(10, Math.max(2, value.split("\n").reduce(
+    (rows, line) => rows + Math.max(1, Math.ceil(line.length / 16)),
+    0,
+  )));
 
   return (
     <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
@@ -57,7 +68,8 @@ export function MobileAiPrompt({
           id="rev-quick-ai-prompt"
           value={value}
           maxLength={360}
-          rows={2}
+          rows={promptRows}
+          style={{ maxHeight: "none" }}
           onChange={(event) => onChange(event.target.value)}
           placeholder="比如：今晚想吃点当地特色，再轻松散散步。"
         />
@@ -67,12 +79,36 @@ export function MobileAiPrompt({
             className="rev-quick-secondary"
             aria-pressed={restPreferenceAdded}
             disabled={busy || !restPreferenceFits}
-            onClick={toggleRestPreference}
+            onClick={() => onChange(togglePromptPreference(value, NEXT_DAY_REST_PREFERENCE))}
             data-testid="rev-quick-ai-rest-preference"
           >
             {restPreferenceAdded
-              ? "已加入：中午后出发 · 留足休息（点按移除）"
-              : "加上偏好：次日中午后出发 · 留足休息"}
+              ? "已加入：不排上午 · 留足休息（点按移除）"
+              : "加上时间窗：13:30 起床 · 14:00 后出发"}
+          </button>
+          <button
+            type="button"
+            className="rev-quick-secondary"
+            aria-pressed={shortWalkPreferenceAdded}
+            disabled={busy || !shortWalkPreferenceFits}
+            onClick={() => onChange(togglePromptPreference(value, SHORT_WALK_PREFERENCE))}
+            data-testid="rev-quick-ai-short-walk-preference"
+          >
+            {shortWalkPreferenceAdded
+              ? "已加入：低体力 · 短路线（点按移除）"
+              : "加上偏好：低体力同行 · 少步行"}
+          </button>
+          <button
+            type="button"
+            className="rev-quick-secondary"
+            aria-pressed={rainPreferenceAdded}
+            disabled={busy || !rainPreferenceFits}
+            onClick={() => onChange(togglePromptPreference(value, RAIN_CONFLICT_PREFERENCE))}
+            data-testid="rev-quick-ai-rain-conflict-preference"
+          >
+            {rainPreferenceAdded
+              ? "已加入：雨天备选 · 冲突可改计划（点按移除）"
+              : "加上偏好：核实两站 · 雨天室内备选"}
           </button>
         </div>
         <div className="rev-quick-ai-actions">
