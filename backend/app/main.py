@@ -19051,7 +19051,23 @@ def _remaining_opportunity_horizon(
 
 
 @app.post("/api/v1/journeys/{journey_id}/start", response_model=JourneyTwinSchema)
-def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
+def start_journey(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import (
+            member_has_capability,
+            resolve_journey_member_principal,
+        )
+
+        _principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+            raise HTTPException(403, "Journey member role cannot start execution")
+
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status == "ACTIVE":
         twin = _twin_snapshot(session, journey)

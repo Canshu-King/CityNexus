@@ -106,3 +106,10 @@ cafe 和 library 的服务端回执显示 Photon 返回了原始要素且 adapte
 - 结果：退出码 0，`16 passed, 4 warnings in 4.49s`。
 - 覆盖 Photon provider 选择、DRAFT 探索、R107 Pocket Walk 保存/恢复、R85-R87 首次地点发现和 R95 来源信息。
 - 本轮只执行隔离 pytest；没有发起真实地点服务请求，也没有完成浏览器端双 POI、GO 或刷新恢复。
+
+## 2026-10-17 Journey 启动身份校验
+
+- `/api/v1/journeys/{journey_id}/start` 现在会先按路径 Journey 校验签名成员，并要求 `JOURNEY_EXECUTION_UPDATE` 能力；检查也覆盖已经是 `ACTIVE` 的幂等返回。未配置旅客签名密钥的旧测试模式保持原有行为。
+- 聚焦命令：`uv run --offline --project . pytest -p no:cacheprovider tests/test_signed_journey_start.py -q`；结果 `2 passed`。数据库使用进程内 SQLite。
+- 两项用例覆盖匿名请求拒绝、非成员拒绝、具备能力的成员访问 ACTIVE 快照，以及缺少启动能力时拒绝。
+- 这些是路由授权回归，测试使用合成数据库记录；它们不代表创建了真实 ACTIVE 行程或 AgentRun。真实签名 ACTIVE Journey 与持久化 Hermes 轨迹仍待真实 Pocket Walk / Journey 启动流程闭环。
