@@ -1,0 +1,43 @@
+{
+ "at_local": "2026-10-17 14:36",
+ "tip": "321d4ab19c6c9d730717cc530de0f58d86b898d1",
+ "ruler": "_cmdr_grad_scan_r1.cjs",
+ "loads": 68,
+ "readings": 4474,
+ "low_below_4_5": 123,
+ "distinct_kinds": 45,
+ "previous_arm_after_landing_34": {
+  "loads": 68,
+  "readings": 4474,
+  "low_below_4_5": 143,
+  "distinct_kinds": 47
+ },
+ "by_screen": {
+  "twin": 31,
+  "authoritative": 29,
+  "intelligence": 21,
+  "studio": 17,
+  "trips": 9,
+  "hub": 3,
+  "agent": 3,
+  "live": 1,
+  "map": 1,
+  "stay": 1,
+  "discover": 1,
+  "import": 1,
+  "bookings": 1,
+  "footprints": 1,
+  "trash": 1,
+  "access": 1,
+  "me": 1
+ },
+ "positive_control_em": {
+  "color_only": 2.18,
+  "with_grad": 2.18
+ },
+ "positive_control_pill": {
+  "color_only": 3.97,
+  "with_grad": 3.97,
+  "text": "画像上下文就绪"
+ }
+}
