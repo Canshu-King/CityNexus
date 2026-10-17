@@ -940,6 +940,8 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "runtime_identity": (
             NATIVE_DEEPSEEK_TOOL_LOOP
             if run.provider_key == "deepseek"
+            else "HERMES_NATIVE_MCP"
+            if run.provider_key == "hermes-native"
             else "HERMES_COMPAT_ENDPOINT"
             if run.provider_key == "hermes"
             else runtime_identity()

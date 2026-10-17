@@ -1119,6 +1119,211 @@ def get_native_hermes_run(run_id: str) -> dict[str, Any]:
         client.close()
 
 
+_NATIVE_SAFE_DECISIONS = frozenset(
+    {item.value for item in AuthorizationDecision} | {"NO_ACTION", "APPROVAL_REQUIRED"}
+)
+_NATIVE_SAFE_STEP_STATUSES = frozenset(
+    {
+        "APPROVAL_REQUIRED",
+        "APPROVED",
+        "BLOCKED",
+        "CANCELLED",
+        "CANCELED",
+        "COMPLETED",
+        "CREATED",
+        "DENIED",
+        "FAILED",
+        "PENDING",
+        "QUEUED",
+        "REJECTED",
+        "RUNNING",
+        "STARTED",
+        "STOPPED",
+        "SUCCEEDED",
+        "WAITING_FOR_APPROVAL",
+    }
+)
+
+
+def _persist_native_agent_run_start(
+    session: Session,
+    *,
+    run_id: str,
+    journey: Journey,
+    mission: JourneyMission,
+    status: str | None,
+    model_key: str,
+) -> AgentRun:
+    """Bind one returned native Hermes run to the existing persisted AgentRun model."""
+    native_run_id = str(run_id or "").strip()
+    if not native_run_id:
+        raise ValueError("native Hermes run id is required")
+    existing = session.get(AgentRun, native_run_id)
+    if existing is not None:
+        if (
+            existing.journey_id != str(journey.id)
+            or existing.mission_id != str(mission.id)
+            or existing.provider_key != "hermes-native"
+        ):
+            raise ValueError("native Hermes run id is already bound to another AgentRun")
+        return existing
+
+    now = datetime.now(timezone.utc).isoformat()
+    safe_status = str(status or "RUNNING").strip().upper()
+    if safe_status not in _NATIVE_SAFE_STEP_STATUSES:
+        safe_status = "RUNNING"
+    run = AgentRun(
+        id=native_run_id,
+        mission_id=str(mission.id),
+        journey_id=str(journey.id),
+        provider_key="hermes-native",
+        model_key=str(model_key),
+        status=safe_status,
+        outcome=None,
+        failure_reason=None,
+        created_at=now,
+        started_at=now,
+        completed_at=None,
+    )
+    session.add(run)
+    return run
+
+
+def _safe_native_step_result(event: Mapping[str, Any]) -> dict[str, Any]:
+    """Keep only bounded normalized result facts in AgentRunStep storage."""
+    summary = event.get("result_summary")
+    if not isinstance(summary, Mapping):
+        return {}
+    safe: dict[str, Any] = {}
+    for key in ("decision", "status", "approval_status"):
+        value = summary.get(key)
+        if isinstance(value, str):
+            code = value.strip().upper()
+            allowed_codes = (
+                _NATIVE_SAFE_DECISIONS if key == "decision" else _NATIVE_SAFE_STEP_STATUSES
+            )
+            if code in allowed_codes:
+                safe[key] = code
+    if isinstance(summary.get("executed"), bool):
+        safe["executed"] = summary["executed"]
+    for key in ("length", "items"):
+        value = summary.get(key)
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            safe[key] = value
+    keys = summary.get("keys")
+    if isinstance(keys, list):
+        safe["keys"] = [
+            item for item in keys[:20]
+            if isinstance(item, str) and re.fullmatch(r"[A-Za-z0-9_.:-]{1,64}", item)
+        ]
+    if summary.get("kind") == "text":
+        safe["kind"] = "text"
+    return safe
+
+
+def _persist_native_agent_event(session: Session, event: Mapping[str, Any]) -> None:
+    """Project normalized native lifecycle/tool events into AgentRun tables."""
+    run_id = str(event.get("run_id") or "")
+    run = session.get(AgentRun, run_id) if run_id else None
+    if run is None:
+        return
+
+    event_type = str(event.get("event_type") or "")
+    now = datetime.now(timezone.utc).isoformat()
+    timestamp = event.get("timestamp")
+    try:
+        event_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00")).isoformat()
+    except (AttributeError, TypeError, ValueError):
+        event_time = now
+    terminal_status = {
+        "run.completed": "COMPLETED",
+        "run.failed": "FAILED_EXTERNAL",
+        "run.stopped": "STOPPED",
+    }.get(event_type)
+    if event_type == "approval.required" and run.status not in {
+        "COMPLETED", "FAILED_EXTERNAL", "STOPPED", "INTERRUPTED"
+    }:
+        run.status = "WAITING_FOR_APPROVAL"
+    elif event_type == "run.started" and run.status not in {
+        "COMPLETED", "FAILED_EXTERNAL", "STOPPED", "INTERRUPTED"
+    }:
+        run.status = "RUNNING"
+        if not run.started_at:
+            run.started_at = event_time
+    elif terminal_status:
+        run.status = terminal_status
+        run.completed_at = event_time
+        run.failure_reason = "NATIVE_HERMES_RUN_FAILED" if event_type == "run.failed" else None
+        run.outcome = json.dumps(
+            {"runtime_identity": "HERMES_NATIVE_MCP", "status": terminal_status},
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+
+    if event_type not in {"tool.completed", "tool.failed"}:
+        return
+    tool_name = event.get("tool_name")
+    if not isinstance(tool_name, str):
+        return
+    tool_name = tool_name.strip()
+    if not re.fullmatch(r"[A-Za-z0-9_.:-]{1,120}", tool_name):
+        return
+
+    signature = json.dumps(dict(event), ensure_ascii=False, sort_keys=True, default=str)
+    step_id = str(uuid5(NAMESPACE_URL, f"citynexus-native-hermes-step:{run.id}:{signature}"))
+    if session.get(AgentRunStep, step_id) is not None:
+        return
+    source_sequence = event.get("sequence")
+    if (
+        isinstance(source_sequence, int)
+        and not isinstance(source_sequence, bool)
+        and source_sequence > 0
+        and source_sequence <= 2_147_483_647
+    ):
+        # Hermes replay may assign a new transport event id to an already
+        # projected sequence. Keep one persisted tool step for that run slot.
+        duplicate_sequence = session.scalar(
+            select(AgentRunStep.id).where(
+                AgentRunStep.run_id == run.id,
+                AgentRunStep.sequence_no == source_sequence,
+            )
+        )
+        if duplicate_sequence is not None:
+            return
+        sequence_no = source_sequence
+    else:
+        max_sequence = session.scalar(
+            select(func.max(AgentRunStep.sequence_no)).where(AgentRunStep.run_id == run.id)
+        ) or 0
+        sequence_no = int(max_sequence) + 1
+
+    decision = event.get("policy_decision")
+    if not isinstance(decision, str) or decision.strip().upper() not in _NATIVE_SAFE_DECISIONS:
+        decision = None
+    completed_at = event_time
+    step = AgentRunStep(
+        id=step_id,
+        run_id=run.id,
+        sequence_no=sequence_no,
+        tool_name=tool_name,
+        # Native Hermes arguments and raw outputs are intentionally not copied.
+        arguments_json="{}",
+        result_json=json.dumps(
+            {
+                "status": "FAILED" if event_type == "tool.failed" else "COMPLETED",
+                "summary": _safe_native_step_result(event),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        decision=decision.strip().upper() if decision else None,
+        status="TOOL_ERROR" if event_type == "tool.failed" else "COMPLETED",
+        created_at=completed_at,
+        completed_at=completed_at,
+    )
+    session.add(step)
+
+
 def _persist_native_event(event: dict[str, Any], *, journey_id: str | None = None) -> None:
     """Persist a compact native event so reconnects can recover run history."""
     run_id = str(event.get("run_id") or "")
@@ -1154,6 +1359,9 @@ def _persist_native_event(event: dict[str, Any], *, journey_id: str | None = Non
             actor_id="hermes-native",
             after=event,
         )
+        run = event_session.get(AgentRun, run_id)
+        if run is not None and (journey_id is None or run.journey_id == str(journey_id)):
+            _persist_native_agent_event(event_session, event)
         event_session.commit()
 
 
@@ -1199,6 +1407,28 @@ def _require_native_hermes_run_member(
     if mission is None or mission.journey_id != str(journey.id):
         raise HTTPException(404, "native Hermes run is not available to this Journey member")
     return principal, member, binding
+
+
+def _require_native_agent_run_member(
+    request: Request,
+    session: Session,
+    *,
+    journey_id: str,
+    run: AgentRun,
+) -> None:
+    """Apply the native run binding before exposing its persisted AgentRun steps."""
+    _principal, _member, binding = _require_native_hermes_run_member(
+        request,
+        session,
+        journey_id=str(journey_id),
+        run_id=run.id,
+    )
+    try:
+        binding_payload = json.loads(binding.after_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        binding_payload = {}
+    if not isinstance(binding_payload, dict) or binding_payload.get("mission_id") != run.mission_id:
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
 
 
 def _require_unscoped_native_hermes_run_member(
@@ -4807,6 +5037,13 @@ def get_agent_run(
     run = session.get(AgentRun, str(run_id))
     if run is None or run.journey_id != journey.id:
         raise HTTPException(404, "agent run was not found")
+    if run.provider_key == "hermes-native":
+        _require_native_agent_run_member(
+            request,
+            session,
+            journey_id=str(journey.id),
+            run=run,
+        )
     mission = session.get(JourneyMission, run.mission_id)
     steps = session.scalars(
         select(AgentRunStep).where(AgentRunStep.run_id == run.id).order_by(AgentRunStep.sequence_no)
@@ -4835,6 +5072,7 @@ def get_agent_run(
         "mission_id": run.mission_id,
         "journey_id": run.journey_id,
         "provider_key": run.provider_key,
+        "runtime_identity": "HERMES_NATIVE_MCP" if run.provider_key == "hermes-native" else None,
         "model_key": run.model_key,
         "status": run.status,
         "completion_contract": _server_completion_contract(
@@ -5000,6 +5238,17 @@ def pending_journey_missions(
             .where(AgentRun.mission_id == mission.id)
             .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
         )
+        if latest_run is not None and latest_run.provider_key == "hermes-native":
+            try:
+                _require_native_agent_run_member(
+                    request,
+                    session,
+                    journey_id=str(journey.id),
+                    run=latest_run,
+                )
+            except HTTPException:
+                # Keep a Journey member from seeing another member's native mission or tool trace.
+                continue
         mission_view = mission_payload(mission)
         clarification = dict(mission_view.get("clarification") or {})
         collective_view = None
@@ -27050,6 +27299,11 @@ def _verify_copilot_fact(
     }
 
 
+def _journey_allows_native_copilot_run(journey: Journey) -> bool:
+    """A durable native run belongs to an already active Journey, never a DRAFT guide."""
+    return str(journey.status or "").upper() == "ACTIVE"
+
+
 @app.post("/api/v1/journeys/{journey_id}/copilot/messages")
 async def copilot_message(
     journey_id: UUID,
@@ -27143,7 +27397,7 @@ async def copilot_message(
             "search", "replan", "rain", "下雨",
         )
     )
-    if (
+    if _journey_allows_native_copilot_run(journey) and (
         interpretation.intent in {"REPLAN_REQUEST", "DISRUPTION_REPORT"}
         or capability_multi_step
     ) and not (
@@ -27194,6 +27448,14 @@ async def copilot_message(
                     autonomy="PLAN_ONLY",
                     mission_plan=native_plan,
                     session_id=f"citynexus-{journey.id}-mission-{native_mission.id}",
+                )
+                _persist_native_agent_run_start(
+                    session,
+                    run_id=native_run.run_id,
+                    journey=journey,
+                    mission=native_mission,
+                    status=native_run.status,
+                    model_key=settings.hermes_native_model or f"profile:{settings.hermes_native_profile}",
                 )
                 native_mission.status = "RUNNING"
                 native_mission.started_at = datetime.now(timezone.utc).isoformat()
