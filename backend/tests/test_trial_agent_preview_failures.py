@@ -99,10 +99,19 @@ def _install_preview_fakes(
             hermes_model="fixture-model",
         ),
     )
+    real_async_client = preview.httpx.AsyncClient
+
+    def handle_request(_request: httpx.Request) -> httpx.Response:
+        calls.append(None)
+        if isinstance(outcome, Exception):
+            raise outcome
+        return outcome
+
+    transport = preview.httpx.MockTransport(handle_request)
     monkeypatch.setattr(
         preview.httpx,
         "AsyncClient",
-        lambda **_kwargs: _ReplyClient(outcome, calls),
+        lambda **kwargs: real_async_client(transport=transport, **kwargs),
     )
     return calls
 
