@@ -820,8 +820,15 @@
      于是白底配白字，比值 1.09：那两屏的文字在暗档下是看不见的。补进同一组，不新造判据。
      08:31 同一把合成尺又在「行程票夹」抓到同一族：`.trip-stop.protected` 的浅绿底 #eefaf2
      （`frontend/src/styles.css:1268`）配上从 `.v8-page` 继承来的近白墨，比值 1.02。
-     它和 `.v8-next-card` 是同一种东西（浅绿语义卡），所以走这一组已有的那一手，不自创第二套。 */
-  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress, :root[data-theme="dark"] .v8-page .trip-stop.protected {
+     它和 `.v8-next-card` 是同一种东西（浅绿语义卡），所以走这一组已有的那一手，不自创第二套。
+     12:0x 十七屏普查（子 Agent 跑尺、我自己另取三屏复算，两处读数一致）在同一族里又抓到
+     三枚一直没进这组的容器：`section.v12-trip-studio`（权威行程那屏的方案卡与版本历史，
+     暗档仍是 rgb(255,255,255)，墨 rgb(245,245,247) → 1.09 一族 36 条）、
+     `aside.v8-studio-aside`（行程工作台侧栏，同是 #fff → 9 条）、
+     `article.v12-state-card`（.now #f6faf8 / .next #f8f8fc → 3 条）。
+     判据没有新增：这三枚都是 `closest('.v8-page')` 为真、自己的 color 已是暗档墨，
+     与上面三例同一形状，所以并入本组而不是另起一套。 */
+  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress, :root[data-theme="dark"] .v8-page .trip-stop.protected, :root[data-theme="dark"] .v8-page .v12-trip-studio, :root[data-theme="dark"] .v8-page .v8-studio-aside, :root[data-theme="dark"] .v8-page .v12-state-card {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
@@ -944,6 +951,29 @@
   }
   :root[data-theme="dark"] .v8-page .trip-stop-protected { color: var(--cn-success) !important; }
   :root[data-theme="dark"] .v8-page .trip-stop-disrupted { color: var(--cn-warning) !important; }
+
+  /* 12:0x 同一族的第二型：语义洗色块在暗档仍是浅底。`div.v8-feasibility`
+     （`frontend/src/styles.css:178`）底 #effaf5、字 `--v8-green`，暗档里那行约束结论
+     量到 1.89、说明行 3.12。修法照 `.trip-stop.disrupted` 已经落地的那一手：底色取
+     这条语义自己那枚色值（暗档 #30d158）压成 0.12 的洗色，不新造色值；文字侧跟着走
+     厂内已有的 `--cn-success` 与 `--cn-ink-secondary`，因为不动它们的话这次改动只是把
+     缺陷挪个位置。 */
+  :root[data-theme="dark"] .v8-page .v8-feasibility {
+    background: rgba(48, 209, 88, 0.12) !important;
+    color: var(--cn-success) !important;
+  }
+  :root[data-theme="dark"] .v8-page .v8-feasibility small { color: var(--cn-ink-secondary) !important; }
+
+  /* 上面那组把容器换成暗档底之后，容器里两枚"本来就只比及格线高一点"的死灰会掉下去：
+     `.v8-activity` 的 #68758a 从 4.67（白卡）掉到 3.65，`.v12-state-kicker` 的 #55716e 从
+     5.02 / 4.99 掉到 3.22 —— 两臂逐行对表抓出来的，不是我推测的（`contrast_diff_1215.json:1`）。
+     这正是本厂那条注释写着的坑："不动它们的话这次改动只是把缺陷挪个位置"。
+     亮档这两枚今天是过的，所以只补暗档这一手，亮档一字不动；`--cn-ink-secondary`
+     在暗档底上是 7.4 左右，与 `.v8-me-card p` 那次同一枚 token。
+     `.v8-activity` 里的 `i`（图标）与 `em`（PROTECTED 小标）各自有 color 声明，
+     继承不到这条，语义色不会被抹平。 */
+  :root[data-theme="dark"] .v8-page .v8-activity { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-page .v12-state-kicker { color: var(--cn-ink-secondary) !important; }
 
   :root[data-theme="dark"] .v8-page .live-proposal {
     background: var(--cn-surface) !important;
@@ -1247,12 +1277,17 @@ button[data-testid^="mode-"],
    day-card greys were. Two sibling #7e8999 sites (.v9-inbox small,
    .v9-offline article span) were left alone on purpose: a two-theme, two-width
    sweep of all six screens never rendered them, so any claim about them would
-   be unverified. */
+   be unverified.
+   12:1x 十七屏普查里第三枚：`.v12-state-card small` 的 #71808b
+   （`frontend/src/styles.css:209`）在白绿卡 #f8f8fc 上是 3.84、在暗档底上是 4.18，
+   两档都不及格，所以进这条两档共用的规则，而不是另开一条暗档补丁。
+   出处 `contrast_diff_1215.json:1`。 */
 .v8-day-card p,
 .v8-day-card span,
 .v8-day-card small,
 .v8-day-detail-title small,
-.v8-me-card p {
+.v8-me-card p,
+.v12-state-card small {
   color: var(--cn-ink-secondary);
 }
 
