@@ -1,0 +1,27 @@
+{
+ "instrument": "cmdr_0500synth_counter_example_arm_r2",
+ "at": "2026-10-17T10:43:48.166Z",
+ "rev": "16c2ebffaff1f5c366ddf6195185e17a041448f6",
+ "source_blob": "875e1448eaf1000e7262afb2f6b112a725a1a249",
+ "enum_under_test": "SYNTHETIC_DEFAULT",
+ "source": "src/lib/displayVocabulary.ts",
+ "shipped_row_count": 1,
+ "A1_shipped": {
+  "zh": "合成默认值，不是供应商给的",
+  "en": "a synthetic default, not a provider reading",
+  "unknown_zh": "这台服务器写的：SOME_NAME_NO_ROW_HAS",
+  "unknown_en": "as this server wrote it: SOME_NAME_NO_ROW_HAS"
+ },
+ "A2_row_deleted": {
+  "zh": "这台服务器写的：SYNTHETIC_DEFAULT",
+  "en": "as this server wrote it: SYNTHETIC_DEFAULT",
+  "unknown_zh": "这台服务器写的：SOME_NAME_NO_ROW_HAS",
+  "unknown_en": "as this server wrote it: SOME_NAME_NO_ROW_HAS"
+ },
+ "verdicts": {
+  "A1_answers_in_human_words": true,
+  "A2_leaks_the_machine_word": true,
+  "only_variable_is_the_row": true
+ },
+ "arm_discriminates": true
+}
