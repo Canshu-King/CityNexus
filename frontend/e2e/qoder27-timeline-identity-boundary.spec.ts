@@ -247,7 +247,11 @@ test.describe("Issue #27 换人不换行程：Agent 轨迹不得从盘上回放�
     /* 同一条规矩：现场照先落，再断言。 */
     await shoot(p, ".qoder27-forbidden");
     const body = await p.locator('[data-testid="v15-copilot"]').innerText();
-    expect(body, "被拒绝之后仍写着「正在核对行程事实」，等于把 403 报成还在分析").not.toMatch(/正在核对|checking/i);
+    /* 空态那句和块头那两句都在禁列里：块头原先无论服务器答什么都写
+     * 「正在为你处理 / 已按你的行程事实执行」，那正是工单点名的"把 403 演成还在分析"。
+     * 注意这里不能松到「正在处理」——那一列里每一行本来就写着它自己那条事件的用时。 */
+    expect(body, "被拒绝之后屏上仍写着还在分析/已按事实执行这一类话")
+      .not.toMatch(/正在核对|正在为你处理|已按你的行程事实|checking your journey|working on your request|ran against your journey/i);
     /* 正面断言：这一臂必须真把可恢复的说明摆出来。只有"没有那句错话"是不够的——
      * 那可以靠一片空白通过。 */
     await expect(p.getByTestId("agent-history-error"), "服务器拒绝之后屏上没有可恢复的说明").toBeVisible();
