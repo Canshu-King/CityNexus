@@ -24,6 +24,15 @@ export type AgentWorkCopyKey =
   | "noLastEvent"
   | "unread"
   | "retry"
+  | "sectionAgent"
+  | "sectionTrip"
+  | "noRun"
+  | "noRunHint"
+  | "techDetails"
+  | "unlistedEvent"
+  | "runtimeNamed"
+  | "sourceLabel"
+  | "sourceAudit"
   | "railAria"
   | "derivedRule"
   | "stateConfiguredUnverified"
@@ -50,6 +59,15 @@ const TABLE: Record<"en" | "zh", Record<AgentWorkCopyKey, string>> = {
     noLastEvent: "none",
     unread: "this read did not come back",
     retry: "Read again",
+    sectionAgent: "What the AI and its tools actually did",
+    sectionTrip: "Trip system activity",
+    noRun: "No real AgentRun yet",
+    noRunHint: "Nothing here is inferred: until this server confirms a run, this panel says so instead of showing steps.",
+    techDetails: "Technical details",
+    unlistedEvent: "an event this screen has no wording for yet",
+    runtimeNamed: "named by the server itself",
+    sourceLabel: "Where these rows come from",
+    sourceAudit: "the server's own audit feed",
     railAria: "AI work events for this trip",
     derivedRule: "Rows come from the audit feed; the mark on each row is read off that row's own event type.",
     stateConfiguredUnverified: "configured, not yet verified by this server",
@@ -75,6 +93,15 @@ const TABLE: Record<"en" | "zh", Record<AgentWorkCopyKey, string>> = {
     noLastEvent: "无",
     unread: "这一路没读回来",
     retry: "再查一次",
+    sectionAgent: "AI 与工具真的做过的事",
+    sectionTrip: "行程系统自己的动态",
+    noRun: "暂无真实 AgentRun",
+    noRunHint: "这一格不推断：服务器没有确证过一次运行之前，这里就照实说没有，不摆步骤给你看。",
+    techDetails: "技术详情",
+    unlistedEvent: "这一行本屏还没有对应说法",
+    runtimeNamed: "由服务器自己报出（见上一格）",
+    sourceLabel: "这些行是从哪来的",
+    sourceAudit: "服务器自己的审计事件流",
     railAria: "这一趟的 AI 工作事件",
     derivedRule: "行来自审计事件流；每行那个标记，读的是那一行自己的事件类型。",
     stateConfiguredUnverified: "已配置，本机服务器尚未验证",

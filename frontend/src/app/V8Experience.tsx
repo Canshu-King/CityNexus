@@ -324,6 +324,39 @@ async function askTravelerSession(
   }
 }
 
+/**
+ * "Did that aborted POST actually land?" -- asked of the server, not guessed from the tab.
+ *
+ * GPT's P0-UX point is right and was previously papered over: an aborted request tells you the
+ * tab stopped listening, nothing about the server.  A journey can be committed with its response
+ * lost in transit, and the old screen asserted 行程还没有创建 from that silence, which is the one
+ * claim that gets a traveller to press 确认创建 twice.  So the recovery is a *read*: ask this
+ * signed traveller's own list (the door is scoped server-side since ORD-0687) and look for a trip
+ * born during this attempt.  Nothing here re-sends the non-idempotent POST.
+ */
+async function confirmCreatedJourney(
+  traveler: string,
+  startedAtMs: number,
+): Promise<string | null> {
+  if (!traveler) return null;
+  let rows: Array<{ id?: string; traveler_id?: string; created_at?: string }> = [];
+  try {
+    const answer = await v8Request<Array<{ id?: string; traveler_id?: string; created_at?: string }>>(
+      "/api/v1/journeys",
+    );
+    rows = Array.isArray(answer) ? answer : [];
+  } catch {
+    // The verification itself failed: the caller still must not claim the trip is absent.
+    return null;
+  }
+  const mine = rows
+    .filter((row) => row?.traveler_id === traveler)
+    .map((row) => ({ id: String(row?.id ?? ""), born: Date.parse(String(row?.created_at ?? "")) }))
+    .filter((row) => row.id && !Number.isNaN(row.born) && row.born >= startedAtMs - 5_000)
+    .sort((a, b) => b.born - a.born);
+  return mine.length ? mine[0].id : null;
+}
+
 interface TravelerAnswer {
   id: string;
   access_token?: string | null;
@@ -1328,6 +1361,12 @@ export function V8Experience() {
     // Read from here, not from `journeyCreated`: this closure holds the value from the
     // render it was created in, which is always false during the attempt.
     let tripWritten = false;
+    /* The two things the recovery read needs after an abort: whose trips to ask for, and what
+       counts as "created by this attempt".  Declared outside the try because the catch has to
+       reach both -- and because the catch is exactly where a claim about the server has to be
+       earned, not assumed. */
+    const startedAtMs = Date.now();
+    let travelerId = "";
     try {
       const cityName = draft.cityName.trim();
       // The real-city discovery provider materialises places under a latin
@@ -1343,7 +1382,7 @@ export function V8Experience() {
         draft.timezone.trim(),
       );
       setCreatePhase("traveler");
-      const travelerId = await ensureSignedTraveler(
+      travelerId = await ensureSignedTraveler(
         locale === "zh-CN" ? "zh-CN" : "en-GB",
         draft.timezone.trim(),
         controller.signal,
@@ -1414,25 +1453,63 @@ export function V8Experience() {
         controller.signal,
       )
         .then((stayCount) => {
-          // Only a real answer opens the planner: an empty or failed search is Today's to show,
-          // with its own retry, not a sheet floating over nothing.
-          if (stayCount > 0) setPlanAiOpen(true);
+          /* GPT P0-UX, accepted: opening the planner here put a modal backdrop over the Today
+             the traveller had just been promised, and everything on that screen -- including the
+             new AI-activity entry -- became unclickable until they dismissed it.  An answer that
+             arrived is *reported*, not *imposed*: Today already renders the stay block, so the
+             traveller reads the outcome where they are, and opens the planner themselves.
+             (The two assertions in `e2e/qoder-ai-sheet-blocked.spec.ts` that pinned the old
+             auto-open are updated in the same commit rather than left to defend it.) */
+          if (stayCount > 0) {
+            setMessage(
+              locale.startsWith("zh")
+                ? `住宿结果已到，这一页下方就是可选住宿；要 AI 出方案，点「AI 帮我规划」。`
+                : `Stay results arrived below. Tap “Plan my trip with AI” when you want options.`,
+            );
+          }
         })
         .catch(() => {
           /* `searchStayOptions` already set 失败 and Today renders it with 再查一次. */
         });
     } catch (error) {
       if (isAbort(error)) {
-        // No endpoint cancels this search, so say what the traveller gave up on instead.
-        setMessage(
-          locale.startsWith("zh")
-            ? tripWritten
+        if (tripWritten) {
+          // No endpoint cancels this search, so say what the traveller gave up on instead.
+          setMessage(
+            locale.startsWith("zh")
               ? "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。"
-              : "已停止等待，行程还没有创建。"
-            : tripWritten
-              ? "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result."
-              : "Stopped waiting — no journey was created.",
-        );
+              : "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result.",
+          );
+        } else {
+          /* GPT P0-UX, the second half: giving up on the wait is a fact about *this tab*, not about
+             the server.  A POST can be committed and still lose its response, and this screen used
+             to assert 行程还没有创建 -- a claim it never measured, and one that invites exactly the
+             duplicate creation a traveller would otherwise retry blind.  So: say 结果未知, then go
+             and read the server.  Nothing here re-sends the non-idempotent POST. */
+          setMessage(
+            locale.startsWith("zh")
+              ? "已停止等待。这一趟到底建没建成，服务器还没回话——正在核实。"
+              : "Stopped waiting — whether this trip exists is not something this tab can know yet. Checking with the server.",
+          );
+          const recovered = await confirmCreatedJourney(travelerId, startedAtMs);
+          if (recovered) {
+            localStorage.setItem("citynexus.v8.journey_id", recovered);
+            await load(recovered);
+            setSetupOpen(false);
+            navigate("hub");
+            setMessage(
+              locale.startsWith("zh")
+                ? "已核实：这一趟其实已经建成了，已为你打开 Today。"
+                : "Checked: the trip was in fact created, and Today is now open.",
+            );
+          } else {
+            setMessage(
+              locale.startsWith("zh")
+                ? "已核实：服务器上还没有这一趟。你可以再点一次「确认创建」。"
+                : "Checked: no such trip is on the server yet. You can press 确认创建 again.",
+            );
+          }
+        }
       } else {
         setMessage(
           refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),

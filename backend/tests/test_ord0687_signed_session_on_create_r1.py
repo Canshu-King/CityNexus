@@ -52,6 +52,12 @@ def _create(display_name: str = "Issue 31 traveller", **extra) -> dict:
     return answer
 
 
+def _bearer(traveler: dict) -> dict:
+    """The credential this server handed this very person, in the shape the doors read."""
+
+    return {"Authorization": "Bearer " + traveler["access_token"]}
+
+
 def _journey(traveler_id: str, city: str, headers: dict | None = None) -> tuple[int, dict]:
     """The same payload the V8 creation wizard sends, so this proves the real user path."""
     start_at = "2026-11-01T09:00:00+08:00"
@@ -101,8 +107,8 @@ def test_one_signed_traveller_can_open_two_journeys(monkeypatch):
     token = body["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    first_status, first = _journey(body["id"], "Ningbo")
-    second_status, second = _journey(body["id"], "Xiamen")
+    first_status, first = _journey(body["id"], "Ningbo", headers=headers)
+    second_status, second = _journey(body["id"], "Xiamen", headers=headers)
 
     assert first_status == 201 and second_status == 201, (first, second)
     assert first["id"] != second["id"]
@@ -168,7 +174,7 @@ def test_an_old_journey_pointer_does_not_authorise_the_next_traveller(monkeypatc
 
     _use_secret(monkeypatch, LONG_SECRET)
     owner = _create("First traveller").json()
-    status, journey = _journey(owner["id"], "Xiamen")
+    status, journey = _journey(owner["id"], "Xiamen", headers=_bearer(owner))
     assert status == 201, journey
     guest = _create("The next person holding the phone").json()
 
@@ -192,7 +198,7 @@ def test_a_member_seat_opens_the_trip_it_was_given(monkeypatch):
 
     _use_secret(monkeypatch, LONG_SECRET)
     owner = _create("Trip owner").json()
-    status, journey = _journey(owner["id"], "Fuzhou")
+    status, journey = _journey(owner["id"], "Fuzhou", headers=_bearer(owner))
     assert status == 201, journey
     seatmate = _create("Seated fellow traveller").json()
 
@@ -216,9 +222,9 @@ def test_a_member_seat_opens_the_trip_it_was_given(monkeypatch):
 def test_a_signed_traveller_cannot_open_a_journey_in_somebody_elses_name(monkeypatch):
     """Issue #31 A(6): no path turns a claim about an id into a trip for that id.
 
-    The body still carries `traveler_id` for the server-side callers that need it (seeding, the
-    demo scene) -- asked anonymously, nothing changes.  Presented *with* a credential, the body's
-    claim has to agree with the signature.
+    Both branches, after GPT's P0-SEC review: somebody else's credential naming this id is 403,
+    and *no* credential naming it is 401 -- dropping the header used to be the way around the
+    first rule, and the body's `traveler_id` is not an identity.
     """
 
     _use_secret(monkeypatch, LONG_SECRET)
@@ -230,22 +236,57 @@ def test_a_signed_traveller_cannot_open_a_journey_in_somebody_elses_name(monkeyp
     assert status == 403, body
     assert body["error"]["reason_code"] == traveler_principal.REASON_TRAVELER_NOT_PRINCIPAL
 
-    anonymous, _ = _journey(stranger["id"], "Guangzhou")
-    assert anonymous == 201
+    anonymous_status, anonymous_body = _journey(stranger["id"], "Guangzhou")
+    assert anonymous_status == 401, anonymous_body
+    assert anonymous_body["error"]["reason_code"] == traveler_principal.REASON_CREDENTIALS_MISSING
 
 
-def test_anonymous_reads_keep_answering_exactly_as_before(monkeypatch):
-    """Control for the two rules above: turning identity on must not darken the shared preview.
+def test_a_private_trip_needs_the_server_to_know_who_is_asking(monkeypatch):
+    """GPT P0-SEC, the named regression: same trip, three callers, three different answers.
 
-    A deployment with no credential in the request behaves as this line has always behaved, so
-    the scope rule can only be blamed for a refusal it actually issued by name.
+    The owner reads it; a second traveller's genuine credential is refused because it is not
+    theirs; and no credential at all is refused before the trip's existence is confirmed.  The
+    middle and last cases used to be 403 and 200 -- the second was right, the first was a hole:
+    a private uuid was readable by anybody who simply stopped sending a header.
     """
 
     _use_secret(monkeypatch, LONG_SECRET)
-    owner = _create("Owner, anonymous read").json()
+    owner = _create("Owner of the private trip").json()
+    status, journey = _journey(owner["id"], "Quanzhou",
+                              headers={"Authorization": f"Bearer {owner['access_token']}"})
+    assert status == 201, journey
+    outsider = _create("A different person").json()
+    path = f"/api/v1/journeys/{journey['id']}"
+
+    mine = client.get(path, headers={"Authorization": f"Bearer {owner['access_token']}"})
+    assert mine.status_code == 200, mine.text
+
+    foreign = client.get(path, headers={"Authorization": f"Bearer {outsider['access_token']}"})
+    assert foreign.status_code == 403, foreign.text
+    assert foreign.json()["error"]["reason_code"] == traveler_principal.REASON_JOURNEY_NOT_SCOPED
+
+    anonymous = client.get(path)
+    assert anonymous.status_code == 401, anonymous.text
+    assert anonymous.json()["error"]["reason_code"] == traveler_principal.REASON_CREDENTIALS_MISSING
+
+    listing = client.get("/api/v1/journeys")
+    assert listing.status_code == 401, listing.text
+
+
+def test_anonymous_reads_stay_available_only_where_signing_is_off(monkeypatch):
+    """The other half of the same rule, so the strict branch cannot be a blanket wall.
+
+    With no secret configured there is no identity this server could require, so the doors answer
+    as they always have.  That is the shared-preview and local-development shape, and it is now a
+    stated configuration rather than an accident of nobody carrying a token.
+    """
+
+    _use_secret(monkeypatch, None)
+    owner = _create("Owner on an unsigned build").json()
     status, journey = _journey(owner["id"], "Dali")
     assert status == 201, journey
     assert client.get(f"/api/v1/journeys/{journey['id']}").status_code == 200
+    assert client.get("/api/v1/journeys").status_code == 200
 
 
 def test_the_running_contract_carries_the_new_fields():

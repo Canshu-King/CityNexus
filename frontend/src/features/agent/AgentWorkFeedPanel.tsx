@@ -5,12 +5,20 @@
  * 所以不问就什么都看不见；而 `agent-feed` 这条门（`GET /api/v1/journeys/{id}/agent-feed`，
  * 服务器自己把审计表投出来）早就存在，却没有入口。这一格就是那个入口。
  *
+ * GPT 复核 P1-TRUTH 把一件事点出来了，这一版照做：`agent-feed` 是**审计事件流**，
+ * 里面既有 AI 与工具的事件，也有"人建了行程"这种行程系统自己的事件。把 `Journey.created`
+ * 摆在「这一趟上 AI 做过什么」下面，等于把人的动作暗示成 AI 的工作。所以这里分成两段：
+ * 上面只放经服务器确证的 Agent／工具事件，没有就明写「暂无真实 AgentRun」；
+ * 行程系统自己的事件另起一段，标题不冒充 AI。
+ *
+ * 同一份复核还点了落地门的 `CODES_ON_SCREEN` 那一类：人读的位置不铺大写内部字段。
+ * 每台机器码都收在 `data-*` 与那块可展开的「技术详情」里，屏幕正文一律中文说法。
+ *
  * 三条不许越过的线：
- *  1. 每一行都必须来自 `agent-feed` 的事件或 `agent/runtime-status` 的字段。服务器回 0 条，
- *     屏上就是"这一趟还没有 AI 工作记录"，不写"正在分析"、不排假步骤；
- *  2. 行上的标记（done/active/failed）只按那一行自己的 `event_type` 词根判（见 `markOf`），
- *     判不出就是 `done` 以外都不给——宁可少一个色，不要编一个状态；
- *  3. 读不到就按 ORD-0101/R14 那套归属把"是谁拒的、拒在哪一层"说出来，并留一颗真的再查一次。
+ *  1. 每一行都必须来自 `agent-feed` 的事件或 `agent/runtime-status` 的字段；服务器回 0 条，
+ *     屏上就是"还没有记录"，不写"正在分析"、不排假步骤；
+ *  2. 行上的标记只按那一行自己的 `event_type` 词根判（见 `markOf`），判不出就不给状态；
+ *  3. 读不到走全应用同一套归属（ORD-0101/R14），并留一颗真的再查一次。
  */
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -26,25 +34,61 @@ import "./agentWorkFeed.css";
 
 type FeedState = "loading" | "ready" | "refused";
 
+/** 哪些事件是"AI／工具真的动过手"——词根取自服务器自己写的事件类型。 */
+const AGENT_WORDS = /(agent|tool|run|approval|replan|guardian|gateway|hermes|proposal)/i;
+
 /**
  * 行标记的唯一判据：那一行自己写的事件类型。
  *
  * `requested` / `started` 只可能是"进行到这一步"，`failed` / `refused` / `rejected` 才是失败，
  * 其余（completed、validated、corroborated、created、resolved…）是过去的事实。
- * 词根表在这里，是为了让 e2e 能用真事件去钉它，而不是钉一个组件里的私有形状。
  */
 export function markOf(eventType: string): AgentRailStep["status"] {
   const word = eventType.toLowerCase();
   if (/(failed|refused|rejected|denied|blocked)/.test(word)) return "failed";
   if (/(approval|required)/.test(word)) return "approval";
-  if (/(requested|started|started_at|begin|pending)/.test(word)) return "active";
+  if (/(requested|started|begin|pending)/.test(word)) return "active";
   return "done";
+}
+
+/** 服务器写的事件类型 → 人读的一句话。词表外的一律回 null，屏上就不假装看懂了。 */
+function eventGloss(locale: string, eventType: string): string | null {
+  const zh = locale.startsWith("zh");
+  const table: Record<string, [string, string]> = {
+    "journey.created": ["行程已创建", "the trip was created"],
+    "traveler.created": ["旅行者已建立", "a traveller was created"],
+    "journey.updated": ["行程资料有更新", "the trip details changed"],
+    "journey.deleted": ["行程已删除", "the trip was deleted"],
+    "agent_tool_requested": ["AI 请求使用一个工具", "the AI asked to use a tool"],
+    "replan_requested": ["AI 请求重排行程", "the AI asked to re-plan"],
+    "impact_hypothesis_created": ["影响假设已记录", "an impact hypothesis was recorded"],
+    "impact_corroborated": ["影响已被佐证", "an impact was corroborated"],
+    "impact_validated": ["影响已核实", "an impact was validated"],
+    "proposal.created": ["方案已生成", "a proposal was created"],
+    "approval.required": ["等待你的确认", "your approval is needed"],
+  };
+  const hit = table[eventType.toLowerCase()];
+  if (!hit) return null;
+  return zh ? hit[0] : hit[1];
+}
+
+/** 服务器给的时间是 ISO；屏上不铺原始串（ORD-0423 那条同一件事）。 */
+function moment(raw: string, zh: boolean): string {
+  const parsed = Date.parse(raw);
+  if (Number.isNaN(parsed)) return raw;
+  return new Intl.DateTimeFormat(zh ? "zh-CN" : "en-GB", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(parsed));
 }
 
 /**
  * 入口自己带面板：`hub-secondary-actions` 与行程页那两块的分发器都是别的车道在改的文件，
- * 从壳里往下穿一条 `onOpenAgentWork` 回调要动两处签名与一份注册表状态，而这一格要的只是
- * "看得见、点得开、点开之后是服务器的事"。所以按钮与它展开的面板是一体的，宿主页只需要摆一个 `<AgentWorkEntry/>`。
+ * 从壳里往下穿一条回调要动两处签名与一份注册表状态，而这一格要的只是"看得见、点得开、
+ * 点开之后是服务器的事"。所以按钮与它展开的面板是一体的，宿主页只需要摆一个 `<AgentWorkEntry/>`。
  */
 export function AgentWorkEntry({
   journeyId,
@@ -73,19 +117,6 @@ export function AgentWorkEntry({
   );
 }
 
-/** 服务器给的时间是 ISO；屏上不铺原始串（ORD-0423 那条同一件事）。 */
-function moment(raw: string, zh: boolean): string {
-  const parsed = Date.parse(raw);
-  if (Number.isNaN(parsed)) return raw;
-  return new Intl.DateTimeFormat(zh ? "zh-CN" : "en-GB", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date(parsed));
-}
-
 export function AgentWorkFeedPanel({
   journeyId,
   limit = 30,
@@ -102,6 +133,7 @@ export function AgentWorkFeedPanel({
   const [events, setEvents] = useState<AgentFeedEntry[]>([]);
   const [source, setSource] = useState<string | null>(null);
   const [runtime, setRuntime] = useState<AgentRuntimeStatus | null>(null);
+  const [runtimeReadable, setRuntimeReadable] = useState(true);
   const [problem, setProblem] = useState<string | null>(null);
   const [facts, setFacts] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -126,8 +158,9 @@ export function AgentWorkFeedPanel({
     }
     setEvents(Array.isArray(feed.value.events) ? feed.value.events : []);
     setSource(typeof feed.value.source === "string" ? feed.value.source : null);
-    // 运行状态读不到不算这格的失败：事件已经拿到了，就把拿到的说清楚，那一行单独标"读不到"。
+    // 运行状态读不到不算这格的失败：事件已经拿到了，就把拿到的说清楚，那一行单独标"没读回来"。
     setRuntime(status.status === "fulfilled" ? status.value : null);
+    setRuntimeReadable(status.status === "fulfilled");
     setState("ready");
   }, [journeyId, limit, locale]);
 
@@ -135,13 +168,20 @@ export function AgentWorkFeedPanel({
     void read();
   }, [read, attempt]);
 
-  const steps: AgentRailStep[] = events.slice(-12).map((item) => ({
-    id: item.id,
-    // `summary` 是服务器写的句子；没有就退回它写的事件类型，绝不拼一句"完成了什么"。
-    label: item.summary && item.summary.trim() ? item.summary : item.event_type,
-    status: markOf(item.event_type),
-    runMeta: `${moment(item.timestamp, zh)}${item.tool ? ` · ${item.tool}` : ""}`,
-  }));
+  const agentEvents = events.filter((item) => AGENT_WORDS.test(item.event_type));
+  const tripEvents = events.filter((item) => !AGENT_WORDS.test(item.event_type));
+
+  const rail = (rows: AgentFeedEntry[]): AgentRailStep[] =>
+    rows.slice(-12).map((item) => ({
+      id: item.id,
+      // 服务器写了人话就用服务器的人话；没写就用它的类型查词表；词表也没有就不铺裸码。
+      label:
+        (item.summary && item.summary.trim()) ||
+        eventGloss(locale, item.event_type) ||
+        agentWorkCopy(locale, "unlistedEvent"),
+      status: markOf(item.event_type),
+      runMeta: `${moment(item.timestamp, zh)}${item.tool ? ` · ${item.tool}` : ""}`,
+    }));
 
   const gloss = aiStateGloss(locale, runtime?.ai_state);
   const last = events.length ? events[events.length - 1] : null;
@@ -152,6 +192,7 @@ export function AgentWorkFeedPanel({
       data-testid="agent-work-feed"
       data-feed-state={state}
       data-feed-events={String(events.length)}
+      data-feed-agent-events={String(agentEvents.length)}
       data-feed-source={source ?? "unknown"}
       data-attempt={String(attempt)}
       {...(facts ? { "data-attribution": facts } : {})}
@@ -178,59 +219,81 @@ export function AgentWorkFeedPanel({
       ) : null}
 
       {state === "refused" ? (
-        <p className="v8-message error" data-testid="agent-work-refused" {...(facts ? { "data-attribution": facts } : {})}>
+        <p className="v8-message error" data-testid="agent-work-refused">
           {problem}
         </p>
       ) : null}
 
       {state === "ready" ? (
         <>
-          <dl className="cn-agent-work-facts" data-testid="agent-work-facts">
-            <div>
-              <dt>{copy("aiStateLabel")}</dt>
-              <dd data-ai-state={runtime?.ai_state ?? "NOT_READ"}>
-                {runtime
-                  ? gloss
-                    ? copy(gloss)
-                    : String(runtime.ai_state ?? "—")
-                  : copy("unread")}
-              </dd>
-            </div>
-            <div>
-              <dt>{copy("runtimeLabel")}</dt>
-              <dd data-runtime-identity={runtime?.runtime_identity ?? "unread"}>
-                {runtime?.runtime_identity ?? "—"}
-              </dd>
-            </div>
-            <div>
-              <dt>{copy("gatewayLabel")}</dt>
-              <dd
-                data-gateway-runs={String(Boolean(runtime?.hermes_native_gateway?.runs))}
-                data-gateway-events={String(Boolean(runtime?.hermes_native_gateway?.events))}
-              >
-                {runtime?.hermes_native_gateway
-                  ? runtime.hermes_native_gateway.reachable
-                    ? copy("gatewayOn")
-                    : copy("gatewayOff")
-                  : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt>{copy("lastEventLabel")}</dt>
-              <dd data-testid="agent-work-last-moment">
-                {last ? moment(last.timestamp, zh) : copy("noLastEvent")}
-              </dd>
-            </div>
-          </dl>
-
-          {steps.length ? (
-            <AgentRunRail steps={steps} />
+          <h3 className="cn-agent-work-section" data-testid="agent-work-agent-heading">
+            {copy("sectionAgent")}
+          </h3>
+          {agentEvents.length ? (
+            <AgentRunRail steps={rail(agentEvents)} />
           ) : (
-            <p className="cn-agent-work-empty" data-testid="agent-work-empty">
-              <b>{copy("noRecord")}</b>
-              <small>{copy("noRecordHint")}</small>
+            <p className="cn-agent-work-empty" data-testid="agent-work-no-run">
+              <b>{copy("noRun")}</b>
+              <small>{copy("noRunHint")}</small>
             </p>
           )}
+
+          {tripEvents.length ? (
+            <>
+              <h3 className="cn-agent-work-section" data-testid="agent-work-trip-heading">
+                {copy("sectionTrip")}
+              </h3>
+              <ul className="cn-agent-work-trip" data-testid="agent-work-trip-events">
+                {tripEvents.slice(-12).map((item) => (
+                  <li key={item.id} data-event-type={item.event_type}>
+                    <b>{eventGloss(locale, item.event_type) ?? copy("unlistedEvent")}</b>
+                    <span>{moment(item.timestamp, zh)}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
+          <details className="cn-agent-work-tech" data-testid="agent-work-tech">
+            <summary>{copy("techDetails")}</summary>
+            <dl className="cn-agent-work-facts" data-testid="agent-work-facts">
+              <div>
+                <dt>{copy("aiStateLabel")}</dt>
+                <dd data-ai-state={runtime?.ai_state ?? "NOT_READ"}>
+                  {runtime ? (gloss ? copy(gloss) : copy("unlistedEvent")) : copy("unread")}
+                </dd>
+              </div>
+              <div>
+                <dt>{copy("runtimeLabel")}</dt>
+                <dd data-runtime-identity={runtime?.runtime_identity ?? "unread"}>
+                  {runtimeReadable ? copy("runtimeNamed") : copy("unread")}
+                </dd>
+              </div>
+              <div>
+                <dt>{copy("gatewayLabel")}</dt>
+                <dd
+                  data-gateway-runs={String(Boolean(runtime?.hermes_native_gateway?.runs))}
+                  data-gateway-events={String(Boolean(runtime?.hermes_native_gateway?.events))}
+                >
+                  {runtime?.hermes_native_gateway
+                    ? runtime.hermes_native_gateway.reachable
+                      ? copy("gatewayOn")
+                      : copy("gatewayOff")
+                    : copy("unread")}
+                </dd>
+              </div>
+              <div>
+                <dt>{copy("lastEventLabel")}</dt>
+                <dd data-testid="agent-work-last-moment">
+                  {last ? moment(last.timestamp, zh) : copy("noLastEvent")}
+                </dd>
+              </div>
+              <div>
+                <dt>{copy("sourceLabel")}</dt>
+                <dd data-feed-source-raw={source ?? "unknown"}>{copy("sourceAudit")}</dd>
+              </div>
+            </dl>
+          </details>
         </>
       ) : null}
     </section>

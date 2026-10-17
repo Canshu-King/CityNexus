@@ -91,3 +91,11 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+/* 截图上真实暴露的缺陷（Issue #31 教程否决第 4 张）：那颗悬浮的 CityNexus Copilot 药丸
+ * 是 `position: fixed`，在 390 那一档正好压在面板右下角。这一格展开时它本来就是多余的
+ * ——它开的是同一个 Copilot——所以让它让位，而不是在图上把问题圈过去。
+ * 规则只活在本文件里：`styles.css` 与那条药丸的归属在别的车道手上。 */
+body:has(.cn-agent-work) .cn-copilot-dock {
+  display: none;
+}

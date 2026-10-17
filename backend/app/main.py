@@ -207,9 +207,11 @@ from app.security.credential_literals import (  # ORD-0307: 字面量凭据的�
     startup_report as credential_gate_startup,
 )
 from app.traveler_principal import (
+    REASON_CREDENTIALS_MISSING,
     REASON_JOURNEY_NOT_SCOPED,
     REASON_TRAVELER_NOT_PRINCIPAL,
     SESSION_STATE_SIGNED,
+    TravelerPrincipal,
     issue_traveler_token,
     presented_principal,
     resolve_traveler_principal,
@@ -3204,13 +3206,38 @@ def suggested_room_count(party_size: int) -> int:
     return max(3, (party_size + 2) // 3)
 
 
+def _identity_required_for_private_trips() -> bool:
+    """Can this build verify a traveller?  Then anonymity is not a way out (GPT P0-SEC).
+
+    Before this, the rule read "a bad credential is refused, no credential is fine", which meant
+    the protection switched off for exactly the caller who wanted it off: strip the header and a
+    stranger's private trip answered 200 again.  Capability now implies obligation.  A demo or
+    public preview that really wants anonymous reads says so by name in its own configuration
+    (`CITYNEXUS_TRAVELER_AUTH_ALLOW_ANONYMOUS_PRIVATE`), instead of getting it because nobody
+    carried a token today.  Where signing is not configured at all, nothing changes -- that
+    deployment has no identity to require.
+    """
+
+    return (
+        signing_state() == SESSION_STATE_SIGNED
+        and not settings.traveler_auth_allow_anonymous_private
+    )
+
+
+def _refuse_missing_credential() -> None:
+    refused = HTTPException(401, "signed traveller credentials are required for this trip")
+    refused.reason_code = REASON_CREDENTIALS_MISSING
+    raise refused
+
+
 def _authorize_journey_read(request: Request, session: Session, journey: Journey) -> None:
-    """Refuse a signed request that is pointing at somebody else's trip (ORD-0687).
+    """Refuse a request that is pointing at somebody else's trip (ORD-0687 / GPT P0-SEC).
 
     The device, not the person, used to decide what the shell could open: `citynexus.v8.journey_id`
     in `localStorage` is a uuid the previous traveller left behind, and every read door took the
-    uuid on faith.  Once a credential is presented the server -- not the pointer -- answers whose
-    trip this is.  An anonymous request is unchanged: no token, no claim about who is asking.
+    uuid on faith.  Now the server answers whose trip this is, on both branches: a credential that
+    is not this person's is refused by name (403), and no credential at all on a build that can
+    verify one is refused by name too (401) -- the uuid alone is not a claim of identity.
 
     Ownership or an in-force seat, read through `_member_state`, so a withdrawn or lapsed seat
     stops counting here at exactly the moment it stops counting at the member doors.
@@ -3218,6 +3245,8 @@ def _authorize_journey_read(request: Request, session: Session, journey: Journey
 
     principal = presented_principal(request, session)
     if principal is None:
+        if _identity_required_for_private_trips():
+            _refuse_missing_credential()
         return
     if journey.traveler_id == principal.traveler_id:
         return
@@ -3238,16 +3267,22 @@ def _authorize_journey_read(request: Request, session: Session, journey: Journey
 def _authorize_journey_write(
     request: Request, session: Session, traveler_id: str
 ) -> None:
-    """A signed traveller may only open trips for themselves (ORD-0687).
+    """A traveller may only open trips for the identity the server vouches for (ORD-0687).
 
     `POST /api/v1/journeys` takes a `traveler_id` in the body, and that is still what a
-    server-side process (seeding, the demo scene) uses.  But when the caller presents a
-    credential, the body's claim has to agree with the signature: otherwise one signed person
-    could mint trips in a stranger's name and hand that stranger a pointer to clean up.
+    server-side process (seeding, the demo scene) uses -- on a build without signing, where there
+    is no identity to check against.  Once this build CAN sign, an anonymous POST naming another
+    traveller is the same hole as an anonymous read: the body's claim has to be backed by a
+    credential that says it, so both branches are closed (401 with no credential, 403 with
+    somebody else's).
     """
 
     principal = presented_principal(request, session)
-    if principal is None or principal.traveler_id == traveler_id:
+    if principal is None:
+        if _identity_required_for_private_trips():
+            _refuse_missing_credential()
+        return
+    if principal.traveler_id == traveler_id:
         return
     refused = HTTPException(
         403, "a signed traveller cannot open a journey for somebody else"
@@ -3358,6 +3393,7 @@ JOURNEY_SORT_REFUSAL = "JOURNEY_SORT_NOT_RECOGNISED"
     },
 )
 def list_journeys(
+    request: Request,
     session: Session = Depends(get_session),
     sort: str | None = Query(
         default=None,
@@ -3405,9 +3441,19 @@ def list_journeys(
     """
 
     live = select(Journey).where(Journey.deleted_at.is_(None))
+    # GPT P0-SEC: this door used to answer every trip on the server to anybody.  A build that can
+    # verify a traveller has no business doing that -- the list is how a stranger's private uuids
+    # get found in the first place.  So: no credential where identity is required is refused by
+    # name, and a credential sees the trips it actually speaks for (owned, or an in-force seat).
+    viewer = presented_principal(request, session)
+    if viewer is None:
+        if _identity_required_for_private_trips():
+            _refuse_missing_credential()
+    else:
+        live = live.where(Journey.traveler_id == viewer.traveler_id)
     if sort is None:
         items = session.scalars(live.order_by(Journey.created_at, Journey.id)).all()
-        return [journey_schema(item) for item in items]
+        return [journey_schema(item) for item in _seated_for(session, viewer, list(items))]
     if sort not in JOURNEY_SORT_TIERS:
         refused = HTTPException(
             422,
@@ -3416,8 +3462,36 @@ def list_journeys(
         refused.reason_code = JOURNEY_SORT_REFUSAL
         refused.error_details = {"sort": sort, "supported": list(JOURNEY_SORT_TIERS)}
         raise refused
-    rows = _journeys_in_tier_order(list(session.scalars(live).all()), sort)
+    rows = _journeys_in_tier_order(
+        _seated_for(session, viewer, list(session.scalars(live).all())), sort
+    )
     return [journey_schema(item) for item in rows]
+
+
+def _seated_for(
+    session: Session, principal: TravelerPrincipal | None, rows: list[Journey]
+) -> list[Journey]:
+    """The trips in `rows` this caller may see: their own, plus the ones they hold a seat on.
+
+    Owner-only filtering would have been the cheap answer and would have broken the shared-journey
+    product on purpose: a fellow traveller with a real seat must still see the trip they were
+    added to.  `_member_state` is the same rule the member doors use, so a withdrawn or lapsed
+    seat stops counting in the list at the moment it stops counting everywhere else.
+    """
+
+    if principal is None:
+        return rows
+    now = datetime.now(timezone.utc)
+    seated = {
+        row.journey_id
+        for row in session.scalars(
+            select(JourneyMemberModel).where(
+                JourneyMemberModel.traveler_id == principal.traveler_id
+            )
+        ).all()
+        if _member_state(row, now) == "MEMBER_IN_FORCE"
+    }
+    return [row for row in rows if row.traveler_id == principal.traveler_id or row.id in seated]
 
 
 #: The two tiers that read a timestamp and the one that reads a name, each with the stored column it

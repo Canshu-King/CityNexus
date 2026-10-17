@@ -21,8 +21,8 @@ import { mkdirSync } from "node:fs";
 
 /* 图文教程（Issue #31 C 要求的"真实截图"）用的图就落在这个目录里：屏幕上是真渲染出来的，
  * 不是我贴上去的形状。目录先建，因为 Playwright 写图之前不会替你建目录。 */
-const DOC_ASSETS = "docs/assets";
-mkdirSync(DOC_ASSETS, { recursive: true });
+const DOC_EVIDENCE = "docs/assets/evidence";
+mkdirSync(DOC_EVIDENCE, { recursive: true });
 
 const JOURNEY_POINTER = "citynexus.v8.journey_id";
 const SESSION_POINTER = "citynexus.v8.traveler.session";
@@ -314,7 +314,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     ).toBe(false);
   });
 
-  test("反控：不带凭证的请求逐字照旧（开身份不会把已有画面变黑）", async ({ page }) => {
+  test("去掉凭证不再是出路：私有行程的匿名读被具名拒绝，屏上给的是可恢复的一屏", async ({ page }) => {
     const available = await signingAvailable(page);
     test.skip(!available, "这台部署没配签名密钥——这一臂要的量不到");
     await seedPhone(page);
@@ -322,21 +322,30 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     await page.getByTestId("trial-create").click();
     await page.waitForFunction(() => !!localStorage.getItem("citynexus.v8.journey_id"), null, { timeout: 40_000 });
 
-    /* 把这一趟的会话从这个标签页拿走（等价于另开一个没签名的标签页），指针留着。 */
+    /* 把这一趟的会话从这个标签页拿走（等价于另开一个没签名的标签页），指针留着。
+     * GPT P0-SEC 之前，这一臂钉的是"匿名照旧 200"——那条断言现在看是给漏洞发的绿牌：
+     * 去掉 header 就能读别人的私有行程，等于授权由客户端决定。现在钉的是新语义。 */
     await page.evaluate(() => sessionStorage.clear());
     let status = 0;
     let bearer = "NONE";
-    page.on("response", (res) => {
+    let reason: string | null = null;
+    page.on("response", async (res) => {
       if (/\/api\/v1\/journeys\/[^/]+\/experience$/.test(res.url())) {
         status = res.status();
         bearer = res.request().headers()["authorization"] ?? "NONE";
+        const body = await res.json().catch(() => ({}));
+        reason = body?.error?.reason_code ?? null;
       }
     });
     await page.reload({ waitUntil: "load" });
     await page.waitForTimeout(3000);
-    await shoot(page, "anonymous-still-works");
+    const body = await page.locator("body").innerText();
+    await shoot(page, "anonymous-refused-by-name");
     expect(bearer, "匿名请求不应该带上 Authorization").toBe("NONE");
-    expect(status, "匿名请求被拒了：范围规则误伤了没有凭证的既有流程").toBe(200);
+    expect(status, "去掉凭证仍然读到了私有行程").toBe(401);
+    expect(reason).toBe("TRAVELER_CREDENTIALS_MISSING");
+    /* 拒得对，还要看得见下一步：这一屏不能是一片空白。 */
+    expect(body, "被拒之后屏上没有可恢复的下一步").toMatch(/重新|开始|创建|新行程/);
   });
 
   test("Issue #31 B：住宿查询慢成 6 秒，Today 照样立刻打开并给出真的出口", async ({ page }) => {
@@ -380,10 +389,10 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
   test("Issue #31 C：Today 上的「AI 工作动态」打开的是这台服务器关于这一趟的事件流", async ({ page }) => {
     await seedPhone(page);
     await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
-    await page.screenshot({ path: `${DOC_ASSETS}/01-trip-setup.png`, fullPage: true });
+    await page.screenshot({ path: `${DOC_EVIDENCE}/01-trip-setup.png`, fullPage: true });
     const journeyId = await createAndAwaitJourney(page);
     await expect(page.getByTestId("hub-secondary-actions"), "Today 没打开").toBeVisible({ timeout: 20_000 });
-    await page.screenshot({ path: `${DOC_ASSETS}/02-today.png`, fullPage: true });
+    await page.screenshot({ path: `${DOC_EVIDENCE}/02-today.png`, fullPage: true });
 
     /* 先把"服务器到底回了什么"单独读一遍，再拿屏上去对：
      * 这一臂要拦的是"面板写了一个服务器没给过的数"，所以对照的是两个独立来源，不是自己看自己。 */
@@ -395,23 +404,11 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
       `${baseOf()}/api/v1/agent/runtime-status`, { headers })).json();
     const serverEvents = Array.isArray(feed.events) ? feed.events.length : -1;
 
-    /* 整套件跑到这一臂时，这一臂曾把 180 秒耗在 `hub-ai-work` 的 click 上（单独跑它是绿的）。
-     * 诊断读数给出了成因，而且是产品的事实：可选住宿真有结果时，AI 规划抽屉会自动打开，
-     * 它的 `v8-sheet-backdrop` 整片盖住 Today —— 中心点命中的是那片遮罩，不是我新加的入口。
-     * `plan-ai-sheet` 自动打开是别人钉着的基线（e2e/qoder-ai-sheet-blocked.spec.ts:583 与 :705
-     * 同一件事），我不去改那条行为；这一臂先把抽屉按正常方式合上，再量"合上之后入口点得动"。
-     * 这条被遮挡的事实本身要写进交块，因为它同样盖住 Today 上任何其他入口。 */
-    const sheetOpen = await page.getByTestId("plan-ai-sheet").isVisible().catch(() => false);
-    if (sheetOpen) {
-      await page.keyboard.press("Escape");
-      await page.waitForTimeout(400);
-      if (await page.getByTestId("plan-ai-sheet").isVisible().catch(() => false)) {
-        await page.mouse.click(6, 6);
-        await page.waitForTimeout(400);
-      }
-    }
-    await expect(page.getByTestId("plan-ai-sheet"), "遮罩合不掉").toBeHidden({ timeout: 10_000 });
-    await page.waitForTimeout(600);
+    /* GPT P0-UX：住宿有结果也不再自动弹规划抽屉。上一版这一臂是被那片遮罩拖到 180 秒超时的，
+     * 当时的处置是"先把遮罩合掉再量"——那等于把产品的坏体验写进用例。现在正面钉：
+     * Today 交出来那一刻，屏上不该有任何盖住它的抽屉。 */
+    await expect(page.getByTestId("plan-ai-sheet"), "Today 刚打开就被规划抽屉盖住").toHaveCount(0);
+    await page.waitForTimeout(700);
     const hubDiag = await page.evaluate(() => {
       const name = (node: Element | null) =>
         node
@@ -427,27 +424,42 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
         docHeight: document.documentElement.scrollHeight,
       };
     });
-    console.log(
-      `Today 入口诊断 抽屉自动打开=${sheetOpen ? "是" : "否"} 合上之后 ${JSON.stringify(hubDiag)}`,
-    );
+    console.log(`Today 入口诊断 ${JSON.stringify(hubDiag)}`);
+    expect(hubDiag.hit, "入口中心点命中的不是这颗按钮（被别的东西盖住了）").toContain("#hub-ai-work");
     await page.getByTestId("hub-ai-work").click({ timeout: 20_000 });
     const panel = page.getByTestId("agent-work-feed");
     await expect(panel, "入口点不开面板").toBeVisible({ timeout: 15_000 });
     await expect(panel).toHaveAttribute("data-feed-state", "ready", { timeout: 20_000 });
     await expect(panel).toHaveAttribute("data-feed-events", String(serverEvents));
     await expect(panel).toHaveAttribute("data-feed-source", String(feed.source));
+
+    /* P1-TRUTH：审计事件流里既有"AI／工具动过手"的，也有"人建了行程"这种行程系统自己的事。
+     * 面板分成两段，所以这里对的是**Agent 那一段**的行数，而不是整条流的条数。 */
+    const agentEvents = (Array.isArray(feed.events) ? feed.events : []).filter((item) =>
+      /(agent|tool|run|approval|replan|guardian|gateway|hermes|proposal)/i.test(String(item?.event_type ?? "")),
+    );
+    await expect(panel).toHaveAttribute("data-feed-agent-events", String(agentEvents.length));
     const rows = await page.locator(".cn-agent-rail li").count();
-    expect(rows, "轨迹条的行数与服务器给的事件数对不上（面板最多显 12 行）")
-      .toBe(Math.min(12, Math.max(0, serverEvents)));
-    if (serverEvents === 0) {
-      await expect(page.getByTestId("agent-work-empty"), "没有记录时没有老实说'还没有记录'").toBeVisible();
+    expect(rows, "轨迹条行数与服务器给的 Agent/工具事件数对不上（面板最多显 12 行）")
+      .toBe(Math.min(12, agentEvents.length));
+    if (agentEvents.length === 0) {
+      await expect(page.getByTestId("agent-work-no-run"), "没有真实运行时没有老实说'暂无真实 AgentRun'")
+        .toContainText("暂无真实 AgentRun");
     }
-    /* AI 可用性那一格必须写服务器自报的那个词，而不是页面猜的。 */
+    /* 落地门那条 `CODES_ON_SCREEN` 的同一类：人读的正文里不许铺内部机器码。
+     * 码本身留在 `data-*` 与可展开的「技术详情」里，读的人不必看。 */
+    const painted = await panel.innerText();
+    for (const code of ["DISABLED_BY_OPS", "NATIVE_DEEPSEEK_TOOL_LOOP", "Journey.created", "audit_log"]) {
+      expect(painted, `屏上铺了内部机器码：${code}`).not.toContain(code);
+    }
+    /* AI 可用性那一格必须写服务器自报的那个词（在 data 上），而不是页面猜的。 */
     await expect(page.locator('[data-testid="agent-work-facts"] dd').first())
       .toHaveAttribute("data-ai-state", String(runtime.ai_state ?? "NOT_READ"));
     await page.waitForTimeout(400);
-    await page.screenshot({ path: `${DOC_ASSETS}/03-ai-work-today.png`, fullPage: true });
-    console.log(`Today 面板：服务器事件 ${serverEvents} 条 | 轨迹条 ${rows} 行 | source=${feed.source} | ai_state=${runtime.ai_state}`);
+    await page.screenshot({ path: `${DOC_EVIDENCE}/03-ai-work-today.png` });
+    console.log(
+      `Today 面板：服务器事件 ${serverEvents} 条（Agent/工具 ${agentEvents.length} 条）| 轨迹 ${rows} 行 | source=${feed.source} | ai_state=${runtime.ai_state}`,
+    );
   });
 
   test("Issue #31 C：行程页的入口在行程之上，不是滚过整份行程才够得着", async ({ page }) => {
@@ -501,7 +513,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     const panel = page.getByTestId("agent-work-feed");
     await expect(panel).toBeVisible({ timeout: 15_000 });
     await expect(panel).toHaveAttribute("data-feed-state", "ready", { timeout: 20_000 });
-    await page.screenshot({ path: `${DOC_ASSETS}/04-ai-work-trip.png`, fullPage: true });
+    await page.screenshot({ path: `${DOC_EVIDENCE}/04-ai-work-trip.png`, fullPage: true });
     if (diag.buttonBox && diag.planBox) {
       expect(diag.buttonBox[1], "入口排在整份行程之下").toBeLessThan(diag.planBox[1]);
     }
