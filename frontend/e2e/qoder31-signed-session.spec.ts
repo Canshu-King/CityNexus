@@ -461,20 +461,73 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     await expect(page.locator('[data-testid="agent-work-facts"] dd').first())
       .toHaveAttribute("data-ai-state", String(runtime.ai_state ?? "NOT_READ"));
     /* 面板与那颗悬浮的 Copilot 药丸不许叠在一起。这里量的是两个盒子，不是靠一条 CSS 把药丸
-     * 藏掉再宣称没问题——药丸自己会 `yield-to-surface`，那就让它真的让开，让不开就红。 */
-    const panelBox = await panel.boundingBox();
-    const dockBox = await page.getByTestId("v18-copilot-dock").boundingBox().catch(() => null);
-    if (panelBox && dockBox) {
-      const overlaps =
-        dockBox.x < panelBox.x + panelBox.width &&
-        panelBox.x < dockBox.x + dockBox.width &&
-        dockBox.y < panelBox.y + dockBox.height &&
-        panelBox.y < dockBox.y + dockBox.height;
-      expect(
-        overlaps,
-        `面板与 Copilot 药丸重叠 panel=${JSON.stringify(panelBox)} dock=${JSON.stringify(dockBox)}`,
-      ).toBe(false);
-    }
+     * 藏掉再宣称没问题——药丸自己会 `yield-to-surface`，那就让它真的让开，让不开就红。
+     *
+     * 这一格以前有个洞：`boundingBox().catch(() => null)` 之后整段判语包在 `if (panelBox && dockBox)`
+     * 里，于是"这一屏根本没量到药丸"也走成通过。07:28 现读把它照出来了：390x844 上面板占
+     * 17,473 起 356x398，药丸停在 336,634 的 44x44 —— **真的压着面板的说明行**，而这一格一直绿着。
+     * 现在分母先钉住（药丸必须在场、必须量得到盒子），再判重叠。
+     *
+     * 同一屏上还有一枚 `sim-float`（演示台那颗浮球，330,522 的 48x60），它归 simulation 车道，
+     * 这一格不替它判——但它的盒子逐轮打出来，谁接这枚球都拿得到现读坐标。 */
+    const dock = page.getByTestId("v18-copilot-dock");
+    expect(await dock.count(), "这一屏上没有那颗 Copilot 药丸：重叠这一格量不到东西，不许当通过").toBe(1);
+    /* 两把尺不在同一个坐标面上：Playwright 的 `boundingBox()` 给的是**页面**坐标（含 scrollY），
+     * 而 `getBoundingClientRect()` 给的是**视口**坐标。药丸是 fixed、面板在流里 —— 拿页面坐标比
+     * 两者会各差一个 scrollY，重叠能被比成"没有"。所以这一格的两枚盒子必须在同一次 evaluate 里取。 */
+    const boxes = await page.evaluate(() => {
+      const rect = (el: Element | null) => {
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return { x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height) };
+      };
+      return {
+        panel: rect(document.querySelector('[data-testid="agent-work-feed"]')),
+        dock: rect(document.querySelector('[data-testid="v18-copilot-dock"]')),
+        scrollY: Math.round(window.scrollY),
+        viewport: { width: window.innerWidth, height: window.innerHeight },
+      };
+    });
+    console.log(`视口量具 ${JSON.stringify(boxes)}`);
+    const panelBox = boxes.panel;
+    const dockBox = boxes.dock;
+    expect(dockBox, "药丸在场却量不到盒子").not.toBeNull();
+    const dockPainted = await dock.isVisible().catch(() => false);
+    const cells = [
+      !!panelBox && !!dockBox && dockBox.x < panelBox.x + panelBox.width,
+      !!panelBox && !!dockBox && panelBox.x < dockBox.x + dockBox.width,
+      !!panelBox && !!dockBox && dockBox.y < panelBox.y + panelBox.height,
+      !!panelBox && !!dockBox && panelBox.y < dockBox.y + dockBox.height,
+    ];
+    const overlaps = dockPainted && cells.every(Boolean);
+    console.log(
+      `重叠判语 画出来=${String(dockPainted)} 四格=${cells.map(String).join(",")} 判重叠=${String(overlaps)} ` +
+        `panel=${JSON.stringify(panelBox)} dock=${JSON.stringify(dockBox)}`,
+    );
+    expect(
+      overlaps,
+      `面板与 Copilot 药丸重叠（四格=${cells.map(String).join(",")}）panel=${JSON.stringify(panelBox)} dock=${JSON.stringify(dockBox)} yield=${await dock.getAttribute("data-yield-to-surface")}`,
+    ).toBe(false);
+    const floaters = await page.evaluate(() => {
+      const rows: Array<{ id: string; pos: string; box: { x: number; y: number; width: number; height: number } }> = [];
+      for (const el of Array.from(document.querySelectorAll<HTMLElement>("[data-testid]"))) {
+        const style = getComputedStyle(el);
+        if (style.position !== "fixed" && style.position !== "sticky") continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width < 8 || rect.height < 8) continue;
+        if (rect.bottom < 0 || rect.top > window.innerHeight) continue;
+        rows.push({
+          id: el.getAttribute("data-testid") || "",
+          pos: style.position,
+          box: { x: Math.round(rect.x), y: Math.round(rect.y), width: Math.round(rect.width), height: Math.round(rect.height) },
+        });
+      }
+      return rows;
+    });
+    console.log(
+      `Today 浮层 ${floaters.length} 枚 panel=${JSON.stringify(panelBox)} yield=${await dock.getAttribute("data-yield-to-surface")} ` +
+        floaters.map((row) => `${row.id}[${row.pos} ${row.box.x},${row.box.y} ${row.box.width}x${row.box.height}]`).join(" "),
+    );
     await page.waitForTimeout(400);
     await page.screenshot({ path: `${DOC_EVIDENCE}/03-ai-work-today.png` });
     console.log(

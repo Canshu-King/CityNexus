@@ -112,7 +112,13 @@
   gap: var(--cn-s-8, 8px);
 }
 
-/* 那颗悬浮的 CityNexus Copilot 药丸与这一格的让位，是产品自己的
- * `cn-copilot-dock.yield-to-surface` 在管（教程第 ⑤ 张实拍里它已经缩成边上的小块）。
- * 这里不再叠一条 `display: none`：那条规则实测咬不到东西，留着只会让人以为重叠是它挡住的。
- * 两格不许重叠由 e2e 的 C 臂按包围盒判，不靠注释。 */
+/* 那颗悬浮的 Copilot 药丸在面板打开时会 `yield-to-surface` 缩成边条，但**缩成边条仍然压着这一格**：
+ * 390x844 现读——面板 17,473 起 356x398，让位后的边条 215,706 的 165x54，两盒在视口里相交。
+ * 手机宽下"面板之外"没有可停的位置，所以这一块打开时请它整枚离开这一屏（面板自己有开关，
+ * 关掉后药丸回来）。`data-agent-work-surface` 由 `AgentWorkFeedPanel` 挂载/卸载时记数写入。
+ *
+ * 这一段以前只写着"让位由产品自己管"，而 e2e 那格比包围盒的式子里有一处把 `panelBox.height`
+ * 写成了 `dockBox.height` —— 于是它一直绿着。07:40 现读拆穿，判语已改回真高度。 */
+html[data-agent-work-surface] .cn-copilot-dock {
+  display: none;
+}

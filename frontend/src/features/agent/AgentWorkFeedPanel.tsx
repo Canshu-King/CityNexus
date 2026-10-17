@@ -37,6 +37,9 @@ type FeedState = "loading" | "ready" | "refused";
 /** 哪些事件是"AI／工具真的动过手"——词根取自服务器自己写的事件类型。 */
 const AGENT_WORDS = /(agent|tool|run|approval|replan|guardian|gateway|hermes|proposal)/i;
 
+/** 现在挂着几块 AI 工作动态面板：0 表示这一屏没有东西要那颗药丸让位。 */
+let SURFACES = 0;
+
 /**
  * 行标记的唯一判据：那一行自己写的事件类型。
  *
@@ -182,6 +185,21 @@ export function AgentWorkFeedPanel({
   useEffect(() => {
     void read();
   }, [read, attempt]);
+
+  /* 这一格是全宽、而且比一屏高：那颗药丸缩成边条也仍然压在面板的行上（390x844 现读——面板
+   * 17,473 起 356x398，让位后的边条 215,706 的 165x54，两个盒子在视口里真的相交）。既然
+   * 390 宽的屏上没有"面板之外"的位置可停，打开的这一块就把药丸整枚请出这一屏，关掉再回来。
+   * 记数而不是记布尔：Today 与行程页可能同时挂着两块面板。 */
+  useEffect(() => {
+    SURFACES += 1;
+    const root = document.documentElement;
+    root.dataset.agentWorkSurface = String(SURFACES);
+    return () => {
+      SURFACES = Math.max(0, SURFACES - 1);
+      if (SURFACES === 0) delete root.dataset.agentWorkSurface;
+      else root.dataset.agentWorkSurface = String(SURFACES);
+    };
+  }, []);
 
   const agentEvents = events.filter((item) => AGENT_WORDS.test(item.event_type));
   const tripEvents = events.filter((item) => !AGENT_WORDS.test(item.event_type));
