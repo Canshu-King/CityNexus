@@ -77,6 +77,9 @@ class WeatherRuntimeResult:
     created_event_ids: tuple[str, ...]
     observation_ids: tuple[str, ...]
     degraded: bool
+    used_timezone: str | None
+    timezone_honoured: bool
+    attribution_skipped_reason_codes: tuple[str, ...]
 
     def to_evidence(self) -> dict[str, object]:
         return {
@@ -85,6 +88,11 @@ class WeatherRuntimeResult:
             "successful_place_ids": list(self.successful_place_ids),
             "failed_place_ids": list(self.failed_place_ids),
             "degraded": self.degraded,
+            "used_timezone": self.used_timezone,
+            "timezone_honoured": self.timezone_honoured,
+            "attribution_skipped_reason_codes": list(
+                self.attribution_skipped_reason_codes
+            ),
             "snapshots": [snapshot.to_evidence() for snapshot in self.snapshots],
             "attributions": [item.to_evidence() for item in self.attributions],
             "event_ids": list(self.event_ids),
@@ -93,11 +101,18 @@ class WeatherRuntimeResult:
         }
 
 
-def _journey_timezone(journey: Journey) -> ZoneInfo:
+def _journey_timezone(journey: Journey) -> ZoneInfo | None:
+    """Return the journey's zone, or None when the stored name cannot be used.
+
+    A stored name is data, not a promise. Returning None lets the caller say the
+    zone was unusable instead of turning the whole weather capture into a
+    generic failure whose reason is lost.
+    """
+
     try:
         return ZoneInfo(journey.timezone)
-    except (ZoneInfoNotFoundError, ValueError) as exc:
-        raise ValueError(f"Journey timezone is invalid: {journey.timezone}") from exc
+    except (ZoneInfoNotFoundError, ValueError, TypeError):
+        return None
 
 
 def _activity_weather_sensitive(place: Place) -> bool:
@@ -170,6 +185,11 @@ def attribute_weather_fact_to_activity(
         return None
 
     timezone = _journey_timezone(journey)
+    if timezone is None:
+        # An activity's stored window is a wall clock in the journey's zone.
+        # Without a usable zone it cannot be placed on the timeline, and
+        # guessing UTC would move it by up to a day.
+        return None
     risk_start = datetime.fromisoformat(fact.at)
     if risk_start.tzinfo is None:
         raise ValueError("WeatherRiskFact.at must be timezone-aware")
@@ -234,6 +254,11 @@ async def refresh_weather_runtime(
             by_place[place.id] = (place, [activity])
         else:
             existing[1].append(activity)
+
+    zone = _journey_timezone(journey)
+    attribution_skipped = (
+        ("JOURNEY_TIMEZONE_UNUSABLE",) if zone is None and by_place else ()
+    )
 
     snapshots: list[WeatherSnapshot] = []
     attributions: list[WeatherActivityAttribution] = []
@@ -353,7 +378,7 @@ async def refresh_weather_runtime(
             active_facts=snapshot.facts,
             resolved_at=snapshot.captured_at,
         )
-        for fact in snapshot.facts:
+        for fact in (snapshot.facts if zone is not None else ()):
             for activity in activities:
                 attribution = attribute_weather_fact_to_activity(
                     journey=journey,
@@ -408,5 +433,8 @@ async def refresh_weather_runtime(
         event_ids=tuple(dict.fromkeys(event_ids)),
         created_event_ids=tuple(dict.fromkeys(created_event_ids)),
         observation_ids=tuple(dict.fromkeys(observation_ids)),
-        degraded=bool(failed),
+        degraded=bool(failed) or bool(attribution_skipped),
+        used_timezone=journey.timezone if zone is not None else None,
+        timezone_honoured=zone is not None,
+        attribution_skipped_reason_codes=attribution_skipped,
     )
