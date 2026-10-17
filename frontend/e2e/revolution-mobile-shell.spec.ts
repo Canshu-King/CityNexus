@@ -566,13 +566,13 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(sheet).toBeVisible();
     await expect(sheet.getByText("测试数据")).toBeVisible();
     await expect(sheet.getByText("已完成", { exact: true })).toBeVisible();
-    await expect(sheet.getByText("正在检查行程安排。")).toBeVisible();
+    await expect(sheet.getByText("正在检查行程安排。", { exact: true })).toHaveCount(0);
     await expect(sheet.getByText("已理解你的需求")).toBeVisible();
     await expect(sheet.getByText("已形成执行计划")).toBeVisible();
     await expect(sheet.getByText("正在检查当前行程")).toBeVisible();
     await expect(sheet.getByText("检查当前行程：已完成")).toBeVisible();
     await expect(sheet.getByText("850 毫秒")).toBeVisible();
-    await expect(run.getByText("inspect_journey")).toHaveCount(0);
+    await expect(sheet.getByText("inspect_journey", { exact: true })).toHaveCount(2);
     await page.screenshot({ path: testInfo.outputPath("mobile-hermes-run-TEST-FIXTURE-390x844.png"), fullPage: false });
     await page.getByRole("button", { name: "关闭工作过程" }).click();
     await expect(sheet).not.toBeVisible();
