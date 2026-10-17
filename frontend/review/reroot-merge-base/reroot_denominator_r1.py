@@ -113,6 +113,8 @@ def main():
     stamp = time.strftime("%Y-%m-%d %H:%M:%S")
     txt = io.open(os.path.join(OUTDIR, "reroot_denominator_r1.txt"), "w", encoding="utf-8", newline="")
     txt.write("分母读数取于 %s｜现尖 %s｜该枝历史可达提交数 %s｜根数 %s\n" % (stamp, tip, cnt, len(root_rows)))
+    head0 = text.splitlines()[0] if text.splitlines() else ""
+    txt.write("点名册原文首行 %s\n" % head0)
     for r in root_rows:
         txt.write("根 | %s\n" % r[:120])
     txt.write("逐枝（合并基准 = 现尖 %s）\n" % tip[:12])

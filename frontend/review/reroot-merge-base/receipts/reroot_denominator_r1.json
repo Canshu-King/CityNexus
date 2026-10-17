@@ -1,7 +1,7 @@
 {
- "measured_at": "2026-10-17 18:48:30",
- "live_tip": "16c2ebffaff1f5c366ddf6195185e17a041448f6",
- "tip_commits_reachable": 104,
+ "measured_at": "2026-10-17 19:48:28",
+ "live_tip": "24835743deccd15b8d014e26c836cc46a5365993",
+ "tip_commits_reachable": 109,
  "tip_root_count": 2,
  "tip_roots": [
   "48c23b29ea06a7286844d25e8c8aef0d1440a850|2026-10-13 06:52|ORD-0635: union of the 12 yielding branches' i18n keys lands on the line -- 12 keys, both halves, each row byte-copied from its own branch; 3 of the commander's 16 (simulation.retry*) had already landed on their own and are not re-merged; setup.somePlace is withheld because its branch wrote a zh-CN row only (no en half, and 0 readers anywhere on the line), so merging it would need an invented English value. ADVISORY from the same ruler: all 12 merged keys currently have 0 readers outside the dictionary -- the code that asks them lives on those branches, so voiding the 12 branches on 'keys merged' grounds would strand these rows.",
@@ -229,7 +229,7 @@
    "sha": "f4fc92c62c487f76e3bcadd1a2957223e18199f7",
    "local_object": true,
    "merge_base_present": true,
-   "already_ancestor": false,
+   "already_ancestor": true,
    "merge_tree_rc": 0,
    "merge_tree_first_stderr_words": ""
   }
