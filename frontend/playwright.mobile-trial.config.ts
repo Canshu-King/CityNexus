@@ -1,5 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
+const port = process.env.CITYNEXUS_MOBILE_UI_PORT ?? "14273";
+
 /**
  * Strict isolated UI-layout test config. Unlike playwright.config.ts this does
  * NOT adopt anyone's backend, credentials, database or already-running server.
@@ -19,7 +21,7 @@ export default defineConfig({
     name: "mobile-ui-chromium-fixture",
     use: {
       browserName: "chromium",
-      baseURL: "http://127.0.0.1:14273",
+      baseURL: `http://127.0.0.1:${port}`,
       viewport: { width: 390, height: 844 },
       hasTouch: true,
       serviceWorkers: "block",
@@ -28,9 +30,9 @@ export default defineConfig({
     },
   }],
   webServer: {
-    command: "npm run dev -- --host 127.0.0.1 --port 14273 --strictPort",
+    command: `npm run dev -- --host 127.0.0.1 --port ${port} --strictPort`,
     cwd: ".",
-    url: "http://127.0.0.1:14273",
+    url: `http://127.0.0.1:${port}`,
     reuseExistingServer: false,
     timeout: 120_000,
     env: { VITE_REV_TRIAL_MODE: "sample" },

@@ -6144,6 +6144,21 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     return body
 
 
+@app.get("/api/v1/travelers/session")
+def get_traveler_session(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    """Return the traveler identity resolved from the signed browser session."""
+    from app.traveler_principal import resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return {"traveler_id": principal.traveler_id}
+
+
 @app.get("/api/v1/travelers/{traveler_id}")
 def get_traveler(traveler_id: UUID, session: Session = Depends(get_session)):
     return traveler_schema(require(session, Traveler, str(traveler_id), "Traveler"))

@@ -2691,6 +2691,13 @@ export const cityNexusApi = {
     return requestJson<DemoIds>("/demo/reset", { method: "POST" });
   },
 
+  getTravelerSession(): Promise<{ traveler_id: string }> {
+    return requestJson<{ traveler_id: string }>("/travelers/session", {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
+  },
+
   /* ORD-0193: the destination-preparation surface.  These mirror the server's own projections --
      `GET /destinations/capability` (anywhere_capability.evaluate_capability) and the three
      catalog-hydration calls -- so the screen shows what the server decided rather than guessing a

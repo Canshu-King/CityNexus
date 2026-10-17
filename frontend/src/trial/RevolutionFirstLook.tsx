@@ -11,7 +11,8 @@ import { MobileCompatAgentActivity } from "./mobile/MobileCompatAgentActivity";
 import {
   clearTravelerBearer,
   readTravelerBearer,
-  storeTravelerBearer,
+  readTravelerIdentity,
+  storeTravelerIdentity,
 } from "../lib/travelerSession";
 import "./RevolutionFirstLook.css";
 import "./RevolutionUsability.css";
@@ -19,28 +20,88 @@ import "./RevolutionQuickExplore.css";
 import "./RevolutionMobileV1.css";
 
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
+const RECENT_JOURNEYS_KEY = "citynexus.revolution.firstlook.recent-journeys";
 
 type TrialJourney = {
   id: string;
   cityCode: string;
   cityName: string;
   status: "DRAFT" | "ACTIVE";
+  ownerTravelerId: string;
 };
 
-function loadRecentJourney(): TrialJourney | null {
-  // A local record is only a navigation pointer. The signed bearer remains the
-  // server's sole member authority and is never copied to localStorage.
-  if (!readTravelerBearer()) return null;
+type LocalJourneyPointer = Omit<TrialJourney, "ownerTravelerId"> & { ownerTravelerId?: string };
+
+function readLegacyJourneyPointer(): LocalJourneyPointer | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    const value = raw ? JSON.parse(raw) as Partial<TrialJourney> : null;
-    if (!value || typeof value.id !== "string" || typeof value.cityCode !== "string" ||
-        typeof value.cityName !== "string") return null;
-    return { id: value.id, cityCode: value.cityCode, cityName: value.cityName,
-             status: value.status === "ACTIVE" ? "ACTIVE" : "DRAFT" };
+    const value = raw ? JSON.parse(raw) as unknown : null;
+    if (!value || typeof value !== "object") return null;
+    const record = value as Partial<LocalJourneyPointer>;
+    if (typeof record.id !== "string" || typeof record.cityCode !== "string" ||
+        typeof record.cityName !== "string") return null;
+    return {
+      id: record.id,
+      cityCode: record.cityCode,
+      cityName: record.cityName,
+      status: record.status === "ACTIVE" ? "ACTIVE" : "DRAFT",
+      ...(typeof record.ownerTravelerId === "string" ? { ownerTravelerId: record.ownerTravelerId } : {}),
+    };
   } catch {
     return null;
   }
+}
+
+function parseJourneyPointer(value: unknown, travelerId: string): TrialJourney | null {
+  if (!value || typeof value !== "object") return null;
+  const record = value as Partial<TrialJourney>;
+  if (typeof record.id !== "string" || typeof record.cityCode !== "string" ||
+      typeof record.cityName !== "string" || record.ownerTravelerId !== travelerId) return null;
+  return {
+    id: record.id,
+    cityCode: record.cityCode,
+    cityName: record.cityName,
+    status: record.status === "ACTIVE" ? "ACTIVE" : "DRAFT",
+    ownerTravelerId: travelerId,
+  };
+}
+
+function loadRecentJourney(): TrialJourney | null {
+  // A local pointer is shown only for the same signed session id. The server
+  // still authorizes all private Journey reads from the bearer.
+  const identity = readTravelerIdentity();
+  if (!identity) return null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return parseJourneyPointer(raw ? JSON.parse(raw) as unknown : null, identity.travelerId);
+  } catch {
+    return null;
+  }
+}
+
+function loadRecentJourneys(): TrialJourney[] {
+  const identity = readTravelerIdentity();
+  if (!identity) return [];
+  try {
+    const raw = localStorage.getItem(RECENT_JOURNEYS_KEY);
+    const values = raw ? JSON.parse(raw) as unknown : [];
+    if (!Array.isArray(values)) return [];
+    const current = loadRecentJourney();
+    const parsed = values
+      .map((value) => parseJourneyPointer(value, identity.travelerId))
+      .filter((value): value is TrialJourney => value !== null);
+    const combined = current ? [current, ...parsed] : parsed;
+    return combined.filter((value, index) => combined.findIndex((item) => item.id === value.id) === index).slice(0, 8);
+  } catch {
+    return [];
+  }
+}
+
+function rememberJourney(journey: TrialJourney): TrialJourney[] {
+  const recent = [journey, ...loadRecentJourneys().filter((item) => item.id !== journey.id)].slice(0, 8);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(journey));
+  localStorage.setItem(RECENT_JOURNEYS_KEY, JSON.stringify(recent));
+  return recent;
 }
 
 async function postJson<T>(path: string, payload: object, bearerOverride?: string): Promise<T> {
@@ -80,10 +141,12 @@ function freshCityCode(): string {
 export function RevolutionFirstLook() {
   const [cityName, setCityName] = useState("连城");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
+  const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
   const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [legacyRestoreFailed, setLegacyRestoreFailed] = useState(false);
   const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<RevolutionMobileTab>("explore");
@@ -99,6 +162,41 @@ export function RevolutionFirstLook() {
     }).catch(() => {
       if (!cancelled) setAgentCheckError("无法读取后端 Agent 状态。");
     });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    const bearer = readTravelerBearer();
+    const pairedIdentity = readTravelerIdentity();
+    const pointer = readLegacyJourneyPointer();
+    if (!bearer || !pointer) return;
+    if (pairedIdentity && pointer.ownerTravelerId === pairedIdentity.travelerId) return;
+
+    let cancelled = false;
+    void (async () => {
+      try {
+        const session = await cityNexusApi.getTravelerSession();
+        if (!session.traveler_id || (pointer.ownerTravelerId && pointer.ownerTravelerId !== session.traveler_id)) {
+          throw new Error("Journey owner does not match the signed traveler");
+        }
+        // A pointer is only a local navigation hint. The authenticated server
+        // read proves the current signed traveler is a member before restoring it.
+        await cityNexusApi.getBootstrapShortlist(pointer.id);
+        if (cancelled || readTravelerBearer() !== bearer) return;
+        const restored: TrialJourney = { ...pointer, ownerTravelerId: session.traveler_id };
+        storeTravelerIdentity(bearer, session.traveler_id);
+        setRecentJourneys(rememberJourney(restored));
+        setJourney(restored);
+        setCityName(restored.cityName);
+        setLegacyRestoreFailed(false);
+        setError(null);
+      } catch {
+        if (cancelled) return;
+        setCityName(pointer.cityName);
+        setLegacyRestoreFailed(true);
+        setError("旧行程无法恢复，原记录仍保存在服务器。");
+      }
+    })();
     return () => { cancelled = true; };
   }, []);
 
@@ -134,8 +232,8 @@ export function RevolutionFirstLook() {
         ? "AI 网关已配置，可在行程页提交需求。"
         : "AI 未启用，可先探索公开地点。";
 
-  const start = async () => {
-    const label = cityName.trim();
+  const start = async (cityNameOverride?: string, options: { freshSession?: boolean } = {}) => {
+    const label = (cityNameOverride ?? cityName).trim();
     if (label.length < 2 || label.length > 60) {
       setError("请输入 2 至 60 个字符的城市或地区名称，例如连城、厦门或杭州。");
       return;
@@ -144,13 +242,18 @@ export function RevolutionFirstLook() {
     setError(null);
     setNotice(null);
     try {
-      // Create through the real product API with a signed member token. Do not
-      // insert test rows, localStorage identities, or forged Journey objects.
-      const traveler = await postJson<{ id: string; access_token?: string }>("/travelers", {
-        display_name: "Revolution Lab explorer",
-        locale: "zh-CN",
-        timezone: "Asia/Shanghai",
-      }, "");
+      // Keep one signed traveler while the person starts Journeys in other
+      // cities. A new traveler is issued only when this browser has no paired
+      // signed session; both session fields commit after Journey creation.
+      const existingBearer = options.freshSession ? null : readTravelerBearer();
+      const existingIdentity = options.freshSession ? null : readTravelerIdentity();
+      const traveler = existingBearer
+        ? { id: (await cityNexusApi.getTravelerSession()).traveler_id, access_token: existingBearer }
+        : await postJson<{ id: string; access_token?: string }>("/travelers", {
+          display_name: "Revolution Lab explorer",
+          locale: "zh-CN",
+          timezone: "Asia/Shanghai",
+        }, "");
       if (!traveler.access_token) {
         throw new Error("服务器没有发放可用于私人探索的签名会话，请检查本地鉴权配置。");
       }
@@ -170,21 +273,51 @@ export function RevolutionFirstLook() {
         party_size: 1,
       }, traveler.access_token);
       if (!created.id) throw new Error("服务器未返回 Journey ID。");
-      // Commit the newly issued member identity only once the Journey exists.
-      // A failed Journey POST must never strand the previous private Journey
-      // under a different, newly-created traveler.
-      storeTravelerBearer(traveler.access_token);
-      const next: TrialJourney = { id: created.id, cityCode, cityName: label, status: "DRAFT" };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      if (!existingIdentity || existingIdentity.travelerId !== traveler.id) {
+        storeTravelerIdentity(traveler.access_token, traveler.id);
+      }
+      const next: TrialJourney = {
+        id: created.id,
+        cityCode,
+        cityName: label,
+        status: "DRAFT",
+        ownerTravelerId: traveler.id,
+      };
+      setRecentJourneys(rememberJourney(next));
       setExplorationTitle(null);
       setJourney(next);
       setActiveTab("explore");
       setPocketWalk(null);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "创建探索草稿失败。");
+      if (readTravelerBearer()) setLegacyRestoreFailed(true);
     } finally {
       setBusy(false);
     }
+  };
+
+  const restartWithNewSession = () => {
+    const pointer = readLegacyJourneyPointer();
+    setJourney(null);
+    setPocketWalk(null);
+    setRecentJourneys([]);
+    setLegacyRestoreFailed(false);
+    setError(null);
+    void start(pointer?.cityName, { freshSession: true });
+  };
+
+  const resumeRecentJourney = (saved: TrialJourney) => {
+    const identity = readTravelerIdentity();
+    if (!identity || identity.travelerId !== saved.ownerTravelerId) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    setJourney(saved);
+    setCityName(saved.cityName);
+    setExplorationTitle(null);
+    setCandidateForJourney(null);
+    setPocketWalk(null);
+    setError(null);
+    setNotice(null);
+    setActiveTab("explore");
   };
 
   const recoverDeniedJourney = () => {
@@ -209,11 +342,12 @@ export function RevolutionFirstLook() {
     setActiveTab("explore");
     setNotice(null);
     setError("这次登录无法访问之前的行程。你可以重新开始探索，原行程不会因此被删除。");
+    setRecentJourneys([]);
   };
 
   const switchCity = (nextCityName?: string) => {
-    // Keep the signed traveler when starting another Journey. The server still
-    // decides which private records this identity may read.
+    if (journey) setRecentJourneys(rememberJourney(journey));
+    // Keep the signed traveler and the previous Journey in the recent list.
     localStorage.removeItem(STORAGE_KEY);
     if (nextCityName?.trim()) setCityName(nextCityName.trim());
     setExplorationTitle(null);
@@ -299,7 +433,35 @@ export function RevolutionFirstLook() {
                   </button>
                 </div>
               </form>
+              {recentJourneys.length > 0 && (
+                <div className="rev-firstlook-recent-journeys" data-testid="rev-recent-journeys">
+                  <h2>最近的行程</h2>
+                  {recentJourneys.map((saved) => (
+                    <button
+                      key={saved.id}
+                      type="button"
+                      className="rev-mobile-secondary"
+                      aria-label={`打开${saved.cityName}行程`}
+                      onClick={() => resumeRecentJourney(saved)}
+                    >
+                      <span>{saved.cityName}</span>
+                      <span>继续行程 →</span>
+                    </button>
+                  ))}
+                </div>
+              )}
               {error && <p className="rev-firstlook-error" role="alert">{error}</p>}
+              {legacyRestoreFailed && (
+                <button
+                  type="button"
+                  className="rev-mobile-secondary"
+                  disabled={busy}
+                  onClick={restartWithNewSession}
+                  data-testid="rev-firstlook-new-session"
+                >
+                  用新行程继续
+                </button>
+              )}
               <p className="rev-mobile-truth">点击后先创建行程草稿。</p>
             </section>
           ) : activeTab === "trips" ? (

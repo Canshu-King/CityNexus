@@ -97,6 +97,33 @@
   max-width: 540px;
   margin-bottom: 20px;
 }
+.rev-mobile-v1 .rev-firstlook-recent-journeys {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+.rev-mobile-v1 .rev-firstlook-recent-journeys h2 {
+  margin: 0 0 2px;
+  color: #193d2a;
+  font-size: 17px;
+  letter-spacing: -.025em;
+}
+.rev-mobile-v1 .rev-firstlook-recent-journeys button {
+  display: flex;
+  width: 100%;
+  min-height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 15px;
+  border: 1px solid #cfe2d5;
+  border-radius: 13px;
+  background: #fff;
+  color: #285b3f;
+  font-size: 14px;
+  font-weight: 650;
+  text-align: left;
+}
 .rev-mobile-v1 .rev-firstlook-hero form {
   margin-top: 28px;
   padding: clamp(16px, 3vw, 25px);

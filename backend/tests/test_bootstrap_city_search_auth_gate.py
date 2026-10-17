@@ -78,3 +78,27 @@ def test_city_search_rejects_signed_nonmember_before_geocoder_creation(monkeypat
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
         object.__setattr__(settings, "real_city_enabled", previous_real_city_enabled)
         object.__setattr__(settings, "real_city_mode", previous_real_city_mode)
+
+
+def test_traveler_session_returns_identity_from_signed_bearer_only(monkeypatch):
+    """The browser can recover its paired ID without trusting a client-supplied traveler ID."""
+    previous_secret = settings.traveler_auth_secret
+    suffix = uuid4().hex
+    try:
+        object.__setattr__(settings, "traveler_auth_secret", TEST_SECRET)
+        traveler = _new_traveler(f"Session identity {suffix}")
+
+        unauthenticated = TEST_CLIENT.get("/api/v1/travelers/session")
+        assert unauthenticated.status_code == 401
+
+        response = TEST_CLIENT.get(
+            "/api/v1/travelers/session",
+            headers={"Authorization": f"Bearer {traveler['access_token']}"},
+        )
+
+        assert response.status_code == 200, response.text
+        assert response.json() == {"traveler_id": traveler["id"]}
+        assert response.headers["cache-control"] == "private, no-store, max-age=0"
+        assert response.headers["vary"] == "Authorization, X-CityNexus-Traveler-Token"
+    finally:
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)

@@ -188,3 +188,10 @@ AI 网关在新试用环境中配置为 `auto:cheapest`，本轮没有另发模�
 `TWO_POI_FLOW`：REAL_PROVIDER_PASS；`PRIVATE_POCKET_WALK_SAVE`：PASS；`POCKET_WALK_GO_REFRESH_RESTORE`：PASS；`SIGNED_ACTIVE_JOURNEY`：NOT_CREATED；`PERSISTED_HERMES_AGENT_RUN`：NOT_CREATED。
 
 真实手机视口截图：`trial/results/assets/20261017-photon-xiamen-pocket-walk-go-reload-390x844.jpg`，SHA-256 `4EF83E3DA840E6FCBBDA03FA9674F455C223E13E2ABC0B5A4A3D633A01361C22`。截图记录刷新后两站和 GO 进度状态。
+
+## 2026-10-17：Chrome-use 旧会话恢复实测
+
+- 在独立 Chrome-use 会话和内存数据库中，实际点击“开始探索”创建测试旅客与厦门 DRAFT 行程；接口分别返回 201。
+- 保留签名 bearer 和本地行程指针，仅移除本地旅客编号，再由浏览器重新打开页面。服务端 `/api/v1/travelers/session` 返回 200，私有 `bootstrap-shortlist` 成员读取返回 200，页面恢复厦门探索状态。
+- 此次只验证浏览器中的旧会话身份恢复；没有真实 POI、Pocket Walk、GO、AI 请求或 AgentRun。临时服务已停止，数据库为内存库。
+- Chrome-use 截图调用超时，没有生成截图文件；页面状态和两项 HTTP 200 由浏览器快照及请求记录确认。

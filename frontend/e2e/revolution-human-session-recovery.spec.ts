@@ -2,6 +2,7 @@ import { expect, test, type Route } from "@playwright/test";
 
 const oldJourneyId = "00000000-0000-4000-8000-000000000117";
 const newJourneyId = "00000000-0000-4000-8000-000000000118";
+const migratedJourneyId = "00000000-0000-4000-8000-000000000119";
 
 async function json(route: Route, status: number, body: unknown) {
   await route.fulfill({
@@ -22,8 +23,9 @@ test.describe("Revolution signed-session recovery UI regression", () => {
   test("a stale Journey's 403 offers one-tap restart without deleting its server record", async ({ page }) => {
     await page.addInitScript(({ id }) => {
       sessionStorage.setItem("citynexus.traveler.bearer", "STALE_SIGNED_FIXTURE");
+      sessionStorage.setItem("citynexus.traveler.session-id", "traveler-stale");
       localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
-        id, cityCode: "CN-RV-OLD", cityName: "连城", status: "DRAFT",
+        id, cityCode: "CN-RV-OLD", cityName: "连城", status: "DRAFT", ownerTravelerId: "traveler-stale",
       }));
     }, { id: oldJourneyId });
     await page.route("**/api/v1/agent/runtime-status", (r) => json(r, 200, {
@@ -52,7 +54,7 @@ test.describe("Revolution signed-session recovery UI regression", () => {
       bearer: sessionStorage.getItem("citynexus.traveler.bearer"),
     }));
     expect(oldState.pointer).toBeNull();
-    expect(oldState.bearer).toBe("STALE_SIGNED_FIXTURE");
+    expect(oldState.bearer).toBeNull();
     expect(publicProviderRequests).toBe(0);
 
     let issued = false;
@@ -84,23 +86,31 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     expect(publicProviderRequests).toBe(0);
   });
 
-  test("failed create Journey never overwrites an existing signed browser session", async ({ page }) => {
+  test("failed signed-session lookup keeps the current bearer and offers a fresh-session recovery", async ({ page }) => {
     await page.addInitScript(() => {
       sessionStorage.setItem("citynexus.traveler.bearer", "ORIGINAL_SIGNED_FIXTURE");
+      sessionStorage.removeItem("citynexus.traveler.session-id");
       localStorage.removeItem("citynexus.revolution.firstlook.journey");
     });
     await page.route("**/api/v1/agent/runtime-status", (r) => json(r, 200, {
       runtime_identity: "UNAVAILABLE", hermes_compat_configured: false, ai_state: "DISABLED",
     }));
-    await page.route("**/api/v1/travelers", (r) =>
-      json(r, 201, { id: "fixture-traveler-2", access_token: "NEW_BUT_NOT_COMMITTED" }));
-    await page.route("**/api/v1/journeys", async (r) => {
-      expect(r.request().headers()["authorization"]).toBe("Bearer NEW_BUT_NOT_COMMITTED");
-      await json(r, 503, { detail: "TEST_ONLY_BACKEND_UNAVAILABLE" });
-    });
+    await page.route("**/api/v1/travelers/session", (r) => json(r, 401, { detail: "INVALID_SIGNED_SESSION" }));
 
     await page.goto("/revolution");
     await page.getByTestId("rev-firstlook-start").click();
+    await expect(page.getByRole("alert")).toContainText("401");
+    await expect(page.getByTestId("rev-firstlook-new-session")).toBeVisible();
+
+    await page.route("**/api/v1/travelers", async (route) => {
+      expect(route.request().headers()["authorization"]).toBeUndefined();
+      await json(route, 201, { id: "fixture-traveler-2", access_token: "NEW_BUT_NOT_COMMITTED" });
+    });
+    await page.route("**/api/v1/journeys", async (route) => {
+      expect(route.request().headers()["authorization"]).toBe("Bearer NEW_BUT_NOT_COMMITTED");
+      await json(route, 503, { detail: "TEST_ONLY_BACKEND_UNAVAILABLE" });
+    });
+    await page.getByTestId("rev-firstlook-new-session").click();
     await expect(page.getByRole("alert")).toContainText("HTTP 503");
     const result = await page.evaluate(() => ({
       pointer: localStorage.getItem("citynexus.revolution.firstlook.journey"),
@@ -108,5 +118,108 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     }));
     expect(result.pointer).toBeNull();
     expect(result.bearer).toBe("ORIGINAL_SIGNED_FIXTURE");
+  });
+
+  test("one signed traveler starts and reopens Journeys in multiple cities", async ({ page }) => {
+    await page.addInitScript(() => {
+      sessionStorage.setItem("citynexus.traveler.bearer", "ONE_TRAVELER_FIXTURE");
+      sessionStorage.setItem("citynexus.traveler.session-id", "traveler-one");
+      localStorage.removeItem("citynexus.revolution.firstlook.journey");
+      localStorage.removeItem("citynexus.revolution.firstlook.recent-journeys");
+    });
+    await page.route("**/api/v1/agent/runtime-status", (r) => json(r, 200, {
+      runtime_identity: "UNAVAILABLE", hermes_compat_configured: false, ai_state: "DISABLED",
+    }));
+    await page.route("**/api/v1/travelers/session", async (route) => {
+      expect(route.request().headers()["authorization"]).toBe("Bearer ONE_TRAVELER_FIXTURE");
+      await json(route, 200, { traveler_id: "traveler-one" });
+    });
+    let travelerCreates = 0;
+    await page.route("**/api/v1/travelers", async (route) => {
+      travelerCreates += 1;
+      await json(route, 500, { detail: "existing signed traveler should be reused" });
+    });
+    const createdJourneys: string[] = [];
+    await page.route("**/api/v1/journeys", async (route) => {
+      expect(route.request().method()).toBe("POST");
+      expect(route.request().headers()["authorization"]).toBe("Bearer ONE_TRAVELER_FIXTURE");
+      const body = route.request().postDataJSON() as { traveler_id?: string };
+      expect(body.traveler_id).toBe("traveler-one");
+      const id = createdJourneys.length === 0 ? oldJourneyId : newJourneyId;
+      createdJourneys.push(id);
+      await json(route, 201, { id });
+    });
+    await page.route("**/api/v1/journeys/*/bootstrap-discovery/readiness", (r) =>
+      json(r, 200, { status: "BLOCKED", reason_code: "TEST_OFFLINE" }));
+    await page.route("**/api/v1/journeys/*/bootstrap-shortlist", (r) =>
+      json(r, 200, { items: [], pocket_walk: null }));
+
+    await page.goto("/revolution");
+    await page.getByTestId("rev-firstlook-city").fill("宁波");
+    await page.getByTestId("rev-firstlook-start").click();
+    await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
+    await page.getByRole("button", { name: "换地区" }).click();
+    await expect(page.getByTestId("rev-recent-journeys")).toContainText("宁波");
+
+    await page.getByTestId("rev-firstlook-city").fill("上海");
+    await page.getByTestId("rev-firstlook-start").click();
+    await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
+    await page.getByRole("button", { name: "换地区" }).click();
+    await expect(page.getByTestId("rev-recent-journeys")).toContainText("上海");
+    await expect(page.getByTestId("rev-recent-journeys")).toContainText("宁波");
+    await page.getByRole("button", { name: "打开宁波行程" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "宁波" })).toBeVisible();
+
+    const state = await page.evaluate(() => ({
+      bearer: sessionStorage.getItem("citynexus.traveler.bearer"),
+      travelerId: sessionStorage.getItem("citynexus.traveler.session-id"),
+      pointer: JSON.parse(localStorage.getItem("citynexus.revolution.firstlook.journey") || "{}") as { id?: string; ownerTravelerId?: string },
+      recent: JSON.parse(localStorage.getItem("citynexus.revolution.firstlook.recent-journeys") || "[]") as unknown[],
+    }));
+    expect(state.bearer).toBe("ONE_TRAVELER_FIXTURE");
+    expect(state.travelerId).toBe("traveler-one");
+    expect(state.pointer.id).toBe(oldJourneyId);
+    expect(state.pointer.ownerTravelerId).toBe("traveler-one");
+    expect(state.recent).toHaveLength(2);
+    expect(travelerCreates).toBe(0);
+    expect(createdJourneys).toEqual([oldJourneyId, newJourneyId]);
+  });
+
+  test("legacy bearer-only session restores a Journey after server membership proof", async ({ page }) => {
+    await page.addInitScript(({ id }) => {
+      sessionStorage.setItem("citynexus.traveler.bearer", "LEGACY_BEARER_FIXTURE");
+      sessionStorage.removeItem("citynexus.traveler.session-id");
+      localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+        id, cityCode: "CN-RV-XM", cityName: "厦门", status: "DRAFT",
+      }));
+    }, { id: migratedJourneyId });
+    await page.route("**/api/v1/agent/runtime-status", (r) => json(r, 200, {
+      runtime_identity: "UNAVAILABLE", hermes_compat_configured: false, ai_state: "DISABLED",
+    }));
+    await page.route("**/api/v1/travelers/session", async (route) => {
+      expect(route.request().headers()["authorization"]).toBe("Bearer LEGACY_BEARER_FIXTURE");
+      await json(route, 200, { traveler_id: "traveler-legacy" });
+    });
+    let membershipRead = false;
+    await page.route(`**/api/v1/journeys/${migratedJourneyId}/bootstrap-shortlist`, async (route) => {
+      expect(route.request().headers()["authorization"]).toBe("Bearer LEGACY_BEARER_FIXTURE");
+      membershipRead = true;
+      await json(route, 200, { journey_id: migratedJourneyId, items: [], pocket_walk: null });
+    });
+    await page.route(`**/api/v1/journeys/${migratedJourneyId}/bootstrap-discovery/readiness`, (r) =>
+      json(r, 200, { journey_id: migratedJourneyId, status: "BLOCKED", reason_code: "TEST_OFFLINE" }));
+
+    await page.goto("/revolution");
+    await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "厦门" })).toBeVisible();
+    const state = await page.evaluate(() => ({
+      travelerId: sessionStorage.getItem("citynexus.traveler.session-id"),
+      pointer: JSON.parse(localStorage.getItem("citynexus.revolution.firstlook.journey") || "{}") as {
+        id?: string; ownerTravelerId?: string;
+      },
+    }));
+    expect(membershipRead).toBe(true);
+    expect(state.travelerId).toBe("traveler-legacy");
+    expect(state.pointer).toMatchObject({ id: migratedJourneyId, ownerTravelerId: "traveler-legacy" });
   });
 });
