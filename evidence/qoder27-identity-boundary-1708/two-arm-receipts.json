@@ -1,0 +1,64 @@
+{
+  "after_patched": {
+    "arm": "after_patched",
+    "base_sha": "321d4ab19c6c9d730717cc530de0f58d86b898d1",
+    "copilotdock_reads_localstorage": false,
+    "tests": [
+      {
+        "title": "A 走完留下缓存 → 同一台设备换 B 回到同一入口：屏上不得出现 A 的任一工具行（桌面 1280×900）",
+        "ok": true
+      },
+      {
+        "title": "A 走完留下缓存 → 同一台设备换 B 回到同一入口：屏上不得出现 A 的任一工具行（手机 390×844）",
+        "ok": true
+      },
+      {
+        "title": "服务器答 403 时，屏上是可恢复的说明，不是「还在核对事实」",
+        "ok": true
+      }
+    ],
+    "screenshots": {
+      "after-memberA-桌面.png": "91481f5c7932af320d285fc80e132d79e42a0b850d5d1117a3701b70117ebaac",
+      "after-memberA-桌面-dock.png": "39df8210ef3961762221e8df766708f681c13429e4f059ef88658a40e37eae55",
+      "after-memberA-手机.png": "24af46e4db06c752fcde3559aa34087881a5449a99a6ed6930cf3eef48cc676f",
+      "after-memberA-手机-dock.png": "a917cdcc579bcd396c61f23490497d8f67cbf3ed44f6189196665d92430fec6b",
+      "after-memberB-桌面.png": "2ef81568ec3be15a898297b59e82dd4d3f87f4bf9f2f74f98faa21f775798305",
+      "after-memberB-桌面-dock.png": "d48066d95ccca42494f1033f1ad56f58d60d7613741c8fe5a74b035ed76032c1",
+      "after-memberB-手机.png": "09da263fc56ee2bf4af0f614473c6e75ad3bbd1bba12f85db86bc290786ae1ed",
+      "after-memberB-手机-dock.png": "9e45133b2d9d97f2d16418033314af2d6f3cffddc8447578a55415933346cda8",
+      "after-forbidden.png": "22055e611bef3c2f490e6e6d0e8cf675dbb537016bc2f94a271dad9bfe92b5c6",
+      "after-forbidden-dock.png": "a57d4571cf1b24680b8bc4804365779ac33b9e9ad4daa2893e73b9b30376e3dc"
+    }
+  },
+  "before_pristine": {
+    "arm": "before_pristine",
+    "base_sha": "321d4ab19c6c9d730717cc530de0f58d86b898d1",
+    "copilotdock_reads_localstorage": true,
+    "tests": [
+      {
+        "title": "A 走完留下缓存 → 同一台设备换 B 回到同一入口：屏上不得出现 A 的任一工具行（桌面 1280×900）",
+        "ok": false
+      },
+      {
+        "title": "A 走完留下缓存 → 同一台设备换 B 回到同一入口：屏上不得出现 A 的任一工具行（手机 390×844）",
+        "ok": false
+      },
+      {
+        "title": "服务器答 403 时，屏上是可恢复的说明，不是「还在核对事实」",
+        "ok": false
+      }
+    ],
+    "screenshots": {
+      "before-memberA-桌面.png": "91481f5c7932af320d285fc80e132d79e42a0b850d5d1117a3701b70117ebaac",
+      "before-memberA-桌面-dock.png": "39df8210ef3961762221e8df766708f681c13429e4f059ef88658a40e37eae55",
+      "before-memberA-手机.png": "24af46e4db06c752fcde3559aa34087881a5449a99a6ed6930cf3eef48cc676f",
+      "before-memberA-手机-dock.png": "e489dc23248614fc411edfb31d70c220987df6e29122247fb433dcb945fce557",
+      "before-memberB-桌面.png": "f3188c9ad27e95146ebb3e2f361aa1183446f138a5c8bcfb902d9af173e07510",
+      "before-memberB-桌面-dock.png": "a7e272f2f6ca5836ef6041ddf9cd0527a4f16e69f6ff1ac5750204921d67f712",
+      "before-memberB-手机.png": "e024c4bbb2875b3afd7a9b4c89e38afedcff1a358c78eccefe1f9d5a5d05aee5",
+      "before-memberB-手机-dock.png": "20dad74c66e75c3a116ac81a1c4dc9ab049a1f20c9e6a1486503dfcf19d64c6e",
+      "before-forbidden.png": "a34b0482611ee765a120c402ecf99ba4e791d08e997357c49aeaaedc8ec1567c",
+      "before-forbidden-dock.png": "e3dfc2874db058f3b0ba82b00bc20cd409ea789299bfe98f77f184ac29c3fb0c"
+    }
+  }
+}
