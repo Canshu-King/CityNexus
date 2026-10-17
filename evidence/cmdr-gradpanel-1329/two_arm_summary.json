@@ -1,0 +1,270 @@
+{
+ "at_local": "2026-10-17 13:15",
+ "ruler": "_cmdr_grad_scan_r1.cjs",
+ "tip_before": "8ec2d57835ebb60af3c8ed99dfee8797f0cddcbf",
+ "before": {
+  "name": "before",
+  "loads": 68,
+  "readings": 4474,
+  "low_with_gradient": 155,
+  "low_color_only": 143,
+  "blind_spots": 12,
+  "distinct_kinds": 51,
+  "by_screen": {
+   "authoritative": 61,
+   "twin": 31,
+   "intelligence": 21,
+   "studio": 17,
+   "trips": 9,
+   "hub": 3,
+   "agent": 3,
+   "live": 1,
+   "map": 1,
+   "stay": 1,
+   "discover": 1,
+   "import": 1,
+   "bookings": 1,
+   "footprints": 1,
+   "trash": 1,
+   "access": 1,
+   "me": 1
+  },
+  "positive_control_em": {
+   "color_only": 2.18,
+   "with_grad": 2.18
+  },
+  "positive_control_pill": {
+   "color_only": 3.97,
+   "with_grad": 3.97,
+   "text": "画像上下文就绪"
+  },
+  "sha1_of_receipt": "ec9dd80f7fe43c667f1f8679d7ffc878424542bb"
+ },
+ "after": {
+  "name": "after",
+  "loads": 68,
+  "readings": 4474,
+  "low_with_gradient": 143,
+  "low_color_only": 143,
+  "blind_spots": 0,
+  "distinct_kinds": 47,
+  "by_screen": {
+   "authoritative": 49,
+   "twin": 31,
+   "intelligence": 21,
+   "studio": 17,
+   "trips": 9,
+   "hub": 3,
+   "agent": 3,
+   "live": 1,
+   "map": 1,
+   "stay": 1,
+   "discover": 1,
+   "import": 1,
+   "bookings": 1,
+   "footprints": 1,
+   "trash": 1,
+   "access": 1,
+   "me": 1
+  },
+  "positive_control_em": {
+   "color_only": 2.18,
+   "with_grad": 2.18
+  },
+  "positive_control_pill": {
+   "color_only": 3.97,
+   "with_grad": 3.97,
+   "text": "画像上下文就绪"
+  },
+  "sha1_of_receipt": "99ed969dd8da31b3df55b9fa6b7ca2faae506a42"
+ },
+ "denominator_equal": false,
+ "keys_fixed": 12,
+ "keys_new": 0,
+ "keys_both": 121,
+ "fixed_by_screen": {
+  "authoritative": 12
+ },
+ "new_by_screen": {},
+ "fixed_rows": [
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "h2",
+   "text": "从方案到边缘的单一真相",
+   "before": 1.02,
+   "after": 15.63,
+   "after_color_only": 15.63
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "h2",
+   "text": "有据可依的自适应恢复",
+   "before": 1.02,
+   "after": 15.63,
+   "after_color_only": 15.63
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "p.v8-muted",
+   "text": "这趟行程没有等待你决定的恢复方案。",
+   "before": 2.06,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span",
+   "text": "服务端执行真相 · 可审计",
+   "before": 3.5,
+   "after": 4.54,
+   "after_color_only": 4.54
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v8-kicker",
+   "text": "V14 · 现实变了",
+   "before": 1.95,
+   "after": 8.17,
+   "after_color_only": 8.17
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v8-kicker",
+   "text": "权威行程",
+   "before": 1.95,
+   "after": 8.17,
+   "after_color_only": 8.17
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "h2",
+   "text": "从方案到边缘的单一真相",
+   "before": 1.02,
+   "after": 15.63,
+   "after_color_only": 15.63
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "h2",
+   "text": "有据可依的自适应恢复",
+   "before": 1.02,
+   "after": 15.63,
+   "after_color_only": 15.63
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "p.v8-muted",
+   "text": "这趟行程没有等待你决定的恢复方案。",
+   "before": 2.06,
+   "after": 7.69,
+   "after_color_only": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span",
+   "text": "服务端执行真相 · 可审计",
+   "before": 3.5,
+   "after": 4.54,
+   "after_color_only": 4.54
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v8-kicker",
+   "text": "V14 · 现实变了",
+   "before": 1.95,
+   "after": 8.17,
+   "after_color_only": 8.17
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "authoritative",
+   "sel": "span.v8-kicker",
+   "text": "权威行程",
+   "before": 1.95,
+   "after": 8.17,
+   "after_color_only": 8.17
+  }
+ ],
+ "key_set_delta": {
+  "keys_before": 4114,
+  "keys_after": 4114,
+  "only_before": 4,
+  "only_after": 4,
+  "only_before_rows": [
+   {
+    "theme": "dark",
+    "screen": "live",
+    "sel": "strong",
+    "text": "12:58"
+   },
+   {
+    "theme": "light",
+    "screen": "live",
+    "sel": "strong",
+    "text": "12:56"
+   },
+   {
+    "theme": "dark",
+    "screen": "live",
+    "sel": "strong",
+    "text": "12:54"
+   },
+   {
+    "theme": "light",
+    "screen": "live",
+    "sel": "strong",
+    "text": "12:52"
+   }
+  ],
+  "only_after_rows": [
+   {
+    "theme": "dark",
+    "screen": "live",
+    "sel": "strong",
+    "text": "13:10"
+   },
+   {
+    "theme": "light",
+    "screen": "live",
+    "sel": "strong",
+    "text": "13:08"
+   },
+   {
+    "theme": "dark",
+    "screen": "live",
+    "sel": "strong",
+    "text": "13:06"
+   },
+   {
+    "theme": "light",
+    "screen": "live",
+    "sel": "strong",
+    "text": "13:05"
+   }
+  ],
+  "cause": "live 屏那枚 strong 是页面自己的钟（HH:MM），两臂各取到当时那一刻，所以四枚键互不相同；读数总数与去重键数两臂相等"
+ }
+}
