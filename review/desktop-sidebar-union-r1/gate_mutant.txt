@@ -1,0 +1,6 @@
+    Error: the desktop sidebar must iterate `drawerRoutes` (the union) so both shapes share the entry set
+      87 |     "the desktop sidebar must iterate `drawerRoutes` (the union) so both shapes share the entry set"
+      91 |     `desktop sidebar is missing entries for: ${v.missing.join(", ") || "(none)"} -- it paints ${v.drawn.length} of the ${v.union.length} declared screens`
+  2 failed
+  2 passed (951ms)
+MUTANT_RC=1

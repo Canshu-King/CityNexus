@@ -1,0 +1,5 @@
+[2/4] [src-rulers] › e2e\qoder-8ac89982-desktop-sidebar-union-r1.spec.ts:97:1 › drawerRoutes really is a spread of desktopRoutes then mobile-only extras (so the change is load-bearing)
+[3/4] [src-rulers] › e2e\qoder-8ac89982-desktop-sidebar-union-r1.spec.ts:112:1 › counter arm: the same ruler, run against the tip's own bytes, names trips and me as the missing entries
+[4/4] [src-rulers] › e2e\qoder-8ac89982-desktop-sidebar-union-r1.spec.ts:130:1 › evidence file carries the two readings (working tree and tip)
+  4 passed (693ms)
+CLEAN_RC=0

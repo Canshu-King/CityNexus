@@ -1984,14 +1984,23 @@ export function V8Experience() {
           {t("shell.workspace")} <span>{t("shell.workspaceSub")}</span>
         </div>
         <nav className="v8-nav" aria-label="Product navigation">
-          {desktopRoutes.map((item, index) => (
+          {/* The sidebar draws the same list the drawer does (the union), so the desktop and phone shapes
+              cannot end up with different entry sets: trips and me used to live only on the phone bar and
+              were reachable at desktop width by a typed address and nothing else. A row with no `group` is
+              titled `nav.groupOther`, exactly as the drawer titles it. */}
+          {drawerRoutes.map((item, index) => (
             <div key={item.key}>
-              {(index === 0 ||
-                desktopRoutes[index - 1].group !== item.group) && (
-                <span className="v8-nav-group">{t(navGroupKey(item.group))}</span>
-              )}
+              {index === 0 ||
+              !("group" in item) ||
+              !("group" in drawerRoutes[index - 1]) ||
+              (drawerRoutes[index - 1] as { group?: string }).group !== item.group ? (
+                <span className="v8-nav-group">
+                  {"group" in item ? t(navGroupKey(item.group)) : t("nav.groupOther")}
+                </span>
+              ) : null}
               <button
                 className={route === item.key ? "active" : ""}
+                aria-current={route === item.key ? "page" : undefined}
                 data-contrast-role={route === item.key ? "state" : undefined}
                 onClick={() => navigate(item.key)}
                 title={collapsed ? t("nav." + item.key) : undefined}
