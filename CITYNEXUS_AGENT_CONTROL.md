@@ -1,4 +1,83 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-对比闸两臂 出厂那枚红不是我今天落的东西造成的
+
+- 现读：出厂的对比审计用例 `frontend/e2e/qoder-contrast-audit.spec.ts:211` 在现尖两臂红（手机与桌面各一枚），另三臂绿（含焦点指示那一臂）。八张屏臂的违规读数：today 手机九、桌面八；live 手机十、桌面十，明暗各一遍。
+- 两臂对表（唯一变量是一枚 CSS 文件的代次）：把 `frontend/src/design-tokens.css` 退回我今天三笔落地之前那一代 41130d39a9a0addc0a66e14069e5333c898f9720（`git cat-file -t` 现读为 commit）重跑，八臂读数逐位相同。结论：这两枚红既不是我三笔暗面落地带来的，也不是 Issue 廿七 那两笔带来的——它们在今天的改动之前就在那儿。
+- 红因不是"颜色不够"：违规清一色 kind=unclassified-control，也就是闸在罚"这个控件没有语义角色"；其中多数行的底色读数是四段皆零的全透明——尺算不出合成底色就记零；另有比值明明已过线（c=15.63 对 3）仍被记成违规的行。也就是说这一红要的是**分类与豁免的形状**，不是再改一次颜色。
+- 这件事正压在两件未裁的事上：文字动作那一档的档位（CMDR-ORDER-0712 队列里）与 ORD-0408「曝光尺要结构化豁免，不靠号令者手放」。我把读数交上去，不手放豁免、也不改断言换绿。
+- 证据：两份完整跑批日志已按字节外读核对，落 `evidence/contrast-gate-ab-1847/`（commander/control，一枚现尖臂、一枚退回代臂）。
+- 顺带记两条现场事实：这一拍权威尖从 16c2ebffaff1f5c366ddf6195185e17a041448f6 推进到 24835743deccd15b8d014e26c836cc46a5365993（落地门 ff-only 放行，不是我这一笔）；唤醒腿的真门是会话消息而不是 BB——按 uuid 裸唤醒八扇之后，板的在工从 0 涨到五扇在写、两扇等模型，其中一扇交来两枚块，一枚被代插门以"正文里的裸数在 evidence 输出里找不到"具名拒收并退回作者。
+- 没有变好的：出厂对比闸仍是两臂红（既有），在工仍未稳定到八扇，收件箱这一拍没有可插块。
+
+
+### 落地这一侧没回音·a68b0631·a68b0631-time-weather-zone-r1（值守转达）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round5_192713.json:2）
+- 枝：refs/heads/review/a68b0631-time-weather-zone-r1｜那把尺的判语逐字：refused: CODES_ON_SCREEN: this candidate puts SIGNED_HMAC_BEARER where a traveller reads words; route those tokens through the dictionary/labels instead
+  出处（这一拍现读）：live_checks/_batch_land_round5_192713.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+该做的：被门拒的那些：把点名的码走字典或标签（别让大写字母码出现在旅客读的句子位上），再在自己那枝上重推一版。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；对上的依据：a68b0631：落档块名反查（块里写过这枝）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### a68b0631 19:18 · 领域「时间与时钟」今晚第六件（自申报下一格：天气运行时的「同一字段两种失败行为」）：行程时区写坏时，整个天气采集以一个泛化的 ValueError 死掉，理由被调用方丢成类名
+
+**一、要落的枝（只这一枚，枝名逐字）**
+
+- `review/a68b0631-time-weather-zone-r1` head `0a0bb36547eaecfcf9449bb8c6bf4afe34764d1a`（已 push 到 `refs/heads/review/`，`ls-remote` 现读回同值）；**父提 = 现尖 `f614e68c1b2736bca36a42dafb85cc128348447d`**（按令先 `git fetch` 对齐后建的）⇒ 快进（`merge-base --is-ancestor` 现读为真）。
+- 动的产品字节：
+  - `backend/app/integrations/context/weather_runtime.py` blob `de28dc547172dc6d54fcb5a1a04c274f674e4230`（`weather_runtime.py:104` 的 `_journey_timezone` 不再抛；`weather_runtime.py:188` 的归因在区不可用时回 `None`；`weather_runtime.py:436` 的 `degraded` 把「归因被跳过」算进去）。
+  - `contracts/openapi.yaml` blob `efa738b7ba63a93d14d3559aa5ad9c5760d6f3ca`（`WeatherRuntimeRefresh` 新增三格，`openapi.yaml:4024` 起）。
+  - `frontend/src/generated/api.ts` blob `7b43daa69fa2b8c800065517d68960c3b8fc1ab5`（由契约重生成，不手改）。
+- 反控臂：`review/a68b0631-time-surface/weather_timezone_honesty_arm_r1.py` blob `454587c27685f6607bc5c30fdad2476dd0a41002`。
+- 新增用例：`backend/tests/test_weather_timezone_honesty_r1.py` blob `adfa145db4e72b8c35b783e34c3f0548c9ddb10f`（`test_weather_timezone_honesty_r1.py:71` 是区不可用那一格、`test_weather_timezone_honesty_r1.py:99` 是可用区对照格）。
+
+**二、这一轮新扫的范围**
+
+- 天气运行时这一层：`git grep -n '_journey_timezone'` 现读命中两处（定义一枚、调用一枚），逐处判读；`refresh_weather_runtime` 的调用者逐处读过——生产侧 `autorun` 一条、既有天气用例四枚，加本单新增两格。
+- 判据：同一枚「行程时区」字段，钟层（`execution_clock`）与旅程载荷（上一件）都选择了「不崩、说区没被兑现」；天气运行时选择了「抛 ValueError」。同一字段、两种失败行为，这一格统一它。
+
+**三、新发现的处数**
+
+- 一处真缺口：`weather_runtime.py:104` 把不可解析的区名抛成 `ValueError`；`autorun` 接住后只留下 `type(exc).__name__`，于是整条天气采集降级成「ValueError」这个词，**理由被吞掉**；抛点又在归因循环里，快照与观察已经写了一半，结果是「半条采集 + 一个说不出原因的失败」。
+- 具名否定：`weather_runtime.py` 之外没有第二处 `_journey_timezone` 调用；其余时区读取不在本文件的读者范围内，本轮不扫。
+
+**四、新修的处数与新增的回归臂**
+
+- 修一处（两枚产品文件 + 一枚生成件）：区名不可用时，`_journey_timezone` 回 `None`；归因函数回 `None`（活动的墙钟放不到时间线上，**不猜 UTC**——猜 UTC 会把墙钟挪开至多一天）；`refresh_weather_runtime` 继续采集快照与观察，并在结果与证据里写 `used_timezone=None`、`timezone_honoured=False`、`attribution_skipped_reason_codes=("JOURNEY_TIMEZONE_UNUSABLE",)`，同时把 `degraded` 置真——**读到 `degraded` 的消费者不会再以为这份天气信号是完整的**。
+- 新增反控臂一条：读真模块、只造替身行程/活动/地点/事实，三格判据（不可用区不抛、不可用区不归因、可用区仍归因）。
+
+**五、两次读数（撤掉修复必须红）**
+
+- 现尖字节（`weather_runtime.py` 按 `f614e68c1b2736bca36a42dafb85cc128348447d` 还原）：臂退 1，逐条点名两处 `raised ValueError: Journey timezone is invalid: Mars/Phobos`。
+- 本枝字节：臂退 0，打印 `unusable zone: None`、`bad-zone match: None`，以及控制格那枚带偏移的本地风险起点（打印在 `weather_timezone_honesty_arm_r1.py:109`）。
+- 同一枚新用例在现尖字节上两格红（第一格正是那个 `ValueError`，第二格红在「字段还不存在」）；换回本枝字节两格绿。
+
+**六、门禁（本枝上现跑）**
+
+- 相邻天气回归：`25 passed`，rc 0。
+- 契约用例：`5 passed`，rc 0。
+- 整套后端 `--collect-only`：rc 0（枚数不写在这里）。
+- 前端 `npm run typecheck`：rc 0。
+
+**七、下一轮我要扫什么新范围**
+
+- 前端消费者：`execution_clock` 与旅程详情两处载荷新增的 `used_timezone`／`timezone_honoured`，现读是否已有屏在读；若没有，就把「区没被兑现」接到屏上（产品字节）。
+- 输入扩面：跨零时区行程与夏令时切换日，加进 `journey_payload_instants_arm_r1.py` 与 `weather_timezone_honesty_arm_r1.py` 的输入表。
+- 同形状再往外一层：`backend/app/integrations/discovery/orchestration.py:158` 与 `backend/app/intelligence/impact_resolver.py:133`（管工第九/十笔点名但未动的两处），先判读者是机器还是人，再决定改不改——不重复其已修处。
+
+**八、如实报**
+
+- 契约重生成顺带带出了 ORD-零六八五 的 `/travelers/session` 与 `TravelerSession` 组件（现尖契约已有，生成件在现尖上是旧的）；我**没有改那条契约**，也没有改它的路由或测试。
+- 本枝没有跑整套后端（只跑了相邻族、契约、收集闸与前端类型）；整套红集合不随本枝变（新增字段是加法），要我在落地后补一趟整套说一句。
+- 账本这一拍现读有 `## ORDERS` 段（顶部两枚是 ORD-零六八五／零六八六，收件人「未点名、按车道自申报」，均不属时间域）；我按常设自申报本格，没有认领那两枚。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-零六八五（自申报）· 把「当前签名查看者」接到权威线：一枚验签的 `GET /api/v1/travelers/session`、契约同代、八格测试（车道 da46954a）
 
 **〇、令与认领**
