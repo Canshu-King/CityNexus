@@ -1,8 +1,8 @@
 HUMAN_CAN_USE = PARTIAL
-LIVE_PROVIDER = PHOTON_HTTP_200_ZERO_USABLE
-TWO_POI_FLOW = NOT_REACHED
-WB2API_TOOL = PASSED (SIGNED_DRAFT_READ_ONLY_SUGGESTION)
-SIGNED_AGENT_RUN = NOT_CREATED
+LIVE_PROVIDER = PHOTON_HTTP_200 (3 real POIs)
+TWO_POI_FLOW = PASSED (2 private stops saved; GO progress restored after reload)
+WB2API_TOOL = PASSED (SIGNED_DRAFT_READ_ONLY_SUGGESTION; separate earlier run)
+SIGNED_AGENT_RUN = NOT_CREATED (Journey remains DRAFT)
 ANDROID_PHONE = NOT_TESTED
 
 # Mobile-First P0 进展｜2026-10-17
@@ -13,6 +13,16 @@ ANDROID_PHONE = NOT_TESTED
 - 创建运行前核验本人身份、行程状态和一次授权；服务端先持久化成员绑定，再请求模型。
 - 兼容接口固定单一模型配置、关闭预算重试，只提供行程、状态和已有调整三种读取工具；服务端执行层拒绝其他工具。
 - 手机只展示数据库已保存的工具名、状态和时间，不显示模型内部推理、工具参数或返回原文。
+
+## 本轮 P0 实测：真实地点、双站保存、GO、刷新恢复
+
+- 修复了 Photon 地点被全部筛掉的问题。Photon 原始 OSM 类型使用 `N/W/R`，探索流程只接受 `node/way/relation`；适配层现在统一输出后者。跨层回归覆盖三种类型，并核对 bootstrap 实际使用的地点身份解析器。
+- 聚焦回归：`uv run --project . python -m pytest -q tests/test_photon_poi_adapter.py tests/test_bootstrap_photon_draft_exploration.py tests/test_bootstrap_photon_provider_selection.py`，结果 `26 passed in 0.72s`；`git diff --check` 通过。
+- 在 390×844 签名 DRAFT 手机界面选择宁波公开地图中心后，页面先展示了发送地点与类别的说明，再发起一次新的 Photon 公园/绿地搜索。Photon HTTP 200，页面得到 3 个真实地点：快鹿公园、月湖公园、天封公园。
+- 选择快鹿公园和月湖公园，保存到当前签名用户的私有 Pocket Walk，点击“开始散步”。页面显示前往第一站；完整刷新后，两站和当前进度都恢复，进度为 `HEADING_TO_FIRST`。
+- 刷新后的手机视口截图：`trial/results/assets/20261017-live-photon-pocketwalk-go-restored-390x844.png`。修复前的零结果截图：`trial/results/assets/20261017-live-photon-adapter-zero-result-390x844.png`。
+- 独立试玩库只读汇总：2 条 `SAVED` 私有站点、1 个 Pocket Walk、1 条 `HEADING_TO_FIRST` 进度；没有写入 Places 表。Journey 本身仍为 `DRAFT`，没有创建 `AgentRun`。这次只验证了 Pocket Walk 的 GO 进度恢复，没有把它记成 ACTIVE 行程。
+- 本次地点检索使用手动选择的宁波公开地图中心，没有调用地名搜索；当前 AI 关闭。此前真实 WB2API 调用属于单独的签名 DRAFT 建议证据，不是本次 POI/路线流程的一部分。
 
 ## 本机真实 AI 实测
 
@@ -27,12 +37,9 @@ ANDROID_PHONE = NOT_TESTED
 
 ## 真实地点和行程流程
 
-- Nominatim：此前一次真实查询返回厦门位置结果。
-- Overpass：此前唯一一次真实 POI 查询返回 HTTP 502，没有重试。
-- Photon：2026-10-17 在签名 DRAFT 页面完成一次真实搜索；Photon HTTP 200，返回 2 个要素，CityNexus 的公共地点校验保留 0 个可用地点，结果为 `LIVE_ZERO_RESULTS`。没有重试或切换来源。
-- 当前没有可选的两个地点，因此 Pocket Walk 保存、GO 和刷新恢复没有进入执行。
-- 手机实测截图：`trial/results/assets/20261017-live-photon-zero-result-390x844.png`。
-- 因此两处真实 POI、Pocket Walk 保存、GO、刷新恢复仍未完成；本轮 AI 建议不能替代地点来源或实际营业时间验证。
+- 当前已完成一轮真实 Photon 搜索、两站私有保存、Pocket Walk GO 和整页刷新恢复，具体结果见“本轮 P0 实测”。
+- 历史来源结果：Nominatim 曾返回厦门地名结果；Overpass 唯一一次 POI 请求返回 HTTP 502，没有重试。
+- 历史 Photon 连城查询均未得到可选地点；后来定位到 Photon `N/W/R` 与探索端 `node/way/relation` 的身份格式不一致，并在本轮修复。之前记录的零结果仍作为修复前证据保留。
 
 ## 验证
 
@@ -53,13 +60,13 @@ ANDROID_PHONE = NOT_TESTED
 
 ## 尚未验收
 
-- `TWO_POI_FLOW = NOT_REACHED`：Photon 返回 HTTP 200，但本次没有可用候选；两站保存、GO 和刷新恢复还没跑到。
-- `SIGNED_AGENT_RUN = NOT_CREATED`：本次使用 DRAFT 只读建议入口，不代表 ACTIVE Journey 中已创建或持久化 AgentRun。
-- `ANDROID_PHONE = NOT_TESTED`：当前为浏览器视口验收，尚无实体手机验收。
+- `SIGNED_AGENT_RUN = NOT_CREATED`：Pocket Walk 的 GO 进度已恢复，但服务端 Journey 仍是 DRAFT；当前没有真实 ACTIVE Journey，也没有可展示的持久化 AgentRun。
+- `ANDROID_PHONE = NOT_TESTED`：完成的是 390×844 浏览器视口流程，尚未在实体 Android 手机上验收。
+- 本次地点流程未经过地名搜索；宁波中心由用户在公开地图位置上选择。
 
 ## 下一步
 
-推进真实地点搜索与 Pocket Walk 两站保存、GO、刷新恢复；只有实际 ACTIVE Journey 可用时再验证服务端持久化 Hermes 轨迹。地点、开放时间和运行轨迹都以服务端或真实来源为准。
+Pocket Walk 双站保存、GO 和刷新恢复已完成。下一阶段是通过正式出行流程形成服务端 `ACTIVE` Journey，再验证 Hermes 工具轨迹是否写入服务端；实体 Android 验收也仍待完成。
 
 ## 2026-10-17 本轮继续施工
 

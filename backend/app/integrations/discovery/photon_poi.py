@@ -237,7 +237,7 @@ def _feature_candidate(
     category = osm_value
     return DiscoveryCandidate(
         provider_key="photon",
-        external_id=f"photon:{osm_type}/{osm_id}",
+        external_id=f"photon:{_OSM_TYPES[osm_type]}/{osm_id}",
         name=name.strip(),
         category=category,
         latitude=latitude,
@@ -247,7 +247,7 @@ def _feature_candidate(
         ),
         opening_hours=normalize_opening_hours(source_tags.get("opening_hours")),
         metadata={
-            "osm_id": f"{osm_type}/{osm_id}",
+            "osm_id": f"{_OSM_TYPES[osm_type]}/{osm_id}",
             "tags": source_tags,
             "photon_type": properties.get("type"),
             "countrycode": properties.get("countrycode"),

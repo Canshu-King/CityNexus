@@ -5,6 +5,7 @@ import math
 import httpx
 import pytest
 
+from app.execution.bootstrap_discovery import _osm_identity
 from app.integrations.discovery.photon_poi import (
     MAX_LIMIT,
     OSM_ATTRIBUTION,
@@ -84,7 +85,9 @@ def test_museum_gallery_query_uses_one_offline_reverse_request_and_keeps_osm_pro
     assert len(candidates) == 1
     candidate = candidates[0]
     assert candidate.provider_key == "photon"
-    assert candidate.external_id == "photon:W/123"
+    assert candidate.external_id == "photon:way/123"
+    assert candidate.metadata["osm_id"] == "way/123"
+    assert _osm_identity(candidate) == ("way", "123")
     assert candidate.name == "Offline Museum"
     assert candidate.category == "museum"
     assert candidate.metadata["source_status"] == "LIVE_PROVIDER"
@@ -95,6 +98,28 @@ def test_museum_gallery_query_uses_one_offline_reverse_request_and_keeps_osm_pro
     assert candidate.cost_evidence["status"] == "UNKNOWN"
     assert attempts[0]["answered"] is True and attempts[0]["http_status"] == 200
     assert attempts[0]["source_status"] == "LIVE_PROVIDER"
+
+
+@pytest.mark.parametrize(
+    ("osm_type", "expected_kind"),
+    [("N", "node"), ("W", "way"), ("R", "relation")],
+)
+def test_photon_identity_matches_bootstrap_identity_contract(
+    osm_type: str, expected_kind: str
+):
+    provider, _requests = _provider(
+        lambda _request: httpx.Response(200, json={"features": [_feature(osm_type=osm_type)]})
+    )
+    try:
+        candidates, _attempts = provider.search_with_evidence(
+            "museum", latitude=35.0, longitude=135.7, radius_m=2500, limit=3
+        )
+    finally:
+        provider.close()
+
+    assert len(candidates) == 1
+    assert candidates[0].external_id == f"photon:{expected_kind}/123"
+    assert _osm_identity(candidates[0]) == (expected_kind, "123")
 
 
 def test_response_is_category_checked_radius_checked_and_finite():
@@ -119,7 +144,7 @@ def test_response_is_category_checked_radius_checked_and_finite():
 
     assert len(requests) == 1
     assert params["limit"] == str(MAX_LIMIT)
-    assert [item.external_id for item in candidates] == ["photon:W/126"]
+    assert [item.external_id for item in candidates] == ["photon:way/126"]
     assert candidates[0].cost_evidence == {
         "status": "KNOWN",
         "amount_minor": 0,
