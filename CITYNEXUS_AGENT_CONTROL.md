@@ -1,4 +1,81 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-1114·第三十二笔落线：压缩行里那二十九处死类名摘完了（二十五条整规则加组里一枚），两臂行集一字不差
+
+**一、这一笔是什么**
+
+CMDR-ORDER-0742 第一节派出去、CMDR-NIGHT-0926 第五节我拒绝顺手做的那一手，落线了：styles.css 六枚压缩行里的七枚死类名，摘掉二十五条整规则、外加一枚从五元选择器组里摘出来的 `.v8-live-grid`。用户看到的画面一字不变——这正是这一笔要证的。
+
+**二、线动了**
+
+- 权威尖从 838fefc86d9e3c91fd58eee91801eb66094521eb 推到 dc4e95049114fb6bc5924a56e0ded2c904a8cfba，只快进（收据 `preflight_r1.json:1`）
+- 动的产品文件一枚：`frontend/src/styles.css`，blob 从 36cd29cf175d24e12dee8a81853b0fa87b594e36（现读 123791 字节）换成 ad9d2f15a606223f42c6373a8abb7878f7903936（现读 121813 字节），少 1978 字节
+- 改动只落在六行上：`frontend/src/styles.css:175`、`frontend/src/styles.css:180`、`frontend/src/styles.css:181`、`frontend/src/styles.css:184`、`frontend/src/styles.css:185`、`frontend/src/styles.css:278`；其余 1933 行逐字节相同（我自己另做一遍逐行比对，不采信工具自报）
+
+**三、七枚 token 的三臂（都在这一代上重跑过）**
+
+| token | 出现处数 | 摘掉的整规则 | 甲（静态读者） | 乙（拼装现场） | 丙（六屏上屏） |
+| --- | --- | --- | --- | --- | --- |
+| v8-anchor-row | 八 | 七条 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+| v8-trip-metrics | 八 | 七条 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+| v8-trip-hero-head | 三 | 三条 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+| anchor-line | 二 | 一条 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+| v8-live-grid | 二 | 一条 + 组里一枚 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+| v8-strength | 四 | 四条 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+| v9-live-actions | 二 | 二条 | 零 | 零 | 零，出处 `arm_c_dom_readings.json:1` |
+
+- 两个数为什么不等：出现处数合计 29，摘掉的规则是二十五条整规则加组里一枚——同一规则的选择器里一枚死类出现两次是常事（例：`.v8-anchor-row span, .v8-anchor-row small` 是一条规则、两处出现），逐条对账在 `strip_manifest_on_tip.json:1`
+- 甲的分母：`src` 内 157 枚 `.tsx/.ts` 加 `frontend/index.html`，另把 `src` 之外 427 枚也扫了，边界正则、禁子串，出处 `subagent_deadcss_plan.md:1`
+- 乙的分母：141 处拼 className 的现场，其中 31 处真落到 class 属性；正对照当场咬住 `frontend/src/components/Badge.tsx:95` 那枚模板串，出处 `subagent_deadcss_plan.json:1`
+- `.v8-anchor-row div:not(.anchor-line)` 这条是整条摘的（祖先已死），`:not()` 本身一字未动；全表里没有"`:not()` 挂在活祖先上"的那种形状，所以没有一处需要为它保留，出处 `strip_manifest_on_tip.json:1`
+
+**四、"摘了不改行为"怎么证**
+
+- 出厂对比尺两臂行集逐字相同：改前 24 个场景 184 行、改后 24 个场景 184 行，把（宽度、主题、kind、选择器、testid、前景、背景、比值）整行拉平做集合比较，两向差集都空，见 `gate_rows_after.json:1`
+- 出厂手机几何尺两臂都是零条小目标读数（上一笔刚把唯一那一族修好），见 `touch_census_after.json:1`
+- 构建臂 `npm run build` 退出码零；落地门 READY_TO_LAND、新增逃逸口零行、尺身份 MATCH，收据 `preflight_r1.json:1`
+- 外读证据在 `evidence/cmdr-landing-CMDR-NIGHT-1111-1113/`，共五件（收据、改后行集、改后触摸普查、逐条清单、重指向后的尺），逐件 BYTE-LEVEL MATCH
+
+**五、分工与可追溯**
+
+剥离尺与逐条清单是子 Agent 写的（十九格自检全绿、另有一把独立审计尺十六格），我没有把它的输出文件整枚贴过来：按上一块第五节那条新规矩，我把它的尺重指向现尖那一版 styles.css 重跑一遍（只换三行路径常量，差异行数六行可查），再自己逐行比对、自己跑两臂。清单在 `strip_manifest_on_tip.json:1`，重指向后的尺在 `strip_tool_repointed_on_tip.py:1`，原作者那份原件在 `subagent_strip_tool_r1.py:1`。
+
+**六、顺手看到的一处，本笔没动**
+
+`frontend/src/styles.css:1658` 那一格 `@media (max-width: 480px) {` 到 `frontend/src/styles.css:1659` 是空的——它在改前改后两版里一模一样，不是本笔造出来的。空媒体块不影响渲染，但会骗人（读代码的人以为 480 那一档有规矩）。要不要连它一起清，归下一轮死码清扫，我不在这一笔里顺手改。
+
+
+### 终值单出件·终值单·10-17·10:55:00 档（值守腿自交，原文按行取回）
+
+- 这一档出的是终值单：件 _night_verdict_1017_1055.txt，rc=0，非空行 53 行（live_checks/patrol/_night_verdict_1017_1055.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_verdict_1017_1055.txt:1）
+- 本机字节 sha1 前十二位 69fc9efe0978；原件 7581 字节（live_checks/patrol/_night_verdict_1017_1055.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  === 夜班终值单  窗口 10-16 18:00 → 10-17 11:00（早班档：昨天傍晚到今晨） 取数于 10-17 10:55:00 ===（live_checks/patrol/_night_verdict_1017_1055.txt:2）
+  1) 入账（文件名戳，限定本窗）：00 时 1 枚、02 时 1 枚、03 时 3 枚、07 时 1 枚、09 时 1 枚、10 时 1 枚、23 时 3 枚（live_checks/patrol/_night_verdict_1017_1055.txt:3）
+     合计 11 枚；最后一枚 42d1a6fa_0952 @ 10:05:02（live_checks/patrol/_night_verdict_1017_1055.txt:4）
+  （第 5 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_verdict_1017_1055.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_verdict_1017_1055.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_verdict_1017_1055.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 终值单出件·第 2 格补件·10-17·10:55:00 档（值守腿自交，原文按行取回）
+
+- 这一档出的是第 2 格补件：件 _night_tipfix_1017_1055.txt，rc=0，非空行 7 行（live_checks/patrol/_night_tipfix_1017_1055.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_tipfix_1017_1055.txt:1）
+- 本机字节 sha1 前十二位 5157c3ad3787；原件 819 字节（live_checks/patrol/_night_tipfix_1017_1055.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  _night_tipfix_1017_2300.txt · 补第 2 格（终值单那格若 API 侧 IncompleteRead，就用这件）于 10:55:15（live_checks/patrol/_night_tipfix_1017_1055.txt:2）
+  （第 3 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_tipfix_1017_1055.txt:3）
+  [2] 18:00→23:00 这一窗内该枝上的提交 0 笔（live_checks/patrol/_night_tipfix_1017_1055.txt:4）
+  [3] 逐笔：（窗口内 0 笔）（live_checks/patrol/_night_tipfix_1017_1055.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_tipfix_1017_1055.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_tipfix_1017_1055.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-NIGHT-1055·第三十一笔落线：Copilot 那排建议 chip 在手机上补回 44 的触摸契约（契约本来就在，是被一枚更具体的规则压掉的）＋一件必须报的自误：我误开了别人的 stash
 
 **一、这一笔用户看到什么**
