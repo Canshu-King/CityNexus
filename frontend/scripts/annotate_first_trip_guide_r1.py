@@ -36,7 +36,7 @@ NOTE_INK = (74, 44, 8)
 CAPTION_BG = (255, 255, 255)
 CAPTION_INK = (28, 28, 30)
 CAPTION_RULE = (226, 59, 43)
-CIRCLED = "①②③④⑤⑥⑦⑧"
+CIRCLED = "①②③④⑤⑥⑦⑧⑨"
 
 
 def font(size):
@@ -52,6 +52,27 @@ def font(size):
 def text_width(draw, text, face):
     box = draw.textbbox((0, 0), text, font=face)
     return box[2] - box[0], box[3] - box[1]
+
+
+def wrap(draw, text, face, max_width):
+    """按画布宽度折行。
+
+    第 ⑨ 张逼出来的：那张的标题比屏幕宽，画出来右半边被裁掉了（"从这一格回" 后面没了）。
+    原先只有 8 张靠"标题写短一点"躲过这件事，那不是机制。折行按字符走，中文没有词间空格，
+    所以不假装会分词——只保证一行放得下。
+    """
+    lines = []
+    current = ""
+    for char in text:
+        trial = current + char
+        if current and text_width(draw, trial, face)[0] > max_width:
+            lines.append(current)
+            current = char
+        else:
+            current = trial
+    if current:
+        lines.append(current)
+    return lines or [""]
 
 
 def badge_spot(frame, canvas, radius, wide):
@@ -86,7 +107,8 @@ def annotate(frontend):
         manifest = json.load(handle)
 
     written = []
-    for shot in manifest["shots"]:
+    shots = manifest["shots"]
+    for shot in shots:
         raw = os.path.join(frontend, "docs", "assets", "raw", shot["file"])
         out = os.path.join(frontend, "docs", "assets", shot["file"])
         if not os.path.exists(raw):
@@ -116,23 +138,38 @@ def annotate(frontend):
         if len(lines) == 1 and lines[0].split(" ", 1)[-1] == headline.split(" ", 1)[-1]:
             lines = []  # 角标照画，只是说明带不再重复同一句话
         head_w, head_h = text_width(probe, headline, head_font)
-        widest = head_w
-        for line in lines:
-            widest = max(widest, text_width(probe, line, line_font)[0])
         pad_x = int(16 * scale)
-        caption_height = int(14 * scale) + head_h + int(8 * scale) + len(lines) * (
-            int(24 * scale)
-        ) + int(14 * scale)
+        max_text = screen.width - 2 * pad_x
+        # 标题与逐行说明都按画布宽度折行：第 ⑨ 张的标题比屏幕长，右半边直接被裁掉过。
+        head_lines = wrap(probe, headline, head_font, max_text)
+        wrapped_lines = []
+        for line in lines:
+            wrapped_lines += wrap(probe, line, line_font, max_text - int(6 * scale))
+        line_height = int(24 * scale)
+        widest = max([text_width(probe, item, head_font)[0] for item in head_lines] +
+                     [text_width(probe, item, line_font)[0] for item in wrapped_lines] + [0])
+        caption_height = (
+            int(14 * scale)
+            + len(head_lines) * (head_h + int(4 * scale))
+            + int(6 * scale)
+            + len(wrapped_lines) * line_height
+            + int(14 * scale)
+        )
         canvas = Image.new("RGB", (screen.width, screen.height + caption_height), CAPTION_BG)
         canvas.paste(screen, (0, 0))
 
         note = shot.get("note")
         note_height = 0
         if note:
-            note_height = int(34 * scale)
+            note_lines = wrap(probe, note, note_font, screen.width - 2 * int(10 * scale))
+            note_height = int(14 * scale) + len(note_lines) * int(26 * scale)
             band = ImageDraw.Draw(canvas)
             band.rectangle([0, 0, canvas.width, note_height], fill=NOTE_BG)
-            band.text((int(10 * scale), int(7 * scale)), note, font=note_font, fill=NOTE_INK)
+            for index, note_line in enumerate(note_lines):
+                band.text(
+                    (int(10 * scale), int(7 * scale) + index * int(26 * scale)),
+                    note_line, font=note_font, fill=NOTE_INK,
+                )
 
         draw = ImageDraw.Draw(canvas)
         radius = max(11, int(15 * scale))
@@ -177,11 +214,13 @@ def annotate(frontend):
         top = screen.height + int(14 * scale)
         draw.line([(0, screen.height), (canvas.width, screen.height)], fill=CAPTION_RULE,
                   width=max(3, int(4 * scale)))
-        draw.text((pad_x, top), headline, font=head_font, fill=CAPTION_INK)
-        top += head_h + int(8 * scale)
-        for line in lines:
+        for index, head_line in enumerate(head_lines):
+            draw.text((pad_x, top), head_line, font=head_font, fill=CAPTION_INK)
+            top += head_h + int(4 * scale)
+        top += int(4 * scale)
+        for line in wrapped_lines:
             draw.text((pad_x + int(6 * scale), top), line, font=line_font, fill=CAPTION_INK)
-            top += int(24 * scale)
+            top += line_height
 
         canvas.save(out)
         written.append((shot["file"], len(boxed), bool(note), widest + 2 * pad_x <= canvas.width))

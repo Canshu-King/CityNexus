@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T21:09:31.422Z",
+  "generatedAt": "2026-10-17T22:13:08.515Z",
   "shots": [
     {
       "id": "01",
@@ -239,6 +239,33 @@
             "visibility": "visible",
             "color": "rgb(10, 92, 214)",
             "paintedText": "再查一次",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "file": "09-my-trips.png",
+      "headline": "⑨ 点这里回到已有的一趟",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "note": "这一格只列服务器认给你这个人的行程；换手机或重新登录之后，先从这一步回去。",
+      "targets": [
+        {
+          "testId": "my-trips-open",
+          "action": "打开这趟",
+          "box": {
+            "x": 314,
+            "y": 646,
+            "width": 48,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(10, 92, 214)",
+            "paintedText": "打开这趟",
             "fadedBy": []
           }
         }

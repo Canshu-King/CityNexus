@@ -22,7 +22,7 @@
  *      （只有 `CNX_QODER31_TTL=60` 起的那一台才跑，见 config 里那行 TTL）。
  */
 import { expect, test, type Page } from "@playwright/test";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 
 /* 图文教程（Issue #31 C 要求的"真实截图"）用的图就落在这个目录里：屏幕上是真渲染出来的，
  * 不是我贴上去的形状。目录先建，因为 Playwright 写图之前不会替你建目录。 */
@@ -563,6 +563,18 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     expect(listed.length, "名下的行程一枚都没列出来").toBeGreaterThan(0);
     expect(listed, `刚建的那趟不在名单里：${JSON.stringify(listed)}`).toContain(journeyId);
     await page.screenshot({ path: `${DOC_EVIDENCE}/05-my-trips-restore.png`, fullPage: true });
+    /* 教程要圈这一格，坐标必须由这一臂现取（`scripts/annotate_first_trip_guide_r1.py` 的同一条件：
+     * 人不猜坐标）。记的是渲染盒与视口宽，标注脚本再按 `PNG 宽 / 视口宽` 缩放。 */
+    const geometry = await page
+      .getByTestId("my-trips")
+      .boundingBox()
+      .then((box) => ({ panel: box, viewport: [page.viewportSize()?.width ?? 390, page.viewportSize()?.height ?? 844], shotHeight: null }));
+    const button = await page.getByTestId("my-trips-open").first().boundingBox();
+    writeFileSync(
+      `${DOC_EVIDENCE}/05-my-trips-restore.json`,
+      JSON.stringify({ ...geometry, openButton: button }, null, 2),
+      "utf-8",
+    );
 
     await page.getByTestId("my-trips-open").first().click();
     await expect

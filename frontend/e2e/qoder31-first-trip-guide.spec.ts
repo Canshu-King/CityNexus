@@ -155,7 +155,7 @@ async function shoot(
   );
 }
 
-test.describe("Issue #31 C 返工：第一次出行的八屏实拍", () => {
+test.describe("Issue #31 C 返工：第一次出行的九屏实拍", () => {
   test.setTimeout(240_000);
 
   test("从第一次打开到 AI 工作动态，逐屏拍全并记下要圈的按钮", async ({ page }) => {
@@ -304,13 +304,37 @@ test.describe("Issue #31 C 返工：第一次出行的八屏实拍", () => {
       { testId: "hub-stay-retry", action: "点这里重试" },
     ]);
 
+    // ⑨ 会话还在、指针没了：从「我的行程」这一格回到已经有的一趟
+    /* 这一屏只在"有凭据"时才存在：没有签名会话时这一格整块不出现（`MyTripsEntry` 里那条规则），
+     * 而走到这里之前已经建过两趟，所以名单上应当有两行——教程要给人看的正是"不止一趟可选"那个形状。 */
+    await page.evaluate(() => localStorage.removeItem("citynexus.v8.journey_id"));
+    await page.goto("/v8", { waitUntil: "load" });
+    await expect(page.getByTestId("my-trips-list"), "向导旁边没有「我的行程」名单").toBeVisible({
+      timeout: 30_000,
+    });
+    const rows = await page.getByTestId("my-trips-list").locator("li[data-cnx-journey]").count();
+    console.log(`guide 09 名单里的行程 ${rows} 枚`);
+    /* 先把这一格滚进视口再拍。第一版 ⑨ 拍出来是"没有这一格的向导"：截图取的是视口
+     * （390×844），而 `boundingBox()` 给的是文档坐标（这一格在 y=860 起），于是圈的位置
+     * 落在画面之外——图上是空的，圈却"量到了"。滚上来之后两者同一个坐标系，才量得对。 */
+    await page.getByTestId("my-trips").evaluate((node) => node.scrollIntoView({ block: "start" }));
+    await page.waitForTimeout(500);
+    await shoot(
+      page,
+      "09",
+      "my-trips",
+      "⑨ 点这里回到已有的一趟",
+      [{ testId: "my-trips-open", action: "打开这趟" }],
+      "这一格只列服务器认给你这个人的行程；换手机或重新登录之后，先从这一步回去。",
+    );
+
     writeFileSync(
       MANIFEST,
       JSON.stringify({ generatedAt: new Date().toISOString(), shots }, null, 2) + "\n",
       "utf-8",
     );
     console.log(`guide manifest -> ${MANIFEST} (${shots.length} 张)`);
-    expect(shots.length).toBe(8);
+    expect(shots.length).toBe(9);
     for (const shot of shots) {
       expect(
         shot.targets.filter((item) => item.box).length,
