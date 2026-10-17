@@ -984,6 +984,19 @@
   :root[data-theme="dark"] .v8-page .v8-activity { color: var(--cn-ink-secondary) !important; }
   :root[data-theme="dark"] .v8-page .v12-state-kicker { color: var(--cn-ink-secondary) !important; }
 
+  /* 13:3x 同一族的第四型（第三十四笔那把新尺量出来的，见 `styles.css:214`）：
+     活动列表那一行的死灰在暗档只有 3.54，亮档同一枚是 5.8 左右、本来就及格，
+     所以只补暗档；那一行的「当前」态整块浅洗色在暗档里是一行亮块，
+     底色换成厂内已有的那一枚高亮 token（暗档发丝线用的就是它），墨跟着走暗档主墨——
+     它自己的深青墨在浅洗色上是及格的，换了底就必须跟着换，否则这一行会从"看得见"
+     变成"更看不见"。序号小圆片自己没有 color，跟着行一起继承。
+     状态蓝那几枚（`.state-*`）不在这一笔里：它要的是暗档第二档蓝，是色值决定，属裁语。 */
+  :root[data-theme="dark"] .v8-page .v12-activity-row { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-page .v12-activity-row.current {
+    background: var(--cn-tint-white-10) !important;
+    color: var(--cn-ink) !important;
+  }
+
   :root[data-theme="dark"] .v8-page .live-proposal {
     background: var(--cn-surface) !important;
     border-color: var(--cn-hairline) !important;
