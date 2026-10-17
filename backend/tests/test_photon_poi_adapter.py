@@ -7,6 +7,7 @@ import httpx
 import pytest
 
 from app.execution.bootstrap_discovery import _attempts, _osm_identity
+from app.integrations.discovery.provider_identity import PROVIDER_USER_AGENT
 from app.integrations.discovery.photon_poi import (
     MAX_LIMIT,
     OSM_ATTRIBUTION,
@@ -16,6 +17,7 @@ from app.integrations.discovery.photon_poi import (
     PhotonPOIProvider,
     UnsupportedPhotonQuery,
 )
+from app.integrations.provider_config import ExternalProviderSettings
 
 
 def _feature(
@@ -100,6 +102,49 @@ def test_museum_gallery_query_uses_one_offline_reverse_request_and_keeps_osm_pro
     assert candidate.cost_evidence["status"] == "UNKNOWN"
     assert attempts[0]["answered"] is True and attempts[0]["http_status"] == 200
     assert attempts[0]["source_status"] == "LIVE_PROVIDER"
+
+
+def test_configured_contact_email_is_only_sent_in_photon_user_agent(
+    monkeypatch, caplog, capsys
+):
+    email = "photon-contact@example.invalid"
+    user_agent = f"CityNexus-RevolutionFirstLook/1.0 (mailto:{email})"
+    monkeypatch.setenv("CITYNEXUS_PHOTON_USER_AGENT", user_agent)
+    assert email not in repr(ExternalProviderSettings())
+    provider, requests = _provider(
+        lambda _request: httpx.Response(200, json={"features": []})
+    )
+    try:
+        _candidates, attempts = provider.search_with_evidence(
+            "museum", latitude=35.0, longitude=135.7, radius_m=2500, limit=3
+        )
+    finally:
+        provider.close()
+
+    assert len(requests) == 1
+    request = requests[0]
+    assert request.headers["User-Agent"] == user_agent
+    assert [
+        name.lower() for name, value in request.headers.items() if email in value
+    ] == ["user-agent"]
+    assert email not in str(request.url.params.multi_items())
+    assert request.content == b""
+    assert email not in json.dumps(attempts)
+    assert email not in caplog.text
+    captured = capsys.readouterr()
+    assert email not in captured.out + captured.err
+
+    monkeypatch.delenv("CITYNEXUS_PHOTON_USER_AGENT")
+    default_provider, default_requests = _provider(
+        lambda _request: httpx.Response(200, json={"features": []})
+    )
+    try:
+        default_provider.search_with_evidence(
+            "museum", latitude=35.0, longitude=135.7, radius_m=2500, limit=3
+        )
+    finally:
+        default_provider.close()
+    assert default_requests[0].headers["User-Agent"] == PROVIDER_USER_AGENT
 
 
 @pytest.mark.parametrize(

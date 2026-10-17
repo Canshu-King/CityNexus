@@ -222,6 +222,8 @@ def isolated_environment(
             # it is never stored in a checkout, database or printed in logs.
             "CITYNEXUS_CITY_SEARCH_USER_AGENT":
                 "CityNexus-RevolutionFirstLook/1.0 (mailto:" + contact_email + ")",
+            "CITYNEXUS_PHOTON_USER_AGENT":
+                "CityNexus-RevolutionFirstLook/1.0 (mailto:" + contact_email + ")",
             "CITYNEXUS_OVERPASS_URL": "https://overpass-api.de/api",
         })
     return env

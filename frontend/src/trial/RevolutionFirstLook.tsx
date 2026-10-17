@@ -182,11 +182,12 @@ export function RevolutionFirstLook() {
     }
   };
 
-  const switchCity = () => {
+  const switchCity = (nextCityName?: string) => {
     // Only remove this isolated trial's pointer; never delete a Journey or
     // alter any production data. Server-side privacy still gates old boards.
     localStorage.removeItem(STORAGE_KEY);
     clearTravelerBearer();
+    if (nextCityName?.trim()) setCityName(nextCityName.trim());
     setExplorationTitle(null);
     setJourney(null);
     setError(null);
@@ -301,7 +302,7 @@ export function RevolutionFirstLook() {
                   <h1>{explorationTitle?.journeyId === journey.id ? explorationTitle.label : journey.cityName}</h1>
                   <p>想怎么走？先聊一句，再从真实地点中选择。</p>
                 </div>
-                <button type="button" onClick={switchCity} className="rev-firstlook-reset">
+                <button type="button" onClick={() => switchCity()} className="rev-firstlook-reset">
                   换地区
                 </button>
               </section>
@@ -317,6 +318,7 @@ export function RevolutionFirstLook() {
                     }}
                     agentConfigured={Boolean(agentConfigured)}
                     agentChecking={agentStatusChecking}
+                    onRestartExplore={(nextCityName) => switchCity(nextCityName)}
                     onPocketWalkChange={setPocketWalk}
                     onFormalCandidateSelected={(placeId) => {
                       setCandidateForJourney(placeId);
@@ -420,7 +422,7 @@ export function RevolutionFirstLook() {
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>
                 </div>
                 <p>进度属于当前行程；地点来源见卡片，到达由你确认。</p>
-                <button type="button" className="rev-mobile-secondary" onClick={switchCity}>探索其他地区</button>
+                <button type="button" className="rev-mobile-secondary" onClick={() => switchCity()}>探索其他地区</button>
                 <details className="rev-discovery-details">
                   <summary>关于技术来源与旧版界面</summary>
                   <p>AI 推理、公开地图查询和路线进度有独立的数据来源与授权。</p>

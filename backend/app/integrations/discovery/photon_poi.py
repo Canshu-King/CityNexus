@@ -23,6 +23,7 @@ from urllib.parse import urlsplit
 import httpx
 
 from app.integrations.discovery.provider_identity import PROVIDER_USER_AGENT
+from app.integrations.provider_config import ExternalProviderSettings
 from app.integrations.discovery.real_city import (
     DiscoveryCandidate,
     cost_evidence_from_tags,
@@ -286,10 +287,13 @@ class PhotonPOIProvider:
     ) -> None:
         self.base_url = _validate_base_url(base_url)
         self.timeout_s = _finite_number("timeout_s", timeout_s, 0.001, MAX_TIMEOUT_SECONDS)
+        self.user_agent = (
+            ExternalProviderSettings().photon_user_agent.strip() or PROVIDER_USER_AGENT
+        )
         self.client = client or httpx.Client(
             timeout=self.timeout_s,
             follow_redirects=False,
-            headers={"User-Agent": PROVIDER_USER_AGENT},
+            headers={"User-Agent": self.user_agent},
         )
         self._owned_client = client is None
 
@@ -354,7 +358,7 @@ class PhotonPOIProvider:
             response = self.client.get(
                 f"{self.base_url}/reverse",
                 params=params,
-                headers={"User-Agent": PROVIDER_USER_AGENT},
+                headers={"User-Agent": self.user_agent},
                 timeout=self.timeout_s,
                 follow_redirects=False,
             )

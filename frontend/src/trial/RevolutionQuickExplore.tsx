@@ -153,6 +153,7 @@ function messageForError(phase: ExplorePhase, error: unknown): string {
   if (error instanceof CityNexusApiError) {
     const status = error.status;
     if (status === 401) return "登录已过期，请重新进入行程。";
+    if (status === 403 && phase === "查找地名") return "无法用当前登录信息操作这条行程。";
     if (status === 403) return "当前账号无权执行「" + phase + "」。";
     if (status === 404) return "找不到当前行程，请重新进入。";
     if (status === 409) return "行程状态已更新，请刷新后继续。";
@@ -209,6 +210,7 @@ export function RevolutionQuickExplore({
   onFormalCandidateSelected,
   onPocketWalkChange,
   onExplorationCenterLabelChange,
+  onRestartExplore,
 }: {
   journeyId: string;
   cityName: string;
@@ -217,6 +219,7 @@ export function RevolutionQuickExplore({
   onFormalCandidateSelected?: (placeId: string) => void;
   onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
   onExplorationCenterLabelChange?: (label: string) => void;
+  onRestartExplore?: (cityQuery: string) => void;
 }) {
   const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
@@ -341,7 +344,7 @@ export function RevolutionQuickExplore({
   const run = async (
     phase: ExplorePhase,
     task: (stillCurrent: () => boolean) => Promise<void>,
-    recovery: QuickRecovery | ((error: unknown) => QuickRecovery),
+    recovery: QuickRecovery | ((error: unknown) => QuickRecovery | null),
   ) => {
     if (busyRef.current) return;
     const identity = readTravelerBearer();
@@ -368,10 +371,11 @@ export function RevolutionQuickExplore({
       await task(stillCurrent);
     } catch (error) {
       if (stillCurrent()) {
+        const errorRecovery = typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery);
         setAlert({
           type: "error",
           text: messageForError(phase, error),
-          recovery: typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery),
+          ...(errorRecovery ? { recovery: errorRecovery } : {}),
         });
         setErrorDetails(errorDiagnostics(phase, error));
       }
@@ -452,11 +456,15 @@ export function RevolutionQuickExplore({
       setSelectedPin(null);
       setTilesEnabled(false);
       setAlert({ type: "good", text: "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。" });
-    }, (error) => recoveryForError(
-      error,
-      { label: "再次查找地名", action: () => cityLookup() },
-      { label: "检查并编辑地名", action: () => document.getElementById("rev-quick-search")?.focus() },
-    ));
+    }, (error) => error instanceof CityNexusApiError && error.status === 403
+      ? onRestartExplore
+        ? { label: "从此地区重新开始", action: () => onRestartExplore(cityQuery) }
+        : null
+      : recoveryForError(
+        error,
+        { label: "再次查找地名", action: () => cityLookup() },
+        { label: "检查并编辑地名", action: () => document.getElementById("rev-quick-search")?.focus() },
+      ));
   };
 
   const useCenter = (point: { latitude: number; longitude: number }, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK") => {

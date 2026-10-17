@@ -169,3 +169,22 @@ P0 仍未闭环：当前页面没有两处可用真实 POI，Pocket Walk 保存�
 - 手机 Playwright：Hermes 成员切换清空旧轨迹 1 passed；探索→地点选择→Pocket Walk→GO→刷新恢复用例 1 passed。用例中的接口响应为 TEST_FIXTURE。
 - npm.cmd run typecheck:all -- --pretty false：退出码 0。
 - 当前真实闭环停在地点搜索授权；真实双 POI、Pocket Walk、GO 与刷新恢复待有效 Journey 会话。当前试用库没有签名 ACTIVE Journey 或 Hermes AgentRun。
+
+## 2026-10-17 本轮：厦门真实地点 → 私人散步 → GO 刷新恢复
+
+在独立试玩库和隔离页面中，从普通的签名旅客入口实际走完：输入厦门 → 使用公开 OSM 链接选地图中心（24.4798, 118.0894）→ Photon 搜索 → 选两站 → 保存私人散步 → GO → 刷新恢复。没有调用 Nominatim，也没有使用测试地点。
+
+- 搜索前的签名 readiness 返回 HTTP 200：`provider=photon`、`expected_recipient=Photon by Komoot public geocoding service`、`external_request_allowed=true`、`test_only=false`；页面在搜索按钮前说明所选区域和类别会发给 Photon。用户授权的联系邮箱仅用作 Photon User-Agent 联系方式，本报告不记录邮箱。
+- 第一次实际 Photon 查询选“咖啡馆”：CityNexus 接口 HTTP 200，页面显示 1 个真实结果：Basao cafe（约 60 米，OSM node 来源链接）。
+- 第二次查询换成“公园和绿地”：接口 HTTP 200，页面显示 3 个真实结果：嘉禾园（约 730 米）、白鹭洲公园（约 740 米）、南湖公园（约 1.2 公里）。页面状态为 `LIVE_RESULTS / LIVE_PROVIDER`，来源卡片链接指向对应 OSM 对象。
+- 选嘉禾园和白鹭洲公园后，`POST /api/v1/journeys/{id}/bootstrap-discovery/pocket-walk` 返回 HTTP 200；页面显示路线已保存到私人行程。
+- 点击“开始散步”后，`POST /api/v1/journeys/{id}/bootstrap-shortlist/pocket-walk/go` 返回 HTTP 200。页面显示“正前往第一站”。
+- 强制刷新后，`GET /bootstrap-shortlist` 返回 HTTP 200，页面恢复同两站路线和“正前往第一站”；`GET /journeys/{id}` 返回 HTTP 200，Journey 自身状态仍为 `DRAFT`。因此已验证的是 Pocket Walk GO 状态可保存、可刷新恢复；它不等于正式 Journey 的 `ACTIVE` 状态。
+
+本次隔离运行端口为 14273/18301，独立数据库 `_revolution_hands_on_20261017_151206.db`。没有运行导航、付款或预订。
+
+AI 网关在新试用环境中配置为 `auto:cheapest`，本轮没有另发模型请求。Journey 仍为 DRAFT，尚无可用于服务端 ACTIVE Operator 的行程；本轮没有创建 Hermes AgentRun，也没有宣称工具轨迹已落库。
+
+`TWO_POI_FLOW`：REAL_PROVIDER_PASS；`PRIVATE_POCKET_WALK_SAVE`：PASS；`POCKET_WALK_GO_REFRESH_RESTORE`：PASS；`SIGNED_ACTIVE_JOURNEY`：NOT_CREATED；`PERSISTED_HERMES_AGENT_RUN`：NOT_CREATED。
+
+真实手机视口截图：`trial/results/assets/20261017-photon-xiamen-pocket-walk-go-reload-390x844.jpg`，SHA-256 `4EF83E3DA840E6FCBBDA03FA9674F455C223E13E2ABC0B5A4A3D633A01361C22`。截图记录刷新后两站和 GO 进度状态。

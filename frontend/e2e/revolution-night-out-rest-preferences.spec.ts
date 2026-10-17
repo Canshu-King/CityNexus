@@ -1,10 +1,10 @@
 import { expect, test, type Route } from "@playwright/test";
 
-test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, serviceWorkers: "block" });
 
 const journeyId = "00000000-0000-4000-8000-000000000238";
 const root = `**/api/v1/journeys/${journeyId}`;
-const goal = "我们是成年情侣，今晚会玩到很晚；明天睡到中午，下午13:00后轻松出门，留足休息时间。";
+const goal = "成年情侣晚间活动较晚，次日睡到中午，不安排早起";
 
 function json(route: Route, value: object) {
   return route.fulfill({
@@ -14,7 +14,7 @@ function json(route: Route, value: object) {
   });
 }
 
-test("390x844 keeps late-start and rest preferences when returning to Explore", async ({ page }) => {
+test("390x844 TEST_FIXTURE challenge submits the complete late-night rest request to AI DRAFT", async ({ page }) => {
   let suggestionCalls = 0;
   let providerCalls = 0;
   let submittedGoal = "";
@@ -59,12 +59,13 @@ test("390x844 keeps late-start and rest preferences when returning to Explore", 
   await page.route(`${root}/trial-ai-discovery`, async (route) => {
     suggestionCalls += 1;
     expect(route.request().method()).toBe("POST");
+    expect(route.request().url()).toContain("/trial-ai-discovery");
     const body = route.request().postDataJSON() as { goal?: unknown };
     submittedGoal = String(body.goal ?? "");
     await json(route, {
       status: "MODEL_TOOL_SUGGESTION",
       category: "park/garden",
-      reason: "TEST_FIXTURE · 先休息，再轻松出门。",
+      reason: "TEST_FIXTURE · 明天中午后再出发，留足休息时间。",
       model: "TEST_FIXTURE",
       evidence: "TEST_FIXTURE",
       provider_calls: 0,
@@ -110,12 +111,8 @@ test("390x844 keeps late-start and rest preferences when returning to Explore", 
   await suggestionResponse;
 
   await expect(page.getByTestId("rev-quick-ai-response")).toBeVisible();
+  await expect(page.getByTestId("rev-quick-ai-response")).toContainText("TEST_FIXTURE · 明天中午后再出发，留足休息时间。");
   expect(suggestionCalls).toBe(1);
-  expect(submittedGoal).toContain("成年情侣");
-  expect(submittedGoal).toContain("今晚会玩到很晚");
-  expect(submittedGoal).toContain("睡到中午");
-  expect(submittedGoal).toContain("下午13:00后");
-  expect(submittedGoal).toContain("轻松出门");
-  expect(submittedGoal).toContain("留足休息时间");
+  expect(submittedGoal).toBe(goal);
   expect(providerCalls).toBe(0);
 });

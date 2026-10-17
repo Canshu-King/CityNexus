@@ -54,7 +54,7 @@ async function prepare(page: Page, status: number | "timeout") {
 
 const httpCases = [
   { status: 401, copy: "有效的签名会话" },
-  { status: 403, copy: "没有执行「查找地名」的权限" },
+  { status: 403, copy: "无法用当前登录信息操作这条行程" },
   { status: 404, copy: "服务器找不到当前行程或对应资源" },
   { status: 409, copy: "行程状态已经变化" },
   { status: 422, copy: "服务器拒绝了「查找地名」提交的数据" },
@@ -64,12 +64,29 @@ const httpCases = [
 ] as const;
 
 for (const item of httpCases) {
-  test("地名搜索将 HTTP " + item.status + " 归类并显示脱敏恢复", async ({ page }) => {
+  test("地名搜索将 HTTP " + item.status + " 归类" + (item.status === 403 ? "并保留探索状态" : "并显示脱敏恢复"), async ({ page }) => {
     const calls = await prepare(page, item.status);
+    const quickExplore = page.getByTestId("rev-quick-explore");
+    if (item.status === 403) {
+      const mapLinkSection = quickExplore.getByTestId("rev-quick-area").locator("details");
+      await mapLinkSection.locator("summary").click();
+      await page.getByLabel("公开地图链接").fill("https://www.openstreetmap.org/#map=13/30.248/120.146");
+      await page.getByTestId("rev-quick-apply-map-link").click();
+      await expect(quickExplore).toContainText("本次探索位置：地图中心已选 · 30.248, 120.146");
+      await quickExplore.getByRole("button", { name: "换一个位置" }).click();
+      await page.getByLabel("城市或地区").fill("杭州西湖");
+    }
     await page.getByTestId("rev-quick-find-city").click();
     const alert = page.getByRole("alert");
     await expect(alert).toContainText(item.copy);
-    await expect(page.getByTestId("rev-quick-error-recovery")).toHaveCount(1);
+    const recovery = page.getByTestId("rev-quick-error-recovery");
+    await expect(recovery).toHaveCount(1);
+    if (item.status === 403) {
+      await expect(quickExplore.getByTestId("rev-quick-area")).toBeVisible();
+      await expect(page.getByLabel("城市或地区")).toHaveValue("杭州西湖");
+      await expect(quickExplore).toContainText("本次探索位置：地图中心已选 · 30.248, 120.146");
+      expect(calls()).toBe(1);
+    }
     await page.getByTestId("rev-quick-error-details").locator("summary").click();
     await expect(page.getByTestId("rev-quick-error-details")).toContainText(
       "请求：POST /journeys/:id/bootstrap-city-search",
@@ -80,6 +97,17 @@ for (const item of httpCases) {
     expect(rendered).not.toContain(privateMarker);
     expect(rendered).not.toContain(journey);
     expect(rendered).not.toContain("private-trace-marker");
+    if (item.status === 403) {
+      await recovery.click();
+      await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
+      await expect(page.getByLabel("目的地")).toHaveValue("杭州西湖");
+      const session = await page.evaluate(() => ({
+        bearer: window.sessionStorage.getItem("citynexus.traveler.bearer"),
+        journey: window.localStorage.getItem("citynexus.revolution.firstlook.journey"),
+      }));
+      expect(session).toEqual({ bearer: null, journey: null });
+      expect(calls()).toBe(1);
+    }
     if (item.status === 503) {
       await page.getByTestId("rev-quick-error-recovery").click();
       await expect(alert).toContainText("HTTP 503");
