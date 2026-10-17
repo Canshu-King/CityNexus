@@ -117,18 +117,18 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       });
     });
     await page.goto("/revolution");
-    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("正在读取 AI 状态");
+    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 正在连接");
     await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("正在连接 AI…");
     await expect(page.getByTestId("rev-quick-consult-ai")).toBeDisabled();
     releaseRuntime();
-    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 尚未验证");
+    await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 建议可试");
     await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("可请求 AI 建议");
     await expect(page.getByTestId("rev-quick-consult-ai")).toBeEnabled();
     await page.getByTestId("rev-mobile-tab-trips").click();
     const draftActivity = page.getByTestId("rev-draft-agent-activity");
     await expect(draftActivity).toBeVisible();
-    await expect(draftActivity).toContainText("AI 尚未验证");
-    await expect(draftActivity).toContainText("当前是探索草稿。完成正式行程后，AI 工作记录会显示在这里。");
+    await expect(draftActivity).toContainText("AI 建议可试");
+    await expect(draftActivity).toContainText("保存两站并出发后，这里会显示 AI 动态。");
   });
 
   test("three bottom tabs are tappable without submitting requests", async ({ page }, testInfo) => {

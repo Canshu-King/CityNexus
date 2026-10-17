@@ -297,12 +297,12 @@ function DraftAgentActivity({
       </div>
       <p>
         {!hasJourney
-          ? "先完成行程计划并启动，之后可在「行程」查看助手动态。"
+          ? "开始行程后，这里会显示 AI 动态。"
           : hasSelectedPlace
-            ? "地点已选好，正式行程还未启动。启动后会在这里显示助手动态。"
+            ? "地点已选好。开始行程后，这里会显示 AI 动态。"
             : hasSavedPocketWalk
-              ? "两站已保存为私人散步。完成正式行程并启动后，AI 工作记录会显示在这里。"
-              : "当前是探索草稿。完成正式行程后，AI 工作记录会显示在这里。"}
+              ? "两站已保存。开始行程后，这里会显示 AI 动态。"
+              : "保存两站并出发后，这里会显示 AI 动态。"}
       </p>
     </section>
   );
@@ -398,35 +398,35 @@ export function RevolutionFirstLook() {
   const aiNotConfigured = runtimeAiState === "NOT_CONFIGURED";
   const agentCanRequestSuggestion = agentConfigured && !aiDisabled && !aiNotConfigured;
   const agentStatusTitle = agentStatusChecking
-    ? "正在读取 AI 状态"
+    ? "AI 正在连接"
     : agentCheckError
-      ? "AI 状态暂不可用"
+      ? "AI 暂时不可用"
       : aiDisabled
-        ? "AI 未启用"
+        ? "AI 暂未开启"
         : nativeHermesReady
-          ? "AI 工具可用"
+          ? "AI 可用"
           : nativeHermesConfigured
-            ? "AI 工具暂不可用"
+            ? "AI 暂时没连上"
             : aiNotConfigured || !agentConfigured
-              ? "AI 未配置"
+              ? "AI 尚未连接"
               : runtimeAiState === "PROVIDER_REFUSED"
-                ? "AI 服务刚才拒绝了请求"
-                : "AI 尚未验证";
+                ? "AI 暂时没响应"
+                : "AI 建议可试";
   const agentStatusDetail = agentStatusChecking
-    ? "正在读取状态。"
+    ? "正在准备 AI。"
     : agentCheckError
-      ? "暂时无法读取状态。"
+      ? "先继续挑地点。"
       : aiDisabled
-        ? "可继续手动探索地点。"
+        ? "先选好地点，再继续安排行程。"
         : nativeHermesReady
-          ? "正式行程启动后可使用 Agent。"
+          ? "出发行程后可查看 AI 工作动态。"
           : nativeHermesConfigured
-            ? "工具服务当前不可用。"
+            ? "先继续挑地点。"
             : runtimeAiState === "PROVIDER_REFUSED"
-              ? "可继续手动探索地点。"
+              ? "先继续挑地点。"
               : agentCanRequestSuggestion
-                ? "配置已读到，模型回复尚未验证。"
-                : "可继续手动探索地点。";
+                ? "写下想法，点「问问 AI」。"
+                : "先开始探索。";
 
   const markStartWriteUnknown = (marker: StartWriteState, reason?: "client-deadline") => {
     const unknown: StartWriteState = {
