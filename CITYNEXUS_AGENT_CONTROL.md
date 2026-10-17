@@ -1,4 +1,24 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-零六八五 把「当前签名查看者」那一层接到权威线（后端先行，前端第二刀）
+
+- 为什么开：Issue 廿七 的修法只能选「不落盘」，因为权威前端线没有任何一扇门能回答「当前签名查看者是谁」。这条不是推测，是现读：`frontend/src/lib/agentSessionCache.ts:33` 与 `frontend/src/lib/agentSessionCache.ts:34` 那两把旧键只绑行程号，而 `frontend/src/features/agent/CopilotDock.tsx:82` 读它们时手上没有身份可用。
+- 对面已有的形状（只读核对，不并枝）：design 枝尖 94e1b146e672b821e3f543c5a9c5872487281907 的 `backend/app/main.py` 里挂着 `@app.get("/api/v1/travelers/session")`，该文件整枚 blob 为 f26b7e725de7d297d0f8a2d4a88ef75786df17b0（`git cat-file -t` 现读为 blob），它 `resolve_traveler_principal(request, session)` 后回 `traveler_id`，并带 `Cache-Control: private, no-store` 与 `Vary: Authorization, X-CityNexus-Traveler-Token`。
+- 权威线现状（现读，分母摊开）：`GET :8011/openapi.json` 的 path 总数读自同一进程，按 `session|traveler|whoami|/me|identity` 过滤后只剩 `POST /api/v1/travelers`、`GET /api/v1/travelers/{traveler_id}` 及其 `agent-policy`、`capabilities`、`preferences`、`push-config`、`recycle-bin/journeys`、`traveler-twin` 子门，外加行程侧 `members`、`member-role-limits`、`members/self-exit`；`backend/app/traveler_principal.py` 这枚文件不存在，`resolve_traveler_principal` 与 `X-CityNexus-Traveler-Token` 在全仓的调用处数都是零。
+
+**这一刀要交付什么（后端，先做这一件）**
+
+1. 权威线新增 `backend/app/traveler_principal.py`：从 `Authorization` 或 `X-CityNexus-Traveler-Token` 解出签名主体，解不出就拒，不返回「猜出来的第一个人」。
+2. `backend/app/main.py` 挂 `GET /api/v1/travelers/session`，回 `traveler_id`，响应头带 `Cache-Control: private, no-store` 与 `Vary`。
+3. 契约同代：`openapi.json` 里必须读得到这条 path，且 `GET` 之外不多挂方法。
+4. 后端测试至少两格：带合法签名回出正确 `traveler_id`；不带或带错回拒（并写出拒因码，不许裸 401 文案）。
+
+**第二刀（等第一刀落地后另开单，本单不做）**：`frontend/src/lib/agentSessionCache.ts:36` 与 `frontend/src/lib/agentSessionCache.ts:44` 的键从 `journeyId` 换成 `travelerId + journeyId`，并给 `frontend/e2e/qoder27-timeline-identity-boundary.spec.ts:148` 那一臂补一条 live 签名身份的对照。
+
+**禁项**：不并 `design/revolution-mobile-first-v1`，不改既有审批与工具权限，不加第二套后端，不把 `traveler_id` 从前端自报当身份用（Issue 廿七 原话）。
+
+- 收件人：未点名，按车道自申报；交块走 `_qoder_ledger_inbox/<lane>_<HHMM>.md`，形制过 Q43。
+
+
 ### CMDR-QODER-ISSUE-廿七 换人不换行程：Agent 轨迹不再从盘上回放（已交 PR，未落地）
 
 - 段内代次：派生自现尖 321d4ab19c6c9d730717cc530de0f58d86b898d1（`git cat-file -t` 现读为 commit），枝名 `review/qoder-27-timeline-identity-boundary-1602`，枝尖 46b1786a514d5fdb347580b7f5a581bf8b8bbe2d（同一把尺现读为 commit，`git ls-remote` 回读同值）；权威尖未动。
