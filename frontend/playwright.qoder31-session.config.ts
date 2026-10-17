@@ -22,7 +22,7 @@ const SECRET = randomBytes(32).toString("hex");
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: /qoder31-(?:signed-session|first-trip-guide)\.spec\.ts/,
+  testMatch: /qoder31-(?:signed-session|first-trip-guide|wizard-wording)\.spec\.ts/,
   timeout: 180_000,
   expect: { timeout: 15_000 },
   workers: 1,
