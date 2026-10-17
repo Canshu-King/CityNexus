@@ -1312,7 +1312,7 @@ body:has(#v8-nav-drawer) { overflow: hidden; }
   font-weight: 700;
 }
 .trip-stop-current {
-  color: var(--v8-accent, #0f766e);
+  color: var(--cn-accent-text);
   font-weight: 700;
 }
 
