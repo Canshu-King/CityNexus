@@ -130,6 +130,7 @@ test("地名搜索超时显示没有 HTTP 回答，并保留准确请求路径",
 
 test.describe("地名服务失败后的 390x844 触控地图回退", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, serviceWorkers: "block" });
+  test.use({ storageState: { cookies: [], origins: [] } });
 
 test("打开地图后地图与兴趣选择都处于可操作视区", async ({ page }) => {
   let cityCalls = 0;
@@ -173,6 +174,7 @@ test("打开地图后地图与兴趣选择都处于可操作视区", async ({ pa
         journey_id: journey,
         status: "GEOCODER_UNAVAILABLE",
         query: "连城",
+        provider_key: null,
         provider_attempts: [{ provider: "nominatim", answered: false, error: "ConnectTimeout" }],
         results: [],
         provider_provenance: "UNVERIFIED",
@@ -205,8 +207,11 @@ test("打开地图后地图与兴趣选择都处于可操作视区", async ({ pa
   await expect(page.getByRole("status")).toContainText("地名查找暂时连不上");
   await expect(page.getByTestId("rev-quick-error-recovery")).toHaveText("打开 OpenStreetMap 地图手选 →");
   await expect(page.getByText("点击后会加载 OpenStreetMap 地图底图；不会使用设备定位。")).toBeVisible();
+  await expect(page.getByTestId("rev-quick-photon-search")).toHaveText("改用 Photon 地名查找 →");
+  await expect(page.getByText("备用搜索会把“连城”发送至 Photon（Komoot 公开地名服务）。")).toBeVisible();
   expect(cityCalls).toBe(1);
   expect(tileCalls).toBe(0);
+  expect(unexpectedProviderRequests).toEqual([]);
 
   await page.getByTestId("rev-quick-error-recovery").tap();
   const map = page.getByTestId("rev-quick-map-fallback");

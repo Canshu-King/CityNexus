@@ -500,8 +500,9 @@ export function RevolutionQuickExplore({
       setCityProviderKey(response.provider_key);
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
+        const attemptedProvider = provider ?? response.provider_key;
         setPhotonFallbackAvailable(
-          response.provider_key === "nominatim" && (
+          !sampleProviderMode && attemptedProvider !== "photon" && (
             response.status === "GEOCODER_UNAVAILABLE" ||
             response.status === "GEOCODER_RATE_LIMITED" ||
             response.status === "CITY_NO_RESULTS"
