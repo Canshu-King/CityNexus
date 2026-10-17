@@ -1,0 +1,458 @@
+{
+ "label": "before0848",
+ "readings": 32,
+ "groups": [
+  {
+   "sel": ".v8-mode-chips button",
+   "color": "rgb(94, 107, 125)",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42,
+   "n": 6,
+   "where": {
+    "390/light/live": 3,
+    "1280/light/live": 3
+   }
+  },
+  {
+   "sel": ".v8-mode-chips button",
+   "color": "rgb(63, 77, 184)",
+   "eff_bg": "rgb(239, 241, 255)",
+   "ratio": 6.31,
+   "n": 2,
+   "where": {
+    "390/light/live": 1,
+    "1280/light/live": 1
+   }
+  },
+  {
+   "sel": ".v8-me-card p",
+   "color": "rgb(126, 137, 153)",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54,
+   "n": 8,
+   "where": {
+    "390/light/me": 4,
+    "1280/light/me": 4
+   }
+  },
+  {
+   "sel": ".v8-mode-chips button",
+   "color": "rgb(174, 174, 178)",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69,
+   "n": 6,
+   "where": {
+    "390/dark/live": 3,
+    "1280/dark/live": 3
+   }
+  },
+  {
+   "sel": ".v8-mode-chips button",
+   "color": "rgb(255, 255, 255)",
+   "eff_bg": "rgb(10, 102, 255)",
+   "ratio": 4.82,
+   "n": 2,
+   "where": {
+    "390/dark/live": 1,
+    "1280/dark/live": 1
+   }
+  },
+  {
+   "sel": ".v8-me-card p",
+   "color": "rgb(126, 137, 153)",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8,
+   "n": 8,
+   "where": {
+    "390/dark/me": 4,
+    "1280/dark/me": 4
+   }
+  }
+ ],
+ "rows": [
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(94, 107, 125)",
+   "text": "步行",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(94, 107, 125)",
+   "text": "骑行",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(63, 77, 184)",
+   "text": "公交地铁",
+   "eff_bg": "rgb(239, 241, 255)",
+   "ratio": 6.31
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(94, 107, 125)",
+   "text": "驾车",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "1 位旅行者 · ¥500.00",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 住宿」里挑选",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 预订」里导入你的票或确认单。",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 390,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(174, 174, 178)",
+   "text": "步行",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(174, 174, 178)",
+   "text": "骑行",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(255, 255, 255)",
+   "text": "公交地铁",
+   "eff_bg": "rgb(10, 102, 255)",
+   "ratio": 4.82
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(174, 174, 178)",
+   "text": "驾车",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "1 位旅行者 · ¥500.00",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 住宿」里挑选",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 预订」里导入你的票或确认单。",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 390,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(94, 107, 125)",
+   "text": "步行",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(94, 107, 125)",
+   "text": "骑行",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(63, 77, 184)",
+   "text": "公交地铁",
+   "eff_bg": "rgb(239, 241, 255)",
+   "ratio": 6.31
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(94, 107, 125)",
+   "text": "驾车",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 5.42
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "1 位旅行者 · ¥500.00",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 住宿」里挑选",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 预订」里导入你的票或确认单。",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 1280,
+   "theme": "light",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你",
+   "eff_bg": "rgb(255, 255, 255)",
+   "ratio": 3.54
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(174, 174, 178)",
+   "text": "步行",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(174, 174, 178)",
+   "text": "骑行",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(255, 255, 255)",
+   "text": "公交地铁",
+   "eff_bg": "rgb(10, 102, 255)",
+   "ratio": 4.82
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "live",
+   "sel": ".v8-mode-chips button",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(174, 174, 178)",
+   "text": "驾车",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 7.69
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "1 位旅行者 · ¥500.00",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 住宿」里挑选",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "在「行程 · 预订」里导入你的票或确认单。",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  },
+  {
+   "w": 1280,
+   "theme": "dark",
+   "screen": "me",
+   "sel": ".v8-me-card p",
+   "in_dom": 5,
+   "visible": 5,
+   "color": "rgb(126, 137, 153)",
+   "text": "任何会影响已确认预订或受保护安排的改动，都会先征得你",
+   "eff_bg": "rgb(28, 28, 30)",
+   "ratio": 4.8
+  }
+ ]
+}
