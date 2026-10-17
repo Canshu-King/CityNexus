@@ -225,3 +225,15 @@ AI 网关在新试用环境中配置为 `auto:cheapest`，本轮没有另发模�
 - 当 Nominatim 返回不可用、限流或无结果，手机页现在显示 Photon 备用按钮，并在点击前说明地区名称会发给 Photon。只有用户点按钮才发第二个请求。后端从 Photon 自己的运营配置取地址和 User-Agent；Photon 未启用时不请求。
 - 后端聚焦配置测试 `test_explicit_photon_city_search_uses_photon_operator_config`：1 passed；`npm.cmd run typecheck:all`、`npm.cmd run build`、`git diff --check` 均通过。
 - 本轮隔离 API 的公开地名服务未启用，因此没有发 Nominatim/Photon 请求，也没有产生 POI、Pocket Walk 或 GO 证据；AI 保持关闭。之前已记录的真实武汉 POI、两站保存、GO 和刷新恢复仍以本报告前文证据为准。
+
+## 2026-10-18 Chrome-use：泉州真实地名查询与 Photon 空结果
+
+- 运行版本：PR #23 测试代码 SHA `7e45855103385235177cc3f91b3325ae61904c4d`；Chrome-use headed 会话，iPhone 14 视口 `390×844`；前端 `14374`、隔离后端 `18374`、进程内 SQLite，AI 关闭。会话结束时已关闭浏览器和两个服务端口。
+- 从手机入口创建旅客和泉州 DRAFT 行程：`POST /travelers` 返回 `201`，`POST /journeys` 返回 `201`。
+- 地名查找只发起一次 Nominatim 搜索“泉州”，页面返回两个公开城市候选；选中“泉州市, 福建省, 中国”。
+- 地点搜索测试两个不同类别，各发起一次 Photon 请求：公园和绿地、博物馆和艺术。两次 CityNexus 接口均返回 `200`；服务端证据均为 `provider=photon`、`provider_provenance=LIVE_PROVIDER`、上游 `HTTP 200`、`features=0`、`LIVE_ZERO_RESULTS`、`raw_count=0`、`accepted_count=0`。上游没有返回地点，筛选拒绝数也为 `0`。没有重试。
+- 由于没有可选地点，本次未进入双站选择、Pocket Walk 保存、GO 或刷新恢复；AI 关闭，未发模型请求。
+- “查找位置”按钮初始位置被固定底部导航部分遮住；滚动后按钮可见，Chrome-use 使用键盘 Enter 激活搜索。
+- Chrome-use 实测截图：[20261018-live-quanzhou-photon-zero-390x844.png](assets/20261018-live-quanzhou-photon-zero-390x844.png)，SHA-256 `E224F18EA8718885E4CE84FCECA08F7724F78593B79D91D1812745ECD10A9BB7`。
+
+本次真实链路停在地点服务没有返回候选；没有以模拟数据补齐结果。
