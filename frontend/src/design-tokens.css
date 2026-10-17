@@ -827,8 +827,16 @@
      `aside.v8-studio-aside`（行程工作台侧栏，同是 #fff → 9 条）、
      `article.v12-state-card`（.now #f6faf8 / .next #f8f8fc → 3 条）。
      判据没有新增：这三枚都是 `closest('.v8-page')` 为真、自己的 color 已是暗档墨，
-     与上面三例同一形状，所以并入本组而不是另起一套。 */
-  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress, :root[data-theme="dark"] .v8-page .trip-stop.protected, :root[data-theme="dark"] .v8-page .v12-trip-studio, :root[data-theme="dark"] .v8-page .v8-studio-aside, :root[data-theme="dark"] .v8-page .v12-state-card {
+     与上面三例同一形状，所以并入本组而不是另起一套。
+     13:0x 第三型，也是这一组第一次抓不到的那一型：`section.v12-authoritative-panel`
+     （`frontend/src/styles.css:201`）的浅色不写在 background-color 上，而写在
+     `background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250,.9))` 上。
+     合成尺只沿 backgroundColor 爬链，于是把 `.v8-page` 的黑底当成它的底，替这张卡判了绿；
+     真相反证是手机暗档 412 那张截图（`shots/phone_dark_authoritative_1246.png`）。
+     换了一把会把 background-image 色标也压进底色的尺重测十七屏，这一屏在暗档两档宽度上
+     各暴露六条，其中 `h2`「从方案到边缘的单一真相」1.02（`grad_scan_17keys_1280_390.json:1`）。
+     修法仍是这一组既有那一手：组里的 `background` 是简写，会把那层渐变一起重置掉。 */
+  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress, :root[data-theme="dark"] .v8-page .trip-stop.protected, :root[data-theme="dark"] .v8-page .v12-trip-studio, :root[data-theme="dark"] .v8-page .v8-studio-aside, :root[data-theme="dark"] .v8-page .v12-state-card, :root[data-theme="dark"] .v8-page .v12-authoritative-panel {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
