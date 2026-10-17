@@ -281,10 +281,12 @@ function DraftAgentActivity({
   status,
   hasJourney,
   hasSelectedPlace,
+  hasSavedPocketWalk,
 }: {
   status: string;
   hasJourney: boolean;
   hasSelectedPlace: boolean;
+  hasSavedPocketWalk: boolean;
 }) {
   return (
     <section className="rev-mobile-panel" data-testid="rev-draft-agent-activity">
@@ -295,10 +297,12 @@ function DraftAgentActivity({
       </div>
       <p>
         {!hasJourney
-          ? "尚未开始正式行程。开始探索并确认后，可在「行程」查看助手动态。"
+          ? "先完成行程计划并启动，之后可在「行程」查看助手动态。"
           : hasSelectedPlace
-            ? "地点已选好。当前仍是草稿，尚无正式 AgentRun；确认后可在「行程」查看助手动态。"
-            : "当前是探索草稿，尚无正式 AgentRun。选好地点并确认后，可在「行程」查看助手动态。"}
+            ? "地点已选好，正式行程还未启动。启动后会在这里显示助手动态。"
+            : hasSavedPocketWalk
+              ? "两站已保存为私人散步。完成正式行程并启动后，AI 工作记录会显示在这里。"
+              : "当前是探索草稿。完成正式行程后，AI 工作记录会显示在这里。"}
       </p>
     </section>
   );
@@ -1043,6 +1047,7 @@ export function RevolutionFirstLook() {
                     status={agentStatusTitle}
                     hasJourney
                     hasSelectedPlace={Boolean(candidateForJourney)}
+                    hasSavedPocketWalk={Boolean(pocketWalk)}
                   />
                 </>
               )}
