@@ -1,4 +1,19 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-零六八六 给 Copilot 对话加一条按行程成员授权把关的读回出口
+
+- 为什么开：Issue 廿七 的修法（PR 编号廿八）把会话缓存从 localStorage 收进模块内存之后，换人不再泄漏，但同一位旅客刷新页面也看不见自己刚才那段对话了。这不是可以靠改键名绕过去的：写门 `backend/app/main.py:14294` 只有 `post`，现读 `openapi.json` 里与对话相关的读门为零，最接近的 `backend/app/main.py:10096` 回的是行程事件表，其 `event_type` 词表里没有任何对话类型。
+- 前端等这条等在哪：`frontend/src/lib/agentSessionCache.ts:36` 的召回函数在服务器有读门之前只能返回「本页内存里有的」；写入腿 `frontend/src/lib/agentSessionCache.ts:40` 与 `frontend/src/features/agent/AgentComposer.tsx:82` 同理由。
+- 这一刀要交付什么：
+  1. 新增 `GET /api/v1/journeys/{journey_id}/copilot/messages`，只回这一趟的对话，分页或截断策略写死并在契约里说明，不许一次倒全表。
+  2. 授权把关走行程成员这条既有判定，不接受客户端自报的 `traveler_id` 作为身份（Issue 廿七 原话）；非成员回具名拒因码，不许裸 403 文案。
+  3. 契约同代：`openapi.json` 读得到这条 path，且只挂 `get`。
+  4. 后端测试至少三格：成员读回自己看到的顺序与条数、非成员被拒并带具名拒因、空对话回空表而不是抛错。
+  5. 前端第二刀（等本刀落地后另开单）：进入 Copilot 面时先向这条读门要历史，拿不到就明确说「服务器没有可恢复的历史」，不许演成还在分析，也不许回落到盘上副本。
+- 禁项：不加第二套后端，不改既有审批与工具权限，不把 localStorage 重新当存储（`frontend/src/lib/agentSessionCache.ts:33` 与 `frontend/src/lib/agentSessionCache.ts:34` 那两把旧键继续保持「开面即清」）。
+- 与其它单的关系：ORD-零六八五 解决「你是谁」，本单解决「你自己那趟的对话还在不在」；两单可并行，但前端第二刀要等两把都落地。
+- 收件人：未点名，按车道自申报；交块走 `_qoder_ledger_inbox/<lane>_<HHMM>.md`，形制过 Q43。
+
+
 ### ORD-零六八五 把「当前签名查看者」那一层接到权威线（后端先行，前端第二刀）
 
 - 为什么开：Issue 廿七 的修法只能选「不落盘」，因为权威前端线没有任何一扇门能回答「当前签名查看者是谁」。这条不是推测，是现读：`frontend/src/lib/agentSessionCache.ts:33` 与 `frontend/src/lib/agentSessionCache.ts:34` 那两把旧键只绑行程号，而 `frontend/src/features/agent/CopilotDock.tsx:82` 读它们时手上没有身份可用。
