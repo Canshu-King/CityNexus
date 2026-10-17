@@ -1,4 +1,40 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-NIGHT-0953·第二十八笔落线：文字侧的蓝终于用"能当文字的那一枚"（暗档「启用 Web Push」3.53 抬到 4.66）
+
+**一、这一笔用户看到什么**
+
+暗档「我的」那屏底部那枚描边按钮「启用 Web Push」，字用的是填充蓝（链接那一枚），配深底实测 3.53，不到四格半的地板。现在它改用厂内那枚"专门当文字用的强调色"：暗档读到 4.66，亮档按同一公式算是 5.97（原来 4.82 就已过线，这一笔是把它一起接回规矩）。
+
+**二、线动了**
+
+- 权威尖从 9a3c5fb8f9ecb9184d32b36a2ff5de04c0401375 推到 3831a7cb4732a940960daac404ef89b5596d8e2c，只快进（收据 `preflight_r1.json:1`）
+- 动的产品文件两枚、共三处 `color:`：`frontend/src/v10.css:29` 的 `.v8-secondary`、`frontend/src/v10.css:11` 的 `.v10-inbox-scanner button`、`frontend/src/design-tokens.css:1536` 的 `.trial-supported summary`，全部从 `var(--v8-accent)` 换成 `var(--cn-accent-text)`
+- 两枚文件的 blob：v10.css 从 dea187a937fbe051d4536d091fded9e84b7f87ad（现读 9780 字节）换成 87066a597e4eaf2cc94d17ade061ce08838a4f73（现读 9790 字节）；design-tokens.css 从 421d39b19025c4f8a5feff3ae7d88dabc740e3d4 换成 68075b26dc7b152bb06a170eb6eb30ab641b8b54，出处 `instrument_accent_text_swap_r1.py:1`
+- 填充侧一处没动：`frontend/src/v10.css:27` 那枚 `background: var(--v8-accent)` 配白字是另一种形状，换 token 会连底一起变，本笔不碰
+
+**三、判据不是我造的**
+
+- 这条规矩在文件里写着：`frontend/src/design-tokens.css:37` 那行注释原话是"链接绑到 `--cn-accent-text`，那是唯一一枚当文字用能过 AA 的强调色"，定义在 `frontend/src/design-tokens.css:33`
+- 所以本笔只是把三枚漏绑的"文字用蓝"接回这条已有规矩，没有新色值、没有新判据
+
+**四、读数（合成普查两臂，同一把尺）**
+
+- 两臂扫到的读数都是 1820 条，分母一字未动，见 `census_control.json:1`
+- 控制臂低于 4.5 的去重七种、二十四条；候选臂六种、二十二条，见 `census_candidate.json:1`
+- 清掉的那一族逐字是：button.v8-secondary 字 rgb(10, 102, 255) 坐在 rgb(28, 28, 30) 上 3.53，两档宽度各两条，见 `census_control.json:1`
+- 新增的种数：零（两臂种集做差，反向差集为空），见 `census_candidate.json:1`
+- 另两枚选择器（`.v10-inbox-scanner button`、`.trial-supported summary`）在这六屏 × 两主题 × 两宽度的扫里一次都没渲染出来，所以它们只算"按同一条规矩改了、屏上未验"，我不给它们编读数，见 `census_candidate.json:1`
+- 一处口径要更正：提交说明里我把亮档那一对数（4.82 与 5.97）写在"Measured on the composited census"那一行底下——那是按 WCAG 公式从两枚色值算出来的算术，不是普查在屏上读到的行（普查里亮档那处本来就不在红名单，因为它 4.82 已经过了）。暗档那两行 3.53 与候选臂的清零才是量出来的。账本以此处为准。
+- 落地门：READY_TO_LAND，在看的 css 两枚、新增三行、新增逃逸口零行、尺身份 MATCH，构建臂 rc 零，收据 `preflight_r1.json:1`
+- 外读证据包在 `evidence/cmdr-landing-CMDR-NIGHT-0950-0951/`，共四件（收据、两臂普查、换绑尺身），逐件回核 BYTE-LEVEL MATCH
+
+**五、剩下的（本笔没修，也不假装修了）**
+
+- 普查还剩六种：侧栏那串「•••」2.18（装饰性省略号，要不要按文字算 AA，属裁语）、「技术详情」3.62（用的是 `--cn-ink-tertiary` 那一档，换档是口味题）、「当前」4.23 与 4.25、「打卡」4.47、紫药丸 3.97，逐条在 `census_candidate.json:1`
+- 紫药丸那一枚厂内没有配好的深紫文字档（`--v8-violet` 只有一枚值、没有第二档），要修就得新造色值：我算过两枚候选坐在 #f3efff 上分别是 5.09 与 6.28，但定哪个是产品的视觉决定，我不替它定，出处 `census_candidate.json:1`
+- 死类名那十三枚的三臂证明与工单在上一块 CMDR-NIGHT-0926 的第四、五节里，本笔没动它们
+
+
 ### CMDR-CORR-0936·勘误一枚值守转达块：那枝不是"没落地"，它已经是尖；转达腿的分类补一类（四十九格自检全绿）
 
 **一、受影响的是哪一枚已发布记录**
