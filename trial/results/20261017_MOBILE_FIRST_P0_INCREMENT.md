@@ -218,3 +218,10 @@ AI 网关在新试用环境中配置为 `auto:cheapest`，本轮没有另发模�
 - AI / Hermes 仍是下一阶段：本试玩健康状态为 `ai=disabled`；隔离库没有签名 ACTIVE Journey 或 Hermes AgentRun。此前一次 DRAFT AI 请求得到 HTTP 502，本轮没有重试，也没有宣称 AI 工具轨迹已落库。
 
 可直接打开当前页面：`http://127.0.0.1:14176/revolution`。启动器终端仍运行 `trial/try_revolution.py`；本机服务保持开启。
+
+## 2026-10-18：Chrome-use 手机路径与地名备用入口
+
+- 在 390×844 iPhone 14 Chrome-use 会话中，页面创建隔离旅客与泉州 DRAFT 行程成功，进入地点探索页。测试后端使用进程内 SQLite；当前浏览器会话没有调用地名服务。
+- 当 Nominatim 返回不可用、限流或无结果，手机页现在显示 Photon 备用按钮，并在点击前说明地区名称会发给 Photon。只有用户点按钮才发第二个请求。后端从 Photon 自己的运营配置取地址和 User-Agent；Photon 未启用时不请求。
+- 后端聚焦配置测试 `test_explicit_photon_city_search_uses_photon_operator_config`：1 passed；`npm.cmd run typecheck:all`、`npm.cmd run build`、`git diff --check` 均通过。
+- 本轮隔离 API 的公开地名服务未启用，因此没有发 Nominatim/Photon 请求，也没有产生 POI、Pocket Walk 或 GO 证据；AI 保持关闭。之前已记录的真实武汉 POI、两站保存、GO 和刷新恢复仍以本报告前文证据为准。

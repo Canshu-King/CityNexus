@@ -3119,7 +3119,7 @@ export const cityNexusApi = {
 
   bootstrapCitySearch(
     journeyId: string,
-    input: { query: string; provider_consent: boolean; limit: number },
+    input: { query: string; provider_consent: boolean; limit: number; provider?: "nominatim" | "photon" },
   ): Promise<BootstrapCitySearchResponse> {
     return requestJson<BootstrapCitySearchResponse>(
       "/journeys/" + journeyId + "/bootstrap-city-search",

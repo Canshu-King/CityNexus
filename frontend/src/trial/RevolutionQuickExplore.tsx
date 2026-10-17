@@ -232,6 +232,7 @@ export function RevolutionQuickExplore({
   const quickExploreRef = useRef<HTMLElement>(null);
   const pendingAiAdviceReveal = useRef(false);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
+  const [photonFallbackAvailable, setPhotonFallbackAvailable] = useState(false);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
   const [mapFallbackOpen, setMapFallbackOpen] = useState(false);
@@ -475,7 +476,7 @@ export function RevolutionQuickExplore({
     action: openMapFallback,
   };
 
-  const cityLookup = () => {
+  const cityLookup = (provider: "nominatim" | "photon" = "nominatim") => {
     const cityQuery = query.trim();
     if (cityQuery.length < 2 || cityQuery.length > 120) {
       setAlert({ type: "error", text: "请输入至少两个字的城市或地区，例如「连城县」。" });
@@ -485,11 +486,21 @@ export function RevolutionQuickExplore({
       // The button explicitly announces that this ONE request sends the
       // entered public city label to Nominatim. No passive or typing request.
       const response = await cityNexusApi.bootstrapCitySearch(journeyId, {
-        query: cityQuery, provider_consent: true, limit: 3,
+        query: cityQuery,
+        provider_consent: true,
+        limit: 3,
+        ...(provider === "photon" ? { provider } : {}),
       });
       if (!stillCurrent()) return;
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
+        setPhotonFallbackAvailable(
+          provider === "nominatim" && (
+            response.status === "GEOCODER_UNAVAILABLE" ||
+            response.status === "GEOCODER_RATE_LIMITED" ||
+            response.status === "CITY_NO_RESULTS"
+          ),
+        );
         const message = response.status === "GEOCODER_RATE_LIMITED"
           ? "地名查找正在限流。你可以在地图上手选区域，或稍后再查。"
           : response.status === "GEOCODER_UNAVAILABLE"
@@ -505,11 +516,17 @@ export function RevolutionQuickExplore({
         return;
       }
       setCityResults(response.results);
+      setPhotonFallbackAvailable(false);
       setCityFocus(null);
       setSelectedPin(null);
       setMapFallbackOpen(false);
       setTilesEnabled(false);
-      setAlert({ type: "good", text: "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。" });
+      setAlert({
+        type: "good",
+        text: provider === "photon"
+          ? "Photon 已找到公开地区。选一个结果后就能继续搜索附近地点。"
+          : "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。",
+      });
     }, (error) => {
       if (error instanceof CityNexusApiError && error.status === 429) {
         return mapFallbackRecovery;
@@ -853,6 +870,7 @@ export function RevolutionQuickExplore({
           cityFocus={cityFocus}
           cityFocusLabel={cityFocusLabel}
           mapFallbackOpen={mapFallbackOpen}
+          photonFallbackAvailable={photonFallbackAvailable}
           selectedPin={selectedPin}
           busy={busy}
           sampleProviderMode={sampleProviderMode}
@@ -865,6 +883,7 @@ export function RevolutionQuickExplore({
           onQueryChange={(value) => {
             setQuery(value);
             setCityResults([]);
+            setPhotonFallbackAvailable(false);
             setCityFocus(null);
             setCityFocusLabel(null);
             setSelectedPin(null);
@@ -872,6 +891,7 @@ export function RevolutionQuickExplore({
             setTilesEnabled(false);
           }}
           onCityLookup={cityLookup}
+          onPhotonCityLookup={() => cityLookup("photon")}
           onCityResultSelect={(item) => {
             // Keep the geocoder's approximate-area source distinct from
             // map taps, GPS, and arrival; Overpass starts on the next button.

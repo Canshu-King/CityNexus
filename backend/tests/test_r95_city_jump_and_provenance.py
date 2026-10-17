@@ -279,3 +279,48 @@ def test_r95_source_grade_operator_scheme_and_global_rate_guard(monkeypatch):
     finally:
         for key, value in previous.items():
             object.__setattr__(settings, key, value)
+
+
+def test_explicit_photon_city_search_uses_photon_operator_config(monkeypatch):
+    from types import SimpleNamespace
+
+    import app.execution.bootstrap_discovery as bootstrap
+
+    previous_enabled = settings.city_search_enabled
+    previous_nominatim_url = settings.city_search_base_url
+    previous_nominatim_agent = settings.city_search_user_agent
+    try:
+        object.__setattr__(settings, "city_search_enabled", True)
+        object.__setattr__(settings, "city_search_base_url", "https://nominatim.openstreetmap.org/search")
+        object.__setattr__(settings, "city_search_user_agent", "CityNexus/1.0 (nominatim@example.org)")
+        monkeypatch.setattr(
+            bootstrap,
+            "ExternalProviderSettings",
+            lambda: SimpleNamespace(
+                photon_enabled=True,
+                photon_base_url="https://photon.komoot.io",
+                photon_user_agent="CityNexus/1.0 (photon@example.org)",
+            ),
+        )
+
+        assert bootstrap._city_search_config_for("photon") == (
+            "photon",
+            "https://photon.komoot.io",
+            "CityNexus/1.0 (photon@example.org)",
+        )
+        assert bootstrap._city_search_config_for("nominatim") == (
+            "nominatim",
+            "https://nominatim.openstreetmap.org/search",
+            "CityNexus/1.0 (nominatim@example.org)",
+        )
+
+        monkeypatch.setattr(
+            bootstrap,
+            "ExternalProviderSettings",
+            lambda: SimpleNamespace(photon_enabled=False),
+        )
+        assert bootstrap._city_search_config_for("photon") is None
+    finally:
+        object.__setattr__(settings, "city_search_enabled", previous_enabled)
+        object.__setattr__(settings, "city_search_base_url", previous_nominatim_url)
+        object.__setattr__(settings, "city_search_user_agent", previous_nominatim_agent)

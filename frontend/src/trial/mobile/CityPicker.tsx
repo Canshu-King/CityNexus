@@ -9,6 +9,7 @@ type CityPickerProps = {
   cityFocus: { latitude: number; longitude: number } | null;
   cityFocusLabel: string | null;
   mapFallbackOpen: boolean;
+  photonFallbackAvailable: boolean;
   selectedPin: PublicCityCenter | null;
   busy: boolean;
   sampleProviderMode: boolean;
@@ -20,6 +21,7 @@ type CityPickerProps = {
   aiAdvice: MobileAiAdvice | null;
   onQueryChange: (value: string) => void;
   onCityLookup: () => void;
+  onPhotonCityLookup: () => void;
   onCityResultSelect: (item: BootstrapCitySearchResult) => void;
   onUseCenter: (
     point: { latitude: number; longitude: number },
@@ -39,6 +41,7 @@ export function CityPicker({
   cityFocus,
   cityFocusLabel,
   mapFallbackOpen,
+  photonFallbackAvailable,
   selectedPin,
   busy,
   sampleProviderMode,
@@ -50,6 +53,7 @@ export function CityPicker({
   aiAdvice,
   onQueryChange,
   onCityLookup,
+  onPhotonCityLookup,
   onCityResultSelect,
   onUseCenter,
   onEnableTiles,
@@ -92,6 +96,25 @@ export function CityPicker({
           ? "点击后将地名发送至本机 TEST_PROVIDER。"
           : "点击后将地名发送至 Nominatim，按所选区域搜索。"}
       </p>
+      {photonFallbackAvailable && !sampleProviderMode && (
+        <div className="rev-quick-photon-fallback" data-testid="rev-quick-photon-fallback">
+          <p className="rev-quick-disclosure">
+            备用搜索会把“{query}”发送至 Photon（Komoot 公开地名服务）。
+          </p>
+          <button
+            type="button"
+            className="rev-quick-secondary"
+            onClick={() => {
+              setCityLookupPending(true);
+              onPhotonCityLookup();
+            }}
+            disabled={busy}
+            data-testid="rev-quick-photon-search"
+          >
+            {busy && cityLookupPending ? "正在用 Photon 查找…" : "改用 Photon 地名查找 →"}
+          </button>
+        </div>
+      )}
       {cityResults.length > 0 && (
         <div className="rev-quick-results" data-testid="rev-quick-city-results">
           <h3>是这些地方吗？</h3>

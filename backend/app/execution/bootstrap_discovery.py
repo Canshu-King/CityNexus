@@ -1510,12 +1510,26 @@ def _reserve_city_search_global_slot(session: Session, *, now: datetime) -> bool
 def _city_search_config() -> tuple[str, str | None, str | None] | None:
     """Return an explicitly approved provider, or None without touching the network."""
 
+    return _city_search_config_for(settings.city_search_provider)
+
+
+def _city_search_config_for(provider: str) -> tuple[str, str | None, str | None] | None:
+    """Resolve one explicitly selected city provider from operator configuration."""
+
     if not settings.city_search_enabled:
         return None
-    provider = settings.city_search_provider
+    provider = str(provider or "").strip().lower()
     if provider not in {"nominatim", "photon"}:
         return None
-    base_url = settings.city_search_base_url
+    if provider == "nominatim":
+        base_url = settings.city_search_base_url
+        user_agent = settings.city_search_user_agent
+    else:
+        external = ExternalProviderSettings()
+        if not external.photon_enabled:
+            return None
+        base_url = external.photon_base_url
+        user_agent = external.photon_user_agent
     if not base_url:
         return None
     try:
@@ -1535,10 +1549,9 @@ def _city_search_config() -> tuple[str, str | None, str | None] | None:
     if not is_loopback:
         # A public endpoint must have a real identifying contact in the UA. The
         # built-in localhost placeholder is intentionally not accepted.
-        agent = settings.city_search_user_agent
-        if not agent or ("mailto:" not in agent.lower() and "@" not in agent):
+        if not user_agent or ("mailto:" not in user_agent.lower() and "@" not in user_agent):
             return None
-    return provider, base_url, settings.city_search_user_agent or None
+    return provider, base_url, user_agent or None
 
 
 def search_bootstrap_city(
@@ -1550,6 +1563,7 @@ def search_bootstrap_city(
     query: str,
     provider_consent: bool,
     limit: int,
+    provider: str | None = None,
 ) -> dict[str, Any]:
     """Perform one explicit bounded city search for the R95 map camera."""
 
@@ -1579,8 +1593,9 @@ def search_bootstrap_city(
         "member_id": member_id,
         "traveler_id": traveler_id,
         "provider_consent": True,
+        "provider": provider or settings.city_search_provider,
     }
-    config = _city_search_config()
+    config = _city_search_config() if provider is None else _city_search_config_for(provider)
     if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live" or config is None:
         _provider_call(
             session,

@@ -3999,6 +3999,7 @@ def search_bootstrap_journey_city(
             query=payload.query,
             provider_consent=payload.provider_consent,
             limit=payload.limit,
+            provider=payload.provider,
         )
         session.commit()
         return result
