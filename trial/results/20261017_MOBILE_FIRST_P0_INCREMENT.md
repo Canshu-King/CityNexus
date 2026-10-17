@@ -160,3 +160,12 @@ P0 仍未闭环：两处真实 POI、Pocket Walk 保存、GO 后刷新恢复；�
 - 前端 npm.cmd run typecheck:all -- --pretty false 退出码 0。
 
 P0 仍未闭环：当前页面没有两处可用真实 POI，Pocket Walk 保存、GO 与刷新恢复尚未完成；真实签名 ACTIVE Journey 和持久化 Hermes AgentRun 仍不存在。
+
+## 2026-10-17 14:35 本机 P0 进展
+
+- 本机试玩页尝试搜索公开区域“杭州市 西湖区”。当前 Journey 成员校验返回 HTTP 403（REQUEST_ERROR），请求在进入 Nominatim 前被拒；本次地点服务调用数为 0。继续前需要在试玩页进入一个有效签名旅客的 Journey。
+- 探索地点卡片已加大触控面积，并清楚标出第 1 站、第 2 站和当前选择状态。
+- 后端 LIVE_RESULTS 过滤汇总路由测试：1 passed；使用 Photon 测试响应，3 条候选中 2 条通过，响应只带计数汇总。
+- 手机 Playwright：Hermes 成员切换清空旧轨迹 1 passed；探索→地点选择→Pocket Walk→GO→刷新恢复用例 1 passed。用例中的接口响应为 TEST_FIXTURE。
+- npm.cmd run typecheck:all -- --pretty false：退出码 0。
+- 当前真实闭环停在地点搜索授权；真实双 POI、Pocket Walk、GO 与刷新恢复待有效 Journey 会话。当前试用库没有签名 ACTIVE Journey 或 Hermes AgentRun。

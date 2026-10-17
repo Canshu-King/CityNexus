@@ -154,6 +154,7 @@ test("plain Chinese first-user journey preserves separate intentional provider r
       id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
     }));
   }, journey);
+  await page.route("**/api/v1/**", (route) => route.abort());
   await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
     runtime_identity: "HERMES_COMPAT_ENDPOINT", hermes_compat_configured: true,
     ai_state: "CONFIGURED_UNVERIFIED",
@@ -257,18 +258,22 @@ test("plain Chinese first-user journey preserves separate intentional provider r
   expect(poiSearchCalls).toBe(0);
 
   // The chosen TEST_PROVIDER geocoder result is only an approximate public
-  // area. One explicit click is enough to adopt it as a user-directed search
-  // center; no blank MapLibre tiles or physical-position proof are required.
+  // area. The user explicitly adopts it, then separately chooses to search
+  // nearby; no blank MapLibre tiles or physical-position proof are required.
   await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
+  await page.getByRole("button", { name: "直接从这片地区附近找 →" }).click();
   await expect(page.getByTestId("rev-quick-category")).toBeVisible();
   expect(poiSearchCalls).toBe(0);
   expect(tileRequests).toBe(0);
 
   await page.getByTestId("rev-quick-find-places").click();
   await expect(page.getByTestId("rev-quick-results")).toBeVisible();
+  await expect(page.getByText("尚未选地点。点选一处加入第 1 站，再点另一处加入第 2 站。", { exact: true })).toBeVisible();
   expect(poiSearchCalls).toBe(1);
   await page.getByTestId(`rev-quick-select-${firstId}`).click();
+  await expect(page.getByText("第 1 站已选；点另一处加入第 2 站。", { exact: true })).toBeVisible();
   await page.getByTestId(`rev-quick-select-${secondId}`).click();
+  await expect(page.getByText("第 1 站和第 2 站已选；点选卡片可调整选择。", { exact: true })).toBeVisible();
   await page.getByTestId("rev-quick-save").click();
   await expect(page.getByTestId("rev-quick-walk")).toBeVisible();
   await page.getByRole("button", { name: "开始散步" }).click();

@@ -876,10 +876,18 @@ export function RevolutionQuickExplore({
             <>
               {isPartialLiveResult ? (
                 <p role="status" data-testid="rev-quick-partial-result">
-                  已找到 1 处；换类别或地图位置继续找第二处。
+                  {first
+                    ? "第 1 站已选；换类别或地图位置找第 2 站。"
+                    : "已找到 1 处；点卡片加入第 1 站，换类别或地图位置找第 2 站。"}
                 </p>
               ) : (
-                <p>点击卡片选择两站，先点的是第一站。</p>
+                <p role="status" aria-live="polite">
+                  {!first
+                    ? "尚未选地点。点选一处加入第 1 站，再点另一处加入第 2 站。"
+                    : !second
+                      ? "第 1 站已选；点另一处加入第 2 站。"
+                      : "第 1 站和第 2 站已选；点选卡片可调整选择。"}
+                </p>
               )}
               <div className="rev-quick-place-list">
                 {discovery.candidates.map((candidate: BootstrapDiscoveryCandidate) => {
