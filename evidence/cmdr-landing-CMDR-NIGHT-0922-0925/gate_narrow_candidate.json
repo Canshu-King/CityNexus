@@ -1,0 +1,2485 @@
+{
+ "at": "2026-10-17T01:20:16.951Z",
+ "label": "cand0920",
+ "viewport_kind": "narrow",
+ "scenes": [
+  {
+   "width": 320,
+   "theme": "light",
+   "count": 329,
+   "warnings": 2,
+   "kinds": {
+    "unclassified-control": 7
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"hub-plan-with-ai\"]",
+     "testId": "hub-plan-with-ai",
+     "text": "AI 帮我规划",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 15,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"journey-link-copy\"]",
+     "testId": "journey-link-copy",
+     "text": "复制行程链接",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "light",
+   "count": 284,
+   "warnings": 11,
+   "kinds": {
+    "unclassified-control": 6
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "light",
+   "count": 181,
+   "warnings": 3,
+   "kinds": {
+    "text-contrast": 1,
+    "unclassified-control": 6
+   },
+   "rows": [
+    {
+     "kind": "text-contrast",
+     "selector": "span.v8-status-pill.violet",
+     "testId": null,
+     "text": "画像上下文就绪",
+     "color": "rgb(128, 99, 215)",
+     "background": "rgb(243, 239, 255)",
+     "fontSizePx": 10,
+     "bold": true,
+     "contrast": 3.97,
+     "required": 4.5
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v15-copilot-submit\"]",
+     "testId": "v15-copilot-submit",
+     "text": "询问 Copilot",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 10,
+     "bold": false,
+     "contrast": 3.03,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "light",
+   "count": 259,
+   "warnings": 1,
+   "kinds": {
+    "unclassified-control": 8,
+    "control-boundary": 1
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-itinerary\"]",
+     "testId": "trips-tab-itinerary",
+     "text": "行程",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 4.43,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-stay\"]",
+     "testId": "trips-tab-stay",
+     "text": "住宿",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "control-boundary",
+     "selector": "[data-testid=\"journey-abort-submit\"]",
+     "testId": "journey-abort-submit",
+     "text": "中止这趟行程",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"calendar-export\"]",
+     "testId": "calendar-export",
+     "text": "导出日历",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "light",
+   "count": 207,
+   "warnings": 10,
+   "kinds": {
+    "unclassified-control": 11
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Old Town Gate",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Riverside Museum",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Central Food Hall",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Tech Art Center",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Nexus River Cruise Pier",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "light",
+   "count": 203,
+   "warnings": 1,
+   "kinds": {
+    "unclassified-control": 5
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "dark",
+   "count": 329,
+   "warnings": 2,
+   "kinds": {
+    "unclassified-control": 7
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"hub-plan-with-ai\"]",
+     "testId": "hub-plan-with-ai",
+     "text": "AI 帮我规划",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 15,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"journey-link-copy\"]",
+     "testId": "journey-link-copy",
+     "text": "复制行程链接",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "dark",
+   "count": 284,
+   "warnings": 9,
+   "kinds": {
+    "unclassified-control": 6
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "dark",
+   "count": 181,
+   "warnings": 2,
+   "kinds": {
+    "unclassified-control": 6
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v15-copilot-submit\"]",
+     "testId": "v15-copilot-submit",
+     "text": "询问 Copilot",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 10,
+     "bold": false,
+     "contrast": 3.03,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "dark",
+   "count": 259,
+   "warnings": 0,
+   "kinds": {
+    "unclassified-control": 8,
+    "control-boundary": 1
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-itinerary\"]",
+     "testId": "trips-tab-itinerary",
+     "text": "行程",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 4.36,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-stay\"]",
+     "testId": "trips-tab-stay",
+     "text": "住宿",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "control-boundary",
+     "selector": "[data-testid=\"journey-abort-submit\"]",
+     "testId": "journey-abort-submit",
+     "text": "中止这趟行程",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"calendar-export\"]",
+     "testId": "calendar-export",
+     "text": "导出日历",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "dark",
+   "count": 207,
+   "warnings": 8,
+   "kinds": {
+    "unclassified-control": 11
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Old Town Gate",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Riverside Museum",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Central Food Hall",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Tech Art Center",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Nexus River Cruise Pier",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 320,
+   "theme": "dark",
+   "count": 203,
+   "warnings": 0,
+   "kinds": {
+    "unclassified-control": 5
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "light",
+   "count": 329,
+   "warnings": 2,
+   "kinds": {
+    "unclassified-control": 7
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"hub-plan-with-ai\"]",
+     "testId": "hub-plan-with-ai",
+     "text": "AI 帮我规划",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 15,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"journey-link-copy\"]",
+     "testId": "journey-link-copy",
+     "text": "复制行程链接",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "light",
+   "count": 284,
+   "warnings": 11,
+   "kinds": {
+    "unclassified-control": 8
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"live-update-location\"]",
+     "testId": "live-update-location",
+     "text": "更新位置",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"live-report-rain\"]",
+     "testId": "live-report-rain",
+     "text": "报告降雨",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "light",
+   "count": 181,
+   "warnings": 3,
+   "kinds": {
+    "text-contrast": 1,
+    "unclassified-control": 6
+   },
+   "rows": [
+    {
+     "kind": "text-contrast",
+     "selector": "span.v8-status-pill.violet",
+     "testId": null,
+     "text": "画像上下文就绪",
+     "color": "rgb(128, 99, 215)",
+     "background": "rgb(243, 239, 255)",
+     "fontSizePx": 10,
+     "bold": true,
+     "contrast": 3.97,
+     "required": 4.5
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v15-copilot-submit\"]",
+     "testId": "v15-copilot-submit",
+     "text": "询问 Copilot",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 10,
+     "bold": false,
+     "contrast": 3.03,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "light",
+   "count": 259,
+   "warnings": 1,
+   "kinds": {
+    "unclassified-control": 9,
+    "control-boundary": 1
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-itinerary\"]",
+     "testId": "trips-tab-itinerary",
+     "text": "行程",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 4.43,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-stay\"]",
+     "testId": "trips-tab-stay",
+     "text": "住宿",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "control-boundary",
+     "selector": "[data-testid=\"journey-abort-submit\"]",
+     "testId": "journey-abort-submit",
+     "text": "中止这趟行程",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"calendar-export\"]",
+     "testId": "calendar-export",
+     "text": "导出日历",
+     "color": "rgb(10, 92, 214)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trip-day-0\"]",
+     "testId": "trip-day-0",
+     "text": "",
+     "color": "rgb(10, 102, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 11,
+     "bold": false,
+     "contrast": 4.43,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "light",
+   "count": 207,
+   "warnings": 10,
+   "kinds": {
+    "unclassified-control": 11
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Old Town Gate",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Riverside Museum",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Central Food Hall",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Tech Art Center",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Nexus River Cruise Pier",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgb(255, 255, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 13.68,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "light",
+   "count": 203,
+   "warnings": 1,
+   "kinds": {
+    "unclassified-control": 5
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(29, 29, 31)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(93, 104, 120)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "dark",
+   "count": 329,
+   "warnings": 2,
+   "kinds": {
+    "unclassified-control": 7
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"hub-plan-with-ai\"]",
+     "testId": "hub-plan-with-ai",
+     "text": "AI 帮我规划",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 15,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"journey-link-copy\"]",
+     "testId": "journey-link-copy",
+     "text": "复制行程链接",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "dark",
+   "count": 284,
+   "warnings": 9,
+   "kinds": {
+    "unclassified-control": 8
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"live-update-location\"]",
+     "testId": "live-update-location",
+     "text": "更新位置",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"live-report-rain\"]",
+     "testId": "live-report-rain",
+     "text": "报告降雨",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "dark",
+   "count": 181,
+   "warnings": 2,
+   "kinds": {
+    "unclassified-control": 6
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v15-copilot-submit\"]",
+     "testId": "v15-copilot-submit",
+     "text": "询问 Copilot",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 10,
+     "bold": false,
+     "contrast": 3.03,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "dark",
+   "count": 259,
+   "warnings": 0,
+   "kinds": {
+    "unclassified-control": 9,
+    "control-boundary": 1
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-itinerary\"]",
+     "testId": "trips-tab-itinerary",
+     "text": "行程",
+     "color": "rgb(255, 255, 255)",
+     "background": "rgb(10, 102, 255)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 4.36,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trips-tab-stay\"]",
+     "testId": "trips-tab-stay",
+     "text": "住宿",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "control-boundary",
+     "selector": "[data-testid=\"journey-abort-submit\"]",
+     "testId": "journey-abort-submit",
+     "text": "中止这趟行程",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"calendar-export\"]",
+     "testId": "calendar-export",
+     "text": "导出日历",
+     "color": "rgb(10, 132, 255)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"trip-day-0\"]",
+     "testId": "trip-day-0",
+     "text": "",
+     "color": "rgb(10, 102, 255)",
+     "background": "rgb(44, 44, 46)",
+     "fontSizePx": 11,
+     "bold": false,
+     "contrast": 4.36,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "dark",
+   "count": 207,
+   "warnings": 8,
+   "kinds": {
+    "unclassified-control": 11
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Old Town Gate",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Riverside Museum",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Central Food Hall",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Tech Art Center",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-map-stop-label\"]",
+     "testId": "v8-map-stop-label",
+     "text": "Nexus River Cruise Pier",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"map-viewport-reset\"]",
+     "testId": "map-viewport-reset",
+     "text": "",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgb(28, 28, 30)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 15.63,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-me\"]",
+     "testId": "nav-me",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  },
+  {
+   "width": 390,
+   "theme": "dark",
+   "count": 203,
+   "warnings": 0,
+   "kinds": {
+    "unclassified-control": 5
+   },
+   "rows": [
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"v8-mobile-menu\"]",
+     "testId": "v8-mobile-menu",
+     "text": "菜单",
+     "color": "rgb(245, 245, 247)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 16,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-hub\"]",
+     "testId": "nav-hub",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-trips\"]",
+     "testId": "nav-trips",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-map\"]",
+     "testId": "nav-map",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    },
+    {
+     "kind": "unclassified-control",
+     "selector": "[data-testid=\"nav-agent\"]",
+     "testId": "nav-agent",
+     "text": "",
+     "color": "rgb(174, 174, 178)",
+     "background": "rgba(0, 0, 0, 0)",
+     "fontSizePx": 13,
+     "bold": false,
+     "contrast": 0,
+     "required": 3
+    }
+   ]
+  }
+ ]
+}
