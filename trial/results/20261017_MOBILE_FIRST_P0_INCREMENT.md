@@ -203,3 +203,18 @@ AI 网关在新试用环境中配置为 `auto:cheapest`，本轮没有另发模�
 - 刷新：强制刷新后，城市输入、偏好文字和失败状态仍显示；没有自动重发搜索。浏览器只观察到这一笔地点搜索请求。
 - 结果：这轮没有进入双 POI 选择、Pocket Walk 保存或 GO。没有重试地点服务，也没有重复 AI 请求。旧的厦门成功闭环证据仍以本报告前文记录为准；本轮福州查询失败不改写那次结果。
 - 本轮没有修改产品代码或保存新截图；本节记录的是 Chrome-use 浏览器快照与网络请求观察。
+
+## 2026-10-17 21:03 Chrome-use：武汉真实咖啡地点 → Pocket Walk GO → 刷新恢复
+
+- 运行版本：PR #23 `design/revolution-mobile-first-v1`，代码 SHA `bf00dc739ef6e9b5ea6690a3416534fc8b2a995f`；隔离 worktree `citynexus-pr23-user-openable-20261017`，前端 `http://127.0.0.1:14176/revolution`，后端 `http://127.0.0.1:18205`，数据库 `backend/_revolution_hands_on_20261017_204330.db`。没有复用旧 14173 页面或数据库。
+- 前端与后端健康检查均返回 HTTP 200，`status=ok`、`database=ok`。此试玩环境显示 `ai=disabled`、`ai_state=CONFIGURED_UNVERIFIED`。
+- Chrome-use 在 390×844 视口操作：开始探索后，`POST /travelers` 与 `POST /journeys` 均返回 201；隔离库中是一条 DRAFT Journey。
+- 对“武汉市”的 Nominatim 请求仅发出一次，CityNexus 收到地名服务 `ConnectTimeout`，没有结果；没有重试。之后在页面明确选用公开 OSM 地图链接定位到武汉 `30.5928, 114.3055`，页面说明搜索会将区域与类别发送给 Photon。
+- 选择“咖啡馆”并只发起一次 Photon 地点搜索。页面显示 3 个公开候选：A Giraffe Coffee&Cacao（约 1.5 公里）、Puzzle Coffee（约 1.3 公里）、Lilly Cafe（约 1.5 公里）；均显示 OSM 来源。隔离库回执为 `photon / bootstrap_city_discovery / SUCCESS` 1 条。
+- 选择 A Giraffe Coffee&Cacao 为第一站、Puzzle Coffee 为第二站。`POST /bootstrap-discovery/pocket-walk` 返回 200；数据库有 2 个 `photon / SAVED` 站点。
+- 点击“开始散步”，`POST /bootstrap-shortlist/pocket-walk/go` 返回 200。页面进入“正前往第一站”。
+- 强制刷新后，服务端恢复两站路线和“我完成了第一站”进度控件；readiness 与 shortlist 均返回 200。没有重发地点查询，也没有把 Journey 状态改成 ACTIVE。
+- 本轮验证结论：`REAL_PHOTON_RESULTS=3`、`PRIVATE_POCKET_WALK_SAVE=PASS`、`POCKET_WALK_GO=PASS`、`GO_REFRESH_RESTORE=PASS`。这是隔离 Chrome-use 会话的实测，用户本人尚未打开验证（`USER_VERIFIED=NOT_YET`）。没有调用导航、预订或付款。
+- AI / Hermes 仍是下一阶段：本试玩健康状态为 `ai=disabled`；隔离库没有签名 ACTIVE Journey 或 Hermes AgentRun。此前一次 DRAFT AI 请求得到 HTTP 502，本轮没有重试，也没有宣称 AI 工具轨迹已落库。
+
+可直接打开当前页面：`http://127.0.0.1:14176/revolution`。启动器终端仍运行 `trial/try_revolution.py`；本机服务保持开启。
