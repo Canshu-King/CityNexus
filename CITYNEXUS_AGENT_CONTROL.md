@@ -1,4 +1,23 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 494abfd7｜Issue #31 第三帖：面板那句"没有"不再说机器话（尖 4dd57ff92f）
+
+上一帖那条规则（正文不铺内部机器码）我只做到一半：码从表格里拿掉了，空态那句话本身写的却是
+「暂无真实 AgentRun」——第一次打开的人没见过的词坐在句子中间，跟落地门 CODES_ON_SCREEN 拦的是
+同一类东西，只是低一档。
+
+屏上现在写「暂无真实运行」，英文 "No real AI run yet"，解释那一句原样留在下面；机器名回到它该在
+的地方：`data-*` 与合上的「技术详情」。词在这两处：`frontend/src/i18n/agentWorkFeedCopy.ts:98`
+与教程图上的黄条 `frontend/e2e/qoder31-first-trip-guide.spec.ts:214`。
+
+这条不会悄悄退回去：闸断言的是屏上真的写出来的字，不是 `data-` 属性——按属性判等于让页面自己
+说没说。判语在 `frontend/e2e/qoder31-signed-session.spec.ts:447`。
+
+读数（现算）：整条 config 九臂 9 passed；typecheck 零输出；`vite build` 退出码零。
+八张图由带着这次改动的同一次运行重出，其中三张（第 ③⑥⑧ 张）与上一版原图逐字节相同——
+按 `git status` 数出来的，不是估的。远端尖 `git ls-remote` 现读回 4dd57ff92f 开头那一枚。
+PR #32 另发一帖（按 id 回读尾行，token 未进正文）。
+
+
 ### 494abfd7｜Issue #31 补帖：八张教程图自己指出的三处屏上缺陷（同一枝，尖 5ad01b507a）
 
 把自己当第一次用的人，把标注版逐张看过一遍之后，屏上有三处不对。三条都是这一枝自己的代码，
