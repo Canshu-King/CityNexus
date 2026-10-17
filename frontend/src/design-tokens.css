@@ -1533,7 +1533,7 @@ dd.trial-city-warning {
   min-height: 30px;
   display: inline-flex;
   align-items: center;
-  color: var(--v8-accent);
+  color: var(--cn-accent-text);
   font-weight: 700;
   cursor: pointer;
 }
