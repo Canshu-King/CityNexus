@@ -107,7 +107,7 @@ export function GoalDraftEditor({ artifact, disabled, onSave }: {
     </fieldset>)}
     <div className="rev-goal-draft-actions">
       <button type="button" disabled={disabled || saving} onClick={() => void save()}>
-        {saving ? "保存中…" : dirty ? "保存我的修改" : "检查草案保存状态"}
+        {saving ? "保存中…" : dirty ? "保存草案" : "检查草案保存状态"}
       </button>
       <p role={saveFailed ? "alert" : "status"} aria-live="polite">
         {message || (disabled ? "Agent 正在研究，等这一轮结束即可编辑保存。"
