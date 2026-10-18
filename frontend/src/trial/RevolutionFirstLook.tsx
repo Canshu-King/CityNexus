@@ -35,10 +35,21 @@ type TripPlanningMode = "balanced" | "budget" | "explore" | "strict_schedule";
 type TripEnergy = "easy" | "steady" | "full";
 
 const TRIP_INTERESTS = [
+  { value: "local_food", label: "当地美食" },
+  { value: "night_market", label: "夜市小吃" },
+  { value: "old_town", label: "古城老街" },
+  { value: "heritage", label: "人文古迹" },
+  { value: "nature", label: "山野自然" },
+  { value: "coast", label: "海边水岸" },
+  { value: "architecture", label: "建筑文化" },
+  { value: "nightlife", label: "夜间活动" },
+  { value: "photography", label: "摄影打卡" },
+  { value: "family", label: "亲子活动" },
+  { value: "shopping", label: "逛街购物" },
   { value: "park/garden", label: "公园绿地" },
   { value: "cafe", label: "咖啡馆" },
   { value: "museum/gallery", label: "博物馆艺术" },
-  { value: "library", label: "安静阅读" },
+  { value: "library", label: "图书馆" },
 ] as const;
 
 const TRIP_ENERGY_LABELS: Record<TripEnergy, string> = {
@@ -359,7 +370,7 @@ export function RevolutionFirstLook() {
   const [budgetYuan, setBudgetYuan] = useState("1000");
   const [planningMode, setPlanningMode] = useState<TripPlanningMode>("balanced");
   const [tripGoal, setTripGoal] = useState("");
-  const [tripInterests, setTripInterests] = useState<string[]>(["park/garden", "cafe"]);
+  const [tripInterests, setTripInterests] = useState<string[]>([]);
   const [tripEnergy, setTripEnergy] = useState<TripEnergy>("easy");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
   const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
