@@ -61,3 +61,48 @@ def test_goal_tools_reach_the_compat_chat_completions_payload():
     finally:
         object.__setattr__(settings,"hermes_api_url",previous[0])
         object.__setattr__(settings,"hermes_api_key",previous[1])
+
+
+def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, monkeypatch):
+    """Provider zero is not a global prohibition on alternative geocoders."""
+    session, journey, _ = goal_scope
+    requests = []
+    def respond(request):
+        requests.append(str(request.url.path))
+        if str(request.url.path).endswith("/api/"):
+            return httpx.Response(200, json={"features": []})
+        if str(request.url.path).endswith("/search"):
+            return httpx.Response(200, json=[{
+                "lat": "26.5", "lon": "116.7", "osm_type": "way", "osm_id": 987,
+                "display_name": "TEST_FIXTURE 古城, 福建省, 中国", "type": "historic",
+            }])
+        return httpx.Response(404)
+    real_client = httpx.Client
+    monkeypatch.setattr(goal_artifacts.httpx, "Client",
+        lambda **kwargs: real_client(transport=httpx.MockTransport(respond), **kwargs))
+    previous = (settings.real_city_enabled, settings.real_city_mode)
+    object.__setattr__(settings, "real_city_enabled", True)
+    object.__setattr__(settings, "real_city_mode", "live")
+    try:
+        task = {}
+        zero = goal_artifacts.discover_goal_places(
+            session, journey, task, query="TEST_FIXTURE 古城", source="photon")
+        found = goal_artifacts.discover_goal_places(
+            session, journey, task, query="TEST_FIXTURE 古城", source="nominatim")
+        duplicate = goal_artifacts.discover_goal_places(
+            session, journey, task, query="TEST_FIXTURE 古城", source="nominatim")
+        session.commit()
+        assert zero["status"] == "NO_RESULTS"
+        assert zero["provider"] == "photon"
+        assert found["status"] == "RESULTS"
+        assert found["provider"] == "nominatim"
+        assert found["places"][0]["source_url"] == "https://www.openstreetmap.org/way/987"
+        assert found["places"][0]["opening_status"] == "UNKNOWN"
+        assert duplicate["status"] == "QUERY_ALREADY_ATTEMPTED"
+        assert requests == ["/api/", "/search"]
+        calls = session.scalars(select(ProviderCall).where(
+            ProviderCall.operation == "goal_place_discovery")).all()
+        assert {call.provider_key for call in calls} == {"photon", "nominatim"}
+    finally:
+        object.__setattr__(settings, "real_city_enabled", previous[0])
+        object.__setattr__(settings, "real_city_mode", previous[1])
