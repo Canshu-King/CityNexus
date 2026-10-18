@@ -51,8 +51,10 @@ EXPECT = {
     "itinerary.emptyReadingPlaces": ("Reading back from the server how many places this city holds…",
                                      "正在向服务器回读这座城有多少地点…"),
     "itinerary.lengthUnknown": ("length unknown", "天数未知"),
-    "itinerary.dayByDay": ("Day by day. Confirmed bookings are marked as protected.",
-                           "逐日安排。已确认的预订会被标记为受保护。"),
+    # Moved with the copy on 2026-10-19: the owner asked for the reassurance sentence on this lede
+    # to go, so the badge on each stop is the only writer of "protected" again. The pin follows the
+    # screen, not the other way round -- and the change is named in the PR #35 receipt.
+    "itinerary.dayByDay": ("Day by day.", "逐日安排。"),
 }
 bad = [(key, en.get(key), zh.get(key)) for key, (a, b) in EXPECT.items()
        if en.get(key) != a or zh.get(key) != b]

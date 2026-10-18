@@ -4905,11 +4905,7 @@ function Bookings({
           <span className="v8-kicker">
             {t("bookings.importBooking")}
           </span>
-          <p className="v8-lede">
-            {zh
-              ? "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
-              : "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirmation text and screenshots go through the journey inbox."}
-          </p>
+          <p className="v8-lede">{t("bookings.importNote")}</p>
           <details className="v8-advanced" data-testid="bookings-advanced">
             <summary>
               {t("bookings.advancedStructuredData")}
