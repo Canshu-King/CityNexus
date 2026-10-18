@@ -635,6 +635,17 @@ def ensure_schema(target_engine: Engine = engine) -> dict[str, object]:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN aborted_at TEXT")
             if "abort_reason" not in journey_columns:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN abort_reason TEXT")
+            # Reform 2026-10-18, Guardian: an additive link from a candidate
+            # proposal to the recovery reality it was generated in.  A proposal
+            # written before this column existed simply has no epoch.
+            proposal_columns = {
+                row[1]
+                for row in connection.exec_driver_sql("PRAGMA table_info(replan_proposals)")
+            }
+            if proposal_columns and "recovery_epoch_id" not in proposal_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE replan_proposals ADD COLUMN recovery_epoch_id TEXT"
+                )
             _migrate_reservation_identity(connection)
             # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
             # to what a role may do instead of inventing one per screen.

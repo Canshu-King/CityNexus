@@ -377,8 +377,54 @@ CREATE TABLE IF NOT EXISTS replan_proposals (
     explanation_json TEXT NOT NULL,
     created_at TEXT NOT NULL,
     decided_at TEXT,
+    recovery_epoch_id TEXT,
     CHECK (base_plan_version_id <> proposed_plan_version_id)
 );
+
+CREATE TABLE IF NOT EXISTS recovery_epochs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    generation INTEGER NOT NULL,
+    active_plan_version_id_at_open TEXT,
+    material_world_epoch_at_open TEXT,
+    recovery_reality_fingerprint TEXT NOT NULL,
+    triggering_event_ids_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'OPEN' CHECK (status IN ('OPEN','SUPERSEDED','COMMITTED','ABANDONED')),
+    opened_at TEXT NOT NULL,
+    closed_at TEXT,
+    close_reason TEXT,
+    superseded_by_recovery_epoch_id TEXT,
+    UNIQUE (journey_id, generation)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open
+    ON recovery_epochs(journey_id) WHERE status = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status
+    ON recovery_epochs(journey_id, status, generation);
+
+CREATE TABLE IF NOT EXISTS collective_authority_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+    plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    authority_mode TEXT NOT NULL,
+    decision_epoch TEXT NOT NULL,
+    material_world_epoch TEXT NOT NULL,
+    candidate_surface_fingerprint TEXT NOT NULL,
+    source_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    required_member_ids_json TEXT NOT NULL DEFAULT '[]',
+    response_audit_ids_json TEXT NOT NULL DEFAULT '[]',
+    principal_actor_ids_json TEXT NOT NULL DEFAULT '[]',
+    classification TEXT NOT NULL,
+    issued_at TEXT NOT NULL,
+    invalidated_at TEXT,
+    invalidation_code TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_collective_authority_receipts_target
+    ON collective_authority_receipts(journey_id, proposal_id, plan_version_id);
 
 CREATE TABLE IF NOT EXISTS recommendations (
     id TEXT PRIMARY KEY,

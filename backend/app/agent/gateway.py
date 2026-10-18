@@ -723,6 +723,21 @@ class AgentToolGateway:
                 "next_legal_path": "select or start a plan before watching reality",
             }
         result = run_live_context_watch(self.session, journey)
+        epoch_payload = None
+        if result.get("material_conflicts") or result.get("created_recovery_event_ids"):
+            # A material conflict is a changed reality: bind the recovery epoch
+            # before any proposal generated against the old world can survive.
+            from app.recovery_epoch import ensure_recovery_epoch
+
+            epoch = ensure_recovery_epoch(self.session, journey)
+            self.session.flush()
+            epoch_payload = {
+                "id": epoch.id,
+                "generation": int(epoch.generation),
+                "status": epoch.status,
+                "recovery_reality_fingerprint": epoch.recovery_reality_fingerprint,
+                "opened_at": epoch.opened_at,
+            }
         self.session.commit()
         stream = guardian_stream(
             self.session,
@@ -734,6 +749,7 @@ class AgentToolGateway:
             **base,
             "status": "REFRESHED",
             "watch": result,
+            "recovery_epoch": epoch_payload,
             "stream": stream["stream"],
             "counts": stream["counts"],
         }

@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 
 from app.core import config
 from app.db.models import Event, GuardianRun, ImpactAssessment, Journey, JourneyMission
+from app.recovery_epoch import current_open_recovery_epoch
 
 _OPEN_STATUSES = ("DETECTED", "ACKNOWLEDGED", "ACTIVE", "OPEN")
 _OBSERVATION_KEYS = (
@@ -93,6 +94,24 @@ def _impact(row: ImpactAssessment | None) -> dict[str, Any] | None:
     }
 
 
+def recovery_epoch_payload(epoch: Any) -> dict[str, Any] | None:
+    """The current open recovery reality, or None when no incident opened one."""
+
+    if epoch is None:
+        return None
+    return {
+        "id": epoch.id,
+        "generation": int(epoch.generation),
+        "status": epoch.status,
+        "recovery_reality_fingerprint": epoch.recovery_reality_fingerprint,
+        "active_plan_version_id_at_open": epoch.active_plan_version_id_at_open,
+        "triggering_event_ids": _load_list(epoch.triggering_event_ids_json),
+        "opened_at": epoch.opened_at,
+        "closed_at": epoch.closed_at,
+        "close_reason": epoch.close_reason,
+    }
+
+
 def _action(row: GuardianRun | None) -> dict[str, Any] | None:
     if row is None:
         return None
@@ -148,6 +167,9 @@ def guardian_stream(
             "enabled": bool(config.settings.guardian_autorun),
             "last_observed_at": events[0].detected_at if events else None,
         },
+        "recovery_epoch": recovery_epoch_payload(
+            current_open_recovery_epoch(session, journey.id)
+        ),
     }
     if not events and not runs:
         return {

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -828,6 +828,83 @@ class ReplanProposal(Base):
     explanation_json: Mapped[str] = mapped_column(Text)
     created_at: Mapped[str] = mapped_column(String)
     decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    # Reform 2026-10-18, Guardian: a proposal belongs to the recovery reality it
+    # was generated in.  Superseding that reality retires the still-presented
+    # candidates instead of letting them survive a changed world.
+    recovery_epoch_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+class RecoveryEpoch(Base):
+    """Server-owned recovery reality binding for one Journey."""
+
+    __tablename__ = "recovery_epochs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    generation: Mapped[int] = mapped_column(Integer)
+    active_plan_version_id_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_reality_fingerprint: Mapped[str] = mapped_column(String)
+    triggering_event_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    status: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    opened_at: Mapped[str] = mapped_column(String)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    close_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    superseded_by_recovery_epoch_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "generation"),
+        Index(
+            "ux_recovery_epochs_one_open",
+            "journey_id",
+            unique=True,
+            sqlite_where=text("status = 'OPEN'"),
+        ),
+        Index("idx_recovery_epochs_journey_status", "journey_id", "status", "generation"),
+    )
+
+
+class CollectiveAuthorityReceipt(Base):
+    """Server-issued proof that one exact collective future is executable.
+
+    The receipt is deliberately separate from a planning proposal, member
+    response, or user approval.  Those rows are evidence used to issue it;
+    this row is the durable authority boundary consumed by a mutation.
+    """
+
+    __tablename__ = "collective_authority_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    proposal_id: Mapped[str] = mapped_column(ForeignKey("replan_proposals.id", ondelete="CASCADE"))
+    plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="CASCADE"))
+    authority_mode: Mapped[str] = mapped_column(String)
+    decision_epoch: Mapped[str] = mapped_column(String)
+    material_world_epoch: Mapped[str] = mapped_column(String)
+    candidate_surface_fingerprint: Mapped[str] = mapped_column(String)
+    source_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    source_agent_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+    required_member_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    response_audit_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    principal_actor_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    classification: Mapped[str] = mapped_column(String)
+    issued_at: Mapped[str] = mapped_column(String)
+    invalidated_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    invalidation_code: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        Index(
+            "idx_collective_authority_receipts_target",
+            "journey_id",
+            "proposal_id",
+            "plan_version_id",
+        ),
+    )
 
 
 class JourneyTripContext(Base):
