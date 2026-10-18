@@ -1,4 +1,68 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第九·十笔：行程的名字按读它的人生成，行上再给出这一趟自己的时刻
+
+Issue #33 主人新增令「前端 ui 改简洁，删掉不必要的车轱辘、防御性与不必要的声明」这一路的第九、第十笔。
+两笔都从实拍里读出来，不是从字典里找出来的。
+
+**第九笔：一个中文名，从写进库到读出来到导出去，是同一串字。**
+壳以前自己拼 `<城市> · journey` 当行程名，所以用中文界面的人，名下列表挂着「北京 · journey」，
+而 Today 的块头——它从城市码推名字——写的是「北京之旅」。同一趟行程，两个屏，两个名字。
+现在建行程那一扇门用字典里已有的 `hub.tripToCity`（Today 渲染的就是它），
+并且两屏共用同一个推导函数：`frontend/src/app/V8Experience.tsx:1467` 与 `frontend/src/app/V8Experience.tsx:5376`。
+Copilot 工具条那行前缀「行程 · / Journey ·」与标题本身重复，键在两臂同删、唯一调用点改掉：
+`frontend/src/features/agent/AgentComposer.tsx:170`。
+那颗药丸原先说的是我们内部的名字（「画像上下文已激活」），现在回答这一格唯一该回答的问题：
+`frontend/src/i18n/LocaleContext.tsx:2102`。
+
+**第十笔：同名成了常态之后，行上得有自己的时刻。**
+第九笔自己的证据就摆着这件事：第⑨张里两趟都叫「北京之旅」。列表门本来就答每一趟的 `start_at`，
+所以那一行把这一刻写在名字下面，用回收站那一行已有的两枚 token，不新增色值、不新增日期格式化器：
+`frontend/src/features/trip/MyTripsEntry.tsx:121`、`frontend/src/features/trip/myTripsCopy.ts:37`。
+措辞是「起」不是「出发」——向导那一格问的是抵达锚，写成出发就是这一支在替人编事实。
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 第⑨张屏上前后（含行上那条时刻） `_issue33_pass9_readings_0952.txt:2` | 逐屏与两屏文案前后 `_issue33_pass9_readings_0952.txt:3` |
+| 手机套两笔各 13 passed、1 skipped 的口径 `_issue33_pass9_readings_0952.txt:5` | 走查臂六屏读数与构建、门内判语 `_issue33_pass9_readings_0952.txt:6` `_issue33_pass9_readings_0952.txt:7` |
+
+| 钉住它的断言 | 坐标（行号现读） |
+| --- | --- |
+| 屏上：名单那一行的名字 = Today 块头，且不许有机器后缀 `frontend/e2e/qoder31-signed-session.spec.ts:753` | 屏上：行上那条时刻非空、且不是服务器的 ISO 串 `frontend/e2e/qoder31-signed-session.spec.ts:734` |
+| 门后：中文名过建门、过列表门逐字不变 `backend/tests/test_issue33_journey_title_survives_verbatim_r1.py:93` | 门后：导出头是 ASCII，中文名百分号编码在前、durable id 在后 `backend/tests/test_issue33_journey_title_survives_verbatim_r1.py:112` |
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线两笔 | 第九笔 `refs/heads/mirror/integration-frontend-apple-pass1` = d4c189bdc791daf92280e472de36b93a1f878089；第十笔 = 9431b13bbffd164f1d4226ae9d1228adb4d82085（两枚均 `git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地门 | 两笔各自 `ff=True behind=0 intersection=0`、`landed=true`、`both_routes_agree=true`、http_status=200；无 force-push、未用 --allow-ungated |
+| 落地回执 | 已发布、逐字节回读相等：第九笔 blob `1327066585e4c220ffad013b2f3ce8094daf031e`，第十笔 blob `33325e6ca2a3756361fe161fd838feea98522914` |
+
+两件限度写在这里，不等别人问：
+第⑨张那两趟是同一个默认窗口建出来的，名字与时刻逐字相同，所以那张图演示不到"分开两行"的效果，能证的是断言 `_issue33_pass9_readings_0952.txt:8`；
+这一笔改的是新建那一扇门写进库的名字，已经建好的行程库里存什么就读什么，不替旧数据改名——那是迁移，不是文案 `_issue33_pass9_readings_0952.txt:9`。
+
+一句自记：上一笔删的是"屏幕在跟自己确认机制"的话，这一笔删的是"两个屏各叫各的名字"——
+同一个毛病：写的人没站在读的人那一侧。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 落地这一侧没回音·修复地图停靠点显名·修复地图停靠点显名-message-dismiss-touch-floor-r1（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round24_040052.json:2）
+- 枝：refs/heads/review/修复地图停靠点显名-message-dismiss-touch-floor-r1｜驱动那侧的原话逐字：REF_UNRESOLVED rc=0 out= err=
+  这不是门把你的活判拒了：远端 refs/heads 里取不到这一枚枝（本地有、origin 上没有 ⇒ 推到 origin 才谈得上落地）。
+  出处（这一拍现读）：live_checks/_batch_land_round24_040052.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：修复地图停靠点显名
+
+该做的：远端取不到枝的那些：把那一枚枝推到 origin 的 refs/heads 下就行，不必改内容。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：修复地图停靠点显名（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第八笔：我自己带的一笔红，量出来了也修掉了——Q1 那扇续期门从没写进契约
 
 `backend/tests/test_contract.py:68` 比的是**运行时路由集合与契约路径集合整集相等**。我在 Issue #33 Q1 加的 `POST /api/v1/travelers/session/refresh` `backend/app/main.py:2634` 只写了路由，没写契约 —— 所以那支测试**从 2ed81d01fe 那天落地起就是红的**。落地门整套只"收集"不"跑"，所以这道门当时放过了它；这一笔把它补上，并说清是谁的责任。
