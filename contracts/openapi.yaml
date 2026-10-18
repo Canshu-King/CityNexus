@@ -193,6 +193,38 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/session/refresh:
+    post:
+      operationId: refreshTravelerSession
+      # Issue #33 Q1: slide the session forward without asking the person to do anything. The door
+      # takes no identity parameter at all -- it re-signs for whoever the presented credential
+      # already proves, which is why a body naming a traveller is refused before anything is signed.
+      responses:
+        '200':
+          description: The same traveller, a later window
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerSessionRefresh'}
+        '400':
+          description: >-
+            The body claimed an identity (`traveler_id` / `sub` / `id`). A refreshed session is
+            signed for the credential on the request, not for an id handed in a body
+            (`error.reason_code` = TRAVELER_NOT_PRINCIPAL).
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '401':
+          description: >-
+            Same four named refusals as `GET /travelers/session`: missing / invalid / expired
+            credentials, or a principal that no longer exists.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '503':
+          description: The verifier has no usable secret (TRAVELER_AUTH_NOT_CONFIGURED).
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /travelers/{traveler_id}:
     parameters:
       - {$ref: '#/components/parameters/TravelerId'}
@@ -2992,6 +3024,21 @@ components:
         expires_at:
           type: integer
           description: Unix seconds at which the presented token stops being accepted
+    TravelerSessionRefresh:
+      # Issue #33 Q1: the principal answer plus the credential it was renewed into.
+      # `renewed_from_expires_at` is the window the *presented* token had, so a client can tell a
+      # renewal from a re-login and keep the person where they were instead of bouncing them to the
+      # wizard.  `Cache-Control: private, no-store`.
+      allOf:
+        - {$ref: '#/components/schemas/TravelerSession'}
+        - type: object
+          required: [session_state, access_token, renewed_from_expires_at]
+          properties:
+            session_state: {type: string, const: SIGNED}
+            access_token: {type: string, description: "the freshly signed credential for this same traveller"}
+            renewed_from_expires_at:
+              type: [integer, 'null']
+              description: unix seconds the presented credential was due; null when it carried none
     ErrorEnvelope:
       type: object
       required: [error]
