@@ -58,6 +58,7 @@ FILES: tuple[str, ...] = (
     "backend/app/agent/tool_catalog.py",
     "backend/app/execution/launch_origin.py",
     "backend/app/route_session_operations.py",
+    "backend/app/classroom_mode.py",
     "backend/app/integrations/web/public_region.py",
     "backend/app/integrations/web/source_discovery.py",
     "backend/app/integrations/web/research_service.py",
@@ -68,6 +69,14 @@ def _git(*args: str) -> str:
     return subprocess.run(
         ["git", *args], check=True, capture_output=True, text=True, encoding="utf-8"
     ).stdout.strip()
+
+
+def _arms(test_path: str) -> int:
+    """Count the named arms in a proof file, so the doc never states a typed number."""
+
+    root = Path(__file__).resolve().parents[2]
+    body = (root / test_path).read_text(encoding="utf-8")
+    return len([line for line in body.splitlines() if line.startswith("def test_")])
 
 
 def _canonical(value: object) -> str:
@@ -237,6 +246,32 @@ def render_markdown(payload: dict) -> str:
         "5 arms in `tests/test_reform_route_mission_adapter_r1.py`; the read projection never",
         "writes an operation row, and a Mission from another Journey is a named 404.",
         "",
+        "### Classroom mode (`backend/app/classroom_mode.py`)",
+        "",
+        "One deployment switch, `CITYNEXUS_CLASSROOM_MODE=true`, default off. With it on, a",
+        "provider that cannot answer returns a labelled estimate instead of a dead end:",
+        "",
+        "- `discover_source_leads` / `research_place_sources` answer `status=ESTIMATED`,",
+        "  `authority=MODEL_ESTIMATE` and `estimate.angles` (query shapes to try), with",
+        "  zero leads: no URL is invented and no `WebObservation` row is written.",
+        "- `mission_route_snapshot` on an unacquired edge answers",
+        "  `eta.status=ESTIMATED_CLASSROOM` with `duration_min`, `basis` and",
+        "  `authority_eligible=false`.",
+        "- the venue watch on unqualified opening hours adds an `estimate` block with a",
+        "  category-typical window and `planned_local_interval_fit`; `status` stays `UNKNOWN`.",
+        "- `estimate_place_facts` with no verified peers fills `opening_hours` from the same",
+        "  category table, still `authority_eligible=false`.",
+        "- the on-demand route capture stops refusing an unmeasured pair, so the stored row",
+        "  carries `provenance=SYNTHETIC_DEFAULT`.",
+        "- the system prompt gains one sentence naming `ESTIMATED`/`MODEL_ESTIMATE`, and only",
+        "  while the switch is on.",
+        "",
+        "What the switch does not move: `_hard_leg_minutes` still rejects a `SYNTHETIC_DEFAULT`",
+        "fact with `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`; estimates never reach",
+        "`opening_hours_json` or `cost_evidence`; no Place, coordinate or cost figure is created.",
+        f"{_arms('backend/tests/test_reform_classroom_mode_r1.py')} arms in",
+        "`backend/tests/test_reform_classroom_mode_r1.py`, each paired strict/classroom.",
+        "",
         "### Guardian (`backend/app/agent/guardian_stream.py`, `backend/app/live_context_watch.py`)",
         "",
         "- `read_guardian_stream` projects `Event -> ImpactAssessment -> GuardianRun` as",
@@ -246,8 +281,10 @@ def render_markdown(payload: dict) -> str:
         "  `CITYNEXUS_GUARDIAN_AUTORUN` switch is on and the Journey has an active plan;",
         "  otherwise it names `WATCH_NOT_ENABLED` / `NO_ACTIVE_PLAN`. A provider is never called",
         "  while monitoring is off.",
-        "- 10 ported watch arms pass unchanged; 6 stream arms cover the projection and both",
-        "  refusals.",
+        f"- the ported watch arms still pass ({_arms('backend/tests/test_live_context_watch.py')}"
+        " of them); the classroom estimate is additive and off by default. "
+        f"{_arms('backend/tests/test_reform_guardian_stream_adapter_r1.py')} stream arms "
+        "cover the projection and both refusals.",
         "",
         "### Recovery epoch (`backend/app/recovery_epoch.py`)",
         "",
