@@ -474,8 +474,23 @@ class JourneyAnchor(BaseModel):
 class TravelBriefRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     goal: str = Field(default="", max_length=1000)
-    interests: list[Literal["park/garden", "cafe", "museum/gallery", "library"]] = Field(default_factory=list, max_length=4)
+    # Interests are traveler language, not a provider's four-category search enum.
+    # Keep unsupported interests as planning intent; they must never silently
+    # become verified provider tags or executable place-search filters.
+    interests: list[str] = Field(default_factory=list, max_length=16)
     energy: Literal["easy", "steady", "full"] = "steady"
+
+    @field_validator("interests")
+    @classmethod
+    def normalize_interests(cls, values: list[str]) -> list[str]:
+        normalized: list[str] = []
+        for value in values:
+            item = value.strip()
+            if not item or len(item) > 60 or any(ord(char) < 32 for char in item):
+                raise ValueError("Each travel interest must be 1–60 printable characters")
+            if item not in normalized:
+                normalized.append(item)
+        return normalized
 
 
 class JourneyCreate(BaseModel):
