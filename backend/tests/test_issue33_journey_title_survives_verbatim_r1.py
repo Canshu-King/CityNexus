@@ -90,6 +90,25 @@ def test_the_list_door_repeats_the_words_it_was_given_on_both_names(monkeypatch)
     assert rows[latin["id"]]["title"] == LATIN_TITLE, rows.get(latin["id"])
 
 
+def test_the_list_door_carries_the_instant_a_row_is_drawn_from(monkeypatch) -> None:
+    """Pass 10 put the trip's own start instant on its row in 我的行程.
+
+    That is only honest if the list door sends the instant the create door was given -- not a
+    re-based one, not the device's guess.  The row formats whatever arrives here, so this is the
+    far end of that line on screen.
+    """
+    traveler_id, token = _signed_traveler(monkeypatch)
+    created = _create_journey(traveler_id, token, CJK_TITLE)
+    answer = client.get(
+        "/api/v1/journeys", headers={"Authorization": "Bearer " + token}
+    )
+    assert answer.status_code == 200, answer.text
+    rows = {row["id"]: row for row in answer.json()}
+    row = rows[created["id"]]
+    assert row["start_at"] == created["start_at"], (row, created)
+    assert row["start_at"].startswith("2026-11-01"), row["start_at"]
+
+
 def test_the_calendar_header_carries_the_name_without_inventing_an_ascii_one() -> None:
     header = content_disposition(CJK_TITLE, "journey-under-test")
     assert header.isascii(), "HTTP 头不能带非 ASCII 字节：" + repr(header)
