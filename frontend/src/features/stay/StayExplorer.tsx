@@ -76,8 +76,8 @@ export function StayExplorer({
           <b>{t("stay.noStayCandidatesYet")}</b>
           <p>
             {zh
-              ? "我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。"
-              : "We have no real accommodation data yet, so we will not show you an invented price card. Choose your plan first, then come back to search stays."}
+              ? "还没有真实住宿数据。先选好行程，再回来搜住宿。"
+              : "No real accommodation data yet. Choose your plan first, then come back to search stays."}
           </p>
           {/* ORD-0511: one press makes the real call. Until it has been made this screen offers no
               "定下来" control at all -- there is nothing to confirm, and a button that pretended
@@ -123,8 +123,8 @@ export function StayExplorer({
           {reloadMissing ? (
             <p role="alert" className="v8-muted" data-testid="stay-reload-absent">
               {zh
-                ? "这一轮服务器答完了，但这一屏没有从外层拿到重新读取的能力，所以卡片不会出现在这里——这一句是本屏自己报的缺，不是服务器的答复。"
-                : "This run was answered, but this screen was not handed a way to re-read, so the cards cannot appear here -- this line is the screen reporting its own missing capability, not the server's answer."}
+                ? "这一轮服务器答完了，但这一屏没拿到重新读取的能力，所以卡片不会出现在这里。"
+                : "This run was answered, but this screen was not handed a way to re-read, so the cards cannot appear here."}
             </p>
           ) : null}
           {/* ORD-0468: the ladder keeps its own name here instead of going with the missing cards. */}
