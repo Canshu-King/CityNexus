@@ -26,6 +26,12 @@ export function RevolutionMobileNav({ active, onSelect, hasSavedWalk }: Props) {
     window.addEventListener("citynexus:open-goal-task", open);
     return () => window.removeEventListener("citynexus:open-goal-task", open);
   }, []);
+  // Mission canvas can expand the real, authenticated map without adding a sixth tab.
+  useEffect(() => {
+    const openMap = () => setPanel("map");
+    window.addEventListener("citynexus:open-map-workspace", openMap);
+    return () => window.removeEventListener("citynexus:open-map-workspace", openMap);
+  }, []);
   return <>
     <nav className="rev-mobile-bottom-nav rev-workspace-nav" aria-label="底部导航" data-testid="rev-mobile-bottom-nav">
       {tabs.map(({ key, label, icon: Icon }) => {
