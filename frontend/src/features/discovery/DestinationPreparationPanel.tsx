@@ -23,7 +23,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { deviceReadout } from "../../lib/failureAttribution";
-import { englishCountNoun } from "../../lib/plural";
 import { PrepAbandonSurvey } from "./PrepAbandonSurvey";
 import { failureSentence, nameTheFailure } from "./prepFailureCopy";
 import { STOP_ACTION_KEY, SURVEY_COPY, appendSurveyLog } from "./prepAbandonSurveyCopy";
@@ -190,37 +189,32 @@ export function DestinationPreparationPanel({
       case "CATALOG_CURRENT":
         return {
           title: t("discovery.thisDestinationIsReady"),
-          body: zh
-            ? "服务器说这座城需要的事实都在，而且是新的，可以直接规划。"
-            : "The server says the facts this city needs are present and current, so planning can start.",
+          body: t("prep.current"),
         };
       case "COVERAGE_INCOMPLETE":
         return {
           title: t("discovery.thisDestinationHasNotBeenPrepared"),
-          body: zh
-            ? `服务器说还缺 ${missing.length} 类事实（${missing.join("、")}），所以现在直接规划会缺依据。可以先准备。`
-            : `The server reports ${missing.length} ${englishCountNoun(missing.length, "category")} missing (${missing.join(", ")}), so planning now would lack evidence. You can prepare it first.`,
+          body: t("prep.missing", {
+            n: missing.length,
+            list: missing.join(zh ? "、" : ", "),
+          }),
         };
       case "CATALOG_STALE":
         return {
           title: t("discovery.thisDestinationSFactsHaveAged"),
-          body: zh
-            ? "服务器说需要的事实都在，但已经不新了。直接规划会用到过季的资料，建议先刷新。"
-            : "The server says nothing is missing but what it holds has aged; planning would use last season's facts. Refreshing first is the honest route.",
+          body: t("prep.stale"),
         };
       case "DESTINATION_AMBIGUOUS":
         return {
           title: t("discovery.thatNameDoesNotNameOnePlace"),
-          body: zh
-            ? `服务器说「${capability.query}」能对上不止一个候选，它没有替你选。请从下面挑一个。`
-            : `The server says "${capability.query}" matches more than one candidate and did not choose for you. Pick one below.`,
+          body: t("prep.ambiguous", { query: capability.query }),
         };
       case "NO_CANONICAL_IDENTITY":
         return {
           title: t("discovery.thisDestinationCannotBeNamedFromATraceableSource"),
-          body: zh
-            ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`
-            : `The server says "${capability.pending_destination_label ?? capability.query}" cannot be resolved to a destination from any traceable source. This is not a network problem: the server just answered. Try another spelling, or choose another place.`,
+          body: t("prep.unnamed", {
+            label: capability.pending_destination_label ?? capability.query,
+          }),
         };
       case "PROVIDER_RATE_LIMITED":
       case "PROVIDER_TIMEOUT":
@@ -229,9 +223,7 @@ export function DestinationPreparationPanel({
       case "CATALOG_PREPARING":
         return {
           title: t("discovery.aProviderCouldNotAnswerThisTime"),
-          body: zh
-            ? `服务器说这是提供方一侧的一次临时失败（${reasonCode}），可以重试；这不是「这个地方不存在」。`
-            : `The server reports a transient failure on a provider's side (${reasonCode}); retrying is right, and this is not "the place does not exist".`,
+          body: t("prep.providerTransient", { reason: reasonCode }),
         };
       case "DESTINATION_RESOLVER_UNAVAILABLE":
         /* ORD-0203: the fourth cell.  Measured live (resolver on, Photon unreachable):
@@ -242,16 +234,12 @@ export function DestinationPreparationPanel({
            planned (that is the UNAVAILABLE cell's claim, which the server did not make). */
         return {
           title: t("discovery.nobodyAnsweredUs"),
-          body: zh
-            ? `服务器说这一问没有拿到答复（${reasonCode}）——是它去问的那一头没答话，不是「这个地方不能规划」，也不是「这城市还要灌数据」。这两句服务器都没说。可以稍后重试。`
-            : `The server reports that nothing answered this request (${reasonCode}). That is not "this place cannot be planned" and not "this city still needs data loaded" -- the server said neither. Trying again later is the route.`,
+          body: t("prep.notAnswered", { reason: reasonCode }),
         };
       default:
         return {
-          title: zh ? `服务器判定：${verdict}` : `Server verdict: ${verdict}`,
-          body: zh
-            ? `服务器给了这个结论（${reasonCode}），本地还没有对应文案，所以照它说的给，不替它解释。`
-            : `The server returned this verdict (${reasonCode}); there is no local copy for it, so it is shown as-is rather than explained away.`,
+          title: t("prep.verdictTitle", { verdict }),
+          body: t("prep.verdictBody", { reason: reasonCode }),
         };
     }
   };
@@ -262,39 +250,29 @@ export function DestinationPreparationPanel({
     if (!job.terminal) {
       const elapsedCell = deviceReadout({ elapsed_ms: job.elapsed_ms }, ["elapsed_ms"]);
       return {
-        title: job.reused
-          ? zh
-            ? "这件事已经在准备了"
-            : "This is already being prepared"
-          : zh
-            ? "正在准备这个目的地"
-            : "Preparing this destination",
-        body: zh
-          ? `服务器说现在在「${job.phase}」这一步，已经跑了 ${Math.round(job.elapsed_ms / 1000)} 秒（${elapsedCell}）。进度不按百分比报——服务器不给这个数，因为队列它自己看不到。`
-          : `The server reports it is inside "${job.phase}", running ${Math.round(job.elapsed_ms / 1000)}s (${elapsedCell}). No percentage is shown because the server does not publish one -- it cannot see the queue.`,
+        title: job.reused ? t("prep.reusedTitle") : t("prep.runningTitle"),
+        body: t("prep.runningBody", {
+          phase: job.phase,
+          seconds: Math.round(job.elapsed_ms / 1000),
+          elapsed: elapsedCell,
+        }),
       };
     }
     switch (String(job.outcome ?? "")) {
       case "CATALOG_PREPARED":
         return {
           title: t("discovery.preparedYouCanGoAndPlan"),
-          body: zh
-            ? "服务器说这座城需要的事实已经落库。现在规划会用到它们。"
-            : "The server says the facts this city needs are now stored, so planning will use them.",
+          body: t("prep.prepared"),
         };
       case "ALREADY_CURRENT":
         return {
           title: t("discovery.alreadyCurrentNothingWasChanged"),
-          body: zh
-            ? "服务器说这份资料已经是新的，所以这次准备什么也没做。这不是失败。"
-            : "The server says this material was already current, so this run changed nothing. That is not a failure.",
+          body: t("prep.alreadyCurrent"),
         };
       case "NO_REGISTERED_SOURCE":
         return {
           title: t("discovery.noTraceableSourceForThisDestination"),
-          body: zh
-            ? "服务器说这个目的地它找不到任何可追溯的数据来源，所以准备不了。这是关于这个地方的事实，不是网络或服务器故障。换个目的地吧。"
-            : "The server says it has no traceable source for this destination, so it cannot prepare it. That is a fact about the place, not a network or server fault. Choose another destination.",
+          body: t("prep.noSource"),
         };
       case "ABANDONED_BY_TRAVELLER":
         return {
@@ -304,9 +282,7 @@ export function DestinationPreparationPanel({
       case "RESOLVER_RUNTIME_FAILURE":
         return {
           title: t("discovery.theResolverFailedAtRuntime"),
-          body: zh
-            ? "服务器说这是它那边的一次运行性失败（可以重试），不是「这个地方不存在」。"
-            : "The server reports a runtime failure on its side (retryable), not that the place does not exist.",
+          body: t("prep.runtimeFailure"),
         };
       case "WORKER_LOST":
         return {
@@ -315,10 +291,8 @@ export function DestinationPreparationPanel({
         };
       default:
         return {
-          title: zh ? `准备结束：${String(job.status)}` : `Preparation ended: ${String(job.status)}`,
-          body: zh
-            ? `服务器给出的结局是 ${String(job.outcome ?? "—")}，本地没有对应文案，照它说的给。`
-            : `The server's outcome is ${String(job.outcome ?? "—")}; there is no local copy for it, so it is shown as-is.`,
+          title: t("prep.endedTitle", { status: String(job.status) }),
+          body: t("prep.endedBody", { outcome: String(job.outcome ?? "—") }),
         };
     }
   };
