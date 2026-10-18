@@ -1758,7 +1758,7 @@ export interface TravelBrief {
 export interface TravelPlanningInput {
   journey_id: string;
   intent: (TravelBrief & { id: string; updated_at: string; source: string;
-    mapped_preferences: { input: string; preference: string }[]; free_text_status: string }) | null;
+    mapped_preferences: { input: string; preference: string }[]; unmapped_interests?: string[]; free_text_status: string }) | null;
   trip: { dates: string[]; party_size: number; budget: Money; planning_mode: string };
   candidates: (BootstrapDiscoveryCandidate & { receipt_id: string })[];
   preview_kind: "UNVERIFIED_SUGGESTION_DRAFT";
