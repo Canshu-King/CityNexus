@@ -4941,7 +4941,6 @@ function Bookings({
                 {parseError}
               </p>
             )}
-            <small>{t("bookings.neverInvented")}</small>
           </details>
         </aside>
       </div>

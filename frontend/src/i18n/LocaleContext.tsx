@@ -32,7 +32,7 @@ const en: Dict = {
   "plan.cancelledBody": "The request was aborted. Your trip is untouched — rephrase and try again.",
   "plan.cancelledAfterSendBody": "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
   "plan.keylessWriteDeadlineBody": "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
-  "plan.unreachableBody": "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
+  "plan.unreachableBody": "Neither the network nor the backend answered. Your trip is unchanged; retry once you are connected.",
   "plan.refusedRequestBody": "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
   "plan.serverErroredBody":
         "The server errored; your trip is unchanged. Retry later, and keep the technical detail if it repeats.",
@@ -492,9 +492,8 @@ const en: Dict = {
   "bookings.advancedStructuredData": "Advanced: structured data",
   "bookings.reservationJson": "Reservation JSON",
   "bookings.reviewProtect": "Review and protect",
-  "bookings.neverInvented": "Critical origin, destination, time, provider and reference facts are never invented.",
-  "bookings.authorityExplicit": "Authority remains explicit",
-  "bookings.authoritySub": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
+  "bookings.authorityExplicit": "What still needs you",
+  "bookings.authoritySub": "A payment, a cancellation or anything irreversible.",
 
   /* ORD-0555: words that belong to the panel table. A `render` in `app/v8PanelRegistry.tsx` is a
      plain function rather than a component, so a mount site that needs a label reads it through a
@@ -1668,7 +1667,7 @@ const zhCN: Dict = {
   "plan.cancelledBody": "请求已中止，你的行程没有被改动。可以改个说法再来一次。",
   "plan.cancelledAfterSendBody": "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
   "plan.keylessWriteDeadlineBody": "这台设备停止等待了，而请求已经发出，服务器可能还在做。这条路线不收幂等键，先刷新核对结果，不要重复提交。",
-  "plan.unreachableBody": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "plan.unreachableBody": "网络或后端没有响应。你的行程没有被改动，检查网络后可以重试。",
   "plan.refusedRequestBody": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
   "plan.serverErroredBody":
         "服务端出错，行程未被改动。可稍后重试；反复出现请保留“技术详情”。",
@@ -2090,9 +2089,8 @@ const zhCN: Dict = {
   "bookings.advancedStructuredData": "高级：结构化数据",
   "bookings.reservationJson": "预订 JSON",
   "bookings.reviewProtect": "审核并保护",
-  "bookings.neverInvented": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
-  "bookings.authorityExplicit": "权限始终明确",
-  "bookings.authoritySub": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+  "bookings.authorityExplicit": "仍要你点头的",
+  "bookings.authoritySub": "支付、退票，以及任何退不回来的改动。",
 
   /* ORD-0555：面板登记表自己的文案。`app/v8PanelRegistry.tsx` 里的 `render` 是普通函数而非组件，
      所以挂载位要一个标签时，由一个自己取词的小组件去读字典，而不是把中英二选一的写死串留在表里。 */
