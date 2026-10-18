@@ -27,7 +27,7 @@ export const pendingSetCopy = {
     "pending.deleteDayRule":
       "This is where a place goes when no day of the trip holds it any more: it is not deleted, it stays listed here.",
     "pending.noPlaceDoor":
-      "This server has no door that puts a place onto a day, so no bring-it-back button is mounted here.",
+      "This server has no door that puts a place onto a day, so there is no bring-it-back action.",
     "pending.filter": "Filter",
     "pending.filter.all": "All",
     "pending.filter.allSub": "every pending place",
@@ -47,9 +47,9 @@ export const pendingSetCopy = {
     "pending.empty.import": "Import places",
     "pending.reread": "Read it again",
     "pending.candidatesAbsent":
-      "This server answered the list of places captured for this trip without a list in it, so this screen has no set to show.",
+      "The server answered the list of places captured for this trip without a list in it.",
     "pending.setUnknown":
-      "The list of places captured for this trip has not been read, so this screen shows no number yet. Nothing about your trip changed.",
+      "The list of places captured for this trip has not been read, so there is no number yet.",
     "pending.placesAbsent":
       "This server did not answer the place list, so no row can be filtered by category; all rows are still listed under All.",
     "pending.details": "Technical details",
@@ -100,7 +100,7 @@ export const pendingSetCopy = {
     "pending.noDay": "这一程没有任何一天排它",
     "pending.capturedOn": "捕获于 {day}",
     "pending.deleteDayRule": "某一天不再排它，地点不会被删掉，它会留在这里。",
-    "pending.noPlaceDoor": "这台服务器没有把地点排进某一天的入口，所以这里不放「找回」按钮。",
+    "pending.noPlaceDoor": "服务器没有把地点排进某一天的入口，所以没有「找回」这个动作。",
     "pending.filter": "筛选",
     "pending.filter.all": "全部",
     "pending.filter.allSub": "全部待规划地点",
@@ -119,8 +119,8 @@ export const pendingSetCopy = {
     "pending.empty.import": "导入地点",
     "pending.reread": "再读一次",
     "pending.candidatesAbsent":
-      "这台服务器答这一程捕获的地点清单时没有带出清单，所以这一屏没有可显示的集合。",
-    "pending.setUnknown": "本程捕获的地点清单没读到，所以这一屏先不给数字。你的行程没有因此变化。",
+      "服务器答这一程捕获的地点清单时没带出清单。",
+    "pending.setUnknown": "本程捕获的地点清单没读到，没有数字可给。",
     "pending.placesAbsent": "这台服务器没答出地点清单，所以无法按类别筛；所有行仍在「全部」下列出。",
     "pending.details": "技术详情",
     "pending.reads": "这台设备读到的",

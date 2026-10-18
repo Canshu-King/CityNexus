@@ -34,7 +34,7 @@ const ARMS: Record<"zh" | "en", Record<string, string>> = {
   zh: {
     "read": "这一次没读到准备的进度。行程没有因此变化，可以再问一次。",
     "check": "这一次没读到这座城市的判定。行程没有因此变化，可以再问一次。",
-    "start": "没能开始准备。这一趟行程没有被改动。",
+    "start": "没能开始准备。",
     "stop": "没能停止这次准备。它还在服务器上跑着。",
     "DESTINATION_RESOLVER_UNAVAILABLE": "目的地来源这一次没答上，可以再问一次。",
     "DESTINATION_IDENTITY_UNRESOLVED": "这座城还没有能被追溯的来源命名，所以没有可准备的东西。",
@@ -52,7 +52,7 @@ const ARMS: Record<"zh" | "en", Record<string, string>> = {
   en: {
     "read": "This read of the preparation's progress did not come back. Nothing about the trip changed; asking again is safe.",
     "check": "This read of the destination's verdict did not come back. Nothing about the trip changed; asking again is safe.",
-    "start": "The preparation did not start. This trip was not changed.",
+    "start": "The preparation did not start.",
     "stop": "The preparation is still running on the server; this stop did not go through.",
     "DESTINATION_RESOLVER_UNAVAILABLE": "The destination source did not answer this time; ask again.",
     "DESTINATION_IDENTITY_UNRESOLVED": "No traceable source names this city yet, so there is nothing to prepare for it.",

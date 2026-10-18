@@ -49,12 +49,12 @@ export const journeyTrashCopy = {
     "trash.gone": "This trip is no longer on this server, so it cannot be brought back.",
     "trash.refused": "The server refused this attempt. Your trip list is unchanged.",
     "trash.transport":
-      "The bin could not be read from this server. Nothing about your trips changed because of this screen.",
+      "The bin could not be read from this server.",
     "trash.doorAbsent":
       "This server did not answer the list of binned trips, so no row can be shown yet. Nothing about your trips changed.",
     "trash.refresh": "Read the bin again",
     "trash.empty.why":
-      "This screen lists only the trips this server reported as still in the bin. When it has no rows to list, that sentence is all there is -- it does not invent a reason for you, because the server did not report one.",
+      "No rows to list: the server reported none.",
     "trash.empty.action": "Go to your trips",
     "trash.noViewer":
       "This screen does not know whose bin to ask for, so it is not showing anybody's. Nothing about your trips changed.",
@@ -70,7 +70,7 @@ export const journeyTrashCopy = {
     "trash.recoveryRefusedOther":
       "This trip belongs to another traveller on this server, so it is shown without an action.",
     "trash.recoveryMissing":
-      "This server gave no answer about whether you may bring this one back, so no action is offered.",
+      "The server gave no answer about whether you may bring this one back.",
   },
   "zh-CN": {
     "trash.title": "回收站",
@@ -95,10 +95,10 @@ export const journeyTrashCopy = {
     "trash.already": "这条已经在你的行程列表里了，没有需要找回的东西。",
     "trash.gone": "这条已经不在这台服务器上了，找不回来。",
     "trash.refused": "服务器拒绝了这次找回。你的行程列表没有变化。",
-    "trash.transport": "回收站没有从这台服务器读到。这一屏没有改动你的任何行程。",
+    "trash.transport": "回收站没从这台服务器读到。",
     "trash.doorAbsent": "这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
     "trash.refresh": "再读一次回收站",
-    "trash.empty.why": "这一屏只列服务器报出来还在站里的行程；现在没有行可列。",
+    "trash.empty.why": "现在没有行可列。",
     "trash.empty.action": "回到我的行程",
     "trash.noViewer": "这一屏还不知道要问谁的回收站，所以任何人的都不显示。你的行程没有因此变化。",
     "trash.rowOwnershipMissing": "服务器没有给出这一行的归属",
@@ -109,7 +109,7 @@ export const journeyTrashCopy = {
     "trash.recoveryRefusedRole": "你在这条行程上有席位，但你那个角色不能把它找回来，所以这里只读。",
     "trash.recoveryRefusedNoSeat": "这条属于别人，而且你在这台服务器上没有它的席位，所以这一屏找不回来。",
     "trash.recoveryRefusedOther": "这条在这台服务器上属于另一位旅客，所以这里显示但不给动作。",
-    "trash.recoveryMissing": "服务器没有回答这条能不能找回，所以这里不给动作。",
+    "trash.recoveryMissing": "服务器没答这条能不能找回。",
   },
 } as const;
 

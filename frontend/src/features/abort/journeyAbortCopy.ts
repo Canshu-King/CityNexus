@@ -59,7 +59,7 @@ export const journeyAbortCopy = {
     "abort.unnamed":
       "The server refused this attempt without naming the condition it refused.",
     "abort.transport":
-      "The server did not answer, so this screen cannot say whether the abort landed.",
+      "The server did not answer: whether the abort landed is not known.",
     "abort.details": "Technical details",
   },
   "zh-CN": {
@@ -91,7 +91,7 @@ export const journeyAbortCopy = {
       "服务器拒绝了这次中止。你的行程没有变化：它仍在实时行程里，也仍在你的行程列表里。",
     "abort.unnamed":
       "服务器拒绝了这次中止，但没有说出拒绝的是哪一种情况。",
-    "abort.transport": "这台服务器没有应答，所以这一屏说不出这次中止有没有生效。",
+    "abort.transport": "服务器没答，这次中止有没有生效不知道。",
     "abort.details": "技术详情",
   },
 } as const;
