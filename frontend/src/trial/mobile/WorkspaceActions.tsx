@@ -35,6 +35,7 @@ const TOOL_NAME: Record<string, string> = {
 };
 const EVENT_NAME: Record<string, string> = {
   TASK_ACCEPTED: "研究任务已建立",
+  USER_MESSAGE_ADDED: "收到了你的新要求",
   RUN_STARTED: "本轮研究开始",
   MODEL_TURN_STARTED: "AI 正在判断下一步",
   MODEL_TURN_COMPLETED: "AI 已完成这一轮分析",
