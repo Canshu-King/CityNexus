@@ -421,6 +421,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
         y: (mapBounds?.height ?? 0) / 2,
       },
     });
+    await expect(page.getByRole("button", { name: "让 Agent 自己寻找玩法并规划 →" })).toBeVisible();
+    await page.getByText("按旧数据服务的四种快捷分类搜索（可选）").click();
     await expect(page.getByTestId("rev-quick-category")).toBeVisible();
     expect(discoveryCalls).toBe(0);
   });
