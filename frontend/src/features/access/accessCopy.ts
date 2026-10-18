@@ -108,17 +108,17 @@ export const accessCopy = {
     "access.identityLine":
       "This device is speaking for {name}, who is {role} on this trip.",
     "access.identityUnnamed":
-      "The registry gave no name for the traveller this trip belongs to, so this line shows no id.",
+      "The registry gave no name for the traveller this trip belongs to.",
     "access.identityUnknown":
       "This device does not know who you are: the trip this screen is on carries no traveller the server named.",
     "access.identityUnknownWay":
-      "To go on, pick a trip above whose traveller this server did name -- this screen will not invent an identity to sign with.",
+      "To go on, pick a trip above whose traveller this server did name.",
     "access.identityStale":
-      "The trip reference this device stored matches nothing the list door answered, so nothing is loaded yet; pick a trip above.",
+      "The trip this device stored matches nothing the server lists; pick a trip above.",
     "access.identityNoSeat":
-      "This server has no membership row for you on this trip, so it lists no role-change or leaving control -- both doors would refuse.",
+      "This server has no membership row for you on this trip, so changing or leaving is refused.",
     "access.noAuthorityLine":
-      "Your role does not hold member management on this server, so this screen lists no role-change control.",
+      "Your role does not hold member management on this server.",
     "access.memberScopeLine": "What this role can do: ",
     "access.roleDetailsBody":
           "A role is what this server lets that person do on this trip. The last owner cannot be removed.",
@@ -139,21 +139,21 @@ export const accessCopy = {
     "access.confirmOtherGains": "That person will get the matching permission.",
     "access.confirmBothChange":
       "That person will get the matching permission, and your own permission changes with it.",
-    "access.confirmUnanswered": "This screen will not answer that with a sentence it has to guess at.",
+    "access.confirmUnanswered": "This server gave no wording for that step.",
     "access.confirmRemoval": "That person will lose access to this trip.",
     "access.switchHeading": "Private to public, and public to private, each said from the other side",
     "access.switchPrivateToPublic":
       "After this the trip is visible to everyone -- people who could not see it before will be able to.",
     "access.switchPublicToPrivate":
       "After this, the people who followed it lose access -- they will not be able to open it any more.",
-    "access.switchUnanswered": "This move has no gain-or-loss sentence on this tree, so none is shown.",
+    "access.switchUnanswered": "This server did not say who gains or loses on this move.",
     "access.inviteHeading": "Invitations",
     "access.inviteExpires": "An invitation carries an expiry: {expires}. After that moment it does not open.",
-    "access.inviteTtlMissing": "This server gave no expiry for an invitation, so none is claimed here.",
+    "access.inviteTtlMissing": "This server gave no expiry for an invitation.",
     "access.inviteQuotaNoCap":
-      "This server gave a member count ({used}) and no limit, so nothing here says whether the trip is full.",
+      "This trip has {used} members; the server gave no limit.",
     "access.inviteQuotaMissing":
-      "This server gave no member count or limit for this trip, so nothing is counted here.",
+      "This server gave no member count or limit for this trip.",
     "access.inviteLimitReached": "This trip has reached its member limit, so a new invitation cannot be sent.",
     "access.activityHeading": "What has happened on this trip",
     "access.activityLoading": "Reading what happened…",
@@ -292,12 +292,12 @@ export const accessCopy = {
     "access.adminCapUnanswered": "席位那扇门没答，所以这一屏不说这条行程能放几枚管理员。",
     // ORD-0527：这台设备替谁说话，以及它不替谁去做的事，同一句里说完。
     "access.identityLine": "这台设备替「{name}」说话，他在这条行程上是{role}。",
-    "access.identityUnnamed": "服务器没给这条行程所属的旅行者登记名字，所以这句不写编号。",
+    "access.identityUnnamed": "服务器没给这条行程的旅行者登记名字。",
     "access.identityUnknown": "这台设备还不知道你是谁：这一屏所在的行程，服务器没有写出它属于哪位旅行者。",
-    "access.identityUnknownWay": "要往下走，先在上方挑一条服务器写了旅行者的行程——这一屏不会自己编一个身份来签名。",
-    "access.identityStale": "这台设备存的行程号在服务器的名单里没有对应，所以什么都没加载；请在上方重新挑一条行程。",
-    "access.identityNoSeat": "服务器在这条行程上没有你的成员行，所以这里不列改角色与退出的按钮——那两扇门都会拒绝。",
-    "access.noAuthorityLine": "你的档位在这台服务器上没有成员管理权，所以这里不列改角色的按钮。",
+    "access.identityUnknownWay": "要往下走，先在上方挑一条服务器写了旅行者的行程。",
+    "access.identityStale": "这台设备存的行程在服务器名单里没有对应；请在上方重新挑一条。",
+    "access.identityNoSeat": "这条行程上没有你的成员行，改角色与退出都会被拒。",
+    "access.noAuthorityLine": "你的档位在这台服务器上没有成员管理权。",
     "access.memberScopeLine": "这一档能做什么：",
     "access.roleDetailsBody":
           "角色说的是服务器允许这个人在这条行程上做什么。最后一个所有者不能被移除。",
@@ -317,18 +317,18 @@ export const accessCopy = {
     "access.whenMemberRemoved": "你撤销某个人的访问权限",
     "access.confirmOtherGains": "对方将获得对应权限。",
     "access.confirmBothChange": "对方将获得对应权限，你的权限也会随之变化。",
-    "access.confirmUnanswered": "这一屏不肯用猜来的句子回答这一步。",
+    "access.confirmUnanswered": "这一步服务器没给说法。",
     "access.confirmRemoval": "对方将失去这条行程的权限。",
     "access.switchHeading": "私到公、公到私，各写一句对方会怎样",
     "access.switchPrivateToPublic": "转换后这条行程全网可见——原先看不见的人会开始能看见。",
     "access.switchPublicToPrivate": "转换后，已经在跟踪这条行程的人会失去访问权限。",
-    "access.switchUnanswered": "这一步在这棵树上没有谁得失的句子，所以这里也不写一句。",
+    "access.switchUnanswered": "服务器没说这一步谁得、谁失。",
     "access.inviteHeading": "邀请",
     "access.inviteExpires": "邀请带着一个到期时刻：{expires}。过了那个时间就打不开了。",
-    "access.inviteTtlMissing": "这台服务器没有给出邀请的有效期，所以这里不声称有一个。",
+    "access.inviteTtlMissing": "服务器没给这张邀请的有效期。",
     "access.inviteQuotaNoCap":
-      "这台服务器给了成员数（{used}），没给上限，所以这里不说这条行程满没满。",
-    "access.inviteQuotaMissing": "这台服务器没有给出这条行程的成员数与上限，所以这里不计数。",
+      "这条行程有 {used} 位成员，服务器没给上限。",
+    "access.inviteQuotaMissing": "服务器没给这条行程的成员数与上限。",
     "access.inviteLimitReached": "这条行程的成员已到上限，发不出新邀请。",
     "access.activityHeading": "这条行程上发生过什么",
     "access.activityLoading": "正在读发生过什么…",

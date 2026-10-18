@@ -41,9 +41,9 @@ export const estimationLadderCopy = {
       "{source}: {amount}. This server sent no confidence with that answer.",
     "ladder.method.noSource": "This server gave only {amount}: it wrote no source for it.",
     "ladder.method.noCandidates":
-      "There is no method to report at this rung: this server returned no stay candidate this time, so there is no figure here to explain.",
+      "There is no method to report at this rung: the server returned no stay candidate this time.",
     "ladder.pre.noAmount":
-      "There is no rate here to compare against yet. We do not print 0 as if it were a price.",
+      "There is no rate here to compare against yet.",
     "ladder.pre.noConfidence":
       "Do not weigh this against another stay yet: the figure carries no provider confidence.",
     "ladder.verify.open":
@@ -69,8 +69,8 @@ export const estimationLadderCopy = {
       "{source}：{amount}，置信度 {confidence}%。这是报回来的一条价，实付以供应商的最终价格为准。",
     "ladder.method.noConfidence": "{source}：{amount}。这台服务器没有随这条回答给出置信度。",
     "ladder.method.noSource": "这台服务器只给了 {amount}：没有写它是从哪来的。",
-    "ladder.method.noCandidates": "这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。",
-    "ladder.pre.noAmount": "这里还没有能拿去比价的房价。我们不会把 0 写成一个价。",
+    "ladder.method.noCandidates": "这一级没有可报的方法：服务器这次没交回住宿候选。",
+    "ladder.pre.noAmount": "这里还没有能比价的房价。",
     "ladder.pre.noConfidence": "先别拿它和别家比：这个数背后没有供应商置信度。",
     "ladder.verify.open": "下单前请向供应商核对这个价格与取消条款。",
     "ladder.verify.binding": "这一档不可取消 —— 下单前请向供应商核对最终价格与取消条款。",
