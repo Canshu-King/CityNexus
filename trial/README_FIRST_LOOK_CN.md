@@ -1,18 +1,14 @@
 # Revolution 手机版试用
 
-先看 [13 步图文教程：开始一次两站散步](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)。每一步都有 Revolution 新版真实截图和按钮原文。
+先看[合肥两站散步图文教程](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)，或双击 [`OPEN_REVOLUTION.cmd`](OPEN_REVOLUTION.cmd) 打开本机体验。
 
-当前本机新版入口：[http://127.0.0.1:14332/revolution](http://127.0.0.1:14332/revolution)。当前运行记录和版本见 [2026-10-18 中文实测报告](results/20261018_CHROME_USE_C0_C1_RESULT.md)。
+服务运行时可直接打开 [Revolution 手机页](http://127.0.0.1:14332/revolution)。没有服务时，双击启动器会复用本工作目录自己的健康实例；否则挑一组空闲端口启动隔离实例，并打印实际入口、当前源码 SHA 和本教程路径。启动窗口需要保持打开。
 
-需要自己启动时，在 `design/revolution-mobile-first-v1` 的工作目录打开 PowerShell：
+首次启动会在本机终端询问 Nominatim 联系邮箱；输入内容会随地名请求发送给该服务。页面每次公开地图查询前都会显示服务名称和发送内容，点击按钮后才发送。
 
-```powershell
-py -3.13 trial\try_revolution.py --fresh --frontend-port 14332 --backend-port 18501
-```
+本教程记录了真实 Chrome 390×844 视口中的合肥查询、两站 Pocket Walk、GO 和刷新恢复。当前环境显示 AI 暂未开启，正式行程助手没有启动。[中文验收记录](results/20261018_ISSUE33_HEFEI_REAL_WALK_RESULT.md)与[图文教程](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)基于产品 SHA `1dbaa828872543112c9db2457f2c3ab6b54a6058`。
 
-保留启动终端，按终端提示输入地图服务联系邮箱，再按页面按钮逐次确认查询。端口已占用时，使用正在运行的入口，或选择另一组空闲端口。
-
-想离线看示例界面时添加 `--sample`；想配置本机 AI 时添加 `--agent`，接入方式见 [本机 WB2API 说明](REVOLUTION_AGENT_WB2API_CONNECT.md)。当前 14332 实例可完成真实公开地点、两站保存和 GO，AI 未启用。
+离线看示例界面时，可运行 `py -3.13 trial\try_revolution.py --sample`。AI 默认关闭；只有主动使用 `--agent` 才读取本机 wb2api 配置，接入说明见[本机 WB2API 说明](REVOLUTION_AGENT_WB2API_CONNECT.md)。
 
 <details>
 <summary>历史启动记录（2026-10-14；旧端口和旧分支命令不适用于上面的新版实例）</summary>
