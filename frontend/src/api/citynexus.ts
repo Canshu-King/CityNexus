@@ -1751,7 +1751,7 @@ export interface BootstrapDiscoveryResponse {
 
 export interface TravelBrief {
   goal: string;
-  interests: ("park/garden" | "cafe" | "museum/gallery" | "library")[];
+  interests: string[];
   energy: "easy" | "steady" | "full";
 }
 
