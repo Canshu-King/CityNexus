@@ -1,7 +1,8 @@
 {
-  "generated_at": "2026-10-18T12:09:59.642930+00:00",
+  "generated_at": "2026-10-18T12:14:55.771293+00:00",
   "branch": "reform/qoder-capability-adapters-1018",
-  "head": "82f228f267c8099f79c344e2425f3d8b318ac094",
+  "head": "f988f8814ec027b79e9c4dcfcfe1d9a86d927343",
+  "code_head": "82f228f267c8099f79c344e2425f3d8b318ac094",
   "agent_tree": "91640075ffdeec98a59c990db1994a9479336acb",
   "files": {
     "backend/app/agent/contracts.py": "bfaf8573823684ccefd9892f68adb56ace68726d",
