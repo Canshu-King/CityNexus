@@ -270,6 +270,8 @@ def main() -> int:
                         help="Store this instance's database and logs in a separate local directory")
     parser.add_argument("--resume-database", default=None,
                         help="Existing .db filename in --runtime-dir; preserves original signed trial state")
+    parser.add_argument("--wb2api-key-file", type=Path, default=None,
+                        help="Explicit local key file or gateway guide; read in memory only, requires --agent")
     parser.add_argument("--frontend-port", type=parse_port, default=FRONT_PORT,
                         help=f"Use a separate frontend port (default: {FRONT_PORT})")
     parser.add_argument("--backend-port", type=parse_port, default=BACK_PORT,
@@ -305,6 +307,8 @@ def main() -> int:
         if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", contact_email):
             raise RuntimeError("A valid contact email is required for LIVE search. Use --sample to run offline.")
     agent_enabled = bool(args.agent or args.agent_direct_model)
+    if args.wb2api_key_file is not None and not agent_enabled:
+        raise RuntimeError("--wb2api-key-file requires explicit --agent")
     agent_config: dict[str, str] = {}
     agent_label = "DISABLED"
     if agent_enabled:
@@ -318,7 +322,7 @@ def main() -> int:
             if not healthy:
                 raise RuntimeError("请先启动本机 WorkBuddy2API 路由（7865）：" + state)
         try:
-            agent_config, agent_label = agent_settings(direct_model=args.agent_direct_model)
+            agent_config, agent_label = agent_settings(direct_model=args.agent_direct_model, key_file=args.wb2api_key_file)
         except ValueError as exc:
             raise RuntimeError(str(exc)) from exc
         print("模型选择：", agent_config["CITYNEXUS_HERMES_MODEL"])

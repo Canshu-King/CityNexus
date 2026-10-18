@@ -43,6 +43,8 @@ HUMAN_CAN_USE = PARTIAL。产品代码 `698b5eb23fb17dc6ffe0027636b8840167bee3f7
 
 这次真实错误页面的390×844截图也尝试了一次，Chrome调试器 `Page.captureScreenshot` 在8000ms超时，未生成图片，未重试。本报告的两张新手机图因此仍明确标为TEST_FIXTURE；真实错误有浏览器响应与后端脱敏日志回执，没有假造截图。
 
+随后仅做不调用模型的 `/v1/models` 认证检查：控制台配置文件的 `api_key` 值返回401，用户已提供教程中的客户端Key返回200/53模型。现已支持 `--wb2api-key-file` 显式读取用户指定的单行Key文件或教程API Key表格，优先于无关环境值，仅传入隔离进程内存。没有修改网关配置，也没有重发Chat Completions。
+
 ## 唯一当前运行操作阻塞与正常人工重启
 
 当前试玩入口仍为 <http://127.0.0.1:14332/revolution>，后端18501仍运行旧代码。此前向启动会话46437发送正常停止换行被自动审批拒绝：`approval required by policy, but AskForApproval is set to Never`。本轮未重试、未换杀进程方式绕过，也未启动替代实例来冒充旧服务已升级。
@@ -52,7 +54,7 @@ HUMAN_CAN_USE = PARTIAL。产品代码 `698b5eb23fb17dc6ffe0027636b8840167bee3f7
 ```powershell
 Set-Location 'D:\moodle\_codex_workers\citynexus-chromeuse-retest-ccdd7486-20261018'
 $trialRun = 'C:\Users\仓鼠王\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\CityNexus\Revolution\5e2ddbf81da2-20261018-144858-6da344'
-& '.\backend\.venv\Scripts\python.exe' '.\trial\try_revolution.py' --agent --runtime-dir $trialRun --resume-database '_revolution_hands_on_20261018_144901.db' --frontend-port 14332 --backend-port 18501
+& '.\backend\.venv\Scripts\python.exe' '.\trial\try_revolution.py' --agent --wb2api-key-file 'C:\Users\仓鼠王\Desktop\教程_本机项目接入网关_2026-10-14.md' --runtime-dir $trialRun --resume-database '_revolution_hands_on_20261018_144901.db' --frontend-port 14332 --backend-port 18501
 ```
 
 重启后才继续新的明确地点名称查询与真实来源补证。新正式 PlanVersion → 用户选用 → 确认 ACTIVE → 一次有界模型/工具调用 → 服务端 AgentRun 的 live 连续验收仍是剩余项。

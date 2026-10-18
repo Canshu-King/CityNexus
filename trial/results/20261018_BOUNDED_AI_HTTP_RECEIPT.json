@@ -20,5 +20,12 @@
   "active_run_persisted": false,
   "poi_queries_performed": 0,
   "save_go_or_payment_performed": false,
-  "retry_performed": false
+  "retry_performed": false,
+  "credential_metadata_checks": {
+    "endpoint": "http://127.0.0.1:7863/v1/models",
+    "console_config_api_key_http_status": 401,
+    "user_supplied_gateway_guide_key_http_status": 200,
+    "model_count": 53,
+    "additional_chat_completions_calls": 0
+  }
 }
