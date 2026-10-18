@@ -70,6 +70,75 @@ def choose_provider(requested: str | None) -> str | None:
     return requested if available.get(requested) else None
 
 
+def provider_chain(requested: str | None) -> list[str]:
+    """The providers worth trying, in order, at most two.
+
+    Issue #37's acceptance line is "first source returns zero and the Agent still
+    continues": one provider answering zero or failing is a leg to step on, not a reason
+    to hand the difficulty back to the traveler.
+    """
+
+    primary = choose_provider(requested)
+    if primary is None:
+        return []
+    chain = [primary]
+    other = "searxng" if primary == "web" else "web"
+    if provider_availability().get(other):
+        chain.append(other)
+    return chain
+
+
+def search_with_fallback(
+    session: Session,
+    query: str,
+    *,
+    requested: str | None,
+    operation: str,
+    request_payload: dict[str, Any],
+    limit: int = MAX_LEADS,
+) -> tuple[list[Any], str, str | None, list[dict[str, Any]]]:
+    """Try each configured provider until one returns leads; audit every call made.
+
+    Returns (drafts, status, reason_code, attempts). One `ProviderCall` row is written per
+    attempt -- including the zero-result and failed ones -- so the retry is provable after
+    the fact rather than a claim in the response.
+    """
+
+    attempts: list[dict[str, Any]] = []
+    drafts: list[Any] = []
+    status = "SOURCE_DISCOVERY_UNAVAILABLE"
+    reason: str | None = "NO_WEB_PROVIDER"
+    for provider_key in provider_chain(requested):
+        began = time.perf_counter()
+        found, provider_status, failure = run_web_search(
+            query, provider=provider_key, limit=limit
+        )
+        elapsed_ms = round((time.perf_counter() - began) * 1000)
+        record_provider_call(
+            session,
+            provider_key="deepseek-web-search" if provider_key == "web" else "searxng",
+            operation=operation,
+            request_payload={**request_payload, "provider": provider_key, "attempt": len(attempts) + 1},
+            status="SUCCESS" if provider_status in {"CAPTURED", "NO_RESULTS"} else "FAILURE",
+            latency_ms=elapsed_ms,
+            response_payload={"status": provider_status, "count": len(found)},
+        )
+        attempts.append(
+            {
+                "provider": provider_key,
+                "status": provider_status,
+                "count": len(found),
+                "elapsed_ms": elapsed_ms,
+                **({"reason_code": failure} if failure else {}),
+            }
+        )
+        drafts, status, reason = found, provider_status, failure
+        if provider_status == "CAPTURED":
+            break
+    session.commit()
+    return drafts, status, reason, attempts
+
+
 def run_web_search(
     query: str, *, provider: str, limit: int = MAX_LEADS
 ) -> tuple[list[Any], str, str | None]:
@@ -273,31 +342,25 @@ def discover_source_leads(
         return result
 
     began = time.perf_counter()
-    drafts, status, reason = run_web_search(query, provider=chosen, limit=limit)
-    elapsed_ms = round((time.perf_counter() - began) * 1000)
-    record_provider_call(
+    drafts, status, reason, attempts = search_with_fallback(
         session,
-        provider_key="deepseek-web-search" if chosen == "web" else "searxng",
+        query,
+        requested=provider,
         operation="source_lead_discovery",
-        request_payload={
-            "query": query,
-            "region": region,
-            "topic": cleaned,
-            "provider": chosen,
-            "limit": limit,
-        },
-        status="SUCCESS" if status in {"CAPTURED", "NO_RESULTS"} else "FAILURE",
-        latency_ms=elapsed_ms,
-        response_payload={"status": status, "count": len(drafts)},
+        request_payload={"query": query, "region": region, "topic": cleaned, "limit": limit},
+        limit=limit,
     )
+    elapsed_ms = round((time.perf_counter() - began) * 1000)
     rows = capture_observations(session, journey, drafts, query)
     session.commit()
-    result = {
+    result: dict[str, Any] = {
         "status": status,
         "region": {"label": region, "source": "JOURNEY_PUBLIC_REGION", "confirmed": True},
         "topic": cleaned,
         "query": query,
-        "provider": chosen,
+        "provider": attempts[-1]["provider"] if attempts else None,
+        "attempts": attempts,
+        "fallback_used": len(attempts) > 1,
         "elapsed_ms": elapsed_ms,
         "authority": "NON_AUTHORITATIVE",
         "leads": [lead_payload(row) for row in rows],

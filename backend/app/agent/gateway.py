@@ -620,24 +620,15 @@ class AgentToolGateway:
             return result
 
         began = time.perf_counter()
-        drafts, provider_status, reason = source_discovery.run_web_search(
-            query, provider=chosen, limit=5
+        drafts, provider_status, reason, attempts = source_discovery.search_with_fallback(
+            self.session,
+            query,
+            requested=None,
+            operation="place_source_research",
+            request_payload={"query": query, "region": region, "place_id": place.id},
+            limit=5,
         )
         elapsed_ms = round((time.perf_counter() - began) * 1000)
-        source_discovery.record_provider_call(
-            self.session,
-            provider_key="deepseek-web-search" if chosen == "web" else "searxng",
-            operation="place_source_research",
-            request_payload={
-                "query": query,
-                "region": region,
-                "place_id": place.id,
-                "provider": chosen,
-            },
-            status="SUCCESS" if provider_status in {"CAPTURED", "NO_RESULTS"} else "FAILURE",
-            latency_ms=elapsed_ms,
-            response_payload={"status": provider_status, "count": len(drafts)},
-        )
         rows = source_discovery.capture_observations(
             self.session, journey, drafts, query
         )
@@ -646,7 +637,9 @@ class AgentToolGateway:
             **base,
             "query": query,
             "status": provider_status,
-            "provider": chosen,
+            "provider": attempts[-1]["provider"] if attempts else None,
+            "attempts": attempts,
+            "fallback_used": len(attempts) > 1,
             "elapsed_ms": elapsed_ms,
             "region": {
                 "label": region,
