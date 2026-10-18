@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import json
 import math
-import re
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -18,14 +17,25 @@ from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGe
 from app.integrations.provider_config import ExternalProviderSettings, trust_environment_for_public_providers
 
 
-def public_city_label(journey) -> str:
-    """Revolution's random city identifier is not a geocoder place name."""
+def public_city_label(journey, session=None) -> str:
+    """Resolve a public region from the owner's structured brief or stable city code."""
+    if session is not None:
+        from app.planning.travel_brief import current_brief
+        row = current_brief(session, journey.id, journey.traveler_id)
+        if row is not None:
+            try:
+                brief = json.loads(row.semantic_envelope_json or "{}")
+            except (TypeError, ValueError):
+                brief = {}
+            label = brief.get("public_region_label")
+            if isinstance(label, str):
+                label = label.strip()
+                if 0 < len(label) <= 60 and not any(ord(char) < 32 for char in label):
+                    return label
     code = str(journey.city_code).strip()
     if code.upper().startswith("CN-RV-"):
-        # FirstLook persists the explicit region intake using this title format.
-        # Do not send a free-form custom title or personal goal to a geocoder.
-        match = re.fullmatch(r"(.{1,60}?)\s*·\s*\d{1,2}日行程", str(journey.title).strip())
-        return match.group(1).strip() if match else ""
+        # Older journeys may have no structured region. Never infer one from title.
+        return ""
     try:
         return _resolver_city_label(code)
     except ValueError:
@@ -99,7 +109,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
         observed_status = response.status_code
     result = {"tool": "discover_places", "provider": source, "status": "NO_RESULTS", "places": [],
               "public_action": public_action[:120], "query": query, "provider_provenance": "LIVE_PROVIDER"}
-    city_label = public_city_label(journey)
+    city_label = public_city_label(journey, session)
     try:
         with httpx.Client(timeout=min(15.0, float(settings.real_city_timeout_seconds)),
                           trust_env=trust_environment_for_public_providers(), follow_redirects=False,
@@ -136,7 +146,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
     result["elapsed_ms"] = round((time.perf_counter()-started)*1000)
     result["http_status"] = observed_status
     session.add(ProviderCall(id=str(uuid4()), provider_key=source, operation="goal_place_discovery",
-        request_json=json.dumps({"query": query, "city": journey.city_code, "public_city_label": city_label, "limit": 8}, ensure_ascii=False),
+        request_json=json.dumps({"query": query, "city": city_label or None, "public_city_label": city_label, "limit": 8}, ensure_ascii=False),
         response_json=json.dumps({"status": result["status"], "http_status": observed_status,
                                   "count": len(result["places"])}, ensure_ascii=False),
         status="SUCCESS" if result["status"] in {"RESULTS", "NO_RESULTS"} else "FAILURE",

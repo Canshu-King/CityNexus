@@ -65,9 +65,12 @@ def test_goal_tools_reach_the_compat_chat_completions_payload():
 
 def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, monkeypatch):
     """Provider zero is not a global prohibition on alternative geocoders."""
-    session, journey, _ = goal_scope
+    from app.planning.travel_brief import save_brief
+    from app.schemas import TravelBriefRequest
+    session, journey, owner = goal_scope
     journey.city_code = "CN-RV-ABC123DEF456"
-    journey.title = "建宁县 · 2日行程"
+    save_brief(session, journey, owner, TravelBriefRequest(public_region_label="建宁县"))
+    journey.title = "PRIVATE_CUSTOM_TRIP_TITLE"
     requests = []
     def respond(request):
         requests.append(str(request.url.path))

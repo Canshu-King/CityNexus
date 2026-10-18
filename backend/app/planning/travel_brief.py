@@ -46,6 +46,22 @@ def save_brief(session, journey, member, payload):
         if any(word in text for word in words):
             preferences[key] = True
             mapped.append({"input": next(word for word in words if word in text), "preference": key})
+    now = datetime.now(timezone.utc).isoformat()
+    row = current_brief(session, journey.id, member.traveler_id)
+    public_region_label = data.get("public_region_label")
+    if isinstance(public_region_label, str):
+        public_region_label = public_region_label.strip() or None
+    if public_region_label is None and row is not None:
+        try:
+            previous_data = json.loads(row.semantic_envelope_json or "{}")
+        except (TypeError, ValueError):
+            previous_data = {}
+        previous_region = previous_data.get("public_region_label")
+        if isinstance(previous_region, str):
+            previous_region = previous_region.strip()
+            if 0 < len(previous_region) <= 60 and not any(ord(char) < 32 for char in previous_region):
+                public_region_label = previous_region
+    data["public_region_label"] = public_region_label
     rhythm = extract_day_rhythm(text)
     if rhythm:
         preferences["day_rhythm"] = rhythm.as_dict()
@@ -53,8 +69,6 @@ def save_brief(session, journey, member, payload):
     # Keep open-ended text; only the explicit mappings above reach deterministic constraints.
     data.update({"mapped_preferences": mapped, "unmapped_interests": unmapped_interests,
                  "free_text_status": "PRESERVED_NOT_FULLY_COMPILED" if text or unmapped_interests else "EMPTY"})
-    now = datetime.now(timezone.utc).isoformat()
-    row = current_brief(session, journey.id, member.traveler_id)
     if row is None:
         row = JourneyIntent(id=str(uuid4()), journey_id=journey.id,
             created_by_traveler_id=member.traveler_id, created_by_member_id=member.id,

@@ -500,11 +500,22 @@ class JourneyAnchor(BaseModel):
 class TravelBriefRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     goal: str = Field(default="", max_length=1000)
+    public_region_label: str | None = Field(default=None, max_length=60)
     # Interests are traveler language, not a provider's four-category search enum.
     # Keep unsupported interests as planning intent; they must never silently
     # become verified provider tags or executable place-search filters.
     interests: list[str] = Field(default_factory=list, max_length=16)
     energy: Literal["easy", "steady", "full"] = "steady"
+
+    @field_validator("public_region_label")
+    @classmethod
+    def normalize_public_region_label(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        if any(ord(char) < 32 for char in normalized):
+            raise ValueError("Public region label must contain printable characters")
+        return normalized or None
 
     @field_validator("interests")
     @classmethod
