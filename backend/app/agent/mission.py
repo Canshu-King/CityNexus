@@ -107,14 +107,21 @@ def _indoor_rain_preferences(value: str) -> tuple[bool, bool]:
         "in case of rain",
     )
     clauses = re.split(r"[，,；;。.!?？]+", value)
+
+    def is_conditional_rain(clause: str) -> bool:
+        return any(token in clause for token in ("下雨", "雨天", "rain")) and any(
+            token in clause for token in conditional_tokens
+        )
+
     conditional_backup = False
     indoor_without_weather_condition = False
-    for clause in clauses:
+    for index, clause in enumerate(clauses):
         if not preference_is_positive(clause, ("室内", "indoor")):
             continue
-        rain = any(token in clause for token in ("下雨", "雨天", "rain"))
-        conditional = any(token in clause for token in conditional_tokens)
-        if rain and conditional:
+        # The mobile preference copy can put the rain condition and indoor choice
+        # in adjacent clauses, such as "若下雨，只排室内地点".
+        adjacent_condition = index > 0 and is_conditional_rain(clauses[index - 1])
+        if is_conditional_rain(clause) or adjacent_condition:
             conditional_backup = True
         else:
             indoor_without_weather_condition = True

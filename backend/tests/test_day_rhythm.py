@@ -83,6 +83,16 @@ def test_rain_contingent_indoor_backup_is_not_a_current_weather_report(monkeypat
     assert "INDOOR_PREFERRED" not in capability_codes
     assert "MINIMIZE_WALKING" in spec.objective_codes
 
+    ui_preference = (
+        "只排已核实开放且可达的两站；未知标待核实。先核实午后雨情；"
+        "若下雨，只排室内地点；冲突先问我改计划。"
+    )
+    ui_spec = _compile_mission_without_activity_resolution(ui_preference, monkeypatch)
+    assert ui_spec.preferences["indoor_backup_if_raining"] is True
+    assert "PREFER_INDOOR" not in ui_spec.objective_codes
+    assert "weather_state" not in ui_spec.preferences
+    assert "INDOOR_PREFERRED" not in {item["code"] for item in ui_spec.capabilities}
+
     conditional = "真实下雨才用室内备选"
     assert classify_copilot_message(conditional).intent == "PREFERENCE_CHANGE"
     assert disruption_event_type(conditional) is None
