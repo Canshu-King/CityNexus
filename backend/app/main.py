@@ -494,6 +494,8 @@ from app.schemas import (
     EdgeObservationRequest,
     EventCreate,
     GeneratePlansRequest,
+    GoalTaskCreateRequest,
+    GoalTaskRunRequest,
     BootstrapDiscoveryRequest,
     BootstrapPlaceFactsRequest,
     BootstrapCitySearchRequest,
@@ -7323,6 +7325,149 @@ def put_trip_planning_intent(journey_id: UUID, payload: TravelBriefRequest,
     response.headers["Cache-Control"] = "private, no-store, max-age=0"
     response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return brief_projection(session, journey, member)
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks", status_code=201)
+def create_signed_draft_goal_task(
+    journey_id: UUID,
+    payload: GoalTaskCreateRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import create_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if (
+        str(member.traveler_id) != str(journey.traveler_id)
+        or not member_has_capability(session, member, "JOURNEY_UPDATE")
+    ):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return create_goal_task(
+        session,
+        journey,
+        member,
+        goal=payload.goal,
+        model_consent=payload.model_consent,
+        online_research_consent=payload.online_research_consent,
+        max_model_turns=payload.max_model_turns,
+        max_tool_calls=payload.max_tool_calls,
+    )
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}")
+def get_signed_draft_goal_task(
+    journey_id: UUID,
+    task_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import read_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return read_goal_task(session, journey, member, task_id)
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/events")
+def get_signed_draft_goal_task_events(
+    journey_id: UUID,
+    task_id: UUID,
+    request: Request,
+    response: Response,
+    after_sequence: int = 0,
+    limit: int = 50,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import list_goal_task_events
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return list_goal_task_events(
+        session, journey, member, task_id, after_sequence=after_sequence, limit=limit
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/run")
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/resume")
+def run_signed_draft_goal_task(
+    journey_id: UUID,
+    task_id: UUID,
+    payload: GoalTaskRunRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import resume_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if (
+        str(member.traveler_id) != str(journey.traveler_id)
+        or not member_has_capability(session, member, "JOURNEY_UPDATE")
+    ):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return resume_goal_task(
+        session,
+        journey,
+        member,
+        task_id,
+        model_consent=payload.model_consent,
+        online_research_consent=payload.online_research_consent,
+        max_model_turns=payload.max_model_turns,
+        max_tool_calls=payload.max_tool_calls,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/cancel")
+def cancel_signed_draft_goal_task(
+    journey_id: UUID,
+    task_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import cancel_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if (
+        str(member.traveler_id) != str(journey.traveler_id)
+        or not member_has_capability(session, member, "JOURNEY_UPDATE")
+    ):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return cancel_goal_task(session, journey, member, task_id)
 
 
 @app.get("/api/v1/journeys/session/recent-drafts")

@@ -11,11 +11,19 @@
 .rev-workspace-dialog .rev-workspace-secondary { background: #eaf2ed; color: #245f48; }
 .rev-workspace-top button { min-width: 44px; font-size: 24px; background: transparent; color: #183c30; }
 .rev-workspace-dialog form { display: grid; gap: 10px; }
+.rev-workspace-consent { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #edf3ef; }
+.rev-workspace-consent input { width: 20px; height: 20px; flex: 0 0 auto; margin: 2px 0 0; accent-color: #245f48; }
 .rev-workspace-dialog textarea { box-sizing: border-box; width: 100%; min-height: 110px; resize: vertical; font: inherit; padding: 12px; border: 1px solid #a6beb0; border-radius: 12px; background: white; color: #183c30; }
 .rev-workspace-dialog :is(button, textarea):focus-visible { outline: 3px solid #b36b24; outline-offset: 2px; }
 .rev-workspace-caption { font-size: 13px; color: #53695e; }
 .rev-workspace-answer { padding: 16px; margin-top: 16px; border: 1px solid #b8d8c6; border-radius: 14px; background: #eef8f0; }
 .rev-workspace-answer h3 { margin-top: 0; }
+.rev-workspace-task-steps, .rev-workspace-task-events { padding-left: 22px; }
+.rev-workspace-task-steps li, .rev-workspace-task-events li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #d8e6dc; }
+.rev-workspace-task-places { display: grid; gap: 8px; padding: 0; list-style: none; }
+.rev-workspace-task-places li { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid #cadbd2; border-radius: 12px; background: white; }
+.rev-workspace-task-places span { color: #53695e; font-size: 13px; }
+.rev-workspace-task-events { color: #53695e; font-size: 13px; }
 .rev-workspace-map { height: clamp(260px, 48dvh, 560px); width: 100%; border-radius: 14px; overflow: hidden; }
 .rev-workspace-map-consent { padding: 18px; border-radius: 14px; background: #edf3ef; }
 .rev-workspace-dialog .rev-workspace-map-pin { min-width: 44px; min-height: 44px; border: 2px solid white; border-radius: 50%; padding: 8px; box-shadow: 0 2px 8px #0003; }

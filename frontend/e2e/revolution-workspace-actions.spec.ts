@@ -1,12 +1,45 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const journeyId = "00000000-0000-4000-8000-000000000921";
+const taskId = "00000000-0000-4000-8000-000000000922";
 const owner = "REFORM_FIXTURE_OWNER";
 const token = "REFORM_TEST_FIXTURE_TOKEN";
 const goal = "两人旅行，少走路，下午出发。";
 
 async function fixture(page: Page, failRuntime = false) {
-  const modelCalls: string[] = [];
+  const submittedGoals: string[] = [];
+  const persistedTask: Record<string, unknown> = {
+    task_id: taskId,
+    journey_id: journeyId,
+    mode: "GOAL_PLANNING",
+    status: "PARTIAL_READY",
+    goal,
+    consent: { model: true, online_research: true },
+    budget: { max_model_turns: 4, max_tool_calls: 8 },
+    usage: { model_turns: 2, tool_calls: 2 },
+    latest_run_id: "00000000-0000-4000-8000-000000000923",
+    candidate_place_ids: ["test-place-one"],
+    source_observation_ids: [],
+    candidate_places: [{
+      id: "test-place-one", name: "TEST_FIXTURE 待核实文化地点", category: "museum/gallery",
+      city_code: "TEST_FIXTURE", provider_key: "TEST_FIXTURE",
+      opening_state: "UNKNOWN", cost_evidence: { status: "UNKNOWN", amount_minor: null },
+    }],
+    tool_steps: [
+      { run_id: "00000000-0000-4000-8000-000000000923", sequence_no: 1,
+        tool_name: "search_city_services", status: "SUCCEEDED", result: { place_count: 0, reason_code: "NO_RESULTS" } },
+      { run_id: "00000000-0000-4000-8000-000000000923", sequence_no: 2,
+        tool_name: "research_place_sources", status: "SUCCEEDED", result: { observation_ids: ["test-observation-1"] } },
+    ],
+    assistant_summary: "TEST_FIXTURE 已保存一处待核实地点。",
+    failure_code: null,
+  };
+  const persistedEvents = [
+    { sequence: 1, event_type: "RUN_STARTED", status: "WORKING", run_id: persistedTask.latest_run_id, step_sequence_no: null, model_turn_no: 1, tool_name: null, reason_code: null, consent: null, budget: null },
+    { sequence: 2, event_type: "TOOL_SUCCEEDED", status: "PARTIAL_READY", run_id: persistedTask.latest_run_id, step_sequence_no: 1, model_turn_no: 1, tool_name: "search_city_services", reason_code: "NO_RESULTS", consent: null, budget: null },
+    { sequence: 3, event_type: "TOOL_SUCCEEDED", status: "PARTIAL_READY", run_id: persistedTask.latest_run_id, step_sequence_no: 2, model_turn_no: 2, tool_name: "research_place_sources", reason_code: null, consent: null, budget: null },
+    { sequence: 4, event_type: "TASK_PARTIAL_READY", status: "PARTIAL_READY", run_id: persistedTask.latest_run_id, step_sequence_no: null, model_turn_no: null, tool_name: null, reason_code: null, consent: null, budget: null },
+  ];
   await page.addInitScript(({ journeyId, owner, token }) => {
     sessionStorage.setItem("citynexus.traveler.bearer", token);
     sessionStorage.setItem("citynexus.traveler.session-id", owner);
@@ -40,18 +73,32 @@ async function fixture(page: Page, failRuntime = false) {
     });
     if (path === `${root}/bootstrap-shortlist`) return reply({ journey_id: journeyId, pocket_walk: null });
     if (path === `${root}/bootstrap-discovery/current`) return reply({ journey_id: journeyId, receipt_id: null, candidates: [] });
+    if (path === `${root}/agent/goal-tasks` && request.method() === "POST") {
+      const payload = request.postDataJSON();
+      expect(payload).toMatchObject({ goal, model_consent: true, online_research_consent: true, max_model_turns: 4, max_tool_calls: 8 });
+      submittedGoals.push(payload.goal);
+      return reply({ ...persistedTask, status: "ACCEPTED", assistant_summary: null, tool_steps: [] }, 201);
+    }
+    if (path === `${root}/agent/goal-tasks/${taskId}/run`) {
+      const payload = request.postDataJSON();
+      expect(payload).toMatchObject({ model_consent: true, online_research_consent: true, max_model_turns: 4, max_tool_calls: 8 });
+      return reply(persistedTask);
+    }
+    if (path === `${root}/agent/goal-tasks/${taskId}`) return reply(persistedTask);
+    if (path === `${root}/agent/goal-tasks/${taskId}/events`) return reply({ task_id: taskId, events: persistedEvents, next_cursor: null });
+    if (path === `${root}/agent/goal-tasks/${taskId}/cancel`) return reply({ ...persistedTask, status: "CANCELLED" });
     if (path === `${root}/trial-ai-discovery`) {
       expect(request.method()).toBe("POST");
-      modelCalls.push(request.postDataJSON().goal);
-      return reply({ status: "MODEL_TOOL_SUGGESTION", evidence: "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE", reason: "TEST_FIXTURE 可以先去室内文化地点。" });
+      submittedGoals.push(request.postDataJSON().goal);
+      return reply({ status: "MODEL_TOOL_SUGGESTION", evidence: "TEST_FIXTURE", reason: "TEST_FIXTURE" });
     }
     return reply({});
   });
-  return modelCalls;
+  return submittedGoals;
 }
 
 for (const width of [390, 430, 1366]) {
-  test(`TEST_FIXTURE assistant is one click from Trips at ${width}, no automatic model call`, async ({ page }) => {
+  test(`TEST_FIXTURE goal task starts from Trips at ${width}, persists its trace, and does not run on open`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     const calls = await fixture(page);
     await page.goto("/revolution");
@@ -61,11 +108,23 @@ for (const width of [390, 430, 1366]) {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole("textbox")).toHaveValue(goal);
     expect(calls).toEqual([]);
-    await dialog.getByRole("button", { name: "发送给 AI", exact: true }).click();
-    await expect(dialog.getByRole("region", { name: "AI 返回的建议" })).toContainText("TEST_FIXTURE");
+    await dialog.locator('input[type="checkbox"]').nth(0).check();
+    await dialog.locator('input[type="checkbox"]').nth(1).check();
+    await dialog.getByRole("button", { name: "开始研究", exact: true }).click();
+    await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     expect(calls).toEqual([goal]);
-    await dialog.getByRole("button", { name: "关闭工作台" }).click();
-    await expect(dialog).not.toBeVisible();
+    await dialog.getByRole("button", { name: "刷新任务", exact: true }).click();
+    await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
+    await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("1 条来源记录");
+    await page.reload();
+    await page.getByTestId("rev-mobile-tab-trips").click();
+    await page.getByTestId("rev-mobile-tab-assistant").click();
+    const restoredDialog = page.getByRole("dialog");
+    await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
+    await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
+    expect(calls).toEqual([goal]);
+    await restoredDialog.getByRole("button", { name: "关闭工作台" }).click();
+    await expect(restoredDialog).not.toBeVisible();
   });
 }
 

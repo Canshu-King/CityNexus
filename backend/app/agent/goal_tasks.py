@@ -202,6 +202,7 @@ def _task_payload(
         "latest_run_id": task.get("latest_run_id"),
         "candidate_place_ids": list(task.get("candidate_place_ids") or []),
         "source_observation_ids": list(task.get("source_observation_ids") or []),
+        "assistant_summary": task.get("assistant_summary"),
         "failure_code": task.get("failure_code"),
         "created_at": mission.created_at,
         "started_at": mission.started_at,
@@ -265,6 +266,7 @@ def create_goal_task(
         "latest_run_id": None,
         "candidate_place_ids": [],
         "source_observation_ids": [],
+        "assistant_summary": None,
         "failure_code": "MODEL_CONSENT_REQUIRED" if not model_consent else None,
         "updated_at": now,
     }
@@ -348,6 +350,31 @@ def read_goal_task(
         }
         for place in places
         if place.city_code == journey.city_code
+    ]
+    runs = session.scalars(
+        select(AgentRun)
+        .where(AgentRun.mission_id == mission.id)
+        .order_by(AgentRun.created_at, AgentRun.id)
+    ).all()
+    run_ids = [str(run.id) for run in runs]
+    steps = (
+        session.scalars(
+            select(AgentRunStep)
+            .where(AgentRunStep.run_id.in_(run_ids))
+            .order_by(AgentRunStep.created_at, AgentRunStep.sequence_no)
+        ).all()
+        if run_ids
+        else []
+    )
+    result["tool_steps"] = [
+        {
+            "run_id": str(step.run_id),
+            "sequence_no": step.sequence_no,
+            "tool_name": step.tool_name,
+            "status": step.status,
+            "result": _json_load(step.result_json, {}),
+        }
+        for step in steps
     ]
     return result
 
@@ -1119,6 +1146,7 @@ def resume_goal_task(
                 assistant_summary = str(message.get("content") or "").strip()[:2000] or None
                 mission = session.get(JourneyMission, mission.id)
                 intent = _task_state(mission)
+                intent[_TASK_KEY]["assistant_summary"] = assistant_summary
                 _finish_run(
                     session,
                     journey,

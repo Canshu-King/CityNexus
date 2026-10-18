@@ -2165,6 +2165,54 @@ export interface AgentRunStep {
   completed_at?: string;
 }
 
+export interface DraftGoalTaskEvent {
+  sequence: number;
+  event_type: string;
+  status: string;
+  run_id: string | null;
+  step_sequence_no: number | null;
+  model_turn_no: number | null;
+  tool_name: string | null;
+  reason_code: string | null;
+  consent: Record<string, boolean> | null;
+  budget: Record<string, number> | null;
+}
+
+export interface DraftGoalTask {
+  task_id: string;
+  journey_id: string;
+  mode: "GOAL_PLANNING";
+  status: string;
+  goal: string;
+  consent: { model?: boolean; online_research?: boolean };
+  budget: { max_model_turns?: number; max_tool_calls?: number };
+  usage: { model_turns?: number; tool_calls?: number };
+  latest_run_id: string | null;
+  candidate_place_ids: string[];
+  source_observation_ids: string[];
+  candidate_places?: Array<{
+    id: string;
+    name: string;
+    category: string;
+    city_code: string;
+    provider_key: string;
+    opening_state: string;
+    cost_evidence: { status?: string; amount_minor?: number | null };
+  }>;
+  tool_steps?: Array<{
+    run_id: string;
+    sequence_no: number;
+    tool_name: string;
+    status: string;
+    result: Record<string, unknown>;
+  }>;
+  assistant_summary?: string | null;
+  failure_code: string | null;
+  created_at?: string;
+  started_at?: string | null;
+  updated_at?: string;
+}
+
 export interface AgentRunOutcome {
   status: string;
   reason_code?: string;
@@ -2936,6 +2984,76 @@ export const cityNexusApi = {
         headers: travelerAuthHeaders(),
         body: JSON.stringify({ goal }),
       },
+    );
+  },
+
+  createDraftGoalTask(
+    journeyId: string,
+    input: {
+      goal: string;
+      model_consent: boolean;
+      online_research_consent: boolean;
+      max_model_turns: number;
+      max_tool_calls: number;
+    },
+    signal?: AbortSignal,
+  ): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+        signal,
+      },
+    );
+  },
+
+  getDraftGoalTask(journeyId: string, taskId: string): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getDraftGoalTaskEvents(
+    journeyId: string,
+    taskId: string,
+    afterSequence = 0,
+  ): Promise<{ task_id: string; events: DraftGoalTaskEvent[]; next_cursor: number | null }> {
+    const query = new URLSearchParams({ after_sequence: String(afterSequence), limit: "100" });
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
+        + encodeURIComponent(taskId) + "/events?" + query.toString(),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  runDraftGoalTask(
+    journeyId: string,
+    taskId: string,
+    input: {
+      model_consent: boolean;
+      online_research_consent: boolean;
+      max_model_turns: number;
+      max_tool_calls: number;
+    },
+    resume = false,
+    signal?: AbortSignal,
+  ): Promise<DraftGoalTask> {
+    const action = resume ? "resume" : "run";
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
+        + encodeURIComponent(taskId) + "/" + action,
+      { method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify(input), signal },
+    );
+  },
+
+  cancelDraftGoalTask(journeyId: string, taskId: string): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
+        + encodeURIComponent(taskId) + "/cancel",
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 

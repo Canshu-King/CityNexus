@@ -202,6 +202,25 @@ class AgentCommandRequest(BaseModel):
     requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
 
 
+class GoalTaskCreateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    goal: str = Field(min_length=1, max_length=2000)
+    model_consent: bool
+    online_research_consent: bool
+    max_model_turns: int = Field(default=4, ge=1, le=8)
+    max_tool_calls: int = Field(default=8, ge=0, le=16)
+
+
+class GoalTaskRunRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    model_consent: bool | None = None
+    online_research_consent: bool | None = None
+    max_model_turns: int | None = Field(default=None, ge=1, le=8)
+    max_tool_calls: int | None = Field(default=None, ge=0, le=16)
+
+
 class MobileCompatAgentRunStartRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
