@@ -1,0 +1,224 @@
+{
+  "product_sha": "78795af469f03352372f8e45ce5ece6aee7cebc2",
+  "same_sha_url": "http://127.0.0.1:14332/revolution",
+  "task_id": "850b95a5-76c2-402f-8f4c-e36ea3182d48",
+  "continued_existing_task": true,
+  "previous_usage": {
+    "model_turns": 6,
+    "tool_calls": 6
+  },
+  "usage": {
+    "model_turns": 13,
+    "tool_calls": 12
+  },
+  "budget": {
+    "max_model_turns": 14,
+    "max_tool_calls": 12
+  },
+  "task_status": "PARTIAL_READY",
+  "run": {
+    "id": "bbde28d7-3b19-4402-83db-0da729c2872b",
+    "status": "COMPLETED",
+    "created_at": "2026-10-18T13:03:39.318961+00:00",
+    "completed_at": "2026-10-18T13:04:05.290269+00:00"
+  },
+  "steps": [
+    {
+      "tool": "inspect_journey",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 17,
+        "observation_ids": [],
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "tool": "discover_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 639,
+        "http_status": 200,
+        "place_count": 0,
+        "provider": "nominatim",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "用公开地图检索建宁县地点",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      }
+    },
+    {
+      "tool": "discover_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 2008,
+        "http_status": 200,
+        "place_count": 0,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "换关键词检索建宁县城地名",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      }
+    },
+    {
+      "tool": "search_city_services",
+      "status": "COMPLETED",
+      "result": {
+        "discovery_attempted": false,
+        "elapsed_ms": 4,
+        "place_count": 0,
+        "place_ids": [],
+        "service_count": 0,
+        "service_ids": [],
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "tool": "discover_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 1574,
+        "http_status": 200,
+        "place_count": 0,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "检索建宁当地山岳景区",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      }
+    },
+    {
+      "tool": "save_draft_itinerary",
+      "status": "COMPLETED",
+      "result": {
+        "draft_revision": 3,
+        "elapsed_ms": 4,
+        "status": "COMPLETED"
+      }
+    }
+  ],
+  "actual_public_calls": [
+    {
+      "provider": "nominatim",
+      "status": "SUCCESS",
+      "latency_ms": 634,
+      "request": {
+        "query": "Jianning County Fujian",
+        "city": "CN-RV-EAEF5FC88E10",
+        "limit": 8
+      },
+      "result": {
+        "status": "NO_RESULTS",
+        "http_status": 200,
+        "count": 0
+      }
+    },
+    {
+      "provider": "photon",
+      "status": "SUCCESS",
+      "latency_ms": 2002,
+      "request": {
+        "query": "Jianning",
+        "city": "CN-RV-EAEF5FC88E10",
+        "limit": 8
+      },
+      "result": {
+        "status": "NO_RESULTS",
+        "http_status": 200,
+        "count": 0
+      }
+    },
+    {
+      "provider": "photon",
+      "status": "SUCCESS",
+      "latency_ms": 1568,
+      "request": {
+        "query": "金铙山",
+        "city": "CN-RV-EAEF5FC88E10",
+        "limit": 8
+      },
+      "result": {
+        "status": "NO_RESULTS",
+        "http_status": 200,
+        "count": 0
+      }
+    }
+  ],
+  "draft_artifact": {
+    "days": [
+      {
+        "date": "2026-10-19",
+        "slots": [
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "行程从中午之后开始，建议选县城中心一带住宿，方便步行少、打车距离短。预算约1000元/2天，住宿建议控制在400元以内。具体酒店、房价与是否有房均未核实，属待办。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "午后入住后休息，晚些时候就近散步",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "研究待办：本次真实地点搜索（Photon/Nominatim）与城市服务目录均未返回建宁可用结果，因此不指定具体商户。建议到县城后向住处前台询问小吃集中路段与摊位营业时段；以步行距离短、可随时坐下休息为原则，人均预算约60-100元，价格未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "县城小吃集中路段逛吃（具体街区待核实）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-20",
+        "slots": [
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "研究待办：确认建宁当地博物馆或纪念馆的准确名称、地址、开放日与闭馆时间、是否需预约及门票。开放信息目前未知，需先通过官方渠道或电话核实后再定。室内参观、走动少，适合午后出行。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "当地博物馆/纪念馆（名称与开放时间待核实）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "研究待办：从建宁周边古村落中挑一处车程较短、路面平缓、可少走路的村落，核实门票、开放时间与返程交通方式。本次地点搜索未获得可用结果，暂不指定村名。建议包车或打车往返，费用预估100-200元，未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "古村落半日游（选一处交通便利的村落）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "按21:00行程结束安排，晚餐选住处附近，避免长距离移动。预算约60-100元，具体餐厅与营业时间未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "返程前在县城用晚餐",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 4,
+    "status": "DRAFT"
+  },
+  "blank_added_row_omitted_on_save": true,
+  "edited_title_restored": true,
+  "public_event_count": 59,
+  "screenshot": "NOT_CAPTURED_CDP_RELAY_TIMEOUT",
+  "remaining": [
+    "No positive real POI",
+    "First live task started at 6 used turns, exceeded old eight-turn ceiling; not an invented eight-turn setup",
+    "Real source-service and formal PlanVersion acceptance remains pending"
+  ],
+  "query_scope_bug": "At the tested revision, random CN-RV city IDs became RV hash fragments in public query scope. HTTP200 zero results do not establish geographic absence or provider coverage.",
+  "query_scope_fix": "Extract public region from normal FirstLook title; custom titles never sent; MockTransport verified, no new live request after fix."
+}

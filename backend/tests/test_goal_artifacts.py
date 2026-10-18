@@ -66,9 +66,14 @@ def test_goal_tools_reach_the_compat_chat_completions_payload():
 def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, monkeypatch):
     """Provider zero is not a global prohibition on alternative geocoders."""
     session, journey, _ = goal_scope
+    journey.city_code = "CN-RV-ABC123DEF456"
+    journey.title = "建宁县 · 2日行程"
     requests = []
     def respond(request):
         requests.append(str(request.url.path))
+        assert "建宁县" in request.url.params["q"]
+        assert "RV" not in request.url.params["q"]
+        assert "ABC123" not in request.url.params["q"]
         if str(request.url.path).endswith("/api/"):
             return httpx.Response(200, json={"features": []})
         if str(request.url.path).endswith("/search"):
@@ -110,3 +115,10 @@ def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, mon
         object.__setattr__(settings, "real_city_enabled", previous[0])
         object.__setattr__(settings, "real_city_mode", previous[1])
         object.__setattr__(settings, "city_search_user_agent", previous[2])
+
+
+def test_random_city_code_never_becomes_a_public_search_label(goal_scope):
+    _session, journey, _member = goal_scope
+    journey.city_code = "CN-RV-ABC123DEF456"
+    journey.title = "PRIVATE_CUSTOM_TRIP_TITLE"
+    assert goal_artifacts.public_city_label(journey) == ""

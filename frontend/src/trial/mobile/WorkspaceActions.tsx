@@ -38,6 +38,7 @@ const EVENT_NAME: Record<string, string> = {
   MODEL_TURN_COMPLETED: "AI 已完成这一轮分析",
   TOOL_STARTED: "开始调用工具",
   TOOL_SUCCEEDED: "工具返回结果",
+  TOOL_COMPLETED: "工具返回结果",
   TOOL_FAILED: "工具未完成",
   TASK_DRAFT_UPDATED: "你的修改已保存",
   TASK_PARTIAL_READY: "已交付阶段成果",
