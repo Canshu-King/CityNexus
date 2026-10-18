@@ -305,9 +305,7 @@ export function TripItinerary({
             </p>
             <p className="v8-lede" data-testid="trip-itinerary-empty-catalogue">
               {catalogueAsking
-                ? zh
-                  ? "正在向服务器回读这座城有多少地点…"
-                  : "Reading back from the server how many places this city holds…"
+                ? t("itinerary.emptyReadingPlaces")
                 : catalogueCountSentence(catalogue, zh)}
             </p>
           </div>
@@ -374,17 +372,13 @@ export function TripItinerary({
           <p className="v8-kicker">{t("nav.trips")}</p>
           <h1 data-testid="trip-day-total">
             {progress.day_total === null
-              ? zh
-                ? "天数未知"
-                : "length unknown"
+              ? t("itinerary.lengthUnknown")
               : zh
                 ? `${progress.day_total} 天行程`
                 : `${progress.day_total}-day itinerary`}
           </h1>
           <p className="v8-lede">
-            {zh
-              ? "逐日安排。已确认的预订会被标记为受保护。"
-              : "Day by day. Confirmed bookings are marked as protected."}
+            {t("itinerary.dayByDay")}
           </p>
           <p className="v8-lede" data-testid="trip-progress-contract">
             {progressContractCopy(progress, zh)}
@@ -503,9 +497,7 @@ export function TripItinerary({
                         <span className="trip-stop-disrupted">
                           {disruption
                             ? disruptionLabel(disruption.type, zh)
-                            : zh
-                              ? "受影响"
-                              : "Affected"}
+                            : t("itinerary.stopDisrupted")}
                         </span>
                       )}
                       {isCurrent && (
