@@ -119,7 +119,7 @@ export function MobileAiPrompt({
             disabled={busy || checking || !configured || value.trim().length < 4}
             data-testid="rev-quick-consult-ai"
           >{requestPending ? "正在请教 AI…" : checking && !busy ? "正在连接 AI…" : "问问 AI →"}</button>
-          <span>点击后发送这段文字。</span>
+          <span>点击后将文字发送给已连接的 AI 服务，可能产生模型费用。</span>
         </div>
       </form>
       {advice && (
