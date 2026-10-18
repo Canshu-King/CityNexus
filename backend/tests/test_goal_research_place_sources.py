@@ -2,11 +2,15 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 
 import pytest
 from fastapi import HTTPException
 
 from app.agent import goal_tasks
+from app.db.models import ProviderCall, WebObservation
+from sqlalchemy import select
+from test_goal_tasks import goal_scope, _create
 
 
 @pytest.fixture
@@ -115,3 +119,39 @@ def test_bad_cached_url_is_omitted_and_canonical_id_keeps_gateway(signed_goal_ta
         gateway, "research_place_sources", request, tampered, canonical_args)
     assert canonical["status"] == "GATEWAY_RESULT"
     assert gateway.calls == [("research_place_sources", request)]
+
+
+def test_real_dispatch_path_reads_task_cache_without_gateway_or_provider(goal_scope, signed_goal_task, monkeypatch):
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, online_research_consent=True)
+    mission = session.get(goal_tasks.JourneyMission, created["task_id"])
+    intent = json.loads(mission.intent_json)
+    intent["goal_task"]["research_places"] = signed_goal_task["research_places"]
+    mission.intent_json = json.dumps(intent)
+    session.commit()
+    class Agent:
+        provider_key = model_key = "TEST_FIXTURE"
+        turn = 0
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "cached-source-fixture", "function": {
+                    "name": "research_place_sources", "arguments": json.dumps({"place_id": "photon:W/123"})}}]}
+            result = json.loads(messages[-1]["content"])
+            assert result["status"] == "CACHED_ONLY"
+            assert result["cached_references"][0]["url"] == "https://www.openstreetmap.org/way/123"
+            assert result["acquisition_attempted"] is False
+            return {"content": "TEST_FIXTURE source reference read; opening and price remain unknown"}
+    class Gateway:
+        def __init__(self, *_, **__): pass
+        def dispatch(self, *_): pytest.fail("research lead must use its task cache")
+    monkeypatch.setattr(goal_tasks, "_new_goal_agent", lambda *_: Agent())
+    monkeypatch.setattr(goal_tasks, "AgentToolGateway", Gateway)
+    goal_tasks.resume_goal_task(session, journey, member, created["task_id"])
+    restored = goal_tasks.read_goal_task(session, journey, member, created["task_id"])
+    assert restored["usage"]["tool_calls"] == 1
+    assert restored["tool_steps"][0]["status"] == "COMPLETED"
+    assert restored["tool_steps"][0]["result"]["status"] == "CACHED_ONLY"
+    assert not restored["source_observation_ids"]
+    assert session.scalar(select(ProviderCall.id)) is None
+    assert session.scalar(select(WebObservation.id)) is None

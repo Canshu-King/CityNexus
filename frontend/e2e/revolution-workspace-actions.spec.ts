@@ -6,7 +6,7 @@ const owner = "REFORM_FIXTURE_OWNER";
 const token = "REFORM_TEST_FIXTURE_TOKEN";
 const goal = "两人旅行，少走路，下午出发。";
 
-async function fixture(page: Page, failRuntime = false) {
+async function fixture(page: Page, failRuntime = false, cachedSource = false) {
   const submittedGoals: string[] = [];
   const persistedTask: Record<string, unknown> = {
     task_id: taskId,
@@ -29,7 +29,9 @@ async function fixture(page: Page, failRuntime = false) {
       { run_id: "00000000-0000-4000-8000-000000000923", sequence_no: 1,
         tool_name: "search_city_services", status: "SUCCEEDED", result: { place_count: 0, reason_code: "NO_RESULTS" } },
       { run_id: "00000000-0000-4000-8000-000000000923", sequence_no: 2,
-        tool_name: "research_place_sources", status: "SUCCEEDED", result: { observation_ids: ["test-observation-1"] } },
+        tool_name: "research_place_sources", status: "SUCCEEDED", result: cachedSource
+          ? { status: "CACHED_ONLY", cached_references: [{ url: "https://www.openstreetmap.org/way/12345" }] }
+          : { observation_ids: ["test-observation-1"] } },
     ],
     assistant_summary: "TEST_FIXTURE 已保存一处待核实地点。",
     draft_artifact: { revision: 1, status: "DRAFT", days: [
@@ -129,6 +131,13 @@ for (const width of [390, 430, 1366]) {
     await dialog.getByRole("button", { name: "开始研究", exact: true }).click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     expect(calls).toEqual([goal]);
+    if (width !== 1366) {
+      await page.getByTestId("rev-mission-layer-timeline").click();
+      await expect.poll(() => page.locator(".cn-mission-spatial").evaluate((node) => node.scrollLeft)).toBeGreaterThan(0);
+      await expect(page.getByTestId("rev-mission-layer-timeline")).toHaveAttribute("aria-pressed", "true");
+      await page.getByTestId("rev-mission-layer-map").click();
+      await expect.poll(() => page.locator(".cn-mission-spatial").evaluate((node) => node.scrollLeft)).toBe(0);
+    }
     await dialog.getByRole("button", { name: "刷新任务", exact: true }).click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("1 条来源记录");
@@ -181,4 +190,16 @@ test("TEST_FIXTURE identity change clears the open private assistant immediately
   });
   await expect(dialog.getByRole("textbox")).toHaveCount(0);
   await expect(dialog).not.toContainText(goal);
+});
+
+test("TEST_FIXTURE cached public source is readable without starting a new research request", async ({ page }) => {
+  const writes = await fixture(page, false, true);
+  await page.addInitScript(({ owner, journeyId, taskId }) => {
+    localStorage.setItem(`citynexus.revolution.goal-task.${owner}.${journeyId}`, taskId);
+  }, { owner, journeyId, taskId });
+  await page.goto("/revolution");
+  const task = page.getByRole("region", { name: "Agent 任务", exact: true });
+  await task.getByText("工具结果 · 2 次").click();
+  await expect(task.getByText("已读取 1 条已有地点来源")).toBeVisible();
+  expect(writes).toEqual([]);
 });

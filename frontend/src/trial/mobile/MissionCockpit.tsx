@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   BrainCircuit, CalendarDays, Clock3, Compass, MapPinned, Navigation2, RefreshCw,
   Route, ShieldCheck, Sparkles, Users,
@@ -89,6 +89,12 @@ export function MissionCockpit({
   const [mapAllowed, setMapAllowed] = useState(false);
   const [identityTick, setIdentityTick] = useState(0);
   const [commandRevision, setCommandRevision] = useState(0);
+  const spatial = useRef<HTMLDivElement>(null);
+  const [layer, setLayer] = useState<"map" | "timeline">("map");
+  const selectLayer = (next: "map" | "timeline") => {
+    setLayer(next);
+    spatial.current?.querySelector<HTMLElement>(next === "map" ? ".cn-mission-map-pane" : ".cn-mission-timeline-pane")?.scrollIntoView({ block: "nearest", inline: "start", behavior: "smooth" });
+  };
   const goalRequest = useMemo(() => commandRevision ? ({ journeyId, goal: command }) : null, [journeyId, command, commandRevision]);
   const receiveTask = useCallback((value: DraftGoalTask, items: DraftGoalTaskEvent[]) => {
     if (value.journey_id !== journeyId) return;
@@ -186,13 +192,17 @@ export function MissionCockpit({
         <h2>{cityName}，<span>边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p></div>
       <span className="cn-mission-state" aria-live="polite">{status}</span>
     </header>
+    <div className="cn-mission-layer-tabs" aria-label="切换工作台图层">
+      <button type="button" aria-pressed={layer === "map"} onClick={() => selectLayer("map")} data-testid="rev-mission-layer-map"><MapPinned size={17} />地图</button>
+      <button type="button" aria-pressed={layer === "timeline"} onClick={() => selectLayer("timeline")} data-testid="rev-mission-layer-timeline"><CalendarDays size={17} />{journeyStatus === "ACTIVE" ? "执行与待办" : "日程"}</button>
+    </div>
     <div className="cn-mission-grid">
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
         <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>Agent 命令台</strong></div>
         {journeyStatus === "ACTIVE" ? executionAgent :
           <WorkspaceActions embedded panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />}
       </div>
-      <div className="cn-mission-spatial" aria-label="地图与日程画布">
+      <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布" onScroll={(event) => setLayer(event.currentTarget.scrollLeft > event.currentTarget.clientWidth / 2 ? "timeline" : "map")}>
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
           <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处地点</span></div>
           {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} />

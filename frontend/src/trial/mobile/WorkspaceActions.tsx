@@ -105,6 +105,8 @@ function saveTaskPointer(actor: Context, taskId: string): void {
   try { localStorage.setItem(pointerKey(actor), taskId); } catch { /* server remains the task record */ }
 }
 function taskStepText(result: Record<string, unknown>): string {
+  if (result.status === "CACHED_ONLY") return Array.isArray(result.cached_references) && result.cached_references.length
+    ? `已读取 ${result.cached_references.length} 条已有地点来源` : "已读取已有地点资料";
   const provider = result.provider === "nominatim" ? "Nominatim" : result.provider === "photon" ? "Photon" : "公开地点来源";
   if (result.status === "NO_RESULTS" || result.reason_code === "NO_RESULTS") return `${provider} 未找到匹配地点，Agent 可更换关键词或来源`;
   if (result.status === "PROVIDER_UNAVAILABLE" || result.reason_code === "PHOTON_UNAVAILABLE" || result.reason_code === "NOMINATIM_UNAVAILABLE") return `${provider} 暂不可用，已有成果已保留`;

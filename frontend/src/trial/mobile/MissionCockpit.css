@@ -406,6 +406,7 @@
 }
 
 /* Shared non-modal canvas: Agent / Map / editable day timeline. */
+.rev-mobile-v1 .cn-mission-layer-tabs { display: none; }
 .rev-mobile-v1 .cn-mission-grid { grid-template-columns: minmax(260px, .85fr) minmax(300px, 1.2fr) minmax(270px, .95fr); align-items: start; }
 .rev-mobile-v1 .cn-mission-spatial { display: contents; }
 .rev-mobile-v1 .cn-mission-agent-pane { padding: 16px; min-width: 0; border: 1px solid var(--os-line); border-radius: 20px; background: #fff; }
@@ -421,6 +422,9 @@
  .rev-mobile-v1 .cn-mission-agent-pane, .rev-mobile-v1 .cn-mission-timeline-pane { max-height: calc(100dvh - 200px); overflow-y: auto; }
 }
 @media (max-width: 999px) {
+ .rev-mobile-v1 .cn-mission-layer-tabs { display: flex; gap: 8px; margin: 12px 0; }
+ .rev-mobile-v1 .cn-mission-layer-tabs button { display: flex; align-items: center; justify-content: center; gap: 7px; flex: 1; min-height: 44px; border: 1px solid var(--os-line); border-radius: 12px; background: white; color: #475569; }
+ .rev-mobile-v1 .cn-mission-layer-tabs button[aria-pressed="true"] { color: #225a48; background: #e6f2e9; border-color: #8ab49a; }
  .rev-mobile-v1 .cn-mission-grid { display: flex; flex-direction: column; }
  .rev-mobile-v1 .cn-mission-spatial { order: 1; display: grid; grid-template-columns: 100% 100%; gap: 12px; width: 100%; max-height: 62dvh; overflow-x: auto; scroll-snap-type: x mandatory; }
  .rev-mobile-v1 .cn-mission-map-pane, .rev-mobile-v1 .cn-mission-timeline-pane { scroll-snap-align: start; overflow-y: auto; min-width: 0; }
