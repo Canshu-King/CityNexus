@@ -75,8 +75,8 @@ async function loadGoalEvents(journeyId: string, taskId: string): Promise<{ task
 const TASK_POINTER = "citynexus.revolution.goal-task";
 const MODEL_TURNS = 8;
 const TOOL_CALLS = 16;
-const MAX_MODEL_TURNS = 64;
-const MAX_TOOL_CALLS = 128;
+const MAX_MODEL_TURNS = 256;
+const MAX_TOOL_CALLS = 512;
 const CONTINUE_MODEL_TURNS = 8;
 const CONTINUE_TOOL_CALLS = 16;
 const DEEP_MODEL_TURNS = 24;
