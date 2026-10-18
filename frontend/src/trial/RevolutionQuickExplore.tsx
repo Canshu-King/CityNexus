@@ -636,7 +636,7 @@ export function RevolutionQuickExplore({
         query: chosenQuery,
         ...(name !== undefined ? { query_mode: "name" as const } : {}),
         radius_m: radiusOverride ?? radiusM,
-        limit: 3,
+        limit: 8,
         source_kind: "MANUAL_PUBLIC_CENTER",
         provider_consent: true,
         consented_provider: consentedProvider,
