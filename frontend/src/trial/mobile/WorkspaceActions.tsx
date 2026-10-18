@@ -32,8 +32,12 @@ const TOOL_NAME: Record<string, string> = {
   generate_plans: "生成候选方案", compare_routes: "比较已有路线",
 };
 const TASK_POINTER = "citynexus.revolution.goal-task";
-const MODEL_TURNS = 4;
-const TOOL_CALLS = 8;
+const MODEL_TURNS = 8;
+const TOOL_CALLS = 16;
+const MAX_MODEL_TURNS = 64;
+const MAX_TOOL_CALLS = 128;
+const CONTINUE_MODEL_TURNS = 8;
+const CONTINUE_TOOL_CALLS = 16;
 
 // This pointer is only a candidate. Every read and model request is authorized by the server.
 function readContext(): Context | null {
@@ -235,8 +239,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
     const controller = new AbortController();
     postController.current = controller;
     writeBusy.current = true; setBusy(true); setRequestError(null);
-    const nextTurns = Math.min(8, Math.max(task.budget.max_model_turns ?? MODEL_TURNS, task.usage.model_turns ?? 0) + 2);
-    const nextTools = Math.min(16, (task.budget.max_tool_calls ?? TOOL_CALLS) + 4);
+    const nextTurns = Math.min(MAX_MODEL_TURNS, Math.max(task.budget.max_model_turns ?? MODEL_TURNS, task.usage.model_turns ?? 0) + CONTINUE_MODEL_TURNS);
+    const nextTools = Math.min(MAX_TOOL_CALLS, Math.max(task.budget.max_tool_calls ?? TOOL_CALLS, task.usage.tool_calls ?? 0) + CONTINUE_TOOL_CALLS);
     const timer = window.setTimeout(() => controller.abort(), 180000);
     try {
       const result = await cityNexusApi.runDraftGoalTask(actor.id, task.task_id, {
@@ -270,13 +274,13 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
   };
 
   const nextModelBudget = visibleTask
-    ? Math.min(8, Math.max(
+    ? Math.min(MAX_MODEL_TURNS, Math.max(
         visibleTask.budget.max_model_turns ?? MODEL_TURNS,
         visibleTask.usage.model_turns ?? 0,
-      ) + 2)
+      ) + CONTINUE_MODEL_TURNS)
     : MODEL_TURNS;
   const nextToolBudget = visibleTask
-    ? Math.min(16, (visibleTask.budget.max_tool_calls ?? TOOL_CALLS) + 4)
+    ? Math.min(MAX_TOOL_CALLS, Math.max(visibleTask.budget.max_tool_calls ?? TOOL_CALLS, visibleTask.usage.tool_calls ?? 0) + CONTINUE_TOOL_CALLS)
     : TOOL_CALLS;
   const taskMapPoints = (visibleTask?.research_places ?? []).map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
@@ -316,7 +320,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
           <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
           <p>{visibleTask.usage.model_turns ?? 0}/{visibleTask.budget.max_model_turns ?? MODEL_TURNS} 轮模型 · {visibleTask.usage.tool_calls ?? 0}/{visibleTask.budget.max_tool_calls ?? TOOL_CALLS} 次工具</p>
           {visibleTask.assistant_summary && <p>{visibleTask.assistant_summary}</p>}
-          {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "这一轮额度已用完，可以保留草案或继续研究。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
+          {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "本阶段的研究额度用完了。草案和调查记录都保留在服务器；点击「继续研究」可单独授权新的额度。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
+          <p className="rev-workspace-budget-help">本轮已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续研究会增加授权额度并可能产生模型/公开来源费用，不会自动无限重试。</p>
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {(visibleTask.tool_steps ?? []).length > 0 && <ol className="rev-workspace-task-steps">
             {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
@@ -340,15 +345,22 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
           {visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
             disabled={busy || visibleTask.status === "WORKING"} onSave={async (artifact) => {
               const actor = readContext();
-              if (!actor) return;
+              if (!actor) throw new Error("当前登录身份已失效，无法保存，请重新登录。");
               const value = await cityNexusApi.updateGoalDraft(actor.id, visibleTask.task_id, artifact);
-              if (sameContext(actor, readContext())) await refreshGoalTask(actor, value.task_id);
+              if (!sameContext(actor, readContext())) throw new Error("身份已切换，检查新的登录后再保存。");
+              setGoalTaskSnapshot((previous) => previous && sameContext(previous.context, actor)
+                ? { ...previous, value } : previous);
+              // Saved response is authoritative; optional event refresh failure is not a failed save.
+              void refreshGoalTask(actor, value.task_id).catch(() => undefined);
             }} />}
           {visibleTask.status === "WORKING" && <button type="button" className="rev-workspace-secondary" onClick={() => void cancelTask()}>取消任务</button>}
           {["RESUMABLE", "FAILED_RECOVERABLE", "PARTIAL_READY", "NEEDS_DECISION"].includes(visibleTask.status) &&
-            <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>
-              {busy ? COPY.sending : `继续研究（上限 ${nextModelBudget} 轮 / ${nextToolBudget} 次工具）`}
-            </button>}
+            (nextModelBudget <= (visibleTask.budget.max_model_turns ?? MODEL_TURNS) &&
+             nextToolBudget <= (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
+              ? <p role="status">此任务已达到当前最大累计研究预算。草案仍可编辑保存，后续可发起新的研究目标。</p>
+              : <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>
+                  {busy ? COPY.sending : `继续研究（新授权累计 ${nextModelBudget} 轮 / ${nextToolBudget} 次工具）`}
+                </button>)}
         </section>}
       </>}
     </div>
