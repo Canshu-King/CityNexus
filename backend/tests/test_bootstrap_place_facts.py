@@ -126,6 +126,9 @@ def test_failed_details_leave_prior_facts_and_do_not_retry(monkeypatch, signed_p
     assert result.json()["candidate"]["opening_state"] == "UNKNOWN"
     assert client.post(path, json=body, headers=headers).json()["cached"] is True
     assert calls == [1]
+    with SessionLocal() as session:
+        scope = json.loads(session.get(RealPlaceCandidate, candidate_id).evidence_json)["bootstrap_scopes"][0]
+        assert scope["osm_facts"]["failure_code"] == "OSM_TIMEOUT"
 
 
 def test_enriched_place_enters_existing_native_plan_generator(monkeypatch, signed_place):

@@ -15,6 +15,7 @@ from app.db.models import Journey, PlanVersion, ProviderCall, RealPlaceCandidate
 from app.execution import bootstrap_discovery as discovery
 from app.integrations.discovery.provider_identity import PROVIDER_USER_AGENT
 from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
+from app.integrations.provider_config import trust_environment_for_public_providers
 
 OSM_API = "https://api.openstreetmap.org/api/0.6"
 _MAX_BYTES = 262_144
@@ -30,7 +31,7 @@ def read_osm_tags(kind: str, osm_id: str) -> dict[str, str]:
     if kind not in {"node", "way", "relation"} or not osm_id.isascii() or not osm_id.isdigit():
         raise ValueError("invalid OSM identity")
     deadline = time.monotonic() + 7
-    with httpx.Client(timeout=5, follow_redirects=False, headers={
+    with httpx.Client(timeout=5, follow_redirects=False, trust_env=trust_environment_for_public_providers(), headers={
         "User-Agent": PROVIDER_USER_AGENT, "Accept": "application/json",
     }) as client:
         with client.stream("GET", f"{OSM_API}/{kind}/{osm_id}.json") as response:
@@ -88,11 +89,20 @@ def refresh_bootstrap_place_facts(
         raise discovery.BootstrapDiscoveryError("RATE_LIMITED", "The place lookup is already in progress", status_code=429)
     started = time.monotonic()
     status = "SUCCESS"
+    failure_code = None
     try:
         tags = read_osm_tags(*osm)
-    except (httpx.HTTPError, ValueError, TypeError):
+    except (httpx.HTTPError, ValueError, TypeError) as error:
         status = "UNAVAILABLE"
         tags = None
+        if isinstance(error, httpx.HTTPStatusError):
+            failure_code = f"OSM_HTTP_{error.response.status_code}"
+        elif isinstance(error, httpx.TimeoutException):
+            failure_code = "OSM_TIMEOUT"
+        elif isinstance(error, httpx.TransportError):
+            failure_code = "OSM_UNREACHABLE"
+        else:
+            failure_code = "OSM_INVALID_RESPONSE"
     # Re-read after network I/O: a newer search or selection must not be overwritten.
     session.refresh(row)
     scope = discovery._bootstrap_scope_for_request(row, member=member, traveler_id=traveler_id, receipt_id=receipt_id)
@@ -100,7 +110,7 @@ def refresh_bootstrap_place_facts(
         raise discovery.BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_UNAVAILABLE", "Place changed during lookup")
     scope = dict(scope)
     checked_at = discovery._iso(discovery._now())
-    scope["osm_facts"] = {"status": status, "checked_at": checked_at, "source": "OSM_ELEMENT_API"}
+    scope["osm_facts"] = {"status": status, "checked_at": checked_at, "source": "OSM_ELEMENT_API", "failure_code": failure_code}
     if tags is not None:
         scope.update({
             "osm_tags": tags,
@@ -126,7 +136,8 @@ def refresh_bootstrap_place_facts(
     session.add(ProviderCall(
         id=str(uuid4()), provider_key="osm_element_api", operation="bootstrap_place_facts",
         request_json=discovery._json({"osm_type": osm[0], "osm_id": osm[1], "provider_consent": True}),
-        response_json=discovery._json({"status": status, "source_url": f"https://www.openstreetmap.org/{osm[0]}/{osm[1]}"}),
+        response_json=discovery._json({"status": status, "failure_code": failure_code,
+                                      "source_url": f"https://www.openstreetmap.org/{osm[0]}/{osm[1]}"}),
         status="SUCCESS" if status == "SUCCESS" else "FAILURE",
         latency_ms=int((time.monotonic() - started) * 1000), created_at=checked_at,
     ))
