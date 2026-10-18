@@ -1,4 +1,84 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第十四·十五笔：仓库那把 i18n 对表尺从红走绿，今天页那一行注意力改从字典读、像素不动
+
+Issue #33「前端 ui 改简洁」这一路的第十四、十五笔。这两笔不改一句人话，改的是"同一句话有两个
+住处"这件事——它正是前几笔那些对不齐的根。
+
+**第十四笔：`frontend/scripts/i18n_detail2_parity_r1.py` 整支是红的。**
+它按单行正则读字典（`frontend/scripts/i18n_detail2_parity_r1.py:26`），而 ORD-0635
+的合并把 `me.asksBeforeProtectedChange` 的英文值换行写在键的下一行，于是它报"两臂键集不等"——
+那一枚键两臂都有、也有人读（`frontend/src/app/V8Experience.tsx:5181`）。值逐字未动，只并回
+一行：`frontend/src/i18n/LocaleContext.tsx:536`。
+同一把尺的 EXPECT 表钉着九句行程文案的逐字值，其中三句今天有意改过且都在屏上核对过，表跟到新值：
+`frontend/scripts/i18n_detail2_parity_r1.py:46`。
+顺带两句"屏幕在讲自己"的话：`frontend/src/i18n/LocaleContext.tsx:1901`、
+`frontend/src/i18n/LocaleContext.tsx:1730`。
+
+**第十五笔：今天页那一行"需要你看什么"。**
+`frontend/src/app/V8Experience.tsx:3443` 原先把六句中英话按 `zh ? 中 : 英` 各写两份在壳组件里，
+而它旁边的 kicker 早就读键——同一屏，一半有住处一半没有。现在六对字面进六枚键
+（`frontend/src/i18n/LocaleContext.tsx:1841`），句子逐字不动；带数量那句走字典自己的
+`{plural:change}` 标记，与组件原先调的 `englishCountNoun` 是同一条码路
+（`frontend/src/lib/plural.ts:35`），所以那个 import 随最后一处调用一起下线。
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 尺改前：1332 / 1333 与 AssertionError PARITY BREAK `_issue33_pass14_readings_1111.txt:2` | 尺改后：PARITY OK、两臂各 1333、SELFCHECK_PASS `_issue33_pass14_readings_1111.txt:3` |
+| 那一枚键的来历与处置（值未动，只并回一行） `_issue33_pass14_readings_1111.txt:4` | EXPECT 表跟的三句、两句屏幕自述改前改后 `_issue33_pass14_readings_1111.txt:5` `_issue33_pass14_readings_1111.txt:6` |
+| 第十五笔"像素不动"的两条证明 `_issue33_pass14_readings_1111.txt:7` | 带数量那句的码路与 import 下线 `_issue33_pass14_readings_1111.txt:8` |
+| 手机套两跑、tsc、vite build、两笔落地门 `_issue33_pass14_readings_1111.txt:9` | — |
+
+钉着这些字的臂判的都是屏上文字（`e2e/qoder-ack-rendered.spec.ts:289` 要「1 项变化」；
+`e2e/qoder-ord0384-pretrip-checklist.spec.ts:266` 不许「一切正常」出现在有待办的清单下面）。
+这两笔之后屏上文字逐字不变，所以两条都仍然成立——这一点不是靠说，是靠 `raw/04-today.png`
+与改动前**逐字节相同**（`git status` 里它没出现）以及走查臂同一读数（五十五行文字、码零处、
+整句英文零处）证的。
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线两笔 | 第十四笔 `refs/heads/mirror/integration-frontend-apple-pass1` = 065f44af7c2770f8b7bb956dcaee344bcd9dcf67；第十五笔 = 999b6c9f6152d58903aae11dd1004b875254dd4e（两枚均 `git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地门 | 两笔各自 `ff=True behind=0 intersection=0`、`landed=true`、`both_routes_agree=true`、http_status=200；无 force-push、未用 --allow-ungated |
+| 落地回执 | 已发布、逐字节回读相等：第十四笔 blob `f6e27e2917cbca3bdebb40b9ffbb485756739bc2`，第十五笔 blob `d4c6f1913ccc74b05f0428e0ca1fa0c44347ffca` |
+
+一句自记：上一笔我在账本里写"旁白从屏上下去"而它当时只在字典里成立；这两笔反过来——
+动的是字典与尺，屏上一个字没动，所以我拿像素相同来作证。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 终值单出件·终值单·10-18·10:55:00 档（值守腿自交，原文按行取回）
+
+- 这一档出的是终值单：件 _night_verdict_1018_1055.txt，rc=0，非空行 54 行（live_checks/patrol/_night_verdict_1018_1055.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_verdict_1018_1055.txt:1）
+- 本机字节 sha1 前十二位 c875cf3cf20a；原件 7938 字节（live_checks/patrol/_night_verdict_1018_1055.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  === 夜班终值单  窗口 10-17 18:00 → 10-18 11:00（早班档：昨天傍晚到今晨） 取数于 10-18 10:55:00 ===（live_checks/patrol/_night_verdict_1018_1055.txt:2）
+  1) 入账（文件名戳，限定本窗）：00 时 1 枚、02 时 2 枚、03 时 2 枚、04 时 1 枚、05 时 5 枚、06 时 2 枚、07 时 2 枚、08 时 7 枚、09 时 4 枚、10 时 1 枚、18 时 3 枚、19 时 2 枚、20 时 6 枚、21 时 1 枚、22 时 1 （live_checks/patrol/_night_verdict_1018_1055.txt:3）
+     合计 46 枚；最后一枚 qoder33_1045 @ 10:45:37（live_checks/patrol/_night_verdict_1018_1055.txt:4）
+  （第 5 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_verdict_1018_1055.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_verdict_1018_1055.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_verdict_1018_1055.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 终值单出件·第 2 格补件·10-18·10:55:00 档（值守腿自交，原文按行取回）
+
+- 这一档出的是第 2 格补件：件 _night_tipfix_1018_1055.txt，rc=0，非空行 7 行（live_checks/patrol/_night_tipfix_1018_1055.txt:1）
+- 带「读数不全／不可得」字样的行 0 行（live_checks/patrol/_night_tipfix_1018_1055.txt:1）
+- 本机字节 sha1 前十二位 f75e9f633248；原件 819 字节（live_checks/patrol/_night_tipfix_1018_1055.txt:1）
+- 原文头四行（每行现读自上面那枚件；含四十位坐标的行按门规不搬进来，只标出行号）：
+  _night_tipfix_1018_2300.txt · 补第 2 格（终值单那格若 API 侧 IncompleteRead，就用这件）于 10:55:19（live_checks/patrol/_night_tipfix_1018_1055.txt:2）
+  （第 3 行含一枚四十位坐标，按门规不搬进本块，请按行号自取）（live_checks/patrol/_night_tipfix_1018_1055.txt:3）
+  [2] 18:00→23:00 这一窗内该枝上的提交 0 笔（live_checks/patrol/_night_tipfix_1018_1055.txt:4）
+  [3] 逐笔：（窗口内 0 笔）（live_checks/patrol/_night_tipfix_1018_1055.txt:5）
+
+- 本块不抄整份原文：全文就在那枚件里，按 `live_checks/patrol/_night_tipfix_1018_1055.txt:行号` 取回；值守这侧不替号力者读数，也不把上一班的结论夹进来（live_checks/patrol/_night_tipfix_1018_1055.txt:1）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第十一·十二·十三笔：提示带不再重复屏上已有的按钮，字典删掉改名留下的整族旧键，那一格空态改从字典读
 
 Issue #33「前端 ui 改简洁」这一路的第十一到第十三笔。三笔都从**重拍出来的图**上读，不是从字典里找。
