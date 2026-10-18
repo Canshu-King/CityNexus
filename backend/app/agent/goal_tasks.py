@@ -619,13 +619,14 @@ def _initial_messages(
         "change Journey state. Keep missing opening hours, prices, and availability UNKNOWN. Treat "
         "source research as non-authoritative unless the server says otherwise. Return a short "
         "Chinese user-facing summary without hidden reasoning, secrets, or tool transcripts. "
-        "search_city_services reads the existing catalogue only; discover_places runs one actual Photon query. "
+        "search_city_services reads the existing catalogue only; discover_places runs one model-selected public Photon or Nominatim query. "
         "For canonical Place IDs returned in this task, reuse research_place_sources, acquire_place_facts, "
         "estimate_place_facts and generate_plans. Estimates remain strategy hypotheses; generate_plans only creates "
         "candidates. Source observations must come from this task, never invent a URL. compare_routes reads stored "
-        "facts only, never live routes. Photon research IDs are tentative source leads, not canonical Place IDs. "
-        "Use public keywords without personal information. If an actual search returns no results, choose a different "
-        "useful query yourself within the budget, or continue another part of the trip. Do not repeat the same query. "
+        "facts only, never live routes. Public geocoder research IDs are tentative leads, not canonical Place IDs. "
+        "Use public keywords without personal information. If a Photon search returns no results, you may choose "
+        "a different keyword or the Nominatim source within the approved budget; distinguish a new source from "
+        "repeating the exact same query. If public data is sparse, continue another part of the trip instead of quitting. "
         "Save useful partial research as an editable draft using save_draft_itinerary, even when every place search fails: "
         "in that case write specific research todos or generic suggestions with no invented Place IDs. "
         "Keep enough budget to save the draft. A place with unknown hours or cost can still be a tentative suggestion."
@@ -656,10 +657,13 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
     if name == "discover_places":
-        if set(raw) - {"query", "public_action"}:
+        if set(raw) - {"query", "public_action", "source"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        source = str(raw.get("source") or "photon").lower().strip()
+        if source not in {"photon", "nominatim"}:
+            raise HTTPException(422, "PUBLIC_SOURCE_NOT_SUPPORTED")
         return {"query": str(raw.get("query") or "").strip()[:120],
-                "public_action": str(raw.get("public_action") or "")[:120]}
+                "public_action": str(raw.get("public_action") or "")[:120], "source": source}
     if name == "save_draft_itinerary":
         if set(raw) != {"days"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -773,7 +777,8 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
 
 def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
     if name == "discover_places":
-        return {"query_length": len(args.get("query") or ""), "public_action": args.get("public_action")}
+        return {"query_length": len(args.get("query") or ""), "public_action": args.get("public_action"),
+                "provider": args.get("source", "photon")}
     if name == "save_draft_itinerary":
         return {"days": len(args.get("days") or [])}
     if name == "search_city_services":
@@ -797,7 +802,8 @@ def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
     if name == "discover_places":
         return {"status": result.get("status"), "reason_code": result.get("reason_code"),
                 "place_count": len(result.get("places") or []), "http_status": result.get("http_status"),
-                "public_action": result.get("public_action"), "provider_provenance": result.get("provider_provenance")}
+                "public_action": result.get("public_action"), "provider": result.get("provider"),
+                "provider_provenance": result.get("provider_provenance") }
     if name == "save_draft_itinerary":
         return {"status": "COMPLETED", "draft_revision": result["draft_artifact"]["revision"]}
     if result.get("status") in {
