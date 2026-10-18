@@ -719,6 +719,55 @@ CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     updated_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS journey_launch_contexts (
+    journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
+    source_kind TEXT NOT NULL,
+    authority_kind TEXT NOT NULL,
+    place_id TEXT REFERENCES places(id) ON DELETE SET NULL,
+    target_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    display_name TEXT NOT NULL,
+    latitude REAL,
+    longitude REAL,
+    coordinate_crs TEXT,
+    source_ref_type TEXT,
+    source_ref_id TEXT,
+    valid_from TEXT,
+    valid_until TEXT,
+    confirmed_by TEXT,
+    confirmation_method TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS route_acquisition_operations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fingerprint TEXT NOT NULL,
+    origin_key TEXT NOT NULL,
+    target_key TEXT NOT NULL,
+    target_activity_id TEXT,
+    requested_mode TEXT NOT NULL,
+    provider_policy_version TEXT NOT NULL,
+    route_truth_policy_version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'QUEUED' CHECK (status IN ('QUEUED','RUNNING','COMPLETED','UNAVAILABLE','FAILED')),
+    phase TEXT,
+    outcome TEXT,
+    request_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    queued_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_route_acquisition_one_open
+    ON route_acquisition_operations(journey_id, fingerprint)
+    WHERE status IN ('QUEUED','RUNNING');
+
+CREATE INDEX IF NOT EXISTS idx_route_acquisition_journey_recent
+    ON route_acquisition_operations(journey_id, queued_at);
+
 CREATE TABLE IF NOT EXISTS accommodation_offer_snapshots (
     id TEXT PRIMARY KEY,
     journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,

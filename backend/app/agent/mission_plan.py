@@ -81,6 +81,9 @@ _ACTION_TOOLS = (
     "create_booking",
     "cancel_refundable_booking",
     "request_commitment_change",
+    # Reform 2026-10-18: acquiring a route is a real provider call with a possible cost, so it sits
+    # with the actions rather than in the free draft set.
+    "acquire_route",
 )
 
 

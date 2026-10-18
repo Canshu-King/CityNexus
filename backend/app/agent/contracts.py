@@ -45,6 +45,9 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, sixth adapter: compare the route facts the server already holds. Read-only:
     # acquisition needs the launch-origin chain this tree does not have yet.
     COMPARE_ROUTES = "COMPARE_ROUTES"
+    # Reform 2026-10-18, seventh adapter: acquire one grounded-origin -> target edge. A real
+    # provider call, so it sits with the action tools rather than in the free draft set.
+    ACQUIRE_ROUTE = "ACQUIRE_ROUTE"
 
 
 class AuthorizationDecision(str, Enum):

@@ -102,6 +102,13 @@ TYPED_TOOLS = (
         False,
         False,
     ),
+    ToolDescriptor(
+        AgentAction.ACQUIRE_ROUTE,
+        "acquire_route",
+        True,
+        False,
+        False,
+    ),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

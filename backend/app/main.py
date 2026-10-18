@@ -5457,6 +5457,31 @@ def active_journey_members_with_capabilities(
     return result
 
 
+def _launch_target_activity(session: Session, journey: Journey) -> Activity | None:
+    """The active plan's current (or first live) activity, or None when there is no plan."""
+
+    if not journey.active_plan_version_id:
+        return None
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == journey.active_plan_version_id)
+        .order_by(Activity.sequence_no)
+    ).all()
+    terminal = {"COMPLETED", "SKIPPED", "CANCELLED"}
+    if journey.current_activity_id:
+        current = next(
+            (
+                row
+                for row in rows
+                if str(row.id) == str(journey.current_activity_id) and row.status not in terminal
+            ),
+            None,
+        )
+        if current is not None:
+            return current
+    return next((row for row in rows if row.status not in terminal), None)
+
+
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"

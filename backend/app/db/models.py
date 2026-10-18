@@ -854,6 +854,62 @@ class JourneyTripContext(Base):
     updated_at: Mapped[str] = mapped_column(String)
 
 
+class JourneyLaunchContext(Base):
+    """Durable planned launch origin, separate from execution truth (reform 2026-10-18 port)."""
+
+    __tablename__ = "journey_launch_contexts"
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), primary_key=True
+    )
+    source_kind: Mapped[str] = mapped_column(String)
+    authority_kind: Mapped[str] = mapped_column(String)
+    place_id: Mapped[str | None] = mapped_column(
+        ForeignKey("places.id", ondelete="SET NULL"), nullable=True
+    )
+    target_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    display_name: Mapped[str] = mapped_column(String)
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
+    coordinate_crs: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_type: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_from: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_until: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmed_by: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmation_method: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class RouteAcquisitionOperation(Base):
+    """Durable lifecycle for one exact on-demand mobility edge (reform 2026-10-18 port)."""
+
+    __tablename__ = "route_acquisition_operations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), index=True
+    )
+    fingerprint: Mapped[str] = mapped_column(String)
+    origin_key: Mapped[str] = mapped_column(String)
+    target_key: Mapped[str] = mapped_column(String)
+    target_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    requested_mode: Mapped[str] = mapped_column(String)
+    provider_policy_version: Mapped[str] = mapped_column(String)
+    route_truth_policy_version: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    phase: Mapped[str | None] = mapped_column(String, nullable=True)
+    outcome: Mapped[str | None] = mapped_column(String, nullable=True)
+    request_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    queued_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
 class AccommodationOfferSnapshot(Base):
     """Immutable captured or live accommodation evidence used by stay-aware planning."""
 

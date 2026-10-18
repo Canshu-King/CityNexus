@@ -50,6 +50,14 @@ from app.db.models import (
     ReplanProposal,
     WebObservation,
 )
+from app.execution.launch_origin import grounded_launch_origin
+from app.execution.route_session_contract import (
+    ROUTE_PROVIDER_POLICY_VERSION,
+    ROUTE_TRUTH_POLICY_VERSION,
+    RouteRequest,
+)
+from app.route_session_operations import operation_payload as route_operation_payload
+from app.route_session_operations import submit_operation as submit_route_operation
 from app.fact_acquisition import acquire_place_facts
 from app.integrations.discovery.real_city import capture_real_city_candidates
 from app.schemas import AgentToolCall, ReplanGenerateRequest
@@ -382,6 +390,7 @@ class AgentToolGateway:
             "discover_places": self.discover_places,
             "acquire_place_facts": self.acquire_place_facts,
             "compare_routes": self.compare_routes,
+            "acquire_route": self.acquire_route,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -610,6 +619,52 @@ class AgentToolGateway:
                 }
                 for row in rows[:5]
             ],
+        }
+
+    def acquire_route(self, request: AgentToolCall) -> dict[str, Any]:
+        """Acquire exactly one server-resolved grounded-origin -> target edge.
+
+        Reform 2026-10-18: the write half of route comparison, using the same launch-origin chain the
+        product route uses. The model names no origin and no coordinates; the server resolves the
+        target activity and the grounded origin, and refuses when either is not ready. Execution runs
+        through the deployment's mobility capture (mock when no live provider is configured), and
+        every attempt is an operation row rather than a silent fetch.
+        """
+        from app.main import _launch_target_activity
+
+        journey = _require_journey(self.session, request.journey_id)
+        target = _launch_target_activity(self.session, journey)
+        if target is None or not target.place_id:
+            raise HTTPException(409, "exact route target is unavailable")
+        if request.target_activity_id and str(request.target_activity_id) != str(target.id):
+            raise HTTPException(422, "target_activity_id is not the active exact target")
+        origin = grounded_launch_origin(self.session, journey, target_activity=target)
+        if origin.get("state") != "READY" or not origin.get("origin_key"):
+            raise HTTPException(409, "grounded launch origin is unavailable")
+        if str(origin.get("source") or "") == "FOREGROUND_LOCATION":
+            raise HTTPException(409, "route acquisition requires an exact persisted origin Place")
+        route_request = RouteRequest(
+            journey_id=str(journey.id),
+            origin_key=str(origin["origin_key"]),
+            target_key=str(target.place_id),
+            target_activity_id=str(target.id),
+            requested_mode=(request.route_mode or "TRANSIT").upper(),
+            provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+            route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+        )
+        row, reused = submit_route_operation(self.session, journey, route_request)
+        self.session.commit()
+        body = route_operation_payload(row, reused=reused)
+        return {
+            "tool": "acquire_route",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "origin": {
+                "key": origin.get("origin_key"),
+                "name": origin.get("name"),
+                "authority": origin.get("authority"),
+                "source": origin.get("source"),
+            },
+            **body,
         }
 
     def compare_routes(self, request: AgentToolCall) -> dict[str, Any]:

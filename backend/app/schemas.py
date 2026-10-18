@@ -186,6 +186,8 @@ class AgentToolCall(BaseModel):
     from_key: str | None = Field(default=None, min_length=1, max_length=128)
     to_key: str | None = Field(default=None, min_length=1, max_length=128)
     route_mode: str | None = Field(default=None, max_length=32)
+    # Reform 2026-10-18: route acquisition may pin the exact target it was told about.
+    target_activity_id: str | None = Field(default=None, min_length=1, max_length=64)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None

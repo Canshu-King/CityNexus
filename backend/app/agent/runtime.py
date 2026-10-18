@@ -240,6 +240,17 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             },
             ["journey_id", "from_key", "to_key"],
         ),
+        _tool(
+            "acquire_route",
+            "Acquire one grounded-origin -> target route edge through the deployment's mobility "
+            "capture. The server resolves the origin and target; the model supplies neither.",
+            {
+                **journey,
+                "target_activity_id": _property("string"),
+                "route_mode": _property("string"),
+            },
+            ["journey_id"],
+        ),
     ]
 
 
