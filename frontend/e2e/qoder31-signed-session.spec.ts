@@ -826,6 +826,36 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     },
   );
 
+  test("Issue #33 Q1 之后的一格：本地判过期之后，服务器那扇续期门还认不认这枚凭证", async ({ page }) => {
+    /* 这一臂不改产品，它量一件决定设计走向的事实：`travelerSession.ts` 在本地钟一过 `expiresAt`
+       就把凭证删掉，而续期那条腿只在**还有**签名时才动。于是"关掉标签页找不回旧行程"这件事，
+       今天说不清是客户端那一下删除造成的、还是服务器本来就不收。前者改几行就够，后者要新端点。
+       问法：拿创建时那枚凭证，等它自己的到期时刻过去几秒，再问一次续期门。
+       只有 `CNX_QODER31_TTL=60` 起的那一台能跑——窗口由部署给，不由测试编。 */
+    test.skip(process.env.CNX_QODER31_TTL !== "60", "需要 TTL=60 的那一台");
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    await createAndAwaitJourney(page);
+    const raw = await readBack(page, SESSION_POINTER, "session");
+    expect(raw, "创建之后没有签名会话可问").not.toBeNull();
+    const held = JSON.parse(raw as string) as { token: string; expiresAt: number | null };
+    expect(typeof held.token, "凭证本身不在").not.toBe("undefined");
+    const waitMs = Math.max(0, (held.expiresAt as number) * 1000 - Date.now() + 2_500);
+    await page.waitForTimeout(waitMs);
+    const answer = await page.request.post(`${baseOf()}/api/v1/travelers/session/refresh`, {
+      headers: { Authorization: `Bearer ${held.token}` },
+    });
+    const body = await answer.text();
+    console.log(
+      `刚过期约 ${Math.round(waitMs / 1000)} 秒后拿原凭证问续期门：http_status=${answer.status()}，答案头 ${body.slice(0, 140)}`,
+    );
+    /* 只判"这扇门答了一句能分类的话"：200 与具名拒绝都是事实，404/5xx 才是这台部署上问不到。 */
+    expect(
+      [200, 401, 403].includes(answer.status()),
+      `续期门答的是一个没想到的状态：${answer.status()} ${body.slice(0, 140)}`,
+    ).toBe(true);
+  });
+
   test("Issue #33 第十九笔：行程页「中止这趟行程」那颗按钮，按下去按到的是它自己", async ({ page }) => {
     await seedPhone(page);
     await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
