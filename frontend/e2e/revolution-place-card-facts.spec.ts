@@ -262,6 +262,7 @@ test("trip place facts refresh requires one-time consent and never repeats a rec
   const receiptId = "trip-place-facts-receipt";
   const incomplete = {
     ...candidate("trip-museum", "8126", "LIVE_PROVIDER"),
+    provider_key: "photon",
     selection_blockers: ["OPENING_UNVERIFIED", "COST_UNKNOWN"],
     receipt_id: receiptId,
   };
@@ -285,8 +286,9 @@ test("trip place facts refresh requires one-time consent and never repeats a rec
 
   await page.addInitScript((id) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "fixture-trip-owner");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
-      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT", ownerTravelerId: "fixture-trip-owner",
     }));
   }, journey);
   await page.route("**/api/v1/**", (route) => route.fulfill({ status: 404,

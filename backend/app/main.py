@@ -7292,6 +7292,20 @@ def get_trip_planning_intent(journey_id: UUID, request: Request, response: Respo
     return brief_projection(session, journey, member)
 
 
+@app.get("/api/v1/journeys/{journey_id}/map-places")
+def get_signed_journey_map_places(journey_id: UUID, request: Request, response: Response,
+                                  session: Session = Depends(get_session)):
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.planning.travel_brief import map_place_projection
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return map_place_projection(session, journey, member)
+
+
 @app.put("/api/v1/journeys/{journey_id}/planning-intent")
 def put_trip_planning_intent(journey_id: UUID, payload: TravelBriefRequest,
                             request: Request, response: Response, session: Session = Depends(get_session)):

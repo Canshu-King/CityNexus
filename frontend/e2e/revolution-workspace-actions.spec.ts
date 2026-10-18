@@ -26,6 +26,11 @@ async function fixture(page: Page, failRuntime = false) {
     if (path.startsWith(root)) expect(request.headers().authorization).toBe(`Bearer ${token}`);
     if (path === root) return reply({ id: journeyId, title: "TEST_FIXTURE", status: "DRAFT", timezone: "Asia/Shanghai" });
     if (path === `${root}/plans`) return reply([]);
+    if (path === `${root}/map-places`) return reply({journey_id: journeyId, candidates: [{
+      candidate_id: "test-map-archived", name: "TEST_FIXTURE 上次搜索地点", latitude: 25.037, longitude: 121.563,
+      coordinate_system: "WGS84", observation_expired: true, selection_state: "OPENING_UNVERIFIED",
+      provider_provenance: "TEST_PROVIDER", source_url: "https://www.openstreetmap.org/way/12345",
+    }]});
     if (path === `${root}/planning-intent`) return reply({
       journey_id: journeyId, intent: { id: "test-intent", goal, interests: [], energy: "easy", updated_at: "2026-10-18T00:00:00Z", mapped_preferences: [] },
       trip: { dates: ["2026-10-19", "2026-10-20"], party_size: 2, budget: { amount_minor: 100000, currency: "CNY" } },
@@ -72,7 +77,9 @@ test("TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved 
   await page.getByTestId("rev-mobile-tab-trips").click();
   await page.getByTestId("rev-mobile-tab-map").click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog).toContainText("TEST_FIXTURE 未核实公园");
+  await expect(dialog).toContainText("TEST_FIXTURE 上次搜索地点");
+  await expect(dialog).toContainText("上次搜索的地点，营业与费用需更新");
+  await expect(dialog.getByRole("link", {name: "查看地点来源 ↗"})).toHaveAttribute("href", "https://www.openstreetmap.org/way/12345");
   await expect(dialog.getByRole("button", { name: "加载地图", exact: true })).toBeEnabled();
   expect(calls).toEqual([]);
   expect(tiles).toBe(0);

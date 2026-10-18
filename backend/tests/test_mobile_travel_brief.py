@@ -43,6 +43,31 @@ def test_atomic_signed_trip_brief_and_fresh_client_restore(enabled_settings):
         assert second_device.get(path,headers=headers).json()['intent']['id']==result['intent']['id']
 
 
+def test_map_keeps_own_expired_coordinates_without_renewing_planning(signed_place):
+    client, headers, outsider, journey_id, candidate_id, *_ = signed_place
+    with SessionLocal() as session:
+        candidate = session.get(RealPlaceCandidate, candidate_id)
+        evidence = json.loads(candidate.evidence_json)
+        for scope in evidence["bootstrap_scopes"]:
+            scope["expires_at"] = "2000-01-01T00:00:00+00:00"
+        candidate.evidence_json = json.dumps(evidence)
+        session.commit()
+    path = f'/api/v1/journeys/{journey_id}/map-places'
+    assert client.get(path).status_code == 401
+    assert client.get(path, headers=outsider).status_code == 403
+    response = client.get(path, headers=headers)
+    assert response.status_code == 200
+    assert "no-store" in response.headers["cache-control"]
+    points = response.json()["candidates"]
+    assert len(points) == 1 and points[0]["candidate_id"] == candidate_id
+    assert points[0]["observation_expired"] is True
+    assert points[0]["selection_state"] == "OPENING_UNVERIFIED"
+    assert "OTHER_MEMBER_ORIGINAL" not in response.text
+    assert client.get(f'/api/v1/journeys/{journey_id}/planning-intent', headers=headers).json()["candidates"] == []
+    with SessionLocal() as session:
+        assert "2000-01-01" in session.get(RealPlaceCandidate, candidate_id).evidence_json
+
+
 def test_saved_brief_is_owner_scoped_and_updated_without_new_intents(signed_place):
     client,headers,outsider,journey_id,*_=signed_place
     path=f'/api/v1/journeys/{journey_id}/planning-intent'

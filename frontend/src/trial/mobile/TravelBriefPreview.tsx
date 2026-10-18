@@ -19,7 +19,7 @@ function missingPlaceFacts(place: PlaceCandidate): string[] {
 }
 
 function canRefreshPlaceFacts(place: PlaceCandidate): boolean {
-  return place.provider_provenance === "LIVE_PROVIDER" && place.provider_key === "overpass" &&
+  return place.provider_provenance === "LIVE_PROVIDER" && ["overpass", "photon"].includes(place.provider_key) &&
     /^(node|way|relation)$/.test(place.osm_type) && /^[1-9][0-9]*$/.test(place.osm_id) &&
     (place.source_url === `https://www.openstreetmap.org/${place.osm_type}/${place.osm_id}` ||
       place.source_url === `https://openstreetmap.org/${place.osm_type}/${place.osm_id}`) &&

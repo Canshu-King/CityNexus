@@ -109,6 +109,30 @@ def brief_projection(session, journey, member):
     return result
 
 
+def map_place_projection(session, journey, member):
+    """Private saved coordinates survive fact expiry; never renew planning receipts."""
+    from app.execution.bootstrap_discovery import _candidate_payload, _scope_expired, _bootstrap_scope_entries
+    points = []
+    for candidate in session.scalars(select(RealPlaceCandidate).where(
+        RealPlaceCandidate.journey_id == journey.id,
+        RealPlaceCandidate.provider_key.in_(("photon", "overpass")),
+    ).order_by(RealPlaceCandidate.captured_at.desc(), RealPlaceCandidate.id).limit(100)).all():
+        evidence = json.loads(candidate.evidence_json or "{}")
+        scopes = [scope for scope in _bootstrap_scope_entries(evidence)
+            if scope.get("member_id") == str(member.id) and scope.get("traveler_id") == str(member.traveler_id)]
+        if not scopes:
+            continue
+        payload = _candidate_payload(candidate, member_id=str(member.id), traveler_id=str(member.traveler_id))
+        payload["observation_expired"] = _scope_expired(scopes[0])
+        payload["captured_at"] = scopes[0].get("captured_at") or candidate.captured_at
+        if payload["observation_expired"]:
+            payload["selection_state"] = "OPENING_UNVERIFIED"
+            payload["selection_action"] = None
+            payload["selection_blockers"] = ["OBSERVATION_EXPIRED"]
+        points.append(payload)
+    return {"journey_id": str(journey.id), "candidates": points}
+
+
 def stamp_plan_intent(session, journey, plans):
     row = current_brief(session, journey.id, journey.traveler_id)
     if row:

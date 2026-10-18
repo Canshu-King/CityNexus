@@ -1693,6 +1693,8 @@ export interface BootstrapDiscoveryCandidate {
   selection_action: string | null;
   selection_blockers?: string[];
   facts_status?: "SUCCESS" | "UNAVAILABLE" | null;
+  observation_expired?: boolean;
+  captured_at?: string;
   availability_confidence: "UNVERIFIED";
   price_state: "UNKNOWN" | "FREE" | "KNOWN" | "VERIFIED_PROVIDER" | "OFFICIAL_WEB_VERIFIED";
   eta_state: "UNKNOWN";
@@ -3175,6 +3177,11 @@ export const cityNexusApi = {
 
   getTravelPlanningInput(journeyId: string): Promise<TravelPlanningInput> {
     return requestJson<TravelPlanningInput>(`/journeys/${journeyId}/planning-intent`,
+      { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+
+  getJourneyMapPlaces(journeyId: string): Promise<{journey_id: string; candidates: BootstrapDiscoveryCandidate[]}> {
+    return requestJson(`/journeys/${journeyId}/map-places`,
       { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
