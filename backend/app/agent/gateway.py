@@ -31,6 +31,8 @@ from app.agent.delegation_policy import (
     policy_from_model,
 )
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2, tool_catalog, tool_catalog_v2
+from app.classroom_mode import AUTHORITY as CLASSROOM_AUTHORITY
+from app.classroom_mode import classroom_mode, estimated_hours, estimated_search_angles
 from app.commerce.idempotency import canonical_request_signature
 from app.commerce.service_impl import CommerceConflict, CommerceValidationError
 from app.core.audit import record_audit
@@ -538,7 +540,8 @@ class AgentToolGateway:
         Place -- the model supplies neither a name nor a URL -- and every captured row is stored
         with `authority_status=NON_AUTHORITATIVE`, so a lead never becomes a fact by being fetched.
         With no configured provider the answer says SOURCE_DISCOVERY_UNAVAILABLE; it does not
-        invent leads to look complete.
+        invent leads to look complete.  Classroom mode answers ESTIMATED instead, and what it
+        returns is the set of query angles worth trying -- still zero leads, still no URL.
         """
         if request.journey_id is None or not request.place_id:
             raise HTTPException(422, "journey_id and place_id are required")
@@ -564,7 +567,7 @@ class AgentToolGateway:
         if not region:
             # No public region means no query: the Journey's random id or custom
             # title is not a place name a provider could answer.
-            return {
+            result = {
                 **base,
                 "status": REGION_PENDING,
                 "reason_code": REGION_PENDING,
@@ -579,10 +582,21 @@ class AgentToolGateway:
                 ),
                 "observations": [],
             }
+            if classroom_mode():
+                result["status"] = "ESTIMATED"
+                result["authority"] = CLASSROOM_AUTHORITY
+                result["estimate"] = estimated_search_angles(
+                    region="(city not confirmed)", topic=str(place.name)
+                )
+                result["next_legal_path"] = (
+                    "continue with the estimated angles, or confirm a public region "
+                    "on this Journey so a provider can answer"
+                )
+            return result
         query = build_source_query(place, journey, region=region)
         chosen = source_discovery.choose_provider(None)
         if chosen is None:
-            return {
+            result = {
                 **base,
                 "query": query,
                 "status": "SOURCE_DISCOVERY_UNAVAILABLE",
@@ -593,6 +607,17 @@ class AgentToolGateway:
                 ),
                 "observations": [],
             }
+            if classroom_mode():
+                result["status"] = "ESTIMATED"
+                result["authority"] = CLASSROOM_AUTHORITY
+                result["estimate"] = estimated_search_angles(
+                    region=region, topic=str(place.name)
+                )
+                result["next_legal_path"] = (
+                    "continue planning with the estimated angles, or configure a web "
+                    "provider to turn them into captured leads"
+                )
+            return result
 
         began = time.perf_counter()
         drafts, provider_status, reason = source_discovery.run_web_search(
@@ -1148,6 +1173,20 @@ class AgentToolGateway:
         if peer_costs:
             estimate["cost_evidence"].update(
                 {"amount_minor": int(median(peer_costs)), "peer_count": len(peer_costs)}
+            )
+        if classroom_mode() and not peer_windows:
+            # No verified peer in this city and category: fall back to the category-typical
+            # window instead of returning an estimate with nothing in it.  Same authority
+            # markers, `authority_eligible` stays false and the numbers never reach
+            # opening_hours_json.
+            window = estimated_hours(place.category)
+            estimate["basis"] = f"{estimate['basis']}; classroom category heuristic (no verified peers)"
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": window["open_minutes"],
+                    "close_minutes": window["close_minutes"],
+                    "basis": "CLASSROOM_CATEGORY_HEURISTIC",
+                }
             )
         if (
             request.estimated_open_minutes is not None

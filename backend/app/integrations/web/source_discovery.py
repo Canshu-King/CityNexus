@@ -15,7 +15,9 @@ Two rules are load-bearing:
     region, never from its random id, custom title or member preferences.
 
 With no configured provider the answer is `SOURCE_DISCOVERY_UNAVAILABLE` and a
-named next legal path, not an invented lead.
+named next legal path, not an invented lead.  Classroom mode is the one exception,
+and it stays inside that rule: it answers `ESTIMATED` with the query angles a human
+would try next and zero leads, never with a fabricated page.
 """
 
 from __future__ import annotations
@@ -29,6 +31,11 @@ from uuid import uuid4
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.classroom_mode import (
+    AUTHORITY,
+    classroom_mode,
+    estimated_search_angles,
+)
 from app.core import config
 from app.db.models import Journey, ProviderCall, WebObservation
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
@@ -203,10 +210,32 @@ def discover_source_leads(
 
     region = public_city_label(journey)
     if not region:
+        pending_region = {
+            "label": None,
+            "source": "JOURNEY_PUBLIC_REGION",
+            "confirmed": False,
+        }
+        if classroom_mode():
+            # A demo Journey has no publicly confirmed city, and inventing one would aim the
+            # estimate at the wrong place.  Keep the city unnamed and estimate on the topic.
+            cleaned = sanitize_public_topic(topic)
+            return {
+                "status": "ESTIMATED",
+                "region": pending_region,
+                "topic": cleaned,
+                "query": None,
+                "authority": AUTHORITY,
+                "estimate": estimated_search_angles(region="(city not confirmed)", topic=cleaned),
+                "next_legal_path": (
+                    "confirm a public region on this Journey to turn the angles into "
+                    "provider-backed leads"
+                ),
+                "leads": [],
+            }
         return {
             "status": REGION_PENDING,
             "reason_code": REGION_PENDING,
-            "region": {"label": None, "source": "JOURNEY_PUBLIC_REGION", "confirmed": False},
+            "region": pending_region,
             "next_legal_path": (
                 "ask the traveler to confirm a public region on this Journey, or "
                 "research a canonical Place with research_place_sources"
@@ -218,7 +247,7 @@ def discover_source_leads(
     query = build_public_topic_query(cleaned, region)
     chosen = choose_provider(provider)
     if chosen is None:
-        return {
+        result: dict[str, Any] = {
             "status": "SOURCE_DISCOVERY_UNAVAILABLE",
             "reason_code": "NO_WEB_PROVIDER",
             "region": {"label": region, "source": "JOURNEY_PUBLIC_REGION", "confirmed": True},
@@ -232,6 +261,16 @@ def discover_source_leads(
             "authority": "NON_AUTHORITATIVE",
             "leads": [],
         }
+        if classroom_mode():
+            # Nothing to search with: answer with the angles, not with fabricated pages.
+            result["status"] = "ESTIMATED"
+            result["authority"] = AUTHORITY
+            result["estimate"] = estimated_search_angles(region=region, topic=cleaned)
+            result["next_legal_path"] = (
+                "continue planning with the estimate above, or configure a web provider "
+                "to turn the angles into captured source leads"
+            )
+        return result
 
     began = time.perf_counter()
     drafts, status, reason = run_web_search(query, provider=chosen, limit=limit)
@@ -253,7 +292,7 @@ def discover_source_leads(
     )
     rows = capture_observations(session, journey, drafts, query)
     session.commit()
-    result: dict[str, Any] = {
+    result = {
         "status": status,
         "region": {"label": region, "source": "JOURNEY_PUBLIC_REGION", "confirmed": True},
         "topic": cleaned,
@@ -275,4 +314,7 @@ def discover_source_leads(
             "try the other configured provider, or continue with stored facts and "
             "ask the traveler to confirm the region"
         )
+    if classroom_mode() and status in {"NO_RESULTS", "FAILED_EXTERNAL"}:
+        # The provider answered with nothing or with an error: the loop still has to move.
+        result["estimate"] = estimated_search_angles(region=region, topic=cleaned)
     return result

@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.classroom_mode import classroom_mode
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.db.models import Journey, MobilityFact, ProviderCall, RouteAcquisitionOperation
@@ -321,7 +322,11 @@ def _execute(operation_id: str) -> None:
                 journey,
                 [pair],
                 operation_key=f"route-session:{row.id}",
-                require_explicit_facts=True,
+                # Strict: a pair with no explicit frozen or measured cell must stay
+                # unavailable rather than inherit the fixture's blanket constant.
+                # Classroom mode relaxes only this display path -- the captured row is
+                # tagged SYNTHETIC_DEFAULT, which the hard feasibility gate still refuses.
+                require_explicit_facts=not classroom_mode(),
                 requested_mode=row.requested_mode,
             )
         except MobilitySnapshotCaptureError as exc:

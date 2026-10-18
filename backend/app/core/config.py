@@ -81,6 +81,12 @@ class Settings:
     guardian_interval_seconds: float = float(os.getenv("CITYNEXUS_GUARDIAN_INTERVAL_SECONDS", "60"))
     guardian_signal_provider: str = os.getenv("CITYNEXUS_GUARDIAN_SIGNAL_PROVIDER", "demo").lower()
     guardian_cooldown_seconds: int = int(os.getenv("CITYNEXUS_GUARDIAN_COOLDOWN_SECONDS", "900"))
+    # Classroom mode: when a provider cannot answer, let the Agent proceed with a
+    # clearly labelled estimate instead of stopping at UNKNOWN.  It is off by default so
+    # the strict product paths keep their tests; the coursework demo turns it on.
+    classroom_mode: bool = (
+        os.getenv("CITYNEXUS_CLASSROOM_MODE", "false").lower() == "true"
+    )
     real_city_enabled: bool = os.getenv("CITYNEXUS_REAL_CITY_ENABLED", "false").lower() == "true"
     real_city_mode: str = os.getenv("CITYNEXUS_REAL_CITY_MODE", "replay").lower()
     # Revolution Lab only: estimated opening/cost facts may make a plan selectable inside an

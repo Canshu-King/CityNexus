@@ -25,6 +25,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
+from app.classroom_mode import AUTHORITY, classroom_mode, estimated_route
 from app.db.models import Journey, JourneyMission, MobilityFact
 from app.execution.launch_origin import grounded_launch_origin
 from app.schemas import AgentToolCall
@@ -118,7 +119,7 @@ def route_snapshot(
         for row in rows
     ]
     if not options:
-        return {
+        result: dict[str, Any] = {
             **base,
             **edge,
             "mode": requested,
@@ -129,6 +130,14 @@ def route_snapshot(
             "options": [],
             "next_legal_path": "acquire this edge through the Mission route action",
         }
+        if classroom_mode():
+            # The demo needs a number to talk about before the router answers.  It is
+            # stamped as a model estimate and the hard gate still refuses it, so the
+            # screen can show it without a decision ever resting on it.
+            result["classroom_mode"] = True
+            result["eta"] = estimated_route(mode=requested)
+            result["authority"] = AUTHORITY
+        return result
     first = options[0]
     return {
         **base,

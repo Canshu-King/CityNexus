@@ -15,6 +15,7 @@ from app.agent.mission import mission_payload
 from app.agent.mission_plan import DRAFT_WRITE_TOOLS, READ_TOOLS, mission_plan_for_model
 from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identity
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
+from app.classroom_mode import classroom_mode
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.agent.ai_availability import (
@@ -345,6 +346,16 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
     # questions and the model has to be able to tell them apart.
     granted_tools = tuple(mission_plan_for_model(mission).get("allowed_tools") or ())
     supplied_tools = citynexus_tool_definitions()
+    # Classroom mode hands the model server-made estimates instead of a dead end.  The
+    # sentence is added only when the switch is on, and it stays number-free so the grant
+    # arithmetic above remains the only place the prompt states a count.
+    classroom_line = (
+        "When a tool answers ESTIMATED or MODEL_ESTIMATE, keep planning with that estimate and "
+        "call it an estimate in every message you send; never present it as a provider "
+        "measurement and never replace it with a number of your own. "
+        if classroom_mode()
+        else ""
+    )
     if len(granted_tools) < len(supplied_tools):
         # Say what the refusal covers, and only when there is something to refuse: naming "the
         # rest" when the mission was granted everything would be a smaller version of the same
@@ -364,6 +375,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         f"{tool_line}"
         "Inspect the Journey and JourneyTwin before any mutation. "
         "Never invent IDs, prices, opening hours, provider status, or commitments. "
+        f"{classroom_line}"
         "The Gateway and deterministic feasibility layer are authoritative: follow their decisions. "
         "You may autonomously act on ordinary reversible changes inside both the global policy and this mission. "
         "Protected activities and commitments must remain unchanged unless the Gateway explicitly permits a stronger action. "

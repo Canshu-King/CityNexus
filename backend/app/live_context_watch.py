@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.classroom_mode import classroom_mode, estimated_hours, window_fit
 from app.core.audit import record_audit
 from app.db.models import Activity, Event, Journey, Place, WebObservation
 from app.fact_acquisition import acquire_place_facts
@@ -96,7 +97,25 @@ def classify_opening_hours(*, activity: Any, place: Any, opening: dict[str, Any]
     if status == "CLOSED":
         return {**base, "status": "CLOSED_CONFLICT", "reason_code": "EXPLICIT_CLOSED_STATE"}
     if status not in _VALID_OPENING:
-        return {**base, "status": "UNKNOWN", "reason_code": "OPENING_HOURS_UNQUALIFIED"}
+        strict = {**base, "status": "UNKNOWN", "reason_code": "OPENING_HOURS_UNQUALIFIED"}
+        if not classroom_mode():
+            return strict
+        # Classroom mode: hours are missing, not unimportant.  Say whether the plan would
+        # fit a category-typical window, labelled as a heuristic so it is never read as a
+        # verified opening fact, and keep the strict `status` so the watcher's own
+        # conflict logic still treats this as UNKNOWN.
+        window = estimated_hours(getattr(place, "category", None))
+        return {
+            **strict,
+            "estimate": {
+                **window,
+                "planned_local_interval_fit": window_fit(
+                    window,
+                    start_minutes=start.hour * 60 + start.minute,
+                    end_minutes=end.hour * 60 + end.minute,
+                ),
+            },
+        }
 
     matching: list[dict[str, Any]] = []
     # An overnight opening interval belongs to the day on which it opens.
