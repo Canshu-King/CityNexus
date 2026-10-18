@@ -4,11 +4,12 @@
 
 ## 产品版本与入口
 
+- 最新产品：`9affeadb5a1d3b40c42306add35b4138d5d70958`。下方 91e680／e21cae 的真实模型收据继续保留原执行版本。
 - PR #23：`design/revolution-mobile-first-v1`。
 - 工作台与结构化地区：`91e680d5864a81788b65c1e38f5bf7397eebf0ab`，包含 PR #39 和结构化地区提交 `820be8a300`。
 - 附近 POI 工具、候选继续研究、地图日程联动：`e21cae5d55fb76e93549a107a7dbed147e509b4c`。
 - 当前本机入口：<http://127.0.0.1:14332/revolution>，后端端口 18501；正常重启后保留原隔离数据库与登录签名。
-- 最新产品 CI：[39144471621 · PASS](https://github.com/Canshu-King/CityNexus/actions/runs/39144471621)。前段工作台 CI 39143675599 也已通过。
+- 已通过的产品 CI：[939806 · 39145842797](https://github.com/Canshu-King/CityNexus/actions/runs/39145842797)、[e21cae · 39144471621](https://github.com/Canshu-King/CityNexus/actions/runs/39144471621)。9affeadb5a 另做 6 项工作台检查及 TypeScript，通过后推送；其 CI 以 PR checks 为准。
 
 ## 实际新增的使用能力
 
@@ -36,7 +37,7 @@
 | 地图与日程 | 实际渲染 11 个图钉；点击博物馆显示 OSM 来源链接，并展开 `photon:W/161090899` 的草案项 |
 | 刷新恢复 | 同一任务恢复 65 条事件、11 个地点、两日九项，未因刷新重新发起来源查询 |
 
-该任务另有 5 次 canonical Place 来源工具参数被拒绝：研究线索 ID 尚不是 canonical Place ID。事件保留了这些失败，工具成功数没有把它们算进去。下一项应适配研究线索的来源核实路径，减少无效调用。
+该任务另有 5 次 canonical Place 来源工具参数被拒绝：当时研究线索 ID 尚不是 canonical Place ID。事件保留了这些失败，工具成功数没有把它们算进去。下述 956bc1 增量已修复此入口，未改写这些历史记录。
 
 第一轮实际收据：`20261019_MISSION_OS_LIVE.json`；后续续作与完整工具结果：`20261019_MISSION_OS_AREA_CONTINUATION.json`。两份分别绑定 91e680 和 e21cae，未将第一轮来源调用写成 e21cae 新调用。
 
@@ -51,8 +52,19 @@
 
 ## 接下来继续施工
 
-1. 研究线索 ID 的来源核实适配，避免模型在 canonical Place 专用工具上反复空转。
+### 后续已交付：执行工作台、来源缓存与手机图层
+
+- `b0c986bc9b` 把已有 AgentWorkStatus、MobileCompatAgentActivity、MobileHermesRun 与 LiveRecovery 接到 ACTIVE 工作台。探索与行程页共用同一个执行实例，不因切页丢失当前输入；Guardian、出发准备、恢复提案等既有请求补上当前登录鉴权头。15/15 界面检查及单独鉴权检查通过；真实 ACTIVE 验收仍需实际已启动行程。
+- 复用原 AI 工作线交付的 `e2eacc5774`，根会话集成为 `956bc1c455`：`research_place_sources` 对本任务实际研究线索返回缓存 OSM 引用、坐标、已有字段与待查字段，不再因 ID 形式拒绝。canonical Place 保持原路径。该分支不访问公网，也不创建 WebObservation。
+- `9398067781` 增加缓存来源的界面结果与手机地图／日程切换按钮；`9affeadb5a` 修正为只滚动画布，避免带动整页。
+- 最新后端聚焦 36/36，包括缓存分支进入真实 dispatcher 的 fixture；工作台 6/6、ACTIVE 15/15、单独鉴权 1/1，TypeScript／build 通过。939806 CI 通过完整 Chromium 检查。
+- 939806 服务启动后实际恢复原 65 条事件、11 条地点、两日九项；新 390×844 图层按钮也已在 Chrome-use 操作，日程画布滚动约 374 px，未发起新的来源或模型请求。
+- 新缓存函数对实际上海任务做过一次只读服务函数检查：返回博物馆 `way/161090899` 的已有来源、坐标及营业／费用等待查字段，`CACHED_ONLY`。这不是新增 Hermes 模型轮次。
+
+### 后续工作
+
+1. 研究线索进一步采集营业、费用和可用性资料；当前缓存入口已可用。
 2. 修正地域后的县域首个零结果→自主继续场景；本轮上海是正向案例，没有把历史受污染的县域查询充作此验收。
-3. Overpass 正向结果、已有真实候选的继续研究、Guardian／LiveRecovery／同行决策深度接线与真人手机触控，继续各自完成。
+3. Overpass 正向结果、已有真实候选的继续研究、Guardian／LiveRecovery／同行决策的真实 ACTIVE 操作与真人手机触控。
 
 USER_VERIFIED：PENDING。当前交付为实际可用的研究与可编辑日程工作台。
