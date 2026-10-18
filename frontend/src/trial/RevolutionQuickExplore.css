@@ -161,3 +161,29 @@
 .rev-firstlook .rev-quick-ai textarea{min-height:74px!important;max-height:140px}
 .rev-firstlook .rev-quick-place-list article>.rev-quick-place-select{min-height:120px!important;padding:14px!important}
 }
+
+/* Primary travel intent is open-ended; the old provider's four buckets are optional. */
+.rev-firstlook .rev-quick-agent-direct {
+  padding: 16px;
+  margin: 18px 0;
+  border: 1px solid #a9d6bb;
+  background: #eaf7ee;
+  border-radius: 14px;
+}
+.rev-firstlook .rev-quick-agent-direct p { margin: 0 0 12px; line-height: 1.55; color: #174631; }
+.rev-firstlook .rev-quick-agent-direct > button { width: 100%; min-height: 48px; }
+.rev-firstlook .rev-quick-legacy-categories {
+  margin: 12px 0;
+  border: 1px solid #dfebe0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fafcf9;
+}
+.rev-firstlook .rev-quick-legacy-categories > summary {
+  cursor: pointer;
+  color: #3c6a52;
+  font-size: 13px;
+  font-weight: 650;
+}
+.rev-firstlook .rev-quick-legacy-categories > :not(summary) { margin-top: 12px; }
+.rev-firstlook .rev-quick-zero-options > button { min-height: 48px; }
