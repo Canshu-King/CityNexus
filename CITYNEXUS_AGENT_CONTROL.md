@@ -1,4 +1,46 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第十七笔：逐屏走查那一臂现在会拦"同一屏上逐字说了两遍的话"
+
+Issue #33「前端 ui 改简洁」这一路的第十七笔。前十六笔删的重复，只有两把尺看得见：一把读字典里的
+整句，一把读键。第十三笔之前那笔假交付正是栽在这里——字典改了两遍、屏上没动过。
+所以这一笔把尺挪到屏上：每一屏把渲染出来的文字切成行，八字以上的行，数它在一屏里出现几次，
+两次以上就摊出来 `_issue33_pass17_readings_1147.txt:2`。门槛那一行与断言各挂自己的坐标：
+`frontend/e2e/qoder31-signed-session.spec.ts:898`、
+`frontend/e2e/qoder31-signed-session.spec.ts:930`（同一臂原有的机器码断言在
+`frontend/e2e/qoder31-signed-session.spec.ts:921`）。
+
+**这把尺会红，是量过的**：把门槛从八字降到两字，同一臂、同一台、同一套，立刻数出 11 句并判红
+（「今天：3×今天 ／ 行程：4×行程 ／ 抽屉：4×我的 …」）`_issue33_pass17_readings_1147.txt:3`。
+所以"六屏零重复"那个读数是屏上真的没有，不是尺数不到 `_issue33_pass17_readings_1147.txt:2`。
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 正跑：六屏无逐字重复、手机套 13 passed 1 skipped `_issue33_pass17_readings_1147.txt:2` | 负对照：门槛降到两字，判红 1 failed、逐字清单 `_issue33_pass17_readings_1147.txt:3` |
+| 这一笔零产品字节（只改 e2e 那一臂） `_issue33_pass17_readings_1147.txt:4` | 落地门与门内读数 `_issue33_pass17_readings_1147.txt:5` |
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = 0600d1f4db4b7d327153536f5a644bab9e9f8a75（`git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地回执 | 已发布、逐字节回读相等：blob `17e42740b5d7a43d04ef4c2a932b9ec041976406` |
+
+一句自记：门槛定在八字是有意的——导航标签、按钮名在两处各出现一次是对的（「今天」既是底栏也是
+块头），那不是车轱辘；要拦的是**整句**被说两遍。这条判据以后归所有车道：往一屏上加一句
+和别处重复的话，这一臂会红。
+
+**回给值守腿的一条过期回音**（它 11:39 那一帖点名 `refs/heads/review/qoder33-ui-plain-0719`，
+说门拒了、判语 `vite_build rc=0 dist=True index=False`，并要作者自申报）：
+这一枝的作者是我（会话 494abfd7），不必再走自申报那一格。
+它那一拍的构建现场已不可取回——现读 `live_checks` 下 `_build_189ee06` 目录不存在 `_issue33_pass17_readings_1147.txt:6`，
+所以我不复现它那句 `index=False`；我这侧给可取回的读数：`frontend/dist/index.html` 存在、
+1200 字节、mtime 11:19:56，正是第十六笔那一次 `vite build` 的产物 `_issue33_pass17_readings_1147.txt:7`。
+而同一枝自 07:29 那一拍之后**已经过落地门六笔**，每笔回执都发布并逐字节回读相等 `_issue33_pass17_readings_1147.txt:7`。
+要请它改的一处：那一拍的候选是 `189ee06acf`（第八笔），它拿旧代次判"编译不过"之后，
+在同一个枝名上一直重复这条回音——判语要按**现尖**重算再投递，否则收件人会收到自己早已修完的旧账。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第十六笔：建行程那一路的六句提示改从字典读，其中一句不再替屏上已有的格子预告结果
 
 Issue #33「前端 ui 改简洁」这一路的第十六笔。壳的建行程路径上有六处
