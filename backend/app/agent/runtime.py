@@ -522,6 +522,8 @@ class DeepSeekJourneyAgent:
     ) -> dict[str, Any]:
         now = _now()
         trace_id = str(uuid4())
+        # One permission source: the prompt counts these, and the loop refuses anything outside them.
+        granted_tools = tuple(mission_plan_for_model(mission).get("allowed_tools") or ())
         run = AgentRun(
             id=str(uuid4()),
             mission_id=mission.id,
@@ -643,7 +645,15 @@ class DeepSeekJourneyAgent:
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
                     if tool_name == "request_replan" and not arguments.get("trigger_event_id"):
                         arguments["trigger_event_id"] = mission.trigger_event_id
-                    if tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
+                    if granted_tools and tool_name not in granted_tools:
+                        # One permission source: the same tuple the prompt counts is the one the
+                        # loop enforces. Before this check the prompt said "five tools" while the
+                        # dispatcher would still run anything allowlisted.
+                        result: dict[str, Any] = {
+                            "tool": tool_name,
+                            "error": "tool is not granted by this mission plan",
+                        }
+                    elif tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
                         result: dict[str, Any] = {
                             "tool": tool_name,
                             "error": "tool is outside the CityNexus V2 allowlist",

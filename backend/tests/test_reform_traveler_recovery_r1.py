@@ -193,3 +193,29 @@ def test_r7_the_id_alone_is_not_a_credential() -> None:
     )
     assert unknown.status_code == 401, unknown.text
     assert unknown.json()["error"]["reason_code"] == "RECOVERY_UNKNOWN"
+
+
+def test_r8_two_tabs_redeeming_the_same_secret_get_one_session() -> None:
+    """GPT's narrow concurrency ask: the same secret presented twice at once.
+
+    The status check cannot decide this -- both readers see an unused row -- so the UPDATE carries
+    the condition and its row count is the verdict. Exactly one caller may come back with a session.
+    """
+    import threading
+
+    a = _traveller("Recovery A")
+    issued = _issue(a)
+    statuses: list[int] = []
+    lock = threading.Lock()
+
+    def redeem_once() -> None:
+        status = _redeem(issued).status_code
+        with lock:
+            statuses.append(status)
+
+    threads = [threading.Thread(target=redeem_once) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert sorted(statuses) == [200, 401], statuses

@@ -225,6 +225,84 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  # Reform 2026-10-18: the way back after a credential is gone. The server keeps a digest and a
+  # lifecycle (expiry, single use, revocation, a failure counter); the secret is shown once and
+  # lives on the person's device. None of these doors accepts a bare traveller id as a credential.
+  /travelers/{traveler_id}/recovery:
+    parameters:
+      - {$ref: '#/components/parameters/TravelerId'}
+    post:
+      operationId: issueTravelerRecovery
+      summary: Issue one recovery credential to the traveller whose own live credential is on the request
+      responses:
+        '201':
+          description: "The secret, shown once; the server keeps only a digest (Cache-Control private, no-store)"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerRecoveryIssued'}
+        '401':
+          description: No usable traveller credential on the request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '403':
+          description: The credential speaks for another traveller (TRAVELER_NOT_PRINCIPAL)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/recovery/redeem:
+    post:
+      operationId: redeemTravelerRecovery
+      summary: Exchange a recovery id and secret for a session signed by the same verifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TravelerRecoveryRedeem'}
+      responses:
+        '200':
+          description: "A fresh session for the credential's traveller (Cache-Control private, no-store)"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerRecoverySession'}
+        '401':
+          description: >-
+            Named refusals: RECOVERY_UNKNOWN / RECOVERY_USED / RECOVERY_EXPIRED / RECOVERY_REVOKED /
+            RECOVERY_SECRET_MISMATCH.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '429':
+          description: RECOVERY_LOCKED after repeated wrong secrets
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/{traveler_id}/recovery/{recovery_id}/revoke:
+    parameters:
+      - {$ref: '#/components/parameters/TravelerId'}
+      - name: recovery_id
+        in: path
+        required: true
+        schema: {type: string}
+    post:
+      operationId: revokeTravelerRecovery
+      summary: Stop a recovery credential before it is used
+      responses:
+        '200':
+          description: Revoked (idempotent)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerRecoveryRevoked'}
+        '403':
+          description: The credential speaks for another traveller
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: No such recovery credential for this traveller
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /travelers/{traveler_id}:
     parameters:
       - {$ref: '#/components/parameters/TravelerId'}
@@ -3039,6 +3117,39 @@ components:
             renewed_from_expires_at:
               type: [integer, 'null']
               description: unix seconds the presented credential was due; null when it carried none
+    TravelerRecoveryIssued:
+      # Reform 2026-10-18: the only time the secret exists in an answer. The server stores a digest
+      # bound to the credential id, never this value.
+      type: object
+      required: [recovery_id, recovery_secret, expires_at, shown_once]
+      properties:
+        recovery_id: {type: string}
+        recovery_secret: {type: string, description: "shown exactly once; the server stores only a digest"}
+        expires_at: {type: string}
+        shown_once: {type: boolean, const: true}
+    TravelerRecoveryRedeem:
+      type: object
+      required: [recovery_id, recovery_secret]
+      properties:
+        recovery_id: {type: string, minLength: 8, maxLength: 64}
+        recovery_secret: {type: string, minLength: 16, maxLength: 256}
+    TravelerRecoverySession:
+      allOf:
+        - {$ref: '#/components/schemas/TravelerSession'}
+        - type: object
+          required: [session_state, access_token, auth_method]
+          properties:
+            session_state: {type: string, const: SIGNED}
+            access_token: {type: string}
+            auth_method: {type: string, const: recovery_credential}
+            recovered_at: {type: [string, 'null']}
+    TravelerRecoveryRevoked:
+      type: object
+      required: [recovery_id, revoked]
+      properties:
+        recovery_id: {type: string}
+        revoked: {type: boolean}
+        revoked_at: {type: [string, 'null']}
     ErrorEnvelope:
       type: object
       required: [error]

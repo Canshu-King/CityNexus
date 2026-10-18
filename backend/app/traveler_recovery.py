@@ -25,6 +25,7 @@ import time
 from datetime import datetime, timezone
 from uuid import uuid4
 
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from app.db.models import TravelerRecoveryCredential
@@ -103,10 +104,26 @@ def redeem_recovery_credential(
         raise RecoveryRefusal(
             401, "RECOVERY_SECRET_MISMATCH", "that is not this credential's secret"
         )
-    row.used_at = _iso(clock)
-    row.failed_attempts = 0
+    # Consume atomically. Two tabs presenting the same secret at the same instant must not both get
+    # a session: the read above cannot decide that, so the UPDATE carries the condition and its
+    # row count is the verdict. The loser re-reads to name why it lost.
+    consumed = session.execute(
+        update(TravelerRecoveryCredential)
+        .where(
+            TravelerRecoveryCredential.id == credential_id,
+            TravelerRecoveryCredential.used_at.is_(None),
+            TravelerRecoveryCredential.revoked_at.is_(None),
+        )
+        .values(used_at=_iso(clock), failed_attempts=0)
+    )
+    if consumed.rowcount != 1:
+        session.rollback()
+        latest = session.get(TravelerRecoveryCredential, credential_id)
+        if latest is not None and latest.revoked_at is not None:
+            raise RecoveryRefusal(401, "RECOVERY_REVOKED", "this recovery credential was revoked")
+        raise RecoveryRefusal(401, "RECOVERY_USED", "this recovery credential has already been used")
     session.commit()
-    return row
+    return session.get(TravelerRecoveryCredential, credential_id)  # type: ignore[return-value]
 
 
 def revoke_recovery_credential(

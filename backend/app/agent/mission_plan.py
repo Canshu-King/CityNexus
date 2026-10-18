@@ -59,6 +59,19 @@ _READ_TOOLS = (
     "inspect_twin",
     "list_replans",
     "search_city_services",
+    # Reform 2026-10-18: read-shaped DRAFT research. They capture observations and strategy
+    # evidence, never plan truth, so a draft is granted them before anything is ACTIVE.
+    "research_place_sources",
+    "estimate_place_facts",
+    "compare_routes",
+)
+_DRAFT_WRITE_TOOLS = (
+    # These write rows a draft needs (provider candidates, canonical facts, candidate plans) and
+    # still cannot commit money, a booking or a plan selection. Keeping them in their own tuple is
+    # what makes the grant's side effect readable instead of "everything that is not a payment".
+    "discover_places",
+    "acquire_place_facts",
+    "generate_plans",
 )
 _ACTION_TOOLS = (
     "request_replan",
@@ -136,7 +149,11 @@ def build_mission_plan(
             None,
             requires_authority=True,
         )
-    allowed_tools = (*_READ_TOOLS, "request_replan") if autonomy == "PLAN_ONLY" else (*_READ_TOOLS, *_ACTION_TOOLS)
+    allowed_tools = (
+        (*_READ_TOOLS, *_DRAFT_WRITE_TOOLS, "request_replan")
+        if autonomy == "PLAN_ONLY"
+        else (*_READ_TOOLS, *_DRAFT_WRITE_TOOLS, *_ACTION_TOOLS)
+    )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
         autonomy=autonomy,
