@@ -135,7 +135,7 @@ async function signingAvailable(page: Page): Promise<boolean> {
   const answer = await page.request.post(`${baseOf()}/api/v1/travelers`, {
     data: { display_name: "Issue 31 probe", locale: "zh-CN", timezone: "Asia/Shanghai" },
   });
-  expect(answer.status(), answer.text()).toEqual(201);
+  expect(answer.status(), await answer.text()).toEqual(201);
   const body = await answer.json();
   return body.session_state === "SIGNED" && typeof body.access_token === "string";
 }
@@ -245,7 +245,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     const probe = await page.request.post(`${baseOf()}/api/v1/travelers`, {
       data: { display_name: "Issue 31 owner", locale: "zh-CN", timezone: "Asia/Shanghai" },
     });
-    expect(probe.status(), probe.text()).toEqual(201);
+    expect(probe.status(), await probe.text()).toEqual(201);
     const owner = await probe.json();
     expect(owner.session_state, "这台部署没开签发，这一臂量不到东西").toEqual("SIGNED");
     const trip = await page.request.post(`${baseOf()}/api/v1/journeys`, {
@@ -265,7 +265,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
         departure_anchor: { at: "2026-11-02T18:00:00+08:00", location: "Tianjin Binhai Airport" },
       },
     });
-    expect(trip.status(), trip.text()).toEqual(201);
+    expect(trip.status(), await trip.text()).toEqual(201);
     const journey = await trip.json();
 
     /* 第二个人接手同一台设备：她有自己的签名会话，指针却还是上一位那趟。 */
@@ -300,7 +300,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     );
     await shoot(page, "foreign-pointer");
     expect(refused, "服务器没有对旧指针给出 403").not.toBeNull();
-    expect((refused as { reason: string | null }).reason).toBe("JOURNEY_POINTER_NOT_OURS");
+    expect((refused as unknown as { reason: string | null }).reason).toBe("JOURNEY_POINTER_NOT_OURS");
     expect(pointerNow, "被拒之后旧指针还留在盘上").toBeNull();
     expect(sessionNow, "换人不该把第二个人登出").not.toBeNull();
     expect(JSON.parse(sessionNow as string).travelerId).toBe(guest.id);
@@ -466,8 +466,10 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
 
     /* P1-TRUTH：审计事件流里既有"AI／工具动过手"的，也有"人建了行程"这种行程系统自己的事。
      * 面板分成两段，所以这里对的是**Agent 那一段**的行数，而不是整条流的条数。 */
-    const agentEvents = (Array.isArray(feed.events) ? feed.events : []).filter((item) =>
-      /(agent|tool|run|approval|replan|guardian|gateway|hermes|proposal)/i.test(String(item?.event_type ?? "")),
+    const agentEvents = (Array.isArray(feed.events) ? feed.events : []).filter((item: unknown) =>
+      /(agent|tool|run|approval|replan|guardian|gateway|hermes|proposal)/i.test(
+        String((item as { event_type?: unknown })?.event_type ?? ""),
+      ),
     );
     await expect(panel).toHaveAttribute("data-feed-agent-events", String(agentEvents.length));
     const rows = await page.locator(".cn-agent-rail li").count();
