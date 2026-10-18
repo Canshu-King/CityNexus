@@ -111,7 +111,6 @@ import {
   type OfflineJourney,
 } from "../lib/offlineJourney";
 import { dictionaryCopy, dictionaryText, useT, useLocale } from "../i18n/LocaleContext";
-import { englishCountNoun } from "../lib/plural";
 import {
   currencyExponent,
   currencyMinorFactor,
@@ -3441,34 +3440,22 @@ function Hub({
             data-no-coordinates={tripUnlocatable ? "true" : "false"}
           >
             {disruptions.length
-              ? zh
-                ? `${disruptions.length} 项变化`
-                : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
+              ? t("today.attentionChanges", { n: disruptions.length })
               : handledDisruptions.length
-                ? zh
-                  ? "已处理"
-                  : "Handled"
+                ? t("today.attentionHandled")
                 : tripUnlocatable
-                  ? /* Not a new word: the map panel owns this condition's sentence
-                       (MapPanel.tsx, "这个行程还没有可信的坐标…"), and the attention line quotes its
-                       own opening clause so the two surfaces on one screen cannot disagree. */
-                    zh
-                    ? "这个行程还没有可信的坐标"
-                    : "This trip has no trustworthy coordinates yet"
-                  : zh
-                    ? "一切正常"
-                    : "All clear"}
+                  ? /* The map panel owns this condition's sentence; the attention line quotes its
+                       opening clause.  Both now read one key, so the two surfaces on this screen
+                       cannot drift apart the way they did while each file held its own copy. */
+                    t("today.attentionNoCoordinates")
+                  : t("today.attentionClear")}
           </strong>
         </div>
         {disruptions.length > 0 || handledDisruptions.length > 0 ? (
           <p className="cn-attention-hint">
             {disruptions.length
-              ? zh
-                ? "打开「实时行程」查看并处理这些变化。"
-                : "Open Live to review these changes."
-              : zh
-                ? "刚才的变化已经处理好。"
-                : "The earlier change has been handled."}
+              ? t("today.attentionOpenHint")
+              : t("today.attentionHandledHint")}
           </p>
         ) : null}
         {disruptions.length > 0 && (
