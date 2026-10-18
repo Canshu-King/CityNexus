@@ -201,6 +201,9 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     let signedOperatorReads = 0;
     let unrequestedModelWrites = 0;
     page.on("request", (request) => {
+      if (/\/guardian\/(pulse\/latest|autopilot\/status)|\/launch-setup|\/replans$/.test(request.url())) {
+        expect(request.headers()["authorization"]).toBe("Bearer TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+      }
       if (request.method() !== "GET" && /agent\/commands|\/trial-ai-discovery|bootstrap-discovery/.test(request.url())) {
         unrequestedModelWrites += 1;
       }
@@ -248,8 +251,13 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     });
 
     await page.goto("/revolution");
+    const canvas = page.getByTestId("rev-mission-cockpit");
+    await expect(canvas.getByTestId("rev-mobile-agent-work")).toBeVisible();
+    await expect(canvas).toContainText("执行与待办");
+    await expect(page.getByTestId("rev-mobile-agent-work")).toHaveCount(1);
     await page.getByTestId("rev-mobile-tab-trips").click();
     const card = page.getByTestId("rev-mobile-agent-work");
+    await expect(card).toHaveCount(1);
     await expect(card).toBeVisible();
     await expect(card.getByText("正在留意行程变化")).toBeVisible();
     await expect(card.getByText("行程监测中。")).toBeVisible();

@@ -1160,10 +1160,10 @@ export function RevolutionFirstLook() {
           )
         ) : (
           <>
-            <section className="rev-mobile-tabpanel" hidden={activeTab !== "explore"} data-testid="rev-mobile-screen-explore">
+            <section className="rev-mobile-tabpanel" hidden={activeTab !== "explore" && !(journey.status === "ACTIVE" && activeTab === "trips")} data-testid="rev-mobile-screen-explore">
               <section className="rev-firstlook-journey">
                 <div>
-                  <span className="rev-firstlook-eyebrow">正在探索</span>
+                  <span className="rev-firstlook-eyebrow">{journey.status === "ACTIVE" ? "正在旅行" : "正在探索"}</span>
                   <h1>{explorationTitle?.journeyId === journey.id ? explorationTitle.label : journey.cityName}</h1>
                   <p>想怎么走？先聊一句，再从真实地点中选择。</p>
                 </div>
@@ -1180,6 +1180,13 @@ export function RevolutionFirstLook() {
                 journeyStatus={journey.status}
                 agentStatus={agentStatusTitle}
                 agentAvailable={Boolean(agentCanRequestSuggestion)}
+                executionAgent={journey.status === "ACTIVE" ? <section aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
+                  <AgentWorkStatus journeyId={journey.id} visible={activeTab !== "me"} />
+                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab !== "me"} aiDisabled={aiDisabled} />
+                  <MobileHermesRun journeyId={journey.id} visible={activeTab !== "me"} />
+                </section> : null}
+                executionDecisions={journey.status === "ACTIVE"
+                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" /> : null}
                 onExplore={() => {
                   if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
                   document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1267,15 +1274,12 @@ export function RevolutionFirstLook() {
                 }}
               />
               {journey.status === "ACTIVE" ? (
-                <section className="rev-firstlook-real-ui" aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
+                <section className="rev-mobile-panel">
                   <section className="rev-mobile-panel">
                     <h2>当前行程</h2>
                     <p>这里显示行程监测、助手运行记录和待确认操作。</p>
                   </section>
-                  <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
-                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab === "trips"} aiDisabled={aiDisabled} />
-                  <MobileHermesRun journeyId={journey.id} visible={activeTab === "trips"} />
-                  <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
+                  <button type="button" onClick={() => navigateMobile("explore")}>回到行程工作台</button>
                 </section>
               ) : (
                 <>

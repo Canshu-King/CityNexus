@@ -357,7 +357,7 @@ export function LiveRecovery({
 
   const loadProposals = useCallback(async () => {
     try {
-      const r = await fetch(`/api/v1/journeys/${journeyId}/replans`);
+      const r = await fetch(`/api/v1/journeys/${journeyId}/replans`, { headers: travelerAuthHeaders() });
       const body = await r.json();
       setProposals(Array.isArray(body) ? (body as Proposal[]) : []);
     } catch {
@@ -373,7 +373,7 @@ export function LiveRecovery({
     let cancelled = false;
     void (async () => {
       try {
-        const response = await fetch(`/api/v1/journeys/${journeyId}/guardian/pulse/latest`);
+        const response = await fetch(`/api/v1/journeys/${journeyId}/guardian/pulse/latest`, { headers: travelerAuthHeaders() });
         if (!response.ok) return;
         const body = await response.json();
         if (!cancelled) setGuardianPulse((body?.pulse ?? null) as GuardianPulse | null);
@@ -388,7 +388,7 @@ export function LiveRecovery({
 
   const loadLaunchSetup = useCallback(async () => {
     try {
-      const response = await fetch(`/api/v1/journeys/${journeyId}/launch-setup`);
+      const response = await fetch(`/api/v1/journeys/${journeyId}/launch-setup`, { headers: travelerAuthHeaders() });
       if (!response.ok) return;
       setLaunchSetup((await response.json()) as LaunchSetup);
     } catch {
@@ -405,12 +405,12 @@ export function LiveRecovery({
     try {
       const response = await fetch(`/api/v1/journeys/${journeyId}/launch-origin`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...travelerAuthHeaders() },
         body: JSON.stringify({ source_kind: sourceKind }),
       });
       if (!response.ok) throw new Error("launch origin unavailable");
       await loadLaunchSetup();
-      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`);
+      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`, { headers: travelerAuthHeaders() });
       if (readiness.ok) setDepartureReadiness((await readiness.json()) as DepartureReadiness);
     } catch {
       setMessage(zh ? "暂时无法保存出发点。" : "We couldn't save that starting point yet.");
@@ -424,13 +424,13 @@ export function LiveRecovery({
     try {
       const response = await fetch(`/api/v1/journeys/${journeyId}/routes/acquire`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...travelerAuthHeaders() },
         body: JSON.stringify({ requested_mode: "WALK" }),
       });
       if (!response.ok) throw new Error("route unavailable");
       const body = (await response.json()) as RouteOperation;
       setRouteOperation(body);
-      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`);
+      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`, { headers: travelerAuthHeaders() });
       if (readiness.ok) setDepartureReadiness((await readiness.json()) as DepartureReadiness);
     } catch {
       setMessage(zh ? "暂时无法检查这段路线。" : "We couldn't check that route yet.");
@@ -469,7 +469,7 @@ export function LiveRecovery({
         return;
       }
       setMessage(zh ? "已记录，你正在前往下一站。" : "Got it — you’re on the way to the next stop.");
-      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`);
+      const readiness = await fetch(`/api/v1/journeys/${journeyId}/guardian/readiness`, { headers: travelerAuthHeaders() });
       if (readiness.ok) setDepartureReadiness((await readiness.json()) as DepartureReadiness);
       await twin.refetch();
       await plans.refetch();
@@ -484,7 +484,7 @@ export function LiveRecovery({
     let cancelled = false;
     void (async () => {
       try {
-        const response = await fetch(`/api/v1/journeys/${journeyId}/guardian/autopilot/status`);
+        const response = await fetch(`/api/v1/journeys/${journeyId}/guardian/autopilot/status`, { headers: travelerAuthHeaders() });
         if (!response.ok) return;
         const body = await response.json();
         if (!cancelled) {
@@ -534,7 +534,7 @@ export function LiveRecovery({
     let cancelled = false;
     void (async () => {
       try {
-        const r = await fetch(`/api/v1/journeys/${journeyId}/experience`);
+        const r = await fetch(`/api/v1/journeys/${journeyId}/experience`, { headers: travelerAuthHeaders() });
         const body = await r.json();
         const fromPlan = (body?.active_plan?.disruptions ?? []) as Disruption[];
         const fromContext = (context?.disruptions ?? []) as Disruption[];

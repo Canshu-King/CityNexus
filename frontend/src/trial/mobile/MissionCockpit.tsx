@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   BrainCircuit, CalendarDays, Clock3, Compass, MapPinned, Navigation2, RefreshCw,
   Route, ShieldCheck, Sparkles, Users,
@@ -21,6 +21,8 @@ type Props = {
   agentAvailable: boolean;
   onExplore: () => void;
   onTrip: () => void;
+  executionAgent?: ReactNode;
+  executionDecisions?: ReactNode;
 };
 
 type DataState = "loading" | "ready" | "partial" | "unavailable";
@@ -76,7 +78,7 @@ function eventLabel(event: DraftGoalTaskEvent): string {
 }
 
 export function MissionCockpit({
-  journeyId, cityName, goal, journeyStatus, agentStatus, agentAvailable, onExplore, onTrip,
+  journeyId, cityName, goal, journeyStatus, agentStatus, agentAvailable, onExplore, onTrip, executionAgent, executionDecisions,
 }: Props) {
   const [command, setCommand] = useState(goal);
   const [task, setTask] = useState<DraftGoalTask | null>(null);
@@ -187,7 +189,8 @@ export function MissionCockpit({
     <div className="cn-mission-grid">
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
         <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>Agent 命令台</strong></div>
-        <WorkspaceActions embedded panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
+        {journeyStatus === "ACTIVE" ? executionAgent :
+          <WorkspaceActions embedded panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />}
       </div>
       <div className="cn-mission-spatial" aria-label="地图与日程画布">
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
@@ -203,7 +206,8 @@ export function MissionCockpit({
           </section>
         </article>
         <article className="cn-mission-card cn-mission-timeline-pane" data-testid="rev-mission-timeline-pane">
-          <div className="cn-mission-section-heading"><CalendarDays size={18} /><strong>按天调整行程</strong></div>
+          <div className="cn-mission-section-heading"><CalendarDays size={18} /><strong>{journeyStatus === "ACTIVE" ? "执行与待办" : "按天调整行程"}</strong></div>
+          {journeyStatus === "ACTIVE" ? executionDecisions : <>
           <p>{draftSlots.length} 项安排 · {draftDays.length} 天</p>
           {task?.draft_artifact ? <GoalDraftEditor key={task.task_id} artifact={task.draft_artifact} disabled={task.status === "WORKING"}
             onSave={async (artifact) => {
@@ -212,7 +216,7 @@ export function MissionCockpit({
               const value = await cityNexusApi.updateGoalDraft(journeyId, task.task_id, artifact);
               if (bearer !== readTravelerBearer() || owner !== readTravelerIdentity()?.travelerId) throw new Error("登录已切换，请重新打开行程。");
               setTask(value); window.dispatchEvent(new Event("citynexus:mission-refresh"));
-            }} /> : <p>Agent 会把暂定安排和待查事项逐步保存到这里。</p>}
+            }} /> : <p>Agent 会把暂定安排和待查事项逐步保存到这里。</p>}</>}
           <div className="cn-mission-capability-grid">
             <button type="button" onClick={onTrip}><Route size={18} /><strong>候选方案与出发</strong></button>
             <button type="button" onClick={onTrip}><ShieldCheck size={18} /><strong>行程守护</strong></button>
