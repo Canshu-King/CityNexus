@@ -790,4 +790,65 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
       );
     },
   );
+
+  test("Issue #33 UI：逐屏走一遍——屏上不许铺机器码，并把整句英文与按不动的按钮摊出来", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    await createAndAwaitJourney(page);
+
+    /* 这一臂不测某一格的功能，测的是"一个人把每一屏都点开看一眼"会看见什么：
+     * ① 中文屏上铺着内部机器码（硬判，这是 Issue #31 那批"真相要给人读"的同一类）；
+     * ② 整句英文散文混在中文里（只摊出来，别处的屏不替别人定规矩）；
+     * ③ 一颗看得见、写着字的按钮，中心点命中的不是它自己（被浮层盖住 = 按不动，也只摊读数）。 */
+    const stops: Array<{ label: string; open: () => Promise<unknown> }> = [
+      { label: "今天", open: async () => page.goto("/v8", { waitUntil: "load" }) },
+      { label: "行程", open: async () => page.getByRole("button", { name: "行程" }).last().click() },
+      { label: "地图", open: async () => page.getByRole("button", { name: "地图" }).last().click() },
+      { label: "Copilot", open: async () => page.getByRole("button", { name: "Copilot" }).last().click() },
+      { label: "我的", open: async () => page.getByRole("button", { name: "我的" }).last().click() },
+      { label: "抽屉", open: async () => page.getByText("菜单").first().click() },
+    ];
+    const report: string[] = [];
+    const seenCodes: string[] = [];
+    for (const stop of stops) {
+      await Promise.resolve(stop.open()).catch(() => undefined);
+      await page.waitForTimeout(900);
+      const facts = await page.evaluate(() => {
+        const CODE = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;
+        const SNAKE = /\b[a-z][a-z0-9]*(?:_[a-z0-9]+){1,}\b/g;
+        const EN = /\b[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\b/g;
+        const visible = (el: Element) => {
+          const box = el.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          return box.width > 6 && box.height > 6 && style.visibility !== "hidden" && style.opacity !== "0"
+            && box.bottom > 0 && box.top < window.innerHeight;
+        };
+        const lines = (document.body.innerText || "").split("\n").map((t) => t.trim()).filter(Boolean);
+        const codes = lines.filter((t) => { CODE.lastIndex = 0; SNAKE.lastIndex = 0; return CODE.test(t) || SNAKE.test(t); });
+        const english = lines.filter((t) => { EN.lastIndex = 0; return EN.test(t) && !/[\u4e00-\u9fff]/.test(t); });
+        const blocked: string[] = [];
+        for (const button of Array.from(document.querySelectorAll("button, a[role=button]")).filter(visible).slice(0, 40)) {
+          const box = button.getBoundingClientRect();
+          const hit = document.elementFromPoint(Math.round(box.x + box.width / 2), Math.round(box.y + box.height / 2));
+          if (!hit) continue;
+          if (hit === button || button.contains(hit) || hit.contains(button)) continue;
+          /* 抽屉打开时那层 backdrop 就是要挡住后面的按钮（点外面即关），这是设计不是按不动；
+             不算它，一次会报出十一颗假的，真那两颗就埋在里面。 */
+          if (hit.closest('[class*="backdrop"], [class*="scrim"], [role="dialog"]')) continue;
+          blocked.push(`${(button.textContent || "").trim().slice(0, 16)}@${Math.round(box.x + box.width / 2)},${Math.round(box.y + box.height / 2)}→${hit.tagName.toLowerCase()}.${String(hit.className).split(" ")[0]}`);
+        }
+        return { lines: lines.length, codes, english, blocked };
+      });
+      seenCodes.push(...facts.codes.map((c) => `${stop.label}：${c}`));
+      report.push(`${stop.label}：文字 ${facts.lines} 行 | 码 ${facts.codes.length} 行 | 整句英文 ${facts.english.length} 行 | 按不动 ${facts.blocked.length} 颗`);
+      if (facts.codes.length) report.push(`   码：${facts.codes.slice(0, 4).join(" ／ ").slice(0, 220)}`);
+      if (facts.english.length) report.push(`   英文：${facts.english.slice(0, 3).join(" ／ ").slice(0, 200)}`);
+      if (facts.blocked.length) report.push(`   按不动：${facts.blocked.slice(0, 4).join(" ／ ").slice(0, 220)}`);
+      await page.screenshot({ path: `${DOC_EVIDENCE}/sweep-${stop.label}.png`, fullPage: false });
+    }
+    console.log(report.join("\n"));
+    /* 判的是**走过的每一屏**：只看最后一屏会漏 —— 07:19 那一跑里 NOT_AVAILABLE 出现在今天与地图，
+     * 抽屉那一屏干干净净，于是这一格绿着放走了它。 */
+    expect(seenCodes.length, `走过的屏上铺了内部机器码：${seenCodes.slice(0, 4).join(" ／ ")}`).toBe(0);
+  });
 });
