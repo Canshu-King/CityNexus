@@ -132,9 +132,9 @@ function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; are
   </li>)}</ul>;
 }
 
-export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, onTaskChange }: { panel: WorkspacePanel;
+export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
-  embedded?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
+  embedded?: boolean; chatDockVisible?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -154,6 +154,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const previousContext = useRef<Context | null>(null);
   const generation = useRef(0);
   const writeBusy = useRef(false);
+  const followupMessageId = useRef<string | null>(null);
   const postController = useRef<AbortController | null>(null);
   const context = readContext();
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
@@ -178,7 +179,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       postController.current?.abort();
       postController.current = null;
       writeBusy.current = false;
-      setSnapshot(null); setGoalTaskSnapshot(null); setQuestion(""); setRequestError(null);
+      setSnapshot(null); setGoalTaskSnapshot(null); setQuestion(""); setRequestError(null); followupMessageId.current = null;
       setModelConsent(false); setOnlineResearchConsent(false);
       setLoadError(null); setBusy(false); setAllowTiles(false); setAiReady(false);
       setRevision((value) => value + 1);
@@ -228,7 +229,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           mapCandidates: mapPlaces?.journey_id === actor.id && Array.isArray(mapPlaces.candidates) ? mapPlaces.candidates : input.candidates });
         setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (input.intent?.goal ?? "").slice(0, 2000));
         if (savedTask && savedTask[0].journey_id === actor.id) {
-          setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || savedTask[0].goal);
+          setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value);
           setGoalTaskSnapshot({ context: actor, value: savedTask[0], events: savedTask[1].events });
           setModelConsent(savedTask[0].consent.model === true);
           setOnlineResearchConsent(savedTask[0].consent.online_research === true);
@@ -285,6 +286,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       }, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       saveTaskPointer(actor, created.task_id);
+      setQuestion("");
       setGoalTaskSnapshot({ context: actor, value: created, events: [] });
       const result = await cityNexusApi.runDraftGoalTask(actor.id, created.task_id, {
         model_consent: modelConsent, online_research_consent: onlineResearchConsent,
@@ -360,11 +362,57 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       ? (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
       : Math.min(MAX_TOOL_CALLS, (visibleTask.budget.max_tool_calls ?? TOOL_CALLS) + CONTINUE_TOOL_CALLS)
     : TOOL_CALLS;
+  const sendFollowup = async () => {
+    const actor = readContext();
+    const task = visibleTask;
+    const message = question.trim();
+    if (!actor || !task || !modelConsent || !aiReady || writeBusy.current || task.status === "WORKING"
+        || task.status === "CANCELLED" || message.length < 1) return;
+    const serial = ++generation.current;
+    const controller = new AbortController();
+    postController.current = controller;
+    writeBusy.current = true; setBusy(true); setRequestError(null);
+    const messageId = followupMessageId.current ?? crypto.randomUUID();
+    followupMessageId.current = messageId;
+    const timer = window.setTimeout(() => controller.abort(), 180000);
+    try {
+      const result = await cityNexusApi.runDraftGoalTask(actor.id, task.task_id, {
+        model_consent: modelConsent, online_research_consent: onlineResearchConsent,
+        max_model_turns: nextModelBudget, max_tool_calls: nextToolBudget,
+        user_message: message, message_id: messageId,
+      }, true, controller.signal);
+      if (serial !== generation.current || !sameContext(actor, readContext())) return;
+      // Only clear after server acknowledgement. The same message ID is reused after an
+      // unknown response so a retry cannot secretly start duplicate research.
+      setQuestion(""); followupMessageId.current = null;
+      setGoalTaskSnapshot({ context: actor, value: result, events: [] });
+      await refreshGoalTask(actor, task.task_id);
+    } catch (error) {
+      if (serial !== generation.current || !sameContext(actor, readContext())) return;
+      setRequestError(error instanceof Error && error.name === "AbortError"
+        ? "没有收到确认。消息可能已到达，先刷新当前任务；再次发送会复用原消息编号。"
+        : error instanceof Error && error.message.includes("GOAL_TASK_ALREADY_RUNNING")
+          ? "Agent 正在处理上一条指令，等这轮结束后可以继续发消息。"
+          : error instanceof Error ? error.message : "当前消息没有确认成功，请检查任务状态。");
+    } finally {
+      window.clearTimeout(timer);
+      if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
+    }
+  };
+
+  const sendMessage = () => {
+    if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup();
+    else void startNewTask();
+  };
+
   const taskMapPoints = (visibleTask?.research_places ?? []).map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
     coordinate_system: "WGS84" as const, provider_provenance: place.provider_provenance,
     selection_state: "OPENING_UNVERIFIED" as const, source_url: place.source_url, observation_expired: false,
   }));
+  const conversation = visibleTask?.conversation?.length
+    ? visibleTask.conversation
+    : visibleTask ? [{ role: "user" as const, text: visibleTask.goal, message_id: "initial", at: visibleTask.created_at ?? "" }] : [];
   const activeTools = visibleEvents.filter((event) => event.event_type === "TOOL_STARTED" &&
     !(visibleTask?.tool_steps ?? []).some((step) => step.run_id === event.run_id && step.sequence_no === event.step_sequence_no));
 
