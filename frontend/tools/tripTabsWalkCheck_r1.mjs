@@ -388,6 +388,7 @@ async function walk(browser, locale) {
     observe(watch.always, "always", collapsed, observations);
     observe(watch.sometimes, "sometimes", collapsed, observations);
 
+    await page.screenshot({ path: join(SHOTS, `tab-${tab}-${locale}.png`), fullPage: true });
     // Now open every collapsed layer this screen offers and measure again. A sentence behind a
     // disclosure is not "on screen", and measuring without opening it would report a reachable
     // control as unreachable -- a false red this harness produced once before being fixed.
