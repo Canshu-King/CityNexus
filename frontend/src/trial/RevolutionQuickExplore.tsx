@@ -589,6 +589,18 @@ export function RevolutionQuickExplore({
     }, { label: "重新检查地图服务", action: () => retryReadiness() });
   };
 
+  const delegateToAgent = (zeroResult = false) => {
+    // Merely opens the existing signed goal workspace. It does NOT send a model
+    // request until the traveler explicitly confirms model and research consent.
+    const goal = (initialGoal?.trim() || aiGoal.trim() || `帮我在${cityName}安排真正有内容的旅行`).slice(0,1500);
+    const queryNote = zeroResult && lastPlaceSearch.current?.query
+      ? `上一次公开地点查询“${lastPlaceSearch.current.query}”没有命中，请你尝试不同关键词和已有合法来源，不要再让我手动选择四种分类。`
+      : "请主动研究古迹、美食、自然或其他符合目标的活动，产出可修改的暂定日程。";
+    window.dispatchEvent(new CustomEvent("citynexus:open-goal-task", {
+      detail: { journeyId, goal: `${goal}\n${queryNote}`.slice(0, 2000) },
+    }));
+  };
+
   const discover = (namedQuery?: string, radiusOverride?: 2500 | 5000) => {
     if (!center) {
       enter("area");
@@ -972,22 +984,32 @@ export function RevolutionQuickExplore({
               recipient={readiness.expected_recipient}
             />
           )}
-          <InterestPicker
-            categories={categories}
-            supportsFreeText={readiness?.provider === "photon" && Boolean(readiness.supports_place_name_search)}
-            radiusKm={radiusM / 1000}
-            category={category}
-            centerBasis={centerBasis}
-            sampleProviderMode={sampleProviderMode}
-            expectedRecipient={readiness?.expected_recipient ?? null}
-            readinessStatus={readinessStatus}
-            readinessReady={readiness?.status === "READY"}
-            busy={busy}
-            onCategoryChange={setCategory}
-            onRetryReadiness={retryReadiness}
-            onDiscover={() => discover()}
-            onChangeArea={() => enter("area")}
-          />
+          <div className="rev-quick-agent-direct">
+            <p>你不用先选公园、咖啡馆或图书馆。可以把完整旅行目标直接交给 Agent，它会尽力研究地点、保存部分资料和暂定行程。</p>
+            <button type="button" className="rev-quick-primary" onClick={() => delegateToAgent()}>
+              让 Agent 自己寻找玩法并规划 →
+            </button>
+          </div>
+          {readiness?.provider !== "photon" && <p className="rev-quick-disclosure">当前地点服务不支持名称关键词检索，但仍可用 AI 工作台研究其他可用来源，或在地图上调整位置。</p>}
+          <details className="rev-quick-legacy-categories">
+            <summary>按旧数据服务的四种快捷分类搜索（可选）</summary>
+            <InterestPicker
+              categories={categories}
+              supportsFreeText={readiness?.provider === "photon" && Boolean(readiness.supports_place_name_search)}
+              radiusKm={radiusM / 1000}
+              category={category}
+              centerBasis={centerBasis}
+              sampleProviderMode={sampleProviderMode}
+              expectedRecipient={readiness?.expected_recipient ?? null}
+              readinessStatus={readinessStatus}
+              readinessReady={readiness?.status === "READY"}
+              busy={busy}
+              onCategoryChange={setCategory}
+              onRetryReadiness={retryReadiness}
+              onDiscover={() => discover()}
+              onChangeArea={() => enter("area")}
+            />
+          </details>
         </>
       )}
 
@@ -1013,7 +1035,7 @@ export function RevolutionQuickExplore({
                 地图返回 {safeFilterSummary.raw_count} 条，符合条件 {safeFilterSummary.accepted_count} 处。
               </p>
             ) : (
-              <p>没有匹配地点。换个类别或搜索区域。</p>
+              <p>这次查询没有匹配地点。你可以直接交给 Agent 研究其他来源，不必继续猜分类。</p>
             )
           ) : (
             <>
@@ -1061,7 +1083,11 @@ export function RevolutionQuickExplore({
           )}
           {discovery?.status === "LIVE_ZERO_RESULTS" && (
             <section aria-label="没有地点时的下一步" className="rev-quick-zero-options" data-testid="rev-quick-zero-options">
-              <p>只是这次查询没有命中，当前选择的城市和原有旅行需求都还在。</p>
+              <p>这次公开数据查询没有命中，不代表当地没有值得去的地方。你的旅行目标、现有草案和地区都保留着。</p>
+              <button type="button" className="rev-quick-primary" data-testid="rev-quick-zero-agent"
+                onClick={() => delegateToAgent(true)}>
+                交给 Agent 继续找，并整理暂定日程 →
+              </button>
               {radiusM === 2500 && readiness?.status === "READY" && (
                 <button type="button" className="rev-quick-primary" disabled={busy}
                   onClick={() => {
