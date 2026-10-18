@@ -66,6 +66,8 @@ READ_TOOLS = (
     "research_place_sources",
     "estimate_place_facts",
     "compare_routes",
+    # Reform 2026-10-18, Guardian: the observation -> impact -> action projection is a read.
+    "read_guardian_stream",
 )
 DRAFT_WRITE_TOOLS = (
     # These write rows a draft needs (provider candidates, canonical facts, candidate plans) and
@@ -87,6 +89,9 @@ ACTION_TOOLS = (
     # Reform 2026-10-18: acquiring a route is a real provider call with a possible cost, so it sits
     # with the actions rather than in the free draft set.
     "acquire_route",
+    # Reform 2026-10-18, Guardian: the watch writes observations/events and can invalidate a
+    # pending replan, so it is an action and is not granted to a PLAN_ONLY mission.
+    "refresh_live_context",
 )
 
 

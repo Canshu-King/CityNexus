@@ -118,6 +118,20 @@ TYPED_TOOLS = (
         False,
         False,
     ),
+    ToolDescriptor(
+        AgentAction.READ_GUARDIAN_STREAM,
+        "read_guardian_stream",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.REFRESH_LIVE_CONTEXT,
+        "refresh_live_context",
+        True,
+        False,
+        False,
+    ),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

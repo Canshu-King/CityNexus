@@ -401,6 +401,8 @@ class AgentToolGateway:
             "acquire_place_facts": self.acquire_place_facts,
             "compare_routes": self.compare_routes,
             "acquire_route": self.acquire_route,
+            "read_guardian_stream": self.read_guardian_stream,
+            "refresh_live_context": self.refresh_live_context,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -663,6 +665,77 @@ class AgentToolGateway:
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "journey_id": journey.id,
             **result,
+        }
+
+    def read_guardian_stream(self, request: AgentToolCall) -> dict[str, Any]:
+        """Project Event -> ImpactAssessment -> GuardianRun; never starts a watch."""
+
+        if request.journey_id is None:
+            raise HTTPException(422, "journey_id is required")
+        journey = _require_journey(self.session, request.journey_id)
+        from app.agent.guardian_stream import guardian_stream
+
+        return guardian_stream(
+            self.session,
+            journey,
+            mission_id=str(request.mission_id) if request.mission_id else None,
+            limit=20,
+        )
+
+    def refresh_live_context(self, request: AgentToolCall) -> dict[str, Any]:
+        """Run the live venue-context watch, only when the deployment enabled it.
+
+        The switch is server-owned (`guardian_autorun`); the model cannot turn a
+        watch on by asking.  A Journey without an active plan has nothing to
+        watch, and says so instead of reporting an empty success.
+        """
+
+        if request.journey_id is None:
+            raise HTTPException(422, "journey_id is required")
+        journey = _require_journey(self.session, request.journey_id)
+        from app.agent.guardian_stream import guardian_stream
+        from app.core.config import settings
+        from app.live_context_watch import run_live_context_watch
+
+        base = {
+            "tool": "refresh_live_context",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "journey_id": journey.id,
+            "mission_id": str(request.mission_id) if request.mission_id else None,
+        }
+        if not settings.guardian_autorun:
+            return {
+                **base,
+                "status": "WATCH_NOT_ENABLED",
+                "reason_code": "GUARDIAN_AUTORUN_OFF",
+                "stream": [],
+                "next_legal_path": (
+                    "enable CITYNEXUS_GUARDIAN_AUTORUN and run the watch; no provider "
+                    "is called while monitoring is off"
+                ),
+            }
+        if not journey.active_plan_version_id:
+            return {
+                **base,
+                "status": "NO_ACTIVE_PLAN",
+                "reason_code": "WATCH_REQUIRES_ACTIVE_PLAN",
+                "stream": [],
+                "next_legal_path": "select or start a plan before watching reality",
+            }
+        result = run_live_context_watch(self.session, journey)
+        self.session.commit()
+        stream = guardian_stream(
+            self.session,
+            journey,
+            mission_id=base["mission_id"],
+            limit=20,
+        )
+        return {
+            **base,
+            "status": "REFRESHED",
+            "watch": result,
+            "stream": stream["stream"],
+            "counts": stream["counts"],
         }
 
     def acquire_route(self, request: AgentToolCall) -> dict[str, Any]:

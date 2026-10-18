@@ -51,6 +51,11 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, Scout: public region + topic -> non-authoritative source leads. This is
     # the zero-Place first step: it writes WebObservation/ProviderCall rows, never a Place.
     DISCOVER_SOURCE_LEADS = "DISCOVER_SOURCE_LEADS"
+    # Reform 2026-10-18, Guardian: read the Event/ImpactAssessment/GuardianRun projection.
+    READ_GUARDIAN_STREAM = "READ_GUARDIAN_STREAM"
+    # Reform 2026-10-18, Guardian: run the live venue-context watch. It writes WebObservation and
+    # Event rows and can invalidate pending replans, so it is an action, not a free read.
+    REFRESH_LIVE_CONTEXT = "REFRESH_LIVE_CONTEXT"
 
 
 class AuthorizationDecision(str, Enum):

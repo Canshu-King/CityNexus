@@ -37,7 +37,7 @@ class AgentRuntimeUnavailable(RuntimeError):
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
 # Reform 2026-10-18: `research_place_sources` is read-shaped (it stores NON_AUTHORITATIVE
 # observations), so it must not inherit the mutation-tool treatment by being newly allowlisted.
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "discover_source_leads", "estimate_place_facts", "discover_places", "compare_routes"}
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "discover_source_leads", "estimate_place_facts", "discover_places", "compare_routes", "read_guardian_stream"}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -261,6 +261,22 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 "target_activity_id": _property("string"),
                 "route_mode": _property("string"),
             },
+            ["journey_id"],
+        ),
+        _tool(
+            "read_guardian_stream",
+            "Read the server-owned Guardian stream for this Journey: each observation, its "
+            "impact assessment and the proposed/executed action. It never starts a watch and "
+            "says WATCH_NOT_RUNNING when none has run.",
+            journey,
+            ["journey_id"],
+        ),
+        _tool(
+            "refresh_live_context",
+            "Run the live venue-context watch for the active plan. It writes WebObservation and "
+            "Event rows and can invalidate a pending replan. It refuses unless the deployment's "
+            "Guardian watch is enabled and the Journey has an active plan.",
+            journey,
             ["journey_id"],
         ),
     ]
