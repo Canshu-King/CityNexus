@@ -4,12 +4,12 @@
 
 ## 产品版本与入口
 
-- 最新产品：`9affeadb5a1d3b40c42306add35b4138d5d70958`。下方 91e680／e21cae 的真实模型收据继续保留原执行版本。
+- 最新产品：`fda3543085c25884a44a95f88046219e23691cea`。地图焦点为 `720fa9fe96`，来源分类后端为 `02c323ade6`，fda354 补历史地址的界面归类。下方真实模型收据继续保留各自执行版本。
 - PR #23：`design/revolution-mobile-first-v1`。
 - 工作台与结构化地区：`91e680d5864a81788b65c1e38f5bf7397eebf0ab`，包含 PR #39 和结构化地区提交 `820be8a300`。
 - 附近 POI 工具、候选继续研究、地图日程联动：`e21cae5d55fb76e93549a107a7dbed147e509b4c`。
 - 当前本机入口：<http://127.0.0.1:14332/revolution>，后端端口 18501；正常重启后保留原隔离数据库与登录签名。
-- 已通过的产品 CI：[939806 · 39145842797](https://github.com/Canshu-King/CityNexus/actions/runs/39145842797)、[e21cae · 39144471621](https://github.com/Canshu-King/CityNexus/actions/runs/39144471621)。9affeadb5a 另做 6 项工作台检查及 TypeScript，通过后推送；其 CI 以 PR checks 为准。
+- 已通过的产品 CI：[720fa9 · 39147023894](https://github.com/Canshu-King/CityNexus/actions/runs/39147023894)、[939806 · 39145842797](https://github.com/Canshu-King/CityNexus/actions/runs/39145842797)。最新 HEAD 的 CI 以 PR checks 为准。
 
 ## 实际新增的使用能力
 
@@ -60,6 +60,23 @@
 - 最新后端聚焦 36/36，包括缓存分支进入真实 dispatcher 的 fixture；工作台 6/6、ACTIVE 15/15、单独鉴权 1/1，TypeScript／build 通过。939806 CI 通过完整 Chromium 检查。
 - 939806 服务启动后实际恢复原 65 条事件、11 条地点、两日九项；新 390×844 图层按钮也已在 Chrome-use 操作，日程画布滚动约 374 px，未发起新的来源或模型请求。
 - 新缓存函数对实际上海任务做过一次只读服务函数检查：返回博物馆 `way/161090899` 的已有来源、坐标及营业／费用等待查字段，`CACHED_ONLY`。这不是新增 Hermes 模型轮次。
+
+### 县域实际研究与来源分类修复
+
+在 `9affeadb5a` 的同一隔离服务，通过 Chrome-use 建立公开屏南县两日任务 `3dc5b57d-c557-4719-b571-0a2070a1f642`。真实模型完成 8 轮、8 次通过校验的工具调用，保存 35 条事件、两日七项草案。请求与工具记录见 `20261019_COUNTY_MISSION_LIVE.json`。
+
+- Photon 搜索“屏南县 博物馆”“漈下村”“漈头村”，旧接口分别记录 5／1／1 条 `research_places`。这些是原始研究线索，不是 7 个合格旅游 POI。
+- 模型以实际漈头村坐标自主选择 3 km 的附近 attraction 查询，Overpass 一次请求约 12.9 秒后不可用，没有重试镜像。随后继续选择 Nominatim 的“双溪镇 屏南”“白水洋”，最后保存可编辑草案。
+- 旧 Nominatim 回执的 `NO_RESULTS/count=0` 只统计 `research_places`。新版只读恢复发现服务器另存 3 条 `research_areas`，其中包括“双溪镇”。所以这些历史状态不能证明全部地理结果为空；首次来源结果实际为正，**严格的“首个请求为零结果”验收仍未完成**。
+- 两处村落安排有真实 OSM 引用；其余项保留明确待办，包括博物馆开放与预约、小吃街位置、交通耗时。营业与费用没有凭空补全。没有创建正式 PlanVersion、ACTIVE 或执行 AgentRun。
+
+实测暴露的分类错误已修复：Photon 的 `type=house/district` 是地址粒度，不能盖过 `osm_value=museum/village`。`02c323ade6` 分别保留类别、地址粒度、OSM key/value 和公开 county/city/state/district；村落、地区、道路进入 `research_areas`，接口刷新恢复这些数据。仅同级显式地区地址冲突才标 CONFLICT；缺少地址或语言不一致保留 UNKNOWN，任务可以继续。地区线索仍可引用到草案，也可读取已有来源。
+
+`720fa9` 地图默认聚焦草案引用的地点，“查看全部研究”可切回所有线索；`fda354` 将历史 house/address 结果归入地区线索，未改写旧数据库与历史回执。地图图钉触摸尺寸为 44×44 CSS px。
+
+03:05 +08 的实际恢复：签名 GET 200，原模型／工具计数仍为 8／8，服务器共保存 10 条研究线索（旧 places 7＋旧 areas 3），两日七项未丢失；默认地图列表只显示漈下村、漈头村及两个实际 OSM 链接，模态框数为 0。新版后端运行 02c323，前端运行 fda354，产品后端文件一致；14332／18501 health 均 200。刷新后的底图仍等待页面上的加载选择；本轮没有新增外部搜索或模型调用，也未获得新截图。
+
+新增代码验证：后端 55/55（协议夹具、签名任务恢复、区域中心边界），工作台 Chromium 7/7，历史地址单场景 1/1，TypeScript／Vite build 通过。它们证明代码分支，不替代上面的真实来源记录。原 AI 工人因工作区积分错误中断，未形成交付提交；根会话保存并接续其两个后端文件的未提交改动完成本次修复。
 
 ### 后续工作
 
