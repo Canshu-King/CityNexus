@@ -31,6 +31,43 @@ const TOOL_NAME: Record<string, string> = {
   acquire_place_facts: "核实地点资料", estimate_place_facts: "估算备选安排",
   generate_plans: "生成候选方案", compare_routes: "比较已有路线",
 };
+const EVENT_NAME: Record<string, string> = {
+  TASK_ACCEPTED: "研究任务已建立",
+  RUN_STARTED: "本轮研究开始",
+  MODEL_TURN_STARTED: "AI 正在判断下一步",
+  MODEL_TURN_COMPLETED: "AI 已完成这一轮分析",
+  TOOL_STARTED: "开始调用工具",
+  TOOL_SUCCEEDED: "工具返回结果",
+  TOOL_FAILED: "工具未完成",
+  TASK_DRAFT_UPDATED: "你的修改已保存",
+  TASK_PARTIAL_READY: "已交付阶段成果",
+  TASK_RESUMABLE: "这轮研究结束，可继续",
+  TASK_NEEDS_DECISION: "等待你决定",
+  MODEL_FAILED: "模型请求失败，可保留现有草案",
+  RUN_INTERRUPTED: "运行已中断，可恢复",
+};
+function eventSummary(event: DraftGoalTaskEvent): string {
+  const prefix = EVENT_NAME[event.event_type] ?? "任务状态已更新";
+  const tool = event.tool_name ? ` · ${TOOL_NAME[event.tool_name] ?? event.tool_name}` : "";
+  const turn = event.model_turn_no ? ` · 第${event.model_turn_no}轮` : "";
+  const reason = event.reason_code === "MODEL_BUDGET_EXHAUSTED" ? " · 本次研究预算用完"
+    : event.reason_code === "RESEARCH_INCOMPLETE" ? " · 继续核实资料"
+    : event.reason_code === "NO_RESULTS" ? " · 暂无匹配地点，需换研究方法"
+    : event.reason_code === "PHOTON_UNAVAILABLE" ? " · 公开地点服务暂不可用" : "";
+  return prefix + tool + turn + reason;
+}
+async function loadGoalEvents(journeyId: string, taskId: string): Promise<{ task_id: string; events: DraftGoalTaskEvent[] }> {
+  const events: DraftGoalTaskEvent[] = [];
+  let cursor = 0;
+  for (let page = 0; page < 12; page++) {
+    const result = await cityNexusApi.getDraftGoalTaskEvents(journeyId, taskId, cursor);
+    if (result.task_id !== taskId) throw new Error("Goal task event identity mismatch");
+    events.push(...result.events);
+    if (result.next_cursor === null || result.next_cursor <= cursor) break;
+    cursor = result.next_cursor;
+  }
+  return { task_id: taskId, events: events.slice(-100) };
+}
 const TASK_POINTER = "citynexus.revolution.goal-task";
 const MODEL_TURNS = 8;
 const TOOL_CALLS = 16;
@@ -146,7 +183,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
     const taskRequest = taskId
       ? Promise.all([
         cityNexusApi.getDraftGoalTask(actor.id, taskId),
-        cityNexusApi.getDraftGoalTaskEvents(actor.id, taskId, 0),
+        loadGoalEvents(actor.id, taskId),
       ]).catch(() => null)
       : Promise.resolve(null);
     Promise.all([cityNexusApi.getTravelPlanningInput(actor.id), cityNexusApi.getJourney(actor.id),
@@ -178,7 +215,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
   const refreshGoalTask = async (actor: Context, taskId: string) => {
     const [value, eventPage] = await Promise.all([
       cityNexusApi.getDraftGoalTask(actor.id, taskId),
-      cityNexusApi.getDraftGoalTaskEvents(actor.id, taskId, 0),
+      loadGoalEvents(actor.id, taskId),
     ]);
     if (value.journey_id !== actor.id || eventPage.task_id !== taskId || !sameContext(actor, readContext())) return;
     setGoalTaskSnapshot({ context: actor, value, events: eventPage.events });
@@ -323,6 +360,17 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
           {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "本阶段的研究额度用完了。草案和调查记录都保留在服务器；点击「继续研究」可单独授权新的额度。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
           <p className="rev-workspace-budget-help">本轮已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续研究会增加授权额度并可能产生模型/公开来源费用，不会自动无限重试。</p>
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
+          {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open>
+            <summary>Agent 真实工作过程 · 已记录 {visibleEvents.length} 条事件</summary>
+            <p>记录模型轮次、工具调用、失败与恢复情况。这里展示的是公开操作记录，不是模型内部私有推理。</p>
+            <ol aria-label="Agent 运行事件">
+              {visibleEvents.slice(-24).map((event) => <li key={event.sequence}>
+                <span className="rev-workspace-event-sequence">#{event.sequence}</span>
+                <span>{eventSummary(event)}</span>
+              </li>)}
+            </ol>
+            {visibleEvents.length > 24 && <p>这里只显示最新 24 条；完整事件仍在同一任务的服务端记录中。</p>}
+          </details>}
           {(visibleTask.tool_steps ?? []).length > 0 && <ol className="rev-workspace-task-steps">
             {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
               <strong>{TOOL_NAME[step.tool_name] ?? step.tool_name}</strong>
