@@ -62,8 +62,8 @@ _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
 # These are cumulative, opt-in task ceilings, not an eight-turn permanent lock.
 # Each continuation is a separate explicit user action with an increased budget.
-_MAX_MODEL_TURNS = 64
-_MAX_TOOL_CALLS = 128
+_MAX_MODEL_TURNS = 256
+_MAX_TOOL_CALLS = 512
 _MAX_EVENT_PAGE = 100
 _REASON_CODE = re.compile(r"^[A-Z][A-Z0-9_]{1,79}$")
 
@@ -655,7 +655,7 @@ def _initial_messages(
     user_context = {
         "goal": mission.user_text,
         "recent_user_instructions": [item["text"] for item in task.get("conversation", [])[-12:] if item.get("role") == "user"],
-        "previous_agent_reply": task.get("assistant_summary"),
+        "recent_conversation": [{"role": item.get("role"), "text": item.get("text")} for item in task.get("conversation", [])[-12:]],
         "journey": _journey_snapshot(journey),
         "known_candidate_places": _known_place_context(session, journey, task),
         "known_non_authoritative_sources": _known_source_context(session, task),
@@ -1060,8 +1060,6 @@ def resume_goal_task(
     )
     if task.get("status") == "CANCELLED" or (task.get("status") == "COMPLETED" and user_message is None):
         raise HTTPException(409, "GOAL_TASK_NOT_RESUMABLE")
-    if user_message is not None and task.get("status") == "WORKING":
-        raise HTTPException(409, "GOAL_TASK_ALREADY_RUNNING")
     normalized_message = " ".join(user_message.split()) if isinstance(user_message, str) else ""
     if user_message is not None and (not normalized_message or len(normalized_message) > _MAX_GOAL_LENGTH):
         raise HTTPException(422, "USER_MESSAGE_INVALID")
@@ -1075,6 +1073,8 @@ def resume_goal_task(
             return _task_payload(mission, intent)
     else:
         normalized_message_id = None
+    if user_message is not None and task.get("status") == "WORKING":
+        raise HTTPException(409, "GOAL_TASK_ALREADY_RUNNING")
     consent = task.get("consent") if isinstance(task.get("consent"), dict) else {}
     prior_consent = {
         "model": consent.get("model") is True,
