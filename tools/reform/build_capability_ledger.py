@@ -73,17 +73,31 @@ DOMAIN_TOOLS: dict[str, list[tuple[str, str]]] = {
     "history_and_trash": [],
 }
 
-# Domains that are product surfaces on V8 but have no agent tool in either tree. Naming them here is
-# the order's alternative to a silent gap: either they get an adapter, or the gap has an owner.
-SURFACE_ONLY = {
-    "weather_and_reality": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` and its four handlers are still the next slice.",
+# Notes are prose, not a status. Keeping them separate matters: adding a note for a domain must
+# not silently change that domain's status (the recovery epoch has source now but no tool, so it
+# is ADAPTER_NEEDED, not SURFACE_ONLY).
+NOTES = {
+    "weather_and_reality": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` is ported and wired to the watch.",
     "transport": "Both halves delivered: `compare_routes` over stored facts, `acquire_route` through the ported launch-origin chain, and a Mission-scoped snapshot/acquire adapter; execution uses the mock provider unless a live one is configured.",
     "traveler_preferences": "Preferences are read by the shell; no agent tool reads or writes them.",
     "stay": "Stay generation is a product surface; no agent tool selects or books a stay.",
     "notification_inbox": "The inbox is a read surface; no agent tool writes or acknowledges.",
     "identity_and_resume": "Session/recovery are doors, not agent tools (by design).",
     "history_and_trash": "Recycle bin and history are product surfaces; no agent tool.",
+    "replanning_and_recovery": "`recovery_epoch` is ported and wired to the Guardian watch; the four user-facing recovery handlers/tools remain Revolution-only.",
 }
+
+# Domains that are product surfaces on V8 but have no agent tool in either tree. Naming them here is
+# the order's alternative to a silent gap: either they get an adapter, or the gap has an owner.
+SURFACE_ONLY = frozenset(
+    {
+        "traveler_preferences",
+        "stay",
+        "notification_inbox",
+        "identity_and_resume",
+        "history_and_trash",
+    }
+)
 
 OWNER = {
     "research_place_sources": "Qoder",
@@ -201,7 +215,7 @@ def build(inventory: dict) -> dict:
                 "tools": callable_rows,
                 "revolution_only_tools": revolution_only,
                 "status": status,
-                "note": SURFACE_ONLY.get(domain, ""),
+                "note": NOTES.get(domain, ""),
             }
         )
     return {

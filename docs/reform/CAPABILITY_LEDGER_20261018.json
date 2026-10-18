@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "CAPABILITY_LEDGER",
-  "v8_commit": "39896c29b4dbd0bbe47543cafffc4218cdc6e7ba",
+  "v8_commit": "2217b20b9f6cfb7ab581597f3f1cca74e0b8dab6",
   "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
   "runtime_verified": false,
   "rows": [
@@ -176,16 +176,15 @@
       ],
       "revolution_only_tools": [],
       "status": "READY_FOR_REHEARSAL",
-      "note": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` and its four handlers are still the next slice."
+      "note": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` is ported and wired to the watch."
     },
     {
       "domain": "replanning_and_recovery",
       "v8_present": [
+        "backend/app/recovery_epoch.py",
         "backend/app/replanning"
       ],
-      "v8_missing": [
-        "backend/app/recovery_epoch.py"
-      ],
+      "v8_missing": [],
       "revolution_missing": [],
       "tools": [
         {
@@ -215,8 +214,8 @@
         "conclude_recovery",
         "discover_recovery_options"
       ],
-      "status": "SOURCE_ONLY",
-      "note": ""
+      "status": "ADAPTER_NEEDED",
+      "note": "`recovery_epoch` is ported and wired to the Guardian watch; the four user-facing recovery handlers/tools remain Revolution-only."
     },
     {
       "domain": "transport",
