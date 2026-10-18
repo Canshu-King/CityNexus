@@ -56,6 +56,17 @@ TYPED_TOOLS = (
         False,
         True,
     ),
+    # Reform 2026-10-18: ported from the Revolution catalog. It writes WebObservation rows with
+    # authority_status=NON_AUTHORITATIVE, so it mutates neither domain truth nor money. It lives in
+    # the typed catalog on purpose: the v1 catalog's shape is frozen by
+    # `tests/test_agent_authority_v2_actions.py`, and new capabilities land additively in v2.
+    ToolDescriptor(
+        AgentAction.RESEARCH_PLACE_SOURCES,
+        "research_place_sources",
+        False,
+        False,
+        False,
+    ),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

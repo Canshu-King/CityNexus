@@ -160,6 +160,9 @@ class AgentToolCall(BaseModel):
     activity_id: UUID | None = None
     replacement_activity_id: UUID | None = None
     replacement_place_id: str | None = Field(default=None, min_length=1, max_length=128)
+    # Reform 2026-10-18: the source-research tool names one server-owned Place. It is a separate
+    # field from `replacement_place_id` so a read cannot be mistaken for a plan mutation.
+    place_id: str | None = Field(default=None, min_length=1, max_length=128)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None

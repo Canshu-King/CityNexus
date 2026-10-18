@@ -35,7 +35,9 @@ class AgentRuntimeUnavailable(RuntimeError):
 
 
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services"}
+# Reform 2026-10-18: `research_place_sources` is read-shaped (it stores NON_AUTHORITATIVE
+# observations), so it must not inherit the mutation-tool treatment by being newly allowlisted.
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources"}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -167,6 +169,13 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 "approval_id": _property("string"),
             },
             ["journey_id", "commitment_id", "reason"],
+        ),
+        _tool(
+            "research_place_sources",
+            "Research up to five non-authoritative source leads for one server-owned Place. "
+            "The server builds the query; results never become facts by themselves.",
+            {**journey, "place_id": _property("string")},
+            ["journey_id", "place_id"],
         ),
     ]
 

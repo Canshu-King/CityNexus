@@ -27,6 +27,9 @@ class AgentAction(str, Enum):
     CREATE_BOOKING = "CREATE_BOOKING"
     CANCEL_REFUNDABLE_BOOKING = "CANCEL_REFUNDABLE_BOOKING"
     REQUEST_COMMITMENT_CHANGE = "REQUEST_COMMITMENT_CHANGE"
+    # Reform 2026-10-18, first adapter: source research is a read-shaped tool -- it captures
+    # non-authoritative observations and never writes domain truth or money.
+    RESEARCH_PLACE_SOURCES = "RESEARCH_PLACE_SOURCES"
 
 
 class AuthorizationDecision(str, Enum):

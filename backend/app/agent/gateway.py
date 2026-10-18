@@ -5,7 +5,7 @@ import json
 import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -46,6 +46,7 @@ from app.db.models import (
     Place,
     PlanVersion,
     ReplanProposal,
+    WebObservation,
 )
 from app.schemas import AgentToolCall, ReplanGenerateRequest
 from app.services import activity_schema, journey_schema, service_schema
@@ -363,6 +364,7 @@ class AgentToolGateway:
             "inspect_twin": self.inspect_twin,
             "list_replans": self.list_replans,
             "search_city_services": self.search_city_services,
+            "research_place_sources": self.research_place_sources,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -488,6 +490,109 @@ class AgentToolGateway:
             "truncated": total > len(items),
             "byte_budget": self.LIST_REPLANS_BYTE_BUDGET,
             "detail_fields_omitted": omitted,
+        }
+
+    def research_place_sources(self, request: AgentToolCall) -> dict[str, Any]:
+        """Return bounded, non-authoritative source leads for one server Place.
+
+        Reform 2026-10-18, ported from the Revolution gateway: the agent may research a place
+        while the journey is still a draft. The query is built here from the Journey and the
+        Place -- the model supplies neither a name nor a URL -- and every captured row is stored
+        with `authority_status=NON_AUTHORITATIVE`, so a lead never becomes a fact by being fetched.
+        With no configured provider the answer says SOURCE_DISCOVERY_UNAVAILABLE; it does not
+        invent leads to look complete.
+        """
+        if request.journey_id is None or not request.place_id:
+            raise HTTPException(422, "journey_id and place_id are required")
+        journey = _require_journey(self.session, request.journey_id)
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+
+        from app.core.config import settings
+        from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
+        from app.integrations.ai.web_research import WebResearchProvider
+        from app.integrations.web.research_service import build_source_query
+        from app.integrations.web.searxng import SearXNGSearchProvider
+
+        query = build_source_query(place, journey)
+        drafts: list[Any] = []
+        provider_status = "SOURCE_DISCOVERY_UNAVAILABLE"
+        if settings.ai_api_key and settings.deepseek_web_search_enabled:
+            client = DeepSeekResponsesClient(
+                api_key=settings.ai_api_key,
+                model=settings.ai_model,
+                base_url=settings.deepseek_api_url,
+                reasoning_effort="low",
+                timeout_seconds=settings.impact_timeout_seconds,
+            )
+            try:
+                drafts = list(WebResearchProvider(client).search(query)[:5])
+                provider_status = "CAPTURED" if drafts else "NO_RESULTS"
+            except DeepSeekResponsesError:
+                provider_status = "FAILED_EXTERNAL"
+        elif settings.searxng_url:
+            provider = SearXNGSearchProvider(settings.searxng_url)
+            try:
+                drafts = list(provider.search(query, limit=5))
+                provider_status = "CAPTURED" if drafts else "NO_RESULTS"
+            except Exception:
+                provider_status = "FAILED_EXTERNAL"
+            finally:
+                provider.close()
+
+        rows: list[WebObservation] = []
+        for item in drafts[:5]:
+            fingerprint = str(getattr(item, "evidence_fingerprint", "")) or hashlib.sha256(
+                f"{item.query}|{item.url}|{item.title}|"
+                f"{item.content_excerpt if hasattr(item, 'content_excerpt') else item.content}".encode()
+            ).hexdigest()
+            existing = self.session.scalar(
+                select(WebObservation).where(
+                    WebObservation.journey_id == journey.id,
+                    WebObservation.evidence_fingerprint == fingerprint,
+                )
+            )
+            if existing is None:
+                existing = WebObservation(
+                    id=str(uuid4()),
+                    journey_id=journey.id,
+                    query=item.query,
+                    url=item.url,
+                    domain=item.domain,
+                    title=item.title,
+                    source_class=getattr(item, "source_class", "OPEN_WEB"),
+                    provider_key=item.provider_key,
+                    model_key=getattr(item, "model_key", ""),
+                    captured_at=item.captured_at,
+                    evidence_fingerprint=fingerprint,
+                    content_excerpt=getattr(item, "content_excerpt", getattr(item, "content", ""))[:2000],
+                    authority_status="NON_AUTHORITATIVE",
+                    created_at=item.captured_at,
+                )
+                self.session.add(existing)
+            rows.append(existing)
+        self.session.commit()
+        return {
+            "tool": "research_place_sources",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "journey_id": journey.id,
+            "place_id": place.id,
+            "query": query,
+            "status": provider_status,
+            "authority": "NON_AUTHORITATIVE",
+            "observations": [
+                {
+                    "id": row.id,
+                    "url": row.url,
+                    "domain": row.domain,
+                    "title": row.title,
+                    "provider": row.provider_key,
+                    "captured_at": row.captured_at,
+                    "authority_status": row.authority_status,
+                }
+                for row in rows[:5]
+            ],
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:
