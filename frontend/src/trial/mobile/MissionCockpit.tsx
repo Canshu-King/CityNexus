@@ -89,6 +89,11 @@ export function MissionCockpit({
   useEffect(() => {
     if (!command.trim() && goal) setCommand(goal);
   }, [goal]);
+  useEffect(() => {
+    const refreshWorkspace = () => setRefresh((value) => value + 1);
+    window.addEventListener("citynexus:mission-refresh", refreshWorkspace);
+    return () => window.removeEventListener("citynexus:mission-refresh", refreshWorkspace);
+  }, []);
   useEffect(() => subscribeTravelerBearer(() => {
     setTask(null); setEvents([]); setPlaces([]); setMapAllowed(false);
     setIdentityTick((value) => value + 1);
@@ -121,6 +126,7 @@ export function MissionCockpit({
     return () => { disposed = true; };
   }, [journeyId, refresh, identityTick]);
 
+  const researchFingerprint = (task?.research_places ?? []).map((place) => [place.id, place.latitude, place.longitude, place.provider_provenance].join(":")).join("|");
   const mapPoints = useMemo<WorkspaceMapPoint[]>(() => {
     const results = new Map<string, WorkspaceMapPoint>();
     for (const point of places) results.set(point.candidate_id, point);
@@ -139,7 +145,7 @@ export function MissionCockpit({
       });
     }
     return [...results.values()];
-  }, [places, task]);
+  }, [places, researchFingerprint]);
   const draftDays = task?.draft_artifact?.days ?? [];
   const draftSlots = draftDays.flatMap((day) => day.slots.map((slot) => ({ date: day.date, ...slot })));
   const latestEvents = events.slice(-5).reverse();
@@ -152,6 +158,7 @@ export function MissionCockpit({
 
   const submitGoal = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (journeyStatus === "ACTIVE") { onTrip(); return; }
     if (command.trim().length >= 4) openAgent(journeyId, command);
   };
 
@@ -179,8 +186,8 @@ export function MissionCockpit({
               placeholder="例如：帮我找到福建的古村落和当地小吃，做两天轻松的行程。找不到就继续换办法。" />
             <div className="cn-mission-composer-actions">
               <span>{agentStatus}</span>
-              <button type="submit" disabled={command.trim().length < 4}>
-                <Sparkles size={16} aria-hidden="true" /> {agentAvailable ? "交给 Agent" : "打开任务助手"}
+              <button type="submit" disabled={journeyStatus !== "ACTIVE" && command.trim().length < 4}>
+                <Sparkles size={16} aria-hidden="true" /> {journeyStatus === "ACTIVE" ? "查看执行 Agent" : agentAvailable ? "交给 Agent" : "打开任务助手"}
                 <ArrowRight size={16} aria-hidden="true" />
               </button>
             </div>
