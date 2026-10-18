@@ -316,7 +316,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
             {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
               <strong>{TOOL_NAME[step.tool_name] ?? step.tool_name}</strong>
               {typeof step.result.public_action === "string" && <span>{step.result.public_action}</span>}
-              <span>{taskStepText(step.result)}</span>
+              <span>{step.tool_name === "inspect_journey" && step.status === "COMPLETED" ? "行程已读取" : taskStepText(step.result)}</span>
               {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
             </li>)}
           </ol>}

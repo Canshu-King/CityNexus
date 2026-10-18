@@ -179,8 +179,8 @@ def _emit_event(
         entity_type="AgentGoalTask",
         entity_id=mission.id,
         journey_id=journey.id,
-        actor_type="TRAVELER",
-        actor_id=member.traveler_id,
+        actor_type="TRAVELER" if event_type in {"TASK_ACCEPTED", "TASK_CANCELLED", "TASK_DRAFT_UPDATED", "CONSENT_UPDATED"} else "AI_AGENT",
+        actor_id=member.traveler_id if event_type in {"TASK_ACCEPTED", "TASK_CANCELLED", "TASK_DRAFT_UPDATED", "CONSENT_UPDATED"} else "hermes-goal-planning",
         after=event,
     )
     mission.intent_json = _json_dump(intent)
@@ -1154,6 +1154,14 @@ def resume_goal_task(
             )
             session.commit()
             try:
+                final_turn = int(task["usage"]["model_turns"]) == int(task["budget"]["max_model_turns"])
+                agent._tool_allowlist = frozenset({"save_draft_itinerary"}) if final_turn else tool_allowlist
+                if final_turn:
+                    messages.append({"role": "system", "content":
+                        "This is the last approved model turn. Research has ended for this round. "
+                        "Use save_draft_itinerary now to deliver the best useful partial multi-day draft from actual results. "
+                        "With no verified places, save specific research todos or generic activity suggestions without Place IDs. "
+                        "Leave all missing facts unknown. Do not request another external search."})
                 message = agent._complete(messages)
             except Exception as exc:
                 # Do not persist provider messages, URLs, tokens, or exception text.
@@ -1248,7 +1256,7 @@ def resume_goal_task(
                     if tool_name not in {"inspect_journey", "save_draft_itinerary"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
                     if int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
-                        exhausted_status = "PARTIAL_READY" if research_failed else "RESUMABLE"
+                        exhausted_status = "PARTIAL_READY" if research_failed or any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", [])) else "RESUMABLE"
                         _finish_run(
                             session,
                             journey,
@@ -1442,7 +1450,7 @@ def resume_goal_task(
                 )
         mission = session.get(JourneyMission, mission.id)
         intent = _task_state(mission)
-        exhausted_status = "PARTIAL_READY" if research_failed else "RESUMABLE"
+        exhausted_status = "PARTIAL_READY" if research_failed or any(day.get("slots") for day in (intent[_TASK_KEY].get("draft_artifact") or {}).get("days", [])) else "RESUMABLE"
         _finish_run(
             session,
             journey,

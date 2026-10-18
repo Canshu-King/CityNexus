@@ -224,6 +224,7 @@ def test_model_sees_zero_result_then_saves_a_durable_editable_draft(goal_scope, 
                 name, args = "save_draft_itinerary", {"days": [{"date":"2026-11-01", "slots":[{
                     "title":"TEST_FIXTURE 午后文化行程", "time_of_day":"afternoon", "place_id":"photon:node/123", "notes":"营业待查"}]}]}
             else:
+                assert self._tool_allowlist == frozenset({"save_draft_itinerary"})
                 return {"content":"TEST_FIXTURE 阶段安排已保存"}
             return {"tool_calls":[{"id":f"fixture-{self.turn}", "function":{"name":name,"arguments":json.dumps(args)}}]}
     def fixture_discovery(_session, _journey, task, **args):
