@@ -13,7 +13,7 @@ from fastapi import HTTPException
 
 from app.core.config import settings
 from app.db.models import ProviderCall
-from app.integrations.discovery.real_city import PhotonCityGeocoder
+from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGeocoder, _resolver_city_label
 from app.integrations.provider_config import ExternalProviderSettings, trust_environment_for_public_providers
 
 
@@ -57,19 +57,24 @@ def normalize_draft(journey, task: dict, days: Any, *, author: str) -> dict[str,
             "status": "DRAFT", "days": [by_date.get(day["date"], day) for day in empty_draft(journey)["days"]]}
 
 
-def discover_goal_places(session, journey, task: dict, *, query: str, public_action: str = "") -> dict[str, Any]:
-    """One explicit model-selected Photon query using the existing public geocoder adapter."""
+def discover_goal_places(session, journey, task: dict, *, query: str, public_action: str = "", source: str = "photon") -> dict[str, Any]:
+    """One model-selected query against a named public source; preserve zero-result evidence."""
     query = str(query).strip()
     if not 2 <= len(query) <= 120:
         raise HTTPException(422, "PUBLIC_QUERY_INVALID")
     if not settings.real_city_enabled or settings.real_city_mode != "live":
         return {"tool": "discover_places", "status": "PROVIDER_DISABLED", "reason_code": "REAL_CITY_DISABLED", "places": []}
-    signature = " ".join(query.casefold().split())
+    source = str(source or "photon").lower().strip()
+    if source not in {"photon", "nominatim"}:
+        raise HTTPException(422, "PUBLIC_SOURCE_NOT_SUPPORTED")
+    query_key = " ".join(query.casefold().split())
+    signature = f"{source}:{query_key}"
     prior = task.setdefault("public_queries", [])
-    if signature in prior:
-        return {"tool": "discover_places", "status": "QUERY_ALREADY_ATTEMPTED", "places": []}
-    if task.get("photon_unavailable"):
-        return {"tool": "discover_places", "status": "PROVIDER_UNAVAILABLE", "reason_code": "PHOTON_UNAVAILABLE", "places": []}
+    if signature in prior or (source == "photon" and query_key in prior):
+        return {"tool": "discover_places", "status": "QUERY_ALREADY_ATTEMPTED", "provider": source, "places": []}
+    if task.get(f"{source}_unavailable"):
+        return {"tool": "discover_places", "status": "PROVIDER_UNAVAILABLE", "provider": source,
+                "reason_code": f"{source.upper()}_UNAVAILABLE", "places": []}
     prior.append(signature)
     config = ExternalProviderSettings()
     started = time.perf_counter()
@@ -77,15 +82,18 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
     def observe(response):
         nonlocal observed_status
         observed_status = response.status_code
-    result = {"tool": "discover_places", "provider": "photon", "status": "NO_RESULTS", "places": [],
+    result = {"tool": "discover_places", "provider": source, "status": "NO_RESULTS", "places": [],
               "public_action": public_action[:120], "query": query, "provider_provenance": "LIVE_PROVIDER"}
     try:
         with httpx.Client(timeout=min(15.0, float(settings.real_city_timeout_seconds)),
                           trust_env=trust_environment_for_public_providers(), follow_redirects=False,
                           event_hooks={"response": [observe]}) as client:
-            provider = PhotonCityGeocoder(client=client, base_url=config.photon_base_url,
-                                          user_agent=config.photon_user_agent or None)
-            candidates = provider.search(query, city=journey.city_code, limit=8)
+            # Do not pass CityNexus internal location codes to a public search API.
+            city_label = _resolver_city_label(journey.city_code)
+            provider = (PhotonCityGeocoder(client=client, base_url=config.photon_base_url,
+                         user_agent=config.photon_user_agent or None) if source == "photon"
+                        else NominatimGeocoder(client=client))
+            candidates = provider.search(query, city=city_label, limit=8)
         places = []
         for place in candidates:
             if not all(math.isfinite(v) for v in (place.latitude, place.longitude)):
@@ -108,11 +116,11 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
         task["research_places"] = list(existing.values())[:80]
         result.update(status="RESULTS" if places else "NO_RESULTS", places=places)
     except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, IndexError, RuntimeError):
-        task["photon_unavailable"] = True
-        result.update(status="PROVIDER_UNAVAILABLE", reason_code="PHOTON_UNAVAILABLE", provider_provenance="UNVERIFIED")
+        task[f"{source}_unavailable"] = True
+        result.update(status="PROVIDER_UNAVAILABLE", reason_code=f"{source.upper()}_UNAVAILABLE", provider_provenance="UNVERIFIED")
     result["elapsed_ms"] = round((time.perf_counter()-started)*1000)
     result["http_status"] = observed_status
-    session.add(ProviderCall(id=str(uuid4()), provider_key="photon", operation="goal_place_discovery",
+    session.add(ProviderCall(id=str(uuid4()), provider_key=source, operation="goal_place_discovery",
         request_json=json.dumps({"query": query, "city": journey.city_code, "limit": 8}, ensure_ascii=False),
         response_json=json.dumps({"status": result["status"], "http_status": observed_status,
                                   "count": len(result["places"])}, ensure_ascii=False),
@@ -129,10 +137,13 @@ def goal_tool_definitions() -> tuple[dict, ...]:
         "notes":{"type":"string", "maxLength":500}}, "required":["title","time_of_day"], "additionalProperties":False}
     return (
         {"type":"function", "function":{"name":"discover_places", "description":
-            "Run one real Photon public keyword search in the Journey city. Use only public place keywords, no personal details. "
-            "An empty result is evidence for choosing another keyword or working on a different part of the trip. Identical queries are not repeated.",
+            "Choose one real public geocoder, photon or nominatim, to search named public places. "
+            "After a zero-result query you may change provider or keyword within approved tool budget. "
+            "Never send private traveler details; either source may have incomplete OSM coverage. "
+            "An empty result is not proof that the area has no attractions.",
             "parameters":{"type":"object", "properties":{"query":{"type":"string","minLength":2,"maxLength":120},
-                "public_action":{"type":"string","maxLength":120,"description":"Short user-facing operation summary, without private reasoning."}},
+                "public_action":{"type":"string","maxLength":120,"description":"Short user-facing operation summary, without private reasoning."},
+                "source":{"type":"string","enum":["photon","nominatim"],"description":"Public geocoder for this one authorized search; defaults to photon."}},
                 "required":["query"],"additionalProperties":False}}},
         {"type":"function", "function":{"name":"save_draft_itinerary", "description":
             "Save an editable tentative multi-day itinerary or useful named research todos. Use only researched IDs for named places. "
