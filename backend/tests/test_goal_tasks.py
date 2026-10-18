@@ -330,3 +330,21 @@ def test_model_sees_zero_result_then_saves_a_durable_editable_draft(goal_scope, 
     assert restored["tool_steps"][0]["result"]["place_count"] == 0
     assert restored["draft_artifact"]["days"][0]["slots"][0]["place_id"] == "photon:node/123"
     assert restored["assistant_summary"] == "TEST_FIXTURE 阶段安排已保存"
+
+
+def test_research_budget_can_be_extended_without_starting_a_provider(goal_scope):
+    """The old 8/16 hard ceiling was a demo limit, not a service capability."""
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=32, max_tool_calls=64,
+                      model_consent=False)
+    assert created["budget"] == {"max_model_turns": 32, "max_tool_calls": 64}
+    assert created["status"] == "NEEDS_DECISION"
+    assert goal_tasks._safe_args("discover_places",
+        {"query": "TEST_FIXTURE", "source": "nominatim"}, {})["source"] == "nominatim"
+    with pytest.raises(HTTPException) as unsupported:
+        goal_tasks._safe_args("discover_places",
+            {"query": "TEST_FIXTURE", "source": "invented-provider"}, {})
+    assert unsupported.value.status_code == 422
+    with pytest.raises(HTTPException) as over_limit:
+        _create(session, journey, member, max_model_turns=65)
+    assert over_limit.value.status_code == 422
