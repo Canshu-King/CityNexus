@@ -1539,8 +1539,8 @@ export function V8Experience() {
           if (stayCount > 0) {
             setMessage(
               locale.startsWith("zh")
-                ? `住宿结果已到，这一页下方就是可选住宿；要 AI 出方案，点「AI 帮我规划」。`
-                : `Stay results arrived below. Tap “Plan my trip with AI” when you want options.`,
+                ? `住宿结果已到，这一页下方就是可选住宿。`
+                : `Stay results arrived below.`,
             );
           }
         })

@@ -209,6 +209,41 @@ test.describe("Issue #31 C 返工：第一次出行的九屏实拍", () => {
     await expect(page.getByTestId("hub-secondary-actions"), "Today 没打开").toBeVisible({
       timeout: 20_000,
     });
+    /* 提示带里那颗「知道了」以前被压成两行（"知道" / "了"）：这一格是 flex + space-between，
+     * 按钮没写 flex:none，正文一长就把它的标签挤断。判据只认渲染出来的行盒。
+     * 等的是这一趟建完之后必然出现的那条带：住宿查到结果写一句，查不到也写一句，两种都带这颗按钮。 */
+    const dismiss = page.locator("div.v8-message button").last();
+    await expect(dismiss, "Today 上没出现带「知道了」的那条提示带").toBeVisible({ timeout: 40_000 });
+    const dismissGeometry = await dismiss.evaluate((node) => {
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      const rects = Array.from(range.getClientRects()).filter(
+        (rect) => rect.width > 0 && rect.height > 0,
+      );
+      const box = node.getBoundingClientRect();
+      const bar = node.closest("div.v8-message")?.getBoundingClientRect();
+      return {
+        lines: rects.length,
+        text: (node.textContent ?? "").trim(),
+        box: [
+          Math.round(box.x),
+          Math.round(box.y),
+          Math.round(box.width),
+          Math.round(box.height),
+        ],
+        inside: bar
+          ? box.x >= bar.x - 1 && box.right <= bar.right + 1
+          : null,
+      };
+    });
+    expect(
+      dismissGeometry.lines,
+      `「${dismissGeometry.text}」被排成 ${dismissGeometry.lines} 行`,
+    ).toBe(1);
+    expect(dismissGeometry.inside, "那颗按钮掉出了提示带").toBe(true);
+    console.log(
+      `提示带按钮：「${dismissGeometry.text}」行盒 ${dismissGeometry.lines} 个，盒子 ${JSON.stringify(dismissGeometry.box)}`,
+    );
     await shoot(page, "04", "today", "④ 点这里看 AI 做过什么", [
       { testId: "hub-ai-work", action: "点这里看 AI" },
     ]);
