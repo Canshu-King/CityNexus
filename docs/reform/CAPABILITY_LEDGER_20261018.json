@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "scope": "CAPABILITY_LEDGER",
+  "v8_commit": "b84d346a5e28fe4b44245a54193817479a74a3cd",
+  "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
+  "runtime_verified": false,
+  "rows": [
+    {
+      "domain": "agent",
+      "v8_present": [
+        "backend/app/agent",
+        "frontend/src/features/agent"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "inspect_journey",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_mission_runtime.py"
+        },
+        {
+          "tool": "inspect_twin",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_mission_runtime.py"
+        },
+        {
+          "tool": "list_replans",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_mission_runtime.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "planning",
+      "v8_present": [
+        "backend/app/planning",
+        "frontend/src/features/planning"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "generate_plans",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        }
+      ],
+      "revolution_only_tools": [
+        "generate_plans"
+      ],
+      "status": "ADAPTER_NEEDED",
+      "note": ""
+    },
+    {
+      "domain": "places_and_map",
+      "v8_present": [
+        "frontend/src/features/discovery"
+      ],
+      "v8_missing": [
+        "backend/app/execution/bootstrap_discovery.py"
+      ],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "search_city_services",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_alternatives_v3.py"
+        },
+        {
+          "tool": "research_place_sources",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_research_place_sources_adapter_r1.py"
+        },
+        {
+          "tool": "estimate_place_facts",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_estimate_place_facts_adapter_r1.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "execution_and_rerouting",
+      "v8_present": [
+        "backend/app/execution",
+        "frontend/src/features/execution"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "request_replan",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_runtime_gate.py"
+        },
+        {
+          "tool": "accept_replan",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_runtime_gate.py"
+        },
+        {
+          "tool": "replace_activity",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_alternatives_v3.py"
+        },
+        {
+          "tool": "reschedule_activity",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "group_decisions",
+      "v8_present": [
+        "backend/app/collective_mediation.py"
+      ],
+      "v8_missing": [
+        "backend/app/shared_stop_coplanning.py"
+      ],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "request_collective_decision",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        }
+      ],
+      "revolution_only_tools": [
+        "request_collective_decision"
+      ],
+      "status": "SOURCE_ONLY",
+      "note": ""
+    },
+    {
+      "domain": "weather_and_reality",
+      "v8_present": [
+        "backend/app/intelligence"
+      ],
+      "v8_missing": [
+        "backend/app/live_context_watch.py"
+      ],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SOURCE_ONLY",
+      "note": "Guardian/weather lives on Revolution only; V8 has no watcher module."
+    },
+    {
+      "domain": "replanning_and_recovery",
+      "v8_present": [
+        "backend/app/replanning"
+      ],
+      "v8_missing": [
+        "backend/app/recovery_epoch.py"
+      ],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "activate_standby",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        },
+        {
+          "tool": "conclude_recovery",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        },
+        {
+          "tool": "discover_recovery_options",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        },
+        {
+          "tool": "apply_clarified_horizon_choice",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        }
+      ],
+      "revolution_only_tools": [
+        "activate_standby",
+        "apply_clarified_horizon_choice",
+        "conclude_recovery",
+        "discover_recovery_options"
+      ],
+      "status": "SOURCE_ONLY",
+      "note": ""
+    },
+    {
+      "domain": "transport",
+      "v8_present": [
+        "frontend/src/features/mobility"
+      ],
+      "v8_missing": [
+        "backend/app/route_session_operations.py"
+      ],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SOURCE_ONLY",
+      "note": "Route session operations live on Revolution only; V8 has no agent tool for routes."
+    },
+    {
+      "domain": "traveler_preferences",
+      "v8_present": [
+        "backend/app/execution/traveler_twin.py",
+        "frontend/src/features/traveler-twin"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Preferences are read by the shell; no agent tool reads or writes them."
+    },
+    {
+      "domain": "stay",
+      "v8_present": [
+        "backend/app/stay_generation_operations.py",
+        "frontend/src/features/stay"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Stay generation is a product surface; no agent tool selects or books a stay."
+    },
+    {
+      "domain": "booking_payment_commitments",
+      "v8_present": [
+        "backend/app/commerce"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "create_booking",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        },
+        {
+          "tool": "cancel_refundable_booking",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        },
+        {
+          "tool": "request_commitment_change",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "notification_inbox",
+      "v8_present": [
+        "backend/app/journey_inbox.py",
+        "frontend/src/features/notifications"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "The inbox is a read surface; no agent tool writes or acknowledges."
+    },
+    {
+      "domain": "identity_and_resume",
+      "v8_present": [
+        "backend/app/traveler_principal.py",
+        "frontend/src/lib/travelerSession.ts"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Session/recovery are doors, not agent tools (by design)."
+    },
+    {
+      "domain": "history_and_trash",
+      "v8_present": [
+        "frontend/src/features/trash",
+        "frontend/src/features/trip"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Recycle bin and history are product surfaces; no agent tool."
+    }
+  ]
+}
