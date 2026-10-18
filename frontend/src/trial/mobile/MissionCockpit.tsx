@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowRight, ArrowUpRight, BrainCircuit, CalendarDays, CheckCircle2, Clock3,
   Compass, Layers3, MapPinned, MessageSquareText, Navigation2, RefreshCw,
@@ -143,9 +143,14 @@ export function MissionCockpit({
   const draftDays = task?.draft_artifact?.days ?? [];
   const draftSlots = draftDays.flatMap((day) => day.slots.map((slot) => ({ date: day.date, ...slot })));
   const latestEvents = events.slice(-5).reverse();
+  useEffect(() => {
+    if (task?.status !== "WORKING") return;
+    const timer = window.setInterval(() => setRefresh((value) => value + 1), 3000);
+    return () => window.clearInterval(timer);
+  }, [task?.status]);
   const status = journeyStatus === "ACTIVE" ? "行程执行中" : task ? statusCopy[task.status] ?? "任务已保存" : "等待第一个目标";
 
-  const submitGoal = (event: React.FormEvent<HTMLFormElement>) => {
+  const submitGoal = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (command.trim().length >= 4) openAgent(journeyId, command);
   };
