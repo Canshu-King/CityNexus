@@ -21,7 +21,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
-from app.agent.goal_artifacts import empty_draft, normalize_draft, discover_goal_places, goal_tool_definitions
+from app.agent.goal_artifacts import empty_draft, normalize_draft, discover_goal_places, discover_nearby_goal_places, goal_tool_definitions
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -48,7 +48,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
+    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -86,6 +86,9 @@ def _require_owner_scope(
     current_member = session.get(JourneyMember, str(getattr(member, "id", "")))
     if current_journey is None or current_member is None:
         raise HTTPException(404, "goal task Journey or member was not found")
+    # The model/provider can take seconds. Re-read authority before each next action.
+    session.refresh(current_journey)
+    session.refresh(current_member)
     if (
         str(getattr(member, "journey_id", "")) != str(current_journey.id)
         or str(current_member.journey_id) != str(current_journey.id)
@@ -97,11 +100,13 @@ def _require_owner_scope(
     if require_draft:
         if str(current_journey.status).upper() != "DRAFT" or current_journey.active_plan_version_id:
             raise HTTPException(409, "GOAL_TASK_REQUIRES_DRAFT_JOURNEY")
+        # An unselected candidate is an output to improve, not a reason to stop research.
         existing_plan_id = session.scalar(
-            select(PlanVersion.id).where(PlanVersion.journey_id == current_journey.id).limit(1)
+            select(PlanVersion.id).where(PlanVersion.journey_id == current_journey.id,
+                                         PlanVersion.status != "CANDIDATE").limit(1)
         )
         if existing_plan_id is not None:
-            raise HTTPException(409, "GOAL_TASK_REQUIRES_DRAFT_WITHOUT_PLAN")
+            raise HTTPException(409, "GOAL_TASK_REQUIRES_DRAFT_WITHOUT_SELECTED_PLAN")
     return current_journey, current_member
 
 
@@ -620,6 +625,8 @@ def _initial_messages(
         "source research as non-authoritative unless the server says otherwise. Return a short "
         "Chinese user-facing summary without hidden reasoning, secrets, or tool transcripts. "
         "search_city_services reads the existing catalogue only; discover_places runs one model-selected public Photon or Nominatim query. "
+        "discover_nearby_places uses one bounded Overpass request near an actual researched place or area ID. "
+        "Use it when a name search misses POIs; the center must come from public_research_places or public_research_areas. "
         "For canonical Place IDs returned in this task, reuse research_place_sources, acquire_place_facts, "
         "and estimate_place_facts. Estimates remain strategy hypotheses. Formal candidate generation belongs to "
         "the separate plan workbench after research. Source observations must come from this task, never invent a URL. compare_routes reads stored "
@@ -637,6 +644,7 @@ def _initial_messages(
         "known_candidate_places": _known_place_context(session, journey, task),
         "known_non_authoritative_sources": _known_source_context(session, task),
         "public_research_places": task.get("research_places") or [],
+        "public_research_areas": task.get("research_areas") or [],
         "draft_artifact": task.get("draft_artifact") or empty_draft(journey),
         "previous_public_queries": task.get("public_queries") or [],
         "consent": dict(task.get("consent") or {}),
@@ -656,6 +664,13 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
+    if name == "discover_nearby_places":
+        if set(raw) - {"center_place_id", "query", "radius_m", "limit", "public_action"}:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {"center_place_id": str(raw.get("center_place_id") or ""),
+                "query": str(raw.get("query") or "").strip()[:120],
+                "radius_m": raw.get("radius_m", 1500), "limit": raw.get("limit", 8),
+                "public_action": str(raw.get("public_action") or "")[:120]}
     if name == "discover_places":
         if set(raw) - {"query", "public_action", "source"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -700,7 +715,7 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
 
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
-    if name in {"discover_places", "save_draft_itinerary"}:
+    if name in {"discover_places", "discover_nearby_places", "save_draft_itinerary"}:
         return raw
     if name == "inspect_journey":
         journey = raw.get("journey") if isinstance(raw.get("journey"), dict) else {}
@@ -776,7 +791,10 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
-    if name == "discover_places":
+    if name == "discover_nearby_places":
+        return {"center_place_id": args.get("center_place_id"), "radius_m": args.get("radius_m"),
+                "query_length": len(args.get("query") or ""), "provider": "overpass", "public_action": args.get("public_action")}
+    if name in {"discover_places", "discover_nearby_places"}:
         return {"query_length": len(args.get("query") or ""), "public_action": args.get("public_action"),
                 "provider": args.get("source", "photon")}
     if name == "save_draft_itinerary":
@@ -799,7 +817,7 @@ def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
                 "plan_ids": [plan["id"] for plan in result.get("plans", []) if plan.get("id")], "activation_attempted": False}
     if name in {"acquire_place_facts", "estimate_place_facts"}:
         return {"status": result.get("status", "COMPLETED"), "place_id": result.get("place_id") or (result.get("estimate") or {}).get("place_id")}
-    if name == "discover_places":
+    if name in {"discover_places", "discover_nearby_places"}:
         return {"status": result.get("status"), "reason_code": result.get("reason_code"),
                 "place_count": len(result.get("places") or []), "http_status": result.get("http_status"),
                 "public_action": result.get("public_action"), "provider": result.get("provider"),
@@ -1302,7 +1320,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"discover_places", "save_draft_itinerary", "compare_routes"}
+                    request = (None if tool_name in {"discover_places", "discover_nearby_places", "save_draft_itinerary", "compare_routes"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1314,8 +1332,9 @@ def resume_goal_task(
                     try:
                         if tool_name == "compare_routes":
                             raw_result = compare_stored_routes(session, journey, **args)
-                        elif tool_name == "discover_places":
-                            raw_result = discover_goal_places(session, journey, task, **args)
+                        elif tool_name in {"discover_places", "discover_nearby_places"}:
+                            discover = discover_goal_places if tool_name == "discover_places" else discover_nearby_goal_places
+                            raw_result = discover(session, journey, task, **args)
                             mission.intent_json = _json_dump(intent)
                             session.commit()
                         elif tool_name == "save_draft_itinerary":

@@ -27,7 +27,7 @@ const TASK_STATUS: Record<string, string> = {
 const TOOL_NAME: Record<string, string> = {
   inspect_journey: "读取行程", search_city_services: "搜索城市地点",
   research_place_sources: "查找地点资料",
-  discover_places: "查找公开地点", save_draft_itinerary: "整理旅行草案",
+  discover_places: "查找公开地点", discover_nearby_places: "查找周边地点", save_draft_itinerary: "整理旅行草案",
   acquire_place_facts: "核实地点资料", estimate_place_facts: "估算备选安排",
   generate_plans: "生成候选方案", compare_routes: "比较已有路线",
 };
@@ -213,6 +213,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           mapCandidates: mapPlaces?.journey_id === actor.id && Array.isArray(mapPlaces.candidates) ? mapPlaces.candidates : input.candidates });
         setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (input.intent?.goal ?? "").slice(0, 2000));
         if (savedTask && savedTask[0].journey_id === actor.id) {
+          setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || savedTask[0].goal);
           setGoalTaskSnapshot({ context: actor, value: savedTask[0], events: savedTask[1].events });
           setModelConsent(savedTask[0].consent.model === true);
           setOnlineResearchConsent(savedTask[0].consent.online_research === true);
@@ -379,7 +380,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               </select>
             </label>
             <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />同意本次向模型发送旅行目标与必要行程资料，最多 {initialModelTurns} 轮，可能产生费用</label>
-            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />同意在本次任务授权范围内使用 Photon、Nominatim 等已配置公开来源，最多 {initialToolCalls} 次工具；不会自动无限调用</label>
+            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许本任务查询 Photon、Nominatim、OSM Overpass，最多 {initialToolCalls} 次工具</label>
             <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4}>{busy ? COPY.sending : COPY.send}</button>
           </form>}
         {requestError && <p role="alert">{requestError}</p>}

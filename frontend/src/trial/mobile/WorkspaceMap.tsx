@@ -9,8 +9,8 @@ function validPoint(place: WorkspaceMapPoint): boolean {
     && Math.abs(place.latitude) <= 85 && Math.abs(place.longitude) <= 180;
 }
 
-export function WorkspaceMap({ candidates, allowed, onAllow }: {
-  candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void;
+export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
+  candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void; onSelect?: (id: string) => void;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);
@@ -37,16 +37,23 @@ export function WorkspaceMap({ candidates, allowed, onAllow }: {
         element.type = "button"; element.className = "rev-workspace-map-pin";
         element.textContent = String(index + 1);
         element.setAttribute("aria-label", point.name);
-        const text = `${point.name}\n${point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "已保存的地点坐标"}`;
+        const content = document.createElement("div");
+        const title = document.createElement("strong"); title.textContent = point.name; content.append(title);
+        if (point.source_url && /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(point.source_url)) {
+          const source = document.createElement("a"); source.textContent = "查看地点来源 ↗";
+          source.href = point.source_url; source.target = "_blank"; source.rel = "noreferrer";
+          content.append(document.createElement("br"), source);
+        }
+        element.addEventListener("click", () => onSelect?.(point.candidate_id));
         markers.push(new lib.Marker({ element }).setLngLat([point.longitude, point.latitude])
-          .setPopup(new lib.Popup({ offset: 18 }).setText(text)).addTo(map!));
+          .setPopup(new lib.Popup({ offset: 18 }).setDOMContent(content)).addTo(map!));
         bounds.extend([point.longitude, point.latitude]);
       });
       if (points.length > 1) map.fitBounds(bounds, { padding: 50, maxZoom: 15, duration: 0 });
       observer = new ResizeObserver(() => map?.resize()); observer.observe(host.current);
     }).catch(() => { if (!disposed) setFailed(true); });
     return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); map?.remove(); };
-  }, [allowed, points]);
+  }, [allowed, points, onSelect]);
   return <section aria-label="当前行程地图">
     <p>已找到 {points.length} 处有坐标的地点。营业和费用未知，也可以先在地图上查看。</p>
     {candidates.length > points.length && <p>{candidates.length - points.length} 处地点暂无可用坐标。</p>}

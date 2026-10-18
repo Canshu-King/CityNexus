@@ -38,6 +38,7 @@ const statusCopy: Record<string, string> = {
 const toolCopy: Record<string, string> = {
   inspect_journey: "读取旅行目标",
   discover_places: "检索公开地点",
+  discover_nearby_places: "检索附近地点",
   search_city_services: "查询城市服务",
   research_place_sources: "调查地点来源",
   acquire_place_facts: "核实地点事实",
@@ -91,6 +92,10 @@ export function MissionCockpit({
     if (value.journey_id !== journeyId) return;
     setTask(value); setEvents(items); setDataState("ready");
   }, [journeyId]);
+  const focusPlace = useCallback((id: string) => {
+    const slot = document.querySelector<HTMLDetailsElement>(`.cn-mission-os .rev-goal-draft-slot[data-place-id="${CSS.escape(id)}"]`);
+    if (slot) { slot.open = true; slot.scrollIntoView({ block: "nearest", inline: "start", behavior: "smooth" }); }
+  }, []);
   useEffect(() => {
     const focus = (event: Event) => {
       const value = (event as CustomEvent).detail;
@@ -187,7 +192,7 @@ export function MissionCockpit({
       <div className="cn-mission-spatial" aria-label="地图与日程画布">
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
           <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处地点</span></div>
-          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} />
+          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
           <section className="cn-mission-activity" aria-label="Agent 工作轨迹">

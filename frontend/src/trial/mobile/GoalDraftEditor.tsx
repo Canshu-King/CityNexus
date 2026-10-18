@@ -90,7 +90,7 @@ export function GoalDraftEditor({ artifact, disabled, onSave }: {
     {draft.days.map((day, dayIndex) => <fieldset key={day.date} disabled={disabled || saving}>
       <legend>{day.date} · {day.slots.filter((slot) => slot.title.trim()).length} 项安排</legend>
       {day.slots.length === 0 && <p>还没有安排，可以添加一项想去的地方或待核实事项。</p>}
-      {day.slots.map((slot, slotIndex) => <details className="rev-goal-draft-slot" key={slotIndex}>
+      {day.slots.map((slot, slotIndex) => <details className="rev-goal-draft-slot" key={slotIndex} data-place-id={slot.place_id || undefined}>
         <summary><strong>{PERIOD[slot.time_of_day] ?? "待定"}</strong> · {slot.title.trim() || "新安排（待填写）"}
           <span>点击编辑</span></summary>
         <div className="rev-goal-draft-slot-fields">

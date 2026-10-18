@@ -13,7 +13,7 @@ from fastapi import HTTPException
 
 from app.core.config import settings
 from app.db.models import ProviderCall
-from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGeocoder, _resolver_city_label
+from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGeocoder, OverpassPOIProvider, _resolver_city_label
 from app.integrations.provider_config import ExternalProviderSettings, trust_environment_for_public_providers
 
 
@@ -119,7 +119,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
                          user_agent=config.photon_user_agent or None) if source == "photon"
                         else NominatimGeocoder(client=client, user_agent=settings.city_search_user_agent or None))
             candidates = provider.search(query, city=city_label, limit=8)
-        places = []
+        places, areas = [], []
         for place in candidates:
             if not all(math.isfinite(v) for v in (place.latitude, place.longitude)):
                 continue
@@ -129,17 +129,22 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
             osm_type = {"N":"node", "W":"way", "R":"relation"}.get(identity[0], identity[0])
             if len(identity) != 2 or osm_type not in {"node", "way", "relation"} or not identity[1].isdigit():
                 continue
-            if place.category.casefold() in {"administrative", "city", "town", "village", "county", "boundary"}:
-                continue
-            places.append({"id": place.external_id, "name": place.name, "category": place.category,
+            lead = {"id": place.external_id, "name": place.name, "category": place.category,
                            "latitude": place.latitude, "longitude": place.longitude,
                            "source_url": f"https://www.openstreetmap.org/{osm_type}/{identity[1]}",
                            "provider": source, "provider_provenance": "LIVE_PROVIDER",
-                           "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"})
+                           "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"}
+            if place.category.casefold() in {"administrative", "city", "town", "village", "county", "boundary"}:
+                areas.append(lead)
+            else:
+                places.append(lead)
         existing = {p["id"]: p for p in task.get("research_places") or []}
         existing.update({p["id"]: p for p in places})
         task["research_places"] = list(existing.values())[:80]
-        result.update(status="RESULTS" if places else "NO_RESULTS", places=places)
+        known_areas = {p["id"]: p for p in task.get("research_areas") or []}
+        known_areas.update({p["id"]: p for p in areas})
+        task["research_areas"] = list(known_areas.values())[:20]
+        result.update(status="RESULTS" if places else "NO_RESULTS", places=places, areas=areas)
     except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, IndexError, RuntimeError):
         task[f"{source}_unavailable"] = True
         result.update(status="PROVIDER_UNAVAILABLE", reason_code=f"{source.upper()}_UNAVAILABLE", provider_provenance="UNVERIFIED")
@@ -154,6 +159,79 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
     return result
 
 
+def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id: str,
+                               query: str, radius_m: int = 1500, limit: int = 8,
+                               public_action: str = "") -> dict[str, Any]:
+    """One Overpass area request anchored to an actual source result owned by this task."""
+    centers = [*(task.get("research_places") or []), *(task.get("research_areas") or [])]
+    center = next((p for p in centers if p.get("id") == center_place_id
+                   and p.get("provider_provenance") == "LIVE_PROVIDER"), None)
+    if center is None:
+        raise HTTPException(403, "CENTER_NOT_IN_GOAL_TASK_SCOPE")
+    if type(radius_m) is not int or not 250 <= radius_m <= 5000 or type(limit) is not int or not 1 <= limit <= 8:
+        raise HTTPException(422, "PUBLIC_AREA_BOUNDS_INVALID")
+    query = str(query).strip()
+    if not 2 <= len(query) <= 120:
+        raise HTTPException(422, "PUBLIC_QUERY_INVALID")
+    latitude, longitude = center.get("latitude"), center.get("longitude")
+    if not isinstance(latitude, (int, float)) or not isinstance(longitude, (int, float)) or not (
+        math.isfinite(latitude) and math.isfinite(longitude) and -90 <= latitude <= 90 and -180 <= longitude <= 180
+    ):
+        raise HTTPException(422, "PUBLIC_AREA_COORDINATES_INVALID")
+    result = {"tool": "discover_nearby_places", "provider": "overpass", "places": [],
+              "public_action": public_action[:120], "provider_provenance": "UNVERIFIED"}
+    if not settings.real_city_enabled or settings.real_city_mode != "live":
+        return {**result, "status": "PROVIDER_DISABLED", "reason_code": "REAL_CITY_DISABLED"}
+    signature = f"overpass:{center_place_id}:{radius_m}:{' '.join(query.casefold().split())}"
+    prior = task.setdefault("public_queries", [])
+    if signature in prior:
+        return {**result, "status": "QUERY_ALREADY_ATTEMPTED"}
+    if task.get("overpass_unavailable"):
+        return {**result, "status": "PROVIDER_UNAVAILABLE", "reason_code": "OVERPASS_UNAVAILABLE"}
+    prior.append(signature)
+    city_label = public_city_label(journey, session)
+    started = time.perf_counter()
+    attempts = []
+    try:
+        with httpx.Client(timeout=min(15.0, float(settings.real_city_timeout_seconds)),
+                          trust_env=trust_environment_for_public_providers(), follow_redirects=False) as client:
+            candidates, attempts = OverpassPOIProvider(client=client).search_with_evidence(
+                query, latitude=latitude, longitude=longitude, radius_m=radius_m, limit=limit, max_attempts=1)
+        places = []
+        for point in candidates[:limit]:
+            osm_id = str((point.metadata or {}).get("osm_id") or "")
+            parts = osm_id.split("/")
+            if len(parts) != 2 or parts[0] not in {"node", "way", "relation"} or not parts[1].isdigit():
+                continue
+            if not (math.isfinite(point.latitude) and math.isfinite(point.longitude)
+                    and -90 <= point.latitude <= 90 and -180 <= point.longitude <= 180):
+                continue
+            places.append({"id": point.external_id, "name": point.name, "category": point.category,
+                           "latitude": point.latitude, "longitude": point.longitude,
+                           "source_url": f"https://www.openstreetmap.org/{osm_id}", "provider": "overpass",
+                           "provider_provenance": "LIVE_PROVIDER", "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"})
+        existing = {p["id"]: p for p in task.get("research_places") or []}
+        existing.update({p["id"]: p for p in places})
+        task["research_places"] = list(existing.values())[:80]
+        result.update(status="RESULTS" if places else "NO_RESULTS", places=places, provider_provenance="LIVE_PROVIDER")
+    except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, RuntimeError) as error:
+        attempts = getattr(error, "provider_attempts", [])
+        task["overpass_unavailable"] = True
+        result.update(status="PROVIDER_UNAVAILABLE", reason_code="OVERPASS_UNAVAILABLE")
+    result["elapsed_ms"] = round((time.perf_counter() - started) * 1000)
+    result["http_status"] = attempts[-1].get("http_status") if attempts else None
+    request = {"query": query, "public_city_label": city_label, "center_place_id": center_place_id,
+               "center_source_url": center["source_url"], "latitude": latitude, "longitude": longitude,
+               "radius_m": radius_m, "limit": limit, "max_attempts": 1}
+    session.add(ProviderCall(id=str(uuid4()), provider_key="overpass", operation="goal_area_discovery",
+        request_json=json.dumps(request, ensure_ascii=False),
+        response_json=json.dumps({"status": result["status"], "http_status": result["http_status"],
+                                 "places": result["places"], "attempt_count": len(attempts)}, ensure_ascii=False),
+        status="SUCCESS" if result["status"] in {"RESULTS", "NO_RESULTS"} else "FAILURE",
+        latency_ms=result["elapsed_ms"], created_at=datetime.now(timezone.utc).isoformat()))
+    return result
+
+
 def goal_tool_definitions() -> tuple[dict, ...]:
     slot = {"type":"object", "properties": {
         "title":{"type":"string", "maxLength":160},
@@ -161,6 +239,16 @@ def goal_tool_definitions() -> tuple[dict, ...]:
         "place_id":{"type":"string", "description":"ID returned by a research tool; omit for a general suggestion or todo."},
         "notes":{"type":"string", "maxLength":500}}, "required":["title","time_of_day"], "additionalProperties":False}
     return (
+        {"type": "function", "function": {"name": "discover_nearby_places", "description":
+            "Find actual OSM POIs near a place or public region center already returned by this task's research. "
+            "Unlike a name geocoder, Overpass searches a bounded area by category keyword (museum, park, restaurant, library, hotel, theatre, nightlife, attraction). "
+            "Use a server-returned center ID, never invented coordinates. One request, no mirror retry; missing opening and cost remain unknown.",
+            "parameters": {"type": "object", "properties": {
+                "center_place_id": {"type": "string"}, "query": {"type": "string", "minLength": 2, "maxLength": 120},
+                "radius_m": {"type": "integer", "minimum": 250, "maximum": 5000},
+                "limit": {"type": "integer", "minimum": 1, "maximum": 8},
+                "public_action": {"type": "string", "maxLength": 120}},
+                "required": ["center_place_id", "query"], "additionalProperties": False}}},
         {"type":"function", "function":{"name":"discover_places", "description":
             "Choose one real public geocoder, photon or nominatim, to search named public places. "
             "After a zero-result query you may change provider or keyword within approved tool budget. "
