@@ -74,6 +74,13 @@ TYPED_TOOLS = (
         False,
         False,
     ),
+    ToolDescriptor(
+        AgentAction.GENERATE_PLANS,
+        "generate_plans",
+        True,
+        False,
+        False,
+    ),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

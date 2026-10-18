@@ -190,6 +190,18 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             },
             ["journey_id", "place_id"],
         ),
+        _tool(
+            "generate_plans",
+            "Generate candidate plans from at least two server-owned Place IDs. Candidates are "
+            "never selected or activated by this call.",
+            {
+                **journey,
+                "place_ids": _property("array", items=_property("string")),
+                "candidate_count": _property("integer", minimum=1, maximum=5),
+                "planning_mode": _property("string"),
+            },
+            ["journey_id", "place_ids"],
+        ),
     ]
 
 

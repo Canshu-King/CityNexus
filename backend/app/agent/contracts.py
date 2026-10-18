@@ -33,6 +33,9 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, second adapter: a strategy estimate from same-city peers. It writes only
     # `strategy_estimate` into place metadata and never canonical provider truth.
     ESTIMATE_PLACE_FACTS = "ESTIMATE_PLACE_FACTS"
+    # Reform 2026-10-18, third adapter: draft generation. It creates CANDIDATE plans and never
+    # selects or activates one; selection stays a separate, user-owned step.
+    GENERATE_PLANS = "GENERATE_PLANS"
 
 
 class AuthorizationDecision(str, Enum):

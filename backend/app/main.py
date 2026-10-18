@@ -5349,6 +5349,114 @@ def read_shared_journey(
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
 # (`app/stay_mobility.py`).
+def active_journey_members_with_capabilities(
+    session: Session, journey: Journey, *, candidate_windows: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
+    """Project the in-force member set without collapsing it into the owner Twin.
+
+    Reform 2026-10-18, ported from the Revolution line so the agent can generate draft plans with
+    the same member projection the workbench uses. The member's own journey-scoped items are
+    appended explicitly; the owner's mission preferences are never copied onto every member.
+    """
+    from types import SimpleNamespace
+
+    from app.collective_mediation import classify_group_decision, member_fit
+
+    now = datetime.now(timezone.utc)
+    members = list(
+        session.scalars(
+            select(JourneyMemberModel)
+            .where(JourneyMemberModel.journey_id == journey.id)
+            .order_by(JourneyMemberModel.created_at, JourneyMemberModel.id)
+        ).all()
+    )
+    roles = list(session.scalars(select(JourneyRoleCapability)).all())
+    capabilities_by_role: dict[str, list[str]] = {}
+    for row in roles:
+        capabilities_by_role.setdefault(row.role, []).append(row.capability)
+    projected: list[dict[str, Any]] = []
+    for member in members:
+        if _member_state(member, now) != "MEMBER_IN_FORCE":
+            continue
+        snapshot = refresh_snapshot(session, member.traveler_id)
+        twin = traveler_twin_payload(snapshot)
+        compact = {
+            "explicit_preferences": twin.get("explicit_preferences", []),
+            "learned_soft_preferences": twin.get("learned_soft_preferences", []),
+            "conflicts": twin.get("conflicts", []),
+            "confidence": twin.get("confidence", 0.0),
+            "evidence_count": twin.get("evidence_count", 0),
+        }
+        try:
+            member_preferences = json.loads(member.preferences_json or "{}")
+        except ValueError:
+            member_preferences = {}
+        if not isinstance(member_preferences, dict):
+            member_preferences = {}
+        journey_items = [
+            SimpleNamespace(
+                category=str(item.get("category") or "interest"),
+                preference_key=str(item.get("key") or item.get("preference_key") or ""),
+                value_json=json.dumps(item.get("value", True), ensure_ascii=False),
+                weight=float(item.get("weight", 1.0)),
+                source="EXPLICIT_MISSION",
+            )
+            for item in member_preferences.get("preferences", [])
+            if isinstance(item, dict)
+        ]
+        projected.append(
+            {
+                "member_id": member.id,
+                "traveler_id": member.traveler_id,
+                "role": member.role,
+                "member_state": "MEMBER_IN_FORCE",
+                "capabilities": sorted(capabilities_by_role.get(member.role, [])),
+                "journey_scoped_explicit_preferences": member_preferences.get("preferences", []),
+                "traveler_twin": compact,
+                "can_authorize_mutation": "JOURNEY_UPDATE"
+                in capabilities_by_role.get(member.role, []),
+                "_preference_items": planning_preference_items(session, member.traveler_id)
+                + journey_items,
+            }
+        )
+    result: dict[str, Any] = {
+        "members": [
+            {key: value for key, value in item.items() if not key.startswith("_")}
+            for item in projected
+        ],
+        "member_count": len(projected),
+        "authority_basis": "JourneyRoleCapability",
+    }
+    if candidate_windows is not None:
+        matrix: list[dict[str, Any]] = []
+        for window in candidate_windows:
+            candidate = window.get("candidate") or {}
+            tags = [str(candidate.get("category") or "")] + list(candidate.get("tags") or [])
+            matrix.append(
+                {
+                    "candidate_id": candidate.get("place_id") or window.get("window_id"),
+                    "window_id": window.get("window_id"),
+                    "status": window.get("status"),
+                    "member_fits": {
+                        item["member_id"]: member_fit(
+                            preferences=item["_preference_items"], candidate_tags=tags
+                        )
+                        for item in projected
+                    },
+                }
+            )
+        result["candidate_fit_matrix"] = matrix
+        mediation = classify_group_decision(matrix)
+        if matrix and mediation.get("classification") != "INSUFFICIENT_WORLD_FACTS":
+            if not any(item.get("can_authorize_mutation") for item in projected):
+                mediation = {
+                    "classification": "AUTHORITY_CONFLICT",
+                    "reason": "NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE",
+                }
+        result["mediation"] = mediation
+    return result
+
+
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"

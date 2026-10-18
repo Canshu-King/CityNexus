@@ -54,7 +54,9 @@ from app.services import (
     _place_verified_cost,
     _place_window,
     activity_schema,
+    generate_plans as compose_plans,
     journey_schema,
+    plan_schema,
     service_schema,
 )
 
@@ -373,6 +375,7 @@ class AgentToolGateway:
             "search_city_services": self.search_city_services,
             "research_place_sources": self.research_place_sources,
             "estimate_place_facts": self.estimate_place_facts,
+            "generate_plans": self.generate_plans,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -601,6 +604,133 @@ class AgentToolGateway:
                 }
                 for row in rows[:5]
             ],
+        }
+
+    def generate_plans(self, request: AgentToolCall) -> dict[str, Any]:
+        """Generate candidate plans for a draft; selection stays a separate step.
+
+        Reform 2026-10-18, ported from the Revolution gateway. Every plan this returns is a
+        CANDIDATE: nothing here selects or activates one, and the active plan (when there is one) is
+        read only to compute what a candidate would change. This is the call that lets a draft be
+        researched and shaped before anybody commits to it.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        requested = list(dict.fromkeys(str(item) for item in (request.place_ids or [])))
+        if len(requested) < 2:
+            raise HTTPException(
+                422, "place_ids must contain at least two distinct server-owned Place IDs"
+            )
+        rows = self.session.scalars(select(Place).where(Place.id.in_(requested))).all()
+        found = {row.id: row for row in rows}
+        missing = [place_id for place_id in requested if place_id not in found]
+        wrong_city = [
+            place_id
+            for place_id in requested
+            if place_id in found and found[place_id].city_code != journey.city_code
+        ]
+        if missing or wrong_city:
+            raise HTTPException(
+                422,
+                json.dumps(
+                    {
+                        "code": "PLACE_IDS_NOT_IN_JOURNEY_CITY",
+                        "missing_place_ids": missing,
+                        "wrong_city_place_ids": wrong_city,
+                    }
+                ),
+            )
+        try:
+            plans = compose_plans(
+                self.session,
+                journey,
+                request.planning_mode or journey.planning_mode,
+                request.candidate_count,
+                place_ids=requested,
+            )
+        except (TypeError, ValueError) as exc:
+            self.session.rollback()
+            raise HTTPException(422, str(exc)) from exc
+        self.session.commit()
+        from app.collective_mediation import plan_collective_fit_subject
+        from app.main import active_journey_members_with_capabilities
+
+        summaries: list[dict[str, Any]] = []
+        collective_windows: list[dict[str, Any]] = []
+        active_projection = None
+        if journey.active_plan_version_id:
+            active_plan = self.session.get(PlanVersion, journey.active_plan_version_id)
+            if active_plan is not None:
+                active_projection = plan_schema(self.session, active_plan).model_dump(mode="json")
+        for plan in plans:
+            projected = plan_schema(self.session, plan).model_dump(mode="json")
+            explanation = projected.get("explanation") or {}
+            mobility = projected.get("mobility_evidence") or {}
+            subject = plan_collective_fit_subject(
+                (active_projection or {}).get("activities", []),
+                projected.get("activities", []),
+            )
+            activity_place_ids = [
+                item.get("place_id")
+                for item in projected.get("activities", [])
+                if item.get("place_id")
+            ]
+            fit_place_ids = list(subject["fit_subject_place_ids"])
+            places_for_fit = (
+                self.session.scalars(select(Place).where(Place.id.in_(fit_place_ids))).all()
+                if fit_place_ids
+                else []
+            )
+            tags: list[str] = []
+            for place in places_for_fit:
+                tags.append(str(place.category or ""))
+                tags.extend(json.loads(place.tags_json or "[]"))
+            subject["fit_subject_tags"] = sorted(
+                {str(tag).strip().lower() for tag in tags if str(tag).strip()}
+            )
+            hard_status = (
+                "GROUNDED_FEASIBLE" if projected["selectable"] else "REVALIDATION_REQUIRED"
+            )
+            collective_windows.append(
+                {
+                    "window_id": projected["id"],
+                    "status": hard_status,
+                    "candidate": {
+                        "place_id": projected["id"],
+                        "ordered_place_ids": fit_place_ids,
+                        "tags": subject["fit_subject_tags"],
+                        **subject,
+                    },
+                }
+            )
+            summaries.append(
+                {
+                    "id": projected["id"],
+                    "version_no": projected["version_no"],
+                    "status": projected["status"],
+                    "selectable": projected["selectable"],
+                    "place_ids": activity_place_ids,
+                    "fit_subject_place_ids": fit_place_ids,
+                    "unresolved_facts": explanation.get("unresolved_facts", []),
+                    "authority_state": explanation.get("authority_state"),
+                    "mobility_provider": mobility.get("source_provider"),
+                    "mobility_snapshot_id": projected.get("mobility_snapshot_id"),
+                    **subject,
+                }
+            )
+        collective = active_journey_members_with_capabilities(
+            self.session, journey, candidate_windows=collective_windows
+        )
+        for summary, row in zip(summaries, collective.get("candidate_fit_matrix", [])):
+            summary["collective_fairness"] = row.get("fairness", {})
+            summary["collective_member_fits"] = row.get("member_fits", {})
+        collective.pop("members", None)
+        return {
+            "tool": "generate_plans",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "candidate_count": len(summaries),
+            "plans": summaries,
+            "collective_mediation": collective,
+            "authority_note": "Candidates are awaiting the deterministic selection step.",
         }
 
     def estimate_place_facts(self, request: AgentToolCall) -> dict[str, Any]:

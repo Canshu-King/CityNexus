@@ -168,6 +168,9 @@ class AgentToolCall(BaseModel):
     estimated_open_minutes: int | None = Field(default=None, ge=0, le=1440)
     estimated_close_minutes: int | None = Field(default=None, ge=0, le=1440)
     estimated_cost_minor: int | None = Field(default=None, ge=0)
+    # Reform 2026-10-18: draft generation names the server-owned places it must arrange.
+    place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    planning_mode: str | None = Field(default=None, max_length=32)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None
