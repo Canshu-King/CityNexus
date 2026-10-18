@@ -407,6 +407,9 @@
 
 /* Shared non-modal canvas: Agent / Map / editable day timeline. */
 .rev-mobile-v1 .cn-mission-layer-tabs { display: none; }
+.rev-mobile-v1 .cn-mission-map .cn-mission-map-scope { width: auto; min-height: 44px; margin-top: 8px; border: 1px solid #d4e4da; border-radius: 10px; background: #f2f8f4; color: #28624e; padding: 7px 12px; font-size: 13px; }
+.rev-mobile-v1 .cn-mission-map .rev-workspace-map-pin { display: grid; place-items: center; width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0; border: 2px solid white; border-radius: 50%; color: white; background: #28624e; box-shadow: 0 2px 8px #0003; }
+.rev-mobile-v1 .cn-mission-map .rev-workspace-map-pin.is-area { background: #edf5fc; border-color: #7297b9; color: #335d82; }
 .rev-mobile-v1 .cn-mission-grid { grid-template-columns: minmax(260px, .85fr) minmax(300px, 1.2fr) minmax(270px, .95fr); align-items: start; }
 .rev-mobile-v1 .cn-mission-spatial { display: contents; }
 .rev-mobile-v1 .cn-mission-agent-pane { padding: 16px; min-width: 0; border: 1px solid var(--os-line); border-radius: 20px; background: #fff; }

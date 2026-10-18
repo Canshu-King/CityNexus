@@ -203,3 +203,37 @@ test("TEST_FIXTURE cached public source is readable without starting a new resea
   await expect(task.getByText("已读取 1 条已有地点来源")).toBeVisible();
   expect(writes).toEqual([]);
 });
+
+test("TEST_FIXTURE map focuses draft references and separates regions from venues", async ({ page }) => {
+  const writes = await fixture(page);
+  await page.addInitScript(({ owner, journeyId, taskId }) => {
+    localStorage.setItem(`citynexus.revolution.goal-task.${owner}.${journeyId}`, taskId);
+  }, { owner, journeyId, taskId });
+  const lead = (id: string, name: string, category: string, region_status: string) => ({
+    id, name, category, region_status, latitude: 26.9, longitude: 119.0,
+    source_url: "https://www.openstreetmap.org/node/12345", provider_provenance: "TEST_PROVIDER",
+    opening_status: "UNKNOWN", cost_status: "UNKNOWN",
+  });
+  await page.route(`**/api/v1/journeys/${journeyId}/agent/goal-tasks/${taskId}`, (route) => route.fulfill({
+    status: 200, contentType: "application/json", body: JSON.stringify({
+      task_id: taskId, journey_id: journeyId, mode: "GOAL_PLANNING", goal, status: "PARTIAL_READY",
+      consent: { model: true, online_research: true }, budget: { max_model_turns: 8, max_tool_calls: 16 }, usage: {},
+      latest_run_id: null, candidate_place_ids: [], source_observation_ids: [], failure_code: null,
+      research_places: [lead("museum", "TEST_FIXTURE 博物馆", "museum", "MATCHED"),
+        lead("village", "TEST_FIXTURE 古村落", "district", "UNKNOWN"),
+        lead("foreign", "TEST_FIXTURE 其他县同名结果", "museum", "CONFLICT")],
+      draft_artifact: { revision: 1, status: "DRAFT", days: [{ date: "2026-10-19", slots: [
+        { title: "TEST_FIXTURE 村落散步", time_of_day: "afternoon", notes: "", place_id: "village" }]}] },
+    }),
+  }));
+  await page.goto("/revolution");
+  const map = page.getByTestId("rev-mission-map-pane");
+  await expect(map).toContainText("1 处日程引用");
+  await expect(map).toContainText("TEST_FIXTURE 古村落");
+  await expect(map).toContainText("地区／村落线索");
+  await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
+  await map.getByRole("button", { name: "查看全部研究（3）" }).click();
+  await expect(map).toContainText("TEST_FIXTURE 博物馆");
+  await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
+  expect(writes).toEqual([]);
+});

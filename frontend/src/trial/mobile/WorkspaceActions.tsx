@@ -4,6 +4,8 @@ import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidat
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
 import { GoalDraftEditor } from "./GoalDraftEditor";
+import { splitGoalResearch } from "./goalResearch";
+import type { GoalResearchLead } from "../../api/citynexus";
 import "./WorkspaceActions.css";
 
 export type WorkspacePanel = "assistant" | "map" | null;
@@ -120,6 +122,16 @@ function taskStepText(result: Record<string, unknown>): string {
   return result.status === "COMPLETED" ? "完成" : "这一步暂未完成";
 }
 
+function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; area?: boolean }) {
+  return <ul className="rev-workspace-task-places">{items.map((place) => <li key={place.id}>
+    <strong>{place.name}</strong><span>{area ? "地区／村落线索" : "营业、费用待查"}</span>
+    {place.public_address && <small>{[...new Set(Object.values(place.public_address))].join(" · ")}</small>}
+    {place.region_status === "UNKNOWN" && <small>地区归属待核实</small>}
+    {/^https:\/\/www\.openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(place.source_url) &&
+      <a href={place.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}
+  </li>)}</ul>;
+}
+
 export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
   embedded?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
@@ -147,6 +159,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
   const visibleTask = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.value : null;
   const visibleEvents = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.events : [];
+  const research = splitGoalResearch(visibleTask);
   useEffect(() => {
     if (embedded && goalTaskSnapshot && sameContext(goalTaskSnapshot.context, readContext())) {
       onTaskChange?.(goalTaskSnapshot.value, goalTaskSnapshot.events);
@@ -418,11 +431,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               <span>{place.cost_evidence.status === "KNOWN" ? "费用资料已读取" : "费用待核实"}</span>
             </li>)}
           </ul>}
-          {(visibleTask.research_places ?? []).length > 0 && <ul className="rev-workspace-task-places">
-            {visibleTask.research_places?.map((place) => <li key={place.id}><strong>{place.name}</strong><span>营业、费用待查</span>
-              {/^https:\/\/www\.openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(place.source_url) && <a href={place.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}
-            </li>)}
-          </ul>}
+          {research.places.length > 0 && <ResearchLeads items={research.places} />}
+          {research.areas.length > 0 && <details><summary>地区／村落线索（{research.areas.length}）</summary><ResearchLeads items={research.areas} area /></details>}
+          {research.conflicts.length > 0 && <details><summary>其他地区的同名结果（{research.conflicts.length}）</summary><ResearchLeads items={research.conflicts} /></details>}
           {!embedded && visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
             disabled={busy || visibleTask.status === "WORKING"} onSave={async (artifact) => {
               const actor = readContext();

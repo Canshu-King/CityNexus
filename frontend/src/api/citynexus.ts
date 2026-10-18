@@ -2190,6 +2190,13 @@ export interface GoalDraftArtifact {
   status: "DRAFT";
   days: Array<{ date: string; slots: GoalDraftSlot[] }>;
 }
+export interface GoalResearchLead {
+  id: string; name: string; category: string; latitude: number; longitude: number;
+  source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  opening_status: string; cost_status: string;
+  region_status?: "MATCHED" | "CONFLICT" | "UNKNOWN";
+  public_address?: Record<string, string>;
+}
 export interface DraftGoalTask {
   task_id: string;
   journey_id: string;
@@ -2220,8 +2227,8 @@ export interface DraftGoalTask {
   }>;
   assistant_summary?: string | null;
   draft_artifact?: GoalDraftArtifact | null;
-  research_places?: Array<{ id: string; name: string; category: string; latitude: number; longitude: number;
-    source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED"; opening_status: string; cost_status: string }>;
+  research_places?: GoalResearchLead[];
+  research_areas?: GoalResearchLead[];
   failure_code: string | null;
   created_at?: string;
   started_at?: string | null;

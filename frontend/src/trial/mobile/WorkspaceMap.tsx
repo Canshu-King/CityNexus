@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { BootstrapDiscoveryCandidate } from "../../api/citynexus";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export type WorkspaceMapPoint = Pick<BootstrapDiscoveryCandidate, "candidate_id" | "name" | "latitude" | "longitude" | "coordinate_system" | "provider_provenance" | "selection_state" | "source_url" | "observation_expired">;
+export type WorkspaceMapPoint = Pick<BootstrapDiscoveryCandidate, "candidate_id" | "name" | "latitude" | "longitude" | "coordinate_system" | "provider_provenance" | "selection_state" | "source_url" | "observation_expired"> & { kind?: "place" | "area" };
 
 function validPoint(place: WorkspaceMapPoint): boolean {
   return place.coordinate_system === "WGS84" && Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
@@ -34,11 +34,12 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
       const bounds = new lib.LngLatBounds();
       points.forEach((point, index) => {
         const element = document.createElement("button");
-        element.type = "button"; element.className = "rev-workspace-map-pin";
+        element.type = "button"; element.className = "rev-workspace-map-pin" + (point.kind === "area" ? " is-area" : "");
         element.textContent = String(index + 1);
         element.setAttribute("aria-label", point.name);
         const content = document.createElement("div");
         const title = document.createElement("strong"); title.textContent = point.name; content.append(title);
+        if (point.kind === "area") { const type = document.createElement("p"); type.textContent = "地区／村落线索"; content.append(type); }
         if (point.source_url && /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(point.source_url)) {
           const source = document.createElement("a"); source.textContent = "查看地点来源 ↗";
           source.href = point.source_url; source.target = "_blank"; source.rel = "noreferrer";
@@ -63,7 +64,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
         : <div ref={host} className="rev-workspace-map" data-testid="rev-workspace-map-canvas" />}
       {failed && <p role="status">底图暂时没有加载成功，下面的地点列表仍可查看。</p>}
       <ol className="rev-workspace-place-list">{points.map((point) => <li key={point.candidate_id}><strong>{point.name}</strong>
-        <small>{point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "地点位置"} · {point.observation_expired ? "上次搜索的地点，营业与费用需更新" : point.selection_state === "READY_FOR_NATIVE_PLAN" ? "资料可用于正式排程" : "部分营业或费用资料待核实"}</small>
+        <small>{point.kind === "area" ? "地区／村落线索" : point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "地点位置"} · {point.observation_expired ? "上次搜索的地点，营业与费用需更新" : point.selection_state === "READY_FOR_NATIVE_PLAN" ? "资料可用于正式排程" : "部分营业或费用资料待核实"}</small>
         {point.source_url && /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(point.source_url) &&
           <a href={point.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}</li>)}</ol>
     </>}
