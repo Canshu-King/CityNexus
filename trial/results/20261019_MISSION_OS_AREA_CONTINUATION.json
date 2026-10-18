@@ -1,0 +1,597 @@
+{
+  "product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c",
+  "same_sha_url": "http://127.0.0.1:14332/revolution",
+  "journey_id": "f49a2208-89d1-405b-a9c5-5fcf23e68ac8",
+  "task_id": "d812feba-7be7-4935-8c08-1b1d7fe0a113",
+  "status": "PARTIAL_READY",
+  "consent": {
+    "model": true,
+    "online_research": true
+  },
+  "budget": {
+    "max_model_turns": 16,
+    "max_tool_calls": 16
+  },
+  "usage": {
+    "model_turns": 16,
+    "tool_calls": 11
+  },
+  "event_sequence": 65,
+  "research_places": [
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/13337971801",
+      "latitude": 31.2303,
+      "longitude": 121.4716703,
+      "name": "上海博物馆餐厅",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/13337971801"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/43927496",
+      "latitude": 31.2206022,
+      "longitude": 121.5367332,
+      "name": "上海科技馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/43927496"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/206608461",
+      "latitude": 31.2561467,
+      "longitude": 121.5048202,
+      "name": "上海犹太难民纪念馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/206608461"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/161090899",
+      "latitude": 31.2301577,
+      "longitude": 121.4709998,
+      "name": "上海博物馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/161090899"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/40324703",
+      "latitude": 31.2332874,
+      "longitude": 121.4682058,
+      "name": "上海当代艺术馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/40324703"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/5530017322",
+      "latitude": 31.2326171,
+      "longitude": 121.4666204,
+      "name": "上海市历史博物馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/5530017322"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/206501415",
+      "latitude": 31.280532,
+      "longitude": 121.1657748,
+      "name": "上海汽车博物馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/206501415"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/425762388",
+      "latitude": 31.2368655,
+      "longitude": 121.4577002,
+      "name": "上海自然博物馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/425762388"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/490345952",
+      "latitude": 31.212213,
+      "longitude": 121.4498928,
+      "name": "上海工艺美术博物馆",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/490345952"
+    },
+    {
+      "category": "other",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/39763744",
+      "latitude": 31.2340096,
+      "longitude": 121.4688019,
+      "name": "人民公园",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/39763744"
+    },
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/12025294820",
+      "latitude": 31.2331398,
+      "longitude": 121.4660132,
+      "name": "人民公园",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/12025294820"
+    }
+  ],
+  "draft_artifact": {
+    "days": [
+      {
+        "date": "2026-10-20",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "为下午出门保留体力；具体地点待定，无需门票与预约信息。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "morning",
+            "title": "上午自由休息（住宿地附近，不安排景点）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公开地图来源（OpenStreetMap way/161090899），坐标约 31.2302, 121.4710。开放时间、是否需预约、门票费用均未知，出发前必须核实；遇闭馆或人流管控则改期。",
+            "opening_status": "UNKNOWN",
+            "place_id": "photon:W/161090899",
+            "time_of_day": "afternoon",
+            "title": "上海博物馆（人民广场馆）参观",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公开地图来源（OpenStreetMap way/39763744），标注为公园，坐标约 31.2340, 121.4688，紧邻人民广场，步行距离短。开放时间与收费未知，待核实；体力不足可跳过。",
+            "opening_status": "UNKNOWN",
+            "place_id": "photon:W/39763744",
+            "time_of_day": "afternoon",
+            "title": "人民公园短距离散步（与博物馆相邻）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "在人民广场或住宿地附近就近用餐，避免长距离步行；具体餐厅、营业时间与费用均未研究。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "就近晚餐并返回休息（餐厅待定）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-21",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "留在住宿地附近轻松活动，视当日体力决定是否提前出门；无已核实地点。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "morning",
+            "title": "上午弹性安排（不排景点）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公开地图来源（OpenStreetMap node/5530017322），坐标约 31.2326, 121.4666，靠近人民广场。开放时间、预约与票价未知，需核实；若闭馆可改为上海当代艺术馆（photon:W/40324703，坐标约 31.2333, 121.4682）。",
+            "opening_status": "UNKNOWN",
+            "place_id": "photon:N/5530017322",
+            "time_of_day": "afternoon",
+            "title": "上海市历史博物馆参观",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公开地图来源（OpenStreetMap way/40324703），坐标约 31.2333, 121.4682。开放时间、票价与当前展览未知，需核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": "photon:W/40324703",
+            "time_of_day": "afternoon",
+            "title": "备选：上海当代艺术馆（仅在前一处闭馆时使用）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "就近用餐，注意 21:00 行程结束时间；餐厅与费用未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "晚餐并于 21:00 前结束行程",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "出发前逐项核实上海博物馆、上海市历史博物馆、上海当代艺术馆的开放日、是否需实名预约及票价；本次地图数据未提供营业时间，周边检索服务不可用，公园类地点亦需确认开放时间。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "研究待办：核实开放与预约信息",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 3,
+    "status": "DRAFT"
+  },
+  "provider_calls": [
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "上海博物馆 人民广场",
+        "city": "上海市",
+        "public_city_label": "上海市",
+        "limit": 8
+      },
+      "response": {
+        "status": "RESULTS",
+        "http_status": 200,
+        "count": 1
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1883,
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "Shanghai Museum",
+        "city": "上海市",
+        "public_city_label": "上海市",
+        "limit": 8
+      },
+      "response": {
+        "status": "RESULTS",
+        "http_status": 200,
+        "count": 8
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1582,
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "人民公园 上海",
+        "city": "上海市",
+        "public_city_label": "上海市",
+        "limit": 8
+      },
+      "response": {
+        "status": "RESULTS",
+        "http_status": 200,
+        "count": 2
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1448,
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "provider": "overpass",
+      "operation": "goal_area_discovery",
+      "request": {
+        "query": "museum",
+        "public_city_label": "上海市",
+        "center_place_id": "photon:W/161090899",
+        "center_source_url": "https://www.openstreetmap.org/way/161090899",
+        "latitude": 31.2301577,
+        "longitude": 121.4709998,
+        "radius_m": 2000,
+        "limit": 8,
+        "max_attempts": 1
+      },
+      "response": {
+        "status": "PROVIDER_UNAVAILABLE",
+        "http_status": null,
+        "places": [],
+        "attempt_count": 1
+      },
+      "status": "FAILURE",
+      "elapsed_ms": 13000,
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    }
+  ],
+  "tool_steps": [
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 1,
+      "tool": "inspect_journey",
+      "result": {
+        "elapsed_ms": 10,
+        "observation_ids": [],
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 2,
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1889,
+        "http_status": 200,
+        "place_count": 1,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "检索上海博物馆人民广场馆候选地点",
+        "reason_code": null,
+        "status": "RESULTS"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 3,
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1587,
+        "http_status": 200,
+        "place_count": 8,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "换关键词检索上海博物馆馆舍",
+        "reason_code": null,
+        "status": "RESULTS"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 4,
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1453,
+        "http_status": 200,
+        "place_count": 2,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "检索人民广场附近公园",
+        "reason_code": null,
+        "status": "RESULTS"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 5,
+      "tool": "research_place_sources",
+      "result": {
+        "elapsed_ms": 0,
+        "reason_code": "PLACE_NOT_IN_GOAL_TASK_SCOPE",
+        "status": "NEEDS_DECISION"
+      },
+      "status": "BLOCKED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 6,
+      "tool": "search_city_services",
+      "result": {
+        "discovery_attempted": false,
+        "elapsed_ms": 6,
+        "place_count": 0,
+        "place_ids": [],
+        "service_count": 0,
+        "service_ids": [],
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 7,
+      "tool": "research_place_sources",
+      "result": {
+        "elapsed_ms": 0,
+        "reason_code": "PLACE_NOT_IN_GOAL_TASK_SCOPE",
+        "status": "NEEDS_DECISION"
+      },
+      "status": "BLOCKED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "3ea0fa04-64ee-45f3-a5e2-2b2a7a37063c",
+      "sequence": 8,
+      "tool": "save_draft_itinerary",
+      "result": {
+        "draft_revision": 1,
+        "elapsed_ms": 2,
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "91e680d5864a81788b65c1e38f5bf7397eebf0ab"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 1,
+      "tool": "inspect_journey",
+      "result": {
+        "elapsed_ms": 9,
+        "observation_ids": [],
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 2,
+      "tool": "research_place_sources",
+      "result": {
+        "elapsed_ms": 0,
+        "reason_code": "PLACE_NOT_IN_GOAL_TASK_SCOPE",
+        "status": "NEEDS_DECISION"
+      },
+      "status": "BLOCKED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 3,
+      "tool": "research_place_sources",
+      "result": {
+        "elapsed_ms": 0,
+        "reason_code": "PLACE_NOT_IN_GOAL_TASK_SCOPE",
+        "status": "NEEDS_DECISION"
+      },
+      "status": "BLOCKED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 4,
+      "tool": "discover_nearby_places",
+      "result": {
+        "elapsed_ms": 13007,
+        "http_status": null,
+        "place_count": 0,
+        "provider": "overpass",
+        "provider_provenance": "UNVERIFIED",
+        "public_action": "查找上海博物馆周边其他博物馆",
+        "reason_code": "OVERPASS_UNAVAILABLE",
+        "status": "PROVIDER_UNAVAILABLE"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 5,
+      "tool": "search_city_services",
+      "result": {
+        "discovery_attempted": false,
+        "elapsed_ms": 4,
+        "place_count": 0,
+        "place_ids": [],
+        "service_count": 0,
+        "service_ids": [],
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 6,
+      "tool": "research_place_sources",
+      "result": {
+        "elapsed_ms": 0,
+        "reason_code": "PLACE_NOT_IN_GOAL_TASK_SCOPE",
+        "status": "NEEDS_DECISION"
+      },
+      "status": "BLOCKED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 7,
+      "tool": "search_city_services",
+      "result": {
+        "discovery_attempted": false,
+        "elapsed_ms": 3,
+        "place_count": 0,
+        "place_ids": [],
+        "service_count": 0,
+        "service_ids": [],
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    },
+    {
+      "run_id": "bc9f00e9-6db2-4637-8f61-5833a842e996",
+      "sequence": 8,
+      "tool": "save_draft_itinerary",
+      "result": {
+        "draft_revision": 3,
+        "elapsed_ms": 3,
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED",
+      "execution_product_sha": "e21cae5d55fb76e93549a107a7dbed147e509b4c"
+    }
+  ],
+  "browser": {
+    "tool": "chrome-use",
+    "css_viewport": [
+      390,
+      844
+    ],
+    "device_emulation": "iPhone 12",
+    "physical_phone": false,
+    "screenshot": "CAPTURE_TIMEOUT",
+    "modal_count": 0,
+    "edited_draft_reopened_before_continuation": true,
+    "css_viewports_observed": [
+      [
+        390,
+        844
+      ],
+      [
+        430,
+        932
+      ],
+      [
+        1366,
+        900
+      ]
+    ],
+    "map_pin_count": 11,
+    "pin_opens_draft_place_id": "photon:W/161090899",
+    "pin_source_url": "https://www.openstreetmap.org/way/161090899",
+    "draft_reopened_after_continuation": true
+  },
+  "user_verified": "PENDING"
+}
