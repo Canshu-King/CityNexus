@@ -303,7 +303,8 @@ class BootstrapDiscoveryRequest(BaseModel):
     query: str = Field(default="cafe", min_length=1, max_length=120)
     query_mode: Literal["category", "name"] = "category"
     radius_m: int = Field(default=2500, ge=100, le=5000)
-    limit: int = Field(default=3, ge=1, le=3)
+    # Three items is a demo card limit, not a useful traveler search result set.
+    limit: int = Field(default=8, ge=1, le=10)
     source_kind: Literal["FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"]
     provider_consent: bool = False
     consented_provider: Literal["overpass", "photon"]
