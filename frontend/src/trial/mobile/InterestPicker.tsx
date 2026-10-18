@@ -6,6 +6,8 @@ type InterestPickerOption = {
 
 type InterestPickerProps<TCategory extends InterestPickerOption> = {
   categories: readonly TCategory[];
+  supportsFreeText: boolean;
+  radiusKm: number;
   category: TCategory["value"];
   centerBasis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" | null;
   sampleProviderMode: boolean;
@@ -21,6 +23,8 @@ type InterestPickerProps<TCategory extends InterestPickerOption> = {
 
 export function InterestPicker<TCategory extends InterestPickerOption,>({
   categories,
+  supportsFreeText,
+  radiusKm,
   category,
   centerBasis,
   sampleProviderMode,
@@ -35,7 +39,10 @@ export function InterestPicker<TCategory extends InterestPickerOption,>({
 }: InterestPickerProps<TCategory>) {
   return (
     <div className="rev-quick-pane" data-testid="rev-quick-category">
-      <h3>这次想看些什么？</h3>
+      <h3>或者按快捷分类寻找</h3>
+      <p className="rev-quick-disclosure">{supportsFreeText
+        ? "这四种只是旧数据服务的快捷分类，不代表当地只有这些玩法。上方可直接查古城、美食、土楼等关键词。"
+        : "当前地点服务只提供这些快捷分类。未找到时可以换区域，也可以从地图继续查看已保存地点。"}</p>
       <div className="rev-quick-categories">
         {categories.map((item) => (
           <button
@@ -52,8 +59,8 @@ export function InterestPicker<TCategory extends InterestPickerOption,>({
       </div>
       <p className="rev-quick-disclosure">
         {centerBasis === "EXPLICIT_GEOCODER_APPROX"
-          ? "使用你选择的区域中心搜索，范围约 2.5 公里。可返回更换区域。"
-          : "你已选择公开地图位置。"}
+          ? `使用已选区域中心搜索，范围约 ${radiusKm} 公里。未命中不代表整个城市没有地点。`
+          : `从你选择的地图位置搜索，范围约 ${radiusKm} 公里。`}
         {sampleProviderMode
           ? "搜索时将所选区域和类别发送至 TEST_PROVIDER。"
           : `搜索时将所选区域和类别发送至 ${expectedRecipient || "公开地图服务"}。`}
