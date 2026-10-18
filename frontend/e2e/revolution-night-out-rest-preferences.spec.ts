@@ -221,9 +221,10 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   }
 
   await askAi.click();
-  const taskDialog = page.getByRole("region", {name: "Agent 命令台"});
-  await expect(taskDialog.getByRole("textbox")).toHaveValue(fullGoal);
-  await expect(taskDialog.getByRole("button", {name: "开始研究", exact: true})).toBeDisabled();
+  const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
+  await expect(chatDock).toBeVisible();
+  await expect(chatDock.locator("#rev-mission-chat-input")).toHaveValue(fullGoal);
+  await expect(chatDock.getByRole("button", { name: "发送 ↑", exact: true })).toBeDisabled();
   expect(suggestionCalls).toBe(0);
   expect(apiPostCalls).toBe(0);
   expect(submittedGoal).toBe("");
