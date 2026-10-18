@@ -36,6 +36,12 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, third adapter: draft generation. It creates CANDIDATE plans and never
     # selects or activates one; selection stays a separate, user-owned step.
     GENERATE_PLANS = "GENERATE_PLANS"
+    # Reform 2026-10-18, fourth adapter: provider-backed alternative search. It materialises
+    # candidate rows for the journey and never touches the plan, a booking or money.
+    DISCOVER_PLACES = "DISCOVER_PLACES"
+    # Reform 2026-10-18, fifth adapter: source-backed place details. It writes canonical Place
+    # facts, so it is a domain mutation and the runtime requires an inspection first.
+    ACQUIRE_PLACE_FACTS = "ACQUIRE_PLACE_FACTS"
 
 
 class AuthorizationDecision(str, Enum):

@@ -81,6 +81,20 @@ TYPED_TOOLS = (
         False,
         False,
     ),
+    ToolDescriptor(
+        AgentAction.DISCOVER_PLACES,
+        "discover_places",
+        True,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.ACQUIRE_PLACE_FACTS,
+        "acquire_place_facts",
+        True,
+        False,
+        False,
+    ),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

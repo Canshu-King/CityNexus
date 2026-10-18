@@ -171,6 +171,17 @@ class AgentToolCall(BaseModel):
     # Reform 2026-10-18: draft generation names the server-owned places it must arrange.
     place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
     planning_mode: str | None = Field(default=None, max_length=32)
+    # Reform 2026-10-18: provider-backed alternative search. The caps are the server's own route
+    # caps -- widening them without provider evidence is exactly what the order forbids.
+    query: str | None = Field(default=None, min_length=1, max_length=120)
+    radius_m: int | None = Field(default=None, ge=100, le=5000)
+    limit: int | None = Field(default=None, ge=1, le=20)
+    mode: str | None = Field(default=None, pattern="^(replay|captured_replay|live)$")
+    # Reform 2026-10-18: source-backed fact acquisition names where the facts come from, if the
+    # caller already holds a lead. Without a binding the server uses the place's provider identity.
+    source_observation_id: str | None = Field(default=None, min_length=1, max_length=64)
+    source_url: str | None = Field(default=None, min_length=1, max_length=2048)
+    source_class: str | None = Field(default=None, min_length=1, max_length=64)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None

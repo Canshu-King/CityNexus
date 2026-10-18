@@ -37,7 +37,7 @@ class AgentRuntimeUnavailable(RuntimeError):
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
 # Reform 2026-10-18: `research_place_sources` is read-shaped (it stores NON_AUTHORITATIVE
 # observations), so it must not inherit the mutation-tool treatment by being newly allowlisted.
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "estimate_place_facts"}
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "estimate_place_facts", "discover_places"}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -201,6 +201,32 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 "planning_mode": _property("string"),
             },
             ["journey_id", "place_ids"],
+        ),
+        _tool(
+            "discover_places",
+            "Search the city through the deployment's provider path when a catalogue search found "
+            "nothing. The server owns the query budget; candidates are materialised, never promoted.",
+            {
+                **journey,
+                "query": _property("string"),
+                "radius_m": _property("integer", minimum=100, maximum=5000),
+                "limit": _property("integer", minimum=1, maximum=20),
+                "mode": _property("string", enum=["replay", "captured_replay", "live"]),
+            },
+            ["journey_id", "query"],
+        ),
+        _tool(
+            "acquire_place_facts",
+            "Acquire provider-backed facts for one existing Place, optionally bound to a source "
+            "observation or URL. Missing facts stay UNKNOWN; nothing is guessed.",
+            {
+                **journey,
+                "place_id": _property("string"),
+                "source_observation_id": _property("string"),
+                "source_url": _property("string"),
+                "source_class": _property("string"),
+            },
+            ["journey_id", "place_id"],
         ),
     ]
 

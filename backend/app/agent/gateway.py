@@ -49,6 +49,8 @@ from app.db.models import (
     ReplanProposal,
     WebObservation,
 )
+from app.fact_acquisition import acquire_place_facts
+from app.integrations.discovery.real_city import capture_real_city_candidates
 from app.schemas import AgentToolCall, ReplanGenerateRequest
 from app.services import (
     _place_verified_cost,
@@ -376,6 +378,8 @@ class AgentToolGateway:
             "research_place_sources": self.research_place_sources,
             "estimate_place_facts": self.estimate_place_facts,
             "generate_plans": self.generate_plans,
+            "discover_places": self.discover_places,
+            "acquire_place_facts": self.acquire_place_facts,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -604,6 +608,101 @@ class AgentToolGateway:
                 }
                 for row in rows[:5]
             ],
+        }
+
+    def acquire_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
+        """Acquire provider-backed facts for one Place, or say why it cannot.
+
+        Reform 2026-10-18, fifth adapter: source-backed details. The provider identity is the
+        place's own (`overpass:node/123` and friends); a caller may also bind the acquisition to a
+        source observation it already holds. Facts the providers do not answer stay UNKNOWN, and a
+        place with no provider identity is reported as such instead of being guessed at. This tool
+        writes canonical Place rows, so the runtime requires an inspection before it runs.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.place_id:
+            raise HTTPException(422, "place_id is required for acquire_place_facts")
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+        bindings = None
+        binding_origin = "agent"
+        if request.source_observation_id is not None:
+            observation = self.session.get(WebObservation, str(request.source_observation_id))
+            if observation is None or observation.journey_id != journey.id:
+                raise HTTPException(409, "SOURCE_OBSERVATION_NOT_OWNED_BY_JOURNEY")
+            if observation.authority_status != "NON_AUTHORITATIVE":
+                raise HTTPException(409, "SOURCE_OBSERVATION_STATE_INVALID")
+            bindings = {
+                place.id: {
+                    "source_url": observation.url,
+                    "source_class": observation.source_class,
+                    "source_observation_id": observation.id,
+                }
+            }
+            binding_origin = "agent_observation"
+        elif request.source_url:
+            bindings = {
+                place.id: {
+                    "source_url": request.source_url,
+                    "source_class": request.source_class,
+                }
+            }
+        receipt = acquire_place_facts(
+            self.session,
+            journey,
+            place_ids=[place.id],
+            source_bindings=bindings,
+            binding_origin=binding_origin,
+        )
+        self.session.commit()
+        return {
+            "tool": "acquire_place_facts",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "place_id": place.id,
+            "receipt": receipt,
+        }
+
+    def discover_places(self, request: AgentToolCall) -> dict[str, Any]:
+        """Provider-backed alternative search, for when a catalogue query found nothing.
+
+        Reform 2026-10-18, fourth adapter. The query budget is the server's own route budget
+        (radius 100..5000 m, at most 20 rows per call); widening it without provider evidence is
+        exactly what the order forbids. Every call writes a ProviderCall row, and a provider that
+        answers with nothing is reported as such -- not raised as a failure of the journey, and not
+        turned into an invented place.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.query:
+            raise HTTPException(422, "query is required for discover_places")
+        mode = (request.mode or "captured_replay").lower()
+        try:
+            result = capture_real_city_candidates(
+                self.session,
+                journey,
+                query=request.query,
+                radius_m=request.radius_m or 2500,
+                limit=request.limit or 8,
+                mode=mode,
+            )
+        except ValueError as exc:
+            # A named refusal (for example, the captured snapshot belongs to another city) is a
+            # conflict the caller can act on, not a provider outage.
+            raise HTTPException(409, str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(503, str(exc)) from exc
+        self.session.commit()
+        candidates = result.get("candidates") or []
+        return {
+            "tool": "discover_places",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "query": request.query,
+            "mode": result.get("mode", mode),
+            "count": len(candidates),
+            "counts_as_supply": bool(candidates),
+            "provenance": result.get("provenance"),
+            "provider_status": result.get("provider_status"),
+            "candidates": candidates,
         }
 
     def generate_plans(self, request: AgentToolCall) -> dict[str, Any]:
