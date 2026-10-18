@@ -57,10 +57,9 @@ export const journeyAbortCopy = {
       "The server refused this attempt. Your trip is unchanged -- it is still live and still in your " +
       "trip list.",
     "abort.unnamed":
-      "The server refused this attempt without naming the condition it refused. Your trip is " +
-      "unchanged.",
+      "The server refused this attempt without naming the condition it refused.",
     "abort.transport":
-      "The server did not answer, so nothing about your trip changed because of this screen.",
+      "The server did not answer, so this screen cannot say whether the abort landed.",
     "abort.details": "Technical details",
   },
   "zh-CN": {
@@ -91,8 +90,8 @@ export const journeyAbortCopy = {
     "abort.refused":
       "服务器拒绝了这次中止。你的行程没有变化：它仍在实时行程里，也仍在你的行程列表里。",
     "abort.unnamed":
-      "服务器拒绝了这次中止，但没有说出拒绝的是哪一种情况。你的行程没有变化。",
-    "abort.transport": "这台服务器没有应答。这一屏没有改动你的任何行程。",
+      "服务器拒绝了这次中止，但没有说出拒绝的是哪一种情况。",
+    "abort.transport": "这台服务器没有应答，所以这一屏说不出这次中止有没有生效。",
     "abort.details": "技术详情",
   },
 } as const;

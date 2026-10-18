@@ -156,9 +156,10 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             <p className="v8-kicker">{t("hub.stayLabel")}</p>
             <h1>{t("stay.noneToCompare")}</h1>
             <p className="v8-lede">
-              {zh
-                ? "这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。"
-                : "No provider-backed accommodation is available for this city yet. Re-run the acquisition, or look at another city — we will not invent hotels."}
+              {/* The hub already states this exact absence through `hub.stayOutcomeUnknown`;
+                  the panel used to retype it inline in both languages, so the same fact had
+                  three writers and the dictionary key had none on this screen. */}
+              {t("hub.stayOutcomeUnknown")}
             </p>
           </div>
         </div>

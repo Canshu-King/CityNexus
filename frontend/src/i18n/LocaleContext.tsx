@@ -21,7 +21,7 @@ const en: Dict = {
   "nav.import": "Import places",
   "planai.tripRequest": "Trip request",
   "planai.importPlacesCta": "Paste your own places and import them into this trip",
-  "plan.aiNotConfiguredNote": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.",
+  "plan.aiNotConfiguredNote": "This server has no AI credential configured.",
   "plan.aiDisabledByOpsNote":
         "The AI switch on this server is off — an operator setting, nothing you did.",
   "plan.aiStateUnknownNote": "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.",
@@ -169,7 +169,7 @@ const en: Dict = {
      server answered.  The wording covers both ways an answer can fail to arrive -- the connection
      never came up, or this read reached its own deadline -- because the screen is not allowed to
      name a cause it did not observe. */
-  "trial.sealedNoAnswer": "Couldn't read the sealed demo: this device got no answer from the server -- the connection did not come up, or this read ended without a reply. Nothing you filled in caused this.",
+  "trial.sealedNoAnswer": "Couldn't read the sealed demo: this device got no answer from the server -- the connection did not come up, or this read ended without a reply.",
 
   "trial.city": "Destination city",
   "trial.country": "Country/region code",
@@ -698,7 +698,7 @@ const en: Dict = {
   "discovery.discoverCompose": "Discover and compose",
   "discovery.composeError": "Discovery could not be composed",
   "discovery.noGroundedCandidates": "No provider-grounded place set is available yet. Try a broader place request or a nearby arrival anchor.",
-  "discovery.aiUnavailable": "The assistant could not finish this request. Your trip is unchanged; try again or use a plain provider search.",
+  "discovery.aiUnavailable": "The assistant could not finish this request; try again or use a plain provider search.",
   "discovery.groundedStop": "A grounded city stop was composed.",
   "discovery.providerUnnamed": "provider",
   "discovery.anchor": "Anchor:",
@@ -1555,8 +1555,8 @@ const en: Dict = {
   "lib.failureAttribution.readFailed": "This read failed",
   "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
-  "lib.failureAttribution.networkCopyStillReadable": "This request could not travel and nothing came back, so this is a network problem. Your trip data has not been lost and the saved read-only copy is still available. Check your connection and try again.",
-  "lib.failureAttribution.networkNoOfflineCopy": "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
+  "lib.failureAttribution.networkCopyStillReadable": "This request could not travel and nothing came back, so this is a network problem. The saved read-only copy is still available. Check your connection and try again.",
+  "lib.failureAttribution.networkNoOfflineCopy": "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show. Check your connection and try again.",
   "lib.failureAttribution.readCauseNotClassified": "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
   "simulation.notGiven": "not given",
@@ -1766,7 +1766,7 @@ const zhCN: Dict = {
   "trial.sealedUnreadable": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
   /* ORD-0349：这一腿根本没拿到回答，所以不许借用"服务器答了"那一句。措辞覆盖拿不到回答的两种走法
      —— 连接没成，或这一趟到时限也没回话 —— 因为屏幕不许点名一个它没观察到的原因。 */
-  "trial.sealedNoAnswer": "没读到封存演示的信息：这台设备没有拿到服务器的回答——连接没成，或者这一趟到时限也没有回话。这不是你填错了什么。",
+  "trial.sealedNoAnswer": "没读到封存演示的信息：这台设备没有拿到服务器的回答——连接没成，或者这一趟到时限也没有回话。",
 
   "trial.city": "目的城市",
   "trial.country": "国家/地区代码",
@@ -2782,7 +2782,7 @@ const zhCN: Dict = {
 
   // ── 恢复与证据过期卡片 ──
   "recovery.staleTitle": "这趟行程的出行证据需要重新同步",
-  "recovery.staleDetail": "这套方案当初依据的路线证据已经过期，所以现在对它的改动还没法校验。你行程上的任何东西都没有被改动。",
+  "recovery.staleDetail": "这套方案当初依据的路线证据已经过期，所以现在对它的改动还没法校验。",
   "recovery.noAltTitle": "没有安全的替代方案",
   "recovery.noAltDetail": "针对 {code} 试过一次重规划，没有产出可行的替代方案。当前方案仍未通过校验。",
   "recovery.decisionTitle": "你的行程需要你做一个决定",
@@ -3115,7 +3115,7 @@ const zhCN: Dict = {
   "hub.stayOutcomeNoOffers": "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。",
   "hub.stayOutcomeAllRejected": "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。",
   "hub.stayOutcomeZeroNights": "这趟行程不过夜，所以没有住宿可搜。",
-  "hub.stayOutcomeUnknown": "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。",
+  "hub.stayOutcomeUnknown": "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。",
   "hub.budgetTightCaveat": "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。",
   "hub.budgetReferenceHint":
         "按你的预算平均出来的参考值；实付以供应商为准。",

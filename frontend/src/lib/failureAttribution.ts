@@ -455,6 +455,10 @@ export function copyFor(
   const kickerOf = (name: keyof typeof KICKER_COPY) =>
     (zh ? KICKER_COPY[name].zh : KICKER_COPY[name].en);
   const titleOf = (key: string) => dictionaryCopy(zh ? "zh-CN" : "en", key);
+  // The body sentences for these two states already live in the travel dictionary.  Reading
+  // them here instead of retyping them means one sentence per state, in one place: the
+  // hardcoded pair used to drift from the keyed pair, and the keyed pair had no reader at all.
+  const bodyOf = (key: string) => dictionaryCopy(zh ? "zh-CN" : "en", key);
   switch (attribution.message_key) {
     case "failure.journeyNotFound":
       return {
@@ -469,12 +473,8 @@ export function copyFor(
         kicker: kickerOf("connection"),
         title: titleOf("lib.failureAttribution.networkUnavailable"),
         body: detail.hasCachedCopy
-          ? zh
-            ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。"
-            : "This request could not travel and nothing came back, so this is a network problem. Your trip data has not been lost and the saved read-only copy is still available. Check your connection and try again."
-          : zh
-            ? "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。"
-            : "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
+          ? bodyOf("lib.failureAttribution.networkCopyStillReadable")
+          : bodyOf("lib.failureAttribution.networkNoOfflineCopy"),
       };
     case "failure.serverError":
       return detail.hasCachedCopy
