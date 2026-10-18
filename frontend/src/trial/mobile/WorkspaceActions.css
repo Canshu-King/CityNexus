@@ -36,3 +36,23 @@
 .rev-workspace-place-list li { padding: 9px 0; }
 .rev-workspace-place-list small { display: block; }
 @media (max-width: 560px) { .rev-workspace-dialog { width: calc(100vw - 12px); max-height: calc(100dvh - 12px); border-radius: 16px; } .rev-workspace-body { padding: 12px 14px 24px; } }
+
+/* Agent-first P0: readable timeline and a compact editable draft, not a 40-field wall. */
+.rev-workspace-top h2 { white-space: nowrap; flex: 0 0 auto; min-width: max-content; }
+.rev-workspace-top > button { margin-left: auto; flex: 0 0 auto; }
+.rev-workspace-budget-help { font-size: 13px; color: #405b4b; line-height: 1.55; }
+.rev-workspace-timeline { margin: 14px 0; padding: 12px; background: #f7faf6; border: 1px solid #c9decf; border-radius: 12px; }
+.rev-workspace-timeline > summary { cursor: pointer; font-weight: 700; color: #20583f; }
+.rev-workspace-timeline p { font-size: 13px; }
+.rev-workspace-timeline ol { display: grid; gap: 4px; margin: 10px 0; padding-left: 4px; list-style: none; max-height: 280px; overflow-y: auto; }
+.rev-workspace-timeline li { display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid #dce8dd; padding: 5px 0; font-size: 13px; }
+.rev-workspace-event-sequence { width: 38px; flex-shrink: 0; font-variant-numeric: tabular-nums; color: #55705e; }
+.rev-goal-draft-slot { display: block; padding: 0; margin: 6px 0; background: #fff; border: 1px solid #d1e1d6; border-radius: 10px; overflow: hidden; }
+.rev-goal-draft-slot > summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; padding: 10px 12px; color: #204b36; line-height: 1.5; }
+.rev-goal-draft-slot > summary span { color: #668174; margin-left: auto; font-size: 12px; }
+.rev-goal-draft-slot-fields { display: grid; gap: 10px; padding: 12px; border-top: 1px solid #e1eae2; }
+.rev-goal-draft-slot-fields label { display: grid; gap: 5px; }
+.rev-goal-draft-actions { position: sticky; bottom: 0; z-index: 2; padding: 12px; border-radius: 12px; border: 1px solid #d2e3d5; background: #f7fbf8; box-shadow: 0 -2px 12px #16392718; }
+.rev-goal-draft-actions > button { display: block; width: 100%; }
+.rev-goal-draft-actions > p { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: #24533e; }
+.rev-goal-draft-actions > p[role="alert"] { color: #943b20; }
