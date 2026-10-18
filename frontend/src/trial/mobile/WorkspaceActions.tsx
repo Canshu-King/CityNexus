@@ -283,8 +283,12 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
     const controller = new AbortController();
     postController.current = controller;
     writeBusy.current = true; setBusy(true); setRequestError(null);
-    const nextTurns = Math.min(MAX_MODEL_TURNS, Math.max(task.budget.max_model_turns ?? MODEL_TURNS, task.usage.model_turns ?? 0) + CONTINUE_MODEL_TURNS);
-    const nextTools = Math.min(MAX_TOOL_CALLS, Math.max(task.budget.max_tool_calls ?? TOOL_CALLS, task.usage.tool_calls ?? 0) + CONTINUE_TOOL_CALLS);
+    const nextTurns = (task.usage.model_turns ?? 0) < (task.budget.max_model_turns ?? MODEL_TURNS)
+      ? (task.budget.max_model_turns ?? MODEL_TURNS)
+      : Math.min(MAX_MODEL_TURNS, (task.budget.max_model_turns ?? MODEL_TURNS) + CONTINUE_MODEL_TURNS);
+    const nextTools = (task.usage.tool_calls ?? 0) < (task.budget.max_tool_calls ?? TOOL_CALLS)
+      ? (task.budget.max_tool_calls ?? TOOL_CALLS)
+      : Math.min(MAX_TOOL_CALLS, (task.budget.max_tool_calls ?? TOOL_CALLS) + CONTINUE_TOOL_CALLS);
     const timer = window.setTimeout(() => controller.abort(), 180000);
     try {
       const result = await cityNexusApi.runDraftGoalTask(actor.id, task.task_id, {
@@ -318,13 +322,14 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
   };
 
   const nextModelBudget = visibleTask
-    ? Math.min(MAX_MODEL_TURNS, Math.max(
-        visibleTask.budget.max_model_turns ?? MODEL_TURNS,
-        visibleTask.usage.model_turns ?? 0,
-      ) + CONTINUE_MODEL_TURNS)
+    ? (visibleTask.usage.model_turns ?? 0) < (visibleTask.budget.max_model_turns ?? MODEL_TURNS)
+      ? (visibleTask.budget.max_model_turns ?? MODEL_TURNS)
+      : Math.min(MAX_MODEL_TURNS, (visibleTask.budget.max_model_turns ?? MODEL_TURNS) + CONTINUE_MODEL_TURNS)
     : MODEL_TURNS;
   const nextToolBudget = visibleTask
-    ? Math.min(MAX_TOOL_CALLS, Math.max(visibleTask.budget.max_tool_calls ?? TOOL_CALLS, visibleTask.usage.tool_calls ?? 0) + CONTINUE_TOOL_CALLS)
+    ? (visibleTask.usage.tool_calls ?? 0) < (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
+      ? (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
+      : Math.min(MAX_TOOL_CALLS, (visibleTask.budget.max_tool_calls ?? TOOL_CALLS) + CONTINUE_TOOL_CALLS)
     : TOOL_CALLS;
   const taskMapPoints = (visibleTask?.research_places ?? []).map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
@@ -417,10 +422,12 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
           {visibleTask.status === "WORKING" && <button type="button" className="rev-workspace-secondary" onClick={() => void cancelTask()}>取消任务</button>}
           {["RESUMABLE", "FAILED_RECOVERABLE", "PARTIAL_READY", "NEEDS_DECISION"].includes(visibleTask.status) &&
             (nextModelBudget <= (visibleTask.budget.max_model_turns ?? MODEL_TURNS) &&
-             nextToolBudget <= (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
-              ? <p role="status">此任务已达到当前最大累计研究预算。草案仍可编辑保存，后续可发起新的研究目标。</p>
+             (visibleTask.usage.model_turns ?? 0) >= (visibleTask.budget.max_model_turns ?? MODEL_TURNS)
+              ? <p role="status">此任务已达到可申请的累计模型预算。草案仍可编辑保存，后续可以发起新的研究目标。</p>
               : <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>
-                  {busy ? COPY.sending : `继续研究（新授权累计 ${nextModelBudget} 轮 / ${nextToolBudget} 次工具）`}
+                  {busy ? COPY.sending : (nextModelBudget > (visibleTask.budget.max_model_turns ?? MODEL_TURNS) || nextToolBudget > (visibleTask.budget.max_tool_calls ?? TOOL_CALLS))
+                    ? `继续研究（新授权累计 ${nextModelBudget} 轮 / ${nextToolBudget} 次工具）`
+                    : "继续使用本次已授权的研究额度"}
                 </button>)}
         </section>}
       </>}
