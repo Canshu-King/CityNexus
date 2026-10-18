@@ -15,7 +15,7 @@ async function fixture(page: Page, failRuntime = false) {
     status: "PARTIAL_READY",
     goal,
     consent: { model: true, online_research: true },
-    budget: { max_model_turns: 4, max_tool_calls: 8 },
+    budget: { max_model_turns: 8, max_tool_calls: 16 },
     usage: { model_turns: 2, tool_calls: 2 },
     latest_run_id: "00000000-0000-4000-8000-000000000923",
     candidate_place_ids: ["test-place-one"],
@@ -79,13 +79,13 @@ async function fixture(page: Page, failRuntime = false) {
     if (path === `${root}/bootstrap-discovery/current`) return reply({ journey_id: journeyId, receipt_id: null, candidates: [] });
     if (path === `${root}/agent/goal-tasks` && request.method() === "POST") {
       const payload = request.postDataJSON();
-      expect(payload).toMatchObject({ goal, model_consent: true, online_research_consent: true, max_model_turns: 4, max_tool_calls: 8 });
+      expect(payload).toMatchObject({ goal, model_consent: true, online_research_consent: true, max_model_turns: 8, max_tool_calls: 16 });
       submittedGoals.push(payload.goal);
       return reply({ ...persistedTask, status: "ACCEPTED", assistant_summary: null, tool_steps: [] }, 201);
     }
     if (path === `${root}/agent/goal-tasks/${taskId}/run`) {
       const payload = request.postDataJSON();
-      expect(payload).toMatchObject({ model_consent: true, online_research_consent: true, max_model_turns: 4, max_tool_calls: 8 });
+      expect(payload).toMatchObject({ model_consent: true, online_research_consent: true, max_model_turns: 8, max_tool_calls: 16 });
       return reply(persistedTask);
     }
     if (path === `${root}/agent/goal-tasks/${taskId}`) return reply(persistedTask);
