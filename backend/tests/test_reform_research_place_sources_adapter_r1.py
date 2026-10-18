@@ -19,6 +19,7 @@ Nothing is stubbed: the provider is not faked. The arms switch the deployment's 
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
@@ -163,6 +164,90 @@ def test_r5_name_outside_the_allowlist_is_404() -> None:
         json={"request_id": "reform-research-" + str(uuid4())},
     )
     assert answer.status_code == 404, answer.text
+
+
+def test_r7_the_runtime_loop_accepts_the_tool_with_a_scripted_model(monkeypatch) -> None:
+    """Dispatch is not the same as the loop accepting a call.
+
+    A scripted model asks for `research_place_sources` on a real place, then answers. The run's step
+    must carry that tool with the deployment's own answer -- not "tool is outside the CityNexus V2
+    allowlist", which is what an unregistered capability would produce.
+    """
+    from dataclasses import replace as replace_settings
+
+    import httpx
+
+    from app.agent.runtime import DeepSeekJourneyAgent
+    from app.core.config import settings as runtime_settings
+
+    _no_provider(monkeypatch)
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
+    journey_id = ids["journey_id"]
+    generated = client.post(
+        f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
+    )
+    assert generated.status_code == 201, generated.text
+    selected = client.post(
+        f"/api/v1/journeys/{journey_id}/plans/{generated.json()[0]['id']}/select"
+    )
+    assert selected.status_code == 200, selected.text
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        place = session.scalar(
+            select(Place).where(Place.city_code == journey.city_code).order_by(Place.id)
+        )
+        assert place is not None
+
+    calls: list[dict] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(json.loads(request.content))
+        if len(calls) == 1:
+            message = {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "call-research-sources",
+                        "type": "function",
+                        "function": {
+                            "name": "research_place_sources",
+                            "arguments": json.dumps(
+                                {"journey_id": journey_id, "place_id": place.id}
+                            ),
+                        },
+                    }
+                ],
+            }
+        else:
+            message = {"role": "assistant", "content": "Looked up the sources."}
+        return httpx.Response(200, json={"choices": [{"message": message}]})
+
+    fake_agent = object.__new__(DeepSeekJourneyAgent)
+    fake_agent.model_key = "deepseek-chat"
+    fake_agent._client = httpx.Client(transport=httpx.MockTransport(handler))
+    fake_agent._owns_client = False
+    monkeypatch.setattr(
+        main_module,
+        "settings",
+        replace_settings(
+            runtime_settings, ai_api_key="test-key", ai_model="deepseek/deepseek-chat"
+        ),
+    )
+    monkeypatch.setattr(main_module, "DeepSeekJourneyAgent", lambda: fake_agent)
+
+    answer = client.post(
+        f"/api/v1/journeys/{journey_id}/agent/commands",
+        json={"command": "帮我查一下这个地点的来源。", "requested_autonomy": "PLAN_ONLY"},
+    )
+    assert answer.status_code == 200, answer.text
+    steps = answer.json()["run"]["tool_steps"]
+    assert [step["tool_name"] for step in steps] == ["research_place_sources"]
+    result = steps[0]["result"]
+    assert "outside the CityNexus V2 allowlist" not in json.dumps(result, ensure_ascii=False)
+    assert result["status"] == "SOURCE_DISCOVERY_UNAVAILABLE"
+    assert result["observations"] == []
 
 
 def test_r6_captured_leads_are_non_authoritative_and_deduplicated(monkeypatch) -> None:
