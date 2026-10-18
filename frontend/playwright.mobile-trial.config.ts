@@ -10,7 +10,7 @@ const port = process.env.CITYNEXUS_MOBILE_UI_PORT ?? "14273";
  */
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: /revolution-(?:mobile-shell|human-session-recovery|night-out-rest-preferences|place-card-facts|mobile-hermes-transparency)\.spec\.ts$/,
+  testMatch: /revolution-(?:mobile-shell|human-session-recovery|night-out-rest-preferences|place-card-facts|mobile-hermes-transparency|mobile-plan-workbench)\.spec\.ts$/,
   timeout: 45_000,
   expect: { timeout: 9_000 },
   workers: 1,

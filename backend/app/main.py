@@ -17630,7 +17630,12 @@ def authoritative_compose_journey(
 
 
 @app.get("/api/v1/journeys/{journey_id}/plans")
-def list_plans(journey_id: UUID, session: Session = Depends(get_session)):
+def list_plans(
+    journey_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
     """Every version this journey has ever had, with the one it runs named explicitly.
 
     The list stays unfiltered on purpose: CANDIDATE, SELECTED, ACTIVE, SUPERSEDED and REJECTED
@@ -17643,6 +17648,16 @@ def list_plans(journey_id: UUID, session: Session = Depends(get_session)):
     first item.
     """
 
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        _principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if not member_has_capability(session, member, "JOURNEY_READ"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     items = session.scalars(
         select(PlanVersion)

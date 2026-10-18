@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
-import { BootstrapJourneyStartPanel } from "../features/discovery/BootstrapJourneyStartPanel";
+import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
@@ -1223,21 +1223,14 @@ export function RevolutionFirstLook() {
             </section>
 
             <section className="rev-mobile-tabpanel" hidden={activeTab !== "trips"} data-testid="rev-mobile-screen-trips">
-              {journey.status === "DRAFT" && candidateForJourney && (
-                <section className="rev-firstlook-start-plan" data-testid="revolution-agent-start-journey">
-                  <h2>确认正式行程</h2>
-                  <p>费用信息未知；预订和付款需另行确认。</p>
-                  <BootstrapJourneyStartPanel
-                    journeyId={journey.id}
-                    placeId={candidateForJourney}
-                    onStarted={finishStartingJourney}
-                    onCancel={() => {
-                      setCandidateForJourney(null);
-                      navigateMobile("explore");
-                    }}
-                  />
-                </section>
-              )}
+              <MobilePlanWorkbench
+                key={journey.id}
+                journeyId={journey.id}
+                placeId={candidateForJourney}
+                visible={activeTab === "trips"}
+                onStarted={finishStartingJourney}
+                onExplore={() => navigateMobile("explore")}
+              />
               {journey.status === "ACTIVE" ? (
                 <section className="rev-firstlook-real-ui" aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
                   <section className="rev-mobile-panel">

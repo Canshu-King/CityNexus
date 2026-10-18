@@ -41,6 +41,10 @@ export interface PlanVersion {
   utility_score: number | null;
   score_breakdown: Record<string, number> | null;
   activities: Activity[];
+  is_current?: boolean;
+  stale?: boolean;
+  selectable?: boolean;
+  lifecycle?: string;
 }
 
 export interface DemoIds {
@@ -56,6 +60,9 @@ export interface JourneyRecord {
   city_code: string;
   timezone: string;
   status: string;
+  start_at?: string;
+  end_at?: string;
+  budget?: Money;
 }
 
 export interface JourneyMembershipInvitationInboxItem {
@@ -2739,7 +2746,14 @@ export const cityNexusApi = {
   },
 
   getJourney(journeyId: string): Promise<JourneyRecord> {
-    return requestJson<JourneyRecord>("/journeys/" + journeyId);
+    return requestJson<JourneyRecord>("/journeys/" + journeyId, { headers: travelerAuthHeaders() });
+  },
+
+  listJourneyPlans(journeyId: string): Promise<PlanVersion[]> {
+    return requestJson<PlanVersion[]>("/journeys/" + journeyId + "/plans", {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   listPlaces(cityCode: string): Promise<PlaceRecord[]> {
