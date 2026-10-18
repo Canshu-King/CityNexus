@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "CAPABILITY_LEDGER",
-  "v8_commit": "a6e1a72d3327f9368b931d45ee7c9d9b8fdf8cc9",
+  "v8_commit": "6b8f5ebdc0e83e7a99792b1f20fcd0dd01931eeb",
   "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
   "runtime_verified": false,
   "rows": [
@@ -206,22 +206,26 @@
     {
       "domain": "transport",
       "v8_present": [
+        "backend/app/route_session_operations.py",
         "frontend/src/features/mobility"
       ],
-      "v8_missing": [
-        "backend/app/route_session_operations.py"
-      ],
+      "v8_missing": [],
       "revolution_missing": [],
       "tools": [
         {
           "tool": "compare_routes",
           "state": "ADVERTISED",
           "verified_by": "tests/test_reform_compare_routes_adapter_r1.py"
+        },
+        {
+          "tool": "acquire_route",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_acquire_route_adapter_r1.py"
         }
       ],
       "revolution_only_tools": [],
       "status": "READY_FOR_REHEARSAL",
-      "note": "Read half delivered (`compare_routes` over stored facts); acquisition needs the launch-origin chain and `route_session_operations.py`, both absent on V8."
+      "note": "Both halves delivered: `compare_routes` over stored facts and `acquire_route` through the ported launch-origin chain; execution uses the mock provider unless a live one is configured."
     },
     {
       "domain": "traveler_preferences",

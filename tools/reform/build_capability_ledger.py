@@ -58,7 +58,10 @@ DOMAIN_TOOLS: dict[str, list[tuple[str, str]]] = {
         ("apply_clarified_horizon_choice", "none"),
     ],
     "weather_and_reality": [],
-    "transport": [("compare_routes", "tests/test_reform_compare_routes_adapter_r1.py")],
+    "transport": [
+        ("compare_routes", "tests/test_reform_compare_routes_adapter_r1.py"),
+        ("acquire_route", "tests/test_reform_acquire_route_adapter_r1.py"),
+    ],
     "traveler_preferences": [],
     "stay": [],
     "notification_inbox": [],
@@ -70,7 +73,7 @@ DOMAIN_TOOLS: dict[str, list[tuple[str, str]]] = {
 # the order's alternative to a silent gap: either they get an adapter, or the gap has an owner.
 SURFACE_ONLY = {
     "weather_and_reality": "Guardian/weather lives on Revolution only; V8 has no watcher module.",
-    "transport": "Read half delivered (`compare_routes` over stored facts); acquisition needs the launch-origin chain and `route_session_operations.py`, both absent on V8.",
+    "transport": "Both halves delivered: `compare_routes` over stored facts and `acquire_route` through the ported launch-origin chain; execution uses the mock provider unless a live one is configured.",
     "traveler_preferences": "Preferences are read by the shell; no agent tool reads or writes them.",
     "stay": "Stay generation is a product surface; no agent tool selects or books a stay.",
     "notification_inbox": "The inbox is a read surface; no agent tool writes or acknowledges.",
