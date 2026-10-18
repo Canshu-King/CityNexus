@@ -301,6 +301,8 @@ export function RevolutionQuickExplore({
       setCityResults([]);
       setDiscovery(null);
       setPlaceName("");
+      setRadiusM(2500);
+      lastPlaceSearch.current = null;
       setWalk(null);
       onPocketWalkChange?.(null);
       setFirst(null);
