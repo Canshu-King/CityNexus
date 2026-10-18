@@ -447,42 +447,40 @@ function stayBudgetSentence(
     .stay_budget;
   if (!stated || stated.declared === null || stated.declared === undefined) {
     return zh
-      ? "这台服务器没有交回「这条行程是否声明过住宿预算」这一格，所以这里不提预算。"
-      : "This server did not answer whether a lodging budget was declared, so no budget is claimed here.";
+      ? "这台服务器没答过这趟有没有声明住宿预算。"
+      : "This server has not said whether this trip declared a lodging budget.";
   }
   if (stated.declared === false) {
-    return zh
-      ? "这条行程没有声明住宿预算，所以这里没有一条预算界线可比。"
-      : "No lodging budget was declared for this trip, so there is no line to compare against.";
+    return zh ? "这趟没有声明住宿预算。" : "No lodging budget was declared for this trip.";
   }
   const amount = typeof stated.amount_minor === "number" ? stated.amount_minor : null;
   const currency = stated.currency || "CNY";
   if (amount === null) {
     return zh
-      ? "这条行程声明过住宿预算，但这台服务器没有交回那个数额。"
-      : "This trip declared a lodging budget, but this server did not return the amount.";
+      ? "这趟声明过住宿预算，但服务器没答数额。"
+      : "This trip declared a lodging budget; the server gave no amount.";
   }
   const declaredWords = `${money(amount, currency, localeOf(zh))}`;
   if (!confirmed) {
     return zh
-      ? `这条行程声明的住宿预算是 ${declaredWords}；还没有选定住宿，所以这里不做超出判断。`
-      : `This trip declared a lodging budget of ${declaredWords}; nothing is selected, so no comparison is made here.`;
+      ? `这趟声明的住宿预算是 ${declaredWords}。`
+      : `Declared lodging budget: ${declaredWords}.`;
   }
   const total = confirmed.stay_total_minor;
   if (typeof total !== "number") {
     return zh
-      ? `这条行程声明的住宿预算是 ${declaredWords}；这枚候选的合计数这台服务器没给，所以不说超出。`
-      : `Declared lodging budget ${declaredWords}; this server gave no total for this stay, so nothing is called over.`;
+      ? `这趟声明的住宿预算是 ${declaredWords}；这枚住宿的合计数服务器没给。`
+      : `Declared lodging budget ${declaredWords}; this server gave no total for this stay.`;
   }
   if (total > amount) {
     const over = `${money(total - amount, currency, localeOf(zh))}`;
     return zh
-      ? `这枚合计 ${money(total, currency, localeOf(zh))}，比声明的 ${declaredWords} 多 ${over}。这一句是本屏把拿到的两个数相减，不是这台服务器的判定。`
-      : `This stay totals ${money(total, currency, localeOf(zh))}, which is ${over} above the declared ${declaredWords}. That subtraction is this screen's own arithmetic, not a ruling by this server.`;
+      ? `这枚合计 ${money(total, currency, localeOf(zh))}，比声明的 ${declaredWords} 多 ${over}（本屏相减，不是服务器的判定）。`
+      : `This stay totals ${money(total, currency, localeOf(zh))}, which is ${over} above the declared ${declaredWords} (this screen's subtraction, not the server's ruling).`;
   }
   return zh
-    ? `这枚合计 ${money(total, currency, localeOf(zh))}，不超过声明的 ${declaredWords}。同样是本屏自己的相减，不是这台服务器的判定。`
-    : `This stay totals ${money(total, currency, localeOf(zh))}, within the declared ${declaredWords} -- again this screen's subtraction, not this server's ruling.`;
+    ? `这枚合计 ${money(total, currency, localeOf(zh))}，不超过声明的 ${declaredWords}（本屏相减，不是服务器的判定）。`
+    : `This stay totals ${money(total, currency, localeOf(zh))}, within the declared ${declaredWords} (this screen's subtraction, not the server's ruling).`;
 }
 
 function localeOf(zh: boolean): string {
