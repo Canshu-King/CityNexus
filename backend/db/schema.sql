@@ -10,6 +10,23 @@ CREATE TABLE IF NOT EXISTS travelers (
     updated_at TEXT NOT NULL
 );
 
+-- Reform 2026-10-18: the traveller's own recovery credential. The server stores a digest and a
+-- lifecycle, never the secret; the secret is shown once and lives on the person's device.
+CREATE TABLE IF NOT EXISTS traveler_recovery_credentials (
+    id TEXT PRIMARY KEY,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    digest TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    used_at TEXT,
+    revoked_at TEXT,
+    failed_attempts INTEGER NOT NULL DEFAULT 0,
+    locked_until TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_traveler_recovery_traveler
+    ON traveler_recovery_credentials(traveler_id, created_at);
+
 CREATE TABLE IF NOT EXISTS preferences (
     id TEXT PRIMARY KEY,
     traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,

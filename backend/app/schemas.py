@@ -227,6 +227,13 @@ class JourneyAnchor(BaseModel):
     notes: str | None = Field(default=None, max_length=500)
 
 
+class RecoveryRedeemRequest(BaseModel):
+    """The two things a person has to present to come back: a handle and the secret itself."""
+
+    recovery_id: str = Field(min_length=8, max_length=64)
+    recovery_secret: str = Field(min_length=16, max_length=256)
+
+
 class JourneyCreate(BaseModel):
     traveler_id: UUID
     title: str = Field(min_length=1, max_length=160)

@@ -217,6 +217,12 @@ from app.traveler_principal import (
     resolve_traveler_principal,
     signing_state,
 )
+from app.traveler_recovery import (
+    RecoveryRefusal,
+    issue_recovery_credential,
+    redeem_recovery_credential,
+    revoke_recovery_credential,
+)
 from app.execution.clock import execution_clock
 from app.execution.route_session_contract import (  # ORD-0602 甲半: source of truth, reporting only
     ROUTE_TRUTH_POLICY_VERSION,
@@ -374,6 +380,7 @@ from app.schemas import (
     PushSubscriptionRequest,
     RealCityDiscoveryRequest,
     RealCityIntelligenceRequest,
+    RecoveryRedeemRequest,
     ReplanGenerateRequest,
     ReservationImportRequest,
     ReservationDraftPatchRequest,
@@ -2693,6 +2700,87 @@ async def refresh_traveler_session(
     answer.headers["Cache-Control"] = "private, no-store"
     answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return answer
+
+
+@app.post("/api/v1/travelers/{traveler_id}/recovery", status_code=201)
+def issue_traveler_recovery(
+    traveler_id: UUID, request: Request, session: Session = Depends(get_session)
+):
+    """Reform 2026-10-18: hand the traveller a recovery secret, once.
+
+    Only the traveller's own live credential may ask for one, so a body naming somebody else never
+    reaches the generator. The answer says `shown_once` because the server keeps only a digest and
+    cannot show it again -- the person has to save it.
+    """
+
+    principal = resolve_traveler_principal(request, session)
+    if principal.traveler_id != str(traveler_id):
+        refused = HTTPException(
+            403, "a recovery credential is issued to the traveller on this request"
+        )
+        refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+        raise refused
+    require(session, Traveler, str(traveler_id), "Traveler")
+    issued = issue_recovery_credential(session, principal.traveler_id)
+    answer = JSONResponse(issued, status_code=201)
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+@app.post("/api/v1/travelers/recovery/redeem")
+def redeem_traveler_recovery(
+    payload: RecoveryRedeemRequest, session: Session = Depends(get_session)
+):
+    """Reform 2026-10-18: exchange the secret the person kept for a fresh session.
+
+    The id alone is a lookup handle, never a credential; the session is signed by the same verifier
+    as every other door. Used, expired, revoked and locked credentials are refused by the server,
+    not by the client's memory of them.
+    """
+
+    try:
+        row = redeem_recovery_credential(session, payload.recovery_id, payload.recovery_secret)
+    except RecoveryRefusal as refusal:
+        exc = HTTPException(refusal.status, refusal.message)
+        exc.reason_code = refusal.code
+        raise exc
+    token, expires_at = renew_traveler_session(row.traveler_id)
+    answer = JSONResponse(
+        {
+            "traveler_id": row.traveler_id,
+            "auth_method": "recovery_credential",
+            "session_state": SESSION_STATE_SIGNED,
+            "access_token": token,
+            "expires_at": expires_at,
+            "recovered_at": row.used_at,
+        }
+    )
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+@app.post("/api/v1/travelers/{traveler_id}/recovery/{recovery_id}/revoke")
+def revoke_traveler_recovery(
+    traveler_id: UUID, recovery_id: str, request: Request, session: Session = Depends(get_session)
+):
+    """Reform 2026-10-18: make a recovery credential stop working before it is used."""
+
+    principal = resolve_traveler_principal(request, session)
+    if principal.traveler_id != str(traveler_id):
+        refused = HTTPException(
+            403, "a recovery credential is revoked by the traveller it belongs to"
+        )
+        refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+        raise refused
+    try:
+        row = revoke_recovery_credential(session, principal.traveler_id, recovery_id)
+    except RecoveryRefusal as refusal:
+        exc = HTTPException(refusal.status, refusal.message)
+        exc.reason_code = refusal.code
+        raise exc
+    return {"recovery_id": row.id, "revoked_at": row.revoked_at, "revoked": True}
 
 
 @app.get("/api/v1/travelers/{traveler_id}")

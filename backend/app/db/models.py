@@ -29,6 +29,26 @@ class Traveler(Base):
     updated_at: Mapped[str] = mapped_column(String)
 
 
+class TravelerRecoveryCredential(Base):
+    """Reform 2026-10-18: a one-time recovery secret the traveller holds.
+
+    Only the digest is stored. The lifecycle columns are what make replay, expiry and revocation
+    server-side facts rather than client promises.
+    """
+
+    __tablename__ = "traveler_recovery_credentials"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    digest: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    used_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    failed_attempts: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    locked_until: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
 class Preference(Base):
     __tablename__ = "preferences"
     id: Mapped[str] = mapped_column(String, primary_key=True)
