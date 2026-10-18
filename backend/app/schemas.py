@@ -208,8 +208,8 @@ class GoalTaskCreateRequest(BaseModel):
     goal: str = Field(min_length=1, max_length=2000)
     model_consent: bool
     online_research_consent: bool
-    max_model_turns: int = Field(default=4, ge=1, le=8)
-    max_tool_calls: int = Field(default=8, ge=0, le=16)
+    max_model_turns: int = Field(default=8, ge=1, le=64)
+    max_tool_calls: int = Field(default=16, ge=0, le=128)
 
 
 class GoalTaskRunRequest(BaseModel):
@@ -217,8 +217,8 @@ class GoalTaskRunRequest(BaseModel):
 
     model_consent: bool | None = None
     online_research_consent: bool | None = None
-    max_model_turns: int | None = Field(default=None, ge=1, le=8)
-    max_tool_calls: int | None = Field(default=None, ge=0, le=16)
+    max_model_turns: int | None = Field(default=None, ge=1, le=64)
+    max_tool_calls: int | None = Field(default=None, ge=0, le=128)
 
 
 class GoalDraftUpdateRequest(BaseModel):
