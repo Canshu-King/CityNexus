@@ -354,7 +354,16 @@ class AgentToolGateway:
             return True
         if request.mission_id is not None:
             mission = self.session.get(JourneyMission, str(request.mission_id))
-            return mission is not None and mission.requested_autonomy == "PLAN_ONLY"
+            if mission is None or mission.requested_autonomy != "PLAN_ONLY":
+                return False
+            # Reform 2026-10-18, Navigator: a mock/local route capture has no external
+            # provider cost.  The PLAN_ONLY boundary protects plan truth and money, not a
+            # free evidence fetch; a configured live provider still needs the receipt.
+            if request.route_mode is not None:
+                from app.core.config import settings
+
+                return bool(settings.live_valhalla_url)
+            return True
         return False
 
     def _bound_authorization(
