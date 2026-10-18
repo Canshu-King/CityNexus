@@ -212,7 +212,6 @@ from app.traveler_principal import (
     REASON_TRAVELER_NOT_PRINCIPAL,
     SESSION_STATE_SIGNED,
     TravelerPrincipal,
-    issue_traveler_token,
     presented_principal,
     renew_traveler_session,
     resolve_traveler_principal,
@@ -2585,10 +2584,19 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     # two different things on the screen.  The token goes nowhere else: not a log, not an error
     # message, not an audit row.
     body["access_token"] = None
+    body["expires_at"] = None
     body["session_state"] = signing_state()
     if body["session_state"] == SESSION_STATE_SIGNED:
         try:
-            body["access_token"] = issue_traveler_token(traveler.id)
+            # The window leaves with the credential on purpose.  A tab that has a token but no
+            # stated expiry cannot tell "this is about to lapse" from "this has plenty of time",
+            # and `renewSignedSessionIfShort` deliberately does nothing when it is not told -- so a
+            # traveller created in this tab went unserved until the next reload, at which point the
+            # door refuses and the trip home turns into 「登录已结束」.  Same rule as the token: this
+            # number goes nowhere else -- not a log, not an error message, not an audit row.
+            token, expires_at = renew_traveler_session(traveler.id)
+            body["access_token"] = token
+            body["expires_at"] = expires_at
         except HTTPException:
             # Race against a config reload: still create the person, still refuse to sign.
             body["session_state"] = "MISCONFIGURED"

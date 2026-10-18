@@ -162,7 +162,9 @@ paths:
           description: Created
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/Traveler'}
+              # `TravelerSessionAnswer`, not plain `Traveler`: this answer carries the credential
+              # and the window it is valid for.  `Cache-Control: private, no-store`.
+              schema: {$ref: '#/components/schemas/TravelerSessionAnswer'}
         '422': {$ref: '#/components/responses/ValidationError'}
   /travelers/session:
     get:
@@ -3066,6 +3068,20 @@ components:
             id: {type: string, format: uuid}
             created_at: {type: string, format: date-time}
             updated_at: {type: string, format: date-time}
+    TravelerSessionAnswer:
+      # ORD-0687 / Issue #33 Q1: `POST /travelers` is the one door that both creates the person and
+      # hands this tab a credential it can be recognised by.  The credential and its window travel
+      # together -- a token without `expires_at` leaves the client unable to tell a session that is
+      # about to lapse from one that is not, and it will not refresh what it cannot measure.
+      # `GET /travelers/{traveler_id}` answers with plain `Traveler`: no token, no window.
+      allOf:
+        - {$ref: '#/components/schemas/Traveler'}
+        - type: object
+          required: [access_token, session_state, expires_at]
+          properties:
+            access_token: {type: [string, 'null'], description: "null whenever this build cannot sign; the reason is in `session_state`, never in a silent absence"}
+            session_state: {type: string, description: "SIGNED | UNSIGNED | MISCONFIGURED -- `signing_state()` verbatim"}
+            expires_at: {type: [integer, 'null'], description: "unix seconds this credential stops being accepted; null exactly when `access_token` is null"}
     PreferenceInput:
       type: object
       required: [category, key, value, weight]

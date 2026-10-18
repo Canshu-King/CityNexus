@@ -152,13 +152,28 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
       if (header && req.url().includes("/api/v1/")) bearerSeen.push(header);
     });
 
+    const createdAnswer = page
+      .waitForResponse((res) => res.url().includes("/api/v1/travelers") && res.status() === 201, { timeout: 40_000 })
+      .then((res) => res.json().catch(() => null));
     await page.getByTestId("trial-create").click();
     await page.waitForFunction(() => !!localStorage.getItem("citynexus.v8.journey_id"), null, { timeout: 40_000 });
 
     const stored = await readBack(page, SESSION_POINTER, "session");
     expect(stored, "创建之后 sessionStorage 里没有会话").not.toBeNull();
-    const session = JSON.parse(stored as string) as { travelerId: string; token: string };
+    const session = JSON.parse(stored as string) as { travelerId: string; token: string; expiresAt: number | null };
     expect(session.token.split(".").length, "令牌形状不对（应为 payload.签名 两段）").toBe(2);
+
+    /* Issue #33 Q1 的尾巴：建人那一扇门要把它刚签发的窗口一起交出来。壳里"没被告知到期就不刷"
+     * 是对的（不许拿自己猜的钟点去敲服务器），所以门里少这个数 = 这一趟在第十五分钟上被请出去，
+     * 而屏上写的是「登录已结束」。这里比的是**服务器说的那一格**与**标签页存下的那一格**。 */
+    const answer = await createdAnswer;
+    expect(answer, "创建那一问没有答复可查").not.toBeNull();
+    const window = (answer as { expires_at?: unknown }).expires_at;
+    expect(typeof window, `门里没有把窗口交出来：${JSON.stringify(window)}`).toBe("number");
+    expect(session.expiresAt, `标签页存的到期与服务器给的不是同一格：${JSON.stringify(session)}`).toBe(window);
+    expect(session.token.slice(0, 6), "答复里的令牌与存下的不是同一枚").toBe(
+      ((answer as { access_token?: string }).access_token ?? "").slice(0, 6),
+    );
 
     /* 令牌不能落到盘上：localStorage 活得比一次交接久，那是 Issue #27 整件事的起因。 */
     const leaked = await page.evaluate((token) =>
