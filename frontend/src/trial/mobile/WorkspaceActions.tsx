@@ -439,6 +439,14 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               <span>{item.role === "user" ? "你" : "CityNexus Agent"}</span>
               <p>{item.text}</p>
             </div>)}
+            {visibleTask && !conversation.some((item) => item.role === "assistant") &&
+              (visibleTask.draft_artifact?.days ?? []).some((day) => day.slots.length > 0) &&
+              <div className="rev-agent-message is-status">
+                <span>已保存的研究成果 · 来自服务器，不是模型回复</span>
+                <p>当前有 {visibleTask.draft_artifact?.days.length} 天暂定日程，
+                  {(visibleTask.draft_artifact?.days ?? []).reduce((count, day) => count + day.slots.length, 0)} 项安排。
+                  你可以在下方直接告诉 Agent 下一步想修改什么。</p>
+              </div>}
           </div>}
           <details className="rev-agent-research-settings" open={!modelConsent && !visibleTask}>
             <summary>{modelConsent ? "本次研究授权与额度 · 已设置" : "开始前，确认一次研究权限"}</summary>
