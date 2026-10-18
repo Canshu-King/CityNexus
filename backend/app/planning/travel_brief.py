@@ -13,7 +13,13 @@ from sqlalchemy import select
 from app.db.models import JourneyIntent, JourneyTripContext, RealPlaceCandidate
 from app.planning.day_rhythm import extract_day_rhythm
 
-INTEREST_KEYS = {"park/garden": "outdoor", "cafe": "food", "museum/gallery": "cultural", "library": "library"}
+INTEREST_KEYS = {
+    "park/garden": "outdoor", "cafe": "food", "museum/gallery": "cultural", "library": "library",
+    "local_food": "food", "night_market": "food", "old_town": "cultural",
+    "heritage": "cultural", "architecture": "cultural", "nature": "outdoor",
+    "coast": "outdoor", "shopping": "shopping", "nightlife": "nightlife",
+    "photography": "photography", "family": "family",
+}
 
 
 def current_brief(session, journey_id, traveler_id):
@@ -28,8 +34,11 @@ def current_brief(session, journey_id, traveler_id):
 def save_brief(session, journey, member, payload):
     data = payload.model_dump()
     text = data["goal"].strip()
-    preferences = {INTEREST_KEYS[key]: True for key in data["interests"]}
-    mapped = [{"input": key, "preference": INTEREST_KEYS[key]} for key in data["interests"]]
+    preferences = {INTEREST_KEYS[key]: True for key in data["interests"] if key in INTEREST_KEYS}
+    mapped = [{"input": key, "preference": INTEREST_KEYS[key]} for key in data["interests"] if key in INTEREST_KEYS]
+    # Unsupported expressions still belong to the user and remain in the brief.
+    # They must not disappear or be asserted as planner constraints we cannot honor.
+    unmapped_interests = [key for key in data["interests"] if key not in INTEREST_KEYS]
     if data["energy"] == "easy" or any(word in text for word in ("少走路", "少走", "轻松", "低步行")):
         preferences["low_walking"] = True
         mapped.append({"input": "轻松少走", "preference": "low_walking"})
@@ -42,7 +51,8 @@ def save_brief(session, journey, member, payload):
         preferences["day_rhythm"] = rhythm.as_dict()
         mapped.append({"input": "作息", "preference": "day_rhythm"})
     # Keep open-ended text; only the explicit mappings above reach deterministic constraints.
-    data.update({"mapped_preferences": mapped, "free_text_status": "PRESERVED_NOT_FULLY_COMPILED" if text else "EMPTY"})
+    data.update({"mapped_preferences": mapped, "unmapped_interests": unmapped_interests,
+                 "free_text_status": "PRESERVED_NOT_FULLY_COMPILED" if text or unmapped_interests else "EMPTY"})
     now = datetime.now(timezone.utc).isoformat()
     row = current_brief(session, journey.id, member.traveler_id)
     if row is None:
