@@ -88,7 +88,8 @@ def brief_projection(session, journey, member):
     zone = ZoneInfo(journey.timezone)
     first = datetime.fromisoformat(journey.start_at).astimezone(zone).date()
     last = datetime.fromisoformat(journey.end_at).astimezone(zone).date()
-    days = [str(first + timedelta(days=i)) for i in range(min(7, (last-first).days+1))]
+    # The intake accepts up to 14 days; do not silently discard days 8 through 14.
+    days = [str(first + timedelta(days=i)) for i in range(min(14, (last-first).days+1))]
     from app.execution.bootstrap_discovery import _candidate_payload, _scope_expired, _bootstrap_scope_entries
     candidates = []
     # Existing per-member observations, without querying or materializing a provider.
