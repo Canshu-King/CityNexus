@@ -22,6 +22,7 @@
  *      （只有 `CNX_QODER31_TTL=60` 起的那一台才跑，见 config 里那行 TTL）。
  */
 import { expect, test, type Page } from "@playwright/test";
+import { PAINTED_PROBE_SOURCE } from "./_qoderPainted";
 import { mkdirSync, writeFileSync } from "node:fs";
 
 /* 图文教程（Issue #31 C 要求的"真实截图"）用的图就落在这个目录里：屏幕上是真渲染出来的，
@@ -825,6 +826,121 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     },
   );
 
+  test("Issue #33 第十九笔：行程页「中止这趟行程」那颗按钮，按下去按到的是它自己", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    await createAndAwaitJourney(page);
+    await page.goto("/v8/trips", { waitUntil: "load" });
+    const itineraryTab = page.getByTestId("trips-tab-itinerary");
+    if (await itineraryTab.isVisible().catch(() => false)) await itineraryTab.click();
+
+    /* 逐屏走查那一臂 12:1x 摊出来过一行：`中止这趟行程@200,388 96x44 被 h1.@17,405 356x37`，
+       裁语据此要修这颗按钮。先量它在不在屏上：`abort.action` 那颗在 `<details>` 里面，折叠时
+       渲不渲染，决定这是产品的缺陷还是我这把尺的假阳（`visible()` 只看盒与 visibility，看不见
+       `content-visibility`）。所以这一臂两态都量：折叠时量看得见的入口，点开之后再量提交那颗。 */
+    const entry = page.getByTestId("journey-abort-open");
+    await expect(entry, "行程页上没有「中止这趟行程」的入口").toBeVisible({ timeout: 20_000 });
+
+    const measure = (testId: string) =>
+      page.evaluate(
+        ([id, probe]) => {
+          /* 共享那把「画没画出来」的尺：注入源码而不是在这里再写一遍，两臂必须同一口径。 */
+          const painted = new Function(`return ${probe}`)() as (el: Element | null) => boolean;
+          const rect = (el: Element) => {
+            const r = el.getBoundingClientRect();
+            return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) };
+          };
+          const target = document.querySelector(`[data-testid="${id}"]`);
+          /* 两条出口同一个形状：`tsc` 会把两种返回拼成联合类型，下面任何一处取字段都要判空，
+             而一把要判空的尺迟早会"判空判到绿"。 */
+          const empty = {
+            found: target ? 1 : 0,
+            painted: false,
+            box: { x: 0, y: 0, w: 0, h: 0 },
+            centre: [0, 0],
+            hitTag: "none",
+            hitTestid: "",
+            hitIsSelf: false,
+            overlappingHeadings: [] as Array<Record<string, unknown>>,
+            contentVisibility: "",
+            display: "",
+            viewport: [window.innerWidth, window.innerHeight],
+          };
+          if (!target) return empty;
+          target.scrollIntoView({ block: "center", inline: "nearest" });
+          const b = rect(target);
+          const cx = Math.round(b.x + b.w / 2);
+          const cy = Math.round(b.y + b.h / 2);
+          const hit = document.elementFromPoint(cx, cy);
+          const style = getComputedStyle(target);
+          const headings = Array.from(document.querySelectorAll("h1")).map((el) => {
+            const h = rect(el);
+            const overlapY = Math.max(0, Math.min(b.y + b.h, h.y + h.h) - Math.max(b.y, h.y));
+            const overlapX = Math.max(0, Math.min(b.x + b.w, h.x + h.w) - Math.max(b.x, h.x));
+            return {
+              text: (el.textContent || "").trim().slice(0, 24),
+              box: h,
+              overlapY,
+              area: overlapX * overlapY,
+            };
+          });
+          return {
+            found: 1,
+            painted: painted(target),
+            box: b,
+            centre: [cx, cy],
+            hitTag: hit ? hit.tagName.toLowerCase() : "none",
+            hitTestid: hit ? hit.getAttribute("data-testid") || "" : "",
+            hitIsSelf: Boolean(hit && (hit === target || target.contains(hit) || hit.contains(target))),
+            overlappingHeadings: headings.filter((row) => Number(row.area) > 0),
+            contentVisibility: style.getPropertyValue("content-visibility"),
+            display: style.display,
+            viewport: [window.innerWidth, window.innerHeight],
+          };
+        },
+        [testId, PAINTED_PROBE_SOURCE] as [string, string],
+      );
+
+    const closedEntry = await measure("journey-abort-open");
+    const closedSubmit = await measure("journey-abort-submit");
+    console.log(`折叠态·入口 ${JSON.stringify(closedEntry)}`);
+    console.log(`折叠态·提交（未点开）${JSON.stringify(closedSubmit)}`);
+    console.log(
+      `折叠态·details 自己 ${JSON.stringify(
+        await page.evaluate(() => {
+          const form = document.querySelector(".cn-abort__form");
+          if (!form) return { present: false };
+          const inner = getComputedStyle(form, "::details-content");
+          return {
+            present: true,
+            tag: form.tagName.toLowerCase(),
+            open: (form as HTMLDetailsElement).open,
+            detailsContentVisibility: inner.visibility,
+            detailsContentDisplay: inner.display,
+            formDisplay: getComputedStyle(form).display,
+          };
+        }),
+      )}`,
+    );
+    /* 有没有真的画出来，最后要看图：折叠态先截一张。 */
+    await page.screenshot({ path: `${DOC_EVIDENCE}/11-abort-closed.png` });
+    expect(closedEntry.overlappingHeadings.length, `入口被标题压住：${JSON.stringify(closedEntry.overlappingHeadings)}`).toBe(0);
+    expect(closedEntry.hitIsSelf, `入口中心点 ${JSON.stringify(closedEntry.centre)} 命中的是 ${closedEntry.hitTag}#${closedEntry.hitTestid}`).toBe(true);
+    /* 这两格是那把新尺自己的负对照：折叠态里那颗提交有布局盒、没有像素——如果哪天有人把
+       "在 details 里" 一律当成 "看不见"，展开态那一格就会红。 */
+    expect(closedSubmit.painted, "折叠态的提交那颗被读成已画出：盒有，像素没有").toBe(false);
+    expect(closedSubmit.found, "折叠态里找不到那颗提交（它应当在 DOM 里，只是没画）").toBe(1);
+
+    await entry.click();
+    const openedSubmit = await measure("journey-abort-submit");
+    console.log(`展开态·提交 ${JSON.stringify(openedSubmit)}`);
+    expect(openedSubmit.found, "点开之后没有提交那颗").toBe(1);
+    expect(openedSubmit.painted, "点开之后那颗提交仍然没被读成画出来").toBe(true);
+    expect(openedSubmit.overlappingHeadings.length, `提交那颗被标题压住：${JSON.stringify(openedSubmit.overlappingHeadings)}`).toBe(0);
+    expect(openedSubmit.hitIsSelf, `提交那颗中心点 ${JSON.stringify(openedSubmit.centre)} 命中的是 ${openedSubmit.hitTag}#${openedSubmit.hitTestid}`).toBe(true);
+    await page.screenshot({ path: `${DOC_EVIDENCE}/11-abort-row.png` });
+  });
+
   test("Issue #33 UI：花费屏的「没算进来」清单只报类别名，不逐行复述服务器的读法", async ({ page }) => {
     await seedPhone(page);
     await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
@@ -935,16 +1051,15 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     for (const stop of stops) {
       await Promise.resolve(stop.open()).catch(() => undefined);
       await page.waitForTimeout(900);
-      const facts = await page.evaluate(async () => {
+      const facts = await page.evaluate(async (probe) => {
+        const painted = new Function(`return ${probe}`)() as (el: Element | null) => boolean;
         const CODE = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;
         const SNAKE = /\b[a-z][a-z0-9]*(?:_[a-z0-9]+){1,}\b/g;
         const EN = /\b[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\b/g;
-        const visible = (el: Element) => {
-          const box = el.getBoundingClientRect();
-          const style = getComputedStyle(el);
-          return box.width > 6 && box.height > 6 && style.visibility !== "hidden" && style.opacity !== "0"
-            && box.bottom > 0 && box.top < window.innerHeight;
-        };
+        /* "看得见、写得着"只算画出像素的那颗：折叠的 `<details>` 里面的按钮有布局盒、没有像素，
+           上一版把那颗读成了"按不动的按钮"，并把一次假缺陷当成缺陷交付了出去（第十九笔的勘误）。
+           视口外不算看不见——人会滚过去，所以下面每一颗都先滚到中间再量中心命中。 */
+        const visible = (el: Element) => painted(el);
         const lines = (document.body.innerText || "").split("\n").map((t) => t.trim()).filter(Boolean);
         const codes = lines.filter((t) => { CODE.lastIndex = 0; SNAKE.lastIndex = 0; return CODE.test(t) || SNAKE.test(t); });
         const english = lines.filter((t) => { EN.lastIndex = 0; return EN.test(t) && !/[\u4e00-\u9fff]/.test(t); });
@@ -990,7 +1105,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
           .map(([line, count]) => `${count}×${line}`);
         window.scrollTo(0, 0);
         return { lines: lines.length, codes, english, blocked, repeated };
-      });
+      }, PAINTED_PROBE_SOURCE);
       seenCodes.push(...facts.codes.map((c) => `${stop.label}：${c}`));
       report.push(`${stop.label}：文字 ${facts.lines} 行 | 码 ${facts.codes.length} 行 | 整句英文 ${facts.english.length} 行 | 按不动 ${facts.blocked.length} 颗`);
       if (facts.codes.length) report.push(`   码：${facts.codes.slice(0, 4).join(" ／ ").slice(0, 220)}`);
