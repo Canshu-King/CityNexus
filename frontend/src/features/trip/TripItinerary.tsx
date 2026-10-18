@@ -34,7 +34,6 @@ import {
   type CatalogueReadback,
 } from "../planning/catalogueReadback";
 import type { V8Data } from "../../app/v8Types";
-import { englishCountNoun } from "../../lib/plural";
 
 export type Activity = V8Data["active_plan"] extends null
   ? never
@@ -427,7 +426,7 @@ export function TripItinerary({
                 setActiveDay(0);
               }}
             >
-              {zh ? `第 ${index + 1} 周` : `Week ${index + 1}`}
+              {t("itinerary.weekLabel", { n: index + 1 })}
             </button>
           ))}
         </div>
@@ -446,7 +445,7 @@ export function TripItinerary({
             >
               <span>{day.label}</span>
               <small>
-                {zh ? `${day.activities.length} 项` : `${day.activities.length} ${englishCountNoun(day.activities.length, "stop")}`}
+                {t("itinerary.stopCount", { n: day.activities.length })}
               </small>
             </button>
           );

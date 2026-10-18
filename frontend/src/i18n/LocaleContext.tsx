@@ -1484,6 +1484,8 @@ const en: Dict = {
   "itinerary.emptyPlanNoDays": "No stop in this plan sits on a day yet. Add stops and they will be listed day by day.",
   "itinerary.emptyNoPlan": "This trip has no chosen plan yet. Ask the AI to plan it, then pick a plan.",
   "itinerary.emptyReadingPlaces": "Reading back from the server how many places this city holds…",
+  "itinerary.weekLabel": "Week {n}",
+  "itinerary.stopCount": "{n} {plural:stop}",
   "itinerary.lengthUnknown": "length unknown",
   "itinerary.stopDisrupted": "Affected",
   "itinerary.dayByDay": "Day by day. Confirmed bookings are marked as protected.",
@@ -3008,6 +3010,8 @@ const zhCN: Dict = {
   "itinerary.emptyNoPlan": "这个行程还没有选定的方案。先让 AI 帮你规划，选定之后就能按天看。",
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
+  "itinerary.weekLabel": "第 {n} 周",
+  "itinerary.stopCount": "{n} 项",
   "itinerary.stopDisrupted": "受影响",
   "itinerary.dayByDay": "逐日安排。已确认的预订会被标记为受保护。",
 
