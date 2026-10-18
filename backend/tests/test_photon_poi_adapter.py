@@ -104,6 +104,53 @@ def test_museum_gallery_query_uses_one_offline_reverse_request_and_keeps_osm_pro
     assert attempts[0]["source_status"] == "LIVE_PROVIDER"
 
 
+def test_named_place_search_is_one_bounded_forward_request_not_a_category_guess():
+    provider, requests = _provider(lambda request: httpx.Response(200, json={"features": [
+        _feature(name="TEST_FIXTURE 目的地博物馆", extra={"opening_hours": "24/7", "fee": "no"}),
+        _feature(osm_id=124, osm_key="place", osm_value="city", name="TEST_FIXTURE not a POI"),
+        _feature(osm_id=125, lon=136.7, name="TEST_FIXTURE outside selected area"),
+    ]}))
+    try:
+        places, attempts = provider.search_with_evidence(
+            "目的地博物馆", query_mode="name", latitude=35.0, longitude=135.7, radius_m=2500, limit=3,
+        )
+    finally:
+        provider.close()
+    assert len(requests) == 1
+    assert requests[0].url.path == "/api/"
+    assert requests[0].url.params["q"] == "目的地博物馆"
+    assert "radius" not in requests[0].url.params
+    bbox = list(map(float, requests[0].url.params["bbox"].split(",")))
+    assert bbox[0] < 135.7 < bbox[2] and bbox[1] < 35.0 < bbox[3]
+    assert len(places) == 1 and places[0].name == "TEST_FIXTURE 目的地博物馆"
+    assert places[0].opening_hours["status"] == "NORMALIZED_VALID"
+    assert attempts[0]["endpoint"] == "https://photon.komoot.io/api/"
+    assert attempts[0]["rejected_by_reason"]["category_mismatch"] == 1
+    assert attempts[0]["rejected_by_reason"]["out_of_range"] == 1
+
+
+def test_named_place_search_error_keeps_actual_endpoint_and_does_not_retry():
+    provider, requests = _provider(lambda request: httpx.Response(503, json={}))
+    try:
+        with pytest.raises(httpx.HTTPError) as failed:
+            provider.search_with_evidence("目的地博物馆", query_mode="name", latitude=35, longitude=135.7, radius_m=2500, limit=3)
+    finally:
+        provider.close()
+    assert len(requests) == 1
+    assert failed.value.provider_attempts[0]["endpoint"] == "https://photon.komoot.io/api/"
+
+
+@pytest.mark.parametrize("name", ["", "x", "a" * 121])
+def test_invalid_place_name_is_rejected_before_network(name):
+    provider, requests = _provider(lambda request: httpx.Response(200, json={"features": []}))
+    try:
+        with pytest.raises(UnsupportedPhotonQuery):
+            provider.search_with_evidence(name, query_mode="name", latitude=35, longitude=135.7, radius_m=2500, limit=3)
+    finally:
+        provider.close()
+    assert requests == []
+
+
 def test_configured_contact_email_is_only_sent_in_photon_user_agent(
     monkeypatch, caplog, capsys
 ):

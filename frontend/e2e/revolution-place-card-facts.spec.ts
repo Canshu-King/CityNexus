@@ -53,6 +53,70 @@ function candidate(
   };
 }
 
+test("named place search waits for explicit submission and keeps the public area", async ({ page }) => {
+  const searches: Record<string, unknown>[] = [];
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/**", (route) => route.fulfill({ status: 404,
+    contentType: "application/json", body: JSON.stringify({ detail: "TEST_FIXTURE_ENDPOINT_NOT_SEEDED" }),
+  }));
+  await page.route("**/api/v1/travelers/session", (route) => json(route, { traveler_id: "fixture-named-owner" }));
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "UNCONFIGURED", hermes_compat_configured: false,
+  }));
+  await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
+    status: "READY", reason_code: "READY", provider: "photon", provider_name: "Photon TEST_FIXTURE",
+    expected_recipient: "Photon TEST_FIXTURE", capability_state: "TEST_CAPABLE", provider_grade: "TEST_PROVIDER",
+    external_request_allowed: true, test_only: true,
+  }));
+  await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
+    journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
+  }));
+  await page.route(`${root}/bootstrap-discovery/current`, (route) => json(route, null));
+  await page.route(`${root}/bootstrap-city-search`, (route) => json(route, {
+    journey_id: journey, status: "CITY_RESULTS", query: "连城", provider_attempts: [], results: [{
+      result_id: "named-city-fixture", name: "连城县", display_name: "连城县（测试地名结果）",
+      provider: "test", provider_provenance: "TEST_PROVIDER", latitude: 25.7, longitude: 116.75,
+      coordinate_system: "WGS84", confidence: "CITY_CENTROID_UNCERTAIN", selection_state: "CAMERA_ONLY_TAP_REQUIRED",
+    }],
+  }));
+  await page.route(`${root}/bootstrap-discovery`, (route) => {
+    expect(route.request().headers().authorization).toBe("Bearer signed-only-fixture-token");
+    searches.push(route.request().postDataJSON());
+    return json(route, {
+      journey_id: journey, status: "LIVE_RESULTS", source_kind: "MANUAL_PUBLIC_CENTER",
+      provider: "photon", provider_provenance: "TEST_PROVIDER", receipt_id: "named-place-fixture-receipt",
+      attempts: [], candidates: [{ ...candidate("named-museum", "991223", "TEST_PROVIDER"),
+        name: "TEST_FIXTURE 想去的博物馆", provider_key: "photon" }],
+    });
+  });
+  await page.goto("/revolution");
+  await page.getByTestId("rev-quick-find-city").click();
+  await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
+  await page.getByTestId("rev-quick-use-approx-center").click();
+  await page.getByText("已经有想去的地方？", { exact: true }).click();
+  const input = page.getByRole("searchbox", { name: "地点名称" });
+  const submit = page.getByRole("button", { name: "查找这个地点", exact: true });
+  await input.fill(" ");
+  await expect(submit).toBeDisabled();
+  await input.fill("  想去的博物馆  ");
+  await expect(page.getByText("把地点名和所选公开区域发送至 Photon TEST_FIXTURE", { exact: true })).toBeVisible();
+  expect(searches).toHaveLength(0);
+  expect(await submit.evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await input.press("Enter");
+  await expect(page.getByTestId("rev-quick-place-card")).toContainText("TEST_FIXTURE 想去的博物馆");
+  expect(searches).toEqual([{
+    query: "想去的博物馆", query_mode: "name", radius_m: 2500, limit: 3,
+    source_kind: "MANUAL_PUBLIC_CENTER", provider_consent: true, consented_provider: "photon",
+    latitude: 25.7, longitude: 116.75, coordinate_system: "WGS84", mode: "live",
+  }]);
+});
+
 test("place cards show grounded hours and costs while preserving provenance and OSM links", async ({ page }) => {
   let detailRequests = 0;
   let discoveryRequests = 0;

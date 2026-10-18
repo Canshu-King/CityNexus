@@ -3211,6 +3211,7 @@ export const cityNexusApi = {
     journeyId: string,
     input: {
       query: string;
+      query_mode?: "category" | "name";
       radius_m: number;
       limit: number;
       source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";

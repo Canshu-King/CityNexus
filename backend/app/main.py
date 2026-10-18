@@ -4199,6 +4199,7 @@ def bootstrap_journey_discovery(
             latitude=payload.latitude,
             longitude=payload.longitude,
             accuracy_m=payload.accuracy_m,
+            query_mode=payload.query_mode,
         )
         session.commit()
         return result

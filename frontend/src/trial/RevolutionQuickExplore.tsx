@@ -19,6 +19,7 @@ import { isWriteDeadlineMissed } from "../lib/writeDeadline";
 import { CityPicker } from "./mobile/CityPicker";
 import { DiscoveryPlaceCard } from "./mobile/DiscoveryPlaceCard";
 import { InterestPicker } from "./mobile/InterestPicker";
+import { NamedPlaceSearch } from "./mobile/NamedPlaceSearch";
 import type { MobileAiAdvice } from "./mobile/MobileAiPrompt";
 
 /**
@@ -248,6 +249,7 @@ export function RevolutionQuickExplore({
   const [mapLink, setMapLink] = useState("");
   const [center, setCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [category, setCategory] = useState<(typeof categories)[number]["value"]>("park/garden");
+  const [placeName, setPlaceName] = useState("");
   const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
   const [readinessStatus, setReadinessStatus] = useState<"checking" | "ready" | "blocked" | "error">("checking");
   const [discovery, setDiscovery] = useState<BootstrapDiscoveryResponse | null>(null);
@@ -290,6 +292,7 @@ export function RevolutionQuickExplore({
       pendingAiAdviceReveal.current = false;
       setCityResults([]);
       setDiscovery(null);
+      setPlaceName("");
       setWalk(null);
       onPocketWalkChange?.(null);
       setFirst(null);
@@ -601,7 +604,7 @@ export function RevolutionQuickExplore({
     }, { label: "重新检查地图服务", action: () => retryReadiness() });
   };
 
-  const discover = () => {
+  const discover = (namedQuery?: string) => {
     if (!center) {
       enter("area");
       setAlert({ type: "neutral", text: "先选一个公开地图区域。" });
@@ -611,13 +614,16 @@ export function RevolutionQuickExplore({
       setAlert({ type: "error", text: "地图服务暂不可用，请稍后重试。" });
       return;
     }
+    const name = namedQuery?.trim();
+    if (name !== undefined && (readiness.provider !== "photon" || name.length < 2 || name.length > 120)) return;
     const selection = center;
-    const chosenCategory = category;
+    const chosenQuery = name ?? category;
     const consentedProvider = readiness.provider;
     void run("搜索附近真实地点", async (stillCurrent) => {
       // The explicitly labelled button is the ONE-use provider consent.
       const response = await cityNexusApi.bootstrapDiscovery(journeyId, {
-        query: chosenCategory,
+        query: chosenQuery,
+        ...(name !== undefined ? { query_mode: "name" as const } : {}),
         radius_m: 2500,
         limit: 3,
         source_kind: "MANUAL_PUBLIC_CENTER",
@@ -637,7 +643,7 @@ export function RevolutionQuickExplore({
         setAlert({
           type: "error",
           text: "地点服务未响应，本次没有找到地点。稍后再试。",
-          recovery: { label: "重新搜索附近地点", action: () => discover() },
+          recovery: { label: "修改搜索条件", action: () => enter("category") },
         });
         return;
       }
@@ -659,7 +665,7 @@ export function RevolutionQuickExplore({
         setAlert({
           type: "error",
           text: "地点查询次数已达限制，请稍后重试。",
-          recovery: { label: "稍后重新搜索附近地点", action: () => discover() },
+          recovery: { label: "修改搜索条件", action: () => enter("category") },
         });
         return;
       }
@@ -675,7 +681,7 @@ export function RevolutionQuickExplore({
       }
     }, (error) => recoveryForError(
       error,
-      { label: "再次搜索附近地点", action: () => discover() },
+      { label: "返回搜索条件", action: () => enter("category") },
       { label: "返回修改搜索条件", action: () => enter("category") },
     ));
   };
@@ -956,6 +962,7 @@ export function RevolutionQuickExplore({
       )}
 
       {stage === "category" && (
+        <>
         <InterestPicker
           categories={categories}
           category={category}
@@ -967,9 +974,19 @@ export function RevolutionQuickExplore({
           busy={busy}
           onCategoryChange={setCategory}
           onRetryReadiness={retryReadiness}
-          onDiscover={discover}
+          onDiscover={() => discover()}
           onChangeArea={() => enter("area")}
         />
+        {readiness?.provider === "photon" && (
+          <NamedPlaceSearch
+            value={placeName}
+            onChange={setPlaceName}
+            onSearch={() => discover(placeName)}
+            disabled={busy || readiness.status !== "READY"}
+            recipient={readiness.expected_recipient}
+          />
+        )}
+        </>
       )}
 
       {stage === "results" && (

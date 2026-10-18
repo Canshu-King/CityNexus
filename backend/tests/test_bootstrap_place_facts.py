@@ -111,6 +111,53 @@ def owner_private_ids_absent(audit, headers, journey_id):
     return headers["Authorization"] not in serialized and journey_id not in serialized
 
 
+def test_signed_named_search_dispatches_once_and_restores_private_receipt(monkeypatch, signed_place):
+    from app.integrations.discovery.photon_poi import PhotonPOIProvider
+
+    client, headers, outsider, journey_id, *_ = signed_place
+    requests = []
+
+    def handler(request):
+        requests.append(request)
+        return httpx.Response(200, json={"features": [{
+            "type": "Feature", "geometry": {"type": "Point", "coordinates": [121.4, 31.2]},
+            "properties": {"name": "TEST_FIXTURE named museum", "osm_type": "W", "osm_id": 991223,
+                           "osm_key": "tourism", "osm_value": "museum", "countrycode": "cn"},
+        }]})
+
+    monkeypatch.setattr(discovery, "_bootstrap_discovery_provider_config", lambda: {
+        "provider": "photon", "provider_name": "Photon POI search",
+        "expected_recipient": "Photon by Komoot public geocoding service", "base_url": "https://photon.komoot.io",
+    })
+    monkeypatch.setattr(discovery, "_bootstrap_live_endpoint_block_reason", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(discovery, "PhotonPOIProvider", lambda **_kwargs: PhotonPOIProvider(
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    ))
+    path = f"/api/v1/journeys/{journey_id}/bootstrap-discovery"
+    body = {"query": "TEST_FIXTURE named museum", "query_mode": "name", "radius_m": 2500, "limit": 3,
+            "source_kind": "MANUAL_PUBLIC_CENTER", "latitude": 31.2, "longitude": 121.4,
+            "coordinate_system": "WGS84", "mode": "live", "provider_consent": True, "consented_provider": "photon"}
+    assert client.post(path, json=body).status_code == 401
+    assert client.post(path, json=body, headers=outsider).status_code == 403
+    assert client.post(path, json={**body, "provider_consent": False}, headers=headers).status_code == 422
+    assert requests == []
+    response = client.post(path, json=body, headers=headers)
+    assert response.status_code == 200, response.text
+    result = response.json()
+    assert result["status"] == "LIVE_RESULTS"  # Contract label under MockTransport, not live evidence.
+    assert len(result["candidates"]) == 1
+    assert len(requests) == 1
+    assert requests[0].url.path == "/api/"
+    assert requests[0].url.params["q"] == body["query"]
+    assert "bbox" in requests[0].url.params
+    restored = client.get(path + "/current", headers=headers)
+    assert restored.status_code == 200
+    assert restored.json()["receipt_id"] == result["receipt_id"]
+    assert restored.json()["candidates"][0]["name"] == "TEST_FIXTURE named museum"
+    assert len(requests) == 1
+    assert client.get(path + "/current", headers=outsider).status_code == 403
+
+
 def test_failed_details_leave_prior_facts_and_do_not_retry(monkeypatch, signed_place):
     client, headers, _, journey_id, candidate_id, receipt_id, _other = signed_place
     calls = []

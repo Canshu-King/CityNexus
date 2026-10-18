@@ -1776,6 +1776,7 @@ def discover_bootstrap_candidates(
     latitude: float,
     longitude: float,
     accuracy_m: float | None,
+    query_mode: str = "category",
 ) -> dict[str, Any]:
     if str(journey.status).upper() != "DRAFT":
         raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "bootstrap discovery requires a DRAFT Journey")
@@ -1805,6 +1806,10 @@ def discover_bootstrap_candidates(
     provider_config = _bootstrap_discovery_provider_config()
     readiness = bootstrap_discovery_readiness(provider_config=provider_config)
     provider_key = str(readiness["provider"])
+    if query_mode not in {"category", "name"} or (query_mode == "name" and provider_key != "photon"):
+        raise BootstrapDiscoveryError("PLACE_NAME_SEARCH_UNAVAILABLE", "Place-name search requires Photon", status_code=422)
+    if query_mode == "name" and len(query) < 2:
+        raise BootstrapDiscoveryError("INVALID_QUERY", "Enter a place name of at least two characters", status_code=422)
     if consented_provider != provider_key:
         raise BootstrapDiscoveryError(
             "PROVIDER_CONSENT_PROVIDER_MISMATCH",
@@ -1817,6 +1822,7 @@ def discover_bootstrap_candidates(
     # exact centers, accuracy, member IDs and traveler IDs out of this record.
     request = {
         "operation": "bootstrap_city_discovery",
+        "query_mode": query_mode,
         "journey_id": str(journey.id),
         "city_code": journey.city_code,
         "query": query,
@@ -1929,6 +1935,7 @@ def discover_bootstrap_candidates(
             radius_m=radius_m,
             limit=limit,
             max_attempts=1,
+            **({"query_mode": "name"} if query_mode == "name" else {}),
         )
         attempts = _attempts(raw_attempts, provider_key=provider_key)
     except Exception as exc:  # provider failures become a truthful unavailable state

@@ -32,6 +32,7 @@ from app.integrations.discovery.real_city import (
 
 PHOTON_BASE_URL = "https://photon.komoot.io"
 PHOTON_REVERSE_URL = f"{PHOTON_BASE_URL}/reverse"
+PHOTON_SEARCH_URL = f"{PHOTON_BASE_URL}/api/"
 OSM_ATTRIBUTION = "© OpenStreetMap contributors"
 OSM_ATTRIBUTION_URL = "https://www.openstreetmap.org/copyright"
 DEFAULT_TIMEOUT_SECONDS = 5.0
@@ -326,6 +327,7 @@ class PhotonPOIProvider:
         radius_m: int,
         limit: int,
         max_attempts: int | None = 1,
+        query_mode: str = "category",
     ) -> tuple[list[DiscoveryCandidate], list[dict[str, Any]]]:
         """Return bounded results and one factual request record; never retry."""
 
@@ -333,7 +335,15 @@ class PhotonPOIProvider:
             isinstance(max_attempts, bool) or not isinstance(max_attempts, int) or max_attempts != 1
         ):
             raise ValueError("Photon POI adapter permits exactly one request")
-        category_tags = _category_tags(query)
+        if query_mode not in {"category", "name"}:
+            raise UnsupportedPhotonQuery("unknown place search mode")
+        if query_mode == "name":
+            query = str(query).strip()
+            if not 2 <= len(query) <= 120:
+                raise UnsupportedPhotonQuery("place name must contain 2 to 120 characters")
+            category_tags = tuple(sorted({tag for _keywords, tags in _CATEGORY_RULES for tag in tags}))
+        else:
+            category_tags = _category_tags(query)
         center_lat = _finite_number("latitude", latitude, -90, 90)
         center_lon = _finite_number("longitude", longitude, -180, 180)
         radius = _finite_number("radius_m", radius_m, 1, MAX_RADIUS_METERS)
@@ -353,17 +363,28 @@ class PhotonPOIProvider:
             "limit": effective_limit,
             "include": include,
         }
+        endpoint = PHOTON_REVERSE_URL
+        if query_mode == "name":
+            endpoint = PHOTON_SEARCH_URL
+            params.pop("radius")
+            params["q"] = query
+            delta_lat = radius / 111_320
+            delta_lon = min(180, delta_lat / max(0.01, math.cos(math.radians(center_lat))))
+            params["bbox"] = ",".join(str(value) for value in (
+                max(-180, center_lon - delta_lon), max(-90, center_lat - delta_lat),
+                min(180, center_lon + delta_lon), min(90, center_lat + delta_lat),
+            ))
         started = time.monotonic()
         try:
             response = self.client.get(
-                f"{self.base_url}/reverse",
+                endpoint,
                 params=params,
                 headers={"User-Agent": self.user_agent},
                 timeout=self.timeout_s,
                 follow_redirects=False,
             )
         except httpx.HTTPError as exc:
-            attempt = self._failed_attempt(started, error=exc)
+            attempt = self._failed_attempt(started, error=exc, endpoint=endpoint)
             _attach_attempts(exc, [attempt])
             raise
 
@@ -372,13 +393,13 @@ class PhotonPOIProvider:
             try:
                 response.raise_for_status()
             except httpx.HTTPError as exc:
-                attempt = self._failed_attempt(started, status=status, error=exc)
+                attempt = self._failed_attempt(started, status=status, error=exc, endpoint=endpoint)
                 _attach_attempts(exc, [attempt])
                 raise
             error = httpx.HTTPStatusError(
                 f"Photon returned HTTP {status}", request=response.request, response=response
             )
-            attempt = self._failed_attempt(started, status=status, error=error)
+            attempt = self._failed_attempt(started, status=status, error=error, endpoint=endpoint)
             _attach_attempts(error, [attempt])
             raise error
 
@@ -387,7 +408,7 @@ class PhotonPOIProvider:
             if not isinstance(payload, dict) or not isinstance(payload.get("features"), list):
                 raise TypeError("Photon response must contain a feature list")
         except (ValueError, TypeError) as exc:
-            attempt = self._failed_attempt(started, status=status, error=exc)
+            attempt = self._failed_attempt(started, status=status, error=exc, endpoint=endpoint)
             _attach_attempts(exc, [attempt])
             raise
 
@@ -408,7 +429,7 @@ class PhotonPOIProvider:
                 candidates.append(candidate)
         candidates = candidates[:effective_limit]
         attempt = {
-            "endpoint": PHOTON_REVERSE_URL,
+            "endpoint": endpoint,
             "answered": True,
             "http_status": status,
             "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
@@ -425,10 +446,10 @@ class PhotonPOIProvider:
 
     @staticmethod
     def _failed_attempt(
-        started: float, *, status: int | None = None, error: Exception
+        started: float, *, status: int | None = None, error: Exception, endpoint: str = PHOTON_REVERSE_URL,
     ) -> dict[str, Any]:
         return {
-            "endpoint": PHOTON_REVERSE_URL,
+            "endpoint": endpoint,
             "answered": False,
             "http_status": status,
             "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),

@@ -1,0 +1,130 @@
+.named-place-search,
+.named-place-search * {
+  box-sizing: border-box;
+}
+
+.named-place-search {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  color: #173d2b;
+}
+
+.named-place-search__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #bad5c4;
+  border-radius: 12px;
+  background: #f2f9f3;
+  color: #24533a;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  list-style: none;
+}
+
+.named-place-search__summary::-webkit-details-marker {
+  display: none;
+}
+
+.named-place-search__summary::after {
+  flex: 0 0 auto;
+  color: #166d44;
+  content: "＋";
+  font-size: 18px;
+  line-height: 1;
+}
+
+.named-place-search[open] > .named-place-search__summary::after {
+  content: "−";
+}
+
+.named-place-search__summary:focus-visible {
+  outline: 3px solid #a2e7b5;
+  outline-offset: 2px;
+}
+
+.named-place-search__form {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 8px;
+  padding: 14px;
+  border: 1px solid #c6e0ce;
+  border-radius: 12px;
+  background: #f9fcf9;
+}
+
+.named-place-search__label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: #173d2b;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.named-place-search__input {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #abcbb5;
+  border-radius: 10px;
+  background: #fff;
+  color: #163a28;
+  font: inherit;
+}
+
+.named-place-search__input:focus-visible {
+  outline: 3px solid #a2e7b5;
+  outline-offset: 1px;
+}
+
+.named-place-search__disclosure {
+  min-width: 0;
+  margin: 0;
+  color: #647f6c;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.named-place-search__submit {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #166d44;
+  border-radius: 12px;
+  background: #166d44;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.named-place-search__submit:focus-visible {
+  outline: 3px solid #a2e7b5;
+  outline-offset: 2px;
+}
+
+.named-place-search__submit:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
