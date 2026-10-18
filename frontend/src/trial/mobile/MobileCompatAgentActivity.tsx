@@ -21,8 +21,8 @@ function isTerminal(status: string) {
   return status !== "RUNNING" && status !== "UNKNOWN";
 }
 
-function stateLabel(run: MobileCompatAgentRun | null) {
-  if (!run) return "让 AI 检查当前行程";
+function stateLabel(run: MobileCompatAgentRun | null, configured: boolean, aiDisabled: boolean) {
+  if (!run) return aiDisabled ? "AI 暂未开启" : configured ? "AI 当前没有执行中的任务" : "WB2API 尚未连接";
   if (run.status === "RUNNING") return "AI 正在检查行程";
   if (run.status === "FAILED_EXTERNAL") return "AI 请求失败";
   if (run.status === "PARTIAL") return "行程检查未完成";
@@ -46,9 +46,11 @@ function safeTime(value: string | null | undefined) {
 export function MobileCompatAgentActivity({
   journeyId,
   visible,
+  aiDisabled,
 }: {
   journeyId: string;
   visible: boolean;
+  aiDisabled: boolean;
 }) {
   const [snapshot, setSnapshot] = useState<MobileCompatAgentLatest | null>(null);
   const [run, setRun] = useState<MobileCompatAgentRun | null>(null);
@@ -163,7 +165,7 @@ export function MobileCompatAgentActivity({
     }
   };
 
-  if (!visible || (loadState === "ready" && snapshot && !snapshot.configured && !run)) return null;
+  if (!visible) return null;
   const recordedSteps = run?.tool_steps ?? [];
 
   return (
@@ -173,11 +175,11 @@ export function MobileCompatAgentActivity({
         <div className="rev-mobile-compat-agent-title">
           <span>WB2API · 行程助手</span>
           <strong role="status">
-            {loadState === "unauthorized" ? "请重新进入行程" : loadState === "offline" ? "服务连接失败" : loadState === "loading" ? "正在读取记录" : stateLabel(run)}
+            {loadState === "unauthorized" ? "请重新进入行程" : loadState === "offline" ? "服务连接失败" : loadState === "loading" ? "正在读取记录" : stateLabel(run, snapshot?.configured === true, aiDisabled)}
           </strong>
         </div>
       </div>
-      {loadState === "ready" && snapshot?.configured && (
+      {loadState === "ready" && snapshot?.configured && !aiDisabled && (
         <div className="rev-mobile-compat-agent-controls">
           <span>点击后将本行程信息发送给 WB2API</span>
           <button type="button" onClick={() => void startRun()} disabled={sending || Boolean(run && !isTerminal(run.status)) || loadState !== "ready"} data-testid="rev-mobile-compat-agent-start">
@@ -185,6 +187,11 @@ export function MobileCompatAgentActivity({
             {sending ? "正在请求" : "检查行程"}
           </button>
         </div>
+      )}
+      {loadState === "ready" && !snapshot?.configured && !run && (
+        <p className="rev-mobile-compat-agent-message" role="status" data-testid="rev-mobile-compat-agent-empty">
+          暂无助手运行记录。
+        </p>
       )}
       {message && <p className="rev-mobile-compat-agent-message" role="alert"><CircleAlert size={15} aria-hidden="true" />{message}</p>}
       {run && (

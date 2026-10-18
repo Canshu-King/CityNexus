@@ -1017,7 +1017,7 @@ export function RevolutionFirstLook() {
                     <p>这里显示行程监测、助手运行记录和待确认操作。</p>
                   </section>
                   <AgentWorkStatus journeyId={journey.id} visible={activeTab === "trips"} />
-                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab === "trips"} />
+                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab === "trips"} aiDisabled={aiDisabled} />
                   <MobileHermesRun journeyId={journey.id} visible={activeTab === "trips"} />
                   <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" />
                 </section>

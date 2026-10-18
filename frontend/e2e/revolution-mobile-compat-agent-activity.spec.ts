@@ -1,8 +1,13 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
 
-test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+test.use({
+  viewport: { width: 390, height: 844 },
+  hasTouch: true,
+  storageState: { cookies: [], origins: [] },
+});
 
 const journeyId = "00000000-0000-4000-8000-000000000223";
+const fixtureTravelerId = "00000000-0000-4000-8000-000000000224";
 const prefix = `**/api/v1/journeys/${journeyId}`;
 const fixtureBearer = "TEST_ONLY_SIGNED_FIXTURE_TOKEN";
 
@@ -14,22 +19,27 @@ async function fulfill(route: Route, value: unknown) {
   });
 }
 
-async function signedActiveJourney(page: Page) {
-  await page.addInitScript((id) => {
+async function signedActiveJourney(
+  page: Page,
+  runtime: { aiState: string; compatConfigured: boolean } = { aiState: "DISABLED_BY_OPS", compatConfigured: false },
+) {
+  await page.addInitScript(({ id, travelerId }) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", travelerId);
     window.localStorage.setItem("citynexus.locale", "zh-CN");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
       id,
       cityCode: "CN-RV-TEST",
       cityName: "连城",
       status: "ACTIVE",
+      ownerTravelerId: travelerId,
     }));
-  }, journeyId);
+  }, { id: journeyId, travelerId: fixtureTravelerId });
 
   await page.route("**/api/v1/agent/runtime-status", (route) => fulfill(route, {
-    runtime_identity: "TEST_FIXTURE",
-    hermes_compat_configured: false,
-    ai_state: "DISABLED",
+    runtime_identity: runtime.compatConfigured ? "HERMES_COMPAT_ENDPOINT" : "NOT_CONFIGURED",
+    hermes_compat_configured: runtime.compatConfigured,
+    ai_state: runtime.aiState,
     fixture_mode: "TEST_FIXTURE",
   }));
   await page.route(`${prefix}/operator`, (route) => fulfill(route, {
@@ -168,7 +178,11 @@ test("TEST_FIXTURE latest read restores saved mobile compatibility tool steps af
   await page.getByTestId("rev-mobile-tab-trips").click();
   await firstTripsRead;
   expect(latestReads).toBeGreaterThan(0);
-  await expect(page.getByTestId("rev-mobile-compat-agent")).toHaveCount(0);
+  const emptyActivity = page.getByTestId("rev-mobile-compat-agent");
+  await expect(emptyActivity).toBeVisible();
+  await expect(emptyActivity.getByRole("status").first()).toHaveText("AI 暂未开启");
+  await expect(emptyActivity.getByTestId("rev-mobile-compat-agent-empty")).toHaveText("暂无助手运行记录。");
+  await expect(emptyActivity.getByTestId("rev-mobile-compat-agent-start")).toHaveCount(0);
 
   const readsAfterFirstTrips = latestReads;
   await page.getByTestId("rev-mobile-tab-explore").click();
@@ -207,5 +221,31 @@ test("TEST_FIXTURE latest read restores saved mobile compatibility tool steps af
   await expect(events).not.toContainText("inspect_journey");
   await expect(events).not.toContainText("inspect_twin");
   await expect(events).not.toContainText("list_replans");
+  expect(providerOrAiPosts).toBe(0);
+});
+
+test("TEST_FIXTURE configured endpoint with no run shows idle state without sending a request", async ({ page }) => {
+  await signedActiveJourney(page, { aiState: "CONFIGURED_UNVERIFIED", compatConfigured: true });
+  await page.route(`${prefix}/agent/mobile-compat-runs/latest`, async (route) => {
+    expect(route.request().method()).toBe("GET");
+    expect(route.request().headers()["authorization"]).toBe(`Bearer ${fixtureBearer}`);
+    await fulfill(route, { runtime_identity: "TEST_FIXTURE", configured: true, run: null, fixture_mode: "TEST_FIXTURE" });
+  });
+  let providerOrAiPosts = 0;
+  page.on("request", (request) => {
+    if (request.method() === "POST" && /agent\/mobile-compat-runs|trial-ai-discovery|copilot\/messages/.test(request.url())) {
+      providerOrAiPosts += 1;
+    }
+  });
+
+  await page.goto("/revolution");
+  const latestRead = page.waitForResponse((response) =>
+    response.request().method() === "GET" && response.url().includes("/agent/mobile-compat-runs/latest"),
+  );
+  await page.getByTestId("rev-mobile-tab-trips").click();
+  await latestRead;
+  const activity = page.getByTestId("rev-mobile-compat-agent");
+  await expect(activity.getByRole("status").first()).toHaveText("AI 当前没有执行中的任务");
+  await expect(activity.getByTestId("rev-mobile-compat-agent-start")).toBeVisible();
   expect(providerOrAiPosts).toBe(0);
 });
