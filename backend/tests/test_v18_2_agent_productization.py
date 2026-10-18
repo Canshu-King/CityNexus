@@ -26,11 +26,20 @@ def test_v182_plan_is_explicit_and_plan_only_limits_native_surface():
         "inspect_proposal",
         "approval_boundary",
     ]
+    # Reform 2026-10-18: a draft is granted the read-shaped research tools and the three
+    # draft-only writes (candidates, canonical facts, candidate plans). It still gets no action
+    # tool, which is what this arm is actually protecting.
     assert plan["allowed_tools"] == [
         "inspect_journey",
         "inspect_twin",
         "list_replans",
         "search_city_services",
+        "research_place_sources",
+        "estimate_place_facts",
+        "compare_routes",
+        "discover_places",
+        "acquire_place_facts",
+        "generate_plans",
         "request_replan",
     ]
     assert "accept_replan" in plan["approval_required_tools"]

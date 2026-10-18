@@ -171,6 +171,39 @@ def test_r3_the_two_levels_do_not_answer_with_the_same_number() -> None:
     ), "both prompts state one grant, so it is not the mission's"
 
 
+# ------------------------------------- R4: a PLAN_ONLY prompt still lets the draft be written
+
+def test_r4_a_plan_only_prompt_allows_the_draft_writes_its_grant_contains() -> None:
+    """The old closing sentence said only "do not ... a mutating action" while the same plan
+    granted `discover_places`, `acquire_place_facts` and `generate_plans`.  A model that obeyed
+    the sentence literally could refuse to form the draft the mission exists to produce.  The
+    allowance has to name the grant's own draft tools, not a fixed list written here."""
+
+    from app.agent.mission_plan import DRAFT_WRITE_TOOLS
+
+    prompt, _granted, _supplied = _prompt_for("PLAN_ONLY")
+    for name in DRAFT_WRITE_TOOLS:
+        assert name in prompt, (name, prompt[-600:])
+    assert "draft candidates, not plan truth" in prompt
+    for forbidden in (
+        "formal plan",
+        "booking",
+        "payment",
+        "commitment change",
+        "irreversible action",
+    ):
+        assert forbidden in prompt, (forbidden, prompt[-600:])
+    assert "do not accept or execute a mutating action" not in prompt, (
+        "the blanket sentence is still there, so a literal model can still refuse the draft"
+    )
+
+
+def test_r5_an_autonomous_prompt_does_not_claim_the_plan_only_rules() -> None:
+    prompt, _granted, _supplied = _prompt_for("AUTONOMOUS")
+    assert "This is PLAN_ONLY" not in prompt
+    assert "draft candidates, not plan truth" not in prompt
+
+
 def test_r3b_the_grant_still_agrees_with_the_permission_the_runtime_enforces() -> None:
     """The prompt says the Gateway refuses the remainder; that is only honest if a PLAN_ONLY
     mission really is refused when it reaches for a mutating tool."""

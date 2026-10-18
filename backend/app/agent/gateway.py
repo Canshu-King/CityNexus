@@ -629,7 +629,15 @@ class AgentToolGateway:
         target activity and the grounded origin, and refuses when either is not ready. Execution runs
         through the deployment's mobility capture (mock when no live provider is configured), and
         every attempt is an operation row rather than a silent fetch.
+
+        Authorization lives here, not only in the runtime loop, because `/agent/tools/v2/...` calls
+        this dispatcher directly. A deployment whose mobility capture is the built-in mock has no
+        external provider cost and stays automatic; a configured live provider needs one named user
+        approval for the exact edge, consumed through the same approval machinery the other typed
+        mutations use. The approval fingerprint binds origin, target and mode, so a receipt for one
+        edge cannot authorize another.
         """
+        from app.core.config import settings
         from app.main import _launch_target_activity
 
         journey = _require_journey(self.session, request.journey_id)
@@ -643,29 +651,56 @@ class AgentToolGateway:
             raise HTTPException(409, "grounded launch origin is unavailable")
         if str(origin.get("source") or "") == "FOREGROUND_LOCATION":
             raise HTTPException(409, "route acquisition requires an exact persisted origin Place")
+        mode = (request.route_mode or "TRANSIT").upper()
         route_request = RouteRequest(
             journey_id=str(journey.id),
             origin_key=str(origin["origin_key"]),
             target_key=str(target.place_id),
             target_activity_id=str(target.id),
-            requested_mode=(request.route_mode or "TRANSIT").upper(),
+            requested_mode=mode,
             provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
             route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
         )
-        row, reused = submit_route_operation(self.session, journey, route_request)
-        self.session.commit()
-        body = route_operation_payload(row, reused=reused)
-        return {
-            "tool": "acquire_route",
-            "decision": AuthorizationDecision.ALLOW_AUTO.value,
-            "origin": {
-                "key": origin.get("origin_key"),
-                "name": origin.get("name"),
-                "authority": origin.get("authority"),
-                "source": origin.get("source"),
-            },
-            **body,
+        live_provider = bool(settings.live_valhalla_url)
+        evidence = {
+            "origin_key": str(origin["origin_key"]),
+            "origin_source": origin.get("source"),
+            "target_activity_id": str(target.id),
+            "target_place_id": str(target.place_id),
+            "requested_mode": mode,
+            "provider": "valhalla" if live_provider else "mock-mobility",
+            "external_provider_call": live_provider,
         }
+
+        def execute() -> dict[str, Any]:
+            row, reused = submit_route_operation(self.session, journey, route_request)
+            self.session.commit()
+            return {
+                "origin": {
+                    "key": origin.get("origin_key"),
+                    "name": origin.get("name"),
+                    "authority": origin.get("authority"),
+                    "source": origin.get("source"),
+                },
+                **route_operation_payload(row, reused=reused),
+            }
+
+        return self._run_typed_mutation(
+            request,
+            journey,
+            action=AgentAction.ACQUIRE_ROUTE,
+            target_type="JourneyRouteEdge",
+            target_id=f"{origin['origin_key']}->{target.place_id}",
+            facts=AuthoritativeActionFacts(external_provider_call=live_provider),
+            evidence=evidence,
+            arguments={
+                "origin_key": str(origin["origin_key"]),
+                "target_key": str(target.place_id),
+                "target_activity_id": str(target.id),
+                "route_mode": mode,
+            },
+            execute=execute,
+        )
 
     def compare_routes(self, request: AgentToolCall) -> dict[str, Any]:
         """Compare the route facts the server already holds for one edge.

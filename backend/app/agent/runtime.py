@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
 from app.agent.mission import mission_payload
-from app.agent.mission_plan import mission_plan_for_model
+from app.agent.mission_plan import DRAFT_WRITE_TOOLS, READ_TOOLS, mission_plan_for_model
 from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identity
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
@@ -266,6 +266,33 @@ def _model_name() -> str:
     return settings.ai_model.removeprefix("deepseek/")
 
 
+def _plan_only_allowance(granted_tools: tuple[str, ...]) -> str:
+    """Name what a PLAN_ONLY mission may still do, from the grant itself.
+
+    The previous sentence only said "do not ... a mutating action", while `discover_places`,
+    `acquire_place_facts` and `generate_plans` are listed in `_MUTATION_TOOLS`. A model reading
+    literally could therefore refuse to form the draft the mission exists to produce. The
+    allowance is derived from `granted_tools`, not hard-coded: a plan that grants no draft write
+    must not claim one, and a plan that grants it must not leave the model guessing.
+    """
+
+    reads = [name for name in READ_TOOLS if name in granted_tools]
+    drafts = [name for name in DRAFT_WRITE_TOOLS if name in granted_tools]
+    parts: list[str] = []
+    if reads:
+        parts.append("inspect, research, estimate and compare through " + ", ".join(reads))
+    if drafts:
+        parts.append(
+            "write editable, revocable draft candidates through " + ", ".join(drafts)
+        )
+    allowed = "; ".join(parts) or "inspect the journey only"
+    return (
+        f"This is PLAN_ONLY. You may {allowed}. Those writes are draft candidates, not plan "
+        "truth. Do not accept or execute a formal plan, a booking, a payment, a commitment "
+        "change, or any other irreversible action."
+    )
+
+
 def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) -> str:
     traveler_twin = snapshot_payload(refresh_snapshot(session, journey.traveler_id))
     # The agent reasons in words like "now", "tonight" and "before arrival", so it has to be told
@@ -322,7 +349,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         f"Mission trigger event ID: {mission.trigger_event_id}\n"
         "The first tool call should be inspection. "
         + (
-            "This is PLAN_ONLY: do not accept or execute a mutating action."
+            _plan_only_allowance(granted_tools)
             if mission.requested_autonomy == "PLAN_ONLY"
             else "The mission permits execution only inside the server policy and envelope."
         )

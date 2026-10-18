@@ -207,6 +207,30 @@ def evaluate_action(
             policy.version,
         )
 
+    if action == AgentAction.ACQUIRE_ROUTE:
+        # Route acquisition freezes one MobilityFact; it never selects a plan, books or pays.
+        # The thing that can cost something is the provider call itself, so the gate is about
+        # that and nothing else: the deployment's mock/local capture has no external cost and
+        # stays automatic, while a configured live provider needs one named user approval for
+        # the exact edge (the approval fingerprint binds origin, target and mode).
+        if facts.provider_degraded and not policy.allow_auto_when_provider_degraded:
+            return AuthorizationResult(
+                AuthorizationDecision.REQUIRE_CONFIRMATION,
+                ("ROUTE_PROVIDER_EVIDENCE_DEGRADED",),
+                policy.version,
+            )
+        if not facts.external_provider_call:
+            return AuthorizationResult(
+                AuthorizationDecision.ALLOW_AUTO,
+                ("ROUTE_ACQUISITION_NO_EXTERNAL_PROVIDER_COST",),
+                policy.version,
+            )
+        return AuthorizationResult(
+            AuthorizationDecision.REQUIRE_CONFIRMATION,
+            ("ROUTE_ACQUISITION_EXTERNAL_PROVIDER_REQUIRES_APPROVAL",),
+            policy.version,
+        )
+
     if action in TYPED_MUTATION_ACTIONS:
         if facts.hard_constraints_passed is not True:
             return AuthorizationResult(

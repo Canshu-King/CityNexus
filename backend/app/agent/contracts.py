@@ -117,6 +117,10 @@ class AuthoritativeActionFacts:
     commitment_management_requested: bool = False
     commitment_levels: tuple[str, ...] = ()
     action_reversible: bool = True
+    # Reform 2026-10-18: a route acquisition is not a plan mutation; what can cost something is
+    # the provider call behind it. The gateway sets this from the deployment's mobility provider,
+    # so "mock/local, free" stays automatic while a configured live provider needs one approval.
+    external_provider_call: bool = False
 
 
 @dataclass(frozen=True)

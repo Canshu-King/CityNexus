@@ -54,7 +54,9 @@ class AgentMissionPlan:
         }
 
 
-_READ_TOOLS = (
+# Public names on purpose: the runtime prompt is built from the same tuples that grant the tools,
+# so a future plan shape cannot say one thing while granting another.
+READ_TOOLS = (
     "inspect_journey",
     "inspect_twin",
     "list_replans",
@@ -65,7 +67,7 @@ _READ_TOOLS = (
     "estimate_place_facts",
     "compare_routes",
 )
-_DRAFT_WRITE_TOOLS = (
+DRAFT_WRITE_TOOLS = (
     # These write rows a draft needs (provider candidates, canonical facts, candidate plans) and
     # still cannot commit money, a booking or a plan selection. Keeping them in their own tuple is
     # what makes the grant's side effect readable instead of "everything that is not a payment".
@@ -73,7 +75,7 @@ _DRAFT_WRITE_TOOLS = (
     "acquire_place_facts",
     "generate_plans",
 )
-_ACTION_TOOLS = (
+ACTION_TOOLS = (
     "request_replan",
     "accept_replan",
     "replace_activity",
@@ -153,9 +155,9 @@ def build_mission_plan(
             requires_authority=True,
         )
     allowed_tools = (
-        (*_READ_TOOLS, *_DRAFT_WRITE_TOOLS, "request_replan")
+        (*READ_TOOLS, *DRAFT_WRITE_TOOLS, "request_replan")
         if autonomy == "PLAN_ONLY"
-        else (*_READ_TOOLS, *_DRAFT_WRITE_TOOLS, *_ACTION_TOOLS)
+        else (*READ_TOOLS, *DRAFT_WRITE_TOOLS, *ACTION_TOOLS)
     )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
@@ -163,9 +165,9 @@ def build_mission_plan(
         steps=tuple(steps),
         protected_activity_ids=tuple(str(item) for item in protected_activity_ids),
         allowed_tools=tuple(allowed_tools),
-        read_only_tools=_READ_TOOLS,
+        read_only_tools=READ_TOOLS,
         approval_required_tools=tuple(
-            item for item in _ACTION_TOOLS if item != "request_replan"
+            item for item in ACTION_TOOLS if item != "request_replan"
         ),
     )
 
