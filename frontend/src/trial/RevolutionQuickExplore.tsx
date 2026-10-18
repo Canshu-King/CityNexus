@@ -250,6 +250,8 @@ export function RevolutionQuickExplore({
   const [center, setCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [category, setCategory] = useState<(typeof categories)[number]["value"]>("park/garden");
   const [placeName, setPlaceName] = useState("");
+  const [radiusM, setRadiusM] = useState<2500 | 5000>(2500);
+  const lastPlaceSearch = useRef<{ mode: "name" | "category"; query: string } | null>(null);
   const lastServerGoal = useRef(initialGoal);
   useEffect(() => {
     const previous = lastServerGoal.current;
@@ -610,7 +612,7 @@ export function RevolutionQuickExplore({
     }, { label: "重新检查地图服务", action: () => retryReadiness() });
   };
 
-  const discover = (namedQuery?: string) => {
+  const discover = (namedQuery?: string, radiusOverride?: 2500 | 5000) => {
     if (!center) {
       enter("area");
       setAlert({ type: "neutral", text: "先选一个公开地图区域。" });
@@ -624,13 +626,14 @@ export function RevolutionQuickExplore({
     if (name !== undefined && (!readiness.supports_place_name_search || readiness.provider !== "photon" || name.length < 2 || name.length > 120)) return;
     const selection = center;
     const chosenQuery = name ?? category;
+    lastPlaceSearch.current = { mode: name !== undefined ? "name" : "category", query: chosenQuery };
     const consentedProvider = readiness.provider;
     void run("搜索附近真实地点", async (stillCurrent) => {
       // The explicitly labelled button is the ONE-use provider consent.
       const response = await cityNexusApi.bootstrapDiscovery(journeyId, {
         query: chosenQuery,
         ...(name !== undefined ? { query_mode: "name" as const } : {}),
-        radius_m: 2500,
+        radius_m: radiusOverride ?? radiusM,
         limit: 3,
         source_kind: "MANUAL_PUBLIC_CENTER",
         provider_consent: true,
@@ -857,7 +860,7 @@ export function RevolutionQuickExplore({
         </h2>
         <p>
           {stage === "area" && "先选地区，再挑兴趣和地点。AI 只在你点击后参与；地图打不开也能继续。"}
-          {stage === "category" && "位置已选好。挑一种兴趣，我们会查找附近的公开地点。"}
+          {stage === "category" && "位置已选好。你可以直接输入地点或玩法关键词；四种分类只是备用查找方式。"}
           {stage === "results" && !isPartialLiveResult && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
         </p>
@@ -969,29 +972,45 @@ export function RevolutionQuickExplore({
 
       {stage === "category" && (
         <>
-        <InterestPicker
-          categories={categories}
-          category={category}
-          centerBasis={centerBasis}
-          sampleProviderMode={sampleProviderMode}
-          expectedRecipient={readiness?.expected_recipient ?? null}
-          readinessStatus={readinessStatus}
-          readinessReady={readiness?.status === "READY"}
-          busy={busy}
-          onCategoryChange={setCategory}
-          onRetryReadiness={retryReadiness}
-          onDiscover={() => discover()}
-          onChangeArea={() => enter("area")}
-        />
-        {readiness?.provider === "photon" && readiness.supports_place_name_search && (
-          <NamedPlaceSearch
-            value={placeName}
-            onChange={setPlaceName}
-            onSearch={() => discover(placeName)}
-            disabled={busy || readiness.status !== "READY"}
-            recipient={readiness.expected_recipient}
+          <div className="rev-quick-pane" aria-label="公开地点搜索范围">
+            <label htmlFor="rev-quick-radius">先选这次要查找多大范围</label>
+            <select
+              id="rev-quick-radius"
+              data-testid="rev-quick-radius"
+              value={radiusM}
+              disabled={busy}
+              onChange={(event) => setRadiusM(event.target.value === "5000" ? 5000 : 2500)}
+            >
+              <option value={2500}>附近 2.5 公里</option>
+              <option value={5000}>附近 5 公里</option>
+            </select>
+            <p className="rev-quick-disclosure">这是公开地点服务的单次查询范围，不是整座城市。找不到不等于当地没有值得去的地方。</p>
+          </div>
+          {readiness?.provider === "photon" && readiness.supports_place_name_search && (
+            <NamedPlaceSearch
+              value={placeName}
+              onChange={setPlaceName}
+              onSearch={() => discover(placeName)}
+              disabled={busy || readiness.status !== "READY"}
+              recipient={readiness.expected_recipient}
+            />
+          )}
+          <InterestPicker
+            categories={categories}
+            supportsFreeText={readiness?.provider === "photon" && Boolean(readiness.supports_place_name_search)}
+            radiusKm={radiusM / 1000}
+            category={category}
+            centerBasis={centerBasis}
+            sampleProviderMode={sampleProviderMode}
+            expectedRecipient={readiness?.expected_recipient ?? null}
+            readinessStatus={readinessStatus}
+            readinessReady={readiness?.status === "READY"}
+            busy={busy}
+            onCategoryChange={setCategory}
+            onRetryReadiness={retryReadiness}
+            onDiscover={() => discover()}
+            onChangeArea={() => enter("area")}
           />
-        )}
         </>
       )}
 
@@ -1063,8 +1082,31 @@ export function RevolutionQuickExplore({
               </button>
             </div>
           )}
+          {discovery?.status === "LIVE_ZERO_RESULTS" && (
+            <section aria-label="没有地点时的下一步" className="rev-quick-zero-options" data-testid="rev-quick-zero-options">
+              <p>只是这次查询没有命中，当前选择的城市和原有旅行需求都还在。</p>
+              {radiusM === 2500 && readiness?.status === "READY" && (
+                <button type="button" className="rev-quick-primary" disabled={busy}
+                  onClick={() => {
+                    const last = lastPlaceSearch.current;
+                    setRadiusM(5000);
+                    discover(last?.mode === "name" ? last.query : undefined, 5000);
+                  }}>
+                  扩大到 5 公里，再查一次 →
+                </button>
+              )}
+              <button type="button" className="rev-quick-secondary" disabled={busy}
+                onClick={() => enter("category")}>
+                自己输入想去的地名或关键词 →
+              </button>
+              <button type="button" className="rev-quick-secondary" disabled={busy}
+                onClick={() => enter("area")}>
+                去地图换一个搜索位置 →
+              </button>
+            </section>
+          )}
           <div className="rev-quick-actions">
-            <button type="button" className="rev-quick-text-btn" onClick={() => enter("category")}>换个兴趣重找</button>
+            <button type="button" className="rev-quick-text-btn" onClick={() => enter("category")}>换搜索条件</button>
             <button type="button" className="rev-quick-text-btn" onClick={() => enter("area")}>换地图位置</button>
           </div>
         </div>
