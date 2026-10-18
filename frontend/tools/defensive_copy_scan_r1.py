@@ -44,7 +44,7 @@ MARKERS = (
     "rest assured", "nothing was changed", "was not changed", "this is not a",
     "no need to worry", "we are not guessing", "not a guess",
     "so this screen", "so this line", "so nothing is", "so there is no figure",
-    "这一屏不", "这句不", "所以这里不", "所以这里没有",
+    "这一屏", "这屏", "这句不", "所以这里不", "所以这里没有", "this screen", "this line shows no",
 )
 
 KEY_LINE = re.compile(r'^\s*"([A-Za-z0-9_.\-]+)":\s*"((?:[^"\\]|\\.)*)"\s*,?\s*$')
@@ -183,19 +183,69 @@ def source_sentences() -> dict[str, set[str]]:
     return _SOURCE_SENTENCES
 
 
-def asserted_elsewhere(sentence: str, own: str) -> list[str]:
-    """Files outside the dictionary and outside the candidate's own file that demand this sentence.
+LIST_ITEM = re.compile(r'^[\s\t]*[\'"`]')
+COMMENT = re.compile(r"^\s*(//|/\*|\*)")
+DECL = re.compile(r"^(?:export\s+)?(?:const|let|var)\s+[A-Za-z_]\w*\b.*[:=]")
+FORBIDDEN = re.compile(
+    r"NEGATED|BANNED|FORBIDDEN|NOT_ALLOWED|DISALLOW|not\.to|must\s+not|may\s+not|不得|禁止|禁项", re.I
+)
+
+
+def _banned_by_a_check(body: str, sentence: str) -> bool:
+    """True when every file that quotes this sentence quotes it as something that must NOT appear.
+
+    A phrase can reach a check file in two opposite roles: demanded to be rendered, or listed so a
+    gate can fail it when it is rendered. Reading the second as the first told me that the 回收站's
+    "这一屏没有改动你的任何行程" was load-bearing, when `copyOnScreenCheck_r1.mjs` has it in the ban
+    list precisely because the campaign retired that reassurance.
+    """
+
+    lines = body.split("\n")
+    seen_any = False
+    for index, line in enumerate(lines):
+        if sentence not in line:
+            continue
+        seen_any = True
+        if FORBIDDEN.search(line):
+            continue
+        opener = ""
+        for back in range(index, -1, -1):
+            candidate = lines[back]
+            if COMMENT.match(candidate) or LIST_ITEM.match(candidate):
+                continue
+            opener = candidate.strip() if DECL.match(candidate) else ""
+            break
+        if not FORBIDDEN.search(opener):
+            return False
+    return seen_any
+
+
+def asserted_elsewhere(sentence: str, own: str) -> tuple[list[str], list[str]]:
+    """Files outside the dictionary and outside the candidate's own file: (demanded, forbidden).
 
     `own` matters now that the candidates come from the modules themselves: a module quote is the
     sentence under test, not a second writer of it. Without it every module candidate would be
     "asserted" by the very line it is being judged on.
+
+    The two buckets exist because the campaign's own auditor learned the lesson twice: a spec that
+    quotes a sentence inside a *ban* list demands the opposite of a spec that demands it be rendered.
+    `tools/copyOnScreenCheck_r1.mjs` lists "这一屏没有改动你的任何行程" among the phrases that may NOT
+    reach the screen, so counting that file as a writer of the demand would tell the next reader that
+    the reassurance is load-bearing -- when it is exactly what the gate is waiting to catch.
     """
 
     if len(sentence) < 8:
-        return []
-    hits = [name for name, body in check_files() if sentence in body]
-    hits += [name for name, pieces in source_sentences().items() if sentence in pieces]
-    return [name for name in sorted(set(hits)) if name != own]
+        return [], []
+    demanded: list[str] = []
+    forbidden: list[str] = []
+    for name, body in check_files():
+        if name == own or sentence not in body:
+            continue
+        (forbidden if _banned_by_a_check(body, sentence) else demanded).append(name)
+    for name, pieces in source_sentences().items():
+        if sentence in pieces and name != own:
+            demanded.append(name)
+    return sorted(set(demanded)), sorted(set(forbidden))
 
 
 def candidates() -> list[tuple[str, str, str, str, str]]:
@@ -244,26 +294,37 @@ def main() -> int:
         "(dictionary {} / module {})".format(len(rows), in_dictionary, len(rows) - in_dictionary)
     )
     shown = 0
+    free = 0
+    banned_only = 0
     for origin, side, key, marker, sentence in rows:
-        if shown >= limit:
-            break
         own = "" if origin == DICT_LABEL else origin
-        where = asserted_elsewhere(sentence, own)
+        demanded, banned = asserted_elsewhere(sentence, own)
+        if not demanded:
+            free += 1
+            if banned:
+                banned_only += 1
+        if shown >= limit:
+            continue
+        shown += 1
+        detail = ""
+        if demanded:
+            detail = " <- " + ", ".join(demanded[:2])
+        elif banned:
+            detail = " <- banned by " + ", ".join(banned[:2])
         print(
-            "  {origin} {side} {key} [{marker}] asserted: {verdict}{detail}".format(
+            "  {origin} {side} {key} [{marker}] demanded: {verdict}{detail}".format(
                 origin=origin, side=side, key=key, marker=marker,
-                verdict="YES" if where else "no",
-                detail="" if not where else " <- " + ", ".join(where[:2]),
+                verdict="YES" if demanded else "no",
+                detail=detail,
             )
         )
         print("      " + sentence[:150])
-        shown += 1
-    free = sum(
-        1 for origin, side, key, marker, sentence in rows
-        if not asserted_elsewhere(sentence, "" if origin == DICT_LABEL else origin)
-    )
     print("----")
-    print(f"candidates: {len(rows)} | shown: {shown} | not asserted anywhere: {free}")
+    print(
+        "candidates: {} | shown: {} | not demanded by any check: {} (of which named in a ban list: {})".format(
+            len(rows), shown, free, banned_only
+        )
+    )
     if shown < len(rows):
         print(f"NOTE: {len(rows) - shown} candidates were not printed -- raise --limit, this is not an empty list.")
     return 0

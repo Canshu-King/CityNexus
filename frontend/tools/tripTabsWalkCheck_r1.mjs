@@ -1,4 +1,10 @@
-/* Walk the four traveller tabs in a real browser and measure how much text they hand the user.
+/* Walk the traveller's screens in a real browser and measure how much text they hand the user.
+
+   Four tabs (行程 / 住宿 / 预订 / 花费) are the spine, and the route screens a traveller reaches through
+   the drawer are walked too -- 票夹, 城市探索, 住宿屏, 成员与权限, 回收站 -- because that is where this
+   campaign's copy actually lives now: several of those screens read their sentences from a
+   `features/<area>/<name>Copy.ts` module rather than from the shared dictionary, so a ruler that only
+   walked the tabs was grading a fraction of the product.
 
    The objective this serves is "make the UI simpler: drop the waffle, the defensive statements and
    the unnecessary declarations". That is only arguable with a number attached, so this prints one
@@ -63,6 +69,7 @@ const WANT_WALLET = !process.argv.includes("--no-wallet");
 const WANT_PREP = !process.argv.includes("--no-prep");
 const WANT_STAY = !process.argv.includes("--no-stay");
 const WANT_ACCESS = !process.argv.includes("--no-access");
+const WANT_TRASH = !process.argv.includes("--no-trash");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -181,6 +188,7 @@ function valueOf(regions, locale, key) {
 const COPY_MODULES = {
   access: join(FRONTEND, "src", "features", "access", "accessCopy.ts"),
   ladder: join(FRONTEND, "src", "features", "estimation", "estimationLadderCopy.ts"),
+  trash: join(FRONTEND, "src", "features", "trash", "journeyTrashCopy.ts"),
 };
 
 function moduleTable(file) {
@@ -503,12 +511,34 @@ const LADDER_KEYS = [
    reader goes red. */
 const LADDER_CLAIMED = ["ladder.method.noCandidates"];
 const ACCESS_CLAIMED = ["access.title", "access.sub", "access.pickLabel"];
+/* The 回收站 screen's own sentences. Nothing is claimed here yet: this is the first run that goes in,
+   and which of these the seeded store shows (an empty bin, a bin with one trip in it, or a bin the
+   server will not answer for) is the server's answer, not this file's guess. */
+const TRASH_KEYS = [
+  "trash.title",
+  "trash.sub",
+  "trash.empty",
+  "trash.count",
+  "trash.rowState",
+  "trash.transport",
+  "trash.recoveryMissing",
+  "trash.action",
+];
+const TRASH_CLAIMED = [];
 
-async function walkAccessFace(page, regions, locale) {
-  const label = valueOf(regions, locale, "nav.access");
+/* One module-backed route screen, reached the way a traveller reaches it: through the drawer, by the
+   label the dictionary gives that nav entry. Written once because the 成员与权限 screen and the 回收站
+   screen are the same measurement -- chars, and which of the module's sentences actually landed.
+
+   The nav label is read from the dictionary at run time, never typed here: this branch's claim is that
+   the screens speak the dictionary, so a hardcoded label would pass while the product renamed the
+   button. Failure always says which door it could not get through. */
+async function walkModuleFace(page, regions, locale, opts) {
+  const { name, navKey, testId, moduleFile, keys } = opts;
+  const label = valueOf(regions, locale, navKey);
   if (!label) {
-    console.log("   access screen: NOT ATTEMPTED (nav.access has no dictionary value)");
-    return { reached: false, note: "nav.access has no dictionary value" };
+    console.log(`   ${name}: NOT ATTEMPTED (${navKey} has no dictionary value)`);
+    return { reached: false, note: `${navKey} has no dictionary value` };
   }
   await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
   await page.waitForTimeout(5000);
@@ -526,47 +556,97 @@ async function walkAccessFace(page, regions, locale) {
         .slice(0, 30)
     );
     console.log(
-      `   access screen: NOT REACHED (no "${label}" entry in the drawer); buttons: ${visible.join(" | ").slice(0, 260)}`
+      `   ${name}: NOT REACHED (no "${label}" entry in the drawer); buttons: ${visible.join(" | ").slice(0, 260)}`
     );
     return { reached: false, note: 'no "' + label + '" entry in the drawer' };
   }
   await nav.first().click({ timeout: 6000 }).catch(() => {});
   await page.waitForTimeout(3000);
-  const panel = await page.evaluate(() => {
+  const mounted = (await page.locator(`[data-testid="${testId}"]`).count()) > 0;
+  const panel = await page.evaluate((id) => {
     const host =
-      document.querySelector('[data-testid="access-panel"]') ||
+      document.querySelector('[data-testid="' + id + '"]') ||
       document.querySelector("main") ||
       document.body;
     return (host.innerText || "").replace(/\s+/g, " ").trim();
-  });
-  const mounted = (await page.locator('[data-testid="access-panel"]').count()) > 0;
+  }, testId);
   if (!mounted || !panel) {
     console.log(
-      `   access screen: clicked "${label}" but access-panel mounted=${mounted}, text ${panel.length} chars`
+      `   ${name}: clicked "${label}" but ${testId} mounted=${mounted}, text ${panel.length} chars`
     );
-    return { reached: false, note: `access-panel mounted=${mounted}` };
+    return { reached: false, note: `${testId} mounted=${mounted}` };
   }
-  console.log(`   access screen: reached, chars=${panel.length}`);
+  console.log(`   ${name}: reached, chars=${panel.length}`);
   console.log(`      ${panel.slice(0, 220)}`);
-  const table = moduleTable(COPY_MODULES.access);
-  const onScreen = [];
-  const off = [];
-  for (const key of ACCESS_KEYS) {
+  const table = moduleTable(moduleFile);
+  const entries = [];
+  for (const key of keys) {
     const value = moduleValue(table, locale, key);
     if (value === null) {
-      console.log(`      access | KEY ABSENT FROM MODULE: ${key}`);
-      off.push(key);
+      console.log(`      ${name} | KEY ABSENT FROM MODULE: ${key}`);
+      entries.push({ key, text: "", hit: false, absent: true, weak: false });
       continue;
     }
     const p = probe(value);
-    const hit = p.judgable && fold(panel).includes(fold(p.text));
-    (hit ? onScreen : off).push(key);
+    entries.push({
+      key,
+      text: p.text,
+      hit: p.judgable && fold(panel).includes(fold(p.text)),
+      absent: false,
+      parameterised: p.parameterised,
+      side: p.side,
+      weak: p.weak,
+    });
+  }
+  /* A five-character reading like 「在回收站里」 is also inside the screen's sub-heading, so on an EMPTY
+     bin it matches without its own row ever rendering. A short label can be flagged as weak, but a
+     five-character phrase is above that threshold, so the honest fix is to name the carrier: the
+     reading stays, and it says which other sentence it could have come from. */
+  for (const entry of entries) {
+    const carrier = entries.find(
+      (other) =>
+        other !== entry &&
+        other.hit &&
+        entry.hit &&
+        other.text.length > entry.text.length &&
+        fold(other.text).includes(fold(entry.text))
+    );
+    entry.carrier = carrier ? carrier.key : "";
+    const flags = [];
+    if (entry.parameterised) flags.push(entry.side);
+    if (entry.weak) flags.push("short label");
+    if (entry.carrier) flags.push("carried by " + entry.carrier);
     console.log(
-      `      access | ${hit ? "ON SCREEN" : "not on this branch"}: ${key} = ${p.text.slice(0, 96)}`
+      `      ${name} | ${entry.hit ? "ON SCREEN" : "not on this branch"}` +
+        (flags.length ? ` [${flags.join(", ")}]` : "") +
+        `: ${entry.key} = ${entry.text.slice(0, 96)}`
     );
   }
-  await page.screenshot({ path: join(SHOTS, `access-${locale}.png`), fullPage: true });
-  return { reached: true, chars: panel.length, onScreen, off };
+  const onScreen = entries.filter((entry) => entry.hit).map((entry) => entry.key);
+  const off = entries.filter((entry) => !entry.hit).map((entry) => entry.key);
+  const weak = entries.filter((entry) => entry.hit && (entry.weak || entry.carrier)).map((entry) => entry.key);
+  await page.screenshot({ path: join(SHOTS, `${name.split(" ")[0]}-${locale}.png`), fullPage: true });
+  return { reached: true, chars: panel.length, onScreen, off, weak };
+}
+
+function walkAccessFace(page, regions, locale) {
+  return walkModuleFace(page, regions, locale, {
+    name: "access screen",
+    navKey: "nav.access",
+    testId: "access-panel",
+    moduleFile: COPY_MODULES.access,
+    keys: ACCESS_KEYS,
+  });
+}
+
+function walkTrashFace(page, regions, locale) {
+  return walkModuleFace(page, regions, locale, {
+    name: "trash screen",
+    navKey: "nav.trash",
+    testId: "journey-trash-panel",
+    moduleFile: COPY_MODULES.trash,
+    keys: TRASH_KEYS,
+  });
 }
 
 async function walk(browser, locale) {
@@ -718,6 +798,7 @@ async function walk(browser, locale) {
   const prep = WANT_PREP ? await walkPreparation(page, regions, locale) : { reached: false };
   const stayScreen = WANT_STAY ? await walkStayScreen(page, regions, locale) : { reached: false };
   const access = WANT_ACCESS ? await walkAccessFace(page, regions, locale) : { reached: false };
+  const trash = WANT_TRASH ? await walkTrashFace(page, regions, locale) : { reached: false };
 
   const problems = [];
   if (prep.reached && prep.verdict && (prep.rendered ?? []).length === 0) {
@@ -738,16 +819,30 @@ async function walk(browser, locale) {
       }
     }
   }
-  if (access.reached) {
-    for (const key of ACCESS_CLAIMED) {
-      if (!(access.onScreen ?? []).includes(key)) {
+  for (const arm of [
+    { screen: "access screen", result: access, claimed: ACCESS_CLAIMED },
+    { screen: "trash screen", result: trash, claimed: TRASH_CLAIMED },
+  ]) {
+    if (!arm.result.reached) continue;
+    for (const key of arm.claimed) {
+      if ((arm.result.weak ?? []).includes(key)) {
+        problems.push(`${arm.screen}: ${key} is claimed on a short label -- claim a full sentence`);
+      }
+      if (!(arm.result.onScreen ?? []).includes(key)) {
         problems.push(
-          `access screen: ${key} is claimed on screen, the module read puts it in: ` +
-            ((access.off ?? []).includes(key) ? "not on this branch" : "not measured")
+          `${arm.screen}: ${key} is claimed on screen, the module read puts it in: ` +
+            ((arm.result.off ?? []).includes(key) ? "not on this branch" : "not measured")
         );
       }
     }
   }
+  console.log(
+    "   module route arms: wallet=" + (wallet.reached ? "reached" : "not reached") +
+      ", access=" + (access.reached ? "reached" : "not reached") +
+      ", trash=" + (trash.reached ? "reached" : "not reached") +
+      ", preparation=" + (prep.reached ? "reached" : "not reached") +
+      ", stay screen=" + (stayScreen.reached ? "reached" : "not reached")
+  );
   for (const screen of screens) {
     for (const item of screen.observations) {
       if (item.branch !== "sometimes" && item.state !== "ON SCREEN") {
