@@ -825,6 +825,85 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     },
   );
 
+  test("Issue #33 UI：花费屏的「没算进来」清单只报类别名，不逐行复述服务器的读法", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    await createAndAwaitJourney(page);
+
+    /* 这一屏改前的原样（屏上读的，不是字典里读的）：
+       标题「这一屏看不见的是哪几类事实」，底下五行
+       「每个站的估价：库里有记，但没有任何按行程的读路由把它答出来。」
+       「方案自己的总额：同上，记着但从不送到这一屏。」
+       「预订单：只能按单个编号一条条读，所以这一屏列不出一趟行程的预订。」
+       「订单：缺的是同一件事。」／「收支流水：缺的是同一件事。」
+       ——五行说的是同一件事，还各自带一句服务器内部的读法；「同上」与「同一件事」在
+       一张列表里连指代对象都没有。人要看的是"这些没算进合计"，机制属于日志不属于屏幕。
+       所以这格尺量三样：① 行里不许再挂冒号后的机制解释；② 不许出现内部词与互相指代；
+       ③ 标题要说出后果。改前这一格必然红——那既是它的负对照，也是现场照。 */
+    const readList = async (arm: string) => {
+      await page.goto("/v8/trips", { waitUntil: "load" });
+      await page.getByTestId("trips-tab-spend").click();
+      const section = page.getByTestId("spend-missing");
+      await expect(section, "花费屏没有『没算进来的类别』这一段").toBeVisible({ timeout: 20_000 });
+      const heading = (await section.locator("h2").innerText()).trim();
+      const rows = (await section.getByTestId("spend-missing-class").allInnerTexts())
+        .map((line) => line.trim())
+        .filter(Boolean);
+      /* 现场照要照到那一段：这一段在首屏之下，不滚就只拍到屏头（第一版就是这么拍的，
+         图上只有标题，等于没有图）。两臂各写一张，名字里带臂，别互相盖。
+         滚动走 `evaluate` 不走 `scrollIntoViewIfNeeded`：后者要等"元素稳定"，
+         而这台壳的行程页会重渲染（同一支 spec 里已经为此改过一次写法）。 */
+      await section.evaluate((el) => el.scrollIntoView({ block: "start" }));
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: `${DOC_EVIDENCE}/10-spend-missing-${arm}.png` });
+      /* 同一屏往下还有「尚未核对」那一格：它原来在指完路之后还要替产品表一句功
+         （"CityNexus 不会宣称没有做过的检查"）。这屏上别的东西都不会自报家门，
+         所以这一句的读者其实不是旅行者。跟着一并读出来。 */
+      const studio = (await page.getByTestId("studio-no-plan").innerText().catch(() => "")).trim();
+      return { heading, rows, studio };
+    };
+
+    const zh = await readList("zh");
+    console.log(`花费屏（中文）标题：${zh.heading}；行：${JSON.stringify(zh.rows)}`);
+    console.log(`花费屏（中文）核对格：${zh.studio}`);
+    expect(zh.rows.length, "『没算进来』清单在屏上一行都没有，这一格量不到东西").toBeGreaterThan(0);
+    const ZH_INTERNAL = ["读路由", "库里有记", "送到这一屏", "这一屏", "这台服务器", "同上", "同一件事", "："];
+    const zhRowsBad = zh.rows.filter((row) => ZH_INTERNAL.some((word) => row.includes(word)));
+    const zhHeadingBad = ZH_INTERNAL.filter((word) => word !== "：" && zh.heading.includes(word));
+    expect(zhRowsBad, `类别行里还挂着机制说明：${zhRowsBad.join(" ／ ")}`).toEqual([]);
+    expect(zhHeadingBad, `标题还在讲服务器：${zhHeadingBad.join(" ／ ")}`).toEqual([]);
+    expect(zh.heading.includes("合计"), `标题没有说出后果（合计里没有它们）：${zh.heading}`).toBe(true);
+    /* 核对格：不许自报家门、不许替自己保证，但必须仍然说清下一步。 */
+    const ZH_SELF_TALK = ["CityNexus", "不会宣称", "没有做过的检查"];
+    expect(
+      ZH_SELF_TALK.filter((word) => zh.studio.includes(word)),
+      `那一格还在替产品自己说话：${zh.studio}`,
+    ).toEqual([]);
+    expect(zh.studio.includes("选定方案"), `去掉自夸之后要把下一步说清楚：${zh.studio}`).toBe(true);
+
+    /* 英文面是同一批键的另一臂，毛病不一样（"no journey-scoped read answers them"），所以单独走一遍。 */
+    await page.evaluate(() => localStorage.setItem("citynexus.locale", "en"));
+    const en = await readList("en");
+    console.log(`花费屏（英文）标题：${en.heading}；行：${JSON.stringify(en.rows)}`);
+    const EN_INTERNAL = ["read", "store", "screen", "the same", "server", ":"];
+    const enRowsBad = en.rows.filter((row) => EN_INTERNAL.some((word) => row.toLowerCase().includes(word)));
+    expect(enRowsBad, `the class rows still explain the reads: ${enRowsBad.join(" / ")}`).toEqual([]);
+    expect(
+      en.heading.toLowerCase().includes("totals"),
+      `the heading still names the screen, not the consequence: ${en.heading}`,
+    ).toBe(true);
+    console.log(`花费屏（英文）核对格：${en.studio}`);
+    const EN_SELF_TALK = ["citynexus", "will not claim", "checks it has not run"];
+    expect(
+      EN_SELF_TALK.filter((word) => en.studio.toLowerCase().includes(word)),
+      `that cell is still speaking for the product: ${en.studio}`,
+    ).toEqual([]);
+    expect(
+      en.studio.toLowerCase().includes("choose a plan"),
+      `the next step went missing with the boast: ${en.studio}`,
+    ).toBe(true);
+  });
+
   test("Issue #33 UI：逐屏走一遍——屏上不许铺机器码，并把整句英文与按不动的按钮摊出来", async ({ page }) => {
     await seedPhone(page);
     await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
@@ -837,6 +916,14 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     const stops: Array<{ label: string; open: () => Promise<unknown> }> = [
       { label: "今天", open: async () => page.goto("/v8", { waitUntil: "load" }) },
       { label: "行程", open: async () => page.getByRole("button", { name: "行程" }).last().click() },
+      /* 第十八笔把这格加进来：花费那一格是行程页里的一颗 tab，不走进来就永远没被"人眼看一遍"
+         覆盖过——而它正是这一屏最长的一段车轱辘住的地方。 */
+      {
+        label: "花费",
+        open: async () => {
+          await page.getByTestId("trips-tab-spend").click();
+        },
+      },
       { label: "地图", open: async () => page.getByRole("button", { name: "地图" }).last().click() },
       { label: "Copilot", open: async () => page.getByRole("button", { name: "Copilot" }).last().click() },
       { label: "我的", open: async () => page.getByRole("button", { name: "我的" }).last().click() },
