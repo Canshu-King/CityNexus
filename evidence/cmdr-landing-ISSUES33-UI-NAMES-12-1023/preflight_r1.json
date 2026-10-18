@@ -1,0 +1,205 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-18T10:25:12+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "cc33c959c98b1c0db58b1e0effb73d915ab66a59",
+ "candidate_ref": "refs/heads/review/qoder33-ui-plain-0719",
+ "candidate_tip": "5f50444eb57c7e2c51d98a192eea03fb53216019",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "cc33c959c98b1c0db58b1e0effb73d915ab66a59",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/docs/assets/05-ai-panel.png",
+   "frontend/docs/assets/07-trip-panel.png",
+   "frontend/docs/assets/manifest.json",
+   "frontend/docs/assets/raw/05-ai-panel.png",
+   "frontend/docs/assets/raw/07-trip-panel.png",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "8a1a5e221e44b5edf3785d3bdef7f4d49a8af0ff",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_issue33_journey_title_survives_verbatim_r1.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "4 passed, 2 warnings in 2.02s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_102327",
+  "blob_equality": [
+   {
+    "path": "frontend/docs/assets/05-ai-panel.png",
+    "candidate_blob": "8d8a8b477fdad24debee7c8394feb1516a3bf826",
+    "export_blob": "8d8a8b477fdad24debee7c8394feb1516a3bf826",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/07-trip-panel.png",
+    "candidate_blob": "927671528a1727c4b93f2f4031f15cd6e354114f",
+    "export_blob": "927671528a1727c4b93f2f4031f15cd6e354114f",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/manifest.json",
+    "candidate_blob": "1f7d0a7c837f7e18eec880a1678dc26a2b7ea5d2",
+    "export_blob": "1f7d0a7c837f7e18eec880a1678dc26a2b7ea5d2",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/05-ai-panel.png",
+    "candidate_blob": "4cf4e68cc2a8bfdb77b728dfdecafe5531189628",
+    "export_blob": "4cf4e68cc2a8bfdb77b728dfdecafe5531189628",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/07-trip-panel.png",
+    "candidate_blob": "6bd50da2064f73c08d02f2ef0be46f679c070f01",
+    "export_blob": "6bd50da2064f73c08d02f2ef0be46f679c070f01",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "0d719adfdead554390b4d8de85828ccd8d249c32",
+    "export_blob": "0d719adfdead554390b4d8de85828ccd8d249c32",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1999,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_��·��_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1999 tests collected in 7.55s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "4 tests collected in 2.69s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_issue33_journey_title_survives_verbatim_r1.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "4 passed, 2 warnings in 2.08s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "dict_keys": {
+   "exit": 0,
+   "verdict": "PASS",
+   "tip_missing": "1",
+   "called_in_view": "2",
+   "new_missing": []
+  },
+  "screen_code": {
+   "exit": 0,
+   "judged": 1,
+   "refuse": 0,
+   "tokens": []
+  },
+  "surface_contract": {
+   "arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d",
+   "exit": 0,
+   "verdict": "NO_CSS_IN_VIEW",
+   "css_files_in_view": "0",
+   "added_css_lines": "0",
+   "new_hatch_rows": "0",
+   "ruler_status": "MATCH",
+   "violations": [],
+   "disclosed_slip": null
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-DoBL3Gzz.js",
+    "/assets/index-BnILFpA0.css"
+   ],
+   "live_tree": "8a1a5e221e44b5edf3785d3bdef7f4d49a8af0ff",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_5f50444_info.json",
+   "build_tail": [
+    "\u001b[33m[plugin vite:reporter] ",
+    "src/features/agent/AgentComposer.tsx, D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_5f50444/frontend/src/features/agent/CopilotDock.tsx, dynamic import will not move module into another chunk.",
+    "\u001b[39m",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ],
+   "error_lines": []
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "5f50444eb57c7e2c51d98a192eea03fb53216019",
+  "branches_route": "5f50444eb57c7e2c51d98a192eea03fb53216019",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
