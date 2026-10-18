@@ -109,7 +109,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
             places.append({"id": place.external_id, "name": place.name, "category": place.category,
                            "latitude": place.latitude, "longitude": place.longitude,
                            "source_url": f"https://www.openstreetmap.org/{osm_type}/{identity[1]}",
-                           "provider": "photon", "provider_provenance": "LIVE_PROVIDER",
+                           "provider": source, "provider_provenance": "LIVE_PROVIDER",
                            "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"})
         existing = {p["id"]: p for p in task.get("research_places") or []}
         existing.update({p["id"]: p for p in places})
