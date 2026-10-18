@@ -246,7 +246,7 @@ test("TEST_FIXTURE running trace shows server state, timestamp, and tool identit
   await expect.poll(() => signedReads.events).toBeGreaterThan(0);
 });
 
-test("TEST_FIXTURE DRAFT activity entry opens status without creating a run or API request", async ({ page }, testInfo) => {
+test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting a run or provider lookup", async ({ page }, testInfo) => {
   let nativeRunReads = 0;
   const apiRequests: string[] = [];
   const startupReads = { runtime: 0, readiness: 0, shortlist: 0, citySearch: 0 };
@@ -260,6 +260,14 @@ test("TEST_FIXTURE DRAFT activity entry opens status without creating a run or A
     }));
   }, journeyId);
   await page.route("**/api/v1/**", (route) => route.abort());
+  await page.route(journeyRoot, async (route) => {
+    expect(route.request().headers().authorization).toBe("Bearer TEST_FIXTURE_MEMBER_24");
+    await json(route, { id: journeyId, status: "DRAFT", timezone: "Asia/Shanghai" });
+  });
+  await page.route(`${journeyRoot}/plans`, async (route) => {
+    expect(route.request().headers().authorization).toBe("Bearer TEST_FIXTURE_MEMBER_24");
+    await json(route, []);
+  });
   await page.route("**/api/v1/agent/runtime-status", async (route) => {
     startupReads.runtime += 1;
     await json(route, {
@@ -328,7 +336,10 @@ test("TEST_FIXTURE DRAFT activity entry opens status without creating a run or A
   await expect(activity).toContainText("暂无运行记录");
   await expect(activity).toContainText("选定真实地点后，在上方确认正式行程。");
   await expect(activity).toContainText("正式行程开始且 AI 可用时，实际工作记录会显示在这里。");
-  expect(apiRequests).toHaveLength(apiRequestsBeforeClick);
+  await expect.poll(() => apiRequests.slice(apiRequestsBeforeClick).sort()).toEqual([
+    `GET /api/v1/journeys/${journeyId}`,
+    `GET /api/v1/journeys/${journeyId}/plans`,
+  ].sort());
   expect(nativeRunReads).toBe(0);
   await page.screenshot({
     path: testInfo.outputPath("issue24-draft-agent-activity-entry-390x844.png"),

@@ -19,6 +19,7 @@ M1_PLAN_WORKBENCH = PARTIAL
 - 后端 `tests/test_mobile_plan_workbench.py`：1/1 PASS。使用独立临时 SQLite 和签名测试身份，实际请求应用路由：匿名 401、外人 403、成员 200、撤销读取能力 403，成功响应 `no-store`。服务端方案是明确创建的 CANDIDATE 测试数据，未创建 ACTIVE 行程。
 - Chromium 手机界面：390×844、430×932 两个用例 PASS。覆盖查看方案、单独选用、刷新恢复、单独启动、44px 触摸目标、无横向溢出，以及换身份后清除旧内容。网络由 `TEST_FIXTURE` 拦截；测试中的启动响应是夹具。
 - 修复过程保留了两次失败：初次后端测试错误使用 frozen settings；初次界面测试发现复用执行页的方案读取缺少 bearer。两处修正后分别重跑通过。
+- 首次 GitHub CI `39103709426`：TypeScript/build 通过，界面 22 通过、1 失败；失败为旧 DRAFT 入口测试要求零 API 读取。新工作台需要签名读取当前 Journey 和 plans，故改为只允许这两条 GET，继续拒绝自动运行/外部查询。该失败用例定向重跑 1/1 通过，完整 CI 由后续补推重新验证。
 - 本轮没有公网地点或模型请求，没有新增真实 PlanVersion / ACTIVE Journey / AgentRun 证据。
 
 ## 渲染截图（TEST_FIXTURE）
