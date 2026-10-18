@@ -29,6 +29,66 @@ import "./RevolutionMobileV1.css";
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 const RECENT_JOURNEYS_KEY = "citynexus.revolution.firstlook.recent-journeys";
 const START_WRITE_STATUS_KEY = "citynexus.revolution.firstlook.start-write";
+const TRIP_BRIEF_STORAGE_PREFIX = "citynexus.revolution.firstlook.trip-brief";
+
+type TripPlanningMode = "balanced" | "budget" | "explore" | "strict_schedule";
+type TripEnergy = "easy" | "steady" | "full";
+
+const TRIP_INTERESTS = [
+  { value: "park/garden", label: "公园绿地" },
+  { value: "cafe", label: "咖啡馆" },
+  { value: "museum/gallery", label: "博物馆艺术" },
+  { value: "library", label: "安静阅读" },
+] as const;
+
+const TRIP_ENERGY_LABELS: Record<TripEnergy, string> = {
+  easy: "轻松少走",
+  steady: "适中节奏",
+  full: "充实安排",
+};
+
+function localDateAfter(days: number): string {
+  const value = new Date();
+  value.setDate(value.getDate() + days);
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function addDaysToDateInput(value: string, days: number): string {
+  const [year, month, day] = value.split("-").map(Number);
+  const next = new Date(Date.UTC(year, month - 1, day + days));
+  return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
+}
+
+function tripBriefGoal(goal: string, interests: string[], energy: TripEnergy): string {
+  const interestLabels = TRIP_INTERESTS
+    .filter((item) => interests.includes(item.value))
+    .map((item) => item.label);
+  return [
+    goal.trim(),
+    interestLabels.length ? `兴趣：${interestLabels.join("、")}` : "",
+    `节奏：${TRIP_ENERGY_LABELS[energy]}`,
+  ].filter(Boolean).join("\n").slice(0, 360);
+}
+
+function saveTripBrief(journeyId: string, goal: string): void {
+  try {
+    localStorage.setItem(`${TRIP_BRIEF_STORAGE_PREFIX}:${journeyId}`, goal);
+  } catch {
+    // The in-memory form remains available when browser storage is disabled.
+  }
+}
+
+function readTripBrief(journeyId: string): string | null {
+  try {
+    const value = localStorage.getItem(`${TRIP_BRIEF_STORAGE_PREFIX}:${journeyId}`);
+    return value && value.length <= 360 ? value : null;
+  } catch {
+    return null;
+  }
+}
 
 type StartWritePhase = "traveler" | "journey";
 type StartWriteState = {
@@ -310,6 +370,14 @@ function DraftAgentActivity({
 
 export function RevolutionFirstLook() {
   const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "连城");
+  const [startDate, setStartDate] = useState(() => localDateAfter(1));
+  const [durationDays, setDurationDays] = useState(2);
+  const [partySize, setPartySize] = useState(1);
+  const [budgetYuan, setBudgetYuan] = useState("1000");
+  const [planningMode, setPlanningMode] = useState<TripPlanningMode>("balanced");
+  const [tripGoal, setTripGoal] = useState("");
+  const [tripInterests, setTripInterests] = useState<string[]>(["park/garden", "cafe"]);
+  const [tripEnergy, setTripEnergy] = useState<TripEnergy>("easy");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
   const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
   const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
@@ -503,6 +571,25 @@ export function RevolutionFirstLook() {
       setError("请输入 2 至 60 个字符的城市或地区名称，例如连城、厦门或杭州。");
       return;
     }
+    const parsedBudget = Number(budgetYuan);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || startDate < localDateAfter(0)) {
+      setError("请选择今天或之后的出发日期。");
+      return;
+    }
+    if (!Number.isInteger(durationDays) || durationDays < 1 || durationDays > 14) {
+      setError("游玩天数请选 1 至 14 天。");
+      return;
+    }
+    if (!Number.isInteger(partySize) || partySize < 1 || partySize > 20) {
+      setError("同行人数请填 1 至 20 人。");
+      return;
+    }
+    if (!budgetYuan.trim() || !Number.isFinite(parsedBudget) || parsedBudget < 0 || parsedBudget > 10000000) {
+      setError("预算请填 0 至 1000 万元之间的数字。");
+      return;
+    }
+    const budgetMinor = Math.round(parsedBudget * 100);
+    const initialGoal = tripBriefGoal(tripGoal, tripInterests, tripEnergy);
     startRequestInFlightRef.current = true;
     setBusy(true);
     setError(null);
@@ -544,21 +631,21 @@ export function RevolutionFirstLook() {
         throw new Error("服务器没有发放可用于私人探索的签名会话，请检查本地鉴权配置。");
       }
       setStartRecoveryIdentity({ bearer: traveler.access_token, travelerId: traveler.id });
-      const startAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-      const endAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
+      const startAt = `${startDate}T09:00:00+08:00`;
+      const endDate = addDaysToDateInput(startDate, durationDays - 1);
+      const endAt = `${endDate}T21:00:00+08:00`;
       journeyCityCode = freshCityCode();
       writePostDispatched = true;
       const journeyResult = await postStartWrite<{ id: string }>("journey", "/journeys", {
         traveler_id: traveler.id,
-        title: label + " · Revolution Explore",
+        title: label + ` · ${durationDays}日行程`,
         city_code: journeyCityCode,
         timezone: "Asia/Shanghai",
         start_at: startAt,
         end_at: endAt,
-        // Open-ended discovery starts from user intent; arrival/departure
-        // anchors belong to a later confirmed plan.
-        budget: { amount_minor: 100000, currency: "CNY" },
-        party_size: 1,
+        budget: { amount_minor: budgetMinor, currency: "CNY" },
+        planning_mode: planningMode,
+        party_size: partySize,
       }, traveler.access_token, label, journeyCityCode);
       journeyReceiptKey = journeyResult.marker.receiptKey;
       const created = journeyResult.value;
@@ -577,11 +664,13 @@ export function RevolutionFirstLook() {
         status: "DRAFT",
         ownerTravelerId: traveler.id,
       };
+      saveTripBrief(created.id, initialGoal);
       setRecentJourneys(rememberJourney(next));
       setExplorationTitle(null);
       setJourney(next);
       setActiveTab("explore");
       setPocketWalk(null);
+      setNotice("旅行草稿已建立。先挑选真实地点，再生成可确认的行程方案。");
       clearStartWriteMarker(journeyResult.marker.receiptKey!);
       startWriteBlockedRef.current = false;
       setStartRecoveryIdentity(null);
@@ -856,26 +945,150 @@ export function RevolutionFirstLook() {
         {!journey ? (
           activeTab === "explore" ? (
             <section className="rev-firstlook-hero" data-testid="rev-mobile-welcome">
-              <span className="rev-firstlook-eyebrow">CITYNEXUS / DISCOVER</span>
-              <h1>想去哪儿，<br />就从那里开始。</h1>
-              <p>输入一个城市或地区，接下来可以用自然语言告诉 AI 你想怎么玩。</p>
-              <form onSubmit={(event) => { event.preventDefault(); void start(); }}>
-                <label htmlFor="rev-firstlook-city">目的地</label>
+              <span className="rev-firstlook-eyebrow">CITYNEXUS / YOUR TRIP</span>
+              <h1>帮我规划<br />这趟旅行。</h1>
+              <p>先填目的地、日期和天数；其他旅行偏好可以继续补充。</p>
+              <form className="rev-trip-request-form" onSubmit={(event) => { event.preventDefault(); void start(); }}>
+                <label className="rev-trip-destination-label" htmlFor="rev-firstlook-city">目的地</label>
                 <div className="rev-firstlook-form-row">
                   <input
                     id="rev-firstlook-city"
                     autoComplete="off"
                     value={cityName}
                     maxLength={60}
+                      required
                     disabled={busy || startWriteBlocked}
                     placeholder="例如：连城、厦门、杭州"
                     onChange={(event) => setCityName(event.target.value)}
                     data-testid="rev-firstlook-city"
                   />
-                  <button disabled={busy || startWriteBlocked} type="submit" data-testid="rev-firstlook-start">
-                    {busy ? "正在准备…" : startWriteBlocked ? "结果待确认" : "开始探索 →"}
-                  </button>
                 </div>
+                <div className="rev-trip-request-grid">
+                  <label>
+                    出发日期
+                    <input
+                      type="date"
+                      min={localDateAfter(0)}
+                      value={startDate}
+                      required
+                      disabled={busy || startWriteBlocked}
+                      onChange={(event) => setStartDate(event.target.value)}
+                      data-testid="rev-trip-start-date"
+                    />
+                  </label>
+                  <label>
+                    游玩天数
+                    <input
+                      type="number"
+                      min={1}
+                      max={14}
+                      value={durationDays}
+                      required
+                      disabled={busy || startWriteBlocked}
+                      onChange={(event) => setDurationDays(Number(event.target.value))}
+                      data-testid="rev-trip-duration"
+                    />
+                  </label>
+                </div>
+                <details className="rev-trip-preferences">
+                  <summary>
+                    <span>更多偏好</span>
+                    <small>同行 {partySize} 人 · 预算 ¥{Number(budgetYuan || 0).toLocaleString("zh-CN")}</small>
+                  </summary>
+                  <div className="rev-trip-preferences-content">
+                    <div className="rev-trip-request-grid">
+                      <label>
+                        同行人数
+                        <input
+                          type="number"
+                          min={1}
+                          max={20}
+                          value={partySize}
+                          required
+                          disabled={busy || startWriteBlocked}
+                          onChange={(event) => setPartySize(Number(event.target.value))}
+                          data-testid="rev-trip-party-size"
+                        />
+                      </label>
+                      <label>
+                        总预算（元）
+                        <input
+                          type="number"
+                          min={0}
+                          max={10000000}
+                          step="1"
+                          value={budgetYuan}
+                          required
+                          disabled={busy || startWriteBlocked}
+                          onChange={(event) => setBudgetYuan(event.target.value)}
+                          data-testid="rev-trip-budget"
+                        />
+                      </label>
+                    </div>
+                    <div className="rev-trip-request-grid rev-trip-request-options">
+                      <label>
+                        行程节奏
+                        <select
+                          value={planningMode}
+                          disabled={busy || startWriteBlocked}
+                          onChange={(event) => setPlanningMode(event.target.value as TripPlanningMode)}
+                          data-testid="rev-trip-planning-mode"
+                        >
+                          <option value="balanced">松紧适中</option>
+                          <option value="budget">优先省钱</option>
+                          <option value="explore">多看看新地方</option>
+                          <option value="strict_schedule">按时间安排</option>
+                        </select>
+                      </label>
+                      <label>
+                        活动强度
+                        <select
+                          value={tripEnergy}
+                          disabled={busy || startWriteBlocked}
+                          onChange={(event) => setTripEnergy(event.target.value as TripEnergy)}
+                          data-testid="rev-trip-energy"
+                        >
+                          <option value="easy">轻松少走</option>
+                          <option value="steady">适中节奏</option>
+                          <option value="full">充实安排</option>
+                        </select>
+                      </label>
+                    </div>
+                    <fieldset className="rev-trip-interest-set" disabled={busy || startWriteBlocked}>
+                      <legend>感兴趣的内容</legend>
+                      <div className="rev-trip-interest-options">
+                        {TRIP_INTERESTS.map((interest) => (
+                          <label key={interest.value}>
+                            <input
+                              type="checkbox"
+                              checked={tripInterests.includes(interest.value)}
+                              onChange={(event) => setTripInterests((current) => event.target.checked
+                                ? [...current, interest.value]
+                                : current.filter((item) => item !== interest.value))}
+                              data-testid={`rev-trip-interest-${interest.value}`}
+                            />
+                            <span>{interest.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <label className="rev-trip-goal-label" htmlFor="rev-trip-goal">想怎么玩？</label>
+                    <textarea
+                      id="rev-trip-goal"
+                      value={tripGoal}
+                      maxLength={240}
+                      rows={3}
+                      disabled={busy || startWriteBlocked}
+                      onChange={(event) => setTripGoal(event.target.value)}
+                      placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
+                      data-testid="rev-trip-goal"
+                    />
+                    <p className="rev-trip-ai-line">保存后，这段想法会带到行程页；你可以修改后再点「问问 AI」。</p>
+                  </div>
+                </details>
+                <button className="rev-trip-submit" disabled={busy || startWriteBlocked} type="submit" data-testid="rev-firstlook-start">
+                  {busy ? "正在保存旅行需求…" : startWriteBlocked ? "结果待确认" : "继续规划 →"}
+                </button>
               </form>
               {recentJourneys.length > 0 && (
                 <div className="rev-firstlook-recent-journeys" data-testid="rev-recent-journeys">
@@ -907,7 +1120,7 @@ export function RevolutionFirstLook() {
                   用新行程继续
                 </button>
               )}
-              <p className="rev-mobile-truth">点击后先创建行程草稿。</p>
+              <p className="rev-mobile-truth">下一步：挑选真实地点。</p>
             </section>
           ) : activeTab === "trips" ? (
             <section className="rev-mobile-panel" data-testid="rev-mobile-empty-trips">
@@ -965,6 +1178,7 @@ export function RevolutionFirstLook() {
                     key={journey.id}
                     journeyId={journey.id}
                     cityName={journey.cityName}
+                    initialGoal={readTripBrief(journey.id) ?? undefined}
                     onExplorationCenterLabelChange={(label) => {
                       setExplorationTitle({ journeyId: journey.id, label });
                     }}

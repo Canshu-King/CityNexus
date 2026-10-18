@@ -209,6 +209,7 @@ function recoveryForError(
 export function RevolutionQuickExplore({
   journeyId,
   cityName,
+  initialGoal,
   agentConfigured = false,
   agentChecking = false,
   onFormalCandidateSelected,
@@ -218,6 +219,7 @@ export function RevolutionQuickExplore({
 }: {
   journeyId: string;
   cityName: string;
+  initialGoal?: string;
   agentConfigured?: boolean;
   agentChecking?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
@@ -228,7 +230,7 @@ export function RevolutionQuickExplore({
   const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
-  const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
+  const [aiGoal, setAiGoal] = useState(() => initialGoal?.trim() || `我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
   const [aiAdvice, setAiAdvice] = useState<MobileAiAdvice | null>(null);
   const quickExploreRef = useRef<HTMLElement>(null);
   const pendingAiAdviceReveal = useRef(false);
