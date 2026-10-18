@@ -136,6 +136,12 @@ const en: Dict = {
   "shell.noJourney": "No journey available",
   "shell.offlineMsg": "Network unavailable · showing your read-only saved journey.",
   "shell.loadError": "Unable to load the journey",
+  "shell.tripCreated": "Trip created — Today is ready to plan.",
+  "shell.stayArrived": "Stay results arrived below.",
+  "shell.stayStoppedWithTrip": "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result.",
+  "shell.stayStoppedUnknown": "Stopped waiting — whether this trip exists is not something this tab can know yet. Checking with the server.",
+  "shell.recoveredTrip": "Checked: the trip was in fact created, and Today is now open.",
+  "shell.noTripYet": "Checked: no such trip is on the server yet. You can press 确认创建 again.",
   "shell.addressNoScreen": "This address names no screen (it asks for “{segment}”), so this is Today.",
 
   // ── Shell: sidebar ──
@@ -1718,6 +1724,12 @@ const zhCN: Dict = {
   "shell.noJourney": "暂无行程",
   "shell.offlineMsg": "网络不可用 · 正在显示只读的已保存行程。",
   "shell.loadError": "没能加载行程",
+  "shell.tripCreated": "行程已创建，现在可以安排今天。",
+  "shell.stayArrived": "住宿结果已到，这一页下方就是可选住宿。",
+  "shell.stayStoppedWithTrip": "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。",
+  "shell.stayStoppedUnknown": "已停止等待。这一趟到底建没建成，服务器还没回话——正在核实。",
+  "shell.recoveredTrip": "已核实：这一趟其实已经建成了，已为你打开 Today。",
+  "shell.noTripYet": "已核实：服务器上还没有这一趟。你可以再点一次「确认创建」。",
   "shell.addressNoScreen": "这个地址没有对应的屏（它点的是「{segment}」），所以留在今天。",
 
   // ── 外壳：侧边栏 ──

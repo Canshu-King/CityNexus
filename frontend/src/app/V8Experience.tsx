@@ -1517,11 +1517,7 @@ export function V8Experience() {
          awaited nowhere: Today already carries 搜索中 / 没找到 / 失败 with its own 再查一次, and the
          shell's state machine keeps updating from that screen.  The one thing the traveller is
          told immediately is the one thing that is already true -- the trip exists and is open. */
-      setMessage(
-        locale.startsWith("zh")
-          ? "行程已创建，现在可以安排今天。住宿搜索结果稍后会出现在这一页。"
-          : "Trip created — Today is ready to plan. Stay results will appear on this screen.",
-      );
+      setMessage(dictionaryText(locale, "shell.tripCreated"));
       void searchStayOptions(
         journey.id,
         `${cityName} stay-aware journey`,
@@ -1536,11 +1532,7 @@ export function V8Experience() {
              (The two assertions in `e2e/qoder-ai-sheet-blocked.spec.ts` that pinned the old
              auto-open are updated in the same commit rather than left to defend it.) */
           if (stayCount > 0) {
-            setMessage(
-              locale.startsWith("zh")
-                ? `住宿结果已到，这一页下方就是可选住宿。`
-                : `Stay results arrived below.`,
-            );
+            setMessage(dictionaryText(locale, "shell.stayArrived"));
           }
         })
         .catch(() => {
@@ -1550,39 +1542,23 @@ export function V8Experience() {
       if (isAbort(error)) {
         if (tripWritten) {
           // No endpoint cancels this search, so say what the traveller gave up on instead.
-          setMessage(
-            locale.startsWith("zh")
-              ? "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。"
-              : "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result.",
-          );
+          setMessage(dictionaryText(locale, "shell.stayStoppedWithTrip"));
         } else {
           /* GPT P0-UX, the second half: giving up on the wait is a fact about *this tab*, not about
              the server.  A POST can be committed and still lose its response, and this screen used
              to assert 行程还没有创建 -- a claim it never measured, and one that invites exactly the
              duplicate creation a traveller would otherwise retry blind.  So: say 结果未知, then go
              and read the server.  Nothing here re-sends the non-idempotent POST. */
-          setMessage(
-            locale.startsWith("zh")
-              ? "已停止等待。这一趟到底建没建成，服务器还没回话——正在核实。"
-              : "Stopped waiting — whether this trip exists is not something this tab can know yet. Checking with the server.",
-          );
+          setMessage(dictionaryText(locale, "shell.stayStoppedUnknown"));
           const recovered = await confirmCreatedJourney(travelerId, startedAtMs);
           if (recovered) {
             localStorage.setItem("citynexus.v8.journey_id", recovered);
             await load(recovered);
             setSetupOpen(false);
             navigate("hub");
-            setMessage(
-              locale.startsWith("zh")
-                ? "已核实：这一趟其实已经建成了，已为你打开 Today。"
-                : "Checked: the trip was in fact created, and Today is now open.",
-            );
+            setMessage(dictionaryText(locale, "shell.recoveredTrip"));
           } else {
-            setMessage(
-              locale.startsWith("zh")
-                ? "已核实：服务器上还没有这一趟。你可以再点一次「确认创建」。"
-                : "Checked: no such trip is on the server yet. You can press 确认创建 again.",
-            );
+            setMessage(dictionaryText(locale, "shell.noTripYet"));
           }
         }
       } else {

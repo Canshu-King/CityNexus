@@ -387,6 +387,16 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     /* 「搜索中」这一格要在那 6 秒还没到之前量：上一版我先睡了 7 秒再回头看，量的已经是结果态，
      * 于是把"查询真的在后台跑着、屏上看得出来"这条本该证明的事自己睡掉了。 */
     const searching = await page.getByTestId("hub-stay-searching").isVisible().catch(() => false);
+    /* 建完那一刻的提示带：现在只说"这一趟已建成、可以安排今天"这一件它独有的事，
+     * 不再替下面那格「搜索中」预告一次结果会来（第十六笔）。 */
+    const toastText = ((await page.locator("div.v8-message").last().innerText()) ?? "")
+      .replace(/\s+/g, " ")
+      .trim();
+    expect(toastText, `提示带写的不是这一句：「${toastText}」`).toContain(
+      "行程已创建，现在可以安排今天。",
+    );
+    expect(toastText, "提示带又在替「搜索中」那一格预告结果").not.toContain("稍后会出现在这一页");
+    console.log(`建完那一刻的提示带：「${toastText}」`);
     await shoot(page, "today-opens-without-stays");
     expect(wizardGone, "住宿查询还挂着，向导就没让位给 Today").toBe(false);
     expect(waited, `Today 打开用了 ${waited} 毫秒，那 6 秒的等待并没被移出关键路径`).toBeLessThan(5000);
