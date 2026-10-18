@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "CAPABILITY_LEDGER",
-  "v8_commit": "b84d346a5e28fe4b44245a54193817479a74a3cd",
+  "v8_commit": "414f84a83df8f6b5e2da9e166e25bbded212e80a",
   "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
   "runtime_verified": false,
   "rows": [
@@ -45,14 +45,12 @@
       "tools": [
         {
           "tool": "generate_plans",
-          "state": "REVOLUTION_ONLY",
-          "verified_by": "none"
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_generate_plans_adapter_r1.py"
         }
       ],
-      "revolution_only_tools": [
-        "generate_plans"
-      ],
-      "status": "ADAPTER_NEEDED",
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
       "note": ""
     },
     {

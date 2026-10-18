@@ -33,7 +33,7 @@ DOMAIN_TOOLS: dict[str, list[tuple[str, str]]] = {
         ("research_place_sources", "tests/test_reform_research_place_sources_adapter_r1.py"),
         ("estimate_place_facts", "tests/test_reform_estimate_place_facts_adapter_r1.py"),
     ],
-    "planning": [("generate_plans", "none")],
+    "planning": [("generate_plans", "tests/test_reform_generate_plans_adapter_r1.py")],
     "execution_and_rerouting": [
         ("request_replan", "tests/test_agent_runtime_gate.py"),
         ("accept_replan", "tests/test_agent_runtime_gate.py"),
