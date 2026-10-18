@@ -25,17 +25,18 @@ export function NamedPlaceSearch({
   };
 
   return (
-    <details className="named-place-search">
-      <summary className="named-place-search__summary">已经有想去的地方？</summary>
+    <section className="named-place-search" aria-label="按关键词查找公开地点">
+      <h3 className="named-place-search__summary">直接搜索想去的地方</h3>
+      <p className="named-place-search__help">不限于下方四种快捷分类。可以尝试古城、土楼、夜市、当地小吃或具体地点名称；公开数据不一定完整。</p>
       <form className="named-place-search__form" onSubmit={submit}>
         <label className="named-place-search__label">
-          地点名称
+          地点名称或关键词
           <input
             className="named-place-search__input"
             type="search"
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            placeholder="例如：想去的博物馆或公园"
+            placeholder="例如：客家土楼、古城、牛肉馆"
             maxLength={120}
             disabled={disabled}
           />
@@ -48,9 +49,9 @@ export function NamedPlaceSearch({
           type="submit"
           disabled={!canSearch}
         >
-          查找这个地点
+          搜索真实地点 →
         </button>
       </form>
-    </details>
+    </section>
   );
 }
