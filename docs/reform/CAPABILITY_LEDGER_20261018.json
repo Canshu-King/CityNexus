@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "CAPABILITY_LEDGER",
-  "v8_commit": "6b8f5ebdc0e83e7a99792b1f20fcd0dd01931eeb",
+  "v8_commit": "acdeb8ebcd0624c0a0248763b14a65a34c4123e9",
   "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
   "runtime_verified": false,
   "rows": [
@@ -72,6 +72,11 @@
           "tool": "research_place_sources",
           "state": "ADVERTISED",
           "verified_by": "tests/test_reform_research_place_sources_adapter_r1.py"
+        },
+        {
+          "tool": "discover_source_leads",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_discover_source_leads_adapter_r1.py"
         },
         {
           "tool": "estimate_place_facts",
