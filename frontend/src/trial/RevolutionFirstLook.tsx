@@ -1178,6 +1178,7 @@ export function RevolutionFirstLook() {
                 goal={serverBrief?.journeyId === journey.id && serverBrief.bearer === readTravelerBearer()
                   ? serverBrief.goal : tripGoal}
                 journeyStatus={journey.status}
+                visible={activeTab === "explore"}
                 agentStatus={agentStatusTitle}
                 agentAvailable={Boolean(agentCanRequestSuggestion)}
                 executionAgent={journey.status === "ACTIVE" ? <section aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
