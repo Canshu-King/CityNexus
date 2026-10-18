@@ -125,8 +125,10 @@ for (const width of [390, 430, 1366]) {
     await dialog.getByRole("button", { name: "刷新任务", exact: true }).click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("1 条来源记录");
+    await expect(dialog.getByText("Agent 真实工作过程", { exact: false })).toBeVisible();
     await dialog.locator(".rev-goal-draft-slot summary").first().click();
     await dialog.getByLabel("安排", { exact: true }).fill("TEST_FIXTURE 改为下午三点出发");
+    await dialog.getByRole("button", { name: "＋ 添加安排" }).first().click();
     await dialog.getByRole("button", { name: "保存草案", exact: true }).click();
     await expect(dialog).toContainText("草案已保存");
     await page.reload();
@@ -135,6 +137,7 @@ for (const width of [390, 430, 1366]) {
     const restoredDialog = page.getByRole("dialog");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
+    await restoredDialog.locator(".rev-goal-draft-slot summary").first().click();
     await expect(restoredDialog.getByLabel("安排", { exact: true })).toHaveValue("TEST_FIXTURE 改为下午三点出发");
     expect(calls).toEqual([goal]);
     await restoredDialog.getByRole("button", { name: "关闭工作台" }).click();
