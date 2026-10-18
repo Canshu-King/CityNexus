@@ -162,6 +162,12 @@ def isolated_environment(
     overpass_port: int = OVERPASS_PORT,
 ) -> dict[str, str]:
     env = os.environ.copy()
+    # On Windows, urllib/httpx stop consulting the system proxy as soon as any
+    # proxy environment entry exists. Preserve that proxy before adding the
+    # loopback NO_PROXY below, or public OSM requests unexpectedly go direct.
+    for scheme, proxy in urllib.request.getproxies().items():
+        if scheme in {"http", "https", "all"} and proxy:
+            env.setdefault(scheme.upper() + "_PROXY", proxy)
     # Remove inherited external credentials/configuration. An existing Qoder
     # session must not turn a local trial into a live AI/provider deployment.
     for key in list(env):

@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-18",
+  "product_base_sha": "8542758bc7",
+  "additional_change": "trial/try_revolution.py preserves Windows system proxy before setting loopback NO_PROXY",
+  "browser": "Chrome-use, 390x844, same isolated signed Journey; DOM click used after native commands produced no request",
+  "restoration": {
+    "api": "GET /bootstrap-discovery/current",
+    "api_status": 200,
+    "candidates_restored": 3,
+    "new_city_or_category_requests": 0
+  },
+  "detail_attempts": [
+    {"source_url": "https://www.openstreetmap.org/way/446638070", "status": "FAILURE", "latency_ms": 5031, "failure_code": null, "retried": false},
+    {"source_url": "https://www.openstreetmap.org/way/318173203", "status": "FAILURE", "latency_ms": 5094, "failure_code": "OSM_TIMEOUT", "retried": false},
+    {"source_url": "https://www.openstreetmap.org/way/854854171", "status": "SUCCESS", "latency_ms": 1530, "failure_code": null, "retried": false, "opening_state": "UNKNOWN", "price_state": "UNKNOWN"}
+  ],
+  "plan_version_created": false,
+  "journey_active": false,
+  "model_request_made": false,
+  "screenshot": null,
+  "screenshot_failure": "Chrome-use Page.captureScreenshot timeout"
+}
