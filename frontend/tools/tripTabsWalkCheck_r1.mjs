@@ -60,6 +60,7 @@ const TABS = (arg("--only", "") || "itinerary,stay,bookings,spend").split(",");
    is allowed to claim, so neither arm can borrow the other's green. */
 const STAY_BRANCH = arg("--branch", "empty");
 const WANT_WALLET = !process.argv.includes("--no-wallet");
+const WANT_PREP = !process.argv.includes("--no-prep");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -298,6 +299,66 @@ async function walkWallet(page, regions, locale) {
   return { reached: true, observations };
 }
 
+/* The destination-preparation screen, reached the same way a traveller reaches it, and asked the
+   same question the copy campaign cares about: does the dictionary's current wording land in the
+   verdict cell? The city typed here is the one the seeded store already holds, so the server can
+   actually answer; the answer itself is what the panel renders, unchanged. */
+const PREP_CITY = arg("--city", "北京");
+
+async function walkPreparation(page, regions, locale) {
+  const label = valueOf(regions, locale, "nav.discover");
+  if (!label) {
+    console.log("   preparation screen: NOT ATTEMPTED (nav.discover has no dictionary value)");
+    return { reached: false, note: "nav.discover has no dictionary value" };
+  }
+  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
+  await page.waitForTimeout(5000);
+  const menu = page.locator('[data-testid="v8-mobile-menu"]');
+  if ((await menu.count()) > 0) {
+    await menu.first().click({ timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(900);
+  }
+  const nav = page.locator("#v8-nav-drawer").getByRole("button", { name: label, exact: true });
+  if ((await nav.count()) === 0) {
+    console.log(`   preparation screen: NOT REACHED (no "${label}" entry in the drawer)`);
+    return { reached: false, note: 'no "' + label + '" entry in the drawer' };
+  }
+  await nav.first().click({ timeout: 6000 }).catch(() => {});
+  await page.waitForTimeout(2500);
+  const panel = page.locator('[data-testid="prep-panel"]');
+  if ((await panel.count()) === 0) {
+    console.log(`   preparation screen: NOT REACHED (reached "${label}" but prep-panel is not on it)`);
+    return { reached: false, note: 'prep-panel not on the "' + label + '" screen' };
+  }
+
+  await page.locator('[data-testid="prep-query"]').fill(PREP_CITY);
+  await page.locator('[data-testid="prep-check"]').click({ timeout: 8000 });
+  await page.waitForTimeout(6000);
+  const verdict = await page.locator('[data-testid="prep-verdict-body"]').innerText().catch(() => "");
+  const title = await page.locator('[data-testid="prep-verdict-title"]').innerText().catch(() => "");
+  const folded = (verdict + " " + title).replace(/\s+/g, " ").trim();
+  console.log(`   preparation screen: reached, verdict reads "${folded.slice(0, 90)}"`);
+  const rendered = [];
+  const notRendered = [];
+  for (const key of PREP_KEYS) {
+    const value = valueOf(regions, locale, key);
+    const p = probe(value === null ? "" : value);
+    if (!p.judgable) continue;
+    (fold(folded).includes(fold(p.text)) ? rendered : notRendered).push(key);
+  }
+  console.log("      prep keys whose wording is on the verdict cell:", rendered.join(", ") || "(none of the watched set)");
+  console.log("      prep keys not on this cell:", notRendered.join(", ") || "(none)");
+  await page.screenshot({ path: join(SHOTS, `preparation-${locale}.png`), fullPage: true });
+  return { reached: true, rendered, notRendered, verdict: folded };
+}
+
+/* The verdict cell shows one of these per server answer; which one is the server's choice, so the
+   arm claims only that *some* dictionary wording landed, and names the one it saw. */
+const PREP_KEYS = [
+  "prep.current", "prep.missing", "prep.stale", "prep.ambiguous", "prep.unnamed",
+  "prep.providerTransient", "prep.notAnswered", "prep.verdictBody",
+];
+
 async function walk(browser, locale) {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -444,8 +505,12 @@ async function walk(browser, locale) {
   const wallet = WANT_WALLET
     ? await walkWallet(page, regions, locale)
     : { reached: false, observations: [] };
+  const prep = WANT_PREP ? await walkPreparation(page, regions, locale) : { reached: false };
 
   const problems = [];
+  if (prep.reached && prep.verdict && (prep.rendered ?? []).length === 0) {
+    problems.push("preparation: the verdict cell renders wording that is in no dictionary key");
+  }
   if (wallet.reached) {
     for (const item of wallet.observations) {
       if (item.state !== "ON SCREEN") problems.push(`wallet: ${item.key} reads "${item.state}"`);
