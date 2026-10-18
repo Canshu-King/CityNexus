@@ -52,7 +52,7 @@ test(`TEST_FIXTURE saved server brief and two-place multiday preview ${width}`, 
   await input.getByText("修改旅行需求",{exact:true}).click();
   await input.getByRole("textbox",{name:"想做什么"}).fill("睡到中午，下午看博物馆");
   await input.getByRole("button",{name:"保存旅行需求",exact:true}).click();
-  await expect(input.getByText("睡到中午，下午看博物馆",{exact:true})).toBeVisible();
+  await expect(input.locator("p").filter({hasText:"睡到中午，下午看博物馆"})).toBeVisible();
   await page.getByTestId("rev-mobile-tab-explore").click();
   await expect(page.getByRole("textbox",{name:"写下你的想法"})).toHaveValue(/睡到中午，下午看博物馆/);
   await page.getByTestId("rev-mobile-tab-trips").click();

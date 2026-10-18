@@ -4,6 +4,8 @@ HUMAN_CAN_USE = PARTIAL。产品代码 `698b5eb23fb17dc6ffe0027636b8840167bee3f7
 
 对应 PR #23 最新指示：[6247650836](https://github.com/Canshu-King/CityNexus/pull/23#issuecomment-6247650836)。
 
+后续产品修正 `a0269f9f86`：在行程页保存需求后，同一页面的 AI 草稿同步到服务端回执中的需求；用户另行编辑的 AI 草稿不会被覆盖。390/430 定向用例2/2通过，新增检查期间修正了段落与 textarea 文本重复导致的测试定位歧义。
+
 ## 新产品与接口
 
 1. `POST /api/v1/journeys` 接受可选 `planning_intent: {goal, interests, energy}`，与 Journey、OWNER 成员在同一事务保存到既有 `JourneyIntent`；含此字段时要求签名旅客与创建人一致。日期、人数、预算继续来自 Journey / JourneyTripContext。
