@@ -33,3 +33,16 @@
   font-weight: 600;
   overflow-wrap: anywhere;
 }
+
+.cn-mytrips-name {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+/* The date sits under the name in the same two tokens the recycle-bin row uses for its
+   secondary line -- this adds no new visual language, and no colour literal. */
+.cn-mytrips-when {
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+}

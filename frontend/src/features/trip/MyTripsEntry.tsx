@@ -6,6 +6,7 @@ import {
   renewSignedSessionIfShort,
   signedTravelerId,
 } from "../../lib/travelerSession";
+import { formatV8Date } from "../../lib/v8Formatting";
 import { readJourneys, type JourneySummary } from "../access/accessDoors";
 import { fillMyTrips, myTripsCopyFor, type MyTripsCopyKey } from "./myTripsCopy";
 import "./myTrips.css";
@@ -112,7 +113,16 @@ export function MyTripsEntry({
           <ul className="cn-mytrips-list" data-testid="my-trips-list">
             {rows.map((row) => (
               <li key={row.id} className="cn-mytrips-row" data-cnx-journey={row.id}>
-                <b className="cn-mytrips-title">{row.title}</b>
+                <span className="cn-mytrips-name">
+                  <b className="cn-mytrips-title">{row.title}</b>
+                  {/* 同名是常态（两趟都叫北京之旅），能把它们分开的是服务器自己给的那条时间。
+                      屏上写的是这一趟开始的那一刻，不是"出发"——向导那一格问的是抵达。 */}
+                  {row.start_at ? (
+                    <span className="cn-mytrips-when" data-testid="my-trips-when">
+                      {say("my.when", { from: formatV8Date(row.start_at, locale) })}
+                    </span>
+                  ) : null}
+                </span>
                 <button
                   type="button"
                   className="v8-quiet-button"

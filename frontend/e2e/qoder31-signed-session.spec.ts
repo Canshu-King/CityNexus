@@ -721,6 +721,17 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
       .locator(`li[data-cnx-journey="${journeyId}"] .cn-mytrips-title`)
       .innerText())
       .trim();
+    /* 第九笔把名字改成人话之后，同名成了常态（两趟都叫北京之旅），能把它们分开的是这一行
+     * 自己的时间。这里要的是"读得懂的时间"：不是服务器那串 ISO，也不是空。 */
+    const when = (await page
+      .locator(`li[data-cnx-journey="${journeyId}"] [data-testid="my-trips-when"]`)
+      .innerText())
+      .trim();
+    expect(when, "这一行没有给出这趟自己的时间，同名的两趟在屏上分不开").not.toBe("");
+    expect(when, "屏上的日期是服务器的 ISO 串，不是人读的").not.toMatch(
+      /\d{4}-\d{2}-\d{2}T|T\d{2}:\d{2}|\+08:00/,
+    );
+    console.log(`行程行上的时间：「${when}」`);
     await page.getByTestId("my-trips-open").first().click();
     await expect
       .poll(() => readBack(page, JOURNEY_POINTER, "local"), { timeout: 25_000 })
