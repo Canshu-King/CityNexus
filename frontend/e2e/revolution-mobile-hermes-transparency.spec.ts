@@ -21,6 +21,7 @@ type FixtureEvent = {
   timestamp: string;
   source: "HERMES_NATIVE";
   duration_ms?: number;
+  result_summary?: Record<string, unknown> | string | null;
   approval_id?: string;
   approval_status?: string;
 };
@@ -397,6 +398,48 @@ test("TEST_FIXTURE completed trace retains the start and end events", async ({ p
   await expect(sheet).toContainText("Hermes 已完成本次运行");
   await expect(sheet).toContainText("1.8 秒");
   await expect(sheet.locator('time[datetime="2026-10-17T09:10:07+08:00"]')).toBeVisible();
+});
+
+test("TEST_FIXTURE tool failures show only a recognized stable error code", async ({ page }) => {
+  const runId = "TEST_FIXTURE-tool-errors-24";
+  const privateError = "provider detail PRIVATE_TOOL_ERROR_CANARY";
+  const privateCanary = "PRIVATE_TOOL_RESULT_CANARY_24";
+  await installRunFixture(page, {
+    runId,
+    status: "failed",
+    timelineEvents: [
+      fixtureEvent(runId, "tool.completed", 1, "2026-10-17T09:10:01+08:00", {
+        tool_name: "inspect_journey",
+        result_summary: { status: "COMPLETED" },
+      }),
+      fixtureEvent(runId, "tool.failed", 2, "2026-10-17T09:10:02+08:00", {
+        tool_name: "inspect_journey",
+        status: "failed",
+        result_summary: { error_code: "MALFORMED_TOOL_ARGUMENTS" },
+      }),
+      fixtureEvent(runId, "tool.failed", 3, "2026-10-17T09:10:03+08:00", {
+        tool_name: "inspect_journey",
+        status: "failed",
+        result_summary: { keys: ["error", "detail"] },
+      }),
+      fixtureEvent(runId, "run.failed", 4, "2026-10-17T09:10:04+08:00", { status: "failed" }),
+    ],
+  });
+
+  const { sheet } = await openRunTrace(page);
+  const completedTool = sheet.locator('[aria-label="Hermes 运行轨迹"] li').filter({
+    hasText: "检查当前行程：已完成",
+  });
+  await expect(completedTool).toHaveCount(1);
+  await expect(completedTool).not.toContainText("失败代码：");
+  await expect(sheet.getByText(/失败代码：MALFORMED_TOOL_ARGUMENTS/)).toBeVisible();
+  const failedToolsWithoutCode = sheet
+    .locator('[aria-label="Hermes 运行轨迹"] li')
+    .filter({ hasText: "检查当前行程：未完成" });
+  await expect(failedToolsWithoutCode).toHaveCount(2);
+  await expect(failedToolsWithoutCode.last()).not.toContainText("失败代码：");
+  await expect(sheet.getByText(privateError, { exact: true })).toHaveCount(0);
+  await expect(sheet.getByText(privateCanary, { exact: true })).toHaveCount(0);
 });
 
 test("TEST_FIXTURE failed trace keeps start and failure milestones in a long event list", async ({ page }) => {

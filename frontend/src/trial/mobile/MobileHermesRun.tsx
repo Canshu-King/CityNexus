@@ -32,6 +32,13 @@ const EVENT_LABELS: Record<string, string> = {
   "run.stopped": "Hermes 本次运行已停止",
 };
 
+const STABLE_TOOL_ERROR_CODES = new Set([
+  "MALFORMED_TOOL_ARGUMENTS",
+  "SEARCH_BATCH_LIMIT",
+  "SEARCH_SATURATION",
+  "NO_ACTIONABLE_EVENT",
+]);
+
 const RUN_MILESTONE_EVENTS = new Set(["run.started", "run.completed", "run.failed", "run.stopped"]);
 
 type RequestState = "idle" | "sending" | "ready" | "unauthorized" | "error";
@@ -84,6 +91,14 @@ function safeEventLabel(event: NativeRuntimeEvent) {
     if (event.event_type === "tool.failed") return `${tool}：未完成`;
   }
   return EVENT_LABELS[event.event_type] ?? "收到一条 Hermes 运行事件";
+}
+
+function safeToolErrorCode(event: NativeRuntimeEvent) {
+  if (event.event_type !== "tool.failed") return null;
+  const summary = event.result_summary;
+  if (!summary || typeof summary !== "object" || Array.isArray(summary)) return null;
+  const code = summary.error_code;
+  return typeof code === "string" && STABLE_TOOL_ERROR_CODES.has(code) ? code : null;
 }
 
 function safeToolName(value: string | null) {
@@ -462,6 +477,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
                         const duration = eventDuration(event.duration_ms);
                         const timestamp = eventTime(event.timestamp);
                         const toolName = safeToolName(event.tool_name);
+                        const toolErrorCode = safeToolErrorCode(event);
                         return (
                           <li key={`${event.sequence ?? ""}|${event.event_id ?? ""}|${event.event_type}|${index}`} className={"is-" + status}>
                             <span className="rev-mobile-hermes-event-mark" aria-hidden="true">
@@ -469,6 +485,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
                             </span>
                             <div className="rev-mobile-hermes-event-body">
                               <span className="rev-mobile-hermes-event-label">{safeEventLabel(event)}</span>
+                              {toolErrorCode && <small>失败代码：{toolErrorCode}</small>}
                               {toolName && <code className="rev-mobile-hermes-tool-name">{toolName}</code>}
                               {(duration || timestamp) && (
                                 <span className="rev-mobile-hermes-event-meta">

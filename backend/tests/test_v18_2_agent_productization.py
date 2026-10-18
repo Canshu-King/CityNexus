@@ -96,6 +96,7 @@ def test_v182_normalized_contract_preserves_safe_tool_metadata_only():
         "approval_status": "PENDING",
         "proposal_id": "proposal-1",
     }
+    assert "error_code" not in event["result_summary"]
     assert "secret" not in str(event)
     assert NORMALIZED_EVENT_TYPES.issuperset(
         {
@@ -114,6 +115,45 @@ def test_v182_normalized_contract_preserves_safe_tool_metadata_only():
             "run.stopped",
         }
     )
+
+
+def test_v182_failed_tool_summary_keeps_only_a_known_stable_error_code():
+    event = normalize_hermes_event(
+        {
+            "event_type": "tool.failed",
+            "tool_name": "inspect_journey",
+            "result": {
+                "error": "MALFORMED_TOOL_ARGUMENTS",
+                "detail": "JSONDecodeError",
+            },
+        }
+    )
+
+    assert event["event_type"] == "tool.failed"
+    assert event["result_summary"] == {"error_code": "MALFORMED_TOOL_ARGUMENTS"}
+    assert "JSONDecodeError" not in str(event)
+
+
+def test_v182_failed_tool_summary_drops_free_text_error_and_canary():
+    private_error = "provider detail PRIVATE_TOOL_ERROR_CANARY"
+    private_canary = "PRIVATE_TOOL_RESULT_CANARY_24"
+    event = normalize_hermes_event(
+        {
+            "event_type": "tool.failed",
+            "tool_name": "inspect_journey",
+            "result": {
+                "error": private_error,
+                "detail": private_canary,
+                "error_code": private_canary,
+            },
+        }
+    )
+
+    serialized = str(event)
+    assert event["result_summary"] == {"keys": ["detail", "error", "error_code"]}
+    assert "error_code" not in event["result_summary"]
+    assert private_error not in serialized
+    assert private_canary not in serialized
 
 
 def test_v182_citynexus_stage_events_keep_source_distinct_from_hermes():

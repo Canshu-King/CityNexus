@@ -38,6 +38,18 @@ TOOL_LABELS = {
     "request_commitment_change": "Request commitment change (CityNexus approval required)",
 }
 
+# Only expose machine codes already emitted by CityNexus tool paths.  Hermes
+# error text is provider-controlled and must never become part of the public
+# runtime event contract.
+STABLE_TOOL_ERROR_CODES = frozenset(
+    {
+        "MALFORMED_TOOL_ARGUMENTS",
+        "SEARCH_BATCH_LIMIT",
+        "SEARCH_SATURATION",
+        "NO_ACTIONABLE_EVENT",
+    }
+)
+
 _IGNORED_EVENT_NAMES = frozenset(
     {
         "message.delta",
@@ -68,7 +80,34 @@ def _tool_name(raw: Mapping[str, Any]) -> str | None:
     return name
 
 
-def _safe_summary(value: Any) -> dict[str, Any] | str | None:
+def _stable_tool_error_code(value: Any) -> str | None:
+    candidates: list[Any] = []
+    if isinstance(value, Mapping):
+        candidates.extend(
+            value.get(key) for key in ("error_code", "failure_code", "code", "error")
+        )
+        nested_error = value.get("error")
+        if isinstance(nested_error, Mapping):
+            candidates.extend(
+                nested_error.get(key) for key in ("error_code", "failure_code", "code")
+            )
+    else:
+        candidates.append(value)
+    return next(
+        (
+            candidate
+            for candidate in candidates
+            if isinstance(candidate, str) and candidate in STABLE_TOOL_ERROR_CODES
+        ),
+        None,
+    )
+
+
+def _safe_summary(
+    value: Any,
+    *,
+    include_tool_error_code: bool = False,
+) -> dict[str, Any] | str | None:
     """Keep result summaries useful while excluding free-form model output."""
 
     if value is None:
@@ -82,11 +121,14 @@ def _safe_summary(value: Any) -> dict[str, Any] | str | None:
             "proposal_id",
             "mission_id",
             "executed",
-            "error",
             "tool",
         ):
             if key in value and isinstance(value[key], (str, int, float, bool)):
                 result[key] = value[key]
+        if include_tool_error_code:
+            error_code = _stable_tool_error_code(value)
+            if error_code is not None:
+                result["error_code"] = error_code
         if not result:
             result["keys"] = sorted(str(key) for key in value.keys())[:20]
         return result
@@ -95,6 +137,10 @@ def _safe_summary(value: Any) -> dict[str, Any] | str | None:
         # bounded shape without copying free-form output into the audit/UI
         # contract; authoritative proposal facts come from CityNexus tools.
         if isinstance(value, str):
+            if include_tool_error_code:
+                error_code = _stable_tool_error_code(value)
+                if error_code is not None:
+                    return {"error_code": error_code}
             return {"kind": "text", "length": len(value)}
         return {"value": value}
     if isinstance(value, list):
@@ -182,7 +228,10 @@ def normalize_hermes_event(
         "status": status,
         "timestamp": timestamp,
         "duration_ms": duration,
-        "result_summary": _safe_summary(result),
+        "result_summary": _safe_summary(
+            result,
+            include_tool_error_code=event_type == "tool.failed",
+        ),
         "policy_decision": _string(decision),
         "raw_event_type": original,
         "source": source,
