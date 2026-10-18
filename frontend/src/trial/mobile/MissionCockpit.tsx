@@ -93,7 +93,9 @@ export function MissionCockpit({
   const [layer, setLayer] = useState<"map" | "timeline">("map");
   const selectLayer = (next: "map" | "timeline") => {
     setLayer(next);
-    spatial.current?.querySelector<HTMLElement>(next === "map" ? ".cn-mission-map-pane" : ".cn-mission-timeline-pane")?.scrollIntoView({ block: "nearest", inline: "start", behavior: "smooth" });
+    const host = spatial.current;
+    const pane = host?.querySelector<HTMLElement>(next === "map" ? ".cn-mission-map-pane" : ".cn-mission-timeline-pane");
+    if (host && pane) host.scrollTo({ left: host.scrollLeft + pane.getBoundingClientRect().left - host.getBoundingClientRect().left, behavior: "auto" });
   };
   const goalRequest = useMemo(() => commandRevision ? ({ journeyId, goal: command }) : null, [journeyId, command, commandRevision]);
   const receiveTask = useCallback((value: DraftGoalTask, items: DraftGoalTaskEvent[]) => {
@@ -102,7 +104,7 @@ export function MissionCockpit({
   }, [journeyId]);
   const focusPlace = useCallback((id: string) => {
     const slot = document.querySelector<HTMLDetailsElement>(`.cn-mission-os .rev-goal-draft-slot[data-place-id="${CSS.escape(id)}"]`);
-    if (slot) { slot.open = true; slot.scrollIntoView({ block: "nearest", inline: "start", behavior: "smooth" }); }
+    if (slot) { slot.open = true; slot.scrollIntoView({ block: "nearest", inline: "start", behavior: "auto" }); }
   }, []);
   useEffect(() => {
     const focus = (event: Event) => {
