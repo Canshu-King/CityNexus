@@ -56,3 +56,6 @@
 .rev-goal-draft-actions > button { display: block; width: 100%; }
 .rev-goal-draft-actions > p { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: #24533e; }
 .rev-goal-draft-actions > p[role="alert"] { color: #943b20; }
+
+.rev-workspace-depth { display: grid; gap: 6px; font-weight: 700; color: #244f3b; }
+.rev-workspace-depth select { padding: 10px 12px; border: 1px solid #a8c4b1; border-radius: 10px; background: white; color: #183b2b; font: inherit; min-height: 44px; width: 100%; }
