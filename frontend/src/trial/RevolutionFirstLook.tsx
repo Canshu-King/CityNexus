@@ -5,6 +5,7 @@ import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
+import { MissionCockpit } from "./mobile/MissionCockpit";
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
 import { MobileHermesRun } from "./mobile/MobileHermesRun";
 import { MobileCompatAgentActivity } from "./mobile/MobileCompatAgentActivity";
@@ -363,7 +364,7 @@ function DraftAgentActivity({
 }
 
 export function RevolutionFirstLook() {
-  const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "连城");
+  const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "");
   const [startDate, setStartDate] = useState(() => localDateAfter(1));
   const [durationDays, setDurationDays] = useState(2);
   const [partySize, setPartySize] = useState(1);
@@ -682,7 +683,7 @@ export function RevolutionFirstLook() {
       setJourney(next);
       setActiveTab("explore");
       setPocketWalk(null);
-      setNotice("旅行草稿已建立。先挑选真实地点，再生成可确认的行程方案。");
+      setNotice("旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。");
       clearStartWriteMarker(journeyResult.marker.receiptKey!);
       startWriteBlockedRef.current = false;
       setStartRecoveryIdentity(null);
@@ -1170,13 +1171,31 @@ export function RevolutionFirstLook() {
                   换地区
                 </button>
               </section>
+              <MissionCockpit
+                key={journey.id}
+                journeyId={journey.id}
+                cityName={journey.cityName}
+                goal={serverBrief?.journeyId === journey.id && serverBrief.bearer === readTravelerBearer()
+                  ? serverBrief.goal : tripGoal}
+                journeyStatus={journey.status}
+                agentStatus={agentStatusTitle}
+                agentAvailable={Boolean(agentCanRequestSuggestion)}
+                onExplore={() => {
+                  if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
+                  document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                onTrip={() => navigateMobile("trips")}
+              />
               {journey.status === "DRAFT" && (
                 <button
                   type="button"
                   className="rev-firstlook-agent-entry"
                   data-testid="rev-quick-open-agent-activity"
                   aria-label={`AI 工作动态，${agentStatusTitle}`}
-                  onClick={() => navigateMobile("trips")}
+                  onClick={() => window.dispatchEvent(new CustomEvent("citynexus:open-goal-task", {
+                    detail: { journeyId: journey.id, goal: serverBrief?.journeyId === journey.id
+                      ? serverBrief.goal : tripGoal.trim() || journey.cityName },
+                  }))}
                 >
                   <span>AI 工作动态</span>
                   <small>{agentStatusTitle}</small>
