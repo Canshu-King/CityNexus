@@ -64,7 +64,15 @@ def require_open_port(port: int) -> None:
 def prepare_python() -> Path:
     if sys.version_info < (3, 12):
         raise RuntimeError("Python 3.12+ required; on Windows try: py -3.13 trial/try_revolution.py")
-    venv_dir = RUNTIME / "python-venv"
+    # Reuse this checkout's installed runtime; separate runs only need new data,
+    # not another copy of all Python dependencies.
+    project_python = BACKEND / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    if project_python.exists():
+        probe = subprocess.run([str(project_python), "-c", "import fastapi, uvicorn, sqlalchemy, httpx"],
+                               cwd=BACKEND, capture_output=True, text=True)
+        if probe.returncode == 0:
+            return project_python
+    venv_dir = TRIAL / ".runtime" / "python-venv"
     py = venv_dir / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     first_run = not py.exists()
     if first_run:
@@ -137,11 +145,11 @@ def wait_for(name: str, url: str, process: subprocess.Popen, seconds: int = 70) 
     deadline = time.monotonic() + seconds
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            raise RuntimeError(f"{name} stopped during startup (exit={process.returncode}); inspect trial/.runtime/{name}.err.log")
+            raise RuntimeError(f"{name} stopped during startup (exit={process.returncode}); inspect {RUNTIME / (name + '.err.log')}")
         if health(url):
             return
         time.sleep(0.5)
-    raise RuntimeError(f"{name} did not become healthy at {url}; inspect trial/.runtime/{name}.err.log")
+    raise RuntimeError(f"{name} did not become healthy at {url}; inspect {RUNTIME / (name + '.err.log')}")
 
 
 def isolated_environment(
@@ -169,7 +177,7 @@ def isolated_environment(
         secret_path.write_text(secret + "\n", encoding="utf-8")
     env.update({
         "CITYNEXUS_ENV": "development",
-        "CITYNEXUS_DATABASE_URL": "sqlite:///./" + db_name,
+        "CITYNEXUS_DATABASE_URL": "sqlite:///" + (Path(db_name).as_posix() if Path(db_name).is_absolute() else "./" + db_name),
         "CITYNEXUS_DEMO_MODE": "false",
         "CITYNEXUS_AI_ENABLED": "false",
         "CITYNEXUS_GUARDIAN_AUTORUN": "false",
@@ -230,6 +238,7 @@ def isolated_environment(
 
 
 def main() -> int:
+    global RUNTIME
     parser = argparse.ArgumentParser()
     parser.add_argument("--fresh", action="store_true",
                         help="Use a new isolated database without deleting your previous trial data")
@@ -241,6 +250,8 @@ def main() -> int:
                         help="Use exact wb2api 7863 model, e.g. global:deepseek-v4.1-flash (may incur charges)")
     parser.add_argument("--no-browser", action="store_true",
                         help="Print the local URL without auto-opening desktop browser")
+    parser.add_argument("--runtime-dir", type=Path, default=None,
+                        help="Store this instance's database and logs in a separate local directory")
     parser.add_argument("--frontend-port", type=parse_port, default=FRONT_PORT,
                         help=f"Use a separate frontend port (default: {FRONT_PORT})")
     parser.add_argument("--backend-port", type=parse_port, default=BACK_PORT,
@@ -250,6 +261,8 @@ def main() -> int:
     parser.add_argument("--overpass-port", type=parse_port, default=OVERPASS_PORT,
                         help=f"Use a separate local Overpass fixture port with --sample (default: {OVERPASS_PORT})")
     args = parser.parse_args()
+    if args.runtime_dir is not None:
+        RUNTIME = args.runtime_dir.expanduser().resolve()
     front_port = args.frontend_port
     back_port = args.backend_port
     city_port = args.city_port
@@ -272,28 +285,21 @@ def main() -> int:
     agent_config: dict[str, str] = {}
     agent_label = "DISABLED"
     if agent_enabled:
-        print("\nREVOLUTION REAL AGENT / WB2API LOCAL GATEWAY")
-        print("An external model may receive your submitted Journey facts and prompts.")
-        print("The 7865 free-first router currently includes a potentially PAID final fallback.")
-        print("Do not assume that any model request is guaranteed to cost zero.")
-        print("AI tool calls remain subject to CityNexus signed user authority and approval.")
+        print("\nAI 旅行规划 · 本机 wb2api")
+        print("你在页面提交需求时会发送给模型，可能产生费用。")
         # --agent is an explicit local operator choice; this step configures
         # the model but DOES NOT invoke it. Each actual AI text submission in
         # the browser is an independent explicit request with cost disclosure.
-        print("AI is configured only. No model call occurs until you ask in the UI.")
         if not args.agent_direct_model:
             healthy, state = router_health()
             if not healthy:
-                raise RuntimeError("Local free-router 7865 not ready: " + state + ". Start WorkBuddy2API/FreeRouter.")
+                raise RuntimeError("请先启动本机 WorkBuddy2API 路由（7865）：" + state)
         try:
             agent_config, agent_label = agent_settings(direct_model=args.agent_direct_model)
         except ValueError as exc:
             raise RuntimeError(str(exc)) from exc
-        print("Agent route:", agent_label)
-        print("Model:", agent_config["CITYNEXUS_HERMES_MODEL"])
-        print("Credential: loaded into isolated backend memory only (value hidden)")
-        print("Runtime: Hermes-compatible tool-calling, not DeepSeek /responses or native Hermes MCP")
-        print("NOTE: configuration is NOT successful Agent tool use; run trial/probe_wb2api_agent.py if needed.")
+        print("模型选择：", agent_config["CITYNEXUS_HERMES_MODEL"])
+        print("打开页面后，点「问问 AI」开始；正式行程中的执行记录在「行程」查看。")
     RUNTIME.mkdir(parents=True, exist_ok=True)
     ports = ((front_port, back_port, city_port, overpass_port)
              if args.sample else (front_port, back_port))
@@ -306,6 +312,8 @@ def main() -> int:
     node = prepare_frontend()
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     db = f"_revolution_hands_on_{stamp}.db" if args.fresh else "_revolution_hands_on.db"
+    if args.runtime_dir is not None:
+        db = (RUNTIME / db).as_posix()
     env = isolated_environment(
         db,
         sample=args.sample,

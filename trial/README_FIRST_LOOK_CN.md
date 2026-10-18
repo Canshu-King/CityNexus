@@ -1,6 +1,8 @@
 # Revolution 手机版试用
 
-先看[合肥两站散步图文教程](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)，或双击 [`OPEN_REVOLUTION.cmd`](OPEN_REVOLUTION.cmd) 打开本机体验。
+双击 [`OPEN_REVOLUTION_AI.cmd`](OPEN_REVOLUTION_AI.cmd) 打开 **AI 旅行规划**，使用本机 wb2api 的 `auto:cheapest` 模型选择。你在页面提交需求时才调用模型，可能产生费用。密钥读取 `WB2API_KEY`；未设置时在启动窗口隐蔽输入一次。
+
+双击 [`OPEN_REVOLUTION.cmd`](OPEN_REVOLUTION.cmd) 可选择「AI 旅行规划」或「仅探索」。启动器会检查模式，选择 AI 时会打开带 AI 的实例。操作步骤见[Revolution 图文教程](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)。
 
 服务运行时可直接打开 [Revolution 手机页](http://127.0.0.1:14332/revolution)。没有服务时，双击启动器会复用本工作目录自己的健康实例；否则挑一组空闲端口启动隔离实例，并打印实际入口、当前源码 SHA 和本教程路径。启动窗口需要保持打开。
 
@@ -10,7 +12,7 @@
 
 本教程及[中文图文步骤](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)中的既有标注图来自更早的产品提交 `1dbaa828872543112c9db2457f2c3ab6b54a6058`；本次 `f8f7e9d` 的浏览器原图见上述复核记录。当前环境显示 AI 暂未开启，正式行程助手没有启动。
 
-离线看示例界面时，可运行 `py -3.13 trial\try_revolution.py --sample`。AI 默认关闭；只有主动使用 `--agent` 才读取本机 wb2api 配置，接入说明见[本机 WB2API 说明](REVOLUTION_AGENT_WB2API_CONNECT.md)。
+命令行可运行 `powershell -File trial\start_revolution.ps1 -Agent`；仅探索用 `-Mode Explore`。离线示例用 `py -3.13 trial\try_revolution.py --sample`。接入说明见[本机 WB2API 说明](REVOLUTION_AGENT_WB2API_CONNECT.md)。
 
 <details>
 <summary>历史启动记录（2026-10-14；旧端口和旧分支命令不适用于上面的新版实例）</summary>

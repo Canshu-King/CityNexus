@@ -1,4 +1,9 @@
-param([switch]$CheckOnly)
+﻿param(
+    [switch]$CheckOnly,
+    [switch]$Agent,
+    [switch]$NoBrowser,
+    [ValidateSet('Ask', 'AI', 'Explore')][string]$Mode = 'Ask'
+)
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path.TrimEnd('\')
@@ -43,6 +48,27 @@ function Test-FreeLocalPort([int]$Port) {
     finally { try { $listener.Stop() } catch {} }
 }
 
+function Get-ServiceMode([int]$Port) {
+    try {
+        $runtime = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/v1/agent/runtime-status" -TimeoutSec 3
+        if ($runtime.ai_state -eq 'DISABLED') { return 'Explore' }
+        if ($runtime.hermes_compat_configured -eq $true) { return 'AI' }
+    }
+    catch {}
+    return 'Unknown'
+}
+
+if ($Agent) { $Mode = 'AI' }
+if (-not $CheckOnly -and $Mode -eq 'Ask') {
+    Write-Host ''
+    Write-Host '1  AI 旅行规划：使用本机 wb2api，提交需求时调用模型，可能计费'
+    Write-Host '2  仅探索：查找地点、安排行程和散步路线'
+    $choice = Read-Host '选择 1 或 2'
+    if ($choice -eq '1') { $Mode = 'AI' }
+    elseif ($choice -eq '2') { $Mode = 'Explore' }
+    else { throw '请输入 1 或 2 后重新启动。' }
+}
+
 $frontPort = 14332
 $backPort = 18501
 $frontHealth = "http://127.0.0.1:$frontPort/api/v1/health"
@@ -54,14 +80,17 @@ Write-Host "Guide: $guidePath"
 
 $sameFrontend = (Test-CheckoutProcess $frontPort 'frontend') -and (Test-Http200 $frontHealth)
 $sameBackend = (Test-CheckoutProcess $backPort 'backend') -and (Test-Http200 $backHealth)
-if ($sameFrontend -and $sameBackend) {
+$serviceMode = if ($sameBackend) { Get-ServiceMode $backPort } else { 'Unknown' }
+$modeMatches = ($Mode -eq 'Ask') -or ($Mode -eq $serviceMode)
+if ($sameFrontend -and $sameBackend -and $modeMatches) {
     Write-Host "Using this checkout's healthy local service: $url"
-    if (-not $CheckOnly) { Start-Process -FilePath $url }
+    Write-Host "Mode: $serviceMode"
+    if (-not $CheckOnly -and -not $NoBrowser) { Start-Process -FilePath $url }
     return
 }
 
 if ($CheckOnly) {
-    Write-Host 'No healthy service pair owned by this checkout was found; running services were left untouched.'
+    Write-Host '当前目录没有匹配此模式的运行实例。'
     exit 2
 }
 
@@ -80,6 +109,12 @@ for ($offset = 0; $offset -lt 40; $offset++) {
 if (-not $foundPair) { throw 'No free local Revolution port pair was found in the configured range.' }
 
 Write-Host "Starting isolated services at http://127.0.0.1:$frontPort/revolution"
-Write-Host 'The terminal stays open while the services run. This launcher keeps AI disabled.'
-& py -3.13 (Join-Path $PSScriptRoot 'try_revolution.py') --fresh --frontend-port $frontPort --backend-port $backPort
+Write-Host "Mode: $Mode | 保持这个窗口打开，网页就能持续使用。"
+$launchArguments = @('--fresh', '--frontend-port', [string]$frontPort, '--backend-port', [string]$backPort)
+$runName = $sha + '-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 6)
+$runtimeDirectory = Join-Path $env:LOCALAPPDATA (Join-Path 'CityNexus\Revolution' $runName)
+$launchArguments += @('--runtime-dir', $runtimeDirectory)
+if ($Mode -eq 'AI') { $launchArguments += '--agent' }
+if ($NoBrowser) { $launchArguments += '--no-browser' }
+& py -3.13 (Join-Path $PSScriptRoot 'try_revolution.py') @launchArguments
 if ($LASTEXITCODE -ne 0) { throw "Revolution launcher exited with code $LASTEXITCODE" }
