@@ -227,7 +227,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         if (mapPlaces?.journey_id && mapPlaces.journey_id !== actor.id) throw new Error("Map context mismatch");
         setSnapshot({ context: actor, input, status: journey.status,
           mapCandidates: mapPlaces?.journey_id === actor.id && Array.isArray(mapPlaces.candidates) ? mapPlaces.candidates : input.candidates });
-        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (input.intent?.goal ?? "").slice(0, 2000));
+        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (savedTask?.[0]?.journey_id === actor.id ? "" : (input.intent?.goal ?? "").slice(0, 2000)));
         if (savedTask && savedTask[0].journey_id === actor.id) {
           setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value);
           setGoalTaskSnapshot({ context: actor, value: savedTask[0], events: savedTask[1].events });
