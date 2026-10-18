@@ -51,6 +51,16 @@ def parse_port(value: str) -> int:
     return port
 
 
+def resume_database(runtime: Path, filename: str) -> str:
+    """Explicitly resume one existing trial DB and its adjacent auth secret."""
+    target = (runtime / filename).resolve()
+    if target.parent != runtime.resolve() or target.suffix != ".db" or not target.is_file():
+        raise RuntimeError("Choose an existing .db file directly inside --runtime-dir")
+    if not (runtime / "traveler_auth_secret.txt").is_file():
+        raise RuntimeError("The original trial authentication secret is required to resume")
+    return target.as_posix()
+
+
 def require_open_port(port: int) -> None:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as check:
         check.settimeout(0.5)
@@ -258,6 +268,8 @@ def main() -> int:
                         help="Print the local URL without auto-opening desktop browser")
     parser.add_argument("--runtime-dir", type=Path, default=None,
                         help="Store this instance's database and logs in a separate local directory")
+    parser.add_argument("--resume-database", default=None,
+                        help="Existing .db filename in --runtime-dir; preserves original signed trial state")
     parser.add_argument("--frontend-port", type=parse_port, default=FRONT_PORT,
                         help=f"Use a separate frontend port (default: {FRONT_PORT})")
     parser.add_argument("--backend-port", type=parse_port, default=BACK_PORT,
@@ -269,6 +281,11 @@ def main() -> int:
     args = parser.parse_args()
     if args.runtime_dir is not None:
         RUNTIME = args.runtime_dir.expanduser().resolve()
+    existing_db = None
+    if args.resume_database:
+        if args.fresh or args.runtime_dir is None:
+            raise RuntimeError("--resume-database requires --runtime-dir and cannot use --fresh")
+        existing_db = resume_database(RUNTIME, args.resume_database)
     front_port = args.frontend_port
     back_port = args.backend_port
     city_port = args.city_port
@@ -320,6 +337,8 @@ def main() -> int:
     db = f"_revolution_hands_on_{stamp}.db" if args.fresh else "_revolution_hands_on.db"
     if args.runtime_dir is not None:
         db = (RUNTIME / db).as_posix()
+    if existing_db:
+        db = existing_db
     env = isolated_environment(
         db,
         sample=args.sample,

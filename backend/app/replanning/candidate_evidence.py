@@ -44,7 +44,10 @@ def _preference_matches_candidate(key: str, tags: set[str]) -> bool:
         if not target:
             return False
         return not (target in tags or f"category:{target}" in tags)
-    return normalized in tags or f"category:{normalized}" in tags
+    aliases = {"food": {"food", "restaurant", "cafe", "café", "market"},
+               "outdoor": {"outdoor", "park", "garden", "viewpoint", "nature"},
+               "cultural": {"cultural", "culture", "museum", "gallery", "historic", "heritage"}}
+    return bool(aliases.get(normalized, {normalized}).intersection(tags)) or f"category:{normalized}" in tags
 
 
 def verified_interest_preference_fit(

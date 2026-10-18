@@ -1,4 +1,17 @@
 .rev-plan-workbench { margin: 0 0 18px; padding: 20px; border: 1px solid #dce5dc; border-radius: 24px; background: #fffdf8; color: #193b32; }
+.rev-travel-input { min-width: 0; overflow-wrap: anywhere; }
+.rev-travel-input p { font-size: 14px; line-height: 1.65; }
+.rev-travel-input summary { min-height: 44px; padding: 12px 0; cursor: pointer; }
+.rev-travel-input form { display: grid; gap: 12px; }
+.rev-travel-input form > label { display: grid; gap: 8px; }
+.rev-travel-input textarea, .rev-travel-input select { width: 100%; min-height: 44px; padding: 12px; box-sizing: border-box; font: inherit; border: 1px solid #bfd0c4; border-radius: 12px; background: #fff; color: #193b32; }
+.rev-travel-input textarea { min-height: 90px; }
+.rev-travel-input fieldset { min-width: 0; border: 1px solid #dce5dc; border-radius: 12px; }
+.rev-travel-input label:has(input) { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.rev-travel-input input[type=checkbox] { width: 22px; height: 22px; flex-shrink: 0; accent-color: #245f48; }
+.rev-travel-place, .rev-travel-day { padding: 12px; margin: 12px 0; border: 1px solid #dce5dc; border-radius: 12px; }
+.rev-travel-place p { margin: 6px 0; }
+.rev-travel-place a { display: inline-flex; align-items: center; min-height: 44px; color: #245f48; }
 .rev-plan-workbench > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .rev-plan-workbench > header > div { flex: 1; min-width: 0; }
 .rev-plan-workbench h2 { margin: 5px 0 14px; font-size: 22px; }

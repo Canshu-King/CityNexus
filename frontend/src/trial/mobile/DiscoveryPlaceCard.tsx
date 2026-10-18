@@ -39,7 +39,7 @@ function formatInterval(value: unknown): string | null {
   return `${interval.open}–${interval.close}`;
 }
 
-function formatOpeningHours(value: unknown): string | null {
+export function formatOpeningHours(value: unknown): string | null {
   const opening = asRecord(value);
   if (!opening) return null;
   if (opening.status === "CLOSED") return "来源标记为关闭";
@@ -74,7 +74,7 @@ function formatOpeningHours(value: unknown): string | null {
   return null;
 }
 
-function formatCost(candidate: BootstrapDiscoveryCandidate): string {
+export function formatCost(candidate: BootstrapDiscoveryCandidate): string {
   if (candidate.price_state === "FREE") return "免费";
   const evidence = candidate.cost_evidence;
   const amountMinor = evidence?.amount_minor;

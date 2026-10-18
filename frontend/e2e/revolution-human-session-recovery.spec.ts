@@ -20,6 +20,7 @@ async function json(route: Route, status: number, body: unknown) {
 test.describe("Revolution signed-session recovery UI regression", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
   test.beforeEach(async ({ page }) => {
+    await page.route("**/api/v1/journeys/*/planning-intent", (route) => json(route, 404, {detail:"TEST_FIXTURE_NO_TRIP_BRIEF"}));
     await page.route("**/api/v1/journeys/*/bootstrap-discovery/current", (route) => json(route, 200, null));
   });
 

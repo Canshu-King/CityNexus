@@ -471,6 +471,13 @@ class JourneyAnchor(BaseModel):
     notes: str | None = Field(default=None, max_length=500)
 
 
+class TravelBriefRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    goal: str = Field(default="", max_length=1000)
+    interests: list[Literal["park/garden", "cafe", "museum/gallery", "library"]] = Field(default_factory=list, max_length=4)
+    energy: Literal["easy", "steady", "full"] = "steady"
+
+
 class JourneyCreate(BaseModel):
     traveler_id: UUID
     title: str = Field(min_length=1, max_length=160)
@@ -485,6 +492,7 @@ class JourneyCreate(BaseModel):
     party_size: int = Field(default=1, ge=1, le=20)
     occupancy: dict[str, Any] = Field(default_factory=dict)
     stay_budget: Money | None = None
+    planning_intent: TravelBriefRequest | None = None
 
     @model_validator(mode="after")
     def valid_window(self) -> JourneyCreate:
@@ -1095,6 +1103,7 @@ class PlanVersion(BaseModel):
 
 
 class GeneratePlansRequest(BaseModel):
+    bootstrap_candidate_ids: list[UUID] | None = Field(default=None, min_length=2, max_length=6)
     planning_mode: PlanningMode | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
     place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)

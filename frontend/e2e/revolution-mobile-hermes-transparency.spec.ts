@@ -338,6 +338,7 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
   await expect(activity).toContainText("正式行程开始且 AI 可用时，实际工作记录会显示在这里。");
   await expect.poll(() => apiRequests.slice(apiRequestsBeforeClick).sort()).toEqual([
     `GET /api/v1/journeys/${journeyId}`,
+    `GET /api/v1/journeys/${journeyId}/planning-intent`,
     `GET /api/v1/journeys/${journeyId}/plans`,
   ].sort());
   expect(nativeRunReads).toBe(0);

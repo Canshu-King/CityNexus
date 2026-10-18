@@ -33,6 +33,18 @@ class LauncherNetworkTest(unittest.TestCase):
             env = self.environment({})
         self.assertNotIn("HTTPS_PROXY", env)
 
+    def test_resume_accepts_only_existing_adjacent_database_and_secret(self):
+        runtime = Path("TEST_FIXTURE_RUNTIME").resolve()
+        with patch.object(Path, "is_file", return_value=True):
+            self.assertEqual(launcher.resume_database(runtime,"saved.db"), (runtime/"saved.db").as_posix())
+            with self.assertRaises(RuntimeError):
+                launcher.resume_database(runtime,"../elsewhere.db")
+            with self.assertRaises(RuntimeError):
+                launcher.resume_database(runtime,"saved.txt")
+        with patch.object(Path, "is_file", return_value=False):
+            with self.assertRaises(RuntimeError):
+                launcher.resume_database(runtime,"saved.db")
+
 
 if __name__ == "__main__":
     unittest.main()

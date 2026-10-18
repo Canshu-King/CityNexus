@@ -1747,6 +1747,23 @@ export interface BootstrapDiscoveryResponse {
   readiness?: BootstrapDiscoveryReadinessResponse;
 }
 
+export interface TravelBrief {
+  goal: string;
+  interests: ("park/garden" | "cafe" | "museum/gallery" | "library")[];
+  energy: "easy" | "steady" | "full";
+}
+
+export interface TravelPlanningInput {
+  journey_id: string;
+  intent: (TravelBrief & { id: string; updated_at: string; source: string;
+    mapped_preferences: { input: string; preference: string }[]; free_text_status: string }) | null;
+  trip: { dates: string[]; party_size: number; budget: Money; planning_mode: string };
+  candidates: (BootstrapDiscoveryCandidate & { receipt_id: string })[];
+  preview_kind: "UNVERIFIED_SUGGESTION_DRAFT";
+  transport_status: "UNKNOWN";
+  plan_version_id: null;
+}
+
 export interface BootstrapDiscoveryReadinessResponse {
   supports_place_name_search?: boolean;
   journey_id?: string;
@@ -3154,6 +3171,23 @@ export const cityNexusApi = {
       "/journeys/" + journeyId + "/bootstrap-discovery/readiness",
       { headers: travelerAuthHeaders(), cache: "no-store" },
     );
+  },
+
+  getTravelPlanningInput(journeyId: string): Promise<TravelPlanningInput> {
+    return requestJson<TravelPlanningInput>(`/journeys/${journeyId}/planning-intent`,
+      { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+
+  saveTravelBrief(journeyId: string, brief: TravelBrief): Promise<TravelPlanningInput> {
+    return requestJson<TravelPlanningInput>(`/journeys/${journeyId}/planning-intent`,
+      { method: "PUT", headers: travelerAuthHeaders(), body: JSON.stringify(brief) });
+  },
+
+  generateFromDiscovery(journeyId: string, candidateIds: string[], idempotencyKey: string): Promise<PlanVersion[]> {
+    return requestJson<PlanVersion[]>(`/journeys/${journeyId}/plans/generate`, {
+      method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+      body: JSON.stringify({ candidate_count: 1, bootstrap_candidate_ids: candidateIds }),
+    });
   },
 
   lookupBootstrapSharedWalk(

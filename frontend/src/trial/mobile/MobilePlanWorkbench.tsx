@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarDays, Check, Clock3, MapPin } from "lucide-react";
-import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, type PlanVersion } from "../../api/citynexus";
+import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, type PlanVersion, type TravelPlanningInput, type TravelBrief } from "../../api/citynexus";
+import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import "./MobilePlanWorkbench.css";
 
-type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[] };
-type WriteAction = "generate" | "select" | "start";
+type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null };
+type WriteAction = "generate" | "select" | "start" | "brief";
 
 function failureText(error: unknown): string {
   if (error instanceof CityNexusApiError) {
@@ -110,6 +111,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   const [message, setMessage] = useState<string | null>(null);
   const [costAck, setCostAck] = useState(false);
   const [needsRefresh, setNeedsRefresh] = useState(false);
+  const [candidateIds, setCandidateIds] = useState<string[]>([]);
   const epoch = useRef(0);
   const writeLock = useRef(false);
   const current = snapshot?.bearer === readTravelerBearer() && snapshot?.journey.id === journeyId ? snapshot : null;
@@ -120,10 +122,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     if (!token) { setSnapshot(null); return; }
     setLoading(true);
     try {
-      const [journey, plans] = await Promise.all([cityNexusApi.getJourney(journeyId), cityNexusApi.listJourneyPlans(journeyId)]);
+      const [journey, plans, input] = await Promise.all([cityNexusApi.getJourney(journeyId), cityNexusApi.listJourneyPlans(journeyId), cityNexusApi.getTravelPlanningInput(journeyId).catch(() => null)]);
       if (serial !== epoch.current || token !== readTravelerBearer()) return;
       if (journey.id !== journeyId || !Array.isArray(plans) || plans.some((plan) => plan.journey_id !== journeyId || !Array.isArray(plan.activities))) throw new Error("Plan response mismatch");
-      setSnapshot({ bearer: token, journey, plans });
+      if (input && input.journey_id !== journeyId) throw new Error("Trip intent response mismatch");
+      setSnapshot({ bearer: token, journey, plans, input });
       setNeedsRefresh(false);
       setMessage(null);
     } catch (error) {
@@ -138,6 +141,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     setSnapshot(null);
     setMessage(null);
     setCostAck(false);
+    setCandidateIds([]);
     setBearer(token);
   }), []);
   useEffect(() => {
@@ -149,7 +153,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   const write = async (action: WriteAction, plan?: PlanVersion) => {
     const token = readTravelerBearer();
     if (!token || !current || writeLock.current || needsRefresh || loading) return;
-    if (action === "generate" && (!costAck || !placeId)) return;
+    if (action === "generate" && (current.input ? !readyForMulti : (!costAck || !placeId))) return;
     const serial = epoch.current;
     const stillCurrent = () => token === readTravelerBearer() && serial === epoch.current;
     writeLock.current = true;
@@ -157,7 +161,8 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     setMessage(null);
     try {
       if (action === "generate") {
-        await cityNexusApi.generatePlans(journeyId, 1, { placeIds: [placeId!], allowSinglePlace: true, allowUnknownCost: true, idempotencyKey: crypto.randomUUID() });
+        if (current.input) await cityNexusApi.generateFromDiscovery(journeyId, candidateIds, crypto.randomUUID());
+        else await cityNexusApi.generatePlans(journeyId, 1, { placeIds: [placeId!], allowSinglePlace: true, allowUnknownCost: true, idempotencyKey: crypto.randomUUID() });
       } else if (action === "select" && plan) {
         await cityNexusApi.selectPlan(journeyId, plan.id);
       } else if (action === "start") {
@@ -182,14 +187,32 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   const selected = plans.find((plan) => plan.is_current === true);
   const canStart = current?.journey.status === "PLANNED" && selected?.status === "SELECTED" && !selected.stale;
   const locked = Boolean(busy || loading || needsRefresh);
+  const picked = current?.input?.candidates.filter((item) => candidateIds.includes(item.candidate_id)) ?? [];
+  const readyForMulti = picked.length >= 2 && picked.length === candidateIds.length && picked.every((item) => item.selection_state === "READY_FOR_NATIVE_PLAN");
+  const saveBrief = async (brief: TravelBrief) => {
+    const token = readTravelerBearer();
+    if (!current || !token || writeLock.current) return;
+    const serial = epoch.current;
+    writeLock.current = true; setBusy("brief"); setMessage(null);
+    try {
+      await cityNexusApi.saveTravelBrief(journeyId, brief);
+      if (serial === epoch.current && token === readTravelerBearer()) await refresh();
+    } catch (error) { if (serial === epoch.current && token === readTravelerBearer()) setMessage(failureText(error)); }
+    finally { writeLock.current = false; setBusy(null); }
+  };
 
   return <section className="rev-plan-workbench" data-testid="rev-plan-workbench" aria-busy={Boolean(busy || loading)}>
     <header><div><span className="rev-firstlook-eyebrow">TRAVEL PLAN</span><h2>你的行程方案</h2></div><button type="button" className="rev-plan-refresh" disabled={Boolean(busy || loading)} onClick={() => void refresh()}>刷新方案</button></header>
     {message && <p role="alert" className="rev-plan-message">{message}</p>}
     {loading && !current && <p role="status">正在读取你的行程方案…</p>}
-    {current && plans.length === 0 && <p>先选一个已核实的地点，再把它排进日程。</p>}
+    {current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} disabled={locked} />}
+    {current && plans.length === 0 && <p>{current.input ? "从想去清单里挑选地点，再生成日程。" : "先选一个已核实的地点，再把它排进日程。"}</p>}
     {current?.journey.status !== "ACTIVE" && current && <div className="rev-plan-generate">
-      {placeId ? <>
+      {current.input ? <>
+        {candidateIds.length > 0 && !readyForMulti && <p className="rev-plan-gap">先选至少两处；营业、费用未齐的地点可在探索页查询详情或改选。</p>}
+        <button type="button" disabled={locked || !readyForMulti} onClick={() => void write("generate")} data-testid="rev-plan-generate">{busy === "generate" ? "正在安排行程…" : "用所选地点生成正式方案"}</button>
+        <button type="button" onClick={onExplore}>继续探索、补资料 →</button>
+      </> : placeId ? <>
         <label><input type="checkbox" checked={costAck} disabled={Boolean(busy)} onChange={(event) => setCostAck(event.target.checked)} />未核实的门票费用，稍后确认</label>
         <button type="button" disabled={locked || !costAck} onClick={() => void write("generate")} data-testid="rev-plan-generate">{busy === "generate" ? "正在安排行程…" : "生成行程方案"}</button>
       </> : <button type="button" onClick={onExplore}>去选地点 →</button>}

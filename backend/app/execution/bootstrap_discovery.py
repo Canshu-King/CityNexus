@@ -4895,6 +4895,7 @@ def select_bootstrap_candidate(
     traveler_id: str,
     receipt_id: UUID,
     candidate_id: UUID,
+    batch_candidate_ids: frozenset[str] | None = None,
 ) -> dict[str, Any]:
     if str(journey.status).upper() != "DRAFT":
         raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "bootstrap selection requires a DRAFT Journey")
@@ -4996,6 +4997,7 @@ def select_bootstrap_candidate(
             RealPlaceCandidate.journey_id == journey.id,
             RealPlaceCandidate.status == "BOOTSTRAP_SELECTED",
             RealPlaceCandidate.id != row.id,
+            RealPlaceCandidate.id.not_in(batch_candidate_ids or ()),
         ).limit(1)
     )
     if other_selected:

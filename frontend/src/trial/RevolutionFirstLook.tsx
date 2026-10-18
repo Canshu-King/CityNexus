@@ -20,6 +20,7 @@ import {
   readTravelerBearer,
   readTravelerIdentity,
   storeTravelerIdentity,
+  subscribeTravelerBearer,
 } from "../lib/travelerSession";
 import "./RevolutionFirstLook.css";
 import "./RevolutionUsability.css";
@@ -29,7 +30,6 @@ import "./RevolutionMobileV1.css";
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 const RECENT_JOURNEYS_KEY = "citynexus.revolution.firstlook.recent-journeys";
 const START_WRITE_STATUS_KEY = "citynexus.revolution.firstlook.start-write";
-const TRIP_BRIEF_STORAGE_PREFIX = "citynexus.revolution.firstlook.trip-brief";
 
 type TripPlanningMode = "balanced" | "budget" | "explore" | "strict_schedule";
 type TripEnergy = "easy" | "steady" | "full";
@@ -71,23 +71,6 @@ function tripBriefGoal(goal: string, interests: string[], energy: TripEnergy): s
     interestLabels.length ? `兴趣：${interestLabels.join("、")}` : "",
     `节奏：${TRIP_ENERGY_LABELS[energy]}`,
   ].filter(Boolean).join("\n").slice(0, 360);
-}
-
-function saveTripBrief(journeyId: string, goal: string): void {
-  try {
-    localStorage.setItem(`${TRIP_BRIEF_STORAGE_PREFIX}:${journeyId}`, goal);
-  } catch {
-    // The in-memory form remains available when browser storage is disabled.
-  }
-}
-
-function readTripBrief(journeyId: string): string | null {
-  try {
-    const value = localStorage.getItem(`${TRIP_BRIEF_STORAGE_PREFIX}:${journeyId}`);
-    return value && value.length <= 360 ? value : null;
-  } catch {
-    return null;
-  }
 }
 
 type StartWritePhase = "traveler" | "journey";
@@ -394,6 +377,8 @@ export function RevolutionFirstLook() {
   const [notice, setNotice] = useState<string | null>(null);
   const [legacyRestoreFailed, setLegacyRestoreFailed] = useState(false);
   const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
+  const [briefBearer, setBriefBearer] = useState(readTravelerBearer);
+  const [serverBrief, setServerBrief] = useState<{ journeyId: string; bearer: string; goal: string } | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<RevolutionMobileTab>("explore");
   const [pocketWalk, setPocketWalk] = useState<BootstrapPocketWalkResponse | null>(null);
@@ -403,6 +388,21 @@ export function RevolutionFirstLook() {
   const startWriteBlocked = startWriteStatus !== null;
   const canCheckCurrentStartDrafts = startWriteStatus?.phase === "journey" &&
     Boolean(startWriteStatus.cityCode && (startRecoveryIdentity?.bearer || readTravelerBearer()));
+
+  useEffect(() => subscribeTravelerBearer((token) => { setServerBrief(null); setBriefBearer(token); }), []);
+  useEffect(() => {
+    let cancelled = false;
+    setServerBrief(null);
+    if (journey && briefBearer) {
+      void cityNexusApi.getTravelPlanningInput(journey.id).then((result) => {
+        if (!cancelled && briefBearer === readTravelerBearer() && result.journey_id === journey.id && result.intent) {
+          setServerBrief({ journeyId: journey.id, bearer: briefBearer,
+            goal: tripBriefGoal(result.intent.goal, result.intent.interests, result.intent.energy) });
+        }
+      }).catch(() => { /* Existing services can still explore without a saved trip brief. */ });
+    }
+    return () => { cancelled = true; };
+  }, [journey?.id, briefBearer]);
 
   useEffect(() => {
     let cancelled = false;
@@ -646,6 +646,7 @@ export function RevolutionFirstLook() {
         budget: { amount_minor: budgetMinor, currency: "CNY" },
         planning_mode: planningMode,
         party_size: partySize,
+        planning_intent: { goal: tripGoal.trim(), interests: tripInterests, energy: tripEnergy },
       }, traveler.access_token, label, journeyCityCode);
       journeyReceiptKey = journeyResult.marker.receiptKey;
       const created = journeyResult.value;
@@ -664,7 +665,7 @@ export function RevolutionFirstLook() {
         status: "DRAFT",
         ownerTravelerId: traveler.id,
       };
-      saveTripBrief(created.id, initialGoal);
+      setServerBrief({ journeyId: created.id, bearer: traveler.access_token, goal: initialGoal });
       setRecentJourneys(rememberJourney(next));
       setExplorationTitle(null);
       setJourney(next);
@@ -1178,7 +1179,7 @@ export function RevolutionFirstLook() {
                     key={journey.id}
                     journeyId={journey.id}
                     cityName={journey.cityName}
-                    initialGoal={readTripBrief(journey.id) ?? undefined}
+                    initialGoal={serverBrief?.journeyId === journey.id && serverBrief.bearer === readTravelerBearer() ? serverBrief.goal : undefined}
                     onExplorationCenterLabelChange={(label) => {
                       setExplorationTitle({ journeyId: journey.id, label });
                     }}

@@ -250,6 +250,12 @@ export function RevolutionQuickExplore({
   const [center, setCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [category, setCategory] = useState<(typeof categories)[number]["value"]>("park/garden");
   const [placeName, setPlaceName] = useState("");
+  const lastServerGoal = useRef(initialGoal);
+  useEffect(() => {
+    const previous = lastServerGoal.current;
+    if (initialGoal) setAiGoal((current) => current === previous || current === `我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？` ? initialGoal : current);
+    lastServerGoal.current = initialGoal;
+  }, [initialGoal, cityName]);
   const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
   const [readinessStatus, setReadinessStatus] = useState<"checking" | "ready" | "blocked" | "error">("checking");
   const [discovery, setDiscovery] = useState<BootstrapDiscoveryResponse | null>(null);

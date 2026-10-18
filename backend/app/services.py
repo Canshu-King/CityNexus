@@ -2010,7 +2010,7 @@ def _generic_compose_plans(
     # rows merely because their IDs sorted first.
     provider_backed = len(places) >= 2 and all(
         str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
-        and str(place.external_id or "").casefold().startswith("overpass:")
+        and str(place.external_id or "").casefold().startswith(("overpass:", "photon:"))
         for place in places.values()
     )
     if provider_backed:
@@ -2093,6 +2093,16 @@ def _generic_compose_plans(
     # the arrival instant crammed an 8-stop Xiamen trip into one morning, which
     # then made every hotel's pinned check-in genuinely unreachable.
     day_windows = _generic_day_windows(journey_start, journey_end)
+    from app.planning.day_rhythm import rhythm_from_preferences
+    rhythm = next((rhythm_from_preferences({"day_rhythm": json.loads(item.value_json)})
+        for item in traveler_preferences if item.preference_key == "day_rhythm"), None)
+    if rhythm:
+        # Use the same persisted day-rhythm semantics as authoritative composition.
+        day_windows = [(max(start, start.replace(hour=rhythm.wake_minute // 60, minute=rhythm.wake_minute % 60)), end)
+            for start, end in day_windows]
+        day_windows = [(start, end) for start, end in day_windows if end > start]
+        if not day_windows:
+            raise ValueError("TRAVEL_BRIEF_NO_USABLE_DAY_WINDOW")
     day_index = 0
     cursor = day_windows[0][0]
     day_used_min = 0

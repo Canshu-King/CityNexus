@@ -516,6 +516,7 @@ from app.schemas import (
     GuardianAutopilotStart,
     JourneyOperatorStartRequest,
     JourneyCreate,
+    TravelBriefRequest,
     JourneyPatch,
     LocationObservationRequest,
     GroupPresenceRouteRequest,
@@ -7163,10 +7164,16 @@ def suggested_room_count(party_size: int) -> int:
 @app.post("/api/v1/journeys", status_code=201)
 def create_journey(
     payload: JourneyCreate,
+    http_request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
     require(session, Traveler, str(payload.traveler_id), "Traveler")
+    if payload.planning_intent is not None:
+        from app.traveler_principal import resolve_traveler_principal
+        principal = resolve_traveler_principal(http_request, session)
+        if str(principal.traveler_id) != str(payload.traveler_id):
+            raise HTTPException(403, "Trip intent must belong to the signed traveler")
     now = datetime.now(timezone.utc).isoformat()
     occupancy = dict(payload.occupancy)
     occupancy.setdefault("adults", payload.party_size)
@@ -7250,6 +7257,14 @@ def create_journey(
             updated_at=now,
         )
     )
+    if payload.planning_intent is not None:
+        from app.planning.travel_brief import save_brief
+        session.flush()
+        owner = session.scalar(select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == journey.traveler_id,
+        ))
+        save_brief(session, journey, owner, payload.planning_intent)
     _complete_start_write_receipt(session, receipt, record_id=journey.id)
     session.commit()
     record_audit(
@@ -7261,6 +7276,39 @@ def create_journey(
     )
     session.commit()
     return journey_schema(journey)
+
+
+@app.get("/api/v1/journeys/{journey_id}/planning-intent")
+def get_trip_planning_intent(journey_id: UUID, request: Request, response: Response,
+                            session: Session = Depends(get_session)):
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.planning.travel_brief import brief_projection
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return brief_projection(session, journey, member)
+
+
+@app.put("/api/v1/journeys/{journey_id}/planning-intent")
+def put_trip_planning_intent(journey_id: UUID, payload: TravelBriefRequest,
+                            request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.planning.travel_brief import brief_projection, save_brief
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if str(member.traveler_id) != str(journey.traveler_id) or not member_has_capability(session, member, "JOURNEY_UPDATE"):
+        raise HTTPException(403, "Journey owner update required")
+    if journey.status != "DRAFT":
+        raise HTTPException(409, "Update trip intent before choosing a plan")
+    with journey_write_lock(str(journey_id)):
+        save_brief(session, journey, member, payload)
+        session.commit()
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return brief_projection(session, journey, member)
 
 
 @app.get("/api/v1/journeys/session/recent-drafts")
@@ -17233,6 +17281,13 @@ def generate_journey_plans(
     journey = require(session, Journey, str(journey_id), "Journey")
     start_request_budget(SCENARIO_PLANS_GENERATE)
     request = payload or GeneratePlansRequest()
+    if request.bootstrap_candidate_ids:
+        from app.traveler_principal import resolve_journey_member_principal, member_has_capability
+        _principal, actor = resolve_journey_member_principal(http_request, session, journey_id=str(journey.id))
+        if str(actor.traveler_id) != str(journey.traveler_id) or not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey owner update required")
+        if request.place_ids or len(set(request.bootstrap_candidate_ids)) != len(request.bootstrap_candidate_ids):
+            raise HTTPException(422, "Select different bootstrap candidates without additional place_ids")
     cost_unknown_ack_actor: str | None = None
     if request.allow_unknown_cost:
         # This flag records a traveller-owned decision, so a deployment with
@@ -17318,6 +17373,8 @@ def _plan_continuation_identity(journey_id: UUID, journey: Journey,
         signature_payload["allow_single_place"] = True
     if request.allow_unknown_cost:
         signature_payload["allow_unknown_cost"] = True
+    if request.bootstrap_candidate_ids:
+        signature_payload["bootstrap_candidate_ids"] = sorted(str(value) for value in request.bootstrap_candidate_ids)
     signature = canonical_request_signature(signature_payload)
     keys = [f"plans.generate:{transport_key}"] if transport_key is not None else []
     if continuation_id is not None and f"plans.generate:{continuation_id}" not in keys:
@@ -17583,15 +17640,42 @@ def _generate_plans_answer(session: Session, journey: Journey,
     """今天这一段的本体：一次生成 + 那次结果的耐久事实。被 Phase B 用同一条事务包住。"""
 
     planning_mode = request.planning_mode or journey.planning_mode
+    place_ids = request.place_ids
+    if request.bootstrap_candidate_ids:
+        from app.planning.travel_brief import brief_projection
+        from app.execution.bootstrap_discovery import select_bootstrap_candidate
+        owner = session.scalar(select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == journey.traveler_id,
+        ))
+        available = {item["candidate_id"]: item for item in brief_projection(session, journey, owner)["candidates"]}
+        if any(str(value) not in available or available[str(value)]["selection_state"] != "READY_FOR_NATIVE_PLAN"
+               for value in request.bootstrap_candidate_ids):
+            from app.services import CompositionRefusal
+            raise CompositionRefusal("Selected places still need opening or cost facts",
+                reason_code="UNRESOLVED_ACTIVITY_FACTS", details={"next_actions": ["VERIFY_SOURCE", "CHOOSE_ANOTHER_PLACE"]})
+        place_ids = []
+        for candidate_id in request.bootstrap_candidate_ids:
+            candidate = available[str(candidate_id)]
+            existing_candidate = session.get(RealPlaceCandidate, str(candidate_id))
+            if existing_candidate.status == "BOOTSTRAP_SELECTED" and existing_candidate.materialized_place_id:
+                place_ids.append(existing_candidate.materialized_place_id)
+                continue
+            selected = select_bootstrap_candidate(session, journey, member=owner,
+                traveler_id=journey.traveler_id, receipt_id=UUID(candidate["receipt_id"]), candidate_id=candidate_id,
+                batch_candidate_ids=frozenset(str(value) for value in request.bootstrap_candidate_ids))
+            place_ids.append(selected["selected_place_id"])
     plans = generate_plans(
         session,
         journey,
         planning_mode,
         request.candidate_count,
-        place_ids=request.place_ids,
+        place_ids=place_ids,
         allow_single_place=request.allow_single_place,
         allow_unknown_cost=request.allow_unknown_cost,
     )
+    from app.planning.travel_brief import stamp_plan_intent
+    stamp_plan_intent(session, journey, plans)
     if request.allow_unknown_cost and cost_unknown_ack_actor:
         for plan in plans:
             explanation = json.loads(plan.explanation_json or "{}")
