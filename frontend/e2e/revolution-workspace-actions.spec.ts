@@ -125,6 +125,7 @@ for (const width of [390, 430, 1366]) {
     await dialog.getByRole("button", { name: "刷新任务", exact: true }).click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("1 条来源记录");
+    await dialog.locator(".rev-goal-draft-slot summary").first().click();
     await dialog.getByLabel("安排", { exact: true }).fill("TEST_FIXTURE 改为下午三点出发");
     await dialog.getByRole("button", { name: "保存草案", exact: true }).click();
     await expect(dialog).toContainText("草案已保存");
