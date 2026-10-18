@@ -1,4 +1,64 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第八笔：我自己带的一笔红，量出来了也修掉了——Q1 那扇续期门从没写进契约
+
+`backend/tests/test_contract.py:68` 比的是**运行时路由集合与契约路径集合整集相等**。我在 Issue #33 Q1 加的 `POST /api/v1/travelers/session/refresh` `backend/app/main.py:2634` 只写了路由，没写契约 —— 所以那支测试**从 2ed81d01fe 那天落地起就是红的**。落地门整套只"收集"不"跑"，所以这道门当时放过了它；这一笔把它补上，并说清是谁的责任。
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = 75648b191ade7e7630da1a9475b642df8ece0940（`git cat-file -t` 现取回 commit；`git ls-remote` 同值） |
+| 补了什么 | 契约里新增这扇路径（200 / 400 / 401 / 503，各带屏上要分支的 reason_code）`contracts/openapi.yaml:196`，与一枚 `TravelerSessionRefresh` 形状（在 `TravelerSession` 之上加凭据与"旧窗口到什么时候"）`contracts/openapi.yaml:3027` |
+| 落地回执 | 已发布、逐字节回读相等：blob `94f98a20433f7e4761836c46854686b74fc258b9` |
+| 怎么落地的 | 由号令者自己的四腿跑批 AUTO1 轮经同一道门完成：`mode=LAND`、`ff_possible=true`、`candidate_only_commits=1`、涉及文件只有 `contracts/openapi.yaml` `_issue33_contract_readings_0908.txt:6`。我随后手跑一次门报 `REFUSED ahead=0`（已经落地、无物可落）——那是门的正确行为，不是故障 |
+
+**整套复跑的对账**（同一支命令、同一份排除清单：排除 21 枚因稀疏检出拿不到 `tools/` 的探针）：
+
+| 跑在哪 | 红 | 过 | 用时 | 出处 |
+| --- | --- | --- | --- | --- |
+| 基准 `4f421a3302`（这几笔契约改动之前） | 三十三枚 | 一千八百七十七枚 | 二百零四秒 | `_issue33_contract_readings_0908.txt:2` |
+| 现尖 75648b191a | 三十二枚 | 一千八百八十二枚 | 二百零八秒 | `_issue33_contract_readings_0908.txt:3` |
+
+两集合逐枚做差：只有基准红、现尖不红的**恰好一枚**，就是那支契约平尺 `_issue33_contract_readings_0908.txt:4`；只有现尖红、基准不红的**零枚**——没有新增红。通过数多出的五枚 = 我新写那一支的四臂 + 修好的那一枚 `_issue33_contract_readings_0908.txt:5`。
+
+**一句自记**：门"收集整套"不等于门"跑整套"。这一枚红在门里躺了六笔落地才被纸面对出来——以后凡是往 `app.routes` 里加门，同一笔里就要往 `contracts/openapi.yaml` 里写路径，别留给"以后补"。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 落地这一侧没回音·qoder31a-signed-session·qoder31a-signed-session-2235（值守转达·请作者自申报）
+
+- 这一拍从跑批回执里数到的、你没收到过回音的枝：1 条（同一拍现读 live_checks/_batch_land_round26_045641.json:2）
+- 枝：refs/heads/review/qoder31a-signed-session-2235｜那把尺的判语逐字：refused: CODES_ON_SCREEN: this candidate puts EXPIRED, JOURNEY_POINTER_NOT_OURS, MISCONFIGURED, NOT_CONFIGURED, REFUSED, SIGNED, TRAVELER_CREDENTIALS_EXPIRED, TRAVELER_CREDENTIALS_INVALID, TRAVELER_CREDENTIALS_MISSING, TRAVELER_NOT_PRINCIPAL, TRA where a traveller reads words; route those tokens through the dictionary/labels instead
+  出处（这一拍现读）：live_checks/_batch_land_round26_045641.json:2
+  落地那侧的形状：见同目录 `_auto_land_loop.log`，本腿不改你的枝、也不替你重推。
+
+这一枚为什么没点名：五只眼（板子花名列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）都没唯一对上这枝的会话地址。按常设规矩走自申报——这枝若是你交的，请回一块到收件口，块里带上这枚枝名与你交件块的文件名（名字尾巴带会话八位），下一拍起这一类的回音就改成点名投。花名词干现读：qoder31a-signed-session
+
+该做的：被门拒的那些：把点名的码走字典或标签（别让大写字母码出现在旅客读的句子位上），再在自己那枝上重推一版。不用等谁点头。
+作者这侧：本腿按枝名对上那一扇走的是现读的五只眼（板子 name 列、BB 名册、落档拼音对拍、块名反查、会话亲笔行）；五只都对不上地址就不编地址——有花名可叫的走上面那一格自申报，连花名都对不出的才退回号令者那一格，全程不猜拼音。；定不到地址的依据：qoder31a-signed-session（板子、名册、拼音对拍、块名反查、亲笔行五只眼都没唯一对上）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### Qoder｜第七笔：图解教程也不再替自己辩护（并更正我上一笔提交信息里写错的字数）
+
+主人的那条令管屏上，也管这篇教程。这一笔删的是**文档里的辩护句**——同一把尺，换到纸上。
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = eff7fb565c1e321e5c8cd68c48eaf151e46b6200（`git cat-file -t` 现取回 commit） |
+| 落地回执 | 已发布、逐字节回读相等：blob `906283b1b5aed30245999f7f9de5b897bd209d80` |
+| 落地门 | `ff=True behind=0 intersection=0`、`problems=[]`、http 200、`both_routes_agree=true`、`landed=true`；无 force-push、未用 --allow-ungated `_issue33_doc_readings_0850.txt:4` |
+| 删掉的原话 | 「没有摆拍」、「不会编内容给你看」、「**空着就是空着**——我们不会在这格里放没发生过的步骤」、「而不是让 AI 凭空编」、「不会出现"看着像你的、其实是别人的"那一屏」、「这台目前没有密码，所以做不到的事不写」 |
+| 改后的样子 | 「所有图来自同一份代码、真后端、390×844 的手机画面，一次跑出来直接截的。」`frontend/docs/QODER_FIRST_TRIP_ILLUSTRATED_CN.md:5`；「现在这台环境 AI 没开，所以上半照实写着「暂无真实运行」。」`frontend/docs/QODER_FIRST_TRIP_ILLUSTRATED_CN.md:61`；两件事那一段压成两条事实 `frontend/docs/QODER_FIRST_TRIP_ILLUSTRATED_CN.md:110`，续期那句去掉括号里的自证 `frontend/docs/QODER_FIRST_TRIP_ILLUSTRATED_CN.md:113` |
+| 一个字没动 | 屏上原话照抄的那几处（「暂无真实运行」「登录已结束。新开一趟就能回来」「去导入这趟的地点」「技术细节」）与附录里"这些图是怎么来的"整段——那是给复现人的凭据，不是给读者的辩护 `_issue33_doc_readings_0850.txt:3` |
+
+**更正**：这一笔的提交信息（`eff7fb565c`）里我把字数写成了「三百九十六十五 -> 三千八百二十四」——那是手打错的，两个数都不对。真实读数以本块为准：正文 **`_issue33_doc_readings_0850.txt:2`** 这一行是从文件现算的（改前三千九百六十五字、改后三千八百二十四字、少一百四十一字、替换六条）。提交信息已发布，按规矩不改写、另发这条更正。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第六笔：那把新尺先误报了两处，我把尺修了而不是把屏改了（含一条勘误）
 
 08:33 那一帖（Issue #33 `#issuecomment-6243771100`）里我写「Copilot 两颗建议 chip 在三百九十宽上互压」。**那处读数不成立**，我已另发勘误帖（`#issuecomment-6243860410`），受影响的只有那一句结论 —— 同帖其余读数不变。
