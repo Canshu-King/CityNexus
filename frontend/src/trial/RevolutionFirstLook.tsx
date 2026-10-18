@@ -293,15 +293,17 @@ function DraftAgentActivity({
       <div className="rev-mobile-account-line">
         <span>AI 服务</span><strong>{status}</strong>
       </div>
-      <p>当前是探索草稿，正式行程尚未启动。</p>
+      <div className="rev-mobile-account-line">
+        <span>本次行程</span><strong>暂无运行记录</strong>
+      </div>
       <p>
         {hasSelectedPlace
-          ? "已选定地点，请在上方确认正式行程。"
+          ? "已选地点。下一步：在上方确认正式行程。"
           : hasSavedPocketWalk
-            ? "散步路线已保存。选定正式行程地点并确认后，就能启动助手。"
-            : "选定真实地点并确认正式行程，就能启动助手。"}
-        启动助手后，实际工作记录会显示在这里。
+            ? "散步路线已保存。选定正式行程地点后，在上方确认行程。"
+            : "选定真实地点后，在上方确认正式行程。"}
       </p>
+      <p>正式行程开始且 AI 可用时，实际工作记录会显示在这里。</p>
     </section>
   );
 }
@@ -943,6 +945,19 @@ export function RevolutionFirstLook() {
                   换地区
                 </button>
               </section>
+              {journey.status === "DRAFT" && (
+                <button
+                  type="button"
+                  className="rev-firstlook-agent-entry"
+                  data-testid="rev-quick-open-agent-activity"
+                  aria-label={`AI 工作动态，${agentStatusTitle}`}
+                  onClick={() => navigateMobile("trips")}
+                >
+                  <span>AI 工作动态</span>
+                  <small>{agentStatusTitle}</small>
+                  <span aria-hidden="true">查看 →</span>
+                </button>
+              )}
               {notice && <p className="rev-firstlook-notice" role="status">{notice}</p>}
               {journey.status === "DRAFT" ? (
                 <section className="rev-firstlook-real-ui" aria-label="地点探索与私人散步">
@@ -955,7 +970,6 @@ export function RevolutionFirstLook() {
                     }}
                     agentConfigured={Boolean(agentCanRequestSuggestion)}
                     agentChecking={agentStatusChecking}
-                    onOpenAgentActivity={() => navigateMobile("trips")}
                     onPocketWalkChange={setPocketWalk}
                     onMemberAccessDenied={recoverDeniedJourney}
                     onFormalCandidateSelected={(placeId) => {

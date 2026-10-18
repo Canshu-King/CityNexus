@@ -208,6 +208,36 @@
   padding: 9px 12px !important;
   white-space: nowrap;
 }
+.rev-mobile-v1 .rev-firstlook-agent-entry {
+  display: flex;
+  width: 100%;
+  min-height: 46px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--m-border);
+  border-radius: 14px;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  background: #f7fbf8;
+  color: #24533a;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  touch-action: manipulation;
+}
+.rev-mobile-v1 .rev-firstlook-agent-entry small {
+  overflow: hidden;
+  margin-left: auto;
+  color: var(--m-muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rev-mobile-v1 .rev-firstlook-agent-entry > span:last-child {
+  flex: 0 0 auto;
+}
 .rev-mobile-v1 .rev-firstlook-real-ui {
   width: 100% !important;
   padding: 0 !important;

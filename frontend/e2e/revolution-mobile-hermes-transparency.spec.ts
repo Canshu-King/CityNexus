@@ -1,6 +1,11 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
 
-test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, serviceWorkers: "block" });
+test.use({
+  viewport: { width: 390, height: 844 },
+  hasTouch: true,
+  serviceWorkers: "block",
+  storageState: { cookies: [], origins: [] },
+});
 
 const journeyId = "00000000-0000-4000-8000-000000000224";
 const journeyRoot = `**/api/v1/journeys/${journeyId}`;
@@ -298,7 +303,8 @@ test("TEST_FIXTURE DRAFT activity entry opens status without creating a run or A
   await page.goto("/revolution");
   await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
   const activityEntry = page.getByTestId("rev-quick-open-agent-activity");
-  await expect(activityEntry).toHaveText("AI 工作动态 →");
+  await expect(activityEntry).toContainText("AI 工作动态");
+  await expect(activityEntry).toContainText("AI 暂未开启");
   await expect.poll(() => startupReads.runtime).toBeGreaterThan(0);
   await expect.poll(() => startupReads.readiness).toBeGreaterThan(0);
   await expect.poll(() => startupReads.shortlist).toBeGreaterThan(0);
@@ -317,9 +323,10 @@ test("TEST_FIXTURE DRAFT activity entry opens status without creating a run or A
   await activityEntry.click();
   await expect(page.getByTestId("rev-mobile-screen-trips")).toBeVisible();
   const activity = page.getByTestId("rev-draft-agent-activity");
-  await expect(activity).toContainText("当前是探索草稿，正式行程尚未启动。");
-  await expect(activity).toContainText("选定真实地点并确认正式行程，就能启动助手。");
-  await expect(activity).toContainText("启动助手后，实际工作记录会显示在这里。");
+  await expect(activity).toContainText("AI 暂未开启");
+  await expect(activity).toContainText("暂无运行记录");
+  await expect(activity).toContainText("选定真实地点后，在上方确认正式行程。");
+  await expect(activity).toContainText("正式行程开始且 AI 可用时，实际工作记录会显示在这里。");
   expect(apiRequests).toHaveLength(apiRequestsBeforeClick);
   expect(nativeRunReads).toBe(0);
   await page.screenshot({

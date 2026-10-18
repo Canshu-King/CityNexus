@@ -211,7 +211,6 @@ export function RevolutionQuickExplore({
   cityName,
   agentConfigured = false,
   agentChecking = false,
-  onOpenAgentActivity,
   onFormalCandidateSelected,
   onPocketWalkChange,
   onExplorationCenterLabelChange,
@@ -221,7 +220,6 @@ export function RevolutionQuickExplore({
   cityName: string;
   agentConfigured?: boolean;
   agentChecking?: boolean;
-  onOpenAgentActivity: () => void;
   onFormalCandidateSelected?: (placeId: string) => void;
   onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
   onExplorationCenterLabelChange?: (label: string) => void;
@@ -928,14 +926,6 @@ export function RevolutionQuickExplore({
             onAiGoalChange={setAiGoal}
             onAskAi={() => { void consultHermes(); }}
           />
-          <button
-            type="button"
-            className="rev-quick-secondary"
-            data-testid="rev-quick-open-agent-activity"
-            onClick={onOpenAgentActivity}
-          >
-            AI 工作动态 →
-          </button>
         </>
       )}
 
