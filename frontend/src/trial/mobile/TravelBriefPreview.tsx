@@ -103,7 +103,8 @@ export function TravelBriefPreview({ input, selected, onSelect, onSave, onRefres
       <p className="rev-plan-gap">已保存到这份行程，重新登录后可恢复。</p>
       <p>{input.intent.goal}</p>
       <p>规划器已接收：{[...new Set(input.intent.mapped_preferences.map((item) => labels[item.preference] ?? item.preference))].join("、") || "日期、人数和预算"}</p>
-      {input.intent.goal && <p className="rev-plan-gap">原文已保留；未列出的开放式要求还需你确认，暂不作为硬性排程条件。</p>}
+      {input.intent.unmapped_interests?.length ? <p className="rev-plan-gap">还未转成正式规划约束的兴趣：{input.intent.unmapped_interests.join("、")}。已为你保存在旅行需求中，后续由 AI 研究，不会被静默删除。</p> : null}
+      {input.intent.goal && <p className="rev-plan-gap">开放式需求原文已保留，当前规则规划器仍不能完整执行这些要求。</p>}
     </>}
     <details><summary>修改旅行需求</summary>
       <form onSubmit={(event) => { event.preventDefault(); if (!disabled) void onSave({ goal, interests: chosen, energy }); }}>
