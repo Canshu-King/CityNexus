@@ -113,8 +113,15 @@ for (const width of [390, 430, 1366]) {
     await page.goto("/revolution");
     await page.getByTestId("rev-mobile-tab-trips").click();
     await page.getByTestId("rev-mobile-tab-assistant").click();
-    const dialog = page.getByRole("dialog");
+    const dialog = page.getByTestId("rev-mission-cockpit");
     await expect(dialog).toBeVisible();
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
+    if (width === 1366) {
+      const a = await page.getByTestId("rev-mission-agent-pane").boundingBox();
+      const m = await page.getByTestId("rev-mission-map-pane").boundingBox();
+      const t = await page.getByTestId("rev-mission-timeline-pane").boundingBox();
+      expect(a!.x).toBeLessThan(m!.x); expect(m!.x).toBeLessThan(t!.x);
+    }
     await expect(dialog.getByRole("textbox")).toHaveValue(goal);
     expect(calls).toEqual([]);
     await dialog.locator('input[type="checkbox"]').nth(0).check();
@@ -134,13 +141,13 @@ for (const width of [390, 430, 1366]) {
     await page.reload();
     await page.getByTestId("rev-mobile-tab-trips").click();
     await page.getByTestId("rev-mobile-tab-assistant").click();
-    const restoredDialog = page.getByRole("dialog");
+    const restoredDialog = page.getByTestId("rev-mission-cockpit");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await restoredDialog.locator(".rev-goal-draft-slot summary").first().click();
     await expect(restoredDialog.getByLabel("安排", { exact: true })).toHaveValue("TEST_FIXTURE 改为下午三点出发");
     expect(calls).toEqual([goal]);
-    await restoredDialog.getByRole("button", { name: "关闭工作台" }).click();
+    await page.getByTestId("rev-mobile-tab-me").click();
     await expect(restoredDialog).not.toBeVisible();
   });
 }
@@ -152,7 +159,7 @@ test("TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved 
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
   await page.getByTestId("rev-mobile-tab-map").click();
-  const dialog = page.getByRole("dialog");
+  const dialog = page.getByTestId("rev-mission-cockpit");
   await expect(dialog).toContainText("TEST_FIXTURE 上次搜索地点");
   await expect(dialog).toContainText("上次搜索的地点，营业与费用需更新");
   await expect(dialog.getByRole("link", {name: "查看地点来源 ↗"})).toHaveAttribute("href", "https://www.openstreetmap.org/way/12345");
@@ -165,7 +172,7 @@ test("TEST_FIXTURE identity change clears the open private assistant immediately
   await fixture(page);
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-assistant").click();
-  const dialog = page.getByRole("dialog");
+  const dialog = page.getByTestId("rev-mission-cockpit");
   await expect(dialog.getByRole("textbox")).toHaveValue(goal);
   await page.evaluate(() => {
     sessionStorage.removeItem("citynexus.traveler.bearer");

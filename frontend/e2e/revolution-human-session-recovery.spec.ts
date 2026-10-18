@@ -102,6 +102,7 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     await page.route("**/api/v1/travelers/session", (r) => json(r, 401, { detail: "INVALID_SIGNED_SESSION" }));
 
     await page.goto("/revolution");
+    await page.getByTestId("rev-firstlook-city").fill("测试地区");
     await page.getByTestId("rev-firstlook-start").click();
     await expect(page.getByRole("alert")).toContainText("401");
     await expect(page.getByTestId("rev-firstlook-new-session")).toBeVisible();

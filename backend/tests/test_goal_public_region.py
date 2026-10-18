@@ -126,7 +126,7 @@ def test_legacy_random_region_queries_without_title_or_city_code(goal_scope, mon
 
     request = json.loads(calls[0].request_json)
     assert result["status"] == "NO_RESULTS"
-    assert captured == [("photon", "TEST_FIXTURE park", None, 8)]
+    assert captured == [("photon", "TEST_FIXTURE park", "", 8)]
     assert request["city"] is None and request["public_city_label"] == ""
     assert "CN-RV-LEGACY987" not in calls[0].request_json
     assert "PRIVATE_LEGACY_TITLE" not in calls[0].request_json

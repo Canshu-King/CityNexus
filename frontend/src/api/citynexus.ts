@@ -1751,6 +1751,7 @@ export interface BootstrapDiscoveryResponse {
 
 export interface TravelBrief {
   goal: string;
+  public_region_label?: string | null;
   interests: string[];
   energy: "easy" | "steady" | "full";
 }

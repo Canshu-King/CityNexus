@@ -221,7 +221,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   }
 
   await askAi.click();
-  const taskDialog = page.getByRole("dialog", {name: "AI助手"});
+  const taskDialog = page.getByRole("region", {name: "Agent 命令台"});
   await expect(taskDialog.getByRole("textbox")).toHaveValue(fullGoal);
   await expect(taskDialog.getByRole("button", {name: "开始研究", exact: true})).toBeDisabled();
   expect(suggestionCalls).toBe(0);

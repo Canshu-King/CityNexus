@@ -118,8 +118,9 @@ function taskStepText(result: Record<string, unknown>): string {
   return result.status === "COMPLETED" ? "完成" : "这一步暂未完成";
 }
 
-export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: WorkspacePanel;
-  goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void }) {
+export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, onTaskChange }: { panel: WorkspacePanel;
+  goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
+  embedded?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -144,6 +145,17 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
   const visibleTask = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.value : null;
   const visibleEvents = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.events : [];
+  useEffect(() => {
+    if (embedded && goalTaskSnapshot && sameContext(goalTaskSnapshot.context, readContext())) {
+      onTaskChange?.(goalTaskSnapshot.value, goalTaskSnapshot.events);
+    }
+  }, [embedded, goalTaskSnapshot, onTaskChange]);
+  useEffect(() => {
+    if (!embedded) return;
+    const refresh = () => setRevision((value) => value + 1);
+    window.addEventListener("citynexus:mission-refresh", refresh);
+    return () => window.removeEventListener("citynexus:mission-refresh", refresh);
+  }, [embedded]);
 
   useEffect(() => {
     const invalidate = () => {
@@ -340,10 +352,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
   const activeTools = visibleEvents.filter((event) => event.event_type === "TOOL_STARTED" &&
     !(visibleTask?.tool_steps ?? []).some((step) => step.run_id === event.run_id && step.sequence_no === event.step_sequence_no));
 
-  return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"
-    onCancel={(event) => { event.preventDefault(); closeRef.current(); }}>
-    <header className="rev-workspace-top"><h2 id="rev-workspace-heading">{panel === "map" ? COPY.map : COPY.assistant}</h2>
-      <button type="button" onClick={onClose} aria-label={COPY.close}>×</button></header>
+  const content = <>
+    {!embedded && <header className="rev-workspace-top"><h2 id="rev-workspace-heading">{panel === "map" ? COPY.map : COPY.assistant}</h2>
+      <button type="button" onClick={onClose} aria-label={COPY.close}>×</button></header>}
     <div className="rev-workspace-body">
       {!context && <p>{COPY.none}</p>}
       {loading && !visible && <p role="status">{COPY.load}</p>}
@@ -360,7 +371,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
         {visible.status !== "DRAFT" ? <p>这趟行程已进入确认或执行阶段，关闭面板后在行程页查看执行助手。</p> :
           <form onSubmit={(event) => { event.preventDefault(); void startNewTask(); }}>
             <label htmlFor="rev-workspace-question">{COPY.question}</label>
-            <textarea id="rev-workspace-question" rows={5} maxLength={2000} value={question} disabled={busy} onChange={(event) => setQuestion(event.target.value)} />
+            <textarea id="rev-workspace-question" rows={embedded ? 3 : 5} maxLength={2000} value={question} disabled={busy} onChange={(event) => setQuestion(event.target.value)} />
             <label className="rev-workspace-depth">本次研究工作量
               <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
                 <option value="deep">深入调查 · 最多 24 轮模型 / 48 次工具（推荐）</option>
@@ -375,11 +386,11 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
         {visibleTask && <section aria-label="Agent 任务" className="rev-workspace-answer">
           <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
           <p>{visibleTask.usage.model_turns ?? 0}/{visibleTask.budget.max_model_turns ?? MODEL_TURNS} 轮模型 · {visibleTask.usage.tool_calls ?? 0}/{visibleTask.budget.max_tool_calls ?? TOOL_CALLS} 次工具</p>
-          {visibleTask.assistant_summary && <p>{visibleTask.assistant_summary}</p>}
+          {visibleTask.assistant_summary && <details><summary>本轮研究摘要</summary><p>{visibleTask.assistant_summary}</p></details>}
           {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "本阶段的研究额度用完了。草案和调查记录都保留在服务器；点击「继续研究」可单独授权新的额度。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
           <p className="rev-workspace-budget-help">已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续前可查看本阶段额度。</p>
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
-          {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open>
+          {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open={!embedded}>
             <summary>Agent 真实工作过程 · 已记录 {visibleEvents.length} 条事件</summary>
             <p>按时间显示模型轮次、工具结果和恢复进度。</p>
             <ol aria-label="Agent 运行事件">
@@ -390,14 +401,14 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
             </ol>
             {visibleEvents.length > 24 && <p>这里只显示最新 24 条；完整事件仍在同一任务的服务端记录中。</p>}
           </details>}
-          {(visibleTask.tool_steps ?? []).length > 0 && <ol className="rev-workspace-task-steps">
+          {(visibleTask.tool_steps ?? []).length > 0 && <details open={!embedded}><summary>工具结果 · {visibleTask.tool_steps?.length} 次</summary><ol className="rev-workspace-task-steps">
             {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
               <strong>{TOOL_NAME[step.tool_name] ?? step.tool_name}</strong>
               {typeof step.result.public_action === "string" && <span>{step.result.public_action}</span>}
               <span>{step.tool_name === "inspect_journey" && step.status === "COMPLETED" ? "行程已读取" : taskStepText(step.result)}</span>
               {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
             </li>)}
-          </ol>}
+          </ol></details>}
           {(visibleTask.candidate_places ?? []).length > 0 && <ul className="rev-workspace-task-places">
             {visibleTask.candidate_places?.map((place) => <li key={place.id}>
               <strong>{place.name}</strong><span>{place.opening_state === "KNOWN" ? "营业资料已读取" : "营业待核实"}</span>
@@ -409,7 +420,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
               {/^https:\/\/www\.openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(place.source_url) && <a href={place.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}
             </li>)}
           </ul>}
-          {visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
+          {!embedded && visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
             disabled={busy || visibleTask.status === "WORKING"} onSave={async (artifact) => {
               const actor = readContext();
               if (!actor) throw new Error("当前登录身份已失效，无法保存，请重新登录。");
@@ -433,5 +444,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
         </section>}
       </>}
     </div>
-  </dialog>, document.body);
+  </>;
+  if (embedded) return <section className="rev-workspace-dialog rev-workspace-inline" aria-label="Agent 命令台">{content}</section>;
+  return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"
+    onCancel={(event) => { event.preventDefault(); closeRef.current(); }}>{content}</dialog>, document.body);
 }

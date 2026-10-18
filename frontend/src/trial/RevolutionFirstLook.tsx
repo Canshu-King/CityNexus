@@ -658,7 +658,7 @@ export function RevolutionFirstLook() {
         budget: { amount_minor: budgetMinor, currency: "CNY" },
         planning_mode: planningMode,
         party_size: partySize,
-        planning_intent: { goal: tripGoal.trim(), interests: tripInterests, energy: tripEnergy },
+        planning_intent: { goal: tripGoal.trim(), public_region_label: label, interests: tripInterests, energy: tripEnergy },
       }, traveler.access_token, label, journeyCityCode);
       journeyReceiptKey = journeyResult.marker.receiptKey;
       const created = journeyResult.value;

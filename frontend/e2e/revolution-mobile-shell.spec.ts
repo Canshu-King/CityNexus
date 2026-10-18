@@ -84,7 +84,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     }));
     await page.goto("/revolution");
     await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
-    await expect(page.getByTestId("rev-firstlook-city")).toHaveValue("连城");
+    await expect(page.getByTestId("rev-firstlook-city")).toHaveValue("");
     await expect(page.getByTestId("rev-firstlook-start")).toBeVisible();
     const destinationBounds = await page.getByTestId("rev-firstlook-city").boundingBox();
     expect(destinationBounds?.height ?? 999).toBeLessThanOrEqual(64);
@@ -161,8 +161,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-find-city")).toBeVisible();
-    const searchBounds = await page.getByTestId("rev-quick-find-city").boundingBox();
-    expect((searchBounds?.y ?? 9999) + (searchBounds?.height ?? 0)).toBeLessThan(820);
+    await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
     await page.screenshot({ path: testInfo.outputPath("mobile-explore-TEST-FIXTURE.png"), fullPage: true });
 
     for (const tab of ["trips", "me", "explore"] as const) {

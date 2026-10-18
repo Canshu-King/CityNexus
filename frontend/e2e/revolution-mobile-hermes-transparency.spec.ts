@@ -330,17 +330,10 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
 
   const apiRequestsBeforeClick = apiRequests.length;
   await activityEntry.click();
-  await expect(page.getByTestId("rev-mobile-screen-trips")).toBeVisible();
-  const activity = page.getByTestId("rev-draft-agent-activity");
-  await expect(activity).toContainText("AI 暂未开启");
-  await expect(activity).toContainText("暂无运行记录");
-  await expect(activity).toContainText("选定真实地点后，在上方确认正式行程。");
-  await expect(activity).toContainText("正式行程开始且 AI 可用时，实际工作记录会显示在这里。");
-  await expect.poll(() => apiRequests.slice(apiRequestsBeforeClick).sort()).toEqual([
-    `GET /api/v1/journeys/${journeyId}`,
-    `GET /api/v1/journeys/${journeyId}/planning-intent`,
-    `GET /api/v1/journeys/${journeyId}/plans`,
-  ].sort());
+  await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
+  await expect(page.getByRole("region", {name: "Agent 命令台"})).toBeVisible();
+  await expect(page.locator("dialog[open]")).toHaveCount(0);
+  expect(apiRequests.slice(apiRequestsBeforeClick).every((request) => request.startsWith("GET "))).toBe(true);
   expect(nativeRunReads).toBe(0);
   await page.screenshot({
     path: testInfo.outputPath("issue24-draft-agent-activity-entry-390x844.png"),

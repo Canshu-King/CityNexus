@@ -404,3 +404,28 @@
 @media (prefers-reduced-motion: reduce) {
   .rev-mobile-v1 .cn-mission-os *, .rev-mobile-v1 .cn-mission-os *::after { scroll-behavior: auto; transition: none !important; }
 }
+
+/* Shared non-modal canvas: Agent / Map / editable day timeline. */
+.rev-mobile-v1 .cn-mission-grid { grid-template-columns: minmax(260px, .85fr) minmax(300px, 1.2fr) minmax(270px, .95fr); align-items: start; }
+.rev-mobile-v1 .cn-mission-spatial { display: contents; }
+.rev-mobile-v1 .cn-mission-agent-pane { padding: 16px; min-width: 0; border: 1px solid var(--os-line); border-radius: 20px; background: #fff; }
+.rev-mobile-v1 .cn-mission-os .rev-workspace-inline { display: block; width: 100%; max-height: none; padding: 0; border: 0; border-radius: 0; overflow: visible; background: transparent; }
+.rev-mobile-v1 .cn-mission-os .rev-workspace-inline .rev-workspace-body { padding: 12px 0 0; }
+.rev-mobile-v1 .cn-mission-os .rev-workspace-inline textarea { min-height: 90px; }
+.rev-mobile-v1 .cn-mission-os .rev-workspace-inline .rev-workspace-answer { margin-top: 12px; padding: 10px; }
+.rev-mobile-v1 .cn-mission-head { min-height: 130px; padding: 22px 26px; }
+.rev-mobile-v1 .cn-mission-timeline-pane { min-width: 0; }
+.rev-mobile-v1 .cn-mission-timeline-pane button { min-height: 44px; }
+.rev-mobile-v1 .cn-mission-map .rev-workspace-map { height: clamp(300px, 46dvh, 600px); }
+@media (min-width: 1000px) {
+ .rev-mobile-v1 .cn-mission-agent-pane, .rev-mobile-v1 .cn-mission-timeline-pane { max-height: calc(100dvh - 200px); overflow-y: auto; }
+}
+@media (max-width: 999px) {
+ .rev-mobile-v1 .cn-mission-grid { display: flex; flex-direction: column; }
+ .rev-mobile-v1 .cn-mission-spatial { order: 1; display: grid; grid-template-columns: 100% 100%; gap: 12px; width: 100%; max-height: 62dvh; overflow-x: auto; scroll-snap-type: x mandatory; }
+ .rev-mobile-v1 .cn-mission-map-pane, .rev-mobile-v1 .cn-mission-timeline-pane { scroll-snap-align: start; overflow-y: auto; min-width: 0; }
+ .rev-mobile-v1 .cn-mission-agent-pane { order: 2; width: 100%; max-height: 45dvh; overflow-y: auto; position: sticky; bottom: 70px; z-index: 4; box-shadow: 0 -4px 24px #182c4920; }
+ .rev-mobile-v1 .cn-mission-head { padding: 18px; }
+ .rev-mobile-v1 .cn-mission-head h2 { font-size: 25px; }
+ .rev-mobile-v1 .cn-mission-map-empty { min-height: 210px; }
+}

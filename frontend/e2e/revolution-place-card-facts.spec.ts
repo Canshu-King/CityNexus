@@ -213,6 +213,7 @@ test("place cards show grounded hours and costs while preserving provenance and 
   await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
   await page.getByTestId("rev-quick-use-approx-center").click();
   await expect(page.getByText("已经有想去的地方？", { exact: true })).toHaveCount(0);
+  await page.locator(".rev-quick-legacy-categories > summary").click();
   await page.getByTestId("rev-quick-find-places").click();
 
   const cards = page.getByTestId("rev-quick-place-card");

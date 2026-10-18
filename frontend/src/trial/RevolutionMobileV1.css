@@ -62,8 +62,8 @@
 }
 .rev-mobile-v1 .rev-firstlook-quiet:hover { color: var(--m-accent); }
 .rev-mobile-v1 .rev-firstlook-content {
-  width: min(100%, 950px) !important;
-  max-width: 950px !important;
+  width: min(100%, 1440px) !important;
+  max-width: 1440px !important;
   padding: clamp(18px, 3vw, 36px) 20px 80px !important;
   margin-inline: auto;
   color: var(--m-ink);

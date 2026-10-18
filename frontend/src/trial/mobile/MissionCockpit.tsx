@@ -1,14 +1,15 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  ArrowRight, ArrowUpRight, BrainCircuit, CalendarDays, CheckCircle2, Clock3,
-  Compass, Layers3, MapPinned, MessageSquareText, Navigation2, RefreshCw,
-  Route, ShieldCheck, Sparkles, Users, Wrench,
+  BrainCircuit, CalendarDays, Clock3, Compass, MapPinned, Navigation2, RefreshCw,
+  Route, ShieldCheck, Sparkles, Users,
 } from "lucide-react";
 import {
   cityNexusApi, type DraftGoalTask, type DraftGoalTaskEvent,
 } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap, type WorkspaceMapPoint } from "./WorkspaceMap";
+import { WorkspaceActions } from "./WorkspaceActions";
+import { GoalDraftEditor } from "./GoalDraftEditor";
 import "./MissionCockpit.css";
 
 type Props = {
@@ -84,6 +85,22 @@ export function MissionCockpit({
   const [refresh, setRefresh] = useState(0);
   const [mapAllowed, setMapAllowed] = useState(false);
   const [identityTick, setIdentityTick] = useState(0);
+  const [commandRevision, setCommandRevision] = useState(0);
+  const goalRequest = useMemo(() => commandRevision ? ({ journeyId, goal: command }) : null, [journeyId, command, commandRevision]);
+  const receiveTask = useCallback((value: DraftGoalTask, items: DraftGoalTaskEvent[]) => {
+    if (value.journey_id !== journeyId) return;
+    setTask(value); setEvents(items); setDataState("ready");
+  }, [journeyId]);
+  useEffect(() => {
+    const focus = (event: Event) => {
+      const value = (event as CustomEvent).detail;
+      if (value?.journeyId && value.journeyId !== journeyId) return;
+      if (typeof value?.goal === "string" && value.goal.trim()) { setCommand(value.goal.slice(0, 2000)); setCommandRevision((v) => v + 1); }
+      document.querySelector<HTMLTextAreaElement>(".cn-mission-os .rev-workspace-inline textarea")?.focus();
+    };
+    window.addEventListener("citynexus:mission-command", focus);
+    return () => window.removeEventListener("citynexus:mission-command", focus);
+  }, [journeyId]);
 
   useEffect(() => { setCommand(goal); setMapAllowed(false); }, [journeyId]);
   useEffect(() => {
@@ -156,127 +173,48 @@ export function MissionCockpit({
   }, [task?.status]);
   const status = journeyStatus === "ACTIVE" ? "行程执行中" : task ? statusCopy[task.status] ?? "任务已保存" : "等待第一个目标";
 
-  const submitGoal = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (journeyStatus === "ACTIVE") { onTrip(); return; }
-    if (command.trim().length >= 4) openAgent(journeyId, command);
-  };
-
-  return (
-    <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit">
-      <div className="cn-mission-head">
-        <div>
-          <div className="cn-mission-kicker"><Sparkles size={15} aria-hidden="true" /> CITYNEXUS / MISSION OS</div>
-          <h2>你的旅行，<span>交给 Agent 推进。</span></h2>
-          <p>一个目标，统一调度研究、地图、日程与实际行程。不需要先完成一串准备页面。</p>
-        </div>
-        <div className="cn-mission-state" aria-live="polite">
-          <span className="cn-mission-state-dot" aria-hidden="true" />
-          {status}
-        </div>
+  return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit">
+    <header className="cn-mission-head">
+      <div><div className="cn-mission-kicker"><Sparkles size={15} /> CITYNEXUS / MISSION OS</div>
+        <h2>{cityName}，<span>边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p></div>
+      <span className="cn-mission-state" aria-live="polite">{status}</span>
+    </header>
+    <div className="cn-mission-grid">
+      <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
+        <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>Agent 命令台</strong></div>
+        <WorkspaceActions embedded panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
       </div>
-
-      <div className="cn-mission-grid">
-        <div className="cn-mission-left">
-          <form className="cn-mission-composer" onSubmit={submitGoal}>
-            <div className="cn-mission-section-heading"><BrainCircuit size={18} aria-hidden="true" /><strong>交给 CityNexus</strong></div>
-            <label htmlFor="cn-mission-command">想去哪里，或者想改变什么？</label>
-            <textarea id="cn-mission-command" value={command} onChange={(event) => setCommand(event.target.value)}
-              maxLength={2000} rows={4}
-              placeholder="例如：帮我找到福建的古村落和当地小吃，做两天轻松的行程。找不到就继续换办法。" />
-            <div className="cn-mission-composer-actions">
-              <span>{agentStatus}</span>
-              <button type="submit" disabled={journeyStatus !== "ACTIVE" && command.trim().length < 4}>
-                <Sparkles size={16} aria-hidden="true" /> {journeyStatus === "ACTIVE" ? "查看执行 Agent" : agentAvailable ? "交给 Agent" : "打开任务助手"}
-                <ArrowRight size={16} aria-hidden="true" />
-              </button>
-            </div>
-            <small>打开当前受签名的任务助手。开始模型和公开研究前，在助手内确认本次授权。</small>
-          </form>
-
-          <article className="cn-mission-card cn-mission-plan">
-            <div className="cn-mission-section-heading"><CalendarDays size={18} aria-hidden="true" /><strong>正在形成的行程</strong></div>
-            <div className="cn-mission-plan-metric">
-              <strong>{draftSlots.length}</strong><span>项已保存安排</span>
-              <span className="cn-mission-mini-dot" aria-hidden="true" /><strong>{draftDays.length}</strong><span>天草案</span>
-            </div>
-            {draftSlots.length ? (
-              <ol>
-                {draftSlots.slice(0, 3).map((slot, index) => <li key={slot.date + ":" + index}>
-                  <span className="cn-mission-stop-dot">{String(index + 1).padStart(2, "0")}</span>
-                  <span><strong>{slot.title}</strong><small>{slot.date} · {slot.place_id ? "待确认来源与执行条件" : "暂定建议 / 待调查"}</small></span>
-                </li>)}
-              </ol>
-            ) : <p>Agent 尚未保存日程。它可以先提交暂定安排，再逐项补全资料，不必等全部地点 READY。</p>}
-            <button type="button" className="cn-mission-text-action" onClick={() => openAgent(journeyId, command.trim() || goal || cityName)}>
-              进入草案与研究记录 <ArrowUpRight size={16} aria-hidden="true" />
-            </button>
-          </article>
-
-          <div className="cn-mission-capability">
-            <div className="cn-mission-section-heading"><Layers3 size={18} aria-hidden="true" /><strong>可调度的现实能力</strong></div>
-            <div className="cn-mission-capability-grid">
-              <button type="button" onClick={onExplore}><Compass size={20} aria-hidden="true" /><strong>地点与发现</strong><small>探索真实地点</small></button>
-              <button type="button" onClick={onTrip}><Route size={20} aria-hidden="true" /><strong>日程与路线</strong><small>比较和调整方案</small></button>
-              <button type="button" onClick={onTrip}><ShieldCheck size={20} aria-hidden="true" /><strong>Guardian</strong><small>行程守护与变化</small></button>
-              <button type="button" onClick={onTrip}><Users size={20} aria-hidden="true" /><strong>多人协作</strong><small>成员决策与同行</small></button>
-            </div>
-            <p>这些是能力入口，不代表每个子 Agent 当前都在运行。实际工作以服务器事件为准。</p>
+      <div className="cn-mission-spatial" aria-label="地图与日程画布">
+        <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
+          <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处地点</span></div>
+          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} />
+            : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
+          <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
+          <section className="cn-mission-activity" aria-label="Agent 工作轨迹">
+            <div className="cn-mission-activity-top"><strong>Agent 工作轨迹</strong><button type="button" aria-label="刷新 Agent 实际任务" onClick={() => setRefresh((v) => v + 1)}><RefreshCw size={16} /></button></div>
+            {task && <p className="cn-mission-run-stats">模型 {task.usage.model_turns ?? 0} 轮 · 工具 {task.usage.tool_calls ?? 0} 次</p>}
+            {latestEvents.length ? <ol>{latestEvents.map((event) => <li key={event.sequence}><Clock3 size={14} /><div><strong>{eventLabel(event)}</strong><small>#{event.sequence}</small></div></li>)}</ol>
+              : <p>{dataState === "loading" ? "正在读取工作记录…" : "提交目标后，这里显示实际工作进度。"}</p>}
+          </section>
+        </article>
+        <article className="cn-mission-card cn-mission-timeline-pane" data-testid="rev-mission-timeline-pane">
+          <div className="cn-mission-section-heading"><CalendarDays size={18} /><strong>按天调整行程</strong></div>
+          <p>{draftSlots.length} 项安排 · {draftDays.length} 天</p>
+          {task?.draft_artifact ? <GoalDraftEditor key={task.task_id} artifact={task.draft_artifact} disabled={task.status === "WORKING"}
+            onSave={async (artifact) => {
+              const bearer = readTravelerBearer(); const owner = readTravelerIdentity()?.travelerId;
+              if (!bearer || !owner) throw new Error("请先登录这趟旅行。");
+              const value = await cityNexusApi.updateGoalDraft(journeyId, task.task_id, artifact);
+              if (bearer !== readTravelerBearer() || owner !== readTravelerIdentity()?.travelerId) throw new Error("登录已切换，请重新打开行程。");
+              setTask(value); window.dispatchEvent(new Event("citynexus:mission-refresh"));
+            }} /> : <p>Agent 会把暂定安排和待查事项逐步保存到这里。</p>}
+          <div className="cn-mission-capability-grid">
+            <button type="button" onClick={onTrip}><Route size={18} /><strong>候选方案与出发</strong></button>
+            <button type="button" onClick={onTrip}><ShieldCheck size={18} /><strong>行程守护</strong></button>
+            <button type="button" onClick={onTrip}><Users size={18} /><strong>同行决策</strong></button>
           </div>
-        </div>
-
-        <div className="cn-mission-right">
-          <article className="cn-mission-card cn-mission-map">
-            <div className="cn-mission-map-top">
-              <div className="cn-mission-section-heading"><MapPinned size={18} aria-hidden="true" /><strong>现实地图</strong></div>
-              <span>{mapPoints.length} 处有坐标的地点</span>
-            </div>
-            {mapPoints.length ? (
-              <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} />
-            ) : (
-              <div className="cn-mission-map-empty">
-                <Navigation2 size={30} aria-hidden="true" />
-                <strong>地图等待真实地点</strong>
-                <span>Agent 找到带坐标的公开地点后，这里直接出现图钉。不会编造位置。</span>
-              </div>
-            )}
-            <div className="cn-mission-map-footer">
-              <span>公开地理资料和私人行程分别按原权限读取</span>
-              <button type="button" onClick={() => window.dispatchEvent(new Event("citynexus:open-map-workspace"))}>
-                展开地图 <ArrowUpRight size={15} aria-hidden="true" />
-              </button>
-            </div>
-          </article>
-
-          <article className="cn-mission-card cn-mission-activity">
-            <div className="cn-mission-activity-top">
-              <div className="cn-mission-section-heading"><Wrench size={18} aria-hidden="true" /><strong>Agent 工作轨迹</strong></div>
-              <button type="button" aria-label="刷新 Agent 实际任务" onClick={() => setRefresh((value) => value + 1)}>
-                <RefreshCw size={17} aria-hidden="true" />
-              </button>
-            </div>
-            {task && <div className="cn-mission-run-stats">
-              <span><BrainCircuit size={14} aria-hidden="true" /> 模型 {task.usage.model_turns ?? 0} 轮</span>
-              <span><Wrench size={14} aria-hidden="true" /> 工具 {task.usage.tool_calls ?? 0} 次</span>
-              <span><CheckCircle2 size={14} aria-hidden="true" /> 事件 {events.length} 条</span>
-            </div>}
-            {latestEvents.length ? (
-              <ol>
-                {latestEvents.map((event) => <li key={event.sequence}>
-                  <span className="cn-mission-event-mark"><Clock3 size={13} aria-hidden="true" /></span>
-                  <div><strong>{eventLabel(event)}</strong><small>事件 #{event.sequence} · 当前任务的真实服务器记录</small></div>
-                </li>)}
-              </ol>
-            ) : <div className="cn-mission-activity-empty">
-              <MessageSquareText size={21} aria-hidden="true" />
-              <span>{dataState === "loading" ? "正在读取实际工作记录…" : dataState === "unavailable" ? "登录状态不可用，无法读取任务。" : "还没有当前任务的工作事件。提交目标后会显示工具调用与结果。"}</span>
-            </div>}
-            <button type="button" className="cn-mission-text-action" onClick={() => openAgent(journeyId, command.trim() || goal || cityName)}>
-              查看完整过程及继续研究 <ArrowRight size={16} aria-hidden="true" />
-            </button>
-          </article>
-        </div>
+        </article>
       </div>
-    </section>
-  );
+    </div>
+  </section>;
 }
