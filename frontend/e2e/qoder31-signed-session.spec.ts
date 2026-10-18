@@ -844,6 +844,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     ];
     const report: string[] = [];
     const seenCodes: string[] = [];
+    const seenRepeated: string[] = [];
     for (const stop of stops) {
       await Promise.resolve(stop.open()).catch(() => undefined);
       await page.waitForTimeout(900);
@@ -889,19 +890,43 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
               `${Math.round(hb.width)}x${Math.round(hb.height)}`,
           );
         }
+        /* 同一屏上逐字说了两遍的话：这一路要删的就是它，而它只有屏上看得见——
+           "字典改了两遍、屏上没动过"这件事，今天真发生过一次（第十三笔的勘误）。
+           这一臂只摊出来给人看，不判红：哪些该改、哪些是两个不同的东西恰好同名，得先看清楚。 */
+        const tally = new Map<string, number>();
+        for (const line of lines) {
+          if (line.length < 8) continue;
+          tally.set(line, (tally.get(line) ?? 0) + 1);
+        }
+        const repeated = Array.from(tally.entries())
+          .filter(([, count]) => count > 1)
+          .map(([line, count]) => `${count}×${line}`);
         window.scrollTo(0, 0);
-        return { lines: lines.length, codes, english, blocked };
+        return { lines: lines.length, codes, english, blocked, repeated };
       });
       seenCodes.push(...facts.codes.map((c) => `${stop.label}：${c}`));
       report.push(`${stop.label}：文字 ${facts.lines} 行 | 码 ${facts.codes.length} 行 | 整句英文 ${facts.english.length} 行 | 按不动 ${facts.blocked.length} 颗`);
       if (facts.codes.length) report.push(`   码：${facts.codes.slice(0, 4).join(" ／ ").slice(0, 220)}`);
       if (facts.english.length) report.push(`   英文：${facts.english.slice(0, 3).join(" ／ ").slice(0, 200)}`);
       if (facts.blocked.length) report.push(`   按不动：${facts.blocked.slice(0, 4).join(" ／ ").slice(0, 220)}`);
+      if (facts.repeated.length) {
+        seenRepeated.push(...facts.repeated.map((line) => `${stop.label}：${line}`));
+        report.push(`   同一屏说了两遍：${facts.repeated.slice(0, 6).join(" ／ ").slice(0, 320)}`);
+      }
       await page.screenshot({ path: `${DOC_EVIDENCE}/sweep-${stop.label}.png`, fullPage: false });
     }
     console.log(report.join("\n"));
     /* 判的是**走过的每一屏**：只看最后一屏会漏 —— 07:19 那一跑里 NOT_AVAILABLE 出现在今天与地图，
      * 抽屉那一屏干干净净，于是这一格绿着放走了它。 */
     expect(seenCodes.length, `走过的屏上铺了内部机器码：${seenCodes.slice(0, 4).join(" ／ ")}`).toBe(0);
+    /* 第十七笔：同一屏上逐字说了两遍的话，摊出来之后判红。
+       负对照同批做过：把长度门槛从 8 字降到 2 字，这一格立刻数出重复并红——
+       所以"零"是屏上真的没有，不是这把尺数不到。 */
+    console.log(
+      seenRepeated.length
+        ? `同一屏逐字重复 ${seenRepeated.length} 句 —— ${seenRepeated.slice(0, 8).join(" ／ ").slice(0, 600)}`
+        : "走过的每一屏都没有逐字重复的句子",
+    );
+    expect(seenRepeated.length, `同一屏上逐字重复：${seenRepeated.slice(0, 4).join(" ／ ")}`).toBe(0);
   });
 });
