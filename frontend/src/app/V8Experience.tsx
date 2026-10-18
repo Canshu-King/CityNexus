@@ -1461,7 +1461,7 @@ export function V8Experience() {
         signal: controller.signal,
         body: JSON.stringify({
           traveler_id: travelerId,
-          title: `${cityName} · journey`,
+          title: dictionaryText(locale, "hub.tripToCity", { cityLabel: cityName }),
           city_code: cityCode,
           timezone: draft.timezone.trim(),
           start_at: startAt,
