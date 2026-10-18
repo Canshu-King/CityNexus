@@ -97,12 +97,13 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
   </>;
 }
 
-export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, onExplore }: {
+export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, onExplore, onBriefSaved }: {
   journeyId: string;
   placeId: string | null;
   visible: boolean;
   onStarted: () => Promise<void>;
   onExplore: () => void;
+  onBriefSaved?: (brief: TravelBrief) => void;
 }) {
   const [bearer, setBearer] = useState(readTravelerBearer);
   const [snapshot, setSnapshot] = useState<PlanSnapshot | null>(null);
@@ -195,8 +196,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     const serial = epoch.current;
     writeLock.current = true; setBusy("brief"); setMessage(null);
     try {
-      await cityNexusApi.saveTravelBrief(journeyId, brief);
-      if (serial === epoch.current && token === readTravelerBearer()) await refresh();
+      const saved = await cityNexusApi.saveTravelBrief(journeyId, brief);
+      if (serial === epoch.current && token === readTravelerBearer()) {
+        if (saved.intent) onBriefSaved?.(saved.intent);
+        await refresh();
+      }
     } catch (error) { if (serial === epoch.current && token === readTravelerBearer()) setMessage(failureText(error)); }
     finally { writeLock.current = false; setBusy(null); }
   };

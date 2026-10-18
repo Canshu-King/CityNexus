@@ -1231,6 +1231,10 @@ export function RevolutionFirstLook() {
                 visible={activeTab === "trips"}
                 onStarted={finishStartingJourney}
                 onExplore={() => navigateMobile("explore")}
+                onBriefSaved={(brief) => {
+                  const bearer = readTravelerBearer();
+                  if (bearer) setServerBrief({ journeyId: journey.id, bearer, goal: tripBriefGoal(brief.goal, brief.interests, brief.energy) });
+                }}
               />
               {journey.status === "ACTIVE" ? (
                 <section className="rev-firstlook-real-ui" aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
