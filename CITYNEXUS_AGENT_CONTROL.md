@@ -1,4 +1,61 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第十八笔：花费屏的「没算进来」清单只报类别名，核对格不再替产品自夸
+
+Issue #33「前端 ui 改简洁」这一路的第十八笔。花费那一格原来有五行，五行各自解释一遍服务器为什么
+答不出这一类：「库里有记，但没有任何按行程的读路由把它答出来」、「stored, and never sent to this
+screen」；其中两行只写「缺的是同一件事」，还有一行写「同上」——在一串顺序由服务器决定的列表里，
+「同上」连指代对象都没有。标题本身是「这一屏看不见的是哪几类事实」，屏幕在描述自己的眼睛。
+
+现在后果只在标题说一次（「这些花费类别没有算进上面的合计」）`frontend/src/i18n/LocaleContext.tsx:2872`，
+每行只留人会去找的那个类别名 `frontend/src/i18n/LocaleContext.tsx:2873`。同一屏往下「尚未核对」那一格
+删掉的是替产品自己表功的半句（原文「先选定方案——CityNexus 不会宣称没有做过的检查。」），留下的仍然
+是人能做的下一步 `frontend/src/i18n/LocaleContext.tsx:1932`；英文两臂同一处
+`frontend/src/i18n/LocaleContext.tsx:362`、`frontend/src/i18n/LocaleContext.tsx:1355`。
+
+尺在屏上读，两臂各读一遍，断言各挂自己的坐标：类别行
+`frontend/e2e/qoder31-signed-session.spec.ts:873`、标题要说后果
+`frontend/e2e/qoder31-signed-session.spec.ts:875`、中文核对格不许自报家门
+`frontend/e2e/qoder31-signed-session.spec.ts:879`、英文类别行
+`frontend/e2e/qoder31-signed-session.spec.ts:890`、英文核对格
+`frontend/e2e/qoder31-signed-session.spec.ts:898`；逐屏走查那一臂今天起也走这一格
+`frontend/e2e/qoder31-signed-session.spec.ts:922`。
+
+**这把尺会红，是量过的**，而且分两次量。第一次整屏改前：那一臂红在类别行上，失败信息里摊出五行原文
+`_issue33_pass18_readings_1224.txt:2`。第二次只把「尚未核对」那一格的旧字放回去、类别行不动：同一臂
+就改红在那一格，而它上面的类别行与标题三格仍然绿 `_issue33_pass18_readings_1224.txt:5`。所以这两处
+"没有"都是屏上真的没有，不是尺数不到。
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 手机套并入新臂后：Running 十五项、14 passed、1 skipped，那条 skip 是原有的条件臂 `_issue33_pass18_readings_1224.txt:1` | 改后两臂的屏上原字（中文与英文各自的标题与五行）`_issue33_pass18_readings_1224.txt:3`、`_issue33_pass18_readings_1224.txt:4` |
+| 落地门读数：READY_TO_LAND、门内 rooted 测试 4 passed、整套 collected 一千九百九十九、构建臂 index_exists=true、表面契约 NO_CSS_IN_VIEW、裸键 PASS、屏上机器码 tokens 空 `_issue33_pass18_readings_1224.txt:6` | 仓库那把 i18n 对表尺：两臂键数一千三百四十五、SELFCHECK_PASS，本笔只改字不改键 `_issue33_pass18_readings_1224.txt:8` |
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = c1764649103ab3bf7ca57ef5f39924b8e5d1d5ad（`git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地回执 | 已发布、逐字节回读相等：blob 9a489b9fab57fd0c0dd2d7b27811f084a9193317 |
+| 本笔两枚产物 | 那一臂 blob bd5d152840430086703c2dff3c38c537a60fc297；字典 blob 08d9d2ea8444ecfb6b4f20d75607e515b38844f2 |
+
+**顺手把上一笔欠值守腿的那格补上**：它 11:39 那一拍判语是 `vite_build rc=0 dist=True index=False`，
+要作者按现尖重算。这一笔的门就在现尖上跑了构建臂：builder_rc=0、vite_build_rc=0、dist_exists=true、
+index_exists=true，产物两枚写进回执 `_issue33_pass18_readings_1224.txt:6`。回执就是上一行那枚 blob，
+可逐字节回读。请它拿这一代重判一次，别再投 07:29 那一拍的旧账。
+
+**这一笔没做的，说清楚为什么**：还有几处屏在讲服务器内部的读法——
+`frontend/src/features/notifications/PushCapabilityCard.tsx:13` 用的那行末尾写着「不是你这边的问题」、
+`frontend/src/features/stay/stayGenerationDoor.ts:49` 用的那行说「这一屏还没有对应词形」、
+`frontend/src/features/shared/SharedJourneyPanel.tsx:56` 与 `frontend/src/app/V8Experience.tsx:273` 用的
+两行说「这台服务器拒绝了这次读取」「不是这一屏能用的数据」。它们各有一处读它的码，但那些屏今天
+开不到：要么要服务器正好给出那个状态，要么要一条分享链接。没有屏上读数就不改字，免得又做成一次
+"字典改了、屏上没动"。还有一处不在我名下：向导与发现屏那句「但还缺 6 类事实（attractions、food、
+nightlife、lodging、mobility、booking）」`frontend/src/features/setup/JourneyTrialSetup.tsx:300`，
+它的中文原话正被另一道的臂逐字钉着 `frontend/e2e/qoder-liangmingci-0558-count-noun-r1.spec.ts:121`，
+我不改别人的断言，这条留给该道自己定。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第十七笔：逐屏走查那一臂现在会拦"同一屏上逐字说了两遍的话"
 
 Issue #33「前端 ui 改简洁」这一路的第十七笔。前十六笔删的重复，只有两把尺看得见：一把读字典里的
