@@ -143,3 +143,38 @@ def test_persisted_food_preference_changes_native_provider_ranking(signed_place)
         cafe=Place(id='TEST_FIXTURE_CAFE',name='cafe',category='cafe',tags_json='[]',opening_hours_json='{}',metadata_json='{}')
         park=Place(id='TEST_FIXTURE_PARK',name='park',category='park',tags_json='[]',opening_hours_json='{}',metadata_json='{}')
         assert _strategy_place_score(cafe,'balanced',prefs)[0] > _strategy_place_score(park,'balanced',prefs)[0]
+
+
+def test_diverse_interests_survive_signed_server_roundtrip(signed_place):
+    """Traveler interests are not limited to the public search provider's four enums."""
+    client, headers, outsider, journey_id, *_ = signed_place
+    path = f"/api/v1/journeys/{journey_id}/planning-intent"
+    body = {
+        "goal": "两天看古城吃当地小吃；对逛图书馆没有兴趣",
+        "interests": ["night_market", "local_food", "old_town", "古村落", "night_market"],
+        "energy": "easy",
+    }
+    response = client.put(path, headers=headers, json=body)
+    assert response.status_code == 200, response.text
+    intent = response.json()["intent"]
+    assert intent["interests"] == ["night_market", "local_food", "old_town", "古村落"]
+    assert intent["unmapped_interests"] == ["古村落"]
+    mapped = {item["preference"] for item in intent["mapped_preferences"]}
+    assert {"food", "cultural", "low_walking"}.issubset(mapped) or {"food", "cultural"}.issubset(mapped)
+    assert intent["free_text_status"] == "PRESERVED_NOT_FULLY_COMPILED"
+    assert client.get(path, headers=headers).json()["intent"]["unmapped_interests"] == ["古村落"]
+    assert client.get(path, headers=outsider).status_code == 403
+
+
+def test_travel_interest_guard_limits_size_not_subject_matter():
+    from pydantic import ValidationError
+    from app.schemas import TravelBriefRequest
+
+    request = TravelBriefRequest(goal="寻访古村落", interests=["古村落", " local_food ", "古村落"])
+    assert request.interests == ["古村落", "local_food"]
+    try:
+        TravelBriefRequest(interests=["a" * 61])
+    except ValidationError:
+        pass
+    else:
+        raise AssertionError("Unbounded interest values must still be rejected")
