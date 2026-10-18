@@ -45,6 +45,6 @@ export function RevolutionMobileNav({ active, onSelect, hasSavedWalk }: Props) {
         </button>;
       })}
     </nav>
-    <WorkspaceActions panel={panel} goalRequest={goalRequest} onClose={() => { setPanel(null); setGoalRequest(null); }} />
+    <WorkspaceActions panel={panel} goalRequest={goalRequest} onClose={() => { setPanel(null); setGoalRequest(null); window.dispatchEvent(new Event("citynexus:mission-refresh")); }} />
   </>;
 }
