@@ -1,4 +1,61 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第十一·十二·十三笔：提示带不再重复屏上已有的按钮，字典删掉改名留下的整族旧键，那一格空态改从字典读
+
+Issue #33「前端 ui 改简洁」这一路的第十一到第十三笔。三笔都从**重拍出来的图**上读，不是从字典里找。
+
+**第十一笔：今天页那条提示带。**
+重拍的图④上，「知道了」被拆成两行（"知道" / "了"）：`.v8-message` 是 flex + `space-between`，
+那颗按钮没写 `flex: none`，正文一长就把它的标签挤断。补两条声明，不动布局、不加色值：
+`frontend/src/styles.css:183`。
+同一条带还在教人点它**正下方**那颗按钮（「要 AI 出方案，点「AI 帮我规划」」）——现在只报这一格
+独有的事实：结果到了。`frontend/src/app/V8Experience.tsx:1542`。
+行程两处空态各带一句屏幕自述（「这一屏就按天把它们列出来」「选定方案后这里会显示逐日安排」），
+这一笔把字典里那两句改了——**但屏上当时没变**，原因见下面第十三笔：
+`frontend/src/i18n/LocaleContext.tsx:2948`、
+`frontend/src/i18n/LocaleContext.tsx:2949`。
+
+**第十二笔：改名留下的整族旧键。**
+ActivityDetail 那一屏的文案早就换到 `src/features/trip/activityDetailCopy.ts` 的屏-local 表，
+共享字典里两段式的旧名（`detail.metres`、`detail.showOnMap` 这一族）没人引用却一直留着，
+活着的是另起的新名（`frontend/src/i18n/LocaleContext.tsx:1439`、
+`frontend/src/i18n/LocaleContext.tsx:1438`）。两臂各删 19 枚、合计 38 行。
+
+**第十三笔：那一格空态其实不读字典——并勘误第十一笔的一句。**
+第十一笔我在账本里写"两处空态的旁白去掉"，那句**在屏上没有兑现**：`TripItinerary` 那一格把同一段话
+逐字抄在自己组件里（连那颗主按钮的标签也是一份内联双语），字典里对应的两枚键全仓零调用点。
+这一笔把格子接到键上、删掉组件里的三份内联重复：
+`frontend/src/features/trip/TripItinerary.tsx:305`、`frontend/src/features/trip/TripItinerary.tsx:295`。
+旁白这才真的从屏上下去——第⑥张现场 dump 里那一格的正文逐字可读 `_issue33_pass11_readings_1020.txt:11`。
+教训写在这里给下一个改文案的人：**屏上那句话有没有变，只能从屏上读**；字典是零命中还是十处命中，
+都不构成"屏改了"的证据。
+
+| 判据（两条都过才算候选） | 现读出处 |
+| --- | --- |
+| 全仓 440 个 .ts/.tsx 里，任何引号中出现过该键名即算活；模板取键前缀下的键一律算活 `_issue33_pass11_readings_1020.txt:7` | 尺的一处盲区与那枚被它漏掉的活键（漏报不误报，写下来别让下一个人照抄分母） `_issue33_pass11_readings_1020.txt:7` |
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 那颗按钮：负对照 2 个行盒（判语「知道了」被排成 2 行、1 failed）→ 装回声明后 1 个行盒 30x14 `_issue33_pass11_readings_1020.txt:2` | 提示带与两处空态的改前改后逐字 `_issue33_pass11_readings_1020.txt:3` `_issue33_pass11_readings_1020.txt:4` |
+| 手机套三跑：正跑 13 passed、负对照 1 failed、删键后再跑 13 passed（均 1 skipped，口径同前） `_issue33_pass11_readings_1020.txt:5` | 字典删前删后键种数与行数 `_issue33_pass11_readings_1020.txt:6` |
+| 同一把尺现读的全仓死键分母：133 种，本笔只删 detail. 那一族 19 种，其余 114 种交字典车道 `_issue33_pass11_readings_1020.txt:8` | 构建与落地门：tsc 零诊断、vite build 退出码零、门内 4 passed、surface contract 判语 `_issue33_pass11_readings_1020.txt:9` |
+
+**断言只认渲染出来的行盒**（`Range.getClientRects()`），不认样式表里写了什么：
+`frontend/e2e/qoder31-first-trip-guide.spec.ts:241`。
+负对照与正跑在同一次会话里各跑一遍——判绿的臂必须先证明自己会红。
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线三笔 | 第十一笔 `refs/heads/mirror/integration-frontend-apple-pass1` = cc33c959c98b1c0db58b1e0effb73d915ab66a59；第十二笔 = 5f50444eb57c7e2c51d98a192eea03fb53216019；第十三笔 = f25539940ac9c9a7a9d229b7bad357cbda4c3182（三枚均 `git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地门 | 三笔各自 `ff=True behind=0 intersection=0`、`landed=true`、`both_routes_agree=true`、http_status=200；无 force-push、未用 --allow-ungated |
+| 落地回执 | 已发布、逐字节回读相等：第十一笔 blob `82f12a2de2af5e0d7303469fb19241860b4b2056`，第十二笔 blob `e3f1a31d16f4f6dff7f32de4eabbd02833743b53`，第十三笔 blob `bbd668fe7ff69d00fbc12ef104d789830ca194f5` |
+
+一句自记：这两笔删的都是**写的人没站在读的人那一侧**留下的东西——一条带在教人点它下面那颗按钮，
+一份字典留着上一轮改名没清干净的旧名。前者在屏上看得见，后者只有尺看得见，所以这一轮把尺也留下了。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第九·十笔：行程的名字按读它的人生成，行上再给出这一趟自己的时刻
 
 Issue #33 主人新增令「前端 ui 改简洁，删掉不必要的车轱辘、防御性与不必要的声明」这一路的第九、第十笔。
