@@ -219,6 +219,8 @@ class GoalTaskRunRequest(BaseModel):
     online_research_consent: bool | None = None
     max_model_turns: int | None = Field(default=None, ge=1, le=64)
     max_tool_calls: int | None = Field(default=None, ge=0, le=128)
+    user_message: str | None = Field(default=None, min_length=1, max_length=2000)
+    message_id: UUID | None = None
 
 
 class GoalDraftUpdateRequest(BaseModel):
