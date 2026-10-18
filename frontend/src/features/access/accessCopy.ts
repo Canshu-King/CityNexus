@@ -37,7 +37,7 @@ export const accessCopy = {
     "access.tripUntitled": "This trip came back with no name.",
     "access.pickLoading": "Reading your trip list…",
     "access.pickEmpty":
-      "This server named no trip for you, so this screen has no subject yet. Nothing about your trips changed.",
+      "The server named no trip for you.",
     /* ORD-0477: the tier words.  `RECENT_UPDATE` / `DEPARTURE_DATE` / `TITLE` are the server's
        (`backend/app/schemas.py::JOURNEY_SORT_TIERS`) and never reach a traveller; these are the words
        the control renders, and the current tier is spelled out in its own sentence so the order a
@@ -47,7 +47,7 @@ export const accessCopy = {
     "access.sortRecent": "Recently updated",
     "access.sortDeparture": "Departure date",
     "access.sortTitle": "Name",
-    "access.sortCurrent": "This screen asked the server for: {tier}.",
+    "access.sortCurrent": "Asked the server for: {tier}.",
     /* ORD-0518: two sentences, not one.  What this screen requested and what the door answered are
        different facts, and collapsing them is exactly how a screen ends up claiming a time order a
        server never gave.  `sortServerSilent` is the named absence; `sortMismatch` only renders when
@@ -56,7 +56,7 @@ export const accessCopy = {
     "access.orderBroken":
           "The order breaks at row {row}. Below is the order the server sent.",
     "access.orderUnverifiable":
-      "This screen cannot check this order from the rows it was given ({reason}). The rows below are in the order they arrived.",
+      "This order cannot be checked from the rows given ({reason}); the rows below are in the order they arrived.",
     /* Why the check compared what it compared, or why it compared nothing.  These are the whole
        sentence's one variable, and the reason lives here rather than in `journeyOrderVerdict.ts`: the
        module knows facts, this file knows the traveller's language.  The stored column names
@@ -69,8 +69,8 @@ export const accessCopy = {
     "access.orderReasonNoUpdatedAt": "this door sends no updated moment in a row",
     "access.orderReasonRowWithoutStart": "row {row} came back with no readable departure time",
     "access.orderReasonFoldDivergent":
-      "a trip name here carries a character this screen cannot fold the way the server folded it",
-    "access.noTierHeading": "Orders this screen cannot offer",
+      "a trip name here carries a character that cannot be folded the way the server folded it",
+    "access.noTierHeading": "Orders not offered",
     "access.noTierArrival": "Arrival time",
     "access.noTierArrivalBecause":
       "The trip-list door has no arrival field. Arrival lives in the trip context's anchors, and no door on this server orders trips by it.",
@@ -90,7 +90,7 @@ export const accessCopy = {
     "access.scopeKeyUnread":
       "This server named a scope key this dictionary has no sentence for: {key}.",
     "access.scopeDoorSilent":
-      "The role door answered nothing, so this screen lists no capabilities -- it does not guess them from the role name.",
+      "The role door answered nothing; there is no capability list to show.",
     "access.roleChangeButton": "Change role",
     "access.selfExitButton": "Leave this trip",
     "access.roleChoicesHeading": "Move this seat to:",
@@ -103,14 +103,14 @@ export const accessCopy = {
     "access.adminCapFull":
       "All {cap} {plural:admin seat:cap} this server allows are taken, so one further promotion is refused.",
     "access.adminCapUnanswered":
-      "The seat door did not answer, so this screen says nothing about how many admins this trip may hold.",
+      "The seat door did not answer: the admin limit for this trip is not known.",
     // ORD-0527: who this device is speaking for, said in the same breath as what it will not do.
     "access.identityLine":
       "This device is speaking for {name}, who is {role} on this trip.",
     "access.identityUnnamed":
       "The registry gave no name for the traveller this trip belongs to.",
     "access.identityUnknown":
-      "This device does not know who you are: the trip this screen is on carries no traveller the server named.",
+      "This device does not know who you are: this trip carries no traveller the server named.",
     "access.identityUnknownWay":
       "To go on, pick a trip above whose traveller this server did name.",
     "access.identityStale":
@@ -168,10 +168,10 @@ export const accessCopy = {
     "access.action.journey.visibilityChanged": "changed who can see this trip",
     "access.action.journey.invitationSent": "sent an invitation to this trip",
     "access.action.journey.invitationRevoked": "cancelled an invitation to this trip",
-    "access.actionUnknown": "This server reported an action this screen has no sentence for: {token}.",
+    "access.actionUnknown": "The server reported an action with no wording for it: {token}.",
     "access.doorLoading": "Asking this server who else can reach this trip…",
     "access.doorAbsent":
-      "This server answered none of {paths}, so nothing on this screen can be changed today. The ladders say what each level will mean once those doors answer -- they are not a claim about this trip.",
+      "This server answered none of {paths}; nothing can be changed today. The ladders say what each level will mean once those doors answer.",
     "access.doorPartial":
       "This server answered some but not all of the sharing doors; the ones still silent are {paths}. Read the ladders as what each level will mean, not as this trip's state.",
     "access.doorPresent":
@@ -184,7 +184,7 @@ export const accessCopy = {
     "access.memberStateActive": "still in force",
     "access.memberStateExpired": "past the expiry this server gave it",
     "access.memberStateRemoved": "withdrawn at {removed}",
-    "access.memberStateUnknown": "This server gave a member state this screen has no sentence for: {state}.",
+    "access.memberStateUnknown": "The server gave a member state with no wording for it: {state}.",
     "access.memberNoEnd": "carries no expiry, so it will not lapse on its own",
     "access.grantHeading": "Invitations issued for this trip",
     "access.grantEmpty": "The invitation door answered with none issued.",
@@ -195,7 +195,7 @@ export const accessCopy = {
     "access.emptyReloadRoles": "Re-read the role door",
     "access.emptyIssueGrant": "Issue a link-readable invitation",
     "access.emptyInviteSomeone": "Go to the invitation form",
-    "access.roleUnread": "This server named a role this screen has no sentence for: {role}.",
+    "access.roleUnread": "The server named a role with no wording for it: {role}.",
     "access.grantTokenSummary": "The token this invitation carries",
     "access.grantActive": "Open until {expires}.",
     "access.grantNoExpiry": "This invitation carries no expiry, so it will not lapse on its own.",
@@ -241,7 +241,7 @@ export const accessCopy = {
     "access.pickNone": "先选一条要看的行程",
     "access.tripUntitled": "这条行程回来时没有名字。",
     "access.pickLoading": "正在读你的行程列表…",
-    "access.pickEmpty": "这台服务器没有报出你的行程，这一屏还没有主语。你的行程没有因此变化。",
+    "access.pickEmpty": "服务器没报出你的行程。",
     /* ORD-0477: 档位的名字。旅客读的这些词与服务器的 CREATION_ORDER / RECENT_UPDATE /
        DEPARTURE_DATE / TITLE 一一对应（`backend/app/schemas.py::JOURNEY_SORT_TIERS`），机器词从不上屏。 */
     "access.sortHeading": "这一列行程怎么排",
@@ -249,21 +249,21 @@ export const accessCopy = {
     "access.sortRecent": "最近更新",
     "access.sortDeparture": "出发日期",
     "access.sortTitle": "名称",
-    "access.sortCurrent": "这一屏向服务器要的是：{tier}。",
+    "access.sortCurrent": "向服务器要的是：{tier}。",
     /* ORD-0518: 两句而不是一句。这一屏要了什么、服务器答了什么，是两件事；把它们并成一句，
        就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
     "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
     "access.orderBroken":
           "顺序对不上：从第 {row} 行起断了。下面按服务器发来的样子列。",
-    "access.orderUnverifiable": "这一档这一屏核不了（{reason}）；下面写的就是行收到的样子。",
+    "access.orderUnverifiable": "这一档核不了（{reason}）；下面写的就是行收到的样子。",
     "access.orderReasonStartAt": "核的是每一程的出发时间",
     "access.orderReasonNoRows": "一行行程都没有回来",
     "access.orderReasonTitle": "核的是行程名",
     "access.orderReasonNoCreatedAt": "这一列里没有创建时间可比",
     "access.orderReasonNoUpdatedAt": "这一列里没有更新时间可比",
     "access.orderReasonRowWithoutStart": "第 {row} 行没有可读的出发时间",
-    "access.orderReasonFoldDivergent": "有的行程名里带着这个屏折不出服务器那个序的字",
-    "access.noTierHeading": "这一屏给不出的排法",
+    "access.orderReasonFoldDivergent": "有的行程名里带着折不出服务器那个序的字",
+    "access.noTierHeading": "给不出的排法",
     "access.noTierArrival": "抵达时间序",
     "access.noTierArrivalBecause": "行程列表门没有抵达字段：抵达时刻在行程上下文的锚里，这台服务器没有任何门按它排行程。",
     "access.noTierSaved": "已存序",
@@ -281,7 +281,7 @@ export const accessCopy = {
     "access.scopeKeyUnread":
       "这台服务器报了一个本字典没有句子的作用域键：{key}。",
     "access.scopeDoorSilent":
-      "角色那扇门没答，所以这一屏不列能力——不拿角色名去猜它能做什么。",
+      "角色那扇门没答，没有能力清单可列。",
     "access.roleChangeButton": "改角色",
     "access.selfExitButton": "我自己退出",
     "access.roleChoicesHeading": "把这枚席位改成：",
@@ -289,11 +289,11 @@ export const accessCopy = {
     "access.confirmSelfExit": "这把你从这条行程里移出去。这一行还留在名单上，别人读得到你走过。",
     "access.adminCapOpen": "这台服务器允许这条行程同时占 {cap} 枚管理员席位，现在占了 {used} 枚。",
     "access.adminCapFull": "这台服务器允许的 {cap} 枚管理员席位已经占满，再多给一枚会被拒。",
-    "access.adminCapUnanswered": "席位那扇门没答，所以这一屏不说这条行程能放几枚管理员。",
+    "access.adminCapUnanswered": "席位那扇门没答，这条行程能放几枚管理员不知道。",
     // ORD-0527：这台设备替谁说话，以及它不替谁去做的事，同一句里说完。
     "access.identityLine": "这台设备替「{name}」说话，他在这条行程上是{role}。",
     "access.identityUnnamed": "服务器没给这条行程的旅行者登记名字。",
-    "access.identityUnknown": "这台设备还不知道你是谁：这一屏所在的行程，服务器没有写出它属于哪位旅行者。",
+    "access.identityUnknown": "这台设备还不知道你是谁：这条行程没有服务器写出的旅行者。",
     "access.identityUnknownWay": "要往下走，先在上方挑一条服务器写了旅行者的行程。",
     "access.identityStale": "这台设备存的行程在服务器名单里没有对应；请在上方重新挑一条。",
     "access.identityNoSeat": "这条行程上没有你的成员行，改角色与退出都会被拒。",
@@ -343,10 +343,10 @@ export const accessCopy = {
     "access.action.journey.visibilityChanged": "改了这条行程能被谁看见",
     "access.action.journey.invitationSent": "向这条行程发出一个邀请",
     "access.action.journey.invitationRevoked": "撤销了这条行程的一个邀请",
-    "access.actionUnknown": "这台服务器报了一个本屏说不出人话的动作：{token}。",
+    "access.actionUnknown": "服务器报了一个没有对应说法的动作：{token}。",
     "access.doorLoading": "正在问这台服务器还有谁能到达这条行程…",
     "access.doorAbsent":
-    "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是每一档的含义。",
+    "这台服务器 {paths} 一扇都没答，今天没有任何一项能真改。下面写的是每一档的含义。",
     "access.doorPartial":
     "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。下面写的是每一档的含义。",
     "access.doorPresent":
@@ -359,7 +359,7 @@ export const accessCopy = {
     "access.memberStateActive": "还在生效",
     "access.memberStateExpired": "已过它自己的到期时刻",
     "access.memberStateRemoved": "已在 {removed} 撤回",
-    "access.memberStateUnknown": "这台服务器报了一个本屏说不出人话的成员状态：{state}。",
+    "access.memberStateUnknown": "服务器报了一个没有对应说法的成员状态：{state}。",
     "access.memberNoEnd": "没给到期时刻，也就是不会自己失效",
     "access.grantHeading": "这条行程发出去的邀请",
     "access.grantEmpty": "邀请门答了，一条也没发过。",
@@ -369,7 +369,7 @@ export const accessCopy = {
     "access.emptyReloadRoles": "重读角色门",
     "access.emptyIssueGrant": "发一条凭链接可读的邀请",
     "access.emptyInviteSomeone": "去邀请那一格",
-    "access.roleUnread": "这台服务器报了一个本屏说不出人话的角色：{role}。",
+    "access.roleUnread": "服务器报了一个没有对应说法的角色：{role}。",
     "access.grantTokenSummary": "这条邀请带的令牌",
     "access.grantActive": "到 {expires} 之前可开。",
     "access.grantNoExpiry": "这条邀请没有到期时刻，不会自己失效。",
