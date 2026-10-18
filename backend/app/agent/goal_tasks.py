@@ -222,6 +222,7 @@ def _task_payload(
         "source_observation_ids": list(task.get("source_observation_ids") or []),
         "assistant_summary": task.get("assistant_summary"),
         "research_places": list(task.get("research_places") or []),
+        "research_areas": list(task.get("research_areas") or []),
         "draft_artifact": task.get("draft_artifact"),
         "failure_code": task.get("failure_code"),
         "created_at": mission.created_at,
@@ -652,6 +653,9 @@ def _initial_messages(
         "journey": _journey_snapshot(journey),
         "known_candidate_places": _known_place_context(session, journey, task),
         "known_non_authoritative_sources": _known_source_context(session, task),
+        "research_location_guidance": "Areas and villages are geographic leads, not verified venues. "
+            "Keep explicit region conflicts separate and use another suitable source-backed center; "
+            "missing address metadata is UNKNOWN and does not prevent further research. Do not infer opening hours or fees.",
         "public_research_places": task.get("research_places") or [],
         "public_research_areas": task.get("research_areas") or [],
         "draft_artifact": task.get("draft_artifact") or empty_draft(journey),
@@ -739,7 +743,7 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
         references = raw.get("cached_references") if isinstance(raw.get("cached_references"), list) else []
         facts = raw.get("cached_facts") if isinstance(raw.get("cached_facts"), dict) else {}
         fields = {"place_id", "provider", "provider_provenance", "name", "category", "latitude",
-                  "longitude", "opening_status", "cost_status"}
+                  "longitude", "opening_status", "cost_status", "location_type", "osm_key", "osm_value"}
         safe_references = [
             {key: item[key] for key in ("reference_type", "provider", "url", "authority_status") if key in item}
             for item in references[:5]
@@ -756,6 +760,9 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
             "reference_status": "PRESENT" if safe_references else "NOT_VERIFIED",
             "cached_references": safe_references,
             "cached_facts": {key: facts[key] for key in fields if key in facts},
+            "region_status": raw.get("region_status") if raw.get("region_status") in {"MATCHED", "CONFLICT", "UNKNOWN"} else "UNKNOWN",
+            "public_address": {key: value for key, value in (raw.get("public_address") or {}).items()
+                               if key in {"county", "city", "state", "district"} and isinstance(value, str)},
             "not_acquired_fields": [
                 field for field in raw.get("not_acquired_fields", [])
                 if field in {"opening_hours", "cost", "availability", "travel_time"}
@@ -876,7 +883,8 @@ def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
         return {"status": result.get("status", "COMPLETED"), "place_id": result.get("place_id") or (result.get("estimate") or {}).get("place_id")}
     if name in {"discover_places", "discover_nearby_places"}:
         return {"status": result.get("status"), "reason_code": result.get("reason_code"),
-                "place_count": len(result.get("places") or []), "http_status": result.get("http_status"),
+                "place_count": len(result.get("places") or []), "area_count": len(result.get("areas") or []),
+                "http_status": result.get("http_status"),
                 "public_action": result.get("public_action"), "provider": result.get("provider"),
                 "provider_provenance": result.get("provider_provenance") }
     if name == "save_draft_itinerary":

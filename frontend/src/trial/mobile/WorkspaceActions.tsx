@@ -117,7 +117,7 @@ function taskStepText(result: Record<string, unknown>): string {
   if (result.status === "NO_STORED_ROUTE_FACTS") return "这两站还没有路线资料";
   if (typeof result.option_count === "number") return `${result.option_count} 条已有路线`;
   if (result.status === "ESTIMATED_AGENT") return "已保存备选估算";
-  if (typeof result.place_count === "number") return `${result.place_count} 处地点`;
+  if (typeof result.place_count === "number") return `${result.place_count} 处地点${typeof result.area_count === "number" && result.area_count > 0 ? ` · ${result.area_count} 处地区线索` : ""}`;
   if (Array.isArray(result.observation_ids)) return `${result.observation_ids.length} 条来源记录`;
   return result.status === "COMPLETED" ? "完成" : "这一步暂未完成";
 }

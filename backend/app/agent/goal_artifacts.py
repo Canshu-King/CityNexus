@@ -20,23 +20,102 @@ from app.integrations.provider_config import ExternalProviderSettings, trust_env
 _LIVE_GOAL_RESEARCH_PROVIDERS = frozenset({"photon", "nominatim", "overpass"})
 _OSM_REFERENCE_TYPES = {"N": "node", "W": "way", "R": "relation",
                         "node": "node", "way": "way", "relation": "relation"}
+_PUBLIC_ADDRESS_FIELDS = ("county", "city", "state", "district")
+_REGION_STATUSES = frozenset({"MATCHED", "CONFLICT", "UNKNOWN"})
+
+
+def _structured_public_region_label(session, journey) -> str:
+    if session is None:
+        return ""
+    from app.planning.travel_brief import current_brief
+    row = current_brief(session, journey.id, journey.traveler_id)
+    if row is None:
+        return ""
+    try:
+        brief = json.loads(row.semantic_envelope_json or "{}")
+    except (TypeError, ValueError):
+        return ""
+    if not isinstance(brief, dict):
+        return ""
+    label = brief.get("public_region_label")
+    if isinstance(label, str):
+        label = label.strip()
+        if 0 < len(label) <= 60 and not any(ord(char) < 32 for char in label):
+            return label
+    return ""
+
+
+def _public_address(metadata: Any) -> dict[str, str]:
+    if not isinstance(metadata, dict):
+        return {}
+    result = {}
+    for key in _PUBLIC_ADDRESS_FIELDS:
+        value = metadata.get(key)
+        if isinstance(value, str) and value.strip() and len(value.strip()) <= 120 \
+                and not any(ord(char) < 32 for char in value):
+            result[key] = value.strip()
+    return result
+
+
+def _public_address_from_tags(tags: Any) -> dict[str, str]:
+    if not isinstance(tags, dict):
+        return {}
+    explicit = {}
+    for key in _PUBLIC_ADDRESS_FIELDS:
+        value = tags.get(f"addr:{key}")
+        if value is None:
+            value = tags.get(key)
+        if isinstance(value, str):
+            explicit[key] = value
+    return _public_address(explicit)
+
+
+def _source_label(value: Any, *, limit: int = 80) -> str | None:
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip()
+    if not normalized or len(normalized) > limit or any(ord(char) < 32 for char in normalized):
+        return None
+    return normalized
+
+
+def _public_region_status(region_label: str, address: dict[str, str]) -> str:
+    if not region_label or not address:
+        return "UNKNOWN"
+    if any(value == region_label for value in address.values()):
+        return "MATCHED"
+    # Compare only explicitly named, comparable administrative levels. A city
+    # search and an address containing a county are not contradictory; absent
+    # aliases or translated labels remain unknown rather than inferred.
+    for key, suffixes in (("county", ("县", "縣")), ("district", ("区", "區")), ("city", ("市",))):
+        value = address.get(key, "")
+        if any(region_label.endswith(suffix) and value.endswith(suffix) for suffix in suffixes):
+            return "CONFLICT"
+    return "UNKNOWN"
+
+
+def _public_location_kind(osm_key: str | None, osm_value: str | None,
+                          location_type: str | None) -> tuple[str, str]:
+    key = (osm_key or "").casefold()
+    value = (osm_value or "").casefold()
+    locator = (location_type or "").casefold()
+    if key in {"place", "boundary"} or value in {
+        "administrative", "city", "town", "village", "county", "boundary",
+        "district", "hamlet", "suburb", "locality", "neighbourhood", "state", "province", "postcode",
+    }:
+        return "AREA", "REGION"
+    if locator == "street" and key == "highway":
+        return "AREA", "STREET"
+    if locator in {"district", "street", "house"} and value in {"", "unknown"}:
+        return "AREA", {"district": "REGION", "street": "STREET", "house": "ADDRESS"}[locator]
+    return "POI", "POI"
 
 
 def public_city_label(journey, session=None) -> str:
     """Resolve a public region from the owner's structured brief or stable city code."""
-    if session is not None:
-        from app.planning.travel_brief import current_brief
-        row = current_brief(session, journey.id, journey.traveler_id)
-        if row is not None:
-            try:
-                brief = json.loads(row.semantic_envelope_json or "{}")
-            except (TypeError, ValueError):
-                brief = {}
-            label = brief.get("public_region_label")
-            if isinstance(label, str):
-                label = label.strip()
-                if 0 < len(label) <= 60 and not any(ord(char) < 32 for char in label):
-                    return label
+    structured_label = _structured_public_region_label(session, journey)
+    if structured_label:
+        return structured_label
     code = str(journey.city_code).strip()
     if code.upper().startswith("CN-RV-"):
         # Older journeys may have no structured region. Never infer one from title.
@@ -49,14 +128,15 @@ def public_city_label(journey, session=None) -> str:
 
 def goal_research_lead(task: dict[str, Any], place_id: str) -> dict[str, Any] | None:
     """Find a live public lead already owned by this signed goal task."""
-    places = task.get("research_places")
-    if not isinstance(places, list):
-        return None
-    for place in places:
-        if (isinstance(place, dict) and place.get("id") == place_id
-                and place.get("provider_provenance") == "LIVE_PROVIDER"
-                and place.get("provider") in _LIVE_GOAL_RESEARCH_PROVIDERS):
-            return place
+    for collection in ("research_places", "research_areas"):
+        places = task.get(collection)
+        if not isinstance(places, list):
+            continue
+        for place in places:
+            if (isinstance(place, dict) and place.get("id") == place_id
+                    and place.get("provider_provenance") == "LIVE_PROVIDER"
+                    and place.get("provider") in _LIVE_GOAL_RESEARCH_PROVIDERS):
+                return place
     return None
 
 
@@ -99,6 +179,14 @@ def cached_goal_place_sources(task: dict[str, Any], place_id: str) -> dict[str, 
     for key in ("opening_status", "cost_status"):
         value = lead.get(key)
         known_facts[key] = value.strip()[:40] if isinstance(value, str) and value.strip() else "UNKNOWN"
+    for key in ("location_type", "osm_key", "osm_value"):
+        value = _source_label(lead.get(key), limit=80 if key != "location_type" else 40)
+        if value:
+            known_facts[key] = value
+    public_address = _public_address(lead.get("public_address"))
+    region_status = lead.get("region_status")
+    if region_status not in _REGION_STATUSES:
+        region_status = "UNKNOWN"
 
     not_acquired_fields = []
     for field, stored_key, status_key in (
@@ -121,6 +209,8 @@ def cached_goal_place_sources(task: dict[str, Any], place_id: str) -> dict[str, 
         "cached_references": references,
         "reference_status": "PRESENT" if references else "NOT_VERIFIED",
         "cached_facts": known_facts,
+        "region_status": region_status,
+        "public_address": public_address,
         "not_acquired_fields": not_acquired_fields,
         "source_discovery_attempted": False,
         "acquisition_attempted": False,
@@ -138,7 +228,9 @@ def normalize_draft(journey, task: dict, days: Any, *, author: str) -> dict[str,
     valid_dates = {day["date"] for day in empty_draft(journey)["days"]}
     if not isinstance(days, list) or not 1 <= len(days) <= 14:
         raise HTTPException(422, "DRAFT_DAYS_INVALID")
-    known_ids = set(task.get("candidate_place_ids") or []) | {p["id"] for p in task.get("research_places") or []}
+    known_ids = (set(task.get("candidate_place_ids") or [])
+                 | {p["id"] for p in task.get("research_places") or []}
+                 | {p["id"] for p in task.get("research_areas") or []})
     output, seen = [], set()
     for day in days:
         if not isinstance(day, dict) or day.get("date") not in valid_dates or day["date"] in seen:
@@ -192,9 +284,10 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
     def observe(response):
         nonlocal observed_status
         observed_status = response.status_code
-    result = {"tool": "discover_places", "provider": source, "status": "NO_RESULTS", "places": [],
+    result = {"tool": "discover_places", "provider": source, "status": "NO_RESULTS", "places": [], "areas": [],
               "public_action": public_action[:120], "query": query, "provider_provenance": "LIVE_PROVIDER"}
     city_label = public_city_label(journey, session)
+    region_label = _structured_public_region_label(session, journey)
     try:
         with httpx.Client(timeout=min(15.0, float(settings.real_city_timeout_seconds)),
                           trust_env=trust_environment_for_public_providers(), follow_redirects=False,
@@ -214,12 +307,22 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
             osm_type = {"N":"node", "W":"way", "R":"relation"}.get(identity[0], identity[0])
             if len(identity) != 2 or osm_type not in {"node", "way", "relation"} or not identity[1].isdigit():
                 continue
+            metadata = getattr(place, "metadata", {})
+            metadata = metadata if isinstance(metadata, dict) else {}
+            osm_key = _source_label(metadata.get("osm_key"))
+            osm_value = _source_label(metadata.get("osm_value"))
+            location_type = _source_label(getattr(place, "location_type", None), limit=40)
+            address = _public_address(metadata)
+            collection, location_kind = _public_location_kind(osm_key, osm_value or place.category, location_type)
             lead = {"id": place.external_id, "name": place.name, "category": place.category,
-                           "latitude": place.latitude, "longitude": place.longitude,
-                           "source_url": f"https://www.openstreetmap.org/{osm_type}/{identity[1]}",
-                           "provider": source, "provider_provenance": "LIVE_PROVIDER",
-                           "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"}
-            if place.category.casefold() in {"administrative", "city", "town", "village", "county", "boundary"}:
+                    "latitude": place.latitude, "longitude": place.longitude,
+                    "source_url": f"https://www.openstreetmap.org/{osm_type}/{identity[1]}",
+                    "provider": source, "provider_provenance": "LIVE_PROVIDER",
+                    "location_type": location_type, "location_kind": location_kind,
+                    "osm_key": osm_key, "osm_value": osm_value, "public_address": address,
+                    "region_status": _public_region_status(region_label, address),
+                    "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"}
+            if collection == "AREA":
                 areas.append(lead)
             else:
                 places.append(lead)
@@ -229,7 +332,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
         known_areas = {p["id"]: p for p in task.get("research_areas") or []}
         known_areas.update({p["id"]: p for p in areas})
         task["research_areas"] = list(known_areas.values())[:20]
-        result.update(status="RESULTS" if places else "NO_RESULTS", places=places, areas=areas)
+        result.update(status="RESULTS" if places or areas else "NO_RESULTS", places=places, areas=areas)
     except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, IndexError, RuntimeError):
         task[f"{source}_unavailable"] = True
         result.update(status="PROVIDER_UNAVAILABLE", reason_code=f"{source.upper()}_UNAVAILABLE", provider_provenance="UNVERIFIED")
@@ -238,7 +341,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
     session.add(ProviderCall(id=str(uuid4()), provider_key=source, operation="goal_place_discovery",
         request_json=json.dumps({"query": query, "city": city_label or None, "public_city_label": city_label, "limit": 8}, ensure_ascii=False),
         response_json=json.dumps({"status": result["status"], "http_status": observed_status,
-                                  "count": len(result["places"])}, ensure_ascii=False),
+                                  "count": len(result["places"]), "area_count": len(result["areas"])}, ensure_ascii=False),
         status="SUCCESS" if result["status"] in {"RESULTS", "NO_RESULTS"} else "FAILURE",
         latency_ms=result["elapsed_ms"], created_at=datetime.now(timezone.utc).isoformat()))
     return result
@@ -249,8 +352,9 @@ def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id
                                public_action: str = "") -> dict[str, Any]:
     """One Overpass area request anchored to an actual source result owned by this task."""
     centers = [*(task.get("research_places") or []), *(task.get("research_areas") or [])]
-    center = next((p for p in centers if p.get("id") == center_place_id
-                   and p.get("provider_provenance") == "LIVE_PROVIDER"), None)
+    center = next((p for p in centers if isinstance(p, dict) and p.get("id") == center_place_id
+                   and p.get("provider_provenance") == "LIVE_PROVIDER"
+                   and str(p.get("region_status") or "UNKNOWN").upper() != "CONFLICT"), None)
     if center is None:
         raise HTTPException(403, "CENTER_NOT_IN_GOAL_TASK_SCOPE")
     if type(radius_m) is not int or not 250 <= radius_m <= 5000 or type(limit) is not int or not 1 <= limit <= 8:
@@ -291,10 +395,15 @@ def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id
             if not (math.isfinite(point.latitude) and math.isfinite(point.longitude)
                     and -90 <= point.latitude <= 90 and -180 <= point.longitude <= 180):
                 continue
+            metadata = point.metadata if isinstance(point.metadata, dict) else {}
+            address = _public_address_from_tags(metadata.get("tags"))
             places.append({"id": point.external_id, "name": point.name, "category": point.category,
                            "latitude": point.latitude, "longitude": point.longitude,
                            "source_url": f"https://www.openstreetmap.org/{osm_id}", "provider": "overpass",
-                           "provider_provenance": "LIVE_PROVIDER", "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"})
+                           "provider_provenance": "LIVE_PROVIDER", "location_type": None,
+                           "location_kind": "POI", "osm_key": None, "osm_value": None,
+                           "public_address": address, "region_status": "UNKNOWN",
+                           "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"})
         existing = {p["id"]: p for p in task.get("research_places") or []}
         existing.update({p["id"]: p for p in places})
         task["research_places"] = list(existing.values())[:80]

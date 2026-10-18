@@ -732,6 +732,7 @@ class DiscoveryCandidate:
     metadata: dict[str, Any]
     distance_m: float | None = None
     cost_evidence: dict[str, Any] = field(default_factory=dict)
+    location_type: str | None = None
 
     def payload(self) -> dict[str, Any]:
         return {
@@ -746,7 +747,35 @@ class DiscoveryCandidate:
             "metadata": self.metadata,
             "distance_m": round(self.distance_m, 1) if self.distance_m is not None else None,
             "cost_evidence": self.cost_evidence,
+            "location_type": self.location_type,
         }
+
+
+_PUBLIC_GEOCODER_ADDRESS_FIELDS = ("county", "city", "state", "district")
+
+
+def _bounded_public_label(value: Any, *, limit: int = 120) -> str | None:
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip()
+    if not normalized or len(normalized) > limit or any(ord(char) < 32 for char in normalized):
+        return None
+    return normalized
+
+
+def _public_geocoder_metadata(address: Any, *, osm_key: Any, osm_value: Any) -> dict[str, str]:
+    """Keep only explicit public address parts and the source OSM key/value."""
+    metadata: dict[str, str] = {}
+    if isinstance(address, Mapping):
+        for key in _PUBLIC_GEOCODER_ADDRESS_FIELDS:
+            value = _bounded_public_label(address.get(key))
+            if value is not None:
+                metadata[key] = value
+    for key, value in (("osm_key", osm_key), ("osm_value", osm_value)):
+        normalized = _bounded_public_label(value, limit=80)
+        if normalized is not None:
+            metadata[key] = normalized
+    return metadata
 
 
 class NominatimGeocoder:
@@ -800,7 +829,9 @@ class NominatimGeocoder:
                 or row.get("place_id")
                 or hashlib.sha1(str(row).encode()).hexdigest()
             )
-            category = str(row.get("type") or row.get("class") or "service")
+            osm_key = row.get("class")
+            osm_value = row.get("type")
+            category = str(osm_value or osm_key or "unknown")
             candidates.append(
                 DiscoveryCandidate(
                     provider_key=self.provider_key,
@@ -809,10 +840,13 @@ class NominatimGeocoder:
                     category=category,
                     latitude=lat,
                     longitude=lon,
-                    tags=(category, "real_city"),
+                    tags=tuple(value for value in (str(osm_key or ""), str(osm_value or ""), "real_city") if value),
                     opening_hours={},
-                    metadata={"display_name": row.get("display_name"), "osm_type": osm_type},
+                    metadata=_public_geocoder_metadata(
+                        row.get("address"), osm_key=osm_key, osm_value=osm_value
+                    ),
                     cost_evidence=cost_evidence_from_tags(row.get("extratags"), source="nominatim"),
+                    location_type=_bounded_public_label(row.get("addresstype"), limit=40),
                 )
             )
         return candidates
@@ -874,12 +908,10 @@ class PhotonCityGeocoder:
                 continue
             osm_type = str(properties.get("osm_type") or "place")
             name = properties.get("name") or properties.get("city") or query
-            category = str(
-                properties.get("type")
-                or properties.get("osm_value")
-                or properties.get("osm_key")
-                or "service"
-            )
+            osm_key = properties.get("osm_key")
+            osm_value = properties.get("osm_value")
+            category = str(osm_value or osm_key or "unknown")
+            location_type = _bounded_public_label(properties.get("type"), limit=40)
             candidates.append(
                 DiscoveryCandidate(
                     provider_key=self.provider_key,
@@ -888,15 +920,15 @@ class PhotonCityGeocoder:
                     category=category,
                     latitude=latitude,
                     longitude=longitude,
-                    tags=(category, "real_city"),
+                    tags=tuple(value for value in (str(osm_key or ""), str(osm_value or ""), "real_city") if value),
                     opening_hours={},
-                    metadata={
-                        "photon_type": properties.get("type"),
-                        "countrycode": properties.get("countrycode"),
-                    },
+                    metadata=_public_geocoder_metadata(
+                        properties, osm_key=osm_key, osm_value=osm_value
+                    ),
                     cost_evidence=cost_evidence_from_tags(
                         properties.get("extra"), source=self.provider_key
                     ),
+                    location_type=location_type,
                 )
             )
         return candidates
