@@ -716,6 +716,11 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
       "utf-8",
     );
 
+    /* 名单那一行读的是服务器存下的 title。先把它抄下来，点进去之后才有东西可对。 */
+    const rowTitle = (await page
+      .locator(`li[data-cnx-journey="${journeyId}"] .cn-mytrips-title`)
+      .innerText())
+      .trim();
     await page.getByTestId("my-trips-open").first().click();
     await expect
       .poll(() => readBack(page, JOURNEY_POINTER, "local"), { timeout: 25_000 })
@@ -727,6 +732,14 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     await expect(page.getByTestId("hub-new-journey"), "打开之后没有落到行程里").toBeVisible({
       timeout: 25_000,
     });
+    /* Issue #33 第九笔：同一趟行程在两个屏上必须是同一个名字。
+     * 名单写的是服务器存的那条 title，Today 的块头写的是从城市码推出来的名字——
+     * 这两条路从前各走各的（一条拼 "北京 · journey"，一条说「北京之旅」）。
+     * 这一断言把它们钉在一起：谁再把其中一条改成自己拼名字，这里就红。 */
+    const headingTitle = (await page.getByTestId("today-heading").innerText()).trim();
+    expect(headingTitle, `名单写「${rowTitle}」，Today 写「${headingTitle}」`).toBe(rowTitle);
+    expect(rowTitle, "行程名里还留着机器写的英文后缀").not.toMatch(/·\s*journey/i);
+    console.log(`同一趟同一个名字：名单「${rowTitle}」= Today「${headingTitle}」`);
     const stillSigned = await readBack(page, SESSION_POINTER, "session");
     expect(stillSigned, "找回行程的过程中把人丢了").not.toBeNull();
     console.log(`找回旧行程：名单 ${listed.length} 枚，指针→${listed[0]}，本次新建的是 ${journeyId}`);

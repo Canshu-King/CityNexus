@@ -1461,7 +1461,15 @@ export function V8Experience() {
         signal: controller.signal,
         body: JSON.stringify({
           traveler_id: travelerId,
-          title: dictionaryText(locale, "hub.tripToCity", { cityLabel: cityName }),
+          /* The name comes from the code this draft resolves to, not from the letters the
+             person happened to type: Today reads the same derivation, and one trip that
+             answers to two names is how a list of trips stops being recognisable. */
+          title: dictionaryText(locale, "hub.tripToCity", {
+            cityLabel: cityLabelFromCode(
+              cityCode,
+              locale.startsWith("zh"),
+            ),
+          }),
           city_code: cityCode,
           timezone: draft.timezone.trim(),
           start_at: startAt,
@@ -2953,25 +2961,12 @@ function Hub({
   // The traveller may intentionally proceed after seeing a tight-budget warning.
   const [advisoryDismissed, setAdvisoryDismissed] = useState(false);
 
-  // The journey carries a city code (CN-XIAMEN); derive a traveller-facing name
-  // from it rather than showing the raw code.
-  const cityLabel = (() => {
-    const code = String(data.journey.city_code || "");
-    const tail = code.includes("-") ? code.split("-").slice(1).join("-") : code;
-    if (!tail) return "";
-    const cleaned = tail.replaceAll("_", " ");
-    // The product creates latin slugs (CN-XIAMEN).  A Chinese traveller must
-    // read the city name in Chinese, not a romanised code, so map the known
-    // slugs back to their local name.
-    const localName = CITY_NAME_BY_SLUG[cleaned.toUpperCase()];
-    if (localName) return locale.startsWith("zh") ? localName.zh : localName.en;
-    if (/[一-鿿]/.test(cleaned)) return cleaned;
-    return cleaned
-      .toLowerCase()
-      .split(/\s+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  })();
+  /* The journey carries a city code (CN-XIAMEN); the traveller reads a city name.  One
+     derivation, shared with the door that writes a new trip's name. */
+  const cityLabel = cityLabelFromCode(
+    String(data.journey.city_code || ""),
+    locale.startsWith("zh"),
+  );
 
   // ORD-0063: the day count is projected by the backend, not derived here.  The removed line
   // rounded the span between the anchors into whole days and added one, which called a
@@ -5373,6 +5368,23 @@ function dayHeading(day: { label: string; date?: string }, zh: boolean): string 
     }).format(new Date(`${iso}T00:00:00Z`));
   }
   return day.label.split(" · ")[0];
+}
+
+/** The city name a traveller reads, from the latin slug the product stores (CN-XIAMEN).
+ *  A code the table does not know keeps its own tail -- naming a city this table has never
+ *  seen would be this file inventing a place. */
+export function cityLabelFromCode(code: string, zh: boolean): string {
+  const tail = code.includes("-") ? code.split("-").slice(1).join("-") : code;
+  if (!tail) return "";
+  const cleaned = tail.replaceAll("_", " ");
+  const localName = CITY_NAME_BY_SLUG[cleaned.toUpperCase()];
+  if (localName) return zh ? localName.zh : localName.en;
+  if (/[一-鿿]/.test(cleaned)) return cleaned;
+  return cleaned
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {
