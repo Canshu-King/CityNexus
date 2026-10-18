@@ -4,12 +4,11 @@ test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, serviceWorkers
 
 const journeyId = "00000000-0000-4000-8000-000000000238";
 const travelerId = "TEST_FIXTURE_TRAVELER_238";
-const localViteOrigin = `http://127.0.0.1:${process.env.CITYNEXUS_MOBILE_UI_PORT ?? "14276"}`;
 const root = `**/api/v1/journeys/${journeyId}`;
 const goal = "情侣凌晨03:00入睡，次日13:30醒；一人体力较低，午后按下雨场景规划两站。";
-const restPreference = "时间窗：次日14:30后出发；上午不排活动，留足休息。";
+const restPreference = "时间窗：次日13:30起床，14:30后出发；上午不排活动，留足休息。";
 const shortWalkPreference = "偏好：低体力同行，少走路，优先短路线。";
-const rainConflictPreference = "只排已核实开放且可达的两站；未知标待核实。先核实午后雨情，下雨给室内备选；冲突先问我改计划。";
+const rainConflictPreference = "只排已核实开放且可达的两站；未知标待核实。先核实午后雨情；若下雨，只排室内地点；冲突先问我改计划。";
 
 function json(route: Route, value: object) {
   return route.fulfill({
@@ -20,6 +19,9 @@ function json(route: Route, value: object) {
 }
 
 test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain conflicts before submitting", async ({ page }) => {
+  const configuredBaseURL = test.info().project.use.baseURL;
+  if (typeof configuredBaseURL !== "string") throw new Error("mobile UI fixture baseURL is required");
+  const localViteOrigin = new URL(configuredBaseURL).origin;
   let suggestionCalls = 0;
   let apiPostCalls = 0;
   let providerCalls = 0;
@@ -154,7 +156,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   await shortWalkPreferenceButton.tap();
   await expect(shortWalkPreferenceButton).toHaveAttribute("aria-pressed", "true");
   await expect(prompt).toHaveValue(`${goal}\n${restPreference}\n${shortWalkPreference}`);
-  await expect(prompt).toHaveAttribute("rows", "7");
+  await expect(prompt).toHaveAttribute("rows", "8");
   expect(suggestionCalls).toBe(0);
   expect(apiPostCalls).toBe(0);
 
@@ -179,7 +181,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   await expect(rainConflictPreferenceButton).toHaveAttribute("aria-pressed", "true");
   const fullGoal = `${goal}\n${restPreference}\n${shortWalkPreference}\n${rainConflictPreference}`;
   await expect(prompt).toHaveValue(fullGoal);
-  await expect(prompt).toHaveAttribute("rows", "10");
+  await expect(prompt).toHaveAttribute("rows", "12");
   const promptIsFullyVisible = await prompt.evaluate((element) => element.scrollHeight <= element.clientHeight + 1);
   expect(promptIsFullyVisible).toBe(true);
   expect(suggestionCalls).toBe(0);

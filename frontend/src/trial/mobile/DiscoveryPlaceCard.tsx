@@ -156,7 +156,7 @@ export function DiscoveryPlaceCard({
     ? candidate.distance_m < 1000
       ? `约 ${Math.max(10, Math.round(candidate.distance_m / 10) * 10)} 米`
       : `约 ${(candidate.distance_m / 1000).toFixed(1)} 公里`
-    : null;
+    : "距离未知";
 
   return (
     <article className={chosenAs ? "is-picked" : ""} data-testid="rev-quick-place-card">

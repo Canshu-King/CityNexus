@@ -61,6 +61,14 @@ test("place cards show grounded hours and costs while preserving provenance and 
     }));
   }, journey);
 
+  await page.route("**/api/v1/**", (route) => route.fulfill({
+    status: 404,
+    contentType: "application/json",
+    body: JSON.stringify({ detail: "TEST_FIXTURE_ENDPOINT_NOT_SEEDED" }),
+  }));
+  await page.route("**/api/v1/travelers/session", (route) => json(route, {
+    traveler_id: "fixture-traveler-223",
+  }));
   await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
     runtime_identity: "UNCONFIGURED", hermes_compat_configured: false,
   }));
@@ -99,9 +107,12 @@ test("place cards show grounded hours and costs while preserving provenance and 
       candidate("test-priced", "124", "TEST_PROVIDER", {
         costEvidence: { status: "VERIFIED_PROVIDER", amount_minor: 1200, currency: "CNY" },
       }),
-      candidate("unknown-facts", "125", "UNVERIFIED", {
-        costEvidence: { status: "UNKNOWN", amount_minor: 0, currency: "CNY" },
-      }),
+      {
+        ...candidate("unknown-facts", "125", "UNVERIFIED", {
+          costEvidence: { status: "UNKNOWN", amount_minor: 0, currency: "CNY" },
+        }),
+        distance_m: null,
+      },
     ],
   }));
 
@@ -120,6 +131,7 @@ test("place cards show grounded hours and costs while preserving provenance and 
   await expect(cards.nth(1)).toContainText("测试地点");
   await expect(cards.nth(2)).toContainText("营业时间未知 · 费用未知");
   await expect(cards.nth(2)).toContainText("来源待确认");
+  await expect(cards.nth(2).getByText("park · 距离未知", { exact: true })).toBeVisible();
 
   for (let index = 0; index < 3; index += 1) {
     await expect(cards.nth(index).getByRole("link", { name: "查看 OpenStreetMap 来源 ↗" })).toHaveAttribute(
