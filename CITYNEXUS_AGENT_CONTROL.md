@@ -1,4 +1,55 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第十九笔：勘误——「中止那颗按钮按不动」是我这把尺量出来的假缺陷，真控件一直按得到
+
+Issue #33「前端 ui 改简洁」这一路的第十九笔，形状和前面几笔不同：它不删字，它撤回一条我自己发出去的读数。
+12:24 那则验收据此点名要修的那格，原文是这样到我手里的：`中止这趟行程@200,388 96x44 被 h1.@17,405 356x37`
+`_issue33_pass19_readings_1250.txt:5`。同一台、同一代（现尖 c176464910）两态各量一遍之后：
+
+- 人看到的那一颗是 `<summary>`，折叠态现读 painted=true、中心点 (195,288) 命中的就是它自己、与任何标题零重叠
+  `_issue33_pass19_readings_1250.txt:1`；
+- 那格读数里的 96x44 那颗是 `<details>` **里面**的提交按钮：它有布局盒、没有像素，折叠时屏上根本不存在
+  `_issue33_pass19_readings_1250.txt:2`，现场照 `docs/assets/evidence/11-abort-closed.png` 里这张卡只有一行高
+  `_issue33_pass19_readings_1250.txt:4`；
+- 点开之后那颗提交 painted=true、中心点 (248,410) 命中 `journey-abort-submit` 自己、零重叠
+  `_issue33_pass19_readings_1250.txt:3`。
+
+**所以「二十七像素纵向重叠、真人按不到」这个结论作废**：重叠是真的，但它发生在标题与一颗没画出来的按钮之间。
+中止这条路两步都按得到。给该格的派单（含裁语里那句"先修真人按钮可点"）请以此件为准，我不动产品字节去修一个
+不存在的缺陷。
+
+修的是尺。`getBoundingClientRect()` 分不出"画出来了"与"只排了版"，所以逐屏走查那颗候选过滤器现在只问一件窄事：
+这元素是不是在折叠的 `<details>` 里、且不是它自己的 `<summary>`（`frontend/e2e/_qoderPainted.ts:25`），
+两臂共用同一份源码（`frontend/e2e/qoder31-signed-session.spec.ts:25`、
+`frontend/e2e/qoder31-signed-session.spec.ts:901`、`frontend/e2e/qoder31-signed-session.spec.ts:1108`），
+不再各写一遍。改前改后各跑同一臂：改前那一跑「行程：按不动 1 颗」`_issue33_pass19_readings_1250.txt:5`，
+改后七屏「按不动」全零 `_issue33_pass19_readings_1250.txt:6`。
+
+**这把新尺自己也被负对照咬过一次，如实记**：第一版谓词顺手把祖先链的 opacity/visibility 也查了，结果那颗
+**明明画着**的 summary 被判成 painted=false `_issue33_pass19_readings_1250.txt:10`——一把会漏报真控件的尺比
+会误报的尺更坏，所以那段整个删掉，只留折叠这一条。留下来的两格对照写在
+`frontend/e2e/qoder31-signed-session.spec.ts:931`（折叠时必须判"没画"）与
+`frontend/e2e/qoder31-signed-session.spec.ts:938`（点开之后必须判"画了"）：谁把这条规则写宽或写窄，这两格会一红一绿。
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 手机套：Running 十六项、十五项通过、一项按原有条件跳过、零失败 `_issue33_pass19_readings_1250.txt:7` | 落地门：READY_TO_LAND、ff=True、ahead=1、behind=0、门内 rooted 测试 4 passed、本笔零产品字节 `_issue33_pass19_readings_1250.txt:8` |
+| 入口那两格断言（不许被标题压住、中心命中自己）`frontend/e2e/qoder31-signed-session.spec.ts:927`、`frontend/e2e/qoder31-signed-session.spec.ts:928` | 提交那两格断言 `frontend/e2e/qoder31-signed-session.spec.ts:939`、`frontend/e2e/qoder31-signed-session.spec.ts:940` |
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = ef1e3a2b5a3b2d84a1b0deac410935994c10ee45（`git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地回执 | 已发布、逐字节回读相等：blob cf0a7190f0bb70e6a48868a7fa1a66008bfb6f23 |
+
+**下一格仍然欠着**：裁语里另一件——凭据过期之后的可信重登。这条不是转述，我现读过了：
+`frontend/src/lib/travelerSession.ts:67` 在判到过期时把凭据从设备上删掉，
+`frontend/src/features/trip/MyTripsEntry.tsx:81` 没有签名旅行者就整块不渲染，所以关掉标签页确实找不回旧行程；
+而 `frontend/src/features/trip/MyTripsEntry.tsx:58` 那条续期腿只在已经有签名时才动。这一件要的是设计与新端点，
+不是一次措辞改动，我按剩余窗口能验通的量去做，做不到就交事实不交绿。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第十八笔：花费屏的「没算进来」清单只报类别名，核对格不再替产品自夸
 
 Issue #33「前端 ui 改简洁」这一路的第十八笔。花费那一格原来有五行，五行各自解释一遍服务器为什么
