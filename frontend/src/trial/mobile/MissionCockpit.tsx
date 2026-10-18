@@ -18,6 +18,7 @@ type Props = {
   cityName: string;
   goal: string;
   journeyStatus: string;
+  visible?: boolean;
   agentStatus: string;
   agentAvailable: boolean;
   onExplore: () => void;
@@ -79,7 +80,7 @@ function eventLabel(event: DraftGoalTaskEvent): string {
 }
 
 export function MissionCockpit({
-  journeyId, cityName, goal, journeyStatus, agentStatus, agentAvailable, onExplore, onTrip, executionAgent, executionDecisions,
+  journeyId, cityName, goal, journeyStatus, visible = true, agentStatus, agentAvailable, onExplore, onTrip, executionAgent, executionDecisions,
 }: Props) {
   const [command, setCommand] = useState(goal);
   const [task, setTask] = useState<DraftGoalTask | null>(null);
@@ -211,7 +212,7 @@ export function MissionCockpit({
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
         <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>Agent 命令台</strong></div>
         {journeyStatus === "ACTIVE" ? executionAgent :
-          <WorkspaceActions embedded panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />}
+          <WorkspaceActions embedded chatDockVisible={visible} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />}
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布" onScroll={(event) => setLayer(event.currentTarget.scrollLeft > event.currentTarget.clientWidth / 2 ? "timeline" : "map")}>
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
