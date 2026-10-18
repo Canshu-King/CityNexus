@@ -195,8 +195,8 @@ def _emit_event(
         entity_type="AgentGoalTask",
         entity_id=mission.id,
         journey_id=journey.id,
-        actor_type="TRAVELER" if event_type in {"TASK_ACCEPTED", "TASK_CANCELLED", "TASK_DRAFT_UPDATED", "CONSENT_UPDATED"} else "AI_AGENT",
-        actor_id=member.traveler_id if event_type in {"TASK_ACCEPTED", "TASK_CANCELLED", "TASK_DRAFT_UPDATED", "CONSENT_UPDATED"} else "hermes-goal-planning",
+        actor_type="TRAVELER" if event_type in {"TASK_ACCEPTED", "TASK_CANCELLED", "TASK_DRAFT_UPDATED", "CONSENT_UPDATED", "USER_MESSAGE_ADDED"} else "AI_AGENT",
+        actor_id=member.traveler_id if event_type in {"TASK_ACCEPTED", "TASK_CANCELLED", "TASK_DRAFT_UPDATED", "CONSENT_UPDATED", "USER_MESSAGE_ADDED"} else "hermes-goal-planning",
         after=event,
     )
     mission.intent_json = _json_dump(intent)
@@ -214,6 +214,7 @@ def _task_payload(
         "mode": GOAL_PLANNING_MODE,
         "status": task.get("status"),
         "goal": mission.user_text,
+        "conversation": list(task.get("conversation") or [{"role": "user", "text": mission.user_text, "message_id": "initial", "at": mission.created_at}]),
         "consent": dict(task.get("consent") or {}),
         "budget": dict(task.get("budget") or {}),
         "usage": dict(task.get("usage") or {}),
@@ -287,6 +288,7 @@ def create_goal_task(
         "latest_run_id": None,
         "candidate_place_ids": [],
         "source_observation_ids": [],
+        "conversation": [{"role": "user", "text": normalized_goal, "message_id": "initial", "at": now}],
         "assistant_summary": None,
         "research_places": [],
         "draft_artifact": empty_draft(journey),
@@ -628,6 +630,8 @@ def _initial_messages(
         "You are the CityNexus DRAFT goal-planning assistant. Use the provided goal and current "
         "Journey facts to research useful candidate Places. After every tool result, inspect the "
         "actual result and choose the next tool yourself; do not follow a fixed tool sequence. "
+        "Respect the latest user follow-up in recent_user_instructions while preserving unaffected " 
+        "verified research and the existing editable draft. A follow-up is not a brand-new trip. "
         "Only use the available tools. This is GOAL_PLANNING, not recovery: do not create or infer "
         "an incident, do not select or activate a PlanVersion, and do not book, pay, cancel, or "
         "change Journey state. Keep missing opening hours, prices, and availability UNKNOWN. Treat "
@@ -650,6 +654,8 @@ def _initial_messages(
     )
     user_context = {
         "goal": mission.user_text,
+        "recent_user_instructions": [item["text"] for item in task.get("conversation", [])[-12:] if item.get("role") == "user"],
+        "previous_agent_reply": task.get("assistant_summary"),
         "journey": _journey_snapshot(journey),
         "known_candidate_places": _known_place_context(session, journey, task),
         "known_non_authoritative_sources": _known_source_context(session, task),
@@ -1044,14 +1050,31 @@ def resume_goal_task(
     online_research_consent: bool | None = None,
     max_model_turns: int | None = None,
     max_tool_calls: int | None = None,
+    user_message: str | None = None,
+    message_id: str | UUID | None = None,
 ) -> dict[str, Any]:
-    """Run the model-selected DRAFT research loop, or resume its persisted task."""
+    """Run or resume the SAME persisted task, including an owner-authored follow-up."""
 
     journey, member, mission, intent, task = _require_task(
         session, journey, member, mission_id, require_draft=True
     )
-    if task.get("status") in {"CANCELLED", "COMPLETED"}:
+    if task.get("status") == "CANCELLED" or (task.get("status") == "COMPLETED" and user_message is None):
         raise HTTPException(409, "GOAL_TASK_NOT_RESUMABLE")
+    if user_message is not None and task.get("status") == "WORKING":
+        raise HTTPException(409, "GOAL_TASK_ALREADY_RUNNING")
+    normalized_message = " ".join(user_message.split()) if isinstance(user_message, str) else ""
+    if user_message is not None and (not normalized_message or len(normalized_message) > _MAX_GOAL_LENGTH):
+        raise HTTPException(422, "USER_MESSAGE_INVALID")
+    if user_message is not None:
+        try:
+            normalized_message_id = str(UUID(str(message_id)))
+        except (ValueError, TypeError, AttributeError):
+            raise HTTPException(422, "USER_MESSAGE_ID_REQUIRED") from None
+        if any(item.get("message_id") == normalized_message_id for item in task.get("conversation") or []):
+            # Repeated HTTP after an unknown response must not duplicate model/provider work.
+            return _task_payload(mission, intent)
+    else:
+        normalized_message_id = None
     consent = task.get("consent") if isinstance(task.get("consent"), dict) else {}
     prior_consent = {
         "model": consent.get("model") is True,
@@ -1086,6 +1109,13 @@ def resume_goal_task(
         "tool_calls": int(usage.get("tool_calls") or 0),
     }
     task["updated_at"] = _now()
+    if normalized_message_id is not None:
+        conversation = list(task.get("conversation") or [{"role": "user", "text": mission.user_text, "message_id": "initial", "at": mission.created_at}])
+        conversation.append({"role": "user", "text": normalized_message, "message_id": normalized_message_id, "at": _now()})
+        task["conversation"] = ([conversation[0]] + conversation[-29:]) if len(conversation) > 30 else conversation
+        task["assistant_summary"] = None
+        _emit_event(session, journey, member, mission, intent, event_type="USER_MESSAGE_ADDED", status="RESUMABLE")
+        session.commit()
     if task["consent"] != prior_consent:
         _emit_event(
             session,
@@ -1318,6 +1348,10 @@ def resume_goal_task(
                 mission = session.get(JourneyMission, mission.id)
                 intent = _task_state(mission)
                 intent[_TASK_KEY]["assistant_summary"] = assistant_summary
+                if assistant_summary:
+                    transcript = list(intent[_TASK_KEY].get("conversation") or [])
+                    transcript.append({"role": "assistant", "text": assistant_summary, "message_id": str(uuid4()), "at": _now()})
+                    intent[_TASK_KEY]["conversation"] = ([transcript[0]] + transcript[-29:]) if len(transcript) > 30 else transcript
                 _finish_run(
                     session,
                     journey,
