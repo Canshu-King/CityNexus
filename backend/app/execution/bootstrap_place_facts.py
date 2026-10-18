@@ -26,6 +26,36 @@ _FACT_TAGS = frozenset({
 })
 
 
+def current_bootstrap_discovery(session: Session, journey: Journey, *, member: Any, traveler_id: str) -> dict[str, Any] | None:
+    """Restore only this member's current, unexpired private search, without I/O."""
+    if journey.status != "DRAFT" or journey.active_plan_version_id or session.scalar(
+        select(PlanVersion.id).where(PlanVersion.journey_id == journey.id).limit(1)
+    ):
+        return None
+    observed = []
+    for row in session.scalars(select(RealPlaceCandidate).where(
+        RealPlaceCandidate.journey_id == journey.id, RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
+        RealPlaceCandidate.materialized_place_id.is_(None),
+        RealPlaceCandidate.provider_key.in_(("photon", "overpass")),
+    )):
+        for scope in discovery._bootstrap_scope_entries(json.loads(row.evidence_json or "{}")):
+            if (scope["member_id"] == str(member.id) and scope["traveler_id"] == traveler_id
+                    and scope.get("source_kind") == "MANUAL_PUBLIC_CENTER"
+                    and not discovery._scope_expired(scope)
+                    and not (not scope.get("expires_at") and row.expires_at and discovery._scope_expired({"expires_at": row.expires_at}))):
+                observed.append((str(scope.get("captured_at") or row.captured_at), row, scope))
+    if not observed:
+        return None
+    _captured, latest, scope = max(observed, key=lambda item: item[0])
+    candidates = [discovery._candidate_payload(row, member_id=str(member.id), traveler_id=traveler_id)
+                  for _time, row, item in observed if item["receipt_id"] == scope["receipt_id"]]
+    return {"journey_id": journey.id, "status": "LIVE_RESULTS", "source_kind": "MANUAL_PUBLIC_CENTER",
+            "result_state": "FOUND_2+" if len(candidates) > 1 else "PARTIAL_1",
+            "receipt_id": scope["receipt_id"], "expires_at": scope.get("expires_at") or latest.expires_at,
+            "provider": latest.provider_key, "provider_provenance": scope.get("provider_provenance") or "UNVERIFIED",
+            "attempts": [], "candidates": candidates}
+
+
 def read_osm_tags(kind: str, osm_id: str) -> dict[str, str]:
     # Identity comes from the server's candidate, never from a client URL.
     if kind not in {"node", "way", "relation"} or not osm_id.isascii() or not osm_id.isdigit():

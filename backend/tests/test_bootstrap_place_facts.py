@@ -131,6 +131,30 @@ def test_failed_details_leave_prior_facts_and_do_not_retry(monkeypatch, signed_p
         assert scope["osm_facts"]["failure_code"] == "OSM_TIMEOUT"
 
 
+def test_search_restore_is_signed_scoped_expiring_and_never_fetches_provider(monkeypatch, signed_place):
+    client, headers, outsider, journey_id, candidate_id, receipt_id, _other = signed_place
+    def unexpected_io(*_args):
+        raise AssertionError("Readonly restore must not fetch a provider")
+    monkeypatch.setattr(facts, "read_osm_tags", unexpected_io)
+    path = f"/api/v1/journeys/{journey_id}/bootstrap-discovery/current"
+    assert client.get(path).status_code == 401
+    assert client.get(path, headers=outsider).status_code == 403
+    result = client.get(path, headers=headers)
+    assert result.status_code == 200
+    assert result.json()["receipt_id"] == receipt_id
+    assert [item["candidate_id"] for item in result.json()["candidates"]] == [candidate_id]
+    assert result.json()["candidates"][0]["name"] != "OTHER_MEMBER_ORIGINAL"
+    assert result.json()["result_state"] == "PARTIAL_1"
+    assert "no-store" in result.headers["cache-control"]
+    with SessionLocal() as session:
+        row = session.get(RealPlaceCandidate, candidate_id)
+        evidence = json.loads(row.evidence_json)
+        evidence["bootstrap_scopes"][0]["expires_at"] = "2000-01-01T00:00:00+00:00"
+        row.evidence_json = json.dumps(evidence)
+        session.commit()
+    assert client.get(path, headers=headers).json() is None
+
+
 def test_enriched_place_enters_existing_native_plan_generator(monkeypatch, signed_place):
     client, headers, _, journey_id, candidate_id, receipt_id, _other = signed_place
     monkeypatch.setattr(facts, "read_osm_tags", lambda *_: {"opening_hours": "24/7", "fee": "no"})

@@ -281,7 +281,7 @@ from app.execution.bootstrap_discovery import (
     get_bootstrap_pocket_walk_go,
     transition_bootstrap_pocket_walk_go,
 )
-from app.execution.bootstrap_place_facts import refresh_bootstrap_place_facts
+from app.execution.bootstrap_place_facts import current_bootstrap_discovery, refresh_bootstrap_place_facts
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
     progress_drift_projection,
@@ -4338,6 +4338,19 @@ def save_bootstrap_discovery_pocket_walk_route(
     except BootstrapDiscoveryError as exc:
         session.rollback()
         raise _bootstrap_http_error(exc) from exc
+
+
+@app.get("/api/v1/journeys/{journey_id}/bootstrap-discovery/current")
+def get_current_bootstrap_discovery(
+    journey_id: UUID, request: Request, response: Response,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return current_bootstrap_discovery(session, journey, member=member, traveler_id=principal.traveler_id)
 
 
 @app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/facts")

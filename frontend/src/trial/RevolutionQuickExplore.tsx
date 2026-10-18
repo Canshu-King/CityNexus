@@ -339,12 +339,19 @@ export function RevolutionQuickExplore({
           });
         }
       });
-    void cityNexusApi.getBootstrapShortlist(journeyId).then((state) => {
+    const operationAtLoad = currentOperation.current;
+    void cityNexusApi.getBootstrapShortlist(journeyId).then(async (state) => {
       if (!valid()) return;
       onPocketWalkChange?.(state.pocket_walk ?? null);
       if (state.pocket_walk) {
         setWalk(state.pocket_walk);
         setStage("walk");
+      } else {
+        const previous = await cityNexusApi.getCurrentBootstrapDiscovery(journeyId);
+        if (!valid() || currentOperation.current !== operationAtLoad || !previous?.candidates.length || previous.journey_id !== journeyId) return;
+        setDiscovery(previous);
+        setStage("results");
+        setAlert({ type: "neutral", text: "已恢复上次找到的地点，可以继续挑选。" });
       }
     }).catch((error: unknown) => {
       // A denied member can never re-authorize itself by reloading the same

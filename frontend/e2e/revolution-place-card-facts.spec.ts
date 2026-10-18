@@ -5,7 +5,7 @@ test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 const journey = "00000000-0000-4000-8000-000000000223";
 const root = `**/api/v1/journeys/${journey}`;
 
-function json(route: Route, object: object) {
+function json(route: Route, object: object | null) {
   return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(object) });
 }
 
@@ -55,6 +55,8 @@ function candidate(
 
 test("place cards show grounded hours and costs while preserving provenance and OSM links", async ({ page }) => {
   let detailRequests = 0;
+  let discoveryRequests = 0;
+  let enriched: (ReturnType<typeof candidate> & { facts_status: string }) | null = null;
   await page.addInitScript((id) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
@@ -89,7 +91,9 @@ test("place cards show grounded hours and costs while preserving provenance and 
       coordinate_system: "WGS84", confidence: "CITY_CENTROID_UNCERTAIN", selection_state: "CAMERA_ONLY_TAP_REQUIRED",
     }],
   }));
-  await page.route(`${root}/bootstrap-discovery`, (route) => json(route, {
+  await page.route(`${root}/bootstrap-discovery`, (route) => {
+    discoveryRequests += 1;
+    return json(route, {
     journey_id: journey, status: "LIVE_RESULTS", source_kind: "MANUAL_PUBLIC_CENTER",
     provider: "overpass", provider_provenance: "LIVE_PROVIDER", receipt_id: "receipt-place-facts",
     expires_at: "2026-10-17T01:00:00Z", attempts: [{ http_status: 200 }],
@@ -116,19 +120,26 @@ test("place cards show grounded hours and costs while preserving provenance and 
       },
       candidate("live-needs-details", "126", "LIVE_PROVIDER"),
     ],
-  }));
+    });
+  });
+  await page.route(`${root}/bootstrap-discovery/current`, (route) => json(route, enriched ? {
+    journey_id: journey, status: "LIVE_RESULTS", receipt_id: "receipt-place-facts",
+    source_kind: "MANUAL_PUBLIC_CENTER", provider: "overpass", provider_provenance: "LIVE_PROVIDER",
+    attempts: [], candidates: [enriched],
+  } : null));
   await page.route(`${root}/bootstrap-discovery/facts`, (route) => {
     detailRequests += 1;
     expect(route.request().headers().authorization).toBe("Bearer signed-only-fixture-token");
     expect(route.request().postDataJSON()).toEqual({
       receipt_id: "receipt-place-facts", candidate_id: "live-needs-details", provider_consent: true,
     });
-    return json(route, { journey_id: journey, cached: false, candidate: {
+    enriched = {
       ...candidate("live-needs-details", "126", "LIVE_PROVIDER", {
         openingHours: { status: "NORMALIZED_VALID", open: "00:00", close: "24:00" },
         costEvidence: { status: "KNOWN", amount_minor: 0, evidence_basis: "OSM_FEE_NO" },
       }), facts_status: "SUCCESS", opening_source: "OpenStreetMap element API",
-    } });
+    };
+    return json(route, { journey_id: journey, cached: false, candidate: enriched });
   });
 
   await page.goto("/revolution");
@@ -170,5 +181,11 @@ test("place cards show grounded hours and costs while preserving provenance and 
   await expect(incomplete).toContainText("营业时间：全天 · 免费");
   await expect(incomplete.getByTestId("rev-quick-formal-live-needs-details")).toBeVisible();
   await expect(incomplete.getByTestId("rev-quick-facts-live-needs-details")).toHaveCount(0);
+  expect(detailRequests).toBe(1);
+  await page.reload();
+  await expect(page.getByText("已恢复上次找到的地点，可以继续挑选。", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("rev-quick-place-card")).toHaveCount(1);
+  await expect(page.getByTestId("rev-quick-place-card")).toContainText("营业时间：全天 · 免费");
+  expect(discoveryRequests).toBe(1);
   expect(detailRequests).toBe(1);
 });

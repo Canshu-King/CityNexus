@@ -19,6 +19,9 @@ async function json(route: Route, status: number, body: unknown) {
  */
 test.describe("Revolution signed-session recovery UI regression", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/v1/journeys/*/bootstrap-discovery/current", (route) => json(route, 200, null));
+  });
 
   test("a stale Journey's 403 offers one-tap restart without deleting its server record", async ({ page }) => {
     await page.addInitScript(({ id }) => {

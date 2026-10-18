@@ -3233,6 +3233,12 @@ export const cityNexusApi = {
     );
   },
 
+  getCurrentBootstrapDiscovery(journeyId: string): Promise<BootstrapDiscoveryResponse | null> {
+    return requestJson("/journeys/" + journeyId + "/bootstrap-discovery/current", {
+      headers: travelerAuthHeaders(), cache: "no-store",
+    });
+  },
+
   refreshBootstrapPlaceFacts(
     journeyId: string,
     receiptId: string,
