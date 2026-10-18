@@ -1,0 +1,240 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-18T11:00:08+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "f25539940ac9c9a7a9d229b7bad357cbda4c3182",
+ "candidate_ref": "refs/heads/review/qoder33-ui-plain-0719",
+ "candidate_tip": "065f44af7c2770f8b7bb956dcaee344bcd9dcf67",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "f25539940ac9c9a7a9d229b7bad357cbda4c3182",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/docs/assets/01-city.png",
+   "frontend/docs/assets/02-anchors.png",
+   "frontend/docs/assets/05-ai-panel.png",
+   "frontend/docs/assets/07-trip-panel.png",
+   "frontend/docs/assets/manifest.json",
+   "frontend/docs/assets/raw/01-city.png",
+   "frontend/docs/assets/raw/02-anchors.png",
+   "frontend/docs/assets/raw/05-ai-panel.png",
+   "frontend/docs/assets/raw/07-trip-panel.png",
+   "frontend/scripts/i18n_detail2_parity_r1.py",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e312ee419a01d189217dd7251830659c31623c9b",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_issue33_journey_title_survives_verbatim_r1.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "4 passed, 2 warnings in 2.24s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_105819",
+  "blob_equality": [
+   {
+    "path": "frontend/docs/assets/01-city.png",
+    "candidate_blob": "3403e3e75f3f4f443e96f8672a04af88a66f9146",
+    "export_blob": "3403e3e75f3f4f443e96f8672a04af88a66f9146",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/02-anchors.png",
+    "candidate_blob": "447152e85c2c54d7cf90bba3ad063f9ca5cc3f73",
+    "export_blob": "447152e85c2c54d7cf90bba3ad063f9ca5cc3f73",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/05-ai-panel.png",
+    "candidate_blob": "e18be425a28b79a1d80bc5a6af44273dc28a4615",
+    "export_blob": "e18be425a28b79a1d80bc5a6af44273dc28a4615",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/07-trip-panel.png",
+    "candidate_blob": "a98584f821f6975e99fb2addab1ad08f81461a97",
+    "export_blob": "a98584f821f6975e99fb2addab1ad08f81461a97",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/manifest.json",
+    "candidate_blob": "4522fba603a178e4524f63e0c88bd07d808aba9b",
+    "export_blob": "4522fba603a178e4524f63e0c88bd07d808aba9b",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/01-city.png",
+    "candidate_blob": "6e2c2cbefaeba4e58e27ff2ece41fe11f56c6039",
+    "export_blob": "6e2c2cbefaeba4e58e27ff2ece41fe11f56c6039",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/02-anchors.png",
+    "candidate_blob": "a44aa0868c539766fa36d111393f60307da5d1da",
+    "export_blob": "a44aa0868c539766fa36d111393f60307da5d1da",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/05-ai-panel.png",
+    "candidate_blob": "c01f451e5a9f3c7132848e695624316df1cf2c81",
+    "export_blob": "c01f451e5a9f3c7132848e695624316df1cf2c81",
+    "equal": true
+   },
+   {
+    "path": "frontend/docs/assets/raw/07-trip-panel.png",
+    "candidate_blob": "b14f2ae2003512d587e254c8ff18614ecc7b8480",
+    "export_blob": "b14f2ae2003512d587e254c8ff18614ecc7b8480",
+    "equal": true
+   },
+   {
+    "path": "frontend/scripts/i18n_detail2_parity_r1.py",
+    "candidate_blob": "1bf14d769bfee5ea19297b289e91dfae877f7365",
+    "export_blob": "1bf14d769bfee5ea19297b289e91dfae877f7365",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "ad045908b0f4f6f58fc70b59973fcab49c76669e",
+    "export_blob": "ad045908b0f4f6f58fc70b59973fcab49c76669e",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1999,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_��·��_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1999 tests collected in 8.24s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "4 tests collected in 2.80s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_issue33_journey_title_survives_verbatim_r1.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "4 passed, 2 warnings in 2.20s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "dict_keys": {
+   "exit": 0,
+   "verdict": "PASS",
+   "tip_missing": "1",
+   "called_in_view": "2",
+   "new_missing": []
+  },
+  "screen_code": {
+   "exit": 0,
+   "judged": 1,
+   "refuse": 0,
+   "tokens": []
+  },
+  "surface_contract": {
+   "arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d",
+   "exit": 0,
+   "verdict": "NO_CSS_IN_VIEW",
+   "css_files_in_view": "0",
+   "added_css_lines": "0",
+   "new_hatch_rows": "0",
+   "ruler_status": "MATCH",
+   "violations": [],
+   "disclosed_slip": null
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-BWpDFN-7.js",
+    "/assets/index-BnILFpA0.css"
+   ],
+   "live_tree": "e312ee419a01d189217dd7251830659c31623c9b",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_065f44a_info.json",
+   "build_tail": [
+    "\u001b[33m[plugin vite:reporter] ",
+    "src/features/agent/AgentComposer.tsx, D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_065f44a/frontend/src/features/agent/CopilotDock.tsx, dynamic import will not move module into another chunk.",
+    "\u001b[39m",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ],
+   "error_lines": []
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "065f44af7c2770f8b7bb956dcaee344bcd9dcf67",
+  "branches_route": "065f44af7c2770f8b7bb956dcaee344bcd9dcf67",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
