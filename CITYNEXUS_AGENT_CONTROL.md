@@ -1,4 +1,34 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜第十六笔：建行程那一路的六句提示改从字典读，其中一句不再替屏上已有的格子预告结果
+
+Issue #33「前端 ui 改简洁」这一路的第十六笔。壳的建行程路径上有六处
+`locale.startsWith("zh") ? 中 : 英`——十二处字面住在组件里，而同一个壳别处的话
+（`shell.loadError`、`shell.dismiss`）早就读键。现在这六句也进 `shell.*`，字面逐字搬过去：
+`frontend/src/app/V8Experience.tsx:1520`、`frontend/src/app/V8Experience.tsx:1535`、
+`frontend/src/i18n/LocaleContext.tsx:1727`、`frontend/src/i18n/LocaleContext.tsx:1728`。
+
+**唯一有意改动的一句**：「行程已创建，现在可以安排今天。」后面那半句
+「住宿搜索结果稍后会出现在这一页。」删掉了。它下面那一格在查询进行的那一刻就写着「搜索中…」，
+并自带「再查一次」——同一件事在同一屏上说两遍，正是这一路要删的东西 `_issue33_pass16_readings_1126.txt:2`。
+
+| 读数 | 现读出处 |
+| --- | --- |
+| 屏上现读：那一刻提示带是「行程已创建，现在可以安排今天。 知道了」 `_issue33_pass16_readings_1126.txt:3` | 钉住它的臂（6 秒窗口那一臂，含 not.toContain 一条） `frontend/e2e/qoder31-signed-session.spec.ts:390` |
+| 手机套 13 passed、1 skipped；对表尺两臂键数与 SELFCHECK_PASS；tsc 零诊断；vite build 零 `_issue33_pass16_readings_1126.txt:4` | 落地门判语 `_issue33_pass16_readings_1126.txt:5` |
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = 2baf3199c88e76cf0df4d8ddaa78d8bda5d078fb（`git cat-file -t` 现取回 commit，`git ls-remote` 同值） |
+| 落地回执 | 已发布、逐字节回读相等：blob `f42fbd79ca8119ce8aa477c2db26c09a9477e77f` |
+
+一句自记：这一笔删的不是字数，是"提示带替下面那格说话"这件事——
+一条 transient 的带子最该说的是**只有它知道的那一句**（这一趟已建成），
+其余的，屏上那一格自己会讲。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜第十四·十五笔：仓库那把 i18n 对表尺从红走绿，今天页那一行注意力改从字典读、像素不动
 
 Issue #33「前端 ui 改简洁」这一路的第十四、十五笔。这两笔不改一句人话，改的是"同一句话有两个
