@@ -1748,6 +1748,7 @@ export interface BootstrapDiscoveryResponse {
 }
 
 export interface BootstrapDiscoveryReadinessResponse {
+  supports_place_name_search?: boolean;
   journey_id?: string;
   provider: "overpass" | "photon";
   provider_name: string;

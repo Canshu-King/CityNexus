@@ -615,7 +615,7 @@ export function RevolutionQuickExplore({
       return;
     }
     const name = namedQuery?.trim();
-    if (name !== undefined && (readiness.provider !== "photon" || name.length < 2 || name.length > 120)) return;
+    if (name !== undefined && (!readiness.supports_place_name_search || readiness.provider !== "photon" || name.length < 2 || name.length > 120)) return;
     const selection = center;
     const chosenQuery = name ?? category;
     const consentedProvider = readiness.provider;
@@ -977,7 +977,7 @@ export function RevolutionQuickExplore({
           onDiscover={() => discover()}
           onChangeArea={() => enter("area")}
         />
-        {readiness?.provider === "photon" && (
+        {readiness?.provider === "photon" && readiness.supports_place_name_search && (
           <NamedPlaceSearch
             value={placeName}
             onChange={setPlaceName}

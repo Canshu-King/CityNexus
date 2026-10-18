@@ -134,6 +134,7 @@ def test_signed_named_search_dispatches_once_and_restores_private_receipt(monkey
         client=httpx.Client(transport=httpx.MockTransport(handler)),
     ))
     path = f"/api/v1/journeys/{journey_id}/bootstrap-discovery"
+    assert client.get(path + "/readiness", headers=headers).json()["supports_place_name_search"] is True
     body = {"query": "TEST_FIXTURE named museum", "query_mode": "name", "radius_m": 2500, "limit": 3,
             "source_kind": "MANUAL_PUBLIC_CENTER", "latitude": 31.2, "longitude": 121.4,
             "coordinate_system": "WGS84", "mode": "live", "provider_consent": True, "consented_provider": "photon"}

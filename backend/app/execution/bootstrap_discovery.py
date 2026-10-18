@@ -169,6 +169,7 @@ def bootstrap_discovery_readiness(
         "provider_name": selected["provider_name"],
         "expected_recipient": selected["expected_recipient"],
         "external_request_allowed": False,
+        "supports_place_name_search": provider_key == "photon",
         "test_only": False,
         "capability_state": "LIVE_BLOCKED",
     }
