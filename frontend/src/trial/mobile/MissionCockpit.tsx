@@ -114,7 +114,7 @@ export function MissionCockpit({
       const value = (event as CustomEvent).detail;
       if (value?.journeyId && value.journeyId !== journeyId) return;
       if (typeof value?.goal === "string" && value.goal.trim()) { setCommand(value.goal.slice(0, 2000)); setCommandRevision((v) => v + 1); }
-      document.querySelector<HTMLTextAreaElement>(".cn-mission-os .rev-workspace-inline textarea")?.focus();
+      (document.getElementById("rev-mission-chat-input") as HTMLTextAreaElement | null)?.focus();
     };
     window.addEventListener("citynexus:mission-command", focus);
     return () => window.removeEventListener("citynexus:mission-command", focus);
