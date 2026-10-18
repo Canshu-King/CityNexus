@@ -813,7 +813,7 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     for (const stop of stops) {
       await Promise.resolve(stop.open()).catch(() => undefined);
       await page.waitForTimeout(900);
-      const facts = await page.evaluate(() => {
+      const facts = await page.evaluate(async () => {
         const CODE = /\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g;
         const SNAKE = /\b[a-z][a-z0-9]*(?:_[a-z0-9]+){1,}\b/g;
         const EN = /\b[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\s+[A-Za-z][a-z]{2,}\b/g;
@@ -826,17 +826,36 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
         const lines = (document.body.innerText || "").split("\n").map((t) => t.trim()).filter(Boolean);
         const codes = lines.filter((t) => { CODE.lastIndex = 0; SNAKE.lastIndex = 0; return CODE.test(t) || SNAKE.test(t); });
         const english = lines.filter((t) => { EN.lastIndex = 0; return EN.test(t) && !/[\u4e00-\u9fff]/.test(t); });
+        /* "按不动"要在**人会去点的那个位置**上量：把每一颗先滚到视口中间、量完再复位。
+           不这么做，固定底栏会把每一屏最后一排都判成"盖住了"——那不是缺陷，是我量错了地方。 */
         const blocked: string[] = [];
-        for (const button of Array.from(document.querySelectorAll("button, a[role=button]")).filter(visible).slice(0, 40)) {
+        /* 抽屉/弹层开着的时候，它**后面**的东西本来就不该点得到——那不是按不动。
+           所以有覆盖层在场时，只判覆盖层里面的按钮。 */
+        const overlay = document.querySelector('[data-testid="v8-nav-drawer"], .v8-drawer, [role="dialog"], .v8-sheet');
+        const candidates = Array.from(document.querySelectorAll("button, a[role=button]"))
+          .filter(visible)
+          .filter((el) => !overlay || overlay.contains(el))
+          .slice(0, 40);
+        for (const button of candidates) {
+          window.scrollTo(0, 0);
+          button.scrollIntoView({ block: "center", inline: "nearest" });
+          await new Promise((resolve) => requestAnimationFrame(() => resolve(0)));
           const box = button.getBoundingClientRect();
+          if (box.top < 0 || box.bottom > window.innerHeight) continue;
           const hit = document.elementFromPoint(Math.round(box.x + box.width / 2), Math.round(box.y + box.height / 2));
           if (!hit) continue;
           if (hit === button || button.contains(hit) || hit.contains(button)) continue;
-          /* 抽屉打开时那层 backdrop 就是要挡住后面的按钮（点外面即关），这是设计不是按不动；
-             不算它，一次会报出十一颗假的，真那两颗就埋在里面。 */
+          /* 抽屉打开时那层 backdrop 就是要挡住后面的按钮（点外面即关），这是设计不是按不动。 */
           if (hit.closest('[class*="backdrop"], [class*="scrim"], [role="dialog"]')) continue;
-          blocked.push(`${(button.textContent || "").trim().slice(0, 16)}@${Math.round(box.x + box.width / 2)},${Math.round(box.y + box.height / 2)}→${hit.tagName.toLowerCase()}.${String(hit.className).split(" ")[0]}`);
+          const hb = hit.getBoundingClientRect();
+          blocked.push(
+            `${(button.textContent || "").trim().slice(0, 16)}@${Math.round(box.x)},${Math.round(box.y)} ` +
+              `${Math.round(box.width)}x${Math.round(box.height)} 被 ${hit.tagName.toLowerCase()}.` +
+              `${String(hit.className).split(" ")[0]}@${Math.round(hb.x)},${Math.round(hb.y)} ` +
+              `${Math.round(hb.width)}x${Math.round(hb.height)}`,
+          );
         }
+        window.scrollTo(0, 0);
         return { lines: lines.length, codes, english, blocked };
       });
       seenCodes.push(...facts.codes.map((c) => `${stop.label}：${c}`));
