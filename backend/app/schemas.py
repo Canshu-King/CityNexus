@@ -163,6 +163,11 @@ class AgentToolCall(BaseModel):
     # Reform 2026-10-18: the source-research tool names one server-owned Place. It is a separate
     # field from `replacement_place_id` so a read cannot be mistaken for a plan mutation.
     place_id: str | None = Field(default=None, min_length=1, max_length=128)
+    # Reform 2026-10-18: an estimate may be a bounded hypothesis, and a hypothesis has to say so.
+    # These three are the model's own guess, recorded as AGENT_PROVIDED_HYPOTHESIS, never as fact.
+    estimated_open_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_close_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_cost_minor: int | None = Field(default=None, ge=0)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None

@@ -916,6 +916,34 @@ def _place_window(place: Place) -> tuple[int, int] | None:
     return opened, closed
 
 
+def _place_verified_cost(place: Place) -> int | None:
+    """A place's own cost when its evidence says KNOWN, or None when it does not.
+
+    Reform 2026-10-18, ported with the estimate adapter: the same status rule as
+    `_catalogue_cost_unverified`, read the other way round. A `mock-city` row without a
+    `cost_evidence` object keeps its legacy `cost_minor`; once an object exists it is the contract,
+    so an explicit UNKNOWN must not be overridden by the legacy number.
+    """
+
+    metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+    provider_key = getattr(place, "provider_key", None)
+    evidence = metadata.get("cost_evidence")
+    if not isinstance(evidence, Mapping):
+        legacy_cost = metadata.get("cost_minor")
+        if (
+            provider_key == "mock-city"
+            and isinstance(legacy_cost, (int, float))
+            and legacy_cost > 0
+        ):
+            return int(legacy_cost)
+        return None
+    status = str(evidence.get("status") or "UNKNOWN").upper()
+    amount = evidence.get("amount_minor")
+    if status not in KNOWN_COST_EVIDENCE_STATUSES or amount is None:
+        return None
+    return int(amount)
+
+
 def _place_duration(place: Place) -> int:
     metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
     try:

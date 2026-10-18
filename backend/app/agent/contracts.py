@@ -30,6 +30,9 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, first adapter: source research is a read-shaped tool -- it captures
     # non-authoritative observations and never writes domain truth or money.
     RESEARCH_PLACE_SOURCES = "RESEARCH_PLACE_SOURCES"
+    # Reform 2026-10-18, second adapter: a strategy estimate from same-city peers. It writes only
+    # `strategy_estimate` into place metadata and never canonical provider truth.
+    ESTIMATE_PLACE_FACTS = "ESTIMATE_PLACE_FACTS"
 
 
 class AuthorizationDecision(str, Enum):

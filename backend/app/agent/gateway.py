@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from statistics import median
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
 from uuid import UUID, uuid4
@@ -49,7 +50,13 @@ from app.db.models import (
     WebObservation,
 )
 from app.schemas import AgentToolCall, ReplanGenerateRequest
-from app.services import activity_schema, journey_schema, service_schema
+from app.services import (
+    _place_verified_cost,
+    _place_window,
+    activity_schema,
+    journey_schema,
+    service_schema,
+)
 
 
 def _agent_key(kind: str, *parts: object) -> str:
@@ -365,6 +372,7 @@ class AgentToolGateway:
             "list_replans": self.list_replans,
             "search_city_services": self.search_city_services,
             "research_place_sources": self.research_place_sources,
+            "estimate_place_facts": self.estimate_place_facts,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -593,6 +601,99 @@ class AgentToolGateway:
                 }
                 for row in rows[:5]
             ],
+        }
+
+    def estimate_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
+        """Estimate one Place's hours or cost from same-city verified peers.
+
+        Reform 2026-10-18, ported from the Revolution gateway. The estimate is strategy evidence:
+        it lands under `strategy_estimate` in the place's metadata and is never promoted into
+        `opening_hours_json` or `cost_evidence`, because a peer median is not this place's fact.
+        A number the model supplies is recorded as AGENT_PROVIDED_HYPOTHESIS, with the same
+        non-authoritative status.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.place_id:
+            raise HTTPException(422, "place_id is required for estimate_place_facts")
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+        peers = self.session.scalars(
+            select(Place).where(
+                Place.city_code == journey.city_code, Place.category == place.category
+            )
+        ).all()
+        peer_costs = [
+            value
+            for peer in peers
+            if json.loads(peer.metadata_json or "{}").get("cost_evidence", {}).get("currency")
+            == journey.budget_currency
+            and (value := _place_verified_cost(peer)) is not None
+        ]
+        peer_windows = [window for peer in peers if (window := _place_window(peer)) is not None]
+        estimate: dict[str, Any] = {
+            "place_id": place.id,
+            "authority_eligible": False,
+            "basis": "same-city verified peers in the same provider category",
+            "opening_hours": {"status": "ESTIMATED_AGENT"},
+            "cost_evidence": {"status": "ESTIMATED_AGENT", "currency": journey.budget_currency},
+        }
+        if peer_windows:
+            opens = [window[0] for window in peer_windows]
+            closes = [window[1] for window in peer_windows]
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": int(median(opens)),
+                    "close_minutes": int(median(closes)),
+                    "peer_count": len(peer_windows),
+                }
+            )
+        if peer_costs:
+            estimate["cost_evidence"].update(
+                {"amount_minor": int(median(peer_costs)), "peer_count": len(peer_costs)}
+            )
+        if (
+            request.estimated_open_minutes is not None
+            and request.estimated_close_minutes is not None
+            and request.estimated_close_minutes > request.estimated_open_minutes
+        ):
+            estimate["basis"] = "agent_bounded_hypothesis"
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": request.estimated_open_minutes,
+                    "close_minutes": request.estimated_close_minutes,
+                    "basis": "AGENT_PROVIDED_HYPOTHESIS",
+                }
+            )
+        if request.estimated_cost_minor is not None:
+            estimate["basis"] = "agent_bounded_hypothesis"
+            estimate["cost_evidence"].update(
+                {
+                    "amount_minor": request.estimated_cost_minor,
+                    "basis": "AGENT_PROVIDED_HYPOTHESIS",
+                }
+            )
+        metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+        metadata["strategy_estimate"] = {
+            "status": "ESTIMATED_AGENT",
+            "authority_eligible": False,
+            "basis": estimate["basis"],
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+            "opening_hours": dict(estimate["opening_hours"]),
+            "cost_evidence": dict(estimate["cost_evidence"]),
+        }
+        place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+        # Estimates are strategy observations, not canonical Place facts. Persisting them lets the
+        # next deterministic compose explain how the decision was made without promoting the
+        # numbers into opening_hours_json or cost_evidence.
+        self.session.commit()
+        return {
+            "tool": "estimate_place_facts",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "estimate": estimate,
+            "warning": (
+                "ESTIMATED_AGENT never becomes canonical/provider truth; it supports strategy only."
+            ),
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:

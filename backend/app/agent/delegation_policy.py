@@ -26,6 +26,7 @@ READ_ACTIONS = frozenset(
         # Reform 2026-10-18: source research is allowed under read scope. It captures
         # non-authoritative observations; it cannot change the plan, a booking or money.
         AgentAction.RESEARCH_PLACE_SOURCES,
+        AgentAction.ESTIMATE_PLACE_FACTS,
     }
 )
 
