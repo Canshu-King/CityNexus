@@ -545,3 +545,28 @@
 @media (prefers-reduced-motion: reduce) {
   .rev-mobile-v1 button { transition: none !important; }
 }
+
+/* Human-facing place search: the radius is a choice, not a hidden 2.5 km constant. */
+.rev-mobile-v1 #rev-quick-radius {
+  width: 100%;
+  max-width: 390px;
+  min-height: 44px;
+  margin: 10px 0;
+  border: 1px solid #afcbb9;
+  border-radius: 10px;
+  padding: 9px 12px;
+  color: #183b2b;
+  background: #fff;
+  font: inherit;
+}
+.rev-mobile-v1 .rev-quick-zero-options {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+  padding: 15px;
+  background: #f3faf5;
+  border: 1px solid #d5e7d9;
+  border-radius: 14px;
+}
+.rev-mobile-v1 .rev-quick-zero-options p { margin: 0 0 2px; }
+.rev-mobile-v1 .rev-quick-zero-options button { min-height: 44px; }
