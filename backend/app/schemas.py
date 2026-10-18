@@ -182,6 +182,10 @@ class AgentToolCall(BaseModel):
     source_observation_id: str | None = Field(default=None, min_length=1, max_length=64)
     source_url: str | None = Field(default=None, min_length=1, max_length=2048)
     source_class: str | None = Field(default=None, min_length=1, max_length=64)
+    # Reform 2026-10-18: the read half of route comparison -- one server-owned edge.
+    from_key: str | None = Field(default=None, min_length=1, max_length=128)
+    to_key: str | None = Field(default=None, min_length=1, max_length=128)
+    route_mode: str | None = Field(default=None, max_length=32)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None

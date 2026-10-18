@@ -43,6 +43,7 @@ from app.db.models import (
     IdempotencyKey,
     Journey,
     JourneyMission,
+    MobilityFact,
     PaymentTransaction,
     Place,
     PlanVersion,
@@ -380,6 +381,7 @@ class AgentToolGateway:
             "generate_plans": self.generate_plans,
             "discover_places": self.discover_places,
             "acquire_place_facts": self.acquire_place_facts,
+            "compare_routes": self.compare_routes,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -607,6 +609,49 @@ class AgentToolGateway:
                     "authority_status": row.authority_status,
                 }
                 for row in rows[:5]
+            ],
+        }
+
+    def compare_routes(self, request: AgentToolCall) -> dict[str, Any]:
+        """Compare the route facts the server already holds for one edge.
+
+        Reform 2026-10-18: the read half of route comparison. Acquisition needs the launch-origin
+        chain this tree does not have yet, so this tool never claims to have looked anything up: it
+        answers with the stored `MobilityFact` rows for the pair, or says no edge was captured. An
+        unknown cost stays unknown -- the row's own `cost_status` is passed through untouched.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.from_key or not request.to_key:
+            raise HTTPException(422, "from_key and to_key are required for compare_routes")
+        query = select(MobilityFact).where(
+            MobilityFact.journey_id == journey.id,
+            MobilityFact.from_key == request.from_key,
+            MobilityFact.to_key == request.to_key,
+        )
+        if request.route_mode:
+            query = query.where(MobilityFact.mode == request.route_mode.upper())
+        rows = self.session.scalars(query.order_by(MobilityFact.mode)).all()
+        return {
+            "tool": "compare_routes",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "pair": {"from_key": request.from_key, "to_key": request.to_key},
+            "status": "STORED_FACTS" if rows else "NO_STORED_ROUTE_FACTS",
+            "counts_as_supply": bool(rows),
+            "options": [
+                {
+                    "mode": row.mode,
+                    "duration_min": row.duration_min,
+                    "distance_m": row.distance_m,
+                    "cost_amount_minor": row.cost_amount_minor,
+                    "currency": row.currency,
+                    "cost_status": row.cost_status,
+                    "transfers": row.transfers,
+                    "walking_min": row.walking_min,
+                    "provider_key": row.provider_key,
+                    "provenance": row.provenance,
+                    "captured_at": row.captured_at,
+                }
+                for row in rows
             ],
         }
 

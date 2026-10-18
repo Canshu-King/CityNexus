@@ -37,7 +37,7 @@ class AgentRuntimeUnavailable(RuntimeError):
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
 # Reform 2026-10-18: `research_place_sources` is read-shaped (it stores NON_AUTHORITATIVE
 # observations), so it must not inherit the mutation-tool treatment by being newly allowlisted.
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "estimate_place_facts", "discover_places"}
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "estimate_place_facts", "discover_places", "compare_routes"}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -227,6 +227,18 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
                 "source_class": _property("string"),
             },
             ["journey_id", "place_id"],
+        ),
+        _tool(
+            "compare_routes",
+            "Compare the route facts the server already holds for one edge. Read-only: it reports "
+            "stored options, or that no edge has been captured -- it never looks one up.",
+            {
+                **journey,
+                "from_key": _property("string"),
+                "to_key": _property("string"),
+                "route_mode": _property("string"),
+            },
+            ["journey_id", "from_key", "to_key"],
         ),
     ]
 

@@ -27,6 +27,7 @@ READ_ACTIONS = frozenset(
         # non-authoritative observations; it cannot change the plan, a booking or money.
         AgentAction.RESEARCH_PLACE_SOURCES,
         AgentAction.ESTIMATE_PLACE_FACTS,
+        AgentAction.COMPARE_ROUTES,
     }
 )
 

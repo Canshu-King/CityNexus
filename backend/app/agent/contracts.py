@@ -42,6 +42,9 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, fifth adapter: source-backed place details. It writes canonical Place
     # facts, so it is a domain mutation and the runtime requires an inspection first.
     ACQUIRE_PLACE_FACTS = "ACQUIRE_PLACE_FACTS"
+    # Reform 2026-10-18, sixth adapter: compare the route facts the server already holds. Read-only:
+    # acquisition needs the launch-origin chain this tree does not have yet.
+    COMPARE_ROUTES = "COMPARE_ROUTES"
 
 
 class AuthorizationDecision(str, Enum):
