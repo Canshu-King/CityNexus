@@ -3,8 +3,13 @@ import type { TravelBrief, TravelPlanningInput } from "../../api/citynexus";
 import { formatMinorMoney } from "../../lib/money";
 import { formatCost, formatOpeningHours } from "./DiscoveryPlaceCard";
 
-const interests = [ ["park/garden", "公园绿地"], ["cafe", "美食咖啡"],
-  ["museum/gallery", "博物馆艺术"], ["library", "安静阅读"] ] as const;
+const interests = [
+  ["local_food", "当地美食"], ["night_market", "夜市小吃"], ["old_town", "古城老街"],
+  ["heritage", "人文古迹"], ["nature", "山野自然"], ["coast", "海边水岸"],
+  ["architecture", "建筑文化"], ["nightlife", "夜间活动"], ["photography", "摄影打卡"],
+  ["family", "亲子活动"], ["shopping", "逛街购物"], ["park/garden", "公园绿地"],
+  ["cafe", "咖啡馆"], ["museum/gallery", "博物馆艺术"], ["library", "图书馆"],
+] as const;
 const labels: Record<string, string> = { outdoor: "户外兴趣", food: "美食兴趣", cultural: "文化兴趣",
   library: "阅读兴趣", low_walking: "少走路偏好", day_rhythm: "作息时间" };
 const blockers: Record<string, string> = {OPENING_UNVERIFIED:"营业时间",COST_UNKNOWN:"费用",ACCESS_RESTRICTED:"开放权限"};
