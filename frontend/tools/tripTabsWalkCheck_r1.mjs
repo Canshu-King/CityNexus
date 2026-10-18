@@ -243,6 +243,8 @@ const WALLET_KEYS = [
   "bookings.title",
   "bookings.lede",
   "bookings.importNote",
+  "bookings.authorityExplicit",
+  "bookings.authoritySub",
   "bookings.noStay",
 ];
 
