@@ -4,13 +4,30 @@ import re
 from typing import Any
 
 from app.db.models import Journey, Place
+from app.integrations.web.public_region import (
+    REGION_PENDING,
+    public_city_label,
+)
 
 
-def build_source_query(place: Place, journey: Journey) -> str:
-    """Build a server-owned query; the Agent supplies neither name nor URL."""
-    city = str(journey.city_code or "").replace("_", " ")
+def build_source_query(
+    place: Place, journey: Journey, *, region: str | None = None
+) -> str:
+    """Build a server-owned query; the Agent supplies neither name nor URL.
+
+    The city half is the *public* region label, never `journey.city_code`: V8
+    mints `CN-XIAMEN`, Revolution mints random `CN-RV-...`, and the demo mints
+    `CNX-DEMO`.  A code that cannot be resolved to a public place name raises
+    `REGION_PENDING` so the caller can report a named state instead of sending a
+    made-up query.  The provider identity is public (`overpass:node/123`); the
+    Journey UUID, title and preferences never enter the string.
+    """
+
+    label = region if region is not None else public_city_label(journey)
+    if not label:
+        raise ValueError(REGION_PENDING)
     identity = str(place.external_id or "").replace(":", " ")
-    return f'"{place.name}" {city} official opening hours admission fee {identity}'.strip()
+    return f'"{place.name}" {label} official opening hours admission fee {identity}'.strip()
 
 
 def normalize_identity_text(value: Any) -> str:

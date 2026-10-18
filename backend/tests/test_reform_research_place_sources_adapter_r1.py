@@ -87,6 +87,35 @@ def _draft_journey(traveler_id: str, city_code: str, timezone_name: str) -> str:
     return created.json()["id"]
 
 
+def _public_place(city_code: str = "CN-XIAMEN") -> str:
+    """A canonical Place in a resolvable public city.
+
+    The demo fixture's Journey carries `CNX-DEMO`, which is intentionally not a
+    public region; arms that need the provider path must use a real city code.
+    The row is cloned from the fixture so every required column stays valid.
+    """
+    with SessionLocal() as session:
+        base = session.scalar(select(Place).order_by(Place.id))
+        assert base is not None
+        place = Place(
+            id=str(uuid4()),
+            provider_key=base.provider_key,
+            external_id=f"scout:{uuid4()}",
+            city_code=city_code,
+            name="鼓浪屿",
+            category=base.category,
+            latitude=24.445,
+            longitude=118.07,
+            opening_hours_json=base.opening_hours_json,
+            tags_json=base.tags_json,
+            metadata_json=base.metadata_json,
+            updated_at=base.updated_at,
+        )
+        session.add(place)
+        session.commit()
+        return place.id
+
+
 def test_r1_tool_is_advertised_with_a_read_shape() -> None:
     v1 = {row["name"]: row for row in client.get("/api/v1/agent/tools").json()}
     v2 = {row["name"]: row for row in client.get("/api/v1/agent/tools/v2").json()}
@@ -105,8 +134,9 @@ def test_r1_tool_is_advertised_with_a_read_shape() -> None:
 
 def test_r2_draft_journey_researches_and_says_unavailable_without_provider(monkeypatch) -> None:
     _no_provider(monkeypatch)
-    traveler_id, city_code, place_id, timezone_name = _demo_city_and_place()
-    journey_id = _draft_journey(traveler_id, city_code, timezone_name)
+    traveler_id, _city_code, _place_id, timezone_name = _demo_city_and_place()
+    journey_id = _draft_journey(traveler_id, "CN-XIAMEN", timezone_name)
+    place_id = _public_place()
     with SessionLocal() as session:
         draft = session.get(Journey, journey_id)
         assert draft is not None and draft.active_plan_version_id is None, "this arm needs a DRAFT"
@@ -246,7 +276,9 @@ def test_r7_the_runtime_loop_accepts_the_tool_with_a_scripted_model(monkeypatch)
     assert [step["tool_name"] for step in steps] == ["research_place_sources"]
     result = steps[0]["result"]
     assert "outside the CityNexus V2 allowlist" not in json.dumps(result, ensure_ascii=False)
-    assert result["status"] == "SOURCE_DISCOVERY_UNAVAILABLE"
+    # The demo fixture's city code is `CNX-DEMO`, which is deliberately not a public region:
+    # the honest answer is the named region state, not a query sent with an internal code.
+    assert result["status"] == "PUBLIC_REGION_UNCONFIRMED"
     assert result["observations"] == []
 
 
@@ -294,8 +326,9 @@ def test_r6_captured_leads_are_non_authoritative_and_deduplicated(monkeypatch) -
     )
     monkeypatch.setattr(searxng_module, "SearXNGSearchProvider", StubProvider)
 
-    traveler_id, city_code, place_id, timezone_name = _demo_city_and_place()
-    journey_id = _draft_journey(traveler_id, city_code, timezone_name)
+    traveler_id, _city_code, _place_id, timezone_name = _demo_city_and_place()
+    journey_id = _draft_journey(traveler_id, "CN-XIAMEN", timezone_name)
+    place_id = _public_place()
     payload = {
         "request_id": "reform-research-" + str(uuid4()),
         "journey_id": journey_id,

@@ -67,6 +67,15 @@ TYPED_TOOLS = (
         False,
         False,
     ),
+    # Scout's zero-Place first step. It writes non-authoritative observations and a provider-call
+    # receipt, so it mutates neither domain truth nor money and never creates a Place.
+    ToolDescriptor(
+        AgentAction.DISCOVER_SOURCE_LEADS,
+        "discover_source_leads",
+        False,
+        False,
+        False,
+    ),
     ToolDescriptor(
         AgentAction.ESTIMATE_PLACE_FACTS,
         "estimate_place_facts",

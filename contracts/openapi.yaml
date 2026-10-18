@@ -3295,6 +3295,7 @@ components:
         request_id: {type: string, minLength: 8, maxLength: 128}
         agent_id: {type: string, minLength: 1, maxLength: 128, default: hermes}
         journey_id: {type: [string, 'null'], format: uuid}
+        mission_id: {type: [string, 'null'], format: uuid}
         proposal_id: {type: [string, 'null'], format: uuid}
         trigger_event_id: {type: [string, 'null'], format: uuid}
         candidate_count: {type: integer, minimum: 1, maximum: 5, default: 3}
@@ -3313,6 +3314,29 @@ components:
         q: {type: [string, 'null'], maxLength: 120}
         category: {type: [string, 'null'], maxLength: 80}
         service_type: {type: [string, 'null'], maxLength: 80}
+        place_id: {type: [string, 'null'], minLength: 1, maxLength: 128}
+        estimated_open_minutes: {type: [integer, 'null'], minimum: 0, maximum: 1440}
+        estimated_close_minutes: {type: [integer, 'null'], minimum: 0, maximum: 1440}
+        estimated_cost_minor: {type: [integer, 'null'], minimum: 0}
+        place_ids:
+          type: [array, 'null']
+          minItems: 2
+          maxItems: 12
+          items: {type: string}
+        planning_mode: {type: [string, 'null'], maxLength: 32}
+        query: {type: [string, 'null'], minLength: 1, maxLength: 120}
+        topic: {type: [string, 'null'], minLength: 2, maxLength: 120}
+        provider: {type: [string, 'null'], enum: [auto, web, searxng]}
+        radius_m: {type: [integer, 'null'], minimum: 100, maximum: 5000}
+        limit: {type: [integer, 'null'], minimum: 1, maximum: 20}
+        mode: {type: [string, 'null'], pattern: '^(replay|captured_replay|live)$'}
+        source_observation_id: {type: [string, 'null'], minLength: 1, maxLength: 64}
+        source_url: {type: [string, 'null'], minLength: 1, maxLength: 2048}
+        source_class: {type: [string, 'null'], minLength: 1, maxLength: 64}
+        from_key: {type: [string, 'null'], minLength: 1, maxLength: 128}
+        to_key: {type: [string, 'null'], minLength: 1, maxLength: 128}
+        route_mode: {type: [string, 'null'], maxLength: 32}
+        target_activity_id: {type: [string, 'null'], minLength: 1, maxLength: 64}
     AgentToolDescriptor:
       type: object
       required: [name, action, mutates_domain_truth, changes_money, changes_c4]

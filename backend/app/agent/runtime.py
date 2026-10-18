@@ -37,7 +37,7 @@ class AgentRuntimeUnavailable(RuntimeError):
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
 # Reform 2026-10-18: `research_place_sources` is read-shaped (it stores NON_AUTHORITATIVE
 # observations), so it must not inherit the mutation-tool treatment by being newly allowlisted.
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "estimate_place_facts", "discover_places", "compare_routes"}
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "discover_source_leads", "estimate_place_facts", "discover_places", "compare_routes"}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -176,6 +176,18 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             "The server builds the query; results never become facts by themselves.",
             {**journey, "place_id": _property("string")},
             ["journey_id", "place_id"],
+        ),
+        _tool(
+            "discover_source_leads",
+            "Discover up to five non-authoritative source leads from a public region and a "
+            "cleaned topic, even when the Journey has zero canonical Places. Leads are not "
+            "Places and never carry coordinates or plan authority.",
+            {
+                **journey,
+                "topic": _property("string", minLength=2, maxLength=120),
+                "provider": _property("string", enum=["auto", "web", "searxng"]),
+            },
+            ["journey_id", "topic"],
         ),
         _tool(
             "estimate_place_facts",

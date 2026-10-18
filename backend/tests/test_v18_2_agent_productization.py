@@ -37,6 +37,7 @@ def test_v182_plan_is_explicit_and_plan_only_limits_native_surface():
         "research_place_sources",
         "estimate_place_facts",
         "compare_routes",
+        "discover_source_leads",
         "discover_places",
         "acquire_place_facts",
         "generate_plans",

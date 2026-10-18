@@ -174,6 +174,10 @@ class AgentToolCall(BaseModel):
     # Reform 2026-10-18: provider-backed alternative search. The caps are the server's own route
     # caps -- widening them without provider evidence is exactly what the order forbids.
     query: str | None = Field(default=None, min_length=1, max_length=120)
+    # Reform 2026-10-18, Scout: a public region + cleaned topic can be researched before any
+    # canonical Place exists. `provider` selects one configured source; `auto` never guesses.
+    topic: str | None = Field(default=None, min_length=2, max_length=120)
+    provider: Literal["auto", "web", "searxng"] | None = None
     radius_m: int | None = Field(default=None, ge=100, le=5000)
     limit: int | None = Field(default=None, ge=1, le=20)
     mode: str | None = Field(default=None, pattern="^(replay|captured_replay|live)$")

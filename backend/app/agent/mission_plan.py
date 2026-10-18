@@ -71,6 +71,7 @@ DRAFT_WRITE_TOOLS = (
     # These write rows a draft needs (provider candidates, canonical facts, candidate plans) and
     # still cannot commit money, a booking or a plan selection. Keeping them in their own tuple is
     # what makes the grant's side effect readable instead of "everything that is not a payment".
+    "discover_source_leads",
     "discover_places",
     "acquire_place_facts",
     "generate_plans",

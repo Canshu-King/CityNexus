@@ -385,6 +385,7 @@ class AgentToolGateway:
             "list_replans": self.list_replans,
             "search_city_services": self.search_city_services,
             "research_place_sources": self.research_place_sources,
+            "discover_source_leads": self.discover_source_leads,
             "estimate_place_facts": self.estimate_place_facts,
             "generate_plans": self.generate_plans,
             "discover_places": self.discover_places,
@@ -535,90 +536,124 @@ class AgentToolGateway:
         if place is None or place.city_code != journey.city_code:
             raise HTTPException(404, "Place is not part of the Journey city")
 
-        from app.core.config import settings
-        from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
-        from app.integrations.ai.web_research import WebResearchProvider
+        import time
+
+        from app.integrations.web import source_discovery
+        from app.integrations.web.public_region import REGION_PENDING, public_city_label
         from app.integrations.web.research_service import build_source_query
-        from app.integrations.web.searxng import SearXNGSearchProvider
 
-        query = build_source_query(place, journey)
-        drafts: list[Any] = []
-        provider_status = "SOURCE_DISCOVERY_UNAVAILABLE"
-        if settings.ai_api_key and settings.deepseek_web_search_enabled:
-            client = DeepSeekResponsesClient(
-                api_key=settings.ai_api_key,
-                model=settings.ai_model,
-                base_url=settings.deepseek_api_url,
-                reasoning_effort="low",
-                timeout_seconds=settings.impact_timeout_seconds,
-            )
-            try:
-                drafts = list(WebResearchProvider(client).search(query)[:5])
-                provider_status = "CAPTURED" if drafts else "NO_RESULTS"
-            except DeepSeekResponsesError:
-                provider_status = "FAILED_EXTERNAL"
-        elif settings.searxng_url:
-            provider = SearXNGSearchProvider(settings.searxng_url)
-            try:
-                drafts = list(provider.search(query, limit=5))
-                provider_status = "CAPTURED" if drafts else "NO_RESULTS"
-            except Exception:
-                provider_status = "FAILED_EXTERNAL"
-            finally:
-                provider.close()
-
-        rows: list[WebObservation] = []
-        for item in drafts[:5]:
-            fingerprint = str(getattr(item, "evidence_fingerprint", "")) or hashlib.sha256(
-                f"{item.query}|{item.url}|{item.title}|"
-                f"{item.content_excerpt if hasattr(item, 'content_excerpt') else item.content}".encode()
-            ).hexdigest()
-            existing = self.session.scalar(
-                select(WebObservation).where(
-                    WebObservation.journey_id == journey.id,
-                    WebObservation.evidence_fingerprint == fingerprint,
-                )
-            )
-            if existing is None:
-                existing = WebObservation(
-                    id=str(uuid4()),
-                    journey_id=journey.id,
-                    query=item.query,
-                    url=item.url,
-                    domain=item.domain,
-                    title=item.title,
-                    source_class=getattr(item, "source_class", "OPEN_WEB"),
-                    provider_key=item.provider_key,
-                    model_key=getattr(item, "model_key", ""),
-                    captured_at=item.captured_at,
-                    evidence_fingerprint=fingerprint,
-                    content_excerpt=getattr(item, "content_excerpt", getattr(item, "content", ""))[:2000],
-                    authority_status="NON_AUTHORITATIVE",
-                    created_at=item.captured_at,
-                )
-                self.session.add(existing)
-            rows.append(existing)
-        self.session.commit()
-        return {
+        base = {
             "tool": "research_place_sources",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
             "journey_id": journey.id,
             "place_id": place.id,
+            "authority": "NON_AUTHORITATIVE",
+        }
+        region = public_city_label(journey)
+        if not region:
+            # No public region means no query: the Journey's random id or custom
+            # title is not a place name a provider could answer.
+            return {
+                **base,
+                "status": REGION_PENDING,
+                "reason_code": REGION_PENDING,
+                "region": {
+                    "label": None,
+                    "source": "JOURNEY_PUBLIC_REGION",
+                    "confirmed": False,
+                },
+                "next_legal_path": (
+                    "ask the traveler to confirm a public region on this Journey, or "
+                    "use discover_source_leads after the region is confirmed"
+                ),
+                "observations": [],
+            }
+        query = build_source_query(place, journey, region=region)
+        chosen = source_discovery.choose_provider(None)
+        if chosen is None:
+            return {
+                **base,
+                "query": query,
+                "status": "SOURCE_DISCOVERY_UNAVAILABLE",
+                "reason_code": "NO_WEB_PROVIDER",
+                "provider_availability": source_discovery.provider_availability(),
+                "next_legal_path": (
+                    "configure DeepSeek web search or SearXNG, or continue with stored facts"
+                ),
+                "observations": [],
+            }
+
+        began = time.perf_counter()
+        drafts, provider_status, reason = source_discovery.run_web_search(
+            query, provider=chosen, limit=5
+        )
+        elapsed_ms = round((time.perf_counter() - began) * 1000)
+        source_discovery.record_provider_call(
+            self.session,
+            provider_key="deepseek-web-search" if chosen == "web" else "searxng",
+            operation="place_source_research",
+            request_payload={
+                "query": query,
+                "region": region,
+                "place_id": place.id,
+                "provider": chosen,
+            },
+            status="SUCCESS" if provider_status in {"CAPTURED", "NO_RESULTS"} else "FAILURE",
+            latency_ms=elapsed_ms,
+            response_payload={"status": provider_status, "count": len(drafts)},
+        )
+        rows = source_discovery.capture_observations(
+            self.session, journey, drafts, query
+        )
+        self.session.commit()
+        result: dict[str, Any] = {
+            **base,
             "query": query,
             "status": provider_status,
-            "authority": "NON_AUTHORITATIVE",
-            "observations": [
-                {
-                    "id": row.id,
-                    "url": row.url,
-                    "domain": row.domain,
-                    "title": row.title,
-                    "provider": row.provider_key,
-                    "captured_at": row.captured_at,
-                    "authority_status": row.authority_status,
-                }
-                for row in rows[:5]
-            ],
+            "provider": chosen,
+            "elapsed_ms": elapsed_ms,
+            "region": {
+                "label": region,
+                "source": "JOURNEY_PUBLIC_REGION",
+                "confirmed": True,
+            },
+            "observations": [source_discovery.lead_payload(row) for row in rows[:5]],
+        }
+        if reason:
+            result["reason_code"] = reason
+        return result
+
+    def discover_source_leads(self, request: AgentToolCall) -> dict[str, Any]:
+        """Zero-Place research: public region + topic -> non-authoritative leads.
+
+        Reform 2026-10-18, Scout: `research_place_sources` needs a canonical Place, and when
+        Photon/Nominatim/the city catalogue all answer zero there is no Place to research.  This
+        tool starts one step earlier.  It never creates a Place, never writes coordinates and never
+        promotes a lead into the map: every row is a `WebObservation` with
+        `authority_status=NON_AUTHORITATIVE` and `can_promote_to_place=false`.
+        """
+        if request.journey_id is None or not request.topic:
+            raise HTTPException(422, "journey_id and topic are required")
+        journey = _require_journey(self.session, request.journey_id)
+        from app.integrations.web import source_discovery
+
+        try:
+            result = source_discovery.discover_source_leads(
+                self.session,
+                journey,
+                topic=request.topic,
+                provider=request.provider,
+                limit=5,
+            )
+        except ValueError as exc:
+            # Sanitisation refusals are named: an internal id in a public topic is a 422,
+            # not a silent rewrite that still sends the id.
+            raise HTTPException(422, str(exc)) from exc
+        return {
+            "tool": "discover_source_leads",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "journey_id": journey.id,
+            **result,
         }
 
     def acquire_route(self, request: AgentToolCall) -> dict[str, Any]:

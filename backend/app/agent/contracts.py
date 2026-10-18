@@ -48,6 +48,9 @@ class AgentAction(str, Enum):
     # Reform 2026-10-18, seventh adapter: acquire one grounded-origin -> target edge. A real
     # provider call, so it sits with the action tools rather than in the free draft set.
     ACQUIRE_ROUTE = "ACQUIRE_ROUTE"
+    # Reform 2026-10-18, Scout: public region + topic -> non-authoritative source leads. This is
+    # the zero-Place first step: it writes WebObservation/ProviderCall rows, never a Place.
+    DISCOVER_SOURCE_LEADS = "DISCOVER_SOURCE_LEADS"
 
 
 class AuthorizationDecision(str, Enum):
