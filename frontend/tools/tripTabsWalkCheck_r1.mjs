@@ -22,7 +22,7 @@
    control behind one is not "unreachable". The two numbers are also the 简洁 metric: how much text
    the screen hands over by default, and how much it hides until asked.
 
-   Usage: node tools/tripTabsWalkCheck_r1.mjs --url http://localhost:5337/ --journey <id> [--expect k:v,k:v]
+   Usage: node _copycheck_dom_r1.mjs --url http://localhost:5337/ --journey <id> [--expect k:v,k:v]
 */
 
 import { createRequire } from "node:module";
@@ -62,6 +62,7 @@ const STAY_BRANCH = arg("--branch", "empty");
 const WANT_WALLET = !process.argv.includes("--no-wallet");
 const WANT_PREP = !process.argv.includes("--no-prep");
 const WANT_STAY = !process.argv.includes("--no-stay");
+const WANT_ACCESS = !process.argv.includes("--no-access");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -170,6 +171,60 @@ function valueOf(regions, locale, key) {
   const match = new RegExp('"' + key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + '": "([^"]*)"')
     .exec(regions[locale]);
   return match ? match[1] : null;
+}
+
+/* The feature copy modules, read the same way: `src/i18n/LocaleContext.tsx` is no longer the only
+   place a traveller-facing sentence lives. `features/access/accessCopy.ts` and
+   `features/estimation/estimationLadderCopy.ts` hold their own two-locale tables, and this wave of
+   the campaign trimmed those rather than the dictionary, so the on-screen arm has to read them from
+   the module files or it would be checking wording the product stopped saying. */
+const COPY_MODULES = {
+  access: join(FRONTEND, "src", "features", "access", "accessCopy.ts"),
+  ladder: join(FRONTEND, "src", "features", "estimation", "estimationLadderCopy.ts"),
+};
+
+function moduleTable(file) {
+  const tables = { en: {}, "zh-CN": {} };
+  let side = null;
+  let pending = null;
+  for (const line of readFileSync(file, "utf8").split(NL)) {
+    if (pending !== null) {
+      const value = /^\s*(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)')\s*,?\s*$/.exec(line);
+      if (value && side) tables[side][pending] = next([value[1], value[2]]);
+      pending = null;
+      continue;
+    }
+    const opened = /^  (?:"([A-Za-z][\w-]*)"|([A-Za-z][\w-]*)):\s*\{\s*$/.exec(line);
+    if (opened) {
+      side = next([opened[1], opened[2]]);
+      if (!(side in tables)) side = null;
+      continue;
+    }
+    if (/^  \}/.test(line)) {
+      side = null;
+      continue;
+    }
+    if (!side) continue;
+    const pair = /^    (?:"([A-Za-z0-9_.\-]+)"|'([A-Za-z0-9_.\-]+)'):\s*(.*)$/.exec(line);
+    if (!pair) continue;
+    const key = next([pair[1], pair[2]]);
+    const rest = pair[3].trim();
+    if (!rest) {
+      pending = key;
+      continue;
+    }
+    const value = /^"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'/.exec(rest);
+    if (value) tables[side][key] = next([value[1], value[2]]);
+  }
+  return tables;
+}
+
+const next = (values) => values.find((value) => value !== undefined && value !== "") ?? "";
+
+/** `{en, zh}` for one module key, with the locale names the two shapes use folded into one. */
+function moduleValue(table, locale, key) {
+  const side = locale === "zh" ? "zh-CN" : "en";
+  return table[side][key] ?? null;
 }
 
 /** The part of a value a screen can be matched against verbatim: the stable text beside any `{param}`. */
@@ -394,8 +449,124 @@ async function walkStayScreen(page, regions, locale) {
   }
   console.log(`   stay screen: reached, chars=${seen.length}`);
   console.log(`      ${seen.slice(0, 220)}`);
+
+  /* The estimation ladder is mounted inside this screen (`features/stay/StayExplorer.tsx`), and its
+     sentences come from `estimationLadderCopy.ts`, not the shared dictionary. Which rung sentence
+     the panel picks is the module's decision, so this reports what it saw instead of claiming a
+     branch: a trim of one of these lines shows up here as the trimmed wording landing. */
+  const ladder = moduleTable(COPY_MODULES.ladder);
+  const ladderOnScreen = [];
+  const ladderOff = [];
+  for (const key of LADDER_KEYS) {
+    const value = moduleValue(ladder, locale, key);
+    if (value === null) {
+      console.log(`      ladder | KEY ABSENT FROM MODULE: ${key}`);
+      ladderOff.push(key);
+      continue;
+    }
+    const p = probe(value);
+    (p.judgable && fold(seen).includes(fold(p.text)) ? ladderOnScreen : ladderOff).push(key);
+    console.log(`      ladder | ${ladderOnScreen.includes(key) ? "ON SCREEN" : "not on this screen"}: ${key} = ${p.text}`);
+  }
+
   await page.screenshot({ path: join(SHOTS, `stay-screen-${locale}.png`), fullPage: true });
-  return { reached: true, chars: seen.length };
+  return { reached: true, chars: seen.length, ladderOnScreen, ladderOff };
+}
+
+/* The 成员与权限 screen (`features/access/accessCopy.ts`, mounted at the `access` route by
+   `app/v8PanelRegistry.tsx`). This is the first time the walker goes there: the sentences this wave
+   trimmed live in this module, and until one of them is read off a rendered screen the trim is only
+   a diff. Nothing is claimed as `always` here until a run says which branch the seeded journey
+   actually lands on. */
+const ACCESS_KEYS = [
+  "access.title",
+  "access.sub",
+  "access.pickLabel",
+  "access.pickEmpty",
+  "access.pickLoading",
+  "access.scopeDoorSilent",
+  "access.adminCapUnanswered",
+  "access.doorAbsent",
+];
+const LADDER_KEYS = [
+  "ladder.method.noCandidates",
+  "ladder.pre.noAmount",
+  "ladder.method.noSource",
+  "ladder.method.noConfidence",
+  "ladder.verify.open",
+];
+/* What the 06:4x run actually read off these two screens, in both languages, so it is now claimed:
+   `ladder.method.noCandidates` on the stay screen's empty branch (the ladder is mounted inside
+   `features/stay/StayExplorer.tsx`), and the three headings of the 成员与权限 screen. The claim is on
+   the key, not on the wording -- the sentence is re-read from the module file at run time -- so a
+   trim that keeps the reader moves the reading instead of breaking it, and a trim that detaches the
+   reader goes red. */
+const LADDER_CLAIMED = ["ladder.method.noCandidates"];
+const ACCESS_CLAIMED = ["access.title", "access.sub", "access.pickLabel"];
+
+async function walkAccessFace(page, regions, locale) {
+  const label = valueOf(regions, locale, "nav.access");
+  if (!label) {
+    console.log("   access screen: NOT ATTEMPTED (nav.access has no dictionary value)");
+    return { reached: false, note: "nav.access has no dictionary value" };
+  }
+  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
+  await page.waitForTimeout(5000);
+  const menu = page.locator('[data-testid="v8-mobile-menu"]');
+  if ((await menu.count()) > 0) {
+    await menu.first().click({ timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(900);
+  }
+  const nav = page.locator("#v8-nav-drawer").getByRole("button", { name: label, exact: true });
+  if ((await nav.count()) === 0) {
+    const visible = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("button"))
+        .map((node) => node.innerText.replace(/\s+/g, " ").trim())
+        .filter(Boolean)
+        .slice(0, 30)
+    );
+    console.log(
+      `   access screen: NOT REACHED (no "${label}" entry in the drawer); buttons: ${visible.join(" | ").slice(0, 260)}`
+    );
+    return { reached: false, note: 'no "' + label + '" entry in the drawer' };
+  }
+  await nav.first().click({ timeout: 6000 }).catch(() => {});
+  await page.waitForTimeout(3000);
+  const panel = await page.evaluate(() => {
+    const host =
+      document.querySelector('[data-testid="access-panel"]') ||
+      document.querySelector("main") ||
+      document.body;
+    return (host.innerText || "").replace(/\s+/g, " ").trim();
+  });
+  const mounted = (await page.locator('[data-testid="access-panel"]').count()) > 0;
+  if (!mounted || !panel) {
+    console.log(
+      `   access screen: clicked "${label}" but access-panel mounted=${mounted}, text ${panel.length} chars`
+    );
+    return { reached: false, note: `access-panel mounted=${mounted}` };
+  }
+  console.log(`   access screen: reached, chars=${panel.length}`);
+  console.log(`      ${panel.slice(0, 220)}`);
+  const table = moduleTable(COPY_MODULES.access);
+  const onScreen = [];
+  const off = [];
+  for (const key of ACCESS_KEYS) {
+    const value = moduleValue(table, locale, key);
+    if (value === null) {
+      console.log(`      access | KEY ABSENT FROM MODULE: ${key}`);
+      off.push(key);
+      continue;
+    }
+    const p = probe(value);
+    const hit = p.judgable && fold(panel).includes(fold(p.text));
+    (hit ? onScreen : off).push(key);
+    console.log(
+      `      access | ${hit ? "ON SCREEN" : "not on this branch"}: ${key} = ${p.text.slice(0, 96)}`
+    );
+  }
+  await page.screenshot({ path: join(SHOTS, `access-${locale}.png`), fullPage: true });
+  return { reached: true, chars: panel.length, onScreen, off };
 }
 
 async function walk(browser, locale) {
@@ -546,6 +717,7 @@ async function walk(browser, locale) {
     : { reached: false, observations: [] };
   const prep = WANT_PREP ? await walkPreparation(page, regions, locale) : { reached: false };
   const stayScreen = WANT_STAY ? await walkStayScreen(page, regions, locale) : { reached: false };
+  const access = WANT_ACCESS ? await walkAccessFace(page, regions, locale) : { reached: false };
 
   const problems = [];
   if (prep.reached && prep.verdict && (prep.rendered ?? []).length === 0) {
@@ -554,6 +726,26 @@ async function walk(browser, locale) {
   if (wallet.reached) {
     for (const item of wallet.observations) {
       if (item.state !== "ON SCREEN") problems.push(`wallet: ${item.key} reads "${item.state}"`);
+    }
+  }
+  if (stayScreen.reached) {
+    for (const key of LADDER_CLAIMED) {
+      if (!(stayScreen.ladderOnScreen ?? []).includes(key)) {
+        problems.push(
+          `stay screen: ${key} is claimed on screen, the ladder read puts it in: ` +
+            ((stayScreen.ladderOff ?? []).includes(key) ? "not on this screen" : "not measured")
+        );
+      }
+    }
+  }
+  if (access.reached) {
+    for (const key of ACCESS_CLAIMED) {
+      if (!(access.onScreen ?? []).includes(key)) {
+        problems.push(
+          `access screen: ${key} is claimed on screen, the module read puts it in: ` +
+            ((access.off ?? []).includes(key) ? "not on this branch" : "not measured")
+        );
+      }
     }
   }
   for (const screen of screens) {
