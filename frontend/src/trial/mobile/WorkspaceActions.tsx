@@ -75,6 +75,8 @@ const MAX_MODEL_TURNS = 64;
 const MAX_TOOL_CALLS = 128;
 const CONTINUE_MODEL_TURNS = 8;
 const CONTINUE_TOOL_CALLS = 16;
+const DEEP_MODEL_TURNS = 24;
+const DEEP_TOOL_CALLS = 48;
 
 // This pointer is only a candidate. Every read and model request is authorized by the server.
 function readContext(): Context | null {
@@ -102,8 +104,9 @@ function saveTaskPointer(actor: Context, taskId: string): void {
   try { localStorage.setItem(pointerKey(actor), taskId); } catch { /* server remains the task record */ }
 }
 function taskStepText(result: Record<string, unknown>): string {
-  if (result.status === "NO_RESULTS" || result.reason_code === "NO_RESULTS") return "暂未找到匹配地点";
-  if (result.status === "PROVIDER_UNAVAILABLE" || result.reason_code === "PHOTON_UNAVAILABLE") return "地点服务暂时不可用，已有成果已保留";
+  const provider = result.provider === "nominatim" ? "Nominatim" : result.provider === "photon" ? "Photon" : "公开地点来源";
+  if (result.status === "NO_RESULTS" || result.reason_code === "NO_RESULTS") return `${provider} 未找到匹配地点，Agent 可更换关键词或来源`;
+  if (result.status === "PROVIDER_UNAVAILABLE" || result.reason_code === "PHOTON_UNAVAILABLE" || result.reason_code === "NOMINATIM_UNAVAILABLE") return `${provider} 暂不可用，已有成果已保留`;
   if (typeof result.draft_revision === "number") return "旅行草案已保存";
   if (typeof result.candidate_count === "number") return `${result.candidate_count} 份候选方案`;
   if (result.status === "NO_STORED_ROUTE_FACTS") return "这两站还没有路线资料";
@@ -127,6 +130,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
   const [requestError, setRequestError] = useState<string | null>(null);
   const [modelConsent, setModelConsent] = useState(false);
   const [onlineResearchConsent, setOnlineResearchConsent] = useState(false);
+  const [researchDepth, setResearchDepth] = useState<"quick" | "deep">("deep");
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(false);
   const [aiReady, setAiReady] = useState(false);
@@ -233,6 +237,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
     return () => { stopped = true; window.clearInterval(timer); };
   }, [panel, visibleTask?.task_id, visibleTask?.status, busy, context?.id, context?.owner, context?.token]);
 
+  const initialModelTurns = researchDepth === "deep" ? DEEP_MODEL_TURNS : MODEL_TURNS;
+  const initialToolCalls = researchDepth === "deep" ? DEEP_TOOL_CALLS : TOOL_CALLS;
+
   const startNewTask = async () => {
     const actor = readContext();
     if (!actor || !visible || !sameContext(actor, visible.context) || !aiReady || visible.status !== "DRAFT" || !modelConsent || writeBusy.current || question.trim().length < 4) return;
@@ -245,14 +252,14 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
       const created = await cityNexusApi.createDraftGoalTask(actor.id, {
         goal: question.trim(), model_consent: modelConsent,
         online_research_consent: onlineResearchConsent,
-        max_model_turns: MODEL_TURNS, max_tool_calls: TOOL_CALLS,
+        max_model_turns: initialModelTurns, max_tool_calls: initialToolCalls,
       }, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       saveTaskPointer(actor, created.task_id);
       setGoalTaskSnapshot({ context: actor, value: created, events: [] });
       const result = await cityNexusApi.runDraftGoalTask(actor.id, created.task_id, {
         model_consent: modelConsent, online_research_consent: onlineResearchConsent,
-        max_model_turns: MODEL_TURNS, max_tool_calls: TOOL_CALLS,
+        max_model_turns: initialModelTurns, max_tool_calls: initialToolCalls,
       }, false, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       setGoalTaskSnapshot({ context: actor, value: result, events: [] });
@@ -348,8 +355,14 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
           <form onSubmit={(event) => { event.preventDefault(); void startNewTask(); }}>
             <label htmlFor="rev-workspace-question">{COPY.question}</label>
             <textarea id="rev-workspace-question" rows={5} maxLength={2000} value={question} disabled={busy} onChange={(event) => setQuestion(event.target.value)} />
-            <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />将目标和行程信息发送给 AI，最多 {MODEL_TURNS} 轮</label>
-            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许通过 Photon 和已配置的公开来源查询地点资料，最多 {TOOL_CALLS} 次工具</label>
+            <label className="rev-workspace-depth">本次研究工作量
+              <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
+                <option value="deep">深入调查 · 最多 24 轮模型 / 48 次工具（推荐）</option>
+                <option value="quick">快速试探 · 最多 8 轮模型 / 16 次工具</option>
+              </select>
+            </label>
+            <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />同意本次向模型发送旅行目标与必要行程资料，最多 {initialModelTurns} 轮，可能产生费用</label>
+            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />同意在本次任务授权范围内使用 Photon、Nominatim 等已配置公开来源，最多 {initialToolCalls} 次工具；不会自动无限调用</label>
             <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4}>{busy ? COPY.sending : COPY.send}</button>
           </form>}
         {requestError && <p role="alert">{requestError}</p>}
