@@ -61,6 +61,7 @@ const TABS = (arg("--only", "") || "itinerary,stay,bookings,spend").split(",");
 const STAY_BRANCH = arg("--branch", "empty");
 const WANT_WALLET = !process.argv.includes("--no-wallet");
 const WANT_PREP = !process.argv.includes("--no-prep");
+const WANT_STAY = !process.argv.includes("--no-stay");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -359,6 +360,44 @@ const PREP_KEYS = [
   "prep.providerTransient", "prep.notAnswered", "prep.verdictBody",
 ];
 
+/* The stay screen, reached the same way. Its copy still lives inside the component (that is the
+   remaining 172-site backlog), so there is no dictionary value to compare against -- what this arm
+   buys is a baseline: how many characters the screen hands a traveller, and the words themselves,
+   so the next trim can be measured rather than described. */
+async function walkStayScreen(page, regions, locale) {
+  const label = valueOf(regions, locale, "nav.stay");
+  if (!label) {
+    console.log("   stay screen: NOT ATTEMPTED (nav.stay has no dictionary value)");
+    return { reached: false };
+  }
+  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
+  await page.waitForTimeout(5000);
+  const menu = page.locator('[data-testid="v8-mobile-menu"]');
+  if ((await menu.count()) > 0) {
+    await menu.first().click({ timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(900);
+  }
+  const nav = page.locator("#v8-nav-drawer").getByRole("button", { name: label, exact: true });
+  if ((await nav.count()) === 0) {
+    console.log(`   stay screen: NOT REACHED (no "${label}" entry in the drawer)`);
+    return { reached: false };
+  }
+  await nav.first().click({ timeout: 6000 }).catch(() => {});
+  await page.waitForTimeout(4000);
+  const seen = await page.evaluate(() => {
+    const main = document.querySelector("main") || document.body;
+    return (main.innerText || "").replace(/\s+/g, " ").trim();
+  });
+  if (!seen) {
+    console.log(`   stay screen: reached "${label}" but the main region rendered no text`);
+    return { reached: false };
+  }
+  console.log(`   stay screen: reached, chars=${seen.length}`);
+  console.log(`      ${seen.slice(0, 220)}`);
+  await page.screenshot({ path: join(SHOTS, `stay-screen-${locale}.png`), fullPage: true });
+  return { reached: true, chars: seen.length };
+}
+
 async function walk(browser, locale) {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -506,6 +545,7 @@ async function walk(browser, locale) {
     ? await walkWallet(page, regions, locale)
     : { reached: false, observations: [] };
   const prep = WANT_PREP ? await walkPreparation(page, regions, locale) : { reached: false };
+  const stayScreen = WANT_STAY ? await walkStayScreen(page, regions, locale) : { reached: false };
 
   const problems = [];
   if (prep.reached && prep.verdict && (prep.rendered ?? []).length === 0) {
