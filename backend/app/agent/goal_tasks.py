@@ -52,8 +52,10 @@ _ALLOWED_TOOLS = frozenset(
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
-_MAX_MODEL_TURNS = 8
-_MAX_TOOL_CALLS = 16
+# These are cumulative, opt-in task ceilings, not an eight-turn permanent lock.
+# Each continuation is a separate explicit user action with an increased budget.
+_MAX_MODEL_TURNS = 64
+_MAX_TOOL_CALLS = 128
 _MAX_EVENT_PAGE = 100
 _REASON_CODE = re.compile(r"^[A-Z][A-Z0-9_]{1,79}$")
 
