@@ -34,6 +34,7 @@ from app.agent.tool_catalog import TOOL_BY_NAME
 TOOLS: tuple[tuple[str, str], ...] = (
     ("search_city_services", "tests/test_agent_alternatives_v3.py"),
     ("research_place_sources", "tests/test_reform_research_place_sources_adapter_r1.py"),
+    ("discover_source_leads", "tests/test_reform_discover_source_leads_adapter_r1.py"),
     ("estimate_place_facts", "tests/test_reform_estimate_place_facts_adapter_r1.py"),
     ("generate_plans", "tests/test_reform_generate_plans_adapter_r1.py"),
     ("discover_places", "tests/test_reform_discover_places_adapter_r1.py"),
@@ -51,6 +52,8 @@ FILES: tuple[str, ...] = (
     "backend/app/agent/tool_catalog.py",
     "backend/app/execution/launch_origin.py",
     "backend/app/route_session_operations.py",
+    "backend/app/integrations/web/public_region.py",
+    "backend/app/integrations/web/source_discovery.py",
     "backend/app/integrations/web/research_service.py",
 )
 
@@ -208,6 +211,63 @@ def render_markdown(payload: dict) -> str:
         "- `acquire_route` is not in the PLAN_ONLY grant. With the built-in mock provider it",
         "  is `ALLOW_AUTO`; with a configured live provider it returns `REQUIRE_CONFIRMATION`",
         "  and one named receipt bound to origin, target and mode.",
+        "",
+        "### Zero-Place examples (stub provider; not LIVE_VERIFIED)",
+        "",
+        "Success: `discover_source_leads` with a public region and topic, two URL-bearing leads:",
+        "",
+        "```json",
+        json.dumps(
+            {
+                "tool": "discover_source_leads",
+                "status": "CAPTURED",
+                "region": {"label": "XIAMEN", "source": "JOURNEY_PUBLIC_REGION", "confirmed": True},
+                "topic": "古村落",
+                "authority": "NON_AUTHORITATIVE",
+                "leads": [
+                    {
+                        "url": "https://example.gov.cn/gucun",
+                        "domain": "example.gov.cn",
+                        "authority_status": "NON_AUTHORITATIVE",
+                        "identity_status": "UNVERIFIED",
+                        "can_promote_to_place": False,
+                    },
+                    {
+                        "url": "https://example.org/food",
+                        "domain": "example.org",
+                        "authority_status": "NON_AUTHORITATIVE",
+                        "identity_status": "UNVERIFIED",
+                        "can_promote_to_place": False,
+                    },
+                ],
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        "```",
+        "",
+        "Honest failure: no configured web provider, so no query is sent and no lead is invented:",
+        "",
+        "```json",
+        json.dumps(
+            {
+                "tool": "discover_source_leads",
+                "status": "SOURCE_DISCOVERY_UNAVAILABLE",
+                "reason_code": "NO_WEB_PROVIDER",
+                "region": {"label": "XIAMEN", "source": "JOURNEY_PUBLIC_REGION", "confirmed": True},
+                "authority": "NON_AUTHORITATIVE",
+                "leads": [],
+                "next_legal_path": (
+                    "configure DeepSeek web search or SearXNG, or use a canonical Place "
+                    "with research_place_sources"
+                ),
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        "```",
+        "",
+        "Unknown region: `REGION_PENDING` with `confirmed=false` and zero leads; no query is built.",
         "",
         "## Signing / call contract",
         "",

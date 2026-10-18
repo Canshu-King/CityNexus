@@ -1,21 +1,23 @@
 {
-  "generated_at": "2026-10-18T12:14:55.771293+00:00",
+  "generated_at": "2026-10-18T16:05:09.814888+00:00",
   "branch": "reform/qoder-capability-adapters-1018",
-  "head": "f988f8814ec027b79e9c4dcfcfe1d9a86d927343",
-  "code_head": "82f228f267c8099f79c344e2425f3d8b318ac094",
-  "agent_tree": "91640075ffdeec98a59c990db1994a9479336acb",
+  "head": "acdeb8ebcd0624c0a0248763b14a65a34c4123e9",
+  "code_head": "acdeb8ebcd0624c0a0248763b14a65a34c4123e9",
+  "agent_tree": "2049cf68941512e517559e69ab43521899c17a34",
   "files": {
-    "backend/app/agent/contracts.py": "bfaf8573823684ccefd9892f68adb56ace68726d",
+    "backend/app/agent/contracts.py": "915246fa98fbd5eed076b30b64aeab1975ceb812",
     "backend/app/agent/delegation_policy.py": "7b10f0f05cb5ca9abe63c8443c4b4219356492fa",
-    "backend/app/agent/gateway.py": "bf2477b7b13b6601f66163940e385ae7e85ce8aa",
-    "backend/app/agent/mission_plan.py": "c365dbb914412757995b5ae24e1682db2980a30b",
-    "backend/app/agent/runtime.py": "7f7375a0ce277fb2fe7f267ed585507ca4b8dc31",
-    "backend/app/agent/tool_catalog.py": "75dd1efe472c4f2e320e3a4cc4eaff525fc592b1",
+    "backend/app/agent/gateway.py": "2037467e37da0dbaaf29036ff3ed37f2cb41e48b",
+    "backend/app/agent/mission_plan.py": "f925d6ea6f705e99b9183106a907a81248b93eb8",
+    "backend/app/agent/runtime.py": "75f4f9e1944357bc05a5c35258c87ca26a9ddac0",
+    "backend/app/agent/tool_catalog.py": "341afc717cb25d1d89fa24271d409e23d47b4bdc",
     "backend/app/execution/launch_origin.py": "431c0cbe0f943fc379ac1f5b2cf814d7f4ad734f",
     "backend/app/route_session_operations.py": "7e4cb39bc29c44284d18bfb255a12fb7518c04ec",
-    "backend/app/integrations/web/research_service.py": "da36672f99895e82209e46df52e0b20d237ee58d"
+    "backend/app/integrations/web/public_region.py": "3004040c4a2fb29ed611be3ac65c6ea83b70eefa",
+    "backend/app/integrations/web/source_discovery.py": "3ded043281677104cfebdf218a6c8d2efb29a062",
+    "backend/app/integrations/web/research_service.py": "8bafee75314dad7a0cae2349ae799e201134cdc6"
   },
-  "tool_count": 8,
+  "tool_count": 9,
   "tools": [
     {
       "name": "search_city_services",
@@ -95,6 +97,53 @@
       },
       "plan_only_grant": "ALLOWED",
       "proof_test": "tests/test_reform_research_place_sources_adapter_r1.py"
+    },
+    {
+      "name": "discover_source_leads",
+      "schema_signature": "2fdab5d3af36815f6f57c21d1803b22f0b10c721346357e9552570c01ac799a5",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "discover_source_leads",
+          "description": "Discover up to five non-authoritative source leads from a public region and a cleaned topic, even when the Journey has zero canonical Places. Leads are not Places and never carry coordinates or plan authority.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "topic": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120
+              },
+              "provider": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "web",
+                  "searxng"
+                ]
+              }
+            },
+            "required": [
+              "journey_id",
+              "topic"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "discover_source_leads",
+        "action": "DISCOVER_SOURCE_LEADS",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_discover_source_leads_adapter_r1.py"
     },
     {
       "name": "estimate_place_facts",
