@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -15,6 +16,10 @@ from app.core.config import settings
 from app.db.models import ProviderCall
 from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGeocoder, OverpassPOIProvider, _resolver_city_label
 from app.integrations.provider_config import ExternalProviderSettings, trust_environment_for_public_providers
+
+_LIVE_GOAL_RESEARCH_PROVIDERS = frozenset({"photon", "nominatim", "overpass"})
+_OSM_REFERENCE_TYPES = {"N": "node", "W": "way", "R": "relation",
+                        "node": "node", "way": "way", "relation": "relation"}
 
 
 def public_city_label(journey, session=None) -> str:
@@ -40,6 +45,86 @@ def public_city_label(journey, session=None) -> str:
         return _resolver_city_label(code)
     except ValueError:
         return ""
+
+
+def goal_research_lead(task: dict[str, Any], place_id: str) -> dict[str, Any] | None:
+    """Find a live public lead already owned by this signed goal task."""
+    places = task.get("research_places")
+    if not isinstance(places, list):
+        return None
+    for place in places:
+        if (isinstance(place, dict) and place.get("id") == place_id
+                and place.get("provider_provenance") == "LIVE_PROVIDER"
+                and place.get("provider") in _LIVE_GOAL_RESEARCH_PROVIDERS):
+            return place
+    return None
+
+
+def _validated_osm_reference(place_id: str, provider: str, stored_url: Any) -> str | None:
+    prefix, separator, object_ref = place_id.partition(":")
+    if not separator or prefix != provider or provider not in _LIVE_GOAL_RESEARCH_PROVIDERS:
+        return None
+    match = re.fullmatch(r"([^/]+)/([1-9][0-9]*)", object_ref)
+    if match is None:
+        return None
+    osm_type = _OSM_REFERENCE_TYPES.get(match.group(1))
+    if osm_type is None:
+        return None
+    expected_url = f"https://www.openstreetmap.org/{osm_type}/{match.group(2)}"
+    return expected_url if stored_url == expected_url else None
+
+
+def cached_goal_place_sources(task: dict[str, Any], place_id: str) -> dict[str, Any]:
+    """Return task-local OSM references and known fields without creating observations or networking."""
+    lead = goal_research_lead(task, place_id)
+    if lead is None:
+        raise HTTPException(403, "PLACE_NOT_IN_GOAL_TASK_SCOPE")
+
+    provider = str(lead.get("provider") or "")
+    source_url = _validated_osm_reference(place_id, provider, lead.get("source_url"))
+    references = ([{"reference_type": "OSM_OBJECT", "provider": provider, "url": source_url,
+                    "authority_status": "NON_AUTHORITATIVE"}] if source_url else [])
+    known_facts: dict[str, Any] = {"place_id": place_id, "provider": provider,
+                                   "provider_provenance": "LIVE_PROVIDER"}
+    for key in ("name", "category"):
+        value = lead.get(key)
+        if isinstance(value, str) and value.strip():
+            known_facts[key] = value.strip()[:160]
+    latitude, longitude = lead.get("latitude"), lead.get("longitude")
+    if (type(latitude) in {int, float} and type(longitude) in {int, float}
+            and math.isfinite(latitude) and math.isfinite(longitude)
+            and -90 <= latitude <= 90 and -180 <= longitude <= 180):
+        known_facts["latitude"] = latitude
+        known_facts["longitude"] = longitude
+    for key in ("opening_status", "cost_status"):
+        value = lead.get(key)
+        known_facts[key] = value.strip()[:40] if isinstance(value, str) and value.strip() else "UNKNOWN"
+
+    not_acquired_fields = []
+    for field, stored_key, status_key in (
+        ("opening_hours", "opening_hours", "opening_status"),
+        ("cost", "cost_evidence", "cost_status"),
+        ("availability", "availability", None),
+        ("travel_time", "travel_time", None),
+    ):
+        value = lead.get(stored_key)
+        missing = value is None or value == "" or value == {} or value == []
+        if status_key and str(lead.get(status_key) or "UNKNOWN").upper() == "UNKNOWN":
+            missing = True
+        if missing:
+            not_acquired_fields.append(field)
+    return {
+        "tool": "research_place_sources",
+        "status": "CACHED_ONLY",
+        "place_id": place_id,
+        "authority": "NON_AUTHORITATIVE",
+        "cached_references": references,
+        "reference_status": "PRESENT" if references else "NOT_VERIFIED",
+        "cached_facts": known_facts,
+        "not_acquired_fields": not_acquired_fields,
+        "source_discovery_attempted": False,
+        "acquisition_attempted": False,
+    }
 
 
 def empty_draft(journey) -> dict[str, Any]:

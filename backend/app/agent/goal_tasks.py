@@ -21,7 +21,15 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
-from app.agent.goal_artifacts import empty_draft, normalize_draft, discover_goal_places, discover_nearby_goal_places, goal_tool_definitions
+from app.agent.goal_artifacts import (
+    cached_goal_place_sources,
+    discover_goal_places,
+    discover_nearby_goal_places,
+    empty_draft,
+    goal_research_lead,
+    goal_tool_definitions,
+    normalize_draft,
+)
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -629,7 +637,8 @@ def _initial_messages(
         "Use it when a name search misses POIs; the center must come from public_research_places or public_research_areas. "
         "For canonical Place IDs returned in this task, reuse research_place_sources, acquire_place_facts, "
         "and estimate_place_facts. Estimates remain strategy hypotheses. Formal candidate generation belongs to "
-        "the separate plan workbench after research. Source observations must come from this task, never invent a URL. compare_routes reads stored "
+        "the separate plan workbench after research. For a public_research_places ID, research_place_sources returns only its cached OSM citation and already-known fields plus not_acquired_fields; it performs no web search and creates no WebObservation. "
+        "Do not pass a URL or convert a public research ID into a canonical Place ID. Source observations must come from this task, never invent a URL. compare_routes reads stored "
         "facts only, never live routes. Public geocoder research IDs are tentative leads, not canonical Place IDs. "
         "Use public keywords without personal information. If a Photon search returns no results, you may choose "
         "a different keyword or the Nominatim source within the approved budget; distinguish a new source from "
@@ -703,16 +712,57 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if name == "research_place_sources":
         if set(raw) - {"journey_id", "place_id"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
-        place_id = str(raw.get("place_id") or "")
-        if not place_id or place_id not in {str(item) for item in task.get("candidate_place_ids") or []}:
+        place_id = raw.get("place_id")
+        if not isinstance(place_id, str) or not place_id:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        canonical_ids = {str(item) for item in task.get("candidate_place_ids") or []}
+        if place_id not in canonical_ids and goal_research_lead(task, place_id) is None:
             raise HTTPException(403, "PLACE_NOT_IN_GOAL_TASK_SCOPE")
         return {"place_id": place_id}
     raise HTTPException(404, "GOAL_TASK_TOOL_NOT_ALLOWED")
 
 
+def _dispatch_gateway_tool(gateway, name: str, request, task: dict[str, Any], args: dict[str, Any]):
+    """Keep canonical research on Gateway; public task leads only expose their local cache."""
+    if name == "research_place_sources":
+        place_id = args.get("place_id")
+        canonical_ids = {str(item) for item in task.get("candidate_place_ids") or []}
+        if place_id not in canonical_ids:
+            return cached_goal_place_sources(task, str(place_id or ""))
+    return gateway.dispatch(name, request)
+
+
 def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
     """Keep model-visible results grounded while omitting member-private fields and excerpts."""
 
+    if name == "research_place_sources" and raw.get("status") == "CACHED_ONLY":
+        references = raw.get("cached_references") if isinstance(raw.get("cached_references"), list) else []
+        facts = raw.get("cached_facts") if isinstance(raw.get("cached_facts"), dict) else {}
+        fields = {"place_id", "provider", "provider_provenance", "name", "category", "latitude",
+                  "longitude", "opening_status", "cost_status"}
+        safe_references = [
+            {key: item[key] for key in ("reference_type", "provider", "url", "authority_status") if key in item}
+            for item in references[:5]
+            if isinstance(item, dict) and item.get("reference_type") == "OSM_OBJECT"
+            and item.get("authority_status") == "NON_AUTHORITATIVE"
+            and isinstance(item.get("url"), str)
+            and re.fullmatch(r"https://www\.openstreetmap\.org/(?:node|way|relation)/[1-9][0-9]*", item["url"])
+        ]
+        return {
+            "tool": name,
+            "status": "CACHED_ONLY",
+            "place_id": raw.get("place_id"),
+            "authority": "NON_AUTHORITATIVE",
+            "reference_status": "PRESENT" if safe_references else "NOT_VERIFIED",
+            "cached_references": safe_references,
+            "cached_facts": {key: facts[key] for key in fields if key in facts},
+            "not_acquired_fields": [
+                field for field in raw.get("not_acquired_fields", [])
+                if field in {"opening_hours", "cost", "availability", "travel_time"}
+            ],
+            "source_discovery_attempted": False,
+            "acquisition_attempted": False,
+        }
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
     if name in {"discover_places", "discover_nearby_places", "save_draft_itinerary"}:
@@ -810,6 +860,13 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "research_place_sources" and result.get("status") == "CACHED_ONLY":
+        return {"status": "CACHED_ONLY", "place_id": result.get("place_id"),
+                "reference_status": result.get("reference_status"),
+                "cached_references": result.get("cached_references") or [],
+                "cached_fact_fields": sorted((result.get("cached_facts") or {}).keys()),
+                "not_acquired_fields": result.get("not_acquired_fields") or [],
+                "source_discovery_attempted": False, "acquisition_attempted": False}
     if name == "compare_routes":
         return {"status": result.get("status"), "option_count": len(result.get("options") or []), "acquisition_attempted": False}
     if name == "generate_plans":
@@ -1343,7 +1400,7 @@ def resume_goal_task(
                             mission.intent_json = _json_dump(intent)
                             session.commit()
                         else:
-                            raw_result = gateway.dispatch(tool_name, request)
+                            raw_result = _dispatch_gateway_tool(gateway, tool_name, request, task, args)
                         safe_result = _safe_tool_result(tool_name, raw_result)
                         dispatch_status = "COMPLETED"
                         reason_code = None
