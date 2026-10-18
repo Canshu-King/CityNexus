@@ -120,13 +120,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
         const isConflict =
           r.status === 422 && namedCodeIn(text, EXPLAINABLE_REFUSALS) !== null;
         setError(
-          isConflict
-            ? zh
-              ? "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。"
-              : "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one."
-            : zh
-              ? "暂时无法选择这家住宿。"
-              : "Could not choose this stay.",
+          isConflict ? t("stay.chosenClashes") : t("stay.chooseFailed"),
           facts,
         );
         return;
@@ -134,7 +128,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       setChosen(optionId);
       onSelected?.();
     } catch {
-      setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+      setError(t("stay.unreachable"));
     } finally {
       setBusy(null);
     }
@@ -188,7 +182,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             }}
             data-testid="hotels-empty-explore-btn"
           >
-            {zh ? "换个城市看看" : "Look at another city"}
+            {t("stay.anotherCity")}
           </button>
         </div>
       </section>
