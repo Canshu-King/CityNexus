@@ -204,3 +204,41 @@ def test_create_rejects_member_who_is_not_journey_owner(goal_scope):
         _create(session, journey, outsider_member)
 
     assert error.value.status_code == 403
+
+
+def test_model_sees_zero_result_then_saves_a_durable_editable_draft(goal_scope, monkeypatch):
+    """Scripted model/tool fixtures verify the loop and persistence, not live autonomy."""
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, online_research_consent=True, max_model_turns=4)
+    class FixtureAgent:
+        provider_key = "TEST_FIXTURE"
+        model_key = "TEST_FIXTURE"
+        turn = 0
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 2:
+                assert json.loads(messages[-1]["content"])["status"] == "NO_RESULTS"
+            if self.turn in {1, 2}:
+                name, args = "discover_places", {"query": f"TEST_FIXTURE keyword {self.turn}"}
+            elif self.turn == 3:
+                name, args = "save_draft_itinerary", {"days": [{"date":"2026-11-01", "slots":[{
+                    "title":"TEST_FIXTURE 午后文化行程", "time_of_day":"afternoon", "place_id":"photon:node/123", "notes":"营业待查"}]}]}
+            else:
+                return {"content":"TEST_FIXTURE 阶段安排已保存"}
+            return {"tool_calls":[{"id":f"fixture-{self.turn}", "function":{"name":name,"arguments":json.dumps(args)}}]}
+    def fixture_discovery(_session, _journey, task, **args):
+        if args["query"].endswith("1"):
+            return {"tool":"discover_places", "status":"NO_RESULTS", "places":[], "http_status":200}
+        place = {"id":"photon:node/123", "name":"TEST_FIXTURE 文化地点", "source_url":"https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        return {"tool":"discover_places", "status":"RESULTS", "places":[place], "http_status":200}
+    monkeypatch.setattr(goal_tasks, "_new_goal_agent", lambda *_: FixtureAgent())
+    monkeypatch.setattr(goal_tasks, "discover_goal_places", fixture_discovery)
+    result = goal_tasks.resume_goal_task(session, journey, member, created["task_id"])
+    assert result["status"] == "PARTIAL_READY"
+    session.expire_all()
+    restored = goal_tasks.read_goal_task(session, journey, member, created["task_id"])
+    assert len(restored["tool_steps"]) == 3
+    assert restored["tool_steps"][0]["result"]["place_count"] == 0
+    assert restored["draft_artifact"]["days"][0]["slots"][0]["place_id"] == "photon:node/123"
+    assert restored["assistant_summary"] == "TEST_FIXTURE 阶段安排已保存"

@@ -496,6 +496,7 @@ from app.schemas import (
     GeneratePlansRequest,
     GoalTaskCreateRequest,
     GoalTaskRunRequest,
+    GoalDraftUpdateRequest,
     BootstrapDiscoveryRequest,
     BootstrapPlaceFactsRequest,
     BootstrapCitySearchRequest,
@@ -7443,6 +7444,20 @@ def run_signed_draft_goal_task(
         max_model_turns=payload.max_model_turns,
         max_tool_calls=payload.max_tool_calls,
     )
+
+
+@app.put("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/draft")
+def update_signed_goal_draft(journey_id: UUID, task_id: UUID, payload: GoalDraftUpdateRequest,
+                             request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import resolve_journey_member_principal, member_has_capability
+    from app.agent.goal_tasks import update_goal_draft
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if str(member.traveler_id) != str(journey.traveler_id) or not member_has_capability(session, member, "JOURNEY_UPDATE"):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return update_goal_draft(session, journey, member, task_id, days=payload.days, expected_revision=payload.expected_revision)
 
 
 @app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/cancel")

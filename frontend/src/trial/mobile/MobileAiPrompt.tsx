@@ -14,7 +14,7 @@ function togglePromptPreference(value: string, preference: string) {
 
 function preferenceFits(value: string, preference: string) {
   return value.split("\n").includes(preference) ||
-    value.length + (value.trim() ? 1 : 0) + preference.length <= 360;
+    value.length + (value.trim() ? 1 : 0) + preference.length <= 2000;
 }
 
 export type MobileAiAdvice = {
@@ -69,7 +69,7 @@ export function MobileAiPrompt({
         <textarea
           id="rev-quick-ai-prompt"
           value={value}
-          maxLength={360}
+          maxLength={2000}
           rows={promptRows}
           style={{ maxHeight: "none" }}
           onChange={(event) => onChange(event.target.value)}
@@ -119,7 +119,7 @@ export function MobileAiPrompt({
             disabled={busy || checking || !configured || value.trim().length < 4}
             data-testid="rev-quick-consult-ai"
           >{requestPending ? "正在请教 AI…" : checking && !busy ? "正在连接 AI…" : "问问 AI →"}</button>
-          <span>点击后将文字发送给已连接的 AI 服务，可能产生模型费用。</span>
+          <span>先打开研究任务，确认模型与公开查询预算后开始。</span>
         </div>
       </form>
       {advice && (

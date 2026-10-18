@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bot, Compass, Map, MapPinned, UserRound } from "lucide-react";
 import { WorkspaceActions, type WorkspacePanel } from "./mobile/WorkspaceActions";
 
@@ -15,6 +15,17 @@ const tabs = [
 // The existing three routes keep their state; map and assistant are available from every route.
 export function RevolutionMobileNav({ active, onSelect, hasSavedWalk }: Props) {
   const [panel, setPanel] = useState<WorkspacePanel>(null);
+  const [goalRequest, setGoalRequest] = useState<{ journeyId: string; goal: string } | null>(null);
+  useEffect(() => {
+    const open = (event: Event) => {
+      const value = (event as CustomEvent).detail;
+      if (!value || typeof value.journeyId !== "string" || typeof value.goal !== "string") return;
+      setGoalRequest({ journeyId: value.journeyId, goal: value.goal.slice(0, 2000) });
+      setPanel("assistant");
+    };
+    window.addEventListener("citynexus:open-goal-task", open);
+    return () => window.removeEventListener("citynexus:open-goal-task", open);
+  }, []);
   return <>
     <nav className="rev-mobile-bottom-nav rev-workspace-nav" aria-label="底部导航" data-testid="rev-mobile-bottom-nav">
       {tabs.map(({ key, label, icon: Icon }) => {
@@ -28,6 +39,6 @@ export function RevolutionMobileNav({ active, onSelect, hasSavedWalk }: Props) {
         </button>;
       })}
     </nav>
-    <WorkspaceActions panel={panel} onClose={() => setPanel(null)} />
+    <WorkspaceActions panel={panel} goalRequest={goalRequest} onClose={() => { setPanel(null); setGoalRequest(null); }} />
   </>;
 }

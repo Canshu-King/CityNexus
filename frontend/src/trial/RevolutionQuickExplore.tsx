@@ -452,36 +452,11 @@ export function RevolutionQuickExplore({
       setAlert({ type: "neutral", text: "AI 建议暂不可用，可直接搜索地点。" });
       return;
     }
-    if (goal.length < 4 || goal.length > 360) {
-      setAlert({ type: "error", text: "用一句话告诉 AI 你想玩什么（4 到 360 个字）。" });
+    if (goal.length < 4 || goal.length > 2000) {
+      setAlert({ type: "error", text: "写下你想怎么玩（4 到 2000 个字）。" });
       return;
     }
-    void run("请教 AI", async (stillCurrent) => {
-      pendingAiAdviceReveal.current = false;
-      setAiAdvice(null);
-      const suggestion = await cityNexusApi.suggestTrialDiscovery(journeyId, goal);
-      if (!stillCurrent()) return;
-      const verified = suggestion.status === "MODEL_TOOL_SUGGESTION";
-      const matched = verified ? categories.find((item) => item.value === suggestion.category) : null;
-      if (matched) setCategory(matched.value);
-      pendingAiAdviceReveal.current = true;
-      setAiAdvice({
-        category: matched?.name ?? null,
-        reason: suggestion.reason,
-        verifiedTool: verified && !!matched,
-        model: suggestion.model ?? null,
-      });
-      setAlert(verified && matched
-        ? { type: "good", text: "AI 建议已生成 · 下一步从公开地图选地点。" }
-        : { type: "neutral", text: "已切换到手动选地点。" });
-    }, () => ({
-      label: "继续手动探索",
-      action: () => {
-        setErrorDetails(null);
-        setAlert({ type: "neutral", text: "可以直接查找公开地名，或在地图上手选区域。" });
-        document.getElementById("rev-quick-search")?.focus();
-      },
-    }));
+    window.dispatchEvent(new CustomEvent("citynexus:open-goal-task", { detail: { journeyId, goal } }));
   };
 
   const openMapFallback = () => {

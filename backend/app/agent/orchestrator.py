@@ -46,6 +46,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         model_chain: tuple[str, ...] | None = None,
         allow_budget_retry: bool = True,
         tool_allowlist: frozenset[str] | None = None,
+        extra_tool_definitions: tuple[dict, ...] = (),
     ):
         if not settings.hermes_api_url or not settings.hermes_api_key:
             raise AgentRuntimeUnavailable("Hermes runtime endpoint is not configured")
@@ -58,6 +59,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
         self.external_attempts: list[dict] = []
         self._allow_budget_retry = allow_budget_retry
         self._tool_allowlist = tool_allowlist
+        self._extra_tool_definitions = extra_tool_definitions
         bounded_timeout = max(5.0, float(settings.impact_timeout_seconds))
         self._client = client or httpx.Client(
             timeout=httpx.Timeout(
@@ -79,6 +81,7 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
                 tool_definitions = __import__(
                     "app.agent.runtime", fromlist=["citynexus_tool_definitions"]
                 ).citynexus_tool_definitions()
+                tool_definitions.extend(self._extra_tool_definitions)
                 if self._tool_allowlist is not None:
                     tool_definitions = [
                         item

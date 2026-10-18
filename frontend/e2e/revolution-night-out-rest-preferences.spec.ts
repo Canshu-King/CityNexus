@@ -64,6 +64,12 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
     hermes_compat_configured: true,
     ai_state: "CONFIGURED_UNVERIFIED",
   }));
+  await page.route(root, (route) => json(route, { id: journeyId, status: "DRAFT" }));
+  await page.route(`${root}/planning-intent`, (route) => json(route, {
+    journey_id: journeyId, intent: { goal: "" }, candidates: [],
+    trip: { dates: ["2026-10-19", "2026-10-20"], party_size: 2, budget: {amount_minor: 50000, currency: "CNY"} },
+  }));
+  await page.route(`${root}/map-places`, (route) => json(route, {journey_id: journeyId, candidates: []}));
   await page.route(`${root}/bootstrap-discovery/readiness`, (route) => json(route, {
     journey_id: journeyId,
     provider: "overpass",
@@ -214,17 +220,13 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
     await page.screenshot({ path: screenshotPath, fullPage: false });
   }
 
-  const suggestionResponse = page.waitForResponse((response) =>
-    response.request().method() === "POST" && response.url().includes("/trial-ai-discovery"),
-  );
   await askAi.click();
-  await suggestionResponse;
-
-  await expect(page.getByTestId("rev-quick-ai-response")).toBeVisible();
-  await expect(page.getByTestId("rev-quick-ai-response")).toContainText("TEST_FIXTURE · 天气、营业与可达性均待核实；不生成未核实两站。");
-  expect(suggestionCalls).toBe(1);
-  expect(apiPostCalls).toBe(1);
-  expect(submittedGoal).toBe(fullGoal);
+  const taskDialog = page.getByRole("dialog", {name: "AI助手"});
+  await expect(taskDialog.getByRole("textbox")).toHaveValue(fullGoal);
+  await expect(taskDialog.getByRole("button", {name: "开始研究", exact: true})).toBeDisabled();
+  expect(suggestionCalls).toBe(0);
+  expect(apiPostCalls).toBe(0);
+  expect(submittedGoal).toBe("");
   expect(providerCalls).toBe(0);
   expect(pocketGoWrites).toBe(0);
   expect(blockedExternalRequests).toBe(0);

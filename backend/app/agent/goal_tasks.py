@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from datetime import datetime, timezone
 from typing import Any
 from uuid import UUID, uuid4
@@ -20,6 +21,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
+from app.agent.goal_artifacts import empty_draft, normalize_draft, discover_goal_places, goal_tool_definitions
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
@@ -45,7 +47,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources"}
+    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "save_draft_itinerary"}
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -203,6 +205,8 @@ def _task_payload(
         "candidate_place_ids": list(task.get("candidate_place_ids") or []),
         "source_observation_ids": list(task.get("source_observation_ids") or []),
         "assistant_summary": task.get("assistant_summary"),
+        "research_places": list(task.get("research_places") or []),
+        "draft_artifact": task.get("draft_artifact"),
         "failure_code": task.get("failure_code"),
         "created_at": mission.created_at,
         "started_at": mission.started_at,
@@ -267,6 +271,8 @@ def create_goal_task(
         "candidate_place_ids": [],
         "source_observation_ids": [],
         "assistant_summary": None,
+        "research_places": [],
+        "draft_artifact": empty_draft(journey),
         "failure_code": "MODEL_CONSENT_REQUIRED" if not model_consent else None,
         "updated_at": now,
     }
@@ -373,10 +379,27 @@ def read_goal_task(
             "tool_name": step.tool_name,
             "status": step.status,
             "result": _json_load(step.result_json, {}),
+            "created_at": step.created_at,
+            "completed_at": step.completed_at,
         }
         for step in steps
     ]
     return result
+
+
+def update_goal_draft(session, journey, member, mission_id, *, days, expected_revision):
+    journey, member, mission, intent, task = _require_task(session, journey, member, mission_id, require_draft=True)
+    if task.get("status") == "WORKING":
+        raise HTTPException(409, "DRAFT_RESEARCH_RUNNING")
+    current = task.get("draft_artifact") or empty_draft(journey)
+    if current["revision"] != expected_revision:
+        raise HTTPException(409, "DRAFT_CHANGED_RELOAD")
+    task["draft_artifact"] = normalize_draft(journey, task, days, author="USER")
+    task["updated_at"] = _now()
+    mission.intent_json = _json_dump(intent)
+    _emit_event(session, journey, member, mission, intent, event_type="TASK_DRAFT_UPDATED", status=task["status"])
+    session.commit()
+    return read_goal_task(session, journey, member, mission.id)
 
 
 def list_goal_task_events(
@@ -499,6 +522,8 @@ def _run_age_seconds(run: AgentRun, *, now: datetime) -> float:
 def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
     """Do not silently fall back to another provider or model chain."""
 
+    if not settings.ai_enabled:
+        raise AgentRuntimeUnavailable("AI is disabled by the operator")
     model = str(settings.hermes_model or "").strip()
     if not model:
         raise AgentRuntimeUnavailable("Hermes goal-planning model is not configured")
@@ -506,6 +531,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
+        extra_tool_definitions=goal_tool_definitions(),
     )
 
 
@@ -589,13 +615,22 @@ def _initial_messages(
         "an incident, do not generate or activate a PlanVersion, and do not book, pay, cancel, or "
         "change Journey state. Keep missing opening hours, prices, and availability UNKNOWN. Treat "
         "source research as non-authoritative unless the server says otherwise. Return a short "
-        "user-facing summary without hidden reasoning, secrets, or tool transcripts."
+        "Chinese user-facing summary without hidden reasoning, secrets, or tool transcripts. "
+        "search_city_services reads the existing catalogue only; discover_places runs one actual Photon query. "
+        "Use public keywords without personal information. If an actual search returns no results, choose a different "
+        "useful query yourself within the budget, or continue another part of the trip. Do not repeat the same query. "
+        "Save useful partial research as an editable draft using save_draft_itinerary, even when every place search fails: "
+        "in that case write specific research todos or generic suggestions with no invented Place IDs. "
+        "Keep enough budget to save the draft. A place with unknown hours or cost can still be a tentative suggestion."
     )
     user_context = {
         "goal": mission.user_text,
         "journey": _journey_snapshot(journey),
         "known_candidate_places": _known_place_context(session, journey, task),
         "known_non_authoritative_sources": _known_source_context(session, task),
+        "public_research_places": task.get("research_places") or [],
+        "draft_artifact": task.get("draft_artifact") or empty_draft(journey),
+        "previous_public_queries": task.get("public_queries") or [],
         "consent": dict(task.get("consent") or {}),
         "remaining_budget": {
             "model_turns": max(0, int(task["budget"]["max_model_turns"]) - int(task["usage"]["model_turns"])),
@@ -611,6 +646,15 @@ def _initial_messages(
 def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+    if name == "discover_places":
+        if set(raw) - {"query", "public_action"}:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {"query": str(raw.get("query") or "").strip()[:120],
+                "public_action": str(raw.get("public_action") or "")[:120]}
+    if name == "save_draft_itinerary":
+        if set(raw) != {"days"}:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {"days": raw["days"]}
     if name == "inspect_journey":
         if set(raw) - {"journey_id"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -641,6 +685,8 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
 def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
     """Keep model-visible results grounded while omitting member-private fields and excerpts."""
 
+    if name in {"discover_places", "save_draft_itinerary"}:
+        return raw
     if name == "inspect_journey":
         journey = raw.get("journey") if isinstance(raw.get("journey"), dict) else {}
         safe_journey = {
@@ -715,6 +761,10 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
+    if name == "discover_places":
+        return {"query_length": len(args.get("query") or ""), "public_action": args.get("public_action")}
+    if name == "save_draft_itinerary":
+        return {"days": len(args.get("days") or [])}
     if name == "search_city_services":
         return {
             "argument_names": sorted(args),
@@ -726,6 +776,12 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "discover_places":
+        return {"status": result.get("status"), "reason_code": result.get("reason_code"),
+                "place_count": len(result.get("places") or []), "http_status": result.get("http_status"),
+                "public_action": result.get("public_action"), "provider_provenance": result.get("provider_provenance")}
+    if name == "save_draft_itinerary":
+        return {"status": "COMPLETED", "draft_revision": result["draft_artifact"]["revision"]}
     if result.get("status") in {
         "FAILED",
         "NEEDS_DECISION",
@@ -1000,7 +1056,7 @@ def resume_goal_task(
 
     online_tools = task["consent"]["online_research"]
     tool_allowlist = frozenset(
-        _ALLOWED_TOOLS if online_tools else {"inspect_journey"}
+        _ALLOWED_TOOLS if online_tools else {"inspect_journey", "save_draft_itinerary"}
     )
     try:
         agent = _new_goal_agent(tool_allowlist)
@@ -1063,7 +1119,7 @@ def resume_goal_task(
     session.commit()
 
     messages = _initial_messages(session, journey, mission, task)
-    gateway = AgentToolGateway(session, bound_run_id=run.id)
+    gateway = AgentToolGateway(session, bound_run_id=run.id, allow_live_discovery=False)
     research_failed = False
     assistant_summary: str | None = None
     try:
@@ -1166,6 +1222,9 @@ def resume_goal_task(
             function = raw_call.get("function")
             function = function if isinstance(function, dict) else {}
             tool_name = str(function.get("name") or "")
+            step_no = _step_sequence(session, run.id)
+            tool_started_at = _now()
+            tool_clock = time.perf_counter()
             pause_for_decision: str | None = None
             if tool_name not in tool_allowlist:
                 blocked_code = (
@@ -1186,7 +1245,7 @@ def resume_goal_task(
                     args_raw = function.get("arguments") or "{}"
                     args_value = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     args = _safe_args(tool_name, args_value, task)
-                    if tool_name != "inspect_journey" and not task["consent"]["online_research"]:
+                    if tool_name not in {"inspect_journey", "save_draft_itinerary"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
                     if int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
                         exhausted_status = "PARTIAL_READY" if research_failed else "RESUMABLE"
@@ -1211,14 +1270,27 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = AgentToolCall.model_validate(request_fields)
+                    request = (None if tool_name in {"discover_places", "save_draft_itinerary"}
+                               else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
                     task["updated_at"] = _now()
                     mission.intent_json = _json_dump(intent)
+                    _emit_event(session, journey, member, mission, intent, event_type="TOOL_STARTED",
+                                status="WORKING", run_id=run.id, step_sequence_no=step_no, tool_name=tool_name)
                     session.commit()
                     try:
-                        raw_result = gateway.dispatch(tool_name, request)
+                        if tool_name == "discover_places":
+                            raw_result = discover_goal_places(session, journey, task, **args)
+                            mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        elif tool_name == "save_draft_itinerary":
+                            task["draft_artifact"] = normalize_draft(journey, task, args["days"], author="MODEL_SUGGESTION")
+                            raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}
+                            mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        else:
+                            raw_result = gateway.dispatch(tool_name, request)
                         safe_result = _safe_tool_result(tool_name, raw_result)
                         dispatch_status = "COMPLETED"
                         reason_code = None
@@ -1264,7 +1336,6 @@ def resume_goal_task(
                         )
                         return {**_task_payload(mission, intent), "assistant_summary": None}
 
-            step_no = _step_sequence(session, run.id)
             if research_failed:
                 task = intent[_TASK_KEY]
                 task["status"] = "PARTIAL_READY"
@@ -1272,6 +1343,7 @@ def resume_goal_task(
                 task["updated_at"] = _now()
                 mission.status = "PARTIAL_READY"
             safe_for_storage = _step_result_summary(tool_name, safe_result)
+            safe_for_storage["elapsed_ms"] = round((time.perf_counter()-tool_clock)*1000)
             session.add(
                 AgentRunStep(
                     id=str(uuid4()),
@@ -1282,7 +1354,7 @@ def resume_goal_task(
                     result_json=_json_dump(safe_for_storage),
                     decision=dispatch_status,
                     status=dispatch_status,
-                    created_at=_now(),
+                    created_at=tool_started_at,
                     completed_at=_now(),
                 )
             )

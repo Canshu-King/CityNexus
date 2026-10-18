@@ -591,12 +591,13 @@ class AgentToolGateway:
     result, provider state, cost delta, or C4 assertion.
     """
 
-    def __init__(self, session: Session, *, bound_run_id: str | None = None):
+    def __init__(self, session: Session, *, bound_run_id: str | None = None, allow_live_discovery: bool = True):
         self.session = session
         # Internal model runtimes inject the exact durable AgentRun that owns
         # this Gateway turn.  Direct/MCP callers may omit it, but the server
         # must never infer an internal run by "latest mission run" ordering.
         self.bound_run_id = str(bound_run_id) if bound_run_id else None
+        self.allow_live_discovery = allow_live_discovery
 
     def _native_plan_boundary(self, request: AgentToolCall) -> bool:
         """Keep native MCP runs proposal-only at the CityNexus boundary.
@@ -1688,7 +1689,7 @@ class AgentToolGateway:
         # An unseeded live Journey must be able to enter the same real discovery
         # path used by the product surface.  The Agent still receives only the
         # materialized provider-backed rows; it never supplies or invents IDs.
-        if not services and not places and journey is not None:
+        if not services and not places and journey is not None and self.allow_live_discovery:
             from app.core.config import settings
             from app.integrations.discovery.real_city import capture_real_city_candidates
 

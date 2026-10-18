@@ -2178,6 +2178,17 @@ export interface DraftGoalTaskEvent {
   budget: Record<string, number> | null;
 }
 
+export interface GoalDraftSlot {
+  title: string;
+  time_of_day: "morning" | "afternoon" | "evening" | "flexible";
+  place_id?: string | null;
+  notes: string;
+}
+export interface GoalDraftArtifact {
+  revision: number;
+  status: "DRAFT";
+  days: Array<{ date: string; slots: GoalDraftSlot[] }>;
+}
 export interface DraftGoalTask {
   task_id: string;
   journey_id: string;
@@ -2207,6 +2218,9 @@ export interface DraftGoalTask {
     result: Record<string, unknown>;
   }>;
   assistant_summary?: string | null;
+  draft_artifact?: GoalDraftArtifact | null;
+  research_places?: Array<{ id: string; name: string; category: string; latitude: number; longitude: number;
+    source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED"; opening_status: string; cost_status: string }>;
   failure_code: string | null;
   created_at?: string;
   started_at?: string | null;
@@ -3046,6 +3060,15 @@ export const cityNexusApi = {
       "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
         + encodeURIComponent(taskId) + "/" + action,
       { method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify(input), signal },
+    );
+  },
+
+  updateGoalDraft(journeyId: string, taskId: string, artifact: GoalDraftArtifact): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId) + "/draft",
+      { method: "PUT", headers: travelerAuthHeaders(), body: JSON.stringify({
+        days: artifact.days, expected_revision: artifact.revision,
+      }) },
     );
   },
 

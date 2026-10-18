@@ -2,13 +2,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { BootstrapDiscoveryCandidate } from "../../api/citynexus";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-function validPoint(place: BootstrapDiscoveryCandidate): boolean {
+export type WorkspaceMapPoint = Pick<BootstrapDiscoveryCandidate, "candidate_id" | "name" | "latitude" | "longitude" | "coordinate_system" | "provider_provenance" | "selection_state" | "source_url" | "observation_expired">;
+
+function validPoint(place: WorkspaceMapPoint): boolean {
   return place.coordinate_system === "WGS84" && Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
     && Math.abs(place.latitude) <= 85 && Math.abs(place.longitude) <= 180;
 }
 
 export function WorkspaceMap({ candidates, allowed, onAllow }: {
-  candidates: BootstrapDiscoveryCandidate[]; allowed: boolean; onAllow: () => void;
+  candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);

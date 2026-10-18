@@ -221,6 +221,12 @@ class GoalTaskRunRequest(BaseModel):
     max_tool_calls: int | None = Field(default=None, ge=0, le=16)
 
 
+class GoalDraftUpdateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    days: list[dict[str, Any]] = Field(min_length=1, max_length=14)
+    expected_revision: int = Field(ge=0)
+
+
 class MobileCompatAgentRunStartRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

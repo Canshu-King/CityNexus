@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidate, type DraftGoalTask, type DraftGoalTaskEvent } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
+import { GoalDraftEditor } from "./GoalDraftEditor";
 import "./WorkspaceActions.css";
 
 export type WorkspacePanel = "assistant" | "map" | null;
@@ -26,6 +27,7 @@ const TASK_STATUS: Record<string, string> = {
 const TOOL_NAME: Record<string, string> = {
   inspect_journey: "读取行程", search_city_services: "搜索城市地点",
   research_place_sources: "查找地点资料",
+  discover_places: "查找公开地点", save_draft_itinerary: "整理旅行草案",
 };
 const TASK_POINTER = "citynexus.revolution.goal-task";
 const MODEL_TURNS = 4;
@@ -57,14 +59,16 @@ function saveTaskPointer(actor: Context, taskId: string): void {
   try { localStorage.setItem(pointerKey(actor), taskId); } catch { /* server remains the task record */ }
 }
 function taskStepText(result: Record<string, unknown>): string {
-  const reason = typeof result.reason_code === "string" ? result.reason_code : null;
-  if (reason) return reason;
+  if (result.status === "NO_RESULTS" || result.reason_code === "NO_RESULTS") return "暂未找到匹配地点";
+  if (result.status === "PROVIDER_UNAVAILABLE" || result.reason_code === "PHOTON_UNAVAILABLE") return "地点服务暂时不可用，已有成果已保留";
+  if (typeof result.draft_revision === "number") return "旅行草案已保存";
   if (typeof result.place_count === "number") return `${result.place_count} 处地点`;
   if (Array.isArray(result.observation_ids)) return `${result.observation_ids.length} 条来源记录`;
-  return result.status === "COMPLETED" ? "完成" : String(result.status ?? "已记录");
+  return result.status === "COMPLETED" ? "完成" : "这一步暂未完成";
 }
 
-export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; onClose: () => void }) {
+export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: WorkspacePanel;
+  goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -143,7 +147,7 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
         if (mapPlaces?.journey_id && mapPlaces.journey_id !== actor.id) throw new Error("Map context mismatch");
         setSnapshot({ context: actor, input, status: journey.status,
           mapCandidates: mapPlaces?.journey_id === actor.id && Array.isArray(mapPlaces.candidates) ? mapPlaces.candidates : input.candidates });
-        setQuestion((value) => value || (input.intent?.goal ?? "").slice(0, 360));
+        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (input.intent?.goal ?? "").slice(0, 2000));
         if (savedTask && savedTask[0].journey_id === actor.id) {
           setGoalTaskSnapshot({ context: actor, value: savedTask[0], events: savedTask[1].events });
           setModelConsent(savedTask[0].consent.model === true);
@@ -159,7 +163,7 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
       setAiReady(runtime.hermes_compat_configured === true && !["DISABLED", "DISABLED_BY_OPS", "NOT_CONFIGURED"].includes(state));
     }).catch(() => { if (!cancelled && sameContext(actor, readContext())) setAiReady(false); });
     return () => { cancelled = true; };
-  }, [Boolean(panel), context?.id, context?.owner, context?.token, revision]);
+  }, [Boolean(panel), context?.id, context?.owner, context?.token, revision, goalRequest]);
 
   const refreshGoalTask = async (actor: Context, taskId: string) => {
     const [value, eventPage] = await Promise.all([
@@ -268,6 +272,13 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
   const nextToolBudget = visibleTask
     ? Math.min(16, (visibleTask.budget.max_tool_calls ?? TOOL_CALLS) + 4)
     : TOOL_CALLS;
+  const taskMapPoints = (visibleTask?.research_places ?? []).map((place) => ({
+    candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
+    coordinate_system: "WGS84" as const, provider_provenance: place.provider_provenance,
+    selection_state: "OPENING_UNVERIFIED" as const, source_url: place.source_url, observation_expired: false,
+  }));
+  const activeTools = visibleEvents.filter((event) => event.event_type === "TOOL_STARTED" &&
+    !(visibleTask?.tool_steps ?? []).some((step) => step.run_id === event.run_id && step.sequence_no === event.step_sequence_no));
 
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"
     onCancel={(event) => { event.preventDefault(); closeRef.current(); }}>
@@ -282,7 +293,7 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
         if (actor && visibleTask) void refreshGoalTask(actor, visibleTask.task_id).catch(() => undefined);
         setRevision((value) => value + 1);
       }}>{COPY.reload}</button>}
-      {visible && panel === "map" && <WorkspaceMap candidates={visible.mapCandidates} allowed={allowTiles} onAllow={() => setAllowTiles(true)} />}
+      {visible && panel === "map" && <WorkspaceMap candidates={[...visible.mapCandidates, ...taskMapPoints]} allowed={allowTiles} onAllow={() => setAllowTiles(true)} />}
       {visible && panel === "assistant" && <>
         <p>{visible.input.trip.dates.length} 天 · {visible.input.trip.party_size} 人 · 旅行需求已从服务器读取</p>
         {!aiReady && <p role="status">AI 尚未连接。</p>}
@@ -291,7 +302,7 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
             <label htmlFor="rev-workspace-question">{COPY.question}</label>
             <textarea id="rev-workspace-question" rows={5} maxLength={2000} value={question} disabled={busy} onChange={(event) => setQuestion(event.target.value)} />
             <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />将目标和行程信息发送给 AI，最多 {MODEL_TURNS} 轮</label>
-            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许查询公开地点与来源，最多 {TOOL_CALLS} 次</label>
+            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许通过 Photon 和已配置的公开来源查询地点资料，最多 {TOOL_CALLS} 次工具</label>
             <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4}>{busy ? COPY.sending : COPY.send}</button>
           </form>}
         {requestError && <p role="alert">{requestError}</p>}
@@ -299,11 +310,14 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
           <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
           <p>{visibleTask.usage.model_turns ?? 0}/{visibleTask.budget.max_model_turns ?? MODEL_TURNS} 轮模型 · {visibleTask.usage.tool_calls ?? 0}/{visibleTask.budget.max_tool_calls ?? TOOL_CALLS} 次工具</p>
           {visibleTask.assistant_summary && <p>{visibleTask.assistant_summary}</p>}
-          {visibleTask.failure_code && <p>当前结果：{visibleTask.failure_code}</p>}
+          {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "这一轮额度已用完，可以保留草案或继续研究。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
+          {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {(visibleTask.tool_steps ?? []).length > 0 && <ol className="rev-workspace-task-steps">
             {(visibleTask.tool_steps ?? []).map((step) => <li key={`${step.run_id}-${step.sequence_no}`}>
               <strong>{TOOL_NAME[step.tool_name] ?? step.tool_name}</strong>
+              {typeof step.result.public_action === "string" && <span>{step.result.public_action}</span>}
               <span>{taskStepText(step.result)}</span>
+              {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
             </li>)}
           </ol>}
           {(visibleTask.candidate_places ?? []).length > 0 && <ul className="rev-workspace-task-places">
@@ -312,11 +326,18 @@ export function WorkspaceActions({ panel, onClose }: { panel: WorkspacePanel; on
               <span>{place.cost_evidence.status === "KNOWN" ? "费用资料已读取" : "费用待核实"}</span>
             </li>)}
           </ul>}
-          {visibleEvents.filter((event) => event.event_type.startsWith("TOOL_") || event.event_type === "RUN_STARTED" || event.event_type.startsWith("TASK_")).length > 0 &&
-            <ol className="rev-workspace-task-events" aria-label="任务记录">
-              {visibleEvents.filter((event) => event.event_type.startsWith("TOOL_") || event.event_type === "RUN_STARTED" || event.event_type.startsWith("TASK_")).map((event) =>
-                <li key={event.sequence}>{event.event_type}{event.tool_name ? ` · ${TOOL_NAME[event.tool_name] ?? event.tool_name}` : ""}{event.reason_code ? ` · ${event.reason_code}` : ""}</li>)}
-            </ol>}
+          {(visibleTask.research_places ?? []).length > 0 && <ul className="rev-workspace-task-places">
+            {visibleTask.research_places?.map((place) => <li key={place.id}><strong>{place.name}</strong><span>营业、费用待查</span>
+              {/^https:\/\/www\.openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(place.source_url) && <a href={place.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}
+            </li>)}
+          </ul>}
+          {visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
+            disabled={busy || visibleTask.status === "WORKING"} onSave={async (artifact) => {
+              const actor = readContext();
+              if (!actor) return;
+              const value = await cityNexusApi.updateGoalDraft(actor.id, visibleTask.task_id, artifact);
+              if (sameContext(actor, readContext())) await refreshGoalTask(actor, value.task_id);
+            }} />}
           {visibleTask.status === "WORKING" && <button type="button" className="rev-workspace-secondary" onClick={() => void cancelTask()}>取消任务</button>}
           {["RESUMABLE", "FAILED_RECOVERABLE", "PARTIAL_READY", "NEEDS_DECISION"].includes(visibleTask.status) &&
             <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>

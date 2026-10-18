@@ -99,9 +99,9 @@ test("named place search waits for explicit submission and keeps the public area
   await page.getByTestId("rev-quick-find-city").click();
   await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
   await page.getByTestId("rev-quick-use-approx-center").click();
-  await page.getByText("已经有想去的地方？", { exact: true }).click();
-  const input = page.getByRole("searchbox", { name: "地点名称" });
-  const submit = page.getByRole("button", { name: "查找这个地点", exact: true });
+  await expect(page.getByRole("region", { name: "按关键词查找公开地点" })).toBeVisible();
+  const input = page.getByRole("searchbox", { name: "地点名称或关键词" });
+  const submit = page.getByRole("button", { name: "搜索真实地点 →", exact: true });
   await input.fill(" ");
   await expect(submit).toBeDisabled();
   await input.fill("  想去的博物馆  ");
@@ -112,7 +112,7 @@ test("named place search waits for explicit submission and keeps the public area
   await input.press("Enter");
   await expect(page.getByTestId("rev-quick-place-card")).toContainText("TEST_FIXTURE 想去的博物馆");
   expect(searches).toEqual([{
-    query: "想去的博物馆", query_mode: "name", radius_m: 2500, limit: 3,
+    query: "想去的博物馆", query_mode: "name", radius_m: 2500, limit: 8,
     source_kind: "MANUAL_PUBLIC_CENTER", provider_consent: true, consented_provider: "photon",
     latitude: 25.7, longitude: 116.75, coordinate_system: "WGS84", mode: "live",
   }]);

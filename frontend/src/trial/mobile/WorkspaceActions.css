@@ -24,6 +24,11 @@
 .rev-workspace-task-places li { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid #cadbd2; border-radius: 12px; background: white; }
 .rev-workspace-task-places span { color: #53695e; font-size: 13px; }
 .rev-workspace-task-events { color: #53695e; font-size: 13px; }
+.rev-goal-draft { display: grid; gap: .75rem; margin-top: 1rem; }
+.rev-goal-draft fieldset { border: 1px solid #d6e2d8; border-radius: 12px; padding: .8rem; min-width: 0; }
+.rev-goal-draft-slot { display: grid; gap: .5rem; margin-bottom: .8rem; }
+.rev-goal-draft-slot label { display: grid; gap: .25rem; }
+.rev-goal-draft-slot input,.rev-goal-draft-slot select,.rev-goal-draft-slot textarea { box-sizing: border-box; width: 100%; min-height: 44px; padding: .5rem; border: 1px solid #a6b9aa; border-radius: 8px; font: inherit; }
 .rev-workspace-map { height: clamp(260px, 48dvh, 560px); width: 100%; border-radius: 14px; overflow: hidden; }
 .rev-workspace-map-consent { padding: 18px; border-radius: 14px; background: #edf3ef; }
 .rev-workspace-dialog .rev-workspace-map-pin { min-width: 44px; min-height: 44px; border: 2px solid white; border-radius: 50%; padding: 8px; box-shadow: 0 2px 8px #0003; }

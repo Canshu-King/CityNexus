@@ -38,6 +38,16 @@ def test_signed_goal_task_create_restore_events_and_cancel(signed_place):
     assert events.status_code == 200, events.text
     assert [event["event_type"] for event in events.json()["events"]] == ["TASK_ACCEPTED"]
 
+    draft = restored.json()["draft_artifact"]
+    draft["days"][0]["slots"] = [{"title": "TEST_FIXTURE 下午逛古城", "time_of_day": "afternoon", "notes": "待查路线"}]
+    edit = {"expected_revision": draft["revision"], "days": draft["days"]}
+    assert client.put(f"{task_url}/draft", headers=outsider_headers, json=edit).status_code == 403
+    saved = client.put(f"{task_url}/draft", headers=owner_headers, json=edit)
+    assert saved.status_code == 200, saved.text
+    assert saved.json()["draft_artifact"]["days"][0]["slots"][0]["cost_status"] == "UNKNOWN"
+    assert client.get(task_url, headers=owner_headers).json()["draft_artifact"]["revision"] == 1
+    assert client.put(f"{task_url}/draft", headers=owner_headers, json=edit).status_code == 409
+
     cancelled = client.post(f"{task_url}/cancel", headers=owner_headers)
     assert cancelled.status_code == 200, cancelled.text
     assert cancelled.json()["status"] == "CANCELLED"
