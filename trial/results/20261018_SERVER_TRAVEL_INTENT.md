@@ -1,6 +1,6 @@
 # 旅行需求进服务端与多地点方案增量
 
-HUMAN_CAN_USE = PARTIAL。产品代码 `698b5eb23fb17dc6ffe0027636b8840167bee3f7` 已完成本地验证；当前真实试玩后端尚待正常重启到新版。
+HUMAN_CAN_USE = PARTIAL。旅行需求、多地点预览与 AI 建议均已接到当前真实试玩服务。核心产品提交 `698b5eb23fb17dc6ffe0027636b8840167bee3f7`；当前真实后端运行 `bfcb9aeeba0ca38d007b6e60f5bbc1bcd4376ed1`，保留原数据库与登录凭据。
 
 对应 PR #23 最新指示：[6247650836](https://github.com/Canshu-King/CityNexus/pull/23#issuecomment-6247650836)。
 
@@ -34,22 +34,23 @@ HUMAN_CAN_USE = PARTIAL。产品代码 `698b5eb23fb17dc6ffe0027636b8840167bee3f7
 | 偏好实际消费 | 美食改变原分类排序得分；中午起床使生成活动不早于12:00；条件下雨未伪装成当前天气。 |
 | 真实来源 → 新版 PlanVersion | 本轮未完成；旧南京/台北已成功读取的来源仍缺营业/费用。 |
 | 真实 ACTIVE | 本轮未发生。 |
-| 真实模型 / 工具 / AgentRun | 本轮 Chrome-use 在现有签名DRAFT与真实后端明确提交一次新需求；CityNexus返回502，上游7865返回401，265ms。请求已发出，认证拒绝，模型执行及工具协议均未验证；没有AgentRun。未重试，未触发POI/保存/GO/付款。 |
-| 验证 | 后端相关61/61；手机 Chromium 全套26/26；随后截图定向2/2；启动器4/4；TypeScript、Vite build通过。 |
+| 真实模型 / 工具 / AgentRun | 首次调用401；修正客户端Key来源、正常重启后，在现有签名DRAFT中通过页面提交一次有界请求，HTTP200，返回 `MODEL_TOOL_SUGGESTION` / `HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE`，类别 `museum/gallery`，中文建议已显示。正式AgentRun尚未创建。 |
+| 真实需求持久化 | 手机行程页编辑原有签名DRAFT，PUT planning-intent 200，GET 200；刷新后从服务端恢复原文与轻松节奏，未查询地图或模型。 |
+| 验证 | 后端相关61/61；手机 Chromium 全套26/26；随后截图定向2/2；Key读取与启动器10/10；TypeScript、Vite build通过。 |
 
 本次首次全套 UI 发现旧测试的只读请求清单缺新 GET，更新断言及夹具后全套通过。初次后端组合测试复用了固定 OSM 身份导致跨用例城市冲突，改为每次独立的夹具身份后通过。两个问题都保留原来源门禁，没有放宽产品校验。Vite 仍有既存大分包提示。
 
-真实AI请求前补充并核对页面披露：「点击后将文字发送给已连接的 AI 服务，可能产生模型费用。」原生Chrome-use点击无请求，在资源记录和后端日志确认后才同页DOM点击一次；脱敏结果见 [HTTP回执](20261018_BOUNDED_AI_HTTP_RECEIPT.json)。上游401只能证明认证被拒，尚未确认是密钥、网关配置还是其他认证条件，未将其写成已定位的密钥故障。
+真实AI请求前补充并核对页面披露：「点击后将文字发送给已连接的 AI 服务，可能产生模型费用。」原生Chrome-use点击无请求，在资源记录和后端日志确认后才同页DOM点击一次。首次401保存在[原始失败回执](20261018_BOUNDED_AI_HTTP_RECEIPT.json)，修正后的真实成功记录另存[WB2API实测回执](20261018_WB2API_REPAIRED_LIVE.json)，没有覆盖原失败。
 
 这次真实错误页面的390×844截图也尝试了一次，Chrome调试器 `Page.captureScreenshot` 在8000ms超时，未生成图片，未重试。本报告的两张新手机图因此仍明确标为TEST_FIXTURE；真实错误有浏览器响应与后端脱敏日志回执，没有假造截图。
 
-随后仅做不调用模型的 `/v1/models` 认证检查：控制台配置文件的 `api_key` 值返回401，用户已提供教程中的客户端Key返回200/53模型。现已支持 `--wb2api-key-file` 显式读取用户指定的单行Key文件或教程API Key表格，优先于无关环境值，仅传入隔离进程内存。没有修改网关配置，也没有重发Chat Completions。
+随后 `/v1/models` 认证检查定位了凭据来源差异：控制台配置文件的 `api_key` 值返回401，用户提供教程中的客户端Key返回200/53模型。`--wb2api-key-file` 显式读取该本地文件，仅传入隔离进程内存。修正后一次真实 Chat Completions 工具调用成功；本次接口未返回具体路由模型名，因此只记录请求模型 `auto:cheapest`。模型建议不是营业或票价来源。
 
-## 唯一当前运行操作阻塞与正常人工重启
+## 当前试玩入口与保留数据的重启
 
-当前试玩入口仍为 <http://127.0.0.1:14332/revolution>，后端18501仍运行旧代码。此前向启动会话46437发送正常停止换行被自动审批拒绝：`approval required by policy, but AskForApproval is set to Never`。本轮未重试、未换杀进程方式绕过，也未启动替代实例来冒充旧服务已升级。
+当前试玩入口 <http://127.0.0.1:14332/revolution>，前端14332/后端18501均已正常更新。用户再次明确要求修复后，同一启动会话46437的正常Enter停止成功；由启动器正常收尾，再以原DB及相邻认证密钥重启，当前启动会话29994。先前审批阻塞已解除，不再列为当前障碍。
 
-正常操作：先在**原启动窗口按 Enter**停止该次试玩；然后在本分支目录运行下列命令。新参数 `--resume-database` 校验已有 DB 与相邻认证密钥，拒绝另建数据库、越出 runtime 目录或与 `--fresh` 混用。命令不会代替页面发起模型或地图查询；邮箱/本机 key 如需输入只在本机提示框完成。
+下次需要重启时，在原启动窗口按Enter停止，然后使用以下命令复用现有数据。`--resume-database` 校验已有DB与相邻认证密钥；命令仅启动服务，模型请求由页面提交触发。
 
 ```powershell
 Set-Location 'D:\moodle\_codex_workers\citynexus-chromeuse-retest-ccdd7486-20261018'
@@ -57,4 +58,4 @@ $trialRun = 'C:\Users\仓鼠王\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g
 & '.\backend\.venv\Scripts\python.exe' '.\trial\try_revolution.py' --agent --wb2api-key-file 'C:\Users\仓鼠王\Desktop\教程_本机项目接入网关_2026-10-14.md' --runtime-dir $trialRun --resume-database '_revolution_hands_on_20261018_144901.db' --frontend-port 14332 --backend-port 18501
 ```
 
-重启后才继续新的明确地点名称查询与真实来源补证。新正式 PlanVersion → 用户选用 → 确认 ACTIVE → 一次有界模型/工具调用 → 服务端 AgentRun 的 live 连续验收仍是剩余项。
+当前主要缺口是正式方案需要的真实地点营业与费用资料，旧南京/台北来源未提供这些字段；本轮没有新的真实PlanVersion、ACTIVE或持久AgentRun。可以继续使用地点探索、需求编辑、多地点预览和AI建议。成功结果已由Chrome页面文本、响应JSON与后端200共同确认；截图功能两次发生调试器超时，没有生成本次成功画面，未用夹具图替代。
