@@ -2945,7 +2945,7 @@ const zhCN: Dict = {
   "itinerary.planWithAi": "AI 帮我规划",
   "itinerary.emptyTitle": "还没有可看的安排",
   "itinerary.stopNow": "当前",
-  "itinerary.emptyPlanNoDays": "这一版方案里还没有站点排在某一天上。补上站点，就能按天看到安排。",
+  "itinerary.emptyPlanNoDays": "这一版方案里还没有站点被排在某一天上。补上站点，就能按天看到安排。",
   "itinerary.emptyNoPlan": "这个行程还没有选定的方案。先让 AI 帮你规划，选定之后就能按天看。",
   "itinerary.emptyReadingPlaces": "正在向服务器回读这座城有多少地点…",
   "itinerary.lengthUnknown": "天数未知",
