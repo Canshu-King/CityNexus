@@ -145,7 +145,7 @@ const en: Dict = {
   "trial.title": "Start a real journey, not only the sealed demo.",
   "trial.lede": "Choose your destination and travel anchors. Cities with no sealed replay use live city providers when enabled; CityNexus will not quietly substitute another city's replay data for the one you asked for.",
   "trial.liveTitle": "Generic-city trial",
-  "trial.liveNote": "For cities without a sealed replay, use live providers. If a provider is unavailable, this screen says so.",
+  "trial.liveNote": "Cities without a sealed replay use live providers; when one is unavailable it says so.",
   /* ORD-0216 ④: no city name here, on purpose.  `GET /api/v1/demo/scene` picks the sealed journey
      from server data -- the one an ACTIVE plan points at, else the most recently seeded one
      (backend/app/main.py) -- so the entry cannot know which city it hands over until the
@@ -328,7 +328,7 @@ const en: Dict = {
   "hub.continuationServerReason": "Server's own reason: ",
   "hub.continuationNoServerReason": "The server sent no reason text -- this sentence is ours, not the server's.",
   "hub.continuationReading": "This device's reading: HTTP {status}",
-  "hub.continuationNoRequestId": "This screen holds no repeatable code -- this read did not carry one.",
+  "hub.continuationNoRequestId": "No repeatable code came with this read.",
 
 
 
@@ -527,8 +527,7 @@ const en: Dict = {
   "me.stayChooseInTrips": "Choose it in Trips · Stay",
   "me.bookingsProtected": "Protected bookings; they are never changed automatically.",
   "me.bookingsImport": "Import a ticket or confirmation in Trips · Bookings.",
-  "me.asksBeforeProtectedChange":
-    "Anything affecting a confirmed booking or protected plan asks you first.",
+  "me.asksBeforeProtectedChange": "Anything affecting a confirmed booking or protected plan asks you first.",
 
   // ── Agent Composer ──
   "agent.kicker": "Ask me anything about your trip",
@@ -1722,7 +1721,7 @@ const zhCN: Dict = {
   "trial.title": "创建真实行程，不只局限于封存演示。",
   "trial.lede": "选择目的地和出发/返程锚点。没有封存数据的城市会用实时数据源，不会拿别的城市冒充。",
   "trial.liveTitle": "通用城市试用",
-  "trial.liveNote": "没有封存回放的城市用实时数据源。数据源不可用时，这一屏会直接告诉你。",
+  "trial.liveNote": "没有封存回放的城市用实时数据源；查不到就写查不到。",
   /* ORD-0216 ④：这里刻意不写城市名。封存演示是哪一趟由服务器的 /api/v1/demo/scene 决定（有 ACTIVE
      方案的那趟，否则最近 seed 的那趟，backend/app/main.py），入口在服务器回答之前无从知道
      城市。HJ-P1 在封存那趟为广州的舞台上读到「使用封存的天津演示」（`ord0216-scene-city.json` 复现了
@@ -1887,7 +1886,7 @@ const zhCN: Dict = {
   "hub.continuationServerReason": "服务器给出的原因：",
   "hub.continuationNoServerReason": "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。",
   "hub.continuationReading": "这台设备看到的回读：HTTP {status}",
-  "hub.continuationNoRequestId": "这一屏没有拿到可复述的编号（这条读取没把它送过来）。",
+  "hub.continuationNoRequestId": "没有拿到可复述的编号。",
 
 
 
