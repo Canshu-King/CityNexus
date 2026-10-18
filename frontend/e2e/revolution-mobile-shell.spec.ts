@@ -345,6 +345,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(page.getByTestId("rev-quick-radius")).toHaveValue("2500");
     await page.getByTestId("rev-quick-radius").selectOption("5000");
     await expect(page.getByTestId("rev-quick-radius")).toHaveValue("5000");
+    await page.getByText("按旧数据服务的四种快捷分类搜索（可选）").click();
     await page.getByTestId("rev-quick-find-places").click();
     const card = page.getByTestId("rev-quick-place-card");
     await expect(card).toContainText("TEST ONLY · 连城步道");
