@@ -137,3 +137,7 @@
   font-size: 13px;
   line-height: 1.6;
 }
+
+.named-place-search__summary { cursor: default; }
+.named-place-search__summary::after { content: none; }
+.named-place-search__form { margin-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
