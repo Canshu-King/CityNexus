@@ -175,7 +175,7 @@ export const accessCopy = {
     "access.doorPartial":
       "This server answered some but not all of the sharing doors; the ones still silent are {paths}. Read the ladders as what each level will mean, not as this trip's state.",
     "access.doorPresent":
-      "This server answered all three sharing doors. The roster and the invitations below are its answers; the ladders and the confirmation lines are still this screen's own words.",
+      "This server answered all three sharing doors. The roster and the invitations below are its answers.",
     "access.rosterHeading": "Members of this trip, as the member door answers",
     "access.rosterEmpty": "The member door answered with nobody in the list -- that is its answer, not a load failure.",
     "access.memberRow": "{role} · {name}",
@@ -230,7 +230,7 @@ export const accessCopy = {
     "access.refuseActorLapsed": "That person's membership on this trip has run out, so it carries no authority to change a role.",
     "access.refuseAdminCapReached": "This trip already holds the number of admin seats the server allows, so the promotion was refused.",
     "access.refuseSelfExitNotAMember": "This server has no membership row for you on this trip, so there was nothing for you to leave.",
-    "access.refuseOwnerCannotLeave": "You are this trip's owner, and the server will not let it be left unowned from this screen.",
+    "access.refuseOwnerCannotLeave": "You are this trip's owner: the server will not let it be left unowned.",
     "access.activityNoSharingWriter":
       "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
   },
@@ -350,7 +350,7 @@ export const accessCopy = {
     "access.doorPartial":
     "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。下面写的是每一档的含义。",
     "access.doorPresent":
-      "这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。",
+      "这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案。",
     "access.rosterHeading": "这条行程的成员，按成员门答的",
     "access.rosterEmpty": "成员门答了，名单是空的——这是它的答案，不是没读到。",
     "access.memberRow": "{role} · {name}",
@@ -404,7 +404,7 @@ export const accessCopy = {
     "access.refuseActorLapsed": "那个人在这条行程上的成员期限已过，所以他没有改别人角色的权。",
     "access.refuseAdminCapReached": "这条行程的管理员席位已经占满服务器允许的数量，所以这一枚提升被拒。",
     "access.refuseSelfExitNotAMember": "服务器在这条行程上没有你的成员行，所以也没有可退的位置。",
-    "access.refuseOwnerCannotLeave": "你是这条行程的主人，服务器不许从这一屏把它变成没有主人。",
+    "access.refuseOwnerCannotLeave": "你是这条行程的主人，服务器不许它变成没有主人。",
     "access.activityNoSharingWriter":
       "成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。",
   },

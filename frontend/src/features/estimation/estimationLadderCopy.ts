@@ -51,11 +51,11 @@ export const estimationLadderCopy = {
     "ladder.verify.binding":
       "Non-refundable -- check the final price and the cancellation terms with the provider before you book.",
     "ladder.remedy.switch":
-      "To get a number you can compare: switch to another of the {n} {plural:candidate} on this screen, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
+      "To get a number you can compare: switch to another of the {n} {plural:candidate} here, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
     "ladder.remedy.recompute":
       "To get a number you can compare: open {door} and change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
     "ladder.remedy.absent":
-      "No door on this screen changes this number today: there is no second candidate here, and {door} did not open for this server.",
+      "Nothing changes this number today: there is no second candidate, and {door} did not open for this server.",
     // ORD-0557: rung triggers are machine tokens, so the zh side carries the same bytes on purpose.
     "estimation.amountNonRefundable": "amount,non_refundable",
     "estimation.amountRefundable": "amount,refundable",
@@ -79,7 +79,7 @@ export const estimationLadderCopy = {
     "ladder.remedy.recompute":
       "想拿到能比价的数：打开{door}更换酒店、或改某一段的出行方式，那里会按同一套硬约束重算。",
     "ladder.remedy.absent":
-      "今天这块屏上没有能改变这个数的入口：既没有第二家候选，{door}那一扇这台服务器也没让我们打开。",
+      "今天没有能改变这个数的入口：既没有第二家候选，{door}那一扇这台服务器也没让打开。",
     "estimation.amountNonRefundable": "amount,non_refundable",
     "estimation.amountRefundable": "amount,refundable",
   },

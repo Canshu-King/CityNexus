@@ -23,7 +23,7 @@ import { expandPluralMarkers } from "../../lib/plural";
 export const planVersionHistoryCopy = {
   en: {
     "history.title": "Plan versions on this trip",
-    "history.sub": "Every version the server still holds, newest last. This list is read-only.",
+    "history.sub": "Every version the server still holds, newest last. Read-only.",
     "history.version": "Version",
     "history.sourceInitial": "first generation",
     "history.sourceReplan": "from a replan",
@@ -42,7 +42,7 @@ export const planVersionHistoryCopy = {
   },
   "zh-CN": {
     "history.title": "这趟行程的方案版本",
-    "history.sub": "服务器上还留着的每一份版本，按写入先后排。这一屏只读。",
+    "history.sub": "服务器上还留着的每一份版本，按写入先后排。只读。",
     "history.version": "版本",
     "history.sourceInitial": "首次生成",
     "history.sourceReplan": "来自一次重规划",
