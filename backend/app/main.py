@@ -7443,6 +7443,8 @@ def run_signed_draft_goal_task(
         online_research_consent=payload.online_research_consent,
         max_model_turns=payload.max_model_turns,
         max_tool_calls=payload.max_tool_calls,
+        user_message=payload.user_message,
+        message_id=payload.message_id,
     )
 
 

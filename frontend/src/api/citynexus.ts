@@ -2203,6 +2203,7 @@ export interface DraftGoalTask {
   mode: "GOAL_PLANNING";
   status: string;
   goal: string;
+  conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string }>;
   consent: { model?: boolean; online_research?: boolean };
   budget: { max_model_turns?: number; max_tool_calls?: number };
   usage: { model_turns?: number; tool_calls?: number };
@@ -3059,6 +3060,8 @@ export const cityNexusApi = {
       online_research_consent: boolean;
       max_model_turns: number;
       max_tool_calls: number;
+      user_message?: string;
+      message_id?: string;
     },
     resume = false,
     signal?: AbortSignal,

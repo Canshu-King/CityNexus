@@ -18,6 +18,7 @@ type Props = {
   cityName: string;
   goal: string;
   journeyStatus: string;
+  visible?: boolean;
   agentStatus: string;
   agentAvailable: boolean;
   onExplore: () => void;
@@ -51,6 +52,7 @@ const toolCopy: Record<string, string> = {
 };
 const eventCopy: Record<string, string> = {
   RUN_STARTED: "Agent 已开始工作",
+  USER_MESSAGE_ADDED: "已收到用户的新要求",
   MODEL_TURN_STARTED: "模型正在选择下一步",
   MODEL_TURN_COMPLETED: "模型完成一次处理",
   TOOL_STARTED: "开始调用工具",
@@ -79,7 +81,7 @@ function eventLabel(event: DraftGoalTaskEvent): string {
 }
 
 export function MissionCockpit({
-  journeyId, cityName, goal, journeyStatus, agentStatus, agentAvailable, onExplore, onTrip, executionAgent, executionDecisions,
+  journeyId, cityName, goal, journeyStatus, visible = true, agentStatus, agentAvailable, onExplore, onTrip, executionAgent, executionDecisions,
 }: Props) {
   const [command, setCommand] = useState(goal);
   const [task, setTask] = useState<DraftGoalTask | null>(null);
@@ -113,7 +115,7 @@ export function MissionCockpit({
       const value = (event as CustomEvent).detail;
       if (value?.journeyId && value.journeyId !== journeyId) return;
       if (typeof value?.goal === "string" && value.goal.trim()) { setCommand(value.goal.slice(0, 2000)); setCommandRevision((v) => v + 1); }
-      document.querySelector<HTMLTextAreaElement>(".cn-mission-os .rev-workspace-inline textarea")?.focus();
+      (document.getElementById("rev-mission-chat-input") as HTMLTextAreaElement | null)?.focus();
     };
     window.addEventListener("citynexus:mission-command", focus);
     return () => window.removeEventListener("citynexus:mission-command", focus);
@@ -211,7 +213,7 @@ export function MissionCockpit({
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
         <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>Agent 命令台</strong></div>
         {journeyStatus === "ACTIVE" ? executionAgent :
-          <WorkspaceActions embedded panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />}
+          <WorkspaceActions embedded chatDockVisible={visible} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />}
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布" onScroll={(event) => setLayer(event.currentTarget.scrollLeft > event.currentTarget.clientWidth / 2 ? "timeline" : "map")}>
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">

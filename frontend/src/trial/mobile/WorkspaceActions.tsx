@@ -35,6 +35,7 @@ const TOOL_NAME: Record<string, string> = {
 };
 const EVENT_NAME: Record<string, string> = {
   TASK_ACCEPTED: "研究任务已建立",
+  USER_MESSAGE_ADDED: "收到了你的新要求",
   RUN_STARTED: "本轮研究开始",
   MODEL_TURN_STARTED: "AI 正在判断下一步",
   MODEL_TURN_COMPLETED: "AI 已完成这一轮分析",
@@ -74,8 +75,8 @@ async function loadGoalEvents(journeyId: string, taskId: string): Promise<{ task
 const TASK_POINTER = "citynexus.revolution.goal-task";
 const MODEL_TURNS = 8;
 const TOOL_CALLS = 16;
-const MAX_MODEL_TURNS = 64;
-const MAX_TOOL_CALLS = 128;
+const MAX_MODEL_TURNS = 256;
+const MAX_TOOL_CALLS = 512;
 const CONTINUE_MODEL_TURNS = 8;
 const CONTINUE_TOOL_CALLS = 16;
 const DEEP_MODEL_TURNS = 24;
@@ -132,9 +133,9 @@ function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; are
   </li>)}</ul>;
 }
 
-export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, onTaskChange }: { panel: WorkspacePanel;
+export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
-  embedded?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
+  embedded?: boolean; chatDockVisible?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -154,6 +155,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const previousContext = useRef<Context | null>(null);
   const generation = useRef(0);
   const writeBusy = useRef(false);
+  const followupMessageId = useRef<string | null>(null);
   const postController = useRef<AbortController | null>(null);
   const context = readContext();
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
@@ -178,7 +180,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       postController.current?.abort();
       postController.current = null;
       writeBusy.current = false;
-      setSnapshot(null); setGoalTaskSnapshot(null); setQuestion(""); setRequestError(null);
+      setSnapshot(null); setGoalTaskSnapshot(null); setQuestion(""); setRequestError(null); followupMessageId.current = null;
       setModelConsent(false); setOnlineResearchConsent(false);
       setLoadError(null); setBusy(false); setAllowTiles(false); setAiReady(false);
       setRevision((value) => value + 1);
@@ -226,9 +228,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         if (mapPlaces?.journey_id && mapPlaces.journey_id !== actor.id) throw new Error("Map context mismatch");
         setSnapshot({ context: actor, input, status: journey.status,
           mapCandidates: mapPlaces?.journey_id === actor.id && Array.isArray(mapPlaces.candidates) ? mapPlaces.candidates : input.candidates });
-        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (input.intent?.goal ?? "").slice(0, 2000));
+        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (savedTask?.[0]?.journey_id === actor.id ? "" : (input.intent?.goal ?? "").slice(0, 2000)));
         if (savedTask && savedTask[0].journey_id === actor.id) {
-          setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || savedTask[0].goal);
+          setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value);
           setGoalTaskSnapshot({ context: actor, value: savedTask[0], events: savedTask[1].events });
           setModelConsent(savedTask[0].consent.model === true);
           setOnlineResearchConsent(savedTask[0].consent.online_research === true);
@@ -285,6 +287,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       }, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       saveTaskPointer(actor, created.task_id);
+      setQuestion("");
       setGoalTaskSnapshot({ context: actor, value: created, events: [] });
       const result = await cityNexusApi.runDraftGoalTask(actor.id, created.task_id, {
         model_consent: modelConsent, online_research_consent: onlineResearchConsent,
@@ -360,11 +363,57 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       ? (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
       : Math.min(MAX_TOOL_CALLS, (visibleTask.budget.max_tool_calls ?? TOOL_CALLS) + CONTINUE_TOOL_CALLS)
     : TOOL_CALLS;
+  const sendFollowup = async () => {
+    const actor = readContext();
+    const task = visibleTask;
+    const message = question.trim();
+    if (!actor || !task || !modelConsent || !aiReady || writeBusy.current || task.status === "WORKING"
+        || task.status === "CANCELLED" || message.length < 1) return;
+    const serial = ++generation.current;
+    const controller = new AbortController();
+    postController.current = controller;
+    writeBusy.current = true; setBusy(true); setRequestError(null);
+    const messageId = followupMessageId.current ?? crypto.randomUUID();
+    followupMessageId.current = messageId;
+    const timer = window.setTimeout(() => controller.abort(), 180000);
+    try {
+      const result = await cityNexusApi.runDraftGoalTask(actor.id, task.task_id, {
+        model_consent: modelConsent, online_research_consent: onlineResearchConsent,
+        max_model_turns: nextModelBudget, max_tool_calls: nextToolBudget,
+        user_message: message, message_id: messageId,
+      }, true, controller.signal);
+      if (serial !== generation.current || !sameContext(actor, readContext())) return;
+      // Only clear after server acknowledgement. The same message ID is reused after an
+      // unknown response so a retry cannot secretly start duplicate research.
+      setQuestion(""); followupMessageId.current = null;
+      setGoalTaskSnapshot({ context: actor, value: result, events: [] });
+      await refreshGoalTask(actor, task.task_id);
+    } catch (error) {
+      if (serial !== generation.current || !sameContext(actor, readContext())) return;
+      setRequestError(error instanceof Error && error.name === "AbortError"
+        ? "没有收到确认。消息可能已到达，先刷新当前任务；再次发送会复用原消息编号。"
+        : error instanceof Error && error.message.includes("GOAL_TASK_ALREADY_RUNNING")
+          ? "Agent 正在处理上一条指令，等这轮结束后可以继续发消息。"
+          : error instanceof Error ? error.message : "当前消息没有确认成功，请检查任务状态。");
+    } finally {
+      window.clearTimeout(timer);
+      if (serial === generation.current) { postController.current = null; writeBusy.current = false; setBusy(false); }
+    }
+  };
+
+  const sendMessage = () => {
+    if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup();
+    else void startNewTask();
+  };
+
   const taskMapPoints = (visibleTask?.research_places ?? []).map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
     coordinate_system: "WGS84" as const, provider_provenance: place.provider_provenance,
     selection_state: "OPENING_UNVERIFIED" as const, source_url: place.source_url, observation_expired: false,
   }));
+  const conversation = visibleTask?.conversation?.length
+    ? visibleTask.conversation
+    : visibleTask ? [{ role: "user" as const, text: visibleTask.goal, message_id: "initial", at: visibleTask.created_at ?? "" }] : [];
   const activeTools = visibleEvents.filter((event) => event.event_type === "TOOL_STARTED" &&
     !(visibleTask?.tool_steps ?? []).some((step) => step.run_id === event.run_id && step.sequence_no === event.step_sequence_no));
 
@@ -384,27 +433,52 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       {visible && panel === "assistant" && <>
         <p>{visible.input.trip.dates.length} 天 · {visible.input.trip.party_size} 人 · 旅行需求已从服务器读取</p>
         {!aiReady && <p role="status">AI 尚未连接。</p>}
-        {visible.status !== "DRAFT" ? <p>这趟行程已进入确认或执行阶段，关闭面板后在行程页查看执行助手。</p> :
-          <form onSubmit={(event) => { event.preventDefault(); void startNewTask(); }}>
-            <label htmlFor="rev-workspace-question">{COPY.question}</label>
-            <textarea id="rev-workspace-question" rows={embedded ? 3 : 5} maxLength={2000} value={question} disabled={busy} onChange={(event) => setQuestion(event.target.value)} />
-            <label className="rev-workspace-depth">本次研究工作量
-              <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
-                <option value="deep">深入调查 · 最多 24 轮模型 / 48 次工具（推荐）</option>
-                <option value="quick">快速试探 · 最多 8 轮模型 / 16 次工具</option>
-              </select>
-            </label>
-            <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />同意本次向模型发送旅行目标与必要行程资料，最多 {initialModelTurns} 轮，可能产生费用</label>
-            <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许本任务查询 Photon、Nominatim、OSM Overpass，最多 {initialToolCalls} 次工具</label>
-            <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4}>{busy ? COPY.sending : COPY.send}</button>
+        {visible.status !== "DRAFT" ? <p>行程已经开始，可以在今日行程里向执行助手提出调整。</p> : <>
+          {conversation.length > 0 && <div className="rev-agent-conversation" role="log" aria-label="与 Agent 的真实对话">
+            {conversation.slice(-6).map((item) => <div className={"rev-agent-message is-" + item.role} key={item.message_id}>
+              <span>{item.role === "user" ? "你" : "CityNexus Agent"}</span>
+              <p>{item.text}</p>
+            </div>)}
+            {visibleTask && !conversation.some((item) => item.role === "assistant") &&
+              (visibleTask.draft_artifact?.days ?? []).some((day) => day.slots.length > 0) &&
+              <div className="rev-agent-message is-status">
+                <span>已保存的研究成果 · 来自服务器，不是模型回复</span>
+                <p>当前有 {visibleTask.draft_artifact?.days.length} 天暂定日程，
+                  {(visibleTask.draft_artifact?.days ?? []).reduce((count, day) => count + day.slots.length, 0)} 项安排。
+                  你可以在下方直接告诉 Agent 下一步想修改什么。</p>
+              </div>}
+          </div>}
+          <details className="rev-agent-research-settings" open={!modelConsent && !visibleTask}>
+            <summary>{modelConsent ? "本次研究授权与额度 · 已设置" : "开始前，确认一次研究权限"}</summary>
+            <div className="rev-agent-research-settings-body">
+              <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />允许 AI 处理本次旅行目标，可能产生调用费用</label>
+              <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许 Agent 在本任务范围内查询公开地点来源</label>
+              <label className="rev-workspace-depth">研究工作量
+                <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
+                  <option value="deep">深入研究 · 24轮模型 / 48次工具</option>
+                  <option value="quick">快速研究 · 8轮模型 / 16次工具</option>
+                </select>
+              </label>
+              <small>已运行的任务会继续沿用服务器保存的研究记录；需要追加额度时会显示本次累计额度。</small>
+            </div>
+          </details>
+          {!embedded && <form className="rev-agent-nonmodal-form" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
+            <label htmlFor="rev-workspace-question">{visibleTask ? "继续和这位 Agent 说话" : COPY.question}</label>
+            <textarea id="rev-workspace-question" rows={3} maxLength={2000} value={question}
+              disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
+              placeholder={visibleTask ? "例如：把第二天下午换成轻松的自然景点，保留其他安排。" : "直接描述你的旅行目标。"} />
+            <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4 || visibleTask?.status === "WORKING"}>
+              {busy ? COPY.sending : visibleTask && visibleTask.status !== "CANCELLED" ? "发送并继续这趟旅行" : "发送给 Agent"}
+            </button>
           </form>}
+        </>}
         {requestError && <p role="alert">{requestError}</p>}
         {visibleTask && <section aria-label="Agent 任务" className="rev-workspace-answer">
           <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
           <p>{visibleTask.usage.model_turns ?? 0}/{visibleTask.budget.max_model_turns ?? MODEL_TURNS} 轮模型 · {visibleTask.usage.tool_calls ?? 0}/{visibleTask.budget.max_tool_calls ?? TOOL_CALLS} 次工具</p>
           {visibleTask.assistant_summary && <details><summary>本轮研究摘要</summary><p>{visibleTask.assistant_summary}</p></details>}
           {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "本阶段的研究额度用完了。草案和调查记录都保留在服务器；点击「继续研究」可单独授权新的额度。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
-          <p className="rev-workspace-budget-help">已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续前可查看本阶段额度。</p>
+          <details className="rev-agent-technical"><summary>任务详情 · 模型与工具额度</summary><p className="rev-workspace-budget-help">已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续前可查看本阶段额度。</p></details>
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open={!embedded}>
             <summary>Agent 真实工作过程 · 已记录 {visibleEvents.length} 条事件</summary>
@@ -425,13 +499,13 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
             </li>)}
           </ol></details>}
-          {(visibleTask.candidate_places ?? []).length > 0 && <ul className="rev-workspace-task-places">
+          {(visibleTask.candidate_places ?? []).length > 0 && <details className="rev-agent-research-drawer"><summary>已核对的正式地点（{visibleTask.candidate_places?.length}）</summary><ul className="rev-workspace-task-places">
             {visibleTask.candidate_places?.map((place) => <li key={place.id}>
               <strong>{place.name}</strong><span>{place.opening_state === "KNOWN" ? "营业资料已读取" : "营业待核实"}</span>
               <span>{place.cost_evidence.status === "KNOWN" ? "费用资料已读取" : "费用待核实"}</span>
             </li>)}
-          </ul>}
-          {research.places.length > 0 && <ResearchLeads items={research.places} />}
+          </ul></details>}
+          {research.places.length > 0 && <details className="rev-agent-research-drawer"><summary>公开来源发现的地点（{research.places.length}）</summary><ResearchLeads items={research.places} /></details>}
           {research.areas.length > 0 && <details><summary>地区／村落线索（{research.areas.length}）</summary><ResearchLeads items={research.areas} area /></details>}
           {research.conflicts.length > 0 && <details><summary>其他地区的同名结果（{research.conflicts.length}）</summary><ResearchLeads items={research.conflicts} /></details>}
           {!embedded && visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
@@ -459,7 +533,33 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       </>}
     </div>
   </>;
-  if (embedded) return <section className="rev-workspace-dialog rev-workspace-inline" aria-label="Agent 命令台">{content}</section>;
+  if (embedded) return <>
+    <section className="rev-workspace-dialog rev-workspace-inline" aria-label="Agent 命令台">{content}</section>
+    {chatDockVisible && visible?.status === "DRAFT" && createPortal(
+      <form className="rev-mission-chat-dock" aria-label="与当前旅行 Agent 对话"
+        onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
+        <label htmlFor="rev-mission-chat-input">{visibleTask ? "继续和当前 Agent 对话" : "告诉 CityNexus 你的旅行目标"}</label>
+        <div className="rev-mission-chat-row">
+          <textarea id="rev-mission-chat-input" value={question} rows={1} maxLength={2000}
+            disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
+            placeholder={visibleTask ? "问 Agent：能不能换个地点？帮我查一下交通..." : "说出目标，Agent 会去研究地点、路线和日程..."}/>
+          <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4 || visibleTask?.status === "WORKING"}>
+            {busy ? "正在研究" : "发送 ↑"}
+          </button>
+        </div>
+        {!modelConsent && <label className="rev-mission-chat-allow">
+          <input type="checkbox" checked={modelConsent} onChange={(event) => setModelConsent(event.target.checked)} />
+          本次允许 AI 处理旅行目标（可能产生费用）
+        </label>}
+        {!onlineResearchConsent && <label className="rev-mission-chat-allow">
+          <input type="checkbox" checked={onlineResearchConsent} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />
+          本次允许查询公开地图和地点来源
+        </label>}
+        <p role="status">{busy || visibleTask?.status === "WORKING"
+          ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
+          : requestError ?? (visibleTask ? "消息会继续进入同一研究任务，不会重新创建行程。" : "发送后会建立属于这趟旅行的 Agent 研究任务。")}</p>
+      </form>, document.body)}
+  </>;
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"
     onCancel={(event) => { event.preventDefault(); closeRef.current(); }}>{content}</dialog>, document.body);
 }

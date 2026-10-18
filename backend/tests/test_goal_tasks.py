@@ -347,5 +347,75 @@ def test_research_budget_can_be_extended_without_starting_a_provider(goal_scope)
             {"query": "TEST_FIXTURE", "source": "invented-provider"}, {})
     assert unsupported.value.status_code == 422
     with pytest.raises(HTTPException) as over_limit:
-        _create(session, journey, member, max_model_turns=65)
+        _create(session, journey, member, max_model_turns=257)
     assert over_limit.value.status_code == 422
+
+
+
+def test_followup_reuses_same_goal_task_and_model_reads_latest_user_message(goal_scope, monkeypatch):
+    """A second chat turn continues the persisted Mission; it does not create a new one."""
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8)
+    calls = []
+
+    class ReplyAgent:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+
+        def _complete(self, messages):
+            context = json.loads(messages[1]["content"])
+            calls.append(context)
+            assert context["goal"] == created["goal"]
+            if len(calls) == 2:
+                assert context["recent_user_instructions"][-1] == "把第二天下午改成轻松的自然景点"
+            return {"content": "TEST_FIXTURE 第一次摘要" if len(calls) == 1 else "TEST_FIXTURE 已接收新的偏好"}
+
+    monkeypatch.setattr(goal_tasks, "_new_goal_agent", lambda *_: ReplyAgent())
+    first = goal_tasks.resume_goal_task(session, journey, member, created["task_id"])
+    assert first["status"] == "PARTIAL_READY"
+    assert first["task_id"] == created["task_id"]
+    first_revision = first["draft_artifact"]["revision"]
+
+    message_id = str(uuid4())
+    second = goal_tasks.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="把第二天下午改成轻松的自然景点",
+        message_id=message_id,
+    )
+    assert second["task_id"] == created["task_id"]
+    assert second["draft_artifact"]["revision"] == first_revision
+    assert [item["role"] for item in second["conversation"]] == ["user", "assistant", "user", "assistant"]
+    assert second["conversation"][-2]["text"] == "把第二天下午改成轻松的自然景点"
+    assert second["conversation"][-1]["text"] == "TEST_FIXTURE 已接收新的偏好"
+    assert len(calls) == 2
+
+    # Duplicate network delivery of the same message ID never starts a third model run.
+    retried = goal_tasks.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="把第二天下午改成轻松的自然景点",
+        message_id=message_id,
+    )
+    assert retried["task_id"] == created["task_id"]
+    assert len(retried["conversation"]) == 4
+    assert len(calls) == 2
+    owner_events = goal_tasks.list_goal_task_events(session, journey, member, created["task_id"])
+    assert sum(event["event_type"] == "USER_MESSAGE_ADDED" for event in owner_events["events"]) == 1
+    assert "把第二天下午" not in json.dumps(owner_events, ensure_ascii=False)
+    assert session.query(goal_tasks.JourneyMission).filter_by(journey_id=journey.id).count() == 1
+
+
+def test_followup_must_be_owner_message_with_unique_uuid_and_not_after_cancel(goal_scope):
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, model_consent=False)
+    for message, message_id in [("", str(uuid4())), ("  ", str(uuid4())), ("a" * 2001, str(uuid4())),
+                                ("continue", None), ("continue", "not-a-uuid")]:
+        with pytest.raises(HTTPException) as error:
+            goal_tasks.resume_goal_task(session, journey, member, created["task_id"],
+                                        user_message=message, message_id=message_id)
+        assert error.value.status_code == 422
+    cancelled = goal_tasks.cancel_goal_task(session, journey, member, created["task_id"])
+    assert cancelled["status"] == "CANCELLED"
+    with pytest.raises(HTTPException) as error:
+        goal_tasks.resume_goal_task(session, journey, member, created["task_id"],
+                                    user_message="continue", message_id=str(uuid4()))
+    assert error.value.status_code == 409
