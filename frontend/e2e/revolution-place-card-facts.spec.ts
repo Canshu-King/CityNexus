@@ -255,3 +255,105 @@ test("place cards show grounded hours and costs while preserving provenance and 
   expect(discoveryRequests).toBe(1);
   expect(detailRequests).toBe(1);
 });
+
+test("trip place facts refresh requires one-time consent and never repeats a recorded attempt", async ({ page }) => {
+  let factsRequests = 0;
+  let planningIntentReads = 0;
+  const receiptId = "trip-place-facts-receipt";
+  const incomplete = {
+    ...candidate("trip-museum", "8126", "LIVE_PROVIDER"),
+    selection_blockers: ["OPENING_UNVERIFIED", "COST_UNKNOWN"],
+    receipt_id: receiptId,
+  };
+  const priorFailure = {
+    ...candidate("trip-park-prior-failure", "8127", "LIVE_PROVIDER"),
+    facts_status: "UNAVAILABLE",
+    selection_blockers: ["OPENING_UNVERIFIED", "COST_UNKNOWN"],
+    receipt_id: receiptId,
+  };
+  let planningCandidates: Record<string, unknown>[] = [incomplete, priorFailure];
+  const planningIntent = () => ({
+    journey_id: journey,
+    intent: null,
+    trip: { dates: ["2026-11-01", "2026-11-02"], party_size: 2,
+      budget: { amount_minor: 100000, currency: "CNY" }, planning_mode: "balanced" },
+    candidates: planningCandidates,
+    preview_kind: "UNVERIFIED_SUGGESTION_DRAFT",
+    transport_status: "UNKNOWN",
+    plan_version_id: null,
+  });
+
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "DRAFT",
+    }));
+  }, journey);
+  await page.route("**/api/v1/**", (route) => route.fulfill({ status: 404,
+    contentType: "application/json", body: JSON.stringify({ detail: "TEST_FIXTURE_ENDPOINT_NOT_SEEDED" }),
+  }));
+  await page.route("**/api/v1/travelers/session", (route) => json(route, { traveler_id: "fixture-trip-owner" }));
+  await page.route("**/api/v1/agent/runtime-status", (route) => json(route, {
+    runtime_identity: "UNCONFIGURED", hermes_compat_configured: false,
+  }));
+  await page.route(`${root}`, (route) => json(route, {
+    id: journey, traveler_id: "fixture-trip-owner", title: "TEST_FIXTURE 连城", city_code: "CN-RV-TEST",
+    timezone: "Asia/Shanghai", status: "DRAFT", start_at: "2026-11-01T00:00:00Z",
+    end_at: "2026-11-02T00:00:00Z", budget: { amount_minor: 100000, currency: "CNY" },
+  }));
+  await page.route(`${root}/plans`, (route) => json(route, []));
+  await page.route(`${root}/planning-intent`, (route) => {
+    planningIntentReads += 1;
+    return json(route, planningIntent());
+  });
+  await page.route(`${root}/bootstrap-discovery/facts`, (route) => {
+    factsRequests += 1;
+    expect(route.request().headers().authorization).toBe("Bearer signed-only-fixture-token");
+    expect(route.request().postDataJSON()).toEqual({
+      receipt_id: receiptId, candidate_id: "trip-museum", provider_consent: true,
+    });
+    const refreshed = {
+      ...candidate("trip-museum", "8126", "LIVE_PROVIDER", {
+        openingHours: { status: "NORMALIZED_VALID", open: "00:00", close: "24:00" },
+      }),
+      selection_state: "OPENING_UNVERIFIED",
+      selection_blockers: ["COST_UNKNOWN"],
+      facts_status: "SUCCESS",
+    };
+    planningCandidates = [{ ...refreshed, receipt_id: receiptId }, priorFailure];
+    return json(route, { journey_id: journey, candidate: refreshed, cached: false });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-mobile-tab-trips").click();
+  await expect(page.getByTestId("rev-plan-workbench")).toBeVisible();
+  const museum = page.getByTestId("rev-travel-place-trip-museum");
+  const detail = museum.getByTestId("rev-plan-facts-detail-trip-museum");
+  await detail.locator("summary").click();
+  await expect(detail).toContainText("node/8126");
+  await expect(detail).toContainText("发送给 OpenStreetMap");
+  const consent = detail.getByTestId("rev-plan-facts-consent-trip-museum");
+  const submit = detail.getByTestId("rev-plan-facts-refresh-trip-museum");
+  await expect(consent).not.toBeChecked();
+  await expect(submit).toBeDisabled();
+  expect(factsRequests).toBe(0);
+
+  await consent.check();
+  await detail.locator("summary").click();
+  await expect(consent).not.toBeChecked();
+  expect(factsRequests).toBe(0);
+  await detail.locator("summary").click();
+  await expect(submit).toBeDisabled();
+  await consent.check();
+  await submit.click();
+
+  await expect(museum).toContainText("营业时间：全天 · 费用未知");
+  await expect(museum).toContainText("待补：费用");
+  await expect(museum.getByTestId("rev-plan-facts-detail-trip-museum")).toHaveCount(0);
+  const failed = page.getByTestId("rev-travel-place-trip-park-prior-failure");
+  await expect(failed).toContainText("待补：营业时间、费用");
+  await expect(failed).toContainText("此前查询未能补齐以上资料");
+  await expect(failed.locator("details")).toHaveCount(0);
+  expect(factsRequests).toBe(1);
+  expect(planningIntentReads).toBeGreaterThanOrEqual(2);
+});

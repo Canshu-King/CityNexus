@@ -12,6 +12,11 @@
 .rev-travel-place, .rev-travel-day { padding: 12px; margin: 12px 0; border: 1px solid #dce5dc; border-radius: 12px; }
 .rev-travel-place p { margin: 6px 0; }
 .rev-travel-place a { display: inline-flex; align-items: center; min-height: 44px; color: #245f48; }
+.rev-travel-place details { margin-top: 8px; }
+.rev-travel-place details > summary { min-height: 44px; padding: 10px 0; color: #245f48; font-weight: 650; cursor: pointer; }
+.rev-travel-place details form { display: grid; gap: 8px; }
+.rev-travel-place details form > label { display: flex; align-items: center; gap: 8px; min-height: 44px; line-height: 1.5; }
+.rev-travel-place details input[type=checkbox] { width: 22px; height: 22px; flex: 0 0 auto; accent-color: #245f48; }
 .rev-plan-workbench > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .rev-plan-workbench > header > div { flex: 1; min-width: 0; }
 .rev-plan-workbench h2 { margin: 5px 0 14px; font-size: 22px; }

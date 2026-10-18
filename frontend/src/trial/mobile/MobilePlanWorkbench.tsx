@@ -7,7 +7,7 @@ import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerS
 import "./MobilePlanWorkbench.css";
 
 type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null };
-type WriteAction = "generate" | "select" | "start" | "brief";
+type WriteAction = "generate" | "select" | "start" | "brief" | "facts";
 
 function failureText(error: unknown): string {
   if (error instanceof CityNexusApiError) {
@@ -204,16 +204,54 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     } catch (error) { if (serial === epoch.current && token === readTravelerBearer()) setMessage(failureText(error)); }
     finally { writeLock.current = false; setBusy(null); }
   };
+  const refreshPlaceFacts = async (place: TravelPlanningInput["candidates"][number]) => {
+    const token = readTravelerBearer();
+    const currentPlace = current?.input?.candidates.find((item) => item.candidate_id === place.candidate_id);
+    if (!current || !token || !currentPlace || currentPlace.receipt_id !== place.receipt_id ||
+      currentPlace.facts_status != null || writeLock.current || needsRefresh || loading) return;
+
+    const serial = epoch.current;
+    const stillCurrent = () => token === readTravelerBearer() && serial === epoch.current;
+    writeLock.current = true;
+    setBusy("facts");
+    setMessage(null);
+    try {
+      const refreshed = await cityNexusApi.refreshBootstrapPlaceFacts(
+        journeyId, currentPlace.receipt_id, currentPlace.candidate_id,
+      );
+      if (!stillCurrent()) return;
+      if (refreshed.journey_id !== journeyId || refreshed.candidate?.candidate_id !== currentPlace.candidate_id) {
+        throw new Error("Place facts response mismatch");
+      }
+
+      const input = await cityNexusApi.getTravelPlanningInput(journeyId);
+      if (!stillCurrent()) return;
+      if (input.journey_id !== journeyId || !input.candidates.some((item) => item.candidate_id === currentPlace.candidate_id)) {
+        throw new Error("Place facts planning intent mismatch");
+      }
+      setSnapshot((previous) => previous?.bearer === token && previous.journey.id === journeyId
+        ? { ...previous, input }
+        : previous);
+    } catch (error) {
+      if (!stillCurrent()) return;
+      setMessage(error instanceof Error && error.message.includes("mismatch")
+        ? "地点详情与当前行程不匹配，未更新显示。请刷新方案后继续。"
+        : failureText(error));
+    } finally {
+      writeLock.current = false;
+      setBusy(null);
+    }
+  };
 
   return <section className="rev-plan-workbench" data-testid="rev-plan-workbench" aria-busy={Boolean(busy || loading)}>
     <header><div><span className="rev-firstlook-eyebrow">TRAVEL PLAN</span><h2>你的行程方案</h2></div><button type="button" className="rev-plan-refresh" disabled={Boolean(busy || loading)} onClick={() => void refresh()}>刷新方案</button></header>
     {message && <p role="alert" className="rev-plan-message">{message}</p>}
     {loading && !current && <p role="status">正在读取你的行程方案…</p>}
-    {current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} disabled={locked} />}
+    {current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview key={`${journeyId}:${bearer}`} input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} onRefreshFacts={refreshPlaceFacts} disabled={locked} />}
     {current && plans.length === 0 && <p>{current.input ? "从想去清单里挑选地点，再生成日程。" : "先选一个已核实的地点，再把它排进日程。"}</p>}
     {current?.journey.status !== "ACTIVE" && current && <div className="rev-plan-generate">
       {current.input ? <>
-        {candidateIds.length > 0 && !readyForMulti && <p className="rev-plan-gap">先选至少两处；营业、费用未齐的地点可在探索页查询详情或改选。</p>}
+        {candidateIds.length > 0 && !readyForMulti && <p className="rev-plan-gap">先选至少两处；资料未齐的地点可展开卡片查询 OpenStreetMap 详情，或改选。</p>}
         <button type="button" disabled={locked || !readyForMulti} onClick={() => void write("generate")} data-testid="rev-plan-generate">{busy === "generate" ? "正在安排行程…" : "用所选地点生成正式方案"}</button>
         <button type="button" onClick={onExplore}>继续探索、补资料 →</button>
       </> : placeId ? <>
