@@ -432,12 +432,13 @@ test("TEST_FIXTURE tool failures show only a recognized stable error code", asyn
   });
   await expect(completedTool).toHaveCount(1);
   await expect(completedTool).not.toContainText("失败代码：");
-  await expect(sheet.getByText(/失败代码：MALFORMED_TOOL_ARGUMENTS/)).toBeVisible();
+  await expect(sheet.getByText("参数格式不正确", { exact: true })).toBeVisible();
   const failedToolsWithoutCode = sheet
     .locator('[aria-label="Hermes 运行轨迹"] li')
     .filter({ hasText: "检查当前行程：未完成" });
   await expect(failedToolsWithoutCode).toHaveCount(2);
   await expect(failedToolsWithoutCode.last()).not.toContainText("失败代码：");
+  await expect(sheet.getByText("MALFORMED_TOOL_ARGUMENTS", { exact: true })).toHaveCount(0);
   await expect(sheet.getByText(privateError, { exact: true })).toHaveCount(0);
   await expect(sheet.getByText(privateCanary, { exact: true })).toHaveCount(0);
 });
