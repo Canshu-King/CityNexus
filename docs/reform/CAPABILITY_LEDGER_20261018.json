@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "CAPABILITY_LEDGER",
-  "v8_commit": "acdeb8ebcd0624c0a0248763b14a65a34c4123e9",
+  "v8_commit": "39896c29b4dbd0bbe47543cafffc4218cdc6e7ba",
   "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
   "runtime_verified": false,
   "rows": [
@@ -157,16 +157,26 @@
     {
       "domain": "weather_and_reality",
       "v8_present": [
-        "backend/app/intelligence"
-      ],
-      "v8_missing": [
+        "backend/app/intelligence",
         "backend/app/live_context_watch.py"
       ],
+      "v8_missing": [],
       "revolution_missing": [],
-      "tools": [],
+      "tools": [
+        {
+          "tool": "read_guardian_stream",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_guardian_stream_adapter_r1.py"
+        },
+        {
+          "tool": "refresh_live_context",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_guardian_stream_adapter_r1.py"
+        }
+      ],
       "revolution_only_tools": [],
-      "status": "SOURCE_ONLY",
-      "note": "Guardian/weather lives on Revolution only; V8 has no watcher module."
+      "status": "READY_FOR_REHEARSAL",
+      "note": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` and its four handlers are still the next slice."
     },
     {
       "domain": "replanning_and_recovery",
@@ -230,7 +240,7 @@
       ],
       "revolution_only_tools": [],
       "status": "READY_FOR_REHEARSAL",
-      "note": "Both halves delivered: `compare_routes` over stored facts and `acquire_route` through the ported launch-origin chain; execution uses the mock provider unless a live one is configured."
+      "note": "Both halves delivered: `compare_routes` over stored facts, `acquire_route` through the ported launch-origin chain, and a Mission-scoped snapshot/acquire adapter; execution uses the mock provider unless a live one is configured."
     },
     {
       "domain": "traveler_preferences",

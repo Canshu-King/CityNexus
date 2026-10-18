@@ -58,7 +58,10 @@ DOMAIN_TOOLS: dict[str, list[tuple[str, str]]] = {
         ("discover_recovery_options", "none"),
         ("apply_clarified_horizon_choice", "none"),
     ],
-    "weather_and_reality": [],
+    "weather_and_reality": [
+        ("read_guardian_stream", "tests/test_reform_guardian_stream_adapter_r1.py"),
+        ("refresh_live_context", "tests/test_reform_guardian_stream_adapter_r1.py"),
+    ],
     "transport": [
         ("compare_routes", "tests/test_reform_compare_routes_adapter_r1.py"),
         ("acquire_route", "tests/test_reform_acquire_route_adapter_r1.py"),
@@ -73,8 +76,8 @@ DOMAIN_TOOLS: dict[str, list[tuple[str, str]]] = {
 # Domains that are product surfaces on V8 but have no agent tool in either tree. Naming them here is
 # the order's alternative to a silent gap: either they get an adapter, or the gap has an owner.
 SURFACE_ONLY = {
-    "weather_and_reality": "Guardian/weather lives on Revolution only; V8 has no watcher module.",
-    "transport": "Both halves delivered: `compare_routes` over stored facts and `acquire_route` through the ported launch-origin chain; execution uses the mock provider unless a live one is configured.",
+    "weather_and_reality": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` and its four handlers are still the next slice.",
+    "transport": "Both halves delivered: `compare_routes` over stored facts, `acquire_route` through the ported launch-origin chain, and a Mission-scoped snapshot/acquire adapter; execution uses the mock provider unless a live one is configured.",
     "traveler_preferences": "Preferences are read by the shell; no agent tool reads or writes them.",
     "stay": "Stay generation is a product surface; no agent tool selects or books a stay.",
     "notification_inbox": "The inbox is a read surface; no agent tool writes or acknowledges.",
@@ -96,6 +99,30 @@ def load(path: Path) -> dict:
 def advertised_tools(inventory: dict, label: str) -> set[str]:
     checkout = inventory["checkouts"][label]
     return {row["name"] for row in checkout["registered_tools"]}
+
+
+def overlay_live_paths(inventory: dict) -> list[str]:
+    """Move expected paths that now exist from 'missing' to 'present'.
+
+    The inventory is a scan of an older commit; a module ported since then
+    would otherwise keep its domain in SOURCE_ONLY even though the file is on
+    this checkout.  Presence is decided by the filesystem, not by a memory.
+    """
+
+    root = Path(__file__).resolve().parents[2]
+    moved: list[str] = []
+    for row in inventory["checkouts"]["v8"]["domains"].values():
+        present = list(row.get("source_paths_present") or [])
+        still_missing = []
+        for path in row.get("expected_paths_missing") or []:
+            if (root / path).exists():
+                present.append(path)
+                moved.append(path)
+            else:
+                still_missing.append(path)
+        row["source_paths_present"] = sorted(set(present))
+        row["expected_paths_missing"] = sorted(set(still_missing))
+    return moved
 
 
 def overlay_live_tools(inventory: dict) -> list[str]:
@@ -247,6 +274,9 @@ def main() -> None:
     args = parser.parse_args()
     inventory = load(args.inventory)
     if args.live:
+        moved = overlay_live_paths(inventory)
+        if moved:
+            print(f"live overlay moved {len(moved)} paths to present: {', '.join(moved)}")
         added = overlay_live_tools(inventory)
         print(f"live overlay added {len(added)} tools: {', '.join(added) or '(none)'}")
     if args.v8_commit:
