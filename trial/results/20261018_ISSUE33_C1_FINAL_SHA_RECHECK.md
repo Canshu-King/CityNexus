@@ -22,11 +22,11 @@
 
 ## 手机视口截图
 
-以下原图均为 390×844 CSS 像素；`10` 是修复 AI 快捷入口后在同一隔离会话拍摄的 GO 屏。标注版只标出当前 GO 屏上通过 Chrome-use 实时 DOM 读取到的两个按钮位置。
+以下原图均为 390×844 CSS 像素；`01`–`09` 是隐藏 AI 快捷入口前的流程截图，`10` 是修复后在同一隔离会话拍摄的 GO 屏。标注版只标出当前 GO 屏上通过 Chrome-use 实时 DOM 读取到的两个按钮位置。
 
 | 步骤 | 截图 |
 | --- | --- |
-| 探索草稿 | [01-draft-explore.png](assets/chrome-use-20261018/c1-final-f8f7e9d/01-draft-explore.png) |
+| 探索草稿（入口修复前） | [01-draft-explore.png](assets/chrome-use-20261018/c1-final-f8f7e9d/01-draft-explore.png) |
 | Photon 城市候选 | [02-photon-city.png](assets/chrome-use-20261018/c1-final-f8f7e9d/02-photon-city.png) |
 | 已选合肥 | [03-city-selected.png](assets/chrome-use-20261018/c1-final-f8f7e9d/03-city-selected.png) |
 | 咖啡馆类别 | [04-cafe-category.png](assets/chrome-use-20261018/c1-final-f8f7e9d/04-cafe-category.png) |
