@@ -96,6 +96,7 @@ def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, mon
         assert zero["provider"] == "photon"
         assert found["status"] == "RESULTS"
         assert found["provider"] == "nominatim"
+        assert found["places"][0]["provider"] == "nominatim"
         assert found["places"][0]["source_url"] == "https://www.openstreetmap.org/way/987"
         assert found["places"][0]["opening_status"] == "UNKNOWN"
         assert duplicate["status"] == "QUERY_ALREADY_ATTEMPTED"
