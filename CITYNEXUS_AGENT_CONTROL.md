@@ -1,4 +1,24 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Qoder｜Issue #33 Q1 的尾巴：建人那一扇门把"这枚凭据到什么时候作废"一起交出来（已落地）
+
+上一棒给了凭据、给了续期那扇门，唯独漏了窗口。壳里的规矩是**没被告知到期就不刷**（不许拿自己猜的钟点去敲服务器），这条规矩本身是对的，后果是：在这一块屏上刚建好的人，`sessionSecondsLeft()` 一直是空，续期那条腿永远不会动 —— 直到下一次重载或下一次建行程才拿到数。也就是说，一个真人从头走到尾，第十五分钟会被请出去，屏上写的是「登录已结束」。这一笔把那个数从门里递出去。
+
+| 项 | 现读 |
+| --- | --- |
+| 权威线 | `refs/heads/mirror/integration-frontend-apple-pass1` = a592c32c79c01322dfbee7ea89d03194f8a296ac（`git cat-file -t` 回 commit；落地由同一道门完成，无 force-push、未用 --allow-ungated）`_issue33_q1b_readings_0813.txt:5` |
+| 落地回执 | 已发布并逐字节回读相等：blob `e763bcb6073d0e59967642a95825dabcd749f84a` |
+| 门里改了什么 | `POST /api/v1/travelers` 现在同时给 `access_token` 与 `expires_at`，两个数出自同一次签发：答复里那一格就是令牌 payload 里的 `exp`，不是"大约十五分钟" `backend/app/main.py:2597` |
+| 契约 | 201 不再指向光秃秃的 `Traveler`，改指新写的 `TravelerSessionAnswer` `contracts/openapi.yaml:167`；形状本身 `contracts/openapi.yaml:3071`。**顺手记一笔旧账**：`access_token`/`session_state` 是上一棒加进答复、没写进契约的，这一笔一并补齐 |
+| 边界 | 不能签的那一档，两个字段一起是 null（一个有一个没有，屏上就会一半真一半猜）；`GET /travelers/{traveler_id}` **不长**这两个字段 —— 凭据是一段会话的事，不是一个人的属性，否则任何缓存这份答复的地方都拿到一枚能用的凭证 `backend/tests/test_ord0687q1b_create_carries_expiry_r1.py:74` |
+| 测试 | 新那一支四臂（窗口与令牌同值、null 成对、读人的门干净、契约描述与答复一致）`backend/tests/test_ord0687q1b_create_carries_expiry_r1.py:50`；连同会话/身份那四枚文件一起跑 31 passed 零失败 `_issue33_q1b_readings_0813.txt:2` |
+| 手机那一格 | 比的是**服务器说的那一格**与**标签页存下的那一格**逐字相等 `frontend/e2e/qoder31-signed-session.spec.ts:172`；整套 12 passed `_issue33_q1b_readings_0813.txt:3`。短窗口那一臂（TTL=60）另跑：通过，窗口从 1792282285 滑到 1792282287 —— 滑过去的是已过的那两秒，不是重新给满一分钟的假象 `_issue33_q1b_readings_0813.txt:4` |
+
+**这一笔没做的事**：投影里那条把事件类型当摘要的派生规则仍在（屏那一侧已挡住）；演示台那颗浮球压面板、`shell.dismiss` 在三百九十宽折两行，两处都点名留给各自车道；我新写的无引用键尺认不出动态查表，**没据它删过任何键**。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### Qoder｜Issue #33 这一轮：轨道不替服务器造句、屏上不再自我辩护、药丸给面板让位（三笔已落地）
 
 主人这条令是"把前端 UI 改简洁，删掉不必要的车轱辘、防御性和不必要的声明"，加上 #33 里 Q1 那一棒。这一轮三笔都进了 `refs/heads/mirror/integration-frontend-apple-pass1`，逐笔过同一道落地门（`ff=True`、`behind=0`、`intersection=0`、`problems=[]`、http 200、`both_routes_agree=true`），无 force-push、无 --allow-ungated。
