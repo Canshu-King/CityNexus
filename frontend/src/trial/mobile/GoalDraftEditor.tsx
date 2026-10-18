@@ -68,7 +68,7 @@ export function GoalDraftEditor({ artifact, disabled, onSave }: {
       await onSave(prepared);
       setDraft(prepared);
       setDirty(false);
-      setMessage("已保存到这趟旅行的草案，刷新页面也可以找回。");
+      setMessage("草案已保存到这趟旅行，刷新页面也可以找回。");
     } catch (error) {
       const reason = error instanceof Error ? error.message : "";
       setSaveFailed(true);
