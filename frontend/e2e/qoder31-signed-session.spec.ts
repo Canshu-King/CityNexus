@@ -856,6 +856,57 @@ test.describe("Issue #31 A/B：真签发的旅行者会话，与不再被住宿�
     ).toBe(true);
   });
 
+  test("reform 第二棒：登着的时候生成恢复凭证，清掉会话之后凭它回到这趟行程", async ({ page }) => {
+    await seedPhone(page);
+    await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
+    const journeyId = await createAndAwaitJourney(page);
+
+    /* 一、签名态：我的那一屏能生成一张只显示一次的恢复凭证。 */
+    await page.goto("/v8", { waitUntil: "load" });
+    await page.getByRole("button", { name: "我的" }).last().click();
+    await expect(page.getByTestId("me-recovery"), "我的那一屏没有恢复凭证这一格").toBeVisible({
+      timeout: 20_000,
+    });
+    await page.getByTestId("me-recovery-create").click();
+    const credentialId = (await page.getByTestId("me-recovery-id").innerText()).trim();
+    const secret = (await page.getByTestId("me-recovery-secret").innerText()).trim();
+    expect(credentialId.length, "凭证编号没上屏").toBeGreaterThan(7);
+    expect(secret.length, "凭证密钥没上屏").toBeGreaterThan(20);
+    await page.screenshot({ path: `${DOC_EVIDENCE}/12-recovery-once.png` });
+
+    /* 二、另一台：把这一页的会话整个清掉，本机指针还在——这就是"关掉标签页"的形状。 */
+    await page.evaluate(() => sessionStorage.clear());
+    await page.goto("/v8", { waitUntil: "load" });
+    await expect(page.getByTestId("me-recovery"), "无会话的落地上没有回来的入口").toBeVisible({
+      timeout: 20_000,
+    });
+    await expect(page.getByTestId("me-recovery-needs-signin")).toBeVisible();
+
+    /* 三、本人凭密钥回来：新会话落地之后，名下列表能打开原来那趟。 */
+    await page.getByTestId("me-recovery-redeem").click();
+    await page.getByTestId("me-recovery-id-input").fill(credentialId);
+    await page.getByTestId("me-recovery-secret-input").fill(secret);
+    await page.getByTestId("me-recovery-submit").click();
+    /* 续上之后这一页会自己重开：指针还在就直接落到今天；指针被那次 401 擦掉的话，名下列表
+       会列出那趟，点开即可。两条都算走通——量的是终点，不是路径。 */
+    await page.waitForFunction(
+      () =>
+        Boolean(
+          document.querySelector('[data-testid="today-hero"]') ??
+            document.querySelector('[data-testid="my-trips-list"]'),
+        ),
+      undefined,
+      { timeout: 30_000 },
+    );
+    if (await page.getByTestId("my-trips-list").isVisible().catch(() => false)) {
+      await page.getByTestId("my-trips-open").first().click();
+    }
+    await expect(page.getByTestId("today-hero"), "回来之后没有落到今天").toBeVisible({
+      timeout: 30_000,
+    });
+    expect(await readBack(page, "citynexus.v8.journey_id", "local")).toBe(journeyId);
+  });
+
   test("Issue #33 第十九笔：行程页「中止这趟行程」那颗按钮，按下去按到的是它自己", async ({ page }) => {
     await seedPhone(page);
     await walkTheWizard(page, "Tianjin", "Tianjin West Station", "Tianjin Binhai Airport");
