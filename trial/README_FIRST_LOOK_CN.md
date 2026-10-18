@@ -6,7 +6,9 @@
 
 首次启动会在本机终端询问 Nominatim 联系邮箱；输入内容会随地名请求发送给该服务。页面每次公开地图查询前都会显示服务名称和发送内容，点击按钮后才发送。
 
-本教程记录了真实 Chrome 390×844 视口中的合肥查询、两站 Pocket Walk、GO 和刷新恢复。当前环境显示 AI 暂未开启，正式行程助手没有启动。[中文验收记录](results/20261018_ISSUE33_HEFEI_REAL_WALK_RESULT.md)与[图文教程](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)基于产品 SHA `1dbaa828872543112c9db2457f2c3ab6b54a6058`。
+最新路线复核见[2026-10-18 C1 记录](results/20261018_ISSUE33_C1_FINAL_SHA_RECHECK.md)：真实流程在产品提交 `f8f7e9d55d8547d24124dcc3f34520e438204c3a` 上完成；随后修复 AI 关闭时仍出现“问 AI”的问题，并单独通过手机界面用例与 TypeScript 检查。两段证据分别记录。
+
+本教程及[中文图文步骤](REVOLUTION_USER_ILLUSTRATED_GUIDE_CN.md)中的既有标注图来自更早的产品提交 `1dbaa828872543112c9db2457f2c3ab6b54a6058`；本次 `f8f7e9d` 的浏览器原图见上述复核记录。当前环境显示 AI 暂未开启，正式行程助手没有启动。
 
 离线看示例界面时，可运行 `py -3.13 trial\try_revolution.py --sample`。AI 默认关闭；只有主动使用 `--agent` 才读取本机 wb2api 配置，接入说明见[本机 WB2API 说明](REVOLUTION_AGENT_WB2API_CONNECT.md)。
 

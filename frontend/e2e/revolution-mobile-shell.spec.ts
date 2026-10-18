@@ -104,6 +104,20 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(fits).toBeTruthy();
   });
 
+  test("hides the AI shortcut when the server has AI disabled", async ({ page }) => {
+    await signedMockJourney(page);
+    await page.route("**/api/v1/agent/runtime-status", (route) => fulfill(route, {
+      runtime_identity: "UNAVAILABLE",
+      hermes_compat_configured: false,
+      ai_state: "DISABLED_BY_OPS",
+    }));
+    await page.goto("/revolution");
+    await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+    await expect(page.getByTestId("rev-quick-ask-ai-shortcut")).toHaveCount(0);
+    await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("AI 建议暂不可用 · 可手动选地点");
+    await expect(page.getByTestId("rev-quick-consult-ai")).toBeDisabled();
+  });
+
   test("does not call AI disabled while the local runtime check is still loading", async ({ page }) => {
     await signedMockJourney(page);
     let releaseRuntime!: () => void;

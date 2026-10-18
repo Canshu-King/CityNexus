@@ -823,7 +823,7 @@ export function RevolutionQuickExplore({
           {stage === "results" && !isPartialLiveResult && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
         </p>
-        {stage === "area" && (
+        {stage === "area" && agentConfigured && (
           <button
             type="button"
             className="rev-quick-text-btn"

@@ -4,6 +4,8 @@
 
 本教程来自 PR #23 产品提交 `1dbaa828872543112c9db2457f2c3ab6b54a6058`，由 Chrome-use headed Chrome 在 390×844 手机视口实测。每张标注图保留一份未标注 390×844 原图；标注版下方的编号对应按钮原文。
 
+最新路线复核见[2026-10-18 C1 记录](results/20261018_ISSUE33_C1_FINAL_SHA_RECHECK.md)，其原图单独标注为 `f8f7e9d`，不与本教程的旧版标注截图混用。
+
 ## 1. 输入目的地并开始探索
 
 ![输入合肥市并开始探索](results/assets/illustrated-revolution-first-trip/annotated/01-home.png)
