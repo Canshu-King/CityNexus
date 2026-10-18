@@ -347,7 +347,7 @@ def test_research_budget_can_be_extended_without_starting_a_provider(goal_scope)
             {"query": "TEST_FIXTURE", "source": "invented-provider"}, {})
     assert unsupported.value.status_code == 422
     with pytest.raises(HTTPException) as over_limit:
-        _create(session, journey, member, max_model_turns=65)
+        _create(session, journey, member, max_model_turns=257)
     assert over_limit.value.status_code == 422
 
 
