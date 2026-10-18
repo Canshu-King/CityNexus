@@ -55,6 +55,7 @@ type ExplorePhase =
   | "检查地图服务"
   | "搜索附近真实地点"
   | "选择正式路线地点"
+  | "查询地点详情"
   | "保存私人散步"
   | "更新散步进度"
   | "读取服务端路线";
@@ -689,6 +690,22 @@ export function RevolutionQuickExplore({
     setSecond(id);
   };
 
+  const refreshPlaceFacts = (candidateId: string) => {
+    const receiptId = discovery?.receipt_id;
+    if (!receiptId) return;
+    void run("查询地点详情", async (stillCurrent) => {
+      const result = await cityNexusApi.refreshBootstrapPlaceFacts(journeyId, receiptId, candidateId);
+      if (!stillCurrent()) return;
+      if (result.journey_id !== journeyId || result.candidate.candidate_id !== candidateId) {
+        throw new Error("地点详情与当前选择不一致");
+      }
+      setDiscovery((current) => current?.receipt_id === receiptId ? {
+        ...current,
+        candidates: current.candidates.map((place) => place.candidate_id === candidateId ? result.candidate : place),
+      } : current);
+    }, { label: "回到地点列表", action: () => enter("results") });
+  };
+
   const chooseFormalJourney = (candidateId: string) => {
     if (!discovery?.receipt_id || !onFormalCandidateSelected) return;
     const selected = discovery.candidates.find((item) => item.candidate_id === candidateId);
@@ -1001,6 +1018,7 @@ export function RevolutionQuickExplore({
                       canStartJourney={Boolean(onFormalCandidateSelected)}
                       onChoose={choose}
                       onStartJourney={chooseFormalJourney}
+                      onRefreshFacts={refreshPlaceFacts}
                     />
                   );
                 })}

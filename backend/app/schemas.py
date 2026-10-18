@@ -327,6 +327,10 @@ class BootstrapSelectRequest(BaseModel):
     candidate_id: UUID
 
 
+class BootstrapPlaceFactsRequest(BootstrapSelectRequest):
+    provider_consent: bool = False
+
+
 class BootstrapMapPreviewRequest(BaseModel):
     """Release one selected public destination to an external map."""
 

@@ -114,12 +114,14 @@ function safeOsmSource(value: string | null): string | null {
 
 function selectionReadinessMessage(candidate: BootstrapDiscoveryCandidate, hasSource: boolean): string | null {
   if (candidate.selection_state === "READY_FOR_NATIVE_PLAN") return null;
+  if (candidate.public_access_state === "RESTRICTED") return "来源标记为限制访问，请换个地点。";
 
   const labels: Record<string, string> = {
     OPENING_UNVERIFIED: "营业时间",
     COST_UNKNOWN: "费用",
     COST_UNVERIFIED: "费用",
     ACCESS_UNVERIFIED: "开放状态",
+    ACCESS_RESTRICTED: "开放权限",
   };
   const missing = [...new Set((candidate.selection_blockers ?? []).map((item) => labels[item]).filter(Boolean))];
   const facts = missing.length > 0 ? `${missing.join("、")}信息` : "地点资料";
@@ -134,6 +136,7 @@ export function DiscoveryPlaceCard({
   canStartJourney,
   onChoose,
   onStartJourney,
+  onRefreshFacts,
 }: {
   candidate: BootstrapDiscoveryCandidate;
   chosenAs: "第一站" | "第二站" | null;
@@ -141,6 +144,7 @@ export function DiscoveryPlaceCard({
   canStartJourney: boolean;
   onChoose: (candidateId: string) => void;
   onStartJourney: (candidateId: string) => void;
+  onRefreshFacts?: (candidateId: string) => void;
 }) {
   const source = safeOsmSource(candidate.source_url);
   const provenance = candidate.provider_provenance === "TEST_PROVIDER"
@@ -164,6 +168,7 @@ export function DiscoveryPlaceCard({
         type="button"
         className="rev-quick-place-select"
         aria-pressed={Boolean(chosenAs)}
+        disabled={busy || candidate.public_access_state === "RESTRICTED"}
         onClick={() => onChoose(candidate.candidate_id)}
         data-testid={`rev-quick-select-${candidate.candidate_id}`}
       >
@@ -190,6 +195,23 @@ export function DiscoveryPlaceCard({
         <a href={source} rel="noopener noreferrer" target="_blank" className="rev-quick-place-source">
           查看 OpenStreetMap 来源 ↗
         </a>
+      )}
+      {source && onRefreshFacts && candidate.provider_provenance === "LIVE_PROVIDER" && (
+        candidate.facts_status ? (
+          <p className="rev-quick-place-blocker" role="status">
+            {candidate.facts_status === "SUCCESS" ? "已读取地点详情，以上为来源提供的资料。" : "地点详情暂未响应，可查看来源或继续挑选地点。"}
+          </p>
+        ) : (
+          <details className="rev-quick-place-blocker">
+            <summary>补齐营业和费用资料</summary>
+            <p>向 OpenStreetMap 查询这处地点的营业时间和费用。</p>
+            <button type="button" className="rev-quick-text-btn" disabled={busy}
+              onClick={() => onRefreshFacts(candidate.candidate_id)}
+              data-testid={`rev-quick-facts-${candidate.candidate_id}`}>
+              {busy ? "查询中…" : "查询地点详情"}
+            </button>
+          </details>
+        )
       )}
       {(candidate.provider_key === "overpass" || candidate.provider_key === "photon") && (
         <a

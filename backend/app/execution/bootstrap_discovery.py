@@ -750,6 +750,8 @@ def _candidate_payload(
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
     cost = observation["cost_evidence"]
     cost_status = str(cost.get("status") or "UNKNOWN").upper()
+    facts = (viewer_scope or {}).get("osm_facts")
+    facts = facts if isinstance(facts, dict) else {}
     selection_blockers: list[str] = []
     if opening_status not in _BOOTSTRAP_GROUNDED_OPENING:
         selection_blockers.append("OPENING_UNVERIFIED")
@@ -759,6 +761,8 @@ def _candidate_payload(
         )
     if observation["public_access_state"] == "INDOOR_ACCESS_UNVERIFIED":
         selection_blockers.append("ACCESS_UNVERIFIED")
+    if observation["public_access_state"] == "RESTRICTED":
+        selection_blockers.append("ACCESS_RESTRICTED")
     selection_ready = not selection_blockers
     if selection_blockers == ["OPENING_UNVERIFIED"]:
         selection_action = "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
@@ -813,10 +817,11 @@ def _candidate_payload(
         "tags": json.loads(row.tags_json or "[]"),
         "opening_hours": opening,
         "opening_observed_at": observation["captured_at"],
+        "facts_status": facts.get("status"),
         "opening_source": (
-            "OpenStreetMap via Photon"
-            if row.provider_key == "photon"
-            else "OpenStreetMap/Overpass"
+            "OpenStreetMap element API"
+            if facts.get("status") == "SUCCESS"
+            else "OpenStreetMap via Photon" if row.provider_key == "photon" else "OpenStreetMap/Overpass"
         ),
         "opening_claim": (
             "OSM_TAG_CLAIM"
@@ -1110,6 +1115,7 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         "cost_evidence": raw.get("cost_evidence"),
                         "osm_tags": raw.get("osm_tags"),
                         "public_access_state": raw.get("public_access_state"),
+                        "osm_facts": raw.get("osm_facts"),
                         "source_url": raw.get("source_url"),
                         "source_attribution": raw.get("source_attribution"),
                         "source_attribution_url": raw.get("source_attribution_url"),

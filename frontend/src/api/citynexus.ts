@@ -1692,6 +1692,7 @@ export interface BootstrapDiscoveryCandidate {
   selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
   selection_action: string | null;
   selection_blockers?: string[];
+  facts_status?: "SUCCESS" | "UNAVAILABLE" | null;
   availability_confidence: "UNVERIFIED";
   price_state: "UNKNOWN" | "FREE" | "KNOWN" | "VERIFIED_PROVIDER" | "OFFICIAL_WEB_VERIFIED";
   eta_state: "UNKNOWN";
@@ -3228,6 +3229,21 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify(input),
+      },
+    );
+  },
+
+  refreshBootstrapPlaceFacts(
+    journeyId: string,
+    receiptId: string,
+    candidateId: string,
+  ): Promise<{ journey_id: string; candidate: BootstrapDiscoveryCandidate; cached: boolean }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/bootstrap-discovery/facts",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ receipt_id: receiptId, candidate_id: candidateId, provider_consent: true }),
       },
     );
   },

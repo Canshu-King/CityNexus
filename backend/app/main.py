@@ -281,6 +281,7 @@ from app.execution.bootstrap_discovery import (
     get_bootstrap_pocket_walk_go,
     transition_bootstrap_pocket_walk_go,
 )
+from app.execution.bootstrap_place_facts import refresh_bootstrap_place_facts
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
     progress_drift_projection,
@@ -494,6 +495,7 @@ from app.schemas import (
     EventCreate,
     GeneratePlansRequest,
     BootstrapDiscoveryRequest,
+    BootstrapPlaceFactsRequest,
     BootstrapCitySearchRequest,
     BootstrapSelectRequest,
     BootstrapMapPreviewRequest,
@@ -4330,6 +4332,33 @@ def save_bootstrap_discovery_pocket_walk_route(
             first_candidate_id=payload.first_candidate_id,
             second_candidate_id=payload.second_candidate_id,
             max_walk_minutes=payload.max_walk_minutes,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/facts")
+def refresh_bootstrap_journey_place_facts(
+    journey_id: UUID,
+    payload: BootstrapPlaceFactsRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Vary"] = "Authorization"
+    try:
+        result = refresh_bootstrap_place_facts(
+            session, journey, member=member, traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id, candidate_id=payload.candidate_id,
+            provider_consent=payload.provider_consent,
         )
         session.commit()
         return result

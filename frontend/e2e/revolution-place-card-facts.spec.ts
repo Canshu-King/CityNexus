@@ -54,6 +54,7 @@ function candidate(
 }
 
 test("place cards show grounded hours and costs while preserving provenance and OSM links", async ({ page }) => {
+  let detailRequests = 0;
   await page.addInitScript((id) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "signed-only-fixture-token");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
@@ -113,8 +114,22 @@ test("place cards show grounded hours and costs while preserving provenance and 
         }),
         distance_m: null,
       },
+      candidate("live-needs-details", "126", "LIVE_PROVIDER"),
     ],
   }));
+  await page.route(`${root}/bootstrap-discovery/facts`, (route) => {
+    detailRequests += 1;
+    expect(route.request().headers().authorization).toBe("Bearer signed-only-fixture-token");
+    expect(route.request().postDataJSON()).toEqual({
+      receipt_id: "receipt-place-facts", candidate_id: "live-needs-details", provider_consent: true,
+    });
+    return json(route, { journey_id: journey, cached: false, candidate: {
+      ...candidate("live-needs-details", "126", "LIVE_PROVIDER", {
+        openingHours: { status: "NORMALIZED_VALID", open: "00:00", close: "24:00" },
+        costEvidence: { status: "KNOWN", amount_minor: 0, evidence_basis: "OSM_FEE_NO" },
+      }), facts_status: "SUCCESS", opening_source: "OpenStreetMap element API",
+    } });
+  });
 
   await page.goto("/revolution");
   await page.getByTestId("rev-quick-find-city").click();
@@ -124,7 +139,7 @@ test("place cards show grounded hours and costs while preserving provenance and 
   await page.getByTestId("rev-quick-find-places").click();
 
   const cards = page.getByTestId("rev-quick-place-card");
-  await expect(cards).toHaveCount(3);
+  await expect(cards).toHaveCount(4);
   await expect(cards.nth(0)).toContainText("营业时间：周一至周五 09:00–18:00 · 免费");
   await expect(cards.nth(0)).toContainText("公开地图来源");
   await expect(cards.nth(1)).toContainText("营业时间未知 · 费用：¥12.00");
@@ -145,4 +160,15 @@ test("place cards show grounded hours and costs while preserving provenance and 
     await expect(cards.nth(index)).not.toContainText("fee=no");
     await expect(cards.nth(index)).not.toContainText("opening_hours");
   }
+  const incomplete = cards.nth(3);
+  await expect(incomplete.getByTestId("rev-quick-formal-live-needs-details")).toHaveCount(0);
+  expect(detailRequests).toBe(0);
+  await incomplete.getByText("补齐营业和费用资料", { exact: true }).click();
+  await expect(incomplete).toContainText("向 OpenStreetMap 查询这处地点的营业时间和费用。");
+  expect(detailRequests).toBe(0);
+  await incomplete.getByTestId("rev-quick-facts-live-needs-details").click();
+  await expect(incomplete).toContainText("营业时间：全天 · 免费");
+  await expect(incomplete.getByTestId("rev-quick-formal-live-needs-details")).toBeVisible();
+  await expect(incomplete.getByTestId("rev-quick-facts-live-needs-details")).toHaveCount(0);
+  expect(detailRequests).toBe(1);
 });
