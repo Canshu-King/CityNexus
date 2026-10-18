@@ -1,0 +1,25 @@
+.rev-mobile-v1 .rev-mobile-bottom-nav.rev-workspace-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.rev-mobile-v1 .rev-workspace-nav .rev-mobile-nav-button { min-width: 0; width: auto; min-height: 52px; }
+.rev-workspace-nav .rev-mobile-nav-label { white-space: nowrap; font-size: 11px; }
+.rev-workspace-dialog { box-sizing: border-box; width: min(960px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid #cadbd2; border-radius: 20px; background: #fffdf8; color: #183c30; overflow: auto; }
+.rev-workspace-dialog::backdrop { background: #122d2580; }
+.rev-workspace-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: #fffdf8; border-bottom: 1px solid #dce5dc; }
+.rev-workspace-top h2 { font-size: 22px; margin: 0; }
+.rev-workspace-body { padding: 16px 20px 28px; line-height: 1.65; overflow-wrap: anywhere; }
+.rev-workspace-dialog button { min-height: 44px; border: 0; border-radius: 12px; padding: 10px 16px; background: #245f48; color: white; font: inherit; cursor: pointer; }
+.rev-workspace-dialog button:disabled { opacity: .55; cursor: default; }
+.rev-workspace-dialog .rev-workspace-secondary { background: #eaf2ed; color: #245f48; }
+.rev-workspace-top button { min-width: 44px; font-size: 24px; background: transparent; color: #183c30; }
+.rev-workspace-dialog form { display: grid; gap: 10px; }
+.rev-workspace-dialog textarea { box-sizing: border-box; width: 100%; min-height: 110px; resize: vertical; font: inherit; padding: 12px; border: 1px solid #a6beb0; border-radius: 12px; background: white; color: #183c30; }
+.rev-workspace-dialog :is(button, textarea):focus-visible { outline: 3px solid #b36b24; outline-offset: 2px; }
+.rev-workspace-caption { font-size: 13px; color: #53695e; }
+.rev-workspace-answer { padding: 16px; margin-top: 16px; border: 1px solid #b8d8c6; border-radius: 14px; background: #eef8f0; }
+.rev-workspace-answer h3 { margin-top: 0; }
+.rev-workspace-map { height: clamp(260px, 48dvh, 560px); width: 100%; border-radius: 14px; overflow: hidden; }
+.rev-workspace-map-consent { padding: 18px; border-radius: 14px; background: #edf3ef; }
+.rev-workspace-dialog .rev-workspace-map-pin { min-width: 44px; min-height: 44px; border: 2px solid white; border-radius: 50%; padding: 8px; box-shadow: 0 2px 8px #0003; }
+.rev-workspace-place-list { padding-left: 24px; }
+.rev-workspace-place-list li { padding: 9px 0; }
+.rev-workspace-place-list small { display: block; }
+@media (max-width: 560px) { .rev-workspace-dialog { width: calc(100vw - 12px); max-height: calc(100dvh - 12px); border-radius: 16px; } .rev-workspace-body { padding: 12px 14px 24px; } }
