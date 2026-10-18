@@ -28,6 +28,8 @@ const TOOL_NAME: Record<string, string> = {
   inspect_journey: "读取行程", search_city_services: "搜索城市地点",
   research_place_sources: "查找地点资料",
   discover_places: "查找公开地点", save_draft_itinerary: "整理旅行草案",
+  acquire_place_facts: "核实地点资料", estimate_place_facts: "估算备选安排",
+  generate_plans: "生成候选方案", compare_routes: "比较已有路线",
 };
 const TASK_POINTER = "citynexus.revolution.goal-task";
 const MODEL_TURNS = 4;
@@ -62,6 +64,10 @@ function taskStepText(result: Record<string, unknown>): string {
   if (result.status === "NO_RESULTS" || result.reason_code === "NO_RESULTS") return "暂未找到匹配地点";
   if (result.status === "PROVIDER_UNAVAILABLE" || result.reason_code === "PHOTON_UNAVAILABLE") return "地点服务暂时不可用，已有成果已保留";
   if (typeof result.draft_revision === "number") return "旅行草案已保存";
+  if (typeof result.candidate_count === "number") return `${result.candidate_count} 份候选方案`;
+  if (result.status === "NO_STORED_ROUTE_FACTS") return "这两站还没有路线资料";
+  if (typeof result.option_count === "number") return `${result.option_count} 条已有路线`;
+  if (result.status === "ESTIMATED_AGENT") return "已保存备选估算";
   if (typeof result.place_count === "number") return `${result.place_count} 处地点`;
   if (Array.isArray(result.observation_ids)) return `${result.observation_ids.length} 条来源记录`;
   return result.status === "COMPLETED" ? "完成" : "这一步暂未完成";

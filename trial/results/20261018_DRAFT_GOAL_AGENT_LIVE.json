@@ -1,0 +1,187 @@
+{
+  "product_sha_first_run": "e0dd2eb8f01b0f38674846233599a99395ca6ed5",
+  "product_sha_resume": "81b5d1801eb0368196002711fcc2f4cab7a4959b",
+  "same_sha_url": "http://127.0.0.1:14332/revolution",
+  "task_status": "PARTIAL_READY",
+  "usage": {
+    "model_turns": 6,
+    "tool_calls": 6
+  },
+  "budget": {
+    "max_model_turns": 6,
+    "max_tool_calls": 12
+  },
+  "runs": [
+    {
+      "id": "be5efbaf-4bd7-44ea-8d5b-957cebb76dfe",
+      "status": "PARTIAL",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "created_at": "2026-10-18T11:57:57.649960+00:00",
+      "completed_at": "2026-10-18T11:58:11.374439+00:00"
+    },
+    {
+      "id": "d3360afe-1d67-4ca1-b7a0-850869007bf3",
+      "status": "COMPLETED",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "created_at": "2026-10-18T12:03:42.506665+00:00",
+      "completed_at": "2026-10-18T12:03:52.354929+00:00"
+    }
+  ],
+  "tool_steps": [
+    {
+      "run_id": "be5efbaf-4bd7-44ea-8d5b-957cebb76dfe",
+      "tool": "inspect_journey",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 14,
+        "observation_ids": [],
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "run_id": "be5efbaf-4bd7-44ea-8d5b-957cebb76dfe",
+      "tool": "discover_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 1871,
+        "http_status": 200,
+        "place_count": 0,
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索建宁县古村落地点",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      }
+    },
+    {
+      "run_id": "be5efbaf-4bd7-44ea-8d5b-957cebb76dfe",
+      "tool": "discover_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 1627,
+        "http_status": 200,
+        "place_count": 0,
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索建宁博物馆类地点",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      }
+    },
+    {
+      "run_id": "be5efbaf-4bd7-44ea-8d5b-957cebb76dfe",
+      "tool": "discover_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 1565,
+        "http_status": 200,
+        "place_count": 0,
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索建宁县城区地标",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      }
+    },
+    {
+      "run_id": "d3360afe-1d67-4ca1-b7a0-850869007bf3",
+      "tool": "inspect_journey",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 12,
+        "observation_ids": [],
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "run_id": "d3360afe-1d67-4ca1-b7a0-850869007bf3",
+      "tool": "save_draft_itinerary",
+      "status": "COMPLETED",
+      "result": {
+        "draft_revision": 1,
+        "elapsed_ms": 2,
+        "status": "COMPLETED"
+      }
+    }
+  ],
+  "zero_result_strategy": [
+    "建宁县 古村落",
+    "建宁 博物馆",
+    "建宁县 濉溪"
+  ],
+  "draft_artifact": {
+    "days": [
+      {
+        "date": "2026-10-19",
+        "slots": [
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "行程从中午之后开始，建议选县城中心一带住宿，方便步行少、打车距离短。预算约1000元/2天，住宿建议控制在400元以内。具体酒店、房价与是否有房均未核实，属待办。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "午后抵达县城，先休息再就近出门",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "研究待办：核实建宁县城小吃集中路段（如濉溪沿岸老城一带）的营业时段与摊位情况。本次真实地点搜索未返回可用结果，故不指定具体商户。以步行距离短、可随时坐下休息为原则，人均预算约60-100元，价格未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "县城小吃街/夜市逛吃（待确认具体街区）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-20",
+        "slots": [
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "研究待办：确认当地博物馆的准确名称、地址、开放日与闭馆时间、是否需预约及门票。因开放信息未知，需先电话或官方渠道核实后再定。室内参观、走动少，适合午后出行。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "建宁县博物馆方向（开放时间待核实）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "研究待办：从建宁周边古村落中挑一处车程较短、路面平缓、可少走路的村落，核实门票、开放时间与返程交通方式。搜索未获得可用地点结果，暂不指定村名。建议包车或打车往返，费用预估100-200元，未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "古村落半日游（选一处交通便利的村落）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "USER",
+            "cost_status": "UNKNOWN",
+            "notes": "按21:00行程结束安排，晚餐选住处附近，避免长距离移动。预算约60-100元，具体餐厅与营业时间未核实。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "返程前在县城用晚餐",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 2,
+    "status": "DRAFT"
+  },
+  "research_place_count": 0,
+  "refresh_restored_edited_title": true,
+  "evidence": "real signed Chrome-use UI, real wb2api completions, real Photon HTTP; no fixture",
+  "blockers": [
+    "No positive POI from three Photon queries",
+    "Screenshot CDP relay timeout; no screenshot file",
+    "No formal PlanVersion or ACTIVE activation; goal remains DRAFT"
+  ],
+  "map_panel_opened": true,
+  "map_tiles_verified": false
+}

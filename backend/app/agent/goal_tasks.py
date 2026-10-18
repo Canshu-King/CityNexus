@@ -1,10 +1,10 @@
 """Bounded DRAFT Journey goal tasks backed by the existing Hermes/Gateway tools.
 
 This is deliberately a service layer: signed routes resolve the traveler and
-JourneyMember, then pass those verified rows here.  A goal task never opens a
-RecoveryEpoch, creates a PlanVersion, changes Journey status, or activates a
-plan.  The only online tools are the existing read/search surfaces, gated by
-task-scoped consent.
+JourneyMember, then pass those verified rows here. A goal task never opens a
+RecoveryEpoch, changes Journey status, or activates a plan.
+Candidate generation stays separate from selection and activation;
+online research is gated by task-scoped consent.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
 from app.agent.goal_artifacts import empty_draft, normalize_draft, discover_goal_places, goal_tool_definitions
+from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
@@ -47,7 +48,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "save_draft_itinerary"}
+    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "save_draft_itinerary"} | DOMAIN_TOOLS
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -531,7 +532,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
-        extra_tool_definitions=goal_tool_definitions(),
+        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition()),
     )
 
 
@@ -612,11 +613,15 @@ def _initial_messages(
         "Journey facts to research useful candidate Places. After every tool result, inspect the "
         "actual result and choose the next tool yourself; do not follow a fixed tool sequence. "
         "Only use the available tools. This is GOAL_PLANNING, not recovery: do not create or infer "
-        "an incident, do not generate or activate a PlanVersion, and do not book, pay, cancel, or "
+        "an incident, do not select or activate a PlanVersion, and do not book, pay, cancel, or "
         "change Journey state. Keep missing opening hours, prices, and availability UNKNOWN. Treat "
         "source research as non-authoritative unless the server says otherwise. Return a short "
         "Chinese user-facing summary without hidden reasoning, secrets, or tool transcripts. "
         "search_city_services reads the existing catalogue only; discover_places runs one actual Photon query. "
+        "For canonical Place IDs returned in this task, reuse research_place_sources, acquire_place_facts, "
+        "estimate_place_facts and generate_plans. Estimates remain strategy hypotheses; generate_plans only creates "
+        "candidates. Source observations must come from this task, never invent a URL. compare_routes reads stored "
+        "facts only, never live routes. Photon research IDs are tentative source leads, not canonical Place IDs. "
         "Use public keywords without personal information. If an actual search returns no results, choose a different "
         "useful query yourself within the budget, or continue another part of the trip. Do not repeat the same query. "
         "Save useful partial research as an editable draft using save_draft_itinerary, even when every place search fails: "
@@ -646,6 +651,8 @@ def _initial_messages(
 def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+    if name in DOMAIN_TOOLS:
+        return domain_args(name, raw, task)
     if name == "discover_places":
         if set(raw) - {"query", "public_action"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -685,6 +692,8 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
 def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
     """Keep model-visible results grounded while omitting member-private fields and excerpts."""
 
+    if name in DOMAIN_TOOLS:
+        return domain_result(name, raw)
     if name in {"discover_places", "save_draft_itinerary"}:
         return raw
     if name == "inspect_journey":
@@ -776,6 +785,13 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "compare_routes":
+        return {"status": result.get("status"), "option_count": len(result.get("options") or []), "acquisition_attempted": False}
+    if name == "generate_plans":
+        return {"status": "COMPLETED", "candidate_count": result.get("candidate_count", 0),
+                "plan_ids": [plan["id"] for plan in result.get("plans", []) if plan.get("id")], "activation_attempted": False}
+    if name in {"acquire_place_facts", "estimate_place_facts"}:
+        return {"status": result.get("status", "COMPLETED"), "place_id": result.get("place_id") or (result.get("estimate") or {}).get("place_id")}
     if name == "discover_places":
         return {"status": result.get("status"), "reason_code": result.get("reason_code"),
                 "place_count": len(result.get("places") or []), "http_status": result.get("http_status"),
@@ -1278,7 +1294,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"discover_places", "save_draft_itinerary"}
+                    request = (None if tool_name in {"discover_places", "save_draft_itinerary", "compare_routes"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1288,7 +1304,9 @@ def resume_goal_task(
                                 status="WORKING", run_id=run.id, step_sequence_no=step_no, tool_name=tool_name)
                     session.commit()
                     try:
-                        if tool_name == "discover_places":
+                        if tool_name == "compare_routes":
+                            raw_result = compare_stored_routes(session, journey, **args)
+                        elif tool_name == "discover_places":
                             raw_result = discover_goal_places(session, journey, task, **args)
                             mission.intent_json = _json_dump(intent)
                             session.commit()

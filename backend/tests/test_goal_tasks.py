@@ -19,6 +19,93 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def test_domain_adapters_scope_and_model_tool_supply(goal_scope):
+    from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, route_tool_definition
+    from app.agent.runtime import citynexus_tool_definitions
+    names = {item["function"]["name"] for item in [*citynexus_tool_definitions(), route_tool_definition()]}
+    assert DOMAIN_TOOLS <= names
+    assert DOMAIN_TOOLS <= goal_tasks._ALLOWED_TOOLS
+    task = {"candidate_place_ids": ["a", "b"], "source_observation_ids": ["obs"]}
+    for name in ("estimate_place_facts", "acquire_place_facts"):
+        assert domain_args(name, {"place_id": "a"}, task) == {"place_id": "a"}
+        with pytest.raises(HTTPException) as rejected:
+            domain_args(name, {"place_id": "other-journey"}, task)
+        assert rejected.value.status_code == 403
+    assert domain_args("generate_plans", {"place_ids": ["a", "b"]}, task)["place_ids"] == ["a", "b"]
+    with pytest.raises(HTTPException):
+        domain_args("generate_plans", {"place_ids": ["a", "other-journey"]}, task)
+    with pytest.raises(HTTPException):
+        domain_args("acquire_place_facts", {"place_id": "a", "source_observation_id": "other"}, task)
+    with pytest.raises(HTTPException):
+        domain_args("acquire_place_facts", {"place_id": "a", "source_url": "https://invented.example"}, task)
+
+
+def test_qoder_stored_route_projection_is_journey_bound(goal_scope):
+    from app.agent.goal_adapters import compare_stored_routes
+    from app.db.models import MobilityFact
+    session, journey, _member = goal_scope
+    assert compare_stored_routes(session, journey, from_key="a", to_key="b")["status"] == "NO_STORED_ROUTE_FACTS"
+    session.add(MobilityFact(id=str(uuid4()), journey_id=journey.id, from_key="a", to_key="b",
+        mode="WALK", duration_min=20, distance_m=900, cost_amount_minor=None, currency=None,
+        cost_status="UNKNOWN", walking_min=20, transfers=0, weather_exposure="OUTDOOR",
+        reliability_score=0.8, provider_key="TEST_FIXTURE", provenance="TEST_PROVIDER", captured_at=_now()))
+    session.commit()
+    result = compare_stored_routes(session, journey, from_key="a", to_key="b")
+    assert result["status"] == "STORED_FACTS"
+    assert result["acquisition_attempted"] is False
+    assert result["options"][0]["cost_amount_minor"] is None
+    assert result["options"][0]["cost_status"] == "UNKNOWN"
+    assert compare_stored_routes(session, journey, from_key="b", to_key="a")["options"] == []
+
+
+def test_goal_plan_projection_omits_collective_member_fields():
+    result = goal_tasks._safe_tool_result("generate_plans", {"candidate_count": 1, "collective_mediation": {"members": ["PRIVATE"]},
+        "plans": [{"id": "candidate", "status": "CANDIDATE", "selectable": False,
+                   "unresolved_facts": ["OPENING_UNKNOWN"], "collective_member_fits": {"PRIVATE": "profile"}}]})
+    assert "PRIVATE" not in json.dumps(result)
+    assert result["activation_attempted"] is False
+    assert result["plans"][0]["unresolved_facts"] == ["OPENING_UNKNOWN"]
+
+
+def test_goal_runtime_dispatches_existing_domain_tools_without_activation(goal_scope, monkeypatch):
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, online_research_consent=True, max_model_turns=6, max_tool_calls=8)
+    mission = session.get(goal_tasks.JourneyMission, created["task_id"])
+    intent = json.loads(mission.intent_json)
+    intent["goal_task"]["candidate_place_ids"] = ["a", "b"]
+    mission.intent_json = json.dumps(intent)
+    session.commit()
+    calls = []
+    class Gateway:
+        def __init__(self, *_args, **_kwargs): pass
+        def dispatch(self, name, request):
+            assert str(request.journey_id) == journey.id
+            assert str(request.mission_id) == mission.id
+            calls.append(name)
+            return {"tool": name, "estimate": {"place_id": "a"}, "receipt": {"status": "TEST_FIXTURE"},
+                    "candidate_count": 0, "plans": []}
+    class Agent:
+        provider_key = model_key = "TEST_FIXTURE"
+        turn = 0
+        def _complete(self, _messages):
+            self.turn += 1
+            entries = [("acquire_place_facts", {"place_id": "a"}), ("estimate_place_facts", {"place_id": "a"}),
+                ("generate_plans", {"place_ids": ["a", "b"]}), ("compare_routes", {"from_key": "a", "to_key": "b"}),
+                ("save_draft_itinerary", {"days": [{"date": "2026-11-01", "slots": [{"title": "TEST_FIXTURE待查交通", "time_of_day": "afternoon"}]}]})]
+            if self.turn > len(entries): return {"content": "TEST_FIXTURE阶段成果"}
+            name, args = entries[self.turn - 1]
+            return {"tool_calls": [{"id": f"fixture-{self.turn}", "function": {"name": name, "arguments": json.dumps(args)}}]}
+    monkeypatch.setattr(goal_tasks, "AgentToolGateway", Gateway)
+    monkeypatch.setattr(goal_tasks, "_new_goal_agent", lambda *_: Agent())
+    result = goal_tasks.resume_goal_task(session, journey, member, created["task_id"])
+    assert calls == ["acquire_place_facts", "estimate_place_facts", "generate_plans"]
+    restored = goal_tasks.read_goal_task(session, journey, member, created["task_id"])
+    assert len(restored["tool_steps"]) == 5
+    assert restored["tool_steps"][3]["result"]["status"] == "NO_STORED_ROUTE_FACTS"
+    assert session.get(Journey, journey.id).status == "DRAFT"
+    assert session.get(Journey, journey.id).active_plan_version_id is None
+
+
 @pytest.fixture
 def goal_scope():
     engine = create_engine("sqlite://", future=True)
