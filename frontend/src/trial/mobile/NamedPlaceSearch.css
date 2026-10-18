@@ -12,6 +12,7 @@
 }
 
 .named-place-search__summary {
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -127,4 +128,12 @@
 .named-place-search__submit:disabled {
   opacity: 0.58;
   cursor: not-allowed;
+}
+
+/* A destination search must be visible without opening a hidden developer disclosure. */
+.named-place-search__help {
+  margin: 8px 2px 0;
+  color: #4d6755;
+  font-size: 13px;
+  line-height: 1.6;
 }
