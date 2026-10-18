@@ -221,6 +221,7 @@ test("TEST_FIXTURE map focuses draft references and separates regions from venue
       latest_run_id: null, candidate_place_ids: [], source_observation_ids: [], failure_code: null,
       research_places: [lead("museum", "TEST_FIXTURE 博物馆", "museum", "MATCHED"),
         lead("village", "TEST_FIXTURE 古村落", "district", "UNKNOWN"),
+        lead("address", "TEST_FIXTURE 旧地址定位", "house", "UNKNOWN"),
         lead("foreign", "TEST_FIXTURE 其他县同名结果", "museum", "CONFLICT")],
       draft_artifact: { revision: 1, status: "DRAFT", days: [{ date: "2026-10-19", slots: [
         { title: "TEST_FIXTURE 村落散步", time_of_day: "afternoon", notes: "", place_id: "village" }]}] },
@@ -232,7 +233,8 @@ test("TEST_FIXTURE map focuses draft references and separates regions from venue
   await expect(map).toContainText("TEST_FIXTURE 古村落");
   await expect(map).toContainText("地区／村落线索");
   await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
-  await map.getByRole("button", { name: "查看全部研究（3）" }).click();
+  await expect(page.locator("summary").filter({ hasText: "地区／村落线索（2）" })).toHaveCount(1);
+  await map.getByRole("button", { name: "查看全部研究（4）" }).click();
   await expect(map).toContainText("TEST_FIXTURE 博物馆");
   await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
   expect(writes).toEqual([]);

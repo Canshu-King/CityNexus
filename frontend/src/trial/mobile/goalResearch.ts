@@ -2,7 +2,7 @@ import type { DraftGoalTask, GoalResearchLead } from "../../api/citynexus";
 
 // Historical geocoder records kept location granularity in category. Keep their
 // data intact while distinguishing a district/village from a venue in the UI.
-const AREA = new Set(["administrative", "city", "town", "village", "county", "boundary", "district", "street", "locality", "suburb", "hamlet", "neighbourhood", "state", "province", "postcode"]);
+const AREA = new Set(["administrative", "city", "town", "village", "county", "boundary", "district", "street", "house", "address", "locality", "suburb", "hamlet", "neighbourhood", "state", "province", "postcode"]);
 
 export function splitGoalResearch(task: DraftGoalTask | null) {
   const areaIds = new Set((task?.research_areas ?? []).map((point) => point.id));
