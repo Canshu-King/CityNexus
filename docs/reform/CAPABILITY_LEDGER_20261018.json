@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "CAPABILITY_LEDGER",
-  "v8_commit": "bb95516c977926b021841e2bde98a9905278aec8",
+  "v8_commit": "a6e1a72d3327f9368b931d45ee7c9d9b8fdf8cc9",
   "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
   "runtime_verified": false,
   "rows": [
@@ -212,10 +212,16 @@
         "backend/app/route_session_operations.py"
       ],
       "revolution_missing": [],
-      "tools": [],
+      "tools": [
+        {
+          "tool": "compare_routes",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_compare_routes_adapter_r1.py"
+        }
+      ],
       "revolution_only_tools": [],
-      "status": "SOURCE_ONLY",
-      "note": "Route session operations live on Revolution only; V8 has no agent tool for routes."
+      "status": "READY_FOR_REHEARSAL",
+      "note": "Read half delivered (`compare_routes` over stored facts); acquisition needs the launch-origin chain and `route_session_operations.py`, both absent on V8."
     },
     {
       "domain": "traveler_preferences",
