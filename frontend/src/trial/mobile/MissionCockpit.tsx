@@ -52,6 +52,7 @@ const toolCopy: Record<string, string> = {
 };
 const eventCopy: Record<string, string> = {
   RUN_STARTED: "Agent 已开始工作",
+  USER_MESSAGE_ADDED: "已收到用户的新要求",
   MODEL_TURN_STARTED: "模型正在选择下一步",
   MODEL_TURN_COMPLETED: "模型完成一次处理",
   TOOL_STARTED: "开始调用工具",
