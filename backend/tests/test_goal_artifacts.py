@@ -72,6 +72,7 @@ def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, mon
         if str(request.url.path).endswith("/api/"):
             return httpx.Response(200, json={"features": []})
         if str(request.url.path).endswith("/search"):
+            assert request.headers["User-Agent"] == "CityNexus TEST_FIXTURE contact@example.invalid"
             return httpx.Response(200, json=[{
                 "lat": "26.5", "lon": "116.7", "osm_type": "way", "osm_id": 987,
                 "display_name": "TEST_FIXTURE 古城, 福建省, 中国", "type": "historic",
@@ -80,9 +81,10 @@ def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, mon
     real_client = httpx.Client
     monkeypatch.setattr(goal_artifacts.httpx, "Client",
         lambda **kwargs: real_client(transport=httpx.MockTransport(respond), **kwargs))
-    previous = (settings.real_city_enabled, settings.real_city_mode)
+    previous = (settings.real_city_enabled, settings.real_city_mode, settings.city_search_user_agent)
     object.__setattr__(settings, "real_city_enabled", True)
     object.__setattr__(settings, "real_city_mode", "live")
+    object.__setattr__(settings, "city_search_user_agent", "CityNexus TEST_FIXTURE contact@example.invalid")
     try:
         task = {}
         zero = goal_artifacts.discover_goal_places(
@@ -107,3 +109,4 @@ def test_public_search_can_switch_to_nominatim_after_photon_zero(goal_scope, mon
     finally:
         object.__setattr__(settings, "real_city_enabled", previous[0])
         object.__setattr__(settings, "real_city_mode", previous[1])
+        object.__setattr__(settings, "city_search_user_agent", previous[2])

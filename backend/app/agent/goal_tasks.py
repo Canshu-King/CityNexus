@@ -48,7 +48,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "save_draft_itinerary"} | DOMAIN_TOOLS
+    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -621,8 +621,8 @@ def _initial_messages(
         "Chinese user-facing summary without hidden reasoning, secrets, or tool transcripts. "
         "search_city_services reads the existing catalogue only; discover_places runs one model-selected public Photon or Nominatim query. "
         "For canonical Place IDs returned in this task, reuse research_place_sources, acquire_place_facts, "
-        "estimate_place_facts and generate_plans. Estimates remain strategy hypotheses; generate_plans only creates "
-        "candidates. Source observations must come from this task, never invent a URL. compare_routes reads stored "
+        "and estimate_place_facts. Estimates remain strategy hypotheses. Formal candidate generation belongs to "
+        "the separate plan workbench after research. Source observations must come from this task, never invent a URL. compare_routes reads stored "
         "facts only, never live routes. Public geocoder research IDs are tentative leads, not canonical Place IDs. "
         "Use public keywords without personal information. If a Photon search returns no results, you may choose "
         "a different keyword or the Nominatim source within the approved budget; distinguish a new source from "

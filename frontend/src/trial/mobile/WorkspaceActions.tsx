@@ -376,11 +376,11 @@ export function WorkspaceActions({ panel, goalRequest, onClose }: { panel: Works
           <p>{visibleTask.usage.model_turns ?? 0}/{visibleTask.budget.max_model_turns ?? MODEL_TURNS} 轮模型 · {visibleTask.usage.tool_calls ?? 0}/{visibleTask.budget.max_tool_calls ?? TOOL_CALLS} 次工具</p>
           {visibleTask.assistant_summary && <p>{visibleTask.assistant_summary}</p>}
           {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "本阶段的研究额度用完了。草案和调查记录都保留在服务器；点击「继续研究」可单独授权新的额度。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
-          <p className="rev-workspace-budget-help">本轮已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续研究会增加授权额度并可能产生模型/公开来源费用，不会自动无限重试。</p>
+          <p className="rev-workspace-budget-help">已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续前可查看本阶段额度。</p>
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open>
             <summary>Agent 真实工作过程 · 已记录 {visibleEvents.length} 条事件</summary>
-            <p>记录模型轮次、工具调用、失败与恢复情况。这里展示的是公开操作记录，不是模型内部私有推理。</p>
+            <p>按时间显示模型轮次、工具结果和恢复进度。</p>
             <ol aria-label="Agent 运行事件">
               {visibleEvents.slice(-24).map((event) => <li key={event.sequence}>
                 <span className="rev-workspace-event-sequence">#{event.sequence}</span>

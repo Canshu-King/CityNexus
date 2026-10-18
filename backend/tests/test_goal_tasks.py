@@ -24,7 +24,8 @@ def test_domain_adapters_scope_and_model_tool_supply(goal_scope):
     from app.agent.runtime import citynexus_tool_definitions
     names = {item["function"]["name"] for item in [*citynexus_tool_definitions(), route_tool_definition()]}
     assert DOMAIN_TOOLS <= names
-    assert DOMAIN_TOOLS <= goal_tasks._ALLOWED_TOOLS
+    assert (DOMAIN_TOOLS - {"generate_plans"}) <= goal_tasks._ALLOWED_TOOLS
+    assert "generate_plans" not in goal_tasks._ALLOWED_TOOLS
     task = {"candidate_place_ids": ["a", "b"], "source_observation_ids": ["obs"]}
     for name in ("estimate_place_facts", "acquire_place_facts"):
         assert domain_args(name, {"place_id": "a"}, task) == {"place_id": "a"}
@@ -90,7 +91,7 @@ def test_goal_runtime_dispatches_existing_domain_tools_without_activation(goal_s
         def _complete(self, _messages):
             self.turn += 1
             entries = [("acquire_place_facts", {"place_id": "a"}), ("estimate_place_facts", {"place_id": "a"}),
-                ("generate_plans", {"place_ids": ["a", "b"]}), ("compare_routes", {"from_key": "a", "to_key": "b"}),
+                ("compare_routes", {"from_key": "a", "to_key": "b"}),
                 ("save_draft_itinerary", {"days": [{"date": "2026-11-01", "slots": [{"title": "TEST_FIXTURE待查交通", "time_of_day": "afternoon"}]}]})]
             if self.turn > len(entries): return {"content": "TEST_FIXTURE阶段成果"}
             name, args = entries[self.turn - 1]
@@ -98,10 +99,10 @@ def test_goal_runtime_dispatches_existing_domain_tools_without_activation(goal_s
     monkeypatch.setattr(goal_tasks, "AgentToolGateway", Gateway)
     monkeypatch.setattr(goal_tasks, "_new_goal_agent", lambda *_: Agent())
     result = goal_tasks.resume_goal_task(session, journey, member, created["task_id"])
-    assert calls == ["acquire_place_facts", "estimate_place_facts", "generate_plans"]
+    assert calls == ["acquire_place_facts", "estimate_place_facts"]
     restored = goal_tasks.read_goal_task(session, journey, member, created["task_id"])
-    assert len(restored["tool_steps"]) == 5
-    assert restored["tool_steps"][3]["result"]["status"] == "NO_STORED_ROUTE_FACTS"
+    assert len(restored["tool_steps"]) == 4
+    assert restored["tool_steps"][2]["result"]["status"] == "NO_STORED_ROUTE_FACTS"
     assert session.get(Journey, journey.id).status == "DRAFT"
     assert session.get(Journey, journey.id).active_plan_version_id is None
 

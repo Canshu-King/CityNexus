@@ -92,7 +92,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
             city_label = _resolver_city_label(journey.city_code)
             provider = (PhotonCityGeocoder(client=client, base_url=config.photon_base_url,
                          user_agent=config.photon_user_agent or None) if source == "photon"
-                        else NominatimGeocoder(client=client))
+                        else NominatimGeocoder(client=client, user_agent=settings.city_search_user_agent or None))
             candidates = provider.search(query, city=city_label, limit=8)
         places = []
         for place in candidates:
