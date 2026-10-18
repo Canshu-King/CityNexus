@@ -31,6 +31,17 @@ def current_brief(session, journey_id, traveler_id):
     ).order_by(JourneyIntent.updated_at.desc(), JourneyIntent.id.desc()).limit(1))
 
 
+def _public_region_label(session, journey) -> str | None:
+    row = current_brief(session, journey.id, journey.traveler_id)
+    if row is None:
+        return None
+    try:
+        value = json.loads(row.semantic_envelope_json or "{}").get("public_region_label")
+    except (TypeError, ValueError, AttributeError):
+        return None
+    return value.strip() if isinstance(value, str) and value.strip() else None
+
+
 def save_brief(session, journey, member, payload):
     data = payload.model_dump()
     text = data["goal"].strip()
@@ -105,6 +116,7 @@ def brief_projection(session, journey, member):
     # The intake accepts up to 14 days; do not silently discard days 8 through 14.
     days = [str(first + timedelta(days=i)) for i in range(min(14, (last-first).days+1))]
     from app.execution.bootstrap_discovery import _candidate_payload, _scope_expired, _bootstrap_scope_entries
+    region_label = _public_region_label(session, journey)
     candidates = []
     # Existing per-member observations, without querying or materializing a provider.
     for candidate in session.scalars(select(RealPlaceCandidate).where(
@@ -116,7 +128,8 @@ def brief_projection(session, journey, member):
             if scope.get("member_id") == str(member.id) and scope.get("traveler_id") == str(member.traveler_id)]
         if not scopes or _scope_expired(scopes[0]):
             continue
-        payload = _candidate_payload(candidate, member_id=str(member.id), traveler_id=str(member.traveler_id))
+        payload = _candidate_payload(candidate, member_id=str(member.id), traveler_id=str(member.traveler_id),
+                                     public_region_label=region_label)
         payload["receipt_id"] = scopes[0]["receipt_id"]
         candidates.append(payload)
         if len(candidates) >= 12:
@@ -137,6 +150,7 @@ def brief_projection(session, journey, member):
 def map_place_projection(session, journey, member):
     """Private saved coordinates survive fact expiry; never renew planning receipts."""
     from app.execution.bootstrap_discovery import _candidate_payload, _scope_expired, _bootstrap_scope_entries
+    region_label = _public_region_label(session, journey)
     points = []
     for candidate in session.scalars(select(RealPlaceCandidate).where(
         RealPlaceCandidate.journey_id == journey.id,
@@ -147,7 +161,8 @@ def map_place_projection(session, journey, member):
             if scope.get("member_id") == str(member.id) and scope.get("traveler_id") == str(member.traveler_id)]
         if not scopes:
             continue
-        payload = _candidate_payload(candidate, member_id=str(member.id), traveler_id=str(member.traveler_id))
+        payload = _candidate_payload(candidate, member_id=str(member.id), traveler_id=str(member.traveler_id),
+                                     public_region_label=region_label)
         payload["observation_expired"] = _scope_expired(scopes[0])
         payload["captured_at"] = scopes[0].get("captured_at") or candidate.captured_at
         if payload["observation_expired"]:

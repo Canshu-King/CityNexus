@@ -69,6 +69,10 @@ async function fixture(page: Page, failRuntime = false, cachedSource = false) {
       candidate_id: "test-map-archived", name: "TEST_FIXTURE 上次搜索地点", latitude: 25.037, longitude: 121.563,
       coordinate_system: "WGS84", observation_expired: true, selection_state: "OPENING_UNVERIFIED",
       provider_provenance: "TEST_PROVIDER", source_url: "https://www.openstreetmap.org/way/12345",
+    }, {
+      candidate_id: "test-map-foreign", name: "TEST_FIXTURE 上海浦东", latitude: 31.23, longitude: 121.47,
+      coordinate_system: "WGS84", observation_expired: false, selection_state: "REGION_CONFLICT",
+      region_status: "CONFLICT", provider_provenance: "LIVE_PROVIDER", source_url: "https://www.openstreetmap.org/node/98765",
     }]});
     if (path === `${root}/planning-intent`) return reply({
       journey_id: journeyId, intent: { id: "test-intent", goal, interests: [], energy: "easy", updated_at: "2026-10-18T00:00:00Z", mapped_preferences: [] },
@@ -124,11 +128,17 @@ for (const width of [390, 430, 1366]) {
       const t = await page.getByTestId("rev-mission-timeline-pane").boundingBox();
       expect(a!.x).toBeLessThan(m!.x); expect(m!.x).toBeLessThan(t!.x);
     }
-    await expect(dialog.getByRole("textbox")).toHaveValue(goal);
+    const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
+    const chatInput = chatDock.locator("#rev-mission-chat-input");
+    await expect(chatDock).toBeVisible();
+    await expect(chatInput).toBeVisible();
+    await expect(chatInput).toHaveValue(goal);
     expect(calls).toEqual([]);
-    await dialog.locator('input[type="checkbox"]').nth(0).check();
-    await dialog.locator('input[type="checkbox"]').nth(1).check();
-    await dialog.getByRole("button", { name: "开始研究", exact: true }).click();
+    await chatDock.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").check();
+    await expect(chatDock.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）")).toBeChecked();
+    await chatDock.getByLabel("本次允许查询公开地图和地点来源").check();
+    await expect(chatDock.getByLabel("本次允许查询公开地图和地点来源")).toBeChecked();
+    await chatDock.getByRole("button", { name: "发送 ↑", exact: true }).click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     expect(calls).toEqual([goal]);
     if (width !== 1366) {
@@ -170,6 +180,7 @@ test("TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved 
   await page.getByTestId("rev-mobile-tab-map").click();
   const dialog = page.getByTestId("rev-mission-cockpit");
   await expect(dialog).toContainText("TEST_FIXTURE 上次搜索地点");
+  await expect(dialog).not.toContainText("TEST_FIXTURE 上海浦东");
   await expect(dialog).toContainText("上次搜索的地点，营业与费用需更新");
   await expect(dialog.getByRole("link", {name: "查看地点来源 ↗"})).toHaveAttribute("href", "https://www.openstreetmap.org/way/12345");
   await expect(dialog.getByRole("button", { name: "加载地图", exact: true })).toBeEnabled();
@@ -182,13 +193,17 @@ test("TEST_FIXTURE identity change clears the open private assistant immediately
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-assistant").click();
   const dialog = page.getByTestId("rev-mission-cockpit");
-  await expect(dialog.getByRole("textbox")).toHaveValue(goal);
+  const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
+  const chatInput = chatDock.locator("#rev-mission-chat-input");
+  await expect(chatDock).toBeVisible();
+  await expect(chatInput).toBeVisible();
+  await expect(chatInput).toHaveValue(goal);
   await page.evaluate(() => {
     sessionStorage.removeItem("citynexus.traveler.bearer");
     sessionStorage.removeItem("citynexus.traveler.session-id");
     window.dispatchEvent(new Event("storage"));
   });
-  await expect(dialog.getByRole("textbox")).toHaveCount(0);
+  await expect(chatDock).toHaveCount(0);
   await expect(dialog).not.toContainText(goal);
 });
 
@@ -231,10 +246,11 @@ test("TEST_FIXTURE map focuses draft references and separates regions from venue
   const map = page.getByTestId("rev-mission-map-pane");
   await expect(map).toContainText("1 处日程引用");
   await expect(map).toContainText("TEST_FIXTURE 古村落");
-  await expect(map).toContainText("地区／村落线索");
   await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
-  await expect(page.locator("summary").filter({ hasText: "地区／村落线索（2）" })).toHaveCount(1);
-  await map.getByRole("button", { name: "查看全部研究（4）" }).click();
+  await expect(map.locator(".rev-workspace-place-list")).toContainText("地区／村落线索");
+  await expect(page.locator("summary").filter({ hasText: "待核实来源（2）" })).toHaveCount(1);
+  await expect(page.locator("summary").filter({ hasText: "其他地区候选（1）" })).toHaveCount(1);
+  await map.getByRole("button", { name: "查看其他研究（3）" }).click();
   await expect(map).toContainText("TEST_FIXTURE 博物馆");
   await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
   expect(writes).toEqual([]);

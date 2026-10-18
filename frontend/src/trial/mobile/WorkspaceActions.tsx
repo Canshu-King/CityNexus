@@ -4,7 +4,7 @@ import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidat
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
 import { GoalDraftEditor } from "./GoalDraftEditor";
-import { splitGoalResearch } from "./goalResearch";
+import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import type { GoalResearchLead } from "../../api/citynexus";
 import "./WorkspaceActions.css";
 
@@ -125,7 +125,7 @@ function taskStepText(result: Record<string, unknown>): string {
 
 function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; area?: boolean }) {
   return <ul className="rev-workspace-task-places">{items.map((place) => <li key={place.id}>
-    <strong>{place.name}</strong><span>{area ? "地区／村落线索" : "营业、费用待查"}</span>
+    <strong>{place.name}</strong><span>{area || isAreaGoalResearchLead(place) ? "地区／村落线索" : "营业、费用待查"}</span>
     {place.public_address && <small>{[...new Set(Object.values(place.public_address))].join(" · ")}</small>}
     {place.region_status === "UNKNOWN" && <small>地区归属待核实</small>}
     {/^https:\/\/www\.openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(place.source_url) &&
@@ -391,7 +391,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     } catch (error) {
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       setRequestError(error instanceof Error && error.name === "AbortError"
-        ? "没有收到确认。消息可能已到达，先刷新当前任务；再次发送会复用原消息编号。"
+        ? "消息还在确认中，刷新任务查看最新进度。"
         : error instanceof Error && error.message.includes("GOAL_TASK_ALREADY_RUNNING")
           ? "Agent 正在处理上一条指令，等这轮结束后可以继续发消息。"
           : error instanceof Error ? error.message : "当前消息没有确认成功，请检查任务状态。");
@@ -406,9 +406,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     else void startNewTask();
   };
 
-  const taskMapPoints = (visibleTask?.research_places ?? []).map((place) => ({
+  const taskMapPoints = (visibleTask?.research_places ?? []).filter((place) => place.region_status !== "CONFLICT").map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
-    coordinate_system: "WGS84" as const, provider_provenance: place.provider_provenance,
+    coordinate_system: "WGS84" as const, provider_provenance: place.provider_provenance, region_status: place.region_status,
     selection_state: "OPENING_UNVERIFIED" as const, source_url: place.source_url, observation_expired: false,
   }));
   const conversation = visibleTask?.conversation?.length
@@ -429,7 +429,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         if (actor && visibleTask) void refreshGoalTask(actor, visibleTask.task_id).catch(() => undefined);
         setRevision((value) => value + 1);
       }}>{COPY.reload}</button>}
-      {visible && panel === "map" && <WorkspaceMap candidates={[...visible.mapCandidates, ...taskMapPoints]} allowed={allowTiles} onAllow={() => setAllowTiles(true)} />}
+      {visible && panel === "map" && <WorkspaceMap candidates={[...visible.mapCandidates.filter((candidate) =>
+        candidate.region_status !== "CONFLICT" && candidate.selection_state !== "REGION_CONFLICT"), ...taskMapPoints]} allowed={allowTiles} onAllow={() => setAllowTiles(true)} />}
       {visible && panel === "assistant" && <>
         <p>{visible.input.trip.dates.length} 天 · {visible.input.trip.party_size} 人 · 旅行需求已从服务器读取</p>
         {!aiReady && <p role="status">AI 尚未连接。</p>}
@@ -507,7 +508,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           </ul></details>}
           {research.places.length > 0 && <details className="rev-agent-research-drawer"><summary>公开来源发现的地点（{research.places.length}）</summary><ResearchLeads items={research.places} /></details>}
           {research.areas.length > 0 && <details><summary>地区／村落线索（{research.areas.length}）</summary><ResearchLeads items={research.areas} area /></details>}
-          {research.conflicts.length > 0 && <details><summary>其他地区的同名结果（{research.conflicts.length}）</summary><ResearchLeads items={research.conflicts} /></details>}
+          {research.unknown.length > 0 && <details><summary>待核实来源（{research.unknown.length}）</summary><ResearchLeads items={research.unknown} /></details>}
+          {research.conflicts.length > 0 && <details><summary>其他地区候选（{research.conflicts.length}）</summary><ResearchLeads items={research.conflicts} /></details>}
           {!embedded && visibleTask.draft_artifact && <GoalDraftEditor key={visibleTask.task_id} artifact={visibleTask.draft_artifact}
             disabled={busy || visibleTask.status === "WORKING"} onSave={async (artifact) => {
               const actor = readContext();
@@ -547,17 +549,17 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             {busy ? "正在研究" : "发送 ↑"}
           </button>
         </div>
-        {!modelConsent && <label className="rev-mission-chat-allow">
+        <label className="rev-mission-chat-allow">
           <input type="checkbox" checked={modelConsent} onChange={(event) => setModelConsent(event.target.checked)} />
           本次允许 AI 处理旅行目标（可能产生费用）
-        </label>}
-        {!onlineResearchConsent && <label className="rev-mission-chat-allow">
+        </label>
+        <label className="rev-mission-chat-allow">
           <input type="checkbox" checked={onlineResearchConsent} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />
           本次允许查询公开地图和地点来源
-        </label>}
+        </label>
         <p role="status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
-          : requestError ?? (visibleTask ? "消息会继续进入同一研究任务，不会重新创建行程。" : "发送后会建立属于这趟旅行的 Agent 研究任务。")}</p>
+          : requestError ?? (visibleTask ? "继续和这趟旅行的 Agent 对话。" : "发送后开始旅行研究。")}</p>
       </form>, document.body)}
   </>;
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"

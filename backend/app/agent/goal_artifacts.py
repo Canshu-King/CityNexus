@@ -16,11 +16,12 @@ from app.core.config import settings
 from app.db.models import ProviderCall
 from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGeocoder, OverpassPOIProvider, _resolver_city_label
 from app.integrations.provider_config import ExternalProviderSettings, trust_environment_for_public_providers
+from app.region_matching import public_address as _public_address, public_address_from_tags as _public_address_from_tags
+from app.region_matching import public_region_status as _public_region_status
 
 _LIVE_GOAL_RESEARCH_PROVIDERS = frozenset({"photon", "nominatim", "overpass"})
 _OSM_REFERENCE_TYPES = {"N": "node", "W": "way", "R": "relation",
                         "node": "node", "way": "way", "relation": "relation"}
-_PUBLIC_ADDRESS_FIELDS = ("county", "city", "state", "district")
 _REGION_STATUSES = frozenset({"MATCHED", "CONFLICT", "UNKNOWN"})
 
 
@@ -45,31 +46,6 @@ def _structured_public_region_label(session, journey) -> str:
     return ""
 
 
-def _public_address(metadata: Any) -> dict[str, str]:
-    if not isinstance(metadata, dict):
-        return {}
-    result = {}
-    for key in _PUBLIC_ADDRESS_FIELDS:
-        value = metadata.get(key)
-        if isinstance(value, str) and value.strip() and len(value.strip()) <= 120 \
-                and not any(ord(char) < 32 for char in value):
-            result[key] = value.strip()
-    return result
-
-
-def _public_address_from_tags(tags: Any) -> dict[str, str]:
-    if not isinstance(tags, dict):
-        return {}
-    explicit = {}
-    for key in _PUBLIC_ADDRESS_FIELDS:
-        value = tags.get(f"addr:{key}")
-        if value is None:
-            value = tags.get(key)
-        if isinstance(value, str):
-            explicit[key] = value
-    return _public_address(explicit)
-
-
 def _source_label(value: Any, *, limit: int = 80) -> str | None:
     if not isinstance(value, str):
         return None
@@ -77,21 +53,6 @@ def _source_label(value: Any, *, limit: int = 80) -> str | None:
     if not normalized or len(normalized) > limit or any(ord(char) < 32 for char in normalized):
         return None
     return normalized
-
-
-def _public_region_status(region_label: str, address: dict[str, str]) -> str:
-    if not region_label or not address:
-        return "UNKNOWN"
-    if any(value == region_label for value in address.values()):
-        return "MATCHED"
-    # Compare only explicitly named, comparable administrative levels. A city
-    # search and an address containing a county are not contradictory; absent
-    # aliases or translated labels remain unknown rather than inferred.
-    for key, suffixes in (("county", ("县", "縣")), ("district", ("区", "區")), ("city", ("市",))):
-        value = address.get(key, "")
-        if any(region_label.endswith(suffix) and value.endswith(suffix) for suffix in suffixes):
-            return "CONFLICT"
-    return "UNKNOWN"
 
 
 def _public_location_kind(osm_key: str | None, osm_value: str | None,
@@ -228,9 +189,9 @@ def normalize_draft(journey, task: dict, days: Any, *, author: str) -> dict[str,
     valid_dates = {day["date"] for day in empty_draft(journey)["days"]}
     if not isinstance(days, list) or not 1 <= len(days) <= 14:
         raise HTTPException(422, "DRAFT_DAYS_INVALID")
-    known_ids = (set(task.get("candidate_place_ids") or [])
-                 | {p["id"] for p in task.get("research_places") or []}
-                 | {p["id"] for p in task.get("research_areas") or []})
+    research_leads = [*(task.get("research_places") or []), *(task.get("research_areas") or [])]
+    known_ids = set(task.get("candidate_place_ids") or []) | {p["id"] for p in research_leads}
+    conflicting_ids = {p["id"] for p in research_leads if p.get("region_status") == "CONFLICT"}
     output, seen = [], set()
     for day in days:
         if not isinstance(day, dict) or day.get("date") not in valid_dates or day["date"] in seen:
@@ -250,6 +211,8 @@ def normalize_draft(journey, task: dict, days: Any, *, author: str) -> dict[str,
             place_id = slot.get("place_id") or None
             if place_id is not None and place_id not in known_ids:
                 raise HTTPException(422, "DRAFT_PLACE_NOT_RESEARCHED")
+            if place_id in conflicting_ids:
+                raise HTTPException(422, "DRAFT_PLACE_REGION_CONFLICT")
             normalized.append({"title": title, "time_of_day": period, "place_id": place_id,
                                "notes": str(slot.get("notes") or "")[:500], "author": author,
                                "opening_status": "UNKNOWN", "cost_status": "UNKNOWN", "travel_time_status": "UNKNOWN"})
@@ -379,6 +342,7 @@ def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id
         return {**result, "status": "PROVIDER_UNAVAILABLE", "reason_code": "OVERPASS_UNAVAILABLE"}
     prior.append(signature)
     city_label = public_city_label(journey, session)
+    region_label = _structured_public_region_label(session, journey)
     started = time.perf_counter()
     attempts = []
     try:
@@ -402,7 +366,7 @@ def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id
                            "source_url": f"https://www.openstreetmap.org/{osm_id}", "provider": "overpass",
                            "provider_provenance": "LIVE_PROVIDER", "location_type": None,
                            "location_kind": "POI", "osm_key": None, "osm_value": None,
-                           "public_address": address, "region_status": "UNKNOWN",
+                           "public_address": address, "region_status": _public_region_status(region_label, address),
                            "opening_status": "UNKNOWN", "cost_status": "UNKNOWN"})
         existing = {p["id"]: p for p in task.get("research_places") or []}
         existing.update({p["id"]: p for p in places})

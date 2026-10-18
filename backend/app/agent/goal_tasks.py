@@ -630,8 +630,9 @@ def _initial_messages(
         "You are the CityNexus DRAFT goal-planning assistant. Use the provided goal and current "
         "Journey facts to research useful candidate Places. After every tool result, inspect the "
         "actual result and choose the next tool yourself; do not follow a fixed tool sequence. "
-        "Respect the latest user follow-up in recent_user_instructions while preserving unaffected " 
+        "Respect the latest user follow-up in recent_user_instructions while preserving unaffected "
         "verified research and the existing editable draft. A follow-up is not a brand-new trip. "
+        "Do not place a research lead marked region_status CONFLICT into the itinerary draft. Keep it in research results for comparison. "
         "Only use the available tools. This is GOAL_PLANNING, not recovery: do not create or infer "
         "an incident, do not select or activate a PlanVersion, and do not book, pay, cancel, or "
         "change Journey state. Keep missing opening hours, prices, and availability UNKNOWN. Treat "
@@ -1068,7 +1069,12 @@ def resume_goal_task(
             normalized_message_id = str(UUID(str(message_id)))
         except (ValueError, TypeError, AttributeError):
             raise HTTPException(422, "USER_MESSAGE_ID_REQUIRED") from None
-        if any(item.get("message_id") == normalized_message_id for item in task.get("conversation") or []):
+        previous_message = next((item for item in task.get("conversation") or []
+                                 if item.get("message_id") == normalized_message_id), None)
+        if previous_message is not None:
+            previous_text = " ".join(str(previous_message.get("text") or "").split())
+            if previous_text != normalized_message:
+                raise HTTPException(409, "MESSAGE_ID_REUSED_WITH_DIFFERENT_TEXT")
             # Repeated HTTP after an unknown response must not duplicate model/provider work.
             return _task_payload(mission, intent)
     else:

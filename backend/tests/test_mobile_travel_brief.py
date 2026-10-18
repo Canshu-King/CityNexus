@@ -130,6 +130,51 @@ def test_two_private_candidates_feed_native_generator_without_inventing_facts(mo
         assert 'goal' not in intent and 'preferences' not in intent
 
 
+def test_explicit_foreign_region_is_visible_as_candidate_but_cannot_enter_plan(signed_place):
+    client, headers, _outsider, journey_id, candidate_id, receipt_id, _other_scope = signed_place
+    base = f'/api/v1/journeys/{journey_id}'
+    brief = client.put(base + '/planning-intent', headers=headers, json={
+        'goal': 'TEST_FIXTURE 连城两日行程', 'interests': ['park/garden'], 'energy': 'easy',
+        'public_region_label': '连城县',
+    })
+    assert brief.status_code == 200, brief.text
+    with SessionLocal() as session:
+        candidate = session.get(RealPlaceCandidate, candidate_id)
+        evidence = json.loads(candidate.evidence_json)
+        owner_scope = next(item for item in evidence['bootstrap_scopes'] if item['receipt_id'] == receipt_id)
+        # Bind this public observation to the explicit Photon address returned for the OSM object.
+        owner_scope['osm_tags'] = {'name': 'TEST_FIXTURE 上海浦东南路候选', 'addr:city': '上海市', 'addr:district': '浦东新区'}
+        candidate.evidence_json = json.dumps(evidence, ensure_ascii=False)
+        session.commit()
+
+    input_response = client.get(base + '/planning-intent', headers=headers)
+    assert input_response.status_code == 200, input_response.text
+    projected = next(item for item in input_response.json()['candidates'] if item['candidate_id'] == candidate_id)
+    assert projected['public_address'] == {'city': '上海市', 'district': '浦东新区'}
+    assert projected['region_status'] == 'CONFLICT'
+    assert projected['selection_state'] == 'REGION_CONFLICT'
+    assert 'REGION_CONFLICT' in projected['selection_blockers']
+
+    map_response = client.get(base + '/map-places', headers=headers)
+    assert map_response.status_code == 200, map_response.text
+    assert map_response.json()['candidates'][0]['region_status'] == 'CONFLICT'
+
+    refused = client.post(base + '/plans/generate', headers=headers, json={
+            'candidate_count': 2, 'bootstrap_candidate_ids': [candidate_id, str(uuid4())],
+    })
+    assert refused.status_code == 422, refused.text
+    assert 'REGION_CONFLICT' in refused.text
+    materialized = client.post(base + '/real-city/bootstrap/select', headers=headers, json={
+        'receipt_id': receipt_id, 'candidate_id': candidate_id,
+    })
+    assert materialized.status_code == 422, materialized.text
+    assert 'BOOTSTRAP_REGION_CONFLICT' in materialized.text
+    with SessionLocal() as session:
+        row = session.get(RealPlaceCandidate, candidate_id)
+        assert row.status == 'BOOTSTRAP_PRIVATE' and row.materialized_place_id is None
+        assert session.scalars(select(PlanVersion).where(PlanVersion.journey_id == journey_id)).all() == []
+
+
 def test_persisted_food_preference_changes_native_provider_ranking(signed_place):
     from app.services import _strategy_place_score
     from app.db.models import Place, Journey

@@ -398,6 +398,14 @@ def test_followup_reuses_same_goal_task_and_model_reads_latest_user_message(goal
     assert retried["task_id"] == created["task_id"]
     assert len(retried["conversation"]) == 4
     assert len(calls) == 2
+    with pytest.raises(HTTPException) as reused:
+        goal_tasks.resume_goal_task(
+            session, journey, member, created["task_id"],
+            user_message="另一条不同的旅行要求",
+            message_id=message_id,
+        )
+    assert reused.value.status_code == 409
+    assert reused.value.detail == "MESSAGE_ID_REUSED_WITH_DIFFERENT_TEXT"
     owner_events = goal_tasks.list_goal_task_events(session, journey, member, created["task_id"])
     assert sum(event["event_type"] == "USER_MESSAGE_ADDED" for event in owner_events["events"]) == 1
     assert "把第二天下午" not in json.dumps(owner_events, ensure_ascii=False)

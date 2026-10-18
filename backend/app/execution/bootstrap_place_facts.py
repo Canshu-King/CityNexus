@@ -47,7 +47,9 @@ def current_bootstrap_discovery(session: Session, journey: Journey, *, member: A
     if not observed:
         return None
     _captured, latest, scope = max(observed, key=lambda item: item[0])
-    candidates = [discovery._candidate_payload(row, member_id=str(member.id), traveler_id=traveler_id)
+    region_label = discovery._public_region_label(session, journey)
+    candidates = [discovery._candidate_payload(row, member_id=str(member.id), traveler_id=traveler_id,
+                                                public_region_label=region_label)
                   for _time, row, item in observed if item["receipt_id"] == scope["receipt_id"]]
     return {"journey_id": journey.id, "status": "LIVE_RESULTS", "source_kind": "MANUAL_PUBLIC_CENTER",
             "result_state": "FOUND_2+" if len(candidates) > 1 else "PARTIAL_1",
@@ -112,7 +114,8 @@ def refresh_bootstrap_place_facts(
         raise discovery.BootstrapDiscoveryError("BOOTSTRAP_IDENTITY_INVALID", "Missing public OSM identity", status_code=422)
     if scope.get("osm_facts"):
         return {"journey_id": journey.id, "candidate": discovery._candidate_payload(
-            row, member_id=str(member.id), traveler_id=traveler_id), "cached": True}
+            row, member_id=str(member.id), traveler_id=traveler_id,
+            public_region_label=discovery._public_region_label(session, journey)), "cached": True}
     now = discovery._now()
     if discovery._bootstrap_rate_limited(session, journey, now, member_id=str(member.id), traveler_id=traveler_id,
                                operation=f"bootstrap-facts:{receipt_id}:{candidate_id}"):
@@ -174,4 +177,5 @@ def refresh_bootstrap_place_facts(
     session.flush()
     session.expire(row, ["evidence_json"])
     return {"journey_id": journey.id, "candidate": discovery._candidate_payload(
-        row, member_id=str(member.id), traveler_id=traveler_id), "cached": False}
+        row, member_id=str(member.id), traveler_id=traveler_id,
+        public_region_label=discovery._public_region_label(session, journey)), "cached": False}

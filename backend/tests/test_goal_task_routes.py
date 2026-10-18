@@ -78,6 +78,11 @@ def test_signed_same_task_chat_works_without_new_journey_and_hides_message_from_
     assert sent.json()["conversation"][-1]["text"] == request["user_message"]
     assert sent.json()["conversation"][-1]["role"] == "user"
     assert client.post(f"{base}/{task_id}/resume", headers=owner_headers, json=request).status_code == 200
+    conflicting_replay = client.post(f"{base}/{task_id}/resume", headers=owner_headers,
+        json={**request, "user_message": "TEST_FIXTURE 另一条不同的要求"})
+    assert conflicting_replay.status_code == 409
+    assert conflicting_replay.json()["error"]["code"] == "CONFLICT"
+    assert conflicting_replay.json()["error"]["message"] == "MESSAGE_ID_REUSED_WITH_DIFFERENT_TEXT"
     restored = client.get(f"{base}/{task_id}", headers=owner_headers).json()
     assert len(restored["conversation"]) == 2
     assert restored["conversation"][1]["message_id"] == message_id

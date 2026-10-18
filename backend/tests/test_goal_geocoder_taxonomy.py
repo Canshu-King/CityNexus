@@ -47,6 +47,9 @@ def test_nominatim_preserves_explicit_public_address_and_category():
 @pytest.mark.parametrize("region,address,status", [
     ("屏南县", {"county": "屏南县"}, "MATCHED"),
     ("屏南县", {"county": "平南县"}, "CONFLICT"),
+    ("连城县", {"city": "上海市", "district": "浦东新区"}, "CONFLICT"),
+    ("连城县", {"county": "连城县", "city": "龙岩市"}, "MATCHED"),
+    ("连城县", {"county": "连城县", "district": "浦东新区"}, "CONFLICT"),
     ("屏南县", {"city": "宁德市"}, "UNKNOWN"),
     ("宁德市", {"county": "屏南县"}, "UNKNOWN"),
     ("屏南县", {"county": "Pingnan County"}, "UNKNOWN"),
@@ -54,6 +57,19 @@ def test_nominatim_preserves_explicit_public_address_and_category():
 ])
 def test_region_comparison_does_not_guess_names_or_mixed_levels(region, address, status):
     assert goal_artifacts._public_region_status(region, address) == status
+
+
+def test_agent_draft_keeps_conflicting_region_leads_out_of_itinerary(goal_scope):
+    session, journey, _member = goal_scope
+    draft = goal_artifacts.empty_draft(journey)
+    date = draft["days"][0]["date"]
+    task = {"research_places": [{"id": "photon:way/123", "region_status": "CONFLICT"}]}
+    with pytest.raises(HTTPException) as error:
+        goal_artifacts.normalize_draft(journey, task, [{"date": date, "slots": [
+            {"title": "TEST_FIXTURE off-region place", "time_of_day": "afternoon", "place_id": "photon:way/123"},
+        ]}], author="AGENT")
+    assert error.value.status_code == 422
+    assert error.value.detail == "DRAFT_PLACE_REGION_CONFLICT"
 
 
 def test_area_result_survives_signed_task_restore_and_is_editable_without_becoming_poi(goal_scope, monkeypatch):

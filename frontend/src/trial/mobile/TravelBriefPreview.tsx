@@ -12,7 +12,7 @@ const interests = [
 ] as const;
 const labels: Record<string, string> = { outdoor: "户外兴趣", food: "美食兴趣", cultural: "文化兴趣",
   library: "阅读兴趣", low_walking: "少走路偏好", day_rhythm: "作息时间" };
-const blockers: Record<string, string> = {OPENING_UNVERIFIED:"营业时间",COST_UNKNOWN:"费用",ACCESS_RESTRICTED:"开放权限"};
+const blockers: Record<string, string> = {OPENING_UNVERIFIED:"营业时间",COST_UNKNOWN:"费用",ACCESS_RESTRICTED:"开放权限",REGION_CONFLICT:"其他地区"};
 
 type PlaceCandidate = TravelPlanningInput["candidates"][number];
 
@@ -21,6 +21,10 @@ function missingPlaceFacts(place: PlaceCandidate): string[] {
   if (!formatOpeningHours(place.opening_hours)) missing.push("营业时间");
   if (formatCost(place) === "费用未知") missing.push("费用");
   return missing;
+}
+
+function isRegionConflict(place: PlaceCandidate): boolean {
+  return place.region_status === "CONFLICT" || place.selection_state === "REGION_CONFLICT";
 }
 
 function canRefreshPlaceFacts(place: PlaceCandidate): boolean {
@@ -45,8 +49,9 @@ function TravelPlaceCard({ place, selected, selectedCount, disabled, onSelect, o
   useEffect(() => { setConsented(false); }, [place.receipt_id, place.facts_status, place.opening_hours, place.cost_evidence]);
 
   return <div className="rev-travel-place" data-testid={`rev-travel-place-${place.candidate_id}`}>
-    <label><input type="checkbox" disabled={disabled || place.public_access_state === "RESTRICTED" || (!selected && selectedCount >= 6)}
+    <label><input type="checkbox" disabled={disabled || (isRegionConflict(place) && !selected) || place.public_access_state === "RESTRICTED" || (!selected && selectedCount >= 6)}
       checked={selected} onChange={(event) => { setConsented(false); onSelect(event.target.checked); }} />{place.name}</label>
+    {isRegionConflict(place) && <p className="rev-plan-gap">其他地区候选 · 不加入这趟行程</p>}
     <p>营业时间：{formatOpeningHours(place.opening_hours) ?? "未知"} · {formatCost(place)}</p>
     <p>{place.provider_provenance === "LIVE_PROVIDER" ? "公开地图来源" : place.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "来源待确认"}</p>
     {missing.length > 0

@@ -17825,9 +17825,12 @@ def _generate_plans_answer(session: Session, journey: Journey,
             JourneyMemberModel.traveler_id == journey.traveler_id,
         ))
         available = {item["candidate_id"]: item for item in brief_projection(session, journey, owner)["candidates"]}
-        if any(str(value) not in available or available[str(value)]["selection_state"] != "READY_FOR_NATIVE_PLAN"
-               for value in request.bootstrap_candidate_ids):
+        invalid_candidates = [available.get(str(value)) for value in request.bootstrap_candidate_ids]
+        if any(item is None or item["selection_state"] != "READY_FOR_NATIVE_PLAN" for item in invalid_candidates):
             from app.services import CompositionRefusal
+            if any(item is not None and item.get("region_status") == "CONFLICT" for item in invalid_candidates):
+                raise CompositionRefusal("A selected place belongs to another administrative region",
+                    reason_code="REGION_CONFLICT", details={"next_actions": ["CHOOSE_CANDIDATE_IN_DESTINATION_REGION"]})
             raise CompositionRefusal("Selected places still need opening or cost facts",
                 reason_code="UNRESOLVED_ACTIVITY_FACTS", details={"next_actions": ["VERIFY_SOURCE", "CHOOSE_ANOTHER_PLACE"]})
         place_ids = []

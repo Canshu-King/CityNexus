@@ -57,6 +57,7 @@ from app.integrations.provider_config import (
     ExternalProviderSettings,
     trust_environment_for_public_providers,
 )
+from app.region_matching import public_address_from_tags, public_region_status
 from app.execution.shared_walk import (
     SharedWalkParseError,
     validate_shared_walk_objects,
@@ -720,6 +721,7 @@ def _candidate_payload(
     *,
     member_id: str | None = None,
     traveler_id: str | None = None,
+    public_region_label: str | None = None,
 ) -> dict[str, Any]:
     evidence = json.loads(row.evidence_json or "{}")
     osm = _osm_identity(row)
@@ -735,6 +737,8 @@ def _candidate_payload(
                 scope_distance = scope.get("distance_m")
                 break
     observation = _scope_observation(row, viewer_scope)
+    public_address = public_address_from_tags(observation["osm_tags"])
+    region_status = public_region_status(public_region_label or "", public_address)
     source_tags = {
         key: str(observation["osm_tags"][key])
         for key in (
@@ -754,6 +758,8 @@ def _candidate_payload(
     facts = (viewer_scope or {}).get("osm_facts")
     facts = facts if isinstance(facts, dict) else {}
     selection_blockers: list[str] = []
+    if region_status == "CONFLICT":
+        selection_blockers.append("REGION_CONFLICT")
     if opening_status not in _BOOTSTRAP_GROUNDED_OPENING:
         selection_blockers.append("OPENING_UNVERIFIED")
     if not _cost_evidence_is_grounded(cost):
@@ -765,7 +771,9 @@ def _candidate_payload(
     if observation["public_access_state"] == "RESTRICTED":
         selection_blockers.append("ACCESS_RESTRICTED")
     selection_ready = not selection_blockers
-    if selection_blockers == ["OPENING_UNVERIFIED"]:
+    if region_status == "CONFLICT":
+        selection_action = "CHOOSE_CANDIDATE_IN_DESTINATION_REGION"
+    elif selection_blockers == ["OPENING_UNVERIFIED"]:
         selection_action = "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
     elif selection_blockers == ["COST_UNKNOWN"]:
         selection_action = "VERIFY_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
@@ -808,7 +816,7 @@ def _candidate_payload(
         "coordinate_system": "WGS84",
         "distance_m": scope_distance,
         "opening_state": opening_status,
-        "selection_state": "READY_FOR_NATIVE_PLAN" if selection_ready else "OPENING_UNVERIFIED",
+        "selection_state": "REGION_CONFLICT" if region_status == "CONFLICT" else "READY_FOR_NATIVE_PLAN" if selection_ready else "OPENING_UNVERIFIED",
         "selection_action": selection_action,
         "selection_blockers": selection_blockers,
         "availability_confidence": "UNVERIFIED",
@@ -836,6 +844,8 @@ def _candidate_payload(
         ),
         "opening_verification_action": "OPEN_SOURCE_PAGE",
         "source_tags": source_tags,
+        "public_address": public_address,
+        "region_status": region_status,
         "public_access_state": observation["public_access_state"],
         "provider_provenance": _row_provider_provenance(row, scope=viewer_scope),
         "draft_exploration": {
@@ -847,6 +857,11 @@ def _candidate_payload(
             "selected_place_id": None,
         },
     }
+
+
+def _public_region_label(session: Session, journey: Journey) -> str:
+    from app.agent.goal_artifacts import _structured_public_region_label
+    return _structured_public_region_label(session, journey)
 
 
 def _provider_call(
@@ -2139,7 +2154,8 @@ def discover_bootstrap_candidates(
         "attempts": attempts,
         "filter_summary": filter_summary,
         "candidates": [
-            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
+            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id,
+                               public_region_label=_public_region_label(session, journey))
             for row in session.scalars(
                 select(RealPlaceCandidate).where(
                     RealPlaceCandidate.journey_id == journey.id,
@@ -2439,7 +2455,8 @@ def lookup_bootstrap_shared_walk(
         "attempts": attempts,
         "verified_count": len(usable),
         "candidates": [
-            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
+            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id,
+                               public_region_label=_public_region_label(session, journey))
             for row in rows
             if _candidate_scope_matches(row, member_id=member_id, traveler_id=traveler_id)
             and row.external_id in {candidate.external_id for candidate in usable}
@@ -4933,6 +4950,17 @@ def select_bootstrap_candidate(
         except ValueError:
             raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate expiry is invalid", status_code=410)
     observation = _scope_observation(row, matching_scope)
+    region_status = public_region_status(
+        _public_region_label(session, journey),
+        public_address_from_tags(observation["osm_tags"]),
+    )
+    if region_status == "CONFLICT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REGION_CONFLICT",
+            "This place belongs to another administrative region",
+            status_code=422,
+            details={"region_status": region_status, "next_actions": ["CHOOSE_CANDIDATE_IN_DESTINATION_REGION"]},
+        )
     opening = observation["opening_hours"]
     opening_state = str(opening.get("status") or "UNKNOWN").upper()
     source_url = observation["source_url"] or str(evidence.get("source_url") or "") or None

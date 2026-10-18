@@ -10,6 +10,8 @@ from sqlalchemy import select
 from app.agent import goal_artifacts, goal_tasks
 from app.core.config import settings
 from app.db.models import ProviderCall, PlanVersion
+from app.planning.travel_brief import save_brief
+from app.schemas import TravelBriefRequest
 from test_goal_tasks import goal_scope, _create, _now
 
 
@@ -62,6 +64,33 @@ def test_area_query_is_once_bounded_and_persists_source(goal_scope, monkeypatch,
         other = goal_artifacts.discover_nearby_goal_places(session, journey, task,
             center_place_id="photon:W/123", query="park")
         assert other["status"] == "PROVIDER_UNAVAILABLE" and len(sent) == 1
+
+
+def test_area_result_with_explicit_foreign_address_is_conflict_and_cannot_enter_draft(goal_scope, monkeypatch):
+    session, journey, member = goal_scope
+    save_brief(session, journey, member, TravelBriefRequest(public_region_label="连城县"))
+    response = {"elements": [{"type": "node", "id": 987, "lat": 31.231, "lon": 121.471,
+        "tags": {"name": "TEST_FIXTURE 上海地点", "tourism": "museum",
+                 "addr:city": "上海市", "addr:district": "浦东新区"}}]}
+    real_client = httpx.Client
+    def respond(_request):
+        return httpx.Response(200, json=response)
+    monkeypatch.setattr(goal_artifacts.httpx, "Client",
+        lambda **kwargs: real_client(transport=httpx.MockTransport(respond), **kwargs))
+    monkeypatch.setattr(goal_artifacts, "settings", replace(settings, real_city_enabled=True, real_city_mode="live"))
+    task = _task()
+    result = goal_artifacts.discover_nearby_goal_places(session, journey, task,
+        center_place_id="photon:W/123", query="museum")
+
+    lead = result["places"][0]
+    assert lead["public_address"] == {"city": "上海市", "district": "浦东新区"}
+    assert lead["region_status"] == "CONFLICT"
+    date = goal_artifacts.empty_draft(journey)["days"][0]["date"]
+    with pytest.raises(HTTPException) as error:
+        goal_artifacts.normalize_draft(journey, task, [{"date": date, "slots": [
+            {"title": "TEST_FIXTURE 上海地点", "time_of_day": "afternoon", "place_id": lead["id"]},
+        ]}], author="AGENT")
+    assert error.value.status_code == 422 and error.value.detail == "DRAFT_PLACE_REGION_CONFLICT"
 
 
 @pytest.mark.parametrize("fields,status", [

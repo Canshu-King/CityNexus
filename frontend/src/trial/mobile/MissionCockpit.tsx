@@ -10,7 +10,7 @@ import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } fro
 import { WorkspaceMap, type WorkspaceMapPoint } from "./WorkspaceMap";
 import { WorkspaceActions } from "./WorkspaceActions";
 import { GoalDraftEditor } from "./GoalDraftEditor";
-import { splitGoalResearch } from "./goalResearch";
+import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import "./MissionCockpit.css";
 
 type Props = {
@@ -163,12 +163,12 @@ export function MissionCockpit({
   }, [journeyId, refresh, identityTick]);
 
   const research = splitGoalResearch(task);
-  const researchFingerprint = JSON.stringify([research.places, research.areas]);
+  const researchFingerprint = JSON.stringify([research.places, research.areas, research.unknown, research.conflicts]);
   const allMapPoints = useMemo<WorkspaceMapPoint[]>(() => {
     const results = new Map<string, WorkspaceMapPoint>();
-    for (const point of places) results.set(point.candidate_id, point);
-    const areaIds = new Set(research.areas.map((point) => point.id));
-    for (const point of [...research.places, ...research.areas]) {
+    for (const point of places) if (point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT") results.set(point.candidate_id, point);
+    for (const point of [...research.places, ...research.areas, ...research.unknown]) {
+      if (point.region_status === "CONFLICT") continue;
       if (point.provider_provenance === "UNVERIFIED") continue;
       results.set(point.id, {
         candidate_id: point.id,
@@ -180,7 +180,8 @@ export function MissionCockpit({
         selection_state: "OPENING_UNVERIFIED",
         source_url: point.source_url,
         observation_expired: false,
-        kind: areaIds.has(point.id) ? "area" : "place",
+        region_status: point.region_status,
+        kind: isAreaGoalResearchLead(point) ? "area" : "place",
       });
     }
     return [...results.values()];
@@ -189,8 +190,14 @@ export function MissionCockpit({
   const draftSlots = draftDays.flatMap((day) => day.slots.map((slot) => ({ date: day.date, ...slot })));
   const draftPlaceIds = new Set(draftSlots.map((slot) => slot.place_id).filter(Boolean));
   const draftPlaceFingerprint = [...draftPlaceIds].sort().join("|");
-  const itineraryMapPoints = useMemo(() => allMapPoints.filter((point) => draftPlaceIds.has(point.candidate_id)), [allMapPoints, draftPlaceFingerprint]);
-  const mapPoints = !showAllResearch && itineraryMapPoints.length ? itineraryMapPoints : allMapPoints;
+  const itineraryMapPoints = useMemo(() => allMapPoints.filter((point) => draftPlaceIds.has(point.candidate_id)
+    && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT"), [allMapPoints, draftPlaceFingerprint]);
+  const defaultMapIds = new Set([...places.map((point) => point.candidate_id), ...research.places.map((point) => point.id),
+    ...research.areas.map((point) => point.id), ...[...research.places, ...research.areas, ...research.unknown]
+      .filter((point) => draftPlaceIds.has(point.id)).map((point) => point.id)]);
+  const defaultMapPoints = allMapPoints.filter((point) => defaultMapIds.has(point.candidate_id));
+  const focusedMapCount = itineraryMapPoints.length || defaultMapPoints.length;
+  const mapPoints = showAllResearch ? allMapPoints : itineraryMapPoints.length ? itineraryMapPoints : defaultMapPoints;
   const latestEvents = events.slice(-5).reverse();
   useEffect(() => {
     if (task?.status !== "WORKING") return;
@@ -218,8 +225,8 @@ export function MissionCockpit({
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布" onScroll={(event) => setLayer(event.currentTarget.scrollLeft > event.currentTarget.clientWidth / 2 ? "timeline" : "map")}>
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
           <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处{!showAllResearch && itineraryMapPoints.length ? "日程引用" : "研究线索"}</span></div>
-          {itineraryMapPoints.length > 0 && allMapPoints.length > itineraryMapPoints.length && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>
-            {showAllResearch ? `只看日程引用（${itineraryMapPoints.length}）` : `查看全部研究（${allMapPoints.length}）`}
+          {allMapPoints.length > focusedMapCount && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>
+            {showAllResearch ? "收起其他研究" : `查看其他研究（${allMapPoints.length - mapPoints.length}）`}
           </button>}
           {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}

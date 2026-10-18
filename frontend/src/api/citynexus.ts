@@ -1689,7 +1689,9 @@ export interface BootstrapDiscoveryCandidate {
   coordinate_system: "WGS84";
   distance_m: number | null;
   opening_state: string;
-  selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
+  selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED" | "REGION_CONFLICT";
+  region_status?: "MATCHED" | "CONFLICT" | "UNKNOWN";
+  public_address?: Record<string, string>;
   selection_action: string | null;
   selection_blockers?: string[];
   facts_status?: "SUCCESS" | "UNAVAILABLE" | null;
@@ -2195,6 +2197,7 @@ export interface GoalResearchLead {
   source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   opening_status: string; cost_status: string;
   region_status?: "MATCHED" | "CONFLICT" | "UNKNOWN";
+  location_kind?: "AREA" | "POI";
   public_address?: Record<string, string>;
 }
 export interface DraftGoalTask {
