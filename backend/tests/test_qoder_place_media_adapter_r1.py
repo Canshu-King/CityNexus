@@ -513,3 +513,41 @@ def test_the_media_route_is_mounted_on_the_real_app():
     assert "/api/v1/journeys/{journey_id}/places/{place_id}/media" in paths, sorted(
         path for path in paths if "places" in path)
     assert "get" in paths["/api/v1/journeys/{journey_id}/places/{place_id}/media"]
+
+
+@pytest.mark.asyncio
+async def test_the_district_flag_is_a_fact_even_when_the_name_bound_directly():
+    """「这区县是不是旅客说的那个地区」不该因为名字直中就变成未知。
+
+    这两枚都是最省的那条路：`label` 与实体名逐字相同，所以 P131 那一趟根本不必走。改之前，
+    `district_matches_region` 在这种最强的绑定上反而是 None，读起来跟「对不上」一样；
+    现在它是一枚事实，而且是靠一次地区搜索买来的，不是靠图谱那一趟。
+    """
+    hit = {"search": [{"id": "Q10895162", "label": "冠豸山", "description": "mountain in Liancheng"}]}
+    region_hit = {"search": [{"id": "Q8686", "label": "连城县", "description": "county"}]}
+    by_term = {"冠豸山": hit, "连城县": region_hit}
+
+    same = entity_payload("Q10895162", "冠豸山", "mountain in Liancheng", ["a.jpg"], located=["Q8686"])
+    seen: list[httpx.Request] = []
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, search_by=by_term, entity=same,
+            district=district_payload("Q8686", zh="连城县")), seen)) as client:
+        upper = await place_media.collect_place_media(
+            place_id="N:1", label="冠豸山", region="连城县", client=client)
+    assert upper.media is not None
+    assert upper.media.identity_status == "BOUND_EXACT_LABEL"
+    assert upper.media.district_qid == "Q8686"
+    assert upper.media.district_matches_region is True, (
+        "同一枚节点就是旅客说的地区，字段却答 None —— 那正是被当成「对不上」读的样子")
+    climbs = [row for row in seen if dict(row.url.params).get("props") == "claims|labels"]
+    assert climbs == [], "the flag must not be bought by the located-in walk"
+
+    nested = entity_payload("Q10895162", "冠豸山", "mountain in Liancheng", ["a.jpg"], located=["Q42"])
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, search_by=by_term, entity=nested,
+            district=district_payload("Q42", zh="古城镇")))) as client:
+        below = await place_media.collect_place_media(
+            place_id="N:2", label="冠豸山", region="连城县", client=client)
+    assert below.media is not None
+    assert below.media.district == "古城镇"
+    assert below.media.district_matches_region is False, "另一个区县就是另一个区县，别让它读成未知"

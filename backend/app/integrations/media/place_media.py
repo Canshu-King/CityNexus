@@ -388,6 +388,13 @@ class WikimediaMediaProvider:
             node = await self._district_node(document["located_in"])
             district = node.get("name") or None
             district_qid = node.get("qid") or None
+            if district_qid and region and region_qid is None:
+                # "这区县是不是旅客说的那个地区" is a fact about the row, not a by-product of which arm
+                # happened to bind it. Before this, a place matched by its own name left the flag None --
+                # which read as "unknown" exactly when the match was strongest, and a renderer cannot
+                # tell that apart from a mismatch. Asked once, only when a district was resolved and
+                # only after the row is going to be shown.
+                region_qid = await self._region_entity(region)
             district_matches_region = (district_qid == region_qid) if (district_qid and region_qid) else None
             if not files:
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
