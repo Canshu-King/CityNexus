@@ -28,6 +28,7 @@ const TASK_STATUS: Record<string, string> = {
   CANCELLED: "已取消", COMPLETED: "已完成",
 };
 const TOOL_NAME: Record<string, string> = {
+  research_place_media: "查找地点照片",
   inspect_journey: "读取行程", read_guardian_stream: "查看行程守护记录", save_draft_variants: "比较旅行备选", search_city_services: "搜索城市地点",
   research_place_sources: "查找地点资料",
   discover_places: "查找公开地点", discover_nearby_places: "查找周边地点", save_draft_itinerary: "整理旅行草案",

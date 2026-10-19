@@ -14,6 +14,7 @@ import { GoalDraftVariants } from "./GoalDraftVariants";
 import { GuardianRealityPanel } from "./GuardianRealityPanel";
 import { DestinationMedia } from "./DestinationMedia";
 import { PlacePhotoGallery } from "./PlacePhotoGallery";
+import { useSourcePlaceMedia } from "./useSourcePlaceMedia";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import "./MissionCockpit.css";
 
@@ -51,6 +52,7 @@ const toolCopy: Record<string, string> = {
   discover_nearby_places: "检索附近地点",
   search_city_services: "查询城市服务",
   research_place_sources: "调查地点来源",
+  research_place_media: "查找地点照片",
   acquire_place_facts: "核实地点事实",
   estimate_place_facts: "准备参考估算",
   compare_routes: "比较已保存路线",
@@ -118,16 +120,16 @@ export function MissionCockpit({
     if (value.journey_id !== journeyId) return;
     setTask(value); setEvents(items); setDataState("ready");
   }, [journeyId]);
-  const focusPlace = useCallback((id: string) => {
+  const focusPlace = useCallback((id: string, preferMap = false) => {
     setFocusedPlaceId(id);
     const slot = document.querySelector<HTMLDetailsElement>(`.cn-mission-os .rev-goal-draft-slot[data-place-id="${CSS.escape(id)}"]`);
-    if (slot) {
+    if (slot && !preferMap) {
       slot.open = true;
       setLayer("timeline");
       requestAnimationFrame(() => slot.scrollIntoView({ block: "center", inline: "nearest", behavior: "auto" }));
     } else {
       setLayer("map");
-      spatial.current?.scrollTo({ left: 0, behavior: "auto" });
+      requestAnimationFrame(() => document.querySelector('.cn-mission-map-pane [aria-label="当前行程地图"]')?.scrollIntoView({ block: "center", behavior: "auto" }));
     }
   }, []);
   useEffect(() => {
@@ -231,6 +233,12 @@ export function MissionCockpit({
   const selectedResearch = allMapPoints.find(point => point.candidate_id === focusedPlaceId);
   const mapPoints = selectedResearch && !visibleMapPoints.some(point => point.candidate_id === focusedPlaceId)
     ? [...visibleMapPoints, selectedResearch] : visibleMapPoints;
+  const photoPriorityIds = new Set([...draftPlaceIds, ...(task?.draft_variants ?? []).flatMap(variant => variant.source_place_ids)] as string[]);
+  const mediaById = useSourcePlaceMedia(journeyId, task?.task_id, Boolean(task?.consent.online_research),
+    allMapPoints, new Set([...(task?.research_places ?? []), ...(task?.research_areas ?? [])].map(place => place.id)), photoPriorityIds, focusedPlaceId);
+  const coverPoint = allMapPoints.find(point => photoPriorityIds.has(point.candidate_id)
+    && mediaById[point.candidate_id]?.media?.can_show);
+  const coverMedia = coverPoint ? mediaById[coverPoint.candidate_id].media : undefined;
   const latestEvents = events.slice(-5).reverse();
   useEffect(() => {
     if (task?.status !== "WORKING") return;
@@ -254,7 +262,7 @@ export function MissionCockpit({
       <div><div className="cn-mission-kicker"><Sparkles size={15} /> CITYNEXUS / MISSION OS</div>
         <h2>{cityName}<span>，边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p>
         {onChangeCity && <button type="button" className="cn-mission-change-city" onClick={onChangeCity}>换地区 ›</button>}</div>
-      <DestinationMedia key={cityName} cityName={cityName} />
+      <DestinationMedia key={cityName + (coverMedia?.image_url || "")} cityName={cityName} media={coverMedia} placeName={coverPoint?.name} />
       <span className="cn-mission-state" aria-live="polite">{status}</span>
     </header>
     <div className="cn-mission-layer-tabs" aria-label="切换工作台图层">
@@ -284,7 +292,7 @@ export function MissionCockpit({
           {allMapPoints.length > focusedMapCount && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>
             {showAllResearch ? "收起其他研究" : `查看其他研究（${allMapPoints.length - mapPoints.length}）`}
           </button>}
-          <PlacePhotoGallery cityName={cityName} places={allMapPoints} selectedId={focusedPlaceId} scheduledIds={draftPlaceIds} onSelect={focusPlace} />
+          <PlacePhotoGallery cityName={cityName} places={allMapPoints} mediaById={mediaById} priorityIds={photoPriorityIds} selectedId={focusedPlaceId} scheduledIds={draftPlaceIds} onSelect={focusPlace} />
           {selectedResearch && <p role="status">正在查看：{selectedResearch.name}{draftPlaceIds.has(selectedResearch.candidate_id) ? " · 已排入日程" : " · 尚未排入日程"}</p>}
           {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
@@ -303,6 +311,7 @@ export function MissionCockpit({
           <GoalDraftVariants key={task?.task_id ?? journeyId} variants={task?.draft_variants ?? []}
             disabled={task?.status === "WORKING"} onChoose={chooseDraft} />
           {task?.draft_artifact ? <GoalDraftEditor key={task.task_id + ":" + chosenDraftRevision} artifact={task.draft_artifact} disabled={task.status === "WORKING"}
+            mediaById={mediaById} onPlaceSelect={id => focusPlace(id, true)}
             onSave={async (artifact) => {
               const bearer = readTravelerBearer(); const owner = readTravelerIdentity()?.travelerId;
               if (!bearer || !owner) throw new Error("请先登录这趟旅行。");

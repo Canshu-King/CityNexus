@@ -28074,3 +28074,8 @@ def get_commitment(commitment_id: UUID, session: Session = Depends(get_session))
     if item is None:
         raise HTTPException(404, f"Commitment {commitment_id} was not found")
     return _commitment_payload(item)
+
+
+# Source-lead media stays signed and separate from Qoder's canonical Place router.
+from app.goal_media_routes import router as goal_media_router
+app.include_router(goal_media_router)

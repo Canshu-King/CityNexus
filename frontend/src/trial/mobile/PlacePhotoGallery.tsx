@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Images, ImageOff } from "lucide-react";
+import { Images, ImageOff, MapPin } from "lucide-react";
+import type { GoalPlaceMediaResult } from "../../api/citynexus";
 import type { WorkspaceMapPoint } from "./WorkspaceMap";
 import "./PlacePhotoGallery.css";
 
@@ -76,22 +77,28 @@ function matchesPhoto(photo: CuratedPhoto, place: WorkspaceMapPoint): boolean {
     && Math.abs(place.longitude - photo.longitude) < 0.03;
 }
 
-function PhotoCard({ photo, place, selected, scheduled, onSelect }: {
-  photo: CuratedPhoto; place: WorkspaceMapPoint; selected: boolean; scheduled: boolean; onSelect?: (id: string) => void;
+function PhotoCard({ photo, result, place, selected, scheduled, onSelect }: {
+  photo?: CuratedPhoto; result?: GoalPlaceMediaResult; place: WorkspaceMapPoint;
+  selected: boolean; scheduled: boolean; onSelect?: (id: string) => void;
 }) {
   const [broken, setBroken] = useState(false);
-  return <article className={"cn-place-photo" + (selected ? " is-selected" : "")} data-place-id={place.candidate_id}>
-    {broken
-      ? <div className="cn-place-photo-fallback"><ImageOff size={24} /><span>照片暂时无法加载</span></div>
-      : <img src={photoUrl(photo.filename)} alt={photo.label + "实景照片"}
-          loading="lazy" decoding="async" onError={() => setBroken(true)} />}
+  const media = result?.media?.can_show && result.media.place_id === place.candidate_id ? result.media : null;
+  const url = media?.thumb_url || media?.image_url || (photo ? photoUrl(photo.filename) : null);
+  const sourceUrl = media?.source_url || (photo ? photoPage(photo.filename) : null);
+  const author = media?.author || photo?.author;
+  const license = media?.license || photo?.licenseLabel;
+  const licenseUrl = media?.terms_url || photo?.licenseHref;
+  return <article className={"cn-place-photo" + (selected ? " is-selected" : "") + (!url ? " is-placeholder" : "")}
+    data-place-id={place.candidate_id} data-photo-origin={media ? "runtime" : photo ? "curated" : "none"}>
+    {broken || !url
+      ? <div className="cn-place-photo-fallback">{url ? <ImageOff size={24} /> : <MapPin size={28} />}<span>{url ? "照片暂时无法加载" : "先看看这个地点"}</span></div>
+      : <img src={url} alt={place.name + "实景照片"} loading="lazy" decoding="async" onError={() => setBroken(true)} />}
     <div className="cn-place-photo-meta">
-      <strong>{photo.label}</strong>
-      <span>历史照片 · 封面裁切</span>
-      <small>
-        <a href={photoPage(photo.filename)} target="_blank" rel="noopener noreferrer">{photo.author}</a>
-        {photo.licenseHref && <> · <a href={photo.licenseHref} target="_blank" rel="noopener noreferrer">{photo.licenseLabel}</a></>}
-      </small>
+      <strong>{photo?.label || place.name}</strong>
+      {url && <span>{media ? "来源实景 · 封面裁切" : "历史照片 · 封面裁切"}</span>}
+      {sourceUrl && <small><a href={sourceUrl} target="_blank" rel="noopener noreferrer">{author}</a>
+        {license && <> · {licenseUrl ? <a href={licenseUrl} target="_blank" rel="noopener noreferrer">{license}</a> : license}</>}
+      </small>}
       <button type="button" onClick={() => onSelect?.(place.candidate_id)} aria-pressed={selected}>
         {selected ? "正在查看" : scheduled ? "查看对应安排" : "在地图中查看"}
       </button>
@@ -99,18 +106,25 @@ function PhotoCard({ photo, place, selected, scheduled, onSelect }: {
   </article>;
 }
 
-export function PlacePhotoGallery({ cityName, places, selectedId, scheduledIds, onSelect }: {
-  cityName: string; places: WorkspaceMapPoint[]; selectedId?: string | null; scheduledIds?: ReadonlySet<string>; onSelect?: (id: string) => void;
+export function PlacePhotoGallery({ cityName, places, mediaById = {}, selectedId, scheduledIds, priorityIds, onSelect }: {
+  cityName: string; places: WorkspaceMapPoint[]; mediaById?: Record<string, GoalPlaceMediaResult>;
+  selectedId?: string | null; scheduledIds?: ReadonlySet<string>; priorityIds?: ReadonlySet<string>; onSelect?: (id: string) => void;
 }) {
-  if (!/^(?:福建省)?(?:龙岩市)?连城(?:县)?$/.test(cityName.trim())) return null;
-  const photos = LIANCHENG_PHOTOS.flatMap((photo) => {
-    const place = places.find((point) => matchesPhoto(photo, point));
-    return place ? [{ photo, place }] : [];
-  });
-  if (photos.length === 0) return null;
+  const [expanded, setExpanded] = useState(false);
+  const curated = /^(?:福建省)?(?:龙岩市)?连城(?:县)?$/.test(cityName.trim()) ? LIANCHENG_PHOTOS : [];
+  const eligible = places.filter(place => place.provider_provenance === "LIVE_PROVIDER"
+    && place.region_status !== "CONFLICT" && place.selection_state !== "REGION_CONFLICT");
+  const cards = eligible.map(place => ({ place, photo: curated.find(photo => matchesPhoto(photo, place)),
+    result: mediaById[place.candidate_id] })).sort((a,b) =>
+      Number(Boolean(b.result?.media || b.photo)) - Number(Boolean(a.result?.media || a.photo)));
+  if (!cards.length) return null;
+  const relevant = cards.filter(card => card.photo || card.result?.media || priorityIds?.has(card.place.candidate_id) || card.place.candidate_id === selectedId);
+  const visibleCards = expanded ? cards : relevant.length ? relevant : cards.slice(0, 6);
   return <section className="cn-place-gallery" aria-label="与研究地点对应的真实景点照片">
-    <div className="cn-place-gallery-heading"><Images size={17} /><strong>先看看这些地方</strong><span>实景相册</span></div>
-    <div className="cn-place-photo-track">{photos.map(({ photo, place }) => <PhotoCard key={photo.filename}
-      photo={photo} place={place} selected={selectedId === place.candidate_id} scheduled={scheduledIds?.has(place.candidate_id) ?? false} onSelect={onSelect} />)}</div>
+    <div className="cn-place-gallery-heading"><Images size={17} /><strong>先看看这些地方</strong><span>地点相册</span></div>
+    <div className="cn-place-photo-track">{visibleCards.slice(0, 24).map(({ photo, place, result }) =>
+      <PhotoCard key={place.candidate_id + (result?.media?.image_url || "")} photo={photo} result={result}
+        place={place} selected={selectedId === place.candidate_id} scheduled={scheduledIds?.has(place.candidate_id) ?? false} onSelect={onSelect} />)}</div>
+    {cards.length > visibleCards.length && !expanded && <button type="button" className="cn-place-gallery-more" onClick={() => setExpanded(true)}>查看更多地点（{Math.min(cards.length,24)}）</button>}
   </section>;
 }

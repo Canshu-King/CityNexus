@@ -2240,6 +2240,17 @@ export interface GoalDraftVariant {
   source_place_ids: string[]; route_ids: string[]; unknown_summary: string[];
 }
 
+export interface GoalPlaceMedia {
+  place_id: string; image_url: string; thumb_url: string | null; author: string;
+  license: string; source_url: string; terms_url?: string | null; title?: string | null;
+  captured_at: string; can_show: boolean; identity_status: string;
+}
+export interface GoalPlaceMediaResult {
+  candidate_id: string; journey_id: string; task_id: string; place_id: string;
+  status: string; media: GoalPlaceMedia | null; cache_hit?: boolean;
+  source_reference?: string | null; source_wikidata_id?: string | null;
+}
+
 export interface DraftGoalTask {
   task_id: string;
   journey_id: string;
@@ -3074,6 +3085,14 @@ export const cityNexusApi = {
         body: JSON.stringify(input),
         signal,
       },
+    );
+  },
+
+  getGoalPlaceMedia(journeyId: string, taskId: string, candidateId: string, signal?: AbortSignal): Promise<GoalPlaceMediaResult> {
+    return requestJson<GoalPlaceMediaResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/place-media?candidate_id=" + encodeURIComponent(candidateId),
+      { headers: travelerAuthHeaders(), cache: "no-store", signal },
     );
   },
 

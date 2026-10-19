@@ -2612,6 +2612,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/agent/goal-tasks/{task_id}/place-media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read licensed media for this signed owner's existing task source lead */
+        get: operations["getSignedGoalPlaceMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7668,6 +7685,84 @@ export interface operations {
                 content: {
                     "application/json": Record<string, never>;
                 };
+            };
+        };
+    };
+    getSignedGoalPlaceMedia: {
+        parameters: {
+            query: {
+                candidate_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Source-bound image or an ordinary no-image fallback; never blocks itinerary editing */
+            200: {
+                headers: {
+                    /** @description private no-store */
+                    "Cache-Control"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        candidate_id: string;
+                        place_id: string;
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        task_id: string;
+                        /** @enum {string} */
+                        status: "REAL_POI_PHOTO" | "NO_IMAGE" | "NO_PERMISSION" | "UNAVAILABLE";
+                        cache_hit?: boolean;
+                        identity_status?: string;
+                        /** Format: uri */
+                        source_reference?: string | null;
+                        source_wikidata_id?: string | null;
+                        media: {
+                            place_id?: string;
+                            /** Format: uri */
+                            image_url?: string;
+                            /** Format: uri */
+                            thumb_url?: string | null;
+                            /** Format: uri */
+                            source_url?: string;
+                            author?: string;
+                            license?: string;
+                            /** Format: uri */
+                            terms_url?: string | null;
+                            can_show?: boolean;
+                            /** Format: date-time */
+                            captured_at?: string;
+                        } | null;
+                    };
+                };
+            };
+            /** @description Signed traveler required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey member or owner scope denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task or candidate does not belong to this Journey and owner */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

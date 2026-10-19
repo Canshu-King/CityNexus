@@ -2175,6 +2175,49 @@ paths:
       operationId: createEdgeObservation
       responses:
         '201': {description: Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}}}
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/place-media:
+    get:
+      operationId: getSignedGoalPlaceMedia
+      summary: Read licensed media for this signed owner's existing task source lead
+      parameters:
+        - {name: journey_id, in: path, required: true, schema: {type: string, format: uuid}}
+        - {name: task_id, in: path, required: true, schema: {type: string, format: uuid}}
+        - {name: candidate_id, in: query, required: true, schema: {type: string, minLength: 1, maxLength: 200}}
+      responses:
+        '200':
+          description: Source-bound image or an ordinary no-image fallback; never blocks itinerary editing
+          headers:
+            Cache-Control: {schema: {type: string}, description: private no-store}
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [candidate_id, place_id, journey_id, task_id, status, media]
+                properties:
+                  candidate_id: {type: string}
+                  place_id: {type: string}
+                  journey_id: {type: string, format: uuid}
+                  task_id: {type: string, format: uuid}
+                  status: {type: string, enum: [REAL_POI_PHOTO, NO_IMAGE, NO_PERMISSION, UNAVAILABLE]}
+                  cache_hit: {type: boolean}
+                  identity_status: {type: string}
+                  source_reference: {type: [string, 'null'], format: uri}
+                  source_wikidata_id: {type: [string, 'null']}
+                  media:
+                    type: [object, 'null']
+                    properties:
+                      place_id: {type: string}
+                      image_url: {type: string, format: uri}
+                      thumb_url: {type: [string, 'null'], format: uri}
+                      source_url: {type: string, format: uri}
+                      author: {type: string}
+                      license: {type: string}
+                      terms_url: {type: [string, 'null'], format: uri}
+                      can_show: {type: boolean}
+                      captured_at: {type: string, format: date-time}
+        '401': {description: Signed traveler required}
+        '403': {description: Journey member or owner scope denied}
+        '404': {description: Task or candidate does not belong to this Journey and owner}
 components:
   parameters:
     DemoResetToken:

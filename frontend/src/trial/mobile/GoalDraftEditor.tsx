@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import type { GoalDraftArtifact, GoalDraftSlot } from "../../api/citynexus";
+import type { GoalDraftArtifact, GoalDraftSlot, GoalPlaceMediaResult } from "../../api/citynexus";
 
 const PERIOD: Record<GoalDraftSlot["time_of_day"], string> = {
   morning: "上午", afternoon: "下午", evening: "晚上", flexible: "时间灵活",
 };
 
-export function GoalDraftEditor({ artifact, disabled, onSave }: {
-  artifact: GoalDraftArtifact; disabled: boolean; onSave: (draft: GoalDraftArtifact) => Promise<void>;
+export function GoalDraftEditor({ artifact, disabled, onSave, mediaById = {}, onPlaceSelect }: {
+  artifact: GoalDraftArtifact; disabled: boolean; mediaById?: Record<string, GoalPlaceMediaResult>;
+  onPlaceSelect?: (id: string) => void; onSave: (draft: GoalDraftArtifact) => Promise<void>;
 }) {
   const [draft, setDraft] = useState(artifact);
   const [saving, setSaving] = useState(false);
@@ -89,6 +90,17 @@ export function GoalDraftEditor({ artifact, disabled, onSave }: {
     <p>草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。</p>
     {draft.days.map((day, dayIndex) => <fieldset key={day.date} disabled={disabled || saving}>
       <legend>{day.date} · {day.slots.filter((slot) => slot.title.trim()).length} 项安排</legend>
+      <div className="rev-draft-day-photos">{[...new Set(day.slots.map(slot => slot.place_id).filter((id): id is string => Boolean(id)))].slice(0, 3).map(id => {
+        const media = mediaById[id]?.media;
+        if (!media?.can_show || media.place_id !== id) return null;
+        const title = day.slots.find(slot => slot.place_id === id)?.title || "行程地点";
+        return <figure key={id} data-place-id={id}>
+          <button type="button" onClick={() => onPlaceSelect?.(id)} aria-label={"在地图中查看 " + title}>
+            <img src={media.thumb_url || media.image_url} loading="lazy" alt={title} onError={event => { event.currentTarget.hidden = true; }} />
+          </button>
+          <figcaption><strong>{title}</strong><a href={media.source_url} target="_blank" rel="noopener noreferrer">{media.author} · {media.license}</a></figcaption>
+        </figure>;
+      })}</div>
       {day.slots.length === 0 && <p>还没有安排，可以添加一项想去的地方或待核实事项。</p>}
       {day.slots.map((slot, slotIndex) => <details className="rev-goal-draft-slot" key={slotIndex} data-place-id={slot.place_id || undefined}>
         <summary><strong>{PERIOD[slot.time_of_day] ?? "待定"}</strong> · {slot.title.trim() || "新安排（待填写）"}

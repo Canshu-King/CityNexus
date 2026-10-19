@@ -35,6 +35,7 @@ from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
+from app.agent.goal_media import read_source_media, media_tool_definition, source_lead
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
@@ -60,7 +61,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "save_draft_variants", "read_guardian_stream", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
+    {"inspect_journey", "research_place_media", "save_draft_variants", "read_guardian_stream", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -556,7 +557,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
-        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition(), guardian_stream_definition(), variant_definition()),
+        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition(), guardian_stream_definition(), variant_definition(), media_tool_definition()),
     )
     # A full multi-day draft tool payload can exceed 2400 tokens on its own.
     # Reserve one bounded completion, without an automatic provider retry.
@@ -674,6 +675,7 @@ def _initial_messages(
         "read_guardian_stream reads existing Journey observations, impacts and recovery epochs only; "
         "it does not start monitoring. Empty records mean no checks recorded, not a running watch. "
         "For comparing relaxed, budget and local-character options, use save_draft_variants from actual task-owned places and routes. "
+        "Use research_place_media for up to three key task-owned source places to show licensed destination photos. Missing media must not prevent saving a draft. Reuse cached media and never invent image URLs. "
         "Alternatives do not overwrite the selected draft. Unknown fees are not evidence of cheapness. "
         "For a request only to compare options or read status, preserve the existing main draft."
     )
@@ -709,6 +711,11 @@ def _initial_messages(
 def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+    if name == "research_place_media":
+        if set(raw) != {"place_id"} or not isinstance(raw.get("place_id"), str):
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        source_lead(task, raw["place_id"])
+        return {"place_id": raw["place_id"]}
     if name == "save_draft_variants":
         if set(raw) != {"variants"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -823,7 +830,7 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
             "source_discovery_attempted": False,
             "acquisition_attempted": False,
         }
-    if name in {"read_guardian_stream", "save_draft_variants"}:
+    if name in {"read_guardian_stream", "save_draft_variants", "research_place_media"}:
         return raw
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
@@ -925,10 +932,15 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
             "category_length": len(args.get("category") or ""),
             "service_type_length": len(args.get("service_type") or ""),
         }
-    return {"place_id": args.get("place_id")} if name == "research_place_sources" else {}
+    return {"place_id": args.get("place_id")} if name in {"research_place_sources", "research_place_media"} else {}
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "research_place_media":
+        media = result.get("media") or {}
+        return {"status": result.get("status"), "place_id": result.get("candidate_id"),
+            "source_url": media.get("source_url"), "license": media.get("license"),
+            "identity_status": result.get("identity_status"), "cache_hit": result.get("cache_hit")}
     if name == "save_draft_variants":
         return {"status": result.get("status"), "variant_ids": [variant["id"] for variant in result.get("variants") or []]}
     if name == "read_guardian_stream":
@@ -1523,7 +1535,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"save_draft_variants", "read_guardian_stream", "discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places"}
+                    request = (None if tool_name in {"save_draft_variants", "read_guardian_stream", "discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places", "research_place_media"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1542,6 +1554,9 @@ def resume_goal_task(
                         elif tool_name == "route_public_places":
                             raw_result = route_public_places(session, journey, task, **args)
                             mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        elif tool_name == "research_place_media":
+                            raw_result = read_source_media(session, journey, task, mission.id, args["place_id"])
                             session.commit()
                         elif tool_name == "compare_routes":
                             raw_result = compare_stored_routes(session, journey, **args)

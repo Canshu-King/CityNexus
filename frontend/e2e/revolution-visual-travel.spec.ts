@@ -82,9 +82,9 @@ for (const width of [390, 430, 1366, 1566]) {
     await expect(cockpit).toBeVisible();
     await expect(page.locator(".cn-mission-media")).toBeVisible();
     await expect(cockpit.getByRole("region", { name: "与研究地点对应的真实景点照片" })).toContainText("冠豸山");
-    await expect(cockpit.locator(".cn-place-photo")).toHaveCount(1);
+    await expect(cockpit.locator('.cn-place-photo[data-photo-origin="curated"]')).toHaveCount(1);
     await expect(cockpit.locator(".cn-place-photo-meta a").first()).toHaveAttribute("href", /commons\.wikimedia\.org/);
-    await expect(cockpit.locator(".cn-place-photo-fallback")).toBeVisible();
+    await expect(cockpit.locator('.cn-place-photo[data-photo-origin="curated"] .cn-place-photo-fallback')).toBeVisible();
     await cockpit.locator(".cn-place-photo").getByRole("button", { name: "查看对应安排" }).click();
     await expect(cockpit.locator('.rev-goal-draft-slot[data-place-id="' + point.candidate_id + '"]')).toHaveAttribute("open", "");
     if (width < 1000) await page.getByTestId("rev-mission-layer-map").click();

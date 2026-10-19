@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ImageOff, Mountain, Trees } from "lucide-react";
+import type { GoalPlaceMedia } from "../../api/citynexus";
 import "./DestinationMedia.css";
 
 /**
@@ -14,22 +15,27 @@ const LIANCHENG_PHOTO = {
   license: "https://creativecommons.org/licenses/by/3.0/",
 };
 
-export function DestinationMedia({ cityName }: { cityName: string }) {
+export function DestinationMedia({ cityName, media, placeName }: { cityName: string; media?: GoalPlaceMedia | null; placeName?: string }) {
   const scene = /^(?:福建省)?(?:龙岩市)?连城(?:县)?$/.test(cityName.trim()) ? LIANCHENG_PHOTO : null;
   const [failed, setFailed] = useState(false);
-  const src = scene ? "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(scene.file) + "?width=1000" : null;
-  return <div className="cn-mission-media" aria-label={scene ? "目的地实景参考" : "旅行目的地插画"}>
-    {scene && !failed && src
-      ? <img src={src} loading="lazy" decoding="async" alt="福建连城冠豸山实景"
+  const src = media?.thumb_url || media?.image_url || (scene ? "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(scene.file) + "?width=1000" : null);
+  const page = media?.source_url || scene?.page;
+  const author = media?.author || scene?.credit;
+  const license = media?.license || (scene ? "CC BY 3.0" : null);
+  const terms = media?.terms_url || scene?.license;
+  const name = media ? placeName : "冠豸山";
+  return <div className="cn-mission-media" aria-label={src ? "目的地实景参考" : "旅行目的地插画"}>
+    {!failed && src
+      ? <img src={src} loading="lazy" decoding="async" alt={name + "实景"}
           onError={() => setFailed(true)} />
       : <div className="cn-mission-media-art" aria-hidden="true">
           <Mountain size={92} strokeWidth={0.65} />
           <Trees size={45} strokeWidth={0.7} />
         </div>}
-    {scene && !failed
+    {src && !failed
       ? <div className="cn-mission-media-credit">
-          <a href={scene.page} target="_blank" rel="noopener noreferrer">冠豸山实景（封面裁切）</a>
-          <span> · {scene.credit} / <a href={scene.license} target="_blank" rel="noopener noreferrer">CC BY 3.0</a></span>
+          <a href={page} target="_blank" rel="noopener noreferrer">{name}实景（封面裁切）</a>
+          <span> · {author} / {terms ? <a href={terms} target="_blank" rel="noopener noreferrer">{license}</a> : license}</span>
         </div>
       : <div className="cn-mission-media-credit is-illustration"><ImageOff size={12} aria-hidden="true" /> 旅行插画</div>}
   </div>;

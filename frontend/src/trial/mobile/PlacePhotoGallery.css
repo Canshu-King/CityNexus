@@ -99,3 +99,16 @@
   .rev-mobile-v1 .cn-place-photo-track { grid-auto-columns: minmax(205px, 78%); }
   .rev-mobile-v1 .cn-place-photo { height: 250px; }
 }
+
+.rev-mobile-v1 .cn-place-photo.is-placeholder { background: linear-gradient(150deg,#e5f1e9,#edf2f9); }
+.rev-mobile-v1 .cn-place-photo.is-placeholder::after { background: linear-gradient(0deg,#294b48d9,transparent 80%); }
+.rev-mobile-v1 .cn-place-gallery .cn-place-gallery-more { justify-self: start; width: auto; min-height: 44px; border: 1px solid #d0e2d9; border-radius: 12px; background: #f0f6f2; color: #2b6450; padding: 8px 14px; font: inherit; font-size: 13px; }
+
+.rev-draft-day-photos { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+.rev-draft-day-photos:empty { display: none; }
+.rev-draft-day-photos figure { flex: 0 0 150px; margin: 0; min-width: 0; border-radius: 12px; overflow: hidden; background: #f1f5f2; }
+.rev-mobile-v1 .rev-draft-day-photos button { display: block; padding: 0; width: 100%; height: 100px; min-height: 44px; border: 0; border-radius: 0; background: #dce9e1; cursor: pointer; }
+.rev-draft-day-photos img { width: 100%; height: 100%; object-fit: cover; }
+.rev-draft-day-photos figcaption { display: grid; padding: 8px; gap: 4px; }
+.rev-draft-day-photos figcaption strong { font-size: 12px; line-height: 1.5; }
+.rev-draft-day-photos figcaption a { font-size: 10px; line-height: 1.4; color: #426657; }
