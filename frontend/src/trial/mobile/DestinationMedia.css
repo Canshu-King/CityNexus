@@ -62,7 +62,7 @@
   right: 16px;
   max-width: 300px;
   text-align: right;
-  font-size: 10px;
+  font-size: 11px;
   color: rgba(255,255,255,.85);
   text-shadow: 0 1px 6px #000d;
   pointer-events: auto;
@@ -79,5 +79,5 @@
   .rev-mobile-v1 .cn-mission-media::after {
     background: linear-gradient(90deg,rgba(14,22,39,.92),rgba(14,22,39,.48)),linear-gradient(0deg,rgba(14,22,39,.62),transparent 45%);
   }
-  .rev-mobile-v1 .cn-mission-media-credit { bottom: 7px; right: 12px; font-size: 9px; }
+  .rev-mobile-v1 .cn-mission-media-credit { bottom: 8px; right: 12px; font-size: 11px; }
 }

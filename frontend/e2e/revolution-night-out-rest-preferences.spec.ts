@@ -54,6 +54,9 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   await page.route("**/*", (route) => {
     const url = new URL(route.request().url());
     if (url.origin === localViteOrigin) return route.continue();
+    // Curated scenery is an image request, not a travel/provider action. Keep
+    // this fixture offline and exercise the illustration fallback explicitly.
+    if (url.hostname === "commons.wikimedia.org" && url.pathname.startsWith("/wiki/Special:FilePath/")) return route.abort();
     blockedExternalRequests += 1;
     return route.abort();
   });

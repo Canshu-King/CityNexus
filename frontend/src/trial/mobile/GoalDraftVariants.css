@@ -299,6 +299,7 @@
 .rev-mobile-v1 .rev-goal-variant-unknowns > strong { font-size: 12px; }
 .rev-mobile-v1 .rev-goal-variant-choose {
   min-height: 48px;
+  scroll-margin-block: 120px 260px;
   border: 0;
   border-radius: 12px;
   background: var(--plan-accent);

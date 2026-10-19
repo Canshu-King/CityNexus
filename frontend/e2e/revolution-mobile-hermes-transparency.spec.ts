@@ -331,6 +331,7 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
   const apiRequestsBeforeClick = apiRequests.length;
   await activityEntry.click();
   await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
+  await page.locator(".cn-mission-agent-disclosure > summary").click();
   await expect(page.getByRole("region", {name: "Agent 命令台"})).toBeVisible();
   await expect(page.locator("dialog[open]")).toHaveCount(0);
   expect(apiRequests.slice(apiRequestsBeforeClick).every((request) => request.startsWith("GET "))).toBe(true);

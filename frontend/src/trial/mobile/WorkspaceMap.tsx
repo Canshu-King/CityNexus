@@ -33,8 +33,8 @@ function shortAdministrativeAddress(address?: Record<string, string>): string {
     .slice(0, 3).join(" · ");
 }
 
-export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
-  candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void; onSelect?: (id: string) => void;
+export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedId }: {
+  candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void; onSelect?: (id: string) => void; selectedId?: string | null;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);
@@ -59,6 +59,15 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
       index,
     }));
   }, [points]);
+  const previewGroups = useMemo(() => {
+    const groups: (typeof previewPins)[] = [];
+    for (const pin of previewPins) {
+      const group = groups.find(items => Math.hypot(items[0].positionX - pin.positionX, items[0].positionY - pin.positionY) < 20);
+      if (group) group.push(pin); else groups.push([pin]);
+    }
+    return groups;
+  }, [previewPins]);
+  const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     if (!allowed || !host.current || points.length === 0) return;
@@ -107,29 +116,39 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
       {!allowed ? <div className="rev-workspace-map-consent">
         <div className="rev-workspace-map-preview" aria-label="已发现地点的坐标分布预览" data-testid="rev-workspace-coordinate-preview">
           <span className="rev-workspace-preview-label">地点分布预览 · 未加载外部底图</span>
-          {previewPins.map((point) => (
-            <button type="button" key={point.candidate_id} className="rev-workspace-preview-pin"
+          {previewGroups.map((group) => {
+            const point = group[0];
+            const grouped = group.length > 1;
+            return <button type="button" key={point.candidate_id} className={"rev-workspace-preview-pin" + (group.some(p => p.candidate_id === selectedId) ? " is-selected" : "")}
               style={{ left: point.positionX + "%", top: point.positionY + "%", zIndex: 10 + point.index }}
-              onClick={() => onSelect?.(point.candidate_id)}
-              title={point.name} aria-label={"查看 " + point.name + " 对应日程"}>
+              onClick={() => grouped ? setExpandedGroup(expandedGroup === point.candidate_id ? null : point.candidate_id) : onSelect?.(point.candidate_id)}
+              aria-expanded={grouped ? expandedGroup === point.candidate_id : undefined}
+              title={group.map(p => p.name).join("、")} aria-label={grouped ? `展开相邻 ${group.length} 处地点` : "查看 " + point.name + " 对应日程"}>
               {point.index + 1}
-            </button>
-          ))}
+              {grouped && <span className="rev-workspace-pin-count">{group.length}</span>}
+            </button>;
+          })}
           <div className="rev-workspace-preview-footer">根据实际坐标显示相对方位，不代表道路或路线</div>
         </div>
+        {expandedGroup && <div className="rev-workspace-pin-choices" role="group" aria-label="相邻地点">
+          {previewGroups.find(group => group[0].candidate_id === expandedGroup)?.map(point =>
+            <button type="button" key={point.candidate_id} onClick={() => onSelect?.(point.candidate_id)} aria-pressed={point.candidate_id === selectedId}>
+              {point.index + 1} · {point.name}
+            </button>)}
+        </div>}
         <p>点击图钉可定位已保存安排；加载 OpenStreetMap 底图后查看街道与详细位置。不会读取 GPS。</p>
         <button type="button" onClick={onAllow}>加载地图</button>
       </div>
         : <div ref={host} className="rev-workspace-map" data-testid="rev-workspace-map-canvas" />}
       {failed && <p role="status">底图暂时没有加载成功，下面的地点列表仍可查看。</p>}
-      <ol className="rev-workspace-place-list" aria-label="OpenStreetMap 地点">{points.map((point) => <li key={point.candidate_id}><strong>{point.name}</strong>
+      <ol className="rev-workspace-place-list" aria-label="OpenStreetMap 地点">{points.map((point) => <li key={point.candidate_id} data-selected={point.candidate_id === selectedId}><strong>{point.name}</strong>
         <small>{point.kind === "area" ? "地区／村落线索" : point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "地点位置"} · {point.observation_expired ? "上次搜索的地点，营业与费用需更新" : point.selection_state === "READY_FOR_NATIVE_PLAN" ? "资料可用于正式排程" : "部分营业或费用资料待核实"}</small>
         {point.source_url && OSM_SOURCE_URL.test(point.source_url) &&
           <a href={point.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}</li>)}</ol>
     </>}
     {amapPoints.length > 0 && <section aria-label="高德地点" data-testid="rev-amap-research-leads">
       <h3>高德地点</h3>
-      <ol className="rev-workspace-place-list">{amapPoints.map((point) => <li key={point.candidate_id}>
+      <ol className="rev-workspace-place-list">{amapPoints.map((point) => <li key={point.candidate_id} data-selected={point.candidate_id === selectedId}>
         <strong><span aria-hidden="true">📍 </span>{point.name}</strong>
         {shortAdministrativeAddress(point.public_address) && <small>{shortAdministrativeAddress(point.public_address)}</small>}
         {point.source_url && AMAP_MARKER_URL.test(point.source_url) &&

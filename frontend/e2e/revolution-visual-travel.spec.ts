@@ -4,7 +4,7 @@ const jid = "00000000-0000-4000-8000-000000000991";
 const tid = "00000000-0000-4000-8000-000000000992";
 const owner = "VISUAL_TEST_FIXTURE_OWNER";
 
-for (const width of [390, 1366]) {
+for (const width of [390, 430, 1366, 1566]) {
   test("TEST_FIXTURE: visual travel cards, grounded photos, map preview and persistent chat at " + width, async ({ page }) => {
     await page.setViewportSize({ width, height: 932 });
     await page.addInitScript(({ jid, tid, owner }) => {
@@ -17,10 +17,10 @@ for (const width of [390, 1366]) {
     }, { jid, tid, owner });
 
     const point = {
-      candidate_id: "photon:W/12345", name: "冠豸山风景区", latitude: 25.7158,
+      candidate_id: "photon:W/846486126", name: "冠豸山风景区", latitude: 25.7158,
       longitude: 116.7757, coordinate_system: "WGS84", provider_provenance: "LIVE_PROVIDER",
-      provider: "photon", selection_state: "OPENING_UNVERIFIED", source_url: "https://www.openstreetmap.org/way/12345",
-      region_status: "MATCHED", observation_expired: false,
+      provider: "photon", selection_state: "OPENING_UNVERIFIED", source_url: "https://www.openstreetmap.org/way/846486126",
+      region_status: "UNKNOWN", observation_expired: false,
     };
     const task = {
       task_id: tid, journey_id: jid, status: "PARTIAL_READY",
@@ -60,7 +60,10 @@ for (const width of [390, 1366]) {
       if (path === "/api/v1/agent/runtime-status") return reply({ ai_state: "CONFIGURED_UNVERIFIED", hermes_compat_configured: true });
       if (path === base) return reply({ id: jid, status: "DRAFT", timezone: "Asia/Shanghai", title: "连城旅行" });
       if (path === base + "/plans") return reply([]);
-      if (path === base + "/map-places") return reply({ journey_id: jid, candidates: [point] });
+      if (path === base + "/map-places") return reply({ journey_id: jid, candidates: [point,
+        { ...point, candidate_id: "photon:W/fixture-neighbor", name: "TEST_FIXTURE 相邻地点", longitude: 116.77571 },
+        { ...point, candidate_id: "photon:W/fixture-distant", name: "冠豸山风景区", longitude: 116.70, latitude: 25.63 },
+      ] });
       if (path === base + "/planning-intent") return reply({
         journey_id: jid, intent: null, candidates: [],
         trip: { dates: ["2026-10-21", "2026-10-22"], party_size: 1, budget: { amount_minor: 100000, currency: "CNY" } },
@@ -78,10 +81,21 @@ for (const width of [390, 1366]) {
     await expect(cockpit).toBeVisible();
     await expect(page.locator(".cn-mission-media")).toBeVisible();
     await expect(cockpit.getByRole("region", { name: "与研究地点对应的真实景点照片" })).toContainText("冠豸山");
+    await expect(cockpit.locator(".cn-place-photo")).toHaveCount(1);
     await expect(cockpit.locator(".cn-place-photo-meta a").first()).toHaveAttribute("href", /commons\.wikimedia\.org/);
+    await expect(cockpit.locator(".cn-place-photo-fallback")).toBeVisible();
+    await cockpit.locator(".cn-place-photo").getByRole("button", { name: "查看对应安排" }).click();
+    await expect(cockpit.locator('.rev-goal-draft-slot[data-place-id="' + point.candidate_id + '"]')).toHaveAttribute("open", "");
+    if (width < 1000) await page.getByTestId("rev-mission-layer-map").click();
     await expect(cockpit.getByTestId("rev-workspace-coordinate-preview")).toBeVisible();
-    await expect(cockpit.locator(".rev-workspace-preview-pin")).toHaveCount(1);
+    await cockpit.getByRole("button", { name: /查看其他研究/ }).click();
+    await expect(cockpit.locator(".rev-workspace-preview-pin")).toHaveCount(2);
     expect(externalTiles).toBe(0);
+    await cockpit.getByRole("button", { name: "展开相邻 2 处地点" }).click();
+    await expect(cockpit.getByRole("group", { name: "相邻地点" })).toBeVisible();
+    await cockpit.getByRole("group", { name: "相邻地点" }).getByRole("button", { name: /冠豸山风景区/ }).click();
+    await expect(cockpit.locator('.rev-goal-draft-slot[data-place-id="' + point.candidate_id + '"]')).toHaveAttribute("open", "");
+    if (width < 1000) await page.getByTestId("rev-mission-layer-timeline").click();
 
     const options = cockpit.getByRole("region", { name: "旅行方案对比" });
     await expect(options.locator(".rev-goal-variant-card")).toHaveCount(3);
@@ -91,8 +105,12 @@ for (const width of [390, 1366]) {
       return { list: list.width, card: card.width };
     });
     expect(layout.card).toBeGreaterThan(layout.list * 0.82);
+    const font = await options.locator("h4").first().evaluate(e => parseFloat(getComputedStyle(e).fontSize));
+    expect(font).toBeGreaterThanOrEqual(16);
     await expect(cockpit.locator(".cn-mission-agent-disclosure")).not.toHaveAttribute("open", "");
     await expect(page.locator(".rev-mission-chat-dock")).toBeVisible();
     await expect(page.locator("#rev-mission-chat-input")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    expect(externalTiles).toBe(0);
   });
 }

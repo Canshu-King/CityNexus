@@ -38,4 +38,8 @@ Do not rewrite user Windows working tree or force push while Codex operates. Int
 ## Wikimedia Commons starter source pages
 - Guanzhai Mountain (rheins, CC BY 3.0): https://commons.wikimedia.org/wiki/File:%E8%BF%9C%E6%9C%9B%E5%86%A0%E8%B1%B8%E5%B1%B1_-_Guanzhai_Mountain_-_2010.07_-_panoramio.jpg
 - Peitian Village (张元柏, CC BY-SA 3.0): https://commons.wikimedia.org/wiki/File:2012_%E7%A6%8F%E5%BB%BA_%E9%BE%99%E5%B2%A9_%E8%BF%9E%E5%9F%8E%E5%8E%BF_%E5%9F%B9%E7%94%B0%E5%8F%A4%E6%9D%91_-_panoramio_(3).jpg
-- Shimen Lake: the gallery links to its Commons file page. Exact license/sublicense is not asserted pending verification.
+- Shimen Lake (rheins, CC BY 3.0): https://commons.wikimedia.org/wiki/File:%E7%9F%B3%E9%97%A8%E6%B9%96_-_Shimeng_Lake_-_2010.07_-_panoramio_-_rheins.jpg . Author and license verified on the Commons file page during Windows integration.
+
+## Windows integration increment
+
+PR #41 was fast-forwarded from `e1b672bd79` at source `f94f6917d0`. The gallery now binds the three exact existing source IDs plus the Commons location metadata, without rewriting UNKNOWN facts. Photo actions focus the same place in the itinerary/map; nearby coordinate pins expand as a group. Current local validation and actual Chrome screenshots are recorded in `trial/results/20261019_VISUAL_INTEGRATION.md`; the unexecuted status above describes the original cloud contribution.

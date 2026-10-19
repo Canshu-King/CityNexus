@@ -617,9 +617,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           </button>
         </div>
         {permissionSettings}
-        <p role="status">{busy || visibleTask?.status === "WORKING"
+        {(busy || visibleTask?.status === "WORKING" || requestError) && <p role="status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
-          : requestError ?? (visibleTask ? "继续和这趟旅行的 Agent 对话。" : "发送后开始旅行研究。")}</p>
+          : requestError}</p>}
       </form>, document.body)}
   </>;
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"

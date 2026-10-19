@@ -113,7 +113,8 @@
   .rev-mission-chat-dock > p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 
-.rev-mission-chat-dock .rev-agent-research-settings { margin: 1px 0; padding: 7px 9px; }
+.rev-mission-chat-dock .rev-agent-research-settings { margin: 1px 0; padding: 0 9px; }
+.rev-mission-chat-dock .rev-agent-research-settings > summary { display: flex; align-items: center; min-height: 44px; }
 .rev-mission-chat-dock .rev-agent-research-settings[open] { max-height: 34vh; overflow-y: auto; }
 
 .rev-mission-chat-dock .rev-quick-ai-preferences { display: grid; gap: 6px; }

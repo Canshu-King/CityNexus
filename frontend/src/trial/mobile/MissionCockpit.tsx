@@ -101,6 +101,7 @@ export function MissionCockpit({
   const [commandRevision, setCommandRevision] = useState(0);
   const [showAllResearch, setShowAllResearch] = useState(false);
   const [guardianOpen, setGuardianOpen] = useState(false);
+  const [focusedPlaceId, setFocusedPlaceId] = useState<string | null>(null);
   const [chosenDraftRevision, setChosenDraftRevision] = useState(0);
   const spatial = useRef<HTMLDivElement>(null);
   const [layer, setLayer] = useState<"map" | "timeline">("map");
@@ -116,8 +117,19 @@ export function MissionCockpit({
     setTask(value); setEvents(items); setDataState("ready");
   }, [journeyId]);
   const focusPlace = useCallback((id: string) => {
+    setFocusedPlaceId(id);
     const slot = document.querySelector<HTMLDetailsElement>(`.cn-mission-os .rev-goal-draft-slot[data-place-id="${CSS.escape(id)}"]`);
-    if (slot) { slot.open = true; slot.scrollIntoView({ block: "nearest", inline: "start", behavior: "auto" }); }
+    if (slot) {
+      slot.open = true;
+      setLayer("timeline");
+      const host = spatial.current;
+      const pane = host?.querySelector<HTMLElement>(".cn-mission-timeline-pane");
+      if (host && pane) host.scrollTo({ left: host.scrollLeft + pane.getBoundingClientRect().left - host.getBoundingClientRect().left, behavior: "auto" });
+      slot.scrollIntoView({ block: "center", inline: "nearest", behavior: "auto" });
+    } else {
+      setLayer("map");
+      spatial.current?.scrollTo({ left: 0, behavior: "auto" });
+    }
   }, []);
   useEffect(() => {
     const focus = (event: Event) => {
@@ -130,7 +142,7 @@ export function MissionCockpit({
     return () => window.removeEventListener("citynexus:mission-command", focus);
   }, [journeyId]);
 
-  useEffect(() => { setCommand(goal); setMapAllowed(false); setGuardianOpen(false); }, [journeyId]);
+  useEffect(() => { setCommand(goal); setMapAllowed(false); setGuardianOpen(false); setFocusedPlaceId(null); }, [journeyId]);
   useEffect(() => {
     if (!command.trim() && goal) setCommand(goal);
   }, [goal]);
@@ -140,7 +152,7 @@ export function MissionCockpit({
     return () => window.removeEventListener("citynexus:mission-refresh", refreshWorkspace);
   }, []);
   useEffect(() => subscribeTravelerBearer(() => {
-    setTask(null); setEvents([]); setPlaces([]); setMapAllowed(false);
+    setTask(null); setEvents([]); setPlaces([]); setMapAllowed(false); setFocusedPlaceId(null);
     setIdentityTick((value) => value + 1);
   }), []);
 
@@ -210,7 +222,10 @@ export function MissionCockpit({
       .filter((point) => draftPlaceIds.has(point.id)).map((point) => point.id)]);
   const defaultMapPoints = allMapPoints.filter((point) => defaultMapIds.has(point.candidate_id));
   const focusedMapCount = itineraryMapPoints.length || defaultMapPoints.length;
-  const mapPoints = showAllResearch ? allMapPoints : itineraryMapPoints.length ? itineraryMapPoints : defaultMapPoints;
+  const visibleMapPoints = showAllResearch ? allMapPoints : itineraryMapPoints.length ? itineraryMapPoints : defaultMapPoints;
+  const selectedResearch = allMapPoints.find(point => point.candidate_id === focusedPlaceId);
+  const mapPoints = selectedResearch && !visibleMapPoints.some(point => point.candidate_id === focusedPlaceId)
+    ? [...visibleMapPoints, selectedResearch] : visibleMapPoints;
   const latestEvents = events.slice(-5).reverse();
   useEffect(() => {
     if (task?.status !== "WORKING") return;
@@ -262,8 +277,9 @@ export function MissionCockpit({
           {allMapPoints.length > focusedMapCount && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>
             {showAllResearch ? "收起其他研究" : `查看其他研究（${allMapPoints.length - mapPoints.length}）`}
           </button>}
-          <PlacePhotoGallery cityName={cityName} places={allMapPoints} />
-          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} />
+          <PlacePhotoGallery cityName={cityName} places={allMapPoints} selectedId={focusedPlaceId} scheduledIds={draftPlaceIds} onSelect={focusPlace} />
+          {selectedResearch && <p role="status">正在查看：{selectedResearch.name}{draftPlaceIds.has(selectedResearch.candidate_id) ? " · 已排入日程" : " · 尚未排入日程"}</p>}
+          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
           <section className="cn-mission-activity" aria-label="Agent 工作轨迹">

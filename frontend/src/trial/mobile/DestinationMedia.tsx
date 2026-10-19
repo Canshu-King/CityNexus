@@ -15,12 +15,12 @@ const LIANCHENG_PHOTO = {
 };
 
 export function DestinationMedia({ cityName }: { cityName: string }) {
-  const scene = /连城/.test(cityName) ? LIANCHENG_PHOTO : null;
+  const scene = /^(?:福建省)?(?:龙岩市)?连城(?:县)?$/.test(cityName.trim()) ? LIANCHENG_PHOTO : null;
   const [failed, setFailed] = useState(false);
   const src = scene ? "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(scene.file) + "?width=1000" : null;
   return <div className="cn-mission-media" aria-label={scene ? "目的地实景参考" : "旅行目的地插画"}>
     {scene && !failed && src
-      ? <img src={src} loading="lazy" decoding="async" alt="福建连城冠豸山实景，作为目的地参考，不代表当前营业与通行状态"
+      ? <img src={src} loading="lazy" decoding="async" alt="福建连城冠豸山实景"
           onError={() => setFailed(true)} />
       : <div className="cn-mission-media-art" aria-hidden="true">
           <Mountain size={92} strokeWidth={0.65} />
@@ -31,6 +31,6 @@ export function DestinationMedia({ cityName }: { cityName: string }) {
           <a href={scene.page} target="_blank" rel="noopener noreferrer">冠豸山实景（封面裁切）</a>
           <span> · {scene.credit} / <a href={scene.license} target="_blank" rel="noopener noreferrer">CC BY 3.0</a></span>
         </div>
-      : <div className="cn-mission-media-credit is-illustration"><ImageOff size={12} aria-hidden="true" /> 场景插画 · 非真实地点照片</div>}
+      : <div className="cn-mission-media-credit is-illustration"><ImageOff size={12} aria-hidden="true" /> 旅行插画</div>}
   </div>;
 }

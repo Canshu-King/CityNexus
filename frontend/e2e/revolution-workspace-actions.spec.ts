@@ -139,6 +139,7 @@ for (const width of [390, 430, 1366]) {
     await chatDock.getByLabel("本次允许查询公开地图和地点来源").check();
     await expect(chatDock.getByLabel("本次允许查询公开地图和地点来源")).toBeChecked();
     await chatDock.getByRole("button", { name: "发送 ↑", exact: true }).click();
+    await dialog.locator(".cn-mission-agent-disclosure > summary").click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     expect(calls).toEqual([goal]);
     if (width !== 1366) {
@@ -161,6 +162,7 @@ for (const width of [390, 430, 1366]) {
     await page.getByTestId("rev-mobile-tab-trips").click();
     await page.getByTestId("rev-mobile-tab-assistant").click();
     const restoredDialog = page.getByTestId("rev-mission-cockpit");
+    await restoredDialog.locator(".cn-mission-agent-disclosure > summary").click();
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await restoredDialog.locator(".rev-goal-draft-slot summary").first().click();
@@ -213,6 +215,7 @@ test("TEST_FIXTURE cached public source is readable without starting a new resea
     localStorage.setItem(`citynexus.revolution.goal-task.${owner}.${journeyId}`, taskId);
   }, { owner, journeyId, taskId });
   await page.goto("/revolution");
+  await page.locator(".cn-mission-agent-disclosure > summary").click();
   const task = page.getByRole("region", { name: "Agent 任务", exact: true });
   await task.getByText("工具结果 · 2 次").click();
   await expect(task.getByText("已读取 1 条已有地点来源")).toBeVisible();
