@@ -154,3 +154,19 @@
 @media (max-width: 600px) {
   .rev-mission-chat-dock { padding: 8px; width: calc(100vw - 16px); }
 }
+
+/* Chat is the primary discussion surface; input grows with wrapped text. */
+.rev-mobile-v1 .rev-mission-chat-dock { align-items: end; }
+.rev-mobile-v1 .rev-mission-chat-dock .rev-mission-chat-row { align-items: end; }
+.rev-mobile-v1 .rev-mission-chat-dock .rev-mission-chat-row textarea {
+  min-height: 48px; height: 48px; max-height: 132px; padding: 11px 10px;
+  font-size: 16px; line-height: 24px; resize: none; overflow-y: hidden;
+}
+.rev-agent-choices { display: grid; gap: 10px; margin: 12px 0; }
+.rev-agent-choices h3 { margin: 0; font-size: 17px; line-height: 1.5; }
+.rev-agent-choices button { display: grid; gap: 5px; text-align: left; min-height: 64px;
+  padding: 12px; border: 1px solid #bcd9cd; border-radius: 14px; background: #f1f8f3; color: #214d3d; }
+.rev-agent-choices button span { font-size: 13px; line-height: 1.5; font-weight: 400; }
+.rev-agent-choices small { font-size: 13px; color: #567365; }
+.rev-agent-start-research { margin: 12px 0; min-height: 48px; }
+.rev-agent-message p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; font-size: 16px; }

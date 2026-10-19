@@ -7376,6 +7376,8 @@ def create_signed_draft_goal_task(
         goal=payload.goal,
         model_consent=payload.model_consent,
         online_research_consent=payload.online_research_consent,
+        interaction_mode=payload.interaction_mode,
+        unlimited_research=payload.unlimited_research,
         max_model_turns=payload.max_model_turns,
         max_tool_calls=payload.max_tool_calls,
     )
@@ -7460,6 +7462,8 @@ def run_signed_draft_goal_task(
         task_id,
         model_consent=payload.model_consent,
         online_research_consent=payload.online_research_consent,
+        interaction_mode=payload.interaction_mode,
+        unlimited_research=payload.unlimited_research,
         max_model_turns=payload.max_model_turns,
         max_tool_calls=payload.max_tool_calls,
         user_message=payload.user_message,

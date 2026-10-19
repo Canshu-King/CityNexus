@@ -130,7 +130,7 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   expect(tileRequests).toBe(0);
 
   if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
-  else await cockpit.locator(".cn-mission-agent-disclosure > summary").click();
+  else await expect(cockpit.locator(".cn-mission-agent-disclosure")).toBeVisible();
   const taskRegion = cockpit.getByRole("region", { name: "Agent 任务", exact: true });
   await expect(taskRegion).toContainText("查询步行路线");
   await taskRegion.getByText("工具结果 · 1 次").click();

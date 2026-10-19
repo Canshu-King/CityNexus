@@ -333,7 +333,7 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
   await activityEntry.click();
   await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
   if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
-  else await page.locator(".cn-mission-agent-disclosure > summary").click();
+  else await expect(page.locator(".cn-mission-agent-disclosure")).toBeVisible();
   await expect(page.getByRole("region", {name: "Agent 命令台"})).toBeVisible();
   await expect(page.locator("dialog[open]")).toHaveCount(0);
   expect(apiRequests.slice(apiRequestsBeforeClick).every((request) => request.startsWith("GET "))).toBe(true);

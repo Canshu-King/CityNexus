@@ -2259,7 +2259,9 @@ export interface DraftGoalTask {
   goal: string;
   conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string }>;
   consent: { model?: boolean; online_research?: boolean };
-  budget: { max_model_turns?: number; max_tool_calls?: number };
+  budget: { max_model_turns?: number; max_tool_calls?: number; unlimited?: boolean };
+  interaction_mode?: "DISCUSS" | "RESEARCH";
+  pending_question?: { id: string; question: string; options: { label: string; description: string }[] } | null;
   usage: { model_turns?: number; tool_calls?: number };
   latest_run_id: string | null;
   candidate_place_ids: string[];
@@ -3072,8 +3074,10 @@ export const cityNexusApi = {
       goal: string;
       model_consent: boolean;
       online_research_consent: boolean;
-      max_model_turns: number;
-      max_tool_calls: number;
+      interaction_mode?: "DISCUSS" | "RESEARCH";
+      unlimited_research?: boolean;
+      max_model_turns?: number;
+      max_tool_calls?: number;
     },
     signal?: AbortSignal,
   ): Promise<DraftGoalTask> {
@@ -3127,8 +3131,10 @@ export const cityNexusApi = {
     input: {
       model_consent: boolean;
       online_research_consent: boolean;
-      max_model_turns: number;
-      max_tool_calls: number;
+      interaction_mode?: "DISCUSS" | "RESEARCH";
+      unlimited_research?: boolean;
+      max_model_turns?: number;
+      max_tool_calls?: number;
       user_message?: string;
       message_id?: string;
     },

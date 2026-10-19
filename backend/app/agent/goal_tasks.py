@@ -35,6 +35,7 @@ from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
+from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question
 from app.agent.goal_media import read_source_media, media_tool_definition, source_lead
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -61,7 +62,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "research_place_media", "save_draft_variants", "read_guardian_stream", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
+    {"ask_traveler", "inspect_journey", "research_place_media", "save_draft_variants", "read_guardian_stream", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -221,6 +222,8 @@ def _task_payload(
         "goal": mission.user_text,
         "conversation": list(task.get("conversation") or [{"role": "user", "text": mission.user_text, "message_id": "initial", "at": mission.created_at}]),
         "consent": dict(task.get("consent") or {}),
+        "interaction_mode": task.get("interaction_mode", "RESEARCH"),
+        "pending_question": task.get("pending_question"),
         "budget": dict(task.get("budget") or {}),
         "usage": dict(task.get("usage") or {}),
         "latest_run_id": task.get("latest_run_id"),
@@ -261,6 +264,8 @@ def create_goal_task(
     online_research_consent: bool,
     max_model_turns: int,
     max_tool_calls: int,
+    interaction_mode: str = "RESEARCH",
+    unlimited_research: bool = False,
 ) -> dict[str, Any]:
     """Accept a bounded DRAFT goal without constructing a provider or AgentRun."""
 
@@ -289,7 +294,9 @@ def create_goal_task(
             "model": model_consent,
             "online_research": online_research_consent,
         },
-        "budget": {"max_model_turns": max_model_turns, "max_tool_calls": max_tool_calls},
+        "budget": {"max_model_turns": max_model_turns, "max_tool_calls": max_tool_calls, **({"unlimited": True} if unlimited_research else {})},
+        "interaction_mode": interaction_mode,
+        "pending_question": None,
         "usage": {"model_turns": 0, "tool_calls": 0},
         "event_sequence": 0,
         "latest_run_id": None,
@@ -557,7 +564,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
-        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition(), guardian_stream_definition(), variant_definition(), media_tool_definition()),
+        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition(), guardian_stream_definition(), variant_definition(), media_tool_definition(), dialogue_definition()),
     )
     # A full multi-day draft tool payload can exceed 2400 tokens on its own.
     # Reserve one bounded completion, without an automatic provider retry.
@@ -698,8 +705,8 @@ def _initial_messages(
         "previous_public_queries": task.get("public_queries") or [],
         "consent": dict(task.get("consent") or {}),
         "remaining_budget": {
-            "model_turns": max(0, int(task["budget"]["max_model_turns"]) - int(task["usage"]["model_turns"])),
-            "tool_calls": max(0, int(task["budget"]["max_tool_calls"]) - int(task["usage"]["tool_calls"])),
+            "model_turns": None if task["budget"].get("unlimited") else max(0, int(task["budget"]["max_model_turns"]) - int(task["usage"]["model_turns"])),
+            "tool_calls": None if task["budget"].get("unlimited") else max(0, int(task["budget"]["max_tool_calls"]) - int(task["usage"]["tool_calls"])),
         },
     }
     return [
@@ -711,6 +718,8 @@ def _initial_messages(
 def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+    if name == "ask_traveler":
+        return validate_question(raw)
     if name == "research_place_media":
         if set(raw) != {"place_id"} or not isinstance(raw.get("place_id"), str):
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -830,7 +839,7 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
             "source_discovery_attempted": False,
             "acquisition_attempted": False,
         }
-    if name in {"read_guardian_stream", "save_draft_variants", "research_place_media"}:
+    if name in {"ask_traveler", "read_guardian_stream", "save_draft_variants", "research_place_media"}:
         return raw
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
@@ -936,6 +945,8 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "ask_traveler":
+        return {"status": "WAITING_FOR_TRAVELER", "option_count": len(result.get("options", []))}
     if name == "research_place_media":
         media = result.get("media") or {}
         return {"status": result.get("status"), "place_id": result.get("candidate_id"),
@@ -1129,6 +1140,8 @@ def resume_goal_task(
     *,
     model_consent: bool | None = None,
     online_research_consent: bool | None = None,
+    interaction_mode: str | None = None,
+    unlimited_research: bool | None = None,
     max_model_turns: int | None = None,
     max_tool_calls: int | None = None,
     user_message: str | None = None,
@@ -1189,6 +1202,13 @@ def resume_goal_task(
         if updated_max < int(usage.get("tool_calls") or 0):
             raise HTTPException(422, "max_tool_calls cannot be lower than prior usage")
         budget["max_tool_calls"] = updated_max
+    if unlimited_research is not None:
+        budget["unlimited"] = _validate_bool("unlimited_research", unlimited_research)
+    if interaction_mode is not None:
+        if interaction_mode not in {"DISCUSS", "RESEARCH"}:
+            raise HTTPException(422, "INTERACTION_MODE_INVALID")
+        task["interaction_mode"] = interaction_mode
+    task["pending_question"] = None
     task["budget"] = budget
     task["usage"] = {
         "model_turns": int(usage.get("model_turns") or 0),
@@ -1198,7 +1218,7 @@ def resume_goal_task(
     if normalized_message_id is not None:
         conversation = list(task.get("conversation") or [{"role": "user", "text": mission.user_text, "message_id": "initial", "at": mission.created_at}])
         conversation.append({"role": "user", "text": normalized_message, "message_id": normalized_message_id, "at": _now()})
-        task["conversation"] = ([conversation[0]] + conversation[-29:]) if len(conversation) > 30 else conversation
+        task["conversation"] = conversation
         task["assistant_summary"] = None
         _emit_event(session, journey, member, mission, intent, event_type="USER_MESSAGE_ADDED", status="RESUMABLE")
         session.commit()
@@ -1232,7 +1252,7 @@ def resume_goal_task(
         session.commit()
         return {**_task_payload(mission, intent), "assistant_summary": None}
 
-    if int(task["usage"]["model_turns"]) >= int(task["budget"]["max_model_turns"]):
+    if not task["budget"].get("unlimited") and int(task["usage"]["model_turns"]) >= int(task["budget"]["max_model_turns"]):
         task["status"] = "RESUMABLE"
         task["failure_code"] = "MODEL_BUDGET_EXHAUSTED"
         task["updated_at"] = _now()
@@ -1284,6 +1304,10 @@ def resume_goal_task(
     editing_existing_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
     write_tool = "replace_draft_slots" if editing_existing_draft else "save_draft_itinerary"
     tool_allowlist = frozenset(tool_allowlist - ({"save_draft_itinerary"} if editing_existing_draft else {"replace_draft_slots"}))
+    if task.get("interaction_mode") == "DISCUSS":
+        tool_allowlist = frozenset({"ask_traveler", "inspect_journey"})
+    else:
+        tool_allowlist = tool_allowlist | {"ask_traveler"}
     try:
         agent = _new_goal_agent(tool_allowlist)
     except AgentRuntimeUnavailable:
@@ -1345,12 +1369,23 @@ def resume_goal_task(
     session.commit()
 
     messages = _initial_messages(session, journey, mission, task)
+    if task.get("interaction_mode") == "DISCUSS":
+        messages.append({"role": "system", "content":
+            "You are discussing a trip with the traveler, not executing research. Answer their actual question first. "
+            "Before a first proposal, use ask_traveler to ask one useful preference question with 2-4 concrete choices; "
+            "use existing city, dates and prior answers instead of asking again. Offer tradeoffs and a recommendation. "
+            "For subsequent replies, acknowledge the chosen option and refine the proposal, asking only if needed. "
+            "Compare preferences and experiences; do not promise free admission, zero walking, hours or ticket prices unless verified in the source fields. "
+            "Do not search, change or save an itinerary in discussion mode. Explain briefly what you would research next; "
+            "the traveler starts research using the separate action. Do not expose internal reasoning or tool mechanics."})
+    if task["budget"].get("unlimited"):
+        messages.append({"role": "system", "content": "There is no cumulative model/tool quota for this task. Finish the requested result naturally; ask_traveler when a meaningful choice is needed. Respect pause/cancel and do not repeat failed identical queries."})
     gateway = AgentToolGateway(session, bound_run_id=run.id, allow_live_discovery=False)
     research_failed = False
     assistant_summary: str | None = None
     draft_delivery_reminded = False
     try:
-        while int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"]):
+        while task["budget"].get("unlimited") or int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"]):
             journey, member = _require_owner_scope(session, journey, member, require_draft=True)
             mission = session.get(JourneyMission, mission.id)
             if mission is None:
@@ -1381,7 +1416,7 @@ def resume_goal_task(
             )
             session.commit()
             try:
-                final_turn = int(task["usage"]["model_turns"]) == int(task["budget"]["max_model_turns"])
+                final_turn = task.get("interaction_mode") != "DISCUSS" and not task["budget"].get("unlimited") and int(task["usage"]["model_turns"]) == int(task["budget"]["max_model_turns"])
                 has_saved_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
                 final_tools = ({write_tool, "save_draft_variants", "read_guardian_stream"} if has_saved_draft else {write_tool})
                 agent._tool_allowlist = frozenset(final_tools) if final_turn else tool_allowlist
@@ -1451,9 +1486,9 @@ def resume_goal_task(
                 # first draft. Use one remaining, already-approved turn to deliver it.
                 has_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
                 grounded = bool(task.get("research_places") or task.get("candidate_place_ids"))
-                remaining = int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"])
-                tool_remaining = int(task["usage"]["tool_calls"]) < int(task["budget"]["max_tool_calls"])
-                if grounded and not has_draft and remaining and tool_remaining and not draft_delivery_reminded:
+                remaining = task["budget"].get("unlimited") or int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"])
+                tool_remaining = task["budget"].get("unlimited") or int(task["usage"]["tool_calls"]) < int(task["budget"]["max_tool_calls"])
+                if task.get("interaction_mode") != "DISCUSS" and grounded and not has_draft and remaining and tool_remaining and not draft_delivery_reminded:
                     draft_delivery_reminded = True
                     messages.append({"role": "system", "content":
                         "Grounded research is available but no editable draft was saved. "
@@ -1467,7 +1502,7 @@ def resume_goal_task(
                 if assistant_summary:
                     transcript = list(intent[_TASK_KEY].get("conversation") or [])
                     transcript.append({"role": "assistant", "text": assistant_summary, "message_id": str(uuid4()), "at": _now()})
-                    intent[_TASK_KEY]["conversation"] = ([transcript[0]] + transcript[-29:]) if len(transcript) > 30 else transcript
+                    intent[_TASK_KEY]["conversation"] = transcript
                 _finish_run(
                     session,
                     journey,
@@ -1510,9 +1545,9 @@ def resume_goal_task(
                     args_raw = function.get("arguments") or "{}"
                     args_value = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     args = _safe_args(tool_name, args_value, task)
-                    if tool_name not in {"inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
+                    if tool_name not in {"ask_traveler", "inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
-                    if int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
+                    if not task["budget"].get("unlimited") and int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
                         exhausted_status = "PARTIAL_READY" if research_failed or any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", [])) else "RESUMABLE"
                         _finish_run(
                             session,
@@ -1535,7 +1570,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"save_draft_variants", "read_guardian_stream", "discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places", "research_place_media"}
+                    request = (None if tool_name in {"ask_traveler", "save_draft_variants", "read_guardian_stream", "discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places", "research_place_media"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1545,7 +1580,12 @@ def resume_goal_task(
                                 status="WORKING", run_id=run.id, step_sequence_no=step_no, tool_name=tool_name)
                     session.commit()
                     try:
-                        if tool_name == "save_draft_variants":
+                        if tool_name == "ask_traveler":
+                            raw_result = ask_question(task, args)
+                            pause_for_decision = "TRAVELER_INPUT_REQUIRED"
+                            mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        elif tool_name == "save_draft_variants":
                             raw_result = save_draft_variants(journey, task, **args)
                             mission.intent_json = _json_dump(intent)
                             session.commit()

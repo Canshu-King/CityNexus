@@ -28,7 +28,7 @@ const TASK_STATUS: Record<string, string> = {
   CANCELLED: "已取消", COMPLETED: "已完成",
 };
 const TOOL_NAME: Record<string, string> = {
-  research_place_media: "查找地点照片",
+  ask_traveler: "与你商量安排", research_place_media: "查找地点照片",
   inspect_journey: "读取行程", read_guardian_stream: "查看行程守护记录", save_draft_variants: "比较旅行备选", search_city_services: "搜索城市地点",
   research_place_sources: "查找地点资料",
   discover_places: "查找公开地点", discover_nearby_places: "查找周边地点", save_draft_itinerary: "整理旅行草案",
@@ -76,14 +76,7 @@ async function loadGoalEvents(journeyId: string, taskId: string): Promise<{ task
   return { task_id: taskId, events: events.slice(-100) };
 }
 const TASK_POINTER = "citynexus.revolution.goal-task";
-const MODEL_TURNS = 8;
-const TOOL_CALLS = 16;
-const MAX_MODEL_TURNS = 256;
-const MAX_TOOL_CALLS = 512;
-const CONTINUE_MODEL_TURNS = 8;
-const CONTINUE_TOOL_CALLS = 16;
-const DEEP_MODEL_TURNS = 24;
-const DEEP_TOOL_CALLS = 48;
+
 
 // This pointer is only a candidate. Every read and model request is authorized by the server.
 function readContext(): Context | null {
@@ -203,7 +196,13 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const [requestError, setRequestError] = useState<string | null>(null);
   const [modelConsent, setModelConsent] = useState(false);
   const [onlineResearchConsent, setOnlineResearchConsent] = useState(false);
-  const [researchDepth, setResearchDepth] = useState<"quick" | "deep">("deep");
+  const composer = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const node = composer.current; if (!node) return;
+    node.style.height = "auto";
+    node.style.height = Math.min(132, Math.max(48, node.scrollHeight)) + "px";
+    node.style.overflowY = node.scrollHeight > 132 ? "auto" : "hidden";
+  }, [question]);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(false);
   const [aiReady, setAiReady] = useState(false);
@@ -219,6 +218,16 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
   const visibleTask = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.value : null;
   const visibleEvents = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.events : [];
+  const conversationAnchor = useRef<HTMLDivElement>(null);
+  const lastMessageId = visibleTask?.conversation?.at(-1)?.message_id;
+  useEffect(() => {
+    if (!chatDockVisible || !lastMessageId) return;
+    const frame = requestAnimationFrame(() => {
+      const anchor = conversationAnchor.current;
+      if (anchor?.getClientRects().length) anchor.scrollIntoView({ block: "end", behavior: "instant" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [chatDockVisible, lastMessageId, visibleTask?.pending_question?.id]);
   const research = splitGoalResearch(visibleTask);
   useEffect(() => {
     if (embedded && goalTaskSnapshot && sameContext(goalTaskSnapshot.context, readContext())) {
@@ -330,12 +339,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     return () => { stopped = true; window.clearInterval(timer); };
   }, [panel, visibleTask?.task_id, visibleTask?.status, busy, context?.id, context?.owner, context?.token]);
 
-  const initialModelTurns = researchDepth === "deep" ? DEEP_MODEL_TURNS : MODEL_TURNS;
-  const initialToolCalls = researchDepth === "deep" ? DEEP_TOOL_CALLS : TOOL_CALLS;
-
-  const startNewTask = async () => {
+  const startNewTask = async (interaction: "DISCUSS" | "RESEARCH" = "DISCUSS") => {
     const actor = readContext();
-    if (!actor || !visible || !sameContext(actor, visible.context) || !aiReady || visible.status !== "DRAFT" || !modelConsent || writeBusy.current || question.trim().length < 4) return;
+    if (!actor || !visible || !sameContext(actor, visible.context) || !aiReady || visible.status !== "DRAFT" || !modelConsent || writeBusy.current || question.trim().length < 1) return;
     const serial = ++generation.current;
     const controller = new AbortController();
     postController.current = controller;
@@ -345,7 +351,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       const created = await cityNexusApi.createDraftGoalTask(actor.id, {
         goal: question.trim(), model_consent: modelConsent,
         online_research_consent: onlineResearchConsent,
-        max_model_turns: initialModelTurns, max_tool_calls: initialToolCalls,
+        interaction_mode: interaction, unlimited_research: true,
       }, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       saveTaskPointer(actor, created.task_id);
@@ -353,7 +359,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       setGoalTaskSnapshot({ context: actor, value: created, events: [] });
       const result = await cityNexusApi.runDraftGoalTask(actor.id, created.task_id, {
         model_consent: modelConsent, online_research_consent: onlineResearchConsent,
-        max_model_turns: initialModelTurns, max_tool_calls: initialToolCalls,
+        interaction_mode: interaction, unlimited_research: true,
       }, false, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       setGoalTaskSnapshot({ context: actor, value: result, events: [] });
@@ -377,17 +383,11 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     const controller = new AbortController();
     postController.current = controller;
     writeBusy.current = true; setBusy(true); setRequestError(null);
-    const nextTurns = (task.usage.model_turns ?? 0) < (task.budget.max_model_turns ?? MODEL_TURNS)
-      ? (task.budget.max_model_turns ?? MODEL_TURNS)
-      : Math.min(MAX_MODEL_TURNS, (task.budget.max_model_turns ?? MODEL_TURNS) + CONTINUE_MODEL_TURNS);
-    const nextTools = (task.usage.tool_calls ?? 0) < (task.budget.max_tool_calls ?? TOOL_CALLS)
-      ? (task.budget.max_tool_calls ?? TOOL_CALLS)
-      : Math.min(MAX_TOOL_CALLS, (task.budget.max_tool_calls ?? TOOL_CALLS) + CONTINUE_TOOL_CALLS);
     const timer = window.setTimeout(() => controller.abort(), 180000);
     try {
       const result = await cityNexusApi.runDraftGoalTask(actor.id, task.task_id, {
         model_consent: modelConsent, online_research_consent: onlineResearchConsent,
-        max_model_turns: nextTurns, max_tool_calls: nextTools,
+        interaction_mode: "RESEARCH", unlimited_research: true,
       }, true, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
       setGoalTaskSnapshot({ context: actor, value: result, events: [] });
@@ -415,20 +415,10 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     }
   };
 
-  const nextModelBudget = visibleTask
-    ? (visibleTask.usage.model_turns ?? 0) < (visibleTask.budget.max_model_turns ?? MODEL_TURNS)
-      ? (visibleTask.budget.max_model_turns ?? MODEL_TURNS)
-      : Math.min(MAX_MODEL_TURNS, (visibleTask.budget.max_model_turns ?? MODEL_TURNS) + CONTINUE_MODEL_TURNS)
-    : MODEL_TURNS;
-  const nextToolBudget = visibleTask
-    ? (visibleTask.usage.tool_calls ?? 0) < (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
-      ? (visibleTask.budget.max_tool_calls ?? TOOL_CALLS)
-      : Math.min(MAX_TOOL_CALLS, (visibleTask.budget.max_tool_calls ?? TOOL_CALLS) + CONTINUE_TOOL_CALLS)
-    : TOOL_CALLS;
-  const sendFollowup = async () => {
+  const sendFollowup = async (reply?: string, interaction: "DISCUSS" | "RESEARCH" = "DISCUSS") => {
     const actor = readContext();
     const task = visibleTask;
-    const message = question.trim();
+    const message = (reply ?? question).trim();
     if (!actor || !task || !modelConsent || !aiReady || writeBusy.current || task.status === "WORKING"
         || task.status === "CANCELLED" || message.length < 1) return;
     const serial = ++generation.current;
@@ -441,7 +431,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     try {
       const result = await cityNexusApi.runDraftGoalTask(actor.id, task.task_id, {
         model_consent: modelConsent, online_research_consent: onlineResearchConsent,
-        max_model_turns: nextModelBudget, max_tool_calls: nextToolBudget,
+        interaction_mode: interaction, unlimited_research: true,
         user_message: message, message_id: messageId,
       }, true, controller.signal);
       if (serial !== generation.current || !sameContext(actor, readContext())) return;
@@ -464,24 +454,19 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   };
 
   const sendMessage = () => {
+    window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: "assistant" }));
     if (visibleTask && visibleTask.status !== "CANCELLED") void sendFollowup();
     else void startNewTask();
   };
 
   const permissionSettings = (
 <details className="rev-agent-research-settings" open={embedded || !visibleTask}>
-            <summary>{modelConsent ? "研究额度与来源 · 已设置" : "本任务的来源与研究额度"}</summary>
+            <summary>{modelConsent ? "AI 与地点来源 · 已连接" : "AI 与地点来源"}</summary>
             <div className="rev-agent-research-settings-body">
               <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
               <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />本次允许查询公开地图和地点来源</label>
-              <label className="rev-workspace-depth">研究工作量
-                <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
-                  <option value="deep">深入研究 · 24轮模型 / 48次工具</option>
-                  <option value="quick">快速研究 · 8轮模型 / 16次工具</option>
-                </select>
-              </label>
               <TravelGoalPreferences value={question} busy={busy} onChange={(value) => { followupMessageId.current = null; setQuestion(value); }} />
-              <small>在所选额度内，Agent 会连续查询、比较并保存草案。额度用完后再由你追加。</small>
+
             </div>
           </details>
   );
@@ -518,7 +503,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         {!aiReady && <p role="status">AI 尚未连接。</p>}
         {visible.status !== "DRAFT" ? <p>行程已经开始，可以在今日行程里向执行助手提出调整。</p> : <>
           {conversation.length > 0 && <div className="rev-agent-conversation" role="log" aria-label="与 Agent 的真实对话">
-            {conversation.slice(-6).map((item) => <div className={"rev-agent-message is-" + item.role} key={item.message_id}>
+            {conversation.map((item) => <div className={"rev-agent-message is-" + item.role} key={item.message_id}>
               <span>{item.role === "user" ? "你" : "CityNexus Agent"}</span>
               <p>{item.text}</p>
             </div>)}
@@ -531,13 +516,27 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
                   你可以在下方直接告诉 Agent 下一步想修改什么。</p>
               </div>}
           </div>}
+          {visibleTask?.pending_question && <section className="rev-agent-choices" aria-label="Agent 请你选择">
+            {!conversation.some(item => item.message_id === visibleTask.pending_question?.id) && <h3>{visibleTask.pending_question.question}</h3>}
+            {visibleTask.pending_question.options.map(option => <button key={option.label} type="button" disabled={busy}
+              onClick={() => { followupMessageId.current = null; void sendFollowup(option.label); }}>
+              <strong>{option.label}</strong><span>{option.description}</span>
+            </button>)}
+            <small>也可以在下方直接说你的想法。</small>
+          </section>}
+          <div ref={conversationAnchor} style={{ height: 1, scrollMarginBottom: 180 }} />
+          {visibleTask && visibleTask.status !== "WORKING" && visibleTask.status !== "CANCELLED" &&
+            <button type="button" className="rev-agent-start-research" disabled={busy || !modelConsent || !aiReady}
+              onClick={() => { followupMessageId.current = null; void sendFollowup(question.trim() || "按我们讨论的方向开始研究，遇到重要取舍先给我选择。", "RESEARCH"); }}>
+              按讨论的方向开始研究
+            </button>}
           {!embedded && permissionSettings}
           {!embedded && <form className="rev-agent-nonmodal-form" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
             <label htmlFor="rev-workspace-question">{visibleTask ? "继续和这位 Agent 说话" : COPY.question}</label>
             <textarea id="rev-workspace-question" rows={3} maxLength={2000} value={question}
               disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
               placeholder={visibleTask ? "例如：把第二天下午换成轻松的自然景点，保留其他安排。" : "直接描述你的旅行目标。"} />
-            <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4 || visibleTask?.status === "WORKING"}>
+            <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 1 || visibleTask?.status === "WORKING"}>
               {busy ? COPY.sending : visibleTask && visibleTask.status !== "CANCELLED" ? "发送并继续这趟旅行" : "发送给 Agent"}
             </button>
           </form>}
@@ -545,10 +544,10 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         {requestError && <p role="alert">{requestError}</p>}
         {visibleTask && <section aria-label="Agent 任务" className="rev-workspace-answer">
           <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
-          <p>{visibleTask.usage.model_turns ?? 0}/{visibleTask.budget.max_model_turns ?? MODEL_TURNS} 轮模型 · {visibleTask.usage.tool_calls ?? 0}/{visibleTask.budget.max_tool_calls ?? TOOL_CALLS} 次工具</p>
+
           {visibleTask.assistant_summary && <details><summary>本轮研究摘要</summary><p>{visibleTask.assistant_summary}</p></details>}
-          {visibleTask.failure_code && <p>{visibleTask.failure_code.includes("BUDGET") ? "本阶段的研究额度用完了。草案和调查记录都保留在服务器；点击「继续研究」可单独授权新的额度。" : "部分研究尚未完成，可以先查看已有结果。"}</p>}
-          <details className="rev-agent-technical"><summary>任务详情 · 模型与工具额度</summary><p className="rev-workspace-budget-help">已用模型 {visibleTask.usage.model_turns ?? 0} 次、工具 {visibleTask.usage.tool_calls ?? 0} 次。继续前可查看本阶段额度。</p></details>
+          {visibleTask.failure_code && !["TRAVELER_INPUT_REQUIRED", "MODEL_BUDGET_EXHAUSTED", "TOOL_BUDGET_EXHAUSTED"].includes(visibleTask.failure_code) && <p>这次有一部分还没完成，你可以继续告诉我想怎么调整。</p>}
+
           {activeTools.map((event) => <p role="status" key={event.sequence}>{TOOL_NAME[event.tool_name ?? ""] ?? "处理当前任务"}…</p>)}
           {visibleEvents.length > 0 && <details className="rev-workspace-timeline" open={!embedded}>
             <summary>Agent 真实工作过程 · 已记录 {visibleEvents.length} 条事件</summary>
@@ -592,15 +591,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               void refreshGoalTask(actor, value.task_id).catch(() => undefined);
             }} />}
           {visibleTask.status === "WORKING" && <button type="button" className="rev-workspace-secondary" onClick={() => void cancelTask()}>取消任务</button>}
-          {["RESUMABLE", "FAILED_RECOVERABLE", "PARTIAL_READY", "NEEDS_DECISION"].includes(visibleTask.status) &&
-            (nextModelBudget <= (visibleTask.budget.max_model_turns ?? MODEL_TURNS) &&
-             (visibleTask.usage.model_turns ?? 0) >= (visibleTask.budget.max_model_turns ?? MODEL_TURNS)
-              ? <p role="status">此任务已达到可申请的累计模型预算。草案仍可编辑保存，后续可以发起新的研究目标。</p>
-              : <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>
-                  {busy ? COPY.sending : (nextModelBudget > (visibleTask.budget.max_model_turns ?? MODEL_TURNS) || nextToolBudget > (visibleTask.budget.max_tool_calls ?? TOOL_CALLS))
-                    ? `继续研究（新授权累计 ${nextModelBudget} 轮 / ${nextToolBudget} 次工具）`
-                    : "继续使用本次已授权的研究额度"}
-                </button>)}
+          {["RESUMABLE", "FAILED_RECOVERABLE"].includes(visibleTask.status) &&
+            <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>继续研究</button>}
+
         </section>}
       </>}
     </div>
@@ -617,15 +610,15 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           aria-expanded={settingsOpen} aria-controls="rev-mission-settings" onClick={() => setSettingsOpen(value => !value)}>⚙</button>
         <label htmlFor="rev-mission-chat-input">{visibleTask ? "继续和当前 Agent 对话" : "告诉 CityNexus 你的旅行目标"}</label>
         <div className="rev-mission-chat-row">
-          <textarea id="rev-mission-chat-input" value={question} rows={Math.min(4, Math.max(1, question.split("\n").length))} maxLength={2000}
+          <textarea ref={composer} id="rev-mission-chat-input" value={question} rows={Math.min(4, Math.max(1, question.split("\n").length))} maxLength={2000}
             disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
-            placeholder={visibleTask ? "问 Agent：能不能换个地点？帮我查一下交通..." : "说出目标，Agent 会去研究地点、路线和日程..."}/>
-          <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4 || visibleTask?.status === "WORKING"}>
-            {busy ? "正在研究" : "发送 ↑"}
+            placeholder="想怎么安排？先聊聊"/>
+          <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 1 || visibleTask?.status === "WORKING"}>
+            {busy ? "回复中…" : "发送 ↑"}
           </button>
         </div>
         <section id="rev-mission-settings" className="rev-mission-settings-panel" hidden={!settingsOpen} aria-label="对话设置">
-          <header><strong>这次想怎么研究？</strong><button type="button" aria-label="关闭对话设置"
+          <header><strong>连接与公开地点来源</strong><button type="button" aria-label="关闭对话设置"
             onClick={() => { setSettingsOpen(false); settingsButton.current?.focus(); }}>×</button></header>
           {permissionSettings}
         </section>

@@ -208,6 +208,8 @@ class GoalTaskCreateRequest(BaseModel):
     goal: str = Field(min_length=1, max_length=2000)
     model_consent: bool
     online_research_consent: bool
+    interaction_mode: Literal["DISCUSS", "RESEARCH"] = "RESEARCH"
+    unlimited_research: bool = False
     max_model_turns: int = Field(default=8, ge=1, le=256)
     max_tool_calls: int = Field(default=16, ge=0, le=512)
 
@@ -217,6 +219,8 @@ class GoalTaskRunRequest(BaseModel):
 
     model_consent: bool | None = None
     online_research_consent: bool | None = None
+    interaction_mode: Literal["DISCUSS", "RESEARCH"] | None = None
+    unlimited_research: bool | None = None
     max_model_turns: int | None = Field(default=None, ge=1, le=256)
     max_tool_calls: int | None = Field(default=None, ge=0, le=512)
     user_message: str | None = Field(default=None, min_length=1, max_length=2000)

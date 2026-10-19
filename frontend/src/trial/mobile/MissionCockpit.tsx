@@ -140,7 +140,7 @@ export function MissionCockpit({
       (document.getElementById("rev-mission-chat-input") as HTMLTextAreaElement | null)?.focus();
     };
     const openPanel = (event: Event) => {
-      if (!window.matchMedia("(max-width: 999px)").matches) return;
+
       const kind = (event as CustomEvent).detail;
       if (kind === "map" || kind === "assistant") setLayer(kind === "map" ? "map" : "agent");
     };
@@ -275,16 +275,16 @@ export function MissionCockpit({
         <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>你的旅行搭档</strong></div>
         <div className="cn-mission-agent-glance" aria-live="polite">
           <span>{status}</span>
-          <strong>{task?.draft_artifact
+          <strong>{draftSlots.length
             ? `已整理 ${draftDays.length} 天 · ${draftSlots.length} 项安排`
             : journeyStatus === "ACTIVE" ? "你的行程正在执行" : "告诉我想去哪儿，其余交给 Agent"}</strong>
           <p>{task ? "地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。" : "无需填写复杂表单，直接说出目的地、兴趣和偏好。"}</p>
         </div>
         {journeyStatus === "ACTIVE" ? executionAgent :
-          <details className="cn-mission-agent-disclosure" open={layer === "agent" ? true : undefined}>
-            <summary>查看完整对话、来源和工作记录</summary>
+          <div className="cn-mission-agent-disclosure">
+            <h3>一起商量安排</h3>
             <WorkspaceActions embedded chatDockVisible={visible} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
-          </details>}
+          </div>}
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布">
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
