@@ -159,7 +159,6 @@ class PlaceMediaResult:
     media: PlaceMedia | None
     readings: tuple[dict[str, Any], ...]
     reason_code: str | None = None
-    blocked_itinerary: bool = False
     # 顶层也带一次身份状态：路由的读者看的是这一层，不该为了「能不能显示这张图」再去翻 media 或 readings。
     identity_status: str | None = None
 
@@ -171,7 +170,6 @@ class PlaceMediaResult:
             "media": self.media.as_payload() if self.media else None,
             "provider_readings": [dict(row) for row in self.readings],
             "identity_status": self.identity_status,
-            "blocked_itinerary": self.blocked_itinerary,
         }
 
 

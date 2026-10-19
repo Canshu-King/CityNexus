@@ -3596,12 +3596,13 @@ export interface components {
             journey_id?: string;
             place_name?: string;
             coordinate_system?: string;
-            /** @enum {string} */
+            /**
+             * @description One of five answers, all of them content: NO_IMAGE, NO_PERMISSION, UNAVAILABLE and NOT_CONFIGURED say what is missing, and none of them blocks the trip -- which is why the payload carries no "blocked" flag.
+             * @enum {string}
+             */
             status: "REAL_POI_PHOTO" | "NO_IMAGE" | "NO_PERMISSION" | "UNAVAILABLE" | "NOT_CONFIGURED";
             reason_code?: string | null;
             identity_status?: components["schemas"]["IdentityStatus"];
-            /** @description Always false here; a missing photograph never blocks a trip */
-            blocked_itinerary: boolean;
             media?: components["schemas"]["PlaceMedia"] | null;
             /** @description One row per source, including the ones never asked */
             provider_readings: Record<string, never>[];

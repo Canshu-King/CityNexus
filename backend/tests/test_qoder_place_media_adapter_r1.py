@@ -144,7 +144,10 @@ async def test_a_bound_commons_answer_carries_author_licence_and_source_page():
     assert media["license"] == "CC BY 3.0"
     assert media["source_url"].startswith("https://commons.wikimedia.org/")
     assert media["can_show"] is True
-    assert payload["blocked_itinerary"] is False
+    # `blocked_itinerary` used to be a required boolean whose whole content was "always false here".
+    # A field that can only say no is a claim the server can never make true, so it is gone; what the
+    # answer does carry is the status enum, where "no photograph" is one value among several.
+    assert "blocked_itinerary" not in payload, sorted(payload)
 
 
 @pytest.mark.asyncio
@@ -207,7 +210,8 @@ async def test_a_timeout_is_a_reading_and_the_itinerary_is_not_blocked():
 
     assert result.status.startswith(place_media.STATUS_UNAVAILABLE)
     assert result.readings[0]["outcome"] == "UNAVAILABLE_ConnectTimeout"
-    assert result.blocked_itinerary is False
+    # The provider being unreachable is an outcome, not a blocked trip: that boolean is gone.
+    assert not hasattr(result, "blocked_itinerary")
 
 
 @pytest.mark.asyncio

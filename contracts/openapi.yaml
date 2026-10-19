@@ -3907,7 +3907,7 @@ components:
              BOUND_DESCRIPTION_SUBSTRING, UNBOUND, 'null']
     PlaceMediaResponse:
       type: object
-      required: [place_id, status, provider_readings, blocked_itinerary]
+      required: [place_id, status, provider_readings]
       properties:
         place_id: {type: string}
         journey_id: {type: string}
@@ -3915,12 +3915,13 @@ components:
         coordinate_system: {type: string}
         status:
           type: string
+          description: >
+            One of five answers, all of them content: NO_IMAGE, NO_PERMISSION, UNAVAILABLE and
+            NOT_CONFIGURED say what is missing, and none of them blocks the trip -- which is why the
+            payload carries no "blocked" flag.
           enum: [REAL_POI_PHOTO, NO_IMAGE, NO_PERMISSION, UNAVAILABLE, NOT_CONFIGURED]
         reason_code: {type: string, nullable: true}
         identity_status: {$ref: '#/components/schemas/IdentityStatus'}
-        blocked_itinerary:
-          type: boolean
-          description: Always false here; a missing photograph never blocks a trip
         media: {allOf: [{$ref: '#/components/schemas/PlaceMedia'}], nullable: true}
         provider_readings:
           type: array

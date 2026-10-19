@@ -137,7 +137,6 @@ class _FixtureResult:
             "media": None,
             "provider_readings": [],
             "identity_status": "TEST_FIXTURE",
-            "blocked_itinerary": None,
         }
 
 
