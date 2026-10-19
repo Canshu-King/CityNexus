@@ -141,7 +141,11 @@ const WATCH = {
   spend: {
     always: ["spend.emptyBody"],
     disclosure: [],
-    sometimes: [],
+    /* Both off-day readings need a priced line the server sent without an instant the trip's calendar
+       can place, and no seeded store answers one. So they join the reported set named as a branch not
+       reached -- the walk looks for them and says it did not find them, which is what makes the next
+       trim of that sentence readable instead of merely diffable. */
+    sometimes: ["spend.offDay", "spend.offDay.plural"],
   },
 };
 
@@ -282,6 +286,11 @@ const COPY_MODULES = {
      word, we do not interpret it". That fallback is the one sentence on the product that must never be
      mistaken for waffle, so its table is walked like any other. */
   scene: join(FRONTEND, "src", "lib", "sceneClock.ts"),
+  /* The off-day sentence has no dictionary reading at all: `src/features/trip/spendCopy.ts` keeps it
+     in its own two-locale table on purpose, and `useT()` has no fallback dictionary to reach it. The
+     spend tab watched only `spend.emptyBody`, so wave 27 could be proved in a diff and not on a
+     screen. The module is now read the way the other module faces are read. */
+  spend: join(FRONTEND, "src", "features", "trip", "spendCopy.ts"),
 };
 
 /** Which locale a name means -- by exact match, never by prefix.
@@ -392,6 +401,32 @@ const next = (values) => values.find((value) => value !== undefined && value !==
 function moduleValue(table, locale, key) {
   const side = locale === "zh" ? "zh-CN" : "en";
   return table[side][key] ?? null;
+}
+
+/* One lookup for both writers of traveller-facing words: the dictionary first, then the module that
+   owns the key. A key that is in neither place is reported by `observe` as a broken read, which is a
+   different fact from "the screen does not show it today". */
+const MODULE_OWNED = {
+  "spend.offDay": COPY_MODULES.spend,
+  "spend.offDay.plural": COPY_MODULES.spend,
+};
+
+/* Parsed once per run per file: the tab walk visits every locale and every branch, and re-reading a
+   module from disk for each key would make the walk measure its own file system instead of the
+   screen. */
+const OWNED_TABLES = new Map();
+
+function ownedTable(file) {
+  if (!OWNED_TABLES.has(file)) OWNED_TABLES.set(file, moduleTable(file));
+  return OWNED_TABLES.get(file);
+}
+
+function valueOfOwned(regions, locale, key) {
+  const fromDictionary = valueOf(regions, locale, key);
+  if (fromDictionary !== null) return fromDictionary;
+  const file = MODULE_OWNED[key];
+  if (!file) return null;
+  return moduleValue(ownedTable(file), locale, key);
 }
 
 /** The part of a value a screen can be matched against verbatim: the stable text beside any `{param}`. */
@@ -1108,9 +1143,15 @@ async function walk(browser, locale) {
     });
     const observe = (keys, branch, text, observations) => {
       for (const key of keys) {
-        const value = valueOf(regions, locale, key);
+        const value = valueOfOwned(regions, locale, key);
         if (value === null) {
-          observations.push({ key, branch, state: "KEY NOT IN DICTIONARY", value: "" });
+          // Two different reasons, and only one of them is a clean screen.
+          observations.push({
+            key,
+            branch,
+            state: MODULE_OWNED[key] ? "KEY NOT IN ITS OWN MODULE TABLE" : "KEY NOT IN DICTIONARY",
+            value: "",
+          });
           continue;
         }
         const p = probe(value);
