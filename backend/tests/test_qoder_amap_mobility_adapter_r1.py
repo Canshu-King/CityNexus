@@ -289,3 +289,71 @@ def test_the_seam_switch_returns_the_city_to_the_previous_provider(monkeypatch):
         monkeypatch, city_code="CN-11-01", key=True, seam="off", valhalla_url=""
     )
     assert seen["primary_key"] == "mock-mobility"
+
+
+def _runtime_capture(monkeypatch, handler, *, hard: bool):
+    """Drive the runtime capture itself with a client whose transport refuses.
+
+    Only `httpx.Client`'s transport is swapped: the provider, the selection rule, the snapshot
+    capture and the hard/soft tails are the product's own code paths.
+    """
+
+    def failing(request: httpx.Request):
+        raise httpx.ConnectError("no route to host", request=request)
+
+    real_client = httpx.Client
+
+    def factory(**kwargs):
+        return real_client(transport=httpx.MockTransport(handler or failing), timeout=10.0)
+
+    monkeypatch.setattr(httpx, "Client", factory)
+    monkeypatch.setattr(
+        runtime,
+        "_place_lookup",
+        lambda session, key: {"latitude": PLACES[key][0], "longitude": PLACES[key][1]},
+    )
+    monkeypatch.setattr(
+        runtime, "settings", types.SimpleNamespace(live_valhalla_url="")
+    )
+    monkeypatch.delenv(amap.KEY_ENV_LEGACY, raising=False)
+    monkeypatch.delenv(amap.ROUTING_SEAM_ENV, raising=False)
+    monkeypatch.setenv(amap.KEY_ENV_PREFERRED, PLACEHOLDER_KEY)
+    journey = types.SimpleNamespace(city_code="CN-11-01")
+    return runtime.capture_runtime_mobility_snapshot(
+        None,
+        journey,
+        [("from", "to")],
+        operation_key="reform:amap-fallback",
+        require_explicit_facts=hard,
+    )
+
+
+def test_a_refused_amap_leg_degrades_softly_and_loses_hard_eligibility(monkeypatch):
+    """Ruling 2026-10-19 item 3: a raw provider failure must not be pushed at the traveller.
+
+    The soft capture still gets a number -- but only a number that is no longer hard-eligible, which
+    is what stops "the provider did not answer" from becoming "the leg is feasible in 12 minutes".
+    """
+    result = _runtime_capture(monkeypatch, None, hard=False)
+    pair = ("from", "to")
+    fact = result.snapshot.facts[pair]
+
+    assert result.degraded is True
+    assert result.fallback_pairs == (pair,)
+    assert result.failed_primary_pairs == (pair,)
+    assert fact.provider_key == "mock-mobility"
+    assert fact.fallback_reason == "AmapRouteError"
+    # V5 blocker-1, applied by the runtime's own tail: a fact that came from the fixture *because a
+    # live provider refused* carries no quality declaration, so the hard gate fails closed on it.
+    assert fact.fact_quality is None
+
+
+def test_a_refused_amap_leg_in_a_hard_capture_names_the_leg_and_invents_nothing(monkeypatch):
+    from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureError
+
+    with pytest.raises(MobilitySnapshotCaptureError) as caught:
+        _runtime_capture(monkeypatch, None, hard=True)
+    message = str(caught.value)
+    assert "from|to" in message
+    assert "AmapRouteError" in message
+    assert PLACEHOLDER_KEY not in message
