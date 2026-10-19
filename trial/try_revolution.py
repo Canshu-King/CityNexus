@@ -332,7 +332,7 @@ def main() -> int:
         except ValueError as exc:
             raise RuntimeError(str(exc)) from exc
         print("模型选择：", agent_config["CITYNEXUS_HERMES_MODEL"])
-        print("打开页面后，点「AI助手」；草稿行程即可启动旅行研究和编辑草案。")
+        print("打开页面后，在底部输入框和 Agent 讨论；点「按讨论的方向开始研究」后查询地点。")
     RUNTIME.mkdir(parents=True, exist_ok=True)
     ports = ((front_port, back_port, city_port, overpass_port)
              if args.sample else (front_port, back_port))
@@ -400,7 +400,7 @@ def main() -> int:
               else "REAL PUBLIC OSM PROVIDERS (network access after specific user consent)")
         print("高德地图：", "已加载本机 Web 服务 Key" if env.get("CITYNEXUS_AMAP_WEB_KEY") else "未配置")
         print("Agent:", "CONFIGURED (" + agent_label + ")" if agent_enabled else "OFF")
-        print("To research with AI: open AI助手 in a DRAFT Journey and confirm the task budget.")
+        print("Discuss in the bottom chat; explicitly start research after confirming AI and map-source consent.")
         print("Payment/booking: mock only. Backend bound to localhost.")
         print("DB:", db)
         print(f"For Android USB Chrome (ADB installed): adb reverse tcp:{front_port} tcp:{front_port}")
