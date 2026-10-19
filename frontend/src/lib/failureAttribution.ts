@@ -502,8 +502,8 @@ export function copyFor(
               ? `服务器答了 HTTP ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
               : `The origin answered HTTP ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，回来的类型是 ${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, and what came back was typed ${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
             kicker: kickerOf("origin"),
@@ -511,8 +511,8 @@ export function copyFor(
               ? `服务器答了 HTTP ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
               : `The origin answered HTTP ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
-              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
+              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，回来的类型是 ${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
+              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, and what came back was typed ${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
     /* ORD-0457: a refusal to be asked again so soon is not a failed read, and the wait is only ever
        the server's own. The retry control stays on screen either way - "later" is a pace, not a
