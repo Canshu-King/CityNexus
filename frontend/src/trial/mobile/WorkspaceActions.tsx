@@ -31,6 +31,7 @@ const TOOL_NAME: Record<string, string> = {
   research_place_sources: "查找地点资料",
   discover_places: "查找公开地点", discover_nearby_places: "查找周边地点", save_draft_itinerary: "整理旅行草案",
   acquire_place_facts: "核实地点资料", estimate_place_facts: "估算备选安排",
+  replace_draft_slots: "更新指定时段",
   generate_plans: "生成候选方案", compare_routes: "比较已有路线", route_public_places: "查询步行路线",
 };
 const EVENT_NAME: Record<string, string> = {

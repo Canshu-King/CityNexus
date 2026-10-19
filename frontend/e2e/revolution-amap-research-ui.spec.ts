@@ -86,6 +86,38 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   await page.getByTestId("rev-mobile-tab-trips").click();
   await page.getByTestId("rev-mobile-tab-assistant").click();
   const cockpit = page.getByTestId("rev-mission-cockpit");
+  const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
+  await expect(chatDock).toBeVisible();
+  for (const width of [390, 430, 1366]) {
+    await page.setViewportSize({ width, height: 844 });
+    const geometry = await chatDock.evaluate((dock) => {
+      const row = dock.querySelector<HTMLElement>(".rev-mission-chat-row")!;
+      const input = row.querySelector<HTMLTextAreaElement>("textarea")!;
+      const submit = row.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      const nav = document.querySelector<HTMLElement>(".rev-mobile-bottom-nav")!;
+      const dockRect = dock.getBoundingClientRect();
+      return {
+        rowDisplay: getComputedStyle(row).display,
+        rowWidth: row.clientWidth,
+        rowScrollWidth: row.scrollWidth,
+        inputWidth: input.getBoundingClientRect().width,
+        submitWidth: submit.getBoundingClientRect().width,
+        dockLeft: dockRect.left,
+        dockRight: dockRect.right,
+        dockBottom: dockRect.bottom,
+        navTop: nav.getBoundingClientRect().top,
+      };
+    });
+    expect(geometry.rowDisplay).toBe("grid");
+    expect(geometry.inputWidth).toBeGreaterThan(0);
+    expect(geometry.submitWidth).toBeGreaterThanOrEqual(44);
+    expect(geometry.submitWidth).toBeLessThanOrEqual(80);
+    expect(geometry.rowScrollWidth).toBeLessThanOrEqual(geometry.rowWidth);
+    expect(geometry.dockLeft).toBeGreaterThanOrEqual(0);
+    expect(geometry.dockRight).toBeLessThanOrEqual(width);
+    expect(geometry.dockBottom).toBeLessThanOrEqual(geometry.navTop + 1);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
   const map = page.getByTestId("rev-mission-map-pane");
   await map.getByRole("button", { name: "查看其他研究（2）" }).click();
   await expect(map.getByTestId("rev-amap-research-leads")).toContainText("TEST_FIXTURE 连城县地点");

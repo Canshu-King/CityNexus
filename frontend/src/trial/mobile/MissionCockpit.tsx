@@ -50,6 +50,7 @@ const toolCopy: Record<string, string> = {
   compare_routes: "比较已保存路线",
   route_public_places: "查询步行路线",
   save_draft_itinerary: "整理多日草案",
+  replace_draft_slots: "更新指定时段",
 };
 const eventCopy: Record<string, string> = {
   RUN_STARTED: "Agent 已开始工作",

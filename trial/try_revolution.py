@@ -398,6 +398,7 @@ def main() -> int:
         print("OPEN:", address)
         print("SOURCE:", "CONTROLLED TEST_PROVIDER (sample places)" if args.sample
               else "REAL PUBLIC OSM PROVIDERS (network access after specific user consent)")
+        print("高德地图：", "已加载本机 Web 服务 Key" if env.get("CITYNEXUS_AMAP_WEB_KEY") else "未配置")
         print("Agent:", "CONFIGURED (" + agent_label + ")" if agent_enabled else "OFF")
         print("To research with AI: open AI助手 in a DRAFT Journey and confirm the task budget.")
         print("Payment/booking: mock only. Backend bound to localhost.")

@@ -16,6 +16,12 @@ class LauncherNetworkTest(unittest.TestCase):
             return launcher.isolated_environment("TEST_FIXTURE.db", sample=False,
                                                  contact_email="test@example.invalid")
 
+    def test_real_service_loads_local_amap_key_server_side(self):
+        with patch.dict(os.environ, {}, clear=True), patch.object(launcher, "load_amap_key", return_value="TEST_FIXTURE_LOCAL_KEY"):
+            env = self.environment({})
+        self.assertEqual(env["CITYNEXUS_AMAP_WEB_KEY"], "TEST_FIXTURE_LOCAL_KEY")
+        self.assertNotIn("VITE_AMAP_KEY", env)
+
     def test_system_proxy_survives_loopback_bypass(self):
         with patch.dict(os.environ, {}, clear=True):
             env = self.environment({"https": "http://127.0.0.1:12345"})

@@ -32,6 +32,7 @@ from app.agent.goal_artifacts import (
 )
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.goal_amap import route_public_places, route_definition
+from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
@@ -57,7 +58,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
+    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -552,7 +553,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
-        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition()),
+        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition()),
     )
     # A full multi-day draft tool payload can exceed 2400 tokens on its own.
     # Reserve one bounded completion, without an automatic provider retry.
@@ -661,8 +662,9 @@ def _initial_messages(
         "When amap_configured is true, prefer discover_places source=amap for Chinese destinations; "
         "the server resolves the destination administrative code. Nearby searches around an Amap ID use Amap. "
         "Use route_public_places for actual walking distance/time between task-owned public research IDs. "
-        "For a user edit request, call save_draft_itinerary with the FULL draft, changing only the requested "
-        "day/time slots and preserving all other slot contents. A verbal suggestion is not a saved edit."
+        "For an existing draft, use replace_draft_slots with exactly the requested date/time block. "
+        "Do not update a different period, meal, or research todo unless asked. All other blocks are retained by the server. "
+        "Existing research routes can answer traffic questions without another external request. A verbal suggestion is not a saved edit."
     )
     user_context = {
         "goal": mission.user_text,
@@ -697,6 +699,10 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
+    if name == "replace_draft_slots":
+        if set(raw) != {"date", "time_of_day", "slots"}:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {"date": raw["date"], "time_of_day": raw["time_of_day"], "slots": raw["slots"]}
     if name == "route_public_places":
         if set(raw) - {"from_place_id", "to_place_id", "public_action"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -799,7 +805,7 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
         }
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
-    if name in {"discover_places", "discover_nearby_places", "route_public_places", "save_draft_itinerary"}:
+    if name in {"discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"}:
         return raw
     if name == "inspect_journey":
         journey = raw.get("journey") if isinstance(raw.get("journey"), dict) else {}
@@ -875,9 +881,14 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
+    if name == "replace_draft_slots":
+        return {"date": args.get("date"), "time_of_day": args.get("time_of_day"), "slot_count": len(args.get("slots") or [])}
+    if name == "route_public_places":
+        return {key: args.get(key) for key in ("from_place_id", "to_place_id", "public_action")}
+
     if name == "discover_nearby_places":
         return {"center_place_id": args.get("center_place_id"), "radius_m": args.get("radius_m"),
-                "query_length": len(args.get("query") or ""), "provider": "overpass", "public_action": args.get("public_action")}
+                "query_length": len(args.get("query") or ""), "provider": "amap" if str(args.get("center_place_id", "")).startswith("amap:") else "overpass", "public_action": args.get("public_action")}
     if name in {"discover_places", "discover_nearby_places"}:
         return {"query_length": len(args.get("query") or ""), "public_action": args.get("public_action"),
                 "provider": args.get("source", "photon")}
@@ -918,8 +929,11 @@ def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
                 "http_status": result.get("http_status"),
                 "public_action": result.get("public_action"), "provider": result.get("provider"),
                 "provider_provenance": result.get("provider_provenance") }
-    if name == "save_draft_itinerary":
-        return {"status": "COMPLETED", "draft_revision": result["draft_artifact"]["revision"]}
+    if name in {"save_draft_itinerary", "replace_draft_slots"}:
+        draft = result.get("draft_artifact")
+        if not isinstance(draft, dict):
+            return {"status": result.get("status", "FAILED"), "reason_code": result.get("reason_code")}
+        return {"status": "COMPLETED", "draft_revision": draft["revision"]}
     if result.get("status") in {
         "FAILED",
         "NEEDS_DECISION",
@@ -1223,8 +1237,11 @@ def resume_goal_task(
 
     online_tools = task["consent"]["online_research"]
     tool_allowlist = frozenset(
-        _ALLOWED_TOOLS if online_tools else {"inspect_journey", "save_draft_itinerary"}
+        _ALLOWED_TOOLS if online_tools else {"inspect_journey", "save_draft_itinerary", "replace_draft_slots"}
     )
+    editing_existing_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
+    write_tool = "replace_draft_slots" if editing_existing_draft else "save_draft_itinerary"
+    tool_allowlist = frozenset(tool_allowlist - ({"save_draft_itinerary"} if editing_existing_draft else {"replace_draft_slots"}))
     try:
         agent = _new_goal_agent(tool_allowlist)
     except AgentRuntimeUnavailable:
@@ -1322,11 +1339,11 @@ def resume_goal_task(
             session.commit()
             try:
                 final_turn = int(task["usage"]["model_turns"]) == int(task["budget"]["max_model_turns"])
-                agent._tool_allowlist = frozenset({"save_draft_itinerary"}) if final_turn else tool_allowlist
+                agent._tool_allowlist = frozenset({write_tool}) if final_turn else tool_allowlist
                 if final_turn:
                     messages.append({"role": "system", "content":
-                        "This is the last approved model turn. Research has ended for this round. "
-                        "Use save_draft_itinerary now to deliver the best useful partial multi-day draft from actual results. "
+                        "This is the last approved model turn. Research has ended for this round. " +
+                        ("Use replace_draft_slots now to save only the date/time block requested by the latest user. " if editing_existing_draft else "Use save_draft_itinerary now to deliver the best useful partial multi-day draft from actual results. ") +
                         "With no verified places, save specific research todos or generic activity suggestions without Place IDs. "
                         "Leave all missing facts unknown. Do not request another external search."})
                 message = agent._complete(messages)
@@ -1434,7 +1451,7 @@ def resume_goal_task(
                     args_raw = function.get("arguments") or "{}"
                     args_value = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     args = _safe_args(tool_name, args_value, task)
-                    if tool_name not in {"inspect_journey", "save_draft_itinerary"} and not task["consent"]["online_research"]:
+                    if tool_name not in {"inspect_journey", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
                     if int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
                         exhausted_status = "PARTIAL_READY" if research_failed or any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", [])) else "RESUMABLE"
@@ -1459,7 +1476,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"discover_places", "discover_nearby_places", "save_draft_itinerary", "compare_routes", "route_public_places"}
+                    request = (None if tool_name in {"discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1478,6 +1495,11 @@ def resume_goal_task(
                         elif tool_name in {"discover_places", "discover_nearby_places"}:
                             discover = discover_goal_places if tool_name == "discover_places" else discover_nearby_goal_places
                             raw_result = discover(session, journey, task, **args)
+                            mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        elif tool_name == "replace_draft_slots":
+                            task["draft_artifact"] = replace_draft_slots(journey, task, **args)
+                            raw_result = {"tool": tool_name, "status": "DRAFT_SAVED", "draft_artifact": task["draft_artifact"]}
                             mission.intent_json = _json_dump(intent)
                             session.commit()
                         elif tool_name == "save_draft_itinerary":

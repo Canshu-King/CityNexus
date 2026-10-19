@@ -176,6 +176,8 @@ def load_amap_key() -> str | None:
     if environment_key.strip():
         return _normalize_key(environment_key)
 
+    if not os.environ.get("LOCALAPPDATA"):
+        return None
     path = credential_path()
     if not path.is_file():
         return None
