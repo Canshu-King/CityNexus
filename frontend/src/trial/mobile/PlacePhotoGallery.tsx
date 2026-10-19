@@ -60,7 +60,7 @@ function PhotoCard({ photo }: { photo: CuratedPhoto }) {
           loading="lazy" decoding="async" onError={() => setBroken(true)} />}
     <div className="cn-place-photo-meta">
       <strong>{photo.label}</strong>
-      <span>历史实景 · 仅供旅行参考</span>
+      <span>历史实景 · 裁切展示 · 仅供参考</span>
       <small>
         <a href={photoPage(photo.filename)} target="_blank" rel="noopener noreferrer">{photo.author}</a>
         {photo.licenseHref && <> · <a href={photo.licenseHref} target="_blank" rel="noopener noreferrer">{photo.licenseLabel}</a></>}
