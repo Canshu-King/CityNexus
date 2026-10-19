@@ -3837,7 +3837,9 @@ components:
           enum: [EXACT_LABEL, REGION_ENTITY_MATCH, REGION_CHAIN_LABEL, DESCRIPTION_SUBSTRING, UNKNOWN]
         identity_status: {type: string, nullable: true, description: BOUND_* for a bound row}
         provider_object_id: {type: string, nullable: true, description: The provider's own item id}
-        district: {type: string, nullable: true, description: Nearest located-in name the chain answered}
+        district: {type: string, nullable: true, description: Chinese label of the nearest located-in entity, asked for its own name}
+        district_qid: {type: string, nullable: true, description: That located-in entity's own Wikidata id}
+        district_matches_region: {type: boolean, nullable: true, description: True when the node is the region itself rather than a district inside it; null when the region was never resolved}
         captured_at: {type: string}
         can_show: {type: boolean, description: False unless a licence lets us display it}
     PlaceMediaResponse:

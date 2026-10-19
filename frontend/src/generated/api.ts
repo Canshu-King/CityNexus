@@ -3560,8 +3560,12 @@ export interface components {
             identity_status?: string | null;
             /** @description The provider's own item id */
             provider_object_id?: string | null;
-            /** @description Nearest located-in name the chain answered */
+            /** @description Chinese label of the nearest located-in entity */
             district?: string | null;
+            /** @description That located-in entity's own Wikidata id */
+            district_qid?: string | null;
+            /** @description True when the node is the region itself rather than a district inside it; null when the region was never resolved */
+            district_matches_region?: boolean | null;
             captured_at: string;
             /** @description False unless a licence lets us display it */
             can_show: boolean;

@@ -58,6 +58,9 @@ IMAGE_PROPERTY = "P18"
 #: `P131` is "located in": the arm that binds a place to a region without trusting strings.
 LOCATION_PROPERTY = "P131"
 CHAIN_CAP = 4
+#: The district slot asks for these two labels, in this order.  Chinese first because a traveller
+#: reads this field on a Chinese screen; `en` is the fallback the node itself offers, not our guess.
+DISTRICT_LANGS = ("zh", "en")
 _TAG = re.compile(r"<[^>]+>")
 
 
@@ -119,6 +122,11 @@ class PlaceMedia:
     identity_status: str | None = None
     provider_object_id: str | None = None
     district: str | None = None
+    #: The `P131` node's OWN entity id -- 区县身份 as an identity, not as whatever label iterated first.
+    district_qid: str | None = None
+    #: True when that node is the region the traveller typed: honest reading is "the city itself,
+    # not a district inside it".  None means the region was never resolved, not that it disagrees.
+    district_matches_region: bool | None = None
 
     def as_payload(self) -> dict[str, Any]:
         return {
@@ -138,6 +146,8 @@ class PlaceMedia:
             "identity_status": self.identity_status or self.confidence,
             "provider_object_id": self.provider_object_id,
             "district": self.district,
+            "district_qid": self.district_qid,
+            "district_matches_region": self.district_matches_region,
             "captured_at": self.captured_at,
             "can_show": self.can_show,
         }
@@ -275,6 +285,32 @@ class WikimediaMediaProvider:
             current = nxt
         return seen, visited, chain_qids
 
+    async def _district_node(self, qids: Sequence[str]) -> dict[str, Any]:
+        """Ask the nearest `P131` node for its OWN id and its OWN Chinese name -- one call, one hop.
+
+        The slot the ruling calls 区县身份 used to be filled from the chain walk's first label, which
+        gave whatever language Wikidata happened to iterate: 外滩 came back `Shanghai` and 广州塔 came
+        back 赤岗街道, and neither reading carried the node's identity.  An id plus a named language is
+        the difference between "a name we happened to see" and "this place is inside THIS entity".
+        """
+        batch = [str(qid) for qid in list(qids)[:CHAIN_CAP] if qid]
+        if not batch:
+            return {}
+        response = await self._client.get(WIKIDATA_API, params={
+            "action": "wbgetentities", "ids": "|".join(batch), "props": "labels",
+            "languages": "|".join(DISTRICT_LANGS), "format": "json"},
+            headers={"User-Agent": PROVIDER_USER_AGENT})
+        response.raise_for_status()
+        payload = _json_payload(response, "Wikidata district node")
+        entities = payload.get("entities") or {}
+        for qid in batch:
+            labels = (entities.get(qid) or {}).get("labels") or {}
+            for language in DISTRICT_LANGS:
+                value = (labels.get(language) or {}).get("value")
+                if value:
+                    return {"qid": qid, "name": str(value), "label_language": language}
+        return {}
+
     async def _search(self, label: str, lang: str = "zh") -> list[dict[str, Any]]:
         # `language` is mandatory on this endpoint and decides which labels are searched: asking without
         # it comes back empty, which an earlier draft of this module mis-filed as "no such entity".
@@ -329,6 +365,7 @@ class WikimediaMediaProvider:
             chain_qids: list[str] = []
             region_qid: str | None = None
             district: str | None = None
+            district_qid: str | None = None
             arm = identity_matches(label, entity_label, description, region)
             if arm is None and region:
                 # Only climb the graph when the strings disagree: the walk is the expensive arm, and it
@@ -338,15 +375,20 @@ class WikimediaMediaProvider:
                 region_qid = await self._region_entity(region)
                 arm = identity_matches(label, entity_label, description, region, chain_labels,
                                        chain_qids, region_qid)
-                # 区县身份：链上第一个真答出来的节点名就是我们对「哪个区县」的全部证据，没有就留空。
-                district = chain_labels[0] if chain_labels else None
             if arm is None:
                 # The answer is about a different place, so for this POI there is no media.
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
                               "outcome": STATUS_NO_MEDIA, "reason_code": "MEDIA_IDENTITY_UNBOUND",
                               "entity_label": entity_label, "chain_labels": chain_labels[:4],
-                              "region_qid": region_qid, "district": district,
+                              "region_qid": region_qid,
                               "captured_at": started}
+            # 区县身份 is asked on every arm: a place matched by its own label sits inside a district no
+            # less than one matched through the chain.  It is asked only once we are going to show
+            # something, so a refusal does not pay for a lookup nobody reads.
+            node = await self._district_node(document["located_in"])
+            district = node.get("name") or None
+            district_qid = node.get("qid") or None
+            district_matches_region = (district_qid == region_qid) if (district_qid and region_qid) else None
             if not files:
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
                               "outcome": STATUS_NO_MEDIA, "reason_code": "PROPERTY_EMPTY",
@@ -368,6 +410,8 @@ class WikimediaMediaProvider:
                 identity_status="BOUND_" + CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
                 provider_object_id=wikidata_id or provider_object_id or None,
                 district=district,
+                district_qid=district_qid,
+                district_matches_region=district_matches_region,
                 image_url=str(info["url"]),
                 thumb_url=str(info["thumburl"]) if info.get("thumburl") else None,
                 author=_plain(meta.get("Artist")),
@@ -382,8 +426,10 @@ class WikimediaMediaProvider:
                        "file": files[0], "license": media.license,
                        "binding_arm": arm, "chain_checked": bool(chain_labels),
                        "identity_status": "BOUND_" + CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
-                       "district": district, "region_qid": region_qid,
-                       "outcome": STATUS_PHOTO if media.can_show else "NO_MEDIA",
+                       "district": district, "district_qid": district_qid,
+                       "district_matches_region": district_matches_region, "region_qid": region_qid,
+                       # One vocabulary for refusals: the reading uses the same word the result does.
+                       "outcome": STATUS_PHOTO if media.can_show else STATUS_NO_MEDIA,
                        "reason_code": None if media.can_show else "LICENCE_UNNAMED",
                        "captured_at": started}
             return (media if media.can_show else None), reading

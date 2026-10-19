@@ -59,7 +59,12 @@ def transport(script: dict[str, Any], seen: list[httpx.Request] | None = None
         host = request.url.host or ""
         params = dict(request.url.params)
         if "wikidata" in host and params.get("action") == "wbgetentities":
-            # The P131 climb asks for a batch of ids; the answer is a set of entity documents.
+            # Two different asks share this endpoint.  The `P131` climb needs claims as well as labels;
+            # the district hop asks for the node's own labels only.  Answering both from one script
+            # would let a district reading silently satisfy the chain control -- the exact confusion
+            # this module exists to remove, so the mock refuses to make it possible.
+            if params.get("props") == "labels":
+                return httpx.Response(200, json=script.get("district", {"entities": {}}))
             return httpx.Response(200, json=script.get("chain", {"entities": {}}))
         if "wikidata" in host and params.get("action") == "wbsearchentities":
             # The region is now resolved as its own entity, so one mock has to answer two different
@@ -80,6 +85,16 @@ def chain_payload(*labels: str) -> dict[str, Any]:
     return {"entities": {
         f"Q{index}": {"labels": {"zh": {"value": text}}, "claims": {}}
         for index, text in enumerate(labels, start=1)}}
+
+
+def district_payload(qid: str, *, zh: str | None = None, en: str | None = None) -> dict[str, Any]:
+    """One node's own labels -- what the 区县身份 hop is allowed to see (it asks for no claims)."""
+    labels: dict[str, Any] = {}
+    if zh:
+        labels["zh"] = {"value": zh}
+    if en:
+        labels["en"] = {"value": en}
+    return {"entities": {qid: {"labels": labels}}}
 
 
 def script_for(**overrides: Any) -> dict[str, Any]:
@@ -111,8 +126,10 @@ async def test_a_bound_commons_answer_carries_author_licence_and_source_page():
                     "provider", "captured_at", "can_show"}
     visual_fields = {"title", "provenance", "attribution_url", "terms_url", "confidence",
                      "thumbnail_url"}
+    district_fields = {"district", "district_qid", "district_matches_region"}
     assert order_fields <= set(media), sorted(order_fields - set(media))
     assert visual_fields <= set(media), sorted(visual_fields - set(media))
+    assert district_fields <= set(media), sorted(district_fields - set(media))
     assert media["thumbnail_url"] == media["thumb_url"]
     assert media["attribution_url"] == media["source_url"]
     assert media["provenance"] == "WIKIDATA_P18+COMMONS_IMAGEINFO"
@@ -310,6 +327,82 @@ async def test_a_strong_binding_and_a_description_match_are_not_the_same_claim()
 
     assert result.readings[0]["binding_arm"] == "label"
     assert result.media is not None and result.media.confidence == "EXACT_LABEL"
+
+
+@pytest.mark.asyncio
+async def test_the_district_slot_is_the_nodes_own_id_in_the_language_the_traveller_reads():
+    """冠豸山 binds on its own label, so the chain is never climbed -- yet 区县身份 still has to arrive,
+    as that node's own id and its own Chinese name rather than whatever label iterated first."""
+    entity = entity_payload("Q10895162", "冠豸山", "mountain in Liancheng", ["p.jpg"],
+                            located=["Q10895200"])
+    seen: list[httpx.Request] = []
+    async with httpx.AsyncClient(transport=transport(
+            script_for(entity=entity, district=district_payload("Q10895200", zh="连城县",
+                                                                en="Liancheng County")),
+            seen)) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:7", label="冠豸山", region="连城县", client=client)
+
+    media = result.media
+    assert media is not None and media.confidence == "EXACT_LABEL"
+    assert media.district == "连城县"
+    assert media.district_qid == "Q10895200"
+    asks = [dict(request.url.params) for request in seen
+            if dict(request.url.params).get("action") == "wbgetentities"]
+    assert len(asks) == 1, asks
+    assert asks[0]["props"] == "labels" and asks[0]["languages"] == "zh|en"
+
+
+@pytest.mark.asyncio
+async def test_a_district_that_is_the_region_itself_is_said_to_be_the_region():
+    """外滩 sits directly under 上海市, and 广州塔 sits under a node inside its region: the payload has
+    to tell those two apart, because only one of them is a 区县."""
+    hit = {"search": [{"id": "Q125474", "label": "外滩", "description": "waterfront"}]}
+    region_hit = {"search": [{"id": "Q8686", "label": "上海市", "description": "municipality"}]}
+    by_term = {"外滩": hit, "上海市": region_hit}
+
+    city_itself = entity_payload("Q125474", "Bund", "waterfront in Huangpu", ["b.jpg"],
+                                 located=["Q8686"])
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, search_by=by_term, entity=city_itself, chain=chain_payload("上海市"),
+            district=district_payload("Q8686", zh="上海市")))) as client:
+        upper = await place_media.collect_place_media(
+            place_id="N:8", label="外滩", region="上海市", client=client)
+    assert upper.media is not None
+    assert upper.media.district_qid == "Q8686"
+    assert upper.media.district_matches_region is True
+
+    nested = entity_payload("Q125474", "Bund", "waterfront in Huangpu", ["b.jpg"],
+                            located=["Q42"])
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, search_by=by_term, entity=nested,
+            chain=chain_payload("黄浦区", "上海市"),
+            district=district_payload("Q42", zh="黄浦区")))) as client:
+        inside = await place_media.collect_place_media(
+            place_id="N:9", label="外滩", region="上海市", client=client)
+    assert inside.media is not None
+    assert inside.media.district == "黄浦区"
+    assert inside.media.district_matches_region is False
+
+
+@pytest.mark.asyncio
+async def test_the_district_hop_cannot_be_mistaken_for_the_region_chain():
+    """A district name is evidence of WHERE the place is, not evidence that it belongs to the region we
+    were given.  Here the climb says 東京都 while the district hop happens to answer 上海市: binding on
+    that name would be the fuzzy-string defect wearing a graph costume, so the row must still refuse."""
+    hit = {"search": [{"id": "Q125474", "label": "外滩", "description": "waterfront"}]}
+    region_hit = {"search": [{"id": "Q8686", "label": "上海市", "description": "municipality"}]}
+    entity = entity_payload("Q125474", "Bund", "waterfront in Huangpu", ["b.jpg"], located=["Q777"])
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, search_by={"外滩": hit, "上海市": region_hit}, entity=entity,
+            chain=chain_payload("東京都"), district=district_payload("Q777", zh="上海市")))) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:10", label="外滩", region="上海市", client=client)
+
+    assert result.status == place_media.STATUS_NO_MEDIA
+    assert result.media is None
+    assert result.readings[0]["reason_code"] == "MEDIA_IDENTITY_UNBOUND"
+    assert result.readings[0]["region_qid"] == "Q8686"
 
 
 @pytest.mark.asyncio
