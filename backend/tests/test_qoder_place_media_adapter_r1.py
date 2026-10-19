@@ -17,12 +17,22 @@ from app.integrations.china import amap as amap_module
 from app.integrations.media import place_media
 
 
-def entity_payload(qid: str, label: str, description: str, files: list[str]) -> dict[str, Any]:
+def entity_payload(qid: str, label: str, description: str, files: list[str],
+                   located: list[str] | None = None) -> dict[str, Any]:
+    """An entity document in the shape `Special:EntityData` answers with.
+
+    `located` fills P131: without it the graph arm has nothing to climb, and a test that expects a
+    chain bind on an entity with no location claim would be testing my mock, not the product.
+    """
+    claims: dict[str, Any] = {place_media.IMAGE_PROPERTY: [
+        {"mainsnak": {"datavalue": {"value": name}}} for name in files]}
+    if located:
+        claims[place_media.LOCATION_PROPERTY] = [
+            {"mainsnak": {"datavalue": {"value": {"id": item}}}} for item in located]
     return {"entities": {qid: {
         "labels": {"zh": {"value": label}},
         "descriptions": {"en": {"value": description}},
-        "claims": {place_media.IMAGE_PROPERTY: [
-            {"mainsnak": {"datavalue": {"value": name}}} for name in files]},
+        "claims": claims,
     }}}
 
 
@@ -46,6 +56,10 @@ def transport(script: dict[str, Any], seen: list[httpx.Request] | None = None
         if seen is not None:
             seen.append(request)
         host = request.url.host or ""
+        params = dict(request.url.params)
+        if "wikidata" in host and params.get("action") == "wbgetentities":
+            # The P131 climb asks for a batch of ids; the answer is a set of entity documents.
+            return httpx.Response(200, json=script.get("chain", {"entities": {}}))
         if "wikidata" in host and request.url.path.endswith("api.php"):
             return httpx.Response(200, json=script["search"])
         if "wikidata" in host:
@@ -54,6 +68,12 @@ def transport(script: dict[str, Any], seen: list[httpx.Request] | None = None
             return httpx.Response(200, json=script["imageinfo"])
         return httpx.Response(200, json=script.get("amap", {}))
     return httpx.MockTransport(handler)
+
+
+def chain_payload(*labels: str) -> dict[str, Any]:
+    return {"entities": {
+        f"Q{index}": {"labels": {"zh": {"value": text}}, "claims": {}}
+        for index, text in enumerate(labels, start=1)}}
 
 
 def script_for(**overrides: Any) -> dict[str, Any]:
@@ -196,3 +216,46 @@ async def test_amap_photos_are_recorded_as_not_displayable(monkeypatch):
     assert "_media" not in reading
     assert result.status == place_media.STATUS_NOT_DISPLAYABLE
     assert "unit-test-key" not in json.dumps(result.as_payload(), ensure_ascii=False)
+
+
+@pytest.mark.asyncio
+async def test_the_graph_arm_binds_a_place_whose_label_and_description_both_miss_our_names():
+    """外滩: the entity answers in English, its description repeats neither name, but `P131` leads to
+    the very region we hold. Binding by climbing beats binding by string-guessing."""
+    english = entity_payload("Q125474", "Bund", "waterfront in Huangpu, Shanghai", ["bund.jpg"],
+                             located=["Q8686"])
+    hit = {"search": [{"id": "Q125474", "label": "外滩", "description": "waterfront"}]}
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, entity=english, chain=chain_payload("上海市")))) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:2", label="外滩", region="上海市", client=client)
+
+    assert result.status == place_media.STATUS_PHOTO
+    assert result.readings[0]["chain_checked"] is True
+    assert result.media is not None and result.media.can_show is True
+
+
+@pytest.mark.asyncio
+async def test_a_chain_that_leads_elsewhere_still_refuses():
+    english = entity_payload("Q9", "Bund", "waterfront in Huangpu, Shanghai", ["x.jpg"],
+                             located=["Q555"])
+    hit = {"search": [{"id": "Q9", "label": "外滩", "description": "waterfront"}]}
+    async with httpx.AsyncClient(transport=transport(script_for(
+            search=hit, entity=english, chain=chain_payload("東京都")))) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:3", label="外滩", region="上海市", client=client)
+
+    assert result.status == place_media.STATUS_NO_MEDIA
+    assert result.readings[0]["reason_code"] == "MEDIA_IDENTITY_UNBOUND"
+    assert "上海市" not in result.readings[0]["chain_labels"]
+
+
+@pytest.mark.asyncio
+async def test_the_chain_is_not_climbed_when_the_strings_already_agree():
+    seen: list[httpx.Request] = []
+    async with httpx.AsyncClient(transport=transport(script_for(), seen)) as client:
+        await place_media.collect_place_media(
+            place_id="N:4", label="冠豸山", region="连城县", client=client)
+
+    actions = [dict(request.url.params).get("action") for request in seen]
+    assert "wbgetentities" not in actions

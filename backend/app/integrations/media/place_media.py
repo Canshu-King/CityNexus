@@ -50,6 +50,9 @@ STATUS_NOT_DISPLAYABLE = "MEDIA_NOT_DISPLAYABLE"
 # `P18` is Wikidata's "image" property. Named here because a silent change to it would turn every
 # answer into NO_MEDIA and look like the provider went quiet.
 IMAGE_PROPERTY = "P18"
+#: `P131` is "located in": the arm that binds a place to a region without trusting strings.
+LOCATION_PROPERTY = "P131"
+CHAIN_CAP = 4
 _TAG = re.compile(r"<[^>]+>")
 
 
@@ -124,7 +127,7 @@ class PlaceMediaResult:
 
 
 def identity_matches(label: str, entity_label: str | None, description: str | None,
-                     region: str | None) -> bool:
+                     region: str | None, chain_labels: Sequence[str] = ()) -> bool:
     """Bind or refuse: the label must agree, or the region we were handed must appear in the entity.
 
     Two arms, because either alone is wrong: label equality only would refuse a mountain whose Wikidata
@@ -137,6 +140,8 @@ def identity_matches(label: str, entity_label: str | None, description: str | No
         return True
     text = (description or "").strip().lower()
     region_text = (region or "").strip().lower()
+    if region_text and any(region_text == str(seen).strip().lower() for seen in chain_labels):
+        return True
     if not text or not region_text:
         return False
     return wanted.lower() in text or region_text in text
@@ -167,12 +172,51 @@ class WikimediaMediaProvider:
         ]
         labels = document.get("labels") or {}
         descriptions = document.get("descriptions") or {}
+        located = [
+            snak["datavalue"]["value"]
+            for claim in claims.get(LOCATION_PROPERTY, [])
+            for snak in [claim.get("mainsnak") or {}]
+            if isinstance(snak.get("datavalue"), dict)
+            and isinstance(snak["datavalue"].get("value"), dict)
+        ]
         return {
             "files": files,
             "label": next((row.get("value") for row in labels.values() if row.get("value")), None),
             "description": next((row.get("value") for row in descriptions.values()
                                 if row.get("value")), None),
+            "located_in": [str(item.get("id")) for item in located if item.get("id")],
         }
+
+    async def _region_chain_labels(self, qids: Sequence[str]) -> tuple[list[str], list[str]]:
+        """Climb `P131` a few hops and hand back every label seen, so the caller can compare, not guess.
+
+        Short-circuits on the first hop that yields nothing: a chain that dead-ends cannot prove a
+        region, and reading fewer rows than asked is reported, never padded.
+        """
+        seen: list[str] = []
+        visited: list[str] = []
+        current = list(qids)
+        while current and len(visited) < CHAIN_CAP:
+            batch = [qid for qid in current if qid not in visited]
+            if not batch:
+                break
+            visited.extend(batch)
+            response = await self._client.get(WIKIDATA_API, params={
+                "action": "wbgetentities", "ids": "|".join(batch), "props": "claims|labels",
+                "format": "json"}, headers={"User-Agent": PROVIDER_USER_AGENT})
+            response.raise_for_status()
+            payload = _json_payload(response, "Wikidata chain")
+            nxt: list[str] = []
+            for doc in (payload.get("entities") or {}).values():
+                for row in (doc.get("labels") or {}).values():
+                    if row.get("value"):
+                        seen.append(str(row["value"]))
+                for claim in (doc.get("claims") or {}).get(LOCATION_PROPERTY, []):
+                    value = ((claim.get("mainsnak") or {}).get("datavalue") or {}).get("value") or {}
+                    if isinstance(value, dict) and value.get("id"):
+                        nxt.append(str(value["id"]))
+            current = nxt
+        return seen, visited
 
     async def _search(self, label: str, lang: str = "zh") -> list[dict[str, Any]]:
         # `language` is mandatory on this endpoint and decides which labels are searched: asking without
@@ -223,11 +267,17 @@ class WikimediaMediaProvider:
             # the label we typed back to us, and trusting it would let any near-miss "prove" itself.
             entity_label = document["label"]
             description = document["description"]
+            chain_labels: list[str] = []
             if not identity_matches(label, entity_label, description, region):
+                # Only climb the graph when the strings disagree: the walk is the expensive arm, and it
+                # is asked exactly for the case a string matcher gets wrong.
+                chain_labels, _visited = await self._region_chain_labels(document["located_in"])
+            if not identity_matches(label, entity_label, description, region, chain_labels):
                 # The answer is about a different place, so for this POI there is no media.
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
                               "outcome": "NO_MEDIA", "reason_code": "MEDIA_IDENTITY_UNBOUND",
-                              "entity_label": entity_label, "captured_at": started}
+                              "entity_label": entity_label, "chain_labels": chain_labels[:4],
+                              "captured_at": started}
             if not files:
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
                               "outcome": "NO_MEDIA", "reason_code": "PROPERTY_EMPTY",
@@ -253,6 +303,7 @@ class WikimediaMediaProvider:
             )
             reading = {"source": self.provider_key, "attempted": True, "qid": qid,
                        "file": files[0], "license": media.license,
+                       "chain_checked": bool(chain_labels),
                        "outcome": STATUS_PHOTO if media.can_show else "NO_MEDIA",
                        "reason_code": None if media.can_show else "LICENCE_UNNAMED",
                        "captured_at": started}
