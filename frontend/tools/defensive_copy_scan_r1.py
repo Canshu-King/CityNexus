@@ -60,6 +60,12 @@ MARKERS = (
     "屏上不说", "no fourth word", "nothing is invented", "is not invented",
     "invented here", "we do not guess", "do not guess", "refuses by state", "this one refuses",
     "nothing is inferred", "no word is", "unrelated to you", "not because of you",
+    # Added again the same day, from three sentences this file walked past while the campaign was
+    # already deleting them: a promise about when the screen speaks, a claim about what it reads, and
+    # a design policy stated on the user's face. A fixed vocabulary under-counts by construction -- the
+    # header therefore reports what this list caught, never how many defensive sentences exist.
+    "不是做完再说", "这句话现在说", "我们只读", "我们只", "让缺口有名字", "本部署自己的",
+    "it is said now", "so the gap has a name", "we read only", "we only read",
 )
 
 KEY_LINE = re.compile(r'^\s*"([A-Za-z0-9_.\-]+)":\s*"((?:[^"\\]|\\.)*)"\s*,?\s*$')
@@ -455,9 +461,19 @@ def selftest() -> int:
     results.append(("collectionCopy.ts is read through the entry shape (it was the file the `entry` key hid)",
                     len(collected) >= 40 and {side for side, _, _ in collected} == {"en", "zh"},
                     "%d values" % len(collected)))
+    per_file: dict[str, int] = {}
+    for label, side, key, value in module_copy():
+        name = label.split("/")[-1]
+        per_file[name] = per_file.get(name, 0) + 1
+    results.append(("the entry-shaped files reach the candidate list (module_copy wiring)",
+                    per_file.get("poiImportCopy.ts", 0) >= 140 and per_file.get("mapPanelCopy.ts", 0) >= 60,
+                    "poiImport=%s mapPanel=%s" % (per_file.get("poiImportCopy.ts"), per_file.get("mapPanelCopy.ts"))))
     for text, want in [
         ("No third word is invented here, so this choice refuses.", True),
         ("这里不另起第三种说法。", True),
+        ("这句话现在说，不是做完再说。", True),
+        ("截图列着，让缺口有名字。", True),
+        ("我们只读本地能读的文字。", True),
         ("The server answered 200 for this trip.", False),
     ]:
         hit = next((marker for marker in MARKERS if marker in text), None)

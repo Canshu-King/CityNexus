@@ -690,9 +690,10 @@ const TRASH_CLAIMED = [];
 const FOOTPRINT_KEYS = ["scope", "emptyWhy", "unreachable", "noZoneHeading", "dayZone"];
 const FOOTPRINT_CLAIMED = ["scope"];
 const COLLECTION_KEYS = ["title", "scope", "empty", "writeRefused", "noPlaceIdOnRow"];
-const COLLECTION_CLAIMED = ["title"];
-const POI_KEYS = ["exitStoreOnly", "storeOnlyRefusal", "storeOnlyChosen", "collectNothingConfirmed", "readBackFailed"];
-const POI_CLAIMED = [];
+const COLLECTION_CLAIMED = ["title", "empty"];
+const POI_KEYS = ["kicker", "lede", "modesTitle", "modesSub", "boundary", "boundarySub", "autoDayNote",
+                  "exitStoreOnly", "storeOnlyRefusal", "storeOnlyChosen", "collectNothingConfirmed", "readBackFailed"];
+const POI_CLAIMED = ["kicker", "lede", "modesTitle"];
 
 /* One module-backed route screen, reached the way a traveller reaches it: through the drawer, by the
    label the dictionary gives that nav entry. Written once because the 成员与权限 screen and the 回收站
