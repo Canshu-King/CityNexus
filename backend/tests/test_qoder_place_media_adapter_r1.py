@@ -406,7 +406,7 @@ async def test_the_district_hop_cannot_be_mistaken_for_the_region_chain():
 
 
 @pytest.mark.asyncio
-async def test_the_route_shape_is_what_a_signed_member_reads():
+async def test_the_route_shape_is_what_a_signed_member_reads(monkeypatch):
     """The GET is the contract's other half: 200 with NO_IMAGE for a place that exists but has no
     showable photograph, 404 only when there is no place or no journey to attribute it to."""
     from fastapi import FastAPI
@@ -415,8 +415,9 @@ async def test_the_route_shape_is_what_a_signed_member_reads():
     from sqlalchemy.orm import sessionmaker
     from sqlalchemy.pool import StaticPool
 
-    from app import place_media_routes
-    from app.db.models import Base, Journey, Place, Traveler
+    from app import place_media_routes, traveler_principal
+    from app.core.config import settings
+    from app.db.models import Base, Journey, JourneyCheckin, Place, Traveler
     from app.db.session import get_session
 
     # 路由吃 UUID 是这棵树的规矩（其他 journey 路由都写 journey_id: UUID），所以种子行也用真 UUID，
@@ -439,6 +440,10 @@ async def test_the_route_shape_is_what_a_signed_member_reads():
                        city_code="350825", name="冠豸山", category="poi", latitude=25.7,
                        longitude=116.75, opening_hours_json="{}", tags_json="[]",
                        metadata_json="{}", updated_at="now"))
+        # 授权之后还要能证明「这站在这趟里」：足迹章是最短的一条真链路（活动链在授权测试里另走一遍）。
+        seed.add(JourneyCheckin(id=str(uuid.uuid4()), journey_id=journey_id, activity_id=None,
+                                place_id="plc-media", target_kind="place", target_key="plc-media",
+                                stamped_at="now"))
         seed.commit()
 
     app = FastAPI()
@@ -453,9 +458,15 @@ async def test_the_route_shape_is_what_a_signed_member_reads():
 
     app.dependency_overrides[get_session] = override_session
     app.dependency_overrides[place_media_routes._media_client] = override_client
-    client = TestClient(app)
+    from dataclasses import replace
 
-    ok = client.get("/api/v1/journeys/" + journey_id + "/places/plc-media/media")
+    secret = uuid.uuid4().hex + uuid.uuid4().hex  # 运行时生成，不落盘
+    monkeypatch.setattr(traveler_principal, "settings",
+                        replace(settings, traveler_auth_secret=secret))
+    client = TestClient(app)
+    signed = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token("trv-media")}
+
+    ok = client.get("/api/v1/journeys/" + journey_id + "/places/plc-media/media", headers=signed)
     assert ok.status_code == 200, ok.text
     body = ok.json()
     assert body["status"] == place_media.STATUS_PHOTO
@@ -463,9 +474,11 @@ async def test_the_route_shape_is_what_a_signed_member_reads():
     assert body["place_name"] == "冠豸山" and body["journey_id"] == journey_id
     assert body["media"]["can_show"] is True
 
-    missing_place = client.get("/api/v1/journeys/" + journey_id + "/places/plc-nope/media")
+    missing_place = client.get("/api/v1/journeys/" + journey_id + "/places/plc-nope/media",
+                                headers=signed)
     assert missing_place.status_code == 404
-    missing_journey = client.get("/api/v1/journeys/" + str(uuid.uuid4()) + "/places/plc-media/media")
+    missing_journey = client.get("/api/v1/journeys/" + str(uuid.uuid4()) + "/places/plc-media/media",
+                                  headers=signed)
     assert missing_journey.status_code == 404
 
 
