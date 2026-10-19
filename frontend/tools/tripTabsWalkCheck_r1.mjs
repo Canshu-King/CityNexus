@@ -74,6 +74,7 @@ const WANT_SHEETS = !process.argv.includes("--no-sheets");
 const WANT_FOOTPRINTS = !process.argv.includes("--no-footprints");
 const WANT_COLLECTIONS = !process.argv.includes("--no-collections");
 const WANT_POIIMPORT = !process.argv.includes("--no-poiimport");
+const WANT_SIM = !process.argv.includes("--no-sim");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -276,6 +277,11 @@ const COPY_MODULES = {
   collection: join(FRONTEND, "src", "features", "collections", "collectionCopy.ts"),
   poiImport: join(FRONTEND, "src", "features", "poiimport", "poiImportCopy.ts"),
   mapPanel: join(FRONTEND, "src", "i18n", "mapPanelCopy.ts"),
+  /* The teaching stage keeps its own five evidence readings next to the clock helpers, and two server
+     states have no named reading at all -- they fall through to the dictionary's "the server said this
+     word, we do not interpret it". That fallback is the one sentence on the product that must never be
+     mistaken for waffle, so its table is walked like any other. */
+  scene: join(FRONTEND, "src", "lib", "sceneClock.ts"),
 };
 
 /** Which locale a name means -- by exact match, never by prefix.
@@ -710,14 +716,28 @@ const POI_CLAIMED = ["kicker", "lede", "modesTitle"];
    the screens speak the dictionary, so a hardcoded label would pass while the product renamed the
    button. Failure always says which door it could not get through. */
 async function walkModuleFace(page, regions, locale, opts) {
-  const { name, navKey, testId, moduleFile, keys } = opts;
+  const { name, navKey, testId, moduleFile, keys, ballTestId } = opts;
+  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
+  await page.waitForTimeout(5000);
+  if (ballTestId) {
+    /* The teaching stage is a floating ball, not a drawer entry: nothing in the navigation names it, so
+       the only honest way to reach it is to click the thing the traveller actually clicks. */
+    const ball = page.locator(`[data-testid="${ballTestId}"]`);
+    if ((await ball.count()) === 0) {
+      const ids = await page.evaluate(() =>
+        Array.from(document.querySelectorAll("[data-testid]")).map((node) => node.getAttribute("data-testid")).slice(0, 24)
+      );
+      console.log(`   ${name}: NOT REACHED (no [data-testid="${ballTestId}"] on the page); ids: ${ids.join(", ")}`);
+      return { reached: false, note: `no ${ballTestId} ball` };
+    }
+    await ball.first().click({ timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(2500);
+  } else {
   const label = valueOf(regions, locale, navKey);
   if (!label) {
     console.log(`   ${name}: NOT ATTEMPTED (${navKey} has no dictionary value)`);
     return { reached: false, note: `${navKey} has no dictionary value` };
   }
-  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
-  await page.waitForTimeout(5000);
   const menu = page.locator('[data-testid="v8-mobile-menu"]');
   if ((await menu.count()) > 0) {
     await menu.first().click({ timeout: 6000 }).catch(() => {});
@@ -738,6 +758,7 @@ async function walkModuleFace(page, regions, locale, opts) {
   }
   await nav.first().click({ timeout: 6000 }).catch(() => {});
   await page.waitForTimeout(3000);
+  }
   const mounted = (await page.locator(`[data-testid="${testId}"]`).count()) > 0;
   const panel = await page.evaluate((id) => {
     const host =
@@ -857,6 +878,28 @@ function walkPoiImportFace(page, regions, locale) {
     testId: "poi-import",
     moduleFile: COPY_MODULES.poiImport,
     keys: POI_KEYS,
+  });
+}
+
+/* The keys the teaching stage carries are read from its own table, never listed here, so adding a
+   sixth server state to sceneClock.ts cannot leave this arm checking a stale list. */
+function simulationKeys() {
+  const table = moduleTable(COPY_MODULES.scene);
+  return Array.from(new Set([...Object.keys(table.en), ...Object.keys(table["zh-CN"])])).sort();
+}
+
+function walkSimulationFace(page, regions, locale) {
+  const keys = simulationKeys();
+  if (keys.length === 0) {
+    console.log("   simulation stage: NOT JUDGED -- SCENE_COPY parsed to zero keys (a broken read, not a clean screen)");
+    return { reached: false, note: "scene table parsed empty" };
+  }
+  return walkModuleFace(page, regions, locale, {
+    name: "simulation stage",
+    testId: "sim-panel",
+    ballTestId: "sim-ball",
+    moduleFile: COPY_MODULES.scene,
+    keys,
   });
 }
 
@@ -1152,6 +1195,7 @@ async function walk(browser, locale) {
   const footprints = WANT_FOOTPRINTS ? await walkFootprintFace(page, regions, locale) : { reached: false };
   const collections = WANT_COLLECTIONS ? await walkCollectionFace(page, regions, locale) : { reached: false };
   const poiImport = WANT_POIIMPORT ? await walkPoiImportFace(page, regions, locale) : { reached: false };
+  const simulation = WANT_SIM ? await walkSimulationFace(page, regions, locale) : { reached: false };
   const sheets = WANT_SHEETS ? await walkSheets(page, regions, locale) : { agent: { reached: false }, plan: { reached: false } };
 
   const problems = [];
@@ -1202,6 +1246,7 @@ async function walk(browser, locale) {
       ", footprint=" + (footprints.reached ? "reached" : "not reached") +
       ", collection=" + (collections.reached ? "reached" : "not reached") +
       ", poi import=" + (poiImport.reached ? "reached" : "not reached") +
+      ", simulation stage=" + (simulation.reached ? "reached" : "not reached") +
       ", agent sheet=" + (sheets.agent.reached ? "reached" : "not reached") +
       ", plan sheet=" + (sheets.plan.reached ? "reached" : "not reached")
   );
