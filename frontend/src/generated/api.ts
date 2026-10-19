@@ -1936,6 +1936,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/departure/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Turn the variant a traveller picked out of `departure.candidates` into this journey's formal plan, once, for the member who asked. The transition is not re-decided here: the door calls the same `select_plan` the app already calls in-process for the seed supply and the staged advance, so frozen evidence, feasibility, retiring the previous SELECTED row, the cursor and the single-ACTIVE invariant keep one writer, and `plan_versions.source` keeps its three closed words (INITIAL / REPLAN / MANUAL) -- this door invents no fourth and needs no migration. What `POST /plans/{plan_version_id}/select` does not answer, and this adds: who decided -- the caller is resolved through the shared traveller verifier and must hold a seat in force, and the decision is written to `audit_logs` with `actor_type` traveler and that actor id -- and whether this exact request was already applied. `Idempotency-Key` is required, its receipt lives in the existing `idempotency_keys` table, and a replay answers the stored body with `idempotency_replay: true` instead of committing twice or emitting a second audit event; the header is optional in the schema on purpose, because a caller who omits it must get the named refusal (IDEMPOTENCY_KEY_REQUIRED) rather than a transport-level error. The body accepts one field, `plan_version_id`, and refuses any other key by name, so no place text and no URL is ever described to the server through this door. A refusal from the transition keeps the transition's own sentence and adds `error.reason_code`: 409 STALE_RECOMPOSE_REQUIRED for a candidate with nothing frozen (pinned to `select`'s literal detail in the backend suite) and 422 PLAN_INFEASIBLE carrying the evaluator's strings. A refused commit stores no receipt, so the same key still works once the underlying state is fixed. */
+        post: operations["commitJourneyDeparture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/resilience/counterfactuals": {
         parameters: {
             query?: never;
@@ -7791,6 +7810,85 @@ export interface operations {
             };
             /** @description Journey not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    commitJourneyDeparture: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    plan_version_id: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The chosen variant is this journey's formal plan, or the stored receipt of the call that made it one */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        plan_version_id: string;
+                        /** Format: uuid */
+                        committed_by: string;
+                        seat: Record<string, never>;
+                        idempotency_key?: string;
+                        decision_action: string;
+                        committed_at?: string;
+                        idempotency_replay?: boolean;
+                        journey: Record<string, never>;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey unknown */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED) */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -82,7 +82,7 @@ def _plan(session, journey_id: str, *, version_no: int, status: str, evidence: d
           snapshot_id: str | None = None) -> str:
     ident = str(uuid.uuid4())
     session.add(PlanVersion(id=ident, journey_id=journey_id, version_no=version_no,
-                            planning_mode="BALANCED", status=status, source="AGENT",
+                            planning_mode="BALANCED", status=status, source="INITIAL",
                             total_cost_minor=470_00, currency="CNY", estimated_duration_min=240,
                             mobility_snapshot_id=snapshot_id,
                             mobility_evidence_json=json.dumps(evidence),

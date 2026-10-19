@@ -2568,6 +2568,73 @@ paths:
         '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
         '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
         '404': {description: Journey not found}
+  /journeys/{journey_id}/departure/commit:
+    parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    post:
+      operationId: commitJourneyDeparture
+      description: >
+        Turn the variant a traveller picked out of `departure.candidates` into this journey's formal
+        plan, once, for the member who asked. The transition is not re-decided here: the door calls the
+        same `select_plan` the app already calls in-process for the seed supply and the staged advance,
+        so frozen evidence, feasibility, retiring the previous SELECTED row, the cursor and the
+        single-ACTIVE invariant keep one writer, and `plan_versions.source` keeps its three closed
+        words (INITIAL / REPLAN / MANUAL) -- this door invents no fourth and needs no migration.
+        What `POST /plans/{plan_version_id}/select` does not answer, and this adds: who decided -- the
+        caller is resolved through the shared traveller verifier and must hold a seat in force, and the
+        decision is written to `audit_logs` with `actor_type` traveler and that actor id -- and whether
+        this exact request was already applied. `Idempotency-Key` is required, its receipt lives in the
+        existing `idempotency_keys` table, and a replay answers the stored body with
+        `idempotency_replay: true` instead of committing twice or emitting a second audit event; the
+        header is optional in the schema on purpose, because a caller who omits it must get the named
+        refusal (IDEMPOTENCY_KEY_REQUIRED) rather than a transport-level error. The body accepts one
+        field, `plan_version_id`, and refuses any other key by name, so no place text and no URL is
+        ever described to the server through this door. A refusal from the transition keeps the
+        transition's own sentence and adds `error.reason_code`: 409 STALE_RECOMPOSE_REQUIRED for a
+        candidate with nothing frozen (pinned to `select`'s literal detail in the backend suite) and
+        422 PLAN_INFEASIBLE carrying the evaluator's strings. A refused commit stores no receipt, so the
+        same key still works once the underlying state is fixed.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [plan_version_id]
+              properties:
+                plan_version_id: {type: string, format: uuid}
+      responses:
+        '200':
+          description: The chosen variant is this journey's formal plan, or the stored receipt of the call that made it one
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [journey_id, plan_version_id, committed_by, seat, decision_action, journey]
+                properties:
+                  journey_id: {type: string, format: uuid}
+                  plan_version_id: {type: string, format: uuid}
+                  committed_by: {type: string, format: uuid}
+                  seat: {type: object}
+                  idempotency_key: {type: string}
+                  decision_action: {type: string}
+                  committed_at: {type: string}
+                  idempotency_replay: {type: boolean}
+                  journey: {type: object}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat, so it cannot confirm for anybody else (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
+        '409': {description: Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED)}
+        '422': {description: Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED), a body field beyond plan_version_id (COMMIT_BODY_TAKES_ONLY_PLAN_VERSION_ID), or PLAN_INFEASIBLE}
   /journeys/{journey_id}/resilience/counterfactuals:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
