@@ -31,7 +31,7 @@ const en: Dict = {
   "plan.plansReadyBody": "Compare them on Today, then choose one to continue.",
   "plan.cancelledBody": "The request was aborted. Your trip is untouched — rephrase and try again.",
   "plan.cancelledAfterSendBody": "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
-  "plan.keylessWriteDeadlineBody": "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
+  "plan.keylessWriteDeadlineBody": "This device stopped waiting after the request was sent -- the server may still be working. Refresh and check the result before submitting again.",
   "plan.unreachableBody": "Neither the network nor the backend answered. Your trip is unchanged; retry once you are connected.",
   "plan.refusedRequestBody": "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
   "plan.serverErroredBody":
@@ -444,7 +444,7 @@ const en: Dict = {
   "recover.writeDeadline.title": "This device stopped waiting after {seconds} s",
   "recover.writeDeadline.body": "The server did not answer in that time, so the outcome of this write is unknown -- not \"did not happen\".",
   "recover.writeDeadline.retryGuidance": "Refresh and check before deciding to retry; retrying with the same idempotency key re-asks the same write instead of creating a second one.",
-  "copilot.keyless.writeUnknown": "{method} {path} -- this device stopped waiting after {seconds} s. The request was already sent, so the outcome is unknown, and this route takes no idempotency key.",
+  "copilot.keyless.writeUnknown": "{method} {path} -- this device stopped waiting after {seconds} s. The request was already sent, so the outcome is unknown; check before retrying.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -775,7 +775,7 @@ const en: Dict = {
   "prep.verdictBody": "This verdict has no local wording; it is shown as the server said it ({reason}).",
   "prep.reusedTitle": "This is already being prepared",
   "prep.runningTitle": "Preparing this destination",
-  "prep.runningBody": "It is inside '{phase}', running {seconds}s ({elapsed}). No percentage is shown because the server does not publish one.",
+  "prep.runningBody": "It is inside '{phase}', running {seconds}s ({elapsed}).",
   "prep.prepared": "The facts this city needs are now stored, so planning will use them.",
   "prep.alreadyCurrent": "This material was already current, so this run changed nothing.",
   "prep.noSource": "No traceable source exists for this destination, so it cannot be prepared. Choose another destination.",
@@ -1684,7 +1684,7 @@ const zhCN: Dict = {
   "plan.plansReadyBody": "去“今天”对比这几个方案，选一个再继续。",
   "plan.cancelledBody": "请求已中止，你的行程没有被改动。可以改个说法再来一次。",
   "plan.cancelledAfterSendBody": "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
-  "plan.keylessWriteDeadlineBody": "这台设备停止等待了，而请求已经发出，服务器可能还在做。这条路线不收幂等键，先刷新核对结果，不要重复提交。",
+  "plan.keylessWriteDeadlineBody": "这台设备停止等待了，请求已经发出，服务器可能还在做。先刷新核对结果，不要重复提交。",
   "plan.unreachableBody": "网络或后端没有响应。你的行程没有被改动，检查网络后可以重试。",
   "plan.refusedRequestBody": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
   "plan.serverErroredBody":
@@ -2065,7 +2065,7 @@ const zhCN: Dict = {
   "recover.writeDeadline.title": "这台设备等到 {seconds} 秒就停了",
   "recover.writeDeadline.body": "服务端没有在这段时间内回答，所以这一笔的结果是未知的——不是「没有发生」。",
   "recover.writeDeadline.retryGuidance": "请先刷新核对再决定是否重试；同一把幂等键重试是补问同一笔，不会生成第二份。",
-  "copilot.keyless.writeUnknown": "{method} {path} -- 这台设备等到 {seconds} 秒就停了。请求已经发出，所以结果未知；这条路线不收幂等键。",
+  "copilot.keyless.writeUnknown": "{method} {path} -- 等到 {seconds} 秒就停了。请求已经发出，结果未知，先核对再重试。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
@@ -2381,7 +2381,7 @@ const zhCN: Dict = {
   "prep.verdictBody": "这个结论本地没有对应说法，按服务器原话给出（{reason}）。",
   "prep.reusedTitle": "这件事已经在准备了",
   "prep.runningTitle": "正在准备这个目的地",
-  "prep.runningBody": "现在在「{phase}」这一步，已经跑了 {seconds} 秒（{elapsed}）。进度不按百分比报——服务器不给这个数。",
+  "prep.runningBody": "现在在「{phase}」这一步，已经跑了 {seconds} 秒（{elapsed}）。",
   "prep.prepared": "这座城需要的事实已经落库。现在规划会用到它们。",
   "prep.alreadyCurrent": "这份资料已经是新的，这次准备什么也没做。",
   "prep.noSource": "这个目的地找不到任何可追溯的数据来源，准备不了。换个目的地吧。",

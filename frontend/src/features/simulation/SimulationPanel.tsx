@@ -400,8 +400,8 @@ export function SimulationPanel({
          Kept visible on purpose: a silently missing row would hide *why* the stage cannot be
          re-seeded from a screen, and the reason is the part a teacher needs. */
       blocked: {
-        zh: "这一步会删掉整库（52 张表），现在还要服务器自己的环境变量里的令牌；浏览器拿不到它，也不该拿到。所以这里不给按——要重播种行程，请由运行服务器的人来做。",
-        en: "This step deletes the whole library (52 tables) and now needs a token that lives in the server's own environment. A browser cannot hold that value and should not, so this is refused on every deployment -- re-seeding is done by whoever runs the server.",
+        zh: "这一步会删掉整库（52 张表），只能由运行服务器的人做，所以这里不给按。",
+        en: "This step wipes the whole library (52 tables) and can only be run by whoever runs the server, so there is nothing to press here.",
       },
       run: async () => {
         const result = await resetStage();
