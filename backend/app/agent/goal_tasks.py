@@ -31,6 +31,7 @@ from app.agent.goal_artifacts import (
     normalize_draft,
 )
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
+from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
@@ -56,7 +57,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
+    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -223,6 +224,7 @@ def _task_payload(
         "source_observation_ids": list(task.get("source_observation_ids") or []),
         "assistant_summary": task.get("assistant_summary"),
         "research_places": list(task.get("research_places") or []),
+        "research_routes": list(task.get("research_routes") or []),
         "research_areas": list(task.get("research_areas") or []),
         "draft_artifact": task.get("draft_artifact"),
         "failure_code": task.get("failure_code"),
@@ -550,7 +552,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
-        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition()),
+        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition()),
     )
 
 
@@ -651,7 +653,12 @@ def _initial_messages(
         "repeating the exact same query. If public data is sparse, continue another part of the trip instead of quitting. "
         "Save useful partial research as an editable draft using save_draft_itinerary, even when every place search fails: "
         "in that case write specific research todos or generic suggestions with no invented Place IDs. "
-        "Keep enough budget to save the draft. A place with unknown hours or cost can still be a tentative suggestion."
+        "Keep enough budget to save the draft. A place with unknown hours or cost can still be a tentative suggestion. "
+        "When amap_configured is true, prefer discover_places source=amap for Chinese destinations; "
+        "the server resolves the destination administrative code. Nearby searches around an Amap ID use Amap. "
+        "Use route_public_places for actual walking distance/time between task-owned public research IDs. "
+        "For a user edit request, call save_draft_itinerary with the FULL draft, changing only the requested "
+        "day/time slots and preserving all other slot contents. A verbal suggestion is not a saved edit."
     )
     user_context = {
         "goal": mission.user_text,
@@ -663,6 +670,8 @@ def _initial_messages(
         "research_location_guidance": "Areas and villages are geographic leads, not verified venues. "
             "Keep explicit region conflicts separate and use another suitable source-backed center; "
             "missing address metadata is UNKNOWN and does not prevent further research. Do not infer opening hours or fees.",
+        "provider_capabilities": {"amap_configured": bool(settings.amap_web_key)},
+        "public_research_routes": task.get("research_routes") or [],
         "public_research_places": task.get("research_places") or [],
         "public_research_areas": task.get("research_areas") or [],
         "draft_artifact": task.get("draft_artifact") or empty_draft(journey),
@@ -684,6 +693,12 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
+    if name == "route_public_places":
+        if set(raw) - {"from_place_id", "to_place_id", "public_action"}:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {"from_place_id": str(raw.get("from_place_id") or ""),
+                "to_place_id": str(raw.get("to_place_id") or ""),
+                "public_action": str(raw.get("public_action") or "")[:120]}
     if name == "discover_nearby_places":
         if set(raw) - {"center_place_id", "query", "radius_m", "limit", "public_action"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
@@ -695,7 +710,7 @@ def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
         if set(raw) - {"query", "public_action", "source"}:
             raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
         source = str(raw.get("source") or "photon").lower().strip()
-        if source not in {"photon", "nominatim"}:
+        if source not in {"photon", "nominatim", "amap"}:
             raise HTTPException(422, "PUBLIC_SOURCE_NOT_SUPPORTED")
         return {"query": str(raw.get("query") or "").strip()[:120],
                 "public_action": str(raw.get("public_action") or "")[:120], "source": source}
@@ -750,14 +765,15 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
         references = raw.get("cached_references") if isinstance(raw.get("cached_references"), list) else []
         facts = raw.get("cached_facts") if isinstance(raw.get("cached_facts"), dict) else {}
         fields = {"place_id", "provider", "provider_provenance", "name", "category", "latitude",
-                  "longitude", "opening_status", "cost_status", "location_type", "osm_key", "osm_value"}
+                  "longitude", "opening_status", "cost_status", "location_type", "osm_key", "osm_value", "coordinate_system", "adcode", "provider_object_id"}
         safe_references = [
             {key: item[key] for key in ("reference_type", "provider", "url", "authority_status") if key in item}
             for item in references[:5]
-            if isinstance(item, dict) and item.get("reference_type") == "OSM_OBJECT"
+            if isinstance(item, dict) and item.get("reference_type") in {"OSM_OBJECT", "AMAP_POI"}
             and item.get("authority_status") == "NON_AUTHORITATIVE"
             and isinstance(item.get("url"), str)
-            and re.fullmatch(r"https://www\.openstreetmap\.org/(?:node|way|relation)/[1-9][0-9]*", item["url"])
+            and (re.fullmatch(r"https://www\.openstreetmap\.org/(?:node|way|relation)/[1-9][0-9]*", item["url"])
+                 or (item.get("reference_type") == "AMAP_POI" and item["url"].startswith("https://uri.amap.com/marker?")))
         ]
         return {
             "tool": name,
@@ -779,7 +795,7 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
         }
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
-    if name in {"discover_places", "discover_nearby_places", "save_draft_itinerary"}:
+    if name in {"discover_places", "discover_nearby_places", "route_public_places", "save_draft_itinerary"}:
         return raw
     if name == "inspect_journey":
         journey = raw.get("journey") if isinstance(raw.get("journey"), dict) else {}
@@ -874,6 +890,10 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "route_public_places":
+        return {"status": result.get("status"), "reason_code": result.get("reason_code"),
+                "provider": "amap", "route": result.get("route"), "http_status": result.get("http_status")}
+
     if name == "research_place_sources" and result.get("status") == "CACHED_ONLY":
         return {"status": "CACHED_ONLY", "place_id": result.get("place_id"),
                 "reference_status": result.get("reference_status"),
@@ -1425,7 +1445,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"discover_places", "discover_nearby_places", "save_draft_itinerary", "compare_routes"}
+                    request = (None if tool_name in {"discover_places", "discover_nearby_places", "save_draft_itinerary", "compare_routes", "route_public_places"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1435,7 +1455,11 @@ def resume_goal_task(
                                 status="WORKING", run_id=run.id, step_sequence_no=step_no, tool_name=tool_name)
                     session.commit()
                     try:
-                        if tool_name == "compare_routes":
+                        if tool_name == "route_public_places":
+                            raw_result = route_public_places(session, journey, task, **args)
+                            mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        elif tool_name == "compare_routes":
                             raw_result = compare_stored_routes(session, journey, **args)
                         elif tool_name in {"discover_places", "discover_nearby_places"}:
                             discover = discover_goal_places if tool_name == "discover_places" else discover_nearby_goal_places

@@ -2196,9 +2196,27 @@ export interface GoalResearchLead {
   id: string; name: string; category: string; latitude: number; longitude: number;
   source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   opening_status: string; cost_status: string;
+  provider?: string;
+  provider_object_id?: string;
+  coordinate_system?: "WGS84" | "GCJ02";
+  adcode?: string;
+  captured_at?: string;
   region_status?: "MATCHED" | "CONFLICT" | "UNKNOWN";
   location_kind?: "AREA" | "POI";
   public_address?: Record<string, string>;
+}
+export interface GoalResearchRoute {
+  id: string;
+  from_place_id: string;
+  to_place_id: string;
+  from_name: string;
+  to_name: string;
+  provider: "amap";
+  coordinate_system: "GCJ02";
+  distance_m: number;
+  duration_seconds: number;
+  captured_at: string;
+  source_url: string;
 }
 export interface DraftGoalTask {
   task_id: string;
@@ -2233,6 +2251,7 @@ export interface DraftGoalTask {
   draft_artifact?: GoalDraftArtifact | null;
   research_places?: GoalResearchLead[];
   research_areas?: GoalResearchLead[];
+  research_routes?: GoalResearchRoute[];
   failure_code: string | null;
   created_at?: string;
   started_at?: string | null;

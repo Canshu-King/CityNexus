@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
 class Settings:
+    amap_web_key: str | None = field(default=os.getenv("CITYNEXUS_AMAP_WEB_KEY") or None, repr=False)
     environment: str = os.getenv("CITYNEXUS_ENV", "development")
     database_url: str = os.getenv("CITYNEXUS_DATABASE_URL", "sqlite:///./citynexus.db")
     # ORD-0058: the only switch that turns the seeded scenario into something a person can

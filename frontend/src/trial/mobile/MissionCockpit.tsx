@@ -48,6 +48,7 @@ const toolCopy: Record<string, string> = {
   acquire_place_facts: "核实地点事实",
   estimate_place_facts: "准备参考估算",
   compare_routes: "比较已保存路线",
+  route_public_places: "查询步行路线",
   save_draft_itinerary: "整理多日草案",
 };
 const eventCopy: Record<string, string> = {
@@ -175,7 +176,11 @@ export function MissionCockpit({
         name: point.name,
         latitude: point.latitude,
         longitude: point.longitude,
-        coordinate_system: "WGS84",
+        coordinate_system: point.coordinate_system ?? (typeof point.provider === "string" && point.provider.toLowerCase() === "amap" ? "GCJ02" : "WGS84"),
+        provider: point.provider,
+        provider_object_id: point.provider_object_id,
+        adcode: point.adcode,
+        public_address: point.public_address,
         provider_provenance: point.provider_provenance,
         selection_state: "OPENING_UNVERIFIED",
         source_url: point.source_url,

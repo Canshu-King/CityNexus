@@ -28,6 +28,7 @@ from datetime import datetime
 from pathlib import Path
 
 from wb2api_agent import agent_settings, router_health
+from amap_credentials import load_amap_key
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -171,6 +172,9 @@ def isolated_environment(
     city_port: int = CITY_PORT,
     overpass_port: int = OVERPASS_PORT,
 ) -> dict[str, str]:
+    # Read the operator's encrypted per-user credential before clearing inherited
+    # CityNexus settings. Only the backend receives this explicitly selected key.
+    amap_key = None if sample else load_amap_key()
     env = os.environ.copy()
     # On Windows, urllib/httpx stop consulting the system proxy as soon as any
     # proxy environment entry exists. Preserve that proxy before adding the
@@ -214,6 +218,8 @@ def isolated_environment(
         "NO_PROXY": "127.0.0.1,localhost,::1",
         "no_proxy": "127.0.0.1,localhost,::1",
     })
+    if amap_key:
+        env["CITYNEXUS_AMAP_WEB_KEY"] = amap_key
     if sample:
         # No network provider is used for sample searches. Every test result
         # is explicitly graded TEST_PROVIDER by the existing backend.
@@ -383,8 +389,9 @@ def main() -> int:
         wait_for("backend", f"http://127.0.0.1:{back_port}/api/v1/health", api)
 
         vite_script = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
+        ui_env = {key: value for key, value in env.items() if key != "CITYNEXUS_AMAP_WEB_KEY"}
         ui = start("frontend", node, [str(vite_script), "--host", "127.0.0.1",
-                                      "--port", str(front_port), "--strictPort"], FRONTEND)
+                                      "--port", str(front_port), "--strictPort"], FRONTEND, ui_env)
         wait_for("frontend", f"http://127.0.0.1:{front_port}/api/v1/health", ui)
         address = f"http://127.0.0.1:{front_port}/revolution"
         print("\nRevolution browser trial is ready (isolated from Qoder and fusion).")

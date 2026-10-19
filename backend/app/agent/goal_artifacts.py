@@ -19,7 +19,7 @@ from app.integrations.provider_config import ExternalProviderSettings, trust_env
 from app.region_matching import public_address as _public_address, public_address_from_tags as _public_address_from_tags
 from app.region_matching import public_region_status as _public_region_status
 
-_LIVE_GOAL_RESEARCH_PROVIDERS = frozenset({"photon", "nominatim", "overpass"})
+_LIVE_GOAL_RESEARCH_PROVIDERS = frozenset({"photon", "nominatim", "overpass", "amap"})
 _OSM_REFERENCE_TYPES = {"N": "node", "W": "way", "R": "relation",
                         "node": "node", "way": "way", "relation": "relation"}
 _REGION_STATUSES = frozenset({"MATCHED", "CONFLICT", "UNKNOWN"})
@@ -122,6 +122,13 @@ def cached_goal_place_sources(task: dict[str, Any], place_id: str) -> dict[str, 
         raise HTTPException(403, "PLACE_NOT_IN_GOAL_TASK_SCOPE")
 
     provider = str(lead.get("provider") or "")
+    if provider == "amap":
+        return {"tool": "research_place_sources", "status": "CACHED_ONLY", "place_id": place_id,
+                "authority": "NON_AUTHORITATIVE", "region_status": lead.get("region_status", "UNKNOWN"),
+                "public_address": lead.get("public_address") or {}, "reference_status": "PRESENT",
+                "cached_references": [{"reference_type": "AMAP_POI", "provider": "amap", "url": lead.get("source_url"), "authority_status": "NON_AUTHORITATIVE"}],
+                "cached_facts": {key: lead[key] for key in ("name", "category", "provider", "provider_object_id", "adcode", "coordinate_system", "latitude", "longitude", "opening_status", "cost_status") if key in lead},
+                "not_acquired_fields": ["opening_hours", "cost", "availability"], "source_discovery_attempted": False, "acquisition_attempted": False}
     source_url = _validated_osm_reference(place_id, provider, lead.get("source_url"))
     references = ([{"reference_type": "OSM_OBJECT", "provider": provider, "url": source_url,
                     "authority_status": "NON_AUTHORITATIVE"}] if source_url else [])
@@ -230,6 +237,9 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
     if not settings.real_city_enabled or settings.real_city_mode != "live":
         return {"tool": "discover_places", "status": "PROVIDER_DISABLED", "reason_code": "REAL_CITY_DISABLED", "places": []}
     source = str(source or "photon").lower().strip()
+    if source == "amap":
+        from app.agent.goal_amap import discover_amap_goal_places
+        return discover_amap_goal_places(session, journey, task, query=query, public_action=public_action)
     if source not in {"photon", "nominatim"}:
         raise HTTPException(422, "PUBLIC_SOURCE_NOT_SUPPORTED")
     query_key = " ".join(query.casefold().split())
@@ -325,6 +335,10 @@ def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id
     query = str(query).strip()
     if not 2 <= len(query) <= 120:
         raise HTTPException(422, "PUBLIC_QUERY_INVALID")
+    if center.get("provider") == "amap":
+        from app.agent.goal_amap import discover_amap_goal_places
+        return discover_amap_goal_places(session, journey, task, query=query, public_action=public_action,
+                                         center=center, radius_m=radius_m, limit=limit)
     latitude, longitude = center.get("latitude"), center.get("longitude")
     if not isinstance(latitude, (int, float)) or not isinstance(longitude, (int, float)) or not (
         math.isfinite(latitude) and math.isfinite(longitude) and -90 <= latitude <= 90 and -180 <= longitude <= 180
@@ -408,13 +422,13 @@ def goal_tool_definitions() -> tuple[dict, ...]:
                 "public_action": {"type": "string", "maxLength": 120}},
                 "required": ["center_place_id", "query"], "additionalProperties": False}}},
         {"type":"function", "function":{"name":"discover_places", "description":
-            "Choose one real public geocoder, photon or nominatim, to search named public places. "
+            "Choose a configured real public source: amap for domestic Chinese POIs, photon or nominatim for OSM geographic leads. "
             "After a zero-result query you may change provider or keyword within approved tool budget. "
             "Never send private traveler details; either source may have incomplete OSM coverage. "
             "An empty result is not proof that the area has no attractions.",
             "parameters":{"type":"object", "properties":{"query":{"type":"string","minLength":2,"maxLength":120},
                 "public_action":{"type":"string","maxLength":120,"description":"Short user-facing operation summary, without private reasoning."},
-                "source":{"type":"string","enum":["photon","nominatim"],"description":"Public geocoder for this one authorized search; defaults to photon."}},
+                "source":{"type":"string","enum":["photon","nominatim","amap"],"description":"Prefer amap for Chinese places when amap_configured is true. Otherwise use OSM sources."}},
                 "required":["query"],"additionalProperties":False}}},
         {"type":"function", "function":{"name":"save_draft_itinerary", "description":
             "Save an editable tentative multi-day itinerary or useful named research todos. Use only researched IDs for named places. "

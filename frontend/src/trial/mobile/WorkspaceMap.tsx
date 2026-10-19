@@ -2,12 +2,34 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { BootstrapDiscoveryCandidate } from "../../api/citynexus";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export type WorkspaceMapPoint = Pick<BootstrapDiscoveryCandidate, "candidate_id" | "name" | "latitude" | "longitude" | "coordinate_system" | "provider_provenance" | "selection_state" | "source_url" | "observation_expired" | "region_status"> & { kind?: "place" | "area" };
+export type WorkspaceMapPoint = Omit<Pick<BootstrapDiscoveryCandidate, "candidate_id" | "name" | "latitude" | "longitude" | "provider_provenance" | "selection_state" | "source_url" | "observation_expired" | "region_status">, "coordinate_system"> & {
+  coordinate_system: "WGS84" | "GCJ02";
+  provider?: string;
+  provider_object_id?: string;
+  adcode?: string;
+  public_address?: Record<string, string>;
+  kind?: "place" | "area";
+};
+
+const OSM_SOURCE_URL = /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/;
+const AMAP_MARKER_URL = /^https:\/\/uri\.amap\.com\/marker(?:\?.*)?$/;
+const ADMIN_ADDRESS_KEYS = ["province", "city", "district", "county", "township", "town"] as const;
+
+function isAmapPoint(place: WorkspaceMapPoint): boolean {
+  return typeof place.provider === "string" && place.provider.toLowerCase() === "amap" && place.coordinate_system === "GCJ02";
+}
 
 function validPoint(place: WorkspaceMapPoint): boolean {
   return place.region_status !== "CONFLICT" && place.selection_state !== "REGION_CONFLICT"
-    && place.coordinate_system === "WGS84" && Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
+    && !(typeof place.provider === "string" && place.provider.toLowerCase() === "amap") && place.coordinate_system === "WGS84"
+    && Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
     && Math.abs(place.latitude) <= 85 && Math.abs(place.longitude) <= 180;
+}
+
+function shortAdministrativeAddress(address?: Record<string, string>): string {
+  if (!address) return "";
+  return [...new Set(ADMIN_ADDRESS_KEYS.map((key) => typeof address[key] === "string" ? address[key].trim() : "").filter(Boolean))]
+    .slice(0, 3).join(" · ");
 }
 
 export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
@@ -15,6 +37,11 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
 }) {
   const host = useRef<HTMLDivElement>(null);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);
+  const amapPoints = useMemo(() => candidates.filter((point) => isAmapPoint(point)
+    && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT"
+    && Number.isFinite(point.latitude) && Number.isFinite(point.longitude)), [candidates]);
+  const otherCoordinatePoints = candidates.filter((point) => !validPoint(point) && !isAmapPoint(point)
+    && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT");
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     if (!allowed || !host.current || points.length === 0) return;
@@ -41,7 +68,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
         const content = document.createElement("div");
         const title = document.createElement("strong"); title.textContent = point.name; content.append(title);
         if (point.kind === "area") { const type = document.createElement("p"); type.textContent = "地区／村落线索"; content.append(type); }
-        if (point.source_url && /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(point.source_url)) {
+        if (point.source_url && OSM_SOURCE_URL.test(point.source_url)) {
           const source = document.createElement("a"); source.textContent = "查看地点来源 ↗";
           source.href = point.source_url; source.target = "_blank"; source.rel = "noreferrer";
           content.append(document.createElement("br"), source);
@@ -57,17 +84,27 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
     return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); map?.remove(); };
   }, [allowed, points, onSelect]);
   return <section aria-label="当前行程地图">
-    <p>已找到 {points.length} 处有坐标的地点。营业和费用未知，也可以先在地图上查看。</p>
-    {candidates.length > points.length && <p>{candidates.length - points.length} 处地点暂无可用坐标。</p>}
-    {!points.length ? <p>先去探索查找地点，查到后可以从任何页打开此图。</p> : <>
+    <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
+    {!points.length && !amapPoints.length && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
+    {points.length > 0 && <>
       {!allowed ? <div className="rev-workspace-map-consent"><p>加载 OpenStreetMap 公开底图，地图服务会收到显示区域的瓦片请求。不读取 GPS。</p>
         <button type="button" onClick={onAllow}>加载地图</button></div>
         : <div ref={host} className="rev-workspace-map" data-testid="rev-workspace-map-canvas" />}
       {failed && <p role="status">底图暂时没有加载成功，下面的地点列表仍可查看。</p>}
-      <ol className="rev-workspace-place-list">{points.map((point) => <li key={point.candidate_id}><strong>{point.name}</strong>
+      <ol className="rev-workspace-place-list" aria-label="OpenStreetMap 地点">{points.map((point) => <li key={point.candidate_id}><strong>{point.name}</strong>
         <small>{point.kind === "area" ? "地区／村落线索" : point.provider_provenance === "TEST_PROVIDER" ? "测试地点" : "地点位置"} · {point.observation_expired ? "上次搜索的地点，营业与费用需更新" : point.selection_state === "READY_FOR_NATIVE_PLAN" ? "资料可用于正式排程" : "部分营业或费用资料待核实"}</small>
-        {point.source_url && /^https:\/\/(www\.)?openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(point.source_url) &&
+        {point.source_url && OSM_SOURCE_URL.test(point.source_url) &&
           <a href={point.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}</li>)}</ol>
     </>}
+    {amapPoints.length > 0 && <section aria-label="高德地点" data-testid="rev-amap-research-leads">
+      <h3>高德地点</h3>
+      <ol className="rev-workspace-place-list">{amapPoints.map((point) => <li key={point.candidate_id}>
+        <strong><span aria-hidden="true">📍 </span>{point.name}</strong>
+        {shortAdministrativeAddress(point.public_address) && <small>{shortAdministrativeAddress(point.public_address)}</small>}
+        {point.source_url && AMAP_MARKER_URL.test(point.source_url) &&
+          <a href={point.source_url} target="_blank" rel="noopener noreferrer">在高德地图打开 ↗</a>}
+      </li>)}</ol>
+    </section>}
+    {otherCoordinatePoints.length > 0 && <p>{otherCoordinatePoints.length} 处其他研究地点坐标尚未用于地图。</p>}
   </section>;
 }

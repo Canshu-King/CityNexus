@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidate, type DraftGoalTask, type DraftGoalTaskEvent } from "../../api/citynexus";
+import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidate, type DraftGoalTask, type DraftGoalTaskEvent, type GoalResearchRoute } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
 import { GoalDraftEditor } from "./GoalDraftEditor";
@@ -31,7 +31,7 @@ const TOOL_NAME: Record<string, string> = {
   research_place_sources: "查找地点资料",
   discover_places: "查找公开地点", discover_nearby_places: "查找周边地点", save_draft_itinerary: "整理旅行草案",
   acquire_place_facts: "核实地点资料", estimate_place_facts: "估算备选安排",
-  generate_plans: "生成候选方案", compare_routes: "比较已有路线",
+  generate_plans: "生成候选方案", compare_routes: "比较已有路线", route_public_places: "查询步行路线",
 };
 const EVENT_NAME: Record<string, string> = {
   TASK_ACCEPTED: "研究任务已建立",
@@ -108,6 +108,11 @@ function saveTaskPointer(actor: Context, taskId: string): void {
   try { localStorage.setItem(pointerKey(actor), taskId); } catch { /* server remains the task record */ }
 }
 function taskStepText(result: Record<string, unknown>): string {
+  const route = result.route && typeof result.route === "object" ? result.route as Record<string, unknown> : null;
+  if (route && typeof route.distance_m === "number" && Number.isFinite(route.distance_m) && route.distance_m >= 0
+    && typeof route.duration_seconds === "number" && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0) {
+    return `步行路线 · ${route.distance_m} 米 · ${route.duration_seconds} 秒`;
+  }
   if (result.status === "CACHED_ONLY") return Array.isArray(result.cached_references) && result.cached_references.length
     ? `已读取 ${result.cached_references.length} 条已有地点来源` : "已读取已有地点资料";
   const provider = result.provider === "nominatim" ? "Nominatim" : result.provider === "photon" ? "Photon" : "公开地点来源";
@@ -123,13 +128,60 @@ function taskStepText(result: Record<string, unknown>): string {
   return result.status === "COMPLETED" ? "完成" : "这一步暂未完成";
 }
 
+const AMAP_MARKER_URL = /^https:\/\/uri\.amap\.com\/marker(?:\?.*)?$/;
+const AMAP_NAVIGATION_URL = /^https:\/\/uri\.amap\.com\/navigation\?/;
+const ADMIN_ADDRESS_KEYS = ["province", "city", "district", "county", "township", "town"] as const;
+
+function shortAdministrativeAddress(address?: Record<string, string>): string {
+  if (!address) return "";
+  return [...new Set(ADMIN_ADDRESS_KEYS.map((key) => typeof address[key] === "string" ? address[key].trim() : "").filter(Boolean))]
+    .slice(0, 3).join(" · ");
+}
+
+function isAmapLead(place: GoalResearchLead): boolean {
+  return typeof place.provider === "string" && place.provider.toLowerCase() === "amap";
+}
+
+function isSafeAmapNavigationUrl(value: string): boolean {
+  if (!AMAP_NAVIGATION_URL.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "uri.amap.com" && url.pathname === "/navigation"
+      && !url.username && !url.password && url.searchParams.get("mode") === "walk"
+      && url.searchParams.get("coordinate") === "gaode";
+  } catch { return false; }
+}
+
+function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
+  const routes = items.filter((route) => route.provider === "amap" && route.coordinate_system === "GCJ02"
+    && typeof route.id === "string" && !!route.id && typeof route.from_place_id === "string" && !!route.from_place_id
+    && typeof route.to_place_id === "string" && !!route.to_place_id
+    && typeof route.from_name === "string" && !!route.from_name.trim()
+    && typeof route.to_name === "string" && !!route.to_name.trim()
+    && Number.isFinite(route.distance_m) && route.distance_m >= 0
+    && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0
+    && typeof route.source_url === "string" && isSafeAmapNavigationUrl(route.source_url));
+  if (!routes.length) return null;
+  return <details className="rev-agent-research-drawer"><summary>高德步行路线（{routes.length}）</summary>
+    <ul className="rev-workspace-task-places">{routes.map((route) => <li key={route.id} data-testid="rev-amap-research-route">
+      <strong>{route.from_name} → {route.to_name}</strong>
+      <span>步行 · {route.distance_m} 米 · {route.duration_seconds} 秒</span>
+      <a href={route.source_url} target="_blank" rel="noopener noreferrer">在高德地图查看路线 ↗</a>
+    </li>)}</ul>
+  </details>;
+}
+
 function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; area?: boolean }) {
   return <ul className="rev-workspace-task-places">{items.map((place) => <li key={place.id}>
     <strong>{place.name}</strong><span>{area || isAreaGoalResearchLead(place) ? "地区／村落线索" : "营业、费用待查"}</span>
-    {place.public_address && <small>{[...new Set(Object.values(place.public_address))].join(" · ")}</small>}
+    {isAmapLead(place)
+      ? shortAdministrativeAddress(place.public_address) && <small>{shortAdministrativeAddress(place.public_address)}</small>
+      : place.public_address && <small>{[...new Set(Object.values(place.public_address))].join(" · ")}</small>}
     {place.region_status === "UNKNOWN" && <small>地区归属待核实</small>}
     {/^https:\/\/www\.openstreetmap\.org\/(node|way|relation)\/[0-9]+$/.test(place.source_url) &&
       <a href={place.source_url} target="_blank" rel="noreferrer">查看地点来源 ↗</a>}
+    {isAmapLead(place) && AMAP_MARKER_URL.test(place.source_url) &&
+      <a href={place.source_url} target="_blank" rel="noopener noreferrer">在高德地图打开 ↗</a>}
   </li>)}</ul>;
 }
 
@@ -408,7 +460,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
 
   const taskMapPoints = (visibleTask?.research_places ?? []).filter((place) => place.region_status !== "CONFLICT").map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
-    coordinate_system: "WGS84" as const, provider_provenance: place.provider_provenance, region_status: place.region_status,
+    coordinate_system: place.coordinate_system ?? (isAmapLead(place) ? "GCJ02" as const : "WGS84" as const),
+    provider: place.provider, provider_object_id: place.provider_object_id, adcode: place.adcode, public_address: place.public_address,
+    provider_provenance: place.provider_provenance, region_status: place.region_status,
     selection_state: "OPENING_UNVERIFIED" as const, source_url: place.source_url, observation_expired: false,
   }));
   const conversation = visibleTask?.conversation?.length
@@ -500,6 +554,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               {typeof step.result.elapsed_ms === "number" && <small>{(step.result.elapsed_ms / 1000).toFixed(1)} 秒</small>}
             </li>)}
           </ol></details>}
+          {visibleTask.research_routes?.length ? <ResearchRoutes items={visibleTask.research_routes} /> : null}
           {(visibleTask.candidate_places ?? []).length > 0 && <details className="rev-agent-research-drawer"><summary>已核对的正式地点（{visibleTask.candidate_places?.length}）</summary><ul className="rev-workspace-task-places">
             {visibleTask.candidate_places?.map((place) => <li key={place.id}>
               <strong>{place.name}</strong><span>{place.opening_state === "KNOWN" ? "营业资料已读取" : "营业待核实"}</span>
