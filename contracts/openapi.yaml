@@ -2442,6 +2442,132 @@ paths:
           description: >
             The lead's own candidate row and its place row carry different regions
             (error.reason_code LEAD_REGION_CONFLICT)
+  /journeys/{journey_id}/members/me:
+    parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    get:
+      operationId: getJourneyMemberMe
+      description: >
+        Does the caller hold a seat on this journey, as what, and until when -- the one read a confirm
+        button needs before it may be shown. The seat words are the same three the member list already
+        answers with (MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN), plus OWNER for the traveller the
+        journey belongs to, who holds a seat without holding a membership row. Credentials first: 401
+        `TRAVELER_CREDENTIALS_MISSING` when none was presented, 404 for a journey that is not there, 403
+        `JOURNEY_MEMBER_REQUIRED` when the caller has no seat in force -- and that 403 carries the seat
+        that explains itself, so a screen can say "this seat ended" rather than "you are lost".
+      responses:
+        '200':
+          description: The caller's own seat on this journey
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [journey_id, traveler_id, seat, may_confirm_departure]
+                properties:
+                  journey_id: {type: string, format: uuid}
+                  traveler_id: {type: string}
+                  may_confirm_departure: {type: boolean}
+                  seat:
+                    type: object
+                    required: [seat_kind, role, member_state, in_force]
+                    properties:
+                      seat_kind: {type: string, enum: [OWNER, MEMBER, NONE]}
+                      role: {type: [string, "null"]}
+                      member_id: {type: [string, "null"]}
+                      member_state:
+                        type: string
+                        enum: [MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN, NO_MEMBERSHIP]
+                      expires_at: {type: [string, "null"]}
+                      in_force: {type: boolean}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: Journey not found}
+  /journeys/{journey_id}/departure:
+    parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    get:
+      operationId: getJourneyDeparture
+      description: >
+        One projection of "准备出发", read from durable rows only: which plan versions this journey holds,
+        what the server froze for each, whether that freeze has passed, and the single gate word for the
+        journey -- READY_TO_DEPART, ALREADY_RUNNING, NO_PLAN_SELECTED, STALE_RECOMPOSE_REQUIRED,
+        PLAN_INFEASIBLE or JOURNEY_NOT_PLANNABLE. It writes nothing and asks no provider: a screen that
+        looks at departure cannot start a trip, and the gate is decided in one order (an ACTIVE journey is
+        reported as running before its evidence is judged). The stale-evidence words are the same words
+        the write doors raise for the same row -- `select` answers 409 STALE_RECOMPOSE_REQUIRED for a
+        candidate with nothing frozen, and `start` answers 409 STALE_RECOMPOSE_REQUIRED when the frozen
+        evidence has expired; both are pinned by name in the backend suite, because this door mirrors
+        those predicates rather than sharing them. `feasibility.failures` carries the evaluator's own
+        strings whenever the gate is PLAN_INFEASIBLE, so nothing is re-worded for the screen.
+      responses:
+        '200':
+          description: Departure projection for one journey the caller holds a seat on
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [journey_id, journey_status, seat, gate, candidates, next_action, observed_at]
+                properties:
+                  journey_id: {type: string, format: uuid}
+                  journey_status: {type: string}
+                  active_plan_version_id: {type: [string, "null"]}
+                  current_activity_id: {type: [string, "null"]}
+                  seat: {type: object}
+                  gate:
+                    type: string
+                    enum: [READY_TO_DEPART, ALREADY_RUNNING, NO_PLAN_SELECTED, STALE_RECOMPOSE_REQUIRED,
+                           PLAN_INFEASIBLE, JOURNEY_NOT_PLANNABLE]
+                  reason_detail: {type: [string, "null"]}
+                  selected_plan: {type: [object, "null"]}
+                  candidates:
+                    type: array
+                    items:
+                      type: object
+                      required: [plan_version_id, version_no, status, evidence, feasibility]
+                      properties:
+                        plan_version_id: {type: string, format: uuid}
+                        version_no: {type: integer}
+                        planning_mode: {type: string}
+                        status: {type: string}
+                        source: {type: string}
+                        currency: {type: string}
+                        total_cost_minor: {type: integer}
+                        estimated_duration_min: {type: integer}
+                        activities_count: {type: integer}
+                        evidence:
+                          type: object
+                          required: [frozen, expired, reference_consistent]
+                          properties:
+                            frozen: {type: boolean}
+                            snapshot_id: {type: [string, "null"]}
+                            expires_at: {type: [string, "null"]}
+                            expired: {type: [boolean, "null"]}
+                            reference_consistent: {type: boolean}
+                            detail: {type: [string, "null"]}
+                        feasibility:
+                          type: object
+                          properties:
+                            feasible: {type: [boolean, "null"]}
+                            failures: {type: array, items: {type: string}}
+                            detail: {type: [string, "null"]}
+                  next_action:
+                    type: object
+                    required: [kind, door]
+                    properties:
+                      kind:
+                        type: string
+                        enum: [select_or_start, generate_plans, recompose, none]
+                      door: {type: [string, "null"]}
+                  observed_at: {type: string}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: Journey not found}
   /journeys/{journey_id}/resilience/counterfactuals:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
