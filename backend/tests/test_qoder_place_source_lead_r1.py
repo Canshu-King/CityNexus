@@ -333,6 +333,32 @@ def test_the_media_read_hands_the_provider_the_row_s_own_identity_columns(seeded
     assert seen == [seeded.ids["held"], seeded.ids["held"]]
 
 
+def test_the_answer_carries_the_row_s_own_frame_and_the_journey_it_was_asked_about(seeded,
+                                                                                   monkeypatch):
+    """Two values the route stamps onto its own answer, checked against the row rather than by name.
+
+    The parity ruler already refuses an answer that carries an undeclared key; what checked nothing
+    until now was whether the stamped VALUES are the row's.  A coordinate frame that silently arrives
+    empty is a screen drawing a point in a system nobody named, and a journey id that is not the one
+    asked about is a leak with a different shape.  Both leads reach one row, so both answers agree.
+    """
+    client, seen = _app(seeded, monkeypatch)
+    with seeded.factory() as check:
+        row = check.get(Place, seeded.ids["held"])
+        frame, name = row.coordinate_system, row.name
+    headers = _header(seeded.ids["owner"])
+    bodies = []
+    for lead in (seeded.ids["held"], seeded.ids["cand_held"]):
+        answer = client.get(MEDIA_PATH % (seeded.ids["journey"], lead), headers=headers)
+        assert answer.status_code == 200, answer.text
+        bodies.append(answer.json())
+    for body in bodies:
+        assert body["coordinate_system"] == frame, body
+        assert body["place_name"] == name, body
+        assert body["journey_id"] == seeded.ids["journey"], body
+    assert seen == [seeded.ids["held"], seeded.ids["held"]]
+
+
 def test_a_lead_carrying_a_slash_resolves_and_the_answer_carries_the_path_to_call(
         seeded, monkeypatch):
     """The wiring the order asks for: two calls, no free text, and no client-side rule to memorise.
