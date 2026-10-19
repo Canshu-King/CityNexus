@@ -76,8 +76,8 @@ for (const width of [390, 430, 1366, 1566]) {
     });
 
     await page.goto("/revolution");
-    await page.getByTestId("rev-mobile-tab-assistant").click();
-    if (width < 1000) await page.getByTestId("rev-mission-layer-map").click();
+    await page.getByTestId("rev-mission-layer-agent").click();
+    await page.getByTestId("rev-mission-layer-map").click();
     const cockpit = page.getByTestId("rev-mission-cockpit");
     await expect(cockpit).toBeVisible();
     await expect(page.locator(".cn-mission-media")).toBeVisible();
@@ -87,7 +87,7 @@ for (const width of [390, 430, 1366, 1566]) {
     await expect(cockpit.locator('.cn-place-photo[data-photo-origin="curated"] .cn-place-photo-fallback')).toBeVisible();
     await cockpit.locator(".cn-place-photo").getByRole("button", { name: "查看对应安排" }).click();
     await expect(cockpit.locator('.rev-goal-draft-slot[data-place-id="' + point.candidate_id + '"]')).toHaveAttribute("open", "");
-    if (width < 1000) await page.getByTestId("rev-mission-layer-map").click();
+    await page.getByTestId("rev-mission-layer-map").click();
     await expect(cockpit.getByTestId("rev-workspace-coordinate-preview")).toBeVisible();
     await cockpit.getByRole("button", { name: /查看其他研究/ }).click();
     await expect(cockpit.locator(".cn-mission-map-top")).toContainText("3 处地点");
@@ -130,7 +130,7 @@ for (const width of [390, 430, 1366, 1566]) {
         dock: document.querySelector(".rev-mission-chat-dock")!.getBoundingClientRect().height,
         font: parseFloat(getComputedStyle(document.querySelector("#rev-mission-chat-input")!).fontSize),
       }));
-      expect(dimensions.hero).toBeLessThanOrEqual(120);
+      expect(dimensions.hero).toBeLessThanOrEqual(220);
       expect(dimensions.dock).toBeLessThanOrEqual(90);
       expect(dimensions.font).toBeGreaterThanOrEqual(16);
     }

@@ -12,11 +12,13 @@ const PERIOD: Record<string, string> = {
 
 type Props = {
   variants: GoalDraftVariant[];
+  current?: GoalDraftArtifact | null;
   disabled?: boolean;
   onChoose: (artifact: GoalDraftArtifact) => Promise<void>;
 };
 
-export function GoalDraftVariants({ variants, disabled = false, onChoose }: Props) {
+export function GoalDraftVariants({ variants, current, disabled = false, onChoose }: Props) {
+  const [previewId, setPreviewId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [choosingId, setChoosingId] = useState<string | null>(null);
   const [failedId, setFailedId] = useState<string | null>(null);
@@ -49,16 +51,18 @@ export function GoalDraftVariants({ variants, disabled = false, onChoose }: Prop
         </div>
       </div>
 
+      <div className="rev-v3-variant-tabs" role="tablist" aria-label="比较旅行方案">{variants.map((variant, index) => <button key={variant.id} type="button" role="tab" id={`rev-v3-variant-tab-${index}`} aria-controls={`rev-v3-variant-${index}`} aria-selected={(previewId ?? variants[0].id) === variant.id} onClick={() => { setPreviewId(variant.id); setExpandedId(variant.id); }}>{String.fromCharCode(65 + index)} · {variant.title}</button>)}</div>
       <div className="rev-goal-variants-list">
         {variants.map((variant, index) => {
           const expanded = expandedId === variant.id;
+          const chosen = Boolean(current && JSON.stringify(current.days) === JSON.stringify(variant.artifact.days));
           const choosingThis = choosingId === variant.id;
           const unknowns = variant.unknown_summary.map((item) => item.trim().slice(0, 180)).filter(Boolean);
           const detailId = `rev-goal-variant-details-${index}`;
           return (
-            <article className="rev-goal-variant-card" key={variant.id} data-plan-style={variant.id} data-expanded={expanded ? "true" : "false"}>
+            <article className="rev-goal-variant-card" role="tabpanel" id={`rev-v3-variant-${index}`} aria-labelledby={`rev-v3-variant-tab-${index}`} hidden={(previewId ?? variants[0].id) !== variant.id} key={variant.id} data-plan-style={variant.id} data-expanded={expanded ? "true" : "false"}>
               <div className="rev-goal-variant-card-head">
-                <span className="rev-goal-variant-number">{index + 1}</span>
+                <span className="rev-goal-variant-number">{String.fromCharCode(65 + index)}</span>
                 <div className="rev-goal-variant-title">
                   <h4>{variant.title}</h4>
                   <p>{variant.comparison}</p>
@@ -111,10 +115,10 @@ export function GoalDraftVariants({ variants, disabled = false, onChoose }: Prop
               <button
                 type="button"
                 className="rev-goal-variant-choose"
-                disabled={disabled || choosingId !== null}
+                disabled={disabled || choosingId !== null || chosen}
                 onClick={() => void choose(variant)}
               >
-                {choosingThis ? "正在选用…" : choosingId !== null ? "请稍候…" : <><Check size={16} aria-hidden="true" />选用这份安排</>}
+                {chosen ? "已选为当前行程" : choosingThis ? "正在选用…" : choosingId !== null ? "请稍候…" : <><Check size={16} aria-hidden="true" />选用这份安排</>}
               </button>
               {failedId === variant.id && <p className="rev-goal-variant-error" role="alert">这份安排没能选用，请重试。</p>}
             </article>

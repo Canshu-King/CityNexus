@@ -13,6 +13,8 @@ for (const width of [390, 430]) test(`TEST_FIXTURE choose a sourced draft varian
   const task = {task_id:tid, journey_id:jid, status:"PARTIAL_READY",goal:"TEST_FIXTURE 两日",mode:"GOAL_PLANNING",consent:{model:true,online_research:true},budget:{max_model_turns:24,max_tool_calls:48},usage:{model_turns:4,tool_calls:3},tool_steps:[],research_places:[],conversation:[],
     draft_artifact:{revision:4,status:"DRAFT",days:[{date:"2026-10-21",slots:[{title:"TEST_FIXTURE 原草案",time_of_day:"afternoon",notes:""}]}]},
     draft_variants:[{id:"relaxed",title:"轻松慢逛",comparison:"使用附近两处来源地点，减少移动",source_place_ids:["amap:fixture-a"],route_ids:[],unknown_summary:["营业与票价待查"],artifact:{revision:1,status:"DRAFT",days:[{date:"2026-10-21",slots:[{title:"TEST_FIXTURE 轻松文化行程",time_of_day:"afternoon",notes:"营业待查",place_id:"amap:fixture-a"}]}]}}]};
+  const baseVariant = task.draft_variants[0];
+  task.draft_variants.push(...["budget", "local"].map((id, index) => ({ ...baseVariant, id, title: index ? "本地风味" : "预算优先", artifact: { ...baseVariant.artifact, days: [{ date: "2026-10-21", slots: [{ ...baseVariant.artifact.days[0].slots[0], title: `TEST_FIXTURE 独立方案${id}` }] }] } })));
   const root = `/api/v1/journeys/${jid}`;
   await page.route("**/api/v1/**",async route=>{
     const path = new URL(route.request().url()).pathname;
@@ -36,15 +38,21 @@ for (const width of [390, 430]) test(`TEST_FIXTURE choose a sourced draft varian
     return reply({});
   });
   await page.goto("/revolution");
-  await page.getByTestId("rev-mobile-tab-assistant").click();
+  await page.getByTestId("rev-mission-layer-agent").click();
   await page.getByTestId("rev-mission-layer-timeline").click();
   const variants=page.getByRole("region",{name:"旅行方案对比"});
   await expect(variants).toBeVisible();
-  await variants.getByRole("button",{name:"查看每天安排与待查事项"}).click();
+  await expect(variants.getByRole("tab")).toHaveCount(3);
+  await variants.getByRole("tab", { name: "B · 预算优先" }).click();
+  await expect(variants.getByRole("tabpanel")).toContainText("TEST_FIXTURE 独立方案budget");
+  await variants.getByRole("tab", { name: "C · 本地风味" }).click();
+  await expect(variants.getByRole("tabpanel")).toContainText("TEST_FIXTURE 独立方案local");
+  await variants.getByRole("tab", { name: "A · 轻松慢逛" }).click();
+
   await expect(variants).toContainText("营业与票价待查");
   await variants.getByRole("button",{name:"选用这份安排"}).click();
   await expect.poll(()=>puts).toBe(1);
-  await page.reload();await page.getByTestId("rev-mobile-tab-assistant").click();
+  await page.reload();await page.getByTestId("rev-mission-layer-agent").click();
   await page.getByTestId("rev-mission-layer-timeline").click();
   const editor=page.getByTestId("rev-mission-timeline-pane").locator(".rev-goal-draft");
   await editor.locator(".rev-goal-draft-slot summary").first().click();

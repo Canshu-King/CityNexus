@@ -27,6 +27,7 @@ import "./RevolutionFirstLook.css";
 import "./RevolutionUsability.css";
 import "./RevolutionQuickExplore.css";
 import "./RevolutionMobileV1.css";
+import "./mobile/RevolutionV3.css";
 
 const STORAGE_KEY = "citynexus.revolution.firstlook.journey";
 const RECENT_JOURNEYS_KEY = "citynexus.revolution.firstlook.recent-journeys";
@@ -392,7 +393,8 @@ export function RevolutionFirstLook() {
   const [briefBearer, setBriefBearer] = useState(readTravelerBearer);
   const [serverBrief, setServerBrief] = useState<{ journeyId: string; bearer: string; goal: string } | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<RevolutionMobileTab>("explore");
+  const [activeTab, setActiveTab] = useState<RevolutionMobileTab>(() => { try { const saved = sessionStorage.getItem("citynexus.revolution.v3.space"); return saved === "trips" || saved === "me" ? saved : "explore"; } catch { return "explore"; } });
+  useEffect(() => { try { sessionStorage.setItem("citynexus.revolution.v3.space", activeTab); } catch { /* Navigation still works in memory. */ } }, [activeTab]);
   const [pocketWalk, setPocketWalk] = useState<BootstrapPocketWalkResponse | null>(null);
   const [agentRuntime, setAgentRuntime] = useState<AgentRuntimeStatus | null>(null);
   const [agentCheckError, setAgentCheckError] = useState<string | null>(null);
@@ -891,13 +893,20 @@ export function RevolutionFirstLook() {
     }
   };
 
+  useEffect(() => {
+    const revealAgent = () => { if (activeTab === "me") setActiveTab("explore"); };
+    window.addEventListener("citynexus:mission-panel", revealAgent);
+    return () => window.removeEventListener("citynexus:mission-panel", revealAgent);
+  }, [activeTab]);
+
   const navigateMobile = (tab: RevolutionMobileTab) => {
     setActiveTab(tab);
+    try { sessionStorage.setItem("citynexus.revolution.v3.space", tab); } catch { /* In-memory navigation remains usable. */ }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="rev-firstlook rev-mobile-v1" data-testid="revolution-first-look">
+    <div className="rev-firstlook rev-mobile-v1 rev-v3" data-testid="revolution-first-look">
       <header className="rev-firstlook-header">
         <div className="rev-firstlook-brand">
           <span className="rev-firstlook-mark" aria-hidden="true">C</span>
@@ -959,9 +968,20 @@ export function RevolutionFirstLook() {
           activeTab === "explore" ? (
             <section className="rev-firstlook-hero" data-testid="rev-mobile-welcome">
               <span className="rev-firstlook-eyebrow">CITYNEXUS / YOUR TRIP</span>
-              <h1>帮我规划<br />这趟旅行。</h1>
-              <p>先填目的地、日期和天数；其他旅行偏好可以继续补充。</p>
+              <h1>你的下一趟旅行，<br />从一句话开始。</h1>
+              <p>说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。</p>
               <form className="rev-trip-request-form" onSubmit={(event) => { event.preventDefault(); void start(); }}>
+                    <label className="rev-trip-goal-label" htmlFor="rev-trip-goal">想怎么玩？</label>
+                    <textarea
+                      id="rev-trip-goal"
+                      value={tripGoal}
+                      maxLength={240}
+                      rows={3}
+                      disabled={busy || startWriteBlocked}
+                      onChange={(event) => setTripGoal(event.target.value)}
+                      placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
+                      data-testid="rev-trip-goal"
+                    />
                 <label className="rev-trip-destination-label" htmlFor="rev-firstlook-city">目的地</label>
                 <div className="rev-firstlook-form-row">
                   <input
@@ -976,7 +996,7 @@ export function RevolutionFirstLook() {
                     data-testid="rev-firstlook-city"
                   />
                 </div>
-                <div className="rev-trip-request-grid">
+                <details className="rev-v3-trip-dates"><summary>日期与天数</summary><div className="rev-trip-request-grid">
                   <label>
                     出发日期
                     <input
@@ -1003,6 +1023,7 @@ export function RevolutionFirstLook() {
                     />
                   </label>
                 </div>
+                </details>
                 <details className="rev-trip-preferences">
                   <summary>
                     <span>更多偏好</span>
@@ -1085,17 +1106,6 @@ export function RevolutionFirstLook() {
                         ))}
                       </div>
                     </fieldset>
-                    <label className="rev-trip-goal-label" htmlFor="rev-trip-goal">想怎么玩？</label>
-                    <textarea
-                      id="rev-trip-goal"
-                      value={tripGoal}
-                      maxLength={240}
-                      rows={3}
-                      disabled={busy || startWriteBlocked}
-                      onChange={(event) => setTripGoal(event.target.value)}
-                      placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
-                      data-testid="rev-trip-goal"
-                    />
                     <p className="rev-trip-ai-line">保存后，这段想法会带到 Agent 输入栏，可以继续聊着修改。</p>
                   </div>
                 </details>
@@ -1160,6 +1170,36 @@ export function RevolutionFirstLook() {
           )
         ) : (
           <>
+            <div hidden={activeTab === "me"}>
+              <MissionCockpit
+                key={journey.id}
+                journeyId={journey.id}
+                cityName={journey.cityName}
+                onChangeCity={() => switchCity()}
+                goal={serverBrief?.journeyId === journey.id && serverBrief.bearer === readTravelerBearer()
+                  ? serverBrief.goal : tripGoal}
+                journeyStatus={journey.status}
+                visible={activeTab !== "me"}
+                space={activeTab === "trips" ? "journey" : "explore"}
+                preparation={(fromAgentDraft) => <MobilePlanWorkbench fromAgentDraft={fromAgentDraft} key={journey.id} journeyId={journey.id} placeId={candidateForJourney}
+                  visible={activeTab === "trips"} onStarted={finishStartingJourney} onExplore={() => navigateMobile("explore")}
+                  onBriefSaved={(brief) => { const bearer = readTravelerBearer(); if (bearer) setServerBrief({ journeyId: journey.id, bearer, goal: tripBriefGoal(brief.goal, brief.interests, brief.energy) }); window.dispatchEvent(new Event("citynexus:mission-refresh")); }} />}
+                agentStatus={agentStatusTitle}
+                agentAvailable={Boolean(agentCanRequestSuggestion)}
+                executionAgent={journey.status === "ACTIVE" ? <section aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
+                  <AgentWorkStatus journeyId={journey.id} visible={activeTab !== "me"} />
+                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab !== "me"} aiDisabled={aiDisabled} />
+                  <MobileHermesRun globalComposer journeyId={journey.id} visible={activeTab !== "me"} />
+                </section> : null}
+                executionDecisions={journey.status === "ACTIVE"
+                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" /> : null}
+                onExplore={() => {
+                  if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
+                  document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                onTrip={() => navigateMobile("trips")}
+              />
+            </div>
             <section className="rev-mobile-tabpanel" hidden={activeTab !== "explore" && !(journey.status === "ACTIVE" && activeTab === "trips")} data-testid="rev-mobile-screen-explore">
               <section className="rev-firstlook-journey">
                 <div>
@@ -1171,30 +1211,7 @@ export function RevolutionFirstLook() {
                   换地区
                 </button>
               </section>
-              <MissionCockpit
-                key={journey.id}
-                journeyId={journey.id}
-                cityName={journey.cityName}
-                onChangeCity={() => switchCity()}
-                goal={serverBrief?.journeyId === journey.id && serverBrief.bearer === readTravelerBearer()
-                  ? serverBrief.goal : tripGoal}
-                journeyStatus={journey.status}
-                visible={activeTab === "explore"}
-                agentStatus={agentStatusTitle}
-                agentAvailable={Boolean(agentCanRequestSuggestion)}
-                executionAgent={journey.status === "ACTIVE" ? <section aria-label="真正的 Journey Operator" data-testid="revolution-real-operator">
-                  <AgentWorkStatus journeyId={journey.id} visible={activeTab !== "me"} />
-                  <MobileCompatAgentActivity journeyId={journey.id} visible={activeTab !== "me"} aiDisabled={aiDisabled} />
-                  <MobileHermesRun journeyId={journey.id} visible={activeTab !== "me"} />
-                </section> : null}
-                executionDecisions={journey.status === "ACTIVE"
-                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" /> : null}
-                onExplore={() => {
-                  if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
-                  document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                onTrip={() => navigateMobile("trips")}
-              />
+
               {journey.status === "DRAFT" && (
                 <button
                   type="button"
@@ -1266,21 +1283,7 @@ export function RevolutionFirstLook() {
             </section>
 
             <section className="rev-mobile-tabpanel" hidden={activeTab !== "trips"} data-testid="rev-mobile-screen-trips">
-              <MobilePlanWorkbench
-                key={journey.id}
-                journeyId={journey.id}
-                placeId={candidateForJourney}
-                visible={activeTab === "trips"}
-                onStarted={finishStartingJourney}
-                onExplore={() => navigateMobile("explore")}
-                onBriefSaved={(brief) => {
-                  const bearer = readTravelerBearer();
-                  if (bearer) {
-                    setServerBrief({ journeyId: journey.id, bearer, goal: tripBriefGoal(brief.goal, brief.interests, brief.energy) });
-                    window.dispatchEvent(new Event("citynexus:mission-refresh"));
-                  }
-                }}
-              />
+
               {journey.status === "ACTIVE" ? (
                 <section className="rev-mobile-panel">
                   <section className="rev-mobile-panel">

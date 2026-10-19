@@ -84,7 +84,7 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
 
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
-  await page.getByTestId("rev-mobile-tab-assistant").click();
+  await page.getByTestId("rev-mission-layer-agent").click();
   if (await page.getByTestId("rev-mission-layer-map").isVisible()) await page.getByTestId("rev-mission-layer-map").click();
   const cockpit = page.getByTestId("rev-mission-cockpit");
   const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });

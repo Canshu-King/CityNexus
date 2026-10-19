@@ -10,6 +10,7 @@ import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } fro
 import { WorkspaceMap, type WorkspaceMapPoint } from "./WorkspaceMap";
 import { WorkspaceActions } from "./WorkspaceActions";
 import { GoalDraftEditor } from "./GoalDraftEditor";
+import { DraftDepartureCard } from "./DraftDepartureCard";
 import { GoalDraftVariants } from "./GoalDraftVariants";
 import { GuardianRealityPanel } from "./GuardianRealityPanel";
 import { DestinationMedia } from "./DestinationMedia";
@@ -29,6 +30,8 @@ type Props = {
   onExplore: () => void;
   onTrip: () => void;
   onChangeCity?: () => void;
+  space?: "explore" | "journey";
+  preparation?: (fromAgentDraft: boolean) => ReactNode;
   executionAgent?: ReactNode;
   executionDecisions?: ReactNode;
 };
@@ -91,7 +94,7 @@ function eventLabel(event: DraftGoalTaskEvent): string {
 }
 
 export function MissionCockpit({
-  journeyId, cityName, goal, journeyStatus, visible = true, agentStatus, agentAvailable, onExplore, onTrip, onChangeCity, executionAgent, executionDecisions,
+  journeyId, cityName, goal, journeyStatus, visible = true, space = "explore", preparation, agentStatus, agentAvailable, onExplore, onTrip, onChangeCity, executionAgent, executionDecisions,
 }: Props) {
   const [command, setCommand] = useState(goal);
   const [task, setTask] = useState<DraftGoalTask | null>(null);
@@ -108,6 +111,7 @@ export function MissionCockpit({
   const [chosenDraftRevision, setChosenDraftRevision] = useState(0);
   const spatial = useRef<HTMLDivElement>(null);
   const [layer, setLayer] = useState<"map" | "timeline" | "agent">(journeyStatus === "ACTIVE" ? "agent" : "map");
+  useEffect(() => { setLayer(space === "journey" || journeyStatus === "ACTIVE" ? "timeline" : "map"); }, [space, journeyStatus]);
   const selectLayer = (next: "map" | "timeline" | "agent") => {
     setLayer(next);
     // Phone panels remain mounted so switching never discards draft edits.
@@ -125,6 +129,7 @@ export function MissionCockpit({
     const slot = document.querySelector<HTMLDetailsElement>(`.cn-mission-os .rev-goal-draft-slot[data-place-id="${CSS.escape(id)}"]`);
     if (slot && !preferMap) {
       slot.open = true;
+      window.dispatchEvent(new CustomEvent("citynexus:draft-focus", { detail: id }));
       setLayer("timeline");
       requestAnimationFrame(() => slot.scrollIntoView({ block: "center", inline: "nearest", behavior: "auto" }));
     } else {
@@ -142,7 +147,7 @@ export function MissionCockpit({
     const openPanel = (event: Event) => {
 
       const kind = (event as CustomEvent).detail;
-      if (kind === "map" || kind === "assistant") setLayer(kind === "map" ? "map" : "agent");
+      if (kind === "map" || kind === "assistant" || kind === "timeline") setLayer(kind === "assistant" ? "agent" : kind);
     };
     window.addEventListener("citynexus:mission-command", focus);
     window.addEventListener("citynexus:mission-panel", openPanel);
@@ -151,7 +156,7 @@ export function MissionCockpit({
 
   useEffect(() => { setCommand(goal); setMapAllowed(false); setGuardianOpen(false); setFocusedPlaceId(null); }, [journeyId]);
   useEffect(() => {
-    if (!command.trim() && goal) setCommand(goal);
+    if (goal && goal !== command) { setCommand(goal); setCommandRevision(value => value + 1); }
   }, [goal]);
   useEffect(() => {
     const refreshWorkspace = () => setRefresh((value) => value + 1);
@@ -257,10 +262,10 @@ export function MissionCockpit({
     window.dispatchEvent(new Event("citynexus:mission-refresh"));
   };
 
-  return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit" data-layer={layer}>
+  return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit" data-layer={layer} data-space={space}>
     <header className="cn-mission-head">
-      <div><div className="cn-mission-kicker"><Sparkles size={15} /> CITYNEXUS / MISSION OS</div>
-        <h2>{cityName}<span>，边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p>
+      <div><div className="cn-mission-kicker"><Sparkles size={15} /> YOUR NEXT JOURNEY</div>
+        <h2 aria-label={cityName}>{cityName}<span>{journeyStatus === "ACTIVE" ? "，旅途正在继续。" : "，把想去变成出发。"}</span></h2><p>{journeyStatus === "ACTIVE" ? "下一站、行程变化和同行决定，都在这里。" : draftSlots.length ? `已有 ${draftDays.length} 天安排，随时可以和 Agent 一起调整。` : "先聊聊你想怎样旅行，再一起找值得去的地方。"}</p>
         {onChangeCity && <button type="button" className="cn-mission-change-city" onClick={onChangeCity}>换地区 ›</button>}</div>
       <DestinationMedia key={cityName + (coverMedia?.image_url || "")} cityName={cityName} media={coverMedia} placeName={coverPoint?.name} />
       <span className="cn-mission-state" aria-live="polite">{status}</span>
@@ -268,7 +273,7 @@ export function MissionCockpit({
     <div className="cn-mission-layer-tabs" aria-label="切换工作台图层">
       <button type="button" aria-pressed={layer === "map"} onClick={() => selectLayer("map")} data-testid="rev-mission-layer-map"><MapPinned size={17} />地图</button>
       <button type="button" aria-pressed={layer === "timeline"} onClick={() => selectLayer("timeline")} data-testid="rev-mission-layer-timeline"><CalendarDays size={17} />{journeyStatus === "ACTIVE" ? "执行与待办" : "日程"}</button>
-      <button type="button" aria-pressed={layer === "agent"} onClick={() => selectLayer("agent")} data-testid="rev-mission-layer-agent"><BrainCircuit size={17} />对话</button>
+      {journeyStatus !== "ACTIVE" && <button type="button" aria-pressed={layer === "agent"} onClick={() => selectLayer("agent")} data-testid="rev-mission-layer-agent"><BrainCircuit size={17} />对话</button>}
     </div>
     <div className="cn-mission-grid">
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
@@ -280,10 +285,10 @@ export function MissionCockpit({
             : journeyStatus === "ACTIVE" ? "你的行程正在执行" : "告诉我想去哪儿，其余交给 Agent"}</strong>
           <p>{task ? "地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。" : "无需填写复杂表单，直接说出目的地、兴趣和偏好。"}</p>
         </div>
-        {journeyStatus === "ACTIVE" ? executionAgent :
+        {journeyStatus === "ACTIVE" ? <p>当前行程的助手动态在「执行与待办」里。</p> :
           <div className="cn-mission-agent-disclosure">
             <h3>一起商量安排</h3>
-            <WorkspaceActions embedded chatDockVisible={visible} dialogueActive={layer === "agent"} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
+            <WorkspaceActions embedded chatDockVisible={true} dialogueActive={layer === "agent"} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
           </div>}
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布">
@@ -297,18 +302,18 @@ export function MissionCockpit({
           {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
-          <section className="cn-mission-activity" aria-label="Agent 工作轨迹">
+          <details className="cn-mission-activity" aria-label="Agent 工作轨迹"><summary>查看 Agent 工作过程</summary>
             <div className="cn-mission-activity-top"><strong>Agent 工作轨迹</strong><button type="button" aria-label="刷新 Agent 实际任务" onClick={() => setRefresh((v) => v + 1)}><RefreshCw size={16} /></button></div>
             {task && <p className="cn-mission-run-stats">模型 {task.usage.model_turns ?? 0} 轮 · 工具 {task.usage.tool_calls ?? 0} 次</p>}
             {latestEvents.length ? <ol>{latestEvents.map((event) => <li key={event.sequence}><Clock3 size={14} /><div><strong>{eventLabel(event)}</strong><small>#{event.sequence}</small></div></li>)}</ol>
               : <p>{dataState === "loading" ? "正在读取工作记录…" : "提交目标后，这里显示实际工作进度。"}</p>}
-          </section>
+          </details>
         </article>
         <article className="cn-mission-card cn-mission-timeline-pane" data-testid="rev-mission-timeline-pane">
           <div className="cn-mission-section-heading"><CalendarDays size={18} /><strong>{journeyStatus === "ACTIVE" ? "执行与待办" : "按天调整行程"}</strong></div>
-          {journeyStatus === "ACTIVE" ? executionDecisions : <>
+          {journeyStatus === "ACTIVE" ? <>{executionAgent}{executionDecisions}</> : <>
           <p>{draftSlots.length} 项安排 · {draftDays.length} 天</p>
-          <GoalDraftVariants key={task?.task_id ?? journeyId} variants={task?.draft_variants ?? []}
+          <GoalDraftVariants key={task?.task_id ?? journeyId} variants={task?.draft_variants ?? []} current={task?.draft_artifact}
             disabled={task?.status === "WORKING"} onChoose={chooseDraft} />
           {task?.draft_artifact ? <GoalDraftEditor key={task.task_id + ":" + chosenDraftRevision} artifact={task.draft_artifact} disabled={task.status === "WORKING"}
             mediaById={mediaById} onPlaceSelect={id => focusPlace(id, true)}
@@ -319,8 +324,9 @@ export function MissionCockpit({
               if (bearer !== readTravelerBearer() || owner !== readTravelerIdentity()?.travelerId) throw new Error("登录已切换，请重新打开行程。");
               setTask(value); window.dispatchEvent(new Event("citynexus:mission-refresh"));
             }} /> : <p>Agent 会把暂定安排和待查事项逐步保存到这里。</p>}</>}
+          {space === "journey" && <details open className="cn-v3-preparation" data-testid="rev-v3-preparation"><summary>准备出发 · 正式计划与待办</summary>{task && <DraftDepartureCard task={task} onDiscuss={(value) => openAgent(journeyId, value)} />}{preparation?.(draftSlots.length > 0)}</details>}
           <div className="cn-mission-capability-grid">
-            <button type="button" onClick={onTrip}><Route size={18} /><strong>候选方案与出发</strong></button>
+            <button type="button" onClick={onTrip}><Route size={18} /><strong>准备出发</strong></button>
             <button type="button" aria-expanded={guardianOpen} onClick={() => setGuardianOpen((value) => !value)}><ShieldCheck size={18} /><strong>行程守护</strong></button>
             <button type="button" onClick={onTrip}><Users size={18} /><strong>同行决策</strong></button>
           </div>

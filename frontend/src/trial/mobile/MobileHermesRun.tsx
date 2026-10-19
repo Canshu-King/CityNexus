@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { Activity, AlertCircle, Check, CircleDashed, Send, Wrench, X } from "lucide-react";
 import { CityNexusApiError, cityNexusApi, type NativeRuntimeEvent } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
@@ -163,7 +164,7 @@ function stateText(
   return "已启动，等待工具事件";
 }
 
-export function MobileHermesRun({ journeyId, visible }: { journeyId: string; visible: boolean }) {
+export function MobileHermesRun({ journeyId, visible, globalComposer = false }: { journeyId: string; visible: boolean; globalComposer?: boolean }) {
   const [prompt, setPrompt] = useState("请检查当前行程，发现问题时给出处理建议。");
   const [requestState, setRequestState] = useState<RequestState>(() => readTravelerBearer() ? "idle" : "unauthorized");
   const [restoreState, setRestoreState] = useState<RestoreState>("idle");
@@ -370,6 +371,23 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
   const toolCount = actualEvents.filter((event) => event.event_type.startsWith("tool.")).length;
   const latestEvent = orderedEvents.at(-1);
 
+  const composer = (<form className={globalComposer ? "rev-mission-chat-dock rev-v3-active-dock" : "rev-mobile-hermes-form"} aria-label="与当前旅行 Agent 对话" onSubmit={(event) => { window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: "timeline" })); void submit(event); }}>
+        <label htmlFor="rev-mobile-hermes-prompt">你希望它检查什么</label>
+        <textarea
+          id="rev-mobile-hermes-prompt"
+          value={prompt}
+          maxLength={1200}
+          rows={globalComposer ? 1 : 3}
+          disabled={requestState === "sending" || requestState === "unauthorized"}
+          onChange={(event) => setPrompt(event.target.value)}
+          data-testid="rev-mobile-hermes-prompt"
+        />
+        <button type="submit" disabled={requestState === "sending" || requestState === "unauthorized" || !prompt.trim()} data-testid="rev-mobile-hermes-submit">
+          <Send size={16} aria-hidden="true" />
+          {requestState === "sending" ? "正在提交…" : globalComposer ? "发送 ↑" : "发送给行程助手"}
+        </button>
+      </form>);
+
   return (
     <section className="rev-mobile-hermes" data-testid="rev-mobile-hermes">
       <div className="rev-mobile-hermes-heading">
@@ -379,22 +397,7 @@ export function MobileHermesRun({ journeyId, visible }: { journeyId: string; vis
           <h2>让助手检查当前行程</h2>
         </div>
       </div>
-      <form className="rev-mobile-hermes-form" onSubmit={(event) => { void submit(event); }}>
-        <label htmlFor="rev-mobile-hermes-prompt">你希望它检查什么</label>
-        <textarea
-          id="rev-mobile-hermes-prompt"
-          value={prompt}
-          maxLength={1200}
-          rows={3}
-          disabled={requestState === "sending" || requestState === "unauthorized"}
-          onChange={(event) => setPrompt(event.target.value)}
-          data-testid="rev-mobile-hermes-prompt"
-        />
-        <button type="submit" disabled={requestState === "sending" || requestState === "unauthorized" || !prompt.trim()} data-testid="rev-mobile-hermes-submit">
-          <Send size={16} aria-hidden="true" />
-          {requestState === "sending" ? "正在提交…" : "发送给行程助手"}
-        </button>
-      </form>
+      {globalComposer ? createPortal(composer, document.body) : composer}
 
       {failure && <p className="rev-mobile-hermes-message error" role="alert"><AlertCircle size={15} aria-hidden="true" />{failure}</p>}
       {visible && !currentRun && requestState !== "sending" && requestState !== "unauthorized" && (restoreState === "checking" || restoreState === "empty") && (

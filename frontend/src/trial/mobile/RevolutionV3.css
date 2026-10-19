@@ -1,0 +1,57 @@
+/* Three spaces share the existing signed Journey, task and place projections. */
+.rev-v3 { --v3-forest: #075748; --v3-mint: #e6f4eb; }
+.rev-v3 .rev-mobile-bottom-nav { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.rev-v3 .rev-firstlook-brand strong { color: var(--v3-forest); }
+.rev-v3 .rev-firstlook-mark { clip-path: polygon(50% 0,100% 100%,0 100%); border-radius: 0; }
+.rev-v3 .rev-trip-request-form > .rev-trip-goal-label { font-size: 13px; color: #426c58; }
+.rev-v3 .rev-trip-request-form > textarea { width: 100%; min-height: 112px; box-sizing: border-box; padding: 16px; border: 1px solid #c5dfce; border-radius: 18px; background: white; color: #214c3b; font: inherit; font-size: 17px; line-height: 1.6; }
+.rev-v3 .rev-v3-trip-dates { margin: 12px 0; }
+.rev-v3 .rev-v3-trip-dates > summary { min-height: 44px; display: flex; align-items: center; color: #557865; cursor: pointer; }
+.rev-v3 .cn-mission-os { margin-top: 0; }
+.rev-v3 .cn-mission-os .cn-mission-head { min-height: 215px; border-radius: 24px; }
+.rev-v3 .cn-mission-os .cn-mission-head > div:first-child { position: relative; z-index: 1; }
+.rev-v3 .cn-mission-os .cn-mission-head .cn-mission-state { position: absolute; top: 16px; right: 16px; }
+.rev-v3 .cn-mission-head .cn-mission-change-city { display: inline-flex; min-height: 44px; color: white; }
+.rev-v3 .cn-mission-grid { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); }
+.rev-v3 .cn-mission-agent-pane { display: none; }
+.rev-v3 .cn-mission-os[data-layer="agent"] .cn-mission-agent-pane { display: block; }
+.rev-v3 .cn-mission-os[data-layer="agent"] .cn-mission-grid { grid-template-columns: minmax(0,1fr); }
+.rev-v3 .cn-mission-os[data-layer="agent"] .cn-mission-spatial { display: none; }
+.rev-v3 .cn-mission-activity { margin-top: 14px; }
+.rev-v3 .cn-mission-activity > summary, .rev-v3 .cn-v3-preparation > summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-size: 14px; font-weight: 700; color: #20654c; }
+.rev-v3 .cn-v3-preparation { padding: 10px 16px; border: 1px solid #cce3d4; border-radius: 16px; margin-top: 18px; background: #f3faf5; }
+.rev-v3 .cn-v3-preparation .rev-mobile-panel { padding: 12px 0; border: 0; box-shadow: none; }
+.rev-v3 .rev-firstlook-journey, .rev-v3 .rev-firstlook-agent-entry { display: none; }
+.rev-v3 .cn-mission-layer-tabs { display: flex; gap: 6px; }
+.rev-v3 .cn-mission-layer-tabs button { flex: 1; min-height: 46px; border: 0; border-radius: 12px; background: #edf4ef; color: #5a7a68; }
+.rev-v3 .cn-mission-layer-tabs button[aria-pressed="true"] { background: #d9eee1; color: #075748; }
+.rev-v3 .rev-v3-variant-tabs, .rev-v3 .rev-v3-day-tabs { display: flex; gap: 7px; margin: 14px 0; overflow-x: auto; }
+.rev-v3 .rev-v3-variant-tabs button, .rev-v3 .rev-v3-day-tabs button { flex: 1; min-height: 48px; min-width: 80px; border: 1px solid #d8e7dc; border-radius: 12px; padding: 8px; background: #f4f8f4; color: #426a54; font: inherit; font-size: 12px; cursor: pointer; }
+.rev-v3 [role="tab"][aria-selected="true"] { background: #dff2e5; color: #075748; border-color: #58a57f; font-weight: 750; }
+.rev-v3 .rev-v3-day-tabs small { display: block; font-size: 11px; margin-top: 3px; }
+.rev-v3 [role="tabpanel"][hidden] { display: none; }
+.rev-v3 .rev-goal-variants-list { display: block; }
+@media (min-width: 1000px) {
+ .rev-v3 .cn-mission-os[data-space="explore"] .cn-mission-timeline-pane { display: block; }
+ .rev-v3 .cn-mission-os[data-space="journey"] .cn-mission-map-pane { display: block; }
+}
+@media (max-width: 999px) {
+ .rev-v3 .cn-mission-os .cn-mission-head { min-height: 200px; align-items: end; padding: 23px 18px; }
+ .rev-v3 .cn-mission-head h2 span { display: block; font-size: 17px; padding-top: 6px; }
+ .rev-v3 .cn-mission-os .cn-mission-head .cn-mission-state { font-size: 10px; }
+ .rev-v3 .cn-mission-grid { display: flex; }
+ .rev-v3 .cn-mission-os[data-layer="agent"] .cn-mission-spatial { display: contents; }
+ .rev-v3 .cn-mission-timeline-pane .cn-mission-capability-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+ .rev-v3 .cn-mission-capability-grid button { min-height: 78px; }
+ .rev-v3 .cn-mission-card { scroll-margin-bottom: 190px; }
+}
+
+.rev-v3-departure { padding: 12px 0; }
+.rev-v3-departure ul { list-style: none; padding: 0; }
+.rev-v3-departure li { display: grid; gap: 5px; padding: 10px 0; border-bottom: 1px solid #dcebe1; }
+.rev-v3-departure li span { color: #6d8274; font-size: 12px; }
+.rev-v3-active-dock { display: flex; align-items: stretch; gap: 8px; }
+.rev-v3-active-dock > label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.rev-v3-active-dock > textarea { flex: 1; min-width: 0; box-sizing: border-box; min-height: 48px; max-height: 132px; resize: vertical; padding: 11px; border: 1px solid #d3e2d9; border-radius: 12px; color: #214c3b; background: white; font: inherit; font-size: 14px; }
+.rev-v3-active-dock > button { width: auto; flex: none; min-height: 48px; border: 0; border-radius: 12px; padding: 10px 14px; background: #0e6a55; color: white; font: inherit; font-size: 13px; }
+.rev-v3-active-dock > button:disabled { opacity: .5; }

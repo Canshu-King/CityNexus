@@ -133,7 +133,7 @@ test("TEST_FIXTURE Guardian panel reads on open, shows linked progress, and clea
 
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
-  await page.getByTestId("rev-mobile-tab-assistant").click();
+  await page.getByTestId("rev-mission-layer-agent").click();
   const cockpit = page.getByTestId("rev-mission-cockpit");
   await expect(cockpit).toBeVisible();
   expect(pageErrors, pageErrors.join("\n")).toEqual([]);

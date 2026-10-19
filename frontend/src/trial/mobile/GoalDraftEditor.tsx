@@ -10,6 +10,7 @@ export function GoalDraftEditor({ artifact, disabled, onSave, mediaById = {}, on
   onPlaceSelect?: (id: string) => void; onSave: (draft: GoalDraftArtifact) => Promise<void>;
 }) {
   const [draft, setDraft] = useState(artifact);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [message, setMessage] = useState("");
@@ -19,6 +20,12 @@ export function GoalDraftEditor({ artifact, disabled, onSave, mediaById = {}, on
   useEffect(() => {
     if (!dirty && !saving) setDraft(artifact);
   }, [artifact.revision, dirty, saving]);
+
+  useEffect(() => {
+    const focus = (event: Event) => { const id = (event as CustomEvent).detail; const day = draft.days.find(value => value.slots.some(slot => slot.place_id === id)); if (day) setSelectedDate(day.date); };
+    window.addEventListener("citynexus:draft-focus", focus);
+    return () => window.removeEventListener("citynexus:draft-focus", focus);
+  }, [draft]);
 
   const edit = (producer: (value: GoalDraftArtifact) => GoalDraftArtifact) => {
     setMessage("");
@@ -88,7 +95,8 @@ export function GoalDraftEditor({ artifact, disabled, onSave, mediaById = {}, on
   return <section className="rev-goal-draft" aria-label="可编辑旅行草案">
     <h3>你的旅行草案</h3>
     <p>草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。</p>
-    {draft.days.map((day, dayIndex) => <fieldset key={day.date} disabled={disabled || saving}>
+    <div className="rev-v3-day-tabs" role="tablist" aria-label="选择行程日期">{draft.days.map((day, index) => <button key={day.date} type="button" role="tab" id={`rev-v3-day-tab-${index}`} aria-controls={`rev-v3-day-${index}`} aria-selected={(selectedDate ?? draft.days[0]?.date) === day.date} onClick={() => setSelectedDate(day.date)}>Day {index + 1}<small>{day.date.slice(5)}</small></button>)}</div>
+    {draft.days.map((day, dayIndex) => <fieldset role="tabpanel" id={`rev-v3-day-${dayIndex}`} aria-labelledby={`rev-v3-day-tab-${dayIndex}`} hidden={(selectedDate && draft.days.some(item => item.date === selectedDate) ? selectedDate : draft.days[0]?.date) !== day.date} key={day.date} disabled={disabled || saving}>
       <legend>{day.date} · {day.slots.filter((slot) => slot.title.trim()).length} 项安排</legend>
       <div className="rev-draft-day-photos">{[...new Set(day.slots.map(slot => slot.place_id).filter((id): id is string => Boolean(id)))].slice(0, 3).map(id => {
         const media = mediaById[id]?.media;

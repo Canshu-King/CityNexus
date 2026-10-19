@@ -97,7 +97,8 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
   </>;
 }
 
-export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, onExplore, onBriefSaved }: {
+export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, onExplore, onBriefSaved, fromAgentDraft = false }: {
+  fromAgentDraft?: boolean;
   journeyId: string;
   placeId: string | null;
   visible: boolean;
@@ -247,9 +248,9 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     <header><div><span className="rev-firstlook-eyebrow">TRAVEL PLAN</span><h2>你的行程方案</h2></div><button type="button" className="rev-plan-refresh" disabled={Boolean(busy || loading)} onClick={() => void refresh()}>刷新方案</button></header>
     {message && <p role="alert" className="rev-plan-message">{message}</p>}
     {loading && !current && <p role="status">正在读取你的行程方案…</p>}
-    {current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview key={`${journeyId}:${bearer}`} input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} onRefreshFacts={refreshPlaceFacts} disabled={locked} />}
-    {current && plans.length === 0 && <p>{current.input ? "从想去清单里挑选地点，再生成日程。" : "先选一个已核实的地点，再把它排进日程。"}</p>}
-    {current?.journey.status !== "ACTIVE" && current && <div className="rev-plan-generate">
+    {!fromAgentDraft && current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview key={`${journeyId}:${bearer}`} input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} onRefreshFacts={refreshPlaceFacts} disabled={locked} />}
+    {!fromAgentDraft && current && plans.length === 0 && <p>{current.input ? "从想去清单里挑选地点，再生成日程。" : "先选一个已核实的地点，再把它排进日程。"}</p>}
+    {!fromAgentDraft && current?.journey.status !== "ACTIVE" && current && <div className="rev-plan-generate">
       {current.input ? <>
         {candidateIds.length > 0 && !readyForMulti && <p className="rev-plan-gap">先选至少两处；资料未齐的地点可展开卡片查询 OpenStreetMap 详情，或改选。</p>}
         <button type="button" disabled={locked || !readyForMulti} onClick={() => void write("generate")} data-testid="rev-plan-generate">{busy === "generate" ? "正在安排行程…" : "用所选地点生成正式方案"}</button>

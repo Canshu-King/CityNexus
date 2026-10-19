@@ -85,7 +85,7 @@ async function fixture(page: Page, failRuntime = false, cachedSource = false) {
     if (path === `${root}/bootstrap-discovery/current`) return reply({ journey_id: journeyId, receipt_id: null, candidates: [] });
     if (path === `${root}/agent/goal-tasks` && request.method() === "POST") {
       const payload = request.postDataJSON();
-      expect(payload).toMatchObject({ goal, model_consent: true, online_research_consent: true, interaction_mode: "DISCUSS", unlimited_research: true });
+      expect(payload).toMatchObject({ goal: goal + "\n节奏：轻松少走", model_consent: true, online_research_consent: true, interaction_mode: "DISCUSS", unlimited_research: true });
       submittedGoals.push(payload.goal);
       return reply({ ...persistedTask, status: "ACCEPTED", assistant_summary: null, tool_steps: [] }, 201);
     }
@@ -118,21 +118,22 @@ for (const width of [390, 430, 1366]) {
     const calls = await fixture(page);
     await page.goto("/revolution");
     await page.getByTestId("rev-mobile-tab-trips").click();
-    await page.getByTestId("rev-mobile-tab-assistant").click();
+    await page.getByTestId("rev-mission-layer-agent").click();
     const dialog = page.getByTestId("rev-mission-cockpit");
     await expect(dialog).toBeVisible();
     await expect(page.locator("dialog[open]")).toHaveCount(0);
     if (width === 1366) {
-      const a = await page.getByTestId("rev-mission-agent-pane").boundingBox();
+      await page.getByTestId("rev-mission-layer-map").click();
       const m = await page.getByTestId("rev-mission-map-pane").boundingBox();
       const t = await page.getByTestId("rev-mission-timeline-pane").boundingBox();
-      expect(a!.x).toBeLessThan(m!.x); expect(m!.x).toBeLessThan(t!.x);
+      expect(m!.x).toBeLessThan(t!.x);
+      await page.getByTestId("rev-mission-layer-agent").click();
     }
     const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
     const chatInput = chatDock.locator("#rev-mission-chat-input");
     await expect(chatDock).toBeVisible();
     await expect(chatInput).toBeVisible();
-    await expect(chatInput).toHaveValue(goal);
+    await expect(chatInput).toHaveValue(goal + "\n节奏：轻松少走");
     expect(calls).toEqual([]);
     await chatDock.getByRole("button", { name: "对话设置", exact: true }).click();
     await chatDock.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").check();
@@ -144,7 +145,7 @@ for (const width of [390, 430, 1366]) {
     if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
     else await expect(dialog.locator(".cn-mission-agent-disclosure")).toBeVisible();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
-    expect(calls).toEqual([goal]);
+    expect(calls).toEqual([goal + "\n节奏：轻松少走"]);
     if (width !== 1366) {
       await page.getByTestId("rev-mission-layer-timeline").click();
       await expect(page.getByTestId("rev-mission-timeline-pane")).toBeVisible();
@@ -159,7 +160,7 @@ for (const width of [390, 430, 1366]) {
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("1 条来源记录");
     await expect(dialog.getByText("Agent 真实工作过程", { exact: false })).toBeVisible();
-    if (width !== 1366) await page.getByTestId("rev-mission-layer-timeline").click();
+    await page.getByTestId("rev-mission-layer-timeline").click();
     await dialog.locator(".rev-goal-draft-slot summary").first().click();
     await dialog.getByLabel("安排", { exact: true }).fill("TEST_FIXTURE 改为下午三点出发");
     await dialog.getByRole("button", { name: "＋ 添加安排" }).first().click();
@@ -167,16 +168,16 @@ for (const width of [390, 430, 1366]) {
     await expect(dialog).toContainText("草案已保存");
     await page.reload();
     await page.getByTestId("rev-mobile-tab-trips").click();
-    await page.getByTestId("rev-mobile-tab-assistant").click();
+    await page.getByTestId("rev-mission-layer-agent").click();
     const restoredDialog = page.getByTestId("rev-mission-cockpit");
     if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
     else await expect(restoredDialog.locator(".cn-mission-agent-disclosure")).toBeVisible();
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
-    if (width !== 1366) await page.getByTestId("rev-mission-layer-timeline").click();
+    await page.getByTestId("rev-mission-layer-timeline").click();
     await restoredDialog.locator(".rev-goal-draft-slot summary").first().click();
     await expect(restoredDialog.getByLabel("安排", { exact: true })).toHaveValue("TEST_FIXTURE 改为下午三点出发");
-    expect(calls).toEqual([goal]);
+    expect(calls).toEqual([goal + "\n节奏：轻松少走"]);
     await page.getByTestId("rev-mobile-tab-me").click();
     await expect(restoredDialog).not.toBeVisible();
   });
@@ -188,7 +189,7 @@ test("TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved 
   await page.route("https://tile.openstreetmap.org/**", (route) => { tiles += 1; return route.abort(); });
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
-  await page.getByTestId("rev-mobile-tab-map").click();
+  await page.getByTestId("rev-mission-layer-map").click();
   const dialog = page.getByTestId("rev-mission-cockpit");
   await expect(dialog).toContainText("TEST_FIXTURE 上次搜索地点");
   await expect(dialog).not.toContainText("TEST_FIXTURE 上海浦东");
@@ -202,13 +203,13 @@ test("TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved 
 test("TEST_FIXTURE identity change clears the open private assistant immediately", async ({ page }) => {
   await fixture(page);
   await page.goto("/revolution");
-  await page.getByTestId("rev-mobile-tab-assistant").click();
+  await page.getByTestId("rev-mission-layer-agent").click();
   const dialog = page.getByTestId("rev-mission-cockpit");
   const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
   const chatInput = chatDock.locator("#rev-mission-chat-input");
   await expect(chatDock).toBeVisible();
   await expect(chatInput).toBeVisible();
-  await expect(chatInput).toHaveValue(goal);
+  await expect(chatInput).toHaveValue(goal + "\n节奏：轻松少走");
   await page.evaluate(() => {
     sessionStorage.removeItem("citynexus.traveler.bearer");
     sessionStorage.removeItem("citynexus.traveler.session-id");
