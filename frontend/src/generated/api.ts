@@ -1869,7 +1869,7 @@ export interface paths {
             };
             cookie?: never;
         };
-        /** @description The photograph this product may show for one place, with the identity evidence that bound it. A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place. The caller is checked before any image provider is asked: this reads one journey's own places, so it needs traveller credentials (401 without them, `TRAVELER_CREDENTIALS_MISSING`), a seat on that journey held by an owner or an in-force member (403 `JOURNEY_MEMBER_REQUIRED`), and the place has to be one this journey actually holds -- a place row from elsewhere answers the same 404 as a place that does not exist, so the door cannot be walked to enumerate another traveller's trip. The path value may be a `Place.id` or a source lead that fits in one path segment (`real-place-<hex>`, `rpc-<hex>`, `photon:Q123`); a lead carrying `/` such as `photon:node/2` is resolved through `/place-identity` first, which returns exactly this id. */
+        /** @description The photograph this product may show for one place, with the identity evidence that bound it. A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place. The caller is checked before any image provider is asked: this reads one journey's own places, so it needs traveller credentials (401 without them, `TRAVELER_CREDENTIALS_MISSING`), a seat on that journey held by an owner or an in-force member (403 `JOURNEY_MEMBER_REQUIRED`), and the place has to be one this journey actually holds -- a place row from elsewhere answers the same 404 as a place that does not exist, so the door cannot be walked to enumerate another traveller's trip. `place-identity` answers with `media_path`, which is this path with the id it resolved. */
         get: operations["getJourneyPlaceMedia"];
         put?: never;
         post?: never;
@@ -1888,7 +1888,7 @@ export interface paths {
             };
             cookie?: never;
         };
-        /** @description Which place is this map point? A workspace map carries a source lead -- Photon, Nominatim or a discovery candidate -- and that lead is not a `Place.id`, so the mapping runs here, server-side, against stored identity columns only. Text and urls are refused (`LEAD_NOT_A_PLACE_LEAD`) rather than looked up by name, because name matching is how a same-named landmark in another city gets the wrong photograph; a lead two rows claim is refused as `LEAD_AMBIGUOUS` instead of guessed. The same door as the media read, asked before any lookup: 401 without credentials, 403 without a seat, 404 for a journey that is not there. It asks no image provider, so it costs no provider call, and its `place_id` is what the media path accepts. */
+        /** @description Which place is this map point? A workspace map carries a source lead -- Photon, Nominatim or a discovery candidate -- and that lead is not a `Place.id`, so the mapping runs here, server-side, against stored identity columns only. Text and urls are refused (`LEAD_NOT_A_PLACE_LEAD`) rather than looked up by name, because name matching is how a same-named landmark in another city gets the wrong photograph; a lead two rows claim is refused as `LEAD_AMBIGUOUS` instead of guessed. The same door as the media read, asked before any lookup: 401 without credentials, 403 without a seat, 404 for a journey that is not there. It asks no image provider, so it costs no provider call, and `media_path` is that other door, already filled in. */
         get: operations["getJourneyPlaceIdentity"];
         put?: never;
         post?: never;
@@ -3630,8 +3630,8 @@ export interface components {
             place_name?: string | null;
             /** @description The candidate row and the place row disagree on region, so imagery is not trusted */
             region_conflict?: boolean;
-            /** @description Why a refusal refused */
-            note?: string;
+            /** @description The media door for the resolved place, id already substituted and escaped */
+            media_path: string;
         };
         Place: {
             id: string;

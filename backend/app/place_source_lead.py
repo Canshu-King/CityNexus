@@ -136,7 +136,6 @@ class PlaceLead:
             "place_name": self.name,
             "matched_by": self.matched_by,
             "region_conflict": self.region_conflict,
-            "note": self.note,
         }
 
 

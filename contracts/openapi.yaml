@@ -2392,9 +2392,7 @@ paths:
         journey held by an owner or an in-force member (403 `JOURNEY_MEMBER_REQUIRED`), and the place
         has to be one this journey actually holds -- a place row from elsewhere answers the same 404 as
         a place that does not exist, so the door cannot be walked to enumerate another traveller's trip.
-        The path value may be a `Place.id` or a source lead that fits in one path segment
-        (`real-place-<hex>`, `rpc-<hex>`, `photon:Q123`); a lead carrying `/` such as `photon:node/2`
-        is resolved through `/place-identity` first, which returns exactly this id.
+        `place-identity` answers with `media_path`, which is this path with the id it resolved.
       responses:
         '200':
           description: PlaceMedia projection
@@ -2420,7 +2418,7 @@ paths:
         the wrong photograph; a lead two rows claim is refused as `LEAD_AMBIGUOUS` instead of guessed.
         The same door as the media read, asked before any lookup: 401 without credentials, 403 without a
         seat, 404 for a journey that is not there. It asks no image provider, so it costs no provider
-        call, and its `place_id` is what the media path accepts.
+        call, and `media_path` is that other door, already filled in.
       parameters:
         - name: lead
           in: query
@@ -3931,7 +3929,7 @@ components:
           items: {type: object}
     PlaceLeadResponse:
       type: object
-      required: [lead, lead_shape, status, reason_code, journey_id]
+      required: [lead, lead_shape, status, reason_code, journey_id, media_path]
       properties:
         lead: {type: string, description: The candidate id the client sent, echoed back}
         journey_id: {type: string, format: uuid}
@@ -3954,7 +3952,9 @@ components:
         region_conflict:
           type: boolean
           description: The candidate row and the place row disagree on region, so imagery is not trusted
-        note: {type: string, description: Why a refusal refused, in one sentence}
+        media_path:
+          type: string
+          description: The media door for the resolved place, id already substituted and escaped
     Place:
       type: object
       required: [id, name, category, location, city_code, provider_key, coordinate_system, source_coordinate_system]

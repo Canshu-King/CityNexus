@@ -307,24 +307,46 @@ def test_media_asked_with_a_lead_reaches_the_same_row_as_media_asked_with_the_id
     assert by_lead.json()["place_name"] == "冠豸山"
 
 
-def test_a_lead_carrying_a_slash_resolves_then_feeds_the_media_path(seeded, monkeypatch):
-    """The wiring the order asks for, in two calls and no free text.
+def test_a_lead_carrying_a_slash_resolves_and_the_answer_carries_the_path_to_call(
+        seeded, monkeypatch):
+    """The wiring the order asks for: two calls, no free text, and no client-side rule to memorise.
 
     `photon:node/2` cannot ride the media path -- a slash starts a new segment -- so the identity read
-    takes it as a query value and hands back the id the path can carry. The client never sends a place
-    name or an image url.
+    takes it as a query value and answers with `media_path`: that door, with the id it resolved already
+    substituted.  The client follows what it was handed instead of learning which lead shapes need a hop.
     """
     client, seen = _app(seeded, monkeypatch)
     headers = _header(seeded.ids["owner"])
     ok = client.get(IDENTITY_PATH.format(seeded.ids["journey"]) + "?lead=photon:node/2",
                     headers=headers)
     assert ok.status_code == 200, ok.text
-    place_id = ok.json()["place_id"]
-    assert place_id == seeded.ids["held"]
+    body = ok.json()
+    assert body["place_id"] == seeded.ids["held"]
     assert seen == [], "the identity read itself must not ask a provider"
-    media = client.get(MEDIA_PATH % (seeded.ids["journey"], place_id), headers=headers)
+    assert "note" not in body, "a refusal's reason is the reason code, not a second prose field"
+    media = client.get(body["media_path"], headers=headers)
     assert media.status_code == 200, media.text
-    assert seen == [place_id]
+    assert seen == [seeded.ids["held"]]
+
+
+def test_the_path_it_hands_back_carries_the_resolved_id_not_the_lead(seeded, monkeypatch):
+    """A candidate id and a place id are two different rows; the path has to name the second.
+
+    Building this from the lead the client sent would look identical for `real-place-` leads and would
+    only be caught by a provider miss -- so the shape is pinned here with the one lead kind whose two
+    ids never look alike.
+    """
+    client, seen = _app(seeded, monkeypatch)
+    headers = _header(seeded.ids["owner"])
+    ok = client.get(IDENTITY_PATH.format(seeded.ids["journey"]) + "?lead=" + seeded.ids["cand_held"],
+                    headers=headers)
+    assert ok.status_code == 200, ok.text
+    path = ok.json()["media_path"]
+    assert seeded.ids["cand_held"] not in path, path
+    assert seeded.ids["held"] in path and path.endswith("/media"), path
+    media = client.get(path, headers=headers)
+    assert media.status_code == 200, media.text
+    assert seen == [seeded.ids["held"]]
 
 
 def test_media_never_reaches_another_trips_place(seeded, monkeypatch):

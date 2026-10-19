@@ -24,6 +24,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
+from urllib.parse import quote
 from uuid import UUID
 
 import httpx
@@ -40,9 +41,23 @@ router = APIRouter()
 
 LIVE_TIMEOUT_SECONDS = 15.0
 
+#: The two doors, named so the identity read can hand back the exact path the other one serves.
+MEDIA_PATH = "/api/v1/journeys/{journey_id}/places/{place_id}/media"
+IDENTITY_PATH = "/api/v1/journeys/{journey_id}/place-identity"
+
 #: Named so the screen can read the reason out of the envelope instead of guessing from the status.
 REASON_MEMBER_REQUIRED = "JOURNEY_MEMBER_REQUIRED"
 REASON_PLACE_OUT_OF_SCOPE = "PLACE_NOT_IN_JOURNEY"
+
+
+def media_path_for(journey_id: str, place_id: str) -> str:
+    """The media door for one place, carrying the id THIS server resolved.
+
+    A source lead can hold a `/` (`photon:node/2`), which cannot survive a path segment, so a client
+    holding such a lead used to have to know which leads need a first hop.  It does not have to know
+    that any more: the identity read answers with this path, already substituted and already escaped.
+    """
+    return MEDIA_PATH.format(journey_id=journey_id, place_id=quote(place_id, safe=""))
 
 
 def _media_client() -> httpx.AsyncClient:
@@ -123,7 +138,7 @@ def _place_of_lead(session: Session, journey_id: str, lead: str) -> Place:
     return row
 
 
-@router.get("/api/v1/journeys/{journey_id}/places/{place_id}/media")
+@router.get(MEDIA_PATH)
 async def journey_place_media(
     request: Request,
     journey_id: UUID,
@@ -162,18 +177,20 @@ async def journey_place_media(
     return payload
 
 
-@router.get("/api/v1/journeys/{journey_id}/place-identity")
+@router.get(IDENTITY_PATH)
 async def journey_place_identity(
     request: Request,
     journey_id: UUID,
     lead: str,
     session: Session = Depends(get_session),
 ) -> dict[str, Any]:
-    """Which place is this map point? Answer with the ids and the region, and ask no provider.
+    """Which place is this map point? Answer with the ids, the region, and the next path to call.
 
     Codex's map carries a source lead (`real-place-<hex>`, `photon:node/<id>`, `rpc-<hex>`), which is
-    not a `Place.id`. This read maps it server-side so the client never has to hand over a place name
-    or an image url to get imagery, and it costs one indexed lookup -- no network, no provider spend.
+    not a `Place.id`. This read maps it server-side, so the client never hands over a place name or an
+    image url to get imagery, and it costs one indexed lookup -- no network, no provider spend.
+    `media_path` is the media door for that place with the resolved id already in it: a lead that
+    cannot live in a path segment stops being the client's problem.
     """
     _signed_journey_read(request, session, journey_id)
     reading = place_source_lead.resolve_place_lead(session, lead, journey_id=str(journey_id))
@@ -195,4 +212,5 @@ async def journey_place_identity(
             "LEAD_REGION_CONFLICT",
             {"journey_id": str(journey_id), "lead": lead, "region": reading.city_code},
         )
+    payload["media_path"] = media_path_for(str(journey_id), str(reading.place_id))
     return payload
