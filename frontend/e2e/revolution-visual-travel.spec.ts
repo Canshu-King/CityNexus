@@ -79,7 +79,7 @@ for (const width of [390, 1366]) {
     await expect(page.locator(".cn-mission-media")).toBeVisible();
     await expect(cockpit.getByRole("region", { name: "与研究地点对应的真实景点照片" })).toContainText("冠豸山");
     await expect(cockpit.locator(".cn-place-photo-meta a").first()).toHaveAttribute("href", /commons\.wikimedia\.org/);
-    await expect(cockpit.locator(".rev-workspace-coordinate-preview")).toBeVisible();
+    await expect(cockpit.getByTestId("rev-workspace-coordinate-preview")).toBeVisible();
     await expect(cockpit.locator(".rev-workspace-preview-pin")).toHaveCount(1);
     expect(externalTiles).toBe(0);
 
