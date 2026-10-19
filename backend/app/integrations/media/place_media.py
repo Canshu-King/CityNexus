@@ -6,17 +6,22 @@ layout: Hermes/Codex render it, the projection is the contract.
 
 Three rules the ruling names, enforced here rather than in a prompt:
 
-  1. A photograph is bound to a *source identity*, never to a vibe. A Wikimedia answer is accepted only
+  1. Failure words are the ones the 2026-10-19 17:20 order names -- NO_IMAGE, NO_PERMISSION,
+     UNAVAILABLE -- and ``reason_code`` keeps the precise cause, because collapsing "nobody was
+     asked", "asked and refused" and "no licence to show" into one blank failure is what makes a
+     screen lie. The earlier 16:37 order called the first of these NO_MEDIA; the later word wins
+     and the rename is recorded here rather than left as a surprise for whoever reads old receipts.
+  2. A photograph is bound to a *source identity*, never to a vibe. A Wikimedia answer is accepted only
      when the entity's own label or description matches the place we asked for (exact label, or the
      region we were given appears in the entity's description). A fuzzy Chinese search that returns a
      pretty landscape of somewhere else is `MEDIA_IDENTITY_UNBOUND`, which reads as `NO_MEDIA` -- the
      ruling forbids filling a specific hall with generic scenery.
-  2. Licences decide visibility. Wikimedia answers carry author + licence + the file page, so they may
+  3. Licences decide visibility. Wikimedia answers carry author + licence + the file page, so they may
      be shown with attribution. Amap's `show_fields=photos` is allowed by its API but its terms restrict
      storing and re-publishing the images, and the practical licence of an individual photo is not
      stated by the provider: those rows are reported with ``can_show=False`` and are never persisted as
      product truth.
-  3. Missing media never blocks a trip. Every provider boundary here is a reading, not an exception,
+  4. Missing media never blocks a trip. Every provider boundary here is a reading, not an exception,
      and the caller gets ``status`` plus per-source readings so "we did not ask" cannot be re-read as
      "there is nothing".
 
@@ -43,9 +48,9 @@ COMMONS_API = "https://commons.wikimedia.org/w/api.php"
 IMAGE_WIDTH = 640
 
 STATUS_PHOTO = "REAL_POI_PHOTO"
-STATUS_NO_MEDIA = "NO_MEDIA"
-STATUS_UNAVAILABLE = "MEDIA_UNAVAILABLE"
-STATUS_NOT_DISPLAYABLE = "MEDIA_NOT_DISPLAYABLE"
+STATUS_NO_MEDIA = "NO_IMAGE"
+STATUS_UNAVAILABLE = "UNAVAILABLE"
+STATUS_NOT_DISPLAYABLE = "NO_PERMISSION"
 
 # `P18` is Wikidata's "image" property. Named here because a silent change to it would turn every
 # answer into NO_MEDIA and look like the provider went quiet.
@@ -111,6 +116,9 @@ class PlaceMedia:
     attribution_url: str | None = None
     terms_url: str | None = None
     confidence: str | None = None
+    identity_status: str | None = None
+    provider_object_id: str | None = None
+    district: str | None = None
 
     def as_payload(self) -> dict[str, Any]:
         return {
@@ -127,6 +135,9 @@ class PlaceMedia:
             "provenance": self.provenance,
             "title": self.title,
             "confidence": self.confidence,
+            "identity_status": self.identity_status or self.confidence,
+            "provider_object_id": self.provider_object_id,
+            "district": self.district,
             "captured_at": self.captured_at,
             "can_show": self.can_show,
         }
@@ -140,6 +151,8 @@ class PlaceMediaResult:
     readings: tuple[dict[str, Any], ...]
     reason_code: str | None = None
     blocked_itinerary: bool = False
+    # 顶层也带一次身份状态：路由的读者看的是这一层，不该为了「能不能显示这张图」再去翻 media 或 readings。
+    identity_status: str | None = None
 
     def as_payload(self) -> dict[str, Any]:
         return {
@@ -148,6 +161,7 @@ class PlaceMediaResult:
             "reason_code": self.reason_code,
             "media": self.media.as_payload() if self.media else None,
             "provider_readings": [dict(row) for row in self.readings],
+            "identity_status": self.identity_status,
             "blocked_itinerary": self.blocked_itinerary,
         }
 
@@ -288,7 +302,8 @@ class WikimediaMediaProvider:
         return {}
 
     async def search(self, *, place_id: str, label: str, region: str | None,
-                     wikidata_id: str | None) -> tuple[PlaceMedia | None, dict[str, Any]]:
+                     wikidata_id: str | None, provider_object_id: str | None = None
+                     ) -> tuple[PlaceMedia | None, dict[str, Any]]:
         started = _stamp()
         try:
             qid = wikidata_id
@@ -298,7 +313,7 @@ class WikimediaMediaProvider:
                 candidates = await self._search(label)
                 if not candidates:
                     return None, {"source": self.provider_key, "attempted": True,
-                                  "outcome": "NO_MEDIA", "reason_code": "ENTITY_NOT_FOUND",
+                                  "outcome": STATUS_NO_MEDIA, "reason_code": "ENTITY_NOT_FOUND",
                                   "captured_at": started}
                 qid = str(candidates[0].get("id") or "")
                 entity_label = candidates[0].get("label") or _plain(
@@ -313,6 +328,7 @@ class WikimediaMediaProvider:
             chain_labels: list[str] = []
             chain_qids: list[str] = []
             region_qid: str | None = None
+            district: str | None = None
             arm = identity_matches(label, entity_label, description, region)
             if arm is None and region:
                 # Only climb the graph when the strings disagree: the walk is the expensive arm, and it
@@ -322,21 +338,23 @@ class WikimediaMediaProvider:
                 region_qid = await self._region_entity(region)
                 arm = identity_matches(label, entity_label, description, region, chain_labels,
                                        chain_qids, region_qid)
+                # 区县身份：链上第一个真答出来的节点名就是我们对「哪个区县」的全部证据，没有就留空。
+                district = chain_labels[0] if chain_labels else None
             if arm is None:
                 # The answer is about a different place, so for this POI there is no media.
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
-                              "outcome": "NO_MEDIA", "reason_code": "MEDIA_IDENTITY_UNBOUND",
+                              "outcome": STATUS_NO_MEDIA, "reason_code": "MEDIA_IDENTITY_UNBOUND",
                               "entity_label": entity_label, "chain_labels": chain_labels[:4],
-                              "region_qid": region_qid,
+                              "region_qid": region_qid, "district": district,
                               "captured_at": started}
             if not files:
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
-                              "outcome": "NO_MEDIA", "reason_code": "PROPERTY_EMPTY",
+                              "outcome": STATUS_NO_MEDIA, "reason_code": "PROPERTY_EMPTY",
                               "captured_at": started}
             info = await self._file_info(files[0])
             if not info.get("url"):
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
-                              "outcome": "NO_MEDIA", "reason_code": "FILE_WITHDRAWN",
+                              "outcome": STATUS_NO_MEDIA, "reason_code": "FILE_WITHDRAWN",
                               "captured_at": started}
             meta = info.get("extmetadata") or {}
             license_name = _plain(meta.get("LicenseShortName")) or _plain(meta.get("License"))
@@ -347,6 +365,9 @@ class WikimediaMediaProvider:
                 attribution_url=info.get("descriptionurl") or None,
                 terms_url=_plain(meta.get("LicenseUrl")) or None,
                 confidence=CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
+                identity_status="BOUND_" + CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
+                provider_object_id=wikidata_id or provider_object_id or None,
+                district=district,
                 image_url=str(info["url"]),
                 thumb_url=str(info["thumburl"]) if info.get("thumburl") else None,
                 author=_plain(meta.get("Artist")),
@@ -360,7 +381,8 @@ class WikimediaMediaProvider:
             reading = {"source": self.provider_key, "attempted": True, "qid": qid,
                        "file": files[0], "license": media.license,
                        "binding_arm": arm, "chain_checked": bool(chain_labels),
-                       "region_qid": region_qid,
+                       "identity_status": "BOUND_" + CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
+                       "district": district, "region_qid": region_qid,
                        "outcome": STATUS_PHOTO if media.can_show else "NO_MEDIA",
                        "reason_code": None if media.can_show else "LICENCE_UNNAMED",
                        "captured_at": started}
@@ -380,7 +402,8 @@ class AmapPhotosProvider:
         self._client = client
 
     async def search(self, *, place_id: str, label: str, region: str | None,
-                     wikidata_id: str | None, amap_poi_id: str | None = None
+                     wikidata_id: str | None, amap_poi_id: str | None = None,
+                     provider_object_id: str | None = None
                      ) -> tuple[PlaceMedia | None, dict[str, Any]]:
         started = _stamp()
         key = amap.web_key()
@@ -388,8 +411,11 @@ class AmapPhotosProvider:
             return None, {"source": self.provider_key, "attempted": False,
                           "outcome": "NOT_CONFIGURED",
                           "reason_code": amap.missing_key_reason(), "captured_at": started}
+        # The order binds by provider_object_id; the Amap row's own POI id is the same thing under the
+          # name this provider has always used, so either spelling addresses it.
+        amap_poi_id = amap_poi_id or provider_object_id
         if not amap_poi_id:
-            return None, {"source": self.provider_key, "attempted": False, "outcome": "NO_MEDIA",
+            return None, {"source": self.provider_key, "attempted": False, "outcome": STATUS_NO_MEDIA,
                           "reason_code": "PROVIDER_ITEM_ID_MISSING", "captured_at": started}
         try:
             response = await amap.amap_get(self._client, amap.AMAP_BASE_URL + "/v5/place/detail", {
@@ -402,12 +428,12 @@ class AmapPhotosProvider:
         photos = [row for poi in (payload.get("pois") or []) for row in (poi.get("photos") or [])]
         url = next((str(row.get("url")) for row in photos if row.get("url")), None)
         if url is None:
-            return None, {"source": self.provider_key, "attempted": True, "outcome": "NO_MEDIA",
+            return None, {"source": self.provider_key, "attempted": True, "outcome": STATUS_NO_MEDIA,
                           "reason_code": "PROVIDER_RETURNED_NO_PHOTO", "captured_at": started}
         # Reported, never handed back as media: the provider does not state a licence for an individual
         # photo and its terms restrict storing it, so `author`/`license` stay None instead of being
         # guessed, and no PlaceMedia is produced for something this product may not display.
-        return None, {"source": self.provider_key, "attempted": True, "outcome": "NOT_DISPLAYABLE",
+        return None, {"source": self.provider_key, "attempted": True, "outcome": STATUS_NOT_DISPLAYABLE,
                       "reason_code": "LICENCE_UNNAMED", "photos": len(photos),
                       "image_url_reported": url, "captured_at": started}
 
@@ -423,6 +449,7 @@ async def collect_place_media(
     label: str,
     region: str | None = None,
     wikidata_id: str | None = None,
+    provider_object_id: str | None = None,
     amap_poi_id: str | None = None,
     sources: Sequence[Any] | None = None,
     client: httpx.AsyncClient | None = None,
@@ -438,7 +465,8 @@ async def collect_place_media(
                              "reason_code": "ANOTHER_SOURCE_ALREADY_ANSWERED"})
             continue
         kwargs: dict[str, Any] = {"place_id": place_id, "label": label, "region": region,
-                                  "wikidata_id": wikidata_id}
+                                  "wikidata_id": wikidata_id,
+                                  "provider_object_id": provider_object_id}
         if isinstance(source, AmapPhotosProvider):
             # Only the Amap leg can be pointed at a provider item id; the Commons leg resolves identity
             # from the label, and handing it a stray keyword would be a TypeError read as a refusal.
@@ -449,7 +477,8 @@ async def collect_place_media(
             chosen = media
     if chosen is not None:
         return PlaceMediaResult(place_id=place_id, status=STATUS_PHOTO, media=chosen,
-                                readings=tuple(readings))
+                                readings=tuple(readings),
+                                identity_status=chosen.identity_status)
     # Nothing displayable: say *why*, in the order the traveller's screen cares about. A provider that
     # could not be asked is a weaker statement than one that answered "no", and an unlicenced photo is
     # its own answer -- never fold those three into one blank NO_MEDIA.
@@ -459,11 +488,17 @@ async def collect_place_media(
         if outcome.startswith(STATUS_UNAVAILABLE):
             decided = (outcome, reading.get("reason_code"))
             break
-        if outcome == "NOT_DISPLAYABLE" and decided is None:
+        if outcome == STATUS_NOT_DISPLAYABLE and decided is None:
             decided = (STATUS_NOT_DISPLAYABLE, reading.get("reason_code"))
-        if outcome in {"NO_MEDIA", "NOT_CONFIGURED"} and decided is None:
-            decided = (STATUS_NO_MEDIA if outcome == "NO_MEDIA" else "NOT_CONFIGURED",
+        if outcome in {STATUS_NO_MEDIA, "NOT_CONFIGURED"} and decided is None:
+            decided = (STATUS_NO_MEDIA if outcome == STATUS_NO_MEDIA else "NOT_CONFIGURED",
                        reading.get("reason_code"))
     status, reason = decided or (STATUS_NO_MEDIA, "NO_SOURCE_ANSWERED")
+    # 拒的时候，身份状态说的是「为什么算没绑上」，不是抄一遍 status：没问过任何来源与问过但不是同一处，
+    # 在屏上是两件事。
+    unbound = next((str(row.get("identity_status")) for row in readings
+                    if row.get("identity_status")), None)
+    identity_status = unbound or ("NOT_ASKED" if not any(
+        row.get("attempted") for row in readings) else "UNBOUND")
     return PlaceMediaResult(place_id=place_id, status=status, media=None, readings=tuple(readings),
-                            reason_code=reason)
+                            reason_code=reason, identity_status=identity_status)

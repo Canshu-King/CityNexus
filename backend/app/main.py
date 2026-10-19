@@ -24,6 +24,7 @@ from sqlalchemy import delete, func, insert, or_, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
+from app import place_media_routes
 from app.agent.autorun import (
     autorun_status,
     enrolled_journey_ids,
@@ -904,6 +905,16 @@ def build_open_meteo_provider(client: httpx.AsyncClient) -> OpenMeteoContextProv
 
     return OpenMeteoContextProvider(client=client, base_url=settings.open_meteo_url)
 
+
+# Registered as plain routes rather than include_router: this app's own contract test walks
+# app.routes and reads route.path, and an included router shows up as a wrapper without one.
+for _media_route in place_media_routes.router.routes:
+    app.add_api_route(
+        _media_route.path,
+        _media_route.endpoint,
+        methods=sorted(_media_route.methods),
+        name=_media_route.name,
+    )
 
 @app.get("/api/v1/health")
 def health() -> dict[str, str]:

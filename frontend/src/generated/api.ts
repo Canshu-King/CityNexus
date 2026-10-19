@@ -68,6 +68,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/travelers/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getTravelerSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/session/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["refreshTravelerSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/{traveler_id}/recovery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Issue one recovery credential to the traveller whose own live credential is on the request */
+        post: operations["issueTravelerRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/recovery/redeem": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exchange a recovery id and secret for a session signed by the same verifier */
+        post: operations["redeemTravelerRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/{traveler_id}/recovery/{recovery_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                recovery_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Stop a recovery credential before it is used */
+        post: operations["revokeTravelerRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/travelers/{traveler_id}": {
         parameters: {
             query?: never;
@@ -1771,6 +1859,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/places/{place_id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                place_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The photograph this product may show for one place, with the identity evidence that bound it. A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place. */
+        get: operations["getJourneyPlaceMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/resilience/counterfactuals": {
         parameters: {
             query?: never;
@@ -2832,6 +2940,47 @@ export interface components {
             /** @enum {string} */
             ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
         };
+        TravelerSession: {
+            /** Format: uuid */
+            traveler_id: string;
+            /** @constant */
+            auth_method: "SIGNED_HMAC_BEARER";
+            /** @description Unix seconds at which the presented token stops being accepted */
+            expires_at: number;
+        };
+        TravelerSessionRefresh: components["schemas"]["TravelerSession"] & {
+            /** @constant */
+            session_state: "SIGNED";
+            /** @description the freshly signed credential for this same traveller */
+            access_token: string;
+            /** @description unix seconds the presented credential was due; null when it carried none */
+            renewed_from_expires_at: number | null;
+        };
+        TravelerRecoveryIssued: {
+            recovery_id: string;
+            /** @description shown exactly once; the server stores only a digest */
+            recovery_secret: string;
+            expires_at: string;
+            /** @constant */
+            shown_once: true;
+        };
+        TravelerRecoveryRedeem: {
+            recovery_id: string;
+            recovery_secret: string;
+        };
+        TravelerRecoverySession: components["schemas"]["TravelerSession"] & {
+            /** @constant */
+            session_state: "SIGNED";
+            access_token: string;
+            /** @constant */
+            auth_method: "recovery_credential";
+            recovered_at?: string | null;
+        };
+        TravelerRecoveryRevoked: {
+            recovery_id: string;
+            revoked: boolean;
+            revoked_at?: string | null;
+        };
         ErrorEnvelope: {
             error: {
                 code: string;
@@ -2891,6 +3040,14 @@ export interface components {
             /** Format: date-time */
             updated_at: string;
         };
+        TravelerSessionAnswer: components["schemas"]["Traveler"] & {
+            /** @description null whenever this build cannot sign; the reason is in `session_state`, never in a silent absence */
+            access_token: string | null;
+            /** @description SIGNED | UNSIGNED | MISCONFIGURED -- `signing_state()` verbatim */
+            session_state: string;
+            /** @description unix seconds this credential stops being accepted; null exactly when `access_token` is null */
+            expires_at: number | null;
+        };
         PreferenceInput: {
             category: string;
             key: string;
@@ -2948,6 +3105,8 @@ export interface components {
             /** Format: uuid */
             journey_id?: string | null;
             /** Format: uuid */
+            mission_id?: string | null;
+            /** Format: uuid */
             proposal_id?: string | null;
             /** Format: uuid */
             trigger_event_id?: string | null;
@@ -2977,6 +3136,26 @@ export interface components {
             q?: string | null;
             category?: string | null;
             service_type?: string | null;
+            place_id?: string | null;
+            estimated_open_minutes?: number | null;
+            estimated_close_minutes?: number | null;
+            estimated_cost_minor?: number | null;
+            place_ids?: string[] | null;
+            planning_mode?: string | null;
+            query?: string | null;
+            topic?: string | null;
+            /** @enum {string|null} */
+            provider?: "auto" | "web" | "searxng" | null;
+            radius_m?: number | null;
+            limit?: number | null;
+            mode?: string | null;
+            source_observation_id?: string | null;
+            source_url?: string | null;
+            source_class?: string | null;
+            from_key?: string | null;
+            to_key?: string | null;
+            route_mode?: string | null;
+            target_activity_id?: string | null;
         };
         AgentToolDescriptor: {
             name: string;
@@ -3350,6 +3529,57 @@ export interface components {
             /** Format: uuid */
             journey_id: string;
             active: boolean;
+        };
+        PlaceMedia: {
+            place_id: string;
+            /** @description Full-size source image */
+            image_url: string;
+            thumb_url?: string | null;
+            /** @description Same value as thumb_url */
+            thumbnail_url?: string | null;
+            /** @description Provider-stated credit */
+            author?: string | null;
+            license?: string | null;
+            /** @description Licence deed page */
+            terms_url?: string | null;
+            /** @description The image's own page */
+            source_url?: string | null;
+            /** @description Same value as source_url */
+            attribution_url?: string | null;
+            /** @enum {string} */
+            provider: "wikimedia-commons" | "amap-web-service";
+            /** @description Which provider records fed this row */
+            provenance?: string | null;
+            title?: string | null;
+            /**
+             * @description Which arm of the identity binding actually fired
+             * @enum {string|null}
+             */
+            confidence?: "EXACT_LABEL" | "REGION_ENTITY_MATCH" | "REGION_CHAIN_LABEL" | "DESCRIPTION_SUBSTRING" | "UNKNOWN" | null;
+            /** @description BOUND_* for a bound row */
+            identity_status?: string | null;
+            /** @description The provider's own item id */
+            provider_object_id?: string | null;
+            /** @description Nearest located-in name the chain answered */
+            district?: string | null;
+            captured_at: string;
+            /** @description False unless a licence lets us display it */
+            can_show: boolean;
+        };
+        PlaceMediaResponse: {
+            place_id: string;
+            journey_id?: string;
+            place_name?: string;
+            coordinate_system?: string;
+            /** @enum {string} */
+            status: "REAL_POI_PHOTO" | "NO_IMAGE" | "NO_PERMISSION" | "UNAVAILABLE" | "NOT_CONFIGURED";
+            reason_code?: string | null;
+            identity_status?: string | null;
+            /** @description Always false here; a missing photograph never blocks a trip */
+            blocked_itinerary: boolean;
+            media?: components["schemas"]["PlaceMedia"] | null;
+            /** @description One row per source, including the ones never asked */
+            provider_readings: Record<string, never>[];
         };
         Place: {
             id: string;
@@ -4158,10 +4388,218 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Traveler"];
+                    "application/json": components["schemas"]["TravelerSessionAnswer"];
                 };
             };
             422: components["responses"]["ValidationError"];
+        };
+    };
+    getTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The authenticated traveller principal */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSession"];
+                };
+            };
+            /** @description No signed traveller credentials, or they are expired, invalid, or name a traveller who no longer exists. The body is the shared error envelope; `error.reason_code` names which of those it was (TRAVELER_CREDENTIALS_MISSING / _INVALID / _EXPIRED / TRAVELER_PRINCIPAL_NOT_FOUND). */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret configured (TRAVELER_AUTH_NOT_CONFIGURED). The door refuses rather than accepting an identity it cannot verify. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    refreshTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The same traveller, a later window */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSessionRefresh"];
+                };
+            };
+            /** @description The body claimed an identity (`traveler_id` / `sub` / `id`). A refreshed session is signed for the credential on the request, not for an id handed in a body (`error.reason_code` = TRAVELER_NOT_PRINCIPAL). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Same four named refusals as `GET /travelers/session`: missing / invalid / expired credentials, or a principal that no longer exists. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret (TRAVELER_AUTH_NOT_CONFIGURED). */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    issueTravelerRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The secret, shown once; the server keeps only a digest (Cache-Control private, no-store) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerRecoveryIssued"];
+                };
+            };
+            /** @description No usable traveller credential on the request */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The credential speaks for another traveller (TRAVELER_NOT_PRINCIPAL) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    redeemTravelerRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TravelerRecoveryRedeem"];
+            };
+        };
+        responses: {
+            /** @description A fresh session for the credential's traveller (Cache-Control private, no-store) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerRecoverySession"];
+                };
+            };
+            /** @description Named refusals: RECOVERY_UNKNOWN / RECOVERY_USED / RECOVERY_EXPIRED / RECOVERY_REVOKED / RECOVERY_SECRET_MISMATCH. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description RECOVERY_LOCKED after repeated wrong secrets */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    revokeTravelerRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                recovery_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Revoked (idempotent) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerRecoveryRevoked"];
+                };
+            };
+            /** @description The credential speaks for another traveller */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description No such recovery credential for this traveller */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
         };
     };
     getTraveler: {
@@ -7024,6 +7462,36 @@ export interface operations {
         responses: {
             /** @description Refreshed resilience snapshot */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyPlaceMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                place_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PlaceMedia projection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaceMediaResponse"];
+                };
+            };
+            /** @description Journey or Place not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

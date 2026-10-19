@@ -8,6 +8,7 @@ the live Wikidata / Commons / Amap bodies arrive in (learned by probing them, se
 from __future__ import annotations
 
 import json
+import uuid
 from typing import Any
 
 import httpx
@@ -184,7 +185,7 @@ async def test_a_timeout_is_a_reading_and_the_itinerary_is_not_blocked():
             place_id="N:1", label="冠豸山", region="连城县", client=client)
 
     assert result.status.startswith(place_media.STATUS_UNAVAILABLE)
-    assert result.readings[0]["outcome"] == "MEDIA_UNAVAILABLE_ConnectTimeout"
+    assert result.readings[0]["outcome"] == "UNAVAILABLE_ConnectTimeout"
     assert result.blocked_itinerary is False
 
 
@@ -227,7 +228,7 @@ async def test_amap_photos_are_recorded_as_not_displayable(monkeypatch):
             sources=[place_media.AmapPhotosProvider(client=client)])
 
     reading = result.readings[0]
-    assert reading["outcome"] == "NOT_DISPLAYABLE" and reading["reason_code"] == "LICENCE_UNNAMED"
+    assert reading["outcome"] == place_media.STATUS_NOT_DISPLAYABLE and reading["reason_code"] == "LICENCE_UNNAMED"
     assert result.media is None
     assert "_media" not in reading
     assert result.status == place_media.STATUS_NOT_DISPLAYABLE
@@ -309,3 +310,100 @@ async def test_a_strong_binding_and_a_description_match_are_not_the_same_claim()
 
     assert result.readings[0]["binding_arm"] == "label"
     assert result.media is not None and result.media.confidence == "EXACT_LABEL"
+
+
+@pytest.mark.asyncio
+async def test_the_route_shape_is_what_a_signed_member_reads():
+    """The GET is the contract's other half: 200 with NO_IMAGE for a place that exists but has no
+    showable photograph, 404 only when there is no place or no journey to attribute it to."""
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+    from sqlalchemy.pool import StaticPool
+
+    from app import place_media_routes
+    from app.db.models import Base, Journey, Place, Traveler
+    from app.db.session import get_session
+
+    # 路由吃 UUID 是这棵树的规矩（其他 journey 路由都写 journey_id: UUID），所以种子行也用真 UUID，
+    # 不然我测的是自己的路径解析，不是「签名成员读得到」。
+    journey_id = str(uuid.uuid4())
+    # TestClient runs the endpoint on another thread, so the in-memory database has to be
+    # shareable across threads instead of owning itself into a ProgrammingError.
+    engine = create_engine("sqlite://", connect_args={"check_same_thread": False},
+                         poolclass=StaticPool)
+    Base.metadata.create_all(engine)
+    TestingSession = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    with TestingSession() as seed:
+        seed.add(Traveler(id="trv-media", display_name="media", locale="zh",
+                          timezone="Asia/Shanghai", created_at="now", updated_at="now"))
+        seed.add(Journey(id=journey_id, traveler_id="trv-media", title="t", city_code="350825",
+                         timezone="Asia/Shanghai", start_at="now", end_at="now",
+                         budget_currency="CNY", budget_amount_minor=1, status="ACTIVE",
+                         created_at="now", updated_at="now"))
+        seed.add(Place(id="plc-media", provider_key="photon", external_id="N:6617849504",
+                       city_code="350825", name="冠豸山", category="poi", latitude=25.7,
+                       longitude=116.75, opening_hours_json="{}", tags_json="[]",
+                       metadata_json="{}", updated_at="now"))
+        seed.commit()
+
+    app = FastAPI()
+    app.include_router(place_media_routes.router)
+
+    def override_session():
+        with TestingSession() as session:
+            yield session
+
+    async def override_client():
+        return httpx.AsyncClient(transport=transport(script_for()))
+
+    app.dependency_overrides[get_session] = override_session
+    app.dependency_overrides[place_media_routes._media_client] = override_client
+    client = TestClient(app)
+
+    ok = client.get("/api/v1/journeys/" + journey_id + "/places/plc-media/media")
+    assert ok.status_code == 200, ok.text
+    body = ok.json()
+    assert body["status"] == place_media.STATUS_PHOTO
+    assert body["identity_status"].startswith("BOUND_")
+    assert body["place_name"] == "冠豸山" and body["journey_id"] == journey_id
+    assert body["media"]["can_show"] is True
+
+    missing_place = client.get("/api/v1/journeys/" + journey_id + "/places/plc-nope/media")
+    assert missing_place.status_code == 404
+    missing_journey = client.get("/api/v1/journeys/" + str(uuid.uuid4()) + "/places/plc-media/media")
+    assert missing_journey.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_a_refusal_says_why_the_identity_did_not_bind_at_the_top_level():
+    """The screen needs one field, not a hunt through readings, and "nobody was asked" is a different
+    sentence from "asked, and it was somewhere else"."""
+    english = entity_payload("Q9", "Bund", "waterfront in Huangpu, Shanghai", ["x.jpg"],
+                             located=["Q555"])
+    hit = {"search": [{"id": "Q9", "label": "外滩", "description": "waterfront"}]}
+    async with httpx.AsyncClient(transport=transport(
+            script_for(search=hit, entity=english, chain=chain_payload("東京都")))) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:9", label="外滩", region="上海市", client=client)
+
+    payload = result.as_payload()
+    assert payload["status"] == place_media.STATUS_NO_MEDIA
+    assert payload["identity_status"] == "UNBOUND"
+    assert payload["media"] is None
+
+
+def test_the_media_route_is_mounted_on_the_real_app():
+    """A router in its own module only helps if the product's app actually carries it.
+
+    This is the control for the two lines in `main.py`: it asks the shipped app's own OpenAPI document,
+    so a forgotten `include_router` -- or a merge that drops it -- goes red here rather than turning the
+    endpoint into a module nobody can reach.
+    """
+    from app.main import app
+
+    paths = app.openapi().get("paths", {})
+    assert "/api/v1/journeys/{journey_id}/places/{place_id}/media" in paths, sorted(
+        path for path in paths if "places" in path)
+    assert "get" in paths["/api/v1/journeys/{journey_id}/places/{place_id}/media"]

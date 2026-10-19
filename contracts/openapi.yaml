@@ -2371,6 +2371,29 @@ paths:
       operationId: refreshJourneyResilience
       responses:
         '200': {description: Refreshed resilience snapshot}
+  /journeys/{journey_id}/places/{place_id}/media:
+    parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      - name: place_id
+        in: path
+        required: true
+        schema: {type: string}
+    get:
+      operationId: getJourneyPlaceMedia
+      description: >
+        The photograph this product may show for one place, with the identity evidence that bound it.
+        A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or
+        UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place.
+      responses:
+        '200':
+          description: PlaceMedia projection
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/PlaceMediaResponse'}
+        '404': {description: Journey or Place not found}
   /journeys/{journey_id}/resilience/counterfactuals:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
@@ -3791,6 +3814,53 @@ components:
             id: {type: string, format: uuid}
             journey_id: {type: string, format: uuid}
             active: {type: boolean}
+    PlaceMedia:
+      type: object
+      required: [place_id, image_url, provider, captured_at, can_show]
+      properties:
+        place_id: {type: string}
+        image_url: {type: string, description: Full-size source image}
+        thumb_url: {type: string, nullable: true}
+        thumbnail_url: {type: string, nullable: true, description: Same value as thumb_url}
+        author: {type: string, nullable: true, description: Provider-stated credit, never guessed}
+        license: {type: string, nullable: true}
+        terms_url: {type: string, nullable: true, description: Licence deed page}
+        source_url: {type: string, nullable: true, description: The image's own page}
+        attribution_url: {type: string, nullable: true, description: Same value as source_url}
+        provider: {type: string, enum: [wikimedia-commons, amap-web-service]}
+        provenance: {type: string, nullable: true, description: Which provider records fed this row}
+        title: {type: string, nullable: true}
+        confidence:
+          type: string
+          nullable: true
+          description: Which arm of the identity binding actually fired
+          enum: [EXACT_LABEL, REGION_ENTITY_MATCH, REGION_CHAIN_LABEL, DESCRIPTION_SUBSTRING, UNKNOWN]
+        identity_status: {type: string, nullable: true, description: BOUND_* for a bound row}
+        provider_object_id: {type: string, nullable: true, description: The provider's own item id}
+        district: {type: string, nullable: true, description: Nearest located-in name the chain answered}
+        captured_at: {type: string}
+        can_show: {type: boolean, description: False unless a licence lets us display it}
+    PlaceMediaResponse:
+      type: object
+      required: [place_id, status, provider_readings, blocked_itinerary]
+      properties:
+        place_id: {type: string}
+        journey_id: {type: string}
+        place_name: {type: string}
+        coordinate_system: {type: string}
+        status:
+          type: string
+          enum: [REAL_POI_PHOTO, NO_IMAGE, NO_PERMISSION, UNAVAILABLE, NOT_CONFIGURED]
+        reason_code: {type: string, nullable: true}
+        identity_status: {type: string, nullable: true}
+        blocked_itinerary:
+          type: boolean
+          description: Always false here; a missing photograph never blocks a trip
+        media: {allOf: [{$ref: '#/components/schemas/PlaceMedia'}], nullable: true}
+        provider_readings:
+          type: array
+          description: One row per source, including the ones never asked
+          items: {type: object}
     Place:
       type: object
       required: [id, name, category, location, city_code, provider_key, coordinate_system, source_coordinate_system]
