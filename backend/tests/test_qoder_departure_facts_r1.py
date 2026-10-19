@@ -2,10 +2,12 @@
 
 The V3 order's first item is 地点事实统一, and it names the failure to close: an unknown must be
 answered as an unknown, not filled in. So this file is mostly about the `UNKNOWN` arms -- a slot with
-no location, a slot pointing at a row this store no longer holds, a row whose opening window is
-inverted, a row whose cost evidence declares itself unknown, a row that never recorded hours, a
-service that carries no point. Each one has to come back named, and each one has to leave the number
-it does not have absent rather than zero.
+no location, a row whose opening window is inverted, a row that never recorded one, a row whose cost
+evidence declares itself unknown, a row with no cost evidence object, a service that carries no point.
+Each one has to come back named, and each one has to leave the number it does not have absent rather
+than zero. A slot naming a row this store does not have is deliberately not among them: the package
+schema's `activities.place_id` is a foreign key `ON DELETE SET NULL`, so that state cannot be stored,
+and one arm below deletes a place to show what the slot answers instead.
 
 What is policed here:
 
@@ -27,6 +29,7 @@ from __future__ import annotations
 
 import ast
 import json
+import re
 import uuid
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
@@ -36,7 +39,7 @@ from types import SimpleNamespace
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, event, select
+from sqlalchemy import create_engine, delete, event, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -127,7 +130,7 @@ def _service(session, *, name: str, availability: dict) -> str:
 def _plan(session, journey_id: str) -> str:
     ident = str(uuid.uuid4())
     session.add(PlanVersion(id=ident, journey_id=journey_id, version_no=1,
-                            planning_mode="BALANCED", status="CANDIDATE", source="INITIAL",
+                            planning_mode="balanced", status="CANDIDATE", source="INITIAL",
                             total_cost_minor=0, currency="CNY", estimated_duration_min=240,
                             created_at=_now()))
     return ident
@@ -140,7 +143,7 @@ def _activity(session, plan_id: str, sequence_no: int, *, place_id: str | None =
                          activity_type="SIGHTSEE", title=title, place_id=place_id,
                          city_service_id=service_id, start_at=_then(60), end_at=_then(120),
                          travel_from_prev_min=0, estimated_cost_minor=estimate_minor,
-                         currency="CNY", status="PENDING", locked=False, metadata_json="{}",
+                         currency="CNY", status="PLANNED", locked=False, metadata_json="{}",
                          created_at=_now(), updated_at=_now()))
     return ident
 
@@ -158,7 +161,18 @@ SLOTS = {
 
 @pytest.fixture()
 def seeded():
-    """One journey, three seats, and one plan whose six slots cover every shape of missing fact."""
+    """One journey, three seats, and one plan whose six slots cover every shape of missing fact.
+
+    The tables come from the ORM here, not from `db/schema.sql`. Bootstrapping from the package DDL
+    was tried for this family and is a separate finding: a single flush that creates a `Traveler` and
+    its `Journey` under the DDL answers FOREIGN KEY constraint failed, because the same flush first
+    writes ten `journey_role_capabilities` rows and never inserts the traveller, so the journey's
+    owner is not there yet when the journey lands. `create_all` carries none of the DDL's CHECK
+    vocabularies either, which is how this family came to seed three words production refuses to
+    store (`plan_versions.source`, `activities.status`, `planning_mode`); those are fixed here, and
+    `test_the_status_words_a_slot_reports_are_words_the_ddl_allows` keeps the vocabulary read against
+    the shipped DDL rather than against this file.
+    """
     engine = create_engine("sqlite://", connect_args={"check_same_thread": False},
                            poolclass=StaticPool)
     Base.metadata.create_all(engine)
@@ -191,8 +205,7 @@ def seeded():
         _activity(session, ids["plan"], 4, place_id=ids["place_no_hours"], estimate_minor=800)
         _activity(session, ids["plan"], 5, service_id=ids["service"], estimate_minor=300)
         _activity(session, ids["plan"], 6, title="自由安排", estimate_minor=0)
-        # A slot naming a row this store no longer holds, so `UNKNOWN` cannot be read as `not asked`.
-        _activity(session, ids["foreign_plan"], 1, place_id="deleted-place", title="删除的地点")
+        _activity(session, ids["foreign_plan"], 1, place_id=ids["place_verified"])
         session.commit()
     return SimpleNamespace(engine=engine, factory=factory, ids=ids)
 
@@ -301,23 +314,36 @@ def test_a_slot_that_names_no_location_is_unknown_and_not_zero(seeded, monkeypat
     assert free["fact_retrieved_at"] is None
 
 
-def test_a_slot_naming_a_row_this_store_does_not_hold_says_so(seeded, monkeypatch):
-    client = _app(seeded, monkeypatch)
-    # The other journey belongs to the stranger; the owner of this one cannot buy a look at it.
-    refused = _read(client, seeded.ids["other_journey"], seeded.ids["foreign_plan"],
-                    seeded.ids["owner"])
-    assert refused.status_code == 403, refused.text
-    answer = _read(client, seeded.ids["other_journey"], seeded.ids["foreign_plan"],
-                   seeded.ids["stranger"])
-    assert answer.status_code == 200, answer.text
-    gone = _slot(answer.json(), 1)
-    assert gone["identity"]["detail"] == departure_facts.REASON_NO_ROW
-    assert gone["identity"]["source_identity"] is None
-    assert gone["opening_hours"]["state"] == departure_facts.STATE_UNKNOWN
-    assert gone["coordinate"]["reason"] == departure_facts.REASON_NO_ROW
-    assert gone["cost"]["detail"] == departure_facts.REASON_NO_ROW
-    assert gone["cost"]["verified_amount_minor"] is None
-    assert gone["cost"]["activity_estimate_minor"] == 0
+def test_deleting_a_place_leaves_the_slot_pointing_at_nothing_not_at_a_missing_row(seeded,
+                                                                                   monkeypatch):
+    """The dangling-row absence is not reachable here, and this file says why with a real delete.
+
+    `activities.place_id` is a foreign key `ON DELETE SET NULL`, so the store cannot hold a slot that
+    names a place it does not have: the reference goes NULL and the slot answers the one name for
+    "nothing to report". A door that invented a second word for the unreachable case would be
+    describing a state the schema forbids, so this arm pins the schema behaviour instead.
+
+    A test engine leaves foreign keys off (SQLite default), so this arm turns them on first and
+    refuses to read a silent no-op as a pass -- the production engine does the same thing in its own
+    connect listener, which is why the live server cannot store the dangling reference either.
+    """
+    with seeded.engine.begin() as connection:
+        connection.exec_driver_sql("PRAGMA foreign_keys=ON")
+        enforced = connection.exec_driver_sql("PRAGMA foreign_keys").scalar()
+    assert enforced == 1, "foreign keys are still off, so this arm would prove nothing"
+    with seeded.factory() as session:
+        activity_id = session.scalars(
+            select(Activity.id).where(Activity.plan_version_id == seeded.ids["plan"],
+                                      Activity.sequence_no == 2)).one()
+        session.execute(delete(Place).where(Place.id == seeded.ids["place_no_evidence"]))
+        session.commit()
+        assert session.get(Activity, activity_id).place_id is None
+
+    slot = _answer(seeded, monkeypatch, 2)
+    assert slot["location_kind"] == "NONE"
+    assert slot["identity"]["canonical_id"] is None
+    assert slot["identity"]["detail"] == departure_facts.REASON_SLOT_HAS_NO_LOCATION
+    assert slot["cost"]["verified_amount_minor"] is None
 
 
 def test_an_inverted_window_and_a_missing_point_are_two_separate_answers(seeded, monkeypatch):
@@ -431,7 +457,7 @@ def test_a_read_runs_only_reads_and_counts_its_own_answers(seeded, monkeypatch):
     with seeded.factory() as session:
         assert session.get(PlanVersion, seeded.ids["plan"]).status == "CANDIDATE"
         assert session.get(Journey, seeded.ids["journey"]).active_plan_version_id is None
-        assert len(session.scalars(select(Activity)).all()) == len(SLOTS) + 1
+        assert len(session.scalars(select(Activity)).all()) == len(SLOTS) + 1  # six on this plan, one on the other
 
 
 def test_the_door_imports_no_client_that_could_ask_the_network():
@@ -450,6 +476,23 @@ def test_the_door_imports_no_client_that_could_ask_the_network():
                "ssl", "websocket"}
     assert not sorted(roots & network), sorted(roots & network)
     assert "app.services" in modules, "the two judgements must stay borrowed, not re-implemented"
+
+
+def test_the_status_words_a_slot_reports_are_words_the_ddl_allows(seeded, monkeypatch):
+    """`db/schema.sql` constrains `activities.status`; a seed or a door that invents a word is a bug.
+
+    The live run caught this the hard way: this family of specs seeded `PENDING`, the DDL never
+    allowed it, and only a server built from the package SQL refused the row. `create_all` from the
+    ORM carries no such check, so a spec can be green on a word production cannot store.
+    """
+    ddl = (Path(__file__).resolve().parents[1] / "db" / "schema.sql").read_text(encoding="utf-8")
+    table = ddl.split("CREATE TABLE IF NOT EXISTS activities", 1)[1].split(");", 1)[0]
+    vocabulary = set(re.findall(r"'([A-Z_]+)'", table.split("status IN", 1)[1].split(")", 1)[0]))
+    assert vocabulary, "the DDL's activity status vocabulary could not be read out"
+    answer = _read(_app(seeded, monkeypatch), seeded.ids["journey"], seeded.ids["plan"],
+                   seeded.ids["owner"]).json()
+    reported = {slot["status"] for slot in answer["slots"]}
+    assert reported <= vocabulary, sorted(reported - vocabulary)
 
 
 def test_the_door_is_a_plain_get_route_on_the_real_app(seeded, monkeypatch):

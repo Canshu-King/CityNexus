@@ -10,7 +10,10 @@ Three deliberate limits:
 * **Bounded by durable rows.** The set of slots comes from `Activity` rows of a `PlanVersion` that
   belongs to this journey; nothing here accepts a place name, a URL or a provider id to go and look
   up. That is what keeps a fact read from becoming the cross-user place/network enumeration the
-  13:42 order forbids.
+  13:42 order forbids. A slot that points at a row the store does not hold is not a case this door
+  answers, because the package schema will not let it happen: `activities.place_id` is a foreign key
+  `ON DELETE SET NULL`, so a removed place leaves the slot pointing at nothing, which is the
+  `SLOT_HAS_NO_LOCATION` arm below.
 * **No provider is asked.** Everything is read out of the rows this server already holds, so the door
   cannot become a way to spend quota or to leak a query. Where a fact is genuinely absent the answer
   is the product's own word for absent, never a plausible number.
@@ -59,7 +62,6 @@ COORD_UNAVAILABLE = "UNAVAILABLE"
 #: "this server has no opening hours for this place" rather than an empty cell. An absence that the
 #: row itself declares ("never recorded") is named apart from one it hands us broken ("not an
 #: interval"), because those two need different words on a screen and different follow-up orders.
-REASON_NO_ROW = "PLACE_ROW_NOT_IN_THIS_STORE"
 REASON_SLOT_HAS_NO_LOCATION = "SLOT_HAS_NO_LOCATION"
 REASON_PLACE_HAS_NO_POINT = "PLACE_ROW_HAS_NO_COORDINATE"
 REASON_WINDOW_NOT_RECORDED = "OPENING_HOURS_NOT_RECORDED"
@@ -73,11 +75,11 @@ REASON_SERVICE_WINDOW_UNKNOWN = "SERVICE_AVAILABILITY_NOT_AN_INTERVAL"
 MEDIA_DOOR = "/api/v1/journeys/{journey_id}/places/{place_id}/media"
 
 
-def _identity(row: Any, detail: str | None = None) -> dict[str, Any]:
+def _identity(row: Any) -> dict[str, Any]:
     """How this server names the thing a slot points at, and what it cannot name."""
     if row is None:
         return {"canonical_id": None, "provider_key": None, "external_id": None,
-                "source_identity": None, "detail": detail or REASON_NO_ROW}
+                "source_identity": None, "detail": REASON_SLOT_HAS_NO_LOCATION}
     provider_key = str(getattr(row, "provider_key", "") or "")
     external_id = str(getattr(row, "external_id", "") or "")
     return {
@@ -122,7 +124,7 @@ def _hours(row: Any) -> dict[str, Any]:
 
 def _cost(row: Any, activity: Activity) -> dict[str, Any]:
     """The verified cost of the place, kept apart from whatever number the plan row happens to carry."""
-    verified = _place_verified_cost(row) if row is not None else None
+    verified = _place_verified_cost(row)
     detail = None
     if verified is None:
         evidence = json.loads(getattr(row, "metadata_json", None) or "{}").get("cost_evidence")
@@ -146,12 +148,6 @@ def _slot(session: Session, journey: Any, activity: Activity) -> dict[str, Any]:
     service = (session.get(CityService, str(activity.city_service_id))
                if activity.city_service_id else None)
     row = place if place is not None else service
-    # One name for the two ways a slot can have nothing to report: it never pointed at a row, and it
-    # pointed at a row this store no longer holds. A screen has to say those differently.
-    detail = None
-    if row is None:
-        detail = (REASON_SLOT_HAS_NO_LOCATION if not (activity.place_id or activity.city_service_id)
-                  else REASON_NO_ROW)
     return {
         "activity_id": activity.id,
         "sequence_no": activity.sequence_no,
@@ -163,22 +159,23 @@ def _slot(session: Session, journey: Any, activity: Activity) -> dict[str, Any]:
         "status": activity.status,
         "location_kind": ("PLACE" if place is not None else
                           "CITY_SERVICE" if service is not None else "NONE"),
-        "identity": _identity(row, detail),
+        "identity": _identity(row),
         # With no row to report on, all three absences carry the one name that says why there is no row.
         "coordinate": _coordinate(row) if row is not None else {
-            "state": COORD_UNAVAILABLE, "reason": detail, "coordinate_system": None},
+            "state": COORD_UNAVAILABLE, "reason": REASON_SLOT_HAS_NO_LOCATION,
+            "coordinate_system": None},
         "opening_hours": _hours(row) if row is not None else {
-            "state": STATE_UNKNOWN, "detail": detail,
+            "state": STATE_UNKNOWN, "detail": REASON_SLOT_HAS_NO_LOCATION,
             "open_minutes": None, "close_minutes": None},
         "cost": _cost(row, activity) if row is not None else {
-            "state": STATE_UNKNOWN, "detail": detail, "verified_amount_minor": None,
+            "state": STATE_UNKNOWN, "detail": REASON_SLOT_HAS_NO_LOCATION,
+            "verified_amount_minor": None,
             "activity_estimate_minor": activity.estimated_cost_minor,
             "currency": activity.currency},
         "fact_retrieved_at": _source_time(row),
         # Licence and author stay one door away, on purpose: this door says which facts a row holds,
         # the media door answers what may be shown and who to credit.
         "media_door": MEDIA_DOOR.format(journey_id=journey.id, place_id=place.id) if place is not None else None,
-        "missing_detail": detail,
     }
 
 

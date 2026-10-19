@@ -2649,13 +2649,16 @@ paths:
         feasibility gate (`_place_window`, `_place_verified_cost`), and no provider client is reachable
         from this module, so a fact read cannot spend quota, cannot become a place or network
         enumeration door, and cannot answer 200 by inventing a number. An absence is named instead:
-        `state` is UNKNOWN with a `detail` word (SLOT_HAS_NO_LOCATION, PLACE_ROW_NOT_IN_THIS_STORE,
-        OPENING_HOURS_NOT_RECORDED, OPENING_WINDOW_NOT_AN_INTERVAL, NO_COST_EVIDENCE_OBJECT,
-        COST_EVIDENCE_STATUS_NOT_KNOWN, CITY_SERVICE_CARRIES_NO_POINT,
-        SERVICE_AVAILABILITY_NOT_RECORDED, SERVICE_AVAILABILITY_NOT_AN_INTERVAL), and the amount stays
-        absent rather than zero. A place's verified cost and the estimate the plan row carries are two
-        fields, never merged. A coordinate uses the shipped pair READY / UNAVAILABLE. Licence and author
-        are one door away: a place slot carries the `media_door` path to read them from.
+        `state` is UNKNOWN with a `detail` word (SLOT_HAS_NO_LOCATION, OPENING_HOURS_NOT_RECORDED,
+        OPENING_WINDOW_NOT_AN_INTERVAL, NO_COST_EVIDENCE_OBJECT, COST_EVIDENCE_STATUS_NOT_KNOWN,
+        CITY_SERVICE_CARRIES_NO_POINT, SERVICE_AVAILABILITY_NOT_RECORDED,
+        SERVICE_AVAILABILITY_NOT_AN_INTERVAL), and the amount stays absent rather than zero. A slot
+        naming a place row this store does not hold is not an answer given here, because
+        `activities.place_id` is a foreign key `ON DELETE SET NULL`: deleting the place leaves the slot
+        pointing at nothing, which is `SLOT_HAS_NO_LOCATION`. A place's verified cost and the estimate
+        the plan row carries are two fields, never merged. A coordinate uses the shipped pair
+        READY / UNAVAILABLE. Licence and author are one door away: a place slot carries the
+        `media_door` path to read them from.
       parameters:
         - name: plan_version_id
           in: query
@@ -2726,7 +2729,6 @@ paths:
                             currency: {type: string}
                         fact_retrieved_at: {type: [string, "null"]}
                         media_door: {type: [string, "null"]}
-                        missing_detail: {type: [string, "null"]}
                   facts_counted:
                     type: object
                     required: [known, unknown]

@@ -113,7 +113,7 @@ def _plan(session, journey_id: str, *, version_no: int, status: str, evidence: d
           snapshot_id: str | None = None) -> str:
     ident = str(uuid.uuid4())
     session.add(PlanVersion(id=ident, journey_id=journey_id, version_no=version_no,
-                            planning_mode="BALANCED", status=status, source="INITIAL",
+                            planning_mode="balanced", status=status, source="INITIAL",
                             total_cost_minor=470_00, currency="CNY", estimated_duration_min=240,
                             mobility_snapshot_id=snapshot_id,
                             mobility_evidence_json=json.dumps(evidence), created_at=_now()))
@@ -125,7 +125,7 @@ def _activity(session, plan_id: str, place_id: str | None) -> str:
     session.add(Activity(id=ident, plan_version_id=plan_id, sequence_no=1, activity_type="SIGHTSEE",
                          title="冠豸山", place_id=place_id, city_service_id=None,
                          start_at=_then(60), end_at=_then(120), travel_from_prev_min=0,
-                         estimated_cost_minor=0, currency="CNY", status="PENDING", locked=False,
+                         estimated_cost_minor=0, currency="CNY", status="PLANNED", locked=False,
                          metadata_json="{}", created_at=_now(), updated_at=_now()))
     return ident
 
