@@ -67,8 +67,8 @@ export const estimationLadderCopy = {
     "ladder.tier.remedy": "你能改的",
     "ladder.method.sourced":
       "{source}：{amount}，置信度 {confidence}%。实付以供应商的最终价格为准。",
-    "ladder.method.noConfidence": "{source}：{amount}。这台服务器没有随这条回答给出置信度。",
-    "ladder.method.noSource": "这台服务器只给了 {amount}：没有写它是从哪来的。",
+    "ladder.method.noConfidence": "{source}：{amount}。这条回答没带置信度。",
+    "ladder.method.noSource": "只给了 {amount}：没写它是从哪来的。",
     "ladder.method.noCandidates": "这一级没有可报的方法：这次没读回住宿候选。",
     "ladder.pre.noAmount": "这里还没有能比价的房价。",
     "ladder.pre.noConfidence": "先别拿它和别家比：这个数背后没有供应商置信度。",

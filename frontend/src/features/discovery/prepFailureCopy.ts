@@ -38,7 +38,7 @@ const ARMS: Record<"zh" | "en", Record<string, string>> = {
     "stop": "没能停止这次准备。它还在服务器上跑着。",
     "DESTINATION_RESOLVER_UNAVAILABLE": "目的地来源这一次没答上，可以再问一次。",
     "DESTINATION_IDENTITY_UNRESOLVED": "这座城还没有能被追溯的来源命名，所以没有可准备的东西。",
-    "DESTINATION_AMBIGUOUS": "这个名字对应不止一处，服务器没有替我挑一个。请选一个再说。",
+    "DESTINATION_AMBIGUOUS": "这个名字对应不止一处，先选一个再说。",
     "PROVIDER_UNREACHABLE": "去问目的地的那个来源这一会儿联系不上，所以这次没问到；可以再问一次。",
     "PROVIDER_BAD_RESPONSE": "来源答回来的东西用不上，这次没问到。可以再问一次。",
     "PROVIDER_NO_RESULTS": "来源答了，并且说它那边没有这个名字。不是这座城不存在，是这一问没有对应的地方。",

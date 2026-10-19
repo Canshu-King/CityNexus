@@ -75,7 +75,7 @@ export const journeyAbortCopy = {
     "abort.alreadyAborted": "这趟已中止：{when}，原因「{reason}」。这次没有重复写入。",
     "abort.storedReason": "你当时的原因：{reason}",
     "abort.storedAt": "中止于 {when}",
-    "abort.readbackMissing": "这台服务器没有回读这趟行程的中止时间或原因",
+    "abort.readbackMissing": "中止的时间和原因，这次没有读回来",
     "abort.liveExcluded":
           "这趟已中止，所以不进「实时行程」。",
 
