@@ -1,0 +1,163 @@
+{
+  "product_sha": "522244e171dcd30c2427fe595577a5383998205e",
+  "task_id": "bac11cb8-2f52-4111-aa97-204c1f0b48cb",
+  "journey_id": "156d1cb9-398b-4c13-a789-7f699268b42f",
+  "authentication": "LOCAL_OPERATOR_SIGNED_EXISTING_OWNER; real DB, no mock API/provider/model",
+  "browser": "Installed Chrome, isolated visible profile, chrome-use CDP19317",
+  "user_send": "把第二天下午换成轻松点的景点，查查交通，其他安排别动",
+  "final_status": "PARTIAL_READY",
+  "usage_cumulative": {
+    "model_turns": 43,
+    "tool_calls": 40
+  },
+  "successful_patch_run_id": "709607fd-20c5-449c-93a5-794cc297a8df",
+  "steps": [
+    {
+      "tool": "replace_draft_slots",
+      "status": "COMPLETED",
+      "result": {
+        "draft_revision": 6,
+        "elapsed_ms": 4,
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "tool": "route_public_places",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 135,
+        "http_status": 200,
+        "provider": "amap",
+        "reason_code": null,
+        "route": {
+          "captured_at": "2026-10-19T06:18:16.688809+00:00",
+          "coordinate_system": "GCJ02",
+          "distance_m": 4293,
+          "duration_seconds": 3434,
+          "from_name": "冠豸山风景区",
+          "from_place_id": "photon:W/846486126",
+          "id": "0dfd5531-8e73-4c91-a18f-b178ffa838ff",
+          "provider": "amap",
+          "source_url": "https://uri.amap.com/navigation?from=116.7926856874902%2C25.703643815397907%2C%E5%86%A0%E8%B1%B8%E5%B1%B1%E9%A3%8E%E6%99%AF%E5%8C%BA&to=116.773981%2C25.705383%2C%E8%BF%9E%E5%9F%8E%E5%8E%BF%E5%8D%9A%E7%89%A9%E9%A6%86&mode=walk&coordinate=gaode&callnative=0",
+          "to_name": "连城县博物馆",
+          "to_place_id": "amap:B0FFJ2VDYV"
+        },
+        "status": "ROUTE_READY"
+      }
+    }
+  ],
+  "before_revision": 3,
+  "pre_patch_restored_revision": 5,
+  "after_revision": 6,
+  "unrelated_slots_exactly_preserved": true,
+  "unrelated_before_sha256": "78460b6f7ba3a337ec6494d33ddba05709bcdcf9cba2d514e8e605cb5a1127b7",
+  "unrelated_after_sha256": "78460b6f7ba3a337ec6494d33ddba05709bcdcf9cba2d514e8e605cb5a1127b7",
+  "target_slots": [
+    {
+      "author": "MODEL_SUGGESTION",
+      "cost_status": "UNKNOWN",
+      "notes": "高德已匹配：福建省龙岩市连城县莲峰镇观景路51号。室内展陈、步行强度低，适合轻松下午。开放时间、是否免费、门票均未知，需提前电话或官方渠道确认。交通参考：自冠豸山风景区步行约4.3公里、约57分钟（高德步行路线估算，仅路线参考、非到达承诺），也可考虑打车或公交接驳。",
+      "opening_status": "UNKNOWN",
+      "place_id": "amap:B0FFJ2VDYV",
+      "time_of_day": "afternoon",
+      "title": "连城县博物馆（室内展陈，轻松）",
+      "travel_time_status": "UNKNOWN"
+    },
+    {
+      "author": "MODEL_SUGGESTION",
+      "cost_status": "UNKNOWN",
+      "notes": "同在观景路51号连城县博物馆院落内，室内客家民俗展陈，逛起来轻松，可与历史馆连在一起看。开放时间与门票未知，需现场或官方核实。",
+      "opening_status": "UNKNOWN",
+      "place_id": "amap:B0L3UAH0T8",
+      "time_of_day": "afternoon",
+      "title": "客家博物馆（连城县博物馆客家民俗馆）",
+      "travel_time_status": "UNKNOWN"
+    },
+    {
+      "author": "MODEL_SUGGESTION",
+      "cost_status": "UNKNOWN",
+      "notes": "若下午仍想去看水景，可作备选：自冠豸山风景区步行约5.4公里、约72分钟（高德步行估算）。游船班次、票价、开放情况均未知，需景区官方渠道确认，不建议作为当天唯一安排。",
+      "opening_status": "UNKNOWN",
+      "place_id": "photon:R/6432779",
+      "time_of_day": "afternoon",
+      "title": "备选（体力允许时）：石门湖",
+      "travel_time_status": "UNKNOWN"
+    }
+  ],
+  "amap_place_count": 11,
+  "amap_adcodes": [
+    "350825"
+  ],
+  "research_routes": [
+    {
+      "captured_at": "2026-10-19T06:10:02.096971+00:00",
+      "coordinate_system": "GCJ02",
+      "distance_m": 4293,
+      "duration_seconds": 3434,
+      "from_name": "连城县博物馆",
+      "from_place_id": "amap:B0FFJ2VDYV",
+      "id": "b282d5b5-8272-47a4-b891-4178b62e0cc1",
+      "provider": "amap",
+      "source_url": "https://uri.amap.com/navigation?from=116.773981%2C25.705383%2C%E8%BF%9E%E5%9F%8E%E5%8E%BF%E5%8D%9A%E7%89%A9%E9%A6%86&to=116.7926856874902%2C25.703643815397907%2C%E5%86%A0%E8%B1%B8%E5%B1%B1%E9%A3%8E%E6%99%AF%E5%8C%BA&mode=walk&coordinate=gaode&callnative=0",
+      "to_name": "冠豸山风景区",
+      "to_place_id": "photon:W/846486126"
+    },
+    {
+      "captured_at": "2026-10-19T06:10:07.104953+00:00",
+      "coordinate_system": "GCJ02",
+      "distance_m": 5407,
+      "duration_seconds": 4326,
+      "from_name": "冠豸山风景区",
+      "from_place_id": "photon:W/846486126",
+      "id": "689913a6-8ef1-40b4-b59f-83bdd4722a61",
+      "provider": "amap",
+      "source_url": "https://uri.amap.com/navigation?from=116.7926856874902%2C25.703643815397907%2C%E5%86%A0%E8%B1%B8%E5%B1%B1%E9%A3%8E%E6%99%AF%E5%8C%BA&to=116.79244138327675%2C25.69871419445443%2C%E7%9F%B3%E9%97%A8%E6%B9%96&mode=walk&coordinate=gaode&callnative=0",
+      "to_name": "石门湖",
+      "to_place_id": "photon:R/6432779"
+    },
+    {
+      "captured_at": "2026-10-19T06:10:10.925315+00:00",
+      "coordinate_system": "GCJ02",
+      "distance_m": 1395,
+      "duration_seconds": 1116,
+      "from_name": "连城县博物馆",
+      "from_place_id": "amap:B0FFJ2VDYV",
+      "id": "cd90b0d6-27c3-49db-a942-952731ef85eb",
+      "provider": "amap",
+      "source_url": "https://uri.amap.com/navigation?from=116.773981%2C25.705383%2C%E8%BF%9E%E5%9F%8E%E5%8E%BF%E5%8D%9A%E7%89%A9%E9%A6%86&to=116.781091%2C25.712634%2C%E8%BF%9E%E5%9F%8E%E7%99%BD%E9%B8%AD%E6%B1%A4&mode=walk&coordinate=gaode&callnative=0",
+      "to_name": "连城白鸭汤",
+      "to_place_id": "amap:B0I15AV3MI"
+    },
+    {
+      "captured_at": "2026-10-19T06:18:16.688809+00:00",
+      "coordinate_system": "GCJ02",
+      "distance_m": 4293,
+      "duration_seconds": 3434,
+      "from_name": "冠豸山风景区",
+      "from_place_id": "photon:W/846486126",
+      "id": "0dfd5531-8e73-4c91-a18f-b178ffa838ff",
+      "provider": "amap",
+      "source_url": "https://uri.amap.com/navigation?from=116.7926856874902%2C25.703643815397907%2C%E5%86%A0%E8%B1%B8%E5%B1%B1%E9%A3%8E%E6%99%AF%E5%8C%BA&to=116.773981%2C25.705383%2C%E8%BF%9E%E5%9F%8E%E5%8E%BF%E5%8D%9A%E7%89%A9%E9%A6%86&mode=walk&coordinate=gaode&callnative=0",
+      "to_name": "连城县博物馆",
+      "to_place_id": "amap:B0FFJ2VDYV"
+    }
+  ],
+  "refresh_get": {
+    "http_status": 200,
+    "revision": 6,
+    "task_id_unchanged": true,
+    "amap_place_count": 11,
+    "route_count": 4
+  },
+  "secrets_in_changed_files_or_frontend_js": false,
+  "prior_failures": [
+    {
+      "run_id": "7e51a037-0ce5-4255-b6cf-d3a01d22dcf4",
+      "result": "MODEL_EXTERNAL_ERROR; no tools, unchanged draft"
+    },
+    {
+      "run_id": "8363b52c-f51e-4237-8e81-0400d40714ea",
+      "result": "full draft saved but changed unrelated dinner/todos; restored original through signed PUT before narrow-patch verification"
+    }
+  ]
+}
