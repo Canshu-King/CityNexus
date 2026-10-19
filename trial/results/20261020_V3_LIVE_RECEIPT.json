@@ -1,0 +1,87 @@
+{
+  "product_sha": "d667bab16284a369e5a18ab9764246f82faa8450",
+  "qoder_source_sha": "a4692457a9b531e7bee355974d26c89905425512",
+  "source": "Existing real signed Guangzhou Journey/GoalTask; no API mocks, no model/research sends this run",
+  "actual": {
+    "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+    "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+    "draft_revision": 2,
+    "variants": 3,
+    "mode": "DISCUSS",
+    "pending_choices": 3,
+    "departure_http": 200,
+    "gate": "NO_PLAN_SELECTED",
+    "formal_candidates": 0,
+    "member_http": 200,
+    "may_confirm_departure": true,
+    "departure_cache": "private, no-store"
+  },
+  "samples": [
+    {
+      "width": 390,
+      "document_width": 390,
+      "nav_buttons": 3,
+      "composers": 1,
+      "layer": "timeline",
+      "space": "journey",
+      "path": "trial/results/assets/20261020-v3-real-390-journey.png"
+    },
+    {
+      "width": 390,
+      "document_width": 390,
+      "nav_buttons": 3,
+      "composers": 1,
+      "layer": "map",
+      "space": "explore",
+      "path": "trial/results/assets/20261020-v3-real-390-explore.png"
+    },
+    {
+      "width": 430,
+      "document_width": 430,
+      "nav_buttons": 3,
+      "composers": 1,
+      "layer": "agent",
+      "space": "explore",
+      "path": "trial/results/assets/20261020-v3-real-430-discussion.png"
+    },
+    {
+      "width": 430,
+      "document_width": 430,
+      "nav_buttons": 3,
+      "composers": 1,
+      "layer": "timeline",
+      "space": "journey",
+      "path": "trial/results/assets/20261020-v3-real-430-preparation.png"
+    },
+    {
+      "width": 1366,
+      "document_width": 1366,
+      "nav_buttons": 3,
+      "composers": 1,
+      "layer": "map",
+      "space": "explore",
+      "path": "trial/results/assets/20261020-v3-real-1366-explore.png"
+    },
+    {
+      "width": 1566,
+      "document_width": 1566,
+      "nav_buttons": 3,
+      "composers": 1,
+      "layer": "map",
+      "space": "explore",
+      "path": "trial/results/assets/20261020-v3-real-1566-explore.png"
+    }
+  ],
+  "writes": [],
+  "native_actions": "Chrome-use focus + Enter: My Journey and B preview. CDP/DOM actions for viewport and screenshot framing.",
+  "hardware_phone": false,
+  "USER_VERIFIED": "PENDING",
+  "qoder_generated_source_sha": "b2bfeb3dec8d2d5ad5538cf2abe514cc47c0d1a4",
+  "tests": {
+    "backend_departure": "14/14 isolated in-memory SQLite",
+    "mobile_ui": "48/48 installed Chrome, isolated mocked API browser contexts",
+    "launcher": "11/11 no network",
+    "typescript": "PASS",
+    "vite_build": "PASS"
+  }
+}
