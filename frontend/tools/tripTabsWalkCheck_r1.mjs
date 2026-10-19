@@ -162,6 +162,41 @@ if (STAY_BRANCH === "comparison") {
    the claim about the words; the screenshot still shows the case the traveller sees. */
 const fold = (value) => value.toLowerCase();
 
+/* A sentence the screen says twice is the waffle this campaign is built to find -- one fact with two
+   writers, like the recycle bin's "回收站是空的…" followed by a 231-character paragraph explaining that
+   the screen only lists what the server reported. That pair was found by reading a screenshot; this is
+   the same reading, automated, so the next trim comes from a rendering rather than from a grep over
+   source. Only clauses of eight characters or more count, and only what the screen actually painted.
+
+   What it prints is a lead, not a verdict, and the first run proved why. Repeats fall in two kinds:
+   a label the screen legitimately shows once per row ("Not chosen yet" x3 on the spend tab, because
+   there are three bookings), and a *sentence* the screen really does say twice. The detector cannot
+   tell them apart -- it only sees strings -- so each hit has to be traced to the element that painted
+   it before anything is cut. Chinese needs no split at all here: the same screen reported nothing
+   repeated, because the per-row labels in that language are shorter than the eight-character floor. */
+function repeatedClauses(text) {
+  const parts = String(text)
+    .split(/[。；;]|\s--\s| — |\.\s|(?<=[a-z])\s(?=[A-Z])/)
+    .map((part) => part.replace(/\s+/g, " ").trim())
+    .filter((part) => part.length >= 8);
+  const seen = new Map();
+  for (const part of parts) seen.set(part, (seen.get(part) || 0) + 1);
+  return [...seen.entries()].filter(([, count]) => count > 1).sort((a, b) => b[1] - a[1]);
+}
+
+function reportRepeats(name, text) {
+  const repeated = repeatedClauses(text);
+  if (!repeated.length) {
+    console.log(`   ${name}: nothing is said twice on this screen`);
+    return [];
+  }
+  console.log(`   ${name}: clauses said twice or more (${repeated.length}):`);
+  for (const [clause, count] of repeated.slice(0, 6)) {
+    console.log(`      x${count} ${clause.slice(0, 110)}`);
+  }
+  return repeated;
+}
+
 function dictionaryRegions() {
   const text = readFileSync(DICT, "utf8");
   const enStart = text.indexOf("const en: Dict");
@@ -582,6 +617,7 @@ async function walkModuleFace(page, regions, locale, opts) {
     return { reached: false, note: `${testId} mounted=${mounted}` };
   }
   console.log(`   ${name}: reached, chars=${panel.length}`);
+  reportRepeats(name, panel);
   console.log(`      ${panel.slice(0, 220)}`);
   const table = moduleTable(moduleFile);
   const entries = [];
@@ -792,6 +828,7 @@ async function walk(browser, locale) {
           `${item.key} = ${item.value}`
       );
     }
+    reportRepeats(`${tab} tab`, measure.text);
     await page.screenshot({ path: join(SHOTS, `tab-${tab}-${locale}-open.png`), fullPage: true });
     screens.push({ tab, observations, chars: measure.chars, panelChars: measure.panelChars });
   }
