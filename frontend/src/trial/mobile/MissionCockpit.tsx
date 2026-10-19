@@ -12,6 +12,7 @@ import { WorkspaceActions } from "./WorkspaceActions";
 import { GoalDraftEditor } from "./GoalDraftEditor";
 import { GoalDraftVariants } from "./GoalDraftVariants";
 import { GuardianRealityPanel } from "./GuardianRealityPanel";
+import { DestinationMedia } from "./DestinationMedia";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import "./MissionCockpit.css";
 
@@ -231,6 +232,7 @@ export function MissionCockpit({
     <header className="cn-mission-head">
       <div><div className="cn-mission-kicker"><Sparkles size={15} /> CITYNEXUS / MISSION OS</div>
         <h2>{cityName}，<span>边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p></div>
+      <DestinationMedia key={cityName} cityName={cityName} />
       <span className="cn-mission-state" aria-live="polite">{status}</span>
     </header>
     <div className="cn-mission-layer-tabs" aria-label="切换工作台图层">
