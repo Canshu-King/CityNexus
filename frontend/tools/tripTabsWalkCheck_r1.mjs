@@ -71,6 +71,9 @@ const WANT_STAY = !process.argv.includes("--no-stay");
 const WANT_ACCESS = !process.argv.includes("--no-access");
 const WANT_TRASH = !process.argv.includes("--no-trash");
 const WANT_SHEETS = !process.argv.includes("--no-sheets");
+const WANT_FOOTPRINTS = !process.argv.includes("--no-footprints");
+const WANT_COLLECTIONS = !process.argv.includes("--no-collections");
+const WANT_POIIMPORT = !process.argv.includes("--no-poiimport");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -268,16 +271,32 @@ const COPY_MODULES = {
   ladder: join(FRONTEND, "src", "features", "estimation", "estimationLadderCopy.ts"),
   trash: join(FRONTEND, "src", "features", "trash", "journeyTrashCopy.ts"),
   agentFeed: join(FRONTEND, "src", "i18n", "agentWorkFeedCopy.ts"),
+  footprint: join(FRONTEND, "src", "features", "checkin", "footprintCopy.ts"),
+  checkin: join(FRONTEND, "src", "features", "checkin", "checkinCopy.ts"),
+  collection: join(FRONTEND, "src", "features", "collections", "collectionCopy.ts"),
+  poiImport: join(FRONTEND, "src", "features", "poiimport", "poiImportCopy.ts"),
+  mapPanel: join(FRONTEND, "src", "i18n", "mapPanelCopy.ts"),
 };
 
-function moduleTable(file) {
+/** Which locale a name means -- by exact match, never by prefix.
+
+    `collectionCopy.ts` has a key called `entry`, and a `startsWith("en")` test read that key as the
+    English half of the file. The ruler that measures screens and the ruler that finds defensive copy
+    must not disagree about what a file says, so both compare the same four names. */
+function localeSide(name) {
+  const lowered = String(name).toLowerCase();
+  if (lowered === "zh" || lowered === "zh-cn") return "zh-CN";
+  if (lowered === "en" || lowered === "en-us" || lowered === "en-gb") return "en";
+  return null;
+}
+
+function moduleLocaleTable(file) {
   const tables = { en: {}, "zh-CN": {} };
   /* Two shapes exist in the product today: `src/features/access/accessCopy.ts` writes
      `"access.title": "…"`, while `src/i18n/agentWorkFeedCopy.ts` writes `sheetLede: "…"` -- a bare
      identifier, which TypeScript allows as an object key. A parser that only knows the quoted shape
      reports the second module's keys as absent, and an absent key reads as "not rendered", which is
      the wrong direction of wrong: it hides a screen instead of clearing it. */
-  const sideOf = (name) => (String(name).toLowerCase().startsWith("zh") ? "zh-CN" : "en");
   let side = null;
   let pending = null;
   for (const line of readFileSync(file, "utf8").split(NL)) {
@@ -289,7 +308,7 @@ function moduleTable(file) {
     }
     const opened = /^\s{0,4}(?:"([A-Za-z][\w-]*)"|([A-Za-z][\w-]*)):\s*\{\s*$/.exec(line);
     if (opened) {
-      side = sideOf(next([opened[1], opened[2]]));
+      side = localeSide(next([opened[1], opened[2]]));
       continue;
     }
     if (/^\s{0,4}\}/.test(line)) {
@@ -309,6 +328,56 @@ function moduleTable(file) {
     if (value) tables[side][key] = next([value[1], value[2]]);
   }
   return tables;
+}
+
+/** A third shape, and the one five modules use: both languages inside a single key --
+
+      storeOnlyRefusal: {
+        zh: "…",
+        en: "…",
+      },
+
+   and `footprintCopy.ts` writes the same thing on one line. `moduleLocaleTable` comes back empty for
+   these files (there is no `en:`/`zh:` table), which used to make every key read as "absent from the
+   module" -- a screen that is measured and then declared invisible. Comments are skipped: these files
+   quote `zh:` and `en:` in their own prose, and a quoted marker is not the wording a traveller reads. */
+function moduleEntryTable(file) {
+  const tables = { en: {}, "zh-CN": {} };
+  const PAIR = /(?:"(en|zh|en-US|zh-CN|en-GB)"|(en|zh|en-US|zh-CN|en-GB))\s*:\s*(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)')/g;
+  let key = null;
+  let inComment = false;
+  for (const line of readFileSync(file, "utf8").split(NL)) {
+    const stripped = line.trim();
+    if (inComment) {
+      if (line.includes("*/")) inComment = false;
+      continue;
+    }
+    if (stripped.startsWith("//") || stripped.startsWith("*")) continue;
+    if (stripped.startsWith("/*")) {
+      if (!line.includes("*/")) inComment = true;
+      continue;
+    }
+    const opener = /^\s{0,4}(?:"([A-Za-z0-9_.\-]+)"|([A-Za-z][\w]*)):\s*\{/.exec(line);
+    if (opener) {
+      key = next([opener[1], opener[2]]);
+    } else if (/^\}/.test(stripped)) {
+      key = null;
+      continue;
+    }
+    if (!key) continue;
+    for (const match of line.matchAll(PAIR)) {
+      const side = localeSide(next([match[1], match[2]]));
+      const value = next([match[3], match[4]]);
+      if (side && value) tables[side][key] = value;
+    }
+  }
+  return tables;
+}
+
+function moduleTable(file) {
+  const table = moduleLocaleTable(file);
+  if (Object.keys(table.en).length || Object.keys(table["zh-CN"]).length) return table;
+  return moduleEntryTable(file);
 }
 
 const next = (values) => values.find((value) => value !== undefined && value !== "") ?? "";
@@ -615,6 +684,16 @@ const TRASH_KEYS = [
 ];
 const TRASH_CLAIMED = [];
 
+/* The three faces this campaign just trimmed and had never walked. The key lists are the sentences the
+   waves touched, plus the heading each screen cannot render without -- a list of keys that are never
+   on screen is not a measurement, so the claims stay small and the rest are reported as branches. */
+const FOOTPRINT_KEYS = ["scope", "emptyWhy", "unreachable", "noZoneHeading", "dayZone"];
+const FOOTPRINT_CLAIMED = ["scope"];
+const COLLECTION_KEYS = ["title", "scope", "empty", "writeRefused", "noPlaceIdOnRow"];
+const COLLECTION_CLAIMED = ["title"];
+const POI_KEYS = ["exitStoreOnly", "storeOnlyRefusal", "storeOnlyChosen", "collectNothingConfirmed", "readBackFailed"];
+const POI_CLAIMED = [];
+
 /* One module-backed route screen, reached the way a traveller reaches it: through the drawer, by the
    label the dictionary gives that nav entry. Written once because the 成员与权限 screen and the 回收站
    screen are the same measurement -- chars, and which of the module's sentences actually landed.
@@ -740,6 +819,36 @@ function walkTrashFace(page, regions, locale) {
     testId: "journey-trash-panel",
     moduleFile: COPY_MODULES.trash,
     keys: TRASH_KEYS,
+  });
+}
+
+function walkFootprintFace(page, regions, locale) {
+  return walkModuleFace(page, regions, locale, {
+    name: "footprint screen",
+    navKey: "nav.footprints",
+    testId: "footprint-panel",
+    moduleFile: COPY_MODULES.footprint,
+    keys: FOOTPRINT_KEYS,
+  });
+}
+
+function walkCollectionFace(page, regions, locale) {
+  return walkModuleFace(page, regions, locale, {
+    name: "collection screen",
+    navKey: "nav.discover",
+    testId: "collection-panel",
+    moduleFile: COPY_MODULES.collection,
+    keys: COLLECTION_KEYS,
+  });
+}
+
+function walkPoiImportFace(page, regions, locale) {
+  return walkModuleFace(page, regions, locale, {
+    name: "poi import screen",
+    navKey: "nav.import",
+    testId: "poi-import",
+    moduleFile: COPY_MODULES.poiImport,
+    keys: POI_KEYS,
   });
 }
 
@@ -1032,6 +1141,9 @@ async function walk(browser, locale) {
   const stayScreen = WANT_STAY ? await walkStayScreen(page, regions, locale) : { reached: false };
   const access = WANT_ACCESS ? await walkAccessFace(page, regions, locale) : { reached: false };
   const trash = WANT_TRASH ? await walkTrashFace(page, regions, locale) : { reached: false };
+  const footprints = WANT_FOOTPRINTS ? await walkFootprintFace(page, regions, locale) : { reached: false };
+  const collections = WANT_COLLECTIONS ? await walkCollectionFace(page, regions, locale) : { reached: false };
+  const poiImport = WANT_POIIMPORT ? await walkPoiImportFace(page, regions, locale) : { reached: false };
   const sheets = WANT_SHEETS ? await walkSheets(page, regions, locale) : { agent: { reached: false }, plan: { reached: false } };
 
   const problems = [];
@@ -1056,6 +1168,9 @@ async function walk(browser, locale) {
   for (const arm of [
     { screen: "access screen", result: access, claimed: ACCESS_CLAIMED },
     { screen: "trash screen", result: trash, claimed: TRASH_CLAIMED },
+    { screen: "footprint screen", result: footprints, claimed: FOOTPRINT_CLAIMED },
+    { screen: "collection screen", result: collections, claimed: COLLECTION_CLAIMED },
+    { screen: "poi import screen", result: poiImport, claimed: POI_CLAIMED },
   ]) {
     if (!arm.result.reached) continue;
     for (const key of arm.claimed) {
@@ -1075,7 +1190,10 @@ async function walk(browser, locale) {
       ", access=" + (access.reached ? "reached" : "not reached") +
       ", trash=" + (trash.reached ? "reached" : "not reached") +
       ", preparation=" + (prep.reached ? "reached" : "not reached") +
-      ", stay screen=" + (stayScreen.reached ? "reached" : "not reached"),
+      ", stay screen=" + (stayScreen.reached ? "reached" : "not reached") +
+      ", footprint=" + (footprints.reached ? "reached" : "not reached") +
+      ", collection=" + (collections.reached ? "reached" : "not reached") +
+      ", poi import=" + (poiImport.reached ? "reached" : "not reached") +
       ", agent sheet=" + (sheets.agent.reached ? "reached" : "not reached") +
       ", plan sheet=" + (sheets.plan.reached ? "reached" : "not reached")
   );
