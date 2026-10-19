@@ -1975,6 +1975,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/replan-proposals/{proposal_id}/consent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Who must agree to this shared future, who has, and what the rule therefore decides. The required set is read through the two predicates the member doors already use -- `_member_state` for in-force, `journey_role_capabilities` for the role's `JOURNEY_UPDATE` -- so narrowing that table narrows the round the same instant; it is never a role list written into a handler. The roster projection in `app.main` is deliberately not called here: it refreshes a twin snapshot per member, and a status read that writes storage is the defect this project already names for `GET /experience`. Answers are the `audit_logs` rows this round writes, one per press, latest per traveller; `classification` is the mediation word a mission recorded for this exact proposal in `resolved_intent_json`, or null when none did. Nothing is asked of a provider. */
+        get: operations["getJourneyProposalConsent"];
+        put?: never;
+        /** @description Record one member's APPROVE or REJECT for one proposal, as themselves. The body carries one decision word and nothing else: the traveller it belongs to comes from the credential, and a body that names a principal is refused by name (`CONSENT_DELEGATION_REFUSED`) rather than ignored -- an organiser cannot confirm for another member, and there is no code path here that would let them. `Idempotency-Key` is required, so a retry after a dropped response replays the answer instead of recording the same act twice. Two of three leaves the shared plan exactly where it was: no apply attempt, no receipt. When the last required member approves, this door issues a `collective_authority_receipts` row -- its `required_member_ids_json`, `principal_actor_ids_json` and `response_audit_ids_json` are written for the first time here, and its `decision_epoch` is `collective_decision_epoch` from `app.collective_mediation` -- and then asks the door that already validates the transition, `POST /api/v1/replans/{proposal_id}/accept`, in-process. Its refusal is reported beside the fulfilled rule as `plan_apply`, never merged into it: consent being complete and the plan being applyable are two facts. A REJECT invalidates a receipt that a previous round issued (`COLLECTIVE_MEMBER_REJECTED`), and a later APPROVE mints a new one rather than reviving it. */
+        post: operations["postJourneyProposalConsent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/resilience/counterfactuals": {
         parameters: {
             query?: never;
@@ -3307,6 +3328,117 @@ export interface components {
             tool_steps: {
                 [key: string]: unknown;
             }[];
+        };
+        /** @description One answer of the consent doors. `fulfilled` is the rule (`required` is a subset of `approved` and no required member stands rejected); `shared_plan.shared_plan_updated` is the plan's own state, read off the rows. They are two fields because they are two facts: a round can be complete while the transition that consumes it is refused for a physical reason, and that refusal is reported in `plan_apply` rather than folded into `fulfilled`. */
+        CollectiveConsentRound: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            proposal_id: string;
+            /** @constant */
+            authority_mode: "MEMBER_CONSENT";
+            /** @constant */
+            authority_basis?: "journey_role_capabilities";
+            required_traveler_ids: string[];
+            required_count: number;
+            roster: {
+                /** Format: uuid */
+                traveler_id: string;
+                /** Format: uuid */
+                member_id: string;
+                /** @enum {string} */
+                role: "OWNER" | "ADMIN" | "COLLABORATOR";
+                /** @enum {string} */
+                member_state: "MEMBER_IN_FORCE" | "MEMBER_LAPSED" | "MEMBER_WITHDRAWN";
+                can_authorize_mutation: boolean;
+                /** @enum {string|null} */
+                decision: "APPROVE" | "REJECT" | null;
+            }[];
+            answers: {
+                /** Format: uuid */
+                traveler_id: string;
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT";
+                recorded_at: string;
+                /** Format: uuid */
+                audit_id: string;
+                counts_toward_fulfillment: boolean;
+                revised_from: {
+                    /** @enum {string} */
+                    decision?: "APPROVE" | "REJECT";
+                    /** Format: uuid */
+                    audit_id?: string;
+                    recorded_at?: string;
+                } | null;
+            }[];
+            counts: {
+                required: number;
+                approved: number;
+                rejected: number;
+                outstanding: number;
+            };
+            approved_traveler_ids: string[];
+            rejected_traveler_ids: string[];
+            outstanding_traveler_ids: string[];
+            fulfilled: boolean;
+            /** @description The mediation word a mission recorded for this exact proposal in `resolved_intent_json.collective_mediation.classification`, or null when none did. This door reads that word and never computes one. */
+            classification: string | null;
+            /** @description Present on the status door when nobody in this roster can authorize a mutation (NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE). */
+            blocking_code?: string;
+            /** Format: uuid */
+            asked_by_traveler_id?: string;
+            /** Format: uuid */
+            recorded_by_traveler_id?: string;
+            /** @enum {string} */
+            decision?: "APPROVE" | "REJECT";
+            counts_toward_fulfillment?: boolean;
+            idempotency_replay?: boolean;
+            /** @description The durable authority boundary a fulfilled round issued, or null. */
+            receipt: {
+                /** Format: uuid */
+                receipt_id?: string;
+                /** @constant */
+                authority_mode?: "MEMBER_CONSENT";
+                classification?: string;
+                required_traveler_ids?: string[];
+                principal_actor_ids?: string[];
+                response_audit_ids?: string[];
+                decision_epoch?: string;
+                material_world_epoch?: string;
+                /** Format: uuid */
+                recovery_epoch_id?: string | null;
+                issued_at?: string;
+            } | null;
+            receipt_invalidated?: {
+                /** Format: uuid */
+                receipt_id?: string;
+                /** @enum {string} */
+                invalidation_code?: "COLLECTIVE_MEMBER_REJECTED" | "COLLECTIVE_CONSENT_WITHDRAWN";
+            };
+            shared_plan: {
+                /** Format: uuid */
+                base_plan_version_id: string;
+                /** Format: uuid */
+                proposed_plan_version_id: string;
+                /** @enum {string} */
+                proposal_status: "GENERATED" | "PRESENTED" | "ACCEPTED" | "REJECTED" | "EXPIRED" | "INVALIDATED";
+                /** Format: uuid */
+                journey_active_plan_version_id: string | null;
+                /** @enum {string|null} */
+                proposed_plan_status: "CANDIDATE" | "SELECTED" | "ACTIVE" | "SUPERSEDED" | "REJECTED" | null;
+                shared_plan_updated: boolean;
+            };
+            /** @description What the plan door said, on the press that fulfilled the rule. `attempted` is false on every press that did not complete the round, so a two-of-three answer cannot look like a refused transition. */
+            plan_apply?: {
+                attempted: boolean;
+                applied: boolean;
+                apply_receipt_key?: string;
+                apply_answer_sections?: string[];
+                refusal_status?: number;
+                refusal_detail?: string;
+                /** @constant */
+                reason_code?: "COLLECTIVE_APPLY_REFUSED_BY_PLAN_DOOR";
+            };
         };
         GuardianRun: {
             /** Format: uuid */
@@ -8034,6 +8166,117 @@ export interface operations {
                 content?: never;
             };
             /** @description plan_version_id was not supplied (error.reason_code PLAN_VERSION_ID_REQUIRED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyProposalConsent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The round, its required set, its answers, and the state of the shared plan */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectiveConsentRound"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That proposal is not a proposal of this journey (error.reason_code PROPOSAL_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyProposalConsent: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT";
+                };
+            };
+        };
+        responses: {
+            /** @description The round after this press, with plan_apply stating what the plan door said */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectiveConsentRound"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That proposal is not a proposal of this journey (error.reason_code PROPOSAL_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The proposal is not one a member may answer (PROPOSAL_NOT_ACTIONABLE), no in-force member holds JOURNEY_UPDATE so no round could bind one (NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE), or the key was reused for a different consent (CONSENT_IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A missing key (CONSENT_IDEMPOTENCY_KEY_REQUIRED), an unknown decision word (CONSENT_DECISION_WORD_UNKNOWN), a body field that is not `decision` (CONSENT_BODY_TAKES_ONLY_DECISION), or a body that names another traveller (CONSENT_DELEGATION_REFUSED) */
             422: {
                 headers: {
                     [name: string]: unknown;

@@ -2772,6 +2772,88 @@ paths:
         '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
         '404': {description: Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
         '422': {description: plan_version_id was not supplied (error.reason_code PLAN_VERSION_ID_REQUIRED)}
+  /journeys/{journey_id}/replan-proposals/{proposal_id}/consent:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - name: proposal_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    get:
+      operationId: getJourneyProposalConsent
+      description: >
+        Who must agree to this shared future, who has, and what the rule therefore decides. The
+        required set is read through the two predicates the member doors already use -- `_member_state`
+        for in-force, `journey_role_capabilities` for the role's `JOURNEY_UPDATE` -- so narrowing that
+        table narrows the round the same instant; it is never a role list written into a handler. The
+        roster projection in `app.main` is deliberately not called here: it refreshes a twin snapshot
+        per member, and a status read that writes storage is the defect this project already names for
+        `GET /experience`. Answers are the `audit_logs` rows this round writes, one per press, latest
+        per traveller; `classification` is the mediation word a mission recorded for this exact
+        proposal in `resolved_intent_json`, or null when none did. Nothing is asked of a provider.
+      responses:
+        '200':
+          description: The round, its required set, its answers, and the state of the shared plan
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectiveConsentRound'}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: That proposal is not a proposal of this journey (error.reason_code PROPOSAL_NOT_IN_JOURNEY)}
+    post:
+      operationId: postJourneyProposalConsent
+      description: >
+        Record one member's APPROVE or REJECT for one proposal, as themselves. The body carries one
+        decision word and nothing else: the traveller it belongs to comes from the credential, and a
+        body that names a principal is refused by name (`CONSENT_DELEGATION_REFUSED`) rather than
+        ignored -- an organiser cannot confirm for another member, and there is no code path here that
+        would let them. `Idempotency-Key` is required, so a retry after a dropped response replays the
+        answer instead of recording the same act twice.
+        Two of three leaves the shared plan exactly where it was: no apply attempt, no receipt. When
+        the last required member approves, this door issues a `collective_authority_receipts` row --
+        its `required_member_ids_json`, `principal_actor_ids_json` and `response_audit_ids_json` are
+        written for the first time here, and its `decision_epoch` is `collective_decision_epoch` from
+        `app.collective_mediation` -- and then asks the door that already validates the transition,
+        `POST /api/v1/replans/{proposal_id}/accept`, in-process. Its refusal is reported beside the
+        fulfilled rule as `plan_apply`, never merged into it: consent being complete and the plan being
+        applyable are two facts. A REJECT invalidates a receipt that a previous round issued
+        (`COLLECTIVE_MEMBER_REJECTED`), and a later APPROVE mints a new one rather than reviving it.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [decision]
+              properties:
+                decision: {type: string, enum: [APPROVE, REJECT]}
+      responses:
+        '200':
+          description: The round after this press, with plan_apply stating what the plan door said
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectiveConsentRound'}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: That proposal is not a proposal of this journey (error.reason_code PROPOSAL_NOT_IN_JOURNEY)}
+        '409':
+          description: >
+            The proposal is not one a member may answer (PROPOSAL_NOT_ACTIONABLE), no in-force member
+            holds JOURNEY_UPDATE so no round could bind one
+            (NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE), or the key was reused for a different
+            consent (CONSENT_IDEMPOTENCY_KEY_REUSE_CONFLICT)
+        '422':
+          description: >
+            A missing key (CONSENT_IDEMPOTENCY_KEY_REQUIRED), an unknown decision word
+            (CONSENT_DECISION_WORD_UNKNOWN), a body field that is not `decision`
+            (CONSENT_BODY_TAKES_ONLY_DECISION), or a body that names another traveller
+            (CONSENT_DELEGATION_REFUSED)
   /journeys/{journey_id}/resilience/counterfactuals:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
@@ -3791,6 +3873,135 @@ components:
           items:
             type: object
             additionalProperties: true
+    CollectiveConsentRound:
+      type: object
+      description: >
+        One answer of the consent doors. `fulfilled` is the rule (`required` is a subset of `approved`
+        and no required member stands rejected); `shared_plan.shared_plan_updated` is the plan's own
+        state, read off the rows. They are two fields because they are two facts: a round can be
+        complete while the transition that consumes it is refused for a physical reason, and that
+        refusal is reported in `plan_apply` rather than folded into `fulfilled`.
+      required: [journey_id, proposal_id, authority_mode, required_traveler_ids, required_count,
+                 roster, answers, counts, approved_traveler_ids, rejected_traveler_ids,
+                 outstanding_traveler_ids, fulfilled, classification, receipt, shared_plan]
+      properties:
+        journey_id: {type: string, format: uuid}
+        proposal_id: {type: string, format: uuid}
+        authority_mode: {type: string, const: MEMBER_CONSENT}
+        authority_basis: {type: string, const: journey_role_capabilities}
+        required_traveler_ids: {type: array, items: {type: string, format: uuid}}
+        required_count: {type: integer}
+        roster:
+          type: array
+          items:
+            type: object
+            required: [traveler_id, member_id, role, member_state, can_authorize_mutation, decision]
+            properties:
+              traveler_id: {type: string, format: uuid}
+              member_id: {type: string, format: uuid}
+              role: {type: string, enum: [OWNER, ADMIN, COLLABORATOR]}
+              member_state:
+                type: string
+                enum: [MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN]
+              can_authorize_mutation: {type: boolean}
+              decision: {type: [string, "null"], enum: [APPROVE, REJECT, null]}
+        answers:
+          type: array
+          items:
+            type: object
+            required: [traveler_id, decision, recorded_at, audit_id, counts_toward_fulfillment,
+                       revised_from]
+            properties:
+              traveler_id: {type: string, format: uuid}
+              decision: {type: string, enum: [APPROVE, REJECT]}
+              recorded_at: {type: string}
+              audit_id: {type: string, format: uuid}
+              counts_toward_fulfillment: {type: boolean}
+              revised_from:
+                type: [object, "null"]
+                properties:
+                  decision: {type: string, enum: [APPROVE, REJECT]}
+                  audit_id: {type: string, format: uuid}
+                  recorded_at: {type: string}
+        counts:
+          type: object
+          required: [required, approved, rejected, outstanding]
+          properties:
+            required: {type: integer}
+            approved: {type: integer}
+            rejected: {type: integer}
+            outstanding: {type: integer}
+        approved_traveler_ids: {type: array, items: {type: string, format: uuid}}
+        rejected_traveler_ids: {type: array, items: {type: string, format: uuid}}
+        outstanding_traveler_ids: {type: array, items: {type: string, format: uuid}}
+        fulfilled: {type: boolean}
+        classification:
+          type: [string, "null"]
+          description: >
+            The mediation word a mission recorded for this exact proposal in
+            `resolved_intent_json.collective_mediation.classification`, or null when none did. This
+            door reads that word and never computes one.
+        blocking_code:
+          type: string
+          description: >
+            Present on the status door when nobody in this roster can authorize a mutation
+            (NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE).
+        asked_by_traveler_id: {type: string, format: uuid}
+        recorded_by_traveler_id: {type: string, format: uuid}
+        decision: {type: string, enum: [APPROVE, REJECT]}
+        counts_toward_fulfillment: {type: boolean}
+        idempotency_replay: {type: boolean}
+        receipt:
+          type: [object, "null"]
+          description: The durable authority boundary a fulfilled round issued, or null.
+          properties:
+            receipt_id: {type: string, format: uuid}
+            authority_mode: {type: string, const: MEMBER_CONSENT}
+            classification: {type: string}
+            required_traveler_ids: {type: array, items: {type: string, format: uuid}}
+            principal_actor_ids: {type: array, items: {type: string, format: uuid}}
+            response_audit_ids: {type: array, items: {type: string, format: uuid}}
+            decision_epoch: {type: string}
+            material_world_epoch: {type: string}
+            recovery_epoch_id: {type: [string, "null"], format: uuid}
+            issued_at: {type: string}
+        receipt_invalidated:
+          type: object
+          properties:
+            receipt_id: {type: string, format: uuid}
+            invalidation_code:
+              type: string
+              enum: [COLLECTIVE_MEMBER_REJECTED, COLLECTIVE_CONSENT_WITHDRAWN]
+        shared_plan:
+          type: object
+          required: [base_plan_version_id, proposed_plan_version_id, proposal_status,
+                     journey_active_plan_version_id, proposed_plan_status, shared_plan_updated]
+          properties:
+            base_plan_version_id: {type: string, format: uuid}
+            proposed_plan_version_id: {type: string, format: uuid}
+            proposal_status:
+              type: string
+              enum: [GENERATED, PRESENTED, ACCEPTED, REJECTED, EXPIRED, INVALIDATED]
+            journey_active_plan_version_id: {type: [string, "null"], format: uuid}
+            proposed_plan_status:
+              type: [string, "null"]
+              enum: [CANDIDATE, SELECTED, ACTIVE, SUPERSEDED, REJECTED, null]
+            shared_plan_updated: {type: boolean}
+        plan_apply:
+          type: object
+          description: >
+            What the plan door said, on the press that fulfilled the rule. `attempted` is false on
+            every press that did not complete the round, so a two-of-three answer cannot look like a
+            refused transition.
+          required: [attempted, applied]
+          properties:
+            attempted: {type: boolean}
+            applied: {type: boolean}
+            apply_receipt_key: {type: string}
+            apply_answer_sections: {type: array, items: {type: string}}
+            refusal_status: {type: integer}
+            refusal_detail: {type: string}
+            reason_code: {type: string, const: COLLECTIVE_APPLY_REFUSED_BY_PLAN_DOOR}
     GuardianRun:
       type: object
       additionalProperties: true
