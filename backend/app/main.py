@@ -30,6 +30,7 @@ from app import (
     departure_facts,
     departure_read,
     place_media_routes,
+    plan_from_slots,
 )
 from app.agent.autorun import (
     autorun_status,
@@ -916,7 +917,7 @@ def build_open_meteo_provider(client: httpx.AsyncClient) -> OpenMeteoContextProv
 # app.routes and reads route.path, and an included router shows up as a wrapper without one.
 for _media_route in (*place_media_routes.router.routes, *departure_read.router.routes,
                      *departure_commit.router.routes, *departure_facts.router.routes,
-                     *collective_consent.router.routes):
+                     *collective_consent.router.routes, *plan_from_slots.router.routes):
     app.add_api_route(
         _media_route.path,
         _media_route.endpoint,

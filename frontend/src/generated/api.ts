@@ -1996,6 +1996,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/plans/from-slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Write the slots a draft already holds as a new CANDIDATE plan version, keeping their order and their times. The shipped generator re-schedules, so it cannot be the door that turns a chosen draft into a plan without claiming a preservation that did not happen. A slot names a canonical `places` row and carries its own times; a provider id (`provider_key:external_id`) is refused by name and pointed at the identity read that yields the canonical id, and the fields that would describe a place (`title`, `name`, `url`, `query`, `address`, `external_id`, `source_id`, `photo`, `image`, `tags`) are refused rather than stored, because `activities.title` is written from the Place row this door reads. A place whose `city_code` differs from the journey's is a refusal, not a plan. `expected_revision` must equal the journey's current `active_plan_version_id`, so a draft read against a plan that has since moved cannot be committed into it; `Idempotency-Key` is required so a retry replays the same plan version instead of writing a second one. Nothing is selected, started or activated here -- the row is CANDIDATE until `POST /api/v1/journeys/{journey_id}/departure/commit` -- and no provider is reachable from the module, so this cannot spend quota. An undeclared cost stays undeclared: the column's zero is stored because the DDL demands NOT NULL, and `cost_declared` says false. */
+        post: operations["postJourneyPlanFromSlots"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/resilience/counterfactuals": {
         parameters: {
             query?: never;
@@ -8280,6 +8299,139 @@ export interface operations {
                 content?: never;
             };
             /** @description A missing key (CONSENT_IDEMPOTENCY_KEY_REQUIRED), an unknown decision word (CONSENT_DECISION_WORD_UNKNOWN), a body field that is not `decision` (CONSENT_BODY_TAKES_ONLY_DECISION), or a body that names another traveller (CONSENT_DELEGATION_REFUSED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyPlanFromSlots: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    expected_revision: string;
+                    /** @enum {string} */
+                    planning_mode?: "balanced" | "budget" | "explore" | "strict_schedule";
+                    slots: {
+                        /** Format: uuid */
+                        place_id: string;
+                        /** Format: date-time */
+                        start_at: string;
+                        /** Format: date-time */
+                        end_at: string;
+                        estimated_cost_minor?: number;
+                        currency?: string;
+                        travel_from_prev_min?: number;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description The CANDIDATE version that was written, with per-slot gaps and next actions */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        plan_version_id: string;
+                        /** Format: uuid */
+                        draft_revision: string;
+                        /** @constant */
+                        status: "CANDIDATE";
+                        version_no: number;
+                        planning_mode?: string;
+                        /** Format: uuid */
+                        created_by_traveler_id?: string;
+                        selected: boolean;
+                        activated: boolean;
+                        idempotency_replay?: boolean;
+                        created_at?: string;
+                        slots: {
+                            sequence_no: number;
+                            /** Format: uuid */
+                            place_id: string;
+                            /** Format: date-time */
+                            start_at: string;
+                            /** Format: date-time */
+                            end_at: string;
+                            estimated_cost_minor: number;
+                            cost_declared: boolean;
+                            currency: string;
+                            facts: {
+                                /** Format: uuid */
+                                place_id: string;
+                                title: string;
+                                city_code: string;
+                                has_coordinate: boolean;
+                                opening_hours_recorded: boolean;
+                                verified_cost_minor: number | null;
+                                cost_declared: boolean;
+                                gaps: ("OPENING_HOURS_NOT_RECORDED" | "NO_COST_DECLARED_FOR_THIS_SLOT" | "PLACE_HAS_NO_POINT")[];
+                            };
+                        }[];
+                        counts: {
+                            slots: number;
+                            with_coordinate: number;
+                            hours_recorded: number;
+                            cost_verified: number;
+                            cost_declared: number;
+                        };
+                        gaps: {
+                            sequence_no: number;
+                            /** Format: uuid */
+                            place_id: string;
+                            gaps: string[];
+                        }[];
+                        next_actions: string[];
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A slot names a place id this store does not have (error.reason_code PLACE_ROW_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The draft was read against a plan that is no longer in force (BASE_PLAN_MOVED), a slot's place belongs to another city (PLACE_NOT_IN_THIS_JOURNEYS_CITY), or the key was reused for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A missing key (IDEMPOTENCY_KEY_REQUIRED), a missing revision (EXPECTED_REVISION_REQUIRED), a provider id where a canonical id belongs (SLOT_NAMES_A_PROVIDER_ID_NOT_A_CANONICAL_PLACE), a slot that describes a place (SLOT_CARRIES_ONLY_SERVER_OWNED_FIELDS), a body field this door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE) or an end not after a start (SLOT_TIMES_UNORDERED) */
             422: {
                 headers: {
                     [name: string]: unknown;
