@@ -368,8 +368,24 @@ def _banned_by_a_check(body: str, sentence: str) -> bool:
     return seen_any
 
 
-def asserted_elsewhere(sentence: str, own: str) -> tuple[list[str], list[str]]:
-    """Files outside the dictionary and outside the candidate's own file: (demanded, forbidden).
+SPEC_FOLDER = "e2e"
+
+
+def role_of(name: str) -> str:
+    """Is this file an acceptance, or is it the campaign's own machinery?
+
+    Only `e2e/` carries a named order's acceptance. `scripts/` and `tools/` hold instruments: a mover
+    that carries a sentence in a from->to table so it can relocate it, a ruler that quotes a phrase as
+    its vocabulary, a gate that lists a sentence precisely so it can fail it. Reading an instrument's
+    copy as a demand is how one lane's one-off migration script ended up protecting a defensive
+    sentence from the very ruler built to find it.
+    """
+
+    return "spec" if name.split("/", 1)[0] == SPEC_FOLDER else "instrument"
+
+
+def asserted_elsewhere(sentence: str, own: str) -> tuple[list[str], list[str], list[str]]:
+    """Files outside the dictionary and outside the candidate's own file: (demanded, forbidden, quoted).
 
     `own` matters now that the candidates come from the modules themselves: a module quote is the
     sentence under test, not a second writer of it. Without it every module candidate would be
@@ -380,20 +396,30 @@ def asserted_elsewhere(sentence: str, own: str) -> tuple[list[str], list[str]]:
     `tools/copyOnScreenCheck_r1.mjs` lists "这一屏没有改动你的任何行程" among the phrases that may NOT
     reach the screen, so counting that file as a writer of the demand would tell the next reader that
     the reassurance is load-bearing -- when it is exactly what the gate is waiting to catch.
+
+    `quoted` is the third bucket and the newest: an instrument that holds the sentence without banning
+    it is neither demanding nor forbidding, it is just carrying the text. It gets printed so a reader
+    can see who else has the string, and it does not count as a reason the sentence must stay.
     """
 
     if len(sentence) < 8:
-        return [], []
+        return [], [], []
     demanded: list[str] = []
     forbidden: list[str] = []
+    quoted: list[str] = []
     for name, body in check_files():
         if name == own or sentence not in body:
             continue
-        (forbidden if _banned_by_a_check(body, sentence) else demanded).append(name)
+        if _banned_by_a_check(body, sentence):
+            forbidden.append(name)
+        elif role_of(name) == "spec":
+            demanded.append(name)
+        else:
+            quoted.append(name)
     for name, pieces in source_sentences().items():
         if sentence in pieces and name != own:
             demanded.append(name)
-    return sorted(set(demanded)), sorted(set(forbidden))
+    return sorted(set(demanded)), sorted(set(forbidden)), sorted(set(quoted))
 
 
 def candidates() -> list[tuple[str, str, str, str, str]]:
@@ -511,6 +537,42 @@ def selftest() -> int:
     pointing = sorted(key for _, _, key, value in hits if "上方" in value or "下面" in value)
     results.append(("the identity sentences this campaign cut are no longer among them",
                     all("identity" not in key for key in pointing), str(pointing)[:56]))
+    # The three demand buckets, against a stubbed index. These controls exist because
+    # `scripts/i18n_0585_move_r1.py` -- a one-off mover whose ROWS table carries a sentence precisely so
+    # it can relocate it -- was being counted as the reason a defensive dictionary sentence had to stay.
+    saved_checks, saved_sources = _CHECKS, _SOURCE_SENTENCES
+    try:
+        script_sentence = "自测合成句子甲：只躺在搬运器的映射表里"
+        spec_sentence = "自测合成句子乙：被验收规格逐字要着"
+        globals()["_CHECKS"] = [("scripts/mover_selftest.py", 'ROWS = [("k", "%s", "moved")]' % script_sentence)]
+        globals()["_SOURCE_SENTENCES"] = {}
+        d_one, f_one, q_one = asserted_elsewhere(script_sentence, "src/features/x/yCopy.ts")
+        results.append(("a mover script's from->to table is quoted, never demanded",
+                        d_one == [] and q_one == ["scripts/mover_selftest.py"] and f_one == [],
+                        "demanded=%s quoted=%s" % (d_one, q_one)))
+        globals()["_CHECKS"] = [("e2e/selftest_spec.ts", 'expect(text).toContain("%s")' % spec_sentence)]
+        d_two, _, q_two = asserted_elsewhere(spec_sentence, "src/features/x/yCopy.ts")
+        results.append(("an e2e spec quote is still a demand (the narrowing did not eat the real case)",
+                        d_two == ["e2e/selftest_spec.ts"] and q_two == [],
+                        "demanded=%s quoted=%s" % (d_two, q_two)))
+        globals()["_CHECKS"] = [("tools/selftest_gate.mjs", 'expect(text).toContain("%s")' % spec_sentence)]
+        d_three, _, q_three = asserted_elsewhere(spec_sentence, "src/features/x/yCopy.ts")
+        results.append(("the same sentence held under tools/ flips out of the demand bucket",
+                        d_three == [] and q_three == ["tools/selftest_gate.mjs"],
+                        "demanded=%s quoted=%s" % (d_three, q_three)))
+        # ...but a second module that writes the line as its own literal is a reader, not a carrier:
+        # that path runs through source_sentences(), and a control over it is what keeps the narrowing
+        # from throwing away real demand while removing the false kind.
+        module_sentence = "自测合成句子丙：另一个模块把它当自己的话写着"
+        globals()["_CHECKS"] = []
+        globals()["_SOURCE_SENTENCES"] = {"src/features/other/OtherCopy.ts": {module_sentence}}
+        d_four, f_four, q_four = asserted_elsewhere(module_sentence, "src/features/x/yCopy.ts")
+        results.append(("a second module writing the line as its own literal still demands it",
+                        d_four == ["src/features/other/OtherCopy.ts"] and q_four == [] and f_four == [],
+                        "demanded=%s quoted=%s" % (d_four, q_four)))
+    finally:
+        globals()["_CHECKS"] = saved_checks
+        globals()["_SOURCE_SENTENCES"] = saved_sources
     dictionary_rows = dictionary_values()
     results.append(("the dictionary is read on both sides",
                     len(dictionary_rows) > 2000 and {side for side, _, _ in dictionary_rows} == {"en", "zh"},
@@ -561,19 +623,24 @@ def main() -> int:
     shown = 0
     free = 0
     banned_only = 0
+    instrument_only = 0
     for origin, side, key, marker, sentence in rows:
         own = "" if origin == DICT_LABEL else origin
-        demanded, banned = asserted_elsewhere(sentence, own)
+        demanded, banned, quoted = asserted_elsewhere(sentence, own)
         if not demanded:
             free += 1
             if banned:
                 banned_only += 1
+            if quoted:
+                instrument_only += 1
         if shown >= limit:
             continue
         shown += 1
         detail = ""
         if demanded:
             detail = " <- " + ", ".join(demanded[:2])
+        elif quoted:
+            detail = " <- carried, not demanded, by " + ", ".join(quoted[:2])
         elif banned:
             detail = " <- banned by " + ", ".join(banned[:2])
         print(
@@ -586,8 +653,9 @@ def main() -> int:
         print("      " + sentence[:150])
     print("----")
     print(
-        "candidates: {} | shown: {} | not demanded by any check: {} (of which named in a ban list: {})".format(
-            len(rows), shown, free, banned_only
+        "candidates: {} | shown: {} | not demanded by any spec: {} (of which named in a ban list: {},"
+        " held only inside an instrument's own table: {})".format(
+            len(rows), shown, free, banned_only, instrument_only
         )
     )
     if shown < len(rows):
