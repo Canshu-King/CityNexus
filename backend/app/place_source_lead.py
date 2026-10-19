@@ -149,15 +149,15 @@ def _from_row(row: Place, *, matched_by: str, lead: str, shape: str,
         shape=shape,
         status=STATUS_RESOLVED,
         reason_code=REASON_RESOLVED,
-        place_id=str(row.id),
-        provider_key=str(row.provider_key),
-        external_id=str(row.external_id),
-        city_code=str(row.city_code or ""),
-        name=str(row.name),
+        place_id=row.id,
+        provider_key=row.provider_key,
+        external_id=row.external_id,
+        city_code=row.city_code,
+        name=row.name,
         matched_by=matched_by,
         # A candidate row and its materialised place should carry one region. When they do not, the
         # lead is not trustworthy for imagery even though a row was found: say so rather than pick.
-        region_conflict=bool(candidate_region and candidate_region != str(row.city_code or "")),
+        region_conflict=bool(candidate_region and candidate_region != row.city_code),
     )
 
 
@@ -181,7 +181,7 @@ def resolve_place_lead(session: Session, lead: str, *,
         if row is None:
             return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY if journey_id else REASON_NOT_A_LEAD,
                                "no place row carries this id")
-        if journey_id and not place_is_in_journey(session, journey_id, str(row.id)):
+        if journey_id and not place_is_in_journey(session, journey_id, row.id):
             return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY,
                                "the journey does not hold this place")
         return _from_row(row, matched_by="place_id", lead=raw, shape=shape)
@@ -204,11 +204,11 @@ def resolve_place_lead(session: Session, lead: str, *,
         if row is None:
             return _unresolved(raw, shape, REASON_NOT_MATERIALIZED,
                                "the candidate has no place row yet")
-        if journey_id and not place_is_in_journey(session, journey_id, str(row.id)):
+        if journey_id and not place_is_in_journey(session, journey_id, row.id):
             return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY,
                                "the journey does not hold this place")
         return _from_row(row, matched_by="candidate_identity", lead=raw, shape=shape,
-                         candidate_region=str(candidate.city_code or ""))
+                         candidate_region=candidate.city_code)
 
     rows = list(session.scalars(select(Place).where(Place.external_id == raw)))
     arm = "provider_object_id"
@@ -220,7 +220,7 @@ def resolve_place_lead(session: Session, lead: str, *,
             rows = [pk_row]
             arm = "place_id"
     if journey_id:
-        rows = [row for row in rows if place_is_in_journey(session, journey_id, str(row.id))]
+        rows = [row for row in rows if place_is_in_journey(session, journey_id, row.id)]
     if not rows:
         return _unresolved(raw, shape,
                            REASON_NOT_IN_JOURNEY if journey_id else REASON_NOT_A_LEAD,

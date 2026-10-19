@@ -42,6 +42,9 @@ from app.db.session import get_session
 IDENTITY_PATH = "/api/v1/journeys/{}/place-identity"
 MEDIA_PATH = "/api/v1/journeys/%s/places/%s/media"
 SECRET = uuid.uuid4().hex + uuid.uuid4().hex  # generated, never printed, never committed
+#: What the route handed the provider on the last media read, so the identity columns are checked
+#: and not just the place id.  `_app` installs the spy; the test that reads it clears it first.
+HANDED: list[dict] = []
 
 
 def _now() -> str:
@@ -158,6 +161,7 @@ def _app(seeded, monkeypatch):
 
     async def _spy(**kwargs):
         seen.append(str(kwargs.get("place_id")))
+        HANDED.append(dict(kwargs))
         return _FixtureResult(str(kwargs.get("place_id")))
 
     monkeypatch.setattr(place_media_routes.place_media, "collect_place_media", _spy)
@@ -304,6 +308,29 @@ def test_media_asked_with_a_lead_reaches_the_same_row_as_media_asked_with_the_id
     assert seen == [seeded.ids["held"], seeded.ids["held"]]
     assert by_lead.json()["place_id"] == by_id.json()["place_id"]
     assert by_lead.json()["place_name"] == "冠豸山"
+
+
+def test_the_media_read_hands_the_provider_the_row_s_own_identity_columns(seeded, monkeypatch):
+    """Reading a column is not the same as handing over something that can never be empty.
+
+    The route passes four values to the provider.  They are policed here rather than by a defensive
+    `or ""` that would swallow a NULL into an empty string: an empty region silently turns a bound
+    photograph into NO_IMAGE, and no test would notice.  Both leads reach the same row, so both must
+    hand over the same columns.
+    """
+    client, seen = _app(seeded, monkeypatch)
+    HANDED.clear()
+    headers = _header(seeded.ids["owner"])
+    assert client.get(MEDIA_PATH % (seeded.ids["journey"], seeded.ids["held"]),
+                      headers=headers).status_code == 200
+    assert client.get(MEDIA_PATH % (seeded.ids["journey"], seeded.ids["cand_held"]),
+                      headers=headers).status_code == 200
+    assert HANDED and all(
+        handed["place_id"] == seeded.ids["held"] and handed["label"] == "冠豸山"
+        and handed["region"] == "连城县" and handed["provider_object_id"] == "photon:node/2"
+        for handed in HANDED), HANDED
+    assert set(HANDED[0]) == {"place_id", "label", "region", "provider_object_id", "client"}
+    assert seen == [seeded.ids["held"], seeded.ids["held"]]
 
 
 def test_a_lead_carrying_a_slash_resolves_and_the_answer_carries_the_path_to_call(

@@ -122,7 +122,7 @@ def _place_of_lead(session: Session, journey_id: str, lead: str) -> Place:
     reading = place_source_lead.resolve_place_lead(session, lead, journey_id=journey_id)
     if not reading.resolved or reading.region_conflict:
         raise _out_of_scope(journey_id, lead)
-    row = session.get(Place, str(reading.place_id))
+    row = session.get(Place, reading.place_id)
     if row is None:
         raise _out_of_scope(journey_id, lead)
     return row
@@ -146,10 +146,10 @@ async def journey_place_media(
 
     try:
         result = await place_media.collect_place_media(
-            place_id=str(row.id),
-            label=str(row.name),
-            region=str(row.city_code or ""),
-            provider_object_id=str(row.external_id or ""),
+            place_id=row.id,
+            label=row.name,
+            region=row.city_code,
+            provider_object_id=row.external_id,
             client=client,
         )
     finally:
@@ -157,8 +157,8 @@ async def journey_place_media(
         await client.aclose()
     payload = result.as_payload()
     payload["journey_id"] = str(journey_id)
-    payload["place_name"] = str(row.name)
-    payload["coordinate_system"] = str(row.coordinate_system or "")
+    payload["place_name"] = row.name
+    payload["coordinate_system"] = row.coordinate_system
     return payload
 
 
@@ -195,5 +195,5 @@ async def journey_place_identity(
             "LEAD_REGION_CONFLICT",
             {"journey_id": str(journey_id), "lead": lead, "region": reading.city_code},
         )
-    payload["media_path"] = media_path_for(str(journey_id), str(reading.place_id))
+    payload["media_path"] = media_path_for(str(journey_id), reading.place_id)
     return payload
