@@ -1,0 +1,122 @@
+{
+  "product_sha": "87bfedced73a5b821986db1509e264f85fbd1a31",
+  "journey_id": "156d1cb9-398b-4c13-a789-7f699268b42f",
+  "task_id": "bac11cb8-2f52-4111-aa97-204c1f0b48cb",
+  "before": {
+    "usage": {
+      "model_turns": 43,
+      "tool_calls": 40
+    },
+    "draft_revision": 6,
+    "draft_sha256": "9adcc621c65e3207a7bb40cd710f51446a5801f40cd1366e80e7154523e465f3",
+    "provider_calls": 73
+  },
+  "completed_at": "2026-10-19T07:39:28.576208+00:00",
+  "evidence": "LIVE_MODEL_ON_EXISTING_OWNER_SIGNED_MISSION",
+  "authentication": "local trusted operator signed existing owner; not a new human login",
+  "run_id": "4715479e-c9e9-4625-b3d7-626c25539e15",
+  "after": {
+    "usage": {
+      "model_turns": 46,
+      "tool_calls": 42
+    },
+    "draft_revision": 6,
+    "draft_sha256": "9adcc621c65e3207a7bb40cd710f51446a5801f40cd1366e80e7154523e465f3",
+    "provider_calls": 73
+  },
+  "main_draft_unchanged": true,
+  "steps": [
+    {
+      "tool": "read_guardian_stream",
+      "status": "COMPLETED",
+      "result": {
+        "acquisition_attempted": false,
+        "counts": {
+          "actions": 0,
+          "events": 0,
+          "impacts": 0,
+          "open_events": 0
+        },
+        "elapsed_ms": 3,
+        "recovery_generation": null,
+        "status": "WATCH_NOT_RUNNING"
+      }
+    },
+    {
+      "tool": "save_draft_variants",
+      "status": "COMPLETED",
+      "result": {
+        "elapsed_ms": 5,
+        "status": "VARIANTS_SAVED",
+        "variant_ids": [
+          "relaxed",
+          "budget",
+          "local"
+        ]
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "relaxed",
+      "title": "轻松版：每天一景点+一室内馆",
+      "day_count": 2,
+      "source_place_count": 6,
+      "route_count": 3,
+      "unknown_summary": [
+        "营业时间与票价待查",
+        "部分地点间的交通时间待查",
+        "部分安排还需要确定地点"
+      ]
+    },
+    {
+      "id": "budget",
+      "title": "省钱版：少转场、县城步行为主",
+      "day_count": 2,
+      "source_place_count": 7,
+      "route_count": 2,
+      "unknown_summary": [
+        "营业时间与票价待查",
+        "部分地点间的交通时间待查",
+        "部分安排还需要确定地点"
+      ]
+    },
+    {
+      "id": "local",
+      "title": "特色版：古村古建+客家菜",
+      "day_count": 2,
+      "source_place_count": 6,
+      "route_count": 1,
+      "unknown_summary": [
+        "营业时间与票价待查",
+        "部分地点间的交通时间待查",
+        "部分安排还需要确定地点"
+      ]
+    }
+  ],
+  "guardian_http_status": 200,
+  "guardian": {
+    "tool": "read_guardian_stream",
+    "journey_id": "156d1cb9-398b-4c13-a789-7f699268b42f",
+    "mission_id": null,
+    "status": "WATCH_NOT_RUNNING",
+    "watch": {
+      "configured": false,
+      "last_observed_at": null,
+      "latest_pulse": null
+    },
+    "recovery_epoch": null,
+    "stream": [],
+    "counts": {
+      "events": 0,
+      "open_events": 0,
+      "impacts": 0,
+      "actions": 0
+    }
+  },
+  "restore_http_status": 200,
+  "restored_variant_count": 3,
+  "journey_status": "DRAFT",
+  "active_journey_created": false,
+  "new_map_provider_requests": false
+}
