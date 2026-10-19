@@ -992,7 +992,7 @@ const en: Dict = {
   "inbox.confirmUnreadable": "The server did not answer again after the attempt; it is not recorded as passed.",
   "inbox.correctionsSavedStillNeeds": "Corrections saved. The server is still missing {fields}.",
   "inbox.technicalDetail": "Technical detail",
-  "shell.reservationReviewFields": "This cannot become a commitment yet - the server is still missing {fields}. It is in \"Confirmations waiting on you\" below: fill in what is missing, then press \"Confirm and protect\".",
+  "shell.reservationReviewFields": "This cannot become a commitment yet - the server is still missing {fields}. It is in 'Confirmations waiting on you': fill in what is missing, then press 'Confirm and protect'.",
   "main.cityNexusRequestFailed": "CityNexus request failed",
   "main.cityNexusRequestRefusedHttp": "CityNexus request refused (HTTP {status})",
   "main.persistedOperationUpdate": "Persisted operation update",
@@ -1571,7 +1571,7 @@ const en: Dict = {
   "simulation.readsDidNotAnswerWhichIsNotTheSameAsNoSlot": " ({n} reads did not answer, which is not the same as \"no slot\")",
   "simulation.sceneWindow": "Scene window",
   "simulation.thePreviousActionHasNotReturnedYet": "The previous action has not returned yet.",
-  "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "The server answered with {listed} proposals, {open} still open; \"Accept the proposal\" below now points at {id}. Accepting is what changes the plan.",
+  "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "The server answered with {listed} proposals, {open} still open; 'Accept the proposal' now points at {id}. Accepting is what changes the plan.",
   "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "The server produced proposals, but none of the {listed} it now lists is open, so \"Accept the proposal\" will refuse and say why on its own line.",
   "simulation.thisActionIsUnavailableRightNow": "This action is unavailable right now: {reason}",
 
