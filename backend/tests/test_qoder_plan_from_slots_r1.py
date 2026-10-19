@@ -128,12 +128,21 @@ def seeded():
 
 
 def _app(seeded, monkeypatch):
+    """Mount the door the way `app.main` does, not the way `include_router` does.
+
+    This is the arm's whole point: a test app built with `include_router` inherits the router's
+    `status_code`, so it answered 201 for every spec in this file while a real uvicorn -- where the
+    door is mounted through main.py's plain-route loop -- answered 200. Registering the same way the
+    app does is what makes `http_status 201` below a claim about the shipped door.
+    """
     monkeypatch.setattr(traveler_principal, "settings",
                         replace(settings, traveler_auth_secret=SECRET))
     from app import main as main_module
 
     app = FastAPI()
-    app.include_router(plan_from_slots.router)
+    for route in plan_from_slots.router.routes:
+        app.add_api_route(route.path, route.endpoint, methods=sorted(route.methods),
+                          name=route.name, status_code=route.status_code)
     app.add_exception_handler(StarletteHTTPException, main_module.http_error)
 
     def override_session():

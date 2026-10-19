@@ -923,6 +923,11 @@ for _media_route in (*place_media_routes.router.routes, *departure_read.router.r
         _media_route.endpoint,
         methods=sorted(_media_route.methods),
         name=_media_route.name,
+        # The declared status travels with the route: a router registered through `include_router`
+        # carries `status_code`, and this loop is not `include_router`. Without this line a door that
+        # says 201 on its router answers 200 at the socket, which is what the draft-write door did
+        # against a real uvicorn while its contract still promised 201.
+        status_code=_media_route.status_code,
     )
 
 @app.get("/api/v1/health")
