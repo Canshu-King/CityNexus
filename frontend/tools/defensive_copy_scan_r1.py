@@ -19,11 +19,17 @@ campaign trimmed `LocaleContext.tsx` for eight waves while `features/access/acce
 "so this screen declines to ..." shape this file was written to find. A ruler that reads only the
 shared dictionary reports a clean UI it has not looked at.
 
+The same mistake happened a second time inside the modules, and is why the readout counts values and
+not files: five `*Copy.ts` files keep both languages inside one key (`poiImportCopy.ts`,
+`collectionCopy.ts`, `mapPanelCopy.ts`, `footprintCopy.ts`, `checkinCopy.ts`) instead of one table per
+locale, and the first version of this file read none of their sentences while still reporting the file
+count. `--selftest` pins all three shapes.
+
 Markers are deliberately blunt: they will also catch honest sentences that happen to use the words
 ("Nothing was written" is a fact when the reader needs to know the request did not land). That is
 why the verdict column is the product of a measurement, not a filter that hides them.
 
-Usage: python tools/defensive_copy_scan_r1.py [--limit N]
+Usage: python tools/defensive_copy_scan_r1.py [--limit N] [--selftest]
 """
 
 from __future__ import annotations
@@ -45,6 +51,15 @@ MARKERS = (
     "no need to worry", "we are not guessing", "not a guess",
     "so this screen", "so this line", "so nothing is", "so there is no figure",
     "这一屏", "这屏", "这句不", "所以这里不", "所以这里没有", "this screen", "this line shows no",
+    # Added 2026-10-19 after the entry-shaped modules went into the denominator: these are the
+    # shapes those files write their self-justification in, and the list above did not see them.
+    # `这一项` was tried here and taken out again: it matched two ordinary aria labels ("改这一项"),
+    # which is a demonstrative, not a defence -- a marker that fires on normal wording makes every
+    # later count unreadable.
+    "不另起", "不替它", "这里不说", "这里不写", "不猜", "按状态拒绝", "与你的操作无关", "和你无关",
+    "屏上不说", "no fourth word", "nothing is invented", "is not invented",
+    "invented here", "we do not guess", "do not guess", "refuses by state", "this one refuses",
+    "nothing is inferred", "no word is", "unrelated to you", "not because of you",
 )
 
 KEY_LINE = re.compile(r'^\s*"([A-Za-z0-9_.\-]+)":\s*"((?:[^"\\]|\\.)*)"\s*,?\s*$')
@@ -77,10 +92,18 @@ def blocks(lines: list[str]) -> dict[str, tuple[int, int]]:
 
 
 def side_of(block: str) -> str | None:
+    """Which locale a table opener names -- by exact match, not by prefix.
+
+    This used to be `startswith("en")`, and `collectionCopy.ts` has a key called `entry`, so that one
+    key was read as the English half of the file: two values landed under the wrong side and the rest
+    of the file was skipped as "not a per-locale table". A prefix test on a name is a guess about a
+    name; the vocabulary is four strings, so compare all four.
+    """
+
     name = block.lower()
-    if name.startswith("zh"):
+    if name in ("zh", "zh-cn"):
         return "zh"
-    if name.startswith("en"):
+    if name in ("en", "en-gb", "en-us"):
         return "en"
     return None
 
@@ -128,6 +151,89 @@ def parse_module(path: Path) -> list[tuple[str, str, str]]:
         if value:
             rows.append((side, key, next(g for g in value.groups() if g)))
     return rows
+
+
+ENTRY_BLOCK = re.compile(r'^  (?:"(?P<q>[A-Za-z0-9_.\-]+)"|(?P<bare>[A-Za-z][\w.]*)):\s*\{\s*$')
+ENTRY_BLOCK_INLINE = re.compile(
+    r'^  (?:"(?P<q>[A-Za-z0-9_.\-]+)"|(?P<bare>[A-Za-z][\w.]*)):\s*\{\s*(?=\S)'
+)
+ENTRY_CLOSE = re.compile(r"^\s*\},?\s*$")
+SIDE_PAIR = re.compile(r'(?P<side>"(?:en|zh|en-US|zh-CN)"|(?:en|zh|en-US|zh-CN))\s*:\s*(?P<value>"(?:[^"\\]|\\.)*")')
+
+
+def has_locale_table(lines: list[str]) -> bool:
+    """True when the file keeps one table per locale (`en: {`), which is what `parse_module` reads."""
+
+    for line in lines:
+        opened = COPY_BLOCK.match(line)
+        if opened and side_of(opened.group("q") or opened.group("bare") or ""):
+            return True
+    return False
+
+
+def parse_entries(lines: list[str]) -> list[tuple[str, str, str]]:
+    """(side, key, value) for the modules that keep both languages inside one key instead of one
+    table per locale: poiImportCopy.ts, collectionCopy.ts, mapPanelCopy.ts, footprintCopy.ts,
+    checkinCopy.ts.
+
+    This shape was not read at all by the first version of this ruler, which then printed "module
+    copy files scanned: 19" -- a file count a reader naturally takes for coverage while five of those
+    files were contributing nothing. Two sub-shapes are handled: a key whose `{` opens a block, and a
+    key that opens and carries the first side on the same line (`noZoneHeading: { zh: "…",`). Comments
+    are skipped, because these files quote `zh:` and `en:` shapes inside their own explanations.
+    """
+
+    rows: list[tuple[str, str, str]] = []
+    entry: str | None = None
+    in_comment = False
+    for line in lines:
+        stripped = line.strip()
+        if in_comment:
+            in_comment = "*/" not in line
+            continue
+        if stripped.startswith("//"):
+            continue
+        if stripped.startswith("/*"):
+            in_comment = "*/" not in line
+            continue
+        opener = ENTRY_BLOCK.match(line) or ENTRY_BLOCK_INLINE.match(line)
+        if opener:
+            entry = opener.group("q") or opener.group("bare")
+        elif ENTRY_CLOSE.match(line):
+            entry = None
+        if entry is None:
+            continue
+        for pair in SIDE_PAIR.finditer(line):
+            side = side_of(pair.group("side").strip('"'))
+            if side is None:
+                continue
+            rows.append((side, entry, pair.group("value")[1:-1].replace('\\"', '"')))
+    return rows
+
+
+def module_copy() -> list[tuple[str, str, str, str]]:
+    """(file label, side, key, value) for every sentence in the feature copy modules, both shapes."""
+
+    rows: list[tuple[str, str, str, str]] = []
+    table_files = entry_files = 0
+    for path in module_files():
+        label = path.relative_to(FRONTEND).as_posix()
+        lines = path.read_text(encoding="utf-8", errors="ignore").split("\n")
+        table = parse_module(path)
+        rows += [(label, side, key, value) for side, key, value in table]
+        table_files += 1 if table else 0
+        if has_locale_table(lines):
+            continue
+        extra = parse_entries(lines)
+        rows += [(label, side, key, value) for side, key, value in extra]
+        entry_files += 1 if extra else 0
+    COVERAGE["table_files"] = table_files
+    COVERAGE["entry_files"] = entry_files
+    COVERAGE["values"] = len(rows)
+    return rows
+
+
+COVERAGE: dict[str, int] = {}
 
 
 def sentences(value: str) -> list[str]:
@@ -267,28 +373,124 @@ def candidates() -> list[tuple[str, str, str, str, str]]:
                 hit = next((marker for marker in MARKERS if marker in sentence), None)
                 if hit:
                     rows.append((DICT_LABEL, side, key, hit, sentence))
-    for path in module_files():
-        label = path.relative_to(FRONTEND).as_posix()
-        seen_key: set[tuple[str, str]] = set()
-        for side, key, value in parse_module(path):
-            if (side, key) in seen_key:
-                continue
-            seen_key.add((side, key))
-            for sentence in sentences(value):
-                hit = next((marker for marker in MARKERS if marker in sentence), None)
-                if hit:
-                    rows.append((label, side, key, hit, sentence))
+    seen_key: set[tuple[str, str, str]] = set()
+    for label, side, key, value in module_copy():
+        if (label, side, key) in seen_key:
+            continue
+        seen_key.add((label, side, key))
+        for sentence in sentences(value):
+            hit = next((marker for marker in MARKERS if marker in sentence), None)
+            if hit:
+                rows.append((label, side, key, hit, sentence))
     return rows
 
 
+def selftest() -> int:
+    """Controls over the three module shapes and the marker list, on text typed here.
+
+    This file's own history is the reason: it read one of the two module shapes for eight waves and
+    printed a file count that looked like coverage. Each control below is a shape or a phrasing that
+    exists in the tree, and a mutation of the reader or the vocabulary turns one of them RED -- the
+    paired mutation script (`_copy_trim_door_mutate_r1.py` in the campaign scratch tree) is what proves
+    that, not this list of strings.
+    """
+
+    table = [
+        "export const accessCopy = {",
+        "  en: {",
+        '    "access.doorPresent":',
+        '      "The server answered the doors. Nothing is invented by this reader.",',
+        "  },",
+        "};",
+    ]
+    blocks = [
+        "export const poiImportCopy = {",
+        "  exitStoreOnly: {",
+        '    zh: "只存不排（测试字串）",',
+        '    en: "Keep them without a day (test string)",',
+        "  },",
+        "  storeOnlyRefusal: {",
+        '    zh: "这里不另起第三种说法（测试字串）。",',
+        '    en: "No third word is invented here (test string), so this choice refuses.",',
+        "  },",
+        "};",
+    ]
+    inline = [
+        "const COPY = {",
+        '  noZoneHeading: { zh: "下面的印按本机钟排（测试字串）。",',
+        '                   en: "The rows below follow this device clock (test string)." },',
+        '  plain: { zh: "服务器答了 200。", en: "The server answered 200." },',
+        "};",
+    ]
+
+    results: list[tuple[str, bool, str]] = []
+    results.append(("a per-locale table file is recognised as a table", has_locale_table(table), str(has_locale_table(table))))
+    results.append(("a per-key file is NOT mistaken for a table", not has_locale_table(blocks), str(has_locale_table(blocks))))
+    entries = parse_entries(blocks)
+    results.append(("both sides of a {zh, en} block are read",
+                    {side for side, _, _ in entries} == {"zh", "en"} and len(entries) == 4, str(entries)[:60]))
+    key_hit = [value for side, key, value in entries if key == "storeOnlyRefusal" and side == "en"]
+    results.append(("the refusal sentence is attributed to its own key",
+                    bool(key_hit) and key_hit[0].startswith("No third word"), str(key_hit)[:60]))
+    flat = parse_entries(inline)
+    results.append(("both languages inside one line are read (key: { zh: ..., en: ... } on one line)",
+                    len(flat) == 4, str([(side, key) for side, key, _ in flat])[:64]))
+    comments = parse_entries([
+        "const X = {",
+        "  a: {",
+        '    zh: "真正的中文",',
+        '    /* prose that quotes en: "not a value" */',
+        "  },",
+        "};",
+    ])
+    results.append(("a comment inside an entry is not read as a value",
+                    all("not a value" not in value for _, _, value in comments), str(comments)[:60]))
+    real = parse_module(FRONTEND / "src/features/access/accessCopy.ts")
+    results.append(("the per-locale table shape is still read (accessCopy.ts on disk)",
+                    len(real) > 200 and {side for side, _, _ in real} == {"en", "zh"}, "%d values" % len(real)))
+    results.append(("a key named `entry` is not read as the English half of a table",
+                    side_of("entry") is None and side_of("en") == "en" and side_of("en-US") == "en",
+                    "entry=%s en=%s en-US=%s" % (side_of("entry"), side_of("en"), side_of("en-US"))))
+    collected = parse_entries((SRC / "features/collections/collectionCopy.ts").read_text(encoding="utf-8").split("\n"))
+    results.append(("collectionCopy.ts is read through the entry shape (it was the file the `entry` key hid)",
+                    len(collected) >= 40 and {side for side, _, _ in collected} == {"en", "zh"},
+                    "%d values" % len(collected)))
+    for text, want in [
+        ("No third word is invented here, so this choice refuses.", True),
+        ("这里不另起第三种说法。", True),
+        ("The server answered 200 for this trip.", False),
+    ]:
+        hit = next((marker for marker in MARKERS if marker in text), None)
+        results.append(("marker list %s a sentence of this shape" % ("catches" if want else "ignores"),
+                        (hit is not None) == want, str(hit)))
+    failed = [name for name, ok, _ in results if not ok]
+    for name, ok, detail in results:
+        print("%s | %s | %s" % ("PASS" if ok else "FAIL", name, detail))
+    print("controls: {} | failed: {}".format(len(results), len(failed)))
+    if failed:
+        print("SELFTEST RED (rc 3): " + "; ".join(failed))
+        return 3
+    print("SELFTEST GREEN: all three module shapes are read and the vocabulary bites where it claims to.")
+    return 0
+
+
 def main() -> int:
+    if "--selftest" in sys.argv:
+        return selftest()
     limit = 40
     if "--limit" in sys.argv:
         limit = int(sys.argv[sys.argv.index("--limit") + 1])
 
     rows = candidates()
     in_dictionary = sum(1 for row in rows if row[0] == DICT_LABEL)
-    print("module copy files scanned:", len(module_files()))
+    # Coverage, because "N files scanned" was read as "N files' copy judged" while five of those
+    # files were contributing no sentences at all. These are counts of values that were parsed.
+    print(
+        "copy values read: {} (module files with per-locale tables {} / with per-key {{zh, en}} blocks {})".format(
+            COVERAGE.get("values", 0), COVERAGE.get("table_files", 0), COVERAGE.get("entry_files", 0)
+        )
+    )
+    print("module copy files in the tree:", len(module_files()))
     print(
         "copy sentences carrying a defensive / self-describing marker: {} "
         "(dictionary {} / module {})".format(len(rows), in_dictionary, len(rows) - in_dictionary)
