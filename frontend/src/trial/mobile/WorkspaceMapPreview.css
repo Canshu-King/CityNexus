@@ -1,0 +1,45 @@
+/* Unnetworked preview of signed WGS84 leads. It is not a road map. */
+.rev-mobile-v1 .rev-workspace-map-preview {
+  position: relative;
+  min-height: 265px;
+  overflow: hidden;
+  border-radius: 17px;
+  border: 1px solid #d3dfdf;
+  background:
+    radial-gradient(circle at 65% 40%,rgba(99,173,151,.25) 0 19%,transparent 20%),
+    radial-gradient(circle at 27% 74%,rgba(114,166,201,.18) 0 22%,transparent 23%),
+    repeating-linear-gradient(28deg,transparent 0 45px,rgba(83,129,143,.08) 46px 47px,transparent 48px 72px),
+    repeating-linear-gradient(117deg,transparent 0 38px,rgba(83,129,143,.07) 39px 40px,transparent 41px 75px),
+    linear-gradient(136deg,#eef5f0,#eaf2f7);
+}
+.rev-mobile-v1 .rev-workspace-preview-label {
+  position: absolute; top: 12px; left: 12px; right: 12px;
+  color: #536c75; font-size: 12px; font-weight: 750;
+  z-index: 1;
+}
+.rev-mobile-v1 .rev-workspace-preview-pin {
+  position: absolute;
+  transform: translate(-50%,-50%);
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+  border: 3px solid #fff; border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(21,55,62,.24);
+  background: #1e736f; color: #fff;
+  font-size: 15px; font-weight: 850;
+  cursor: pointer;
+}
+.rev-mobile-v1 .rev-workspace-preview-pin:focus-visible { outline: 3px solid #5666d2; outline-offset: 4px; }
+.rev-mobile-v1 .rev-workspace-preview-footer {
+  position: absolute; bottom: 10px; left: 10px; right: 10px;
+  border-radius: 8px;
+  padding: 6px 9px;
+  background: rgba(255,255,255,.87);
+  color: #556b75; font-size: 11px; line-height: 1.5;
+  text-align: center;
+}
+.rev-mobile-v1 .rev-workspace-map-consent { display: grid; gap: 11px; }
+.rev-mobile-v1 .rev-workspace-map-consent > p { margin: 0; color: #566875; font-size: 12px; line-height: 1.6; }
+@media (max-width: 620px) {
+  .rev-mobile-v1 .rev-workspace-map-preview { min-height: 240px; }
+}
