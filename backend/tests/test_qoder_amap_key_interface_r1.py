@@ -51,6 +51,16 @@ def test_missing_key_reason_names_both_environments():
     assert FAKE_KEY not in status.reason
 
 
+def test_the_backend_reads_the_name_the_local_tool_writes(monkeypatch):
+    """The launcher exports CITYNEXUS_AMAP_WEB_KEY; this is the promise that makes that enough."""
+    assert amap.amap_status().status == 'NOT_CONFIGURED'
+    monkeypatch.setenv(amap.KEY_ENV_PREFERRED, FAKE_KEY)
+    ready = amap.amap_status()
+    assert ready.status == 'READY' and ready.provenance == 'LIVE'
+    assert ready.coordinate_crs == 'GCJ02'
+    assert FAKE_KEY not in repr(ready)
+
+
 def test_sanitize_url_masks_the_key_wherever_it_sits():
     for url in (
         f"https://restapi.amap.com/v5/place/text?key={FAKE_KEY}&keywords=%E7%AB%99",
