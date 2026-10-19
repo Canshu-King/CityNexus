@@ -51,8 +51,23 @@ def sanitize_url(url: str) -> str:
     return KEY_PARAM_PATTERN.sub(lambda match: match.group(1) + "key=***", url)
 
 
+def request_failure(exc: httpx.HTTPError) -> RuntimeError:
+    """Turn an httpx failure into an exception whose message cannot carry the key.
+
+    The HTTP-status leg knows the whole request URL and the transport leg knows only the exception
+    type.  Both of them end up in a log line and, from here, in a product answer, so both go through
+    this one rule.
+    """
+    if isinstance(exc, httpx.HTTPStatusError):
+        return RuntimeError(
+            f"Amap answered http_status={exc.response.status_code} for "
+            + sanitize_url(str(exc.request.url))
+        )
+    return RuntimeError(f"Amap request did not complete: {type(exc).__name__}")
+
+
 async def amap_get(client: httpx.AsyncClient, url: str, params: dict[str, Any]) -> httpx.Response:
-    """GET, and fail with a message that cannot contain the key.
+    """GET, failing only through `request_failure`.
 
     Both the HTTP-status leg and the transport leg are covered: the first one knows the URL, the second
     one knows only the exception type, and neither hands back a string with `key=` in it.
@@ -60,13 +75,24 @@ async def amap_get(client: httpx.AsyncClient, url: str, params: dict[str, Any]) 
     try:
         response = await client.get(url, params=params)
         response.raise_for_status()
-    except httpx.HTTPStatusError as failure:
-        raise RuntimeError(
-            f"Amap answered http_status={failure.response.status_code} for "
-            + sanitize_url(str(failure.request.url))
-        ) from None
     except httpx.HTTPError as failure:
-        raise RuntimeError(f"Amap request did not complete: {type(failure).__name__}") from None
+        raise request_failure(failure) from None
+    return response
+
+
+def amap_get_sync(client: httpx.Client, url: str, params: dict[str, Any]) -> httpx.Response:
+    """The same two legs as `amap_get`, for callers that already hold a sync `httpx.Client`.
+
+    The runtime mobility capture builds one sync client per operation and hands it to whichever
+    provider is primary, so a provider that wants to be that primary has to answer on the same shape.
+    The failure rule is shared here rather than retyped there: two writers of one rule drift, and the
+    one that drifts is the one that starts leaking.
+    """
+    try:
+        response = client.get(url, params=params)
+        response.raise_for_status()
+    except httpx.HTTPError as failure:
+        raise request_failure(failure) from None
     return response
 
 
@@ -111,6 +137,32 @@ def amap_status() -> ProviderStatus:
 def provider_for_region(city_code: str) -> str:
     return (
         "amap-web-service" if str(city_code).upper().startswith("CN-") else "global-provider-mesh"
+    )
+
+
+ROUTING_SEAM_ENV = "CITYNEXUS_CHINA_MOBILITY_ROUTING"
+
+
+def china_routing_seam() -> str:
+    """`off` puts a Chinese journey's legs back on the previous providers; `amap` is the default.
+
+    The seam is read from the process environment rather than `Settings` so that switching the
+    country routing off is an operation on the running process, not a code change -- and so this
+    module stays the only place that knows the name.
+    """
+    value = str(os.getenv(ROUTING_SEAM_ENV, "amap") or "amap").strip().lower()
+    return value if value in {"off", "amap"} else "amap"
+
+
+def routes_via_amap(city_code: str) -> bool:
+    """Would a journey in this city be routed through Amap right now?
+
+    Three things have to be true together: the city is a Chinese administrative region, a key is
+    configured under one of the two names, and the seam has not been switched off.  Anything else
+    answers `False`, which is the same answer the tree gave before this provider existed.
+    """
+    return provider_for_region(city_code) == "amap-web-service" and web_key() is not None and (
+        china_routing_seam() == "amap"
     )
 
 
@@ -212,6 +264,63 @@ class AmapPoiProvider:
         return result
 
 
+def normalize_direction_payload(payload: dict[str, Any], mode: str) -> NormalizedRoute:
+    """One Amap direction answer, read once, for whoever asked.
+
+    This is the only place that knows Amap's route shape.  The async provider above and the sync
+    mobility-capture adapter both go through it, because a parsing rule with two writers is how a
+    converted geometry ends up converted by one of them.
+
+    The polyline arrives in GCJ-02 and leaves as WGS84 `[[lon, lat], …]` -- the order the snapshot
+    capture's own geometry reader expects.  `transfers` is not read from this payload: v5 answers a
+    transit with segments this function does not walk, so a transit answer carries `transfers=0` as
+    "not derived from this answer", and nothing here is allowed to read it as "direct".
+    """
+    normalized_mode = mode.upper()
+    if str(payload.get("status")) != "1":
+        raise RuntimeError(str(payload.get("info") or "Amap route request failed"))
+    route = payload.get("route", {})
+    paths = route.get("paths") or route.get("transits") or []
+    if not paths:
+        raise RuntimeError("Amap returned no route path")
+    selected = paths[0]
+    steps = selected.get("steps") or []
+    polyline = ";".join(str(step.get("polyline") or "") for step in steps)
+    distance = int(float(selected.get("distance") or 0))
+    duration = max(
+        1,
+        math.ceil(
+            float(selected.get("cost", {}).get("duration") or selected.get("duration") or 60) / 60
+        ),
+    )
+    taxi_cost = selected.get("cost", {}).get("taxi_fee")
+    cost = int(float(taxi_cost) * 100) if taxi_cost not in (None, "") else None
+    cost_status = (
+        "ESTIMATED"
+        if cost is not None
+        else ("FREE_KNOWN" if normalized_mode == "WALK" else "UNKNOWN")
+    )
+    return NormalizedRoute(
+        mode=normalized_mode,
+        duration_min=duration,
+        distance_m=distance,
+        cost_amount_minor=cost,
+        currency="CNY" if cost is not None else None,
+        cost_status=cost_status,
+        walking_min=duration if normalized_mode == "WALK" else 0,
+        transfers=0,
+        reliability_score=0.9,
+        geometry={
+            "type": "Feature",
+            "properties": {"source_crs": "GCJ02", "domain_crs": "WGS84"},
+            "geometry": {"type": "LineString", "coordinates": _parse_polyline(polyline)},
+        },
+        source_crs="GCJ02",
+        domain_crs="WGS84",
+        conversion="ITERATIVE_GCJ02_TO_WGS84",
+    )
+
+
 class AmapMobilityProvider:
     provider_key = "amap-web-service"
 
@@ -243,49 +352,7 @@ class AmapMobilityProvider:
         async with httpx.AsyncClient(timeout=15.0) as client:
             response = await amap_get(client, f"{AMAP_BASE_URL}/v5/direction/{path}", params)
             payload = response.json()
-        if str(payload.get("status")) != "1":
-            raise RuntimeError(str(payload.get("info") or "Amap route request failed"))
-        route = payload.get("route", {})
-        paths = route.get("paths") or route.get("transits") or []
-        if not paths:
-            raise RuntimeError("Amap returned no route path")
-        selected = paths[0]
-        steps = selected.get("steps") or []
-        polyline = ";".join(str(step.get("polyline") or "") for step in steps)
-        distance = int(float(selected.get("distance") or 0))
-        duration = max(
-            1,
-            math.ceil(
-                float(selected.get("cost", {}).get("duration") or selected.get("duration") or 60)
-                / 60
-            ),
-        )
-        taxi_cost = selected.get("cost", {}).get("taxi_fee")
-        cost = int(float(taxi_cost) * 100) if taxi_cost not in (None, "") else None
-        cost_status = (
-            "ESTIMATED"
-            if cost is not None
-            else ("FREE_KNOWN" if normalized_mode == "WALK" else "UNKNOWN")
-        )
-        return NormalizedRoute(
-            mode=normalized_mode,
-            duration_min=duration,
-            distance_m=distance,
-            cost_amount_minor=cost,
-            currency="CNY" if cost is not None else None,
-            cost_status=cost_status,
-            walking_min=duration if normalized_mode == "WALK" else 0,
-            transfers=0,
-            reliability_score=0.9,
-            geometry={
-                "type": "Feature",
-                "properties": {"source_crs": "GCJ02", "domain_crs": "WGS84"},
-                "geometry": {"type": "LineString", "coordinates": _parse_polyline(polyline)},
-            },
-            source_crs="GCJ02",
-            domain_crs="WGS84",
-            conversion="ITERATIVE_GCJ02_TO_WGS84",
-        )
+        return normalize_direction_payload(payload, normalized_mode)
 
 
 class AmapTrafficProvider:
