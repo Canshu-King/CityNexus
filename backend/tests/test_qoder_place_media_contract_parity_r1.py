@@ -34,7 +34,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app import main as main_module
 from app import place_media_routes, place_source_lead, traveler_principal
 from app.core.config import settings
-from app.db.models import Base, Journey, JourneyCheckin, Place, Traveler
+from app.db.models import (
+    Base,
+    Journey,
+    JourneyCheckin,
+    Place,
+    RealPlaceCandidate,
+    Traveler,
+)
 from app.db.session import get_session
 from app.integrations.media import place_media
 from app.main import app as product_app  # the served document
@@ -43,6 +50,9 @@ CONTRACT = Path(__file__).resolve().parents[2] / "contracts" / "openapi.yaml"
 MEDIA_PATH = "/journeys/{journey_id}/places/{place_id}/media"
 IDENTITY_PATH = "/journeys/{journey_id}/place-identity"
 SECRET = uuid.uuid4().hex + uuid.uuid4().hex  # generated, never printed, never committed
+#: A candidate whose own region column disagrees with the place row it materialised into.
+#: That is the one shape where identity is found and still untrustworthy, so the door must refuse.
+CANDIDATE_ID = "rpc-" + "a" * 24
 
 
 def _now() -> str:
@@ -82,6 +92,12 @@ def world():
         session.add(JourneyCheckin(id=str(uuid.uuid4()), journey_id=journey, activity_id=None,
                                    place_id=place, target_kind="place", target_key=place,
                                    stamped_at=_now()))
+        session.add(RealPlaceCandidate(id=CANDIDATE_ID, journey_id=journey, provider_key="photon",
+                                       external_id="photon:Q1209125", city_code="厦门市",
+                                       name="冠豸山", category="poi", latitude=25.7,
+                                       longitude=116.75, tags_json="[]", opening_hours_json="{}",
+                                       metadata_json="{}", evidence_json="{}", captured_at=_now(),
+                                       status="DISCOVERED"))
         session.commit()
 
     app = FastAPI()
@@ -353,3 +369,21 @@ def world_like(monkeypatch):
                {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(owner)})
     finally:
         traveler_principal.settings = original
+
+
+def test_a_split_region_is_refused_with_its_own_code_on_the_wire(world):
+    """The 409 the document promises has to be answerable, not merely written down.
+
+    A candidate whose own region column disagrees with the place row it materialised into is the one
+    shape where identity is found and still untrustworthy: the door answers `LEAD_REGION_CONFLICT`, and
+    that code has to appear inside this path's own contract block -- otherwise a renderer gets a status
+    it cannot explain, which is the failure this file exists to catch.
+    """
+    client, journey, _place, headers, _stranger = world
+    refused = client.get("/api/v1" + IDENTITY_PATH.format(journey_id=journey) + "?lead=" + CANDIDATE_ID,
+                         headers=headers)
+    assert refused.status_code == 409, refused.text
+    error = refused.json()["error"]
+    assert error["reason_code"] == "LEAD_REGION_CONFLICT", error
+    assert "LEAD_REGION_CONFLICT" in path_block(IDENTITY_PATH), (
+        "the door answers a code that the document never names")
