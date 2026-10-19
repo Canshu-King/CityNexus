@@ -247,7 +247,7 @@ test("TEST_FIXTURE map focuses draft references and separates regions from venue
   }));
   await page.goto("/revolution");
   const map = page.getByTestId("rev-mission-map-pane");
-  await expect(map).toContainText("1 处日程引用");
+  await expect(map.locator(".cn-mission-map-top")).toContainText("1 处地点");
   await expect(map).toContainText("TEST_FIXTURE 古村落");
   await expect(map).not.toContainText("TEST_FIXTURE 其他县同名结果");
   await expect(map.locator(".rev-workspace-place-list")).toContainText("地区／村落线索");
