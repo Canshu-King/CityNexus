@@ -70,6 +70,7 @@ const WANT_PREP = !process.argv.includes("--no-prep");
 const WANT_STAY = !process.argv.includes("--no-stay");
 const WANT_ACCESS = !process.argv.includes("--no-access");
 const WANT_TRASH = !process.argv.includes("--no-trash");
+const WANT_SHEETS = !process.argv.includes("--no-sheets");
 
 /* Keys this copy campaign moved, retired or re-pointed at the dictionary.
 
@@ -162,6 +163,10 @@ if (STAY_BRANCH === "comparison") {
    the claim about the words; the screenshot still shows the case the traveller sees. */
 const fold = (value) => value.toLowerCase();
 
+/* The English rule splits only after a real sentence end. An earlier version also split at a
+   lower-to-upper case boundary, which cut "What the AI has done" into "What the" + "AI has done" and
+   reported the fragment as a repeat seen in three places -- a splitter artifact wearing a finding.
+   The first run of this arm caught that by reading its own output; the Chinese rule was never wrong. */
 /* A sentence the screen says twice is the waffle this campaign is built to find -- one fact with two
    writers, like the recycle bin's "回收站是空的…" followed by a 231-character paragraph explaining that
    the screen only lists what the server reported. That pair was found by reading a screenshot; this is
@@ -176,7 +181,7 @@ const fold = (value) => value.toLowerCase();
    repeated, because the per-row labels in that language are shorter than the eight-character floor. */
 function repeatedClauses(text) {
   const parts = String(text)
-    .split(/[。；;]|\s--\s| — |\.\s|(?<=[a-z])\s(?=[A-Z])/)
+    .split(/[。；;]|\s--\s| — |(?<=[a-z!?])\.\s+/)
     .map((part) => part.replace(/\s+/g, " ").trim())
     .filter((part) => part.length >= 8);
   const seen = new Map();
@@ -195,6 +200,44 @@ function reportRepeats(name, text) {
     console.log(`      x${count} ${clause.slice(0, 110)}`);
   }
   return repeated;
+}
+
+/** The smallest elements whose own text paints this clause, so a repeat names where it was seen.
+
+    A repeated string alone cannot tell a per-row label from a sentence the screen really does say
+    twice, and that difference is the whole question. So: walk the elements, keep the ones that contain
+    the clause while none of their children do -- those are the painters. Two painters under different
+    headings is a duplication the reader sees as an echo; two painters that are sibling rows of one
+    list is structure, and nothing should be cut from it. */
+async function paintersOf(page, clause) {
+  return page.evaluate((needle) => {
+    const norm = (value) => String(value || "").replace(/\s+/g, " ").trim();
+    const folded = needle.toLowerCase();
+    const painters = [];
+    for (const node of Array.from(document.querySelectorAll("body *"))) {
+      if (!norm(node.innerText).toLowerCase().includes(folded)) continue;
+      const childPaints = Array.from(node.children).some((child) =>
+        norm(child.innerText).toLowerCase().includes(folded)
+      );
+      if (childPaints) continue;
+      const path = [];
+      let cursor = node;
+      for (let hop = 0; cursor && hop < 4; hop += 1) {
+        const testid = cursor.getAttribute ? cursor.getAttribute("data-testid") : null;
+        const classes = typeof cursor.className === "string" ? cursor.className.trim().split(/\s+/)[0] : "";
+        path.unshift(
+          cursor.tagName.toLowerCase() +
+            (cursor.id ? "#" + cursor.id : "") +
+            (testid ? "[testid=" + testid + "]" : "") +
+            (classes ? "." + classes : "")
+        );
+        cursor = cursor.parentElement;
+      }
+      painters.push(path.join(" > "));
+      if (painters.length >= 4) break;
+    }
+    return painters;
+  }, clause);
 }
 
 function dictionaryRegions() {
@@ -224,10 +267,17 @@ const COPY_MODULES = {
   access: join(FRONTEND, "src", "features", "access", "accessCopy.ts"),
   ladder: join(FRONTEND, "src", "features", "estimation", "estimationLadderCopy.ts"),
   trash: join(FRONTEND, "src", "features", "trash", "journeyTrashCopy.ts"),
+  agentFeed: join(FRONTEND, "src", "i18n", "agentWorkFeedCopy.ts"),
 };
 
 function moduleTable(file) {
   const tables = { en: {}, "zh-CN": {} };
+  /* Two shapes exist in the product today: `src/features/access/accessCopy.ts` writes
+     `"access.title": "…"`, while `src/i18n/agentWorkFeedCopy.ts` writes `sheetLede: "…"` -- a bare
+     identifier, which TypeScript allows as an object key. A parser that only knows the quoted shape
+     reports the second module's keys as absent, and an absent key reads as "not rendered", which is
+     the wrong direction of wrong: it hides a screen instead of clearing it. */
+  const sideOf = (name) => (String(name).toLowerCase().startsWith("zh") ? "zh-CN" : "en");
   let side = null;
   let pending = null;
   for (const line of readFileSync(file, "utf8").split(NL)) {
@@ -237,21 +287,20 @@ function moduleTable(file) {
       pending = null;
       continue;
     }
-    const opened = /^  (?:"([A-Za-z][\w-]*)"|([A-Za-z][\w-]*)):\s*\{\s*$/.exec(line);
+    const opened = /^\s{0,4}(?:"([A-Za-z][\w-]*)"|([A-Za-z][\w-]*)):\s*\{\s*$/.exec(line);
     if (opened) {
-      side = next([opened[1], opened[2]]);
-      if (!(side in tables)) side = null;
+      side = sideOf(next([opened[1], opened[2]]));
       continue;
     }
-    if (/^  \}/.test(line)) {
+    if (/^\s{0,4}\}/.test(line)) {
       side = null;
       continue;
     }
     if (!side) continue;
-    const pair = /^    (?:"([A-Za-z0-9_.\-]+)"|'([A-Za-z0-9_.\-]+)'):\s*(.*)$/.exec(line);
+    const pair = /^\s+(?:"([A-Za-z0-9_.\-]+)"|'([A-Za-z0-9_.\-]+)'|([A-Za-z][\w]*)):\s*(.*)$/.exec(line);
     if (!pair) continue;
-    const key = next([pair[1], pair[2]]);
-    const rest = pair[3].trim();
+    const key = next([pair[1], pair[2], pair[3]]);
+    const rest = next([pair[4]]).trim();
     if (!rest) {
       pending = key;
       continue;
@@ -617,7 +666,11 @@ async function walkModuleFace(page, regions, locale, opts) {
     return { reached: false, note: `${testId} mounted=${mounted}` };
   }
   console.log(`   ${name}: reached, chars=${panel.length}`);
-  reportRepeats(name, panel);
+  for (const [clause, count] of reportRepeats(name, panel).slice(0, 4)) {
+    const painters = await paintersOf(page, clause);
+    console.log(`      x${count} painted by ${painters.length} element(s):`);
+    for (const path of painters) console.log(`        ${path}`);
+  }
   console.log(`      ${panel.slice(0, 220)}`);
   const table = moduleTable(moduleFile);
   const entries = [];
@@ -689,6 +742,144 @@ function walkTrashFace(page, regions, locale) {
     keys: TRASH_KEYS,
   });
 }
+
+/* Every `plan.*` / `agent.*` key the dictionary carries, read now -- so the sheet arm can say how much
+   of a layer's wording reached the screen without this file guessing which keys exist today. */
+function keysWithPrefix(regions, locale, prefix) {
+  const found = [];
+  const pattern = new RegExp('"(' + prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + '[A-Za-z0-9_.\\-]*)": "', "g");
+  for (const match of regions[locale].matchAll(pattern)) {
+    if (!found.includes(match[1])) found.push(match[1]);
+  }
+  return found;
+}
+
+/** The two sheets no arm used to open.
+
+    `plan.unreachableBody` has been listed as "static evidence only" in three receipts, and this wave
+    trimmed two sentences inside the AI work feed, without any way to see either of them rendered. Both
+    layers sit behind a button a traveller presses, so the only honest fix is to press it: enter the
+    trips screen the way the other arms do, click the entry, and read the layer that opens. Nothing is
+    claimed here yet -- this is the run that finds out which sentences the seeded store can show. */
+async function walkSheets(page, regions, locale) {
+  const out = { agent: { reached: false }, plan: { reached: false } };
+
+  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
+  await page.waitForTimeout(5000);
+  if (!(await reachTrips(page))) {
+    console.log("   sheets: NOT ATTEMPTED (the trips screen was not reached)");
+    return out;
+  }
+
+  const agentEntry = page.locator('[data-testid="trip-ai-work"]');
+  if ((await agentEntry.count()) > 0) {
+    await agentEntry.first().click({ timeout: 8000 }).catch(() => {});
+    await page.waitForTimeout(2500);
+    const sheet = page.locator('[data-testid="agent-work-feed"]');
+    if ((await sheet.count()) > 0) {
+      const text = (await sheet.first().innerText().catch(() => "")).replace(/\s+/g, " ").trim();
+      console.log(`   agent work sheet: reached, chars=${text.length}`);
+      console.log(`      ${text.slice(0, 220)}`);
+      const table = moduleTable(COPY_MODULES.agentFeed);
+      const landed = [];
+      const missing = [];
+      for (const key of AGENT_SHEET_KEYS) {
+        const value = moduleValue(table, locale, key);
+        if (value === null) {
+          console.log(`      agent sheet | KEY ABSENT FROM MODULE: ${key}`);
+          missing.push(key);
+          continue;
+        }
+        const p = probe(value);
+        const hit = p.judgable && fold(text).includes(fold(p.text));
+        (hit ? landed : missing).push(key);
+        console.log(
+          `      agent sheet | ${hit ? "ON SCREEN" : "not on this branch"}: ${key} = ${p.text.slice(0, 90)}`
+        );
+      }
+      for (const item of reportRepeats("agent work sheet", text).slice(0, 3)) {
+        for (const path of await paintersOf(page, item[0])) console.log(`        ${path}`);
+      }
+      await page.screenshot({ path: join(SHOTS, `sheet-agent-${locale}.png`), fullPage: true });
+      out.agent = { reached: true, chars: text.length, landed, missing };
+    } else {
+      console.log('   agent work sheet: NOT REACHED (clicking "trip-ai-work" opened no agent-work-feed)');
+    }
+  } else {
+    console.log('   agent work sheet: NOT ATTEMPTED (no trip-ai-work entry on the trips screen)');
+  }
+
+  await page.goto(BASE, { waitUntil: "load", timeout: 45000 });
+  await page.waitForTimeout(5000);
+  if (!(await reachTrips(page))) return out;
+  await page.locator("#trips-tab-itinerary").click({ timeout: 8000 }).catch(() => {});
+  await page.waitForTimeout(1500);
+  const planLabel =
+    valueOf(regions, locale, "itinerary.planWithAi") ||
+    valueOf(regions, locale, "itinerary.planWithAiNeedsPlaces");
+  if (!planLabel) {
+    console.log("   plan-with-AI sheet: NOT ATTEMPTED (neither itinerary.planWithAi* has a dictionary value)");
+    return out;
+  }
+  const opener = page.getByRole("button", { name: planLabel, exact: true });
+  if ((await opener.count()) === 0) {
+    const visible = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("button"))
+        .map((node) => node.innerText.replace(/\s+/g, " ").trim())
+        .filter(Boolean)
+        .slice(0, 30)
+    );
+    console.log(
+      `   plan-with-AI sheet: NOT REACHED (no "${planLabel}" button); buttons: ${visible.join(" | ").slice(0, 240)}`
+    );
+    return out;
+  }
+  await opener.first().click({ timeout: 8000 }).catch(() => {});
+  await page.waitForTimeout(2500);
+  const planSheet = page.locator('[data-testid="plan-ai-sheet"]');
+  if ((await planSheet.count()) === 0) {
+    console.log(`   plan-with-AI sheet: NOT REACHED (clicked "${planLabel}" and no plan-ai-sheet mounted)`);
+    return out;
+  }
+  const planText = (await planSheet.first().innerText().catch(() => "")).replace(/\s+/g, " ").trim();
+  console.log(`   plan-with-AI sheet: reached, chars=${planText.length}`);
+  console.log(`      ${planText.slice(0, 220)}`);
+  const planKeys = keysWithPrefix(regions, locale, "plan.");
+  const landed = [];
+  for (const key of planKeys) {
+    const value = valueOf(regions, locale, key);
+    const p = probe(value === null ? "" : value);
+    if (value !== null && p.judgable && fold(planText).includes(fold(p.text))) landed.push(key);
+  }
+  console.log(
+    `      plan.* keys of ${planKeys.length} in this locale that are on the sheet: ${landed.length}` +
+      (landed.length ? " -- " + landed.join(", ") : "")
+  );
+  for (const item of reportRepeats("plan-with-AI sheet", planText).slice(0, 3)) {
+    for (const path of await paintersOf(page, item[0])) console.log(`        ${path}`);
+  }
+  await page.screenshot({ path: join(SHOTS, `sheet-plan-${locale}.png`), fullPage: true });
+  out.plan = { reached: true, chars: planText.length, landed, of: planKeys.length };
+  return out;
+}
+
+const AGENT_SHEET_KEYS = [
+  "sheetTitle",
+  "sheetLede",
+  "loading",
+  "noRecord",
+  "noRecordHint",
+  "aiStateLabel",
+  "lastEventLabel",
+  "noLastEvent",
+  "unread",
+  "sectionAgent",
+  "sectionTrip",
+  "noRun",
+  "noRunHint",
+  "techDetails",
+  "unlistedEvent",
+];
 
 async function walk(browser, locale) {
   const context = await browser.newContext({
@@ -841,6 +1032,7 @@ async function walk(browser, locale) {
   const stayScreen = WANT_STAY ? await walkStayScreen(page, regions, locale) : { reached: false };
   const access = WANT_ACCESS ? await walkAccessFace(page, regions, locale) : { reached: false };
   const trash = WANT_TRASH ? await walkTrashFace(page, regions, locale) : { reached: false };
+  const sheets = WANT_SHEETS ? await walkSheets(page, regions, locale) : { agent: { reached: false }, plan: { reached: false } };
 
   const problems = [];
   if (prep.reached && prep.verdict && (prep.rendered ?? []).length === 0) {
@@ -883,7 +1075,9 @@ async function walk(browser, locale) {
       ", access=" + (access.reached ? "reached" : "not reached") +
       ", trash=" + (trash.reached ? "reached" : "not reached") +
       ", preparation=" + (prep.reached ? "reached" : "not reached") +
-      ", stay screen=" + (stayScreen.reached ? "reached" : "not reached")
+      ", stay screen=" + (stayScreen.reached ? "reached" : "not reached"),
+      ", agent sheet=" + (sheets.agent.reached ? "reached" : "not reached") +
+      ", plan sheet=" + (sheets.plan.reached ? "reached" : "not reached")
   );
   for (const screen of screens) {
     for (const item of screen.observations) {
