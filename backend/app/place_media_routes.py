@@ -1,23 +1,15 @@
-"""One GET that answers "what may we actually show for this place" -- nothing else.
+"""Two GETs about one place in one journey, both answered before any image provider is asked.
 
-Why this file exists: every other route in this product lives in `app/main.py`, and asking Codex to
-merge a media endpoint means asking them to merge into a 15k-line file. A router in its own module keeps
-the merge surface at two lines in `main.py` plus one new file, which is also what the 17:20 order asked
-for as "接线方式".
+`.../places/{place_id}/media` answers the PlaceMedia contract. `.../place-identity?lead=` maps a
+workspace source lead onto a `Place.id` from stored identity only -- the map carries a lead, not an
+id, and the client may not fix that by sending place text or a picture url.
 
-The route is a read on the same journey-scoped family the other member reads use, it never starts a
-write, and it always answers with the media contract -- including when the answer is NO_IMAGE.
+The door runs first, and every refusal uses a status this product already has: unknown journey 404,
+no credentials 401, no seat in force 403, a place this journey does not hold 404 -- all before any
+outbound request, so neither the answer nor the traffic can enumerate another traveller's trip.
 
-Authorization came later than the shape, and the order that asked for it names the hole precisely:
-confirming that two rows exist is not the same question as "may this caller see them".  Without the
-door below, the path was a way to spend another traveller's money and another traveller's places:
-anyone who could guess two uuids got an outbound Wikimedia lookup and a payload about a POI that is
-not theirs.  So the door runs BEFORE any provider is asked, and every refusal answers with a status
-this product already uses, so the answer cannot be turned into a scanner.
-
-The second GET answers "which place is this map point" for the same journey, from stored identity only.
-It exists because the workspace map hands round a source lead, not a `Place.id`, and the client is not
-allowed to fix that by passing place text or a picture url.
+A read, never a write. Kept in its own module because every other route lives in `app/main.py`, so a
+router here keeps the merge surface at two lines plus one file.
 """
 
 from __future__ import annotations
@@ -101,13 +93,11 @@ def _signed_journey_read(request: Request, session: Session, journey_id: UUID) -
 
 def _membership_is_in_force(session: Session, journey_id: str, traveler_id: str,
                             now: datetime) -> bool:
-    """One definition of "does this traveller still hold this journey", borrowed, not re-decided.
+    """Does this traveller still hold this journey -- borrowed from `app/main.py`, not re-decided.
 
-    The predicate already exists in `app/main.py` next to the share grants that use it, and two doors
-    holding two definitions of membership is how a withdrawn member keeps reading.  It is imported
-    inside the call because `app.main` imports this router: a module-level import would be a cycle.
-    The cost of the lazy form is that a rename surfaces at request time, so
-    `tests/test_qoder_place_media_authorization_r1.py` pins the name it reaches for.
+    Two doors holding two definitions of membership is how a withdrawn member keeps reading. The
+    import sits inside the call because `app.main` imports this router; a rename would therefore
+    surface at request time, so `tests/test_qoder_place_media_authorization_r1.py` pins the name.
     """
     from app.main import _member_is_in_force
 
@@ -146,15 +136,10 @@ async def journey_place_media(
     session: Session = Depends(get_session),
     client: httpx.AsyncClient = Depends(_media_client),
 ) -> dict[str, Any]:
-    """Return the PlaceMedia contract for one place this journey actually holds.
+    """The PlaceMedia contract for one place this journey actually holds.
 
-    A missing row is 404 -- there is nothing to attribute -- but a place that exists and has no
-    showable photograph is a 200 with NO_IMAGE/NO_PERMISSION/UNAVAILABLE, never a 4xx: the traveller's
-    screen still has to render the place, and a failure status is content, not an error.
-
-    The order the door comes from is written down: unknown journey 404, no credentials 401, a caller
-    who holds no seat 403, and a place this journey does not know 404 -- all of them BEFORE any
-    outbound request, so neither the answer nor the traffic can be used to probe somebody else's trip.
+    A place that exists with nothing showable is a 200 carrying NO_IMAGE / NO_PERMISSION /
+    UNAVAILABLE, never a 4xx: the failure status is content the screen has to render.
     """
     _signed_journey_read(request, session, journey_id)
     row = _place_of_lead(session, str(journey_id), place_id)
@@ -173,7 +158,7 @@ async def journey_place_media(
     payload = result.as_payload()
     payload["journey_id"] = str(journey_id)
     payload["place_name"] = str(row.name)
-    payload["coordinate_system"] = str(getattr(row, "coordinate_system", "") or "")
+    payload["coordinate_system"] = str(row.coordinate_system or "")
     return payload
 
 
@@ -186,11 +171,9 @@ async def journey_place_identity(
 ) -> dict[str, Any]:
     """Which place is this map point? Answer with the ids, the region, and the next path to call.
 
-    Codex's map carries a source lead (`real-place-<hex>`, `photon:node/<id>`, `rpc-<hex>`), which is
-    not a `Place.id`. This read maps it server-side, so the client never hands over a place name or an
-    image url to get imagery, and it costs one indexed lookup -- no network, no provider spend.
-    `media_path` is the media door for that place with the resolved id already in it: a lead that
-    cannot live in a path segment stops being the client's problem.
+    One indexed lookup, no network, no provider spend. `media_path` is the media door with the
+    resolved id already substituted, so a lead that cannot live in a path segment stops being the
+    client's problem, and place text or image urls are refused rather than looked up by name.
     """
     _signed_journey_read(request, session, journey_id)
     reading = place_source_lead.resolve_place_lead(session, lead, journey_id=str(journey_id))

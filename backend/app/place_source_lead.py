@@ -1,15 +1,14 @@
-"""Read a Codex map-point lead back into this product's own place identity -- or refuse.
+"""Read a map-point source lead back into this product's place identity -- or refuse.
 
-Why this file exists: the workspace map's `candidate_id` is a *source lead*. It can be a minted
-`Place.id` (`real-place-<hex>`), a provider object id (`photon:node/123`), or a discovery candidate
-row (`rpc-<hex>`), and only the first of those is something a media read accepts. Passing the lead
-straight through mostly 404s; making it "work" by searching the visible name would attach one city's
-photograph to another city's same-named landmark, silently. So resolution runs here, from stored
-identity only, and every shape that cannot name a place comes back as a named refusal.
+A `candidate_id` can be a minted `Place.id` (`real-place-<hex>`), a provider object id
+(`photon:node/123`) or a discovery candidate (`rpc-<hex>`); only the first is a media path segment.
+Making the others "work" by searching the visible name would attach one city's photograph to another
+city's same-named landmark, silently -- so resolution runs here against stored identity, and every
+shape that cannot name a place comes back as a named refusal.
 
-Two rules the callers can rely on:
+Two rules callers can rely on:
   * no text matching -- not names, not descriptions, not URLs; identity columns only;
-  * when a journey is supplied, the answer is bounded by that journey, so the read cannot be used to
+  * with a journey supplied, the answer is bounded by that journey, so the read cannot be used to
     discover which places somebody else's trip holds.
 """
 
