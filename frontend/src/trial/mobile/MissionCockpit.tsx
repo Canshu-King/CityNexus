@@ -265,7 +265,7 @@ export function MissionCockpit({
   return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit" data-layer={layer} data-space={space}>
     <header className="cn-mission-head">
       <div><div className="cn-mission-kicker"><Sparkles size={15} /> YOUR NEXT JOURNEY</div>
-        <h2 aria-label={cityName}>{cityName}<span>{journeyStatus === "ACTIVE" ? "，旅途正在继续。" : "，把想去变成出发。"}</span></h2><p>{journeyStatus === "ACTIVE" ? "下一站、行程变化和同行决定，都在这里。" : draftSlots.length ? `已有 ${draftDays.length} 天安排，随时可以和 Agent 一起调整。` : "先聊聊你想怎样旅行，再一起找值得去的地方。"}</p>
+        <h2 aria-label={cityName}>{cityName}<span>{journeyStatus === "ACTIVE" ? "旅途正在继续。" : "把想去变成出发。"}</span></h2><p>{journeyStatus === "ACTIVE" ? "下一站、行程变化和同行决定，都在这里。" : draftSlots.length ? `已有 ${draftDays.length} 天安排，随时可以和 Agent 一起调整。` : "先聊聊你想怎样旅行，再一起找值得去的地方。"}</p>
         {onChangeCity && <button type="button" className="cn-mission-change-city" onClick={onChangeCity}>换地区 ›</button>}</div>
       <DestinationMedia key={cityName + (coverMedia?.image_url || "")} cityName={cityName} media={coverMedia} placeName={coverPoint?.name} />
       <span className="cn-mission-state" aria-live="polite">{status}</span>

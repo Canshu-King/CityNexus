@@ -28083,3 +28083,7 @@ def get_commitment(commitment_id: UUID, session: Session = Depends(get_session))
 # Source-lead media stays signed and separate from Qoder's canonical Place router.
 from app.goal_media_routes import router as goal_media_router
 app.include_router(goal_media_router)
+
+# V3 departure reads adapted from Qoder a4692457a9; mutation gates remain in their own routes.
+from app.departure_read import router as departure_read_router
+app.include_router(departure_read_router)

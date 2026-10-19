@@ -2845,6 +2845,13 @@ export interface CatalogHydrationOperation {
   abandon_requested_at?: string | null;
 }
 
+export interface JourneyDepartureRead {
+  journey_id: string; gate: string; observed_at: string; reason_detail: string | null;
+  selected_plan: { plan_version_id: string; activities_count: number } | null;
+  candidates: Array<{ plan_version_id: string; version_no: number; activities_count: number }>;
+}
+export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
+
 export const cityNexusApi = {
   resetDemo(): Promise<DemoIds> {
     return requestJson<DemoIds>("/demo/reset", { method: "POST" });
@@ -2895,6 +2902,12 @@ export const cityNexusApi = {
     );
   },
 
+  getJourneyDeparture(journeyId: string): Promise<JourneyDepartureRead> {
+    return requestJson<JourneyDepartureRead>("/journeys/" + journeyId + "/departure", { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+  getJourneyMemberSeat(journeyId: string): Promise<JourneyMemberSeatRead> {
+    return requestJson<JourneyMemberSeatRead>("/journeys/" + journeyId + "/members/me", { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
   getJourney(journeyId: string): Promise<JourneyRecord> {
     return requestJson<JourneyRecord>("/journeys/" + journeyId, { headers: travelerAuthHeaders() });
   },

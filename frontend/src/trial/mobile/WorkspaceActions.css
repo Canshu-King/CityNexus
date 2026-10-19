@@ -1,4 +1,4 @@
-.rev-mobile-v1 .rev-mobile-bottom-nav.rev-workspace-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.rev-mobile-v1 .rev-mobile-bottom-nav.rev-workspace-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .rev-mobile-v1 .rev-workspace-nav .rev-mobile-nav-button { min-width: 0; width: auto; min-height: 52px; }
 .rev-workspace-nav .rev-mobile-nav-label { white-space: nowrap; font-size: 11px; }
 .rev-workspace-dialog { box-sizing: border-box; width: min(960px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid #cadbd2; border-radius: 20px; background: #fffdf8; color: #183c30; overflow: auto; }

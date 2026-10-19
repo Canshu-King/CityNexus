@@ -8,7 +8,7 @@
 .rev-v3 .rev-v3-trip-dates { margin: 12px 0; }
 .rev-v3 .rev-v3-trip-dates > summary { min-height: 44px; display: flex; align-items: center; color: #557865; cursor: pointer; }
 .rev-v3 .cn-mission-os { margin-top: 0; }
-.rev-v3 .cn-mission-os .cn-mission-head { min-height: 215px; border-radius: 24px; }
+.rev-v3 .cn-mission-os .cn-mission-head { min-height: 215px; border-radius: 24px; background: linear-gradient(120deg,#064739,#0e6a55); }
 .rev-v3 .cn-mission-os .cn-mission-head > div:first-child { position: relative; z-index: 1; }
 .rev-v3 .cn-mission-os .cn-mission-head .cn-mission-state { position: absolute; top: 16px; right: 16px; }
 .rev-v3 .cn-mission-head .cn-mission-change-city { display: inline-flex; min-height: 44px; color: white; }
@@ -55,3 +55,5 @@
 .rev-v3-active-dock > textarea { flex: 1; min-width: 0; box-sizing: border-box; min-height: 48px; max-height: 132px; resize: vertical; padding: 11px; border: 1px solid #d3e2d9; border-radius: 12px; color: #214c3b; background: white; font: inherit; font-size: 14px; }
 .rev-v3-active-dock > button { width: auto; flex: none; min-height: 48px; border: 0; border-radius: 12px; padding: 10px 14px; background: #0e6a55; color: white; font: inherit; font-size: 13px; }
 .rev-v3-active-dock > button:disabled { opacity: .5; }
+
+.rev-v3 .cn-mission-os .cn-mission-media::after { background: linear-gradient(90deg,#064739,rgba(6,71,57,.55) 45%,rgba(6,71,57,.12)); }

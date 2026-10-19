@@ -76,6 +76,7 @@ function addDaysToDateInput(value: string, days: number): string {
 }
 
 function tripBriefGoal(goal: string, interests: string[], energy: TripEnergy): string {
+  if (!goal.trim() && interests.length === 0) return "";
   const interestLabels = TRIP_INTERESTS
     .filter((item) => interests.includes(item.value))
     .map((item) => item.label);
@@ -901,6 +902,7 @@ export function RevolutionFirstLook() {
 
   const navigateMobile = (tab: RevolutionMobileTab) => {
     setActiveTab(tab);
+    if (tab !== "me") requestAnimationFrame(() => window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: tab === "trips" ? "timeline" : "map" })));
     try { sessionStorage.setItem("citynexus.revolution.v3.space", tab); } catch { /* In-memory navigation remains usable. */ }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

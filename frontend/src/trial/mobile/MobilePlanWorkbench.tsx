@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarDays, Check, Clock3, MapPin } from "lucide-react";
-import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, type PlanVersion, type TravelPlanningInput, type TravelBrief } from "../../api/citynexus";
+import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, type PlanVersion, type TravelPlanningInput, type TravelBrief, type JourneyDepartureRead, type JourneyMemberSeatRead } from "../../api/citynexus";
 import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import "./MobilePlanWorkbench.css";
 
-type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null };
+type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null; departure: JourneyDepartureRead | null; seat: JourneyMemberSeatRead | null };
 type WriteAction = "generate" | "select" | "start" | "brief" | "facts";
 
 function failureText(error: unknown): string {
@@ -124,11 +124,13 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     if (!token) { setSnapshot(null); return; }
     setLoading(true);
     try {
-      const [journey, plans, input] = await Promise.all([cityNexusApi.getJourney(journeyId), cityNexusApi.listJourneyPlans(journeyId), cityNexusApi.getTravelPlanningInput(journeyId).catch(() => null)]);
+      const [journey, plans, input, departure, seat] = await Promise.all([cityNexusApi.getJourney(journeyId), cityNexusApi.listJourneyPlans(journeyId), cityNexusApi.getTravelPlanningInput(journeyId).catch(() => null), cityNexusApi.getJourneyDeparture(journeyId).catch(() => null), cityNexusApi.getJourneyMemberSeat(journeyId).catch(() => null)]);
       if (serial !== epoch.current || token !== readTravelerBearer()) return;
       if (journey.id !== journeyId || !Array.isArray(plans) || plans.some((plan) => plan.journey_id !== journeyId || !Array.isArray(plan.activities))) throw new Error("Plan response mismatch");
       if (input && input.journey_id !== journeyId) throw new Error("Trip intent response mismatch");
-      setSnapshot({ bearer: token, journey, plans, input });
+      if (departure && (departure.journey_id !== journeyId || typeof departure.gate !== "string" || !Array.isArray(departure.candidates))) throw new Error("Departure response mismatch");
+      if (seat && seat.journey_id !== journeyId) throw new Error("Member response mismatch");
+      setSnapshot({ bearer: token, journey, plans, input, departure, seat });
       setNeedsRefresh(false);
       setMessage(null);
     } catch (error) {
@@ -187,7 +189,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   if (!visible) return null;
   const plans = current?.plans.filter((plan) => ["CANDIDATE", "SELECTED", "ACTIVE"].includes(plan.status) && plan.lifecycle !== "STANDBY") ?? [];
   const selected = plans.find((plan) => plan.is_current === true);
-  const canStart = current?.journey.status === "PLANNED" && selected?.status === "SELECTED" && !selected.stale;
+  const canStart = current?.journey.status === "PLANNED" && selected?.status === "SELECTED" && !selected.stale && current.seat?.may_confirm_departure !== false && (!current.departure || (current.departure.gate === "READY_TO_DEPART" && current.departure.selected_plan?.plan_version_id === selected.id));
   const locked = Boolean(busy || loading || needsRefresh);
   const picked = current?.input?.candidates.filter((item) => candidateIds.includes(item.candidate_id)) ?? [];
   const readyForMulti = picked.length >= 2 && picked.length === candidateIds.length && picked.every((item) => item.selection_state === "READY_FOR_NATIVE_PLAN");
@@ -246,6 +248,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
 
   return <section className="rev-plan-workbench" data-testid="rev-plan-workbench" aria-busy={Boolean(busy || loading)}>
     <header><div><span className="rev-firstlook-eyebrow">TRAVEL PLAN</span><h2>你的行程方案</h2></div><button type="button" className="rev-plan-refresh" disabled={Boolean(busy || loading)} onClick={() => void refresh()}>刷新方案</button></header>
+    {current?.departure && <section className="rev-v3-departure-status" aria-label="服务器出发检查" data-testid="rev-v3-server-departure">
+      <strong>{{ READY_TO_DEPART: "可以确认出发", ALREADY_RUNNING: "旅程已开始", NO_PLAN_SELECTED: "等待正式计划", STALE_RECOMPOSE_REQUIRED: "出发资料需要更新", PLAN_INFEASIBLE: "这份安排还需要调整", JOURNEY_NOT_PLANNABLE: "当前阶段无法准备出发" }[current.departure.gate] ?? "正在核对出发条件"}</strong>
+      <p>{current.departure.selected_plan ? `${current.departure.selected_plan.activities_count} 项正式安排` : `${current.departure.candidates.length} 份正式候选方案`}</p>
+      {current.seat?.may_confirm_departure === false && <small>请由行程发起人确认出发。</small>}
+    </section>}
     {message && <p role="alert" className="rev-plan-message">{message}</p>}
     {loading && !current && <p role="status">正在读取你的行程方案…</p>}
     {!fromAgentDraft && current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview key={`${journeyId}:${bearer}`} input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} onRefreshFacts={refreshPlaceFacts} disabled={locked} />}

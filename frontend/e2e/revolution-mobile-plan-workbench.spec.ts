@@ -92,6 +92,8 @@ test(`TEST_FIXTURE mobile plan review requires separate select and start, and su
     if (req.method() === "POST") writes.push(path);
     if (path.endsWith("/travelers/session")) return respond({ traveler_id: "TEST_FIXTURE_PLAN_TRAVELER" });
     if (path.endsWith("/agent/runtime-status")) return respond({ ai_state: "DISABLED", runtime_identity: "UNAVAILABLE" });
+    if (path.endsWith("/members/me")) { if(req.headers().authorization !== "Bearer TEST_FIXTURE_PLAN_OWNER") return respond({detail:"TEST_FIXTURE_OTHER_MEMBER"},403); expect(req.headers().authorization).toBe("Bearer TEST_FIXTURE_PLAN_OWNER"); return respond({journey_id:journeyId,traveler_id:"TEST_FIXTURE_PLAN_TRAVELER",may_confirm_departure:true,seat:{in_force:true,role:"OWNER"}}); }
+    if (path.endsWith("/departure")) { if(req.headers().authorization !== "Bearer TEST_FIXTURE_PLAN_OWNER") return respond({detail:"TEST_FIXTURE_OTHER_MEMBER"},403); expect(req.headers().authorization).toBe("Bearer TEST_FIXTURE_PLAN_OWNER"); return respond({journey_id:journeyId,gate:active?"ALREADY_RUNNING":selected?"READY_TO_DEPART":"NO_PLAN_SELECTED",observed_at:"2026-10-20T00:00:00Z",reason_detail:null,selected_plan:selected?{plan_version_id:planId,activities_count:1}:null,candidates:[]}); }
     if (path === `/api/v1/journeys/${journeyId}`) return respond({
       id: journeyId, city_code: "TEST_FIXTURE", title: "TEST_FIXTURE 3天旅行", timezone: "Asia/Shanghai",
       status: active ? "ACTIVE" : selected ? "PLANNED" : "DRAFT",
@@ -142,6 +144,7 @@ test(`TEST_FIXTURE mobile plan review requires separate select and start, and su
   await page.screenshot({ path: testInfo.outputPath(`plan-review-${viewport.width}x${viewport.height}-TEST_FIXTURE.png`) });
   await page.getByTestId("rev-plan-select").click();
   await expect(workbench).toContainText("已选用");
+  await expect(page.getByTestId("rev-v3-server-departure")).toContainText("可以确认出发");
   expect(writes).toEqual([`/api/v1/journeys/${journeyId}/plans/${planId}/select`]);
   await page.reload();
   await page.getByTestId("rev-mobile-tab-trips").click();

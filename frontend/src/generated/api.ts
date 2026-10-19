@@ -4,6 +4,44 @@
  */
 
 export interface paths {
+    "/journeys/{journey_id}/members/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Does the caller hold a seat on this journey, as what, and until when -- the one read a confirm button needs before it may be shown. The seat words are the same three the member list already answers with (MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN), plus OWNER for the traveller the journey belongs to, who holds a seat without holding a membership row. Credentials first: 401 `TRAVELER_CREDENTIALS_MISSING` when none was presented, 404 for a journey that is not there, 403 `JOURNEY_MEMBER_REQUIRED` when the caller has no seat in force -- and that 403 carries the seat that explains itself, so a screen can say "this seat ended" rather than "you are lost". */
+        get: operations["getJourneyMemberMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/departure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description One projection of "准备出发", read from durable rows only: which plan versions this journey holds, what the server froze for each, whether that freeze has passed, and the single gate word for the journey -- READY_TO_DEPART, ALREADY_RUNNING, NO_PLAN_SELECTED, STALE_RECOMPOSE_REQUIRED, PLAN_INFEASIBLE or JOURNEY_NOT_PLANNABLE. It writes nothing and asks no provider: a screen that looks at departure cannot start a trip, and the gate is decided in one order (an ACTIVE journey is reported as running before its evidence is judged). The stale-evidence words are the same words the write doors raise for the same row -- `select` answers 409 STALE_RECOMPOSE_REQUIRED for a candidate with nothing frozen, and `start` answers 409 STALE_RECOMPOSE_REQUIRED when the frozen evidence has expired; both are pinned by name in the backend suite, because this door mirrors those predicates rather than sharing them. `feasibility.failures` carries the evaluator's own strings whenever the gate is PLAN_INFEASIBLE, so nothing is re-worded for the screen. */
+        get: operations["getJourneyDeparture"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -3682,6 +3720,149 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getJourneyMemberMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The caller's own seat on this journey */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        traveler_id: string;
+                        may_confirm_departure: boolean;
+                        seat: {
+                            /** @enum {string} */
+                            seat_kind: "OWNER" | "MEMBER" | "NONE";
+                            role: string | null;
+                            member_id?: string | null;
+                            /** @enum {string} */
+                            member_state: "MEMBER_IN_FORCE" | "MEMBER_LAPSED" | "MEMBER_WITHDRAWN" | "NO_MEMBERSHIP";
+                            expires_at?: string | null;
+                            in_force: boolean;
+                        };
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyDeparture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Departure projection for one journey the caller holds a seat on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        journey_status: string;
+                        active_plan_version_id?: string | null;
+                        current_activity_id?: string | null;
+                        seat: Record<string, never>;
+                        /** @enum {string} */
+                        gate: "READY_TO_DEPART" | "ALREADY_RUNNING" | "NO_PLAN_SELECTED" | "STALE_RECOMPOSE_REQUIRED" | "PLAN_INFEASIBLE" | "JOURNEY_NOT_PLANNABLE";
+                        reason_detail?: string | null;
+                        selected_plan?: Record<string, never> | null;
+                        candidates: {
+                            /** Format: uuid */
+                            plan_version_id: string;
+                            version_no: number;
+                            planning_mode?: string;
+                            status: string;
+                            source?: string;
+                            currency?: string;
+                            total_cost_minor?: number;
+                            estimated_duration_min?: number;
+                            activities_count?: number;
+                            evidence: {
+                                frozen: boolean;
+                                snapshot_id?: string | null;
+                                expires_at?: string | null;
+                                expired: boolean | null;
+                                reference_consistent: boolean;
+                                detail?: string | null;
+                            };
+                            feasibility: {
+                                feasible?: boolean | null;
+                                failures?: string[];
+                                detail?: string | null;
+                            };
+                        }[];
+                        next_action: {
+                            /** @enum {string} */
+                            kind: "select_or_start" | "generate_plans" | "recompose" | "none";
+                            door: string | null;
+                        };
+                        observed_at: string;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getHealth: {
         parameters: {
             query?: never;
