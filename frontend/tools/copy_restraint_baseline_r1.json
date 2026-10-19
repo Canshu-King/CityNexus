@@ -1,0 +1,47 @@
+{
+ "blessed_by": "copy_restraint_gate_r1.py --bless",
+ "counts": {
+  "defensive": 11,
+  "orphans": 15,
+  "pointers": 5
+ },
+ "sets": {
+  "defensive": [
+   "dictionary|zh|live.evidence.serverWordUnexplained",
+   "dictionary|zh|me.recoveryRefusedMismatch",
+   "dictionary|zh|trial.sealedUnreadable",
+   "src/features/checkin/footprintCopy.ts|zh|emptyWhy",
+   "src/features/checkin/footprintCopy.ts|zh|unreachable",
+   "src/features/collections/collectionCopy.ts|zh|writeRefused",
+   "src/features/discovery/prepAbandonSurveyCopy.ts|zh|prepSurvey.r2",
+   "src/features/poiimport/poiImportCopy.ts|en|collectNothingConfirmed",
+   "src/features/poiimport/poiImportCopy.ts|en|readBackFailed",
+   "src/features/poiimport/poiImportCopy.ts|zh|boundarySub",
+   "src/features/trash/journeyTrashCopy.ts|en|trash.noViewer"
+  ],
+  "orphans": [
+   "orphans|-|close",
+   "orphans|-|coordinateSystem",
+   "orphans|-|detailsLabel",
+   "orphans|-|host",
+   "orphans|-|noCoordinateSystem",
+   "orphans|-|noHost",
+   "orphans|-|noName",
+   "orphans|-|noRecord",
+   "orphans|-|noRecordHint",
+   "orphans|-|noSource",
+   "orphans|-|noSourceCoordinateSystem",
+   "orphans|-|notSent",
+   "orphans|-|railAria",
+   "orphans|-|sheetLede",
+   "orphans|-|sourceCoordinateSystem"
+  ],
+  "pointers": [
+   "src/features/planning/planRankingCopy.ts|en|rank.sortHint",
+   "src/features/trip/spendCopy.ts|zh|spend.offDay",
+   "src/features/trip/spendCopy.ts|zh|spend.offDay.plural",
+   "src/i18n/agentWorkFeedCopy.ts|en|sheetLede",
+   "src/i18n/agentWorkFeedCopy.ts|zh|sheetLede"
+  ]
+ }
+}

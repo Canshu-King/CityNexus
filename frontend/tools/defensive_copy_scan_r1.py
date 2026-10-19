@@ -217,6 +217,42 @@ def parse_entries(lines: list[str]) -> list[tuple[str, str, str]]:
     return rows
 
 
+POINTER = re.compile(
+    r"上面|下面|上方|下方|左方|右方|上一格|下一格|左手边|右手边|\babove\b|\bbelow\b|the line above|the button below"
+)
+
+
+def dictionary_values() -> list[tuple[str, str, str]]:
+    """(side, key, value) for the travel dictionary's two locale blocks."""
+
+    lines = DICT.read_text(encoding="utf-8").split("\n")
+    rows: list[tuple[str, str, str]] = []
+    for side, (low, high) in blocks(lines).items():
+        seen: set[str] = set()
+        for line in lines[low:high]:
+            match = KEY_LINE.match(line)
+            if not match or match.group(1) in seen:
+                continue
+            seen.add(match.group(1))
+            rows.append((side, match.group(1), match.group(2)))
+    return rows
+
+
+def layout_pointers() -> list[tuple[str, str, str, str]]:
+    """(origin, side, key, value) for copy that points at the screen's own layout.
+
+    The second disease this campaign serves, and it lives in the same ruler on purpose: a sentence may
+    say what is on the screen and what the reader can do, but not where -- "the roster below",
+    "the button below", "pick a trip above" are facts about this build's arrangement and survive a
+    rearrangement only by luck. Both spellings of the Chinese word (上面 / 上方) are in the pattern
+    because the first version searched one and let two sentences through a whole wave.
+    """
+
+    rows = [(DICT_LABEL, side, key, value) for side, key, value in dictionary_values() if POINTER.search(value)]
+    rows += [(label, side, key, value) for label, side, key, value in module_copy() if POINTER.search(value)]
+    return rows
+
+
 def module_copy() -> list[tuple[str, str, str, str]]:
     """(file label, side, key, value) for every sentence in the feature copy modules, both shapes."""
 
@@ -468,6 +504,17 @@ def selftest() -> int:
     results.append(("the entry-shaped files reach the candidate list (module_copy wiring)",
                     per_file.get("poiImportCopy.ts", 0) >= 140 and per_file.get("mapPanelCopy.ts", 0) >= 60,
                     "poiImport=%s mapPanel=%s" % (per_file.get("poiImportCopy.ts"), per_file.get("mapPanelCopy.ts"))))
+    hits = layout_pointers()
+    results.append(("layout pointers are found in the tree, on both spellings of the word",
+                    len(hits) >= 1 and any("上方" in value or "下面" in value or "above" in value or "below" in value
+                                           for _, _, _, value in hits), "%d values still point" % len(hits)))
+    pointing = sorted(key for _, _, key, value in hits if "上方" in value or "下面" in value)
+    results.append(("the identity sentences this campaign cut are no longer among them",
+                    all("identity" not in key for key in pointing), str(pointing)[:56]))
+    dictionary_rows = dictionary_values()
+    results.append(("the dictionary is read on both sides",
+                    len(dictionary_rows) > 2000 and {side for side, _, _ in dictionary_rows} == {"en", "zh"},
+                    "%d values" % len(dictionary_rows)))
     for text, want in [
         ("No third word is invented here, so this choice refuses.", True),
         ("这里不另起第三种说法。", True),

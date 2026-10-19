@@ -141,12 +141,12 @@ def selftest() -> int:
     return 0
 
 
-def main() -> int:
-    if "--selftest" in sys.argv:
-        return selftest()
-    limit = 40
-    if "--limit" in sys.argv:
-        limit = int(sys.argv[sys.argv.index("--limit") + 1])
+def inventory() -> dict:
+    """The counts, as data -- so a second tool can watch them without re-implementing this rule.
+
+    Two tools re-deriving "which copy key has no reader" is two tools that can disagree, and the one
+    that is wrong is the one nobody notices.
+    """
 
     files = {str(path): path.read_text(encoding="utf-8", errors="ignore") for path in source_files()}
     keys = dictionary_keys()
@@ -176,10 +176,33 @@ def main() -> int:
     judged_dead = [k for k, defining in keys.items() if not read[k] and not runtime_keyed.intersection(defining)]
     dead = sorted(k for k in judged_dead if k not in dynamic)
     suspect = sorted(k for k, defining in keys.items() if not read[k] and runtime_keyed.intersection(defining))
+    return {
+        "keys": keys,
+        "dead": dead,
+        "suspect": suspect,
+        "prefixes": prefixes,
+        "runtime_keyed": runtime_keyed,
+        "dynamic": len(dynamic),
+        "inventoried": len(keys),
+        "files": len({p for paths in keys.values() for p in paths}),
+    }
 
-    print("copy keys inventoried:", len(keys), "across", len({p for paths in keys.values() for p in paths}), "files")
+
+def main() -> int:
+    if "--selftest" in sys.argv:
+        return selftest()
+    limit = 40
+    if "--limit" in sys.argv:
+        limit = int(sys.argv[sys.argv.index("--limit") + 1])
+
+    seen = inventory()
+    keys, dead, suspect, prefixes, runtime_keyed = (
+        seen["keys"], seen["dead"], seen["suspect"], seen["prefixes"], seen["runtime_keyed"]
+    )
+
+    print("copy keys inventoried:", seen["inventoried"], "across", seen["files"], "files")
     print("dynamic prefixes seen (their keys are not judged):", ", ".join(prefixes) or "(none)")
-    print("keys reachable through one of those prefixes:", len(dynamic))
+    print("keys reachable through one of those prefixes:", seen["dynamic"])
     print("files whose tables a run-time value could address (a literal scan cannot judge them):",
           ", ".join(sorted(Path(p).name for p in runtime_keyed)) or "(none)")
     print("   keys with no literal anywhere, but such a file owns them (SUSPECT, not dead):", len(suspect))
