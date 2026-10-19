@@ -152,8 +152,8 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   },
   footprintAsking: { zh: "正在向服务器问这一趟的足迹…", en: "Asking the server for this trip's footprints…" },
   footprintNotAsked: {
-    zh: "这一屏没有打开的行程，所以没向服务器问过足迹。",
-    en: "No trip is open on this screen, so nothing was ever asked of the server.",
+    zh: "没有打开的行程，所以没向服务器问过足迹。",
+    en: "No trip is open, so nothing was asked of the server.",
   },
   footprintBadgeAria: { zh: "到站日期 %s", en: "Day stamped %s" },
   /* The 「只看打过」 switch. Two labels, one per state, in the direction of what the press DOES --

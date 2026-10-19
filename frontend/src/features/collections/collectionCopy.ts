@@ -93,8 +93,8 @@ export const COLLECTION_COPY = {
     en: "The place behind this stop is not held by this server, so nothing was put away.",
   },
   writeRefused: {
-    zh: "这一屏没能把这一枚写进架子。上面这句是屏自己判断的状态，不是服务器给的理由。",
-    en: "This face could not write the place onto a shelf. That sentence is the screen's own state, not the server's reason.",
+    zh: "这一枚没能写进架子；理由是这一屏自己的判断，不是服务器给的。",
+    en: "The place was not written onto a shelf. That reason is this app's own state, not the server's.",
   },
   writeUnreachable: {
     zh: "这台设备没连上服务器，所以这一枚没有写出去。",
@@ -113,7 +113,7 @@ export const COLLECTION_COPY = {
     en: "This device could not reach the server, so no shelves could be listed.",
   },
   noPlaceIdOnRow: {
-    zh: "这一行没有对应的地点身份，所以这里不给收藏入口。",
+    zh: "这一行没有对应的地点身份，所以没有收藏入口。",
     en: "This row carries no place identity, so there is nothing to collect.",
   },
   noTravelerYet: {

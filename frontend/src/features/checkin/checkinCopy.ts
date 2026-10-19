@@ -76,16 +76,16 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
     en: "This trip is in the recycle bin; bring it back before stamping or reading its footprints.",
   },
   journeyUnknown: {
-    zh: "这台服务器上没有这趟行程，所以这一屏的打卡没有落下。",
+    zh: "这台服务器上没有这趟行程，所以打卡没有落下。",
     en: "This server has no such trip, so this stamp was not written.",
   },
   unreachable: {
-    zh: "这一问没有到达服务器，所以这里不能说打卡有没有落下。",
-    en: "This request never reached the server, so nothing here can say whether the stamp was written.",
+    zh: "这一问没有到达服务器，不知道打卡有没有落下。",
+    en: "This request never reached the server, so whether the stamp was written is unknown.",
   },
   unexpected: {
-    zh: "服务器收了这枚打卡但给了一个这里说不上名的答复（{status}），所以这一屏按没有打卡处理。",
-    en: "The server answered this stamp with a name this screen does not recognise ({status}), so this screen treats it as not written.",
+    zh: "服务器收了这枚打卡，但给了一个叫不出名字的答复（{status}），所以按没有打卡处理。",
+    en: "The server answered this stamp with a name it does not recognise ({status}), so it is treated as not written.",
   },
 };
 

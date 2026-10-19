@@ -43,8 +43,8 @@ export type FootprintCopyKey =
 
 const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   scope: {
-    zh: "这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。",
-    en: "Every row here is a stamp the server holds for this trip, grouped by day and, inside a day, in the order they were stamped.",
+    zh: "只列服务器替这次行程记下的印，按天分，天内按打的先后排。",
+    en: "Every row is a stamp the server holds for this trip, grouped by day and, inside a day, in the order they were stamped.",
   },
   /* The day line. `{day}` is filled by the component from the server's own instant, read in the
      journey's timezone -- see `zonePhrase`, which says out loud which zone the split used. */
@@ -67,8 +67,8 @@ const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   empty: { zh: "还没有足迹。打开行程，在一站上按「打卡」。",
            en: "No footprints yet. Open the itinerary and tap Check in on a stop." },
   emptyWhy: {
-    zh: "这一屏只列你自己按出来的那几枚印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。",
-    en: "This screen only lists stamps you made yourself -- the server does not record any for you. Go to a stop on your itinerary and tap Check in once, and a stamp will appear here.",
+    zh: "只列你自己按出来的印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。",
+    en: "Only stamps you made yourself are listed -- the server does not record any for you. Go to a stop on your itinerary and tap Check in once, and a stamp will appear.",
   },
   emptyAction: { zh: "打开行程去打卡", en: "Go check in on a stop" },
   /* Two different failures, two sentences: the order asks the screen to say WHICH step did not

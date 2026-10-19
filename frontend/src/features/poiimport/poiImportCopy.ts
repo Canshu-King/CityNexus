@@ -121,14 +121,14 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
      exit above. So there is no door to wire this radio to, and the honest form of the third exit is a
      refusal that names why. */
   storeOnlyRefusal: {
-    zh: "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。",
-    en: "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting it on a shelf is the exit above. No fourth word is invented here, so this one refuses by state and writes nothing.",
+    zh: "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，架子是另一个出口。这一项什么都不写。",
+    en: "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and the shelf is the other exit. This option writes nothing.",
   },
   /* The chosen state of the refused exit: the traveller picked it, so the screen owes a sentence about
      what just happened -- which is that nothing happened, and no write control exists any more. */
   storeOnlyChosen: {
-    zh: "这一项选上了，但它没有可写的门：上面那句就是它的全部回答，这一屏什么都没写。",
-    en: "This destination is chosen and has no door to write through: the line above is its whole answer, and nothing has been written.",
+    zh: "这一项选上了，但它没有可写的门，所以什么都没写。",
+    en: "This destination is chosen and has no door to write through, so nothing was written.",
   },
   landingDayChosen: {
     zh: "你选的日子：{day}",
@@ -163,8 +163,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "{n} {plural:place} already on {shelf}, so nothing was written twice.",
   },
   collectNothingConfirmed: {
-    zh: "写入应答了，但架子上读不回这一枚。在它读回来之前，这里不说“已收在”。",
-    en: "The write answered, but the shelf did not give these back. Nothing is called collected until it does.",
+    zh: "写入应答了，但架子上读不回这一枚，所以先不说“已收在”。",
+    en: "The write answered, but the shelf did not give these back, so nothing is called collected yet.",
   },
   /* The badge next to the screen's title.  It carries no `{...}` value because the screen states it
      the same way whatever it is showing: the parser is local and no link is opened.  Both halves are
@@ -363,8 +363,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "One place per line, or a whole note. Links may be mixed in.",
   },
   readBackFailed: {
-    zh: "写入应答了，但计划没有把那条记录交回来。在它交回来之前，这里不说“已加入”。",
-    en: "The write answered, but the plan did not give the record back. Nothing is called added until it does.",
+    zh: "写入应答了，但计划没有把那条记录交回来，所以先不说“已加入”。",
+    en: "The write answered, but the plan did not give the record back, so nothing is called added yet.",
   },
   retry: {
     zh: "重试",
