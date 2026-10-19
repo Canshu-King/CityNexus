@@ -80,6 +80,21 @@ def _json_payload(response: httpx.Response, where: str) -> dict[str, Any]:
     return payload
 
 
+# Two written contracts exist for this row and they do not use the same words:
+#   * the 2026-10-19 order names place_id / image_url / thumb_url / author / license / source_url /
+#     provider / captured_at / can_show;
+#   * docs/reform/REVOLUTION_VISUAL_TRAVEL_UI_20261019.md (PR #41) adds title / provenance /
+#     attribution_url / terms_url / confidence and spells the thumbnail "thumbnail_url".
+# The payload carries both spellings of the two renamed fields instead of making a renderer guess, and
+# "confidence" is not a made-up score: it names which arm of the binding actually fired.
+CONFIDENCE_BY_ARM = {
+    "label": "EXACT_LABEL",
+    "region_id": "REGION_ENTITY_MATCH",
+    "region_label": "REGION_CHAIN_LABEL",
+    "description": "DESCRIPTION_SUBSTRING",
+}
+
+
 @dataclass(frozen=True)
 class PlaceMedia:
     place_id: str
@@ -91,16 +106,27 @@ class PlaceMedia:
     provider: str
     captured_at: str
     can_show: bool
+    title: str | None = None
+    provenance: str | None = None
+    attribution_url: str | None = None
+    terms_url: str | None = None
+    confidence: str | None = None
 
     def as_payload(self) -> dict[str, Any]:
         return {
             "place_id": self.place_id,
             "image_url": self.image_url,
             "thumb_url": self.thumb_url,
+            "thumbnail_url": self.thumb_url,
             "author": self.author,
             "license": self.license,
             "source_url": self.source_url,
+            "attribution_url": self.attribution_url or self.source_url,
+            "terms_url": self.terms_url,
             "provider": self.provider,
+            "provenance": self.provenance,
+            "title": self.title,
+            "confidence": self.confidence,
             "captured_at": self.captured_at,
             "can_show": self.can_show,
         }
@@ -127,24 +153,31 @@ class PlaceMediaResult:
 
 
 def identity_matches(label: str, entity_label: str | None, description: str | None,
-                     region: str | None, chain_labels: Sequence[str] = ()) -> bool:
-    """Bind or refuse: the label must agree, or the region we were handed must appear in the entity.
+                     region: str | None, chain_labels: Sequence[str] = (),
+                     chain_qids: Sequence[str] = (), region_qid: str | None = None) -> str | None:
+    """Which arm binds this entity to the place we asked for -- or None when nothing does.
 
-    Two arms, because either alone is wrong: label equality only would refuse a mountain whose Wikidata
-    label is English while the traveller's POI is Chinese, and region-only matching would accept any
-    entity that happens to mention the county.
+    Returning the arm rather than a bool is what turns "confidence" into a fact: a caller can see
+    whether the binding was an exact label, a shared region entity, a chain label or a description
+    substring, and a renderer can choose to trust only the strong ones.
     """
     wanted = (label or "").strip()
     given = (entity_label or "").strip()
     if wanted and given and wanted == given:
-        return True
+        return "label"
     text = (description or "").strip().lower()
     region_text = (region or "").strip().lower()
+    if region_qid and region_qid in set(chain_qids):
+        # The strongest region arm: both sides resolved to a Wikidata entity, so the three spellings of
+        # one city are one node instead of three strings that have to match character for character.
+        return "region_id"
     if region_text and any(region_text == str(seen).strip().lower() for seen in chain_labels):
-        return True
+        return "region_label"
     if not text or not region_text:
-        return False
-    return wanted.lower() in text or region_text in text
+        return None
+    if wanted.lower() in text or region_text in text:
+        return "description"
+    return None
 
 
 class WikimediaMediaProvider:
@@ -187,14 +220,23 @@ class WikimediaMediaProvider:
             "located_in": [str(item.get("id")) for item in located if item.get("id")],
         }
 
-    async def _region_chain_labels(self, qids: Sequence[str]) -> tuple[list[str], list[str]]:
-        """Climb `P131` a few hops and hand back every label seen, so the caller can compare, not guess.
+    async def _region_entity(self, region: str) -> str | None:
+        """Resolve the traveller's own region string to a Wikidata entity id (one call, or none)."""
+        for hit in await self._search(region):
+            qid = str(hit.get("id") or "")
+            if qid:
+                return qid
+        return None
+
+    async def _region_chain(self, qids: Sequence[str]) -> tuple[list[str], list[str], list[str]]:
+        """Climb `P131` a few hops and hand back every label and id seen.
 
         Short-circuits on the first hop that yields nothing: a chain that dead-ends cannot prove a
         region, and reading fewer rows than asked is reported, never padded.
         """
         seen: list[str] = []
         visited: list[str] = []
+        chain_qids: list[str] = []
         current = list(qids)
         while current and len(visited) < CHAIN_CAP:
             batch = [qid for qid in current if qid not in visited]
@@ -207,7 +249,8 @@ class WikimediaMediaProvider:
             response.raise_for_status()
             payload = _json_payload(response, "Wikidata chain")
             nxt: list[str] = []
-            for doc in (payload.get("entities") or {}).values():
+            for qid_seen, doc in (payload.get("entities") or {}).items():
+                chain_qids.append(str(qid_seen))
                 for row in (doc.get("labels") or {}).values():
                     if row.get("value"):
                         seen.append(str(row["value"]))
@@ -216,7 +259,7 @@ class WikimediaMediaProvider:
                     if isinstance(value, dict) and value.get("id"):
                         nxt.append(str(value["id"]))
             current = nxt
-        return seen, visited
+        return seen, visited, chain_qids
 
     async def _search(self, label: str, lang: str = "zh") -> list[dict[str, Any]]:
         # `language` is mandatory on this endpoint and decides which labels are searched: asking without
@@ -268,15 +311,23 @@ class WikimediaMediaProvider:
             entity_label = document["label"]
             description = document["description"]
             chain_labels: list[str] = []
-            if not identity_matches(label, entity_label, description, region):
+            chain_qids: list[str] = []
+            region_qid: str | None = None
+            arm = identity_matches(label, entity_label, description, region)
+            if arm is None and region:
                 # Only climb the graph when the strings disagree: the walk is the expensive arm, and it
                 # is asked exactly for the case a string matcher gets wrong.
-                chain_labels, _visited = await self._region_chain_labels(document["located_in"])
-            if not identity_matches(label, entity_label, description, region, chain_labels):
+                chain_labels, _visited, chain_qids = await self._region_chain(
+                    document["located_in"])
+                region_qid = await self._region_entity(region)
+                arm = identity_matches(label, entity_label, description, region, chain_labels,
+                                       chain_qids, region_qid)
+            if arm is None:
                 # The answer is about a different place, so for this POI there is no media.
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
                               "outcome": "NO_MEDIA", "reason_code": "MEDIA_IDENTITY_UNBOUND",
                               "entity_label": entity_label, "chain_labels": chain_labels[:4],
+                              "region_qid": region_qid,
                               "captured_at": started}
             if not files:
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
@@ -291,6 +342,11 @@ class WikimediaMediaProvider:
             license_name = _plain(meta.get("LicenseShortName")) or _plain(meta.get("License"))
             media = PlaceMedia(
                 place_id=place_id,
+                title=_plain(meta.get("ImageDescription")) or files[0],
+                provenance="WIKIDATA_" + IMAGE_PROPERTY + "+COMMONS_IMAGEINFO",
+                attribution_url=info.get("descriptionurl") or None,
+                terms_url=_plain(meta.get("LicenseUrl")) or None,
+                confidence=CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
                 image_url=str(info["url"]),
                 thumb_url=str(info["thumburl"]) if info.get("thumburl") else None,
                 author=_plain(meta.get("Artist")),
@@ -303,7 +359,8 @@ class WikimediaMediaProvider:
             )
             reading = {"source": self.provider_key, "attempted": True, "qid": qid,
                        "file": files[0], "license": media.license,
-                       "chain_checked": bool(chain_labels),
+                       "binding_arm": arm, "chain_checked": bool(chain_labels),
+                       "region_qid": region_qid,
                        "outcome": STATUS_PHOTO if media.can_show else "NO_MEDIA",
                        "reason_code": None if media.can_show else "LICENCE_UNNAMED",
                        "captured_at": started}

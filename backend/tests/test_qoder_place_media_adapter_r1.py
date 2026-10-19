@@ -60,6 +60,11 @@ def transport(script: dict[str, Any], seen: list[httpx.Request] | None = None
         if "wikidata" in host and params.get("action") == "wbgetentities":
             # The P131 climb asks for a batch of ids; the answer is a set of entity documents.
             return httpx.Response(200, json=script.get("chain", {"entities": {}}))
+        if "wikidata" in host and params.get("action") == "wbsearchentities":
+            # The region is now resolved as its own entity, so one mock has to answer two different
+            # searches. `search_by` keys them by the term actually asked for.
+            by_term = script.get("search_by") or {}
+            return httpx.Response(200, json=by_term.get(params.get("search"), script["search"]))
         if "wikidata" in host and request.url.path.endswith("api.php"):
             return httpx.Response(200, json=script["search"])
         if "wikidata" in host:
@@ -98,8 +103,19 @@ async def test_a_bound_commons_answer_carries_author_licence_and_source_page():
     payload = result.as_payload()
     assert payload["status"] == place_media.STATUS_PHOTO
     media = payload["media"]
-    assert set(media) == {"place_id", "image_url", "thumb_url", "author", "license", "source_url",
-                          "provider", "captured_at", "can_show"}
+    # Both written contracts must be readable off one row: the 2026-10-19 order's nine names, and the
+    # visual contract's additions (title/provenance/attribution_url/terms_url/confidence plus its
+    # spelling "thumbnail_url").
+    order_fields = {"place_id", "image_url", "thumb_url", "author", "license", "source_url",
+                    "provider", "captured_at", "can_show"}
+    visual_fields = {"title", "provenance", "attribution_url", "terms_url", "confidence",
+                     "thumbnail_url"}
+    assert order_fields <= set(media), sorted(order_fields - set(media))
+    assert visual_fields <= set(media), sorted(visual_fields - set(media))
+    assert media["thumbnail_url"] == media["thumb_url"]
+    assert media["attribution_url"] == media["source_url"]
+    assert media["provenance"] == "WIKIDATA_P18+COMMONS_IMAGEINFO"
+    assert media["confidence"] == "EXACT_LABEL"
     assert media["image_url"] == "https://upload.wikimedia.org/x.jpg"
     assert media["thumb_url"] == "https://thumb.example/t.jpg"
     assert media["author"] == "某作者" and "<" not in media["author"]
@@ -259,3 +275,37 @@ async def test_the_chain_is_not_climbed_when_the_strings_already_agree():
 
     actions = [dict(request.url.params).get("action") for request in seen]
     assert "wbgetentities" not in actions
+
+
+@pytest.mark.asyncio
+async def test_the_region_binds_by_entity_id_when_neither_label_spells_the_region_our_way():
+    """上海市 in our pocket, "Shanghai" on the graph: comparing strings would fail, comparing entity
+    ids binds. This is the arm that makes 沪 / 上海市 / Shanghai one place instead of three guesses."""
+    entity = entity_payload("Q125474", "Bund", "waterfront in Huangpu", ["bund.jpg"],
+                            located=["Q8686"])
+    hit = {"search": [{"id": "Q125474", "label": "外滩", "description": "waterfront"}]}
+    region_hit = {"search": [{"id": "Q8686", "label": "上海市", "description": "municipality"}]}
+    chain = {"entities": {"Q8686": {"labels": {"en": {"value": "Shanghai"}}, "claims": {}}}}
+    async with httpx.AsyncClient(transport=transport(
+            script_for(search=hit, search_by={"外滩": hit, "上海市": region_hit},
+                       entity=entity, chain=chain))) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:5", label="外滩", region="上海市", client=client)
+
+    reading = result.readings[0]
+    assert result.status == place_media.STATUS_PHOTO
+    assert reading["binding_arm"] == "region_id"
+    assert reading["region_qid"] == "Q8686"
+    assert result.media is not None
+    assert result.media.confidence == "REGION_ENTITY_MATCH"
+
+
+@pytest.mark.asyncio
+async def test_a_strong_binding_and_a_description_match_are_not_the_same_claim():
+    """冠豸山 binds on its own label; the row must not be reported as if it had to fall back to prose."""
+    async with httpx.AsyncClient(transport=transport(script_for())) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:6", label="冠豸山", region="连城县", client=client)
+
+    assert result.readings[0]["binding_arm"] == "label"
+    assert result.media is not None and result.media.confidence == "EXACT_LABEL"
