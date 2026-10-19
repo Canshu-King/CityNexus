@@ -277,6 +277,36 @@ def module_copy() -> list[tuple[str, str, str, str]]:
 
 COVERAGE: dict[str, int] = {}
 
+ANSWER_KEY = re.compile(r"\.r\d+$")
+ASKED = re.compile(r"[?？]\s*$")
+# Filled by candidates(): the survey answers that carry a marker but are the traveller's own words.
+ANSWER_ROWS: list[tuple[str, str, str, str, str]] = []
+
+
+def answer_keys_in(rows: list[tuple[str, str]]) -> set[str]:
+    """Which of these (key, value) pairs are options a traveller picks rather than words the product says.
+
+    The shape is what decides, not the wording: a table that asks a question (`*.title` ending in ？ or ?)
+    and carries a run of `rN` keys is a survey, and 「这不是我要找的那个地方」 contains the marker 这不是
+    only because the person is describing their own reason. Counting that as defensive copy hides the real
+    sentences behind a false positive, which is the mistake this ruler has been built to avoid repeating.
+    """
+
+    asked = any(key.endswith(".title") and ASKED.search(value) for key, value in rows)
+    return {key for key, value in rows if asked and ANSWER_KEY.search(key)}
+
+
+def answer_options() -> set[tuple[str, str]]:
+    """(file, key) for every copy value that sits in a survey's answer list."""
+
+    by_file: dict[str, list[tuple[str, str]]] = {}
+    for label, _side, key, value in module_copy():
+        by_file.setdefault(label, []).append((key, value))
+    out: set[tuple[str, str]] = set()
+    for label, rows in by_file.items():
+        out.update((label, key) for key in answer_keys_in(rows))
+    return out
+
 
 def sentences(value: str) -> list[str]:
     return [part.strip() for part in re.split(r"[。；;.]|\s--\s", value) if part.strip()]
@@ -442,6 +472,8 @@ def candidates() -> list[tuple[str, str, str, str, str]]:
                 if hit:
                     rows.append((DICT_LABEL, side, key, hit, sentence))
     seen_key: set[tuple[str, str, str]] = set()
+    options = answer_options()
+    ANSWER_ROWS.clear()
     for label, side, key, value in module_copy():
         if (label, side, key) in seen_key:
             continue
@@ -449,6 +481,9 @@ def candidates() -> list[tuple[str, str, str, str, str]]:
         for sentence in sentences(value):
             hit = next((marker for marker in MARKERS if marker in sentence), None)
             if hit:
+                if (label, key) in options:
+                    ANSWER_ROWS.append((label, side, key, hit, sentence))
+                    continue
                 rows.append((label, side, key, hit, sentence))
     return rows
 
@@ -573,6 +608,28 @@ def selftest() -> int:
     finally:
         globals()["_CHECKS"] = saved_checks
         globals()["_SOURCE_SENTENCES"] = saved_sources
+    # The survey shape, as a pure decision over (key, value) pairs -- so the false positive that hid a
+    # real answer option behind a marker is now pinned by a control instead of by my memory of it.
+    survey = [
+        ("prepSurvey.title", "能说说为什么现在要停止吗？"),
+        ("prepSurvey.sub", "原因可以多选，也可以整个跳过。"),
+        ("prepSurvey.r1", "它转得太久，我等不下去了"),
+        ("prepSurvey.r2", "这不是我要找的那个地方"),
+    ]
+    picked = answer_keys_in(survey)
+    results.append(("a survey's answer options are the traveller's own words, not a defence",
+                    picked == {"prepSurvey.r1", "prepSurvey.r2"}, str(sorted(picked))))
+    no_question = [
+        ("prepFailure.r1", "这一屏没有把原因讲清楚"),
+        ("prepFailure.r2", "这不是服务器给的答复"),
+    ]
+    results.append(("the same rN shape without a question-shaped title stays product copy",
+                    answer_keys_in(no_question) == set(), str(sorted(answer_keys_in(no_question)))))
+    in_tree = candidates()
+    results.append(("prepSurvey.r2 is out of the defensive set on the real tree, and named as set aside",
+                    all(key != "prepSurvey.r2" for _, _, key, _, _ in in_tree)
+                    and any(key == "prepSurvey.r2" for _, _, key, _, _ in ANSWER_ROWS),
+                    "candidates=%d set aside=%d" % (len(in_tree), len(ANSWER_ROWS))))
     dictionary_rows = dictionary_values()
     results.append(("the dictionary is read on both sides",
                     len(dictionary_rows) > 2000 and {side for side, _, _ in dictionary_rows} == {"en", "zh"},
@@ -652,6 +709,8 @@ def main() -> int:
         )
         print("      " + sentence[:150])
     print("----")
+    print("survey answers set aside as the traveller's own words: {} ({})".format(
+        len(ANSWER_ROWS), ", ".join(sorted({key for _, _, key, _, _ in ANSWER_ROWS})) or "none"))
     print(
         "candidates: {} | shown: {} | not demanded by any spec: {} (of which named in a ban list: {},"
         " held only inside an instrument's own table: {})".format(
