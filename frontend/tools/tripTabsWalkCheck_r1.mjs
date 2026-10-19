@@ -495,6 +495,8 @@ const ACCESS_KEYS = [
   "access.scopeDoorSilent",
   "access.adminCapUnanswered",
   "access.doorAbsent",
+  "access.doorPresent",
+  "access.refuseOwnerCannotLeave",
 ];
 const LADDER_KEYS = [
   "ladder.method.noCandidates",
@@ -518,10 +520,13 @@ const TRASH_KEYS = [
   "trash.title",
   "trash.sub",
   "trash.empty",
+  "trash.empty.why",
   "trash.count",
   "trash.rowState",
   "trash.transport",
   "trash.recoveryMissing",
+  "trash.noViewer",
+  "trash.recoveryRefusedNoSeat",
   "trash.action",
 ];
 const TRASH_CLAIMED = [];
