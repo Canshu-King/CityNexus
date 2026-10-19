@@ -3589,10 +3589,10 @@ export interface components {
             can_show: boolean;
         };
         /**
-         * @description Which arm of the identity binding actually produced this row, so a screen can decide how much to trust it instead of guessing from a status code. A bound row names its arm (`BOUND_EXACT_LABEL` when the entity label is the place's own name, `BOUND_REGION_ENTITY_MATCH` when both sides resolved to one region entity, `BOUND_REGION_CHAIN_LABEL` when a located-in chain carries the region, `BOUND_DESCRIPTION_SUBSTRING` when only a description mentions it); a row whose binding was refused says `UNBOUND`, and a row whose provider was never asked says `NOT_ASKED`. There is no "bound by something unknown" answer: an arm that did not fire returns `UNBOUND` rather than a guess.
+         * @description Which arm of the identity binding actually produced this row, so a screen can decide how much to trust it instead of guessing from a status code. A bound row names its arm (`BOUND_EXACT_LABEL` when the entity label is the place's own name, `BOUND_REGION_ENTITY_MATCH` when both sides resolved to one region entity, `BOUND_REGION_CHAIN_LABEL` when a located-in chain carries the region, `BOUND_DESCRIPTION_SUBSTRING` when only a description mentions it); a row whose binding was refused says `UNBOUND`. The module can also answer `NOT_ASKED` when a caller hands it an empty source chain, but this product's only caller always hands it both sources, so that word never comes out of this door and is deliberately not listed here.
          * @enum {string|null}
          */
-        IdentityStatus: "BOUND_EXACT_LABEL" | "BOUND_REGION_ENTITY_MATCH" | "BOUND_REGION_CHAIN_LABEL" | "BOUND_DESCRIPTION_SUBSTRING" | "UNBOUND" | "NOT_ASKED" | "null" | null;
+        IdentityStatus: "BOUND_EXACT_LABEL" | "BOUND_REGION_ENTITY_MATCH" | "BOUND_REGION_CHAIN_LABEL" | "BOUND_DESCRIPTION_SUBSTRING" | "UNBOUND" | "null" | null;
         PlaceMediaResponse: {
             place_id: string;
             journey_id?: string;

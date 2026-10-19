@@ -3903,11 +3903,11 @@ components:
         (`BOUND_EXACT_LABEL` when the entity label is the place's own name, `BOUND_REGION_ENTITY_MATCH`
         when both sides resolved to one region entity, `BOUND_REGION_CHAIN_LABEL` when a located-in
         chain carries the region, `BOUND_DESCRIPTION_SUBSTRING` when only a description mentions it);
-        a row whose binding was refused says `UNBOUND`, and a row whose provider was never asked says
-        `NOT_ASKED`. There is no "bound by something unknown" answer: an arm that did not fire returns
-        `UNBOUND` rather than a guess.
+        a row whose binding was refused says `UNBOUND`. The module can also answer `NOT_ASKED` when a
+        caller hands it an empty source chain, but this product's only caller always hands it both
+        sources, so that word never comes out of this door and is deliberately not listed here.
       enum: [BOUND_EXACT_LABEL, BOUND_REGION_ENTITY_MATCH, BOUND_REGION_CHAIN_LABEL,
-             BOUND_DESCRIPTION_SUBSTRING, UNBOUND, NOT_ASKED, 'null']
+             BOUND_DESCRIPTION_SUBSTRING, UNBOUND, 'null']
     PlaceMediaResponse:
       type: object
       required: [place_id, status, provider_readings, blocked_itinerary]

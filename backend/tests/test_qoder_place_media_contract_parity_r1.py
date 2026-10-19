@@ -262,3 +262,94 @@ def test_the_schema_enums_close_over_the_reason_codes_the_resolver_can_answer():
     documented = set(schema("PlaceLeadResponse")["properties"]["reason_code"]["enum"])
     assert produced <= documented, (
         f"the resolver can answer {sorted(produced - documented)} and the document does not list them")
+
+
+def test_the_only_production_caller_always_hands_the_adapter_both_sources():
+    """`NOT_ASKED` is in the module but deliberately not in the document.
+
+    The word is reachable only through the `sources=` seam, which exists for tests: the one production
+    caller is the media route, and it never restricts the chain. A contract may not promise a word this
+    deployment can never answer, so this test fails the moment a second caller appears or the route
+    starts passing a shorter chain -- at which point the vocabulary has to be re-decided, not patched.
+    """
+    app_dir = Path(place_media_routes.__file__).parent
+    callers = sorted(path.name for path in app_dir.rglob("*.py")
+                     if "collect_place_media(" in path.read_text(encoding="utf-8"))
+    assert callers == ["place_media.py", "place_media_routes.py"], callers
+    route = Path(place_media_routes.__file__).read_text(encoding="utf-8")
+    call = route[route.index("collect_place_media("):route.index("collect_place_media(") + 500]
+    assert "sources=" not in call, "the route now restricts the chain; the identity vocabulary changes"
+    documented = {value for value in schema("IdentityStatus")["enum"] if value != "null"}
+    assert "NOT_ASKED" not in documented
+
+
+@pytest.mark.asyncio
+async def test_a_refused_row_answers_unbound_on_the_wire(world_like):
+    """The enum's other half has to be seen, not just named: a refusal says `UNBOUND`."""
+    client, journey, place, headers = world_like
+    ok = client.get(media_url(journey, place), headers=headers)
+    assert ok.status_code == 200, ok.text
+    body = ok.json()
+    assert body["status"] == "NO_IMAGE"
+    assert body["identity_status"] == "UNBOUND"
+    documented = {value for value in schema("IdentityStatus")["enum"] if value != "null"}
+    assert body["identity_status"] in documented
+
+
+@pytest.fixture()
+def world_like(monkeypatch):
+    """The same door with a provider that finds an entity but no picture for it."""
+    app = FastAPI()
+    app.include_router(place_media_routes.router)
+    app.add_exception_handler(StarletteHTTPException, main_module.http_error)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if "Special:EntityData" in str(request.url):
+            return httpx.Response(200, json={"entities": {"Q1": {
+                "labels": {"zh": {"value": "冠豸山"}},
+                "descriptions": {"en": {"value": "mountain"}},
+                "claims": {place_media.IMAGE_PROPERTY: [
+                    {"mainsnak": {"datavalue": {"value": "x.jpg"}}}]}}}})
+        if request.url.params.get("action") == "wbsearchentities":
+            return httpx.Response(200, json={"search": [{"id": "Q1", "label": "冠豸山",
+                                                        "description": "mountain"}]})
+        return httpx.Response(200, json={"query": {"pages": {}}})
+
+    engine = create_engine("sqlite://", connect_args={"check_same_thread": False},
+                           poolclass=StaticPool)
+    Base.metadata.create_all(engine)
+    factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    owner, journey, place = str(uuid.uuid4()), str(uuid.uuid4()), "real-place-" + "c" * 24
+    stamp = _now()
+    with factory() as session:
+        session.add(Traveler(id=owner, display_name="owner", email=None, locale="zh-CN",
+                             timezone="Asia/Shanghai", created_at=stamp, updated_at=stamp))
+        session.add(Journey(id=journey, traveler_id=owner, title="连城", city_code="350825",
+                            timezone="Asia/Shanghai", start_at=stamp, end_at=stamp,
+                            budget_currency="CNY", budget_amount_minor=1, status="ACTIVE",
+                            created_at=stamp, updated_at=stamp))
+        session.add(Place(id=place, provider_key="photon", external_id="photon:Q1",
+                          city_code="连城县", name="冠豸山", category="poi", latitude=25.7,
+                          longitude=116.75, opening_hours_json="{}", tags_json="[]",
+                          metadata_json="{}", updated_at=stamp))
+        session.add(JourneyCheckin(id=str(uuid.uuid4()), journey_id=journey, activity_id=None,
+                                   place_id=place, target_kind="place", target_key=place,
+                                   stamped_at=stamp))
+        session.commit()
+
+    def override_session():
+        with factory() as session:
+            yield session
+
+    def override_client():
+        return httpx.AsyncClient(transport=httpx.MockTransport(handler), timeout=5.0)
+
+    app.dependency_overrides[get_session] = override_session
+    app.dependency_overrides[place_media_routes._media_client] = override_client
+    original = traveler_principal.settings
+    traveler_principal.settings = replace(settings, traveler_auth_secret=SECRET)
+    try:
+        yield (TestClient(app), journey, place,
+               {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(owner)})
+    finally:
+        traveler_principal.settings = original
