@@ -3,7 +3,7 @@
 **现在可以在本机 `/revolution` 试用新版画面。** 当前连城任务能查看冠豸山、石门湖、培田照片，挑选纵向方案卡，从照片打开对应日程，也能继续向同一个 Agent 提要求。
 
 - 试玩入口：http://127.0.0.1:14332/revolution
-- 产品提交：`338db540d2d32346e44203cefa0d01e215891100`
+- 产品提交：`24f83ea44fbe8f4bd3270f3a3b35e220e43c3e6f`（主体 `338db540d2`，最后补正地图地点计数，不把临时查看地点称为已排日程）。
 - 集成来源：[PR #41](https://github.com/Canshu-King/CityNexus/pull/41)，`f94f6917d0c73f6615c39634050336c2d7819346`；共同起点 `e1b672bd79`，安全快进，保留原提交。
 - 对应指示：[6263149016](https://github.com/Canshu-King/CityNexus/pull/23#issuecomment-6263149016)、[6263900534](https://github.com/Canshu-King/CityNexus/pull/23#issuecomment-6263900534)。
 
@@ -45,6 +45,7 @@
 - 新视觉用例进入 `playwright.mobile-trial.config.ts`，覆盖四档视口、照片失败回退、同名但来源不匹配不配图、图片到日程、重叠图钉、加载底图前零瓦片请求。旧工作记录测试按展开操作适配，保留原权限/恢复断言。
 - 初次整组的 7 项失败分别来自旧折叠入口定位与新增图片被旧离线计数捕获，已具名修复；最终整组通过。[最终本地原始输出](20261019_VISUAL_UI_TESTS.txt)
 - 产品 CI：[39254702734](https://github.com/Canshu-King/CityNexus/actions/runs/39254702734) **PASS**：TypeScript、Vite、42 项 Chromium 界面回归均通过。
+- 地图计数补正后，四档视觉定向用例 **4/4**；四档截图/浏览器测量已更新绑定 `24f83ea44f`。真实对话发生于主体 `338db540d2`，对应后端文件与最后产品提交一致。
 
 ## 图片来源与下一棒
 
@@ -54,4 +55,4 @@
 
 本次三张为人工核对、按来源 ID 与照片地点元数据绑定的图片，不改写来源记录的 UNKNOWN 地区/营业/费用状态。通用 Agent 自动取图及服务端 PlaceMedia 接口尚未接入本分支，后续接这条能力；其余地点继续使用已有地图/地点信息。
 
-`PRODUCT_SHA=338db540d2 | LIVE_PHOTO=3_LOADED | CHAT=ONE_INPUT_LIVE_FOLLOWUP | THREE_PLANS=READABLE_4_WIDTHS | MAP=SOURCE_COORDINATES_AND_FOCUS | USER_VERIFIED=PENDING`
+`PRODUCT_SHA=24f83ea44f | LIVE_PHOTO=3_LOADED | CHAT=ONE_INPUT_LIVE_FOLLOWUP | THREE_PLANS=READABLE_4_WIDTHS | MAP=SOURCE_COORDINATES_AND_FOCUS | USER_VERIFIED=PENDING`
