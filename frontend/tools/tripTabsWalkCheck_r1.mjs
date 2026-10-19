@@ -650,6 +650,13 @@ const ACCESS_KEYS = [
   "access.doorAbsent",
   "access.doorPresent",
   "access.refuseOwnerCannotLeave",
+  /* The five sentences waves 22 trimmed. Without them the arm can report that the members screen
+     lost 12 English characters and cannot say which twelve, which is a number, not a measurement. */
+  "access.identityStale",
+  "access.identityUnknownWay",
+  "access.orderBroken",
+  "access.orderUnverifiable",
+  "access.activityNoSharingWriter",
 ];
 const LADDER_KEYS = [
   "ladder.method.noCandidates",
