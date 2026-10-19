@@ -5,6 +5,7 @@ import math
 import os
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any
 
 import httpx
@@ -261,7 +262,21 @@ def _parse_polyline(polyline: str) -> list[list[float]]:
 class AmapPoiProvider:
     provider_key = "amap-web-service"
 
-    async def search(self, query: str, city: str, *, limit: int = 10) -> list[dict[str, Any]]:
+    async def search(
+        self,
+        query: str,
+        city: str,
+        *,
+        limit: int = 10,
+        client: httpx.AsyncClient | None = None,
+    ) -> list[dict[str, Any]]:
+        """Keyword search inside one administrative region, in the shape the lead surface reads.
+
+        `client` is injectable so this leg can be driven in a test without a socket; when a caller
+        passes one in, that caller owns closing it. `adcode` and `cityname` are copied only when the
+        answer carried them -- the administrative region is the field that separates two places with
+        the same name in different cities, so it is never filled in from the request.
+        """
         key = web_key()
         if not key:
             raise RuntimeError(missing_key_reason())
@@ -277,25 +292,45 @@ class AmapPoiProvider:
             # same-named place in another city is returned as if it were the one the traveller asked
             # for. The region is a filter, not a hint.
             params["citylimit"] = "true"
-        async with httpx.AsyncClient(timeout=12.0) as client:
+        owns_client = client is None
+        if owns_client:
+            client = httpx.AsyncClient(timeout=12.0)
+        try:
             response = await amap_get(client, f"{AMAP_BASE_URL}/v5/place/text", params)
             payload = response.json()
+        finally:
+            if owns_client:
+                await client.aclose()
         if str(payload.get("status")) != "1":
             raise RuntimeError(str(payload.get("info") or "Amap POI request failed"))
+        captured = datetime.now(timezone.utc).isoformat(timespec="seconds")
         result = []
         for item in payload.get("pois", [])[:limit]:
-            longitude, latitude = (float(value) for value in str(item["location"]).split(",", 1))
-            wgs_lat, wgs_lon = gcj02_to_wgs84(latitude, longitude)
+            parts = str(item.get("location") or "").split(",", 1)
+            latitude = None
+            longitude = None
+            if len(parts) == 2:
+                try:
+                    raw_lon, raw_lat = float(parts[0]), float(parts[1])
+                except ValueError:
+                    raw_lon = raw_lat = None
+                if raw_lat is not None:
+                    latitude, longitude = gcj02_to_wgs84(raw_lat, raw_lon)
             result.append(
                 {
                     "external_id": item.get("id"),
+                    "provider_item_id": item.get("id"),
                     "name": item.get("name"),
-                    "latitude": wgs_lat,
-                    "longitude": wgs_lon,
+                    "latitude": latitude,
+                    "longitude": longitude,
                     "source_crs": "GCJ02",
                     "domain_crs": "WGS84",
+                    "coordinate_system": "WGS84",
                     "conversion": "ITERATIVE_GCJ02_TO_WGS84",
                     "provider_key": self.provider_key,
+                    "adcode": item.get("adcode"),
+                    "region": item.get("cityname"),
+                    "captured_at": captured,
                 }
             )
         return result
