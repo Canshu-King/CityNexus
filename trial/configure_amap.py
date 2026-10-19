@@ -125,16 +125,16 @@ def _configure_from_prompt() -> bool:
         print(f"Using {ENV_KEY_NAME} from this process environment.")
     else:
         try:
-            key = getpass.getpass("Amap Web key (hidden input): ")
+            key = getpass.getpass("高德 Web 服务 Key（隐藏输入）：")
         except (EOFError, KeyboardInterrupt):
-            print("Configuration cancelled.")
+            print("已取消配置。")
             return False
     try:
         save_amap_key(key)
     except AmapCredentialError as exc:
         print(f"Configuration failed: {exc}", file=sys.stderr)
         return False
-    print("Encrypted Amap credential saved for this Windows user.")
+    print("高德 Key 已加密保存。重新运行 Revolution 启动器即可加载。")
     _print_status()
     return True
 

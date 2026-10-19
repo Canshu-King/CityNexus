@@ -548,12 +548,16 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
     model = str(settings.hermes_model or "").strip()
     if not model:
         raise AgentRuntimeUnavailable("Hermes goal-planning model is not configured")
-    return HermesJourneyAgent(
+    agent = HermesJourneyAgent(
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
         extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition()),
     )
+    # A full multi-day draft tool payload can exceed 2400 tokens on its own.
+    # Reserve one bounded completion, without an automatic provider retry.
+    agent._initial_max_tokens = 9600
+    return agent
 
 
 def _journey_snapshot(journey: Journey) -> dict[str, Any]:
@@ -1331,7 +1335,17 @@ def resume_goal_task(
                 cancelled = _cancelled_result(session, mission.id, run)
                 if cancelled is not None:
                     return cancelled
-                reason = "MODEL_TIMEOUT" if "Timeout" in type(exc).__name__ else "MODEL_EXTERNAL_ERROR"
+                cause = exc.__cause__ or exc
+                if "Timeout" in type(cause).__name__:
+                    reason = "MODEL_TIMEOUT"
+                elif isinstance(cause, ValueError) and str(cause) == "Hermes response exhausted its bounded output budget":
+                    reason = "MODEL_OUTPUT_BUDGET_EXHAUSTED"
+                elif isinstance(cause, ValueError) and str(cause) == "Hermes response message is empty":
+                    reason = "MODEL_EMPTY_RESPONSE"
+                elif type(cause).__name__ == "HTTPStatusError":
+                    reason = "MODEL_HTTP_" + str(cause.response.status_code)
+                else:
+                    reason = "MODEL_EXTERNAL_ERROR"
                 mission = session.get(JourneyMission, mission.id)
                 intent = _task_state(mission)
                 _finish_run(
