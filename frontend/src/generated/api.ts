@@ -2015,6 +2015,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/plans/delta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description What one plan version changes against another on this journey: the places a map must add and drop, the money and minutes the rows carry, and the mobility evidence both versions froze. The two version ids are the only inputs, and each must be a row on this journey, so a delta cannot enumerate another traveller's plan or reach a provider. Every per-slot judgement -- identity, coordinate state, opening window, verified cost, media door -- is `app.departure_facts._slot`, the same function `GET .../departure/facts` answers with, and a test runs both doors over the same rows and compares them field by field. Points are ordered by `sequence_no` on both sides. An unpriced slot is counted in `verified_cost.unpriced_slots`, never priced; two versions in different currencies produce no `budget_delta.delta_minor` rather than a subtracted pair; a slot whose free-text times this server cannot parse is named in `duration_delta.*_unreadable_slots` instead of quietly shortening the day. Matching kept/moved/added/removed is `sequence_no` plus place identity, and a slot whose place appeared on neither side is reported as `KEPT_WITHOUT_PLACE`, not as a move. Nothing is written and nothing is selected. */
+        get: operations["getJourneyPlanDelta"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/resilience/counterfactuals": {
         parameters: {
             query?: never;
@@ -4441,6 +4460,171 @@ export interface components {
             recommendations?: {
                 [key: string]: unknown;
             }[];
+        };
+        /** @description A slot reduced to the columns the map and the ledger need, with no judgement added here. */
+        PlanDeltaSlotStamp: {
+            sequence_no: number;
+            /** Format: uuid */
+            place_id: string | null;
+            start_at: string;
+            end_at: string;
+            estimated_cost_minor: number;
+            currency: string;
+            status: string;
+        };
+        /** @description One place a map must draw or drop, carrying the fact door's own coordinate answer. */
+        PlanDeltaPoint: {
+            sequence_no: number;
+            /** Format: uuid */
+            place_id: string | null;
+            source_identity: string | null;
+            label: string;
+            coordinate: {
+                /** @enum {string} */
+                state: "READY" | "UNAVAILABLE";
+                reason: string | null;
+                coordinate_system: string | null;
+            };
+            media_door: string | null;
+        };
+        /** @description One row of `sets`. `from`/`from_slot` are absent for an added slot and `to`/`to_slot` for a removed one, which is why they are optional here rather than null. */
+        PlanDeltaSetEntry: {
+            sequence_no: number;
+            /**
+             * @description Only kept slots state a kind, so a place-less keep is not read as a move.
+             * @enum {string}
+             */
+            kind?: "KEPT" | "KEPT_WITHOUT_PLACE";
+            from?: components["schemas"]["PlanDeltaSlotStamp"];
+            to?: components["schemas"]["PlanDeltaSlotStamp"];
+            from_slot?: components["schemas"]["DepartureFactsSlot"];
+            to_slot?: components["schemas"]["DepartureFactsSlot"];
+        };
+        /** @description One slot as app.departure_facts._slot answers it, which is the only view a plan delta may carry, so the two doors cannot disagree about the same row. */
+        DepartureFactsSlot: {
+            /** Format: uuid */
+            activity_id: string;
+            sequence_no: number;
+            activity_type?: string;
+            title: string;
+            starts_at?: string;
+            ends_at?: string;
+            locked?: boolean;
+            status?: string;
+            /** @enum {string} */
+            location_kind: "PLACE" | "CITY_SERVICE" | "NONE";
+            identity: {
+                /** Format: uuid */
+                canonical_id: string | null;
+                provider_key: string | null;
+                external_id: string | null;
+                source_identity: string | null;
+                detail: string | null;
+            };
+            coordinate: {
+                /** @enum {string} */
+                state: "READY" | "UNAVAILABLE";
+                reason: string | null;
+                coordinate_system: string | null;
+            };
+            opening_hours: {
+                /** @enum {string} */
+                state: "KNOWN" | "UNKNOWN";
+                detail: string | null;
+                open_minutes: number | null;
+                close_minutes: number | null;
+            };
+            cost: {
+                /** @enum {string} */
+                state: "KNOWN" | "UNKNOWN";
+                detail: string | null;
+                verified_amount_minor: number | null;
+                activity_estimate_minor: number;
+                currency: string;
+            };
+            fact_retrieved_at: string | null;
+            media_door: string | null;
+        };
+        /** @description The gate answer the select door compares, read through departure_read.frozen_evidence_of. */
+        PlanDeltaEvidenceSide: {
+            frozen: boolean;
+            snapshot_id: string | null;
+            expires_at: string | null;
+            expired: boolean | null;
+            detail: string | null;
+            reference_consistent: boolean | null;
+        };
+        PlanDeltaAnswer: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            asked_by_traveler_id: string;
+            /** Format: uuid */
+            from_plan_version_id: string;
+            /** Format: uuid */
+            to_plan_version_id: string;
+            from_status: string;
+            to_status: string;
+            from_version_no: number;
+            to_version_no: number;
+            counts: {
+                from_slots: number;
+                to_slots: number;
+                kept: number;
+                moved: number;
+                added: number;
+                removed: number;
+            };
+            /** @description The four sets, each ordered by `sequence_no`. A slot that moved names both halves, so a screen draws one arrow instead of inferring a pair from an add and a remove. */
+            sets: {
+                kept: components["schemas"]["PlanDeltaSetEntry"][];
+                moved: components["schemas"]["PlanDeltaSetEntry"][];
+                added: components["schemas"]["PlanDeltaSetEntry"][];
+                removed: components["schemas"]["PlanDeltaSetEntry"][];
+            };
+            map_delta: {
+                points_added: components["schemas"]["PlanDeltaPoint"][];
+                points_removed: components["schemas"]["PlanDeltaPoint"][];
+                /** @description Counted by the state word the fact door answered with, so a state this module did not imagine appears under its own name instead of being folded into UNAVAILABLE. */
+                coordinate_states: {
+                    [key: string]: number;
+                };
+            };
+            /** @description The numbers the plan rows carry, not a provider's opinion of them. */
+            budget_delta: {
+                from_total_minor: number;
+                to_total_minor: number;
+                delta_minor: number | null;
+                currency: string | null;
+                mixed_or_missing_currency: boolean;
+                /** @constant */
+                read_from: "activities.estimated_cost_minor";
+            };
+            verified_cost: {
+                from_total_minor: number;
+                to_total_minor: number;
+                delta_minor: number;
+                priced_slots: number;
+                unpriced_slots: number;
+                /** @constant */
+                read_from: "app.services._place_verified_cost";
+            };
+            duration_delta: {
+                from_minutes: number;
+                to_minutes: number;
+                delta_min: number;
+                from_unreadable_slots: number;
+                to_unreadable_slots: number;
+                /** @constant */
+                read_from: "activities.start_at / end_at";
+            };
+            evidence: {
+                from: components["schemas"]["PlanDeltaEvidenceSide"];
+                to: components["schemas"]["PlanDeltaEvidenceSide"];
+                /** @constant */
+                read_from: "app.departure_read.frozen_evidence_of";
+            };
+            next_actions: string[];
         };
     };
     responses: {
@@ -8114,50 +8298,7 @@ export interface operations {
                         plan_version_id: string;
                         plan_status: string;
                         seat: Record<string, never>;
-                        slots: {
-                            /** Format: uuid */
-                            activity_id: string;
-                            sequence_no: number;
-                            activity_type?: string;
-                            title: string;
-                            starts_at?: string;
-                            ends_at?: string;
-                            locked?: boolean;
-                            status?: string;
-                            /** @enum {string} */
-                            location_kind: "PLACE" | "CITY_SERVICE" | "NONE";
-                            identity: {
-                                /** Format: uuid */
-                                canonical_id: string | null;
-                                provider_key: string | null;
-                                external_id: string | null;
-                                source_identity: string | null;
-                                detail: string | null;
-                            };
-                            coordinate: {
-                                /** @enum {string} */
-                                state: "READY" | "UNAVAILABLE";
-                                reason: string | null;
-                                coordinate_system: string | null;
-                            };
-                            opening_hours: {
-                                /** @enum {string} */
-                                state: "KNOWN" | "UNKNOWN";
-                                detail: string | null;
-                                open_minutes: number | null;
-                                close_minutes: number | null;
-                            };
-                            cost: {
-                                /** @enum {string} */
-                                state: "KNOWN" | "UNKNOWN";
-                                detail: string | null;
-                                verified_amount_minor: number | null;
-                                activity_estimate_minor: number;
-                                currency: string;
-                            };
-                            fact_retrieved_at: string | null;
-                            media_door: string | null;
-                        }[];
+                        slots: components["schemas"]["DepartureFactsSlot"][];
                         facts_counted: {
                             known: number;
                             unknown: number;
@@ -8432,6 +8573,59 @@ export interface operations {
                 content?: never;
             };
             /** @description A missing key (IDEMPOTENCY_KEY_REQUIRED), a missing revision (EXPECTED_REVISION_REQUIRED), a provider id where a canonical id belongs (SLOT_NAMES_A_PROVIDER_ID_NOT_A_CANONICAL_PLACE), a slot that describes a place (SLOT_CARRIES_ONLY_SERVER_OWNED_FIELDS), a body field this door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE) or an end not after a start (SLOT_TIMES_UNORDERED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyPlanDelta: {
+        parameters: {
+            query: {
+                from_plan_version_id: string;
+                to_plan_version_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The map, budget, duration and evidence difference between the two versions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanDeltaAnswer"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Either version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A version id is missing */
             422: {
                 headers: {
                     [name: string]: unknown;

@@ -2711,56 +2711,7 @@ paths:
                   seat: {type: object}
                   slots:
                     type: array
-                    items:
-                      type: object
-                      required: [activity_id, sequence_no, title, location_kind, identity,
-                                 coordinate, opening_hours, cost, fact_retrieved_at, media_door]
-                      properties:
-                        activity_id: {type: string, format: uuid}
-                        sequence_no: {type: integer}
-                        activity_type: {type: string}
-                        title: {type: string}
-                        starts_at: {type: string}
-                        ends_at: {type: string}
-                        locked: {type: boolean}
-                        status: {type: string}
-                        location_kind: {type: string, enum: [PLACE, CITY_SERVICE, NONE]}
-                        identity:
-                          type: object
-                          required: [canonical_id, provider_key, external_id, source_identity, detail]
-                          properties:
-                            canonical_id: {type: [string, "null"], format: uuid}
-                            provider_key: {type: [string, "null"]}
-                            external_id: {type: [string, "null"]}
-                            source_identity: {type: [string, "null"]}
-                            detail: {type: [string, "null"]}
-                        coordinate:
-                          type: object
-                          required: [state, reason, coordinate_system]
-                          properties:
-                            state: {type: string, enum: [READY, UNAVAILABLE]}
-                            reason: {type: [string, "null"]}
-                            coordinate_system: {type: [string, "null"]}
-                        opening_hours:
-                          type: object
-                          required: [state, detail, open_minutes, close_minutes]
-                          properties:
-                            state: {type: string, enum: [KNOWN, UNKNOWN]}
-                            detail: {type: [string, "null"]}
-                            open_minutes: {type: [integer, "null"]}
-                            close_minutes: {type: [integer, "null"]}
-                        cost:
-                          type: object
-                          required: [state, detail, verified_amount_minor, activity_estimate_minor,
-                                     currency]
-                          properties:
-                            state: {type: string, enum: [KNOWN, UNKNOWN]}
-                            detail: {type: [string, "null"]}
-                            verified_amount_minor: {type: [integer, "null"]}
-                            activity_estimate_minor: {type: integer}
-                            currency: {type: string}
-                        fact_retrieved_at: {type: [string, "null"]}
-                        media_door: {type: [string, "null"]}
+                    items: {$ref: '#/components/schemas/DepartureFactsSlot'}
                   facts_counted:
                     type: object
                     required: [known, unknown]
@@ -2995,6 +2946,44 @@ paths:
             door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots
             (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE)
             or an end not after a start (SLOT_TIMES_UNORDERED)
+  /journeys/{journey_id}/plans/delta:
+    parameters: [{$ref: '#/components/parameters/JourneyId'}]
+    get:
+      operationId: getJourneyPlanDelta
+      description: >
+        What one plan version changes against another on this journey: the places a map must add and
+        drop, the money and minutes the rows carry, and the mobility evidence both versions froze. The
+        two version ids are the only inputs, and each must be a row on this journey, so a delta cannot
+        enumerate another traveller's plan or reach a provider. Every per-slot judgement -- identity,
+        coordinate state, opening window, verified cost, media door -- is `app.departure_facts._slot`,
+        the same function `GET .../departure/facts` answers with, and a test runs both doors over the
+        same rows and compares them field by field. Points are ordered by `sequence_no` on both sides.
+        An unpriced slot is counted in `verified_cost.unpriced_slots`, never priced; two versions in
+        different currencies produce no `budget_delta.delta_minor` rather than a subtracted pair; a slot
+        whose free-text times this server cannot parse is named in `duration_delta.*_unreadable_slots`
+        instead of quietly shortening the day. Matching kept/moved/added/removed is `sequence_no` plus
+        place identity, and a slot whose place appeared on neither side is reported as
+        `KEPT_WITHOUT_PLACE`, not as a move. Nothing is written and nothing is selected.
+      parameters:
+        - name: from_plan_version_id
+          in: query
+          required: true
+          schema: {type: string, format: uuid}
+        - name: to_plan_version_id
+          in: query
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: The map, budget, duration and evidence difference between the two versions
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/PlanDeltaAnswer'}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: Either version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
+        '422': {description: A version id is missing, or both ids name the same version (error.reason_code FROM_PLAN_VERSION_ID_REQUIRED, TO_PLAN_VERSION_ID_REQUIRED, DELTA_NEEDS_TWO_DIFFERENT_VERSIONS)}
+
   /journeys/{journey_id}/resilience/counterfactuals:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
@@ -5254,3 +5243,205 @@ components:
         recommendations:
           type: array
           items: {type: object, additionalProperties: true}
+
+    PlanDeltaSlotStamp:
+      type: object
+      description: A slot reduced to the columns the map and the ledger need, with no judgement added here.
+      required: [sequence_no, place_id, start_at, end_at, estimated_cost_minor, currency, status]
+      properties:
+        sequence_no: {type: integer}
+        place_id: {type: [string, "null"], format: uuid}
+        start_at: {type: string}
+        end_at: {type: string}
+        estimated_cost_minor: {type: integer}
+        currency: {type: string}
+        status: {type: string}
+    PlanDeltaPoint:
+      type: object
+      description: One place a map must draw or drop, carrying the fact door's own coordinate answer.
+      required: [sequence_no, place_id, source_identity, label, coordinate, media_door]
+      properties:
+        sequence_no: {type: integer}
+        place_id: {type: [string, "null"], format: uuid}
+        source_identity: {type: [string, "null"]}
+        label: {type: string}
+        coordinate:
+          type: object
+          required: [state, reason, coordinate_system]
+          properties:
+            state: {type: string, enum: [READY, UNAVAILABLE]}
+            reason: {type: [string, "null"]}
+            coordinate_system: {type: [string, "null"]}
+        media_door: {type: [string, "null"]}
+    PlanDeltaSetEntry:
+      type: object
+      description: >
+        One row of `sets`. `from`/`from_slot` are absent for an added slot and `to`/`to_slot` for a
+        removed one, which is why they are optional here rather than null.
+      required: [sequence_no]
+      properties:
+        sequence_no: {type: integer}
+        kind:
+          type: string
+          description: Only kept slots state a kind, so a place-less keep is not read as a move.
+          enum: [KEPT, KEPT_WITHOUT_PLACE]
+        from: {$ref: '#/components/schemas/PlanDeltaSlotStamp'}
+        to: {$ref: '#/components/schemas/PlanDeltaSlotStamp'}
+        from_slot: {$ref: '#/components/schemas/DepartureFactsSlot'}
+        to_slot: {$ref: '#/components/schemas/DepartureFactsSlot'}
+    DepartureFactsSlot:
+      description: One slot as app.departure_facts._slot answers it, which is the only
+        view a plan delta may carry, so the two doors cannot disagree about the same row.
+      type: object
+      required: [activity_id, sequence_no, title, location_kind, identity,
+                 coordinate, opening_hours, cost, fact_retrieved_at, media_door]
+      properties:
+        activity_id: {type: string, format: uuid}
+        sequence_no: {type: integer}
+        activity_type: {type: string}
+        title: {type: string}
+        starts_at: {type: string}
+        ends_at: {type: string}
+        locked: {type: boolean}
+        status: {type: string}
+        location_kind: {type: string, enum: [PLACE, CITY_SERVICE, NONE]}
+        identity:
+          type: object
+          required: [canonical_id, provider_key, external_id, source_identity, detail]
+          properties:
+            canonical_id: {type: [string, "null"], format: uuid}
+            provider_key: {type: [string, "null"]}
+            external_id: {type: [string, "null"]}
+            source_identity: {type: [string, "null"]}
+            detail: {type: [string, "null"]}
+        coordinate:
+          type: object
+          required: [state, reason, coordinate_system]
+          properties:
+            state: {type: string, enum: [READY, UNAVAILABLE]}
+            reason: {type: [string, "null"]}
+            coordinate_system: {type: [string, "null"]}
+        opening_hours:
+          type: object
+          required: [state, detail, open_minutes, close_minutes]
+          properties:
+            state: {type: string, enum: [KNOWN, UNKNOWN]}
+            detail: {type: [string, "null"]}
+            open_minutes: {type: [integer, "null"]}
+            close_minutes: {type: [integer, "null"]}
+        cost:
+          type: object
+          required: [state, detail, verified_amount_minor, activity_estimate_minor,
+                     currency]
+          properties:
+            state: {type: string, enum: [KNOWN, UNKNOWN]}
+            detail: {type: [string, "null"]}
+            verified_amount_minor: {type: [integer, "null"]}
+            activity_estimate_minor: {type: integer}
+            currency: {type: string}
+        fact_retrieved_at: {type: [string, "null"]}
+        media_door: {type: [string, "null"]}
+
+    PlanDeltaEvidenceSide:
+      type: object
+      description: The gate answer the select door compares, read through departure_read.frozen_evidence_of.
+      required: [frozen, snapshot_id, expires_at, expired, detail, reference_consistent]
+      properties:
+        frozen: {type: boolean}
+        snapshot_id: {type: [string, "null"]}
+        expires_at: {type: [string, "null"]}
+        expired: {type: [boolean, "null"]}
+        detail: {type: [string, "null"]}
+        reference_consistent: {type: [boolean, "null"]}
+    PlanDeltaAnswer:
+      type: object
+      required: [journey_id, asked_by_traveler_id, from_plan_version_id, to_plan_version_id,
+                 from_status, to_status, from_version_no, to_version_no, counts, sets, map_delta,
+                 budget_delta, verified_cost, duration_delta, evidence, next_actions]
+      properties:
+        journey_id: {type: string, format: uuid}
+        asked_by_traveler_id: {type: string, format: uuid}
+        from_plan_version_id: {type: string, format: uuid}
+        to_plan_version_id: {type: string, format: uuid}
+        from_status: {type: string}
+        to_status: {type: string}
+        from_version_no: {type: integer}
+        to_version_no: {type: integer}
+        counts:
+          type: object
+          required: [from_slots, to_slots, kept, moved, added, removed]
+          properties:
+            from_slots: {type: integer}
+            to_slots: {type: integer}
+            kept: {type: integer}
+            moved: {type: integer}
+            added: {type: integer}
+            removed: {type: integer}
+        sets:
+          type: object
+          description: >
+            The four sets, each ordered by `sequence_no`. A slot that moved names both halves, so a
+            screen draws one arrow instead of inferring a pair from an add and a remove.
+          required: [kept, moved, added, removed]
+          properties:
+            kept: {type: array, items: {$ref: '#/components/schemas/PlanDeltaSetEntry'}}
+            moved: {type: array, items: {$ref: '#/components/schemas/PlanDeltaSetEntry'}}
+            added: {type: array, items: {$ref: '#/components/schemas/PlanDeltaSetEntry'}}
+            removed: {type: array, items: {$ref: '#/components/schemas/PlanDeltaSetEntry'}}
+        map_delta:
+          type: object
+          required: [points_added, points_removed, coordinate_states]
+          properties:
+            points_added: {type: array, items: {$ref: '#/components/schemas/PlanDeltaPoint'}}
+            points_removed: {type: array, items: {$ref: '#/components/schemas/PlanDeltaPoint'}}
+            coordinate_states:
+              type: object
+              description: >
+                Counted by the state word the fact door answered with, so a state this module did not
+                imagine appears under its own name instead of being folded into UNAVAILABLE.
+              additionalProperties: {type: integer}
+        budget_delta:
+          type: object
+          description: The numbers the plan rows carry, not a provider's opinion of them.
+          required: [from_total_minor, to_total_minor, delta_minor, currency,
+                     mixed_or_missing_currency, read_from]
+          properties:
+            from_total_minor: {type: integer}
+            to_total_minor: {type: integer}
+            delta_minor: {type: [integer, "null"]}
+            currency: {type: [string, "null"]}
+            mixed_or_missing_currency: {type: boolean}
+            read_from: {type: string, const: activities.estimated_cost_minor}
+        verified_cost:
+          type: object
+          required: [from_total_minor, to_total_minor, delta_minor, priced_slots, unpriced_slots,
+                     read_from]
+          properties:
+            from_total_minor: {type: integer}
+            to_total_minor: {type: integer}
+            delta_minor: {type: integer}
+            priced_slots: {type: integer}
+            unpriced_slots: {type: integer}
+            read_from: {type: string, const: app.services._place_verified_cost}
+        duration_delta:
+          type: object
+          required: [from_minutes, to_minutes, delta_min, from_unreadable_slots,
+                     to_unreadable_slots, read_from]
+          properties:
+            from_minutes: {type: integer}
+            to_minutes: {type: integer}
+            delta_min: {type: integer}
+            from_unreadable_slots: {type: integer}
+            to_unreadable_slots: {type: integer}
+            read_from: {type: string, const: activities.start_at / end_at}
+        evidence:
+          type: object
+          required: [from, to, read_from]
+          properties:
+            from: {$ref: '#/components/schemas/PlanDeltaEvidenceSide'}
+            to: {$ref: '#/components/schemas/PlanDeltaEvidenceSide'}
+            read_from: {type: string, const: app.departure_read.frozen_evidence_of}
+        next_actions:
+          type: array
+          items: {type: string}
+
