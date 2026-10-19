@@ -97,10 +97,16 @@ def world():
 
     app.dependency_overrides[get_session] = override_session
     app.dependency_overrides[place_media_routes._media_client] = override_client
+    # The secret is swapped for the duration of this module only: leaving it set is how the next
+    # test file starts answering 401 to calls it wrote expecting an unconfigured credential door.
+    original = traveler_principal.settings
     traveler_principal.settings = replace(settings, traveler_auth_secret=SECRET)
-    headers = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(owner)}
-    stranger = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(outsider)}
-    return TestClient(app), journey, place, headers, stranger
+    try:
+        headers = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(owner)}
+        stranger = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(outsider)}
+        yield TestClient(app), journey, place, headers, stranger
+    finally:
+        traveler_principal.settings = original
 
 
 def _respond(request: httpx.Request) -> httpx.Response:
