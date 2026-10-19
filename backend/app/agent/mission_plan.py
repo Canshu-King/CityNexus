@@ -78,6 +78,16 @@ DRAFT_WRITE_TOOLS = (
     "acquire_place_facts",
     "generate_plans",
 )
+MEASUREMENT_TOOLS = (
+    # Arbiter ruling 2026-10-19 (Revolution Autonomy Upgrade) item 1: one mandate has to cover place
+    # lookup, source checking, route querying and estimate planning, and only a real external
+    # commitment, a payment, or a change to an already-active multi-party plan asks again.
+    # Both of these measure the world and store what a provider answered; neither commits money,
+    # a booking or a plan selection. `acquire_route` also stays in the runtime's mutation set, so the
+    # "inspect before you change the run" ordering guard is untouched by this grant.
+    "acquire_route",
+    "refresh_live_context",
+)
 ACTION_TOOLS = (
     "request_replan",
     "accept_replan",
@@ -86,12 +96,6 @@ ACTION_TOOLS = (
     "create_booking",
     "cancel_refundable_booking",
     "request_commitment_change",
-    # Reform 2026-10-18: acquiring a route is a real provider call with a possible cost, so it sits
-    # with the actions rather than in the free draft set.
-    "acquire_route",
-    # Reform 2026-10-18, Guardian: the watch writes observations/events and can invalidate a
-    # pending replan, so it is an action and is not granted to a PLAN_ONLY mission.
-    "refresh_live_context",
 )
 
 
@@ -161,9 +165,9 @@ def build_mission_plan(
             requires_authority=True,
         )
     allowed_tools = (
-        (*READ_TOOLS, *DRAFT_WRITE_TOOLS, "request_replan")
+        (*READ_TOOLS, *DRAFT_WRITE_TOOLS, *MEASUREMENT_TOOLS, "request_replan")
         if autonomy == "PLAN_ONLY"
-        else (*READ_TOOLS, *DRAFT_WRITE_TOOLS, *ACTION_TOOLS)
+        else (*READ_TOOLS, *DRAFT_WRITE_TOOLS, *MEASUREMENT_TOOLS, *ACTION_TOOLS)
     )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",

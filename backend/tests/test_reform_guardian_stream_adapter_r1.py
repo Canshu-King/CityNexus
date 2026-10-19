@@ -97,8 +97,12 @@ def test_r1_tools_are_advertised_and_granted_correctly() -> None:
     assert TOOL_BY_NAME[REFRESH].as_dict()["mutates_domain_truth"] is True
     plan_only = build_mission_plan(autonomy="PLAN_ONLY")
     assert READ in set(plan_only.allowed_tools)
-    assert REFRESH not in set(plan_only.allowed_tools)
-    assert REFRESH in set(plan_only.approval_required_tools)
+    # Arbiter ruling 2026-10-19 item 1: refreshing the live context measures and stores
+    # observations; it can invalidate a pending replan but it commits nothing, so it is inside the
+    # mandate now. The commitments (accept/replace/reschedule/booking/cancel/commitment-change)
+    # are asserted where the grant vocabulary is built, and stay outside.
+    assert REFRESH in set(plan_only.allowed_tools), "live measurement is inside the mandate"
+    assert REFRESH not in set(plan_only.approval_required_tools)
 
 
 def test_r2_no_watch_is_a_named_state_not_an_empty_success() -> None:

@@ -101,8 +101,14 @@ def test_r1_tool_is_advertised_as_an_action() -> None:
     assert entry["mutates_domain_truth"] is True
     assert entry["changes_money"] is False
     plan_only = build_mission_plan(autonomy="PLAN_ONLY")
-    assert TOOL not in set(plan_only.allowed_tools), "a provider call is not a free draft action"
-    assert TOOL in set(plan_only.approval_required_tools)
+    # Arbiter ruling 2026-10-19 item 1: one mandate covers route querying, so measuring a leg is
+    # granted to a draft. What did NOT move is the ordering guard -- `acquire_route` is still a
+    # mutation tool to the runtime, so it cannot run before an inspection has happened in the run.
+    assert TOOL in set(plan_only.allowed_tools), "route measurement is inside the mandate"
+    assert TOOL not in set(plan_only.approval_required_tools)
+    from app.agent import runtime as agent_runtime
+
+    assert TOOL in agent_runtime._MUTATION_TOOLS, "the inspect-before-measure boundary is intact"
 
 
 def test_r2_a_draft_without_a_plan_is_refused_by_name() -> None:
