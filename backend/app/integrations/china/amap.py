@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import math
 import os
 import re
@@ -66,12 +67,47 @@ def request_failure(exc: httpx.HTTPError) -> RuntimeError:
     return RuntimeError(f"Amap request did not complete: {type(exc).__name__}")
 
 
-async def amap_get(client: httpx.AsyncClient, url: str, params: dict[str, Any]) -> httpx.Response:
-    """GET, failing only through `request_failure`.
+class KeyRedactionFilter(logging.Filter):
+    """Masks `key=` in any log record that already carries one.
 
-    Both the HTTP-status leg and the transport leg are covered: the first one knows the URL, the second
-    one knows only the exception type, and neither hands back a string with `key=` in it.
+    `sanitize_url` only reaches the messages this module writes itself.  The wider risk is the
+    library underneath: an `httpx` INFO line prints the full URL of every request it makes, and the
+    key travels in that query string.  A filter on that logger is the only thing that can stop a
+    secret from reaching a log line nobody read the source of.
     """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        try:
+            message = record.getMessage()
+        except (TypeError, ValueError, AttributeError):
+            # A record that cannot render is not ours to rewrite; letting it through keeps the
+            # logging failure visible where it belongs instead of hiding it inside a guard.
+            return True
+        if KEY_PARAM_PATTERN.search(message):
+            record.msg = KEY_PARAM_PATTERN.sub(lambda match: match.group(1) + "key=***", message)
+            record.args = ()
+        return True
+
+
+FILTERED_LOGGERS: set[str] = set()
+
+
+def install_log_redaction(*names: str) -> None:
+    """Put the redaction filter on the request loggers, once per name, before any request is made."""
+    targets = names or ("httpx",)
+    for name in targets:
+        logger = logging.getLogger(name)
+        if name in FILTERED_LOGGERS and any(
+            isinstance(existing, KeyRedactionFilter) for existing in logger.filters
+        ):
+            continue
+        logger.addFilter(KeyRedactionFilter())
+        FILTERED_LOGGERS.add(name)
+
+
+async def amap_get(client: httpx.AsyncClient, url: str, params: dict[str, Any]) -> httpx.Response:
+    """GET, failing only through `request_failure`, with the request loggers already masked."""
+    install_log_redaction()
     try:
         response = await client.get(url, params=params)
         response.raise_for_status()
@@ -88,6 +124,7 @@ def amap_get_sync(client: httpx.Client, url: str, params: dict[str, Any]) -> htt
     The failure rule is shared here rather than retyped there: two writers of one rule drift, and the
     one that drifts is the one that starts leaking.
     """
+    install_log_redaction()
     try:
         response = client.get(url, params=params)
         response.raise_for_status()

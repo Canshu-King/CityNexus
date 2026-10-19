@@ -8,6 +8,9 @@ Covered here, in the order the interface was asked for:
   * `httpx`'s own failure text carries the full request URL, and the key is a query parameter -- so the
     helper that replaces `raise_for_status()` is tested against a secret value, not against a shape;
   * a transport failure says only the exception type;
+  * the logger `httpx` uses for its own request line prints the whole URL, so the guard there is a
+    filter installed by the same helper that makes the request -- not the module's own `sanitize_url`,
+    which can only reach messages this module writes;
   * the POI search restricts the answer to the named administrative region when one is given, because
     a same-named place in another city is not the place the traveller asked about.
 
@@ -17,6 +20,8 @@ exists only inside this file.
 """
 
 from __future__ import annotations
+
+import logging
 
 import httpx
 import pytest
@@ -177,3 +182,44 @@ def test_no_http_surface_prints_the_key_when_the_provider_is_ready(monkeypatch):
     assert missing['amap']['status'] == 'NOT_CONFIGURED'
     assert amap.KEY_ENV_PREFERRED in missing['amap']['reason']
     assert FAKE_KEY not in client.get('/api/v1/providers/v9').text
+
+
+def test_the_request_logger_of_the_library_underneath_never_prints_the_key(caplog):
+    """`httpx` logs the whole URL of every request it makes, and the key rides in that query string.
+
+    `sanitize_url` cannot reach that line: it only rewrites messages this module builds.  So the
+    request helper installs a filter on the logger before it sends anything.
+    """
+    seen = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["url"] = str(request.url)
+        return httpx.Response(200, json={"status": "1", "pois": []})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    with caplog.at_level(logging.INFO, logger="httpx"):
+        response = amap.amap_get_sync(
+            client,
+            amap.AMAP_BASE_URL + "/v5/place/text",
+            {"key": FAKE_KEY, "keywords": "西站"},
+        )
+
+    assert response.status_code == 200
+    # The secret really was on the wire in this test -- otherwise the next two lines prove nothing.
+    assert FAKE_KEY in seen["url"]
+    logged = "\n".join(record.getMessage() for record in caplog.records)
+    assert logged != ""
+    assert FAKE_KEY not in logged
+    assert "key=***" in logged
+
+
+def test_the_redaction_filter_is_installed_once_not_once_per_request():
+    logger = logging.getLogger("httpx")
+
+    def installed():
+        return sum(1 for one in logger.filters if isinstance(one, amap.KeyRedactionFilter))
+
+    before = installed()
+    amap.install_log_redaction()
+    amap.install_log_redaction()
+    assert installed() == max(before, 1)
