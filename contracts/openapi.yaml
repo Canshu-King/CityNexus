@@ -2635,6 +2635,109 @@ paths:
         '404': {description: Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
         '409': {description: Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED)}
         '422': {description: Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED), a body field beyond plan_version_id (COMMIT_BODY_TAKES_ONLY_PLAN_VERSION_ID), or PLAN_INFEASIBLE}
+  /journeys/{journey_id}/departure/facts:
+    parameters: [{$ref: '#/components/parameters/JourneyId'}]
+    get:
+      operationId: getJourneyDepartureFacts
+      description: >
+        For the slots of one plan version of one journey the caller holds a seat on, what this server
+        actually holds about the place each slot names: the identity pair (our canonical id plus the
+        `provider_key:external_id` it came from), whether there is a plottable point, whether the row
+        states an opening window, whether it states a verified cost, and when that cost was taken.
+        Nothing is looked up and nothing is written: the slots come from `Activity` rows of a
+        `PlanVersion` on this journey, the judgements are the ones `app.services` already makes for the
+        feasibility gate (`_place_window`, `_place_verified_cost`), and no provider client is reachable
+        from this module, so a fact read cannot spend quota, cannot become a place or network
+        enumeration door, and cannot answer 200 by inventing a number. An absence is named instead:
+        `state` is UNKNOWN with a `detail` word (SLOT_HAS_NO_LOCATION, PLACE_ROW_NOT_IN_THIS_STORE,
+        OPENING_HOURS_NOT_RECORDED, OPENING_WINDOW_NOT_AN_INTERVAL, NO_COST_EVIDENCE_OBJECT,
+        COST_EVIDENCE_STATUS_NOT_KNOWN, CITY_SERVICE_CARRIES_NO_POINT,
+        SERVICE_AVAILABILITY_NOT_RECORDED, SERVICE_AVAILABILITY_NOT_AN_INTERVAL), and the amount stays
+        absent rather than zero. A place's verified cost and the estimate the plan row carries are two
+        fields, never merged. A coordinate uses the shipped pair READY / UNAVAILABLE. Licence and author
+        are one door away: a place slot carries the `media_door` path to read them from.
+      parameters:
+        - name: plan_version_id
+          in: query
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Per-slot facts for one plan version of one journey the caller holds a seat on
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [journey_id, plan_version_id, plan_status, seat, slots, facts_counted, observed_at]
+                properties:
+                  journey_id: {type: string, format: uuid}
+                  plan_version_id: {type: string, format: uuid}
+                  plan_status: {type: string}
+                  seat: {type: object}
+                  slots:
+                    type: array
+                    items:
+                      type: object
+                      required: [activity_id, sequence_no, title, location_kind, identity,
+                                 coordinate, opening_hours, cost, fact_retrieved_at, media_door]
+                      properties:
+                        activity_id: {type: string, format: uuid}
+                        sequence_no: {type: integer}
+                        activity_type: {type: string}
+                        title: {type: string}
+                        starts_at: {type: string}
+                        ends_at: {type: string}
+                        locked: {type: boolean}
+                        status: {type: string}
+                        location_kind: {type: string, enum: [PLACE, CITY_SERVICE, NONE]}
+                        identity:
+                          type: object
+                          required: [canonical_id, provider_key, external_id, source_identity, detail]
+                          properties:
+                            canonical_id: {type: [string, "null"], format: uuid}
+                            provider_key: {type: [string, "null"]}
+                            external_id: {type: [string, "null"]}
+                            source_identity: {type: [string, "null"]}
+                            detail: {type: [string, "null"]}
+                        coordinate:
+                          type: object
+                          required: [state, reason, coordinate_system]
+                          properties:
+                            state: {type: string, enum: [READY, UNAVAILABLE]}
+                            reason: {type: [string, "null"]}
+                            coordinate_system: {type: [string, "null"]}
+                        opening_hours:
+                          type: object
+                          required: [state, detail, open_minutes, close_minutes]
+                          properties:
+                            state: {type: string, enum: [KNOWN, UNKNOWN]}
+                            detail: {type: [string, "null"]}
+                            open_minutes: {type: [integer, "null"]}
+                            close_minutes: {type: [integer, "null"]}
+                        cost:
+                          type: object
+                          required: [state, detail, verified_amount_minor, activity_estimate_minor,
+                                     currency]
+                          properties:
+                            state: {type: string, enum: [KNOWN, UNKNOWN]}
+                            detail: {type: [string, "null"]}
+                            verified_amount_minor: {type: [integer, "null"]}
+                            activity_estimate_minor: {type: integer}
+                            currency: {type: string}
+                        fact_retrieved_at: {type: [string, "null"]}
+                        media_door: {type: [string, "null"]}
+                        missing_detail: {type: [string, "null"]}
+                  facts_counted:
+                    type: object
+                    required: [known, unknown]
+                    properties:
+                      known: {type: integer}
+                      unknown: {type: integer}
+                  observed_at: {type: string}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
+        '422': {description: plan_version_id was not supplied (error.reason_code PLAN_VERSION_ID_REQUIRED)}
   /journeys/{journey_id}/resilience/counterfactuals:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:

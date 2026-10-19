@@ -1955,6 +1955,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/departure/facts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description For the slots of one plan version of one journey the caller holds a seat on, what this server actually holds about the place each slot names: the identity pair (our canonical id plus the `provider_key:external_id` it came from), whether there is a plottable point, whether the row states an opening window, whether it states a verified cost, and when that cost was taken. Nothing is looked up and nothing is written: the slots come from `Activity` rows of a `PlanVersion` on this journey, the judgements are the ones `app.services` already makes for the feasibility gate (`_place_window`, `_place_verified_cost`), and no provider client is reachable from this module, so a fact read cannot spend quota, cannot become a place or network enumeration door, and cannot answer 200 by inventing a number. An absence is named instead: `state` is UNKNOWN with a `detail` word (SLOT_HAS_NO_LOCATION, PLACE_ROW_NOT_IN_THIS_STORE, OPENING_HOURS_NOT_RECORDED, OPENING_WINDOW_NOT_AN_INTERVAL, NO_COST_EVIDENCE_OBJECT, COST_EVIDENCE_STATUS_NOT_KNOWN, CITY_SERVICE_CARRIES_NO_POINT, SERVICE_AVAILABILITY_NOT_RECORDED, SERVICE_AVAILABILITY_NOT_AN_INTERVAL), and the amount stays absent rather than zero. A place's verified cost and the estimate the plan row carries are two fields, never merged. A coordinate uses the shipped pair READY / UNAVAILABLE. Licence and author are one door away: a place slot carries the `media_door` path to read them from. */
+        get: operations["getJourneyDepartureFacts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/resilience/counterfactuals": {
         parameters: {
             query?: never;
@@ -7888,6 +7907,115 @@ export interface operations {
                 content?: never;
             };
             /** @description Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyDepartureFacts: {
+        parameters: {
+            query: {
+                plan_version_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Per-slot facts for one plan version of one journey the caller holds a seat on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        plan_version_id: string;
+                        plan_status: string;
+                        seat: Record<string, never>;
+                        slots: {
+                            /** Format: uuid */
+                            activity_id: string;
+                            sequence_no: number;
+                            activity_type?: string;
+                            title: string;
+                            starts_at?: string;
+                            ends_at?: string;
+                            locked?: boolean;
+                            status?: string;
+                            /** @enum {string} */
+                            location_kind: "PLACE" | "CITY_SERVICE" | "NONE";
+                            identity: {
+                                /** Format: uuid */
+                                canonical_id: string | null;
+                                provider_key: string | null;
+                                external_id: string | null;
+                                source_identity: string | null;
+                                detail: string | null;
+                            };
+                            coordinate: {
+                                /** @enum {string} */
+                                state: "READY" | "UNAVAILABLE";
+                                reason: string | null;
+                                coordinate_system: string | null;
+                            };
+                            opening_hours: {
+                                /** @enum {string} */
+                                state: "KNOWN" | "UNKNOWN";
+                                detail: string | null;
+                                open_minutes: number | null;
+                                close_minutes: number | null;
+                            };
+                            cost: {
+                                /** @enum {string} */
+                                state: "KNOWN" | "UNKNOWN";
+                                detail: string | null;
+                                verified_amount_minor: number | null;
+                                activity_estimate_minor: number;
+                                currency: string;
+                            };
+                            fact_retrieved_at: string | null;
+                            media_door: string | null;
+                            missing_detail?: string | null;
+                        }[];
+                        facts_counted: {
+                            known: number;
+                            unknown: number;
+                        };
+                        observed_at: string;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey unknown */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description plan_version_id was not supplied (error.reason_code PLAN_VERSION_ID_REQUIRED) */
             422: {
                 headers: {
                     [name: string]: unknown;
