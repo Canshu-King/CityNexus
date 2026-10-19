@@ -24,6 +24,7 @@ from app.db.models import (
     Journey,
     JourneyMission,
     JourneyResilienceSnapshot,
+    ProviderObservation,
     ReplanProposal,
 )
 from app.schemas import AgentToolCall
@@ -339,6 +340,23 @@ def guardian_payload(
         "created_at": run.created_at,
         "completed_at": run.completed_at,
         "cooldown_until": run.cooldown_until,
+    }
+
+
+OBSERVATION_WINDOW = 20
+
+
+def _observation_payload(row: ProviderObservation) -> dict[str, Any]:
+    """One sourced observation: who said it, what they said, when, and until when it stands."""
+    return {
+        "id": row.id,
+        "provider_key": row.provider_key,
+        "observation_type": row.observation_type,
+        "state": row.state,
+        "incident_fingerprint": row.incident_fingerprint,
+        "provenance": row.provenance,
+        "captured_at": row.captured_at,
+        "expires_at": row.expires_at,
     }
 
 
@@ -869,10 +887,22 @@ def guardian_status(session: Session, journey: Journey) -> dict[str, Any]:
             .limit(20)
         ).all()
     )
+    observations = list(
+        session.scalars(
+            select(ProviderObservation)
+            .where(ProviderObservation.journey_id == journey.id)
+            .order_by(ProviderObservation.captured_at.desc(), ProviderObservation.id.desc())
+            .limit(OBSERVATION_WINDOW)
+        ).all()
+    )
     return {
         "journey_id": journey.id,
         "standing_mission": mission_payload(mission) if mission else None,
         "current_active_plan_version_id": journey.active_plan_version_id,
         "latest": guardian_payload(session, runs[0]) if runs else None,
         "runs": [guardian_payload(session, item) for item in runs],
+        # What the server actually saw, each one with the source that said it and the moment it was
+        # captured. A screen has to be able to tell 'nobody observed anything' from 'the observation
+        # expired', so an absent expiry is reported as absent rather than as still valid.
+        "observations": [_observation_payload(row) for row in observations],
     }

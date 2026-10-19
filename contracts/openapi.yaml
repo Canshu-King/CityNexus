@@ -1972,12 +1972,44 @@ paths:
       - {$ref: '#/components/parameters/JourneyId'}
     get:
       operationId: getJourneyGuardianStatus
+      description: >
+        The Guardian's own read-out, declared key by key so screen 09 can rely on it: the standing
+        Mission, the plan the journey is on, the last 20 runs (decision, action_status, evidence,
+        the plan it moved from and to, its timestamps and cooldown), and the last 20 observations this
+        server holds. An observation is only ever a stored row -- nothing here asks a provider, and a
+        row that never stated an expiry answers null rather than a stamp, so an expired note and a
+        never-expiring one cannot be confused.
       responses:
         '200':
-          description: Reloadable standing Mission and Guardian run history
+          description: Standing Mission, run history and the sourced observations behind them
           content:
             application/json:
-              schema: {type: object, additionalProperties: true}
+              schema:
+                type: object
+                required: [journey_id, standing_mission, current_active_plan_version_id, latest,
+                           runs, observations]
+                properties:
+                  journey_id: {type: string, format: uuid}
+                  standing_mission: {type: [object, "null"]}
+                  current_active_plan_version_id: {type: [string, "null"], format: uuid}
+                  latest: {type: [object, "null"]}
+                  runs: {type: array, items: {type: object}}
+                  autopilot: {type: object}
+                  observations:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, provider_key, observation_type, state, provenance,
+                                 captured_at, expires_at]
+                      properties:
+                        id: {type: string, format: uuid}
+                        provider_key: {type: string}
+                        observation_type: {type: string}
+                        state: {type: string}
+                        incident_fingerprint: {type: [string, "null"]}
+                        provenance: {type: string}
+                        captured_at: {type: string}
+                        expires_at: {type: [string, "null"]}
         '404': {$ref: '#/components/responses/NotFound'}
   /journeys/{journey_id}/agent/approvals/{approval_id}/approve:
     parameters:

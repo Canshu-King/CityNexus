@@ -1300,6 +1300,7 @@ export interface paths {
             };
             cookie?: never;
         };
+        /** @description The Guardian's own read-out, declared key by key so screen 09 can rely on it: the standing Mission, the plan the journey is on, the last 20 runs (decision, action_status, evidence, the plan it moved from and to, its timestamps and cooldown), and the last 20 observations this server holds. An observation is only ever a stored row -- nothing here asks a provider, and a row that never stated an expiry answers null rather than a stamp, so an expired note and a never-expiring one cannot be confused. */
         get: operations["getJourneyGuardianStatus"];
         put?: never;
         post?: never;
@@ -6863,14 +6864,32 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Reloadable standing Mission and Guardian run history */
+            /** @description Standing Mission, run history and the sourced observations behind them */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
+                        /** Format: uuid */
+                        journey_id: string;
+                        standing_mission: Record<string, never> | null;
+                        /** Format: uuid */
+                        current_active_plan_version_id: string | null;
+                        latest: Record<string, never> | null;
+                        runs: Record<string, never>[];
+                        autopilot?: Record<string, never>;
+                        observations: {
+                            /** Format: uuid */
+                            id: string;
+                            provider_key: string;
+                            observation_type: string;
+                            state: string;
+                            incident_fingerprint?: string | null;
+                            provenance: string;
+                            captured_at: string;
+                            expires_at: string | null;
+                        }[];
                     };
                 };
             };
