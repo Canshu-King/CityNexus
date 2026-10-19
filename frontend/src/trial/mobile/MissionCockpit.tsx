@@ -4,12 +4,14 @@ import {
   Route, ShieldCheck, Sparkles, Users,
 } from "lucide-react";
 import {
-  cityNexusApi, type DraftGoalTask, type DraftGoalTaskEvent,
+  cityNexusApi, type DraftGoalTask, type DraftGoalTaskEvent, type GoalDraftArtifact,
 } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap, type WorkspaceMapPoint } from "./WorkspaceMap";
 import { WorkspaceActions } from "./WorkspaceActions";
 import { GoalDraftEditor } from "./GoalDraftEditor";
+import { GoalDraftVariants } from "./GoalDraftVariants";
+import { GuardianRealityPanel } from "./GuardianRealityPanel";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import "./MissionCockpit.css";
 
@@ -41,6 +43,7 @@ const statusCopy: Record<string, string> = {
 };
 const toolCopy: Record<string, string> = {
   inspect_journey: "读取旅行目标",
+  read_guardian_stream: "查看行程守护记录",
   discover_places: "检索公开地点",
   discover_nearby_places: "检索附近地点",
   search_city_services: "查询城市服务",
@@ -95,6 +98,8 @@ export function MissionCockpit({
   const [identityTick, setIdentityTick] = useState(0);
   const [commandRevision, setCommandRevision] = useState(0);
   const [showAllResearch, setShowAllResearch] = useState(false);
+  const [guardianOpen, setGuardianOpen] = useState(false);
+  const [chosenDraftRevision, setChosenDraftRevision] = useState(0);
   const spatial = useRef<HTMLDivElement>(null);
   const [layer, setLayer] = useState<"map" | "timeline">("map");
   const selectLayer = (next: "map" | "timeline") => {
@@ -123,7 +128,7 @@ export function MissionCockpit({
     return () => window.removeEventListener("citynexus:mission-command", focus);
   }, [journeyId]);
 
-  useEffect(() => { setCommand(goal); setMapAllowed(false); }, [journeyId]);
+  useEffect(() => { setCommand(goal); setMapAllowed(false); setGuardianOpen(false); }, [journeyId]);
   useEffect(() => {
     if (!command.trim() && goal) setCommand(goal);
   }, [goal]);
@@ -212,6 +217,16 @@ export function MissionCockpit({
   }, [task?.status]);
   const status = journeyStatus === "ACTIVE" ? "行程执行中" : task ? statusCopy[task.status] ?? "任务已保存" : "等待第一个目标";
 
+  const chooseDraft = async (artifact: GoalDraftArtifact) => {
+    const bearer = readTravelerBearer(); const owner = readTravelerIdentity()?.travelerId;
+    if (!bearer || !owner || !task) throw new Error("请先登录这趟旅行。");
+    const value = await cityNexusApi.updateGoalDraft(journeyId, task.task_id,
+      { ...artifact, revision: task.draft_artifact?.revision ?? 0 });
+    if (bearer !== readTravelerBearer() || owner !== readTravelerIdentity()?.travelerId) throw new Error("登录已切换。");
+    setTask(value); setChosenDraftRevision((revision) => revision + 1);
+    window.dispatchEvent(new Event("citynexus:mission-refresh"));
+  };
+
   return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit">
     <header className="cn-mission-head">
       <div><div className="cn-mission-kicker"><Sparkles size={15} /> CITYNEXUS / MISSION OS</div>
@@ -248,7 +263,9 @@ export function MissionCockpit({
           <div className="cn-mission-section-heading"><CalendarDays size={18} /><strong>{journeyStatus === "ACTIVE" ? "执行与待办" : "按天调整行程"}</strong></div>
           {journeyStatus === "ACTIVE" ? executionDecisions : <>
           <p>{draftSlots.length} 项安排 · {draftDays.length} 天</p>
-          {task?.draft_artifact ? <GoalDraftEditor key={task.task_id} artifact={task.draft_artifact} disabled={task.status === "WORKING"}
+          <GoalDraftVariants key={task?.task_id ?? journeyId} variants={task?.draft_variants ?? []}
+            disabled={task?.status === "WORKING"} onChoose={chooseDraft} />
+          {task?.draft_artifact ? <GoalDraftEditor key={task.task_id + ":" + chosenDraftRevision} artifact={task.draft_artifact} disabled={task.status === "WORKING"}
             onSave={async (artifact) => {
               const bearer = readTravelerBearer(); const owner = readTravelerIdentity()?.travelerId;
               if (!bearer || !owner) throw new Error("请先登录这趟旅行。");
@@ -258,9 +275,10 @@ export function MissionCockpit({
             }} /> : <p>Agent 会把暂定安排和待查事项逐步保存到这里。</p>}</>}
           <div className="cn-mission-capability-grid">
             <button type="button" onClick={onTrip}><Route size={18} /><strong>候选方案与出发</strong></button>
-            <button type="button" onClick={onTrip}><ShieldCheck size={18} /><strong>行程守护</strong></button>
+            <button type="button" aria-expanded={guardianOpen} onClick={() => setGuardianOpen((value) => !value)}><ShieldCheck size={18} /><strong>行程守护</strong></button>
             <button type="button" onClick={onTrip}><Users size={18} /><strong>同行决策</strong></button>
           </div>
+          <GuardianRealityPanel journeyId={journeyId} visible={visible && guardianOpen} />
         </article>
       </div>
     </div>

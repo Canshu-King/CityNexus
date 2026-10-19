@@ -2680,6 +2680,25 @@ def _guardian_pulse_payload(row: GuardianPulse | None) -> dict[str, Any] | None:
     }
 
 
+@app.get("/api/v1/journeys/{journey_id}/guardian/stream")
+def get_signed_guardian_stream(
+    journey_id: UUID, request: Request, response: Response,
+    mission_id: UUID | None = None, limit: int = 20,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.guardian_stream import guardian_stream
+    principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.deleted_at:
+        raise HTTPException(404, "Journey was not found")
+    if principal.traveler_id != journey.traveler_id or not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "Journey owner read required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return guardian_stream(session, journey, mission_id=str(mission_id) if mission_id else None, limit=limit)
+
+
 @app.post("/api/v1/journeys/{journey_id}/guardian/pulse")
 def run_guardian_pulse_now(
     journey_id: UUID,

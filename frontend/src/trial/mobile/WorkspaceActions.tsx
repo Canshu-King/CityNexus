@@ -27,7 +27,7 @@ const TASK_STATUS: Record<string, string> = {
   CANCELLED: "已取消", COMPLETED: "已完成",
 };
 const TOOL_NAME: Record<string, string> = {
-  inspect_journey: "读取行程", search_city_services: "搜索城市地点",
+  inspect_journey: "读取行程", read_guardian_stream: "查看行程守护记录", save_draft_variants: "比较旅行备选", search_city_services: "搜索城市地点",
   research_place_sources: "查找地点资料",
   discover_places: "查找公开地点", discover_nearby_places: "查找周边地点", save_draft_itinerary: "整理旅行草案",
   acquire_place_facts: "核实地点资料", estimate_place_facts: "估算备选安排",
@@ -459,6 +459,23 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     else void startNewTask();
   };
 
+  const permissionSettings = (
+<details className="rev-agent-research-settings" open={!visibleTask}>
+            <summary>{modelConsent ? "研究额度与来源 · 已设置" : "本任务的来源与研究额度"}</summary>
+            <div className="rev-agent-research-settings-body">
+              <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
+              <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />本次允许查询公开地图和地点来源</label>
+              <label className="rev-workspace-depth">研究工作量
+                <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
+                  <option value="deep">深入研究 · 24轮模型 / 48次工具</option>
+                  <option value="quick">快速研究 · 8轮模型 / 16次工具</option>
+                </select>
+              </label>
+              <small>在所选额度内，Agent 会连续查询、比较并保存草案。额度用完后再由你追加。</small>
+            </div>
+          </details>
+  );
+
   const taskMapPoints = (visibleTask?.research_places ?? []).filter((place) => place.region_status !== "CONFLICT").map((place) => ({
     candidate_id: place.id, name: place.name, latitude: place.latitude, longitude: place.longitude,
     coordinate_system: place.coordinate_system ?? (isAmapLead(place) ? "GCJ02" as const : "WGS84" as const),
@@ -504,20 +521,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
                   你可以在下方直接告诉 Agent 下一步想修改什么。</p>
               </div>}
           </div>}
-          <details className="rev-agent-research-settings" open={!modelConsent && !visibleTask}>
-            <summary>{modelConsent ? "本次研究授权与额度 · 已设置" : "开始前，确认一次研究权限"}</summary>
-            <div className="rev-agent-research-settings-body">
-              <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />允许 AI 处理本次旅行目标，可能产生调用费用</label>
-              <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />允许 Agent 在本任务范围内查询公开地点来源</label>
-              <label className="rev-workspace-depth">研究工作量
-                <select value={researchDepth} disabled={busy} onChange={(event) => setResearchDepth(event.target.value === "quick" ? "quick" : "deep")}>
-                  <option value="deep">深入研究 · 24轮模型 / 48次工具</option>
-                  <option value="quick">快速研究 · 8轮模型 / 16次工具</option>
-                </select>
-              </label>
-              <small>已运行的任务会继续沿用服务器保存的研究记录；需要追加额度时会显示本次累计额度。</small>
-            </div>
-          </details>
+          {!embedded && permissionSettings}
           {!embedded && <form className="rev-agent-nonmodal-form" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
             <label htmlFor="rev-workspace-question">{visibleTask ? "继续和这位 Agent 说话" : COPY.question}</label>
             <textarea id="rev-workspace-question" rows={3} maxLength={2000} value={question}
@@ -605,14 +609,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             {busy ? "正在研究" : "发送 ↑"}
           </button>
         </div>
-        <label className="rev-mission-chat-allow">
-          <input type="checkbox" checked={modelConsent} onChange={(event) => setModelConsent(event.target.checked)} />
-          本次允许 AI 处理旅行目标（可能产生费用）
-        </label>
-        <label className="rev-mission-chat-allow">
-          <input type="checkbox" checked={onlineResearchConsent} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />
-          本次允许查询公开地图和地点来源
-        </label>
+        {permissionSettings}
         <p role="status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
           : requestError ?? (visibleTask ? "继续和这趟旅行的 Agent 对话。" : "发送后开始旅行研究。")}</p>

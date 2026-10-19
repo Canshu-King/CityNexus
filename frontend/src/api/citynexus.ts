@@ -5,6 +5,23 @@ import { OriginResponseUnusableError } from "../lib/failureAttribution";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import { travelerAuthHeaders } from "../lib/travelerSession";
 
+export type GuardianStream = {
+  tool: "read_guardian_stream"; journey_id: string; mission_id: string | null;
+  status: "WATCH_NOT_RUNNING" | "HAS_EVENTS";
+  watch: { configured: boolean; last_observed_at: string | null; latest_pulse: {
+    id: string; status: string; started_at: string; completed_at: string | null;
+  } | null };
+  recovery_epoch: { id: string; generation: number; status: string;
+    triggering_event_ids: string[]; opened_at: string; active_plan_version_id_at_open: string | null } | null;
+  stream: { observation: { id: string; event_type: string; severity: string; status: string;
+    provider: string; provenance: string; detected_at: string; affected_activity_id: string | null };
+    impact: { id: string; status: string; uncertain: boolean; reason_codes: string[]; created_at: string } | null;
+    proposed_action: { id: string; decision: string; status: string; action_status: string;
+      proposal_id: string | null; created_at: string; completed_at: string | null } | null;
+  }[];
+  counts: { events: number; open_events: number; impacts: number; actions: number };
+};
+
 export interface Money {
   amount_minor: number;
   currency: string;
@@ -2218,6 +2235,11 @@ export interface GoalResearchRoute {
   captured_at: string;
   source_url: string;
 }
+export interface GoalDraftVariant {
+  id: string; title: string; comparison: string; artifact: GoalDraftArtifact;
+  source_place_ids: string[]; route_ids: string[]; unknown_summary: string[];
+}
+
 export interface DraftGoalTask {
   task_id: string;
   journey_id: string;
@@ -2249,6 +2271,7 @@ export interface DraftGoalTask {
   }>;
   assistant_summary?: string | null;
   draft_artifact?: GoalDraftArtifact | null;
+  draft_variants?: GoalDraftVariant[];
   research_places?: GoalResearchLead[];
   research_areas?: GoalResearchLead[];
   research_routes?: GoalResearchRoute[];
@@ -3072,6 +3095,11 @@ export const cityNexusApi = {
         + encodeURIComponent(taskId) + "/events?" + query.toString(),
       { headers: travelerAuthHeaders(), cache: "no-store" },
     );
+  },
+
+  getGuardianStream(journeyId: string): Promise<GuardianStream> {
+    return requestJson<GuardianStream>("/journeys/" + encodeURIComponent(journeyId) + "/guardian/stream",
+      { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   runDraftGoalTask(

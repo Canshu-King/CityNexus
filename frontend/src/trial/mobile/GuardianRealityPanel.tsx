@@ -1,0 +1,320 @@
+import { useEffect, useRef, useState } from "react";
+import { Activity, Clock3, ShieldCheck } from "lucide-react";
+import { cityNexusApi, type GuardianStream } from "../../api/citynexus";
+import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
+import "./GuardianRealityPanel.css";
+
+type RequestState = "idle" | "loading" | "ready" | "offline" | "unauthorized";
+type StreamEntry = GuardianStream["stream"][number];
+
+const eventLabels: Record<string, string> = {
+  TRAFFIC_DELAY: "交通出现延误",
+  CLOSURE: "地点或路段暂停服务",
+  WEATHER: "天气情况发生变化",
+  SCHEDULE_DELAY: "行程时间需要调整",
+  OPPORTUNITY_WINDOW: "出现新的出行时机",
+  SERVICE_UNAVAILABLE: "一项服务暂不可用",
+  USER_CHANGE: "行程已更新",
+  OTHER: "行程情况更新",
+};
+
+const eventStatusLabels: Record<string, string> = {
+  DETECTED: "待处理",
+  OPEN: "待处理",
+  ACTIVE: "处理中",
+  ACKNOWLEDGED: "已查看",
+  RESOLVED: "已处理",
+  IGNORED: "已忽略",
+};
+
+const severityLabels: Record<string, string> = {
+  INFO: "提示",
+  MINOR: "轻微",
+  MAJOR: "重要",
+  CRITICAL: "紧急",
+};
+
+const impactStatusLabels: Record<string, string> = {
+  ASSESSED: "影响已评估",
+  COMPLETED: "影响已评估",
+  UNCERTAIN: "影响待核实",
+  UNRESOLVED: "影响待核实",
+  RECOVERY_REQUIRED: "需要调整行程",
+  NO_ACTION: "暂不需要调整",
+};
+
+const decisionLabels: Record<string, string> = {
+  NO_ACTION: "暂不调整",
+  WATCH: "继续留意",
+  RECOVERY_REQUIRED: "需要调整行程",
+  PREEMPTIVE_RECOVERY: "提前准备备选方案",
+};
+
+const actionStatusLabels: Record<string, string> = {
+  NO_ACTION: "暂不需要处理",
+  MODEL_NO_ACTION: "暂不需要处理",
+  MISSION_REQUIRED: "等待行程任务信息",
+  PLANNING: "正在整理调整方案",
+  PROPOSAL_PRESENTED: "调整方案已生成，等待查看",
+  APPROVAL_PENDING: "等待你确认",
+  COMPLETED: "处理已完成",
+  EXECUTED: "已执行获准的操作",
+  UNRESOLVED: "问题仍待解决",
+  RETRYABLE_FAILURE: "上一步未完成",
+  NO_FEASIBLE_RECOVERY: "暂未找到可行调整",
+};
+
+const reasonLabels: Record<string, string> = {
+  TRAFFIC_DELAY: "交通延误",
+  CLOSURE: "地点或路段暂停服务",
+  WEATHER: "天气变化",
+  SCHEDULE_DELAY: "行程时间变化",
+  SERVICE_UNAVAILABLE: "服务不可用",
+  OPPORTUNITY_WINDOW: "出行时机变化",
+  USER_CHANGE: "行程更新",
+};
+
+const providerLabels: Record<string, string> = {
+  openstreetmap: "OpenStreetMap",
+  osm: "OpenStreetMap",
+  overpass: "OpenStreetMap",
+  photon: "Photon 地图数据",
+  nominatim: "Nominatim 地图数据",
+  amap: "高德地图",
+  gaode: "高德地图",
+  system: "CityNexus",
+};
+
+const provenanceLabels: Record<string, string> = {
+  PROVIDER_VERIFIED: "外部来源已核实",
+  USER_REPORTED: "来自你提供的信息",
+  SYSTEM_DERIVED: "系统整理",
+  SIMULATED: "模拟记录",
+  TEST_PROVIDER: "测试记录",
+  LIVE_PROVIDER: "实时来源",
+};
+
+function timeLabel(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const milliseconds = Date.parse(value);
+  if (!Number.isFinite(milliseconds)) return null;
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
+  }).format(milliseconds);
+}
+
+function label(map: Record<string, string>, value: string, fallback: string): string {
+  return Object.hasOwn(map, value) ? map[value] : fallback;
+}
+
+function pulseLabel(status: string): string {
+  const labels: Record<string, string> = {
+    RUNNING: "正在检查",
+    QUEUED: "等待检查",
+    COMPLETED: "检查已完成",
+    FAILED: "检查未完成",
+    CANCELLED: "检查已停止",
+  };
+  return label(labels, status, "已有检查记录");
+}
+
+function recoveryStatusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    OPEN: "正在处理",
+    COMMITTED: "调整方案已确认",
+    SUPERSEDED: "已进入新一轮调整",
+    ABANDONED: "本轮已结束",
+  };
+  return label(labels, status, "恢复状态已记录");
+}
+
+function sourceLabel(provider: string, provenance: string): string {
+  const safeProvider = providerLabels[provider.toLowerCase()] ?? "行程记录";
+  const safeProvenance = label(provenanceLabels, provenance, "来源已记录");
+  return `${safeProvider} · ${safeProvenance}`;
+}
+
+function triggerEntries(snapshot: GuardianStream): StreamEntry[] {
+  const ids = new Set(snapshot.recovery_epoch?.triggering_event_ids ?? []);
+  return snapshot.stream.filter(({ observation }) => ids.has(observation.id));
+}
+
+export function GuardianRealityPanel({
+  journeyId,
+  visible = false,
+}: {
+  journeyId: string;
+  visible?: boolean;
+}) {
+  const [snapshot, setSnapshot] = useState<{
+    journeyId: string;
+    bearer: string;
+    value: GuardianStream;
+  } | null>(null);
+  const [requestState, setRequestState] = useState<RequestState>("idle");
+  const [identityRevision, setIdentityRevision] = useState(0);
+  const requestEpoch = useRef(0);
+
+  useEffect(() => {
+    const epoch = ++requestEpoch.current;
+    setSnapshot(null);
+    if (!visible) {
+      setRequestState("idle");
+      return () => { requestEpoch.current += 1; };
+    }
+
+    const startingBearer = readTravelerBearer();
+    setRequestState(startingBearer ? "loading" : "unauthorized");
+    const unsubscribe = subscribeTravelerBearer((bearer) => {
+      if (bearer === startingBearer) return;
+      requestEpoch.current += 1;
+      setSnapshot(null);
+      setRequestState(bearer ? "loading" : "unauthorized");
+      setIdentityRevision((revision) => revision + 1);
+    });
+
+    if (startingBearer) {
+      void cityNexusApi.getGuardianStream(journeyId).then((response) => {
+        if (requestEpoch.current !== epoch || readTravelerBearer() !== startingBearer) return;
+        if (response.journey_id !== journeyId) {
+          setRequestState("offline");
+          return;
+        }
+        setSnapshot({ journeyId, bearer: startingBearer, value: response });
+        setRequestState("ready");
+      }).catch(() => {
+        if (requestEpoch.current !== epoch || readTravelerBearer() !== startingBearer) return;
+        setRequestState("offline");
+      });
+    }
+
+    return () => {
+      requestEpoch.current += 1;
+      unsubscribe();
+    };
+  }, [journeyId, visible, identityRevision]);
+
+  if (!visible) return null;
+
+  const currentBearer = readTravelerBearer();
+  const currentSnapshot = snapshot?.journeyId === journeyId && snapshot.bearer === currentBearer
+    ? snapshot.value
+    : null;
+  const state = !currentBearer ? "unauthorized" : requestState;
+  const hasRecords = Boolean(currentSnapshot && currentSnapshot.stream.length > 0);
+  const triggers = currentSnapshot ? triggerEntries(currentSnapshot) : [];
+
+  return (
+    <section className="rev-guardian-panel" data-testid="rev-guardian-reality-panel" aria-label="行程守护记录">
+      <header className="rev-guardian-panel-head">
+        <span className="rev-guardian-panel-icon" aria-hidden="true"><ShieldCheck size={18} /></span>
+        <div>
+          <strong>行程守护</strong>
+          <span>检查记录与处理进展</span>
+        </div>
+      </header>
+
+      {state === "loading" && <p className="rev-guardian-state" role="status">正在读取守护记录…</p>}
+      {state === "unauthorized" && <p className="rev-guardian-state" role="status">请登录后查看当前行程的守护记录。</p>}
+      {state === "offline" && <p className="rev-guardian-state" role="status">行程守护记录暂时无法读取。</p>}
+
+      {state === "ready" && currentSnapshot && (
+        <>
+          <div className="rev-guardian-summary" role="status">
+            {hasRecords ? (
+              <>
+                <span>{currentSnapshot.counts.events} 项变化</span>
+                <span>{currentSnapshot.counts.impacts} 项影响</span>
+                <span>{currentSnapshot.counts.actions} 项行动</span>
+              </>
+            ) : (
+              <span>行程守护还没有检查记录</span>
+            )}
+            <span className="rev-guardian-watch-state">
+              {currentSnapshot.watch.latest_pulse
+                ? pulseLabel(currentSnapshot.watch.latest_pulse.status)
+                : currentSnapshot.status === "WATCH_NOT_RUNNING"
+                  ? "当前没有运行中的守护检查"
+                  : "已读取到守护记录"}
+            </span>
+          </div>
+
+          {currentSnapshot.watch.configured && (
+            <p className="rev-guardian-configured">守护规则已设置</p>
+          )}
+          {currentSnapshot.watch.last_observed_at && (
+            <p className="rev-guardian-last-seen">
+              <Clock3 size={13} aria-hidden="true" />
+              最近记录：{timeLabel(currentSnapshot.watch.last_observed_at) ?? "时间未提供"}
+            </p>
+          )}
+
+          {currentSnapshot.recovery_epoch && (
+            <section className="rev-guardian-epoch" aria-label="当前恢复轮次">
+              <div className="rev-guardian-epoch-head">
+                <strong>当前恢复第 {currentSnapshot.recovery_epoch.generation} 轮</strong>
+                <span>{recoveryStatusLabel(currentSnapshot.recovery_epoch.status)}</span>
+              </div>
+              <div className="rev-guardian-trigger-list">
+                <span>触发记录</span>
+                {triggers.length > 0 ? (
+                  <ul>
+                    {triggers.map(({ observation }) => (
+                      <li key={observation.id}>
+                        {label(eventLabels, observation.event_type, "行程变化")}
+                        {timeLabel(observation.detected_at) ? ` · ${timeLabel(observation.detected_at)}` : ""}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <small>{currentSnapshot.recovery_epoch.triggering_event_ids.length} 条记录</small>
+                )}
+              </div>
+            </section>
+          )}
+
+          {hasRecords && (
+            <ol className="rev-guardian-events">
+              {currentSnapshot.stream.map(({ observation, impact, proposed_action }) => (
+                <li className="rev-guardian-event" key={observation.id} data-testid="rev-guardian-event">
+                  <div className="rev-guardian-event-title">
+                    <Activity size={15} aria-hidden="true" />
+                    <strong>{label(eventLabels, observation.event_type, "行程变化")}</strong>
+                    <span>{label(severityLabels, observation.severity, "待评估")}</span>
+                  </div>
+                  <div className="rev-guardian-event-meta">
+                    <span>{label(eventStatusLabels, observation.status, "状态已记录")}</span>
+                    <span>{sourceLabel(observation.provider, observation.provenance)}</span>
+                    <time>{timeLabel(observation.detected_at) ?? "时间未提供"}</time>
+                  </div>
+                  {impact && (
+                    <div className="rev-guardian-linked-state">
+                      <strong>{impact.uncertain
+                        ? "影响待核实"
+                        : label(impactStatusLabels, impact.status, "行程影响已记录")}</strong>
+                      {impact.reason_codes.length > 0 && (
+                        <span>{impact.reason_codes
+                          .map((code) => reasonLabels[code])
+                          .filter((value): value is string => Boolean(value))
+                          .join(" · ") || "相关因素待核实"}</span>
+                      )}
+                    </div>
+                  )}
+                  {proposed_action && (
+                    <div className="rev-guardian-linked-state rev-guardian-action">
+                      <strong>{label(decisionLabels, proposed_action.decision, "处理建议已记录")}</strong>
+                      <span>{label(actionStatusLabels, proposed_action.action_status, "处理进度已记录")}</span>
+                      {proposed_action.completed_at && (
+                        <time>完成于 {timeLabel(proposed_action.completed_at) ?? "时间未提供"}</time>
+                      )}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+        </>
+      )}
+    </section>
+  );
+}

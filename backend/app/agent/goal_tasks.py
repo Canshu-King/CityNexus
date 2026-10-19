@@ -33,6 +33,8 @@ from app.agent.goal_artifacts import (
 from app.agent.goal_adapters import DOMAIN_TOOLS, domain_args, domain_result, compare_stored_routes, route_tool_definition
 from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
+from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
+from app.agent.goal_variants import save_draft_variants, variant_definition
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
 from app.core.audit import record_audit
@@ -58,7 +60,7 @@ _TASK_KEY = "goal_task"
 # It writes only provider-backed Place/CityService evidence; bootstrap-private
 # member-scoped candidates are not promoted by this service.
 _ALLOWED_TOOLS = frozenset(
-    {"inspect_journey", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
+    {"inspect_journey", "save_draft_variants", "read_guardian_stream", "search_city_services", "research_place_sources", "discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"} | (DOMAIN_TOOLS - {"generate_plans"})
 )
 _EVENT_ACTION = "agent.goal_task.event"
 _MAX_GOAL_LENGTH = 2000
@@ -228,6 +230,7 @@ def _task_payload(
         "research_routes": list(task.get("research_routes") or []),
         "research_areas": list(task.get("research_areas") or []),
         "draft_artifact": task.get("draft_artifact"),
+        "draft_variants": list(task.get("draft_variants") or []),
         "failure_code": task.get("failure_code"),
         "created_at": mission.created_at,
         "started_at": mission.started_at,
@@ -553,7 +556,7 @@ def _new_goal_agent(tool_allowlist: frozenset[str]) -> HermesJourneyAgent:
         model_chain=(model,),
         allow_budget_retry=False,
         tool_allowlist=tool_allowlist,
-        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition()),
+        extra_tool_definitions=(*goal_tool_definitions(), route_tool_definition(), route_definition(), draft_patch_definition(), guardian_stream_definition(), variant_definition()),
     )
     # A full multi-day draft tool payload can exceed 2400 tokens on its own.
     # Reserve one bounded completion, without an automatic provider retry.
@@ -656,6 +659,9 @@ def _initial_messages(
         "Use public keywords without personal information. If a Photon search returns no results, you may choose "
         "a different keyword or the Nominatim source within the approved budget; distinguish a new source from "
         "repeating the exact same query. If public data is sparse, continue another part of the trip instead of quitting. "
+        "As soon as the first grounded POIs arrive, save a useful initial draft before doing more research. "
+        "Continue improving it within the same approved budget without asking for another click. "
+        "If a provider returns zero results, fails, or lacks a key, select a different public query or available source within the remaining budget; never repeat an identical request. "
         "Save useful partial research as an editable draft using save_draft_itinerary, even when every place search fails: "
         "in that case write specific research todos or generic suggestions with no invented Place IDs. "
         "Keep enough budget to save the draft. A place with unknown hours or cost can still be a tentative suggestion. "
@@ -664,7 +670,12 @@ def _initial_messages(
         "Use route_public_places for actual walking distance/time between task-owned public research IDs. "
         "For an existing draft, use replace_draft_slots with exactly the requested date/time block. "
         "Do not update a different period, meal, or research todo unless asked. All other blocks are retained by the server. "
-        "Existing research routes can answer traffic questions without another external request. A verbal suggestion is not a saved edit."
+        "Existing research routes can answer traffic questions without another external request. A verbal suggestion is not a saved edit. "
+        "read_guardian_stream reads existing Journey observations, impacts and recovery epochs only; "
+        "it does not start monitoring. Empty records mean no checks recorded, not a running watch. "
+        "For comparing relaxed, budget and local-character options, use save_draft_variants from actual task-owned places and routes. "
+        "Alternatives do not overwrite the selected draft. Unknown fees are not evidence of cheapness. "
+        "For a request only to compare options or read status, preserve the existing main draft."
     )
     user_context = {
         "goal": mission.user_text,
@@ -681,6 +692,7 @@ def _initial_messages(
         "public_research_places": task.get("research_places") or [],
         "public_research_areas": task.get("research_areas") or [],
         "draft_artifact": task.get("draft_artifact") or empty_draft(journey),
+        "draft_variants": task.get("draft_variants") or [],
         "previous_public_queries": task.get("public_queries") or [],
         "consent": dict(task.get("consent") or {}),
         "remaining_budget": {
@@ -697,6 +709,14 @@ def _initial_messages(
 def _safe_args(name: str, raw: Any, task: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+    if name == "save_draft_variants":
+        if set(raw) != {"variants"}:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {"variants": raw["variants"]}
+    if name == "read_guardian_stream":
+        if raw:
+            raise HTTPException(422, "TOOL_ARGUMENTS_INVALID")
+        return {}
     if name in DOMAIN_TOOLS:
         return domain_args(name, raw, task)
     if name == "replace_draft_slots":
@@ -803,6 +823,8 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
             "source_discovery_attempted": False,
             "acquisition_attempted": False,
         }
+    if name in {"read_guardian_stream", "save_draft_variants"}:
+        return raw
     if name in DOMAIN_TOOLS:
         return domain_result(name, raw)
     if name in {"discover_places", "discover_nearby_places", "route_public_places", "replace_draft_slots", "save_draft_itinerary"}:
@@ -881,6 +903,8 @@ def _safe_tool_result(name: str, raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
+    if name == "save_draft_variants":
+        return {"variant_count": len(args.get("variants") or [])}
     if name == "replace_draft_slots":
         return {"date": args.get("date"), "time_of_day": args.get("time_of_day"), "slot_count": len(args.get("slots") or [])}
     if name == "route_public_places":
@@ -905,6 +929,12 @@ def _step_args_summary(name: str, args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _step_result_summary(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    if name == "save_draft_variants":
+        return {"status": result.get("status"), "variant_ids": [variant["id"] for variant in result.get("variants") or []]}
+    if name == "read_guardian_stream":
+        epoch = result.get("recovery_epoch") or {}
+        return {"status": result.get("status"), "counts": result.get("counts") or {},
+                "recovery_generation": epoch.get("generation"), "acquisition_attempted": False}
     if name == "route_public_places":
         return {"status": result.get("status"), "reason_code": result.get("reason_code"),
                 "provider": "amap", "route": result.get("route"), "http_status": result.get("http_status")}
@@ -1237,7 +1267,7 @@ def resume_goal_task(
 
     online_tools = task["consent"]["online_research"]
     tool_allowlist = frozenset(
-        _ALLOWED_TOOLS if online_tools else {"inspect_journey", "save_draft_itinerary", "replace_draft_slots"}
+        _ALLOWED_TOOLS if online_tools else {"inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"}
     )
     editing_existing_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
     write_tool = "replace_draft_slots" if editing_existing_draft else "save_draft_itinerary"
@@ -1306,6 +1336,7 @@ def resume_goal_task(
     gateway = AgentToolGateway(session, bound_run_id=run.id, allow_live_discovery=False)
     research_failed = False
     assistant_summary: str | None = None
+    draft_delivery_reminded = False
     try:
         while int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"]):
             journey, member = _require_owner_scope(session, journey, member, require_draft=True)
@@ -1339,11 +1370,14 @@ def resume_goal_task(
             session.commit()
             try:
                 final_turn = int(task["usage"]["model_turns"]) == int(task["budget"]["max_model_turns"])
-                agent._tool_allowlist = frozenset({write_tool}) if final_turn else tool_allowlist
+                has_saved_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
+                final_tools = ({write_tool, "save_draft_variants", "read_guardian_stream"} if has_saved_draft else {write_tool})
+                agent._tool_allowlist = frozenset(final_tools) if final_turn else tool_allowlist
                 if final_turn:
                     messages.append({"role": "system", "content":
                         "This is the last approved model turn. Research has ended for this round. " +
-                        ("Use replace_draft_slots now to save only the date/time block requested by the latest user. " if editing_existing_draft else "Use save_draft_itinerary now to deliver the best useful partial multi-day draft from actual results. ") +
+                        ("Use replace_draft_slots only for requested changes to a date/time block; use save_draft_variants for requested comparisons. " if editing_existing_draft else "Use save_draft_itinerary if no useful partial draft has been saved yet. ") +
+                        "If the requested result is already saved, summarize it without rewriting unrelated arrangements. " +
                         "With no verified places, save specific research todos or generic activity suggestions without Place IDs. "
                         "Leave all missing facts unknown. Do not request another external search."})
                 message = agent._complete(messages)
@@ -1401,6 +1435,19 @@ def resume_goal_task(
             # the next choice; never store model reasoning or raw tool transcripts.
             raw_calls = message.get("tool_calls") or []
             if not raw_calls:
+                # A text-only response must not discard grounded research before its
+                # first draft. Use one remaining, already-approved turn to deliver it.
+                has_draft = any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
+                grounded = bool(task.get("research_places") or task.get("candidate_place_ids"))
+                remaining = int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"])
+                tool_remaining = int(task["usage"]["tool_calls"]) < int(task["budget"]["max_tool_calls"])
+                if grounded and not has_draft and remaining and tool_remaining and not draft_delivery_reminded:
+                    draft_delivery_reminded = True
+                    messages.append({"role": "system", "content":
+                        "Grounded research is available but no editable draft was saved. "
+                        "Use save_draft_itinerary now for a useful partial draft from those task-owned IDs. "
+                        "Keep missing prices/hours unknown. Do not ask the traveler to click again."})
+                    continue
                 assistant_summary = str(message.get("content") or "").strip()[:2000] or None
                 mission = session.get(JourneyMission, mission.id)
                 intent = _task_state(mission)
@@ -1436,7 +1483,7 @@ def resume_goal_task(
                 blocked_code = (
                     "ONLINE_CONSENT_REQUIRED"
                     if tool_name in _ALLOWED_TOOLS
-                    and tool_name != "inspect_journey"
+                    and tool_name not in {"inspect_journey", "read_guardian_stream"}
                     and not task["consent"].get("online_research")
                     else "TOOL_NOT_ALLOWED"
                 )
@@ -1451,7 +1498,7 @@ def resume_goal_task(
                     args_raw = function.get("arguments") or "{}"
                     args_value = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     args = _safe_args(tool_name, args_value, task)
-                    if tool_name not in {"inspect_journey", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
+                    if tool_name not in {"inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
                     if int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
                         exhausted_status = "PARTIAL_READY" if research_failed or any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", [])) else "RESUMABLE"
@@ -1476,7 +1523,7 @@ def resume_goal_task(
                         "mission_id": UUID(mission.id),
                         **args,
                     }
-                    request = (None if tool_name in {"discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places"}
+                    request = (None if tool_name in {"save_draft_variants", "read_guardian_stream", "discover_places", "discover_nearby_places", "save_draft_itinerary", "replace_draft_slots", "compare_routes", "route_public_places"}
                                else AgentToolCall.model_validate(request_fields))
                     _require_owner_scope(session, journey, member, require_draft=True)
                     task["usage"]["tool_calls"] += 1
@@ -1486,7 +1533,13 @@ def resume_goal_task(
                                 status="WORKING", run_id=run.id, step_sequence_no=step_no, tool_name=tool_name)
                     session.commit()
                     try:
-                        if tool_name == "route_public_places":
+                        if tool_name == "save_draft_variants":
+                            raw_result = save_draft_variants(journey, task, **args)
+                            mission.intent_json = _json_dump(intent)
+                            session.commit()
+                        elif tool_name == "read_guardian_stream":
+                            raw_result = guardian_stream(session, journey, mission_id=mission.id)
+                        elif tool_name == "route_public_places":
                             raw_result = route_public_places(session, journey, task, **args)
                             mission.intent_json = _json_dump(intent)
                             session.commit()
@@ -1515,13 +1568,13 @@ def resume_goal_task(
                         if _has_research_failure(tool_name, raw_result):
                             research_failed = True
                             task["failure_code"] = "RESEARCH_UNAVAILABLE"
-                            task["status"] = "PARTIAL_READY"
+                            task["status"] = "WORKING"
                         mission = session.get(JourneyMission, mission.id)
                         intent = _task_state(mission)
                         task = intent[_TASK_KEY]
                         if _has_research_failure(tool_name, raw_result):
                             task["failure_code"] = "RESEARCH_UNAVAILABLE"
-                            task["status"] = "PARTIAL_READY"
+                            task["status"] = "WORKING"
                         _persist_tool_result_refs(task, tool_name, raw_result)
                     except HTTPException as exc:
                         reason_code = _reason_from_http(exc)
@@ -1556,10 +1609,10 @@ def resume_goal_task(
 
             if research_failed:
                 task = intent[_TASK_KEY]
-                task["status"] = "PARTIAL_READY"
+                task["status"] = "WORKING"
                 task["failure_code"] = "RESEARCH_UNAVAILABLE"
                 task["updated_at"] = _now()
-                mission.status = "PARTIAL_READY"
+                mission.status = "WORKING"
             safe_for_storage = _step_result_summary(tool_name, safe_result)
             safe_for_storage["elapsed_ms"] = round((time.perf_counter()-tool_clock)*1000)
             session.add(
@@ -1577,7 +1630,7 @@ def resume_goal_task(
                 )
             )
             mission.intent_json = _json_dump(intent)
-            event_status = "PARTIAL_READY" if research_failed else "WORKING"
+            event_status = "WORKING"
             if dispatch_status == "COMPLETED":
                 _emit_event(
                     session,

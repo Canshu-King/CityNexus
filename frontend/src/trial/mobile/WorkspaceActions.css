@@ -112,3 +112,6 @@
   .rev-mission-chat-dock { width: calc(100vw - 16px); padding: 10px 11px 7px; border-radius: 14px; }
   .rev-mission-chat-dock > p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+.rev-mission-chat-dock .rev-agent-research-settings { margin: 1px 0; padding: 7px 9px; }
+.rev-mission-chat-dock .rev-agent-research-settings[open] { max-height: 34vh; overflow-y: auto; }
