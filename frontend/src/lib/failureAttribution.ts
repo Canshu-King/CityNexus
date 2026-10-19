@@ -465,8 +465,8 @@ export function copyFor(
         kicker: kickerOf("connectionFine"),
         title: titleOf("lib.failureAttribution.tripNotOnServer"),
         body: zh
-          ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。`
-          : `This device remembered trip ${id}, and the server answered plainly that it does not exist (http_status=${attribution.http_status}). This is not a network problem: the server just answered.`,
+          ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（HTTP ${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。`
+          : `This device remembered trip ${id}, and the server answered plainly that it does not exist (HTTP ${attribution.http_status}). This is not a network problem: the server just answered.`,
       };
     case "failure.networkUnavailable":
       return {
@@ -482,15 +482,15 @@ export function copyFor(
             kicker: kickerOf("server"),
             title: titleOf("lib.failureAttribution.serviceUnavailable"),
             body: zh
-              ? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The service is unavailable for now. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `服务器刚才答了你，但它自己报错了（HTTP ${attribution.http_status}）。这是服务暂时不可用。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `The server did answer, and answered with an error of its own (HTTP ${attribution.http_status}). The service is unavailable for now. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
             kicker: kickerOf("server"),
             title: titleOf("lib.failureAttribution.serverCouldNotRead"),
             body: zh
-              ? `服务器自己报错了（http_status=${attribution.http_status}）。这是服务器那边的问题。可以重试；如果一直这样，稍后再来。`
-              : `The server reported an error of its own (http_status=${attribution.http_status}). That is the server's side of it. Retry; if it persists, come back later.`,
+              ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是服务器那边的问题。可以重试；如果一直这样，稍后再来。`
+              : `The server reported an error of its own (HTTP ${attribution.http_status}). That is the server's side of it. Retry; if it persists, come back later.`,
           };
     /* ORD-0263 fifth state: an answer arrived, so the sentence may not claim one did not.  The status
        and media type quoted here are the ones this response actually carried. */
@@ -499,20 +499,20 @@ export function copyFor(
         ? {
             kicker: kickerOf("origin"),
             title: zh
-              ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
-              : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+              ? `服务器答了 HTTP ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
+              : `The origin answered HTTP ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
             kicker: kickerOf("origin"),
             title: zh
-              ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
-              : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+              ? `服务器答了 HTTP ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
+              : `The origin answered HTTP ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
-              : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
+              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? categoryLabel("UNKNOWN", zh)}），只是那不是一个可解析的行程响应。这属于服务暂时不可用。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
+              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
     /* ORD-0457: a refusal to be asked again so soon is not a failed read, and the wait is only ever
        the server's own. The retry control stays on screen either way - "later" is a pace, not a
@@ -522,10 +522,10 @@ export function copyFor(
         kicker: kickerOf("rateLimited"),
         title: titleOf("lib.failureAttribution.slowDownRate"),
         body: zh
-          ? `这一发被限流了（http_status=${attribution.http_status}）。服务器给了等待时间：约 ${Math.round(
+          ? `这一发被限流了（HTTP ${attribution.http_status}）。服务器给了等待时间：约 ${Math.round(
               (attribution as { retry_after_ms?: number }).retry_after_ms ?? 0,
             )} 毫秒后再问。数据没有丢，下面那个按钮一直在，等一会儿再按它就行。`
-          : `This request was rate-limited (http_status=${attribution.http_status}). The server named its own wait: ask again in about ${Math.round(
+          : `This request was rate-limited (HTTP ${attribution.http_status}). The server named its own wait: ask again in about ${Math.round(
               (attribution as { retry_after_ms?: number }).retry_after_ms ?? 0,
             )} milliseconds. Nothing was lost; the button below stays, so wait a moment and use it.`,
       };
@@ -534,16 +534,16 @@ export function copyFor(
         kicker: kickerOf("rateLimited"),
         title: titleOf("lib.failureAttribution.slowDownRetry"),
         body: zh
-          ? `这一发被限流了（http_status=${attribution.http_status}），这一次它没有说等多久。数据没有丢，稍后再按下面那个按钮。`
-          : `This request was rate-limited (http_status=${attribution.http_status}) and no wait came with it this time. Nothing was lost - press the button below again shortly.`,
+          ? `这一发被限流了（HTTP ${attribution.http_status}），这一次它没有说等多久。数据没有丢，稍后再按下面那个按钮。`
+          : `This request was rate-limited (HTTP ${attribution.http_status}) and no wait came with it this time. Nothing was lost - press the button below again shortly.`,
       };
     case "failure.stateAlreadyMoved":
       return {
         kicker: kickerOf("alreadyDone"),
         title: titleOf("lib.failureAttribution.stateAlreadyMoved"),
         body: zh
-          ? `服务器接了这发，回答的是「现在已经是这样了」（http_status=${attribution.http_status}）。所以这句不是失败：再按一次只会重新读一遍现在的样子。它给的名字在下面的归因详情里。`
-          : `The server took this request and answered that it is already so (http_status=${attribution.http_status}). That is not a failure: asking again just re-reads the current state. Its own name for the condition is in the attribution detail below.`,
+          ? `服务器接了这发，回答的是「现在已经是这样了」（HTTP ${attribution.http_status}）。所以这句不是失败：再按一次只会重新读一遍现在的样子。它给的名字在下面的归因详情里。`
+          : `The server took this request and answered that it is already so (HTTP ${attribution.http_status}). That is not a failure: asking again just re-reads the current state. Its own name for the condition is in the attribution detail below.`,
       };
     /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
        whether the request travelled is not something this screen knows, so the sentence does not
@@ -569,16 +569,16 @@ export function copyFor(
         kicker: kickerOf("identity"),
         title: titleOf("lib.failureAttribution.needsFreshSignIn"),
         body: zh
-          ? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`
-          : `The server refused this read (http_status=${attribution.http_status}). Your trip is still there once you sign in.`,
+          ? `服务器拒绝了这次读取（HTTP ${attribution.http_status}）。登录之后这一趟还在。`
+          : `The server refused this read (HTTP ${attribution.http_status}). Your trip is still there once you sign in.`,
       };
     case "failure.forbidden":
       return {
         kicker: kickerOf("permission"),
         title: titleOf("lib.failureAttribution.stepNotAllowed"),
         body: zh
-          ? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
-          : `The server knows who you are and still refused this step (http_status=${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
+          ? `服务器认得你是谁，但明确拒绝了这一步（HTTP ${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
+          : `The server knows who you are and still refused this step (HTTP ${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
       };
     default:
       return {
