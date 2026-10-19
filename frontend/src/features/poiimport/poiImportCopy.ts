@@ -155,16 +155,16 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
      arms carry no `{plural:}` marker at all, which is ORD-0433's rule: a marker in a zh line would
      paint an English noun on the Chinese glass. */
   collectedCount: {
-    zh: "{n} 枚已收在「{shelf}」——这句是从同一扇读门重读回来的。",
-    en: "{n} {plural:place} now on {shelf} — read back from the same list door.",
+    zh: "{n} 枚已收在「{shelf}」。",
+    en: "{n} {plural:place} now on {shelf}.",
   },
   collectAlready: {
-    zh: "{n} 枚本来就在「{shelf}」上，没有重复写入。",
-    en: "{n} {plural:place} already on {shelf}, so nothing was written twice.",
+    zh: "{n} 枚本来就在「{shelf}」上。",
+    en: "{n} {plural:place} already on {shelf}.",
   },
   collectNothingConfirmed: {
-    zh: "写入应答了，但架子上读不回这一枚，所以先不说“已收在”。",
-    en: "The write answered, but the shelf did not give these back, so nothing is called collected yet.",
+    zh: "写入应答了，但架子上读不回这一枚。",
+    en: "The write answered, but the shelf did not give these back.",
   },
   /* The badge next to the screen's title.  It carries no `{...}` value because the screen states it
      the same way whatever it is showing: the parser is local and no link is opened.  Both halves are
@@ -179,16 +179,16 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Add to plan",
   },
   addedCount: {
-    zh: "{n} 个地点已在 {day} ——这是从服务端读回来的结果。",
-    en: "{n} {plural:place} on {day} — read back from the server.",
+    zh: "{n} 个地点已在 {day}。",
+    en: "{n} {plural:place} on {day}.",
   },
   adding: {
     zh: "正在加…",
     en: "Adding…",
   },
   alreadyPresent: {
-    zh: "{n} 个本来就在那一天，没有重复添加。",
-    en: "{n} were already on that day, so nothing was added twice.",
+    zh: "{n} 个本来就在那一天。",
+    en: "{n} were already on that day.",
   },
   autoDayLabel: {
     zh: "会落到哪一天",
@@ -363,8 +363,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "One place per line, or a whole note. Links may be mixed in.",
   },
   readBackFailed: {
-    zh: "写入应答了，但计划没有把那条记录交回来，所以先不说“已加入”。",
-    en: "The write answered, but the plan did not give the record back, so nothing is called added yet.",
+    zh: "写入应答了，但计划没有把那条记录交回来。",
+    en: "The write answered, but the plan did not give the record back.",
   },
   retry: {
     zh: "重试",

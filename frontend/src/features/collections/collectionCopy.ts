@@ -117,8 +117,8 @@ export const COLLECTION_COPY = {
     en: "This row carries no place identity, so there is nothing to collect.",
   },
   noTravelerYet: {
-    zh: "还没有旅客身份，所以没问服务器：收藏的读门要一个 traveler_id。",
-    en: "No traveller identity yet, so nothing was asked: the collection read door requires a traveler_id.",
+    zh: "还没有旅客身份，所以没问服务器：收藏读不了。",
+    en: "No traveller identity yet, so this server's collection read was never asked.",
   },
 } as const;
 
@@ -130,6 +130,6 @@ export const COLLECTION_REFUSAL = {
 } as const;
 
 export const COLLECTION_NO_TRAVELER = {
-  zh: "还没有旅客身份，所以没问服务器：收藏的读门要一个 traveler_id。",
-  en: "No traveller identity yet, so nothing was asked: the collection read door requires a traveler_id.",
+  zh: "还没有旅客身份，所以没问服务器：收藏读不了。",
+  en: "No traveller identity yet, so this server's collection read was never asked.",
 } as const;

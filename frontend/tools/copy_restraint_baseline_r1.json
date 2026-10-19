@@ -1,7 +1,7 @@
 {
  "blessed_by": "copy_restraint_gate_r1.py --bless",
  "counts": {
-  "defensive": 7,
+  "defensive": 5,
   "orphans": 15,
   "pointers": 3
  },
@@ -11,8 +11,6 @@
    "dictionary|zh|me.recoveryRefusedMismatch",
    "dictionary|zh|trial.sealedUnreadable",
    "src/features/checkin/footprintCopy.ts|zh|unreachable",
-   "src/features/poiimport/poiImportCopy.ts|en|collectNothingConfirmed",
-   "src/features/poiimport/poiImportCopy.ts|en|readBackFailed",
    "src/features/trash/journeyTrashCopy.ts|en|trash.noViewer"
   ],
   "orphans": [

@@ -56,8 +56,8 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
     en: "That stop belongs to another trip, so this stamp was not written. Stamp a stop from this trip's own itinerary.",
   },
   placeUnknown: {
-    zh: "那个地点我们这边没有档案，所以这枚打卡没有落下。",
-    en: "We have no record of that place here, so this stamp was not written.",
+    zh: "服务器没有那个地点的档案，这枚打卡没有落下。",
+    en: "There is no record of that place, so this stamp was not written.",
   },
   /* The control's own name is interpolated, never written here: the dictionary says what the button
      is called in each language, and a sentence that hard-codes one language's label points at a word
@@ -84,8 +84,8 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
     en: "This request never reached the server, so whether the stamp was written is unknown.",
   },
   unexpected: {
-    zh: "服务器收了这枚打卡，但给了一个叫不出名字的答复（{status}），所以按没有打卡处理。",
-    en: "The server answered this stamp with a name it does not recognise ({status}), so it is treated as not written.",
+    zh: "服务器收了这枚打卡，答复叫不出名字（{status}），按没有打卡处理。",
+    en: "The server answered this stamp with a name it does not recognise ({status}); treated as not written.",
   },
 };
 
