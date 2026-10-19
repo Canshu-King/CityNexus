@@ -283,7 +283,7 @@ export function MissionCockpit({
         {journeyStatus === "ACTIVE" ? executionAgent :
           <div className="cn-mission-agent-disclosure">
             <h3>一起商量安排</h3>
-            <WorkspaceActions embedded chatDockVisible={visible} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
+            <WorkspaceActions embedded chatDockVisible={visible} dialogueActive={layer === "agent"} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
           </div>}
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布">

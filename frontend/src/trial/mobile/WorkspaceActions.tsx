@@ -181,9 +181,9 @@ function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; are
   </li>)}</ul>;
 }
 
-export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, onTaskChange }: { panel: WorkspacePanel;
+export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, dialogueActive = true, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
-  embedded?: boolean; chatDockVisible?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
+  embedded?: boolean; chatDockVisible?: boolean; dialogueActive?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -221,13 +221,13 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const conversationAnchor = useRef<HTMLDivElement>(null);
   const lastMessageId = visibleTask?.conversation?.at(-1)?.message_id;
   useEffect(() => {
-    if (!chatDockVisible || !lastMessageId) return;
+    if (!chatDockVisible || !dialogueActive || !lastMessageId) return;
     const frame = requestAnimationFrame(() => {
       const anchor = conversationAnchor.current;
       if (anchor?.getClientRects().length) anchor.scrollIntoView({ block: "end", behavior: "instant" });
     });
     return () => cancelAnimationFrame(frame);
-  }, [chatDockVisible, lastMessageId, visibleTask?.pending_question?.id]);
+  }, [chatDockVisible, dialogueActive, lastMessageId, visibleTask?.pending_question?.id]);
   const research = splitGoalResearch(visibleTask);
   useEffect(() => {
     if (embedded && goalTaskSnapshot && sameContext(goalTaskSnapshot.context, readContext())) {
