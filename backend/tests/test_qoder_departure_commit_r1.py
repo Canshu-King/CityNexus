@@ -1,29 +1,28 @@
 """One signed, idempotent commit door, and the refusals that come before it writes anything.
 
-The 19:28 V3 order's second item is 「选定的 Agent GoalDraft/Variant → 正式 PlanVersion」 with the
+The V3 order's second item is 「选定的 Agent GoalDraft/Variant → 正式 PlanVersion」 with the
 instruction to search the existing persistence domain first and not hand Codex a second manual place
 selection. What the search found, read at HEAD:
 
-* there is no agent-draft table -- `app/agent/` keeps `JourneyMission` / `AgentRun` / `AgentRunStep`
-  (`backend/app/db/models.py:229`, `:271`, `:288`) and no plan row, and the only `Variant` in the
-  backend is the in-memory `PlannerVariant` (`backend/app/planning/adapter.py:8`);
-* the A/B/C the traveller picks *are* the `CANDIDATE` PlanVersion rows the generator already writes
-  (`backend/app/services.py:2020`), and `POST .../plans/{id}/select` already performs the transition;
-* `select` answers no identity question and takes no `Idempotency-Key`
-  (`backend/app/main.py:8320`), so a screen cannot say who confirmed, and a retry after a dropped
-  response is a second write.
+* there is no agent-draft table -- `app.agent` persists `JourneyMission`, `AgentRun` and
+  `AgentRunStep` in `app.db.models`, none of which holds a plan, and the only `Variant` in the
+  backend is the in-memory dataclass `app.planning.adapter.PlannerVariant`;
+* the A/B/C the traveller picks *are* the `CANDIDATE` PlanVersion rows `app.services.generate_plans`
+  already writes, and `POST .../plans/{id}/select` already performs the transition;
+* `app.main.select_plan` answers no identity question and takes no `Idempotency-Key`, so a screen
+  cannot say who confirmed, and a retry after a dropped response is a second write.
 
 So the bridge adds exactly those two missing properties and delegates everything else: it calls the
-same `select_plan` the app already calls in-process for the seed supply (`backend/app/main.py:1980`)
-and the staged advance (`backend/app/main.py:2226`). Nothing here re-decides frozen evidence,
-feasibility, retirement of the previous SELECTED row, the cursor or the single-ACTIVE invariant --
-the refusals below are pinned to `select`'s own sentences so the two doors cannot drift.
+same `select_plan` that `app.main` already calls in-process for its seed-supply loop and its staged
+advance. Nothing here re-decides frozen evidence, feasibility, retirement of the previous SELECTED
+row, the cursor or the single-ACTIVE invariant -- the refusals below are pinned to `select`'s own
+sentences so the two doors cannot drift.
 
-`plan_versions.source` gets no new vocabulary (`backend/db/schema.sql:179-180` allows only
-INITIAL / REPLAN / MANUAL), and no migration is needed for the decision record: `audit_logs` already
-carries `actor_type` / `actor_id`, and `traveler` is the word the member doors use
-(`backend/tests/test_qoder_ord0503_member_doors.py`). The credential secret is generated per run and
-never written into the tree.
+`plan_versions.source` gets no new vocabulary: the CHECK in `backend/db/schema.sql` allows only
+INITIAL / REPLAN / MANUAL. No migration is needed for the decision record either -- `audit_logs`
+already carries `actor_type` / `actor_id`, and `traveler` is the word the member doors use, as
+`backend/tests/test_qoder_ord0503_member_doors.py` asserts. The credential secret is generated per
+run and never written into the tree.
 """
 
 from __future__ import annotations

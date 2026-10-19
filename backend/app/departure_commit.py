@@ -5,8 +5,8 @@ This is the commit step the departure screen needs after `GET .../departure` ans
 frozen mobility evidence, feasibility, retiring the previous SELECTED row, moving the cursor,
 the single-ACTIVE invariant, the `plan.selected` audit event -- belongs to
 `POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select` and is *not* re-implemented
-here: this door calls that same function in-process, which is what `app/main.py` already does for
-the seed supply (`app/main.py:1980`) and the staged advance (`app/main.py:2226`). A second
+here: this door calls that same function in-process, which is how `app.main` already uses it twice --
+once for its own seed supply loop and once for the staged advance. A second
 implementation of "pick a plan" is the failure this order explicitly closes.
 
 What `select` cannot answer, and this door adds:
