@@ -1175,6 +1175,7 @@ export function RevolutionFirstLook() {
                 key={journey.id}
                 journeyId={journey.id}
                 cityName={journey.cityName}
+                onChangeCity={() => switchCity()}
                 goal={serverBrief?.journeyId === journey.id && serverBrief.bearer === readTravelerBearer()
                   ? serverBrief.goal : tripGoal}
                 journeyStatus={journey.status}
@@ -1201,6 +1202,7 @@ export function RevolutionFirstLook() {
                   data-testid="rev-quick-open-agent-activity"
                   aria-label={`AI 工作动态，${agentStatusTitle}`}
                   onClick={() => {
+                    window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: "assistant" }));
                     const composer = document.getElementById("rev-mission-chat-input");
                     if (composer) { composer.focus(); return; }
                     document.querySelector(".cn-mission-activity")?.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -207,6 +207,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const [loading, setLoading] = useState(false);
   const [aiReady, setAiReady] = useState(false);
   const [allowTiles, setAllowTiles] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsButton = useRef<HTMLButtonElement>(null);
   const previousContext = useRef<Context | null>(null);
   const generation = useRef(0);
   const writeBusy = useRef(false);
@@ -466,7 +468,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   };
 
   const permissionSettings = (
-<details className="rev-agent-research-settings" open={!visibleTask}>
+<details className="rev-agent-research-settings" open={embedded || !visibleTask}>
             <summary>{modelConsent ? "研究额度与来源 · 已设置" : "本任务的来源与研究额度"}</summary>
             <div className="rev-agent-research-settings-body">
               <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
@@ -606,7 +608,12 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     <section className="rev-workspace-dialog rev-workspace-inline" aria-label="Agent 命令台">{content}</section>
     {chatDockVisible && visible?.status === "DRAFT" && createPortal(
       <form className="rev-mission-chat-dock" aria-label="与当前旅行 Agent 对话"
-        onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
+        onSubmit={(event) => { event.preventDefault(); sendMessage(); }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && settingsOpen) { setSettingsOpen(false); settingsButton.current?.focus(); }
+        }}>
+        <button ref={settingsButton} type="button" className="rev-mission-settings-toggle" aria-label="对话设置"
+          aria-expanded={settingsOpen} aria-controls="rev-mission-settings" onClick={() => setSettingsOpen(value => !value)}>⚙</button>
         <label htmlFor="rev-mission-chat-input">{visibleTask ? "继续和当前 Agent 对话" : "告诉 CityNexus 你的旅行目标"}</label>
         <div className="rev-mission-chat-row">
           <textarea id="rev-mission-chat-input" value={question} rows={Math.min(4, Math.max(1, question.split("\n").length))} maxLength={2000}
@@ -616,7 +623,11 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             {busy ? "正在研究" : "发送 ↑"}
           </button>
         </div>
-        {permissionSettings}
+        <section id="rev-mission-settings" className="rev-mission-settings-panel" hidden={!settingsOpen} aria-label="对话设置">
+          <header><strong>这次想怎么研究？</strong><button type="button" aria-label="关闭对话设置"
+            onClick={() => { setSettingsOpen(false); settingsButton.current?.focus(); }}>×</button></header>
+          {permissionSettings}
+        </section>
         {(busy || visibleTask?.status === "WORKING" || requestError) && <p role="status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
           : requestError}</p>}

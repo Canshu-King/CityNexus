@@ -27,6 +27,7 @@ type Props = {
   agentAvailable: boolean;
   onExplore: () => void;
   onTrip: () => void;
+  onChangeCity?: () => void;
   executionAgent?: ReactNode;
   executionDecisions?: ReactNode;
 };
@@ -88,7 +89,7 @@ function eventLabel(event: DraftGoalTaskEvent): string {
 }
 
 export function MissionCockpit({
-  journeyId, cityName, goal, journeyStatus, visible = true, agentStatus, agentAvailable, onExplore, onTrip, executionAgent, executionDecisions,
+  journeyId, cityName, goal, journeyStatus, visible = true, agentStatus, agentAvailable, onExplore, onTrip, onChangeCity, executionAgent, executionDecisions,
 }: Props) {
   const [command, setCommand] = useState(goal);
   const [task, setTask] = useState<DraftGoalTask | null>(null);
@@ -104,12 +105,13 @@ export function MissionCockpit({
   const [focusedPlaceId, setFocusedPlaceId] = useState<string | null>(null);
   const [chosenDraftRevision, setChosenDraftRevision] = useState(0);
   const spatial = useRef<HTMLDivElement>(null);
-  const [layer, setLayer] = useState<"map" | "timeline">("map");
-  const selectLayer = (next: "map" | "timeline") => {
+  const [layer, setLayer] = useState<"map" | "timeline" | "agent">(journeyStatus === "ACTIVE" ? "agent" : "map");
+  const selectLayer = (next: "map" | "timeline" | "agent") => {
     setLayer(next);
-    const host = spatial.current;
-    const pane = host?.querySelector<HTMLElement>(next === "map" ? ".cn-mission-map-pane" : ".cn-mission-timeline-pane");
-    if (host && pane) host.scrollTo({ left: host.scrollLeft + pane.getBoundingClientRect().left - host.getBoundingClientRect().left, behavior: "auto" });
+    // Phone panels remain mounted so switching never discards draft edits.
+    requestAnimationFrame(() => {
+      document.querySelector(".cn-mission-layer-tabs")?.scrollIntoView({ block: "start", behavior: "auto" });
+    });
   };
   const goalRequest = useMemo(() => commandRevision ? ({ journeyId, goal: command }) : null, [journeyId, command, commandRevision]);
   const receiveTask = useCallback((value: DraftGoalTask, items: DraftGoalTaskEvent[]) => {
@@ -122,10 +124,7 @@ export function MissionCockpit({
     if (slot) {
       slot.open = true;
       setLayer("timeline");
-      const host = spatial.current;
-      const pane = host?.querySelector<HTMLElement>(".cn-mission-timeline-pane");
-      if (host && pane) host.scrollTo({ left: host.scrollLeft + pane.getBoundingClientRect().left - host.getBoundingClientRect().left, behavior: "auto" });
-      slot.scrollIntoView({ block: "center", inline: "nearest", behavior: "auto" });
+      requestAnimationFrame(() => slot.scrollIntoView({ block: "center", inline: "nearest", behavior: "auto" }));
     } else {
       setLayer("map");
       spatial.current?.scrollTo({ left: 0, behavior: "auto" });
@@ -138,8 +137,14 @@ export function MissionCockpit({
       if (typeof value?.goal === "string" && value.goal.trim()) { setCommand(value.goal.slice(0, 2000)); setCommandRevision((v) => v + 1); }
       (document.getElementById("rev-mission-chat-input") as HTMLTextAreaElement | null)?.focus();
     };
+    const openPanel = (event: Event) => {
+      if (!window.matchMedia("(max-width: 999px)").matches) return;
+      const kind = (event as CustomEvent).detail;
+      if (kind === "map" || kind === "assistant") setLayer(kind === "map" ? "map" : "agent");
+    };
     window.addEventListener("citynexus:mission-command", focus);
-    return () => window.removeEventListener("citynexus:mission-command", focus);
+    window.addEventListener("citynexus:mission-panel", openPanel);
+    return () => { window.removeEventListener("citynexus:mission-command", focus); window.removeEventListener("citynexus:mission-panel", openPanel); };
   }, [journeyId]);
 
   useEffect(() => { setCommand(goal); setMapAllowed(false); setGuardianOpen(false); setFocusedPlaceId(null); }, [journeyId]);
@@ -244,16 +249,18 @@ export function MissionCockpit({
     window.dispatchEvent(new Event("citynexus:mission-refresh"));
   };
 
-  return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit">
+  return <section className="cn-mission-os" aria-label="CityNexus Mission 工作台" data-testid="rev-mission-cockpit" data-layer={layer}>
     <header className="cn-mission-head">
       <div><div className="cn-mission-kicker"><Sparkles size={15} /> CITYNEXUS / MISSION OS</div>
-        <h2>{cityName}，<span>边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p></div>
+        <h2>{cityName}<span>，边研究，边成行。</span></h2><p>地图、日程和 Agent 在同一个工作空间。</p>
+        {onChangeCity && <button type="button" className="cn-mission-change-city" onClick={onChangeCity}>换地区 ›</button>}</div>
       <DestinationMedia key={cityName} cityName={cityName} />
       <span className="cn-mission-state" aria-live="polite">{status}</span>
     </header>
     <div className="cn-mission-layer-tabs" aria-label="切换工作台图层">
       <button type="button" aria-pressed={layer === "map"} onClick={() => selectLayer("map")} data-testid="rev-mission-layer-map"><MapPinned size={17} />地图</button>
       <button type="button" aria-pressed={layer === "timeline"} onClick={() => selectLayer("timeline")} data-testid="rev-mission-layer-timeline"><CalendarDays size={17} />{journeyStatus === "ACTIVE" ? "执行与待办" : "日程"}</button>
+      <button type="button" aria-pressed={layer === "agent"} onClick={() => selectLayer("agent")} data-testid="rev-mission-layer-agent"><BrainCircuit size={17} />对话</button>
     </div>
     <div className="cn-mission-grid">
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
@@ -266,12 +273,12 @@ export function MissionCockpit({
           <p>{task ? "地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。" : "无需填写复杂表单，直接说出目的地、兴趣和偏好。"}</p>
         </div>
         {journeyStatus === "ACTIVE" ? executionAgent :
-          <details className="cn-mission-agent-disclosure">
+          <details className="cn-mission-agent-disclosure" open={layer === "agent" ? true : undefined}>
             <summary>查看完整对话、来源和工作记录</summary>
             <WorkspaceActions embedded chatDockVisible={visible} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
           </details>}
       </div>
-      <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布" onScroll={(event) => setLayer(event.currentTarget.scrollLeft > event.currentTarget.clientWidth / 2 ? "timeline" : "map")}>
+      <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布">
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
           <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处地点</span></div>
           {allMapPoints.length > focusedMapCount && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>

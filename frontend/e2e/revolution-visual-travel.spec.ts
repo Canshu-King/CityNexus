@@ -77,6 +77,7 @@ for (const width of [390, 430, 1366, 1566]) {
 
     await page.goto("/revolution");
     await page.getByTestId("rev-mobile-tab-assistant").click();
+    if (width < 1000) await page.getByTestId("rev-mission-layer-map").click();
     const cockpit = page.getByTestId("rev-mission-cockpit");
     await expect(cockpit).toBeVisible();
     await expect(page.locator(".cn-mission-media")).toBeVisible();
@@ -113,5 +114,34 @@ for (const width of [390, 430, 1366, 1566]) {
     await expect(page.locator("#rev-mission-chat-input")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     expect(externalTiles).toBe(0);
+    const input = page.locator("#rev-mission-chat-input");
+    await input.fill("先保留这句未发送的修改");
+    if (width < 1000) {
+      await page.getByTestId("rev-mission-layer-map").click();
+      await expect(page.getByTestId("rev-mission-timeline-pane")).toBeHidden();
+      await expect(page.getByTestId("rev-mission-agent-pane")).toBeHidden();
+      await page.getByTestId("rev-mission-layer-agent").click();
+      await expect(page.getByTestId("rev-mission-agent-pane")).toBeVisible();
+      await expect(page.getByTestId("rev-mission-map-pane")).toBeHidden();
+      await expect(input).toHaveValue("先保留这句未发送的修改");
+      await input.blur();
+      const dimensions = await page.evaluate(() => ({
+        hero: document.querySelector(".cn-mission-head")!.getBoundingClientRect().height,
+        dock: document.querySelector(".rev-mission-chat-dock")!.getBoundingClientRect().height,
+        font: parseFloat(getComputedStyle(document.querySelector("#rev-mission-chat-input")!).fontSize),
+      }));
+      expect(dimensions.hero).toBeLessThanOrEqual(120);
+      expect(dimensions.dock).toBeLessThanOrEqual(90);
+      expect(dimensions.font).toBeGreaterThanOrEqual(16);
+    }
+    const settings = page.getByRole("region", { name: "对话设置", exact: true });
+    await expect(settings).toBeHidden();
+    await page.getByRole("button", { name: "对话设置", exact: true }).click();
+    await expect(settings).toBeVisible();
+    await expect(settings.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）")).toBeChecked();
+    await settings.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").uncheck();
+    await settings.getByRole("button", { name: "关闭对话设置" }).click();
+    await expect(settings).toBeHidden();
+    await expect(input).toHaveValue("先保留这句未发送的修改");
   });
 }

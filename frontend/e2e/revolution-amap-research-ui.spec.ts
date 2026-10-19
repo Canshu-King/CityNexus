@@ -85,6 +85,7 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
   await page.getByTestId("rev-mobile-tab-assistant").click();
+  if (await page.getByTestId("rev-mission-layer-map").isVisible()) await page.getByTestId("rev-mission-layer-map").click();
   const cockpit = page.getByTestId("rev-mission-cockpit");
   const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
   await expect(chatDock).toBeVisible();
@@ -128,7 +129,8 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   await expect(map.getByRole("button", { name: "加载地图", exact: true })).toBeEnabled();
   expect(tileRequests).toBe(0);
 
-  await cockpit.locator(".cn-mission-agent-disclosure > summary").click();
+  if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
+  else await cockpit.locator(".cn-mission-agent-disclosure > summary").click();
   const taskRegion = cockpit.getByRole("region", { name: "Agent 任务", exact: true });
   await expect(taskRegion).toContainText("查询步行路线");
   await taskRegion.getByText("工具结果 · 1 次").click();
@@ -140,6 +142,7 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   await expect(taskRegion.getByTestId("rev-amap-research-route")).toContainText("650 米 · 480 秒");
   await expect(taskRegion.getByRole("link", { name: "在高德地图查看路线 ↗" })).toHaveAttribute("href", navigationUrl);
 
+  if (await page.getByTestId("rev-mission-layer-map").isVisible()) await page.getByTestId("rev-mission-layer-map").click();
   await map.getByRole("button", { name: "加载地图", exact: true }).click();
   await expect(map.getByTestId("rev-workspace-map-canvas")).toBeVisible();
   await expect(map.locator(".rev-workspace-map-pin")).toHaveCount(1);

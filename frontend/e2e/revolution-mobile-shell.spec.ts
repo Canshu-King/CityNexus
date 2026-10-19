@@ -143,6 +143,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     releaseRuntime();
     await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 建议可试");
     await composer.locator("textarea").fill("TEST_FIXTURE 轻松看博物馆");
+    await composer.getByRole("button", { name: "对话设置", exact: true }).click();
     await composer.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").check();
     await expect(send).toBeEnabled();
     await expect(page.locator("#rev-quick-ai-prompt")).toHaveCount(0);

@@ -124,3 +124,33 @@
   font: inherit; font-size: 11px; line-height: 1.5; cursor: pointer;
 }
 .rev-mission-chat-dock .rev-quick-ai-preferences button[aria-pressed="true"] { background: #e9f4ed; border-color: #96c6a5; }
+
+/* Keep the canvas visible; permissions open above the composer on demand. */
+.rev-mission-chat-dock { grid-template-columns: 44px minmax(0, 1fr); gap: 8px; padding: 8px; border-radius: 18px; }
+.rev-mission-chat-dock > label:first-of-type {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.rev-mission-settings-toggle {
+  grid-column: 1; grid-row: 1; width: 44px; height: 48px; border: 0;
+  border-radius: 12px; color: #315646; background: #ecf3ef; font-size: 26px; cursor: pointer;
+}
+.rev-mission-chat-row { grid-column: 2; grid-row: 1; }
+.rev-mission-chat-row textarea { font-size: 16px; min-height: 48px; padding: 11px; resize: none; }
+.rev-mission-chat-row button { min-height: 48px; width: 66px; }
+.rev-mission-chat-dock > p { grid-column: 1 / -1; font-size: 12px; white-space: normal; }
+.rev-mission-settings-panel {
+  position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+  max-height: min(65dvh, 520px); overflow-y: auto; overscroll-behavior: contain;
+  background: #fff; border: 1px solid #d7e5dc; border-radius: 18px;
+  padding: 14px; box-shadow: 0 -8px 35px #17352b22;
+}
+.rev-mission-settings-panel[hidden] { display: none; }
+.rev-mission-settings-panel > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.rev-mission-settings-panel > header button { width: 44px; height: 44px; border: 0; background: #edf4ef; border-radius: 50%; color: #315646; font-size: 24px; cursor: pointer; }
+.rev-mission-settings-panel .rev-workspace-consent { min-height: 44px; font-size: 14px; }
+.rev-mission-settings-panel .rev-agent-research-settings > summary { display: none; }
+.rev-mission-settings-panel .rev-agent-research-settings { border: 0; background: transparent; }
+@media (max-width: 600px) {
+  .rev-mission-chat-dock { padding: 8px; width: calc(100vw - 16px); }
+}

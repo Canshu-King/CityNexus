@@ -37,6 +37,7 @@ for (const width of [390, 430]) test(`TEST_FIXTURE choose a sourced draft varian
   });
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-assistant").click();
+  await page.getByTestId("rev-mission-layer-timeline").click();
   const variants=page.getByRole("region",{name:"旅行方案对比"});
   await expect(variants).toBeVisible();
   await variants.getByRole("button",{name:"查看每天安排与待查事项"}).click();

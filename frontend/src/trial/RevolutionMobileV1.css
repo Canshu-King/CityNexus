@@ -171,7 +171,7 @@
 }
 .rev-mobile-v1 .rev-firstlook-form-row button:disabled { opacity: .6; }
 .rev-mobile-v1 .rev-firstlook-journey {
-  display: flex !important;
+  display: flex;
   align-items: flex-start !important;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -503,7 +503,7 @@
   }
   .rev-mobile-v1 .rev-firstlook-form-row button { width: 100% !important; }
   .rev-mobile-v1 .rev-firstlook-journey {
-    display: grid !important;
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center !important;
     gap: 8px !important;

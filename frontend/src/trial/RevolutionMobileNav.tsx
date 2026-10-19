@@ -21,6 +21,7 @@ export function RevolutionMobileNav({ active, onSelect, hasSavedWalk }: Props) {
     window.requestAnimationFrame(() => {
       const canvas = document.querySelector<HTMLElement>(".cn-mission-os");
       if (!canvas) { if (request) setGoalRequest(request); setPanel(kind); return; }
+      window.dispatchEvent(new CustomEvent("citynexus:mission-panel", { detail: kind }));
       if (kind === "assistant") window.dispatchEvent(new CustomEvent("citynexus:mission-command", { detail: request }));
       canvas.querySelector<HTMLElement>(kind === "map" ? ".cn-mission-map-pane" : ".cn-mission-agent-pane")?.scrollIntoView({ block: "nearest", inline: "start", behavior: "smooth" });
     });

@@ -183,7 +183,7 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     await expect(page.getByTestId("rev-recent-journeys")).toContainText("上海");
     await expect(page.getByTestId("rev-recent-journeys")).toContainText("宁波");
     await page.getByRole("button", { name: "打开宁波行程" }).click();
-    await expect(page.getByRole("heading", { level: 1, name: "宁波" })).toBeVisible();
+    await expect(page.getByTestId("rev-mission-cockpit").getByRole("heading", { level: 2, name: "宁波", exact: true })).toBeVisible();
 
     const state = await page.evaluate(() => ({
       bearer: sessionStorage.getItem("citynexus.traveler.bearer"),
@@ -226,7 +226,7 @@ test.describe("Revolution signed-session recovery UI regression", () => {
 
     await page.goto("/revolution");
     await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1, name: "厦门" })).toBeVisible();
+    await expect(page.getByTestId("rev-mission-cockpit").getByRole("heading", { level: 2, name: "厦门", exact: true })).toBeVisible();
     const state = await page.evaluate(() => ({
       travelerId: sessionStorage.getItem("citynexus.traveler.session-id"),
       pointer: JSON.parse(localStorage.getItem("citynexus.revolution.firstlook.journey") || "{}") as {

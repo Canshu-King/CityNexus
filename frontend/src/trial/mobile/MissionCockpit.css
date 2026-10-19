@@ -568,3 +568,51 @@
 @media (max-width: 999px) {
   .rev-mobile-v1 .cn-mission-agent-glance > strong { font-size: 18px; }
 }
+
+/* Phone workspace: one task panel, one vertical scroll and a reachable composer. */
+@media (max-width: 999px) {
+  .rev-mobile-v1 .rev-firstlook-content:has(.cn-mission-os) { padding-bottom: 170px !important; }
+  .rev-mobile-v1 .cn-mission-os .cn-mission-head {
+    min-height: 106px; padding: 17px 18px; border-radius: 18px;
+    flex-direction: row; align-items: center; gap: 10px;
+  }
+  .rev-mobile-v1 .cn-mission-head h2 { margin: 0; font-size: 25px !important; max-width: none; }
+  .rev-mobile-v1 .cn-mission-head h2 span,
+  .rev-mobile-v1 .cn-mission-head > div:first-child > p,
+  .rev-mobile-v1 .cn-mission-kicker { display: none; }
+  .rev-mobile-v1 .cn-mission-head .cn-mission-state { font-size: 11px; margin: 0; }
+  .rev-mobile-v1 .cn-mission-media-credit { bottom: 5px; right: 9px; font-size: 9px; }
+  .rev-mobile-v1 .cn-mission-layer-tabs {
+    position: sticky; top: 0; z-index: 12; padding: 8px 0; margin: 0;
+    background: #f5f8f6; scroll-margin-top: 0; gap: 5px;
+  }
+  .rev-mobile-v1 .cn-mission-layer-tabs button { min-height: 46px; font-size: 14px; font-weight: 700; border-radius: 12px; }
+  .rev-mobile-v1 .cn-mission-grid { gap: 0; }
+  .rev-mobile-v1 .cn-mission-spatial { display: contents; }
+  .rev-mobile-v1 .cn-mission-map-pane,
+  .rev-mobile-v1 .cn-mission-timeline-pane,
+  .rev-mobile-v1 .cn-mission-agent-pane { display: none; width: 100%; box-sizing: border-box; }
+  .rev-mobile-v1 .cn-mission-os[data-layer="map"] .cn-mission-map-pane,
+  .rev-mobile-v1 .cn-mission-os[data-layer="timeline"] .cn-mission-timeline-pane,
+  .rev-mobile-v1 .cn-mission-os[data-layer="agent"] .cn-mission-agent-pane { display: block; }
+  .rev-mobile-v1 .cn-mission-os .cn-mission-card { padding: 15px; border-radius: 17px; }
+  .rev-mobile-v1 .cn-mission-map .cn-mission-activity { display: none; }
+  .rev-mobile-v1 .cn-mission-agent-glance { margin-top: 10px; padding: 13px; }
+  .rev-mobile-v1 .cn-mission-agent-disclosure > summary { display: none; }
+  .rev-mobile-v1 .cn-mission-agent-disclosure { border: 0; background: transparent; }
+  .rev-mobile-v1 .cn-mission-agent-disclosure .rev-workspace-inline { padding: 0; }
+  .rev-mobile-v1 .rev-goal-draft-actions { position: static; box-shadow: none; }
+  .rev-mobile-v1 .cn-mission-timeline-pane .rev-goal-draft-slot { scroll-margin-block: 65px 170px; }
+}
+
+.rev-mobile-v1 .cn-mission-change-city { display: none; }
+@media (max-width: 999px) {
+  .rev-mobile-v1 .rev-firstlook-journey:has(+ .cn-mission-os) { display: none; }
+  .rev-mobile-v1 .cn-mission-head .cn-mission-change-city {
+    display: inline-flex; align-items: center; min-height: 44px; width: auto;
+    border: 0; background: transparent; padding: 6px 0; margin: 0;
+    color: #fff; font-size: 13px; text-decoration: underline; cursor: pointer;
+  }
+  .rev-mobile-v1 .cn-mission-os .cn-mission-head { min-height: 112px; }
+  .rev-mobile-v1 .cn-mission-head .cn-mission-state { align-self: flex-start; }
+}

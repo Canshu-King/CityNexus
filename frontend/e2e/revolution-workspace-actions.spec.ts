@@ -134,25 +134,32 @@ for (const width of [390, 430, 1366]) {
     await expect(chatInput).toBeVisible();
     await expect(chatInput).toHaveValue(goal);
     expect(calls).toEqual([]);
+    await chatDock.getByRole("button", { name: "对话设置", exact: true }).click();
     await chatDock.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").check();
     await expect(chatDock.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）")).toBeChecked();
     await chatDock.getByLabel("本次允许查询公开地图和地点来源").check();
     await expect(chatDock.getByLabel("本次允许查询公开地图和地点来源")).toBeChecked();
+    await chatDock.getByRole("button", { name: "关闭对话设置" }).click();
     await chatDock.getByRole("button", { name: "发送 ↑", exact: true }).click();
-    await dialog.locator(".cn-mission-agent-disclosure > summary").click();
+    if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
+    else await dialog.locator(".cn-mission-agent-disclosure > summary").click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     expect(calls).toEqual([goal]);
     if (width !== 1366) {
       await page.getByTestId("rev-mission-layer-timeline").click();
-      await expect.poll(() => page.locator(".cn-mission-spatial").evaluate((node) => node.scrollLeft)).toBeGreaterThan(0);
+      await expect(page.getByTestId("rev-mission-timeline-pane")).toBeVisible();
+      await expect(page.getByTestId("rev-mission-map-pane")).toBeHidden();
       await expect(page.getByTestId("rev-mission-layer-timeline")).toHaveAttribute("aria-pressed", "true");
       await page.getByTestId("rev-mission-layer-map").click();
-      await expect.poll(() => page.locator(".cn-mission-spatial").evaluate((node) => node.scrollLeft)).toBe(0);
+      await expect(page.getByTestId("rev-mission-map-pane")).toBeVisible();
+      await expect(page.getByTestId("rev-mission-timeline-pane")).toBeHidden();
     }
+    if (width !== 1366) await page.getByTestId("rev-mission-layer-agent").click();
     await dialog.getByRole("button", { name: "刷新任务", exact: true }).click();
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
     await expect(dialog.getByRole("region", { name: "Agent 任务" })).toContainText("1 条来源记录");
     await expect(dialog.getByText("Agent 真实工作过程", { exact: false })).toBeVisible();
+    if (width !== 1366) await page.getByTestId("rev-mission-layer-timeline").click();
     await dialog.locator(".rev-goal-draft-slot summary").first().click();
     await dialog.getByLabel("安排", { exact: true }).fill("TEST_FIXTURE 改为下午三点出发");
     await dialog.getByRole("button", { name: "＋ 添加安排" }).first().click();
@@ -162,9 +169,11 @@ for (const width of [390, 430, 1366]) {
     await page.getByTestId("rev-mobile-tab-trips").click();
     await page.getByTestId("rev-mobile-tab-assistant").click();
     const restoredDialog = page.getByTestId("rev-mission-cockpit");
-    await restoredDialog.locator(".cn-mission-agent-disclosure > summary").click();
+    if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
+    else await restoredDialog.locator(".cn-mission-agent-disclosure > summary").click();
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("TEST_FIXTURE 已保存一处待核实地点。");
     await expect(restoredDialog.getByRole("region", { name: "Agent 任务" })).toContainText("搜索城市地点");
+    if (width !== 1366) await page.getByTestId("rev-mission-layer-timeline").click();
     await restoredDialog.locator(".rev-goal-draft-slot summary").first().click();
     await expect(restoredDialog.getByLabel("安排", { exact: true })).toHaveValue("TEST_FIXTURE 改为下午三点出发");
     expect(calls).toEqual([goal]);
@@ -215,7 +224,8 @@ test("TEST_FIXTURE cached public source is readable without starting a new resea
     localStorage.setItem(`citynexus.revolution.goal-task.${owner}.${journeyId}`, taskId);
   }, { owner, journeyId, taskId });
   await page.goto("/revolution");
-  await page.locator(".cn-mission-agent-disclosure > summary").click();
+  if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
+  else await page.locator(".cn-mission-agent-disclosure > summary").click();
   const task = page.getByRole("region", { name: "Agent 任务", exact: true });
   await task.getByText("工具结果 · 2 次").click();
   await expect(task.getByText("已读取 1 条已有地点来源")).toBeVisible();

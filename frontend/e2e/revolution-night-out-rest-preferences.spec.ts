@@ -135,6 +135,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
 
   await prompt.fill(goal);
   await expect(prompt).toHaveValue(goal);
+  await page.getByRole("button", { name: "对话设置", exact: true }).click();
   const restPreferenceButton = page.getByTestId("rev-quick-ai-rest-preference");
   await expect(restPreferenceButton).toBeVisible();
   await expect(restPreferenceButton).toBeInViewport();

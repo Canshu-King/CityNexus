@@ -207,6 +207,7 @@ async function installRunFixture(page: Page, fixture: RunFixture) {
 async function openRunTrace(page: Page) {
   await page.goto("/revolution");
   await page.getByTestId("rev-mobile-tab-trips").click();
+  if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
   const hermes = page.getByTestId("rev-mobile-hermes");
   const run = hermes.getByTestId("rev-mobile-hermes-run");
   await expect(run).toBeVisible();
@@ -331,7 +332,8 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
   const apiRequestsBeforeClick = apiRequests.length;
   await activityEntry.click();
   await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
-  await page.locator(".cn-mission-agent-disclosure > summary").click();
+  if (await page.getByTestId("rev-mission-layer-agent").isVisible()) await page.getByTestId("rev-mission-layer-agent").click();
+  else await page.locator(".cn-mission-agent-disclosure > summary").click();
   await expect(page.getByRole("region", {name: "Agent 命令台"})).toBeVisible();
   await expect(page.locator("dialog[open]")).toHaveCount(0);
   expect(apiRequests.slice(apiRequestsBeforeClick).every((request) => request.startsWith("GET "))).toBe(true);
