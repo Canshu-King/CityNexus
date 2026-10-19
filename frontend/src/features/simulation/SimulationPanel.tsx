@@ -598,8 +598,8 @@ export function SimulationPanel({
         (lastEventId
           ? null
           : {
-              zh: "重规划要由一个中断触发（服务器要求 trigger_event_id）。先按上面「触发一次中断」。",
-              en: "A replan needs a triggering event (the server requires trigger_event_id). Raise a disruption above first.",
+              zh: "重规划要由一个中断触发。先按上面「触发一次中断」。",
+              en: "A replan needs a triggering event. Raise a disruption above first.",
             }),
       run: async () => {
         await cityNexusApi.generateReplans(
