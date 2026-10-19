@@ -13,6 +13,7 @@ import { GoalDraftEditor } from "./GoalDraftEditor";
 import { GoalDraftVariants } from "./GoalDraftVariants";
 import { GuardianRealityPanel } from "./GuardianRealityPanel";
 import { DestinationMedia } from "./DestinationMedia";
+import { PlacePhotoGallery } from "./PlacePhotoGallery";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import "./MissionCockpit.css";
 
@@ -251,6 +252,7 @@ export function MissionCockpit({
           {allMapPoints.length > focusedMapCount && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>
             {showAllResearch ? "收起其他研究" : `查看其他研究（${allMapPoints.length - mapPoints.length}）`}
           </button>}
+          <PlacePhotoGallery cityName={cityName} places={allMapPoints} />
           {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
