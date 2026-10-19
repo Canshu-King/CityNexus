@@ -18,7 +18,7 @@ type CuratedPhoto = {
 // Do not add arbitrary remote thumbnails based on a fuzzy POI name.
 const LIANCHENG_PHOTOS: CuratedPhoto[] = [
   {
-    placeTest: /冠豸山/,
+    placeTest: /^(?:连城(?:县)?[ ·]*)?冠豸山(?:风景区|景区|国家地质公园)?$/,
     label: "冠豸山",
     filename: "远望冠豸山 - Guanzhai Mountain - 2010.07 - panoramio.jpg",
     author: "rheins",
@@ -26,7 +26,7 @@ const LIANCHENG_PHOTOS: CuratedPhoto[] = [
     licenseHref: "https://creativecommons.org/licenses/by/3.0/",
   },
   {
-    placeTest: /石门湖/,
+    placeTest: /^(?:连城(?:县)?[ ·]*)?石门湖(?:景区|风景区)?$/,
     label: "石门湖",
     filename: "石门湖 - Shimeng Lake - 2010.07 - panoramio - rheins.jpg",
     author: "Wikimedia Commons · 请查看原始授权",
@@ -34,7 +34,7 @@ const LIANCHENG_PHOTOS: CuratedPhoto[] = [
     licenseHref: "",
   },
   {
-    placeTest: /培田(?:古村|村)?/,
+    placeTest: /^(?:连城(?:县)?[ ·]*)?培田(?:古村落|古村|村)$/,
     label: "培田古村",
     filename: "2012 福建 龙岩 连城县 培田古村 - panoramio (3).jpg",
     author: "张元柏",
@@ -73,7 +73,7 @@ export function PlacePhotoGallery({ cityName, places }: { cityName: string; plac
   if (!/连城/.test(cityName)) return null;
   const photos = LIANCHENG_PHOTOS.filter((photo) =>
     places.some((place) => photo.placeTest.test(place.name)
-      && place.region_status !== "CONFLICT"
+      && place.region_status === "MATCHED"
       && place.provider_provenance === "LIVE_PROVIDER"));
   if (photos.length === 0) return null;
   return <section className="cn-place-gallery" aria-label="与研究地点对应的真实景点照片">
