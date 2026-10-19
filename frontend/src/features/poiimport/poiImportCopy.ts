@@ -195,8 +195,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Day it would land on",
   },
   autoDayNote: {
-    zh: "不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。",
-    en: "Leaving the day empty puts these places on the plan's first day. It is said now, not after.",
+    zh: "不填日子就会放进这个计划的第一天。",
+    en: "Leaving the day empty puts these places on the plan's first day.",
   },
   autoDayUnknown: {
     zh: "还没有日子——请选一个",
@@ -299,8 +299,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Paste what you already wrote",
   },
   lede: {
-    zh: "贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。",
-    en: "Paste a note, a list or a link. We read the words we can read locally, show you what each line became, and let you choose before anything is written.",
+    zh: "贴一段笔记、一个清单或一条链接。逐行告诉你读成了什么，写回之前由你确认。",
+    en: "Paste a note, a list or a link. We show you what each line became, and you choose before anything is written.",
   },
   loadFailed: {
     zh: "这段文字没读出来。你写的还在原地，可以再试一次。",
@@ -319,8 +319,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Recognise text or links",
   },
   modesSub: {
-    zh: "今天支持文本与链接；截图也列出来，让缺口有名字。",
-    en: "Text or links today; screenshots are listed so the gap has a name.",
+    zh: "今天支持文本与链接；截图列着，但还不认。",
+    en: "Text or links today; screenshot mode is not live yet.",
   },
   modesTitle: {
     zh: "两条入口",

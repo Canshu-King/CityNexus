@@ -56,7 +56,7 @@ export const accessCopy = {
     "access.orderBroken":
           "The order breaks at row {row}. Below is the order the server sent.",
     "access.orderUnverifiable":
-      "This order cannot be checked from the rows given ({reason}); the rows below are in the order they arrived.",
+      "This order cannot be checked from the rows given ({reason}); the rows are in the order they arrived.",
     /* Why the check compared what it compared, or why it compared nothing.  These are the whole
        sentence's one variable, and the reason lives here rather than in `journeyOrderVerdict.ts`: the
        module knows facts, this file knows the traveller's language.  The stored column names
@@ -112,9 +112,9 @@ export const accessCopy = {
     "access.identityUnknown":
       "This device does not know who you are: this trip carries no traveller the server named.",
     "access.identityUnknownWay":
-      "To go on, pick a trip above whose traveller this server did name.",
+      "To go on, pick a trip whose traveller this server did name.",
     "access.identityStale":
-      "The trip this device stored matches nothing the server lists; pick a trip above.",
+      "The trip this device stored matches nothing the server lists; choose a trip.",
     "access.identityNoSeat":
       "This server has no membership row for you on this trip, so changing or leaving is refused.",
     "access.noAuthorityLine":
@@ -232,7 +232,7 @@ export const accessCopy = {
     "access.refuseSelfExitNotAMember": "This server has no membership row for you on this trip, so there was nothing for you to leave.",
     "access.refuseOwnerCannotLeave": "You are this trip's owner: the server will not let it be left unowned.",
     "access.activityNoSharingWriter":
-      "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
+      "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list holds only the trip's own actions.",
   },
   "zh-CN": {
     "access.title": "成员与权限",
@@ -254,8 +254,8 @@ export const accessCopy = {
        就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
     "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
     "access.orderBroken":
-          "顺序对不上：从第 {row} 行起断了。下面按服务器发来的样子列。",
-    "access.orderUnverifiable": "这一档核不了（{reason}）；下面写的就是行收到的样子。",
+          "顺序对不上：从第 {row} 行起断了。按服务器发来的样子列。",
+    "access.orderUnverifiable": "这一档核不了（{reason}）；写的就是行收到的样子。",
     "access.orderReasonStartAt": "核的是每一程的出发时间",
     "access.orderReasonNoRows": "一行行程都没有回来",
     "access.orderReasonTitle": "核的是行程名",
@@ -346,9 +346,9 @@ export const accessCopy = {
     "access.actionUnknown": "服务器报了一个没有对应说法的动作：{token}。",
     "access.doorLoading": "正在问这台服务器还有谁能到达这条行程…",
     "access.doorAbsent":
-    "这台服务器 {paths} 一扇都没答，今天没有任何一项能真改。下面写的是每一档的含义。",
+    "这台服务器 {paths} 一扇都没答，今天没有任何一项能真改。每档的含义在档位表里。",
     "access.doorPartial":
-    "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。下面写的是每一档的含义。",
+    "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。每档的含义在档位表里。",
     "access.doorPresent":
       "这台服务器三扇共享门都答了。名单与邀请是这几扇的答案。",
     "access.rosterHeading": "这条行程的成员，按成员门答的",
@@ -406,7 +406,7 @@ export const accessCopy = {
     "access.refuseSelfExitNotAMember": "服务器在这条行程上没有你的成员行，所以也没有可退的位置。",
     "access.refuseOwnerCannotLeave": "你是这条行程的主人，服务器不许它变成没有主人。",
     "access.activityNoSharingWriter":
-      "成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。",
+      "成员与邀请这类动作，这台服务器还没往活动流里写，所以只有这条行程自己的动作。",
   },
 } as const;
 

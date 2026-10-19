@@ -33,8 +33,8 @@ export const COLLECTION_COPY = {
     en: "places",
   },
   empty: {
-    zh: "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
-    en: "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.",
+    zh: "还没有收藏。在「城市探索」里挑一枚地点，它就有了落脚的地方。",
+    en: "Nothing collected yet. Pick a place in City Discovery and it will have somewhere to land.",
   },
   noShelf: {
     /* This row renders inside a shelf that the screen has just named and counted, so the sentence
