@@ -273,7 +273,7 @@ export function MissionCockpit({
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布" onScroll={(event) => setLayer(event.currentTarget.scrollLeft > event.currentTarget.clientWidth / 2 ? "timeline" : "map")}>
         <article className="cn-mission-card cn-mission-map cn-mission-map-pane" data-testid="rev-mission-map-pane">
-          <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处{!showAllResearch && itineraryMapPoints.length ? "日程引用" : "研究线索"}</span></div>
+          <div className="cn-mission-map-top"><div className="cn-mission-section-heading"><MapPinned size={18} /><strong>现实地图</strong></div><span>{mapPoints.length} 处地点</span></div>
           {allMapPoints.length > focusedMapCount && <button type="button" className="cn-mission-map-scope" onClick={() => setShowAllResearch((value) => !value)}>
             {showAllResearch ? "收起其他研究" : `查看其他研究（${allMapPoints.length - mapPoints.length}）`}
           </button>}

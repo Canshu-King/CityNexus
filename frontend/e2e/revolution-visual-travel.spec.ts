@@ -89,6 +89,7 @@ for (const width of [390, 430, 1366, 1566]) {
     if (width < 1000) await page.getByTestId("rev-mission-layer-map").click();
     await expect(cockpit.getByTestId("rev-workspace-coordinate-preview")).toBeVisible();
     await cockpit.getByRole("button", { name: /查看其他研究/ }).click();
+    await expect(cockpit.locator(".cn-mission-map-top")).toContainText("3 处地点");
     await expect(cockpit.locator(".rev-workspace-preview-pin")).toHaveCount(2);
     expect(externalTiles).toBe(0);
     await cockpit.getByRole("button", { name: "展开相邻 2 处地点" }).click();
