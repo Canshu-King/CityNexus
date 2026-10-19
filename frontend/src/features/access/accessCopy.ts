@@ -175,7 +175,7 @@ export const accessCopy = {
     "access.doorPartial":
       "This server answered some but not all of the sharing doors; the ones still silent are {paths}. Read the ladders as what each level will mean, not as this trip's state.",
     "access.doorPresent":
-      "This server answered all three sharing doors. The roster and the invitations are its answers.",
+      "All three sharing doors answered. The roster and the invitations are those answers.",
     "access.rosterHeading": "Members of this trip, as the member door answers",
     "access.rosterEmpty": "The member door answered with nobody in the list -- that is its answer, not a load failure.",
     "access.memberRow": "{role} · {name}",
@@ -350,7 +350,7 @@ export const accessCopy = {
     "access.doorPartial":
     "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。每档的含义在档位表里。",
     "access.doorPresent":
-      "这台服务器三扇共享门都答了。名单与邀请是这几扇的答案。",
+      "三扇共享门都答了。名单与邀请就是这几扇的答案。",
     "access.rosterHeading": "这条行程的成员，按成员门答的",
     "access.rosterEmpty": "成员门答了，名单是空的——这是它的答案，不是没读到。",
     "access.memberRow": "{role} · {name}",

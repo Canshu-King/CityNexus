@@ -25,7 +25,7 @@ export const journeyTrashCopy = {
     "trash.sub":
       "Trips in the bin. Each row has one action: bring it back.",
     "trash.loading": "Reading the bin…",
-    "trash.empty": "The bin is empty: this server named no trip in it.",
+    "trash.empty": "The bin is empty.",
     "trash.count": "{n} {plural:trip} in the bin",
     "trash.rowState": "in the bin",
     "trash.rowStateMissing": "this server gave no bin state for this row",
@@ -76,7 +76,7 @@ export const journeyTrashCopy = {
     "trash.title": "回收站",
     "trash.sub": "回收站里的行程。每一行只有一个动作：把它找回来。",
     "trash.loading": "正在读回收站…",
-    "trash.empty": "回收站是空的：这台服务器没有报出任何在站里的行程。",
+    "trash.empty": "回收站是空的。",
     "trash.count": "回收站里有 {n} 条行程",
     "trash.rowState": "在回收站里",
     "trash.rowStateMissing": "服务器没有给出这一行的在站状态",

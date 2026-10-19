@@ -1635,7 +1635,7 @@ const en: Dict = {
   "hub.stayOutcomeNoOffers": "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.",
   "hub.stayOutcomeAllRejected": "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).",
   "hub.stayOutcomeZeroNights": "This trip has no overnight stay, so there is nothing to search for.",
-  "hub.stayOutcomeUnknown": "Your trip is created and its dates are intact — this search returned nothing to compare.",
+  "hub.stayOutcomeUnknown": "Your trip is created — this search returned nothing to compare.",
   "hub.budgetTightCaveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.",
   "hub.budgetReferenceHint":
         "Your budget averaged out; real prices come from providers.",
@@ -3191,7 +3191,7 @@ const zhCN: Dict = {
   "hub.stayOutcomeNoOffers": "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。",
   "hub.stayOutcomeAllRejected": "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。",
   "hub.stayOutcomeZeroNights": "这趟行程不过夜，所以没有住宿可搜。",
-  "hub.stayOutcomeUnknown": "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿。",
+  "hub.stayOutcomeUnknown": "行程已经建好，只是这一次搜索没有可比较的住宿。",
   "hub.budgetTightCaveat": "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。",
   "hub.budgetReferenceHint":
         "按你的预算平均出来的参考值；实付以供应商为准。",
