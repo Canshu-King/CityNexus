@@ -84,6 +84,13 @@ const BANNED = [
   "the trip keeps the stamp it had",
   "the screen's own state",
   "no door that keeps a place without giving it a day",
+  /* Wave 19 retired four more tails -- the screen stopped explaining who it asked or how honest it is.
+     Each of these four was read back out of the tree before pinning (现读 0 处命中), so this list bans
+     the wording itself, not some other module's surviving sentence. */
+  "我们不替它解释",
+  "we do not interpret it",
+  "这不是这张凭证的密钥",
+  "That is not this credential's secret",
 ];
 
 const PENDING_RULING = [

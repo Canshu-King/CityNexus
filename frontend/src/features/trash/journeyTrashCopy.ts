@@ -57,7 +57,7 @@ export const journeyTrashCopy = {
       "No rows to list: the server reported none.",
     "trash.empty.action": "Go to your trips",
     "trash.noViewer":
-      "This device does not know whose bin to ask for, so nothing is shown.",
+      "This device does not know whose bin to ask for.",
     "trash.rowOwnershipMissing": "this server gave no owner for this row",
     "trash.rowOwnedByOther": "kept by another traveller on this server",
     "trash.rowOwnedByMe": "yours on this server",
@@ -100,7 +100,7 @@ export const journeyTrashCopy = {
     "trash.refresh": "再读一次回收站",
     "trash.empty.why": "现在没有行可列。",
     "trash.empty.action": "回到我的行程",
-    "trash.noViewer": "还不知道要问谁的回收站，所以任何人的都不显示。",
+    "trash.noViewer": "还不知道要问谁的回收站。",
     "trash.rowOwnershipMissing": "服务器没有给出这一行的归属",
     "trash.rowOwnedByOther": "由这台服务器上的另一位旅客保管",
     "trash.rowOwnedByMe": "在这台服务器上属于你",

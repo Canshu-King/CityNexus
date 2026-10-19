@@ -1,17 +1,14 @@
 {
  "blessed_by": "copy_restraint_gate_r1.py --bless",
  "counts": {
-  "defensive": 5,
+  "defensive": 2,
   "orphans": 15,
   "pointers": 3
  },
  "sets": {
   "defensive": [
-   "dictionary|zh|live.evidence.serverWordUnexplained",
-   "dictionary|zh|me.recoveryRefusedMismatch",
    "dictionary|zh|trial.sealedUnreadable",
-   "src/features/checkin/footprintCopy.ts|zh|unreachable",
-   "src/features/trash/journeyTrashCopy.ts|en|trash.noViewer"
+   "src/features/checkin/footprintCopy.ts|zh|unreachable"
   ],
   "orphans": [
    "orphans|-|close",

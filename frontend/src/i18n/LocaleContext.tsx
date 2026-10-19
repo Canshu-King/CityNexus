@@ -440,7 +440,7 @@ const en: Dict = {
   "live.acknowledgedStillOpen": "Seen, still open: you have seen these changes but have not chosen a new arrangement yet.",
   "live.confirmedUnchanged": "Confirmed bookings and your arrival/departure stay unchanged.",
   "live.confirmedAffected": "Note: some confirmed items are affected.",
-  "live.evidence.serverWordUnexplained": "the server reported {state}; we do not interpret it",
+  "live.evidence.serverWordUnexplained": "The server reported {state}.",
   "recover.writeDeadline.title": "This device stopped waiting after {seconds} s",
   "recover.writeDeadline.body": "The server did not answer in that time, so the outcome of this write is unknown -- not \"did not happen\".",
   "recover.writeDeadline.retryGuidance": "Refresh and check before deciding to retry; retrying with the same idempotency key re-asks the same write instead of creating a second one.",
@@ -556,7 +556,7 @@ const en: Dict = {
   "me.recoveryRefusedUsed": "That credential has already been used. Use a newer one.",
   "me.recoveryRefusedExpired": "That credential has expired. Create a new one next time you are signed in.",
   "me.recoveryRefusedRevoked": "That credential was revoked.",
-  "me.recoveryRefusedMismatch": "That is not this credential's secret.",
+  "me.recoveryRefusedMismatch": "Wrong secret for this credential.",
   "me.recoveryRefusedLocked": "Too many wrong tries. Wait fifteen minutes, then try again.",
 
   // ── Agent Composer ──
@@ -2061,7 +2061,7 @@ const zhCN: Dict = {
   "live.acknowledgedStillOpen": "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。",
   "live.confirmedUnchanged": "已确认的预订和到达/离开时间保持不变。",
   "live.confirmedAffected": "注意：部分已确认内容会受影响。",
-  "live.evidence.serverWordUnexplained": "服务器报的是 {state}，我们不替它解释",
+  "live.evidence.serverWordUnexplained": "服务器报的是 {state}。",
   "recover.writeDeadline.title": "这台设备等到 {seconds} 秒就停了",
   "recover.writeDeadline.body": "服务端没有在这段时间内回答，所以这一笔的结果是未知的——不是「没有发生」。",
   "recover.writeDeadline.retryGuidance": "请先刷新核对再决定是否重试；同一把幂等键重试是补问同一笔，不会生成第二份。",
@@ -2170,7 +2170,7 @@ const zhCN: Dict = {
   "me.recoveryRefusedUsed": "这张凭证已经用过了，请用更新的一张。",
   "me.recoveryRefusedExpired": "这张凭证过期了。下次还登着的时候再生成一张。",
   "me.recoveryRefusedRevoked": "这张凭证已被撤销。",
-  "me.recoveryRefusedMismatch": "这不是这张凭证的密钥。",
+  "me.recoveryRefusedMismatch": "凭证的密钥不对。",
   "me.recoveryRefusedLocked": "错得太多次，等一刻钟再试。",
 
   // ── Agent Composer ──
