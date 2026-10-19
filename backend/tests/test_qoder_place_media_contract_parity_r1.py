@@ -252,8 +252,7 @@ def test_the_identity_status_vocabulary_is_the_one_the_adapter_can_answer():
     armed = set(place_media.CONFIDENCE_BY_ARM.values())
     documented_confidence = set(schema("PlaceMedia")["properties"]["confidence"]["enum"])
     assert documented_confidence == armed, (
-        "the document says {} while the adapter's arm table is {}".format(
-            sorted(documented_confidence), sorted(armed)))
+        f"the document says {sorted(documented_confidence)} while the adapter's arm table is {sorted(armed)}")
 
 
 def test_the_schema_enums_close_over_the_reason_codes_the_resolver_can_answer():
