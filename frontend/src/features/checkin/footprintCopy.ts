@@ -43,8 +43,8 @@ export type FootprintCopyKey =
 
 const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   scope: {
-    zh: "只列服务器替这次行程记下的印，按天分，天内按打的先后排。",
-    en: "Every row is a stamp the server holds for this trip, grouped by day and, inside a day, in the order they were stamped.",
+    zh: "只列服务器替这次行程记下的印，按天分。",
+    en: "Every row is a stamp the server holds for this trip, grouped by day.",
   },
   /* The day line. `{day}` is filled by the component from the server's own instant, read in the
      journey's timezone -- see `zonePhrase`, which says out loud which zone the split used. */

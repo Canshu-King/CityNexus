@@ -23,7 +23,7 @@ export const journeyTrashCopy = {
   en: {
     "trash.title": "Recycle bin",
     "trash.sub":
-      "The trips this server says are in the bin. Each row has one action: bring it back into your trip list.",
+      "Trips in the bin. Each row has one action: bring it back.",
     "trash.loading": "Reading the bin…",
     "trash.empty": "The bin is empty: this server named no trip in it.",
     "trash.count": "{n} {plural:trip} in the bin",
@@ -74,7 +74,7 @@ export const journeyTrashCopy = {
   },
   "zh-CN": {
     "trash.title": "回收站",
-    "trash.sub": "这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。",
+    "trash.sub": "回收站里的行程。每一行只有一个动作：把它找回来。",
     "trash.loading": "正在读回收站…",
     "trash.empty": "回收站是空的：这台服务器没有报出任何在站里的行程。",
     "trash.count": "回收站里有 {n} 条行程",

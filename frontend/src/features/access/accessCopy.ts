@@ -29,7 +29,7 @@ export const accessCopy = {
   en: {
     "access.title": "Members and access",
     "access.sub":
-      "Who can change this trip, what each visibility level means, and which of that this server can answer today.",
+      "Who can change this trip, and what each visibility level means.",
     "access.pickLabel": "Choose a trip",
     "access.pickNone": "Pick a trip to look at",
     /* A row with no title is named as that. The old control fell back to the trip's uuid, which
@@ -232,11 +232,11 @@ export const accessCopy = {
     "access.refuseSelfExitNotAMember": "This server has no membership row for you on this trip, so there was nothing for you to leave.",
     "access.refuseOwnerCannotLeave": "You are this trip's owner: the server will not let it be left unowned.",
     "access.activityNoSharingWriter":
-      "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list holds only the trip's own actions.",
+      "The list holds this trip's own actions.",
   },
   "zh-CN": {
     "access.title": "成员与权限",
-    "access.sub": "谁能改这条行程、每个可见档位各意味着什么，以及这些里头哪些是这台服务器现在真能答的。",
+    "access.sub": "谁能改这条行程，每个可见档位各意味着什么。",
     "access.pickLabel": "选一条行程",
     "access.pickNone": "先选一条要看的行程",
     "access.tripUntitled": "这条行程回来时没有名字。",
@@ -406,7 +406,7 @@ export const accessCopy = {
     "access.refuseSelfExitNotAMember": "服务器在这条行程上没有你的成员行，所以也没有可退的位置。",
     "access.refuseOwnerCannotLeave": "你是这条行程的主人，服务器不许它变成没有主人。",
     "access.activityNoSharingWriter":
-      "成员与邀请这类动作，这台服务器还没往活动流里写，所以只有这条行程自己的动作。",
+      "清单里是这条行程自己的动作。",
   },
 } as const;
 
