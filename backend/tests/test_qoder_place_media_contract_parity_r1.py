@@ -233,6 +233,29 @@ def test_the_media_answer_carries_exactly_the_declared_keys(world):
 
 
 # ---------------------------------------------------------------- refusals name themselves
+def test_the_identity_status_vocabulary_is_the_one_the_adapter_can_answer():
+    """A renderer decides how much to trust a picture from this word, so the word list is a contract.
+
+    The bound names are derived from the module's own arm table rather than typed out here, and a
+    documented value that appears nowhere in the adapter -- a name the code stopped producing -- is red.
+    """
+    source = Path(place_media.__file__).read_text(encoding="utf-8")
+    minted = {"BOUND_" + arm for arm in place_media.CONFIDENCE_BY_ARM.values()}
+    literals = set(re.findall(r'"([A-Z][A-Z_]{3,})"', source))
+    documented = {value for value in schema("IdentityStatus")["enum"] if value != "null"}
+    missing = sorted(minted - documented)
+    assert not missing, f"the adapter can answer {missing} and the document does not list them"
+    stale = sorted(documented - minted - literals)
+    assert not stale, f"the document lists {stale} which this adapter no longer produces"
+    # The confidence slot is the arm table itself, in both directions: no arm the code cannot fire,
+    # and no fired arm the document forgot.
+    armed = set(place_media.CONFIDENCE_BY_ARM.values())
+    documented_confidence = set(schema("PlaceMedia")["properties"]["confidence"]["enum"])
+    assert documented_confidence == armed, (
+        "the document says {} while the adapter's arm table is {}".format(
+            sorted(documented_confidence), sorted(armed)))
+
+
 def test_the_schema_enums_close_over_the_reason_codes_the_resolver_can_answer():
     """The document must know every code the module can produce -- not the ones I happened to write."""
     source = Path(place_source_lead.__file__).read_text(encoding="utf-8")

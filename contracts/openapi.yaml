@@ -3883,15 +3883,31 @@ components:
         confidence:
           type: string
           nullable: true
-          description: Which arm of the identity binding actually fired
-          enum: [EXACT_LABEL, REGION_ENTITY_MATCH, REGION_CHAIN_LABEL, DESCRIPTION_SUBSTRING, UNKNOWN]
-        identity_status: {type: string, nullable: true, description: BOUND_* for a bound row}
+          description: >
+            Which arm of the identity binding actually fired. The set is the adapter's own arm table:
+            an arm that did not fire is not answerable here, and there is no "unknown" arm -- a row that
+            never bound answers through identity_status instead.
+          enum: [EXACT_LABEL, REGION_ENTITY_MATCH, REGION_CHAIN_LABEL, DESCRIPTION_SUBSTRING]
+        identity_status: {$ref: '#/components/schemas/IdentityStatus'}
         provider_object_id: {type: string, nullable: true, description: The provider's own item id}
         district: {type: string, nullable: true, description: Chinese label of the nearest located-in entity, asked for its own name}
         district_qid: {type: string, nullable: true, description: That located-in entity's own Wikidata id}
         district_matches_region: {type: boolean, nullable: true, description: True when the node is the region itself rather than a district inside it; null when the region was never resolved}
         captured_at: {type: string}
         can_show: {type: boolean, description: False unless a licence lets us display it}
+    IdentityStatus:
+      type: [string, 'null']
+      description: >
+        Which arm of the identity binding actually produced this row, so a screen can decide how much
+        to trust it instead of guessing from a status code. A bound row names its arm
+        (`BOUND_EXACT_LABEL` when the entity label is the place's own name, `BOUND_REGION_ENTITY_MATCH`
+        when both sides resolved to one region entity, `BOUND_REGION_CHAIN_LABEL` when a located-in
+        chain carries the region, `BOUND_DESCRIPTION_SUBSTRING` when only a description mentions it);
+        a row whose binding was refused says `UNBOUND`, and a row whose provider was never asked says
+        `NOT_ASKED`. There is no "bound by something unknown" answer: an arm that did not fire returns
+        `UNBOUND` rather than a guess.
+      enum: [BOUND_EXACT_LABEL, BOUND_REGION_ENTITY_MATCH, BOUND_REGION_CHAIN_LABEL,
+             BOUND_DESCRIPTION_SUBSTRING, UNBOUND, NOT_ASKED, 'null']
     PlaceMediaResponse:
       type: object
       required: [place_id, status, provider_readings, blocked_itinerary]
@@ -3904,7 +3920,7 @@ components:
           type: string
           enum: [REAL_POI_PHOTO, NO_IMAGE, NO_PERMISSION, UNAVAILABLE, NOT_CONFIGURED]
         reason_code: {type: string, nullable: true}
-        identity_status: {type: string, nullable: true}
+        identity_status: {$ref: '#/components/schemas/IdentityStatus'}
         blocked_itinerary:
           type: boolean
           description: Always false here; a missing photograph never blocks a trip

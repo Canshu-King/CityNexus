@@ -3571,12 +3571,11 @@ export interface components {
             provenance?: string | null;
             title?: string | null;
             /**
-             * @description Which arm of the identity binding actually fired
+             * @description Which arm of the identity binding actually fired. The set is the adapter's own arm table: an arm that did not fire is not answerable here, and there is no "unknown" arm -- a row that never bound answers through identity_status instead.
              * @enum {string|null}
              */
-            confidence?: "EXACT_LABEL" | "REGION_ENTITY_MATCH" | "REGION_CHAIN_LABEL" | "DESCRIPTION_SUBSTRING" | "UNKNOWN" | null;
-            /** @description BOUND_* for a bound row */
-            identity_status?: string | null;
+            confidence?: "EXACT_LABEL" | "REGION_ENTITY_MATCH" | "REGION_CHAIN_LABEL" | "DESCRIPTION_SUBSTRING" | null;
+            identity_status?: components["schemas"]["IdentityStatus"];
             /** @description The provider's own item id */
             provider_object_id?: string | null;
             /** @description Chinese label of the nearest located-in entity */
@@ -3589,6 +3588,11 @@ export interface components {
             /** @description False unless a licence lets us display it */
             can_show: boolean;
         };
+        /**
+         * @description Which arm of the identity binding actually produced this row, so a screen can decide how much to trust it instead of guessing from a status code. A bound row names its arm (`BOUND_EXACT_LABEL` when the entity label is the place's own name, `BOUND_REGION_ENTITY_MATCH` when both sides resolved to one region entity, `BOUND_REGION_CHAIN_LABEL` when a located-in chain carries the region, `BOUND_DESCRIPTION_SUBSTRING` when only a description mentions it); a row whose binding was refused says `UNBOUND`, and a row whose provider was never asked says `NOT_ASKED`. There is no "bound by something unknown" answer: an arm that did not fire returns `UNBOUND` rather than a guess.
+         * @enum {string|null}
+         */
+        IdentityStatus: "BOUND_EXACT_LABEL" | "BOUND_REGION_ENTITY_MATCH" | "BOUND_REGION_CHAIN_LABEL" | "BOUND_DESCRIPTION_SUBSTRING" | "UNBOUND" | "NOT_ASKED" | "null" | null;
         PlaceMediaResponse: {
             place_id: string;
             journey_id?: string;
@@ -3597,7 +3601,7 @@ export interface components {
             /** @enum {string} */
             status: "REAL_POI_PHOTO" | "NO_IMAGE" | "NO_PERMISSION" | "UNAVAILABLE" | "NOT_CONFIGURED";
             reason_code?: string | null;
-            identity_status?: string | null;
+            identity_status?: components["schemas"]["IdentityStatus"];
             /** @description Always false here; a missing photograph never blocks a trip */
             blocked_itinerary: boolean;
             media?: components["schemas"]["PlaceMedia"] | null;
