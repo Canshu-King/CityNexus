@@ -133,7 +133,6 @@ class PlaceMedia:
             "place_id": self.place_id,
             "image_url": self.image_url,
             "thumb_url": self.thumb_url,
-            "thumbnail_url": self.thumb_url,
             "author": self.author,
             "license": self.license,
             "source_url": self.source_url,

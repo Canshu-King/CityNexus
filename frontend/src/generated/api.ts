@@ -3554,8 +3554,6 @@ export interface components {
             /** @description Full-size source image */
             image_url: string;
             thumb_url?: string | null;
-            /** @description Same value as thumb_url */
-            thumbnail_url?: string | null;
             /** @description Provider-stated credit */
             author?: string | null;
             license?: string | null;

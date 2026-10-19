@@ -3869,7 +3869,6 @@ components:
         place_id: {type: string}
         image_url: {type: string, description: Full-size source image}
         thumb_url: {type: string, nullable: true}
-        thumbnail_url: {type: string, nullable: true, description: Same value as thumb_url}
         author: {type: string, nullable: true, description: Provider-stated credit, never guessed}
         license: {type: string, nullable: true}
         terms_url: {type: string, nullable: true, description: Licence deed page}

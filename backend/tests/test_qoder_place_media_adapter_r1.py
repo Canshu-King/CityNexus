@@ -120,17 +120,21 @@ async def test_a_bound_commons_answer_carries_author_licence_and_source_page():
     assert payload["status"] == place_media.STATUS_PHOTO
     media = payload["media"]
     # Both written contracts must be readable off one row: the 2026-10-19 order's nine names, and the
-    # visual contract's additions (title/provenance/attribution_url/terms_url/confidence plus its
-    # spelling "thumbnail_url").
+    # visual contract's additions (title/provenance/attribution_url/terms_url/confidence).
     order_fields = {"place_id", "image_url", "thumb_url", "author", "license", "source_url",
                     "provider", "captured_at", "can_show"}
-    visual_fields = {"title", "provenance", "attribution_url", "terms_url", "confidence",
-                     "thumbnail_url"}
+    visual_fields = {"title", "provenance", "attribution_url", "terms_url", "confidence"}
     district_fields = {"district", "district_qid", "district_matches_region"}
     assert order_fields <= set(media), sorted(order_fields - set(media))
     assert visual_fields <= set(media), sorted(visual_fields - set(media))
     assert district_fields <= set(media), sorted(district_fields - set(media))
-    assert media["thumbnail_url"] == media["thumb_url"]
+    # `thumbnail_url` used to ride along as a second spelling of `thumb_url`. Nobody reads it: on
+    # origin/design/revolution-mobile-first-v1 every thumbnail reader says `thumb_url`
+    # (`frontend/src/api/citynexus.ts`, `frontend/src/trial/mobile/DestinationMedia.tsx`,
+    # `frontend/e2e/revolution-source-media.spec.ts`, `frontend/src/generated/api.ts`), and the
+    # authoritative mirror branch reads neither. Two keys that must be kept equal are a rule the
+    # server has to enforce and a client has to guess -- so there is now one name, and this asserts it.
+    assert "thumbnail_url" not in media, sorted(media)
     assert media["attribution_url"] == media["source_url"]
     assert media["provenance"] == "WIKIDATA_P18+COMMONS_IMAGEINFO"
     assert media["confidence"] == "EXACT_LABEL"
