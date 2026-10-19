@@ -41,7 +41,10 @@ if (-not (Test-Path -LiteralPath $Python)) {
     exit 3
 }
 
+# Both names, for one reason: a checkout that has not taken the rename yet reads only the old
+# one, and a wizard that silently does nothing there is worse than one that says what it set.
 $env:CITYNEXUS_AMAP_WEB_KEY = $secret
+$env:AMAP_WEB_KEY = $secret
 if ($DatabaseUrl) { $env:CITYNEXUS_DATABASE_URL = $DatabaseUrl }
 
 Write-Host ('STARTING uvicorn app.main:app on 127.0.0.1:' + $Port + ' from ' + $backend)
@@ -55,4 +58,5 @@ try {
 finally {
     Pop-Location
     Remove-Item Env:\CITYNEXUS_AMAP_WEB_KEY -ErrorAction SilentlyContinue
+    Remove-Item Env:\AMAP_WEB_KEY -ErrorAction SilentlyContinue
 }
