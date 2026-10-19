@@ -97,7 +97,7 @@ export const COLLECTION_COPY = {
     en: "The place was not written onto a shelf.",
   },
   writeUnreachable: {
-    zh: "这台设备没连上服务器，所以这一枚没有写出去。",
+    zh: "没联网，这一枚没有写出去。",
     en: "This device could not reach the server, so nothing was sent.",
   },
   placedInto: {
@@ -105,7 +105,7 @@ export const COLLECTION_COPY = {
     en: "Collected into",
   },
   placedNowhere: {
-    zh: "服务器上的架子里没有这一枚",
+    zh: "这个架子里没有这一枚",
     en: "no shelf on the server carries this one",
   },
   readUnreachable: {

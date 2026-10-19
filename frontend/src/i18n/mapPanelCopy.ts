@@ -173,14 +173,14 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      attribution line, and it rides in `data-cnx-basemap-host` for the gates. A second copy of the host
      in this sentence is what pushed the English arm past the plate's height budget. */
   degradedHeadline: {
-    zh: "底图没接上（网络或瓦片源）：%s 个站照常画着",
+    zh: "底图没接上：%s 个站照常画着",
     en: "No basemap (network or tiles): %s stops still plotted.",
   },
   /* The arm the counted sentence cannot speak: a journey with route geometry and no located stop is not
      a trip whose stops are "still plotted", and saying it anyway would be the plate inventing a comfort
      the data did not hand it. */
   degradedHeadlineNoStops: {
-    zh: "底图没接上（网络或瓦片源）：这一趟没有带位置的站",
+    zh: "底图没接上：这一趟没有带位置的站",
     en: "No basemap (network or tiles): no located stop to plot.",
   },
   degradedRetried: { zh: "已再取过 %s 次，仍没接上。", en: "Reloaded %s times — still no answer." },

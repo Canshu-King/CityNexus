@@ -49,7 +49,7 @@ const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   /* The day line. `{day}` is filled by the component from the server's own instant, read in the
      journey's timezone -- see `zonePhrase`, which says out loud which zone the split used. */
   dayHeading: { zh: "{day}", en: "{day}" },
-  dayZone: { zh: "日期按这趟行程自己的时区（{zone}）分，不按这台设备的钟。",
+  dayZone: { zh: "日期按这趟行程的时区 {zone} 分。",
              en: "Days are split on this trip's own timezone ({zone}), not on this device's clock." },
   noZoneHeading: { zh: "这趟行程没有给出自己的时区，日期按这台设备的钟走。",
                    en: "This trip did not carry a timezone, so the dates follow this device's clock." },

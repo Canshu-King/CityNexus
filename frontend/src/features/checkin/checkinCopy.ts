@@ -40,7 +40,7 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
   /* The duplicate answer has to point at the stamp that won, in the only two terms a traveller can
      check: this stop, and the instant the server wrote.  No uuid. */
   duplicateAt: {
-    zh: "这一站已经打过卡了（服务器记的是 {moment}），这次没有再盖一枚。",
+    zh: "这一站已在 {moment} 打过卡，这次没有再盖。",
     en: "This stop is already stamped ({moment}); nothing new was written.",
   },
   duplicateNoMoment: {
@@ -48,7 +48,7 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
     en: "This stop is already stamped and nothing new was written; the winning stamp's moment did not come back with this answer.",
   },
   activityUnknown: {
-    zh: "这一站已经不在服务器上了，所以这枚打卡没有落下。请回行程列表重新打开这趟。",
+    zh: "这一站已经没了，这枚打卡没有落下。请回行程列表重新打开这趟。",
     en: "That stop is no longer on the server, so this stamp was not written. Open the trip again from your trips list.",
   },
   activityNotInJourney: {
@@ -56,7 +56,7 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
     en: "That stop belongs to another trip, so this stamp was not written. Stamp a stop from this trip's own itinerary.",
   },
   placeUnknown: {
-    zh: "服务器没有那个地点的档案，这枚打卡没有落下。",
+    zh: "那个地点没有档案，这枚打卡没有落下。",
     en: "There is no record of that place, so this stamp was not written.",
   },
   /* The control's own name is interpolated, never written here: the dictionary says what the button
@@ -76,15 +76,15 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
     en: "This trip is in the recycle bin; bring it back before stamping or reading its footprints.",
   },
   journeyUnknown: {
-    zh: "这台服务器上没有这趟行程，所以打卡没有落下。",
+    zh: "找不到这趟行程，这枚打卡没有落下。",
     en: "This server has no such trip, so this stamp was not written.",
   },
   unreachable: {
-    zh: "这一问没有到达服务器，不知道打卡有没有落下。",
+    zh: "这一问没送出去，不知道打卡有没有落下。",
     en: "This request never reached the server, so whether the stamp was written is unknown.",
   },
   unexpected: {
-    zh: "服务器收了这枚打卡，答复叫不出名字（{status}），按没有打卡处理。",
+    zh: "这枚打卡的答复叫不出名字（{status}），按没有打卡处理。",
     en: "The server answered this stamp with a name it does not recognise ({status}); treated as not written.",
   },
 };

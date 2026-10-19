@@ -259,7 +259,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "This plan has no day of its own; type the day you want them on.",
   },
   errJourneyNotFound: {
-    zh: "这台服务器上已经没有这趟行程了。请从今日页重新选一次。",
+    zh: "这趟行程已经没了，请从今日页重新选一次。",
     en: "That journey is not on this server any more. Pick it again from Today.",
   },
   errNoActivePlan: {
@@ -267,7 +267,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Nothing is chosen as the plan yet, so there is no day to add places to.",
   },
   errNoResponse: {
-    zh: "服务器这一问没有回答。什么都没改动。",
+    zh: "这一问没有回答，什么都没改动。",
     en: "The server did not answer this one. Nothing was changed.",
   },
   errPlaceNotVisitable: {
