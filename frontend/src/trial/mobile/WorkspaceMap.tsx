@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { BootstrapDiscoveryCandidate } from "../../api/citynexus";
 import "maplibre-gl/dist/maplibre-gl.css";
+import "./WorkspaceMapPreview.css";
 
 export type WorkspaceMapPoint = Omit<Pick<BootstrapDiscoveryCandidate, "candidate_id" | "name" | "latitude" | "longitude" | "provider_provenance" | "selection_state" | "source_url" | "observation_expired" | "region_status">, "coordinate_system"> & {
   coordinate_system: "WGS84" | "GCJ02";
@@ -42,6 +43,22 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
     && Number.isFinite(point.latitude) && Number.isFinite(point.longitude)), [candidates]);
   const otherCoordinatePoints = candidates.filter((point) => !validPoint(point) && !isAmapPoint(point)
     && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT");
+  // Owner-signed coordinates only. Relative distribution is intentionally NOT a
+  // street map, route, travel distance or GCJ02/WGS84 conversion.
+  const previewPins = useMemo(() => {
+    const sample = points.slice(0, 8);
+    if (sample.length === 0) return [];
+    const lons = sample.map((p) => p.longitude), lats = sample.map((p) => p.latitude);
+    const minLon = Math.min(...lons), maxLon = Math.max(...lons);
+    const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+    const lonSpan = maxLon - minLon, latSpan = maxLat - minLat;
+    return sample.map((point, index) => ({
+      ...point,
+      positionX: lonSpan < 0.00001 ? 50 : 18 + ((point.longitude - minLon) / lonSpan) * 64,
+      positionY: latSpan < 0.00001 ? 50 : 18 + ((maxLat - point.latitude) / latSpan) * 64,
+      index,
+    }));
+  }, [points]);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     if (!allowed || !host.current || points.length === 0) return;
@@ -87,8 +104,22 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect }: {
     <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
     {!points.length && !amapPoints.length && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
     {points.length > 0 && <>
-      {!allowed ? <div className="rev-workspace-map-consent"><p>加载 OpenStreetMap 公开底图，地图服务会收到显示区域的瓦片请求。不读取 GPS。</p>
-        <button type="button" onClick={onAllow}>加载地图</button></div>
+      {!allowed ? <div className="rev-workspace-map-consent">
+        <div className="rev-workspace-map-preview" aria-label="已发现地点的坐标分布预览" data-testid="rev-workspace-coordinate-preview">
+          <span className="rev-workspace-preview-label">地点分布预览 · 未加载外部底图</span>
+          {previewPins.map((point) => (
+            <button type="button" key={point.candidate_id} className="rev-workspace-preview-pin"
+              style={{ left: point.positionX + "%", top: point.positionY + "%", zIndex: 10 + point.index }}
+              onClick={() => onSelect?.(point.candidate_id)}
+              title={point.name} aria-label={"查看 " + point.name + " 对应日程"}>
+              {point.index + 1}
+            </button>
+          ))}
+          <div className="rev-workspace-preview-footer">根据实际坐标显示相对方位，不代表道路或路线</div>
+        </div>
+        <p>点击图钉可定位已保存安排；加载 OpenStreetMap 底图后查看街道与详细位置。不会读取 GPS。</p>
+        <button type="button" onClick={onAllow}>加载地图</button>
+      </div>
         : <div ref={host} className="rev-workspace-map" data-testid="rev-workspace-map-canvas" />}
       {failed && <p role="status">底图暂时没有加载成功，下面的地点列表仍可查看。</p>}
       <ol className="rev-workspace-place-list" aria-label="OpenStreetMap 地点">{points.map((point) => <li key={point.candidate_id}><strong>{point.name}</strong>
