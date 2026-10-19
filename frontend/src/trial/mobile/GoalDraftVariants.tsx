@@ -56,7 +56,7 @@ export function GoalDraftVariants({ variants, disabled = false, onChoose }: Prop
           const unknowns = variant.unknown_summary.map((item) => item.trim().slice(0, 180)).filter(Boolean);
           const detailId = `rev-goal-variant-details-${index}`;
           return (
-            <article className="rev-goal-variant-card" key={variant.id}>
+            <article className="rev-goal-variant-card" key={variant.id} data-plan-style={variant.id} data-expanded={expanded ? "true" : "false"}>
               <div className="rev-goal-variant-card-head">
                 <span className="rev-goal-variant-number">{index + 1}</span>
                 <div className="rev-goal-variant-title">
