@@ -19,17 +19,15 @@
 export const spendCopy = {
   en: {
     "spend.offDay":
-      "{n} priced line is inside the totals above and on no day below: this server sent it an amount " +
-      "with no instant the trip's calendar can place.",
+      "{n} priced line is counted in the totals but on no day: this server sent it an amount with no instant the trip's calendar can place.",
     "spend.offDay.plural":
-      "{n} priced lines are inside the totals above and on no day below: this server sent them amounts " +
-      "with no instant the trip's calendar can place.",
+      "{n} priced lines are counted in the totals but on no day: this server sent them amounts with no instant the trip's calendar can place.",
   },
   "zh-CN": {
     "spend.offDay":
-      "上面合计里有 {n} 笔不在任何一天里：服务器给了它金额，没给能落进这趟日历的时刻。",
+      "合计里有 {n} 笔不在任何一天里：服务器给了它金额，没给能落进这趟日历的时刻。",
     "spend.offDay.plural":
-      "上面合计里有 {n} 笔不在任何一天里：服务器给了它们金额，没给能落进这趟日历的时刻。",
+      "合计里有 {n} 笔不在任何一天里：服务器给了它们金额，没给能落进这趟日历的时刻。",
   },
 } as const;
 

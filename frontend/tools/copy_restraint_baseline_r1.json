@@ -3,7 +3,7 @@
  "counts": {
   "defensive": 7,
   "orphans": 15,
-  "pointers": 7
+  "pointers": 3
  },
  "sets": {
   "defensive": [
@@ -34,10 +34,6 @@
   ],
   "pointers": [
    "src/features/planning/planRankingCopy.ts|en|rank.sortHint",
-   "src/features/trip/spendCopy.ts|en|spend.offDay",
-   "src/features/trip/spendCopy.ts|en|spend.offDay.plural",
-   "src/features/trip/spendCopy.ts|zh|spend.offDay",
-   "src/features/trip/spendCopy.ts|zh|spend.offDay.plural",
    "src/i18n/agentWorkFeedCopy.ts|en|sheetLede",
    "src/i18n/agentWorkFeedCopy.ts|zh|sheetLede"
   ]

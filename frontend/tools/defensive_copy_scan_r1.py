@@ -644,20 +644,33 @@ def selftest() -> int:
                     all(key != "prepSurvey.r2" for _, _, key, _, _ in in_tree)
                     and any(key == "prepSurvey.r2" for _, _, key, _, _ in ANSWER_ROWS),
                     "candidates=%d set aside=%d" % (len(in_tree), len(ANSWER_ROWS))))
-    joined = parse_module(FRONTEND / "src/features/trip/spendCopy.ts")
-    en_off = [value for side, key, value in joined if side == "en" and key == "spend.offDay"]
-    whole = en_off[0] if en_off else ""
-    # Head and tail both, not just the tail: the first version of this control checked only how the value
-    # ended, so it passed while the reader was still returning the last link of the sentence alone.
-    results.append(("a joined literal is read whole -- both links, in order, with the seam kept",
-                    whole.startswith("{n} priced line is inside the totals above")
-                    and "an amount with no instant" in whole
-                    and whole.endswith("calendar can place.") and "+" not in whole,
-                    (whole[:36] + " … " + whole[-24:]) if whole else "(the key was not read at all)"))
-    english_points = sorted(key for _origin, side, key, value in layout_pointers()
-                            if side == "en" and "above" in value)
-    results.append(("the English half of the layout pointers is inside the denominator now",
-                    "spend.offDay" in english_points, str(english_points)[:70]))
+    # The joined-literal read is proven on a sample this file writes, not on a product sentence: two
+    # controls used to quote spendCopy.ts's own wording, and the wave that shortened that sentence turned
+    # them red while the reader was working perfectly. A control that pins product text is a control that
+    # has to be repaired by whoever improves a sentence, which is the wrong way round.
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = Path(tmp) / "joinedCopy.ts"
+        fake.write_text(chr(10).join([
+            "export const joinedCopy = {",
+            '  "en": {',
+            '    "joined.sentence":',
+            '      "the first half of the sentence " +',
+            '      "and the half that used to be invisible.",',
+            "  },",
+            "};",
+            "",
+        ]), encoding="utf-8", newline=chr(10))
+        read = [value for side, key, value in parse_module(fake) if key == "joined.sentence"]
+    results.append(("a sentence split by a plus is read whole -- both links, in order, no leftover seam",
+                    bool(read) and read[0].startswith("the first half")
+                    and read[0].endswith("used to be invisible.") and "+" not in read[0],
+                    (read[0][:56] if read else "(the key was not read at all)")))
+    spend = [value for label, side, key, value in module_copy()
+             if label.endswith("spendCopy.ts") and side == "en" and key == "spend.offDay"]
+    results.append(("a product sentence that used to be split still reaches the denominator in one piece",
+                    bool(spend) and spend[0].startswith("{n} ") and "+" not in spend[0],
+                    (spend[0][:52] if spend else "(no such value on the tree)")))
     dictionary_rows = dictionary_values()
     results.append(("the dictionary is read on both sides",
                     len(dictionary_rows) > 2000 and {side for side, _, _ in dictionary_rows} == {"en", "zh"},
