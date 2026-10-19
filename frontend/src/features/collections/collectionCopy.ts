@@ -93,8 +93,8 @@ export const COLLECTION_COPY = {
     en: "The place behind this stop is not held by this server, so nothing was put away.",
   },
   writeRefused: {
-    zh: "这一枚没能写进架子；理由是这一屏自己的判断，不是服务器给的。",
-    en: "The place was not written onto a shelf. That reason is this app's own state, not the server's.",
+    zh: "这一枚没能写进架子。",
+    en: "The place was not written onto a shelf.",
   },
   writeUnreachable: {
     zh: "这台设备没连上服务器，所以这一枚没有写出去。",

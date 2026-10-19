@@ -207,8 +207,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Nothing is fetched",
   },
   boundarySub: {
-    zh: "识别只跑本部署自己的文本规则和我们已有的地点行。",
-    en: "Extraction runs on this deployment's own text rules and our own place rows.",
+    zh: "识别只看你贴进来的文字和已有的地点。",
+    en: "Extraction reads only the text you paste and the places we already have.",
   },
   brand: {
     zh: "CityNexus",

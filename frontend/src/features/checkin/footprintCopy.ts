@@ -67,8 +67,8 @@ const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   empty: { zh: "还没有足迹。打开行程，在一站上按「打卡」。",
            en: "No footprints yet. Open the itinerary and tap Check in on a stop." },
   emptyWhy: {
-    zh: "只列你自己按出来的印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。",
-    en: "Only stamps you made yourself are listed -- the server does not record any for you. Go to a stop on your itinerary and tap Check in once, and a stamp will appear.",
+    zh: "只列你自己按出来的印。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。",
+    en: "Only stamps you made yourself are listed. Go to a stop on your itinerary and tap Check in once, and a stamp will appear.",
   },
   emptyAction: { zh: "打开行程去打卡", en: "Go check in on a stop" },
   /* Two different failures, two sentences: the order asks the screen to say WHICH step did not

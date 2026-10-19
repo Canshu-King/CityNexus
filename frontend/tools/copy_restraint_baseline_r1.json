@@ -1,7 +1,7 @@
 {
  "blessed_by": "copy_restraint_gate_r1.py --bless",
  "counts": {
-  "defensive": 11,
+  "defensive": 8,
   "orphans": 15,
   "pointers": 5
  },
@@ -10,13 +10,10 @@
    "dictionary|zh|live.evidence.serverWordUnexplained",
    "dictionary|zh|me.recoveryRefusedMismatch",
    "dictionary|zh|trial.sealedUnreadable",
-   "src/features/checkin/footprintCopy.ts|zh|emptyWhy",
    "src/features/checkin/footprintCopy.ts|zh|unreachable",
-   "src/features/collections/collectionCopy.ts|zh|writeRefused",
    "src/features/discovery/prepAbandonSurveyCopy.ts|zh|prepSurvey.r2",
    "src/features/poiimport/poiImportCopy.ts|en|collectNothingConfirmed",
    "src/features/poiimport/poiImportCopy.ts|en|readBackFailed",
-   "src/features/poiimport/poiImportCopy.ts|zh|boundarySub",
    "src/features/trash/journeyTrashCopy.ts|en|trash.noViewer"
   ],
   "orphans": [
