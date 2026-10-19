@@ -276,17 +276,28 @@ def test_budget_and_duration_are_sums_of_the_seeded_rows_not_the_doors_opinion(s
 def test_a_slot_whose_times_this_door_cannot_read_is_named_not_quietly_dropped(seeded, monkeypatch):
     """`activities.start_at` is free text (backend/app/db/models.py:575), so a row can carry anything.
 
+    The pair used here is chosen to be producible under the shipped DDL, not just under `create_all`:
+    `activities` carries `CHECK (end_at > start_at)` (backend/db/schema.sql:257) and that is a text
+    comparison, so a malformed-but-ordered timestamp string passes the constraint and reaches the door.
     A duration quietly shortened by a row the door did not understand would be a number the screen
     cannot question, so the count of unreadable slots rides next to the minutes it left out.
     """
     client = _app(seeded, monkeypatch)
     ids = seeded.ids
+    # Why this pair and not a word: the DDL's `end_at > start_at` compares text, so an unparseable pair
+    # that is still in ascending order passes the constraint and reaches the door -- and neither half
+    # parses, so the arm below cannot be reading real minutes by accident.
+    unreadable_start, unreadable_end = "2026-13-45T99:99:99", "2026-13-46T99:99:99"
+    assert unreadable_end > unreadable_start, "the DDL compares these two as text"
+    for value in (unreadable_start, unreadable_end):
+        with pytest.raises(ValueError):
+            datetime.fromisoformat(value)
     with seeded.factory() as session:
         row = session.scalars(select(Activity).where(
             Activity.plan_version_id == ids["candidate"],
             Activity.sequence_no == 4)).one()
-        row.start_at = "明天下午"
-        row.end_at = "后天上午"
+        row.start_at = unreadable_start
+        row.end_at = unreadable_end
         session.commit()
     duration = _delta(client, ids).json()["duration_delta"]
     assert duration["to_unreadable_slots"] == 1, duration
