@@ -469,3 +469,24 @@
   .rev-mobile-v1 .cn-mission-map-pane, .rev-mobile-v1 .cn-mission-timeline-pane { overflow-y: visible; }
   .rev-mobile-v1 .cn-mission-spatial { max-height: none; }
 }
+
+
+/* DestinationMedia is intentionally allowed visual real estate after all older
+   "compact mission header" overrides. Real scenery is a primary product surface. */
+.rev-mobile-v1 .cn-mission-os .cn-mission-head {
+  min-height: 205px;
+  padding: 28px;
+}
+.rev-mobile-v1 .cn-mission-os .cn-mission-head h2 {
+  max-width: 540px;
+  font-size: clamp(27px,3.1vw,40px) !important;
+}
+@media (max-width: 740px) {
+  .rev-mobile-v1 .cn-mission-os .cn-mission-head {
+    min-height: 205px; padding: 22px 18px 30px;
+  }
+  .rev-mobile-v1 .cn-mission-os .cn-mission-head h2 {
+    max-width: 300px;
+    font-size: 27px !important;
+  }
+}
