@@ -2388,7 +2388,7 @@ paths:
         A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or
         UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place.
         The caller is checked before any image provider is asked: this reads one journey's own places,
-        so it needs traveller credentials (401 without them, `CREDENTIALS_MISSING`), a seat on that
+        so it needs traveller credentials (401 without them, `TRAVELER_CREDENTIALS_MISSING`), a seat on that
         journey held by an owner or an in-force member (403 `JOURNEY_MEMBER_REQUIRED`), and the place
         has to be one this journey actually holds -- a place row from elsewhere answers the same 404 as
         a place that does not exist, so the door cannot be walked to enumerate another traveller's trip.
@@ -2401,7 +2401,7 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/PlaceMediaResponse'}
-        '401': {description: No traveller credentials presented (error.reason_code CREDENTIALS_MISSING)}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
         '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
         '404': {description: Journey not found, or this place is not part of the journey (error.reason_code PLACE_NOT_IN_JOURNEY)}
   /journeys/{journey_id}/place-identity:
@@ -2433,7 +2433,7 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/PlaceLeadResponse'}
-        '401': {description: No traveller credentials presented (error.reason_code CREDENTIALS_MISSING)}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
         '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
         '404':
           description: >

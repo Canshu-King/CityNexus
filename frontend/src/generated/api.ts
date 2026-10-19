@@ -1869,8 +1869,27 @@ export interface paths {
             };
             cookie?: never;
         };
-        /** @description The photograph this product may show for one place, with the identity evidence that bound it. A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place. */
+        /** @description The photograph this product may show for one place, with the identity evidence that bound it. A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place. The caller is checked before any image provider is asked: this reads one journey's own places, so it needs traveller credentials (401 without them, `TRAVELER_CREDENTIALS_MISSING`), a seat on that journey held by an owner or an in-force member (403 `JOURNEY_MEMBER_REQUIRED`), and the place has to be one this journey actually holds -- a place row from elsewhere answers the same 404 as a place that does not exist, so the door cannot be walked to enumerate another traveller's trip. The path value may be a `Place.id` or a source lead that fits in one path segment (`real-place-<hex>`, `rpc-<hex>`, `photon:Q123`); a lead carrying `/` such as `photon:node/2` is resolved through `/place-identity` first, which returns exactly this id. */
         get: operations["getJourneyPlaceMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/place-identity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Which place is this map point? A workspace map carries a source lead -- Photon, Nominatim or a discovery candidate -- and that lead is not a `Place.id`, so the mapping runs here, server-side, against stored identity columns only. Text and urls are refused (`LEAD_NOT_A_PLACE_LEAD`) rather than looked up by name, because name matching is how a same-named landmark in another city gets the wrong photograph; a lead two rows claim is refused as `LEAD_AMBIGUOUS` instead of guessed. The same door as the media read, asked before any lookup: 401 without credentials, 403 without a seat, 404 for a journey that is not there. It asks no image provider, so it costs no provider call, and its `place_id` is what the media path accepts. */
+        get: operations["getJourneyPlaceIdentity"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3584,6 +3603,31 @@ export interface components {
             media?: components["schemas"]["PlaceMedia"] | null;
             /** @description One row per source, including the ones never asked */
             provider_readings: Record<string, never>[];
+        };
+        PlaceLeadResponse: {
+            /** @description The candidate id the client sent */
+            lead: string;
+            /** Format: uuid */
+            journey_id: string;
+            /** @enum {string} */
+            lead_shape: "PLACE_ID" | "CANDIDATE_ID" | "PROVIDER_OBJECT_ID" | "NOT_A_LEAD";
+            /** @enum {string} */
+            status: "RESOLVED" | "UNRESOLVED";
+            /** @enum {string} */
+            reason_code: "LEAD_RESOLVED" | "LEAD_NOT_A_PLACE_LEAD" | "LEAD_AMBIGUOUS" | "CANDIDATE_NOT_MATERIALIZED" | "PLACE_NOT_IN_JOURNEY";
+            /** @description Which identity column answered -- place_id, provider_object_id, candidate_identity */
+            matched_by?: string | null;
+            /** @description Null whenever the lead did not resolve */
+            place_id?: string | null;
+            provider_key?: string | null;
+            provider_object_id?: string | null;
+            /** @description The city_code this product stores for the place */
+            region?: string | null;
+            place_name?: string | null;
+            /** @description The candidate row and the place row disagree on region, so imagery is not trusted */
+            region_conflict?: boolean;
+            /** @description Why a refusal refused */
+            note?: string;
         };
         Place: {
             id: string;
@@ -7494,8 +7538,75 @@ export interface operations {
                     "application/json": components["schemas"]["PlaceMediaResponse"];
                 };
             };
-            /** @description Journey or Place not found */
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyPlaceIdentity: {
+        parameters: {
+            query: {
+                /** @description The map point's candidate id, as it is carried -- no name, no url. */
+                lead: string;
+            };
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resolved identity and region for one lead this journey holds */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaceLeadResponse"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found, or the lead resolves to nothing this journey holds; error.reason_code is one of LEAD_NOT_A_PLACE_LEAD, LEAD_AMBIGUOUS, CANDIDATE_NOT_MATERIALIZED, PLACE_NOT_IN_JOURNEY */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The lead's own candidate row and its place row carry different regions (error.reason_code LEAD_REGION_CONFLICT) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
