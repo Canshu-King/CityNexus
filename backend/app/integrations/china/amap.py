@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import os
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -14,6 +15,59 @@ MODE_PATHS = {
     "TRANSIT": "transit/integrated",
     "AUTO": "driving",
 }
+
+# Two environment names, deliberately ordered. `CITYNEXUS_AMAP_WEB_KEY` is the one this deployment's
+# local configuration tool writes; `AMAP_WEB_KEY` is what has always been read here, so a machine that
+# is already configured keeps answering without anyone re-entering anything. The preferred name wins
+# when both exist, and nothing in this module falls back to a key baked into the source.
+KEY_ENV_PREFERRED = "CITYNEXUS_AMAP_WEB_KEY"
+KEY_ENV_LEGACY = "AMAP_WEB_KEY"
+KEY_PARAM_PATTERN = re.compile(r"([?&])key=[^&]*")
+
+
+def web_key() -> str | None:
+    return os.getenv(KEY_ENV_PREFERRED) or os.getenv(KEY_ENV_LEGACY)
+
+
+def key_env_name() -> str | None:
+    """Which name supplied the key -- the environment variable's own name, never its value."""
+    if os.getenv(KEY_ENV_PREFERRED):
+        return KEY_ENV_PREFERRED
+    if os.getenv(KEY_ENV_LEGACY):
+        return KEY_ENV_LEGACY
+    return None
+
+
+def missing_key_reason() -> str:
+    return f"neither {KEY_ENV_PREFERRED} nor {KEY_ENV_LEGACY} is configured"
+
+
+def sanitize_url(url: str) -> str:
+    """The same URL with the key parameter replaced by a marker.
+
+    This matters because `httpx.HTTPStatusError` prints the whole request URL, and the key travels as a
+    query parameter: an exception that reaches a log line would otherwise carry the secret with it.
+    """
+    return KEY_PARAM_PATTERN.sub(lambda match: match.group(1) + "key=***", url)
+
+
+async def amap_get(client: httpx.AsyncClient, url: str, params: dict[str, Any]) -> httpx.Response:
+    """GET, and fail with a message that cannot contain the key.
+
+    Both the HTTP-status leg and the transport leg are covered: the first one knows the URL, the second
+    one knows only the exception type, and neither hands back a string with `key=` in it.
+    """
+    try:
+        response = await client.get(url, params=params)
+        response.raise_for_status()
+    except httpx.HTTPStatusError as failure:
+        raise RuntimeError(
+            f"Amap answered http_status={failure.response.status_code} for "
+            + sanitize_url(str(failure.request.url))
+        ) from None
+    except httpx.HTTPError as failure:
+        raise RuntimeError(f"Amap request did not complete: {type(failure).__name__}") from None
+    return response
 
 
 @dataclass(frozen=True)
@@ -44,13 +98,13 @@ class NormalizedRoute:
 
 
 def amap_status() -> ProviderStatus:
-    configured = bool(os.getenv("AMAP_WEB_KEY"))
+    configured = web_key() is not None
     return ProviderStatus(
         provider_key="amap-web-service",
         status="READY" if configured else "NOT_CONFIGURED",
         provenance="LIVE" if configured else "UNAVAILABLE",
         coordinate_crs="GCJ02",
-        reason=None if configured else "AMAP_WEB_KEY is absent",
+        reason=None if configured else missing_key_reason(),
     )
 
 
@@ -119,19 +173,23 @@ class AmapPoiProvider:
     provider_key = "amap-web-service"
 
     async def search(self, query: str, city: str, *, limit: int = 10) -> list[dict[str, Any]]:
-        key = os.getenv("AMAP_WEB_KEY")
+        key = web_key()
         if not key:
-            raise RuntimeError("AMAP_WEB_KEY is not configured")
-        params = {
+            raise RuntimeError(missing_key_reason())
+        params: dict[str, Any] = {
             "key": key,
             "keywords": query,
             "region": city,
             "page_size": min(limit, 25),
             "show_fields": "business",
         }
+        if city:
+            # Without this the answer is not restricted to the named administrative region, so a
+            # same-named place in another city is returned as if it were the one the traveller asked
+            # for. The region is a filter, not a hint.
+            params["citylimit"] = "true"
         async with httpx.AsyncClient(timeout=12.0) as client:
-            response = await client.get(f"{AMAP_BASE_URL}/v5/place/text", params=params)
-            response.raise_for_status()
+            response = await amap_get(client, f"{AMAP_BASE_URL}/v5/place/text", params)
             payload = response.json()
         if str(payload.get("status")) != "1":
             raise RuntimeError(str(payload.get("info") or "Amap POI request failed"))
@@ -167,9 +225,9 @@ class AmapMobilityProvider:
     ) -> NormalizedRoute:
         normalized_mode = mode.upper()
         path = MODE_PATHS.get(normalized_mode)
-        key = os.getenv("AMAP_WEB_KEY")
+        key = web_key()
         if not key:
-            raise RuntimeError("AMAP_WEB_KEY is not configured")
+            raise RuntimeError(missing_key_reason())
         if not path:
             raise ValueError(f"Amap does not provide mode {mode}")
         origin_lat, origin_lon = wgs84_to_gcj02(*origin_wgs84)
@@ -183,8 +241,7 @@ class AmapMobilityProvider:
             "show_fields": "cost,polyline",
         }
         async with httpx.AsyncClient(timeout=15.0) as client:
-            response = await client.get(f"{AMAP_BASE_URL}/v5/direction/{path}", params=params)
-            response.raise_for_status()
+            response = await amap_get(client, f"{AMAP_BASE_URL}/v5/direction/{path}", params)
             payload = response.json()
         if str(payload.get("status")) != "1":
             raise RuntimeError(str(payload.get("info") or "Amap route request failed"))
