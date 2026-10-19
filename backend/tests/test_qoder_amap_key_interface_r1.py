@@ -147,3 +147,33 @@ async def test_poi_search_limits_to_the_named_administrative_region(monkeypatch)
     captured.clear()
     await amap.AmapPoiProvider().search("西站", "", limit=5)
     assert "citylimit" not in captured["params"]
+
+def test_no_http_surface_prints_the_key_when_the_provider_is_ready(monkeypatch):
+    """The order said the static key must not reach the browser. This is the machine-checked version.
+
+    A synthetic value goes into the environment the backend reads; the provider-status route is then
+    asked, and the raw response text is searched for it. The test also asserts the key really was
+    configured -- a route that answered NOT_CONFIGURED would pass the absence check for the wrong
+    reason, which is the empty-green this campaign keeps having to write rulers against.
+    """
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    monkeypatch.setenv(amap.KEY_ENV_PREFERRED, FAKE_KEY)
+    client = TestClient(app)
+    answer = client.get('/api/v1/providers/v9')
+    assert answer.status_code == 200
+    body = answer.text
+    payload = answer.json()
+    assert payload['amap']['status'] == 'READY', 'the configured leg must be the one asserting absence'
+    assert payload['amap']['provenance'] == 'LIVE'
+    assert payload['amap']['coordinate_crs'] == 'GCJ02'
+    assert FAKE_KEY not in body
+    assert 'key=' not in body
+
+    monkeypatch.delenv(amap.KEY_ENV_PREFERRED)
+    missing = client.get('/api/v1/providers/v9').json()
+    assert missing['amap']['status'] == 'NOT_CONFIGURED'
+    assert amap.KEY_ENV_PREFERRED in missing['amap']['reason']
+    assert FAKE_KEY not in client.get('/api/v1/providers/v9').text
