@@ -121,8 +121,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
      exit above. So there is no door to wire this radio to, and the honest form of the third exit is a
      refusal that names why. */
   storeOnlyRefusal: {
-    zh: "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，架子是另一个出口。这一项什么都不写。",
-    en: "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and the shelf is the other exit. This option writes nothing.",
+    zh: "这一项没有可写的门：加进计划要落在某一天，只想收着就走架子。",
+    en: "This exit has no door to write through: adding to the plan needs a day; the shelf is for keeping.",
   },
   /* The chosen state of the refused exit: the traveller picked it, so the screen owes a sentence about
      what just happened -- which is that nothing happened, and no write control exists any more. */
@@ -371,12 +371,12 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Try again",
   },
   scopeHint: {
-    zh: "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。",
-    en: "This reads the text you paste. Links to Xiaohongshu notes, WeChat Official Account posts or Feishu docs are named back as unread -- this build opens nobody else's page.",
+    zh: "这里读你粘贴的文字；小红书、公众号、飞书链接只会被点名说没读。",
+    en: "This reads the text you paste; Xiaohongshu, WeChat or Feishu links are named back as unread.",
   },
   screenshotNotSupported: {
-    zh: "这一版没有截图识别。请改贴文字——这个形态是具名不支持，不是悄悄没有。",
-    en: "Screenshot recognition is not in this build. Paste the text instead; the picture form is named, not silently unavailable.",
+    zh: "这一版没有截图识别，请改贴文字。",
+    en: "Screenshot recognition is not in this build; paste the text instead.",
   },
   selectedCount: {
     zh: "已选 {n} / 可加 {total}",
@@ -403,8 +403,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Links are never fetched here; paste the text of the note.",
   },
   verifyWarning: {
-    zh: "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。",
-    en: "These matches are our guess at what you meant. Check each line before adding — a wrong place on a day is yours to remove, not ours to hide.",
+    zh: "这些对照是按你写的东西猜的；加进去之前请逐行核对，放错的日子由你删除。",
+    en: "These matches are guesses at what you wrote — check each line before adding; a wrong day is yours to remove.",
   },
 };
 

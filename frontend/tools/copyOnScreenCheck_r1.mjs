@@ -69,6 +69,21 @@ const BANNED = [
   "we will not invent hotels",
   "Your trip data has not been lost",
   "Nothing about your trip was changed",
+  /* 2026-10-19 第六刀：这六句的尾巴是从「句子里」删掉的 -- 它们解释产品为什么不做事，而不是
+     告诉旅客接下来会怎样。删掉之后原文在整棵树里现读 0 命中（`_copy_pins_1019au.txt:1` 一类的
+     复查漏过不等于没有），所以这里钉住的是「别把它写回来」，不管哪一枚模块。 */
+  "这一版不打开别人的页面",
+  "这个形态是具名不支持，不是悄悄没有",
+  "不由我们藏起来",
+  "行程里还是原来那一枚",
+  "上面这句话是屏自己判断的状态",
+  "这台服务器没有“存下来但不给日子”的门",
+  "opens nobody else's page",
+  "not silently unavailable",
+  "not ours to hide",
+  "the trip keeps the stamp it had",
+  "the screen's own state",
+  "no door that keeps a place without giving it a day",
 ];
 
 const PENDING_RULING = [

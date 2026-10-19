@@ -125,8 +125,8 @@ export const COLLECTION_COPY = {
 export type CollectionCopyKey = keyof typeof COLLECTION_COPY;
 
 export const COLLECTION_REFUSAL = {
-  zh: "这一屏没能从服务器读到架子。上面这句话是屏自己判断的状态，不是服务器给的理由。",
-  en: "This face could not read the shelves from the server. That sentence is the screen's own state, not the server's reason.",
+  zh: "这一屏没能从服务器读到架子。",
+  en: "This face could not read the shelves from the server.",
 } as const;
 
 export const COLLECTION_NO_TRAVELER = {

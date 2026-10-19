@@ -40,8 +40,8 @@ export const CHECKIN_COPY: Record<CheckinCopyKey, { zh: string; en: string }> = 
   /* The duplicate answer has to point at the stamp that won, in the only two terms a traveller can
      check: this stop, and the instant the server wrote.  No uuid. */
   duplicateAt: {
-    zh: "这一站已经打过卡了（服务器记的是 {moment}），这次没有再盖一枚，行程里还是原来那一枚。",
-    en: "This stop is already stamped ({moment}); nothing new was written — the trip keeps the stamp it had.",
+    zh: "这一站已经打过卡了（服务器记的是 {moment}），这次没有再盖一枚。",
+    en: "This stop is already stamped ({moment}); nothing new was written.",
   },
   duplicateNoMoment: {
     zh: "这一站已经打过卡了，这次没有再盖一枚；那一枚的时间这次没有随答案回来。",
