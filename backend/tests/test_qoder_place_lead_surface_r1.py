@@ -356,3 +356,97 @@ async def test_the_geocoder_leg_flows_through_its_real_dataclass_shape(monkeypat
     assert lead.coordinate_system == "WGS84" and lead.native_coordinate_system is None
     assert "adcode" not in lead.verified_fields
     assert result.counts_as_draft_supply is True
+
+
+@pytest.mark.asyncio
+async def test_the_photon_leg_names_itself_on_every_request():
+    """The refusal is real and it is about identity: measured 2026-10-19 on photon.komoot.io.
+
+    Same URL, same params, one second apart: `python-httpx/0.28.1` answered http_status=403 and the
+    product User-Agent answered http_status=200.  So the header belongs to this adapter, not to whoever
+    built the client -- a caller that forgets it must not silently turn "nobody identified themselves"
+    into "this source has nothing".
+    """
+    from app.integrations.discovery.photon import PhotonGeocoder
+    from app.integrations.discovery.provider_identity import PROVIDER_USER_AGENT
+
+    seen: list[str | None] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request.headers.get("user-agent"))
+        return httpx.Response(200, json={"features": []})
+
+    # No headers on the client on purpose: the leg has to carry its own identity.
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        await PhotonGeocoder(client=client, base_url="https://photon.test").search("龙岩")
+
+    assert seen == [PROVIDER_USER_AGENT]
+
+
+@pytest.mark.asyncio
+async def test_a_refused_geocoder_answer_is_a_step_and_not_an_empty_shelf(monkeypatch):
+    """A 403 from the provider is filed as NOT_ANSWERED, never as ANSWERED_EMPTY."""
+    from app.integrations.china import amap as amap_module
+    from app.integrations.discovery.photon import PhotonGeocoder
+
+    monkeypatch.delenv(amap_module.KEY_ENV_PREFERRED, raising=False)
+    monkeypatch.delenv(amap_module.KEY_ENV_LEGACY, raising=False)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(403, text="Forbidden")
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        sources = place_leads.build_sources(
+            city_code="CN-35-08", client=client, photon=PhotonGeocoder(client=client)
+        )
+        result = await place_leads.collect_place_leads("龙岩", region="CN-35-08", sources=sources)
+
+    readings = {row["source"]: row for row in result.provider_readings}
+    assert readings["photon"]["outcome"] == "NOT_ANSWERED_HTTPStatusError"
+    assert readings["photon"]["attempted"] is True
+    assert result.counts_as_draft_supply is False
+
+
+@pytest.mark.asyncio
+async def test_a_matched_geocoder_identity_without_a_point_reaches_the_surface(monkeypatch):
+    """Photon can hand back a relation it never located; that row must arrive, not vanish.
+
+    Before this, `search()` dropped every feature whose geometry was missing, so the nullable
+    `GeocodedPlace.latitude` the module documents could never be produced by this adapter, and the
+    traveller's screen read "not found" for a place a provider had just named.
+    """
+    from app.integrations.china import amap as amap_module
+    from app.integrations.discovery.photon import PhotonGeocoder
+
+    monkeypatch.delenv(amap_module.KEY_ENV_PREFERRED, raising=False)
+    monkeypatch.delenv(amap_module.KEY_ENV_LEGACY, raising=False)
+    payload = {
+        "features": [
+            {"geometry": {}, "properties": {"osm_id": 7, "osm_type": "R", "name": "贡山县", "city": None}},
+            {
+                "geometry": {"coordinates": [98.66, 28.08]},
+                "properties": {"osm_id": 8, "osm_type": "N", "name": "贡山", "country": "中国"},
+            },
+        ]
+    }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json=payload)
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        geocoder = PhotonGeocoder(client=client, base_url="https://photon.test")
+        rows = await geocoder.search("贡山")
+        sources = place_leads.build_sources(
+            city_code="CN-53-33", client=client, photon=geocoder
+        )
+        result = await place_leads.collect_place_leads("贡山", region="CN-53-33", sources=sources)
+
+    assert [row.external_id for row in rows] == ["R:7", "N:8"]
+    assert rows[0].latitude is None and rows[0].longitude is None
+    assert rows[1].latitude == 28.08
+    assert len(result.leads) == 2
+    unlocated = [lead for lead in result.leads if not lead.has_position()]
+    assert [lead.provider_item_id for lead in unlocated] == ["R:7"]
+    assert "position" in unlocated[0].unknown_fields
+    assert unlocated[0].latitude is None
+    assert result.counts_as_draft_supply is True

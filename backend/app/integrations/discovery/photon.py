@@ -5,6 +5,8 @@ from typing import Any
 
 import httpx
 
+from app.integrations.discovery.provider_identity import PROVIDER_USER_AGENT
+
 
 @dataclass(frozen=True)
 class GeocodedPlace:
@@ -41,7 +43,17 @@ class PhotonGeocoder:
         params: dict[str, Any] = {"q": query, "limit": limit}
         if lang:
             params["lang"] = lang
-        response = await self._client.get(f"{self._base_url}/api/", params=params)
+        # The identity rides on the request, not on whoever built the client: this adapter speaks to a
+        # provider that refuses an anonymous `python-httpx` caller (measured 2026-10-19 on
+        # photon.komoot.io -- same URL, same params, `python-httpx/0.28.1` answered http_status=403 and
+        # the product User-Agent answered http_status=200, one second apart).  Left to the caller, every
+        # new `httpx.AsyncClient` re-introduces the refusal, and a refused provider reads as "this source
+        # has nothing" instead of "nobody identified themselves".
+        response = await self._client.get(
+            f"{self._base_url}/api/",
+            params=params,
+            headers={"User-Agent": PROVIDER_USER_AGENT},
+        )
         response.raise_for_status()
         features = response.json().get("features", [])
         result: list[GeocodedPlace] = []
@@ -49,19 +61,21 @@ class PhotonGeocoder:
             geometry = feature.get("geometry", {})
             coordinates = geometry.get("coordinates", [])
             properties = feature.get("properties", {})
-            if len(coordinates) < 2:
-                continue
             name = properties.get("name") or properties.get("street") or properties.get("city")
             osm_id = properties.get("osm_id")
             osm_type = properties.get("osm_type", "unknown")
             if name is None or osm_id is None:
                 continue
+            # A matched identity with no point is kept, not dropped: `GeocodedPlace` declares the gap,
+            # and discarding the row here is how "found but not geocodable" silently became "not found"
+            # -- the caller can only name that state if the row reaches it.
+            has_point = len(coordinates) >= 2
             result.append(
                 GeocodedPlace(
                     external_id=f"{osm_type}:{osm_id}",
                     name=str(name),
-                    latitude=float(coordinates[1]),
-                    longitude=float(coordinates[0]),
+                    latitude=float(coordinates[1]) if has_point else None,
+                    longitude=float(coordinates[0]) if has_point else None,
                     country=properties.get("country"),
                     city=properties.get("city"),
                     raw=feature,
