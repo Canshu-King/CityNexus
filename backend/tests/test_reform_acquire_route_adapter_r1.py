@@ -90,7 +90,7 @@ def _acquire(journey_id: str, **extra: object):
     return client.post(f"/api/v1/agent/tools/{TOOL}", json=payload)
 
 
-def test_r1_tool_is_advertised_as_an_action() -> None:
+def test_r1_route_measurement_is_granted_inside_the_mandate() -> None:
     v1 = {row["name"] for row in client.get("/api/v1/agent/tools").json()}
     v2 = {row["name"] for row in client.get("/api/v1/agent/tools/v2").json()}
     assert TOOL in v2
