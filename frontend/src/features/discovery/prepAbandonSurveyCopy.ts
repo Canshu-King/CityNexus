@@ -36,7 +36,7 @@ export const SURVEY_COPY: Record<"zh" | "en", Record<SurveyKey, string>> = {
     "prepSurvey.max": "这一句最多 200 个字",
     "prepSurvey.over": "超了，先删掉几个字再说",
     "prepSurvey.stored": "这几个答案只写在这台设备上。",
-    "prepSurvey.noDoor": "这台服务器还没有收这个问题的门。",
+    "prepSurvey.noDoor": "这个问题现在还没法回答。",
     "prepSurvey.back": "先不停止，我再看看",
     "prepSurvey.stopAction": "停止这次准备",
   },

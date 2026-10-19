@@ -91,7 +91,7 @@ export const journeyAbortCopy = {
       "这次中止没被接受：它仍在实时行程里，也在你的行程列表里。",
     "abort.unnamed":
       "这次中止被拒绝，但没说清是哪一种情况。",
-    "abort.transport": "服务器没答，这次中止有没有生效不知道。",
+    "abort.transport": "这次没答上，中止有没有生效还不一定。",
     "abort.details": "技术详情",
   },
 } as const;
