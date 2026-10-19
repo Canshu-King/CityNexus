@@ -528,8 +528,8 @@ export function SimulationPanel({
             }
           : !planVersionId
             ? {
-                zh: "舞台上还没有计划（服务器回的 plan_version_id 是空的）。先按上面「准备舞台」，才有可开始的东西。",
-                en: "No plan on the stage yet (the server's plan_version_id is empty). Put a plan on it first; that is what there is to start.",
+                zh: "舞台上还没有计划。先按上面「准备舞台」，才有可以开始的东西。",
+                en: "No plan on the stage yet. Put a plan on it first; that is what there is to start.",
               }
             : null),
       run: async () => {

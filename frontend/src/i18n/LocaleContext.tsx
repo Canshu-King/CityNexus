@@ -39,7 +39,7 @@ const en: Dict = {
   "plan.plansWithoutAiBody":
         "These came from places already found for this city, not from your words. Retry to plan from what you typed — reason under “Technical detail”.",
   "plan.baselineUnavailableBody": "We could not confirm whether this run produced new plans. Please retry or refresh.",
-  "plan.noPlansProducedBody": "The server said no feasible plan came out and gave no reason code. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
+  "plan.noPlansProducedBody": "No feasible plan came out. Your trip is unchanged; the reason is under “Technical detail”. You can retry or try another city.",
   "plan.assistantUnreachableBody": "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
   "plan.couldNotFinishBody": "We could not produce plans this time. Your trip is unchanged; retry or rephrase.",
   "planning.workingOnYourRequest": "Working on your request.",
@@ -992,7 +992,7 @@ const en: Dict = {
   "inbox.confirmUnreadable": "The server did not answer again after the attempt; it is not recorded as passed.",
   "inbox.correctionsSavedStillNeeds": "Corrections saved. The server is still missing {fields}.",
   "inbox.technicalDetail": "Technical detail",
-  "shell.reservationReviewFields": "This cannot become a commitment yet - the server is still missing {fields}. It is in 'Confirmations waiting on you': fill in what is missing, then press 'Confirm and protect'.",
+  "shell.reservationReviewFields": "This is not a commitment yet - {fields} still missing. It is in 'Confirmations waiting on you': fill it in, then press 'Confirm and protect'.",
   "main.cityNexusRequestFailed": "CityNexus request failed",
   "main.cityNexusRequestRefusedHttp": "CityNexus request refused (HTTP {status})",
   "main.persistedOperationUpdate": "Persisted operation update",
@@ -1572,7 +1572,7 @@ const en: Dict = {
   "simulation.sceneWindow": "Scene window",
   "simulation.thePreviousActionHasNotReturnedYet": "The previous action has not returned yet.",
   "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "The server answered with {listed} proposals, {open} still open; 'Accept the proposal' now points at {id}. Accepting is what changes the plan.",
-  "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "The server produced proposals, but none of the {listed} it now lists is open, so \"Accept the proposal\" will refuse and say why on its own line.",
+  "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "None of the {listed} proposals it lists is open, so \"Accept the proposal\" will refuse and say why on its own line.",
   "simulation.thisActionIsUnavailableRightNow": "This action is unavailable right now: {reason}",
 
   // ── ORD-0557 stage header, two remaining rows ──
@@ -1630,7 +1630,7 @@ const en: Dict = {
   "copilot.approval.approve": "Approve",
   "copilot.approval.reject": "Reject",
   "failure.serverRefusedStep": "The server refused this step (HTTP {status}). Your trip is unchanged; check the details and try again.",
-  "failure.serverAnsweredUnusable": "The server answered HTTP {status}, but not with usable data (Content-Type: {contentType}).",
+  "failure.serverAnsweredUnusable": "The server answered HTTP {status}, but not with usable data.",
   "common.unknown": "unknown",
   "hub.stayOutcomeNoOffers": "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.",
   "hub.stayOutcomeAllRejected": "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).",
@@ -1692,7 +1692,7 @@ const zhCN: Dict = {
   "plan.plansWithoutAiBody":
         "这些方案是按城里已找到的地点排的，没读你刚才那段话。要按你的话重排，请重试；原因在“技术详情”里。",
   "plan.baselineUnavailableBody": "无法确认本次是否生成了新方案，请重试或刷新页面。",
-  "plan.noPlansProducedBody": "服务器说这次没排出可行方案，也没给原因编号。你的行程没有被改动，原因原文在「技术详情」里；可以再试一次或换一座城市。",
+  "plan.noPlansProducedBody": "这次没排出可行方案。你的行程没有被改动，原因在「技术详情」里；可以再试一次或换一座城市。",
   "plan.assistantUnreachableBody": "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。",
   "plan.couldNotFinishBody": "这次没能生成方案。你的行程没有被改动，可以重试或换个说法。",
   "planning.workingOnYourRequest": "正在处理你的需求。",
@@ -2589,7 +2589,7 @@ const zhCN: Dict = {
   "inbox.confirmUnreadable": "试过一次，服务器没有再回话；这次没有记作通过。",
   "inbox.correctionsSavedStillNeeds": "更正已保存。服务器说还缺 {fields}。",
   "inbox.technicalDetail": "技术详情",
-  "shell.reservationReviewFields": "这条还不能成为承诺：服务器说还缺 {fields}。它已经在「等你审核的确认单」里，补完缺的就点「确认并保护」。",
+  "shell.reservationReviewFields": "还缺 {fields}，这条还不能成为承诺。它在「等你审核的确认单」里，补完就点「确认并保护」。",
   "main.cityNexusRequestFailed": "CityNexus 请求失败",
   "main.cityNexusRequestRefusedHttp": "CityNexus 请求被拒绝（HTTP {status}）",
   "main.persistedOperationUpdate": "已持久化的操作更新",
@@ -3132,7 +3132,7 @@ const zhCN: Dict = {
   "simulation.sceneWindow": "场景窗口",
   "simulation.thePreviousActionHasNotReturnedYet": "上一个动作还没回来，先等它。",
   "simulation.theServerAnsweredWithProposalsStillOpenAcceptTheProposalBelowNowPointsAtAcceptingIsWhatChangesThePlan": "服务器回了 {listed} 份方案，{open} 份还开着；「接受方案」现在拿的是 {id}。接受才会换计划。",
-  "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "服务器回了方案，但列出的 {listed} 份里没有还开着的那一份，所以「接受方案」按不了——理由在它自己那行。",
+  "simulation.theServerProducedProposalsButNoneOfTheItNowListsIsOpenSoAcceptTheProposalWillRefuseAndSayWhyOnItsOwnLine": "列出的 {listed} 份方案里没有还开着的那一份，所以「接受方案」按不了。",
   "simulation.thisActionIsUnavailableRightNow": "这个动作现在做不了：{reason}",
 
   // ── ORD-0557 stage header, two remaining rows ──
@@ -3186,7 +3186,7 @@ const zhCN: Dict = {
   "copilot.approval.approve": "批准",
   "copilot.approval.reject": "拒绝",
   "failure.serverRefusedStep": "服务器拒绝了这一步（HTTP {status}）。你的行程没有因此改变，可以检查后重试。",
-  "failure.serverAnsweredUnusable": "服务器答了 HTTP {status}，带回来的不是能用的数据（Content-Type: {contentType}）。",
+  "failure.serverAnsweredUnusable": "服务器答了 HTTP {status}，带回来的不是能用的数据。",
   "common.unknown": "未知",
   "hub.stayOutcomeNoOffers": "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。",
   "hub.stayOutcomeAllRejected": "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。",
