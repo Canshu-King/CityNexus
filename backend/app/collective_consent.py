@@ -89,6 +89,12 @@ AUTHORITY_MODE = "MEMBER_CONSENT"
 #: shipped roster projection tests for its `can_authorize_mutation` field.
 REQUIRED_CAPABILITY = "JOURNEY_UPDATE"
 
+#: Words the shipped DDL allows in `journey_members.role` / `.member_state`. The owner arm below
+#: writes the role of the traveller who holds the journey itself, so both are named here rather than
+#: typed inline at two places.
+OWNER_ROLE = "OWNER"
+MEMBER_IN_FORCE = "MEMBER_IN_FORCE"
+
 REASON_BODY = "CONSENT_BODY_TAKES_ONLY_DECISION"
 REASON_DELEGATION = "CONSENT_DELEGATION_REFUSED"
 REASON_DECISION_WORD = "CONSENT_DECISION_WORD_UNKNOWN"
@@ -160,9 +166,30 @@ def required_authority(session: Session, journey) -> tuple[list[str], list[dict[
                 "can_authorize_mutation": REQUIRED_CAPABILITY in capabilities,
             }
         )
+
+    # The journey's own holder may never have got a `journey_members` row: `seat_of` treats
+    # `journeys.traveler_id` as a seat in force for exactly that case, so a consent round that only
+    # looked at member rows could never be answered by the person who owns the trip. The capability
+    # is still read from `journey_role_capabilities` for the OWNER role, never assumed, so narrowing
+    # that table takes the owner out of the round the same instant it takes an ADMIN out.
+    owner_id = str(journey.traveler_id or "")
+    if owner_id and not any(str(row["traveler_id"]) == owner_id for row in rows):
+        owner_capabilities = sorted(_role_capabilities(session, OWNER_ROLE))
+        rows.insert(
+            0,
+            {
+                "member_id": None,
+                "traveler_id": owner_id,
+                "role": OWNER_ROLE,
+                "member_state": MEMBER_IN_FORCE,
+                "capabilities": owner_capabilities,
+                "can_authorize_mutation": REQUIRED_CAPABILITY in owner_capabilities,
+            },
+        )
+
     required = sorted(
         str(row["traveler_id"]) for row in rows
-        if row["member_state"] == "MEMBER_IN_FORCE" and row["can_authorize_mutation"]
+        if row["member_state"] == MEMBER_IN_FORCE and row["can_authorize_mutation"]
     )
     return required, rows
 

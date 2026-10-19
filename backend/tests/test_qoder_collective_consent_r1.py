@@ -194,7 +194,8 @@ def seeded():
                                         mint=str(uuid.uuid4()))
         _journey(session, ids["lonely_journey"], ids["stranger"],
                  active_plan_id=ids["lonely_base"])
-        _member(session, ids["lonely_journey"], ids["stranger"], role="COLLABORATOR")
+        # Deliberately no `journey_members` row here: this is the journey whose owner never invited
+        # anyone, including themselves -- the shape `seat_of` answers with SEAT_OWNER.
         ids["lonely_proposal"] = _proposal(
             session,
             {**ids, "journey": ids["lonely_journey"], "base": ids["lonely_base"],
@@ -381,26 +382,63 @@ def test_a_withdrawn_member_is_not_required_and_cannot_press(seeded, monkeypatch
     assert len(_rows(seeded, AuditLog)) == 0, "a refused press left a consent row"
 
 
-def test_a_round_nobody_can_bind_is_refused_by_name(seeded, monkeypatch):
-    """Every seat on that journey lacks JOURNEY_UPDATE, so no consent could license a plan change."""
+def test_the_journey_owner_with_no_member_row_of_their_own_still_forms_a_round(seeded, monkeypatch):
+    """A journey nobody was invited to is still somebody's journey.
+
+    `seat_of` treats `journeys.traveler_id` as a seat in force; a round that read only member rows
+    would tell that person to invite themselves before they could answer for their own trip. The
+    capability is still asked of `journey_role_capabilities` for the OWNER role, never assumed.
+    """
     client = _app(seeded, monkeypatch)
     ids = seeded.ids
     path = CONSENT.format(ids["lonely_journey"], ids["lonely_proposal"])
 
-    refused = client.post(path, headers={**_header(ids["stranger"]), "Idempotency-Key": "lonely-1"},
+    answer = client.get(path, headers=_header(ids["stranger"])).json()
+    assert answer["required_traveler_ids"] == [ids["stranger"]], answer["required_traveler_ids"]
+    assert len(answer["roster"]) == 1, answer["roster"]
+    assert answer["roster"][0]["member_id"] is None, answer["roster"][0]
+    assert answer["roster"][0]["role"] == collective_consent.OWNER_ROLE, answer["roster"][0]
+    assert answer["counts"] == {"required": 1, "approved": 0, "rejected": 0, "outstanding": 1}, \
+        answer["counts"]
+
+    pressed = client.post(path, headers={**_header(ids["stranger"]),
+                                         "Idempotency-Key": "owner-alone"},
                           json={"decision": "APPROVE"})
+    assert pressed.status_code == 200, pressed.text
+    body = pressed.json()
+    assert body["fulfilled"] is True, body
+    assert body["receipt"]["principal_actor_ids"] == [ids["stranger"]], body["receipt"]
+    # A complete rule still does not decide the plan: the plan door is asked, and refuses.
+    assert body["plan_apply"]["attempted"] is True, body["plan_apply"]
+    assert SHIPPED_EVIDENCE_REFUSAL in body["plan_apply"]["refusal_detail"], body["plan_apply"]
+    assert _plan_rows(seeded)[ids["lonely_candidate"]] == "CANDIDATE"
+
+
+def test_the_round_follows_the_capability_table_whenever_operations_narrows_it(seeded, monkeypatch):
+    """No role list of its own: take JOURNEY_UPDATE out of the table and the round empties out."""
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    from sqlalchemy import delete
+
+    assert _status(client, ids, ids["organiser"]).json()["required_traveler_ids"] != []
+    with seeded.factory() as session:
+        session.execute(delete(JourneyRoleCapability).where(
+            JourneyRoleCapability.capability == collective_consent.REQUIRED_CAPABILITY))
+        session.commit()
+
+    refused = _press(client, ids, ids["organiser"], "APPROVE", "nobody-1")
     assert refused.status_code == 409, refused.text
     body = refused.json()["error"]
     assert body["reason_code"] == collective_consent.REASON_NO_AUTHORITY, body
     detail = body["details"]
-    assert detail["required_capability"] == "JOURNEY_UPDATE", detail
-    assert detail["roles_in_roster"] == ["COLLABORATOR"], detail
+    assert detail["required_capability"] == collective_consent.REQUIRED_CAPABILITY, detail
+    assert detail["roles_in_roster"] == ["ADMIN", "COLLABORATOR", "OWNER"], detail
 
-    # The status door answers the same fact rather than pretending a round exists.
-    answer = client.get(path, headers=_header(ids["stranger"])).json()
+    answer = _status(client, ids, ids["organiser"]).json()
     assert answer["required_traveler_ids"] == [], answer["required_traveler_ids"]
     assert answer["fulfilled"] is False, answer
     assert answer["blocking_code"] == collective_consent.REASON_NO_AUTHORITY, answer
+    assert all(not item["can_authorize_mutation"] for item in answer["roster"]), answer["roster"]
 
 
 def test_a_reject_takes_back_an_issued_round_and_a_later_approve_mints_a_new_one(seeded, monkeypatch):

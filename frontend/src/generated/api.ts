@@ -3344,8 +3344,11 @@ export interface components {
             roster: {
                 /** Format: uuid */
                 traveler_id: string;
-                /** Format: uuid */
-                member_id: string;
+                /**
+                 * Format: uuid
+                 * @description Null for the journey's own holder when no `journey_members` row was ever written for them -- the seat `seat_of` answers as OWNER comes from `journeys.traveler_id`.
+                 */
+                member_id: string | null;
                 /** @enum {string} */
                 role: "OWNER" | "ADMIN" | "COLLABORATOR";
                 /** @enum {string} */

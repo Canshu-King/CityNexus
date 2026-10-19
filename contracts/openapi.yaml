@@ -3898,7 +3898,12 @@ components:
             required: [traveler_id, member_id, role, member_state, can_authorize_mutation, decision]
             properties:
               traveler_id: {type: string, format: uuid}
-              member_id: {type: string, format: uuid}
+              member_id:
+                type: [string, "null"]
+                format: uuid
+                description: >
+                  Null for the journey's own holder when no `journey_members` row was ever written
+                  for them -- the seat `seat_of` answers as OWNER comes from `journeys.traveler_id`.
               role: {type: string, enum: [OWNER, ADMIN, COLLABORATOR]}
               member_state:
                 type: string
