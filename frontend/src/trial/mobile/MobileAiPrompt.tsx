@@ -24,57 +24,14 @@ export type MobileAiAdvice = {
   model: string | null;
 };
 
-export function MobileAiPrompt({
-  value,
-  busy,
-  requestPending = busy,
-  configured,
-  checking = false,
-  advice,
-  onChange,
-  onSubmit,
-}: {
-  value: string;
-  busy: boolean;
-  requestPending?: boolean;
-  configured: boolean;
-  checking?: boolean;
-  advice: MobileAiAdvice | null;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
-}) {
-  const submit = (event: FormEvent) => {
-    event.preventDefault();
-    onSubmit();
-  };
+export function TravelGoalPreferences({value,busy,onChange}: {value:string;busy:boolean;onChange:(value:string)=>void}) {
   const restPreferenceAdded = value.split("\n").includes(NEXT_DAY_REST_PREFERENCE);
   const shortWalkPreferenceAdded = value.split("\n").includes(SHORT_WALK_PREFERENCE);
   const restPreferenceFits = preferenceFits(value, NEXT_DAY_REST_PREFERENCE);
   const shortWalkPreferenceFits = preferenceFits(value, SHORT_WALK_PREFERENCE);
   const rainPreferenceAdded = value.split("\n").includes(RAIN_CONFLICT_PREFERENCE);
   const rainPreferenceFits = preferenceFits(value, RAIN_CONFLICT_PREFERENCE);
-  const promptRows = Math.min(12, Math.max(2, value.split("\n").reduce(
-    (rows, line) => rows + Math.max(1, Math.ceil(line.length / 16)),
-    0,
-  )));
-
   return (
-    <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
-      <div className="rev-quick-ai-title">
-        <strong>想让 AI 帮你想玩法？</strong>
-        <small>{checking ? "正在连接 AI…" : configured ? "可请求 AI 建议" : "AI 建议暂不可用 · 可手动选地点"}</small>
-      </div>
-      <form onSubmit={submit}>
-        <label htmlFor="rev-quick-ai-prompt">写下你的想法</label>
-        <textarea
-          id="rev-quick-ai-prompt"
-          value={value}
-          maxLength={2000}
-          rows={promptRows}
-          style={{ maxHeight: "none" }}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder="比如：今晚想吃点当地特色，再轻松散散步。"
-        />
         <div className="rev-quick-ai-preferences">
           <button
             type="button"
@@ -113,6 +70,55 @@ export function MobileAiPrompt({
               : "加上偏好：核实两站 · 雨天仅排室内"}
           </button>
         </div>
+  );
+}
+
+export function MobileAiPrompt({
+  value,
+  busy,
+  requestPending = busy,
+  configured,
+  checking = false,
+  advice,
+  onChange,
+  onSubmit,
+}: {
+  value: string;
+  busy: boolean;
+  requestPending?: boolean;
+  configured: boolean;
+  checking?: boolean;
+  advice: MobileAiAdvice | null;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+}) {
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    onSubmit();
+  };
+  const promptRows = Math.min(12, Math.max(2, value.split("\n").reduce(
+    (rows, line) => rows + Math.max(1, Math.ceil(line.length / 16)),
+    0,
+  )));
+
+  return (
+    <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
+      <div className="rev-quick-ai-title">
+        <strong>想让 AI 帮你想玩法？</strong>
+        <small>{checking ? "正在连接 AI…" : configured ? "可请求 AI 建议" : "AI 建议暂不可用 · 可手动选地点"}</small>
+      </div>
+      <form onSubmit={submit}>
+        <label htmlFor="rev-quick-ai-prompt">写下你的想法</label>
+        <textarea
+          id="rev-quick-ai-prompt"
+          value={value}
+          maxLength={2000}
+          rows={promptRows}
+          style={{ maxHeight: "none" }}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder="比如：今晚想吃点当地特色，再轻松散散步。"
+        />
+        <TravelGoalPreferences value={value} busy={busy} onChange={onChange} />
         <div className="rev-quick-ai-actions">
           <button
             type="submit"

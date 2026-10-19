@@ -15,8 +15,10 @@ async function fulfill(route: Route, value: unknown) {
 async function signedMockJourney(page: Page, saved = false) {
   await page.addInitScript(({ id }) => {
     window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "fixture-traveler-117");
     window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
       id,
+      ownerTravelerId:"fixture-traveler-117",
       cityCode: "CN-RV-TEST",
       cityName: "连城",
       status: "DRAFT",
@@ -27,6 +29,9 @@ async function signedMockJourney(page: Page, saved = false) {
     hermes_compat_configured: false,
     ai_state: "CONFIGURED_UNVERIFIED",
   }));
+  await page.route(prefix, (r) => fulfill(r, {id:journeyId,status:"DRAFT",timezone:"Asia/Shanghai"}));
+  await page.route(`${prefix}/planning-intent`, (r) => fulfill(r, {journey_id:journeyId,intent:null,candidates:[],trip:{dates:["2026-10-21"],party_size:1,budget:{amount_minor:50000,currency:"CNY"}}}));
+  await page.route(`${prefix}/map-places`, (r) => fulfill(r, {journey_id:journeyId,candidates:[]}));
   await page.route(`${prefix}/bootstrap-discovery/readiness`, (r) => fulfill(r, {
     status: "READY",
     reason_code: "READY",
@@ -114,8 +119,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await page.goto("/revolution");
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-ask-ai-shortcut")).toHaveCount(0);
-    await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("AI 建议暂不可用 · 可手动选地点");
-    await expect(page.getByTestId("rev-quick-consult-ai")).toBeDisabled();
+    await expect(page.locator("#rev-quick-ai-prompt")).toHaveCount(0);
+    await expect(page.getByRole("form",{name:"与当前旅行 Agent 对话"}).getByRole("button",{name:"发送 ↑",exact:true})).toBeDisabled();
   });
 
   test("does not call AI disabled while the local runtime check is still loading", async ({ page }) => {
@@ -132,12 +137,15 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     });
     await page.goto("/revolution");
     await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 正在连接");
-    await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("正在连接 AI…");
-    await expect(page.getByTestId("rev-quick-consult-ai")).toBeDisabled();
+    const composer=page.getByRole("form",{name:"与当前旅行 Agent 对话"});
+    const send=composer.getByRole("button",{name:"发送 ↑",exact:true});
+    await expect(send).toBeDisabled();
     releaseRuntime();
     await expect(page.getByTestId("revolution-agent-runtime").locator("summary")).toHaveText("AI 建议可试");
-    await expect(page.getByTestId("rev-quick-ai-guide").locator("small")).toHaveText("可请求 AI 建议");
-    await expect(page.getByTestId("rev-quick-consult-ai")).toBeEnabled();
+    await composer.locator("textarea").fill("TEST_FIXTURE 轻松看博物馆");
+    await composer.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").check();
+    await expect(send).toBeEnabled();
+    await expect(page.locator("#rev-quick-ai-prompt")).toHaveCount(0);
     await page.getByTestId("rev-mobile-tab-trips").click();
     const draftActivity = page.getByTestId("rev-draft-agent-activity");
     await expect(draftActivity).toBeVisible();
@@ -185,6 +193,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
   test("ACTIVE Journey shows signed Operator status and actions", async ({ page }, testInfo) => {
     await page.addInitScript((id) => {
       window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "fixture-traveler-117");
       window.localStorage.setItem("citynexus.locale", "zh-CN");
       window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
         id, cityCode: "CN-RV-TEST", cityName: "连城", status: "ACTIVE",
@@ -452,6 +461,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     page.on("console", (message) => { if (message.type() === "error") pageErrors.push(message.text()); });
     await page.addInitScript((id) => {
       window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "fixture-traveler-117");
       window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
         id, cityCode: "CN-RV-TEST", cityName: "连城", status: "ACTIVE",
       }));

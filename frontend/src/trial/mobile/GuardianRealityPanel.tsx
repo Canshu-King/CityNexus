@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Activity, Clock3, ShieldCheck } from "lucide-react";
+import { Activity, Clock3, RefreshCw, ShieldCheck } from "lucide-react";
 import { cityNexusApi, type GuardianStream } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import "./GuardianRealityPanel.css";
@@ -142,9 +142,11 @@ function triggerEntries(snapshot: GuardianStream): StreamEntry[] {
 export function GuardianRealityPanel({
   journeyId,
   visible = false,
+  active = false,
 }: {
   journeyId: string;
   visible?: boolean;
+  active?: boolean;
 }) {
   const [snapshot, setSnapshot] = useState<{
     journeyId: string;
@@ -194,6 +196,12 @@ export function GuardianRealityPanel({
     };
   }, [journeyId, visible, identityRevision]);
 
+  useEffect(() => {
+    if (!visible || !active || requestState !== "ready" || !readTravelerBearer()) return;
+    const timer = window.setTimeout(() => setIdentityRevision((revision) => revision + 1), 10_000);
+    return () => window.clearTimeout(timer);
+  }, [visible, active, requestState, identityRevision]);
+
   if (!visible) return null;
 
   const currentBearer = readTravelerBearer();
@@ -212,6 +220,8 @@ export function GuardianRealityPanel({
           <strong>行程守护</strong>
           <span>检查记录与处理进展</span>
         </div>
+        <button type="button" aria-label="刷新行程守护记录" disabled={state === "loading"}
+          onClick={() => setIdentityRevision((revision) => revision + 1)}><RefreshCw size={16} /></button>
       </header>
 
       {state === "loading" && <p className="rev-guardian-state" role="status">正在读取守护记录…</p>}

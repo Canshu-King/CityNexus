@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { cityNexusApi, type TravelPlanningInput, type BootstrapDiscoveryCandidate, type DraftGoalTask, type DraftGoalTaskEvent, type GoalResearchRoute } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap } from "./WorkspaceMap";
+import { TravelGoalPreferences } from "./MobileAiPrompt";
 import { GoalDraftEditor } from "./GoalDraftEditor";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
 import type { GoalResearchLead } from "../../api/citynexus";
@@ -196,6 +197,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [goalTaskSnapshot, setGoalTaskSnapshot] = useState<GoalTaskSnapshot | null>(null);
   const [question, setQuestion] = useState("");
+  const seededGoal = useRef("");
   const [loadError, setLoadError] = useState<string | null>(null);
   const [requestError, setRequestError] = useState<string | null>(null);
   const [modelConsent, setModelConsent] = useState(false);
@@ -261,7 +263,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
       postController.current = null;
       writeBusy.current = false;
       previousContext.current = actor;
-      setQuestion(""); setGoalTaskSnapshot(null); setBusy(false); setRequestError(null);
+      setQuestion(""); seededGoal.current = ""; setGoalTaskSnapshot(null); setBusy(false); setRequestError(null);
       setModelConsent(false); setOnlineResearchConsent(false); setAllowTiles(false); setAiReady(false);
     }
     let cancelled = false;
@@ -281,7 +283,11 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         if (mapPlaces?.journey_id && mapPlaces.journey_id !== actor.id) throw new Error("Map context mismatch");
         setSnapshot({ context: actor, input, status: journey.status,
           mapCandidates: mapPlaces?.journey_id === actor.id && Array.isArray(mapPlaces.candidates) ? mapPlaces.candidates : input.candidates });
-        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value || (savedTask?.[0]?.journey_id === actor.id ? "" : (input.intent?.goal ?? "").slice(0, 2000)));
+        const incomingGoal = savedTask?.[0]?.journey_id === actor.id ? "" : (input.intent?.goal ?? "").slice(0, 2000);
+        const previousSeed = seededGoal.current;
+        seededGoal.current = incomingGoal;
+        setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal
+          : !value.trim() || value === previousSeed ? incomingGoal : value);
         if (savedTask && savedTask[0].journey_id === actor.id) {
           setQuestion((value) => goalRequest?.journeyId === actor.id ? goalRequest.goal : value);
           setGoalTaskSnapshot({ context: actor, value: savedTask[0], events: savedTask[1].events });
@@ -471,6 +477,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
                   <option value="quick">快速研究 · 8轮模型 / 16次工具</option>
                 </select>
               </label>
+              <TravelGoalPreferences value={question} busy={busy} onChange={(value) => { followupMessageId.current = null; setQuestion(value); }} />
               <small>在所选额度内，Agent 会连续查询、比较并保存草案。额度用完后再由你追加。</small>
             </div>
           </details>
@@ -602,7 +609,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
         <label htmlFor="rev-mission-chat-input">{visibleTask ? "继续和当前 Agent 对话" : "告诉 CityNexus 你的旅行目标"}</label>
         <div className="rev-mission-chat-row">
-          <textarea id="rev-mission-chat-input" value={question} rows={1} maxLength={2000}
+          <textarea id="rev-mission-chat-input" value={question} rows={Math.min(4, Math.max(1, question.split("\n").length))} maxLength={2000}
             disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
             placeholder={visibleTask ? "问 Agent：能不能换个地点？帮我查一下交通..." : "说出目标，Agent 会去研究地点、路线和日程..."}/>
           <button type="submit" disabled={!aiReady || busy || !modelConsent || question.trim().length < 4 || visibleTask?.status === "WORKING"}>

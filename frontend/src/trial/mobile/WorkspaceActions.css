@@ -115,3 +115,11 @@
 
 .rev-mission-chat-dock .rev-agent-research-settings { margin: 1px 0; padding: 7px 9px; }
 .rev-mission-chat-dock .rev-agent-research-settings[open] { max-height: 34vh; overflow-y: auto; }
+
+.rev-mission-chat-dock .rev-quick-ai-preferences { display: grid; gap: 6px; }
+.rev-mission-chat-dock .rev-quick-ai-preferences button {
+  width: 100%; min-height: 44px; border: 1px solid #d9e5df; border-radius: 10px;
+  padding: 8px 10px; background: #f7fbf8; color: #365b47; text-align: left;
+  font: inherit; font-size: 11px; line-height: 1.5; cursor: pointer;
+}
+.rev-mission-chat-dock .rev-quick-ai-preferences button[aria-pressed="true"] { background: #e9f4ed; border-color: #96c6a5; }

@@ -108,3 +108,9 @@
   .rev-mobile-v1 .rev-guardian-panel { padding: 11px; }
   .rev-mobile-v1 .rev-guardian-watch-state { margin-left: 0; }
 }
+
+.rev-mobile-v1 .rev-guardian-panel-head > button {
+  margin-left: auto; width: 44px; min-height: 44px; flex: 0 0 44px;
+  display: grid; place-items: center; border: 1px solid #d5e5da; border-radius: 12px;
+  background: #fff; color: #287449; cursor: pointer;
+}

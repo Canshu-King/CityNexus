@@ -323,7 +323,7 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
   await cityLookup.click();
   await expect(cityLookup).toBeDisabled();
   await expect(cityLookup).toHaveText("查询中…");
-  await expect(page.getByTestId("rev-quick-consult-ai")).toHaveText("问问 AI →");
+  await expect(page.locator("#rev-quick-ai-prompt")).toHaveCount(0);
   await expect.poll(() => startupReads.citySearch).toBe(1);
   releaseCityLookup();
   await expect(cityLookup).toBeEnabled();

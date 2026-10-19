@@ -17,6 +17,7 @@ type CityPickerProps = {
   tilesEnabled: boolean;
   mapLink: string;
   aiGoal: string;
+  showAiPrompt?: boolean;
   agentConfigured: boolean;
   agentChecking?: boolean;
   aiAdvice: MobileAiAdvice | null;
@@ -50,6 +51,7 @@ export function CityPicker({
   tilesEnabled,
   mapLink,
   aiGoal,
+  showAiPrompt = true,
   agentConfigured,
   agentChecking = false,
   aiAdvice,
@@ -227,7 +229,7 @@ export function CityPicker({
         />
         <button type="button" onClick={onApplyMapLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
       </details>
-      <MobileAiPrompt
+      {showAiPrompt && <MobileAiPrompt
         value={aiGoal}
         busy={busy}
         requestPending={aiRequestPending}
@@ -239,7 +241,7 @@ export function CityPicker({
           setPendingAction("ai-request");
           onAskAi();
         }}
-      />
+      />}
     </div>
   );
 }

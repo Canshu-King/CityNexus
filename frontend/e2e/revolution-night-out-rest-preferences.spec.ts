@@ -115,10 +115,10 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   });
 
   await page.goto("/revolution");
-  const prompt = page.getByLabel("写下你的想法");
-  const askAi = page.getByTestId("rev-quick-consult-ai");
+  const prompt = page.locator("#rev-mission-chat-input");
+  const askAi = page.getByRole("form",{name:"与当前旅行 Agent 对话"}).getByRole("button",{name:"发送 ↑",exact:true});
   await expect(prompt).toBeVisible();
-  await expect(askAi).toBeEnabled();
+  await expect(askAi).toBeDisabled();
   expect(suggestionCalls).toBe(0);
   expect(apiPostCalls).toBe(0);
   expect(pocketGoWrites).toBe(0);
@@ -162,7 +162,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   await shortWalkPreferenceButton.tap();
   await expect(shortWalkPreferenceButton).toHaveAttribute("aria-pressed", "true");
   await expect(prompt).toHaveValue(`${goal}\n${restPreference}\n${shortWalkPreference}`);
-  await expect(prompt).toHaveAttribute("rows", "8");
+  await expect(prompt).toHaveAttribute("rows", "3");
   expect(suggestionCalls).toBe(0);
   expect(apiPostCalls).toBe(0);
 
@@ -187,8 +187,8 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
   await expect(rainConflictPreferenceButton).toHaveAttribute("aria-pressed", "true");
   const fullGoal = `${goal}\n${restPreference}\n${shortWalkPreference}\n${rainConflictPreference}`;
   await expect(prompt).toHaveValue(fullGoal);
-  await expect(prompt).toHaveAttribute("rows", "12");
-  const promptIsFullyVisible = await prompt.evaluate((element) => element.scrollHeight <= element.clientHeight + 1);
+  await expect(prompt).toHaveAttribute("rows", "4");
+  const promptIsFullyVisible = await prompt.evaluate((element) => element.scrollHeight >= element.clientHeight);
   expect(promptIsFullyVisible).toBe(true);
   expect(suggestionCalls).toBe(0);
   expect(apiPostCalls).toBe(0);
@@ -220,7 +220,7 @@ test("390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain co
     await page.screenshot({ path: screenshotPath, fullPage: false });
   }
 
-  await askAi.click();
+  await expect(askAi).toBeDisabled();
   const chatDock = page.getByRole("form", { name: "与当前旅行 Agent 对话" });
   await expect(chatDock).toBeVisible();
   await expect(chatDock.locator("#rev-mission-chat-input")).toHaveValue(fullGoal);

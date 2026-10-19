@@ -505,7 +505,7 @@ export function RevolutionFirstLook() {
             : runtimeAiState === "PROVIDER_REFUSED"
               ? "先继续挑地点。"
               : agentCanRequestSuggestion
-                ? "写下想法，点「问问 AI」。"
+                ? "在底部告诉 Agent 你想怎么玩。"
                 : "先开始探索。";
 
   const markStartWriteUnknown = (marker: StartWriteState, reason?: "client-deadline") => {
@@ -1096,7 +1096,7 @@ export function RevolutionFirstLook() {
                       placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
                       data-testid="rev-trip-goal"
                     />
-                    <p className="rev-trip-ai-line">保存后，这段想法会带到行程页；你可以修改后再点「问问 AI」。</p>
+                    <p className="rev-trip-ai-line">保存后，这段想法会带到 Agent 输入栏，可以继续聊着修改。</p>
                   </div>
                 </details>
                 <button className="rev-trip-submit" disabled={busy || startWriteBlocked} type="submit" data-testid="rev-firstlook-start">
@@ -1215,6 +1215,7 @@ export function RevolutionFirstLook() {
               {journey.status === "DRAFT" ? (
                 <section className="rev-firstlook-real-ui" aria-label="地点探索与私人散步">
                   <RevolutionQuickExplore
+                    missionMode
                     key={journey.id}
                     journeyId={journey.id}
                     cityName={journey.cityName}
@@ -1272,7 +1273,10 @@ export function RevolutionFirstLook() {
                 onExplore={() => navigateMobile("explore")}
                 onBriefSaved={(brief) => {
                   const bearer = readTravelerBearer();
-                  if (bearer) setServerBrief({ journeyId: journey.id, bearer, goal: tripBriefGoal(brief.goal, brief.interests, brief.energy) });
+                  if (bearer) {
+                    setServerBrief({ journeyId: journey.id, bearer, goal: tripBriefGoal(brief.goal, brief.interests, brief.energy) });
+                    window.dispatchEvent(new Event("citynexus:mission-refresh"));
+                  }
                 }}
               />
               {journey.status === "ACTIVE" ? (

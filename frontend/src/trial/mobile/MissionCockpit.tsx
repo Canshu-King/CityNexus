@@ -278,7 +278,7 @@ export function MissionCockpit({
             <button type="button" aria-expanded={guardianOpen} onClick={() => setGuardianOpen((value) => !value)}><ShieldCheck size={18} /><strong>行程守护</strong></button>
             <button type="button" onClick={onTrip}><Users size={18} /><strong>同行决策</strong></button>
           </div>
-          <GuardianRealityPanel journeyId={journeyId} visible={visible && guardianOpen} />
+          <GuardianRealityPanel journeyId={journeyId} visible={visible && guardianOpen} active={journeyStatus === "ACTIVE"} />
         </article>
       </div>
     </div>

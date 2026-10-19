@@ -212,6 +212,7 @@ export function RevolutionQuickExplore({
   journeyId,
   cityName,
   initialGoal,
+  missionMode = false,
   agentConfigured = false,
   agentChecking = false,
   onFormalCandidateSelected,
@@ -222,6 +223,7 @@ export function RevolutionQuickExplore({
   journeyId: string;
   cityName: string;
   initialGoal?: string;
+  missionMode?: boolean;
   agentConfigured?: boolean;
   agentChecking?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
@@ -825,6 +827,10 @@ export function RevolutionQuickExplore({
   const goState = walk?.go_progress.state;
 
   const focusAiPrompt = () => {
+    if (missionMode) {
+      document.getElementById("rev-mission-chat-input")?.focus();
+      return;
+    }
     const prompt = quickExploreRef.current?.querySelector<HTMLTextAreaElement>("#rev-quick-ai-prompt");
     if (!prompt) return;
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -848,7 +854,7 @@ export function RevolutionQuickExplore({
               : "想去哪儿逛逛？"}
         </h2>
         <p>
-          {stage === "area" && "先选地区，再挑兴趣和地点。AI 只在你点击后参与；地图打不开也能继续。"}
+          {stage === "area" && "这里可以手动查找地点，也可以在底部告诉 Agent 你的旅行目标。"}
           {stage === "category" && "位置已选好。你可以直接输入地点或玩法关键词；四种分类只是备用查找方式。"}
           {stage === "results" && !isPartialLiveResult && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
           {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
@@ -914,6 +920,7 @@ export function RevolutionQuickExplore({
             tilesEnabled={tilesEnabled}
             mapLink={mapLink}
             aiGoal={aiGoal}
+            showAiPrompt={!missionMode}
             agentConfigured={agentConfigured}
             agentChecking={agentChecking}
             aiAdvice={aiAdvice}
