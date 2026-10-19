@@ -28,7 +28,7 @@ export function DestinationMedia({ cityName }: { cityName: string }) {
         </div>}
     {scene && !failed
       ? <div className="cn-mission-media-credit">
-          <a href={scene.page} target="_blank" rel="noopener noreferrer">冠豸山实景</a>
+          <a href={scene.page} target="_blank" rel="noopener noreferrer">冠豸山实景（封面裁切）</a>
           <span> · {scene.credit} / <a href={scene.license} target="_blank" rel="noopener noreferrer">CC BY 3.0</a></span>
         </div>
       : <div className="cn-mission-media-credit is-illustration"><ImageOff size={12} aria-hidden="true" /> 场景插画 · 非真实地点照片</div>}
