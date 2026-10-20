@@ -29,7 +29,7 @@ import {
 import { AgentRunRail, type AgentRailStep } from "./AgentRunRail";
 import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failureAttribution";
 import { useLocale } from "../../i18n/LocaleContext";
-import { agentWorkCopy, aiStateGloss } from "../../i18n/agentWorkFeedCopy";
+import { agentEventGloss, agentWorkCopy, aiStateGloss } from "../../i18n/agentWorkFeedCopy";
 import "./agentWorkFeed.css";
 
 type FeedState = "loading" | "ready" | "refused";
@@ -71,23 +71,8 @@ function humanSummary(eventType: string, summary: string | null | undefined): st
 
 /** 服务器写的事件类型 → 人读的一句话。词表外的一律回 null，屏上就不假装看懂了。 */
 function eventGloss(locale: string, eventType: string): string | null {
-  const zh = locale.startsWith("zh");
-  const table: Record<string, [string, string]> = {
-    "journey.created": ["行程已创建", "the trip was created"],
-    "traveler.created": ["旅行者已建立", "a traveller was created"],
-    "journey.updated": ["行程资料有更新", "the trip details changed"],
-    "journey.deleted": ["行程已删除", "the trip was deleted"],
-    "agent_tool_requested": ["AI 请求使用一个工具", "the AI asked to use a tool"],
-    "replan_requested": ["AI 请求重排行程", "the AI asked to re-plan"],
-    "impact_hypothesis_created": ["影响假设已记录", "an impact hypothesis was recorded"],
-    "impact_corroborated": ["影响已被佐证", "an impact was corroborated"],
-    "impact_validated": ["影响已核实", "an impact was validated"],
-    "proposal.created": ["方案已生成", "a proposal was created"],
-    "approval.required": ["等待你的确认", "your approval is needed"],
-  };
-  const hit = table[eventType.toLowerCase()];
-  if (!hit) return null;
-  return zh ? hit[0] : hit[1];
+  const key = agentEventGloss(locale, eventType);
+  return key ? agentWorkCopy(locale, key) : null;
 }
 
 /** 服务器给的时间是 ISO；屏上不铺原始串（ORD-0423 那条同一件事）。 */

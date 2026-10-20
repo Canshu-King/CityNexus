@@ -38,7 +38,18 @@ export type AgentWorkCopyKey =
   | "stateConfiguredUnverified"
   | "stateNotConfigured"
   | "stateDisabledByOps"
-  | "stateProviderRefused";
+  | "stateProviderRefused"
+  | "evtJourneyCreated"
+  | "evtTravelerCreated"
+  | "evtJourneyUpdated"
+  | "evtJourneyDeleted"
+  | "evtToolRequested"
+  | "evtReplanRequested"
+  | "evtImpactHypothesis"
+  | "evtImpactCorroborated"
+  | "evtImpactValidated"
+  | "evtProposalCreated"
+  | "evtApprovalRequired";
 
 const TABLE: Record<"en" | "zh", Record<AgentWorkCopyKey, string>> = {
   en: {
@@ -74,6 +85,17 @@ const TABLE: Record<"en" | "zh", Record<AgentWorkCopyKey, string>> = {
     stateNotConfigured: "not configured on this deployment",
     stateDisabledByOps: "disabled by operations",
     stateProviderRefused: "the model provider refused",
+    evtJourneyCreated: "the trip was created",
+    evtTravelerCreated: "a traveller was created",
+    evtJourneyUpdated: "the trip details changed",
+    evtJourneyDeleted: "the trip was deleted",
+    evtToolRequested: "the AI asked to use a tool",
+    evtReplanRequested: "the AI asked to re-plan",
+    evtImpactHypothesis: "an impact hypothesis was recorded",
+    evtImpactCorroborated: "an impact was corroborated",
+    evtImpactValidated: "an impact was validated",
+    evtProposalCreated: "a proposal was created",
+    evtApprovalRequired: "your approval is needed"
   },
   zh: {
     entryToday: "AI 工作动态",
@@ -108,6 +130,17 @@ const TABLE: Record<"en" | "zh", Record<AgentWorkCopyKey, string>> = {
     stateNotConfigured: "这个部署未配置",
     stateDisabledByOps: "被运维停用",
     stateProviderRefused: "模型侧拒绝",
+    evtJourneyCreated: "行程已创建",
+    evtTravelerCreated: "旅行者已建立",
+    evtJourneyUpdated: "行程资料有更新",
+    evtJourneyDeleted: "行程已删除",
+    evtToolRequested: "AI 请求使用一个工具",
+    evtReplanRequested: "AI 请求重排行程",
+    evtImpactHypothesis: "影响假设已记录",
+    evtImpactCorroborated: "影响已被佐证",
+    evtImpactValidated: "影响已核实",
+    evtProposalCreated: "方案已生成",
+    evtApprovalRequired: "等待你的确认"
   },
 };
 
@@ -136,4 +169,27 @@ export function aiStateGloss(
     default:
       return null;
   }
+}
+
+
+/**
+ * 服务器写的事件类型 → 字典键。词表外的一律回 `null`，与 `aiStateGloss` 同一条规矩：
+ * 判不出就不给说法，而不是猜一句中文糊在屏幕上。
+ */
+const EVENT_GLOSS: Record<string, AgentWorkCopyKey> = {
+  "journey.created": "evtJourneyCreated",
+  "traveler.created": "evtTravelerCreated",
+  "journey.updated": "evtJourneyUpdated",
+  "journey.deleted": "evtJourneyDeleted",
+  "agent_tool_requested": "evtToolRequested",
+  "replan_requested": "evtReplanRequested",
+  "impact_hypothesis_created": "evtImpactHypothesis",
+  "impact_corroborated": "evtImpactCorroborated",
+  "impact_validated": "evtImpactValidated",
+  "proposal.created": "evtProposalCreated",
+  "approval.required": "evtApprovalRequired",
+};
+
+export function agentEventGloss(locale: string, eventType: string): AgentWorkCopyKey | null {
+  return EVENT_GLOSS[String(eventType).toLowerCase()] || null;
 }
