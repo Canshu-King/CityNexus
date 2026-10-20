@@ -300,7 +300,14 @@ def compile_semantic_envelope(
                 "If the user states a capability or accessibility need, include only a bounded capability "
                 "item with code, severity, and params. Do not claim a place or route is accessible; "
                 "accessibility evidence belongs to CityNexus provider or frozen facts. "
-                "reasoning_summary must be concise and user-safe; do not reveal hidden reasoning."
+                "reasoning_summary must be concise and user-safe; do not reveal hidden reasoning. "
+                # The shape travels with the words as well as with `response_format`: a transport whose
+                # upstream ignores the structured-output field leaves the model nothing to fill, and it
+                # then answers by echoing the input it was given -- which is not an envelope and falls
+                # back. Naming the schema in the prompt changes what the model can return, never what
+                # this function accepts: the envelope still has to parse.
+                "The required schema, verbatim: "
+                + json.dumps(SEMANTIC_ENVELOPE_SCHEMA, ensure_ascii=False, sort_keys=True)
             ),
         },
         {
