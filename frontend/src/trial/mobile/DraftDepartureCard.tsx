@@ -31,6 +31,12 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setMessage(""); setConfirmed(false); }), []);
   const days = task.draft_artifact?.days ?? [];
   if (!schedule.length) return null;
+  const pending = new Map<number, { title: string; kinds: string[] }>();
+  for (const gap of result?.gaps ?? []) {
+    const row = pending.get(gap.sequence_no) ?? { title: gap.title, kinds: [] };
+    if (!row.kinds.includes(gap.kind)) row.kinds.push(gap.kind);
+    pending.set(gap.sequence_no, row);
+  }
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
     setConfirmed(false); setResult(null); requestKey.current = null;
@@ -56,7 +62,8 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   };
   return <section className="rev-v3-departure" aria-label="当前草案的出发准备">
     <h3>从这份安排继续</h3>
-    <p>保留已选地点和日期，先确认每天的时间。</p>
+    <p>{result ? `${result.slots_count} 项安排已保存，刷新也能找回。` : "保留已选地点和日期，先确认每天的时间。"}</p>
+    <details open={!result}><summary>{result ? "已确认时间 · 查看或调整" : "确认每天的时间"}</summary>
     <fieldset disabled={busy || task.status === "WORKING"}>
       {schedule.map((stamp, index) => {
         const day = days[stamp.day_index], slot = day?.slots[stamp.slot_index];
@@ -70,8 +77,9 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       <label><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)} />按以上时间准备方案</label>
       <button type="button" disabled={!confirmed || busy || Boolean(result)} onClick={() => void prepare()}>{busy ? "正在保存安排…" : result ? "安排已保存" : "保存为正式候选方案"}</button>
     </fieldset>
+    </details>
     {message && <p role="status">{message}</p>}
-    {result && result.gaps.length > 0 && <><h4>出发待办</h4><ul>{[...new Set(result.gaps.map(item => `${item.title} · ${gapCopy[item.kind] ?? "资料"}`))].map(item => <li key={item}>{item}</li>)}</ul></>}
+    {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, row]) => <li key={sequence}><strong>{row.title}</strong><span>{row.kinds.map(kind => gapCopy[kind] ?? "资料").join(" · ")}</span></li>)}</ul></>}
     <button type="button" onClick={() => onDiscuss("继续讨论当前选好的草案，保留所有日期和地点。逐项告诉我出发前缺哪些营业、费用或转场资料，并给我处理选择，先不要改行程。")}>和 Agent 补齐出发资料</button>
   </section>;
 }

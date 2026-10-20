@@ -67,7 +67,7 @@ for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates 
   await page.reload();
   await page.getByTestId("rev-mobile-tab-trips").click();
   await expect(page.getByTestId("rev-plan-option")).toContainText("TEST_FIXTURE 原草案");
-  await expect(page.getByRole("button",{name:"安排已保存",exact:true})).toBeDisabled();
+  await expect(page.getByRole("region",{name:"当前草案的出发准备"})).toContainText("1 项安排已保存，刷新也能找回。");
   expect(puts).toBe(0);expect(prepares).toBe(1);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
 });
