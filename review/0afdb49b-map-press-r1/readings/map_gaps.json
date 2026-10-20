@@ -1,0 +1,124 @@
+{
+ "schema": "CNX_MAP_GAP_PROBE_R1",
+ "base": "http://127.0.0.1:4895",
+ "got": {
+  "stops": [
+   {
+    "top": 998,
+    "bottom": 1033,
+    "left": 40,
+    "right": 350,
+    "h": 35,
+    "w": 310,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "normal",
+    "pe": "auto",
+    "testid": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80"
+   },
+   {
+    "top": 1053,
+    "bottom": 1088,
+    "left": 40,
+    "right": 350,
+    "h": 35,
+    "w": 310,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "normal",
+    "pe": "auto",
+    "testid": "map-stop-abe4e842-249e-516f-ac43-b41695083792"
+   },
+   {
+    "top": 1108,
+    "bottom": 1143,
+    "left": 40,
+    "right": 350,
+    "h": 35,
+    "w": 310,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "normal",
+    "pe": "auto",
+    "testid": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee"
+   },
+   {
+    "top": 1163,
+    "bottom": 1198,
+    "left": 40,
+    "right": 350,
+    "h": 35,
+    "w": 310,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "normal",
+    "pe": "auto",
+    "testid": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6"
+   },
+   {
+    "top": 1218,
+    "bottom": 1253,
+    "left": 40,
+    "right": 350,
+    "h": 35,
+    "w": 310,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "normal",
+    "pe": "auto",
+    "testid": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036"
+   },
+   {
+    "top": 1273,
+    "bottom": 1308,
+    "left": 40,
+    "right": 350,
+    "h": 35,
+    "w": 310,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "normal",
+    "pe": "auto",
+    "testid": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837"
+   }
+  ],
+  "stop_gaps": [
+   20,
+   20,
+   20,
+   20,
+   20
+  ],
+  "controls": [
+   {
+    "top": 369,
+    "bottom": 405,
+    "left": 230,
+    "right": 360,
+    "h": 36,
+    "w": 130,
+    "mt": "12px",
+    "mb": "0px",
+    "gap": "8px",
+    "pe": "auto",
+    "testid": "map-viewport-reset"
+   }
+  ],
+  "control_gaps": [],
+  "controls_wrap": {
+   "gap": "normal",
+   "pe": "auto",
+   "box": [
+    130,
+    48
+   ]
+  },
+  "list_style": {
+   "gap": "8px",
+   "box": [
+    310,
+    246
+   ]
+  }
+ }
+}

@@ -1,0 +1,91 @@
+{
+ "schema": "CNX_MAP_PRESS_AFTER_R2",
+ "base": "http://127.0.0.1:4895",
+ "started": "Wed Oct 21 2026 04:41:27 GMT+0800 (中国标准时间)",
+ "controls": [
+  {
+   "sel": ".v8-map-page-grid .v8-map-stop",
+   "painted": [
+    310,
+    35
+   ],
+   "pressable": [
+    82,
+    44
+   ],
+   "role": null,
+   "tabindex": null,
+   "pe": "auto",
+   "aria": "在地图上定位 Old Town Gate",
+   "pressed_attr": "false",
+   "viewport_state": null
+  },
+  {
+   "sel": ".v8-map-panel .v8-map-viewport-control",
+   "painted": [
+    130,
+    36
+   ],
+   "pressable": [
+    82,
+    44
+   ],
+   "role": null,
+   "tabindex": null,
+   "pe": "auto",
+   "aria": "视野正落在这段行程上",
+   "pressed_attr": "false",
+   "viewport_state": "on-target"
+  },
+  {
+   "sel": ".v9-map-marker",
+   "painted": [
+    34,
+    34
+   ],
+   "pressable": [
+    34,
+    36
+   ],
+   "role": "button",
+   "tabindex": "0",
+   "pe": "auto",
+   "aria": "Old Town Gate",
+   "pressed_attr": "false",
+   "viewport_state": null
+  },
+  {
+   "sel": ".v8-map-stop-label",
+   "painted": [
+    105,
+    22
+   ],
+   "pressable": [
+    2,
+    2
+   ],
+   "role": null,
+   "tabindex": null,
+   "pe": "none",
+   "aria": "",
+   "pressed_attr": null,
+   "viewport_state": null
+  }
+ ],
+ "taps": [
+  {
+   "what": "stop list row (third)",
+   "before": "false",
+   "after": "true",
+   "pins_now_pressed": 1
+  },
+  {
+   "what": "re-centre",
+   "before": "on-target",
+   "after": "on-target"
+  }
+ ],
+ "errors": [],
+ "horizontal_overflow": false,
+ "finished": "Wed Oct 21 2026 04:41:37 GMT+0800 (中国标准时间)"
+}

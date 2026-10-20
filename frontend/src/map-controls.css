@@ -45,6 +45,17 @@
   box-shadow: var(--cn-shadow-card);
 }
 
+/* ORD-0485 phone chain: 回到行程视野 measured 130x36 at 390x844. Its own plate is 130x48, so a hit box
+   extended 5 px above and below (46 tall) still sits inside the space the panel already reserves and cannot
+   overlap the canvas control beside it; the painted button keeps its height for the same reason the
+   degraded button does (cn-pulse-map.css:96-101). */
+.v8-map-panel .v8-map-viewport-control { position: relative; }
+.v8-map-panel .v8-map-viewport-control::after {
+  content: "";
+  position: absolute;
+  inset: -5px 0;
+}
+
 .v8-map-panel .v8-map-viewport-control:focus-visible {
   outline: 2px solid var(--v8-indigo);
   outline-offset: 2px;

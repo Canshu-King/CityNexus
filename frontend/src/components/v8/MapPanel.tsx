@@ -618,6 +618,17 @@ export function MapPanel({
         const chipMarker = new maplibregl.Marker({ element: chip })
           .setLngLat(at)
           .addTo(mapInstance);
+        /* maplibre stamps role="button" and aria-label="Map marker" on every element it is handed, and it
+           does so during construction -- removing them above this call is a no-op, which is what the first
+           attempt measured.  The chip is a painted overlay whose whole design is "the pin owns the tap"
+           (`pointer-events: none` in map-stop-labels.css:37), so leaving that pair on it advertises a
+           control the finger can never reach: at 390x844 its painted box is 105-148x22 while its pressable
+           area is nothing at all, and the phone census has been counting five of these as under-sized
+           buttons ever since the chip shipped.  `aria-hidden` already takes it out of the accessibility
+           tree; the role and the library's name go too, so the DOM stops claiming a button that is not
+           one.  The pin beside it keeps its own role, tabindex, name and hit target untouched. */
+        chip.removeAttribute("role");
+        chip.removeAttribute("aria-label");
         labelMarkers.current.push(chipMarker);
         labelNodes.current.push({
           el: chip,

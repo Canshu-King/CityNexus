@@ -100,6 +100,20 @@
   cursor: pointer;
 }
 
+/* ORD-0485 phone chain: the stop list is how a traveller picks a stop on the map screen, and its rows
+   measured 310x35 at 390x844 -- nine px under the floor. The painted row is not grown (the list box is
+   laid out from the laid-out chip height, `.v8-map-stops` above, so a taller row moves the map plate), so
+   the hit box is extended 5 px above and below only: measured gap between consecutive rows is 20 px, so
+   5 px of extension leaves 15 px clear and cannot steal a neighbour's press. This is the same shape
+   cn-pulse-map.css:96-101 already documents for the panel's degraded button -- the floor is honoured where
+   a finger lands, not where paint is. */
+.v8-map-page-grid .v8-map-stop { position: relative; }
+.v8-map-page-grid .v8-map-stop::after {
+  content: "";
+  position: absolute;
+  inset: -5px 0;
+}
+
 .v8-map-page-grid .v8-map-stop.selected {
   border-color: var(--v8-indigo);
   color: var(--v8-indigo);

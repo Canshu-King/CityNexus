@@ -1,0 +1,67 @@
+{
+ "schema": "CNX_MAP_CHIP_OUTER_R1",
+ "base": "http://127.0.0.1:4895",
+ "got": {
+  "chip_html": "<div class=\"v8-map-stop-label maplibregl-marker maplibregl-marker-anchor-center\" data-testid=\"v8-map-stop-label\" data-stop-ordinal=\"1\" data-name-source=\"title\" data-forbidden-removed=\"nothing\" aria-hidden=\"true\" data-placement=\"shown\" data-side=\"right\" data-fits-right=\"true\" data-fits-left=\"false\" data-fits-under=\"true",
+  "chip_attrs": [
+   "class=v8-map-stop-label maplibregl-marker maplibre",
+   "data-testid=v8-map-stop-label",
+   "data-stop-ordinal=1",
+   "data-name-source=title",
+   "data-forbidden-removed=nothing",
+   "aria-hidden=true",
+   "data-placement=shown",
+   "data-side=right",
+   "data-fits-right=true",
+   "data-fits-left=false",
+   "data-fits-under=true",
+   "data-blocked-by=nothing",
+   "style=transform: translate(-50%, -50%) translate(1"
+  ],
+  "chip_box": [
+   105,
+   22,
+   521
+  ],
+  "chip_style_pointer_events": "none",
+  "stop_attrs": [
+   "class=v8-map-stop",
+   "type=button",
+   "data-testid=map-stop-3a58c470-524c-5854-aa39-6c37a350eb8",
+   "aria-label=在地图上定位 Old Town Gate",
+   "aria-pressed=false"
+  ],
+  "stop_box": [
+   310,
+   35,
+   998
+  ],
+  "stop_text": "Old Town Gate",
+  "reset_attrs": [
+   "type=button",
+   "class=v8-map-viewport-control",
+   "data-testid=map-viewport-reset",
+   "data-viewport-state=on-target",
+   "aria-label=视野正落在这段行程上",
+   "aria-pressed=false"
+  ],
+  "reset_box": [
+   130,
+   36,
+   369
+  ],
+  "pin_attrs": [
+   "class=v9-map-marker maplibregl-marker maplibregl-m",
+   "aria-label=Old Town Gate",
+   "role=button",
+   "tabindex=0",
+   "aria-pressed=false",
+   "style=transform: translate(-50%, -50%) translate(9"
+  ],
+  "pin_box": [
+   34,
+   34,
+   514
+  ]
+ }
+}
