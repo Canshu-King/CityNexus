@@ -113,6 +113,9 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      different sentence in each state rather than the same word with a different colour. */
   viewportResetToJourney: { zh: "回到行程视野", en: "Fit to my journey" },
   viewportOnTarget: { zh: "视野正落在这段行程上", en: "The view is on your journey" },
+  /* Not a hint strip: `MapViewportControls.tsx:54` puts this string in `aria-label`, which replaces
+     the button's visible name for a screen reader. Drop the action clause and the only thing such a
+     traveller hears is a state with no verb — so the shortest honest form keeps both parts. */
   viewportOffTarget: { zh: "已移出行程视野，点按回到全程", en: "Moved off the journey — tap to fit it all" },
   stopSelectedLead: { zh: "已选中", en: "Selected" },
   /* ORD-0453 — the third state of a long stop list on a small screen.
@@ -124,7 +127,7 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   stopsShowAllTotal: { zh: "查看全部 %s 个地点", en: "Show all %s places" },
   stopsCollapseCta: { zh: "收起清单", en: "Collapse list" },
   stopsCaptureAria: { zh: "展开或收起地点清单", en: "Expand or collapse the stop list" },
-  stopsWithoutPlace: { zh: "另有 %s 个站点这次没有位置，地图就不列它们", en: "%s stops have no position, so the map leaves them out" },
+  stopsWithoutPlace: { zh: "另有 %s 个站点没有位置", en: "%s stops have no position" },
   /* ORD-0497 — 足迹上地图。Three rules these sentences have to keep:
      1. the `read` arm with nothing in it names the READ ("这台服务器这次没有交回"), not the
         traveller ("你没有去过任何一站"), because an empty list from one server on one occasion is
