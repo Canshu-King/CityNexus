@@ -209,6 +209,26 @@ def test_a_candidate_lead_resolves_through_its_own_identity_columns(session_of, 
     assert reading.region_conflict is False
 
 
+def test_a_provider_colon_object_lead_reaches_a_row_stored_bare(session_of, seeded):
+    """The Photon writer's own row shape: provider in one column, bare object id in the other.
+
+    A lead spelled `photon:node/77` used to answer `LEAD_HAS_NO_PLACE_ROW` against such a row even
+    though the store carried exactly that identity -- the refusal depended on which shipped writer
+    seeded the row, which is not a fact about the data. `matched_by` names the columns that answered
+    so a caller can tell the two shapes apart instead of guessing from a place id.
+    """
+    bare = _place(session_of, provider_key="photon", external_id="node/77",
+                  city_code="连城县", name="冠豸山东门")
+    session_of.commit()
+    reading = place_source_lead.resolve_place_lead(session_of, "photon:node/77")
+    assert reading.resolved, reading.as_payload()
+    assert reading.place_id == bare
+    assert reading.matched_by == "provider_key_and_object_id"
+    assert reading.provider_key == "photon"
+    assert reading.as_payload()["provider_object_id"] == "node/77", "the row's own columns, not the lead"
+    assert place_source_lead.minted_place_id("photon", "node/77") == bare
+
+
 # ---------------------------------------------------------------- the shapes that must refuse
 def test_place_text_is_not_a_lead_even_when_a_row_carries_that_name(session_of):
     """同名异地的那一刀：屏上写着「外滩」不等于 photon:node/1 就是外滩。"""
@@ -227,6 +247,26 @@ def test_a_colliding_provider_object_id_is_refused_not_chosen(session_of, seeded
     scoped = place_source_lead.resolve_place_lead(
         session_of, "photon:node/2", journey_id=seeded.ids["journey"])
     assert scoped.resolved and scoped.place_id == seeded.ids["held"]
+
+
+def test_one_identity_written_two_ways_is_refused_across_both_arms(session_of, seeded):
+    """The collision the widened arm makes visible: two rows, one identity, different column shapes.
+
+    A store that carries both `external_id = "photon:node/88"` and `(provider_key, external_id) =
+    ("photon", "node/88")` genuinely has two place rows for one provider object. The single-column arm
+    saw one row and resolved silently; with both arms tried the count is what refuses, and the answer
+    withholds `matched_by` because choosing an arm is exactly what is being refused.
+    """
+    _place(session_of, provider_key="amap", external_id="photon:node/88",
+           city_code="上海市", name="外滩源", place_id="plc-whole-spelling")
+    _place(session_of, provider_key="photon", external_id="node/88",
+           city_code="厦门市", name="外滩源", place_id="plc-bare-spelling")
+    session_of.commit()
+    reading = place_source_lead.resolve_place_lead(session_of, "photon:node/88")
+    assert reading.reason_code == place_source_lead.REASON_AMBIGUOUS, reading.as_payload()
+    assert reading.place_id is None
+    assert reading.matched_by is None, reading.as_payload()
+    assert "2 place rows" in reading.note, reading.note
 
 
 def test_a_hollow_candidate_says_it_has_no_place_row(session_of, seeded):

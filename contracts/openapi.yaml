@@ -4759,7 +4759,11 @@ components:
                  PLACE_NOT_IN_JOURNEY, LEAD_HAS_NO_PLACE_ROW]
         matched_by:
           type: [string, 'null']
-          description: Which identity column answered -- place_id, provider_object_id, candidate_identity
+          description: >
+            Which stored identity answered: `place_id`, `provider_object_id`,
+            `provider_key_and_object_id` (a row whose provider lives in `provider_key` and whose
+            `external_id` carries only the object part), or `candidate_identity`. Null whenever the
+            lead did not resolve -- the arms are not reported while the refusal is standing.
         place_id: {type: [string, 'null'], description: Null whenever the lead did not resolve}
         provider_key: {type: [string, 'null']}
         provider_object_id: {type: [string, 'null']}

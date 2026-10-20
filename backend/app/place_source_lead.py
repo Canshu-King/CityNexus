@@ -213,16 +213,32 @@ def resolve_place_lead(session: Session, lead: str, *,
         return _from_row(row, matched_by="candidate_identity", lead=raw, shape=shape,
                          candidate_region=candidate.city_code)
 
-    rows = list(session.scalars(select(Place).where(Place.external_id == raw)))
-    arm = "provider_object_id"
-    if not rows:
-        # The same string can also be the row's own primary key (seeded and legacy ids carry a colon),
-        # so a colon-shaped lead is tried against both identity columns -- never against a name.
-        pk_row = session.get(Place, raw)
-        if pk_row is not None:
-            rows = [pk_row]
-            arm = "place_id"
-    if not rows:
+    #: The three identity columns a lead may name, tried in this order and never by text. Shipped
+    #: writers disagree about one detail, and that disagreement used to be the caller's problem:
+    #: `real_city._external_id()` stores the full `provider:object` in `Place.external_id`, while the
+    #: Photon writer stores only the object part and keeps the provider in `Place.provider_key`. So a
+    #: lead spelled `photon:node/2` has to be allowed to name the pair as well as the single column --
+    #: still two equality lookups on stored identity, still no name, no search, no URL.
+    rows: dict[str, Place] = {}
+    matched_by: dict[str, str] = {}
+
+    def _collect(arm_rows: Any, word: str) -> None:
+        for row in arm_rows:
+            rows.setdefault(row.id, row)
+            matched_by.setdefault(row.id, word)
+
+    _collect(session.scalars(select(Place).where(Place.external_id == raw)), "provider_object_id")
+    provider_word, _, object_part = raw.partition(":")
+    if object_part:
+        _collect(session.scalars(select(Place).where(
+            Place.provider_key == provider_word, Place.external_id == object_part)),
+            "provider_key_and_object_id")
+    pk_row = session.get(Place, raw)
+    if pk_row is not None:
+        # The same string can also be the row's own primary key (seeded and legacy ids carry a colon).
+        _collect([pk_row], "place_id")
+    candidates = list(rows.values())
+    if not candidates:
         # Nothing in this store carries that identity. Saying `PLACE_NOT_IN_JOURNEY` here -- which is
         # what a journey-scoped call used to get -- blamed the trip for a missing row and sent callers
         # to attach a place that does not exist. The absence is the answer; scope is only reported
@@ -230,13 +246,15 @@ def resolve_place_lead(session: Session, lead: str, *,
         return _unresolved(raw, shape, REASON_NO_ROW_FOR_LEAD,
                            "no place row carries this provider object id")
     if journey_id:
-        rows = [row for row in rows if place_is_in_journey(session, journey_id, row.id)]
-        if not rows:
+        candidates = [row for row in candidates if place_is_in_journey(session, journey_id, row.id)]
+        if not candidates:
             return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY,
                                "the journey does not hold this place")
-    if len(rows) > 1:
+    if len(candidates) > 1:
         # Two rows claim one provider object id. Choosing by name or by "the first one" is exactly the
-        # silent cross-city pairing, so the answer is a refusal that names how many collided.
+        # silent cross-city pairing, so the answer is a refusal that names how many collided -- and
+        # which columns matched is withheld, because picking one of them is what is being refused.
         return _unresolved(raw, shape, REASON_AMBIGUOUS,
-                           f"{len(rows)} place rows carry this provider object id")
-    return _from_row(rows[0], matched_by=arm, lead=raw, shape=shape)
+                           f"{len(candidates)} place rows carry this provider object id")
+    row = candidates[0]
+    return _from_row(row, matched_by=matched_by[row.id], lead=raw, shape=shape)

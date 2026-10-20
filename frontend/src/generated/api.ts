@@ -3911,7 +3911,7 @@ export interface components {
              * @enum {string}
              */
             reason_code: "LEAD_RESOLVED" | "LEAD_NOT_A_PLACE_LEAD" | "LEAD_AMBIGUOUS" | "CANDIDATE_NOT_MATERIALIZED" | "PLACE_NOT_IN_JOURNEY" | "LEAD_HAS_NO_PLACE_ROW";
-            /** @description Which identity column answered -- place_id, provider_object_id, candidate_identity */
+            /** @description Which stored identity answered: `place_id`, `provider_object_id`, `provider_key_and_object_id` (a row whose provider lives in `provider_key` and whose `external_id` carries only the object part), or `candidate_identity`. Null whenever the lead did not resolve -- the arms are not reported while the refusal is standing. */
             matched_by?: string | null;
             /** @description Null whenever the lead did not resolve */
             place_id?: string | null;
