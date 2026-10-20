@@ -267,3 +267,74 @@ def test_the_no_plan_notice_stops_reciting_the_machine():
     assert "确定性门控" not in zh and "权威" not in zh
     assert "No plan is selected for this trip yet" in en
     assert zh != en
+
+
+_CAMEL_CASE = re.compile(r"[A-Za-z][a-z]+[A-Z][A-Za-z]*")
+_INTERNAL_NAMES = ("TravelerTwin", "JourneyTwin", "PlanVersion", "ReplanDiff", "CityNexus", "Copilot")
+
+
+def _interpretation(intent: str, entities: dict | None = None) -> CopilotInterpretation:
+    return CopilotInterpretation(
+        intent=intent,
+        confidence=0.8,
+        reason="pinned by this test",
+        entities=entities or {},
+        provider_key="deepseek",
+        degraded=False,
+    )
+
+
+def _reader_branches() -> list[tuple[str, CopilotInterpretation, dict, str, str]]:
+    """Every branch a traveller can land on, with the one fact each must still say out loud."""
+
+    hard = {"capabilities": [{"code": "STEP_FREE", "severity": "HARD", "params": {}}]}
+    soft = {"capabilities": [{"code": "QUIET_SPACE", "severity": "SOFT", "params": {}}]}
+    return [
+        ("DISCOVER", _interpretation("DISCOVER"), {}, "不会自己加进行程", "never added to your trip"),
+        ("capability-hard", _interpretation("WHAT_IF", hard), {}, "要你先确认", "need your confirmation"),
+        ("capability-soft", _interpretation("WHAT_IF", soft), {}, "不会自己改动你的偏好档案", "won't change your preference profile"),
+        ("PREFERENCE_CHANGE", _interpretation("PREFERENCE_CHANGE"), {}, "明确确认更新偏好", "confirm the preference update"),
+        ("REPLAN_REQUEST", _interpretation("REPLAN_REQUEST"), {}, "先过可行性核对", "pass the feasibility check"),
+        ("VERIFY_FACT", _interpretation("VERIFY_FACT"), {}, "还没核实", "isn't verified yet"),
+        ("PERSONAL_ASSISTANCE", _interpretation("PERSONAL_ASSISTANCE"), {}, "个人求助", "personal assistance"),
+        ("unrouted", _interpretation("SOMETHING_ELSE"), {}, "没有可靠识别", "could not route"),
+        (
+            "EXPLAIN_PLAN",
+            _interpretation("EXPLAIN_PLAN"),
+            {"plan": _PLAN, "protected_commitments": []},
+            "号方案",
+            "plan version",
+        ),
+    ]
+
+
+def test_no_sentence_addressed_to_a_traveller_names_one_of_our_own_objects():
+    """A standing gate over the copilot's reader-facing sentences.
+
+    These answers used to say things like `不会由 Copilot 静默修改 TravelerTwin` and name `CityNexus` as
+    the party that must verify feasibility. The reassurance stays; the object names, the pipeline
+    names and the self-justification do not. This walks every branch, both languages, so a future
+    branch that leaks an identifier fails here rather than on a phone.
+    """
+
+    for label, interpretation, context, zh_fact, en_fact in _reader_branches():
+        zh = main_module._copilot_answer(interpretation, context, locale="zh")
+        en = main_module._copilot_answer(interpretation, context, locale="en")
+
+        assert _HAS_CJK.search(zh), (label, zh)
+        assert not _HAS_CJK.search(en), (label, en)
+        assert zh_fact in zh, (label, zh)
+        assert en_fact in en, (label, en)
+
+        for name in _INTERNAL_NAMES:
+            assert name not in zh, (label, name, zh)
+            assert name not in en, (label, name, en)
+        assert not _CAMEL_CASE.search(zh), (label, zh)
+        assert not _CAMEL_CASE.search(en), (label, en)
+
+    # The preview table is reader-facing too: no cell may carry an internal object name.
+    for code, (zh, en) in main_module._WHAT_IF_ANSWERS.items():
+        for name in _INTERNAL_NAMES:
+            assert name not in zh and name not in en, (code, name)
+        assert not _CAMEL_CASE.search(zh), code
+        assert not _CAMEL_CASE.search(en), code

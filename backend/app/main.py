@@ -14765,7 +14765,7 @@ def _copilot_answer(
             return f"这趟现在按{_plan_label_text(plan, locale)}走，服务器核过 {protected_count} 项受保护承诺。这段解释只读已选方案的事实，不会改动行程。"
         return f"This trip runs on {_plan_label_text(plan, locale)}; the server verified {protected_count} protected commitments. This explanation reads selected-plan facts and changes nothing."
     if interpretation.intent == "DISCOVER":
-        return "我会基于当前城市和行程上下文搜索候选地点；搜索结果不会直接写入方案。" if locale == "zh" else "I can search candidates using the current city and journey context; discovery results will not write to the plan."
+        return "我按当前城市和这趟的安排找候选地点；找到的先列给你看，不会自己加进行程。" if locale == "zh" else "I search candidate places using the current city and this trip; they are listed for you and never added to your trip on their own."
     capability_items = interpretation.entities.get("capabilities") if isinstance(interpretation.entities, dict) else None
     if isinstance(capability_items, list) and capability_items:
         codes = [str(item.get("code")) for item in capability_items if isinstance(item, dict)]
@@ -14773,19 +14773,19 @@ def _copilot_answer(
         labels = ", ".join(code for code in codes if code)
         if locale == "zh":
             if hard:
-                return f"已识别能力约束（{labels}）。其中硬性需求需要明确确认；可行性必须由 CityNexus 根据供应商/冻结证据核验，未知无障碍证据不会被视为可通行。"
-            return f"已识别旅行能力与偏好（{labels}）。它们会影响候选评估和解释，但不会由 Copilot 静默修改 TravelerTwin。"
+                return f"记下你的硬性需求（{labels}）。这类需求要你先确认；能不能满足得看供应商或已有的证据，没有证据我不会说那里可去。"
+            return f"记下你的能力与偏好（{labels}）。这些会影响我给你挑地点和解释的方式，我不会自己改动你的偏好档案。"
         if hard:
-            return f"I identified capability constraints ({labels}). Hard needs require explicit confirmation; CityNexus must verify feasibility from provider/frozen evidence, and unknown accessibility evidence is not treated as accessible."
-        return f"I identified traveler capabilities/preferences ({labels}). They will guide candidate evaluation and explanations without silently changing the TravelerTwin."
+            return f"Noted your hard needs ({labels}). These need your confirmation; whether something can meet them depends on provider or existing evidence, and I won't call a place accessible without it."
+        return f"Noted your capabilities and preferences ({labels}). They shape which places I pick and how I explain them; I won't change your preference profile on my own."
     if interpretation.intent == "PREFERENCE_CHANGE":
-        return "已识别为偏好请求。当前只展示请求，不会静默修改 TravelerTwin；请通过明确的偏好更新动作继续。" if locale == "zh" else "I recognized a preference request. This response does not silently change the TravelerTwin; continue with an explicit preference update action."
+        return "这是偏好改动请求。我先把它列在这里；要真的生效，请你明确确认更新偏好。" if locale == "zh" else "This is a preference change request, listed here for now. To make it stick, confirm the preference update explicitly."
     if interpretation.intent == "REPLAN_REQUEST":
-        return "已识别为重新规划请求。需要通过现有确定性可行性和授权路径生成方案，不会由 Copilot 直接改写当前方案。" if locale == "zh" else "I recognized a replan request. The existing deterministic feasibility and authorization path must produce it; Copilot will not rewrite the current plan directly."
+        return "这是重新规划请求。新方案要先过可行性核对，我不会直接改写你当前的方案。" if locale == "zh" else "This is a replan request. A new plan has to pass the feasibility check first; I won't rewrite your current plan directly."
     if interpretation.intent == "VERIFY_FACT":
-        return "这是一条尚未核实的旅行信息。我会先基于供应商或来源证据核验，不会先写入城市事件。" if locale == "zh" else "This is an unverified travel claim. It must be checked against provider or source evidence before becoming a city event."
+        return "这条出行信息还没核实。我会先对供应商或来源的证据，核实前不会把它记成城市事件。" if locale == "zh" else "This travel claim isn't verified yet. I check it against provider or source evidence before it becomes a city event."
     if interpretation.intent == "PERSONAL_ASSISTANCE":
-        return "我识别到这是个人求助，需要按个人情况处理，不会把它当作城市天气或交通事件。" if locale == "zh" else "I recognized a personal assistance request; it will not be turned into a city weather or traffic event."
+        return "这看起来是个人求助，我按你的个人情况来处理，不会把它当成城市的天气或交通事件。" if locale == "zh" else "This looks like a personal assistance request, so I handle it for your own situation and don't turn it into a city weather or traffic event."
     if locale == "zh":
         return "我没有可靠识别这条请求。可以问我为什么这样安排、如果多待一小时会怎样、找一个室内地点，或报告正在发生的交通/天气变化。"
     return "I could not route this request reliably. Ask why the plan looks this way, what would happen if you stayed an hour longer, find an indoor place, or report a disruption that is happening now."
