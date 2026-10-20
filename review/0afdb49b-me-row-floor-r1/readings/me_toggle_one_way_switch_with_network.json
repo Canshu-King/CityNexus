@@ -1,0 +1,252 @@
+{
+ "schema": "CNX_BUILDING_ME_TOGGLE_R4",
+ "base": "http://127.0.0.1:4894",
+ "started": "Wed Oct 21 2026 03:59:44 GMT+0800 (中国标准时间)",
+ "taps": [
+  {
+   "i": 0,
+   "point": {
+    "x": 40,
+    "y": 422
+   },
+   "before": {
+    "checked": true,
+    "disabled": false,
+    "row": "开启自动执行",
+    "section": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+    "says_on": true,
+    "says_advice_only": false,
+    "alerts": []
+   },
+   "after": {
+    "checked": true,
+    "disabled": false,
+    "row": "开启自动执行",
+    "section": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+    "says_on": true,
+    "says_advice_only": false,
+    "alerts": [
+     "自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了"
+    ]
+   },
+   "changed": false,
+   "new_requests": [
+    {
+     "t": 1792526389992,
+     "method": "PUT",
+     "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+     "status": 200,
+     "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+    }
+   ]
+  },
+  {
+   "i": 1,
+   "point": {
+    "x": 40,
+    "y": 498
+   },
+   "before": {
+    "checked": true,
+    "disabled": false,
+    "row": "开启自动执行",
+    "section": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+    "says_on": true,
+    "says_advice_only": false,
+    "alerts": [
+     "自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了"
+    ]
+   },
+   "after": {
+    "checked": true,
+    "disabled": false,
+    "row": "开启自动执行",
+    "section": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+    "says_on": true,
+    "says_advice_only": false,
+    "alerts": [
+     "自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了"
+    ]
+   },
+   "changed": false,
+   "new_requests": [
+    {
+     "t": 1792526392216,
+     "method": "PUT",
+     "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+     "status": 200,
+     "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+    }
+   ]
+  },
+  {
+   "i": 2,
+   "point": {
+    "x": 40,
+    "y": 498
+   },
+   "before": {
+    "checked": true,
+    "disabled": false,
+    "row": "开启自动执行",
+    "section": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+    "says_on": true,
+    "says_advice_only": false,
+    "alerts": [
+     "自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了"
+    ]
+   },
+   "after": {
+    "checked": true,
+    "disabled": false,
+    "row": "开启自动执行",
+    "section": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push",
+    "says_on": true,
+    "says_advice_only": false,
+    "alerts": [
+     "自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了"
+    ]
+   },
+   "changed": false,
+   "new_requests": [
+    {
+     "t": 1792526394433,
+     "method": "PUT",
+     "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+     "status": 200,
+     "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+    }
+   ]
+  }
+ ],
+ "requests": [
+  {
+   "t": 1792526384388,
+   "method": "GET",
+   "url": "/api/v1/demo/scene",
+   "status": 200,
+   "body": "{\"demo_mode\":true,\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"journey_status\":\"ACTIVE\",\"current_activity_id\":\"98af0be5-966b-5f49-b699-5dfdceea8ab6\",\"scene_start_at\":\"2026-10-10T09:00:00+08:00\",\"scene_end_at\":\"2026-10-10T19:00:00+08:00\",\"effective_now\""
+  },
+  {
+   "t": 1792526386179,
+   "method": "GET",
+   "url": "/api/v1/demo/scene",
+   "status": 200,
+   "body": "{\"demo_mode\":true,\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"journey_status\":\"ACTIVE\",\"current_activity_id\":\"98af0be5-966b-5f49-b699-5dfdceea8ab6\",\"scene_start_at\":\"2026-10-10T09:00:00+08:00\",\"scene_end_at\":\"2026-10-10T19:00:00+08:00\",\"effective_now\""
+  },
+  {
+   "t": 1792526386189,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "status": 200,
+   "body": "{\"journey\":{\"id\":\"22222222-2222-4222-8222-222222222222\",\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"title\":\"One Day in Nexus City\",\"city_code\":\"CNX-DEMO\",\"timezone\":\"Asia/Shanghai\",\"used_timezone\":\"Asia/Shanghai\",\"timezone_honoured\":true,\"start_at\":\""
+  },
+  {
+   "t": 1792526386208,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+   "status": 200,
+   "body": "[]"
+  },
+  {
+   "t": 1792526386210,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+   "status": 200,
+   "body": "[{\"id\":\"55523d40-cafe-5bd2-b30a-de057ec7a839\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"ACTIVE\",\"source\":\"INITIAL\",\"parent_plan_version_id\":null,\"total_cost\":{\"amount_minor\":37000,\"currency\":\"CNY\"},"
+  },
+  {
+   "t": 1792526386210,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+   "status": 200,
+   "body": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"active_plan_version_id\":\"55523d40-cafe-5bd2-b30a-de057ec7a839\",\"current_activity_id\":\"98af0be5-966b-5f49-b699-5dfdceea8ab6\",\"latest_event_id\":null,\"projection_status\":\"READY\",\"snapshot_at\":\"2026-10-20T19:59"
+  },
+  {
+   "t": 1792526386220,
+   "method": "GET",
+   "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+   "status": 200,
+   "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+  },
+  {
+   "t": 1792526386220,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+   "status": 200,
+   "body": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"reservations\":[],\"commitments\":[{\"id\":\"a0cf7b9c-769c-4558-8005-625ef4972540\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"activity_id\":\"74f10240-fc4d-500e-b6ac-e520bcab1036\",\"kind\":\"BOOKING\",\"level\""
+  },
+  {
+   "t": 1792526386221,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+   "status": 200,
+   "body": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"sequence\":4,\"valid_until\":\"2026-09-29T04:41:47.311667+08:00\",\"snapshot\":{\"active_plan_version_id\":\"55523d40-cafe-5bd2-b30a-de057ec7a839\",\"current_activity_id\":\"98af0be5-966b-5f49-b699-5dfdceea8ab6\",\"executi"
+  },
+  {
+   "t": 1792526386221,
+   "method": "GET",
+   "url": "/api/v1/agent/runtime-status",
+   "status": 200,
+   "body": "{\"runtime_identity\":\"NOT_CONFIGURED\",\"native_binary_detected\":false,\"native_mcp_proven\":false,\"mcp_server\":\"citynexus-v2\",\"deepseek_configured\":false,\"hermes_compat_configured\":false,\"ai_state\":\"DISABLED_BY_OPS\",\"hermes_native_gateway\":{\"configured\":false,\"rea"
+  },
+  {
+   "t": 1792526386336,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+   "status": 200,
+   "body": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"source\":\"audit_log\",\"events\":[{\"id\":\"9acf0928-2e6e-48f3-b28e-6a2380aca1f6\",\"timestamp\":\"2026-09-27T20:41:47.027096+00:00\",\"event_type\":\"plans.generated\",\"type\":\"plans.generated\",\"summary\":\"Plans.generated\","
+  },
+  {
+   "t": 1792526386336,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+   "status": 200,
+   "body": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"source\":\"audit_log\",\"events\":[{\"id\":\"9acf0928-2e6e-48f3-b28e-6a2380aca1f6\",\"timestamp\":\"2026-09-27T20:41:47.027096+00:00\",\"event_type\":\"plans.generated\",\"type\":\"plans.generated\",\"summary\":\"Plans.generated\","
+  },
+  {
+   "t": 1792526386336,
+   "method": "GET",
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/provider-mesh",
+   "status": 200,
+   "body": "{\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"providers\":[],\"real_place_candidates\":[]}"
+  },
+  {
+   "t": 1792526386336,
+   "method": "GET",
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "status": 200,
+   "body": "[{\"id\":\"place-city-park\",\"name\":\"Nexus City Park\",\"category\":\"park\",\"city_code\":\"CNX-DEMO\",\"location\":{\"latitude\":39.113,\"longitude\":117.202},\"tags\":[\"waterfront\",\"relaxed\",\"outdoor\"],\"provider_key\":\"mock-city\",\"coordinate_system\":\"WGS84\",\"source_coordinate_sy"
+  },
+  {
+   "t": 1792526388696,
+   "method": "GET",
+   "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/push-config",
+   "status": 200,
+   "body": "{\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"capability\":\"RECORD_ONLY\",\"public_key\":null,\"record_fallback\":true}"
+  },
+  {
+   "t": 1792526389992,
+   "method": "PUT",
+   "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+   "status": 200,
+   "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+  },
+  {
+   "t": 1792526392216,
+   "method": "PUT",
+   "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+   "status": 200,
+   "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+  },
+  {
+   "t": 1792526394433,
+   "method": "PUT",
+   "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+   "status": 200,
+   "body": "{\"mode\":\"AUTONOMOUS\",\"auto_accept_replan\":true,\"max_auto_replan_cost_delta_minor\":5000,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":20,\"allowed_activity_types\":[\"transport\",\"visit\"],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guarant"
+  }
+ ],
+ "errors": [],
+ "finished": "Wed Oct 21 2026 03:59:56 GMT+0800 (中国标准时间)"
+}

@@ -1,0 +1,73 @@
+{
+ "schema": "CNX_BUILDING_ME_TOGGLE_R3",
+ "base": "http://127.0.0.1:4894",
+ "arms": [
+  {
+   "how": "mouse",
+   "armed": {
+    "input_box": [
+     134,
+     415,
+     13,
+     13
+    ],
+    "label_box": [
+     34,
+     411,
+     116,
+     21
+    ],
+    "checked_at_arm": true
+   },
+   "point": {
+    "x": 40,
+    "y": 422
+   },
+   "counts": {
+    "input_click": 1,
+    "input_change": 1,
+    "label_click": 2,
+    "checked": true
+   },
+   "checked_now": true,
+   "says_on": true,
+   "moved": false,
+   "fired_input_click": 1,
+   "fired_change": 1
+  },
+  {
+   "how": "touch",
+   "armed": {
+    "input_box": [
+     134,
+     415,
+     13,
+     13
+    ],
+    "label_box": [
+     34,
+     411,
+     116,
+     21
+    ],
+    "checked_at_arm": true
+   },
+   "point": {
+    "x": 40,
+    "y": 422
+   },
+   "counts": {
+    "input_click": 1,
+    "input_change": 1,
+    "label_click": 2,
+    "checked": true
+   },
+   "checked_now": true,
+   "says_on": true,
+   "moved": false,
+   "fired_input_click": 1,
+   "fired_change": 1
+  }
+ ],
+ "errors": []
+}

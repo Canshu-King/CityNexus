@@ -1,0 +1,182 @@
+{
+ "schema": "CNX_BUILDING_ME_TOGGLE_R1",
+ "base": "http://127.0.0.1:4894",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Wed Oct 21 2026 03:56:57 GMT+0800 (中国标准时间)",
+ "steps": [
+  {
+   "tag": "open_drawer",
+   "pressed": true
+  },
+  {
+   "tag": "enter_me",
+   "pressed": true,
+   "geo": {
+    "x": 150,
+    "y": 798,
+    "w": 271,
+    "h": 44,
+    "landed": true,
+    "hit_tag": "BUTTON",
+    "hit_testid": "v8-drawer-entry-me"
+   }
+  }
+ ],
+ "readings": [
+  {
+   "tag": "before",
+   "path": "/v8/me",
+   "input": {
+    "box": {
+     "x": 134,
+     "y": 872,
+     "w": 13,
+     "h": 13
+    },
+    "checked": false,
+    "type": "checkbox",
+    "clickable_at_centre": false,
+    "aria": null,
+    "id": null
+   },
+   "label": {
+    "text": "开启自动执行",
+    "box": {
+     "x": 34,
+     "y": 868,
+     "w": 116,
+     "h": 21
+    },
+    "clickable_at_centre": false,
+    "tagName": "LABEL"
+   },
+   "row": {
+    "text": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只",
+    "box": {
+     "x": 17,
+     "y": 245,
+     "w": 356,
+     "h": 882
+    }
+   },
+   "state": {
+    "on": false,
+    "off": true,
+    "both": false
+   },
+   "body_tail": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "tag": "after_input_reference_tap",
+   "path": "/v8/me",
+   "input": {
+    "box": {
+     "x": 134,
+     "y": 491,
+     "w": 13,
+     "h": 13
+    },
+    "checked": true,
+    "type": "checkbox",
+    "clickable_at_centre": true,
+    "aria": null,
+    "id": null
+   },
+   "label": {
+    "text": "开启自动执行",
+    "box": {
+     "x": 34,
+     "y": 487,
+     "w": 116,
+     "h": 21
+    },
+    "clickable_at_centre": true,
+    "tagName": "LABEL"
+   },
+   "row": {
+    "text": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通",
+    "box": {
+     "x": 17,
+     "y": -136,
+     "w": 356,
+     "h": 882
+    }
+   },
+   "state": {
+    "on": true,
+    "off": true,
+    "both": true
+   },
+   "body_tail": "我的 跟随系统 EN DE 自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的"
+  },
+  {
+   "tag": "after_restore",
+   "path": "/v8/me",
+   "input": {
+    "box": {
+     "x": 134,
+     "y": 491,
+     "w": 13,
+     "h": 13
+    },
+    "checked": true,
+    "type": "checkbox",
+    "clickable_at_centre": true,
+    "aria": null,
+    "id": null
+   },
+   "label": {
+    "text": "开启自动执行",
+    "box": {
+     "x": 34,
+     "y": 487,
+     "w": 116,
+     "h": 21
+    },
+    "clickable_at_centre": true,
+    "tagName": "LABEL"
+   },
+   "row": {
+    "text": "这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通",
+    "box": {
+     "x": 17,
+     "y": -136,
+     "w": 356,
+     "h": 882
+    }
+   },
+   "state": {
+    "on": true,
+    "off": true,
+    "both": true
+   },
+   "body_tail": "我的 跟随系统 EN DE 自主恢复已启用，仅限权限范围内的可逆交通变更。 知道了 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 演示城市 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 自动执行已开启 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的"
+  }
+ ],
+ "presses": [
+  {
+   "tag": "tap_input_reference",
+   "pressed": true,
+   "geo": {
+    "x": 141,
+    "y": 422,
+    "w": 13,
+    "h": 13,
+    "landed": true,
+    "hit_tag": "INPUT",
+    "hit_testid": "me-mode-toggle"
+   }
+  }
+ ],
+ "verdict": "STATE_CHANGES_BUT_TARGET_IS_UNDER_FLOOR",
+ "page_errors": [],
+ "console_errors": [],
+ "shot": "D:/moodle/_qoder_phone_ord0485_20260930/evidence/me_toggle_r1.png",
+ "changed_by_control_itself": true,
+ "label_present": true,
+ "restored": false,
+ "finished": "Wed Oct 21 2026 03:57:09 GMT+0800 (中国标准时间)"
+}
