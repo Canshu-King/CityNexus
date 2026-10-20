@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from app.core.config import settings
-from app.agent.ai_availability import ai_availability_state
+from app.agent.ai_availability import provider_witness, witnessed_ai_state
 from app.integrations.hermes.native_client import native_hermes_status
 
 
@@ -56,6 +56,28 @@ def runtime_identity() -> str:
     return NOT_CONFIGURED
 
 
+def _last_call_payload() -> dict[str, Any] | None:
+    """What this process last watched the AI provider do, or None when it never has.
+
+    ORD-0697: the cell used to have no word at all for a server that had just served real answers,
+    and the model it actually sent stayed unreported.  Only the four identity fields plus the two
+    counters go out - never the request body, never a credential.
+    """
+
+    seen = provider_witness()
+    if seen is None:
+        return None
+    return {
+        "provider_key": seen.provider_key,
+        "model_key": seen.model_key,
+        "outcome": seen.outcome,
+        "status_code": seen.status_code,
+        "observed_at": seen.observed_at,
+        "answers": seen.answers,
+        "refusals": seen.refusals,
+    }
+
+
 def runtime_status() -> dict[str, Any]:
     """Describe runtime provenance for UI and audits, never credential material."""
 
@@ -72,6 +94,11 @@ def runtime_status() -> dict[str, Any]:
         # ORD-0359: additive. `deepseek_configured` stays a boolean for the clients that already
         # read it; `ai_state` is the named reason, so a screen no longer has to infer "disabled"
         # from a flag that cannot tell an operator's switch from a missing credential.
-        "ai_state": ai_availability_state(),
+        # ORD-0697: this door may quote a witnessed outcome, because the witness is what this
+        # process actually watched; the run-payload doors that describe one stored run still call
+        # `ai_availability_state` with no witnessed argument.
+        "ai_state": witnessed_ai_state(),
+        # Additive and nullable: a client written against the old shape is not promised this field.
+        "ai_last_call": _last_call_payload(),
         "hermes_native_gateway": native,
     }
