@@ -5713,9 +5713,17 @@ components:
       allOf:
         - {$ref: '#/components/schemas/PlanDeltaDifference'}
         - type: object
-          required: [asked_by_traveler_id, next_actions]
+          required: [asked_by_traveler_id, no_material_change, next_actions]
           properties:
             asked_by_traveler_id: {type: string, format: uuid}
+            no_material_change:
+              type: boolean
+              description: >
+                `app.plan_submission`'s own verdict for this pair: true when the two versions carry the
+                same places, instants, money and commitments, which is the state the submission door
+                refuses as `SUBMISSION_NO_MATERIAL_CHANGE` instead of opening a round about nothing. A
+                difference confined to `activities.status` does not count, so this reads true for the
+                plan in force echoed back after a journey has departed.
             next_actions:
               type: array
               items: {type: string}

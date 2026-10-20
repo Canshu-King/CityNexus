@@ -27,6 +27,12 @@ place is `moved`, not an add plus a remove, because the screen needs the pair to
 The frozen-mobility-evidence state of both versions rides along, read through
 `app.departure_read.frozen_evidence_of`: this is where a traveller learns why a candidate the plan door
 will not accept still says what it is missing, in the door's own words.
+
+The answer also says what to do next. `no_material_change` is `app.plan_submission`'s own verdict about
+whether this pair expresses anything a round could be asked about, and `next_actions` names the door to
+press -- the freeze door while the "to" side carries no frozen evidence, and the submission door only when
+the pair is not a mirror of the plan in force. That verdict is read from the module that owns it instead of
+being re-derived here, so the read door cannot promise a press the write door is about to refuse.
 """
 
 from __future__ import annotations
@@ -153,10 +159,40 @@ def journey_plan_delta(
         plans[label] = plan
     answer = delta_of(session, journey, plans["from"], plans["to"])
     answer["asked_by_traveler_id"] = seat["traveler_id"]
+    # Whether this pair expresses anything a round could be asked about is the submission door's rule, so
+    # it is asked from there -- imported here, not at module scope, because `app.plan_submission` imports
+    # this module for the arithmetic. The reader gets the same verdict the write door would reach, and a
+    # pointer that says so instead of sending a caller to a door that is about to refuse.
+    from app.plan_submission import (
+        REASON_NO_MATERIAL,
+        _lock_flag_states,
+        _travel_delta,
+        material_comparison,
+    )
+
+    dropped, added = _lock_flag_states(session, plans["from"].id, plans["to"].id)
+    comparison = material_comparison(
+        answer,
+        travel_delta_min=_travel_delta(session, plans["from"].id, plans["to"].id),
+        lock_flag_changes=sorted(set(dropped) | set(added)),
+    )
+    answer["no_material_change"] = bool(comparison["unchanged"])
+    prefix = "/api/v1/journeys/" + journey.id + "/plans/" + plans["to"].id
+    actions: list[str] = []
+    if not (answer["evidence"]["to"] or {}).get("frozen"):
+        actions.append("freeze this version's travel evidence with POST " + prefix +
+                       "/mobility-freeze, or the feasibility gate answers STALE_RECOMPOSE_REQUIRED")
+    actions.append("select this version with POST /api/v1/journeys/" + journey.id +
+                   "/departure/commit")
+    if comparison["unchanged"]:
+        actions.append("presenting this pair at POST " + prefix + "/submission is refused as " +
+                       REASON_NO_MATERIAL + " -- the two versions carry the same places, times, "
+                       "money and commitments")
+    else:
+        actions.append("present it to the members with POST " + prefix + "/submission, which applies "
+                       "nothing to anybody")
     # The difference itself carries no intent; whose door to press next belongs to the door being read.
-    answer["next_actions"] = [
-        "select this version with POST /api/v1/journeys/" + journey.id + "/departure/commit",
-    ]
+    answer["next_actions"] = actions
     response.headers["Cache-Control"] = "private, no-store"
     response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return answer

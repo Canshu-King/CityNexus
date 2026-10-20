@@ -40,7 +40,14 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app import departure_facts, departure_read, plan_delta, traveler_principal
+from app import (
+    departure_facts,
+    departure_read,
+    plan_delta,
+    plan_evidence,
+    plan_submission,
+    traveler_principal,
+)
 from app.core.config import settings
 from app.db.models import (
     Activity,
@@ -507,7 +514,8 @@ def test_the_contract_promises_exactly_the_keys_this_door_emits(seeded, monkeypa
     # The fourteen keys of the difference are one schema, shared with the submission door that stores it.
     difference = schemas["PlanDeltaDifference"]
     assert sorted(difference["required"]) == sorted(set(body) - {"asked_by_traveler_id",
-                                                                "next_actions"}), difference
+                                                                "next_actions",
+                                                                "no_material_change"}), difference
     submission = schemas["PlanCandidateSubmission"]["properties"]["delta"]
     assert submission == {"$ref": "#/components/schemas/PlanDeltaDifference"}, submission
 
@@ -515,8 +523,8 @@ def test_the_contract_promises_exactly_the_keys_this_door_emits(seeded, monkeypa
 def _resolved(schema: dict, schemas: dict) -> dict:
     """An `allOf` schema flattened to the keys and required list a reader actually gets.
 
-    The answer schema is the shared `PlanDeltaDifference` plus the two keys the request adds, so a test
-    that read only the flat `properties` would silently check half the promise.
+    The answer schema is the shared `PlanDeltaDifference` plus the keys the request adds, so a test that
+    read only the flat `properties` would silently check half the promise.
     """
     required: list[str] = []
     properties: dict = {}
@@ -526,3 +534,73 @@ def _resolved(schema: dict, schemas: dict) -> dict:
         required += list(branch.get("required", []))
         properties.update(branch.get("properties", {}))
     return {"required": required, "properties": properties}
+
+
+def _mirror_of_the_base(seeded) -> str:
+    """A third version carrying the base's own rows verbatim -- instants, money and lock words alike.
+
+    The copy is deliberate rather than another `_activity` call because a second call would stamp its own
+    microseconds into `start_at`; a mirror that differs by a timestamp is not the thing a traveller does.
+    """
+    ids = seeded.ids
+    with seeded.factory() as session:
+        twin = _plan(session, ids["journey"], number=3, status="CANDIDATE", minutes=1)
+        rows = session.scalars(select(Activity).where(
+            Activity.plan_version_id == ids["base"])).all()
+        for row in rows:
+            session.add(Activity(
+                id=str(uuid.uuid4()), plan_version_id=twin, sequence_no=row.sequence_no,
+                activity_type=row.activity_type, title=row.title, place_id=row.place_id,
+                city_service_id=row.city_service_id, start_at=row.start_at, end_at=row.end_at,
+                travel_from_prev_min=row.travel_from_prev_min,
+                estimated_cost_minor=row.estimated_cost_minor, currency=row.currency,
+                status=row.status, locked=row.locked, metadata_json=row.metadata_json,
+                created_at=_now(), updated_at=_now()))
+        session.commit()
+    return twin
+
+
+def test_a_mirror_pair_is_named_immaterial_and_not_pointed_at_the_submission_door(seeded, monkeypatch):
+    """The read door answers with the write door's verdict, so it cannot promise a press that refuses."""
+    ids = seeded.ids
+    client = _app(seeded, monkeypatch)
+    twin = _mirror_of_the_base(seeded)
+    answer = _delta(client, ids, src=ids["base"], dst=twin)
+    assert answer.status_code == 200, answer.text
+    body = answer.json()
+    assert body["no_material_change"] is True, body["counts"]
+    submission = plan_submission.SUBMISSION_PATH.format(journey_id=ids["journey"],
+                                                        plan_version_id=twin)
+    pointed = [line for line in body["next_actions"] if submission in line]
+    assert len(pointed) == 1, body["next_actions"]
+    # The pointer names the door and says what that door will answer, instead of sending the caller in.
+    assert plan_submission.REASON_NO_MATERIAL in pointed[0], pointed[0]
+    assert "present it to the members" not in " ".join(body["next_actions"]), body["next_actions"]
+    assert " ".join(body["next_actions"]).count("/api/v1/") == len(body["next_actions"]), (
+        body["next_actions"])
+
+
+def test_a_pair_that_differs_points_at_the_submission_door_by_its_own_path(seeded, monkeypatch):
+    """The seeded pair moves a slot, so the pointer is the door that would actually open the round."""
+    ids = seeded.ids
+    client = _app(seeded, monkeypatch)
+    body = _delta(client, ids).json()
+    assert body["no_material_change"] is False, body["counts"]
+    submission = plan_submission.SUBMISSION_PATH.format(journey_id=ids["journey"],
+                                                        plan_version_id=ids["candidate"])
+    assert any(submission in line and "POST" in line for line in body["next_actions"]), (
+        body["next_actions"])
+    assert any("departure/commit" in line for line in body["next_actions"]), body["next_actions"]
+
+
+def test_a_version_with_no_frozen_evidence_is_pointed_at_the_freeze_door_first(seeded, monkeypatch):
+    """The order the doors have to be pressed in, said by the read door instead of learned by refusal."""
+    ids = seeded.ids
+    client = _app(seeded, monkeypatch)
+    body = _delta(client, ids).json()
+    freeze = plan_evidence.FREEZE_PATH.format(journey_id=ids["journey"],
+                                              plan_version_id=ids["candidate"])
+    assert body["next_actions"][0] == (
+        "freeze this version's travel evidence with POST " + freeze +
+        ", or the feasibility gate answers STALE_RECOMPOSE_REQUIRED"), body["next_actions"][0]
+    assert body["evidence"]["to"]["frozen"] is False, body["evidence"]

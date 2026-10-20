@@ -4777,6 +4777,8 @@ export interface components {
         PlanDeltaAnswer: components["schemas"]["PlanDeltaDifference"] & {
             /** Format: uuid */
             asked_by_traveler_id: string;
+            /** @description `app.plan_submission`'s own verdict for this pair: true when the two versions carry the same places, instants, money and commitments, which is the state the submission door refuses as `SUBMISSION_NO_MATERIAL_CHANGE` instead of opening a round about nothing. A difference confined to `activities.status` does not count, so this reads true for the plan in force echoed back after a journey has departed. */
+            no_material_change: boolean;
             next_actions: string[];
         };
     };
