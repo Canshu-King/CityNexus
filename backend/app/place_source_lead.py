@@ -36,6 +36,10 @@ REASON_NOT_A_LEAD = "LEAD_NOT_A_PLACE_LEAD"
 REASON_AMBIGUOUS = "LEAD_AMBIGUOUS"
 REASON_NOT_MATERIALIZED = "CANDIDATE_NOT_MATERIALIZED"
 REASON_NOT_IN_JOURNEY = "PLACE_NOT_IN_JOURNEY"
+#: The lead is well-shaped and this store simply has no row carrying that identity. Kept apart from
+#: `PLACE_NOT_IN_JOURNEY` because the two send the caller to different doors: one says "attach a place
+#: this trip already holds", the other says "no such place row exists yet -- go materialize it".
+REASON_NO_ROW_FOR_LEAD = "LEAD_HAS_NO_PLACE_ROW"
 
 STATUS_RESOLVED = "RESOLVED"
 STATUS_UNRESOLVED = "UNRESOLVED"
@@ -179,8 +183,7 @@ def resolve_place_lead(session: Session, lead: str, *,
     if shape == SHAPE_PLACE_ID:
         row = session.get(Place, raw)
         if row is None:
-            return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY if journey_id else REASON_NOT_A_LEAD,
-                               "no place row carries this id")
+            return _unresolved(raw, shape, REASON_NO_ROW_FOR_LEAD, "no place row carries this id")
         if journey_id and not place_is_in_journey(session, journey_id, row.id):
             return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY,
                                "the journey does not hold this place")
@@ -219,12 +222,18 @@ def resolve_place_lead(session: Session, lead: str, *,
         if pk_row is not None:
             rows = [pk_row]
             arm = "place_id"
+    if not rows:
+        # Nothing in this store carries that identity. Saying `PLACE_NOT_IN_JOURNEY` here -- which is
+        # what a journey-scoped call used to get -- blamed the trip for a missing row and sent callers
+        # to attach a place that does not exist. The absence is the answer; scope is only reported
+        # when a row actually matched.
+        return _unresolved(raw, shape, REASON_NO_ROW_FOR_LEAD,
+                           "no place row carries this provider object id")
     if journey_id:
         rows = [row for row in rows if place_is_in_journey(session, journey_id, row.id)]
-    if not rows:
-        return _unresolved(raw, shape,
-                           REASON_NOT_IN_JOURNEY if journey_id else REASON_NOT_A_LEAD,
-                           "no place row carries this provider object id")
+        if not rows:
+            return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY,
+                               "the journey does not hold this place")
     if len(rows) > 1:
         # Two rows claim one provider object id. Choosing by name or by "the first one" is exactly the
         # silent cross-city pairing, so the answer is a refusal that names how many collided.

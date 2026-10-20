@@ -3906,8 +3906,11 @@ export interface components {
             lead_shape: "PLACE_ID" | "CANDIDATE_ID" | "PROVIDER_OBJECT_ID" | "NOT_A_LEAD";
             /** @enum {string} */
             status: "RESOLVED" | "UNRESOLVED";
-            /** @enum {string} */
-            reason_code: "LEAD_RESOLVED" | "LEAD_NOT_A_PLACE_LEAD" | "LEAD_AMBIGUOUS" | "CANDIDATE_NOT_MATERIALIZED" | "PLACE_NOT_IN_JOURNEY";
+            /**
+             * @description The absence is named apart: `LEAD_HAS_NO_PLACE_ROW` means no `places` row carries that identity anywhere in this store, `PLACE_NOT_IN_JOURNEY` means a row did match and this journey does not hold it. A caller that confuses them sends a place into the trip that does not exist.
+             * @enum {string}
+             */
+            reason_code: "LEAD_RESOLVED" | "LEAD_NOT_A_PLACE_LEAD" | "LEAD_AMBIGUOUS" | "CANDIDATE_NOT_MATERIALIZED" | "PLACE_NOT_IN_JOURNEY" | "LEAD_HAS_NO_PLACE_ROW";
             /** @description Which identity column answered -- place_id, provider_object_id, candidate_identity */
             matched_by?: string | null;
             /** @description Null whenever the lead did not resolve */
@@ -8205,7 +8208,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Journey not found, or the lead resolves to nothing this journey holds; error.reason_code is one of LEAD_NOT_A_PLACE_LEAD, LEAD_AMBIGUOUS, CANDIDATE_NOT_MATERIALIZED, PLACE_NOT_IN_JOURNEY */
+            /** @description Journey not found, or the lead answers nothing. The two absences are named apart, because the caller does a different thing about each: `LEAD_HAS_NO_PLACE_ROW` when no `places` row carries that identity anywhere in this store, `PLACE_NOT_IN_JOURNEY` when a row did match and this journey does not hold it. Also `LEAD_NOT_A_PLACE_LEAD` for text or a url, `LEAD_AMBIGUOUS` when two rows claim one provider object id, `CANDIDATE_NOT_MATERIALIZED` for a candidate row with no place yet. */
             404: {
                 headers: {
                     [name: string]: unknown;

@@ -253,6 +253,27 @@ def test_a_place_the_journey_does_not_hold_stays_unreachable(session_of, seeded)
     assert reading.reason_code == place_source_lead.REASON_NOT_IN_JOURNEY
 
 
+def test_a_lead_no_row_carries_is_not_reported_as_the_journeys_fault(session_of, seeded):
+    """Two different absences, because they send the caller to two different doors.
+
+    A lead that matches no row at all is `LEAD_HAS_NO_PLACE_ROW`: the fix is to materialize the place
+    (or send the identity the discovery actually carried). A lead that matches a row this trip does not
+    hold stays `PLACE_NOT_IN_JOURNEY`: there the scope rule is the answer, and it is unchanged. Before
+    the split a journey-scoped call reported the second word for both, so a caller was told to attach a
+    place that does not exist.
+    """
+    unheld = place_source_lead.resolve_place_lead(session_of, seeded.ids["shanghai"],
+                                                  journey_id=seeded.ids["journey"])
+    assert unheld.reason_code == place_source_lead.REASON_NOT_IN_JOURNEY, unheld.note
+
+    for lead in (str(uuid.uuid4()), "photon:node/no-such-row"):
+        reading = place_source_lead.resolve_place_lead(session_of, lead,
+                                                       journey_id=seeded.ids["journey"])
+        assert reading.resolved is False, (lead, reading.as_payload())
+        assert reading.reason_code == place_source_lead.REASON_NO_ROW_FOR_LEAD, (lead, reading.note)
+        assert reading.place_id is None, reading.as_payload()
+
+
 # ---------------------------------------------------------------- the reads themselves
 def test_the_owner_gets_identity_and_region_from_the_lead(seeded, monkeypatch):
     client, seen = _app(seeded, monkeypatch)
