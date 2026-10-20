@@ -229,6 +229,34 @@ def test_a_provider_colon_object_lead_reaches_a_row_stored_bare(session_of, seed
     assert place_source_lead.minted_place_id("photon", "node/77") == bare
 
 
+def test_a_lead_that_is_a_rows_own_external_id_resolves_even_when_it_looks_like_an_id(session_of, seeded):
+    """`mock-city` 那支写者的真形制：`external_id` 存 `P001` 这种短码，主键是另一串。
+
+    线索 `P001` 被分类成「像主键」，可旧码在 PLACE_ID 那一支只查主键、查不到就答无行——真库里
+    16 枚 Place 拿自己的 `external_id` 当线索，一枚都补不回来。形状决定用哪个词表，不决定查哪一列。
+    """
+    _place(session_of, provider_key="mock-city", external_id="P901",
+           city_code="广州市", name="广州塔", place_id="plc-mock-901")
+    session_of.commit()
+    reading = place_source_lead.resolve_place_lead(session_of, "P901")
+    assert reading.resolved, reading.as_payload()
+    assert reading.place_id == "plc-mock-901"
+    assert reading.matched_by == "provider_object_id", reading.as_payload()
+    assert reading.as_payload()["provider_object_id"] == "P901"
+
+
+def test_one_string_that_is_one_rows_id_and_another_rows_external_id_is_refused(session_of, seeded):
+    """两列各指一行时不替调用方选：拒，并且不报是哪一列答的。"""
+    _place(session_of, provider_key="mock-city", external_id="别的码",
+           city_code="广州市", name="甲站", place_id="K123")
+    _place(session_of, provider_key="mock-city", external_id="K123",
+           city_code="上海市", name="乙站", place_id="plc-other")
+    session_of.commit()
+    reading = place_source_lead.resolve_place_lead(session_of, "K123")
+    assert reading.reason_code == place_source_lead.REASON_AMBIGUOUS, reading.as_payload()
+    assert reading.place_id is None and reading.matched_by is None, reading.as_payload()
+
+
 # ---------------------------------------------------------------- the shapes that must refuse
 def test_place_text_is_not_a_lead_even_when_a_row_carries_that_name(session_of):
     """同名异地的那一刀：屏上写着「外滩」不等于 photon:node/1 就是外滩。"""

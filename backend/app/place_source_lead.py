@@ -169,25 +169,18 @@ def resolve_place_lead(session: Session, lead: str, *,
                        journey_id: str | None = None) -> PlaceLead:
     """Map one source lead onto at most one Place, using stored identity columns only.
 
-    Resolution arms, in the order they are trusted: minted/exact ``Place.id``, ``RealPlaceCandidate``
-    row joined on its own (provider_key, external_id), then ``Place.external_id`` equality. Scope
-    runs last and never widens the set: with a journey supplied, only places that journey holds can
-    be answered about.
+    Resolution arms, in the order they are trusted: a ``RealPlaceCandidate`` row joined on its own
+    (provider_key, external_id), then ``Place.external_id`` equality, then the (provider_key, object)
+    pair when the lead carries a provider prefix, then the minted ``Place.id``. A lead's shape picks
+    the vocabulary, not the column -- an id-shaped string can be a row's ``external_id`` -- so every
+    non-candidate shape goes through the same three equality arms. Scope runs last and never widens
+    the set: with a journey supplied, only places that journey holds can be answered about.
     """
     raw = (lead or "").strip()
     shape = classify_lead(raw)
     if shape == SHAPE_NOT_A_LEAD:
         return _unresolved(raw, shape, REASON_NOT_A_LEAD,
                            "this product stores places by id and by provider object id, not by text")
-
-    if shape == SHAPE_PLACE_ID:
-        row = session.get(Place, raw)
-        if row is None:
-            return _unresolved(raw, shape, REASON_NO_ROW_FOR_LEAD, "no place row carries this id")
-        if journey_id and not place_is_in_journey(session, journey_id, row.id):
-            return _unresolved(raw, shape, REASON_NOT_IN_JOURNEY,
-                               "the journey does not hold this place")
-        return _from_row(row, matched_by="place_id", lead=raw, shape=shape)
 
     if shape == SHAPE_CANDIDATE_ID:
         candidate = session.get(RealPlaceCandidate, raw)
@@ -213,12 +206,15 @@ def resolve_place_lead(session: Session, lead: str, *,
         return _from_row(row, matched_by="candidate_identity", lead=raw, shape=shape,
                          candidate_region=candidate.city_code)
 
-    #: The three identity columns a lead may name, tried in this order and never by text. Shipped
-    #: writers disagree about one detail, and that disagreement used to be the caller's problem:
-    #: `real_city._external_id()` stores the full `provider:object` in `Place.external_id`, while the
-    #: Photon writer stores only the object part and keeps the provider in `Place.provider_key`. So a
-    #: lead spelled `photon:node/2` has to be allowed to name the pair as well as the single column --
-    #: still two equality lookups on stored identity, still no name, no search, no URL.
+    #: The three identity columns a lead may name, tried in this order and never by text. Two real
+    #: shapes reach this one path, because a lead's shape does not tell which column holds it:
+    #: `real_city._external_id()` stores the full `provider:object` in `Place.external_id` while the
+    #: Photon writer keeps the provider in `Place.provider_key` and the object part alone in
+    #: `external_id`, and a fixture writer (`mock-city`) stores short codes like `P001` in
+    #: `external_id` while its primary key is a different string again. So one lead is tried against
+    #: `external_id` whole, against the (provider_key, object) pair when it carries a prefix, and
+    #: against the primary key -- three equality lookups on stored identity columns, no name, no
+    #: search, no url.
     rows: dict[str, Place] = {}
     matched_by: dict[str, str] = {}
 
@@ -244,7 +240,7 @@ def resolve_place_lead(session: Session, lead: str, *,
         # to attach a place that does not exist. The absence is the answer; scope is only reported
         # when a row actually matched.
         return _unresolved(raw, shape, REASON_NO_ROW_FOR_LEAD,
-                           "no place row carries this provider object id")
+                           "no place row carries this identity")
     if journey_id:
         candidates = [row for row in candidates if place_is_in_journey(session, journey_id, row.id)]
         if not candidates:
