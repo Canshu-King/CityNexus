@@ -1,0 +1,182 @@
+{
+ "built_at": "2026-10-21T04:10:08+0800",
+ "volume": {
+  "free_before_bytes": 5881978880,
+  "free_after_bytes": 6111297536,
+  "delta_bytes": 229318656
+ },
+ "sweep": {
+  "mode": "APPLY",
+  "days": 14,
+  "dirs_removed": 18,
+  "dirs_kept": 14,
+  "bytes_listed": 678277793,
+  "removed": [
+   {
+    "dir": "_qoder_cmdr_backend_live_0143",
+    "age_days": 18.0,
+    "bytes": 10014695
+   },
+   {
+    "dir": "_qoder_cmdr_backend_live_0350",
+    "age_days": 20.1,
+    "bytes": 16322546
+   },
+   {
+    "dir": "_qoder_cmdr_backend_live_0433",
+    "age_days": 23.0,
+    "bytes": 8187394
+   },
+   {
+    "dir": "_qoder_cmdr_backend_live_0503",
+    "age_days": 23.0,
+    "bytes": 8204116
+   },
+   {
+    "dir": "_qoder_cmdr_backend_live_1617",
+    "age_days": 22.5,
+    "bytes": 7723451
+   },
+   {
+    "dir": "_qoder_cmdr_backend_live_1813",
+    "age_days": 24.4,
+    "bytes": 102112277
+   },
+   {
+    "dir": "_qoder_cmdr_base_20260921",
+    "age_days": 18.0,
+    "bytes": 101879163
+   },
+   {
+    "dir": "_qoder_cmdr_builds",
+    "age_days": 9000000000.0,
+    "bytes": 0
+   },
+   {
+    "dir": "_qoder_cmdr_int_0441",
+    "age_days": 21.8,
+    "bytes": 113940945
+   },
+   {
+    "dir": "_qoder_cmdr_stack_aac1142",
+    "age_days": 15.1,
+    "bytes": 17497860
+   },
+   {
+    "dir": "_qoder_cmdr_stack_d107131",
+    "age_days": 15.5,
+    "bytes": 18337720
+   },
+   {
+    "dir": "_qoder_cmdr_stack_ee14270",
+    "age_days": 16.1,
+    "bytes": 17591850
+   },
+   {
+    "dir": "_qoder_cmdr_stack_seed",
+    "age_days": 17.2,
+    "bytes": 18131825
+   },
+   {
+    "dir": "_qoder_cmdr_stack_tip",
+    "age_days": 17.6,
+    "bytes": 7777102
+   },
+   {
+    "dir": "_qoder_cmdr_suite_0418",
+    "age_days": 22.0,
+    "bytes": 18613929
+   },
+   {
+    "dir": "_qoder_cmdr_tipnow",
+    "age_days": 21.7,
+    "bytes": 12341491
+   },
+   {
+    "dir": "_qoder_cmdr_toolcheck_1858",
+    "age_days": 24.4,
+    "bytes": 99784036
+   },
+   {
+    "dir": "_qoder_cmdr_toolsland_1936",
+    "age_days": 24.4,
+    "bytes": 99817393
+   }
+  ],
+  "abort": null
+ },
+ "volume_top_dirs_mb": [
+  {
+   "dir": "_codex_workers",
+   "mb": 42608.8
+  },
+  {
+   "dir": "CityNexus-Tools",
+   "mb": 12965.1
+  },
+  {
+   "dir": "CityNexus",
+   "mb": 11055.9
+  },
+  {
+   "dir": "_qoder_badge_1008",
+   "mb": 7925.9
+  },
+  {
+   "dir": "_hjp3_0300c2_0925",
+   "mb": 7292.4
+  },
+  {
+   "dir": "hrpd",
+   "mb": 6117.6
+  },
+  {
+   "dir": "_hjp3_0301p3_0925",
+   "mb": 5820.6
+  },
+  {
+   "dir": "_codex_sol_extreme_v2_20260919",
+   "mb": 4064.5
+  },
+  {
+   "dir": "_hjp3_0312r_0926",
+   "mb": 3648.2
+  },
+  {
+   "dir": "_cmdr_fe_rev_1016",
+   "mb": 2738.6
+  },
+  {
+   "dir": "_qoder_82f55d8a_ord0576_export",
+   "mb": 2322.2
+  },
+  {
+   "dir": "_cnx_hist_stage",
+   "mb": 2106.0
+  },
+  {
+   "dir": "_cmdr_saojieggong_1016",
+   "mb": 2094.2
+  },
+  {
+   "dir": "_cmdr_butugong_wp_d",
+   "mb": 2092.2
+  },
+  {
+   "dir": "_qoder_beich_0570",
+   "mb": 2091.0
+  },
+  {
+   "dir": "_qoder_beich_0566",
+   "mb": 2054.4
+  },
+  {
+   "dir": "_qoder_beich_0557",
+   "mb": 2043.2
+  },
+  {
+   "dir": "_qoder_beicheng_0555",
+   "mb": 2043.1
+  }
+ ]
+}
