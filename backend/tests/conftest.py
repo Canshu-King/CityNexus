@@ -47,6 +47,8 @@ import pathlib
 import tempfile
 import uuid
 
+import pytest
+
 os.environ.setdefault("CITYNEXUS_DEMO_MODE", "true")
 
 # ORD-0389: demo mode says the deployment may be a stage; it does not say who may empty it.  The
@@ -138,3 +140,20 @@ for _name in _INHERITED_PROVIDER_ENV:
     os.environ.pop(_name, None)
 
 del _name
+
+
+@pytest.fixture(autouse=True)
+def _isolate_ai_provider_witness():
+    """ORD-0697: the provider witness is process state, so it has to be returned to a clean slot.
+
+    A test that simulates one 2xx from the AI provider genuinely makes *this* process able to say
+    `PROVIDER_ANSWERED` - that is what the word means - so without a reset the next module's health
+    assertion would be reading another module's simulation.  Nothing here relaxes an assertion: it
+    puts the slot back to the state a freshly started server has, before and after every test.
+    """
+
+    from app.agent.ai_availability import reset_provider_witness
+
+    reset_provider_witness()
+    yield
+    reset_provider_witness()
