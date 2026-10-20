@@ -2972,9 +2972,13 @@ paths:
         `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree.
         `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by
         nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency
-        is refused rather than stored as a subtracted pair, a pair already presented is refused by name,
-        and `Idempotency-Key` is required so a retry replays one proposal instead of writing a second
-        round. No provider is reachable from this module.
+        is refused rather than stored as a subtracted pair, a pair already presented is refused by name, a
+        candidate that differs from the plan in force in no place, time, money or commitment is refused as
+        `SUBMISSION_NO_MATERIAL_CHANGE` rather than turned into a vote about nothing -- a difference
+        confined to `activities.status`, the lifecycle word this server writes as the day runs, is named
+        in that refusal and not counted as something to approve. `Idempotency-Key`
+        is required so a retry replays one proposal instead of writing a second round. No provider is
+        reachable from this module.
       parameters:
         - name: Idempotency-Key
           in: header
@@ -2999,7 +3003,7 @@ paths:
         '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
         '404': {description: That version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
         '409': {description: "Not a CANDIDATE row, no active base, this pair already presented, or a reused key (error.reason_code SUBMISSION_NEEDS_A_CANDIDATE_VERSION, SUBMISSION_JOURNEY_HAS_NO_ACTIVE_PLAN, SUBMISSION_ALREADY_PRESENTED, SUBMISSION_IDEMPOTENCY_KEY_REUSE_CONFLICT)"}
-        '422': {description: "A body field, no key, the active version itself, or two currencies (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY)"}
+        '422': {description: "A body field, no key, the active version itself, two currencies, or a candidate that changes nothing against the plan in force (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY, SUBMISSION_NO_MATERIAL_CHANGE)"}
 
   /journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze:
     parameters:

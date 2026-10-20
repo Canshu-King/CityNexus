@@ -32,8 +32,12 @@ Refusals, each named: no seat; that version is not on this journey; the journey 
 a base against; the candidate is not `CANDIDATE` (an ACTIVE or SUPERSEDED row is not a proposal); base
 and candidate being the same row, which the shipped DDL also forbids; the two sides not sharing one
 currency, because a mixed pair has no `cost_delta_minor` for the Guardian's bounds to read; this pair
-already being PRESENTED; a missing `Idempotency-Key`; and a body carrying fields (everything is read from
-rows, so a caller cannot supply a judgement).
+already being PRESENTED; a missing `Idempotency-Key`; a body carrying fields (everything is read from
+rows, so a caller cannot supply a judgement); and a candidate that changes nothing -- the delta's own
+arithmetic, plus `activities.locked` and `travel_from_prev_min`, which its stamps do not carry, all of
+them unchanged -- because the V3 order keeps a genuine absence named (`NO_MATERIAL_CHANGE`) rather than
+turning it into something people are asked to vote on. A difference confined to `activities.status`, the
+lifecycle word this server writes as the day runs, is named in that refusal and not counted as a change.
 
 What it never does: it does not move `journeys.active_plan_version_id`, does not select, start or
 activate, does not touch a `plan_versions.status`, does not reach a provider (asserted from this module's
@@ -78,6 +82,18 @@ REASON_NO_BASE = "SUBMISSION_JOURNEY_HAS_NO_ACTIVE_PLAN"
 REASON_SAME = "SUBMISSION_BASE_IS_THE_CANDIDATE"
 REASON_CURRENCY = "SUBMISSION_NEEDS_ONE_CURRENCY"
 REASON_ALREADY = "SUBMISSION_ALREADY_PRESENTED"
+#: The V3 order's own word for a genuine absence: the Guardian answers `NO_MATERIAL_CHANGE` when nothing
+#: moved, and this door refuses to open a round that would ask the members to approve nothing.
+REASON_NO_MATERIAL = "SUBMISSION_NO_MATERIAL_CHANGE"
+
+#: `activities.status` is a lifecycle word this server writes as the day runs -- `POST .../start` marks
+#: the first slot `ACTIVE`, the check-in door marks it `COMPLETED` -- while a candidate's rows always say
+#: `PLANNED`. A member can approve or reject where, when and what it costs; nobody can vote a lifecycle
+#: word, so a difference confined to this column is named in the refusal and not counted as a change.
+#: Every other column a stamp carries counts, including any column added later (default-deny, pinned by
+#: a spec cell that re-reads `app.plan_delta._stamp`'s own keys).
+LIFECYCLE_STAMP_FIELDS = frozenset({"status"})
+LIFECYCLE_DISCLOSURE = "activities.status"
 
 #: The consent door's own path template, kept here so the two halves of the round name each other.
 CONSENT_PATH = "/api/v1/journeys/{journey_id}/replan-proposals/{proposal_id}/consent"
@@ -159,6 +175,71 @@ def _gate_verdict(session: Session, journey, candidate: PlanVersion) -> dict[str
     }
 
 
+def material_comparison(delta: dict[str, Any], *, travel_delta_min: int,
+                        lock_flag_changes: list[int]) -> dict[str, Any]:
+    """Whether a submission would ask the members about anything, computed from the delta itself.
+
+    The V3 order's third item keeps a genuine absence named -- `NO_MATERIAL_CHANGE` -- instead of
+    dressing it up as a change. A round is the opposite dressing-up: a candidate whose rows match the
+    plan already in force would be stored as `PRESENTED` and ask people to approve nothing, so this
+    refuses on the arithmetic rather than on a caller's say-so.
+
+    Seven things have to agree before the answer is "nothing moved", each a read of a shipped column and
+    none invented here: no slot moved, was added or was removed; every kept slot's own row is unchanged
+    in the fields a traveller chooses (`place_id`, `start_at`, `end_at`, `estimated_cost_minor`,
+    `currency`); the plan-row money sum, the places' verified cost sum, the wall-clock duration and the
+    declared travel minutes all came out at zero; and no `activities.locked` flag flipped. Aggregate
+    deltas alone are not enough -- two rows can trade minutes for nothing -- so the per-slot stamps are
+    compared too, and `travel_from_prev_min` and `locked` are read from rows because the delta's stamps
+    do not carry them. A pair whose money cannot be totalled in one currency is compared on the raw
+    column sums, the weaker claim this door is allowed to make when what it is proving is "nothing
+    changed", not "here is a number".
+
+    One difference is named without being counted: `activities.status`. A departed journey's live plan
+    carries the words this server writes as the day runs -- `POST .../start` marks the first slot
+    `ACTIVE`, the check-in door marks it `COMPLETED` -- while a candidate's rows always say `PLANNED`, so
+    a traveller who presses the same day back at the server differs in that column and in nothing else.
+    Nobody can approve or reject a lifecycle word, and pretending otherwise would let the door answer
+    "presented" to a round about the plan already in force. **Default-deny:** every other column a stamp
+    carries, including one added to `app.plan_delta._stamp` later, counts as a change; a spec cell
+    re-reads those keys so this stays true.
+    """
+    counts = delta["counts"]
+    changed = {word: int(counts[word]) for word in ("moved", "added", "removed") if counts[word]}
+    kept_changes: list[int] = []
+    lifecycle_changes: list[int] = []
+    for entry in delta["sets"]["kept"]:
+        differing = sorted(key for key in set(entry["from"]) | set(entry["to"])
+                           if entry["from"].get(key) != entry["to"].get(key))
+        if [key for key in differing if key not in LIFECYCLE_STAMP_FIELDS]:
+            kept_changes.append(int(entry["sequence_no"]))
+        if [key for key in differing if key in LIFECYCLE_STAMP_FIELDS]:
+            lifecycle_changes.append(int(entry["sequence_no"]))
+    budget = delta["budget_delta"]
+    if budget["delta_minor"] is None:
+        money_unchanged = budget["from_total_minor"] == budget["to_total_minor"]
+    else:
+        money_unchanged = int(budget["delta_minor"]) == 0
+    unchanged = (not changed and not kept_changes and money_unchanged
+                 and int(delta["verified_cost"]["delta_minor"]) == 0
+                 and int(delta["duration_delta"]["delta_min"]) == 0
+                 and int(travel_delta_min) == 0 and not lock_flag_changes)
+    return {
+        "unchanged": unchanged,
+        "counts": dict(counts),
+        "sets_that_changed": changed,
+        "kept_slots_whose_row_differs": kept_changes,
+        "kept_slots_whose_lifecycle_word_differs": lifecycle_changes,
+        "lifecycle_word_not_counted": LIFECYCLE_DISCLOSURE,
+        "lock_flags_changed": list(lock_flag_changes),
+        "budget_delta_minor": budget["delta_minor"],
+        "budget_totals_minor": [budget["from_total_minor"], budget["to_total_minor"]],
+        "verified_cost_delta_minor": delta["verified_cost"]["delta_minor"],
+        "duration_delta_min": delta["duration_delta"]["delta_min"],
+        "travel_delta_min": int(travel_delta_min),
+    }
+
+
 @router.post(SUBMISSION_PATH, status_code=201)
 def journey_plan_submission(
     response: Response,
@@ -228,6 +309,21 @@ def journey_plan_submission(
                       {"proposal_id": already.id, "status": already.status})
 
     delta = delta_of(session, journey, base, candidate)
+    travel_delta_min = _travel_delta(session, base.id, candidate.id)
+    comparison = material_comparison(
+        delta, travel_delta_min=travel_delta_min,
+        lock_flag_changes=_lock_flag_changes(session, base.id, candidate.id))
+    if comparison["unchanged"]:
+        raise _refuse(
+            422,
+            "this candidate differs from the plan in force in no place, time, money or commitment, "
+            "so a round about it would ask the members to approve nothing",
+            REASON_NO_MATERIAL,
+            {"journey_id": journey.id, "base_plan_version_id": base.id,
+             "proposed_plan_version_id": candidate.id,
+             "read_from": "app.plan_delta.delta_of + activities.locked / travel_from_prev_min",
+             **comparison},
+        )
     gate_verdict = _gate_verdict(session, journey, candidate)
     preserved, dropped = _locked_preserved(session, base, candidate)
     from app.main import _envelope_payload
@@ -242,7 +338,7 @@ def journey_plan_submission(
         moved_count=delta["counts"]["moved"],
         removed_count=delta["counts"]["removed"],
         added_count=delta["counts"]["added"],
-        travel_delta_min=_travel_delta(session, base.id, candidate.id),
+        travel_delta_min=travel_delta_min,
         budget_amount_minor=journey.budget_amount_minor,
         after_envelope=envelope,
         commitments_preserved=preserved,
@@ -344,6 +440,25 @@ def _travel_delta(session: Session, base_id: str, candidate_id: str) -> int:
                 Activity.plan_version_id == plan_id)).all()
         )
     return totals["candidate"] - totals["base"]
+
+
+def _lock_flag_changes(session: Session, base_id: str, candidate_id: str) -> list[int]:
+    """Sequences whose `activities.locked` word differs between the two sides.
+
+    A commitment that stopped being a commitment is a change worth a round even when the slot carries
+    the same place at the same time for the same money, and the delta's per-slot stamps do not hold this
+    column, so it is read from the rows here rather than quietly left out of the comparison above.
+    Sequences that exist on only one side are already `added` / `removed`.
+    """
+    flags: dict[str, dict[int, bool]] = {}
+    for label, plan_id in (("base", base_id), ("candidate", candidate_id)):
+        flags[label] = {
+            int(row.sequence_no): bool(row.locked)
+            for row in session.scalars(select(Activity).where(
+                Activity.plan_version_id == plan_id)).all()
+        }
+    return sorted(sequence for sequence in set(flags["base"]) & set(flags["candidate"])
+                  if flags["base"][sequence] != flags["candidate"][sequence])
 
 
 def _stored_diff(delta: dict[str, Any], envelope: dict[str, Any]) -> dict[str, Any]:

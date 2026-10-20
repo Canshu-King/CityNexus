@@ -106,12 +106,18 @@ def _plan(session, journey_id: str, *, number: int, status: str) -> str:
 
 
 def _activity(session, plan_id: str, sequence_no: int, place_id: str | None, *, title: str,
-              cost: int = 3000, start: int, length: int = 45, locked: bool = False,
-              travel: int = 10, currency: str = "CNY") -> str:
+              cost: int = 3000, start: int | None = None, length: int = 45, locked: bool = False,
+              travel: int = 10, currency: str = "CNY", at: str | None = None) -> str:
+    """One slot. `at` pins the start verbatim -- see the mirror candidate in the fixture, where two
+    rows are meant to carry the same instant down to the microsecond; `start` asks for one from now."""
+    if (start is None) == (at is None):
+        raise AssertionError("a slot takes a minute offset or a pinned instant, not both")
     ident = str(uuid.uuid4())
+    start_at = _then(int(start)) if at is None else at
+    end_at = (datetime.fromisoformat(start_at) + timedelta(minutes=length)).isoformat()
     session.add(Activity(id=ident, plan_version_id=plan_id, sequence_no=sequence_no,
                          activity_type="SIGHTSEE", title=title, place_id=place_id,
-                         city_service_id=None, start_at=_then(start), end_at=_then(start + length),
+                         city_service_id=None, start_at=start_at, end_at=end_at,
                          travel_from_prev_min=travel, estimated_cost_minor=cost, currency=currency,
                          status="PLANNED", locked=locked, metadata_json="{}",
                          created_at=_now(), updated_at=_now()))
@@ -136,6 +142,7 @@ def seeded():
         ids["candidate"] = _plan(session, ids["journey"], number=2, status="CANDIDATE")
         ids["active_other"] = _plan(session, ids["journey"], number=3, status="ACTIVE")
         ids["other_candidate"] = _plan(session, ids["journey"], number=4, status="CANDIDATE")
+        ids["mirror"] = _plan(session, ids["journey"], number=5, status="CANDIDATE")
         ids["foreign"] = _plan(session, ids["other_journey"], number=1, status="CANDIDATE")
         session.add(Journey(id=ids["journey"], traveler_id=ids["owner"], title="连城",
                             city_code=CITY, timezone="Asia/Shanghai", start_at=_then(60),
@@ -155,9 +162,19 @@ def seeded():
         ids["a"] = _place(session, name="冠豸山", point=(25.7, 116.75))
         ids["b"] = _place(session, name="天一塔", point=(25.71, 116.76))
         ids["c"] = _place(session, name="龙王滩", point=(25.72, 116.77))
-        _activity(session, ids["base"], 1, ids["a"], title="冠豸山", start=60, locked=True)
-        _activity(session, ids["base"], 2, ids["b"], title="天一塔", start=120)
-        _activity(session, ids["base"], 3, ids["c"], title="龙王滩", start=180)
+        #: One clock taken once, so the mirror candidate below carries the base's instants verbatim:
+        #: two separate `_then` calls differ by microseconds, and that would make a "same plan"
+        #: candidate differ in a way no traveller ever typed.
+        at = {1: _then(60), 2: _then(120), 3: _then(180)}
+        _activity(session, ids["base"], 1, ids["a"], title="冠豸山", at=at[1], locked=True)
+        _activity(session, ids["base"], 2, ids["b"], title="天一塔", at=at[2])
+        _activity(session, ids["base"], 3, ids["c"], title="龙王滩", at=at[3])
+        # The mirror: the same three places, the same instants, the same money, the same lock. Only the
+        # version row is new -- which is exactly what `POST .../plans/from-slots` writes when a
+        # traveller presses the plan already in force back at the server.
+        _activity(session, ids["mirror"], 1, ids["a"], title="冠豸山", at=at[1], locked=True)
+        _activity(session, ids["mirror"], 2, ids["b"], title="天一塔", at=at[2])
+        _activity(session, ids["mirror"], 3, ids["c"], title="龙王滩", at=at[3])
         _activity(session, ids["candidate"], 1, ids["a"], title="冠豸山", start=60, locked=True)
         _activity(session, ids["candidate"], 2, ids["c"], title="龙王滩", start=120)
         _activity(session, ids["active_other"], 1, ids["a"], title="冠豸山", start=60)
@@ -461,6 +478,184 @@ def test_two_currencies_have_no_cost_delta_so_the_submission_is_refused(seeded):
     assert error["reason_code"] == plan_submission.REASON_CURRENCY, error
     assert error["details"]["currencies"] == ["CNY", "USD"], error
     assert _rows(seeded, ReplanProposal) == [], _rows(seeded, ReplanProposal)
+
+
+def test_a_candidate_that_changes_nothing_is_refused_instead_of_opening_a_round(seeded):
+    """The V3 order keeps a genuine absence named (`NO_MATERIAL_CHANGE`) instead of calling a vote.
+
+    `ids["mirror"]` carries the base's places, instants, money and locks under a new version number,
+    which is what a traveller gets for pressing the plan already in force back through the write door.
+    The shipped DDL would take that proposal happily and the members would be asked to approve the plan
+    they are already on, so the refusal is computed here, from the delta's own arithmetic.
+    """
+    client = _app(seeded)
+    ids = seeded.ids
+    refused = _submit(client, ids, plan=ids["mirror"], key="submit-mirror")
+    assert refused.status_code == 422, refused.text
+    error = refused.json()["error"]
+    assert error["reason_code"] == plan_submission.REASON_NO_MATERIAL, error
+    details = error["details"]
+    assert details["counts"] == {"from_slots": 3, "to_slots": 3, "kept": 3, "moved": 0,
+                                 "added": 0, "removed": 0}, details["counts"]
+    assert details["sets_that_changed"] == {}, details
+    assert details["kept_slots_whose_row_differs"] == [], details
+    assert details["kept_slots_whose_lifecycle_word_differs"] == [], details
+    assert details["lifecycle_word_not_counted"] == plan_submission.LIFECYCLE_DISCLOSURE, details
+    assert details["lock_flags_changed"] == [], details
+    assert details["budget_totals_minor"] == [9000, 9000], details
+    for word in ("budget_delta_minor", "verified_cost_delta_minor", "duration_delta_min",
+                 "travel_delta_min"):
+        assert details[word] == 0, (word, details[word])
+    assert details["read_from"] == ("app.plan_delta.delta_of + activities.locked / "
+                                    "travel_from_prev_min"), details["read_from"]
+    assert details["base_plan_version_id"] == ids["base"], details
+    assert details["proposed_plan_version_id"] == ids["mirror"], details
+    for model in (ReplanProposal, IdempotencyKey, AuditLog):
+        assert _rows(seeded, model) == [], model.__name__
+    with seeded.factory() as session:
+        assert session.get(Journey, ids["journey"]).active_plan_version_id == ids["base"]
+        assert session.get(PlanVersion, ids["mirror"]).status == "CANDIDATE"
+
+
+def test_a_difference_only_in_the_word_the_server_writes_is_named_not_counted(seeded):
+    """`/start` marks the live plan's first slot ACTIVE while a candidate says PLANNED: nothing else.
+
+    Measured on a real socket (`_live_mirror_1020fc.py`): a traveller who presses a departed plan back
+    at the server differs in `activities.status` and in no chosen fact. That column is this server's own
+    lifecycle word, which no member can approve or reject, so the round is still refused -- and the
+    difference is stated in the refusal rather than quietly dropped.
+    """
+    client = _app(seeded)
+    ids = seeded.ids
+    with seeded.factory() as session:
+        slot = session.scalars(select(Activity).where(
+            Activity.plan_version_id == ids["base"], Activity.sequence_no == 1)).one()
+        slot.status = "ACTIVE"
+        session.commit()
+    refused = _submit(client, ids, plan=ids["mirror"], key="submit-lifecycle")
+    assert refused.status_code == 422, refused.text
+    error = refused.json()["error"]
+    assert error["reason_code"] == plan_submission.REASON_NO_MATERIAL, error
+    details = error["details"]
+    assert details["kept_slots_whose_lifecycle_word_differs"] == [1], details
+    assert details["kept_slots_whose_row_differs"] == [], details
+    assert details["lifecycle_word_not_counted"] == "activities.status", details
+    assert _rows(seeded, ReplanProposal) == [], _rows(seeded, ReplanProposal)
+
+
+def test_every_column_a_delta_stamp_carries_is_classified_by_the_no_material_rule(seeded):
+    """Default-deny, proved against the writer: a stamp field added later must not fall through unseen."""
+    client = _app(seeded)
+    ids = seeded.ids
+    delta = client.get(plan_delta.DELTA_PATH.format(journey_id=ids["journey"]),
+                       params={"from_plan_version_id": ids["base"],
+                               "to_plan_version_id": ids["mirror"]},
+                       headers=_header(ids["owner"]))
+    assert delta.status_code == 200, delta.text
+    keys: set[str] = set()
+    for entry in delta.json()["sets"]["kept"]:
+        keys |= set(entry["from"]) | set(entry["to"])
+    chosen = {"place_id", "start_at", "end_at", "estimated_cost_minor", "currency"}
+    assert keys == chosen | {"sequence_no"} | set(plan_submission.LIFECYCLE_STAMP_FIELDS), sorted(keys)
+
+
+def test_the_no_material_verdict_is_the_same_function_the_door_answers_with(seeded):
+    """One writer for the verdict: `material_comparison` re-run over the delta door's own answer."""
+    client = _app(seeded)
+    ids = seeded.ids
+    with seeded.factory() as session:
+        journey = session.get(Journey, ids["journey"])
+        base = session.get(PlanVersion, ids["base"])
+        mirror = session.get(PlanVersion, ids["mirror"])
+        candidate = session.get(PlanVersion, ids["candidate"])
+        mirror_delta = plan_delta.delta_of(session, journey, base, mirror)
+        candidate_delta = plan_delta.delta_of(session, journey, base, candidate)
+        mirror_travel = plan_submission._travel_delta(session, base.id, mirror.id)
+        candidate_travel = plan_submission._travel_delta(session, base.id, candidate.id)
+        mirror_locks = plan_submission._lock_flag_changes(session, base.id, mirror.id)
+        candidate_locks = plan_submission._lock_flag_changes(session, base.id, candidate.id)
+    nothing = plan_submission.material_comparison(
+        mirror_delta, travel_delta_min=mirror_travel, lock_flag_changes=mirror_locks)
+    something = plan_submission.material_comparison(
+        candidate_delta, travel_delta_min=candidate_travel, lock_flag_changes=candidate_locks)
+    assert nothing["unchanged"] is True, nothing
+    assert something["unchanged"] is False, (something, something["sets_that_changed"])
+
+    details = _submit(client, ids, plan=ids["mirror"], key="submit-parity").json()["error"]["details"]
+    for word in ("counts", "sets_that_changed", "kept_slots_whose_row_differs",
+                 "kept_slots_whose_lifecycle_word_differs", "lifecycle_word_not_counted",
+                 "lock_flags_changed", "budget_delta_minor", "budget_totals_minor",
+                 "verified_cost_delta_minor", "duration_delta_min", "travel_delta_min"):
+        assert details[word] == nothing[word], (word, details[word], nothing[word])
+
+
+def test_a_candidate_that_only_moves_the_clock_is_a_change_though_the_day_keeps_its_length(seeded):
+    """The per-slot stamps are load-bearing: every aggregate still reads zero, so this must be asked."""
+    client = _app(seeded)
+    ids = seeded.ids
+    with seeded.factory() as session:
+        for row in session.scalars(select(Activity).where(
+                Activity.plan_version_id == ids["mirror"])).all():
+            row.start_at = (datetime.fromisoformat(row.start_at) + timedelta(minutes=30)).isoformat()
+            row.end_at = (datetime.fromisoformat(row.end_at) + timedelta(minutes=30)).isoformat()
+        session.commit()
+    accepted = _submit(client, ids, plan=ids["mirror"], key="submit-shift")
+    assert accepted.status_code == 201, accepted.text
+    body = accepted.json()
+    assert body["delta"]["counts"]["moved"] == 0 and body["delta"]["counts"]["added"] == 0, body
+    assert body["delta"]["counts"]["kept"] == 3, body["delta"]["counts"]
+    assert body["delta"]["duration_delta"]["delta_min"] == 0, body["delta"]["duration_delta"]
+    assert body["delta"]["budget_delta"]["delta_minor"] == 0, body["delta"]["budget_delta"]
+    assert len(_rows(seeded, ReplanProposal)) == 1, _rows(seeded, ReplanProposal)
+
+
+def test_a_candidate_that_only_unlocks_a_commitment_is_still_a_change(seeded):
+    """`activities.locked` is not in a delta stamp, so the guard reads it from the rows for itself."""
+    client = _app(seeded)
+    ids = seeded.ids
+    with seeded.factory() as session:
+        slot = session.scalars(select(Activity).where(
+            Activity.plan_version_id == ids["mirror"], Activity.sequence_no == 1)).one()
+        slot.locked = False
+        session.commit()
+    accepted = _submit(client, ids, plan=ids["mirror"], key="submit-unlock")
+    assert accepted.status_code == 201, accepted.text
+    body = accepted.json()
+    assert body["delta"]["counts"]["kept"] == 3 and body["delta"]["counts"]["moved"] == 0, body
+    assert body["delta"]["duration_delta"]["delta_min"] == 0, body["delta"]
+    assert body["locked_commitments_preserved"] is True, body
+
+
+def test_a_refusal_costs_the_idempotency_key_nothing_and_a_reprice_is_a_change(seeded):
+    """No receipt rides a refusal: the same key carries the corrected press, which then writes a round."""
+    client = _app(seeded)
+    ids = seeded.ids
+    refused = _submit(client, ids, plan=ids["mirror"], key="submit-once")
+    assert refused.status_code == 422, refused.text
+    assert refused.json()["error"]["reason_code"] == plan_submission.REASON_NO_MATERIAL, refused.text
+    assert _rows(seeded, IdempotencyKey) == [], _rows(seeded, IdempotencyKey)
+    with seeded.factory() as session:
+        slot = session.scalars(select(Activity).where(
+            Activity.plan_version_id == ids["mirror"], Activity.sequence_no == 3)).one()
+        slot.estimated_cost_minor = 3500
+        session.commit()
+    accepted = _submit(client, ids, plan=ids["mirror"], key="submit-once")
+    assert accepted.status_code == 201, accepted.text
+    assert accepted.json()["delta"]["budget_delta"]["delta_minor"] == 500, accepted.json()["delta"]
+    assert len(_rows(seeded, ReplanProposal)) == 1, _rows(seeded, ReplanProposal)
+    assert len(_rows(seeded, IdempotencyKey)) == 1, _rows(seeded, IdempotencyKey)
+
+
+def test_every_refusal_word_this_door_can_answer_with_is_written_in_the_contract():
+    """A reason code a screen has to branch on is only a contract word if the contract carries it."""
+    contract = yaml.safe_load(Path("../contracts/openapi.yaml").read_text(encoding="utf-8"))
+    path = contract["paths"]["/journeys/{journey_id}/plans/{plan_version_id}/submission"]["post"]
+    described = json.dumps(path["responses"], ensure_ascii=False)
+    words = sorted(value for name, value in vars(plan_submission).items()
+                   if name.startswith("REASON_"))
+    assert len(words) >= 2, words
+    missing = [word for word in words if word not in described]
+    assert missing == [], (missing, words)
 
 
 def test_no_event_and_no_epoch_are_invented_for_a_hand_built_candidate(seeded):

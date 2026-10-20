@@ -2027,7 +2027,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Present a CANDIDATE plan version of this journey to its members as a `replan_proposals` row in the shipped PRESENTED state, without applying it to anybody: the journey keeps pointing at its active version, the candidate keeps its own status, and the round that follows is the consent door. The body is empty on purpose -- every field stored is read from rows and judged by the functions that already own those judgements: `hard_constraints_passed` from `app.services.validate_plan_feasibility` (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and the places the candidate carries, `utility_score` and `score_breakdown` from `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree. `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency is refused rather than stored as a subtracted pair, a pair already presented is refused by name, and `Idempotency-Key` is required so a retry replays one proposal instead of writing a second round. No provider is reachable from this module. */
+        /** @description Present a CANDIDATE plan version of this journey to its members as a `replan_proposals` row in the shipped PRESENTED state, without applying it to anybody: the journey keeps pointing at its active version, the candidate keeps its own status, and the round that follows is the consent door. The body is empty on purpose -- every field stored is read from rows and judged by the functions that already own those judgements: `hard_constraints_passed` from `app.services.validate_plan_feasibility` (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and the places the candidate carries, `utility_score` and `score_breakdown` from `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree. `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency is refused rather than stored as a subtracted pair, a pair already presented is refused by name, a candidate that differs from the plan in force in no place, time, money or commitment is refused as `SUBMISSION_NO_MATERIAL_CHANGE` rather than turned into a vote about nothing -- a difference confined to `activities.status`, the lifecycle word this server writes as the day runs, is named in that refusal and not counted as something to approve. `Idempotency-Key` is required so a retry replays one proposal instead of writing a second round. No provider is reachable from this module. */
         post: operations["postJourneyPlanSubmission"];
         delete?: never;
         options?: never;
@@ -8407,7 +8407,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED) */
+            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED), or a round is still asking about that plan version (COMMIT_ROUND_IN_FLIGHT) */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -8787,7 +8787,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description A body field, no key, the active version itself, or two currencies (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY) */
+            /** @description A body field, no key, the active version itself, two currencies, or a candidate that changes nothing against the plan in force (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY, SUBMISSION_NO_MATERIAL_CHANGE) */
             422: {
                 headers: {
                     [name: string]: unknown;
