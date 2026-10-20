@@ -39,7 +39,7 @@ export const placeProvenanceCopy: Record<"en" | "zhCN", PlaceProvenanceCopy> = {
     noSource: "source not recorded",
     noCoordinateSystem: "coordinate system not recorded",
     noSourceCoordinateSystem: "original system not recorded at capture",
-    noHost: "not taken from a web address",
+    noHost: "source host not recorded",
   },
   zhCN: {
     detailsLabel: "来源与坐标系",
@@ -53,7 +53,7 @@ export const placeProvenanceCopy: Record<"en" | "zhCN", PlaceProvenanceCopy> = {
     noSource: "未记录来源",
     noCoordinateSystem: "未记录坐标系",
     noSourceCoordinateSystem: "采集时未记录原始坐标系",
-    noHost: "不是从网址采来的",
+    noHost: "未记录来源主机",
   },
 };
 
