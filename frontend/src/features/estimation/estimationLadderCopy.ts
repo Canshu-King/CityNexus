@@ -36,7 +36,7 @@ export const estimationLadderCopy = {
     "ladder.tier.verify": "Verify",
     "ladder.tier.remedy": "What you can change",
     "ladder.method.sourced":
-      "{source}: {amount} at {confidence}% confidence. It is a quote handed back to us, not a settlement -- the provider's own final price is what you pay.",
+      "{source}: {amount} at {confidence}% confidence. It is a quote handed back to us; the provider's own final price is what you pay.",
     "ladder.method.noConfidence":
       "{source}: {amount}. This server sent no confidence with that answer.",
     "ladder.method.noSource": "This server gave only {amount}: it wrote no source for it.",
@@ -66,7 +66,7 @@ export const estimationLadderCopy = {
     "ladder.tier.verify": "核对",
     "ladder.tier.remedy": "你能改的",
     "ladder.method.sourced":
-      "{source}：{amount}，置信度 {confidence}%。这是报回来的一条价，不是结算单，实付以供应商的最终价格为准。",
+      "{source}：{amount}，置信度 {confidence}%。这是报回来的一条价，实付以供应商的最终价格为准。",
     "ladder.method.noConfidence": "{source}：{amount}。这台服务器没有随这条回答给出置信度。",
     "ladder.method.noSource": "这台服务器只给了 {amount}：没有写它是从哪来的。",
     "ladder.method.noCandidates": "这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。",

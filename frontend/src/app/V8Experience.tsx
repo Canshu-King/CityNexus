@@ -12,6 +12,7 @@ import { mapCopy } from "../i18n/mapPanelCopy";
 import { footprintWords, useFootprints } from "../features/checkin/footprintRead";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
+import { AgentWorkEntry } from "../features/agent/AgentWorkFeedPanel";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
 import { PlanAiRunStrip } from "../features/planning/PlanAiRunStrip";
 import { TripItinerary } from "../features/trip/TripItinerary";
@@ -41,6 +42,15 @@ import {
 } from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import {
+  adoptSignedSession,
+  observeRejection,
+  refusalReasonCode,
+  renewSignedSessionIfShort,
+  signedBearerHeaders,
+  signedTravelerId,
+  verifySignedSession,
+} from "../lib/travelerSession";
+import {
   clearPendingContinuation,
   continuePendingPlan,
   type ContinuationOutcome,
@@ -59,6 +69,7 @@ import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
+import { MyTripsEntry } from "../features/trip/MyTripsEntry";
 import { useDemoScene } from "../lib/sceneClock";
 import { SharedJourneyScreen } from "../features/shared/SharedJourneyPanel";
 import { SharedPosterScreen } from "../features/poster/SharedPosterScreen";
@@ -100,7 +111,6 @@ import {
   type OfflineJourney,
 } from "../lib/offlineJourney";
 import { dictionaryCopy, dictionaryText, useT, useLocale } from "../i18n/LocaleContext";
-import { englishCountNoun } from "../lib/plural";
 import {
   currencyExponent,
   currencyMinorFactor,
@@ -285,10 +295,150 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 }
 
+/**
+ * The traveller's own two doors read as facts, not as throws -- `GET .../session` and
+ * `POST .../session/refresh`, which differ only in method and path.
+ *
+ * The verifier has to be able to tell four answers apart -- the door agreed, the credential was
+ * refused, this build has no identity configured (503), the network blinked -- and the shell's
+ * own channel raises on every one of them.  Status `0` means "nothing answered", which is
+ * deliberately not the same thing as "this person is not who they say": a wifi dropout must not
+ * sign somebody out.
+ */
+async function askSessionDoor(
+  path: string,
+  method: "GET" | "POST",
+  headers: Record<string, string>,
+  signal?: AbortSignal,
+): Promise<{ status: number; body: unknown }> {
+  try {
+    const response = await fetchWithReadDeadline(path, { method, headers, signal });
+    const raw = await response.text();
+    let body: unknown = null;
+    if (raw.trim() !== "") {
+      try {
+        body = JSON.parse(raw);
+      } catch {
+        body = null;
+      }
+    }
+    return { status: response.status, body };
+  } catch {
+    return { status: 0, body: null };
+  }
+}
+
+async function askTravelerSession(
+  headers: Record<string, string>,
+  signal?: AbortSignal,
+): Promise<{ status: number; body: unknown }> {
+  return askSessionDoor("/api/v1/travelers/session", "GET", headers, signal);
+}
+
+/**
+ * `POST /api/v1/travelers/session/refresh`, read the same way.
+ *
+ * The door carries no identity in its body or path on purpose -- it signs a fresh window for
+ * whoever's credential is on the request -- so this call sends headers and nothing else.  A
+ * `status: 0` here means "nothing answered" and leaves the session alone; only a named refusal
+ * ends it, which is decided inside `travelerSession`.
+ */
+async function askTravelerSessionRefresh(
+  headers: Record<string, string>,
+  signal?: AbortSignal,
+): Promise<{ status: number; body: unknown }> {
+  return askSessionDoor("/api/v1/travelers/session/refresh", "POST", headers, signal);
+}
+
+/**
+ * "Did that aborted POST actually land?" -- asked of the server, not guessed from the tab.
+ *
+ * GPT's P0-UX point is right and was previously papered over: an aborted request tells you the
+ * tab stopped listening, nothing about the server.  A journey can be committed with its response
+ * lost in transit, and the old screen asserted 行程还没有创建 from that silence, which is the one
+ * claim that gets a traveller to press 确认创建 twice.  So the recovery is a *read*: ask this
+ * signed traveller's own list (the door is scoped server-side since ORD-0687) and look for a trip
+ * born during this attempt.  Nothing here re-sends the non-idempotent POST.
+ */
+async function confirmCreatedJourney(
+  traveler: string,
+  startedAtMs: number,
+): Promise<string | null> {
+  if (!traveler) return null;
+  let rows: Array<{ id?: string; traveler_id?: string; created_at?: string }> = [];
+  try {
+    const answer = await v8Request<Array<{ id?: string; traveler_id?: string; created_at?: string }>>(
+      "/api/v1/journeys",
+    );
+    rows = Array.isArray(answer) ? answer : [];
+  } catch {
+    // The verification itself failed: the caller still must not claim the trip is absent.
+    return null;
+  }
+  const mine = rows
+    .filter((row) => row?.traveler_id === traveler)
+    .map((row) => ({ id: String(row?.id ?? ""), born: Date.parse(String(row?.created_at ?? "")) }))
+    .filter((row) => row.id && !Number.isNaN(row.born) && row.born >= startedAtMs - 5_000)
+    .sort((a, b) => b.born - a.born);
+  return mine.length ? mine[0].id : null;
+}
+
+interface TravelerAnswer {
+  id: string;
+  access_token?: string | null;
+  session_state?: string;
+}
+
+/**
+ * The traveller this new trip belongs to: the one the server already vouched for if there is one,
+ * a fresh one otherwise (ORD-0687).
+ *
+ * Before this, every wizard run minted a brand-new anonymous traveller, so "who is on this phone"
+ * was answered by a uuid nobody authenticated and a second trip was a second stranger.  Now the
+ * tab's signed session is re-checked against the server and reused: the same person can open as
+ * many journeys as they like, and a stale credential that the door refuses cannot keep opening
+ * trips in a name nobody is signed in to.
+ */
+async function ensureSignedTraveler(
+  localeTag: string,
+  timezone: string,
+  signal?: AbortSignal,
+): Promise<string> {
+  if (signedTravelerId()) {
+    const verified = await verifySignedSession((headers) => askTravelerSession(headers, signal));
+    if (verified) {
+      /* Issue #33 Q1: a credential about to lapse is slid forward here, on the way to creating --
+         one extra round trip only inside the last five minutes of its window, and never on a tab
+         that has plenty of time left.  Awaiting it is deliberate: a create that died on an expiry
+         mid-flight would come back as a refusal the wizard has no way to explain. */
+      await renewSignedSessionIfShort((headers) => askTravelerSessionRefresh(headers, signal));
+      return verified.travelerId;
+    }
+  }
+  const answer = await v8Request<TravelerAnswer>("/api/v1/travelers", {
+    method: "POST",
+    signal,
+    body: JSON.stringify({
+      display_name: "City traveler",
+      locale: localeTag,
+      timezone,
+    }),
+  });
+  adoptSignedSession(answer);
+  return answer.id;
+}
+
 async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
+  /* ORD-0687: the shell's own channel now speaks for the signed traveller when this tab has one.
+     Headers are merged instead of being replaced by `...init`, so a call site that adds its own
+     header (an idempotency key) keeps it and still carries the credential. */
   const response = await fetchWithReadDeadline(path, {
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+      ...signedBearerHeaders(),
+    },
   });
   /* Parsed by hand rather than `response.json().catch(() => null)`: that one line turned three
      different answers -- zero bytes, an HTML document, a plain sentence -- into the same `null`, and
@@ -306,6 +456,9 @@ async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
   }
   const contentType = response.headers.get("content-type");
   if (!response.ok) {
+    // ORD-0687: a credential refusal or a foreign-pointer refusal is acted on the moment it is
+    // read, before any screen has a chance to keep showing what the last traveller was told.
+    observeRejection(response.status, refusalReasonCode(body));
     throw new V8Rejection(
       rejectionReason(body, response.status),
       response.status,
@@ -860,6 +1013,21 @@ export function V8Experience() {
     setCachedCopySaved(await saveOfflineJourneyVerified(nextOffline));
   };
 
+  /* Issue #31 A(4): a credential this tab is holding gets checked the moment the shell mounts,
+     not lazily at the next create.  "Token 失效就清除" is only a rule if it runs before anybody
+     reads the screen the old session was still holding -- otherwise a phone handed over shows the
+     previous traveller's trip until the person happens to press something.  A transport failure
+     deliberately keeps the session (the wifi blinking is not a logout), and a refusal wipes the
+     credential, the trip pointer and every Agent record with it, inside `travelerSession`. */
+  useEffect(() => {
+    if (!signedTravelerId()) return;
+    void verifySignedSession((headers) => askTravelerSession(headers))
+      /* The same check that drops a dead credential also slides a living-but-short one forward,
+         so a tab reopened five minutes before expiry does not die on the person's first tap. */
+      .then(() => renewSignedSessionIfShort(askTravelerSessionRefresh))
+      .catch(() => undefined);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     async function boot() {
@@ -1144,6 +1312,36 @@ export function V8Experience() {
     }
   };
   /**
+   * Issue #33 Q1 -- open a trip this credential already owns.
+   *
+   * Before this the shell had one door for a tab whose pointer was wiped: the create form.  So the
+   * recovery button the classifier names 「选一趟行程」 (`choose-journey`) led a traveller to a form
+   * and never to the trips they already had.  This is the other half of that label -- the same four
+   * steps `enterSealedDemo` walks (write the pointer, read the journey, close the wizard, land where
+   * the address asked), with no new state and no second copy of a sentence: a read that fails goes
+   * through the same classifier as every other read on this line.
+   */
+  const openExistingJourney = (journeyId: string) => {
+    setSetupBusy(true);
+    setMessage(null);
+    void (async () => {
+      try {
+        localStorage.setItem("citynexus.v8.journey_id", journeyId);
+        await load(journeyId);
+        setFailure(null);
+        setSetupOpen(false);
+        navigate(deepLink.kind === "screen" ? deepLink.route : "hub");
+      } catch (error) {
+        const attribution = classifyReadFailure(error);
+        recordAttribution(attribution, "wizard.myTrips.open");
+        setFailure({ attribution, journeyId });
+        setSetupOpen(false);
+      } finally {
+        setSetupBusy(false);
+      }
+    })();
+  };
+  /**
    * One stay search, one honest outcome.  Cold cities measured 114.98s here and came back
    * with `top_k: []`, so the count -- not the 200 -- is what decides the next screen, and a
    * zero result gets its own state instead of Today's ordinary face.
@@ -1230,6 +1428,12 @@ export function V8Experience() {
     // Read from here, not from `journeyCreated`: this closure holds the value from the
     // render it was created in, which is always false during the attempt.
     let tripWritten = false;
+    /* The two things the recovery read needs after an abort: whose trips to ask for, and what
+       counts as "created by this attempt".  Declared outside the try because the catch has to
+       reach both -- and because the catch is exactly where a claim about the server has to be
+       earned, not assumed. */
+    const startedAtMs = Date.now();
+    let travelerId = "";
     try {
       const cityName = draft.cityName.trim();
       // The real-city discovery provider materialises places under a latin
@@ -1245,22 +1449,26 @@ export function V8Experience() {
         draft.timezone.trim(),
       );
       setCreatePhase("traveler");
-      const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
-        method: "POST",
-        signal: controller.signal,
-        body: JSON.stringify({
-          display_name: "City traveler",
-          locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
-          timezone: draft.timezone.trim(),
-        }),
-      });
+      travelerId = await ensureSignedTraveler(
+        locale === "zh-CN" ? "zh-CN" : "en-GB",
+        draft.timezone.trim(),
+        controller.signal,
+      );
       setCreatePhase("journey");
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
         signal: controller.signal,
         body: JSON.stringify({
-          traveler_id: traveler.id,
-          title: `${cityName} · journey`,
+          traveler_id: travelerId,
+          /* The name comes from the code this draft resolves to, not from the letters the
+             person happened to type: Today reads the same derivation, and one trip that
+             answers to two names is how a list of trips stops being recognisable. */
+          title: dictionaryText(locale, "hub.tripToCity", {
+            cityLabel: cityLabelFromCode(
+              cityCode,
+              locale.startsWith("zh"),
+            ),
+          }),
           city_code: cityCode,
           timezone: draft.timezone.trim(),
           start_at: startAt,
@@ -1293,45 +1501,66 @@ export function V8Experience() {
          from her interests, so there is nothing to unsay -- what the server actually holds is what
          the gate reads back.  It must not block creating the trip either: the journey is real. */
       try {
-        await syncStatedInterests(traveler.id, draft.interests ?? []);
+        await syncStatedInterests(travelerId, draft.interests ?? []);
       } catch {
         /* left un-stated on purpose; see the gate `ord0238-2-…` */
       }
-      const stayCount = await searchStayOptions(
-        journey.id,
-        `${cityName} stay-aware journey`,
-        controller.signal,
-      );
       setCreatePhase("experience");
       await load(journey.id);
       setSetupOpen(false);
       // Land on Today and open the planning entry: the next thing a traveller
       // wants after creating a trip is a plan, not a discovery console.
       navigate("hub");
-      if (stayCount === 0) {
-        /* An empty search is not a success to announce: Today carries the empty block with
-           its own retry, and opening the planner on top of nothing is the same lie. */
-        setMessage(null);
-      } else {
-        setPlanAiOpen(true);
-        setMessage(
-          locale.startsWith("zh")
-            ? "行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。"
-            : "Trip created. Tell the AI how you like to travel and it will build candidate plans.",
-        );
-      }
+      /* Issue #31 B: the optional stay search used to sit *between* "the trip is written" and
+         "the traveller gets a screen", so an external provider being slow -- or the AI offer
+         generator being off -- held a finished journey behind a spinner.  It is started here and
+         awaited nowhere: Today already carries 搜索中 / 没找到 / 失败 with its own 再查一次, and the
+         shell's state machine keeps updating from that screen.  The one thing the traveller is
+         told immediately is the one thing that is already true -- the trip exists and is open. */
+      setMessage(dictionaryText(locale, "shell.tripCreated"));
+      void searchStayOptions(
+        journey.id,
+        `${cityName} stay-aware journey`,
+        controller.signal,
+      )
+        .then((stayCount) => {
+          /* GPT P0-UX, accepted: opening the planner here put a modal backdrop over the Today
+             the traveller had just been promised, and everything on that screen -- including the
+             new AI-activity entry -- became unclickable until they dismissed it.  An answer that
+             arrived is *reported*, not *imposed*: Today already renders the stay block, so the
+             traveller reads the outcome where they are, and opens the planner themselves.
+             (The two assertions in `e2e/qoder-ai-sheet-blocked.spec.ts` that pinned the old
+             auto-open are updated in the same commit rather than left to defend it.) */
+          if (stayCount > 0) {
+            setMessage(dictionaryText(locale, "shell.stayArrived"));
+          }
+        })
+        .catch(() => {
+          /* `searchStayOptions` already set 失败 and Today renders it with 再查一次. */
+        });
     } catch (error) {
       if (isAbort(error)) {
-        // No endpoint cancels this search, so say what the traveller gave up on instead.
-        setMessage(
-          locale.startsWith("zh")
-            ? tripWritten
-              ? "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。"
-              : "已停止等待，行程还没有创建。"
-            : tripWritten
-              ? "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result."
-              : "Stopped waiting — no journey was created.",
-        );
+        if (tripWritten) {
+          // No endpoint cancels this search, so say what the traveller gave up on instead.
+          setMessage(dictionaryText(locale, "shell.stayStoppedWithTrip"));
+        } else {
+          /* GPT P0-UX, the second half: giving up on the wait is a fact about *this tab*, not about
+             the server.  A POST can be committed and still lose its response, and this screen used
+             to assert 行程还没有创建 -- a claim it never measured, and one that invites exactly the
+             duplicate creation a traveller would otherwise retry blind.  So: say 结果未知, then go
+             and read the server.  Nothing here re-sends the non-idempotent POST. */
+          setMessage(dictionaryText(locale, "shell.stayStoppedUnknown"));
+          const recovered = await confirmCreatedJourney(travelerId, startedAtMs);
+          if (recovered) {
+            localStorage.setItem("citynexus.v8.journey_id", recovered);
+            await load(recovered);
+            setSetupOpen(false);
+            navigate("hub");
+            setMessage(dictionaryText(locale, "shell.recoveredTrip"));
+          } else {
+            setMessage(dictionaryText(locale, "shell.noTripYet"));
+          }
+        }
       } else {
         setMessage(
           refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
@@ -1771,6 +2000,10 @@ export function V8Experience() {
             state that needs it had no way to reach it, and measured wizard -> wizard.  Collapsed
             here so the wizard keeps the screen. */}
         <SimulationEntry defaultOpen={false} />
+        {/* Issue #33 Q1: the trips this credential already owns, listed beside the form that would
+            otherwise be the only way out of this screen.  Renders nothing on a fresh tab with no
+            credential -- see features/trip/MyTripsEntry.tsx for why that state stays empty. */}
+        <MyTripsEntry onOpen={openExistingJourney} askRefresh={askTravelerSessionRefresh} />
       </>
     );
   if (busy && !data)
@@ -2703,25 +2936,12 @@ function Hub({
   // The traveller may intentionally proceed after seeing a tight-budget warning.
   const [advisoryDismissed, setAdvisoryDismissed] = useState(false);
 
-  // The journey carries a city code (CN-XIAMEN); derive a traveller-facing name
-  // from it rather than showing the raw code.
-  const cityLabel = (() => {
-    const code = String(data.journey.city_code || "");
-    const tail = code.includes("-") ? code.split("-").slice(1).join("-") : code;
-    if (!tail) return "";
-    const cleaned = tail.replaceAll("_", " ");
-    // The product creates latin slugs (CN-XIAMEN).  A Chinese traveller must
-    // read the city name in Chinese, not a romanised code, so map the known
-    // slugs back to their local name.
-    const localName = CITY_NAME_BY_SLUG[cleaned.toUpperCase()];
-    if (localName) return locale.startsWith("zh") ? localName.zh : localName.en;
-    if (/[一-鿿]/.test(cleaned)) return cleaned;
-    return cleaned
-      .toLowerCase()
-      .split(/\s+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  })();
+  /* The journey carries a city code (CN-XIAMEN); the traveller reads a city name.  One
+     derivation, shared with the door that writes a new trip's name. */
+  const cityLabel = cityLabelFromCode(
+    String(data.journey.city_code || ""),
+    locale.startsWith("zh"),
+  );
 
   // ORD-0063: the day count is projected by the backend, not derived here.  The removed line
   // rounded the span between the anchors into whole days and added one, which called a
@@ -3137,6 +3357,7 @@ function Hub({
           <button
             type="button"
             className="v8-quiet-button"
+            data-testid="hub-new-journey"
             onClick={onNewJourney}
           >
             {t("trial.newJourney")}
@@ -3153,6 +3374,9 @@ function Hub({
               second primary button competing with the hero (Pass-8 ruling #1/#2 above stays intact). */}
           <JourneyLinkAction journeyId={data.journey.id} variant="quiet" />
         </div>
+        {/* Issue #31 C：「AI 工作动态」的 Today 入口。放在这一排之后、而不是塞进那一排，是因为
+            这一排是 1/3 网格，展开的面板会被压进一格里；入口本身仍然是那颗安静的文字按钮。 */}
+        <AgentWorkEntry journeyId={data.journey.id} surface="today" />
       </div>
       {/* ORD-0059: the Simulation entry belongs on Today, because Today is the screen whose
           "now" is being staged.  Whether this deployment is a stage is the server's answer
@@ -3192,34 +3416,22 @@ function Hub({
             data-no-coordinates={tripUnlocatable ? "true" : "false"}
           >
             {disruptions.length
-              ? zh
-                ? `${disruptions.length} 项变化`
-                : `${disruptions.length} ${englishCountNoun(disruptions.length, "change")}`
+              ? t("today.attentionChanges", { n: disruptions.length })
               : handledDisruptions.length
-                ? zh
-                  ? "已处理"
-                  : "Handled"
+                ? t("today.attentionHandled")
                 : tripUnlocatable
-                  ? /* Not a new word: the map panel owns this condition's sentence
-                       (MapPanel.tsx, "这个行程还没有可信的坐标…"), and the attention line quotes its
-                       own opening clause so the two surfaces on one screen cannot disagree. */
-                    zh
-                    ? "这个行程还没有可信的坐标"
-                    : "This trip has no trustworthy coordinates yet"
-                  : zh
-                    ? "一切正常"
-                    : "All clear"}
+                  ? /* The map panel owns this condition's sentence; the attention line quotes its
+                       opening clause.  Both now read one key, so the two surfaces on this screen
+                       cannot drift apart the way they did while each file held its own copy. */
+                    t("today.attentionNoCoordinates")
+                  : t("today.attentionClear")}
           </strong>
         </div>
         {disruptions.length > 0 || handledDisruptions.length > 0 ? (
           <p className="cn-attention-hint">
             {disruptions.length
-              ? zh
-                ? "打开「实时行程」查看并处理这些变化。"
-                : "Open Live to review these changes."
-              : zh
-                ? "刚才的变化已经处理好。"
-                : "The earlier change has been handled."}
+              ? t("today.attentionOpenHint")
+              : t("today.attentionHandledHint")}
           </p>
         ) : null}
         {disruptions.length > 0 && (
@@ -5119,6 +5331,23 @@ function dayHeading(day: { label: string; date?: string }, zh: boolean): string 
     }).format(new Date(`${iso}T00:00:00Z`));
   }
   return day.label.split(" · ")[0];
+}
+
+/** The city name a traveller reads, from the latin slug the product stores (CN-XIAMEN).
+ *  A code the table does not know keeps its own tail -- naming a city this table has never
+ *  seen would be this file inventing a place. */
+export function cityLabelFromCode(code: string, zh: boolean): string {
+  const tail = code.includes("-") ? code.split("-").slice(1).join("-") : code;
+  if (!tail) return "";
+  const cleaned = tail.replaceAll("_", " ");
+  const localName = CITY_NAME_BY_SLUG[cleaned.toUpperCase()];
+  if (localName) return zh ? localName.zh : localName.en;
+  if (/[一-鿿]/.test(cleaned)) return cleaned;
+  return cleaned
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {

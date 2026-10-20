@@ -206,7 +206,17 @@ from app.error_receipt import (  # ORD-0332: 一枚可复述回执号，唯一�
 from app.security.credential_literals import (  # ORD-0307: 字面量凭据的常驻启动门
     startup_report as credential_gate_startup,
 )
-from app.traveler_principal import resolve_traveler_principal
+from app.traveler_principal import (
+    REASON_CREDENTIALS_MISSING,
+    REASON_JOURNEY_NOT_SCOPED,
+    REASON_TRAVELER_NOT_PRINCIPAL,
+    SESSION_STATE_SIGNED,
+    TravelerPrincipal,
+    presented_principal,
+    renew_traveler_session,
+    resolve_traveler_principal,
+    signing_state,
+)
 from app.execution.clock import execution_clock
 from app.execution.route_session_contract import (  # ORD-0602 甲半: source of truth, reporting only
     ROUTE_TRUTH_POLICY_VERSION,
@@ -399,6 +409,7 @@ from app.schemas import (
 from app.schemas import (
     AgentPolicy as AgentPolicySchema,
 )
+from app.schemas import TravelerWithSession
 from app.schemas import (
     Booking as BookingSchema,
 )
@@ -2534,7 +2545,7 @@ def demo_start_scenario(session: Session = Depends(get_session)):
 
 
 
-@app.post("/api/v1/travelers", status_code=201)
+@app.post("/api/v1/travelers", status_code=201, response_model=TravelerWithSession)
 def create_traveler(payload: TravelerCreate, session: Session = Depends(get_session)):
     identifier = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
@@ -2564,7 +2575,36 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
     session.commit()
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
-    return traveler_schema(traveler)
+    body = traveler_schema(traveler).model_dump(mode="json")
+    # ORD-0687: hand the person who just arrived a credential they can be recognised by.
+    # The token is signed for the id this function generated, from nothing the caller supplied
+    # -- `payload` has no id field, and no route anywhere trades a bare traveller_id for a
+    # token.  When the verifier is not configured the answer says so by name rather than
+    # staying silent, because "this build has no identity" and "identity is broken" have to be
+    # two different things on the screen.  The token goes nowhere else: not a log, not an error
+    # message, not an audit row.
+    body["access_token"] = None
+    body["expires_at"] = None
+    body["session_state"] = signing_state()
+    if body["session_state"] == SESSION_STATE_SIGNED:
+        try:
+            # The window leaves with the credential on purpose.  A tab that has a token but no
+            # stated expiry cannot tell "this is about to lapse" from "this has plenty of time",
+            # and `renewSignedSessionIfShort` deliberately does nothing when it is not told -- so a
+            # traveller created in this tab went unserved until the next reload, at which point the
+            # door refuses and the trip home turns into 「登录已结束」.  Same rule as the token: this
+            # number goes nowhere else -- not a log, not an error message, not an audit row.
+            token, expires_at = renew_traveler_session(traveler.id)
+            body["access_token"] = token
+            body["expires_at"] = expires_at
+        except HTTPException:
+            # Race against a config reload: still create the person, still refuse to sign.
+            body["session_state"] = "MISCONFIGURED"
+    answer = JSONResponse(status_code=201, content=body)
+    # A credential is per-person and per-session; a shared cache holding it is a leak.
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
 
 
 @app.get("/api/v1/travelers/session")
@@ -2586,6 +2626,70 @@ def get_traveler_session(request: Request, session: Session = Depends(get_sessio
     )
     # A principal is per-person and per-request: no shared cache may keep it, and a proxy must
     # key on the header that carried it.
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+@app.post("/api/v1/travelers/session/refresh")
+async def refresh_traveler_session(
+    request: Request, session: Session = Depends(get_session)
+):
+    """Issue #33 Q1 -- slide an existing session forward; never mint a token from a claim.
+
+    One property worth knowing before reading the refusals: the signature is deterministic per
+    second (`{v,aud,sub,iat,exp}` over the shared secret, no nonce), so a renewal asked for inside
+    the same second as the credential it replaces answers with the same token and the same window.
+    That is a no-op, not a bug -- the window never moves backwards -- and it is why the front end
+    renews on a margin (a third of the window) rather than on every mount.
+
+    The night order's condition was explicit: without a real authentication step, no door may
+    trade a bare `traveler_id` or uuid for a credential.  This door is built so that the question
+    cannot be asked: it takes no identity parameter, resolves whoever is *already* speaking
+    through the same verifier every other door uses, and signs the new token for that principal's
+    own id.  A body that tries to name somebody is refused before anything is signed -- and that
+    refusal is asserted by a test, so the property is checked rather than asserted in prose.
+
+    Why it exists: a traveller's credential is short-lived on purpose (default 900 s), and the
+    honest gap Issue #31 left open was that once it lapsed the tab had no way back -- the trips
+    were still theirs, but nothing could say so.  Renewal is the smallest door that closes that
+    gap without inventing a second identity system.
+    """
+
+    raw = await request.body()
+    if raw and raw.strip():
+        try:
+            claimed = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, ValueError):
+            # Unparseable is not a claim about anybody; it is simply nothing to check.  The
+            # credential below still has to stand up on its own.
+            claimed = None
+        if isinstance(claimed, dict) and any(
+            claimed.get(field) is not None for field in ("traveler_id", "sub", "id")
+        ):
+            refused = HTTPException(
+                400,
+                "a refreshed session is signed for the credential on this request, "
+                "not for an id handed in a body",
+            )
+            refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+            raise refused
+
+    principal = resolve_traveler_principal(request, session)
+    renewed_from = principal.expires_at
+    token, expires_at = renew_traveler_session(principal.traveler_id)
+    answer = JSONResponse(
+        {
+            "traveler_id": principal.traveler_id,
+            "auth_method": principal.auth_method,
+            "session_state": SESSION_STATE_SIGNED,
+            "access_token": token,
+            "expires_at": expires_at,
+            # The window the old credential had, so a client can tell a renewal from a re-login
+            # and keep the person where they were instead of bouncing them to the wizard.
+            "renewed_from_expires_at": renewed_from,
+        }
+    )
     answer.headers["Cache-Control"] = "private, no-store"
     answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return answer
@@ -3175,8 +3279,96 @@ def suggested_room_count(party_size: int) -> int:
     return max(3, (party_size + 2) // 3)
 
 
+def _identity_required_for_private_trips() -> bool:
+    """Can this build verify a traveller?  Then anonymity is not a way out (GPT P0-SEC).
+
+    Before this, the rule read "a bad credential is refused, no credential is fine", which meant
+    the protection switched off for exactly the caller who wanted it off: strip the header and a
+    stranger's private trip answered 200 again.  Capability now implies obligation.  A demo or
+    public preview that really wants anonymous reads says so by name in its own configuration
+    (`CITYNEXUS_TRAVELER_AUTH_ALLOW_ANONYMOUS_PRIVATE`), instead of getting it because nobody
+    carried a token today.  Where signing is not configured at all, nothing changes -- that
+    deployment has no identity to require.
+    """
+
+    return (
+        signing_state() == SESSION_STATE_SIGNED
+        and not settings.traveler_auth_allow_anonymous_private
+    )
+
+
+def _refuse_missing_credential() -> None:
+    refused = HTTPException(401, "signed traveller credentials are required for this trip")
+    refused.reason_code = REASON_CREDENTIALS_MISSING
+    raise refused
+
+
+def _authorize_journey_read(request: Request, session: Session, journey: Journey) -> None:
+    """Refuse a request that is pointing at somebody else's trip (ORD-0687 / GPT P0-SEC).
+
+    The device, not the person, used to decide what the shell could open: `citynexus.v8.journey_id`
+    in `localStorage` is a uuid the previous traveller left behind, and every read door took the
+    uuid on faith.  Now the server answers whose trip this is, on both branches: a credential that
+    is not this person's is refused by name (403), and no credential at all on a build that can
+    verify one is refused by name too (401) -- the uuid alone is not a claim of identity.
+
+    Ownership or an in-force seat, read through `_member_state`, so a withdrawn or lapsed seat
+    stops counting here at exactly the moment it stops counting at the member doors.
+    """
+
+    principal = presented_principal(request, session)
+    if principal is None:
+        if _identity_required_for_private_trips():
+            _refuse_missing_credential()
+        return
+    if journey.traveler_id == principal.traveler_id:
+        return
+    now = datetime.now(timezone.utc)
+    for member in session.scalars(
+        select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == principal.traveler_id,
+        )
+    ).all():
+        if _member_state(member, now) == "MEMBER_IN_FORCE":
+            return
+    refused = HTTPException(403, "this credential does not speak for that journey")
+    refused.reason_code = REASON_JOURNEY_NOT_SCOPED
+    raise refused
+
+
+def _authorize_journey_write(
+    request: Request, session: Session, traveler_id: str
+) -> None:
+    """A traveller may only open trips for the identity the server vouches for (ORD-0687).
+
+    `POST /api/v1/journeys` takes a `traveler_id` in the body, and that is still what a
+    server-side process (seeding, the demo scene) uses -- on a build without signing, where there
+    is no identity to check against.  Once this build CAN sign, an anonymous POST naming another
+    traveller is the same hole as an anonymous read: the body's claim has to be backed by a
+    credential that says it, so both branches are closed (401 with no credential, 403 with
+    somebody else's).
+    """
+
+    principal = presented_principal(request, session)
+    if principal is None:
+        if _identity_required_for_private_trips():
+            _refuse_missing_credential()
+        return
+    if principal.traveler_id == traveler_id:
+        return
+    refused = HTTPException(
+        403, "a signed traveller cannot open a journey for somebody else"
+    )
+    refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+    raise refused
+
+
 @app.post("/api/v1/journeys", status_code=201)
-def create_journey(payload: JourneyCreate, session: Session = Depends(get_session)):
+def create_journey(
+    payload: JourneyCreate, request: Request, session: Session = Depends(get_session)
+):
+    _authorize_journey_write(request, session, str(payload.traveler_id))
     require(session, Traveler, str(payload.traveler_id), "Traveler")
     now = datetime.now(timezone.utc).isoformat()
     occupancy = dict(payload.occupancy)
@@ -3274,6 +3466,7 @@ JOURNEY_SORT_REFUSAL = "JOURNEY_SORT_NOT_RECOGNISED"
     },
 )
 def list_journeys(
+    request: Request,
     session: Session = Depends(get_session),
     sort: str | None = Query(
         default=None,
@@ -3321,9 +3514,19 @@ def list_journeys(
     """
 
     live = select(Journey).where(Journey.deleted_at.is_(None))
+    # GPT P0-SEC: this door used to answer every trip on the server to anybody.  A build that can
+    # verify a traveller has no business doing that -- the list is how a stranger's private uuids
+    # get found in the first place.  So: no credential where identity is required is refused by
+    # name, and a credential sees the trips it actually speaks for (owned, or an in-force seat).
+    viewer = presented_principal(request, session)
+    if viewer is None:
+        if _identity_required_for_private_trips():
+            _refuse_missing_credential()
+    else:
+        live = live.where(Journey.traveler_id == viewer.traveler_id)
     if sort is None:
         items = session.scalars(live.order_by(Journey.created_at, Journey.id)).all()
-        return [journey_schema(item) for item in items]
+        return [journey_schema(item) for item in _seated_for(session, viewer, list(items))]
     if sort not in JOURNEY_SORT_TIERS:
         refused = HTTPException(
             422,
@@ -3332,8 +3535,36 @@ def list_journeys(
         refused.reason_code = JOURNEY_SORT_REFUSAL
         refused.error_details = {"sort": sort, "supported": list(JOURNEY_SORT_TIERS)}
         raise refused
-    rows = _journeys_in_tier_order(list(session.scalars(live).all()), sort)
+    rows = _journeys_in_tier_order(
+        _seated_for(session, viewer, list(session.scalars(live).all())), sort
+    )
     return [journey_schema(item) for item in rows]
+
+
+def _seated_for(
+    session: Session, principal: TravelerPrincipal | None, rows: list[Journey]
+) -> list[Journey]:
+    """The trips in `rows` this caller may see: their own, plus the ones they hold a seat on.
+
+    Owner-only filtering would have been the cheap answer and would have broken the shared-journey
+    product on purpose: a fellow traveller with a real seat must still see the trip they were
+    added to.  `_member_state` is the same rule the member doors use, so a withdrawn or lapsed
+    seat stops counting in the list at the moment it stops counting everywhere else.
+    """
+
+    if principal is None:
+        return rows
+    now = datetime.now(timezone.utc)
+    seated = {
+        row.journey_id
+        for row in session.scalars(
+            select(JourneyMemberModel).where(
+                JourneyMemberModel.traveler_id == principal.traveler_id
+            )
+        ).all()
+        if _member_state(row, now) == "MEMBER_IN_FORCE"
+    }
+    return [row for row in rows if row.traveler_id == principal.traveler_id or row.id in seated]
 
 
 #: The two tiers that read a timestamp and the one that reads a name, each with the stored column it
@@ -4056,8 +4287,11 @@ def add_collection_item(
 
 
 @app.get("/api/v1/journeys/{journey_id}")
-def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
-    return journey_schema(require(session, Journey, str(journey_id), "Journey"))
+def get_journey(journey_id: UUID, request: Request, session: Session = Depends(get_session)):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0687: same rule as /experience -- a presented credential has to speak for this trip.
+    _authorize_journey_read(request, session, journey)
+    return journey_schema(journey)
 
 
 # ORD-0496 slice 1: a trip's own schedule leaves this server as an RFC 5545 calendar.  This slice is
@@ -5513,8 +5747,13 @@ def read_journey_member_role_limits(journey_id: UUID, session: Session = Depends
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")
-def get_journey_experience(journey_id: UUID, session: Session = Depends(get_session)):
+def get_journey_experience(
+    journey_id: UUID, request: Request, session: Session = Depends(get_session)
+):
     journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0687: the phone's saved pointer is not an authorisation.  A signed request that names
+    # somebody else's trip is refused here, which is the door every screen in the shell opens.
+    _authorize_journey_read(request, session, journey)
     payload = experience_payload(session, journey)
     # Surface the durable recovery state (and, if the plan is still ACTIVE,
     # re-check feasibility so a stale plan cannot look healthy to the phone).

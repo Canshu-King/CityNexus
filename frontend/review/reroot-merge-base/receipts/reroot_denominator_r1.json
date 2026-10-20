@@ -1,0 +1,237 @@
+{
+ "measured_at": "2026-10-17 19:48:28",
+ "live_tip": "24835743deccd15b8d014e26c836cc46a5365993",
+ "tip_commits_reachable": 109,
+ "tip_root_count": 2,
+ "tip_roots": [
+  "48c23b29ea06a7286844d25e8c8aef0d1440a850|2026-10-13 06:52|ORD-0635: union of the 12 yielding branches' i18n keys lands on the line -- 12 keys, both halves, each row byte-copied from its own branch; 3 of the commander's 16 (simulation.retry*) had already landed on their own and are not re-merged; setup.somePlace is withheld because its branch wrote a zh-CN row only (no en half, and 0 readers anywhere on the line), so merging it would need an invented English value. ADVISORY from the same ruler: all 12 merged keys currently have 0 readers outside the dictionary -- the code that asks them lives on those branches, so voiding the 12 branches on 'keys merged' grounds would strand these rows.",
+  "0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5|2026-10-13 06:13|ORD-0644 落两枚产品模块：fact_acquisition 与 replanning/proposal_lifecycle 逐字节进线"
+ ],
+ "relay_rows_read": 34,
+ "branches_probed": 26,
+ "probed_with_local_object": 23,
+ "merge_tree_nonzero": 21,
+ "cause_unrelated_histories": 20,
+ "scanner_verdict_line": "_disjoint_scan_r1.py:190:dirty.append((ref, sha, len(lset), [\"merge-tree 判有冲突\"]))",
+ "rows": [
+  {
+   "branch": "refs/heads/review/pinggong-0679-r1",
+   "sha": "8865a2aabe21b0e108262190df23473d92e8dae9",
+   "local_object": true,
+   "merge_base_present": true,
+   "already_ancestor": false,
+   "merge_tree_rc": 0,
+   "merge_tree_first_stderr_words": ""
+  },
+  {
+   "branch": "refs/heads/review/wenangong-0407-r1",
+   "sha": "629575f2c276694086c0c400fbc0a8b224dfa2cc",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/xuxiangong-0685-c-r1",
+   "resolvable": false
+  },
+  {
+   "branch": "refs/heads/review/住宿工-0576-r1",
+   "sha": "c9770b83e795b6598fcf7ca4d665175566bcd8e5",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/住宿工-0570-r1",
+   "sha": "bef30c4b1cc37ebede046031ed087d4bf0960cd7",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/加闸工-0576-r1",
+   "sha": "c0a5c334565997e335ccba06773e7990d3f9f1e3",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/备城工-0570-r1",
+   "sha": "bd55d46ed1d3fbfabda5ef02e0350c75c93d5f3b",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/备城工-0557-r1",
+   "sha": "d9966ad27090a5dcad919b59068ceb493e503270",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/大柜工-0569-dict-r1",
+   "resolvable": false
+  },
+  {
+   "branch": "refs/heads/review/大柜工-0558-r1",
+   "sha": "58f1ee66ee962d302af220f597b38ab34161a192",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/大柜工-0557-dict-r2",
+   "resolvable": false
+  },
+  {
+   "branch": "refs/heads/review/快刀工-0557-r3",
+   "sha": "aa94bb011ec968a301e0b6d2423d63cc59e827d8",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快刀工-0557-dict-r3",
+   "sha": "0148013389f2f96c64875956ec2c407853ed5b04",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快刀工-0557-dict-r2",
+   "sha": "7797e13579f3e4df85e204f757078837b411c4ea",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快剪工-0573-r2",
+   "sha": "62b0167242ad09aa17f32f6922c13159f8bdbcfd",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快钉工-0557-walk-r1",
+   "sha": "4859bb8913d361bc4af40ca46cb6d95e033b578a",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快钉工-0557-r3",
+   "sha": "957edfb862c5881b4721631f8103ef6eac398997",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快钉工-0557-dict-r3",
+   "sha": "a4b2128287f636ff07021a2766d65341ac328b6f",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快锥工-0576-dict-r1",
+   "sha": "8d33874d4e13f46a2486c877e990f911a076b434",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/快锥工-0557-liverecovery-dict-r1",
+   "sha": "7da922f0ea20b9b6a4e8c4fa7f22a0d3927e8d91",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/旅馆工-0557-r1",
+   "sha": "94618a385e70c105bebab605c2e103585094084d",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/旅馆工-0557-dict-r1",
+   "sha": "b5c21e50a935a74addeb0622a86c33562e135d2e",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "refs/heads/review/盘务工-0680-r14-r1",
+   "sha": "1e2460111aae57d2aeb21b76b4151ea991f6fc31",
+   "local_object": true,
+   "merge_base_present": true,
+   "already_ancestor": false,
+   "merge_tree_rc": 1,
+   "merge_tree_first_stderr_words": ""
+  },
+  {
+   "branch": "refs/heads/review/起手工-0572-r1",
+   "sha": "e0a786c07b66576ebc72c47c6130804bb24e54e2",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "stranded -r1",
+   "sha": "fe972aecf50478622215544adbdf572e6171d2ce",
+   "local_object": true,
+   "merge_base_present": false,
+   "already_ancestor": false,
+   "merge_tree_rc": 128,
+   "merge_tree_first_stderr_words": "fatal: refusing to merge unrelated histories"
+  },
+  {
+   "branch": "re-issued -r2",
+   "sha": "f4fc92c62c487f76e3bcadd1a2957223e18199f7",
+   "local_object": true,
+   "merge_base_present": true,
+   "already_ancestor": true,
+   "merge_tree_rc": 0,
+   "merge_tree_first_stderr_words": ""
+  }
+ ]
+}

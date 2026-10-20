@@ -12,6 +12,7 @@
  * read as "nobody shares this trip" -- a claim this tree has no source for.
  */
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
+import { signedBearerHeaders } from "../../lib/travelerSession";
 import type { operations } from "../../generated/api";
 
 export const JOURNEY_LIST_PATH = "/journeys";
@@ -89,7 +90,11 @@ export function journeyListPath(choice: JourneyOrderChoice): string {
  *  header, and no order field in the row shape. What the screen says about the order is decided by
  *  `journeyOrderVerdict.ts` from the rows themselves. */
 export function readJourneys(choice: JourneyOrderChoice): Promise<JourneySummary[]> {
-  return request<JourneySummary[]>(journeyListPath(choice));
+  /* Issue #33 Q1: the credential goes on this read when this tab holds one.  The door already
+     narrows to the trips that credential speaks for (`backend/app/main.py`, `list_journeys` --
+     owned plus in-force seats), so sending it is what turns "every trip on the server" into
+     "my trips"; with no session the headers stay empty and the anonymous read is unchanged. */
+  return request<JourneySummary[]>(journeyListPath(choice), { headers: signedBearerHeaders() });
 }
 
 /** The server's `summary` is deliberately not trusted for the words on screen: for an action the
