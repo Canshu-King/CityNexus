@@ -44,10 +44,15 @@ export type MapCopyKey =
   /* ORD-0497 -- the footprint arms. Named per read, never per traveller: the empty sentence says
      what THIS read brought back, because "还没有足迹" would be a claim about the person rather than
      about the door. */
-  | "footprintStamped"
-  | "footprintNone"
+  | "footprintStampedCount"
+  | "footprintSolidMeans"
+  | "footprintHollowMeans"
+  | "footprintNoneRead"
+  | "footprintNoneDrawn"
   | "footprintRefused"
-  | "footprintUnreachable"
+  | "footprintUnreachableRead"
+  | "footprintUnreachableDrawn"
+  | "footprintUnreachableSilence"
   | "footprintAsking"
   | "footprintNotAsked"
   | "footprintBadgeAria"
@@ -137,21 +142,41 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      3. `%s` carries only the server's own count. The day under a pin is that same row's
         `stamped_at`, rendered date-only -- see `formatStampDay` for the glass rule that forbids a
         clock here. */
-  footprintStamped: {
-    zh: "这台服务器这次交回 %s 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。",
-    en: "This server handed back %s footprints on this read: solid pins are the stops it recorded, and the day under a pin is that stamp's; hollow pins are the stops it returned no stamp for.",
+  footprintStampedCount: {
+    zh: "服务器这次交回 %s 枚足迹",
+    en: "This read returned %s footprints",
   },
-  footprintNone: {
-    zh: "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
-    en: "This server returned no footprint on this read, so every stop of this trip is painted hollow.",
+  footprintSolidMeans: {
+    zh: "实心图钉是它记下的站，钉下的日期就是那一枚的时间",
+    en: "a solid pin is a stop it recorded, dated at that stamp",
+  },
+  footprintHollowMeans: {
+    zh: "空心的是这次没有印的站",
+    en: "a hollow pin is a stop it returned no stamp for",
+  },
+  footprintNoneRead: {
+    zh: "服务器这次没有交回任何足迹",
+    en: "This read returned no footprint",
+  },
+  footprintNoneDrawn: {
+    zh: "图上的站全部画成空心",
+    en: "every stop of this trip is drawn hollow",
   },
   footprintRefused: {
     zh: "服务器没收下这次读取，图上不分到过的站与没到过的站。",
     en: "The server would not take this read, so the map draws no distinction between stamped and unstamped stops.",
   },
-  footprintUnreachable: {
-    zh: "这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。",
-    en: "This read never reached the server, so the map draws no distinction — nothing painted here speaks for the server.",
+  footprintUnreachableRead: {
+    zh: "这次没有问到服务器",
+    en: "This read never reached the server",
+  },
+  footprintUnreachableDrawn: {
+    zh: "图上不区分到过的站与没到过的站",
+    en: "the map draws no distinction between stamped and unstamped stops",
+  },
+  footprintUnreachableSilence: {
+    zh: "这一片的画法不替服务器说话",
+    en: "nothing painted here speaks for the server",
   },
   footprintAsking: { zh: "正在向服务器问这一趟的足迹…", en: "Asking the server for this trip's footprints…" },
   footprintNotAsked: {
