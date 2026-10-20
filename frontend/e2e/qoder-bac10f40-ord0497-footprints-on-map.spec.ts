@@ -40,19 +40,27 @@ const PANEL = "[data-testid='v8-maplibre-panel']";
 const BAND = "[data-testid='v8-map-footprint-state']";
 const FILTER = "[data-testid='v8-map-footprint-filter']";
 /* The sentences, taken from the copy table the product itself reads. The spec names them because it
-   has to tell the four arms apart -- and an arm that passes against a paraphrase proves nothing. */
+   has to tell the four arms apart -- and an arm that passes against a paraphrase proves nothing.
+   Each arm is now a set of short sentences, so the pins name each half: an arm that loses one of them
+   has to fail, which a single whole-sentence quote would not have said. */
 const COPY = {
   none: {
-    zh: "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
-    en: "This server returned no footprint on this read, so every stop of this trip is painted hollow.",
+    readZh: "服务器这次没有交回任何足迹",
+    drawnZh: "图上的站全部画成空心",
+    readEn: "This read returned no footprint",
+    drawnEn: "every stop of this trip is drawn hollow",
   },
   unreachable: {
-    zh: "这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。",
-    en: "This read never reached the server, so the map draws no distinction — nothing painted here speaks for the server.",
+    readZh: "这次没有问到服务器",
+    drawnZh: "图上不区分到过的站与没到过的站",
+    silenceZh: "这一片的画法不替服务器说话",
+    readEn: "This read never reached the server",
+    drawnEn: "the map draws no distinction between stamped and unstamped stops",
+    silenceEn: "nothing painted here speaks for the server",
   },
   filterLabel: { zh: "只看打过", en: "Stamped only" },
   filterClear: { zh: "看全部站", en: "Show every stop" },
-  stampedLead: { zh: "这台服务器这次交回", en: "This server handed back" },
+  stampedLead: { zh: "服务器这次交回", en: "This read returned" },
   done: { zh: "已打卡", en: "Checked in" },
 };
 
@@ -162,7 +170,11 @@ async function enterMap(page: Page, locale: "zh-CN" | "en" = "zh-CN") {
 test("ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is named as the read", async ({ page }) => {
   const w = await enterMap(page);
   expect(w.panel_present, "the map panel has to be the one being measured").toBe(true);
-  expect(w.band_text, "the empty arm names THIS read, not the traveller").toBe(COPY.none.zh);
+  expect(w.band_text, "the empty arm names THIS read, not the traveller").toContain(COPY.none.readZh);
+  expect(w.band_text, "and the empty arm still says how the stops are painted").toContain(COPY.none.drawnZh);
+  expect(w.band_text, "the two halves are the whole sentence, in this order").toBe(
+    `${COPY.none.readZh}；${COPY.none.drawnZh}。`,
+  );
   expect(w.pin_total, "the seeded trip has located stops to paint").toBeGreaterThan(1);
   /* Every claim-bearing pin is hollow and none is solid: the server returned nothing, so nothing may
      be painted as visited. Pins that carry no claim (the traveller's own dot, a stay offer) are
@@ -185,7 +197,11 @@ test("ORD-0497 zh 390x844 arm=empty_read_names_itself an answered-empty read is 
   /* The same arm in the other language, because both sentences were written here and an untested
      dictionary arm is an untested sentence. */
   const we = await enterMap(page, "en");
-  expect(we.band_text, "the English empty arm is the sentence that was written").toBe(COPY.none.en);
+  expect(we.band_text, "the English empty arm is the sentence that was written").toContain(COPY.none.readEn);
+  expect(we.band_text, "and it names how the stops are painted").toContain(COPY.none.drawnEn);
+  expect(we.band_text, "the English halves are the whole sentence, in this order").toBe(
+    `${COPY.none.readEn}; ${COPY.none.drawnEn}.`,
+  );
   push("empty_read_names_itself_en", {
     locale: "en",
     viewport: PHONE,
@@ -355,7 +371,12 @@ test("ORD-0497 zh 390x844 arm=read_never_arrived cutting the read leg invents no
   await page.goto("/v8/map", { waitUntil: "load" });
   await expect(page.getByTestId("v8-maplibre-panel").first()).toBeVisible({ timeout: 25_000 });
   const w = await settleMap(page);
-  expect(w.band_text, "the screen says it never reached the server").toBe(COPY.unreachable.zh);
+  expect(w.band_text, "the screen says it never reached the server").toContain(COPY.unreachable.readZh);
+  expect(w.band_text, "and that the picture draws no distinction").toContain(COPY.unreachable.drawnZh);
+  expect(w.band_text, "and that nothing here speaks for the server").toContain(COPY.unreachable.silenceZh);
+  expect(w.band_text, "the three halves are the whole sentence, in this order").toBe(
+    `${COPY.unreachable.readZh}；${COPY.unreachable.drawnZh}；${COPY.unreachable.silenceZh}。`,
+  );
   expect(w.solid_count, "and does not paint one solid pin").toBe(0);
   expect(w.badge_count, "nor a single date").toBe(0);
   expect(w.hollow_count, "nor an hollow one -- no claim is made about stops it cannot ask about").toBe(0);
