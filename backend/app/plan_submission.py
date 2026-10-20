@@ -33,6 +33,13 @@ What it stores, and who judged each of it -- nothing here is asserted by this mo
 * `trigger_event_id`, `recovery_epoch_id` -- null: a hand-built candidate was not triggered by an event
   and does not belong to a recovery epoch, and this door does not manufacture either.
 
+The answer also carries `evidence_basis`, which is read rather than judged: the gate's own loader
+(`app.services._snapshot_for_plan`) plus the freeze door's own provenance tally
+(`app.replanning.provider_snapshots.fact_quality_summary`). `hard_constraints_passed` alone can read
+`true` while every leg behind it is a mock default, and a person being asked about the round deserves to
+know which of the two it is; a candidate with nothing frozen for it gets None, the same absence
+`gate.judged` false reports.
+
 Refusals, each named: no seat; that version is not on this journey; the journey has no active plan to be
 a base against; the candidate is not `CANDIDATE` (an ACTIVE or SUPERSEDED row is not a proposal); base
 and candidate being the same row, which the shipped DDL also forbids; the two sides not sharing one
@@ -245,6 +252,31 @@ def material_comparison(delta: dict[str, Any], *, travel_delta_min: int,
     }
 
 
+def evidence_basis(session: Session, journey: Any, candidate: PlanVersion) -> dict[str, Any] | None:
+    """What the frozen evidence behind this candidate really is, read the way the gate reads it.
+
+    `gate.passed` says the shipped feasibility rule found nothing wrong about the plan; it does not say
+    whether that rule was handed measured legs or a mock provider's blanket default. This is the other
+    half of the sentence, with no new judgement anywhere in it: the snapshot is loaded by
+    `app.services._snapshot_for_plan` -- the same loader the gate uses, the one that refuses a half-frozen
+    evidence pair -- and the tally comes from
+    `app.replanning.provider_snapshots.fact_quality_summary`, the function the freeze door answers with.
+    A candidate with nothing frozen for it answers None: an absence, not a zero.
+    """
+    from app.replanning.provider_snapshots import fact_quality_summary
+    from app.services import _snapshot_for_plan
+
+    try:
+        snapshot = _snapshot_for_plan(session, journey, candidate)
+    except (ValueError, TypeError):
+        return None
+    basis = fact_quality_summary(snapshot)
+    basis.update({"frozen": True, "snapshot_id": snapshot.snapshot_id,
+                  "source_provider": snapshot.source_provider_key,
+                  "captured_at": snapshot.captured_at})
+    return basis
+
+
 @router.post(SUBMISSION_PATH, status_code=201)
 def journey_plan_submission(
     response: Response,
@@ -410,6 +442,10 @@ def journey_plan_submission(
         "created_at": proposal.created_at,
         "hard_constraints_passed": gate_verdict["passed"],
         "gate": gate_verdict,
+        # What the gate was handed: whose legs, of which provenance, how many of them hard-feasibility
+        # would trust. None when nothing is frozen for this candidate -- the same absence `gate.judged`
+        # false reports, stated in the evidence's own words rather than as a zero.
+        "evidence_basis": evidence_basis(session, journey, candidate),
         # The one reason a hand-built candidate cannot be judged today, stated as a flag a screen can
         # branch on instead of re-reading the gate's sentence.
         "evidence_gap": gate_verdict["refusal_code"] == "STALE_RECOMPOSE_REQUIRED",

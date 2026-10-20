@@ -18,6 +18,31 @@ SYNTHETIC_DEFAULT = "SYNTHETIC_DEFAULT"
 HARD_FEASIBLE_QUALITIES = frozenset({EXPLICIT_FROZEN_FIXTURE, LIVE_PROVIDER_CAPTURE})
 
 
+def fact_quality_summary(snapshot: Any) -> dict[str, Any]:
+    """How many frozen legs each provenance word covers, and how many of them hard-feasibility trusts.
+
+    One writer for this count: the freeze door answers with it when it captures, and the submission door
+    re-reads it from the stored snapshot so a round can say what its judgement rests on. This function
+    decides nothing -- the shipped allowlist is `MobilitySnapshot.hard_minutes` in this module, and it is
+    reached by the replan leg helper `app.main._hard_leg_minutes`, not by the travel arithmetic in
+    `app/replanning/feasibility.py`, which reads the raw `estimate_minutes`. So `hard_eligible_legs` is a
+    disclosure of what the numbers were, never a second verdict: a round can be `gate.passed` true with
+    zero eligible legs, and on the mock provider that is exactly what it is.
+    """
+    qualities: dict[str, int] = {}
+    for fact in snapshot.facts.values():
+        word = str(fact.fact_quality) if fact.fact_quality is not None else "UNKNOWN"
+        qualities[word] = qualities.get(word, 0) + 1
+    return {
+        "fact_qualities": dict(sorted(qualities.items())),
+        "legs_frozen": len(snapshot.facts),
+        "hard_eligible_legs": sum(
+            1 for fact in snapshot.facts.values() if fact.fact_quality in HARD_FEASIBLE_QUALITIES
+        ),
+        "read_from": "app.replanning.provider_snapshots.fact_quality_summary",
+    }
+
+
 @dataclass(frozen=True)
 class TravelEstimateFact:
     origin_key: str

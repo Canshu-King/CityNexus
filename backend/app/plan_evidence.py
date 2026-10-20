@@ -68,7 +68,7 @@ from app.departure_facts import REASON_PLAN_NOT_IN_JOURNEY
 from app.departure_read import _refuse, _signed_journey
 from app.integrations.mobility.runtime import capture_runtime_mobility_snapshot
 from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureError
-from app.replanning.provider_snapshots import HARD_FEASIBLE_QUALITIES
+from app.replanning.provider_snapshots import fact_quality_summary
 
 router = APIRouter()
 
@@ -343,13 +343,9 @@ def journey_plan_mobility_freeze(
              "evidence_snapshot_id": str(read_back.get("snapshot_id") or "")},
         )
 
-    qualities: dict[str, int] = {}
-    for fact in snapshot.facts.values():
-        word = str(fact.fact_quality) if fact.fact_quality is not None else "UNKNOWN"
-        qualities[word] = qualities.get(word, 0) + 1
-    hard_eligible = sum(
-        1 for fact in snapshot.facts.values() if fact.fact_quality in HARD_FEASIBLE_QUALITIES
-    )
+    summary = fact_quality_summary(snapshot)
+    qualities = summary["fact_qualities"]
+    hard_eligible = summary["hard_eligible_legs"]
     record_audit(
         session,
         action=FREEZE_ACTION,

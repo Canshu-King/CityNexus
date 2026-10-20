@@ -5466,7 +5466,7 @@ components:
       type: object
       required: [journey_id, proposal_id, base_plan_version_id, proposed_plan_version_id, base_status,
                  status, submitted_by_traveler_id, created_at, hard_constraints_passed, gate,
-                 evidence_gap, locked_commitments_preserved, locked_slots_dropped,
+                 evidence_gap, evidence_basis, locked_commitments_preserved, locked_slots_dropped,
                  lock_flags_dropped, lock_flags_added, currency,
                  utility_score, score_breakdown, envelope, delta, applied, shared_plan_updated,
                  journey_active_plan_version_id, consent_path, next_actions]
@@ -5496,6 +5496,31 @@ components:
             refusal_code: {type: [string, "null"]}
             refusal_detail: {type: [string, "null"]}
         evidence_gap: {type: boolean}
+        evidence_basis:
+          description: >
+            Whose legs the gate was handed, read through `app.services._snapshot_for_plan` (the gate's own
+            loader) and tallied by `app.replanning.provider_snapshots.fact_quality_summary` (the freeze
+            door's own function), so the two doors cannot disagree about the same frozen snapshot. null for
+            a candidate with nothing frozen -- the same absence `gate.judged` false reports, never a zero.
+            `hard_eligible_legs` counts the legs the shipped allowlist `MobilitySnapshot.hard_minutes` would
+            admit into a hard decision. The gate's travel arithmetic reads the raw `estimate_minutes`
+            (`app/replanning/feasibility.py`) instead, so this count is a disclosure and not a second
+            verdict: a round can be `gate.passed` true with `hard_eligible_legs` 0, and a candidate written
+            by `from-slots` on the mock provider is exactly that.
+          anyOf:
+            - type: object
+              required: [frozen, snapshot_id, source_provider, captured_at, fact_qualities, legs_frozen,
+                         hard_eligible_legs, read_from]
+              properties:
+                frozen: {type: boolean, const: true}
+                snapshot_id: {type: string}
+                source_provider: {type: string}
+                captured_at: {type: string}
+                fact_qualities: {type: object, additionalProperties: {type: integer}}
+                legs_frozen: {type: integer}
+                hard_eligible_legs: {type: integer}
+                read_from: {type: string, const: app.replanning.provider_snapshots.fact_quality_summary}
+            - type: "null"
         locked_commitments_preserved: {type: boolean}
         locked_slots_dropped: {type: array, items: {type: integer}}
         lock_flags_dropped: {type: array, items: {type: integer}}
@@ -5514,8 +5539,12 @@ components:
         consent_path: {type: string}
         next_actions:
           type: array
+          description: >
+            Two pointers when the candidate's evidence is already frozen, three when it is not: the first
+            is then `POST .../mobility-freeze`, because the round this press opens cannot be judged until
+            the gate is handed something to judge.
           minItems: 2
-          maxItems: 2
+          maxItems: 3
           items: {type: string}
 
     PlanDeltaEvidenceSide:

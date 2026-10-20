@@ -346,12 +346,23 @@ def test_a_frozen_candidate_reaches_a_verdict_and_an_unfrozen_one_does_not(seede
     assert before["gate"]["judged"] is False, before["gate"]
     assert before["evidence_gap"] is True, before["evidence_gap"]
     assert before["gate"]["refusal_code"] == "STALE_RECOMPOSE_REQUIRED", before["gate"]
+    assert before["evidence_basis"] is None, before["evidence_basis"]
 
-    assert _freeze(seeded, ids["candidate"]).status_code == 200
+    frozen = _freeze(seeded, ids["candidate"]).json()
     after = _submit(seeded, ids["candidate"], key="submit-frozen").json()
     assert after["gate"]["judged"] is True, after["gate"]
     assert after["evidence_gap"] is False, after["evidence_gap"]
     assert after["gate"]["refusal_code"] is None, after["gate"]
+    #: The round says whose legs the gate was handed, and the numbers are this door's own tally -- the
+    #: same function over the same stored snapshot, not a second count that could drift.
+    basis = after["evidence_basis"]
+    assert basis["fact_qualities"] == frozen["fact_qualities"], (basis, frozen)
+    assert basis["legs_frozen"] == frozen["counts"]["legs_frozen"], (basis, frozen["counts"])
+    assert basis["hard_eligible_legs"] == frozen["counts"]["hard_eligible_legs"], basis
+    assert basis["source_provider"] == frozen["source_provider"], basis
+    assert basis["snapshot_id"] == frozen["mobility_snapshot_id"], basis
+    assert basis["captured_at"] == frozen["captured_at"], basis
+    assert basis["read_from"] == "app.replanning.provider_snapshots.fact_quality_summary", basis
     with seeded.factory() as session:
         journey = session.get(Journey, ids["journey"])
         candidate = session.get(PlanVersion, ids["candidate"])

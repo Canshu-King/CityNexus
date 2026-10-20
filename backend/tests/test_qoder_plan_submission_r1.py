@@ -309,6 +309,9 @@ def test_a_candidate_the_gate_refuses_to_judge_is_stored_as_not_judged_not_passe
     assert explanation["gate_judged"] is False, explanation
     assert explanation["gate_refusal_code"] == "STALE_RECOMPOSE_REQUIRED", explanation
     assert body["evidence_gap"] is True, body
+    # Nothing was frozen, so there is no basis to report -- an absence, and never a zero invented to
+    # make the field look answered.
+    assert body["evidence_basis"] is None, body
 
 
 def _travel_delta(seeded, base_id: str, candidate_id: str) -> int:

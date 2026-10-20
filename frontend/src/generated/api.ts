@@ -4612,6 +4612,21 @@ export interface components {
                 refusal_detail: string | null;
             };
             evidence_gap: boolean;
+            /** @description Whose legs the gate was handed, read through `app.services._snapshot_for_plan` (the gate's own loader) and tallied by `app.replanning.provider_snapshots.fact_quality_summary` (the freeze door's own function), so the two doors cannot disagree about the same frozen snapshot. null for a candidate with nothing frozen -- the same absence `gate.judged` false reports, never a zero. `hard_eligible_legs` counts the legs the shipped allowlist `MobilitySnapshot.hard_minutes` would admit into a hard decision. The gate's travel arithmetic reads the raw `estimate_minutes` (`app/replanning/feasibility.py`) instead, so this count is a disclosure and not a second verdict: a round can be `gate.passed` true with `hard_eligible_legs` 0, and a candidate written by `from-slots` on the mock provider is exactly that. */
+            evidence_basis: {
+                /** @constant */
+                frozen: true;
+                snapshot_id: string;
+                source_provider: string;
+                captured_at: string;
+                fact_qualities: {
+                    [key: string]: number;
+                };
+                legs_frozen: number;
+                hard_eligible_legs: number;
+                /** @constant */
+                read_from: "app.replanning.provider_snapshots.fact_quality_summary";
+            } | null;
             locked_commitments_preserved: boolean;
             locked_slots_dropped: number[];
             lock_flags_dropped: number[];
@@ -4633,6 +4648,7 @@ export interface components {
             /** Format: uuid */
             journey_active_plan_version_id: string | null;
             consent_path: string;
+            /** @description Two pointers when the candidate's evidence is already frozen, three when it is not: the first is then `POST .../mobility-freeze`, because the round this press opens cannot be judged until the gate is handed something to judge. */
             next_actions: string[];
         };
         /** @description The gate answer the select door compares, read through departure_read.frozen_evidence_of. */
