@@ -41,7 +41,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app import departure_commit, departure_read, traveler_principal
+from app import (
+    collective_consent,
+    departure_commit,
+    departure_read,
+    traveler_principal,
+)
 from app.core.config import settings
 from app.db.models import (
     Activity,
@@ -50,6 +55,7 @@ from app.db.models import (
     IdempotencyKey,
     Journey,
     JourneyMember,
+    JourneyRoleCapability,
     Place,
     PlanVersion,
     ReplanProposal,
@@ -488,3 +494,116 @@ def test_a_round_on_another_candidate_does_not_stop_this_one(seeded, monkeypatch
                       idempotency_key=_key())
     assert pressed.status_code == 200, pressed.text
     assert _status_of(seeded, ids["plan_committable"]) == "SELECTED"
+
+
+def _consent_client(seeded, monkeypatch):
+    """The commit door and the consent door on one app, so an answer can be pressed for real."""
+    from app import main as main_module
+
+    monkeypatch.setattr(traveler_principal, "settings",
+                        replace(settings, traveler_auth_secret=SECRET))
+    app = FastAPI()
+    app.include_router(departure_read.router)
+    app.include_router(departure_commit.router)
+    app.include_router(collective_consent.router)
+    app.add_exception_handler(StarletteHTTPException, main_module.http_error)
+
+    def override_session():
+        with seeded.factory() as inner:
+            yield inner
+
+    app.dependency_overrides[get_session] = override_session
+    return TestClient(app)
+
+
+def _grant_shipped_acl(seeded) -> int:
+    """The role/capability rows the shipped seeder writes, taken from its own table.
+
+    The fixture runs on the ORM's `create_all`, which builds the ACL *table* but not its rows, and
+    `required_authority` reads the capability from `journey_role_capabilities` rather than assuming it.
+    Writing this tuple here -- not a list invented below -- is what lets a consent round be answered at
+    all, and keeps the roster's judgement the shipped one.
+    """
+    from app.db.session import JOURNEY_ROLE_CAPABILITIES
+
+    with seeded.factory() as session:
+        for role, capability, message_key in JOURNEY_ROLE_CAPABILITIES:
+            session.add(JourneyRoleCapability(role=role, capability=capability,
+                                              scope_message_key=message_key, created_at=_now()))
+        session.commit()
+    return len(JOURNEY_ROLE_CAPABILITIES)
+
+
+def _answer(seeded, client, proposal_id: str, traveler_id: str, decision: str):
+    return client.post(collective_consent.CONSENT_PATH.format(
+        journey_id=seeded.ids["journey"], proposal_id=proposal_id),
+        json={"decision": decision},
+        headers={**_header(traveler_id), "Idempotency-Key": _key()})
+
+
+def test_a_round_everyone_required_has_answered_is_not_an_open_question(seeded, monkeypatch):
+    """When the block lifts is the consent door's rule: unanimity, not a word on the proposal row.
+
+    Read on a real socket (`_live_v3_chain_1020ex.txt:14`): on a journey that has not departed,
+    `_accept_replan_executing` requires an ACTIVE journey, so a fulfilled round cannot apply and the row
+    stays PRESENTED -- no shipped door ever writes another status for it. Refusing the traveller's own
+    commit there would strand them behind a question nobody is still waiting on, so this door asks the
+    consent door whether the round has decided instead of reading the row's word alone.
+    """
+    ids = seeded.ids
+    client = _consent_client(seeded, monkeypatch)
+    assert _grant_shipped_acl(seeded) > 0, "the shipped ACL table has rows to read"
+    proposal_id = _open_round(seeded, proposed_id=ids["plan_committable"])
+    answered = _answer(seeded, client, proposal_id, ids["owner"], "APPROVE")
+    assert answered.status_code == 200, answered.text
+    assert answered.json()["fulfilled"] is True, answered.json()
+    assert _rows(seeded, ReplanProposal, id=proposal_id)[0].status == "PRESENTED", (
+        "no shipped door moves the row when the apply is refused")
+
+    pressed = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"],
+                      idempotency_key=_key())
+    assert pressed.status_code == 200, pressed.text
+    assert _status_of(seeded, ids["plan_committable"]) == "SELECTED"
+    assert _rows(seeded, Journey, id=ids["journey"])[0].active_plan_version_id == (
+        ids["plan_committable"])
+
+
+def test_a_round_somebody_rejected_still_holds_the_travellers_door(seeded, monkeypatch):
+    """A decision against the candidate is not an absence of a question: the shared plan stays put."""
+    ids = seeded.ids
+    client = _consent_client(seeded, monkeypatch)
+    _grant_shipped_acl(seeded)
+    proposal_id = _open_round(seeded, proposed_id=ids["plan_committable"])
+    rejected = _answer(seeded, client, proposal_id, ids["owner"], "REJECT")
+    assert rejected.status_code == 200, rejected.text
+    assert rejected.json()["fulfilled"] is False, rejected.json()
+
+    refused = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"],
+                      idempotency_key=_key())
+    assert refused.status_code == 409, refused.text
+    error = refused.json()["error"]
+    assert error["reason_code"] == departure_commit.REASON_ROUND_IN_FLIGHT, error
+    rounds = error["details"]["rounds"]
+    assert rounds[0]["proposal_id"] == proposal_id, rounds
+    assert rounds[0]["rejected_traveler_ids"] == [ids["owner"]], rounds
+    assert rounds[0]["counts"]["outstanding"] == 0, rounds
+    assert _status_of(seeded, ids["plan_committable"]) == "CANDIDATE"
+
+
+def test_the_commit_door_carries_the_consent_doors_own_round_answer(seeded, monkeypatch):
+    """One writer for 「has this round decided」: the refusal carries that door's dict verbatim."""
+    ids = seeded.ids
+    client = _consent_client(seeded, monkeypatch)
+    _grant_shipped_acl(seeded)
+    proposal_id = _open_round(seeded, proposed_id=ids["plan_committable"])
+    with seeded.factory() as session:
+        expected = collective_consent.round_answer(
+            session, session.get(Journey, ids["journey"]),
+            session.get(ReplanProposal, proposal_id))
+    assert expected["fulfilled"] is False, expected
+
+    refused = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"],
+                      idempotency_key=_key())
+    assert refused.status_code == 409, refused.text
+    assert refused.json()["error"]["details"]["rounds"] == [expected], (
+        refused.json()["error"]["details"]["rounds"], expected)

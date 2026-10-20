@@ -59,6 +59,7 @@ from fastapi import APIRouter, Depends, Header, Request, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.collective_consent import round_answer
 from app.commerce.idempotency import canonical_request_signature
 from app.core.audit import record_audit
 from app.db.models import Activity, IdempotencyKey, Place, PlanVersion, ReplanProposal
@@ -236,6 +237,12 @@ def journey_plan_mobility_freeze(
              "detail": "app.services._snapshot_for_plan raises STALE_RECOMPOSE_REQUIRED here"},
         )
 
+    #: "Is this round still asking?" is the consent door's rule, asked from
+    #: `app.collective_consent.round_answer` rather than re-derived here -- the same reason
+    #: `app.departure_commit` asks it. A round everybody required has approved is answered even when the
+    #: shipped plan door refused to move the plan, and the traveller then has to be able to re-freeze; a
+    #: rejected or unanswered round still holds this door, because re-freezing would change the facts
+    #: under the people who are voting.
     asking = session.scalars(
         select(ReplanProposal)
         .where(ReplanProposal.journey_id == journey.id,
@@ -243,15 +250,20 @@ def journey_plan_mobility_freeze(
                ReplanProposal.status.in_(PROPOSAL_ACTIONABLE_STATUSES))
         .order_by(ReplanProposal.created_at.desc())
     ).all()
-    if asking:
+    rounds = [round_answer(session, journey, row) for row in asking]
+    voting = [item for item in rounds if not item["fulfilled"]]
+    if voting:
         raise _refuse(
             409,
             "a round is already asking about this candidate on the evidence it had; re-freezing here "
             "would change the facts under the people voting",
             REASON_ROUND_IN_FLIGHT,
             {"plan_version_id": plan.id,
-             "proposal_ids": [row.id for row in asking],
-             "proposal_statuses": sorted({str(row.status) for row in asking})},
+             "proposal_ids": [item["proposal_id"] for item in voting],
+             "proposal_statuses": sorted({item["status"] for item in voting}),
+             "rounds": voting,
+             "decided_proposal_ids": [item["proposal_id"] for item in rounds
+                                      if item["fulfilled"]]},
         )
 
     slots = _plan_slots(session, plan.id)

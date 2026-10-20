@@ -2665,7 +2665,7 @@ paths:
         '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
         '403': {description: "The caller holds no in-force seat, so it cannot confirm for anybody else (error.reason_code JOURNEY_MEMBER_REQUIRED)"}
         '404': {description: "Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY)"}
-        '409': {description: "Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED), or a round is still asking about that plan version (COMMIT_ROUND_IN_FLIGHT)"}
+        '409': {description: "Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED), or a round is still asking about that plan version (COMMIT_ROUND_IN_FLIGHT) -- asking means the consent door's own fulfilment rule has not decided it, so a round everybody required approved is answered even when the plan door refused to apply"}
         '422': {description: "Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED), a body field beyond plan_version_id (COMMIT_BODY_TAKES_ONLY_PLAN_VERSION_ID), or PLAN_INFEASIBLE"}
   /journeys/{journey_id}/departure/facts:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]

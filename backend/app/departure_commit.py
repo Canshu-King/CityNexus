@@ -20,15 +20,22 @@ What `select` cannot answer, and this door adds:
 * *that nothing else was accepted* -- the body carries one server-owned id and nothing else. Place
   names, URLs and provider payloads are refused by name, so this cannot become a way to describe a
   place to the server.
-* *that a round in flight is not walked through* -- an outstanding proposal about this very candidate
-  (`GENERATED` or `PRESENTED`) makes the commit a refusal, not a fact. The V3 order's fourth item says
-  the shared plan must not move while its round has not decided; before this rule landed the same press
-  answered 200, moved the journey's `active_plan_version_id`, superseded the old plan and left the
-  proposal `PRESENTED`, still asking. `_live_round_bypass_1020ez.py` re-measures that press and now prints
-  it as a refusal with the pointer and the proposal unchanged (`_live_round_bypass_1020ez.txt:8`), which
-  is what a docstring may cite: the behaviour as it stands, the history as prose. The collective path is
-  untouched: the fulfilled round applies through its own door, and a traveller may still commit once the
-  round has been answered.
+* *that a round which has not decided is not walked through* -- the V3 order's fourth item says the
+  shared plan must not move while its round has not decided, so a proposal about this very candidate in
+  `GENERATED` or `PRESENTED` whose round has not reached the consent door's bar makes the commit a
+  refusal, not a fact. "Decided" is not this door's word to coin: it asks `app.collective_consent`
+  (`round_answer`) who is required and whose answer counts, and lets the commit through when that door
+  says the round is fulfilled -- which matters on a journey that has not departed, where
+  `_accept_replan_executing` requires an ACTIVE journey, so a fulfilled round cannot apply, no shipped
+  door ever writes another status for the row, and refusing here would strand the traveller behind a
+  question nobody is waiting on. Measured on a real socket after that lift: the commit press that follows
+  a fulfilled-but-unapplied round answers 200 and the journey then starts
+  (`_live_v3_chain_1020ex.txt:14`, `:15`). Before the first version of this rule landed, the same press
+  answered 200 while the round still showed `outstanding 1`, moved the journey's
+  `active_plan_version_id`, superseded the old plan and left the proposal `PRESENTED`, still asking;
+  `_live_round_bypass_1020ez.py` re-measures that press and now prints it as a refusal with the pointer
+  and the proposal unchanged (`_live_round_bypass_1020ez.txt:8`), which is what a docstring may cite: the
+  behaviour as it stands, the history as prose. A round somebody rejected keeps holding the door.
 
 No schema migration: `audit_logs` already carries `actor_type` / `actor_id`, and `traveler` is the
 word the member doors already write there, asserted by
@@ -46,6 +53,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.collective_consent import round_answer
 from app.commerce.idempotency import canonical_request_signature
 from app.core.audit import record_audit
 from app.db.models import IdempotencyKey, PlanVersion, ReplanProposal
@@ -177,8 +185,14 @@ def journey_departure_commit(
         )
 
     # A round about this candidate that has not decided is not a suggestion to walk through: the shared
-    # plan must stay where it was until the members' round decides (V3's fourth item). The fulfilled path
-    # applies through its own door; this one waits.
+    # plan must stay where it was until the members' round decides (V3's fourth item). "Decided" is the
+    # consent door's own word, asked from `app.collective_consent.round_answer` rather than re-derived
+    # here, because the rule of who is required and whose answer counts is not this door's to invent. A
+    # round that everyone required has approved is answered even when the shipped plan door refused to
+    # move the plan -- on a journey that has not departed, `_accept_replan_executing` requires an ACTIVE
+    # journey, so the collective path cannot apply and the row stays PRESENTED. Measured on a real socket
+    # (`_live_v3_chain_1020ex.txt:15`): refusing there would strand the traveller, who owns the commit
+    # door, with a round nobody is still waiting on. A rejected or unanswered round keeps holding it.
     asking = session.scalars(
         select(ReplanProposal)
         .where(ReplanProposal.journey_id == journey.id,
@@ -186,15 +200,20 @@ def journey_departure_commit(
                ReplanProposal.status.in_(PROPOSAL_ACTIONABLE_STATUSES))
         .order_by(ReplanProposal.created_at.desc())
     ).all()
-    if asking:
+    rounds = [round_answer(session, journey, row) for row in asking]
+    undecided = [item for item in rounds if not item["fulfilled"]]
+    if undecided:
         raise _refuse(
             409,
             "a round is still asking about this plan version, so committing it here would move the "
             "shared plan past the very people the proposal is asking",
             REASON_ROUND_IN_FLIGHT,
             {"journey_id": journey.id, "plan_version_id": plan.id,
-             "proposal_ids": [row.id for row in asking],
-             "proposal_statuses": sorted({str(row.status) for row in asking}),
+             "proposal_ids": [item["proposal_id"] for item in undecided],
+             "proposal_statuses": sorted({item["status"] for item in undecided}),
+             "rounds": undecided,
+             "decided_proposal_ids": [item["proposal_id"] for item in rounds
+                                      if item["fulfilled"]],
              "outstanding": True},
         )
 

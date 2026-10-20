@@ -8407,7 +8407,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED), or a round is still asking about that plan version (COMMIT_ROUND_IN_FLIGHT) */
+            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED), or a round is still asking about that plan version (COMMIT_ROUND_IN_FLIGHT) -- asking means the consent door's own fulfilment rule has not decided it, so a round everybody required approved is answered even when the plan door refused to apply */
             409: {
                 headers: {
                     [name: string]: unknown;

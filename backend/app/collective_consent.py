@@ -507,6 +507,30 @@ def _round(
     }
 
 
+def round_answer(session: Session, journey, proposal) -> dict[str, Any]:
+    """This door's own fulfilment arithmetic for one proposal, asked from outside the consent routes.
+
+    `app.departure_commit` and `app.plan_evidence` each have to know whether a round about a candidate
+    still holds the shared plan where it was. Who is required, whose answer counts, and what unanimity
+    means are this module's rule, so those doors ask here instead of re-deriving it -- the answer they get
+    is the same one `GET .../consent` answers with, computed by the same `_round` call.
+    """
+    required, roster = required_authority(session, journey)
+    answer = _round(
+        session, journey=journey, proposal=proposal, required=required, roster=roster,
+        classification=_classification_for(session, journey, proposal),
+    )
+    return {
+        "proposal_id": answer["proposal_id"],
+        "status": str(proposal.status),
+        "fulfilled": bool(answer["fulfilled"]),
+        "counts": dict(answer["counts"]),
+        "outstanding_traveler_ids": list(answer["outstanding_traveler_ids"]),
+        "rejected_traveler_ids": list(answer["rejected_traveler_ids"]),
+        "read_from": "app.collective_consent._round",
+    }
+
+
 def _proposal_and_journey(request: Request, session: Session, journey_id: UUID, proposal_id: str):
     """Seat first, then the proposal, then whether anyone in this roster may answer at all."""
 

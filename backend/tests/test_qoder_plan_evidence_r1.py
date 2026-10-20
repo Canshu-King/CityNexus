@@ -53,12 +53,13 @@ from app.db.models import (
     IdempotencyKey,
     Journey,
     JourneyMember,
+    JourneyRoleCapability,
     Place,
     PlanVersion,
     ReplanProposal,
     Traveler,
 )
-from app.db.session import get_session
+from app.db.session import JOURNEY_ROLE_CAPABILITIES, get_session
 from app.integrations.mobility.runtime import capture_runtime_mobility_snapshot
 from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureError
 from app.replanning.provider_snapshots import (
@@ -464,6 +465,42 @@ def test_a_new_key_under_an_open_round_is_refused_by_name(seeded):
     with seeded.factory() as session:
         row = session.get(ReplanProposal, proposals[0])
     assert row.proposed_plan_version_id == ids["candidate"], vars(row)
+
+
+def test_a_round_that_has_decided_does_not_hold_the_freeze_door(seeded):
+    """The same rule the consent door owns lifts both doors, so they cannot disagree.
+
+    `app.departure_commit` asks `app.collective_consent.round_answer` whether a round has decided, and so
+    does this door -- a traveller whose round everyone required answered still has to be able to re-capture
+    evidence, because the shipped plan door will not apply it on a journey that has not departed. An
+    unanswered round keeps holding the door (the cell above), so nobody's vote is walked under.
+    """
+    ids = seeded.ids
+    client = _client(seeded)
+    with seeded.factory() as session:
+        for role, capability, message_key in JOURNEY_ROLE_CAPABILITIES:
+            session.add(JourneyRoleCapability(role=role, capability=capability,
+                                              scope_message_key=message_key, created_at=_now()))
+        session.commit()
+
+    assert _freeze(seeded, ids["candidate"], key="freeze-before").status_code == 200
+    proposal_id = _submit(seeded, ids["candidate"], key="submit-deciding").json()["proposal_id"]
+    answered = client.post(collective_consent.CONSENT_PATH.format(
+        journey_id=ids["journey"], proposal_id=proposal_id),
+        json={"decision": "APPROVE"},
+        headers={"Idempotency-Key": "consent-deciding", **_header(ids["owner"])})
+    assert answered.status_code == 200, answered.text
+    body = answered.json()
+    assert body["fulfilled"] is True, body
+    assert body["plan_apply"]["applied"] is False, body
+    with seeded.factory() as session:
+        assert session.get(ReplanProposal, proposal_id).status == "PRESENTED"
+
+    refrozen = _freeze(seeded, ids["candidate"], key="freeze-after")
+    assert refrozen.status_code == 200, refrozen.text
+    assert refrozen.json()["replaces_snapshot_id"], refrozen.json()
+    assert _plan_row(seeded, ids["candidate"]).mobility_snapshot_id == (
+        refrozen.json()["mobility_snapshot_id"])
 
 
 def test_a_candidate_with_no_round_may_be_frozen_again_and_says_what_it_replaced(seeded):
