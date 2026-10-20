@@ -261,6 +261,51 @@ async def test_amap_photos_are_recorded_as_not_displayable(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_amap_is_never_handed_another_provider_object_id(monkeypatch):
+    """The row's stored identity is not a universal id: a photon object must not become an Amap ask.
+
+    `Place.external_id` carries `node:281001` for the rows `photon.py` writes and `provider:object` for
+    the ones `real_city._external_id()` writes. The leg used to put whatever it received into `id=`, so
+    the first photograph Amap returned for a *different* provider's object would have been paired with
+    this place silently. Refusing before the request is the only answer that cannot be mis-paired.
+    """
+    monkeypatch.setenv(amap_module.KEY_ENV_PREFERRED, "unit-test-key-DO-NOT-LEAK")
+    seen: list[httpx.Request] = []
+    payload = {"pois": [{"id": "B0FFF", "photos": [{"title": "外观", "url": "https://amap/x.png"}]}]}
+    async with httpx.AsyncClient(transport=transport({"amap": payload}, seen)) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:1", label="冠豸山", region="连城县", provider_object_id="node:281001",
+            client=client, sources=[place_media.AmapPhotosProvider(client=client)])
+
+    assert seen == [], "a photon object id went to Amap: " + repr([str(r.url.path) for r in seen])
+    reading = result.readings[0]
+    assert reading["attempted"] is False and reading["reason_code"] == "PROVIDER_ITEM_ID_MISSING"
+    assert result.media is None
+    assert "unit-test-key" not in json.dumps(result.as_payload(), ensure_ascii=False)
+
+
+@pytest.mark.asyncio
+async def test_the_prefix_this_amap_leg_owns_is_stripped_before_the_query(monkeypatch):
+    """A row spelled with this leg's own provider prefix still addresses exactly one Amap POI."""
+    monkeypatch.setenv(amap_module.KEY_ENV_PREFERRED, "unit-test-key-DO-NOT-LEAK")
+    seen: list[httpx.Request] = []
+    payload = {"pois": [{"id": "B00140WBI1", "photos": [{"title": "外观", "url": "https://amap/x.png"}]}]}
+    async with httpx.AsyncClient(transport=transport({"amap": payload}, seen)) as client:
+        result = await place_media.collect_place_media(
+            place_id="N:1", label="广州塔", region="广州市",
+            provider_object_id="amap-web-service:B00140WBI1", client=client,
+            sources=[place_media.AmapPhotosProvider(client=client)])
+
+    assert len(seen) == 1
+    sent = dict(seen[0].url.params)
+    assert sent.get("id") == "B00140WBI1", sent
+    assert "amap-web-service" not in str(sent.get("id"))
+    assert str(seen[0].url.path) == "/v5/place/detail"
+    # The key goes out as a query param and comes back nowhere: not in the answer, not in a reading.
+    assert "unit-test-key" not in json.dumps(result.as_payload(), ensure_ascii=False)
+
+
+@pytest.mark.asyncio
 async def test_the_graph_arm_binds_a_place_whose_label_and_description_both_miss_our_names():
     """外滩: the entity answers in English, its description repeats neither name, but `P131` leads to
     the very region we hold. Binding by climbing beats binding by string-guessing."""

@@ -451,6 +451,25 @@ class AmapPhotosProvider:
     def __init__(self, *, client: httpx.AsyncClient) -> None:
         self._client = client
 
+    def _own_object_id(self, value: str | None) -> str | None:
+        """The POI id this provider can be asked about, taken from the stored string's own prefix.
+
+        The two shipped writers spell `Place.external_id` differently -- `photon.py:75` stores the OSM
+        object as `node:281001`, `real_city._external_id()` stores `provider:object` -- and Amap's
+        `/v5/place/detail` accepts neither of those as one of its own POI ids. Asking it about another
+        provider's object is a cross-provider pairing decided by a string shape, so it is refused here,
+        before any request, rather than answered with somebody else's photograph.
+        """
+        raw = str(value or "").strip()
+        if not raw:
+            return None
+        prefix = f"{self.provider_key}:"
+        if raw.startswith(prefix):
+            return raw[len(prefix):] or None
+        if ":" in raw:
+            return None
+        return raw
+
     async def search(self, *, place_id: str, label: str, region: str | None,
                      wikidata_id: str | None, amap_poi_id: str | None = None,
                      provider_object_id: str | None = None
@@ -461,9 +480,7 @@ class AmapPhotosProvider:
             return None, {"source": self.provider_key, "attempted": False,
                           "outcome": "NOT_CONFIGURED",
                           "reason_code": amap.missing_key_reason(), "captured_at": started}
-        # The order binds by provider_object_id; the Amap row's own POI id is the same thing under the
-          # name this provider has always used, so either spelling addresses it.
-        amap_poi_id = amap_poi_id or provider_object_id
+        amap_poi_id = amap_poi_id or self._own_object_id(provider_object_id)
         if not amap_poi_id:
             return None, {"source": self.provider_key, "attempted": False, "outcome": STATUS_NO_MEDIA,
                           "reason_code": "PROVIDER_ITEM_ID_MISSING", "captured_at": started}
