@@ -155,3 +155,43 @@ Policy, as ruled on 2026-09-20:
 A Git-SHA / build-hash verification gate.  Process ownership (points 2, 3 and 6) is
 what makes "did we test our own tree" true, and it is mechanical; re-verifying
 artefact hashes on top of that was considered and rejected as ceremony.
+
+## Issuance, seed state, and the harness typecheck
+
+Added 2026-10-21, after a run whose reds had no product cause. These are invocation
+facts, so they belong to the same policy as points 1-8; none of them weakens an
+assertion.
+
+**Issuance is an environment value, and its absence is not a product answer.**
+`CITYNEXUS_TRAVELER_AUTH_SECRET` signs the traveller principal
+(`backend/app/core/config.py`; refused as `TRAVELER_AUTH_NOT_CONFIGURED` in
+`backend/app/traveler_principal.py`). It is never defaulted to a literal, because a
+default secret is a public secret. With it unset, `session_state` is `NOT_CONFIGURED`
+and every cell that expects `SIGNED` fails as one cascade — measured as eight reds
+whose only named cause was a missing environment value. `announce()` therefore prints
+`issuance=SIGNED-capable` or `issuance=NOT_CONFIGURED` on the provenance line and into
+`e2e-provenance/authoritative.json`. Read that field before believing a red in the
+signed-session family, and fix the invocation rather than the assertion.
+
+**Seed browser state is named per run.** `e2e/_qoderRealSeed.setup.ts` writes it and
+four configs plus `tools/capture-visual.mjs` read it; all six compute the name through
+`seedStateFileName()` — `e2e-seed-state-<runId>.json`, falling back to the frontend
+port — inside `frontend/reports/`. The single source exists because six hard-coded
+copies of one name let two concurrent runs overwrite each other's seed, which made a
+green possibly replay another run's journey.
+
+**One spec file per invocation.** Several specs in one call share the backend and the
+database and pollute each other; a name that is red in a combined run and green alone
+is the combined run being wrong, not the product being wrong.
+
+**The harness is outside the gate's typecheck.** `tsconfig.typecheck.json` covers
+`src/**`, so `playwrightEnv.ts`, the configs and `e2e/**` are not typechecked by
+`cmdr_commit_gate_r1.py --typecheck`. When one of those files changes, run tsc on it
+directly:
+
+```bash
+cd frontend
+node node_modules/typescript/bin/tsc --noEmit --target es2022 --module esnext \
+  --moduleResolution bundler --skipLibCheck --allowJs --esModuleInterop --resolveJsonModule \
+  --types node playwright e2e/_qoderRealSeed.setup.ts
+```
