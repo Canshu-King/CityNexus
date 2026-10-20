@@ -22,11 +22,13 @@ What `select` cannot answer, and this door adds:
   place to the server.
 * *that a round in flight is not walked through* -- an outstanding proposal about this very candidate
   (`GENERATED` or `PRESENTED`) makes the commit a refusal, not a fact. The V3 order's fourth item says
-  the shared plan must not move while its round has not decided; measured before this rule was added, a
-  traveller's commit while the round still showed `outstanding 1` moved the journey's
-  `active_plan_version_id`, superseded the old plan and left the proposal `PRESENTED`, still asking
-  (`_live_round_bypass_1020ez.txt:8`). The collective path is untouched: the fulfilled round applies
-  through its own door, and a traveller may still commit once the round has been answered or withdrawn.
+  the shared plan must not move while its round has not decided; before this rule landed the same press
+  answered 200, moved the journey's `active_plan_version_id`, superseded the old plan and left the
+  proposal `PRESENTED`, still asking. `_live_round_bypass_1020ez.py` re-measures that press and now prints
+  it as a refusal with the pointer and the proposal unchanged (`_live_round_bypass_1020ez.txt:8`), which
+  is what a docstring may cite: the behaviour as it stands, the history as prose. The collective path is
+  untouched: the fulfilled round applies through its own door, and a traveller may still commit once the
+  round has been answered.
 
 No schema migration: `audit_logs` already carries `actor_type` / `actor_id`, and `traveler` is the
 word the member doors already write there, asserted by
