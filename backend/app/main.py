@@ -14517,22 +14517,24 @@ def _copilot_answer(
         return "我按当前城市和这趟的安排找候选地点；找到的先列给你看，不会自己加进行程。" if locale == "zh" else "I search candidate places using the current city and this trip; they are listed for you and never added to your trip on their own."
     capability_items = interpretation.entities.get("capabilities") if isinstance(interpretation.entities, dict) else None
     if isinstance(capability_items, list) and capability_items:
-        codes = [str(item.get("code")) for item in capability_items if isinstance(item, dict)]
         hard = [item for item in capability_items if isinstance(item, dict) and item.get("severity") == "HARD"]
-        labels = ", ".join(code for code in codes if code)
+        # The codes stay where they belong -- in `entities`, which the envelope panel shows and the
+        # feasibility layer consumes. Naming `MAX_WALKING_PER_LEG_M` inside a sentence addressed to a
+        # traveller gave them an identifier they cannot read, and the readable name for that code
+        # already has one writer in the interface dictionary; the answer is not to copy it here.
         if locale == "zh":
             if hard:
-                return f"记下你的硬性需求（{labels}）。这类需求要你先确认；能不能满足得看供应商或已有的证据，没有证据我不会说那里可去。"
-            return f"记下你的能力与偏好（{labels}）。这些会影响我给你挑地点和解释的方式，我不会自己改动你的偏好档案。"
+                return "记下你的硬性需求了。这类需求要你先确认；能不能满足得看供应商或已有的证据，没有证据我不会说那里可去。"
+            return "记下你的能力与偏好了。这些会影响我给你挑地点和解释的方式，我不会自己改动你的偏好档案。"
         if hard:
-            return f"Noted your hard needs ({labels}). These need your confirmation; whether something can meet them depends on provider or existing evidence, and I won't call a place accessible without it."
-        return f"Noted your capabilities and preferences ({labels}). They shape which places I pick and how I explain them; I won't change your preference profile on my own."
+            return "Noted your hard needs. These need your confirmation; whether something can meet them depends on provider or existing evidence, and I won't call a place accessible without it."
+        return "Noted your capabilities and preferences. They shape which places I pick and how I explain them; I won't change your preference profile on my own."
     if interpretation.intent == "PREFERENCE_CHANGE":
         return "这是偏好改动请求。我先把它列在这里；要真的生效，请你明确确认更新偏好。" if locale == "zh" else "This is a preference change request, listed here for now. To make it stick, confirm the preference update explicitly."
     if interpretation.intent == "REPLAN_REQUEST":
         return "这是重新规划请求。新方案要先过可行性核对，我不会直接改写你当前的方案。" if locale == "zh" else "This is a replan request. A new plan has to pass the feasibility check first; I won't rewrite your current plan directly."
     if interpretation.intent == "VERIFY_FACT":
-        return "这条出行信息还没核实。我会先对供应商或来源的证据，核实前不会把它记成城市事件。" if locale == "zh" else "This travel claim isn't verified yet. I check it against provider or source evidence before it becomes a city event."
+        return "这条出行信息还没核实。我会先拿供应商或来源的证据核一遍，核实前不会把它记成城市事件。" if locale == "zh" else "This travel claim isn't verified yet. I check it against provider or source evidence before it becomes a city event."
     if interpretation.intent == "PERSONAL_ASSISTANCE":
         return "这看起来是个人求助，我按你的个人情况来处理，不会把它当成城市的天气或交通事件。" if locale == "zh" else "This looks like a personal assistance request, so I handle it for your own situation and don't turn it into a city weather or traffic event."
     if locale == "zh":
