@@ -19,6 +19,11 @@ What it stores, and who judged each of it -- nothing here is asserted by this mo
 * `locked_commitments_preserved` -- computed: every base slot whose row says `locked` must still be
   carried by the candidate under the same canonical place, otherwise the stored word is false and the
   sequences that were dropped are named;
+* `lock_flags_dropped` / `lock_flags_added` -- computed from the two sides' `activities.locked` words for
+  slots that exist on both sides. The shipped claim above asks about *places*, so a candidate that carries
+  every place and stops calling any of them locked still reads "preserved" -- and a candidate written by
+  `POST .../plans/from-slots` always says unlocked, which is why this door names the flag beside the
+  claim instead of leaving the reader with only `true`;
 * `utility_score` / `score_breakdown_json` -- `app.replanning.verified_scoring.score_replan_candidate`,
   fed with counts from the difference below and an envelope built by `app.main._envelope_payload` from
   the rows. Preference fit and opportunity value are passed as None, which that scorer documents as the
@@ -310,9 +315,10 @@ def journey_plan_submission(
 
     delta = delta_of(session, journey, base, candidate)
     travel_delta_min = _travel_delta(session, base.id, candidate.id)
+    locks_dropped, locks_added = _lock_flag_states(session, base.id, candidate.id)
     comparison = material_comparison(
         delta, travel_delta_min=travel_delta_min,
-        lock_flag_changes=_lock_flag_changes(session, base.id, candidate.id))
+        lock_flag_changes=sorted(set(locks_dropped) | set(locks_added)))
     if comparison["unchanged"]:
         raise _refuse(
             422,
@@ -362,6 +368,8 @@ def journey_plan_submission(
             "gate_failures": gate_verdict["failures"],
             "gate_refusal_code": gate_verdict["refusal_code"],
             "locked_slots_dropped": dropped,
+            "lock_flags_dropped": locks_dropped,
+            "lock_flags_added": locks_added,
             "currency": currencies[0],
         }, sort_keys=True),
         created_at=datetime.now(timezone.utc).isoformat(),
@@ -390,6 +398,11 @@ def journey_plan_submission(
         "evidence_gap": gate_verdict["refusal_code"] == "STALE_RECOMPOSE_REQUIRED",
         "locked_commitments_preserved": preserved,
         "locked_slots_dropped": dropped,
+        # The shipped claim above compares place identity; these two name the `locked` word itself, which
+        # a candidate written by `from-slots` always leaves off. A reader that only saw "preserved: true"
+        # would not learn that every commitment stopped being a commitment.
+        "lock_flags_dropped": locks_dropped,
+        "lock_flags_added": locks_added,
         "currency": currencies[0],
         "utility_score": score.total,
         "score_breakdown": dict(score.breakdown),
@@ -442,13 +455,18 @@ def _travel_delta(session: Session, base_id: str, candidate_id: str) -> int:
     return totals["candidate"] - totals["base"]
 
 
-def _lock_flag_changes(session: Session, base_id: str, candidate_id: str) -> list[int]:
-    """Sequences whose `activities.locked` word differs between the two sides.
+def _lock_flag_states(session: Session, base_id: str,
+                      candidate_id: str) -> tuple[list[int], list[int]]:
+    """Sequences whose `activities.locked` word the candidate dropped, and the ones it added.
 
     A commitment that stopped being a commitment is a change worth a round even when the slot carries
     the same place at the same time for the same money, and the delta's per-slot stamps do not hold this
-    column, so it is read from the rows here rather than quietly left out of the comparison above.
-    Sequences that exist on only one side are already `added` / `removed`.
+    column, so it is read from the rows here rather than quietly left out. This is also the honest
+    companion to `locked_commitments_preserved`: that shipped claim asks whether the base's locked
+    *places* are still carried, and a candidate written by `POST .../plans/from-slots` always says
+    unlocked -- so a plan that keeps every place can still drop every lock word, and the two lists name
+    that instead of letting the stored "preserved" answer be the only thing a reader sees. Sequences
+    that exist on only one side are already `added` / `removed` in the delta.
     """
     flags: dict[str, dict[int, bool]] = {}
     for label, plan_id in (("base", base_id), ("candidate", candidate_id)):
@@ -457,8 +475,12 @@ def _lock_flag_changes(session: Session, base_id: str, candidate_id: str) -> lis
             for row in session.scalars(select(Activity).where(
                 Activity.plan_version_id == plan_id)).all()
         }
-    return sorted(sequence for sequence in set(flags["base"]) & set(flags["candidate"])
-                  if flags["base"][sequence] != flags["candidate"][sequence])
+    shared = set(flags["base"]) & set(flags["candidate"])
+    dropped = sorted(sequence for sequence in shared
+                     if flags["base"][sequence] and not flags["candidate"][sequence])
+    added = sorted(sequence for sequence in shared
+                   if not flags["base"][sequence] and flags["candidate"][sequence])
+    return dropped, added
 
 
 def _stored_diff(delta: dict[str, Any], envelope: dict[str, Any]) -> dict[str, Any]:

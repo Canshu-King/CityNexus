@@ -572,12 +572,15 @@ def test_the_no_material_verdict_is_the_same_function_the_door_answers_with(seed
         candidate_delta = plan_delta.delta_of(session, journey, base, candidate)
         mirror_travel = plan_submission._travel_delta(session, base.id, mirror.id)
         candidate_travel = plan_submission._travel_delta(session, base.id, candidate.id)
-        mirror_locks = plan_submission._lock_flag_changes(session, base.id, mirror.id)
-        candidate_locks = plan_submission._lock_flag_changes(session, base.id, candidate.id)
+        mirror_dropped, mirror_added = plan_submission._lock_flag_states(session, base.id, mirror.id)
+        candidate_dropped, candidate_added = plan_submission._lock_flag_states(
+            session, base.id, candidate.id)
     nothing = plan_submission.material_comparison(
-        mirror_delta, travel_delta_min=mirror_travel, lock_flag_changes=mirror_locks)
+        mirror_delta, travel_delta_min=mirror_travel,
+        lock_flag_changes=sorted(set(mirror_dropped) | set(mirror_added)))
     something = plan_submission.material_comparison(
-        candidate_delta, travel_delta_min=candidate_travel, lock_flag_changes=candidate_locks)
+        candidate_delta, travel_delta_min=candidate_travel,
+        lock_flag_changes=sorted(set(candidate_dropped) | set(candidate_added)))
     assert nothing["unchanged"] is True, nothing
     assert something["unchanged"] is False, (something, something["sets_that_changed"])
 
@@ -623,7 +626,30 @@ def test_a_candidate_that_only_unlocks_a_commitment_is_still_a_change(seeded):
     body = accepted.json()
     assert body["delta"]["counts"]["kept"] == 3 and body["delta"]["counts"]["moved"] == 0, body
     assert body["delta"]["duration_delta"]["delta_min"] == 0, body["delta"]
+    # The shipped place-based claim still says "preserved" here, and the door says so while naming the
+    # flag it is not looking at -- this is the shape a `from-slots` candidate over a locked base has.
     assert body["locked_commitments_preserved"] is True, body
+    assert body["lock_flags_dropped"] == [1], body
+    assert body["lock_flags_added"] == [], body
+    stored = _proposal(seeded, body["proposal_id"])
+    assert json.loads(stored.explanation_json)["lock_flags_dropped"] == [1], stored.explanation_json
+
+
+def test_a_candidate_that_adds_a_commitment_names_it_apart_from_a_dropped_one(seeded):
+    """Two directions of the same column are two different facts for the people being asked."""
+    client = _app(seeded)
+    ids = seeded.ids
+    with seeded.factory() as session:
+        slot = session.scalars(select(Activity).where(
+            Activity.plan_version_id == ids["mirror"], Activity.sequence_no == 2)).one()
+        slot.locked = True
+        session.commit()
+    accepted = _submit(client, ids, plan=ids["mirror"], key="submit-lock-add")
+    assert accepted.status_code == 201, accepted.text
+    body = accepted.json()
+    assert body["lock_flags_added"] == [2], body
+    assert body["lock_flags_dropped"] == [], body
+    assert body["locked_slots_dropped"] == [], body
 
 
 def test_a_refusal_costs_the_idempotency_key_nothing_and_a_reprice_is_a_change(seeded):
@@ -666,8 +692,8 @@ def test_no_event_and_no_epoch_are_invented_for_a_hand_built_candidate(seeded):
     assert stored.recovery_epoch_id is None, stored.recovery_epoch_id
     explanation = json.loads(stored.explanation_json)
     assert sorted(explanation) == ["currency", "gate_failures", "gate_judged", "gate_refusal_code",
-                                   "locked_slots_dropped", "source",
-                                   "submitted_by_traveler_id"], explanation
+                                   "lock_flags_added", "lock_flags_dropped", "locked_slots_dropped",
+                                   "source", "submitted_by_traveler_id"], explanation
     assert explanation["source"] == plan_submission.FAMILY, explanation
     for value in explanation.values():
         if isinstance(value, str):

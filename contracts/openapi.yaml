@@ -2966,7 +2966,9 @@ paths:
         (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen
         mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's
         own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and
-        the places the candidate carries, `utility_score` and `score_breakdown` from
+        the places the candidate carries (and `lock_flags_dropped` / `lock_flags_added`, which name the
+        `locked` word itself on slots both sides carry -- that claim compares places, and a candidate
+        written by `from-slots` always says unlocked), `utility_score` and `score_breakdown` from
         `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an
         envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic
         `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree.
@@ -5464,7 +5466,8 @@ components:
       type: object
       required: [journey_id, proposal_id, base_plan_version_id, proposed_plan_version_id, base_status,
                  status, submitted_by_traveler_id, created_at, hard_constraints_passed, gate,
-                 evidence_gap, locked_commitments_preserved, locked_slots_dropped, currency,
+                 evidence_gap, locked_commitments_preserved, locked_slots_dropped,
+                 lock_flags_dropped, lock_flags_added, currency,
                  utility_score, score_breakdown, envelope, delta, applied, shared_plan_updated,
                  journey_active_plan_version_id, consent_path, next_actions]
       properties:
@@ -5495,6 +5498,8 @@ components:
         evidence_gap: {type: boolean}
         locked_commitments_preserved: {type: boolean}
         locked_slots_dropped: {type: array, items: {type: integer}}
+        lock_flags_dropped: {type: array, items: {type: integer}}
+        lock_flags_added: {type: array, items: {type: integer}}
         currency: {type: string}
         utility_score: {type: number, minimum: 0, maximum: 1}
         score_breakdown: {type: object, additionalProperties: {type: number}}
