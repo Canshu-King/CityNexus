@@ -4,6 +4,7 @@ from typing import Callable, Protocol
 
 import httpx
 
+from app.agent.ai_availability import record_provider_answer, record_provider_refusal
 from app.agent.runtime import AgentRuntimeUnavailable, DeepSeekJourneyAgent
 from app.agent.runtime_identity import HERMES_COMPAT_ENDPOINT
 from app.core.config import settings
@@ -49,7 +50,23 @@ class HermesJourneyAgent(DeepSeekJourneyAgent):
             message = response.json()["choices"][0]["message"]
             if not isinstance(message, dict):
                 raise TypeError("Hermes response message is invalid")
+            # ORD-0697: the compat endpoint is the door the product actually uses when
+            # `CITYNEXUS_HERMES_API_URL` is set, so it is the arm that has to witness the answer.
+            record_provider_answer(
+                provider_key=self.provider_key,
+                model_key=self.model_key,
+                status_code=response.status_code,
+            )
             return message
+        except httpx.HTTPStatusError as exc:
+            # Split out ahead of the broad arm below, which also catches this one: a status the
+            # provider actually sent is a refusal, and only a refusal.
+            record_provider_refusal(
+                provider_key=self.provider_key,
+                model_key=self.model_key,
+                status_code=exc.response.status_code,
+            )
+            raise AgentRuntimeUnavailable("Hermes Agent completion failed") from exc
         except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
             raise AgentRuntimeUnavailable("Hermes Agent completion failed") from exc
 
