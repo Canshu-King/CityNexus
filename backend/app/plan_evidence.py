@@ -39,6 +39,13 @@ The order is part of the contract: the idempotency receipt is consulted before a
 retry of a press that already froze evidence would otherwise be refused by the write it just made (the
 round-in-flight guard is one of them). That order is measured, not asserted -- ``_live_evidence_1020eo.py``
 presses the same key twice over a candidate that has since been submitted.
+
+One thing this door reports instead of fixing: two consecutive slots naming the same place ask the gate for
+a leg from that place to itself, and ``app.integrations.mobility.snapshot_capture`` deliberately freezes no
+fact for a pair whose origin equals its destination. The answer names those steps
+(``same_place_consecutive_transitions``) and says what the gate will answer. It does not write a
+zero-minute measurement to make such a plan look feasible: whether an identity leg should become a fact of
+the mobility domain is that domain's call, not this door's.
 """
 
 from __future__ import annotations
@@ -259,6 +266,16 @@ def journey_plan_mobility_freeze(
         if origin != destination
     )
     unlocatable = [slot["sequence_no"] for slot in slots if not slot["routing_key"]]
+    # Two consecutive slots at one place ask the gate for a leg from that place to itself. The capture
+    # domain deliberately freezes no self-pair -- `app.integrations.mobility.snapshot_capture` drops pairs
+    # whose origin equals its destination -- so such a plan cannot be judged, and the refusal arrives much
+    # later at `select`. Naming it here costs nothing and keeps the cause beside the act.
+    repeated = [
+        {"from_sequence_no": earlier["sequence_no"], "to_sequence_no": later["sequence_no"],
+         "place_id": earlier["place_id"]}
+        for earlier, later in zip(slots, slots[1:])
+        if earlier["routing_key"] and earlier["routing_key"] == later["routing_key"]
+    ]
     no_point = [
         {"sequence_no": slot["sequence_no"], "place_id": slot["place_id"]}
         for slot in slots
@@ -336,6 +353,18 @@ def journey_plan_mobility_freeze(
         actor_id=seat["traveler_id"],
     )
 
+    actions = [
+        "judge it with POST " + SUBMISSION_PATH.format(
+            journey_id=journey.id, plan_version_id=plan.id),
+        "read the difference with GET " + DELTA_PATH.format(
+            journey_id=journey.id) + f"?to_plan_version_id={plan.id}",
+    ]
+    if repeated:
+        actions.append(
+            "this plan asks the gate for a leg from one place to that same place, and the capture "
+            "domain freezes no fact for a pair whose origin equals its destination "
+            "(app/integrations/mobility/snapshot_capture.py, the `if a and b` normalisation of pairs): "
+            "the gate will answer MOBILITY_DATA_UNAVAILABLE until that rule names a zero-minute self leg")
     answer = {
         "journey_id": journey.id,
         "plan_version_id": plan.id,
@@ -355,7 +384,9 @@ def journey_plan_mobility_freeze(
             "hard_eligible_legs": hard_eligible,
             "fallback_legs": len(capture.fallback_pairs),
             "slots_without_a_location_row": len(unlocatable),
+            "same_place_consecutive_transitions": len(repeated),
         },
+        "same_place_consecutive_transitions": repeated,
         "fact_qualities": dict(sorted(qualities.items())),
         "provider_capabilities": dict(snapshot.provider_capabilities),
         "sequences_without_a_location_row": unlocatable,
@@ -365,12 +396,7 @@ def journey_plan_mobility_freeze(
             "columns": "app.db.models.PlanVersion.mobility_snapshot_id",
             "consumed_by": "app.services._snapshot_for_plan",
         },
-        "next_actions": [
-            "judge it with POST " + SUBMISSION_PATH.format(
-                journey_id=journey.id, plan_version_id=plan.id),
-            "read the difference with GET " + DELTA_PATH.format(
-                journey_id=journey.id) + f"?to_plan_version_id={plan.id}",
-        ],
+        "next_actions": actions,
         "idempotency_key": scoped_key,
         "written_at": datetime.now(timezone.utc).isoformat(),
     }

@@ -2047,7 +2047,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Freeze the travel facts one CANDIDATE plan version's own slots imply, onto the two nullable columns `plan_versions` already carries. This is the door that makes a hand-built candidate judgeable: `app.services.validate_plan_feasibility` raises `STALE_RECOMPOSE_REQUIRED` for a version with no frozen evidence, so the submission door can only answer `gate.judged` false with `evidence_gap` true until this door has run. Nothing is invented: the legs are the plan's own `activities` rows in `sequence_no` order, every leg is measured by `app.integrations.mobility.runtime.capture_runtime_mobility_snapshot` -- the same primitive `plans/generate` uses, so this door adds no provider, no fallback rule and no trust level -- and what is stored is that capture's own snapshot id plus its own evidence document. A caller cannot supply minutes, a place list or a judgement: a body with any field is refused, so this cannot become a route-quoting or place-enumeration surface. Unlike the other plan doors, this one can reach a provider: when the deployment configures one, that capture is a live call per leg, and `counts.legs_requested` says how many. The answer counts `hard_eligible_legs` separately from `legs_frozen` and lists every leg's own `fact_qualities` word, because the fixture's blanket constant is not a measurement and must not read as one. Re-freezing a candidate is allowed while nobody is answering about it, and the answer names the snapshot id it replaces. The idempotency receipt is consulted before any state guard, so a retry of a press that already froze evidence replays that receipt instead of being refused by the very write it made. Nothing is selected, started, activated or presented here. */
+        /** @description Freeze the travel facts one CANDIDATE plan version's own slots imply, onto the two nullable columns `plan_versions` already carries. This is the door that makes a hand-built candidate judgeable: `app.services.validate_plan_feasibility` raises `STALE_RECOMPOSE_REQUIRED` for a version with no frozen evidence, so the submission door can only answer `gate.judged` false with `evidence_gap` true until this door has run. Nothing is invented: the legs are the plan's own `activities` rows in `sequence_no` order, every leg is measured by `app.integrations.mobility.runtime.capture_runtime_mobility_snapshot` -- the same primitive `plans/generate` uses, so this door adds no provider, no fallback rule and no trust level -- and what is stored is that capture's own snapshot id plus its own evidence document. A caller cannot supply minutes, a place list or a judgement: a body with any field is refused, so this cannot become a route-quoting or place-enumeration surface. Unlike the other plan doors, this one can reach a provider: when the deployment configures one, that capture is a live call per leg, and `counts.legs_requested` says how many. The answer counts `hard_eligible_legs` separately from `legs_frozen` and lists every leg's own `fact_qualities` word, because the fixture's blanket constant is not a measurement and must not read as one. Re-freezing a candidate is allowed while nobody is answering about it, and the answer names the snapshot id it replaces. The idempotency receipt is consulted before any state guard, so a retry of a press that already froze evidence replays that receipt instead of being refused by the very write it made. Nothing is selected, started, activated or presented here. A plan that visits one place in two consecutive slots is named in full (`same_place_consecutive_transitions`): the capture domain deliberately freezes no fact for a pair whose origin equals its destination, so the shipped gate will answer MOBILITY_DATA_UNAVAILABLE for it. This door reports that step instead of inventing a zero-minute measurement to hide it. */
         post: operations["postJourneyPlanMobilityFreeze"];
         delete?: never;
         options?: never;
@@ -4673,6 +4673,8 @@ export interface components {
                 hard_eligible_legs: number;
                 fallback_legs: number;
                 slots_without_a_location_row: number;
+                /** @description Consecutive slots naming one place. The capture domain freezes no fact for a pair whose origin equals its destination, so each such step is one the shipped gate will refuse to price. */
+                same_place_consecutive_transitions: number;
             };
             /** @description How many legs came back under each provenance word, counted from the frozen facts themselves. */
             fact_qualities: {
@@ -4681,6 +4683,13 @@ export interface components {
             /** @description The live arm's own capability read; empty on the offline arm, which fills none. */
             provider_capabilities: Record<string, never>;
             sequences_without_a_location_row: number[];
+            /** @description Which steps ask for a leg from a place to that same place, named by the two sequence numbers and the canonical place row. This door writes no self leg and does not soften the gate -- it says, at the moment of freezing, that such a plan cannot be committed until the mobility rule names a zero-minute self leg. */
+            same_place_consecutive_transitions: {
+                from_sequence_no: number;
+                to_sequence_no: number;
+                /** Format: uuid */
+                place_id: string;
+            }[];
             evidence_columns: string[];
             read_from: {
                 capture: string;

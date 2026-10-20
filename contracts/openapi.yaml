@@ -3030,6 +3030,10 @@ paths:
         snapshot id it replaces. The idempotency receipt is consulted before any state guard, so a retry
         of a press that already froze evidence replays that receipt instead of being refused by the very
         write it made. Nothing is selected, started, activated or presented here.
+        A plan that visits one place in two consecutive slots is named in full (`same_place_consecutive_transitions`): the capture domain deliberately freezes no fact for a
+        pair whose origin equals its destination, so the shipped gate will answer
+        MOBILITY_DATA_UNAVAILABLE for it. This door reports that step instead of inventing a
+        zero-minute measurement to hide it.
       parameters:
         - name: Idempotency-Key
           in: header
@@ -5521,6 +5525,7 @@ components:
       required: [journey_id, plan_version_id, status, mobility_snapshot_id, replaces_snapshot_id,
                  source_provider, operation_key, captured_at, expires_at, degraded, counts,
                  fact_qualities, provider_capabilities, sequences_without_a_location_row,
+                 same_place_consecutive_transitions,
                  evidence_columns, read_from, next_actions, idempotency_key, written_at]
       properties:
         journey_id: {type: string, format: uuid}
@@ -5546,7 +5551,7 @@ components:
         counts:
           type: object
           required: [slots, distinct_places, legs_requested, legs_frozen, hard_eligible_legs,
-                     fallback_legs, slots_without_a_location_row]
+                     fallback_legs, slots_without_a_location_row, same_place_consecutive_transitions]
           properties:
             slots: {type: integer, minimum: 0}
             distinct_places: {type: integer, minimum: 0}
@@ -5563,6 +5568,12 @@ components:
                 from `legs_frozen` because the fixture's blanket constant is not a measurement.
             fallback_legs: {type: integer, minimum: 0}
             slots_without_a_location_row: {type: integer, minimum: 0}
+            same_place_consecutive_transitions:
+              type: integer
+              minimum: 0
+              description: Consecutive slots naming one place. The capture domain freezes
+                no fact for a pair whose origin equals its destination, so each such step is
+                one the shipped gate will refuse to price.
         fact_qualities:
           type: object
           additionalProperties: {type: integer, minimum: 0}
@@ -5572,6 +5583,20 @@ components:
           type: object
           description: The live arm's own capability read; empty on the offline arm, which fills none.
         sequences_without_a_location_row: {type: array, items: {type: integer}}
+        same_place_consecutive_transitions:
+          type: array
+          items:
+            type: object
+            required: [from_sequence_no, to_sequence_no, place_id]
+            properties:
+              from_sequence_no: {type: integer}
+              to_sequence_no: {type: integer}
+              place_id: {type: string, format: uuid}
+          description: >
+            Which steps ask for a leg from a place to that same place, named by the two
+            sequence numbers and the canonical place row. This door writes no self leg and does
+            not soften the gate -- it says, at the moment of freezing, that such a plan cannot
+            be committed until the mobility rule names a zero-minute self leg.
         evidence_columns: {type: array, items: {type: string}}
         read_from:
           type: object

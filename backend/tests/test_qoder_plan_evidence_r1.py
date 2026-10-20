@@ -160,6 +160,7 @@ def seeded():
         ids["unfrozen"] = _plan(session, ids["journey"], number=3, status="CANDIDATE")
         ids["twice"] = _plan(session, ids["journey"], number=4, status="CANDIDATE")
         ids["blind"] = _plan(session, ids["journey"], number=5, status="CANDIDATE")
+        ids["loop"] = _plan(session, ids["journey"], number=6, status="CANDIDATE")
         ids["foreign"] = _plan(session, ids["other_journey"], number=1, status="CANDIDATE")
         session.add(Journey(id=ids["journey"], traveler_id=ids["owner"], title="连城",
                             city_code=CITY, timezone="Asia/Shanghai", start_at=_then(30),
@@ -188,6 +189,8 @@ def seeded():
             _activity(session, ids[plan], 3, ids["c"], start=240)
         _activity(session, ids["blind"], 1, ids["blind_place"], start=60)
         _activity(session, ids["blind"], 2, ids["b"], start=150)
+        _activity(session, ids["loop"], 1, ids["a"], start=60)
+        _activity(session, ids["loop"], 2, ids["a"], start=150)
         _activity(session, ids["foreign"], 1, ids["b"], start=60)
         session.commit()
     return SimpleNamespace(engine=engine, factory=factory, ids=ids)
@@ -285,8 +288,9 @@ def test_the_frozen_legs_are_the_ones_this_plan_s_own_slots_imply(seeded):
     assert frozen == expected, (frozen, expected)
     assert body["counts"] == {"slots": len(keys), "distinct_places": len(set(keys)),
                               "legs_requested": len(expected), "legs_frozen": len(expected),
-                              "hard_eligible_legs": 0,
-                              "fallback_legs": 0, "slots_without_a_location_row": 0}, body["counts"]
+                              "hard_eligible_legs": 0, "fallback_legs": 0,
+                              "slots_without_a_location_row": 0,
+                              "same_place_consecutive_transitions": 0}, body["counts"]
 
 
 def test_the_same_capture_the_generator_runs_produces_the_same_evidence_shape(seeded):
@@ -365,6 +369,32 @@ def test_the_door_never_takes_a_minute_from_the_caller(seeded):
     assert detail["details"]["accepted_fields"] == [], detail["details"]
     row = _plan_row(seeded, ids["candidate"])
     assert row.mobility_snapshot_id is None and row.mobility_evidence_json is None
+
+
+def test_a_plan_that_visits_one_place_twice_names_the_step_nothing_can_price(seeded):
+    """Found by this door's own chain: the capture domain freezes no self-pair, so the gate cannot price it.
+
+    The door does not invent a zero-minute measurement to make the plan pass, and it does not stay silent
+    about a step it knows the gate will refuse. Which of the two shapes -- a named identity leg in the
+    mobility domain, or a refusal at this door -- is the right fix belongs to that domain's owner, so this
+    cell pins the disclosure and the shipped verdict, not a cure.
+    """
+    ids = seeded.ids
+    answer = _freeze(seeded, ids["loop"]).json()
+    assert answer["counts"]["same_place_consecutive_transitions"] == 1, answer["counts"]
+    assert answer["same_place_consecutive_transitions"] == [
+        {"from_sequence_no": 1, "to_sequence_no": 2, "place_id": ids["a"]}], answer
+    assert answer["counts"]["distinct_places"] == 1 and answer["counts"]["legs_frozen"] == 0, (
+        answer["counts"])
+    assert any("zero-minute self leg" in line for line in answer["next_actions"]), (
+        answer["next_actions"])
+    verdict = _submit(seeded, ids["loop"], key="submit-loop").json()
+    assert verdict["gate"]["judged"] is True, verdict["gate"]
+    assert verdict["gate"]["passed"] is False, verdict["gate"]
+    assert any(code.startswith("MOBILITY_DATA_UNAVAILABLE")
+               for code in verdict["gate"]["failures"]), verdict["gate"]["failures"]
+    stored = json.loads(_plan_row(seeded, ids["loop"]).mobility_evidence_json)
+    assert stored["facts"] == [], "nothing was fabricated to fill the missing step"
 
 
 def test_a_slot_whose_place_carries_no_point_is_named_and_nothing_is_written(seeded):
