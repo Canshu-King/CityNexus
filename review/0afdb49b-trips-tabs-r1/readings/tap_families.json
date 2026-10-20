@@ -1,0 +1,145 @@
+{
+ "schema": "CNX_TAP_FAMILIES_R1",
+ "base": "http://127.0.0.1:4895",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Wed Oct 21 2026 04:53:27 GMT+0800 (中国标准时间)",
+ "screens": [
+  {
+   "screen": "hub",
+   "path": "/v8/hub",
+   "rows": []
+  },
+  {
+   "screen": "trips",
+   "path": "/v8/trips",
+   "rows": [
+    {
+     "sel": "[data-cnx-probe='tab-0-行程']",
+     "tag": "BUTTON",
+     "cls": "active",
+     "role": "tab",
+     "testid": "trips-tab-itinerary",
+     "words": "行程",
+     "painted": [
+      356,
+      40
+     ],
+     "pressable": [
+      82,
+      40
+     ],
+     "centre_lands": true,
+     "centre_hit": "trips-tab-itinerary",
+     "pe": "auto",
+     "cursor": "pointer",
+     "min_h": "40px",
+     "tabindex": "0",
+     "words_found": "行程"
+    },
+    {
+     "sel": "[data-cnx-probe='tab-1-住宿']",
+     "tag": "BUTTON",
+     "cls": "",
+     "role": "tab",
+     "testid": "trips-tab-stay",
+     "words": "住宿",
+     "painted": [
+      356,
+      40
+     ],
+     "pressable": [
+      82,
+      40
+     ],
+     "centre_lands": true,
+     "centre_hit": "trips-tab-stay",
+     "pe": "auto",
+     "cursor": "pointer",
+     "min_h": "40px",
+     "tabindex": "-1",
+     "words_found": "住宿"
+    },
+    {
+     "sel": "[data-cnx-probe='tab-2-预订']",
+     "tag": "BUTTON",
+     "cls": "",
+     "role": "tab",
+     "testid": "trips-tab-bookings",
+     "words": "预订",
+     "painted": [
+      356,
+      40
+     ],
+     "pressable": [
+      82,
+      40
+     ],
+     "centre_lands": true,
+     "centre_hit": "trips-tab-bookings",
+     "pe": "auto",
+     "cursor": "pointer",
+     "min_h": "40px",
+     "tabindex": "-1",
+     "words_found": "预订"
+    },
+    {
+     "sel": "[data-cnx-probe='tab-3-花费']",
+     "tag": "BUTTON",
+     "cls": "",
+     "role": "tab",
+     "testid": "trips-tab-spend",
+     "words": "花费",
+     "painted": [
+      356,
+      40
+     ],
+     "pressable": [
+      82,
+      40
+     ],
+     "centre_lands": true,
+     "centre_hit": "trips-tab-spend",
+     "pe": "auto",
+     "cursor": "pointer",
+     "min_h": "40px",
+     "tabindex": "-1",
+     "words_found": "花费"
+    }
+   ]
+  },
+  {
+   "screen": "map",
+   "path": "/v8/map",
+   "rows": [
+    {
+     "sel": "[data-cnx-probe='0']",
+     "tag": "BUTTON",
+     "cls": "cn-copilot-edge",
+     "role": null,
+     "testid": null,
+     "words": "✦ CityNexus Copilot",
+     "painted": [
+      165,
+      42
+     ],
+     "pressable": [
+      82,
+      42
+     ],
+     "centre_lands": true,
+     "centre_hit": "SPAN",
+     "pe": "auto",
+     "cursor": "pointer",
+     "min_h": "42px",
+     "tabindex": null,
+     "words_found": "✦\nCityNexus Copilot"
+    }
+   ]
+  }
+ ],
+ "taps": [],
+ "errors": []
+}

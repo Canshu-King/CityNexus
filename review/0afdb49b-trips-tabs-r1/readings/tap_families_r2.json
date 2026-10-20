@@ -1,0 +1,127 @@
+{
+ "schema": "CNX_TAP_FAMILIES_R2",
+ "base": "http://127.0.0.1:4895",
+ "started": "Wed Oct 21 2026 04:55:21 GMT+0800 (中国标准时间)",
+ "screens": [
+  {
+   "screen": "map",
+   "room": {
+    "edge": {
+     "top": 718,
+     "bottom": 760,
+     "left": 215,
+     "right": 380,
+     "w": 165,
+     "h": 42
+    },
+    "nav": {
+     "top": 768,
+     "bottom": 844,
+     "left": 0,
+     "right": 390,
+     "w": 390,
+     "h": 76
+    },
+    "tabs": [],
+    "tab_gaps": [],
+    "edge_min_h": "42px",
+    "edge_above": "ASIDE",
+    "edge_below": "DIV",
+    "gap_edge_to_nav": 8
+   },
+   "centre_pressable": true,
+   "chars_before": 565,
+   "chars_after": 629,
+   "dock_present_after": true
+  },
+  {
+   "screen": "trips",
+   "room": {
+    "edge": {
+     "top": 684,
+     "bottom": 728,
+     "left": 336,
+     "right": 380,
+     "w": 44,
+     "h": 44
+    },
+    "nav": {
+     "top": 768,
+     "bottom": 844,
+     "left": 0,
+     "right": 390,
+     "w": 390,
+     "h": 76
+    },
+    "tabs": [
+     {
+      "testid": "trips-tab-itinerary",
+      "words": "行程",
+      "min_h": "40px",
+      "top": 105,
+      "bottom": 145,
+      "left": 17,
+      "right": 373,
+      "w": 356,
+      "h": 40,
+      "pe": "auto"
+     },
+     {
+      "testid": "trips-tab-stay",
+      "words": "住宿",
+      "min_h": "40px",
+      "top": 105,
+      "bottom": 145,
+      "left": 379,
+      "right": 735,
+      "w": 356,
+      "h": 40,
+      "pe": "auto"
+     },
+     {
+      "testid": "trips-tab-bookings",
+      "words": "预订",
+      "min_h": "40px",
+      "top": 105,
+      "bottom": 145,
+      "left": 741,
+      "right": 1097,
+      "w": 356,
+      "h": 40,
+      "pe": "auto"
+     },
+     {
+      "testid": "trips-tab-spend",
+      "words": "花费",
+      "min_h": "40px",
+      "top": 105,
+      "bottom": 145,
+      "left": 1103,
+      "right": 1459,
+      "w": 356,
+      "h": 40,
+      "pe": "auto"
+     }
+    ],
+    "tab_gaps": [
+     -40,
+     -40,
+     -40
+    ],
+    "edge_min_h": "44px",
+    "edge_above": "DIV",
+    "edge_below": "DIV",
+    "gap_edge_to_nav": 40
+   },
+   "tab_tap": {
+    "attempted": true,
+    "selected_before": null,
+    "selected_after": "true",
+    "chars_before": 584,
+    "chars_after": 484
+   }
+  }
+ ],
+ "taps": [],
+ "errors": []
+}

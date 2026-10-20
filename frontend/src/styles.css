@@ -1429,8 +1429,16 @@ body:has(#v8-nav-drawer) { overflow: hidden; }
   border-bottom: 1px solid rgba(127, 127, 127, 0.18);
   -webkit-overflow-scrolling: touch;
 }
+/* ORD-0485 phone chain: styles.css carries a bare `button { width:100% }`, and a full-width tab inside a
+   nowrap scroller means only the first of four tabs is ever on a phone screen -- measured at 390 the tabs
+   started at x = 17, 379, 741 and 1103 inside a 356-wide strip, so 住宿/预订/花费 sat off-screen with an
+   11 px sliver as the only hint. `flex: 0 0 auto` was already the intent; the width had to be released for
+   it to show. The hit box is then extended 2 px above and below so the pill's pressable height reaches the
+   floor without repainting it (same shape as the map plate and the auto-execution row). */
 .trips-tabs button {
   flex: 0 0 auto;
+  width: auto;
+  position: relative;
   min-height: 40px;
   padding: 8px 14px;
   border: 0;
@@ -1440,6 +1448,11 @@ body:has(#v8-nav-drawer) { overflow: hidden; }
   font-size: 13px;
   opacity: 0.6;
   cursor: pointer;
+}
+.trips-tabs button::after {
+  content: "";
+  position: absolute;
+  inset: -2px 0;
 }
 .trips-tabs button.active {
   background: var(--v8-accent, #0f766e);
