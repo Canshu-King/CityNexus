@@ -79,7 +79,7 @@ export const journeyTrashCopy = {
     "trash.empty": "回收站是空的。",
     "trash.count": "回收站里有 {n} 条行程",
     "trash.rowState": "在回收站里",
-    "trash.rowStateMissing": "服务器没有给出这一行的在站状态",
+    "trash.rowStateMissing": "这一行没有在站状态",
     "trash.deletedAt": "丢弃于 {when}",
     "trash.deletedAtMissing": "这台服务器没有给出这条行程的丢弃时间",
     "trash.discardSequence": "这是这条行程第 {n} 次被丢弃",

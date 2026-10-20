@@ -42,12 +42,12 @@ export const planVersionHistoryCopy = {
   },
   "zh-CN": {
     "history.title": "这趟行程的方案版本",
-    "history.sub": "服务器上还留着的每一份版本，按写入先后排。只读。",
+    "history.sub": "还留着的每份版本，按写入先后排。只读。",
     "history.version": "版本",
     "history.sourceInitial": "首次生成",
     "history.sourceReplan": "来自一次重规划",
     "history.sourceManual": "来自一次人工改动（调整活动顺序或换住宿）",
-    "history.sourceUnknown": "这台服务器写的来源：{code}",
+    "history.sourceUnknown": "来源未记：{code}",
     "history.current": "行程正在跑这一份",
     "history.parent": "源自版本",
     "history.noParent": "没有父版本",
@@ -58,12 +58,12 @@ export const planVersionHistoryCopy = {
        returned* (`backend/app/main.py`, `backend/app/operations/v9.py`). Measured against
        real writes: 7 generate rounds left 21 rows, version_no 1..21 with no hole
        (backend/tests/test_qoder_ord0386_plan_version_history.py, test_3). */
-    "history.retention": "这台服务器没有设保留上限：目前这趟共有 {n} 份版本，这里全部列出。写新版本不会丢掉旧的。",
+    "history.retention": "没有设保留上限：这趟共有 {n} 份版本，全部列出。写新版不会丢旧的。",
     "history.count": "共列出 {n} 份版本",
     "history.noRestore": "这里不做还原：回到旧版本会替换你正在执行的方案。",
     "history.empty": "这趟行程还没有方案版本。",
     "history.loading": "正在读版本列表…",
-    "history.failed": "版本列表没有从这台服务器读到。你当前的方案没有变化。",
+    "history.failed": "版本列表没读到。你当前的方案没有变化。",
   },
 } as const;
 
