@@ -153,6 +153,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     return () => { epoch.current += 1; };
   }, [bearer, visible, refresh]);
   useEffect(() => { setCostAck(false); }, [placeId]);
+  useEffect(() => {
+    const changed = (event: Event) => { if ((event as CustomEvent).detail === journeyId) void refresh(); };
+    window.addEventListener("citynexus:plans-updated", changed);
+    return () => window.removeEventListener("citynexus:plans-updated", changed);
+  }, [journeyId, refresh]);
 
   const write = async (action: WriteAction, plan?: PlanVersion) => {
     const token = readTravelerBearer();
@@ -270,7 +275,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     {plans.map((plan) => <article key={plan.id} className="rev-plan-option" data-testid="rev-plan-option" data-current={plan.is_current === true}>
       <div className="rev-plan-option-heading"><h3>方案 {plan.version_no}</h3>{plan.is_current && <span><Check size={15} aria-hidden="true" />{current?.journey.status === "ACTIVE" ? "正在使用" : "已选用"}</span>}</div>
       {current && <PlanSchedule plan={plan} journey={current.journey} />}
-      {plan.stale ? <p className="rev-plan-gap">地点信息有更新，请重新生成方案。</p> : plan.selectable !== false && plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
+      {plan.stale ? <p className="rev-plan-gap">{plan.explanation?.compose_source === "SELECTED_GOAL_DRAFT" ? "安排已保存，完成地点资料和转场路线后即可选用。" : "地点信息有更新，请重新生成方案。"}</p> : plan.selectable !== false && plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
     </article>)}
     {canStart && <div className="rev-plan-start"><p>已选好方案。确认后开始正式行程。</p><button type="button" disabled={locked} onClick={() => void write("start")} data-testid="rev-plan-start">{busy === "start" ? "正在启动…" : "确认方案，开始行程"}</button></div>}
   </section>;

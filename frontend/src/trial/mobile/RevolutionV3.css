@@ -57,3 +57,8 @@
 .rev-v3-active-dock > button:disabled { opacity: .5; }
 
 .rev-v3 .cn-mission-os .cn-mission-media::after { background: linear-gradient(90deg,#064739,rgba(6,71,57,.55) 45%,rgba(6,71,57,.12)); }
+
+.rev-v3-slot-time { padding: 12px 0; border-bottom: 1px solid #dce6df; }
+.rev-v3-slot-time > div { display: flex; gap: 12px; margin-top: 8px; }
+.rev-v3-slot-time label { flex: 1; min-width: 0; }
+.rev-v3-slot-time input { width: 100%; min-height: 44px; box-sizing: border-box; }

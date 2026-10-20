@@ -739,6 +739,11 @@ def plan_authority_blocker(
     """
 
     explanation = json.loads(item.explanation_json or "{}")
+    if explanation.get("compose_source") == "SELECTED_GOAL_DRAFT" and any(
+        row.get("kind") in {"SOURCE_IDENTITY", "PLACE_REQUIRED"}
+        for row in explanation.get("unresolved_facts", []) if isinstance(row, Mapping)
+    ):
+        return UNRESOLVED_ACTIVITY_FACTS
     used = [str(value) for value in (used_place_ids or ()) if value]
     used_unique = list(dict.fromkeys(used))
     coursework_places = [places_by_id.get(place_id) for place_id in used_unique]

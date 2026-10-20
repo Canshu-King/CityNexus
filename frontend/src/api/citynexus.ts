@@ -62,6 +62,7 @@ export interface PlanVersion {
   stale?: boolean;
   selectable?: boolean;
   lifecycle?: string;
+  explanation?: Record<string, unknown>;
 }
 
 export interface DemoIds {
@@ -2209,6 +2210,15 @@ export interface GoalDraftArtifact {
   status: "DRAFT";
   days: Array<{ date: string; slots: GoalDraftSlot[] }>;
 }
+export interface GoalPreparationSchedule {
+  day_index: number; slot_index: number; start_time: string; end_time: string;
+}
+export interface GoalPreparationResult {
+  journey_id: string; task_id: string; draft_revision: number; plan_version_id: string;
+  status: "CANDIDATE"; selected: false; activated: false; slots_count: number;
+  mobility_frozen: boolean;
+  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN" }>;
+}
 export interface GoalResearchLead {
   id: string; name: string; category: string; latitude: number; longitude: number;
   source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
@@ -2284,6 +2294,7 @@ export interface DraftGoalTask {
   }>;
   assistant_summary?: string | null;
   draft_artifact?: GoalDraftArtifact | null;
+  prepared_plan?: { result: GoalPreparationResult; schedule: GoalPreparationSchedule[] } | null;
   draft_variants?: GoalDraftVariant[];
   research_places?: GoalResearchLead[];
   research_areas?: GoalResearchLead[];
@@ -3168,6 +3179,14 @@ export const cityNexusApi = {
       { method: "PUT", headers: travelerAuthHeaders(), body: JSON.stringify({
         days: artifact.days, expected_revision: artifact.revision,
       }) },
+    );
+  },
+
+  prepareGoalDraft(journeyId: string, taskId: string, revision: number, schedule: GoalPreparationSchedule[], idempotencyKey: string): Promise<GoalPreparationResult> {
+    return requestJson<GoalPreparationResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId) + "/prepare-plan",
+      { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ expected_revision: revision, schedule }) },
     );
   },
 

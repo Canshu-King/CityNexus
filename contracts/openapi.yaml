@@ -7,6 +7,52 @@ info:
 servers:
   - url: http://localhost:8000/api/v1
 paths:
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan:
+    post:
+      summary: Prepare Plan
+      operationId: prepare_plan_api_v1_journeys__journey_id__agent_goal_tasks__task_id__prepare_plan_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 160
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrepareDraft'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreparationResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /health:
     get:
       operationId: getHealth
@@ -2553,6 +2599,133 @@ components:
         application/json:
           schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   schemas:
+    SlotTime:
+      properties:
+        day_index:
+          type: integer
+          minimum: 0.0
+          title: Day Index
+        slot_index:
+          type: integer
+          minimum: 0.0
+          title: Slot Index
+        start_time:
+          type: string
+          pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$
+          title: Start Time
+        end_time:
+          type: string
+          pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$
+          title: End Time
+      additionalProperties: false
+      type: object
+      required:
+      - day_index
+      - slot_index
+      - start_time
+      - end_time
+      title: SlotTime
+    PrepareDraft:
+      properties:
+        expected_revision:
+          type: integer
+          minimum: 0.0
+          title: Expected Revision
+        schedule:
+          items:
+            $ref: '#/components/schemas/SlotTime'
+          type: array
+          minItems: 1
+          title: Schedule
+      additionalProperties: false
+      type: object
+      required:
+      - expected_revision
+      - schedule
+      title: PrepareDraft
+    PreparationGap:
+      properties:
+        sequence_no:
+          type: integer
+          title: Sequence No
+        title:
+          type: string
+          title: Title
+        kind:
+          type: string
+          title: Kind
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
+        status:
+          type: string
+          const: UNKNOWN
+          title: Status
+      type: object
+      required:
+      - sequence_no
+      - title
+      - kind
+      - place_id
+      - status
+      title: PreparationGap
+    PreparationResult:
+      properties:
+        journey_id:
+          type: string
+          title: Journey Id
+        task_id:
+          type: string
+          title: Task Id
+        draft_revision:
+          type: integer
+          title: Draft Revision
+        plan_version_id:
+          type: string
+          title: Plan Version Id
+        status:
+          type: string
+          const: CANDIDATE
+          title: Status
+        selected:
+          type: boolean
+          const: false
+          title: Selected
+        activated:
+          type: boolean
+          const: false
+          title: Activated
+        slots_count:
+          type: integer
+          title: Slots Count
+        gaps:
+          items:
+            $ref: '#/components/schemas/PreparationGap'
+          type: array
+          title: Gaps
+        mobility_frozen:
+          type: boolean
+          const: false
+          title: Mobility Frozen
+        idempotency_replay:
+          type: boolean
+          title: Idempotency Replay
+          default: false
+      type: object
+      required:
+      - journey_id
+      - task_id
+      - draft_revision
+      - plan_version_id
+      - status
+      - selected
+      - activated
+      - slots_count
+      - gaps
+      - mobility_frozen
+      title: PreparationResult
     PlanningMode:
       type: string
       enum: [balanced, budget, explore, strict_schedule]

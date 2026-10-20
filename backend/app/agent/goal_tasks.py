@@ -234,6 +234,7 @@ def _task_payload(
         "research_routes": list(task.get("research_routes") or []),
         "research_areas": list(task.get("research_areas") or []),
         "draft_artifact": task.get("draft_artifact"),
+        "prepared_plan": task.get("prepared_plan"),
         "draft_variants": list(task.get("draft_variants") or []),
         "failure_code": task.get("failure_code"),
         "created_at": mission.created_at,

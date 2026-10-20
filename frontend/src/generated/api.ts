@@ -2667,6 +2667,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+
+"/journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare Plan */
+        post: operations["prepare_plan_api_v1_journeys__journey_id__agent_goal_tasks__task_id__prepare_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3655,7 +3673,81 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
-    };
+
+PreparationResult: {
+            /** Journey Id */
+            journey_id: string;
+            /** Task Id */
+            task_id: string;
+            /** Draft Revision */
+            draft_revision: number;
+            /** Plan Version Id */
+            plan_version_id: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "CANDIDATE";
+            /**
+             * Selected
+             * @constant
+             */
+            selected: false;
+            /**
+             * Activated
+             * @constant
+             */
+            activated: false;
+            /** Slots Count */
+            slots_count: number;
+            /** Gaps */
+            gaps: components["schemas"]["PreparationGap"][];
+            /**
+             * Mobility Frozen
+             * @constant
+             */
+            mobility_frozen: false;
+            /**
+             * Idempotency Replay
+             * @default false
+             */
+            idempotency_replay: boolean;
+        };
+
+PreparationGap: {
+            /** Sequence No */
+            sequence_no: number;
+            /** Title */
+            title: string;
+            /** Kind */
+            kind: string;
+            /** Place Id */
+            place_id: string | null;
+            /**
+             * Status
+             * @constant
+             */
+            status: "UNKNOWN";
+        };
+
+PrepareDraft: {
+            /** Expected Revision */
+            expected_revision: number;
+            /** Schedule */
+            schedule: components["schemas"]["SlotTime"][];
+        };
+
+SlotTime: {
+            /** Day Index */
+            day_index: number;
+            /** Slot Index */
+            slot_index: number;
+            /** Start Time */
+            start_time: string;
+            /** End Time */
+            end_time: string;
+        };
+};
     responses: {
         /** @description Not found */
         NotFound: {
@@ -7944,6 +8036,45 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+
+prepare_plan_api_v1_journeys__journey_id__agent_goal_tasks__task_id__prepare_plan_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PrepareDraft"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreparationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
             };
         };
     };

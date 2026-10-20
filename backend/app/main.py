@@ -28087,3 +28087,6 @@ app.include_router(goal_media_router)
 # V3 departure reads adapted from Qoder a4692457a9; mutation gates remain in their own routes.
 from app.departure_read import router as departure_read_router
 app.include_router(departure_read_router)
+
+from app.agent.goal_preparation import router as goal_preparation_router
+app.include_router(goal_preparation_router)
