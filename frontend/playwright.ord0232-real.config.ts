@@ -4,6 +4,7 @@ import {
   backendCommand,
   backendEnv,
   resolveE2eEnvironment,
+  seedStateFileName,
 } from "./playwrightEnv";
 
 /**
@@ -28,7 +29,7 @@ export default defineConfig({
     {
       name: "chromium",
       dependencies: ["real-seed"],
-      use: { storageState: "./e2e/.qoder-seed-state.json" },
+      use: { storageState: `./reports/${seedStateFileName(env)}` },
     },
   ],
   timeout: 420_000,

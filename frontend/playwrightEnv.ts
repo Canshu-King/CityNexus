@@ -195,6 +195,17 @@ export function announce(env: E2eEnvironment, label: string): void {
   }
 }
 
+/* 种子浏览器状态的文件名 —— 单一来源。
+ *
+ * 写它的人（`e2e/_qoderRealSeed.setup.ts`）和读它的人（四个 config 加 `tools/capture-visual.mjs`）
+ * 必须算出同一个名字。原先六处都写死 `.qoder-seed-state.json`，于是同一棵树里并发两次 e2e 调用会
+ * 互相盖掉对方的种子——一枚"绿"可能其实是在回放别人的行程。现在名字带 run id，没有 run id 时带前端
+ * 端口；文件落在 `frontend/reports/`（`.gitignore` 已有 `frontend/reports/` 一条，不新增忽略项），
+ * 也不落在每次运行会被清空的 `test-results/`。 */
+export function seedStateFileName(env: { runId: string | undefined; frontendPort: number }): string {
+  return `e2e-seed-state-${env.runId ?? `port${env.frontendPort}`}.json`;
+}
+
 export function backendCommand(env: E2eEnvironment): string {
   const python = env.backendPython.includes(" ") ? `"${env.backendPython}"` : env.backendPython;
   return `${python} -m uvicorn app.main:app --host 127.0.0.1 --port ${env.backendPort}`;
