@@ -143,12 +143,27 @@ export function resolveE2eEnvironment(
 
 /** One provenance line per config load, on stderr so `--reporter=json` stays parseable. */
 export function announce(env: E2eEnvironment, label: string): void {
+  /* Which vocabulary the backend will answer with for traveler sessions. Read here, named here: an
+     authoritative run without `CITYNEXUS_TRAVELER_AUTH_SECRET` boots a deployment whose
+     `session_state` is NOT_CONFIGURED, and then every assertion in the signed-session family fails as
+     a cascade of that one absence -- eight reds whose only named cause is a missing environment value.
+     Nothing is refused (a run that does not need issuance is still a run), but the state is printed,
+     written into the provenance file, and names the variable without ever touching its value. */
+  const issuance = (process.env.CITYNEXUS_TRAVELER_AUTH_SECRET ?? "").trim()
+    ? "SIGNED-capable"
+    : "NOT_CONFIGURED";
   const line =
     `[citynexus e2e] suite=${label} authoritative=${env.authoritative} ` +
     `python=${env.backendPython} frontend=:${env.frontendPort} backend=:${env.backendPort} ` +
     `db=${env.databaseUrl ?? "(inherited default)"} ai=${env.ai} ` +
-    `reuseExistingServer=${env.reuseExistingServer}`;
+    `reuseExistingServer=${env.reuseExistingServer} issuance=${issuance}`;
   console.error(line);
+  if (issuance === "NOT_CONFIGURED") {
+    console.error(
+      "[citynexus e2e] CITYNEXUS_TRAVELER_AUTH_SECRET 未设：签发门是关的。" +
+        "凡断 `session_state === \"SIGNED\"` 的格都会红成级联，那不是产品的读数。",
+    );
+  }
   if (env.authoritative) {
     const target = evidencePath("e2e-provenance/authoritative.json");
     mkdirSync(dirname(target), { recursive: true });
@@ -165,6 +180,7 @@ export function announce(env: E2eEnvironment, label: string): void {
           backendPort: env.backendPort,
           databaseUrl: env.databaseUrl ?? "(inherited default)",
           ai: env.ai,
+          issuance,
           reuseExistingServer: env.reuseExistingServer,
           workers: 1,
           retries: 0,
