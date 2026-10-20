@@ -19,7 +19,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { mapCopy } from "../../i18n/mapPanelCopy";
+import { mapCopy, type MapCopyKey } from "../../i18n/mapPanelCopy";
 import { readCheckins, type CheckinStamp } from "./checkins";
 
 export type FootprintState =
@@ -94,15 +94,25 @@ export function useFootprints(journeyId: string | null): FootprintState {
  * and the empty `read` arm still names itself as *this read*, not as a fact about the traveller.
  */
 export function footprintWords(locale: string, state: FootprintState): string {
+  /* Short sentences, one fact each, joined here. Each arm used to be one long clause, which read as
+     a paragraph and could only be pinned as a paragraph -- a spec quoting the whole sentence cannot
+     say which half a broken arm got wrong. */
+  const sep = locale.toLowerCase().startsWith("zh") ? "；" : "; ";
+  const stop = locale.toLowerCase().startsWith("zh") ? "。" : ".";
+  const say = (key: MapCopyKey) => mapCopy(locale, key);
+  const join = (parts: string[]) => parts.join(sep) + stop;
   switch (state.kind) {
     case "read":
       return state.stamps.length === 0
-        ? mapCopy(locale, "footprintNone")
-        : mapCopy(locale, "footprintStamped").replace("%s", String(state.stamps.length));
+        ? join([say("footprintNoneRead"), say("footprintNoneDrawn")])
+        : join([say("footprintStampedCount").replace("%s", String(state.stamps.length)),
+                say("footprintSolidMeans"),
+                say("footprintHollowMeans")]);
     case "refused":
       return mapCopy(locale, "footprintRefused");
     case "unreachable":
-      return mapCopy(locale, "footprintUnreachable");
+      return join([say("footprintUnreachableRead"), say("footprintUnreachableDrawn"),
+                   say("footprintUnreachableSilence")]);
     case "not_asked":
       return mapCopy(locale, "footprintNotAsked");
     case "asking":
