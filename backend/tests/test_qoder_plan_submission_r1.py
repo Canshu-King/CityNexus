@@ -365,6 +365,9 @@ def test_an_unjudged_round_is_pointed_at_the_door_that_can_judge_it(seeded):
     joined = " ".join(body["next_actions"])
     assert joined.count("/api/v1/") == len(body["next_actions"]), body["next_actions"]
     assert body["gate"]["refusal_code"] in body["next_actions"][0], body["gate"]
+    # Run-time half of the pointer ruler: what the answer actually assembled must be pressable.
+    from answer_pointers import assert_pointers_are_served
+    assert_pointers_are_served(body["next_actions"], expect=3)
 
 
 def test_the_consent_door_answers_for_a_submitted_proposal(seeded):

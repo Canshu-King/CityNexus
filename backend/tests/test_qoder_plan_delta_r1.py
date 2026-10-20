@@ -591,6 +591,8 @@ def test_a_pair_that_differs_points_at_the_submission_door_by_its_own_path(seede
     assert any(submission in line and "POST" in line for line in body["next_actions"]), (
         body["next_actions"])
     assert any("departure/commit" in line for line in body["next_actions"]), body["next_actions"]
+    from answer_pointers import assert_pointers_are_served
+    assert_pointers_are_served(body["next_actions"])
 
 
 def test_a_version_with_no_frozen_evidence_is_pointed_at_the_freeze_door_first(seeded, monkeypatch):

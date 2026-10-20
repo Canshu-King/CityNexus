@@ -363,6 +363,11 @@ def test_a_frozen_candidate_reaches_a_verdict_and_an_unfrozen_one_does_not(seede
     assert basis["snapshot_id"] == frozen["mobility_snapshot_id"], basis
     assert basis["captured_at"] == frozen["captured_at"], basis
     assert basis["read_from"] == "app.replanning.provider_snapshots.fact_quality_summary", basis
+    # Both answers hand URLs out, assembled at run time: every one of them has to name a verb a real
+    # route answers -- the pointer is the product's promise to the next click.
+    from answer_pointers import assert_pointers_are_served
+    assert_pointers_are_served(frozen["next_actions"])
+    assert_pointers_are_served(after["next_actions"])
     with seeded.factory() as session:
         journey = session.get(Journey, ids["journey"])
         candidate = session.get(PlanVersion, ids["candidate"])
@@ -589,6 +594,8 @@ def test_the_answer_says_which_store_it_wrote_and_which_door_reads_it(seeded):
     joined = " ".join(body["next_actions"])
     assert joined.count("/api/v1/") == len(body["next_actions"]), body["next_actions"]
     assert "submission" in joined and "plans/delta" in joined, body["next_actions"]
+    from answer_pointers import assert_pointers_are_served
+    assert_pointers_are_served(body["next_actions"])
 
 
 def test_no_provider_client_is_reachable_from_the_draft_door_it_freezes_for(seeded):

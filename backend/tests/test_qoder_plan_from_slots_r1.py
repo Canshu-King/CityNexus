@@ -236,6 +236,9 @@ def test_a_provider_id_is_refused_by_name_and_no_row_is_written(seeded, monkeypa
     assert pressed_path in pointer, (pressed_path, pointer)
     registered = {getattr(route, "path", "") for route in place_media_routes.router.routes}
     assert place_media_routes.IDENTITY_PATH in registered, sorted(registered)
+    # And the assembled pointer, query string and all, is something the shipped router would route.
+    from answer_pointers import assert_pointers_are_served
+    assert_pointers_are_served([pointer], expect=1)
     assert _plans(seeded) == before, "a refused draft still wrote a plan version"
 
 
