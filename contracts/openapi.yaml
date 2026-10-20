@@ -2946,6 +2946,59 @@ paths:
             door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots
             (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE)
             or an end not after a start (SLOT_TIMES_UNORDERED)
+  /journeys/{journey_id}/plans/{plan_version_id}/submission:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - name: plan_version_id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    post:
+      operationId: postJourneyPlanSubmission
+      description: >
+        Present a CANDIDATE plan version of this journey to its members as a `replan_proposals` row in the
+        shipped PRESENTED state, without applying it to anybody: the journey keeps pointing at its active
+        version, the candidate keeps its own status, and the round that follows is the consent door. The
+        body is empty on purpose -- every field stored is read from rows and judged by the functions that
+        already own those judgements: `hard_constraints_passed` from `app.services.validate_plan_feasibility`
+        (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen
+        mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's
+        own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and
+        the places the candidate carries, `utility_score` and `score_breakdown` from
+        `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an
+        envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic
+        `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree.
+        `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by
+        nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency
+        is refused rather than stored as a subtracted pair, a pair already presented is refused by name,
+        and `Idempotency-Key` is required so a retry replays one proposal instead of writing a second
+        round. No provider is reachable from this module.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              description: Empty. A caller that supplies a field is refused by name because a submitted
+                judgement would be a second answer about the same rows.
+      responses:
+        '201':
+          description: The PRESENTED proposal, the difference it carries, and where the round goes next
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/PlanCandidateSubmission'}
+        '401': {description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)}
+        '403': {description: The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED)}
+        '404': {description: That version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY)}
+        '409': {description: Not a CANDIDATE row, no active base, this pair already presented, or a reused key (error.reason_code SUBMISSION_NEEDS_A_CANDIDATE_VERSION, SUBMISSION_JOURNEY_HAS_NO_ACTIVE_PLAN, SUBMISSION_ALREADY_PRESENTED, SUBMISSION_IDEMPOTENCY_KEY_REUSE_CONFLICT)}
+        '422': {description: A body field, no key, the active version itself, or two currencies (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY)}
+
   /journeys/{journey_id}/plans/delta:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
@@ -5342,6 +5395,59 @@ components:
         fact_retrieved_at: {type: [string, "null"]}
         media_door: {type: [string, "null"]}
 
+    PlanCandidateSubmission:
+      type: object
+      required: [journey_id, proposal_id, base_plan_version_id, proposed_plan_version_id, base_status,
+                 status, submitted_by_traveler_id, created_at, hard_constraints_passed, gate,
+                 evidence_gap, locked_commitments_preserved, locked_slots_dropped, currency,
+                 utility_score, score_breakdown, envelope, delta, applied, shared_plan_updated,
+                 journey_active_plan_version_id, consent_path, next_actions]
+      properties:
+        journey_id: {type: string, format: uuid}
+        proposal_id: {type: string, format: uuid}
+        base_plan_version_id: {type: string, format: uuid}
+        proposed_plan_version_id: {type: string, format: uuid}
+        base_status: {type: string}
+        status: {type: string, const: PRESENTED}
+        submitted_by_traveler_id: {type: string, format: uuid}
+        created_at: {type: string}
+        idempotency_replay:
+          type: boolean
+          description: Absent on the first press, true on a replay of the same key and content.
+        hard_constraints_passed:
+          type: boolean
+          description: The gate's own answer; false also covers "the gate refused to judge", which
+            `gate.judged` states, because the shipped column cannot hold a null.
+        gate:
+          type: object
+          required: [judged, passed, failures, refusal_code, refusal_detail]
+          properties:
+            judged: {type: boolean}
+            passed: {type: boolean}
+            failures: {type: array, items: {type: string}}
+            refusal_code: {type: [string, "null"]}
+            refusal_detail: {type: [string, "null"]}
+        evidence_gap: {type: boolean}
+        locked_commitments_preserved: {type: boolean}
+        locked_slots_dropped: {type: array, items: {type: integer}}
+        currency: {type: string}
+        utility_score: {type: number, minimum: 0, maximum: 1}
+        score_breakdown: {type: object, additionalProperties: {type: number}}
+        envelope:
+          type: object
+          description: The envelope app.main._envelope_payload builds from the candidate's own rows.
+          additionalProperties: true
+        delta: {$ref: '#/components/schemas/PlanDeltaDifference'}
+        applied: {type: boolean, const: false}
+        shared_plan_updated: {type: boolean, const: false}
+        journey_active_plan_version_id: {type: [string, "null"], format: uuid}
+        consent_path: {type: string}
+        next_actions:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items: {type: string}
+
     PlanDeltaEvidenceSide:
       type: object
       description: The gate answer the select door compares, read through departure_read.frozen_evidence_of.
@@ -5353,14 +5459,13 @@ components:
         expired: {type: [boolean, "null"]}
         detail: {type: [string, "null"]}
         reference_consistent: {type: [boolean, "null"]}
-    PlanDeltaAnswer:
-      type: object
-      required: [journey_id, asked_by_traveler_id, from_plan_version_id, to_plan_version_id,
-                 from_status, to_status, from_version_no, to_version_no, counts, sets, map_delta,
-                 budget_delta, verified_cost, duration_delta, evidence, next_actions]
+    PlanDeltaDifference:
+      description: The difference itself -- what `app.plan_delta.delta_of` emits. The
+        read door answers with it and the submission door stores it, so a plan change has
+        one arithmetic and not two.
+      required: [journey_id, from_plan_version_id, to_plan_version_id, from_status, to_status, from_version_no, to_version_no, counts, sets, map_delta, budget_delta, verified_cost, duration_delta, evidence]
       properties:
         journey_id: {type: string, format: uuid}
-        asked_by_traveler_id: {type: string, format: uuid}
         from_plan_version_id: {type: string, format: uuid}
         to_plan_version_id: {type: string, format: uuid}
         from_status: {type: string}
@@ -5441,7 +5546,15 @@ components:
             from: {$ref: '#/components/schemas/PlanDeltaEvidenceSide'}
             to: {$ref: '#/components/schemas/PlanDeltaEvidenceSide'}
             read_from: {type: string, const: app.departure_read.frozen_evidence_of}
-        next_actions:
-          type: array
-          items: {type: string}
+
+    PlanDeltaAnswer:
+      allOf:
+        - {$ref: '#/components/schemas/PlanDeltaDifference'}
+        - type: object
+          required: [asked_by_traveler_id, next_actions]
+          properties:
+            asked_by_traveler_id: {type: string, format: uuid}
+            next_actions:
+              type: array
+              items: {type: string}
 

@@ -473,7 +473,8 @@ def test_the_contract_promises_exactly_the_keys_this_door_emits(seeded, monkeypa
     which is what Codex's generated client would silently drop.
     """
     contract = yaml.safe_load(Path("../contracts/openapi.yaml").read_text(encoding="utf-8"))
-    answer = contract["components"]["schemas"]["PlanDeltaAnswer"]
+    schemas = contract["components"]["schemas"]
+    answer = _resolved(schemas["PlanDeltaAnswer"], schemas)
     path = contract["paths"]["/journeys/{journey_id}/plans/delta"]["get"]
     assert path["operationId"] == "getJourneyPlanDelta", path["operationId"]
     assert path["responses"]["200"]["content"]["application/json"]["schema"] == {
@@ -497,9 +498,31 @@ def test_the_contract_promises_exactly_the_keys_this_door_emits(seeded, monkeypa
     # The slot views the delta carries are the fact door's own schema, referenced not recopied.
     entry = answer["properties"]["sets"]["properties"]["moved"]["items"]["$ref"]
     assert entry == "#/components/schemas/PlanDeltaSetEntry", entry
-    moved_schema = contract["components"]["schemas"]["PlanDeltaSetEntry"]["properties"]
+    moved_schema = schemas["PlanDeltaSetEntry"]["properties"]
     assert moved_schema["to_slot"] == {
         "$ref": "#/components/schemas/DepartureFactsSlot"}, moved_schema["to_slot"]
     facts_slots = contract["paths"]["/journeys/{journey_id}/departure/facts"]["get"]["responses"][
         "200"]["content"]["application/json"]["schema"]["properties"]["slots"]["items"]
     assert facts_slots == {"$ref": "#/components/schemas/DepartureFactsSlot"}, facts_slots
+    # The fourteen keys of the difference are one schema, shared with the submission door that stores it.
+    difference = schemas["PlanDeltaDifference"]
+    assert sorted(difference["required"]) == sorted(set(body) - {"asked_by_traveler_id",
+                                                                "next_actions"}), difference
+    submission = schemas["PlanCandidateSubmission"]["properties"]["delta"]
+    assert submission == {"$ref": "#/components/schemas/PlanDeltaDifference"}, submission
+
+
+def _resolved(schema: dict, schemas: dict) -> dict:
+    """An `allOf` schema flattened to the keys and required list a reader actually gets.
+
+    The answer schema is the shared `PlanDeltaDifference` plus the two keys the request adds, so a test
+    that read only the flat `properties` would silently check half the promise.
+    """
+    required: list[str] = []
+    properties: dict = {}
+    for branch in schema.get("allOf", [schema]):
+        if "$ref" in branch:
+            branch = schemas[branch["$ref"].split("/")[-1]]
+        required += list(branch.get("required", []))
+        properties.update(branch.get("properties", {}))
+    return {"required": required, "properties": properties}

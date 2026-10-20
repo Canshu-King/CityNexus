@@ -2015,6 +2015,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/plans/{plan_version_id}/submission": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Present a CANDIDATE plan version of this journey to its members as a `replan_proposals` row in the shipped PRESENTED state, without applying it to anybody: the journey keeps pointing at its active version, the candidate keeps its own status, and the round that follows is the consent door. The body is empty on purpose -- every field stored is read from rows and judged by the functions that already own those judgements: `hard_constraints_passed` from `app.services.validate_plan_feasibility` (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and the places the candidate carries, `utility_score` and `score_breakdown` from `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree. `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency is refused rather than stored as a subtracted pair, a pair already presented is refused by name, and `Idempotency-Key` is required so a retry replays one proposal instead of writing a second round. No provider is reachable from this module. */
+        post: operations["postJourneyPlanSubmission"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/plans/delta": {
         parameters: {
             query?: never;
@@ -4545,6 +4565,54 @@ export interface components {
             fact_retrieved_at: string | null;
             media_door: string | null;
         };
+        PlanCandidateSubmission: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            proposal_id: string;
+            /** Format: uuid */
+            base_plan_version_id: string;
+            /** Format: uuid */
+            proposed_plan_version_id: string;
+            base_status: string;
+            /** @constant */
+            status: "PRESENTED";
+            /** Format: uuid */
+            submitted_by_traveler_id: string;
+            created_at: string;
+            /** @description Absent on the first press, true on a replay of the same key and content. */
+            idempotency_replay?: boolean;
+            /** @description The gate's own answer; false also covers "the gate refused to judge", which `gate.judged` states, because the shipped column cannot hold a null. */
+            hard_constraints_passed: boolean;
+            gate: {
+                judged: boolean;
+                passed: boolean;
+                failures: string[];
+                refusal_code: string | null;
+                refusal_detail: string | null;
+            };
+            evidence_gap: boolean;
+            locked_commitments_preserved: boolean;
+            locked_slots_dropped: number[];
+            currency: string;
+            utility_score: number;
+            score_breakdown: {
+                [key: string]: number;
+            };
+            /** @description The envelope app.main._envelope_payload builds from the candidate's own rows. */
+            envelope: {
+                [key: string]: unknown;
+            };
+            delta: components["schemas"]["PlanDeltaDifference"];
+            /** @constant */
+            applied: false;
+            /** @constant */
+            shared_plan_updated: false;
+            /** Format: uuid */
+            journey_active_plan_version_id: string | null;
+            consent_path: string;
+            next_actions: string[];
+        };
         /** @description The gate answer the select door compares, read through departure_read.frozen_evidence_of. */
         PlanDeltaEvidenceSide: {
             frozen: boolean;
@@ -4554,11 +4622,10 @@ export interface components {
             detail: string | null;
             reference_consistent: boolean | null;
         };
-        PlanDeltaAnswer: {
+        /** @description The difference itself -- what `app.plan_delta.delta_of` emits. The read door answers with it and the submission door stores it, so a plan change has one arithmetic and not two. */
+        PlanDeltaDifference: {
             /** Format: uuid */
             journey_id: string;
-            /** Format: uuid */
-            asked_by_traveler_id: string;
             /** Format: uuid */
             from_plan_version_id: string;
             /** Format: uuid */
@@ -4624,6 +4691,10 @@ export interface components {
                 /** @constant */
                 read_from: "app.departure_read.frozen_evidence_of";
             };
+        };
+        PlanDeltaAnswer: components["schemas"]["PlanDeltaDifference"] & {
+            /** Format: uuid */
+            asked_by_traveler_id: string;
             next_actions: string[];
         };
     };
@@ -8573,6 +8644,70 @@ export interface operations {
                 content?: never;
             };
             /** @description A missing key (IDEMPOTENCY_KEY_REQUIRED), a missing revision (EXPECTED_REVISION_REQUIRED), a provider id where a canonical id belongs (SLOT_NAMES_A_PROVIDER_ID_NOT_A_CANONICAL_PLACE), a slot that describes a place (SLOT_CARRIES_ONLY_SERVER_OWNED_FIELDS), a body field this door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE) or an end not after a start (SLOT_TIMES_UNORDERED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyPlanSubmission: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description The PRESENTED proposal, the difference it carries, and where the round goes next */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanCandidateSubmission"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a CANDIDATE row */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A body field */
             422: {
                 headers: {
                     [name: string]: unknown;

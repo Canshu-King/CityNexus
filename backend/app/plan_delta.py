@@ -151,7 +151,25 @@ def journey_plan_delta(
                 {"journey_id": journey.id, "which": label, "plan_version_id": str(wanted)},
             )
         plans[label] = plan
-    base, candidate = plans["from"], plans["to"]
+    answer = delta_of(session, journey, plans["from"], plans["to"])
+    answer["asked_by_traveler_id"] = seat["traveler_id"]
+    # The difference itself carries no intent; whose door to press next belongs to the door being read.
+    answer["next_actions"] = [
+        "select this version with POST /api/v1/journeys/" + journey.id + "/departure/commit",
+    ]
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+def delta_of(session: Session, journey: Any, base: PlanVersion,
+             candidate: PlanVersion) -> dict[str, Any]:
+    """The difference itself, with no request in it.
+
+    Two doors need exactly this: the read door answers with it, and the submission door has to store
+    what a candidate changes in `replan_proposals.diff_json`, which the Guardian later reads. A second
+    writer of that arithmetic would be a second answer waiting to disagree.
+    """
     before = _activities(session, base.id)
     after = _activities(session, candidate.id)
 
@@ -249,7 +267,6 @@ def journey_plan_delta(
 
     answer = {
         "journey_id": journey.id,
-        "asked_by_traveler_id": seat["traveler_id"],
         "from_plan_version_id": base.id,
         "to_plan_version_id": candidate.id,
         "from_status": base.status,
@@ -306,13 +323,7 @@ def journey_plan_delta(
             "to": frozen_evidence_of(candidate),
             "read_from": "app.departure_read.frozen_evidence_of",
         },
-        "next_actions": [
-            "select this version with POST /api/v1/journeys/"
-            + journey.id + "/departure/commit",
-        ],
     }
-    response.headers["Cache-Control"] = "private, no-store"
-    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return answer
 
 
