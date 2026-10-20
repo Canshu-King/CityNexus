@@ -122,20 +122,26 @@ def capture_runtime_mobility_snapshot(
 
     # One client, one capture call, one set of fail-closed tails: a second copy of that tail is how a
     # leg stops being protected in one of the two branches.
-    capabilities_key = "valhalla"
+    capabilities_key = "amap-web-service" if amap_primary else "valhalla"
     with httpx.Client(timeout=10.0) as client:
-        primary: Any = ValhallaHTTPMobilityProvider(
-            client=client,
-            base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key),
-        )
-        if amap_primary:
-            capabilities_key = "amap-web-service"
-            primary = AmapHTTPMobilityProvider(
+        # Build ONLY the provider that is primary. A deployment that routes through Amap has no
+        # Valhalla URL at all (`live_valhalla_url` is None), and constructing the Valhalla adapter
+        # before the swap used to die on `None.rstrip("/")` in its own constructor -- which made the
+        # Amap route unreachable precisely in the state this machine is in now: key configured,
+        # seam on, no Valhalla.
+        primary: Any = (
+            AmapHTTPMobilityProvider(
                 client=client,
                 place_lookup=lambda key: _place_lookup(session, key),
                 city_code=journey.city_code,
             )
+            if amap_primary
+            else ValhallaHTTPMobilityProvider(
+                client=client,
+                base_url=settings.live_valhalla_url,
+                place_lookup=lambda key: _place_lookup(session, key),
+            )
+        )
         try:
             capabilities = primary.status_capabilities()
         except (ValhallaProviderError, AmapRouteError) as exc:

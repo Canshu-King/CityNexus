@@ -265,6 +265,27 @@ def test_a_hard_cn_capture_gets_no_mock_fallback(monkeypatch):
     assert seen["fallback_key"] is None
 
 
+def test_a_cn_journey_with_no_valhalla_at_all_never_builds_that_adapter(monkeypatch):
+    """`None`, not `""`: that is what `settings.live_valhalla_url` actually holds in a deployment
+    that never configured Valhalla -- and the probe above passed `""`, which the adapter tolerated.
+    Constructing the Valhalla adapter before swapping in Amap used to die on `None.rstrip("/")` in
+    its own constructor, so the Amap route was unreachable precisely in the shape this machine is in.
+    """
+    seen = _selection_probe(
+        monkeypatch, city_code="CN-11-01", key=True, seam=None, valhalla_url=None
+    )
+    assert seen["primary_key"] == "amap-web-service", seen
+
+
+def test_a_none_valhalla_url_leaves_a_non_chinese_city_on_the_previous_provider(monkeypatch):
+    """The other half of the same value: with no Valhalla and no Amap routing, nothing is built --
+    the offline answer is the mock's, and the missing URL is not an error the traveller sees."""
+    seen = _selection_probe(
+        monkeypatch, city_code="FR-11", key=True, seam=None, valhalla_url=None
+    )
+    assert seen["primary_key"] == "mock-mobility", seen
+
+
 def test_a_city_that_is_not_chinese_keeps_the_previous_provider(monkeypatch):
     seen = _selection_probe(
         monkeypatch, city_code="FR-11", key=True, seam=None, valhalla_url=""
