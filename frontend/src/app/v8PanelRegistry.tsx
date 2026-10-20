@@ -20,6 +20,7 @@ import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPane
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { TripItinerary } from "../features/trip/TripItinerary";
+import { AgentWorkEntry } from "../features/agent/AgentWorkFeedPanel";
 import { TripPosterPanel } from "../features/poster/TripPosterPanel";
 import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
 import { AccessPanel } from "../features/access/AccessPanel";
@@ -451,6 +452,18 @@ export const tripsTabPanels: V8PanelEntry<TripsTabScope>[] = [
     when: (s) => s.tab === "itinerary",
     render: (s) => (
       <JourneyAbortPanel data={s.data} onAborted={() => void s.onRefresh()} />
+    ),
+  },
+  {
+    /* Issue #31 C：行程页上的「AI 工作动态」入口。挂在整份行程之上（与 `trips-abort` 同一个理由：
+       要点开的东西不该先滚过整页才够得着）。面板里那一行行的事件与那四格事实都来自
+       `GET /journeys/{id}/agent-feed` 与 `GET /agent/runtime-status`，服务器回 0 条就写"还没有记录"。 */
+    id: "trips-ai-work",
+    surface: "trips-tab",
+    testId: "trip-ai-work",
+    when: (s) => s.tab === "itinerary",
+    render: (s) => (
+      <AgentWorkEntry journeyId={s.data.journey.id} surface="trip" />
     ),
   },
   {

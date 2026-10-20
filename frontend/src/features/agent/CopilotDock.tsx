@@ -614,6 +614,9 @@ export function CopilotDock({
   // R6: the dock must never cover a sheet, a drawer, or a Live proposal.  The
   // selectors are the real high-priority surfaces; while any is present the
   // dock collapses to its edge button and restores itself afterwards.
+  //
+  // 「AI 工作动态」的那块面板是同一类：390x844 上现读到面板占 17,473 起 356x398，而药丸停在
+  // 336,634 的 44x44 —— 正好压在面板自己的说明行上。它不是弹层，所以以前没人把它算进 R6。
   const [yieldToSurface, setYieldToSurface] = useState(false);
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -622,6 +625,7 @@ export function CopilotDock({
       ".v8-sheet-backdrop",
       ".v8-drawer-backdrop",
       '[data-testid="live-proposal"]',
+      '[data-testid="agent-work-feed"]',
     ].join(",");
     const sync = () => setYieldToSurface(Boolean(document.querySelector(HIGH_PRIORITY)));
     sync();

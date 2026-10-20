@@ -36,6 +36,23 @@ class Traveler(TravelerCreate):
     updated_at: datetime
 
 
+class TravelerWithSession(Traveler):
+    """ORD-0687 -- creating a traveller can also hand back the signed session for *that* traveller.
+
+    Two fields, and what they are allowed to say:
+
+    * ``access_token`` is present only when the server actually signed one, for the traveller
+      this very request created.  It is never filled from a caller-supplied id, so there is no
+      "trade a traveller_id for a token" back door;
+    * ``session_state`` names why a token is or is not here (``SIGNED`` / ``NOT_CONFIGURED`` /
+      ``MISCONFIGURED``), so a client that gets no token can tell the user the truth instead of
+      guessing between "this build has no identity" and "identity is broken".
+    """
+
+    access_token: str | None = None
+    session_state: str = "NOT_CONFIGURED"
+
+
 class PreferenceInput(BaseModel):
     category: str = Field(min_length=1)
     key: str = Field(min_length=1)

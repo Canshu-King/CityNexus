@@ -94,8 +94,8 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      about a remedy the screen cannot offer. The opening clause is verbatim as before, because
      `e2e/qoder-today-follows-the-stage.spec.ts` reads it to keep the attention band and the map from
      contradicting each other; what was dropped is the promise, which is the part with no door. */
-  noLocationBody: { zh: "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
-            en: "This trip has no trustworthy coordinates yet. This build has no door to add an activity location (NOT_AVAILABLE)." },
+  noLocationBody: { zh: "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有。",
+            en: "This trip has no trustworthy coordinates yet. This build has no door to add an activity location." },
   tileNotice: { zh: "底图未加载，显示的是路线示意。",
             en: "Basemap did not load — showing the route diagram only." },
   gestureHint: { zh: "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
