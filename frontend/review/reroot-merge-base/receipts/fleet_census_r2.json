@@ -1,0 +1,258 @@
+{
+ "measured_at": "2026-10-21 03:11:31",
+ "live_tip": "ee324aad6ff8149926b18eda45b3958f52cad38a",
+ "remote_review_heads": 2323,
+ "seconds": 419,
+ "buckets": {
+  "in_line": 1238,
+  "clean_merge": 436,
+  "real_conflict": 606,
+  "no_common_ancestor": 43,
+  "other_nonzero": 0,
+  "no_local_object": 0
+ },
+ "owners_ranked_by_no_common_ancestor": [
+  {
+   "owner": "0278",
+   "no_common_ancestor": 5,
+   "heads": 5,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0261",
+   "no_common_ancestor": 4,
+   "heads": 4,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "0280",
+   "no_common_ancestor": 3,
+   "heads": 3,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0272",
+   "no_common_ancestor": 3,
+   "heads": 3,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0296",
+   "no_common_ancestor": 3,
+   "heads": 5,
+   "in_line": 1,
+   "clean_merge": 0,
+   "real_conflict": 1
+  },
+  {
+   "owner": "0269",
+   "no_common_ancestor": 2,
+   "heads": 2,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "0274",
+   "no_common_ancestor": 2,
+   "heads": 2,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "0281",
+   "no_common_ancestor": 2,
+   "heads": 3,
+   "in_line": 1,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0253",
+   "no_common_ancestor": 2,
+   "heads": 2,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0287",
+   "no_common_ancestor": 2,
+   "heads": 2,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "0292",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "0302",
+   "no_common_ancestor": 1,
+   "heads": 5,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 4
+  },
+  {
+   "owner": "credential",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "emptystate",
+   "no_common_ancestor": 1,
+   "heads": 2,
+   "in_line": 1,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "hub",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "journey",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "map",
+   "no_common_ancestor": 1,
+   "heads": 7,
+   "in_line": 4,
+   "clean_merge": 2,
+   "real_conflict": 0
+  },
+  {
+   "owner": "offline",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0262",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0263",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0268",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "ord0310",
+   "no_common_ancestor": 1,
+   "heads": 11,
+   "in_line": 2,
+   "clean_merge": 8,
+   "real_conflict": 0
+  },
+  {
+   "owner": "search",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "searchbox",
+   "no_common_ancestor": 1,
+   "heads": 3,
+   "in_line": 2,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "settings",
+   "no_common_ancestor": 1,
+   "heads": 1,
+   "in_line": 0,
+   "clean_merge": 0,
+   "real_conflict": 0
+  },
+  {
+   "owner": "0323",
+   "no_common_ancestor": 0,
+   "heads": 3,
+   "in_line": 2,
+   "clean_merge": 0,
+   "real_conflict": 1
+  },
+  {
+   "owner": "0afdb49b",
+   "no_common_ancestor": 0,
+   "heads": 34,
+   "in_line": 9,
+   "clean_merge": 22,
+   "real_conflict": 3
+  },
+  {
+   "owner": "1ba48dbf",
+   "no_common_ancestor": 0,
+   "heads": 80,
+   "in_line": 22,
+   "clean_merge": 29,
+   "real_conflict": 29
+  },
+  {
+   "owner": "1d64acf5",
+   "no_common_ancestor": 0,
+   "heads": 28,
+   "in_line": 10,
+   "clean_merge": 16,
+   "real_conflict": 2
+  },
+  {
+   "owner": "2d2d7428",
+   "no_common_ancestor": 0,
+   "heads": 51,
+   "in_line": 27,
+   "clean_merge": 12,
+   "real_conflict": 12
+  }
+ ],
+ "exception_rows_written": 2280,
+ "owner_sum_selfcheck": 2323
+}
