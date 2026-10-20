@@ -68,6 +68,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/travelers/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getTravelerSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/session/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["refreshTravelerSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/travelers/{traveler_id}": {
         parameters: {
             query?: never;
@@ -2830,7 +2862,23 @@ export interface components {
             /** @enum {string} */
             ai: "available" | "unavailable" | "disabled";
             /** @enum {string} */
-            ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
+            ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED" | "PROVIDER_ANSWERED";
+        };
+        TravelerSession: {
+            /** Format: uuid */
+            traveler_id: string;
+            /** @constant */
+            auth_method: "SIGNED_HMAC_BEARER";
+            /** @description Unix seconds at which the presented token stops being accepted */
+            expires_at: number;
+        };
+        TravelerSessionRefresh: components["schemas"]["TravelerSession"] & {
+            /** @constant */
+            session_state: "SIGNED";
+            /** @description the freshly signed credential for this same traveller */
+            access_token: string;
+            /** @description unix seconds the presented credential was due; null when it carried none */
+            renewed_from_expires_at: number | null;
         };
         ErrorEnvelope: {
             error: {
@@ -2890,6 +2938,14 @@ export interface components {
             created_at: string;
             /** Format: date-time */
             updated_at: string;
+        };
+        TravelerSessionAnswer: components["schemas"]["Traveler"] & {
+            /** @description null whenever this build cannot sign; the reason is in `session_state`, never in a silent absence */
+            access_token: string | null;
+            /** @description SIGNED | UNSIGNED | MISCONFIGURED -- `signing_state()` verbatim */
+            session_state: string;
+            /** @description unix seconds this credential stops being accepted; null exactly when `access_token` is null */
+            expires_at: number | null;
         };
         PreferenceInput: {
             category: string;
@@ -3918,6 +3974,11 @@ export interface components {
                     [key: string]: unknown;
                 };
                 explanation: string;
+                /**
+                 * @description Names which preview branch produced `explanation`, so a reader-facing surface can answer in the reader's language instead of echoing server prose.
+                 * @enum {string}
+                 */
+                explanation_code?: "NO_TARGET_SIMULATED" | "PROTECTED_OR_LOCKED_TOUCHED" | "NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED" | "ABSORBS_WITHIN_OBSERVED_WINDOW" | "PROVIDER_BACKED_ALTERNATIVE_REQUIRED" | "HYPOTHETICAL_WEATHER_OR_CLOSURE";
                 next_action?: string | null;
             } | null;
             event?: {
@@ -4161,10 +4222,95 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Traveler"];
+                    "application/json": components["schemas"]["TravelerSessionAnswer"];
                 };
             };
             422: components["responses"]["ValidationError"];
+        };
+    };
+    getTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The authenticated traveller principal */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSession"];
+                };
+            };
+            /** @description No signed traveller credentials, or they are expired, invalid, or name a traveller who no longer exists. The body is the shared error envelope; `error.reason_code` names which of those it was (TRAVELER_CREDENTIALS_MISSING / _INVALID / _EXPIRED / TRAVELER_PRINCIPAL_NOT_FOUND). */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret configured (TRAVELER_AUTH_NOT_CONFIGURED). The door refuses rather than accepting an identity it cannot verify. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    refreshTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The same traveller, a later window */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSessionRefresh"];
+                };
+            };
+            /** @description The body claimed an identity (`traveler_id` / `sub` / `id`). A refreshed session is signed for the credential on the request, not for an id handed in a body (`error.reason_code` = TRAVELER_NOT_PRINCIPAL). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Same four named refusals as `GET /travelers/session`: missing / invalid / expired credentials, or a principal that no longer exists. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret (TRAVELER_AUTH_NOT_CONFIGURED). */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
         };
     };
     getTraveler: {
@@ -4421,7 +4567,17 @@ export interface operations {
                         deepseek_configured: boolean;
                         hermes_compat_configured: boolean;
                         /** @enum {string} */
-                        ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
+                        ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED" | "PROVIDER_ANSWERED";
+                        ai_last_call?: {
+                            provider_key?: string;
+                            model_key?: string | null;
+                            /** @enum {string} */
+                            outcome?: "ANSWERED" | "REFUSED";
+                            status_code?: number | null;
+                            observed_at?: string;
+                            answers?: number;
+                            refusals?: number;
+                        } | null;
                         hermes_native_gateway?: Record<string, never>;
                     };
                 };
