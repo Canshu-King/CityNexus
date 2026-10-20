@@ -1,0 +1,32 @@
+{
+ "tree": "D:\\moodle\\_qoder_phone_ord0485_20260930\\recut_avatar",
+ "started": "2026-10-21 04:14:45",
+ "backend_port": 8146,
+ "static_port": 4895,
+ "backend_port_pid": null,
+ "backend_already_up": false,
+ "static_port_pid": null,
+ "static_already_up": false,
+ "store": {
+  "shared_bytes_before": 7213056,
+  "shared_mtime_before": 1790644827.9802465,
+  "shared_bytes_after": 7213056,
+  "shared_mtime_after": 1790644827.9802465,
+  "shared_untouched": true,
+  "private_store_bytes": 7213056
+ },
+ "backend_probe": {
+  "ready": true,
+  "http_status": 200,
+  "bytes": 960,
+  "url": "http://127.0.0.1:8146/api/v1/demo/scene",
+  "tries": 45
+ },
+ "static_probe": {
+  "ready": true,
+  "http_status": 200,
+  "bytes": 1200,
+  "url": "http://127.0.0.1:4895/v8/hub",
+  "tries": 30
+ }
+}

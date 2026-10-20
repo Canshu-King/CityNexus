@@ -1,0 +1,44 @@
+{
+ "schema": "CNX_BUILDING_TOPBAR_SHAPE_PAIR_R1",
+ "base": "http://127.0.0.1:4895",
+ "viewport": {
+  "width": 1280,
+  "height": 900
+ },
+ "avatar": {
+  "path": "/v8/hub",
+  "painted": [
+   28,
+   28
+  ],
+  "pressable": [
+   28,
+   28
+  ],
+  "samples": 41,
+  "overflow": "hidden",
+  "position": "static",
+  "before_transform": "auto",
+  "others": [
+   {
+    "id": "topbar-theme",
+    "w": 86,
+    "h": 44
+   },
+   {
+    "id": "topbar-language",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "id": "v8-mobile-menu",
+    "w": 0,
+    "h": 0
+   }
+  ],
+  "inner_width": 1280
+ },
+ "shot": "D:/moodle/_qoder_phone_ord0485_20260930/evidence/topbar_shape_desktop.png",
+ "page_errors": [],
+ "started": "Wed Oct 21 2026 04:15:24 GMT+0800 (中国标准时间)"
+}
