@@ -2007,7 +2007,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Write the slots a draft already holds as a new CANDIDATE plan version, keeping their order and their times. The shipped generator re-schedules, so it cannot be the door that turns a chosen draft into a plan without claiming a preservation that did not happen. A slot names a canonical `places` row and carries its own times; a provider id (`provider_key:external_id`) is refused by name and pointed at the identity read that yields the canonical id, and the fields that would describe a place (`title`, `name`, `url`, `query`, `address`, `external_id`, `source_id`, `photo`, `image`, `tags`) are refused rather than stored, because `activities.title` is written from the Place row this door reads. A place whose `city_code` differs from the journey's is a refusal, not a plan. `expected_revision` must equal the journey's current `active_plan_version_id`, so a draft read against a plan that has since moved cannot be committed into it; `Idempotency-Key` is required so a retry replays the same plan version instead of writing a second one. Nothing is selected, started or activated here -- the row is CANDIDATE until `POST /api/v1/journeys/{journey_id}/departure/commit` -- and no provider is reachable from the module, so this cannot spend quota. An undeclared cost stays undeclared: the column's zero is stored because the DDL demands NOT NULL, and `cost_declared` says false. */
+        /** @description Write the slots a draft already holds as a new CANDIDATE plan version, keeping their order and their times. The shipped generator re-schedules, so it cannot be the door that turns a chosen draft into a plan without claiming a preservation that did not happen. A slot names a canonical `places` row and carries its own times; a provider id (`provider_key:external_id`) is refused by name and pointed at the identity read that yields the canonical id, and the fields that would describe a place (`title`, `name`, `url`, `query`, `address`, `external_id`, `source_id`, `photo`, `image`, `tags`) are refused rather than stored, because `activities.title` is written from the Place row this door reads. A place whose `city_code` differs from the journey's is a refusal, not a plan. `expected_revision` must equal the journey's current `active_plan_version_id`, so a draft read against a plan that has since moved cannot be committed into it; `Idempotency-Key` is required so a retry replays the same plan version instead of writing a second one. Nothing is selected, started or activated here -- the row is CANDIDATE until `POST /api/v1/journeys/{journey_id}/departure/commit` -- and no provider is reachable from the module, so this cannot spend quota. An undeclared cost stays undeclared: the column's zero is stored because the DDL demands NOT NULL, and `cost_declared` says false. Its own frozen evidence is not this door's to invent: a candidate written here reaches a judgeable submission through `POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze`. */
         post: operations["postJourneyPlanFromSlots"];
         delete?: never;
         options?: never;
@@ -2029,6 +2029,26 @@ export interface paths {
         put?: never;
         /** @description Present a CANDIDATE plan version of this journey to its members as a `replan_proposals` row in the shipped PRESENTED state, without applying it to anybody: the journey keeps pointing at its active version, the candidate keeps its own status, and the round that follows is the consent door. The body is empty on purpose -- every field stored is read from rows and judged by the functions that already own those judgements: `hard_constraints_passed` from `app.services.validate_plan_feasibility` (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and the places the candidate carries, `utility_score` and `score_breakdown` from `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree. `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency is refused rather than stored as a subtracted pair, a pair already presented is refused by name, and `Idempotency-Key` is required so a retry replays one proposal instead of writing a second round. No provider is reachable from this module. */
         post: operations["postJourneyPlanSubmission"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Freeze the travel facts one CANDIDATE plan version's own slots imply, onto the two nullable columns `plan_versions` already carries. This is the door that makes a hand-built candidate judgeable: `app.services.validate_plan_feasibility` raises `STALE_RECOMPOSE_REQUIRED` for a version with no frozen evidence, so the submission door can only answer `gate.judged` false with `evidence_gap` true until this door has run. Nothing is invented: the legs are the plan's own `activities` rows in `sequence_no` order, every leg is measured by `app.integrations.mobility.runtime.capture_runtime_mobility_snapshot` -- the same primitive `plans/generate` uses, so this door adds no provider, no fallback rule and no trust level -- and what is stored is that capture's own snapshot id plus its own evidence document. A caller cannot supply minutes, a place list or a judgement: a body with any field is refused, so this cannot become a route-quoting or place-enumeration surface. Unlike the other plan doors, this one can reach a provider: when the deployment configures one, that capture is a live call per leg, and `counts.legs_requested` says how many. The answer counts `hard_eligible_legs` separately from `legs_frozen` and lists every leg's own `fact_qualities` word, because the fixture's blanket constant is not a measurement and must not read as one. Re-freezing a candidate is allowed while nobody is answering about it, and the answer names the snapshot id it replaces. The idempotency receipt is consulted before any state guard, so a retry of a press that already froze evidence replays that receipt instead of being refused by the very write it made. Nothing is selected, started, activated or presented here. */
+        post: operations["postJourneyPlanMobilityFreeze"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4621,6 +4641,57 @@ export interface components {
             expired: boolean | null;
             detail: string | null;
             reference_consistent: boolean | null;
+        };
+        PlanCandidateMobilityFreeze: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            plan_version_id: string;
+            /**
+             * @description This door writes evidence onto a candidate and changes no status anywhere.
+             * @constant
+             */
+            status: "CANDIDATE";
+            /** Format: uuid */
+            mobility_snapshot_id: string;
+            /** @description The snapshot id this press overwrote; null when the candidate had none. */
+            replaces_snapshot_id: string | null;
+            /** @description The provider key the capture domain actually used, carried verbatim. */
+            source_provider: string;
+            operation_key: string;
+            captured_at: string;
+            /** @description Read out of the stored evidence document rather than asserted -- neither shipped arm of the capture domain writes an expiry, so the gate's staleness rule never sees one. */
+            expires_at: string | null;
+            degraded: boolean;
+            counts: {
+                slots: number;
+                distinct_places: number;
+                /** @description Ordered place pairs this plan's own slots imply -- what a configured provider is asked for, so the cost of the press is visible before it is spent again. */
+                legs_requested: number;
+                legs_frozen: number;
+                /** @description Legs tagged EXPLICIT_FROZEN_FIXTURE or LIVE_PROVIDER_CAPTURE. Kept apart from `legs_frozen` because the fixture's blanket constant is not a measurement. */
+                hard_eligible_legs: number;
+                fallback_legs: number;
+                slots_without_a_location_row: number;
+            };
+            /** @description How many legs came back under each provenance word, counted from the frozen facts themselves. */
+            fact_qualities: {
+                [key: string]: number;
+            };
+            /** @description The live arm's own capability read; empty on the offline arm, which fills none. */
+            provider_capabilities: Record<string, never>;
+            sequences_without_a_location_row: number[];
+            evidence_columns: string[];
+            read_from: {
+                capture: string;
+                columns: string;
+                consumed_by: string;
+            };
+            next_actions: string[];
+            idempotency_key: string;
+            written_at: string;
+            /** @description Absent on the first press, true on a replay of the same key. */
+            idempotency_replay?: boolean;
         };
         /** @description The difference itself -- what `app.plan_delta.delta_of` emits. The read door answers with it and the submission door stores it, so a plan change has one arithmetic and not two. */
         PlanDeltaDifference: {
@@ -8059,7 +8130,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Journey not found */
+            /** @description Journey not found, or this place is not part of the journey (error.reason_code PLACE_NOT_IN_JOURNEY) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -8313,28 +8384,28 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description The caller holds no in-force seat */
+            /** @description The caller holds no in-force seat, so it cannot confirm for anybody else (error.reason_code JOURNEY_MEMBER_REQUIRED) */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Journey unknown */
+            /** @description Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED) */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED) */
+            /** @description Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED), a body field beyond plan_version_id (COMMIT_BODY_TAKES_ONLY_PLAN_VERSION_ID), or PLAN_INFEASIBLE */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -8392,7 +8463,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Journey unknown */
+            /** @description Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -8700,15 +8771,86 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Not a CANDIDATE row */
+            /** @description Not a CANDIDATE row, no active base, this pair already presented, or a reused key (error.reason_code SUBMISSION_NEEDS_A_CANDIDATE_VERSION, SUBMISSION_JOURNEY_HAS_NO_ACTIVE_PLAN, SUBMISSION_ALREADY_PRESENTED, SUBMISSION_IDEMPOTENCY_KEY_REUSE_CONFLICT) */
             409: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description A body field */
+            /** @description A body field, no key, the active version itself, or two currencies (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY) */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyPlanMobilityFreeze: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description The frozen evidence this server wrote, with each leg's own provenance counts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanCandidateMobilityFreeze"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a CANDIDATE row, one of the two evidence columns present alone, a round already asking about this candidate, a slot whose place carries no point, or a reused key (error.reason_code FREEZE_NEEDS_A_CANDIDATE_VERSION, FREEZE_EVIDENCE_COLUMN_PAIR_IS_SPLIT, FREEZE_PROPOSAL_ALREADY_ASKING, FREEZE_SLOT_PLACE_HAS_NO_POINT, FREEZE_IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A body field, or no Idempotency-Key (error.reason_code FREEZE_READS_EVERY_LEG_FROM_ROWS, FREEZE_IDEMPOTENCY_KEY_REQUIRED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The mobility source refused a leg, so no evidence was written (error.reason_code MOBILITY_PROVIDER_REFUSED_A_LEG) */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -8760,7 +8902,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description A version id is missing */
+            /** @description A version id is missing, or both ids name the same version (error.reason_code FROM_PLAN_VERSION_ID_REQUIRED, TO_PLAN_VERSION_ID_REQUIRED, DELTA_NEEDS_TWO_DIFFERENT_VERSIONS) */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -8872,7 +9014,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description DeepSeek-curated */
+            /** @description DeepSeek-curated, deterministic, authoritative city intelligence result */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -8897,7 +9039,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Places extracted by this deployment's own local parser */
+            /** @description Places extracted by this deployment's own local parser, with the forms it refused to read named */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -8929,7 +9071,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Places appended to the active plan */
+            /** @description Places appended to the active plan, with the day they landed on and where to read them back */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -9263,14 +9405,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Captured accommodation evidence */
+            /** @description Captured accommodation evidence, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9283,14 +9423,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Accommodation provider results */
+            /** @description Accommodation provider results, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9303,14 +9441,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Bounded Top-K stay and Journey options */
+            /** @description Bounded Top-K stay and Journey options, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9323,23 +9459,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Journey pushed to PLANNED with a SELECTED plan via the real pipeline; no /start */
+            /** @description 'Journey pushed to PLANNED with a SELECTED plan via the real pipeline; no /start', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description CITYNEXUS_DEMO_MODE is not set; nothing was generated or selected */
+            /** @description 'CITYNEXUS_DEMO_MODE is not set; nothing was generated or selected', content: {application/json: {schema: {type: object}}} */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9352,23 +9484,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Scenario started through /start, with the journey status and cursor it produced */
+            /** @description 'Scenario started through /start, with the journey status and cursor it produced', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description CITYNEXUS_DEMO_MODE is not set; nothing was started */
+            /** @description 'CITYNEXUS_DEMO_MODE is not set; nothing was started', content: {application/json: {schema: {type: object}}} */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9381,14 +9509,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself. supply - what this stage is standing on, read out of the rows and from nobody else: asked (was a catalog-hydration job ever opened for this journey), operation_id and job_status, state (the outcome the job recorded: CATALOG_PREPARED | ALREADY_CURRENT | NO_REGISTERED_SOURCE | PENDING_CANDIDATES_UNAPPLIED | ABANDONED_BY_TRAVELLER | WORKER_LOST | DESTINATION_AMBIGUOUS | RESOLVER_RUNTIME_FAILURE; the job status when no outcome was written; NOT_ASKED when nobody opened one), failed_stage (the phase the job reached: QUEUED | RESOLVING_DESTINATION | DISCOVERING_POIS | NORMALIZING | BUILDING_MOBILITY | PERSISTING | FINALIZING, null when the ending left material), reason_code, retryable, and leg_states - one cell per hop this product can ask (photon | nominatim | overpass) saying CAPTURED | ANSWERED_EMPTY | NOT_ANSWERED | NOT_ASKED, or null when a hop replied without a counter, because an uncounted reply is not a measured zero. counts_as_supply is false whenever every stop on this stage came back from a replay: a replay is never supply, the same ban live discovery writes. stops carries plan_present, total, with_coordinate, without_coordinate, reasons (the named reason the projection already gives for every stop without a position, so a screen cannot quietly draw fewer rows) and source_kinds (GOLDEN_FIXTURE | REMOTE_PROVIDER | SIMULATED | REPLAY | OFFLINE_SNAPSHOT). The read asks no provider: an empty board is reported from what the store already knows, never re-measured at the moment somebody looked */
+            /** @description 'demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself. supply - what this stage is standing on, read out of the rows and from nobody else: asked (was a catalog-hydration job ever opened for this journey), operation_id and job_status, state (the outcome the job recorded: CATALOG_PREPARED | ALREADY_CURRENT | NO_REGISTERED_SOURCE | PENDING_CANDIDATES_UNAPPLIED | ABANDONED_BY_TRAVELLER | WORKER_LOST | DESTINATION_AMBIGUOUS | RESOLVER_RUNTIME_FAILURE; the job status when no outcome was written; NOT_ASKED when nobody opened one), failed_stage (the phase the job reached: QUEUED | RESOLVING_DESTINATION | DISCOVERING_POIS | NORMALIZING | BUILDING_MOBILITY | PERSISTING | FINALIZING, null when the ending left material), reason_code, retryable, and leg_states - one cell per hop this product can ask (photon | nominatim | overpass) saying CAPTURED | ANSWERED_EMPTY | NOT_ANSWERED | NOT_ASKED, or null when a hop replied without a counter, because an uncounted reply is not a measured zero. counts_as_supply is false whenever every stop on this stage came back from a replay: a replay is never supply, the same ban live discovery writes. stops carries plan_present, total, with_coordinate, without_coordinate, reasons (the named reason the projection already gives for every stop without a position, so a screen cannot quietly draw fewer rows) and source_kinds (GOLDEN_FIXTURE | REMOTE_PROVIDER | SIMULATED | REPLAY | OFFLINE_SNAPSHOT). The read asks no provider: an empty board is reported from what the store already knows, never re-measured at the moment somebody looked', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9404,23 +9530,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description capability (READY | HYDRATABLE | UNKNOWN_RETRYABLE | UNAVAILABLE - four structural cells since the arbiter answer "one" on 2026-09-22; still no UNKNOWN, because "nobody looked" remains an absent provider_status and never a state, and UNKNOWN_RETRYABLE is reserved for the opposite case: we asked and nothing could answer, which is always paired with retryable true and the action RETRY_LATER rather than an invitation to prepare) + destination_state (RESOLVED | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE - what the resolver concluded about this request, a separate axis from capability) + reason_code + recommended_action + retryable + coverage for all six intents (attractions, food, nightlife, lodging, mobility, booking) each READY | PARTIAL | MISSING + coverage_detail with the counts behind each state + canonical_destination_id, which is NULL for AMBIGUOUS / NO_MATCH / RUNTIME_FAILURE and never contains user text (ORD-0167: raw text is not identity) + pending_destination_label (the traveller input verbatim) + resolver_query_normalized (the folded form matching used, also not an identity) + destination_pending_key (correlation material only, never a place or destination identifier and never a catalog join key) + candidates (populated only when the query is ambiguous, so no winner is guessed) + malformed_candidates (evidence a provider offered and this build refused: an entity reference that names no OSM element class, or a position outside the WGS-84 range; a refusal is a named RUNTIME_FAILURE with attribution_reason=PROVIDER_BAD_RESPONSE and retryable=true, never an identity, never NO_MATCH, and the refused record is kept verbatim instead of being rounded or repaired) + the attribution group attribution_reason / evidence_kind / http_status / source_layer, derived once from the same observation and arriving together or not at all, with http_status null rather than 0 when nothing answered (R14 section 8: four consumers, one classification) + hard_gaps, always present and empty when there is nothing to name, carrying MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE when the destination is named, the catalog holds rows, mobility has explicit legs, and none of that material is of a class anything may treat as a hard constraint - the mobility axis also reports source_classes and hard_eligible so the claim can be checked rather than inferred, and an empty axis is MISSING with no gap rather than a gap over nothing + provider_status whose destination cell carries the per-attempt evidence (endpoint / answered / http_status / elapsed_ms) on a successful answer as well as on a failed one, because evidence that only appears when something goes wrong is not evidence) + the fingerprint and its segments, four of them when a destination is named (canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version) and a namespaced request fingerprint when it is not (pending-request-v1 + scope + resolver_query_normalized + the same three versions) + provenance (source_kinds, never upgraded by normalisation). READY is only ever the versioned server-side policy result: a place count cannot produce it, and a resolver that could not be reached keeps a destination retryable instead of declaring it structurally unusable */
+            /** @description 'capability (READY | HYDRATABLE | UNKNOWN_RETRYABLE | UNAVAILABLE - four structural cells since the arbiter answer "one" on 2026-09-22; still no UNKNOWN, because "nobody looked" remains an absent provider_status and never a state, and UNKNOWN_RETRYABLE is reserved for the opposite case: we asked and nothing could answer, which is always paired with retryable true and the action RETRY_LATER rather than an invitation to prepare) + destination_state (RESOLVED | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE - what the resolver concluded about this request, a separate axis from capability) + reason_code + recommended_action + retryable + coverage for all six intents (attractions, food, nightlife, lodging, mobility, booking) each READY | PARTIAL | MISSING + coverage_detail with the counts behind each state + canonical_destination_id, which is NULL for AMBIGUOUS / NO_MATCH / RUNTIME_FAILURE and never contains user text (ORD-0167: raw text is not identity) + pending_destination_label (the traveller input verbatim) + resolver_query_normalized (the folded form matching used, also not an identity) + destination_pending_key (correlation material only, never a place or destination identifier and never a catalog join key) + candidates (populated only when the query is ambiguous, so no winner is guessed) + malformed_candidates (evidence a provider offered and this build refused: an entity reference that names no OSM element class, or a position outside the WGS-84 range; a refusal is a named RUNTIME_FAILURE with attribution_reason=PROVIDER_BAD_RESPONSE and retryable=true, never an identity, never NO_MATCH, and the refused record is kept verbatim instead of being rounded or repaired) + the attribution group attribution_reason / evidence_kind / http_status / source_layer, derived once from the same observation and arriving together or not at all, with http_status null rather than 0 when nothing answered (R14 section 8: four consumers, one classification) + hard_gaps, always present and empty when there is nothing to name, carrying MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE when the destination is named, the catalog holds rows, mobility has explicit legs, and none of that material is of a class anything may treat as a hard constraint - the mobility axis also reports source_classes and hard_eligible so the claim can be checked rather than inferred, and an empty axis is MISSING with no gap rather than a gap over nothing + provider_status whose destination cell carries the per-attempt evidence (endpoint / answered / http_status / elapsed_ms) on a successful answer as well as on a failed one, because evidence that only appears when something goes wrong is not evidence) + the fingerprint and its segments, four of them when a destination is named (canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version) and a namespaced request fingerprint when it is not (pending-request-v1 + scope + resolver_query_normalized + the same three versions) + provenance (source_kinds, never upgraded by normalisation). READY is only ever the versioned server-side policy result: a place count cannot produce it, and a resolver that could not be reached keeps a destination retryable instead of declaring it structurally unusable', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description Request validation failed */
+            /** @description Request validation failed, content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -9442,41 +9564,33 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The same answer with reused=true: an open job for this identical fingerprint already exists and this caller joined it. There is deliberately no 409 - colliding with the work is success, and pushing the caller away would make them start a second chain */
+            /** @description 'The same answer with reused=true: an open job for this identical fingerprint already exists and this caller joined it. There is deliberately no 409 - colliding with the work is success, and pushing the caller away would make them start a second chain', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description Accepted and started: operation_id, fingerprint, reused=false, status QUEUED, phase, elapsed_ms, retry_after_ms, status_url, abandon_url, and the four fingerprint segments. No provider is contacted before this answer is written */
+            /** @description 'Accepted and started: operation_id, fingerprint, reused=false, status QUEUED, phase, elapsed_ms, retry_after_ms, status_url, abandon_url, and the four fingerprint segments. No provider is contacted before this answer is written', content: {application/json: {schema: {type: object}}} */
             202: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description Unprocessable: an empty or over-long query, or a journey_id this backend does not have */
+            /** @description 'Unprocessable: an empty or over-long query, or a journey_id this backend does not have', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
-            /** @description The catalog store could not record the job inside the acceptance budget (named, retryable, with retry_after_ms) - never a silent 500 */
+            /** @description 'The catalog store could not record the job inside the acceptance budget (named, retryable, with retry_after_ms) - never a silent 500', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             503: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -9491,23 +9605,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The job read from the store: operation_id, fingerprint, reused, status (QUEUED | RUNNING | COMPLETED | FAILED | UNAVAILABLE | ABANDON_REQUESTED | ABANDONED - a lifecycle axis, separate from phase, because one axis cannot tell "abandoned but still running" from "finished"), phase (the stage the worker is genuinely inside), outcome, terminal, elapsed_ms, retry_after_ms, result or error, the four fingerprint segments, status_url, abandon_url. Deliberately no progress percentage - an invented denominator is not information */
+            /** @description 'The job read from the store: operation_id, fingerprint, reused, status (QUEUED | RUNNING | COMPLETED | FAILED | UNAVAILABLE | ABANDON_REQUESTED | ABANDONED - a lifecycle axis, separate from phase, because one axis cannot tell "abandoned but still running" from "finished"), phase (the stage the worker is genuinely inside), outcome, terminal, elapsed_ms, retry_after_ms, result or error, the four fingerprint segments, status_url, abandon_url. Deliberately no progress percentage - an invented denominator is not information', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description No such operation (app envelope, not a route-level 404) */
+            /** @description 'No such operation (app envelope, not a route-level 404)', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -9522,23 +9632,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Idempotent stop request: ABANDON_REQUESTED while in flight (never a claim that work already on the wire is dead), the real terminal state otherwise. An abandoned job writes no result */
+            /** @description 'Idempotent stop request: ABANDON_REQUESTED while in flight (never a claim that work already on the wire is dead), the real terminal state otherwise. An abandoned job writes no result', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description No such operation */
+            /** @description 'No such operation', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -9551,14 +9657,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The job this journey already has open, plus its latest operation, so a reload restores it without an id */
+            /** @description 'The job this journey already has open, plus its latest operation, so a reload restores it without an id', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9571,14 +9675,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Operation accepted: operation_id, status, status_url, abandon_url, retry_after_ms, reused */
+            /** @description 'Operation accepted: operation_id, status, status_url, abandon_url, retry_after_ms, reused', content: {application/json: {schema: {type: object}}} */
             202: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9591,14 +9693,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Status, phase, outcome, elapsed_ms, retry_after_ms, stored result or error */
+            /** @description 'Status, phase, outcome, elapsed_ms, retry_after_ms, stored result or error', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9611,14 +9711,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Idempotent stop request: ABANDON_REQUESTED while in flight, the real terminal state otherwise */
+            /** @description 'Idempotent stop request: ABANDON_REQUESTED while in flight, the real terminal state otherwise', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9631,14 +9729,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Ranked stay and Journey options */
+            /** @description Ranked stay and Journey options, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9651,14 +9747,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Selected stay option */
+            /** @description Selected stay option, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9671,14 +9765,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Weather-adjusted stay Journey option */
+            /** @description Weather-adjusted stay Journey option, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9691,14 +9783,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Policy-gated autonomous recovery */
+            /** @description Policy-gated autonomous recovery, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9711,14 +9801,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Mode-aware Journey impact */
+            /** @description Mode-aware Journey impact, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9731,14 +9819,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Multi-day anchors and day groups */
+            /** @description Multi-day anchors and day groups, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9751,14 +9837,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Stay and mobility provider mesh status */
+            /** @description Stay and mobility provider mesh status, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9771,14 +9855,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Frozen multimodal facts */
+            /** @description Frozen multimodal facts, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9791,14 +9873,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Mode comparison */
+            /** @description Mode comparison, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9811,14 +9891,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Persisted luggage and baggage constraints */
+            /** @description Persisted luggage and baggage constraints, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9831,14 +9909,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Reservation draft extracted without inventing critical facts */
+            /** @description Reservation draft extracted without inventing critical facts, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9851,14 +9927,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Journey Inbox drafts */
+            /** @description Journey Inbox drafts, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9871,14 +9945,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Semantic Journey Memory timeline */
+            /** @description Semantic Journey Memory timeline, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9897,23 +9969,19 @@ export interface operations {
             };
         };
         responses: {
-            /** @description DeepSeek Responses text extraction draft */
+            /** @description DeepSeek Responses text extraction draft, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description ORD-0551: the extraction provider refused this text; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason. */
+            /** @description 'ORD-0551: the extraction provider refused this text; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason.', content: {application/json: {schema: {type: object}}} */
             502: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9934,23 +10002,19 @@ export interface operations {
             };
         };
         responses: {
-            /** @description DeepSeek Responses vision extraction draft */
+            /** @description DeepSeek Responses vision extraction draft, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description ORD-0551: the extraction provider refused this image; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason. */
+            /** @description 'ORD-0551: the extraction provider refused this image; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason.', content: {application/json: {schema: {type: object}}} */
             502: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9974,14 +10038,12 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Non-authoritative DeepSeek web observations */
+            /** @description Non-authoritative DeepSeek web observations, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -9994,14 +10056,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Stored non-authoritative web observations */
+            /** @description Stored non-authoritative web observations, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10045,14 +10105,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User-confirmed reservation and durable Commitment */
+            /** @description User-confirmed reservation and durable Commitment, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
             /** @description Critical reservation facts remain unresolved */
             409: {
@@ -10072,14 +10130,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Corrected semantic reservation draft */
+            /** @description Corrected semantic reservation draft, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
             /** @description Confirmed drafts cannot be edited */
             409: {
@@ -10099,14 +10155,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Policy-gated semantic intake decision */
+            /** @description Policy-gated semantic intake decision, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10119,14 +10173,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Confirmed reservations and protected commitments */
+            /** @description Confirmed reservations and protected commitments, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10139,14 +10191,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Schedule update recorded and Guardian notified */
+            /** @description Schedule update recorded and Guardian notified, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10159,14 +10209,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Read-only next-24-hour Journey snapshot and provider freshness */
+            /** @description Read-only next-24-hour Journey snapshot and provider freshness, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10179,14 +10227,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Foreground location observation with accuracy and timestamp */
+            /** @description Foreground location observation with accuracy and timestamp, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10199,14 +10245,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Server-owned push subscription seam */
+            /** @description Server-owned push subscription seam, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10219,14 +10263,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Non-secret Web Push capability and public VAPID key */
+            /** @description Non-secret Web Push capability and public VAPID key, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10239,14 +10281,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Deduplicated server-owned notification records */
+            /** @description Deduplicated server-owned notification records, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10259,14 +10299,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Region-aware provider readiness and honest absence semantics */
+            /** @description Region-aware provider readiness and honest absence semantics, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10279,14 +10317,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Scoped Edge Companion credential returned once */
+            /** @description Scoped Edge Companion credential returned once, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10299,14 +10335,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Compact read-only current and next Journey state */
+            /** @description Compact read-only current and next Journey state, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -10319,14 +10353,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Allowlisted low-risk Edge Companion action */
+            /** @description Allowlisted low-risk Edge Companion action, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
             /** @description Action exceeds the Edge Companion authority surface */
             403: {
@@ -10346,14 +10378,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Edge observation recorded as evidence */
+            /** @description Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };

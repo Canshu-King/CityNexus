@@ -31,6 +31,7 @@ from app import (
     departure_read,
     place_media_routes,
     plan_delta,
+    plan_evidence,
     plan_from_slots,
     plan_submission,
 )
@@ -920,7 +921,8 @@ def build_open_meteo_provider(client: httpx.AsyncClient) -> OpenMeteoContextProv
 for _media_route in (*place_media_routes.router.routes, *departure_read.router.routes,
                      *departure_commit.router.routes, *departure_facts.router.routes,
                      *collective_consent.router.routes, *plan_from_slots.router.routes,
-                     *plan_delta.router.routes, *plan_submission.router.routes):
+                     *plan_delta.router.routes, *plan_submission.router.routes,
+                     *plan_evidence.router.routes):
     app.add_api_route(
         _media_route.path,
         _media_route.endpoint,
