@@ -10,7 +10,8 @@ import { expandPluralMarkers } from "../../lib/plural";
 export const planRankingCopy = {
   en: {
     "rank.title": "Compare the plans this trip can choose from",
-    "rank.sub": "Ranked on numbers this product computes for each plan. A dimension every plan shares is shown, but never used to break a tie.",
+    "rank.sub":
+          "Ranked on numbers each plan has. A dimension every plan shares is listed but never breaks a tie.",
     "rank.dim.cost": "cost",
     "rank.dim.walk": "walking minutes",
     "rank.dim.protected": "protected stops",
@@ -30,7 +31,8 @@ export const planRankingCopy = {
     "rank.failed": "The plan list could not be read from this server.",
     "rank.retry": "Read again",
     "rank.noneHint": "This screen fills in as soon as the trip holds more than one plan you could choose.",
-    "rank.sortHint": "Pick a column heading to sort on it. A plan that does not answer that dimension stays listed below the ones that do, because an unknown is not a low number.",
+    "rank.sortHint":
+          "Pick a column heading to sort on it. A plan without that dimension is listed below the ones that have it.",
     "rank.sortAria": "Sort by {dim}",
     "rank.sortAsc": "ascending",
     "rank.sortDesc": "descending",
@@ -46,7 +48,8 @@ export const planRankingCopy = {
   },
   "zh-CN": {
     "rank.title": "把这趟能选的方案摆在一屏上比",
-    "rank.sub": "排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一维照实列出来，但不用它分高下。",
+    "rank.sub":
+          "排序只用每一版自己算得出的数。各版都一样的一维照实列出，但不分高下。",
     "rank.dim.cost": "预算",
     "rank.dim.walk": "步行时长",
     "rank.dim.protected": "受保护锚点",
@@ -66,7 +69,8 @@ export const planRankingCopy = {
     "rank.failed": "方案列表没读到。",
     "rank.retry": "再读一次",
     "rank.noneHint": "这趟一旦出现两个以上可选方案，这里就会摆出来。",
-    "rank.sortHint": "点一列的标题就按它排。没有这一维数据的方案会排在有数的方案后面，因为「没量到」不是一个小的数。",
+    "rank.sortHint":
+          "点一列的标题就按它排。没有这一维数据的方案排在有数的那些后面。",
     "rank.sortAria": "按{dim}排序",
     "rank.sortAsc": "从小到大",
     "rank.sortDesc": "从大到小",

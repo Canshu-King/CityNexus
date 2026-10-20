@@ -37,7 +37,7 @@ const en: Dict = {
   "plan.serverErroredBody":
         "The server errored; your trip is unchanged. Retry later, and keep the technical detail if it repeats.",
   "plan.plansWithoutAiBody":
-        "These came from places already found for this city, not from your words. Retry to plan from what you typed — reason under “Technical detail”.",
+        "These came from places already found for this city, not from your words. Retry to plan from what you typed.",
   "plan.baselineUnavailableBody": "We could not confirm whether this run produced new plans. Please retry or refresh.",
   "plan.noPlansProducedBody": "No feasible plan came out. Your trip is unchanged; the reason is under “Technical detail”. You can retry or try another city.",
   "plan.assistantUnreachableBody": "The planning assistant could not be reached. Your trip is unchanged; you can retry.",
@@ -914,7 +914,8 @@ const en: Dict = {
      only what this device did, and each clause below states what the server said -- its tier, the instant
      it recorded, or that it said nothing. A clause is never chosen by the device's own assumption. */
   "inbox.journeyLinkCopiedOpenNoEnd": "The server's grant here is {tier}, and it records no expiry instant for it.",
-  "inbox.journeyLinkCopiedOpenUntil": "The server's grant here is {tier}, and it records {at} as the instant this grant carries; whether that instant has passed is the door's answer, not this sentence's.",
+  "inbox.journeyLinkCopiedOpenUntil":
+        "The server's grant here is {tier}, recorded at {at}; whether it has passed is that door's answer.",
   "inbox.journeyLinkCopiedTierClosed": "The grant the server lists here is {tier} — {consequence}",
   "inbox.journeyLinkCopiedRevoked": "The server revoked this grant (revocation recorded as {at}).",
   "inbox.journeyLinkCopiedNoGrant": "The server lists no share grant for this journey.",
@@ -1044,7 +1045,8 @@ const en: Dict = {
   "intel.enableRecovery": "Enable reversible recovery",
   "intel.guardianReady": "Guardian ready",
   "intel.recoveryTitle": "Autonomous recovery stays inside the envelope.",
-  "intel.recoverySub": "Rain is a semantic signal. The gate checks the action after it is chosen: stay total, route facts, arrival/departure anchors, schedule slack, and protected commitments.",
+  "intel.recoverySub":
+        "Rain is a semantic signal. A chosen action is checked against: stay total, route facts, arrival/departure anchors, schedule slack, protected commitments.",
   "intel.deepseek": "DeepSeek",
   "intel.hermes": "Hermes",
   "intel.gateway": "Gateway",
@@ -1235,14 +1237,16 @@ const en: Dict = {
      they are two lines. Both still open with the same confirmation word the landed X1 arm measures. */
   "poster.share": "Share this picture",
   "poster.sharing": "Asking the server…",
-  "poster.shareDone": "Shared: this press wrote a new grant. The server's grant list for this trip answers with {rows} {plural:row:rows}, and this link's row is {grant}.",
+  "poster.shareDone":
+        "Shared: this press wrote a new grant. This trip's list has {rows} {plural:row:rows}; this link's row is {grant}.",
   "poster.shareErrRefused": "Not shared: the server refused this grant write (status {status}).",
   "poster.shareErrNoToken": "Not shared: the write came back without a token, so there is no link to hand over.",
   "poster.shareErrNotListed": "Not shared: the server's grant list does not carry the row this device just wrote.",
   "poster.shareErrRevoked": "Not shared: the row on the server's list carries a revocation, so the link is already withdrawn.",
   "poster.shareErrReadUnanswered": "Not shared: the grant list gave no answer (status {status}), so this device has nothing to confirm.",
   "poster.shareLinkLabel": "The link that opens this picture for somebody else",
-  "poster.shareReused": "Shared. This press wrote nothing: the server's grant list for this trip already carried a standing link-readable row, {grant}, and that is the link handed over ({rows} {plural:row:rows} read).",
+  "poster.shareReused":
+        "Shared. This press wrote nothing: this trip already carried a link-readable grant, {grant}, and that is the link handed over ({rows} {plural:row:rows}).",
   "mapComp.yourLocation": "Your location · {n} m accuracy",
   "mapComp.journeyMap": "Journey map",
   "mapComp.routeContext": "Route context",
@@ -1594,7 +1598,8 @@ const en: Dict = {
   "lib.displayVocabulary.nativeGatewayAnswering": "the native gateway installed on this machine is answering",
   "lib.displayVocabulary.compatEndpointUnverified": "the compatibility endpoint this deployment configured; no verified native gateway",
   "lib.failureAttribution.networkCopyStillReadable": "This request could not travel and nothing came back, so this is a network problem. The saved read-only copy is still available. Check your connection and try again.",
-  "lib.failureAttribution.networkNoOfflineCopy": "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show. Check your connection and try again.",
+  "lib.failureAttribution.networkNoOfflineCopy":
+        "The request did not go out and nothing came back -- a network problem. This device holds no offline copy. Check your connection and retry.",
   "lib.failureAttribution.readCauseNotClassified": "The server answered, but this read did not succeed and the cause is not yet classified. Retrying is safe.",
   "lib.displayVocabulary.serviceOwnLoop": "this service's own loop straight to the model provider",
   "simulation.notGiven": "not given",
@@ -1690,7 +1695,7 @@ const zhCN: Dict = {
   "plan.serverErroredBody":
         "服务端出错，行程未被改动。可稍后重试；反复出现请保留“技术详情”。",
   "plan.plansWithoutAiBody":
-        "这些方案是按城里已找到的地点排的，没读你刚才那段话。要按你的话重排，请重试；原因在“技术详情”里。",
+        "这些方案按城里已找到的地点排的，没读你那段话。要按你的话重排，请重试。",
   "plan.baselineUnavailableBody": "无法确认本次是否生成了新方案，请重试或刷新页面。",
   "plan.noPlansProducedBody": "这次没排出可行方案。你的行程没有被改动，原因在「技术详情」里；可以再试一次或换一座城市。",
   "plan.assistantUnreachableBody": "规划助手这次没能连上。你的行程没有被改动，可以稍后重试。",
@@ -2518,7 +2523,8 @@ const zhCN: Dict = {
   /* ORD-0447：上面那句原本还附带一个不加条件的可达主张，现由 ORD-0385 之外的一枚事实替代——ORD-0434 的授权门会答。
      所以那句只说本机做了什么，下面每一条只说服务端答了什么：档位、它记的时刻，或它没答。 */
   "inbox.journeyLinkCopiedOpenNoEnd": "服务端这枚授权的档位是「{tier}」，且没给它记失效时刻。",
-  "inbox.journeyLinkCopiedOpenUntil": "服务端这枚授权的档位是「{tier}」，它把这枚授权记的时刻写作「{at}」；这一刻过没过由那扇门答，不由这句话判。",
+  "inbox.journeyLinkCopiedOpenUntil":
+        "服务端记的档位是「{tier}」，时刻写作「{at}」；过没过要问那扇门。",
   "inbox.journeyLinkCopiedTierClosed": "服务端在这份行程下列出的授权档位是「{tier}」——{consequence}",
   "inbox.journeyLinkCopiedRevoked": "服务端已撤销这枚授权（撤销记作「{at}」）。",
   "inbox.journeyLinkCopiedNoGrant": "服务端这份行程下没有分享授权。",
@@ -2641,7 +2647,8 @@ const zhCN: Dict = {
   "intel.enableRecovery": "启用可逆恢复",
   "intel.guardianReady": "Guardian 就绪",
   "intel.recoveryTitle": "自主恢复保持在权限范围内。",
-  "intel.recoverySub": "降雨是语义信号。网关在选择操作后检查：住宿总计、路线事实、到达/出发锚点、时间余量和受保护承诺。",
+  "intel.recoverySub":
+        "降雨是语义信号。选定操作后核对：住宿总计、路线事实、到达/出发锚点、时间余量和受保护承诺。",
   "intel.deepseek": "DeepSeek",
   "intel.hermes": "Hermes",
   "intel.gateway": "网关",
@@ -2815,14 +2822,16 @@ const zhCN: Dict = {
   "poster.fail.noDownload": "这台浏览器不给我们递文件的出口。",
   "poster.share": "分享这张长图",
   "poster.sharing": "正在向服务器登记…",
-  "poster.shareDone": "已分享：这一次按下确实写入了一条授权。服务器的授权列表对这趟旅行答出 {rows} 条，本链接对应的是 {grant}。",
+  "poster.shareDone":
+        "已分享：这一次按下写入了一条新授权。这趟的授权列表有 {rows} 条，本链接对应 {grant}。",
   "poster.shareErrRefused": "没有分享出去：服务器拒了这次授权写入（状态码 {status}）。",
   "poster.shareErrNoToken": "没有分享出去：写入答回来了，但没有交出暗号，所以没有链接可以给你。",
   "poster.shareErrNotListed": "没有分享出去：服务器回读的授权列表里没有这台设备刚写入的那一条。",
   "poster.shareErrRevoked": "没有分享出去：服务器列表上的那一条带着撤销记录，链接已经被收回。",
   "poster.shareErrReadUnanswered": "没有分享出去：授权列表没有给出答复（状态码 {status}），这台设备无从确认。",
   "poster.shareLinkLabel": "让别人打开这张长图的链接",
-  "poster.shareReused": "已分享：这一趟本来就有一条有效的链接授权（{grant}），长图用的就是它（读出 {rows} 条）。",
+  "poster.shareReused":
+        "已分享：这趟本来就有一条可读链接的授权（{grant}），长图用的就是它（{rows} 条）。",
   "mapComp.yourLocation": "你的位置 · {n} 米精度",
   "mapComp.journeyMap": "行程地图",
   "mapComp.routeContext": "路线上下文",
@@ -3153,7 +3162,8 @@ const zhCN: Dict = {
   "lib.displayVocabulary.nativeGatewayAnswering": "本机自带的原生网关正在应答",
   "lib.displayVocabulary.compatEndpointUnverified": "这台部署配的兼容端点，原生网关没有验到在应答",
   "lib.failureAttribution.networkCopyStillReadable": "请求没能出去，也没收到回答：这是网络问题。已保存的只读副本还能看。请检查网络后重试。",
-  "lib.failureAttribution.networkNoOfflineCopy": "请求没能出去，也没收到回答：这是网络问题。这台设备上还没有可看的离线副本。请检查网络后重试。",
+  "lib.failureAttribution.networkNoOfflineCopy":
+        "请求没出去也没回答：这是网络问题。这台设备没有离线副本可看。请检查网络后重试。",
   "lib.failureAttribution.readCauseNotClassified": "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。",
   "lib.displayVocabulary.serviceOwnLoop": "这个服务自己直连模型商的那条环",
   "simulation.notGiven": "服务器未给证据状态",

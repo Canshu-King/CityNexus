@@ -51,7 +51,7 @@ export const journeyTrashCopy = {
     "trash.transport":
       "The bin could not be read from this server.",
     "trash.doorAbsent":
-      "This server did not answer the list of binned trips, so no row can be shown yet. Nothing about your trips changed.",
+          "This server did not answer the list of binned trips, so no row can be shown. Your trips are unchanged.",
     "trash.refresh": "Read the bin again",
     "trash.empty.why":
       "No rows to list: the server reported none.",
@@ -96,7 +96,8 @@ export const journeyTrashCopy = {
     "trash.gone": "这条已经不在这台服务器上了，找不回来。",
     "trash.refused": "服务器拒绝了这次找回。你的行程列表没有变化。",
     "trash.transport": "回收站没从这台服务器读到。",
-    "trash.doorAbsent": "这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
+    "trash.doorAbsent":
+          "服务器没答出回收站里那份列表，所以现在一行都显示不出来。你的行程没有因此变化。",
     "trash.refresh": "再读一次回收站",
     "trash.empty.why": "现在没有行可列。",
     "trash.empty.action": "回到我的行程",
