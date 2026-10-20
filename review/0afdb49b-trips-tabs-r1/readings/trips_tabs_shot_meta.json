@@ -1,0 +1,11 @@
+{
+ "base": "http://127.0.0.1:4895",
+ "strip_box": {
+  "left": 17,
+  "top": 93,
+  "width": 356,
+  "height": 63,
+  "n": 4
+ },
+ "errors": []
+}
