@@ -4395,7 +4395,7 @@ function MapPage({
               overlay band inside `.v8-map-panel` is what `fitBounds` measures its padding against
               (the ORD-0417/ORD-0453 note in `map-selection.css`), so a line added there moves ground
               the camera was promised; this column already carries sentences of the same kind.
-              The empty arm says what THIS read brought back -- "这台服务器这次没有交回任何足迹" --
+              The empty arm says what THIS read brought back -- "服务器这次没有交回任何足迹" --
               because an empty list is a fact about one answer, not about the traveller. */}
           <p
             className="v8-map-footprint-state"
