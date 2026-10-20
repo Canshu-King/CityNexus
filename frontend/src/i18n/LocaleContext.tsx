@@ -138,7 +138,8 @@ const en: Dict = {
   "shell.loadError": "Unable to load the journey",
   "shell.tripCreated": "Trip created — Today is ready to plan.",
   "shell.stayArrived": "Stay results arrived.",
-  "shell.stayStoppedWithTrip": "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result.",
+  "shell.stayStoppedWithTrip":
+        "Stopped waiting. The trip is created; the stay search may still be running. Back to Today for the result.",
   "shell.stayStoppedUnknown": "Stopped waiting — whether this trip exists is not something this tab can know yet. Checking with the server.",
   "shell.recoveredTrip": "Checked: the trip was in fact created, and Today is now open.",
   "shell.noTripYet": "Checked: no such trip is on the server yet. You can press 确认创建 again.",
@@ -444,7 +445,8 @@ const en: Dict = {
   "recover.writeDeadline.title": "This device stopped waiting after {seconds} s",
   "recover.writeDeadline.body": "The server did not answer in that time, so the outcome of this write is unknown -- not \"did not happen\".",
   "recover.writeDeadline.retryGuidance": "Refresh and check before deciding to retry; retrying with the same idempotency key re-asks the same write instead of creating a second one.",
-  "copilot.keyless.writeUnknown": "{method} {path} -- this device stopped waiting after {seconds} s. The request was already sent, so the outcome is unknown; check before retrying.",
+  "copilot.keyless.writeUnknown":
+        "{method} {path} -- stopped waiting after {seconds} s. The request was sent, so the outcome is unknown; check before retrying.",
 
   // ── Map ──
   "map.kicker": "Map · one glance",
@@ -993,7 +995,8 @@ const en: Dict = {
   "inbox.confirmUnreadable": "The server did not answer again after the attempt; it is not recorded as passed.",
   "inbox.correctionsSavedStillNeeds": "Corrections saved. The server is still missing {fields}.",
   "inbox.technicalDetail": "Technical detail",
-  "shell.reservationReviewFields": "This is not a commitment yet - {fields} still missing. It is in 'Confirmations waiting on you': fill it in, then press 'Confirm and protect'.",
+  "shell.reservationReviewFields":
+        "Not a commitment yet - {fields} missing. It is in 'Confirmations waiting on you'; fill it in, then press 'Confirm and protect'.",
   "main.cityNexusRequestFailed": "CityNexus request failed",
   "main.cityNexusRequestRefusedHttp": "CityNexus request refused (HTTP {status})",
   "main.persistedOperationUpdate": "Persisted operation update",
@@ -1278,8 +1281,10 @@ const en: Dict = {
   "recovery.generateRefused": "The server refused to generate new options (HTTP {status}, named {code}). No plan was changed.",
   "recovery.acknowledge": "Acknowledge warning",
   "recovery.acknowledged": "Warning acknowledged",
-  "recovery.ackRefused": "The server did not accept the acknowledgement (HTTP {status}, named {code}). The warning is still showing because the plan is still unverified.",
-  "recovery.noOpenRecovery": "There is no recovery decision open on this journey to acknowledge: what is stale here is the plan's evidence. This warning clears when a verified plan is selected.",
+  "recovery.ackRefused":
+        "The server refused this acknowledgement (HTTP {status}, named {code}). The warning stays until the plan verifies.",
+  "recovery.noOpenRecovery":
+        "No recovery decision is open on this journey: what is stale is the plan's evidence. This warning clears when a verified plan is selected.",
   "recovery.failureCount": "The server listed {n} {plural:refusal} against this plan; its own words are in the technical detail.",
   "recovery.technicalDetail": "Technical detail",
   "recovery.serverReason": "Reason the server gave",
@@ -1612,7 +1617,8 @@ const en: Dict = {
   "setup.stepFailedStaySearchOnly": "This step did not complete — the trip was created, but the stay search did not.",
   "setup.stillNeeded": "Still needed: ",
   "setup.groupRuleSupported": "What decides this group: the server recognizes this name and its catalog holds rows for it.",
-  "setup.groupRuleNeedsLookup": "What decides this group: nothing the server consults names this spelling, so it has no canonical identity and would have to be resolved over the network.",
+  "setup.groupRuleNeedsLookup":
+        "Nothing the server consults names this spelling: it has no canonical identity and would need a network lookup.",
   "setup.groupRuleUnknown": "What decides this group: no plannable verdict came back this round — the catalog holds nothing for it yet, it was asked and nothing answered, or nothing was read at all.",
   "failure.chooseTrip": "Choose a trip",
   "failure.signInAgain": "Sign in again",
@@ -1787,7 +1793,8 @@ const zhCN: Dict = {
   "shell.loadError": "没能加载行程",
   "shell.tripCreated": "行程已创建，现在可以安排今天。",
   "shell.stayArrived": "住宿结果已到。",
-  "shell.stayStoppedWithTrip": "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。",
+  "shell.stayStoppedWithTrip":
+        "已停止等待。行程已创建，住宿搜索可能还在跑，稍后回 Today 看结果。",
   "shell.stayStoppedUnknown": "已停止等待。这一趟到底建没建成，服务器还没回话——正在核实。",
   "shell.recoveredTrip": "已核实：这一趟其实已经建成了，已为你打开 Today。",
   "shell.noTripYet": "已核实：服务器上还没有这一趟。你可以再点一次「确认创建」。",
@@ -2070,7 +2077,8 @@ const zhCN: Dict = {
   "recover.writeDeadline.title": "这台设备等到 {seconds} 秒就停了",
   "recover.writeDeadline.body": "服务端没有在这段时间内回答，所以这一笔的结果是未知的——不是「没有发生」。",
   "recover.writeDeadline.retryGuidance": "请先刷新核对再决定是否重试；同一把幂等键重试是补问同一笔，不会生成第二份。",
-  "copilot.keyless.writeUnknown": "{method} {path} -- 等到 {seconds} 秒就停了。请求已经发出，结果未知，先核对再重试。",
+  "copilot.keyless.writeUnknown":
+        "{method} {path} -- 等到 {seconds} 秒就停了。请求已发出、结果未知，先核对再重试。",
 
   // ── Map ──
   "map.kicker": "地图 · 一目了然",
@@ -2595,7 +2603,8 @@ const zhCN: Dict = {
   "inbox.confirmUnreadable": "试过一次，服务器没有再回话；这次没有记作通过。",
   "inbox.correctionsSavedStillNeeds": "更正已保存。服务器说还缺 {fields}。",
   "inbox.technicalDetail": "技术详情",
-  "shell.reservationReviewFields": "还缺 {fields}，这条还不能成为承诺。它在「等你审核的确认单」里，补完就点「确认并保护」。",
+  "shell.reservationReviewFields":
+        "还缺 {fields}，还不能成为承诺。它在「等你审核的确认单」里，补完点「确认并保护」。",
   "main.cityNexusRequestFailed": "CityNexus 请求失败",
   "main.cityNexusRequestRefusedHttp": "CityNexus 请求被拒绝（HTTP {status}）",
   "main.persistedOperationUpdate": "已持久化的操作更新",
@@ -2858,8 +2867,10 @@ const zhCN: Dict = {
   "recovery.generateRefused": "服务器拒绝了这次生成（HTTP {status}，具名 {code}）。没有任何方案被改动。",
   "recovery.acknowledge": "我知道了这条提醒",
   "recovery.acknowledged": "已确认收到提醒",
-  "recovery.ackRefused": "服务器没有接受这次确认（HTTP {status}，具名 {code}）。提醒仍在显示，因为方案仍未通过校验。",
-  "recovery.noOpenRecovery": "这趟现在没有等待确认的恢复决定：过期的是方案的证据。选定一份通过校验的方案后这条提醒才消失。",
+  "recovery.ackRefused":
+        "服务器拒绝了这次确认（HTTP {status}，具名 {code}）。方案没通过校验前，这条提醒一直在。",
+  "recovery.noOpenRecovery":
+        "这趟没有等待确认的恢复决定：过期的是方案证据。选定一份通过校验的方案后这条提醒才消失。",
   "recovery.failureCount": "服务器针对这一版列出了 {n} 条拒绝，原文在技术详情里。",
   "recovery.technicalDetail": "技术详情",
   "recovery.serverReason": "服务器给出的原因",
@@ -3173,7 +3184,8 @@ const zhCN: Dict = {
   "setup.stepFailedStaySearchOnly": "这一步没有成功——行程已创建，但住宿搜索没有完成。",
   "setup.stillNeeded": "还需要填写：",
   "setup.groupRuleSupported": "这一组看的是：服务器认得这个名字（有正式身份），目录里也有它的行。",
-  "setup.groupRuleNeedsLookup": "这一组看的是：服务器问过的词表和目录里都没有这个名字，也就是还没有正式身份，要联网解析才有答案。",
+  "setup.groupRuleNeedsLookup":
+        "服务器问过的词表和目录里都没有这个名字：它还没有正式身份，要联网解析才有答案。",
   "setup.groupRuleUnknown": "这一组看的是：这一轮拿不出可规划的判定——目录里暂时没有它的行、问过但没人回答，或者这一轮根本没读到。",
   "failure.chooseTrip": "选一趟行程",
   "failure.signInAgain": "重新登录",
