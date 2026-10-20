@@ -39,6 +39,26 @@ def routed(method: str, url: str) -> bool:
     return False
 
 
+def served_methods(url: str) -> set[str]:
+    """Which verbs the shipped router would actually answer for this URL.
+
+    For a pointer handed over as a bare path -- the identity read's `media_path` is one -- there is no
+    verb in the sentence to check, so this is the honest form of the same question: the path must be
+    routed, and the caller must not have to guess which verb it answers.
+    """
+    from app.main import app as real_app
+
+    path = url.partition("?")[0]
+    answers: set[str] = set()
+    for method in ("GET", "POST", "PUT", "PATCH", "DELETE"):
+        for route in real_app.router.routes:
+            match, _child = route.matches(_scope(method, path))
+            if match.name == "FULL":
+                answers.add(method)
+                break
+    return answers
+
+
 def assert_pointers_are_served(lines: list[str], *, expect: int | None = None) -> None:
     """Every pointer in `lines` names a verb and a URL the shipped router would route."""
     found: list[tuple[str, str]] = []

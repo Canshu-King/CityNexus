@@ -400,6 +400,11 @@ def test_a_lead_carrying_a_slash_resolves_and_the_answer_carries_the_path_to_cal
     media = client.get(body["media_path"], headers=headers)
     assert media.status_code == 200, media.text
     assert seen == [seeded.ids["held"]]
+    # The path handed over as a bare string, with no verb beside it: the shipped router must answer it
+    # under exactly one method, so "press it with GET" is a fact about the pointer, not a guess.
+    from answer_pointers import served_methods
+    assert served_methods(body["media_path"]) == {"GET"}, (
+        body["media_path"], sorted(served_methods(body["media_path"])))
 
 
 def test_the_path_it_hands_back_carries_the_resolved_id_not_the_lead(seeded, monkeypatch):

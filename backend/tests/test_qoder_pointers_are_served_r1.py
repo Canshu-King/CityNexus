@@ -131,6 +131,21 @@ def test_the_method_arm_can_bite(served):
     assert ("POST", _shape(identity)) not in answered, "this door answers POST too -- pick another control"
 
 
+def test_a_bare_path_pointer_reports_only_the_verbs_that_answer_it():
+    """The `media_path` arm has to distinguish, not just confirm.
+
+    One door that is GET-only, one that is POST-only, and the dead path from the incident: the first two
+    report a single verb each, the third reports none. If this ever comes back with more than one verb
+    for a door the answers hand over as a bare path, the caller is guessing again.
+    """
+    from answer_pointers import served_methods
+
+    assert served_methods("/api/v1/journeys/{journey_id}/place-identity") == {"GET"}
+    assert served_methods("/api/v1/journeys/{journey_id}/plans/from-slots") == {"POST"}
+    dead = "/api/v1/journeys/{journey_id}/places/{place_id}/identity"
+    assert served_methods(dead) == set(), dead
+
+
 def test_the_identity_pointer_this_family_used_to_get_wrong_is_now_a_served_route(served):
     """The named negative control: the dead path must not be what any module hands out.
 
