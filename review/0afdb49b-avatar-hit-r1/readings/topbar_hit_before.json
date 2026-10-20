@@ -1,0 +1,124 @@
+{
+ "schema": "CNX_BUILDING_TOPBAR_HIT_R1",
+ "base": "http://127.0.0.1:4894",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Wed Oct 21 2026 03:37:34 GMT+0800 (中国标准时间)",
+ "controls": [
+  {
+   "testid": "v8-mobile-menu",
+   "words": "菜单",
+   "w": 46,
+   "h": 44,
+   "left": 17,
+   "right": 63,
+   "top": 11,
+   "bottom": 55,
+   "hit_w": 44,
+   "hit_h": 44,
+   "hit_samples": 117,
+   "min_h": "44px",
+   "min_w": "auto",
+   "height_css": "44px",
+   "scroll_w": 46,
+   "scroll_h": 44,
+   "radius": "12px",
+   "overflow": "visible"
+  },
+  {
+   "testid": "topbar-theme",
+   "words": "跟随系统",
+   "w": 86,
+   "h": 44,
+   "left": 191,
+   "right": 277,
+   "top": 17,
+   "bottom": 61,
+   "hit_w": 68,
+   "hit_h": 44,
+   "hit_samples": 187,
+   "min_h": "44px",
+   "min_w": "max-content",
+   "height_css": "44px",
+   "scroll_w": 84,
+   "scroll_h": 42,
+   "radius": "8px",
+   "overflow": "visible"
+  },
+  {
+   "testid": "topbar-language",
+   "words": "EN",
+   "w": 44,
+   "h": 44,
+   "left": 285,
+   "right": 329,
+   "top": 17,
+   "bottom": 61,
+   "hit_w": 44,
+   "hit_h": 44,
+   "hit_samples": 119,
+   "min_h": "44px",
+   "min_w": "44px",
+   "height_css": "44px",
+   "scroll_w": 42,
+   "scroll_h": 42,
+   "radius": "8px",
+   "overflow": "visible"
+  },
+  {
+   "testid": "topbar-avatar",
+   "words": "DE",
+   "w": 28,
+   "h": 28,
+   "left": 345,
+   "right": 373,
+   "top": 25,
+   "bottom": 53,
+   "hit_w": 28,
+   "hit_h": 28,
+   "hit_samples": 41,
+   "min_h": "auto",
+   "min_w": "auto",
+   "height_css": "28px",
+   "scroll_w": 28,
+   "scroll_h": 28,
+   "radius": "50%",
+   "overflow": "hidden"
+  }
+ ],
+ "overlaps": [],
+ "taps": [
+  {
+   "testid": "v8-mobile-menu",
+   "lands": true,
+   "hit_testid": "v8-mobile-menu"
+  },
+  {
+   "testid": "topbar-theme",
+   "lands": true,
+   "hit_testid": "topbar-theme"
+  },
+  {
+   "testid": "topbar-language",
+   "lands": true,
+   "hit_testid": "topbar-language"
+  },
+  {
+   "testid": "topbar-avatar",
+   "lands": true,
+   "hit_testid": "topbar-avatar"
+  }
+ ],
+ "verdict": "UNDER_FLOOR:topbar-avatar",
+ "page_errors": [],
+ "console_errors": [],
+ "inner_width": 390,
+ "language_switch_reads_theme_word": "System",
+ "shot": "D:/moodle/_qoder_phone_ord0485_20260930/evidence/topbar_hit_before.png",
+ "under_floor_by_hit_area": [
+  "topbar-avatar"
+ ],
+ "finished": "Wed Oct 21 2026 03:37:40 GMT+0800 (中国标准时间)"
+}
