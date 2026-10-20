@@ -143,12 +143,27 @@ export function resolveE2eEnvironment(
 
 /** One provenance line per config load, on stderr so `--reporter=json` stays parseable. */
 export function announce(env: E2eEnvironment, label: string): void {
+  /* Which vocabulary the backend will answer with for traveler sessions. Read here, named here: an
+     authoritative run without `CITYNEXUS_TRAVELER_AUTH_SECRET` boots a deployment whose
+     `session_state` is NOT_CONFIGURED, and then every assertion in the signed-session family fails as
+     a cascade of that one absence -- eight reds whose only named cause is a missing environment value.
+     Nothing is refused (a run that does not need issuance is still a run), but the state is printed,
+     written into the provenance file, and names the variable without ever touching its value. */
+  const issuance = (process.env.CITYNEXUS_TRAVELER_AUTH_SECRET ?? "").trim()
+    ? "SIGNED-capable"
+    : "NOT_CONFIGURED";
   const line =
     `[citynexus e2e] suite=${label} authoritative=${env.authoritative} ` +
     `python=${env.backendPython} frontend=:${env.frontendPort} backend=:${env.backendPort} ` +
     `db=${env.databaseUrl ?? "(inherited default)"} ai=${env.ai} ` +
-    `reuseExistingServer=${env.reuseExistingServer}`;
+    `reuseExistingServer=${env.reuseExistingServer} issuance=${issuance}`;
   console.error(line);
+  if (issuance === "NOT_CONFIGURED") {
+    console.error(
+      "[citynexus e2e] CITYNEXUS_TRAVELER_AUTH_SECRET 未设：签发门是关的。" +
+        "凡断 `session_state === \"SIGNED\"` 的格都会红成级联，那不是产品的读数。",
+    );
+  }
   if (env.authoritative) {
     const target = evidencePath("e2e-provenance/authoritative.json");
     mkdirSync(dirname(target), { recursive: true });
@@ -165,6 +180,7 @@ export function announce(env: E2eEnvironment, label: string): void {
           backendPort: env.backendPort,
           databaseUrl: env.databaseUrl ?? "(inherited default)",
           ai: env.ai,
+          issuance,
           reuseExistingServer: env.reuseExistingServer,
           workers: 1,
           retries: 0,
@@ -177,6 +193,17 @@ export function announce(env: E2eEnvironment, label: string): void {
       "utf-8",
     );
   }
+}
+
+/* 种子浏览器状态的文件名 —— 单一来源。
+ *
+ * 写它的人（`e2e/_qoderRealSeed.setup.ts`）和读它的人（四个 config 加 `tools/capture-visual.mjs`）
+ * 必须算出同一个名字。原先六处都写死 `.qoder-seed-state.json`，于是同一棵树里并发两次 e2e 调用会
+ * 互相盖掉对方的种子——一枚"绿"可能其实是在回放别人的行程。现在名字带 run id，没有 run id 时带前端
+ * 端口；文件落在 `frontend/reports/`（`.gitignore` 已有 `frontend/reports/` 一条，不新增忽略项），
+ * 也不落在每次运行会被清空的 `test-results/`。 */
+export function seedStateFileName(env: { runId: string | undefined; frontendPort: number }): string {
+  return `e2e-seed-state-${env.runId ?? `port${env.frontendPort}`}.json`;
 }
 
 export function backendCommand(env: E2eEnvironment): string {

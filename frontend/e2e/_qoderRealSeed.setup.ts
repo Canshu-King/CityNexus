@@ -2,6 +2,7 @@ import { expect, test as setup } from "@playwright/test";
 import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { seedStateFileName } from "../playwrightEnv";
 
 /**
  * Real-seed global setup (integration environment, 2026-09-19).
@@ -34,7 +35,14 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BASE =
   process.env.CITYNEXUS_E2E_BASE_URL ??
   `http://127.0.0.1:${Number(process.env.CITYNEXUS_E2E_PORT ?? 4173)}`;
-const STATE = path.join(HERE, ".qoder-seed-state.json");
+/* 名字由 `playwrightEnv.seedStateFileName` 单点算出，四个 config 读的是同一个函数 —— 写的人与读的人
+ * 不可能算岔。落在 `frontend/reports/`：既被 `.gitignore` 现有的一条覆盖，也不在每次运行会被清空的
+ * `test-results/` 里。 */
+const STATE_DIR = path.join(HERE, "..", "reports");
+const STATE = path.join(STATE_DIR, seedStateFileName({
+  runId: process.env.CITYNEXUS_E2E_RUN_ID,
+  frontendPort: Number(process.env.CITYNEXUS_E2E_PORT ?? 4173),
+}));
 
 type AnchorRole = "ARRIVAL" | "MID_TRIP" | "DEPARTURE";
 
@@ -160,7 +168,8 @@ setup("seed a real journey through the product API", async ({ browser }) => {
   const current = await page.getByTestId("live-journey-current").count();
   console.log(`[qoder-real-seed] trialWizard=${stillWizard} live-journey-current=${current > 0}`);
 
-  if (!existsSync(HERE)) mkdirSync(HERE, { recursive: true });
+  if (!existsSync(STATE_DIR)) mkdirSync(STATE_DIR, { recursive: true });
   await context.storageState({ path: STATE });
+  console.log(`[qoder-real-seed] storageState written to ${path.relative(HERE, STATE)}`);
   expect(stillWizard, "seeded journey was not accepted by the V8 shell").toBe(false);
 });

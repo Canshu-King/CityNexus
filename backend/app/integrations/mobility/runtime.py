@@ -11,6 +11,8 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import CityService, Journey, Place
+from app.integrations.china.amap import routes_via_amap
+from app.integrations.mobility.amap_http import AmapHTTPMobilityProvider, AmapRouteError
 from app.integrations.mobility.snapshot_capture import (
     MobilitySnapshotCaptureResult,
     capture_mobility_snapshot,
@@ -107,7 +109,10 @@ def capture_runtime_mobility_snapshot(
         place_lookup=lambda key: _place_lookup(session, key),
         strict=require_explicit_facts,
     )
-    if not settings.live_valhalla_url:
+    # A Chinese journey with an Amap key is routed here only when nobody configured Valhalla: the
+    # deployment's own router wins over a hosted country provider.
+    amap_primary = not settings.live_valhalla_url and routes_via_amap(journey.city_code)
+    if not settings.live_valhalla_url and not amap_primary:
         return capture_mobility_snapshot(
             normalized_pairs,
             primary=mock,
@@ -115,15 +120,31 @@ def capture_runtime_mobility_snapshot(
             operation_key=operation_key,
         )
 
+    # One client, one capture call, one set of fail-closed tails: a second copy of that tail is how a
+    # leg stops being protected in one of the two branches.
+    capabilities_key = "amap-web-service" if amap_primary else "valhalla"
     with httpx.Client(timeout=10.0) as client:
-        primary: Any = ValhallaHTTPMobilityProvider(
-            client=client,
-            base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key),
+        # Build ONLY the provider that is primary. A deployment that routes through Amap has no
+        # Valhalla URL at all (`live_valhalla_url` is None), and constructing the Valhalla adapter
+        # before the swap used to die on `None.rstrip("/")` in its own constructor -- which made the
+        # Amap route unreachable precisely in the state this machine is in now: key configured,
+        # seam on, no Valhalla.
+        primary: Any = (
+            AmapHTTPMobilityProvider(
+                client=client,
+                place_lookup=lambda key: _place_lookup(session, key),
+                city_code=journey.city_code,
+            )
+            if amap_primary
+            else ValhallaHTTPMobilityProvider(
+                client=client,
+                base_url=settings.live_valhalla_url,
+                place_lookup=lambda key: _place_lookup(session, key),
+            )
         )
         try:
             capabilities = primary.status_capabilities()
-        except ValhallaProviderError as exc:
+        except (ValhallaProviderError, AmapRouteError) as exc:
             capabilities = {
                 "status": "UNAVAILABLE",
                 "has_live_traffic": False,
@@ -161,7 +182,7 @@ def capture_runtime_mobility_snapshot(
             captured,
             snapshot=replace(
                 snapshot,
-                provider_capabilities={"valhalla": capabilities},
+                provider_capabilities={capabilities_key: capabilities},
             ),
         )
 

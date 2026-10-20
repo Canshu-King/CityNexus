@@ -57,10 +57,9 @@ export const journeyAbortCopy = {
       "The server refused this attempt. Your trip is unchanged -- it is still live and still in your " +
       "trip list.",
     "abort.unnamed":
-      "The server refused this attempt without naming the condition it refused. Your trip is " +
-      "unchanged.",
+      "The server refused this attempt without naming the condition it refused.",
     "abort.transport":
-      "The server did not answer, so nothing about your trip changed because of this screen.",
+      "The server did not answer: whether the abort landed is not known.",
     "abort.details": "Technical details",
   },
   "zh-CN": {
@@ -73,26 +72,26 @@ export const journeyAbortCopy = {
     "abort.busy": "正在中止…",
     "abort.done": "已中止：{title}。原因已随这趟行程存下，它不再出现在「实时行程」里，但仍留在你的行程列表中。",
     "abort.stateOnScreen": "已中止",
-    "abort.alreadyAborted": "这趟已经被中止：{when}，原因是「{reason}」。服务器没有把它再写一次。",
+    "abort.alreadyAborted": "这趟已中止：{when}，原因「{reason}」。这次没有重复写入。",
     "abort.storedReason": "你当时的原因：{reason}",
     "abort.storedAt": "中止于 {when}",
-    "abort.readbackMissing": "这台服务器没有回读这趟行程的中止时间或原因",
+    "abort.readbackMissing": "中止的时间和原因，这次没有读回来",
     "abort.liveExcluded":
           "这趟已中止，所以不进「实时行程」。",
 
     "abort.inBin":
           "这趟在回收站里，不能中止。中止不等于丢弃：先找回你的行程列表，再中止。",
-    "abort.notYours": "这次请求点名的身份不是这趟行程的主人，所以服务器没有写入。",
-    "abort.gone": "这趟已经不在这台服务器上了，这里没有可中止的东西。服务器没有写入。",
+    "abort.notYours": "按下来的不是这趟行程的主人，这次没有写入。",
+    "abort.gone": "这趟已经不在了，没有可中止的东西。",
     "abort.contested":
       "请求在跑的时候这趟行程被改动过，所以这次没有写入。",
     "abort.emptyReason":
           "必须写原因，空着会被拒绝。",
     "abort.refused":
-      "服务器拒绝了这次中止。你的行程没有变化：它仍在实时行程里，也仍在你的行程列表里。",
+      "这次中止没被接受：它仍在实时行程里，也在你的行程列表里。",
     "abort.unnamed":
-      "服务器拒绝了这次中止，但没有说出拒绝的是哪一种情况。你的行程没有变化。",
-    "abort.transport": "这台服务器没有应答。这一屏没有改动你的任何行程。",
+      "这次中止被拒绝，但没说清是哪一种情况。",
+    "abort.transport": "这次没答上，中止有没有生效还不一定。",
     "abort.details": "技术详情",
   },
 } as const;

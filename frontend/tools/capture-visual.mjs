@@ -17,7 +17,11 @@ import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 
 const BASE = process.env.CITYNEXUS_E2E_BASE_URL ?? "http://127.0.0.1:4175";
-const STATE = "./e2e/.qoder-seed-state.json";
+/* 与四个 config 同一个名字公式（单点在 `playwrightEnv.seedStateFileName`：run id 优先，否则前端端口）。
+ * 这里是 .mjs，导不了 TS，所以那一条公式就地复写一遍——将来改公式两处都要动，改错会读到别人的种子。 */
+const STATE = `./reports/e2e-seed-state-${
+  process.env.CITYNEXUS_E2E_RUN_ID ?? `port${Number(process.env.CITYNEXUS_E2E_PORT ?? 4175)}`
+}.json`;
 const OUT = "../reports/visual-integration";
 
 const SCREENS = [

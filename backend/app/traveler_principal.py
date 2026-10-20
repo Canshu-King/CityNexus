@@ -114,6 +114,18 @@ def _token_ttl(ttl_seconds: int | None) -> int:
     return ttl
 
 
+def recovery_digest(credential_id: str, secret: str) -> str:
+    """Digest of a recovery secret, bound to its credential id.
+
+    Same server verifier as the session tokens, so there is one secret to rotate and one thing to
+    protect. The id is part of the message so a digest cannot be replayed against another row.
+    """
+
+    return hmac.new(
+        _secret(), f"{credential_id}:{secret}".encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+
+
 def issue_traveler_token(
     traveler_id: str,
     *,

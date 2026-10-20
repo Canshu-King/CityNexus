@@ -27,7 +27,7 @@ export const pendingSetCopy = {
     "pending.deleteDayRule":
       "This is where a place goes when no day of the trip holds it any more: it is not deleted, it stays listed here.",
     "pending.noPlaceDoor":
-      "This server has no door that puts a place onto a day, so no bring-it-back button is mounted here.",
+      "This server has no door that puts a place onto a day, so there is no bring-it-back action.",
     "pending.filter": "Filter",
     "pending.filter.all": "All",
     "pending.filter.allSub": "every pending place",
@@ -47,9 +47,9 @@ export const pendingSetCopy = {
     "pending.empty.import": "Import places",
     "pending.reread": "Read it again",
     "pending.candidatesAbsent":
-      "This server answered the list of places captured for this trip without a list in it, so this screen has no set to show.",
+      "The server answered the list of places captured for this trip without a list in it.",
     "pending.setUnknown":
-      "The list of places captured for this trip has not been read, so this screen shows no number yet. Nothing about your trip changed.",
+      "The list of places captured for this trip has not been read, so there is no number yet.",
     "pending.placesAbsent":
       "This server did not answer the place list, so no row can be filtered by category; all rows are still listed under All.",
     "pending.details": "Technical details",
@@ -100,15 +100,15 @@ export const pendingSetCopy = {
     "pending.noDay": "这一程没有任何一天排它",
     "pending.capturedOn": "捕获于 {day}",
     "pending.deleteDayRule": "某一天不再排它，地点不会被删掉，它会留在这里。",
-    "pending.noPlaceDoor": "这台服务器没有把地点排进某一天的入口，所以这里不放「找回」按钮。",
+    "pending.noPlaceDoor": "没有把地点排进某一天的入口，所以没有「找回」这个动作。",
     "pending.filter": "筛选",
     "pending.filter.all": "全部",
     "pending.filter.allSub": "全部待规划地点",
     "pending.filter.reset": "重置",
     "pending.filter.done": "完成",
     "pending.filter.sheetTitle": "筛选待规划地点",
-    "pending.rowCategoryMissing": "服务器没给这一行的类别",
-    "pending.noPlan": "这台服务器还没有选定方案，所以没有「哪一天」可比。",
+    "pending.rowCategoryMissing": "这一行没有类别",
+    "pending.noPlan": "还没有选定方案，没有「哪一天」可比。",
     "pending.empty": "这一程没有待规划的地点。",
     "pending.filterEmpty": "这个筛选里现在没有地点，「全部」下还有 {n} 个。",
     "pending.empty.next":
@@ -119,9 +119,9 @@ export const pendingSetCopy = {
     "pending.empty.import": "导入地点",
     "pending.reread": "再读一次",
     "pending.candidatesAbsent":
-      "这台服务器答这一程捕获的地点清单时没有带出清单，所以这一屏没有可显示的集合。",
-    "pending.setUnknown": "本程捕获的地点清单没读到，所以这一屏先不给数字。你的行程没有因此变化。",
-    "pending.placesAbsent": "这台服务器没答出地点清单，所以无法按类别筛；所有行仍在「全部」下列出。",
+      "服务器答这一程捕获的地点清单时没带出清单。",
+    "pending.setUnknown": "没读到本程的地点清单，没有数字可给。",
+    "pending.placesAbsent": "没有地点清单，无法按类别筛；所有行仍在「全部」下。",
     "pending.details": "技术详情",
     "pending.reads": "这台设备读到的",
     "pending.activities": "已读活动",
@@ -130,7 +130,7 @@ export const pendingSetCopy = {
     "pending.notAnswered": "未答出",
     "pending.placed": "已有某天猫住",
     "pending.candidatesPlaced": "已被某天排上的捕获",
-    "pending.stateMissing": "服务器没给这一行的状态",
+    "pending.stateMissing": "这一行没有状态",
 
     /* ORD-0450 -- 把勾上的地点排进某一天，走 ORD-0435 已落地的两扇门。 */
     "pending.tickOn": "加入这一批",
@@ -140,9 +140,9 @@ export const pendingSetCopy = {
     "pending.busy": "正在排…",
     "pending.batchLine": "这一批带上当前方案已有的 {planned} 个地点，再加你勾的 {picked} 个，已有的一个都不会掉。",
     "pending.blocked.NOTHING_PICKED": "先勾至少一个地点。",
-    "pending.blocked.PICK_HAS_NO_PLACE_ROW": "你勾的地点里有一个服务器还没有地点行，排不进去。",
+    "pending.blocked.PICK_HAS_NO_PLACE_ROW": "勾的地点里有一个还没有地点行，排不进去。",
     "pending.blocked.SET_TOO_SMALL": "这一批不足 2 个地点，排期门最少要 2 个。",
-    "pending.blocked.SET_TOO_LARGE": "这一批超过 {max} 个地点，这是服务器给的上限。",
+    "pending.blocked.SET_TOO_LARGE": "这一批超过 {max} 个地点的上限。",
     "pending.receipt": "服务器把 {n} 个地点排到了 {days}。这是候选第 {version} 版，共 {stops} 个地点。",
     "pending.receiptNoDay": "没给出那一天",
     "pending.missing": "没排进去：{names}。",
@@ -154,7 +154,7 @@ export const pendingSetCopy = {
     "pending.refuse.WINDOW": "排期门没能把这一批放进本程的那一天。什么都没写入。",
     "pending.refuse.COMMITMENT": "卡住这一批的是受保护的承诺：它来不及排上，或没被带进这一批。什么都没写入。",
     "pending.refuse.NO_PLAN": "排期门没有从这一批产出一版。什么都没写入。",
-    "pending.refuse.other": "服务器拒绝了这次排期。你的方案没有变化。",
+    "pending.refuse.other": "这次排期被拒。你的方案没有变化。",
     "pending.noToken": "这台设备没读到词",
     "pending.adoptRefused": "这一版没能改成。你原来那版还在执行。",
   },

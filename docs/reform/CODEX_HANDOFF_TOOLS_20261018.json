@@ -1,0 +1,516 @@
+{
+  "generated_at": "2026-10-18T20:06:01.355233+00:00",
+  "branch": "reform/qoder-capability-adapters-1018",
+  "head": "a7fccb3ce69380aacd8d90cff5553ddcb5c32e86",
+  "code_head": "a7fccb3ce69380aacd8d90cff5553ddcb5c32e86",
+  "agent_tree": "685eeced658ebd243ac85304c75c238f80696fb6",
+  "files": {
+    "backend/app/agent/contracts.py": "7910d49321e750082a6188818a58a55b8a529d3d",
+    "backend/app/agent/delegation_policy.py": "7b10f0f05cb5ca9abe63c8443c4b4219356492fa",
+    "backend/app/agent/gateway.py": "b6a659b85a89ad173dfc35e52a7ccafd7046806a",
+    "backend/app/agent/guardian_stream.py": "aadd5ce84012a1f93a1cb4f1135e2ef2f0e1dcfc",
+    "backend/app/live_context_watch.py": "8fef787680aea164948bf5b2ba75af12638dd938",
+    "backend/app/recovery_epoch.py": "e12d51053396a139c1a3b52ab808c4b545a1dca6",
+    "backend/app/agent/mission_plan.py": "e450946e8d11a9278f77b7dcd8172e44a08ef90c",
+    "backend/app/agent/route_mission.py": "d09433e39683eded8f4f63b41fb2c44096aede4d",
+    "backend/app/agent/runtime.py": "c275fcc5bf13e9678f14371ad22dd6186cd862b4",
+    "backend/app/agent/tool_catalog.py": "57996efae63a046a5beb364b472e1e908916118f",
+    "backend/app/execution/launch_origin.py": "431c0cbe0f943fc379ac1f5b2cf814d7f4ad734f",
+    "backend/app/route_session_operations.py": "1a38466d1c3fd9150a7865e9683366fb19320894",
+    "backend/app/classroom_mode.py": "803f16bd9bfdfd1c53fe97e7f19e2107ab8c9ee8",
+    "backend/app/integrations/web/public_region.py": "3004040c4a2fb29ed611be3ac65c6ea83b70eefa",
+    "backend/app/integrations/web/source_discovery.py": "bd123f75de57e324ad0a964f882f505804ef610d",
+    "backend/app/integrations/web/research_service.py": "8bafee75314dad7a0cae2349ae799e201134cdc6"
+  },
+  "tool_count": 11,
+  "tools": [
+    {
+      "name": "search_city_services",
+      "schema_signature": "7bd5fc4cadd0b621126fb3f0f8e8037718272252693cb2650b83c84f60722b9b",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "search_city_services",
+          "description": "Search server-owned CityService alternatives; never invent candidate IDs.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "q": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "service_type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "journey_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "search_city_services",
+        "action": "SEARCH_CITY_SERVICES",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_agent_alternatives_v3.py"
+    },
+    {
+      "name": "research_place_sources",
+      "schema_signature": "ee7a7419406197d0a3b376d31fbeee7db1216562b691ac11170b9f7528c4aec7",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "research_place_sources",
+          "description": "Research up to five non-authoritative source leads for one server-owned Place. The server builds the query; results never become facts by themselves.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "place_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "journey_id",
+              "place_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "research_place_sources",
+        "action": "RESEARCH_PLACE_SOURCES",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_research_place_sources_adapter_r1.py"
+    },
+    {
+      "name": "discover_source_leads",
+      "schema_signature": "2fdab5d3af36815f6f57c21d1803b22f0b10c721346357e9552570c01ac799a5",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "discover_source_leads",
+          "description": "Discover up to five non-authoritative source leads from a public region and a cleaned topic, even when the Journey has zero canonical Places. Leads are not Places and never carry coordinates or plan authority.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "topic": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120
+              },
+              "provider": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "web",
+                  "searxng"
+                ]
+              }
+            },
+            "required": [
+              "journey_id",
+              "topic"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "discover_source_leads",
+        "action": "DISCOVER_SOURCE_LEADS",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_discover_source_leads_adapter_r1.py"
+    },
+    {
+      "name": "estimate_place_facts",
+      "schema_signature": "1265d6aee41531f8731387a591a9d01cffcc6af84cadbdf4c36faab0c8bce6b3",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "estimate_place_facts",
+          "description": "Estimate one Place's opening hours or cost from same-city verified peers, or record a bounded agent hypothesis. An estimate is strategy evidence and never canonical truth.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "place_id": {
+                "type": "string"
+              },
+              "estimated_open_minutes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1440
+              },
+              "estimated_close_minutes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1440
+              },
+              "estimated_cost_minor": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "journey_id",
+              "place_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "estimate_place_facts",
+        "action": "ESTIMATE_PLACE_FACTS",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_estimate_place_facts_adapter_r1.py"
+    },
+    {
+      "name": "generate_plans",
+      "schema_signature": "85d9729a9e281c2fa0b19f76b8c58b6bd3eb4f0db5efb51d77109098da51d6c9",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "generate_plans",
+          "description": "Generate candidate plans from at least two server-owned Place IDs. Candidates are never selected or activated by this call.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "place_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "candidate_count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "planning_mode": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "journey_id",
+              "place_ids"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "generate_plans",
+        "action": "GENERATE_PLANS",
+        "mutates_domain_truth": true,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_generate_plans_adapter_r1.py"
+    },
+    {
+      "name": "discover_places",
+      "schema_signature": "f1b1f3b58da86af8a8cc575adcd5a53a9722f51ed024d163f1e953337412ef45",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "discover_places",
+          "description": "Search the city through the deployment's provider path when a catalogue search found nothing. The server owns the query budget; candidates are materialised, never promoted.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "query": {
+                "type": "string"
+              },
+              "radius_m": {
+                "type": "integer",
+                "minimum": 100,
+                "maximum": 5000
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "replay",
+                  "captured_replay",
+                  "live"
+                ]
+              }
+            },
+            "required": [
+              "journey_id",
+              "query"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "discover_places",
+        "action": "DISCOVER_PLACES",
+        "mutates_domain_truth": true,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_discover_places_adapter_r1.py"
+    },
+    {
+      "name": "acquire_place_facts",
+      "schema_signature": "b97ed8cf3eeda3c5c7e1a1da52828250e0dfe4651970e31a8ac343f160f82ef7",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "acquire_place_facts",
+          "description": "Acquire provider-backed facts for one existing Place, optionally bound to a source observation or URL. Missing facts stay UNKNOWN; nothing is guessed.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "place_id": {
+                "type": "string"
+              },
+              "source_observation_id": {
+                "type": "string"
+              },
+              "source_url": {
+                "type": "string"
+              },
+              "source_class": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "journey_id",
+              "place_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "acquire_place_facts",
+        "action": "ACQUIRE_PLACE_FACTS",
+        "mutates_domain_truth": true,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_acquire_place_facts_adapter_r1.py"
+    },
+    {
+      "name": "compare_routes",
+      "schema_signature": "972f8c24487ed69b26ef26ff0914de233696f0f69bd148eacfb1c8cb25bc9eec",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "compare_routes",
+          "description": "Compare the route facts the server already holds for one edge. Read-only: it reports stored options, or that no edge has been captured -- it never looks one up.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "from_key": {
+                "type": "string"
+              },
+              "to_key": {
+                "type": "string"
+              },
+              "route_mode": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "journey_id",
+              "from_key",
+              "to_key"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "compare_routes",
+        "action": "COMPARE_ROUTES",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_compare_routes_adapter_r1.py"
+    },
+    {
+      "name": "acquire_route",
+      "schema_signature": "1bafa6a1c08bf124799cdc8614cbe74470cdb3866e62aa60771465b3a2677712",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "acquire_route",
+          "description": "Acquire one grounded-origin -> target route edge through the deployment's mobility capture. The server resolves the origin and target; the model supplies neither.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              },
+              "target_activity_id": {
+                "type": "string"
+              },
+              "route_mode": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "journey_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "acquire_route",
+        "action": "ACQUIRE_ROUTE",
+        "mutates_domain_truth": true,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "APPROVAL_REQUIRED",
+      "proof_test": "tests/test_reform_acquire_route_adapter_r1.py"
+    },
+    {
+      "name": "read_guardian_stream",
+      "schema_signature": "9011aeefcf95a1ad88c418ccb2a0d067a9e26ba9d8fa06f534e303f48518095b",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "read_guardian_stream",
+          "description": "Read the server-owned Guardian stream for this Journey: each observation, its impact assessment and the proposed/executed action. It never starts a watch and says WATCH_NOT_RUNNING when none has run.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              }
+            },
+            "required": [
+              "journey_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "read_guardian_stream",
+        "action": "READ_GUARDIAN_STREAM",
+        "mutates_domain_truth": false,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "ALLOWED",
+      "proof_test": "tests/test_reform_guardian_stream_adapter_r1.py"
+    },
+    {
+      "name": "refresh_live_context",
+      "schema_signature": "417fb8e05f94489eecad4f0dbbb38c3f3c8f53cdd531284413f655bd0369a40a",
+      "definition": {
+        "type": "function",
+        "function": {
+          "name": "refresh_live_context",
+          "description": "Run the live venue-context watch for the active plan. It writes WebObservation and Event rows and can invalidate a pending replan. It refuses unless the deployment's Guardian watch is enabled and the Journey has an active plan.",
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "journey_id": {
+                "type": "string",
+                "description": "Server-owned Journey UUID"
+              }
+            },
+            "required": [
+              "journey_id"
+            ]
+          }
+        }
+      },
+      "catalog": {
+        "name": "refresh_live_context",
+        "action": "REFRESH_LIVE_CONTEXT",
+        "mutates_domain_truth": true,
+        "changes_money": false,
+        "changes_c4": false
+      },
+      "plan_only_grant": "APPROVAL_REQUIRED",
+      "proof_test": "tests/test_reform_guardian_stream_adapter_r1.py"
+    }
+  ],
+  "call_contract": {
+    "model_facing_schemas": "app.agent.runtime.citynexus_tool_definitions()",
+    "catalog_metadata": "GET /api/v1/agent/tools/v2 (name + mutates/money/C4 only)",
+    "call_envelope": "app.schemas.AgentToolCall",
+    "required_fields": [
+      "request_id (8-128 chars)",
+      "journey_id"
+    ],
+    "server_resolved_identity": "the HTTP door resolves the agent principal and overwrites agent_id; in-process callers must pass the owner-verified journey id, never a client-supplied actor as authority",
+    "runtime_grant": "PLAN_ONLY grants READ_TOOLS + DRAFT_WRITE_TOOLS + request_replan; the loop refuses any tool outside that tuple before dispatch",
+    "approval": "acquire_route uses approval_fingerprint over action/journey/target/policy_version/decision/facts/proposal_diff; the target is origin_key->target_place_id and the mode is bound too. Mock/local capture has no external cost and stays ALLOW_AUTO; a configured live provider returns REQUIRE_CONFIRMATION until one receipt is consumed.",
+    "no_sql_no_free_http": "the model names ids and keywords only; every provider call is written as a ProviderCall/WebObservation/RouteAcquisitionOperation row"
+  }
+}

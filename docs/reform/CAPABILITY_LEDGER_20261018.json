@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "scope": "CAPABILITY_LEDGER",
+  "v8_commit": "2217b20b9f6cfb7ab581597f3f1cca74e0b8dab6",
+  "revolution_commit": "c1995047a3a7ff936e3772d850a0ca5c749e4e11",
+  "runtime_verified": false,
+  "rows": [
+    {
+      "domain": "agent",
+      "v8_present": [
+        "backend/app/agent",
+        "frontend/src/features/agent"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "inspect_journey",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_mission_runtime.py"
+        },
+        {
+          "tool": "inspect_twin",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_mission_runtime.py"
+        },
+        {
+          "tool": "list_replans",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_mission_runtime.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "planning",
+      "v8_present": [
+        "backend/app/planning",
+        "frontend/src/features/planning"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "generate_plans",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_generate_plans_adapter_r1.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "places_and_map",
+      "v8_present": [
+        "frontend/src/features/discovery"
+      ],
+      "v8_missing": [
+        "backend/app/execution/bootstrap_discovery.py"
+      ],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "search_city_services",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_alternatives_v3.py"
+        },
+        {
+          "tool": "research_place_sources",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_research_place_sources_adapter_r1.py"
+        },
+        {
+          "tool": "discover_source_leads",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_discover_source_leads_adapter_r1.py"
+        },
+        {
+          "tool": "estimate_place_facts",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_estimate_place_facts_adapter_r1.py"
+        },
+        {
+          "tool": "discover_places",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_discover_places_adapter_r1.py"
+        },
+        {
+          "tool": "acquire_place_facts",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_acquire_place_facts_adapter_r1.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "execution_and_rerouting",
+      "v8_present": [
+        "backend/app/execution",
+        "frontend/src/features/execution"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "request_replan",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_runtime_gate.py"
+        },
+        {
+          "tool": "accept_replan",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_runtime_gate.py"
+        },
+        {
+          "tool": "replace_activity",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_alternatives_v3.py"
+        },
+        {
+          "tool": "reschedule_activity",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "group_decisions",
+      "v8_present": [
+        "backend/app/collective_mediation.py"
+      ],
+      "v8_missing": [
+        "backend/app/shared_stop_coplanning.py"
+      ],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "request_collective_decision",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        }
+      ],
+      "revolution_only_tools": [
+        "request_collective_decision"
+      ],
+      "status": "SOURCE_ONLY",
+      "note": ""
+    },
+    {
+      "domain": "weather_and_reality",
+      "v8_present": [
+        "backend/app/intelligence",
+        "backend/app/live_context_watch.py"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "read_guardian_stream",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_guardian_stream_adapter_r1.py"
+        },
+        {
+          "tool": "refresh_live_context",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_guardian_stream_adapter_r1.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": "Venue-context watch ported; observation->impact->action stream advertised. `recovery_epoch` is ported and wired to the watch."
+    },
+    {
+      "domain": "replanning_and_recovery",
+      "v8_present": [
+        "backend/app/recovery_epoch.py",
+        "backend/app/replanning"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "activate_standby",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        },
+        {
+          "tool": "conclude_recovery",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        },
+        {
+          "tool": "discover_recovery_options",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        },
+        {
+          "tool": "apply_clarified_horizon_choice",
+          "state": "REVOLUTION_ONLY",
+          "verified_by": "none"
+        }
+      ],
+      "revolution_only_tools": [
+        "activate_standby",
+        "apply_clarified_horizon_choice",
+        "conclude_recovery",
+        "discover_recovery_options"
+      ],
+      "status": "ADAPTER_NEEDED",
+      "note": "`recovery_epoch` is ported and wired to the Guardian watch; the four user-facing recovery handlers/tools remain Revolution-only."
+    },
+    {
+      "domain": "transport",
+      "v8_present": [
+        "backend/app/route_session_operations.py",
+        "frontend/src/features/mobility"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "compare_routes",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_compare_routes_adapter_r1.py"
+        },
+        {
+          "tool": "acquire_route",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_reform_acquire_route_adapter_r1.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": "Both halves delivered: `compare_routes` over stored facts, `acquire_route` through the ported launch-origin chain, and a Mission-scoped snapshot/acquire adapter; execution uses the mock provider unless a live one is configured."
+    },
+    {
+      "domain": "traveler_preferences",
+      "v8_present": [
+        "backend/app/execution/traveler_twin.py",
+        "frontend/src/features/traveler-twin"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Preferences are read by the shell; no agent tool reads or writes them."
+    },
+    {
+      "domain": "stay",
+      "v8_present": [
+        "backend/app/stay_generation_operations.py",
+        "frontend/src/features/stay"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Stay generation is a product surface; no agent tool selects or books a stay."
+    },
+    {
+      "domain": "booking_payment_commitments",
+      "v8_present": [
+        "backend/app/commerce"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [
+        {
+          "tool": "create_booking",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        },
+        {
+          "tool": "cancel_refundable_booking",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        },
+        {
+          "tool": "request_commitment_change",
+          "state": "ADVERTISED",
+          "verified_by": "tests/test_agent_authority_v2_actions.py"
+        }
+      ],
+      "revolution_only_tools": [],
+      "status": "READY_FOR_REHEARSAL",
+      "note": ""
+    },
+    {
+      "domain": "notification_inbox",
+      "v8_present": [
+        "backend/app/journey_inbox.py",
+        "frontend/src/features/notifications"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "The inbox is a read surface; no agent tool writes or acknowledges."
+    },
+    {
+      "domain": "identity_and_resume",
+      "v8_present": [
+        "backend/app/traveler_principal.py",
+        "frontend/src/lib/travelerSession.ts"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Session/recovery are doors, not agent tools (by design)."
+    },
+    {
+      "domain": "history_and_trash",
+      "v8_present": [
+        "frontend/src/features/trash",
+        "frontend/src/features/trip"
+      ],
+      "v8_missing": [],
+      "revolution_missing": [],
+      "tools": [],
+      "revolution_only_tools": [],
+      "status": "SURFACE_ONLY",
+      "note": "Recycle bin and history are product surfaces; no agent tool."
+    }
+  ]
+}

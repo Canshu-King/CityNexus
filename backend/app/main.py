@@ -24,6 +24,17 @@ from sqlalchemy import delete, func, insert, or_, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
+from app import (
+    collective_consent,
+    departure_commit,
+    departure_facts,
+    departure_read,
+    place_media_routes,
+    plan_delta,
+    plan_evidence,
+    plan_from_slots,
+    plan_submission,
+)
 from app.agent.autorun import (
     autorun_status,
     enrolled_journey_ids,
@@ -217,6 +228,12 @@ from app.traveler_principal import (
     resolve_traveler_principal,
     signing_state,
 )
+from app.traveler_recovery import (
+    RecoveryRefusal,
+    issue_recovery_credential,
+    redeem_recovery_credential,
+    revoke_recovery_credential,
+)
 from app.execution.clock import execution_clock
 from app.execution.route_session_contract import (  # ORD-0602 甲半: source of truth, reporting only
     ROUTE_TRUTH_POLICY_VERSION,
@@ -374,6 +391,7 @@ from app.schemas import (
     PushSubscriptionRequest,
     RealCityDiscoveryRequest,
     RealCityIntelligenceRequest,
+    RecoveryRedeemRequest,
     ReplanGenerateRequest,
     ReservationImportRequest,
     ReservationDraftPatchRequest,
@@ -897,6 +915,25 @@ def build_open_meteo_provider(client: httpx.AsyncClient) -> OpenMeteoContextProv
 
     return OpenMeteoContextProvider(client=client, base_url=settings.open_meteo_url)
 
+
+# Registered as plain routes rather than include_router: this app's own contract test walks
+# app.routes and reads route.path, and an included router shows up as a wrapper without one.
+for _media_route in (*place_media_routes.router.routes, *departure_read.router.routes,
+                     *departure_commit.router.routes, *departure_facts.router.routes,
+                     *collective_consent.router.routes, *plan_from_slots.router.routes,
+                     *plan_delta.router.routes, *plan_submission.router.routes,
+                     *plan_evidence.router.routes):
+    app.add_api_route(
+        _media_route.path,
+        _media_route.endpoint,
+        methods=sorted(_media_route.methods),
+        name=_media_route.name,
+        # The declared status travels with the route: a router registered through `include_router`
+        # carries `status_code`, and this loop is not `include_router`. Without this line a door that
+        # says 201 on its router answers 200 at the socket, which is what the draft-write door did
+        # against a real uvicorn while its contract still promised 201.
+        status_code=_media_route.status_code,
+    )
 
 @app.get("/api/v1/health")
 def health() -> dict[str, str]:
@@ -2693,6 +2730,87 @@ async def refresh_traveler_session(
     answer.headers["Cache-Control"] = "private, no-store"
     answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     return answer
+
+
+@app.post("/api/v1/travelers/{traveler_id}/recovery", status_code=201)
+def issue_traveler_recovery(
+    traveler_id: UUID, request: Request, session: Session = Depends(get_session)
+):
+    """Reform 2026-10-18: hand the traveller a recovery secret, once.
+
+    Only the traveller's own live credential may ask for one, so a body naming somebody else never
+    reaches the generator. The answer says `shown_once` because the server keeps only a digest and
+    cannot show it again -- the person has to save it.
+    """
+
+    principal = resolve_traveler_principal(request, session)
+    if principal.traveler_id != str(traveler_id):
+        refused = HTTPException(
+            403, "a recovery credential is issued to the traveller on this request"
+        )
+        refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+        raise refused
+    require(session, Traveler, str(traveler_id), "Traveler")
+    issued = issue_recovery_credential(session, principal.traveler_id)
+    answer = JSONResponse(issued, status_code=201)
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+@app.post("/api/v1/travelers/recovery/redeem")
+def redeem_traveler_recovery(
+    payload: RecoveryRedeemRequest, session: Session = Depends(get_session)
+):
+    """Reform 2026-10-18: exchange the secret the person kept for a fresh session.
+
+    The id alone is a lookup handle, never a credential; the session is signed by the same verifier
+    as every other door. Used, expired, revoked and locked credentials are refused by the server,
+    not by the client's memory of them.
+    """
+
+    try:
+        row = redeem_recovery_credential(session, payload.recovery_id, payload.recovery_secret)
+    except RecoveryRefusal as refusal:
+        exc = HTTPException(refusal.status, refusal.message)
+        exc.reason_code = refusal.code
+        raise exc
+    token, expires_at = renew_traveler_session(row.traveler_id)
+    answer = JSONResponse(
+        {
+            "traveler_id": row.traveler_id,
+            "auth_method": "recovery_credential",
+            "session_state": SESSION_STATE_SIGNED,
+            "access_token": token,
+            "expires_at": expires_at,
+            "recovered_at": row.used_at,
+        }
+    )
+    answer.headers["Cache-Control"] = "private, no-store"
+    answer.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return answer
+
+
+@app.post("/api/v1/travelers/{traveler_id}/recovery/{recovery_id}/revoke")
+def revoke_traveler_recovery(
+    traveler_id: UUID, recovery_id: str, request: Request, session: Session = Depends(get_session)
+):
+    """Reform 2026-10-18: make a recovery credential stop working before it is used."""
+
+    principal = resolve_traveler_principal(request, session)
+    if principal.traveler_id != str(traveler_id):
+        refused = HTTPException(
+            403, "a recovery credential is revoked by the traveller it belongs to"
+        )
+        refused.reason_code = REASON_TRAVELER_NOT_PRINCIPAL
+        raise refused
+    try:
+        row = revoke_recovery_credential(session, principal.traveler_id, recovery_id)
+    except RecoveryRefusal as refusal:
+        exc = HTTPException(refusal.status, refusal.message)
+        exc.reason_code = refusal.code
+        raise exc
+    return {"recovery_id": row.id, "revoked_at": row.revoked_at, "revoked": True}
 
 
 @app.get("/api/v1/travelers/{traveler_id}")
@@ -5261,6 +5379,139 @@ def read_shared_journey(
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
 # (`app/stay_mobility.py`).
+def active_journey_members_with_capabilities(
+    session: Session, journey: Journey, *, candidate_windows: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
+    """Project the in-force member set without collapsing it into the owner Twin.
+
+    Reform 2026-10-18, ported from the Revolution line so the agent can generate draft plans with
+    the same member projection the workbench uses. The member's own journey-scoped items are
+    appended explicitly; the owner's mission preferences are never copied onto every member.
+    """
+    from types import SimpleNamespace
+
+    from app.collective_mediation import classify_group_decision, member_fit
+
+    now = datetime.now(timezone.utc)
+    members = list(
+        session.scalars(
+            select(JourneyMemberModel)
+            .where(JourneyMemberModel.journey_id == journey.id)
+            .order_by(JourneyMemberModel.created_at, JourneyMemberModel.id)
+        ).all()
+    )
+    roles = list(session.scalars(select(JourneyRoleCapability)).all())
+    capabilities_by_role: dict[str, list[str]] = {}
+    for row in roles:
+        capabilities_by_role.setdefault(row.role, []).append(row.capability)
+    projected: list[dict[str, Any]] = []
+    for member in members:
+        if _member_state(member, now) != "MEMBER_IN_FORCE":
+            continue
+        snapshot = refresh_snapshot(session, member.traveler_id)
+        twin = traveler_twin_payload(snapshot)
+        compact = {
+            "explicit_preferences": twin.get("explicit_preferences", []),
+            "learned_soft_preferences": twin.get("learned_soft_preferences", []),
+            "conflicts": twin.get("conflicts", []),
+            "confidence": twin.get("confidence", 0.0),
+            "evidence_count": twin.get("evidence_count", 0),
+        }
+        try:
+            member_preferences = json.loads(member.preferences_json or "{}")
+        except ValueError:
+            member_preferences = {}
+        if not isinstance(member_preferences, dict):
+            member_preferences = {}
+        journey_items = [
+            SimpleNamespace(
+                category=str(item.get("category") or "interest"),
+                preference_key=str(item.get("key") or item.get("preference_key") or ""),
+                value_json=json.dumps(item.get("value", True), ensure_ascii=False),
+                weight=float(item.get("weight", 1.0)),
+                source="EXPLICIT_MISSION",
+            )
+            for item in member_preferences.get("preferences", [])
+            if isinstance(item, dict)
+        ]
+        projected.append(
+            {
+                "member_id": member.id,
+                "traveler_id": member.traveler_id,
+                "role": member.role,
+                "member_state": "MEMBER_IN_FORCE",
+                "capabilities": sorted(capabilities_by_role.get(member.role, [])),
+                "journey_scoped_explicit_preferences": member_preferences.get("preferences", []),
+                "traveler_twin": compact,
+                "can_authorize_mutation": "JOURNEY_UPDATE"
+                in capabilities_by_role.get(member.role, []),
+                "_preference_items": planning_preference_items(session, member.traveler_id)
+                + journey_items,
+            }
+        )
+    result: dict[str, Any] = {
+        "members": [
+            {key: value for key, value in item.items() if not key.startswith("_")}
+            for item in projected
+        ],
+        "member_count": len(projected),
+        "authority_basis": "JourneyRoleCapability",
+    }
+    if candidate_windows is not None:
+        matrix: list[dict[str, Any]] = []
+        for window in candidate_windows:
+            candidate = window.get("candidate") or {}
+            tags = [str(candidate.get("category") or "")] + list(candidate.get("tags") or [])
+            matrix.append(
+                {
+                    "candidate_id": candidate.get("place_id") or window.get("window_id"),
+                    "window_id": window.get("window_id"),
+                    "status": window.get("status"),
+                    "member_fits": {
+                        item["member_id"]: member_fit(
+                            preferences=item["_preference_items"], candidate_tags=tags
+                        )
+                        for item in projected
+                    },
+                }
+            )
+        result["candidate_fit_matrix"] = matrix
+        mediation = classify_group_decision(matrix)
+        if matrix and mediation.get("classification") != "INSUFFICIENT_WORLD_FACTS":
+            if not any(item.get("can_authorize_mutation") for item in projected):
+                mediation = {
+                    "classification": "AUTHORITY_CONFLICT",
+                    "reason": "NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE",
+                }
+        result["mediation"] = mediation
+    return result
+
+
+def _launch_target_activity(session: Session, journey: Journey) -> Activity | None:
+    """The active plan's current (or first live) activity, or None when there is no plan."""
+
+    if not journey.active_plan_version_id:
+        return None
+    rows = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == journey.active_plan_version_id)
+        .order_by(Activity.sequence_no)
+    ).all()
+    terminal = {"COMPLETED", "SKIPPED", "CANCELLED"}
+    if journey.current_activity_id:
+        current = next(
+            (
+                row
+                for row in rows
+                if str(row.id) == str(journey.current_activity_id) and row.status not in terminal
+            ),
+            None,
+        )
+        if current is not None:
+            return current
+    return next((row for row in rows if row.status not in terminal), None)
+
+
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"
@@ -14405,6 +14656,95 @@ def _copilot_place_answer(
     answer = header + newline + newline.join(f"• {line}" for line in lines) + newline + footer
     return answer, evidence
 
+# What a what-if preview says to the reader, per branch code, in the reader's own language. The
+# sentence that stays in the payload (`what_if.explanation`) is the server's own record of the branch;
+# this table is what a traveller sees. Keeping the two apart is what stops a Chinese screen from
+# answering in English machinery prose, and the shared test fails when a branch is added on one side
+# without the other.
+_WHAT_IF_ANSWERS: dict[str, tuple[str, str]] = {
+    "NO_TARGET_SIMULATED": (
+        "这次没能定下要改哪一站，只按现状算了一遍；行程没有改动。",
+        "No stop was matched for this change, so only the current state was computed; your trip is unchanged.",
+    ),
+    "PROTECTED_OR_LOCKED_TOUCHED": (
+        "要改的那一段正被受保护或已锁定的安排占着，所以这次没有改动。",
+        "That stretch belongs to a protected or locked activity, so nothing was changed.",
+    ),
+    "NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED": (
+        "这样延后会吃掉下一个受保护安排的时间窗，这次试算判它不可行。",
+        "The extension would consume the next protected commitment window, so this preview judges it not feasible.",
+    ),
+    "ABSORBS_WITHIN_OBSERVED_WINDOW": (
+        "这一站能在已观察到的承诺窗口里吸收你要加的时长；要真的改，请明确发起重新规划。",
+        "The selected activity absorbs this extension inside the observed commitment window; apply it through an explicit replan.",
+    ),
+    "PROVIDER_BACKED_ALTERNATIVE_REQUIRED": (
+        "你提的费用、步行或室内改动要供应商那侧的证据才成立；这次只算给你看。",
+        "Your cost, walking, or indoor change needs provider-backed evidence before it holds; this was a preview only.",
+    ),
+    "HYPOTHETICAL_WEATHER_OR_CLOSURE": (
+        "这是天气或关闭的假设试算，没有当成已经发生的事件；要真的改，请明确发起重新规划。",
+        "This is a weather or closure hypothetical, not a recorded event; apply it through an explicit replan.",
+    ),
+}
+
+
+def _what_if_answer_text(what_if: dict[str, Any], locale: str) -> str:
+    """Say the preview branch in the reader's language; never in an empty voice.
+
+    A branch that did not name itself (`explanation_code` missing or outside the vocabulary) is a bug
+    on the simulator side. It must not cost the traveller a blank bubble, so the fallback keeps the
+    server's own recorded sentence; when even that is absent it says the one thing every preview
+    branch has in common -- it previewed -- instead of inventing a claim.
+    """
+
+    pair = _WHAT_IF_ANSWERS.get(str(what_if.get("explanation_code") or ""))
+    if pair is not None:
+        return pair[0] if locale == "zh" else pair[1]
+    recorded = str(what_if.get("explanation") or "").strip()
+    if recorded:
+        return recorded
+    return (
+        "这次只做了试算，行程没有改动。"
+        if locale == "zh"
+        else "This was a preview only; your trip is unchanged."
+    )
+
+
+# Plan-version status tokens as the traveller reads them. The vocabulary was read off the tree (the
+# column defaults to CANDIDATE, and the values in use are ACTIVE, SELECTED, REJECTED, SUPERSEDED,
+# EXPIRED). A value outside this table keeps its raw token: showing `WATSOEVER` is honest, inventing
+# a Chinese word for a state nobody named would not be.
+_PLAN_STATUS_WORDS: dict[str, tuple[str, str]] = {
+    "ACTIVE": ("在用", "in use"),
+    "SELECTED": ("已选定", "selected"),
+    "CANDIDATE": ("候选", "candidate"),
+    "REJECTED": ("未通过", "not passed"),
+    "SUPERSEDED": ("已被取代", "superseded"),
+    "EXPIRED": ("已过期", "expired"),
+}
+
+
+def _plan_label_text(plan: dict[str, Any], locale: str) -> str:
+    """Say which plan the trip runs on, in the reader's language.
+
+    The old string put the column name and its value on the screen (`PlanVersion 2 (ACTIVE)`, and
+    worse, `no selected PlanVersion` inside a Chinese sentence). The facts stay -- version number and
+    state -- only the words change.
+    """
+
+    if not plan:
+        return "还没有选定的方案" if locale == "zh" else "no selected plan"
+    status = str(plan.get("status") or "")
+    words = _PLAN_STATUS_WORDS.get(status)
+    described = words[0] if (locale == "zh" and words) else (
+        words[1] if words else status
+    )
+    if locale == "zh":
+        return f"第 {plan.get('version_no')} 号方案（{described}）" if described else f"第 {plan.get('version_no')} 号方案"
+    return f"plan version {plan.get('version_no')} ({described})" if described else f"plan version {plan.get('version_no')}"
+
+
 def _copilot_answer(
     interpretation: CopilotInterpretation,
     context: dict[str, Any],
@@ -14413,44 +14753,41 @@ def _copilot_answer(
     what_if: dict[str, Any] | None = None,
 ) -> str:
     plan = context.get("plan") or {}
-    plan_label = (
-        f"PlanVersion {plan.get('version_no')} ({plan.get('status')})"
-        if plan
-        else "no selected PlanVersion"
-    )
     protected_count = len(context.get("protected_commitments", []))
     if what_if is not None:
         if what_if.get("status") == "NOT_SIMULATABLE_FROM_CURRENT_EVIDENCE":
             if locale == "zh":
-                return "当前还没有已选的权威 PlanVersion。请先在住宿选择中选择一个通过供应商事实和确定性门控的方案，再预览时间或费用变化；本次试算没有修改行程。"
-            return "There is no selected authoritative PlanVersion yet. Select a provider-backed plan in Stay Explorer before previewing time or cost changes; this preview changed nothing."
-        return str(what_if["explanation"])
+                return "这趟还没有选定方案。先在住宿那屏挑一个方案，再来预览时间或费用的变化；这次试算没有改动行程。"
+            return "No plan is selected for this trip yet. Pick one in Stay Explorer, then preview the time or cost changes; this preview changed nothing."
+        return _what_if_answer_text(what_if, locale)
     if interpretation.intent == "EXPLAIN_PLAN":
         if locale == "zh":
-            return f"当前使用 {plan_label}，服务器已核验 {protected_count} 个受保护承诺。解释基于已选方案事实，不会修改行程。"
-        return f"The current journey uses {plan_label}; the server verified {protected_count} protected commitments. This explanation uses selected-plan facts and changes nothing."
+            return f"这趟现在按{_plan_label_text(plan, locale)}走，服务器核过 {protected_count} 项受保护承诺。这段解释只读已选方案的事实，不会改动行程。"
+        return f"This trip runs on {_plan_label_text(plan, locale)}; the server verified {protected_count} protected commitments. This explanation reads selected-plan facts and changes nothing."
     if interpretation.intent == "DISCOVER":
-        return "我会基于当前城市和行程上下文搜索候选地点；搜索结果不会直接写入方案。" if locale == "zh" else "I can search candidates using the current city and journey context; discovery results will not write to the plan."
+        return "我按当前城市和这趟的安排找候选地点；找到的先列给你看，不会自己加进行程。" if locale == "zh" else "I search candidate places using the current city and this trip; they are listed for you and never added to your trip on their own."
     capability_items = interpretation.entities.get("capabilities") if isinstance(interpretation.entities, dict) else None
     if isinstance(capability_items, list) and capability_items:
-        codes = [str(item.get("code")) for item in capability_items if isinstance(item, dict)]
         hard = [item for item in capability_items if isinstance(item, dict) and item.get("severity") == "HARD"]
-        labels = ", ".join(code for code in codes if code)
+        # The codes stay where they belong -- in `entities`, which the envelope panel shows and the
+        # feasibility layer consumes. Naming `MAX_WALKING_PER_LEG_M` inside a sentence addressed to a
+        # traveller gave them an identifier they cannot read, and the readable name for that code
+        # already has one writer in the interface dictionary; the answer is not to copy it here.
         if locale == "zh":
             if hard:
-                return f"已识别能力约束（{labels}）。其中硬性需求需要明确确认；可行性必须由 CityNexus 根据供应商/冻结证据核验，未知无障碍证据不会被视为可通行。"
-            return f"已识别旅行能力与偏好（{labels}）。它们会影响候选评估和解释，但不会由 Copilot 静默修改 TravelerTwin。"
+                return "记下你的硬性需求了。这类需求要你先确认；能不能满足得看供应商或已有的证据，没有证据我不会说那里可去。"
+            return "记下你的能力与偏好了。这些会影响我给你挑地点和解释的方式，我不会自己改动你的偏好档案。"
         if hard:
-            return f"I identified capability constraints ({labels}). Hard needs require explicit confirmation; CityNexus must verify feasibility from provider/frozen evidence, and unknown accessibility evidence is not treated as accessible."
-        return f"I identified traveler capabilities/preferences ({labels}). They will guide candidate evaluation and explanations without silently changing the TravelerTwin."
+            return "Noted your hard needs. These need your confirmation; whether something can meet them depends on provider or existing evidence, and I won't call a place accessible without it."
+        return "Noted your capabilities and preferences. They shape which places I pick and how I explain them; I won't change your preference profile on my own."
     if interpretation.intent == "PREFERENCE_CHANGE":
-        return "已识别为偏好请求。当前只展示请求，不会静默修改 TravelerTwin；请通过明确的偏好更新动作继续。" if locale == "zh" else "I recognized a preference request. This response does not silently change the TravelerTwin; continue with an explicit preference update action."
+        return "这是偏好改动请求。我先把它列在这里；要真的生效，请你明确确认更新偏好。" if locale == "zh" else "This is a preference change request, listed here for now. To make it stick, confirm the preference update explicitly."
     if interpretation.intent == "REPLAN_REQUEST":
-        return "已识别为重新规划请求。需要通过现有确定性可行性和授权路径生成方案，不会由 Copilot 直接改写当前方案。" if locale == "zh" else "I recognized a replan request. The existing deterministic feasibility and authorization path must produce it; Copilot will not rewrite the current plan directly."
+        return "这是重新规划请求。新方案要先过可行性核对，我不会直接改写你当前的方案。" if locale == "zh" else "This is a replan request. A new plan has to pass the feasibility check first; I won't rewrite your current plan directly."
     if interpretation.intent == "VERIFY_FACT":
-        return "这是一条尚未核实的旅行信息。我会先基于供应商或来源证据核验，不会先写入城市事件。" if locale == "zh" else "This is an unverified travel claim. It must be checked against provider or source evidence before becoming a city event."
+        return "这条出行信息还没核实。我会先拿供应商或来源的证据核一遍，核实前不会把它记成城市事件。" if locale == "zh" else "This travel claim isn't verified yet. I check it against provider or source evidence before it becomes a city event."
     if interpretation.intent == "PERSONAL_ASSISTANCE":
-        return "我识别到这是个人求助，需要按个人情况处理，不会把它当作城市天气或交通事件。" if locale == "zh" else "I recognized a personal assistance request; it will not be turned into a city weather or traffic event."
+        return "这看起来是个人求助，我按你的个人情况来处理，不会把它当成城市的天气或交通事件。" if locale == "zh" else "This looks like a personal assistance request, so I handle it for your own situation and don't turn it into a city weather or traffic event."
     if locale == "zh":
         return "我没有可靠识别这条请求。可以问我为什么这样安排、如果多待一小时会怎样、找一个室内地点，或报告正在发生的交通/天气变化。"
     return "I could not route this request reliably. Ask why the plan looks this way, what would happen if you stayed an hour longer, find an indoor place, or report a disruption that is happening now."

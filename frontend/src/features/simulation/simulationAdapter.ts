@@ -74,9 +74,9 @@ const TABLE: Record<
   { zh: (status: number, extra: string) => string; en: (status: number, extra: string) => string }
 > = {
   DEMO_MODE_REQUIRED: {
-    zh: () => "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+    zh: () => "这台部署没开模拟舞台，已经拒绝；没有任何数据被删除。",
     en: () =>
-      "This deployment is not a simulation stage (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted.",
+      "This deployment has no simulation stage; it refused, and nothing was deleted.",
   },
   /* ORD-0070's named 503, so the stage says "wait" instead of "nothing happened". */
   "generation.store_busy": {

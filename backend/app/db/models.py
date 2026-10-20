@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -27,6 +27,26 @@ class Traveler(Base):
     timezone: Mapped[str] = mapped_column(String)
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
+
+
+class TravelerRecoveryCredential(Base):
+    """Reform 2026-10-18: a one-time recovery secret the traveller holds.
+
+    Only the digest is stored. The lifecycle columns are what make replay, expiry and revocation
+    server-side facts rather than client promises.
+    """
+
+    __tablename__ = "traveler_recovery_credentials"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    traveler_id: Mapped[str] = mapped_column(ForeignKey("travelers.id", ondelete="CASCADE"))
+    digest: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str] = mapped_column(String)
+    used_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    failed_attempts: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    locked_until: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class Preference(Base):
@@ -808,6 +828,83 @@ class ReplanProposal(Base):
     explanation_json: Mapped[str] = mapped_column(Text)
     created_at: Mapped[str] = mapped_column(String)
     decided_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    # Reform 2026-10-18, Guardian: a proposal belongs to the recovery reality it
+    # was generated in.  Superseding that reality retires the still-presented
+    # candidates instead of letting them survive a changed world.
+    recovery_epoch_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+class RecoveryEpoch(Base):
+    """Server-owned recovery reality binding for one Journey."""
+
+    __tablename__ = "recovery_epochs"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    generation: Mapped[int] = mapped_column(Integer)
+    active_plan_version_id_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    material_world_epoch_at_open: Mapped[str | None] = mapped_column(String, nullable=True)
+    recovery_reality_fingerprint: Mapped[str] = mapped_column(String)
+    triggering_event_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    status: Mapped[str] = mapped_column(String, default="OPEN", server_default="OPEN")
+    opened_at: Mapped[str] = mapped_column(String)
+    closed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    close_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    superseded_by_recovery_epoch_id: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("journey_id", "generation"),
+        Index(
+            "ux_recovery_epochs_one_open",
+            "journey_id",
+            unique=True,
+            sqlite_where=text("status = 'OPEN'"),
+        ),
+        Index("idx_recovery_epochs_journey_status", "journey_id", "status", "generation"),
+    )
+
+
+class CollectiveAuthorityReceipt(Base):
+    """Server-issued proof that one exact collective future is executable.
+
+    The receipt is deliberately separate from a planning proposal, member
+    response, or user approval.  Those rows are evidence used to issue it;
+    this row is the durable authority boundary consumed by a mutation.
+    """
+
+    __tablename__ = "collective_authority_receipts"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(ForeignKey("journeys.id", ondelete="CASCADE"))
+    proposal_id: Mapped[str] = mapped_column(ForeignKey("replan_proposals.id", ondelete="CASCADE"))
+    plan_version_id: Mapped[str] = mapped_column(ForeignKey("plan_versions.id", ondelete="CASCADE"))
+    authority_mode: Mapped[str] = mapped_column(String)
+    decision_epoch: Mapped[str] = mapped_column(String)
+    material_world_epoch: Mapped[str] = mapped_column(String)
+    candidate_surface_fingerprint: Mapped[str] = mapped_column(String)
+    source_mission_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journey_missions.id", ondelete="SET NULL"), nullable=True
+    )
+    source_agent_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("agent_runs.id", ondelete="SET NULL"), nullable=True
+    )
+    recovery_epoch_id: Mapped[str | None] = mapped_column(
+        ForeignKey("recovery_epochs.id", ondelete="SET NULL"), nullable=True
+    )
+    required_member_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    response_audit_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    principal_actor_ids_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
+    classification: Mapped[str] = mapped_column(String)
+    issued_at: Mapped[str] = mapped_column(String)
+    invalidated_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    invalidation_code: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    __table_args__ = (
+        Index(
+            "idx_collective_authority_receipts_target",
+            "journey_id",
+            "proposal_id",
+            "plan_version_id",
+        ),
+    )
 
 
 class JourneyTripContext(Base):
@@ -831,6 +928,62 @@ class JourneyTripContext(Base):
     # may hold an amount a traveller really typed.
     stay_budget_declared: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=None)
     created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class JourneyLaunchContext(Base):
+    """Durable planned launch origin, separate from execution truth (reform 2026-10-18 port)."""
+
+    __tablename__ = "journey_launch_contexts"
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), primary_key=True
+    )
+    source_kind: Mapped[str] = mapped_column(String)
+    authority_kind: Mapped[str] = mapped_column(String)
+    place_id: Mapped[str | None] = mapped_column(
+        ForeignKey("places.id", ondelete="SET NULL"), nullable=True
+    )
+    target_activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    display_name: Mapped[str] = mapped_column(String)
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
+    coordinate_crs: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_type: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_ref_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_from: Mapped[str | None] = mapped_column(String, nullable=True)
+    valid_until: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmed_by: Mapped[str | None] = mapped_column(String, nullable=True)
+    confirmation_method: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class RouteAcquisitionOperation(Base):
+    """Durable lifecycle for one exact on-demand mobility edge (reform 2026-10-18 port)."""
+
+    __tablename__ = "route_acquisition_operations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), index=True
+    )
+    fingerprint: Mapped[str] = mapped_column(String)
+    origin_key: Mapped[str] = mapped_column(String)
+    target_key: Mapped[str] = mapped_column(String)
+    target_activity_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    requested_mode: Mapped[str] = mapped_column(String)
+    provider_policy_version: Mapped[str] = mapped_column(String)
+    route_truth_policy_version: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    phase: Mapped[str | None] = mapped_column(String, nullable=True)
+    outcome: Mapped[str | None] = mapped_column(String, nullable=True)
+    request_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    queued_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[str] = mapped_column(String)
 
 

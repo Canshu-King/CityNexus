@@ -33,8 +33,8 @@ export const COLLECTION_COPY = {
     en: "places",
   },
   empty: {
-    zh: "还没有收藏。在上面的「城市探索」里挑一枚地点，它就有了落脚的地方。",
-    en: "Nothing collected yet. Pick a place in City Discovery above and it will have somewhere to land.",
+    zh: "还没有收藏。在「城市探索」里挑一枚地点，它就有了落脚的地方。",
+    en: "Nothing collected yet. Pick a place in City Discovery and it will have somewhere to land.",
   },
   noShelf: {
     /* This row renders inside a shelf that the screen has just named and counted, so the sentence
@@ -93,11 +93,11 @@ export const COLLECTION_COPY = {
     en: "The place behind this stop is not held by this server, so nothing was put away.",
   },
   writeRefused: {
-    zh: "这一屏没能把这一枚写进架子。上面这句是屏自己判断的状态，不是服务器给的理由。",
-    en: "This face could not write the place onto a shelf. That sentence is the screen's own state, not the server's reason.",
+    zh: "这一枚没能写进架子。",
+    en: "The place was not written onto a shelf.",
   },
   writeUnreachable: {
-    zh: "这台设备没连上服务器，所以这一枚没有写出去。",
+    zh: "没联网，这一枚没有写出去。",
     en: "This device could not reach the server, so nothing was sent.",
   },
   placedInto: {
@@ -105,7 +105,7 @@ export const COLLECTION_COPY = {
     en: "Collected into",
   },
   placedNowhere: {
-    zh: "服务器上的架子里没有这一枚",
+    zh: "这个架子里没有这一枚",
     en: "no shelf on the server carries this one",
   },
   readUnreachable: {
@@ -113,23 +113,23 @@ export const COLLECTION_COPY = {
     en: "This device could not reach the server, so no shelves could be listed.",
   },
   noPlaceIdOnRow: {
-    zh: "这一行没有对应的地点身份，所以这里不给收藏入口。",
+    zh: "这一行没有对应的地点身份，所以没有收藏入口。",
     en: "This row carries no place identity, so there is nothing to collect.",
   },
   noTravelerYet: {
-    zh: "还没有旅客身份，所以没问服务器：收藏的读门要一个 traveler_id。",
-    en: "No traveller identity yet, so nothing was asked: the collection read door requires a traveler_id.",
+    zh: "还没有旅客身份，所以没问服务器：收藏读不了。",
+    en: "No traveller identity yet, so this server's collection read was never asked.",
   },
 } as const;
 
 export type CollectionCopyKey = keyof typeof COLLECTION_COPY;
 
 export const COLLECTION_REFUSAL = {
-  zh: "这一屏没能从服务器读到架子。上面这句话是屏自己判断的状态，不是服务器给的理由。",
-  en: "This face could not read the shelves from the server. That sentence is the screen's own state, not the server's reason.",
+  zh: "这一屏没能从服务器读到架子。",
+  en: "This face could not read the shelves from the server.",
 } as const;
 
 export const COLLECTION_NO_TRAVELER = {
-  zh: "还没有旅客身份，所以没问服务器：收藏的读门要一个 traveler_id。",
-  en: "No traveller identity yet, so nothing was asked: the collection read door requires a traveler_id.",
+  zh: "还没有旅客身份，所以没问服务器：收藏读不了。",
+  en: "No traveller identity yet, so this server's collection read was never asked.",
 } as const;

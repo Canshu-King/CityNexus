@@ -34,7 +34,6 @@ import {
   type CatalogueReadback,
 } from "../planning/catalogueReadback";
 import type { V8Data } from "../../app/v8Types";
-import { englishCountNoun } from "../../lib/plural";
 
 export type Activity = V8Data["active_plan"] extends null
   ? never
@@ -306,9 +305,7 @@ export function TripItinerary({
             </p>
             <p className="v8-lede" data-testid="trip-itinerary-empty-catalogue">
               {catalogueAsking
-                ? zh
-                  ? "正在向服务器回读这座城有多少地点…"
-                  : "Reading back from the server how many places this city holds…"
+                ? t("itinerary.emptyReadingPlaces")
                 : catalogueCountSentence(catalogue, zh)}
             </p>
           </div>
@@ -375,17 +372,13 @@ export function TripItinerary({
           <p className="v8-kicker">{t("nav.trips")}</p>
           <h1 data-testid="trip-day-total">
             {progress.day_total === null
-              ? zh
-                ? "天数未知"
-                : "length unknown"
+              ? t("itinerary.lengthUnknown")
               : zh
                 ? `${progress.day_total} 天行程`
                 : `${progress.day_total}-day itinerary`}
           </h1>
           <p className="v8-lede">
-            {zh
-              ? "逐日安排。已确认的预订会被标记为受保护。"
-              : "Day by day. Confirmed bookings are marked as protected."}
+            {t("itinerary.dayByDay")}
           </p>
           <p className="v8-lede" data-testid="trip-progress-contract">
             {progressContractCopy(progress, zh)}
@@ -427,7 +420,7 @@ export function TripItinerary({
                 setActiveDay(0);
               }}
             >
-              {zh ? `第 ${index + 1} 周` : `Week ${index + 1}`}
+              {t("itinerary.weekLabel", { n: index + 1 })}
             </button>
           ))}
         </div>
@@ -446,7 +439,7 @@ export function TripItinerary({
             >
               <span>{day.label}</span>
               <small>
-                {zh ? `${day.activities.length} 项` : `${day.activities.length} ${englishCountNoun(day.activities.length, "stop")}`}
+                {t("itinerary.stopCount", { n: day.activities.length })}
               </small>
             </button>
           );
@@ -504,9 +497,7 @@ export function TripItinerary({
                         <span className="trip-stop-disrupted">
                           {disruption
                             ? disruptionLabel(disruption.type, zh)
-                            : zh
-                              ? "受影响"
-                              : "Affected"}
+                            : t("itinerary.stopDisrupted")}
                         </span>
                       )}
                       {isCurrent && (

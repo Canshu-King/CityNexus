@@ -20,8 +20,8 @@ ANCHOR = '  "live.confirmedAffected": '
 
 ROWS = [
     ("live.evidence.serverWordUnexplained",
-     "服务器报的是 {state}，我们不替它解释",
-     "the server reported {state}; we do not interpret it"),
+     "服务器报的是 {state}。,
+     "The server reported {state}."),
     ("recover.writeDeadline.title",
      "这台设备等到 {seconds} 秒就停了",
      "This device stopped waiting after {seconds} s"),

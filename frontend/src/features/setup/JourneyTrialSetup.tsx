@@ -306,8 +306,8 @@ export function notFoundCauseWords(
     return {
       title: t("setup.noPlacesAreRegisteredForThisDestination"),
       body: zh
-        ? `服务器认得「${spell}」，但目录里一条地点都没有——是还没登记，不是查不到这个名字。`
-        : `The server names "${spell}" but the catalog holds no places: they are not registered yet, which is different from the name being unknown.`,
+        ? `服务器认得「${spell}」，但目录里一条地点都没有。`
+        : `The server names "${spell}" but the catalog holds no places yet.`,
     };
   }
 
@@ -1594,8 +1594,8 @@ export function JourneyTrialSetup({
           </p>
           <p className="trial-wait-note">
             {zh
-              ? "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。"
-              : "A cold city's first search measured about two minutes. The server reports nothing until it finishes, so this is measured seconds — not an invented number."}
+              ? "第一次搜索一座城市要两分钟左右，服务器不中途汇报进度。"
+              : "A cold city's first search takes about two minutes; the server reports nothing until it finishes."}
           </p>
           {onStopWaiting && (
             <button
@@ -1609,8 +1609,8 @@ export function JourneyTrialSetup({
           )}
           <p className="trial-wait-hint">
             {zh
-              ? "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。"
-              : "Stopping the wait only closes this view: the server keeps going, and nothing you typed is lost."}
+              ? "停止等待只是离开这一屏，服务器还在跑。"
+              : "Stopping the wait only closes this view; the server keeps going."}
           </p>
         </div>
       )}

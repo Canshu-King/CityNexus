@@ -54,13 +54,41 @@ class AgentMissionPlan:
         }
 
 
-_READ_TOOLS = (
+# Public names on purpose: the runtime prompt is built from the same tuples that grant the tools,
+# so a future plan shape cannot say one thing while granting another.
+READ_TOOLS = (
     "inspect_journey",
     "inspect_twin",
     "list_replans",
     "search_city_services",
+    # Reform 2026-10-18: read-shaped DRAFT research. They capture observations and strategy
+    # evidence, never plan truth, so a draft is granted them before anything is ACTIVE.
+    "research_place_sources",
+    "estimate_place_facts",
+    "compare_routes",
+    # Reform 2026-10-18, Guardian: the observation -> impact -> action projection is a read.
+    "read_guardian_stream",
 )
-_ACTION_TOOLS = (
+DRAFT_WRITE_TOOLS = (
+    # These write rows a draft needs (provider candidates, canonical facts, candidate plans) and
+    # still cannot commit money, a booking or a plan selection. Keeping them in their own tuple is
+    # what makes the grant's side effect readable instead of "everything that is not a payment".
+    "discover_source_leads",
+    "discover_places",
+    "acquire_place_facts",
+    "generate_plans",
+)
+MEASUREMENT_TOOLS = (
+    # Arbiter ruling 2026-10-19 (Revolution Autonomy Upgrade) item 1: one mandate has to cover place
+    # lookup, source checking, route querying and estimate planning, and only a real external
+    # commitment, a payment, or a change to an already-active multi-party plan asks again.
+    # Both of these measure the world and store what a provider answered; neither commits money,
+    # a booking or a plan selection. `acquire_route` also stays in the runtime's mutation set, so the
+    # "inspect before you change the run" ordering guard is untouched by this grant.
+    "acquire_route",
+    "refresh_live_context",
+)
+ACTION_TOOLS = (
     "request_replan",
     "accept_replan",
     "replace_activity",
@@ -136,16 +164,20 @@ def build_mission_plan(
             None,
             requires_authority=True,
         )
-    allowed_tools = (*_READ_TOOLS, "request_replan") if autonomy == "PLAN_ONLY" else (*_READ_TOOLS, *_ACTION_TOOLS)
+    allowed_tools = (
+        (*READ_TOOLS, *DRAFT_WRITE_TOOLS, *MEASUREMENT_TOOLS, "request_replan")
+        if autonomy == "PLAN_ONLY"
+        else (*READ_TOOLS, *DRAFT_WRITE_TOOLS, *MEASUREMENT_TOOLS, *ACTION_TOOLS)
+    )
     return AgentMissionPlan(
         version="citynexus.mission-plan.v1",
         autonomy=autonomy,
         steps=tuple(steps),
         protected_activity_ids=tuple(str(item) for item in protected_activity_ids),
         allowed_tools=tuple(allowed_tools),
-        read_only_tools=_READ_TOOLS,
+        read_only_tools=READ_TOOLS,
         approval_required_tools=tuple(
-            item for item in _ACTION_TOOLS if item != "request_replan"
+            item for item in ACTION_TOOLS if item != "request_replan"
         ),
     )
 

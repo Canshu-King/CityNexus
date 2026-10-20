@@ -44,10 +44,15 @@ export type MapCopyKey =
   /* ORD-0497 -- the footprint arms. Named per read, never per traveller: the empty sentence says
      what THIS read brought back, because "还没有足迹" would be a claim about the person rather than
      about the door. */
-  | "footprintStamped"
-  | "footprintNone"
+  | "footprintStampedCount"
+  | "footprintSolidMeans"
+  | "footprintHollowMeans"
+  | "footprintNoneRead"
+  | "footprintNoneDrawn"
   | "footprintRefused"
-  | "footprintUnreachable"
+  | "footprintUnreachableRead"
+  | "footprintUnreachableDrawn"
+  | "footprintUnreachableSilence"
   | "footprintAsking"
   | "footprintNotAsked"
   | "footprintBadgeAria"
@@ -113,6 +118,9 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      different sentence in each state rather than the same word with a different colour. */
   viewportResetToJourney: { zh: "回到行程视野", en: "Fit to my journey" },
   viewportOnTarget: { zh: "视野正落在这段行程上", en: "The view is on your journey" },
+  /* Not a hint strip: `MapViewportControls.tsx:54` puts this string in `aria-label`, which replaces
+     the button's visible name for a screen reader. Drop the action clause and the only thing such a
+     traveller hears is a state with no verb — so the shortest honest form keeps both parts. */
   viewportOffTarget: { zh: "已移出行程视野，点按回到全程", en: "Moved off the journey — tap to fit it all" },
   stopSelectedLead: { zh: "已选中", en: "Selected" },
   /* ORD-0453 — the third state of a long stop list on a small screen.
@@ -124,7 +132,7 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   stopsShowAllTotal: { zh: "查看全部 %s 个地点", en: "Show all %s places" },
   stopsCollapseCta: { zh: "收起清单", en: "Collapse list" },
   stopsCaptureAria: { zh: "展开或收起地点清单", en: "Expand or collapse the stop list" },
-  stopsWithoutPlace: { zh: "另有 %s 个站点这次没有位置，地图就不列它们", en: "%s stops have no position, so the map leaves them out" },
+  stopsWithoutPlace: { zh: "另有 %s 个站点没有位置", en: "%s stops have no position" },
   /* ORD-0497 — 足迹上地图。Three rules these sentences have to keep:
      1. the `read` arm with nothing in it names the READ ("这台服务器这次没有交回"), not the
         traveller ("你没有去过任何一站"), because an empty list from one server on one occasion is
@@ -134,26 +142,46 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      3. `%s` carries only the server's own count. The day under a pin is that same row's
         `stamped_at`, rendered date-only -- see `formatStampDay` for the glass rule that forbids a
         clock here. */
-  footprintStamped: {
-    zh: "这台服务器这次交回 %s 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。",
-    en: "This server handed back %s footprints on this read: solid pins are the stops it recorded, and the day under a pin is that stamp's; hollow pins are the stops it returned no stamp for.",
+  footprintStampedCount: {
+    zh: "服务器这次交回 %s 枚足迹",
+    en: "This read returned %s footprints",
   },
-  footprintNone: {
-    zh: "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
-    en: "This server returned no footprint on this read, so every stop of this trip is painted hollow.",
+  footprintSolidMeans: {
+    zh: "实心图钉是它记下的站，钉下的日期就是那一枚的时间",
+    en: "a solid pin is a stop it recorded, dated at that stamp",
+  },
+  footprintHollowMeans: {
+    zh: "空心的是这次没有印的站",
+    en: "a hollow pin is a stop it returned no stamp for",
+  },
+  footprintNoneRead: {
+    zh: "服务器这次没有交回任何足迹",
+    en: "This read returned no footprint",
+  },
+  footprintNoneDrawn: {
+    zh: "图上的站全部画成空心",
+    en: "every stop of this trip is drawn hollow",
   },
   footprintRefused: {
-    zh: "服务器这次没收下这个读取请求，所以图上不区分到过的站与没到过的站。",
+    zh: "服务器没收下这次读取，图上不分到过的站与没到过的站。",
     en: "The server would not take this read, so the map draws no distinction between stamped and unstamped stops.",
   },
-  footprintUnreachable: {
-    zh: "这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。",
-    en: "This read never reached the server, so the map draws no distinction — nothing painted here speaks for the server.",
+  footprintUnreachableRead: {
+    zh: "这次没有问到服务器",
+    en: "This read never reached the server",
+  },
+  footprintUnreachableDrawn: {
+    zh: "图上不区分到过的站与没到过的站",
+    en: "the map draws no distinction between stamped and unstamped stops",
+  },
+  footprintUnreachableSilence: {
+    zh: "这一片的画法不替服务器说话",
+    en: "nothing painted here speaks for the server",
   },
   footprintAsking: { zh: "正在向服务器问这一趟的足迹…", en: "Asking the server for this trip's footprints…" },
   footprintNotAsked: {
-    zh: "这一屏没有打开的行程，所以没向服务器问过足迹。",
-    en: "No trip is open on this screen, so nothing was ever asked of the server.",
+    zh: "没有打开的行程，所以没向服务器问过足迹。",
+    en: "No trip is open, so nothing was asked of the server.",
   },
   footprintBadgeAria: { zh: "到站日期 %s", en: "Day stamped %s" },
   /* The 「只看打过」 switch. Two labels, one per state, in the direction of what the press DOES --
@@ -173,14 +201,14 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      attribution line, and it rides in `data-cnx-basemap-host` for the gates. A second copy of the host
      in this sentence is what pushed the English arm past the plate's height budget. */
   degradedHeadline: {
-    zh: "底图没接上（网络或瓦片源）：%s 个站照常画着",
+    zh: "底图没接上：%s 个站照常画着",
     en: "No basemap (network or tiles): %s stops still plotted.",
   },
   /* The arm the counted sentence cannot speak: a journey with route geometry and no located stop is not
      a trip whose stops are "still plotted", and saying it anyway would be the plate inventing a comfort
      the data did not hand it. */
   degradedHeadlineNoStops: {
-    zh: "底图没接上（网络或瓦片源）：这一趟没有带位置的站",
+    zh: "底图没接上：这一趟没有带位置的站",
     en: "No basemap (network or tiles): no located stop to plot.",
   },
   degradedRetried: { zh: "已再取过 %s 次，仍没接上。", en: "Reloaded %s times — still no answer." },

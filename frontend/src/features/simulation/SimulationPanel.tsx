@@ -400,8 +400,8 @@ export function SimulationPanel({
          Kept visible on purpose: a silently missing row would hide *why* the stage cannot be
          re-seeded from a screen, and the reason is the part a teacher needs. */
       blocked: {
-        zh: "这一步会删掉整库（52 张表），现在还要服务器自己的环境变量里的令牌；浏览器拿不到它，也不该拿到。所以这里不给按——要重播种行程，请由运行服务器的人来做。",
-        en: "This step deletes the whole library (52 tables) and now needs a token that lives in the server's own environment. A browser cannot hold that value and should not, so this is refused on every deployment -- re-seeding is done by whoever runs the server.",
+        zh: "这一步会删掉整库（52 张表），只能由运行服务器的人做，所以这里不给按。",
+        en: "This step wipes the whole library (52 tables) and can only be run by whoever runs the server, so there is nothing to press here.",
       },
       run: async () => {
         const result = await resetStage();
@@ -528,8 +528,8 @@ export function SimulationPanel({
             }
           : !planVersionId
             ? {
-                zh: "舞台上还没有计划（服务器回的 plan_version_id 是空的）。先按上面「准备舞台」，才有可开始的东西。",
-                en: "No plan on the stage yet (the server's plan_version_id is empty). Put a plan on it first; that is what there is to start.",
+                zh: "舞台上还没有计划。先按上面「准备舞台」，才有可以开始的东西。",
+                en: "No plan on the stage yet. Put a plan on it first; that is what there is to start.",
               }
             : null),
       run: async () => {
@@ -598,8 +598,8 @@ export function SimulationPanel({
         (lastEventId
           ? null
           : {
-              zh: "重规划要由一个中断触发（服务器要求 trigger_event_id）。先按上面「触发一次中断」。",
-              en: "A replan needs a triggering event (the server requires trigger_event_id). Raise a disruption above first.",
+              zh: "重规划要由一个中断触发。先按上面「触发一次中断」。",
+              en: "A replan needs a triggering event. Raise a disruption above first.",
             }),
       run: async () => {
         await cityNexusApi.generateReplans(

@@ -36,14 +36,14 @@ export const estimationLadderCopy = {
     "ladder.tier.verify": "Verify",
     "ladder.tier.remedy": "What you can change",
     "ladder.method.sourced":
-      "{source}: {amount} at {confidence}% confidence. It is a quote handed back to us; the provider's own final price is what you pay.",
+      "{source}: {amount} at {confidence}% confidence. The provider's own final price is what you pay.",
     "ladder.method.noConfidence":
       "{source}: {amount}. This server sent no confidence with that answer.",
     "ladder.method.noSource": "This server gave only {amount}: it wrote no source for it.",
     "ladder.method.noCandidates":
-      "There is no method to report at this rung: this server returned no stay candidate this time, so there is no figure here to explain.",
+      "There is no method to report at this rung: the server returned no stay candidate this time.",
     "ladder.pre.noAmount":
-      "There is no rate here to compare against yet. We do not print 0 as if it were a price.",
+      "There is no rate here to compare against yet.",
     "ladder.pre.noConfidence":
       "Do not weigh this against another stay yet: the figure carries no provider confidence.",
     "ladder.verify.open":
@@ -51,11 +51,11 @@ export const estimationLadderCopy = {
     "ladder.verify.binding":
       "Non-refundable -- check the final price and the cancellation terms with the provider before you book.",
     "ladder.remedy.switch":
-      "To get a number you can compare: switch to another of the {n} {plural:candidate} on this screen, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
+      "To get a number you can compare: switch to another of the {n} {plural:candidate} here, or open {door} to change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
     "ladder.remedy.recompute":
       "To get a number you can compare: open {door} and change the hotel or one leg's mode -- the same hard commitments are re-checked there.",
     "ladder.remedy.absent":
-      "No door on this screen changes this number today: there is no second candidate here, and {door} did not open for this server.",
+      "Nothing changes this number today: there is no second candidate, and {door} did not open for this server.",
     // ORD-0557: rung triggers are machine tokens, so the zh side carries the same bytes on purpose.
     "estimation.amountNonRefundable": "amount,non_refundable",
     "estimation.amountRefundable": "amount,refundable",
@@ -66,11 +66,11 @@ export const estimationLadderCopy = {
     "ladder.tier.verify": "核对",
     "ladder.tier.remedy": "你能改的",
     "ladder.method.sourced":
-      "{source}：{amount}，置信度 {confidence}%。这是报回来的一条价，实付以供应商的最终价格为准。",
-    "ladder.method.noConfidence": "{source}：{amount}。这台服务器没有随这条回答给出置信度。",
-    "ladder.method.noSource": "这台服务器只给了 {amount}：没有写它是从哪来的。",
-    "ladder.method.noCandidates": "这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。",
-    "ladder.pre.noAmount": "这里还没有能拿去比价的房价。我们不会把 0 写成一个价。",
+      "{source}：{amount}，置信度 {confidence}%。实付以供应商的最终价格为准。",
+    "ladder.method.noConfidence": "{source}：{amount}。这条回答没带置信度。",
+    "ladder.method.noSource": "只给了 {amount}：没写它是从哪来的。",
+    "ladder.method.noCandidates": "这一级没有可报的方法：这次没读回住宿候选。",
+    "ladder.pre.noAmount": "这里还没有能比价的房价。",
     "ladder.pre.noConfidence": "先别拿它和别家比：这个数背后没有供应商置信度。",
     "ladder.verify.open": "下单前请向供应商核对这个价格与取消条款。",
     "ladder.verify.binding": "这一档不可取消 —— 下单前请向供应商核对最终价格与取消条款。",
@@ -79,7 +79,7 @@ export const estimationLadderCopy = {
     "ladder.remedy.recompute":
       "想拿到能比价的数：打开{door}更换酒店、或改某一段的出行方式，那里会按同一套硬约束重算。",
     "ladder.remedy.absent":
-      "今天这块屏上没有能改变这个数的入口：既没有第二家候选，{door}那一扇这台服务器也没让我们打开。",
+      "今天没有能改变这个数的入口：既没有第二家候选，{door}那一扇这台服务器也没让打开。",
     "estimation.amountNonRefundable": "amount,non_refundable",
     "estimation.amountRefundable": "amount,refundable",
   },

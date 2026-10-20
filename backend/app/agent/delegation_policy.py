@@ -23,6 +23,11 @@ READ_ACTIONS = frozenset(
         AgentAction.INSPECT_TWIN,
         AgentAction.LIST_REPLANS,
         AgentAction.SEARCH_CITY_SERVICES,
+        # Reform 2026-10-18: source research is allowed under read scope. It captures
+        # non-authoritative observations; it cannot change the plan, a booking or money.
+        AgentAction.RESEARCH_PLACE_SOURCES,
+        AgentAction.ESTIMATE_PLACE_FACTS,
+        AgentAction.COMPARE_ROUTES,
     }
 )
 
@@ -199,6 +204,30 @@ def evaluate_action(
         return AuthorizationResult(
             AuthorizationDecision.ALLOW_AUTO,
             ("PROPOSAL_ONLY", "DOMAIN_TRUTH_NOT_ACTIVATED"),
+            policy.version,
+        )
+
+    if action == AgentAction.ACQUIRE_ROUTE:
+        # Route acquisition freezes one MobilityFact; it never selects a plan, books or pays.
+        # The thing that can cost something is the provider call itself, so the gate is about
+        # that and nothing else: the deployment's mock/local capture has no external cost and
+        # stays automatic, while a configured live provider needs one named user approval for
+        # the exact edge (the approval fingerprint binds origin, target and mode).
+        if facts.provider_degraded and not policy.allow_auto_when_provider_degraded:
+            return AuthorizationResult(
+                AuthorizationDecision.REQUIRE_CONFIRMATION,
+                ("ROUTE_PROVIDER_EVIDENCE_DEGRADED",),
+                policy.version,
+            )
+        if not facts.external_provider_call:
+            return AuthorizationResult(
+                AuthorizationDecision.ALLOW_AUTO,
+                ("ROUTE_ACQUISITION_NO_EXTERNAL_PROVIDER_COST",),
+                policy.version,
+            )
+        return AuthorizationResult(
+            AuthorizationDecision.REQUIRE_CONFIRMATION,
+            ("ROUTE_ACQUISITION_EXTERNAL_PROVIDER_REQUIRES_APPROVAL",),
             policy.version,
         )
 

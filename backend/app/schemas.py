@@ -160,6 +160,38 @@ class AgentToolCall(BaseModel):
     activity_id: UUID | None = None
     replacement_activity_id: UUID | None = None
     replacement_place_id: str | None = Field(default=None, min_length=1, max_length=128)
+    # Reform 2026-10-18: the source-research tool names one server-owned Place. It is a separate
+    # field from `replacement_place_id` so a read cannot be mistaken for a plan mutation.
+    place_id: str | None = Field(default=None, min_length=1, max_length=128)
+    # Reform 2026-10-18: an estimate may be a bounded hypothesis, and a hypothesis has to say so.
+    # These three are the model's own guess, recorded as AGENT_PROVIDED_HYPOTHESIS, never as fact.
+    estimated_open_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_close_minutes: int | None = Field(default=None, ge=0, le=1440)
+    estimated_cost_minor: int | None = Field(default=None, ge=0)
+    # Reform 2026-10-18: draft generation names the server-owned places it must arrange.
+    place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    planning_mode: str | None = Field(default=None, max_length=32)
+    # Reform 2026-10-18: provider-backed alternative search. The caps are the server's own route
+    # caps -- widening them without provider evidence is exactly what the order forbids.
+    query: str | None = Field(default=None, min_length=1, max_length=120)
+    # Reform 2026-10-18, Scout: a public region + cleaned topic can be researched before any
+    # canonical Place exists. `provider` selects one configured source; `auto` never guesses.
+    topic: str | None = Field(default=None, min_length=2, max_length=120)
+    provider: Literal["auto", "web", "searxng"] | None = None
+    radius_m: int | None = Field(default=None, ge=100, le=5000)
+    limit: int | None = Field(default=None, ge=1, le=20)
+    mode: str | None = Field(default=None, pattern="^(replay|captured_replay|live)$")
+    # Reform 2026-10-18: source-backed fact acquisition names where the facts come from, if the
+    # caller already holds a lead. Without a binding the server uses the place's provider identity.
+    source_observation_id: str | None = Field(default=None, min_length=1, max_length=64)
+    source_url: str | None = Field(default=None, min_length=1, max_length=2048)
+    source_class: str | None = Field(default=None, min_length=1, max_length=64)
+    # Reform 2026-10-18: the read half of route comparison -- one server-owned edge.
+    from_key: str | None = Field(default=None, min_length=1, max_length=128)
+    to_key: str | None = Field(default=None, min_length=1, max_length=128)
+    route_mode: str | None = Field(default=None, max_length=32)
+    # Reform 2026-10-18: route acquisition may pin the exact target it was told about.
+    target_activity_id: str | None = Field(default=None, min_length=1, max_length=64)
     booking_id: UUID | None = None
     commitment_id: UUID | None = None
     start_at: datetime | None = None
@@ -222,6 +254,13 @@ class JourneyAnchor(BaseModel):
     location: str = Field(min_length=1, max_length=240)
     place_id: str | None = None
     notes: str | None = Field(default=None, max_length=500)
+
+
+class RecoveryRedeemRequest(BaseModel):
+    """The two things a person has to present to come back: a handle and the secret itself."""
+
+    recovery_id: str = Field(min_length=8, max_length=64)
+    recovery_secret: str = Field(min_length=16, max_length=256)
 
 
 class JourneyCreate(BaseModel):

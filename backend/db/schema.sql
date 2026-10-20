@@ -10,6 +10,23 @@ CREATE TABLE IF NOT EXISTS travelers (
     updated_at TEXT NOT NULL
 );
 
+-- Reform 2026-10-18: the traveller's own recovery credential. The server stores a digest and a
+-- lifecycle, never the secret; the secret is shown once and lives on the person's device.
+CREATE TABLE IF NOT EXISTS traveler_recovery_credentials (
+    id TEXT PRIMARY KEY,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    digest TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    used_at TEXT,
+    revoked_at TEXT,
+    failed_attempts INTEGER NOT NULL DEFAULT 0,
+    locked_until TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_traveler_recovery_traveler
+    ON traveler_recovery_credentials(traveler_id, created_at);
+
 CREATE TABLE IF NOT EXISTS preferences (
     id TEXT PRIMARY KEY,
     traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
@@ -360,8 +377,54 @@ CREATE TABLE IF NOT EXISTS replan_proposals (
     explanation_json TEXT NOT NULL,
     created_at TEXT NOT NULL,
     decided_at TEXT,
+    recovery_epoch_id TEXT,
     CHECK (base_plan_version_id <> proposed_plan_version_id)
 );
+
+CREATE TABLE IF NOT EXISTS recovery_epochs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    generation INTEGER NOT NULL,
+    active_plan_version_id_at_open TEXT,
+    material_world_epoch_at_open TEXT,
+    recovery_reality_fingerprint TEXT NOT NULL,
+    triggering_event_ids_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'OPEN' CHECK (status IN ('OPEN','SUPERSEDED','COMMITTED','ABANDONED')),
+    opened_at TEXT NOT NULL,
+    closed_at TEXT,
+    close_reason TEXT,
+    superseded_by_recovery_epoch_id TEXT,
+    UNIQUE (journey_id, generation)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_recovery_epochs_one_open
+    ON recovery_epochs(journey_id) WHERE status = 'OPEN';
+CREATE INDEX IF NOT EXISTS idx_recovery_epochs_journey_status
+    ON recovery_epochs(journey_id, status, generation);
+
+CREATE TABLE IF NOT EXISTS collective_authority_receipts (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    proposal_id TEXT NOT NULL REFERENCES replan_proposals(id) ON DELETE CASCADE,
+    plan_version_id TEXT NOT NULL REFERENCES plan_versions(id) ON DELETE CASCADE,
+    authority_mode TEXT NOT NULL,
+    decision_epoch TEXT NOT NULL,
+    material_world_epoch TEXT NOT NULL,
+    candidate_surface_fingerprint TEXT NOT NULL,
+    source_mission_id TEXT REFERENCES journey_missions(id) ON DELETE SET NULL,
+    source_agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+    recovery_epoch_id TEXT REFERENCES recovery_epochs(id) ON DELETE SET NULL,
+    required_member_ids_json TEXT NOT NULL DEFAULT '[]',
+    response_audit_ids_json TEXT NOT NULL DEFAULT '[]',
+    principal_actor_ids_json TEXT NOT NULL DEFAULT '[]',
+    classification TEXT NOT NULL,
+    issued_at TEXT NOT NULL,
+    invalidated_at TEXT,
+    invalidation_code TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_collective_authority_receipts_target
+    ON collective_authority_receipts(journey_id, proposal_id, plan_version_id);
 
 CREATE TABLE IF NOT EXISTS recommendations (
     id TEXT PRIMARY KEY,
@@ -701,6 +764,55 @@ CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS journey_launch_contexts (
+    journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
+    source_kind TEXT NOT NULL,
+    authority_kind TEXT NOT NULL,
+    place_id TEXT REFERENCES places(id) ON DELETE SET NULL,
+    target_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    display_name TEXT NOT NULL,
+    latitude REAL,
+    longitude REAL,
+    coordinate_crs TEXT,
+    source_ref_type TEXT,
+    source_ref_id TEXT,
+    valid_from TEXT,
+    valid_until TEXT,
+    confirmed_by TEXT,
+    confirmation_method TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS route_acquisition_operations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fingerprint TEXT NOT NULL,
+    origin_key TEXT NOT NULL,
+    target_key TEXT NOT NULL,
+    target_activity_id TEXT,
+    requested_mode TEXT NOT NULL,
+    provider_policy_version TEXT NOT NULL,
+    route_truth_policy_version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'QUEUED' CHECK (status IN ('QUEUED','RUNNING','COMPLETED','UNAVAILABLE','FAILED')),
+    phase TEXT,
+    outcome TEXT,
+    request_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    queued_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_route_acquisition_one_open
+    ON route_acquisition_operations(journey_id, fingerprint)
+    WHERE status IN ('QUEUED','RUNNING');
+
+CREATE INDEX IF NOT EXISTS idx_route_acquisition_journey_recent
+    ON route_acquisition_operations(journey_id, queued_at);
 
 CREATE TABLE IF NOT EXISTS accommodation_offer_snapshots (
     id TEXT PRIMARY KEY,

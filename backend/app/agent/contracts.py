@@ -27,6 +27,35 @@ class AgentAction(str, Enum):
     CREATE_BOOKING = "CREATE_BOOKING"
     CANCEL_REFUNDABLE_BOOKING = "CANCEL_REFUNDABLE_BOOKING"
     REQUEST_COMMITMENT_CHANGE = "REQUEST_COMMITMENT_CHANGE"
+    # Reform 2026-10-18, first adapter: source research is a read-shaped tool -- it captures
+    # non-authoritative observations and never writes domain truth or money.
+    RESEARCH_PLACE_SOURCES = "RESEARCH_PLACE_SOURCES"
+    # Reform 2026-10-18, second adapter: a strategy estimate from same-city peers. It writes only
+    # `strategy_estimate` into place metadata and never canonical provider truth.
+    ESTIMATE_PLACE_FACTS = "ESTIMATE_PLACE_FACTS"
+    # Reform 2026-10-18, third adapter: draft generation. It creates CANDIDATE plans and never
+    # selects or activates one; selection stays a separate, user-owned step.
+    GENERATE_PLANS = "GENERATE_PLANS"
+    # Reform 2026-10-18, fourth adapter: provider-backed alternative search. It materialises
+    # candidate rows for the journey and never touches the plan, a booking or money.
+    DISCOVER_PLACES = "DISCOVER_PLACES"
+    # Reform 2026-10-18, fifth adapter: source-backed place details. It writes canonical Place
+    # facts, so it is a domain mutation and the runtime requires an inspection first.
+    ACQUIRE_PLACE_FACTS = "ACQUIRE_PLACE_FACTS"
+    # Reform 2026-10-18, sixth adapter: compare the route facts the server already holds. Read-only:
+    # acquisition needs the launch-origin chain this tree does not have yet.
+    COMPARE_ROUTES = "COMPARE_ROUTES"
+    # Reform 2026-10-18, seventh adapter: acquire one grounded-origin -> target edge. A real
+    # provider call, so it sits with the action tools rather than in the free draft set.
+    ACQUIRE_ROUTE = "ACQUIRE_ROUTE"
+    # Reform 2026-10-18, Scout: public region + topic -> non-authoritative source leads. This is
+    # the zero-Place first step: it writes WebObservation/ProviderCall rows, never a Place.
+    DISCOVER_SOURCE_LEADS = "DISCOVER_SOURCE_LEADS"
+    # Reform 2026-10-18, Guardian: read the Event/ImpactAssessment/GuardianRun projection.
+    READ_GUARDIAN_STREAM = "READ_GUARDIAN_STREAM"
+    # Reform 2026-10-18, Guardian: run the live venue-context watch. It writes WebObservation and
+    # Event rows and can invalidate pending replans, so it is an action, not a free read.
+    REFRESH_LIVE_CONTEXT = "REFRESH_LIVE_CONTEXT"
 
 
 class AuthorizationDecision(str, Enum):
@@ -96,6 +125,10 @@ class AuthoritativeActionFacts:
     commitment_management_requested: bool = False
     commitment_levels: tuple[str, ...] = ()
     action_reversible: bool = True
+    # Reform 2026-10-18: a route acquisition is not a plan mutation; what can cost something is
+    # the provider call behind it. The gateway sets this from the deployment's mobility provider,
+    # so "mock/local, free" stays automatic while a configured live provider needs one approval.
+    external_provider_call: bool = False
 
 
 @dataclass(frozen=True)

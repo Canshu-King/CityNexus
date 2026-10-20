@@ -121,14 +121,14 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
      exit above. So there is no door to wire this radio to, and the honest form of the third exit is a
      refusal that names why. */
   storeOnlyRefusal: {
-    zh: "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。",
-    en: "This server has no door that keeps a place without giving it a day: 加进计划 must land on a day, and putting it on a shelf is the exit above. No fourth word is invented here, so this one refuses by state and writes nothing.",
+    zh: "这一项没有可写的门：加进计划要落在某一天，只想收着就走架子。",
+    en: "This exit has no door to write through: adding to the plan needs a day; the shelf is for keeping.",
   },
   /* The chosen state of the refused exit: the traveller picked it, so the screen owes a sentence about
      what just happened -- which is that nothing happened, and no write control exists any more. */
   storeOnlyChosen: {
-    zh: "这一项选上了，但它没有可写的门：上面那句就是它的全部回答，这一屏什么都没写。",
-    en: "This destination is chosen and has no door to write through: the line above is its whole answer, and nothing has been written.",
+    zh: "这一项选上了，但它没有可写的门，所以什么都没写。",
+    en: "This destination is chosen and has no door to write through, so nothing was written.",
   },
   landingDayChosen: {
     zh: "你选的日子：{day}",
@@ -155,16 +155,16 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
      arms carry no `{plural:}` marker at all, which is ORD-0433's rule: a marker in a zh line would
      paint an English noun on the Chinese glass. */
   collectedCount: {
-    zh: "{n} 枚已收在「{shelf}」——这句是从同一扇读门重读回来的。",
-    en: "{n} {plural:place} now on {shelf} — read back from the same list door.",
+    zh: "{n} 枚已收在「{shelf}」。",
+    en: "{n} {plural:place} now on {shelf}.",
   },
   collectAlready: {
-    zh: "{n} 枚本来就在「{shelf}」上，没有重复写入。",
-    en: "{n} {plural:place} already on {shelf}, so nothing was written twice.",
+    zh: "{n} 枚本来就在「{shelf}」上。",
+    en: "{n} {plural:place} already on {shelf}.",
   },
   collectNothingConfirmed: {
-    zh: "写入应答了，但架子上读不回这一枚。在它读回来之前，这里不说“已收在”。",
-    en: "The write answered, but the shelf did not give these back. Nothing is called collected until it does.",
+    zh: "写入应答了，但架子上读不回这一枚。",
+    en: "The write answered, but the shelf did not give these back.",
   },
   /* The badge next to the screen's title.  It carries no `{...}` value because the screen states it
      the same way whatever it is showing: the parser is local and no link is opened.  Both halves are
@@ -179,24 +179,24 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Add to plan",
   },
   addedCount: {
-    zh: "{n} 个地点已在 {day} ——这是从服务端读回来的结果。",
-    en: "{n} {plural:place} on {day} — read back from the server.",
+    zh: "{n} 个地点已在 {day}。",
+    en: "{n} {plural:place} on {day}.",
   },
   adding: {
     zh: "正在加…",
     en: "Adding…",
   },
   alreadyPresent: {
-    zh: "{n} 个本来就在那一天，没有重复添加。",
-    en: "{n} were already on that day, so nothing was added twice.",
+    zh: "{n} 个本来就在那一天。",
+    en: "{n} were already on that day.",
   },
   autoDayLabel: {
     zh: "会落到哪一天",
     en: "Day it would land on",
   },
   autoDayNote: {
-    zh: "不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。",
-    en: "Leaving the day empty puts these places on the plan's first day. It is said now, not after.",
+    zh: "不填日子就会放进这个计划的第一天。",
+    en: "Leaving the day empty puts these places on the plan's first day.",
   },
   autoDayUnknown: {
     zh: "还没有日子——请选一个",
@@ -207,8 +207,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Nothing is fetched",
   },
   boundarySub: {
-    zh: "识别只跑本部署自己的文本规则和我们已有的地点行。",
-    en: "Extraction runs on this deployment's own text rules and our own place rows.",
+    zh: "识别只看你贴进来的文字和已有的地点。",
+    en: "Extraction reads only the text you paste and the places we already have.",
   },
   brand: {
     zh: "CityNexus",
@@ -259,7 +259,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "This plan has no day of its own; type the day you want them on.",
   },
   errJourneyNotFound: {
-    zh: "这台服务器上已经没有这趟行程了。请从今日页重新选一次。",
+    zh: "这趟行程已经没了，请从今日页重新选一次。",
     en: "That journey is not on this server any more. Pick it again from Today.",
   },
   errNoActivePlan: {
@@ -267,7 +267,7 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Nothing is chosen as the plan yet, so there is no day to add places to.",
   },
   errNoResponse: {
-    zh: "服务器这一问没有回答。什么都没改动。",
+    zh: "这一问没有回答，什么都没改动。",
     en: "The server did not answer this one. Nothing was changed.",
   },
   errPlaceNotVisitable: {
@@ -299,8 +299,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Paste what you already wrote",
   },
   lede: {
-    zh: "贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。",
-    en: "Paste a note, a list or a link. We read the words we can read locally, show you what each line became, and let you choose before anything is written.",
+    zh: "贴一段笔记、一个清单或一条链接。逐行告诉你读成了什么，写回之前由你确认。",
+    en: "Paste a note, a list or a link. We show you what each line became, and you choose before anything is written.",
   },
   loadFailed: {
     zh: "这段文字没读出来。你写的还在原地，可以再试一次。",
@@ -319,8 +319,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Recognise text or links",
   },
   modesSub: {
-    zh: "今天支持文本与链接；截图也列出来，让缺口有名字。",
-    en: "Text or links today; screenshots are listed so the gap has a name.",
+    zh: "今天支持文本与链接；截图列着，但还不认。",
+    en: "Text or links today; screenshot mode is not live yet.",
   },
   modesTitle: {
     zh: "两条入口",
@@ -363,20 +363,20 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "One place per line, or a whole note. Links may be mixed in.",
   },
   readBackFailed: {
-    zh: "写入应答了，但计划没有把那条记录交回来。在它交回来之前，这里不说“已加入”。",
-    en: "The write answered, but the plan did not give the record back. Nothing is called added until it does.",
+    zh: "写入应答了，但计划没有把那条记录交回来。",
+    en: "The write answered, but the plan did not give the record back.",
   },
   retry: {
     zh: "重试",
     en: "Try again",
   },
   scopeHint: {
-    zh: "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。",
-    en: "This reads the text you paste. Links to Xiaohongshu notes, WeChat Official Account posts or Feishu docs are named back as unread -- this build opens nobody else's page.",
+    zh: "这里读你粘贴的文字；小红书、公众号、飞书链接只会被点名说没读。",
+    en: "This reads the text you paste; Xiaohongshu, WeChat or Feishu links are named back as unread.",
   },
   screenshotNotSupported: {
-    zh: "这一版没有截图识别。请改贴文字——这个形态是具名不支持，不是悄悄没有。",
-    en: "Screenshot recognition is not in this build. Paste the text instead; the picture form is named, not silently unavailable.",
+    zh: "这一版没有截图识别，请改贴文字。",
+    en: "Screenshot recognition is not in this build; paste the text instead.",
   },
   selectedCount: {
     zh: "已选 {n} / 可加 {total}",
@@ -403,8 +403,8 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
     en: "Links are never fetched here; paste the text of the note.",
   },
   verifyWarning: {
-    zh: "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。",
-    en: "These matches are our guess at what you meant. Check each line before adding — a wrong place on a day is yours to remove, not ours to hide.",
+    zh: "这些对照是按你写的东西猜的；加进去之前请逐行核对，放错的日子由你删除。",
+    en: "These matches are guesses at what you wrote — check each line before adding; a wrong day is yours to remove.",
   },
 };
 

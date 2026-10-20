@@ -3,9 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from statistics import median
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -30,6 +31,8 @@ from app.agent.delegation_policy import (
     policy_from_model,
 )
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2, tool_catalog, tool_catalog_v2
+from app.classroom_mode import AUTHORITY as CLASSROOM_AUTHORITY
+from app.classroom_mode import classroom_mode, estimated_hours, estimated_search_angles
 from app.commerce.idempotency import canonical_request_signature
 from app.commerce.service_impl import CommerceConflict, CommerceValidationError
 from app.core.audit import record_audit
@@ -42,13 +45,33 @@ from app.db.models import (
     IdempotencyKey,
     Journey,
     JourneyMission,
+    MobilityFact,
     PaymentTransaction,
     Place,
     PlanVersion,
     ReplanProposal,
+    WebObservation,
 )
+from app.execution.launch_origin import grounded_launch_origin
+from app.execution.route_session_contract import (
+    ROUTE_PROVIDER_POLICY_VERSION,
+    ROUTE_TRUTH_POLICY_VERSION,
+    RouteRequest,
+)
+from app.route_session_operations import operation_payload as route_operation_payload
+from app.route_session_operations import submit_operation as submit_route_operation
+from app.fact_acquisition import acquire_place_facts
+from app.integrations.discovery.real_city import capture_real_city_candidates
 from app.schemas import AgentToolCall, ReplanGenerateRequest
-from app.services import activity_schema, journey_schema, service_schema
+from app.services import (
+    _place_verified_cost,
+    _place_window,
+    activity_schema,
+    generate_plans as compose_plans,
+    journey_schema,
+    plan_schema,
+    service_schema,
+)
 
 
 def _agent_key(kind: str, *parts: object) -> str:
@@ -333,7 +356,16 @@ class AgentToolGateway:
             return True
         if request.mission_id is not None:
             mission = self.session.get(JourneyMission, str(request.mission_id))
-            return mission is not None and mission.requested_autonomy == "PLAN_ONLY"
+            if mission is None or mission.requested_autonomy != "PLAN_ONLY":
+                return False
+            # Reform 2026-10-18, Navigator: a mock/local route capture has no external
+            # provider cost.  The PLAN_ONLY boundary protects plan truth and money, not a
+            # free evidence fetch; a configured live provider still needs the receipt.
+            if request.route_mode is not None:
+                from app.core.config import settings
+
+                return bool(settings.live_valhalla_url)
+            return True
         return False
 
     def _bound_authorization(
@@ -363,6 +395,16 @@ class AgentToolGateway:
             "inspect_twin": self.inspect_twin,
             "list_replans": self.list_replans,
             "search_city_services": self.search_city_services,
+            "research_place_sources": self.research_place_sources,
+            "discover_source_leads": self.discover_source_leads,
+            "estimate_place_facts": self.estimate_place_facts,
+            "generate_plans": self.generate_plans,
+            "discover_places": self.discover_places,
+            "acquire_place_facts": self.acquire_place_facts,
+            "compare_routes": self.compare_routes,
+            "acquire_route": self.acquire_route,
+            "read_guardian_stream": self.read_guardian_stream,
+            "refresh_live_context": self.refresh_live_context,
             "request_replan": self.request_replan,
             "accept_replan": self.accept_replan,
             "replace_activity": self.replace_activity,
@@ -488,6 +530,699 @@ class AgentToolGateway:
             "truncated": total > len(items),
             "byte_budget": self.LIST_REPLANS_BYTE_BUDGET,
             "detail_fields_omitted": omitted,
+        }
+
+    def research_place_sources(self, request: AgentToolCall) -> dict[str, Any]:
+        """Return bounded, non-authoritative source leads for one server Place.
+
+        Reform 2026-10-18, ported from the Revolution gateway: the agent may research a place
+        while the journey is still a draft. The query is built here from the Journey and the
+        Place -- the model supplies neither a name nor a URL -- and every captured row is stored
+        with `authority_status=NON_AUTHORITATIVE`, so a lead never becomes a fact by being fetched.
+        With no configured provider the answer says SOURCE_DISCOVERY_UNAVAILABLE; it does not
+        invent leads to look complete.  Classroom mode answers ESTIMATED instead, and what it
+        returns is the set of query angles worth trying -- still zero leads, still no URL.
+        """
+        if request.journey_id is None or not request.place_id:
+            raise HTTPException(422, "journey_id and place_id are required")
+        journey = _require_journey(self.session, request.journey_id)
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+
+        import time
+
+        from app.integrations.web import source_discovery
+        from app.integrations.web.public_region import REGION_PENDING, public_city_label
+        from app.integrations.web.research_service import build_source_query
+
+        base = {
+            "tool": "research_place_sources",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "journey_id": journey.id,
+            "place_id": place.id,
+            "authority": "NON_AUTHORITATIVE",
+        }
+        region = public_city_label(journey)
+        if not region:
+            # No public region means no query: the Journey's random id or custom
+            # title is not a place name a provider could answer.
+            result = {
+                **base,
+                "status": REGION_PENDING,
+                "reason_code": REGION_PENDING,
+                "region": {
+                    "label": None,
+                    "source": "JOURNEY_PUBLIC_REGION",
+                    "confirmed": False,
+                },
+                "next_legal_path": (
+                    "ask the traveler to confirm a public region on this Journey, or "
+                    "use discover_source_leads after the region is confirmed"
+                ),
+                "observations": [],
+            }
+            if classroom_mode():
+                result["status"] = "ESTIMATED"
+                result["authority"] = CLASSROOM_AUTHORITY
+                result["estimate"] = estimated_search_angles(
+                    region="(city not confirmed)", topic=str(place.name)
+                )
+                result["next_legal_path"] = (
+                    "continue with the estimated angles, or confirm a public region "
+                    "on this Journey so a provider can answer"
+                )
+            return result
+        query = build_source_query(place, journey, region=region)
+        chosen = source_discovery.choose_provider(None)
+        if chosen is None:
+            result = {
+                **base,
+                "query": query,
+                "status": "SOURCE_DISCOVERY_UNAVAILABLE",
+                "reason_code": "NO_WEB_PROVIDER",
+                "provider_availability": source_discovery.provider_availability(),
+                "next_legal_path": (
+                    "configure DeepSeek web search or SearXNG, or continue with stored facts"
+                ),
+                "observations": [],
+            }
+            if classroom_mode():
+                result["status"] = "ESTIMATED"
+                result["authority"] = CLASSROOM_AUTHORITY
+                result["estimate"] = estimated_search_angles(
+                    region=region, topic=str(place.name)
+                )
+                result["next_legal_path"] = (
+                    "continue planning with the estimated angles, or configure a web "
+                    "provider to turn them into captured leads"
+                )
+            return result
+
+        began = time.perf_counter()
+        drafts, provider_status, reason, attempts = source_discovery.search_with_fallback(
+            self.session,
+            query,
+            requested=None,
+            operation="place_source_research",
+            request_payload={"query": query, "region": region, "place_id": place.id},
+            limit=5,
+        )
+        elapsed_ms = round((time.perf_counter() - began) * 1000)
+        rows = source_discovery.capture_observations(
+            self.session, journey, drafts, query
+        )
+        self.session.commit()
+        result: dict[str, Any] = {
+            **base,
+            "query": query,
+            "status": provider_status,
+            "provider": attempts[-1]["provider"] if attempts else None,
+            "attempts": attempts,
+            "fallback_used": len(attempts) > 1,
+            "elapsed_ms": elapsed_ms,
+            "region": {
+                "label": region,
+                "source": "JOURNEY_PUBLIC_REGION",
+                "confirmed": True,
+            },
+            "observations": [source_discovery.lead_payload(row) for row in rows[:5]],
+        }
+        if reason:
+            result["reason_code"] = reason
+        return result
+
+    def discover_source_leads(self, request: AgentToolCall) -> dict[str, Any]:
+        """Zero-Place research: public region + topic -> non-authoritative leads.
+
+        Reform 2026-10-18, Scout: `research_place_sources` needs a canonical Place, and when
+        Photon/Nominatim/the city catalogue all answer zero there is no Place to research.  This
+        tool starts one step earlier.  It never creates a Place, never writes coordinates and never
+        promotes a lead into the map: every row is a `WebObservation` with
+        `authority_status=NON_AUTHORITATIVE` and `can_promote_to_place=false`.
+        """
+        if request.journey_id is None or not request.topic:
+            raise HTTPException(422, "journey_id and topic are required")
+        journey = _require_journey(self.session, request.journey_id)
+        from app.integrations.web import source_discovery
+
+        try:
+            result = source_discovery.discover_source_leads(
+                self.session,
+                journey,
+                topic=request.topic,
+                provider=request.provider,
+                limit=5,
+            )
+        except ValueError as exc:
+            # Sanitisation refusals are named: an internal id in a public topic is a 422,
+            # not a silent rewrite that still sends the id.
+            raise HTTPException(422, str(exc)) from exc
+        return {
+            "tool": "discover_source_leads",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "journey_id": journey.id,
+            **result,
+        }
+
+    def read_guardian_stream(self, request: AgentToolCall) -> dict[str, Any]:
+        """Project Event -> ImpactAssessment -> GuardianRun; never starts a watch."""
+
+        if request.journey_id is None:
+            raise HTTPException(422, "journey_id is required")
+        journey = _require_journey(self.session, request.journey_id)
+        from app.agent.guardian_stream import guardian_stream
+
+        return guardian_stream(
+            self.session,
+            journey,
+            mission_id=str(request.mission_id) if request.mission_id else None,
+            limit=20,
+        )
+
+    def refresh_live_context(self, request: AgentToolCall) -> dict[str, Any]:
+        """Run the live venue-context watch, only when the deployment enabled it.
+
+        The switch is server-owned (`guardian_autorun`); the model cannot turn a
+        watch on by asking.  A Journey without an active plan has nothing to
+        watch, and says so instead of reporting an empty success.
+        """
+
+        if request.journey_id is None:
+            raise HTTPException(422, "journey_id is required")
+        journey = _require_journey(self.session, request.journey_id)
+        from app.agent.guardian_stream import guardian_stream
+        from app.core.config import settings
+        from app.live_context_watch import run_live_context_watch
+
+        base = {
+            "tool": "refresh_live_context",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "journey_id": journey.id,
+            "mission_id": str(request.mission_id) if request.mission_id else None,
+        }
+        if not settings.guardian_autorun:
+            return {
+                **base,
+                "status": "WATCH_NOT_ENABLED",
+                "reason_code": "GUARDIAN_AUTORUN_OFF",
+                "stream": [],
+                "next_legal_path": (
+                    "enable CITYNEXUS_GUARDIAN_AUTORUN and run the watch; no provider "
+                    "is called while monitoring is off"
+                ),
+            }
+        if not journey.active_plan_version_id:
+            return {
+                **base,
+                "status": "NO_ACTIVE_PLAN",
+                "reason_code": "WATCH_REQUIRES_ACTIVE_PLAN",
+                "stream": [],
+                "next_legal_path": "select or start a plan before watching reality",
+            }
+        result = run_live_context_watch(self.session, journey)
+        epoch_payload = None
+        if result.get("material_conflicts") or result.get("created_recovery_event_ids"):
+            # A material conflict is a changed reality: bind the recovery epoch
+            # before any proposal generated against the old world can survive.
+            from app.recovery_epoch import ensure_recovery_epoch
+
+            epoch = ensure_recovery_epoch(self.session, journey)
+            self.session.flush()
+            epoch_payload = {
+                "id": epoch.id,
+                "generation": int(epoch.generation),
+                "status": epoch.status,
+                "recovery_reality_fingerprint": epoch.recovery_reality_fingerprint,
+                "opened_at": epoch.opened_at,
+            }
+        self.session.commit()
+        stream = guardian_stream(
+            self.session,
+            journey,
+            mission_id=base["mission_id"],
+            limit=20,
+        )
+        return {
+            **base,
+            "status": "REFRESHED",
+            "watch": result,
+            "recovery_epoch": epoch_payload,
+            "stream": stream["stream"],
+            "counts": stream["counts"],
+        }
+
+    def acquire_route(self, request: AgentToolCall) -> dict[str, Any]:
+        """Acquire exactly one server-resolved grounded-origin -> target edge.
+
+        Reform 2026-10-18: the write half of route comparison, using the same launch-origin chain the
+        product route uses. The model names no origin and no coordinates; the server resolves the
+        target activity and the grounded origin, and refuses when either is not ready. Execution runs
+        through the deployment's mobility capture (mock when no live provider is configured), and
+        every attempt is an operation row rather than a silent fetch.
+
+        Authorization lives here, not only in the runtime loop, because `/agent/tools/v2/...` calls
+        this dispatcher directly. A deployment whose mobility capture is the built-in mock has no
+        external provider cost and stays automatic; a configured live provider needs one named user
+        approval for the exact edge, consumed through the same approval machinery the other typed
+        mutations use. The approval fingerprint binds origin, target and mode, so a receipt for one
+        edge cannot authorize another.
+        """
+        from app.core.config import settings
+        from app.main import _launch_target_activity
+
+        journey = _require_journey(self.session, request.journey_id)
+        target = _launch_target_activity(self.session, journey)
+        if target is None or not target.place_id:
+            raise HTTPException(409, "exact route target is unavailable")
+        if request.target_activity_id and str(request.target_activity_id) != str(target.id):
+            raise HTTPException(422, "target_activity_id is not the active exact target")
+        origin = grounded_launch_origin(self.session, journey, target_activity=target)
+        if origin.get("state") != "READY" or not origin.get("origin_key"):
+            raise HTTPException(409, "grounded launch origin is unavailable")
+        if str(origin.get("source") or "") == "FOREGROUND_LOCATION":
+            raise HTTPException(409, "route acquisition requires an exact persisted origin Place")
+        mode = (request.route_mode or "TRANSIT").upper()
+        route_request = RouteRequest(
+            journey_id=str(journey.id),
+            origin_key=str(origin["origin_key"]),
+            target_key=str(target.place_id),
+            target_activity_id=str(target.id),
+            requested_mode=mode,
+            provider_policy_version=ROUTE_PROVIDER_POLICY_VERSION,
+            route_truth_policy_version=ROUTE_TRUTH_POLICY_VERSION,
+        )
+        live_provider = bool(settings.live_valhalla_url)
+        evidence = {
+            "origin_key": str(origin["origin_key"]),
+            "origin_source": origin.get("source"),
+            "target_activity_id": str(target.id),
+            "target_place_id": str(target.place_id),
+            "requested_mode": mode,
+            "provider": "valhalla" if live_provider else "mock-mobility",
+            "external_provider_call": live_provider,
+        }
+
+        def execute() -> dict[str, Any]:
+            row, reused = submit_route_operation(self.session, journey, route_request)
+            self.session.commit()
+            return {
+                "origin": {
+                    "key": origin.get("origin_key"),
+                    "name": origin.get("name"),
+                    "authority": origin.get("authority"),
+                    "source": origin.get("source"),
+                },
+                **route_operation_payload(row, reused=reused),
+            }
+
+        return self._run_typed_mutation(
+            request,
+            journey,
+            action=AgentAction.ACQUIRE_ROUTE,
+            target_type="JourneyRouteEdge",
+            target_id=f"{origin['origin_key']}->{target.place_id}",
+            facts=AuthoritativeActionFacts(external_provider_call=live_provider),
+            evidence=evidence,
+            arguments={
+                "origin_key": str(origin["origin_key"]),
+                "target_key": str(target.place_id),
+                "target_activity_id": str(target.id),
+                "route_mode": mode,
+            },
+            execute=execute,
+        )
+
+    def compare_routes(self, request: AgentToolCall) -> dict[str, Any]:
+        """Compare the route facts the server already holds for one edge.
+
+        Reform 2026-10-18: the read half of route comparison. Acquisition needs the launch-origin
+        chain this tree does not have yet, so this tool never claims to have looked anything up: it
+        answers with the stored `MobilityFact` rows for the pair, or says no edge was captured. An
+        unknown cost stays unknown -- the row's own `cost_status` is passed through untouched.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.from_key or not request.to_key:
+            raise HTTPException(422, "from_key and to_key are required for compare_routes")
+        query = select(MobilityFact).where(
+            MobilityFact.journey_id == journey.id,
+            MobilityFact.from_key == request.from_key,
+            MobilityFact.to_key == request.to_key,
+        )
+        if request.route_mode:
+            query = query.where(MobilityFact.mode == request.route_mode.upper())
+        rows = self.session.scalars(query.order_by(MobilityFact.mode)).all()
+        return {
+            "tool": "compare_routes",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "pair": {"from_key": request.from_key, "to_key": request.to_key},
+            "status": "STORED_FACTS" if rows else "NO_STORED_ROUTE_FACTS",
+            "counts_as_supply": bool(rows),
+            "options": [
+                {
+                    "mode": row.mode,
+                    "duration_min": row.duration_min,
+                    "distance_m": row.distance_m,
+                    "cost_amount_minor": row.cost_amount_minor,
+                    "currency": row.currency,
+                    "cost_status": row.cost_status,
+                    "transfers": row.transfers,
+                    "walking_min": row.walking_min,
+                    "provider_key": row.provider_key,
+                    "provenance": row.provenance,
+                    "captured_at": row.captured_at,
+                }
+                for row in rows
+            ],
+        }
+
+    def acquire_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
+        """Acquire provider-backed facts for one Place, or say why it cannot.
+
+        Reform 2026-10-18, fifth adapter: source-backed details. The provider identity is the
+        place's own (`overpass:node/123` and friends); a caller may also bind the acquisition to a
+        source observation it already holds. Facts the providers do not answer stay UNKNOWN, and a
+        place with no provider identity is reported as such instead of being guessed at. This tool
+        writes canonical Place rows, so the runtime requires an inspection before it runs.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.place_id:
+            raise HTTPException(422, "place_id is required for acquire_place_facts")
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+        bindings = None
+        binding_origin = "agent"
+        if request.source_observation_id is not None:
+            observation = self.session.get(WebObservation, str(request.source_observation_id))
+            if observation is None or observation.journey_id != journey.id:
+                raise HTTPException(409, "SOURCE_OBSERVATION_NOT_OWNED_BY_JOURNEY")
+            if observation.authority_status != "NON_AUTHORITATIVE":
+                raise HTTPException(409, "SOURCE_OBSERVATION_STATE_INVALID")
+            bindings = {
+                place.id: {
+                    "source_url": observation.url,
+                    "source_class": observation.source_class,
+                    "source_observation_id": observation.id,
+                }
+            }
+            binding_origin = "agent_observation"
+        elif request.source_url:
+            bindings = {
+                place.id: {
+                    "source_url": request.source_url,
+                    "source_class": request.source_class,
+                }
+            }
+        receipt = acquire_place_facts(
+            self.session,
+            journey,
+            place_ids=[place.id],
+            source_bindings=bindings,
+            binding_origin=binding_origin,
+        )
+        self.session.commit()
+        return {
+            "tool": "acquire_place_facts",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "place_id": place.id,
+            "receipt": receipt,
+        }
+
+    def discover_places(self, request: AgentToolCall) -> dict[str, Any]:
+        """Provider-backed alternative search, for when a catalogue query found nothing.
+
+        Reform 2026-10-18, fourth adapter. The query budget is the server's own route budget
+        (radius 100..5000 m, at most 20 rows per call); widening it without provider evidence is
+        exactly what the order forbids. Every call writes a ProviderCall row, and a provider that
+        answers with nothing is reported as such -- not raised as a failure of the journey, and not
+        turned into an invented place.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.query:
+            raise HTTPException(422, "query is required for discover_places")
+        mode = (request.mode or "captured_replay").lower()
+        try:
+            result = capture_real_city_candidates(
+                self.session,
+                journey,
+                query=request.query,
+                radius_m=request.radius_m or 2500,
+                limit=request.limit or 8,
+                mode=mode,
+            )
+        except ValueError as exc:
+            # A named refusal (for example, the captured snapshot belongs to another city) is a
+            # conflict the caller can act on, not a provider outage.
+            raise HTTPException(409, str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(503, str(exc)) from exc
+        self.session.commit()
+        candidates = result.get("candidates") or []
+        return {
+            "tool": "discover_places",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "query": request.query,
+            "mode": result.get("mode", mode),
+            "count": len(candidates),
+            "counts_as_supply": bool(candidates),
+            "provenance": result.get("provenance"),
+            "provider_status": result.get("provider_status"),
+            "candidates": candidates,
+        }
+
+    def generate_plans(self, request: AgentToolCall) -> dict[str, Any]:
+        """Generate candidate plans for a draft; selection stays a separate step.
+
+        Reform 2026-10-18, ported from the Revolution gateway. Every plan this returns is a
+        CANDIDATE: nothing here selects or activates one, and the active plan (when there is one) is
+        read only to compute what a candidate would change. This is the call that lets a draft be
+        researched and shaped before anybody commits to it.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        requested = list(dict.fromkeys(str(item) for item in (request.place_ids or [])))
+        if len(requested) < 2:
+            raise HTTPException(
+                422, "place_ids must contain at least two distinct server-owned Place IDs"
+            )
+        rows = self.session.scalars(select(Place).where(Place.id.in_(requested))).all()
+        found = {row.id: row for row in rows}
+        missing = [place_id for place_id in requested if place_id not in found]
+        wrong_city = [
+            place_id
+            for place_id in requested
+            if place_id in found and found[place_id].city_code != journey.city_code
+        ]
+        if missing or wrong_city:
+            raise HTTPException(
+                422,
+                json.dumps(
+                    {
+                        "code": "PLACE_IDS_NOT_IN_JOURNEY_CITY",
+                        "missing_place_ids": missing,
+                        "wrong_city_place_ids": wrong_city,
+                    }
+                ),
+            )
+        try:
+            plans = compose_plans(
+                self.session,
+                journey,
+                request.planning_mode or journey.planning_mode,
+                request.candidate_count,
+                place_ids=requested,
+            )
+        except (TypeError, ValueError) as exc:
+            self.session.rollback()
+            raise HTTPException(422, str(exc)) from exc
+        self.session.commit()
+        from app.collective_mediation import plan_collective_fit_subject
+        from app.main import active_journey_members_with_capabilities
+
+        summaries: list[dict[str, Any]] = []
+        collective_windows: list[dict[str, Any]] = []
+        active_projection = None
+        if journey.active_plan_version_id:
+            active_plan = self.session.get(PlanVersion, journey.active_plan_version_id)
+            if active_plan is not None:
+                active_projection = plan_schema(self.session, active_plan).model_dump(mode="json")
+        for plan in plans:
+            projected = plan_schema(self.session, plan).model_dump(mode="json")
+            explanation = projected.get("explanation") or {}
+            mobility = projected.get("mobility_evidence") or {}
+            subject = plan_collective_fit_subject(
+                (active_projection or {}).get("activities", []),
+                projected.get("activities", []),
+            )
+            activity_place_ids = [
+                item.get("place_id")
+                for item in projected.get("activities", [])
+                if item.get("place_id")
+            ]
+            fit_place_ids = list(subject["fit_subject_place_ids"])
+            places_for_fit = (
+                self.session.scalars(select(Place).where(Place.id.in_(fit_place_ids))).all()
+                if fit_place_ids
+                else []
+            )
+            tags: list[str] = []
+            for place in places_for_fit:
+                tags.append(str(place.category or ""))
+                tags.extend(json.loads(place.tags_json or "[]"))
+            subject["fit_subject_tags"] = sorted(
+                {str(tag).strip().lower() for tag in tags if str(tag).strip()}
+            )
+            hard_status = (
+                "GROUNDED_FEASIBLE" if projected["selectable"] else "REVALIDATION_REQUIRED"
+            )
+            collective_windows.append(
+                {
+                    "window_id": projected["id"],
+                    "status": hard_status,
+                    "candidate": {
+                        "place_id": projected["id"],
+                        "ordered_place_ids": fit_place_ids,
+                        "tags": subject["fit_subject_tags"],
+                        **subject,
+                    },
+                }
+            )
+            summaries.append(
+                {
+                    "id": projected["id"],
+                    "version_no": projected["version_no"],
+                    "status": projected["status"],
+                    "selectable": projected["selectable"],
+                    "place_ids": activity_place_ids,
+                    "fit_subject_place_ids": fit_place_ids,
+                    "unresolved_facts": explanation.get("unresolved_facts", []),
+                    "authority_state": explanation.get("authority_state"),
+                    "mobility_provider": mobility.get("source_provider"),
+                    "mobility_snapshot_id": projected.get("mobility_snapshot_id"),
+                    **subject,
+                }
+            )
+        collective = active_journey_members_with_capabilities(
+            self.session, journey, candidate_windows=collective_windows
+        )
+        for summary, row in zip(summaries, collective.get("candidate_fit_matrix", [])):
+            summary["collective_fairness"] = row.get("fairness", {})
+            summary["collective_member_fits"] = row.get("member_fits", {})
+        collective.pop("members", None)
+        return {
+            "tool": "generate_plans",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "candidate_count": len(summaries),
+            "plans": summaries,
+            "collective_mediation": collective,
+            "authority_note": "Candidates are awaiting the deterministic selection step.",
+        }
+
+    def estimate_place_facts(self, request: AgentToolCall) -> dict[str, Any]:
+        """Estimate one Place's hours or cost from same-city verified peers.
+
+        Reform 2026-10-18, ported from the Revolution gateway. The estimate is strategy evidence:
+        it lands under `strategy_estimate` in the place's metadata and is never promoted into
+        `opening_hours_json` or `cost_evidence`, because a peer median is not this place's fact.
+        A number the model supplies is recorded as AGENT_PROVIDED_HYPOTHESIS, with the same
+        non-authoritative status.
+        """
+        journey = _require_journey(self.session, request.journey_id)
+        if not request.place_id:
+            raise HTTPException(422, "place_id is required for estimate_place_facts")
+        place = self.session.get(Place, request.place_id)
+        if place is None or place.city_code != journey.city_code:
+            raise HTTPException(404, "Place is not part of the Journey city")
+        peers = self.session.scalars(
+            select(Place).where(
+                Place.city_code == journey.city_code, Place.category == place.category
+            )
+        ).all()
+        peer_costs = [
+            value
+            for peer in peers
+            if json.loads(peer.metadata_json or "{}").get("cost_evidence", {}).get("currency")
+            == journey.budget_currency
+            and (value := _place_verified_cost(peer)) is not None
+        ]
+        peer_windows = [window for peer in peers if (window := _place_window(peer)) is not None]
+        estimate: dict[str, Any] = {
+            "place_id": place.id,
+            "authority_eligible": False,
+            "basis": "same-city verified peers in the same provider category",
+            "opening_hours": {"status": "ESTIMATED_AGENT"},
+            "cost_evidence": {"status": "ESTIMATED_AGENT", "currency": journey.budget_currency},
+        }
+        if peer_windows:
+            opens = [window[0] for window in peer_windows]
+            closes = [window[1] for window in peer_windows]
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": int(median(opens)),
+                    "close_minutes": int(median(closes)),
+                    "peer_count": len(peer_windows),
+                }
+            )
+        if peer_costs:
+            estimate["cost_evidence"].update(
+                {"amount_minor": int(median(peer_costs)), "peer_count": len(peer_costs)}
+            )
+        if classroom_mode() and not peer_windows:
+            # No verified peer in this city and category: fall back to the category-typical
+            # window instead of returning an estimate with nothing in it.  Same authority
+            # markers, `authority_eligible` stays false and the numbers never reach
+            # opening_hours_json.
+            window = estimated_hours(place.category)
+            estimate["basis"] = f"{estimate['basis']}; classroom category heuristic (no verified peers)"
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": window["open_minutes"],
+                    "close_minutes": window["close_minutes"],
+                    "basis": "CLASSROOM_CATEGORY_HEURISTIC",
+                }
+            )
+        if (
+            request.estimated_open_minutes is not None
+            and request.estimated_close_minutes is not None
+            and request.estimated_close_minutes > request.estimated_open_minutes
+        ):
+            estimate["basis"] = "agent_bounded_hypothesis"
+            estimate["opening_hours"].update(
+                {
+                    "open_minutes": request.estimated_open_minutes,
+                    "close_minutes": request.estimated_close_minutes,
+                    "basis": "AGENT_PROVIDED_HYPOTHESIS",
+                }
+            )
+        if request.estimated_cost_minor is not None:
+            estimate["basis"] = "agent_bounded_hypothesis"
+            estimate["cost_evidence"].update(
+                {
+                    "amount_minor": request.estimated_cost_minor,
+                    "basis": "AGENT_PROVIDED_HYPOTHESIS",
+                }
+            )
+        metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+        metadata["strategy_estimate"] = {
+            "status": "ESTIMATED_AGENT",
+            "authority_eligible": False,
+            "basis": estimate["basis"],
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+            "opening_hours": dict(estimate["opening_hours"]),
+            "cost_evidence": dict(estimate["cost_evidence"]),
+        }
+        place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+        # Estimates are strategy observations, not canonical Place facts. Persisting them lets the
+        # next deterministic compose explain how the decision was made without promoting the
+        # numbers into opening_hours_json or cost_evidence.
+        self.session.commit()
+        return {
+            "tool": "estimate_place_facts",
+            "decision": AuthorizationDecision.ALLOW_AUTO.value,
+            "estimate": estimate,
+            "warning": (
+                "ESTIMATED_AGENT never becomes canonical/provider truth; it supports strategy only."
+            ),
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:

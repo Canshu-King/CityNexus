@@ -120,13 +120,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
         const isConflict =
           r.status === 422 && namedCodeIn(text, EXPLAINABLE_REFUSALS) !== null;
         setError(
-          isConflict
-            ? zh
-              ? "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。"
-              : "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one."
-            : zh
-              ? "暂时无法选择这家住宿。"
-              : "Could not choose this stay.",
+          isConflict ? t("stay.chosenClashes") : t("stay.chooseFailed"),
           facts,
         );
         return;
@@ -134,7 +128,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       setChosen(optionId);
       onSelected?.();
     } catch {
-      setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+      setError(t("stay.unreachable"));
     } finally {
       setBusy(null);
     }
@@ -156,9 +150,10 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             <p className="v8-kicker">{t("hub.stayLabel")}</p>
             <h1>{t("stay.noneToCompare")}</h1>
             <p className="v8-lede">
-              {zh
-                ? "这个城市还没有拿到可用的住宿数据。可以重新采集一次，或换个城市看看——我们不会编造酒店。"
-                : "No provider-backed accommodation is available for this city yet. Re-run the acquisition, or look at another city — we will not invent hotels."}
+              {/* The hub already states this exact absence through `hub.stayOutcomeUnknown`;
+                  the panel used to retype it inline in both languages, so the same fact had
+                  three writers and the dictionary key had none on this screen. */}
+              {t("hub.stayOutcomeUnknown")}
             </p>
           </div>
         </div>
@@ -187,7 +182,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
             }}
             data-testid="hotels-empty-explore-btn"
           >
-            {zh ? "换个城市看看" : "Look at another city"}
+            {t("stay.anotherCity")}
           </button>
         </div>
       </section>
@@ -201,9 +196,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
           <p className="v8-kicker">{t("hub.stayLabel")}</p>
           <h1>{t("stay.chooseTitle")}</h1>
           <p className="v8-lede">
-            {zh
-              ? `按与行程的关系排序的 ${options.length} 家住宿。价格未知时我们如实说明。`
-              : `${options.length} stays ranked by how they fit your itinerary. Where price is unknown we say so.`}
+            {t("stay.rankedCount", { n: options.length })}
           </p>
         </div>
       </div>
@@ -230,37 +223,37 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
               </header>
               <dl>
                 <div>
-                  <dt>{zh ? "价格" : "Price"}</dt>
+                  <dt>{t("stay.priceLabel")}</dt>
                   <dd data-testid="hotel-price">
                     {priceKnown
-                      ? `${stay.currency} ${Math.round(stay.nightly_amount_minor / 100)} / ${zh ? "晚" : "night"}`
-                      : zh
-                        ? "暂无价格"
-                        : "Price unavailable"}
+                      ? t("stay.pricePerNight", {
+                          currency: stay.currency,
+                          amount: Math.round(stay.nightly_amount_minor / 100),
+                        })
+                      : t("stay.priceUnavailable")}
                   </dd>
                 </div>
                 <div>
-                  <dt>{zh ? "步行" : "Walking"}</dt>
-                  <dd>{option.walking_min}{zh ? " 分钟" : " min"}</dd>
+                  <dt>{t("stay.walkingLabel")}</dt>
+                  <dd>{t("stay.minutes", { n: option.walking_min })}</dd>
                 </div>
                 <div>
                   <dt>{t("stay.arrivalFit")}</dt>
                   <dd>{option.arrival_fit}% / {option.departure_fit}%</dd>
                 </div>
                 <div>
-                  <dt>{zh ? "退改" : "Cancellation"}</dt>
-                  <dd>{stay.refundable ? (zh ? "可取消" : "Refundable") : zh ? "不可取消" : "Non-refundable"}</dd>
+                  <dt>{t("stay.cancellationLabel")}</dt>
+                  <dd>{stay.refundable ? t("stay.refundableYes") : t("stay.refundableNo")}</dd>
                 </div>
               </dl>
               <p className="hotel-reason">
-                {zh ? "推荐理由：" : "Why: "}
+                {t("stay.whyLabel")}
                 {option.hard_constraints_passed
-                  ? zh
-                    ? `与行程冲突最少，步行负担 ${option.walking_min} 分钟，预留缓冲 ${option.protected_margin_min} 分钟。`
-                    : `Fewest itinerary conflicts, ${option.walking_min} min walking, ${option.protected_margin_min} min protected margin.`
-                  : zh
-                    ? "与当前硬约束存在冲突，仅供参考。"
-                    : "Conflicts with current hard constraints; shown for reference only."}
+                  ? t("stay.reasonFits", {
+                      walking: option.walking_min,
+                      margin: option.protected_margin_min,
+                    })
+                  : t("stay.reasonConflicts")}
               </p>
               <button
                 type="button"
@@ -270,10 +263,10 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
                 onClick={() => void select(option.id)}
               >
                 {isChosen
-                  ? zh ? "已选择这家" : "Selected"
+                  ? t("stay.chosenLabel")
                   : busy === option.id
-                    ? zh ? "选择中…" : "Choosing…"
-                    : zh ? "选择这家住宿" : "Choose this stay"}
+                    ? t("stay.choosing")
+                    : t("stay.choose")}
               </button>
             </article>
           );

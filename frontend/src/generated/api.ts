@@ -68,6 +68,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/travelers/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getTravelerSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/session/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["refreshTravelerSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/{traveler_id}/recovery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Issue one recovery credential to the traveller whose own live credential is on the request */
+        post: operations["issueTravelerRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/recovery/redeem": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exchange a recovery id and secret for a session signed by the same verifier */
+        post: operations["redeemTravelerRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/travelers/{traveler_id}/recovery/{recovery_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                recovery_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Stop a recovery credential before it is used */
+        post: operations["revokeTravelerRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/travelers/{traveler_id}": {
         parameters: {
             query?: never;
@@ -1212,6 +1300,7 @@ export interface paths {
             };
             cookie?: never;
         };
+        /** @description The Guardian's own read-out, declared key by key so screen 09 can rely on it: the standing Mission, the plan the journey is on, the last 20 runs (decision, action_status, evidence, the plan it moved from and to, its timestamps and cooldown), and the last 20 observations this server holds. An observation is only ever a stored row -- nothing here asks a provider, and a row that never stated an expiry answers null rather than a stamp, so an expired note and a never-expiring one cannot be confused. */
         get: operations["getJourneyGuardianStatus"];
         put?: never;
         post?: never;
@@ -1765,6 +1854,220 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["refreshJourneyResilience"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/places/{place_id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                place_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description The photograph this product may show for one place, with the identity evidence that bound it. A place that exists but has no showable photograph answers 200 with NO_IMAGE, NO_PERMISSION or UNAVAILABLE and a null media -- never 4xx, because the traveller still has to see the place. The caller is checked before any image provider is asked: this reads one journey's own places, so it needs traveller credentials (401 without them, `TRAVELER_CREDENTIALS_MISSING`), a seat on that journey held by an owner or an in-force member (403 `JOURNEY_MEMBER_REQUIRED`), and the place has to be one this journey actually holds -- a place row from elsewhere answers the same 404 as a place that does not exist, so the door cannot be walked to enumerate another traveller's trip. `place-identity` answers with `media_path`, which is this path with the id it resolved. */
+        get: operations["getJourneyPlaceMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/place-identity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Which place is this map point? A workspace map carries a source lead -- Photon, Nominatim or a discovery candidate -- and that lead is not a `Place.id`, so the mapping runs here, server-side, against stored identity columns only. Text and urls are refused (`LEAD_NOT_A_PLACE_LEAD`) rather than looked up by name, because name matching is how a same-named landmark in another city gets the wrong photograph; a lead two rows claim is refused as `LEAD_AMBIGUOUS` instead of guessed. The same door as the media read, asked before any lookup: 401 without credentials, 403 without a seat, 404 for a journey that is not there. It asks no image provider, so it costs no provider call, and `media_path` is that other door, already filled in. */
+        get: operations["getJourneyPlaceIdentity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/members/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Does the caller hold a seat on this journey, as what, and until when -- the one read a confirm button needs before it may be shown. The seat words are the same three the member list already answers with (MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN), plus OWNER for the traveller the journey belongs to, who holds a seat without holding a membership row. Credentials first: 401 `TRAVELER_CREDENTIALS_MISSING` when none was presented, 404 for a journey that is not there, 403 `JOURNEY_MEMBER_REQUIRED` when the caller has no seat in force -- and that 403 carries the seat that explains itself, so a screen can say "this seat ended" rather than "you are lost". */
+        get: operations["getJourneyMemberMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/departure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description One projection of "准备出发", read from durable rows only: which plan versions this journey holds, what the server froze for each, whether that freeze has passed, and the single gate word for the journey -- READY_TO_DEPART, ALREADY_RUNNING, NO_PLAN_SELECTED, STALE_RECOMPOSE_REQUIRED, PLAN_INFEASIBLE or JOURNEY_NOT_PLANNABLE. It writes nothing and asks no provider: a screen that looks at departure cannot start a trip, and the gate is decided in one order (an ACTIVE journey is reported as running before its evidence is judged). The stale-evidence words are the same words the write doors raise for the same row -- `select` answers 409 STALE_RECOMPOSE_REQUIRED for a candidate with nothing frozen, and `start` answers 409 STALE_RECOMPOSE_REQUIRED when the frozen evidence has expired; both are pinned by name in the backend suite, because this door mirrors those predicates rather than sharing them. `feasibility.failures` carries the evaluator's own strings whenever the gate is PLAN_INFEASIBLE, so nothing is re-worded for the screen. */
+        get: operations["getJourneyDeparture"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/departure/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Turn the variant a traveller picked out of `departure.candidates` into this journey's formal plan, once, for the member who asked. The transition is not re-decided here: the door calls the same `select_plan` the app already calls in-process for the seed supply and the staged advance, so frozen evidence, feasibility, retiring the previous SELECTED row, the cursor and the single-ACTIVE invariant keep one writer, and `plan_versions.source` keeps its three closed words (INITIAL / REPLAN / MANUAL) -- this door invents no fourth and needs no migration. What `POST /plans/{plan_version_id}/select` does not answer, and this adds: who decided -- the caller is resolved through the shared traveller verifier and must hold a seat in force, and the decision is written to `audit_logs` with `actor_type` traveler and that actor id -- and whether this exact request was already applied. `Idempotency-Key` is required, its receipt lives in the existing `idempotency_keys` table, and a replay answers the stored body with `idempotency_replay: true` instead of committing twice or emitting a second audit event; the header is optional in the schema on purpose, because a caller who omits it must get the named refusal (IDEMPOTENCY_KEY_REQUIRED) rather than a transport-level error. The body accepts one field, `plan_version_id`, and refuses any other key by name, so no place text and no URL is ever described to the server through this door. A refusal from the transition keeps the transition's own sentence and adds `error.reason_code`: 409 STALE_RECOMPOSE_REQUIRED for a candidate with nothing frozen (pinned to `select`'s literal detail in the backend suite) and 422 PLAN_INFEASIBLE carrying the evaluator's strings. A refused commit stores no receipt, so the same key still works once the underlying state is fixed. */
+        post: operations["commitJourneyDeparture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/departure/facts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description For the slots of one plan version of one journey the caller holds a seat on, what this server actually holds about the place each slot names: the identity pair (our canonical id plus the `provider_key:external_id` it came from), whether there is a plottable point, whether the row states an opening window, whether it states a verified cost, and when that cost was taken. Nothing is looked up and nothing is written: the slots come from `Activity` rows of a `PlanVersion` on this journey, the judgements are the ones `app.services` already makes for the feasibility gate (`_place_window`, `_place_verified_cost`), and no provider client is reachable from this module, so a fact read cannot spend quota, cannot become a place or network enumeration door, and cannot answer 200 by inventing a number. An absence is named instead: `state` is UNKNOWN with a `detail` word (SLOT_HAS_NO_LOCATION, OPENING_HOURS_NOT_RECORDED, OPENING_WINDOW_NOT_AN_INTERVAL, NO_COST_EVIDENCE_OBJECT, COST_EVIDENCE_STATUS_NOT_KNOWN, CITY_SERVICE_CARRIES_NO_POINT, SERVICE_AVAILABILITY_NOT_RECORDED, SERVICE_AVAILABILITY_NOT_AN_INTERVAL), and the amount stays absent rather than zero. A slot naming a place row this store does not hold is not an answer given here, because `activities.place_id` is a foreign key `ON DELETE SET NULL`: deleting the place leaves the slot pointing at nothing, which is `SLOT_HAS_NO_LOCATION`. A place's verified cost and the estimate the plan row carries are two fields, never merged. A coordinate uses the shipped pair READY / UNAVAILABLE. Licence and author are one door away: a place slot carries the `media_door` path to read them from. */
+        get: operations["getJourneyDepartureFacts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/replan-proposals/{proposal_id}/consent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Who must agree to this shared future, who has, and what the rule therefore decides. The required set is read through the two predicates the member doors already use -- `_member_state` for in-force, `journey_role_capabilities` for the role's `JOURNEY_UPDATE` -- so narrowing that table narrows the round the same instant; it is never a role list written into a handler. The roster projection in `app.main` is deliberately not called here: it refreshes a twin snapshot per member, and a status read that writes storage is the defect this project already names for `GET /experience`. Answers are the `audit_logs` rows this round writes, one per press, latest per traveller; `classification` is the mediation word a mission recorded for this exact proposal in `resolved_intent_json`, or null when none did. Nothing is asked of a provider. */
+        get: operations["getJourneyProposalConsent"];
+        put?: never;
+        /** @description Record one member's APPROVE or REJECT for one proposal, as themselves. The body carries one decision word and nothing else: the traveller it belongs to comes from the credential, and a body that names a principal is refused by name (`CONSENT_DELEGATION_REFUSED`) rather than ignored -- an organiser cannot confirm for another member, and there is no code path here that would let them. `Idempotency-Key` is required, so a retry after a dropped response replays the answer instead of recording the same act twice. Two of three leaves the shared plan exactly where it was: no apply attempt, no receipt. When the last required member approves, this door issues a `collective_authority_receipts` row -- its `required_member_ids_json`, `principal_actor_ids_json` and `response_audit_ids_json` are written for the first time here, and its `decision_epoch` is `collective_decision_epoch` from `app.collective_mediation` -- and then asks the door that already validates the transition, `POST /api/v1/replans/{proposal_id}/accept`, in-process. Its refusal is reported beside the fulfilled rule as `plan_apply`, never merged into it: consent being complete and the plan being applyable are two facts. A REJECT invalidates a receipt that a previous round issued (`COLLECTIVE_MEMBER_REJECTED`), and a later APPROVE mints a new one rather than reviving it. */
+        post: operations["postJourneyProposalConsent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/plans/from-slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Write the slots a draft already holds as a new CANDIDATE plan version, keeping their order and their times. The shipped generator re-schedules, so it cannot be the door that turns a chosen draft into a plan without claiming a preservation that did not happen. A slot names a canonical `places` row and carries its own times; a provider id (`provider_key:external_id`) is refused by name and pointed at the identity read that yields the canonical id, and the fields that would describe a place (`title`, `name`, `url`, `query`, `address`, `external_id`, `source_id`, `photo`, `image`, `tags`) are refused rather than stored, because `activities.title` is written from the Place row this door reads. A place whose `city_code` differs from the journey's is a refusal, not a plan. `expected_revision` has to be *said* by every call: it is the journey's current `active_plan_version_id`, or `null` for a journey that has no plan version yet -- which is how a first draft gets written, since there is nothing for it to have moved off. Naming `null` while a plan is in force is `BASE_PLAN_MOVED`, not an acceptance, and leaving the field out is `EXPECTED_REVISION_REQUIRED`; `Idempotency-Key` is required so a retry replays the same plan version instead of writing a second one. Nothing is selected, started or activated here -- the row is CANDIDATE until `POST /api/v1/journeys/{journey_id}/departure/commit` -- and no provider is reachable from the module, so this cannot spend quota. An undeclared cost stays undeclared: the column's zero is stored because the DDL demands NOT NULL, and `cost_declared` says false. Its own frozen evidence is not this door's to invent: a candidate written here reaches a judgeable submission through `POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze`. */
+        post: operations["postJourneyPlanFromSlots"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/plans/{plan_version_id}/submission": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Present a CANDIDATE plan version of this journey to its members as a `replan_proposals` row in the shipped PRESENTED state, without applying it to anybody: the journey keeps pointing at its active version, the candidate keeps its own status, and the round that follows is the consent door. The body is empty on purpose -- every field stored is read from rows and judged by the functions that already own those judgements: `hard_constraints_passed` from `app.services.validate_plan_feasibility` (the same gate `select` runs; it raises `STALE_RECOMPOSE_REQUIRED` for a version whose frozen mobility evidence is missing, which is stored as not-passed with `gate.judged` false and the gate's own code, never as a pass), `locked_commitments_preserved` from the base's own `locked` slots and the places the candidate carries (and `lock_flags_dropped` / `lock_flags_added`, which name the `locked` word itself on slots both sides carry -- that claim compares places, and a candidate written by `from-slots` always says unlocked), `utility_score` and `score_breakdown` from `app.replanning.verified_scoring.score_replan_candidate` fed with the difference below and an envelope built from the rows, and `diff_json` from `app.plan_delta.delta_of` -- the same arithmetic `GET .../plans/delta` answers with, so the Guardian's bound checks and this door cannot disagree. `trigger_event_id` and `recovery_epoch_id` stay null: a hand-built candidate was triggered by nothing, and this door does not manufacture an event or an epoch to fill a column. A mixed currency is refused rather than stored as a subtracted pair, a pair already presented is refused by name, a candidate that differs from the plan in force in no place, time, money or commitment is refused as `SUBMISSION_NO_MATERIAL_CHANGE` rather than turned into a vote about nothing -- a difference confined to `activities.status`, the lifecycle word this server writes as the day runs, is named in that refusal and not counted as something to approve. `Idempotency-Key` is required so a retry replays one proposal instead of writing a second round. No provider is reachable from this module. */
+        post: operations["postJourneyPlanSubmission"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Freeze the travel facts one CANDIDATE plan version's own slots imply, onto the two nullable columns `plan_versions` already carries. This is the door that makes a hand-built candidate judgeable: `app.services.validate_plan_feasibility` raises `STALE_RECOMPOSE_REQUIRED` for a version with no frozen evidence, so the submission door can only answer `gate.judged` false with `evidence_gap` true until this door has run. Nothing is invented: the legs are the plan's own `activities` rows in `sequence_no` order, every leg is measured by `app.integrations.mobility.runtime.capture_runtime_mobility_snapshot` -- the same primitive `plans/generate` uses, so this door adds no provider, no fallback rule and no trust level -- and what is stored is that capture's own snapshot id plus its own evidence document. A caller cannot supply minutes, a place list or a judgement: a body with any field is refused, so this cannot become a route-quoting or place-enumeration surface. Unlike the other plan doors, this one can reach a provider: when the deployment configures one, that capture is a live call per leg, and `counts.legs_requested` says how many. The answer counts `hard_eligible_legs` separately from `legs_frozen` and lists every leg's own `fact_qualities` word, because the fixture's blanket constant is not a measurement and must not read as one. Re-freezing a candidate is allowed while nobody is answering about it, and the answer names the snapshot id it replaces. The idempotency receipt is consulted before any state guard, so a retry of a press that already froze evidence replays that receipt instead of being refused by the very write it made. Nothing is selected, started, activated or presented here. A plan that visits one place in two consecutive slots is named in full (`same_place_consecutive_transitions`): the capture domain deliberately freezes no fact for a pair whose origin equals its destination, so the shipped gate will answer MOBILITY_DATA_UNAVAILABLE for it. This door reports that step instead of inventing a zero-minute measurement to hide it. */
+        post: operations["postJourneyPlanMobilityFreeze"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/plans/delta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description What one plan version changes against another on this journey: the places a map must add and drop, the money and minutes the rows carry, and the mobility evidence both versions froze. The two version ids are the only inputs, and each must be a row on this journey, so a delta cannot enumerate another traveller's plan or reach a provider. Every per-slot judgement -- identity, coordinate state, opening window, verified cost, media door -- is `app.departure_facts._slot`, the same function `GET .../departure/facts` answers with, and a test runs both doors over the same rows and compares them field by field. Points are ordered by `sequence_no` on both sides. An unpriced slot is counted in `verified_cost.unpriced_slots`, never priced; two versions in different currencies produce no `budget_delta.delta_minor` rather than a subtracted pair; a slot whose free-text times this server cannot parse is named in `duration_delta.*_unreadable_slots` instead of quietly shortening the day. Matching kept/moved/added/removed is `sequence_no` plus place identity, and a slot whose place appeared on neither side is reported as `KEPT_WITHOUT_PLACE`, not as a move. Nothing is written and nothing is selected. */
+        get: operations["getJourneyPlanDelta"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2832,6 +3135,47 @@ export interface components {
             /** @enum {string} */
             ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
         };
+        TravelerSession: {
+            /** Format: uuid */
+            traveler_id: string;
+            /** @constant */
+            auth_method: "SIGNED_HMAC_BEARER";
+            /** @description Unix seconds at which the presented token stops being accepted */
+            expires_at: number;
+        };
+        TravelerSessionRefresh: components["schemas"]["TravelerSession"] & {
+            /** @constant */
+            session_state: "SIGNED";
+            /** @description the freshly signed credential for this same traveller */
+            access_token: string;
+            /** @description unix seconds the presented credential was due; null when it carried none */
+            renewed_from_expires_at: number | null;
+        };
+        TravelerRecoveryIssued: {
+            recovery_id: string;
+            /** @description shown exactly once; the server stores only a digest */
+            recovery_secret: string;
+            expires_at: string;
+            /** @constant */
+            shown_once: true;
+        };
+        TravelerRecoveryRedeem: {
+            recovery_id: string;
+            recovery_secret: string;
+        };
+        TravelerRecoverySession: components["schemas"]["TravelerSession"] & {
+            /** @constant */
+            session_state: "SIGNED";
+            access_token: string;
+            /** @constant */
+            auth_method: "recovery_credential";
+            recovered_at?: string | null;
+        };
+        TravelerRecoveryRevoked: {
+            recovery_id: string;
+            revoked: boolean;
+            revoked_at?: string | null;
+        };
         ErrorEnvelope: {
             error: {
                 code: string;
@@ -2891,6 +3235,14 @@ export interface components {
             /** Format: date-time */
             updated_at: string;
         };
+        TravelerSessionAnswer: components["schemas"]["Traveler"] & {
+            /** @description null whenever this build cannot sign; the reason is in `session_state`, never in a silent absence */
+            access_token: string | null;
+            /** @description SIGNED | UNSIGNED | MISCONFIGURED -- `signing_state()` verbatim */
+            session_state: string;
+            /** @description unix seconds this credential stops being accepted; null exactly when `access_token` is null */
+            expires_at: number | null;
+        };
         PreferenceInput: {
             category: string;
             key: string;
@@ -2948,6 +3300,8 @@ export interface components {
             /** Format: uuid */
             journey_id?: string | null;
             /** Format: uuid */
+            mission_id?: string | null;
+            /** Format: uuid */
             proposal_id?: string | null;
             /** Format: uuid */
             trigger_event_id?: string | null;
@@ -2977,6 +3331,26 @@ export interface components {
             q?: string | null;
             category?: string | null;
             service_type?: string | null;
+            place_id?: string | null;
+            estimated_open_minutes?: number | null;
+            estimated_close_minutes?: number | null;
+            estimated_cost_minor?: number | null;
+            place_ids?: string[] | null;
+            planning_mode?: string | null;
+            query?: string | null;
+            topic?: string | null;
+            /** @enum {string|null} */
+            provider?: "auto" | "web" | "searxng" | null;
+            radius_m?: number | null;
+            limit?: number | null;
+            mode?: string | null;
+            source_observation_id?: string | null;
+            source_url?: string | null;
+            source_class?: string | null;
+            from_key?: string | null;
+            to_key?: string | null;
+            route_mode?: string | null;
+            target_activity_id?: string | null;
         };
         AgentToolDescriptor: {
             name: string;
@@ -3032,6 +3406,120 @@ export interface components {
             tool_steps: {
                 [key: string]: unknown;
             }[];
+        };
+        /** @description One answer of the consent doors. `fulfilled` is the rule (`required` is a subset of `approved` and no required member stands rejected); `shared_plan.shared_plan_updated` is the plan's own state, read off the rows. They are two fields because they are two facts: a round can be complete while the transition that consumes it is refused for a physical reason, and that refusal is reported in `plan_apply` rather than folded into `fulfilled`. */
+        CollectiveConsentRound: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            proposal_id: string;
+            /** @constant */
+            authority_mode: "MEMBER_CONSENT";
+            /** @constant */
+            authority_basis?: "journey_role_capabilities";
+            required_traveler_ids: string[];
+            required_count: number;
+            roster: {
+                /** Format: uuid */
+                traveler_id: string;
+                /**
+                 * Format: uuid
+                 * @description Null for the journey's own holder when no `journey_members` row was ever written for them -- the seat `seat_of` answers as OWNER comes from `journeys.traveler_id`.
+                 */
+                member_id: string | null;
+                /** @enum {string} */
+                role: "OWNER" | "ADMIN" | "COLLABORATOR";
+                /** @enum {string} */
+                member_state: "MEMBER_IN_FORCE" | "MEMBER_LAPSED" | "MEMBER_WITHDRAWN";
+                can_authorize_mutation: boolean;
+                /** @enum {string|null} */
+                decision: "APPROVE" | "REJECT" | null;
+            }[];
+            answers: {
+                /** Format: uuid */
+                traveler_id: string;
+                /** @enum {string} */
+                decision: "APPROVE" | "REJECT";
+                recorded_at: string;
+                /** Format: uuid */
+                audit_id: string;
+                counts_toward_fulfillment: boolean;
+                revised_from: {
+                    /** @enum {string} */
+                    decision?: "APPROVE" | "REJECT";
+                    /** Format: uuid */
+                    audit_id?: string;
+                    recorded_at?: string;
+                } | null;
+            }[];
+            counts: {
+                required: number;
+                approved: number;
+                rejected: number;
+                outstanding: number;
+            };
+            approved_traveler_ids: string[];
+            rejected_traveler_ids: string[];
+            outstanding_traveler_ids: string[];
+            fulfilled: boolean;
+            /** @description The mediation word a mission recorded for this exact proposal in `resolved_intent_json.collective_mediation.classification`, or null when none did. This door reads that word and never computes one. */
+            classification: string | null;
+            /** @description Present on the status door when nobody in this roster can authorize a mutation (NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE). */
+            blocking_code?: string;
+            /** Format: uuid */
+            asked_by_traveler_id?: string;
+            /** Format: uuid */
+            recorded_by_traveler_id?: string;
+            /** @enum {string} */
+            decision?: "APPROVE" | "REJECT";
+            counts_toward_fulfillment?: boolean;
+            idempotency_replay?: boolean;
+            /** @description The durable authority boundary a fulfilled round issued, or null. */
+            receipt: {
+                /** Format: uuid */
+                receipt_id?: string;
+                /** @constant */
+                authority_mode?: "MEMBER_CONSENT";
+                classification?: string;
+                required_traveler_ids?: string[];
+                principal_actor_ids?: string[];
+                response_audit_ids?: string[];
+                decision_epoch?: string;
+                material_world_epoch?: string;
+                /** Format: uuid */
+                recovery_epoch_id?: string | null;
+                issued_at?: string;
+            } | null;
+            receipt_invalidated?: {
+                /** Format: uuid */
+                receipt_id?: string;
+                /** @enum {string} */
+                invalidation_code?: "COLLECTIVE_MEMBER_REJECTED" | "COLLECTIVE_CONSENT_WITHDRAWN";
+            };
+            shared_plan: {
+                /** Format: uuid */
+                base_plan_version_id: string;
+                /** Format: uuid */
+                proposed_plan_version_id: string;
+                /** @enum {string} */
+                proposal_status: "GENERATED" | "PRESENTED" | "ACCEPTED" | "REJECTED" | "EXPIRED" | "INVALIDATED";
+                /** Format: uuid */
+                journey_active_plan_version_id: string | null;
+                /** @enum {string|null} */
+                proposed_plan_status: "CANDIDATE" | "SELECTED" | "ACTIVE" | "SUPERSEDED" | "REJECTED" | null;
+                shared_plan_updated: boolean;
+            };
+            /** @description What the plan door said, on the press that fulfilled the rule. `attempted` is false on every press that did not complete the round, so a two-of-three answer cannot look like a refused transition. */
+            plan_apply?: {
+                attempted: boolean;
+                applied: boolean;
+                apply_receipt_key?: string;
+                apply_answer_sections?: string[];
+                refusal_status?: number;
+                refusal_detail?: string;
+                /** @constant */
+                reason_code?: "COLLECTIVE_APPLY_REFUSED_BY_PLAN_DOOR";
+            };
         };
         GuardianRun: {
             /** Format: uuid */
@@ -3350,6 +3838,92 @@ export interface components {
             /** Format: uuid */
             journey_id: string;
             active: boolean;
+        };
+        PlaceMedia: {
+            place_id: string;
+            /** @description Full-size source image */
+            image_url: string;
+            thumb_url?: string | null;
+            /** @description Provider-stated credit */
+            author?: string | null;
+            license?: string | null;
+            /** @description Licence deed page */
+            terms_url?: string | null;
+            /** @description The image's own page */
+            source_url?: string | null;
+            /** @description Same value as source_url */
+            attribution_url?: string | null;
+            /** @enum {string} */
+            provider: "wikimedia-commons" | "amap-web-service";
+            /** @description Which provider records fed this row */
+            provenance?: string | null;
+            title?: string | null;
+            /**
+             * @description Which arm of the identity binding actually fired. The set is the adapter's own arm table: an arm that did not fire is not answerable here, and there is no "unknown" arm -- a row that never bound answers through identity_status instead.
+             * @enum {string|null}
+             */
+            confidence?: "EXACT_LABEL" | "REGION_ENTITY_MATCH" | "REGION_CHAIN_LABEL" | "DESCRIPTION_SUBSTRING" | null;
+            identity_status?: components["schemas"]["IdentityStatus"];
+            /** @description The provider's own item id */
+            provider_object_id?: string | null;
+            /** @description Chinese label of the nearest located-in entity */
+            district?: string | null;
+            /** @description That located-in entity's own Wikidata id */
+            district_qid?: string | null;
+            /** @description True when the node is the region itself rather than a district inside it; null when the region was never resolved */
+            district_matches_region?: boolean | null;
+            captured_at: string;
+            /** @description False unless a licence lets us display it */
+            can_show: boolean;
+        };
+        /**
+         * @description Which arm of the identity binding actually produced this row, so a screen can decide how much to trust it instead of guessing from a status code. A bound row names its arm (`BOUND_EXACT_LABEL` when the entity label is the place's own name, `BOUND_REGION_ENTITY_MATCH` when both sides resolved to one region entity, `BOUND_REGION_CHAIN_LABEL` when a located-in chain carries the region, `BOUND_DESCRIPTION_SUBSTRING` when only a description mentions it); a row whose binding was refused says `UNBOUND`. The module can also answer `NOT_ASKED` when a caller hands it an empty source chain, but this product's only caller always hands it both sources, so that word never comes out of this door and is deliberately not listed here.
+         * @enum {string|null}
+         */
+        IdentityStatus: "BOUND_EXACT_LABEL" | "BOUND_REGION_ENTITY_MATCH" | "BOUND_REGION_CHAIN_LABEL" | "BOUND_DESCRIPTION_SUBSTRING" | "UNBOUND" | "null" | null;
+        PlaceMediaResponse: {
+            place_id: string;
+            journey_id?: string;
+            place_name?: string;
+            coordinate_system?: string;
+            /**
+             * @description One of five answers, all of them content: NO_IMAGE, NO_PERMISSION, UNAVAILABLE and NOT_CONFIGURED say what is missing, and none of them blocks the trip -- which is why the payload carries no "blocked" flag.
+             * @enum {string}
+             */
+            status: "REAL_POI_PHOTO" | "NO_IMAGE" | "NO_PERMISSION" | "UNAVAILABLE" | "NOT_CONFIGURED";
+            reason_code?: string | null;
+            identity_status?: components["schemas"]["IdentityStatus"];
+            media?: components["schemas"]["PlaceMedia"] | null;
+            /** @description One row per source, including the ones never asked */
+            provider_readings: Record<string, never>[];
+        };
+        PlaceLeadResponse: {
+            /** @description The candidate id the client sent */
+            lead: string;
+            /** Format: uuid */
+            journey_id: string;
+            /** @enum {string} */
+            lead_shape: "PLACE_ID" | "CANDIDATE_ID" | "PROVIDER_OBJECT_ID" | "NOT_A_LEAD";
+            /** @enum {string} */
+            status: "RESOLVED" | "UNRESOLVED";
+            /**
+             * @description The absence is named apart: `LEAD_HAS_NO_PLACE_ROW` means no `places` row carries that identity anywhere in this store, `PLACE_NOT_IN_JOURNEY` means a row did match and this journey does not hold it. A caller that confuses them sends a place into the trip that does not exist.
+             * @enum {string}
+             */
+            reason_code: "LEAD_RESOLVED" | "LEAD_NOT_A_PLACE_LEAD" | "LEAD_AMBIGUOUS" | "CANDIDATE_NOT_MATERIALIZED" | "PLACE_NOT_IN_JOURNEY" | "LEAD_HAS_NO_PLACE_ROW";
+            /** @description Which stored identity answered: `place_id`, `provider_object_id`, `provider_key_and_object_id` (a row whose provider lives in `provider_key` and whose `external_id` carries only the object part), or `candidate_identity`. Null whenever the lead did not resolve -- the arms are not reported while the refusal is standing. */
+            matched_by?: string | null;
+            /** @description Null whenever the lead did not resolve */
+            place_id?: string | null;
+            provider_key?: string | null;
+            provider_object_id?: string | null;
+            /** @description The city_code this product stores for the place */
+            region?: string | null;
+            place_name?: string | null;
+            /** @description The candidate row and the place row disagree on region, so imagery is not trusted */
+            region_conflict?: boolean;
+            /** @description The media door for the resolved place, id already substituted and escaped */
+            media_path: string;
         };
         Place: {
             id: string;
@@ -3933,6 +4507,302 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
+        /** @description A slot reduced to the columns the map and the ledger need, with no judgement added here. */
+        PlanDeltaSlotStamp: {
+            sequence_no: number;
+            /** Format: uuid */
+            place_id: string | null;
+            start_at: string;
+            end_at: string;
+            estimated_cost_minor: number;
+            currency: string;
+            status: string;
+        };
+        /** @description One place a map must draw or drop, carrying the fact door's own coordinate answer. */
+        PlanDeltaPoint: {
+            sequence_no: number;
+            /** Format: uuid */
+            place_id: string | null;
+            source_identity: string | null;
+            label: string;
+            coordinate: {
+                /** @enum {string} */
+                state: "READY" | "UNAVAILABLE";
+                reason: string | null;
+                coordinate_system: string | null;
+            };
+            media_door: string | null;
+        };
+        /** @description One row of `sets`. `from`/`from_slot` are absent for an added slot and `to`/`to_slot` for a removed one, which is why they are optional here rather than null. */
+        PlanDeltaSetEntry: {
+            sequence_no: number;
+            /**
+             * @description Only kept slots state a kind, so a place-less keep is not read as a move.
+             * @enum {string}
+             */
+            kind?: "KEPT" | "KEPT_WITHOUT_PLACE";
+            from?: components["schemas"]["PlanDeltaSlotStamp"];
+            to?: components["schemas"]["PlanDeltaSlotStamp"];
+            from_slot?: components["schemas"]["DepartureFactsSlot"];
+            to_slot?: components["schemas"]["DepartureFactsSlot"];
+        };
+        /** @description One slot as app.departure_facts._slot answers it, which is the only view a plan delta may carry, so the two doors cannot disagree about the same row. */
+        DepartureFactsSlot: {
+            /** Format: uuid */
+            activity_id: string;
+            sequence_no: number;
+            activity_type?: string;
+            title: string;
+            starts_at?: string;
+            ends_at?: string;
+            locked?: boolean;
+            status?: string;
+            /** @enum {string} */
+            location_kind: "PLACE" | "CITY_SERVICE" | "NONE";
+            identity: {
+                /** Format: uuid */
+                canonical_id: string | null;
+                provider_key: string | null;
+                external_id: string | null;
+                source_identity: string | null;
+                detail: string | null;
+            };
+            coordinate: {
+                /** @enum {string} */
+                state: "READY" | "UNAVAILABLE";
+                reason: string | null;
+                coordinate_system: string | null;
+            };
+            opening_hours: {
+                /** @enum {string} */
+                state: "KNOWN" | "UNKNOWN";
+                detail: string | null;
+                open_minutes: number | null;
+                close_minutes: number | null;
+            };
+            cost: {
+                /** @enum {string} */
+                state: "KNOWN" | "UNKNOWN";
+                detail: string | null;
+                verified_amount_minor: number | null;
+                activity_estimate_minor: number;
+                currency: string;
+            };
+            fact_retrieved_at: string | null;
+            media_door: string | null;
+        };
+        PlanCandidateSubmission: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            proposal_id: string;
+            /** Format: uuid */
+            base_plan_version_id: string;
+            /** Format: uuid */
+            proposed_plan_version_id: string;
+            base_status: string;
+            /** @constant */
+            status: "PRESENTED";
+            /** Format: uuid */
+            submitted_by_traveler_id: string;
+            created_at: string;
+            /** @description Absent on the first press, true on a replay of the same key and content. */
+            idempotency_replay?: boolean;
+            /** @description The gate's own answer; false also covers "the gate refused to judge", which `gate.judged` states, because the shipped column cannot hold a null. */
+            hard_constraints_passed: boolean;
+            gate: {
+                judged: boolean;
+                passed: boolean;
+                failures: string[];
+                refusal_code: string | null;
+                refusal_detail: string | null;
+            };
+            evidence_gap: boolean;
+            /** @description Whose legs the gate was handed, read through `app.services._snapshot_for_plan` (the gate's own loader) and tallied by `app.replanning.provider_snapshots.fact_quality_summary` (the freeze door's own function), so the two doors cannot disagree about the same frozen snapshot. null for a candidate with nothing frozen -- the same absence `gate.judged` false reports, never a zero. `hard_eligible_legs` counts the legs the shipped allowlist `MobilitySnapshot.hard_minutes` would admit into a hard decision. The gate's travel arithmetic reads the raw `estimate_minutes` (`app/replanning/feasibility.py`) instead, so this count is a disclosure and not a second verdict: a round can be `gate.passed` true with `hard_eligible_legs` 0, and a candidate written by `from-slots` on the mock provider is exactly that. */
+            evidence_basis: {
+                /** @constant */
+                frozen: true;
+                snapshot_id: string;
+                source_provider: string;
+                captured_at: string;
+                fact_qualities: {
+                    [key: string]: number;
+                };
+                legs_frozen: number;
+                hard_eligible_legs: number;
+                /** @constant */
+                read_from: "app.replanning.provider_snapshots.fact_quality_summary";
+            } | null;
+            locked_commitments_preserved: boolean;
+            locked_slots_dropped: number[];
+            lock_flags_dropped: number[];
+            lock_flags_added: number[];
+            currency: string;
+            utility_score: number;
+            score_breakdown: {
+                [key: string]: number;
+            };
+            /** @description The envelope app.main._envelope_payload builds from the candidate's own rows. */
+            envelope: {
+                [key: string]: unknown;
+            };
+            delta: components["schemas"]["PlanDeltaDifference"];
+            /** @constant */
+            applied: false;
+            /** @constant */
+            shared_plan_updated: false;
+            /** Format: uuid */
+            journey_active_plan_version_id: string | null;
+            consent_path: string;
+            /** @description Two pointers when the candidate's evidence is already frozen, three when it is not: the first is then `POST .../mobility-freeze`, because the round this press opens cannot be judged until the gate is handed something to judge. */
+            next_actions: string[];
+        };
+        /** @description The gate answer the select door compares, read through departure_read.frozen_evidence_of. */
+        PlanDeltaEvidenceSide: {
+            frozen: boolean;
+            snapshot_id: string | null;
+            expires_at: string | null;
+            expired: boolean | null;
+            detail: string | null;
+            reference_consistent: boolean | null;
+        };
+        PlanCandidateMobilityFreeze: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            plan_version_id: string;
+            /**
+             * @description This door writes evidence onto a candidate and changes no status anywhere.
+             * @constant
+             */
+            status: "CANDIDATE";
+            /** Format: uuid */
+            mobility_snapshot_id: string;
+            /** @description The snapshot id this press overwrote; null when the candidate had none. */
+            replaces_snapshot_id: string | null;
+            /** @description The provider key the capture domain actually used, carried verbatim. */
+            source_provider: string;
+            operation_key: string;
+            captured_at: string;
+            /** @description Read out of the stored evidence document rather than asserted -- neither shipped arm of the capture domain writes an expiry, so the gate's staleness rule never sees one. */
+            expires_at: string | null;
+            degraded: boolean;
+            counts: {
+                slots: number;
+                distinct_places: number;
+                /** @description Ordered place pairs this plan's own slots imply -- what a configured provider is asked for, so the cost of the press is visible before it is spent again. */
+                legs_requested: number;
+                legs_frozen: number;
+                /** @description Legs tagged EXPLICIT_FROZEN_FIXTURE or LIVE_PROVIDER_CAPTURE. Kept apart from `legs_frozen` because the fixture's blanket constant is not a measurement. */
+                hard_eligible_legs: number;
+                fallback_legs: number;
+                slots_without_a_location_row: number;
+                /** @description Consecutive slots naming one place. The capture domain freezes no fact for a pair whose origin equals its destination, so each such step is one the shipped gate will refuse to price. */
+                same_place_consecutive_transitions: number;
+            };
+            /** @description How many legs came back under each provenance word, counted from the frozen facts themselves. */
+            fact_qualities: {
+                [key: string]: number;
+            };
+            /** @description The live arm's own capability read; empty on the offline arm, which fills none. */
+            provider_capabilities: Record<string, never>;
+            sequences_without_a_location_row: number[];
+            /** @description Which steps ask for a leg from a place to that same place, named by the two sequence numbers and the canonical place row. This door writes no self leg and does not soften the gate -- it says, at the moment of freezing, that such a plan cannot be committed until the mobility rule names a zero-minute self leg. */
+            same_place_consecutive_transitions: {
+                from_sequence_no: number;
+                to_sequence_no: number;
+                /** Format: uuid */
+                place_id: string;
+            }[];
+            evidence_columns: string[];
+            read_from: {
+                capture: string;
+                columns: string;
+                consumed_by: string;
+            };
+            next_actions: string[];
+            idempotency_key: string;
+            written_at: string;
+            /** @description Absent on the first press, true on a replay of the same key. */
+            idempotency_replay?: boolean;
+        };
+        /** @description The difference itself -- what `app.plan_delta.delta_of` emits. The read door answers with it and the submission door stores it, so a plan change has one arithmetic and not two. */
+        PlanDeltaDifference: {
+            /** Format: uuid */
+            journey_id: string;
+            /** Format: uuid */
+            from_plan_version_id: string;
+            /** Format: uuid */
+            to_plan_version_id: string;
+            from_status: string;
+            to_status: string;
+            from_version_no: number;
+            to_version_no: number;
+            counts: {
+                from_slots: number;
+                to_slots: number;
+                kept: number;
+                moved: number;
+                added: number;
+                removed: number;
+            };
+            /** @description The four sets, each ordered by `sequence_no`. A slot that moved names both halves, so a screen draws one arrow instead of inferring a pair from an add and a remove. */
+            sets: {
+                kept: components["schemas"]["PlanDeltaSetEntry"][];
+                moved: components["schemas"]["PlanDeltaSetEntry"][];
+                added: components["schemas"]["PlanDeltaSetEntry"][];
+                removed: components["schemas"]["PlanDeltaSetEntry"][];
+            };
+            map_delta: {
+                points_added: components["schemas"]["PlanDeltaPoint"][];
+                points_removed: components["schemas"]["PlanDeltaPoint"][];
+                /** @description Counted by the state word the fact door answered with, so a state this module did not imagine appears under its own name instead of being folded into UNAVAILABLE. */
+                coordinate_states: {
+                    [key: string]: number;
+                };
+            };
+            /** @description The numbers the plan rows carry, not a provider's opinion of them. */
+            budget_delta: {
+                from_total_minor: number;
+                to_total_minor: number;
+                delta_minor: number | null;
+                currency: string | null;
+                mixed_or_missing_currency: boolean;
+                /** @constant */
+                read_from: "activities.estimated_cost_minor";
+            };
+            verified_cost: {
+                from_total_minor: number;
+                to_total_minor: number;
+                delta_minor: number;
+                priced_slots: number;
+                unpriced_slots: number;
+                /** @constant */
+                read_from: "app.services._place_verified_cost";
+            };
+            duration_delta: {
+                from_minutes: number;
+                to_minutes: number;
+                delta_min: number;
+                from_unreadable_slots: number;
+                to_unreadable_slots: number;
+                /** @constant */
+                read_from: "activities.start_at / end_at";
+            };
+            evidence: {
+                from: components["schemas"]["PlanDeltaEvidenceSide"];
+                to: components["schemas"]["PlanDeltaEvidenceSide"];
+                /** @constant */
+                read_from: "app.departure_read.frozen_evidence_of";
+            };
+        };
+        PlanDeltaAnswer: components["schemas"]["PlanDeltaDifference"] & {
+            /** Format: uuid */
+            asked_by_traveler_id: string;
+            /** @description `app.plan_submission`'s own verdict for this pair: true when the two versions carry the same places, instants, money and commitments, which is the state the submission door refuses as `SUBMISSION_NO_MATERIAL_CHANGE` instead of opening a round about nothing. A difference confined to `activities.status` does not count, so this reads true for the plan in force echoed back after a journey has departed. */
+            no_material_change: boolean;
+            next_actions: string[];
+        };
     };
     responses: {
         /** @description Not found */
@@ -4161,10 +5031,218 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Traveler"];
+                    "application/json": components["schemas"]["TravelerSessionAnswer"];
                 };
             };
             422: components["responses"]["ValidationError"];
+        };
+    };
+    getTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The authenticated traveller principal */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSession"];
+                };
+            };
+            /** @description No signed traveller credentials, or they are expired, invalid, or name a traveller who no longer exists. The body is the shared error envelope; `error.reason_code` names which of those it was (TRAVELER_CREDENTIALS_MISSING / _INVALID / _EXPIRED / TRAVELER_PRINCIPAL_NOT_FOUND). */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret configured (TRAVELER_AUTH_NOT_CONFIGURED). The door refuses rather than accepting an identity it cannot verify. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    refreshTravelerSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The same traveller, a later window */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerSessionRefresh"];
+                };
+            };
+            /** @description The body claimed an identity (`traveler_id` / `sub` / `id`). A refreshed session is signed for the credential on the request, not for an id handed in a body (`error.reason_code` = TRAVELER_NOT_PRINCIPAL). */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Same four named refusals as `GET /travelers/session`: missing / invalid / expired credentials, or a principal that no longer exists. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The verifier has no usable secret (TRAVELER_AUTH_NOT_CONFIGURED). */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    issueTravelerRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The secret, shown once; the server keeps only a digest (Cache-Control private, no-store) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerRecoveryIssued"];
+                };
+            };
+            /** @description No usable traveller credential on the request */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The credential speaks for another traveller (TRAVELER_NOT_PRINCIPAL) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    redeemTravelerRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TravelerRecoveryRedeem"];
+            };
+        };
+        responses: {
+            /** @description A fresh session for the credential's traveller (Cache-Control private, no-store) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerRecoverySession"];
+                };
+            };
+            /** @description Named refusals: RECOVERY_UNKNOWN / RECOVERY_USED / RECOVERY_EXPIRED / RECOVERY_REVOKED / RECOVERY_SECRET_MISMATCH. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description RECOVERY_LOCKED after repeated wrong secrets */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    revokeTravelerRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                traveler_id: components["parameters"]["TravelerId"];
+                recovery_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Revoked (idempotent) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TravelerRecoveryRevoked"];
+                };
+            };
+            /** @description The credential speaks for another traveller */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description No such recovery credential for this traveller */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
         };
     };
     getTraveler: {
@@ -6301,14 +7379,32 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Reloadable standing Mission and Guardian run history */
+            /** @description Standing Mission, run history and the sourced observations behind them */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        [key: string]: unknown;
+                        /** Format: uuid */
+                        journey_id: string;
+                        standing_mission: Record<string, never> | null;
+                        /** Format: uuid */
+                        current_active_plan_version_id: string | null;
+                        latest: Record<string, never> | null;
+                        runs: Record<string, never>[];
+                        autopilot?: Record<string, never>;
+                        observations: {
+                            /** Format: uuid */
+                            id: string;
+                            provider_key: string;
+                            observation_type: string;
+                            state: string;
+                            incident_fingerprint?: string | null;
+                            provenance: string;
+                            captured_at: string;
+                            expires_at: string | null;
+                        }[];
                     };
                 };
             };
@@ -7034,6 +8130,828 @@ export interface operations {
             };
         };
     };
+    getJourneyPlaceMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+                place_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PlaceMedia projection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaceMediaResponse"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found, or this place is not part of the journey (error.reason_code PLACE_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyPlaceIdentity: {
+        parameters: {
+            query: {
+                /** @description The map point's candidate id, as it is carried -- no name, no url. */
+                lead: string;
+            };
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resolved identity and region for one lead this journey holds */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaceLeadResponse"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found, or the lead answers nothing. The two absences are named apart, because the caller does a different thing about each: `LEAD_HAS_NO_PLACE_ROW` when no `places` row carries that identity anywhere in this store, `PLACE_NOT_IN_JOURNEY` when a row did match and this journey does not hold it. Also `LEAD_NOT_A_PLACE_LEAD` for text or a url, `LEAD_AMBIGUOUS` when two rows claim one provider object id, `CANDIDATE_NOT_MATERIALIZED` for a candidate row with no place yet. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The lead's own candidate row and its place row carry different regions (error.reason_code LEAD_REGION_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyMemberMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The caller's own seat on this journey */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        traveler_id: string;
+                        may_confirm_departure: boolean;
+                        seat: {
+                            /** @enum {string} */
+                            seat_kind: "OWNER" | "MEMBER" | "NONE";
+                            role: string | null;
+                            member_id?: string | null;
+                            /** @enum {string} */
+                            member_state: "MEMBER_IN_FORCE" | "MEMBER_LAPSED" | "MEMBER_WITHDRAWN" | "NO_MEMBERSHIP";
+                            expires_at?: string | null;
+                            in_force: boolean;
+                        };
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyDeparture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Departure projection for one journey the caller holds a seat on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        journey_status: string;
+                        active_plan_version_id?: string | null;
+                        current_activity_id?: string | null;
+                        seat: Record<string, never>;
+                        /** @enum {string} */
+                        gate: "READY_TO_DEPART" | "ALREADY_RUNNING" | "NO_PLAN_SELECTED" | "STALE_RECOMPOSE_REQUIRED" | "PLAN_INFEASIBLE" | "JOURNEY_NOT_PLANNABLE";
+                        reason_detail?: string | null;
+                        selected_plan?: Record<string, never> | null;
+                        candidates: {
+                            /** Format: uuid */
+                            plan_version_id: string;
+                            version_no: number;
+                            planning_mode?: string;
+                            status: string;
+                            source?: string;
+                            currency?: string;
+                            total_cost_minor?: number;
+                            estimated_duration_min?: number;
+                            activities_count?: number;
+                            evidence: {
+                                frozen: boolean;
+                                snapshot_id?: string | null;
+                                expires_at?: string | null;
+                                expired: boolean | null;
+                                reference_consistent: boolean;
+                                detail?: string | null;
+                            };
+                            feasibility: {
+                                feasible?: boolean | null;
+                                failures?: string[];
+                                detail?: string | null;
+                            };
+                        }[];
+                        next_action: {
+                            /** @enum {string} */
+                            kind: "select_or_start" | "generate_plans" | "recompose" | "none";
+                            door: string | null;
+                        };
+                        observed_at: string;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    commitJourneyDeparture: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    plan_version_id: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The chosen variant is this journey's formal plan, or the stored receipt of the call that made it one */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        plan_version_id: string;
+                        /** Format: uuid */
+                        committed_by: string;
+                        seat: Record<string, never>;
+                        idempotency_key?: string;
+                        decision_action: string;
+                        committed_at?: string;
+                        idempotency_replay?: boolean;
+                        journey: Record<string, never>;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat, so it cannot confirm for anybody else (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Same key used for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT), or the transition refused the row (STALE_RECOMPOSE_REQUIRED), or a round is still asking about that plan version (COMMIT_ROUND_IN_FLIGHT) -- asking means the consent door's own fulfilment rule has not decided it, so a round everybody required approved is answered even when the plan door refused to apply */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED), a body field beyond plan_version_id (COMMIT_BODY_TAKES_ONLY_PLAN_VERSION_ID), or PLAN_INFEASIBLE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyDepartureFacts: {
+        parameters: {
+            query: {
+                plan_version_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Per-slot facts for one plan version of one journey the caller holds a seat on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        plan_version_id: string;
+                        plan_status: string;
+                        seat: Record<string, never>;
+                        slots: components["schemas"]["DepartureFactsSlot"][];
+                        facts_counted: {
+                            known: number;
+                            unknown: number;
+                        };
+                        observed_at: string;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey unknown, or that plan version is not on this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description plan_version_id was not supplied (error.reason_code PLAN_VERSION_ID_REQUIRED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyProposalConsent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The round, its required set, its answers, and the state of the shared plan */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectiveConsentRound"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That proposal is not a proposal of this journey (error.reason_code PROPOSAL_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyProposalConsent: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                proposal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT";
+                };
+            };
+        };
+        responses: {
+            /** @description The round after this press, with plan_apply stating what the plan door said */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectiveConsentRound"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That proposal is not a proposal of this journey (error.reason_code PROPOSAL_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The proposal is not one a member may answer (PROPOSAL_NOT_ACTIONABLE), no in-force member holds JOURNEY_UPDATE so no round could bind one (NO_IN_FORCE_MEMBER_CAN_AUTHORIZE_JOURNEY_UPDATE), or the key was reused for a different consent (CONSENT_IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A missing key (CONSENT_IDEMPOTENCY_KEY_REQUIRED), an unknown decision word (CONSENT_DECISION_WORD_UNKNOWN), a body field that is not `decision` (CONSENT_BODY_TAKES_ONLY_DECISION), or a body that names another traveller (CONSENT_DELEGATION_REFUSED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyPlanFromSlots: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * Format: uuid
+                     * @description The plan version this draft was read against. `null` is a statement, not an omission: it says the journey has no plan version yet, and is what a first draft of a journey sends. Omitting the field stays `EXPECTED_REVISION_REQUIRED`.
+                     */
+                    expected_revision: string | null;
+                    /** @enum {string} */
+                    planning_mode?: "balanced" | "budget" | "explore" | "strict_schedule";
+                    slots: {
+                        /** Format: uuid */
+                        place_id: string;
+                        /** Format: date-time */
+                        start_at: string;
+                        /** Format: date-time */
+                        end_at: string;
+                        estimated_cost_minor?: number;
+                        currency?: string;
+                        travel_from_prev_min?: number;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description The CANDIDATE version that was written, with per-slot gaps and next actions */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        plan_version_id: string;
+                        /**
+                         * Format: uuid
+                         * @description Echoed back as the caller named it -- the plan version, or null when this draft is the journey's first.
+                         */
+                        draft_revision: string | null;
+                        /** @constant */
+                        status: "CANDIDATE";
+                        version_no: number;
+                        planning_mode?: string;
+                        /** Format: uuid */
+                        created_by_traveler_id?: string;
+                        selected: boolean;
+                        activated: boolean;
+                        idempotency_replay?: boolean;
+                        created_at?: string;
+                        slots: {
+                            sequence_no: number;
+                            /** Format: uuid */
+                            place_id: string;
+                            /** Format: date-time */
+                            start_at: string;
+                            /** Format: date-time */
+                            end_at: string;
+                            estimated_cost_minor: number;
+                            cost_declared: boolean;
+                            currency: string;
+                            facts: {
+                                /** Format: uuid */
+                                place_id: string;
+                                title: string;
+                                city_code: string;
+                                has_coordinate: boolean;
+                                opening_hours_recorded: boolean;
+                                verified_cost_minor: number | null;
+                                cost_declared: boolean;
+                                gaps: ("OPENING_HOURS_NOT_RECORDED" | "NO_COST_DECLARED_FOR_THIS_SLOT" | "PLACE_HAS_NO_POINT")[];
+                            };
+                        }[];
+                        counts: {
+                            slots: number;
+                            with_coordinate: number;
+                            hours_recorded: number;
+                            cost_verified: number;
+                            cost_declared: number;
+                        };
+                        gaps: {
+                            sequence_no: number;
+                            /** Format: uuid */
+                            place_id: string;
+                            gaps: string[];
+                        }[];
+                        next_actions: string[];
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A slot names a place id this store does not have (error.reason_code PLACE_ROW_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The draft was read against a plan that is no longer in force (BASE_PLAN_MOVED), a slot's place belongs to another city (PLACE_NOT_IN_THIS_JOURNEYS_CITY), or the key was reused for a different request (IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A key the caller never sent (IDEMPOTENCY_KEY_REQUIRED), a revision the body never named (EXPECTED_REVISION_REQUIRED), a provider id where a canonical id belongs (SLOT_NAMES_A_PROVIDER_ID_NOT_A_CANONICAL_PLACE), a slot that describes a place (SLOT_CARRIES_ONLY_SERVER_OWNED_FIELDS), a body field this door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE) or an end not after a start (SLOT_TIMES_UNORDERED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyPlanSubmission: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description The PRESENTED proposal, the difference it carries, and where the round goes next */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanCandidateSubmission"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a CANDIDATE row, no active base, this pair already presented, or a reused key (error.reason_code SUBMISSION_NEEDS_A_CANDIDATE_VERSION, SUBMISSION_JOURNEY_HAS_NO_ACTIVE_PLAN, SUBMISSION_ALREADY_PRESENTED, SUBMISSION_IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A body field, no key, the active version itself, two currencies, or a candidate that changes nothing against the plan in force (error.reason_code SUBMISSION_READS_EVERYTHING_FROM_ROWS, SUBMISSION_IDEMPOTENCY_KEY_REQUIRED, SUBMISSION_BASE_IS_THE_CANDIDATE, SUBMISSION_NEEDS_ONE_CURRENCY, SUBMISSION_NO_MATERIAL_CHANGE) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postJourneyPlanMobilityFreeze: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                plan_version_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description The frozen evidence this server wrote, with each leg's own provenance counts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanCandidateMobilityFreeze"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description That version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not a CANDIDATE row, one of the two evidence columns present alone, a round already asking about this candidate, a slot whose place carries no point, or a reused key (error.reason_code FREEZE_NEEDS_A_CANDIDATE_VERSION, FREEZE_EVIDENCE_COLUMN_PAIR_IS_SPLIT, FREEZE_PROPOSAL_ALREADY_ASKING, FREEZE_SLOT_PLACE_HAS_NO_POINT, FREEZE_IDEMPOTENCY_KEY_REUSE_CONFLICT) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A body field, or no Idempotency-Key (error.reason_code FREEZE_READS_EVERY_LEG_FROM_ROWS, FREEZE_IDEMPOTENCY_KEY_REQUIRED) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The mobility source refused a leg, so no evidence was written (error.reason_code MOBILITY_PROVIDER_REFUSED_A_LEG) */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyPlanDelta: {
+        parameters: {
+            query: {
+                from_plan_version_id: string;
+                to_plan_version_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The map, budget, duration and evidence difference between the two versions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanDeltaAnswer"];
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Either version is not a plan of this journey (error.reason_code PLAN_NOT_IN_JOURNEY) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description A version id is missing, or both ids name the same version (error.reason_code FROM_PLAN_VERSION_ID_REQUIRED, TO_PLAN_VERSION_ID_REQUIRED, DELTA_NEEDS_TWO_DIFFERENT_VERSIONS) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     listResilienceCounterfactuals: {
         parameters: {
             query?: never;
@@ -7137,7 +9055,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description DeepSeek-curated */
+            /** @description DeepSeek-curated, deterministic, authoritative city intelligence result */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -7162,7 +9080,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Places extracted by this deployment's own local parser */
+            /** @description Places extracted by this deployment's own local parser, with the forms it refused to read named */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -7194,7 +9112,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Places appended to the active plan */
+            /** @description Places appended to the active plan, with the day they landed on and where to read them back */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -7528,14 +9446,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Captured accommodation evidence */
+            /** @description Captured accommodation evidence, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7548,14 +9464,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Accommodation provider results */
+            /** @description Accommodation provider results, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7568,14 +9482,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Bounded Top-K stay and Journey options */
+            /** @description Bounded Top-K stay and Journey options, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7588,23 +9500,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Journey pushed to PLANNED with a SELECTED plan via the real pipeline; no /start */
+            /** @description 'Journey pushed to PLANNED with a SELECTED plan via the real pipeline; no /start', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description CITYNEXUS_DEMO_MODE is not set; nothing was generated or selected */
+            /** @description 'CITYNEXUS_DEMO_MODE is not set; nothing was generated or selected', content: {application/json: {schema: {type: object}}} */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7617,23 +9525,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Scenario started through /start, with the journey status and cursor it produced */
+            /** @description 'Scenario started through /start, with the journey status and cursor it produced', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description CITYNEXUS_DEMO_MODE is not set; nothing was started */
+            /** @description 'CITYNEXUS_DEMO_MODE is not set; nothing was started', content: {application/json: {schema: {type: object}}} */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7646,14 +9550,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself. supply - what this stage is standing on, read out of the rows and from nobody else: asked (was a catalog-hydration job ever opened for this journey), operation_id and job_status, state (the outcome the job recorded: CATALOG_PREPARED | ALREADY_CURRENT | NO_REGISTERED_SOURCE | PENDING_CANDIDATES_UNAPPLIED | ABANDONED_BY_TRAVELLER | WORKER_LOST | DESTINATION_AMBIGUOUS | RESOLVER_RUNTIME_FAILURE; the job status when no outcome was written; NOT_ASKED when nobody opened one), failed_stage (the phase the job reached: QUEUED | RESOLVING_DESTINATION | DISCOVERING_POIS | NORMALIZING | BUILDING_MOBILITY | PERSISTING | FINALIZING, null when the ending left material), reason_code, retryable, and leg_states - one cell per hop this product can ask (photon | nominatim | overpass) saying CAPTURED | ANSWERED_EMPTY | NOT_ANSWERED | NOT_ASKED, or null when a hop replied without a counter, because an uncounted reply is not a measured zero. counts_as_supply is false whenever every stop on this stage came back from a replay: a replay is never supply, the same ban live discovery writes. stops carries plan_present, total, with_coordinate, without_coordinate, reasons (the named reason the projection already gives for every stop without a position, so a screen cannot quietly draw fewer rows) and source_kinds (GOLDEN_FIXTURE | REMOTE_PROVIDER | SIMULATED | REPLAY | OFFLINE_SNAPSHOT). The read asks no provider: an empty board is reported from what the store already knows, never re-measured at the moment somebody looked */
+            /** @description 'demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself. supply - what this stage is standing on, read out of the rows and from nobody else: asked (was a catalog-hydration job ever opened for this journey), operation_id and job_status, state (the outcome the job recorded: CATALOG_PREPARED | ALREADY_CURRENT | NO_REGISTERED_SOURCE | PENDING_CANDIDATES_UNAPPLIED | ABANDONED_BY_TRAVELLER | WORKER_LOST | DESTINATION_AMBIGUOUS | RESOLVER_RUNTIME_FAILURE; the job status when no outcome was written; NOT_ASKED when nobody opened one), failed_stage (the phase the job reached: QUEUED | RESOLVING_DESTINATION | DISCOVERING_POIS | NORMALIZING | BUILDING_MOBILITY | PERSISTING | FINALIZING, null when the ending left material), reason_code, retryable, and leg_states - one cell per hop this product can ask (photon | nominatim | overpass) saying CAPTURED | ANSWERED_EMPTY | NOT_ANSWERED | NOT_ASKED, or null when a hop replied without a counter, because an uncounted reply is not a measured zero. counts_as_supply is false whenever every stop on this stage came back from a replay: a replay is never supply, the same ban live discovery writes. stops carries plan_present, total, with_coordinate, without_coordinate, reasons (the named reason the projection already gives for every stop without a position, so a screen cannot quietly draw fewer rows) and source_kinds (GOLDEN_FIXTURE | REMOTE_PROVIDER | SIMULATED | REPLAY | OFFLINE_SNAPSHOT). The read asks no provider: an empty board is reported from what the store already knows, never re-measured at the moment somebody looked', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7669,23 +9571,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description capability (READY | HYDRATABLE | UNKNOWN_RETRYABLE | UNAVAILABLE - four structural cells since the arbiter answer "one" on 2026-09-22; still no UNKNOWN, because "nobody looked" remains an absent provider_status and never a state, and UNKNOWN_RETRYABLE is reserved for the opposite case: we asked and nothing could answer, which is always paired with retryable true and the action RETRY_LATER rather than an invitation to prepare) + destination_state (RESOLVED | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE - what the resolver concluded about this request, a separate axis from capability) + reason_code + recommended_action + retryable + coverage for all six intents (attractions, food, nightlife, lodging, mobility, booking) each READY | PARTIAL | MISSING + coverage_detail with the counts behind each state + canonical_destination_id, which is NULL for AMBIGUOUS / NO_MATCH / RUNTIME_FAILURE and never contains user text (ORD-0167: raw text is not identity) + pending_destination_label (the traveller input verbatim) + resolver_query_normalized (the folded form matching used, also not an identity) + destination_pending_key (correlation material only, never a place or destination identifier and never a catalog join key) + candidates (populated only when the query is ambiguous, so no winner is guessed) + malformed_candidates (evidence a provider offered and this build refused: an entity reference that names no OSM element class, or a position outside the WGS-84 range; a refusal is a named RUNTIME_FAILURE with attribution_reason=PROVIDER_BAD_RESPONSE and retryable=true, never an identity, never NO_MATCH, and the refused record is kept verbatim instead of being rounded or repaired) + the attribution group attribution_reason / evidence_kind / http_status / source_layer, derived once from the same observation and arriving together or not at all, with http_status null rather than 0 when nothing answered (R14 section 8: four consumers, one classification) + hard_gaps, always present and empty when there is nothing to name, carrying MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE when the destination is named, the catalog holds rows, mobility has explicit legs, and none of that material is of a class anything may treat as a hard constraint - the mobility axis also reports source_classes and hard_eligible so the claim can be checked rather than inferred, and an empty axis is MISSING with no gap rather than a gap over nothing + provider_status whose destination cell carries the per-attempt evidence (endpoint / answered / http_status / elapsed_ms) on a successful answer as well as on a failed one, because evidence that only appears when something goes wrong is not evidence) + the fingerprint and its segments, four of them when a destination is named (canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version) and a namespaced request fingerprint when it is not (pending-request-v1 + scope + resolver_query_normalized + the same three versions) + provenance (source_kinds, never upgraded by normalisation). READY is only ever the versioned server-side policy result: a place count cannot produce it, and a resolver that could not be reached keeps a destination retryable instead of declaring it structurally unusable */
+            /** @description 'capability (READY | HYDRATABLE | UNKNOWN_RETRYABLE | UNAVAILABLE - four structural cells since the arbiter answer "one" on 2026-09-22; still no UNKNOWN, because "nobody looked" remains an absent provider_status and never a state, and UNKNOWN_RETRYABLE is reserved for the opposite case: we asked and nothing could answer, which is always paired with retryable true and the action RETRY_LATER rather than an invitation to prepare) + destination_state (RESOLVED | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE - what the resolver concluded about this request, a separate axis from capability) + reason_code + recommended_action + retryable + coverage for all six intents (attractions, food, nightlife, lodging, mobility, booking) each READY | PARTIAL | MISSING + coverage_detail with the counts behind each state + canonical_destination_id, which is NULL for AMBIGUOUS / NO_MATCH / RUNTIME_FAILURE and never contains user text (ORD-0167: raw text is not identity) + pending_destination_label (the traveller input verbatim) + resolver_query_normalized (the folded form matching used, also not an identity) + destination_pending_key (correlation material only, never a place or destination identifier and never a catalog join key) + candidates (populated only when the query is ambiguous, so no winner is guessed) + malformed_candidates (evidence a provider offered and this build refused: an entity reference that names no OSM element class, or a position outside the WGS-84 range; a refusal is a named RUNTIME_FAILURE with attribution_reason=PROVIDER_BAD_RESPONSE and retryable=true, never an identity, never NO_MATCH, and the refused record is kept verbatim instead of being rounded or repaired) + the attribution group attribution_reason / evidence_kind / http_status / source_layer, derived once from the same observation and arriving together or not at all, with http_status null rather than 0 when nothing answered (R14 section 8: four consumers, one classification) + hard_gaps, always present and empty when there is nothing to name, carrying MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE when the destination is named, the catalog holds rows, mobility has explicit legs, and none of that material is of a class anything may treat as a hard constraint - the mobility axis also reports source_classes and hard_eligible so the claim can be checked rather than inferred, and an empty axis is MISSING with no gap rather than a gap over nothing + provider_status whose destination cell carries the per-attempt evidence (endpoint / answered / http_status / elapsed_ms) on a successful answer as well as on a failed one, because evidence that only appears when something goes wrong is not evidence) + the fingerprint and its segments, four of them when a destination is named (canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version) and a namespaced request fingerprint when it is not (pending-request-v1 + scope + resolver_query_normalized + the same three versions) + provenance (source_kinds, never upgraded by normalisation). READY is only ever the versioned server-side policy result: a place count cannot produce it, and a resolver that could not be reached keeps a destination retryable instead of declaring it structurally unusable', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description Request validation failed */
+            /** @description Request validation failed, content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -7707,41 +9605,33 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The same answer with reused=true: an open job for this identical fingerprint already exists and this caller joined it. There is deliberately no 409 - colliding with the work is success, and pushing the caller away would make them start a second chain */
+            /** @description 'The same answer with reused=true: an open job for this identical fingerprint already exists and this caller joined it. There is deliberately no 409 - colliding with the work is success, and pushing the caller away would make them start a second chain', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description Accepted and started: operation_id, fingerprint, reused=false, status QUEUED, phase, elapsed_ms, retry_after_ms, status_url, abandon_url, and the four fingerprint segments. No provider is contacted before this answer is written */
+            /** @description 'Accepted and started: operation_id, fingerprint, reused=false, status QUEUED, phase, elapsed_ms, retry_after_ms, status_url, abandon_url, and the four fingerprint segments. No provider is contacted before this answer is written', content: {application/json: {schema: {type: object}}} */
             202: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description Unprocessable: an empty or over-long query, or a journey_id this backend does not have */
+            /** @description 'Unprocessable: an empty or over-long query, or a journey_id this backend does not have', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
-            /** @description The catalog store could not record the job inside the acceptance budget (named, retryable, with retry_after_ms) - never a silent 500 */
+            /** @description 'The catalog store could not record the job inside the acceptance budget (named, retryable, with retry_after_ms) - never a silent 500', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             503: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -7756,23 +9646,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The job read from the store: operation_id, fingerprint, reused, status (QUEUED | RUNNING | COMPLETED | FAILED | UNAVAILABLE | ABANDON_REQUESTED | ABANDONED - a lifecycle axis, separate from phase, because one axis cannot tell "abandoned but still running" from "finished"), phase (the stage the worker is genuinely inside), outcome, terminal, elapsed_ms, retry_after_ms, result or error, the four fingerprint segments, status_url, abandon_url. Deliberately no progress percentage - an invented denominator is not information */
+            /** @description 'The job read from the store: operation_id, fingerprint, reused, status (QUEUED | RUNNING | COMPLETED | FAILED | UNAVAILABLE | ABANDON_REQUESTED | ABANDONED - a lifecycle axis, separate from phase, because one axis cannot tell "abandoned but still running" from "finished"), phase (the stage the worker is genuinely inside), outcome, terminal, elapsed_ms, retry_after_ms, result or error, the four fingerprint segments, status_url, abandon_url. Deliberately no progress percentage - an invented denominator is not information', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description No such operation (app envelope, not a route-level 404) */
+            /** @description 'No such operation (app envelope, not a route-level 404)', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -7787,23 +9673,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Idempotent stop request: ABANDON_REQUESTED while in flight (never a claim that work already on the wire is dead), the real terminal state otherwise. An abandoned job writes no result */
+            /** @description 'Idempotent stop request: ABANDON_REQUESTED while in flight (never a claim that work already on the wire is dead), the real terminal state otherwise. An abandoned job writes no result', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description No such operation */
+            /** @description 'No such operation', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}} */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
+                content?: never;
             };
         };
     };
@@ -7816,14 +9698,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The job this journey already has open, plus its latest operation, so a reload restores it without an id */
+            /** @description 'The job this journey already has open, plus its latest operation, so a reload restores it without an id', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7836,14 +9716,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Operation accepted: operation_id, status, status_url, abandon_url, retry_after_ms, reused */
+            /** @description 'Operation accepted: operation_id, status, status_url, abandon_url, retry_after_ms, reused', content: {application/json: {schema: {type: object}}} */
             202: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7856,14 +9734,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Status, phase, outcome, elapsed_ms, retry_after_ms, stored result or error */
+            /** @description 'Status, phase, outcome, elapsed_ms, retry_after_ms, stored result or error', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7876,14 +9752,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Idempotent stop request: ABANDON_REQUESTED while in flight, the real terminal state otherwise */
+            /** @description 'Idempotent stop request: ABANDON_REQUESTED while in flight, the real terminal state otherwise', content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7896,14 +9770,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Ranked stay and Journey options */
+            /** @description Ranked stay and Journey options, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7916,14 +9788,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Selected stay option */
+            /** @description Selected stay option, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7936,14 +9806,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Weather-adjusted stay Journey option */
+            /** @description Weather-adjusted stay Journey option, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7956,14 +9824,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Policy-gated autonomous recovery */
+            /** @description Policy-gated autonomous recovery, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7976,14 +9842,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Mode-aware Journey impact */
+            /** @description Mode-aware Journey impact, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -7996,14 +9860,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Multi-day anchors and day groups */
+            /** @description Multi-day anchors and day groups, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8016,14 +9878,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Stay and mobility provider mesh status */
+            /** @description Stay and mobility provider mesh status, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8036,14 +9896,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Frozen multimodal facts */
+            /** @description Frozen multimodal facts, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8056,14 +9914,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Mode comparison */
+            /** @description Mode comparison, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8076,14 +9932,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Persisted luggage and baggage constraints */
+            /** @description Persisted luggage and baggage constraints, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8096,14 +9950,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Reservation draft extracted without inventing critical facts */
+            /** @description Reservation draft extracted without inventing critical facts, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8116,14 +9968,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Journey Inbox drafts */
+            /** @description Journey Inbox drafts, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8136,14 +9986,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Semantic Journey Memory timeline */
+            /** @description Semantic Journey Memory timeline, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8162,23 +10010,19 @@ export interface operations {
             };
         };
         responses: {
-            /** @description DeepSeek Responses text extraction draft */
+            /** @description DeepSeek Responses text extraction draft, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description ORD-0551: the extraction provider refused this text; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason. */
+            /** @description 'ORD-0551: the extraction provider refused this text; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason.', content: {application/json: {schema: {type: object}}} */
             502: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8199,23 +10043,19 @@ export interface operations {
             };
         };
         responses: {
-            /** @description DeepSeek Responses vision extraction draft */
+            /** @description DeepSeek Responses vision extraction draft, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
-            /** @description ORD-0551: the extraction provider refused this image; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason. */
+            /** @description 'ORD-0551: the extraction provider refused this image; no draft was created. The body names the machine status (FAILED_EXTERNAL) and the provider reason.', content: {application/json: {schema: {type: object}}} */
             502: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8239,14 +10079,12 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Non-authoritative DeepSeek web observations */
+            /** @description Non-authoritative DeepSeek web observations, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8259,14 +10097,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Stored non-authoritative web observations */
+            /** @description Stored non-authoritative web observations, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8310,14 +10146,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User-confirmed reservation and durable Commitment */
+            /** @description User-confirmed reservation and durable Commitment, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
             /** @description Critical reservation facts remain unresolved */
             409: {
@@ -8337,14 +10171,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Corrected semantic reservation draft */
+            /** @description Corrected semantic reservation draft, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
             /** @description Confirmed drafts cannot be edited */
             409: {
@@ -8364,14 +10196,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Policy-gated semantic intake decision */
+            /** @description Policy-gated semantic intake decision, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8384,14 +10214,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Confirmed reservations and protected commitments */
+            /** @description Confirmed reservations and protected commitments, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8404,14 +10232,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Schedule update recorded and Guardian notified */
+            /** @description Schedule update recorded and Guardian notified, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8424,14 +10250,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Read-only next-24-hour Journey snapshot and provider freshness */
+            /** @description Read-only next-24-hour Journey snapshot and provider freshness, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8444,14 +10268,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Foreground location observation with accuracy and timestamp */
+            /** @description Foreground location observation with accuracy and timestamp, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8464,14 +10286,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Server-owned push subscription seam */
+            /** @description Server-owned push subscription seam, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8484,14 +10304,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Non-secret Web Push capability and public VAPID key */
+            /** @description Non-secret Web Push capability and public VAPID key, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8504,14 +10322,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Deduplicated server-owned notification records */
+            /** @description Deduplicated server-owned notification records, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8524,14 +10340,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Region-aware provider readiness and honest absence semantics */
+            /** @description Region-aware provider readiness and honest absence semantics, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8544,14 +10358,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Scoped Edge Companion credential returned once */
+            /** @description Scoped Edge Companion credential returned once, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8564,14 +10376,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Compact read-only current and next Journey state */
+            /** @description Compact read-only current and next Journey state, content: {application/json: {schema: {type: object}}} */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };
@@ -8584,14 +10394,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Allowlisted low-risk Edge Companion action */
+            /** @description Allowlisted low-risk Edge Companion action, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
             /** @description Action exceeds the Edge Companion authority surface */
             403: {
@@ -8611,14 +10419,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Edge observation recorded as evidence */
+            /** @description Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}} */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": Record<string, never>;
-                };
+                content?: never;
             };
         };
     };

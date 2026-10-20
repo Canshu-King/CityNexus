@@ -212,3 +212,40 @@ def test_runtime_status_endpoint_exposes_identity_without_credentials():
         "NOT_CONFIGURED",
     }
     assert "api_key" not in json.dumps(body).lower()
+
+
+def test_prompt_carries_the_envelope_schema_as_words_not_only_as_a_transport_field():
+    """The shape must travel in the sentence as well as in the structured-output field.
+
+    Measured on the live gateway: an upstream that ignores `response_format` answers by echoing the
+    input it was given, so a prompt that only *refers* to "the supplied JSON Schema" leaves the model
+    nothing to fill, the envelope parses to None, and the hub silently drops to the deterministic
+    fallback. Naming the schema in the words is what changed the product-visible `mode`; this cell
+    pins that the words carry the same schema object the transport field carries -- and that nothing
+    about what this function ACCEPTS was relaxed to get there.
+    """
+    fake = FakeSemanticClient(_envelope())
+
+    result = compile_semantic_envelope(
+        fake, "明天下午我想去河边逛逛，帮我看看顺不顺路", {"city_code": "CN"}
+    )
+
+    assert result is not None
+    assert result.intent == "DISRUPTION_REPORT"
+
+    system_text = fake.calls[0]["messages"][0]["content"]
+    marker = "The required schema, verbatim: "
+    assert marker in system_text
+
+    # The tail of the sentence has to *be* the schema, not a paraphrase of it.
+    embedded = json.loads(system_text.split(marker, 1)[1])
+    assert embedded == SEMANTIC_ENVELOPE_SCHEMA
+    assert embedded == fake.calls[0]["response_schema"]
+
+    # Every field a caller must fill is named in words the model can read.
+    for field in SEMANTIC_ENVELOPE_SCHEMA["required"]:
+        assert f'"{field}"' in system_text
+
+    # Acceptance is unchanged: an envelope-shaped reply wins, a prose reply still loses.
+    prose_only = FakeSemanticClient({"message": "好主意！"})
+    assert compile_semantic_envelope(prose_only, "明天下午去河边", {"city_code": "CN"}) is None

@@ -1,0 +1,36 @@
+{
+ "blessed_by": "copy_restraint_gate_r1.py --bless",
+ "counts": {
+  "defensive": 2,
+  "orphans": 15,
+  "pointers": 3
+ },
+ "sets": {
+  "defensive": [
+   "dictionary|zh|trial.sealedUnreadable",
+   "src/features/checkin/footprintCopy.ts|zh|unreachable"
+  ],
+  "orphans": [
+   "orphans|-|close",
+   "orphans|-|coordinateSystem",
+   "orphans|-|detailsLabel",
+   "orphans|-|host",
+   "orphans|-|noCoordinateSystem",
+   "orphans|-|noHost",
+   "orphans|-|noName",
+   "orphans|-|noRecord",
+   "orphans|-|noRecordHint",
+   "orphans|-|noSource",
+   "orphans|-|noSourceCoordinateSystem",
+   "orphans|-|notSent",
+   "orphans|-|railAria",
+   "orphans|-|sheetLede",
+   "orphans|-|sourceCoordinateSystem"
+  ],
+  "pointers": [
+   "src/features/planning/planRankingCopy.ts|en|rank.sortHint",
+   "src/i18n/agentWorkFeedCopy.ts|en|sheetLede",
+   "src/i18n/agentWorkFeedCopy.ts|zh|sheetLede"
+  ]
+ }
+}

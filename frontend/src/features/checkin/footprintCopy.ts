@@ -43,16 +43,16 @@ export type FootprintCopyKey =
 
 const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   scope: {
-    zh: "这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。",
-    en: "Every row here is a stamp the server holds for this trip, grouped by day and, inside a day, in the order they were stamped.",
+    zh: "只列服务器替这次行程记下的印，按天分。",
+    en: "Every row is a stamp the server holds for this trip, grouped by day.",
   },
   /* The day line. `{day}` is filled by the component from the server's own instant, read in the
      journey's timezone -- see `zonePhrase`, which says out loud which zone the split used. */
   dayHeading: { zh: "{day}", en: "{day}" },
-  dayZone: { zh: "日期按这趟行程自己的时区（{zone}）分，不按这台设备的钟。",
+  dayZone: { zh: "日期按这趟行程的时区 {zone} 分。",
              en: "Days are split on this trip's own timezone ({zone}), not on this device's clock." },
-  noZoneHeading: { zh: "这趟行程没有给出自己的时区，所以下面的日期是这台设备的钟。",
-                   en: "This trip did not carry a timezone, so the dates below are this device's clock." },
+  noZoneHeading: { zh: "这趟行程没有给出自己的时区，日期按这台设备的钟走。",
+                   en: "This trip did not carry a timezone, so the dates follow this device's clock." },
   time: { zh: "时刻", en: "time" },
   target: { zh: "地点", en: "place" },
   noteLabel: { zh: "备注", en: "note" },
@@ -67,8 +67,8 @@ const COPY: Record<FootprintCopyKey, { zh: string; en: string }> = {
   empty: { zh: "还没有足迹。打开行程，在一站上按「打卡」。",
            en: "No footprints yet. Open the itinerary and tap Check in on a stop." },
   emptyWhy: {
-    zh: "这一屏只列你自己按出来的那几枚印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。",
-    en: "This screen only lists stamps you made yourself -- the server does not record any for you. Go to a stop on your itinerary and tap Check in once, and a stamp will appear here.",
+    zh: "只列你自己按出来的印。还没到站？去行程里按一次「打卡」。",
+    en: "Only your own stamps are listed. Not at a stop yet? Open the itinerary and tap Check in.",
   },
   emptyAction: { zh: "打开行程去打卡", en: "Go check in on a stop" },
   /* Two different failures, two sentences: the order asks the screen to say WHICH step did not

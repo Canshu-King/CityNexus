@@ -12,9 +12,10 @@ from sqlalchemy.orm import Session
 
 from app.agent.gateway import AgentToolGateway
 from app.agent.mission import mission_payload
-from app.agent.mission_plan import mission_plan_for_model
+from app.agent.mission_plan import DRAFT_WRITE_TOOLS, READ_TOOLS, mission_plan_for_model
 from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identity
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
+from app.classroom_mode import classroom_mode
 from app.core.audit import record_audit
 from app.core.config import settings
 from app.agent.ai_availability import (
@@ -35,7 +36,9 @@ class AgentRuntimeUnavailable(RuntimeError):
 
 
 _INSPECTION_TOOLS = {"inspect_journey", "inspect_twin", "list_replans"}
-_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services"}
+# Reform 2026-10-18: `research_place_sources` is read-shaped (it stores NON_AUTHORITATIVE
+# observations), so it must not inherit the mutation-tool treatment by being newly allowlisted.
+_MUTATION_TOOLS = RUNTIME_MCP_ALLOWLIST_V2 - _INSPECTION_TOOLS - {"search_city_services", "research_place_sources", "discover_source_leads", "estimate_place_facts", "discover_places", "compare_routes", "read_guardian_stream"}
 
 
 def _property(kind: str = "string", **extra: Any) -> dict[str, Any]:
@@ -168,6 +171,115 @@ def citynexus_tool_definitions() -> list[dict[str, Any]]:
             },
             ["journey_id", "commitment_id", "reason"],
         ),
+        _tool(
+            "research_place_sources",
+            "Research up to five non-authoritative source leads for one server-owned Place. "
+            "The server builds the query; results never become facts by themselves.",
+            {**journey, "place_id": _property("string")},
+            ["journey_id", "place_id"],
+        ),
+        _tool(
+            "discover_source_leads",
+            "Discover up to five non-authoritative source leads from a public region and a "
+            "cleaned topic, even when the Journey has zero canonical Places. Leads are not "
+            "Places and never carry coordinates or plan authority.",
+            {
+                **journey,
+                "topic": _property("string", minLength=2, maxLength=120),
+                "provider": _property("string", enum=["auto", "web", "searxng"]),
+            },
+            ["journey_id", "topic"],
+        ),
+        _tool(
+            "estimate_place_facts",
+            "Estimate one Place's opening hours or cost from same-city verified peers, or record a "
+            "bounded agent hypothesis. An estimate is strategy evidence and never canonical truth.",
+            {
+                **journey,
+                "place_id": _property("string"),
+                "estimated_open_minutes": _property("integer", minimum=0, maximum=1440),
+                "estimated_close_minutes": _property("integer", minimum=0, maximum=1440),
+                "estimated_cost_minor": _property("integer", minimum=0),
+            },
+            ["journey_id", "place_id"],
+        ),
+        _tool(
+            "generate_plans",
+            "Generate candidate plans from at least two server-owned Place IDs. Candidates are "
+            "never selected or activated by this call.",
+            {
+                **journey,
+                "place_ids": _property("array", items=_property("string")),
+                "candidate_count": _property("integer", minimum=1, maximum=5),
+                "planning_mode": _property("string"),
+            },
+            ["journey_id", "place_ids"],
+        ),
+        _tool(
+            "discover_places",
+            "Search the city through the deployment's provider path when a catalogue search found "
+            "nothing. The server owns the query budget; candidates are materialised, never promoted.",
+            {
+                **journey,
+                "query": _property("string"),
+                "radius_m": _property("integer", minimum=100, maximum=5000),
+                "limit": _property("integer", minimum=1, maximum=20),
+                "mode": _property("string", enum=["replay", "captured_replay", "live"]),
+            },
+            ["journey_id", "query"],
+        ),
+        _tool(
+            "acquire_place_facts",
+            "Acquire provider-backed facts for one existing Place, optionally bound to a source "
+            "observation or URL. Missing facts stay UNKNOWN; nothing is guessed.",
+            {
+                **journey,
+                "place_id": _property("string"),
+                "source_observation_id": _property("string"),
+                "source_url": _property("string"),
+                "source_class": _property("string"),
+            },
+            ["journey_id", "place_id"],
+        ),
+        _tool(
+            "compare_routes",
+            "Compare the route facts the server already holds for one edge. Read-only: it reports "
+            "stored options, or that no edge has been captured -- it never looks one up.",
+            {
+                **journey,
+                "from_key": _property("string"),
+                "to_key": _property("string"),
+                "route_mode": _property("string"),
+            },
+            ["journey_id", "from_key", "to_key"],
+        ),
+        _tool(
+            "acquire_route",
+            "Acquire one grounded-origin -> target route edge through the deployment's mobility "
+            "capture. The server resolves the origin and target; the model supplies neither.",
+            {
+                **journey,
+                "target_activity_id": _property("string"),
+                "route_mode": _property("string"),
+            },
+            ["journey_id"],
+        ),
+        _tool(
+            "read_guardian_stream",
+            "Read the server-owned Guardian stream for this Journey: each observation, its "
+            "impact assessment and the proposed/executed action. It never starts a watch and "
+            "says WATCH_NOT_RUNNING when none has run.",
+            journey,
+            ["journey_id"],
+        ),
+        _tool(
+            "refresh_live_context",
+            "Run the live venue-context watch for the active plan. It writes WebObservation and "
+            "Event rows and can invalidate a pending replan. It refuses unless the deployment's "
+            "Guardian watch is enabled and the Journey has an active plan.",
+            journey,
+            ["journey_id"],
+        ),
     ]
 
 
@@ -181,6 +293,33 @@ def _json_text(value: Any) -> str:
 
 def _model_name() -> str:
     return settings.ai_model.removeprefix("deepseek/")
+
+
+def _plan_only_allowance(granted_tools: tuple[str, ...]) -> str:
+    """Name what a PLAN_ONLY mission may still do, from the grant itself.
+
+    The previous sentence only said "do not ... a mutating action", while `discover_places`,
+    `acquire_place_facts` and `generate_plans` are listed in `_MUTATION_TOOLS`. A model reading
+    literally could therefore refuse to form the draft the mission exists to produce. The
+    allowance is derived from `granted_tools`, not hard-coded: a plan that grants no draft write
+    must not claim one, and a plan that grants it must not leave the model guessing.
+    """
+
+    reads = [name for name in READ_TOOLS if name in granted_tools]
+    drafts = [name for name in DRAFT_WRITE_TOOLS if name in granted_tools]
+    parts: list[str] = []
+    if reads:
+        parts.append("inspect, research, estimate and compare through " + ", ".join(reads))
+    if drafts:
+        parts.append(
+            "write editable, revocable draft candidates through " + ", ".join(drafts)
+        )
+    allowed = "; ".join(parts) or "inspect the journey only"
+    return (
+        f"This is PLAN_ONLY. You may {allowed}. Those writes are draft candidates, not plan "
+        "truth. Do not accept or execute a formal plan, a booking, a payment, a commitment "
+        "change, or any other irreversible action."
+    )
 
 
 def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) -> str:
@@ -207,6 +346,16 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
     # questions and the model has to be able to tell them apart.
     granted_tools = tuple(mission_plan_for_model(mission).get("allowed_tools") or ())
     supplied_tools = citynexus_tool_definitions()
+    # Classroom mode hands the model server-made estimates instead of a dead end.  The
+    # sentence is added only when the switch is on, and it stays number-free so the grant
+    # arithmetic above remains the only place the prompt states a count.
+    classroom_line = (
+        "When a tool answers ESTIMATED or MODEL_ESTIMATE, keep planning with that estimate and "
+        "call it an estimate in every message you send; never present it as a provider "
+        "measurement and never replace it with a number of your own. "
+        if classroom_mode()
+        else ""
+    )
     if len(granted_tools) < len(supplied_tools):
         # Say what the refusal covers, and only when there is something to refuse: naming "the
         # rest" when the mission was granted everything would be a smaller version of the same
@@ -226,6 +375,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         f"{tool_line}"
         "Inspect the Journey and JourneyTwin before any mutation. "
         "Never invent IDs, prices, opening hours, provider status, or commitments. "
+        f"{classroom_line}"
         "The Gateway and deterministic feasibility layer are authoritative: follow their decisions. "
         "You may autonomously act on ordinary reversible changes inside both the global policy and this mission. "
         "Protected activities and commitments must remain unchanged unless the Gateway explicitly permits a stronger action. "
@@ -239,7 +389,7 @@ def _system_prompt(session: Session, mission: JourneyMission, journey: Journey) 
         f"Mission trigger event ID: {mission.trigger_event_id}\n"
         "The first tool call should be inspection. "
         + (
-            "This is PLAN_ONLY: do not accept or execute a mutating action."
+            _plan_only_allowance(granted_tools)
             if mission.requested_autonomy == "PLAN_ONLY"
             else "The mission permits execution only inside the server policy and envelope."
         )
@@ -450,6 +600,8 @@ class DeepSeekJourneyAgent:
     ) -> dict[str, Any]:
         now = _now()
         trace_id = str(uuid4())
+        # One permission source: the prompt counts these, and the loop refuses anything outside them.
+        granted_tools = tuple(mission_plan_for_model(mission).get("allowed_tools") or ())
         run = AgentRun(
             id=str(uuid4()),
             mission_id=mission.id,
@@ -571,7 +723,15 @@ class DeepSeekJourneyAgent:
                     arguments["request_id"] = f"agent-run-{run.id}-{sequence}"
                     if tool_name == "request_replan" and not arguments.get("trigger_event_id"):
                         arguments["trigger_event_id"] = mission.trigger_event_id
-                    if tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
+                    if granted_tools and tool_name not in granted_tools:
+                        # One permission source: the same tuple the prompt counts is the one the
+                        # loop enforces. Before this check the prompt said "five tools" while the
+                        # dispatcher would still run anything allowlisted.
+                        result: dict[str, Any] = {
+                            "tool": tool_name,
+                            "error": "tool is not granted by this mission plan",
+                        }
+                    elif tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
                         result: dict[str, Any] = {
                             "tool": tool_name,
                             "error": "tool is outside the CityNexus V2 allowlist",

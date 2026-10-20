@@ -56,6 +56,82 @@ TYPED_TOOLS = (
         False,
         True,
     ),
+    # Reform 2026-10-18: ported from the Revolution catalog. It writes WebObservation rows with
+    # authority_status=NON_AUTHORITATIVE, so it mutates neither domain truth nor money. It lives in
+    # the typed catalog on purpose: the v1 catalog's shape is frozen by
+    # `tests/test_agent_authority_v2_actions.py`, and new capabilities land additively in v2.
+    ToolDescriptor(
+        AgentAction.RESEARCH_PLACE_SOURCES,
+        "research_place_sources",
+        False,
+        False,
+        False,
+    ),
+    # Scout's zero-Place first step. It writes non-authoritative observations and a provider-call
+    # receipt, so it mutates neither domain truth nor money and never creates a Place.
+    ToolDescriptor(
+        AgentAction.DISCOVER_SOURCE_LEADS,
+        "discover_source_leads",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.ESTIMATE_PLACE_FACTS,
+        "estimate_place_facts",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.GENERATE_PLANS,
+        "generate_plans",
+        True,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.DISCOVER_PLACES,
+        "discover_places",
+        True,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.ACQUIRE_PLACE_FACTS,
+        "acquire_place_facts",
+        True,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.COMPARE_ROUTES,
+        "compare_routes",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.ACQUIRE_ROUTE,
+        "acquire_route",
+        True,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.READ_GUARDIAN_STREAM,
+        "read_guardian_stream",
+        False,
+        False,
+        False,
+    ),
+    ToolDescriptor(
+        AgentAction.REFRESH_LIVE_CONTEXT,
+        "refresh_live_context",
+        True,
+        False,
+        False,
+    ),
 )
 
 TOOL_BY_NAME = {item.tool_name: item for item in (*TOOLS, *TYPED_TOOLS)}

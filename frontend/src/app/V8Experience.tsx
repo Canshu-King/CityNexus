@@ -65,6 +65,7 @@ import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner
 import { JourneyInboxWorkbench, fieldLabel } from "../features/inbox/JourneyInboxWorkbench";
 import { JourneyLinkAction } from "../features/inbox/JourneyLinkAction";
 import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard";
+import { TravelerRecoveryCard } from "../features/identity/TravelerRecoveryCard";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
@@ -1951,6 +1952,10 @@ export function V8Experience() {
             </button>
           )}
         </div>
+        {/* Reform 2026-10-18: this is the screen a traveller actually lands on when the session is
+            gone, so the way back belongs here -- not only on a settings page they cannot reach in
+            this state. Other failures do not show it. */}
+        {action === "sign-in" && <TravelerRecoveryCard />}
         {/* The record the classifier actually produced, kept on screen for the same reason telemetry
             keeps it: a false cause has to be discoverable without a screenshot. */}
         <details className="v8-advanced" data-testid="failure-attribution">
@@ -2004,6 +2009,10 @@ export function V8Experience() {
             otherwise be the only way out of this screen.  Renders nothing on a fresh tab with no
             credential -- see features/trip/MyTripsEntry.tsx for why that state stays empty. */}
         <MyTripsEntry onOpen={openExistingJourney} askRefresh={askTravelerSessionRefresh} />
+        {/* Reform 2026-10-18: the way back sits on the signed-out landing, beside the list that is
+            empty without a credential. A recovery entry that only exists inside a signed-in screen
+            cannot be used in the state it is for. */}
+        <TravelerRecoveryCard />
       </>
     );
   if (busy && !data)
@@ -4391,7 +4400,7 @@ function MapPage({
               overlay band inside `.v8-map-panel` is what `fitBounds` measures its padding against
               (the ORD-0417/ORD-0453 note in `map-selection.css`), so a line added there moves ground
               the camera was promised; this column already carries sentences of the same kind.
-              The empty arm says what THIS read brought back -- "这台服务器这次没有交回任何足迹" --
+              The empty arm says what THIS read brought back -- "服务器这次没有交回任何足迹" --
               because an empty list is a fact about one answer, not about the traveller. */}
           <p
             className="v8-map-footprint-state"
@@ -4896,11 +4905,7 @@ function Bookings({
           <span className="v8-kicker">
             {t("bookings.importBooking")}
           </span>
-          <p className="v8-lede">
-            {zh
-              ? "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
-              : "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirmation text and screenshots go through the journey inbox."}
-          </p>
+          <p className="v8-lede">{t("bookings.importNote")}</p>
           <details className="v8-advanced" data-testid="bookings-advanced">
             <summary>
               {t("bookings.advancedStructuredData")}
@@ -4936,7 +4941,6 @@ function Bookings({
                 {parseError}
               </p>
             )}
-            <small>{t("bookings.neverInvented")}</small>
           </details>
         </aside>
       </div>
@@ -5170,6 +5174,7 @@ function Me({
         </article>
 
         <PushCapabilityCard travelerId={data.journey.traveler_id} />
+        <TravelerRecoveryCard />
       </div>
 
       <details className="v8-advanced" data-testid="me-advanced">

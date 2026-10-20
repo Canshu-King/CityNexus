@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
 from dataclasses import dataclass
 from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
@@ -108,6 +107,7 @@ class AccommodationProvider(Protocol):
     ) -> tuple[AccommodationOfferDraft, ...]: ...
 
 
+from app.integrations.china.amap import web_key as amap_web_key
 from app.integrations.stay_osm import OsmAccommodationProvider
 
 
@@ -1980,7 +1980,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             },
             "mobility": {
                 "amap": {
-                    "status": "READY" if os.getenv("AMAP_WEB_KEY") else "NOT_CONFIGURED",
+                    "status": "READY" if amap_web_key() else "NOT_CONFIGURED",
                     "captured_fallback": "READY"
                     if city_fixture(journey.city_code)
                     else "UNAVAILABLE_FOR_CITY",

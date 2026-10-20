@@ -26,14 +26,40 @@ def test_v182_plan_is_explicit_and_plan_only_limits_native_surface():
         "inspect_proposal",
         "approval_boundary",
     ]
+    # Reform 2026-10-18: a draft is granted the read-shaped research tools and the three
+    # draft-only writes (candidates, canonical facts, candidate plans). It still gets no action
+    # tool, which is what this arm is actually protecting.
+    # Arbiter ruling 2026-10-19 item 1 moves the two measurement tools (route acquisition, live
+    # context refresh) into the grant; they measure and store a provider's answer, they do not
+    # commit money, a booking or a plan selection. The commitment tools stay on the other side.
     assert plan["allowed_tools"] == [
         "inspect_journey",
         "inspect_twin",
         "list_replans",
         "search_city_services",
+        "research_place_sources",
+        "estimate_place_facts",
+        "compare_routes",
+        "read_guardian_stream",
+        "discover_source_leads",
+        "discover_places",
+        "acquire_place_facts",
+        "generate_plans",
+        "acquire_route",
+        "refresh_live_context",
         "request_replan",
     ]
     assert "accept_replan" in plan["approval_required_tools"]
+    for commitment in (
+        "accept_replan",
+        "replace_activity",
+        "reschedule_activity",
+        "create_booking",
+        "cancel_refundable_booking",
+        "request_commitment_change",
+    ):
+        assert commitment in plan["approval_required_tools"], commitment
+        assert commitment not in plan["allowed_tools"], commitment
     assert plan["protected_activity_ids"] == ["cruise-activity"]
 
     with SessionLocal() as session:
