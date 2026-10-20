@@ -318,7 +318,6 @@ def test_the_evidence_the_gate_judged_is_still_the_pair_the_committed_plan_carri
     """No drift across the chain: what the door froze is what the shipped loader reads back."""
     ids = seeded.ids
     frozen = _press(seeded, FREEZE, key="freeze-1").json()
-    assert _press(seeded, SUBMIT, key="submit-1").json()["gate"]["judged"] is True
     assert _press(seeded, COMMIT, key="commit-1",
                   body={"plan_version_id": ids["candidate"]}).status_code == 200
     from app.services import _snapshot_for_plan

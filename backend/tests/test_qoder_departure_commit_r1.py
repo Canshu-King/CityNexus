@@ -52,6 +52,7 @@ from app.db.models import (
     JourneyMember,
     Place,
     PlanVersion,
+    ReplanProposal,
     Traveler,
 )
 from app.db.session import get_session
@@ -429,3 +430,61 @@ def test_no_new_plan_source_vocabulary_is_invented_by_this_door(seeded, monkeypa
         assert row.source in allowed, (row.id, row.source)
     committed = _rows(seeded, PlanVersion, id=seeded.ids["plan_committable"])[0]
     assert committed.source == "INITIAL" and committed.status == "SELECTED"
+
+
+def _open_round(seeded, *, proposed_id: str, status: str = "PRESENTED") -> str:
+    """A proposal row in the words the shipped DDL allows, asking about one candidate."""
+    proposal_id = str(uuid.uuid4())
+    with seeded.factory() as session:
+        session.add(ReplanProposal(
+            id=proposal_id, journey_id=seeded.ids["journey"],
+            base_plan_version_id=seeded.ids["plan_infeasible"], proposed_plan_version_id=proposed_id,
+            status=status, hard_constraints_passed=True, locked_commitments_preserved=True,
+            utility_score=0.5, score_breakdown_json="{}", diff_json="{}",
+            explanation_json="{}", created_at=_now()))
+        session.commit()
+    return proposal_id
+
+
+def test_a_round_still_asking_about_this_candidate_is_not_walked_through(seeded, monkeypatch):
+    """V3's fourth item: an undecided round must not be moved past by the traveller's own door."""
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    proposal_id = _open_round(seeded, proposed_id=ids["plan_committable"])
+    before = _rows(seeded, Journey, id=ids["journey"])[0].active_plan_version_id
+
+    refused = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"],
+                      idempotency_key=_key())
+    assert refused.status_code == 409, refused.text
+    error = refused.json()["error"]
+    assert error["reason_code"] == departure_commit.REASON_ROUND_IN_FLIGHT, error
+    assert error["details"]["proposal_ids"] == [proposal_id], error["details"]
+    assert error["details"]["proposal_statuses"] == ["PRESENTED"], error["details"]
+    assert _status_of(seeded, ids["plan_committable"]) == "CANDIDATE", "nothing was selected"
+    assert _rows(seeded, Journey, id=ids["journey"])[0].active_plan_version_id == before
+    assert _rows(seeded, AuditLog, action=departure_commit.COMMIT_ACTION) == [], "no decision recorded"
+    assert _rows(seeded, IdempotencyKey) == [], "a refusal stores no receipt"
+
+
+def test_a_round_that_has_decided_does_not_hold_the_travellers_own_door(seeded, monkeypatch):
+    """The guard is about an open question, not about a proposal having ever existed."""
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    _open_round(seeded, proposed_id=ids["plan_committable"], status="REJECTED")
+    answered = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"],
+                       idempotency_key=_key())
+    assert answered.status_code == 200, answered.text
+    assert _status_of(seeded, ids["plan_committable"]) == "SELECTED"
+    assert _rows(seeded, Journey, id=ids["journey"])[0].active_plan_version_id == (
+        ids["plan_committable"])
+
+
+def test_a_round_on_another_candidate_does_not_stop_this_one(seeded, monkeypatch):
+    """The refusal is per plan version: a round about a different row must not freeze the journey."""
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    _open_round(seeded, proposed_id=ids["plan_unfrozen"])
+    pressed = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"],
+                      idempotency_key=_key())
+    assert pressed.status_code == 200, pressed.text
+    assert _status_of(seeded, ids["plan_committable"]) == "SELECTED"

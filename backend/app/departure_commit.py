@@ -20,6 +20,13 @@ What `select` cannot answer, and this door adds:
 * *that nothing else was accepted* -- the body carries one server-owned id and nothing else. Place
   names, URLs and provider payloads are refused by name, so this cannot become a way to describe a
   place to the server.
+* *that a round in flight is not walked through* -- an outstanding proposal about this very candidate
+  (`GENERATED` or `PRESENTED`) makes the commit a refusal, not a fact. The V3 order's fourth item says
+  the shared plan must not move while its round has not decided; measured before this rule was added, a
+  traveller's commit while the round still showed `outstanding 1` moved the journey's
+  `active_plan_version_id`, superseded the old plan and left the proposal `PRESENTED`, still asking
+  (`_live_round_bypass_1020ez.txt:8`). The collective path is untouched: the fulfilled round applies
+  through its own door, and a traveller may still commit once the round has been answered or withdrawn.
 
 No schema migration: `audit_logs` already carries `actor_type` / `actor_id`, and `traveler` is the
 word the member doors already write there, asserted by
@@ -34,11 +41,12 @@ from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.commerce.idempotency import canonical_request_signature
 from app.core.audit import record_audit
-from app.db.models import IdempotencyKey, PlanVersion
+from app.db.models import IdempotencyKey, PlanVersion, ReplanProposal
 from app.db.session import get_session
 from app.departure_read import GATE_STALE_EVIDENCE, _refuse, _signed_journey
 
@@ -54,6 +62,10 @@ REASON_KEY_CONFLICT = "IDEMPOTENCY_KEY_REUSE_CONFLICT"
 REASON_BODY_FIELDS = "COMMIT_BODY_TAKES_ONLY_PLAN_VERSION_ID"
 REASON_PLAN_NOT_IN_JOURNEY = "PLAN_NOT_IN_JOURNEY"
 REASON_NOT_COMMITTABLE = "PLAN_NOT_COMMITTABLE"
+REASON_ROUND_IN_FLIGHT = "COMMIT_ROUND_IN_FLIGHT"
+
+#: The words a `replan_proposals` row can hold while its round is still asking.
+PROPOSAL_ACTIONABLE_STATUSES = ("GENERATED", "PRESENTED")
 
 #: `select` raises these words; mapping them keeps a screen from learning two vocabularies.
 _STALE_PREFIX = "STALE_RECOMPOSE_REQUIRED"
@@ -160,6 +172,28 @@ def journey_departure_commit(
             f"PlanVersion {plan_version_id} was not found",
             REASON_PLAN_NOT_IN_JOURNEY,
             {"journey_id": journey.id, "plan_version_id": plan_version_id},
+        )
+
+    # A round about this candidate that has not decided is not a suggestion to walk through: the shared
+    # plan must stay where it was until the members' round decides (V3's fourth item). The fulfilled path
+    # applies through its own door; this one waits.
+    asking = session.scalars(
+        select(ReplanProposal)
+        .where(ReplanProposal.journey_id == journey.id,
+               ReplanProposal.proposed_plan_version_id == plan.id,
+               ReplanProposal.status.in_(PROPOSAL_ACTIONABLE_STATUSES))
+        .order_by(ReplanProposal.created_at.desc())
+    ).all()
+    if asking:
+        raise _refuse(
+            409,
+            "a round is still asking about this plan version, so committing it here would move the "
+            "shared plan past the very people the proposal is asking",
+            REASON_ROUND_IN_FLIGHT,
+            {"journey_id": journey.id, "plan_version_id": plan.id,
+             "proposal_ids": [row.id for row in asking],
+             "proposal_statuses": sorted({str(row.status) for row in asking}),
+             "outstanding": True},
         )
 
     # Imported here, not at module scope: `app.main` imports this module to register the door, so a
