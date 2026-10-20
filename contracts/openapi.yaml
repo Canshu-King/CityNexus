@@ -4266,6 +4266,10 @@ components:
                 proposed_changes: {type: array, items: {type: object, additionalProperties: true}}
                 provenance: {type: object, additionalProperties: true}
                 explanation: {type: string}
+                explanation_code:
+                  type: string
+                  enum: [NO_TARGET_SIMULATED, PROTECTED_OR_LOCKED_TOUCHED, NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED, ABSORBS_WITHIN_OBSERVED_WINDOW, PROVIDER_BACKED_ALTERNATIVE_REQUIRED, HYPOTHETICAL_WEATHER_OR_CLOSURE]
+                  description: Names which preview branch produced `explanation`, so a reader-facing surface can answer in the reader's language instead of echoing server prose.
                 next_action: {type: [string, "null"]}
             - type: "null"
         event: {type: [object, "null"], additionalProperties: true}
