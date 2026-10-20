@@ -382,10 +382,27 @@ def journey_plan_submission(
         after={"proposal_id": proposal.id, "base_plan_version_id": base.id,
                "proposed_plan_version_id": candidate.id, "status": STATUS_PRESENTED},
     )
+    #: The order the doors actually have to be pressed in, said by the door that knows the round is open.
+    #: A candidate with no frozen evidence is presented with `gate.judged` false -- the round exists and
+    #: cannot be judged -- so the freeze door is named first, with the code the gate answers, before the
+    #: consent pointer. The path is read from `app.plan_evidence`, not recopied, and the import is inside
+    #: the handler because that module is the one that reaches a provider.
+    from app.plan_evidence import FREEZE_PATH
+
+    next_actions: list[str] = []
+    if gate_verdict["refusal_code"] == "STALE_RECOMPOSE_REQUIRED":
+        next_actions.append(
+            "close the evidence gap with POST " + FREEZE_PATH.format(
+                journey_id=journey.id, plan_version_id=candidate.id) +
+            ", or this round stays gate.judged false with " + str(gate_verdict["refusal_code"]))
+    next_actions.append("ask this journey's members through POST " + CONSENT_PATH.format(
+        journey_id=journey.id, proposal_id=proposal.id))
+    next_actions.append("read what this changes with GET /api/v1/journeys/" + journey.id +
+                        "/plans/delta")
+
     answer = {
         "journey_id": journey.id,
-        "proposal_id": proposal.id,
-        "base_plan_version_id": base.id,
+        "proposal_id": proposal.id,        "base_plan_version_id": base.id,
         "proposed_plan_version_id": candidate.id,
         "base_status": base.status,
         "status": STATUS_PRESENTED,
@@ -412,11 +429,7 @@ def journey_plan_submission(
         "shared_plan_updated": False,
         "journey_active_plan_version_id": journey.active_plan_version_id,
         "consent_path": CONSENT_PATH.format(journey_id=journey.id, proposal_id=proposal.id),
-        "next_actions": [
-            "ask this journey's members through POST " + CONSENT_PATH.format(
-                journey_id=journey.id, proposal_id=proposal.id),
-            "read what this changes with GET /api/v1/journeys/" + journey.id + "/plans/delta",
-        ],
+        "next_actions": next_actions,
     }
     _store(session, scoped_key=scoped_key, signature=signature, answer=answer)
     session.commit()

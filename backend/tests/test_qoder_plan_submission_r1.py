@@ -36,6 +36,7 @@ from app import (
     collective_consent,
     departure_read,
     plan_delta,
+    plan_evidence,
     plan_from_slots,
     plan_submission,
     traveler_principal,
@@ -341,6 +342,28 @@ def test_the_stored_difference_is_the_delta_doors_own_answer_field_by_field(seed
     assert stored["read_from"] == "app.plan_delta.delta_of", stored["read_from"]
 
 
+def test_an_unjudged_round_is_pointed_at_the_door_that_can_judge_it(seeded):
+    """The round this door opens cannot be judged until the evidence exists, and the answer says so.
+
+    A hand-built candidate is presented with `gate.judged` false -- that is the honest encoding of the
+    shipped `STALE_RECOMPOSE_REQUIRED` wall -- and since the freeze door landed there is a door that
+    closes the gap, so the pointer names it, with its own path template rather than a recopied string.
+    """
+    client = _app(seeded)
+    ids = seeded.ids
+    body = _submit(client, ids).json()
+    assert body["evidence_gap"] is True, body
+    freeze = plan_evidence.FREEZE_PATH.format(journey_id=ids["journey"],
+                                              plan_version_id=ids["candidate"])
+    assert body["next_actions"][0] == (
+        "close the evidence gap with POST " + freeze +
+        ", or this round stays gate.judged false with STALE_RECOMPOSE_REQUIRED"), (
+        body["next_actions"][0])
+    joined = " ".join(body["next_actions"])
+    assert joined.count("/api/v1/") == len(body["next_actions"]), body["next_actions"]
+    assert body["gate"]["refusal_code"] in body["next_actions"][0], body["gate"]
+
+
 def test_the_consent_door_answers_for_a_submitted_proposal(seeded):
     """The two halves name each other: the submission's `consent_path` is the round's own door."""
     client = _app(seeded)
@@ -348,7 +371,8 @@ def test_the_consent_door_answers_for_a_submitted_proposal(seeded):
     body = _submit(client, ids).json()
     assert body["consent_path"] == collective_consent.CONSENT_PATH.format(
         journey_id=ids["journey"], proposal_id=body["proposal_id"]), body["consent_path"]
-    assert body["next_actions"][0].endswith(body["consent_path"]), body["next_actions"]
+    assert any("POST" in line and line.endswith(body["consent_path"])
+               for line in body["next_actions"]), body["next_actions"]
     round_answer = client.get(body["consent_path"], headers=_header(ids["owner"]))
     assert round_answer.status_code == 200, round_answer.text
     round_body = round_answer.json()
