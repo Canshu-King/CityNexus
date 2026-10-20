@@ -14656,6 +14656,61 @@ def _copilot_place_answer(
     answer = header + newline + newline.join(f"• {line}" for line in lines) + newline + footer
     return answer, evidence
 
+# What a what-if preview says to the reader, per branch code, in the reader's own language. The
+# sentence that stays in the payload (`what_if.explanation`) is the server's own record of the branch;
+# this table is what a traveller sees. Keeping the two apart is what stops a Chinese screen from
+# answering in English machinery prose, and the shared test fails when a branch is added on one side
+# without the other.
+_WHAT_IF_ANSWERS: dict[str, tuple[str, str]] = {
+    "NO_TARGET_SIMULATED": (
+        "这次没能定下要改哪一站，只按现状算了一遍；行程没有改动。",
+        "No stop was matched for this change, so only the current state was computed; your trip is unchanged.",
+    ),
+    "PROTECTED_OR_LOCKED_TOUCHED": (
+        "要改的那一段正被受保护或已锁定的安排占着，所以这次没有改动。",
+        "That stretch belongs to a protected or locked activity, so nothing was changed.",
+    ),
+    "NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED": (
+        "这样延后会吃掉下一个受保护安排的时间窗，这次试算判它不可行。",
+        "The extension would consume the next protected commitment window, so this preview judges it not feasible.",
+    ),
+    "ABSORBS_WITHIN_OBSERVED_WINDOW": (
+        "这一站能在已观察到的承诺窗口里吸收你要加的时长；要真的改，请明确发起重新规划。",
+        "The selected activity absorbs this extension inside the observed commitment window; apply it through an explicit replan.",
+    ),
+    "PROVIDER_BACKED_ALTERNATIVE_REQUIRED": (
+        "你提的费用、步行或室内改动要供应商那侧的证据才成立；这次只算给你看。",
+        "Your cost, walking, or indoor change needs provider-backed evidence before it holds; this was a preview only.",
+    ),
+    "HYPOTHETICAL_WEATHER_OR_CLOSURE": (
+        "这是天气或关闭的假设试算，没有当成已经发生的事件；要真的改，请明确发起重新规划。",
+        "This is a weather or closure hypothetical, not a recorded event; apply it through an explicit replan.",
+    ),
+}
+
+
+def _what_if_answer_text(what_if: dict[str, Any], locale: str) -> str:
+    """Say the preview branch in the reader's language; never in an empty voice.
+
+    A branch that did not name itself (`explanation_code` missing or outside the vocabulary) is a bug
+    on the simulator side. It must not cost the traveller a blank bubble, so the fallback keeps the
+    server's own recorded sentence; when even that is absent it says the one thing every preview
+    branch has in common -- it previewed -- instead of inventing a claim.
+    """
+
+    pair = _WHAT_IF_ANSWERS.get(str(what_if.get("explanation_code") or ""))
+    if pair is not None:
+        return pair[0] if locale == "zh" else pair[1]
+    recorded = str(what_if.get("explanation") or "").strip()
+    if recorded:
+        return recorded
+    return (
+        "这次只做了试算，行程没有改动。"
+        if locale == "zh"
+        else "This was a preview only; your trip is unchanged."
+    )
+
+
 def _copilot_answer(
     interpretation: CopilotInterpretation,
     context: dict[str, Any],
@@ -14675,7 +14730,7 @@ def _copilot_answer(
             if locale == "zh":
                 return "当前还没有已选的权威 PlanVersion。请先在住宿选择中选择一个通过供应商事实和确定性门控的方案，再预览时间或费用变化；本次试算没有修改行程。"
             return "There is no selected authoritative PlanVersion yet. Select a provider-backed plan in Stay Explorer before previewing time or cost changes; this preview changed nothing."
-        return str(what_if["explanation"])
+        return _what_if_answer_text(what_if, locale)
     if interpretation.intent == "EXPLAIN_PLAN":
         if locale == "zh":
             return f"当前使用 {plan_label}，服务器已核验 {protected_count} 个受保护承诺。解释基于已选方案事实，不会修改行程。"
