@@ -1,0 +1,61 @@
+{
+ "measured_at": "2026-10-17 21:02:48",
+ "live_tip": "f5ecd9d854000e7eaa6ca07c55bd0436d4f80c68",
+ "remote_review_heads": 2273,
+ "seconds": 251,
+ "buckets": {
+  "in_line": 88,
+  "clean_merge": 13,
+  "real_conflict": 7,
+  "no_common_ancestor": 2165,
+  "other_nonzero": 0,
+  "no_local_object": 0
+ },
+ "owners_sorted_by_no_common_ancestor": [
+  [
+   "0afdb49b",
+   0
+  ],
+  [
+   "8ac89982",
+   0
+  ],
+  [
+   "a68b0631",
+   0
+  ],
+  [
+   "cmdr",
+   0
+  ],
+  [
+   "maibogong",
+   0
+  ],
+  [
+   "pinggong",
+   0
+  ],
+  [
+   "号令者",
+   0
+  ],
+  [
+   "地图工",
+   0
+  ],
+  [
+   "归档工",
+   0
+  ],
+  [
+   "接尖工",
+   0
+  ],
+  [
+   "盘务工",
+   0
+  ]
+ ],
+ "other_nonzero_rows": []
+}
