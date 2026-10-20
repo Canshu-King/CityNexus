@@ -93,6 +93,44 @@ def test_each_pointer_a_module_hands_back_is_served_and_documented(module_name, 
         assert _shape(path) in documented_shapes, (module_name, path, sorted(documented)[:3])
 
 
+def _method_pointers() -> dict[str, set[tuple[str, str]]]:
+    """Pointers that name the verb too -- "read GET ...", "select POST ...".
+
+    Same path template as above, so a line-wrapped literal cannot be mistaken for a dead link (the
+    shape rule, not a stricter one, is what this file checks).
+    """
+    pattern = re.compile(r"(GET|POST|PUT|DELETE)\s+(" + TEMPLATE.pattern + ")")
+    found: dict[str, set[tuple[str, str]]] = {}
+    for name in MODULES:
+        source = (APP / name).read_text(encoding="utf-8")
+        found[name] = set(pattern.findall(source))
+    return found
+
+
+def test_a_pointer_that_names_a_verb_names_one_that_route_answers(served):
+    """The method dimension, added because without it a GET pointer onto a POST-only door is green.
+
+    Denominator first: the arm would pass vacuously if no module spelled out a verb.
+    """
+    pairs = {pair for found in _method_pointers().values() for pair in found}
+    assert len(pairs) >= 5, sorted(pairs)
+    answered = {(method, _shape(path)) for method, path in served}
+    wrong = sorted((method, path) for method, path in pairs
+                   if (method, _shape(path)) not in answered)
+    assert not wrong, "these verbs are named at callers but the route does not answer them: " + repr(wrong)
+
+
+def test_the_method_arm_can_bite(served):
+    """A named control: flip the verb on a real GET pointer and the served set must not carry it.
+
+    Without this, "0 wrong" above could mean the arm is blind rather than the code clean.
+    """
+    answered = {(method, _shape(path)) for method, path in served}
+    identity = "/api/v1/journeys/{journey_id}/place-identity"
+    assert ("GET", _shape(identity)) in answered, sorted(answered)[:5]
+    assert ("POST", _shape(identity)) not in answered, "this door answers POST too -- pick another control"
+
+
 def test_the_identity_pointer_this_family_used_to_get_wrong_is_now_a_served_route(served):
     """The named negative control: the dead path must not be what any module hands out.
 
