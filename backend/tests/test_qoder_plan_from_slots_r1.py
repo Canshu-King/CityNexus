@@ -221,8 +221,34 @@ def test_a_provider_id_is_refused_by_name_and_no_row_is_written(seeded, monkeypa
     error = refused.json()["error"]
     assert error["reason_code"] == plan_from_slots.REASON_DELEGATED_SHAPE, error
     assert error["details"]["accepted_shape"] == "canonical Place uuid", error
-    assert "identity" in error["details"]["next_action"], error
+    # The pointer has to be a door the caller can actually press. Reading it for the word `identity`
+    # was green while it named `/places/{place_id}/identity`, a path no router serves: whoever pressed
+    # that answer got a 404. So: the exact string this module builds, the refused lead echoed back
+    # where a query value can hold it, the old shape named as the negative control, and the path
+    # checked against the constant the identity GET is registered with -- read off that router here, so
+    # a drift between the two shows up red in this file rather than as a dead link for a traveller.
+    pointer = error["details"]["next_action"]
+    assert pointer == plan_from_slots.identity_pointer(ids["journey"], "amap:B00140WBI1"), pointer
+    assert pointer.endswith("?lead=amap:B00140WBI1"), pointer
+    assert "/places/" not in pointer, pointer
+    from app import place_media_routes
+    pressed_path = place_media_routes.IDENTITY_PATH.format(journey_id=ids["journey"])
+    assert pressed_path in pointer, (pressed_path, pointer)
+    registered = {getattr(route, "path", "") for route in place_media_routes.router.routes}
+    assert place_media_routes.IDENTITY_PATH in registered, sorted(registered)
     assert _plans(seeded) == before, "a refused draft still wrote a plan version"
+
+
+def test_a_lead_that_cannot_sit_in_a_query_is_not_echoed_into_one(seeded, monkeypatch):
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    refused = _press(client, ids, ids["owner"], [{"place_id": "amap:B001#7",
+                                                 "start_at": _then(120), "end_at": _then(180)}])
+    assert refused.status_code == 422, refused.text
+    pointer = refused.json()["error"]["details"]["next_action"]
+    assert "amap:B001#7" not in pointer, pointer
+    assert pointer.endswith("?lead= (name the refused id from details; this door will not put it in "
+                            "a url)"), pointer
 
 
 def test_a_uuid_that_is_not_a_row_in_this_store_is_answered_as_missing(seeded, monkeypatch):
@@ -321,6 +347,61 @@ def test_a_draft_read_against_a_plan_that_moved_is_refused(seeded, monkeypatch):
                           json={"slots": [_slot(ids["good"])]})
     assert missing.status_code == 422, missing.text
     assert missing.json()["error"]["reason_code"] == plan_from_slots.REASON_REVISION_MISSING
+
+
+def test_a_journey_that_has_never_had_a_plan_can_get_its_first_one(seeded, monkeypatch):
+    """Issue #42 P0-1: `expected_revision` names the plan in force, or null when there is none.
+
+    The whole body used to be one check: a null was refused for being empty, and any id was refused
+    for not matching -- so a journey with no `active_plan_version_id` had no legal request, and the
+    seeded store could not show it because every journey in it already had a base. Presence is now
+    what is required; the value is what is compared.
+    """
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    first = str(uuid.uuid4())
+    with seeded.factory() as session:
+        session.add(Journey(id=first, traveler_id=ids["owner"], title="广州首趟", city_code=CITY,
+                            timezone="Asia/Shanghai", start_at=_then(60), end_at=_then(60 * 24),
+                            budget_currency="CNY", budget_amount_minor=500_00, status="DRAFT",
+                            active_plan_version_id=None, created_at=_now(), updated_at=_now()))
+        session.commit()
+    before = _plans(seeded)
+    slot = [_slot(ids["good"])]
+
+    pressed = client.post(DOOR.format(first),
+                          headers={**_header(ids["owner"]), "Idempotency-Key": "first-1"},
+                          json={"slots": slot, "expected_revision": None,
+                                "planning_mode": "balanced"})
+    assert pressed.status_code == 201, pressed.text
+    body = pressed.json()
+    assert body["status"] == "CANDIDATE" and body["version_no"] == 1, body
+    assert body["draft_revision"] is None, body
+    with seeded.factory() as session:
+        journey = session.get(Journey, first)
+        assert journey.active_plan_version_id is None, "a first draft must not select itself"
+    assert _plans(seeded) == sorted(before + [(body["plan_version_id"], "CANDIDATE", "MANUAL", 1)]), \
+        _plans(seeded)
+
+    # A replay of the same key and content gives the same row, not a second first plan.
+    again = client.post(DOOR.format(first),
+                        headers={**_header(ids["owner"]), "Idempotency-Key": "first-1"},
+                        json={"slots": slot, "expected_revision": None,
+                              "planning_mode": "balanced"})
+    assert again.status_code == 201, again.text
+    assert again.json()["plan_version_id"] == body["plan_version_id"], again.json()
+    assert _plans(seeded) == sorted(before + [(body["plan_version_id"], "CANDIDATE", "MANUAL", 1)]), \
+        _plans(seeded)
+
+    # Naming null where a plan *is* in force is the mismatch it always was -- not a way to skip it.
+    against_base = client.post(DOOR.format(ids["journey"]),
+                               headers={**_header(ids["owner"]), "Idempotency-Key": "null-vs-base"},
+                               json={"slots": [_slot(ids["good"])], "expected_revision": None})
+    assert against_base.status_code == 409, against_base.text
+    refused = against_base.json()["error"]
+    assert refused["reason_code"] == plan_from_slots.REASON_REVISION, refused
+    assert refused["details"]["expected_revision"] == "", refused
+    assert refused["details"]["current_active_plan_version_id"] == ids["base"], refused
 
 
 def test_one_press_one_plan_version_under_a_retried_key(seeded, monkeypatch):

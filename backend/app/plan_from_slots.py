@@ -20,7 +20,11 @@ What it refuses, and why each refusal is the point:
   refusal rather than a plan.
 * **a revision it cannot check** -- `expected_revision` is the journey's current
   `active_plan_version_id`. A caller whose draft was built on a plan that has since moved gets
-  `BASE_PLAN_MOVED`: the candidate it would create is not the one the user looked at.
+  `BASE_PLAN_MOVED`: the candidate it would create is not the one the user looked at. The field must
+  be *said*; what it says then decides the answer. A journey that has no plan version yet is not a
+  caller error -- naming `null` is how a first draft states that, and it is accepted while the
+  journey still has none. Naming `null` against a journey that does have one is `BASE_PLAN_MOVED`,
+  not an acceptance, and omitting the field is `EXPECTED_REVISION_REQUIRED`.
 
 What it never does: it does not select, start or activate anything -- the row it returns is
 `CANDIDATE` and stays that way until the traveller picks it through
@@ -53,6 +57,7 @@ from app.core.audit import record_audit
 from app.db.models import Activity, IdempotencyKey, Place, PlanVersion
 from app.db.session import get_session
 from app.departure_read import _refuse, _signed_journey
+from app.place_media_routes import IDENTITY_PATH
 from app.services import _place_verified_cost, _place_window
 
 router = APIRouter()
@@ -97,8 +102,32 @@ GAP_COORDINATE = "PLACE_HAS_NO_POINT"
 
 NEXT_ACTION_FACTS = "read GET /api/v1/journeys/{journey_id}/departure/facts"
 NEXT_ACTION_COMMIT = "select POST /api/v1/journeys/{journey_id}/departure/commit"
-NEXT_ACTION_IDENTITY = "map the provider id first with GET /api/v1/journeys/{journey_id}/places/" \
-                      "{place_id}/identity"
+
+
+#: Characters that would change what a query parameter means if this door echoed the lead into one.
+LEAD_QUERY_UNSAFE = "&#+%? "
+
+
+def identity_pointer(journey_id: str, lead: Any) -> str:
+    """The identity read this door points at, spelled the way that router actually serves it.
+
+    The path is `app.place_media_routes.IDENTITY_PATH` -- the constant the GET itself is registered
+    with -- because a pointer copied into a second file is a pointer that can drift: this one named
+    `/places/{place_id}/identity`, a path no route serves, and it stayed green under a spec that only
+    looked for the word `identity`, so a caller who pressed it got a 404. This module imports that
+    router's path constant and nothing else from it, and no network client is reachable from here
+    (the shipped AST arm keeps that true).
+
+    The refused lead goes in verbatim when it can -- a colon is legal inside a query value, which is
+    what every provider id this product holds uses -- and is left out when it cannot, because a
+    pointer that silently means something else is the same bug wearing a different hat. The value is
+    always in the refusal's own `received`/slot either way.
+    """
+    head = "map the provider id first with GET " + IDENTITY_PATH.format(journey_id=journey_id)
+    text = str(lead)
+    if any(character in text for character in LEAD_QUERY_UNSAFE):
+        return head + "?lead= (name the refused id from details; this door will not put it in a url)"
+    return head + "?lead=" + text
 
 
 def _parse(moment: str, field: str, sequence_no: int) -> datetime:
@@ -224,21 +253,29 @@ def journey_plan_from_slots(
             REASON_BODY,
             {"accepted_words": list(PLANNING_MODES), "received": planning_mode},
         )
-    expected_revision = fields.get("expected_revision")
-    if expected_revision is None or str(expected_revision) == "":
+    if "expected_revision" not in fields:
         raise _refuse(
             422,
-            "a draft write must name the plan version the draft was read against",
+            "a draft write must say which plan version the draft was read against, "
+            "and must say null when there is none",
             REASON_REVISION_MISSING,
-            {"journey_id": journey.id,
+            {"journey_id": journey.id, "field": "expected_revision",
+             "accepted_values": ["the journey's active_plan_version_id", "null for a first draft"],
              "current_active_plan_version_id": journey.active_plan_version_id},
         )
-    if str(expected_revision) != str(journey.active_plan_version_id or ""):
+    # Presence is the contract; the value may be empty. A first journey has no `active_plan_version_id`
+    # at all, so a caller that names null is not forgetting the revision -- it is stating the only thing
+    # that is true. Before this split the two were one check, and such a draft had no legal request:
+    # null was 422 `EXPECTED_REVISION_REQUIRED` and any id was 409 `BASE_PLAN_MOVED`.
+    named_revision = "" if fields["expected_revision"] is None else str(
+        fields["expected_revision"]).strip()
+    in_force = str(journey.active_plan_version_id or "")
+    if named_revision != in_force:
         raise _refuse(
             409,
             "the plan this draft was read against is no longer the one in force",
             REASON_REVISION,
-            {"journey_id": journey.id, "expected_revision": str(expected_revision),
+            {"journey_id": journey.id, "expected_revision": named_revision,
              "current_active_plan_version_id": journey.active_plan_version_id},
         )
 
@@ -246,7 +283,7 @@ def journey_plan_from_slots(
         "operation": FROM_SLOTS_OPERATION,
         "journey_id": journey.id,
         "traveler_id": seat["traveler_id"],
-        "expected_revision": str(expected_revision),
+        "expected_revision": named_revision,
         "slots": slots,
         "planning_mode": planning_mode,
     })
@@ -280,7 +317,7 @@ def journey_plan_from_slots(
                 REASON_DELEGATED_SHAPE,
                 {"slot": index, "accepted_shape": "canonical Place uuid",
                  "refused_shape": "provider_key:external_id",
-                 "next_action": NEXT_ACTION_IDENTITY,
+                 "next_action": identity_pointer(journey.id, raw_place_id),
                  "journey_id": journey.id},
             )
         try:
@@ -290,7 +327,7 @@ def journey_plan_from_slots(
                 422, "a provider id is not a place this server holds; map it to a canonical id first",
                 REASON_DELEGATED_SHAPE,
                 {"slot": index, "received": raw_place_id[:40], "detail": str(refused)[:80],
-                 "next_action": NEXT_ACTION_IDENTITY},
+                 "next_action": identity_pointer(journey.id, raw_place_id)},
             ) from refused
         place = session.get(Place, str(place_uuid))
         if place is None:
@@ -388,7 +425,7 @@ def journey_plan_from_slots(
         entity_type="PlanVersion",
         entity_id=plan.id,
         journey_id=journey.id,
-        before={"expected_revision": str(expected_revision),
+        before={"expected_revision": named_revision,
                 "active_plan_version_id": journey.active_plan_version_id,
                 "traveler_id": seat["traveler_id"]},
         after={"plan_version_id": plan.id, "status": plan.status, "source": plan.source,
@@ -401,7 +438,7 @@ def journey_plan_from_slots(
         "journey_id": journey.id,
         "task_id": None,
         "plan_version_id": plan.id,
-        "draft_revision": str(expected_revision),
+        "draft_revision": named_revision or None,
         "status": plan.status,
         "version_no": version_no,
         "planning_mode": plan.planning_mode,

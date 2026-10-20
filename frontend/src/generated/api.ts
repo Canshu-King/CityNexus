@@ -2007,7 +2007,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Write the slots a draft already holds as a new CANDIDATE plan version, keeping their order and their times. The shipped generator re-schedules, so it cannot be the door that turns a chosen draft into a plan without claiming a preservation that did not happen. A slot names a canonical `places` row and carries its own times; a provider id (`provider_key:external_id`) is refused by name and pointed at the identity read that yields the canonical id, and the fields that would describe a place (`title`, `name`, `url`, `query`, `address`, `external_id`, `source_id`, `photo`, `image`, `tags`) are refused rather than stored, because `activities.title` is written from the Place row this door reads. A place whose `city_code` differs from the journey's is a refusal, not a plan. `expected_revision` must equal the journey's current `active_plan_version_id`, so a draft read against a plan that has since moved cannot be committed into it; `Idempotency-Key` is required so a retry replays the same plan version instead of writing a second one. Nothing is selected, started or activated here -- the row is CANDIDATE until `POST /api/v1/journeys/{journey_id}/departure/commit` -- and no provider is reachable from the module, so this cannot spend quota. An undeclared cost stays undeclared: the column's zero is stored because the DDL demands NOT NULL, and `cost_declared` says false. Its own frozen evidence is not this door's to invent: a candidate written here reaches a judgeable submission through `POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze`. */
+        /** @description Write the slots a draft already holds as a new CANDIDATE plan version, keeping their order and their times. The shipped generator re-schedules, so it cannot be the door that turns a chosen draft into a plan without claiming a preservation that did not happen. A slot names a canonical `places` row and carries its own times; a provider id (`provider_key:external_id`) is refused by name and pointed at the identity read that yields the canonical id, and the fields that would describe a place (`title`, `name`, `url`, `query`, `address`, `external_id`, `source_id`, `photo`, `image`, `tags`) are refused rather than stored, because `activities.title` is written from the Place row this door reads. A place whose `city_code` differs from the journey's is a refusal, not a plan. `expected_revision` has to be *said* by every call: it is the journey's current `active_plan_version_id`, or `null` for a journey that has no plan version yet -- which is how a first draft gets written, since there is nothing for it to have moved off. Naming `null` while a plan is in force is `BASE_PLAN_MOVED`, not an acceptance, and leaving the field out is `EXPECTED_REVISION_REQUIRED`; `Idempotency-Key` is required so a retry replays the same plan version instead of writing a second one. Nothing is selected, started or activated here -- the row is CANDIDATE until `POST /api/v1/journeys/{journey_id}/departure/commit` -- and no provider is reachable from the module, so this cannot spend quota. An undeclared cost stays undeclared: the column's zero is stored because the DDL demands NOT NULL, and `cost_declared` says false. Its own frozen evidence is not this door's to invent: a candidate written here reaches a judgeable submission through `POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/mobility-freeze`. */
         post: operations["postJourneyPlanFromSlots"];
         delete?: never;
         options?: never;
@@ -8633,8 +8633,11 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    /** Format: uuid */
-                    expected_revision: string;
+                    /**
+                     * Format: uuid
+                     * @description The plan version this draft was read against. `null` is a statement, not an omission: it says the journey has no plan version yet, and is what a first draft of a journey sends. Omitting the field stays `EXPECTED_REVISION_REQUIRED`.
+                     */
+                    expected_revision: string | null;
                     /** @enum {string} */
                     planning_mode?: "balanced" | "budget" | "explore" | "strict_schedule";
                     slots: {
@@ -8663,8 +8666,11 @@ export interface operations {
                         journey_id: string;
                         /** Format: uuid */
                         plan_version_id: string;
-                        /** Format: uuid */
-                        draft_revision: string;
+                        /**
+                         * Format: uuid
+                         * @description Echoed back as the caller named it -- the plan version, or null when this draft is the journey's first.
+                         */
+                        draft_revision: string | null;
                         /** @constant */
                         status: "CANDIDATE";
                         version_no: number;
@@ -8743,7 +8749,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description A missing key (IDEMPOTENCY_KEY_REQUIRED), a missing revision (EXPECTED_REVISION_REQUIRED), a provider id where a canonical id belongs (SLOT_NAMES_A_PROVIDER_ID_NOT_A_CANONICAL_PLACE), a slot that describes a place (SLOT_CARRIES_ONLY_SERVER_OWNED_FIELDS), a body field this door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE) or an end not after a start (SLOT_TIMES_UNORDERED) */
+            /** @description A key the caller never sent (IDEMPOTENCY_KEY_REQUIRED), a revision the body never named (EXPECTED_REVISION_REQUIRED), a provider id where a canonical id belongs (SLOT_NAMES_A_PROVIDER_ID_NOT_A_CANONICAL_PLACE), a slot that describes a place (SLOT_CARRIES_ONLY_SERVER_OWNED_FIELDS), a body field this door does not take (FROM_SLOTS_BODY_TAKES_ONLY_THE_SERVERS_OWN_FIELDS), no slots (FROM_SLOTS_NEEDS_AT_LEAST_ONE_SLOT), an unreadable timestamp (SLOT_TIMESTAMP_NOT_PARSEABLE) or an end not after a start (SLOT_TIMES_UNORDERED) */
             422: {
                 headers: {
                     [name: string]: unknown;
