@@ -270,6 +270,10 @@ def test_the_no_plan_notice_stops_reciting_the_machine():
 
 
 _CAMEL_CASE = re.compile(r"[A-Za-z][a-z]+[A-Z][A-Za-z]*")
+# Capability codes are the second shape that leaked: measured on the phone screen, the preference
+# branch answered `记下你的能力与偏好（MAX_WALKING_PER_LEG_M）…`. The code belongs in `entities`, not in
+# a sentence addressed to a traveller.
+_CODE_SHAPE = re.compile(r"[A-Z][A-Z0-9]*_[A-Z0-9_]+")
 _INTERNAL_NAMES = ("TravelerTwin", "JourneyTwin", "PlanVersion", "ReplanDiff", "CityNexus", "Copilot")
 
 
@@ -331,6 +335,8 @@ def test_no_sentence_addressed_to_a_traveller_names_one_of_our_own_objects():
             assert name not in en, (label, name, en)
         assert not _CAMEL_CASE.search(zh), (label, zh)
         assert not _CAMEL_CASE.search(en), (label, en)
+        assert not _CODE_SHAPE.search(zh), (label, zh)
+        assert not _CODE_SHAPE.search(en), (label, en)
 
     # The preview table is reader-facing too: no cell may carry an internal object name.
     for code, (zh, en) in main_module._WHAT_IF_ANSWERS.items():
@@ -338,3 +344,5 @@ def test_no_sentence_addressed_to_a_traveller_names_one_of_our_own_objects():
             assert name not in zh and name not in en, (code, name)
         assert not _CAMEL_CASE.search(zh), code
         assert not _CAMEL_CASE.search(en), code
+        assert not _CODE_SHAPE.search(zh), code
+        assert not _CODE_SHAPE.search(en), code
