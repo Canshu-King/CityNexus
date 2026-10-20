@@ -9,6 +9,7 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid4, uuid5
 
 from sqlalchemy import delete, func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
@@ -890,24 +891,45 @@ def set_luggage_context(
     baggage_size_class: str,
     luggage_drop_required: bool,
 ) -> JourneyOperationsContext:
-    row = session.get(JourneyOperationsContext, journey.id)
+    """Read-modify-write of the one-per-journey operations row, safe under concurrency.
+
+    A plain `get`-then-`add` is a race: `/experience` and the luggage door can both find
+    no row for the same journey, and the loser of the `journey_id` UNIQUE constraint used
+    to surface as a 500 instead of as the traveller's own update.  A savepoint keeps the
+    failed insert from poisoning the outer transaction, so the row the *other* writer
+    created is what gets read back -- and then amended.
+    """
+
     now = _now()
+    row = session.get(JourneyOperationsContext, journey.id)
     if row is None:
-        row = JourneyOperationsContext(
-            journey_id=journey.id,
-            baggage_present=baggage_present,
-            baggage_size_class=baggage_size_class,
-            luggage_drop_required=luggage_drop_required,
-            constraints_json="{}",
-            created_at=now,
-            updated_at=now,
-        )
-        session.add(row)
-    else:
-        row.baggage_present = baggage_present
-        row.baggage_size_class = baggage_size_class
-        row.luggage_drop_required = luggage_drop_required
-        row.updated_at = now
+        try:
+            with session.begin_nested():
+                session.add(
+                    JourneyOperationsContext(
+                        journey_id=journey.id,
+                        baggage_present=baggage_present,
+                        baggage_size_class=baggage_size_class,
+                        luggage_drop_required=luggage_drop_required,
+                        constraints_json="{}",
+                        created_at=now,
+                        updated_at=now,
+                    )
+                )
+                session.flush()
+        except IntegrityError:
+            session.expire_all()
+            row = session.get(JourneyOperationsContext, journey.id)
+            if row is None:
+                raise
+        else:
+            row = session.get(JourneyOperationsContext, journey.id)
+    if row is None:
+        raise RuntimeError("operations context disappeared while being created")
+    row.baggage_present = baggage_present
+    row.baggage_size_class = baggage_size_class
+    row.luggage_drop_required = luggage_drop_required
+    row.updated_at = now
     session.flush()
     return row
 

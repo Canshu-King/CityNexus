@@ -1393,12 +1393,14 @@ export function JourneyTrialSetup({
               <dt>{t("trial.destination")}{reviewEdit("city")}</dt>
               <dd data-testid="review-city">{draft.cityName || "—"}</dd>
               {/* The step-1 caution has to be here too: this is the screen the traveller
-                  confirms from, and an assumption shown only two steps back is gone. */}
+                  confirms from, and an assumption shown only two steps back is gone.
+                  What is *not* repeated here is the enumeration of the neutral basis: step 1 already
+                  says 「按中立口径 CN / 人民币（CNY）/ Asia/Shanghai 规划」 in full, and printing that
+                  forty-character list a second time on the confirmation screen is what pushed this
+                  row to wrap over three lines on a 390px phone. The caution itself stays. */}
               {unrecognizedCity && (
                 <dd className="trial-city-warning" data-testid="review-city-warning">
-                  {zh
-                    ? `未识别 · 按中立口径 ${basisWords.country} / ${basisWords.currency}（${basisWords.currencyCode}）/ ${basisWords.timezone} 规划，不沿用上一次识别到的城市`
-                    : `not recognised · planned on the neutral basis ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}, not the last recognised city`}
+                  {zh ? "未识别 · 按中立口径规划" : "not recognised · planned on the neutral basis"}
                 </dd>
               )}
             </div>

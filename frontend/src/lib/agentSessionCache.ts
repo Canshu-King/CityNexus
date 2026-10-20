@@ -65,3 +65,25 @@ export function clearAgentSessionCaches(): void {
   transcripts.clear();
   timelines.clear();
 }
+
+/**
+ * 换人／退出／凭证失效那一刻的全量清扫：这台设备上属于**任何**行程的 Agent 旧副本都不再属于
+ * 当前这个人，所以不能只擦"当前那一趟"。Issue #27 收住了新的写入，`dropLegacyDiskCopies`
+ * 只按一枚行程号擦，改前它擦不到上一位留下的别的行程；`clearSignedSession` 现在两样都做，
+ * 返回值只为让调用方能数清擦了几条，不改变判定。
+ */
+export function dropAllLegacyDiskCopies(): number {
+  if (typeof window === "undefined") return 0;
+  let removed = 0;
+  try {
+    for (const key of Object.keys(window.localStorage)) {
+      if (key.startsWith(LEGACY_TRANSCRIPT_PREFIX) || key.startsWith(LEGACY_TIMELINE_PREFIX)) {
+        window.localStorage.removeItem(key);
+        removed += 1;
+      }
+    }
+  } catch {
+    /* 私密模式或配额问题下删不掉也不该影响这一屏：权威记录在服务器。 */
+  }
+  return removed;
+}

@@ -3735,6 +3735,9 @@ export interface components {
             successful_place_ids: string[];
             failed_place_ids: string[];
             degraded: boolean;
+            used_timezone: string | null;
+            timezone_honoured: boolean;
+            attribution_skipped_reason_codes: string[];
             snapshots: {
                 [key: string]: unknown;
             }[];

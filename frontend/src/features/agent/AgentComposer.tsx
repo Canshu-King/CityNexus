@@ -167,7 +167,7 @@ export function AgentComposer({
           />
           <div className="v8-agent-toolbar">
             <span>
-              {t("agent.journeyPrefix")} {data.journey.title}
+              {data.journey.title}
             </span>
             <button
               className="v8-primary"

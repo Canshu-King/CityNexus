@@ -1,0 +1,48 @@
+/* Issue #33 Q1 -- the reopen-my-trips entry.  Cards and rows follow the tokens the recycle-bin
+   screen already uses (features/trash/journeyTrash.css), so this adds no new visual language. */
+.cn-mytrips {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-card);
+}
+
+.cn-mytrips-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cn-mytrips-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+}
+
+.cn-mytrips-title {
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cn-mytrips-name {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+/* The date sits under the name in the same two tokens the recycle-bin row uses for its
+   secondary line -- this adds no new visual language, and no colour literal. */
+.cn-mytrips-when {
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+}

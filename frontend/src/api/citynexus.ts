@@ -3,6 +3,7 @@ import type { ReplanProposal } from "../contracts/replan";
 import { fetchWithReadDeadline } from "../lib/readDeadline";
 import { OriginResponseUnusableError } from "../lib/failureAttribution";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
+import { observeRejection, refusalReasonCode, signedBearerHeaders } from "../lib/travelerSession";
 
 export interface Money {
   amount_minor: number;
@@ -684,7 +685,12 @@ async function requestJsonInner<T>(path: string, init?: RequestInit): Promise<T>
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      /* ORD-0687: when this tab speaks for a signed traveller, every read says so.  The session
+         is applied last on purpose: the identity the server vouched for outranks a header some
+         call site remembered, and a stale one must not be able to ask on another traveller's
+         behalf.  Anonymous stays anonymous -- no token, no Authorization stub. */
       ...(init?.headers ?? {}),
+      ...signedBearerHeaders(),
     },
   });
   const text = await response.text();
@@ -704,6 +710,9 @@ async function requestJsonInner<T>(path: string, init?: RequestInit): Promise<T>
     }
   }
   if (!response.ok) {
+    // ORD-0687: a refusal that names the credential or the pointer is acted on where it is
+    // heard, not by each screen remembering to.  The throw below is unchanged.
+    observeRejection(response.status, refusalReasonCode(body));
     throw new CityNexusApiError(
       response.status,
       body,

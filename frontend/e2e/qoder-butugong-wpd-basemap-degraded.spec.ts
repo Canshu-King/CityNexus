@@ -544,6 +544,9 @@ test("A9-on-the-imagery — what the DOM ruler cannot see, the pixels can", asyn
         const r = el.getBoundingClientRect();
         const cs = getComputedStyle(el);
         return {
+          tag: el.tagName,
+          role: el.getAttribute("role"),
+          contrastRole: el.getAttribute("data-contrast-role"),
           x: Math.round(r.left - pr.left),
           y: Math.round(r.top - pr.top),
           w: Math.round(r.width),

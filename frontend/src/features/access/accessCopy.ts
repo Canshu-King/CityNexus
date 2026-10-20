@@ -54,9 +54,9 @@ export const accessCopy = {
        both halves are known and disagree. */
     "access.orderChecked": "Checked row by row: these rows are in this order ({reason}).",
     "access.orderBroken":
-      "These rows are NOT in the order this screen asked for -- the order breaks at row {row}. The list below is what the server sent, not what the button says.",
+          "The order breaks at row {row}. Below is the order the server sent.",
     "access.orderUnverifiable":
-      "This screen cannot check this order from the rows it was given ({reason}), so it does not claim the list is in it. The rows below are in the order they arrived.",
+      "This screen cannot check this order from the rows it was given ({reason}). The rows below are in the order they arrived.",
     /* Why the check compared what it compared, or why it compared nothing.  These are the whole
        sentence's one variable, and the reason lives here rather than in `journeyOrderVerdict.ts`: the
        module knows facts, this file knows the traveller's language.  The stored column names
@@ -121,7 +121,7 @@ export const accessCopy = {
       "Your role does not hold member management on this server, so this screen lists no role-change control.",
     "access.memberScopeLine": "What this role can do: ",
     "access.roleDetailsBody":
-      "A role is what this server lets that person do on this trip, not what a screen shows them. Removing the last owner is refused by the server rather than left for a traveller to discover.",
+          "A role is what this server lets that person do on this trip. The last owner cannot be removed.",
     "access.visibilityHeading": "Each visibility level, with its consequence said in the same breath",
     "access.visPrivate": "Only me",
     "access.visPrivateConsequence": "No one else can open it, not even holding the link.",
@@ -253,8 +253,9 @@ export const accessCopy = {
     /* ORD-0518: 两句而不是一句。这一屏要了什么、服务器答了什么，是两件事；把它们并成一句，
        就是屏上出现「服务器没给的顺序也被说成按时间排了」那条路。 */
     "access.orderChecked": "逐行核过：这些行确实是这个顺序（{reason}）。",
-    "access.orderBroken": "这些行不是这一屏要的那个顺序——从第 {row} 行起对不上。下面列的是服务器发来的样子，不是按钮说的那个序。",
-    "access.orderUnverifiable": "这一档这一屏核不了（{reason}），所以它不敢说这一列就是这个序；下面写的就是行收到的样子。",
+    "access.orderBroken":
+          "顺序对不上：从第 {row} 行起断了。下面按服务器发来的样子列。",
+    "access.orderUnverifiable": "这一档这一屏核不了（{reason}）；下面写的就是行收到的样子。",
     "access.orderReasonStartAt": "核的是每一程的出发时间",
     "access.orderReasonNoRows": "一行行程都没有回来",
     "access.orderReasonTitle": "核的是行程名",
@@ -299,7 +300,7 @@ export const accessCopy = {
     "access.noAuthorityLine": "你的档位在这台服务器上没有成员管理权，所以这里不列改角色的按钮。",
     "access.memberScopeLine": "这一档能做什么：",
     "access.roleDetailsBody":
-      "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除，这条由服务器拒绝，而不是让旅行者自己撞上才知道。",
+          "角色说的是服务器允许这个人在这条行程上做什么。最后一个所有者不能被移除。",
     "access.visibilityHeading": "可见性每一档，后果就在同一句里",
     "access.visPrivate": "仅个人",
     "access.visPrivateConsequence": "别人打不开，拿到链接也打不开。",
@@ -345,9 +346,9 @@ export const accessCopy = {
     "access.actionUnknown": "这台服务器报了一个本屏说不出人话的动作：{token}。",
     "access.doorLoading": "正在问这台服务器还有谁能到达这条行程…",
     "access.doorAbsent":
-      "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+    "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是每一档的含义。",
     "access.doorPartial":
-      "这台服务器只答了共享那几扇门里的一部分，还没答的是 {paths}。下面写的是每档将要意味着什么，不是这条行程现在的状态。",
+    "这台服务器只答了共享那几扇门的一部分，还没答的是 {paths}。下面写的是每一档的含义。",
     "access.doorPresent":
       "这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。",
     "access.rosterHeading": "这条行程的成员，按成员门答的",

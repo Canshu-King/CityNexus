@@ -1,0 +1,79 @@
+BB 通播腿仍带这条药方的时刻（取自本机耐久日志 bus.jsonl，现读）
+2026-10-10 17:32 | stale-branch-通播:modal+住宿工+大柜工+对表工+快刀工+快剪工+快锥工+ | from qoder:42d1a6fa | to *
+2026-10-10 17:33 | stale-branch-通播:预防工 | from qoder:42d1a6fa | to *
+2026-10-10 17:34 | stale-branch-补件:撞车文件逐枝补齐（上一封只给了枝名） | from qoder:42d1a6fa | to *
+2026-10-10 18:33 | stale-branch-通播:wenangong+屏工+快钉工+路牌工甲 | from qoder:42d1a6fa | to *
+2026-10-10 18:50 | stale-branch-通播:抽屉工+量名词+门牌号 | from qoder:42d1a6fa | to *
+2026-10-10 19:45 | stale-branch-通播:备城工+验路工 | from qoder:42d1a6fa | to *
+2026-10-10 23:28 | stale-branch-通播:活明细 | from qoder:42d1a6fa | to *
+2026-10-10 23:57 | stale-branch-通播:modal+住宿工+大柜工+对表工+快刀工+快剪工+快锥工+ | from qoder:42d1a6fa | to *
+2026-10-11 00:12 | stale-branch-通播:比价工 | from qoder:42d1a6fa | to *
+2026-10-11 00:44 | stale-branch-通播:wenangong+屏工+快钉工+路牌工甲 | from qoder:42d1a6fa | to *
+2026-10-11 01:00 | stale-branch-通播:抽屉工+量名词+门牌号 | from qoder:42d1a6fa | to *
+2026-10-11 01:45 | stale-branch-通播:备城工 | from qoder:42d1a6fa | to *
+2026-10-11 02:13 | stale-branch-通播:抬秤工+撬板工+量尺工 | from qoder:42d1a6fa | to *
+2026-10-11 04:28 | stale-branch-通播:起手工 | from qoder:42d1a6fa | to *
+2026-10-11 05:35 | stale-branch-通播:活明细 | from qoder:42d1a6fa | to *
+2026-10-11 06:16 | stale-branch-通播:modal+住宿工+大柜工+快刀工+快锥工+旅馆工+路牌工乙 | from qoder:42d1a6fa | to *
+2026-10-11 06:58 | stale-branch-通播:wenangong+屏工+快钉工+路牌工甲+预防工 | from qoder:42d1a6fa | to *
+2026-10-11 08:02 | stale-branch-通播:备城工+抽屉工+量名词+门牌号 | from qoder:42d1a6fa | to *
+2026-10-11 19:08 | stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+屏工 | from qoder:42d1a6fa | to *
+2026-10-11 19:32 | stale-branch-通播:对表工+比价工+活明细 | from qoder:42d1a6fa | to *
+2026-10-11 20:11 | stale-branch-通播:抬秤工 | from qoder:42d1a6fa | to *
+2026-10-11 22:04 | stale-branch-通播:加闸工+快剪工+验路工 | from qoder:42d1a6fa | to *
+2026-10-12 00:50 | stale-branch-通播:撬板工+量尺工 | from qoder:42d1a6fa | to *
+2026-10-12 01:13 | stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+快刀 | from qoder:42d1a6fa | to *
+2026-10-12 01:35 | stale-branch-通播:对表工+比价工+活明细 | from qoder:42d1a6fa | to *
+2026-10-12 02:19 | stale-branch-通播:抬秤工 | from qoder:42d1a6fa | to *
+2026-10-12 04:10 | stale-branch-通播:快剪工+验路工 | from qoder:42d1a6fa | to *
+2026-10-12 07:30 | stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+快刀 | from qoder:42d1a6fa | to *
+2026-10-12 08:29 | stale-branch-通播:对表工+抬秤工+比价工+活明细 | from qoder:42d1a6fa | to *
+2026-10-12 13:47 | stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+快刀 | from qoder:42d1a6fa | to *
+2026-10-12 20:08 | stale-branch-通播:wenangong+住宿工+备城工+大柜工+对表工+快刀工+ | from qoder:42d1a6fa | to *
+2026-10-13 02:32 | stale-branch-通播:wenangong+住宿工+备城工+大柜工+对表工+快刀工+ | from qoder:42d1a6fa | to *
+2026-10-13 07:41 | stale-branch-通播:加闸工+快钉工+铁盒工 | from qoder:42d1a6fa | to *
+2026-10-13 08:47 | stale-branch-通播:wenangong+住宿工+备城工+大柜工+快刀工+快剪工+ | from qoder:42d1a6fa | to *
+2026-10-13 16:36 | stale-branch-通播:wenangong+住宿工+加闸工+备城工+大柜工+快刀工+ | from qoder:42d1a6fa | to *
+2026-10-13 17:22 | stale-branch-通播:pinggong+盘务工 | from qoder:42d1a6fa | to *
+2026-10-13 18:27 | stale-branch-通播:xuxiangong | from qoder:42d1a6fa | to *
+2026-10-13 22:57 | stale-branch-通播:wenangong+住宿工+加闸工+备城工+大柜工+快刀工+ | from qoder:42d1a6fa | to *
+2026-10-14 00:07 | stale-branch-通播:pinggong+盘务工 | from qoder:42d1a6fa | to *
+2026-10-14 00:29 | stale-branch-通播:xuxiangong | from qoder:42d1a6fa | to *
+2026-10-14 05:01 | stale-branch-通播:wenangong+住宿工+加闸工+备城工+大柜工+快刀工+ | from qoder:42d1a6fa | to *
+2026-10-14 06:31 | stale-branch-通播:pinggong+xuxiangong+盘务工 | from qoder:42d1a6fa | to *
+2026-10-14 12:53 | stale-branch-通播:pinggong+wenangong+xuxiangong+ | from qoder:42d1a6fa | to *
+2026-10-16 11:43 | stale-branch-通播:pinggong+wenangong+xuxiangong+ | from qoder:42d1a6fa | to *
+2026-10-16 13:18 | stale-branch-通播:pinggong+wenangong+xuxiangong+ | from qoder:42d1a6fa | to *
+2026-10-17 00:11 | stale-branch-通播:pinggong+wenangong+xuxiangong+ | from qoder:42d1a6fa | to *
+2026-10-18 00:04 | stale-branch-通播:pinggong+wenangong+xuxiangong+ | from qoder:42d1a6fa | to *
+2026-10-18 05:47 | stale-branch-通播:修复地图停靠点显名 | from qoder:42d1a6fa | to *
+2026-10-18 08:18 | stale-branch-通播:a68b0631+pinggong+wenangong+xu | from qoder:42d1a6fa | to *
+2026-10-18 14:21 | stale-branch-通播:a68b0631+pinggong+wenangong+xu | from qoder:42d1a6fa | to *
+2026-10-19 14:24 | stale-branch-通播:a68b0631+pinggong+wenangong+xu | from qoder:42d1a6fa | to *
+2026-10-20 00:09 | stale-branch-通播:a68b0631+pinggong+wenangong+xu | from qoder:42d1a6fa | to *
+2026-10-21 02:19 | stale-branch-通播:a68b0631+pinggong+wenangong+xu | from qoder:42d1a6fa | to *
+通播合计 53 封｜最早 2026-10-10 17:32｜最近 2026-10-21 02:19
+账本副本腿仍带这句话的块（行号现读）
+账本第 901 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 1022 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 1742 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 2036 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 2434 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 3015 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 3512 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 4459 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 5874 行 | CMDR-RULING-0702 · ff=False 且 intersecti
+账本第 6483 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 7730 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 10162 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 10839 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 11199 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 14104 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·
+账本第 16307 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块）
+账本第 17509 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块）
+账本第 21502 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块）
+账本第 21672 行 | 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块）
+账本第 28805 行 | 值守交回 · 请快钉工把自己那两枝 review 枝并回现尖再重交（落地门按裁决
+账本副本合计 20 处｜最新一处的块头见上表首行以下最后一行
+更正一行：账本副本按行号小者为新，最新一处在第 901 行，块头 待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·10-18 20 时现读）
+匹配行全列 901,1022,1742,2036,2434,3015,3512,4459,5874,6483,7730,10162,10839,11199,14104,16307,17509,21502,21672,28805
