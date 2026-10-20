@@ -178,3 +178,92 @@ def test_the_answer_helper_is_what_the_copilot_actually_uses():
 
     english = main_module._copilot_answer(interpretation, context, locale="en", what_if=what_if)
     assert english == main_module._WHAT_IF_ANSWERS["HYPOTHETICAL_WEATHER_OR_CLOSURE"][1]
+
+
+def _explain() -> CopilotInterpretation:
+    return CopilotInterpretation(
+        intent="EXPLAIN_PLAN",
+        confidence=0.9,
+        reason="pinned by this test",
+        entities={},
+        provider_key="deepseek",
+        degraded=False,
+    )
+
+
+_PLAN = {
+    "id": "plan-1",
+    "version_no": 2,
+    "status": "ACTIVE",
+    "cost_minor": 2000,
+    "currency": "CNY",
+    "activities": [],
+    "legs": [],
+}
+
+
+def test_the_plan_state_is_named_in_the_readers_own_words():
+    """The screen used to print the column name and its value: `PlanVersion 2 (ACTIVE)`.
+
+    Each status the tree actually writes has a word in both languages; the version number stays, and
+    the internal token does not leak into a Chinese sentence.
+    """
+
+    vocabulary = {
+        "ACTIVE": ("在用", "in use"),
+        "SELECTED": ("已选定", "selected"),
+        "CANDIDATE": ("候选", "candidate"),
+        "REJECTED": ("未通过", "not passed"),
+        "SUPERSEDED": ("已被取代", "superseded"),
+        "EXPIRED": ("已过期", "expired"),
+    }
+    for status, (zh_word, en_word) in vocabulary.items():
+        context = {"plan": {**_PLAN, "status": status}, "protected_commitments": [{"id": "c1"}]}
+        zh = main_module._copilot_answer(_explain(), context, locale="zh")
+        en = main_module._copilot_answer(_explain(), context, locale="en")
+
+        assert "第 2 号方案" in zh, status
+        assert zh_word in zh, status
+        assert "PlanVersion" not in zh, status
+        assert "plan version 2" in en, status
+        assert en_word in en, status
+        assert zh != en
+
+
+def test_no_plan_selected_says_it_without_naming_a_column():
+    context = {"plan": None, "protected_commitments": []}
+    zh = main_module._copilot_answer(_explain(), context, locale="zh")
+    en = main_module._copilot_answer(_explain(), context, locale="en")
+
+    assert "还没有选定的方案" in zh
+    assert "no selected plan" in en
+    # The defect was an English phrase inside a Chinese sentence; keep both halves of the pin.
+    assert "no selected PlanVersion" not in zh
+    assert "PlanVersion" not in zh and "PlanVersion" not in en
+
+
+def test_a_status_nobody_named_stays_visible_instead_of_being_invented():
+    """Truth over prettiness: an unknown status is shown as it is, not re-labelled."""
+
+    context = {"plan": {**_PLAN, "status": "WATSOEVER"}, "protected_commitments": []}
+    zh = main_module._copilot_answer(_explain(), context, locale="zh")
+
+    assert "WATSOEVER" in zh
+    assert "第 2 号方案" in zh
+    assert "在用" not in zh and "已选定" not in zh
+
+
+def test_the_no_plan_notice_stops_reciting_the_machine():
+    what_if = simulate_what_if(
+        "如果下午下雨，行程要怎么改？", {"currency": "CNY", "plan": None, "commitments": []}
+    )
+    assert what_if["status"] == "NOT_SIMULATABLE_FROM_CURRENT_EVIDENCE"
+
+    zh = main_module._copilot_answer(_explain(), {}, locale="zh", what_if=what_if)
+    en = main_module._copilot_answer(_explain(), {}, locale="en", what_if=what_if)
+
+    assert "还没有选定方案" in zh and "没有改动行程" in zh
+    # The old sentence named two mechanisms the traveller cannot act on.
+    assert "确定性门控" not in zh and "权威" not in zh
+    assert "No plan is selected for this trip yet" in en
+    assert zh != en
