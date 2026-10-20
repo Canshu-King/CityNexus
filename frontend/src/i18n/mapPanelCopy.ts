@@ -143,7 +143,7 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
     en: "This server returned no footprint on this read, so every stop of this trip is painted hollow.",
   },
   footprintRefused: {
-    zh: "服务器这次没收下这个读取请求，所以图上不区分到过的站与没到过的站。",
+    zh: "服务器没收下这次读取，图上不分到过的站与没到过的站。",
     en: "The server would not take this read, so the map draws no distinction between stamped and unstamped stops.",
   },
   footprintUnreachable: {
