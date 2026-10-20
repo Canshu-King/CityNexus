@@ -14460,6 +14460,40 @@ def _what_if_answer_text(what_if: dict[str, Any], locale: str) -> str:
     )
 
 
+# Plan-version status tokens as the traveller reads them. The vocabulary was read off the tree (the
+# column defaults to CANDIDATE, and the values in use are ACTIVE, SELECTED, REJECTED, SUPERSEDED,
+# EXPIRED). A value outside this table keeps its raw token: showing `WATSOEVER` is honest, inventing
+# a Chinese word for a state nobody named would not be.
+_PLAN_STATUS_WORDS: dict[str, tuple[str, str]] = {
+    "ACTIVE": ("在用", "in use"),
+    "SELECTED": ("已选定", "selected"),
+    "CANDIDATE": ("候选", "candidate"),
+    "REJECTED": ("未通过", "not passed"),
+    "SUPERSEDED": ("已被取代", "superseded"),
+    "EXPIRED": ("已过期", "expired"),
+}
+
+
+def _plan_label_text(plan: dict[str, Any], locale: str) -> str:
+    """Say which plan the trip runs on, in the reader's language.
+
+    The old string put the column name and its value on the screen (`PlanVersion 2 (ACTIVE)`, and
+    worse, `no selected PlanVersion` inside a Chinese sentence). The facts stay -- version number and
+    state -- only the words change.
+    """
+
+    if not plan:
+        return "还没有选定的方案" if locale == "zh" else "no selected plan"
+    status = str(plan.get("status") or "")
+    words = _PLAN_STATUS_WORDS.get(status)
+    described = words[0] if (locale == "zh" and words) else (
+        words[1] if words else status
+    )
+    if locale == "zh":
+        return f"第 {plan.get('version_no')} 号方案（{described}）" if described else f"第 {plan.get('version_no')} 号方案"
+    return f"plan version {plan.get('version_no')} ({described})" if described else f"plan version {plan.get('version_no')}"
+
+
 def _copilot_answer(
     interpretation: CopilotInterpretation,
     context: dict[str, Any],
@@ -14468,22 +14502,17 @@ def _copilot_answer(
     what_if: dict[str, Any] | None = None,
 ) -> str:
     plan = context.get("plan") or {}
-    plan_label = (
-        f"PlanVersion {plan.get('version_no')} ({plan.get('status')})"
-        if plan
-        else "no selected PlanVersion"
-    )
     protected_count = len(context.get("protected_commitments", []))
     if what_if is not None:
         if what_if.get("status") == "NOT_SIMULATABLE_FROM_CURRENT_EVIDENCE":
             if locale == "zh":
-                return "当前还没有已选的权威 PlanVersion。请先在住宿选择中选择一个通过供应商事实和确定性门控的方案，再预览时间或费用变化；本次试算没有修改行程。"
-            return "There is no selected authoritative PlanVersion yet. Select a provider-backed plan in Stay Explorer before previewing time or cost changes; this preview changed nothing."
+                return "这趟还没有选定方案。先在住宿那屏挑一个方案，再来预览时间或费用的变化；这次试算没有改动行程。"
+            return "No plan is selected for this trip yet. Pick one in Stay Explorer, then preview the time or cost changes; this preview changed nothing."
         return _what_if_answer_text(what_if, locale)
     if interpretation.intent == "EXPLAIN_PLAN":
         if locale == "zh":
-            return f"当前使用 {plan_label}，服务器已核验 {protected_count} 个受保护承诺。解释基于已选方案事实，不会修改行程。"
-        return f"The current journey uses {plan_label}; the server verified {protected_count} protected commitments. This explanation uses selected-plan facts and changes nothing."
+            return f"这趟现在按{_plan_label_text(plan, locale)}走，服务器核过 {protected_count} 项受保护承诺。这段解释只读已选方案的事实，不会改动行程。"
+        return f"This trip runs on {_plan_label_text(plan, locale)}; the server verified {protected_count} protected commitments. This explanation reads selected-plan facts and changes nothing."
     if interpretation.intent == "DISCOVER":
         return "我会基于当前城市和行程上下文搜索候选地点；搜索结果不会直接写入方案。" if locale == "zh" else "I can search candidates using the current city and journey context; discovery results will not write to the plan."
     capability_items = interpretation.entities.get("capabilities") if isinstance(interpretation.entities, dict) else None
