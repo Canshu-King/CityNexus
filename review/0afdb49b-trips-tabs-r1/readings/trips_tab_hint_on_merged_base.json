@@ -1,0 +1,81 @@
+{
+ "schema": "CNX_TRIPS_TAB_HINT_R1",
+ "base": "http://127.0.0.1:4895",
+ "got": {
+  "inner_width": 390,
+  "strip_found": true,
+  "strip_cls": "trips-tabs",
+  "scroller_cls": "trips-tabs",
+  "scroller_overflow_x": "auto",
+  "scroller_client_w": 356,
+  "scroller_scroll_w": 1442,
+  "strip_has_scrollbar_style": {
+   "overflow_x": "auto",
+   "scroll_w": 1442,
+   "client_w": 356
+  },
+  "hints": [
+   {
+    "words": "详情 ›",
+    "tag": "BUTTON",
+    "inside_strip": false,
+    "cls": "trip-stop-more",
+    "top": 832
+   },
+   {
+    "words": "详情 ›",
+    "tag": "BUTTON",
+    "inside_strip": false,
+    "cls": "trip-stop-more",
+    "top": 989
+   },
+   {
+    "words": "详情 ›",
+    "tag": "BUTTON",
+    "inside_strip": false,
+    "cls": "trip-stop-more",
+    "top": 1146
+   },
+   {
+    "words": "详情 ›",
+    "tag": "BUTTON",
+    "inside_strip": false,
+    "cls": "trip-stop-more",
+    "top": 1303
+   },
+   {
+    "words": "详情 ›",
+    "tag": "BUTTON",
+    "inside_strip": false,
+    "cls": "trip-stop-more",
+    "top": 1460
+   },
+   {
+    "words": "详情 ›",
+    "tag": "BUTTON",
+    "inside_strip": false,
+    "cls": "trip-stop-more",
+    "top": 1617
+   }
+  ],
+  "hints_inside_strip": [],
+  "sliver": [
+   {
+    "testid": "trips-tab-stay",
+    "left": 379,
+    "visible_px": 11
+   },
+   {
+    "testid": "trips-tab-bookings",
+    "left": 741,
+    "visible_px": 0
+   },
+   {
+    "testid": "trips-tab-spend",
+    "left": 1103,
+    "visible_px": 0
+   }
+  ]
+ },
+ "errors": []
+}

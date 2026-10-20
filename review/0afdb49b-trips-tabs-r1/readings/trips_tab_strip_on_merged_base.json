@@ -1,0 +1,163 @@
+{
+ "schema": "CNX_TRIPS_TAB_STRIP_R1",
+ "base": "http://127.0.0.1:4895",
+ "got": {
+  "inner_width": 390,
+  "tabs": [
+   {
+    "testid": "trips-tab-itinerary",
+    "words": "行程",
+    "left": 17,
+    "right": 373,
+    "w": 356,
+    "h": 40,
+    "on_screen": true,
+    "centre_hit": "trips-tab-itinerary"
+   },
+   {
+    "testid": "trips-tab-stay",
+    "words": "住宿",
+    "left": 379,
+    "right": 735,
+    "w": 356,
+    "h": 40,
+    "on_screen": false,
+    "centre_hit": null
+   },
+   {
+    "testid": "trips-tab-bookings",
+    "words": "预订",
+    "left": 741,
+    "right": 1097,
+    "w": 356,
+    "h": 40,
+    "on_screen": false,
+    "centre_hit": null
+   },
+   {
+    "testid": "trips-tab-spend",
+    "words": "花费",
+    "left": 1103,
+    "right": 1459,
+    "w": 356,
+    "h": 40,
+    "on_screen": false,
+    "centre_hit": null
+   }
+  ],
+  "ancestor_chain": [
+   {
+    "tag": "NAV",
+    "cls": "trips-tabs",
+    "overflow_x": "auto",
+    "display": "flex",
+    "flex_wrap": "nowrap",
+    "client_w": 356,
+    "scroll_w": 1442,
+    "can_scroll": true,
+    "box_w": 356
+   },
+   {
+    "tag": "DIV",
+    "cls": "v8-content",
+    "overflow_x": "visible",
+    "display": "block",
+    "flex_wrap": "nowrap",
+    "client_w": 390,
+    "scroll_w": 390,
+    "can_scroll": false,
+    "box_w": 390
+   },
+   {
+    "tag": "MAIN",
+    "cls": "v8-main",
+    "overflow_x": "visible",
+    "display": "block",
+    "flex_wrap": "nowrap",
+    "client_w": 390,
+    "scroll_w": 390,
+    "can_scroll": false,
+    "box_w": 390
+   },
+   {
+    "tag": "DIV",
+    "cls": "v8-product-shell",
+    "overflow_x": "visible",
+    "display": "block",
+    "flex_wrap": "nowrap",
+    "client_w": 390,
+    "scroll_w": 390,
+    "can_scroll": false,
+    "box_w": 390
+   },
+   {
+    "tag": "DIV",
+    "cls": "",
+    "overflow_x": "visible",
+    "display": "block",
+    "flex_wrap": "nowrap",
+    "client_w": 390,
+    "scroll_w": 390,
+    "can_scroll": false,
+    "box_w": 390
+   }
+  ],
+  "scroller_found": true,
+  "affordances": [
+   {
+    "tag": "BUTTON",
+    "words": "详情 ›",
+    "h": 44
+   },
+   {
+    "tag": "BUTTON",
+    "words": "详情 ›",
+    "h": 44
+   },
+   {
+    "tag": "BUTTON",
+    "words": "详情 ›",
+    "h": 44
+   },
+   {
+    "tag": "BUTTON",
+    "words": "详情 ›",
+    "h": 44
+   },
+   {
+    "tag": "BUTTON",
+    "words": "详情 ›",
+    "h": 44
+   },
+   {
+    "tag": "BUTTON",
+    "words": "详情 ›",
+    "h": 44
+   }
+  ],
+  "body_head": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」。它仍留在你的行程列表里——中止不等于丢弃（要丢弃请去回收站）。你写下的原因会和这趟一起存下来。不能回头：想再走只能新开一趟。 中止这趟行程 AI 工作动态 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 第 1 天 / 共 1 天。已完成 3/6 站。 导出日历 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 打卡 收藏到… 10:30 11:45"
+ },
+ "afterScroll": [
+  {
+   "testid": "trips-tab-itinerary",
+   "left": -1069,
+   "on_screen": false
+  },
+  {
+   "testid": "trips-tab-stay",
+   "left": -707,
+   "on_screen": false
+  },
+  {
+   "testid": "trips-tab-bookings",
+   "left": -345,
+   "on_screen": false
+  },
+  {
+   "testid": "trips-tab-spend",
+   "left": 17,
+   "on_screen": true
+  }
+ ],
+ "errors": []
+}
