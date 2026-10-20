@@ -1,0 +1,10 @@
+{
+ "generatedBy": "8ac89982",
+ "ruler": "message-dismiss-touch-floor-r1",
+ "run": "touchfloor-unset",
+ "base_pin": "f5ecd9d854000e7eaa6ca07c55bd0436d4f80c68",
+ "candidate_floored_on_phone": true,
+ "tip_floored_on_phone": false,
+ "desktop_base_has_min_height": false,
+ "cn_touch_min_px": 44
+}
