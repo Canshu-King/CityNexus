@@ -1,0 +1,64 @@
+.........F...............                                                [100%]
+================================== FAILURES ===================================
+_ test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned _
+
+seeded = '11111111-1111-4111-8111-111111111111'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000105DA5074A0>
+
+    def test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned(
+        seeded, monkeypatch
+    ) -> None:
+        """A job abandoned by a writer this process cannot see still has to close, honestly.
+    
+        The row is moved to `ABANDON_REQUESTED` straight in the store at a real stage boundary (the
+        survey), and the process-local abandonment registry is forced to say "no request here" - which is
+        exactly the cross-process case `PROCESS_LOCAL_ONLY` admits.  The terminal write must then resolve
+        into the named abandoned branch rather than raising on a transition the table forbids.
+        """
+    
+        accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
+        operation_id = accepted.json()["operation_id"]
+        original_survey = hydration_module._survey
+        injected: list[str] = []
+    
+        def racing_survey(session, canonical_destination_id):
+            # ORD-0703 乙: this writer must not ride the worker's own transaction.  Marking through the
+            # session the worker is holding let any later rollback of *its* erase the "abandon from
+            # elsewhere" the door is trying to create -- which is why the door went red about once every
+            # dozen whole-file runs.  A separate session commits it, the way another process would.
+            with SessionLocal() as other:
+                moved = hydration_module.mark(
+                    other,
+                    operation_id,
+                    hydration_module.ABANDON_REQUESTED,
+                    from_statuses=(hydration_module.RUNNING,),
+                    abandon_requested_at=hydration_module.now_iso(),
+                )
+            assert moved is True, "SETUP 失败：竞态注入没改成 ABANDON_REQUESTED，这条门什么都没测"
+            injected.append(operation_id)
+            return original_survey(session, canonical_destination_id)
+    
+        monkeypatch.setattr(hydration_module, "_survey", racing_survey)
+        monkeypatch.setattr(hydration_module, "abandonment_requested", lambda _oid: False)
+        terminal = _wait_terminal(operation_id)
+>       assert injected, (
+            f"PROBE 丙: 注入从未发生（0 次），终态 {terminal['status']} / "
+            f"outcome={terminal.get('outcome')} 与这条门的前提无关"
+        )
+E       AssertionError: PROBE 丙: 注入从未发生（0 次），终态 COMPLETED / outcome=ALREADY_CURRENT 与这条门的前提无关
+E       assert []
+
+tests\test_qoder_catalog_hydration.py:607: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+1 failed, 24 passed, 2 warnings in 3.62s
