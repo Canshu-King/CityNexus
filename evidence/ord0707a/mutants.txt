@@ -1,0 +1,8 @@
+A_退回修复前那一行           rc=1  1 failed, 5 passed in 0.66s
+                     还原=字节一致
+B_能力过滤做过头            rc=1  2 failed, 4 passed in 0.56s
+                     还原=字节一致
+=== 还原后本文件复跑 ===
+复跑                   rc=0  6 passed in 0.45s
+=== 现尖所有读 mission 的套件 ===
+    7 failed, 214 passed, 1861 deselected, 2 warnings in 14.64s
