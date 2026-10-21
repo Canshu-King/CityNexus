@@ -1,0 +1,14 @@
+
+=== 臂 seam=off 端口=8012 库副本=_cmdr_ord0704b_arm_off.db
+   健康 2 秒  ai=DISABLED_BY_OPS
+   generate http_status=201 墙钟=0.05s 方案数=1 答本身就是列表
+   最新快照 97df1027 fact_quality={'SYNTHETIC_DEFAULT': 132} provider={'mock-mobility': 132} caps=[]
+
+=== 臂 seam=amap 端口=8013 库副本=_cmdr_ord0704b_arm_amap.db
+   健康 2 秒  ai=DISABLED_BY_OPS
+   generate http_status=201 墙钟=13.14s 方案数=1 答本身就是列表
+   最新快照 918cea2e fact_quality={'LIVE_PROVIDER_CAPTURE': 38, 'None': 94} provider={'amap-web-service': 38, 'mock-mobility': 94} caps=['amap-web-service']
+
+=== 两臂对照（同一请求形状）===
+    ('off', 0.04852319999190513, {'SYNTHETIC_DEFAULT': 132}, [])
+    ('amap', 13.143925299998955, {'LIVE_PROVIDER_CAPTURE': 38, 'None': 94}, ['amap-web-service'])
