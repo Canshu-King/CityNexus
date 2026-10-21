@@ -1,0 +1,13 @@
+head_round_1 rc=1 | 1 failed, 22 passed, 2 warnings in 4.39s
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+head_round_2 rc=0 | 23 passed, 2 warnings in 4.21s
+head_round_3 rc=0 | 23 passed, 2 warnings in 4.27s
+head_round_4 rc=0 | 23 passed, 2 warnings in 4.27s
+head_round_5 rc=1 | 1 failed, 22 passed, 2 warnings in 4.52s
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+head_round_6 rc=0 | 23 passed, 2 warnings in 4.33s
+head_round_7 rc=1 | 1 failed, 22 passed, 2 warnings in 4.32s
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+head_round_8 rc=1 | 1 failed, 22 passed, 2 warnings in 14.30s
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job
+RESTORE_IDENTICAL
