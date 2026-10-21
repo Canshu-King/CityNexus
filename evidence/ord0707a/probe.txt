@@ -1,0 +1,7 @@
+现尖（f74e9f898e）对四句真话的读数——本单的立单依据：
+  句子=我们想睡到中午再出门，若午后下雨给室内备选 | copilot intent=PREFERENCE_CHANGE | disruption event=None | caps=['INDOOR_PREFERRED']
+  句子=现在下雨了，博物馆关门了 | copilot intent=DISRUPTION_REPORT | disruption event=CLOSURE | caps=[]
+  句子=我们只想要室内的地方 | copilot intent=PREFERENCE_CHANGE | disruption event=None | caps=['INDOOR_PREFERRED']
+  句子=如果下雨就改室内 | copilot intent=PREFERENCE_CHANGE | disruption event=None | caps=['INDOOR_PREFERRED']
+要点：copilot 那侧已经不会把条件句当成天气事故（event=None、intent=PREFERENCE_CHANGE），所以本单不碰它；
+但 mission 这侧仍然一句「若午后下雨给室内备选」就把整程标成 PREFER_INDOOR 并留下 INDOOR_PREFERRED 能力——那就是要修的。
