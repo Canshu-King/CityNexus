@@ -1,0 +1,14 @@
+快照 f5d6c3d4  段=132  live=38  fallback=94
+段里出现的地点=12  库里查到=12  city_code=['CN-TIANJIN']
+查不到坐标的地点数=0
+   fallback #0 答了 minutes=47 distance_m=3451 直线≈4027m 点名=Tianjin We→Luggage dr
+   fallback #1 答了 minutes=47 distance_m=3451 直线≈4027m 点名=Tianjin We→Overnight 
+   fallback #2 答了 minutes=47 distance_m=3451 直线≈4027m 点名=Tianjin We→Check out 
+   fallback #3 拒 原文=Amap answer could not be read as a route: CUQPS_HAS_EXCEEDED_THE_LIMIT | 直线≈4027m 点名=Tianjin We→Overnight 
+   fallback #4 拒 原文=Amap answer could not be read as a route: CUQPS_HAS_EXCEEDED_THE_LIMIT | 直线≈4143m 点名=Tianjin We→Five Great
+   fallback #5 拒 原文=Amap answer could not be read as a route: CUQPS_HAS_EXCEEDED_THE_LIMIT | 直线≈15905m 点名=Tianjin We→Tianjin Bi
+   fallback #6 答了 minutes=79 distance_m=5917 直线≈5611m 点名=Check in ·→Tianjin Mu
+   fallback #7 答了 minutes=31 distance_m=2273 直线≈1324m 点名=Check in ·→Italian St
+   live #0 答了 minutes=47 distance_m=3451 直线≈4027m 点名=Tianjin We→Check in ·
+   live #1 拒 原文=Amap answer could not be read as a route: CUQPS_HAS_EXCEEDED_THE_LIMIT | 直线≈8030m 点名=Tianjin We→Tianjin Mu
+   live #2 拒 原文=Amap answer could not be read as a route: CUQPS_HAS_EXCEEDED_THE_LIMIT | 直线≈3688m 点名=Tianjin We→Italian St
