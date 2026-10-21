@@ -1,0 +1,11 @@
+arm=post tree=D:\moodle\_cmdr_ord0700_tip_1022
+library copy from _preview_1021_backup_1022a.db bytes=8204288
+counts {"journeys": 7, "plan_versions": 2, "commitments": 1}
+ACTIVE C4 commitment: bf6d8757-c4ad-4d28-beb8-d06a859a283c policy={"price_status":"KNOWN","scheduled_start_at":"2026-10-09T08:00:00+08:00","semantic_key":"160022ba-d830-53ca-970a-f38b0e42fb1c","semantic_node_key":"arrival-anchor","source":"USER_CONFIRMED_EXTERNAL_RE
+this tree has the role reader: True
+POST plans/generate: http_status=201
+plans in the answer: 3
+  plan 1: status=CANDIDATE activities=8 first=arrival/v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+  plan 2: status=CANDIDATE activities=8 first=arrival/v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+  plan 3: status=CANDIDATE activities=8 first=arrival/v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+plan versions read back: before=2 after=5
