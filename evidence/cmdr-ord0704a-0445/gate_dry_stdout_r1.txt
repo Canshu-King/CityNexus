@@ -1,0 +1,10 @@
+D:\moodle\_qoder_cmdr_ref_20260921\live_checks\preflight_and_land_r7.py:291: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  tf.extractall(export)  # noqa: S202 - the archive is our own `git archive` of one rev
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7897', 'HTTP_PROXY': 'http://127.0.0.1:7897'}, 'refused': [], 'action': 'KEEP_PROXY'}
+verdict=READY_TO_LAND mode=DRY_RUN tip=34fef6fea6 cand=80d3ae8c8d ff=True ahead=1 behind=0 intersection=0
+product introduced: backend/app/integrations/china/amap.py, backend/app/integrations/mobility/amap_http.py, backend/app/integrations/mobility/runtime.py
+surface contract: {"skipped": "no frontend/src file changed"}
+gate: {"collect_exit": 0, "test_exit": 0, "summary": ["21 passed in 0.56s"], "blob_equality_all": true}
+scratch swept: snap_preflight_044202
+receipt=D:/moodle/_cmdr_fe_rev_1016/cmdr_ord0704a_receipt_dry_1022a.json (4602 B) -> publish with publish_evidence_gated_r1.py --local D:/moodle/_cmdr_fe_rev_1016/cmdr_ord0704a_receipt_dry_1022a.json --path evidence/cmdr-landing-<order>-<hhmm>/preflight_r1.json
+GATE_RC=0
