@@ -1,0 +1,51 @@
+product bytes 51200 sha1 6969e8100339b4f60a915363ac399e15fd93257f
+=== M1 product commit default -> False :: tests/test_qoder_catalog_hydration.py -k rollback
+FF                                                                       [100%]
+================================== FAILURES ===================================
+D:\moodle\_cmdr_ord0705_wt_1022\backend\tests\test_qoder_catalog_hydration.py:692: AssertionError: SETUP 失败：工人那侧读到的不是 RUNNING，而是 QUEUED；后面的回滚就没东西可擦
+D:\moodle\_cmdr_ord0705_wt_1022\backend\tests\test_qoder_catalog_hydration.py:743: AssertionError: SETUP 失败：同事务内的 UPDATE 都没匹配到行，这条门什么都没测
+============================== warnings summary ===============================
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_catalog_hydration.py::test_a_committed_abandon_by_another_writer_survives_a_read_only_rollback
+FAILED tests/test_qoder_catalog_hydration.py::test_an_uncommitted_abandon_in_the_workers_own_session_is_erased_by_its_rollback
+2 failed, 23 deselected, 2 warnings in 1.96s
+M1 restore sha1 6969e8100339b4f60a915363ac399e15fd93257f equal=True
+=== M4 product commit unconditional :: tests/test_qoder_catalog_hydration.py -k rollback
+.F                                                                       [100%]
+================================== FAILURES ===================================
+D:\moodle\_cmdr_ord0705_wt_1022\backend\tests\test_qoder_catalog_hydration.py:756: AssertionError: 期望：未提交、且由同一枚会话回滚的放弃请求必须回到 RUNNING —— 这正是旧写法把注入擦掉的形状；实际：ABANDON_REQUESTED / outcome=None
+============================== warnings summary ===============================
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_catalog_hydration.py::test_an_uncommitted_abandon_in_the_workers_own_session_is_erased_by_its_rollback
+1 failed, 1 passed, 23 deselected, 2 warnings in 1.98s
+M4 restore sha1 6969e8100339b4f60a915363ac399e15fd93257f equal=True
+=== M2+M3+M5 shape mutants :: tests/test_qoder_cmdr0703c_mutants_r1.py
+================================== FAILURES ===================================
+D:\moodle\_cmdr_ord0705_wt_1022\backend\tests\test_qoder_cmdr0703c_mutants_r1.py:44: AssertionError: M5 expects RED here: 0 injections, terminal was COMPLETED
+D:\moodle\_cmdr_ord0705_wt_1022\backend\tests\test_qoder_cmdr0703c_mutants_r1.py:72: AssertionError: M2 expects RED here: status=RUNNING
+D:\moodle\_cmdr_ord0705_wt_1022\backend\tests\test_qoder_cmdr0703c_mutants_r1.py:100: AssertionError: M3 expects RED here: status=ABANDON_REQUESTED
+============================== warnings summary ===============================
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_cmdr0703c_mutants_r1.py::test_m5_press_then_patch_shape_loses_its_premise
+FAILED tests/test_qoder_cmdr0703c_mutants_r1.py::test_m2_door_a_reading_injected_the_old_way
+FAILED tests/test_qoder_cmdr0703c_mutants_r1.py::test_m3_door_b_reading_injected_the_fixed_way
+3 failed, 2 warnings in 2.17s
+mutant file exists after cleanup = False
+=== CONTROL real doors :: tests/test_qoder_catalog_hydration.py -k rollback
+..                                                                       [100%]
+============================== warnings summary ===============================
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 23 deselected, 2 warnings in 2.02s
+=== CONTROL whole file :: tests/test_qoder_catalog_hydration.py
+.........................                                                [100%]
+============================== warnings summary ===============================
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 2 warnings in 3.31s
