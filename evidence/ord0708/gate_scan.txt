@@ -1,0 +1,32 @@
+=== 库 D:/moodle/_cmdr_fe_rev_1016/_preview_1021.db
+   地点 {'总数': 20, '新闸拒': 0, '旧闸也拒': 0, '这刀新拒': 0}
+   这一版方案挂上的站数=12 其中会被新闸拒=0
+      Tianjin West Station       过  
+      Luggage drop · Haihe River 过  
+      Italian Style Town         过  
+      Check in · Haihe Riverside 过  
+      Overnight · Haihe Riversid 过  
+      Five Great Avenues         过  
+      Tianjin Museum             过  
+      Tianjin Eye                过  
+      Overnight · Haihe Riversid 过  
+      Check out · Haihe Riversid 过  
+      Tianjin Binhai Airport     过  
+      Arrival                    过  
+
+=== 库 D:/moodle/_cmdr_fe_rev_1016/_cmdr_ord0700_proof_1022a.db
+   地点 {'总数': 20, '新闸拒': 0, '旧闸也拒': 0, '这刀新拒': 0}
+   这一版方案挂上的站数=12 其中会被新闸拒=0
+      Tianjin West Station       过  
+      Luggage drop · Haihe River 过  
+      Italian Style Town         过  
+      Check in · Haihe Riverside 过  
+      Overnight · Haihe Riversid 过  
+      Five Great Avenues         过  
+      Tianjin Museum             过  
+      Tianjin Eye                过  
+      Overnight · Haihe Riversid 过  
+      Check out · Haihe Riversid 过  
+      Tianjin Binhai Airport     过  
+      Arrival                    过  
+
