@@ -1,0 +1,152 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-22T02:16:40+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "0a7abf8a96176f5497425cff107066df106d6757",
+ "candidate_ref": "refs/heads/review/cmdr-ord0700-legacy-anchor-role-r1",
+ "candidate_tip": "f3539adbae1536539cadc0480e36fcf7bdc5488b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "0a7abf8a96176f5497425cff107066df106d6757",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/planning/anchor_schedule.py",
+   "backend/app/planning/anchors.py",
+   "backend/app/replanning/protected_commitments.py",
+   "backend/tests/test_qoder_ord0700_legacy_anchor_role.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/planning/anchor_schedule.py",
+   "backend/app/planning/anchors.py",
+   "backend/app/replanning/protected_commitments.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "302b71abb1059318e3c6f1056a0696d7b1e4c01e",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_ord0700_legacy_anchor_role.py",
+   "backend/tests/test_rx4_c4_generate_gate.py",
+   "backend/tests/test_v12_authoritative_trip_execution.py",
+   "backend/tests/test_qoder_ord0360_single_active_anchor.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "28 passed, 2 warnings in 6.50s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_021559",
+  "blob_equality": [
+   {
+    "path": "backend/app/planning/anchor_schedule.py",
+    "candidate_blob": "b88584fd15b1dcaccb28694e9419fd419626d6c5",
+    "export_blob": "b88584fd15b1dcaccb28694e9419fd419626d6c5",
+    "equal": true
+   },
+   {
+    "path": "backend/app/planning/anchors.py",
+    "candidate_blob": "95063e51a032b550ef449032c68c30586b781ff8",
+    "export_blob": "95063e51a032b550ef449032c68c30586b781ff8",
+    "equal": true
+   },
+   {
+    "path": "backend/app/replanning/protected_commitments.py",
+    "candidate_blob": "32b885730be69a4fe40a9d00c1a5bb43d4e033c4",
+    "export_blob": "32b885730be69a4fe40a9d00c1a5bb43d4e033c4",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0700_legacy_anchor_role.py",
+    "candidate_blob": "2fbf83049b8fa7f4507d2b400d9d5c2995c668c0",
+    "export_blob": "2fbf83049b8fa7f4507d2b400d9d5c2995c668c0",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 2029,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "2029 tests collected in 7.76s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "28 tests collected in 2.73s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_ord0700_legacy_anchor_role.py",
+    "backend/tests/test_rx4_c4_generate_gate.py",
+    "backend/tests/test_v12_authoritative_trip_execution.py",
+    "backend/tests/test_qoder_ord0360_single_active_anchor.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "28 passed, 2 warnings in 6.50s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "surface_contract": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "f3539adbae1536539cadc0480e36fcf7bdc5488b",
+  "branches_route": "f3539adbae1536539cadc0480e36fcf7bdc5488b",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
