@@ -1,0 +1,22 @@
+[
+ {
+  "order": "AUTO1",
+  "ref": "refs/heads/review/cmdr-ord0703-hydration-pool-wait-r1",
+  "cand": "34fef6fea6052ebb3ecc40656cd030ce5fa33cd6",
+  "recut": "34fef6fea6052ebb3ecc40656cd030ce5fa33cd6",
+  "landed": true,
+  "tip_after": "34fef6fea605",
+  "note": "FF FAST_FORWARD_POSSIBLE cand=34fef6fea605 tip=225fea3bb4d0 -> the candidate already sits on the tip; || DICT_DUP rc=0 || EMPTY_BLOB rc=0",
+  "gate": "verdict=READY_TO_LAND mode=LAND tip=225fea3bb4 cand=34fef6fea6 ff=True ahead=1 behind=0 intersection=0",
+  "why": ""
+ },
+ {
+  "order": "AUTO2",
+  "ref": "refs/heads/review/\u9884\u9632\u5de5-0557-dict-r2",
+  "cand": "3258e6f6e7b6e319a479486ad4c640a42f7b944f",
+  "recut": null,
+  "landed": false,
+  "tip_after": null,
+  "note": "RECUT_ABORT: 1 file(s) did not merge to the lane's own bytes -- the lane's tests no longer || describe what would land.  Send it back to the lane, do not land a hand-merged file: / frontend/src/i18n/LocaleContext.tsx"
+ }
+]
