@@ -1,0 +1,131 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-22T05:41:47+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "80d3ae8c8de9576afb3cf6f37fb03141694fd096",
+ "candidate_ref": "refs/heads/review/cmdr-0705a-amap-leg-cache-r1",
+ "candidate_tip": "110df9e455d2e197555a362cba1c5e959aca5f6a",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "80d3ae8c8de9576afb3cf6f37fb03141694fd096",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/integrations/mobility/amap_http.py",
+   "backend/app/integrations/mobility/runtime.py",
+   "backend/tests/test_qoder_amap_mobility_adapter_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/integrations/mobility/amap_http.py",
+   "backend/app/integrations/mobility/runtime.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e9020610bfbf6a127fbbf7b48b8f5f33688db781",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_amap_mobility_adapter_r1.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "28 passed in 0.56s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_054119",
+  "blob_equality": [
+   {
+    "path": "backend/app/integrations/mobility/amap_http.py",
+    "candidate_blob": "8ee31ded74903a3c5a56945e64227dbb866a9866",
+    "export_blob": "8ee31ded74903a3c5a56945e64227dbb866a9866",
+    "equal": true
+   },
+   {
+    "path": "backend/app/integrations/mobility/runtime.py",
+    "candidate_blob": "73e56567739c4832862e20c31ba207b3f201e89e",
+    "export_blob": "73e56567739c4832862e20c31ba207b3f201e89e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_amap_mobility_adapter_r1.py",
+    "candidate_blob": "cedcc6da14faa63bee021252cb51116446f204ba",
+    "export_blob": "cedcc6da14faa63bee021252cb51116446f204ba",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 2069,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "2069 tests collected in 8.37s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "tests/test_qoder_amap_mobility_adapter_r1.py::test_the_leg_memory_forgets_the_oldest_leg_when_it_is_full",
+   "",
+   "28 tests collected in 0.49s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_amap_mobility_adapter_r1.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "28 passed in 0.55s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "surface_contract": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "dry run: candidate 110df9e455 is ff-able onto 80d3ae8c8d, intersection 0, gate [\"28 passed in 0.56s\"]",
+ "derived_result": null
+}
