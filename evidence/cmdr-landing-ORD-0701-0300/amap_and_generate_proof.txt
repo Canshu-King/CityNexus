@@ -1,0 +1,6 @@
+ORD-0701 proof - new tip c506322c0d, started with the legacy name absent
+this shell has AMAP_WEB_KEY: False | has CITYNEXUS_AMAP_WEB_KEY: True
+GET providers/v9: http_status=200 amap.status=READY amap.provenance=LIVE reason=None
+POST plans/generate: http_status=201 plans=3
+  first activity: type=arrival place_id=v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+GET /plans: http_status=200 versions=8
