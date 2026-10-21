@@ -1,0 +1,9 @@
+round_1 rc=0
+round_2 rc=0
+round_3 rc=0
+round_4 rc=0
+round_5 rc=0
+round_6 rc=0
+round_7 rc=1
+D:\moodle\_cmdr_0697\backend\tests\test_qoder_catalog_hydration.py:600: AssertionError: 期望：被别处放弃的作业终态只能是 ABANDONED，且 worker 不抛；实际：COMPLETED / outcome=ALREADY_CURRENT / error=None
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
