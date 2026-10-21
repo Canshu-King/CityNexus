@@ -1,0 +1,35 @@
+库 = D:/moodle/_cmdr_fe_rev_1016/_preview_1021.db
+有机动快照的方案代次 = 4
+
+快照 16e8f7c8  生成于 2026-10-21T21:05:20.570398+00:00
+   方案数=1  evidence字节=428420  段数=132
+   source_provider: {'-': 132}
+   fact_quality: {'LIVE_PROVIDER_CAPTURE': 39, 'None': 93}
+   带几何的段=0  几何点合计=0
+   capabilities 键=['amap-web-service'] seam=amap status=READY
+   首段字段=captured_at, cost_provenance, degraded, destination_key, distance_m, fact_quality, fallback_reason, geometry_provider, minutes, mode, origin_key, provider, route_geometry, route_provenance, time_basis, walking_distance_m, walking_min
+
+快照 f5d6c3d4  生成于 2026-10-21T20:57:25.791800+00:00
+   方案数=3  evidence字节=465979  段数=132
+   source_provider: {'-': 132}
+   fact_quality: {'LIVE_PROVIDER_CAPTURE': 38, 'None': 94}
+   带几何的段=0  几何点合计=0
+   capabilities 键=['amap-web-service'] seam=amap status=READY
+   首段字段=captured_at, cost_provenance, degraded, destination_key, distance_m, fact_quality, fallback_reason, geometry_provider, minutes, mode, origin_key, provider, route_geometry, route_provenance, time_basis, walking_distance_m, walking_min
+
+快照 3c86b792  生成于 2026-10-21T19:39:47.733644+00:00
+   方案数=3  evidence字节=78257  段数=132
+   source_provider: {'-': 132}
+   fact_quality: {'SYNTHETIC_DEFAULT': 132}
+   带几何的段=0  几何点合计=0
+   capabilities 键=[] 
+   首段字段=captured_at, cost_provenance, degraded, destination_key, distance_m, fact_quality, fallback_reason, geometry_provider, minutes, mode, origin_key, provider, route_geometry, route_provenance, time_basis, walking_distance_m, walking_min
+
+快照 1a89b94e  生成于 2026-10-21T18:37:46.777212+00:00
+   方案数=3  evidence字节=78257  段数=132
+   source_provider: {'-': 132}
+   fact_quality: {'SYNTHETIC_DEFAULT': 132}
+   带几何的段=0  几何点合计=0
+   capabilities 键=[] 
+   首段字段=captured_at, cost_provenance, degraded, destination_key, distance_m, fact_quality, fallback_reason, geometry_provider, minutes, mode, origin_key, provider, route_geometry, route_provenance, time_basis, walking_distance_m, walking_min
+
