@@ -297,15 +297,18 @@ export function statusCopy(
 export type AiPreflightState =
   | "checking"
   | "configured_unverified"
+  | "provider_answered"
   | "not_configured"
   | "disabled_by_ops"
   | "provider_refused"
   | "unknown";
 
 /** The tone a state is painted with. `styles.css` is held by other lanes today, so the three new
- * states reuse the class the old `unconfigured` state already had rather than adding one. */
+ * states reuse the class the old `unconfigured` state already had rather than adding one.
+ * ORD-0697: a witnessed answer is the strongest good state there is, so it takes the same `ready`
+ * tone `configured_unverified` already had -- it does not invent a brighter claim than "ready". */
 export function aiPreflightClass(state: AiPreflightState): string {
-  return state === "configured_unverified" ? "ready" : state === "checking" ? "checking" : state === "unknown" ? "unknown" : "unconfigured";
+  return state === "configured_unverified" || state === "provider_answered" ? "ready" : state === "checking" ? "checking" : state === "unknown" ? "unknown" : "unconfigured";
 }
 
 /* ORD-0387: the input is the contract type, not an ad-hoc shape.  Naming the field here as
@@ -318,6 +321,8 @@ export function aiStateFromServer(body: AgentRuntimeStatus | null): AiPreflightS
   switch (typeof body.ai_state === "string" ? body.ai_state : "") {
     case "CONFIGURED_UNVERIFIED":
       return "configured_unverified";
+    case "PROVIDER_ANSWERED":
+      return "provider_answered";
     case "NOT_CONFIGURED":
       return "not_configured";
     case "DISABLED_BY_OPS":
@@ -781,6 +786,8 @@ export function PlanWithAiSheet({
           >
             {aiState === "configured_unverified" &&
               (t("plan.aiConfiguredUnverifiedNote"))}
+            {aiState === "provider_answered" &&
+              (t("plan.aiProviderAnsweredNote"))}
             {aiState === "not_configured" &&
               (t("plan.aiNotConfiguredNote"))}
             {aiState === "disabled_by_ops" &&
