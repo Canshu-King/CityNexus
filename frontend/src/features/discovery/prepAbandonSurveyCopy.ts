@@ -52,7 +52,7 @@ export const SURVEY_COPY: Record<"zh" | "en", Record<SurveyKey, string>> = {
     "prepSurvey.max": "This line holds at most 200 characters",
     "prepSurvey.over": "Over the line - trim a few words first",
     "prepSurvey.stored": "These answers stay on this device.",
-    "prepSurvey.noDoor": "This server has no door for the question (NOT_AVAILABLE).",
+    "prepSurvey.noDoor": "This server can't take that answer yet.",
     "prepSurvey.back": "Don't stop yet, let me look",
     "prepSurvey.stopAction": "Stop this preparation",
   },
