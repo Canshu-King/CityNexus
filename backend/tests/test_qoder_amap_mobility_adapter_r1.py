@@ -455,3 +455,208 @@ def test_the_async_provider_and_the_sync_adapter_share_the_request_leg(monkeypat
     assert "http_status=500" in message, message
     assert PLACEHOLDER_KEY not in message, message
 
+
+# ---------------------------------------------------------------------------
+# ORD-0705 甲: a leg Amap already answered is not re-asked, and it keeps the instant it was answered
+# at.  Measured on the demo journey (132 identical pairs asked in three generations, 38-39 answered
+# each time, 81 answered across them, no pair ever giving two different durations): the re-ask is
+# pure cost and the refusals that follow are the rate limit, not the road.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(autouse=True)
+def _every_door_starts_cold():
+    """Empty the process leg memory around every test in this file.
+
+    These doors count requests, so a leg remembered by the previous test would silently turn a "we
+    asked once" assertion into "we never asked at all" -- and a refusal door would go green because
+    the answer came from memory instead of from the transport that was built to refuse.
+    """
+
+    amap_http.reset_process_leg_memory()
+    yield
+    amap_http.reset_process_leg_memory()
+
+
+def _counting_provider(counter, **kwargs):
+    """A provider whose transport records every request that actually reached it."""
+
+    def handler(request):
+        counter["n"] += 1
+        if counter.get("refuse"):
+            raise httpx.ConnectError("no route to host", request=request)
+        return httpx.Response(200, json=_driving_payload())
+
+    counter.setdefault("n", 0)
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    return AmapHTTPMobilityProvider(
+        client=client,
+        place_lookup=_lookup,
+        city_code=kwargs.pop("city_code", "CN-11-01"),
+        api_key=kwargs.pop("api_key", PLACEHOLDER_KEY),
+        **kwargs,
+    )
+
+
+def test_a_leg_answered_once_is_not_asked_again_by_the_next_generation():
+    counter = {}
+    first = _counting_provider(counter)
+    assert first.estimate("from", "to").duration_min == 26
+    assert counter["n"] == 1, counter
+
+    second = _counting_provider(counter)
+    estimate = second.estimate("from", "to")
+
+    assert counter["n"] == 1, "the second generation asked Amap again: %s" % counter
+    assert estimate.duration_min == 26, "a remembered leg must read exactly like a fresh one"
+    assert second.legs_from_memory == 1
+    assert second.requests_sent == 0
+
+
+def test_a_remembered_leg_carries_its_own_measurement_instant(monkeypatch):
+    """The one door that decides whether reuse is honest or a forgery.
+
+    `time_basis` says AMAP_ROUTE_CAPTURED_AT.  A leg measured at 04:57 that is stamped 05:05 because
+    that is when the *snapshot* was taken claims a measurement that did not happen.  So the fact keeps
+    04:57 while the snapshot keeps 05:05, and the only thing that got cheaper is the request.
+    """
+
+    measured_at = "2026-10-22T04:57:00+00:00"
+    monkeypatch.setattr(amap_http, "_utc_iso_now", lambda: measured_at)
+    counter = {}
+
+    def capture(stamp):
+        return _memory_capture(monkeypatch, counter, captured_at=stamp)
+
+    first = capture("2026-10-22T04:57:00+00:00")
+    second = capture("2026-10-22T05:05:00+00:00")
+    pair = ("from", "to")
+
+    assert counter["n"] == 1, counter
+    assert second.snapshot.captured_at == "2026-10-22T05:05:00+00:00"
+    assert first.snapshot.facts[pair].captured_at == measured_at
+    assert second.snapshot.facts[pair].captured_at == measured_at
+    assert second.snapshot.facts[pair].captured_at != second.snapshot.captured_at
+    caps = second.snapshot.provider_capabilities["amap-web-service"]
+    assert caps["legs_from_memory"] == 1, caps
+    assert caps["requests_sent"] == 0, caps
+
+
+def test_a_leg_the_provider_refused_is_never_remembered():
+    """A refusal is not an answer, and must not be able to become one by sitting in memory."""
+
+    counter = {"refuse": True}
+    refused = _counting_provider(counter)
+    with pytest.raises(AmapRouteError):
+        refused.estimate("from", "to")
+    assert len(amap_http.process_leg_memory()) == 0
+    assert counter["n"] == 1, counter
+
+    counter["refuse"] = False
+    asked_again = _counting_provider(counter)
+    assert asked_again.estimate("from", "to").duration_min == 26
+    assert counter["n"] == 2, "a refused leg has to be asked again, not served from memory"
+
+
+def test_the_memory_asks_again_once_the_leg_has_gone_stale():
+    """The memory is minutes old, not forever: past the ttl the provider asks Amap again."""
+
+    counter = {}
+    clock = {"t": 0.0}
+    memory = amap_http.AmapLegMemory(ttl_s=600.0, clock=lambda: clock["t"])
+    first = _counting_provider(counter, leg_memory=memory)
+    first.estimate("from", "to")
+
+    key = ("WALK", "CN-11-01", "from", "to")
+    memory.touch(key, 601.0)
+    second = _counting_provider(counter, leg_memory=memory)
+    second.estimate("from", "to")
+
+    assert counter["n"] == 2, counter
+    assert second.legs_from_memory == 0
+
+
+def test_a_remembered_leg_is_still_declared_live():
+    """Reuse must not quietly downgrade a measurement to an estimate.
+
+    The capture reads the attestation off the provider that answered, so a leg served from memory has
+    to reach the same quality as the leg that was measured.  If this ever goes the other way, hard
+    feasibility would start refusing legs it already accepted.
+    """
+
+    counter = {}
+    _counting_provider(counter).estimate("from", "to")
+
+    from app.integrations.mobility.snapshot_capture import capture_mobility_snapshot
+
+    warm = _counting_provider(counter)
+    captured = capture_mobility_snapshot([("from", "to")], primary=warm)
+    fact = captured.snapshot.facts[("from", "to")]
+
+    assert counter["n"] == 1, counter
+    assert warm.legs_from_memory == 1
+    assert fact.fact_quality == LIVE_PROVIDER_CAPTURE, fact
+    assert fact.provider_key == "amap-web-service", fact
+    assert captured.degraded is False
+
+
+def test_a_different_mode_or_city_never_borrows_a_remembered_leg():
+    """A taxi leg is not a walking leg, and another city's road is not this city's road."""
+
+    counter = {}
+    _counting_provider(counter).estimate("from", "to")
+
+    driving = _counting_provider(counter, mode="AUTO")
+    assert driving.estimate("from", "to").duration_min == 26
+    assert driving.legs_from_memory == 0, "AUTO borrowed a WALK measurement"
+
+    shanghai = _counting_provider(counter, city_code="CN-31-01")
+    assert shanghai.estimate("from", "to").duration_min == 26
+    assert shanghai.legs_from_memory == 0, "CN-31-01 borrowed a CN-11-01 measurement"
+    assert counter["n"] == 3, counter
+
+
+def test_the_leg_memory_forgets_the_oldest_leg_when_it_is_full():
+    """Bounded: a long-lived process cannot grow this memory without limit."""
+
+    memory = amap_http.AmapLegMemory(ttl_s=600.0, max_entries=2, clock=lambda: 0.0)
+    route = _counting_provider({}, leg_memory=memory).estimate("from", "to").route
+    for index in range(3):
+        memory.remember(
+            ("WALK", "CN-11-01", "from", str(index)),
+            route,
+            "2026-10-22T04:5%d:00+00:00" % index,
+        )
+
+    assert len(memory) == 2
+    assert memory.get(("WALK", "CN-11-01", "from", "0")) is None
+    assert memory.get(("WALK", "CN-11-01", "from", "2")) is not None
+
+
+def _memory_capture(monkeypatch, counter, *, captured_at):
+    """One generation of the runtime capture, with the transport counted and the stamp fixed."""
+
+    def handler(request):
+        counter["n"] = counter.get("n", 0) + 1
+        return httpx.Response(200, json=_driving_payload())
+
+    real_client = httpx.Client
+
+    def factory(**kwargs):
+        return real_client(transport=httpx.MockTransport(handler), timeout=10.0)
+
+    monkeypatch.setattr(httpx, "Client", factory)
+    monkeypatch.setattr(runtime, "_place_lookup", lambda session, key: _lookup(key))
+    monkeypatch.setattr(runtime, "settings", types.SimpleNamespace(live_valhalla_url=None))
+    monkeypatch.delenv(amap.KEY_ENV_LEGACY, raising=False)
+    monkeypatch.delenv(amap.ROUTING_SEAM_ENV, raising=False)
+    monkeypatch.setenv(amap.KEY_ENV_PREFERRED, PLACEHOLDER_KEY)
+    journey = types.SimpleNamespace(city_code="CN-11-01")
+    return runtime.capture_runtime_mobility_snapshot(
+        None,
+        journey,
+        [("from", "to")],
+        operation_key="reform:amap-leg-memory",
+        captured_at=captured_at,
+    )
+

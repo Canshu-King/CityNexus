@@ -181,6 +181,26 @@ def capture_runtime_mobility_snapshot(
                 if fact is not None and fact.fact_quality is not None:
                     facts[pair] = replace(fact, fact_quality=None)
             snapshot = replace(snapshot, facts=facts)
+        if amap_primary:
+            # A leg served out of the adapter's short-term memory was measured earlier than this
+            # snapshot, and `time_basis` says "captured at" -- so the fact gets the instant it was
+            # really measured instead of this capture's stamp.  Legs asked just now are left alone
+            # (`measurement_instant` returns None for them), so this move can only ever make a
+            # fact's timestamp older and truthful, never newer and invented.
+            facts = dict(snapshot.facts)
+            for pair, fact in facts.items():
+                instant = primary.measurement_instant(pair[0], pair[1])
+                if instant and fact is not None and instant != snapshot.captured_at:
+                    facts[pair] = replace(fact, captured_at=instant)
+            snapshot = replace(snapshot, facts=facts)
+            # What this capture spent, published where the traveller's evidence card can read it:
+            # requests are the cost, remembered legs are the saving, and neither is a number we would
+            # rather not say out loud.
+            capabilities = {
+                **capabilities,
+                "legs_from_memory": primary.legs_from_memory,
+                "requests_sent": primary.requests_sent,
+            }
         return replace(
             captured,
             snapshot=replace(
