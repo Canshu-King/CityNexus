@@ -1,0 +1,24 @@
+ORD-0700 A proof | source _preview_1021.db 8204288 B -> copy _cmdr_ord0700_proof_1022a.db
+
+health: http_status=200
+journey read: http_status=200 title=Tianjin rail arrival · real trip operations city=CN-TIANJIN plans_before=0
+POST plans/generate: http_status=201
+plans in the answer: 3
+plan keys: activities,created_at,explanation,id,is_current,journey_id,mobility_evidence,mobility_snapshot_id,parent_plan_version_id,planning_mode,score_breakdown,selectable,source,stale,stale_reason,status,total_cost,utility_score,version_no
+activity keys: activity_type,city_service_id,cost_status,end_at,estimated_cost,id,locked,metadata,place_id,place_name,sequence_no,start_at,status,title,travel_from_prev_min
+  plan 1: label=None activities=8 total_cost_minor=None
+    arrival|v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor|v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+    visit|160022ba-d830-53ca-970a-f38b0e42fb1c|None
+    visit|4569fcff-5e78-5b9c-809c-68e3756cf439|None
+    visit|506e1f97-d236-5a15-919b-08627c2f696c|None
+  plan 2: label=None activities=8 total_cost_minor=None
+    arrival|v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor|v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+    visit|4569fcff-5e78-5b9c-809c-68e3756cf439|None
+    visit|506e1f97-d236-5a15-919b-08627c2f696c|None
+    visit|6b1df9bd-f014-53c5-b460-53e28e7d3139|None
+  plan 3: label=None activities=8 total_cost_minor=None
+    arrival|v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor|v12:1cfb54f2-5934-4161-99e0-5aa78ec16706:arrival-anchor
+    visit|506e1f97-d236-5a15-919b-08627c2f696c|None
+    visit|6b1df9bd-f014-53c5-b460-53e28e7d3139|None
+    visit|90504fc8-5d88-5651-8815-d41a6dfdb398|None
+plans read back from the journey: 0
