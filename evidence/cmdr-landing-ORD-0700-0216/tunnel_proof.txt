@@ -1,0 +1,11 @@
+tunnel POST plans/generate: http_status=201 idempotency_key=cmdr-ord0700-tunnel-28d86b44
+  plans returned: 3
+   plan 1: id=41cfc949-1805 status=CANDIDATE activities=8 first=Arrival/Arrival total_cost={'amount_minor': 0, 'currency': 'CNY'}
+   plan 2: id=e7936afe-1b29 status=CANDIDATE activities=8 first=Arrival/Arrival total_cost={'amount_minor': 0, 'currency': 'CNY'}
+   plan 3: id=e05cd660-3767 status=CANDIDATE activities=8 first=Arrival/Arrival total_cost={'amount_minor': 0, 'currency': 'CNY'}
+tunnel GET /plans: http_status=200 方案数=5
+   1eefcf30-92e1 status=SUPERSEDED created=2026-09-12T14:35:34.515947+00:00 activities=11 is_current=False
+   17f6cb8d-3d9d status=ACTIVE created=2026-09-12T14:35:35.997908+00:00 activities=11 is_current=True
+   41cfc949-1805 status=CANDIDATE created=2026-10-21T18:37:46.777212+00:00 activities=8 is_current=False
+   e7936afe-1b29 status=CANDIDATE created=2026-10-21T18:37:46.777212+00:00 activities=8 is_current=False
+   e05cd660-3767 status=CANDIDATE created=2026-10-21T18:37:46.777212+00:00 activities=8 is_current=False
