@@ -34,6 +34,7 @@ import {
   fetchWithKeylessWriteDeadline,
   isKeylessWriteDeadlineMissed,
   keylessWriteUnknownReading,
+  type KeylessWriteDeadlineMissed,
 } from "../../lib/keylessWriteDeadline";
 import { englishCountNoun } from "../../lib/plural";
 
@@ -524,20 +525,32 @@ export async function beginAiRun(args: {
       emit({ current: baseline.current });
     }
     enter("request");
-    const response = await fetchWithKeylessWriteDeadline(
-      `/api/v1/journeys/${journeyId}/agent/commands`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Idempotency-Key": idempotencyKey,
+    /* A deadline on this leg says one thing and one thing only: this device stopped knowing the
+       answer.  It used to end the whole run, which quietly cancelled the question *below* it - the
+       deterministic composer was never asked, so a traveller whose model took longer than the bound
+       read "unknown" and got no plan reading either.  The unknown stays (it is all Q54=① allows this
+       screen to claim), and the rest of the run goes on to answer what this device can prove. */
+    let missionDeadline: KeylessWriteDeadlineMissed | null = null;
+    let response: Response | null = null;
+    try {
+      response = await fetchWithKeylessWriteDeadline(
+        `/api/v1/journeys/${journeyId}/agent/commands`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Idempotency-Key": idempotencyKey,
+          },
+          body: JSON.stringify({ command }),
+          signal,
         },
-        body: JSON.stringify({ command }),
-        signal,
-      },
-    );
-    const raw = await response.text().catch(() => null);
+      );
+    } catch (cause) {
+      if (!isKeylessWriteDeadlineMissed(cause)) throw cause;
+      missionDeadline = cause;
+    }
+    const raw = response === null ? null : await response.text().catch(() => null);
     let body: unknown = null;
     if (raw !== null) {
       try {
@@ -546,11 +559,14 @@ export async function beginAiRun(args: {
         body = null;
       }
     }
-    const rawReading: RawReading = {
-      http_status: response.status,
-      content_type: response.headers.get("content-type") ?? "",
-      bytes: raw === null ? null : new TextEncoder().encode(raw).length,
-    };
+    const rawReading: RawReading | null =
+      response === null
+        ? null
+        : {
+            http_status: response.status,
+            content_type: response.headers.get("content-type") ?? "",
+            bytes: raw === null ? null : new TextEncoder().encode(raw).length,
+          };
     const mission = (
       body as {
         mission?: {
@@ -562,7 +578,7 @@ export async function beginAiRun(args: {
       } | null
     )?.mission ?? null;
     if (mission?.id) markPendingContinuation(journeyId, String(mission.id));
-    if (!response.ok) {
+    if (response !== null && !response.ok) {
       return settle({
         status: `HTTP_${response.status}`,
         failureReason: failureNote(
@@ -672,7 +688,12 @@ export async function beginAiRun(args: {
     const missionStatus = String(mission?.status ?? "").toUpperCase();
     const missionCompleted = missionStatus === "COMPLETED" || missionStatus === "SUCCEEDED";
     let status: string;
-    if (baselinePlanIds === null) {
+    if (missionDeadline !== null) {
+      /* Q54=① keeps its word: this one write is UNKNOWN, not cancelled, not absent, not retryable
+         with the same key.  Everything the run can still prove - how many plans this journey now
+         has - is carried beside that sentence instead of being forfeited by it. */
+      status = "UNKNOWN_KEYLESS_WRITE_DEADLINE";
+    } else if (baselinePlanIds === null) {
       status = "BASELINE_UNAVAILABLE";
       planCount = -1;
       newPlanIds = [];
@@ -702,7 +723,13 @@ export async function beginAiRun(args: {
             from: "server" as const,
             field: "mission.failure_reason",
           }
-        : blockedSentence,
+        : (missionDeadline
+            ? keylessWriteUnknownReading(
+                missionDeadline.method,
+                missionDeadline.path,
+                missionDeadline.deadlineMs,
+              )
+            : blockedSentence),
       summary: mission?.reasoning_summary ?? null,
       summaryOrigin: summaryOriginOf(mission ?? null),
       rawReading,
