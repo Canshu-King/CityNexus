@@ -1,0 +1,73 @@
+{
+ "file": "e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts",
+ "runId": "ord0702amutA",
+ "deadline_ms": 60000,
+ "arms": {
+  "M3": {
+   "read": {
+    "status": "BLOCKED:CATALOG_EMPTY",
+    "plan_count": "unknown",
+    "new_plan_ids": "",
+    "units_line": "",
+    "text": "这次排不出方案：数据不够，不是你说的不对 这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY） 技术详情 这座城在这台服务器上还没有可排的地点。 粘贴你自己的地点，导入这趟行程 换一座有数据的城市"
+   },
+   "places_asked": 4,
+   "places_asked_with_planner_flag": 0,
+   "places_asked_plain": 4,
+   "place_offsets": [
+    {
+     "at_ms": 486,
+     "with_planner_flag": false
+    },
+    {
+     "at_ms": 963,
+     "with_planner_flag": false
+    },
+    {
+     "at_ms": 294,
+     "with_planner_flag": false
+    },
+    {
+     "at_ms": 303,
+     "with_planner_flag": false
+    }
+   ],
+   "generate_posts": 0,
+   "generate_at_ms": null,
+   "mission_posts": 1,
+   "deadline_ms": 60000,
+   "verdict": "NOT_MET",
+   "rows": [
+    {
+     "claim": "这座城在排程器自己的口径下也确实空，所以拒答照旧",
+     "ok": true,
+     "got": "BLOCKED:CATALOG_EMPTY"
+    },
+    {
+     "claim": "屏上仍说得出那句「没有任何地点数据」（修口径不等于噤声）",
+     "ok": true,
+     "got": "这次排不出方案：数据不够，不是你说的不对 这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY） 技术详情 这座城"
+    },
+    {
+     "claim": "目录确实空的时候不去敲方案口",
+     "ok": true,
+     "got": {
+      "generate_posts": 0,
+      "places": 4
+     }
+    },
+    {
+     "claim": "那句「空」也是在排程器的口径上读的（不是只问过探索目录就下结论）",
+     "ok": false,
+     "got": {
+      "flagged": 0,
+      "plain": 4
+     }
+    }
+   ],
+   "failed": [
+    "那句「空」也是在排程器的口径上读的（不是只问过探索目录就下结论）"
+   ]
+  }
+ }
+}
