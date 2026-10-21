@@ -1,0 +1,14 @@
+round 1  rc=0  wall=4.4s  at 07:01:34
+25 passed, 2 warnings in 3.48s
+round 2  rc=0  wall=4.4s  at 07:01:38
+25 passed, 2 warnings in 3.42s
+round 3  rc=0  wall=4.4s  at 07:01:43
+25 passed, 2 warnings in 3.48s
+round 4  rc=1  wall=4.3s  at 07:01:47
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+1 failed, 24 passed, 2 warnings in 3.40s
+round 5  rc=0  wall=4.4s  at 07:01:52
+25 passed, 2 warnings in 3.49s
+round 6  rc=0  wall=4.2s  at 07:01:56
+25 passed, 2 warnings in 3.37s
+done sha1 22fc3491e21addfd7d7883d87fe23a1e04462a8d
