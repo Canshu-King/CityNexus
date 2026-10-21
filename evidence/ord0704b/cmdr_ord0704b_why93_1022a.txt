@@ -1,0 +1,54 @@
+=== 快照 16e8f7c8  生成于 2026-10-21T21:05:20.570398+00:00  段=132
+   provider           {'mock-mobility': 93, 'amap-web-service': 39}
+   fallback_reason    {'AmapRouteError': 93, 'None': 39}
+   route_provenance   {'SYNTHETIC_FIXTURE': 93, 'LIVE_PROVIDER_CAPTURE': 39}
+   geometry_provider  {'mock-mobility': 93, 'amap-web-service': 39}
+   cost_provenance    {'CITYNEXUS_COST_ESTIMATE': 132}
+   degraded           {'True': 93, 'False': 39}
+   mode               {'WALK': 132}
+   time_basis         {'MOCK_DETERMINISTIC': 93, 'AMAP_ROUTE_CAPTURED_AT': 39}
+   有质量那批 minutes: n=39 min=1 中位=47 max=195
+   无质量那批 minutes: n=93 min=20 中位=20 max=20
+   顶层键 = captured_at, degraded, facts, operation_key, provider_capabilities, snapshot_id, source_provider
+   caps[amap-web-service] = {"status": "READY", "provider_key": "amap-web-service", "mode": "WALK", "city_code": "CN-TIANJIN", "coordinate_crs": "GCJ02", "domain_crs": "WGS84", "conversion": "ITERATIVE_GCJ02_TO_WGS84", "seam": "amap"}
+
+=== 快照 f5d6c3d4  生成于 2026-10-21T20:57:25.791800+00:00  段=132
+   provider           {'mock-mobility': 94, 'amap-web-service': 38}
+   fallback_reason    {'AmapRouteError': 94, 'None': 38}
+   route_provenance   {'SYNTHETIC_FIXTURE': 94, 'LIVE_PROVIDER_CAPTURE': 38}
+   geometry_provider  {'mock-mobility': 94, 'amap-web-service': 38}
+   cost_provenance    {'CITYNEXUS_COST_ESTIMATE': 132}
+   degraded           {'True': 94, 'False': 38}
+   mode               {'WALK': 132}
+   time_basis         {'MOCK_DETERMINISTIC': 94, 'AMAP_ROUTE_CAPTURED_AT': 38}
+   有质量那批 minutes: n=38 min=1 中位=47 max=255
+   无质量那批 minutes: n=94 min=20 中位=20 max=20
+   顶层键 = captured_at, degraded, facts, operation_key, provider_capabilities, snapshot_id, source_provider
+   caps[amap-web-service] = {"status": "READY", "provider_key": "amap-web-service", "mode": "WALK", "city_code": "CN-TIANJIN", "coordinate_crs": "GCJ02", "domain_crs": "WGS84", "conversion": "ITERATIVE_GCJ02_TO_WGS84", "seam": "amap"}
+
+=== 快照 3c86b792  生成于 2026-10-21T19:39:47.733644+00:00  段=132
+   provider           {'mock-mobility': 132}
+   fallback_reason    {'None': 132}
+   route_provenance   {'SYNTHETIC_FIXTURE': 132}
+   geometry_provider  {'mock-mobility': 132}
+   cost_provenance    {'CITYNEXUS_COST_ESTIMATE': 132}
+   degraded           {'False': 132}
+   mode               {'None': 132}
+   time_basis         {'PROVIDER_CAPTURED_AT': 132}
+   有质量那批 minutes: 无
+   无质量那批 minutes: 无
+   顶层键 = captured_at, degraded, facts, operation_key, provider_capabilities, snapshot_id, source_provider
+
+=== 快照 1a89b94e  生成于 2026-10-21T18:37:46.777212+00:00  段=132
+   provider           {'mock-mobility': 132}
+   fallback_reason    {'None': 132}
+   route_provenance   {'SYNTHETIC_FIXTURE': 132}
+   geometry_provider  {'mock-mobility': 132}
+   cost_provenance    {'CITYNEXUS_COST_ESTIMATE': 132}
+   degraded           {'False': 132}
+   mode               {'None': 132}
+   time_basis         {'PROVIDER_CAPTURED_AT': 132}
+   有质量那批 minutes: 无
+   无质量那批 minutes: 无
+   顶层键 = captured_at, degraded, facts, operation_key, provider_capabilities, snapshot_id, source_provider
+
