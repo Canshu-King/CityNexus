@@ -1,0 +1,18 @@
+=== 臂一：隔离实例连做两代（AI 关，落线后的码）===
+   健康 ok 端口=8014 库=_cmdr_ord0705a_arm.db
+   第1代 http_status=201 墙钟=12.55s
+   第2代 http_status=201 墙钟=8.54s
+   快照 31d88a78 生成于 2026-10-21T21:44:26.266489+00:00
+      段=132 带质量=62 快照时刻=2026-10-21T21:44:26 段级时刻有几种=14
+      最早_live_段=2026-10-21T21:44:13 最晚=2026-10-21T21:44:26
+      caps: status=READY legs_from_memory=40 requests_sent=92 seam=amap
+   快照 867acbfa 生成于 2026-10-21T21:44:13.718904+00:00
+      段=132 带质量=40 快照时刻=2026-10-21T21:44:13 段级时刻有几种=1
+      最早_live_段=2026-10-21T21:44:13 最晚=2026-10-21T21:44:13
+      caps: status=READY legs_from_memory=0 requests_sent=132 seam=amap
+
+=== 臂二：演示链 :8010（AI 开）===
+   health: {'status': 'ok', 'database': 'ok', 'ai': 'enabled', 'ai_state': 'CONFIGURED_UNVERIFIED', 'e2e_run_id': '', 'e2e_database_id': ''}
+   一次生成 http_status=201 墙钟=13.43s
+   快照 270c9d88 段=132 带质量=41 段级时刻几种=1 caps=[{'status': 'READY', 'legs_from_memory': 0, 'requests_sent': 132}]
+   快照 16e8f7c8 段=132 带质量=39 段级时刻几种=1 caps=[{'status': 'READY', 'legs_from_memory': None, 'requests_sent': None}]
