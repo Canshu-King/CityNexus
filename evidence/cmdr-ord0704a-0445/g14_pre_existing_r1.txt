@@ -1,0 +1,4 @@
+at tip 34fef6fea6 (before this slice): =========================== short test summary info ===========================
+at tip 34fef6fea6 (before this slice): FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+at tip 34fef6fea6 (before this slice): FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+at tip 34fef6fea6 (before this slice): 2 failed, 9 deselected, 2 warnings in 1.73s
