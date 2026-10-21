@@ -1,0 +1,9 @@
+ORD-0707 甲 现场读数（演示链真 HTTP，尖 b2d20a5a10b326f37259f3147f0b9f3a13e2951c）
+臂 cond 原话：我们想睡到中午再出门，若午后下雨给室内备选
+   http=200 墙钟=87.9s objective_codes=['RESPECT_DAY_RHYTHM', 'afternoon_outing', 'rain_indoor_backup', 'sleep_until_noon']
+   preferences: indoor=None indoor_backup_if_raining=True day_rhythm.wake_hhmm='12:00'
+   capabilities=[]
+臂 plain 原话：我们只想要室内的地方，少走一点路
+   http=200 墙钟=71.4s objective_codes=['CAPABILITY_AWARE', 'MINIMIZE_WALKING', 'PREFER_INDOOR']
+   preferences: indoor=True indoor_backup_if_raining=None day_rhythm.wake_hhmm=None
+   capabilities=[]
