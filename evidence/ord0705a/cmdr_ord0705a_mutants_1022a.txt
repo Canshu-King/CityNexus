@@ -1,0 +1,11 @@
+### A_不回填量取时刻（改 runtime.py）
+   A_不回填量取时刻              rc=1 =========================== short test summary info =========================== | FAILED tests/test_qoder_amap_mobility_adapter_r1.py::test_a_remembered_leg_carries_its_own_measurement_instant | 1 failed, 27 deselected in 0.51s
+                          还原=字节一致（该行原出现 1 次）
+### B_不查记忆每次都问（改 amap_http.py）
+   B_不查记忆每次都问             rc=1 =========================== short test summary info =========================== | FAILED tests/test_qoder_amap_mobility_adapter_r1.py::test_a_leg_answered_once_is_not_asked_again_by_the_next_generation | 1 failed, 27 deselected in 0.51s
+                          还原=字节一致（该行原出现 1 次）
+### C_记忆永不过期（改 amap_http.py）
+   C_记忆永不过期               rc=1 =========================== short test summary info =========================== | FAILED tests/test_qoder_amap_mobility_adapter_r1.py::test_the_memory_asks_again_once_the_leg_has_gone_stale | 1 failed, 27 deselected in 0.52s
+                          还原=字节一致（该行原出现 1 次）
+=== 全套还原后复跑 ===
+28 passed in 0.54s rc=0
