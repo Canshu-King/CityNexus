@@ -1,0 +1,9 @@
+arm=pre tree=D:\moodle\_cmdr_ord0700_pre_1022
+library copy from _preview_1021_backup_1022a.db bytes=8204288
+counts {"journeys": 7, "plan_versions": 2, "commitments": 1}
+ACTIVE C4 commitment: bf6d8757-c4ad-4d28-beb8-d06a859a283c policy={"price_status":"KNOWN","scheduled_start_at":"2026-10-09T08:00:00+08:00","semantic_key":"160022ba-d830-53ca-970a-f38b0e42fb1c","semantic_node_key":"arrival-anchor","source":"USER_CONFIRMED_EXTERNAL_RE
+this tree has the role reader: False
+POST plans/generate: http_status=422
+server message: No feasible plan candidates satisfy the journey constraints
+server details: {"city_code": "CN-TIANJIN", "places_in_catalog": 11, "city_services_in_catalog": 0, "day_sequences_available": 3, "day_sequences_unsourced_hours": 3, "requested_candidates": 3, "candidate_rejections": [{"reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"
+plan versions read back: before=2 after=2
