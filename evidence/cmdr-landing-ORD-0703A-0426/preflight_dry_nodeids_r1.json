@@ -1,0 +1,115 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-22T04:27:28+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "225fea3bb4d06fe523f1dd234abf832df362119d",
+ "candidate_ref": "refs/heads/review/cmdr-ord0703-hydration-pool-wait-r1",
+ "candidate_tip": "34fef6fea6052ebb3ecc40656cd030ce5fa33cd6",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "225fea3bb4d06fe523f1dd234abf832df362119d",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/tests/test_qoder_catalog_hydration.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "55f20028221b5bcc931527ffeae8de47b4ced575",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job backend/tests/test_qoder_catalog_hydration.py::test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage backend/tests/test_qoder_catalog_hydration.py::test_a_job_stopped_before_its_worker_starts_still_closes_itself"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 4,
+  "summary": [],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_042656",
+  "blob_equality": [
+   {
+    "path": "backend/tests/test_qoder_catalog_hydration.py",
+    "candidate_blob": "945506bbbfc41a0de22e4d6b9e9bd4545961e804",
+    "export_blob": "945506bbbfc41a0de22e4d6b9e9bd4545961e804",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 2041,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_��·��_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "2041 tests collected in 3.33s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "2041 tests collected in 8.58s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job backend/tests/test_qoder_catalog_hydration.py::test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage backend/tests/test_qoder_catalog_hydration.py::test_a_job_stopped_before_its_worker_starts_still_closes_itself"
+   ],
+   "exit": 4,
+   "summary": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "surface_contract": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [
+  "requested test target is not a .py file name: 'backend/tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job backend/tests/test_qoder_catalog_hydration.py::test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage backend/tests/test_qoder_catalog_hydration.py::test_a_job_stopped_before_its_worker_starts_still_closes_itself'",
+  "the test request resolved to zero targets -- the door must not report a run it did not perform",
+  "gate run not green (collect rc=0 test rc=4)",
+  "gate run produced no summary line - instrument did not measure"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: requested test target is not a .py file name: 'backend/tests/test_qoder_catalog_hydration.py::test_an_abandon_whose_own_write_never_landed_still_closes_the_job backend/tests/test_qoder_catalog_hydration.py::test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage backend/tests/test_qoder_catalog_hydration.py::test_a_job_stopped_before_its_worker_starts_still_closes_itself' | the test request resolved to zero targets -- the door must not report a run it did not perform | gate run not green (collect rc=0 test rc=4) | gate run produced no summary line - instrument did not measure",
+ "derived_result": null
+}
