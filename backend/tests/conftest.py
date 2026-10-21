@@ -134,6 +134,11 @@ _INHERITED_PROVIDER_ENV = (
     "CITYNEXUS_HERMES_MODEL",
     "CITYNEXUS_HERMES_NATIVE_PROVIDER",
     "CITYNEXUS_HERMES_NATIVE_MODEL",
+    # ORD-0701: the Amap web key has two accepted names, and a configured terminal used to make
+    # the provider mesh answer READY - the same "ready because the developer happens to be
+    # configured" failure this list exists to prevent.  A test that wants a key says so.
+    "CITYNEXUS_AMAP_WEB_KEY",
+    "AMAP_WEB_KEY",
 )
 
 for _name in _INHERITED_PROVIDER_ENV:
