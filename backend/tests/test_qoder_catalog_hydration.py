@@ -584,13 +584,18 @@ def test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandone
     original_survey = hydration_module._survey
 
     def racing_survey(session, canonical_destination_id):
-        moved = hydration_module.mark(
-            session,
-            operation_id,
-            hydration_module.ABANDON_REQUESTED,
-            from_statuses=(hydration_module.RUNNING,),
-            abandon_requested_at=hydration_module.now_iso(),
-        )
+        # ORD-0703 乙: this writer must not ride the worker's own transaction.  Marking through the
+        # session the worker is holding let any later rollback of *its* erase the "abandon from
+        # elsewhere" the door is trying to create -- which is why the door went red about once every
+        # dozen whole-file runs.  A separate session commits it, the way another process would.
+        with SessionLocal() as other:
+            moved = hydration_module.mark(
+                other,
+                operation_id,
+                hydration_module.ABANDON_REQUESTED,
+                from_statuses=(hydration_module.RUNNING,),
+                abandon_requested_at=hydration_module.now_iso(),
+            )
         assert moved is True, "SETUP 失败：竞态注入没改成 ABANDON_REQUESTED，这条门什么都没测"
         return original_survey(session, canonical_destination_id)
 
