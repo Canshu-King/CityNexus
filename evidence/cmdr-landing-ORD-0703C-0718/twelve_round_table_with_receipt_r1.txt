@@ -1,0 +1,27 @@
+round 01  rc=0  wall=4.9s  at 07:08:43
+25 passed, 2 warnings in 3.86s
+round 02  rc=0  wall=4.4s  at 07:08:47
+25 passed, 2 warnings in 3.44s
+round 03  rc=0  wall=4.3s  at 07:08:51
+25 passed, 2 warnings in 3.40s
+round 04  rc=0  wall=4.3s  at 07:08:56
+25 passed, 2 warnings in 3.39s
+round 05  rc=0  wall=4.4s  at 07:09:00
+25 passed, 2 warnings in 3.46s
+round 06  rc=0  wall=4.4s  at 07:09:05
+25 passed, 2 warnings in 3.44s
+round 07  rc=0  wall=4.4s  at 07:09:09
+25 passed, 2 warnings in 3.41s
+round 08  rc=0  wall=4.5s  at 07:09:13
+25 passed, 2 warnings in 3.57s
+round 09  rc=0  wall=4.4s  at 07:09:18
+25 passed, 2 warnings in 3.45s
+round 10  rc=0  wall=4.3s  at 07:09:22
+25 passed, 2 warnings in 3.38s
+round 11  rc=0  wall=4.3s  at 07:09:26
+25 passed, 2 warnings in 3.34s
+round 12  rc=1  wall=4.6s  at 07:09:31
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+1 failed, 24 passed, 2 warnings in 3.62s
+  full output -> cmdr_ord0703c_flake_12_1022b.txt (4084 bytes, sha1 96882bef8fa85ef3cceb5b4d641b9fed38e8748e)
+end sha1 6587cbe988e5fa505acaf9280b04f724094c9dca
