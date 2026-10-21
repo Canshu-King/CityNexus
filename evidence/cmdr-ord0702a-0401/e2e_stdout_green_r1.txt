@@ -1,0 +1,148 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4353 backend=:8153 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702a1022b.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [11720]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8153 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:55517 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55525 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ord0702a1022b frontend=:4353 -> backend=:8153 ai=disabled db=_e2e_ord0702a1022b.db
+
+Running 7 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4353 backend=:8153 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702a1022b.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:55526 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:55527 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:55526 - "POST /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55527 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55526 - "POST /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/stay-options/90f61731-ff49-477c-888c-c34175748c0b/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=4c99bd1d-c17e-44b3-870f-6d413c9fca77 options=4 chosen=90f61731-ff49-477c-888c-c34175748c0b (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:56111 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56112 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61430 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61427 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61425 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, context_json=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-10-21T19:50:18.822229+00:00', '{"degraded_providers": [], "execution": {"cursor_status": "VALID", "execution_truth": null, "next": {"end_at": "2026-10-09T19:05:00+08:00", "executio ... (998 characters truncated) ... raded": false, "provider": "mock-mobility", "snapshot_id": null, "source": "deterministic-offline"}, "opportunity_window": null, "provider_level": 1}', '2026-10-21T19:50:18.822229+00:00', '4c99bd1d-c17e-44b3-870f-6d413c9fca77')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:50737 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61429 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53507 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53512 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53513 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53509 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49188 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53515 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (4.9s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4353 backend=:8153 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702a1022b.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:55927 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57145 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57146 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62434 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62431 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62429 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57229 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62432 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62433 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52758 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60680 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64088 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62161 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64089 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55254 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55255 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61645 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52131 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57759 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57009 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55592 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60257 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52161 - "GET /api/v1/places?city_code=CN-TIANJIN&include_structural=true HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60634 - "POST /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans/generate HTTP/1.1" 422 Unprocessable Entity
+  ok 2 [chromium] › e2e\qoder-ord0310-keyless-write-deadline.spec.ts:121:1 › K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源 (1.0m)
+[WebServer] INFO:     127.0.0.1:60636 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53502 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53503 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54727 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54725 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54726 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54728 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54724 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59635 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65288 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52227 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56214 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59059 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52228 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57135 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57136 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59779 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+  ok 3 [chromium] › e2e\qoder-ord0310-keyless-write-deadline.spec.ts:148:1 › K2 正控：服务器两秒内答完时，这枚期限不碰正常结局 (1.4s)
+[WebServer] INFO:     127.0.0.1:59784 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56539 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56540 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49841 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49839 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49838 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49842 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49840 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51074 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61184 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62711 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59534 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54289 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51909 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58746 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62333 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55789 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49698 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/plans HTTP/1.1" 200 OK
+  ok 4 [chromium] › e2e\qoder-ord0310-keyless-write-deadline.spec.ts:166:1 › K3 反控：旅行者按取消时，期限不许冒充用户 (1.3s)
+[WebServer] INFO:     127.0.0.1:49702 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53989 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53991 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63218 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53994 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63219 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64974 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53993 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64973 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55069 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52169 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55070 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54646 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51463 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64770 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52886 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56117 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+  ok 5 [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:253:1 › M1 期限到点后仍要问目录与方案口：未知的归未知，数得出来的归数得出来 (1.0m)
+[WebServer] INFO:     127.0.0.1:56119 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50929 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50930 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63000 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63001 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61615 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63003 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61614 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63002 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54542 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61543 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53491 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52231 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+  ok 6 [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:266:1 › M2 只有服务器自有地点的城：不许说「没有任何地点数据」，要落到真候选 (1.4s)
+[WebServer] INFO:     127.0.0.1:60368 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58310 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58311 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53790 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59602 - "GET /api/v1/travelers/adc1cf9e-abb1-427f-86ee-e0e8bba20583/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53792 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50846 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59600 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52201 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58312 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59601 - "GET /api/v1/journeys/4c99bd1d-c17e-44b3-870f-6d413c9fca77/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50375 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49188 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+  ok 7 [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:278:1 › M3 负控制：排程器口径下也空的城，仍要如实说空，并且不去敲方案口 (1.4s)
+
+  7 passed (2.3m)
