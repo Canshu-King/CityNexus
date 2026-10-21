@@ -612,8 +612,13 @@ export async function beginAiRun(args: {
     if (baselinePlanIds !== null && planCount === 0) {
       enter("fallback");
       try {
+        /* This gate asks one question: is there anything this journey's own composer could place?
+           The plain catalogue answer is a different book - the city-exploration view, which hides
+           server-owned and structural rows on purpose - so asking *it* here let a city with a dozen
+           placeable rows be reported as having no place data at all.  Ask the planner's question in
+           the planner's terms; the reason codes below stay exactly as ORD-0107 defined them. */
         const placesResponse = await fetch(
-          `/api/v1/places?city_code=${encodeURIComponent(cityCode ?? "")}`,
+          `/api/v1/places?city_code=${encodeURIComponent(cityCode ?? "")}&include_structural=true`,
           { headers: { Accept: "application/json" }, signal },
         );
         if (!placesResponse.ok) {
