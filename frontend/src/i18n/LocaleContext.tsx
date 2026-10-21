@@ -148,7 +148,7 @@ const en: Dict = {
   // ── Shell: sidebar ──
   "shell.brand": "CityNexus",
   "shell.tagline": "journey intelligence",
-  "trial.kicker": "Try CityNexus with your own city",
+  "trial.kicker": "Your city, one trial run",
   "trial.title": "Start a real journey, not only the sealed demo.",
   "trial.lede": "Choose your destination and travel anchors. Cities with no sealed replay use live city providers when enabled; CityNexus will not quietly substitute another city's replay data for the one you asked for.",
   "trial.liveTitle": "Generic-city trial",
@@ -348,7 +348,7 @@ const en: Dict = {
   // ── Studio ──
   "studio.kicker": "Trip Studio · multi-day plan",
   "studio.title": "Shape the journey around what matters.",
-  "studio.lede": "Switch the hotel or a leg mode and CityNexus recomputes the travel impact against the same hard commitments.",
+  "studio.lede": "Switch the hotel or a leg mode and the travel impact is recomputed against the same hard commitments.",
   "studio.reportRain": "Report rain disruption",
   "studio.draftPreview": "Draft reorder preview",
   "studio.dayActivities": "Day {day} · {count} activities",
@@ -607,7 +607,7 @@ const en: Dict = {
   "agent.explainAgain": "Keep explanation",
   "agent.whatIfStudio": "Preview a change",
   "agent.whatIfStudioSub": "Preview time, cost and walking without changing your chosen plan.",
-  "agent.sendError": "Copilot could not reach CityNexus.",
+  "agent.sendError": "The assistant couldn't be reached.",
   /* ORD-0370: the Copilot dock's three fallbacks, moved out of the component. The Chinese side
      keeps the previous value's length on purpose, so re-wording is not re-sizing. */
   "agent.stopFailed": "Couldn't stop.",
@@ -1005,7 +1005,7 @@ const en: Dict = {
   // ── Intelligence: Control Tower ──
   "intel.kicker": "Intelligence · Control Tower",
   "intel.title": "Judgement up front. Hard facts at the gate.",
-  "intel.lede": "DeepSeek can interpret a fuzzy city signal. CityNexus verifies the resulting action against the journey, provider state, budget, and commitment envelope.",
+  "intel.lede": "A model can read a fuzzy city signal first; the chosen action is then checked against the journey, provider state, budget and commitment gates.",
   "intel.autonomyActive": "Autonomy active",
   "intel.enableRecovery": "Enable reversible recovery",
   "intel.guardianReady": "Risk watch is on",
@@ -1044,7 +1044,7 @@ const en: Dict = {
   "mobility.unavailable": "Unavailable",
   "mobility.costUnknown": "Cost unknown",
   "mobility.noProvider": "No provider evidence",
-  "mobility.letChoose": "Let CityNexus choose",
+  "mobility.letChoose": "Choose for me",
   "mobility.note": "Costs are shown only when captured from a provider. Unknown is not treated as zero.",
 
   // ── Stay Explorer ──
@@ -1595,7 +1595,7 @@ const en: Dict = {
   "copilot.proposal.ready": "A suggestion is ready; open advanced detail to see how it was produced.",
   "copilot.proposal.nothingToDecide": "There is nothing for you to decide yet.",
   "copilot.action.stopping": "Stopping…",
-  "copilot.action.stoppedViaCitynexus": "Stopped through CityNexus",
+  "copilot.action.stoppedViaCitynexus": "Stopped as you asked",
   "copilot.approval.modifyReview": "Modify / Review",
   "copilot.badge.protectedCommitment": "Protected commitment",
   "copilot.badge.protectedActivity": "Protected activity",
@@ -1738,7 +1738,7 @@ const zhCN: Dict = {
   // ── 外壳：侧边栏 ──
   "shell.brand": "CityNexus",
   "shell.tagline": "行程智能",
-  "trial.kicker": "用你自己的城市试用 CityNexus",
+  "trial.kicker": "拿你自己的城市试一次",
   "trial.title": "创建真实行程，不只局限于封存演示。",
   "trial.lede": "选择目的地和出发/返程锚点。没有封存数据的城市会用实时数据源，不会拿别的城市冒充。",
   "trial.liveTitle": "通用城市试用",
@@ -1920,7 +1920,7 @@ const zhCN: Dict = {
   // ── Studio ──
   "studio.kicker": "行程工作台 · 多日方案",
   "studio.title": "围绕重要的事塑造行程。",
-  "studio.lede": "更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。",
+  "studio.lede": "换酒店或改某一段的出行方式，会在同样的硬约束下重算出行影响。",
   "studio.reportRain": "报告降雨中断",
   "studio.draftPreview": "草稿重排预览",
   "studio.dayActivities": "第 {day} 天 · {count} 个活动",
@@ -2167,7 +2167,7 @@ const zhCN: Dict = {
   "agent.explainAgain": "保留解释",
   "agent.whatIfStudio": "试算一次改动",
   "agent.whatIfStudioSub": "在不改动已选方案的前提下，预览时间和成本变化。",
-  "agent.sendError": "Copilot 暂时没能连上 CityNexus。",
+  "agent.sendError": "暂时没连上助手。",
   "agent.stopFailed": "没能停止",
   "agent.approvalFailed": "没能确认",
   "agent.toolWorking": "处理中",
@@ -2236,7 +2236,7 @@ const zhCN: Dict = {
   "discovery.discoverCompose": "探索并组合",
   "discovery.composeError": "没能组合探索结果",
   "discovery.noGroundedCandidates": "暂时拼不出有依据的地点。可以把地点说得宽一点，或换一个近一点的到达点；行程没有改动。",
-  "discovery.aiUnavailable": "DeepSeek 暂时无法完成语义解读。行程没有改变；可以重试，或使用确定性的供应商请求。",
+  "discovery.aiUnavailable": "助手暂时没能完成这句话的解读。行程没有改动；可以再试一次，或直接按供应商实测数据搜。",
   "discovery.groundedStop": "一个落地的城市停留已组合完成。",
   "discovery.providerUnnamed": "服务方",
   "discovery.anchor": "锚点：",
@@ -2548,7 +2548,7 @@ const zhCN: Dict = {
   // ── 智能守护 ──
   "intel.kicker": "智能守护 · 控制塔",
   "intel.title": "判断前置。硬事实在关口。",
-  "intel.lede": "DeepSeek 可解读模糊的城市信号。CityNexus 对照行程、供应商状态、预算和承诺权限验证所选操作。",
+  "intel.lede": "模型可以先读一条模糊的城市信号；选出的动作再对照行程、供应商状态、预算和承诺权限核验。",
   "intel.autonomyActive": "自主权限已激活",
   "intel.enableRecovery": "启用可逆恢复",
   "intel.guardianReady": "风险盯守已开",
@@ -2585,7 +2585,7 @@ const zhCN: Dict = {
   "mobility.unavailable": "不可用",
   "mobility.costUnknown": "费用未知",
   "mobility.noProvider": "无供应商证据",
-  "mobility.letChoose": "让 CityNexus 选择",
+  "mobility.letChoose": "帮我选",
   "mobility.note": "费用仅在从供应商采集时显示。未知不被视为零。",
 
   // ── 住宿选择 ──
@@ -3097,7 +3097,7 @@ const zhCN: Dict = {
   "copilot.proposal.ready": "已经生成建议，展开高级详情可以看到过程。",
   "copilot.proposal.nothingToDecide": "还没有需要你决定的改动。",
   "copilot.action.stopping": "正在停止…",
-  "copilot.action.stoppedViaCitynexus": "已通过 CityNexus 停止",
+  "copilot.action.stoppedViaCitynexus": "已按你的指令停止",
   "copilot.approval.modifyReview": "修改 / 审核",
   "copilot.badge.protectedCommitment": "受保护承诺",
   "copilot.badge.protectedActivity": "受保护活动",
