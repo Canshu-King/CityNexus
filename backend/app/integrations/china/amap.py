@@ -14,6 +14,35 @@ MODE_PATHS = {
     "TRANSIT": "transit/integrated",
     "AUTO": "driving",
 }
+# Two environment names, deliberately ordered.  ``CITYNEXUS_AMAP_WEB_KEY`` is the
+# name this deployment's local configuration tool writes; ``AMAP_WEB_KEY`` is what
+# has always been read here, so a machine that is already configured keeps answering
+# without anyone re-entering anything.  The preferred name wins when both exist, and
+# nothing in this module falls back to a key baked into the source.
+KEY_ENV_PREFERRED = "CITYNEXUS_AMAP_WEB_KEY"
+KEY_ENV_LEGACY = "AMAP_WEB_KEY"
+
+
+def web_key() -> str | None:
+    """The configured Amap web key, from either accepted environment name."""
+
+    return os.getenv(KEY_ENV_PREFERRED) or os.getenv(KEY_ENV_LEGACY)
+
+
+def key_env_name() -> str | None:
+    """Which environment name supplied the key - the name, never the value."""
+
+    if os.getenv(KEY_ENV_PREFERRED):
+        return KEY_ENV_PREFERRED
+    if os.getenv(KEY_ENV_LEGACY):
+        return KEY_ENV_LEGACY
+    return None
+
+
+def missing_key_reason() -> str:
+    """What to say when no key answers, naming both accepted variables."""
+
+    return f"neither {KEY_ENV_PREFERRED} nor {KEY_ENV_LEGACY} is configured"
 
 
 @dataclass(frozen=True)
@@ -44,13 +73,13 @@ class NormalizedRoute:
 
 
 def amap_status() -> ProviderStatus:
-    configured = bool(os.getenv("AMAP_WEB_KEY"))
+    configured = bool(web_key())
     return ProviderStatus(
         provider_key="amap-web-service",
         status="READY" if configured else "NOT_CONFIGURED",
         provenance="LIVE" if configured else "UNAVAILABLE",
         coordinate_crs="GCJ02",
-        reason=None if configured else "AMAP_WEB_KEY is absent",
+        reason=None if configured else missing_key_reason(),
     )
 
 
@@ -119,9 +148,9 @@ class AmapPoiProvider:
     provider_key = "amap-web-service"
 
     async def search(self, query: str, city: str, *, limit: int = 10) -> list[dict[str, Any]]:
-        key = os.getenv("AMAP_WEB_KEY")
+        key = web_key()
         if not key:
-            raise RuntimeError("AMAP_WEB_KEY is not configured")
+            raise RuntimeError(missing_key_reason())
         params = {
             "key": key,
             "keywords": query,
@@ -167,9 +196,9 @@ class AmapMobilityProvider:
     ) -> NormalizedRoute:
         normalized_mode = mode.upper()
         path = MODE_PATHS.get(normalized_mode)
-        key = os.getenv("AMAP_WEB_KEY")
+        key = web_key()
         if not key:
-            raise RuntimeError("AMAP_WEB_KEY is not configured")
+            raise RuntimeError(missing_key_reason())
         if not path:
             raise ValueError(f"Amap does not provide mode {mode}")
         origin_lat, origin_lon = wgs84_to_gcj02(*origin_wgs84)
