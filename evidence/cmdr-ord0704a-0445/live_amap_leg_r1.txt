@@ -1,0 +1,12 @@
+ORD-0704 甲 真调一程（键只从环境读，输出不含键）
+reading tree: D:/moodle/_cmdr_0697/backend  权威尖现读: 80d3ae8c8de9576afb3cf6f37fb03141694fd096
+== arm=default_seam_on mode=WALK seam=amap routes_via_amap(CN-11-01)=True key_name=CITYNEXUS_AMAP_WEB_KEY
+   capabilities 键名=city_code,conversion,coordinate_crs,domain_crs,mode,provider_key,seam,status status=READY seam=amap
+   真答 duration_min=91 distance_m=6755 cost_status=FREE_KNOWN 几何条数=330 首点(WGS84 lon,lat)=116.40739,39.90424
+   换算核对：请求方把自己按 WGS84 声明的起点推成 GCJ-02 再问，回来的首点应当回到声明值附近（声明 39.90420,116.40740；读回 39.90424,116.40739，纬度偏差 4 米、经度偏差 0 米，两者都应在百米内 => True
+   输出里出现真实键值：无
+== arm=seam_off mode=WALK seam=off routes_via_amap(CN-11-01)=False key_name=CITYNEXUS_AMAP_WEB_KEY
+   capabilities 键名=city_code,conversion,coordinate_crs,domain_crs,mode,provider_key,seam,status status=NOT_CONFIGURED seam=off
+   真答 duration_min=91 distance_m=6755 cost_status=FREE_KNOWN 几何条数=330 首点(WGS84 lon,lat)=116.40739,39.90424
+   换算核对：请求方把自己按 WGS84 声明的起点推成 GCJ-02 再问，回来的首点应当回到声明值附近（声明 39.90420,116.40740；读回 39.90424,116.40739，纬度偏差 4 米、经度偏差 0 米，两者都应在百米内 => True
+   输出里出现真实键值：无
