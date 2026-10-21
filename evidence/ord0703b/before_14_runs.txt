@@ -1,0 +1,58 @@
+run1: 23 passed, 2 warnings in 3.55s
+run2: 23 passed, 2 warnings in 3.52s
+run3: 23 passed, 2 warnings in 3.34s
+run4: 23 passed, 2 warnings in 3.48s
+run5: 23 passed, 2 warnings in 3.63s
+run6: 23 passed, 2 warnings in 3.47s
+run7: 23 passed, 2 warnings in 3.57s
+run8: 23 passed, 2 warnings in 3.37s
+run9: 23 passed, 2 warnings in 3.49s
+run10: 23 passed, 2 warnings in 3.39s
+run11: 23 passed, 2 warnings in 3.48s
+run12: 1 failed, 22 passed, 2 warnings in 3.74s
+        into the named abandoned branch rather than raising on a transition the table forbids.
+        """
+    
+        accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
+        operation_id = accepted.json()["operation_id"]
+        original_survey = hydration_module._survey
+    
+        def racing_survey(session, canonical_destination_id):
+            moved = hydration_module.mark(
+                session,
+                operation_id,
+                hydration_module.ABANDON_REQUESTED,
+                from_statuses=(hydration_module.RUNNING,),
+                abandon_requested_at=hydration_module.now_iso(),
+            )
+            assert moved is True, "SETUP 失败：竞态注入没改成 ABANDON_REQUESTED，这条门什么都没测"
+            return original_survey(session, canonical_destination_id)
+    
+        monkeypatch.setattr(hydration_module, "_survey", racing_survey)
+        monkeypatch.setattr(hydration_module, "abandonment_requested", lambda _oid: False)
+        terminal = _wait_terminal(operation_id)
+>       assert terminal["status"] == "ABANDONED", (
+            f"期望：被别处放弃的作业终态只能是 ABANDONED，且 worker 不抛；实际："
+            f"{terminal['status']} / outcome={terminal.get('outcome')} / "
+            f"error={str((terminal.get('error') or {}).get('message'))[:160]}"
+        )
+E       AssertionError: 期望：被别处放弃的作业终态只能是 ABANDONED，且 worker 不抛；实际：COMPLETED / outcome=ALREADY_CURRENT / error=None
+E       assert 'COMPLETED' == 'ABANDONED'
+E         
+E         - ABANDONED
+E         + COMPLETED
+
+tests\test_qoder_catalog_hydration.py:600: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\backend\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+1 failed, 22 passed, 2 warnings in 3.74s
