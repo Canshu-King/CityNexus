@@ -1,0 +1,183 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4354 backend=:8154 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702amutA.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [13400]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8154 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:51538 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64007 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ord0702amutA frontend=:4354 -> backend=:8154 ai=disabled db=_e2e_ord0702amutA.db
+
+Running 4 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4354 backend=:8154 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702amutA.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:64008 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:64009 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:64008 - "POST /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64009 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64008 - "POST /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/stay-options/f24ab20e-29f4-4272-9e71-ea7c9e7b7fa6/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=7f0059b3-7f10-4892-b733-84ce3d2faae9 options=4 chosen=f24ab20e-29f4-4272-9e71-ea7c9e7b7fa6 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:63558 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63559 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59195 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59194 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59197 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63560 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58525 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59196 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56151 - "GET /api/v1/travelers/1baa1b8c-3982-4d50-b964-e6090c81ff25/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64850 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64849 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57785 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64852 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (4.9s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4354 backend=:8154 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702amutA.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:53796 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53825 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53827 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49195 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49194 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49193 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50432 - "GET /api/v1/travelers/1baa1b8c-3982-4d50-b964-e6090c81ff25/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65369 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52862 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53828 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49196 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49695 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52061 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53491 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65373 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50061 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49685 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62039 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54149 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+  x  2 [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:253:1 › M1 期限到点后仍要问目录与方案口：未知的归未知，数得出来的归数得出来 (1.5m)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4354 backend=:8154 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702amutA.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:54155 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60384 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60385 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60387 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61955 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61956 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61958 - "GET /api/v1/travelers/1baa1b8c-3982-4d50-b964-e6090c81ff25/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54147 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60386 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61613 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61957 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56745 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49695 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50737 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51654 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+  x  3 [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:266:1 › M2 只有服务器自有地点的城：不许说「没有任何地点数据」，要落到真候选 (31.4s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4354 backend=:8154 db=sqlite:///D:/moodle/_cmdr_0697/backend/_e2e_ord0702amutA.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:51656 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54614 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54615 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52192 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52194 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/provider-mesh HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52193 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/agent-feed?limit=200 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52197 - "GET /api/v1/travelers/1baa1b8c-3982-4d50-b964-e6090c81ff25/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62845 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54616 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52196 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58493 - "GET /api/v1/journeys/7f0059b3-7f10-4892-b733-84ce3d2faae9/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56785 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:64847 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+  x  4 [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:278:1 › M3 负控制：排程器口径下也空的城，仍要如实说空，并且不去敲方案口 (1.5s)
+
+
+  1) [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:253:1 › M1 期限到点后仍要问目录与方案口：未知的归未知，数得出来的归数得出来 
+
+    Error: e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts :: M1 — 结局卡上没有两枚候选
+
+    expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('plan-ai-result')
+    Expected: "2"
+    Received: "unknown"
+    Timeout:  30000ms
+
+    Call log:
+      - e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts :: M1 — 结局卡上没有两枚候选 getByTestId('plan-ai-result') with timeout 30000ms
+      - waiting for getByTestId('plan-ai-result')
+        62 × locator resolved to <div role="alert" data-new-plan-ids="" aria-live="assertive" data-result-tone="warn" data-plan-count="unknown" class="plan-ai-result warn" data-testid="plan-ai-result" data-result-status="BLOCKED:CATALOG_EMPTY">…</div>
+           - unexpected value "unknown"
+
+
+      260 |     .toBeVisible({ timeout: KEYLESS_WRITE_DEADLINE_MS + 90_000 });
+      261 |   await expect(page.getByTestId("plan-ai-result"), node("M1", "结局卡上没有两枚候选"))
+    > 262 |     .toHaveAttribute("data-plan-count", "2", { timeout: 30_000 });
+          |      ^
+      263 |   await decide("M1", await readCard(page), ledger);
+      264 | });
+      265 |
+        at D:\moodle\_cmdr_0697\frontend\e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:262:6
+
+    Error Context: test-results\qoder-ord0702a-keyless-dea-c7b44-仍要问目录与方案口：未知的归未知，数得出来的归数得出来-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0702a-keyless-dea-c7b44-仍要问目录与方案口：未知的归未知，数得出来的归数得出来-chromium\error-context.md
+
+  2) [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:266:1 › M2 只有服务器自有地点的城：不许说「没有任何地点数据」，要落到真候选 
+
+    Error: e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts :: M2 — 结局卡上没有两枚候选
+
+    expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('plan-ai-result')
+    Expected: "2"
+    Received: "unknown"
+    Timeout:  30000ms
+
+    Call log:
+      - e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts :: M2 — 结局卡上没有两枚候选 getByTestId('plan-ai-result') with timeout 30000ms
+      - waiting for getByTestId('plan-ai-result')
+        63 × locator resolved to <div role="alert" data-new-plan-ids="" aria-live="assertive" data-result-tone="warn" data-plan-count="unknown" class="plan-ai-result warn" data-testid="plan-ai-result" data-result-status="BLOCKED:CATALOG_EMPTY">…</div>
+           - unexpected value "unknown"
+
+
+      272 |     .toBeVisible({ timeout: 30_000 });
+      273 |   await expect(page.getByTestId("plan-ai-result"), node("M2", "结局卡上没有两枚候选"))
+    > 274 |     .toHaveAttribute("data-plan-count", "2", { timeout: 30_000 });
+          |      ^
+      275 |   await decide("M2", await readCard(page), ledger);
+      276 | });
+      277 |
+        at D:\moodle\_cmdr_0697\frontend\e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:274:6
+
+    Error Context: test-results\qoder-ord0702a-keyless-dea-ee836-自有地点的城：不许说「没有任何地点数据」，要落到真候选-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0702a-keyless-dea-ee836-自有地点的城：不许说「没有任何地点数据」，要落到真候选-chromium\error-context.md
+
+  3) [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:278:1 › M3 负控制：排程器口径下也空的城，仍要如实说空，并且不去敲方案口 
+
+    Error: e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts :: M3 — {"status":"BLOCKED:CATALOG_EMPTY","plan_count":"unknown"}
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "那句「空」也是在排程器的口径上读的（不是只问过探索目录就下结论）",
+    + ]
+
+      248 |   };
+      249 |   expect(bad.map((b) => b.claim), node(arm, JSON.stringify({ status: read.status, plan_count: read.plan_count })))
+    > 250 |     .toEqual([]);
+          |      ^
+      251 | }
+      252 |
+      253 | test("M1 期限到点后仍要问目录与方案口：未知的归未知，数得出来的归数得出来", async ({ page }) => {
+        at decide (D:\moodle\_cmdr_0697\frontend\e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:250:6)
+        at D:\moodle\_cmdr_0697\frontend\e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:287:9
+
+    Error Context: test-results\qoder-ord0702a-keyless-dea-aba2e-：排程器口径下也空的城，仍要如实说空，并且不去敲方案口-chromium\error-context.md
+
+    Error Context: test-results\qoder-ord0702a-keyless-dea-aba2e-：排程器口径下也空的城，仍要如实说空，并且不去敲方案口-chromium\error-context.md
+
+  3 failed
+    [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:253:1 › M1 期限到点后仍要问目录与方案口：未知的归未知，数得出来的归数得出来 
+    [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:266:1 › M2 只有服务器自有地点的城：不许说「没有任何地点数据」，要落到真候选 
+    [chromium] › e2e\qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts:278:1 › M3 负控制：排程器口径下也空的城，仍要如实说空，并且不去敲方案口 
+  1 passed (2.3m)
