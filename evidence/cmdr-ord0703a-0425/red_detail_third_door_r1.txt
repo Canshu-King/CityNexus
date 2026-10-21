@@ -1,0 +1,16 @@
+.........F.............                                                  [100%]
+================================== FAILURES ===================================
+D:\moodle\_cmdr_0697\backend\tests\test_qoder_catalog_hydration.py:600: AssertionError: 期望：被别处放弃的作业终态只能是 ABANDONED，且 worker 不抛；实际：COMPLETED / outcome=ALREADY_CURRENT / error=None
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned
+1 failed, 22 passed, 2 warnings in 4.42s
