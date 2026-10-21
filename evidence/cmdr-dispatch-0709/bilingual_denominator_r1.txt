@@ -1,0 +1,17 @@
+OLD a54369f9e3 files=164 hits=138
+NEW d027dbc7bf files=164 hits=138
+DELTA 0 (old-new)
+CLEARED_FILES 0
+STILL_TOP 17 files=132
+STILL 34 frontend/src/app/V8Experience.tsx
+STILL 18 frontend/src/features/stay/HotelsPanel.tsx
+STILL 14 frontend/src/features/stay/StayExplorer.tsx
+STILL 13 frontend/src/features/execution/LiveRecovery.tsx
+STILL 12 frontend/src/features/discovery/DestinationPreparationPanel.tsx
+STILL 10 frontend/src/features/planning/PlanComparison.tsx
+STILL 10 frontend/src/features/setup/JourneyTrialSetup.tsx
+STILL 6 frontend/src/features/planning/PlanWithAiSheet.tsx
+STILL 6 frontend/src/features/simulation/SimulationPanel.tsx
+STILL 4 frontend/src/features/trip/TripItinerary.tsx
+STILL 3 frontend/src/lib/failureAttribution.ts
+STILL 2 frontend/src/features/inbox/JourneyInboxWorkbench.tsx
