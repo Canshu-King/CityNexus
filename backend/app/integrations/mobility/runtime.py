@@ -11,6 +11,8 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import CityService, Journey, Place
+from app.integrations.china.amap import routes_via_amap
+from app.integrations.mobility.amap_http import AmapHTTPMobilityProvider, AmapRouteError
 from app.integrations.mobility.snapshot_capture import (
     MobilitySnapshotCaptureResult,
     capture_mobility_snapshot,
@@ -86,7 +88,9 @@ def capture_runtime_mobility_snapshot(
     """Capture one immutable mobility reality for a product operation.
 
     The default/offline profile uses the deterministic mock provider. When an
-    opt-in Valhalla URL is configured, Valhalla becomes the primary provider.
+    opt-in Valhalla URL is configured, Valhalla becomes the primary provider.  With no Valhalla URL
+    and a Chinese journey whose city Amap can serve, the Amap Web service becomes the primary
+    provider instead - one provider is built per capture, never both.
     For *soft* (non-hard) captures the deterministic mock stays an explicit
     pair-level fallback so a transient live outage degrades rather than
     aborts.  For *hard* replan captures (``require_explicit_facts=True``) there
@@ -107,7 +111,10 @@ def capture_runtime_mobility_snapshot(
         place_lookup=lambda key: _place_lookup(session, key),
         strict=require_explicit_facts,
     )
-    if not settings.live_valhalla_url:
+    # A Chinese journey with an Amap key is routed here only when nobody configured Valhalla: the
+    # deployment's own router wins over a hosted country provider.
+    amap_primary = not settings.live_valhalla_url and routes_via_amap(journey.city_code)
+    if not settings.live_valhalla_url and not amap_primary:
         return capture_mobility_snapshot(
             normalized_pairs,
             primary=mock,
@@ -115,15 +122,32 @@ def capture_runtime_mobility_snapshot(
             operation_key=operation_key,
         )
 
+    # One client, one capture call, one set of fail-closed tails: a second copy of that tail is how a
+    # leg stops being protected in one of the two branches.
+    capabilities_key = "amap-web-service" if amap_primary else "valhalla"
     with httpx.Client(timeout=10.0) as client:
-        primary: Any = ValhallaHTTPMobilityProvider(
-            client=client,
-            base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key),
+        # Build ONLY the provider that is primary.  A deployment that routes through Amap has no
+        # Valhalla URL at all (`live_valhalla_url` is None, which is what `core/config.py` produces
+        # when the variable is unset), and constructing the Valhalla adapter before the swap dies on
+        # `None.rstrip("/")` inside its own constructor - which would make the Amap route unreachable
+        # precisely in the state a Chinese deployment is actually in: key configured, seam on, no
+        # Valhalla.
+        primary: Any = (
+            AmapHTTPMobilityProvider(
+                client=client,
+                place_lookup=lambda key: _place_lookup(session, key),
+                city_code=journey.city_code,
+            )
+            if amap_primary
+            else ValhallaHTTPMobilityProvider(
+                client=client,
+                base_url=settings.live_valhalla_url,
+                place_lookup=lambda key: _place_lookup(session, key),
+            )
         )
         try:
             capabilities = primary.status_capabilities()
-        except ValhallaProviderError as exc:
+        except (ValhallaProviderError, AmapRouteError) as exc:
             capabilities = {
                 "status": "UNAVAILABLE",
                 "has_live_traffic": False,
@@ -161,7 +185,7 @@ def capture_runtime_mobility_snapshot(
             captured,
             snapshot=replace(
                 snapshot,
-                provider_capabilities={"valhalla": capabilities},
+                provider_capabilities={capabilities_key: capabilities},
             ),
         )
 
