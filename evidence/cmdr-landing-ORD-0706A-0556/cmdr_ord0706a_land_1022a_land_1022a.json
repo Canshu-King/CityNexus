@@ -1,0 +1,137 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-22T05:56:37+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "110df9e455d2e197555a362cba1c5e959aca5f6a",
+ "candidate_ref": "refs/heads/review/cmdr-0705a-amap-leg-cache-r1",
+ "candidate_tip": "f74e9f898e8ea77f7860a06c8d2e3dfe5bff1ba4",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "110df9e455d2e197555a362cba1c5e959aca5f6a",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/planning/day_rhythm.py",
+   "backend/tests/test_day_rhythm.py",
+   "backend/tests/test_qoder_day_rhythm_noon_wake_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/planning/day_rhythm.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "6d497cc1ae384aad976f2ffb17956c5ffd2d8d81",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_day_rhythm_noon_wake_r1.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "7 passed in 0.07s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_055610",
+  "blob_equality": [
+   {
+    "path": "backend/app/planning/day_rhythm.py",
+    "candidate_blob": "59ff2469cc1da9fa3e55564b97dd5b90187a1e64",
+    "export_blob": "59ff2469cc1da9fa3e55564b97dd5b90187a1e64",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_day_rhythm.py",
+    "candidate_blob": "0e429ba96461ddce92beeba838cdd1d6dd9ffcb9",
+    "export_blob": "0e429ba96461ddce92beeba838cdd1d6dd9ffcb9",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_day_rhythm_noon_wake_r1.py",
+    "candidate_blob": "e16ffe70adf55ca156e8ca849440151d30cac6e9",
+    "export_blob": "e16ffe70adf55ca156e8ca849440151d30cac6e9",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 2077,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "2077 tests collected in 8.83s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "tests/test_qoder_day_rhythm_noon_wake_r1.py::test_a_noon_wake_drops_the_optional_morning_and_keeps_the_noon_and_locked_rows",
+   "",
+   "7 tests collected in 0.06s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_day_rhythm_noon_wake_r1.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "7 passed in 0.06s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "dict_keys": {
+   "skipped": "no frontend/src file changed"
+  },
+  "screen_code": {
+   "skipped": "no frontend/src file changed"
+  },
+  "surface_contract": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "f74e9f898e8ea77f7860a06c8d2e3dfe5bff1ba4",
+  "branches_route": "f74e9f898e8ea77f7860a06c8d2e3dfe5bff1ba4",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
