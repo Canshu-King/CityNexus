@@ -1,0 +1,21 @@
+ORD-0706 甲 现场读数（演示链真 HTTP，落线后的码 f74e9f89）
+POST /api/v1/journeys/<演示程>/agent/commands  应答 http_status=200、run.status=COMPLETED、墙钟 73.8 秒（含真 AI 一趟）
+旅客原话：我们想睡到中午再出门，下午沿河走走，晚上逛夜市
+mission.preferences.day_rhythm 整块回读（只贴这一块，其余答复体不落证据）：
+{
+ "bed_hhmm": "01:30",
+ "bed_minute": 90,
+ "brunch": false,
+ "evidence": [
+  "late wake",
+  "wake until noon",
+  "late-night activity"
+ ],
+ "late_night": true,
+ "skip_breakfast": false,
+ "source": "EXTRACTED_FROM_USER_TEXT",
+ "wake_hhmm": "12:00",
+ "wake_minute": 720
+}
+要点：wake_hhmm=12:00 / wake_minute=720 / evidence=['late wake', 'wake until noon', 'late-night activity'] / late_night=True / source=EXTRACTED_FROM_USER_TEXT
+同一句的改前读数不来自这条 HTTP：来自同代突变——把正午那一步退回十点半那一档时，三格判据当场红（见 cmdr_ord0706a_mutants_1022a.txt）。
