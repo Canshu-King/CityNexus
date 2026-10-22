@@ -1,0 +1,796 @@
+arm codes-on-screen r4 | ref=2f9fc88d22658fea9f80f69218aa3fcdc301f692 base=a8ae9fa6ee files_judged=163 refuse=305 info=490 require_name=True only_added=False corpus=1565
+REFUSE frontend/src/api/citynexus.ts:909 (entry :909) token=CAPTURE named_by=server_corpus in rendered | transaction_type: "CAPTURE",
+REFUSE frontend/src/api/citynexus.ts:1131 (entry :1131) token=DELETE named_by=server_corpus in rendered | method: "DELETE",
+REFUSE frontend/src/api/citynexus.ts:1181 (entry :1181) token=CLOSURE named_by=server_corpus in rendered | event_type: "CLOSURE",
+REFUSE frontend/src/api/v10Execution.ts:22 (entry :22) token=NON_AUTHORITATIVE named_by=server_corpus in rendered | authority_status: "NON_AUTHORITATIVE";
+REFUSE frontend/src/app/V8Experience.tsx:1665 (entry :1665) token=AUTONOMOUS named_by=server_corpus in rendered | mode: "AUTONOMOUS",
+REFUSE frontend/src/app/V8Experience.tsx:1696 (entry :1696) token=STRUCTURED_JSON named_by=server_corpus in rendered | artifact_type: "STRUCTURED_JSON",
+REFUSE frontend/src/app/V8Experience.tsx:3072 (entry :3072) token=COMPLETED named_by=server_corpus in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+REFUSE frontend/src/app/V8Experience.tsx:3072 (entry :3072) token=SKIPPED named_by=server_corpus in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+REFUSE frontend/src/app/V8Experience.tsx:3072 (entry :3072) token=CANCELLED named_by=server_corpus in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+REFUSE frontend/src/app/V8Experience.tsx:3505 (entry :3505) token=UNKNOWN named_by=server_corpus in rendered | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+REFUSE frontend/src/app/V8Experience.tsx:4002 (entry :4002) token=UNKNOWN named_by=server_corpus in rendered | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+REFUSE frontend/src/app/V8Experience.tsx:4505 (entry :4505) token=CONFIRMED named_by=server_corpus in rendered | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+REFUSE frontend/src/app/V8Experience.tsx:4505 (entry :4505) token=FULFILLED named_by=server_corpus in rendered | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+REFUSE frontend/src/app/V8Experience.tsx:4505 (entry :4505) token=COMPLETED named_by=server_corpus in rendered | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+REFUSE frontend/src/app/V8Experience.tsx:5185 (entry :5185) token=ADVISORY named_by=server_corpus in rendered | <b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>
+REFUSE frontend/src/app/V8Experience.tsx:5341 (entry :5341) token=XIAMEN named_by=server_corpus in rendered | 厦门: "XIAMEN",
+REFUSE frontend/src/app/V8Experience.tsx:5342 (entry :5342) token=BEIJING named_by=server_corpus in rendered | 北京: "BEIJING",
+REFUSE frontend/src/app/V8Experience.tsx:5343 (entry :5343) token=SHANGHAI named_by=server_corpus in rendered | 上海: "SHANGHAI",
+REFUSE frontend/src/app/V8Experience.tsx:5344 (entry :5344) token=TIANJIN named_by=server_corpus in rendered | 天津: "TIANJIN",
+REFUSE frontend/src/app/V8Experience.tsx:5346 (entry :5346) token=GUANGZHOU named_by=server_corpus in rendered | 广州: "GUANGZHOU",
+REFUSE frontend/src/app/V8Experience.tsx:5347 (entry :5347) token=SHENZHEN named_by=server_corpus in rendered | 深圳: "SHENZHEN",
+REFUSE frontend/src/app/V8Experience.tsx:5348 (entry :5348) token=CHENGDU named_by=server_corpus in rendered | 成都: "CHENGDU",
+REFUSE frontend/src/app/V8Experience.tsx:5349 (entry :5349) token=HANGZHOU named_by=server_corpus in rendered | 杭州: "HANGZHOU",
+REFUSE frontend/src/app/v8Types.ts:106 (entry :106) token=BICYCLE named_by=server_corpus in rendered | export const v8Modes = ["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] as const;
+REFUSE frontend/src/app/v8Types.ts:106 (entry :106) token=TRANSIT named_by=server_corpus in rendered | export const v8Modes = ["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] as const;
+REFUSE frontend/src/app/v8Types.ts:106 (entry :106) token=RIDE_HAIL named_by=server_corpus in rendered | export const v8Modes = ["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"] as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:21 (entry :21) token=COLLABORATOR named_by=server_corpus in rendered | export const ROLE_COLLABORATOR = "COLLABORATOR" as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:61 (entry :61) token=PRIVATE named_by=server_corpus in rendered | export const VISIBILITY_PRIVATE = "PRIVATE" as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:62 (entry :62) token=LINK_READ named_by=server_corpus in rendered | export const VISIBILITY_LINK_READ = "LINK_READ" as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:63 (entry :63) token=INVITEES_ONLY named_by=server_corpus in rendered | export const VISIBILITY_INVITEES_ONLY = "INVITEES_ONLY" as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:64 (entry :64) token=PUBLIC named_by=server_corpus in rendered | export const VISIBILITY_PUBLIC = "PUBLIC" as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:311 (entry :311) token=RECENT_UPDATE named_by=server_corpus in rendered | export const SORT_RECENT_UPDATE = "RECENT_UPDATE" as const;
+REFUSE frontend/src/features/access/accessVocabulary.ts:312 (entry :312) token=DEPARTURE_DATE named_by=server_corpus in rendered | export const SORT_DEPARTURE_DATE = "DEPARTURE_DATE" as const;
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:62 (entry :62) token=RECENT_UPDATE named_by=server_corpus in rendered | ORDERS_THIS_SCREEN_CANNOT_VERIFY: readonly string[] = ["RECENT_UPDATE", "CREATION_ORDER"];
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:146 (entry :146) token=NO_ROWS named_by=this_file_names_it in rendered | state: "NO_ROWS",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:155 (entry :155) token=NOT_VERIFIABLE named_by=this_file_names_it in rendered | state: "NOT_VERIFIABLE",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:168 (entry :168) token=NOT_VERIFIABLE named_by=this_file_names_it in rendered | state: "NOT_VERIFIABLE",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:177 (entry :177) token=INCONSISTENT named_by=this_file_names_it in rendered | state: "INCONSISTENT",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:187 (entry :187) token=CONSISTENT named_by=this_file_names_it in rendered | state: "CONSISTENT",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:203 (entry :203) token=NOT_VERIFIABLE named_by=this_file_names_it in rendered | state: "NOT_VERIFIABLE",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:216 (entry :216) token=INCONSISTENT named_by=this_file_names_it in rendered | state: "INCONSISTENT",
+REFUSE frontend/src/features/access/journeyOrderVerdict.ts:226 (entry :226) token=CONSISTENT named_by=this_file_names_it in rendered | state: "CONSISTENT",
+REFUSE frontend/src/features/checkin/checkins.ts:81 (entry :81) token=CHECKIN_DUPLICATE_STAMP named_by=server_corpus in rendered | "CHECKIN_DUPLICATE_STAMP",
+REFUSE frontend/src/features/checkin/checkins.ts:82 (entry :82) token=CHECKIN_JOURNEY_IN_RECYCLE_BIN named_by=server_corpus in rendered | "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+REFUSE frontend/src/features/checkin/checkins.ts:83 (entry :83) token=CHECKIN_ACTIVITY_NOT_IN_JOURNEY named_by=server_corpus in rendered | "CHECKIN_ACTIVITY_NOT_IN_JOURNEY",
+REFUSE frontend/src/features/checkin/checkins.ts:84 (entry :84) token=CHECKIN_ACTIVITY_UNKNOWN named_by=server_corpus in rendered | "CHECKIN_ACTIVITY_UNKNOWN",
+REFUSE frontend/src/features/checkin/checkins.ts:85 (entry :85) token=CHECKIN_PLACE_UNKNOWN named_by=server_corpus in rendered | "CHECKIN_PLACE_UNKNOWN",
+REFUSE frontend/src/features/checkin/checkins.ts:86 (entry :86) token=CHECKIN_TARGET_REQUIRED named_by=server_corpus in rendered | "CHECKIN_TARGET_REQUIRED",
+REFUSE frontend/src/features/checkin/checkins.ts:87 (entry :87) token=CHECKIN_TARGET_AMBIGUOUS named_by=server_corpus in rendered | "CHECKIN_TARGET_AMBIGUOUS",
+REFUSE frontend/src/features/checkin/checkins.ts:88 (entry :88) token=CHECKIN_JOURNEY_UNKNOWN named_by=server_corpus in rendered | "CHECKIN_JOURNEY_UNKNOWN",
+REFUSE frontend/src/features/checkin/checkins.ts:112 (entry :112) token=UNRECOGNISED named_by=this_file_names_it in rendered | : "UNRECOGNISED",
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:181 (entry :181) token=TIANJIN named_by=server_corpus in rendered | JIN", "TIANJIN", "TSN", "CNX-DEMO"].includes(cityCode.toUpperCase().replaceAll("_", "-"));
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:181 (entry :181) token=TIANJIN named_by=server_corpus in rendered | JIN", "TIANJIN", "TSN", "CNX-DEMO"].includes(cityCode.toUpperCase().replaceAll("_", "-"));
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:253 (entry :253) token=V13_DISCOVERY_NO_FEASIBLE_PLACE_SET named_by=server_corpus in rendered | "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET",
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:254 (entry :254) token=V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR named_by=this_file_names_it in rendered | "V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR",
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:341 (entry :341) token=V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW named_by=this_file_names_it in rendered | "V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW",
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:342 (entry :342) token=V13_C4_ANCHOR_NOT_IN_INPUT named_by=server_corpus in rendered | "V13_C4_ANCHOR_NOT_IN_INPUT",
+REFUSE frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:343 (entry :343) token=V13_DISCOVERY_COMPOSE_EMPTY named_by=server_corpus in rendered | "V13_DISCOVERY_COMPOSE_EMPTY",
+REFUSE frontend/src/features/execution/LiveRecovery.tsx:280 (entry :280) token=UNKNOWN named_by=server_corpus in rendered | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+REFUSE frontend/src/features/execution/V10LiveExecutionPanel.tsx:91 (entry :91) token=UNKNOWN named_by=server_corpus in rendered | rong data-testid="v10-current-step" data-cursor-status={window.cursorStatus ?? "UNKNOWN"}>
+REFUSE frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:82 (entry :82) token=COMPLETED named_by=server_corpus in rendered | activities.find((item) => !["COMPLETED", "SKIPPED"].includes(item.status ?? ""));
+REFUSE frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:82 (entry :82) token=SKIPPED named_by=server_corpus in rendered | activities.find((item) => !["COMPLETED", "SKIPPED"].includes(item.status ?? ""));
+REFUSE frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:84 (entry :84) token=COMPLETED named_by=server_corpus in rendered | d((item) => item.id !== now?.id && !["COMPLETED", "SKIPPED"].includes(item.status ?? ""));
+REFUSE frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:84 (entry :84) token=SKIPPED named_by=server_corpus in rendered | d((item) => item.id !== now?.id && !["COMPLETED", "SKIPPED"].includes(item.status ?? ""));
+REFUSE frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:85 (entry :85) token=NOT_STARTED named_by=server_corpus in rendered | const action = now ? transitions[now.status ?? "NOT_STARTED"] : undefined;
+REFUSE frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:136 (entry :136) token=NOT_STARTED named_by=server_corpus in rendered | e-${(item.status ?? "NOT_STARTED").toLowerCase()}`}>{label(item.status, t, locale)}</span>
+REFUSE frontend/src/features/execution/V12StatePrimitives.tsx:56 (entry :56) token=SYNCED named_by=this_file_names_it in rendered | function EdgeStatus({ status = "SYNCED" }: { status?: "SYNCED" | "STALE" | "DEGRADED" }) {
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:389 (entry :389) token=STRUCTURED_JSON named_by=server_corpus in rendered | artifact_type: "STRUCTURED_JSON",
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:639 (entry :639) token=NEEDS_REVIEW named_by=server_corpus in rendered | const decision = draft?.smart_intake?.decision ?? "NEEDS_REVIEW";
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:649 (entry :649) token=AUTO_APPLY named_by=server_corpus in rendered | ["AUTO_APPLY", "APPLY_WITH_NOTICE"].includes(decision),
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:649 (entry :649) token=APPLY_WITH_NOTICE named_by=server_corpus in rendered | ["AUTO_APPLY", "APPLY_WITH_NOTICE"].includes(decision),
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:697 (entry :697) token=FLIGHT named_by=server_corpus in rendered | { value: "FLIGHT", label: t("inbox.typeFlight") },
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:701 (entry :701) token=RESERVATION named_by=server_corpus in rendered | { value: "RESERVATION", label: t("inbox.typeReservation") },
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:967 (entry :967) token=UNKNOWN named_by=server_corpus in rendered | { value: "UNKNOWN", label: t("inbox.roleUnknown") },
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:968 (entry :968) token=ARRIVAL named_by=server_corpus in rendered | { value: "ARRIVAL", label: t("inbox.roleArrival") },
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:969 (entry :969) token=MID_TRIP named_by=server_corpus in rendered | { value: "MID_TRIP", label: t("inbox.roleMidTrip") },
+REFUSE frontend/src/features/inbox/JourneyInboxWorkbench.tsx:970 (entry :970) token=DEPARTURE named_by=server_corpus in rendered | { value: "DEPARTURE", label: t("inbox.roleDeparture") },
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:46 (entry :46) token=ANSWERED named_by=server_corpus in rendered | | { state: "ANSWERED"; http_status: number; rows: GrantRow[] }
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:47 (entry :47) token=NOT_ANSWERED named_by=server_corpus in rendered | | { state: "NOT_ANSWERED"; http_status: number };
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:57 (entry :57) token=REVOKED named_by=server_corpus in rendered | | { kind: "REVOKED"; revokedAt: string | null }
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:59 (entry :59) token=NOT_ANSWERED named_by=server_corpus in rendered | | { kind: "NOT_ANSWERED"; httpStatus: number }
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:60 (entry :60) token=READ_FAILED named_by=this_file_names_it in rendered | | { kind: "READ_FAILED" };
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:79 (entry :79) token=NOT_ANSWERED named_by=server_corpus in rendered | USES.has(response.status)) return { state: "NOT_ANSWERED", http_status: response.status };
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:82 (entry :82) token=ANSWERED named_by=server_corpus in rendered |  state: "ANSWERED", http_status: response.status, rows: Array.isArray(rows) ? rows : [] };
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:100 (entry :100) token=READ_FAILED named_by=this_file_names_it in rendered | export function claimFromRead(read: GrantRead | { state: "READ_FAILED" }): CopyClaim {
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:101 (entry :101) token=READ_FAILED named_by=this_file_names_it in rendered | if (read.state === "READ_FAILED") return { kind: "READ_FAILED" };
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:102 (entry :102) token=NOT_ANSWERED named_by=server_corpus in rendered | d.state === "NOT_ANSWERED") return { kind: "NOT_ANSWERED", httpStatus: read.http_status };
+REFUSE frontend/src/features/inbox/shareGrantRead.ts:108 (entry :108) token=REVOKED named_by=server_corpus in rendered | return { kind: "REVOKED", revokedAt: rows[0]?.revoked_at ?? null };
+REFUSE frontend/src/features/pending/PendingSetPanel.tsx:78 (entry :78) token=COMMITMENT named_by=server_corpus in rendered | COMMITMENT: "pending.refuse.COMMITMENT",
+REFUSE frontend/src/features/pending/PendingSetPanel.tsx:79 (entry :79) token=NO_PLAN named_by=server_corpus in rendered | NO_PLAN: "pending.refuse.NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:21 (entry :21) token=WINDOW named_by=this_file_names_it in rendered | V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW: "WINDOW",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:22 (entry :22) token=WINDOW named_by=this_file_names_it in rendered | V13_CHECK_OUT_DEPARTURE_BUFFER: "WINDOW",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:23 (entry :23) token=WINDOW named_by=this_file_names_it in rendered | V13_INVALID_ANCHOR_WINDOW: "WINDOW",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:24 (entry :24) token=WINDOW named_by=this_file_names_it in rendered | V13_JOURNEY_DAYS_OUT_OF_BOUNDS: "WINDOW",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:25 (entry :25) token=COMMITMENT named_by=server_corpus in rendered | V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER: "COMMITMENT",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:26 (entry :26) token=COMMITMENT named_by=server_corpus in rendered | V13_COMMITMENT_ANCHOR_TOO_EARLY: "COMMITMENT",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:27 (entry :27) token=COMMITMENT named_by=server_corpus in rendered | V13_COMMITMENT_ANCHOR_DAY_CONFLICT: "COMMITMENT",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:28 (entry :28) token=COMMITMENT named_by=server_corpus in rendered | V13_COMMITMENT_OUTSIDE_OPENING_HOURS: "COMMITMENT",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:29 (entry :29) token=COMMITMENT named_by=server_corpus in rendered | V13_C4_ANCHOR_NOT_IN_INPUT: "COMMITMENT",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:30 (entry :30) token=NO_PLAN named_by=server_corpus in rendered | V13_DISCOVERY_COMPOSE_EMPTY: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:31 (entry :31) token=NO_PLAN named_by=server_corpus in rendered | V13_DISCOVERY_NO_FEASIBLE_PLACE_SET: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:32 (entry :32) token=NO_PLAN named_by=server_corpus in rendered | V13_DISCOVERY_NO_FEASIBLE_PLAN: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:33 (entry :33) token=NO_PLAN named_by=server_corpus in rendered | V13_AUTHORITATIVE_BOUNDED_MULTIDAY: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:34 (entry :34) token=NO_PLAN named_by=server_corpus in rendered | V13_STAY_CANDIDATE_UNAVAILABLE: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:35 (entry :35) token=NO_PLAN named_by=server_corpus in rendered | V13_STAY_CHECK_IN_OUTSIDE_JOURNEY: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:36 (entry :36) token=NO_PLAN named_by=server_corpus in rendered | V13_DAY_TRIP_CANNOT_SELECT_STAY: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:37 (entry :37) token=NO_PLAN named_by=server_corpus in rendered | V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR: "NO_PLAN",
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:125 (entry :125) token=NO_PLAN named_by=server_corpus in rendered | return { family: "NO_PLAN", rejection_code: "V13_DISCOVERY_COMPOSE_EMPTY" };
+REFUSE frontend/src/features/pending/pendingPlaceWrites.ts:125 (entry :125) token=V13_DISCOVERY_COMPOSE_EMPTY named_by=server_corpus in rendered | return { family: "NO_PLAN", rejection_code: "V13_DISCOVERY_COMPOSE_EMPTY" };
+REFUSE frontend/src/features/pending/pendingSet.ts:273 (entry :273) token=NOTHING_PICKED named_by=this_file_names_it in rendered | if (args.picked.length === 0) blocked = "NOTHING_PICKED";
+REFUSE frontend/src/features/pending/pendingSet.ts:274 (entry :274) token=PICK_HAS_NO_PLACE_ROW named_by=this_file_names_it in rendered | else if (pickWithoutRow) blocked = "PICK_HAS_NO_PLACE_ROW";
+REFUSE frontend/src/features/pending/pendingSet.ts:275 (entry :275) token=SET_TOO_SMALL named_by=this_file_names_it in rendered | else if (placeIds.length < 2) blocked = "SET_TOO_SMALL";
+REFUSE frontend/src/features/pending/pendingSet.ts:276 (entry :276) token=SET_TOO_LARGE named_by=this_file_names_it in rendered | else if (placeIds.length > MAX_COMPOSE_PLACES) blocked = "SET_TOO_LARGE";
+REFUSE frontend/src/features/planning/PlanWithAiSheet.tsx:116 (entry :116) token=CATALOG_EMPTY named_by=server_corpus in rendered | ATALOGUE_SHAPE_CODES = ["CATALOG_EMPTY", "CATALOG_INSUFFICIENT", "PLACES_NOT_IN_CATALOG"];
+REFUSE frontend/src/features/planning/PlanWithAiSheet.tsx:116 (entry :116) token=CATALOG_INSUFFICIENT named_by=server_corpus in rendered | ATALOGUE_SHAPE_CODES = ["CATALOG_EMPTY", "CATALOG_INSUFFICIENT", "PLACES_NOT_IN_CATALOG"];
+REFUSE frontend/src/features/planning/PlanWithAiSheet.tsx:116 (entry :116) token=PLACES_NOT_IN_CATALOG named_by=server_corpus in rendered | ATALOGUE_SHAPE_CODES = ["CATALOG_EMPTY", "CATALOG_INSUFFICIENT", "PLACES_NOT_IN_CATALOG"];
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:628 (entry :628) token=BLOCKED named_by=server_corpus in rendered | tus: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.status}`}`,
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:647 (entry :647) token=BLOCKED named_by=server_corpus in rendered | status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:647 (entry :647) token=CATALOG_INSUFFICIENT named_by=server_corpus in rendered | status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:706 (entry :706) token=COMPLETED named_by=server_corpus in rendered | status = "COMPLETED";
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:708 (entry :708) token=PLANS_WITHOUT_AI named_by=this_file_names_it in rendered | status = "PLANS_WITHOUT_AI";
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:710 (entry :710) token=BLOCKED named_by=server_corpus in rendered | status = `BLOCKED:${blockedCode}`;
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:712 (entry :712) token=SKIPPED_EXTERNAL_DEPENDENCY named_by=server_corpus in rendered | status = "SKIPPED_EXTERNAL_DEPENDENCY";
+REFUSE frontend/src/features/planning/aiGenerationRun.ts:763 (entry :763) token=NETWORK named_by=server_corpus in rendered | status: "NETWORK",
+REFUSE frontend/src/features/planning/planRanking.ts:14 (entry :14) token=EXPLICIT_FROZEN_FIXTURE named_by=server_corpus in rendered | t HARD_FEASIBLE_QUALITIES = ["EXPLICIT_FROZEN_FIXTURE", "LIVE_PROVIDER_CAPTURE"] as const;
+REFUSE frontend/src/features/planning/planRanking.ts:14 (entry :14) token=LIVE_PROVIDER_CAPTURE named_by=server_corpus in rendered | t HARD_FEASIBLE_QUALITIES = ["EXPLICIT_FROZEN_FIXTURE", "LIVE_PROVIDER_CAPTURE"] as const;
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:70 (entry :70) token=LOCAL_TEXT_PARSER named_by=server_corpus in rendered | source_channel: "LOCAL_TEXT_PARSER";
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:115 (entry :115) token=JOURNEY_NOT_FOUND named_by=server_corpus in rendered | "JOURNEY_NOT_FOUND",
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:116 (entry :116) token=NO_ACTIVE_PLAN named_by=server_corpus in rendered | "NO_ACTIVE_PLAN",
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:117 (entry :117) token=IMPORT_DAY_REQUIRED named_by=server_corpus in rendered | "IMPORT_DAY_REQUIRED",
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:118 (entry :118) token=IMPORT_PLACE_UNKNOWN named_by=server_corpus in rendered | "IMPORT_PLACE_UNKNOWN",
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:119 (entry :119) token=IMPORT_PLACE_NOT_VISITABLE named_by=server_corpus in rendered | "IMPORT_PLACE_NOT_VISITABLE",
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:139 (entry :139) token=UNNAMED_REFUSAL named_by=this_file_names_it in rendered | return { code: code ?? "UNNAMED_REFUSAL", status: cause.http_status };
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:141 (entry :141) token=NO_RESPONSE_FROM_ORIGIN named_by=this_file_names_it in rendered | return { code: "NO_RESPONSE_FROM_ORIGIN", status: null };
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:513 (entry :513) token=LOCAL_TEXT_PARSER named_by=server_corpus in rendered | ">{poiImportCopy(locale, CHANNEL_NAME[parsed?.source_channel ?? "LOCAL_TEXT_PARSER"])}</b>
+REFUSE frontend/src/features/poiimport/PoiImportPanel.tsx:519 (entry :519) token=LOCAL_TEXT_PARSER named_by=server_corpus in rendered | a-testid="poi-import-channel-token">{parsed?.source_channel ?? "LOCAL_TEXT_PARSER"}</code>
+REFUSE frontend/src/features/poster/posterShare.ts:46 (entry :46) token=CONFIRMED named_by=server_corpus in rendered | state: "CONFIRMED";
+REFUSE frontend/src/features/poster/posterShare.ts:114 (entry :114) token=ANSWERED named_by=server_corpus in rendered | | { state: "ANSWERED"; rows: GrantRow[]; http_status: number }
+REFUSE frontend/src/features/poster/posterShare.ts:115 (entry :115) token=REFUSED named_by=server_corpus in rendered | | { state: "REFUSED"; http_status: number | string; detail: string }
+REFUSE frontend/src/features/poster/posterShare.ts:120 (entry :120) token=REFUSED named_by=server_corpus in rendered | return { state: "REFUSED", http_status: read.http_status, detail: "" };
+REFUSE frontend/src/features/poster/posterShare.ts:122 (entry :122) token=ANSWERED named_by=server_corpus in rendered | return { state: "ANSWERED", rows: read.rows, http_status: read.http_status };
+REFUSE frontend/src/features/poster/posterShare.ts:125 (entry :125) token=REFUSED named_by=server_corpus in rendered | state: "REFUSED",
+REFUSE frontend/src/features/poster/posterShare.ts:150 (entry :150) token=READ_NOT_ANSWERED named_by=this_file_names_it in rendered | reason: "READ_NOT_ANSWERED",
+REFUSE frontend/src/features/poster/posterShare.ts:158 (entry :158) token=CONFIRMED named_by=server_corpus in rendered | state: "CONFIRMED",
+REFUSE frontend/src/features/poster/posterShare.ts:181 (entry :181) token=CREATE_REFUSED named_by=this_file_names_it in rendered | reason: "CREATE_REFUSED",
+REFUSE frontend/src/features/poster/posterShare.ts:193 (entry :193) token=NO_TOKEN named_by=this_file_names_it in rendered | reason: "NO_TOKEN",
+REFUSE frontend/src/features/poster/posterShare.ts:206 (entry :206) token=READ_NOT_ANSWERED named_by=this_file_names_it in rendered | reason: "READ_NOT_ANSWERED",
+REFUSE frontend/src/features/poster/posterShare.ts:215 (entry :215) token=NOT_IN_SERVER_READ named_by=this_file_names_it in rendered | reason: "NOT_IN_SERVER_READ",
+REFUSE frontend/src/features/poster/posterShare.ts:223 (entry :223) token=REVOKED_IN_SERVER_READ named_by=this_file_names_it in rendered | reason: "REVOKED_IN_SERVER_READ",
+REFUSE frontend/src/features/poster/posterShare.ts:230 (entry :230) token=CONFIRMED named_by=server_corpus in rendered | state: "CONFIRMED",
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:141 (entry :141) token=ACCEPTED named_by=server_corpus in rendered | , "REJECTED", "DECLINED", "SUPERSEDED"].includes(String(item.status ?? "").toUpperCase()),
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:141 (entry :141) token=REJECTED named_by=server_corpus in rendered | , "REJECTED", "DECLINED", "SUPERSEDED"].includes(String(item.status ?? "").toUpperCase()),
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:141 (entry :141) token=SUPERSEDED named_by=server_corpus in rendered | , "REJECTED", "DECLINED", "SUPERSEDED"].includes(String(item.status ?? "").toUpperCase()),
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:206 (entry :206) token=NO_SCENARIO named_by=server_corpus in rendered | zh: "台上没有场景：服务器回的是 NO_SCENARIO。先在产品里建一趟行程，或按下面的重置播一个演示场景。",
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:207 (entry :207) token=NO_SCENARIO named_by=server_corpus in rendered | e (the server answered NO_SCENARIO). Create a trip in the product, or re-seed one below.",
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:222 (entry :222) token=UNKNOWN named_by=server_corpus in rendered | 状态是 ${scene.scene?.journeyStatus ?? categoryLabel("UNKNOWN", zh)}）。先按上面「开始执行」，才会有可推进的游标。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:235 (entry :235) token=ACTIVE named_by=server_corpus in rendered | zh: "这趟还没有 ACTIVE 计划（服务器没返回计划版本），重规划需要它。",
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:236 (entry :236) token=ACTIVE named_by=server_corpus in rendered | TIVE plan on this journey (the server returned no plan version), and a replan needs one.",
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:281 (entry :281) token=COMPLETED named_by=server_corpus in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:281 (entry :281) token=SKIPPED named_by=server_corpus in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:281 (entry :281) token=CANCELLED named_by=server_corpus in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:339 (entry :339) token=PLANNED named_by=server_corpus in rendered | 始的行程上：这时按下去，服务器对清单上每个活动都回同一句“booking requires a PLANNED Journey”。要改已经开始的这一趟，请用下面「请求重规划」。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:340 (entry :340) token=PLANNED named_by=server_corpus in rendered | es a PLANNED Journey". To change a journey that has begun, use "Request a replan" below.`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:441 (entry :441) token=UNKNOWN named_by=server_corpus in rendered | 」（${refused.refused}）：这趟现在的状态是 ${advance.journeyStatus ?? categoryLabel("UNKNOWN", zh)}。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:446 (entry :446) token=UNKNOWN named_by=server_corpus in rendered | WN", zh)} · 计划 ${shortId(advance.selectedPlanVersionId)} · 用时 ${advance.totalMs ?? 0}ms。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:472 (entry :472) token=UNKNOWN named_by=server_corpus in rendered | anVersionId)}${report.advance?.totalMs != null ? ` · ${report.advance.totalMs}ms` : ""}。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:543 (entry :543) token=UNKNOWN named_by=server_corpus in rendered |  ?? categoryLabel("UNKNOWN", zh)} · 用时 ${report.advance?.totalMs ?? 0}ms。游标在哪一站，由它下面那行说。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:579 (entry :579) token=TRAFFIC_DELAY named_by=server_corpus in rendered | eventType: "TRAFFIC_DELAY",
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:622 (entry :622) token=ACCEPTED named_by=server_corpus in rendered | !["ACCEPTED", "REJECTED", "DECLINED", "SUPERSEDED"].includes(
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:622 (entry :622) token=REJECTED named_by=server_corpus in rendered | !["ACCEPTED", "REJECTED", "DECLINED", "SUPERSEDED"].includes(
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:622 (entry :622) token=SUPERSEDED named_by=server_corpus in rendered | !["ACCEPTED", "REJECTED", "DECLINED", "SUPERSEDED"].includes(
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:660 (entry :660) token=ACTIVE named_by=server_corpus in rendered | pted.proposal.id)}，新 ACTIVE 计划 ${shortId(accepted.twin.active_plan_version_id ?? null)}。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:661 (entry :661) token=ACTIVE named_by=server_corpus in rendered | proposal.id)}; new ACTIVE plan ${shortId(accepted.twin.active_plan_version_id ?? null)}.`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:702 (entry :702) token=OUTAGE named_by=server_corpus in rendered | ixture?.state ? t("simulation.now", { state: fixture.state }) : ""}。这只影响这台演示舞台，不是真实世界变了。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:703 (entry :703) token=OUTAGE named_by=server_corpus in rendered | on.now", { state: fixture.state }) : ""}. This moves the stage only, not the real world.`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:718 (entry :718) token=NORMAL named_by=server_corpus in rendered | 服务器把信号夹具设回 NORMAL${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}。`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:719 (entry :719) token=NORMAL named_by=server_corpus in rendered | fixture to NORMAL${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}.`,
+REFUSE frontend/src/features/simulation/SimulationPanel.tsx:1097 (entry :1097) token=STAGE_LIVE named_by=this_file_names_it in rendered | {dotState === "STAGE_LIVE" ? "a scenario is on stage" : "no scenario yet"}): ${declared}`;
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:68 (entry :68) token=NETWORK named_by=server_corpus in rendered | if (error instanceof TypeError) return { code: "NETWORK", status: 0 };
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:69 (entry :69) token=UNKNOWN named_by=server_corpus in rendered | return { code: "UNKNOWN", status: 0 };
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:77 (entry :76) token=CITYNEXUS_DEMO_MODE named_by=server_corpus in rendered | zh: () => "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:79 (entry :76) token=CITYNEXUS_DEMO_MODE named_by=server_corpus in rendered | (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted.",
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:175 (entry :175) token=MOBILITY_DATA_UNAVAILABLE named_by=server_corpus in rendered | 码：MOBILITY_DATA_UNAVAILABLE，证据状态 ${states}）。所以它没有算出任何替代方案，你现在的方案没有变化——这一步要接上真实的路线数据源才会通。`,
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:176 (entry :176) token=MOBILITY_DATA_UNAVAILABLE named_by=server_corpus in rendered |  your current plan is unchanged -- this step needs a real routing data source connected.`,
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:185 (entry :185) token=INVALID_ACTIVITY_TRANSITION named_by=server_corpus in rendered | 对（${code.replace("INVALID_ACTIVITY_TRANSITION:", "")}），活动状态没有被改动。上面那行会跟着服务器的状态换成它允许的那一步。`,
+REFUSE frontend/src/features/simulation/simulationAdapter.ts:186 (entry :186) token=INVALID_ACTIVITY_TRANSITION named_by=server_corpus in rendered | e activity is unchanged. The row above follows the server's state to the step it allows.`,
+REFUSE frontend/src/features/stay/HotelsPanel.tsx:47 (entry :47) token=STAY_ITINERARY_CONFLICT named_by=server_corpus in rendered | const EXPLAINABLE_REFUSALS = ["STAY_ITINERARY_CONFLICT", "STAY_PINNED_CONFLICT"];
+REFUSE frontend/src/features/studio/V12TripStudioPanel.tsx:24 (entry :24) token=PROTECTED_ACTIVITY_REORDER named_by=server_corpus in rendered | "PROTECTED_ACTIVITY_REORDER",
+REFUSE frontend/src/features/studio/V12TripStudioPanel.tsx:25 (entry :25) token=FROZEN_ROUTE_EVIDENCE_MISSING named_by=server_corpus in rendered | "FROZEN_ROUTE_EVIDENCE_MISSING",
+REFUSE frontend/src/features/studio/V12TripStudioPanel.tsx:26 (entry :26) token=FROZEN_EVIDENCE_INTEGRITY_MISMATCH named_by=server_corpus in rendered | "FROZEN_EVIDENCE_INTEGRITY_MISMATCH",
+REFUSE frontend/src/features/studio/V12TripStudioPanel.tsx:27 (entry :27) token=STALE_FROZEN_EVIDENCE named_by=server_corpus in rendered | "STALE_FROZEN_EVIDENCE",
+REFUSE frontend/src/features/studio/V12TripStudioPanel.tsx:28 (entry :28) token=INVALID_FROZEN_EVIDENCE_EXPIRY named_by=server_corpus in rendered | "INVALID_FROZEN_EVIDENCE_EXPIRY",
+REFUSE frontend/src/features/studio/V12TripStudioPanel.tsx:29 (entry :29) token=MOBILITY_DATA_UNAVAILABLE named_by=server_corpus in rendered | "MOBILITY_DATA_UNAVAILABLE",
+REFUSE frontend/src/features/trip/ActivityDetail.tsx:189 (entry :189) token=UNKNOWN named_by=server_corpus in rendered | knownFree ? "KNOWN_FREE" : knownPaid ? "KNOWN_PAID" : "UNKNOWN"
+REFUSE frontend/src/features/trip/calendarExport.ts:59 (entry :59) token=CALENDAR_JOURNEY_IN_RECYCLE_BIN named_by=server_corpus in rendered | "CALENDAR_JOURNEY_IN_RECYCLE_BIN",
+REFUSE frontend/src/features/trip/calendarExport.ts:60 (entry :60) token=JOURNEY_NOT_FOUND named_by=server_corpus in rendered | "JOURNEY_NOT_FOUND",
+REFUSE frontend/src/features/trip/calendarExport.ts:61 (entry :61) token=CALENDAR_SOURCE_UNREADABLE named_by=server_corpus in rendered | "CALENDAR_SOURCE_UNREADABLE",
+REFUSE frontend/src/features/trip/calendarExport.ts:103 (entry :103) token=UNRECOGNISED named_by=this_file_names_it in rendered | let refusal: CalendarRefusal = "UNRECOGNISED";
+REFUSE frontend/src/features/trip/calendarExport.ts:111 (entry :111) token=UNRECOGNISED named_by=this_file_names_it in rendered | refusal = "UNRECOGNISED";
+REFUSE frontend/src/features/trip/calendarExport.ts:119 (entry :119) token=NOT_CALENDAR_BYTES named_by=this_file_names_it in rendered | return { kind: "refused", refusal: "NOT_CALENDAR_BYTES", status: response.status };
+REFUSE frontend/src/features/trip/calendarExport.ts:125 (entry :125) token=NOT_CALENDAR_BYTES named_by=this_file_names_it in rendered | return { kind: "refused", refusal: "NOT_CALENDAR_BYTES", status: response.status };
+REFUSE frontend/src/features/trip/spendFacts.ts:108 (entry :108) token=BOOKING named_by=server_corpus in rendered | "BOOKING",
+REFUSE frontend/src/features/trip/spendFacts.ts:115 (entry :115) token=ACTIVE named_by=server_corpus in rendered | const LIVE_COMMITMENT_STATES = new Set(["ACTIVE", "FULFILLED"]);
+REFUSE frontend/src/features/trip/spendFacts.ts:115 (entry :115) token=FULFILLED named_by=server_corpus in rendered | const LIVE_COMMITMENT_STATES = new Set(["ACTIVE", "FULFILLED"]);
+REFUSE frontend/src/features/trip/spendFacts.ts:121 (entry :121) token=ESTIMATED named_by=server_corpus in rendered | if (status === "KNOWN") return "ESTIMATED";
+REFUSE frontend/src/features/trip/spendFacts.ts:122 (entry :122) token=ESTIMATED named_by=server_corpus in rendered | if (status === "ESTIMATED") return "ESTIMATED";
+REFUSE frontend/src/features/trip/spendFacts.ts:123 (entry :123) token=UNNAMED named_by=this_file_names_it in rendered | return "UNNAMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:127 (entry :127) token=CONFIRMED named_by=server_corpus in rendered | if (status === "CONFIRMED" && priceStatus === "KNOWN") return "CONFIRMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:128 (entry :128) token=CONFIRMED named_by=server_corpus in rendered | if (status === "CONFIRMED" && priceStatus === "FREE_KNOWN") return "CONFIRMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:129 (entry :129) token=ESTIMATED named_by=server_corpus in rendered | if (priceStatus === "ESTIMATED") return "ESTIMATED";
+REFUSE frontend/src/features/trip/spendFacts.ts:130 (entry :130) token=UNNAMED named_by=this_file_names_it in rendered | return "UNNAMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:135 (entry :135) token=CONFIRMED named_by=server_corpus in rendered | return "CONFIRMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:137 (entry :137) token=ESTIMATED named_by=server_corpus in rendered | if (valueStatus === "ESTIMATED") return "ESTIMATED";
+REFUSE frontend/src/features/trip/spendFacts.ts:138 (entry :138) token=UNNAMED named_by=this_file_names_it in rendered | if (LIVE_COMMITMENT_STATES.has(status) && ANCHORED_LEVELS.has(level)) return "UNNAMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:139 (entry :139) token=UNNAMED named_by=this_file_names_it in rendered | return "UNNAMED";
+REFUSE frontend/src/features/trip/spendFacts.ts:199 (entry :199) token=STAY_OPTION named_by=this_file_names_it in rendered | id: `STAY_OPTION:${chosen.id}`,
+REFUSE frontend/src/features/trip/spendFacts.ts:200 (entry :200) token=STAY_OPTION named_by=this_file_names_it in rendered | source: "STAY_OPTION",
+REFUSE frontend/src/features/trip/spendFacts.ts:201 (entry :201) token=UNNAMED named_by=this_file_names_it in rendered | strength: typeof total === "number" ? "ESTIMATED" : "UNNAMED",
+REFUSE frontend/src/features/trip/spendFacts.ts:214 (entry :214) token=RESERVATION named_by=server_corpus in rendered | id: `RESERVATION:${reservation.id}`,
+REFUSE frontend/src/features/trip/spendFacts.ts:215 (entry :215) token=RESERVATION named_by=server_corpus in rendered | source: "RESERVATION",
+REFUSE frontend/src/features/trip/spendFacts.ts:238 (entry :238) token=COMMITMENT named_by=server_corpus in rendered | id: `COMMITMENT:${commitment.id}`,
+REFUSE frontend/src/features/trip/spendFacts.ts:239 (entry :239) token=COMMITMENT named_by=server_corpus in rendered | source: "COMMITMENT",
+REFUSE frontend/src/generated/api.ts:3151 (entry :3151) token=IN_RECYCLE_BIN named_by=server_corpus in rendered | bin_state: "IN_RECYCLE_BIN";
+REFUSE frontend/src/generated/api.ts:3204 (entry :3204) token=FOREGROUND_WEB named_by=server_corpus in rendered | source: "FOREGROUND_WEB";
+REFUSE frontend/src/generated/api.ts:4137 (entry :4137) token=CITYNEXUS_DEMO_MODE named_by=server_corpus in rendered | flag?: "CITYNEXUS_DEMO_MODE";
+REFUSE frontend/src/i18n/LocaleContext.tsx:127 (entry :127) token=SYSTEM named_by=server_corpus in rendered | "nav.groupSystem": "SYSTEM",
+REFUSE frontend/src/i18n/LocaleContext.tsx:373 (entry :373) token=SELECTED named_by=server_corpus in rendered | "studio.selectedStay": "SELECTED STAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:375 (entry :375) token=SELECTED named_by=server_corpus in rendered | "studio.noStaySelected": "NO STAY SELECTED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:507 (entry :507) token=CONFIRMATION named_by=server_corpus in rendered | "bookings.importKicker": "IMPORT CONFIRMATION",
+REFUSE frontend/src/i18n/LocaleContext.tsx:522 (entry :522) token=OFFLINE named_by=server_corpus in rendered | "offline.readOnly": "OFFLINE · READ ONLY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:541 (entry :541) token=AUTHORIZED named_by=server_corpus in rendered | "me.preAuthorized": "PRE-AUTHORIZED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:609 (entry :609) token=SIMULATION named_by=server_corpus in rendered | "agent.simulationOnly": "SIMULATION ONLY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:683 (entry :683) token=REPLAY named_by=server_corpus in rendered | "discovery.sealedReplayReady": "SEALED REAL REPLAY READY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:683 (entry :683) token=SEALED named_by=server_corpus in rendered | "discovery.sealedReplayReady": "SEALED REAL REPLAY READY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:685 (entry :685) token=REPLAY named_by=server_corpus in rendered | "discovery.demoReplay": "DEMO REPLAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:687 (entry :687) token=DISCOVERY named_by=server_corpus in rendered | "discovery.brand": "CN / DISCOVERY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:713 (entry :713) token=REPLAY named_by=server_corpus in rendered | "discovery.sealedReal": "SEALED REAL REPLAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:713 (entry :713) token=SEALED named_by=server_corpus in rendered | "discovery.sealedReal": "SEALED REAL REPLAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:716 (entry :716) token=MOBILITY named_by=server_corpus in rendered | "discovery.mobility": "MOBILITY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:722 (entry :722) token=DEGRADED named_by=server_corpus in rendered | "discovery.mixedDegraded": "MIXED / DEGRADED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:814 (entry :814) token=OFFLINE named_by=server_corpus in rendered | "exec.offline": "OFFLINE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:822 (entry :822) token=JOURNEY named_by=server_corpus in rendered | "exec.authoritativeJourney": "AUTHORITATIVE JOURNEY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:836 (entry :836) token=EN_ROUTE named_by=server_corpus in rendered | "exec.markEnRoute": "Mark EN_ROUTE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:837 (entry :837) token=ARRIVED named_by=server_corpus in rendered | "exec.markArrived": "Mark ARRIVED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:838 (entry :838) token=IN_PROGRESS named_by=server_corpus in rendered | "exec.markInProgress": "Mark IN_PROGRESS",
+REFUSE frontend/src/i18n/LocaleContext.tsx:839 (entry :839) token=COMPLETED named_by=server_corpus in rendered | "exec.markCompleted": "Mark COMPLETED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:851 (entry :851) token=JOURNEY named_by=server_corpus in rendered | "exec.liveJourneyPrefix": "LIVE JOURNEY ·",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1043 (entry :1043) token=COMMITMENT named_by=server_corpus in rendered | "intel.commitment": "COMMITMENT",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1322 (entry :1322) token=PROTECTED named_by=server_corpus in rendered | "v14.kickerProtected": "PROTECTED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1338 (entry :1338) token=DEGRADED named_by=server_corpus in rendered | "v14.gateDegraded": "DEGRADED · confirmation",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1339 (entry :1339) token=PASSED named_by=server_corpus in rendered | "v14.gatePassed": "PASSED · provider facts frozen",
+REFUSE frontend/src/lib/budgetEvidence.ts:28 (entry :28) token=KNOWN_FREE named_by=server_corpus in rendered | const KNOWN_STATUSES = new Set(["KNOWN", "KNOWN_FREE", "KNOWN_PAID"]);
+REFUSE frontend/src/lib/budgetEvidence.ts:28 (entry :28) token=KNOWN_PAID named_by=server_corpus in rendered | const KNOWN_STATUSES = new Set(["KNOWN", "KNOWN_FREE", "KNOWN_PAID"]);
+REFUSE frontend/src/lib/budgetEvidence.ts:90 (entry :90) token=PARTIAL named_by=server_corpus in rendered | state = knownCount === totalCount && verifiedCount === totalCount ? "FULL" : "PARTIAL";
+REFUSE frontend/src/lib/displayVocabulary.ts:74 (entry :74) token=NOT_CONFIGURED named_by=server_corpus in rendered | const EXTRACTION_KEYS = ["READY", "NOT_CONFIGURED", "FAILED_EXTERNAL"] as const;
+REFUSE frontend/src/lib/displayVocabulary.ts:74 (entry :74) token=FAILED_EXTERNAL named_by=server_corpus in rendered | const EXTRACTION_KEYS = ["READY", "NOT_CONFIGURED", "FAILED_EXTERNAL"] as const;
+REFUSE frontend/src/lib/disruptionState.ts:23 (entry :23) token=RESOLVED named_by=server_corpus in rendered | const RESOLVING_STATUSES = new Set(["RESOLVED", "IGNORED"]);
+REFUSE frontend/src/lib/disruptionState.ts:23 (entry :23) token=IGNORED named_by=server_corpus in rendered | const RESOLVING_STATUSES = new Set(["RESOLVED", "IGNORED"]);
+REFUSE frontend/src/lib/executionWindow.ts:3 (entry :3) token=COMPLETED named_by=server_corpus in rendered | export const TERMINAL_ACTIVITY_STATES = new Set(["COMPLETED", "SKIPPED", "CANCELLED"]);
+REFUSE frontend/src/lib/executionWindow.ts:3 (entry :3) token=SKIPPED named_by=server_corpus in rendered | export const TERMINAL_ACTIVITY_STATES = new Set(["COMPLETED", "SKIPPED", "CANCELLED"]);
+REFUSE frontend/src/lib/executionWindow.ts:3 (entry :3) token=CANCELLED named_by=server_corpus in rendered | export const TERMINAL_ACTIVITY_STATES = new Set(["COMPLETED", "SKIPPED", "CANCELLED"]);
+REFUSE frontend/src/lib/failureAttribution.ts:143 (entry :143) token=NOT_FOUND named_by=server_corpus in rendered | const NOT_FOUND_CODES = ["NOT_FOUND", "RESOURCE_NOT_FOUND", "JOURNEY_NOT_FOUND"];
+REFUSE frontend/src/lib/failureAttribution.ts:143 (entry :143) token=JOURNEY_NOT_FOUND named_by=server_corpus in rendered | const NOT_FOUND_CODES = ["NOT_FOUND", "RESOURCE_NOT_FOUND", "JOURNEY_NOT_FOUND"];
+REFUSE frontend/src/lib/failureAttribution.ts:324 (entry :324) token=NOT_MEASURED named_by=server_corpus in rendered | export const NOT_MEASURED = "NOT_MEASURED";
+REFUSE frontend/src/lib/failureAttribution.ts:353 (entry :353) token=NOT_MEASURED named_by=server_corpus in rendered | (value === null || value === undefined || value === "") return `${field}=${NOT_MEASURED}`;
+REFUSE frontend/src/lib/failureAttribution.ts:555 (entry :555) token=READ_DEADLINE_SECONDS named_by=this_file_names_it in rendered | CONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
+REFUSE frontend/src/lib/failureAttribution.ts:562 (entry :562) token=READ_DEADLINE_SECONDS named_by=this_file_names_it in rendered | CONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
+REFUSE frontend/src/lib/journeyLink.ts:99 (entry :99) token=NO_JOURNEY named_by=this_file_names_it in rendered | if (buildJourneyLinkUrl(env.journeyId, env.origin) === null) return "NO_JOURNEY";
+REFUSE frontend/src/lib/journeyLink.ts:100 (entry :100) token=INSECURE_CONTEXT named_by=this_file_names_it in rendered | if (!env.isSecureContext) return "INSECURE_CONTEXT";
+REFUSE frontend/src/lib/journeyLink.ts:101 (entry :101) token=CLIPBOARD_UNAVAILABLE named_by=this_file_names_it in rendered | if (!env.clipboardAvailable) return "CLIPBOARD_UNAVAILABLE";
+REFUSE frontend/src/lib/journeyLink.ts:111 (entry :111) token=NO_JOURNEY named_by=this_file_names_it in rendered | if (url === null) return { ok: false, url: null, failure: "NO_JOURNEY" };
+REFUSE frontend/src/lib/journeyLink.ts:112 (entry :112) token=INSECURE_CONTEXT named_by=this_file_names_it in rendered | if (!env.isSecureContext) return { ok: false, url, failure: "INSECURE_CONTEXT" };
+REFUSE frontend/src/lib/journeyLink.ts:113 (entry :113) token=CLIPBOARD_UNAVAILABLE named_by=this_file_names_it in rendered | if (!env.clipboardAvailable) return { ok: false, url, failure: "CLIPBOARD_UNAVAILABLE" };
+REFUSE frontend/src/lib/journeyLink.ts:117 (entry :117) token=CLIPBOARD_UNAVAILABLE named_by=this_file_names_it in rendered | return { ok: false, url, failure: "CLIPBOARD_UNAVAILABLE" };
+REFUSE frontend/src/main.tsx:825 (entry :825) token=ACCEPTED named_by=server_corpus in rendered | actor.send({ type: "ACCEPTED" });
+REFUSE frontend/src/main.tsx:995 (entry :995) token=REJECTED named_by=server_corpus in rendered | actor.send({ type: "REJECTED" });
+REFUSE frontend/src/main.tsx:1043 (entry :1043) token=UNKNOWN named_by=server_corpus in rendered | {twin?.context.journey_status ?? "UNKNOWN"} · backend truth
+REFUSE frontend/src/main.tsx:1165 (entry :1165) token=WATCHING named_by=server_corpus in rendered | {guardianStatus?.latest?.decision ?? "WATCHING"}
+REFUSE frontend/src/main.tsx:1223 (entry :1223) token=NORMAL named_by=server_corpus in rendered | {guardianStatus?.signal_fixture?.state ?? "NORMAL"}
+REFUSE frontend/src/mocks/handlers.ts:4 (entry :4) token=NOT_STARTED named_by=server_corpus in rendered | "NOT_STARTED",
+REFUSE frontend/src/mocks/handlers.ts:5 (entry :5) token=EN_ROUTE named_by=server_corpus in rendered | "EN_ROUTE",
+REFUSE frontend/src/mocks/handlers.ts:6 (entry :6) token=ARRIVED named_by=server_corpus in rendered | "ARRIVED",
+REFUSE frontend/src/mocks/handlers.ts:7 (entry :7) token=IN_PROGRESS named_by=server_corpus in rendered | "IN_PROGRESS",
+REFUSE frontend/src/mocks/handlers.ts:8 (entry :8) token=ACTIVE named_by=server_corpus in rendered | "ACTIVE",
+REFUSE frontend/src/mocks/handlers.ts:9 (entry :9) token=COMPLETED named_by=server_corpus in rendered | "COMPLETED",
+REFUSE frontend/src/mocks/handlers.ts:10 (entry :10) token=SKIPPED named_by=server_corpus in rendered | "SKIPPED",
+REFUSE frontend/src/mocks/handlers.ts:22 (entry :21) token=IN_PROGRESS named_by=server_corpus in rendered | now_state: "IN_PROGRESS",
+REFUSE frontend/src/mocks/handlers.ts:23 (entry :21) token=NOT_STARTED named_by=server_corpus in rendered | next_state: "NOT_STARTED",
+REFUSE frontend/src/routes/v8Routes.ts:21 (entry :21) token=SYSTEM named_by=server_corpus in rendered | { key: "authoritative", label: "Recovery", icon: "spark", group: "SYSTEM" },
+REFUSE frontend/src/routes/v8Routes.ts:22 (entry :22) token=SYSTEM named_by=server_corpus in rendered | { key: "intelligence", label: "Intelligence", icon: "spark", group: "SYSTEM" },
+REFUSE frontend/src/routes/v8Routes.ts:23 (entry :23) token=SYSTEM named_by=server_corpus in rendered | { key: "twin", label: "Traveler Twin", icon: "calendar", group: "SYSTEM" },
+REFUSE frontend/src/routes/v8Routes.ts:28 (entry :28) token=SYSTEM named_by=server_corpus in rendered | { key: "trash", label: "Recycle bin", icon: "calendar", group: "SYSTEM" },
+REFUSE frontend/src/routes/v8Routes.ts:32 (entry :32) token=SYSTEM named_by=server_corpus in rendered | { key: "access", label: "Access", icon: "user", group: "SYSTEM" },
+REFUSE frontend/src/state/journeyModeMachine.ts:12 (entry :12) token=ACCEPTED named_by=server_corpus in rendered | | { type: "ACCEPTED" }
+REFUSE frontend/src/state/journeyModeMachine.ts:14 (entry :14) token=REJECTED named_by=server_corpus in rendered | | { type: "REJECTED" }
+REFUSE frontend/src/stories/CnxSelect.stories.tsx:20 (entry :20) token=FLIGHT named_by=server_corpus in rendered | { value: "FLIGHT", label: "Flight" },
+REFUSE frontend/src/stories/CnxSelect.stories.tsx:24 (entry :24) token=RESERVATION named_by=server_corpus in rendered | { value: "RESERVATION", label: "Reservation" },
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:5 (entry :5) token=NOT_STARTED named_by=server_corpus in rendered | "NOT_STARTED",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:6 (entry :6) token=EN_ROUTE named_by=server_corpus in rendered | "EN_ROUTE",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:7 (entry :7) token=ARRIVED named_by=server_corpus in rendered | "ARRIVED",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:8 (entry :8) token=IN_PROGRESS named_by=server_corpus in rendered | "IN_PROGRESS",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:9 (entry :9) token=ACTIVE named_by=server_corpus in rendered | "ACTIVE",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:10 (entry :10) token=COMPLETED named_by=server_corpus in rendered | "COMPLETED",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:11 (entry :11) token=SKIPPED named_by=server_corpus in rendered | "SKIPPED",
+REFUSE frontend/src/stories/V12ExecutionStates.stories.tsx:38 (entry :38) token=NOT_STARTED named_by=server_corpus in rendered | status: "NOT_STARTED" as const,
+INFO   frontend/src/api/candidateRejections.ts:1 slug=react-query
+INFO   frontend/src/api/candidateRejections.ts:85 slug=candidate-rejections
+INFO   frontend/src/api/useContinuationState.ts:1 slug=react-query
+INFO   frontend/src/api/useContinuationState.ts:37 slug=continuation-feed
+INFO   frontend/src/api/v10Execution.ts:2 slug=react-query
+INFO   frontend/src/api/v10Execution.ts:9 slug=execution-clock
+INFO   frontend/src/api/v10Execution.ts:39 slug=execution-clock
+INFO   frontend/src/api/v10Execution.ts:47 slug=web-observations
+INFO   frontend/src/api/v12Authoritative.ts:1 slug=react-query
+INFO   frontend/src/api/v12Authoritative.ts:19 slug=trip-studio
+INFO   frontend/src/api/v12Authoritative.ts:38 slug=authoritative-plans
+INFO   frontend/src/api/v12Authoritative.ts:46 slug=authoritative-twin
+INFO   frontend/src/api/v12Authoritative.ts:72 slug=authoritative-plans
+INFO   frontend/src/app/V8Experience.tsx:68 slug=traveler-twin
+INFO   frontend/src/app/V8Experience.tsx:1856 slug=failure-choose-journey
+INFO   frontend/src/app/V8Experience.tsx:1865 slug=failure-sign-in
+INFO   frontend/src/app/V8Experience.tsx:1876 slug=failure-retry-later
+INFO   frontend/src/app/V8Experience.tsx:1886 slug=failure-view-current-state
+INFO   frontend/src/app/V8Experience.tsx:1896 slug=failure-read-cached
+INFO   frontend/src/app/V8Experience.tsx:1904 slug=failure-retry
+INFO   frontend/src/app/V8Experience.tsx:2562 slug=drawer-entry
+INFO   frontend/src/app/V8Experience.tsx:2708 slug=trips-tab
+INFO   frontend/src/app/V8Experience.tsx:2713 slug=trips-tab
+INFO   frontend/src/app/V8Experience.tsx:2740 slug=trips-tab
+INFO   frontend/src/app/V8Experience.tsx:3169 slug=today-advisory
+INFO   frontend/src/app/V8Experience.tsx:4413 slug=map-stop
+INFO   frontend/src/app/V8Experience.tsx:4416 slug=map-stop
+INFO   frontend/src/app/V8Experience.tsx:4852 slug=booking-state
+INFO   frontend/src/app/v8PanelRegistry.tsx:21 slug=traveler-twin
+INFO   frontend/src/app/v8PanelRegistry.tsx:130 slug=plan-ranking
+INFO   frontend/src/app/v8PanelRegistry.tsx:132 slug=plan-ranking
+INFO   frontend/src/app/v8PanelRegistry.tsx:146 slug=pending-set
+INFO   frontend/src/app/v8PanelRegistry.tsx:148 slug=pending-set
+INFO   frontend/src/app/v8PanelRegistry.tsx:161 slug=trip-studio
+INFO   frontend/src/app/v8PanelRegistry.tsx:168 slug=stay-explorer
+INFO   frontend/src/app/v8PanelRegistry.tsx:183 slug=prep-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:211 slug=poi-import
+INFO   frontend/src/app/v8PanelRegistry.tsx:213 slug=poi-import
+INFO   frontend/src/app/v8PanelRegistry.tsx:242 slug=collection-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:252 slug=live-recovery
+INFO   frontend/src/app/v8PanelRegistry.tsx:281 slug=maplibre-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:286 slug=trips-activity-detail
+INFO   frontend/src/app/v8PanelRegistry.tsx:288 slug=activity-detail
+INFO   frontend/src/app/v8PanelRegistry.tsx:312 slug=trips-workspace
+INFO   frontend/src/app/v8PanelRegistry.tsx:314 slug=trips-tabs
+INFO   frontend/src/app/v8PanelRegistry.tsx:321 slug=inbox-pending-queue
+INFO   frontend/src/app/v8PanelRegistry.tsx:343 slug=runtime-status
+INFO   frontend/src/app/v8PanelRegistry.tsx:363 slug=authoritative-page
+INFO   frontend/src/app/v8PanelRegistry.tsx:387 slug=journey-trash-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:402 slug=access-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:415 slug=footprint-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:437 slug=trips-poster-entry
+INFO   frontend/src/app/v8PanelRegistry.tsx:438 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:439 slug=trip-poster-bar
+INFO   frontend/src/app/v8PanelRegistry.tsx:449 slug=trips-abort
+INFO   frontend/src/app/v8PanelRegistry.tsx:450 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:451 slug=journey-abort
+INFO   frontend/src/app/v8PanelRegistry.tsx:461 slug=trips-ai-work
+INFO   frontend/src/app/v8PanelRegistry.tsx:462 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:463 slug=trip-ai-work
+INFO   frontend/src/app/v8PanelRegistry.tsx:470 slug=trips-itinerary
+INFO   frontend/src/app/v8PanelRegistry.tsx:471 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:472 slug=trip-itinerary
+INFO   frontend/src/app/v8PanelRegistry.tsx:484 slug=trips-stay
+INFO   frontend/src/app/v8PanelRegistry.tsx:485 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:486 slug=hotels-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:491 slug=trips-bookings
+INFO   frontend/src/app/v8PanelRegistry.tsx:492 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:493 slug=trips-commitments
+INFO   frontend/src/app/v8PanelRegistry.tsx:517 slug=trips-spend
+INFO   frontend/src/app/v8PanelRegistry.tsx:518 slug=trips-tab
+INFO   frontend/src/app/v8PanelRegistry.tsx:519 slug=trips-spend
+INFO   frontend/src/app/v8PanelRegistry.tsx:534 slug=auth-recovery-required
+INFO   frontend/src/app/v8PanelRegistry.tsx:536 slug=recovery-required-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:550 slug=auth-no-plan
+INFO   frontend/src/app/v8PanelRegistry.tsx:557 slug=auth-plan-version-history
+INFO   frontend/src/app/v8PanelRegistry.tsx:559 slug=plan-version-history
+INFO   frontend/src/app/v8PanelRegistry.tsx:564 slug=auth-journey
+INFO   frontend/src/app/v8PanelRegistry.tsx:566 slug=authoritative-panel
+INFO   frontend/src/app/v8PanelRegistry.tsx:579 slug=auth-trip-studio
+INFO   frontend/src/app/v8PanelRegistry.tsx:581 slug=trip-studio
+INFO   frontend/src/app/v8PanelRegistry.tsx:588 slug=auth-preventive
+INFO   frontend/src/app/v8PanelRegistry.tsx:595 slug=auth-recovery-truth
+INFO   frontend/src/app/v8PanelRegistry.tsx:597 slug=recovery-truth
+INFO   frontend/src/app/v8PanelRegistry.tsx:624 slug=hub-pretrip-checklist
+INFO   frontend/src/app/v8PanelRegistry.tsx:625 slug=hub-anchor
+INFO   frontend/src/app/v8PanelRegistry.tsx:626 slug=pretrip-checklist
+INFO   frontend/src/components/Badge.tsx:95 slug=cn-badge
+INFO   frontend/src/components/Badge.tsx:95 slug=cn-badge
+INFO   frontend/src/components/Badge.tsx:95 slug=cn-badge
+INFO   frontend/src/components/CnxMeasuredFacts.tsx:66 slug=receipt-fold
+INFO   frontend/src/components/CnxMeasuredFacts.tsx:67 slug=receipt-summary
+INFO   frontend/src/components/CnxSelect.tsx:2 slug=cnx-select
+INFO   frontend/src/components/CnxSelect.tsx:27 slug=data-testid
+INFO   frontend/src/components/CnxSelect.tsx:68 slug=data-testid
+INFO   frontend/src/components/CnxSelect.tsx:110 slug=cnx-select
+INFO   frontend/src/components/CnxSelect.tsx:249 slug=cnx-select
+INFO   frontend/src/components/CnxSelect.tsx:249 slug=cnx-select
+INFO   frontend/src/components/JourneyMap.tsx:2 slug=maplibre-gl
+INFO   frontend/src/components/JourneyMap.tsx:3 slug=maplibre-gl
+INFO   frontend/src/components/JourneyMap.tsx:10 slug=map-attribution
+INFO   frontend/src/components/JourneyMap.tsx:86 slug=client-place-fallback
+INFO   frontend/src/components/JourneyMap.tsx:95 slug=client-place-fallback
+INFO   frontend/src/components/JourneyMap.tsx:127 slug=citynexus-old-route
+INFO   frontend/src/components/JourneyMap.tsx:129 slug=citynexus-old-route
+INFO   frontend/src/components/JourneyMap.tsx:143 slug=citynexus-disruption-scope-fill
+INFO   frontend/src/components/JourneyMap.tsx:145 slug=citynexus-disruption-scope
+INFO   frontend/src/components/JourneyMap.tsx:149 slug=citynexus-disruption-scope-line
+INFO   frontend/src/components/JourneyMap.tsx:151 slug=citynexus-disruption-scope
+INFO   frontend/src/components/JourneyMap.tsx:161 slug=citynexus-new-route
+INFO   frontend/src/components/JourneyMap.tsx:163 slug=citynexus-new-route
+INFO   frontend/src/components/JourneyMap.tsx:204 slug=citynexus-activity-points
+INFO   frontend/src/components/JourneyMap.tsx:206 slug=citynexus-activities
+INFO   frontend/src/components/JourneyMap.tsx:225 slug=citynexus-activity-labels
+INFO   frontend/src/components/JourneyMap.tsx:227 slug=citynexus-activities
+INFO   frontend/src/components/JourneyMap.tsx:245 slug=citynexus-marker-points
+INFO   frontend/src/components/JourneyMap.tsx:247 slug=citynexus-markers
+INFO   frontend/src/components/PlaceProvenance.tsx:62 slug=place-provenance
+INFO   frontend/src/components/PoiCandidateCard.tsx:7 slug=discovery-batch
+INFO   frontend/src/components/PoiCandidateCard.tsx:110 slug=pick-box
+INFO   frontend/src/components/ProductErrorBoundary.tsx:139 slug=pre-wrap
+INFO   frontend/src/components/v8/MapPanel.tsx:2 slug=maplibre-gl
+INFO   frontend/src/components/v8/MapPanel.tsx:10 slug=map-attribution
+INFO   frontend/src/components/v8/MapPanel.tsx:11 slug=map-selection
+INFO   frontend/src/components/v8/MapPanel.tsx:12 slug=map-stop-labels
+INFO   frontend/src/components/v8/MapPanel.tsx:457 slug=open-street-map
+INFO   frontend/src/components/v8/MapPanel.tsx:459 slug=open-street-map
+INFO   frontend/src/components/v8/MapPanel.tsx:465 slug=journey-provider-route-casing
+INFO   frontend/src/components/v8/MapPanel.tsx:467 slug=journey-provider-route
+INFO   frontend/src/components/v8/MapPanel.tsx:483 slug=journey-provider-route
+INFO   frontend/src/components/v8/MapPanel.tsx:485 slug=journey-provider-route
+INFO   frontend/src/components/v8/MapPanel.tsx:571 slug=map-marker
+INFO   frontend/src/components/v8/MapPanel.tsx:607 slug=map-stop-label
+INFO   frontend/src/components/v8/MapPanel.tsx:634 slug=map-marker
+INFO   frontend/src/components/v8/MapPanel.tsx:763 slug=on-target
+INFO   frontend/src/components/v8/MapPanel.tsx:844 slug=map-stamp-date
+INFO   frontend/src/components/v8/MapPanel.tsx:882 slug=data-testid,map-attribution
+INFO   frontend/src/components/v8/MapPanel.tsx:883 slug=map-overlay-stack
+INFO   frontend/src/components/v8/MapPanel.tsx:884 slug=map-caption
+INFO   frontend/src/components/v8/MapPanel.tsx:885 slug=map-tile-notice
+INFO   frontend/src/components/v8/MapPanel.tsx:889 slug=map-degraded
+INFO   frontend/src/components/v8/MapPanel.tsx:890 slug=data-testid,map-gesture-hint
+INFO   frontend/src/components/v8/MapPanel.tsx:891 slug=data-testid,map-viewport-reset
+INFO   frontend/src/components/v8/MapViewportControls.tsx:2 slug=map-controls
+INFO   frontend/src/demo/goldenScenario.ts:102 slug=frontend-agent-request
+INFO   frontend/src/demo/goldenScenario.ts:103 slug=frontend-agent
+INFO   frontend/src/features/abort/JourneyAbortPanel.tsx:83 slug=reason-missing
+INFO   frontend/src/features/abort/JourneyAbortPanel.tsx:92 slug=at-missing
+INFO   frontend/src/features/abort/journeyAbortCopy.ts:27 slug=un-aborts
+INFO   frontend/src/features/access/AccessPanel.tsx:549 slug=access-sort-tier
+INFO   frontend/src/features/access/AccessPanel.tsx:584 slug=access-no-tier
+INFO   frontend/src/features/access/AccessPanel.tsx:651 slug=access-trip-open
+INFO   frontend/src/features/access/accessCopy.ts:76 slug=trip-list
+INFO   frontend/src/features/access/accessCopy.ts:119 slug=role-change
+INFO   frontend/src/features/access/accessCopy.ts:121 slug=role-change
+INFO   frontend/src/features/access/accessCopy.ts:149 slug=gain-or-loss
+INFO   frontend/src/features/access/accessCopy.ts:196 slug=link-readable
+INFO   frontend/src/features/access/accessCopy.ts:219 slug=link-readable
+INFO   frontend/src/features/access/accessDoors.ts:32 slug=agent-feed
+INFO   frontend/src/features/access/accessDoors.ts:39 slug=share-grants
+INFO   frontend/src/features/access/accessDoors.ts:273 slug=member-role-limits
+INFO   frontend/src/features/agent/AgentComposer.tsx:206 slug=copilot-message
+INFO   frontend/src/features/agent/AgentRunRail.tsx:17 slug=cn-agent-step
+INFO   frontend/src/features/agent/AgentWorkFeedPanel.tsx:106 slug=agent-work-entry
+INFO   frontend/src/features/agent/AgentWorkFeedPanel.tsx:110 slug=trip-ai-work
+INFO   frontend/src/features/agent/AgentWorkFeedPanel.tsx:209 slug=cn-agent-work
+INFO   frontend/src/features/agent/CopilotDock.tsx:401 slug=cn-native-mission
+INFO   frontend/src/features/agent/CopilotDock.tsx:425 slug=agent-history-error
+INFO   frontend/src/features/agent/CopilotDock.tsx:624 slug=data-testid,plan-ai-sheet
+INFO   frontend/src/features/agent/CopilotDock.tsx:625 slug=sheet-backdrop
+INFO   frontend/src/features/agent/CopilotDock.tsx:626 slug=drawer-backdrop
+INFO   frontend/src/features/agent/CopilotDock.tsx:627 slug=data-testid,live-proposal
+INFO   frontend/src/features/agent/CopilotDock.tsx:628 slug=agent-work-feed,data-testid
+INFO   frontend/src/features/agent/CopilotDock.tsx:876 slug=cn-copilot-dock,idle-compact,yield-at-rest,yield-to-surface
+INFO   frontend/src/features/agent/CopilotDock.tsx:918 slug=cn-copilot-bubble
+INFO   frontend/src/features/checklist/PretripChecklistPanel.tsx:95 slug=pretrip-goto
+INFO   frontend/src/features/discovery/DestinationPreparationPanel.tsx:254 slug=as-is
+INFO   frontend/src/features/discovery/DestinationPreparationPanel.tsx:321 slug=as-is
+INFO   frontend/src/features/discovery/DestinationPreparationPanel.tsx:569 slug=prep-job
+INFO   frontend/src/features/discovery/PrepAbandonSurvey.tsx:64 slug=prep-survey-reason
+INFO   frontend/src/features/discovery/PrepAbandonSurvey.tsx:68 slug=prep-survey-reason-label
+INFO   frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:14 slug=discovery-batch
+INFO   frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:499 slug=stay-card
+INFO   frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:510 slug=pick-box
+INFO   frontend/src/features/discovery/prepFailureCopy.ts:65 slug=mid-run
+INFO   frontend/src/features/estimation/EstimationLadderPanel.tsx:68 slug=ladder-rung
+INFO   frontend/src/features/estimation/estimationLadderCopy.ts:54 slug=re-checked
+INFO   frontend/src/features/estimation/estimationLadderCopy.ts:56 slug=re-checked
+INFO   frontend/src/features/execution/V10LiveExecutionPanel.tsx:7 slug=lucide-react
+INFO   frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:2 slug=lucide-react
+INFO   frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:133 slug=activity-row
+INFO   frontend/src/features/execution/V12StatePrimitives.tsx:2 slug=lucide-react
+INFO   frontend/src/features/execution/V12StatePrimitives.tsx:39 slug=impact-card
+INFO   frontend/src/features/execution/V12StatePrimitives.tsx:43 slug=risk-banner
+INFO   frontend/src/features/inbox/JourneyInboxWorkbench.tsx:401 slug=manual-entry
+INFO   frontend/src/features/inbox/JourneyInboxWorkbench.tsx:1000 slug=inbox-clear
+INFO   frontend/src/features/inbox/JourneyLinkAction.tsx:130 slug=primary-button
+INFO   frontend/src/features/inbox/shareGrantRead.ts:22 slug=share-grants
+INFO   frontend/src/features/inbox/shareGrantRead.ts:77 slug=no-store
+INFO   frontend/src/features/intelligence/ControlTowerPanel.tsx:46 slug=status-pill
+INFO   frontend/src/features/mobility/MobilitySheet.tsx:16 slug=mode-option
+INFO   frontend/src/features/pending/PendingSetPanel.tsx:344 slug=cn-pending-chip
+INFO   frontend/src/features/pending/PendingSetPanel.tsx:361 slug=cn-pending-chip
+INFO   frontend/src/features/pending/PendingSetPanel.tsx:411 slug=cn-pending-tick
+INFO   frontend/src/features/pending/PendingSetPanel.tsx:649 slug=pending-places-facts
+INFO   frontend/src/features/pending/pendingSetCopy.ts:30 slug=bring-it-back
+INFO   frontend/src/features/pending/pendingSetCopy.ts:86 slug=day-by-day
+INFO   frontend/src/features/pending/pendingSetCopy.ts:87 slug=day-by-day
+INFO   frontend/src/features/planning/PlanComparison.tsx:191 slug=plan-cmp-band
+INFO   frontend/src/features/planning/PlanRankingPanel.tsx:177 slug=rank-filter
+INFO   frontend/src/features/planning/PlanRankingPanel.tsx:243 slug=rank-sort
+INFO   frontend/src/features/planning/PlanRankingPanel.tsx:257 slug=rank-grip
+INFO   frontend/src/features/planning/PlanRankingPanel.tsx:290 slug=rank-cell
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:125 slug=another-city
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:130 slug=another-city
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:135 slug=another-city
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:145 slug=another-city
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:783 slug=plan-ai-preflight
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:925 slug=plan-ai-result
+INFO   frontend/src/features/planning/PlanWithAiSheet.tsx:1046 slug=content-type
+INFO   frontend/src/features/planning/planRankingColumns.ts:126 slug=sans-serif
+INFO   frontend/src/features/planning/planRankingColumns.ts:165 slug=column-widths,plan-ranking
+INFO   frontend/src/features/planning/planRankingCopy.ts:45 slug=double-click
+INFO   frontend/src/features/poiimport/PoiImportPanel.tsx:19 slug=poi-import
+INFO   frontend/src/features/poiimport/PoiImportPanel.tsx:590 slug=pick-box,poi-import-select-all
+INFO   frontend/src/features/poiimport/poiImportCopy.ts:223 slug=third-party
+INFO   frontend/src/features/poster/SharedPosterScreen.tsx:33 slug=trip-poster
+INFO   frontend/src/features/poster/SharedPosterScreen.tsx:35 slug=citynexus-shared-poster
+INFO   frontend/src/features/poster/SharedPosterScreen.tsx:281 slug=cn-poster-page
+INFO   frontend/src/features/poster/SharedPosterScreen.tsx:282 slug=shared-poster-page
+INFO   frontend/src/features/poster/SharedPosterScreen.tsx:299 slug=shared-poster-day
+INFO   frontend/src/features/poster/TripPosterPanel.tsx:26 slug=trip-poster
+INFO   frontend/src/features/poster/TripPosterPanel.tsx:28 slug=citynexus-trip-poster
+INFO   frontend/src/features/poster/TripPosterPanel.tsx:176 slug=cn-poster-page
+INFO   frontend/src/features/poster/TripPosterPanel.tsx:177 slug=poster-page
+INFO   frontend/src/features/poster/TripPosterPanel.tsx:197 slug=poster-day
+INFO   frontend/src/features/poster/TripPosterPanel.tsx:263 slug=cn-poster-outcome
+INFO   frontend/src/features/poster/posterCanvas.ts:80 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:81 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:82 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:83 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:84 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:85 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:86 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:87 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:88 slug=cn-r-card
+INFO   frontend/src/features/poster/posterCanvas.ts:89 slug=cn-fs-caption
+INFO   frontend/src/features/poster/posterCanvas.ts:90 slug=cn-fs-meta
+INFO   frontend/src/features/poster/posterCanvas.ts:91 slug=cn-fs-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:92 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:93 slug=cn-fs-title
+INFO   frontend/src/features/poster/posterCanvas.ts:96 slug=cn-lh-body
+INFO   frontend/src/features/poster/posterCanvas.ts:100 slug=cn-canvas
+INFO   frontend/src/features/poster/posterCanvas.ts:101 slug=cn-surface
+INFO   frontend/src/features/poster/posterCanvas.ts:102 slug=cn-ink
+INFO   frontend/src/features/poster/posterCanvas.ts:103 slug=cn-ink-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:104 slug=cn-ink-tertiary
+INFO   frontend/src/features/poster/posterCanvas.ts:105 slug=cn-hairline
+INFO   frontend/src/features/poster/posterCanvas.ts:134 slug=cn-canvas
+INFO   frontend/src/features/poster/posterCanvas.ts:231 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:233 slug=cn-lh-body
+INFO   frontend/src/features/poster/posterCanvas.ts:234 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:260 slug=cn-fs-caption
+INFO   frontend/src/features/poster/posterCanvas.ts:260 slug=cn-ink-tertiary
+INFO   frontend/src/features/poster/posterCanvas.ts:261 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:262 slug=cn-fs-title
+INFO   frontend/src/features/poster/posterCanvas.ts:262 slug=cn-ink
+INFO   frontend/src/features/poster/posterCanvas.ts:263 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:264 slug=cn-fs-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:264 slug=cn-ink-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:265 slug=cn-fs-meta
+INFO   frontend/src/features/poster/posterCanvas.ts:265 slug=cn-ink-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:266 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:270 slug=cn-fs-meta
+INFO   frontend/src/features/poster/posterCanvas.ts:277 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:282 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:283 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:284 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:286 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:288 slug=cn-fs-caption
+INFO   frontend/src/features/poster/posterCanvas.ts:290 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:295 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:296 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:298 slug=cn-ink
+INFO   frontend/src/features/poster/posterCanvas.ts:303 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:304 slug=cn-fs-caption
+INFO   frontend/src/features/poster/posterCanvas.ts:306 slug=cn-ink-tertiary
+INFO   frontend/src/features/poster/posterCanvas.ts:308 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:310 slug=cn-fs-card
+INFO   frontend/src/features/poster/posterCanvas.ts:310 slug=cn-ink
+INFO   frontend/src/features/poster/posterCanvas.ts:311 slug=cn-fs-caption
+INFO   frontend/src/features/poster/posterCanvas.ts:311 slug=cn-ink-tertiary
+INFO   frontend/src/features/poster/posterCanvas.ts:313 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:317 slug=cn-fs-meta
+INFO   frontend/src/features/poster/posterCanvas.ts:321 slug=cn-fs-meta
+INFO   frontend/src/features/poster/posterCanvas.ts:322 slug=cn-fs-meta
+INFO   frontend/src/features/poster/posterCanvas.ts:324 slug=cn-ink-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:326 slug=cn-fs-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:328 slug=cn-fs-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:333 slug=cn-fs-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:334 slug=cn-fs-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:336 slug=cn-ink
+INFO   frontend/src/features/poster/posterCanvas.ts:339 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:342 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:343 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:351 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:352 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:354 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:360 slug=cn-fs-caption
+INFO   frontend/src/features/poster/posterCanvas.ts:362 slug=cn-ink-secondary
+INFO   frontend/src/features/poster/posterCanvas.ts:366 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:406 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:471 slug=cn-canvas
+INFO   frontend/src/features/poster/posterCanvas.ts:477 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:479 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:481 slug=cn-r-card
+INFO   frontend/src/features/poster/posterCanvas.ts:483 slug=cn-surface
+INFO   frontend/src/features/poster/posterCanvas.ts:485 slug=cn-hairline
+INFO   frontend/src/features/poster/posterCanvas.ts:491 slug=cn-hairline
+INFO   frontend/src/features/poster/posterCanvas.ts:494 slug=cn-s
+INFO   frontend/src/features/poster/posterCanvas.ts:495 slug=cn-s
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:517 slug=review-edit
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:537 slug=trial-city
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:538 slug=trial-arrival
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:539 slug=trial-departure
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:540 slug=trial-party
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:541 slug=trial-budget
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:542 slug=trial-pace-fieldset
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:543 slug=trial-interests-fieldset
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:544 slug=trial-special
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:547 slug=auto-set
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:547 slug=trial-show-advanced
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:887 slug=trial-city
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:890 slug=trial-arrival
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:893 slug=trial-departure
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:988 slug=trial-step
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1077 slug=trial-supported-group
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1082 slug=trial-supported-group-rule
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1088 slug=trial-supported-none
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1097 slug=trial-supported-row
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1109 slug=trial-supported-identity
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1116 slug=trial-supported-fields
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1151 slug=trial-required-hint
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1180 slug=trial-required-hint
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1335 slug=trial-pace
+INFO   frontend/src/features/setup/JourneyTrialSetup.tsx:1355 slug=trial-interest
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:2 slug=react-dom
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:3 slug=react-query
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:116 slug=sim-stage-plan
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:126 slug=sim-replans
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:179 slug=authoritative-twin
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:182 slug=sim-stage-plan
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:185 slug=sim-replans
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:284 slug=sim-stage-journey
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:290 slug=sim-stage-city-services
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:295 slug=sim-stage-bookable
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:404 slug=re-seeding
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:442 slug=re-seeded
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:447 slug=re-seeded
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:586 slug=server-side
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:619 slug=sim-replans
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:870 slug=sim-reason
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:885 slug=sim-action
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:919 slug=sim-blocked
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:932 slug=cn-sim-refusal
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:975 slug=mobile-nav
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:975 slug=cn-copilot-dock
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:975 slug=trial-sticky-cta
+INFO   frontend/src/features/simulation/simulationAdapter.ts:429 slug=simulation-panel
+INFO   frontend/src/features/stay/HotelsPanel.tsx:161 slug=provider-backed
+INFO   frontend/src/features/stay/HotelsPanel.tsx:219 slug=hotel-card
+INFO   frontend/src/features/stay/StayExplorer.tsx:127 slug=re-read
+INFO   frontend/src/features/stay/StayExplorer.tsx:162 slug=stay-card
+INFO   frontend/src/features/stay/StayExplorer.tsx:417 slug=check-in,check-out
+INFO   frontend/src/features/studio/SortableActivityList.tsx:10 slug=dnd-kit
+INFO   frontend/src/features/studio/SortableActivityList.tsx:17 slug=dnd-kit
+INFO   frontend/src/features/studio/SortableActivityList.tsx:18 slug=dnd-kit
+INFO   frontend/src/features/studio/V12TripStudioPanel.tsx:2 slug=lucide-react
+INFO   frontend/src/features/studio/planVersionHistoryCopy.ts:26 slug=read-only
+INFO   frontend/src/features/trash/journeyTrash.ts:41 slug=recycle-bin
+INFO   frontend/src/features/trash/journeyTrash.ts:51 slug=recycle-bin
+INFO   frontend/src/features/trash/journeyTrashCopy.ts:67 slug=read-only
+INFO   frontend/src/features/trip/TripItinerary.tsx:444 slug=trip-day
+INFO   frontend/src/features/trip/TripItinerary.tsx:471 slug=trip-stop
+INFO   frontend/src/generated/api.ts:1383 slug=authoritative-compose
+INFO   frontend/src/generated/api.ts:1419 slug=trip-studio
+INFO   frontend/src/generated/api.ts:1455 slug=trip-studio
+INFO   frontend/src/generated/api.ts:3733 slug=open-meteo
+INFO   frontend/src/generated/api.ts:4825 slug=no-cache
+INFO   frontend/src/i18n/LocaleContext.tsx:35 slug=re-ask
+INFO   frontend/src/i18n/LocaleContext.tsx:138 slug=read-only
+INFO   frontend/src/i18n/LocaleContext.tsx:155 slug=day-by-day
+INFO   frontend/src/i18n/LocaleContext.tsx:159 slug=server-side
+INFO   frontend/src/i18n/LocaleContext.tsx:259 slug=leave-now
+INFO   frontend/src/i18n/LocaleContext.tsx:275 slug=evidence-backed
+INFO   frontend/src/i18n/LocaleContext.tsx:316 slug=weather-aware
+INFO   frontend/src/i18n/LocaleContext.tsx:366 slug=multi-day
+INFO   frontend/src/i18n/LocaleContext.tsx:400 slug=multi-day
+INFO   frontend/src/i18n/LocaleContext.tsx:407 slug=leave-by
+INFO   frontend/src/i18n/LocaleContext.tsx:464 slug=re-asks
+INFO   frontend/src/i18n/LocaleContext.tsx:465 slug=re-ask
+INFO   frontend/src/i18n/LocaleContext.tsx:565 slug=what-if
+INFO   frontend/src/i18n/LocaleContext.tsx:584 slug=what-if
+INFO   frontend/src/i18n/LocaleContext.tsx:656 slug=read-back
+INFO   frontend/src/i18n/LocaleContext.tsx:658 slug=read-back
+INFO   frontend/src/i18n/LocaleContext.tsx:664 slug=read-back
+INFO   frontend/src/i18n/LocaleContext.tsx:689 slug=server-known
+INFO   frontend/src/i18n/LocaleContext.tsx:718 slug=fact-level
+INFO   frontend/src/i18n/LocaleContext.tsx:732 slug=provider-grounded
+INFO   frontend/src/i18n/LocaleContext.tsx:743 slug=rain-friendly
+INFO   frontend/src/i18n/LocaleContext.tsx:779 slug=mid-run
+INFO   frontend/src/i18n/LocaleContext.tsx:882 slug=auto-apply
+INFO   frontend/src/i18n/LocaleContext.tsx:904 slug=share-grant
+INFO   frontend/src/i18n/LocaleContext.tsx:1001 slug=policy-gated
+INFO   frontend/src/i18n/LocaleContext.tsx:1002 slug=auto-accept
+INFO   frontend/src/i18n/LocaleContext.tsx:1039 slug=pre-authorized
+INFO   frontend/src/i18n/LocaleContext.tsx:1162 slug=in-app
+INFO   frontend/src/i18n/LocaleContext.tsx:1164 slug=policy-bound
+INFO   frontend/src/i18n/LocaleContext.tsx:1228 slug=link-readable
+INFO   frontend/src/i18n/LocaleContext.tsx:1248 slug=re-syncing
+INFO   frontend/src/i18n/LocaleContext.tsx:1332 slug=auto-accept
+INFO   frontend/src/i18n/LocaleContext.tsx:1455 slug=whole-day
+INFO   frontend/src/i18n/LocaleContext.tsx:1468 slug=straight-line
+INFO   frontend/src/i18n/LocaleContext.tsx:1554 slug=sign-in
+INFO   frontend/src/i18n/LocaleContext.tsx:1559 slug=read-only
+INFO   frontend/src/i18n/LocaleContext.tsx:2561 slug=policy-gated
+INFO   frontend/src/i18n/LocaleContext.tsx:2562 slug=auto-accept
+INFO   frontend/src/i18n/agentWorkFeedCopy.ts:93 slug=re-plan
+INFO   frontend/src/i18n/travelerLabels.ts:285 slug=sign-in
+INFO   frontend/src/lib/agentSessionCache.ts:34 slug=native-hermes
+INFO   frontend/src/lib/entryLimits.ts:52 slug=trial-party
+INFO   frontend/src/lib/entryLimits.ts:62 slug=trial-rooms
+INFO   frontend/src/lib/entryLimits.ts:72 slug=trial-budget
+INFO   frontend/src/lib/entryLimits.ts:82 slug=trial-stay-budget
+INFO   frontend/src/lib/errorReceipt.ts:52 slug=data-cnx-receipt
+INFO   frontend/src/lib/errorReceipt.ts:53 slug=not-an-object
+INFO   frontend/src/lib/errorReceipt.ts:57 slug=data-cnx-receipt
+INFO   frontend/src/lib/errorReceipt.ts:58 slug=data-cnx-receipt-present
+INFO   frontend/src/lib/errorReceipt.ts:62 slug=wrong-shape
+INFO   frontend/src/lib/errorReceipt.ts:63 slug=data-cnx-receipt
+INFO   frontend/src/lib/errorReceipt.ts:64 slug=data-cnx-receipt-present
+INFO   frontend/src/lib/failureAttribution.ts:486 slug=read-only
+INFO   frontend/src/lib/failureAttribution.ts:506 slug=read-only
+INFO   frontend/src/lib/failureAttribution.ts:528 slug=rate-limited
+INFO   frontend/src/lib/failureAttribution.ts:538 slug=rate-limited
+INFO   frontend/src/lib/failureAttribution.ts:546 slug=re-reads
+INFO   frontend/src/lib/failureAttribution.ts:558 slug=read-only
+INFO   frontend/src/lib/failureAttribution.ts:581 slug=sign-in
+INFO   frontend/src/lib/mapLabelRules.ts:44 slug=canvas-label-strings
+INFO   frontend/src/lib/mapLabelRules.ts:46 slug=dom-attribution
+INFO   frontend/src/lib/mapLabelRules.ts:46 slug=dom-panel-text
+INFO   frontend/src/lib/mapLabelRules.ts:62 slug=clock-time
+INFO   frontend/src/lib/queryClient.ts:1 slug=react-query
+INFO   frontend/src/lib/rawFacts.ts:78 slug=content-type
+INFO   frontend/src/lib/sceneClock.ts:1 slug=react-query
+INFO   frontend/src/lib/sceneClock.ts:57 slug=demo-scene
+INFO   frontend/src/lib/travelerSession.ts:103 slug=not-configured
+INFO   frontend/src/lib/visualViewport.ts:21 slug=vv-height
+INFO   frontend/src/lib/visualViewport.ts:22 slug=vv-offset
+INFO   frontend/src/lib/visualViewport.ts:23 slug=vv-bottom
+INFO   frontend/src/lib/writeDeadline.ts:34 slug=idempotency-key
+INFO   frontend/src/main.tsx:2 slug=react-dom
+INFO   frontend/src/main.tsx:3 slug=react-query
+INFO   frontend/src/main.tsx:44 slug=design-tokens
+INFO   frontend/src/main.tsx:47 slug=cn-pulse
+INFO   frontend/src/main.tsx:51 slug=cn-pulse-actions
+INFO   frontend/src/main.tsx:54 slug=cn-pulse-chrome
+INFO   frontend/src/main.tsx:57 slug=cn-pulse-map
+INFO   frontend/src/main.tsx:698 slug=demo-provider
+INFO   frontend/src/main.tsx:729 slug=tianjin-real-city-predictive-replay
+INFO   frontend/src/main.tsx:904 slug=frontend-agent-auto-accept
+INFO   frontend/src/main.tsx:905 slug=frontend-agent
+INFO   frontend/src/main.tsx:950 slug=frontend-agent-accept
+INFO   frontend/src/main.tsx:951 slug=frontend-agent
+INFO   frontend/src/main.tsx:1600 slug=provider-ready
+INFO   frontend/src/main.tsx:1645 slug=timeline-item
+INFO   frontend/src/main.tsx:1671 slug=family-chip
+INFO   frontend/src/main.tsx:1788 slug=controller-transition
+INFO   frontend/src/main.tsx:1789 slug=generation-handover-pending
+INFO   frontend/src/main.tsx:1801 slug=citynexus-trip-operations
+INFO   frontend/src/main.tsx:1802 slug=citynexus-pages
+INFO   frontend/src/main.tsx:1803 slug=citynexus-static
+INFO   frontend/src/stories/CnxSelect.stories.tsx:1 slug=react-vite
+INFO   frontend/src/stories/V10Primitives.stories.tsx:1 slug=react-vite
+INFO   frontend/src/stories/V10Primitives.stories.tsx:2 slug=react-query
+INFO   frontend/src/stories/V10Primitives.stories.tsx:31 slug=demo-journey
+INFO   frontend/src/stories/V12ExecutionStates.stories.tsx:1 slug=react-vite
+INFO   frontend/src/stories/V12ExecutionStates.stories.tsx:17 slug=story-frozen-evidence
+INFO   frontend/src/stories/V12StatePrimitives.stories.tsx:1 slug=react-vite
+INFO   frontend/src/theme.ts:77 slug=theme-color
