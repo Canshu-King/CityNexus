@@ -1,0 +1,19 @@
+PROVENANCE command: PYTHONIOENCODING=utf-8 D:/moodle/CityNexus/.venv/Scripts/python.exe _media_receipt_readback_r3.py   (run in D:/moodle/_cmdr_v3_port_1022)
+PROVENANCE interpreter: 3.12.14
+PROVENANCE read scope: D:/moodle/_cmdr_v3_live_1022/*_1022.db, table provider_calls, SELECT only (mode=ro)
+PROVENANCE taken_at_local: 2026-10-23T00:07:03+08:00
+NOTE citynexus_v3_human4_1022.db is the database the after-fix walkthrough (walk-39-log.txt) wrote into.
+NOTE the walk-38-era database was replaced by a reboot, so its per-row readings are NOT retrievable; the oldest surviving media rows are in citynexus_v3_human3_1022.db and are listed here as they read now.
+=== citynexus_v3_human3_1022.db  media_rows=6
+    2026-10-22T14:13:33.413289+00:00 goal_place_media wikimedia-commons latency_ms= 8281 {"status": "UNAVAILABLE", "reason_code": null, "place": "颐和园", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T14:13:38.662515+00:00 goal_place_media wikimedia-commons latency_ms= 5203 {"status": "UNAVAILABLE", "reason_code": null, "place": "颐和园博物馆", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T14:13:43.817088+00:00 goal_place_media wikimedia-commons latency_ms= 5031 {"status": "UNAVAILABLE", "reason_code": null, "place": "颐和园长廊", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T14:59:17.666702+00:00 goal_place_media wikimedia-commons latency_ms= 5422 {"status": "UNAVAILABLE", "reason_code": null, "place": "颐和园", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T14:59:23.955002+00:00 goal_place_media wikimedia-commons latency_ms= 6235 {"status": "UNAVAILABLE", "reason_code": null, "place": "颐和园博物馆", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T14:59:30.193885+00:00 goal_place_media wikimedia-commons latency_ms= 6203 {"status": "UNAVAILABLE", "reason_code": null, "place": "颐和园长廊", "author": "", "license": null, "thumb_host": ""}
+=== citynexus_v3_human4_1022.db  media_rows=5
+    2026-10-22T15:44:51.213149+00:00 goal_place_media wikimedia-commons latency_ms= 3110 {"status": "REAL_POI_PHOTO", "reason_code": null, "place": "故宫博物院", "author": "user:kallgan", "license": "CC BY-SA 3.0", "thumb_host": "thumb.wikimedia.org"}
+    2026-10-22T15:44:52.263446+00:00 goal_place_media wikimedia-commons latency_ms= 1047 {"status": "NO_IMAGE", "reason_code": "ENTITY_NOT_FOUND", "place": "故宫博物院-午门", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T15:44:53.461048+00:00 goal_place_media wikimedia-commons latency_ms= 1172 {"status": "NO_IMAGE", "reason_code": "ENTITY_NOT_FOUND", "place": "故宫博物院-文华殿", "author": "", "license": null, "thumb_host": ""}
+    2026-10-22T15:45:24.419363+00:00 goal_place_media wikimedia-commons latency_ms= 2687 {"status": "REAL_POI_PHOTO", "reason_code": null, "place": "南锣鼓巷", "author": "Francisco Anzola", "license": "CC BY 2.0", "thumb_host": "thumb.wikimedia.org"}
+    2026-10-22T15:45:26.994300+00:00 goal_place_media wikimedia-commons latency_ms= 2547 {"status": "REAL_POI_PHOTO", "reason_code": null, "place": "什刹海", "author": "FANG Chen", "license": "CC BY-SA 2.0", "thumb_host": "thumb.wikimedia.org"}

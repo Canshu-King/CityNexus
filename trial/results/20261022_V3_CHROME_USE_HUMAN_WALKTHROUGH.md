@@ -161,19 +161,24 @@
 旅客最早那句「一张照片都没有」到这里才有完整答案，而且它是两件事，分开量了才敢分开设责任：
 
 - 先修路。产品的公开来源客户端本来就尊重环境代理（`backend/app/integrations/provider_config.py:49` 默认 `auto`），而之前每一次起栈我都把代理变量剥掉了。换成只让 Wikimedia 两台主机走本机已在监听的代理口（`_boot_human_stack_r3.ps1`；高德／Photon／Overpass 仍走直连），用产品自己的 httpx 与产品自己的 UA 复测：Commons API 与一张缩略图都回 `http_status=200`（缩略图为 image/jpeg，四万余字节），同一时刻直连两侧仍是 ConnectTimeout。
-- 再修闸。路通了屏上仍然是占位（`walk-38-log.txt:13` `GALLERY_IMGS=[]`、`:18` `PHOTO_IMGS=0`）。拿产品自己的媒体链一跳一跳打才看见真相：南锣鼓巷那一趟已经带回真作者 `Francisco Anzola`、真许可 `CC BY 2.0`、真 Commons 文件页与 `upload.wikimedia.org` 原图，`displayable_media` 却仍判 `NO_PERMISSION / ATTRIBUTION_OR_LICENSE_UNAVAILABLE`。逐条比对该判据的六个条件，唯一不通过的是缩略图主机名——Commons 现在把缩略图发在 `thumb.wikimedia.org`，而白名单里只写着 `upload.wikimedia.org`（`backend/app/agent/goal_media.py:44` 起）。合规的照片是被我们自己写死的域名丢掉的。
+- 再修闸。路通了屏上仍然是占位（`walk-38-log.txt:13` `GALLERY_IMGS=[]`、`:18` `PHOTO_IMGS=0`）。拿产品自己的媒体链一跳一跳打才看见真相：南锣鼓巷那一趟已经带回真作者 `Francisco Anzola`、真许可 `CC BY 2.0`、真 Commons 文件页与 `upload.wikimedia.org` 原图，`displayable_media` 却仍判 `NO_PERMISSION / ATTRIBUTION_OR_LICENSE_UNAVAILABLE`。逐条比对该判据的六个条件，唯一不通过的是缩略图主机名——Commons 现在把缩略图发在 `thumb.wikimedia.org`，而白名单里只写着 `upload.wikimedia.org`（现尖 `backend/app/agent/goal_media.py:58`；改动前那一代的同一枚文件是 blob `da2e4ee9f9c57b29b364c882cffb6c67a6656ab3`，其第 50 行就是只有一台主机的集合）。合规的照片是被我们自己写死的域名丢掉的。
 
-改法只动域名白名单：图片接受 Wikimedia 自己这两台主机，来源页仍只认 `commons.wikimedia.org`，许可、作者、`can_show`、"不得是客户端传入的 URL" 这些条件一个都没松；反例臂把主机写成 `thumb.wikimedia.org.evil.invalid` 照样拒（`backend/tests/test_goal_place_media.py` 新增一臂，该文件 11 passed）。另外按实测把这一跳的预算从五秒抬到八秒：改动前落库的回执里有一条正好死在 5047 ms（旧上限五秒），屏上因此只剩占位。
+改法只动域名白名单：图片接受 Wikimedia 自己这两台主机，来源页仍只认 `commons.wikimedia.org`，许可、作者、`can_show`、"不得是客户端传入的 URL" 这些条件一个都没松；反例臂把主机写成 `thumb.wikimedia.org.evil.invalid` 照样拒（`backend/tests/test_goal_place_media.py` 新增一臂，该文件 11 passed）。另外按实测把这一跳的预算从五秒抬到八秒（旧代 blob 第 79 行写 `timeout=5.0`，现尖 `backend/app/agent/goal_media.py:92` 是 `timeout=8.0`）：库里现存最早的一批媒体回执全是在五秒上下死的——`trial/results/20261022_v3_human_chrome/media-receipts-readback-1.txt:8` 到 `:13` 六格一律 `UNAVAILABLE`，耗时 5031、5203、5422、6203、6235、8281 ms。要说明的是：我第一次是在终端上看见 `NO_PERMISSION` 那一格与 5047 ms 那格的，而 walk-38 那一刻用的库后来被重启换掉了，那两个具体数字现在取不回来；所以本节把成因改挂在两样取得回的东西上——旧代源码那行白名单，和现库里三格真图回执的缩略图主机名（`:15`、`:18`、`:19`）。
 
 同机同流程重走的读数（`walk-39-log.txt`）：
 
 | 量 | 改前（`walk-38-log.txt`） | 改后（`walk-39-log.txt`） |
 | --- | --- | --- |
-| 相册里的图片元素 | `GALLERY_IMGS=[]`（`:13`） | 三张真图，src 为 `thumb.wikimedia.org/…Forbidden_City_Beijing_Shenwumen_Gate.JPG/960px-…` 与 `…Nanluogu_Xiang_(6230757826).jpg/960px-…`，自然尺寸 960×720（`:13`） |
-| 第一张是否真的看得见 | `FIRST_PHOTO_VISIBLE=false PHOTO_IMGS=0`（`:18`） | `FIRST_PHOTO_VISIBLE=true PHOTO_IMGS=3`（`:18`） |
-| 屏上署名与许可 | 只有「先看看这个地点」 | 「故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0」「南锣鼓巷 … Francisco Anzola · CC BY 2.0」「什刹海 … FANG Chen · CC BY-SA 2.0」（`:15`、`:19`） |
-| 地图层顶部引用 | 无照片可引 | 「故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0」（`:20`） |
-| 同一库媒体回执 | 一格 `NO_PERMISSION/ATTRIBUTION_OR_LICENSE_UNAVAILABLE`、两格 `UNAVAILABLE`（含死在 5047 ms 那格） | 三格 `REAL_POI_PHOTO` 带图、两格 `NO_IMAGE/ENTITY_NOT_FOUND`，最长一跳 3110 ms |
-| 像素 | `human-206-photo-strip-with-wikimedia-route.png` 214,562 字节（占位） | 同名文件 614,854 字节，另有 `human-207-map-layer-after-photo-route.png`（真图，含顶部署名条） |
+| 相册里的图片元素 | `GALLERY_IMGS=[]`（`:13`） | 三张真图，src 为 `thumb.wikimedia.org/…Forbidden_City_Beijing_Shenwumen_Gate.JPG/960px-…` 与 `…Nanluogu_Xiang_(6230757826).jpg/960px-…`，自然尺寸 960×720（`:12`） |
+| 第一张是否真的看得见 | `FIRST_PHOTO_VISIBLE=false PHOTO_IMGS=0`（`:18`） | `FIRST_PHOTO_VISIBLE=true PHOTO_IMGS=3`（`:16`） |
+| 屏上署名与许可 | 只有「先看看这个地点」（`:15`、`:19`） | 「故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0」「南锣鼓巷 … Francisco Anzola · CC BY 2.0」「什刹海 … FANG Chen · CC BY-SA 2.0」（`:14`、`:17`） |
+| 地图层顶部引用 | 无照片可引（`:20`） | 「故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0」（`:18`） |
+| 落库的媒体回执 | 现存最早一批：颐和园三格一律 `UNAVAILABLE`，5031–8281 ms（`media-receipts-readback-1.txt:8` 起） | 三格 `REAL_POI_PHOTO` 带作者与许可、缩略图主机 `thumb.wikimedia.org`（`media-receipts-readback-1.txt:15`、`:18`、`:19`），两格 `NO_IMAGE/ENTITY_NOT_FOUND`（`:16`、`:17`），最长一跳 3110 ms（`:15`） |
+| 像素 | `human-206-photo-strip-with-wikimedia-route.png` 214,562 字节（占位，`walk-38-log.txt:17`） | 同名文件 614,854 字节（`walk-39-log.txt:15`），另有 `human-207-map-layer-after-photo-route.png`（真图，含顶部署名条） |
 
-仍然没好的部分照实写：这趟六个地点里有两个服务端确实找不到对应实体（`NO_IMAGE/ENTITY_NOT_FOUND`），屏上那两格仍是中性占位——不是被闸丢掉，而是没有可核实的来源照片，而产品规则本来就不允许按名字去配异地同名地标。另外照片能否出现，取决于这台机器有没有一条能出校园的口：那是我起这台隔离测试栈时给它设的环境，不是产品默认，用户自己的设备仍需各自可达——这一点已写进外发汇报，不当已验。
+仍然没好的部分照实写，两条分开：
+
+- 这趟库里一共落了五格媒体回执，其中两格服务端确实找不到对应实体（`NO_IMAGE/ENTITY_NOT_FOUND`，`media-receipts-readback-1.txt:16`、`:17`，故宫博物院-午门与-文华殿）——屏上不是被闸丢掉，而是没有可核实的来源照片，而产品规则本来就不允许按名字去配异地同名地标。
+- 屏上相册第四格「天坛公园」（`walk-39-log.txt:17`）在库里根本没有对应的媒体回执：这台库的 `goal_place_media` 只有五格，都不叫天坛。也就是说媒体腿是跟着研究批次跑的，草案最后入选的格子不保证都被跑过——旅客看到的"占位"里，有一部分不是"没有照片"，而是"还没替这一格去找过照片"。这一条今天只做到"有名字"，没有改。
+
+另外照片能否出现，取决于这台机器有没有一条能出校园的口：那是我起这台隔离测试栈时给它设的环境，不是产品默认，用户自己的设备仍需各自可达——这一点已写进外发汇报，不当已验。
