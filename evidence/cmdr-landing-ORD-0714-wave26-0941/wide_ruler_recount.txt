@@ -1,0 +1,6 @@
+WIDE-RULER (ternary pairs, template literals included)
+OLD 2f9fc88d22 files=164 pairs=200
+NEW af8ad6a1c3 files=164 pairs=197
+DELTA 3
+MOVED frontend/src/app/V8Experience.tsx: 17 -> 14
+TOP at new tip: [('frontend/src/features/discovery/DestinationPreparationPanel.tsx', 22), ('frontend/src/features/stay/StayExplorer.tsx', 22), ('frontend/src/features/setup/JourneyTrialSetup.tsx', 20), ('frontend/src/features/stay/HotelsPanel.tsx', 20), ('frontend/src/features/planning/PlanComparison.tsx', 18), ('frontend/src/lib/failureAttribution.ts', 18), ('frontend/src/features/execution/LiveRecovery.tsx', 17), ('frontend/src/app/V8Experience.tsx', 14)]
