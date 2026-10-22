@@ -635,8 +635,13 @@ function dateInZone(
     // The zone could not be used, so this reading is the DEVICE clock.  Saying so is the whole
     // point: a moment that silently switches zones is a moment the reader cannot place.
     // ORD-0712: `hub.deviceTime` already says this sentence in both languages; the shell used to
-    // write its own copy of it, which is how the two could drift apart.
-    return date(value, locale) + " · " + dictionaryText(locale, "hub.deviceTime");
+    // write its own copy of it, which is how the two could drift apart.  Which arm to read is still
+    // decided here -- the same decision the formatter one line above makes -- but the words are not.
+    return (
+      date(value, locale) +
+      " · " +
+      dictionaryText(locale === "zh-CN" ? "zh-CN" : "en", "hub.deviceTime")
+    );
   }
 }
 
