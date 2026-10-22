@@ -719,7 +719,7 @@ export function PoiImportPanel({
                       <p data-testid="poi-import-added">
                         {poiImportCopy(locale, "addedCount", { n: added.ids.length, day: added.day })}
                         {DAY_SOURCE_NAME[added.daySource] ? (
-                          <small data-testid="poi-import-added-source">
+                          <small className="poi-import-added-source" data-testid="poi-import-added-source">
                             {poiImportCopy(locale, DAY_SOURCE_NAME[added.daySource] as PoiImportCopyKey)}
                           </small>
                         ) : null}

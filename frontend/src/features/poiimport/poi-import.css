@@ -91,3 +91,11 @@
     min-height: var(--cn-touch-min);
   }
 }
+/* The read-back sentence and the sentence about WHERE the day came from are two statements, and `small`
+   is inline -- the same glue this file's first comment describes for the exits column.  Measured at 390
+   in English after the day-source words were added: "…read back from the server.You left the day
+   empty…".  The fix is the one already used above: give the second statement its own line. */
+.poi-import-added-source {
+  display: block;
+  margin-top: 4px;
+}
