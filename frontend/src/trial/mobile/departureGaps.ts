@@ -109,8 +109,12 @@ export function agentAskPrompt(rows: GapRow[], priceAccepted: boolean): string {
     return `屏上出发待办已经没有可问的了，${priceAccepted ? "票价也确认过了，" : ""}这份方案可以直接选用。`;
   }
   return `出发前还缺这几项，请逐项去来源补齐：${unique.join("；")}。${keepQuiet}`
-    + "只改上面点名的这几处安排，其它日期和其它安排都保持不变；补齐后按同样的时间重新准备一份方案，"
-    + "并且直接告诉我哪一项来源还是没有答案，不要把没答的当成确定的。";
+    + "只改上面点名的这几处安排，其它日期和其它安排都保持不变。"
+    // The traveller, not the Agent, saves the plan: the draft door is POST .../prepare-plan behind this
+    // card's own checkbox and idempotency key, so asking the Agent to "重新准备一份方案" would invite it
+    // to claim a write it cannot make.  Ask for the findings; keep the save on this screen.
+    + "补完把查到的告诉我，我在这张卡片上再保存一次方案；"
+    + "哪项来源还是没有答案，就直接说哪项没有，不要把没答的当成确定的。";
 }
 
 // Why the ask needs a second press and says so.  The chat dock sends only after the traveller's own

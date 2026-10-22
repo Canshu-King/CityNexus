@@ -665,9 +665,9 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             onClick={() => { setSettingsOpen(false); settingsButton.current?.focus(); }}>×</button></header>
           {permissionSettings}
         </section>
-        {(busy || visibleTask?.status === "WORKING" || requestError) && <p role="status">{busy || visibleTask?.status === "WORKING"
+        {(busy || visibleTask?.status === "WORKING" || visibleTask?.status === "FAILED_RECOVERABLE" || requestError) && <p role="status" data-testid="rev-dock-status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
-          : requestError}</p>}
+          : (requestError || "Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。")}</p>}
       </form>, document.body)}
   </>;
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"
