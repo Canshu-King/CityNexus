@@ -99,6 +99,8 @@ ZIP = os.path.join(OUTDIR, NAME)
 
 os.makedirs(os.path.join(DEL, "Evidence", "scripts"), exist_ok=True)
 os.makedirs(os.path.join(DEL, "Evidence", "logs"), exist_ok=True)
+# _*.py are throwaway probes; shipping them would ask the reader to run a script
+# that pokes a live Office instance for no delivery purpose
 for pat in ("se_*.py",):
     for f in glob.glob(os.path.join(HERE, pat)):
         shutil.copyfile(f, os.path.join(DEL, "Evidence", "scripts",
@@ -118,7 +120,8 @@ for name in ("se_visio_build_result.json", "se_visio_proof_result.json",
              "se_project_snapshot_result.json",
              "se_project_snapshot_r2_result.json", "se_project_brief_result.json",
              "se_project_recovery_result.json", "se_plan_status_result.json",
-             "se_deck_result.json", "se_evidence_reconcile_result.json"):
+             "se_deck_result.json", "se_evidence_reconcile_result.json",
+             "se_classroom_demo_result.json"):
 # se_review_package_r2_result.json is deliberately NOT copied in: it carries the
 # digest of the zip that would contain it, so any copy inside the package is by
 # construction one generation old - which is the defect round 2 was reported for.

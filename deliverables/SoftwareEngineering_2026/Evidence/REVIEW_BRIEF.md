@@ -1,7 +1,7 @@
 # CityNexus 软件工程 2026 · 修订二交付包（复审简报）
 
-生成 2026-10-23 · 仓库 `CityNexus` · 分支 `review/se-coursework-deliverables-r1` · 打包时分支头 `609aaf04e6b1d62f68e72d48a534d13bbc79aee8`。
-包内 **173** 个文件（不含 `MANIFEST.sha256` 自身——清单不能给自己的摘要签名）。
+生成 2026-10-23 · 仓库 `CityNexus` · 分支 `review/se-coursework-deliverables-r1` · 打包时分支头 `13f7d1842ca2ffe79da07f0eabb15bcd79badffd`。
+包内 **179** 个文件（不含 `MANIFEST.sha256` 自身——清单不能给自己的摘要签名）。
 逐文件 sha256 见 `MANIFEST.sha256`；压缩包 sha256 `zip 不能自证：压缩包自身的 sha256 记在包外的 `Evidence/R3_RESULT.md` 与提交信息里，包内只放逐文件清单`。
 
 ## 0. 这一版是冲着谁的

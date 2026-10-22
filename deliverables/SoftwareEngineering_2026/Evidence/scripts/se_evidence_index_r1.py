@@ -214,6 +214,16 @@ for md in sorted(glob.glob(os.path.join(DEL, "**", "*.md"), recursive=True)):
             ok = os.path.exists(os.path.normpath(target)) or \
                 os.path.exists(os.path.normpath(os.path.join(
                     r"D:\moodle\CityNexus", path)))
+        elif path.startswith("deliverables/"):
+            # a repo-root path, as the received instruction notes write them
+            key = ("repo", path)
+            ok = os.path.exists(os.path.normpath(os.path.join(
+                os.path.dirname(os.path.dirname(DEL)), path)))
+            cited.setdefault(key, {"citedBy": set(), "exists": ok})
+            cited[key]["citedBy"].add(os.path.relpath(md, DEL).replace("\\", "/"))
+            if not ok:
+                missing.append((path, sorted(cited[key]["citedBy"])))
+            continue
         else:
             key = ("package", path)
             ok = (os.path.exists(os.path.normpath(os.path.join(DEL, path))) or
@@ -280,10 +290,11 @@ A("")
 A("%d relative paths are cited by the markdown in this delivery. "
   "Unresolvable: **%d**." % (len(cited), len(missing)))
 A("")
-A("Documents excluded from the citation check, by name: %s. Those are received "
-  "external reviews; they are quoted as they arrived and are not allowed to be "
-  "edited into agreement." % (", ".join("`%s`" % e for e in EXCLUDED_DOCS)
-                              or "none"))
+A("Documents excluded from the citation check, by name: %s. Two kinds: received "
+  "external reviews and instruction notes, which are quoted as they arrived and are "
+  "not allowed to be edited into agreement; and this report plus `R3_RESULT.md`, "
+  "which name the findings they are checking, so scanning them would make the "
+  "checker cite itself." % (", ".join("`%s`" % e for e in EXCLUDED_DOCS) or "none"))
 A("")
 if missing:
     A("| cited path | cited by |")

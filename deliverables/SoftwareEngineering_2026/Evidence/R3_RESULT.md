@@ -1,6 +1,6 @@
 # CityNexus 软件工程 2026 - 第三轮交付结果 (R3_RESULT)
 
-生成 2026-10-23 01:52。计划文件 `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` sha256 `4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41`；重计划文件 `CityNexus_Plan_Recovery.mpp` sha256 `ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7`。
+生成 2026-10-23 02:14。计划文件 `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` sha256 `4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41`；重计划文件 `CityNexus_Plan_Recovery.mpp` sha256 `ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7`。
 
 本轮只动课程交付的生成器、证据文件与展示资产：没有改 CityNexus 主产品代码，没有碰 Codex Revolution 分支，没有跑无关的历史全量回归。R2 已被独立验收的 Visio 自定义属性、Agent 核心流程与 Project 全量依赖三项修复按原样保留，并重新通过各自的门。
 
@@ -36,7 +36,7 @@ M9/M10/M11/M12/M13 已改名为「预计就绪日」与「课程截止日」两�
 
 新增 `Presentation/CityNexus_SE2026_Briefing_Deck.vsdx`：四页 16:9（13.333 x 7.5 英寸），56 个形状、4 条连接线，绘图门 **0 条失败**。正文最小字号 13 pt，并且门里新加了一条规则：任何带文字、尺寸小于该页字号下限的形状直接判失败，所以这张图不可能再退化成5.8 pt 的墨墙。四页分别是：系统概览、Agent 受约束的核心流程、进度与阻塞、分工与成本。
 
-Project 视图 PNG 的根因是上一版抓的是「屏幕矩形」，Chrome 压在上面就照下来了。新版（`se_project_snapshot_r2.py`）改用 Win32 `PrintWindow(PW_RENDERFULLCONTENT)` 抓目标窗口自身的 DC，与 z-order 无关；并且以只读方式打开（文件系统层 chmod 只读），抓完比对摘要：`4cd35d0725c2c5d3` -> `4cd35d0725c2c5d3`，未改动。每帧还做非空白检查（颜色数 1098~2295，非白像素比例最低 0.163）。6 个视图全部由我肉眼看过，画面是 Project 自己的表格与甘特条，没有别的窗口。
+Project 视图 PNG 的根因是上一版抓的是「屏幕矩形」，Chrome 压在上面就照下来了。新版（`se_project_snapshot_r2.py`）改用 Win32 `PrintWindow(PW_RENDERFULLCONTENT)` 抓目标窗口自身的 DC，与 z-order 无关；并且以只读方式打开（文件系统层 chmod 只读），抓完比对摘要：`4cd35d0725c2c5d3` -> `4cd35d0725c2c5d3`，未改动。每帧还做非空白检查（颜色数 1098~2295，非白像素比例最低 0.160）。7 个视图全部由我肉眼看过，画面是 Project 自己的表格与甘特条，没有别的窗口。
 
 命名与页数也按实测交代：`Briefing_One_Page.pdf` 已删除（它实际 12 页），同一份打印以 `Plan_Briefing_Print.pdf` 交付，实测 **12 页**；汇报 deck PDF 实测 **4 页**；A3 总览 `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf` 确实是 **1 页**，但它不是汇报版，汇报版是上面那四页。`Task_Usage.pdf` 不再被引用：这台安装的 Project 里「任务使用情况」视图不存在（`ViewApply` 报「视图已经不存在」），所以那个文件不可能由本机产生，引用已删而不是补一个假文件。
 
@@ -60,7 +60,7 @@ Project 视图 PNG 的根因是上一版抓的是「屏幕矩形」，Chrome 压
 1. **Part 1 是否提交**：要课程平台记录，本机拿不到；计划里 10.1 与 M10 按「已错过」记，不宣称提交。
 2. **成员可用工时与分工**：20 h/周与三人分工是课程计划提案，git 只有一个提交身份，需要本人确认。
 3. **Visio 形状拖动时连线是否跟随**：结构面已证（Shape Data 579/579 属性、connector glue 148/148、重开/编辑/恢复 PASS），实际拖动的观感仍需在平板上人工看一次。
-4. **PrintWindow 与屏幕像素的对照**：本机 SetForegroundWindow 被前台锁拒绝，抓屏时确有 10 个窗口压在上面，所以「与屏幕一致」这一条没做成决定性验证；能给的证据是窗口自身 DC 的渲染、非空白统计与肉眼检查。
+4. **PrintWindow 与屏幕像素的对照**：本机 SetForegroundWindow 被前台锁拒绝，抓屏时确有 7 个窗口压在上面，所以「与屏幕一致」这一条没做成决定性验证；能给的证据是窗口自身 DC 的渲染、非空白统计与肉眼检查。
 5. **真机用户流程**：Valhalla 实时路由未配置、原生 Hermes 缺失、支付/退款无真实工具、手机与 PWA 影子试用未做——这四条写在汇报第 3 页的阻塞栏里，没有粉饰。
 
 ## 5. 复现清单

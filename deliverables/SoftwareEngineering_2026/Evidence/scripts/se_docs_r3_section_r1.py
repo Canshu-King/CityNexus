@@ -163,6 +163,9 @@ def build():
     a("* `Evidence/PLAN_RECONCILIATION.md` - static pass against the engine, row by "
       "row, with the offset accounted for.")
     a("* `Evidence/R3_RESULT.md` - what was fixed and what is still not proven.")
+    a("* `Evidence/CLASSROOM_20261023_README.md` - the noon demonstration sheet: what "
+      "to open in which order, the recorded open/move/edit/save/reopen results from "
+      "`se_classroom_demo_r1.py`, and the fallback previews if Office will not start.")
     a("* `Microsoft_Project/CityNexus_Plan_Recovery.mpp` - open work only, scheduled "
       "from the status date; finishes %s against the 2026-11-06 contract date."
       % rec.get("finish", "?"))

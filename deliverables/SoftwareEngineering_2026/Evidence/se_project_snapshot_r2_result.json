@@ -3,42 +3,36 @@
   "Gantt_Chart": {
    "view": "甘特图",
    "png": "Gantt_Chart.png",
-   "bytes": 227347,
+   "bytes": 225387,
    "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
    "printWindowReturned": true,
    "occludedBy": [
-    "ChatGPT - HRPD - Google Chrome",
-    "fullsystem_qoder_r1 - 文件资源管理器",
-    "Qoder",
-    "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "翻译 英语 页面?",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
     "Windows 输入体验",
     "Armoury Crate",
     "命令面板",
     "PowerToys Quick Access (Preview)",
     "Program Manager"
    ],
-   "sha256": "7ae19f04a2814124",
+   "sha256": "f01dc3684255936e",
    "px": [
     2578,
     1558
    ],
-   "colours": 1669,
+   "colours": 1421,
    "inkFraction": 0.1651,
    "crossCheck": {
     "occluders": [
-     "ChatGPT - HRPD - Google Chrome",
-     "fullsystem_qoder_r1 - 文件资源管理器",
-     "Qoder",
-     "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-     "EdgeGuide_System_Wiring.pdf - WPS Office",
+     "翻译 英语 页面?",
+     "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
      "Windows 输入体验",
      "Armoury Crate",
      "命令面板",
      "PowerToys Quick Access (Preview)",
      "Program Manager"
     ],
-    "meanAbsDiff": 11.75
+    "meanAbsDiff": 7.66
    }
   },
   "Tracking_Gantt": {
@@ -48,11 +42,8 @@
    "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
    "printWindowReturned": true,
    "occludedBy": [
-    "ChatGPT - HRPD - Google Chrome",
-    "fullsystem_qoder_r1 - 文件资源管理器",
-    "Qoder",
-    "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "翻译 英语 页面?",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
     "Windows 输入体验",
     "Armoury Crate",
     "命令面板",
@@ -74,11 +65,8 @@
    "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
    "printWindowReturned": true,
    "occludedBy": [
-    "ChatGPT - HRPD - Google Chrome",
-    "fullsystem_qoder_r1 - 文件资源管理器",
-    "Qoder",
-    "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "翻译 英语 页面?",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
     "Windows 输入体验",
     "Armoury Crate",
     "命令面板",
@@ -100,11 +88,8 @@
    "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
    "printWindowReturned": true,
    "occludedBy": [
-    "ChatGPT - HRPD - Google Chrome",
-    "fullsystem_qoder_r1 - 文件资源管理器",
-    "Qoder",
-    "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "翻译 英语 页面?",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
     "Windows 输入体验",
     "Armoury Crate",
     "命令面板",
@@ -126,11 +111,8 @@
    "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
    "printWindowReturned": true,
    "occludedBy": [
-    "ChatGPT - HRPD - Google Chrome",
-    "fullsystem_qoder_r1 - 文件资源管理器",
-    "Qoder",
-    "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "翻译 英语 页面?",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
     "Windows 输入体验",
     "Armoury Crate",
     "命令面板",
@@ -152,11 +134,8 @@
    "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
    "printWindowReturned": true,
    "occludedBy": [
-    "ChatGPT - HRPD - Google Chrome",
-    "fullsystem_qoder_r1 - 文件资源管理器",
-    "Qoder",
-    "CityNexus Trip Operations 和另外 1 个页面 - 个人 - Microsoft​ Edge",
-    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "翻译 英语 页面?",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
     "Windows 输入体验",
     "Armoury Crate",
     "命令面板",
@@ -170,10 +149,26 @@
    ],
    "colours": 2295,
    "inkFraction": 0.4018
+  },
+  "Milestone_Timeline": {
+   "view": "甘特图",
+   "png": "Milestone_Timeline.png",
+   "bytes": 203766,
+   "windowTitle": "Project Professional - CityNexus_Milestone_View.mpp [只读]",
+   "printWindowReturned": true,
+   "source": "CityNexus_Milestone_View.mpp",
+   "sha256": "c8a809eb8140c521",
+   "px": [
+    2578,
+    1558
+   ],
+   "colours": 1193,
+   "inkFraction": 0.1602
   }
  },
  "sha256Before": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41",
  "sha256After": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41",
+ "milestoneHeld": true,
  "readOnly": true,
  "lockFilesLeft": [],
  "screenCrossCheck": false,

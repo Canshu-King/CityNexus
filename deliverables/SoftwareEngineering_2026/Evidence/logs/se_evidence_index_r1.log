@@ -9,8 +9,8 @@
 [   0.0s]   se_project_build_r2_result.json          128853 B  7e9b4ebd5b223a0f  publication.sha256AfterVerification: 4cd35d0725c2c5d3 (current)
 [   0.0s]   se_project_export_r2_result.json            788 B  7cee8ac240861887  -
 [   0.0s]   se_project_recovery_result.json            2145 B  5e1374a19d451b09  sourcePlanSha256: 4cd35d0725c2c5d3 (current)
-[   0.0s]   se_project_snapshot_r2_result.json         5325 B  c9eedb23e7c6b1f0  -
-[   0.0s]   se_review_package_r2_result.json           1398 B  8d5a323a99f65dd2  -
+[   0.0s]   se_project_snapshot_r2_result.json         4877 B  4370d818aed3b585  -
+[   0.0s]   se_review_package_r2_result.json           1398 B  c8215a47f149ee4c  -
 [   0.0s]   se_visio_build_result.json                61641 B  f1c94e98f239a49f  -
 [   0.0s]   se_visio_plan_brief_result.json            8379 B  f00d0f87197b7d95  -
 [   0.0s]   se_visio_proof_result.json                10248 B  61ebbbba022af9a8  -
@@ -20,6 +20,6 @@
 [   0.0s]   fact late rows at the status date (engine dates) ['14'] AGREE
 [   0.0s]   fact student hours                      ['220.9'] AGREE
 [   0.0s]   fact over-allocated person-weeks        ['0'] AGREE
-[   0.0s] cited paths: 54, unresolvable: 0
+[   0.0s] cited paths: 57, unresolvable: 0
 [   0.0s] wrote Evidence/EVIDENCE_INDEX.md (51 lines)
 [   0.0s] EVIDENCE INDEX OK

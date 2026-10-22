@@ -408,6 +408,15 @@ except GateError as exc:
 log("deck gate: %d failures, %d nodes, %d edges, %d pages"
     % (len(rep["failures"]), rep.get("nodes", 0), rep.get("edges", 0),
        len(rep.get("pages", []))))
+if not rep["failures"]:
+    # the engine keeps the gate report of a REFUSED build under debug/ so a failed
+    # run is still diagnosable; once a later build passes, that copy is stale
+    # evidence sitting next to the shipped sheet, which is a defect in itself
+    import shutil
+    dbg = os.path.join(OUT, "debug")
+    if os.path.isdir(dbg):
+        shutil.rmtree(dbg)
+        log("removed the stale debug/ copy of an earlier refused gate report")
 for f in rep["failures"][:25]:
     log("   %s" % f[:190])
 json.dump({"gate": rep, "planSha256_12": plan_sha,

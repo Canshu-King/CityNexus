@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `609aaf04e6 2026-10-23 docs(coursework): independent R2 audit of capacity, deadline semantics, evidence and presentation`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `13f7d1842c 2026-10-23 coursework(R3-classroom): milestone screenshot, converged reports and package`
 Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
@@ -92,11 +92,11 @@ It is fixed, the reader now carries a self-test that the build refuses to run wi
 
 | deck preview | bytes |
 |---|---|
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.png` | 62077 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png` | 62077 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png` | 45044 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png` | 84690 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png` | 64648 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.png` | 62071 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png` | 62071 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png` | 45037 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png` | 84665 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png` | 64640 |
 
 ### Project screenshots, and how they were taken
 
@@ -104,12 +104,13 @@ Method PrintWindow(PW_RENDERFULLCONTENT). The plan was opened **read-only at the
 
 | view | file | pixels | ink fraction | windows overlapping it |
 |---|---|---|---|---|
-| 日历 | `Calendar.png` | 2578x1558 | 0.4018 | 10 |
-| 甘特图 | `Gantt_Chart.png` | 2578x1558 | 0.1651 | 10 |
-| 网络图 | `Network_Diagram.png` | 2578x1558 | 0.1886 | 10 |
-| 资源工作表 | `Resource_Sheet.png` | 2578x1558 | 0.1632 | 10 |
-| 跟踪甘特图 | `Tracking_Gantt.png` | 2578x1558 | 0.1981 | 10 |
-| 任务工作表 | `WBS_Task_Sheet.png` | 2578x1558 | 0.1925 | 10 |
+| 日历 | `Calendar.png` | 2578x1558 | 0.4018 | 7 |
+| 甘特图 | `Gantt_Chart.png` | 2578x1558 | 0.1651 | 7 |
+| 甘特图 | `Milestone_Timeline.png` | 2578x1558 | 0.1602 | 0 |
+| 网络图 | `Network_Diagram.png` | 2578x1558 | 0.1886 | 7 |
+| 资源工作表 | `Resource_Sheet.png` | 2578x1558 | 0.1632 | 7 |
+| 跟踪甘特图 | `Tracking_Gantt.png` | 2578x1558 | 0.1981 | 7 |
+| 任务工作表 | `WBS_Task_Sheet.png` | 2578x1558 | 0.1925 | 7 |
 
 The last column is the honest part: other windows really are on top of Project on this desktop while the capture runs, which is exactly why the screen-rectangle grab of round 2 was wrong. `PrintWindow` renders the target window into its own device context, so the image is Project's pixels regardless of z-order, and each file was also looked at by eye.
 
@@ -128,13 +129,14 @@ The round-2 print named Briefing_One_Page.pdf is gone from the tree - it was twe
 | `Microsoft_Project/Resource_Sheet.pdf` | 3 | 147059 |
 | `Microsoft_Project/Tracking_Gantt.pdf` | 15 | 601735 |
 | `Microsoft_Project/WBS_View.pdf` | 6 | 196387 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf` | 4 | 49423 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf` | 4 | 49420 |
 
 ### New files this round
 
 * `Evidence/STATUS_AND_OVERDUE.md` - four date clocks, the full lateness table, the per-person per-week capacity table.
 * `Evidence/PLAN_RECONCILIATION.md` - static pass against the engine, row by row, with the offset accounted for.
 * `Evidence/R3_RESULT.md` - what was fixed and what is still not proven.
+* `Evidence/CLASSROOM_20261023_README.md` - the noon demonstration sheet: what to open in which order, the recorded open/move/edit/save/reopen results from `se_classroom_demo_r1.py`, and the fallback previews if Office will not start.
 * `Microsoft_Project/CityNexus_Plan_Recovery.mpp` - open work only, scheduled from the status date; finishes 2026-11-04 against the 2026-11-06 contract date.
 * `Presentation/CityNexus_SE2026_Briefing_Deck.vsdx` and its previews.
 * Generators: `se_plan_status_r1.py`, `se_project_recovery_r1.py`, `se_deck_r1.py`, `se_project_snapshot_r2.py`, `se_evidence_reconcile_r1.py`, `se_docs_r3_section_r1.py`.
