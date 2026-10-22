@@ -10,6 +10,7 @@
 |---|---|
 | 分支 | `review/se-coursework-deliverables-r1` |
 | 本地已同步到的远端头 | `db001c28ca8f5c7623e6cf4f806d4eb18a2e6172` |
+| 本轮 noon 提交（已 push，`git ls-remote` 回读一致） | `d7118c2ce5455d3cbabb389b2dd2c149efafe2d8` |
 | R3 主体提交（保留，不重做） | `4bba9d2e54` → `fdbb4ff988` → `13f7d1842c` → `bf2a8d3a09` |
 | 主计划 .mpp sha256/16 | `4cd35d0725c2c5d3`（本轮所有视图调整只动展示副本） |
 | 现场时刻 | 2026-10-23 12:00 +08:00；11:00 起冻结 |
@@ -22,8 +23,8 @@
 | P0-B | M11 中期汇报时间措辞 | **完成** | 06:05 | 计划源改为 `M11 Mid-term teacher review (scheduled 2026-10-23 noon)`、0% 完成；恢复计划把它记为 scheduledEvents 并写明 10.2 材料包 10-28 完成的风险 |
 | P0-C | 双软件真机打开/编辑/副本保存/重开 | **完成**（改动后复跑） | 06:45 | `se_classroom_demo_result.json`：Visio PASS、Project PASS、连线跟随 True、原件摘要未变 |
 | P1-D | `Classroom/课堂演示顺序.md` + 三套备用 | **完成** | 07:00 | 四段顺序+讲稿+离线文件清单（含大小与 sha256/12）+ 不要说的话 |
-| P0-E | 中午包 + `CLASSROOM_FINAL_VERIFICATION.md` + 回执 + push | 进行中 | | 包在仓库外：`D:/moodle` 下的 `CityNexus_20261023_Noon_Ready.zip`（17 成员、解包逐文件字节一致、sha256 记在验收文件里） |
-| 冻结 | 11:00～12:00 只读查验 | 未开始 | | |
+| P0-E | 中午包 + 最终验收 + 回执 + push | **完成** | 07:20 | 包在仓库外：`D:/moodle/CityNexus_20261023_Noon_Ready.zip`，sha256 `1f7bf7af90169970…`，17 成员 + 清单，`testzip` clean，解包逐文件字节比对 0 差异；`Evidence/CLASSROOM_FINAL_VERIFICATION.md`、`Evidence/CLASSROOM_CONTINUOUS_EXECUTION_RESULT.md` |
+| 就绪 | 冷启动抽检：从干净解包目录只读打开全部原生文件 | **完成** | 07:30 | 4 个 .vsdx + 5 个 .mpp 全部打开成功；清单 16 条 0 失败；四页 PDF 实测 4 页；`se_classroom_readiness_result.json` |
 
 ## 硬约束（每阶段自查）
 
@@ -38,6 +39,6 @@
 
 ## 下一阶段
 
-1. 跑完 docs → index → package → commit → push，把最终 SHA 写回本文件。
-2. 11:00 起冻结：只做只读抽检（重新打开四个 .vsdx 与三个 .mpp 的副本、看四页 PDF、核对 `Classroom/previews/` 四张图）。
+1. 11:00 复跑 `se_classroom_readiness_r1.py`（只读冷启动抽检），把结果与当时时间写回本文件；如果原生文件仍能打开就宣布 READY_WITH_LIMITATIONS 冻结，不再改任何内容。
+2. 当前主计划 sha256 `6398e58f9b4cd3b3…`；课堂副本 `02ebbcba23808a47…`（视图不同、数据相同）。
 3. 已知需要现场手动的一步：Project 甘特图右侧时间轴无法脚本滚到项目起点（13 个入口不存在、Timescale 赋值与 TimescaleEdit 全部失败，已留日志），现场按一次 Ctrl+Home 或用 `Gantt_Visible_print.png` 当替身图。
