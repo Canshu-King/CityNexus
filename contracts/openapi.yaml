@@ -239,6 +239,171 @@ paths:
                     title: Detail
                 type: object
                 title: HTTPValidationError
+  /api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/accept-unknown-price:
+    post:
+      summary: Accept Unknown Price Route
+      operationId: accept_unknown_price_route_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__accept_unknown_price_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      - name: plan_version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Plan Version Id
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 160
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: UnknownPriceRequest
+              properties:
+                unknown_place_ids:
+                  items:
+                    type: string
+                  type: array
+                  maxItems: 64
+                  minItems: 1
+                  title: Unknown Place Ids
+              additionalProperties: false
+              required:
+              - unknown_place_ids
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: UnknownPriceResult
+                properties:
+                  journey_id:
+                    type: string
+                    title: Journey Id
+                  task_id:
+                    type: string
+                    title: Task Id
+                  plan_version_id:
+                    type: string
+                    title: Plan Version Id
+                  accepted:
+                    type: boolean
+                    title: Accepted
+                  unknown_place_ids:
+                    items:
+                      type: string
+                    type: array
+                    title: Unknown Place Ids
+                  unknown_count:
+                    type: integer
+                    title: Unknown Count
+                  known_subtotal_minor:
+                    type: integer
+                    title: Known Subtotal Minor
+                  currency:
+                    type: string
+                    title: Currency
+                  unknown_cost_included:
+                    type: boolean
+                    title: Unknown Cost Included
+                  authority_state:
+                    type: string
+                    title: Authority State
+                  mobility_snapshot_id:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    title: Mobility Snapshot Id
+                  selectable_after:
+                    type: boolean
+                    title: Selectable After
+                  blocker_after:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    title: Blocker After
+                  confirmed_at:
+                    type: string
+                    title: Confirmed At
+                  idempotency_replay:
+                    type: boolean
+                    title: Idempotency Replay
+                    default: false
+                required:
+                - journey_id
+                - task_id
+                - plan_version_id
+                - accepted
+                - unknown_place_ids
+                - unknown_count
+                - known_subtotal_minor
+                - currency
+                - unknown_cost_included
+                - authority_state
+                - mobility_snapshot_id
+                - selectable_after
+                - blocker_after
+                - confirmed_at
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                title: HTTPValidationError
+                properties:
+                  detail:
+                    items:
+                      type: object
+                      title: ValidationError
+                      properties:
+                        loc:
+                          items:
+                            anyOf:
+                            - type: string
+                            - type: integer
+                          type: array
+                          title: Location
+                        msg:
+                          type: string
+                          title: Message
+                        type:
+                          type: string
+                          title: Error Type
+                        input:
+                          title: Input
+                        ctx:
+                          type: object
+                          title: Context
+                      required:
+                      - loc
+                      - msg
+                      - type
+                    type: array
+                    title: Detail
   /health:
     get:
       operationId: getHealth
