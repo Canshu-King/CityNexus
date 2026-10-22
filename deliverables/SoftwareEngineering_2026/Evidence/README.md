@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: `review/se-coursework-deliverables-r1` at `cca117cf1a 2026-10-08 鐜荤拑宸ラ�栨牸 路 娣诲姞鍥炲綊鑷� v2锛堣皟鍑芥暟瀹炵畻锛�`
+Source tree: `review/se-coursework-deliverables-r1` at `b8cdb49c9e 2026-10-22 璇剧▼浜や粯锛歏isio 鍥涘紶绯荤粺璁捐�″浘 + Microsoft Project 寮�鍙戣�″垝锛堝師鐢� .vsdx / .mpp锛�`
 Repository root: `D:\moodle\CityNexus`
 
 ## What to show, in what order
