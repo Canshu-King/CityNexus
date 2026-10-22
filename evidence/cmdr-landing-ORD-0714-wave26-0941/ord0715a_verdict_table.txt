@@ -1,0 +1,54 @@
+V8Experience.tsx:1665 | AUTONOMOUS             | OBJECT_DEFAULT           | mode: "AUTONOMOUS",
+V8Experience.tsx:1696 | STRUCTURED_JSON        | OBJECT_DEFAULT           | artifact_type: "STRUCTURED_JSON",
+V8Experience.tsx:3072 | COMPLETED              | SET_OR_ARRAY_PREDICATE   | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+V8Experience.tsx:3072 | SKIPPED                | SET_OR_ARRAY_PREDICATE   | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+V8Experience.tsx:3072 | CANCELLED              | SET_OR_ARRAY_PREDICATE   | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+V8Experience.tsx:3499 | UNKNOWN                | DATA_ATTRIBUTE           | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+V8Experience.tsx:3996 | UNKNOWN                | DATA_ATTRIBUTE           | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+V8Experience.tsx:4499 | CONFIRMED              | SET_OR_ARRAY_PREDICATE   | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"
+V8Experience.tsx:4499 | FULFILLED              | SET_OR_ARRAY_PREDICATE   | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"
+V8Experience.tsx:4499 | COMPLETED              | SET_OR_ARRAY_PREDICATE   | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"
+V8Experience.tsx:5179 | ADVISORY               | CODE_ELEMENT             | <b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>
+V8Experience.tsx:5335 | XIAMEN                 | CN_KEY_MAP               | 厦门: "XIAMEN",
+V8Experience.tsx:5336 | BEIJING                | CN_KEY_MAP               | 北京: "BEIJING",
+V8Experience.tsx:5337 | SHANGHAI               | CN_KEY_MAP               | 上海: "SHANGHAI",
+V8Experience.tsx:5338 | TIANJIN                | CN_KEY_MAP               | 天津: "TIANJIN",
+V8Experience.tsx:5340 | GUANGZHOU              | CN_KEY_MAP               | 广州: "GUANGZHOU",
+V8Experience.tsx:5341 | SHENZHEN               | CN_KEY_MAP               | 深圳: "SHENZHEN",
+V8Experience.tsx:5342 | CHENGDU                | CN_KEY_MAP               | 成都: "CHENGDU",
+V8Experience.tsx:5343 | HANGZHOU               | CN_KEY_MAP               | 杭州: "HANGZHOU",
+LocaleContext.tsx:127 | SYSTEM                 | DICTIONARY_VALUE         | "nav.groupSystem": "SYSTEM",
+LocaleContext.tsx:376 | SELECTED               | DICTIONARY_VALUE         | "studio.selectedStay": "SELECTED STAY",
+LocaleContext.tsx:378 | SELECTED               | DICTIONARY_VALUE         | "studio.noStaySelected": "NO STAY SELECTED",
+LocaleContext.tsx:510 | CONFIRMATION           | DICTIONARY_VALUE         | "bookings.importKicker": "IMPORT CONFIRMATION",
+LocaleContext.tsx:525 | OFFLINE                | DICTIONARY_VALUE         | "offline.readOnly": "OFFLINE · READ ONLY",
+LocaleContext.tsx:544 | AUTHORIZED             | DICTIONARY_VALUE         | "me.preAuthorized": "PRE-AUTHORIZED",
+LocaleContext.tsx:612 | SIMULATION             | DICTIONARY_VALUE         | "agent.simulationOnly": "SIMULATION ONLY",
+LocaleContext.tsx:686 | REPLAY                 | DICTIONARY_VALUE         | "discovery.sealedReplayReady": "SEALED REAL REPLAY READY",
+LocaleContext.tsx:686 | SEALED                 | DICTIONARY_VALUE         | "discovery.sealedReplayReady": "SEALED REAL REPLAY READY",
+LocaleContext.tsx:688 | REPLAY                 | DICTIONARY_VALUE         | "discovery.demoReplay": "DEMO REPLAY",
+LocaleContext.tsx:690 | DISCOVERY              | DICTIONARY_VALUE         | "discovery.brand": "CN / DISCOVERY",
+LocaleContext.tsx:716 | REPLAY                 | DICTIONARY_VALUE         | "discovery.sealedReal": "SEALED REAL REPLAY",
+LocaleContext.tsx:716 | SEALED                 | DICTIONARY_VALUE         | "discovery.sealedReal": "SEALED REAL REPLAY",
+LocaleContext.tsx:719 | MOBILITY               | DICTIONARY_VALUE         | "discovery.mobility": "MOBILITY",
+LocaleContext.tsx:725 | DEGRADED               | DICTIONARY_VALUE         | "discovery.mixedDegraded": "MIXED / DEGRADED",
+LocaleContext.tsx:817 | OFFLINE                | DICTIONARY_VALUE         | "exec.offline": "OFFLINE",
+LocaleContext.tsx:825 | JOURNEY                | DICTIONARY_VALUE         | "exec.authoritativeJourney": "AUTHORITATIVE JOURNEY",
+LocaleContext.tsx:839 | EN_ROUTE               | DICTIONARY_VALUE         | "exec.markEnRoute": "Mark EN_ROUTE",
+LocaleContext.tsx:840 | ARRIVED                | DICTIONARY_VALUE         | "exec.markArrived": "Mark ARRIVED",
+LocaleContext.tsx:841 | IN_PROGRESS            | DICTIONARY_VALUE         | "exec.markInProgress": "Mark IN_PROGRESS",
+LocaleContext.tsx:842 | COMPLETED              | DICTIONARY_VALUE         | "exec.markCompleted": "Mark COMPLETED",
+LocaleContext.tsx:854 | JOURNEY                | DICTIONARY_VALUE         | "exec.liveJourneyPrefix": "LIVE JOURNEY ·",
+LocaleContext.tsx:1046 | COMMITMENT             | DICTIONARY_VALUE         | "intel.commitment": "COMMITMENT",
+LocaleContext.tsx:1325 | PROTECTED              | DICTIONARY_VALUE         | "v14.kickerProtected": "PROTECTED",
+LocaleContext.tsx:1341 | DEGRADED               | DICTIONARY_VALUE         | "v14.gateDegraded": "DEGRADED · confirmation",
+LocaleContext.tsx:1342 | PASSED                 | DICTIONARY_VALUE         | "v14.gatePassed": "PASSED · provider facts frozen",
+
+CLASS TALLY (45 处这一格)
+  DICTIONARY_VALUE         26
+  CN_KEY_MAP               8
+  SET_OR_ARRAY_PREDICATE   6
+  OBJECT_DEFAULT           2
+  DATA_ATTRIBUTE           2
+  CODE_ELEMENT             1
+TOTAL 45
