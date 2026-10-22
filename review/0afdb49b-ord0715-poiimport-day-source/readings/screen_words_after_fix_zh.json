@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_IMPORT_DAY_SOURCE_R4",
+ "base": "http://127.0.0.1:4901",
+ "want_locale": "zh",
+ "paste": "Design Library 半日",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Thu Oct 22 2026 10:48:57 GMT+0800 (中国标准时间)",
+ "page_errors": [],
+ "outcome": "COMPLETE",
+ "lang_before_toggle": "zh-CN",
+ "toggle_press": {
+  "tag": "toggle_language",
+  "pressed": false,
+  "why": "ALREADY_IN_WANTED_LOCALE"
+ },
+ "lang_after_toggle": "zh-CN",
+ "locale_reached": true,
+ "drawer_entry_words": "导入地点",
+ "parse_press": {
+  "tag": "parse",
+  "testid": "poi-import-parse",
+  "pressed": true,
+  "box": [
+   54,
+   44
+  ]
+ },
+ "counts": "读出 1 行 · 对上 1 个 · 0 个要你选 · 0 个没找到",
+ "select_all_press": {
+  "tag": "select_all",
+  "testid": "poi-import-select-all",
+  "pressed": true,
+  "box": [
+   356,
+   44
+  ]
+ },
+ "add_press": {
+  "tag": "add",
+  "testid": "poi-import-add",
+  "pressed": true,
+  "box": [
+   97,
+   44
+  ]
+ },
+ "added_line": "1 个地点已在 2026-10-10 ——这是从服务端读回来的结果。你没填日子，它落在计划的第一天",
+ "added_source_words": "你没填日子，它落在计划的第一天",
+ "already_present_line": null,
+ "line_shape": {
+  "added_box": [
+   314,
+   58
+  ],
+  "source_box": [
+   314,
+   16
+  ],
+  "source_starts_below_added": true,
+  "source_display": "block",
+  "added_text": "1 个地点已在 2026-10-10 ——这是从服务端读回来的结果。你没填日子，它落在计划的第一天",
+  "glued": false
+ },
+ "token_after_open": "JOURNEY_FIRST_DAY",
+ "codes_in_traveller_cells": []
+}

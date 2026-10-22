@@ -1,0 +1,7233 @@
+{
+ "schema": "CNX_IMPORT_FOOTPRINT_R3",
+ "base": "http://127.0.0.1:4895",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Wed Oct 21 2026 07:54:46 GMT+0800 (中国标准时间)",
+ "steps": [
+  {
+   "step": "import_opened",
+   "snap": {
+    "tag": "import_opened",
+    "path": "/v8/import",
+    "body": "菜单 / 导入地点 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 0 字 这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。 识别 会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 至少写两个字再识别。 ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "poi-import": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列"
+      ],
+      "boxes": [
+       [
+        356,
+        1000
+       ]
+      ]
+     },
+     "poi-import-mode-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "文本或链接识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-mode-screenshot": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "截图识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        308,
+        150
+       ]
+      ]
+     },
+     "poi-import-char-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "0 字"
+      ],
+      "boxes": [
+       [
+        308,
+        21
+       ]
+      ]
+     },
+     "poi-import-scope-hint": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-parse": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "识别"
+      ],
+      "boxes": [
+       [
+        54,
+        44
+       ]
+      ]
+     },
+     "poi-import-day-disclosure": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": 11,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": 25,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-mode-text",
+      "role": "radio",
+      "words": "文本或链接识别",
+      "w": 308,
+      "h": 44,
+      "top": 576,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-mode-screenshot",
+      "role": "radio",
+      "words": "截图识别",
+      "w": 308,
+      "h": 44,
+      "top": 637,
+      "on_screen": true,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-parse",
+      "role": "BUTTON",
+      "words": "识别",
+      "w": 54,
+      "h": 44,
+      "top": 959,
+      "on_screen": false,
+      "checked": null,
+      "disabled": true,
+      "centre_on_self": false
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 524,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 1,
+    "controls_off_screen": 1,
+    "controls_covered": 0,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "import_after_paste",
+   "snap": {
+    "tag": "import_after_paste",
+    "path": "/v8/import",
+    "body": "菜单 / 导入地点 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 78 字 这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。 识别 会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "poi-import": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列"
+      ],
+      "boxes": [
+       [
+        356,
+        974
+       ]
+      ]
+     },
+     "poi-import-mode-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "文本或链接识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-mode-screenshot": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "截图识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Nexus City Park 傍晚散步 Riverside Museum Old Town Gate 城门 Design Library 一家没听过的馆子"
+      ],
+      "boxes": [
+       [
+        308,
+        150
+       ]
+      ]
+     },
+     "poi-import-char-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "78 字"
+      ],
+      "boxes": [
+       [
+        308,
+        21
+       ]
+      ]
+     },
+     "poi-import-scope-hint": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-parse": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "识别"
+      ],
+      "boxes": [
+       [
+        54,
+        44
+       ]
+      ]
+     },
+     "poi-import-day-disclosure": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": 11,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": 25,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-mode-text",
+      "role": "radio",
+      "words": "文本或链接识别",
+      "w": 308,
+      "h": 44,
+      "top": 576,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-mode-screenshot",
+      "role": "radio",
+      "words": "截图识别",
+      "w": 308,
+      "h": 44,
+      "top": 637,
+      "on_screen": true,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-parse",
+      "role": "BUTTON",
+      "words": "识别",
+      "w": 54,
+      "h": 44,
+      "top": 959,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 524,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 1,
+    "controls_off_screen": 1,
+    "controls_covered": 0,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "import_after_parse",
+   "snap": {
+    "tag": "import_after_parse",
+    "path": "/v8/import",
+    "body": "菜单 / 导入地点 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 78 字 这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。 识别 会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。 全选可加的行 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 选中 ✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 选中 ✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 选中 ✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 选中 — 一家没听过的馆子 这里没有 来源与坐标系 · poi · 未记录来源 这座城市的地点里没有能对上这一行的，所以不能添加。 你写的是：一家没听过的馆子 第 5 行 去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 0 / 可加 4 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划 打开计划 ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "poi-import": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列"
+      ],
+      "boxes": [
+       [
+        356,
+        3155
+       ]
+      ]
+     },
+     "poi-import-mode-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "文本或链接识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-mode-screenshot": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "截图识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Nexus City Park 傍晚散步 Riverside Museum Old Town Gate 城门 Design Library 一家没听过的馆子"
+      ],
+      "boxes": [
+       [
+        308,
+        150
+       ]
+      ]
+     },
+     "poi-import-char-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "78 字"
+      ],
+      "boxes": [
+       [
+        308,
+        21
+       ]
+      ]
+     },
+     "poi-import-scope-hint": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-parse": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "识别"
+      ],
+      "boxes": [
+       [
+        54,
+        44
+       ]
+      ]
+     },
+     "poi-import-day-disclosure": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-card": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句"
+      ],
+      "boxes": [
+       [
+        356,
+        643
+       ]
+      ]
+     },
+     "poi-import-phase": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出"
+      ],
+      "boxes": [
+       [
+        50,
+        26
+       ]
+      ]
+     },
+     "poi-import-counts": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到"
+      ],
+      "boxes": [
+       [
+        300,
+        21
+       ]
+      ]
+     },
+     "poi-import-retry": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "重试"
+      ],
+      "boxes": [
+       [
+        62,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-cell": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节"
+      ],
+      "boxes": [
+       [
+        356,
+        161
+       ]
+      ]
+     },
+     "poi-import-channel-name": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "本机文字解析"
+      ],
+      "boxes": [
+       [
+        314,
+        24
+       ]
+      ]
+     },
+     "poi-import-channel-fold": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "技术细节"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-token": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        143,
+        19
+       ]
+      ]
+     },
+     "poi-import-day-result": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        356,
+        117
+       ]
+      ]
+     },
+     "poi-import-verify-warning": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。"
+      ],
+      "boxes": [
+       [
+        356,
+        28
+       ]
+      ]
+     },
+     "poi-import-results": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "全选可加的行 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 选中 ✓ Riverside Museum 已对上 来源"
+      ],
+      "boxes": [
+       [
+        356,
+        939
+       ]
+      ]
+     },
+     "poi-import-select-all": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "全选可加的行"
+      ],
+      "boxes": [
+       [
+        356,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-card": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 选中",
+       "✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 选中",
+       "✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 选中",
+       "✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 选中"
+      ],
+      "boxes": [
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        165
+       ]
+      ]
+     },
+     "poi-candidate-state": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "已对上",
+       "已对上",
+       "已对上",
+       "已对上"
+      ],
+      "boxes": [
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        50,
+        20
+       ]
+      ]
+     },
+     "place-provenance": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-summary": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-name": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        104,
+        19
+       ],
+       [
+        121,
+        19
+       ],
+       [
+        97,
+        19
+       ],
+       [
+        96,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "place-provenance-provider_key": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ]
+      ]
+     },
+     "place-provenance-coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        84,
+        19
+       ]
+      ]
+     },
+     "place-provenance-source_coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ]
+      ]
+     },
+     "place-provenance-opening_hours.source_urls": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "poi-candidate-phrase": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "你写的是：Nexus City Park 傍晚散步",
+       "你写的是：Riverside Museum",
+       "你写的是：Old Town Gate 城门",
+       "你写的是：Design Library"
+      ],
+      "boxes": [
+       [
+        145,
+        12
+       ],
+       [
+        118,
+        12
+       ],
+       [
+        124,
+        12
+       ],
+       [
+        102,
+        12
+       ],
+       [
+        117,
+        12
+       ]
+      ]
+     },
+     "poi-card-select": {
+      "n": 4,
+      "visible": 4,
+      "words": [
+       "选中",
+       "选中",
+       "选中",
+       "选中"
+      ],
+      "boxes": [
+       [
+        55,
+        44
+       ],
+       [
+        55,
+        44
+       ],
+       [
+        55,
+        44
+       ],
+       [
+        55,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-reason": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这座城市的地点里没有能对上这一行的，所以不能添加。"
+      ],
+      "boxes": [
+       [
+        317,
+        15
+       ]
+      ]
+     },
+     "poi-import-exits-lead": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "三个去处只能选一个：选了哪一个，就只照那一个写。"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-selection-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已选 0 / 可加 4"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-exits": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划 存到收藏 只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        180
+       ]
+      ]
+     },
+     "poi-import-exit-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-shelf": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "存到收藏"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-store-only": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-store-only-why": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。"
+      ],
+      "boxes": [
+       [
+        314,
+        50
+       ]
+      ]
+     },
+     "poi-import-exit-plan-body": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        110
+       ]
+      ]
+     },
+     "poi-import-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        118,
+        21
+       ]
+      ]
+     },
+     "poi-import-landing-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "没有填日子，就落在计划的第一天：2026-10-10"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-add": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        97,
+        44
+       ]
+      ]
+     },
+     "poi-import-open-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "打开计划"
+      ],
+      "boxes": [
+       [
+        64,
+        44
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": -416,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": -410,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": -410,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": -402,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-text",
+      "role": "radio",
+      "words": "文本或链接识别",
+      "w": 308,
+      "h": 44,
+      "top": 149,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-mode-screenshot",
+      "role": "radio",
+      "words": "截图识别",
+      "w": 308,
+      "h": 44,
+      "top": 210,
+      "on_screen": true,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-parse",
+      "role": "BUTTON",
+      "words": "识别",
+      "w": 54,
+      "h": 44,
+      "top": 532,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-retry",
+      "role": "BUTTON",
+      "words": "重试",
+      "w": 62,
+      "h": 44,
+      "top": 741,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-select-all",
+      "role": "checkbox",
+      "words": "全选可加的行",
+      "w": 356,
+      "h": 44,
+      "top": 1882,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 2046,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 2224,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 2402,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 2580,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-plan",
+      "role": "radio",
+      "words": "加进计划",
+      "w": 314,
+      "h": 44,
+      "top": 1467,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-shelf",
+      "role": "radio",
+      "words": "存到收藏",
+      "w": 314,
+      "h": 44,
+      "top": 1529,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-store-only",
+      "role": "radio",
+      "words": "只存不排",
+      "w": 314,
+      "h": 44,
+      "top": 1591,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-add",
+      "role": "BUTTON",
+      "words": "加进计划",
+      "w": 97,
+      "h": 44,
+      "top": 1755,
+      "on_screen": false,
+      "checked": null,
+      "disabled": true,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-open-plan",
+      "role": "BUTTON",
+      "words": "打开计划",
+      "w": 64,
+      "h": 44,
+      "top": 1799,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 654,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 1,
+    "controls_off_screen": 14,
+    "controls_covered": 0,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "import_after_row_tick",
+   "snap": {
+    "tag": "import_after_row_tick",
+    "path": "/v8/import",
+    "body": "菜单 / 导入地点 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 78 字 这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。 识别 会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。 全选可加的行 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消 ✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 选中 ✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 选中 ✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 选中 — 一家没听过的馆子 这里没有 来源与坐标系 · poi · 未记录来源 这座城市的地点里没有能对上这一行的，所以不能添加。 你写的是：一家没听过的馆子 第 5 行 去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 1 / 可加 4 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划 打开计划 ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "poi-import": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列"
+      ],
+      "boxes": [
+       [
+        356,
+        3183
+       ]
+      ]
+     },
+     "poi-import-mode-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "文本或链接识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-mode-screenshot": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "截图识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Nexus City Park 傍晚散步 Riverside Museum Old Town Gate 城门 Design Library 一家没听过的馆子"
+      ],
+      "boxes": [
+       [
+        308,
+        150
+       ]
+      ]
+     },
+     "poi-import-char-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "78 字"
+      ],
+      "boxes": [
+       [
+        308,
+        21
+       ]
+      ]
+     },
+     "poi-import-scope-hint": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-parse": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "识别"
+      ],
+      "boxes": [
+       [
+        54,
+        44
+       ]
+      ]
+     },
+     "poi-import-day-disclosure": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-card": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句"
+      ],
+      "boxes": [
+       [
+        356,
+        643
+       ]
+      ]
+     },
+     "poi-import-phase": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出"
+      ],
+      "boxes": [
+       [
+        50,
+        26
+       ]
+      ]
+     },
+     "poi-import-counts": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到"
+      ],
+      "boxes": [
+       [
+        300,
+        21
+       ]
+      ]
+     },
+     "poi-import-retry": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "重试"
+      ],
+      "boxes": [
+       [
+        62,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-cell": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节"
+      ],
+      "boxes": [
+       [
+        356,
+        161
+       ]
+      ]
+     },
+     "poi-import-channel-name": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "本机文字解析"
+      ],
+      "boxes": [
+       [
+        314,
+        24
+       ]
+      ]
+     },
+     "poi-import-channel-fold": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "技术细节"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-token": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        143,
+        19
+       ]
+      ]
+     },
+     "poi-import-day-result": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        356,
+        117
+       ]
+      ]
+     },
+     "poi-import-verify-warning": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。"
+      ],
+      "boxes": [
+       [
+        356,
+        28
+       ]
+      ]
+     },
+     "poi-import-results": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "全选可加的行 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消 ✓ Riverside Mus"
+      ],
+      "boxes": [
+       [
+        356,
+        967
+       ]
+      ]
+     },
+     "poi-import-select-all": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "全选可加的行"
+      ],
+      "boxes": [
+       [
+        356,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-card": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消",
+       "✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 选中",
+       "✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 选中",
+       "✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 选中"
+      ],
+      "boxes": [
+       [
+        356,
+        194
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        165
+       ]
+      ]
+     },
+     "poi-candidate-state": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "已对上",
+       "已对上",
+       "已对上",
+       "已对上"
+      ],
+      "boxes": [
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        50,
+        20
+       ]
+      ]
+     },
+     "place-provenance": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-summary": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-name": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        104,
+        19
+       ],
+       [
+        121,
+        19
+       ],
+       [
+        97,
+        19
+       ],
+       [
+        96,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "place-provenance-provider_key": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ]
+      ]
+     },
+     "place-provenance-coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        84,
+        19
+       ]
+      ]
+     },
+     "place-provenance-source_coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ]
+      ]
+     },
+     "place-provenance-opening_hours.source_urls": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "poi-candidate-phrase": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "你写的是：Nexus City Park 傍晚散步",
+       "你写的是：Riverside Museum",
+       "你写的是：Old Town Gate 城门",
+       "你写的是：Design Library"
+      ],
+      "boxes": [
+       [
+        145,
+        12
+       ],
+       [
+        118,
+        12
+       ],
+       [
+        124,
+        12
+       ],
+       [
+        102,
+        12
+       ],
+       [
+        117,
+        12
+       ]
+      ]
+     },
+     "poi-card-select": {
+      "n": 4,
+      "visible": 4,
+      "words": [
+       "✓ 已选中——点一下取消",
+       "选中",
+       "选中",
+       "选中"
+      ],
+      "boxes": [
+       [
+        127,
+        44
+       ],
+       [
+        55,
+        44
+       ],
+       [
+        55,
+        44
+       ],
+       [
+        55,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-reason": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这座城市的地点里没有能对上这一行的，所以不能添加。"
+      ],
+      "boxes": [
+       [
+        317,
+        15
+       ]
+      ]
+     },
+     "poi-import-exits-lead": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "三个去处只能选一个：选了哪一个，就只照那一个写。"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-selection-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已选 1 / 可加 4"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-exits": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划 存到收藏 只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        180
+       ]
+      ]
+     },
+     "poi-import-exit-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-shelf": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "存到收藏"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-store-only": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-store-only-why": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。"
+      ],
+      "boxes": [
+       [
+        314,
+        50
+       ]
+      ]
+     },
+     "poi-import-exit-plan-body": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        110
+       ]
+      ]
+     },
+     "poi-import-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        118,
+        21
+       ]
+      ]
+     },
+     "poi-import-landing-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "没有填日子，就落在计划的第一天：2026-10-10"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-add": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        97,
+        44
+       ]
+      ]
+     },
+     "poi-import-open-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "打开计划"
+      ],
+      "boxes": [
+       [
+        64,
+        44
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": -2062,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": -2056,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": -2056,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": -2048,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-text",
+      "role": "radio",
+      "words": "文本或链接识别",
+      "w": 308,
+      "h": 44,
+      "top": -1497,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-screenshot",
+      "role": "radio",
+      "words": "截图识别",
+      "w": 308,
+      "h": 44,
+      "top": -1436,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-parse",
+      "role": "BUTTON",
+      "words": "识别",
+      "w": 54,
+      "h": 44,
+      "top": -1114,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-retry",
+      "role": "BUTTON",
+      "words": "重试",
+      "w": 62,
+      "h": 44,
+      "top": -905,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-select-all",
+      "role": "checkbox",
+      "words": "全选可加的行",
+      "w": 356,
+      "h": 44,
+      "top": 236,
+      "on_screen": true,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 428,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 606,
+      "on_screen": true,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 784,
+      "on_screen": true,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "选中",
+      "w": 55,
+      "h": 44,
+      "top": 962,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-plan",
+      "role": "radio",
+      "words": "加进计划",
+      "w": 314,
+      "h": 44,
+      "top": -179,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-shelf",
+      "role": "radio",
+      "words": "存到收藏",
+      "w": 314,
+      "h": 44,
+      "top": -117,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-store-only",
+      "role": "radio",
+      "words": "只存不排",
+      "w": 314,
+      "h": 44,
+      "top": -55,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-add",
+      "role": "BUTTON",
+      "words": "加进计划",
+      "w": 97,
+      "h": 44,
+      "top": 109,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-open-plan",
+      "role": "BUTTON",
+      "words": "打开计划",
+      "w": 64,
+      "h": 44,
+      "top": 153,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 284,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 1,
+    "controls_off_screen": 12,
+    "controls_covered": 1,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "import_after_select_all",
+   "snap": {
+    "tag": "import_after_select_all",
+    "path": "/v8/import",
+    "body": "菜单 / 导入地点 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 78 字 这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。 识别 会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。 ✓ 已全选——点一下取消全部 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消 ✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 ✓ 已选中——点一下取消 ✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 ✓ 已选中——点一下取消 ✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 ✓ 已选中——点一下取消 — 一家没听过的馆子 这里没有 来源与坐标系 · poi · 未记录来源 这座城市的地点里没有能对上这一行的，所以不能添加。 你写的是：一家没听过的馆子 第 5 行 去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 4 / 可加 4 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划 打开计划 ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "poi-import": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列"
+      ],
+      "boxes": [
+       [
+        356,
+        3183
+       ]
+      ]
+     },
+     "poi-import-mode-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "文本或链接识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-mode-screenshot": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "截图识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Nexus City Park 傍晚散步 Riverside Museum Old Town Gate 城门 Design Library 一家没听过的馆子"
+      ],
+      "boxes": [
+       [
+        308,
+        150
+       ]
+      ]
+     },
+     "poi-import-char-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "78 字"
+      ],
+      "boxes": [
+       [
+        308,
+        21
+       ]
+      ]
+     },
+     "poi-import-scope-hint": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-parse": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "识别"
+      ],
+      "boxes": [
+       [
+        54,
+        44
+       ]
+      ]
+     },
+     "poi-import-day-disclosure": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-card": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句"
+      ],
+      "boxes": [
+       [
+        356,
+        643
+       ]
+      ]
+     },
+     "poi-import-phase": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出"
+      ],
+      "boxes": [
+       [
+        50,
+        26
+       ]
+      ]
+     },
+     "poi-import-counts": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到"
+      ],
+      "boxes": [
+       [
+        300,
+        21
+       ]
+      ]
+     },
+     "poi-import-retry": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "重试"
+      ],
+      "boxes": [
+       [
+        62,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-cell": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节"
+      ],
+      "boxes": [
+       [
+        356,
+        161
+       ]
+      ]
+     },
+     "poi-import-channel-name": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "本机文字解析"
+      ],
+      "boxes": [
+       [
+        314,
+        24
+       ]
+      ]
+     },
+     "poi-import-channel-fold": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "技术细节"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-token": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        143,
+        19
+       ]
+      ]
+     },
+     "poi-import-day-result": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        356,
+        117
+       ]
+      ]
+     },
+     "poi-import-verify-warning": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。"
+      ],
+      "boxes": [
+       [
+        356,
+        28
+       ]
+      ]
+     },
+     "poi-import-results": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✓ 已全选——点一下取消全部 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消 ✓ River"
+      ],
+      "boxes": [
+       [
+        356,
+        967
+       ]
+      ]
+     },
+     "poi-import-select-all": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✓ 已全选——点一下取消全部"
+      ],
+      "boxes": [
+       [
+        356,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-card": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消",
+       "✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 ✓ 已选中——点一下取消",
+       "✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 ✓ 已选中——点一下取消",
+       "✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 ✓ 已选中——点一下取消"
+      ],
+      "boxes": [
+       [
+        356,
+        194
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        165
+       ]
+      ]
+     },
+     "poi-candidate-state": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "已对上",
+       "已对上",
+       "已对上",
+       "已对上"
+      ],
+      "boxes": [
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        50,
+        20
+       ]
+      ]
+     },
+     "place-provenance": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-summary": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-name": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        104,
+        19
+       ],
+       [
+        121,
+        19
+       ],
+       [
+        97,
+        19
+       ],
+       [
+        96,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "place-provenance-provider_key": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ]
+      ]
+     },
+     "place-provenance-coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        84,
+        19
+       ]
+      ]
+     },
+     "place-provenance-source_coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ]
+      ]
+     },
+     "place-provenance-opening_hours.source_urls": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "poi-candidate-phrase": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "你写的是：Nexus City Park 傍晚散步",
+       "你写的是：Riverside Museum",
+       "你写的是：Old Town Gate 城门",
+       "你写的是：Design Library"
+      ],
+      "boxes": [
+       [
+        145,
+        12
+       ],
+       [
+        118,
+        12
+       ],
+       [
+        124,
+        12
+       ],
+       [
+        102,
+        12
+       ],
+       [
+        117,
+        12
+       ]
+      ]
+     },
+     "poi-card-select": {
+      "n": 4,
+      "visible": 4,
+      "words": [
+       "✓ 已选中——点一下取消",
+       "✓ 已选中——点一下取消",
+       "✓ 已选中——点一下取消",
+       "✓ 已选中——点一下取消"
+      ],
+      "boxes": [
+       [
+        127,
+        44
+       ],
+       [
+        127,
+        44
+       ],
+       [
+        127,
+        44
+       ],
+       [
+        127,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-reason": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这座城市的地点里没有能对上这一行的，所以不能添加。"
+      ],
+      "boxes": [
+       [
+        317,
+        15
+       ]
+      ]
+     },
+     "poi-import-exits-lead": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "三个去处只能选一个：选了哪一个，就只照那一个写。"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-selection-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已选 4 / 可加 4"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-exits": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划 存到收藏 只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        180
+       ]
+      ]
+     },
+     "poi-import-exit-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-shelf": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "存到收藏"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-store-only": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-store-only-why": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。"
+      ],
+      "boxes": [
+       [
+        314,
+        50
+       ]
+      ]
+     },
+     "poi-import-exit-plan-body": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        110
+       ]
+      ]
+     },
+     "poi-import-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        118,
+        21
+       ]
+      ]
+     },
+     "poi-import-landing-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "没有填日子，就落在计划的第一天：2026-10-10"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-add": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        97,
+        44
+       ]
+      ]
+     },
+     "poi-import-open-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "打开计划"
+      ],
+      "boxes": [
+       [
+        64,
+        44
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": -2062,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": -2056,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": -2056,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": -2048,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-text",
+      "role": "radio",
+      "words": "文本或链接识别",
+      "w": 308,
+      "h": 44,
+      "top": -1497,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-screenshot",
+      "role": "radio",
+      "words": "截图识别",
+      "w": 308,
+      "h": 44,
+      "top": -1436,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-parse",
+      "role": "BUTTON",
+      "words": "识别",
+      "w": 54,
+      "h": 44,
+      "top": -1114,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-retry",
+      "role": "BUTTON",
+      "words": "重试",
+      "w": 62,
+      "h": 44,
+      "top": -905,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-select-all",
+      "role": "checkbox",
+      "words": "✓ 已全选——点一下取消全部",
+      "w": 356,
+      "h": 44,
+      "top": 236,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 428,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 606,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 784,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 962,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-plan",
+      "role": "radio",
+      "words": "加进计划",
+      "w": 314,
+      "h": 44,
+      "top": -179,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-shelf",
+      "role": "radio",
+      "words": "存到收藏",
+      "w": 314,
+      "h": 44,
+      "top": -117,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-store-only",
+      "role": "radio",
+      "words": "只存不排",
+      "w": 314,
+      "h": 44,
+      "top": -55,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-add",
+      "role": "BUTTON",
+      "words": "加进计划",
+      "w": 97,
+      "h": 44,
+      "top": 109,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-open-plan",
+      "role": "BUTTON",
+      "words": "打开计划",
+      "w": 64,
+      "h": 44,
+      "top": 153,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 284,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 1,
+    "controls_off_screen": 12,
+    "controls_covered": 1,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "import_after_add",
+   "snap": {
+    "tag": "import_after_add",
+    "path": "/v8/import",
+    "body": "菜单 / 导入地点 跟随系统 EN DE 把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列出来，让缺口有名字。 不抓取任何内容 识别只跑本部署自己的文本规则和我们已有的地点行。 文本或链接识别 截图识别 你的文字 78 字 这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。 识别 会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。 这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。 ✓ 已全选——点一下取消全部 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消 ✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 ✓ 已选中——点一下取消 ✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 ✓ 已选中——点一下取消 ✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 ✓ 已选中——点一下取消 — 一家没听过的馆子 这里没有 来源与坐标系 · poi · 未记录来源 这座城市的地点里没有能对上这一行的，所以不能添加。 你写的是：一家没听过的馆子 第 5 行 去处 三个去处只能选一个：选了哪一个，就只照那一个写。 已选 4 / 可加 4 加进计划 存到收藏 只存不排 这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。 落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划 2 个地点已在 2026-10-10 ——这是从服务端读回来的结果。JOURNEY_FIRST_DAY 2 个本来就在那一天，没有重复添加。 打开计划 ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "poi-import": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，写回之前由你确认。 本地解析，不打开链接 CityNexus 两条入口 今天支持文本与链接；截图也列"
+      ],
+      "boxes": [
+       [
+        356,
+        3276
+       ]
+      ]
+     },
+     "poi-import-mode-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "文本或链接识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-mode-screenshot": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "截图识别"
+      ],
+      "boxes": [
+       [
+        308,
+        44
+       ]
+      ]
+     },
+     "poi-import-text": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Nexus City Park 傍晚散步 Riverside Museum Old Town Gate 城门 Design Library 一家没听过的馆子"
+      ],
+      "boxes": [
+       [
+        308,
+        150
+       ]
+      ]
+     },
+     "poi-import-char-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "78 字"
+      ],
+      "boxes": [
+       [
+        308,
+        21
+       ]
+      ]
+     },
+     "poi-import-scope-hint": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-parse": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "识别"
+      ],
+      "boxes": [
+       [
+        54,
+        44
+       ]
+      ]
+     },
+     "poi-import-day-disclosure": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        308,
+        28
+       ]
+      ]
+     },
+     "poi-import-card": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出 读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到 重试 通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节 会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句"
+      ],
+      "boxes": [
+       [
+        356,
+        643
+       ]
+      ]
+     },
+     "poi-import-phase": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已读出"
+      ],
+      "boxes": [
+       [
+        50,
+        26
+       ]
+      ]
+     },
+     "poi-import-counts": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到"
+      ],
+      "boxes": [
+       [
+        300,
+        21
+       ]
+      ]
+     },
+     "poi-import-retry": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "重试"
+      ],
+      "boxes": [
+       [
+        62,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-cell": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "通道 本机文字解析 本地解析器；不接第三方读取服务。 技术细节"
+      ],
+      "boxes": [
+       [
+        356,
+        161
+       ]
+      ]
+     },
+     "poi-import-channel-name": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "本机文字解析"
+      ],
+      "boxes": [
+       [
+        314,
+        24
+       ]
+      ]
+     },
+     "poi-import-channel-fold": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "技术细节"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-channel-token": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        143,
+        19
+       ]
+      ]
+     },
+     "poi-import-day-result": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "会落到哪一天 2026-10-10 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。"
+      ],
+      "boxes": [
+       [
+        356,
+        117
+       ]
+      ]
+     },
+     "poi-import-verify-warning": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。"
+      ],
+      "boxes": [
+       [
+        356,
+        28
+       ]
+      ]
+     },
+     "poi-import-results": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✓ 已全选——点一下取消全部 ✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消 ✓ River"
+      ],
+      "boxes": [
+       [
+        356,
+        967
+       ]
+      ]
+     },
+     "poi-import-select-all": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✓ 已全选——点一下取消全部"
+      ],
+      "boxes": [
+       [
+        356,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-card": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "✓ Nexus City Park 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Nexus City Park 傍晚散步 第 1 行 ✓ 已选中——点一下取消",
+       "✓ Riverside Museum 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Riverside Museum 第 2 行 ✓ 已选中——点一下取消",
+       "✓ Old Town Gate 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Old Town Gate 城门 第 3 行 ✓ 已选中——点一下取消",
+       "✓ Design Library 已对上 来源与坐标系 · poi · 未记录来源 你写的是：Design Library 第 4 行 ✓ 已选中——点一下取消"
+      ],
+      "boxes": [
+       [
+        356,
+        194
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        166
+       ],
+       [
+        356,
+        165
+       ]
+      ]
+     },
+     "poi-candidate-state": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "已对上",
+       "已对上",
+       "已对上",
+       "已对上"
+      ],
+      "boxes": [
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        50,
+        20
+       ]
+      ]
+     },
+     "place-provenance": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-summary": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源",
+       "来源与坐标系 · poi · 未记录来源"
+      ],
+      "boxes": [
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ],
+       [
+        317,
+        44
+       ]
+      ]
+     },
+     "place-provenance-name": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        104,
+        19
+       ],
+       [
+        121,
+        19
+       ],
+       [
+        97,
+        19
+       ],
+       [
+        96,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "place-provenance-provider_key": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ],
+       [
+        70,
+        19
+       ]
+      ]
+     },
+     "place-provenance-coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        48,
+        19
+       ],
+       [
+        84,
+        19
+       ]
+      ]
+     },
+     "place-provenance-source_coordinate_system": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ],
+       [
+        154,
+        19
+       ]
+      ]
+     },
+     "place-provenance-opening_hours.source_urls": {
+      "n": 5,
+      "visible": 5,
+      "words": [],
+      "boxes": [
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ],
+       [
+        112,
+        19
+       ]
+      ]
+     },
+     "poi-candidate-phrase": {
+      "n": 5,
+      "visible": 5,
+      "words": [
+       "你写的是：Nexus City Park 傍晚散步",
+       "你写的是：Riverside Museum",
+       "你写的是：Old Town Gate 城门",
+       "你写的是：Design Library"
+      ],
+      "boxes": [
+       [
+        145,
+        12
+       ],
+       [
+        118,
+        12
+       ],
+       [
+        124,
+        12
+       ],
+       [
+        102,
+        12
+       ],
+       [
+        117,
+        12
+       ]
+      ]
+     },
+     "poi-card-select": {
+      "n": 4,
+      "visible": 4,
+      "words": [
+       "✓ 已选中——点一下取消",
+       "✓ 已选中——点一下取消",
+       "✓ 已选中——点一下取消",
+       "✓ 已选中——点一下取消"
+      ],
+      "boxes": [
+       [
+        127,
+        44
+       ],
+       [
+        127,
+        44
+       ],
+       [
+        127,
+        44
+       ],
+       [
+        127,
+        44
+       ]
+      ]
+     },
+     "poi-candidate-reason": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这座城市的地点里没有能对上这一行的，所以不能添加。"
+      ],
+      "boxes": [
+       [
+        317,
+        15
+       ]
+      ]
+     },
+     "poi-import-exits-lead": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "三个去处只能选一个：选了哪一个，就只照那一个写。"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-selection-count": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已选 4 / 可加 4"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-exits": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划 存到收藏 只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        180
+       ]
+      ]
+     },
+     "poi-import-exit-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-shelf": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "存到收藏"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-exit-store-only": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "只存不排"
+      ],
+      "boxes": [
+       [
+        314,
+        44
+       ]
+      ]
+     },
+     "poi-import-store-only-why": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这台服务器没有“存下来但不给日子”的门：加进计划必须落在某一天，而存进架子就是上面那个出口。这里不另起第四种说法，所以这一项按状态拒绝，什么都不写。"
+      ],
+      "boxes": [
+       [
+        314,
+        50
+       ]
+      ]
+     },
+     "poi-import-exit-plan-body": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "落点日子 没有填日子，就落在计划的第一天：2026-10-10 加进计划 2 个地点已在 2026-10-10 ——这是从服务端读回来的结果。JOURNEY_FIRST_DAY 2 个本来就在那一天，没有重复添加。"
+      ],
+      "boxes": [
+       [
+        314,
+        192
+       ]
+      ]
+     },
+     "poi-import-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        118,
+        21
+       ]
+      ]
+     },
+     "poi-import-landing-day": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "没有填日子，就落在计划的第一天：2026-10-10"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-add": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "加进计划"
+      ],
+      "boxes": [
+       [
+        97,
+        44
+       ]
+      ]
+     },
+     "poi-import-added": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "2 个地点已在 2026-10-10 ——这是从服务端读回来的结果。JOURNEY_FIRST_DAY"
+      ],
+      "boxes": [
+       [
+        314,
+        38
+       ]
+      ]
+     },
+     "poi-import-added-source": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "JOURNEY_FIRST_DAY"
+      ],
+      "boxes": [
+       [
+        92,
+        14
+       ]
+      ]
+     },
+     "poi-import-already-present": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "2 个本来就在那一天，没有重复添加。"
+      ],
+      "boxes": [
+       [
+        314,
+        19
+       ]
+      ]
+     },
+     "poi-import-open-plan": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "打开计划"
+      ],
+      "boxes": [
+       [
+        64,
+        44
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": -2155,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": -2149,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": -2149,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": -2141,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-text",
+      "role": "radio",
+      "words": "文本或链接识别",
+      "w": 308,
+      "h": 44,
+      "top": -1590,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-mode-screenshot",
+      "role": "radio",
+      "words": "截图识别",
+      "w": 308,
+      "h": 44,
+      "top": -1529,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-parse",
+      "role": "BUTTON",
+      "words": "识别",
+      "w": 54,
+      "h": 44,
+      "top": -1207,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-retry",
+      "role": "BUTTON",
+      "words": "重试",
+      "w": 62,
+      "h": 44,
+      "top": -998,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-select-all",
+      "role": "checkbox",
+      "words": "✓ 已全选——点一下取消全部",
+      "w": 356,
+      "h": 44,
+      "top": 236,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 428,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 606,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 784,
+      "on_screen": true,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-card-select",
+      "role": "checkbox",
+      "words": "✓ 已选中——点一下取消",
+      "w": 127,
+      "h": 44,
+      "top": 962,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-plan",
+      "role": "radio",
+      "words": "加进计划",
+      "w": 314,
+      "h": 44,
+      "top": -272,
+      "on_screen": false,
+      "checked": "true",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-shelf",
+      "role": "radio",
+      "words": "存到收藏",
+      "w": 314,
+      "h": 44,
+      "top": -210,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-exit-store-only",
+      "role": "radio",
+      "words": "只存不排",
+      "w": 314,
+      "h": 44,
+      "top": -148,
+      "on_screen": false,
+      "checked": "false",
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "poi-import-add",
+      "role": "BUTTON",
+      "words": "加进计划",
+      "w": 97,
+      "h": 44,
+      "top": 16,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poi-import-open-plan",
+      "role": "BUTTON",
+      "words": "打开计划",
+      "w": 64,
+      "h": 44,
+      "top": 153,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 284,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 1,
+    "controls_off_screen": 12,
+    "controls_covered": 1,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "footprint_opened",
+   "snap": {
+    "tag": "footprint_opened",
+    "path": "/v8/footprints",
+    "body": "菜单 / 足迹 跟随系统 EN DE 足迹 这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。 重读一次 还没有足迹。打开行程，在一站上按「打卡」。 这一屏只列你自己按出来的那几枚印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」，这里就会多一枚。 打开行程去打卡 这次行程共有 0 枚足迹。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "footprint-panel": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "足迹 这一屏只列服务器替这次行程记下的印，按天分，天内按打的先后排。 重读一次 还没有足迹。打开行程，在一站上按「打卡」。 这一屏只列你自己按出来的那几枚印——服务器不会替你记。还没到站就先去行程里走一站，按一次「打卡」"
+      ],
+      "boxes": [
+       [
+        356,
+        359
+       ]
+      ]
+     },
+     "footprint-retry": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "重读一次"
+      ],
+      "boxes": [
+       [
+        48,
+        111
+       ]
+      ]
+     },
+     "footprint-empty": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "还没有足迹。打开行程，在一站上按「打卡」。"
+      ],
+      "boxes": [
+       [
+        316,
+        22
+       ]
+      ]
+     },
+     "footprint-empty-action": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "打开行程去打卡"
+      ],
+      "boxes": [
+       [
+        146,
+        47
+       ]
+      ]
+     },
+     "footprint-tally": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "这次行程共有 0 枚足迹。"
+      ],
+      "boxes": [
+       [
+        316,
+        22
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦ CityNexus Copilot"
+      ],
+      "boxes": [
+       [
+        165,
+        54
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": 11,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": 25,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "footprint-retry",
+      "role": "BUTTON",
+      "words": "重读一次",
+      "w": 48,
+      "h": 111,
+      "top": 109,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "footprint-empty-action",
+      "role": "BUTTON",
+      "words": "打开行程去打卡",
+      "w": 146,
+      "h": 47,
+      "top": 356,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦ CityNexus Copilot",
+      "w": 165,
+      "h": 42,
+      "top": 718,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 2,
+    "controls_off_screen": 0,
+    "controls_covered": 0,
+    "horizontal_overflow": false
+   }
+  },
+  {
+   "step": "footprint_after_empty_action",
+   "snap": {
+    "tag": "footprint_after_empty_action",
+    "path": "/v8/trips",
+    "body": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图 中止之后：这趟不再进入「实时行程」。它仍留在你的行程列表里——中止不等于丢弃（要丢弃请去回收站）。你写下的原因会和这趟一起存下来。不能回头：想再走只能新开一趟。 中止这趟行程 AI 工作动态 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 第 1 天 / 共 1 天。已完成 3/6 站。 导出日历 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 打卡 收藏到… 10:30 11:45 Riverside Museum 1 小时 15 分 详情 › 打卡 收藏到… 12:00 13:00 Central Food Hall 1 小时 详情 › 打卡 收藏到… 13:20 14:40 Tech Art Center 1 小时 20 分 当前 详情 › 打卡 收藏到… 15:30 16:30 Nexus River Cruise Pier 1 小时 已确认 · 受保护 详情 › 打卡 收藏到… 17:00 18:30 Skyline Dinner House 1 小时 30 分 详情 › 打卡 收藏到… ✦ 今天 行程 地图 Copilot 我的",
+    "testids": {
+     "sidebar-collapse": {
+      "n": 1,
+      "visible": 0,
+      "words": [],
+      "boxes": []
+     },
+     "v8-mobile-menu": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "菜单"
+      ],
+      "boxes": [
+       [
+        46,
+        44
+       ]
+      ]
+     },
+     "topbar-theme": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "跟随系统"
+      ],
+      "boxes": [
+       [
+        86,
+        44
+       ]
+      ]
+     },
+     "topbar-language": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "EN"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "topbar-avatar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "DE"
+      ],
+      "boxes": [
+       [
+        28,
+        28
+       ]
+      ]
+     },
+     "trips-tabs": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程 住宿 预订 花费"
+      ],
+      "boxes": [
+       [
+        356,
+        63
+       ]
+      ]
+     },
+     "trips-tab-itinerary": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        54,
+        40
+       ]
+      ]
+     },
+     "trips-tab-stay": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "住宿"
+      ],
+      "boxes": [
+       [
+        54,
+        40
+       ]
+      ]
+     },
+     "trips-tab-bookings": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "预订"
+      ],
+      "boxes": [
+       [
+        54,
+        40
+       ]
+      ]
+     },
+     "trips-tab-spend": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "花费"
+      ],
+      "boxes": [
+       [
+        54,
+        40
+       ]
+      ]
+     },
+     "trip-poster-bar": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "把这趟旅行收成一张长图；图上每一天，就是这块屏上已经排好的那些。 展开行程长图"
+      ],
+      "boxes": [
+       [
+        356,
+        121
+       ]
+      ]
+     },
+     "poster-open": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "展开行程长图"
+      ],
+      "boxes": [
+       [
+        330,
+        44
+       ]
+      ]
+     },
+     "journey-abort": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "中止之后：这趟不再进入「实时行程」。它仍留在你的行程列表里——中止不等于丢弃（要丢弃请去回收站）。你写下的原因会和这趟一起存下来。不能回头：想再走只能新开一趟。 中止这趟行程"
+      ],
+      "boxes": [
+       [
+        356,
+        163
+       ]
+      ]
+     },
+     "journey-abort-explains": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "中止之后：这趟不再进入「实时行程」。它仍留在你的行程列表里——中止不等于丢弃（要丢弃请去回收站）。你写下的原因会和这趟一起存下来。不能回头：想再走只能新开一趟。"
+      ],
+      "boxes": [
+       [
+        322,
+        65
+       ]
+      ]
+     },
+     "journey-abort-open": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "中止这趟行程"
+      ],
+      "boxes": [
+       [
+        322,
+        44
+       ]
+      ]
+     },
+     "journey-abort-reason": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        166,
+        78
+       ]
+      ]
+     },
+     "journey-abort-submit": {
+      "n": 1,
+      "visible": 1,
+      "words": [],
+      "boxes": [
+       [
+        96,
+        44
+       ]
+      ]
+     },
+     "agent-work-entry-trip": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "AI 工作动态"
+      ],
+      "boxes": [
+       [
+        356,
+        44
+       ]
+      ]
+     },
+     "trip-ai-work": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "AI 工作动态"
+      ],
+      "boxes": [
+       [
+        83,
+        44
+       ]
+      ]
+     },
+     "trip-itinerary": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 第 1 天 / 共 1 天。已完成 3/6 站。 导出日历 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详"
+      ],
+      "boxes": [
+       [
+        356,
+        1222
+       ]
+      ]
+     },
+     "trip-day-total": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "1 天行程"
+      ],
+      "boxes": [
+       [
+        356,
+        37
+       ]
+      ]
+     },
+     "trip-progress-contract": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "第 1 天 / 共 1 天。已完成 3/6 站。"
+      ],
+      "boxes": [
+       [
+        356,
+        25
+       ]
+      ]
+     },
+     "calendar-export": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "导出日历"
+      ],
+      "boxes": [
+       [
+        64,
+        44
+       ]
+      ]
+     },
+     "trip-day-strip": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "10月10日周六 6 项"
+      ],
+      "boxes": [
+       [
+        356,
+        67
+       ]
+      ]
+     },
+     "trip-day-0": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "10月10日周六 6 项"
+      ],
+      "boxes": [
+       [
+        356,
+        49
+       ]
+      ]
+     },
+     "trip-day-detail": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 打卡 收藏到… 10:30 11:45 Riverside Museum 1 小时 15 分 详情 › 打卡 收藏到… 12:00 13:"
+      ],
+      "boxes": [
+       [
+        356,
+        934
+       ]
+      ]
+     },
+     "trip-stop": {
+      "n": 6,
+      "visible": 6,
+      "words": [
+       "09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 打卡 收藏到…",
+       "10:30 11:45 Riverside Museum 1 小时 15 分 详情 › 打卡 收藏到…",
+       "12:00 13:00 Central Food Hall 1 小时 详情 › 打卡 收藏到…",
+       "13:20 14:40 Tech Art Center 1 小时 20 分 当前 详情 › 打卡 收藏到…"
+      ],
+      "boxes": [
+       [
+        356,
+        149
+       ],
+       [
+        356,
+        149
+       ],
+       [
+        356,
+        149
+       ],
+       [
+        356,
+        149
+       ],
+       [
+        356,
+        149
+       ],
+       [
+        356,
+        149
+       ]
+      ]
+     },
+     "trip-stop-details": {
+      "n": 6,
+      "visible": 6,
+      "words": [
+       "详情 ›",
+       "详情 ›",
+       "详情 ›",
+       "详情 ›"
+      ],
+      "boxes": [
+       [
+        26,
+        44
+       ],
+       [
+        26,
+        44
+       ],
+       [
+        26,
+        44
+       ],
+       [
+        26,
+        44
+       ],
+       [
+        26,
+        44
+       ],
+       [
+        26,
+        44
+       ]
+      ]
+     },
+     "stop-checkin": {
+      "n": 6,
+      "visible": 6,
+      "words": [
+       "打卡",
+       "打卡",
+       "打卡",
+       "打卡"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ],
+       [
+        44,
+        44
+       ],
+       [
+        44,
+        44
+       ],
+       [
+        44,
+        44
+       ],
+       [
+        44,
+        44
+       ],
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "collect-into": {
+      "n": 6,
+      "visible": 6,
+      "words": [
+       "收藏到…",
+       "收藏到…",
+       "收藏到…",
+       "收藏到…"
+      ],
+      "boxes": [
+       [
+        272,
+        56
+       ],
+       [
+        272,
+        56
+       ],
+       [
+        272,
+        56
+       ],
+       [
+        272,
+        56
+       ],
+       [
+        272,
+        56
+       ],
+       [
+        272,
+        56
+       ]
+      ]
+     },
+     "collect-entry": {
+      "n": 6,
+      "visible": 6,
+      "words": [
+       "收藏到…",
+       "收藏到…",
+       "收藏到…",
+       "收藏到…"
+      ],
+      "boxes": [
+       [
+        272,
+        44
+       ],
+       [
+        272,
+        44
+       ],
+       [
+        272,
+        44
+       ],
+       [
+        272,
+        44
+       ],
+       [
+        272,
+        44
+       ],
+       [
+        272,
+        44
+       ]
+      ]
+     },
+     "trip-stop-protected": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "已确认 · 受保护"
+      ],
+      "boxes": [
+       [
+        68,
+        44
+       ]
+      ]
+     },
+     "v18-copilot-dock": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "✦"
+      ],
+      "boxes": [
+       [
+        44,
+        44
+       ]
+      ]
+     },
+     "nav-hub": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "今天"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-trips": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "行程"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-map": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "地图"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-agent": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "Copilot"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     },
+     "nav-me": {
+      "n": 1,
+      "visible": 1,
+      "words": [
+       "我的"
+      ],
+      "boxes": [
+       [
+        76,
+        48
+       ]
+      ]
+     }
+    },
+    "controls": [
+     {
+      "testid": "v8-mobile-menu",
+      "role": "BUTTON",
+      "words": "菜单",
+      "w": 46,
+      "h": 44,
+      "top": 11,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-theme",
+      "role": "BUTTON",
+      "words": "跟随系统",
+      "w": 86,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-language",
+      "role": "BUTTON",
+      "words": "EN",
+      "w": 44,
+      "h": 44,
+      "top": 17,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "topbar-avatar",
+      "role": "BUTTON",
+      "words": "DE",
+      "w": 28,
+      "h": 28,
+      "top": 25,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "trips-tab-itinerary",
+      "role": "tab",
+      "words": "行程",
+      "w": 54,
+      "h": 40,
+      "top": 105,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "trips-tab-stay",
+      "role": "tab",
+      "words": "住宿",
+      "w": 54,
+      "h": 40,
+      "top": 105,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "trips-tab-bookings",
+      "role": "tab",
+      "words": "预订",
+      "w": 54,
+      "h": 40,
+      "top": 105,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "trips-tab-spend",
+      "role": "tab",
+      "words": "花费",
+      "w": 54,
+      "h": 40,
+      "top": 105,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "poster-open",
+      "role": "BUTTON",
+      "words": "展开行程长图",
+      "w": 330,
+      "h": 44,
+      "top": 236,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "journey-abort-submit",
+      "role": "BUTTON",
+      "words": "",
+      "w": 96,
+      "h": 44,
+      "top": 522,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "trip-ai-work",
+      "role": "BUTTON",
+      "words": "AI 工作动态",
+      "w": 83,
+      "h": 44,
+      "top": 468,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "calendar-export",
+      "role": "BUTTON",
+      "words": "导出日历",
+      "w": 64,
+      "h": 44,
+      "top": 650,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "trip-day-0",
+      "role": "BUTTON",
+      "words": "10月10日周六 6 项",
+      "w": 356,
+      "h": 49,
+      "top": 733,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "trip-stop-details",
+      "role": "BUTTON",
+      "words": "详情 ›",
+      "w": 26,
+      "h": 44,
+      "top": 832,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "stop-checkin",
+      "role": "BUTTON",
+      "words": "打卡",
+      "w": 44,
+      "h": 44,
+      "top": 832,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "collect-entry",
+      "role": "BUTTON",
+      "words": "收藏到…",
+      "w": 272,
+      "h": 44,
+      "top": 894,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "trip-stop-details",
+      "role": "BUTTON",
+      "words": "详情 ›",
+      "w": 26,
+      "h": 44,
+      "top": 989,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "stop-checkin",
+      "role": "BUTTON",
+      "words": "打卡",
+      "w": 44,
+      "h": 44,
+      "top": 989,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "collect-entry",
+      "role": "BUTTON",
+      "words": "收藏到…",
+      "w": 272,
+      "h": 44,
+      "top": 1051,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "trip-stop-details",
+      "role": "BUTTON",
+      "words": "详情 ›",
+      "w": 26,
+      "h": 44,
+      "top": 1146,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "stop-checkin",
+      "role": "BUTTON",
+      "words": "打卡",
+      "w": 44,
+      "h": 44,
+      "top": 1146,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "collect-entry",
+      "role": "BUTTON",
+      "words": "收藏到…",
+      "w": 272,
+      "h": 44,
+      "top": 1208,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "trip-stop-details",
+      "role": "BUTTON",
+      "words": "详情 ›",
+      "w": 26,
+      "h": 44,
+      "top": 1303,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "stop-checkin",
+      "role": "BUTTON",
+      "words": "打卡",
+      "w": 44,
+      "h": 44,
+      "top": 1303,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "collect-entry",
+      "role": "BUTTON",
+      "words": "收藏到…",
+      "w": 272,
+      "h": 44,
+      "top": 1365,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "trip-stop-details",
+      "role": "BUTTON",
+      "words": "详情 ›",
+      "w": 26,
+      "h": 44,
+      "top": 1460,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "stop-checkin",
+      "role": "BUTTON",
+      "words": "打卡",
+      "w": 44,
+      "h": 44,
+      "top": 1460,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "collect-entry",
+      "role": "BUTTON",
+      "words": "收藏到…",
+      "w": 272,
+      "h": 44,
+      "top": 1522,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "trip-stop-details",
+      "role": "BUTTON",
+      "words": "详情 ›",
+      "w": 26,
+      "h": 44,
+      "top": 1617,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "stop-checkin",
+      "role": "BUTTON",
+      "words": "打卡",
+      "w": 44,
+      "h": 44,
+      "top": 1617,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": "collect-entry",
+      "role": "BUTTON",
+      "words": "收藏到…",
+      "w": 272,
+      "h": 44,
+      "top": 1679,
+      "on_screen": false,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": false
+     },
+     {
+      "testid": null,
+      "role": "BUTTON",
+      "words": "✦",
+      "w": 44,
+      "h": 44,
+      "top": 684,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-hub",
+      "role": "BUTTON",
+      "words": "今天",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-trips",
+      "role": "BUTTON",
+      "words": "行程",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-map",
+      "role": "BUTTON",
+      "words": "地图",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-agent",
+      "role": "BUTTON",
+      "words": "Copilot",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     },
+     {
+      "testid": "nav-me",
+      "role": "BUTTON",
+      "words": "我的",
+      "w": 76,
+      "h": 48,
+      "top": 789,
+      "on_screen": true,
+      "checked": null,
+      "disabled": null,
+      "centre_on_self": true
+     }
+    ],
+    "controls_under_44": 5,
+    "controls_off_screen": 18,
+    "controls_covered": 1,
+    "horizontal_overflow": false
+   }
+  }
+ ],
+ "page_errors": [],
+ "console_errors": [],
+ "outcome": "COMPLETE",
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "import_entry": "v8-drawer-entry-import",
+ "import_parse_press": {
+  "tag": "press_parse",
+  "testid": "poi-import-parse",
+  "pressed": true,
+  "box": [
+   54,
+   44
+  ]
+ },
+ "import_counts": "读出 5 行 · 对上 4 个 · 0 个要你选 · 1 个没找到",
+ "import_selection_before": "已选 0 / 可加 4",
+ "import_add_disabled_before": true,
+ "import_pick_boxes": [
+  {
+   "box": [
+    55,
+    44
+   ],
+   "top": 2046,
+   "on_screen": false,
+   "checked": "false"
+  },
+  {
+   "box": [
+    55,
+    44
+   ],
+   "top": 2224,
+   "on_screen": false,
+   "checked": "false"
+  },
+  {
+   "box": [
+    55,
+    44
+   ],
+   "top": 2402,
+   "on_screen": false,
+   "checked": "false"
+  },
+  {
+   "box": [
+    55,
+    44
+   ],
+   "top": 2580,
+   "on_screen": false,
+   "checked": "false"
+  }
+ ],
+ "import_select_all_box": [
+  {
+   "box": [
+    356,
+    44
+   ],
+   "on_screen": false,
+   "checked": "false"
+  }
+ ],
+ "import_row_press": {
+  "tag": "press_first_row_select",
+  "testid": "poi-card-select",
+  "pressed": true,
+  "box": [
+   55,
+   44
+  ]
+ },
+ "import_selection_after_row": "已选 1 / 可加 4",
+ "import_add_state_after_row": [
+  {
+   "disabled": false,
+   "box": [
+    97,
+    44
+   ]
+  }
+ ],
+ "import_select_all_press": {
+  "tag": "press_select_all",
+  "testid": "poi-import-select-all",
+  "pressed": true,
+  "box": [
+   356,
+   44
+  ]
+ },
+ "import_selection_after_all": "已选 4 / 可加 4",
+ "import_add_press": {
+  "tag": "press_add",
+  "testid": "poi-import-add",
+  "pressed": true,
+  "box": [
+   97,
+   44
+  ]
+ },
+ "import_added_words": "2 个地点已在 2026-10-10 ——这是从服务端读回来的结果。JOURNEY_FIRST_DAY",
+ "import_added_source": "JOURNEY_FIRST_DAY",
+ "import_already_present": "2 个本来就在那一天，没有重复添加。",
+ "import_readback_failed": null,
+ "import_open_plan_words": "打开计划",
+ "server_plans": {
+  "http_status": 200,
+  "plans": 1,
+  "first_plan_items": 0,
+  "first_plan_titles": []
+ },
+ "footprint_entry": "v8-drawer-entry-footprints",
+ "footprint_tally_words": "这次行程共有 0 枚足迹。",
+ "footprint_empty_words": "还没有足迹。打开行程，在一站上按「打卡」。",
+ "footprint_rows": 0,
+ "server_checkins": {
+  "http_status": 200,
+  "n": 0,
+  "payload_keys": null
+ },
+ "footprint_empty_action_words": "打开行程去打卡",
+ "footprint_empty_action_press": {
+  "tag": "press_empty_action",
+  "testid": "footprint-empty-action",
+  "pressed": true,
+  "box": [
+   146,
+   47
+  ]
+ },
+ "after_action_path": "/v8/trips",
+ "after_action_checkin_controls": [
+  {
+   "testid": "stop-checkin",
+   "words": "打卡",
+   "box": [
+    44,
+    44
+   ],
+   "on_screen": false
+  },
+  {
+   "testid": "stop-checkin",
+   "words": "打卡",
+   "box": [
+    44,
+    44
+   ],
+   "on_screen": false
+  },
+  {
+   "testid": "stop-checkin",
+   "words": "打卡",
+   "box": [
+    44,
+    44
+   ],
+   "on_screen": false
+  },
+  {
+   "testid": "stop-checkin",
+   "words": "打卡",
+   "box": [
+    44,
+    44
+   ],
+   "on_screen": false
+  },
+  {
+   "testid": "stop-checkin",
+   "words": "打卡",
+   "box": [
+    44,
+    44
+   ],
+   "on_screen": false
+  },
+  {
+   "testid": "stop-checkin",
+   "words": "打卡",
+   "box": [
+    44,
+    44
+   ],
+   "on_screen": false
+  }
+ ]
+}

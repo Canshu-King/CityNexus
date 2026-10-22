@@ -1,0 +1,130 @@
+{
+ "arm": "codes-on-screen-r4",
+ "ref": "b76b4eb0b9a3e69dbbb520edccf590b8dc9922e5",
+ "base": "af8ad6a1c32021852ade9a7fa6d9f782f687879f",
+ "require_name": true,
+ "only_added": false,
+ "files_judged": 1,
+ "problems": [
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 70,
+   "entry_line": 70,
+   "token": "LOCAL_TEXT_PARSER",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "source_channel: \"LOCAL_TEXT_PARSER\";"
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 115,
+   "entry_line": 115,
+   "token": "JOURNEY_NOT_FOUND",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"JOURNEY_NOT_FOUND\","
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 116,
+   "entry_line": 116,
+   "token": "NO_ACTIVE_PLAN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"NO_ACTIVE_PLAN\","
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 117,
+   "entry_line": 117,
+   "token": "IMPORT_DAY_REQUIRED",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"IMPORT_DAY_REQUIRED\","
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 118,
+   "entry_line": 118,
+   "token": "IMPORT_PLACE_UNKNOWN",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"IMPORT_PLACE_UNKNOWN\","
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 119,
+   "entry_line": 119,
+   "token": "IMPORT_PLACE_NOT_VISITABLE",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\"IMPORT_PLACE_NOT_VISITABLE\","
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 139,
+   "entry_line": 139,
+   "token": "UNNAMED_REFUSAL",
+   "position": "rendered",
+   "named_by": "this_file_names_it",
+   "class": "refuse",
+   "text": "return { code: code ?? \"UNNAMED_REFUSAL\", status: cause.http_status };"
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 141,
+   "entry_line": 141,
+   "token": "NO_RESPONSE_FROM_ORIGIN",
+   "position": "rendered",
+   "named_by": "this_file_names_it",
+   "class": "refuse",
+   "text": "return { code: \"NO_RESPONSE_FROM_ORIGIN\", status: null };"
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 523,
+   "entry_line": 523,
+   "token": "LOCAL_TEXT_PARSER",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "\">{poiImportCopy(locale, CHANNEL_NAME[parsed?.source_channel ?? \"LOCAL_TEXT_PARSER\"])}</b>"
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 529,
+   "entry_line": 529,
+   "token": "LOCAL_TEXT_PARSER",
+   "position": "rendered",
+   "named_by": "server_corpus",
+   "class": "refuse",
+   "text": "a-testid=\"poi-import-channel-token\">{parsed?.source_channel ?? \"LOCAL_TEXT_PARSER\"}</code>"
+  }
+ ],
+ "informational": [
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 19,
+   "entry_line": 19,
+   "token": "poi-import",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import \"./poi-import.css\";"
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 600,
+   "entry_line": 600,
+   "token": "pick-box,poi-import-select-all",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "hosen ? \"v8-pick-box checked poi-import-select-all\" : \"v8-pick-box poi-import-select-all\"}"
+  }
+ ]
+}

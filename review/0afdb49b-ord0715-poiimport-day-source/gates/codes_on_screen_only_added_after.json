@@ -1,0 +1,371 @@
+{
+ "arm": "codes-on-screen-r4",
+ "ref": "b76b4eb0b9a3e69dbbb520edccf590b8dc9922e5",
+ "base": "01d6f8fc811e9abd44b09374591e4fc51e0bdcab",
+ "require_name": true,
+ "only_added": true,
+ "files_judged": 5,
+ "problems": [],
+ "informational": [
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 69,
+   "entry_line": 69,
+   "token": "traveler-twin",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import { TwinPanel } from \"../features/traveler-twin/TwinPanel\";"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1857,
+   "entry_line": 1857,
+   "token": "failure-choose-journey",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-choose-journey\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1866,
+   "entry_line": 1866,
+   "token": "failure-sign-in",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-sign-in\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1877,
+   "entry_line": 1877,
+   "token": "failure-retry-later",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-retry-later\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1887,
+   "entry_line": 1887,
+   "token": "failure-view-current-state",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-view-current-state\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1897,
+   "entry_line": 1897,
+   "token": "failure-read-cached",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-read-cached\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1905,
+   "entry_line": 1905,
+   "token": "failure-retry",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "testId: \"failure-retry\","
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2563,
+   "entry_line": 2563,
+   "token": "drawer-entry",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={\"v8-drawer-entry-\" + item.key}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2709,
+   "entry_line": 2709,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id={`trips-tab-${item.key}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2714,
+   "entry_line": 2714,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`trips-tab-${item.key}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 2741,
+   "entry_line": 2741,
+   "token": "trips-tab",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "aria-labelledby={`trips-tab-${tab}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 3170,
+   "entry_line": 3170,
+   "token": "today-advisory",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "className={`today-advisory${advisory.tight ? \" tight\" : \"\"}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4411,
+   "entry_line": 4411,
+   "token": "map-stop",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "className={stop.id === selectedActivityId ? \"v8-map-stop selected\" : \"v8-map-stop\"}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4414,
+   "entry_line": 4414,
+   "token": "map-stop",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "data-testid={`map-stop-${stop.id}`}"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 4850,
+   "entry_line": 4850,
+   "token": "booking-state",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "e={`v8-booking-state${serverConfirmed(item.status) && item.commitment_id ? \" safe\" : \"\"}`}"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 2,
+   "entry_line": 2,
+   "token": "maplibre-gl",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import \"maplibre-gl/dist/maplibre-gl.css\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 10,
+   "entry_line": 10,
+   "token": "map-attribution",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import \"../../map-attribution.css\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 11,
+   "entry_line": 11,
+   "token": "map-selection",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import \"../../map-selection.css\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 12,
+   "entry_line": 12,
+   "token": "map-stop-labels",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import \"../../map-stop-labels.css\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 457,
+   "entry_line": 450,
+   "token": "open-street-map",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"open-street-map\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 459,
+   "entry_line": 459,
+   "token": "open-street-map",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "source: \"open-street-map\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 465,
+   "entry_line": 465,
+   "token": "journey-provider-route-casing",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"journey-provider-route-casing\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 467,
+   "entry_line": 467,
+   "token": "journey-provider-route",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "source: \"journey-provider-route\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 483,
+   "entry_line": 483,
+   "token": "journey-provider-route",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "id: \"journey-provider-route\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 485,
+   "entry_line": 485,
+   "token": "journey-provider-route",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "source: \"journey-provider-route\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 571,
+   "entry_line": 571,
+   "token": "map-marker",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "protected\" : \"\"} ${point.current ? \"current\" : \"\"} ${point.disrupted ? \"disrupted\" : \"\"}`;"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 607,
+   "entry_line": 607,
+   "token": "map-stop-label",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "chip.className = \"v8-map-stop-label\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 645,
+   "entry_line": 645,
+   "token": "map-marker",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "user.className = \"v9-map-marker user\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 774,
+   "entry_line": 774,
+   "token": "on-target",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "Math.hypot(want.x - have.x, want.y - have.y) > TOLERANCE_PX ? \"off-target\" : \"on-target\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 855,
+   "entry_line": 855,
+   "token": "map-stamp-date",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "badge.className = \"v8-map-stamp-date\";"
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 893,
+   "entry_line": 893,
+   "token": "data-testid,map-attribution",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"[data-testid='v8-map-attribution']\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 894,
+   "entry_line": 894,
+   "token": "map-overlay-stack",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\".v8-map-overlay-stack\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 895,
+   "entry_line": 895,
+   "token": "map-caption",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\".v8-map-caption\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 896,
+   "entry_line": 896,
+   "token": "map-tile-notice",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\".v8-map-tile-notice\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 900,
+   "entry_line": 900,
+   "token": "map-degraded",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\".v8-map-degraded\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 901,
+   "entry_line": 901,
+   "token": "data-testid,map-gesture-hint",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"[data-testid='v8-map-gesture-hint']\","
+  },
+  {
+   "file": "frontend/src/components/v8/MapPanel.tsx",
+   "line": 902,
+   "entry_line": 902,
+   "token": "data-testid,map-viewport-reset",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "\"[data-testid='map-viewport-reset']\","
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 19,
+   "entry_line": 19,
+   "token": "poi-import",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "import \"./poi-import.css\";"
+  },
+  {
+   "file": "frontend/src/features/poiimport/PoiImportPanel.tsx",
+   "line": 600,
+   "entry_line": 600,
+   "token": "pick-box,poi-import-select-all",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "hosen ? \"v8-pick-box checked poi-import-select-all\" : \"v8-pick-box poi-import-select-all\"}"
+  },
+  {
+   "file": "frontend/src/features/poiimport/poiImportCopy.ts",
+   "line": 228,
+   "entry_line": 226,
+   "token": "third-party",
+   "position": "rendered",
+   "class": "info_slug_only",
+   "text": "en: \"Local parser; no third-party reading service.\","
+  }
+ ]
+}

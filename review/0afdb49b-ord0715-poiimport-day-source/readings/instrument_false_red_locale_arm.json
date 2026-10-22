@@ -1,0 +1,60 @@
+{
+ "schema": "CNX_IMPORT_DAY_SOURCE_R2",
+ "base": "http://127.0.0.1:4898",
+ "want_locale": "en",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "started": "Thu Oct 22 2026 09:49:17 GMT+0800 (中国标准时间)",
+ "page_errors": [],
+ "outcome": "COMPLETE",
+ "lang_on_hub": "zh-CN",
+ "language_control_words": "EN",
+ "lang_before_toggle": "zh-CN",
+ "toggle_press": {
+  "tag": "toggle_language",
+  "testid": "topbar-language",
+  "pressed": true,
+  "box": [
+   44,
+   44
+  ]
+ },
+ "lang_after_toggle": "en",
+ "locale_reached": true,
+ "drawer_entry": "v8-drawer-entry-import",
+ "drawer_entry_words": "Import places",
+ "parse_press": {
+  "tag": "parse",
+  "testid": "poi-import-parse",
+  "pressed": true,
+  "box": [
+   78,
+   44
+  ]
+ },
+ "counts": "2 lines read · 2 matched · 0 need your choice · 0 not found",
+ "select_all_press": {
+  "tag": "select_all",
+  "testid": "poi-import-select-all",
+  "pressed": false,
+  "why": "CENTRE_LANDS_ON_SPAN"
+ },
+ "add_press": {
+  "tag": "add",
+  "testid": "poi-import-add",
+  "pressed": false,
+  "why": "CONTROL_DISABLED",
+  "box": [
+   115,
+   44
+  ]
+ },
+ "added_line": null,
+ "added_source_words": null,
+ "already_present_line": null,
+ "fold_present": false,
+ "token_after_open": null,
+ "codes_in_traveller_cells": []
+}
