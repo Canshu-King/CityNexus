@@ -161,6 +161,16 @@ const CHANNEL_NAME: Record<ParseResponse["source_channel"], PoiImportCopyKey> = 
   LOCAL_TEXT_PARSER: "channelValueLocal",
 };
 
+/* The server's `day_source` is an enumerated field (contracts/openapi.yaml, and the two arms are
+   `Literal[...]` in the schema), and this screen used to print its value straight into the success
+   sentence -- measured on the glass at 390: "2 个地点已在 2026-10-10 ——这是从服务端读回来的结果。
+   JOURNEY_FIRST_DAY".  Words go in the main slot; a source the dictionary does not know stays silent
+   there rather than becoming a code in a sentence, and the raw value remains in the fold below. */
+const DAY_SOURCE_NAME: Record<string, PoiImportCopyKey | null> = {
+  TRAVELLER_CHOSEN: "daySourceTravellerChosen",
+  JOURNEY_FIRST_DAY: "daySourceJourneyFirstDay",
+};
+
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
@@ -705,10 +715,22 @@ export function PoiImportPanel({
                       under the 本来就在 line, which is the second success the order forbids -- measured in
                       the gate's own replay arm. What a replay may say is what was already there. */}
                   {added && added.ids.length > 0 ? (
-                    <p data-testid="poi-import-added">
-                      {poiImportCopy(locale, "addedCount", { n: added.ids.length, day: added.day })}
-                      <small data-testid="poi-import-added-source">{added.daySource}</small>
-                    </p>
+                    <>
+                      <p data-testid="poi-import-added">
+                        {poiImportCopy(locale, "addedCount", { n: added.ids.length, day: added.day })}
+                        {DAY_SOURCE_NAME[added.daySource] ? (
+                          <small data-testid="poi-import-added-source">
+                            {poiImportCopy(locale, DAY_SOURCE_NAME[added.daySource] as PoiImportCopyKey)}
+                          </small>
+                        ) : null}
+                      </p>
+                      {/* The value the server answered stays reachable where a person goes to diagnose,
+                          which is the fold -- the same split the channel cell already uses. */}
+                      <details data-testid="poi-import-added-source-fold">
+                        <summary>{poiImportCopy(locale, "technicalToggle")}</summary>
+                        <code data-testid="poi-import-added-source-token">{added.daySource}</code>
+                      </details>
+                    </>
                   ) : null}
                   {alreadyPresent.length ? (
                     <p data-testid="poi-import-already-present">

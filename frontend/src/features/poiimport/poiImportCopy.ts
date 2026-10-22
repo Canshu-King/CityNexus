@@ -54,6 +54,11 @@ export type PoiImportCopyKey =
   | "charCount"
   | "counts"
   | "dayLabel"
+  /* ORD-0715 shape found on the glass, not in the source: the write-back line printed the server's own
+     `day_source` value, so a traveller who had just added places read `JOURNEY_FIRST_DAY` inside a
+     sentence. Both arms of that field are enumerated in the contract, so both get words here. */
+  | "daySourceJourneyFirstDay"
+  | "daySourceTravellerChosen"
   /* ORD-0470: the nothing-extracted cell used to be a sentence with no door under it. */
   | "emptyClearAction"
   | "emptyDiscoverAction"
@@ -237,6 +242,14 @@ const COPY: Record<PoiImportCopyKey, { zh: string; en: string }> = {
   dayLabel: {
     zh: "落点日子",
     en: "Landing day",
+  },
+  daySourceJourneyFirstDay: {
+    zh: "你没填日子，它落在计划的第一天",
+    en: "You left the day empty, so it landed on the plan's first day",
+  },
+  daySourceTravellerChosen: {
+    zh: "日子是你填的那一天",
+    en: "The day is the one you typed",
   },
   /* ORD-0470: two doors under the nothing-extracted sentence.  清空重写 is a control that acts on this
      screen's own input, and 去城市探索 is the nav's own word for the route that fills the catalogue
