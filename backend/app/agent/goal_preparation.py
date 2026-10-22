@@ -145,13 +145,33 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
             cost = _place_verified_cost(place) if place else None
             if cost is None:
                 missing.append("ADMISSION_PRICE")
+            hop: dict | None = None
             if number > 1 and slots[indices[number - 2]][0] == date:
-                missing.append("TRANSFER_ROUTE")
+                # This line used to append TRANSFER_ROUTE unconditionally for every same-day pair, so
+                # the traveller's to-do complained about hops the Agent had already had AMap route.
+                # Measured in the walked journey (trial/results/20261022_v3_human_chrome/
+                # research-routes-in-walked-journey-1.txt): five same-day hops, four of them carrying a
+                # real provider route (3385 m / 2708 s and friends), and the screen named all five as
+                # missing.  The routes the task acquired live in task["research_routes"]
+                # (backend/app/agent/goal_amap.py:210), keyed by these very place ids, so the to-do can
+                # now point at the hop that genuinely has no evidence -- and nothing here changes
+                # whether a candidate is selectable, which services.py decides elsewhere.
+                previous_slot = slots[indices[number - 2]][1]
+                previous_source = str(previous_slot.get("place_id") or "")
+                hop = next((row for row in task.get("research_routes") or []
+                            if isinstance(row, dict) and row.get("from_place_id") == previous_source
+                            and row.get("to_place_id") == source_id), None)
+                if hop is None:
+                    missing.append("TRANSFER_ROUTE")
             metadata = {"goal_task_id": mission.id, "draft_revision": body.expected_revision,
                         "source_candidate_id": source_id or None, "time_basis": "USER_CONFIRMED_SCHEDULE",
                         "cost_evidence": {"status": "UNKNOWN", "amount_minor": None}, "cost_status": "UNKNOWN",
                         "price_known": cost is not None, "cost_included_in_total": cost is not None,
                         "draft_notes": str(slot.get("notes") or ""), "preparation_gaps": missing}
+            if hop is not None:
+                metadata["transfer_route"] = {key: hop.get(key) for key in
+                    ("from_place_id", "to_place_id", "from_name", "to_name", "provider",
+                     "distance_m", "duration_seconds", "captured_at", "source_url")}
             if place:
                 metadata["cost_status"] = "KNOWN" if cost is not None else "UNKNOWN"
                 metadata["cost_evidence"] = json.loads(place.metadata_json or "{}").get("cost_evidence", metadata["cost_evidence"])

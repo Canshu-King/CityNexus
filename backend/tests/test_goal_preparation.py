@@ -138,3 +138,63 @@ def test_exact_existing_source_identity_only_not_name_matching(prepared_scope):
     plan=next(p for p in plans if p["id"]==result.json()["plan_version_id"])
     assert plan["activities"][0]["cost_status"]=="KNOWN_FREE"
     assert "ADMISSION_PRICE" not in {gap["kind"] for gap in result.json()["gaps"]}
+
+
+def test_a_hop_the_agent_already_routed_is_not_listed_as_missing(prepared_scope):
+    """The departure to-do used to name every same-day hop as missing, evidence or not.
+
+    Measured on the walked journey: five same-day hops, four of them carrying a real AMap walking
+    route the Agent had fetched (3385 m / 2708 s and friends,
+    trial/results/20261022_v3_human_chrome/research-routes-in-walked-journey-1.txt), and the screen
+    still said 转场路线 for all five.  A to-do that cannot be satisfied by evidence is not a to-do.  The
+    hop nobody fetched must still be named, and naming the routed one must not make the candidate any
+    more selectable than the authority rules already allow.
+    """
+    client, headers, _, jid, tid, path, body = prepared_scope
+    with SessionLocal() as s:
+        s.get(Journey, jid).end_at = "2026-11-01T22:00:00+08:00"
+        s.commit()
+    draft_path = path.removesuffix("/prepare-plan") + "/draft"
+    days = [{"date": "2026-11-01", "slots": [
+        {"title": "TEST_FIXTURE 第一站", "time_of_day": "morning", "notes": ""},
+        {"title": "TEST_FIXTURE 第二站", "time_of_day": "afternoon", "notes": ""},
+        {"title": "TEST_FIXTURE 第三站", "time_of_day": "evening", "notes": ""}]}]
+    assert client.put(draft_path, headers=headers, json={"expected_revision": 1, "days": days}).status_code == 200
+    with SessionLocal() as s:
+        mission = s.get(JourneyMission, tid)
+        intent = json.loads(mission.intent_json)
+        task = intent["goal_task"]
+        for index, place in enumerate(("a", "b", "c")):
+            task["draft_artifact"]["days"][0]["slots"][index]["place_id"] = f"amap:fixture-{place}"
+        # A slot that names a place has to name one this task actually researched -- the same door the
+        # traveller's screen goes through, so the fixture cannot skip it.
+        task["research_places"] = [{"id": f"amap:fixture-{place}", "name": f"TEST_FIXTURE 第{index}站",
+            "provider": "amap", "provider_object_id": f"fixture-{place}", "provider_provenance": "LIVE_PROVIDER",
+            "latitude": 39.9 + index * 0.01, "longitude": 116.4, "coordinate_system": "GCJ02",
+            "region_status": "MATCHED", "category": "景点"}
+            for index, place in enumerate(("a", "b", "c"))]
+        task["research_routes"] = [{"from_place_id": "amap:fixture-a", "to_place_id": "amap:fixture-b",
+            "from_name": "TEST_FIXTURE 第一站", "to_name": "TEST_FIXTURE 第二站", "provider": "amap",
+            "distance_m": 1445, "duration_seconds": 1156, "captured_at": "2026-10-22T16:00:00+00:00",
+            "source_url": "https://uri.amap.com/navigation?fixture=1"}]
+        mission.intent_json = json.dumps(intent)
+        s.commit()
+    schedule = [{"day_index": 0, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"},
+                {"day_index": 0, "slot_index": 1, "start_time": "14:00", "end_time": "15:00"},
+                {"day_index": 0, "slot_index": 2, "start_time": "19:00", "end_time": "20:00"}]
+    result = client.post(path, headers=headers, json={"expected_revision": 2, "schedule": schedule})
+    assert result.status_code == 201, result.text
+    by_sequence: dict[int, set[str]] = {}
+    for gap in result.json()["gaps"]:
+        by_sequence.setdefault(gap["sequence_no"], set()).add(gap["kind"])
+    assert "TRANSFER_ROUTE" not in by_sequence.get(2, set()), by_sequence
+    assert "TRANSFER_ROUTE" in by_sequence.get(3, set()), by_sequence
+    with SessionLocal() as s:
+        rows = s.scalars(select(Activity).where(Activity.plan_version_id == result.json()["plan_version_id"])
+            .order_by(Activity.sequence_no)).all()
+        hop = json.loads(rows[1].metadata_json).get("transfer_route") or {}
+        assert hop.get("distance_m") == 1445 and hop.get("provider") == "amap", hop
+        assert json.loads(rows[2].metadata_json).get("transfer_route") is None
+    plans = client.get(f"/api/v1/journeys/{jid}/plans", headers=headers).json()
+    plan = next(item for item in plans if item["id"] == result.json()["plan_version_id"])
+    assert plan["selectable"] is False, "a routed hop must not by itself open the selection door"

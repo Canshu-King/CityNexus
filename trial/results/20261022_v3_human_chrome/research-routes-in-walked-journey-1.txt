@@ -1,0 +1,16 @@
+TABLE journey_missions intent_json research_routes= 6
+   ROUTE amap:B000A83C1S -> amap:B000A8UIN8 | m= 3385 s= 2708
+   ROUTE amap:B000A8UIN8 -> amap:B000A7I1OL | m= 1445 s= 1156
+   ROUTE amap:B000A7I1OL -> amap:B000A8UR3U | m= 4322 s= 3458
+   ROUTE amap:B000A81CB2 -> amap:B000A8UR3U | m= 2372 s= 1898
+   ROUTE amap:B000A8UR3U -> amap:B0FFFAH7I9 | m= 5072 s= 4058
+   ROUTE amap:B000A7O1CU -> amap:B000A8UR3U | m= 20260 s= 16208
+   DRAFT_SLOTS 7
+      SLOT ('2026-12-03', 'amap:B000A83C1S', '天安门广场（清晨人少、需安检）')
+      SLOT ('2026-12-03', 'amap:B000A8UIN8', '故宫博物院（08:30开，周一闭馆，')
+      SLOT ('2026-12-03', 'amap:B000A7I1OL', '景山公园·万春亭俯瞰故宫')
+      SLOT ('2026-12-03', 'amap:B000A8UR3U', '前门大街/大栅栏晚餐')
+      SLOT ('2026-12-04', 'amap:B000A09F5A', '慕田峪长城（缆车上下，省体力、人少景')
+      SLOT ('2026-12-04', 'amap:B000A7O1CU', '颐和园（昆明湖乘船/长廊，少爬坡）')
+      SLOT ('2026-12-04', 'amap:B000A8UR3U', '市区晚餐，21:00前结束')
+ANY_ROUTES_FOUND True
