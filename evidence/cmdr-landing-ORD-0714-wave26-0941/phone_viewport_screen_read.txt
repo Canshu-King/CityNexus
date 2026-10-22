@@ -1,0 +1,27 @@
+第廿六波（ORD-0714）手机视口屏读补证 · 现尖 af8ad6a1c32021852ade9a7fa6d9f782f687879f
+读取时刻 2026-10-22 10:18（本地 +08）
+
+被测对象：127.0.0.1:4179 上那枚 vite preview（`D:/moodle/_cmdr_wave23_check_1022a/frontend/dist`，
+与落地那一代同一份源文件的 `vite build` 产物，rc=0；落地门的 frontend_build 臂对候选 blob 判 equal）。
+CITYNEXUS_BACKEND_PORT=8010，走 vite 自己的 preview.proxy；`/api/v1/health` 同拍现读 http_status=200、
+ai_state=PROVIDER_ANSWERED。视口 390×844（手机那一档，不是桌面）。
+驱动：Playwright，断言读的是渲染出来的文字（textContent），并且当场取了那一格的渲染盒——
+盒宽 341、高 23、getBoundingClientRect 有值，所以是"画在屏上"，不是"在 DOM 里但没渲染"。
+
+臂一 语言 zh-CN（documentElement.lang=zh-CN 现读）
+  今日那一格（.cn-hero-meta）屏上原文：今天还有 5 项安排
+  同屏还读到：接下来 · 09:00 Luggage drop · Haihe Riverside Hotel
+  横向溢出 scrollWidth - clientWidth = 0
+臂二 语言 en（点过语言开关、documentElement.lang=en 现读）
+  今日那一格屏上原文：5 stops today
+  同屏还读到：Next · 09:00 Luggage drop · Haihe Riverside Hotel
+  横向溢出 = 0
+
+这一格是真走到的（演示行程今天有 5 站，n=5 是复数那一支），所以第廿六波那句
+`{n} {plural:stop} today` 在屏上读到的是整句；n=1 那支由 `lib/plural.ts` 的真函数跑出来证明
+（见 plural_check_reading.txt），不是屏读。
+
+另外记一件我量到但不属于这一波的事：中文那一臂里，站点标题仍是英文
+（"Luggage drop · Haihe Riverside Hotel"）。这是服务端回写的既有活动名，不是应用壳拼的——
+应用壳这一格只把 `nextUp.title` 原样念出来。这条按"行程名按读者的语言生成"那一笔的旧账看，
+属于种子数据侧，不是这次文案刀的范围，我记在这儿等点名，不含糊过去。
