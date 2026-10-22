@@ -47,8 +47,14 @@ function labelsIn(rows: GapRow[]): string[] {
 }
 
 // Why a saved schedule cannot be chosen yet, from the reasons the server actually listed.
-export function missingFactsSentence(rows: GapRow[]): string {
+// A candidate with no frozen walking evidence says so too: selection reads that evidence and nothing
+// a traveller can press on this screen writes it (backend/app/main.py:18120 asks for a snapshot id, and
+// the draft door declares at backend/app/agent/goal_preparation.py:76 that it freezes none).
+export function missingFactsSentence(rows: GapRow[], hasMobilityEvidence = true): string {
   const labels = labelsIn(rows);
-  if (!labels.length) return "这份方案现在还不能选用。";
-  return `这版方案还缺：${labels.join("、")}。出发待办逐处写着找谁要。`;
+  const parts: string[] = [];
+  if (labels.length) parts.push(`这版方案还缺：${labels.join("、")}。出发待办逐处写着找谁要。`);
+  if (!hasMobilityEvidence) parts.push("这份候选里没有冻结的步行时间。");
+  if (!parts.length) return "这份方案现在还不能选用。";
+  return parts.join("");
 }

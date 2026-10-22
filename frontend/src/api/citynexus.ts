@@ -61,6 +61,7 @@ export interface PlanVersion {
   is_current?: boolean;
   stale?: boolean;
   selectable?: boolean;
+  mobility_snapshot_id?: string | null;
   lifecycle?: string;
   explanation?: Record<string, unknown>;
 }
