@@ -1268,12 +1268,8 @@ export function V8Experience() {
         /* Fail closed, with the reason the server gave: no silent POST fallback. */
         setSealedDemoUnavailable(
           !scene.demo_mode
-            ? locale === "zh-CN"
-              ? "这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。"
-              : "This deployment is not a demo stage (demo_mode=false), so there is no sealed demo to enter."
-            : locale === "zh-CN"
-              ? "服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。"
-              : "The server currently names no usable sealed demo journey, so this entry is closed. Try again later, or create your own trip.",
+            ? t("demo.notAStage")
+            : t("demo.noSealedJourney"),
         );
         return;
       }
@@ -3100,9 +3096,7 @@ function Hub({
                 </span>
               </strong>
               <span>
-                {zh
-                  ? "服务器不会中途汇报进度，这里只有真实等待时间。第一次搜索一个城市可能要一两分钟。"
-                  : "The server reports nothing until it finishes, so this is measured waiting time. A city's first search can take a minute or two."}
+                {t("hub.stayWaitingNote")}
               </span>
             </div>
           )}
@@ -3114,9 +3108,7 @@ function Hub({
               role="alert"
             >
               <strong>
-                {zh
-                  ? "住宿搜索失败了，行程本身还在。"
-                  : "The stay search failed — your trip is untouched."}
+                {t("hub.stayFailed")}
               </strong>
               <button
                 type="button"
@@ -3140,9 +3132,7 @@ function Hub({
               role="status"
             >
               <strong>
-                {zh
-                  ? "这次没找到可推荐的住宿"
-                  : "No stay options came back this time"}
+                {t("hub.stayEmpty")}
               </strong>
               <p>{stayOutcomeLine(stayOutcome, zh)}</p>
               <div className="hub-stay-empty-actions">
@@ -3474,26 +3464,18 @@ function Hub({
             <strong className="cn-hero-next-row">
               {nextUp
                 ? `${heroClock ?? ""} ${nextUp.title}`.trim()
-                : zh
-                  ? "还没有安排"
-                  : "Nothing scheduled"}
+                : t("today.nothingScheduled")}
             </strong>
             {nextUp ? (
               <small className="cn-hero-meta">
                 {todayStops.length
-                  ? zh
-                    ? `今天还有 ${todayStops.length} 项安排`
-                    : `${todayStops.length} stops today`
+                  ? t("today.stopsToday", { n: todayStops.length })
                   : /* An empty calendar day says nothing about whether further stops exist -- only
                        the server's sequence does.  "暂无安排" beside a real later stop was the same
                        contradiction in a smaller font. */
                     remainingAfterNext > 0
-                      ? zh
-                        ? `后面还有 ${remainingAfterNext} 站`
-                        : `${remainingAfterNext} stops after this`
-                      : zh
-                        ? "这一趟到下一站就结束了"
-                        : "This trip ends at the next stop"}
+                      ? t("today.stopsAfterThis", { n: remainingAfterNext })
+                      : t("today.tripEndsNextStop")}
               </small>
             ) : null}
           </div>
@@ -3625,9 +3607,7 @@ function Hub({
         <div className="v8-empty-state" data-testid="hub-glance-empty">
           <b>{t("hub.nothingToPreview")}</b>
           <p>
-            {zh
-              ? "选定方案后，这里会显示每天的安排。"
-              : "Choose a plan and the day-by-day plan appears here."}
+            {t("itinerary.choosePlanHint")}
           </p>
         </div>
       )}
@@ -3722,9 +3702,7 @@ function Studio({
         <div className="v8-days-column">
           {!chosen && selected && (
             <p className="v8-muted" data-testid="studio-preview-caveat">
-              {locale.startsWith("zh")
-                ? "以下只是候选方案的预览，你还没有采用它。"
-                : "This is a preview of a candidate option - you have not chosen a plan yet."}
+              {t("itinerary.candidatePreviewNote")}
             </p>
           )}
           {selected?.days.map((day) => (
