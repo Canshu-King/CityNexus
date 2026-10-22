@@ -1,0 +1,37 @@
+第廿五波（ORD-0714）屏读记录 · 现尖 2f9fc88d22658fea9f80f69218aa3fcdc301f692
+读取时刻 2026-10-22 09:16–09:18（本地 +08）
+被测对象：D:/moodle/_cmdr_wave23_check_1022a/frontend/dist（同一代 vite build 产物，rc=0），
+用 vite preview 起在 127.0.0.1:4179，CITYNEXUS_BACKEND_PORT=8010，走 vite 自己的 preview.proxy，
+不是另写的一个静态壳。/api/v1/health 经该壳实测 http_status=200、ai_state=PROVIDER_ANSWERED。
+驱动：Playwright 真点击（不是 --dump-dom），断言读的是渲染出来的文字（textContent），不是 data-* 属性。
+
+场景注入只有一处：page.route 把 /api/v1/demo/scene 的应答换成 {demo_mode, journey_id} 两种形状，
+目的是把「进不去封存演示」那两格带读者语言的真字读到——这台部署真值是 demo_mode=true、
+journey_id=1cfb54f2-5934-4161-99e0-5aa78ec16706（现读原文见下），真机上那两格本来就走不到。
+其余全按真流程走：点 hub-new-journey 开向导、点 trial-tianjin-demo 按入口、读 trial-sealed-unavailable。
+后端数据面没有因为这次屏读被写坏：入口这一支自 ORD-0209 起不再 POST 建行程。
+
+现读 /api/v1/demo/scene（真值，未注入）：
+{"demo_mode":true,"journey_id":"1cfb54f2-5934-4161-99e0-5aa78ec16706","journey_status":"ACTIVE",
+ "current_activity_id":"5a5363a9-3050-478d-9860-5229dea21fa0","basis":"CURSOR",
+ "evidence_state":"NO_FROZEN_EVIDENCE"}
+
+臂一 语言 zh-CN · 注入 demo_mode=false
+  屏上读到：这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。
+  同一格里还读到可执行下一步 trial-sealed-retry 一枚（重试按钮在世）
+臂二 语言 zh-CN · 注入 demo_mode=true 且 journey_id=null
+  屏上读到：服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。
+臂三 语言 en（点 topbar-language 后 document.documentElement.lang=en）· 注入 demo_mode=false
+  屏上读到：This deployment is not a demo stage (demo_mode=false), so there is no sealed demo to enter.
+臂四 语言 en · 注入 demo_mode=true 且 journey_id=null
+  屏上读到：The server currently names no usable sealed demo journey, so this entry is closed. Try again later, or create your own trip.
+
+第一次跑这四臂时出过我自己的一个错：把语言开关当成「设成英文」用了，它其实是 toggle——
+第三臂从 zh 切到 en 是对的，第四臂再点一次就切回 zh，于是第四臂重复证了中文那一句。
+上面第三、四臂是改法（先读 document.documentElement.lang，只在需要时点一次）之后的重测。
+
+其余六句（住宿搜索的等待补语／失败／零结果、方案选择提示、候选预览补语、"还没有安排"）
+这一代屏上没有走到：它们各是一个状态格，而现尖这台部署的演示行程正处 ACTIVE、有方案、有 nextUp
+（屏上 today-hero 那行走的是有安排那一支，读到 09:00 Luggage drop · Haihe Riverside Hotel）。
+这六句换的是写者不是字，字节层面对账见 cmdr_wave25_byte_identity_1022a.txt：
+每句的中英文在旧尖应用壳里各以同样的字节出现过一枚，现尖壳里都已归零，且键在旧尖字典里原本不存在。
