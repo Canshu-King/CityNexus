@@ -1,0 +1,38 @@
+{
+  "product_sha": "338db540d2d32346e44203cefa0d01e215891100",
+  "visual_source_sha": "f94f6917d0c73f6615c39634050336c2d7819346",
+  "journey_id": "156d1cb9-398b-4c13-a789-7f699268b42f",
+  "task_id": "bac11cb8-2f52-4111-aa97-204c1f0b48cb",
+  "run_id": "ef62e774-d99c-4e08-98ab-e57f77015f8a",
+  "session": "Existing owner, locally operator-signed browser session",
+  "interaction": "chrome-use native fill and click; one resume request, no replay",
+  "request": "第二天下午只保留连城县博物馆和客家博物馆，去掉下午的石门湖备选。其他日期和时段保持原样，不新增地点或路线查询，只修改已有草案。",
+  "revision_before": 6,
+  "revision_after": 7,
+  "same_task_after_reload": true,
+  "draft_restored_exactly": true,
+  "other_dates_and_periods_unchanged": true,
+  "unchanged_slots_sha256": "9987384efe25db84ea86d792d1cb1e849ba08e0be4aa48e4ae432c222b5c9ac0",
+  "variants_unchanged": true,
+  "model_turns": [
+    46,
+    48
+  ],
+  "tool_calls": [
+    42,
+    43
+  ],
+  "completed_steps": [
+    {
+      "tool_name": "replace_draft_slots",
+      "status": "COMPLETED"
+    }
+  ],
+  "provider_call_rows": [
+    73,
+    73
+  ],
+  "hardware_phone": false,
+  "USER_VERIFIED": "PENDING",
+  "generic_agent_media_lookup": "NOT_INTEGRATED; current photos are three curated source-bound Commons records"
+}

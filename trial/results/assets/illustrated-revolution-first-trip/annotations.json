@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "product_sha": "1dbaa828872543112c9db2457f2c3ab6b54a6058",
+  "pr": 23,
+  "url": "http://127.0.0.1:14332/revolution",
+  "capture_date": "2026-10-18",
+  "browser": "headed Chrome-use isolated session",
+  "viewport_css_px": { "width": 390, "height": 844 },
+  "device_pixel_ratio": 3,
+  "screenshot_scale": 0.333333,
+  "bbox_source": "Live Chrome-use get box output for the named accessible element; CSS-pixel bounds were measured in the matching screen state before capture.",
+  "annotated_canvas_note": "Annotated PNGs add a labeled footer below the untouched 390x844 screenshot. Red outlines use the recorded CSS-pixel element bounds; red circles connect to the numbered Chinese action labels in the footer.",
+  "screenshots": [
+    {
+      "id": "01-home",
+      "raw": "raw/final-00-home-hefei-1dbaa-390x844.png",
+      "annotated": "annotated/01-home.png",
+      "callouts": [
+        {
+          "number": 1,
+          "element": "textbox 目的地 @e25",
+          "label": "目的地：合肥市",
+          "bbox_css": { "x": 30.52852249145508, "y": 354.10235595703125, "width": 329.27850341796875, "height": 51.99664306640625 },
+          "badge_placement": "top-right"
+        },
+        {
+          "number": 2,
+          "element": "button 开始探索 → @e26",
+          "label": "开始探索 →",
+          "bbox_css": { "x": 30.52852249145508, "y": 416.0989685058594, "width": 329.27850341796875, "height": 51.99664306640625 },
+          "badge_placement": "bottom-right"
+        }
+      ]
+    },
+    {
+      "id": "02-photon-fallback",
+      "raw": "raw/final-04-photon-fallback-1dbaa-390x844-visible.png",
+      "annotated": "annotated/02-photon-fallback.png",
+      "callouts": [
+        {
+          "number": 3,
+          "element": "button 改用 Photon 地名查找 → @e29",
+          "label": "改用 Photon 地名查找 →",
+          "bbox_css": { "x": 32.52516555786133, "y": 387.32379150390625, "width": 196.912841796875, "height": 48.9932861328125 },
+          "badge_placement": "top-left"
+        }
+      ]
+    },
+    {
+      "id": "03-city-result",
+      "raw": "raw/final-05-city-results-1dbaa-390x844.png",
+      "annotated": "annotated/03-city-result.png",
+      "callouts": [
+        {
+          "number": 4,
+          "element": "button 合肥市 city candidate @e32",
+          "label": "合肥市（选择地区结果）",
+          "bbox_css": { "x": 32.52516555786133, "y": 378.65771484375, "width": 325.28521728515625, "height": 66.459716796875 },
+          "badge_placement": "top-right"
+        }
+      ]
+    },
+    {
+      "id": "04-live-places",
+      "raw": "raw/final-08-live-pois-1dbaa-390x844.png",
+      "annotated": "annotated/04-live-places.png",
+      "callouts": [
+        {
+          "number": 5,
+          "element": "place card 市府小花园 @e49",
+          "label": "地点卡片：市府小花园",
+          "bbox_css": { "x": 33.06208038330078, "y": 337.9027099609375, "width": 324.2113952636719, "height": 147.93646240234375 },
+          "badge_placement": "top-left"
+        }
+      ]
+    },
+    {
+      "id": "05-pocket-walk-saved",
+      "raw": "raw/final-10-pocket-walk-saved-1dbaa-390x844.png",
+      "annotated": "annotated/05-pocket-walk-saved.png",
+      "callouts": [
+        {
+          "number": 6,
+          "element": "button 开始散步 → @e62",
+          "label": "开始散步 →",
+          "bbox_css": { "x": 32.52516555786133, "y": 638.313720703125, "width": 112.93624877929688, "height": 48.9932861328125 },
+          "badge_placement": "top-left"
+        }
+      ]
+    },
+    {
+      "id": "06-go-in-progress",
+      "raw": "raw/final-11-go-heading-first-1dbaa-390x844.png",
+      "annotated": "annotated/06-go-in-progress.png",
+      "callouts": [
+        {
+          "number": 7,
+          "element": "button 我完成了第一站 → @e64",
+          "label": "我完成了第一站 →（到达后再点）",
+          "bbox_css": { "x": 32.52516555786133, "y": 442.52508544921875, "width": 154.93287658691406, "height": 48.9932861328125 },
+          "badge_placement": "top-left"
+        }
+      ]
+    },
+    {
+      "id": "07-refresh-restored",
+      "raw": "raw/final-15-reload-restored-1dbaa-390x844.png",
+      "annotated": "annotated/07-refresh-restored.png",
+      "callouts": [
+        {
+          "number": 8,
+          "element": "button 我完成了第一站 → @e11 after full page reload",
+          "label": "刷新后仍可继续：我完成了第一站 →",
+          "bbox_css": { "x": 32.52516555786133, "y": 663.2550048828125, "width": 154.93287658691406, "height": 48.9932861328125 },
+          "badge_placement": "top-left"
+        }
+      ]
+    },
+    {
+      "id": "08-trips-ai-status",
+      "raw": "raw/final-16-trips-ai-status-1dbaa-390x844.png",
+      "annotated": "annotated/08-trips-ai-status.png",
+      "callouts": [
+        {
+          "number": 9,
+          "element": "heading AI 工作动态 @e18",
+          "label": "AI 工作动态：此环境显示 AI 暂未开启",
+          "bbox_css": { "x": 34.53020095825195, "y": 575.369140625, "width": 321.275146484375, "height": 32.5 },
+          "badge_placement": "top-left"
+        }
+      ]
+    },
+    {
+      "id": "09-me-status",
+      "raw": "raw/final-17-me-status-1dbaa-390x844.png",
+      "annotated": "annotated/09-me-status.png",
+      "callouts": [
+        {
+          "number": 10,
+          "element": "button 探索其他地区 @e20",
+          "label": "探索其他地区",
+          "bbox_css": { "x": 34.53020095825195, "y": 427.4664306640625, "width": 121.04865264892578, "height": 45.998321533203125 },
+          "badge_placement": "top-left"
+        }
+      ]
+    }
+  ]
+}

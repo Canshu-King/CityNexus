@@ -8,9 +8,8 @@
  * Today, on the map, or reading the session -- and the one control that stops it is inside the sheet,
  * not hidden behind this strip's ×.
  *
- * It deliberately renders no numbers it cannot prove: the seconds come from the run's own start, the
- * step words are the phases `aiGenerationRun` really awaits, and a settled outcome borrows
- * `statusCopy()` so the strip and the sheet can never disagree about what happened.
+ * Elapsed time comes from the run's start, step labels match the phases `aiGenerationRun` awaits,
+ * and settled outcomes use `statusCopy()` in both the strip and sheet.
  */
 
 import { useEffect, useState } from "react";

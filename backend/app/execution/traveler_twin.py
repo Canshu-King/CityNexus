@@ -505,6 +505,12 @@ def planning_preference_items(
         if str(row.category).strip().lower() == "interest"
     }
     items: list[Any] = rows[:]
+    if journey_id:
+        from app.planning.travel_brief import preference_items as brief_preference_items
+        brief_items = brief_preference_items(session, traveler_id, journey_id)
+        brief_keys = {item.preference_key for item in brief_items}
+        items = [item for item in items if item.preference_key not in brief_keys] + brief_items
+        explicit_dimensions.update(brief_keys)
     for capability in capability_payload(session, traveler_id, journey_id):
         items.append(
             SimpleNamespace(

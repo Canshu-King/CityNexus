@@ -1,0 +1,13 @@
+INFO:     127.0.0.1:<client-port> - "GET /api/v1/journeys/<id>/bootstrap-discovery/readiness HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "GET /api/v1/journeys/<id>/bootstrap-shortlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-city-search HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-city-search HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-discovery HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-discovery/pocket-walk HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-shortlist/pocket-walk/go HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "GET /api/v1/journeys/<id>/bootstrap-discovery/readiness HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "GET /api/v1/journeys/<id>/bootstrap-shortlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-shortlist/pocket-walk/go HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "POST /api/v1/journeys/<id>/bootstrap-shortlist/pocket-walk/go HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "GET /api/v1/journeys/<id>/bootstrap-discovery/readiness HTTP/1.1" 200 OK
+INFO:     127.0.0.1:<client-port> - "GET /api/v1/journeys/<id>/bootstrap-shortlist HTTP/1.1" 200 OK

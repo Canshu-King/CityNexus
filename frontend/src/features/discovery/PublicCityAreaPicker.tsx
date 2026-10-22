@@ -11,11 +11,15 @@ export type PublicCityCenter = {
 export function PublicCityAreaPicker({
   selectedCenter,
   focusCenter,
+  fallbackCameraCenter,
   onSelect,
+  mobileFirst = false,
 }: {
   selectedCenter: PublicCityCenter | null;
   focusCenter?: { latitude: number; longitude: number } | null;
+  fallbackCameraCenter?: { latitude: number; longitude: number } | null;
   onSelect: (center: PublicCityCenter) => void;
+  mobileFirst?: boolean;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
@@ -36,7 +40,9 @@ export function PublicCityAreaPicker({
         ? [selectedCenter.longitude, selectedCenter.latitude]
         : focusCenter
           ? [focusCenter.longitude, focusCenter.latitude]
-          : [0, 0];
+          : fallbackCameraCenter
+            ? [fallbackCameraCenter.longitude, fallbackCameraCenter.latitude]
+            : [0, 0];
       const mapInstance = new maplibregl.Map({
         container: hostRef.current,
         style: {
@@ -55,7 +61,7 @@ export function PublicCityAreaPicker({
           ],
         },
         center,
-        zoom: selectedCenter || focusCenter ? 11 : 1.5,
+        zoom: selectedCenter || focusCenter ? 11 : fallbackCameraCenter ? 3.5 : 1.5,
         attributionControl: false,
         interactive: true,
         dragRotate: false,
@@ -70,7 +76,10 @@ export function PublicCityAreaPicker({
           return;
         }
         if (!markerRef.current) {
-          markerRef.current = new maplibregl.Marker({ color: "#0a66ff" }).addTo(mapInstance);
+          markerRef.current = new maplibregl.Marker({ color: mobileFirst ? "#176b46" : "#0a66ff" })
+            .setLngLat([longitude, latitude])
+            .addTo(mapInstance);
+          return;
         }
         markerRef.current.setLngLat([longitude, latitude]);
       };
@@ -136,16 +145,28 @@ export function PublicCityAreaPicker({
   }, [selectedCenter?.latitude, selectedCenter?.longitude, focusCenter?.latitude, focusCenter?.longitude]);
 
   return (
-    <div className="public-city-area-picker" data-testid="bootstrap-public-map" aria-label="Choose public search area">
+    <div
+      className="public-city-area-picker"
+      data-testid="bootstrap-public-map"
+      aria-label={mobileFirst ? "选择公开搜索区域地图" : "Choose public search area"}
+    >
       <div ref={hostRef} className="public-city-area-map" data-testid="bootstrap-public-map-canvas" />
-      <p className="public-city-area-attribution">Map tiles: © OpenStreetMap contributors · tiles.openstreetmap.org</p>
+      <p className="public-city-area-attribution">
+        {mobileFirst
+          ? "地图底图 © OpenStreetMap 贡献者 · tile.openstreetmap.org"
+          : "Map tiles: © OpenStreetMap contributors · tiles.openstreetmap.org"}
+      </p>
       {tilesUnavailable ? (
         <p className="public-city-area-notice" role="status" data-testid="bootstrap-public-map-unavailable">
-          Map tiles are unavailable here. You can still use the strict OpenStreetMap link or WGS84 fields below.
+          {mobileFirst
+            ? "地图瓦片暂时不可用。仍可使用上方的地区中心，或粘贴 OpenStreetMap 公开地图链接。"
+            : "Map tiles are unavailable here. You can still use the strict OpenStreetMap link or WGS84 fields below."}
         </p>
       ) : null}
       <p className="public-city-area-hint" data-testid="bootstrap-public-map-hint">
-        Tap or click once to place one public search pin. Pan and zoom first if needed; this pin is not your location or route origin.
+        {mobileFirst
+          ? "轻触地图设置公开搜索点。手机定位需单独授权。"
+          : "Tap the map to set a public search point. Device location needs separate consent."}
       </p>
     </div>
   );

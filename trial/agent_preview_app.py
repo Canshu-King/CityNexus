@@ -13,12 +13,15 @@ on an actual ACTIVE Journey through its own persisted authorization pipeline.
 from __future__ import annotations
 
 import json
+import logging
 import threading
 import time
+from uuid import uuid4
 from urllib.parse import urlsplit
 
 import httpx
 from fastapi import HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 from app.main import app
 from app.core.config import settings
@@ -29,6 +32,18 @@ from app.traveler_principal import resolve_journey_member_principal
 
 # Keep the public model-facing contract intentionally small and strictly typed.
 _ALLOWED_CATEGORIES = frozenset({"park/garden", "museum/gallery", "cafe", "library"})
+_SAFE_UPSTREAM_FAILURE_CODES = frozenset(
+    {
+        "UPSTREAM_HTTP_ERROR",
+        "UPSTREAM_CONNECTION_ERROR",
+        "UPSTREAM_PROTOCOL_ERROR",
+        "UPSTREAM_TRANSPORT_ERROR",
+        "UPSTREAM_TIMEOUT",
+        "UPSTREAM_JSON_INVALID",
+        "UPSTREAM_RESPONSE_INVALID",
+    }
+)
+_logger = logging.getLogger(__name__)
 _lock = threading.Lock()
 _recent_model_requests: dict[str, list[float]] = {}
 
@@ -69,8 +84,67 @@ def _admit_model_request(traveler_id: str) -> None:
         _recent_model_requests[traveler_id] = valid
 
 
+def _upstream_failure(
+    *,
+    failure_code: str,
+    started_at: float,
+    status_code: int = 502,
+    upstream_status: int | None = None,
+    exception_class: str | None = None,
+) -> JSONResponse:
+    safe_code = (
+        failure_code
+        if failure_code in _SAFE_UPSTREAM_FAILURE_CODES
+        else "UPSTREAM_TRANSPORT_ERROR"
+    )
+    try:
+        port = urlsplit(settings.hermes_api_url).port
+    except ValueError:
+        port = None
+    elapsed_ms = max(0, round((time.monotonic() - started_at) * 1000))
+    diagnostic = (
+        f"upstream_status={upstream_status}"
+        if upstream_status is not None
+        else f"exception_class={exception_class or 'ResponseStructureError'}"
+    )
+    correlation_id = uuid4().hex
+    _logger.warning(
+        "adapter=wb2api_hermes_compatible port=%s elapsed_ms=%s %s correlation_id=%s",
+        port,
+        elapsed_ms,
+        diagnostic,
+        correlation_id,
+    )
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "error": {
+                "code": "TRIAL_AI_UPSTREAM_FAILURE",
+                "message": "AI 网关未完成请求；可以直接搜索公开地点继续。",
+                "message_key": "error.trial_ai_upstream_failure",
+                "trace_id": correlation_id,
+                "details": None,
+                "failure_code": safe_code,
+                "correlation_id": correlation_id,
+            }
+        },
+    )
+
+
+def _invalid_upstream_response(*, started_at: float, upstream_status: int) -> JSONResponse:
+    return _upstream_failure(
+        failure_code="UPSTREAM_RESPONSE_INVALID",
+        started_at=started_at,
+        upstream_status=upstream_status,
+    )
+
+
 @app.post("/api/v1/journeys/{journey_id}/trial-ai-discovery", tags=["Revolution Local Trial"])
-async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, request: Request) -> dict:
+async def propose_public_discovery(
+    journey_id: str,
+    payload: DiscoveryGoal,
+    request: Request,
+) -> dict:
     """ONE user-requested, no-retry, signed read-only Hermes tool suggestion."""
     _check_local_agent()
     if not request.url.hostname in {"127.0.0.1", "localhost"}:
@@ -123,19 +197,17 @@ async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, requ
             {
                 "role": "system",
                 "content": (
-                    "You are CityNexus Revolution's read-only Chinese travel discovery guide. "
-                    "You MUST call propose_public_discovery once, choosing only an allowed "
-                    "public search category. The city name is an unverified USER LABEL, "
-                    "not a verified location or GPS. Never claim you looked up venues, "
-                    "reviewed opening hours, computed a route, executed a tool or "
-                    "created a plan. If the user asks for impossible details, say "
-                    "those require a separate real public provider query after user action. "
-                    "Do not ask for a private address, location permission, or payment."
+                    "You are CityNexus Revolution's Chinese travel discovery guide. "
+                    "Call propose_public_discovery exactly once with one allowed public "
+                    "search category. Use the traveler-entered city label and travel idea "
+                    "to suggest a category. For venue details, direct the traveler to the "
+                    "public-place search flow. This screen collects an area label and "
+                    "travel interests."
                 ),
             },
             {
                 "role": "user",
-                "content": "用户所填写的地区（未经验证）：" + city_hint +
+                "content": "用户填写的地区：" + city_hint +
                            "\n用户旅行想法：" + payload.goal,
             },
         ],
@@ -147,6 +219,7 @@ async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, requ
         "max_tokens": 1500,
         "temperature": 0,
     }
+    started_at = time.monotonic()
     try:
         async with httpx.AsyncClient(
             timeout=httpx.Timeout(connect=5.0, read=55.0, write=5.0, pool=5.0),
@@ -158,49 +231,138 @@ async def propose_public_discovery(journey_id: str, payload: DiscoveryGoal, requ
                 json=body,
             )
         response.raise_for_status()
-        data = response.json()
     except httpx.TimeoutException as exc:
-        raise HTTPException(504, "AI 本次响应超时。未重复扣费请求，可以继续手动探索。") from exc
-    except (httpx.HTTPError, ValueError) as exc:
-        # Neither upstream error body nor token nor the user's raw prompt
-        # are shown/logged. The model request may have incurred a charge.
-        raise HTTPException(502, "AI 网关本次未完成请求。可以稍后再试或直接探索。") from exc
+        return _upstream_failure(
+            failure_code="UPSTREAM_TIMEOUT",
+            status_code=504,
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+    except httpx.HTTPStatusError as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_HTTP_ERROR",
+            started_at=started_at,
+            upstream_status=exc.response.status_code,
+        )
+    except (httpx.ProtocolError, httpx.DecodingError) as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_PROTOCOL_ERROR",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+    except httpx.ConnectError as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_CONNECTION_ERROR",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+    except httpx.NetworkError as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_CONNECTION_ERROR",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+    except httpx.HTTPError as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_TRANSPORT_ERROR",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+
+    try:
+        data = response.json()
+    except httpx.DecodingError as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_PROTOCOL_ERROR",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_JSON_INVALID",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
 
     if not isinstance(data, dict):
-        raise HTTPException(502, "模型没有返回可校验的响应。")
-    options = data.get("choices") or []
-    message = options[0].get("message") if isinstance(options, list) and options and isinstance(options[0], dict) else None
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    choices = data.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    message = choices[0].get("message")
     if not isinstance(message, dict):
-        return {"status": "MODEL_UNVERIFIED", "reason": "模型未返回可用的结构化建议。"}
-    calls = message.get("tool_calls") or []
-    for call in calls if isinstance(calls, list) else []:
-        if not isinstance(call, dict) or not isinstance(call.get("function"), dict):
-            continue
-        function = call["function"]
-        if function.get("name") != "propose_public_discovery":
-            continue
-        try:
-            args = json.loads(function.get("arguments", ""))
-        except (json.JSONDecodeError, TypeError):
-            continue
-        if not isinstance(args, dict) or set(args) != {"category", "reason"}:
-            continue
-        category, reason = args.get("category"), args.get("reason")
-        if category not in _ALLOWED_CATEGORIES or not isinstance(reason, str) or not reason.strip():
-            continue
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    calls = message.get("tool_calls")
+    if calls is None or calls == []:
         return {
-            "status": "MODEL_TOOL_SUGGESTION",
-            "category": category,
-            "reason": reason.strip()[:110],
-            "model": str(data.get("model") or "UNREPORTED")[:90],
-            # Explicitly NOT an AgentRun or persisted authenticated tool step.
-            "evidence": "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE",
+            "status": "MODEL_NO_TOOL_CALL",
+            "reason": "模型没有给出可验证的工具建议。你可以直接搜索城市和公开地点。",
             "provider_calls": 0,
             "agent_run_created": False,
         }
+    if not isinstance(calls, list) or len(calls) != 1 or not isinstance(calls[0], dict):
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    function = calls[0].get("function")
+    if not isinstance(function, dict) or not isinstance(function.get("name"), str):
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    if function["name"] != "propose_public_discovery":
+        return {
+            "status": "MODEL_NO_TOOL_CALL",
+            "reason": "模型没有给出可验证的工具建议。你可以直接搜索城市和公开地点。",
+            "provider_calls": 0,
+            "agent_run_created": False,
+        }
+    raw_arguments = function.get("arguments")
+    if not isinstance(raw_arguments, str):
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    try:
+        args = json.loads(raw_arguments)
+    except (json.JSONDecodeError, TypeError) as exc:
+        return _upstream_failure(
+            failure_code="UPSTREAM_JSON_INVALID",
+            started_at=started_at,
+            exception_class=type(exc).__name__,
+        )
+    if not isinstance(args, dict) or set(args) != {"category", "reason"}:
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
+    category, reason = args.get("category"), args.get("reason")
+    if (
+        not isinstance(category, str)
+        or category not in _ALLOWED_CATEGORIES
+        or not isinstance(reason, str)
+        or not reason.strip()
+    ):
+        return _invalid_upstream_response(
+            started_at=started_at,
+            upstream_status=response.status_code,
+        )
     return {
-        "status": "MODEL_NO_TOOL_CALL",
-        "reason": "模型没有给出可验证的工具建议。你可以直接搜索城市和公开地点。",
+        "status": "MODEL_TOOL_SUGGESTION",
+        "category": category,
+        "reason": reason.strip()[:110],
+        # The preview response is returned here; authenticated AgentRun persistence belongs to the Journey flow.
+        "evidence": "HERMES_COMPAT_READ_ONLY_TOOL_RESPONSE",
         "provider_calls": 0,
         "agent_run_created": False,
     }

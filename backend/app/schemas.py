@@ -202,6 +202,44 @@ class AgentCommandRequest(BaseModel):
     requested_autonomy: Literal["PLAN_ONLY", "EXECUTE_WITHIN_BOUNDS"] = "EXECUTE_WITHIN_BOUNDS"
 
 
+class GoalTaskCreateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    goal: str = Field(min_length=1, max_length=2000)
+    model_consent: bool
+    online_research_consent: bool
+    interaction_mode: Literal["DISCUSS", "RESEARCH"] = "RESEARCH"
+    unlimited_research: bool = False
+    max_model_turns: int = Field(default=8, ge=1, le=256)
+    max_tool_calls: int = Field(default=16, ge=0, le=512)
+
+
+class GoalTaskRunRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    model_consent: bool | None = None
+    online_research_consent: bool | None = None
+    interaction_mode: Literal["DISCUSS", "RESEARCH"] | None = None
+    unlimited_research: bool | None = None
+    max_model_turns: int | None = Field(default=None, ge=1, le=256)
+    max_tool_calls: int | None = Field(default=None, ge=0, le=512)
+    user_message: str | None = Field(default=None, min_length=1, max_length=2000)
+    message_id: UUID | None = None
+
+
+class GoalDraftUpdateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    days: list[dict[str, Any]] = Field(min_length=1, max_length=14)
+    expected_revision: int = Field(ge=0)
+
+
+class MobileCompatAgentRunStartRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    request_id: UUID
+    provider_consent: Literal[True]
+
+
 class AgentRunOutcome(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -294,10 +332,13 @@ class BootstrapDiscoveryRequest(BaseModel):
     """Pre-plan discovery for a new Journey with no materialized catalogue."""
 
     query: str = Field(default="cafe", min_length=1, max_length=120)
+    query_mode: Literal["category", "name"] = "category"
     radius_m: int = Field(default=2500, ge=100, le=5000)
-    limit: int = Field(default=3, ge=1, le=3)
+    # Three items is a demo card limit, not a useful traveler search result set.
+    limit: int = Field(default=8, ge=1, le=10)
     source_kind: Literal["FOREGROUND_GPS", "MANUAL_PUBLIC_CENTER"]
     provider_consent: bool = False
+    consented_provider: Literal["overpass", "photon"]
     latitude: float
     longitude: float
     coordinate_system: Literal["WGS84"] = "WGS84"
@@ -311,11 +352,16 @@ class BootstrapCitySearchRequest(BaseModel):
     query: str = Field(min_length=2, max_length=120)
     provider_consent: bool = False
     limit: int = Field(default=3, ge=1, le=3)
+    provider: Literal["nominatim", "photon"] | None = None
 
 
 class BootstrapSelectRequest(BaseModel):
     receipt_id: UUID
     candidate_id: UUID
+
+
+class BootstrapPlaceFactsRequest(BootstrapSelectRequest):
+    provider_consent: bool = False
 
 
 class BootstrapMapPreviewRequest(BaseModel):
@@ -457,6 +503,39 @@ class JourneyAnchor(BaseModel):
     notes: str | None = Field(default=None, max_length=500)
 
 
+class TravelBriefRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    goal: str = Field(default="", max_length=1000)
+    public_region_label: str | None = Field(default=None, max_length=60)
+    # Interests are traveler language, not a provider's four-category search enum.
+    # Keep unsupported interests as planning intent; they must never silently
+    # become verified provider tags or executable place-search filters.
+    interests: list[str] = Field(default_factory=list, max_length=16)
+    energy: Literal["easy", "steady", "full"] = "steady"
+
+    @field_validator("public_region_label")
+    @classmethod
+    def normalize_public_region_label(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        if any(ord(char) < 32 for char in normalized):
+            raise ValueError("Public region label must contain printable characters")
+        return normalized or None
+
+    @field_validator("interests")
+    @classmethod
+    def normalize_interests(cls, values: list[str]) -> list[str]:
+        normalized: list[str] = []
+        for value in values:
+            item = value.strip()
+            if not item or len(item) > 60 or any(ord(char) < 32 for char in item):
+                raise ValueError("Each travel interest must be 1–60 printable characters")
+            if item not in normalized:
+                normalized.append(item)
+        return normalized
+
+
 class JourneyCreate(BaseModel):
     traveler_id: UUID
     title: str = Field(min_length=1, max_length=160)
@@ -471,6 +550,7 @@ class JourneyCreate(BaseModel):
     party_size: int = Field(default=1, ge=1, le=20)
     occupancy: dict[str, Any] = Field(default_factory=dict)
     stay_budget: Money | None = None
+    planning_intent: TravelBriefRequest | None = None
 
     @model_validator(mode="after")
     def valid_window(self) -> JourneyCreate:
@@ -1081,6 +1161,7 @@ class PlanVersion(BaseModel):
 
 
 class GeneratePlansRequest(BaseModel):
+    bootstrap_candidate_ids: list[UUID] | None = Field(default=None, min_length=2, max_length=6)
     planning_mode: PlanningMode | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
     place_ids: list[str] | None = Field(default=None, min_length=1, max_length=12)

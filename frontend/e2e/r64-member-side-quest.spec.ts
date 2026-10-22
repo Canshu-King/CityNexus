@@ -287,7 +287,7 @@ test("R66 scouts, explicitly selects, then completes the existing private detour
     await expect(ownerCard).toHaveAttribute("data-state", "COMPLETED");
     await expect(ownerCard.getByTestId("member-side-quest-return-emphasis")).toContainText("return to");
     await expect(ownerCard.getByTestId("member-side-quest-return-state")).toContainText("Return status unknown");
-    await expect(ownerCard).toContainText("shared Journey is unchanged");
+    await expect(ownerCard).toContainText("Your private side quest");
     await expect(owner.page.getByTestId("moment-scout")).toHaveCount(0);
 
     await owner.page.context().route("https://www.openstreetmap.org/**", (route) => route.fulfill({

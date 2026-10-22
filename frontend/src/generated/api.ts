@@ -4,6 +4,44 @@
  */
 
 export interface paths {
+    "/journeys/{journey_id}/members/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Does the caller hold a seat on this journey, as what, and until when -- the one read a confirm button needs before it may be shown. The seat words are the same three the member list already answers with (MEMBER_IN_FORCE, MEMBER_LAPSED, MEMBER_WITHDRAWN), plus OWNER for the traveller the journey belongs to, who holds a seat without holding a membership row. Credentials first: 401 `TRAVELER_CREDENTIALS_MISSING` when none was presented, 404 for a journey that is not there, 403 `JOURNEY_MEMBER_REQUIRED` when the caller has no seat in force -- and that 403 carries the seat that explains itself, so a screen can say "this seat ended" rather than "you are lost". */
+        get: operations["getJourneyMemberMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/departure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        /** @description One projection of "准备出发", read from durable rows only: which plan versions this journey holds, what the server froze for each, whether that freeze has passed, and the single gate word for the journey -- READY_TO_DEPART, ALREADY_RUNNING, NO_PLAN_SELECTED, STALE_RECOMPOSE_REQUIRED, PLAN_INFEASIBLE or JOURNEY_NOT_PLANNABLE. It writes nothing and asks no provider: a screen that looks at departure cannot start a trip, and the gate is decided in one order (an ACTIVE journey is reported as running before its evidence is judged). The stale-evidence words are the same words the write doors raise for the same row -- `select` answers 409 STALE_RECOMPOSE_REQUIRED for a candidate with nothing frozen, and `start` answers 409 STALE_RECOMPOSE_REQUIRED when the frozen evidence has expired; both are pinned by name in the backend suite, because this door mirrors those predicates rather than sharing them. `feasibility.failures` carries the evaluator's own strings whenever the gate is PLAN_INFEASIBLE, so nothing is re-worded for the screen. */
+        get: operations["getJourneyDeparture"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -418,7 +456,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description ORD-0434 step 2: the recycle bin scoped to one owner.  A separate door rather than a query parameter on `/recycle-bin/journeys`, because that door's contract carries a tested promise to advertise no filter, no scope and no pagination, and this order does not get to bend it.  The rows are the same `RecycleBinJourney` shape in the same `deleted_at` newest-first order, so the two doors cannot disagree about a trip.  Naming an owner in a path is not proof of who is asking - binding a caller to a name is the daylight decision this step leaves open. */
+        /** @description ORD-0434 step 2: the recycle bin scoped to one owner.  The dedicated route keeps `/recycle-bin/journeys` unfiltered, unscoped and unpaginated.  `traveler_id` selects the owner; caller identity binding remains a follow-up authorization requirement.  Rows share the same `RecycleBinJourney` shape and `deleted_at` newest-first ordering. */
         get: operations["listTravelerRecycleBinJourneys"];
         put?: never;
         post?: never;
@@ -2612,6 +2650,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/agent/goal-tasks/{task_id}/place-media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read licensed media for this signed owner's existing task source lead */
+        get: operations["getSignedGoalPlaceMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+
+"/journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare Plan */
+        post: operations["prepare_plan_api_v1_journeys__journey_id__agent_goal_tasks__task_id__prepare_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3600,7 +3673,81 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
-    };
+
+PreparationResult: {
+            /** Journey Id */
+            journey_id: string;
+            /** Task Id */
+            task_id: string;
+            /** Draft Revision */
+            draft_revision: number;
+            /** Plan Version Id */
+            plan_version_id: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "CANDIDATE";
+            /**
+             * Selected
+             * @constant
+             */
+            selected: false;
+            /**
+             * Activated
+             * @constant
+             */
+            activated: false;
+            /** Slots Count */
+            slots_count: number;
+            /** Gaps */
+            gaps: components["schemas"]["PreparationGap"][];
+            /**
+             * Mobility Frozen
+             * @constant
+             */
+            mobility_frozen: false;
+            /**
+             * Idempotency Replay
+             * @default false
+             */
+            idempotency_replay: boolean;
+        };
+
+PreparationGap: {
+            /** Sequence No */
+            sequence_no: number;
+            /** Title */
+            title: string;
+            /** Kind */
+            kind: string;
+            /** Place Id */
+            place_id: string | null;
+            /**
+             * Status
+             * @constant
+             */
+            status: "UNKNOWN";
+        };
+
+PrepareDraft: {
+            /** Expected Revision */
+            expected_revision: number;
+            /** Schedule */
+            schedule: components["schemas"]["SlotTime"][];
+        };
+
+SlotTime: {
+            /** Day Index */
+            day_index: number;
+            /** Slot Index */
+            slot_index: number;
+            /** Start Time */
+            start_time: string;
+            /** End Time */
+            end_time: string;
+        };
+};
     responses: {
         /** @description Not found */
         NotFound: {
@@ -3665,6 +3812,149 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getJourneyMemberMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The caller's own seat on this journey */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        traveler_id: string;
+                        may_confirm_departure: boolean;
+                        seat: {
+                            /** @enum {string} */
+                            seat_kind: "OWNER" | "MEMBER" | "NONE";
+                            role: string | null;
+                            member_id?: string | null;
+                            /** @enum {string} */
+                            member_state: "MEMBER_IN_FORCE" | "MEMBER_LAPSED" | "MEMBER_WITHDRAWN" | "NO_MEMBERSHIP";
+                            expires_at?: string | null;
+                            in_force: boolean;
+                        };
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getJourneyDeparture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Departure projection for one journey the caller holds a seat on */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        journey_id: string;
+                        journey_status: string;
+                        active_plan_version_id?: string | null;
+                        current_activity_id?: string | null;
+                        seat: Record<string, never>;
+                        /** @enum {string} */
+                        gate: "READY_TO_DEPART" | "ALREADY_RUNNING" | "NO_PLAN_SELECTED" | "STALE_RECOMPOSE_REQUIRED" | "PLAN_INFEASIBLE" | "JOURNEY_NOT_PLANNABLE";
+                        reason_detail?: string | null;
+                        selected_plan?: Record<string, never> | null;
+                        candidates: {
+                            /** Format: uuid */
+                            plan_version_id: string;
+                            version_no: number;
+                            planning_mode?: string;
+                            status: string;
+                            source?: string;
+                            currency?: string;
+                            total_cost_minor?: number;
+                            estimated_duration_min?: number;
+                            activities_count?: number;
+                            evidence: {
+                                frozen: boolean;
+                                snapshot_id?: string | null;
+                                expires_at?: string | null;
+                                expired: boolean | null;
+                                reference_consistent: boolean;
+                                detail?: string | null;
+                            };
+                            feasibility: {
+                                feasible?: boolean | null;
+                                failures?: string[];
+                                detail?: string | null;
+                            };
+                        }[];
+                        next_action: {
+                            /** @enum {string} */
+                            kind: "select_or_start" | "generate_plans" | "recompose" | "none";
+                            door: string | null;
+                        };
+                        observed_at: string;
+                    };
+                };
+            };
+            /** @description No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The caller holds no in-force seat on this journey (error.reason_code JOURNEY_MEMBER_REQUIRED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getHealth: {
         parameters: {
             query?: never;
@@ -7667,6 +7957,123 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    getSignedGoalPlaceMedia: {
+        parameters: {
+            query: {
+                candidate_id: string;
+            };
+            header?: never;
+            path: {
+                journey_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Source-bound image or an ordinary no-image fallback; never blocks itinerary editing */
+            200: {
+                headers: {
+                    /** @description private no-store */
+                    "Cache-Control"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        candidate_id: string;
+                        place_id: string;
+                        /** Format: uuid */
+                        journey_id: string;
+                        /** Format: uuid */
+                        task_id: string;
+                        /** @enum {string} */
+                        status: "REAL_POI_PHOTO" | "NO_IMAGE" | "NO_PERMISSION" | "UNAVAILABLE";
+                        cache_hit?: boolean;
+                        identity_status?: string;
+                        /** Format: uri */
+                        source_reference?: string | null;
+                        source_wikidata_id?: string | null;
+                        media: {
+                            place_id?: string;
+                            /** Format: uri */
+                            image_url?: string;
+                            /** Format: uri */
+                            thumb_url?: string | null;
+                            /** Format: uri */
+                            source_url?: string;
+                            author?: string;
+                            license?: string;
+                            /** Format: uri */
+                            terms_url?: string | null;
+                            can_show?: boolean;
+                            /** Format: date-time */
+                            captured_at?: string;
+                        } | null;
+                    };
+                };
+            };
+            /** @description Signed traveler required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey member or owner scope denied */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Task or candidate does not belong to this Journey and owner */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+
+prepare_plan_api_v1_journeys__journey_id__agent_goal_tasks__task_id__prepare_plan_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                journey_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PrepareDraft"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreparationResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };

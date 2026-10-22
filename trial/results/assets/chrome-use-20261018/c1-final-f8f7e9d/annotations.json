@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "code_base_sha": "f8f7e9d55d8547d24124dcc3f34520e438204c3a",
+  "working_tree_delta": ["AI unavailable shortcut visibility only"],
+  "url": "http://127.0.0.1:14332/revolution",
+  "browser": "headed Chrome-use isolated session",
+  "viewport_css_px": { "width": 390, "height": 844 },
+  "device_pixel_ratio": 1,
+  "bbox_source": "Chrome-use get box output captured from the live GO screen immediately before screenshot.",
+  "screenshots": [
+    {
+      "id": "10-go-after-cta-fix",
+      "raw": "10-go-after-cta-fix.png",
+      "annotated": "10-go-after-cta-fix-annotated.png",
+      "callouts": [
+        {
+          "number": 1,
+          "element": "button 我完成了第一站 → @e12",
+          "label": "到达第一站后点这里",
+          "bbox_css": { "x": 32.52516555786133, "y": 511.7030029296875, "width": 154.93287658691406, "height": 48.9932861328125 },
+          "badge_placement": "top-left"
+        },
+        {
+          "number": 2,
+          "element": "button 暂停散步 @e13",
+          "label": "需要休息时暂停",
+          "bbox_css": { "x": 187.4580535888672, "y": 511.7030029296875, "width": 95.05033111572266, "height": 48.9932861328125 },
+          "badge_placement": "top-right"
+        }
+      ]
+    }
+  ]
+}

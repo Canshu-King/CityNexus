@@ -1,28 +1,25 @@
-# Codex / Qoder: THIS BRANCH IS A REAL HUMAN UNBLOCK TASK
+# Active work order: Revolution Mobile-First V1
 
-**Only for `fix/revolution-first-human-e2e-20261015`.**
+**Scope of this AGENTS.md: `design/revolution-mobile-first-v1` only.**
 
-Read `trial/tasks/20261015_CODEX_FIRST_REAL_HUMAN_JOURNEY_RESCUE.md` before editing anything. GitHub Issue: https://github.com/Canshu-King/CityNexus/issues/19.
+The user repeatedly tried the Revolution Lab on desktop and phone and reported that it looks like a developer test console rather than a mainstream mobile travel app: giant full-width buttons, scrolling walls of text, map/consent dead ends, technical statuses and an AI system invisible to the user. They explicitly ordered immediate construction, not another planning loop.
 
-## Owner and mission
+**Codex is the implementation owner. Do the coding.**
 
-Codex owns **code + actual browser/backend verification**. Qoder should not independently rewrite the trial interface or integrate into the Qoder product line during this fix. Any Qoder handoff must be a minimal named backend blocker approved by the Codex issue.
+Read the binding taskbook:
+`trial/tasks/20261016_REVOLUTION_MOBILE_FIRST_V1_EXECUTION.md`.
 
-The real user has repeatedly failed to finish the first Revolution outing, most recently seeing:
+**Additional product mandate (Issue #24):** Real mobile Agent work transparency, not a decorative "thinking" spinner. Read `trial/tasks/20261016_AGENT_ACTIVITY_MOBILE_UI_TASKBOOK.md`. GPT has already committed `frontend/src/trial/mobile/AgentWorkStatus.tsx` plus CSS, mounted on the ACTIVE Journey Trips screen and backed by signed `GET /journeys/:id/operator`. Continue it into real, run-bound Hermes tool events by extracting the existing `NativeMissionTimeline` SSE projection from `CopilotDock.tsx`; DO NOT introduce a duplicate Agent backend. Preserve authority, no fake AgentRun, no raw model chain-of-thought and no other member's timeline.
 
-> 这一步没有完成。请检查网络后重试，已保存的行程不会因此消失。
+- GitHub repo: `Canshu-King/CityNexus`. This branch was created from the completed first-human failure rescue branch `fix/revolution-first-human-e2e-20261015`, whose PR #20 is still open. **Target the fix branch as the base of the new design PR, not commander/control and not the stale default branch.**
+- New code already on this branch: `RevolutionMobileNav.tsx`, `RevolutionMobileV1.css`, revised `RevolutionFirstLook.tsx`, and signed server Pocket Walk state propagation in `RevolutionQuickExplore.tsx`. Verify the real build and browser behavior immediately, fix issues and complete actual mobile screens.
+- Priority = product surface: attractive, cohesive, mobile-friendly Explore / Trip / Me + natural language AI entry / sourceful place cards / walk. Fix real bugs before writing extra plans or verifier reports. Get 390x844 and 430x932 real browser screenshots.
+- The full frontend React 19/Vite 7 stack has `lucide-react` and MapLibre installed. Do not blindly install Ant Design Mobile v5: its React 19 compatibility instructions require a special render adapter. Run an isolated proof first; React Modal Sheet also requires Motion and touch/StrictMode verification.
+- One clear primary action per screen, natural Chinese, zero global changes to Qoder styles, no `!important` proliferation. Fix the existing global CSS conflicts incrementally, keeping this trial isolated.
+- Treat `HERMES_COMPAT_ENDPOINT` as CONFIGURED, not successful AgentRun. Keep authenticated Journey, per-member pocket walk, provider consent, UNKNOWN/LIVE/TEST provenance and self-report-vs-GPS boundaries unaltered.
+- Do not mutate user `trial/.runtime`, real SQLite, local npm lockfile fixes, keys, wallet, payment or Qoder deployment. For tests, create an isolated signed test backend and fixture DB. Avoid repeated paid/real provider calls.
+- Bring back accurate results: typecheck/build, Playwright desktop + mobile, touch/tabs/keyboard, signed server Pocket Walk restore, provider-down fallback. All unverified evidence stays NOT_VERIFIED.
+- Commit and push incremental **working product** code. Open/maintain the design PR targeting `fix/revolution-first-human-e2e-20261015`. First line of outcome `trial/results/20261016_MOBILE_FIRST_V1_RESULT.md` must say whether a real human can use it, and precisely which step remains blocked.
+- Qoder is a non-editing integration reviewer this round. Specific shared components can be recommended, but both agents must not concurrently rewrite the same branch.
 
-This is an unacceptable generic error from `frontend/src/trial/RevolutionQuickExplore.tsx::messageForError`. The root cause of the failed request is **not established**: get the exact method/path/status and a safe reason from actual requests before guessing.
-
-### Work, don't supervise work
-
-1. First reproduce the actual failed screen against the isolated local trial app, diagnose the first failing HTTP request, and **fix the product code**.
-2. A new user must be able to open `/revolution`, optionally request real Hermes read-only AI guidance, search `连城`, tap the actual Nominatim result **once** to enter the next screen even with blank map tiles, query public POIs **only on one clear explicit click**, save two genuine sourced stops, enter GO, then reload to see the same member's durable progress.
-3. Replace non-actionable red bars with human-readable phase-specific errors and a single recovery action. Degrade without the AI provider, do not silently retry paid providers or make up LIVE_PROVIDER truth.
-4. Confirm correctness with **real signed backend + browser** (not only mocked requests), desktop + mobile screenshots, deliberate failure injection, then narrow tests, typecheck/build. Report EXACT evidence grades rather than only counts.
-5. Commit and push working code to this branch. File a PR **into** `trial/revolution-first-look-20261014`, and write `trial/results/20261015_FIRST_HUMAN_JOURNEY_RESULT.md` stating clearly at the very top whether the user can actually progress.
-6. Never delete/overwrite user `trial/.runtime`, DB, `frontend/package-lock.json`, keys, or local machines. Keep permissions, signed-member isolation, no GPS fake proof, and no paid commerce.
-
-**Stop writing verifier taskbooks in place of fixing the user's problem.** Spend time fixing the visible journey, not reopening the historical ORD/R-series acceptance archive.
-
-**IMPORTANT:** This AGENTS.md and GitHub Issue do not automatically start Codex. Codex must be invoked in a capable local/cloud coding environment; once invoked, the work above is the required plan.
+**Stop treating test counts, architecture docs and R-series cycles as a substitute for a functioning travel app.**

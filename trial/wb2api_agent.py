@@ -10,6 +10,7 @@ import getpass
 import json
 import os
 import re
+from pathlib import Path
 import urllib.error
 import urllib.request
 
@@ -18,7 +19,22 @@ DIRECT_BASE = "http://127.0.0.1:7863/v1"
 FREE_ROUTER_MODEL = "auto:cheapest"
 
 
-def agent_settings(*, direct_model: str | None = None) -> tuple[dict[str, str], str]:
+def read_key_file(path: Path) -> str:
+    """Read an explicitly supplied key or Markdown API Key table, never execute it."""
+    try:
+        if path.stat().st_size > 65536:
+            raise ValueError("WB2API key document is too large")
+        text = path.read_text(encoding="utf-8-sig").strip()
+    except OSError:
+        raise ValueError("WB2API key file is not readable") from None
+    match = re.search(r"\*\*API Key\*\*\s*\|\s*`([^`]+)`", text)
+    key = match.group(1).strip() if match else text
+    if not re.fullmatch(r"[A-Za-z0-9_.:-]{8,512}", key):
+        raise ValueError("WB2API key file must contain one key or an API Key table entry")
+    return key
+
+
+def agent_settings(*, direct_model: str | None = None, key_file: Path | None = None) -> tuple[dict[str, str], str]:
     """Construct environment consumed by app.agent.orchestrator.HermesJourneyAgent.
 
     The original application requires the *complete chat completions URL*,
@@ -31,7 +47,7 @@ def agent_settings(*, direct_model: str | None = None) -> tuple[dict[str, str], 
     else:
         base, model, label = FREE_ROUTER_BASE, FREE_ROUTER_MODEL, "wb2api-free-router"
 
-    key = (os.environ.get("WB2API_KEY") or "").strip()
+    key = read_key_file(key_file) if key_file is not None else (os.environ.get("WB2API_KEY") or "").strip()
     if not key:
         key = getpass.getpass("Enter local WB2API_KEY (hidden, never committed): ").strip()
     if not key:

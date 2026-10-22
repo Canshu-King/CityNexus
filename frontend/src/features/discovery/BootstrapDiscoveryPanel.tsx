@@ -17,6 +17,7 @@ import {
   type BootstrapSharedWalkLookupResponse,
 } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
+import { useLocale } from "../../i18n/LocaleContext";
 import { PublicCityAreaPicker, type PublicCityCenter } from "./PublicCityAreaPicker";
 import { parseSharedWalkText, type SharedWalkParseResult } from "./sharedWalk";
 
@@ -310,6 +311,8 @@ export function BootstrapDiscoveryPanel({
   onCompleted: (placeId: string) => Promise<void>;
   onCancel?: () => void;
 }) {
+  const { locale } = useLocale();
+  const zh = locale.startsWith("zh");
   const [sourceKind, setSourceKind] = useState<SourceKind>("MANUAL_PUBLIC_CENTER");
   const [outingIntent, setOutingIntent] = useState<OutingIntent | null>(null);
   const [latitude, setLatitude] = useState("");
@@ -871,7 +874,7 @@ export function BootstrapDiscoveryPanel({
     setSharedWalkSaveOrder([]);
     setSharedWalkSaveConsent(false);
     setSharedWalkPocketBudget(null);
-    setSharedWalkMessage(parsed.ok ? "Preview only: these two public OSM identities are still unverified." : parsed.message);
+    setSharedWalkMessage(parsed.ok ? "已预览两个公开地点。" : parsed.message);
   };
 
   const lookupSharedWalk = async () => {
@@ -904,10 +907,10 @@ export function BootstrapDiscoveryPanel({
       setSharedWalkPocketBudget(null);
       setSharedWalkMessage(
         response.status === "LOOKUP_BLOCKED"
-          ? "LOOKUP_BLOCKED: the exact public lookup did not answer. The source-only preview remains; no coordinates or save-ready places were invented."
+          ? "地点来源查询暂不可用。"
           : response.verified_count === 2
-            ? "Both public identities were freshly verified for this signed member. Save them to your own private shortlist, then choose their order."
-            : "Only part of the shared walk was verified. Source-only preview remains; a two-stop Pocket Walk is not available.",
+            ? "已核对两处公开地点。保存到你的收藏并选择路线顺序。"
+            : "地点来源查询已更新。确认两处地点后可保存步行路线。",
       );
     } catch (error) {
       if (stillCurrent()) setSharedWalkMessage(error instanceof Error ? error.message : "The exact public lookup could not be completed.");
@@ -980,7 +983,7 @@ export function BootstrapDiscoveryPanel({
 
   const search = async () => {
     if (readiness?.status !== "READY") {
-      setMessage(`Discovery is blocked by ${readiness?.reason_code ?? "UNAVAILABLE"}; no provider request was made.`);
+       setMessage(`Discovery unavailable (${readiness?.reason_code ?? "UNAVAILABLE"}).`);
       return;
     }
     if (sourceKind !== "MANUAL_PUBLIC_CENTER") {
@@ -996,7 +999,7 @@ export function BootstrapDiscoveryPanel({
       return;
     }
     if (!providerConsent) {
-      setMessage("Confirm the OpenStreetMap/Overpass provider disclosure before searching.");
+      setMessage(`Confirm the ${readiness.expected_recipient} provider disclosure before searching.`);
       return;
     }
     if (parsedLatitude === null || parsedLongitude === null) {
@@ -1018,6 +1021,7 @@ export function BootstrapDiscoveryPanel({
         limit: 3,
         source_kind: fence.sourceKind,
         provider_consent: true,
+        consented_provider: readiness.provider,
         latitude: requestLatitude,
         longitude: requestLongitude,
         coordinate_system: "WGS84",
@@ -1041,9 +1045,9 @@ export function BootstrapDiscoveryPanel({
       if (next.status === "PROVIDER_UNAVAILABLE") {
         setMessage("The public provider is unavailable. Use a public map center and try again later.");
       } else if (next.status === "PROVIDER_DISABLED") {
-        setMessage(`Live public discovery is unavailable (${next.failure_code ?? "PROVIDER_DISABLED"}). No provider request was made.`);
+         setMessage(`Live discovery unavailable (${next.failure_code ?? "PROVIDER_DISABLED"}).`);
       } else if (next.status === "LIVE_ZERO_RESULTS") {
-        setMessage("No named public places were returned for that center.");
+        setMessage((next.filter_summary?.raw_count ?? 0) > 0 ? null : "这个位置附近暂时没有可用的公共地点。");
       }
     } catch (error) {
       if (isCurrentDiscovery(fence)) {
@@ -1150,42 +1154,42 @@ export function BootstrapDiscoveryPanel({
     const sample = selected.some((candidate) => candidate.provider_provenance !== "LIVE_PROVIDER");
     return [
       "CityNexus public two-place city discovery",
-      ...(sample ? ["sample/unverified location - not real-world verified"] : []),
+      ...(sample ? ["Sample places"] : []),
       ...selected.flatMap((candidate, index) => [
         `${index + 1}. ${safeText(candidate.name)} (${safeText(candidate.category)})`,
         `   OSM source: ${sources[index]}`,
         `   Source: ${candidate.provider_provenance}; captured ${candidate.opening_observed_at}`,
       ]),
-      "Opening, cost, accessibility, arrival, and guaranteed ETA remain unknown.",
+      "Opening hours, price, access and ETA: pending.",
     ].join("\n");
   };
 
   const shareSelectedCandidates = async () => {
     if (!candidateShareConsent) {
-      setCandidateShareMessage("Confirm the public-only preview before sending or copying these two places.");
+      setCandidateShareMessage("Review the two-place share before sending.");
       return;
     }
     const text = candidateShareText();
     if (!text) {
-      setCandidateShareMessage("Choose two candidates with trusted OpenStreetMap source links first.");
+      setCandidateShareMessage("Select two places with OpenStreetMap source links.");
       return;
     }
     setCandidateShareBusy(true);
     try {
       if (typeof navigator.share === "function") {
         await navigator.share({ title: "CityNexus public city discovery", text });
-        setCandidateShareMessage("Public-only two-place share sent. No private Journey or member data was included.");
+        setCandidateShareMessage("Two-place share sent.");
       } else if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
-        setCandidateShareMessage("Public-only two-place share copied. No private Journey or member data was included.");
+        setCandidateShareMessage("Two-place share copied.");
       } else {
         throw new Error("This browser does not provide a share sheet or clipboard.");
       }
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
-        setCandidateShareMessage("Share cancelled; nothing was sent.");
+        setCandidateShareMessage("Share cancelled.");
       } else {
-        setCandidateShareMessage(error instanceof Error ? error.message : "The public-only share was not completed.");
+        setCandidateShareMessage(error instanceof Error ? error.message : "Share failed.");
       }
     } finally {
       setCandidateShareBusy(false);
@@ -1236,7 +1240,7 @@ export function BootstrapDiscoveryPanel({
       });
       if (!isCurrentDiscovery(fence)) return;
       setShortlist((items) => items.some((item) => item.shortlist_id === saved.shortlist_id) ? items : [...items, saved]);
-      setExploreNotice("Saved to your private draft shortlist. This is not a Place, PlanVersion, visit, booking, or payment authorization.");
+      setExploreNotice("Saved to your private draft list.");
     } catch (error) {
       if (isCurrentDiscovery(fence)) {
         setMessage(error instanceof Error ? error.message : "This public place could not be saved.");
@@ -1621,7 +1625,7 @@ export function BootstrapDiscoveryPanel({
         throw new Error("The server returned progress for a different walk; reload before continuing.");
       }
       setPocketWalk(updated.pocket_walk);
-      setPocketGoMessage("Saved on this signed member's server record. This is your self-report; physical arrival is not verified.");
+      setPocketGoMessage("到达自述已保存。");
     } catch (error) {
       if (!stillCurrent()) return;
       setPocketGoMessage(error instanceof Error ? error.message : "GO MODE progress could not be saved.");
@@ -1673,15 +1677,15 @@ export function BootstrapDiscoveryPanel({
       .some((stop) => /TEST_PROVIDER|UNVERIFIED|SIMULAT/i.test(stop.source_provenance));
     const lines = [
       "CityNexus public Pocket Walk",
-      ...(sample ? ["sample/unverified location - not real-world verified"] : []),
+      ...(sample ? ["Sample places"] : []),
       `1. ${pocketWalk.first_stop.name} (${pocketWalk.first_stop.category})`,
       `   OSM source: ${firstSource}`,
       `   Source: ${pocketWalk.first_stop.source_provenance}; captured ${pocketWalk.first_stop.captured_at}`,
       `2. ${pocketWalk.second_stop.name} (${pocketWalk.second_stop.category})`,
       `   OSM source: ${secondSource}`,
       `   Source: ${pocketWalk.second_stop.source_provenance}; captured ${pocketWalk.second_stop.captured_at}`,
-      `Walking budget: ${pocketWalk.max_walk_minutes === null ? "not declared" : `${pocketWalk.max_walk_minutes} minutes (human-declared)`}`,
-      "Opening, cost, accessibility, arrival, and guaranteed ETA remain unknown.",
+      `Walking budget: ${pocketWalk.max_walk_minutes === null ? "not set" : `${pocketWalk.max_walk_minutes} minutes`}`,
+      "Opening hours, price, access and ETA: pending.",
     ];
     if (reviewedMapLink) {
       lines.push("Authorized public-to-public walking map link (shared separately by the traveler):", reviewedMapLink);
@@ -1695,29 +1699,29 @@ export function BootstrapDiscoveryPanel({
       return;
     }
     if (!pocketShareConsent) {
-      setPocketWalkMessage("Confirm the public-only share preview before sending or copying it.");
+      setPocketWalkMessage("Review the public share preview before sending or copying it.");
       return;
     }
     const text = pocketShareText();
     if (!text) {
-      setPocketWalkMessage("Sharing is blocked because both saved sources are not trusted OpenStreetMap links.");
+      setPocketWalkMessage("Sharing requires two trusted OpenStreetMap links.");
       return;
     }
     try {
       if (typeof navigator.share === "function") {
         await navigator.share({ title: "CityNexus public Pocket Walk", text });
-        setPocketWalkMessage("Public-only Pocket Walk shared. No private identity or Journey data was included.");
+        setPocketWalkMessage("Public Pocket Walk shared.");
       } else if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
-        setPocketWalkMessage("Public-only Pocket Walk copied. No private identity or Journey data was included.");
+        setPocketWalkMessage("Public Pocket Walk copied.");
       } else {
         throw new Error("This browser does not provide a share sheet or clipboard.");
       }
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
-        setPocketWalkMessage("Share cancelled; nothing was sent.");
+        setPocketWalkMessage("Share cancelled.");
       } else {
-        setPocketWalkMessage(error instanceof Error ? error.message : "The public-only share was not completed.");
+        setPocketWalkMessage(error instanceof Error ? error.message : "Sharing failed.");
       }
     }
   };
@@ -2024,12 +2028,13 @@ export function BootstrapDiscoveryPanel({
         setMapFallbackUrl(publicMapUrl);
       }
       setLastNavigationLaunched(pendingMapPreview.purpose === "WALKING");
+      const openingStatus = released.opening.verification_state === "EXTERNAL_NOT_ATTESTED"
+        ? "Opening hours need confirmation."
+        : "Opening hours are source-reported.";
       setExploreNotice(
         (openedAutomatically
           ? (pendingMapPreview.purpose === "WALKING" ? "Destination-only walking directions opened. " : "Public destination opened. ")
-          : "Your browser blocked the automatic tab. Use the authorized destination link below. ") +
-          "Explore first: no Place, PlanVersion, route ETA, arrival, booking, or Journey start was created. Opening is still " +
-          (released.opening.verification_state === "EXTERNAL_NOT_ATTESTED" ? "EXTERNAL_NOT_ATTESTED." : "provider-grounded, not freshly rechecked."),
+          : "Your browser blocked the automatic tab. Use the destination link below. ") + openingStatus,
       );
       cancelMapPreview();
     } catch (error) {
@@ -2069,6 +2074,23 @@ export function BootstrapDiscoveryPanel({
     setMapPickerOpen(true);
     setMapTileConsent(false);
     setMessage(null);
+  };
+
+  const returnToSearchCenterPicker = () => {
+    openPublicAreaPicker();
+    window.requestAnimationFrame(() => {
+      document.querySelector('[data-testid="bootstrap-public-area-picker"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const returnToCategoryPicker = () => {
+    setProviderConsent(false);
+    invalidateDiscovery();
+    setOutingIntent(null);
+    setMessage(null);
+    window.requestAnimationFrame(() => {
+      document.querySelector('[data-testid="bootstrap-outing-intents"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   const cancelPublicAreaPicker = () => {
@@ -2166,6 +2188,21 @@ export function BootstrapDiscoveryPanel({
             : result.candidates.length === 1 ? "PARTIAL_1" : "ZERO"
     )
     : null;
+  const zeroResultFilterSummary = result?.status === "LIVE_ZERO_RESULTS" ? result.filter_summary : undefined;
+  const zeroResultRejections = zeroResultFilterSummary?.rejected_by_reason;
+  const centerRejectionCount = (zeroResultRejections?.invalid_coordinates ?? 0) +
+    (zeroResultRejections?.invalid_distance ?? 0) +
+    (zeroResultRejections?.out_of_radius ?? 0);
+  const categoryRejectionCount = (zeroResultRejections?.provider_mismatch ?? 0) +
+    (zeroResultRejections?.invalid_identity ?? 0) +
+    (zeroResultRejections?.missing_name ?? 0) +
+    (zeroResultRejections?.restricted_access ?? 0) +
+    (zeroResultRejections?.duplicate ?? 0);
+  const zeroResultGuidance = (zeroResultFilterSummary?.raw_count ?? 0) > 0
+    ? centerRejectionCount > categoryRejectionCount
+      ? { target: "center" as const, message: "附近暂时没有合适的地点，试试更换搜索中心。" }
+      : { target: "category" as const, message: "附近暂时没有合适的地点，试试更换地点类型。" }
+    : null;
 
   return (
     <main className="v8-join-entry" data-testid="bootstrap-discovery">
@@ -2175,31 +2212,27 @@ export function BootstrapDiscoveryPanel({
         <p>
           先在公开地图上选一个位置，再按兴趣寻找附近地点。搜到的结果会告诉你来自哪里；你来决定去哪儿。
         </p>
-        <p>
-          地图上的点只用来搜索，不会获取你现在的 GPS，也不代表你已到达。营业时间、费用和步行时长没有可靠信息时会写「未知」。
-        </p>
         <details className="rev-technical-details" data-testid="rev-technical-details">
           <summary>查看地图服务状态和技术详情</summary>
           <section data-testid="bootstrap-discovery-readiness" aria-labelledby="bootstrap-discovery-readiness-title">
           <h2 id="bootstrap-discovery-readiness-title">地图服务与来源详情</h2>
           <p>
             Expected recipient: <strong>{readiness?.expected_recipient ?? "OpenStreetMap/Overpass public map data service"}</strong>.
-            No provider request is made by this readiness check, on mount, while typing, or for an invalid center.
+            This check reads server configuration. Place searches start when you submit a valid center.
           </p>
           <p data-testid="bootstrap-discovery-readiness-reason">
             {readinessBusy
-              ? "Checking operator configuration…"
+              ? "Checking map service…"
               : readinessMessage
                 ? `UNAVAILABLE: ${readinessMessage}`
                 : `${effectiveReadinessReason}: ${readiness?.provider_grade ?? "UNVERIFIED"}`}
           </p>
           {readiness?.status === "READY" ? (
             <p data-testid="bootstrap-discovery-capability">
-              Configuration capability is <strong>{readiness.capability_state ?? "UNVERIFIED"}</strong>.
-              This is not live venue evidence; only a completed provider response may be labeled LIVE_PROVIDER.
+              Service capability: <strong>{readiness.capability_state ?? "UNVERIFIED"}</strong> · Source: {readiness.provider_grade ?? "UNVERIFIED"}.
             </p>
           ) : null}
-          {readiness?.test_only ? <p>Controlled test endpoint only. Any returned evidence remains TEST_PROVIDER.</p> : null}
+          {readiness?.test_only ? <p>Test service.</p> : null}
         </section>
         </details>
         <div className="v8-actions">
@@ -2216,12 +2249,12 @@ export function BootstrapDiscoveryPanel({
           <section className="journey-membership-map-consent public-city-area-picker-shell" data-testid="bootstrap-public-area-picker" aria-labelledby="bootstrap-public-area-picker-title">
             <h2 id="bootstrap-public-area-picker-title">选择你想逛的地方</h2>
             <p>
-              这个地图点只是搜索中心，不代表你当前的位置、行程起点或已经到达。只有你选择加载地图时，才会请求地图瓦片服务。
+              地图点作为搜索中心。点击「加载地图」后会请求地图瓦片。
             </p>
             <div className="public-city-search" data-testid="bootstrap-city-search">
               <h3>搜索城市或县城</h3>
               <p>
-                输入「连城县」搜索位置。系统不会边打字边发送请求，也不会替你自动选择结果。
+                输入「连城县」后，点击搜索并选择结果。
               </p>
               <label>
                 <input
@@ -2350,13 +2383,12 @@ export function BootstrapDiscoveryPanel({
               {accuracy != null ? ` · accuracy ${Math.round(accuracy)}m` : ""}
             </p>
             <p>
-              This is a user-selected public search center. City relation is unsupported until separately verified;
-              it is not a route origin, presence claim, or proof of arrival. Provider disclosure remains separate from this selection.
+              Public search center selected. Confirm the city before starting discovery.
             </p>
           </div>
         ) : (
           <p data-testid="bootstrap-center-required">
-            Choose a public map center before searching. No provider request will be made yet.
+            Choose a public map center to search.
           </p>
         )}
         <label data-testid="bootstrap-city-label-confirmation">
@@ -2376,9 +2408,7 @@ export function BootstrapDiscoveryPanel({
           <section data-testid="bootstrap-resume" aria-labelledby="bootstrap-resume-title">
             <h2 id="bootstrap-resume-title">Continue exploring</h2>
             <p>
-              Last chosen public place: <strong>{resumeIntent.name}</strong>. This is a private draft resume
-              pointer, not a route, GPS trace, arrival, or visit record. Returning to CityNexus only means the
-              app was opened again; physical arrival remains unverified.
+              Continue from the public place you chose: <strong>{resumeIntent.name}</strong>.
             </p>
             <p>
               {safeHttpsSourceUrl(resumeIntent.source_url) ? (
@@ -2420,8 +2450,7 @@ export function BootstrapDiscoveryPanel({
           <section data-testid="bootstrap-shared-walk-import" aria-labelledby="bootstrap-shared-walk-import-title">
           <h2 id="bootstrap-shared-walk-import-title">导入朋友分享的路线</h2>
           <p>
-            Paste the public-only text from a friend. CityNexus reads exactly two canonical OpenStreetMap object links locally;
-            names, opening hours, prices, provider labels, walking times, Journey IDs, and private authority in the pasted text are untrusted.
+            Paste a shared public walk. CityNexus extracts two OpenStreetMap place links from the text.
           </p>
           <label>
             Public walk text
@@ -2462,7 +2491,7 @@ export function BootstrapDiscoveryPanel({
                 setSharedWalkSaveOrder([]);
                 setSharedWalkSaveConsent(false);
                 setSharedWalkPocketBudget(null);
-                setSharedWalkMessage("Import cancelled; no provider request was made.");
+                setSharedWalkMessage("Import cancelled.");
               }}
               disabled={sharedWalkLookupBusy}
             >
@@ -2474,18 +2503,18 @@ export function BootstrapDiscoveryPanel({
           ) : null}
           {sharedWalkParse?.ok ? (
             <div data-testid="bootstrap-shared-walk-preview" role="status">
-              <p>Recipient has not verified names, opening, prices, coordinates or routes.</p>
+              <p>收件人确认地点后，可继续查看营业、价格和路线信息。</p>
               <ol>
                 {sharedWalkParse.objects.map((object, index) => (
                   <li key={object.source_url}>
-                    Stop {index + 1}: <strong>{object.osm_type}/{object.osm_id}</strong> · UNVERIFIED_SHARED_REFERENCE ·{" "}
+                    Stop {index + 1}: <strong>{object.osm_type}/{object.osm_id}</strong> · 待核验 ·{" "}
                     <a href={object.source_url} target="_blank" rel="noopener noreferrer" data-testid={`bootstrap-shared-walk-source-${index}`}>
                       Inspect public OSM source
                     </a>
                   </li>
                 ))}
               </ol>
-              <p>Opening the source is a deliberate public OSM disclosure. Pasting, previewing, reload and cancellation make no provider request.</p>
+              <p>打开 OpenStreetMap 来源链接查看地点资料。</p>
               <label>
                 <input
                   type="checkbox"
@@ -2587,10 +2616,10 @@ export function BootstrapDiscoveryPanel({
                   <article key={candidate.candidate_id} data-testid={`bootstrap-shared-walk-candidate-${candidate.candidate_id}`}>
                     <h4>{candidate.name}</h4>
                     <p>
-                      {candidate.category} · public coordinates freshly returned ·{" "}
+                      {candidate.category} ·{" "}
                       {candidate.public_access_state === "INDOOR_ACCESS_UNVERIFIED"
-                        ? "indoor-only access; public visitability is unverified"
-                        : "public visitability is not independently verified"} · opening and price remain UNKNOWN
+                        ? "indoor access pending"
+                        : "access pending"} · hours and price pending
                     </p>
                     <p>Source grade: {candidate.provider_provenance} · observed {candidate.opening_observed_at}</p>
                     {source ? <a href={source} target="_blank" rel="noopener noreferrer">Open public OSM source</a> : null}
@@ -2605,7 +2634,7 @@ export function BootstrapDiscoveryPanel({
                   </article>
                 );
               })}
-              {sharedWalkLookup.verified_count < 2 ? <p role="status">A second identity was not verified, so no two-stop Pocket Walk can be claimed.</p> : null}
+              {sharedWalkLookup.verified_count < 2 ? <p role="status">需要两名成员确认后生成两站步行路线。</p> : null}
             </div>
           ) : null}
         </section>
@@ -2613,7 +2642,7 @@ export function BootstrapDiscoveryPanel({
         <section data-testid="bootstrap-outing-intents" aria-labelledby="bootstrap-outing-intents-title">
           <h2 id="bootstrap-outing-intents-title">你想逛什么？</h2>
           <p>
-            选择一个喜欢的类型。我们会按这个类别查询真实公开地点，不凭空编造景点。
+            选择类型，按类别查找公开地点。
           </p>
           <div className="v8-actions" role="radiogroup" aria-label="First outing preference">
             {OUTING_INTENTS.map((item) => (
@@ -2669,9 +2698,9 @@ export function BootstrapDiscoveryPanel({
             checked={providerConsent}
             onChange={(event) => setProviderConsent(event.target.checked)}
           />
-          我同意本次查询：将所选类别{selectedOutingIntent ? `（${selectedOutingIntent.query}）` : ""}、地区名称“{publicCityLabel}”和我选择的公开地图坐标{hasValidSearchCenter ? `（${parsedLatitude.toFixed(6)}, ${parsedLongitude.toFixed(6)}）` : ""}发送至 OpenStreetMap/Overpass 服务。不会读取当前 GPS，也不会自动再次查询。
+          我同意将所选类别、地区和地图中心发送至 {readiness?.expected_recipient ?? "公开地图服务"} 搜索。
         </label>
-        {!searchReady && !busy && (
+        {!searchReady && !busy && !zeroResultGuidance && (
           <p className="rev-next-action" role="status" data-testid="revolution-next-action">
             {sourceKind !== "MANUAL_PUBLIC_CENTER" || !hasValidSearchCenter
               ? "还差一步：点击上面的「在地图上选个位置」，确认地图上的公开位置。"
@@ -2682,7 +2711,7 @@ export function BootstrapDiscoveryPanel({
                   : !providerConsent
                     ? "最后一步：勾选本次公开数据查询授权，才能开始搜索。"
                     : readiness?.status !== "READY"
-                      ? "地图查询服务暂时不可用，请打开技术详情查看原因，或稍后再试。"
+                      ? "地图查询暂不可用，请稍后再试。"
                       : "请确认表单中的设置。"}
           </p>
         )}
@@ -2697,7 +2726,19 @@ export function BootstrapDiscoveryPanel({
           ) : null}
         </div>
         {message ? <p role="status">{message}</p> : null}
-        {result && discoveryOutcome ? (
+        {zeroResultGuidance ? (
+          <section className="bootstrap-zero-result-guidance" data-testid="bootstrap-zero-result-guidance" aria-live="polite">
+            <p role="status">{zeroResultGuidance.message}</p>
+            <button
+              type="button"
+              data-testid={zeroResultGuidance.target === "center" ? "bootstrap-zero-result-change-center" : "bootstrap-zero-result-change-category"}
+              onClick={zeroResultGuidance.target === "center" ? returnToSearchCenterPicker : returnToCategoryPicker}
+            >
+              {zeroResultGuidance.target === "center" ? "更换搜索中心" : "更换地点类型"}
+            </button>
+          </section>
+        ) : null}
+        {result && discoveryOutcome && !zeroResultGuidance ? (
           <section data-testid="bootstrap-discovery-outcome" aria-live="polite">
             <h2>Discovery outcome: {discoveryOutcome}</h2>
             <p>
@@ -2908,8 +2949,7 @@ export function BootstrapDiscoveryPanel({
                 </p>
                 {candidate.selection_state !== "READY_FOR_NATIVE_PLAN" ? (
                   <p role="status" data-testid={`bootstrap-opening-blocker-${candidate.candidate_id}`}>
-                    Opening is not independently verified. Verify the source, preview the public map, inspect the source,
-                    or continue exploring; this candidate cannot start a Journey yet.
+                    Check opening times before choosing this place.
                   </p>
                 ) : null}
                 <p>
@@ -2920,7 +2960,7 @@ export function BootstrapDiscoveryPanel({
                       rel="noreferrer"
                       data-testid={`bootstrap-source-${candidate.candidate_id}`}
                     >
-                      Open public source to verify
+                      Open source
                     </a>
                   ) : null}
                 </p>
@@ -2929,7 +2969,7 @@ export function BootstrapDiscoveryPanel({
                     Source identity: {candidate.opening_source ?? "OpenStreetMap/Overpass"} · {candidate.external_id} · grade {candidate.provider_provenance} · observed {candidate.opening_observed_at ?? "unknown"}
                   </p>
                   <p>
-                    Opening evidence: {candidate.opening_claim ?? "NO_OPENING_TAG"} · {candidate.opening_verification_state === "PROVIDER_GROUNDED" ? "provider-grounded, not freshly rechecked" : "EXTERNAL_NOT_ATTESTED"}
+                    Opening evidence: {candidate.opening_claim ?? "NO_OPENING_TAG"} · {candidate.opening_verification_state === "PROVIDER_GROUNDED" ? "provider record · refresh pending" : "source pending"}
                   </p>
                   {candidate.opening_hours?.raw ? <p>OSM opening_hours: {String(candidate.opening_hours.raw)}</p> : null}
                   {Object.entries(candidate.source_tags ?? {}).map(([key, value]) => {
@@ -2941,7 +2981,7 @@ export function BootstrapDiscoveryPanel({
                         {key}: {value}{" "}
                         {safeUrl ? (
                           <a href={safeUrl} target="_blank" rel="noopener noreferrer">
-                            Open unverified OSM-provided site
+                            Open source website
                           </a>
                         ) : null}
                       </p>
@@ -3033,15 +3073,15 @@ export function BootstrapDiscoveryPanel({
           <p>
             {shortlistLoading
               ? "Restoring your saved public places…"
-              : `Saved ${shortlist.length} of 3. Only public identity, coordinates, source, capture time, and explicitly supported source facts are retained for this member.`}
+              : `Saved ${shortlist.length} of 3 public places with source details.`}
           </p>
           {shortlist.map((item) => (
             <article key={item.shortlist_id} data-testid={`bootstrap-shortlist-item-${item.shortlist_id}`}>
               <h3>{item.name}</h3>
               <p>
                 {item.category} · {item.public_access_state === "INDOOR_ACCESS_UNVERIFIED"
-                  ? "indoor-only access; public visitability unverified"
-                  : "public visitability unverified"} · opening {item.opening_state || "UNKNOWN"} · price {item.price_state || "UNKNOWN"} · route ETA {item.eta_state || "UNKNOWN"}
+                  ? "indoor access pending"
+                  : "access pending"} · hours {item.opening_state || "pending"} · price {item.price_state || "pending"} · route ETA {item.eta_state || "pending"}
               </p>
               <p>
                 Source: {item.source_provenance} · captured {item.captured_at}
@@ -3113,8 +3153,8 @@ export function BootstrapDiscoveryPanel({
                 >
                   <p>
                     {pendingMapPreview.purpose === "WALKING"
-                      ? "Fresh one-time consent: share only this saved public destination with a walking-directions provider. The provider receives no origin, query, receipt, or foreground GPS. Opening, cost, route duration, and arrival remain unknown."
-                      : "Fresh one-time consent: share only this saved public destination with OpenStreetMap. No receipt, origin, search center, or foreground GPS is reused or sent."}
+                      ? "For this request, send this saved destination to a walking-directions provider. Opening, price, access and ETA are pending."
+                      : "For this request, open this saved destination on OpenStreetMap."}
                   </p>
                   <label>
                     <input
@@ -3187,10 +3227,7 @@ export function BootstrapDiscoveryPanel({
             </button>
             {orderedTwoStopItems.length === 2 ? (
               <div className="journey-membership-map-consent" data-testid="bootstrap-two-stop-consent">
-                <p>
-                  Fresh one-time consent: send only public stop 1 and public stop 2 to the external walking map.
-                  Your current location, foreground GPS, member identity, receipt, query center, and private intent stay withheld.
-                </p>
+                <p>本次会把两个已选公开地点发送给步行地图服务以计算路线。</p>
                 <label>
                   <input
                     type="checkbox"
@@ -3255,15 +3292,15 @@ export function BootstrapDiscoveryPanel({
                       Walking feasibility: {twoStopWalkability.duration_min} min · {((twoStopWalkability.distance_m ?? 0) / 1000).toFixed(2)} km · {twoStopWalkability.provider} · {twoStopWalkability.provenance}.
                     </p>
                     <p>
-                      Observed {twoStopWalkability.observed_at}. This is advisory provider evidence; safety, accessibility, opening, price, arrival, and a guaranteed ETA remain UNKNOWN.
+                      查询时间：{twoStopWalkability.observed_at} · 安全、无障碍、营业、价格和到达状态待补充。
                     </p>
                   </>
                 ) : (
                   <p data-testid="bootstrap-two-stop-walkability-result">
-                    Cannot verify walkability now ({twoStopWalkability.reason_code ?? "ROUTE_UNVERIFIED"}). {twoStopWalkability.reason ?? "No provider-backed walking route is available."} Use the external public walking map below; no duration or distance was invented.
+                    步行路线暂不可用（{twoStopWalkability.reason_code ?? "ROUTE_UNVERIFIED"}）。{twoStopWalkability.reason ?? "可在下方外部地图查看路线。"}
                   </p>
                 )}
-                <p>Journey remains draft explore-only; checking this route did not start the Journey.</p>
+                <p>Journey 状态：草稿。</p>
               </div>
             ) : null}
             {twoStopNotice ? <p role="status" data-testid="bootstrap-two-stop-notice">{twoStopNotice}</p> : null}
@@ -3276,18 +3313,14 @@ export function BootstrapDiscoveryPanel({
             ) : null}
             {twoStopWalkability?.status === "ROUTE_UNVERIFIED" ? (
               <p data-testid="bootstrap-two-stop-walkability-fallback">
-                The router could not verify this walk. To open public-to-public
-                directions in Google Maps, use the separate external-map consent
-                above and select Open walking leg to stop 2.
+                路线暂不可用。可单独授权后在 Google Maps 查看步行路线。
               </p>
             ) : null}
             {orderedTwoStopItems.length === 2 && adaptiveAlternativeSecond ? (
               <div data-testid="bootstrap-adaptive-short-walk">
                 <h4>Find a better second stop for a short walk</h4>
                 <p>
-                  Compare the current second stop with one other saved public place using only the three public
-                  coordinates. This is an advisory draft check; it does not use your origin or GPS and does not
-                  change the plan, arrival, opening, safety, price, or booking state.
+                  Compare the current second stop with another saved public place by route distance.
                 </p>
                 <label>
                   Maximum walking time for this leg
@@ -3350,14 +3383,11 @@ export function BootstrapDiscoveryPanel({
                         <p>
                           Current evidence: {adaptiveWalkComparison.current_leg.provider} · {adaptiveWalkComparison.current_leg.provenance} · observed {adaptiveWalkComparison.current_leg.observed_at}. Alternative evidence: {adaptiveWalkComparison.alternative_leg.provider} · {adaptiveWalkComparison.alternative_leg.provenance} · observed {adaptiveWalkComparison.alternative_leg.observed_at}.
                         </p>
-                        <ul>
-                          {[...adaptiveWalkComparison.current_leg.route_caveats, ...adaptiveWalkComparison.alternative_leg.route_caveats]
-                            .filter((caveat, index, caveats) => caveats.indexOf(caveat) === index)
-                            .map((caveat) => <li key={caveat}>{caveat}</li>)}
-                        </ul>
                         <p>{adaptiveWalkComparison.recommendation_reason}</p>
                         <p>
-                          This provider evidence is advisory. Safety, accessibility, opening, price, arrival, and a guaranteed ETA remain UNKNOWN; the Journey remains a draft and no plan or booking was created.
+                          {zh
+                            ? "路线为估算值；出发前确认通行情况、开放时间和价格。"
+                            : "Estimated route; confirm access, opening hours and prices before leaving."}
                         </p>
                         {adaptiveWalkComparison.suggested_second_shortlist_id ? (
                           <button
@@ -3372,22 +3402,19 @@ export function BootstrapDiscoveryPanel({
                     ) : (
                       <>
                         <p>
-                          ROUTE_UNVERIFIED: {adaptiveWalkComparison.current_leg.reason_code ?? "No current-leg route evidence"}; {adaptiveWalkComparison.alternative_leg.reason_code ?? "no alternative-leg route evidence"}. No duration or distance was invented.
+                          {zh
+                            ? `路线暂不可用：${adaptiveWalkComparison.current_leg.reason_code ?? "当前路线暂无结果"}；${adaptiveWalkComparison.alternative_leg.reason_code ?? "备选路线暂无结果"}。`
+                            : `Routes unavailable: ${adaptiveWalkComparison.current_leg.reason_code ?? "current route has no result"}; ${adaptiveWalkComparison.alternative_leg.reason_code ?? "alternative route has no result"}.`}
                         </p>
                         <p>
-                          Current source: {adaptiveWalkComparison.current_leg.provider ?? "none"} · observed {adaptiveWalkComparison.current_leg.observed_at}; alternative source: {adaptiveWalkComparison.alternative_leg.provider ?? "none"} · observed {adaptiveWalkComparison.alternative_leg.observed_at}.
+                          {zh
+                            ? `来源：${adaptiveWalkComparison.current_leg.provider ?? "无"}（${adaptiveWalkComparison.current_leg.observed_at}）；${adaptiveWalkComparison.alternative_leg.provider ?? "无"}（${adaptiveWalkComparison.alternative_leg.observed_at}）。`
+                            : `Sources: ${adaptiveWalkComparison.current_leg.provider ?? "none"} (${adaptiveWalkComparison.current_leg.observed_at}); ${adaptiveWalkComparison.alternative_leg.provider ?? "none"} (${adaptiveWalkComparison.alternative_leg.observed_at}).`}
                         </p>
-                        <ul>
-                          {[...adaptiveWalkComparison.current_leg.route_caveats, ...adaptiveWalkComparison.alternative_leg.route_caveats]
-                            .filter((caveat, index, caveats) => caveats.indexOf(caveat) === index)
-                            .map((caveat) => <li key={caveat}>{caveat}</li>)}
-                        </ul>
                         <p>
-                          {adaptiveWalkComparison.recommendation_reason} You can keep
-                          the current stop or choose the other saved public stop.
-                          Before sharing either route with Google Maps, use the
-                          separate signed external-map consent above. Router
-                          consent does not authorize an external map.
+                          {zh
+                            ? `${adaptiveWalkComparison.recommendation_reason} 你可以保留当前站点或选择备选站点。打开外部地图前会再次确认。`
+                            : `${adaptiveWalkComparison.recommendation_reason} Keep the current stop or choose the alternative. Confirm before opening an external map.`}
                         </p>
                         <div className="v8-actions">
                           <button
@@ -3451,8 +3478,7 @@ export function BootstrapDiscoveryPanel({
             {pocketWalk ? (
               <div data-testid="bootstrap-pocket-walk-card" role="status">
                 <p>
-                  Saved privately for this signed member. The card does not infer arrival, movement, opening, cost, accessibility,
-                  safety, or a guaranteed ETA. Sources were captured at the times shown below.
+                  Personal Pocket Walk · place sources and capture times appear below.
                 </p>
                 <ol data-testid="bootstrap-pocket-walk-stops">
                   {[pocketWalk.first_stop, pocketWalk.second_stop].map((stop) => {
@@ -3492,8 +3518,7 @@ export function BootstrapDiscoveryPanel({
                 <section data-testid="bootstrap-pocket-go-mode" aria-labelledby="bootstrap-pocket-go-mode-title">
                   <h4 id="bootstrap-pocket-go-mode-title">GO MODE · take this walk</h4>
                   <p>
-                    This is a server-saved companion for your two-stop intention. Every progress action is an explicit
-                    <strong> USER_REPORTED_PROGRESS</strong> self-report; opening a map never advances it and physical arrival is not verified.
+                    步行计划保存在服务器；每次进度都由你确认并保存。
                   </p>
                   <ol data-testid="bootstrap-pocket-go-stops">
                     {[pocketWalk.first_stop, pocketWalk.second_stop].map((stop) => {
@@ -3554,8 +3579,7 @@ export function BootstrapDiscoveryPanel({
                 </section>
                 <h4>Share public walk</h4>
                 <p>
-                  Review this exact public-only text before sending or copying it. It contains no member, traveler, Journey,
-                  GPS, query center, token, receipt, private preference, or internal evidence identifier.
+                  Review the public route below before sending or copying it.
                 </p>
                 <pre data-testid="bootstrap-pocket-share-preview">{pocketSharePreview ?? "Sharing is blocked until both trusted OpenStreetMap source links are available."}</pre>
                 {twoStopFallbackUrl ? (

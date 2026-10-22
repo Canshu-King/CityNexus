@@ -9,28 +9,17 @@ import {
 } from "../../api/citynexus";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { AgentRunRail, type AgentRailStep } from "./AgentRunRail";
+import {
+  nativeEventKey,
+  statusForNativeEvent,
+  useNativeHermesTimeline,
+} from "./nativeHermesTimeline";
 import { JourneyClarificationPanel } from "./JourneyClarificationPanel";
 import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failureAttribution";
 
 
 type Message = { role: "user" | "assistant"; text: string; response?: CopilotResponse };
 type NativeRun = NonNullable<CopilotResponse["agent_run"]>;
-
-const EVENT_TYPES = [
-  "semantic.interpreted",
-  "mission.planned",
-  "run.started",
-  "tool.started",
-  "tool.completed",
-  "tool.failed",
-  "gateway.checked",
-  "guardian.checked",
-  "proposal.created",
-  "approval.required",
-  "run.completed",
-  "run.failed",
-  "run.stopped",
-] as const;
 
 const TERMINAL_RE = /^(completed|succeeded|failed|cancelled|canceled|stopped|error)$/i;
 
@@ -63,69 +52,6 @@ const toolLabels: Record<string, { en: string; zh: string }> = {
 
 function terminalStatus(value: string | null | undefined) {
   return TERMINAL_RE.test(String(value ?? ""));
-}
-
-function eventKey(event: NativeRuntimeEvent) {
-  return [
-    event.event_type,
-    event.event_id ?? "",
-    event.sequence ?? "",
-    event.tool_name ?? "",
-    event.timestamp ?? "",
-    event.duration_ms ?? "",
-    event.approval_id ?? "",
-    event.proposal_id ?? "",
-  ].join("|");
-}
-
-function readStoredEvents(journeyId: string, runId: string): NativeRuntimeEvent[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(`citynexus.native-hermes.timeline.${journeyId}.${runId}`);
-    const value = raw ? JSON.parse(raw) : [];
-    return Array.isArray(value) ? (value as NativeRuntimeEvent[]).slice(-250) : [];
-  } catch {
-    return [];
-  }
-}
-
-function mergeEvents(...groups: Array<NativeRuntimeEvent[] | undefined>) {
-  const result: NativeRuntimeEvent[] = [];
-  const seen = new Set<string>();
-  for (const group of groups) {
-    for (const item of group ?? []) {
-      if (!item || typeof item !== "object") continue;
-      const key = eventKey(item);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      result.push(item);
-    }
-  }
-  return result
-    .map((event, index) => ({ event, index }))
-    .sort((left, right) => {
-      const leftSequence = Number.isFinite(left.event.sequence) ? Number(left.event.sequence) : null;
-      const rightSequence = Number.isFinite(right.event.sequence) ? Number(right.event.sequence) : null;
-      if (leftSequence != null && rightSequence != null && leftSequence !== rightSequence) {
-        return leftSequence - rightSequence;
-      }
-      const leftTime = left.event.timestamp ? Date.parse(String(left.event.timestamp)) : Number.NaN;
-      const rightTime = right.event.timestamp ? Date.parse(String(right.event.timestamp)) : Number.NaN;
-      if (Number.isFinite(leftTime) && Number.isFinite(rightTime) && leftTime !== rightTime) {
-        return leftTime - rightTime;
-      }
-      return left.index - right.index;
-    })
-    .map(({ event }) => event)
-    .slice(-250);
-}
-
-function statusForEvent(event: NativeRuntimeEvent): AgentRailStep["status"] {
-  if (event.event_type === "approval.required" || event.status === "approval_required") return "approval";
-  if (event.event_type.endsWith(".failed") || event.status === "failed") return "failed";
-  if (event.event_type.endsWith(".completed") || event.status === "completed") return "done";
-  if (event.event_type === "run.stopped" || event.status === "stopped") return "failed";
-  return "active";
 }
 
 function formatDuration(value: number) {
@@ -166,124 +92,19 @@ export function NativeMissionTimeline({
   const { locale } = useLocale();
   const t = useT();
   const zh = locale === "zh-CN";
-  const [events, setEvents] = useState<NativeRuntimeEvent[]>(() =>
-    mergeEvents(run.initial_events, readStoredEvents(data.journey.id, run.run_id)),
-  );
-  const [runState, setRunState] = useState(run.status);
+  const { events, runState, setRunState, authState, connection } = useNativeHermesTimeline({
+    journeyId: data.journey.id,
+    run,
+  });
   const [actionState, setActionState] = useState<string | null>(null);
   const [actionFacts, setActionFacts] = useState<string | null>(null);
-  const [streamError, setStreamError] = useState<string | null>(null);
-
-  const appendEvents = useCallback((incoming: NativeRuntimeEvent[]) => {
-    setEvents((current) => mergeEvents(current, incoming));
-  }, []);
-
-  // A closed panel or route unmount does not discard the mission timeline.
-  // This is only a local UI cache; authoritative history is the server audit
-  // timeline fetched below.
-  useEffect(() => {
-    setEvents(mergeEvents(run.initial_events, readStoredEvents(data.journey.id, run.run_id)));
-    setRunState(run.status);
-    setActionState(null);
-    setStreamError(null);
-  }, [data.journey.id, run.run_id]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(
-        `citynexus.native-hermes.timeline.${data.journey.id}.${run.run_id}`,
-        JSON.stringify(events.slice(-250)),
-      );
-    } catch {
-      // Local storage is an enhancement only; server audit history remains authoritative.
-    }
-  }, [data.journey.id, events, run.run_id]);
-
-  useEffect(() => {
-    let cancelled = false;
-    void cityNexusApi
-      .getNativeHermesTimeline(data.journey.id, run.run_id)
-      .then((payload) => {
-        if (!cancelled) appendEvents(payload.events);
-      })
-      .catch(() => {
-        // A freshly-created run may not have emitted an event yet.
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [appendEvents, data.journey.id, run.run_id]);
-
-  useEffect(() => {
-    const url = run.events_url;
-    if (!url || typeof window === "undefined") return undefined;
-    let cancelled = false;
-    let ended = false;
-    let attempts = 0;
-    let retryTimer: number | undefined;
-    let source: EventSource | null = null;
-    const connect = () => {
-      if (cancelled || ended) return;
-      source = new EventSource(url);
-      const handleEvent = (incoming: Event) => {
-        try {
-          const payload = JSON.parse((incoming as MessageEvent<string>).data) as NativeRuntimeEvent;
-          if (!payload || typeof payload !== "object") return;
-          attempts = 0;
-          setStreamError(null);
-          appendEvents([payload]);
-          if (payload.status) setRunState(String(payload.status));
-          if (["run.completed", "run.failed", "run.stopped"].includes(payload.event_type)) {
-            ended = true;
-            source?.close();
-            source = null;
-          }
-        } catch {
-          setStreamError(zh ? "运行事件暂时无法解析" : "A runtime event could not be read");
-        }
-      };
-      source.addEventListener("message", handleEvent);
-      for (const name of EVENT_TYPES) source.addEventListener(name, handleEvent);
-      source.onerror = () => {
-        if (ended || cancelled) return;
-        source?.close();
-        source = null;
-        attempts += 1;
-        if (attempts <= 3) {
-          setStreamError(zh ? "正在重新连接运行事件" : "Reconnecting to runtime events");
-          retryTimer = window.setTimeout(connect, Math.min(5000, 500 * 2 ** (attempts - 1)));
-        } else {
-          setStreamError(zh ? "运行事件流不可用；已保留已收到的事件" : "Event stream unavailable; received events are preserved");
-        }
-      };
-    };
-    connect();
-    return () => {
-      cancelled = true;
-      ended = true;
-      if (retryTimer != null) window.clearTimeout(retryTimer);
-      source?.close();
-    };
-  }, [appendEvents, run.events_url, zh]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const poll = () => {
-      void cityNexusApi
-        .getNativeHermesRun(data.journey.id, run.run_id)
-        .then((payload) => {
-          if (!cancelled && typeof payload.status === "string") setRunState(payload.status);
-        })
-        .catch(() => undefined);
-    };
-    poll();
-    const timer = window.setInterval(poll, 3000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, [data.journey.id, run.run_id]);
+  const streamError = authState === "unauthorized"
+    ? zh ? "当前签名成员无权读取这条运行记录" : "This signed member cannot read this run"
+    : connection === "retrying"
+      ? zh ? "正在重新连接运行事件" : "Reconnecting to runtime events"
+      : connection === "unavailable"
+        ? zh ? "事件流中断，显示已收到的记录" : "Event stream interrupted; showing received events"
+        : null;
 
   const executed = useMemo(
     () => events.some((event) => event.source === "HERMES_NATIVE" && (
@@ -319,9 +140,9 @@ export function NativeMissionTimeline({
       </span>
     );
     return {
-      id: `${index}-${eventKey(event)}`,
+      id: `${index}-${nativeEventKey(event)}`,
       label: summaryText(event, zh),
-      status: statusForEvent(event),
+      status: statusForNativeEvent(event),
       /* `result_summary` is left out on purpose: the server builds it from whatever a tool
          returned, so it can carry a sentence this screen cannot vouch for.  Q64 lets the allowed
          fields through, not the answer's prose -- and Q71 says a collapsed block is still in the
@@ -351,7 +172,9 @@ export function NativeMissionTimeline({
     ),
   );
   const proposalEvent = [...events].reverse().find((event) => event.event_type === "proposal.created" || event.proposal_id);
-  const active = !terminalStatus(runState) && !events.some((event) => event.event_type === "run.stopped");
+  const active = authState === "authorized"
+    && !terminalStatus(runState)
+    && !events.some((event) => event.event_type === "run.stopped");
 
   const stop = async () => {
     if (!active) return;
@@ -369,17 +192,17 @@ export function NativeMissionTimeline({
 
   const approve = async () => {
     if (typeof navigator !== "undefined" && !navigator.onLine) {
-      setActionState(zh ? "离线时不能确认方案" : "Approval is disabled while offline");
+      setActionState(zh ? "网络恢复后可确认方案" : "Reconnect to approve the proposal");
       return;
     }
     if (!approvalEvent?.approval_id) {
-      setActionState(zh ? "缺少 CityNexus approval_id，需打开恢复中心审核" : "CityNexus approval_id is not available; review in Recovery");
+      setActionState(zh ? "缺少确认编号，请前往恢复中心审核" : "Approval ID missing. Review in Recovery.");
       return;
     }
     setActionState(zh ? "正在记录 CityNexus 确认…" : "Recording CityNexus approval…");
     try {
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
-      setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
+      setActionState(zh ? "已提交确认，等待行程授权" : "Confirmation submitted; awaiting Journey authorization");
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
@@ -429,7 +252,7 @@ export function NativeMissionTimeline({
           <ol>
             {run.mission_plan.steps.map((step) => (
               <li key={step.id}>
-                <span>{zh ? localizePlanStep(step.operation) : step.operation}</span>
+                <span>{localizePlanStep(step.operation, zh)}</span>
                 {step.requires_authority && <small>{zh ? "CityNexus 授权" : "CityNexus authority"}</small>}
               </li>
             ))}
@@ -459,8 +282,8 @@ export function NativeMissionTimeline({
           <b>{zh ? "需要你确认" : "Needs your confirmation"}</b>
           <span>
             {zh
-              ? "任何会影响已确认预订或受保护安排的改动，都需要你先确认，系统不会自己改。"
-              : "Anything that affects a confirmed booking or a protected plan needs your confirmation first; nothing is changed automatically."}
+              ? "影响已确认预订或受保护安排的改动，需要你批准。"
+              : "Changes to confirmed bookings or protected plans need your approval."}
           </span>
           <div>
             <button type="button" className="v8-primary" onClick={() => void approve()}>{zh ? "批准" : "Approve"}</button>
@@ -480,19 +303,21 @@ export function NativeMissionTimeline({
   );
 }
 
-function localizePlanStep(operation: string) {
+function localizePlanStep(operation: string, zh: boolean) {
+  if (operation === "Proposal only; no mutation without user approval") {
+    return zh ? "待你确认" : "Awaiting your confirmation";
+  }
   const values: Record<string, string> = {
     "Inspect current Journey": "检查当前行程",
     "Inspect JourneyTwin": "核对我的行程事实",
-    "Inspect protected commitments": "检查受保护承诺",
+    "Inspect protected commitments": "检查已确认安排",
     "Inspect affected activities": "检查受影响活动",
     "Search candidate places and services": "搜索候选地点和服务",
     "Evaluate candidates against constraints": "按约束评估候选项",
     "Request a deterministic replan proposal": "请求调整方案",
     "Inspect proposal trade-offs": "检查方案权衡",
-    "Proposal only; no mutation without user approval": "仅方案；未经确认不修改",
   };
-  return values[operation] ?? operation;
+  return zh ? values[operation] ?? operation : operation;
 }
 
 // Traveller-facing labels.  Intent enums, verification states and action
@@ -514,8 +339,8 @@ const VERIFICATION_LABELS: Record<string, { zh: string; en: string }> = {
   VERIFIED: { zh: "已核验", en: "Verified" },
   PARTIALLY_VERIFIED: { zh: "部分核验", en: "Partly verified" },
   UNVERIFIED: { zh: "未核验", en: "Unverified" },
-  FAILED_EXTERNAL: { zh: "暂时无法核验", en: "Could not verify" },
-  NOT_CONFIGURED: { zh: "暂不支持核验", en: "Verification unavailable" },
+  FAILED_EXTERNAL: { zh: "核验失败", en: "Verification failed" },
+  NOT_CONFIGURED: { zh: "未连接", en: "Not connected" },
 };
 
 const ACTION_LABELS: Record<string, { zh: string; en: string }> = {
@@ -866,8 +691,8 @@ export function CopilotDock({
               <b>{t("agent.citynexus")}</b>
               <small>
                 {locale === "zh-CN"
-                  ? "回答只依据已核验的行程事实，不会自己改动你的安排。"
-                  : "Answers use verified journey facts only and never change your plan."}
+                  ? "基于已核验的行程事实回答。"
+                  : "Answers use verified journey facts."}
               </small>
             </div>
             <button type="button" className="cn-copilot-close" onClick={() => setOpen(false)} aria-label={t("shell.close")}>×</button>

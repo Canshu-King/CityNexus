@@ -1,0 +1,39 @@
+{
+  "base_sha": "2431a1e8030e5d883b52200ef8bf4e58635a3b64",
+  "state": "captured from these product bytes before commit",
+  "browser": "installed Chrome through existing chrome-use/CDP session",
+  "screenshots": "raw viewport captures, DOM click only to frame timeline screenshot",
+  "data": "existing signed isolated backend journey and server draft",
+  "hardware_phone": false,
+  "new_model_or_poi_requests": 0,
+  "api_writes": [],
+  "viewports": [
+    {
+      "width": 390,
+      "documentWidth": 390,
+      "hero": 111.99664306640625,
+      "dock": 77.05536651611328,
+      "photoCount": 3,
+      "photosLoaded": [
+        960,
+        960,
+        960
+      ],
+      "visiblePanels": 1
+    },
+    {
+      "width": 430,
+      "documentWidth": 430,
+      "hero": 111.99664306640625,
+      "dock": 77.05536651611328,
+      "photoCount": 3,
+      "photosLoaded": [
+        960,
+        960,
+        960
+      ],
+      "visiblePanels": 1
+    }
+  ],
+  "product_sha": "d0e61d6f5916681e688b60a3bfec6c2d0d4fde5c"
+}

@@ -5,6 +5,23 @@ import { OriginResponseUnusableError } from "../lib/failureAttribution";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import { travelerAuthHeaders } from "../lib/travelerSession";
 
+export type GuardianStream = {
+  tool: "read_guardian_stream"; journey_id: string; mission_id: string | null;
+  status: "WATCH_NOT_RUNNING" | "HAS_EVENTS";
+  watch: { configured: boolean; last_observed_at: string | null; latest_pulse: {
+    id: string; status: string; started_at: string; completed_at: string | null;
+  } | null };
+  recovery_epoch: { id: string; generation: number; status: string;
+    triggering_event_ids: string[]; opened_at: string; active_plan_version_id_at_open: string | null } | null;
+  stream: { observation: { id: string; event_type: string; severity: string; status: string;
+    provider: string; provenance: string; detected_at: string; affected_activity_id: string | null };
+    impact: { id: string; status: string; uncertain: boolean; reason_codes: string[]; created_at: string } | null;
+    proposed_action: { id: string; decision: string; status: string; action_status: string;
+      proposal_id: string | null; created_at: string; completed_at: string | null } | null;
+  }[];
+  counts: { events: number; open_events: number; impacts: number; actions: number };
+};
+
 export interface Money {
   amount_minor: number;
   currency: string;
@@ -21,7 +38,7 @@ export interface Activity {
   end_at: string;
   travel_from_prev_min: number;
   estimated_cost: Money;
-  /** KNOWN_FREE / KNOWN_PAID / UNKNOWN; compatibility amount 0 is not proof of free. */
+  /** KNOWN_FREE / KNOWN_PAID / UNKNOWN; amount 0 leaves the status UNKNOWN unless marked KNOWN_FREE. */
   cost_status?: string;
   metadata?: Record<string, unknown>;
   status: string;
@@ -41,6 +58,11 @@ export interface PlanVersion {
   utility_score: number | null;
   score_breakdown: Record<string, number> | null;
   activities: Activity[];
+  is_current?: boolean;
+  stale?: boolean;
+  selectable?: boolean;
+  lifecycle?: string;
+  explanation?: Record<string, unknown>;
 }
 
 export interface DemoIds {
@@ -56,6 +78,9 @@ export interface JourneyRecord {
   city_code: string;
   timezone: string;
   status: string;
+  start_at?: string;
+  end_at?: string;
+  budget?: Money;
 }
 
 export interface JourneyMembershipInvitationInboxItem {
@@ -1670,6 +1695,7 @@ export interface ProviderMeshResponse {
 
 export interface BootstrapDiscoveryCandidate {
   candidate_id: string;
+  provider_key: "overpass" | "photon";
   name: string;
   category: string;
   external_id: string;
@@ -1681,21 +1707,50 @@ export interface BootstrapDiscoveryCandidate {
   coordinate_system: "WGS84";
   distance_m: number | null;
   opening_state: string;
-  selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED";
+  selection_state: "READY_FOR_NATIVE_PLAN" | "OPENING_UNVERIFIED" | "REGION_CONFLICT";
+  region_status?: "MATCHED" | "CONFLICT" | "UNKNOWN";
+  public_address?: Record<string, string>;
   selection_action: string | null;
+  selection_blockers?: string[];
+  facts_status?: "SUCCESS" | "UNAVAILABLE" | null;
+  observation_expired?: boolean;
+  captured_at?: string;
   availability_confidence: "UNVERIFIED";
-  price_state: "UNKNOWN";
+  price_state: "UNKNOWN" | "FREE" | "KNOWN" | "VERIFIED_PROVIDER" | "OFFICIAL_WEB_VERIFIED";
   eta_state: "UNKNOWN";
   tags: string[];
   opening_hours: Record<string, unknown>;
+  cost_evidence?: {
+    status?: string;
+    amount_minor?: number | null;
+    currency?: string | null;
+    evidence_basis?: string;
+  };
   opening_observed_at: string;
   opening_source: string;
   opening_claim: "OSM_TAG_CLAIM" | "NO_OPENING_TAG";
   opening_verification_state: "PROVIDER_GROUNDED" | "EXTERNAL_NOT_ATTESTED";
   opening_verification_action: "OPEN_SOURCE_PAGE";
   source_tags: Record<string, string>;
+  source_attribution?: string;
+  source_attribution_url?: string;
   public_access_state: "PUBLIC_ACCESS_UNVERIFIED" | "INDOOR_ACCESS_UNVERIFIED" | "RESTRICTED" | string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+}
+
+export interface BootstrapDiscoveryFilterSummary {
+  raw_count: number;
+  accepted_count: number;
+  rejected_by_reason: {
+    provider_mismatch: number;
+    invalid_identity: number;
+    missing_name: number;
+    invalid_coordinates: number;
+    invalid_distance: number;
+    out_of_radius: number;
+    restricted_access: number;
+    duplicate: number;
+  };
 }
 
 export interface BootstrapDiscoveryResponse {
@@ -1705,17 +1760,37 @@ export interface BootstrapDiscoveryResponse {
   receipt_id: string | null;
   expires_at: string | null;
   source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
-  provider: "overpass";
+  provider: "overpass" | "photon";
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   attempts: Array<Record<string, unknown>>;
   candidates: BootstrapDiscoveryCandidate[];
+  filter_summary?: BootstrapDiscoveryFilterSummary;
   failure_code?: string;
   readiness?: BootstrapDiscoveryReadinessResponse;
 }
 
+export interface TravelBrief {
+  goal: string;
+  public_region_label?: string | null;
+  interests: string[];
+  energy: "easy" | "steady" | "full";
+}
+
+export interface TravelPlanningInput {
+  journey_id: string;
+  intent: (TravelBrief & { id: string; updated_at: string; source: string;
+    mapped_preferences: { input: string; preference: string }[]; unmapped_interests?: string[]; free_text_status: string }) | null;
+  trip: { dates: string[]; party_size: number; budget: Money; planning_mode: string };
+  candidates: (BootstrapDiscoveryCandidate & { receipt_id: string })[];
+  preview_kind: "UNVERIFIED_SUGGESTION_DRAFT";
+  transport_status: "UNKNOWN";
+  plan_version_id: null;
+}
+
 export interface BootstrapDiscoveryReadinessResponse {
+  supports_place_name_search?: boolean;
   journey_id?: string;
-  provider: "overpass";
+  provider: "overpass" | "photon";
   provider_name: string;
   expected_recipient: string;
   status: "READY" | "BLOCKED";
@@ -1729,6 +1804,8 @@ export interface BootstrapDiscoveryReadinessResponse {
 export interface BootstrapSelectionResponse {
   journey_id: string;
   selected_place_id: string;
+  provider_key: "overpass" | "photon";
+  external_id: string;
   plan_version_id: string | null;
   journey_status: string;
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
@@ -1755,6 +1832,7 @@ export interface BootstrapCitySearchResponse {
   journey_id: string;
   status: "CITY_RESULTS" | "CITY_NO_RESULTS" | "GEOCODER_DISABLED" | "GEOCODER_UNAVAILABLE" | "GEOCODER_RATE_LIMITED";
   query: string;
+  provider_key: "nominatim" | "photon" | null;
   provider_provenance?: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   provider_attempts: Array<Record<string, unknown>>;
   cache_hit?: boolean;
@@ -1788,7 +1866,7 @@ export interface BootstrapMapPreviewResponse {
   receipt_id: string;
   candidate_id: string;
   expires_at: string | null;
-  provider: "overpass";
+  provider: "overpass" | "photon";
   provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
   destination: {
     name: string;
@@ -1822,7 +1900,7 @@ export interface BootstrapMapPreviewResponse {
 export interface BootstrapShortlistItem {
   shortlist_id: string;
   journey_id: string;
-  provider_key: "overpass";
+  provider_key: "overpass" | "photon";
   external_id: string;
   name: string;
   category: string;
@@ -1863,6 +1941,7 @@ export interface BootstrapShortlistResumeIntent {
 export interface BootstrapPocketWalkStop {
   position: 1 | 2;
   shortlist_id: string;
+  provider_key: "overpass" | "photon";
   name: string;
   category: string;
   external_id: string;
@@ -2107,6 +2186,125 @@ export interface AgentRunStep {
   completed_at?: string;
 }
 
+export interface DraftGoalTaskEvent {
+  sequence: number;
+  event_type: string;
+  status: string;
+  run_id: string | null;
+  step_sequence_no: number | null;
+  model_turn_no: number | null;
+  tool_name: string | null;
+  reason_code: string | null;
+  consent: Record<string, boolean> | null;
+  budget: Record<string, number> | null;
+}
+
+export interface GoalDraftSlot {
+  title: string;
+  time_of_day: "morning" | "afternoon" | "evening" | "flexible";
+  place_id?: string | null;
+  notes: string;
+}
+export interface GoalDraftArtifact {
+  revision: number;
+  status: "DRAFT";
+  days: Array<{ date: string; slots: GoalDraftSlot[] }>;
+}
+export interface GoalPreparationSchedule {
+  day_index: number; slot_index: number; start_time: string; end_time: string;
+}
+export interface GoalPreparationResult {
+  journey_id: string; task_id: string; draft_revision: number; plan_version_id: string;
+  status: "CANDIDATE"; selected: false; activated: false; slots_count: number;
+  mobility_frozen: boolean;
+  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN" }>;
+}
+export interface GoalResearchLead {
+  id: string; name: string; category: string; latitude: number; longitude: number;
+  source_url: string; provider_provenance: "LIVE_PROVIDER" | "TEST_PROVIDER" | "UNVERIFIED";
+  opening_status: string; cost_status: string;
+  provider?: string;
+  provider_object_id?: string;
+  coordinate_system?: "WGS84" | "GCJ02";
+  adcode?: string;
+  captured_at?: string;
+  region_status?: "MATCHED" | "CONFLICT" | "UNKNOWN";
+  location_kind?: "AREA" | "POI";
+  public_address?: Record<string, string>;
+}
+export interface GoalResearchRoute {
+  id: string;
+  from_place_id: string;
+  to_place_id: string;
+  from_name: string;
+  to_name: string;
+  provider: "amap";
+  coordinate_system: "GCJ02";
+  distance_m: number;
+  duration_seconds: number;
+  captured_at: string;
+  source_url: string;
+}
+export interface GoalDraftVariant {
+  id: string; title: string; comparison: string; artifact: GoalDraftArtifact;
+  source_place_ids: string[]; route_ids: string[]; unknown_summary: string[];
+}
+
+export interface GoalPlaceMedia {
+  place_id: string; image_url: string; thumb_url: string | null; author: string;
+  license: string; source_url: string; terms_url?: string | null; title?: string | null;
+  captured_at: string; can_show: boolean; identity_status: string;
+}
+export interface GoalPlaceMediaResult {
+  candidate_id: string; journey_id: string; task_id: string; place_id: string;
+  status: string; media: GoalPlaceMedia | null; cache_hit?: boolean;
+  source_reference?: string | null; source_wikidata_id?: string | null;
+}
+
+export interface DraftGoalTask {
+  task_id: string;
+  journey_id: string;
+  mode: "GOAL_PLANNING";
+  status: string;
+  goal: string;
+  conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string }>;
+  consent: { model?: boolean; online_research?: boolean };
+  budget: { max_model_turns?: number; max_tool_calls?: number; unlimited?: boolean };
+  interaction_mode?: "DISCUSS" | "RESEARCH";
+  pending_question?: { id: string; question: string; options: { label: string; description: string }[] } | null;
+  usage: { model_turns?: number; tool_calls?: number };
+  latest_run_id: string | null;
+  candidate_place_ids: string[];
+  source_observation_ids: string[];
+  candidate_places?: Array<{
+    id: string;
+    name: string;
+    category: string;
+    city_code: string;
+    provider_key: string;
+    opening_state: string;
+    cost_evidence: { status?: string; amount_minor?: number | null };
+  }>;
+  tool_steps?: Array<{
+    run_id: string;
+    sequence_no: number;
+    tool_name: string;
+    status: string;
+    result: Record<string, unknown>;
+  }>;
+  assistant_summary?: string | null;
+  draft_artifact?: GoalDraftArtifact | null;
+  prepared_plan?: { result: GoalPreparationResult; schedule: GoalPreparationSchedule[] } | null;
+  draft_variants?: GoalDraftVariant[];
+  research_places?: GoalResearchLead[];
+  research_areas?: GoalResearchLead[];
+  research_routes?: GoalResearchRoute[];
+  failure_code: string | null;
+  created_at?: string;
+  started_at?: string | null;
+  updated_at?: string;
+}
+
 export interface AgentRunOutcome {
   status: string;
   reason_code?: string;
@@ -2183,6 +2381,44 @@ export interface NativeRuntimeEvent {
   mission_id?: string;
   approval_status?: string;
   approval_method?: string | null;
+}
+
+export interface NativeHermesRunReference {
+  run_id: string;
+  status?: string;
+  runtime_identity: string;
+  provider_key?: string;
+  mission_id?: string;
+  reasoning_summary?: string | null;
+  initial_events?: NativeRuntimeEvent[];
+}
+
+export interface MobileCompatAgentToolStep {
+  sequence_no: number;
+  tool_name: "inspect_journey" | "inspect_twin" | "list_replans";
+  status: "COMPLETED" | "FAILED";
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface MobileCompatAgentRun {
+  request_id: string;
+  run_id: string;
+  mission_id: string;
+  runtime_identity: "HERMES_COMPAT_ENDPOINT";
+  status: string;
+  tool_call_recorded: boolean;
+  verification: "WB2API_TOOL_CALL_RECORDED" | "MODEL_NOT_VERIFIED";
+  tool_steps: MobileCompatAgentToolStep[];
+  created_at: string;
+  started_at: string;
+  completed_at: string | null;
+}
+
+export interface MobileCompatAgentLatest {
+  runtime_identity: string;
+  configured: boolean;
+  run: MobileCompatAgentRun | null;
 }
 
 export interface AgentCommandResponse {
@@ -2293,6 +2529,7 @@ export interface CopilotResponse {
     events_url?: string;
     timeline_url?: string;
     mission_id?: string;
+    reasoning_summary?: string | null;
     model_key?: string;
     mission_plan?: AgentMissionPlan;
     initial_events?: NativeRuntimeEvent[];
@@ -2619,9 +2856,23 @@ export interface CatalogHydrationOperation {
   abandon_requested_at?: string | null;
 }
 
+export interface JourneyDepartureRead {
+  journey_id: string; gate: string; observed_at: string; reason_detail: string | null;
+  selected_plan: { plan_version_id: string; activities_count: number } | null;
+  candidates: Array<{ plan_version_id: string; version_no: number; activities_count: number }>;
+}
+export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
+
 export const cityNexusApi = {
   resetDemo(): Promise<DemoIds> {
     return requestJson<DemoIds>("/demo/reset", { method: "POST" });
+  },
+
+  getTravelerSession(): Promise<{ traveler_id: string }> {
+    return requestJson<{ traveler_id: string }>("/travelers/session", {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   /* ORD-0193: the destination-preparation surface.  These mirror the server's own projections --
@@ -2662,8 +2913,21 @@ export const cityNexusApi = {
     );
   },
 
+  getJourneyDeparture(journeyId: string): Promise<JourneyDepartureRead> {
+    return requestJson<JourneyDepartureRead>("/journeys/" + journeyId + "/departure", { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+  getJourneyMemberSeat(journeyId: string): Promise<JourneyMemberSeatRead> {
+    return requestJson<JourneyMemberSeatRead>("/journeys/" + journeyId + "/members/me", { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
   getJourney(journeyId: string): Promise<JourneyRecord> {
-    return requestJson<JourneyRecord>("/journeys/" + journeyId);
+    return requestJson<JourneyRecord>("/journeys/" + journeyId, { headers: travelerAuthHeaders() });
+  },
+
+  listJourneyPlans(journeyId: string): Promise<PlanVersion[]> {
+    return requestJson<PlanVersion[]>("/journeys/" + journeyId + "/plans", {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   listPlaces(cityCode: string): Promise<PlaceRecord[]> {
@@ -2828,6 +3092,112 @@ export const cityNexusApi = {
     );
   },
 
+  createDraftGoalTask(
+    journeyId: string,
+    input: {
+      goal: string;
+      model_consent: boolean;
+      online_research_consent: boolean;
+      interaction_mode?: "DISCUSS" | "RESEARCH";
+      unlimited_research?: boolean;
+      max_model_turns?: number;
+      max_tool_calls?: number;
+    },
+    signal?: AbortSignal,
+  ): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify(input),
+        signal,
+      },
+    );
+  },
+
+  getGoalPlaceMedia(journeyId: string, taskId: string, candidateId: string, signal?: AbortSignal): Promise<GoalPlaceMediaResult> {
+    return requestJson<GoalPlaceMediaResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/place-media?candidate_id=" + encodeURIComponent(candidateId),
+      { headers: travelerAuthHeaders(), cache: "no-store", signal },
+    );
+  },
+
+  getDraftGoalTask(journeyId: string, taskId: string): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getDraftGoalTaskEvents(
+    journeyId: string,
+    taskId: string,
+    afterSequence = 0,
+  ): Promise<{ task_id: string; events: DraftGoalTaskEvent[]; next_cursor: number | null }> {
+    const query = new URLSearchParams({ after_sequence: String(afterSequence), limit: "100" });
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
+        + encodeURIComponent(taskId) + "/events?" + query.toString(),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getGuardianStream(journeyId: string): Promise<GuardianStream> {
+    return requestJson<GuardianStream>("/journeys/" + encodeURIComponent(journeyId) + "/guardian/stream",
+      { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+
+  runDraftGoalTask(
+    journeyId: string,
+    taskId: string,
+    input: {
+      model_consent: boolean;
+      online_research_consent: boolean;
+      interaction_mode?: "DISCUSS" | "RESEARCH";
+      unlimited_research?: boolean;
+      max_model_turns?: number;
+      max_tool_calls?: number;
+      user_message?: string;
+      message_id?: string;
+    },
+    resume = false,
+    signal?: AbortSignal,
+  ): Promise<DraftGoalTask> {
+    const action = resume ? "resume" : "run";
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
+        + encodeURIComponent(taskId) + "/" + action,
+      { method: "POST", headers: travelerAuthHeaders(), body: JSON.stringify(input), signal },
+    );
+  },
+
+  updateGoalDraft(journeyId: string, taskId: string, artifact: GoalDraftArtifact): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId) + "/draft",
+      { method: "PUT", headers: travelerAuthHeaders(), body: JSON.stringify({
+        days: artifact.days, expected_revision: artifact.revision,
+      }) },
+    );
+  },
+
+  prepareGoalDraft(journeyId: string, taskId: string, revision: number, schedule: GoalPreparationSchedule[], idempotencyKey: string): Promise<GoalPreparationResult> {
+    return requestJson<GoalPreparationResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId) + "/prepare-plan",
+      { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ expected_revision: revision, schedule }) },
+    );
+  },
+
+  cancelDraftGoalTask(journeyId: string, taskId: string): Promise<DraftGoalTask> {
+    return requestJson<DraftGoalTask>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/"
+        + encodeURIComponent(taskId) + "/cancel",
+      { method: "POST", headers: travelerAuthHeaders() },
+    );
+  },
+
   runAgentCommand(
     journeyId: string,
     command: string,
@@ -2854,6 +3224,7 @@ export const cityNexusApi = {
   ): Promise<CopilotResponse> {
     return requestJson<CopilotResponse>("/journeys/" + journeyId + "/copilot/messages", {
       method: "POST",
+      headers: travelerAuthHeaders(),
       body: JSON.stringify({ message, locale }),
     });
   },
@@ -2861,6 +3232,42 @@ export const cityNexusApi = {
   getNativeHermesRun(journeyId: string, runId: string): Promise<Record<string, unknown>> {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getLatestNativeHermesRun(journeyId: string): Promise<{
+    journey_id: string;
+    run: NativeHermesRunReference | null;
+  }> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/hermes/latest-run",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  getLatestMobileCompatRun(journeyId: string): Promise<MobileCompatAgentLatest> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/mobile-compat-runs/latest",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
+    );
+  },
+
+  startMobileCompatRun(journeyId: string, requestId: string): Promise<MobileCompatAgentRun> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/mobile-compat-runs",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ request_id: requestId, provider_consent: true }),
+      },
+    );
+  },
+
+  getMobileCompatRun(journeyId: string, requestId: string): Promise<MobileCompatAgentRun> {
+    return requestJson(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/mobile-compat-runs/" + encodeURIComponent(requestId),
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 
@@ -2883,19 +3290,21 @@ export const cityNexusApi = {
   }> {
     return requestJson(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId) + "/timeline",
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 
   stopNativeHermesRun(journeyId: string, runId: string): Promise<Record<string, unknown>> {
     return requestJson<Record<string, unknown>>(
       "/journeys/" + journeyId + "/agent/hermes/runs/" + encodeURIComponent(runId) + "/stop",
-      { method: "POST" },
+      { method: "POST", headers: travelerAuthHeaders() },
     );
   },
 
   getAgentRun(journeyId: string, runId: string): Promise<AgentRun> {
     return requestJson<AgentRun>(
       "/journeys/" + journeyId + "/agent/runs/" + runId,
+      { headers: travelerAuthHeaders(), cache: "no-store" },
     );
   },
 
@@ -3006,7 +3415,7 @@ export const cityNexusApi = {
 
   bootstrapCitySearch(
     journeyId: string,
-    input: { query: string; provider_consent: boolean; limit: number },
+    input: { query: string; provider_consent: boolean; limit: number; provider?: "nominatim" | "photon" },
   ): Promise<BootstrapCitySearchResponse> {
     return requestJson<BootstrapCitySearchResponse>(
       "/journeys/" + journeyId + "/bootstrap-city-search",
@@ -3023,6 +3432,28 @@ export const cityNexusApi = {
       "/journeys/" + journeyId + "/bootstrap-discovery/readiness",
       { headers: travelerAuthHeaders(), cache: "no-store" },
     );
+  },
+
+  getTravelPlanningInput(journeyId: string): Promise<TravelPlanningInput> {
+    return requestJson<TravelPlanningInput>(`/journeys/${journeyId}/planning-intent`,
+      { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+
+  getJourneyMapPlaces(journeyId: string): Promise<{journey_id: string; candidates: BootstrapDiscoveryCandidate[]}> {
+    return requestJson(`/journeys/${journeyId}/map-places`,
+      { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+
+  saveTravelBrief(journeyId: string, brief: TravelBrief): Promise<TravelPlanningInput> {
+    return requestJson<TravelPlanningInput>(`/journeys/${journeyId}/planning-intent`,
+      { method: "PUT", headers: travelerAuthHeaders(), body: JSON.stringify(brief) });
+  },
+
+  generateFromDiscovery(journeyId: string, candidateIds: string[], idempotencyKey: string): Promise<PlanVersion[]> {
+    return requestJson<PlanVersion[]>(`/journeys/${journeyId}/plans/generate`, {
+      method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+      body: JSON.stringify({ candidate_count: 1, bootstrap_candidate_ids: candidateIds }),
+    });
   },
 
   lookupBootstrapSharedWalk(
@@ -3081,10 +3512,12 @@ export const cityNexusApi = {
     journeyId: string,
     input: {
       query: string;
+      query_mode?: "category" | "name";
       radius_m: number;
       limit: number;
       source_kind: "FOREGROUND_GPS" | "MANUAL_PUBLIC_CENTER";
       provider_consent: boolean;
+      consented_provider: "overpass" | "photon";
       latitude: number;
       longitude: number;
       coordinate_system: "WGS84";
@@ -3098,6 +3531,27 @@ export const cityNexusApi = {
         method: "POST",
         headers: travelerAuthHeaders(),
         body: JSON.stringify(input),
+      },
+    );
+  },
+
+  getCurrentBootstrapDiscovery(journeyId: string): Promise<BootstrapDiscoveryResponse | null> {
+    return requestJson("/journeys/" + journeyId + "/bootstrap-discovery/current", {
+      headers: travelerAuthHeaders(), cache: "no-store",
+    });
+  },
+
+  refreshBootstrapPlaceFacts(
+    journeyId: string,
+    receiptId: string,
+    candidateId: string,
+  ): Promise<{ journey_id: string; candidate: BootstrapDiscoveryCandidate; cached: boolean }> {
+    return requestJson(
+      "/journeys/" + journeyId + "/bootstrap-discovery/facts",
+      {
+        method: "POST",
+        headers: travelerAuthHeaders(),
+        body: JSON.stringify({ receipt_id: receiptId, candidate_id: candidateId, provider_consent: true }),
       },
     );
   },

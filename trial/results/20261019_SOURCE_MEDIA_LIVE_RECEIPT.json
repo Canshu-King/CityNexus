@@ -1,0 +1,483 @@
+{
+  "source_sha": "7fdf9e0963e92efdadd8227136d11fa8adc269a7",
+  "product_sha": "16ab341cba1ba64e3e79781e1751833e11147a8f",
+  "scope": "isolated signed Guangzhou DRAFT GoalTask, operator UI validation",
+  "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+  "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+  "status": "PARTIAL_READY",
+  "human_verified": false,
+  "hardware_phone": false,
+  "followup": {
+    "revision_before": 1,
+    "revision_after": 2,
+    "other_slots_unchanged": true,
+    "variants_unchanged": true,
+    "other_slots_sha256": "5b31e30dc75e0a7a0df6afd5f0fde5729630595e2f884f5d639635897db27d1b",
+    "variants_sha256": "d8e36e1b7aee0074bfd510c31abee8e72f87ffa728247863dce8d7471c35a8a3",
+    "provider_calls_before": 86,
+    "provider_calls_after_followup": 86,
+    "model_turns_before": 7,
+    "model_turns_after": 8,
+    "tool_calls_before": 6,
+    "tool_calls_after": 7,
+    "counter_observation": "Read-only SQLite count sampled immediately before and after followup; later refreshes are separate."
+  },
+  "media_receipts": [
+    {
+      "operation": "goal_place_media",
+      "status": "SUCCESS",
+      "latency_ms": 3375,
+      "created_at": "2026-10-19T14:36:31.392407+00:00",
+      "candidate_id": "amap:B00140WBI1",
+      "media_status": "REAL_POI_PHOTO",
+      "reason_code": null,
+      "source_reference": "https://uri.amap.com/marker?position=113.324521%2C23.106428&name=%E5%B9%BF%E5%B7%9E%E5%A1%94&coordinate=gaode&callnative=0",
+      "source_fingerprint": "4cd0cda2319140b70eac37ac9e143fe8f87dbfa7ba36e09f1b9adbc4947542aa",
+      "identity_status": "BOUND_SOURCE_COORDINATE_MATCH",
+      "media": {
+        "place_id": "amap:B00140WBI1",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou%2C_China_-_panoramio_%289%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou%2C_China_-_panoramio_%289%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou%2C_China_-_panoramio_%289%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        "author": "jiang-wen-jie",
+        "license": "CC BY-SA 3.0",
+        "source_url": "https://commons.wikimedia.org/wiki/File:%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou,_China_-_panoramio_(9).jpg",
+        "attribution_url": "https://commons.wikimedia.org/wiki/File:%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou,_China_-_panoramio_(9).jpg",
+        "terms_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "provider": "wikimedia-commons",
+        "provenance": "WIKIDATA_P18+COMMONS_IMAGEINFO",
+        "title": "广州塔Scenery in Guangzhou, China",
+        "confidence": "SOURCE_COORDINATE_MATCH",
+        "identity_status": "BOUND_SOURCE_COORDINATE_MATCH",
+        "provider_object_id": "amap:B00140WBI1",
+        "district": "赤岗街道",
+        "district_qid": "Q7210382",
+        "district_matches_region": null,
+        "captured_at": "2026-10-19T14:36:31+00:00",
+        "can_show": true
+      }
+    },
+    {
+      "operation": "goal_place_media",
+      "status": "SUCCESS",
+      "latency_ms": 875,
+      "created_at": "2026-10-19T14:36:32.283506+00:00",
+      "candidate_id": "amap:B00141I9XU",
+      "media_status": "NO_IMAGE",
+      "reason_code": "ENTITY_NOT_FOUND",
+      "source_reference": "https://uri.amap.com/marker?position=113.324117%2C23.105443&name=%E5%B9%BF%E5%B7%9E%E5%A1%94%E5%9C%B0%E4%B8%8B%E5%81%9C%E8%BD%A6%E5%9C%BA&coordinate=gaode&callnative=0",
+      "source_fingerprint": "537c5931814645cfe0a2f7d81b429d78e175f1ef3dcb03e99e68580c2f2032e5",
+      "identity_status": "UNBOUND",
+      "media": null
+    },
+    {
+      "operation": "goal_place_media",
+      "status": "SUCCESS",
+      "latency_ms": 875,
+      "created_at": "2026-10-19T14:36:33.179275+00:00",
+      "candidate_id": "amap:BV10015731",
+      "media_status": "NO_IMAGE",
+      "reason_code": "ENTITY_NOT_FOUND",
+      "source_reference": "https://uri.amap.com/marker?position=113.323464%2C23.106483&name=%E5%B9%BF%E5%B7%9E%E5%A1%94%28%E5%9C%B0%E9%93%81%E7%AB%99%29&coordinate=gaode&callnative=0",
+      "source_fingerprint": "de1389f012232405fc151f9349a20109240d7cc2fbe41322b0dbf5509264a503",
+      "identity_status": "UNBOUND",
+      "media": null
+    },
+    {
+      "operation": "goal_place_media",
+      "status": "SUCCESS",
+      "latency_ms": 2922,
+      "created_at": "2026-10-19T14:36:37.929996+00:00",
+      "candidate_id": "amap:B00140U6L3",
+      "media_status": "NO_PERMISSION",
+      "reason_code": "ATTRIBUTION_OR_LICENSE_UNAVAILABLE",
+      "source_reference": null,
+      "source_fingerprint": "53675242238a4b047545a36981d4bf306373e1f6cc2f38a34b47f80a2baa364a",
+      "identity_status": "UNBOUND",
+      "media": null
+    },
+    {
+      "operation": "goal_place_media",
+      "status": "SUCCESS",
+      "latency_ms": 3219,
+      "created_at": "2026-10-19T14:48:15.036018+00:00",
+      "candidate_id": "amap:B00140U6L3",
+      "media_status": "NO_PERMISSION",
+      "reason_code": "ATTRIBUTION_OR_LICENSE_UNAVAILABLE",
+      "source_reference": null,
+      "source_fingerprint": "53675242238a4b047545a36981d4bf306373e1f6cc2f38a34b47f80a2baa364a",
+      "identity_status": "UNBOUND",
+      "media": null
+    },
+    {
+      "operation": "goal_place_media",
+      "status": "SUCCESS",
+      "latency_ms": 922,
+      "created_at": "2026-10-19T14:48:15.985634+00:00",
+      "candidate_id": "amap:B00141I9XU",
+      "media_status": "NO_IMAGE",
+      "reason_code": "ENTITY_NOT_FOUND",
+      "source_reference": "https://uri.amap.com/marker?position=113.324117%2C23.105443&name=%E5%B9%BF%E5%B7%9E%E5%A1%94%E5%9C%B0%E4%B8%8B%E5%81%9C%E8%BD%A6%E5%9C%BA&coordinate=gaode&callnative=0",
+      "source_fingerprint": "537c5931814645cfe0a2f7d81b429d78e175f1ef3dcb03e99e68580c2f2032e5",
+      "identity_status": "UNBOUND",
+      "media": null
+    }
+  ],
+  "api": [
+    {
+      "at": "2026-10-19T14:36:31.398Z",
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600/place-media",
+      "method": "GET",
+      "status": 200,
+      "candidate_id": "amap:B00140WBI1",
+      "media_status": "REAL_POI_PHOTO",
+      "source": "https://commons.wikimedia.org/wiki/File:%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou,_China_-_panoramio_(9).jpg",
+      "license": "CC BY-SA 3.0",
+      "cache_hit": false
+    },
+    {
+      "at": "2026-10-19T14:36:32.291Z",
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600/place-media",
+      "method": "GET",
+      "status": 200,
+      "candidate_id": "amap:B00141I9XU",
+      "media_status": "NO_IMAGE",
+      "cache_hit": false
+    },
+    {
+      "at": "2026-10-19T14:36:33.183Z",
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600/place-media",
+      "method": "GET",
+      "status": 200,
+      "candidate_id": "amap:BV10015731",
+      "media_status": "NO_IMAGE",
+      "cache_hit": false
+    },
+    {
+      "at": "2026-10-19T14:36:37.999Z",
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600/place-media",
+      "method": "GET",
+      "status": 200,
+      "candidate_id": "amap:B00140U6L3",
+      "media_status": "NO_PERMISSION",
+      "cache_hit": false
+    },
+    {
+      "at": "2026-10-19T14:36:52.220Z",
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600/run",
+      "method": "POST",
+      "status": 200,
+      "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+      "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+      "task_status": "PARTIAL_READY",
+      "usage": {
+        "model_turns": 7,
+        "tool_calls": 6
+      },
+      "revision": 1,
+      "variants": 3
+    },
+    {
+      "at": "2026-10-19T14:38:14.937Z",
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600/resume",
+      "method": "POST",
+      "status": 200,
+      "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+      "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+      "task_status": "PARTIAL_READY",
+      "usage": {
+        "model_turns": 8,
+        "tool_calls": 7
+      },
+      "revision": 2,
+      "variants": 3
+    }
+  ],
+  "browser_restore": {
+    "browser": "Installed Chrome, existing signed isolated session",
+    "hardware_phone": false,
+    "framing": "DOM clicks only to select screenshots; live goal/followup used native Chrome-use fill and Enter",
+    "writes": [],
+    "snapshots": [
+      {
+        "http_status": 200,
+        "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+        "revision": 2,
+        "variants": 3,
+        "usage": {
+          "model_turns": 8,
+          "tool_calls": 7
+        },
+        "status": "PARTIAL_READY",
+        "tool_steps": [
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_itinerary",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_variants",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "replace_draft_slots",
+            "status": "COMPLETED"
+          }
+        ],
+        "pointer": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "width": 390,
+        "documentWidth": 390,
+        "runtimePhotos": [
+          {
+            "candidate_id": "amap:B00140WBI1",
+            "naturalWidth": 536,
+            "credit": "广州塔\n来源实景 · 封面裁切\njiang-wen-jie · CC BY-SA 3.0\n查看对应安排"
+          }
+        ]
+      },
+      {
+        "http_status": 200,
+        "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+        "revision": 2,
+        "variants": 3,
+        "usage": {
+          "model_turns": 8,
+          "tool_calls": 7
+        },
+        "status": "PARTIAL_READY",
+        "tool_steps": [
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_itinerary",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_variants",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "replace_draft_slots",
+            "status": "COMPLETED"
+          }
+        ],
+        "pointer": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "width": 430,
+        "documentWidth": 430,
+        "runtimePhotos": [
+          {
+            "candidate_id": "amap:B00140WBI1",
+            "naturalWidth": 536,
+            "credit": "广州塔\n来源实景 · 封面裁切\njiang-wen-jie · CC BY-SA 3.0\n查看对应安排"
+          }
+        ]
+      },
+      {
+        "http_status": 200,
+        "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+        "revision": 2,
+        "variants": 3,
+        "usage": {
+          "model_turns": 8,
+          "tool_calls": 7
+        },
+        "status": "PARTIAL_READY",
+        "tool_steps": [
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_itinerary",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_variants",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "replace_draft_slots",
+            "status": "COMPLETED"
+          }
+        ],
+        "pointer": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "width": 1366,
+        "documentWidth": 1366,
+        "runtimePhotos": [
+          {
+            "candidate_id": "amap:B00140WBI1",
+            "naturalWidth": 536,
+            "credit": "广州塔\n来源实景 · 封面裁切\njiang-wen-jie · CC BY-SA 3.0\n查看对应安排"
+          }
+        ]
+      },
+      {
+        "http_status": 200,
+        "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+        "revision": 2,
+        "variants": 3,
+        "usage": {
+          "model_turns": 8,
+          "tool_calls": 7
+        },
+        "status": "PARTIAL_READY",
+        "tool_steps": [
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "discover_places",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_itinerary",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "research_place_media",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "save_draft_variants",
+            "status": "COMPLETED"
+          },
+          {
+            "tool": "replace_draft_slots",
+            "status": "COMPLETED"
+          }
+        ],
+        "pointer": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+        "width": 1566,
+        "documentWidth": 1566,
+        "runtimePhotos": [
+          {
+            "candidate_id": "amap:B00140WBI1",
+            "naturalWidth": 536,
+            "credit": "广州塔\n来源实景 · 封面裁切\njiang-wen-jie · CC BY-SA 3.0\n查看对应安排"
+          }
+        ]
+      }
+    ]
+  },
+  "private_evidence_sha256": {
+    "before-followup.json": "a3fa803555939cdd88256c0c773688c6cea79cecec23a9b35bde295fdb4aef45",
+    "after-followup.json": "a8d059d376b9ba5b58fa0ef80c786cb9c6296a8cf28a96cff4b93193b7c473ae",
+    "live-network.jsonl": "63e76e8ed43574fec47f75f6dd932a1274239c4e79254abb578912645028fe8c"
+  },
+  "provider_calls_at_receipt": 91,
+  "final_commit_smoke": {
+    "task_http": 200,
+    "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+    "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+    "revision": 2,
+    "variants": 3,
+    "media_http": 200,
+    "media_status": "REAL_POI_PHOTO",
+    "cache_hit": true,
+    "candidate_id": "amap:B00140WBI1",
+    "source_url": "https://commons.wikimedia.org/wiki/File:%E5%B9%BF%E5%B7%9E%E5%A1%94Scenery_in_Guangzhou,_China_-_panoramio_(9).jpg",
+    "license": "CC BY-SA 3.0",
+    "identity_status": "BOUND_SOURCE_COORDINATE_MATCH",
+    "product_sha": "16ab341cba1ba64e3e79781e1751833e11147a8f"
+  },
+  "liancheng_curated_browser": {
+    "journey_id": "156d1cb9-398b-4c13-a789-7f699268b42f",
+    "heading": "连城县",
+    "width": 390,
+    "documentWidth": 390,
+    "photos": [
+      {
+        "candidate_id": "photon:W/846486126",
+        "naturalWidth": 960,
+        "credit": "冠豸山\n历史照片 · 封面裁切\nrheins · CC BY 3.0\n查看对应安排"
+      },
+      {
+        "candidate_id": "photon:R/6432779",
+        "naturalWidth": 960,
+        "credit": "石门湖\n历史照片 · 封面裁切\nrheins · CC BY 3.0\n在地图中查看"
+      },
+      {
+        "candidate_id": "nominatim:way/670148268",
+        "naturalWidth": 960,
+        "credit": "培田古村\n历史照片 · 封面裁切\n张元柏 · CC BY-SA 3.0\n查看对应安排"
+      }
+    ]
+  },
+  "photo_day_map_identity": {
+    "day_photo_candidate": "amap:B00140WBI1",
+    "map_focused_candidate": "amap:B00140WBI1",
+    "matched": true
+  },
+  "tests": {
+    "backend": {
+      "command": "python -m pytest backend/tests/test_goal_place_media.py backend/tests/test_goal_task_routes.py backend/tests/test_goal_variants.py -q",
+      "passed": 20,
+      "exit": 0,
+      "database": "isolated SQLite media-qa-final.db"
+    },
+    "ui": {
+      "config": "private copy of mobile-trial config using installed headed Chrome, serial worker",
+      "passed": 45,
+      "exit": 0,
+      "output": "frontend/output/pr23-source-media-final-20261019"
+    },
+    "typescript": {
+      "command": "npm.cmd run typecheck:all",
+      "exit": 0
+    },
+    "vite": {
+      "command": "npm.cmd run build",
+      "exit": 0
+    }
+  }
+}

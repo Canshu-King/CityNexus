@@ -54,7 +54,7 @@ def _new_journey(traveler_id: str) -> dict:
     return response.json()
 
 
-def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeypatch):
+def test_r86_zero_catalog_unknown_cost_cannot_be_materialized_by_plan_ack(monkeypatch):
     previous_secret = settings.traveler_auth_secret
     previous_enabled = settings.real_city_enabled
     previous_mode = settings.real_city_mode
@@ -138,6 +138,7 @@ def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeyp
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": True,
+                "consented_provider": "overpass",
                 "latitude": 39.12,
                 "longitude": 117.20,
                 "coordinate_system": "WGS84",
@@ -146,7 +147,13 @@ def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeyp
         )
         assert discovery.status_code == 200, discovery.text
         discovery_body = discovery.json()
-        assert discovery_body["candidates"][0]["opening_state"] == "VERIFIED_PROVIDER"
+        unknown_cost = next(
+            item for item in discovery_body["candidates"] if item["external_id"] == "overpass:node/86101"
+        )
+        assert unknown_cost["opening_state"] == "VERIFIED_PROVIDER"
+        assert unknown_cost["price_state"] == "UNKNOWN"
+        assert unknown_cost["selection_blockers"] == ["COST_UNKNOWN"]
+        assert unknown_cost["selection_state"] != "READY_FOR_NATIVE_PLAN"
         assert len(discovery_body["candidates"]) == 2
         assert provider_calls == 1
 
@@ -159,6 +166,7 @@ def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeyp
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": True,
+                "consented_provider": "overpass",
                 "latitude": 39.12,
                 "longitude": 117.20,
                 "coordinate_system": "WGS84",
@@ -169,8 +177,12 @@ def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeyp
         assert provider_calls == 1
         assert rate_limited.json()["error"]["details"]["scope"] == "journey_member_traveler"
 
-        candidate_id = discovery_body["candidates"][0]["candidate_id"]
-        expired_candidate_id = discovery_body["candidates"][1]["candidate_id"]
+        candidate_id = unknown_cost["candidate_id"]
+        expired_candidate_id = next(
+            item["candidate_id"]
+            for item in discovery_body["candidates"]
+            if item["external_id"] == "overpass:node/86102"
+        )
         invalid = client.post(
             f"/api/v1/journeys/{journey['id']}/bootstrap-discovery/select",
             headers=headers,
@@ -201,6 +213,10 @@ def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeyp
             expired_row = session.get(RealPlaceCandidate, expired_candidate_id)
             assert expired_row is not None
             expired_row.expires_at = "2020-01-01T00:00:00+00:00"
+            evidence = json.loads(expired_row.evidence_json or "{}")
+            for scope in evidence.get("bootstrap_scopes", []):
+                scope["expires_at"] = "2020-01-01T00:00:00+00:00"
+            expired_row.evidence_json = json.dumps(evidence)
             session.commit()
         viewer = client.post(
             f"/api/v1/journeys/{journey['id']}/bootstrap-discovery/select",
@@ -219,102 +235,28 @@ def test_r86_zero_catalog_unknown_cost_can_start_only_after_explicit_ack(monkeyp
             headers=headers,
             json={"receipt_id": discovery_body["receipt_id"], "candidate_id": candidate_id},
         )
-        assert selected.status_code == 200, selected.text
-        place_id = selected.json()["selected_place_id"]
+        assert selected.status_code == 422, selected.text
+        assert selected.json()["error"]["reason_code"] == "BOOTSTRAP_COST_UNVERIFIED"
+        assert selected.json()["error"]["details"]["price_state"] == "UNKNOWN"
         places = client.get("/api/v1/places?city_code=CN-R86-FIRST-STARTABLE").json()
-        assert [item["id"] for item in places] == [place_id]
-        assert places[0]["opening_hours"]["status"] == "VERIFIED_PROVIDER"
+        assert places == []
 
-        blocked = client.post(
-            f"/api/v1/journeys/{journey['id']}/plans/generate",
-            headers=headers,
-            json={
-                "place_ids": [place_id],
-                "candidate_count": 1,
-                "allow_single_place": True,
-            },
-        )
-        assert blocked.status_code == 422, blocked.text
-        assert "PLACE_COST_UNVERIFIED" in blocked.text
         with SessionLocal() as session:
+            assert session.scalar(select(func.count(Place.id)).where(Place.city_code == "CN-R86-FIRST-STARTABLE")) == 0
             assert session.scalar(select(func.count(PlanVersion.id)).where(PlanVersion.journey_id == journey["id"])) == 0
-
-        generated = client.post(
-            f"/api/v1/journeys/{journey['id']}/plans/generate",
-            headers={**headers, "Idempotency-Key": "r86-native-plan-first-attempt"},
-            json={
-                "place_ids": [place_id],
-                "candidate_count": 1,
-                "allow_single_place": True,
-                "allow_unknown_cost": True,
-            },
-        )
-        assert generated.status_code == 201, generated.text
-        plan = generated.json()[0]
-        assert plan["total_cost"]["amount_minor"] == 0
-        assert plan["total_cost_status"] == "PARTIAL_UNKNOWN"
-        assert plan["explanation"]["authority_state"] == "COST_UNKNOWN_ACCEPTED"
-        assert plan["explanation"]["cost_unknown_policy"] == "USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED"
-        assert plan["explanation"]["cost_summary"] == {
-            "known_subtotal_minor": 0,
-            "unknown_cost_included": False,
-            "unknown_item_count": 1,
-            "unknown_place_ids": [place_id],
-            "total_is_not_free": True,
-        }
-        assert plan["activities"][0]["cost_status"] == "UNKNOWN"
-        assert plan["activities"][0]["metadata"]["price_known"] is False
-        assert plan["activities"][0]["metadata"]["cost_included_in_total"] is False
-        replayed = client.post(
-            f"/api/v1/journeys/{journey['id']}/plans/generate",
-            headers={**headers, "Idempotency-Key": "r86-native-plan-first-attempt"},
-            json={
-                "place_ids": [place_id],
-                "candidate_count": 1,
-                "allow_single_place": True,
-                "allow_unknown_cost": True,
-            },
-        )
-        assert replayed.status_code == 201, replayed.text
-        assert replayed.json()[0]["id"] == plan["id"]
-
-        selected_plan = client.post(
-            f"/api/v1/journeys/{journey['id']}/plans/{plan['id']}/select",
-            headers=headers,
-        )
-        assert selected_plan.status_code == 200, selected_plan.text
-        activity_id = plan["activities"][0]["id"]
-        booking = client.post(
-            f"/api/v1/journeys/{journey['id']}/bookings",
-            headers=headers,
-            json={"activity_id": activity_id},
-        )
-        assert booking.status_code == 422, booking.text
-        assert "unknown cost is not bookable" in booking.text
-
-        started = client.post(f"/api/v1/journeys/{journey['id']}/start", headers=headers)
-        assert started.status_code == 200, started.text
-        assert client.get(f"/api/v1/journeys/{journey['id']}").json()["status"] == "ACTIVE"
-
-        with SessionLocal() as session:
-            assert session.scalar(select(func.count(Place.id)).where(Place.city_code == "CN-R86-FIRST-STARTABLE")) == 1
-            assert session.scalar(select(func.count(PlanVersion.id)).where(PlanVersion.journey_id == journey["id"])) == 1
             assert session.scalar(select(func.count(RealPlaceCandidate.id)).where(RealPlaceCandidate.journey_id == journey["id"])) == 2
             assert session.scalar(
                 select(func.count(RealPlaceCandidate.id)).where(
                     RealPlaceCandidate.journey_id == journey["id"],
                     RealPlaceCandidate.materialized_place_id.is_not(None),
                 )
-            ) == 1
+            ) == 0
             assert session.scalar(select(func.count(ProviderCall.id)).where(ProviderCall.operation == "bootstrap_city_discovery", ProviderCall.request_json.like(f'%{journey["id"]}%'))) == 1
             assert session.scalar(select(func.count(AgentRun.id)).where(AgentRun.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(GuardianRun.id)).where(GuardianRun.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(Booking.id)).where(Booking.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(Order.id)).where(Order.journey_id == journey["id"])) == 0
             assert session.scalar(select(func.count(PaymentTransaction.id)).where(PaymentTransaction.journey_id == journey["id"])) == 0
-            persisted_plan = session.get(PlanVersion, plan["id"])
-            assert persisted_plan is not None
-            assert json.loads(persisted_plan.explanation_json)["cost_unknown_acknowledgement"]["policy"] == "USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED"
     finally:
         object.__setattr__(settings, "traveler_auth_secret", previous_secret)
         object.__setattr__(settings, "real_city_enabled", previous_enabled)

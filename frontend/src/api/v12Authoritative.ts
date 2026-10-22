@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { rejectionWithFacts } from "../lib/rejectionFacts";
+import { travelerAuthHeaders } from "../lib/travelerSession";
 import type { components, paths } from "../generated/api";
 
 export type AuthoritativeComposeRequest =
@@ -37,7 +38,10 @@ export function useAuthoritativePlans(journeyId: string | null) {
   return useQuery({
     queryKey: ["v12-authoritative-plans", journeyId],
     enabled: Boolean(journeyId),
-    queryFn: () => request<PlanVersion[]>(`/journeys/${journeyId}/plans`),
+    queryFn: () => request<PlanVersion[]>(`/journeys/${journeyId}/plans`, {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    }),
   });
 }
 

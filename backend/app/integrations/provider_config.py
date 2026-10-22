@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 def _flag(name: str, default: bool = False) -> bool:
@@ -21,6 +21,13 @@ class ExternalProviderSettings:
     open_meteo_enabled: bool = _flag("CITYNEXUS_OPEN_METEO_ENABLED")
     photon_enabled: bool = _flag("CITYNEXUS_PHOTON_ENABLED")
     photon_base_url: str = os.getenv("CITYNEXUS_PHOTON_BASE_URL", "https://photon.komoot.io")
+    photon_user_agent: str = field(
+        default_factory=lambda: os.getenv("CITYNEXUS_PHOTON_USER_AGENT", "").strip(),
+        repr=False,
+    )
+    poi_discovery_provider: str = os.getenv(
+        "CITYNEXUS_POI_DISCOVERY_PROVIDER", "overpass"
+    ).strip().lower()
 
     # Public-provider network policy (docs/NETWORK_POLICY.md).
     #   AUTO      - honour the environment/proxy configuration first, then a

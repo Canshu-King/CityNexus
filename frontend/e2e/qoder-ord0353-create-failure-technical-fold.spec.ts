@@ -212,7 +212,7 @@ test("the fold is on the failure screen, closed, and holds nothing but measureme
 
   const sentence = (await page.getByTestId("trial-create-error").innerText()).replace(/\s+/g, " ");
   expect(
-    sentence.includes("这一步没有成功，行程还没有创建"),
+    sentence.includes("行程尚未创建"),
     node("own-words", `the panel's own sentence is missing: "${sentence}"`),
   ).toBe(true);
   /* The number lives in the fold, not in the sentence above it: the traveller's line stays this

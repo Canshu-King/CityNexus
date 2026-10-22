@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   CityNexusApiError,
   cityNexusApi,
+  type BootstrapCitySearchResponse,
   type BootstrapCitySearchResult,
   type BootstrapDiscoveryCandidate,
   type BootstrapDiscoveryReadinessResponse,
@@ -10,21 +11,23 @@ import {
   type BootstrapPocketWalkGoState,
 } from "../api/citynexus";
 import { parsePublicMapLink } from "../features/discovery/BootstrapDiscoveryPanel";
-import { PublicCityAreaPicker, type PublicCityCenter } from "../features/discovery/PublicCityAreaPicker";
+import { type PublicCityCenter } from "../features/discovery/PublicCityAreaPicker";
 import { readTravelerBearer, subscribeTravelerBearer } from "../lib/travelerSession";
 import { isOriginResponseUnusable } from "../lib/failureAttribution";
 import { isReadDeadlineMissed } from "../lib/readDeadline";
 import { isWriteDeadlineMissed } from "../lib/writeDeadline";
+import { CityPicker } from "./mobile/CityPicker";
+import { DiscoveryPlaceCard } from "./mobile/DiscoveryPlaceCard";
+import { InterestPicker } from "./mobile/InterestPicker";
+import { NamedPlaceSearch } from "./mobile/NamedPlaceSearch";
+import type { MobileAiAdvice } from "./mobile/MobileAiPrompt";
 
 /**
  * A HUMAN-SIZED entry to the exact signed R107/R108 endpoints.
  *
- * The two external HTTP operations are sent only when the user clicks their
- * plainly-labelled release button. A public geocoder result is only an
- * APPROXIMATE city center. If a user explicitly selects it as a coarse
- * public search area, this creates a manual search choice, not a claim that
- * they tapped a map or physically arrived there. No GPS, silent external
- * requests, disguised fixture, PlanVersion, or AgentRun is invented here.
+ * The labeled buttons send the two external HTTP operations. Geocoder results
+ * provide approximate city centers; selecting one sets a manual coarse public
+ * search area for the discovery request.
  */
 type Stage = "area" | "category" | "results" | "walk";
 
@@ -37,15 +40,15 @@ const categories = [
 
 const goCopy: Record<BootstrapPocketWalkGoState, string> = {
   NOT_STARTED: "路线已经保存。想出发时，点击下面的「开始散步」。",
-  HEADING_TO_FIRST: "正前往第一站。到达后请自己确认，系统不会假装知道你的实时位置。",
+  HEADING_TO_FIRST: "正前往第一站。到达后请确认进度。",
   FIRST_STOP_DONE_SELF_REPORTED: "第一站完成（由你手动报告）。可以出发去第二站了。",
   HEADING_TO_SECOND: "正前往第二站。完成后你可以自己报告。",
-  WALK_DONE_SELF_REPORTED: "散步完成。这个状态是你的报告，不是系统证明你真实到达。",
+  WALK_DONE_SELF_REPORTED: "两站散步已完成。",
   PAUSED: "路线已暂停，稍后可以继续。",
 };
 
 type AlertKind = "neutral" | "error" | "good";
-type QuickRecovery = { label: string; action: () => void };
+type QuickRecovery = { label: string; action: () => void; disclosure?: string };
 type QuickAlert = { type: AlertKind; text: string; recovery?: QuickRecovery };
 type ExplorePhase =
   | "请教 AI"
@@ -53,6 +56,7 @@ type ExplorePhase =
   | "检查地图服务"
   | "搜索附近真实地点"
   | "选择正式路线地点"
+  | "查询地点详情"
   | "保存私人散步"
   | "更新散步进度"
   | "读取服务端路线";
@@ -64,22 +68,6 @@ type ErrorDiagnostics = {
   status: number | null;
   reasonCode: string | null;
 };
-
-function candidateSource(value: string | null): string | null {
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    if (
-      url.protocol !== "https:" ||
-      !["www.openstreetmap.org", "openstreetmap.org"].includes(url.hostname) ||
-      url.username || url.password ||
-      !/^\/(node|way|relation)\/[1-9][0-9]*$/.test(url.pathname)
-    ) return null;
-    return url.toString();
-  } catch {
-    return null;
-  }
-}
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -154,49 +142,53 @@ function errorDiagnostics(phase: ExplorePhase, error: unknown): ErrorDiagnostics
 function messageForError(phase: ExplorePhase, error: unknown): string {
   if (phase === "请教 AI") {
     if (error instanceof CityNexusApiError) {
-      if (error.status === 401) return "登录会话已过期，AI 引导没有完成；你仍可跳过 AI，继续手动探索。";
-      if (error.status === 403) return "当前会话没有使用 AI 引导的权限；你仍可跳过 AI，继续手动探索。";
-      if (error.status === 404) return "AI 引导接口当前不可用；你可以跳过 AI，继续手动探索。";
-      if (error.status === 422) return "AI 引导没有接受这次输入；可以换一种说法，也可以跳过 AI 手动探索。";
-      if (error.status === 429) return "AI 引导暂时受到请求限制；稍后再试或跳过 AI，继续手动探索。";
-      if (error.status >= 500) return "AI 服务刚才没有响应；没有自动重试或额外模型调用，你可以跳过 AI 手动探索。";
-      return "AI 引导没有完成（HTTP " + error.status + "）；你仍可跳过 AI，继续手动探索。";
+      if (error.status === 401) return "登录已过期，请重新进入行程。";
+      if (error.status === 403) return "当前账号无权使用 AI 引导。";
+      if (error.status === 404) return "AI 引导暂不可用。";
+      if (error.status === 422) return "AI 没能理解这句话，换个说法试试。";
+      if (error.status === 429) return "AI 当前繁忙。";
+      if (error.status >= 500) return "AI 服务暂不可用。";
+      return "AI 引导失败（HTTP " + error.status + "）。";
     }
-    if (isReadDeadlineMissed(error)) return "等待 AI 引导超时，没有自动重试；你可以跳过 AI，继续手动探索。";
-    return "AI 建议这一步没有完成；没有自动重试或额外模型调用。你仍可跳过 AI，继续手动选择地区和地点。";
+    if (isReadDeadlineMissed(error)) return "等待 AI 超时。";
+    if (error instanceof TypeError || (error instanceof Error && error.name === "AbortError")) {
+      return "AI 连接中断。";
+    }
+    return "AI 建议暂未生成。";
   }
   if (error instanceof CityNexusApiError) {
     const status = error.status;
-    if (status === 401) return phase + "需要有效的签名会话。回到 Revolution 重新进入后再试。";
-    if (status === 403) return "当前会话没有执行「" + phase + "」的权限。请回到 Revolution 重新进入这趟行程。";
-    if (status === 404) return "服务器找不到当前行程或对应资源，「" + phase + "」没有完成。回到 Revolution 重新开始。";
-    if (status === 409) return "服务器上的行程状态已经变化；「" + phase + "」没有覆盖新状态。先重新读取路线状态。";
-    if (status === 422) return "服务器拒绝了「" + phase + "」提交的数据。检查位置、类别或所选地点后再试。";
-    if (status === 429) return "服务端对「" + phase + "」进行了限流。稍等片刻，再明确点一次恢复操作。";
+    if (status === 401) return "登录已过期，请重新进入行程。";
+    if (status === 403 && phase === "查找地名") return "无法用当前登录信息操作这条行程。";
+    if (status === 403) return "当前账号无权执行「" + phase + "」。";
+    if (status === 404) return "找不到当前行程，请重新进入。";
+    if (status === 409) return "行程状态已更新，请刷新后继续。";
+    if (status === 422) return "检查位置、类别或所选地点后重试。";
+    if (status === 429) return "操作太频繁，请稍后重试。";
     if (status >= 500) {
       const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
       return writes
-        ? phase + "遇到服务端故障（HTTP " + status + "）。请求结果需要先从服务器读取核对。"
-        : phase + "遇到服务端故障（HTTP " + status + "）。可以稍后再明确试一次。";
+        ? phase + "暂时失败，请刷新行程确认状态。"
+        : phase + "暂时失败，请稍后重试。";
     }
-    return "服务器拒绝了「" + phase + "」（HTTP " + status + "）。检查当前输入后再试。";
+    return "「" + phase + "」失败（HTTP " + status + "），检查输入后重试。";
   }
   if (isOriginResponseUnusable(error)) {
-    return "服务器已回答 HTTP " + error.status + "，但响应内容无法用于「" + phase + "」，本页没有采用这份响应。";
+    return "服务器返回内容异常，请刷新后重试「" + phase + "」。";
   }
   if (isReadDeadlineMissed(error) || isWriteDeadlineMissed(error)) {
     const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
     return writes
-      ? "等待「" + phase + "」的答复超时，服务器可能已经处理这次请求。先读取服务器路线状态，再决定是否重试。"
-      : "等待「" + phase + "」的答复超时，没有收到 HTTP 状态。你可以明确重试这一步。";
+      ? "「" + phase + "」请求超时，请刷新行程确认结果。"
+      : "「" + phase + "」请求超时，请稍后重试。";
   }
   if (error instanceof TypeError || (error instanceof Error && error.name === "AbortError")) {
     const writes = ["保存私人散步", "更新散步进度", "选择正式路线地点"].includes(phase);
     return writes
-      ? "「" + phase + "」没有收到 HTTP 答复，服务器可能已经处理请求。先读取服务器路线状态，再决定是否重试。"
-      : "「" + phase + "」没有收到 HTTP 答复。检查连接后可以明确重试这一步。";
+      ? "「" + phase + "」连接中断，请刷新行程确认结果。"
+      : "「" + phase + "」连接中断，请检查网络后重试。";
   }
-  return "「" + phase + "」返回的内容未通过本页校验，没有采用。先读取服务器状态或返回检查所选内容。";
+  return "「" + phase + "」暂时无法完成，请检查所选内容后重试。";
 }
 
 function recoveryForError(
@@ -219,28 +211,55 @@ function recoveryForError(
 export function RevolutionQuickExplore({
   journeyId,
   cityName,
+  initialGoal,
+  missionMode = false,
   agentConfigured = false,
+  agentChecking = false,
   onFormalCandidateSelected,
+  onPocketWalkChange,
+  onExplorationCenterLabelChange,
+  onMemberAccessDenied,
 }: {
   journeyId: string;
   cityName: string;
+  initialGoal?: string;
+  missionMode?: boolean;
   agentConfigured?: boolean;
+  agentChecking?: boolean;
   onFormalCandidateSelected?: (placeId: string) => void;
+  onPocketWalkChange?: (walk: BootstrapPocketWalkResponse | null) => void;
+  onExplorationCenterLabelChange?: (label: string) => void;
+  onMemberAccessDenied?: () => void;
 }) {
   const sampleProviderMode = import.meta.env.VITE_REV_TRIAL_MODE === "sample";
   const [stage, setStage] = useState<Stage>("area");
   const [query, setQuery] = useState(cityName);
-  const [aiGoal, setAiGoal] = useState(`我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
-  const [aiAdvice, setAiAdvice] = useState<{ category: string | null; reason: string; verifiedTool: boolean; model: string | null } | null>(null);
+  const [aiGoal, setAiGoal] = useState(() => initialGoal?.trim() || `我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？`);
+  const [aiAdvice, setAiAdvice] = useState<MobileAiAdvice | null>(null);
+  const quickExploreRef = useRef<HTMLElement>(null);
+  const pendingAiAdviceReveal = useRef(false);
   const [cityResults, setCityResults] = useState<BootstrapCitySearchResult[]>([]);
+  const [cityProviderKey, setCityProviderKey] = useState<BootstrapCitySearchResponse["provider_key"] | undefined>(undefined);
+  const [photonFallbackAvailable, setPhotonFallbackAvailable] = useState(false);
   const [cityFocus, setCityFocus] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cityFocusLabel, setCityFocusLabel] = useState<string | null>(null);
+  const [mapFallbackOpen, setMapFallbackOpen] = useState(false);
   const [centerBasis, setCenterBasis] = useState<"EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK" | null>(null);
+  const [explorationCenterLabel, setExplorationCenterLabel] = useState<string | null>(null);
   const [tilesEnabled, setTilesEnabled] = useState(false);
   const [selectedPin, setSelectedPin] = useState<PublicCityCenter | null>(null);
   const [mapLink, setMapLink] = useState("");
   const [center, setCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [category, setCategory] = useState<(typeof categories)[number]["value"]>("park/garden");
+  const [placeName, setPlaceName] = useState("");
+  const [radiusM, setRadiusM] = useState<2500 | 5000>(2500);
+  const lastPlaceSearch = useRef<{ mode: "name" | "category"; query: string } | null>(null);
+  const lastServerGoal = useRef(initialGoal);
+  useEffect(() => {
+    const previous = lastServerGoal.current;
+    if (initialGoal) setAiGoal((current) => current === previous || current === `我在${cityName}，今天想轻松逛逛，别太累。有什么好玩的方向？` ? initialGoal : current);
+    lastServerGoal.current = initialGoal;
+  }, [initialGoal, cityName]);
   const [readiness, setReadiness] = useState<BootstrapDiscoveryReadinessResponse | null>(null);
   const [readinessStatus, setReadinessStatus] = useState<"checking" | "ready" | "blocked" | "error">("checking");
   const [discovery, setDiscovery] = useState<BootstrapDiscoveryResponse | null>(null);
@@ -250,6 +269,21 @@ export function RevolutionQuickExplore({
   const [busy, setBusy] = useState(false);
   const [alert, setAlert] = useState<QuickAlert | null>(null);
   const [errorDetails, setErrorDetails] = useState<ErrorDiagnostics | null>(null);
+
+  // Reveal each accepted reply once; scrolling never moves keyboard focus.
+  useLayoutEffect(() => {
+    if (!aiAdvice || !pendingAiAdviceReveal.current) return;
+    pendingAiAdviceReveal.current = false;
+    const resultCard = quickExploreRef.current?.querySelector<HTMLElement>(".rev-quick-ai-response");
+    if (!resultCard) return;
+
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    resultCard.scrollIntoView({
+      behavior: reducedMotion ? "instant" : "smooth",
+      block: "nearest",
+      inline: "nearest",
+    });
+  }, [aiAdvice]);
   const generation = useRef(0);
   const currentOperation = useRef(0);
   const mounted = useRef(true);
@@ -265,9 +299,14 @@ export function RevolutionQuickExplore({
       currentOperation.current += 1;
       busyRef.current = false;
       setBusy(false);
+      pendingAiAdviceReveal.current = false;
       setCityResults([]);
       setDiscovery(null);
+      setPlaceName("");
+      setRadiusM(2500);
+      lastPlaceSearch.current = null;
       setWalk(null);
+      onPocketWalkChange?.(null);
       setFirst(null);
       setSecond(null);
       setCenter(null);
@@ -301,20 +340,47 @@ export function RevolutionQuickExplore({
         setReadiness(next);
         setReadinessStatus(next.status === "READY" ? "ready" : "blocked");
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         if (!valid()) return;
         setReadiness(null);
         setReadinessStatus("error");
+        if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
+          setAlert({
+            type: "error",
+            text: "当前登录无法访问这段行程，请重新建立探索。原来的行程记录不会因此被删除。",
+            recovery: onMemberAccessDenied
+              ? { label: "重新开始探索", action: onMemberAccessDenied }
+              : undefined,
+          });
+        }
       });
-    void cityNexusApi.getBootstrapShortlist(journeyId).then((state) => {
+    const operationAtLoad = currentOperation.current;
+    void cityNexusApi.getBootstrapShortlist(journeyId).then(async (state) => {
       if (!valid()) return;
+      onPocketWalkChange?.(state.pocket_walk ?? null);
       if (state.pocket_walk) {
         setWalk(state.pocket_walk);
         setStage("walk");
+      } else {
+        const previous = await cityNexusApi.getCurrentBootstrapDiscovery(journeyId);
+        if (!valid() || currentOperation.current !== operationAtLoad || !previous?.candidates.length || previous.journey_id !== journeyId) return;
+        setDiscovery(previous);
+        setStage("results");
+        setAlert({ type: "neutral", text: "已恢复上次找到的地点，可以继续挑选。" });
       }
-    }).catch(() => {
-      // No saved walk or an unavailable backend is not permission to display
-      // fabricated state. First-time users can still start a fresh search.
+    }).catch((error: unknown) => {
+      // A denied member can never re-authorize itself by reloading the same
+      // URL; offer a human action instead of an endless 403 / reload loop.
+      if (!valid()) return;
+      if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
+        setAlert({
+          type: "error",
+          text: "这次登录没有权限读取旧行程。你可以重新开始，服务器原记录不会被清除。",
+          recovery: onMemberAccessDenied
+            ? { label: "重新开始探索", action: onMemberAccessDenied }
+            : undefined,
+        });
+      }
     });
   }, [journeyId]);
 
@@ -329,7 +395,7 @@ export function RevolutionQuickExplore({
   const run = async (
     phase: ExplorePhase,
     task: (stillCurrent: () => boolean) => Promise<void>,
-    recovery: QuickRecovery | ((error: unknown) => QuickRecovery),
+    recovery: QuickRecovery | ((error: unknown) => QuickRecovery | null),
   ) => {
     if (busyRef.current) return;
     const identity = readTravelerBearer();
@@ -356,10 +422,17 @@ export function RevolutionQuickExplore({
       await task(stillCurrent);
     } catch (error) {
       if (stillCurrent()) {
+        const sessionDenied = error instanceof CityNexusApiError && [401, 403].includes(error.status);
+        const errorRecovery = typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery);
+        const nextRecovery = sessionDenied && onMemberAccessDenied
+          ? { label: "重新开始探索", action: onMemberAccessDenied }
+          : errorRecovery;
         setAlert({
           type: "error",
-          text: messageForError(phase, error),
-          recovery: typeof recovery === "function" ? recovery(error) : recoveryForError(error, recovery),
+          text: sessionDenied
+            ? "当前登录无法继续访问这段行程；重新开始不会删除服务器上的旧记录。"
+            : messageForError(phase, error),
+          ...(nextRecovery ? { recovery: nextRecovery } : {}),
         });
         setErrorDetails(errorDiagnostics(phase, error));
       }
@@ -373,79 +446,121 @@ export function RevolutionQuickExplore({
 
   const consultHermes = () => {
     const goal = aiGoal.trim();
+    if (agentChecking) {
+      setAlert({ type: "neutral", text: "AI 正在连接，稍等一下再提交。" });
+      return;
+    }
     if (!agentConfigured) {
-      setAlert({ type: "neutral", text: "当前 AI 尚未接入这个会话，直接查城市也能继续。需要先用 --agent 启动本地服务。" });
+      setAlert({ type: "neutral", text: "AI 建议暂不可用，可直接搜索地点。" });
       return;
     }
-    if (goal.length < 4 || goal.length > 360) {
-      setAlert({ type: "error", text: "用一句话告诉 AI 你想玩什么（4 到 360 个字）。" });
+    if (goal.length < 4 || goal.length > 2000) {
+      setAlert({ type: "error", text: "写下你想怎么玩（4 到 2000 个字）。" });
       return;
     }
-    void run("请教 AI", async (stillCurrent) => {
-      const suggestion = await cityNexusApi.suggestTrialDiscovery(journeyId, goal);
-      if (!stillCurrent()) return;
-      const verified = suggestion.status === "MODEL_TOOL_SUGGESTION";
-      const matched = verified ? categories.find((item) => item.value === suggestion.category) : null;
-      if (matched) setCategory(matched.value);
-      setAiAdvice({
-        category: matched?.name ?? null,
-        reason: suggestion.reason,
-        verifiedTool: verified && !!matched,
-        model: suggestion.model ?? null,
-      });
-      setAlert(verified && matched
-        ? { type: "good", text: "AI 已根据你说的话建议了一个探索方向。地点仍要从真实公开地图查找。" }
-        : { type: "neutral", text: "模型这次没有返回可验证的工具建议。你仍然可以手动选择地区和兴趣。" });
-    }, () => ({
-      label: "继续手动探索",
-      action: () => setAlert({ type: "neutral", text: "AI 建议未完成；可以直接查找公开地名并手动挑选两处地点。" }),
-    }));
+    window.dispatchEvent(new CustomEvent("citynexus:open-goal-task", { detail: { journeyId, goal } }));
   };
 
-  const cityLookup = () => {
+  const openMapFallback = () => {
+    setMapFallbackOpen(true);
+    setTilesEnabled(true);
+    setSelectedPin(null);
+    setErrorDetails(null);
+    setAlert({
+      type: "neutral",
+      text: "地图底图来自 OpenStreetMap。轻触地图确定公开搜索区域；不会读取设备定位。",
+    });
+  };
+
+  const mapFallbackRecovery: QuickRecovery = {
+    label: "打开 OpenStreetMap 地图手选 →",
+    disclosure: "点击后会加载 OpenStreetMap 地图底图；不会使用设备定位。",
+    action: openMapFallback,
+  };
+
+  const cityLookup = (provider?: "nominatim" | "photon") => {
     const cityQuery = query.trim();
     if (cityQuery.length < 2 || cityQuery.length > 120) {
       setAlert({ type: "error", text: "请输入至少两个字的城市或地区，例如「连城县」。" });
       return;
     }
+    setCityProviderKey(undefined);
     void run("查找地名", async (stillCurrent) => {
-      // The button explicitly announces that this ONE request sends the
-      // entered public city label to Nominatim. No passive or typing request.
+      // One explicit action sends the entered public city label to the
+      // server-selected geocoder. There is no passive or typing request.
       const response = await cityNexusApi.bootstrapCitySearch(journeyId, {
-        query: cityQuery, provider_consent: true, limit: 3,
+        query: cityQuery,
+        provider_consent: true,
+        limit: 3,
+        ...(provider === "photon" ? { provider } : {}),
       });
       if (!stillCurrent()) return;
+      setCityProviderKey(response.provider_key);
       if (response.status !== "CITY_RESULTS" || !response.results.length) {
         setCityResults([]);
+        const attemptedProvider = provider ?? response.provider_key;
+        setPhotonFallbackAvailable(
+          !sampleProviderMode && attemptedProvider !== "photon" && (
+            response.status === "GEOCODER_UNAVAILABLE" ||
+            response.status === "GEOCODER_RATE_LIMITED" ||
+            response.status === "CITY_NO_RESULTS"
+          ),
+        );
+        const message = response.status === "GEOCODER_RATE_LIMITED"
+          ? "地名查找正在限流。你可以在地图上手选区域，或稍后再查。"
+          : response.status === "GEOCODER_UNAVAILABLE"
+            ? "地名查找暂时连不上。你可以在地图上手选区域。"
+            : response.status === "GEOCODER_DISABLED"
+              ? "当前环境未开启地名查找。你可以在地图上手选区域。"
+              : "没找到这个地区。试试更完整的名称，或在地图上手选区域。";
         setAlert({
           type: "neutral",
-          text: response.status === "GEOCODER_RATE_LIMITED"
-            ? "地图服务正在限流，稍等后重试；也可以粘贴公开 OpenStreetMap 地图链接。"
-            : "没有找到足够可靠的地名结果。可以换更完整的地名，或粘贴公开地图链接。",
+          text: message,
+          recovery: mapFallbackRecovery,
         });
         return;
       }
       setCityResults(response.results);
+      setPhotonFallbackAvailable(false);
       setCityFocus(null);
       setSelectedPin(null);
+      setMapFallbackOpen(false);
       setTilesEnabled(false);
-      setAlert({ type: "good", text: "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。" });
-    }, (error) => recoveryForError(
-      error,
-      { label: "再次查找地名", action: () => cityLookup() },
-      { label: "检查并编辑地名", action: () => document.getElementById("rev-quick-search")?.focus() },
-    ));
+      setAlert({
+        type: "good",
+        text: provider === "photon"
+          ? "Photon 已找到公开地区。选一个结果后就能继续搜索附近地点。"
+          : "已经找到公开地区。选一个结果后可以直接按“从这一带附近找”，地图是可选的。",
+      });
+    }, (error) => {
+      if (error instanceof CityNexusApiError && error.status === 429) {
+        return mapFallbackRecovery;
+      }
+      return recoveryForError(
+        error,
+        mapFallbackRecovery,
+        { label: "检查并编辑地名", action: () => document.getElementById("rev-quick-search")?.focus() },
+      );
+    });
   };
 
   const useCenter = (point: { latitude: number; longitude: number }, basis: "EXPLICIT_GEOCODER_APPROX" | "MAP_TAP" | "OSM_MAP_LINK") => {
     if (!Number.isFinite(point.latitude) || !Number.isFinite(point.longitude)) return;
     setCenter(point);
     setCenterBasis(basis);
+    const nextCenterLabel = basis === "EXPLICIT_GEOCODER_APPROX"
+      ? cityFocusLabel || "已选地区中心"
+      : basis === "OSM_MAP_LINK"
+        ? `地图中心已选 · ${point.latitude.toFixed(3)}, ${point.longitude.toFixed(3)}`
+        : "地图中心已选";
+    setExplorationCenterLabel(nextCenterLabel);
+    onExplorationCenterLabelChange?.(nextCenterLabel);
     setDiscovery(null);
     setFirst(null);
     setSecond(null);
     setCityResults([]);
     setAlert({ type: "good", text: "公开搜索区域已确认。接下来选一个你感兴趣的类别。" });
+    setMapFallbackOpen(false);
     enter("category");
   };
 
@@ -454,10 +569,13 @@ export function RevolutionQuickExplore({
     if (!point) {
       setAlert({
         type: "error",
-        text: "请粘贴 OpenStreetMap 的公开地图链接（例如 https://www.openstreetmap.org/#map=13/25.7/116.75），不要粘贴私人地址。",
+        text: "请粘贴公开 OpenStreetMap 地图链接，勿填私人地址。",
       });
       return;
     }
+    setQuery("");
+    setCityFocus(null);
+    setCityFocusLabel(null);
     useCenter(point, "OSM_MAP_LINK");
   };
 
@@ -469,30 +587,48 @@ export function RevolutionQuickExplore({
       setReadinessStatus(next.status === "READY" ? "ready" : "blocked");
       setAlert(next.status === "READY"
         ? { type: "good", text: "地图服务已准备好，可以发起一次明确授权的查询。" }
-        : { type: "error", text: "地图服务仍不可用。你可以查看服务状态，但不会虚构地点。" });
+        : { type: "error", text: "地图服务暂不可用，请检查服务状态或稍后重试。" });
     }, { label: "重新检查地图服务", action: () => retryReadiness() });
   };
 
-  const discover = () => {
+  const delegateToAgent = (zeroResult = false) => {
+    // Merely opens the existing signed goal workspace. It does NOT send a model
+    // request until the traveler explicitly confirms model and research consent.
+    const goal = (initialGoal?.trim() || aiGoal.trim() || `帮我在${cityName}安排真正有内容的旅行`).slice(0,1500);
+    const queryNote = zeroResult && lastPlaceSearch.current?.query
+      ? `上一次公开地点查询“${lastPlaceSearch.current.query}”没有命中，请你尝试不同关键词和已有合法来源，不要再让我手动选择四种分类。`
+      : "请主动研究古迹、美食、自然或其他符合目标的活动，产出可修改的暂定日程。";
+    window.dispatchEvent(new CustomEvent("citynexus:open-goal-task", {
+      detail: { journeyId, goal: `${goal}\n${queryNote}`.slice(0, 2000) },
+    }));
+  };
+
+  const discover = (namedQuery?: string, radiusOverride?: 2500 | 5000) => {
     if (!center) {
       enter("area");
       setAlert({ type: "neutral", text: "先选一个公开地图区域。" });
       return;
     }
     if (!readiness || readiness.status !== "READY") {
-      setAlert({ type: "error", text: "地图服务暂时无法搜索。没有发送请求，也不会虚构结果。" });
+      setAlert({ type: "error", text: "地图服务暂不可用，请稍后重试。" });
       return;
     }
+    const name = namedQuery?.trim();
+    if (name !== undefined && (!readiness.supports_place_name_search || readiness.provider !== "photon" || name.length < 2 || name.length > 120)) return;
     const selection = center;
-    const chosenCategory = category;
+    const chosenQuery = name ?? category;
+    lastPlaceSearch.current = { mode: name !== undefined ? "name" : "category", query: chosenQuery };
+    const consentedProvider = readiness.provider;
     void run("搜索附近真实地点", async (stillCurrent) => {
       // The explicitly labelled button is the ONE-use provider consent.
       const response = await cityNexusApi.bootstrapDiscovery(journeyId, {
-        query: chosenCategory,
-        radius_m: 2500,
-        limit: 3,
+        query: chosenQuery,
+        ...(name !== undefined ? { query_mode: "name" as const } : {}),
+        radius_m: radiusOverride ?? radiusM,
+        limit: 8,
         source_kind: "MANUAL_PUBLIC_CENTER",
         provider_consent: true,
+        consented_provider: consentedProvider,
         latitude: selection.latitude,
         longitude: selection.longitude,
         coordinate_system: "WGS84",
@@ -506,15 +642,15 @@ export function RevolutionQuickExplore({
       if (response.status === "PROVIDER_UNAVAILABLE") {
         setAlert({
           type: "error",
-          text: "公开地点服务刚才没有响应。附近是否有地点尚未确认，这次没有保存路线；你可以稍后手动重试。",
-          recovery: { label: "重新搜索附近地点", action: () => discover() },
+          text: "地点服务未响应，本次没有找到地点。稍后再试。",
+          recovery: { label: "修改搜索条件", action: () => enter("category") },
         });
         return;
       }
       if (response.status === "PROVIDER_DISABLED") {
         setAlert({
           type: "error",
-          text: "当前试玩环境没有启用公开地点搜索，没有发出地点查询，也没有保存地点。",
+          text: "公开地点搜索尚未开启。",
           recovery: {
             label: "重新检查地图服务",
             action: () => {
@@ -528,13 +664,15 @@ export function RevolutionQuickExplore({
       if (response.status === "RATE_LIMITED") {
         setAlert({
           type: "error",
-          text: "地图服务限制了这次查询。稍等后可以手动重试；本次没有保存地点。",
-          recovery: { label: "稍后重新搜索附近地点", action: () => discover() },
+          text: "地点查询次数已达限制，请稍后重试。",
+          recovery: { label: "修改搜索条件", action: () => enter("category") },
         });
         return;
       }
       if (response.status !== "LIVE_RESULTS" || response.candidates.length === 0) {
-        setAlert({ type: "neutral", text: "这次没有找到可用的公开地点。可以换类别或位置再试，不会偷偷用样本替换。" });
+        setAlert({ type: "neutral", text: "没找到地点，调整类别或位置后再试。" });
+      } else if (response.candidates.length === 1) {
+        setAlert(null);
       } else {
         setAlert({
           type: "good",
@@ -543,7 +681,7 @@ export function RevolutionQuickExplore({
       }
     }, (error) => recoveryForError(
       error,
-      { label: "再次搜索附近地点", action: () => discover() },
+      { label: "返回搜索条件", action: () => enter("category") },
       { label: "返回修改搜索条件", action: () => enter("category") },
     ));
   };
@@ -565,11 +703,27 @@ export function RevolutionQuickExplore({
     setSecond(id);
   };
 
+  const refreshPlaceFacts = (candidateId: string) => {
+    const receiptId = discovery?.receipt_id;
+    if (!receiptId) return;
+    void run("查询地点详情", async (stillCurrent) => {
+      const result = await cityNexusApi.refreshBootstrapPlaceFacts(journeyId, receiptId, candidateId);
+      if (!stillCurrent()) return;
+      if (result.journey_id !== journeyId || result.candidate.candidate_id !== candidateId) {
+        throw new Error("地点详情与当前选择不一致");
+      }
+      setDiscovery((current) => current?.receipt_id === receiptId ? {
+        ...current,
+        candidates: current.candidates.map((place) => place.candidate_id === candidateId ? result.candidate : place),
+      } : current);
+    }, { label: "回到地点列表", action: () => enter("results") });
+  };
+
   const chooseFormalJourney = (candidateId: string) => {
     if (!discovery?.receipt_id || !onFormalCandidateSelected) return;
     const selected = discovery.candidates.find((item) => item.candidate_id === candidateId);
     if (!selected || selected.selection_state !== "READY_FOR_NATIVE_PLAN") {
-      setAlert({ type: "neutral", text: "这个地点暂时还没有足够的营业状态证据，不能用它启动正式 Journey。可以先保存私人散步。" });
+      setAlert({ type: "neutral", text: "营业信息不足，暂不能启动行程；可先保存私人散步。" });
       return;
     }
     const receiptId = discovery.receipt_id;
@@ -590,18 +744,20 @@ export function RevolutionQuickExplore({
       if (!stillCurrent()) return;
       if (state.pocket_walk) {
         setWalk(state.pocket_walk);
+        onPocketWalkChange?.(state.pocket_walk);
         enter("walk");
         setAlert({ type: "good", text: "已从服务器重新读取路线状态；显示的是当前签名行程保存的事实。" });
       } else {
         setWalk(null);
-        setAlert({ type: "neutral", text: "服务器当前没有已保存的私人散步。原路线没有被本页假定为已保存；可以回到结果页再决定是否保存。" });
+        onPocketWalkChange?.(null);
+        setAlert({ type: "neutral", text: "暂无已保存的私人散步。返回结果页保存路线。" });
       }
     }, { label: "重新读取路线状态", action: () => refreshSavedWalk() });
   };
 
   const saveWalk = () => {
     if (!discovery?.receipt_id || !first || !second || first === second) {
-      setAlert({ type: "neutral", text: "先挑两个不同的真实地点。" });
+      setAlert({ type: "neutral", text: "请选择两个不同地点。" });
       return;
     }
     const receipt = discovery.receipt_id;
@@ -621,6 +777,7 @@ export function RevolutionQuickExplore({
         throw new Error("服务端未返回符合当前 Journey 权限和事实等级的私人散步。");
       }
       setWalk(saved.pocket_walk);
+      onPocketWalkChange?.(saved.pocket_walk);
       enter("walk");
       setAlert({ type: "good", text: "两站路线已保存到你的私人探索草稿。刷新页面也能恢复。" });
     }, (error) => recoveryForError(
@@ -648,27 +805,70 @@ export function RevolutionQuickExplore({
         throw new Error("收到不符合当前用户或路线版本的进度，未采用结果。");
       }
       setWalk(response.pocket_walk);
-      setAlert({ type: "good", text: "状态已保存。到达与完成由你报告，不是手机 GPS 证明。" });
+      onPocketWalkChange?.(response.pocket_walk);
+      setAlert({ type: "good", text: "进度已保存。" });
     }, { label: "重新读取路线进度", action: () => refreshSavedWalk() });
   };
 
   const stageNumber = { area: 1, category: 2, results: 3, walk: 4 }[stage];
   const sourceKind = discovery?.provider_provenance;
+  const isPartialLiveResult = discovery?.status === "LIVE_RESULTS" && discovery.candidates.length === 1;
+  const filterSummary = discovery?.filter_summary;
+  const safeFilterSummary = filterSummary &&
+    Number.isSafeInteger(filterSummary.raw_count) &&
+    filterSummary.raw_count >= 0 &&
+    Number.isSafeInteger(filterSummary.accepted_count) &&
+    filterSummary.accepted_count >= 0 &&
+    filterSummary.accepted_count <= filterSummary.raw_count
+    ? filterSummary
+    : null;
   const firstPlace = discovery?.candidates.find((item) => item.candidate_id === first);
   const secondPlace = discovery?.candidates.find((item) => item.candidate_id === second);
   const goState = walk?.go_progress.state;
 
+  const focusAiPrompt = () => {
+    if (missionMode) {
+      document.getElementById("rev-mission-chat-input")?.focus();
+      return;
+    }
+    const prompt = quickExploreRef.current?.querySelector<HTMLTextAreaElement>("#rev-quick-ai-prompt");
+    if (!prompt) return;
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    prompt.scrollIntoView({
+      behavior: reducedMotion ? "instant" : "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+    prompt.focus({ preventScroll: true });
+  };
+
   return (
-    <section className="rev-quick" data-testid="rev-quick-explore">
+    <section ref={quickExploreRef} className="rev-quick" data-testid="rev-quick-explore">
       <header className="rev-quick-header">
         <div className="rev-quick-kicker">CITYNEXUS / EXPLORE</div>
-        <h2>{stage === "walk" ? "你的私人散步路线" : "想去哪儿逛逛？"}</h2>
+        <h2>
+          {stage === "walk"
+            ? "你的私人散步路线"
+            : center && explorationCenterLabel
+              ? `本次探索位置：${explorationCenterLabel}`
+              : "想去哪儿逛逛？"}
+        </h2>
         <p>
-          {stage === "area" && "你可以先告诉 AI 想怎么玩，再找地方。地图打不开也能继续。"}
-          {stage === "category" && "位置已选好。挑一种兴趣，我们会查找附近的公开地点。"}
-          {stage === "results" && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
-          {stage === "walk" && "保存了两个公开地点。你控制进度，我们不冒充 GPS 到场。"}
+          {stage === "area" && "这里可以手动查找地点，也可以在底部告诉 Agent 你的旅行目标。"}
+          {stage === "category" && "位置已选好。你可以直接输入地点或玩法关键词；四种分类只是备用查找方式。"}
+          {stage === "results" && !isPartialLiveResult && "选两个真实返回的地点。没有可信结果就直接告诉你。"}
+          {stage === "walk" && "保存了两个公开地点。你可以在行程中手动更新到访进度。"}
         </p>
+        {stage === "area" && agentConfigured && (
+          <button
+            type="button"
+            className="rev-quick-text-btn"
+            data-testid="rev-quick-ask-ai-shortcut"
+            onClick={focusAiPrompt}
+          >
+            问 AI
+          </button>
+        )}
         <div className="rev-quick-progress" aria-label="当前步骤">
           {["选地方", "选兴趣", "看结果", "去散步"].map((label, i) => (
             <span key={label} className={i + 1 === stageNumber ? "is-active" : i + 1 < stageNumber ? "is-done" : ""}>
@@ -683,7 +883,9 @@ export function RevolutionQuickExplore({
           {alert.text}
           {alert.recovery && (
             <>
-              <br />
+              {alert.recovery.disclosure && (
+                <small className="rev-quick-recovery-disclosure">{alert.recovery.disclosure}</small>
+              )}
               <button type="button" className="rev-quick-secondary" onClick={alert.recovery.action} data-testid="rev-quick-error-recovery">
                 {alert.recovery.label}
               </button>
@@ -693,219 +895,129 @@ export function RevolutionQuickExplore({
       )}
       {alert?.type === "error" && errorDetails && (
         <details className="rev-quick-internals" data-testid="rev-quick-error-details">
-          <summary>技术详情（已隐藏原始响应和行程标识）</summary>
+          <summary>技术详情</summary>
           <p>操作阶段：{errorDetails.phase}</p>
           <p>请求：{errorDetails.method ?? "未知"} {errorDetails.path ?? "未能确定路径"}</p>
           <p>HTTP 状态：{errorDetails.status ?? "未收到 HTTP 状态"}</p>
-          <p>服务端原因码：{errorDetails.reasonCode ?? "响应未提供可安全显示的原因码"}</p>
+          <p>服务端原因码：{errorDetails.reasonCode ?? "未知"}</p>
           <p>归类：{errorDetails.classification}</p>
         </details>
       )}
 
       {stage === "area" && (
-        <div className="rev-quick-pane" data-testid="rev-quick-area">
-          <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
-            <div className="rev-quick-ai-title">
-              <strong>先跟 AI 说一句</strong>
-              <small>{agentConfigured ? "Hermes 模型已配置，可请求真实建议" : "模型尚未接通，不影响手动探索"}</small>
-            </div>
-            <label htmlFor="rev-quick-ai-prompt">你想怎么玩？</label>
-            <textarea
-              id="rev-quick-ai-prompt"
-              value={aiGoal}
-              maxLength={360}
-              rows={3}
-              onChange={(event) => setAiGoal(event.target.value)}
-              placeholder="例如：我在连城，今晚三个小时，想吃点当地特色，再轻松散散步。"
-              disabled={busy}
-            />
-            <div className="rev-quick-ai-actions">
-              <button
-                type="button"
-                onClick={consultHermes}
-                disabled={busy || !agentConfigured}
-                data-testid="rev-quick-consult-ai"
-              >{busy ? "正在请教 AI…" : "让 AI 帮我想想 →"}</button>
-              <span>点击后才会把上面这句话发给本机 wb2api 连接的外部模型，可能消耗积分；不会自动搜索地图或预订。</span>
-            </div>
-            {aiAdvice && (
-              <div className="rev-quick-ai-response" role="status" data-testid="rev-quick-ai-response">
-                <strong>{aiAdvice.verifiedTool ? "AI 给你的探索建议" : "模型这次未完成工具建议"}</strong>
-                <p>{aiAdvice.reason}</p>
-                {aiAdvice.category && <span>建议兴趣：{aiAdvice.category}（可以修改）</span>}
-                <small>{aiAdvice.verifiedTool
-                  ? "来自真实模型的只读工具建议，不是已规划路线，也没有发生 AgentRun。"
-                  : "没有得到可校验的工具调用，不能当作 AI 规划已完成。"}{aiAdvice.model ? ` · ${aiAdvice.model}` : ""}</small>
-              </div>
-            )}
-          </section>
-          <label htmlFor="rev-quick-search">城市或地区</label>
-          <div className="rev-quick-inline">
-            <input
-              id="rev-quick-search"
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); setCityResults([]); setCityFocus(null); setCityFocusLabel(null); setSelectedPin(null); }}
-              placeholder="比如：连城县，福建龙岩"
-              maxLength={120}
-              disabled={busy}
-            />
-            <button type="button" onClick={cityLookup} disabled={busy} data-testid="rev-quick-find-city">
-              {busy ? "查询中…" : "查找位置 →"}
-            </button>
-          </div>
-          <p className="rev-quick-disclosure">
-            {sampleProviderMode
-              ? "点「查找位置」时只把地名发送给本机受控测试服务（TEST_PROVIDER），不会访问公开 Nominatim。不会读取手机 GPS。"
-              : "点「查找位置」才会把这次输入的地名发送给公开 Nominatim 地图服务。不会读取手机 GPS。"}
-          </p>
-          {cityResults.length > 0 && (
-            <div className="rev-quick-results" data-testid="rev-quick-city-results">
-              <h3>是这些地方吗？</h3>
-              {cityResults.map((item) => (
-                <button
-                  type="button"
-                  className="rev-quick-city-option"
-                  key={item.result_id}
-                  onClick={() => {
-                    // User chooses the geocoder's APPROXIMATE public area.
-                    // This does NOT assert map tap, GPS, or physical arrival.
-                    // Overpass is still only called on next explicit button.
-                    setCityFocus({ latitude: item.latitude, longitude: item.longitude });
-                    setCityFocusLabel(item.display_name || item.name);
-                    setSelectedPin(null);
-                    setTilesEnabled(false);
-                    useCenter({
-                      latitude: item.latitude,
-                      longitude: item.longitude,
-                    }, "EXPLICIT_GEOCODER_APPROX");
-                  }}
-                >
-                  <strong>{item.display_name || item.name}</strong>
-                  <small>{item.provider_provenance === "TEST_PROVIDER" ? "受控测试来源" : "公开地名搜索结果"} · 中心位置仅供参考</small>
-                  <span>就从这个公开地区中心附近找（约2.5公里） →</span>
-                </button>
-              ))}
-            </div>
-          )}
-          {cityFocus && (
-            <div className="rev-quick-map-step">
-              <h3>已找到：{cityFocusLabel || "当前地区"}</h3>
-              <p className="rev-quick-disclosure">
-                这个位置来自公开地名搜索，是城市或县城的<strong>大致中心</strong>，不是你的 GPS，
-                不保证景点就在这里。你可以立即从附近 2.5 公里查找，或按需调整地图。
-              </p>
-              <button
-                type="button"
-                className="rev-quick-primary rev-quick-continue"
-                data-testid="rev-quick-use-approx-center"
-                onClick={() => {
-                  // This explicit user selection makes a PUBLIC, approximate
-                  // center the user-directed search area. It does NOT invent a
-                  // MAP_TAP provenance or silently send provider requests.
-                  useCenter({
-                    latitude: cityFocus.latitude,
-                    longitude: cityFocus.longitude,
-                  }, "EXPLICIT_GEOCODER_APPROX");
-                }}
-              >直接从这片地区附近找 →</button>
-              <details className="rev-quick-optional-map">
-                <summary>想换具体位置？可以打开地图（可选）</summary>
-                <p className="rev-quick-disclosure">加载地图瓦片需要单独点击“显示地图”，地图不显示也不影响上面的快捷入口。</p>
-              {!tilesEnabled ? (
-                <button
-                  type="button"
-                  className="rev-quick-secondary"
-                  onClick={() => setTilesEnabled(true)}
-                  data-testid="rev-quick-load-map"
-                >
-                  显示地图（仅此次向 OpenStreetMap 加载地图瓦片）
-                </button>
-              ) : (
-                <>
-                  <PublicCityAreaPicker
-                    selectedCenter={selectedPin}
-                    focusCenter={cityFocus}
-                    onSelect={(point) => {
-                      // A deliberate public map tap is already the user's manual
-                      // center selection. Don't demand a second "confirm" click.
-                      // No Overpass request occurs until the next explicit action.
-                      setSelectedPin(point);
-                      useCenter(point, "MAP_TAP");
-                    }}
-                  />
-                </>
-              )}
-              </details>
-            </div>
-          )}
-          <details className="rev-quick-internals">
-            <summary>想用公开 OpenStreetMap 链接定位？（可选）</summary>
-            <label htmlFor="rev-quick-map-link">公开地图链接</label>
-            <input
-              id="rev-quick-map-link"
-              type="url"
-              value={mapLink}
-              onChange={(e) => setMapLink(e.target.value)}
-              placeholder="https://www.openstreetmap.org/#map=13/25.7/116.75"
-            />
-            <button type="button" onClick={applyLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
-          </details>
-        </div>
+        <>
+          <CityPicker
+            query={query}
+            cityResults={cityResults}
+            cityFocus={cityFocus}
+            cityFocusLabel={cityFocusLabel}
+            mapFallbackOpen={mapFallbackOpen}
+            photonFallbackAvailable={photonFallbackAvailable}
+            selectedPin={selectedPin}
+            busy={busy}
+            cityProviderKey={cityProviderKey}
+            sampleProviderMode={sampleProviderMode}
+            tilesEnabled={tilesEnabled}
+            mapLink={mapLink}
+            aiGoal={aiGoal}
+            showAiPrompt={!missionMode}
+            agentConfigured={agentConfigured}
+            agentChecking={agentChecking}
+            aiAdvice={aiAdvice}
+            onQueryChange={(value) => {
+              setQuery(value);
+              setCityResults([]);
+              setCityProviderKey(undefined);
+              setPhotonFallbackAvailable(false);
+              setCityFocus(null);
+              setCityFocusLabel(null);
+              setSelectedPin(null);
+              setMapFallbackOpen(false);
+              setTilesEnabled(false);
+            }}
+            onCityLookup={cityLookup}
+            onPhotonCityLookup={() => cityLookup("photon")}
+            onCityResultSelect={(item) => {
+              // Keep the geocoder's approximate-area source distinct from
+              // map taps, GPS, and arrival; Overpass starts on the next button.
+              setCityFocus({ latitude: item.latitude, longitude: item.longitude });
+              setCityFocusLabel(item.display_name || item.name);
+              setSelectedPin(null);
+              setTilesEnabled(false);
+              setAlert({
+                type: "good",
+                text: "已选中公开地区的大致中心。你可以直接从附近查找，也可以先打开地图微调。",
+              });
+            }}
+            onUseCenter={useCenter}
+            onEnableTiles={() => setTilesEnabled(true)}
+            onMapSelect={(point) => {
+              // A deliberate public map tap is already the user's manual
+              // center selection. Don't demand a second "confirm" click.
+              // No public POI request occurs until the next explicit action.
+              setSelectedPin(point);
+              useCenter(point, "MAP_TAP");
+            }}
+            onMapLinkChange={setMapLink}
+            onApplyMapLink={applyLink}
+            onAiGoalChange={setAiGoal}
+            onAskAi={() => { void consultHermes(); }}
+          />
+        </>
       )}
 
       {stage === "category" && (
-        <div className="rev-quick-pane" data-testid="rev-quick-category">
-          <h3>这次想看些什么？</h3>
-          <div className="rev-quick-categories">
-            {categories.map((item) => (
-              <button
-                type="button"
-                className={category === item.value ? "is-chosen" : ""}
-                key={item.value}
-                onClick={() => setCategory(item.value)}
-                disabled={busy}
-                aria-pressed={category === item.value}
-              >
-                <strong>{item.name}</strong><small>{item.subtitle}</small>
-              </button>
-            ))}
-          </div>
-          <p className="rev-quick-disclosure">
-            {centerBasis === "EXPLICIT_GEOCODER_APPROX"
-              ? "采用你刚才明确选定的公开县城/城市近似中心，查找半径约 2.5 公里。若不合适可返回改选，绝不是你的精确位置。"
-              : "你已选择公开地图位置。"}
-            {sampleProviderMode
-              ? "点击下面的搜索按钮时，只向本机受控测试地点服务（TEST_PROVIDER）发送已选公开区域和类别。"
-              : "点击下面的搜索按钮时，才会向 OpenStreetMap/Overpass 发送公开地图坐标和类别。"}
-            不发送 GPS、身份令牌或私人行程。
-          </p>
-          {readinessStatus !== "ready" && (
-            <p className="rev-quick-alert neutral" role="status">
-              {readinessStatus === "checking"
-                ? "正在检查地图服务是否可用（这一步不发起公开地点查询）…"
-                : readinessStatus === "blocked"
-                  ? "公开地点服务暂时不可用，不会擅自发送请求或假装找到地点。"
-                  : "刚才无法检查地图服务。你可以重新检查，不需要重建旅程。"}
-              {readinessStatus !== "checking" && (
-                <button type="button" className="rev-quick-secondary" onClick={retryReadiness} disabled={busy}>
-                  重新检查服务
-                </button>
-              )}
-            </p>
-          )}
-          <div className="rev-quick-actions">
-            <button
-              type="button"
-              className="rev-quick-primary"
-              onClick={discover}
-              disabled={busy || readiness?.status !== "READY"}
-              data-testid="rev-quick-find-places"
+        <>
+          <div className="rev-quick-pane" aria-label="公开地点搜索范围">
+            <label htmlFor="rev-quick-radius">先选这次要查找多大范围</label>
+            <select
+              id="rev-quick-radius"
+              data-testid="rev-quick-radius"
+              value={radiusM}
+              disabled={busy}
+              onChange={(event) => setRadiusM(event.target.value === "5000" ? 5000 : 2500)}
             >
-              {busy ? "正在寻找真实地点…" : "搜索附近地点 →"}
-            </button>
-            <button type="button" className="rev-quick-text-btn" onClick={() => enter("area")}>换一个位置</button>
+              <option value={2500}>附近 2.5 公里</option>
+              <option value={5000}>附近 5 公里</option>
+            </select>
+            <p className="rev-quick-disclosure">这是公开地点服务的单次查询范围，不是整座城市。找不到不等于当地没有值得去的地方。</p>
           </div>
-        </div>
+          {readiness?.provider === "photon" && readiness.supports_place_name_search && (
+            <NamedPlaceSearch
+              value={placeName}
+              onChange={setPlaceName}
+              onSearch={() => discover(placeName)}
+              disabled={busy || readiness.status !== "READY"}
+              recipient={readiness.expected_recipient}
+            />
+          )}
+          <div className="rev-quick-agent-direct">
+            <p>你不用先选公园、咖啡馆或图书馆。可以把完整旅行目标直接交给 Agent，它会尽力研究地点、保存部分资料和暂定行程。</p>
+            <button type="button" className="rev-quick-primary" onClick={() => delegateToAgent()}>
+              让 Agent 自己寻找玩法并规划 →
+            </button>
+          </div>
+          {readiness?.provider !== "photon" && <p className="rev-quick-disclosure">当前地点服务不支持名称关键词检索，但仍可用 AI 工作台研究其他可用来源，或在地图上调整位置。</p>}
+          <details className="rev-quick-legacy-categories">
+            <summary>按旧数据服务的四种快捷分类搜索（可选）</summary>
+            <InterestPicker
+              categories={categories}
+              supportsFreeText={readiness?.provider === "photon" && Boolean(readiness.supports_place_name_search)}
+              radiusKm={radiusM / 1000}
+              category={category}
+              centerBasis={centerBasis}
+              sampleProviderMode={sampleProviderMode}
+              expectedRecipient={readiness?.expected_recipient ?? null}
+              readinessStatus={readinessStatus}
+              readinessReady={readiness?.status === "READY"}
+              busy={busy}
+              onCategoryChange={setCategory}
+              onRetryReadiness={retryReadiness}
+              onDiscover={() => discover()}
+              onChangeArea={() => enter("area")}
+            />
+          </details>
+        </>
       )}
 
       {stage === "results" && (
@@ -913,52 +1025,56 @@ export function RevolutionQuickExplore({
           <h3>这些地方怎么样？</h3>
           <p className="rev-quick-disclosure">
             {sourceKind === "TEST_PROVIDER"
-              ? "以下全部是测试来源，不能当作实地开放的景点。"
+              ? "示例地点（测试来源）。"
               : sourceKind === "LIVE_PROVIDER"
-                ? "地点名称和坐标来自实际公开服务。是否营业、门票和路线时间仍须自行核实。"
-                : "数据来源未能验证，不要把这些地点当作已确认事实。"}
+                ? "来源：公开地名服务 · 营业、票价和路线信息待补充。"
+                : "地点来源待确认。"}
           </p>
           {discovery?.status === "PROVIDER_UNAVAILABLE" ? (
-            <p>公开地点服务没有回答，附近情况尚未确认。</p>
+            <p>地点服务暂未返回结果。</p>
           ) : discovery?.status === "PROVIDER_DISABLED" ? (
             <p>当前试玩环境尚未启用公开地点搜索。</p>
           ) : discovery?.status === "RATE_LIMITED" ? (
             <p>地图服务限制了这次请求，暂时不能判断附近地点。</p>
           ) : discovery?.status !== "LIVE_RESULTS" || !discovery.candidates.length ? (
-            <p>暂时没有找到符合条件的地点。可以换个类别，或重新选一个区域再试。</p>
+            safeFilterSummary && discovery?.status === "LIVE_ZERO_RESULTS" && safeFilterSummary.accepted_count === 0 ? (
+              <p role="status" data-testid="rev-quick-filter-result">
+                地图返回 {safeFilterSummary.raw_count} 条，符合条件 {safeFilterSummary.accepted_count} 处。
+              </p>
+            ) : (
+              <p>这次查询没有匹配地点。你可以直接交给 Agent 研究其他来源，不必继续猜分类。</p>
+            )
           ) : (
             <>
-              <p>点击卡片选择两站，先点的是第一站。</p>
+              {isPartialLiveResult ? (
+                <p role="status" data-testid="rev-quick-partial-result">
+                  {first
+                    ? "第 1 站已选；换类别或地图位置找第 2 站。"
+                    : "已找到 1 处；点卡片加入第 1 站，换类别或地图位置找第 2 站。"}
+                </p>
+              ) : (
+                <p role="status" aria-live="polite">
+                  {!first
+                    ? "尚未选地点。点选一处加入第 1 站，再点另一处加入第 2 站。"
+                    : !second
+                      ? "第 1 站已选；点另一处加入第 2 站。"
+                      : "第 1 站和第 2 站已选；点选卡片可调整选择。"}
+                </p>
+              )}
               <div className="rev-quick-place-list">
                 {discovery.candidates.map((candidate: BootstrapDiscoveryCandidate) => {
                   const chosenAs = first === candidate.candidate_id ? "第一站" : second === candidate.candidate_id ? "第二站" : null;
-                  const source = candidateSource(candidate.source_url);
                   return (
-                    <article className={chosenAs ? "is-picked" : ""} key={candidate.candidate_id}>
-                      <button
-                        type="button"
-                        onClick={() => choose(candidate.candidate_id)}
-                        data-testid={`rev-quick-select-${candidate.candidate_id}`}
-                      >
-                        <span className="rev-quick-pick">{chosenAs ?? "＋ 选择"}</span>
-                        <strong>{candidate.name}</strong>
-                        <small>{candidate.category} · {candidate.provider_provenance === "TEST_PROVIDER" ? "测试数据" : "OpenStreetMap 公开地点"}</small>
-                      </button>
-                      {source && (
-                        <a href={source} rel="noopener noreferrer" target="_blank">
-                          查看 OSM 原始来源（会打开外部网站） ↗
-                        </a>
-                      )}
-                      {onFormalCandidateSelected && candidate.selection_state === "READY_FOR_NATIVE_PLAN" && (
-                        <button
-                          type="button"
-                          className="rev-quick-formal"
-                          disabled={busy}
-                          onClick={() => chooseFormalJourney(candidate.candidate_id)}
-                          data-testid={`rev-quick-formal-${candidate.candidate_id}`}
-                        >想让 AI 继续照看正式行程？从这里开始（需要你确认计划）</button>
-                      )}
-                    </article>
+                    <DiscoveryPlaceCard
+                      key={candidate.candidate_id}
+                      candidate={candidate}
+                      chosenAs={chosenAs}
+                      busy={busy}
+                      canStartJourney={Boolean(onFormalCandidateSelected)}
+                      onChoose={choose}
+                      onStartJourney={chooseFormalJourney}
+                      onRefreshFacts={refreshPlaceFacts}
+                    />
                   );
                 })}
               </div>
@@ -972,8 +1088,35 @@ export function RevolutionQuickExplore({
               </button>
             </div>
           )}
+          {discovery?.status === "LIVE_ZERO_RESULTS" && (
+            <section aria-label="没有地点时的下一步" className="rev-quick-zero-options" data-testid="rev-quick-zero-options">
+              <p>这次公开数据查询没有命中，不代表当地没有值得去的地方。你的旅行目标、现有草案和地区都保留着。</p>
+              <button type="button" className="rev-quick-primary" data-testid="rev-quick-zero-agent"
+                onClick={() => delegateToAgent(true)}>
+                交给 Agent 继续找，并整理暂定日程 →
+              </button>
+              {radiusM === 2500 && readiness?.status === "READY" && (
+                <button type="button" className="rev-quick-primary" disabled={busy}
+                  onClick={() => {
+                    const last = lastPlaceSearch.current;
+                    setRadiusM(5000);
+                    discover(last?.mode === "name" ? last.query : undefined, 5000);
+                  }}>
+                  扩大到 5 公里，再查一次 →
+                </button>
+              )}
+              <button type="button" className="rev-quick-secondary" disabled={busy}
+                onClick={() => enter("category")}>
+                自己输入想去的地名或关键词 →
+              </button>
+              <button type="button" className="rev-quick-secondary" disabled={busy}
+                onClick={() => enter("area")}>
+                去地图换一个搜索位置 →
+              </button>
+            </section>
+          )}
           <div className="rev-quick-actions">
-            <button type="button" className="rev-quick-text-btn" onClick={() => enter("category")}>换个兴趣重找</button>
+            <button type="button" className="rev-quick-text-btn" onClick={() => enter("category")}>换搜索条件</button>
             <button type="button" className="rev-quick-text-btn" onClick={() => enter("area")}>换地图位置</button>
           </div>
         </div>
@@ -994,15 +1137,20 @@ export function RevolutionQuickExplore({
           {goState && !["NOT_STARTED", "WALK_DONE_SELF_REPORTED", "PAUSED"].includes(goState) && (
             <button type="button" className="rev-quick-secondary" disabled={busy} onClick={() => go("PAUSE")}>暂停散步</button>
           )}
-          <p className="rev-quick-disclosure">进度由你本人报告并保存在服务器中，不等于 GPS 已证明到场。地图导航、支付和正式 AI Journey 是独立授权的功能。</p>
+          <p className="rev-quick-disclosure">到访进度由你确认；导航和支付需单独授权。</p>
         </div>
       )}
 
       <details className="rev-quick-internals">
-        <summary>技术信息（不影响正常使用）</summary>
+        <summary>技术信息</summary>
         <p>城市结果提供公开地区的大致中心。点选结果即可继续；地图和 OSM 链接都是可选项。</p>
         <p>数据状态：{discovery?.status ?? "尚未搜索"} · {sourceKind ?? "来源未确定"}</p>
-        <p>普通地点搜索不等于 Agent 自主推理。私人路线和进度由当前签名会话从服务器读取。</p>
+        {safeFilterSummary && (
+          <p data-testid="rev-quick-filter-summary">
+            原始候选：{safeFilterSummary.raw_count} 条 · 可用地点：{safeFilterSummary.accepted_count} 处
+          </p>
+        )}
+        <p>地点来源：{sourceKind ?? "待确定"}。私人路线与进度来自当前行程。</p>
       </details>
     </section>
   );

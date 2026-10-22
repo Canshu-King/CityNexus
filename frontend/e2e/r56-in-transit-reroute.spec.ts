@@ -264,7 +264,7 @@ test("EN_ROUTE traveller can recalculate from one freshly shared advisory locati
     "Your browser location may be off the planned route.",
   );
   await expect(page.getByTestId("journey-transit-reroute")).toContainText(
-    "advisory only",
+    "Browser location is used for route estimates.",
   );
 
   await page.getByTestId("journey-transit-reroute-button").click();
@@ -285,7 +285,7 @@ test("EN_ROUTE traveller can recalculate from one freshly shared advisory locati
     "New route: about 9 min",
   );
   await expect(page.getByTestId("journey-transit-reroute-result")).toContainText(
-    "plan unchanged",
+    "LIVE_PROVIDER_CAPTURE",
   );
   await expect(page.getByTestId("journey-transit-commitment-risk")).toContainText(
     "18 min",

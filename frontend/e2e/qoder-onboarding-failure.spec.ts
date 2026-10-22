@@ -81,7 +81,7 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
     /* Requirement 3: no silent "looks clickable again" state.  The notice has to say the
        step did not complete even when the reason itself cannot reach this screen. */
     const saysItFailed =
-      /没有成功|did not complete|no journey was created/i.test(text);
+      /行程尚未创建|journey not created/i.test(text);
     /* An unhandled server error crosses the wire as plain text, so the only thing the
        client may state is the status.  Naming a code the endpoint never sent would be the
        same lie in the other direction. */

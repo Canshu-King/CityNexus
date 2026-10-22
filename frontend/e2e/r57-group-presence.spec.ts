@@ -85,7 +85,7 @@ test("shared Journey shows coarse member presence and guides only the viewer to 
   expect(locationBody).toMatchObject({ latitude: 35.01, longitude: 135.01, accuracy_m: 18 });
   expect(routeBody).toEqual({ location_observation_id: "r57-current-sample", requested_mode: "WALK" });
   await expect(page.getByTestId("journey-group-route-result")).toContainText("About 11 min");
-  await expect(page.getByTestId("journey-group-route-result")).toContainText("plan unchanged");
+  await expect(page.getByTestId("journey-group-route-result")).toContainText("r57-ui-fixture");
 });
 
 test("R58 distinguishes keeping the shared plan from asking Hermes to prepare a governed group option", async ({ page, context }) => {

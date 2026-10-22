@@ -281,6 +281,7 @@ from app.execution.bootstrap_discovery import (
     get_bootstrap_pocket_walk_go,
     transition_bootstrap_pocket_walk_go,
 )
+from app.execution.bootstrap_place_facts import current_bootstrap_discovery, refresh_bootstrap_place_facts
 from app.execution.progress_drift import (
     execution_drift_fingerprint,
     progress_drift_projection,
@@ -479,6 +480,7 @@ from app.schemas import (
     AgentApprovalRequest,
     AgentCommandResponse,
     AgentCommandRequest,
+    MobileCompatAgentRunStartRequest,
     AgentRunResponse,
     ClarificationAnswer,
     CollectiveClarificationAnswer,
@@ -492,7 +494,11 @@ from app.schemas import (
     EdgeObservationRequest,
     EventCreate,
     GeneratePlansRequest,
+    GoalTaskCreateRequest,
+    GoalTaskRunRequest,
+    GoalDraftUpdateRequest,
     BootstrapDiscoveryRequest,
+    BootstrapPlaceFactsRequest,
     BootstrapCitySearchRequest,
     BootstrapSelectRequest,
     BootstrapMapPreviewRequest,
@@ -513,6 +519,7 @@ from app.schemas import (
     GuardianAutopilotStart,
     JourneyOperatorStartRequest,
     JourneyCreate,
+    TravelBriefRequest,
     JourneyPatch,
     LocationObservationRequest,
     GroupPresenceRouteRequest,
@@ -1118,6 +1125,211 @@ def get_native_hermes_run(run_id: str) -> dict[str, Any]:
         client.close()
 
 
+_NATIVE_SAFE_DECISIONS = frozenset(
+    {item.value for item in AuthorizationDecision} | {"NO_ACTION", "APPROVAL_REQUIRED"}
+)
+_NATIVE_SAFE_STEP_STATUSES = frozenset(
+    {
+        "APPROVAL_REQUIRED",
+        "APPROVED",
+        "BLOCKED",
+        "CANCELLED",
+        "CANCELED",
+        "COMPLETED",
+        "CREATED",
+        "DENIED",
+        "FAILED",
+        "PENDING",
+        "QUEUED",
+        "REJECTED",
+        "RUNNING",
+        "STARTED",
+        "STOPPED",
+        "SUCCEEDED",
+        "WAITING_FOR_APPROVAL",
+    }
+)
+
+
+def _persist_native_agent_run_start(
+    session: Session,
+    *,
+    run_id: str,
+    journey: Journey,
+    mission: JourneyMission,
+    status: str | None,
+    model_key: str,
+) -> AgentRun:
+    """Bind one returned native Hermes run to the existing persisted AgentRun model."""
+    native_run_id = str(run_id or "").strip()
+    if not native_run_id:
+        raise ValueError("native Hermes run id is required")
+    existing = session.get(AgentRun, native_run_id)
+    if existing is not None:
+        if (
+            existing.journey_id != str(journey.id)
+            or existing.mission_id != str(mission.id)
+            or existing.provider_key != "hermes-native"
+        ):
+            raise ValueError("native Hermes run id is already bound to another AgentRun")
+        return existing
+
+    now = datetime.now(timezone.utc).isoformat()
+    safe_status = str(status or "RUNNING").strip().upper()
+    if safe_status not in _NATIVE_SAFE_STEP_STATUSES:
+        safe_status = "RUNNING"
+    run = AgentRun(
+        id=native_run_id,
+        mission_id=str(mission.id),
+        journey_id=str(journey.id),
+        provider_key="hermes-native",
+        model_key=str(model_key),
+        status=safe_status,
+        outcome=None,
+        failure_reason=None,
+        created_at=now,
+        started_at=now,
+        completed_at=None,
+    )
+    session.add(run)
+    return run
+
+
+def _safe_native_step_result(event: Mapping[str, Any]) -> dict[str, Any]:
+    """Keep only bounded normalized result facts in AgentRunStep storage."""
+    summary = event.get("result_summary")
+    if not isinstance(summary, Mapping):
+        return {}
+    safe: dict[str, Any] = {}
+    for key in ("decision", "status", "approval_status"):
+        value = summary.get(key)
+        if isinstance(value, str):
+            code = value.strip().upper()
+            allowed_codes = (
+                _NATIVE_SAFE_DECISIONS if key == "decision" else _NATIVE_SAFE_STEP_STATUSES
+            )
+            if code in allowed_codes:
+                safe[key] = code
+    if isinstance(summary.get("executed"), bool):
+        safe["executed"] = summary["executed"]
+    for key in ("length", "items"):
+        value = summary.get(key)
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            safe[key] = value
+    keys = summary.get("keys")
+    if isinstance(keys, list):
+        safe["keys"] = [
+            item for item in keys[:20]
+            if isinstance(item, str) and re.fullmatch(r"[A-Za-z0-9_.:-]{1,64}", item)
+        ]
+    if summary.get("kind") == "text":
+        safe["kind"] = "text"
+    return safe
+
+
+def _persist_native_agent_event(session: Session, event: Mapping[str, Any]) -> None:
+    """Project normalized native lifecycle/tool events into AgentRun tables."""
+    run_id = str(event.get("run_id") or "")
+    run = session.get(AgentRun, run_id) if run_id else None
+    if run is None:
+        return
+
+    event_type = str(event.get("event_type") or "")
+    now = datetime.now(timezone.utc).isoformat()
+    timestamp = event.get("timestamp")
+    try:
+        event_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00")).isoformat()
+    except (AttributeError, TypeError, ValueError):
+        event_time = now
+    terminal_status = {
+        "run.completed": "COMPLETED",
+        "run.failed": "FAILED_EXTERNAL",
+        "run.stopped": "STOPPED",
+    }.get(event_type)
+    if event_type == "approval.required" and run.status not in {
+        "COMPLETED", "FAILED_EXTERNAL", "STOPPED", "INTERRUPTED"
+    }:
+        run.status = "WAITING_FOR_APPROVAL"
+    elif event_type == "run.started" and run.status not in {
+        "COMPLETED", "FAILED_EXTERNAL", "STOPPED", "INTERRUPTED"
+    }:
+        run.status = "RUNNING"
+        if not run.started_at:
+            run.started_at = event_time
+    elif terminal_status:
+        run.status = terminal_status
+        run.completed_at = event_time
+        run.failure_reason = "NATIVE_HERMES_RUN_FAILED" if event_type == "run.failed" else None
+        run.outcome = json.dumps(
+            {"runtime_identity": "HERMES_NATIVE_MCP", "status": terminal_status},
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+
+    if event_type not in {"tool.completed", "tool.failed"}:
+        return
+    tool_name = event.get("tool_name")
+    if not isinstance(tool_name, str):
+        return
+    tool_name = tool_name.strip()
+    if not re.fullmatch(r"[A-Za-z0-9_.:-]{1,120}", tool_name):
+        return
+
+    signature = json.dumps(dict(event), ensure_ascii=False, sort_keys=True, default=str)
+    step_id = str(uuid5(NAMESPACE_URL, f"citynexus-native-hermes-step:{run.id}:{signature}"))
+    if session.get(AgentRunStep, step_id) is not None:
+        return
+    source_sequence = event.get("sequence")
+    if (
+        isinstance(source_sequence, int)
+        and not isinstance(source_sequence, bool)
+        and source_sequence > 0
+        and source_sequence <= 2_147_483_647
+    ):
+        # Hermes replay may assign a new transport event id to an already
+        # projected sequence. Keep one persisted tool step for that run slot.
+        duplicate_sequence = session.scalar(
+            select(AgentRunStep.id).where(
+                AgentRunStep.run_id == run.id,
+                AgentRunStep.sequence_no == source_sequence,
+            )
+        )
+        if duplicate_sequence is not None:
+            return
+        sequence_no = source_sequence
+    else:
+        max_sequence = session.scalar(
+            select(func.max(AgentRunStep.sequence_no)).where(AgentRunStep.run_id == run.id)
+        ) or 0
+        sequence_no = int(max_sequence) + 1
+
+    decision = event.get("policy_decision")
+    if not isinstance(decision, str) or decision.strip().upper() not in _NATIVE_SAFE_DECISIONS:
+        decision = None
+    completed_at = event_time
+    step = AgentRunStep(
+        id=step_id,
+        run_id=run.id,
+        sequence_no=sequence_no,
+        tool_name=tool_name,
+        # Native Hermes arguments and raw outputs are intentionally not copied.
+        arguments_json="{}",
+        result_json=json.dumps(
+            {
+                "status": "FAILED" if event_type == "tool.failed" else "COMPLETED",
+                "summary": _safe_native_step_result(event),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+        decision=decision.strip().upper() if decision else None,
+        status="TOOL_ERROR" if event_type == "tool.failed" else "COMPLETED",
+        created_at=completed_at,
+        completed_at=completed_at,
+    )
+    session.add(step)
+
+
 def _persist_native_event(event: dict[str, Any], *, journey_id: str | None = None) -> None:
     """Persist a compact native event so reconnects can recover run history."""
     run_id = str(event.get("run_id") or "")
@@ -1153,7 +1365,105 @@ def _persist_native_event(event: dict[str, Any], *, journey_id: str | None = Non
             actor_id="hermes-native",
             after=event,
         )
+        run = event_session.get(AgentRun, run_id)
+        if run is not None and (journey_id is None or run.journey_id == str(journey_id)):
+            _persist_native_agent_event(event_session, event)
         event_session.commit()
+
+
+def _require_native_hermes_run_member(
+    request: Request,
+    session: Session,
+    *,
+    journey_id: str,
+    run_id: str,
+) -> tuple[Any, Any, AuditLog]:
+    """Require the signed Journey member recorded when this native run was created."""
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    binding = session.scalar(
+        select(AuditLog).where(
+            AuditLog.action == "agent.native_hermes.run_bound",
+            AuditLog.entity_type == "HermesNativeRun",
+            AuditLog.entity_id == run_id,
+            AuditLog.journey_id == str(journey.id),
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+        ).order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    if binding is None:
+        # Do not distinguish another member's run from an unknown run id.
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+    try:
+        record = json.loads(binding.after_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        record = {}
+    mission_id = str(record.get("mission_id") or "") if isinstance(record, dict) else ""
+    if (
+        not mission_id
+        or record.get("traveler_id") != principal.traveler_id
+        or record.get("member_id") != member.id
+    ):
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+    mission = session.get(JourneyMission, mission_id)
+    if mission is None or mission.journey_id != str(journey.id):
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+    return principal, member, binding
+
+
+def _require_native_agent_run_member(
+    request: Request,
+    session: Session,
+    *,
+    journey_id: str,
+    run: AgentRun,
+) -> None:
+    """Apply the native run binding before exposing its persisted AgentRun steps."""
+    _principal, _member, binding = _require_native_hermes_run_member(
+        request,
+        session,
+        journey_id=str(journey_id),
+        run_id=run.id,
+    )
+    try:
+        binding_payload = json.loads(binding.after_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        binding_payload = {}
+    if not isinstance(binding_payload, dict) or binding_payload.get("mission_id") != run.mission_id:
+        raise HTTPException(404, "native Hermes run is not available to this Journey member")
+
+
+def _require_unscoped_native_hermes_run_member(
+    request: Request,
+    session: Session,
+    *,
+    run_id: str,
+) -> str:
+    """Resolve the Journey for a signed owner before serving the legacy run stream."""
+    from app.traveler_principal import resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    binding = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "agent.native_hermes.run_bound",
+            AuditLog.entity_type == "HermesNativeRun",
+            AuditLog.entity_id == run_id,
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+    )
+    if binding is None or not binding.journey_id:
+        raise HTTPException(404, "native Hermes run is not available to this traveler")
+    _require_native_hermes_run_member(
+        request, session, journey_id=binding.journey_id, run_id=run_id
+    )
+    return binding.journey_id
 
 
 def _native_citynexus_events(
@@ -1251,19 +1561,400 @@ def _native_event_stream(run_id: str, journey_id: str | None = None):
 
 
 @app.get("/api/v1/agent/hermes/runs/{run_id}/events")
-def stream_native_hermes_events(run_id: str) -> StreamingResponse:
+def stream_native_hermes_events(
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+) -> StreamingResponse:
+    journey_id = _require_unscoped_native_hermes_run_member(
+        request, session, run_id=run_id
+    )
     return StreamingResponse(
-        _native_event_stream(run_id),
+        _native_event_stream(run_id, journey_id),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
 
 
+@app.get("/api/v1/journeys/{journey_id}/agent/hermes/latest-run")
+def get_latest_journey_native_hermes_run(
+    journey_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    """Return only this signed member's latest server-bound native run reference.
+
+    This read-only projection lets a mobile client restore an existing trace after
+    navigation or reload. It does not ask Hermes to start a run or call the
+    provider. The run id is selected from the durable binding created by the
+    authenticated Copilot response, never from client storage or a global latest.
+    """
+    from app.traveler_principal import (
+        member_has_capability,
+        resolve_journey_member_principal,
+    )
+
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    binding = session.scalar(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "agent.native_hermes.run_bound",
+            AuditLog.entity_type == "HermesNativeRun",
+            AuditLog.journey_id == str(journey.id),
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+            # A traveler can have a new membership after a leave/rejoin cycle.
+            # Select only bindings that could belong to this exact signed member,
+            # then validate the decoded record below before exposing it.
+            AuditLog.after_json.contains(member.id),
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        .limit(1)
+    )
+    current_run: dict[str, Any] | None = None
+    if binding is not None:
+        try:
+            record = json.loads(binding.after_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            record = {}
+        mission_id = str(record.get("mission_id") or "") if isinstance(record, dict) else ""
+        if (
+            mission_id
+            and record.get("traveler_id") == principal.traveler_id
+            and record.get("member_id") == member.id
+        ):
+            mission = session.get(JourneyMission, mission_id)
+            if mission is not None and mission.journey_id == str(journey.id):
+                summary = str(mission.reasoning_summary or "").strip()
+                current_run = {
+                    "run_id": str(binding.entity_id),
+                    "mission_id": mission_id,
+                    "runtime_identity": "HERMES_NATIVE_MCP",
+                    "status": "unknown",
+                    "reasoning_summary": summary[:600] or None,
+                }
+    return {"journey_id": str(journey.id), "run": current_run}
+
+
+_MOBILE_COMPAT_READ_TOOLS = frozenset(
+    {"inspect_journey", "inspect_twin", "list_replans"}
+)
+
+
+def _mobile_compat_run_id(journey_id: str, member_id: str, request_id: str) -> str:
+    return str(
+        uuid5(
+            NAMESPACE_URL,
+            f"citynexus-mobile-compat:{journey_id}:{member_id}:{request_id}",
+        )
+    )
+
+
+def _mobile_compat_binding(
+    session: Session,
+    *,
+    journey_id: str,
+    traveler_id: str,
+    member_id: str,
+    run_id: str,
+) -> dict[str, Any] | None:
+    row = session.scalar(
+        select(AuditLog).where(
+            AuditLog.action == "agent.mobile_compat.run_bound",
+            AuditLog.entity_type == "AgentRun",
+            AuditLog.entity_id == run_id,
+            AuditLog.journey_id == journey_id,
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == traveler_id,
+            AuditLog.after_json.contains(member_id),
+        )
+    )
+    if row is None:
+        return None
+    try:
+        payload = json.loads(row.after_json or "{}")
+    except (TypeError, json.JSONDecodeError):
+        return None
+    if (
+        not isinstance(payload, dict)
+        or payload.get("run_id") != run_id
+        or payload.get("traveler_id") != traveler_id
+        or payload.get("member_id") != member_id
+        or payload.get("runtime_identity") != "HERMES_COMPAT_ENDPOINT"
+        or payload.get("provider_consent") is not True
+    ):
+        return None
+    return payload
+
+
+def _mobile_compat_run_projection(
+    session: Session,
+    *,
+    journey: Journey,
+    traveler_id: str,
+    member_id: str,
+    request_id: str,
+) -> dict[str, Any]:
+    run_id = _mobile_compat_run_id(str(journey.id), member_id, request_id)
+    binding = _mobile_compat_binding(
+        session,
+        journey_id=str(journey.id),
+        traveler_id=traveler_id,
+        member_id=member_id,
+        run_id=run_id,
+    )
+    run = session.get(AgentRun, run_id)
+    mission = session.get(JourneyMission, run.mission_id) if run is not None else None
+    if (
+        binding is None
+        or binding.get("request_id") != request_id
+        or run is None
+        or run.journey_id != str(journey.id)
+        or mission is None
+        or mission.journey_id != str(journey.id)
+    ):
+        raise HTTPException(404, "Agent run was not found")
+
+    steps = session.scalars(
+        select(AgentRunStep)
+        .where(AgentRunStep.run_id == run.id)
+        .order_by(AgentRunStep.sequence_no)
+    ).all()
+    projected_steps: list[dict[str, Any]] = []
+    for step in steps:
+        if step.tool_name not in _MOBILE_COMPAT_READ_TOOLS:
+            continue
+        try:
+            result = json.loads(step.result_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            result = {}
+        failed = not isinstance(result, dict) or bool(result.get("error"))
+        projected_steps.append(
+            {
+                "sequence_no": step.sequence_no,
+                "tool_name": step.tool_name,
+                "status": "FAILED" if failed else "COMPLETED",
+                "created_at": step.created_at,
+                "completed_at": step.completed_at,
+            }
+        )
+
+    status_allowlist = {
+        "RUNNING",
+        "COMPLETED",
+        "PARTIAL",
+        "FAILED_EXTERNAL",
+        "WAITING_FOR_APPROVAL",
+        "SKIPPED_EXTERNAL_DEPENDENCY",
+        "SUPERSEDED",
+    }
+    status = run.status if run.status in status_allowlist else "UNKNOWN"
+    return {
+        "request_id": request_id,
+        "run_id": run.id,
+        "mission_id": mission.id,
+        "runtime_identity": "HERMES_COMPAT_ENDPOINT",
+        "status": status,
+        "tool_call_recorded": bool(projected_steps),
+        "verification": (
+            "WB2API_TOOL_CALL_RECORDED" if projected_steps else "MODEL_NOT_VERIFIED"
+        ),
+        "tool_steps": projected_steps,
+        "created_at": run.created_at,
+        "started_at": run.started_at,
+        "completed_at": run.completed_at,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/mobile-compat-runs/latest")
+def get_latest_mobile_compat_run(
+    journey_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    rows = session.scalars(
+        select(AuditLog)
+        .where(
+            AuditLog.action == "agent.mobile_compat.run_bound",
+            AuditLog.entity_type == "AgentRun",
+            AuditLog.journey_id == str(journey.id),
+            AuditLog.actor_type == "TRAVELER",
+            AuditLog.actor_id == principal.traveler_id,
+            AuditLog.after_json.contains(member.id),
+        )
+        .order_by(AuditLog.created_at.desc(), AuditLog.id.desc())
+        .limit(20)
+    ).all()
+    current_run: dict[str, Any] | None = None
+    for row in rows:
+        try:
+            binding = json.loads(row.after_json or "{}")
+        except (TypeError, json.JSONDecodeError):
+            continue
+        if not isinstance(binding, dict):
+            continue
+        if (
+            binding.get("traveler_id") != principal.traveler_id
+            or binding.get("member_id") != member.id
+            or binding.get("run_id") != row.entity_id
+        ):
+            continue
+        request_id = str(binding.get("request_id") or "")
+        try:
+            request_id = str(UUID(request_id))
+        except (TypeError, ValueError):
+            continue
+        try:
+            current_run = _mobile_compat_run_projection(
+                session,
+                journey=journey,
+                traveler_id=principal.traveler_id,
+                member_id=member.id,
+                request_id=request_id,
+            )
+        except HTTPException:
+            continue
+        break
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    configured = bool(settings.ai_enabled and settings.hermes_api_url and settings.hermes_api_key)
+    return {
+        "runtime_identity": "HERMES_COMPAT_ENDPOINT" if configured else "NOT_CONFIGURED",
+        "configured": configured,
+        "run": current_run,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/mobile-compat-runs/{request_id}")
+def get_mobile_compat_run(
+    journey_id: UUID,
+    request_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return _mobile_compat_run_projection(
+        session,
+        journey=journey,
+        traveler_id=principal.traveler_id,
+        member_id=member.id,
+        request_id=str(request_id),
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/mobile-compat-runs")
+def start_mobile_compat_run(
+    journey_id: UUID,
+    body: MobileCompatAgentRunStartRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    if not body.provider_consent:
+        raise HTTPException(403, "provider consent is required")
+    if journey.status != "ACTIVE":
+        raise HTTPException(409, "Agent runs are available for active Journeys")
+    if not settings.ai_enabled or not settings.hermes_api_url or not settings.hermes_api_key:
+        raise HTTPException(503, "wb2api Agent is not configured")
+
+    request_id = str(body.request_id)
+    run_id = _mobile_compat_run_id(str(journey.id), member.id, request_id)
+    existing = session.get(AgentRun, run_id)
+    if existing is not None:
+        return _mobile_compat_run_projection(
+            session,
+            journey=journey,
+            traveler_id=principal.traveler_id,
+            member_id=member.id,
+            request_id=request_id,
+        )
+    binding = {
+        "traveler_id": principal.traveler_id,
+        "member_id": member.id,
+        "request_id": request_id,
+    }
+    request.state.citynexus_mobile_compat_run = {
+        "run_id": run_id,
+        "binding": binding,
+        "max_steps": 1,
+    }
+    try:
+        try:
+            run_agent_command(
+                journey_id=journey_id,
+                payload=AgentCommandRequest(
+                    command=(
+                        "只读检查当前行程。先检查服务器保存的行程事实，再用简短结果概括；"
+                        "不要搜索地点、提交方案、修改安排或执行任何写入。"
+                    ),
+                    requested_autonomy="PLAN_ONLY",
+                ),
+                request=request,
+                session=session,
+            )
+        except IntegrityError:
+            # A concurrent duplicate with the same signed request id reaches
+            # the unique AgentRun key before any second provider call.
+            session.rollback()
+            winner = session.get(AgentRun, run_id)
+            if winner is None:
+                raise
+    finally:
+        try:
+            del request.state.citynexus_mobile_compat_run
+        except AttributeError:
+            pass
+    return _mobile_compat_run_projection(
+        session,
+        journey=journey,
+        traveler_id=principal.traveler_id,
+        member_id=member.id,
+        request_id=request_id,
+    )
+
+
 @app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}")
 def get_journey_native_hermes_run(
-    journey_id: UUID, run_id: str, session: Session = Depends(get_session)
+    journey_id: UUID,
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
 ) -> dict[str, Any]:
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     client = HermesNativeClient()
     try:
         payload = client.get_run(run_id)
@@ -1281,10 +1972,13 @@ def get_journey_native_hermes_run(
 def get_native_hermes_timeline(
     journey_id: UUID,
     run_id: str,
+    request: Request,
     limit: int = Query(default=100, ge=1, le=250),
     session: Session = Depends(get_session),
 ) -> dict[str, Any]:
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     rows = session.scalars(
         select(AuditLog)
         .where(
@@ -1384,9 +2078,14 @@ def get_native_hermes_timeline(
 
 @app.get("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events")
 def stream_journey_native_hermes_events(
-    journey_id: UUID, run_id: str, session: Session = Depends(get_session)
+    journey_id: UUID,
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
 ) -> StreamingResponse:
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     return StreamingResponse(
         _native_event_stream(run_id, str(journey_id)),
         media_type="text/event-stream",
@@ -1395,9 +2094,16 @@ def stream_journey_native_hermes_events(
 
 
 @app.post("/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop")
-def stop_native_hermes_run(journey_id: UUID, run_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
+def stop_native_hermes_run(
+    journey_id: UUID,
+    run_id: str,
+    request: Request,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
     """Stop a native run through CityNexus; Hermes is never called directly by the UI."""
-    require(session, Journey, str(journey_id), "Journey")
+    _require_native_hermes_run_member(
+        request, session, journey_id=str(journey_id), run_id=run_id
+    )
     client = HermesNativeClient()
     try:
         return client.stop(run_id)
@@ -1452,6 +2158,8 @@ def run_agent_command(
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    mobile_compat_run = getattr(request.state, "citynexus_mobile_compat_run", None)
+    mobile_compat_enabled = isinstance(mobile_compat_run, dict)
     start_request_budget(SCENARIO_AGENT_COMMANDS)
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
@@ -1466,7 +2174,11 @@ def run_agent_command(
             now=now_dt,
         )
     context = _copilot_context(session, journey)
-    interpretation = _copilot_fallback_or_ai(payload.command, context)
+    interpretation = (
+        classify_copilot_message(payload.command)
+        if mobile_compat_enabled
+        else _copilot_fallback_or_ai(payload.command, context)
+    )
     if _is_live_journey_intent_request(payload.command, interpretation):
         return _run_live_journey_intent(
             request=request,
@@ -1563,6 +2275,7 @@ def run_agent_command(
             command=payload.command,
             requested_autonomy=payload.requested_autonomy,
             trigger_event_id=event.id if event else None,
+            use_model_draft=not mobile_compat_enabled,
         )
         record_audit(
             session,
@@ -1580,7 +2293,7 @@ def run_agent_command(
         )
         commit_within_budget(session, SCENARIO_AGENT_COMMANDS)
     native_status = native_hermes_status()
-    if native_status.get("ready"):
+    if native_status.get("ready") and not mobile_compat_enabled:
         native = HermesNativeClient()
         try:
             native_plan = mission_plan_for_model(mission)
@@ -1656,9 +2369,30 @@ def run_agent_command(
             "event_id": event.id if event else None,
             "run": run,
         }
-    runtime = configured_journey_agent(native_factory=DeepSeekJourneyAgent)
+    runtime = configured_journey_agent(
+        native_factory=DeepSeekJourneyAgent,
+        force_compat=mobile_compat_enabled,
+        allow_budget_retry=not mobile_compat_enabled,
+        tool_allowlist=(
+            _MOBILE_COMPAT_READ_TOOLS if mobile_compat_enabled else None
+        ),
+    )
     try:
-        run = runtime.run(session, journey=journey, mission=mission)
+        run_options = (
+            {
+                "max_steps": int(mobile_compat_run.get("max_steps") or 1),
+                "run_id": str(mobile_compat_run["run_id"]),
+                "signed_member_binding": dict(mobile_compat_run["binding"]),
+            }
+            if mobile_compat_enabled
+            else {}
+        )
+        run = runtime.run(
+            session,
+            journey=journey,
+            mission=mission,
+            **run_options,
+        )
     except AgentRuntimeUnavailable as exc:
         failed_run = session.scalar(
             select(AgentRun)
@@ -1944,6 +2678,25 @@ def _guardian_pulse_payload(row: GuardianPulse | None) -> dict[str, Any] | None:
         "completed_at": row.completed_at,
         "result": result,
     }
+
+
+@app.get("/api/v1/journeys/{journey_id}/guardian/stream")
+def get_signed_guardian_stream(
+    journey_id: UUID, request: Request, response: Response,
+    mission_id: UUID | None = None, limit: int = 20,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.guardian_stream import guardian_stream
+    principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.deleted_at:
+        raise HTTPException(404, "Journey was not found")
+    if principal.traveler_id != journey.traveler_id or not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "Journey owner read required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return guardian_stream(session, journey, mission_id=str(mission_id) if mission_id else None, limit=limit)
 
 
 @app.post("/api/v1/journeys/{journey_id}/guardian/pulse")
@@ -3465,9 +4218,11 @@ def bootstrap_journey_discovery(
             limit=payload.limit,
             source_kind=payload.source_kind,
             provider_consent=payload.provider_consent,
+            consented_provider=payload.consented_provider,
             latitude=payload.latitude,
             longitude=payload.longitude,
             accuracy_m=payload.accuracy_m,
+            query_mode=payload.query_mode,
         )
         session.commit()
         return result
@@ -3500,6 +4255,7 @@ def search_bootstrap_journey_city(
             query=payload.query,
             provider_consent=payload.provider_consent,
             limit=payload.limit,
+            provider=payload.provider,
         )
         session.commit()
         return result
@@ -3577,10 +4333,13 @@ def save_bootstrap_discovery_pocket_walk_route(
     journey_id: UUID,
     payload: BootstrapDiscoveryPocketWalkSaveRequest,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Atomically save two current manual-center discoveries privately."""
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
 
@@ -3597,6 +4356,46 @@ def save_bootstrap_discovery_pocket_walk_route(
             first_candidate_id=payload.first_candidate_id,
             second_candidate_id=payload.second_candidate_id,
             max_walk_minutes=payload.max_walk_minutes,
+        )
+        session.commit()
+        return result
+    except BootstrapDiscoveryError as exc:
+        session.rollback()
+        raise _bootstrap_http_error(exc) from exc
+
+
+@app.get("/api/v1/journeys/{journey_id}/bootstrap-discovery/current")
+def get_current_bootstrap_discovery(
+    journey_id: UUID, request: Request, response: Response,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+    principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return current_bootstrap_discovery(session, journey, member=member, traveler_id=principal.traveler_id)
+
+
+@app.post("/api/v1/journeys/{journey_id}/bootstrap-discovery/facts")
+def refresh_bootstrap_journey_place_facts(
+    journey_id: UUID,
+    payload: BootstrapPlaceFactsRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    journey = require(session, Journey, str(journey_id), "Journey")
+    from app.traveler_principal import resolve_journey_member_principal
+
+    principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey.id))
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Vary"] = "Authorization"
+    try:
+        result = refresh_bootstrap_place_facts(
+            session, journey, member=member, traveler_id=principal.traveler_id,
+            receipt_id=payload.receipt_id, candidate_id=payload.candidate_id,
+            provider_consent=payload.provider_consent,
         )
         session.commit()
         return result
@@ -3676,16 +4475,19 @@ def preview_bootstrap_journey_candidate(
 def get_bootstrap_shortlist(
     journey_id: UUID,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Return only the signed member's public-only draft shortlist."""
 
-    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     from app.traveler_principal import resolve_journey_member_principal
 
     principal, member = resolve_journey_member_principal(
-        request, session, journey_id=str(journey.id)
+        request, session, journey_id=str(journey_id)
     )
+    journey = require(session, Journey, str(journey_id), "Journey")
     try:
         return list_bootstrap_shortlist_items(
             session,
@@ -4008,10 +4810,13 @@ def save_bootstrap_pocket_walk_intent(
 def get_bootstrap_pocket_walk_go_mode(
     journey_id: UUID,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Read this signed member's latest server-verified self-reported progress."""
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
 
@@ -4034,10 +4839,13 @@ def transition_bootstrap_pocket_walk_go_mode(
     journey_id: UUID,
     payload: BootstrapPocketWalkGoTransitionRequest,
     request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
     """Persist one conditional GO MODE self-report without creating arrival facts."""
 
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     from app.traveler_principal import resolve_journey_member_principal
 
@@ -4273,12 +5081,35 @@ def journey_operations_stream(
 def get_agent_run(
     journey_id: UUID,
     run_id: UUID,
+    request: Request,
+    response: Response,
     session: Session = Depends(get_session),
 ):
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import (
+            member_has_capability,
+            resolve_journey_member_principal,
+        )
+
+        _principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if not member_has_capability(session, member, "JOURNEY_READ"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+
     journey = require(session, Journey, str(journey_id), "Journey")
     run = session.get(AgentRun, str(run_id))
     if run is None or run.journey_id != journey.id:
         raise HTTPException(404, "agent run was not found")
+    if run.provider_key == "hermes-native":
+        _require_native_agent_run_member(
+            request,
+            session,
+            journey_id=str(journey.id),
+            run=run,
+        )
     mission = session.get(JourneyMission, run.mission_id)
     steps = session.scalars(
         select(AgentRunStep).where(AgentRunStep.run_id == run.id).order_by(AgentRunStep.sequence_no)
@@ -4307,6 +5138,7 @@ def get_agent_run(
         "mission_id": run.mission_id,
         "journey_id": run.journey_id,
         "provider_key": run.provider_key,
+        "runtime_identity": "HERMES_NATIVE_MCP" if run.provider_key == "hermes-native" else None,
         "model_key": run.model_key,
         "status": run.status,
         "completion_contract": _server_completion_contract(
@@ -4472,6 +5304,17 @@ def pending_journey_missions(
             .where(AgentRun.mission_id == mission.id)
             .order_by(AgentRun.created_at.desc(), AgentRun.id.desc())
         )
+        if latest_run is not None and latest_run.provider_key == "hermes-native":
+            try:
+                _require_native_agent_run_member(
+                    request,
+                    session,
+                    journey_id=str(journey.id),
+                    run=latest_run,
+                )
+            except HTTPException:
+                # Keep a Journey member from seeing another member's native mission or tool trace.
+                continue
         mission_view = mission_payload(mission)
         clarification = dict(mission_view.get("clarification") or {})
         collective_view = None
@@ -5576,8 +6419,131 @@ def demo_start_scenario(session: Session = Depends(get_session)):
 
 
 
+START_WRITE_RECEIPT_RETENTION_DAYS = 365
+
+
+def _start_write_receipt_storage_key(operation: str, raw_key: str) -> str:
+    if operation not in {"traveler", "journey"}:
+        raise HTTPException(404, "start-write receipt not found")
+    if re.fullmatch(r"[0-9a-f]{64}", raw_key) is None:
+        raise HTTPException(422, "write receipt key must be 256-bit lowercase hex")
+    digest = hashlib.sha256(raw_key.encode("ascii")).hexdigest()
+    return f"revolution.start.{operation}:{digest}"
+
+
+def _claim_start_write_receipt(
+    session: Session,
+    *,
+    operation: str,
+    payload: Any,
+    raw_key: str | None,
+) -> IdempotencyKey | None:
+    if raw_key is None:
+        return None
+    storage_key = _start_write_receipt_storage_key(operation, raw_key)
+    request_hash = canonical_request_signature(payload)
+    existing = session.get(IdempotencyKey, storage_key)
+    if existing is not None:
+        existing_operation = existing.operation
+        existing_request_hash = existing.request_hash
+        session.rollback()
+        if existing_operation != f"revolution.start.{operation}" or existing_request_hash != request_hash:
+            raise HTTPException(409, "start-write receipt key is already bound to another request")
+        raise HTTPException(409, "start-write receipt key has already been used")
+
+    now = datetime.now(timezone.utc)
+    row = IdempotencyKey(
+        key=storage_key,
+        operation=f"revolution.start.{operation}",
+        request_hash=request_hash,
+        response_status=None,
+        response_json=None,
+        created_at=now.isoformat(),
+        expires_at=(now + timedelta(days=START_WRITE_RECEIPT_RETENTION_DAYS)).isoformat(),
+        claim_token=secrets.token_urlsafe(24),
+        claim_deadline=_lease_deadline(now),
+    )
+    session.add(row)
+    try:
+        # Commit the pending receipt before creation. The entity and committed receipt
+        # are then written together so a missing browser response remains queryable.
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raise HTTPException(409, "start-write receipt key has already been used") from exc
+    return row
+
+
+def _complete_start_write_receipt(
+    session: Session,
+    receipt: IdempotencyKey | None,
+    *,
+    record_id: str,
+) -> None:
+    if receipt is None:
+        return
+    completed = session.execute(
+        update(IdempotencyKey)
+        .where(
+            IdempotencyKey.key == receipt.key,
+            IdempotencyKey.claim_token == receipt.claim_token,
+            IdempotencyKey.response_json.is_(None),
+        )
+        .values(
+            response_status=201,
+            response_json=json.dumps({"record_id": record_id}, separators=(",", ":")),
+            claim_token=None,
+            claim_deadline=None,
+        )
+        .execution_options(synchronize_session=False)
+    )
+    if completed.rowcount != 1:
+        raise HTTPException(409, "start-write receipt claim is no longer current")
+
+
+@app.get("/api/v1/start-write-receipts/{operation}")
+def get_start_write_receipt(
+    operation: str,
+    response: Response,
+    receipt_key: str = Header(alias="X-CityNexus-Write-Receipt-Key"),
+    session: Session = Depends(get_session),
+):
+    """Return only the state of one client-held write receipt capability."""
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "X-CityNexus-Write-Receipt-Key"
+    storage_key = _start_write_receipt_storage_key(operation, receipt_key)
+    row = session.get(IdempotencyKey, storage_key)
+    state = "unknown"
+    if row is not None and row.operation == f"revolution.start.{operation}":
+        if row.response_json is None:
+            try:
+                claim_deadline = datetime.fromisoformat(row.claim_deadline or "")
+                if claim_deadline > datetime.now(timezone.utc):
+                    state = "pending"
+            except (TypeError, ValueError):
+                state = "unknown"
+        elif row.response_status == 201:
+            try:
+                receipt_body = json.loads(row.response_json)
+                UUID(str(receipt_body.get("record_id", "")))
+                state = "committed"
+            except (AttributeError, TypeError, ValueError, json.JSONDecodeError):
+                state = "unknown"
+    return {"operation": operation, "state": state}
+
+
 @app.post("/api/v1/travelers", status_code=201)
-def create_traveler(payload: TravelerCreate, session: Session = Depends(get_session)):
+def create_traveler(
+    payload: TravelerCreate,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
+    receipt = _claim_start_write_receipt(
+        session,
+        operation="traveler",
+        payload=payload.model_dump(mode="json"),
+        raw_key=idempotency_key,
+    )
     identifier = str(uuid4())
     now = datetime.now(timezone.utc).isoformat()
     traveler = Traveler(
@@ -5603,6 +6569,7 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
             updated_at=now,
         )
     )
+    _complete_start_write_receipt(session, receipt, record_id=traveler.id)
     session.commit()
     record_audit(session, action="traveler.created", entity_type="Traveler", entity_id=traveler.id)
     session.commit()
@@ -5615,6 +6582,21 @@ def create_traveler(payload: TravelerCreate, session: Session = Depends(get_sess
 
         body["access_token"] = issue_traveler_token(traveler.id)
     return body
+
+
+@app.get("/api/v1/travelers/session")
+def get_traveler_session(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    """Return the traveler identity resolved from the signed browser session."""
+    from app.traveler_principal import resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return {"traveler_id": principal.traveler_id}
 
 
 @app.get("/api/v1/travelers/{traveler_id}")
@@ -6202,8 +7184,18 @@ def suggested_room_count(party_size: int) -> int:
 
 
 @app.post("/api/v1/journeys", status_code=201)
-def create_journey(payload: JourneyCreate, session: Session = Depends(get_session)):
+def create_journey(
+    payload: JourneyCreate,
+    http_request: Request,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+):
     require(session, Traveler, str(payload.traveler_id), "Traveler")
+    if payload.planning_intent is not None:
+        from app.traveler_principal import resolve_traveler_principal
+        principal = resolve_traveler_principal(http_request, session)
+        if str(principal.traveler_id) != str(payload.traveler_id):
+            raise HTTPException(403, "Trip intent must belong to the signed traveler")
     now = datetime.now(timezone.utc).isoformat()
     occupancy = dict(payload.occupancy)
     occupancy.setdefault("adults", payload.party_size)
@@ -6261,6 +7253,12 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     # cannot accept a window that `/stay-options/generate` would later reject.  The raised
     # `V13_…` becomes a named 422 in `temporal_rejection` above.
     journey_temporal_shape(trip_context, journey)
+    receipt = _claim_start_write_receipt(
+        session,
+        operation="journey",
+        payload=payload.model_dump(mode="json"),
+        raw_key=idempotency_key,
+    )
     session.add(journey)
     session.add(trip_context)
     # A shared Journey has an explicit owner member from birth.  Keeping the
@@ -6281,6 +7279,15 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
             updated_at=now,
         )
     )
+    if payload.planning_intent is not None:
+        from app.planning.travel_brief import save_brief
+        session.flush()
+        owner = session.scalar(select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == journey.traveler_id,
+        ))
+        save_brief(session, journey, owner, payload.planning_intent)
+    _complete_start_write_receipt(session, receipt, record_id=journey.id)
     session.commit()
     record_audit(
         session,
@@ -6291,6 +7298,241 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     )
     session.commit()
     return journey_schema(journey)
+
+
+@app.get("/api/v1/journeys/{journey_id}/planning-intent")
+def get_trip_planning_intent(journey_id: UUID, request: Request, response: Response,
+                            session: Session = Depends(get_session)):
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.planning.travel_brief import brief_projection
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return brief_projection(session, journey, member)
+
+
+@app.get("/api/v1/journeys/{journey_id}/map-places")
+def get_signed_journey_map_places(journey_id: UUID, request: Request, response: Response,
+                                  session: Session = Depends(get_session)):
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.planning.travel_brief import map_place_projection
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    journey = require(session, Journey, str(journey_id), "Journey")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return map_place_projection(session, journey, member)
+
+
+@app.put("/api/v1/journeys/{journey_id}/planning-intent")
+def put_trip_planning_intent(journey_id: UUID, payload: TravelBriefRequest,
+                            request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.planning.travel_brief import brief_projection, save_brief
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if str(member.traveler_id) != str(journey.traveler_id) or not member_has_capability(session, member, "JOURNEY_UPDATE"):
+        raise HTTPException(403, "Journey owner update required")
+    if journey.status != "DRAFT":
+        raise HTTPException(409, "Update trip intent before choosing a plan")
+    with journey_write_lock(str(journey_id)):
+        save_brief(session, journey, member, payload)
+        session.commit()
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return brief_projection(session, journey, member)
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks", status_code=201)
+def create_signed_draft_goal_task(
+    journey_id: UUID,
+    payload: GoalTaskCreateRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import create_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if (
+        str(member.traveler_id) != str(journey.traveler_id)
+        or not member_has_capability(session, member, "JOURNEY_UPDATE")
+    ):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return create_goal_task(
+        session,
+        journey,
+        member,
+        goal=payload.goal,
+        model_consent=payload.model_consent,
+        online_research_consent=payload.online_research_consent,
+        interaction_mode=payload.interaction_mode,
+        unlimited_research=payload.unlimited_research,
+        max_model_turns=payload.max_model_turns,
+        max_tool_calls=payload.max_tool_calls,
+    )
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}")
+def get_signed_draft_goal_task(
+    journey_id: UUID,
+    task_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import read_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return read_goal_task(session, journey, member, task_id)
+
+
+@app.get("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/events")
+def get_signed_draft_goal_task_events(
+    journey_id: UUID,
+    task_id: UUID,
+    request: Request,
+    response: Response,
+    after_sequence: int = 0,
+    limit: int = 50,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import list_goal_task_events
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "JOURNEY_READ required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return list_goal_task_events(
+        session, journey, member, task_id, after_sequence=after_sequence, limit=limit
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/run")
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/resume")
+def run_signed_draft_goal_task(
+    journey_id: UUID,
+    task_id: UUID,
+    payload: GoalTaskRunRequest,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import resume_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if (
+        str(member.traveler_id) != str(journey.traveler_id)
+        or not member_has_capability(session, member, "JOURNEY_UPDATE")
+    ):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return resume_goal_task(
+        session,
+        journey,
+        member,
+        task_id,
+        model_consent=payload.model_consent,
+        online_research_consent=payload.online_research_consent,
+        interaction_mode=payload.interaction_mode,
+        unlimited_research=payload.unlimited_research,
+        max_model_turns=payload.max_model_turns,
+        max_tool_calls=payload.max_tool_calls,
+        user_message=payload.user_message,
+        message_id=payload.message_id,
+    )
+
+
+@app.put("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/draft")
+def update_signed_goal_draft(journey_id: UUID, task_id: UUID, payload: GoalDraftUpdateRequest,
+                             request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import resolve_journey_member_principal, member_has_capability
+    from app.agent.goal_tasks import update_goal_draft
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if str(member.traveler_id) != str(journey.traveler_id) or not member_has_capability(session, member, "JOURNEY_UPDATE"):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return update_goal_draft(session, journey, member, task_id, days=payload.days, expected_revision=payload.expected_revision)
+
+
+@app.post("/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/cancel")
+def cancel_signed_draft_goal_task(
+    journey_id: UUID,
+    task_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+    from app.agent.goal_tasks import cancel_goal_task
+
+    _principal, member = resolve_journey_member_principal(
+        request, session, journey_id=str(journey_id)
+    )
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if (
+        str(member.traveler_id) != str(journey.traveler_id)
+        or not member_has_capability(session, member, "JOURNEY_UPDATE")
+    ):
+        raise HTTPException(403, "Journey owner update required")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    return cancel_goal_task(session, journey, member, task_id)
+
+
+@app.get("/api/v1/journeys/session/recent-drafts")
+def list_recent_signed_draft_journeys(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    """Return a small private recovery window for the signed traveler's DRAFT journeys."""
+    from app.traveler_principal import resolve_traveler_principal
+
+    principal = resolve_traveler_principal(request, session)
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+    items = session.scalars(
+        select(Journey)
+        .where(
+            Journey.traveler_id == principal.traveler_id,
+            Journey.status == "DRAFT",
+            Journey.deleted_at.is_(None),
+        )
+        .order_by(Journey.created_at.desc(), Journey.id.desc())
+        .limit(5)
+    ).all()
+    return [{"id": item.id, "city_code": item.city_code, "status": item.status} for item in items]
 
 
 @app.get("/api/v1/journeys", response_model=list[JourneySchema])
@@ -6600,11 +7842,9 @@ def create_share_grant(
 def list_traveler_recycle_bin_journeys(traveler_id: UUID, session: Session = Depends(get_session)):
     """ORD-0434 step 2: the same bin rows, scoped to one owner.
 
-    This is its own door rather than a parameter on `GET /api/v1/recycle-bin/journeys` because that
-    one carries a tested promise to advertise no filter, no scope and no page - a promise this order
-    has no business bending.  Naming an owner in a path is not proof of who is asking; binding the
-    caller to the name is the daylight decision step 2 does not make.  Rows and ordering are the same
-    schema and the same `deleted_at` newest-first rule, so the two doors cannot disagree about a row.
+    The dedicated route keeps `GET /api/v1/recycle-bin/journeys` unfiltered, unscoped and
+    unpaginated. `traveler_id` selects the owner; caller identity binding remains a follow-up
+    authorization requirement. Rows share the same schema and `deleted_at` newest-first ordering.
     """
     items = session.scalars(
         select(Journey)
@@ -16240,6 +17480,13 @@ def generate_journey_plans(
     journey = require(session, Journey, str(journey_id), "Journey")
     start_request_budget(SCENARIO_PLANS_GENERATE)
     request = payload or GeneratePlansRequest()
+    if request.bootstrap_candidate_ids:
+        from app.traveler_principal import resolve_journey_member_principal, member_has_capability
+        _principal, actor = resolve_journey_member_principal(http_request, session, journey_id=str(journey.id))
+        if str(actor.traveler_id) != str(journey.traveler_id) or not member_has_capability(session, actor, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey owner update required")
+        if request.place_ids or len(set(request.bootstrap_candidate_ids)) != len(request.bootstrap_candidate_ids):
+            raise HTTPException(422, "Select different bootstrap candidates without additional place_ids")
     cost_unknown_ack_actor: str | None = None
     if request.allow_unknown_cost:
         # This flag records a traveller-owned decision, so a deployment with
@@ -16325,6 +17572,8 @@ def _plan_continuation_identity(journey_id: UUID, journey: Journey,
         signature_payload["allow_single_place"] = True
     if request.allow_unknown_cost:
         signature_payload["allow_unknown_cost"] = True
+    if request.bootstrap_candidate_ids:
+        signature_payload["bootstrap_candidate_ids"] = sorted(str(value) for value in request.bootstrap_candidate_ids)
     signature = canonical_request_signature(signature_payload)
     keys = [f"plans.generate:{transport_key}"] if transport_key is not None else []
     if continuation_id is not None and f"plans.generate:{continuation_id}" not in keys:
@@ -16590,15 +17839,45 @@ def _generate_plans_answer(session: Session, journey: Journey,
     """今天这一段的本体：一次生成 + 那次结果的耐久事实。被 Phase B 用同一条事务包住。"""
 
     planning_mode = request.planning_mode or journey.planning_mode
+    place_ids = request.place_ids
+    if request.bootstrap_candidate_ids:
+        from app.planning.travel_brief import brief_projection
+        from app.execution.bootstrap_discovery import select_bootstrap_candidate
+        owner = session.scalar(select(JourneyMemberModel).where(
+            JourneyMemberModel.journey_id == journey.id,
+            JourneyMemberModel.traveler_id == journey.traveler_id,
+        ))
+        available = {item["candidate_id"]: item for item in brief_projection(session, journey, owner)["candidates"]}
+        invalid_candidates = [available.get(str(value)) for value in request.bootstrap_candidate_ids]
+        if any(item is None or item["selection_state"] != "READY_FOR_NATIVE_PLAN" for item in invalid_candidates):
+            from app.services import CompositionRefusal
+            if any(item is not None and item.get("region_status") == "CONFLICT" for item in invalid_candidates):
+                raise CompositionRefusal("A selected place belongs to another administrative region",
+                    reason_code="REGION_CONFLICT", details={"next_actions": ["CHOOSE_CANDIDATE_IN_DESTINATION_REGION"]})
+            raise CompositionRefusal("Selected places still need opening or cost facts",
+                reason_code="UNRESOLVED_ACTIVITY_FACTS", details={"next_actions": ["VERIFY_SOURCE", "CHOOSE_ANOTHER_PLACE"]})
+        place_ids = []
+        for candidate_id in request.bootstrap_candidate_ids:
+            candidate = available[str(candidate_id)]
+            existing_candidate = session.get(RealPlaceCandidate, str(candidate_id))
+            if existing_candidate.status == "BOOTSTRAP_SELECTED" and existing_candidate.materialized_place_id:
+                place_ids.append(existing_candidate.materialized_place_id)
+                continue
+            selected = select_bootstrap_candidate(session, journey, member=owner,
+                traveler_id=journey.traveler_id, receipt_id=UUID(candidate["receipt_id"]), candidate_id=candidate_id,
+                batch_candidate_ids=frozenset(str(value) for value in request.bootstrap_candidate_ids))
+            place_ids.append(selected["selected_place_id"])
     plans = generate_plans(
         session,
         journey,
         planning_mode,
         request.candidate_count,
-        place_ids=request.place_ids,
+        place_ids=place_ids,
         allow_single_place=request.allow_single_place,
         allow_unknown_cost=request.allow_unknown_cost,
     )
+    from app.planning.travel_brief import stamp_plan_intent
+    stamp_plan_intent(session, journey, plans)
     if request.allow_unknown_cost and cost_unknown_ack_actor:
         for plan in plans:
             explanation = json.loads(plan.explanation_json or "{}")
@@ -16680,7 +17959,12 @@ def authoritative_compose_journey(
 
 
 @app.get("/api/v1/journeys/{journey_id}/plans")
-def list_plans(journey_id: UUID, session: Session = Depends(get_session)):
+def list_plans(
+    journey_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
     """Every version this journey has ever had, with the one it runs named explicitly.
 
     The list stays unfiltered on purpose: CANDIDATE, SELECTED, ACTIVE, SUPERSEDED and REJECTED
@@ -16693,6 +17977,16 @@ def list_plans(journey_id: UUID, session: Session = Depends(get_session)):
     first item.
     """
 
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+        _principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if not member_has_capability(session, member, "JOURNEY_READ"):
+            raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
     journey = require(session, Journey, str(journey_id), "Journey")
     items = session.scalars(
         select(PlanVersion)
@@ -18562,7 +19856,23 @@ def _remaining_opportunity_horizon(
 
 
 @app.post("/api/v1/journeys/{journey_id}/start", response_model=JourneyTwinSchema)
-def start_journey(journey_id: UUID, session: Session = Depends(get_session)):
+def start_journey(
+    journey_id: UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    if settings.traveler_auth_secret:
+        from app.traveler_principal import (
+            member_has_capability,
+            resolve_journey_member_principal,
+        )
+
+        _principal, member = resolve_journey_member_principal(
+            request, session, journey_id=str(journey_id)
+        )
+        if not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+            raise HTTPException(403, "Journey member role cannot start execution")
+
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status == "ACTIVE":
         twin = _twin_snapshot(session, journey)
@@ -23320,7 +24630,7 @@ def generate_replan(
                     COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
                 ),
                 "authority_note": (
-                    "Coursework-only recovery using explicit Agent estimates; this is not a LIVE provider-ready result."
+                    "Coursework recovery estimate based on explicit Agent-provided costs."
                     if coursework_authority
                     else None
                 ),
@@ -26333,9 +27643,17 @@ def _verify_copilot_fact(
     }
 
 
+def _journey_allows_native_copilot_run(journey: Journey) -> bool:
+    """A durable native run belongs to an already active Journey, never a DRAFT guide."""
+    return str(journey.status or "").upper() == "ACTIVE"
+
+
 @app.post("/api/v1/journeys/{journey_id}/copilot/messages")
 async def copilot_message(
-    journey_id: UUID, body: dict[str, Any], session: Session = Depends(get_session)
+    journey_id: UUID,
+    body: dict[str, Any],
+    request: Request,
+    session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     message = str(body.get("message") or "").strip()
@@ -26423,7 +27741,7 @@ async def copilot_message(
             "search", "replan", "rain", "下雨",
         )
     )
-    if (
+    if _journey_allows_native_copilot_run(journey) and (
         interpretation.intent in {"REPLAN_REQUEST", "DISRUPTION_REPORT"}
         or capability_multi_step
     ) and not (
@@ -26431,6 +27749,16 @@ async def copilot_message(
     ):
         native_status = native_hermes_status()
         if native_status.get("ready"):
+            if not settings.traveler_auth_secret:
+                raise HTTPException(
+                    503,
+                    "signed Journey member verification is required before starting a native Hermes run",
+                )
+            from app.traveler_principal import resolve_journey_member_principal
+
+            requester, requester_member = resolve_journey_member_principal(
+                request, session, journey_id=str(journey.id)
+            )
             native = HermesNativeClient()
             trigger_event_id = str(event.get("id")) if isinstance(event, dict) and event.get("id") else None
             native_mission = create_mission(
@@ -26465,8 +27793,30 @@ async def copilot_message(
                     mission_plan=native_plan,
                     session_id=f"citynexus-{journey.id}-mission-{native_mission.id}",
                 )
+                _persist_native_agent_run_start(
+                    session,
+                    run_id=native_run.run_id,
+                    journey=journey,
+                    mission=native_mission,
+                    status=native_run.status,
+                    model_key=settings.hermes_native_model or f"profile:{settings.hermes_native_profile}",
+                )
                 native_mission.status = "RUNNING"
                 native_mission.started_at = datetime.now(timezone.utc).isoformat()
+                record_audit(
+                    session,
+                    action="agent.native_hermes.run_bound",
+                    entity_type="HermesNativeRun",
+                    entity_id=native_run.run_id,
+                    journey_id=journey.id,
+                    actor_type="TRAVELER",
+                    actor_id=requester.traveler_id,
+                    after={
+                        "mission_id": native_mission.id,
+                        "member_id": requester_member.id,
+                        "traveler_id": requester.traveler_id,
+                    },
+                )
                 session.commit()
                 initial_events = _native_citynexus_events(
                     run_id=native_run.run_id,
@@ -26481,6 +27831,7 @@ async def copilot_message(
                     "provider_key": "hermes-native",
                     "model_key": settings.hermes_native_model or f"profile:{settings.hermes_native_profile}",
                     "mission_id": native_mission.id,
+                    "reasoning_summary": native_mission.reasoning_summary,
                     "events_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/events",
                     "timeline_url": f"/api/v1/journeys/{journey.id}/agent/hermes/runs/{native_run.run_id}/timeline",
                     "mission_plan": native_plan,
@@ -26727,3 +28078,15 @@ def get_commitment(commitment_id: UUID, session: Session = Depends(get_session))
     if item is None:
         raise HTTPException(404, f"Commitment {commitment_id} was not found")
     return _commitment_payload(item)
+
+
+# Source-lead media stays signed and separate from Qoder's canonical Place router.
+from app.goal_media_routes import router as goal_media_router
+app.include_router(goal_media_router)
+
+# V3 departure reads adapted from Qoder a4692457a9; mutation gates remain in their own routes.
+from app.departure_read import router as departure_read_router
+app.include_router(departure_read_router)
+
+from app.agent.goal_preparation import router as goal_preparation_router
+app.include_router(goal_preparation_router)

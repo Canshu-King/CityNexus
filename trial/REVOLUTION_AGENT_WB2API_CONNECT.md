@@ -13,7 +13,7 @@
 - 7863 = **指定具体模型**，如 `global:deepseek-v4.1-flash`。
 - 两者调用 `/v1/chat/completions`；必须 Authorization Bearer；不支持浏览器跨源直接调用。
 - 本机已经设置 `WB2API_KEY`（但当前终端可能未继承）。
-- model may return `reasoning_content` and streaming chunks, but model tooling must be **separately verified**: successful chat is not proof it returns `tool_calls`.
+- Models may return `reasoning_content` and streaming chunks. Chat replies and `tool_calls` are separate capabilities; inspect the tool-call field directly.
 
 CityNexus 原生 `DeepSeekJourneyAgent` 使用 `/responses`，**不能直接把 wb2api /chat/completions Base URL 塞到那个配置里**。
 
@@ -26,7 +26,7 @@ CityNexus 原生 `DeepSeekJourneyAgent` 使用 `/responses`，**不能直接把 
 | Model | `CITYNEXUS_HERMES_MODEL=auto:cheapest` |
 | Router fallback | `CITYNEXUS_HERMES_MODEL_FALLBACKS=`（设为空；Router 自己决定备用候选） |
 | 超时 | `CITYNEXUS_IMPACT_TIMEOUT_SECONDS=120` |
-| Agent 类型 | `HERMES_COMPAT_ENDPOINT`，**不冒充 `HERMES_NATIVE_MCP`** |
+| Agent 类型 | `HERMES_COMPAT_ENDPOINT`（OpenAI-compatible adapter）；`HERMES_NATIVE_MCP`（MCP adapter） |
 | 外部 AI | 显式 `--agent` 后 `CITYNEXUS_AI_ENABLED=true`，Guardian autorun 仍然关闭 |
 | 交易 | mock-booking / mock-payment，不执行真实支付 |
 
@@ -78,19 +78,19 @@ py -3.13 trial\try_revolution.py --agent
 py -3.13 trial\try_revolution.py --agent-direct-model global:deepseek-v4.1-flash
 ```
 
-此时直连 **7863**，不经过 7865 免费候选链。模型价格以当时实际 `usage.credit` 为准，不能根据 2026-10-14 的一次零积分测试承诺永久免费。
+此时直连 **7863**，不经过 7865 免费候选链。按每次响应的 `usage.credit` 查看实际费用；2026-10-14 的零积分结果只对应那次请求。
 
 ## 3. 用户界面里 Agent 真正在哪里？
 
 在 `/revolution`：
 
-- **AI Agent 连接状态**显示后端 `GET /api/v1/agent/runtime-status` 的实际运行时身份。如果出现 `HERMES_COMPAT_ENDPOINT`，只是 **CONFIGURED_UNVERIFIED**，代表密钥和 URL 配置已加载，不代表调用成功。
-- 新城市搜索、Pocket Walk、GO MODE 本身是 **DRAFT 私人探索**，不是完整 AI Agent。它不会因为模型配置就假称自己的规则动作是自主推理。
+- **AI Agent 连接状态**显示 `GET /api/v1/agent/runtime-status` 返回的运行时身份。`HERMES_COMPAT_ENDPOINT` 表示端点配置已加载；模型响应与工具调用由后续请求结果显示。
+- 新城市搜索、Pocket Walk、GO MODE 属于 **DRAFT 私人探索**。真实 AgentRun 在正式 Journey 的 Journey Operator 中显示。
 - 从有来源的公开候选地点选择“作为正式行程的首地点”后，页面可通过原有 `BootstrapJourneyStartPanel` 显式确认**未知价格**，使用原生 `generatePlans -> selectPlan -> startJourney`；这一过程要求现有服务 API 真正成功，不偷偷插入虚构 PlanVersion。
 - 正式 Journey 才展示原生 `LiveRecovery` / Journey Operator：可选择“照看这趟行程”，并通过原生 Agent/计划权限接口提交需求、检查状态、审批调整。
-- 你也可以进 `/v8/live` 看完整旧版实时行程工作台，验证 AgentRun 与工具记录。普通 Copilot 聊天的 `FALLBACK` 不能冒充 Hermes Agent。
+- 你也可以进 `/v8/live` 查看旧版实时行程工作台中的 AgentRun 与工具记录。普通 Copilot 离线回答标记为 `FALLBACK`。
 
-**注意：** R107/R108 保存的私人 Pocket Walk 必须先在 DRAFT 中单独体验；启动正式 PlanVersion 是另一条需要额外用户确认的路线，不保证 GO 还能继续使用。可新建第二个 DRAFT 来分别体验两种模式。
+R107/R108 的私人 Pocket Walk 在 DRAFT 中体验。正式 PlanVersion 需要用户另行确认；可分别创建两个 DRAFT 体验两种流程。
 
 ## 4. 只验证模型的 tool_calls 协议（可选，一发真实请求）
 
@@ -105,22 +105,22 @@ py -3.13 trial\probe_wb2api_agent.py
 - 只输出 `TOOL_FRAME_PASS`、`CHAT_ONLY_OR_UNVERIFIED` 或 HTTP/连接错误、模型名、`usage.credit`，不回显密钥或聊天内容；
 - 此请求**可能消耗积分**。在确认网关付费末端是否禁用后再运行。
 
-出现 `TOOL_FRAME_PASS` 只表示模型返回了工具调用帧。还必须完成一个 **真实 signed Journey** 的 AgentRun，产生可核查的工具步骤和权限结果，才算项目 Agent 可用。
+`TOOL_FRAME_PASS` 表示模型返回工具调用帧。下一步是在真实 signed Journey 中运行 AgentRun，并检查服务器保存的工具步骤和授权结果。
 
 ## 5. 验收三档
 
-| 级别 | 什么能证明 | 什么不能证明 |
+| 阶段 | 完成条件 | 下一步 |
 |---|---|---|
-| L0 配置 | `/agent/runtime-status` 显示 `HERMES_COMPAT_ENDPOINT` | 模型已响应、工具可用 |
-| L1 协议 | `TOOL_FRAME_PASS` + 实际模型、credit | CityNexus Agent 完整执行 |
-| L2 Agent | 在真实签名 Journey 通过模型自主调用工具，服务器生成 AgentRun/tool_steps 和授权决策，刷新后仍可读 | 物理到场、第三方支付和外部事实永远正确 |
-| L3 产品 | 用户在 `/revolution` 用真实地点和真实需求触发/读懂 Agent 结果，手机亲测同版本 | 自动等于人工确认 |
+| L0 配置 | `/agent/runtime-status` 显示 `HERMES_COMPAT_ENDPOINT` | 发起一次模型请求，检查响应 |
+| L1 协议 | `TOOL_FRAME_PASS`，并记录模型与 `usage.credit` | 在签名 Journey 中启动 AgentRun |
+| L2 Agent | 真实签名 Journey 保存 AgentRun、tool_steps 和授权决策；刷新后仍可读取 | 在手机上验收完整用户流程 |
+| L3 产品 | 用户在 `/revolution` 用真实地点和需求完成 Agent 流程，并在手机上验收同一版本 | 现场信息、支付和到场状态各自查看对应记录 |
 
-工具请求可能只得到 chat 内容、不支持 function calling、遇到 503 cooling、调用超时或返回模型错误。**不要降低 AgentRun 证据要求来报完成，也不要无限重试可能产生费用的调用。**
+工具请求可能返回普通文本、503、超时或模型错误。记录本次结果，并按请求限额处理后续重试。
 
 ## 6. 秘钥、费用及可用性
 
-- 用户原始教程在上传的 Markdown 中直接包含了完整网关 Key。它**没有被本次写入 GitHub**，建议在 wb2api 网关里轮换这个已经出现在聊天附件中的凭据。
+- 用户原始教程附件包含网关 Key；本次提交未加入该凭据。请在 wb2api 网关轮换此 Key。
 - 网关 7865 最末端仍是可能付费的 `cn:space-bunny`；如果你的硬要求是绝对零积分，按原教程移除其路由兜底并重启 free-router，随后允许所有免费模型冷却时报 503。
-- 用户隐私：只有用户主动启动 Agent / 提交行程意图才允许传递模型上下文；模型输出不能代替服务器地点事实、授权、承诺或付款凭据。
-- 本次远程 GitHub 施工**没有直接运行用户电脑的 WorkBuddy2API，也没有验证真实网关返回 tool_calls**。本机运行结果必须按以上等级如实记录。
+- 用户点击启动 Agent 或提交行程意图后，模型才接收对应上下文。地点、授权、承诺和付款状态来自服务器记录。
+- 本次完成远程源码核对；本机 WorkBuddy2API 与真实 `tool_calls` 结果待实测。

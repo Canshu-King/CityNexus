@@ -69,7 +69,7 @@ export function MomentScoutCard({
     if (!sharedStopTarget) {
       setMessage(zh
         ? "当前共同集合点没有可公开使用的 WGS84 坐标；没有打开地图。"
-        : "The current shared stop has no public WGS84 coordinates, so no map was opened.");
+        : "This shared stop has no map pin.");
       return;
     }
     try {
@@ -99,7 +99,7 @@ export function MomentScoutCard({
       setLiveReceipt(null);
       setLiveSelectedCandidateId("");
       setMessage(zh
-        ? "这组实时地点线索已过期；如需继续，请再次明确同意并搜索。"
+        ? "地点搜索已过期，请重新授权后搜索。"
         : "These live place leads expired. Give consent again to run a new search.");
     }, delay);
     return () => window.clearTimeout(timeout);
@@ -120,8 +120,8 @@ export function MomentScoutCard({
       if (!locationObservationId) {
         setShowSharedStopFallback(Boolean(sharedStopTarget));
         setMessage(zh
-          ? "没有取得这一次的位置；没有生成附近推荐。你可以打开当前共同集合点的公共地图，或继续共同计划。"
-          : "No one-time location was available, so no nearby options were generated. Open the current shared stop on a public map or continue the shared plan.");
+        ? "未获取当前位置，附近推荐未生成。可打开公共会合点地图。"
+          : "Share your location to find nearby places, or open the shared stop on a map.");
         return;
       }
       const value = await cityNexusApi.scoutMemberMoment(
@@ -133,13 +133,13 @@ export function MomentScoutCard({
       setReceipt({ value, locationObservationId });
       if (value.scout_state === "NO_GROUNDED_OPTIONS") {
         setMessage(zh
-          ? "附近没有可核实的已知地点；当前共同计划保持不变。"
-          : "There are no grounded known places nearby. Your shared Journey stays unchanged.");
+          ? "附近暂无可用地点。"
+          : "No nearby places are available.");
       }
     } catch {
       setMessage(zh
-        ? "暂时无法查找附近体验；共享行程没有改变。请刷新位置后重试。"
-        : "Nearby discovery is unavailable right now. The shared Journey is unchanged; refresh your location and try again.");
+        ? "附近搜索暂不可用，请刷新位置。"
+        : "Nearby search is unavailable. Refresh your location.");
     } finally {
       setBusy(false);
     }
@@ -163,7 +163,7 @@ export function MomentScoutCard({
           interest,
           radius_m: 1200,
           message: zh
-            ? "没有取得这一次的精确位置；外部地点服务没有收到搜索请求。"
+            ? "未读取到位置，搜索未开始。请重试定位。"
             : "A fresh location was unavailable; the external place provider was not contacted.",
           candidates: [],
         });
@@ -200,10 +200,10 @@ export function MomentScoutCard({
         radius_m: 1200,
         message: locationUnavailable
           ? (zh
-            ? "这次位置已过期或不够精确；没有向外部地点服务发送搜索。请重新读取位置。"
-            : "This location is stale or imprecise; no search was sent to the external provider. Refresh your location.")
+            ? "位置已过期或精度不足，请重新定位后搜索。"
+            : "Refresh your location before searching nearby.")
           : (zh
-            ? "实时地点服务暂时不可用；已知地点和手动选择仍可继续使用。"
+            ? "实时地点搜索暂不可用，可选已知地点。"
             : "Live place data is unavailable right now. Known places and manual choices remain available."),
         candidates: [],
       });
@@ -228,8 +228,8 @@ export function MomentScoutCard({
       setLiveReceipt(null);
       setLiveSelectedCandidateId("");
       setMessage(zh
-        ? "已把你确认的 OSM 地点加入公共地点目录，并准备好本人可见的私人停留；路线和返程时间仍未核实。"
-        : "Your confirmed OSM place is in the public place catalog and your private stop is ready. Route and return time remain unverified.");
+        ? "已将确认的 OSM 地点加入公共目录，并准备好私人停留。"
+        : "The confirmed OSM place is in the public catalog and your private stop is ready.");
       try {
         await onUpdated();
       } catch {
@@ -246,25 +246,25 @@ export function MomentScoutCard({
         setLiveReceipt(null);
         setLiveSelectedCandidateId("");
         setMessage(zh
-          ? "共同会合时间已过，不能继续创建私人停留；请先跟进当前共享行程。"
+          ? "会合时间已过，无法新增私人停留。请更新共同计划。"
           : "The shared rendezvous time has passed. Don't start a new private stop; check the current shared Journey.");
       } else if (detail.includes("SCOUT_EXPIRED")) {
         setLiveReceipt(null);
         setLiveSelectedCandidateId("");
         setMessage(zh
-          ? "这组实时地点线索或共同会合安排已过期；请刷新后重新查找并再次同意外部搜索。"
+          ? "地点或会合安排已过期，请刷新并重新授权搜索。"
           : "These live leads or the shared rendezvous expired. Refresh, search again, and give consent again.");
       } else if (detail.includes("Start the Journey Operator before planning a side trip")) {
         setMessage(zh
-          ? "请先点击「照看这趟行程」开启 Journey Operator，再确认这条私人支线。实时地点回执仍保留。"
+          ? "请先开启「照看这趟行程」，再确认私人支线。"
           : "Start Journey Operator on this page, then confirm this private stop. The live result is still available.");
       } else if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
         setMessage(zh
           ? "你的行程成员身份无效或已失效；没有替其他成员创建私人支线。"
-          : "Your Journey membership or sign-in is no longer valid. No stop was created for another member.");
+          : "Sign in with your Journey member account to add a private stop.");
       } else {
         setMessage(zh
-          ? "地点确认未完成；请刷新查看当前支线状态后再试。"
+          ? "地点确认未完成，请刷新后重试。"
           : "The place was not confirmed. Refresh to check the current private-stop state before trying again.");
       }
       try {
@@ -294,8 +294,8 @@ export function MomentScoutCard({
       setReceipt(null);
       setSelectedPlaceId("");
       setMessage(zh
-        ? "私人停留已准备好；路线时间仍未核实。共同会合点和共享计划未改变。"
-        : "Your private stop is ready. Route time remains unverified; the rendezvous and shared plan are unchanged.");
+        ? "私人停留已准备好。"
+        : "Your private stop is ready.");
       try {
         await onUpdated();
       } catch {
@@ -312,12 +312,12 @@ export function MomentScoutCard({
         : "";
       if (detail.includes("Start the Journey Operator before planning a side trip")) {
         setMessage(zh
-          ? "请先在本页点击「照看这趟行程」开启 Journey Operator，再重新查找并确认私人停留。尚未创建私人支线。"
-          : "First tap 'Take care of this trip' to start Journey Operator on this page, then scout and confirm again. No private stop was created.");
+          ? "请先开启「照看这趟行程」，再搜索并确认私人停留。"
+          : "Start Journey Operator before adding a private stop.");
       } else if (error instanceof CityNexusApiError && [401, 403].includes(error.status)) {
         setMessage(zh
           ? "你的行程成员身份无效或已失效，请重新登录自己的账号。没有替其他成员创建私人支线。"
-          : "Your Journey membership or sign-in is no longer valid. Sign in as yourself; no stop was created for another member.");
+          : "Sign in with your Journey member account to add a private stop.");
       } else if (error instanceof CityNexusApiError && error.status === 409) {
         setMessage(zh
           ? "推荐、共同会合安排或当前私人支线状态已经变化。请刷新再查找；如果分离意图已生效，可以继续完成私人地点选择。"
@@ -351,8 +351,8 @@ export function MomentScoutCard({
       <strong>{zh ? "附近有什么可以顺路玩？" : "Find a quick adventure nearby"}</strong>
       <small>
         {zh
-          ? "仅在你点击后读取一次当前位置；距离是直线距离，不是步行时间。推荐仅本人可见。"
-          : "A single foreground location sample is requested only after you tap. Distance is straight-line, not walking time; suggestions are visible only to you."}
+          ? "点击后读取一次当前位置。推荐仅你可见，距离以直线计算。"
+          : "Tap to share one current-location sample. Suggestions are visible only to you; distances are straight-line."}
       </small>
       <label>
         {zh ? "个人时间偏好" : "Personal time budget"}
@@ -419,8 +419,8 @@ export function MomentScoutCard({
         <div role="group" data-testid="moment-scout-live-consent">
           <small>
             {zh
-              ? "同意后会主动读取一次前台位置：位置观察保存于 Journey，可能改变同行者可见的粗粒度队伍位置状态；外部 OpenStreetMap 地点服务收到你附近的搜索中心。同行者不会自动收到你的精确起点、搜索兴趣和未选择地点。地点可能过时、关闭或不可达；取消不会发送外部查询。"
-              : "With consent, one foreground observation is stored on this Journey and may change companions' coarse group-presence view. The external OpenStreetMap place provider receives the nearby search center. Companions do not automatically receive your precise origin, search interest, or unselected places. Leads may be outdated, closed or unreachable; cancelling sends no external query."}
+              ? "授权后读取一次当前位置并发送搜索中心至 OpenStreetMap；同行者仅看到队伍概况。"
+              : "With consent, your current location is sent to OpenStreetMap; companions see only coarse group status."}
           </small>
           <button
             type="button"
@@ -445,7 +445,7 @@ export function MomentScoutCard({
           <strong>{zh ? "先回到当前共同集合点" : "Return to the current shared stop"}</strong>
           <small>
             {zh
-              ? `当前位置没有取得；你可以打开「${sharedStopTarget.name}」的公共地图。这里只发送公开集合点坐标，不发送当前位置，也不会请求附近地点服务。`
+              ? `暂时无法读取当前位置。你可以打开「${sharedStopTarget.name}」的公共地图；仅发送该地点坐标。`
               : `Your current location was unavailable. Open the public map for “${sharedStopTarget.name}”. Only the public shared-stop coordinates are sent; your current location is not shared and no nearby provider request is made.`}
           </small>
           <button
@@ -474,35 +474,35 @@ export function MomentScoutCard({
           {rendezvous?.time_state === "UNKNOWN" && (
             <small role="status" data-testid="moment-scout-rendezvous-time-warning">
               {zh
-                ? "共同会合时间未知；离开前请核对共享计划。路线时间也未核实。"
-                : "The shared rendezvous time is unknown. Check the shared plan before leaving; route time is also unverified."}
+                ? "共同会合时间未知；离开前请核对共享计划。路线时间待查询。"
+                : "Shared meeting time is unknown. Check the plan before leaving; route time is pending."}
             </small>
           )}
           {rendezvous?.time_state === "PAST" && (
             <small role="alert" data-testid="moment-scout-rendezvous-time-warning">
               {zh
-                ? "下一共同会合时间已过，不能创建私人停留；请继续共同计划。"
+                ? "会合时间已过，无法新增私人停留。请更新共同计划。"
                 : "The next shared rendezvous time has passed, so a private stop cannot be started. Continue the shared plan."}
             </small>
           )}
           {rendezvous?.time_state === "AVAILABLE" && shortWindow && (
             <small role="status" data-testid="moment-scout-rendezvous-time-warning">
               {zh
-                ? `距离会合约 ${rendezvous.minutes_until} 分钟，少于你选的 ${receipt.value.budget_minutes} 分钟偏好；路线时间未核实。`
-                : `About ${rendezvous.minutes_until} minutes remain before the rendezvous, less than your ${receipt.value.budget_minutes}-minute preference. Route time is unverified.`}
+                ? `距会合约 ${rendezvous.minutes_until} 分钟，少于你设定的 ${receipt.value.budget_minutes} 分钟；路线时间待查询。`
+                : `About ${rendezvous.minutes_until} minutes remain, below your ${receipt.value.budget_minutes}-minute preference. Route time is pending.`}
             </small>
           )}
           {receipt.value.candidates.map((candidate) => (
             <article key={candidate.place_id} data-testid="moment-scout-candidate" data-place-id={candidate.place_id}>
               <strong>{candidate.name}</strong>
               <small>
-                {candidate.category} · {zh ? `直线 ${candidate.straight_line_distance_m} 米` : `${candidate.straight_line_distance_m} m straight line, not a route ETA`}
+                {candidate.category} · {zh ? `直线 ${candidate.straight_line_distance_m} 米` : `${candidate.straight_line_distance_m} m straight-line distance`}
               </small>
               <small>
                 {candidate.place_provenance === "DEMO_FIXTURE"
-                  ? (zh ? "来源：演示 / 夹具地点" : "Source: demo / fixture place")
+                  ? (zh ? "演示地点" : "Demo place")
                   : `Source: ${candidate.place_provenance.replace("CITY_PLACE_CATALOG:", "")}`}
-                {zh ? " · 营业状态未知 · 会合适配未核实" : " · opening status unknown · return fit unverified"}
+                {zh ? " · 营业与返场安排待确认" : " · opening and return details pending"}
               </small>
               <button
                 type="button"
@@ -521,8 +521,8 @@ export function MomentScoutCard({
             <div data-testid="moment-scout-confirmation">
               <small>
                 {zh
-                  ? `确认先去「${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}」，再回到「${receipt.value.rendezvous.place_name}」${rendezvousTime ? `（${rendezvousTime}）` : ""}会合。${rendezvous?.time_state === "UNKNOWN" ? "会合时间未知，请核对共享计划。" : shortWindow ? `剩余时间少于 ${receipt.value.budget_minutes} 分钟偏好。` : ""}路线时间尚未核实。`
-                  : `Go to ${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}, then rejoin at ${receipt.value.rendezvous.place_name}${rendezvousTime ? ` (${rendezvousTime})` : ""}.${rendezvous?.time_state === "UNKNOWN" ? " Rendezvous time is unknown; check the shared plan." : shortWindow ? ` Less than your ${receipt.value.budget_minutes}-minute preference remains.` : ""} Route time is unverified.`}
+                  ? `先去「${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}」，再回到「${receipt.value.rendezvous.place_name}」${rendezvousTime ? `（${rendezvousTime}）` : ""}会合。${rendezvous?.time_state === "UNKNOWN" ? "会合时间未知，请核对共享计划。" : shortWindow ? `剩余时间少于 ${receipt.value.budget_minutes} 分钟。` : ""}路线时间待查询。`
+                  : `Visit ${receipt.value.candidates.find((item) => item.place_id === selectedPlaceId)?.name}, then return to ${receipt.value.rendezvous.place_name}${rendezvousTime ? ` (${rendezvousTime})` : ""}.${rendezvous?.time_state === "UNKNOWN" ? " Meeting time is unknown; check the shared plan." : shortWindow ? ` Less than ${receipt.value.budget_minutes} minutes remain.` : ""} Route time is pending.`}
               </small>
               <button
                 type="button"
@@ -538,7 +538,7 @@ export function MomentScoutCard({
               </button>
             </div>
           )}
-          <small>{zh ? "选项是附近地点线索，不代表营业、可达或能按时返回。" : "These are nearby place leads, not proof of opening, route access, or an on-time return."}</small>
+          <small>{zh ? "附近地点线索 · 查看各地点的营业与路线信息。" : "Nearby leads · see opening and route details on each option."}</small>
         </div>
       )}
       {liveReceipt && (
@@ -581,12 +581,12 @@ export function MomentScoutCard({
               <small>
                 {candidate.category} · {zh
                   ? `直线 ${candidate.straight_line_distance_m} 米`
-                  : `${candidate.straight_line_distance_m} m straight line, not a route ETA`}
+                  : `${candidate.straight_line_distance_m} m straight-line distance`}
               </small>
               <small>
                 {candidate.osm_type}/{candidate.osm_id} · {zh
-                  ? "营业状态未知 · 费用未知 · 路线和会合适配未核实"
-                  : "opening and cost unknown · route and return fit unverified"}
+                  ? "营业、费用、路线与返场安排待确认"
+                  : "Opening, cost, route and return details pending"}
               </small>
               <a href={candidate.source_url} target="_blank" rel="noreferrer">
                 {zh ? "查看 OpenStreetMap 来源" : "View OpenStreetMap source"}
@@ -608,8 +608,8 @@ export function MomentScoutCard({
             <div data-testid="moment-scout-live-confirmation">
               <small>
                 {zh
-                  ? `确认去「${liveReceipt.candidates.find((item) => item.candidate_id === liveSelectedCandidateId)?.name}」，然后返回当前共同会合点「${liveReceipt.rendezvous.place_name}」。营业、路线和按时返回能力都尚未核实。`
-                  : `Confirm the place, then return to the current shared rendezvous at ${liveReceipt.rendezvous.place_name}. Opening, route and on-time return are unverified.`}
+                  ? `确认前往「${liveReceipt.candidates.find((item) => item.candidate_id === liveSelectedCandidateId)?.name}」，然后返回「${liveReceipt.rendezvous.place_name}」。出发前查看营业时间与路线。`
+                  : `Confirm this place, then return to ${liveReceipt.rendezvous.place_name}. Check opening hours and route before leaving.`}
               </small>
               <button
                 type="button"
@@ -632,8 +632,8 @@ export function MomentScoutCard({
           )}
           <small>
             {zh
-              ? "外部地点线索仅在本人确认选择后加入公共地点目录；搜索位置、兴趣和未选择候选不会写入同行者可读记录。"
-              : "Only the place you confirm is added to the public place catalog. Your search location, interest and unselected leads are not written to companion-readable Journey records."}
+              ? "选定地点后才会加入公共目录；未选搜索结果不会同步给同行者。"
+              : "Selected places enter the public catalog; searches stay private."}
           </small>
         </div>
       )}

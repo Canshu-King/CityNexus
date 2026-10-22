@@ -23,8 +23,8 @@ export function StayExplorer({ data, selected, onSelect }: { data: V8Data; selec
           <b>{zh ? "还没有可用的住宿候选" : "No stay candidates yet"}</b>
           <p>
             {zh
-              ? "我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。"
-              : "We have no real accommodation data yet, so we will not show you an invented price card. Choose your plan first, then come back to search stays."}
+              ? "选择行程后即可搜索住宿。"
+              : "Choose a plan to search stays."}
           </p>
         </div>
       </section>
@@ -77,8 +77,7 @@ function pricePair(
   if (!known) {
     return (
       <strong data-testid="stay-price-unknown">
-        {zh ? "价格未知" : "Price unavailable"}
-        <small>{zh ? "（供应商未提供房价）" : " (no provider rate)"}</small>
+        {zh ? "价格待供应商提供" : "Provider rate pending"}
       </strong>
     );
   }
@@ -126,8 +125,8 @@ function priceLabel(
   // stay arrives as 0; printing "CNY 0.00" would read as a free room.
   if (minor === null || minor === undefined || minor <= 0) {
     return zh
-      ? "价格未知（供应商未提供房价）"
-      : "Price unknown (no provider rate)";
+      ? "价格待供应商提供"
+      : "Provider rate pending";
   }
   return `${money(minor, currency, locale)} · ${currency || "CNY"}`;
 }
@@ -145,7 +144,7 @@ function cancellationLabel(summary: string | null | undefined, zh: boolean): str
 function evidenceLabel(option: V8Data["options"][number] | null | undefined, zh: boolean): string {
   const confidence = option?.stay?.evidence?.confidence;
   if (typeof confidence !== "number" || confidence <= 0) {
-    return zh ? "暂无供应商证据" : "No provider evidence";
+    return zh ? "暂无住宿来源" : "No stay source yet";
   }
   return zh
     ? `供应商证据置信度 ${Math.round(confidence * 100)}%`

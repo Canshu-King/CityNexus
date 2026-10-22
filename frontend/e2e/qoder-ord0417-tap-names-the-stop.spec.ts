@@ -43,11 +43,10 @@
  * Both bought their pixels out of the framing.  The sentence is therefore laid out inside the caption
  * box the camera already measured.
  *
- * What this file does NOT claim: that tapping a pin never leaves a pin under the band.  Selecting also
- * pans the camera (ORD-0390's `easeTo`), and on the untouched tip that pan alone puts two pins under
- * the band at 320x653 and moves the Copilot pill out of the reachable set -- measured by the same
- * census, recorded in `pins_covered_by_band_after_the_pan` rather than asserted, and judged in the
- * delivery by the tip-vs-candidate diff.  A clustering/framing order owns that, not this one.
+ * Pin behavior: tapping a pin updates the caption. Selection also pans the camera (ORD-0390's `easeTo`),
+ * and on the untouched tip that pan alone puts two pins under the band at 320x653 and moves the Copilot
+ * pill out of the reachable set. The same census records this in `pins_covered_by_band_after_the_pan`;
+ * clustering and framing are handled in a separate change.
  *
  * The control set, the floor and the (name, n-th-of-that-name) identity key are copied from
  * `e2e/qoder-ord0407-empty-state-actions.spec.ts` deliberately: a lane that re-defines the ruler to

@@ -26,7 +26,7 @@ test.use({ viewport: VIEWPORT, hasTouch: true });
 const MODEL_WORDS =
   "Detected hard constraints: sleep in/no pre-10 plans, West Lake night view is a hard requirement.";
 /** This lane's own wording for the two labelled parts of the technical disclosure. */
-const FROZEN_MODEL_LABEL_ZH = "模型原始输出（未翻译，不代表本界面的结论）";
+const FROZEN_MODEL_LABEL_ZH = "模型原文";
 const FROZEN_REASON_LABEL_ZH = "服务器给出的原因";
 
 async function openSheetWithModelWords(page: Page, summary: string | null, nodeId: string) {
@@ -229,7 +229,7 @@ test("ord0240-2-the-disclosure-says-whose-words-they-are — 展开必须写明�
         head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
         label: said,
         rawModelText: raw,
-        rule: "原文照引且标明\"模型原始输出（未翻译）\"；不进任何字典",
+        rule: "模型原文保持原样，语言标签由界面提供",
       },
       null,
       2,

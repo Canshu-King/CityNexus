@@ -199,7 +199,7 @@ def _disruption_semantic_status(value: str) -> tuple[str, str]:
             "停止营业", "停电", "停水", "closed", "closure", "shut", "out of service", "under maintenance",
             "no longer open", "power outage", "water outage", "堵车", "拥堵", "交通管制", "封路", "绕行", "路封",
             "道路施工", "高速封闭", "traffic", "congestion", "road closed", "road closure", "gridlock", "detour",
-            "roadworks", "台风", "暴雨", "大雨", "雷暴", "雷阵雨", "下雪", "暴雪", "冰雹", "高温", "寒潮", "大风",
+            "roadworks", "台风", "暴雨", "大雨", "下雨", "降雨", "阵雨", "小雨", "雷暴", "雷阵雨", "下雪", "暴雪", "冰雹", "高温", "寒潮", "大风",
             "沙尘", "雾霾", "洪水", "内涝", "地震", "typhoon", "storm", "heavy rain", "downpour", "thunder", "snow",
             "blizzard", "hail", "heatwave", "heat wave", "cold snap", "gale", "flood", "earthquake", "raining", "rain",
         ),
@@ -261,7 +261,12 @@ def disruption_event_type(message: str) -> str | None:
     )
     weather = _has_any(
         value,
-        ("台风", "暴雨", "大雨", "雷暴", "雷阵雨", "下雪", "暴雪", "冰雹", "高温", "寒潮", "大风", "沙尘", "雾霾", "洪水", "内涝", "地震", "typhoon", "storm", "heavy rain", "downpour", "thunder", "snow", "blizzard", "hail", "heatwave", "heat wave", "cold snap", "gale", "flood", "earthquake", "raining", "rain"),
+        (
+            "台风", "暴雨", "大雨", "下雨", "降雨", "阵雨", "小雨", "雷暴", "雷阵雨", "下雪", "暴雪",
+            "冰雹", "高温", "寒潮", "大风", "沙尘", "雾霾", "洪水", "内涝", "地震", "typhoon", "storm",
+            "heavy rain", "downpour", "thunder", "snow", "blizzard", "hail", "heatwave", "heat wave", "cold snap",
+            "gale", "flood", "earthquake", "raining", "rain",
+        ),
     )
     if not any((schedule, traffic, closure, weather)):
         return None

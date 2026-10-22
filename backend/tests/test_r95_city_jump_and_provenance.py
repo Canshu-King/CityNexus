@@ -70,7 +70,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         for index, name in enumerate(("R95 Gallery", "R95 Library"), start=1):
             candidates.append(
                 DiscoveryCandidate(
-                    provider_key="TEST_PROVIDER",
+                    provider_key="overpass",
                     external_id=f"overpass:node/95{index:03d}",
                     name=name,
                     category="gallery" if index == 1 else "library",
@@ -80,7 +80,18 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
                     opening_hours={"status": "NORMALIZED_VALID", "raw": "10:00-18:00"},
                     metadata={"osm_id": f"node/95{index:03d}", "tags": {"name": name}},
                     distance_m=100.0 + index,
-                    cost_evidence={"status": "UNKNOWN", "source": "TEST_PROVIDER"},
+                    cost_evidence=(
+                        {
+                            "status": "KNOWN",
+                            "amount_minor": 0,
+                            "currency": None,
+                            "currency_agnostic": True,
+                            "evidence_basis": "OSM_FEE_NO",
+                            "source": "TEST_PROVIDER",
+                        }
+                        if index == 2
+                        else {"status": "UNKNOWN", "source": "TEST_PROVIDER"}
+                    ),
                 )
             )
         return candidates, [{"endpoint": "http://127.0.0.1:8211/interpreter", "answered": True, "http_status": 200, "elements": 2}]
@@ -120,6 +131,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         assert city.status_code == 200, city.text
         city_body = city.json()
         assert city_body["status"] == "CITY_RESULTS"
+        assert city_body["provider_key"] == "nominatim"
         assert city_body["provider_provenance"] == "TEST_PROVIDER"
         assert city_body["results"][0]["selection_state"] == "CAMERA_ONLY_TAP_REQUIRED"
         assert city_body["results"][0]["source_url"].endswith("/relation/95001")
@@ -130,6 +142,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         )
         assert cached_city.status_code == 200, cached_city.text
         assert cached_city.json()["cache_hit"] is True
+        assert cached_city.json()["provider_key"] == "nominatim"
         assert city_calls == ["Shanghai"]
 
         discovery = client.post(
@@ -141,6 +154,7 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
                 "limit": 3,
                 "source_kind": "MANUAL_PUBLIC_CENTER",
                 "provider_consent": True,
+                "consented_provider": "overpass",
                 "latitude": 31.2304,
                 "longitude": 121.4737,
                 "coordinate_system": "WGS84",
@@ -151,7 +165,8 @@ def test_r95_city_search_requires_consent_and_controlled_provider_grade_survives
         body = discovery.json()
         assert body["provider_provenance"] == "TEST_PROVIDER"
         assert all(item["provider_provenance"] == "TEST_PROVIDER" for item in body["candidates"])
-        first, second = body["candidates"][:2]
+        first = next(item for item in body["candidates"] if item["external_id"] == "overpass:node/95001")
+        second = next(item for item in body["candidates"] if item["external_id"] == "overpass:node/95002")
 
         saved = client.post(
             f"/api/v1/journeys/{journey_id}/bootstrap-shortlist",
@@ -266,3 +281,48 @@ def test_r95_source_grade_operator_scheme_and_global_rate_guard(monkeypatch):
     finally:
         for key, value in previous.items():
             object.__setattr__(settings, key, value)
+
+
+def test_explicit_photon_city_search_uses_photon_operator_config(monkeypatch):
+    from types import SimpleNamespace
+
+    import app.execution.bootstrap_discovery as bootstrap
+
+    previous_enabled = settings.city_search_enabled
+    previous_nominatim_url = settings.city_search_base_url
+    previous_nominatim_agent = settings.city_search_user_agent
+    try:
+        object.__setattr__(settings, "city_search_enabled", True)
+        object.__setattr__(settings, "city_search_base_url", "https://nominatim.openstreetmap.org/search")
+        object.__setattr__(settings, "city_search_user_agent", "CityNexus/1.0 (nominatim@example.org)")
+        monkeypatch.setattr(
+            bootstrap,
+            "ExternalProviderSettings",
+            lambda: SimpleNamespace(
+                photon_enabled=True,
+                photon_base_url="https://photon.komoot.io",
+                photon_user_agent="CityNexus/1.0 (photon@example.org)",
+            ),
+        )
+
+        assert bootstrap._city_search_config_for("photon") == (
+            "photon",
+            "https://photon.komoot.io",
+            "CityNexus/1.0 (photon@example.org)",
+        )
+        assert bootstrap._city_search_config_for("nominatim") == (
+            "nominatim",
+            "https://nominatim.openstreetmap.org/search",
+            "CityNexus/1.0 (nominatim@example.org)",
+        )
+
+        monkeypatch.setattr(
+            bootstrap,
+            "ExternalProviderSettings",
+            lambda: SimpleNamespace(photon_enabled=False),
+        )
+        assert bootstrap._city_search_config_for("photon") is None
+    finally:
+        object.__setattr__(settings, "city_search_enabled", previous_enabled)
+        object.__setattr__(settings, "city_search_base_url", previous_nominatim_url)
+        object.__setattr__(settings, "city_search_user_agent", previous_nominatim_agent)

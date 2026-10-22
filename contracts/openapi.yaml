@@ -7,6 +7,52 @@ info:
 servers:
   - url: http://localhost:8000/api/v1
 paths:
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan:
+    post:
+      summary: Prepare Plan
+      operationId: prepare_plan_api_v1_journeys__journey_id__agent_goal_tasks__task_id__prepare_plan_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 160
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrepareDraft'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreparationResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /health:
     get:
       operationId: getHealth
@@ -2175,6 +2221,305 @@ paths:
       operationId: createEdgeObservation
       responses:
         '201': {description: Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}}}
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/place-media:
+    get:
+      operationId: getSignedGoalPlaceMedia
+      summary: Read licensed media for this signed owner's existing task source lead
+      parameters:
+        - {name: journey_id, in: path, required: true, schema: {type: string, format: uuid}}
+        - {name: task_id, in: path, required: true, schema: {type: string, format: uuid}}
+        - {name: candidate_id, in: query, required: true, schema: {type: string, minLength: 1, maxLength: 200}}
+      responses:
+        '200':
+          description: Source-bound image or an ordinary no-image fallback; never blocks itinerary editing
+          headers:
+            Cache-Control: {schema: {type: string}, description: private no-store}
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [candidate_id, place_id, journey_id, task_id, status, media]
+                properties:
+                  candidate_id: {type: string}
+                  place_id: {type: string}
+                  journey_id: {type: string, format: uuid}
+                  task_id: {type: string, format: uuid}
+                  status: {type: string, enum: [REAL_POI_PHOTO, NO_IMAGE, NO_PERMISSION, UNAVAILABLE]}
+                  cache_hit: {type: boolean}
+                  identity_status: {type: string}
+                  source_reference: {type: [string, 'null'], format: uri}
+                  source_wikidata_id: {type: [string, 'null']}
+                  media:
+                    type: [object, 'null']
+                    properties:
+                      place_id: {type: string}
+                      image_url: {type: string, format: uri}
+                      thumb_url: {type: [string, 'null'], format: uri}
+                      source_url: {type: string, format: uri}
+                      author: {type: string}
+                      license: {type: string}
+                      terms_url: {type: [string, 'null'], format: uri}
+                      can_show: {type: boolean}
+                      captured_at: {type: string, format: date-time}
+        '401': {description: Signed traveler required}
+        '403': {description: Journey member or owner scope denied}
+        '404': {description: Task or candidate does not belong to this Journey and owner}
+  /journeys/{journey_id}/members/me:
+    parameters:
+    - name: journey_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: getJourneyMemberMe
+      description: 'Does the caller hold a seat on this journey, as what, and until
+        when -- the one read a confirm button needs before it may be shown. The seat
+        words are the same three the member list already answers with (MEMBER_IN_FORCE,
+        MEMBER_LAPSED, MEMBER_WITHDRAWN), plus OWNER for the traveller the journey belongs
+        to, who holds a seat without holding a membership row. Credentials first: 401
+        `TRAVELER_CREDENTIALS_MISSING` when none was presented, 404 for a journey that
+        is not there, 403 `JOURNEY_MEMBER_REQUIRED` when the caller has no seat in force
+        -- and that 403 carries the seat that explains itself, so a screen can say "this
+        seat ended" rather than "you are lost".
+
+        '
+      responses:
+        '200':
+          description: The caller's own seat on this journey
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - journey_id
+                - traveler_id
+                - seat
+                - may_confirm_departure
+                properties:
+                  journey_id:
+                    type: string
+                    format: uuid
+                  traveler_id:
+                    type: string
+                  may_confirm_departure:
+                    type: boolean
+                  seat:
+                    type: object
+                    required:
+                    - seat_kind
+                    - role
+                    - member_state
+                    - in_force
+                    properties:
+                      seat_kind:
+                        type: string
+                        enum:
+                        - OWNER
+                        - MEMBER
+                        - NONE
+                      role:
+                        type:
+                        - string
+                        - 'null'
+                      member_id:
+                        type:
+                        - string
+                        - 'null'
+                      member_state:
+                        type: string
+                        enum:
+                        - MEMBER_IN_FORCE
+                        - MEMBER_LAPSED
+                        - MEMBER_WITHDRAWN
+                        - NO_MEMBERSHIP
+                      expires_at:
+                        type:
+                        - string
+                        - 'null'
+                      in_force:
+                        type: boolean
+        '401':
+          description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)
+        '403':
+          description: The caller holds no in-force seat on this journey (error.reason_code
+            JOURNEY_MEMBER_REQUIRED)
+        '404':
+          description: Journey not found
+  /journeys/{journey_id}/departure:
+    parameters:
+    - name: journey_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      operationId: getJourneyDeparture
+      description: 'One projection of "准备出发", read from durable rows only: which plan
+        versions this journey holds, what the server froze for each, whether that freeze
+        has passed, and the single gate word for the journey -- READY_TO_DEPART, ALREADY_RUNNING,
+        NO_PLAN_SELECTED, STALE_RECOMPOSE_REQUIRED, PLAN_INFEASIBLE or JOURNEY_NOT_PLANNABLE.
+        It writes nothing and asks no provider: a screen that looks at departure cannot
+        start a trip, and the gate is decided in one order (an ACTIVE journey is reported
+        as running before its evidence is judged). The stale-evidence words are the
+        same words the write doors raise for the same row -- `select` answers 409 STALE_RECOMPOSE_REQUIRED
+        for a candidate with nothing frozen, and `start` answers 409 STALE_RECOMPOSE_REQUIRED
+        when the frozen evidence has expired; both are pinned by name in the backend
+        suite, because this door mirrors those predicates rather than sharing them.
+        `feasibility.failures` carries the evaluator''s own strings whenever the gate
+        is PLAN_INFEASIBLE, so nothing is re-worded for the screen.
+
+        '
+      responses:
+        '200':
+          description: Departure projection for one journey the caller holds a seat
+            on
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - journey_id
+                - journey_status
+                - seat
+                - gate
+                - candidates
+                - next_action
+                - observed_at
+                properties:
+                  journey_id:
+                    type: string
+                    format: uuid
+                  journey_status:
+                    type: string
+                  active_plan_version_id:
+                    type:
+                    - string
+                    - 'null'
+                  current_activity_id:
+                    type:
+                    - string
+                    - 'null'
+                  seat:
+                    type: object
+                  gate:
+                    type: string
+                    enum:
+                    - READY_TO_DEPART
+                    - ALREADY_RUNNING
+                    - NO_PLAN_SELECTED
+                    - STALE_RECOMPOSE_REQUIRED
+                    - PLAN_INFEASIBLE
+                    - JOURNEY_NOT_PLANNABLE
+                  reason_detail:
+                    type:
+                    - string
+                    - 'null'
+                  selected_plan:
+                    type:
+                    - object
+                    - 'null'
+                  candidates:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - plan_version_id
+                      - version_no
+                      - status
+                      - evidence
+                      - feasibility
+                      properties:
+                        plan_version_id:
+                          type: string
+                          format: uuid
+                        version_no:
+                          type: integer
+                        planning_mode:
+                          type: string
+                        status:
+                          type: string
+                        source:
+                          type: string
+                        currency:
+                          type: string
+                        total_cost_minor:
+                          type: integer
+                        estimated_duration_min:
+                          type: integer
+                        activities_count:
+                          type: integer
+                        evidence:
+                          type: object
+                          required:
+                          - frozen
+                          - expired
+                          - reference_consistent
+                          properties:
+                            frozen:
+                              type: boolean
+                            snapshot_id:
+                              type:
+                              - string
+                              - 'null'
+                            expires_at:
+                              type:
+                              - string
+                              - 'null'
+                            expired:
+                              type:
+                              - boolean
+                              - 'null'
+                            reference_consistent:
+                              type: boolean
+                            detail:
+                              type:
+                              - string
+                              - 'null'
+                        feasibility:
+                          type: object
+                          properties:
+                            feasible:
+                              type:
+                              - boolean
+                              - 'null'
+                            failures:
+                              type: array
+                              items:
+                                type: string
+                            detail:
+                              type:
+                              - string
+                              - 'null'
+                  next_action:
+                    type: object
+                    required:
+                    - kind
+                    - door
+                    properties:
+                      kind:
+                        type: string
+                        enum:
+                        - select_or_start
+                        - generate_plans
+                        - recompose
+                        - none
+                      door:
+                        type:
+                        - string
+                        - 'null'
+                  observed_at:
+                    type: string
+        '401':
+          description: No traveller credentials presented (error.reason_code TRAVELER_CREDENTIALS_MISSING)
+        '403':
+          description: The caller holds no in-force seat on this journey (error.reason_code
+            JOURNEY_MEMBER_REQUIRED)
+        '404':
+          description: Journey not found
+
 components:
   parameters:
     DemoResetToken:
@@ -2254,6 +2599,133 @@ components:
         application/json:
           schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   schemas:
+    SlotTime:
+      properties:
+        day_index:
+          type: integer
+          minimum: 0.0
+          title: Day Index
+        slot_index:
+          type: integer
+          minimum: 0.0
+          title: Slot Index
+        start_time:
+          type: string
+          pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$
+          title: Start Time
+        end_time:
+          type: string
+          pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$
+          title: End Time
+      additionalProperties: false
+      type: object
+      required:
+      - day_index
+      - slot_index
+      - start_time
+      - end_time
+      title: SlotTime
+    PrepareDraft:
+      properties:
+        expected_revision:
+          type: integer
+          minimum: 0.0
+          title: Expected Revision
+        schedule:
+          items:
+            $ref: '#/components/schemas/SlotTime'
+          type: array
+          minItems: 1
+          title: Schedule
+      additionalProperties: false
+      type: object
+      required:
+      - expected_revision
+      - schedule
+      title: PrepareDraft
+    PreparationGap:
+      properties:
+        sequence_no:
+          type: integer
+          title: Sequence No
+        title:
+          type: string
+          title: Title
+        kind:
+          type: string
+          title: Kind
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
+        status:
+          type: string
+          const: UNKNOWN
+          title: Status
+      type: object
+      required:
+      - sequence_no
+      - title
+      - kind
+      - place_id
+      - status
+      title: PreparationGap
+    PreparationResult:
+      properties:
+        journey_id:
+          type: string
+          title: Journey Id
+        task_id:
+          type: string
+          title: Task Id
+        draft_revision:
+          type: integer
+          title: Draft Revision
+        plan_version_id:
+          type: string
+          title: Plan Version Id
+        status:
+          type: string
+          const: CANDIDATE
+          title: Status
+        selected:
+          type: boolean
+          const: false
+          title: Selected
+        activated:
+          type: boolean
+          const: false
+          title: Activated
+        slots_count:
+          type: integer
+          title: Slots Count
+        gaps:
+          items:
+            $ref: '#/components/schemas/PreparationGap'
+          type: array
+          title: Gaps
+        mobility_frozen:
+          type: boolean
+          const: false
+          title: Mobility Frozen
+        idempotency_replay:
+          type: boolean
+          title: Idempotency Replay
+          default: false
+      type: object
+      required:
+      - journey_id
+      - task_id
+      - draft_revision
+      - plan_version_id
+      - status
+      - selected
+      - activated
+      - slots_count
+      - gaps
+      - mobility_frozen
+      title: PreparationResult
     PlanningMode:
       type: string
       enum: [balanced, budget, explore, strict_schedule]

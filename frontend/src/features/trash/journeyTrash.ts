@@ -63,8 +63,8 @@ export function undeleteJourney(journeyId: string): Promise<{ id: string; title:
  *
  * `error.reason_code` is where ORD-0101 put it (`backend/app/main.py:598` -- `http_error` forwards
  * `getattr(exc, "reason_code", null)`), and the two names this door can answer with are
- * `JOURNEY_NOT_DELETED` (409) and `JOURNEY_NOT_FOUND` (404). Returning `null` is not a failure: it
- * means this device did not read a name, and the screen then says so instead of picking a sentence.
+ * `JOURNEY_NOT_DELETED` (409) and `JOURNEY_NOT_FOUND` (404). A null result means this device has
+ * no refusal code; the screen uses its fallback sentence.
  */
 export function refusalReasonCode(cause: unknown): string | null {
   if (!(cause instanceof RejectionWithFacts)) return null;

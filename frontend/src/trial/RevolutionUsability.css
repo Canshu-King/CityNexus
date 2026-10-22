@@ -1,7 +1,7 @@
 
 /* Scoped to the standalone /revolution trial. Never changes Qoder/V8. */
 .rev-firstlook .rev-firstlook-content{width:100%;max-width:1120px;min-width:0;margin:auto}
-.rev-firstlook .rev-firstlook-journey{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:20px!important;width:100%!important;align-items:start!important}
+.rev-firstlook:not(.rev-mobile-v1) .rev-firstlook-journey{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:20px!important;width:100%!important;align-items:start!important}
 .rev-firstlook .rev-firstlook-journey>div{min-width:0;width:auto!important;max-width:750px}
 .rev-firstlook .rev-firstlook-journey h1{font-size:clamp(29px,4vw,46px)!important;line-height:1.25!important;word-break:keep-all;white-space:normal!important;max-width:100%!important}
 .rev-firstlook .rev-firstlook-journey p{font-size:15px;line-height:1.8}
@@ -38,8 +38,8 @@
 .rev-firstlook .rev-optional-import{border-top:1px solid #d3e4d8;padding-top:14px;margin-top:18px}
 @media(max-width:720px){
 .rev-firstlook .rev-firstlook-content{padding-inline:14px!important}
-.rev-firstlook .rev-firstlook-journey{grid-template-columns:minmax(0,1fr)!important}
-.rev-firstlook .rev-firstlook-journey>.rev-firstlook-reset{justify-self:start}
+.rev-firstlook:not(.rev-mobile-v1) .rev-firstlook-journey{grid-template-columns:minmax(0,1fr)!important}
+.rev-firstlook:not(.rev-mobile-v1) .rev-firstlook-journey>.rev-firstlook-reset{justify-self:start}
 .rev-firstlook .rev-guide-steps{grid-template-columns:1fr}
 .rev-firstlook .rev-guide-steps>button{min-height:106px!important}
 .rev-firstlook .rev-firstlook-real-ui{padding:12px!important}

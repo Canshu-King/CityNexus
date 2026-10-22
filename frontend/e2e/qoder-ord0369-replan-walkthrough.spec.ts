@@ -295,8 +295,8 @@ test.describe("ORD-0369 the teaching stage's replan leg", () => {
  * carries, and `qoder-model-words-are-labelled.spec.ts` stays the owner of the frozen label itself.
  */
 const SUMMARY = "第二天减少一个点位，保留夜景。";
-const NO_MODEL_LABEL_ZH = "服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）";
-const MODEL_LABEL_ZH = "模型原始输出（未翻译，不代表本界面的结论）";
+const NO_MODEL_LABEL_ZH = "服务器摘要";
+const MODEL_LABEL_ZH = "模型原文";
 
 async function submitWithMission(page: Page, mission: Record<string, unknown>, nodeId: string) {
   const seeded = (await (await page.request.get(`${BASE}/api/v1/demo/scene`)).json()) as { journey_id?: string };

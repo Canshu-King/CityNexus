@@ -196,7 +196,7 @@ export function evidenceWord(state: string | null, zh: boolean): string {
   if (state === "NO_FROZEN_EVIDENCE")
     return zh ? "这趟没有冻结证据" : "no frozen evidence on this trip";
   if (state === "NO_SCENARIO") return zh ? "台上没有场景" : "no scenario on stage";
-  return zh ? `服务器报的是 ${state}，我们不替它解释` : `the server reported ${state}; we do not interpret it`;
+  return zh ? `服务器状态：${state}` : `Server status: ${state}`;
 }
 
 /**

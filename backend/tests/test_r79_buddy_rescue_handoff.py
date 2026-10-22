@@ -198,7 +198,7 @@ def test_r79_signed_pair_accepts_private_public_handoff_without_changing_journey
     assert all(item["opening_hours_state"] == "UNKNOWN" for item in candidates["items"])
     assert all(item["evidence_grade"] == "DEMO_FIXTURE_NOT_LIVE_VERIFIED" for item in candidates["items"])
     selected = candidates["items"][-1]
-    assert "not live-verified" in selected["source_label"].lower()
+    assert "demo catalog fixture" in selected["source_label"].lower()
 
     unauthorized_candidates = client.get(
         f"/api/v1/journeys/{journey_id}/rendezvous-buddy-handoffs/candidates?signal_id={signal_id}",

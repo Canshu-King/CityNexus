@@ -85,8 +85,8 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
       key: "recovery_needs_decision",
       title: { zh: "恢复方案等你决定", en: "A recovery is waiting on your decision" },
       why: {
-        zh: "服务端把这一趟标为需要用户决定（`requires_user_decision` 为真），在你决定之前方案不会自己改。",
-        en: "The server flags this journey as needing a user decision (`requires_user_decision`), and the plan will not change itself before you choose.",
+        zh: "恢复方案等你决定后继续。",
+        en: "Choose how to continue this recovery.",
       },
       basis: { endpoint: EXPERIENCE, field: "recovery.requires_user_decision",
                anchor: { file: CONTRACT, line: 1923 } },

@@ -1,0 +1,28 @@
+{
+  "status": "RESULTS",
+  "reason_code": null,
+  "http_status": 200,
+  "places": [
+    {
+      "external_id": "amap:B0L2N5I2SO",
+      "provider_id": "B0L2N5I2SO",
+      "provider_key": "amap-web-service",
+      "name": "客家文化公园",
+      "category": "风景名胜;风景名胜相关;旅游景点",
+      "address": "石景路1号冠豸山景区",
+      "province": "福建省",
+      "city": "龙岩市",
+      "district": "连城县",
+      "adcode": "350825",
+      "citycode": "0597",
+      "requested_adcode": "350825",
+      "region_status": "MATCH",
+      "latitude": 25.706809,
+      "longitude": 116.775135,
+      "coordinate_system": "GCJ02"
+    }
+  ],
+  "elapsed_ms": 201,
+  "provider_call_id": "15a15b26-ef22-423e-988b-382f7d886292",
+  "execution": "OPERATOR_PROVIDER_PROBE_NOT_MODEL_SELECTED"
+}

@@ -1,9 +1,7 @@
 /**
  * Route/product error boundary.
  *
- * A runtime error in any panel must never trap the traveller on a white screen.
- * The boundary always explains what happened, reassures that trip data is safe,
- * and offers retry / back-to-today / reload.
+ * Keeps a panel error recoverable and offers retry / back-to-today / reload.
  */
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
@@ -39,7 +37,7 @@ function fieldsText(fields: Fields | null): string {
 const COPY = {
   en: {
     title: "Something went wrong here",
-    body: "Your trip data has not been lost. You can retry this screen or go back to Today.",
+    body: "This screen failed to load. Retry or return to Today.",
     retry: "Try again",
     home: "Back to Today",
     reload: "Reload the app",
@@ -47,7 +45,7 @@ const COPY = {
   },
   zh: {
     title: "这里出了点问题",
-    body: "你的行程数据没有丢失。可以重试当前页面，或回到「今天」。",
+    body: "页面加载失败。重试或返回「今天」。",
     retry: "重试",
     home: "返回今天",
     reload: "重新加载",

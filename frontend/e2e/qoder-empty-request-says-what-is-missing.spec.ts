@@ -19,7 +19,7 @@ const VIEWPORT = { width: 390, height: 844 };
 test.use({ viewport: VIEWPORT, hasTouch: true });
 
 /** Held by this gate; the product constant is never imported. */
-const FROZEN_REASON_ZH = "还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。";
+const FROZEN_REASON_ZH = "写一句你这趟想怎么安排。";
 /** The floor as it stands in code today, asserted as a boundary rather than trusted.  These fixtures
  *  are 7 and 8 *characters* (one CJK glyph = one `length` unit), not 7 and 8 words. */
 const MIN_LENGTH = 8;

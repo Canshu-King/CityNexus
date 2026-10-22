@@ -1,0 +1,473 @@
+{
+  "product_sha": "9affeadb5a1d3b40c42306add35b4138d5d70958",
+  "journey_id": "fdf90dfa-a828-45ca-8eb6-67d52233169f",
+  "task_id": "3dc5b57d-c557-4719-b571-0a2070a1f642",
+  "status": "PARTIAL_READY",
+  "consent": {
+    "model": true,
+    "online_research": true
+  },
+  "budget": {
+    "max_model_turns": 8,
+    "max_tool_calls": 16
+  },
+  "usage": {
+    "model_turns": 8,
+    "tool_calls": 8
+  },
+  "event_sequence": 35,
+  "research_places": [
+    {
+      "category": "house",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/7935693261",
+      "latitude": 26.9002092,
+      "longitude": 119.1224859,
+      "name": "屏南",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/7935693261"
+    },
+    {
+      "category": "district",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/2166631353",
+      "latitude": 23.5469315,
+      "longitude": 110.3921104,
+      "name": "平南街道",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/2166631353"
+    },
+    {
+      "category": "district",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/2507130109",
+      "latitude": 27.8409578,
+      "longitude": 119.0809875,
+      "name": "屏南镇",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/2507130109"
+    },
+    {
+      "category": "district",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/5106724724",
+      "latitude": 24.3747605,
+      "longitude": 108.9051154,
+      "name": "屏南乡",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/5106724724"
+    },
+    {
+      "category": "street",
+      "cost_status": "UNKNOWN",
+      "id": "photon:W/498077790",
+      "latitude": 22.4084096,
+      "longitude": 120.5780713,
+      "name": "屏南路",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/way/498077790"
+    },
+    {
+      "category": "district",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/5733595170",
+      "latitude": 26.8520246,
+      "longitude": 118.9359283,
+      "name": "漈下村",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/5733595170"
+    },
+    {
+      "category": "district",
+      "cost_status": "UNKNOWN",
+      "id": "photon:N/11061742921",
+      "latitude": 26.9007624,
+      "longitude": 119.0298475,
+      "name": "漈头村",
+      "opening_status": "UNKNOWN",
+      "provider": "photon",
+      "provider_provenance": "LIVE_PROVIDER",
+      "source_url": "https://www.openstreetmap.org/node/11061742921"
+    }
+  ],
+  "draft_artifact": {
+    "days": [
+      {
+        "date": "2026-10-20",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公开地图仅确认村落地名与大致位置；是否收费、开放时间、村内可歇脚的点均未知。建议只走主街一小段，多安排坐下休息，控制步行量。",
+            "opening_status": "UNKNOWN",
+            "place_id": "photon:N/5733595170",
+            "time_of_day": "afternoon",
+            "title": "午后出发：漈下村古村落缓步游览（暂定线索，开放时间未知）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "本次检索未获得小吃街的真实公开地点记录，请在出发前用本地公开渠道确认一处县城内可短距离到达的夜间小吃集中地，再补入草案。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "待办：核实屏南县城小吃街的具体位置与营业时段",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公交班次、打车费用、包车价格均未知；若需包车，需先问价以确保两日总花费不超过1000元。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "待办：确认住处到漈下村的交通方式与单程耗时（预算内）",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      },
+      {
+        "date": "2026-10-21",
+        "slots": [
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "公开地图仅确认村名与坐标；门票、开放时间、村内展馆均未知。适合慢走看建筑，注意午后返程时间。",
+            "opening_status": "UNKNOWN",
+            "place_id": "photon:N/11061742921",
+            "time_of_day": "afternoon",
+            "title": "午后：漈头村古村落与老街一带轻松游览（暂定线索，开放时间未知）",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "本次关键词检索未返回博物馆类真实公开地点，需另行确认县级博物馆名称与地址；若闭馆，可用村内祠堂/展陈点替代。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "afternoon",
+            "title": "待办：查询屏南县博物馆的开放日、开放时段与是否需预约",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "检索仅定位到双溪镇行政区，未获得具体古镇街区或景点条目，需核实后再决定是否加入。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "flexible",
+            "title": "待办：确认双溪镇方向是否有可短距离游览的古镇街区",
+            "travel_time_status": "UNKNOWN"
+          },
+          {
+            "author": "MODEL_SUGGESTION",
+            "cost_status": "UNKNOWN",
+            "notes": "用餐地点待定，价格未知；建议控制在预算内，为交通留出余量。",
+            "opening_status": "UNKNOWN",
+            "place_id": null,
+            "time_of_day": "evening",
+            "title": "傍晚：县城内就近用餐并返回，预留返程余量",
+            "travel_time_status": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "revision": 1,
+    "status": "DRAFT"
+  },
+  "provider_calls": [
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "屏南县 博物馆",
+        "city": "屏南县",
+        "public_city_label": "屏南县",
+        "limit": 8
+      },
+      "response": {
+        "status": "RESULTS",
+        "http_status": 200,
+        "count": 5
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1673
+    },
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "漈下村",
+        "city": "屏南县",
+        "public_city_label": "屏南县",
+        "limit": 8
+      },
+      "response": {
+        "status": "RESULTS",
+        "http_status": 200,
+        "count": 1
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1541
+    },
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "漈头村",
+        "city": "屏南县",
+        "public_city_label": "屏南县",
+        "limit": 8
+      },
+      "response": {
+        "status": "RESULTS",
+        "http_status": 200,
+        "count": 1
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1500
+    },
+    {
+      "provider": "overpass",
+      "operation": "goal_area_discovery",
+      "request": {
+        "query": "attraction",
+        "public_city_label": "屏南县",
+        "center_place_id": "photon:N/11061742921",
+        "center_source_url": "https://www.openstreetmap.org/node/11061742921",
+        "latitude": 26.9007624,
+        "longitude": 119.0298475,
+        "radius_m": 3000,
+        "limit": 8,
+        "max_attempts": 1
+      },
+      "response": {
+        "status": "PROVIDER_UNAVAILABLE",
+        "http_status": null,
+        "places": [],
+        "attempt_count": 1
+      },
+      "status": "FAILURE",
+      "elapsed_ms": 12871
+    },
+    {
+      "provider": "nominatim",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "双溪镇 屏南",
+        "city": "屏南县",
+        "public_city_label": "屏南县",
+        "limit": 8
+      },
+      "response": {
+        "status": "NO_RESULTS",
+        "http_status": 200,
+        "count": 0
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 979
+    },
+    {
+      "provider": "photon",
+      "operation": "goal_place_discovery",
+      "request": {
+        "query": "白水洋",
+        "city": "屏南县",
+        "public_city_label": "屏南县",
+        "limit": 8
+      },
+      "response": {
+        "status": "NO_RESULTS",
+        "http_status": 200,
+        "count": 0
+      },
+      "status": "SUCCESS",
+      "elapsed_ms": 1754
+    }
+  ],
+  "tool_steps": [
+    {
+      "tool": "inspect_journey",
+      "result": {
+        "elapsed_ms": 10,
+        "observation_ids": [],
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1680,
+        "http_status": 200,
+        "place_count": 5,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索屏南县的博物馆",
+        "reason_code": null,
+        "status": "RESULTS"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1547,
+        "http_status": 200,
+        "place_count": 1,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索屏南古村落漈下村",
+        "reason_code": null,
+        "status": "RESULTS"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1505,
+        "http_status": 200,
+        "place_count": 1,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索漈头古村",
+        "reason_code": null,
+        "status": "RESULTS"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "discover_nearby_places",
+      "result": {
+        "elapsed_ms": 12875,
+        "http_status": null,
+        "place_count": 0,
+        "provider": "overpass",
+        "provider_provenance": "UNVERIFIED",
+        "public_action": "查找漈头村周边景点",
+        "reason_code": "OVERPASS_UNAVAILABLE",
+        "status": "PROVIDER_UNAVAILABLE"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 985,
+        "http_status": 200,
+        "place_count": 0,
+        "provider": "nominatim",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索双溪古镇",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "discover_places",
+      "result": {
+        "elapsed_ms": 1760,
+        "http_status": 200,
+        "place_count": 0,
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "public_action": "搜索白水洋景区",
+        "reason_code": null,
+        "status": "NO_RESULTS"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "tool": "save_draft_itinerary",
+      "result": {
+        "draft_revision": 1,
+        "elapsed_ms": 2,
+        "status": "COMPLETED"
+      },
+      "status": "COMPLETED"
+    }
+  ],
+  "browser": {
+    "tool": "chrome-use",
+    "css_viewport": [
+      390,
+      844
+    ],
+    "physical_phone": false,
+    "dom_click_used": true,
+    "screenshot": "CAPTURE_TIMEOUT_NOT_RETRIED"
+  },
+  "first_provider_result": "RESULTS",
+  "first_zero_scenario": "NOT_OBSERVED",
+  "post_fix_readonly_observation": {
+    "observed_at": "2026-10-18T19:05:00.827225+00:00",
+    "product_sha": "fda3543085c25884a44a95f88046219e23691cea",
+    "backend_code_sha": "02c323ade6698d2b2ccfe4b630e942f5648a29ad",
+    "signed_get_status": 200,
+    "legacy_research_places_count": 7,
+    "legacy_research_areas": [
+      {
+        "category": "city",
+        "cost_status": "UNKNOWN",
+        "id": "photon:R/3277230",
+        "latitude": 26.9120598,
+        "longitude": 118.981458,
+        "name": "屏南县",
+        "opening_status": "UNKNOWN",
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "source_url": "https://www.openstreetmap.org/relation/3277230"
+      },
+      {
+        "category": "county",
+        "cost_status": "UNKNOWN",
+        "id": "photon:N/244081571",
+        "latitude": 26.9047319,
+        "longitude": 119.0040339,
+        "name": "屏南县",
+        "opening_status": "UNKNOWN",
+        "provider": "photon",
+        "provider_provenance": "LIVE_PROVIDER",
+        "source_url": "https://www.openstreetmap.org/node/244081571"
+      },
+      {
+        "category": "town",
+        "cost_status": "UNKNOWN",
+        "id": "nominatim:node/3558146002",
+        "latitude": 27.0219562,
+        "longitude": 119.0419274,
+        "name": "双溪镇",
+        "opening_status": "UNKNOWN",
+        "provider": "nominatim",
+        "provider_provenance": "LIVE_PROVIDER",
+        "source_url": "https://www.openstreetmap.org/node/3558146002"
+      }
+    ],
+    "combined_unique_leads": 10,
+    "model_turns": 8,
+    "tool_calls": 8,
+    "draft_days": 2,
+    "draft_slots": 7,
+    "map_default_referenced_ids": [
+      "photon:N/5733595170",
+      "photon:N/11061742921"
+    ],
+    "new_model_or_provider_calls": 0,
+    "note": "Legacy status/count recorded only research_places, omitting areas. They do not establish zero total geographic results. Raw provider feature/address metadata was not retained; legacy categories and provenance remain unchanged. New API exposes the three stored areas. UI groups legacy location-granularity categories as geographic leads, not verified venues."
+  }
+}

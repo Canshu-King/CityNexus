@@ -739,6 +739,11 @@ def plan_authority_blocker(
     """
 
     explanation = json.loads(item.explanation_json or "{}")
+    if explanation.get("compose_source") == "SELECTED_GOAL_DRAFT" and any(
+        row.get("kind") in {"SOURCE_IDENTITY", "PLACE_REQUIRED"}
+        for row in explanation.get("unresolved_facts", []) if isinstance(row, Mapping)
+    ):
+        return UNRESOLVED_ACTIVITY_FACTS
     used = [str(value) for value in (used_place_ids or ()) if value]
     used_unique = list(dict.fromkeys(used))
     coursework_places = [places_by_id.get(place_id) for place_id in used_unique]
@@ -1723,7 +1728,7 @@ def _provisional_catalogue_plan(
             COURSEWORK_ESTIMATE_AUTHORITY_ENVELOPE if coursework_authority else None
         ),
         "authority_note": (
-            "Coursework-only selection using explicit Agent estimates; this is not a LIVE provider-ready result."
+            "Coursework estimate based on explicit Agent-provided costs."
             if coursework_authority
             else None
         ),
@@ -2010,7 +2015,7 @@ def _generic_compose_plans(
     # rows merely because their IDs sorted first.
     provider_backed = len(places) >= 2 and all(
         str(place.provider_key or "").casefold() not in {"mock-city", "demo", "fixture"}
-        and str(place.external_id or "").casefold().startswith("overpass:")
+        and str(place.external_id or "").casefold().startswith(("overpass:", "photon:"))
         for place in places.values()
     )
     if provider_backed:
@@ -2093,6 +2098,16 @@ def _generic_compose_plans(
     # the arrival instant crammed an 8-stop Xiamen trip into one morning, which
     # then made every hotel's pinned check-in genuinely unreachable.
     day_windows = _generic_day_windows(journey_start, journey_end)
+    from app.planning.day_rhythm import rhythm_from_preferences
+    rhythm = next((rhythm_from_preferences({"day_rhythm": json.loads(item.value_json)})
+        for item in traveler_preferences if item.preference_key == "day_rhythm"), None)
+    if rhythm:
+        # Use the same persisted day-rhythm semantics as authoritative composition.
+        day_windows = [(max(start, start.replace(hour=rhythm.wake_minute // 60, minute=rhythm.wake_minute % 60)), end)
+            for start, end in day_windows]
+        day_windows = [(start, end) for start, end in day_windows if end > start]
+        if not day_windows:
+            raise ValueError("TRAVEL_BRIEF_NO_USABLE_DAY_WINDOW")
     day_index = 0
     cursor = day_windows[0][0]
     day_used_min = 0

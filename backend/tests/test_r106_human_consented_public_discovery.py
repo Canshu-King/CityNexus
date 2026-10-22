@@ -13,10 +13,20 @@ def _set(name: str, value):
     object.__setattr__(settings, name, value)
 
 
-def test_r106_live_capability_is_not_live_evidence():
+def test_r106_live_capability_is_not_live_evidence(monkeypatch):
     names = ("real_city_enabled", "real_city_mode", "overpass_url", "city_search_test_provider")
     previous = {name: getattr(settings, name) for name in names}
     try:
+        monkeypatch.setattr(
+            discovery,
+            "_bootstrap_discovery_provider_config",
+            lambda: {
+                "provider": "overpass",
+                "provider_name": "OpenStreetMap Overpass",
+                "expected_recipient": "OpenStreetMap/Overpass public map data service",
+                "base_url": str(settings.overpass_url or "").strip(),
+            },
+        )
         _set("real_city_enabled", True)
         _set("real_city_mode", "live")
         _set("city_search_test_provider", False)
@@ -37,6 +47,16 @@ def test_r106_private_dns_resolution_blocks_before_provider(monkeypatch):
     previous = {name: getattr(settings, name) for name in names}
     provider = MagicMock()
     try:
+        monkeypatch.setattr(
+            discovery,
+            "_bootstrap_discovery_provider_config",
+            lambda: {
+                "provider": "overpass",
+                "provider_name": "OpenStreetMap Overpass",
+                "expected_recipient": "OpenStreetMap/Overpass public map data service",
+                "base_url": str(settings.overpass_url or "").strip(),
+            },
+        )
         _set("real_city_enabled", True)
         _set("real_city_mode", "live")
         _set("city_search_test_provider", False)
@@ -60,6 +80,7 @@ def test_r106_private_dns_resolution_blocks_before_provider(monkeypatch):
             limit=3,
             source_kind="MANUAL_PUBLIC_CENTER",
             provider_consent=True,
+            consented_provider="overpass",
             latitude=31.2304,
             longitude=121.4737,
             accuracy_m=None,

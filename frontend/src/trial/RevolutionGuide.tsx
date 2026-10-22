@@ -23,7 +23,7 @@ export function RevolutionGuide({ cityName }: { cityName: string }) {
 
   const chooseArea = () => {
     setStep(1);
-    setHint("先搜索「连城县」或在地图上选一个公开区域，然后确认位置。不会读取你的实时 GPS。");
+    setHint("搜索「连城县」或在地图选区，然后确认位置。");
     reveal();
     if (goTo('[data-testid="bootstrap-public-area-picker"]')) return;
     const start = document.querySelector<HTMLButtonElement>('[data-testid="bootstrap-source-manual"]');
@@ -31,7 +31,7 @@ export function RevolutionGuide({ cityName }: { cityName: string }) {
       start.click();
       window.setTimeout(() => goTo('[data-testid="bootstrap-public-area-picker"]'), 80);
     } else {
-      setHint("地图选择组件还在加载。请稍等或刷新页面，别填写没有来源的虚构坐标。");
+      setHint("地图选择组件正在加载，请稍等或刷新页面。");
     }
   };
 
@@ -48,12 +48,12 @@ export function RevolutionGuide({ cityName }: { cityName: string }) {
 
   const saveWalk = () => {
     setStep(3);
-    setHint("搜索成功后，选择两个真实返回的地点并保存私人步行计划。没有真实结果时不会凭空编造。");
+    setHint("搜索后选择两个地点，保存私人步行计划。");
     reveal();
     window.setTimeout(() => {
       if (!goTo('[data-testid="bootstrap-discovery-pocket-walk"]') &&
           !goTo('[data-testid="bootstrap-shortlist"]')) {
-        setHint("还没有地点可以保存。先返回上一步，搜索真实地点。");
+        setHint("还没有地点可以保存。先搜索附近地点。");
       }
     }, 40);
   };
@@ -63,7 +63,7 @@ export function RevolutionGuide({ cityName }: { cityName: string }) {
       <div className="rev-guide-heading">
         <span className="rev-guide-overline">开始探索</span>
         <h2>探索{cityName}，只需三步。</h2>
-        <p>我带你找到两个真正有来源的地点。下面的按钮会直接带你到对应操作。</p>
+        <p>搜索并选择两个地点，按下方步骤开始散步。</p>
       </div>
       <div className="rev-guide-steps" aria-label="探索步骤">
         <button type="button" onClick={chooseArea} className={step === 1 ? "is-current" : ""}>
@@ -87,7 +87,7 @@ export function RevolutionGuide({ cityName }: { cityName: string }) {
       </div>
       {hint && <p className="rev-guide-hint" role="status">{hint}</p>}
       <p className="rev-guide-disclaimer">
-        公开地点查询需要你主动授权；“AI 已配置”不等于 AI 已完成自主规划。
+        查询公开地点前需你确认；AI 会生成探索建议。
       </p>
     </section>
   );

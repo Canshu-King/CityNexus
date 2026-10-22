@@ -3,7 +3,7 @@
 Run on Windows from the repository root:
     py -3.13 trial/try_revolution.py
 
-Default: REAL public OpenStreetMap/Overpass data after explicit UI consent.
+Default: REAL public OpenStreetMap/Photon data after explicit UI consent.
 Use --sample only if you intentionally want controlled offline locations.
 The backend remains isolated on localhost; AI is opt-in via --agent.
 Mock booking/payment and user approval boundaries remain unchanged.
@@ -28,6 +28,7 @@ from datetime import datetime
 from pathlib import Path
 
 from wb2api_agent import agent_settings, router_health
+from amap_credentials import load_amap_key
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,6 +52,16 @@ def parse_port(value: str) -> int:
     return port
 
 
+def resume_database(runtime: Path, filename: str) -> str:
+    """Explicitly resume one existing trial DB and its adjacent auth secret."""
+    target = (runtime / filename).resolve()
+    if target.parent != runtime.resolve() or target.suffix != ".db" or not target.is_file():
+        raise RuntimeError("Choose an existing .db file directly inside --runtime-dir")
+    if not (runtime / "traveler_auth_secret.txt").is_file():
+        raise RuntimeError("The original trial authentication secret is required to resume")
+    return target.as_posix()
+
+
 def require_open_port(port: int) -> None:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as check:
         check.settimeout(0.5)
@@ -64,7 +75,15 @@ def require_open_port(port: int) -> None:
 def prepare_python() -> Path:
     if sys.version_info < (3, 12):
         raise RuntimeError("Python 3.12+ required; on Windows try: py -3.13 trial/try_revolution.py")
-    venv_dir = RUNTIME / "python-venv"
+    # Reuse this checkout's installed runtime; separate runs only need new data,
+    # not another copy of all Python dependencies.
+    project_python = BACKEND / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    if project_python.exists():
+        probe = subprocess.run([str(project_python), "-c", "import fastapi, uvicorn, sqlalchemy, httpx"],
+                               cwd=BACKEND, capture_output=True, text=True)
+        if probe.returncode == 0:
+            return project_python
+    venv_dir = TRIAL / ".runtime" / "python-venv"
     py = venv_dir / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     first_run = not py.exists()
     if first_run:
@@ -137,11 +156,11 @@ def wait_for(name: str, url: str, process: subprocess.Popen, seconds: int = 70) 
     deadline = time.monotonic() + seconds
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            raise RuntimeError(f"{name} stopped during startup (exit={process.returncode}); inspect trial/.runtime/{name}.err.log")
+            raise RuntimeError(f"{name} stopped during startup (exit={process.returncode}); inspect {RUNTIME / (name + '.err.log')}")
         if health(url):
             return
         time.sleep(0.5)
-    raise RuntimeError(f"{name} did not become healthy at {url}; inspect trial/.runtime/{name}.err.log")
+    raise RuntimeError(f"{name} did not become healthy at {url}; inspect {RUNTIME / (name + '.err.log')}")
 
 
 def isolated_environment(
@@ -153,7 +172,16 @@ def isolated_environment(
     city_port: int = CITY_PORT,
     overpass_port: int = OVERPASS_PORT,
 ) -> dict[str, str]:
+    # Read the operator's encrypted per-user credential before clearing inherited
+    # CityNexus settings. Only the backend receives this explicitly selected key.
+    amap_key = None if sample else load_amap_key()
     env = os.environ.copy()
+    # On Windows, urllib/httpx stop consulting the system proxy as soon as any
+    # proxy environment entry exists. Preserve that proxy before adding the
+    # loopback NO_PROXY below, or public OSM requests unexpectedly go direct.
+    for scheme, proxy in urllib.request.getproxies().items():
+        if scheme in {"http", "https", "all"} and proxy:
+            env.setdefault(scheme.upper() + "_PROXY", proxy)
     # Remove inherited external credentials/configuration. An existing Qoder
     # session must not turn a local trial into a live AI/provider deployment.
     for key in list(env):
@@ -169,7 +197,7 @@ def isolated_environment(
         secret_path.write_text(secret + "\n", encoding="utf-8")
     env.update({
         "CITYNEXUS_ENV": "development",
-        "CITYNEXUS_DATABASE_URL": "sqlite:///./" + db_name,
+        "CITYNEXUS_DATABASE_URL": "sqlite:///" + (Path(db_name).as_posix() if Path(db_name).is_absolute() else "./" + db_name),
         "CITYNEXUS_DEMO_MODE": "false",
         "CITYNEXUS_AI_ENABLED": "false",
         "CITYNEXUS_GUARDIAN_AUTORUN": "false",
@@ -178,6 +206,8 @@ def isolated_environment(
         "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": "86400",
         "CITYNEXUS_REAL_CITY_ENABLED": "true",
         "CITYNEXUS_REAL_CITY_MODE": "live",
+        "CITYNEXUS_PHOTON_ENABLED": "false",
+        "CITYNEXUS_POI_DISCOVERY_PROVIDER": "overpass",
         "CITYNEXUS_CITY_PROVIDER": "mock-city",
         "CITYNEXUS_MOBILITY_PROVIDER": "mock-mobility",
         "CITYNEXUS_BOOKING_PROVIDER": "mock-booking",
@@ -188,6 +218,8 @@ def isolated_environment(
         "NO_PROXY": "127.0.0.1,localhost,::1",
         "no_proxy": "127.0.0.1,localhost,::1",
     })
+    if amap_key:
+        env["CITYNEXUS_AMAP_WEB_KEY"] = amap_key
     if sample:
         # No network provider is used for sample searches. Every test result
         # is explicitly graded TEST_PROVIDER by the existing backend.
@@ -198,6 +230,9 @@ def isolated_environment(
             "CITYNEXUS_CITY_SEARCH_BASE_URL": f"http://127.0.0.1:{city_port}",
             "CITYNEXUS_NOMINATIM_URL": f"http://127.0.0.1:{city_port}",
             "CITYNEXUS_OVERPASS_URL": f"http://127.0.0.1:{overpass_port}/api",
+            # The sample path remains isolated on the local Overpass fixture.
+            "CITYNEXUS_PHOTON_ENABLED": "false",
+            "CITYNEXUS_POI_DISCOVERY_PROVIDER": "overpass",
             "REV_TRIAL_CITY_PORT": str(city_port),
             "REV_TRIAL_OVERPASS_PORT": str(overpass_port),
         })
@@ -210,10 +245,14 @@ def isolated_environment(
             "CITYNEXUS_CITY_SEARCH_TEST_PROVIDER": "false",
             "CITYNEXUS_CITY_SEARCH_BASE_URL": "https://nominatim.openstreetmap.org",
             "CITYNEXUS_NOMINATIM_URL": "https://nominatim.openstreetmap.org",
+            "CITYNEXUS_PHOTON_ENABLED": "true",
+            "CITYNEXUS_POI_DISCOVERY_PROVIDER": "photon",
             # Nominatim requires an operator-identifying User-Agent.
             # The email is typed locally and is sent ONLY as a provider header;
             # it is never stored in a checkout, database or printed in logs.
             "CITYNEXUS_CITY_SEARCH_USER_AGENT":
+                "CityNexus-RevolutionFirstLook/1.0 (mailto:" + contact_email + ")",
+            "CITYNEXUS_PHOTON_USER_AGENT":
                 "CityNexus-RevolutionFirstLook/1.0 (mailto:" + contact_email + ")",
             "CITYNEXUS_OVERPASS_URL": "https://overpass-api.de/api",
         })
@@ -221,6 +260,7 @@ def isolated_environment(
 
 
 def main() -> int:
+    global RUNTIME
     parser = argparse.ArgumentParser()
     parser.add_argument("--fresh", action="store_true",
                         help="Use a new isolated database without deleting your previous trial data")
@@ -232,6 +272,12 @@ def main() -> int:
                         help="Use exact wb2api 7863 model, e.g. global:deepseek-v4.1-flash (may incur charges)")
     parser.add_argument("--no-browser", action="store_true",
                         help="Print the local URL without auto-opening desktop browser")
+    parser.add_argument("--runtime-dir", type=Path, default=None,
+                        help="Store this instance's database and logs in a separate local directory")
+    parser.add_argument("--resume-database", default=None,
+                        help="Existing .db filename in --runtime-dir; preserves original signed trial state")
+    parser.add_argument("--wb2api-key-file", type=Path, default=None,
+                        help="Explicit local key file or gateway guide; read in memory only, requires --agent")
     parser.add_argument("--frontend-port", type=parse_port, default=FRONT_PORT,
                         help=f"Use a separate frontend port (default: {FRONT_PORT})")
     parser.add_argument("--backend-port", type=parse_port, default=BACK_PORT,
@@ -241,6 +287,13 @@ def main() -> int:
     parser.add_argument("--overpass-port", type=parse_port, default=OVERPASS_PORT,
                         help=f"Use a separate local Overpass fixture port with --sample (default: {OVERPASS_PORT})")
     args = parser.parse_args()
+    if args.runtime_dir is not None:
+        RUNTIME = args.runtime_dir.expanduser().resolve()
+    existing_db = None
+    if args.resume_database:
+        if args.fresh or args.runtime_dir is None:
+            raise RuntimeError("--resume-database requires --runtime-dir and cannot use --fresh")
+        existing_db = resume_database(RUNTIME, args.resume_database)
     front_port = args.frontend_port
     back_port = args.backend_port
     city_port = args.city_port
@@ -249,7 +302,7 @@ def main() -> int:
     contact_email = None
     if not args.sample:
         print("\nREVOLUTION REAL CITY EXPERIENCE")
-        print("External geocoding: OpenStreetMap Nominatim; places: Overpass.")
+        print("External geocoding: OpenStreetMap Nominatim; places: Photon.")
         print("Nothing is sent while typing; the UI separately asks for each provider consent.")
         print("Nominatim requires an identifying contact email in its User-Agent.")
         print("Enter your own contact email locally. It will be sent to Nominatim,")
@@ -260,31 +313,26 @@ def main() -> int:
         if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", contact_email):
             raise RuntimeError("A valid contact email is required for LIVE search. Use --sample to run offline.")
     agent_enabled = bool(args.agent or args.agent_direct_model)
+    if args.wb2api_key_file is not None and not agent_enabled:
+        raise RuntimeError("--wb2api-key-file requires explicit --agent")
     agent_config: dict[str, str] = {}
     agent_label = "DISABLED"
     if agent_enabled:
-        print("\nREVOLUTION REAL AGENT / WB2API LOCAL GATEWAY")
-        print("An external model may receive your submitted Journey facts and prompts.")
-        print("The 7865 free-first router currently includes a potentially PAID final fallback.")
-        print("Do not assume that any model request is guaranteed to cost zero.")
-        print("AI tool calls remain subject to CityNexus signed user authority and approval.")
+        print("\nAI 旅行规划 · 本机 wb2api")
+        print("你在页面提交需求时会发送给模型，可能产生费用。")
         # --agent is an explicit local operator choice; this step configures
         # the model but DOES NOT invoke it. Each actual AI text submission in
         # the browser is an independent explicit request with cost disclosure.
-        print("AI is configured only. No model call occurs until you ask in the UI.")
         if not args.agent_direct_model:
             healthy, state = router_health()
             if not healthy:
-                raise RuntimeError("Local free-router 7865 not ready: " + state + ". Start WorkBuddy2API/FreeRouter.")
+                raise RuntimeError("请先启动本机 WorkBuddy2API 路由（7865）：" + state)
         try:
-            agent_config, agent_label = agent_settings(direct_model=args.agent_direct_model)
+            agent_config, agent_label = agent_settings(direct_model=args.agent_direct_model, key_file=args.wb2api_key_file)
         except ValueError as exc:
             raise RuntimeError(str(exc)) from exc
-        print("Agent route:", agent_label)
-        print("Model:", agent_config["CITYNEXUS_HERMES_MODEL"])
-        print("Credential: loaded into isolated backend memory only (value hidden)")
-        print("Runtime: Hermes-compatible tool-calling, not DeepSeek /responses or native Hermes MCP")
-        print("NOTE: configuration is NOT successful Agent tool use; run trial/probe_wb2api_agent.py if needed.")
+        print("模型选择：", agent_config["CITYNEXUS_HERMES_MODEL"])
+        print("打开页面后，在底部输入框和 Agent 讨论；点「按讨论的方向开始研究」后查询地点。")
     RUNTIME.mkdir(parents=True, exist_ok=True)
     ports = ((front_port, back_port, city_port, overpass_port)
              if args.sample else (front_port, back_port))
@@ -297,6 +345,10 @@ def main() -> int:
     node = prepare_frontend()
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     db = f"_revolution_hands_on_{stamp}.db" if args.fresh else "_revolution_hands_on.db"
+    if args.runtime_dir is not None:
+        db = (RUNTIME / db).as_posix()
+    if existing_db:
+        db = existing_db
     env = isolated_environment(
         db,
         sample=args.sample,
@@ -337,16 +389,18 @@ def main() -> int:
         wait_for("backend", f"http://127.0.0.1:{back_port}/api/v1/health", api)
 
         vite_script = FRONTEND / "node_modules" / "vite" / "bin" / "vite.js"
+        ui_env = {key: value for key, value in env.items() if key != "CITYNEXUS_AMAP_WEB_KEY"}
         ui = start("frontend", node, [str(vite_script), "--host", "127.0.0.1",
-                                      "--port", str(front_port), "--strictPort"], FRONTEND)
+                                      "--port", str(front_port), "--strictPort"], FRONTEND, ui_env)
         wait_for("frontend", f"http://127.0.0.1:{front_port}/api/v1/health", ui)
         address = f"http://127.0.0.1:{front_port}/revolution"
         print("\nRevolution browser trial is ready (isolated from Qoder and fusion).")
         print("OPEN:", address)
-        print("SOURCE:", "CONTROLLED TEST_PROVIDER (not real places)" if args.sample
+        print("SOURCE:", "CONTROLLED TEST_PROVIDER (sample places)" if args.sample
               else "REAL PUBLIC OSM PROVIDERS (network access after specific user consent)")
-        print("Agent:", "CONFIGURED_UNVERIFIED (" + agent_label + ")" if agent_enabled else "OFF")
-        print("AI tool-use requires an ACTIVE Journey and a real AgentRun; Pocket Walk alone is not an AgentRun.")
+        print("高德地图：", "已加载本机 Web 服务 Key" if env.get("CITYNEXUS_AMAP_WEB_KEY") else "未配置")
+        print("Agent:", "CONFIGURED (" + agent_label + ")" if agent_enabled else "OFF")
+        print("Discuss in the bottom chat; explicitly start research after confirming AI and map-source consent.")
         print("Payment/booking: mock only. Backend bound to localhost.")
         print("DB:", db)
         print(f"For Android USB Chrome (ADB installed): adb reverse tcp:{front_port} tcp:{front_port}")

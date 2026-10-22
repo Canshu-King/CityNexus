@@ -325,7 +325,7 @@ test.describe("ORD-0047 the stay search says what it is waiting for", () => {
     ).toBe(true);
     // And the journey really was created before the refusal, so the notice may not deny it.
     expect(
-      /no journey was created/i.test(seen.failed.text),
+      /journey not created/i.test(seen.failed.text),
       node("gen-three-states-distinguishable", `the notice denies a journey that exists: ${JSON.stringify(seen.failed.text)}`),
     ).toBe(false);
 

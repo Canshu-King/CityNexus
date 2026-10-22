@@ -189,7 +189,7 @@ test("R102 keeps one shared OSM identity fresh and member-scoped", async ({ brow
     await expect(importPanel).toBeVisible();
     await importPanel.getByTestId("bootstrap-shared-walk-textarea").fill(ownerShare);
     await importPanel.getByTestId("bootstrap-shared-walk-preview-button").click();
-    await expect(importPanel.locator('div[data-testid="bootstrap-shared-walk-preview"]')).toContainText("UNVERIFIED_SHARED_REFERENCE");
+    await expect(importPanel.locator('div[data-testid="bootstrap-shared-walk-preview"]')).toContainText("待核验");
     expect(fixture.requestBodies).toHaveLength(1);
 
     await importPanel.getByTestId("bootstrap-shared-walk-lookup-consent").check();

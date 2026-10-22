@@ -160,8 +160,8 @@ export function ActivityDetail({
           <p className="v8-lede">
             {activity.protected
               ? zh
-                ? "这是已确认的安排，不会因为其他调整被移动。"
-                : "This is a confirmed booking and will not be moved by other changes."
+                ? "已确认预订 · 受保护安排"
+                : "Confirmed booking · protected commitment"
               : zh
                 ? "这是你行程中的一个停靠点。"
                 : "This is one stop on your itinerary."}

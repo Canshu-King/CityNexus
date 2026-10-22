@@ -72,15 +72,15 @@ const TABLE: Record<
   { zh: (status: number, extra: string) => string; en: (status: number, extra: string) => string }
 > = {
   DEMO_MODE_REQUIRED: {
-    zh: () => "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+    zh: () => "模拟操作当前关闭。",
     en: () =>
-      "This deployment is not a simulation stage (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted.",
+      "Simulation is currently off.",
   },
   /* ORD-0070's named 503, so the stage says "wait" instead of "nothing happened". */
   "generation.store_busy": {
-    zh: (_s, extra) => `上一次的生成还占着存储${extra}。等它跑完再试，这一步没有失败，只是被挡住了。`,
+    zh: (_s, extra) => `上一次生成仍在写入存储${extra}，完成后再试。`,
     en: (_s, extra) =>
-      `The previous generation still holds the store${extra}. Wait for it and try again -- this step was blocked, not refused.`,
+      `The previous generation is still writing to storage${extra}. Try again when it finishes.`,
   },
   GENERATION_STORE_BUSY: {
     zh: (_s, extra) => `上一次的生成还占着存储${extra}。等它跑完再试，这一步没有失败，只是被挡住了。`,
@@ -92,9 +92,9 @@ const TABLE: Record<
     en: (_s, extra) => `The server rejected one or more fields${extra}, so this step did not run.`,
   },
   NETWORK: {
-    zh: () => "请求没有到达服务器（网络或进程断了）。场景状态没有变化，我们也无从得知它变了没有。",
+    zh: () => "连接失败，场景未更新。",
     en: () =>
-      "The request never reached the server (network or process down). Nothing about the scene is known from here.",
+      "Connection failed. The scene was not updated.",
   },
 };
 
@@ -153,13 +153,11 @@ export function describeFailure(error: unknown): NamedFailure {
   const mobility = mobilityRefusal(error);
   if (mobility) {
     const states = mobility.states.length ? mobility.states.join("、") : "服务器未给证据状态";
-    const legs = mobility.legs > 0 ? ` ${mobility.legs} 段` : "";
-    const legsEn = mobility.legs > 0 ? ` ${mobility.legs} leg(s)` : "";
     return {
       code,
       status,
-      zh: `重算这一版需要能当作硬依据的路线证据。服务器说这些路程${legs}的证据在档，但达不到可硬用的标准（它给的码：MOBILITY_DATA_UNAVAILABLE，证据状态 ${states}）。所以它没有算出任何替代方案，你现在的方案没有变化——这一步要接上真实的路线数据源才会通。`,
-      en: `Recomputing this plan needs route evidence that can be treated as a hard basis. The server says these${legsEn} have facts on file that do not meet that bar (its code: MOBILITY_DATA_UNAVAILABLE, evidence state ${mobility.states.join(", ") || "not given"}). It produced no alternative, and your current plan is unchanged -- this step needs a real routing data source connected.`,
+      zh: `路线证据暂不可用（MOBILITY_DATA_UNAVAILABLE · ${states}）。连接路线数据源后可重新计算。`,
+      en: `Route evidence unavailable (MOBILITY_DATA_UNAVAILABLE · ${mobility.states.join(", ") || "not given"}). Connect a routing source to recalculate.`,
     };
   }
   if (code.startsWith("INVALID_ACTIVITY_TRANSITION")) {
@@ -168,8 +166,8 @@ export function describeFailure(error: unknown): NamedFailure {
     return {
       code,
       status,
-      zh: `服务器说这一步的顺序不对（${code.replace("INVALID_ACTIVITY_TRANSITION:", "")}），活动状态没有被改动。上面那行会跟着服务器的状态换成它允许的那一步。`,
-      en: `The server refused this step's order (${code.replace("INVALID_ACTIVITY_TRANSITION:", "")}); the activity is unchanged. The row above follows the server's state to the step it allows.`,
+       zh: `服务器拒绝了这个步骤（${code.replace("INVALID_ACTIVITY_TRANSITION:", "")}）。`,
+       en: `The server refused this step (${code.replace("INVALID_ACTIVITY_TRANSITION:", "")}).`,
     };
   }
   /* No local wording for this one.  Say that, name it, and quote the server's own sentence when it
@@ -180,11 +178,11 @@ export function describeFailure(error: unknown): NamedFailure {
     code,
     status,
     zh: said
-      ? `服务器拒绝了这个动作（HTTP ${status}，具名 ${code}）。它的原话：${said}。这条我们没有本地文案，所以照它说的给，不替它解释。`
-      : `服务器拒绝了这个动作（HTTP ${status}，具名码 ${code}）。我们没有这条拒绝的本地文案，所以不替它编造原因。`,
+      ? `服务器拒绝此操作（HTTP ${status} · ${code}）：${said}`
+      : `服务器拒绝此操作（HTTP ${status} · ${code}）。`,
     en: said
-      ? `The server refused this action (HTTP ${status}, ${code}). Its own words: ${said}. There is no local wording for it, so the sentence is passed through rather than explained.`
-      : `The server refused this action (HTTP ${status}, code ${code}). There is no local wording for it, so no reason is invented here.`,
+      ? `Request refused (HTTP ${status} · ${code}): ${said}`
+      : `Request refused (HTTP ${status} · ${code}).`,
   };
 }
 
@@ -199,20 +197,20 @@ export function describeFailure(error: unknown): NamedFailure {
  */
 const BOOKING_REFUSALS: Record<string, { zh: (t: string) => string; en: (t: string) => string }> = {
   "activity has no supported tradable commerce service": {
-    zh: (t: string) => `${t} 这项活动没有可下单的服务（服务器的原话：activity has no supported tradable commerce service）。这一步没有发生，换一个活动试试。`,
-    en: (t: string) => `${t} has no service that can be ordered (the server's words: "activity has no supported tradable commerce service"). Nothing was booked; try another activity.`,
+    zh: (t: string) => `${t}暂不可预订，请选择其他活动。`,
+    en: (t: string) => `${t} is unavailable to book. Choose another activity.`,
   },
   "activity service is not available in the frozen catalog": {
-    zh: (t: string) => `${t} 要的服务不在这台舞台的冻结目录里（服务器的原话：activity service is not available in the frozen catalog）。这一步没有发生。`,
-    en: (t: string) => `${t}'s service is not in this stage's frozen catalog (the server's words: "activity service is not available in the frozen catalog"). Nothing was booked.`,
+    zh: (t: string) => `${t}无法完成：当前演示环境未启用该服务。`,
+    en: (t: string) => `${t} is unavailable for booking in this version.`,
   },
   "commerce service semantic identity does not match activity": {
-    zh: (t: string) => `${t} 的服务和活动指向的不是同一个地点（服务器的原话：commerce service semantic identity does not match activity），所以服务器不肯下单。`,
-    en: (t: string) => `The service behind ${t} points at a different place than the activity does (the server's words: "commerce service semantic identity does not match activity"), so it will not book.`,
+    zh: (t: string) => `${t} 的预订地点与活动地点不匹配。`,
+    en: (t: string) => `The booking place for ${t} does not match the activity place.`,
   },
   "commerce service belongs to another city": {
-    zh: (t: string) => `${t} 的服务属于另一座城市（服务器的原话：commerce service belongs to another city），这一趟订不了。`,
-    en: (t: string) => `The service behind ${t} belongs to another city (the server's words: "commerce service belongs to another city"), so this trip cannot book it.`,
+    zh: (t: string) => `${t} 的预订服务属于其他城市。`,
+    en: (t: string) => `The booking service for ${t} belongs to another city.`,
   },
 };
 
@@ -442,9 +440,8 @@ export async function postSimulatedEvent(
  *    **404 here**, and its booking is refused with `activity service is not available in the frozen
  *    catalog`; `service-river-cruise-booking` answers 200 with one slot and books `201 CONFIRMED`.
  *
- * So a 404 on this path is not a failure to display -- it is the answer that retires the candidate.
- * Anything else (5xx, a dropped connection) *is* unreadable, and gets said as such rather than being
- * folded into "nothing can be booked", which would be the panel claiming a server fact it did not get.
+ * A 404 retires the candidate as unavailable. A 5xx or dropped connection keeps the result in its
+ * unreadable state.
  */
 export const ORDERABLE_SERVICE_TYPES: readonly string[] = [
   "bookable_experience",

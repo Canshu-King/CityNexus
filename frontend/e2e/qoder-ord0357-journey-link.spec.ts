@@ -12,8 +12,8 @@
  *   A2  the three refusals each name their own fact, in both directions, including which one wins when
  *       two hold at once. R2's "the clipboard refusing is not the journey being gone".
  *   B1  on the real screen, one press puts the absolute link in the real clipboard.
- *   B2  a device that will not accept a write says so, and does not claim the journey vanished.
- *   B3  a non-secure context says so, and does not claim the journey vanished.
+ *   B2  a clipboard write failure reports its status while the journey stays visible.
+ *   B3  a non-secure context reports its status while the journey stays visible.
  *   B4  a refusal costs no second screen and leaks no prose into an attribute (Q64=① / Q71).
  *
  * The counter-example that lives outside this file: `review/n3_mutation_hollow_r1.py` deletes the

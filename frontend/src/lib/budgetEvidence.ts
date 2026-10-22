@@ -30,9 +30,8 @@ const KNOWN_STATUSES = new Set(["KNOWN", "KNOWN_FREE", "KNOWN_PAID"]);
 /**
  * Whether an item is *verified* evidence — an explicit KNOWN status.
  *
- * A bare positive amount with no status is displayable but not proof (it may be
- * an unverified legacy figure), so it must not by itself license a FULL trip
- * verdict (V2-T4 / B4 regression 4).
+ * A bare amount without a KNOWN status stays unverified. It may be displayed as a legacy figure,
+ * while a FULL trip verdict requires explicit status (V2-T4 / B4 regression 4).
  */
 export function isVerifiedCostEvidence(item: CostEvidenceLike): boolean {
   const status = String(item.cost_status ?? "").toUpperCase();
@@ -42,9 +41,8 @@ export function isVerifiedCostEvidence(item: CostEvidenceLike): boolean {
 /**
  * Whether one activity carries reliable price evidence.
  *
- * An explicit status wins.  `UNKNOWN` is never evidence.  Without a status we
- * fall back to the amount, and only a *positive* amount counts: an absent or
- * zero amount with no status is not proof of anything.
+ * An explicit status wins. `UNKNOWN` stays unverified. Without a status, only a positive amount
+ * carries price evidence; absent or zero amounts leave the status unknown.
  */
 export function hasReliableCostEvidence(item: CostEvidenceLike): boolean {
   const status = String(item.cost_status ?? "").toUpperCase();

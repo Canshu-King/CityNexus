@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "purpose": "MIGRATION_SEED_NOT_AN_EXECUTION_ALLOWLIST",
+  "observed_revolution_commit": "b3c14cc46fd821b2dc8e6fc5c6b7bee3527c495b",
+  "observed_mainline_commit": "f97f0f8dafe24a1b8a1c20d8d65d7fedd58c68b3",
+  "observed_archive_commit": "a5a2f1096e0fbd806acd8be134fe8fb6095ad1a9",
+  "observed_catalog_path": "backend/app/agent/tool_catalog.py",
+  "observed_registered_tools": [
+    "inspect_journey", "inspect_twin", "list_replans", "search_city_services",
+    "discover_recovery_options", "research_place_sources", "request_replan",
+    "accept_replan", "activate_standby", "request_collective_decision",
+    "conclude_recovery", "apply_clarified_horizon_choice", "acquire_place_facts",
+    "estimate_place_facts", "generate_plans", "replace_activity",
+    "reschedule_activity", "create_booking", "cancel_refundable_booking",
+    "request_commitment_change"
+  ],
+  "required_status_per_capability": [
+    "source_present", "domain_operation_resolved", "agent_schema_registered",
+    "dispatcher_bound", "phase_policy", "deployment_configured",
+    "user_entry_mounted", "contract_tested", "live_verified"
+  ],
+  "restore_domains": [
+    "intent_and_preferences", "public_place_discovery", "source_research_and_facts",
+    "map_and_routes", "provisional_and_formal_planning", "real_agent_execution",
+    "guardian_weather_and_traffic", "replanning_and_standby", "group_negotiation_and_meetup",
+    "lodging", "booking_payment_and_commitments", "notifications_and_inbox",
+    "session_reauthentication", "history_trash_export_and_reflection"
+  ],
+  "runtime_evidence": "NOT_VERIFIED_BY_THIS_MANIFEST",
+  "rules": [
+    "A declared tool is not proof its dispatcher accepts it or its provider is configured.",
+    "No tool gets authority from this seed file. Enforce identity and budget at execution time.",
+    "Unknown facts may block a particular commitment, not conversation, research or provisional planning.",
+    "Reconcile runtime OpenAPI prefixes and tool dispatchers before generating any adapter.",
+    "Every historical capability is migrated, explicitly retired, or assigned an owner; none disappear silently."
+  ]
+}

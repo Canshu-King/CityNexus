@@ -940,6 +940,8 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "runtime_identity": (
             NATIVE_DEEPSEEK_TOOL_LOOP
             if run.provider_key == "deepseek"
+            else "HERMES_NATIVE_MCP"
+            if run.provider_key == "hermes-native"
             else "HERMES_COMPAT_ENDPOINT"
             if run.provider_key == "hermes"
             else runtime_identity()
@@ -1052,12 +1054,14 @@ class DeepSeekJourneyAgent:
         journey: Journey,
         mission: JourneyMission,
         max_steps: int = 12,
+        run_id: str | None = None,
+        signed_member_binding: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         now = _now()
         trace_id = str(uuid4())
         recovery_epoch = ensure_recovery_epoch(session, journey)
         run = AgentRun(
-            id=str(uuid4()),
+            id=run_id or str(uuid4()),
             mission_id=mission.id,
             journey_id=journey.id,
             provider_key=self.provider_key,
@@ -1088,6 +1092,31 @@ class DeepSeekJourneyAgent:
             trace_id=trace_id,
         )
         session.flush()
+        if signed_member_binding is not None:
+            record_audit(
+                session,
+                action="agent.mobile_compat.run_bound",
+                entity_type="AgentRun",
+                entity_id=run.id,
+                journey_id=journey.id,
+                actor_type="TRAVELER",
+                actor_id=signed_member_binding["traveler_id"],
+                after={
+                    "run_id": run.id,
+                    "mission_id": mission.id,
+                    "traveler_id": signed_member_binding["traveler_id"],
+                    "member_id": signed_member_binding["member_id"],
+                    "request_id": signed_member_binding["request_id"],
+                    "provider_consent": True,
+                    "runtime_identity": self.runtime_identity,
+                },
+                trace_id=trace_id,
+            )
+            # Persist the signed member binding and running envelope before the
+            # outbound request. Repeated requests can restore this run without
+            # starting a second provider call.
+            session.commit()
+            session.refresh(run)
         # The run envelope must survive a process/request interruption before
         # the first external model call. A flush only assigns IDs inside the
         # current transaction; it is not durable evidence.
@@ -1344,6 +1373,49 @@ class DeepSeekJourneyAgent:
                     tool_name = str(function.get("name") or "")
                     call_id = str(call.get("id") or f"tool-call-{sequence}")
                     raw_arguments = str(function.get("arguments") or "{}")
+                    tool_allowlist = getattr(self, "_tool_allowlist", None)
+                    if tool_allowlist is not None and tool_name not in tool_allowlist:
+                        sequence += 1
+                        step_now = _now()
+                        result = {
+                            "tool": tool_name,
+                            "error": "tool is outside this run's allowlist",
+                            "decision": "REJECT_TOOL",
+                        }
+                        session.add(
+                            AgentRunStep(
+                                id=str(uuid4()),
+                                run_id=run.id,
+                                sequence_no=sequence,
+                                tool_name=tool_name,
+                                arguments_json="{}",
+                                result_json=_json_text(result),
+                                decision="REJECT_TOOL",
+                                status="TOOL_ERROR",
+                                created_at=step_now,
+                                completed_at=step_now,
+                            )
+                        )
+                        tool_trace.append(
+                            {
+                                "sequence_no": sequence,
+                                "tool_name": tool_name,
+                                "arguments": {},
+                                "result": result,
+                                "decision": "REJECT_TOOL",
+                                "status": "TOOL_ERROR",
+                                "created_at": step_now,
+                                "completed_at": step_now,
+                            }
+                        )
+                        messages.append(
+                            {
+                                "role": "tool",
+                                "tool_call_id": call_id,
+                                "content": _result_for_model(result),
+                            }
+                        )
+                        continue
                     search_batch_limited = tool_name == "search_city_services" and batch_search_seen
                     if tool_name == "search_city_services":
                         batch_search_seen = True

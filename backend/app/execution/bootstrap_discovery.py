@@ -42,6 +42,13 @@ from app.integrations.discovery.real_city import (
     OverpassPOIProvider,
     PhotonCityGeocoder,
 )
+from app.integrations.discovery.photon_poi import (
+    OSM_ATTRIBUTION,
+    OSM_ATTRIBUTION_URL,
+    PHOTON_REJECTION_REASONS,
+    PhotonPOIProvider,
+    _validate_base_url as _validate_photon_base_url,
+)
 from app.integrations.mobility.valhalla_http import (
     ValhallaHTTPMobilityProvider,
     ValhallaProviderError,
@@ -50,13 +57,15 @@ from app.integrations.provider_config import (
     ExternalProviderSettings,
     trust_environment_for_public_providers,
 )
+from app.region_matching import public_address_from_tags, public_region_status
 from app.execution.shared_walk import (
     SharedWalkParseError,
     validate_shared_walk_objects,
 )
 
 
-_OSM_EXTERNAL_ID = re.compile(r"^overpass:(node|way|relation)/([1-9][0-9]*)$")
+_OSM_EXTERNAL_ID = re.compile(r"^(overpass|photon):(node|way|relation)/([1-9][0-9]*)$")
+_BOOTSTRAP_DISCOVERY_PROVIDER_KEYS = ("overpass", "photon")
 _PRIVATE_ACCESS = {
     "private",
     "no",
@@ -69,6 +78,17 @@ _PRIVATE_ACCESS = {
 }
 _BOOTSTRAP_GROUNDED_OPENING = frozenset(
     {"NORMALIZED_VALID", "VERIFIED_PROVIDER", "OFFICIAL_WEB_VERIFIED"}
+)
+_BOOTSTRAP_GROUNDED_COST = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+_BOOTSTRAP_FILTER_REJECTION_REASONS = (
+    "provider_mismatch",
+    "invalid_identity",
+    "missing_name",
+    "invalid_coordinates",
+    "invalid_distance",
+    "out_of_radius",
+    "restricted_access",
+    "duplicate",
 )
 _MAX_QUERY = 120
 _MAX_SHORTLIST_ITEMS = 3
@@ -92,7 +112,49 @@ class BootstrapDiscoveryError(ValueError):
         self.details = details or {}
 
 
-def bootstrap_discovery_readiness() -> dict[str, Any]:
+def _cost_evidence_is_grounded(cost: dict[str, Any]) -> bool:
+    status = str(cost.get("status") or "UNKNOWN").upper()
+    amount_minor = cost.get("amount_minor")
+    return (
+        status in _BOOTSTRAP_GROUNDED_COST
+        and isinstance(amount_minor, int)
+        and not isinstance(amount_minor, bool)
+        and amount_minor >= 0
+    )
+
+
+def _bootstrap_overpass_provider_config() -> dict[str, str]:
+    return {
+        "provider": "overpass",
+        "provider_name": "OpenStreetMap Overpass",
+        "expected_recipient": "OpenStreetMap/Overpass public map data service",
+        "base_url": str(settings.overpass_url or "").strip(),
+    }
+
+
+def _bootstrap_discovery_provider_config() -> dict[str, str]:
+    configured = ExternalProviderSettings()
+    selected_provider = str(configured.poi_discovery_provider or "overpass").strip().lower()
+    if selected_provider == "photon":
+        return {
+            "provider": "photon",
+            "provider_name": "Photon POI search",
+            "expected_recipient": "Photon by Komoot public geocoding service",
+            "base_url": str(configured.photon_base_url or "").strip(),
+        }
+    if selected_provider == "overpass":
+        return _bootstrap_overpass_provider_config()
+    return {
+        "provider": selected_provider,
+        "provider_name": "Invalid POI discovery provider configuration",
+        "expected_recipient": "No external provider will receive a request until this setting is corrected",
+        "base_url": "",
+    }
+
+
+def bootstrap_discovery_readiness(
+    *, provider_config: dict[str, str] | None = None
+) -> dict[str, Any]:
     """Project the operator gate without constructing a provider or doing I/O.
 
     The response describes only the recipient and the decision. It never exposes
@@ -101,11 +163,14 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
     test boundary and is always graded as ``TEST_PROVIDER``.
     """
 
+    selected = provider_config or _bootstrap_discovery_provider_config()
+    provider_key = selected["provider"]
     base = {
-        "provider": "overpass",
-        "provider_name": "OpenStreetMap Overpass",
-        "expected_recipient": "OpenStreetMap/Overpass public map data service",
+        "provider": provider_key,
+        "provider_name": selected["provider_name"],
+        "expected_recipient": selected["expected_recipient"],
         "external_request_allowed": False,
+        "supports_place_name_search": provider_key == "photon",
         "test_only": False,
         "capability_state": "LIVE_BLOCKED",
     }
@@ -126,7 +191,7 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
             "capability_state": "LIVE_BLOCKED",
         }
     try:
-        parsed = urlparse(str(settings.overpass_url or "").strip())
+        parsed = urlparse(selected["base_url"])
         host = (parsed.hostname or "").lower().rstrip(".")
         port = parsed.port
     except (TypeError, ValueError):
@@ -145,8 +210,37 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
         is_loopback = host in _BOOTSTRAP_LOOPBACK_HOSTS or ipaddress.ip_address(host).is_loopback
     except ValueError:
         is_loopback = host in _BOOTSTRAP_LOOPBACK_HOSTS
-    path_ok = parsed.path.rstrip("/") == "/api"
     no_authority_extras = not parsed.query and not parsed.fragment
+    if provider_key == "photon":
+        try:
+            _validate_photon_base_url(selected["base_url"])
+        except ValueError:
+            return {
+                **base,
+                "status": "BLOCKED",
+                "reason_code": "ENDPOINT_NOT_APPROVED",
+                "provider_grade": "UNVERIFIED",
+                "capability_state": "LIVE_BLOCKED",
+            }
+        return {
+            **base,
+            "status": "READY",
+            "reason_code": "READY",
+            "provider_grade": "LIVE_CAPABLE",
+            "capability_state": "LIVE_CAPABLE",
+            "external_request_allowed": True,
+        }
+
+    if provider_key != "overpass":
+        return {
+            **base,
+            "status": "BLOCKED",
+            "reason_code": "ENDPOINT_NOT_APPROVED",
+            "provider_grade": "UNVERIFIED",
+            "capability_state": "LIVE_BLOCKED",
+        }
+
+    path_ok = parsed.path.rstrip("/") == "/api"
     if (
         is_loopback
         and settings.city_search_test_provider
@@ -190,7 +284,9 @@ def bootstrap_discovery_readiness() -> dict[str, Any]:
     }
 
 
-def _bootstrap_live_endpoint_block_reason() -> str | None:
+def _bootstrap_live_endpoint_block_reason(
+    provider_key: str = "overpass", *, configured_url: str | None = None
+) -> str | None:
     """Reject an approved public hostname that resolves to a private address.
 
     Readiness stays a pure configuration projection. DNS is checked only after
@@ -199,12 +295,27 @@ def _bootstrap_live_endpoint_block_reason() -> str | None:
     """
 
     try:
-        parsed = urlparse(str(settings.overpass_url or "").strip())
+        endpoint = configured_url
+        if endpoint is None:
+            # Exact-object lookup is a separate, Overpass-only contract. Its
+            # callers do not pass an endpoint, so keep its default pinned to
+            # Overpass even when ordinary discovery is configured for Photon.
+            endpoint = (
+                str(ExternalProviderSettings().photon_base_url or "").strip()
+                if provider_key == "photon"
+                else str(settings.overpass_url or "").strip()
+            )
+        parsed = urlparse(str(endpoint or "").strip())
         host = (parsed.hostname or "").lower().rstrip(".")
         port = parsed.port or 443
     except (TypeError, ValueError):
         return "ENDPOINT_NOT_APPROVED"
-    if parsed.scheme.lower() != "https" or host not in _BOOTSTRAP_OVERPASS_HOSTS:
+    allowed_hosts = (
+        {"photon.komoot.io"}
+        if provider_key == "photon"
+        else _BOOTSTRAP_OVERPASS_HOSTS
+    )
+    if parsed.scheme.lower() != "https" or host not in allowed_hosts:
         return "ENDPOINT_NOT_APPROVED"
     try:
         infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
@@ -254,7 +365,9 @@ def _osm_identity(candidate: DiscoveryCandidate) -> tuple[str, str] | None:
     match = _OSM_EXTERNAL_ID.fullmatch(str(candidate.external_id or ""))
     if not match:
         return None
-    kind, raw_id = match.groups()
+    provider_key, kind, raw_id = match.groups()
+    if str(candidate.provider_key or "") != provider_key:
+        return None
     return kind, raw_id
 
 
@@ -350,46 +463,115 @@ def _candidate_scope_observation(
         "osm_tags": tags,
         "public_access_state": _public_access_state(tags),
         "source_url": source_url,
+        "source_attribution": OSM_ATTRIBUTION,
+        "source_attribution_url": OSM_ATTRIBUTION_URL,
     }
 
 
-def _public_candidate(candidate: DiscoveryCandidate, *, radius_m: int) -> bool:
+def _public_candidate_rejection_reason(
+    candidate: DiscoveryCandidate, *, radius_m: int
+) -> str | None:
     if _osm_identity(candidate) is None:
-        return False
+        return "invalid_identity"
     tags = _candidate_tags(candidate)
     name = str(tags.get("name") or candidate.name or "").strip()
     if not name or name.casefold().startswith("osm "):
-        return False
+        return "missing_name"
     if _candidate_coordinates(candidate) is None:
-        return False
+        return "invalid_coordinates"
     if candidate.distance_m is not None:
         try:
             distance = float(candidate.distance_m)
         except (TypeError, ValueError, OverflowError):
-            return False
-        if not math.isfinite(distance) or distance < 0 or distance > radius_m:
-            return False
+            return "invalid_distance"
+        if not math.isfinite(distance) or distance < 0:
+            return "invalid_distance"
+        if distance > radius_m:
+            return "out_of_radius"
     if _public_access_state(tags) == "RESTRICTED":
-        return False
-    return True
+        return "restricted_access"
+    return None
 
 
-def _attempts(value: Any) -> list[dict[str, Any]]:
+def _candidate_filter_rejection_reason(
+    candidate: DiscoveryCandidate, *, provider_key: str, radius_m: int
+) -> str | None:
+    if candidate.provider_key != provider_key:
+        return "provider_mismatch"
+    return _public_candidate_rejection_reason(candidate, radius_m=radius_m)
+
+
+def _public_candidate(candidate: DiscoveryCandidate, *, radius_m: int) -> bool:
+    return _public_candidate_rejection_reason(candidate, radius_m=radius_m) is None
+
+
+def _bootstrap_filter_summary(
+    candidates: list[DiscoveryCandidate], *, provider_key: str, radius_m: int
+) -> dict[str, Any]:
+    """Return counts only; accepted_count is unique eligible rows before output limiting."""
+
+    rejected_by_reason = {reason: 0 for reason in _BOOTSTRAP_FILTER_REJECTION_REASONS}
+    seen: set[str] = set()
+    accepted_count = 0
+    for candidate in candidates:
+        reason = _candidate_filter_rejection_reason(
+            candidate, provider_key=provider_key, radius_m=radius_m
+        )
+        if reason is None:
+            if candidate.external_id in seen:
+                reason = "duplicate"
+            else:
+                seen.add(candidate.external_id)
+                accepted_count += 1
+        if reason is not None:
+            rejected_by_reason[reason] += 1
+    return {
+        "raw_count": len(candidates),
+        "accepted_count": accepted_count,
+        "rejected_by_reason": rejected_by_reason,
+    }
+
+
+def _attempts(value: Any, *, provider_key: str = "overpass") -> list[dict[str, Any]]:
     if not isinstance(value, list):
         return []
     result: list[dict[str, Any]] = []
     for item in value[:4]:
         if not isinstance(item, dict):
             continue
-        result.append(
-            {
-                "endpoint": str(item.get("endpoint") or "")[:240],
-                "answered": bool(item.get("answered")),
-                "http_status": item.get("http_status"),
-                "elements": item.get("elements"),
-                "error": str(item.get("error") or "")[:160] or None,
-            }
-        )
+        attempt = {
+            "provider_key": provider_key,
+            "endpoint": str(item.get("endpoint") or "")[:240],
+            "answered": bool(item.get("answered")),
+            "http_status": item.get("http_status"),
+            "elements": item.get("elements"),
+            "features": item.get("features"),
+            "returned": item.get("returned"),
+            "elapsed_ms": item.get("elapsed_ms"),
+            "source_status": str(item.get("source_status") or "")[:40] or None,
+            "result_status": str(item.get("result_status") or "")[:40] or None,
+            "attribution": (
+                "© OpenStreetMap contributors"
+                if item.get("attribution") == "© OpenStreetMap contributors"
+                else None
+            ),
+            "attribution_url": (
+                "https://www.openstreetmap.org/copyright"
+                if item.get("attribution_url") == "https://www.openstreetmap.org/copyright"
+                else None
+            ),
+            "error": str(item.get("error") or "")[:160] or None,
+        }
+        raw_rejection_counts = item.get("rejected_by_reason")
+        if provider_key == "photon" and isinstance(raw_rejection_counts, dict):
+            safe_rejection_counts: dict[str, int] = {}
+            for reason in PHOTON_REJECTION_REASONS:
+                count = raw_rejection_counts.get(reason)
+                safe_rejection_counts[reason] = (
+                    count if type(count) is int and count >= 0 else 0
+                )
+            attempt["rejected_by_reason"] = safe_rejection_counts
+        result.append(attempt)
     return result
 
 
@@ -413,13 +595,10 @@ def _provider_provenance(attempts: list[dict[str, Any]], *, configured_url: str 
         host = (parsed.hostname or "").lower()
     except ValueError:
         return "UNVERIFIED"
-    # The authoritative browser suite binds its provider boundary to loopback;
-    # a loopback answer is useful evidence, but it is not a public OSM answer.
+    # Loopback endpoints are classified as TEST_PROVIDER by the browser suite.
     if host in {"127.0.0.1", "localhost", "::1"} or host.endswith(".local"):
         return "TEST_PROVIDER"
-    # Source grading cannot claim a verified public endpoint over plaintext
-    # HTTP (or from a URL with embedded credentials).  Local test fixtures
-    # remain TEST_PROVIDER regardless of scheme, above.
+    # Public endpoint grades require HTTPS and credential-free URLs. Local fixtures keep TEST_PROVIDER above.
     if parsed.scheme.lower() != "https" or parsed.username or parsed.password:
         return "UNVERIFIED"
     if host in {
@@ -528,6 +707,12 @@ def _scope_observation(row: RealPlaceCandidate, scope: dict[str, Any] | None) ->
             or _public_access_state(dict(tags))
         ),
         "source_url": str(candidate_scope.get("source_url") or "") or None,
+        "source_attribution": str(
+            candidate_scope.get("source_attribution") or OSM_ATTRIBUTION
+        ),
+        "source_attribution_url": str(
+            candidate_scope.get("source_attribution_url") or OSM_ATTRIBUTION_URL
+        ),
     }
 
 
@@ -536,11 +721,12 @@ def _candidate_payload(
     *,
     member_id: str | None = None,
     traveler_id: str | None = None,
+    public_region_label: str | None = None,
 ) -> dict[str, Any]:
     evidence = json.loads(row.evidence_json or "{}")
-    kind = str(evidence.get("osm_type") or "node")
-    osm_id = str(evidence.get("osm_id") or "")
-    source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm_id else None
+    osm = _osm_identity(row)
+    kind, osm_id = osm if osm is not None else (None, None)
+    source_url = f"https://www.openstreetmap.org/{kind}/{osm_id}" if osm else None
     scope_distance = None
     viewer_scope = None
     viewer_scope_entries = _bootstrap_scope_entries(evidence)
@@ -551,6 +737,8 @@ def _candidate_payload(
                 scope_distance = scope.get("distance_m")
                 break
     observation = _scope_observation(row, viewer_scope)
+    public_address = public_address_from_tags(observation["osm_tags"])
+    region_status = public_region_status(public_region_label or "", public_address)
     source_tags = {
         key: str(observation["osm_tags"][key])
         for key in (
@@ -565,38 +753,85 @@ def _candidate_payload(
     }
     opening = observation["opening_hours"]
     opening_status = str(opening.get("status") or "UNKNOWN").upper()
+    cost = observation["cost_evidence"]
+    cost_status = str(cost.get("status") or "UNKNOWN").upper()
+    facts = (viewer_scope or {}).get("osm_facts")
+    facts = facts if isinstance(facts, dict) else {}
+    selection_blockers: list[str] = []
+    if region_status == "CONFLICT":
+        selection_blockers.append("REGION_CONFLICT")
+    if opening_status not in _BOOTSTRAP_GROUNDED_OPENING:
+        selection_blockers.append("OPENING_UNVERIFIED")
+    if not _cost_evidence_is_grounded(cost):
+        selection_blockers.append(
+            "COST_UNKNOWN" if cost_status == "UNKNOWN" else "COST_UNVERIFIED"
+        )
+    if observation["public_access_state"] == "INDOOR_ACCESS_UNVERIFIED":
+        selection_blockers.append("ACCESS_UNVERIFIED")
+    if observation["public_access_state"] == "RESTRICTED":
+        selection_blockers.append("ACCESS_RESTRICTED")
+    selection_ready = not selection_blockers
+    if region_status == "CONFLICT":
+        selection_action = "CHOOSE_CANDIDATE_IN_DESTINATION_REGION"
+    elif selection_blockers == ["OPENING_UNVERIFIED"]:
+        selection_action = "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers == ["COST_UNKNOWN"]:
+        selection_action = "VERIFY_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers == ["COST_UNVERIFIED"]:
+        selection_action = "VERIFY_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers == ["ACCESS_UNVERIFIED"]:
+        selection_action = "VERIFY_PUBLIC_ACCESS_OR_CHOOSE_ANOTHER_CANDIDATE"
+    elif selection_blockers:
+        selection_action = "VERIFY_OPENING_AND_COST_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
+    else:
+        selection_action = None
+    valid_private_scope = (
+        viewer_scope is not None
+        and viewer_scope.get("source_kind") == "MANUAL_PUBLIC_CENTER"
+        and not _scope_expired(viewer_scope)
+        and row.status == "BOOTSTRAP_PRIVATE"
+        and row.materialized_place_id is None
+    )
+    has_source_identity = bool(osm and source_url)
+    pocket_walk_eligible = (
+        has_source_identity
+        and valid_private_scope
+        and observation["public_access_state"] != "RESTRICTED"
+    )
     if scope_distance is None and len(viewer_scope_entries) <= 1:
         scope_distance = row.distance_m
     return {
         "candidate_id": row.id,
         "name": observation["name"],
         "category": observation["category"],
+        "provider_key": row.provider_key,
         "external_id": row.external_id,
         "osm_type": kind,
         "osm_id": osm_id,
         "source_url": source_url,
+        "source_attribution": observation["source_attribution"],
+        "source_attribution_url": observation["source_attribution_url"],
         "latitude": observation["latitude"],
         "longitude": observation["longitude"],
         "coordinate_system": "WGS84",
         "distance_m": scope_distance,
         "opening_state": opening_status,
-        "selection_state": (
-            "READY_FOR_NATIVE_PLAN"
-            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
-            else "OPENING_UNVERIFIED"
-        ),
-        "selection_action": (
-            None
-            if opening_status in _BOOTSTRAP_GROUNDED_OPENING
-            else "VERIFY_OPENING_SOURCE_OR_CHOOSE_ANOTHER_CANDIDATE"
-        ),
+        "selection_state": "REGION_CONFLICT" if region_status == "CONFLICT" else "READY_FOR_NATIVE_PLAN" if selection_ready else "OPENING_UNVERIFIED",
+        "selection_action": selection_action,
+        "selection_blockers": selection_blockers,
         "availability_confidence": "UNVERIFIED",
-        "price_state": "UNKNOWN",
+        "price_state": cost_status,
+        "cost_evidence": cost,
         "eta_state": "UNKNOWN",
         "tags": json.loads(row.tags_json or "[]"),
         "opening_hours": opening,
         "opening_observed_at": observation["captured_at"],
-        "opening_source": "OpenStreetMap/Overpass",
+        "facts_status": facts.get("status"),
+        "opening_source": (
+            "OpenStreetMap element API"
+            if facts.get("status") == "SUCCESS"
+            else "OpenStreetMap via Photon" if row.provider_key == "photon" else "OpenStreetMap/Overpass"
+        ),
         "opening_claim": (
             "OSM_TAG_CLAIM"
             if source_tags.get("opening_hours")
@@ -609,9 +844,24 @@ def _candidate_payload(
         ),
         "opening_verification_action": "OPEN_SOURCE_PAGE",
         "source_tags": source_tags,
+        "public_address": public_address,
+        "region_status": region_status,
         "public_access_state": observation["public_access_state"],
         "provider_provenance": _row_provider_provenance(row, scope=viewer_scope),
+        "draft_exploration": {
+            "state": "DRAFT_EXPLORE_ONLY",
+            "viewable": has_source_identity,
+            "pocket_walk_eligible": pocket_walk_eligible,
+            "formal_selection_eligible": selection_ready,
+            "plan_version_id": None,
+            "selected_place_id": None,
+        },
     }
+
+
+def _public_region_label(session: Session, journey: Journey) -> str:
+    from app.agent.goal_artifacts import _structured_public_region_label
+    return _structured_public_region_label(session, journey)
 
 
 def _provider_call(
@@ -671,10 +921,13 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
         "longitude": row.longitude,
         "coordinate_system": row.coordinate_system,
         "source_url": row.source_url,
+        "source_attribution": OSM_ATTRIBUTION,
+        "source_attribution_url": OSM_ATTRIBUTION_URL,
         "source_provenance": row.source_provenance,
         "captured_at": row.captured_at,
         "opening_hours": opening,
         "opening_state": str(opening.get("status") or "UNKNOWN").upper(),
+        "cost_evidence": cost,
         "price_state": str(cost.get("status") or "UNKNOWN").upper(),
         "eta_state": "UNKNOWN",
         "source_tags": source_tags,
@@ -690,17 +943,25 @@ def _shortlist_payload(row: MemberDraftShortlistItem) -> dict[str, Any]:
 def _resume_payload(intent: MemberDraftResumeIntent, item: MemberDraftShortlistItem) -> dict[str, Any]:
     """Return public identity only; ownership is enforced by the signed lookup."""
 
+    saved = _shortlist_payload(item)
     return {
-        "shortlist_id": item.id,
-        "journey_id": item.journey_id,
-        "name": item.name,
-        "category": item.category,
-        "latitude": item.latitude,
-        "longitude": item.longitude,
-        "coordinate_system": item.coordinate_system,
-        "source_url": item.source_url,
-        "source_provenance": item.source_provenance,
-        "captured_at": item.captured_at,
+        "shortlist_id": saved["shortlist_id"],
+        "journey_id": saved["journey_id"],
+        "name": saved["name"],
+        "category": saved["category"],
+        "latitude": saved["latitude"],
+        "longitude": saved["longitude"],
+        "coordinate_system": saved["coordinate_system"],
+        "source_url": saved["source_url"],
+        "source_attribution": saved["source_attribution"],
+        "source_attribution_url": saved["source_attribution_url"],
+        "source_provenance": saved["source_provenance"],
+        "captured_at": saved["captured_at"],
+        "opening_hours": saved["opening_hours"],
+        "opening_state": saved["opening_state"],
+        "cost_evidence": saved["cost_evidence"],
+        "price_state": saved["price_state"],
+        "distance_m": saved["distance_m"],
         "selected_at": intent.selected_at,
         "status": "CHOSEN",
     }
@@ -711,16 +972,23 @@ def _pocket_stop_payload(row: MemberDraftShortlistItem, position: int) -> dict[s
     return {
         "position": position,
         "shortlist_id": item["shortlist_id"],
+        "provider_key": item["provider_key"],
         "name": item["name"],
         "category": item["category"],
         "external_id": item["external_id"],
         "source_url": item["source_url"],
+        "source_attribution": item["source_attribution"],
+        "source_attribution_url": item["source_attribution_url"],
         "source_provenance": item["source_provenance"],
         "captured_at": item["captured_at"],
         "coordinate_system": item["coordinate_system"],
         "public_access_state": item["public_access_state"],
+        "opening_hours": item["opening_hours"],
         "opening_state": item["opening_state"],
+        "cost_evidence": item["cost_evidence"],
         "price_state": item["price_state"],
+        "distance_m": item["distance_m"],
+        "distance_basis": item["distance_basis"],
         "route_eta_state": "UNKNOWN",
     }
 
@@ -863,7 +1131,10 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         "cost_evidence": raw.get("cost_evidence"),
                         "osm_tags": raw.get("osm_tags"),
                         "public_access_state": raw.get("public_access_state"),
+                        "osm_facts": raw.get("osm_facts"),
                         "source_url": raw.get("source_url"),
+                        "source_attribution": raw.get("source_attribution"),
+                        "source_attribution_url": raw.get("source_attribution_url"),
                     }
                 )
     if scopes:
@@ -891,6 +1162,8 @@ def _bootstrap_scope_entries(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 "osm_tags": evidence.get("osm_tags"),
                 "public_access_state": evidence.get("public_access_state"),
                 "source_url": evidence.get("source_url"),
+                "source_attribution": evidence.get("source_attribution"),
+                "source_attribution_url": evidence.get("source_attribution_url"),
             }
         ]
     return []
@@ -968,6 +1241,7 @@ def _replace_candidate_scope(
     session: Session,
     *,
     journey_id: str,
+    provider_key: str = "overpass",
     external_id: str,
     member_id: str,
     traveler_id: str,
@@ -981,7 +1255,7 @@ def _replace_candidate_scope(
             select(RealPlaceCandidate)
             .where(
                 RealPlaceCandidate.journey_id == str(journey_id),
-                RealPlaceCandidate.provider_key == "overpass",
+                RealPlaceCandidate.provider_key == provider_key,
                 RealPlaceCandidate.external_id == str(external_id),
                 RealPlaceCandidate.status == "BOOTSTRAP_PRIVATE",
             )
@@ -1258,12 +1532,26 @@ def _reserve_city_search_global_slot(session: Session, *, now: datetime) -> bool
 def _city_search_config() -> tuple[str, str | None, str | None] | None:
     """Return an explicitly approved provider, or None without touching the network."""
 
+    return _city_search_config_for(settings.city_search_provider)
+
+
+def _city_search_config_for(provider: str) -> tuple[str, str | None, str | None] | None:
+    """Resolve one explicitly selected city provider from operator configuration."""
+
     if not settings.city_search_enabled:
         return None
-    provider = settings.city_search_provider
+    provider = str(provider or "").strip().lower()
     if provider not in {"nominatim", "photon"}:
         return None
-    base_url = settings.city_search_base_url
+    if provider == "nominatim":
+        base_url = settings.city_search_base_url
+        user_agent = settings.city_search_user_agent
+    else:
+        external = ExternalProviderSettings()
+        if not external.photon_enabled:
+            return None
+        base_url = external.photon_base_url
+        user_agent = external.photon_user_agent
     if not base_url:
         return None
     try:
@@ -1283,10 +1571,9 @@ def _city_search_config() -> tuple[str, str | None, str | None] | None:
     if not is_loopback:
         # A public endpoint must have a real identifying contact in the UA. The
         # built-in localhost placeholder is intentionally not accepted.
-        agent = settings.city_search_user_agent
-        if not agent or ("mailto:" not in agent.lower() and "@" not in agent):
+        if not user_agent or ("mailto:" not in user_agent.lower() and "@" not in user_agent):
             return None
-    return provider, base_url, settings.city_search_user_agent or None
+    return provider, base_url, user_agent or None
 
 
 def search_bootstrap_city(
@@ -1298,6 +1585,7 @@ def search_bootstrap_city(
     query: str,
     provider_consent: bool,
     limit: int,
+    provider: str | None = None,
 ) -> dict[str, Any]:
     """Perform one explicit bounded city search for the R95 map camera."""
 
@@ -1327,8 +1615,9 @@ def search_bootstrap_city(
         "member_id": member_id,
         "traveler_id": traveler_id,
         "provider_consent": True,
+        "provider": provider or settings.city_search_provider,
     }
-    config = _city_search_config()
+    config = _city_search_config() if provider is None else _city_search_config_for(provider)
     if not settings.real_city_enabled or str(settings.real_city_mode).lower() != "live" or config is None:
         _provider_call(
             session,
@@ -1349,6 +1638,7 @@ def search_bootstrap_city(
             "journey_id": journey.id,
             "status": "GEOCODER_DISABLED",
             "query": query,
+            "provider_key": None,
             "provider_attempts": [],
             "results": [],
             "provider_provenance": "UNVERIFIED",
@@ -1360,6 +1650,7 @@ def search_bootstrap_city(
             "journey_id": journey.id,
             "status": str(cached.get("status") or "CITY_RESULTS"),
             "query": query,
+            "provider_key": provider_name,
             "provider_provenance": str(cached.get("provider_provenance") or "UNVERIFIED"),
             "provider_attempts": [],
             "cache_hit": True,
@@ -1394,6 +1685,7 @@ def search_bootstrap_city(
             "journey_id": journey.id,
             "status": "GEOCODER_RATE_LIMITED",
             "query": query,
+            "provider_key": None,
             "provider_provenance": "UNVERIFIED",
             "provider_attempts": [],
             "cache_hit": False,
@@ -1452,6 +1744,7 @@ def search_bootstrap_city(
     )
     payload = {
         "status": status,
+        "provider_key": provider_name,
         "provider_provenance": provenance,
         "results": [_city_result_payload(item, provenance=provenance) for item in selected],
     }
@@ -1476,6 +1769,7 @@ def search_bootstrap_city(
         "journey_id": journey.id,
         "status": status,
         "query": query,
+        "provider_key": provider_name,
         "provider_provenance": provenance,
         "provider_attempts": attempts,
         "cache_hit": False,
@@ -1494,9 +1788,11 @@ def discover_bootstrap_candidates(
     limit: int,
     source_kind: str,
     provider_consent: bool,
+    consented_provider: str | None = None,
     latitude: float,
     longitude: float,
     accuracy_m: float | None,
+    query_mode: str = "category",
 ) -> dict[str, Any]:
     if str(journey.status).upper() != "DRAFT":
         raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "bootstrap discovery requires a DRAFT Journey")
@@ -1523,12 +1819,26 @@ def discover_bootstrap_candidates(
     captured_at = _now()
     member_id = str(member.id)
     traveler_id = str(traveler_id)
-    readiness = bootstrap_discovery_readiness()
+    provider_config = _bootstrap_discovery_provider_config()
+    readiness = bootstrap_discovery_readiness(provider_config=provider_config)
+    provider_key = str(readiness["provider"])
+    if query_mode not in {"category", "name"} or (query_mode == "name" and provider_key != "photon"):
+        raise BootstrapDiscoveryError("PLACE_NAME_SEARCH_UNAVAILABLE", "Place-name search requires Photon", status_code=422)
+    if query_mode == "name" and len(query) < 2:
+        raise BootstrapDiscoveryError("INVALID_QUERY", "Enter a place name of at least two characters", status_code=422)
+    if consented_provider != provider_key:
+        raise BootstrapDiscoveryError(
+            "PROVIDER_CONSENT_PROVIDER_MISMATCH",
+            "the disclosed place-search provider changed; review the current disclosure and confirm again",
+            status_code=409,
+            details={"provider": provider_key},
+        )
     expires_at = captured_at + timedelta(seconds=settings.real_city_cache_ttl_seconds)
     # ProviderCall is an audit of the public operation, not a location log. Keep
     # exact centers, accuracy, member IDs and traveler IDs out of this record.
     request = {
         "operation": "bootstrap_city_discovery",
+        "query_mode": query_mode,
         "journey_id": str(journey.id),
         "city_code": journey.city_code,
         "query": query,
@@ -1538,6 +1848,8 @@ def discover_bootstrap_candidates(
         "source_kind": source_kind,
         "coordinate_system": "WGS84",
         "provider_consent": True,
+        "consented_provider": provider_key,
+        "provider": provider_key,
     }
     if readiness["status"] != "READY":
         _provider_call(
@@ -1552,6 +1864,7 @@ def discover_bootstrap_candidates(
             },
             status="DISABLED",
             created_at=_iso(captured_at),
+            provider_key=provider_key,
         )
         return {
             "journey_id": journey.id,
@@ -1562,14 +1875,16 @@ def discover_bootstrap_candidates(
             "receipt_id": None,
             "expires_at": None,
             "source_kind": source_kind,
-            "provider": "overpass",
+            "provider": provider_key,
             "provider_provenance": "UNVERIFIED",
             "attempts": [],
             "candidates": [],
         }
     endpoint_block_reason = None
     if not readiness.get("test_only"):
-        endpoint_block_reason = _bootstrap_live_endpoint_block_reason()
+        endpoint_block_reason = _bootstrap_live_endpoint_block_reason(
+            provider_key, configured_url=provider_config["base_url"]
+        )
     if endpoint_block_reason is not None:
         blocked_status = "PROVIDER_UNAVAILABLE" if endpoint_block_reason == "PROVIDER_DNS_UNAVAILABLE" else "PROVIDER_DISABLED"
         audit_status = "UNAVAILABLE" if blocked_status == "PROVIDER_UNAVAILABLE" else "DISABLED"
@@ -1585,6 +1900,7 @@ def discover_bootstrap_candidates(
             },
             status=audit_status,
             created_at=_iso(captured_at),
+            provider_key=provider_key,
         )
         return {
             "journey_id": journey.id,
@@ -1595,7 +1911,7 @@ def discover_bootstrap_candidates(
             "receipt_id": None,
             "expires_at": None,
             "source_kind": source_kind,
-            "provider": "overpass",
+            "provider": provider_key,
             "provider_provenance": "UNVERIFIED",
             "attempts": [],
             "candidates": [],
@@ -1621,27 +1937,40 @@ def discover_bootstrap_candidates(
             },
         )
 
-    provider = OverpassPOIProvider()
+    if provider_key == "photon":
+        provider = PhotonPOIProvider(base_url=provider_config["base_url"])
+    else:
+        provider = OverpassPOIProvider()
     configured_provider_url = provider.base_url
     attempts: list[dict[str, Any]] = []
     try:
-        candidates, attempts = provider.search_with_evidence(
+        candidates, raw_attempts = provider.search_with_evidence(
             query,
             latitude=float(latitude),
             longitude=float(longitude),
             radius_m=radius_m,
             limit=limit,
             max_attempts=1,
+            **({"query_mode": "name"} if query_mode == "name" else {}),
         )
+        attempts = _attempts(raw_attempts, provider_key=provider_key)
     except Exception as exc:  # provider failures become a truthful unavailable state
-        attempts = _attempts(getattr(exc, "provider_attempts", []))
+        attempts = _attempts(
+            getattr(exc, "provider_attempts", []), provider_key=provider_key
+        )
         _provider_call(
             session,
             journey=journey,
             request=request,
-            response={"status": "PROVIDER_UNAVAILABLE", "attempts": attempts, "count": 0},
+            response={
+                "status": "PROVIDER_UNAVAILABLE",
+                "provider": provider_key,
+                "attempts": attempts,
+                "count": 0,
+            },
             status="UNAVAILABLE",
             created_at=_iso(captured_at),
+            provider_key=provider_key,
         )
         return {
             "journey_id": journey.id,
@@ -1652,7 +1981,7 @@ def discover_bootstrap_candidates(
             "receipt_id": None,
             "expires_at": None,
             "source_kind": source_kind,
-            "provider": "overpass",
+            "provider": provider_key,
             "provider_provenance": "UNVERIFIED",
             "attempts": attempts,
             "candidates": [],
@@ -1661,12 +1990,19 @@ def discover_bootstrap_candidates(
     finally:
         provider.close()
 
+    raw_candidates = list(candidates)
+    filter_summary = _bootstrap_filter_summary(
+        raw_candidates, provider_key=provider_key, radius_m=radius_m
+    )
     provider_provenance = _provider_provenance(attempts, configured_url=configured_provider_url)
 
     usable: list[DiscoveryCandidate] = []
     seen: set[str] = set()
-    for candidate in candidates:
-        if not _public_candidate(candidate, radius_m=radius_m):
+    for candidate in raw_candidates:
+        if (
+            candidate.provider_key != provider_key
+            or not _public_candidate(candidate, radius_m=radius_m)
+        ):
             continue
         if candidate.external_id in seen:
             continue
@@ -1717,7 +2053,7 @@ def discover_bootstrap_candidates(
         existing_candidate = session.scalar(
             select(RealPlaceCandidate).where(
                 RealPlaceCandidate.journey_id == journey.id,
-                RealPlaceCandidate.provider_key == "overpass",
+                RealPlaceCandidate.provider_key == provider_key,
                 RealPlaceCandidate.external_id == candidate.external_id,
             )
         )
@@ -1730,6 +2066,7 @@ def discover_bootstrap_candidates(
                 _replace_candidate_scope(
                     session,
                     journey_id=journey.id,
+                    provider_key=provider_key,
                     external_id=candidate.external_id,
                     member_id=member_id,
                     traveler_id=traveler_id,
@@ -1741,7 +2078,7 @@ def discover_bootstrap_candidates(
             RealPlaceCandidate(
                 id=row_id,
                 journey_id=journey.id,
-                provider_key="overpass",
+                provider_key=provider_key,
                 external_id=candidate.external_id,
                 city_code=journey.city_code,
                 name=observation["observed_name"],
@@ -1775,6 +2112,7 @@ def discover_bootstrap_candidates(
                         "source_kind": source_kind,
                         "bootstrap_scopes": [scope],
                         "provider_attempts": attempts,
+                        "provider_key": provider_key,
                         "provider_provenance": provider_provenance,
                         "candidate_id": row_id,
                         "osm_type": osm_type,
@@ -1796,9 +2134,12 @@ def discover_bootstrap_candidates(
             "attempts": attempts,
             "count": len(usable),
             "provider_provenance": provider_provenance,
+            "provider": provider_key,
+            "filter_summary": filter_summary,
         },
         status="SUCCESS",
         created_at=_iso(captured_at),
+        provider_key=provider_key,
     )
     return {
         "journey_id": journey.id,
@@ -1808,11 +2149,13 @@ def discover_bootstrap_candidates(
         "receipt_id": receipt_id,
         "expires_at": _iso(expires_at),
         "source_kind": source_kind,
-        "provider": "overpass",
+        "provider": provider_key,
         "provider_provenance": provider_provenance,
         "attempts": attempts,
+        "filter_summary": filter_summary,
         "candidates": [
-            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
+            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id,
+                               public_region_label=_public_region_label(session, journey))
             for row in session.scalars(
                 select(RealPlaceCandidate).where(
                     RealPlaceCandidate.journey_id == journey.id,
@@ -1867,7 +2210,10 @@ def lookup_bootstrap_shared_walk(
         "objects": [{"osm_type": kind, "osm_id": identifier} for kind, identifier in requested],
         "provider_consent": True,
     }
-    readiness = bootstrap_discovery_readiness()
+    # Exact shared-object lookup has its own Overpass-only contract and consent.
+    readiness = bootstrap_discovery_readiness(
+        provider_config=_bootstrap_overpass_provider_config()
+    )
     if readiness["status"] != "READY":
         _provider_call(
             session,
@@ -2109,7 +2455,8 @@ def lookup_bootstrap_shared_walk(
         "attempts": attempts,
         "verified_count": len(usable),
         "candidates": [
-            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id)
+            _candidate_payload(row, member_id=member_id, traveler_id=traveler_id,
+                               public_region_label=_public_region_label(session, journey))
             for row in rows
             if _candidate_scope_matches(row, member_id=member_id, traveler_id=traveler_id)
             and row.external_id in {candidate.external_id for candidate in usable}
@@ -2290,12 +2637,12 @@ def save_bootstrap_discovery_pocket_walk(
         select(RealPlaceCandidate).where(
             RealPlaceCandidate.id.in_([str(first_candidate_id), str(second_candidate_id)]),
             RealPlaceCandidate.journey_id == locked_journey.id,
-            RealPlaceCandidate.provider_key == "overpass",
+            RealPlaceCandidate.provider_key.in_(_BOOTSTRAP_DISCOVERY_PROVIDER_KEYS),
         )
     ).all()
     by_id = {str(row.id): row for row in candidate_rows}
     ordered_rows: list[tuple[RealPlaceCandidate, dict[str, Any]]] = []
-    seen_external_ids: set[str] = set()
+    seen_osm_identities: set[tuple[str, str]] = set()
     for candidate_id in (first_candidate_id, second_candidate_id):
         row = by_id.get(str(candidate_id))
         if row is None:
@@ -2345,13 +2692,13 @@ def save_bootstrap_discovery_pocket_walk(
                 "both discovery stops must have valid OSM identities",
                 status_code=422,
             )
-        if row.external_id in seen_external_ids:
+        if osm in seen_osm_identities:
             raise BootstrapDiscoveryError(
                 "BOOTSTRAP_DISCOVERY_POCKET_STOPS_NOT_DISTINCT",
                 "a discovery Pocket Walk requires two different OSM identities",
                 status_code=422,
             )
-        seen_external_ids.add(row.external_id)
+        seen_osm_identities.add(osm)
         ordered_rows.append((row, scope))
 
     existing_rows = session.scalars(
@@ -2368,7 +2715,8 @@ def save_bootstrap_discovery_pocket_walk(
     # identical save must not erase a traveler’s in-progress GO MODE.
     source_keys = (
         "name", "category", "latitude", "longitude", "coordinate_system",
-        "source_url", "source_provenance", "captured_at", "opening_hours",
+        "source_url", "source_attribution", "source_attribution_url",
+        "source_provenance", "captured_at", "opening_hours",
         "price_state", "source_tags", "public_access_state",
         "distance_m", "distance_basis",
     )
@@ -2558,7 +2906,7 @@ def preview_bootstrap_candidate(
         select(RealPlaceCandidate).where(
             RealPlaceCandidate.id == str(candidate_id),
             RealPlaceCandidate.journey_id == journey.id,
-            RealPlaceCandidate.provider_key == "overpass",
+            RealPlaceCandidate.provider_key.in_(_BOOTSTRAP_DISCOVERY_PROVIDER_KEYS),
         )
     )
     if row is None:
@@ -2672,7 +3020,7 @@ def preview_bootstrap_candidate(
         "receipt_id": str(receipt_id),
         "candidate_id": row.id,
         "expires_at": matching_scope.get("expires_at") or row.expires_at,
-        "provider": "overpass",
+        "provider": row.provider_key,
         "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
         "destination": {
             "name": observation["name"],
@@ -2683,6 +3031,8 @@ def preview_bootstrap_candidate(
             "longitude": observation["longitude"],
             "coordinate_system": "WGS84",
             "source_url": source_url,
+            "source_attribution": observation["source_attribution"],
+            "source_attribution_url": observation["source_attribution_url"],
             "map_url": map_url,
             "public_access_state": observation["public_access_state"],
         },
@@ -2690,7 +3040,11 @@ def preview_bootstrap_candidate(
             "state": opening_status,
             "raw": opening.get("raw") or source_tags.get("opening_hours"),
             "source_tags": source_tags,
-            "source": "OpenStreetMap/Overpass",
+            "source": (
+                "OpenStreetMap via Photon"
+                if row.provider_key == "photon"
+                else "OpenStreetMap/Overpass"
+            ),
             "observed_at": observation["captured_at"],
             "claim": "OSM_TAG_CLAIM" if source_tags.get("opening_hours") else "NO_OPENING_TAG",
             "verification_state": (
@@ -2781,7 +3135,7 @@ def save_bootstrap_shortlist_item(
         select(RealPlaceCandidate).where(
             RealPlaceCandidate.id == str(candidate_id),
             RealPlaceCandidate.journey_id == journey.id,
-            RealPlaceCandidate.provider_key == "overpass",
+            RealPlaceCandidate.provider_key.in_(_BOOTSTRAP_DISCOVERY_PROVIDER_KEYS),
         )
     )
     if row is None:
@@ -2931,7 +3285,7 @@ def save_bootstrap_shortlist_item(
         journey_id=journey.id,
         member_id=str(member.id),
         traveler_id=str(traveler_id),
-        provider_key="overpass",
+        provider_key=row.provider_key,
         external_id=row.external_id,
         name=observation["name"],
         category=observation["category"],
@@ -3665,6 +4019,9 @@ def preview_bootstrap_shortlist_item(
     opening = json.loads(row.opening_hours_json or "{}")
     if not isinstance(opening, dict):
         opening = {"status": "UNKNOWN"}
+    cost = json.loads(row.cost_evidence_json or "{}")
+    if not isinstance(cost, dict):
+        cost = {"status": "UNKNOWN"}
     source_tags = json.loads(row.source_tags_json or "{}")
     if not isinstance(source_tags, dict):
         source_tags = {}
@@ -3683,6 +4040,8 @@ def preview_bootstrap_shortlist_item(
             "name": row.name,
             "external_id": row.external_id,
             "source_url": row.source_url,
+            "source_attribution": OSM_ATTRIBUTION,
+            "source_attribution_url": OSM_ATTRIBUTION_URL,
             "latitude": row.latitude,
             "longitude": row.longitude,
             "coordinate_system": "WGS84",
@@ -3699,6 +4058,8 @@ def preview_bootstrap_shortlist_item(
             "verification_state": "EXTERNAL_NOT_ATTESTED" if opening_status not in _BOOTSTRAP_GROUNDED_OPENING else "PROVIDER_GROUNDED",
             "verification_action": "OPEN_SOURCE_PAGE",
         },
+        "cost_evidence": cost,
+        "price_state": str(cost.get("status") or "UNKNOWN").upper(),
         "explore_state": "DRAFT_EXPLORE_ONLY",
         "shared_fields": ["public_destination", "osm_id", "source_url"],
         "withheld_fields": ["origin", "foreground_gps", "query_center", "member_id", "traveler_id", "receipt_id"],
@@ -4135,8 +4496,8 @@ def preview_bootstrap_two_stop_walkability(
         "route_time_state": "PROVIDER_CAPTURED",
         "route_distance_state": "PROVIDER_CAPTURED",
         "route_caveats": [
-            "This is advisory provider evidence, not proof of safety, accessibility, opening, arrival, or a guaranteed ETA.",
-            "Opening hours and price remain UNKNOWN from this route check.",
+            "Estimated walk · check local access and conditions before departure.",
+            "Opening hours and prices · check with the venue.",
         ],
         "shared_fields": shared_fields,
         "withheld_fields": withheld_fields,
@@ -4361,8 +4722,8 @@ def preview_bootstrap_adaptive_short_walk(
             "route_time_state": "PROVIDER_CAPTURED",
             "route_distance_state": "PROVIDER_CAPTURED",
             "route_caveats": [
-                "This is advisory provider evidence, not proof of safety, accessibility, opening, arrival, or a guaranteed ETA.",
-                "Opening hours and price remain UNKNOWN from this route check.",
+                "Estimated walk · check local access and conditions before departure.",
+                "Opening hours and prices · check with the venue.",
             ],
         }
 
@@ -4551,6 +4912,7 @@ def select_bootstrap_candidate(
     traveler_id: str,
     receipt_id: UUID,
     candidate_id: UUID,
+    batch_candidate_ids: frozenset[str] | None = None,
 ) -> dict[str, Any]:
     if str(journey.status).upper() != "DRAFT":
         raise BootstrapDiscoveryError("BOOTSTRAP_REQUIRES_DRAFT", "bootstrap selection requires a DRAFT Journey")
@@ -4562,7 +4924,7 @@ def select_bootstrap_candidate(
         select(RealPlaceCandidate).where(
             RealPlaceCandidate.id == str(candidate_id),
             RealPlaceCandidate.journey_id == journey.id,
-            RealPlaceCandidate.provider_key == "overpass",
+            RealPlaceCandidate.provider_key.in_(_BOOTSTRAP_DISCOVERY_PROVIDER_KEYS),
         )
     )
     if row is None:
@@ -4588,6 +4950,17 @@ def select_bootstrap_candidate(
         except ValueError:
             raise BootstrapDiscoveryError("BOOTSTRAP_CANDIDATE_EXPIRED", "bootstrap candidate expiry is invalid", status_code=410)
     observation = _scope_observation(row, matching_scope)
+    region_status = public_region_status(
+        _public_region_label(session, journey),
+        public_address_from_tags(observation["osm_tags"]),
+    )
+    if region_status == "CONFLICT":
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_REGION_CONFLICT",
+            "This place belongs to another administrative region",
+            status_code=422,
+            details={"region_status": region_status, "next_actions": ["CHOOSE_CANDIDATE_IN_DESTINATION_REGION"]},
+        )
     opening = observation["opening_hours"]
     opening_state = str(opening.get("status") or "UNKNOWN").upper()
     source_url = observation["source_url"] or str(evidence.get("source_url") or "") or None
@@ -4621,12 +4994,30 @@ def select_bootstrap_candidate(
                 "next_actions": ["VERIFY_OPENING_SOURCE", "CHOOSE_ANOTHER_CANDIDATE"],
             },
         )
+    cost = observation["cost_evidence"]
+    cost_status = str(cost.get("status") or "UNKNOWN").upper()
+    if not _cost_evidence_is_grounded(cost):
+        raise BootstrapDiscoveryError(
+            "BOOTSTRAP_COST_UNVERIFIED",
+            "OpenStreetMap did not provide grounded admission-cost evidence; save a private Pocket Walk or choose another candidate",
+            status_code=422,
+            details={
+                "price_state": cost_status,
+                "source_url": source_url,
+                "next_actions": ["VERIFY_COST_SOURCE", "CHOOSE_ANOTHER_CANDIDATE"],
+                "explore_state": "DRAFT_EXPLORE_ONLY",
+                "plan_version_id": None,
+                "selected_place_id": None,
+            },
+        )
     if row.materialized_place_id and row.status == "BOOTSTRAP_SELECTED":
         return {
             "journey_id": journey.id,
             "selected_place_id": row.materialized_place_id,
             "plan_version_id": None,
             "journey_status": journey.status,
+            "provider_key": row.provider_key,
+            "external_id": row.external_id,
             "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
         }
     other_selected = session.scalar(
@@ -4634,6 +5025,7 @@ def select_bootstrap_candidate(
             RealPlaceCandidate.journey_id == journey.id,
             RealPlaceCandidate.status == "BOOTSTRAP_SELECTED",
             RealPlaceCandidate.id != row.id,
+            RealPlaceCandidate.id.not_in(batch_candidate_ids or ()),
         ).limit(1)
     )
     if other_selected:
@@ -4657,7 +5049,7 @@ def select_bootstrap_candidate(
     if osm is None:
         raise BootstrapDiscoveryError("BOOTSTRAP_IDENTITY_INVALID", "candidate OSM identity is invalid", status_code=422)
     existing = session.scalar(
-        select(Place).where(Place.provider_key == "overpass", Place.external_id == row.external_id)
+        select(Place).where(Place.provider_key == row.provider_key, Place.external_id == row.external_id)
     )
     if existing is not None and existing.city_code != journey.city_code:
         raise BootstrapDiscoveryError("BOOTSTRAP_IDENTITY_CONFLICT", "OSM identity belongs to another city")
@@ -4668,7 +5060,7 @@ def select_bootstrap_candidate(
         opening_hours.setdefault("status", "UNKNOWN")
         place = Place(
             id=str(uuid5(NAMESPACE_URL, f"citynexus:bootstrap:{row.provider_key}:{row.external_id}")),
-            provider_key="overpass",
+            provider_key=row.provider_key,
             external_id=row.external_id,
             city_code=journey.city_code,
             name=observation["name"],
@@ -4685,6 +5077,8 @@ def select_bootstrap_candidate(
                     "cost_evidence": cost,
                     "price_known": str(cost.get("status") or "UNKNOWN").upper() in {"KNOWN", "VERIFIED_PROVIDER"},
                     "source_url": source_url,
+                    "source_attribution": observation["source_attribution"],
+                    "source_attribution_url": observation["source_attribution_url"],
                     "selected_member_observed_at": observation["captured_at"],
                     "public_access_state": observation["public_access_state"],
                 }
@@ -4699,7 +5093,7 @@ def select_bootstrap_candidate(
         except IntegrityError:
             session.rollback()
             place = session.scalar(
-                select(Place).where(Place.provider_key == "overpass", Place.external_id == row.external_id)
+                select(Place).where(Place.provider_key == row.provider_key, Place.external_id == row.external_id)
             )
             if place is None:
                 raise BootstrapDiscoveryError("BOOTSTRAP_MATERIALIZATION_FAILED", "Place materialization failed")
@@ -4714,5 +5108,7 @@ def select_bootstrap_candidate(
         "selected_place_id": place.id,
         "plan_version_id": None,
         "journey_status": journey.status,
+        "provider_key": row.provider_key,
+        "external_id": row.external_id,
         "provider_provenance": _row_provider_provenance(row, scope=matching_scope),
     }

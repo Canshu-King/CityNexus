@@ -1,0 +1,31 @@
+{
+  "test_kind": "CHROME_USE_REAL_SIGNED_DRAFT",
+  "origin": "http://127.0.0.1:14332/revolution",
+  "running_backend_product_sha": "cb86b7689a327cbb3c217f3ea939198c1d59efa5",
+  "request_path_template": "/api/v1/journeys/{id}/trial-ai-discovery",
+  "new_explicit_request_count": 1,
+  "local_response_http_status": 502,
+  "upstream_port": 7865,
+  "upstream_http_status": 401,
+  "elapsed_ms": 265,
+  "correlation_id": "ab0e3057913940769817ae58205a8cdb",
+  "consent_copy_visible": "点击后将文字发送给已连接的 AI 服务，可能产生模型费用。",
+  "native_click_result": "NO_REQUEST_CONFIRMED_BY_RESOURCE_TIMING_AND_BACKEND_LOG",
+  "actual_submit": "SAME_PAGE_DOM_CLICK_AFTER_NO_REQUEST_CONFIRMATION",
+  "response_observation": "SANITIZED_FETCH_RESPONSE_FIELDS_AND_BACKEND_DIAGNOSTIC",
+  "request_text_included": false,
+  "key_or_headers_included": false,
+  "model_execution_verified": false,
+  "tool_protocol_verified": false,
+  "active_run_persisted": false,
+  "poi_queries_performed": 0,
+  "save_go_or_payment_performed": false,
+  "retry_performed": false,
+  "credential_metadata_checks": {
+    "endpoint": "http://127.0.0.1:7863/v1/models",
+    "console_config_api_key_http_status": 401,
+    "user_supplied_gateway_guide_key_http_status": 200,
+    "model_count": 53,
+    "additional_chat_completions_calls": 0
+  }
+}

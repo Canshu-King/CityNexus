@@ -1,0 +1,90 @@
+{
+  "product_sha": "05f858712b02a0fd10eba5bb194940b6e3b7708c",
+  "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+  "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+  "source": "real WB2API auto:cheapest conversation through native Chrome-use fill/Enter and option Enter",
+  "mode": "DISCUSS",
+  "unlimited_research": true,
+  "status": "NEEDS_DECISION",
+  "pending_question": {
+    "id": "86087e2f-da4c-4189-aeda-42ec4eddc32d",
+    "options": [
+      {
+        "description": "推荐。乘电梯直达高处平台看珠江与城市全景，不用在塔里长时间走动，日落时段最美。需购票，票价与开放时间我暂时查不到，会标注待确认。",
+        "label": "登塔（付费看最高处夜景）"
+      },
+      {
+        "description": "在塔基的东广场/广州塔广场坐着看塔身亮灯与江景，步行几乎为零。缺点是只能看外观，视角不如登塔。",
+        "label": "不登塔，广场+江边慢坐看夜景（免费）"
+      },
+      {
+        "description": "以登塔观景为主，额外留半小时在江边平台拍塔身全景。步行量略增，需要多一段移动。",
+        "label": "登塔为主＋下楼后到江边拍一张塔身全景"
+      }
+    ],
+    "question": "好的，那我们把这一天的重心放在广州塔。塔景优先具体想怎么看塔？（下面会据此调整下午到晚上的节奏，博物馆暂时按你上次说的不安排）"
+  },
+  "reply": "塔景优先",
+  "usage_before": {
+    "model_turns": 8,
+    "tool_calls": 7
+  },
+  "usage_after": {
+    "model_turns": 10,
+    "tool_calls": 9
+  },
+  "prior_model_limit": 8,
+  "provider_calls_before": 115,
+  "provider_calls_after": 115,
+  "draft_unchanged": true,
+  "variants_unchanged": true,
+  "draft_sha256": "79cc18ada5f9352cb3272d0d38efa4f9bdef27a87dc2d5a9b5f449cfeb329a37",
+  "variants_sha256": "d8e36e1b7aee0074bfd510c31abee8e72f87ffa728247863dce8d7471c35a8a3",
+  "actual_runs": [
+    {
+      "id": "d1fac920-139c-4e13-b8d4-e12044196779",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "status": "PARTIAL",
+      "created_at": "2026-10-19T15:22:46.678843+00:00",
+      "tools": [
+        {
+          "tool_name": "ask_traveler",
+          "status": "COMPLETED",
+          "created_at": "2026-10-19T15:22:53.291077+00:00",
+          "completed_at": "2026-10-19T15:22:53.295086+00:00"
+        }
+      ]
+    },
+    {
+      "id": "234aade2-a0d8-4a90-bb6a-879c3f434952",
+      "provider_key": "hermes",
+      "model_key": "auto:cheapest",
+      "status": "PARTIAL",
+      "created_at": "2026-10-19T15:20:16.187841+00:00",
+      "tools": [
+        {
+          "tool_name": "ask_traveler",
+          "status": "COMPLETED",
+          "created_at": "2026-10-19T15:20:21.338281+00:00",
+          "completed_at": "2026-10-19T15:20:21.343272+00:00"
+        }
+      ]
+    }
+  ],
+  "hardware_phone": false,
+  "human_verified": false,
+  "tests": {
+    "backend": "29/29, isolated SQLite",
+    "UI": "full 48/48; final discussion focus 3/3",
+    "typescript": "PASS",
+    "vite": "PASS"
+  },
+  "final_commit_readback": {
+    "http": 200,
+    "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+    "mode": "DISCUSS",
+    "unlimited": true,
+    "choices": 3
+  }
+}

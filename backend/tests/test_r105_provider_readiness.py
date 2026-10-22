@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.core.config import settings
+from app.execution import bootstrap_discovery as discovery
 from app.execution.bootstrap_discovery import bootstrap_discovery_readiness
 
 
@@ -8,10 +9,20 @@ def _set(name: str, value):
     object.__setattr__(settings, name, value)
 
 
-def test_r105_provider_readiness_is_nonsecret_and_strict():
+def test_r105_provider_readiness_is_nonsecret_and_strict(monkeypatch):
     names = ("real_city_enabled", "real_city_mode", "overpass_url", "city_search_test_provider")
     previous = {name: getattr(settings, name) for name in names}
     try:
+        monkeypatch.setattr(
+            discovery,
+            "_bootstrap_discovery_provider_config",
+            lambda: {
+                "provider": "overpass",
+                "provider_name": "OpenStreetMap Overpass",
+                "expected_recipient": "OpenStreetMap/Overpass public map data service",
+                "base_url": str(settings.overpass_url or "").strip(),
+            },
+        )
         _set("real_city_enabled", False)
         _set("real_city_mode", "live")
         _set("overpass_url", "https://user:secret@example.invalid/api?token=secret")
@@ -59,10 +70,20 @@ def test_r105_provider_readiness_is_nonsecret_and_strict():
             _set(name, value)
 
 
-def test_r105_provider_readiness_rejects_loopback_without_test_boundary():
+def test_r105_provider_readiness_rejects_loopback_without_test_boundary(monkeypatch):
     names = ("real_city_enabled", "real_city_mode", "overpass_url", "city_search_test_provider")
     previous = {name: getattr(settings, name) for name in names}
     try:
+        monkeypatch.setattr(
+            discovery,
+            "_bootstrap_discovery_provider_config",
+            lambda: {
+                "provider": "overpass",
+                "provider_name": "OpenStreetMap Overpass",
+                "expected_recipient": "OpenStreetMap/Overpass public map data service",
+                "base_url": str(settings.overpass_url or "").strip(),
+            },
+        )
         _set("real_city_enabled", True)
         _set("real_city_mode", "live")
         _set("city_search_test_provider", False)

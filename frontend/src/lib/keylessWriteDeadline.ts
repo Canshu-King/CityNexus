@@ -59,9 +59,8 @@ export function keylessWriteUnknownReading(
   const seconds = Math.round(deadlineMs / 1000);
   return {
     text:
-      `${method} ${path} -- 这台设备等到 ${seconds} 秒就停下来了。` +
-      `这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。` +
-      `也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。`,
+      `${method} ${path} 请求超时（${seconds} 秒）。` +
+      `请求已发送，结果待确认；刷新查看状态后再决定是否重试。`,
     from: "device" as const,
   };
 }

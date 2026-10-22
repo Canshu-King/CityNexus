@@ -45,12 +45,9 @@ import {
  * 「模型原始输出」 label credits a model for text the deterministic compiler wrote -- the mirror
  * image of the defect ORD-0240 closed.
  *
- * The vocabulary is the one `backend/app/agent/ai_availability.py:36-44` produces after ORD-0359,
- * which renamed `READY` away because "a key exists" was promising that it works. So
- * `CONFIGURED_UNVERIFIED` deliberately does **not** mean a model wrote this -- mapping it to
- * "model" would re-open 0359's hole one level up. Only `PROVIDER_REFUSED` states that the provider
- * was actually reached and answered. Everything else, including a missing state, keeps today's
- * wording, because "we were not told" is not evidence that nothing ran either.
+ * The vocabulary comes from `backend/app/agent/ai_availability.py:36-44` after ORD-0359.
+ * `CONFIGURED_UNVERIFIED` marks a loaded endpoint; `PROVIDER_REFUSED` records an answered request.
+ * Other or missing states retain the current origin label.
  */
 type SummaryOrigin = "model" | "no_model" | "not_stated";
 

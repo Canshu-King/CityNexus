@@ -1,0 +1,227 @@
+{
+  "product_sha": "d796a731e0",
+  "browser": "installed Chrome via chrome-use focus/Enter",
+  "viewport_kind": "CSS viewport, not phone hardware",
+  "http_status": 201,
+  "result": {
+    "journey_id": "f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+    "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+    "draft_revision": 2,
+    "plan_version_id": "54d2cfca-ad1f-4dd5-a198-128c21a1294c",
+    "status": "CANDIDATE",
+    "selected": false,
+    "activated": false,
+    "slots_count": 3,
+    "gaps": [
+      {
+        "sequence_no": 1,
+        "title": "广州塔（塔下广场慢坐休息、看日落，少走路）",
+        "kind": "SOURCE_IDENTITY",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 1,
+        "title": "广州塔（塔下广场慢坐休息、看日落，少走路）",
+        "kind": "OPENING_HOURS",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 1,
+        "title": "广州塔（塔下广场慢坐休息、看日落，少走路）",
+        "kind": "ADMISSION_PRICE",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 2,
+        "title": "广州塔（塔下广场 + 日落夜景，少走路）",
+        "kind": "SOURCE_IDENTITY",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 2,
+        "title": "广州塔（塔下广场 + 日落夜景，少走路）",
+        "kind": "OPENING_HOURS",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 2,
+        "title": "广州塔（塔下广场 + 日落夜景，少走路）",
+        "kind": "ADMISSION_PRICE",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 2,
+        "title": "广州塔（塔下广场 + 日落夜景，少走路）",
+        "kind": "TRANSFER_ROUTE",
+        "place_id": "amap:B00140WBI1",
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 3,
+        "title": "晚餐建议：海珠/珠江新城一带就近用餐（未指定门店，费用未知）",
+        "kind": "PLACE_REQUIRED",
+        "place_id": null,
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 3,
+        "title": "晚餐建议：海珠/珠江新城一带就近用餐（未指定门店，费用未知）",
+        "kind": "OPENING_HOURS",
+        "place_id": null,
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 3,
+        "title": "晚餐建议：海珠/珠江新城一带就近用餐（未指定门店，费用未知）",
+        "kind": "ADMISSION_PRICE",
+        "place_id": null,
+        "status": "UNKNOWN"
+      },
+      {
+        "sequence_no": 3,
+        "title": "晚餐建议：海珠/珠江新城一带就近用餐（未指定门店，费用未知）",
+        "kind": "TRANSFER_ROUTE",
+        "place_id": null,
+        "status": "UNKNOWN"
+      }
+    ],
+    "mobility_frozen": false,
+    "idempotency_replay": false
+  },
+  "request_schedule": {
+    "expected_revision": 2,
+    "schedule": [
+      {
+        "day_index": 0,
+        "slot_index": 0,
+        "start_time": "14:00",
+        "end_time": "15:00"
+      },
+      {
+        "day_index": 0,
+        "slot_index": 1,
+        "start_time": "19:00",
+        "end_time": "20:00"
+      },
+      {
+        "day_index": 0,
+        "slot_index": 2,
+        "start_time": "20:00",
+        "end_time": "21:00"
+      }
+    ]
+  },
+  "provider_requests": 0,
+  "model_requests": 0,
+  "assertion": "CANDIDATE only; canonical Place not created; no select/start",
+  "ui_sha": "b81fe06212",
+  "backend_sha": "d796a731e0",
+  "readback": [
+    {
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d",
+      "status": 200,
+      "data": {
+        "status": "DRAFT",
+        "active_plan_version_id": null
+      }
+    },
+    {
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/agent/goal-tasks/73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+      "status": 200,
+      "data": {
+        "task_id": "73a7efa7-0fb0-4e2a-bf8f-3001a3865600",
+        "draft_revision": 2,
+        "prepared_plan_id": "54d2cfca-ad1f-4dd5-a198-128c21a1294c",
+        "schedule": [
+          {
+            "day_index": 0,
+            "slot_index": 0,
+            "start_time": "14:00",
+            "end_time": "15:00"
+          },
+          {
+            "day_index": 0,
+            "slot_index": 1,
+            "start_time": "19:00",
+            "end_time": "20:00"
+          },
+          {
+            "day_index": 0,
+            "slot_index": 2,
+            "start_time": "20:00",
+            "end_time": "21:00"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/plans",
+      "status": 200,
+      "data": [
+        {
+          "id": "54d2cfca-ad1f-4dd5-a198-128c21a1294c",
+          "status": "CANDIDATE",
+          "is_current": false,
+          "selectable": false,
+          "total_cost_status": "PARTIAL_UNKNOWN",
+          "activities": [
+            {
+              "id": "105009de-dc6f-4711-a8c3-fe1a08086be4",
+              "title": "广州塔（塔下广场慢坐休息、看日落，少走路）",
+              "start_at": "2026-10-20T14:00:00+08:00",
+              "end_at": "2026-10-20T15:00:00+08:00",
+              "cost_status": "UNKNOWN",
+              "source_candidate_id": "amap:B00140WBI1"
+            },
+            {
+              "id": "32d1ea21-c8d0-4267-ab85-a26306b69295",
+              "title": "广州塔（塔下广场 + 日落夜景，少走路）",
+              "start_at": "2026-10-20T19:00:00+08:00",
+              "end_at": "2026-10-20T20:00:00+08:00",
+              "cost_status": "UNKNOWN",
+              "source_candidate_id": "amap:B00140WBI1"
+            },
+            {
+              "id": "0b0fdc37-e06a-460d-9a1e-5da3c8d8075f",
+              "title": "晚餐建议：海珠/珠江新城一带就近用餐（未指定门店，费用未知）",
+              "start_at": "2026-10-20T20:00:00+08:00",
+              "end_at": "2026-10-20T21:00:00+08:00",
+              "cost_status": "UNKNOWN",
+              "source_candidate_id": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/f97d2dbf-921c-4942-b29b-7765ccb52e5d/departure",
+      "status": 200,
+      "data": {
+        "gate": "NO_PLAN_SELECTED",
+        "candidate_count": 1
+      }
+    }
+  ],
+  "frames": [
+    {
+      "width": 390,
+      "document_width": 390,
+      "nav_buttons": 3,
+      "composers": 1,
+      "path": "trial/results/assets/20261020-v3-390-preparation-saved.png"
+    },
+    {
+      "width": 430,
+      "document_width": 430,
+      "nav_buttons": 3,
+      "composers": 1,
+      "path": "trial/results/assets/20261020-v3-430-candidate-saved.png"
+    }
+  ]
+}

@@ -7,9 +7,11 @@ from __future__ import annotations
 
 import os
 import unittest
+from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
-from wb2api_agent import agent_settings
+from wb2api_agent import agent_settings, read_key_file
 
 
 class TestWb2ApiAgentSettings(unittest.TestCase):
@@ -46,6 +48,23 @@ class TestWb2ApiAgentSettings(unittest.TestCase):
             with patch("wb2api_agent.getpass.getpass", return_value=""):
                 with self.assertRaises(ValueError):
                     agent_settings()
+
+    def test_explicit_guide_key_overrides_unrelated_environment(self):
+        with patch.object(Path,"stat",return_value=SimpleNamespace(st_size=100)), \
+             patch.object(Path,"read_text",return_value="| **API Key** | `local-fixture-guide-key` |"), \
+             patch.dict(os.environ,{"WB2API_KEY":"wrong-fixture-environment"}), \
+             patch("wb2api_agent.getpass.getpass") as prompt:
+            configured,_=agent_settings(key_file=Path("TEST_FIXTURE.md"))
+        self.assertEqual(configured["CITYNEXUS_HERMES_API_KEY"],"local-fixture-guide-key")
+        prompt.assert_not_called()
+
+    def test_single_key_and_invalid_documents(self):
+        with patch.object(Path,"stat",return_value=SimpleNamespace(st_size=100)):
+            with patch.object(Path,"read_text",return_value="local-fixture-plain-key\n"):
+                self.assertEqual(read_key_file(Path("TEST_FIXTURE.txt")),"local-fixture-plain-key")
+            for text in ('{"api_key":"wrong-field"}',"not a key\nrun something",""):
+                with patch.object(Path,"read_text",return_value=text),self.assertRaises(ValueError):
+                    read_key_file(Path("TEST_FIXTURE.txt"))
 
 
 if __name__ == "__main__":
