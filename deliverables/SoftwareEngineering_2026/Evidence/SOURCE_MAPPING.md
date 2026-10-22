@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1095 |
+| Commits on this branch | `git rev-list --count HEAD` | 1096 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1006), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1007), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -105,22 +105,22 @@ choice rather than a fact and is marked provisional in its own Notes field.
 
 | file | bytes | sha256/16 |
 |---|---|---|
-| `Visio/01_CityNexus_System_Architecture.vsdx` | 57854 | `e5c59fcbd8777c00` |
-| `Visio/02_CityNexus_User_Journey.vsdx` | 58343 | `7262e57ae18c6ec9` |
-| `Visio/03_CityNexus_Agent_Workflow.vsdx` | 47953 | `12bc16742a7d8f8a` |
-| `Visio/04_CityNexus_Use_Case.vsdx` | 84063 | `8206e8ac86e40dba` |
+| `Visio/01_CityNexus_System_Architecture.vsdx` | 57842 | `556aef240320a841` |
+| `Visio/02_CityNexus_User_Journey.vsdx` | 58340 | `6ef27997ce75038a` |
+| `Visio/03_CityNexus_Agent_Workflow.vsdx` | 47949 | `0a6ccdc46b057dd0` |
+| `Visio/04_CityNexus_Use_Case.vsdx` | 84061 | `c9c0ace7eab3961d` |
 | `Visio/previews/01_CityNexus_System_Architecture.gate.json` | 9907 | `4c514f8a540127a6` |
-| `Visio/previews/01_CityNexus_System_Architecture.pdf` | 50297 | `6a5af7a061b40edc` |
+| `Visio/previews/01_CityNexus_System_Architecture.pdf` | 50297 | `b817ad00db06ae00` |
 | `Visio/previews/01_CityNexus_System_Architecture.png` | 147009 | `5f106c41234413ee` |
 | `Visio/previews/02_CityNexus_User_Journey.gate.json` | 12664 | `bc5195bb111edb5d` |
-| `Visio/previews/02_CityNexus_User_Journey.pdf` | 46380 | `e73363bb8930712d` |
-| `Visio/previews/02_CityNexus_User_Journey.png` | 159783 | `a4d8ed593e543beb` |
+| `Visio/previews/02_CityNexus_User_Journey.pdf` | 46380 | `9aa7ffab98937e8f` |
+| `Visio/previews/02_CityNexus_User_Journey.png` | 134675 | `603eee56bb819e0c` |
 | `Visio/previews/03_CityNexus_Agent_Workflow.gate.json` | 12547 | `6f2f4cb1903e64c2` |
-| `Visio/previews/03_CityNexus_Agent_Workflow.pdf` | 46235 | `9b69fa2675905a14` |
-| `Visio/previews/03_CityNexus_Agent_Workflow.png` | 154636 | `e27b49ced9eee7e0` |
+| `Visio/previews/03_CityNexus_Agent_Workflow.pdf` | 46235 | `a55d8e69b964a785` |
+| `Visio/previews/03_CityNexus_Agent_Workflow.png` | 144205 | `2a0ea2e57539fa78` |
 | `Visio/previews/04_CityNexus_Use_Case.gate.json` | 18586 | `751ef58b20043172` |
-| `Visio/previews/04_CityNexus_Use_Case.pdf` | 52267 | `d69cb560a6e99e54` |
-| `Visio/previews/04_CityNexus_Use_Case.png` | 325141 | `24e89c0178f8dfee` |
+| `Visio/previews/04_CityNexus_Use_Case.pdf` | 52267 | `1294964d7c700c9f` |
+| `Visio/previews/04_CityNexus_Use_Case.png` | 277656 | `cda743b15a367a1d` |
 
 **Microsoft Project**
 
