@@ -1,0 +1,153 @@
+{
+ "milestones": [
+  {
+   "name": "M1  Topic and scope agreed",
+   "finish": "2026-09-05",
+   "deadline": "2026-09-05",
+   "wbs": "1.4",
+   "cost": 0.0
+  },
+  {
+   "name": "M2  Requirements baseline drafted",
+   "finish": "2026-09-12",
+   "deadline": "2026-09-12",
+   "wbs": "2.5",
+   "cost": 0.0
+  },
+  {
+   "name": "M3  Architecture design complete",
+   "finish": "2026-09-15",
+   "deadline": "2026-09-15",
+   "wbs": "3.4",
+   "cost": 0.0
+  },
+  {
+   "name": "M4  Core backend running end to end",
+   "finish": "2026-09-14",
+   "deadline": "2026-09-13",
+   "wbs": "4.6",
+   "cost": 0.0
+  },
+  {
+   "name": "M5  Provider mesh integrated behind one interface",
+   "finish": "2026-09-21",
+   "deadline": "2026-09-21",
+   "wbs": "5.5",
+   "cost": 0.0
+  },
+  {
+   "name": "M6  Agent surface proven against a live model",
+   "finish": "2026-09-23",
+   "deadline": "2026-09-23",
+   "wbs": "6.6",
+   "cost": 0.0
+  },
+  {
+   "name": "M7  Frontend running against the real backend",
+   "finish": "2026-10-13",
+   "deadline": "2026-10-13",
+   "wbs": "7.4",
+   "cost": 0.0
+  },
+  {
+   "name": "M8  Integration line stable",
+   "finish": "2026-10-08",
+   "deadline": "2026-10-08",
+   "wbs": "8.3",
+   "cost": 0.0
+  },
+  {
+   "name": "M9  System test complete",
+   "finish": "2026-11-02",
+   "deadline": "2026-11-02",
+   "wbs": "9.5",
+   "cost": 0.0
+  },
+  {
+   "name": "M10  Part 1 deadline (missed)",
+   "finish": "2026-10-02",
+   "deadline": "2026-10-02",
+   "wbs": "10.5",
+   "cost": 0.0
+  },
+  {
+   "name": "M11  Mid-term review",
+   "finish": "2026-10-22",
+   "deadline": "2026-10-22",
+   "wbs": "10.6",
+   "cost": 0.0
+  },
+  {
+   "name": "M12  Part 2 submission deadline",
+   "finish": "2026-11-06",
+   "deadline": "2026-11-06",
+   "wbs": "10.7",
+   "cost": 0.0
+  },
+  {
+   "name": "M13  Final coursework delivery",
+   "finish": "2026-11-06",
+   "deadline": "2026-11-06",
+   "wbs": "11.3",
+   "cost": 0.0
+  }
+ ],
+ "timelineRows": [
+  [
+   "M1  Topic and scope agreed",
+   "2026-09-05"
+  ],
+  [
+   "M2  Requirements baseline drafted",
+   "2026-09-12"
+  ],
+  [
+   "M3  Architecture design complete",
+   "2026-09-15"
+  ],
+  [
+   "M4  Core backend running end to end",
+   "2026-09-14"
+  ],
+  [
+   "M5  Provider mesh integrated behind one interface",
+   "2026-09-21"
+  ],
+  [
+   "M6  Agent surface proven against a live model",
+   "2026-09-23"
+  ],
+  [
+   "M7  Frontend running against the real backend",
+   "2026-10-13"
+  ],
+  [
+   "M8  Integration line stable",
+   "2026-10-08"
+  ],
+  [
+   "M9  System test complete",
+   "2026-11-02"
+  ],
+  [
+   "M10  Part 1 deadline (missed)",
+   "2026-10-02"
+  ],
+  [
+   "M11  Mid-term review",
+   "2026-10-22"
+  ],
+  [
+   "M12  Part 2 submission deadline",
+   "2026-11-06"
+  ],
+  [
+   "M13  Final coursework delivery",
+   "2026-11-06"
+  ]
+ ],
+ "mismatches": [],
+ "view": "甘特图",
+ "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Microsoft_Project\\Milestone_Timeline.pdf",
+ "source": "CityNexus_Software_Engineering_Plan.mpp"
+}
