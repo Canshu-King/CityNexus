@@ -1,0 +1,25 @@
+rows read: en=1367 zh=1367
+exec.markEnRoute             | EN: Mark EN_ROUTE                              | ZH: 标记 出发中
+exec.markArrived             | EN: Mark ARRIVED                               | ZH: 标记 已到达
+exec.markInProgress          | EN: Mark IN_PROGRESS                           | ZH: 标记 进行中
+exec.markCompleted           | EN: Mark COMPLETED                             | ZH: 标记 已完成
+exec.offline                 | EN: OFFLINE                                    | ZH: 离线
+exec.authoritativeJourney    | EN: AUTHORITATIVE JOURNEY                      | ZH: 权威行程
+exec.liveJourneyPrefix       | EN: LIVE JOURNEY ·                             | ZH: 实时行程 ·
+studio.selectedStay          | EN: SELECTED STAY                              | ZH: 已选住宿
+studio.noStaySelected        | EN: NO STAY SELECTED                           | ZH: 尚未选择住宿
+nav.groupSystem              | EN: SYSTEM                                     | ZH: 系统
+offline.readOnly             | EN: OFFLINE · READ ONLY                        | ZH: 离线 · 只读
+discovery.brand              | EN: CN / DISCOVERY                             | ZH: CN / 探索
+agent.simulationOnly         | EN: SIMULATION ONLY                            | ZH: 仅模拟，不写入
+v14.kickerProtected          | EN: PROTECTED                                  | ZH: 受保护
+intel.commitment             | EN: COMMITMENT                                 | ZH: 承诺
+bookings.importKicker        | EN: IMPORT CONFIRMATION                        | ZH: 导入确认
+discovery.sealedReplayReady  | EN: SEALED REAL REPLAY READY                   | ZH: 密封真实回放就绪
+discovery.mixedDegraded      | EN: MIXED / DEGRADED                           | ZH: 混合 / 降级
+discovery.sealedReal         | EN: SEALED REAL REPLAY                         | ZH: 密封真实回放
+discovery.demoReplay         | EN: DEMO REPLAY                                | ZH: 演示回放
+discovery.mobility           | EN: MOBILITY                                   | ZH: 出行
+me.preAuthorized             | EN: PRE-AUTHORIZED                             | ZH: 预授权
+v14.gateDegraded             | EN: DEGRADED · confirmation                    | ZH: 已降级 · 需确认
+v14.gatePassed               | EN: PASSED · provider facts frozen             | ZH: 已通过 · 提供方事实已冻结
