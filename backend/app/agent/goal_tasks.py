@@ -35,7 +35,7 @@ from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
-from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, latest_traveller_request
+from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, asks_for_plan_versions, latest_traveller_request
 from app.agent.goal_media import read_source_media, media_tool_definition, source_lead
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -1229,7 +1229,8 @@ def resume_goal_task(
         # giving an instruction about a schedule that already exists, so the round runs as an execution
         # round. Left in DISCUSS the Agent can only talk -- which is exactly when it starts saying the
         # change has been made.
-        if (interaction_mode == "DISCUSS" and normalized_message and asks_for_schedule_change(normalized_message)
+        if (interaction_mode == "DISCUSS" and normalized_message
+                and (asks_for_schedule_change(normalized_message) or asks_for_plan_versions(normalized_message))
                 and any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))):
             interaction_mode = "RESEARCH"
         task["interaction_mode"] = interaction_mode
@@ -1410,6 +1411,33 @@ def resume_goal_task(
     # the pair stored with it below is what the screen shows, so a reply that did not move the
     # schedule cannot be read as one that did.
     draft_revision_before_round = (task.get("draft_artifact") or {}).get("revision")
+
+    def unfinished_request_note(current_task: dict, claim_text: str = "") -> str | None:
+        """What the traveller asked for that this round has not actually done, or None.
+
+        Two shapes were measured on real browsers. A sentence asking to move a half-day, answered with
+        words while the saved schedule stayed put; and a sentence asking for versions to compare,
+        answered with paragraphs while the task held no versions at all. The second one has no cards to
+        pick, so the comparison screen the traveller was promised simply is not there.
+        """
+        if current_task.get("interaction_mode") == "DISCUSS":
+            return None
+        artifact = current_task.get("draft_artifact") or {}
+        if not any(day.get("slots") for day in artifact.get("days") or []):
+            return None
+        request = normalized_message or latest_traveller_request(current_task)
+        if asks_for_plan_versions(request) and not (current_task.get("draft_variants") or []):
+            return ("The traveller asked for versions to choose between, and this task has none saved. "
+                    "Call save_draft_variants now using only the places, areas and routes owned by this task, "
+                    "leave every unverified price and hour unknown, then let the traveller pick one.")
+        revision_still = artifact.get("revision") == draft_revision_before_round
+        if revision_still and (asks_for_schedule_change(request) or claims_written_change(claim_text)):
+            return ("The traveller's message asked for a change to the saved schedule, and this round has not "
+                    "moved it. Do not report the change as already made. Either call replace_draft_slots now "
+                    "with exactly the requested day or half-day and keep every other slot, or ask one concrete "
+                    "question about that change and say plainly that nothing has been altered yet.")
+        return None
+
     research_failed = False
     assistant_summary: str | None = None
     draft_delivery_reminded = False
@@ -1527,19 +1555,14 @@ def resume_goal_task(
                         "Use save_draft_itinerary now for a useful partial draft from those task-owned IDs. "
                         "Keep missing prices/hours unknown. Do not ask the traveler to click again."})
                     continue
-                # A reply that describes a change to a saved schedule without moving its revision is
-                # the failure the traveller cannot see for themselves, so the server asks once for the
-                # write (or one concrete question) before the round is allowed to end.
-                revision_moved = (task.get("draft_artifact") or {}).get("revision") != draft_revision_before_round
-                if (task.get("interaction_mode") != "DISCUSS" and has_draft and not revision_moved
-                        and remaining and tool_remaining and not edit_write_reminded):
+                # Two shapes were measured on real browsers: a reply that only *describes* a change to a
+                # saved schedule, and a reply that answers a request for versions to compare with prose.
+                # Both leave the traveller with words and nothing to act on, so one already-approved turn
+                # is spent putting the request back in front of the Agent before the round may end.
+                note = unfinished_request_note(task)
+                if note and remaining and tool_remaining and not edit_write_reminded:
                     edit_write_reminded = True
-                    messages.append({"role": "system", "content":
-                        "This round ended without moving the saved draft. If the traveler asked for a change to a "
-                        "day or half-day, call replace_draft_slots now and apply exactly that, keeping every other slot. "
-                        "If the request is ambiguous, call ask_traveler with one concrete question instead. "
-                        "If nothing needed changing, answer in one short sentence and stop. "
-                        "Never describe a change as made when no draft tool returned a receipt."})
+                    messages.append({"role": "system", "content": note})
                     continue
                 assistant_summary = plain_traveller_text(message.get("content"))[:2000] or None
                 mission = session.get(JourneyMission, mission.id)
@@ -1602,19 +1625,11 @@ def resume_goal_task(
                     # a change ("收到，按你说的改…其余原封不动") while this very round moved nothing.
                     # One already-approved turn is spent asking for the write or for a question that does
                     # not claim work; the request is not started as a tool call, so the ledger stays clean.
-                    if (tool_name == "ask_traveler" and not edit_write_reminded
-                            and task.get("interaction_mode") != "DISCUSS"
-                            and any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
-                            and (task.get("draft_artifact") or {}).get("revision") == draft_revision_before_round
-                            and (asks_for_schedule_change(normalized_message or latest_traveller_request(task))
-                                 or claims_written_change(str(args.get("question") or "")))):
+                    ask_traveler_note = (unfinished_request_note(task, str(args.get("question") or ""))
+                                         if tool_name == "ask_traveler" and not edit_write_reminded else None)
+                    if ask_traveler_note:
                         edit_write_reminded = True
-                        messages.append({"role": "system", "content":
-                            "The traveller's last message asked for a change to the saved schedule, and this round "
-                            "has not moved it. Do not report the change as already made, and do not change the "
-                            "subject. Either call replace_draft_slots now with exactly the requested half-day and "
-                            "keep every other slot, or ask one concrete question about that change and say plainly "
-                            "that nothing has been altered yet."})
+                        messages.append({"role": "system", "content": ask_traveler_note})
                         continue
                     if tool_name not in {"ask_traveler", "inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")

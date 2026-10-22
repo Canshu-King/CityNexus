@@ -576,3 +576,103 @@ def test_a_typed_question_about_the_trip_stays_a_discussion(goal_scope, monkeypa
     session.expire_all()
     restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
     assert restored["interaction_mode"] == "DISCUSS"
+
+
+def test_versions_asked_for_in_words_are_put_back_until_they_exist(goal_scope, monkeypatch):
+    """The comparison screen only exists when the task holds versions, not when prose lists them.
+
+    Measured twice: 「按轻松少走、省钱、本地特色三种想法各出一版，让我三选一」 came back as three
+    paragraphs and the on-screen counts for the variant tabs and cards stayed at zero -- because a
+    typed message ran as a discussion round, where the version tool is not even offered, and the
+    round was then allowed to end with words.
+    """
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+
+    def fixture_discovery(_session, _journey, task, **args):
+        place = {"id": "photon:node/123", "name": "TEST_FIXTURE 古迹", "source_url": "https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        task["candidate_place_ids"] = ["photon:node/123"]
+        return {"tool": "discover_places", "status": "RESULTS", "places": [place], "http_status": 200}
+
+    class SeedDraft:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+        turn = 0
+
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "v-search", "function": {
+                    "name": "discover_places", "arguments": json.dumps({"query": "TEST_FIXTURE 古迹"})}}]}
+            if self.turn == 2:
+                return {"tool_calls": [{"id": "v-write", "function": {
+                    "name": "save_draft_itinerary", "arguments": json.dumps({"days": [{
+                        "date": "2026-11-01", "slots": [{
+                            "title": "TEST_FIXTURE 古迹半天", "time_of_day": "morning",
+                            "place_id": "photon:node/123", "notes": "待核实"}]}]})}}]}
+            return {"content": "TEST_FIXTURE 草稿已存"}
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: SeedDraft())
+    monkeypatch.setattr(goal_tasks_agent, "discover_goal_places", fixture_discovery)
+    goal_tasks_agent.resume_goal_task(session, journey, member, created["task_id"])
+
+    rounds = []
+
+    def variant_arguments() -> str:
+        day = [{"date": "2026-11-01", "slots": [{
+            "title": "TEST_FIXTURE 古迹半天", "time_of_day": "morning",
+            "place_id": "photon:node/123", "notes": "待核实"}]}]
+        # Only the three ids the tool itself declares (relaxed / budget / local) can be published;
+        # a free-letter id is refused, and a refused call is exactly what used to leave the screen empty.
+        return json.dumps({"variants": [
+            {"id": "relaxed", "title": "TEST_FIXTURE 轻松少走", "comparison": "少走路，半天一个点", "days": day},
+            {"id": "budget", "title": "TEST_FIXTURE 省钱", "comparison": "只买大门票", "days": day}]})
+
+    class ProseThenVariants:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+
+        def _complete(self, messages):
+            rounds.append(messages[-1]["role"])
+            if len(rounds) == 1:
+                return {"content": "TEST_FIXTURE 轻松少走版……；省钱版……（三选一）"}
+            if len(rounds) == 2:
+                assert rounds[-1] == "system", "a prose answer to a request for versions is put back once"
+                return {"tool_calls": [{"id": "v-variants", "function": {
+                    "name": "save_draft_variants", "arguments": variant_arguments()}}]}
+            return {"content": "TEST_FIXTURE 两版都存好了，你想选哪一版？"}
+
+        _tool_allowlist = frozenset()
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: ProseThenVariants())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="按轻松少走、省钱、本地特色三种想法各出一版，让我三选一。",
+        message_id=str(uuid4()), interaction_mode="RESEARCH",
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+
+    assert len(rounds) == 3
+    step = [item for item in restored["tool_steps"] if item["tool_name"] == "save_draft_variants"]
+    assert len(step) == 1 and step[0]["status"] == "COMPLETED", step
+    assert step[0]["result"]["status"] == "VARIANTS_SAVED", step[0]["result"]
+    assert [item["title"] for item in restored["draft_variants"]] == ["TEST_FIXTURE 轻松少走", "TEST_FIXTURE 省钱"]
+    assert [item["id"] for item in restored["draft_variants"]] == ["relaxed", "budget"]
+    assert restored["draft_variants"][0]["unknown_summary"], "an unpublished price stays an unknown"
+
+
+def test_a_versions_request_is_not_left_in_discussion_mode(goal_scope, monkeypatch):
+    """Discussion mode does not even offer save_draft_variants, so the request must not stay there."""
+    session, journey, member, created = _seed_two_slot_draft(goal_scope, monkeypatch, goal_tasks_agent)
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: TextOnly())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="按轻松少走和省钱两种想法各出一版，让我三选一。",
+        message_id=str(uuid4()), interaction_mode="DISCUSS",
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+    assert restored["interaction_mode"] == "RESEARCH"

@@ -53,6 +53,19 @@ def latest_traveller_request(task: dict) -> str:
                  if item.get("role") == "user"), "")
 
 
+# 「按轻松少走、省钱、本地特色三种想法各出一版，让我三选一」 was asked twice on two browsers and both
+# times the three versions came back as paragraphs, so the comparison screen had nothing to show.
+# That sentence is a request for plan versions, and discussion mode does not even offer the tool that
+# makes them (goal_tasks keeps the allowlist to ask_traveler and inspect_journey there).
+_VERSION_MARKS = ("各出一版", "各出几种", "各给一版", "各排一版", "三选一", "二选一", "几种方案", "两种方案",
+                  "三种方案", "两个版本", "对比一下", "各来一版", "分别出一版")
+
+
+def asks_for_plan_versions(text: str) -> bool:
+    value = plain_traveller_text(text)
+    return any(mark in value for mark in _VERSION_MARKS)
+
+
 def dialogue_definition() -> dict:
     return {"type": "function", "function": {"name": "ask_traveler",
         "description": "Ask one useful travel question with concrete choices and wait for the traveler. Use for preferences or tradeoffs, not internal execution details.",

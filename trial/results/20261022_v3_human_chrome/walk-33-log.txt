@@ -1,0 +1,18 @@
+WALK18_START 2026-10-22T13:38:17.534Z attaches to the tab the first sitting left open url=http://127.0.0.1:14371/revolution
+TAB_STATE journey=cde142aa-4a98-4ec5-8fb3-89d7228ce499 bearer=present saved_cards="[{\"id\":\"cde142aa-4a98-4ec5-8fb3-89d7228ce499\",\"cityCode\":\"CN"
+AFTER_RELOAD_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 已有阶段性成果 地图 日程 对话 现实地图 4 处地点 查看其他研究（44） 先看看这些地方 地点相册 先看看这个地点 故宫博物院 查看对应安排 先看看这个地点 南锣鼓巷 查看对应安排 先看看这个地点 鼓楼 查看对应安排 先看看这个地点 萤火虫咖啡(后海店) 在地图中查看 先看看这个地点 糖房咖啡(什刹海店) 查看对应安排 查看更多地点（24） OpenStreetMap 地图地点 0 处 · 高德地点 4 处 高德地点 📍 故宫博物院 北京市 · 东城区 在高德地图打开 ↗ 📍 南锣鼓巷 北京市 · 东城区 在高德地图打开 ↗ 📍 鼓楼 北京市 · 东城区 在高德地图打开 ↗ 📍 糖房咖啡(什刹海店) 北京市 · 西城区 在高德地图打开 ↗ 手动探索地点 CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交给 Agent。 改这句，然后交给 Agent → 1. 选地方 2. 选兴趣 3. 看结果 4. 去散步 我想自己先挑地点（可选） 技术信息 高级功能：地图坐标、分享与技术详情 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认 ⚙ 继续和当前 Agent 对话 发送 ↑
+SLOTS_AFTER_RELOAD=6
+  RELOAD_1 上午 · 故宫博物院（上午逛古迹） 点击编辑
+  RELOAD_2 下午 · 南锣鼓巷·胡同小吃慢逛 点击编辑
+  RELOAD_3 晚上 · 灵活：胡同晚餐/散步 点击编辑
+  RELOAD_4 上午 · 鼓楼（中轴线古迹）点击编辑时段上午下午晚上时间灵活安排备注与后海相邻、步行可达；门票待核实。移除这项安排
+  RELOAD_5 下午 · 糖房咖啡（什刹海店）·坐着看湖点击编辑时段上午下午晚上时间灵活安排备注咖啡小额消费；预算紧可改免费湖边长椅坐。价格待核实。移除这项安排
+  RELOAD_6 晚上 · 灵活：后海周边晚餐点击编辑时段上午下午晚上时间灵活安排备注视体力自由安排。移除这项安排
+CHOSEN_VERSION_SURVIVED_RELOAD=true
+SHOT human-188-schedule-after-choosing-and-reloading.png bytes=50791
+VARIANT_TABS_AFTER_RELOAD=3 VARIANT_CARDS=3
+CHOSEN_BUTTON_LABELS ["选用这份安排","选用这份安排","选用这份安排"]
+DEPARTURE_CARD_VISIBLE=false
+OPENER_VISIBLE=true OPENER_TEXT=准备出发
+DEPARTURE_AFTER_OPENER=true
+PREPARATION_PANEL 准备出发 · 正式计划与待办 从这份安排继续 保留已选地点和日期，先确认每天的时间。 确认每天的时间 11-02 · 故宫博物院（上午逛古迹） 开始 结束 11-02 · 南锣鼓巷·胡同小吃慢逛 开始 结束 11-02 · 灵活：胡同晚餐/散步 开始 结束 11-03 · 鼓楼（中轴线古迹） 开始 结束 11-03 · 糖房咖啡（什刹海店）·坐着看湖 开始 结束 11-03 · 灵活：后海周边晚餐 开始 结束 按以上时间准备方案 保存为正式候选方案 和 Agent 补齐出发资料 TRAVEL PLAN 你的行程方案 刷新方案 等待正式计划 0 份正式候选方案

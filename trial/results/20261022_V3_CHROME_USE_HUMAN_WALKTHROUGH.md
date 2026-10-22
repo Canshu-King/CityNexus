@@ -67,7 +67,8 @@
 - `CHROME_USE_CONNECTED = YES（读数与点击）/ NO（截图）`，`BROWSER_FALLBACK_USED` 已注明原因；今晚这台机器的 Chrome 进程被外部反复收走（同一时刻 WorkBuddy 自己的 debug Chrome 活着，见 `20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md` 第四节），走查改用同机真实 Edge 窗口（Chromium 内核、同一个隔离 profile 思路、可见窗口、真人点击）；Playwright 的截图路径在这台机器上会卡在渲染线程，截图改走调试协议 `Page.captureScreenshot` 直取
 - `HUMAN_BROWSER_USED = YES`
 - `NOVICE_FIRST_CLICK = PASS`（首屏一句话即可提交；第一次按「发送」的死键已修，见 `20261022_V3_SEND_GATE_ON_SCREEN.md:1`；「目的地」仍要再填一次，这是下一个待改点）
-- `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL`（同一 Journey 上已走到「已有阶段性成果 · 2 天 6 项安排」，见 `20261022_v3_human_chrome/walk-06-log.txt:6`；SELECTED/ACTIVE 仍在走。今晚两处新事实：出发面板只在「我的旅程」这一页，地图/日程/对话三页各读一次都是 `preparation=0`，只有 trips 页 `preparation=1 card_visible=true`（`walk-29-log.txt:2` 与 `:14`）；而上一代带真地点之前，一份正式候选已经存进服务器，屏上仍写「等待正式计划 1 份正式候选方案」而 `rev-plan-select` 不出现（`walk-22-log.txt:63` 与 `:64`），出发待办点名「具体地点 · 营业时间 · 票价」）
+- `AGENT_PLAN_VERSIONS_ON_SCREEN = PASS`（旅客一句话要三版，屏上出现 A／B／C 三张对比卡与三个 tab，按下 B 的「选用这份安排」后服务端草案版本 1 → 2、日程换成那一版，刷新仍在；改前同一句话只有散文、两个计数都是零。逐项读数与成因见第七节）
+- `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL`（同一 Journey 上已走到「已有阶段性成果 · 2 天 6 项安排」，见 `20261022_v3_human_chrome/walk-06-log.txt:6`；SELECTED/ACTIVE 仍在走。今晚两处新事实：出发面板只在「我的旅程」这一页，地图/日程/对话三页各读一次都是 `preparation=0`，只有 trips 页 `preparation=1 card_visible=true`（`walk-29-log.txt:2` 与 `:14`）；而上一代带真地点之前，一份正式候选已经存进服务器，屏上仍写「等待正式计划 1 份正式候选方案」而 `rev-plan-select` 不出现（`walk-22-log.txt:63` 与 `:64`），出发待办点名「具体地点 · 营业时间 · 票价」。**今晚这一代带着真高德地点重走，同一句话仍然不出现**：`SELECT_BUTTONS=0`（`walk-34-log.txt:19`），服务端对拍给出名字——四格 `SOURCE_IDENTITY`、两格 `PLACE_REQUIRED`，同库 `places` 表 0 行（`walk-34-server-readback.txt:71`、`:78`、`:94`），成因与既有落库门的接法写在第七节）
 - `AGENT_RESEARCH_GROUNDED = PASS（地名与身份）/ NO（照片）`：屏上「现实地图 4 处地点」`walk-31-log.txt:3`，同一屏「OpenStreetMap 地图地点 0 处 · 高德地点 4 处」与「查看更多地点（24）」`walk-31-log.txt:4`；草案格子里带供应方地点 id（服务端对拍 `walk-22-server-readback.txt:5` 起四行 `place_id= amap:B000A8UIN8` 等）。照片仍是没有：屏上相册 `PHOTO_IMGS=0 FALLBACK_TILES=4`（`walk-31-log.txt:5`），原因是这台机器此刻取不到 Wikimedia 系（直连 TLS 握手超时、走唯一活着的代理口 7892 是 `SSL UNEXPECTED_EOF`＝门户拦截），而产品规则禁止按名字模糊配异地照片，所以屏上是中性占位「先看看这个地点」而不是假图
 - `AGENT_NATURAL_LANGUAGE_HALF_DAY_EDIT = PASS`（旅客一句「11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动」之后，屏上回执 `walk-26-log.txt:32` 出现 `日程：版本 1 → 2`，同一屏第五条变成 `下午 · 什刹海边咖啡馆坐着（萤火虫咖啡 后海店）`（`:39`），`EDIT_CHANGED_SCHEDULE=true`（`:40`）。此前两代同一句话都是 Agent 说「已改」而日程不动，成因与修法见 `20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md` 第七节）
 - `RELOAD_RECOVERY = PASS`（**Agent 改过之后**刷新仍然在：`walk-26-log.txt:42` `AFTER_RELOAD_SLOTS=5 SAME_AS_AFTER_EDIT=true`；更早那一次手动改半天的刷新记录仍在 `walk-07-log.txt:4`，两者不是同一件事）
@@ -88,3 +89,27 @@
 8. 第一次用要先勾输入框下面那两行「本次允许」——勾完「发送 ↑」才会亮起来，不勾的话那一行会一直在那儿等你。
 9. 按「发送 ↑」，Agent 开始研究并会问你问题；它给选项时按选项回答。
 10. 想让它别再问、先出安排，就按「按讨论的方向开始研究」；之后点「日程」看每天安排，一句话告诉它你想改哪半天，回复下面那行「日程：版本 …」会告诉你它到底改没改成。再往下一步「准备出发 · 正式计划与待办」不在地图/日程/对话这三页上，它在底部「我的旅程」里。
+11. 想要几版对比着挑，就在对话里说「按轻松少走、省钱、本地特色三种想法各出一版，让我三选一」；说完点「日程」，上面会出现 A / B / C 三张卡片，按下想用的那张「选用这份安排」，日程就换成那一版。
+
+## 七、廿二日深夜这一趟：三版对比卡片上了屏，最后一道门量出了名字
+
+仪器：同机真实 Edge（Chromium 内核，CDP 9335，独立测试 profile `profile_edge_fourth_use`，视口 414×900），一次坐下走完；截图走 `Page.captureScreenshot`。日志 `20261022_v3_human_chrome/walk-32-log.txt`（第一坐）、`walk-33-log.txt`（同一标签页续走）、`walk-34-log.txt`（准备出发到正式候选），服务端对拍 `walk-34-server-readback.txt`。
+
+三版对比（改前 → 改后，都从屏上读）：
+
+| 量 | 改前（walk-26-log.txt:50） | 改后（walk-32-log.txt） |
+| --- | --- | --- |
+| 要三版之后屏上的对比 tab | `VARIANT_TABS=0` | `VARIANT_TABS=3`，标题 `["A · 轻松少走版","B · 省钱版","C · 本地特色版"]`（`:47`、`:48`） |
+| 可见的方案卡片 | `VARIANT_VISIBLE_CARD=0` | `VARIANT_VISIBLE_CARD=1`，A 卡正文点名 4 处真地点并写「咖啡馆选离鼓楼最近的前海东沿」（`:49`） |
+| 换到第二版 | 无卡可换 | 按 tab 后 `visibleCards=1 card=B 省钱版 …`（`:51`） |
+| 按「选用这份安排」 | 按钮不存在 | `CHOOSE_LABEL=选用这份安排 disabled=false`（`:53`）→ 服务端 PUT 草案 `200`，版本 1 → 2，日程第五格变成「下午 · 糖房咖啡（什刹海店）·坐着看湖」（`walk-34-log.txt:7`） |
+| 刷新之后 | 未测 | `CHOSEN_VERSION_SURVIVED_RELOAD=true`（`walk-33-log.txt:11`），三张卡仍在（`:13`） |
+
+同一趟里另外三条读数：第一次回复的封套标点 `ENVELOPE_PUNCT_ON_SCREEN=[]`（`walk-32-log.txt:13`）；每条回复旁边的服务端回执（`:19` 三条 `这条回复没有改动日程（版本 0）`／`日程：版本 0 → 1`）；旅客那句「11 月 3 日下午…改成什刹海边一家咖啡馆坐着」这一代得到的是**一句落地过的追问**——「11月3日下午改成…你想选哪一家？」并列出三家真高德门店，回执同时写明 `这条回复没有改动日程（版本 1）`（`:30`、`:31`），日程一格未动。这不是上一代那种「说了没做」：话里没宣称已改，回执也说没改，两者一致。
+
+最后一道门现在有了名字（不是猜的，两证对齐）：勾「按以上时间准备方案」→「保存为正式候选方案」得到 `SAVE_STATUS 已保存 6 项正式安排`（`walk-34-log.txt:14`），屏上 `GATE 等待正式计划 1 份正式候选方案`（`:17`），而 `SELECT_BUTTONS=0`、方案卡片末尾写「安排已保存，完成地点资料和转场路线后即可选用。」（`:19`、`:18`）。服务端对拍同一条候选：`PLAN_VERSIONS=1 … status=CANDIDATE`（`walk-34-server-readback.txt:67`）、`authority_state=PROVISIONAL_UNRESOLVED_FACTS`（`:70`），六格里带真高德 id 的四格各挂 `SOURCE_IDENTITY`（`:71`），另两格挂 `PLACE_REQUIRED`（`:78`）；同一份库 `CANONICAL_PLACE_ROWS_IN_THIS_DB=0`（`:94`）。
+
+即：Agent 这一路找到的地点是**任务范围内的供应方观测**（`amap:B000A8UIN8` 这类），而方案的选用门要求 `places` 表里有按 `provider_key + external_id` 对得上号的正式地点行；V3 这条路上没有任何一步把观测落成正式行，所以每一份正式候选都被判 `stale`，「选用这份方案」永远不出现，`goal → SELECTED → ACTIVE` 结构上走不通。同一产品在别的路（`agent/gateway.py:1854` 的 recovery discovery）本来就会调 `materialize_candidates` 写下正式行并回 `materialized_place_id`，所以缺的不是新能力，是把 Agent 研究这一路接到既有的落库门上。
+
+屏上那句提示本身也有一处对不上：它把「转场路线」列为选用的前提，而 `services.py:742` 的判据只看 `SOURCE_IDENTITY`／`PLACE_REQUIRED` 两类——营业时间、票价、转场路线都不参与否决。这句话要么改成点名真正拦路的那几格，要么把可点的下一步给出来；本轮先如实记下，改动随落库门那一刀一起做。
+
