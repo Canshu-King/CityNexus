@@ -4,7 +4,7 @@ import {
   Route, ShieldCheck, Sparkles, Users,
 } from "lucide-react";
 import {
-  cityNexusApi, type DraftGoalTask, type DraftGoalTaskEvent, type GoalDraftArtifact,
+  cityNexusApi, CityNexusApiError, type DraftGoalTask, type DraftGoalTaskEvent, type GoalDraftArtifact,
 } from "../../api/citynexus";
 import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { WorkspaceMap, type WorkspaceMapPoint } from "./WorkspaceMap";
@@ -101,6 +101,7 @@ export function MissionCockpit({
   const [events, setEvents] = useState<DraftGoalTaskEvent[]>([]);
   const [places, setPlaces] = useState<WorkspaceMapPoint[]>([]);
   const [dataState, setDataState] = useState<DataState>("loading");
+  const [accessLost, setAccessLost] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [mapAllowed, setMapAllowed] = useState(false);
   const [identityTick, setIdentityTick] = useState(0);
@@ -177,14 +178,25 @@ export function MissionCockpit({
     }
     let disposed = false;
     setDataState("loading");
+    // A credential that has run out is not the same fact as "this traveller has no places yet", and
+    // the screen used to show them identically: measured 2026-10-22, an expired bearer made both reads
+    // answer http_status=401 while the cockpit still said 「地点研究会在这里汇合」 and 「提交目标后，这里显示
+    // 实际工作进度」 -- an empty app to a person who had a full trip minutes earlier.
+    let refused = false;
+    const noteRefused = (error: unknown) => {
+      if (error instanceof CityNexusApiError && (error.status === 401 || error.status === 403)) refused = true;
+      return null;
+    };
+    setAccessLost(false);
     // This local pointer only locates a task. Both reads are authorized by the server.
     const pointer = localStorage.getItem(TASK_POINTER + "." + owner + "." + journeyId);
-    const readTask = pointer ? cityNexusApi.getDraftGoalTask(journeyId, pointer).catch(() => null) : Promise.resolve(null);
-    const readEvents = pointer ? cityNexusApi.getDraftGoalTaskEvents(journeyId, pointer).catch(() => null) : Promise.resolve(null);
+    const readTask = pointer ? cityNexusApi.getDraftGoalTask(journeyId, pointer).catch(noteRefused) : Promise.resolve(null);
+    const readEvents = pointer ? cityNexusApi.getDraftGoalTaskEvents(journeyId, pointer).catch(noteRefused) : Promise.resolve(null);
     void Promise.all([
-      cityNexusApi.getJourneyMapPlaces(journeyId).catch(() => null), readTask, readEvents,
+      cityNexusApi.getJourneyMapPlaces(journeyId).catch(noteRefused), readTask, readEvents,
     ]).then(([map, savedTask, eventPage]) => {
       if (disposed || bearer !== readTravelerBearer() || owner !== readTravelerIdentity()?.travelerId) return;
+      setAccessLost(refused);
       const ownedTask = savedTask?.journey_id === journeyId ? savedTask : null;
       setTask(ownedTask);
       setEvents(ownedTask && eventPage?.task_id === ownedTask.task_id && Array.isArray(eventPage.events)
@@ -250,7 +262,7 @@ export function MissionCockpit({
     const timer = window.setInterval(() => setRefresh((value) => value + 1), 3000);
     return () => window.clearInterval(timer);
   }, [task?.status]);
-  const status = journeyStatus === "ACTIVE" ? "行程执行中" : task ? statusCopy[task.status] ?? "任务已保存" : "等待第一个目标";
+  const status = journeyStatus === "ACTIVE" ? "行程执行中" : task ? statusCopy[task.status] ?? "任务已保存" : accessLost ? "登录已过期" : "等待第一个目标";
 
   const chooseDraft = async (artifact: GoalDraftArtifact) => {
     const bearer = readTravelerBearer(); const owner = readTravelerIdentity()?.travelerId;
@@ -300,13 +312,13 @@ export function MissionCockpit({
           <PlacePhotoGallery cityName={cityName} places={allMapPoints} mediaById={mediaById} priorityIds={photoPriorityIds} selectedId={focusedPlaceId} scheduledIds={draftPlaceIds} onSelect={focusPlace} />
           {selectedResearch && <p role="status">正在查看：{selectedResearch.name}{draftPlaceIds.has(selectedResearch.candidate_id) ? " · 已排入日程" : " · 尚未排入日程"}</p>}
           {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} />
-            : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>地点研究会在这里汇合</strong><span>找到有坐标的地点后，点击图钉查看来源。</span></div>}
+            : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>{accessLost ? "这次登录已经过期" : "地点研究会在这里汇合"}</strong><span>{accessLost ? "这趟行程还在，只是这台设备当前读不到它。" : "找到有坐标的地点后，点击图钉查看来源。"}</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
           <details className="cn-mission-activity" aria-label="Agent 工作轨迹"><summary>查看 Agent 工作过程</summary>
             <div className="cn-mission-activity-top"><strong>Agent 工作轨迹</strong><button type="button" aria-label="刷新 Agent 实际任务" onClick={() => setRefresh((v) => v + 1)}><RefreshCw size={16} /></button></div>
             {task && <p className="cn-mission-run-stats">模型 {task.usage.model_turns ?? 0} 轮 · 工具 {task.usage.tool_calls ?? 0} 次</p>}
             {latestEvents.length ? <ol>{latestEvents.map((event) => <li key={event.sequence}><Clock3 size={14} /><div><strong>{eventLabel(event)}</strong><small>#{event.sequence}</small></div></li>)}</ol>
-              : <p>{dataState === "loading" ? "正在读取工作记录…" : "提交目标后，这里显示实际工作进度。"}</p>}
+              : <p>{accessLost ? "这次登录已经过期，读不到工作记录。" : dataState === "loading" ? "正在读取工作记录…" : "提交目标后，这里显示实际工作进度。"}</p>}
           </details>
         </article>
         <article className="cn-mission-card cn-mission-timeline-pane" data-testid="rev-mission-timeline-pane">

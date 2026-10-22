@@ -231,3 +231,19 @@
 **一个没查清的现象，写在这里而不是藏起来。** 同一台活标签页（14381，凭证在、traveler id 在）现在屏上是「旅行插画 等待第一个目标 / 现实地图 0 处地点」，而本机指针仍是 walk-39 那趟行程：`identity_pointer_r1.mjs` 现读 `session_id` 与 `pointer_owner` 是同一枚 `08fbd109-…`、`pointer_id=3f7f18fd-…`、刷新前后 `tiles` 都是 0（`trial/results/20261022_v3_human_chrome/walk-45-log.txt` 末尾）。这台标签页在十六点二十分那趟探测里同样是四格相册，中间只经过我自己的点按与刷新。**成因未定**：我用 `task_fetch_r1.mjs` 探任务口时把 URL 猜成了 `/agent/goal-task`，拿到 `http_status=404`——那是我的路由写错，不能当产品证据；行程本体 `GET /api/v1/journeys/{id}` 回 `http_status=200`。下一步该做的是从壳里真正加载任务的那条请求看起（它到底请求了哪条路、回了什么、失败后有没有重试入口），已单开一条待办。
 
 **我撤掉了什么：** 今晚顺手做的一枚"把看过的答案留在这一页会话里，刷新后不必再按一次"的改动（`useSourcePlaceMedia.ts` 加 sessionStorage 答案缓存）已经**回退**——它的动机有实证（`trial/results/20261022_v3_human_chrome/walk-42-log.txt:5` 显示刷新后邀请又回来了），但改完的"生效读数"拿不到，因为这台标签页的相册正好进入了上面那个 0 处地点的状态。没验到的东西不进分支：现在那枚文件里 `ANSWERS_KEY` 零命中，`git status` 只剩证据文件。
+
+## 十五、十二点五十九分：凭证过期时，屏上说的是"你还没开始"
+
+第十四节那个"没查清的黑屏"当场就查清了，而且它不是黑屏，是**说谎**。
+
+**读数。** 这台活标签页的凭证、身份、指针、行程 id 全都在（`identity_pointer_r1.mjs` 现读 `wanted_present: true`、`session_id` 与 `pointer_owner` 同一枚）。用 `exact_routes_r2.mjs` 照抄壳自己发的那两条请求、带这台标签页自己的 bearer 重放：`/journeys/{id}/map-places` 与 `/journeys/{id}/agent/goal-tasks/{task_id}` 两回都是 `http_status=401`（`trial/results/20261022_v3_human_chrome/walk-46-log.txt` 的 `MAP_PLACES_HTTP_STATUS` 行）。**凭证过期了。**
+
+**为什么屏上看不出来。** `frontend/src/trial/mobile/MissionCockpit.tsx:182` 起那三枚读取全部 `.catch(() => null)`，401 被吞成 null，`dataState` 于是落到 "partial"——地图格说「地点研究会在这里汇合」，工作轨迹说「提交目标后，这里显示实际工作进度」，抬头说「等待第一个目标」。同一屏的「准备出发」卡片却早就写着「当前账号无法读取这份行程，请重新进入行程。」同一代代码里三处撒谎、一处诚实。
+
+**改法。** 把"被服务器拒了"和"还没有东西"分开：只有 `CityNexusApiError` 且状态是 401 或 403 才置 `accessLost`（`frontend/src/trial/mobile/MissionCockpit.tsx:181`），三处文案各改一句。不加自动重试、不动鉴权，也**不承诺"重新登录就能回来"**——这台壳里没有可点的重新登录入口，而新会话是否仍拥有这趟行程今晚未验，所以只说「这趟行程还在，只是这台设备当前读不到它。」这一句的可依据是今晚从库里读到的那趟行程与它的三十五格研究地点。
+
+**真机对照。** 改前：`human-224-tile-cleared-invitation.png`（0 处地点 + 「地点研究会在这里汇合」）。改后：`human-227-expired-credential-honest-state.png`，同屏三处分别读成「登录已过期」「这次登录已经过期 / 这趟行程还在，只是这台设备当前读不到它。」「这次登录已经过期，读不到工作记录。」（`trial/results/20261022_v3_human_chrome/walk-46-log.txt` 的 `SCREEN` 行）。`npm run typecheck` 干净。
+
+**与 #280 的关系：** 同一族（凭证面），不同成因——#280 是这台标签页根本没有凭证（sessionStorage 随标签页销毁），这条是凭证在世但已到期。两条都不需要改鉴权就能先把屏说对。
+
+**仪器自报：** 第一次探任务口我把 URL 猜成 `/agent/goal-task`，拿到 `http_status=404`——那是我的路由写错，不是产品证据；照抄壳里那两条真实路径才拿到 401。教训：**探接口要照抄调用点，不要凭印象拼 URL**（同一枚坑今天在第廿六节也咬过一次——凭印象写行号）。
