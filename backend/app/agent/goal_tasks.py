@@ -35,7 +35,7 @@ from app.agent.goal_amap import route_public_places, route_definition
 from app.agent.goal_draft_patch import replace_draft_slots, draft_patch_definition
 from app.agent.guardian_stream import guardian_stream, guardian_stream_definition
 from app.agent.goal_variants import save_draft_variants, variant_definition
-from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question
+from app.agent.goal_dialogue import dialogue_definition, validate_question, ask_question, plain_traveller_text, claims_written_change, asks_for_schedule_change, latest_traveller_request
 from app.agent.goal_media import read_source_media, media_tool_definition, source_lead
 from app.agent.orchestrator import HermesJourneyAgent
 from app.agent.runtime import AgentRuntimeUnavailable
@@ -1533,7 +1533,7 @@ def resume_goal_task(
                         "If nothing needed changing, answer in one short sentence and stop. "
                         "Never describe a change as made when no draft tool returned a receipt."})
                     continue
-                assistant_summary = str(message.get("content") or "").strip()[:2000] or None
+                assistant_summary = plain_traveller_text(message.get("content"))[:2000] or None
                 mission = session.get(JourneyMission, mission.id)
                 intent = _task_state(mission)
                 intent[_TASK_KEY]["assistant_summary"] = assistant_summary
@@ -1590,6 +1590,24 @@ def resume_goal_task(
                     args_raw = function.get("arguments") or "{}"
                     args_value = json.loads(args_raw) if isinstance(args_raw, str) else args_raw
                     args = _safe_args(tool_name, args_value, task)
+                    # The most common false promise on the screen is a question that begins by reporting
+                    # a change ("收到，按你说的改…其余原封不动") while this very round moved nothing.
+                    # One already-approved turn is spent asking for the write or for a question that does
+                    # not claim work; the request is not started as a tool call, so the ledger stays clean.
+                    if (tool_name == "ask_traveler" and not edit_write_reminded
+                            and task.get("interaction_mode") != "DISCUSS"
+                            and any(day.get("slots") for day in (task.get("draft_artifact") or {}).get("days", []))
+                            and (task.get("draft_artifact") or {}).get("revision") == draft_revision_before_round
+                            and (asks_for_schedule_change(normalized_message or latest_traveller_request(task))
+                                 or claims_written_change(str(args.get("question") or "")))):
+                        edit_write_reminded = True
+                        messages.append({"role": "system", "content":
+                            "The traveller's last message asked for a change to the saved schedule, and this round "
+                            "has not moved it. Do not report the change as already made, and do not change the "
+                            "subject. Either call replace_draft_slots now with exactly the requested half-day and "
+                            "keep every other slot, or ask one concrete question about that change and say plainly "
+                            "that nothing has been altered yet."})
+                        continue
                     if tool_name not in {"ask_traveler", "inspect_journey", "save_draft_variants", "read_guardian_stream", "save_draft_itinerary", "replace_draft_slots"} and not task["consent"]["online_research"]:
                         raise HTTPException(403, "ONLINE_CONSENT_REQUIRED")
                     if not task["budget"].get("unlimited") and int(task["usage"]["tool_calls"]) >= int(task["budget"]["max_tool_calls"]):
@@ -1626,7 +1644,7 @@ def resume_goal_task(
                     session.commit()
                     try:
                         if tool_name == "ask_traveler":
-                            raw_result = ask_question(task, args)
+                            raw_result = ask_question(task, args, draft_revision_before_round)
                             pause_for_decision = "TRAVELER_INPUT_REQUIRED"
                             mission.intent_json = _json_dump(intent)
                             session.commit()

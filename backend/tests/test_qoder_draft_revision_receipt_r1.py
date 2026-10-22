@@ -207,3 +207,289 @@ def test_a_round_that_only_describes_a_change_is_asked_once_to_actually_write_it
     entry = restored["conversation"][-1]
     assert entry["draft_revision_before"] == 1
     assert entry["draft_revision_after"] == restored["draft_artifact"]["revision"] == 2
+
+
+def test_the_round_that_saved_the_draft_reports_it_even_when_it_ends_on_a_question(goal_scope, monkeypatch):
+    """A question that closes a saving round must not read as "nothing happened".
+
+    Measured on a real Chrome journey: the research round saved six arrangements (revision 0 to 1)
+    and ended by asking which ancient site to prefer. The screen said 「这条回复没有改动日程（版本 1）」
+    right next to a schedule that had just appeared, because the question stamped both halves of the
+    receipt with the revision of the moment it was written.
+    """
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+
+    class WriteThenAsk:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+        turn = 0
+
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "q-search", "function": {
+                    "name": "discover_places", "arguments": json.dumps({"query": "TEST_FIXTURE 古迹"})}}]}
+            if self.turn == 2:
+                return {"tool_calls": [{"id": "q-write", "function": {
+                    "name": "save_draft_itinerary", "arguments": json.dumps({"days": [{
+                        "date": "2026-11-01", "slots": [{
+                            "title": "TEST_FIXTURE 故宫一带", "time_of_day": "morning",
+                            "place_id": "photon:node/123", "notes": "待核实"}]}]})}}]}
+            return {"tool_calls": [{"id": "q-ask", "function": {"name": "ask_traveler", "arguments": json.dumps({
+                "question": "TEST_FIXTURE 第一天上午的主古迹你想优先哪个方向？\"}]",
+                "options": [{"label": "天坛\"", "description": "园林式、较省力"},
+                            {"label": "颐和园", "description": "湖园结合，稍远"}]})}}]}
+
+    def fixture_discovery(_session, _journey, task, **args):
+        place = {"id": "photon:node/123", "name": "TEST_FIXTURE 古迹", "source_url": "https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        return {"tool": "discover_places", "status": "RESULTS", "places": [place], "http_status": 200}
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: WriteThenAsk())
+    monkeypatch.setattr(goal_tasks_agent, "discover_goal_places", fixture_discovery)
+    goal_tasks_agent.resume_goal_task(session, journey, member, created["task_id"])
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+
+    assert restored["draft_artifact"]["revision"] == 1
+    entry = restored["conversation"][-1]
+    assert entry["draft_revision_before"] == 0
+    assert entry["draft_revision_after"] == 1
+    # The envelope punctuation the walk measured is gone, and the traveller's own sentence shape stays.
+    assert entry["text"] == "TEST_FIXTURE 第一天上午的主古迹你想优先哪个方向？"
+    assert restored["pending_question"]["options"][0]["label"] == "天坛"
+
+
+def test_a_traveller_sentence_keeps_its_own_punctuation_and_loses_the_envelope():
+    """The residue rule is narrow on purpose: ASCII envelope characters at the very end, nothing else."""
+    from app.agent.goal_dialogue import plain_traveller_text
+
+    assert plain_traveller_text("第二天下午想在哪片水域散步？\"}]") == "第二天下午想在哪片水域散步？"
+    assert plain_traveller_text("第一天上午的主古迹你想优先哪个方向？（这决定小吃片区）\"") == (
+        "第一天上午的主古迹你想优先哪个方向？（这决定小吃片区）")
+    # Ordinary copy a traveller or a model would really write is left alone, every character of it.
+    for kept in ("已把 Day1 上午改为天坛一带。", "预算 ¥500/人", "要不要早上八点出发", "什刹海（后海）"):
+        assert plain_traveller_text(kept) == kept
+    assert plain_traveller_text(None) == ""
+
+
+def test_a_question_that_reports_a_change_that_never_happened_is_sent_back_once(goal_scope, monkeypatch):
+    """The shape the real walk produced: a tool call, not a sentence, so the text-only nudge missed it.
+
+    Measured on a real Edge journey: the traveller wrote 「11 月 3 日下午…改成什刹海边一家咖啡馆坐着，
+    其他安排都别动」 and the Agent ended the round with ask_traveler whose own text read
+    「收到，按你说的改：…其余安排原封不动」 while the draft stayed at revision 1. A round that reports
+    finished work must either do that work or say plainly that nothing changed yet.
+    """
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+
+    class SeedDraft:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+        turn = 0
+
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "c-search", "function": {
+                    "name": "discover_places", "arguments": json.dumps({"query": "TEST_FIXTURE 古迹"})}}]}
+            if self.turn == 2:
+                return {"tool_calls": [{"id": "c-write", "function": {
+                    "name": "save_draft_itinerary", "arguments": json.dumps({"days": [{
+                        "date": "2026-11-01", "slots": [{
+                            "title": "TEST_FIXTURE 湖边散步", "time_of_day": "afternoon",
+                            "place_id": "photon:node/123", "notes": "待核实"}]}]})}}]}
+            return {"content": "TEST_FIXTURE 草稿已存"}
+
+    def fixture_discovery(_session, _journey, task, **args):
+        place = {"id": "photon:node/123", "name": "TEST_FIXTURE 古迹", "source_url": "https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        return {"tool": "discover_places", "status": "RESULTS", "places": [place], "http_status": 200}
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: SeedDraft())
+    monkeypatch.setattr(goal_tasks_agent, "discover_goal_places", fixture_discovery)
+    goal_tasks_agent.resume_goal_task(session, journey, member, created["task_id"])
+
+    seen = []
+
+    def question_args(**extra):
+        return json.dumps({"question": extra.get("question"), "options": [
+            {"label": "A", "description": "甲"}, {"label": "B", "description": "乙"}]})
+
+    class ClaimThenWrite:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+
+        def _complete(self, messages):
+            seen.append([item["role"] for item in messages])
+            if len(seen) == 1:
+                return {"tool_calls": [{"id": "c-claim", "function": {"name": "ask_traveler", "arguments": question_args(
+                    question="TEST_FIXTURE 收到，按你说的改：下午从湖边散步换成咖啡馆坐着，其余安排原封不动。要哪家咖啡馆？")}}]}
+            if len(seen) == 2:
+                assert seen[-1][-1] == "system", "the claiming question must be sent back once"
+                return {"tool_calls": [{"id": "c-patch", "function": {"name": "replace_draft_slots", "arguments": json.dumps({
+                    "date": "2026-11-01", "time_of_day": "afternoon",
+                    "slots": [{"title": "TEST_FIXTURE 什刹海边咖啡馆坐着", "time_of_day": "afternoon", "notes": "店名待定"}]})}}]}
+            return {"tool_calls": [{"id": "c-ask", "function": {"name": "ask_traveler", "arguments": question_args(
+                question="TEST_FIXTURE 下午这一格已经换成咖啡馆坐着，还没有改动别的。你想靠窗还是院子里？")}}]}
+
+        _tool_allowlist = frozenset()
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: ClaimThenWrite())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动。",
+        message_id=str(uuid4()),
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+
+    assert len(seen) == 3, "one claiming question earns one send-back, not a loop"
+    slot = restored["draft_artifact"]["days"][0]["slots"][0]
+    assert slot["title"] == "TEST_FIXTURE 什刹海边咖啡馆坐着"
+    assert restored["draft_artifact"]["revision"] == 2
+    # The question the traveller is left with reports the truth: the change is now actually saved.
+    assert restored["pending_question"]["question"].startswith("TEST_FIXTURE 下午这一格已经换成咖啡馆坐着")
+
+
+def test_a_round_that_changes_the_subject_is_sent_back_to_the_requested_edit(goal_scope, monkeypatch):
+    """The second measured shape: a question that claims nothing and simply drops the request.
+
+    Same sentence twice on two browsers: 「11 月 3 日下午…改成什刹海边一家咖啡馆坐着，其他安排都别动」
+    and the Agent answered with a comparison of morning monuments. Nothing was claimed, so the wording
+    check could not see it; the traveller's own request is what says a half-day was meant to move.
+    """
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+
+    class SeedDraft:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+        turn = 0
+
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "s-search", "function": {
+                    "name": "discover_places", "arguments": json.dumps({"query": "TEST_FIXTURE 古迹"})}}]}
+            if self.turn == 2:
+                return {"tool_calls": [{"id": "s-write", "function": {
+                    "name": "save_draft_itinerary", "arguments": json.dumps({"days": [{
+                        "date": "2026-11-01", "slots": [
+                            {"title": "TEST_FIXTURE 湖边散步", "time_of_day": "afternoon",
+                             "place_id": "photon:node/123", "notes": "待核实"},
+                            {"title": "TEST_FIXTURE 故宫一带", "time_of_day": "morning",
+                             "notes": "地点待核实"}]}]})}}]}
+            return {"content": "TEST_FIXTURE 草稿已存"}
+
+    def fixture_discovery(_session, _journey, task, **args):
+        place = {"id": "photon:node/123", "name": "TEST_FIXTURE 古迹", "source_url": "https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        return {"tool": "discover_places", "status": "RESULTS", "places": [place], "http_status": 200}
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: SeedDraft())
+    monkeypatch.setattr(goal_tasks_agent, "discover_goal_places", fixture_discovery)
+    goal_tasks_agent.resume_goal_task(session, journey, member, created["task_id"])
+
+    turns = []
+
+    class DeflectThenApply:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+
+        def _complete(self, messages):
+            turns.append(messages[-1]["role"])
+            if len(turns) == 1:
+                return {"tool_calls": [{"id": "s-deflect", "function": {"name": "ask_traveler", "arguments": json.dumps({
+                    "question": "TEST_FIXTURE 上午的古迹你想看哪个方向？",
+                    "options": [{"label": "故宫", "description": "体量大"}, {"label": "天坛", "description": "园林式"}]})}}]}
+            if len(turns) == 2:
+                assert turns[-1] == "system", "a dropped request is put back in front of the Agent once"
+                return {"tool_calls": [{"id": "s-apply", "function": {"name": "replace_draft_slots", "arguments": json.dumps({
+                    "date": "2026-11-01", "time_of_day": "afternoon",
+                    "slots": [{"title": "TEST_FIXTURE 什刹海边咖啡馆坐着", "time_of_day": "afternoon", "notes": "店名待定"}]})}}]}
+            return {"content": "TEST_FIXTURE 下午这一格已换成咖啡馆坐着，上午没有动。"}
+
+        _tool_allowlist = frozenset()
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: DeflectThenApply())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动。",
+        message_id=str(uuid4()),
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+
+    assert len(turns) == 3
+    titles = {slot["title"] for day in restored["draft_artifact"]["days"] for slot in day["slots"]}
+    assert "TEST_FIXTURE 什刹海边咖啡馆坐着" in titles
+    assert "TEST_FIXTURE 故宫一带" in titles, "the unrelated half-day must survive the edit"
+    assert restored["draft_artifact"]["revision"] == 2
+    assert restored["conversation"][-1]["draft_revision_before"] == 1
+
+def test_a_plain_question_without_a_claim_is_left_alone(goal_scope, monkeypatch):
+    """The send-back must not fire on a round that only asks, or every first reply costs a turn."""
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+
+    class SeedDraft:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+        turn = 0
+
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "n-search", "function": {
+                    "name": "discover_places", "arguments": json.dumps({"query": "TEST_FIXTURE 古迹"})}}]}
+            if self.turn == 2:
+                return {"tool_calls": [{"id": "n-write", "function": {
+                    "name": "save_draft_itinerary", "arguments": json.dumps({"days": [{
+                        "date": "2026-11-01", "slots": [{
+                            "title": "TEST_FIXTURE 故宫一带", "time_of_day": "morning",
+                            "place_id": "photon:node/123", "notes": "待核实"}]}]})}}]}
+            return {"content": "TEST_FIXTURE 草稿已存"}
+
+    def fixture_discovery(_session, _journey, task, **args):
+        place = {"id": "photon:node/123", "name": "TEST_FIXTURE 古迹", "source_url": "https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        return {"tool": "discover_places", "status": "RESULTS", "places": [place], "http_status": 200}
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: SeedDraft())
+    monkeypatch.setattr(goal_tasks_agent, "discover_goal_places", fixture_discovery)
+    goal_tasks_agent.resume_goal_task(session, journey, member, created["task_id"])
+
+    calls = []
+
+    class AskOnly:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+
+        def _complete(self, messages):
+            calls.append(len(messages))
+            return {"tool_calls": [{"id": "n-ask", "function": {"name": "ask_traveler", "arguments": json.dumps({
+                "question": "TEST_FIXTURE 第二天上午想去人少的园子还是寺院？",
+                "options": [{"label": "天坛", "description": "露天，步行多"}, {"label": "雍和宫", "description": "殿宇，院子紧凑"}]})}}]}
+
+        _tool_allowlist = frozenset()
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: AskOnly())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="第二天上午有什么推荐？", message_id=str(uuid4()),
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+
+    assert len(calls) == 1, "a question that claims nothing is the traveller's to answer right away"
+    assert restored["status"] == "NEEDS_DECISION"
+    assert restored["pending_question"]["question"] == "TEST_FIXTURE 第二天上午想去人少的园子还是寺院？"
+    assert restored["draft_artifact"]["revision"] == 1
+
