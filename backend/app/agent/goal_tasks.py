@@ -421,13 +421,29 @@ def read_goal_task(
     return result
 
 
+DRAFT_RESEARCH_RUNNING = "DRAFT_RESEARCH_RUNNING"
+DRAFT_CHANGED_RELOAD = "DRAFT_CHANGED_RELOAD"
+
+
+def refuse_draft_edit(reason: str) -> HTTPException:
+    """A 409 on the draft says only CONFLICT, which cannot tell a traveller what to do next.
+
+    Two different doors answer with it -- the turn is still running, and someone else's save moved
+    the version -- so the reason is carried as `reason_code` in the same envelope the client already
+    reads (ORD-0101).  Both doors raise through here, so the words and the name come from one place.
+    """
+    refused = HTTPException(409, reason)
+    refused.reason_code = reason  # type: ignore[attr-defined]
+    return refused
+
+
 def update_goal_draft(session, journey, member, mission_id, *, days, expected_revision):
     journey, member, mission, intent, task = _require_task(session, journey, member, mission_id, require_draft=True)
     if task.get("status") == "WORKING":
-        raise HTTPException(409, "DRAFT_RESEARCH_RUNNING")
+        raise refuse_draft_edit(DRAFT_RESEARCH_RUNNING)
     current = task.get("draft_artifact") or empty_draft(journey)
     if current["revision"] != expected_revision:
-        raise HTTPException(409, "DRAFT_CHANGED_RELOAD")
+        raise refuse_draft_edit(DRAFT_CHANGED_RELOAD)
     task["draft_artifact"] = normalize_draft(journey, task, days, author="USER")
     task["updated_at"] = _now()
     mission.intent_json = _json_dump(intent)

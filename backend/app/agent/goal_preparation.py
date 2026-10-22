@@ -18,7 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.agent.goal_tasks import _require_task
+from app.agent.goal_tasks import DRAFT_CHANGED_RELOAD, DRAFT_RESEARCH_RUNNING, _require_task, refuse_draft_edit
 from app.agent.goal_artifacts import goal_research_lead
 from app.commerce.idempotency import canonical_request_signature
 from app.concurrency_guards import journey_write_lock
@@ -91,10 +91,10 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
             return {**json.loads(existing.response_json), "idempotency_replay": True}
         _require_task(session, journey, member, task_id, require_draft=True)
         if task.get("status") == "WORKING":
-            raise HTTPException(409, "DRAFT_RESEARCH_RUNNING")
+            raise refuse_draft_edit(DRAFT_RESEARCH_RUNNING)
         draft = task.get("draft_artifact") or {}
         if draft.get("revision") != body.expected_revision:
-            raise HTTPException(409, "DRAFT_CHANGED_RELOAD")
+            raise refuse_draft_edit(DRAFT_CHANGED_RELOAD)
         slots = {(di, si): (day["date"], slot) for di, day in enumerate(draft.get("days", []))
                  for si, slot in enumerate(day.get("slots", [])) if str(slot.get("title") or "").strip()}
         indices = [(row.day_index, row.slot_index) for row in body.schedule]
