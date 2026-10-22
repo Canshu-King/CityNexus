@@ -94,7 +94,7 @@ process:
 | critical path computed by the engine | 4 rows |
 | dates set by the assignment brief | 6 met, 0 breached, 0 internal targets missed |
 | save, close, reopen in a new process, every field of every row | 0 field differences |
-| published copy | published yes, 386048 bytes, sha256 4cd35d0725c2c5d3 at that instant (note below); re-read 65 rows, 122 dependency records, 0 violations |
+| published copy | published yes, 386048 bytes, sha256 6398e58f9b4cd3b3 at that instant (note below); re-read 65 rows, 122 dependency records, 0 violations |
 
 Note on file digests: opening a `.mpp` in Project rewrites it, so the sha256 in
 the table above is the bytes at that instant. `MANIFEST.sha256` and the review
@@ -161,9 +161,9 @@ neither confirmed nor denied from this repository - only from the course record.
 | members unknown, Part 1 asserted never submitted | placeholder resources at zero and a claim the repository cannot support | three named members with work resources and hours; Part 1 now says what is true: not verifiable from this repository, awaiting the course record |
 | `Detailed_Gantt.pdf` | 详细甘特图 | 454510 |
 | `Gantt_Chart.pdf` | 甘特图 | 842537 |
-| `Milestone_Timeline.pdf` | - | 369858 |
+| `Milestone_Timeline.pdf` | - | 441384 |
 | `Network_Diagram.pdf` | 网络图 | 171583 |
-| `Plan_Briefing_Print.pdf` | - | 450530 |
+| `Plan_Briefing_Print.pdf` | - | 450847 |
 | `Resource_Sheet.pdf` | 资源工作表 | 147059 |
 | `Tracking_Gantt.pdf` | 跟踪甘特图 | 601735 |
 | `WBS_View.pdf` | 任务工作表 | 196387 |

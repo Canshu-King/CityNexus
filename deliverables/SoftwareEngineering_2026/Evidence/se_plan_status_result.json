@@ -838,13 +838,13 @@
   },
   {
    "wbs": "10.6",
-   "name": "M11  Mid-term review (held today)",
+   "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
    "scheduledDate": "2026-10-16",
-   "deadline": "2026-10-22",
+   "deadline": "2026-10-23",
    "deadlineKind": "plan target (ours)",
    "observed": "",
    "observedBasis": "",
-   "pct": 100,
+   "pct": 0,
    "meaning": "when the plan says the thing is ready; ours to revise",
    "verdict": "met by the schedule"
   },

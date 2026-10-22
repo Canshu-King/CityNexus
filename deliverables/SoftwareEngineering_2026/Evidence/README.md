@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `13f7d1842c 2026-10-23 coursework(R3-classroom): milestone screenshot, converged reports and package`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `db001c28ca 2026-10-23 docs(coursework): Qoder continuous execution to 23 Oct noon with hard demo freeze`
 Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
@@ -92,25 +92,25 @@ It is fixed, the reader now carries a self-test that the build refuses to run wi
 
 | deck preview | bytes |
 |---|---|
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.png` | 62071 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png` | 62071 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png` | 45037 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png` | 84665 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png` | 64640 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.png` | 77299 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png` | 77299 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png` | 56471 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png` | 105235 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png` | 81069 |
 
 ### Project screenshots, and how they were taken
 
-Method PrintWindow(PW_RENDERFULLCONTENT). The plan was opened **read-only at the filesystem level**, because a plain open makes Project rewrite the container on close even when nothing was edited: digest before `4cd35d0725c2c5d3`, after `4cd35d0725c2c5d3`. No Office lock file was left (none). Each frame is tested for not being blank - colour count and non-white pixel fraction - before it is kept.
+Method PrintWindow(PW_RENDERFULLCONTENT). The plan was opened **read-only at the filesystem level**, because a plain open makes Project rewrite the container on close even when nothing was edited: digest before `6398e58f9b4cd3b3`, after `6398e58f9b4cd3b3`. No Office lock file was left (none). Each frame is tested for not being blank - colour count and non-white pixel fraction - before it is kept.
 
 | view | file | pixels | ink fraction | windows overlapping it |
 |---|---|---|---|---|
-| 日历 | `Calendar.png` | 2578x1558 | 0.4018 | 7 |
-| 甘特图 | `Gantt_Chart.png` | 2578x1558 | 0.1651 | 7 |
-| 甘特图 | `Milestone_Timeline.png` | 2578x1558 | 0.1602 | 0 |
-| 网络图 | `Network_Diagram.png` | 2578x1558 | 0.1886 | 7 |
-| 资源工作表 | `Resource_Sheet.png` | 2578x1558 | 0.1632 | 7 |
-| 跟踪甘特图 | `Tracking_Gantt.png` | 2578x1558 | 0.1981 | 7 |
-| 任务工作表 | `WBS_Task_Sheet.png` | 2578x1558 | 0.1925 | 7 |
+| 日历 | `Calendar.png` | 3414x2350 | 0.4043 | 11 |
+| 甘特图 | `Gantt_Chart.png` | 3414x2350 | 0.1347 | 11 |
+| 甘特图 | `Milestone_Timeline.png` | 3414x2350 | 0.13 | 0 |
+| 网络图 | `Network_Diagram.png` | 3414x2350 | 0.1558 | 11 |
+| 资源工作表 | `Resource_Sheet.png` | 3414x2350 | 0.132 | 11 |
+| 跟踪甘特图 | `Tracking_Gantt.png` | 3414x2350 | 0.1676 | 11 |
+| 任务工作表 | `WBS_Task_Sheet.png` | 3414x2350 | 0.1626 | 11 |
 
 The last column is the honest part: other windows really are on top of Project on this desktop while the capture runs, which is exactly why the screen-rectangle grab of round 2 was wrong. `PrintWindow` renders the target window into its own device context, so the image is Project's pixels regardless of z-order, and each file was also looked at by eye.
 
@@ -123,13 +123,13 @@ The round-2 print named Briefing_One_Page.pdf is gone from the tree - it was twe
 | `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf` | 1 | 45713 |
 | `Microsoft_Project/Detailed_Gantt.pdf` | 12 | 454510 |
 | `Microsoft_Project/Gantt_Chart.pdf` | 24 | 842537 |
-| `Microsoft_Project/Milestone_Timeline.pdf` | 9 | 369858 |
+| `Microsoft_Project/Milestone_Timeline.pdf` | 12 | 441384 |
 | `Microsoft_Project/Network_Diagram.pdf` | 41 | 171583 |
-| `Microsoft_Project/Plan_Briefing_Print.pdf` | 12 | 450530 |
+| `Microsoft_Project/Plan_Briefing_Print.pdf` | 12 | 450847 |
 | `Microsoft_Project/Resource_Sheet.pdf` | 3 | 147059 |
 | `Microsoft_Project/Tracking_Gantt.pdf` | 15 | 601735 |
 | `Microsoft_Project/WBS_View.pdf` | 6 | 196387 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf` | 4 | 49420 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf` | 4 | 49448 |
 
 ### New files this round
 

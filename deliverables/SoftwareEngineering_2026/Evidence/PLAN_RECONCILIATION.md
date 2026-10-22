@@ -1,6 +1,6 @@
 # CityNexus SE2026 - one plan, three clocks
 
-Generated 2026-10-23 01:43 by `live_checks/se_evidence_reconcile_r1.py`. Source plan: `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`, sha256 `4cd35d0725c2...`.
+Generated 2026-10-23 04:37 by `live_checks/se_evidence_reconcile_r1.py`. Source plan: `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`, sha256 `6398e58f9b4c...`.
 
 The R2 review found three different finish dates being quoted as if they were one fact. They are three different questions, and this page says which is which and why the two schedulers disagree.
 

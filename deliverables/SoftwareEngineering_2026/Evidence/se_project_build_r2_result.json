@@ -1122,8 +1122,8 @@
    },
    {
     "key": "M11",
-    "name": "M11  Mid-term review (held today)",
-    "deadline": "2026-10-22",
+    "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
+    "deadline": "2026-10-23",
     "finish": "2026-10-16",
     "statutory": false,
     "recordedFact": false
@@ -1350,13 +1350,26 @@
    "driver": "10.2  Mid-term review pack: architecture, jo",
    "driverDays": 11,
    "watched": 8,
-   "movedStart": [],
+   "movedStart": [
+    {
+     "key": "2.4",
+     "via": "FS",
+     "before": "2026-10-19",
+     "after": "2026-11-02"
+    }
+   ],
    "movedFinish": [
     {
      "key": "10.3",
      "via": "FS",
      "before": "2026-10-22",
      "after": "2026-11-02"
+    },
+    {
+     "key": "2.4",
+     "via": "FS",
+     "before": "2026-10-21",
+     "after": "2026-11-04"
     }
    ],
    "notRestored": [],
@@ -1438,15 +1451,15 @@
  "publication": {
   "published": true,
   "bytes": 386048,
-  "sha256": "2487d51048a6e4a975d6855d4e7adc4f475aab54d2638130b870ba161cea52e4",
-  "stagedSha256": "2487d51048a6e4a975d6855d4e7adc4f475aab54d2638130b870ba161cea52e4",
+  "sha256": "07cb9c3959129723cae6e72429bbc8b639416f90e9cc6dc11928f8b20182e57e",
+  "stagedSha256": "07cb9c3959129723cae6e72429bbc8b639416f90e9cc6dc11928f8b20182e57e",
   "identicalToStaged": true,
   "shippedRows": 65,
   "shippedLinksRead": 122,
   "shippedLinkViolations": 0,
   "shippedCost": 4460.688,
   "shippedFinish": "2026-10-23",
-  "sha256AfterVerification": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41",
+  "sha256AfterVerification": "6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee",
   "rewrittenByVerificationOpen": true
  },
  "first_pass": {
@@ -2059,7 +2072,7 @@
     {
      "from": 60,
      "to": 11,
-     "from_name": "M11  Mid-term review (held today)",
+     "from_name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
      "to_name": "2.4  Get the requirement baseline agreed with the teacher as customer",
      "type_raw": 1,
      "type": "FS",
@@ -4672,7 +4685,7 @@
    "durationText": "11 个工作日",
    "start": "2026-10-02",
    "finish": "2026-10-16",
-   "slack": 1536,
+   "slack": 960,
    "critical": false,
    "pct": 70,
    "pctWork": 70,
@@ -4710,7 +4723,7 @@
      "from": 56,
      "to": 60,
      "from_name": "10.2  Mid-term review pack: architecture, journey, agent loop, use cases",
-     "to_name": "M11  Mid-term review (held today)",
+     "to_name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4928,7 +4941,7 @@
   },
   {
    "id": 60,
-   "name": "M11  Mid-term review (held today)",
+   "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
    "wbs": "10.6",
    "summary": false,
    "outline": 2,
@@ -4938,18 +4951,18 @@
    "durationText": "0 个工作日",
    "start": "2026-10-16",
    "finish": "2026-10-16",
-   "slack": 0,
+   "slack": 960,
    "critical": false,
-   "pct": 100,
-   "pctWork": 100,
+   "pct": 0,
+   "pctWork": 0,
    "work": 0.0,
    "actualWork": 0.0,
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-10-16",
-   "actualFinish": "2026-10-16",
-   "deadline": "2026-10-22",
+   "actualStart": "",
+   "actualFinish": "",
+   "deadline": "2026-10-23",
    "constraint": 0,
    "constraintDate": "",
    "predecessors": "56",
@@ -4958,7 +4971,7 @@
      "from": 56,
      "to": 60,
      "from_name": "10.2  Mid-term review pack: architecture, journey, agent loop, use cases",
-     "to_name": "M11  Mid-term review (held today)",
+     "to_name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4966,7 +4979,7 @@
     {
      "from": 60,
      "to": 11,
-     "from_name": "M11  Mid-term review (held today)",
+     "from_name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
      "to_name": "2.4  Get the requirement baseline agreed with the teacher as customer",
      "type_raw": 1,
      "type": "FS",
@@ -4974,7 +4987,7 @@
     }
    ],
    "assigns": [],
-   "notes": "EVIDENCE: Today. The deliverables in this package are what the review looks at.\r"
+   "notes": "EVIDENCE: SCHEDULED, NOT HELD. The review with the teacher takes place at noon o"
   },
   {
    "id": 61,
