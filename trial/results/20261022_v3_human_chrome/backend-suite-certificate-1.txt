@@ -1,0 +1,9 @@
+TIP e4d800d6cb90f167b7305e7c699ab19a2e1a8920
+INTERPRETER Python 3.12.14
+COMMAND python -m pytest -q -p no:randomly (cwd backend)
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_route_evidence_before_any_proposal_reads_the_proposal_supply_not_the_plan
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_the_m3_slice_completes_on_the_sealed_evidence
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_a_recovery_refused_for_a_missing_target_is_not_blamed_on_mobility
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_the_read_fails_closed_when_the_plan_really_has_nothing
+ERROR tests/test_qoder_mobility_evidence_sources.py::test_a_pointer_that_disagrees_with_its_own_payload_is_reported_as_inconsistent
+188 failed, 2289 passed, 15 skipped, 1 xfailed, 4 warnings, 7 errors in 479.62s (0:07:59)

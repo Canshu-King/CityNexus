@@ -249,3 +249,47 @@
 **与二百八十号待办（旧行程找不到）的关系：** 同一族（凭证面），不同成因——#280 是这台标签页根本没有凭证（sessionStorage 随标签页销毁），这条是凭证在世但已到期。两条都不需要改鉴权就能先把屏说对。
 
 **仪器自报：** 第一次探任务口我把 URL 猜成 `/agent/goal-task`，拿到 `http_status=404`——那是我的路由写错，不是产品证据；照抄壳里那两条真实路径才拿到 401。教训：**探接口要照抄调用点，不要凭印象拼 URL**（同一枚坑今天在第廿六节也咬过一次——凭印象写行号）。
+
+## 十六、一点三十八分：那一格说「还没核实到具体是哪个地点」，而答案就在它下面一行
+
+**旅客看到什么。** 相册第四格（天坛公园）在真人按下「先看看这个地点」之后，屏上写 `还没核实到具体是哪个地点 天坛公园 正在查看`，格子里没有图（`trial/results/20261022_v3_human_chrome/walk-42-log.txt:7`）。同一条答案也存进了服务器回执：`{"status": "NO_IMAGE", "reason_code": "MEDIA_IDENTITY_UNBOUND", "place": "天坛公园"}`，`latency_ms=1500`（`media-receipts-readback-2.txt:18`）。
+
+**为什么这句话是假的。** 媒体腿查 Wikidata 之后只看第一条命中（`backend/app/integrations/media/place_media.py` 改前的 `candidates[0]`）。现读搜索答案（`media-hit-ranking-probe-1.txt:4` 起三行）：
+
+```
+### 天坛公园  search_hits=2
+   hit0 Q125445   doc_label='天坛'          exact_name_match=False  distance_m=531  files=1
+   hit1 Q49570636 doc_label='Tiantan Gongyuan' exact_name_match=True distance_m=309 files=0
+```
+
+hit0 是天坛建筑群，它的文档里从来没有「天坛公园」这个名字，所以按我们那条绑定规则判不出来——判不出来就说"没核实到是哪个地点"。而 hit1 才是公园自己：名字对得上、离高德给的那一点三百零九米。答案在下一行，腿没往下读。
+
+**改法。** 把那条唯一的绑定规则抽成一个函数（`backend/app/integrations/media/place_media.py:323`），逐条命中都问它一遍（`:371` 起循环，`:378` 判定），第一条文档仍留作兜底（`:376`），所以真的没有一条绑上时，旅客听到的还是原来那句、不是新的含糊话。循环有两道界：最多五条命中，外加 `deadline = monotonic() + 5.0`（`:369`）——整条链只有十秒，一次拒绝不该让旅客等到超时。命中全都没有实体 id 时明确回 `ENTITY_NOT_FOUND`（`:386`），不再让 `None` 走到下标里去、把回执写成 `UNAVAILABLE_TypeError` 那种 blame 自己代码的码。
+
+规则本身一个字没松：只用实体自己的名字和自己的坐标，不看搜索回显的标签（模糊搜索会把我们打进去的词原样吐回来，信它等于让任何近似命中自证），也不按"离得近"就配图。所以八达岭长城仍然拒（`media-hit-ranking-probe-1.txt:1` 起三行：hit0 `Q798826 doc_label='Бадалин'`、hit1 `Q33239460` 是「八达岭长城站」，两条都没有等于「八达岭长城」的名字，尽管第一条身上就挂着长城照片）——这一格照实说"没核实到具体是哪个地点"。这是裁过的边界（不静默把异地照片配到同名地标），不是漏修。
+
+**回执的第二处假话。** 绑定成功之后没查到图片，那条早退（`PROPERTY_EMPTY`）和文件被撤（`FILE_WITHDRAWN`）都不写身份，于是落到汇总层的默认值 `UNBOUND`（`:525`）——"这地方我们没认出来"和"认出来了、没照片"是两件事，回执把它们写成同一件。现在两处各带上它自己挣来的身份（`:421`、`:427`）。
+
+**同一出口、隔几分钟的真读对照**（`_media_second_hit_probe_r1.py` 调产品自己的 `goal_media._collect`，用的是存下来的那三点真坐标，不是夹具）：
+
+| 地点 | 改前 `media-binding-before-2.txt` | 改后 `media-binding-after-3.txt` |
+| --- | --- | --- |
+| 天坛公园 | `NO_IMAGE` / `MEDIA_IDENTITY_UNBOUND` / `UNBOUND` | `NO_IMAGE` / `PROPERTY_EMPTY` / `BOUND_SOURCE_COORDINATE_MATCH` |
+| 八达岭长城 | `NO_IMAGE` / `MEDIA_IDENTITY_UNBOUND` / `UNBOUND` | 同上（照实不动） |
+| 南锣鼓巷 | `REAL_POI_PHOTO` / 署名 Francisco Anzola / `CC BY 2.0` / `thumb.wikimedia.org` / 闸门留图 | 同上 |
+
+**先量到的一对废读数要点名：** 这对之前我先跑过一次，三格全是 `UNAVAILABLE`（`media-binding-before-1.txt`、`media-binding-after-1.txt`）。原因不在产品：这台机器环境里的 `HTTPS_PROXY` 指向 7897，而那一刻 7897 根本没有监听（`netstat` 只有 7892 在听，直连 7897 是 WinError 10061）。两臂同成 `UNAVAILABLE` 就是没有判别力，我把那对留下当"仪表先于结论"的样本，改用 7892 重跑才拿到上表。顺手量到另一条：不带 User-Agent 打 Wikidata 的搜索口，它回 `HTTP 403`，带产品那枚 `PROVIDER_USER_AGENT` 才 200——所以这不是"我们的出口不通"，也不是产品缺陷。
+
+**"离旅客那一格很近"不等于"就是旅客那一格"。** 上表那三点坐标是我手打的 GCJ02；把探针点与库里同名那行对量（`_cmdr_v3_port_1022/_probe_coordinate_check_r1.py` → `media-probe-coordinate-check-1.txt`，现读 `PLACES_IN_DB 84`）：天坛公园差 334.6 米、八达岭长城差 426.5 米、南锣鼓巷差 20.5 米与 82.8 米两行。三点都在 800 米绑定半径之内，所以两臂照样判别；但"在附近"不是"那一格"。于是换成从同一枚库的 `journey_missions.intent_json` 里把旅客自己那五条线索原样取出来（`_media_stored_lead_probe_r2.py`，现读 `LEADS_FOUND 12`），一个字段都不改地喂给产品那条腿：
+
+| 线索（库里原样） | 改前 `media-stored-lead-before-2.txt` | 改后 `media-stored-lead-after-1.txt` |
+| --- | --- | --- |
+| 故宫博物院 / 南锣鼓巷 / 什刹海 | `REAL_POI_PHOTO` + 署名 + 许可 | 同上，一张没丢 |
+| 天坛公园 `amap:B000A81CB2` | `NO_IMAGE` / `MEDIA_IDENTITY_UNBOUND` / `UNBOUND` | `NO_IMAGE` / `PROPERTY_EMPTY` / `BOUND_SOURCE_COORDINATE_MATCH` |
+| 八达岭长城 `amap:B000A45467` | `NO_IMAGE` / `MEDIA_IDENTITY_UNBOUND` / `UNBOUND` | 同上（照实不动） |
+
+两臂各自"跑的是哪一代代码"不靠我说：改前那轮运行时 `git hash-object` 现读到 `f57a864d`（`HEAD~1` 的那枚 blob），改后那轮读到 `de71399d`（现尖那枚），跑完立刻从 HEAD 取回并复算工作树干净。
+
+**测试。** `tests/test_goal_place_media.py` 现在 14 条通过；同一文件里两枚新臂在**改前的产品代码**上是红的（`media-fix-before-arm-1.txt:18` 起三行：`2 failed, 1 passed`），改后绿；那枚对照臂（`tests/test_goal_place_media.py:199`，钉"多问几条命中也不许放松绑定证据"）两代都过——它管的就是别把闸改松。相关面复跑 `tests/test_goal_*.py` 加身份与地点事实两枚文件：120 条通过。产品码 `6946f98bdc466b093ee1a224c8c6bca541836eff` 已推到 `rescue/v3-final-departure-20261022`（`git ls-remote` 回读同一枚）。
+
+**屏上的"改后"读数怎么取，以及为什么不能就地重开。** 这句话是前端按 `reason_code` 挑的（`frontend/src/trial/mobile/PlacePhotoGallery.tsx:96`），所以要把上表走到屏上必须让后端加载新代码；而起栈脚本一启动就删自己的 SQLite（`_cmdr_v3_port_1022/_cmdr_v3_serve_human_r1.py:34`），重开会把上面那些读数依赖的 human4 库抹掉。所以另起一栈：`_boot_human_stack_r4.ps1` 用 60182／14382 与一枚空的 human5 库，旧栈与旧库一个字没动，新旅客从零走一遍（`gallery_recheck_r1.mjs`，逐格读渲染文字，记在 `walk-48-log.txt`），结果写在第十七节。
