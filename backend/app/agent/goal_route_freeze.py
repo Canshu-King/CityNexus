@@ -1,0 +1,278 @@
+"""Turn the hops a saved candidate actually walks into frozen provider evidence.
+
+Why this door exists: selecting a plan reads two things the Agent's draft never wrote --
+`backend/app/main.py:18120` refuses any candidate whose `mobility_evidence_json` has no snapshot id, and
+`backend/app/services.py:584` marks exactly those candidates stale with the sentence
+"STALE_RECOMPOSE_REQUIRED: no frozen provider evidence". Measured on the walked database
+(trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt) every candidate saved from
+an Agent draft hit both, so the traveller could save eight real places and still be given no button.
+The preparation door states this itself: `backend/app/agent/goal_preparation.py:76` returns
+`mobility_frozen: False`, and `:233` writes that literal.
+
+What this adds is a bridge, not a second source of truth:
+
+* Only the edges the candidate really walks are enumerated -- same-day adjacent activities that both
+  carry a canonical place row. Cross-day pairs are skipped because nobody walks them, and the draft's
+  own to-do already names any item with no place.
+* The measurement is the one the Agent already uses: a stored `research_routes` row from a real
+  `goal_amap_walking` provider call is reused, and a missing edge is asked of the same client through
+  the same receipt writer, so every number in the snapshot has a `ProviderCall` behind it.
+* The snapshot is written by the product's existing capture door
+  (`backend/app/integrations/mobility/snapshot_capture.py:95`) with no fallback provider: if any edge
+  has no live measurement the capture raises and nothing is frozen. A fixture number, a straight line
+  between two coordinates, or a model guess never enters a hard decision here (V4 #4, T2).
+* Freezing is not selecting. Selection still runs the server's own authority and feasibility gates
+  (`backend/app/services.py:744` onward, `backend/app/replanning/feasibility.py:965` onward); this only
+  stops the candidate from being evidence-free.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import datetime, timedelta, timezone
+from urllib.parse import urlencode
+from uuid import UUID, uuid4
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
+from pydantic import BaseModel, ConfigDict
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.agent.goal_amap import _client, _receipt
+from app.agent.goal_mobility import StoredAmapWalkingRoutes
+from app.agent.goal_tasks import _require_task
+from app.commerce.idempotency import canonical_request_signature
+from app.concurrency_guards import journey_write_lock
+from app.core.audit import record_audit
+from app.core.config import settings
+from app.db.models import Activity, IdempotencyKey, Journey, Place, PlanVersion
+from app.db.session import get_session
+from app.integrations.china.amap import wgs84_to_gcj02
+from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureError, capture_mobility_snapshot
+from app.traveler_principal import member_has_capability, resolve_journey_member_principal
+
+router = APIRouter()
+PATH = "/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/freeze-routes"
+
+REUSED = "REUSED_PROVIDER_RECEIPT"
+MEASURED = "MEASURED_NOW"
+UNAVAILABLE = "ROUTE_UNAVAILABLE"
+
+
+class RouteEdge(BaseModel):
+    from_place_id: str
+    to_place_id: str
+    from_name: str
+    to_name: str
+    status: str
+    minutes: int | None
+    distance_m: int | None
+    provider: str | None
+    source_url: str | None
+    captured_at: str | None
+    reason_code: str | None
+
+
+class FreezeRoutesResult(BaseModel):
+    journey_id: str
+    task_id: str
+    plan_version_id: str
+    edges: list[RouteEdge]
+    verified: int
+    total: int
+    frozen: bool
+    mobility_snapshot_id: str | None
+    reason_code: str | None
+    idempotency_replay: bool = False
+
+
+def _candidate_id(activity: Activity) -> str:
+    """The provider key this row was researched under, from the row itself -- never a name match."""
+    try:
+        metadata = json.loads(activity.metadata_json or "{}")
+    except json.JSONDecodeError:
+        metadata = {}
+    return str(metadata.get("source_candidate_id") or "")
+
+
+def _same_day(previous: Activity, current: Activity) -> bool:
+    return str(previous.start_at)[:10] == str(current.start_at)[:10]
+
+
+def used_edges(session: Session, plan: PlanVersion) -> list[tuple[Activity, Activity]]:
+    rows = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan.id)
+                               .order_by(Activity.sequence_no)))
+    return [(previous, current) for previous, current in zip(rows, rows[1:])
+            if _same_day(previous, current) and previous.place_id and current.place_id]
+
+
+def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | None:
+    for row in task.get("research_routes") or []:
+        if not isinstance(row, dict):
+            continue
+        pair = {str(row.get("from_place_id") or ""), str(row.get("to_place_id") or "")}
+        if pair == {origin_key, destination_key} and row.get("duration_seconds") is not None:
+            return row
+    return None
+
+
+def _measure_now(session: Session, task: dict, origin: Place, destination: Place) -> dict | None:
+    """Ask the same AMap client the Agent uses, through the same receipt writer.
+
+    GCJ-02 is what the provider speaks and WGS-84 is what the row stores
+    (`app/db/models.py`, Arbitration R4): the stored point is converted on the way out and the returned
+    row keeps both the provider coordinate claim and the public source url, so the frozen fact is
+    traceable to a call rather than to a string.
+    """
+    if not settings.amap_web_key:
+        return None
+    start = wgs84_to_gcj02(float(origin.latitude), float(origin.longitude))
+    end = wgs84_to_gcj02(float(destination.latitude), float(destination.longitude))
+    with _client() as client:
+        receipt = _receipt(session, "goal_amap_walking",
+                           {"from_place_id": origin.id, "to_place_id": destination.id,
+                            "coordinate_system": "GCJ02"}, client.walking(start, end))
+    route = receipt.get("route")
+    if receipt.get("status") != "ROUTE_READY" or not isinstance(route, dict):
+        return None
+    row = {"id": receipt.get("provider_call_id") or str(uuid4()),
+           "from_place_id": _candidate_id_for(task, origin), "to_place_id": _candidate_id_for(task, destination),
+           "from_name": origin.name, "to_name": destination.name, "provider": "amap",
+           "coordinate_system": "GCJ02", "distance_m": route.get("distance_m"),
+           "duration_seconds": route.get("duration_seconds"), "captured_at": datetime.now(timezone.utc).isoformat(),
+           "source_url": "https://uri.amap.com/navigation?" + urlencode(
+               {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
+                "mode": "walk", "coordinate": "gaode", "callnative": "0"})}
+    task.setdefault("research_routes", []).append(row)
+    task["research_routes"] = task["research_routes"][-16:]
+    return row
+
+
+def _candidate_id_for(task: dict, place: Place) -> str:
+    for lead in task.get("research_places") or []:
+        if isinstance(lead, dict) and str(lead.get("canonical_place_id") or "") == place.id:
+            return str(lead.get("id") or "")
+    provider, separator, tail = str(place.external_id or "").partition(":")
+    return f"{provider}:{tail}" if separator else str(place.external_id or "")
+
+
+def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVersion, task_id: str) -> dict:
+    """Verify every walked edge, then freeze the whole set or nothing."""
+    edges: list[dict] = []
+    facts: list[tuple[str, str, dict]] = []
+    for origin_row, destination_row in used_edges(session, plan):
+        origin = session.get(Place, str(origin_row.place_id))
+        destination = session.get(Place, str(destination_row.place_id))
+        if origin is None or destination is None:
+            continue
+        origin_key = _candidate_id(origin_row) or _candidate_id_for(task, origin)
+        destination_key = _candidate_id(destination_row) or _candidate_id_for(task, destination)
+        route = _stored_route(task, origin_key, destination_key)
+        status = REUSED
+        if route is None:
+            route = _measure_now(session, task, origin, destination)
+            status = MEASURED if route is not None else UNAVAILABLE
+        minutes = None if route is None else max(1, int(round(float(route["duration_seconds"]) / 60.0)))
+        if route is not None:
+            facts.append((origin.id, destination.id, route))
+        edges.append({"from_place_id": origin.id, "to_place_id": destination.id,
+                      "from_name": origin.name, "to_name": destination.name, "status": status,
+                      "minutes": minutes,
+                      "distance_m": route.get("distance_m") if route else None,
+                      "provider": route.get("provider") if route else None,
+                      "source_url": route.get("source_url") if route else None,
+                      "captured_at": route.get("captured_at") if route else None,
+                      "reason_code": None if route else ("AMAP_NOT_CONFIGURED" if not settings.amap_web_key
+                                                         else "PROVIDER_ROUTE_UNAVAILABLE")})
+    verified = len([row for row in edges if row["status"] != UNAVAILABLE])
+    frozen = bool(edges) and verified == len(edges)
+    snapshot_id: str | None = None
+    reason: str | None = None
+    if not edges:
+        reason = "NO_SAME_DAY_EDGES"
+    elif frozen:
+        try:
+            capture = capture_mobility_snapshot(
+                [(row[0], row[1]) for row in facts],
+                primary=StoredAmapWalkingRoutes(facts),
+                operation_key=f"goal-freeze:{plan.id}",
+                captured_at=datetime.now(timezone.utc).isoformat(),
+            )
+        except MobilitySnapshotCaptureError:
+            # The capture door refuses a pair it cannot serve; that is the answer, not a reason to
+            # freeze a partial snapshot.
+            frozen, reason = False, "MOBILITY_CAPTURE_REFUSED"
+        else:
+            snapshot = capture.snapshot
+            plan.mobility_snapshot_id = snapshot.snapshot_id
+            plan.mobility_evidence_json = json.dumps(snapshot.to_evidence(), ensure_ascii=False, sort_keys=True)
+            snapshot_id = snapshot.snapshot_id
+            # The to-do line for a hop was written when nobody had measured it.  Now every walked hop
+            # has a provider fact frozen onto this plan, so leaving 转场路线 on the traveller's list
+            # would ask them for something that already exists.  Only TRANSFER_ROUTE rows are dropped;
+            # identity, opening and price rows stay, because freezing a walk proves none of those.
+            explanation = json.loads(plan.explanation_json or "{}")
+            kept = [row for row in (explanation.get("unresolved_facts") or [])
+                    if not (isinstance(row, dict) and row.get("kind") == "TRANSFER_ROUTE")]
+            if len(kept) != len(explanation.get("unresolved_facts") or []):
+                explanation["unresolved_facts"] = kept
+                plan.explanation_json = json.dumps(explanation, ensure_ascii=False)
+            stored = (task.get("prepared_plan") or {}).get("result")
+            if isinstance(stored, dict):
+                stored["gaps"] = [row for row in (stored.get("gaps") or []) if row.get("kind") != "TRANSFER_ROUTE"]
+    elif verified:
+        reason = "ROUTE_PARTIALLY_VERIFIED"
+    else:
+        reason = "ROUTE_UNAVAILABLE"
+    return {"journey_id": journey.id, "task_id": task_id, "plan_version_id": plan.id,
+            "edges": edges, "verified": verified, "total": len(edges), "frozen": frozen,
+            "mobility_snapshot_id": snapshot_id, "reason_code": reason}
+
+
+@router.post(PATH, response_model=FreezeRoutesResult)
+def freeze_plan_routes(journey_id: UUID, task_id: UUID, plan_version_id: UUID, request: Request,
+                       response: Response,
+                       idempotency_key: str = Header(alias="Idempotency-Key", min_length=1, max_length=160),
+                       session: Session = Depends(get_session)):
+    with journey_write_lock(str(journey_id)):
+        _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+        journey = session.get(Journey, str(journey_id))
+        if journey is None:
+            raise HTTPException(404, "Journey not found")
+        if member.traveler_id != journey.traveler_id or not member_has_capability(session, member, "JOURNEY_UPDATE"):
+            raise HTTPException(403, "Journey owner update required")
+        signature = canonical_request_signature({"task_id": str(task_id), "plan_version_id": str(plan_version_id),
+                                                "actor": member.id})
+        key = f"goal.freeze:{journey.id}:{idempotency_key}"
+        existing = session.get(IdempotencyKey, key)
+        if existing:
+            if existing.request_hash != signature:
+                raise HTTPException(409, "FREEZE_KEY_REUSE_CONFLICT")
+            response.headers["Cache-Control"] = "private, no-store"
+            return {**json.loads(existing.response_json), "idempotency_replay": True}
+        journey, member, mission, intent, task = _require_task(session, journey, member, task_id, require_draft=False)
+        plan = session.get(PlanVersion, str(plan_version_id))
+        if plan is None or plan.journey_id != journey.id:
+            raise HTTPException(404, "PLAN_NOT_IN_JOURNEY")
+        explanation = json.loads(plan.explanation_json or "{}")
+        if explanation.get("compose_source") != "SELECTED_GOAL_DRAFT" or \
+                str(explanation.get("goal_task_id") or "") != str(mission.id):
+            # This door only serves the candidate this task saved; it must not be able to freeze
+            # evidence onto somebody else's plan version.
+            raise HTTPException(403, "PLAN_NOT_FROM_GOAL_TASK_DRAFT")
+        now = datetime.now(timezone.utc)
+        answer = freeze_routes(session, journey, task, plan, str(mission.id))
+        # The research step may have measured a hop just now, so the task owns the new rows.
+        mission.intent_json = json.dumps(intent, ensure_ascii=False)
+        session.add(IdempotencyKey(key=key, operation="goal.freeze-routes", request_hash=signature,
+                                   response_status=200, response_json=json.dumps(answer, ensure_ascii=False),
+                                   created_at=now.isoformat(), expires_at=(now + timedelta(days=7)).isoformat()))
+        record_audit(session, action="goal.routes.frozen", entity_type="PlanVersion", entity_id=plan.id,
+                     journey_id=journey.id, actor_type="traveler", actor_id=member.traveler_id,
+                     after={"task_id": mission.id, "plan_version_id": plan.id, "frozen": answer["frozen"],
+                            "verified": answer["verified"], "total": answer["total"],
+                            "mobility_snapshot_id": answer["mobility_snapshot_id"]})
+        session.commit()
+        response.headers["Cache-Control"] = "private, no-store"
+        response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+        return answer

@@ -53,6 +53,192 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorEnvelope'
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/freeze-routes:
+    post:
+      summary: Freeze Plan Routes
+      operationId: freeze_plan_routes_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__freeze_routes_post
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      - name: plan_version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Plan Version Id
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 160
+          title: Idempotency-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                properties:
+                  journey_id:
+                    type: string
+                    title: Journey Id
+                  task_id:
+                    type: string
+                    title: Task Id
+                  plan_version_id:
+                    type: string
+                    title: Plan Version Id
+                  edges:
+                    items:
+                      properties:
+                        from_place_id:
+                          type: string
+                          title: From Place Id
+                        to_place_id:
+                          type: string
+                          title: To Place Id
+                        from_name:
+                          type: string
+                          title: From Name
+                        to_name:
+                          type: string
+                          title: To Name
+                        status:
+                          type: string
+                          title: Status
+                        minutes:
+                          anyOf:
+                          - type: integer
+                          - type: 'null'
+                          title: Minutes
+                        distance_m:
+                          anyOf:
+                          - type: integer
+                          - type: 'null'
+                          title: Distance M
+                        provider:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          title: Provider
+                        source_url:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          title: Source Url
+                        captured_at:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          title: Captured At
+                        reason_code:
+                          anyOf:
+                          - type: string
+                          - type: 'null'
+                          title: Reason Code
+                      type: object
+                      required:
+                      - from_place_id
+                      - to_place_id
+                      - from_name
+                      - to_name
+                      - status
+                      - minutes
+                      - distance_m
+                      - provider
+                      - source_url
+                      - captured_at
+                      - reason_code
+                      title: RouteEdge
+                    type: array
+                    title: Edges
+                  verified:
+                    type: integer
+                    title: Verified
+                  total:
+                    type: integer
+                    title: Total
+                  frozen:
+                    type: boolean
+                    title: Frozen
+                  mobility_snapshot_id:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    title: Mobility Snapshot Id
+                  reason_code:
+                    anyOf:
+                    - type: string
+                    - type: 'null'
+                    title: Reason Code
+                  idempotency_replay:
+                    type: boolean
+                    title: Idempotency Replay
+                    default: false
+                type: object
+                required:
+                - journey_id
+                - task_id
+                - plan_version_id
+                - edges
+                - verified
+                - total
+                - frozen
+                - mobility_snapshot_id
+                - reason_code
+                title: FreezeRoutesResult
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                properties:
+                  detail:
+                    items:
+                      properties:
+                        loc:
+                          items:
+                            anyOf:
+                            - type: string
+                            - type: integer
+                          type: array
+                          title: Location
+                        msg:
+                          type: string
+                          title: Message
+                        type:
+                          type: string
+                          title: Error Type
+                        input:
+                          title: Input
+                        ctx:
+                          type: object
+                          title: Context
+                      type: object
+                      required:
+                      - loc
+                      - msg
+                      - type
+                      title: ValidationError
+                    type: array
+                    title: Detail
+                type: object
+                title: HTTPValidationError
   /health:
     get:
       operationId: getHealth

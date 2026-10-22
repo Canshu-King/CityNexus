@@ -2214,6 +2214,19 @@ export interface GoalDraftArtifact {
 export interface GoalPreparationSchedule {
   day_index: number; slot_index: number; start_time: string; end_time: string;
 }
+export interface GoalRouteEdge {
+  from_place_id: string; to_place_id: string; from_name: string; to_name: string;
+  status: "REUSED_PROVIDER_RECEIPT" | "MEASURED_NOW" | "ROUTE_UNAVAILABLE";
+  minutes: number | null; distance_m: number | null; provider: string | null;
+  source_url: string | null; captured_at: string | null; reason_code: string | null;
+}
+
+export interface GoalRouteFreezeResult {
+  journey_id: string; task_id: string; plan_version_id: string; edges: GoalRouteEdge[];
+  verified: number; total: number; frozen: boolean; mobility_snapshot_id: string | null;
+  reason_code: string | null; idempotency_replay?: boolean;
+}
+
 export interface GoalPreparationResult {
   journey_id: string; task_id: string; draft_revision: number; plan_version_id: string;
   status: "CANDIDATE"; selected: false; activated: false; slots_count: number;
@@ -3224,6 +3237,14 @@ export const cityNexusApi = {
       "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId) + "/prepare-plan",
       { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
         body: JSON.stringify({ expected_revision: revision, schedule }) },
+    );
+  },
+
+  freezeGoalRoutes(journeyId: string, taskId: string, planVersionId: string, idempotencyKey: string): Promise<GoalRouteFreezeResult> {
+    return requestJson<GoalRouteFreezeResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/plans/" + encodeURIComponent(planVersionId) + "/freeze-routes",
+      { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey } },
     );
   },
 

@@ -1,0 +1,12 @@
+PLAN 36ee2357 snapshot ad4a4346-080f-4df8-b0a1-5270a1e103e2 activities 8
+   STALE False reason None BLOCKER UNRESOLVED_ACTIVITY_FACTS
+   EVIDENCE facts 3 degraded False source_provider amap_walking captured_at 2026-10-22T20:16:16.398568+00:00 operation_key goal-freeze:36ee2357-4f87-46e7-bbbe-1d34a5ac2b3e
+   FACT {"origin_key": "real-place-00d9e27cd4cc6c7b28b6509e", "destination_key": "real-place-62c2e60619da82efebfdea8c", "minutes": 46, "provider_key": null, "capture_provenance": null, "time_basis": "PROVIDER_CAPTURED_AT", "captured_at": "2026-10-22T20:16:16.398568+00:00"}
+   FACT {"origin_key": "real-place-519a9aa24230d0710177c399", "destination_key": "real-place-f0886f6808934f9535a0f01f", "minutes": 9, "provider_key": null, "capture_provenance": null, "time_basis": "PROVIDER_CAPTURED_AT", "captured_at": "2026-10-22T20:16:16.398568+00:00"}
+   FACT {"origin_key": "real-place-62c2e60619da82efebfdea8c", "destination_key": "real-place-71156f2f76c005e3d88802c2", "minutes": 18, "provider_key": null, "capture_provenance": null, "time_basis": "PROVIDER_CAPTURED_AT", "captured_at": "2026-10-22T20:16:16.398568+00:00"}
+   GAP_KINDS ['ADMISSION_PRICE', 'OPENING_HOURS', 'PLACE_REQUIRED', 'TRANSFER_ROUTE']
+AMAP_WALKING_RECEIPTS 4
+   RECEIPT 4a924c06 SUCCESS http 200 from_to ['0177c399', '35a0f01f'] distance_m 663 duration_s 530
+   RECEIPT 5ce7abc1 SUCCESS http 200 from_to ['00A81CB2', '00A83BU7'] distance_m 4133 duration_s 3306
+   RECEIPT 2732c348 SUCCESS http 200 from_to ['00A8UIN8', 'FFHELWET'] distance_m 1333 duration_s 1066
+   RECEIPT 444d78ea SUCCESS http 200 from_to ['00A83C1S', '00A8UIN8'] distance_m 3385 duration_s 2708

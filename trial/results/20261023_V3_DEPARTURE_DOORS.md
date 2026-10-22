@@ -24,7 +24,15 @@
 - 附带一道要裁的语义：选用时可行性门把**每一对相邻活动**都当一跳检查，包括隔夜那对（`backend/app/replanning/feasibility.py:973` 到 `:980`，失败码 `INSUFFICIENT_TRAVEL_GAP`）。Agent 的路线工具只会步行量法，隔夜两站之间的"步行时长"在真实行程里没有意义。要么按日切段（同日才查），要么让这跳由别的模式量。这条与门三一起裁。
 - 现读的分母：走通的那几趟里，同一天相邻跳数为 5（`trial/results/20261022_v3_human_chrome/research-routes-in-walked-journey-1.txt`），Agent 当时量到 4 跳；册廿三日十一分的另一趟（`trial/results/20261022_v3_human_chrome/walk-57-log.txt:28`）里待办还写着 4 段「转场路线：让 Agent 量这一段路」，说明这一趟模型没去量。
 
-## 门三之后 · 一件事实在册廿三日十九点五十分补上
+## 门三 · 已在这一棒接上（册廿三日廿一点十六分之后）
+
+第 1 棒落地：`backend/app/agent/goal_route_freeze.py` 把「这份候选当天真正会走的相邻两站」列出来，能用上的高德回执就复用（`REUSED_PROVIDER_RECEIPT`），没有的就用同一个客户端、同一个回执写入器当场再量一次（`MEASURED_NOW`），任何一跳量不到就整批不冻（`ROUTE_UNAVAILABLE`＋fail-closed）。冻结走的是产品既有的那台机器 `backend/app/integrations/mobility/snapshot_capture.py:95`，不新建第二套路线真相。
+
+屏上真实点击读数：`trial/results/20261022_v3_human_chrome/walk-61-log.txt:31` 是「当天的转场还没有向高德核实过。」，同一处按钮点下去之后 `walk-61-log.txt:32` 变成「转场已核实 3/3 · 已冻结进这版方案」。库里回读 `trial/results/20261022_v3_human_chrome/route-freeze-readback-1.txt`：`:2` 候选已有 snapshot id 且 `STALE False`（同一条判据在接上之前恒说"没有冻结证据"），`:3` 三条事实 degraded False、来源 amap_walking、`fact_quality=LIVE_PROVIDER_CAPTURE`、`time_basis=PROVIDER_CAPTURED_AT`，`:8` 四张高德回执都是 http 200 的真测距（663 m、4133 m、1333 m、3385 m）。冻结成功后那几行「转场路线」的待办会一起消失，身份/营业/票价的缺口留着——钉在 `backend/tests/test_goal_route_freeze.py`。
+
+仍然没有骗人的地方：选用按钮还是 0（`walk-61-log.txt:34`），因为服务端权威还指着票价与那处没有身份的地点；几何也没有（研究步存下来的回执本就裁掉了 geometry，两点连线不是道路，不补）。
+
+## 门三之前 · 一条当时的实测事实（保留，说明为什么必须接）
 
 只读取器把刚保存的三份草案候选逐条过产品自己的判据（`backend/app/services.py:573` 起的 `_plan_staleness` 与 `plan_authority_blocker`），现读结果：三份全都 `stale=True`，原因是
 `STALE_RECOMPOSE_REQUIRED: no frozen provider evidence`（这句话在 `backend/app/services.py:584`），

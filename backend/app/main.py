@@ -28112,6 +28112,9 @@ app.include_router(departure_read_router)
 from app.agent.goal_preparation import router as goal_preparation_router
 app.include_router(goal_preparation_router)
 
+from app.agent.goal_route_freeze import router as goal_route_freeze_router
+app.include_router(goal_route_freeze_router)
+
 # Qoder's mutation half, brought across file by file onto this line -- not the whole branch:
 # the signed departure commit, and the collective-consent gate that decides when a proposal may
 # update the shared plan.  Both keep their own path; neither is mounted behind the read router.

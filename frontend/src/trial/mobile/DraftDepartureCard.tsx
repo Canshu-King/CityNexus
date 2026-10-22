@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult } from "../../api/citynexus";
+import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import { ASK_AGENT_BUTTON, GAP_LABELS, gapAction } from "./departureGaps";
 
@@ -24,11 +24,14 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [result, setResult] = useState<GoalPreparationResult | null>(() => task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null);
+  const [routes, setRoutes] = useState<GoalRouteFreezeResult | null>(null);
+  const [routesBusy, setRoutesBusy] = useState(false);
+  const routeKey = useRef<string | null>(null);
   const requestKey = useRef<string | null>(null);
   const inFlight = useRef(false);
   const scope = useRef(0);
-  useEffect(() => { scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null); setMessage(""); requestKey.current = null; }, [task.task_id, task.draft_artifact?.revision]);
-  useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setMessage(""); setConfirmed(false); }), []);
+  useEffect(() => { scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null); setMessage(""); requestKey.current = null; routeKey.current = null; setRoutes(null); }, [task.task_id, task.draft_artifact?.revision]);
+  useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setRoutes(null); setMessage(""); setConfirmed(false); }), []);
   const days = task.draft_artifact?.days ?? [];
   if (!schedule.length) return null;
   type GapRow = GoalPreparationResult["gaps"][number];
@@ -40,7 +43,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   }
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
-    setConfirmed(false); setResult(null); requestKey.current = null;
+    setConfirmed(false); setResult(null); requestKey.current = null; setRoutes(null); routeKey.current = null;
   };
   const prepare = async () => {
     if (!confirmed || inFlight.current || task.status === "WORKING" || !task.draft_artifact) return;
@@ -61,6 +64,26 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       setMessage(detail.includes("DRAFT_CHANGED") ? "草案已更新，请刷新任务后再确认时间。" : detail.includes("SCHEDULE") ? "请调整时间：各项安排按顺序衔接，并放在这趟旅行的日期内。" : "这次未能保存，时间仍留在这里，可以重试。");
     } finally { inFlight.current = false; setBusy(false); }
   };
+  const verifyRoutes = async () => {
+    if (!result || inFlight.current || task.status === "WORKING") return;
+    const token = readTravelerBearer(), epoch = scope.current;
+    if (!token) return;
+    inFlight.current = true; setRoutesBusy(true); setMessage("");
+    routeKey.current ??= crypto.randomUUID();
+    try {
+      const answer = await cityNexusApi.freezeGoalRoutes(result.journey_id, result.task_id, result.plan_version_id, routeKey.current);
+      if (epoch !== scope.current || token !== readTravelerBearer()) return;
+      if (answer.journey_id !== result.journey_id || answer.task_id !== result.task_id || answer.plan_version_id !== result.plan_version_id) {
+        throw new Error("这份转场结果不属于当前方案。");
+      }
+      setRoutes(answer);
+      window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: result.journey_id }));
+    } catch (error) {
+      if (epoch !== scope.current || token !== readTravelerBearer()) return;
+      setMessage(error instanceof Error && error.message ? error.message : "转场没能核实，时间仍留在这里，可以重试。");
+    } finally { inFlight.current = false; setRoutesBusy(false); }
+  };
+
   return <section className="rev-v3-departure" aria-label="当前草案的出发准备">
     <h3>从这份安排继续</h3>
     <p>{result ? `${result.slots_count} 项安排已保存，刷新也能找回。` : "保留已选地点和日期，先确认每天的时间。"}</p>
@@ -80,6 +103,10 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     </fieldset>
     </details>
     {message && <p role="status">{message}</p>}
+    {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
+      {routes ? `转场已核实 ${routes.verified}/${routes.total}${routes.frozen ? " · 已冻结进这版方案" : routes.total ? ` · 还差 ${routes.total - routes.verified} 段` : " · 这版方案里没有当天相邻的两站"}` : "当天的转场还没有向高德核实过。"}
+      <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">{routesBusy ? "正在核实转场…" : routes?.frozen ? "重新核实转场" : "核实并冻结今天的转场"}</button>
+    </p>}
     {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, group]) => <li key={sequence}><strong>{group.title}</strong>{group.rows.map(gap => <span key={String(gap.kind)}>{GAP_LABELS[String(gap.kind)] ?? "资料"}：{gapAction(gap)}</span>)}</li>)}</ul></>}
     <button type="button" onClick={() => onDiscuss("继续讨论当前选好的草案，保留所有日期和地点。逐项告诉我出发前缺哪些营业、费用或转场资料，并给我处理选择，先不要改行程。")}>{ASK_AGENT_BUTTON}</button>
   </section>;
