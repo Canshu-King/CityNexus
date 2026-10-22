@@ -88,6 +88,16 @@
  "finish": "2026-11-04",
  "cost": 1099.552,
  "bytes": 289792,
- "sha256": "ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7",
- "sourcePlanSha256": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41"
+ "sha256": "7e4f561a46d32b229bf593c18b37adfdc1cfc63080388c595b684f9142fcc0fb",
+ "sourcePlanSha256": "6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee",
+ "scheduledEvents": [
+  {
+   "key": "M11",
+   "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
+   "date": "2026-10-23",
+   "pack": "10.2",
+   "packFinish": "2026-10-28",
+   "note": "the pack the review looks at is the package delivered on 2026-10-23; the re-planned 10.2 row finishes later, and that is the readiness risk to state out loud"
+  }
+ ]
 }

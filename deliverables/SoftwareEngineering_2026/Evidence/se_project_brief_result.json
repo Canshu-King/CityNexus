@@ -162,9 +162,9 @@
    "wbs": "10.5"
   },
   {
-   "name": "M11  Mid-term review (held today)",
+   "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
    "finish": "2026-10-16",
-   "deadline": "2026-10-22",
+   "deadline": "2026-10-23",
    "wbs": "10.6"
   },
   {
@@ -199,8 +199,8 @@
  "view": "甘特图",
  "pageSetup": null,
  "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Microsoft_Project\\Plan_Briefing_Print.pdf",
- "pdfBytes": 450530,
+ "pdfBytes": 450847,
  "pdfPages": 12,
  "planReadOnlyHeld": true,
- "pdfSha256": "095fc85c78749ad493544a8ec8ab8eca0d2368893c5b4e88a5995f9b35ecf9a1"
+ "pdfSha256": "50d174e434c01739bf8454d255bea80c1139fff0d9789d10125b6dd80739ac52"
 }

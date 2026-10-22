@@ -189,8 +189,14 @@ for md in sorted(glob.glob(os.path.join(DEL, "**", "*.md"), recursive=True)):
     # A received external review is quoted material, not one of our claims: it is
     # allowed to name a file we then removed, and editing it would destroy the
     # evidence. The exclusion is named in the report rather than applied silently.
-    if base.startswith("INDEPENDENT_") or base in ("EVIDENCE_INDEX.md",
-                                                   "R3_RESULT.md"):
+    if base.startswith("INDEPENDENT_") or base in (
+            "EVIDENCE_INDEX.md", "R3_RESULT.md",
+            # received instructions quote the artefacts they ask for, including one
+            # (the noon bundle) that is deliberately not committed; they are quoted
+            # material and must not be edited into agreement
+            "CLASSROOM_20261023_NOON_PRIORITY.md",
+            "CLASSROOM_QODER_CONTINUOUS_UNTIL_NOON_20261023.md",
+            "CLASSROOM_R3_LAST_MILE_20261023.md"):
         EXCLUDED_DOCS.append(base)
         continue
     text = open(md, encoding="utf-8", errors="replace").read()

@@ -359,10 +359,15 @@ PLAN = [
          ev="Brief page 1: no later than midnight Friday 2 October 2026. Kept in the "
             "plan as a missed statutory date, shown by Project's deadline arrow against "
             "a row that was never booked complete."),
-    dict(kind="ms", pct=100, name="M11  Mid-term review (held today)", links=["10.2FS"], deadline="2026-10-22",
-         obs=dict(date="2026-10-22", basis="this build", cite="date this pack was "
-                  "generated"),
-         ev="Today. The deliverables in this package are what the review looks at."),
+    dict(kind="ms", pct=0, name="M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
+         links=["10.2FS"], deadline="2026-10-23",
+         obs=dict(date="2026-10-23", basis="stated by the student",
+                  cite="the team's own account of the meeting time; no course-platform "
+                       "record was read for this date"),
+         ev="SCHEDULED, NOT HELD. The review with the teacher takes place at noon on "
+            "2026-10-23 (+08:00), after this pack was built, so the row is booked 0% "
+            "and the package is what the review will look at. Nothing here claims the "
+            "teacher has seen or accepted anything."),
     dict(kind="ms", name="M12  Part 2 course deadline (contract 2026-11-06)", links=["10.4FS"],
          deadline="2026-11-06",
          statutory=True,

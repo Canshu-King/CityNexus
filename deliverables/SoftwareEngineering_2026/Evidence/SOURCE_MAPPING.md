@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1106 |
+| Commits on this branch | `git rev-list --count HEAD` | 1109 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1015), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1016), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -92,7 +92,7 @@ Milestone dates are taken from dated artefacts in the tree, not chosen freely:
 * `M8  Integration line stable` -> 2026-09-23
 * `M9  System test ready (plan target)` -> 2026-10-06
 * `M10  Part 1 course deadline (contract 2026-10-02, missed)` -> 2026-09-29
-* `M11  Mid-term review (held today)` -> 2026-10-16
+* `M11  Mid-term teacher review (scheduled 2026-10-23 noon)` -> 2026-10-16
 * `M12  Part 2 course deadline (contract 2026-11-06)` -> 2026-10-23
 * `M13  Coursework delivery (plan)` -> 2026-10-23
 
@@ -130,20 +130,20 @@ choice rather than a fact and is marked provisional in its own Notes field.
 |---|---|---|
 | `Microsoft_Project/Detailed_Gantt.pdf` | 454510 | `99449d41b60a65e0` |
 | `Microsoft_Project/Gantt_Chart.pdf` | 842537 | `c8ecfc8663316dc1` |
-| `Microsoft_Project/Milestone_Timeline.pdf` | 369858 | `a51c1ed0612e676d` |
+| `Microsoft_Project/Milestone_Timeline.pdf` | 441384 | `7cc39d265043f0b9` |
 | `Microsoft_Project/Network_Diagram.pdf` | 171583 | `b393c185c450df50` |
-| `Microsoft_Project/Plan_Briefing_Print.pdf` | 450530 | `095fc85c78749ad4` |
+| `Microsoft_Project/Plan_Briefing_Print.pdf` | 450847 | `50d174e434c01739` |
 | `Microsoft_Project/Resource_Sheet.pdf` | 147059 | `62f778f5d40380bc` |
 | `Microsoft_Project/Tracking_Gantt.pdf` | 601735 | `9cb7e893f2f77e8a` |
 | `Microsoft_Project/WBS_View.pdf` | 196387 | `54e10c5b0aa2291f` |
-| `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `d0c117951feca746` |
-| `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `9959eeb22ffdd08b` |
-| `Microsoft_Project/CityNexus_Plan_Recovery.mpp` | 289792 | `ec3e1a5c7b2b25b8` |
-| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 386048 | `4cd35d0725c2c5d3` |
-| `Microsoft_Project/previews/Calendar.png` | 309398 | `85174fd58ee51322` |
-| `Microsoft_Project/previews/Gantt_Chart.png` | 225387 | `f01dc3684255936e` |
-| `Microsoft_Project/previews/Milestone_Timeline.png` | 203766 | `c8a809eb8140c521` |
-| `Microsoft_Project/previews/Network_Diagram.png` | 189475 | `961a3e9b9ac06179` |
-| `Microsoft_Project/previews/Resource_Sheet.png` | 190809 | `bdae2ad9ac47fc68` |
-| `Microsoft_Project/previews/Tracking_Gantt.png` | 327675 | `7dc2cf334b591780` |
-| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 310899 | `be7025d452b83b9c` |
+| `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `d1def47164e694c0` |
+| `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `99adeb281957bb87` |
+| `Microsoft_Project/CityNexus_Plan_Recovery.mpp` | 289792 | `7e4f561a46d32b22` |
+| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 386048 | `6398e58f9b4cd3b3` |
+| `Microsoft_Project/previews/Calendar.png` | 491670 | `aad8217129b2d073` |
+| `Microsoft_Project/previews/Gantt_Chart.png` | 339826 | `fa25166f0fb8f364` |
+| `Microsoft_Project/previews/Milestone_Timeline.png` | 293526 | `ccbce7847ae160a4` |
+| `Microsoft_Project/previews/Network_Diagram.png` | 290112 | `6021906c888c40fe` |
+| `Microsoft_Project/previews/Resource_Sheet.png` | 255697 | `1c8dfe4b9582c4d0` |
+| `Microsoft_Project/previews/Tracking_Gantt.png` | 511477 | `753ff0289f9adf03` |
+| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 484575 | `f692a09bcf838299` |

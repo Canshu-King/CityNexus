@@ -1,42 +1,42 @@
 [   0.0s] DPI awareness set to per-monitor
-[   0.1s] plan sha256 before the run 4cd35d0725c2c5d3
+[   0.1s] plan sha256 before the run 6398e58f9b4cd3b3
 [   0.1s] plan set read-only on disk
-[   0.4s] no pre-existing WINPROJ.EXE
-[   1.1s] read-only open refused (com_error), opening normally and never saving
-[   1.6s] opened CityNexus_Software_Engineering_Plan.mpp (65 tasks, 5 resources), Project says ReadOnly=True
-[   1.6s] Project windows: ['CityNexus_Software_Engineering_Plan.mpp [只读]']
-[   1.6s] Project main window 'Project Professional - CityNexus_Software_Engineering_Plan.m' pid 26472
-[   1.7s]   Gantt_Chart: ViewWhole refused (AttributeError), captured at the current scale
-[   1.8s]   Gantt_Chart tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
-[   4.0s]   Gantt_Chart      2578x1558  colours 1421  ink 0.165
-[   4.1s]   SetForegroundWindow failed (error), trying SwitchToThisWindow
-[   5.1s]   cross-check PrintWindow vs screen: mean abs diff 7.66 over 0-255, occluders while grabbing 7
-[   5.1s]   cross-check not decisive: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crate', '命令面板' sat on top while grabbing
-[   5.1s]   kept Gantt_Chart (225387 bytes, 7 windows above it: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crat)
-[   5.3s]   Tracking_Gantt: ViewWhole refused (AttributeError), captured at the current scale
-[   5.4s]   Tracking_Gantt tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
-[   7.5s]   Tracking_Gantt   2578x1558  colours 1555  ink 0.198
-[   7.5s]   kept Tracking_Gantt (327675 bytes, 7 windows above it: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crat)
-[   8.0s]   Network_Diagram: ViewWhole refused (AttributeError), captured at the current scale
-[   8.0s]   Network_Diagram tuned: ColumnBestFit refused (com_error); Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
-[  10.1s]   Network_Diagram  2578x1558  colours 1098  ink 0.189
-[  10.2s]   kept Network_Diagram (189475 bytes, 7 windows above it: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crat)
-[  10.3s]   WBS_Task_Sheet: ViewWhole refused (AttributeError), captured at the current scale
-[  10.4s]   WBS_Task_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
-[  12.5s]   WBS_Task_Sheet   2578x1558  colours 1248  ink 0.192
-[  12.6s]   kept WBS_Task_Sheet (310899 bytes, 7 windows above it: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crat)
-[  12.7s]   Resource_Sheet: ViewWhole refused (AttributeError), captured at the current scale
-[  12.8s]   Resource_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
-[  14.9s]   Resource_Sheet   2578x1558  colours 1149  ink 0.163
-[  14.9s]   kept Resource_Sheet (190809 bytes, 7 windows above it: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crat)
-[  14.9s]   ViewApply 任务使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“任务使用情况”视图已经不存在。', 'C:\\Prog
-[  14.9s]   ViewApply 资源使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“资源使用情况”视图已经不存在。', 'C:\\Prog
-[  15.1s]   Calendar: ViewWhole refused (AttributeError), captured at the current scale
-[  15.1s]   Calendar tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
-[  17.2s]   Calendar         2578x1558  colours 2295  ink 0.402
-[  17.3s]   kept Calendar (309398 bytes, 7 windows above it: ['翻译 英语 页面?', 'CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft\u200b Edge', 'Windows 输入体验', 'Armoury Crat)
-[  20.8s]   Milestone_Timeline 2578x1558  colours 1193  ink 0.160
-[  20.9s]   kept Milestone_Timeline from CityNexus_Milestone_View.mpp
-[  20.9s] milestone file digest d0c117951feca746 -> d0c117951feca746 (held)
-[  21.1s] plan sha256 after the run 4cd35d0725c2c5d3; Office lock files left: none
-[  21.1s] SNAPSHOT R2 DONE: 7 images (plan + milestone), file unchanged, cross-check not decisive
+[   0.5s] no pre-existing WINPROJ.EXE
+[   1.7s] read-only open refused (com_error), opening normally and never saving
+[   2.9s] opened CityNexus_Software_Engineering_Plan.mpp (65 tasks, 5 resources), Project says ReadOnly=True
+[   2.9s] Project windows: ['CityNexus_Software_Engineering_Plan.mpp [只读]']
+[   2.9s] Project main window 'Project Professional - CityNexus_Software_Engineering_Plan.m' pid 55984
+[   3.0s]   Gantt_Chart: ViewWhole refused (AttributeError), captured at the current scale
+[   3.3s]   Gantt_Chart tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[   5.7s]   Gantt_Chart      3414x2350  colours 1308  ink 0.135
+[   5.8s]   SetForegroundWindow failed (error), trying SwitchToThisWindow
+[   6.9s]   cross-check PrintWindow vs screen: mean abs diff 13.76 over 0-255, occluders while grabbing 11
+[   6.9s]   cross-check not decisive: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeG sat on top while grabbing
+[   6.9s]   kept Gantt_Chart (339826 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[   7.1s]   Tracking_Gantt: ViewWhole refused (AttributeError), captured at the current scale
+[   7.3s]   Tracking_Gantt tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[   9.5s]   Tracking_Gantt   3414x2350  colours 1320  ink 0.168
+[   9.6s]   kept Tracking_Gantt (511477 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  10.5s]   Network_Diagram: ViewWhole refused (AttributeError), captured at the current scale
+[  10.5s]   Network_Diagram tuned: ColumnBestFit refused (com_error); Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  12.7s]   Network_Diagram  3414x2350  colours 1145  ink 0.156
+[  12.8s]   kept Network_Diagram (290112 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  13.2s]   WBS_Task_Sheet: ViewWhole refused (AttributeError), captured at the current scale
+[  13.4s]   WBS_Task_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  15.6s]   WBS_Task_Sheet   3414x2350  colours 1233  ink 0.163
+[  15.8s]   kept WBS_Task_Sheet (484575 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  16.1s]   Resource_Sheet: ViewWhole refused (AttributeError), captured at the current scale
+[  16.1s]   Resource_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  18.4s]   Resource_Sheet   3414x2350  colours 1177  ink 0.132
+[  18.4s]   kept Resource_Sheet (255697 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  18.4s]   ViewApply 任务使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“任务使用情况”视图已经不存在。', 'C:\\Prog
+[  18.4s]   ViewApply 资源使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“资源使用情况”视图已经不存在。', 'C:\\Prog
+[  18.6s]   Calendar: ViewWhole refused (AttributeError), captured at the current scale
+[  18.6s]   Calendar tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  20.9s]   Calendar         3414x2350  colours 2411  ink 0.404
+[  21.0s]   kept Calendar (491670 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  24.6s]   Milestone_Timeline 3414x2350  colours 1234  ink 0.130
+[  24.7s]   kept Milestone_Timeline from CityNexus_Milestone_View.mpp
+[  24.7s] milestone file digest d1def47164e694c0 -> d1def47164e694c0 (held)
+[  24.9s] plan sha256 after the run 6398e58f9b4cd3b3; Office lock files left: none
+[  24.9s] SNAPSHOT R2 DONE: 7 images (plan + milestone), file unchanged, cross-check not decisive

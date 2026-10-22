@@ -6,5 +6,4 @@
 [   0.0s]   sheet 3  CNX-SE-DECK-3: 2 bands, 21 boxes, used 5.85in of 5.85in, air factor 0.98
 [   0.0s]   sheet 4  rows: [0.65 0.65 0.65 0.65] | [0.65 0.65]  (heads 1.08 + rows 3.87 = 4.95 of 5.85, air 0.66)
 [   0.0s]   sheet 4  CNX-SE-DECK-4: 2 bands, 13 boxes, used 5.61in of 5.85in, air factor 1.00
-[  14.6s] deck gate: 0 failures, 56 nodes, 4 edges, 4 pages
-[  14.6s] removed the stale debug/ copy of an earlier refused gate report
+[  10.5s] deck gate: 0 failures, 56 nodes, 4 edges, 4 pages

@@ -1,6 +1,6 @@
 # Status, lateness and capacity - as the shipped plan actually reads
 
-Generated 2026-10-23 01:38 from `se_project_build_r2_result.json`, which the build wrote while reading the published `.mpp`. Status date: 2026-10-22.
+Generated 2026-10-23 04:37 from `se_project_build_r2_result.json`, which the build wrote while reading the published `.mpp`. Status date: 2026-10-22.
 
 ## 1. Four different dates, never mixed
 
@@ -48,7 +48,7 @@ Of these, 6 are at 0% (never started) and 8 are part-done. Nothing here was move
 | 8.3 | M8  Integration line stable | observed event | 2026-09-23 | - | 100% | a recorded event, not a commitment |
 | 9.7 | M9  System test ready (plan target) | plan target (ours) | 2026-10-06 | 2026-11-02 | 0% | when the plan says the thing is ready; ours to revise |
 | 10.5 | M10  Part 1 course deadline (contract 2026-10-02, missed | plan target (ours) | 2026-09-29 | 2026-10-02 | 0% | when the plan says the thing is ready; ours to revise |
-| 10.6 | M11  Mid-term review (held today) | plan target (ours) | 2026-10-16 | 2026-10-22 | 100% | when the plan says the thing is ready; ours to revise |
+| 10.6 | M11  Mid-term teacher review (scheduled 2026-10-23 noon) | plan target (ours) | 2026-10-16 | 2026-10-23 | 0% | when the plan says the thing is ready; ours to revise |
 | 10.7 | M12  Part 2 course deadline (contract 2026-11-06) | plan target (ours) | 2026-10-23 | 2026-11-06 | 0% | when the plan says the thing is ready; ours to revise |
 | 11.3 | M13  Coursework delivery (plan) | plan target (ours) | 2026-10-23 | 2026-11-06 | 0% | when the plan says the thing is ready; ours to revise |
 

@@ -112,6 +112,7 @@ for r in RESOURCES:
 
 # --- rows: open work only, links kept where both ends are open --------------
 ids, rows = {}, []
+SCHEDULED = []
 for prow in PLAN:
     k = key_of(prow["name"])
     if prow.get("kind") == "task" and k in open_keys:
@@ -127,10 +128,23 @@ for prow in PLAN:
         continue
     if not (prow.get("deadline") or prow.get("statutory")):
         continue
-    if k in ("M10", "M11"):
-        continue                       # Part 1 is a recorded miss and the mid-term
-                                       # review was held today: both are history,
-                                       # not forward-looking targets
+    if k == "M10":
+        continue                       # Part 1 is a recorded miss: history, not a
+                                       # forward target
+    if k == "M11":
+        # An appointment is not work. The mid-term teacher review happens at noon on
+        # 2026-10-23 whether or not this file says so, and putting it in the recovery
+        # plan made it inherit 10.2's re-planned finish (2026-10-28) and then report
+        # itself as breaching its own date - a modelling artefact, not a fact. It is
+        # recorded here as a scheduled event with the readiness gap named, so the gap
+        # is stated instead of being hidden by leaving the row out.
+        SCHEDULED.append({"key": k, "name": prow["name"], "date": prow.get("deadline"),
+                          "pack": "10.2", "packFinish": "2026-10-28",
+                          "note": "the pack the review looks at is the package "
+                                  "delivered on 2026-10-23; the re-planned 10.2 row "
+                                  "finishes later, and that is the readiness risk to "
+                                  "state out loud"})
+        continue
     t = p.Tasks.Add(prow["name"])
     t.SetField(1280, 0)
     t.Duration = "0d"
@@ -139,6 +153,8 @@ for prow in PLAN:
         t.Deadline = D.strptime(prow["deadline"] + " 09:00", "%Y-%m-%d %H:%M")
     ids[k] = t.ID
     rows.append((k, prow, t, None))
+log("recovery scheduled events kept out of the work plan: %s"
+    % (json.dumps(SCHEDULED, ensure_ascii=False)[:220]))
 log("recovery rows: %d open tasks + %d dated milestones"
     % (len([r for r in rows if r[3]]), len([r for r in rows if not r[3]])))
 
@@ -323,7 +339,8 @@ json.dump({"rows": len(rows), "openTasks": len([r for r in rows if r[3]]),
            "deadlinesBreached": dl_bad, "critical": crit,
            "finish": live["finish"], "cost": live["cost"],
            "bytes": os.path.getsize(REC), "sha256": sha(REC, 64),
-           "sourcePlanSha256": sha(MAIN, 64)},
+           "sourcePlanSha256": sha(MAIN, 64),
+           "scheduledEvents": SCHEDULED},
           open(os.path.join(HERE, "se_project_recovery_result.json"), "w",
                encoding="utf-8"), indent=1, ensure_ascii=False, default=str)
 LOG.close()
