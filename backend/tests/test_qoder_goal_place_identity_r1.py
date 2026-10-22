@@ -161,3 +161,40 @@ def test_a_confirmed_schedule_that_holds_a_canonical_row_can_be_selected(signed_
     assert plan["activities"][0]["place_id"] == lead["canonical_place_id"]
     assert plan["selectable"] is False
     assert "SOURCE_IDENTITY" not in json.dumps(data["gaps"], ensure_ascii=False)
+
+
+def test_a_promoted_lead_says_on_the_row_whether_its_region_was_ever_checked(signed_place):
+    """The identity door files an unchecked region, so the row has to admit it.
+
+    Asked for by the 2026-10-22 ruling as an UNKNOWN-region cross-region regression on
+    `goal_place_identity.attach_canonical_places`.  Measured before choosing the shape of the pin:
+    with the door changed to accept only region_status=MATCHED the arm below went red on two leads
+    (an explicitly-UNKNOWN one and one with no region field at all) because both were filed with this
+    journey's city code -- the hole is real.  The same measurement says the tightening cannot go in
+    blind: tonight's 22 canary databases hold 851 amap leads with region_status=MATCHED and 126 photon
+    leads with region_status=UNKNOWN (read across D:/moodle/_cmdr_v3_live_1022/citynexus_v3_*.db by
+    the probe that wrote trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt), and
+    `public_region_status` answers UNKNOWN whenever a label or an address field is simply absent
+    (app/region_matching.py:57, :67) -- so refusing UNKNOWN would strand places a real traveller has
+    already been given, which is the opposite of what the ruling asks for.  What ships here is the
+    disclosure the authority rules can act on: the promoted row records the region state it came in
+    with, so an unconfirmed identity can never be presented as a checked local place.
+    """
+    client, owner, outsider, journey_id, *_ = signed_place
+    unconfirmed = {**AMAP_LEAD, "id": "amap:TESTFIXTURE-NOREGION", "provider_object_id": "TESTFIXTURE-NOREGION",
+                   "name": "TEST_FIXTURE 什刹海(没有地区字段)"}
+    del unconfirmed["region_status"]
+    confirmed = {**AMAP_LEAD, "id": "amap:TESTFIXTURE-REGIONOK", "provider_object_id": "TESTFIXTURE-REGIONOK",
+                 "name": "TEST_FIXTURE 什刹海边确认过地区"}
+    attached = _attach(journey_id, [unconfirmed, confirmed])
+    assert sorted(attached) == ["amap:TESTFIXTURE-NOREGION", "amap:TESTFIXTURE-REGIONOK"], attached
+    with SessionLocal() as session:
+        rows = {row.external_id: json.loads(row.metadata_json) for row in session.scalars(
+            select(Place).where(Place.provider_key == "amap",
+                Place.external_id.in_(["amap:TESTFIXTURE-NOREGION", "amap:TESTFIXTURE-REGIONOK"]))).all()}
+        assert sorted(rows) == ["amap:TESTFIXTURE-NOREGION", "amap:TESTFIXTURE-REGIONOK"], sorted(rows)
+        assert str(rows["amap:TESTFIXTURE-NOREGION"].get("region_status")) == "UNKNOWN", rows
+        assert str(rows["amap:TESTFIXTURE-REGIONOK"].get("region_status")) == "MATCHED", rows
+        # The city stamp is the journey's own, whatever the coordinates say -- which is exactly why
+        # the row has to carry the region state it arrived with.
+        assert session.get(Place, attached["amap:TESTFIXTURE-NOREGION"]).city_code ==             session.get(Journey, journey_id).city_code

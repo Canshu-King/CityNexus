@@ -198,3 +198,53 @@ def test_a_hop_the_agent_already_routed_is_not_listed_as_missing(prepared_scope)
     plans = client.get(f"/api/v1/journeys/{jid}/plans", headers=headers).json()
     plan = next(item for item in plans if item["id"] == result.json()["plan_version_id"])
     assert plan["selectable"] is False, "a routed hop must not by itself open the selection door"
+
+
+def test_every_to_do_line_names_who_holds_the_answer(prepared_scope):
+    """A to-do line has to say what the traveller can do, not only what is missing.
+
+    Measured on the walked journey (trial/results/20261022_v3_human_chrome/
+    departure-price-evidence-probe-1.txt): the saved candidate listed 票价 for all seven places and
+    转场路线 for hops nobody had measured, while the plan screen below it claimed one fixed reason -
+    「相邻几站之间还没有可用的转场路线。」 - whatever the server had actually refused for.  The row is
+    where the facts are known, so the row carries the answer: identity gaps go to the Agent, a fact a
+    held place's source never gave goes to the Agent's next question, an unrouted hop goes to the
+    Agent's route tool, and a price no source answered stays with the traveller.
+    """
+    client, headers, _, jid, tid, path, _ = prepared_scope
+    with SessionLocal() as s:
+        s.get(Journey, jid).end_at = "2026-11-01T22:00:00+08:00"
+        s.commit()
+    with SessionLocal() as s:
+        journey = s.get(Journey, jid); m = s.get(JourneyMission, tid)
+        intent = json.loads(m.intent_json); task = intent["goal_task"]
+        task["draft_artifact"]["days"][0]["slots"][0]["place_id"] = "amap:fixture-holder-tower"
+        task["draft_artifact"]["days"][0]["slots"].append(
+            {"title": "TEST_FIXTURE 第二处", "time_of_day": "evening", "notes": "", "place_id": "amap:fixture-holder-park"})
+        task["research_places"] = [
+            {"id": "amap:fixture-holder-tower", "name": "TEST_FIXTURE tower", "provider": "amap",
+             "provider_provenance": "LIVE_PROVIDER", "region_status": "MATCHED"},
+            {"id": "amap:fixture-holder-park", "name": "TEST_FIXTURE park", "provider": "amap",
+             "provider_provenance": "LIVE_PROVIDER", "region_status": "MATCHED"}]
+        for external, name in (("fixture-holder-tower", "TEST_FIXTURE canonical tower"), ("fixture-holder-park", "TEST_FIXTURE canonical park")):
+            s.add(Place(id=str(uuid4()), provider_key="amap", external_id=external, city_code=journey.city_code,
+                name=name, category="landmark", latitude=23.1, longitude=113.3,
+                opening_hours_json=json.dumps({"status": "UNKNOWN"}), tags_json="[]",
+                metadata_json=json.dumps({"cost_evidence": {"status": "UNKNOWN", "amount_minor": None}}),
+                updated_at=journey.updated_at))
+        m.intent_json = json.dumps(intent); s.commit()
+    schedule = [{"day_index": 0, "slot_index": 0, "start_time": "14:00", "end_time": "15:00"},
+                {"day_index": 0, "slot_index": 1, "start_time": "19:00", "end_time": "20:00"}]
+    result = client.post(path, headers=headers, json={"expected_revision": 1, "schedule": schedule})
+    assert result.status_code == 201, result.text
+    answers = {(gap["kind"], gap["sequence_no"]): gap["resolution"] for gap in result.json()["gaps"]}
+    assert answers[("OPENING_HOURS", 1)] == "ASK_AGENT_FOR_PLACE_FACT", answers
+    assert answers[("ADMISSION_PRICE", 1)] == "PRICE_HELD_BY_TRAVELLER", answers
+    assert answers[("TRANSFER_ROUTE", 2)] == "ASK_AGENT_TO_MEASURE_HOP", answers
+    kinds = {gap["kind"] for gap in result.json()["gaps"]}
+    assert "PLACE_REQUIRED" not in kinds and "SOURCE_IDENTITY" not in kinds, kinds
+    plans = client.get(f"/api/v1/journeys/{jid}/plans", headers=headers).json()
+    plan = next(item for item in plans if item["id"] == result.json()["plan_version_id"])
+    carried = {(row["kind"], row["sequence_no"]): row.get("resolution") for row in plan["explanation"]["unresolved_facts"]}
+    assert carried[("ADMISSION_PRICE", 1)] == "PRICE_HELD_BY_TRAVELLER", carried
+    assert carried[("TRANSFER_ROUTE", 2)] == "ASK_AGENT_TO_MEASURE_HOP", carried

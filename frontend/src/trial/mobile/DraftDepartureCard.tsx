@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
+import { ASK_AGENT_BUTTON, GAP_LABELS, gapAction } from "./departureGaps";
 
-const gapCopy: Record<string, string> = { SOURCE_IDENTITY: "地点资料接入", PLACE_REQUIRED: "具体地点", OPENING_HOURS: "营业时间", ADMISSION_PRICE: "票价", TRANSFER_ROUTE: "转场路线" };
 function scheduleFor(task: DraftGoalTask): GoalPreparationSchedule[] {
   if (task.prepared_plan && task.prepared_plan.result.draft_revision === task.draft_artifact?.revision) return task.prepared_plan.schedule;
   return (task.draft_artifact?.days ?? []).flatMap((day, di) => {
@@ -31,11 +31,12 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setMessage(""); setConfirmed(false); }), []);
   const days = task.draft_artifact?.days ?? [];
   if (!schedule.length) return null;
-  const pending = new Map<number, { title: string; kinds: string[] }>();
+  type GapRow = GoalPreparationResult["gaps"][number];
+  const pending = new Map<number, { title: string; rows: GapRow[] }>();
   for (const gap of result?.gaps ?? []) {
-    const row = pending.get(gap.sequence_no) ?? { title: gap.title, kinds: [] };
-    if (!row.kinds.includes(gap.kind)) row.kinds.push(gap.kind);
-    pending.set(gap.sequence_no, row);
+    const group = pending.get(gap.sequence_no) ?? { title: gap.title, rows: [] };
+    if (!group.rows.some((item) => item.kind === gap.kind)) group.rows.push(gap);
+    pending.set(gap.sequence_no, group);
   }
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
@@ -79,7 +80,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     </fieldset>
     </details>
     {message && <p role="status">{message}</p>}
-    {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, row]) => <li key={sequence}><strong>{row.title}</strong><span>{row.kinds.map(kind => gapCopy[kind] ?? "资料").join(" · ")}</span></li>)}</ul></>}
-    <button type="button" onClick={() => onDiscuss("继续讨论当前选好的草案，保留所有日期和地点。逐项告诉我出发前缺哪些营业、费用或转场资料，并给我处理选择，先不要改行程。")}>和 Agent 补齐出发资料</button>
+    {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, group]) => <li key={sequence}><strong>{group.title}</strong>{group.rows.map(gap => <span key={String(gap.kind)}>{GAP_LABELS[String(gap.kind)] ?? "资料"}：{gapAction(gap)}</span>)}</li>)}</ul></>}
+    <button type="button" onClick={() => onDiscuss("继续讨论当前选好的草案，保留所有日期和地点。逐项告诉我出发前缺哪些营业、费用或转场资料，并给我处理选择，先不要改行程。")}>{ASK_AGENT_BUTTON}</button>
   </section>;
 }

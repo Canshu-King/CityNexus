@@ -1,0 +1,17 @@
+DB citynexus_v3_human8_1022.db
+JOURNEYS 1
+JOURNEY {"id": "3703e929-b913-4a76-ab73-b2ed4675adf9", "title": "北京 · 2日行程", "city": "CN-RV-2E8CE2493CDF", "start": "2026-12-03T09:00:00+08:00", "end": "2026-12-04T21:00:00+08:00", "active_plan": null}
+CANDIDATE_PLANS 1
+PLAN {"id": "4d992f11-f206-4045-ba1f-4c8de885d4fe", "journey": "3703e929-b913-4a76-ab73-b2ed4675adf9", "version": 1, "mobility_snapshot": null, "authority_state": "PROVISIONAL_UNRESOLVED_FACTS", "cost_unknown_policy": null, "gap_kinds": ["ADMISSION_PRICE", "OPENING_HOURS", "PLACE_REQUIRED", "TRANSFER_ROUTE"], "activities": 7}
+BLOCKER_FROM_PRODUCT_OWN_FUNCTION UNRESOLVED_ACTIVITY_FACTS
+SEQ {"no": 1, "title": "天安门广场（看广场/升旗）", "place": "天安门广场", "provider_key": "amap", "external_id": "amap:B000A83C1S", "opening_status": "VERIFIED_PROVIDER", "opening_raw": "", "cost_evidence_status": "UNKNOWN", "cost_evidence_amount": null, "authority_envelope": "", "blocks_opening": false, "blocks_cost": true}
+SEQ {"no": 2, "title": "故宫博物院", "place": "故宫博物院", "provider_key": "amap", "external_id": "amap:B000A8UIN8", "opening_status": "VERIFIED_PROVIDER", "opening_raw": "", "cost_evidence_status": "UNKNOWN", "cost_evidence_amount": null, "authority_envelope": "", "blocks_opening": false, "blocks_cost": true}
+SEQ {"no": 3, "title": "景山公园", "place": "景山公园", "provider_key": "amap", "external_id": "amap:B000A7I1OL", "opening_status": "VERIFIED_PROVIDER", "opening_raw": "", "cost_evidence_status": "UNKNOWN", "cost_evidence_amount": null, "authority_envelope": "", "blocks_opening": false, "blocks_cost": true}
+SEQ {"no": 4, "title": "前门大街·大栅栏", "place": "北京大栅栏", "provider_key": "amap", "external_id": "amap:B000A84KJP", "opening_status": "VERIFIED_PROVIDER", "opening_raw": "", "cost_evidence_status": "UNKNOWN", "cost_evidence_amount": null, "authority_envelope": "", "blocks_opening": false, "blocks_cost": true}
+SEQ {"no": 5, "title": "天坛公园", "place": "天坛公园", "provider_key": "amap", "external_id": "amap:B000A81CB2", "opening_status": "VERIFIED_PROVIDER", "opening_raw": "", "cost_evidence_status": "UNKNOWN", "cost_evidence_amount": null, "authority_envelope": "", "blocks_opening": false, "blocks_cost": true}
+SEQ {"no": 6, "title": "王府井步行街", "place": "王府井步行街", "provider_key": "amap", "external_id": "amap:B000A48169", "opening_status": "VERIFIED_PROVIDER", "opening_raw": "", "cost_evidence_status": "UNKNOWN", "cost_evidence_amount": null, "authority_envelope": "", "blocks_opening": false, "blocks_cost": true}
+SEQ 7 就近晚餐、早休 -> NO_PLACE_ROW place_id=(empty)
+JOURNEY_CITY_CODES ["CN-RV-2E8CE2493CDF"]
+CATALOG_PLACES_IN_CN-RV-2E8CE2493CDF 72
+PROVIDER {"provider_key": "amap", "rows": 72, "opening_known": 56, "cost_known": 0}
+PLACES_WITH_BOTH_FACTS_KNOWN_IN_CN-RV-2E8CE2493CDF 0

@@ -97,7 +97,12 @@ def attach_canonical_places(session, journey: Journey, task: dict, leads: list[d
             opening_hours=dict(lead.get("opening_hours") or {}),
             metadata={"source_urls": [url] if url.startswith("http") else [],
                       "public_address": str(lead.get("public_address") or "")[:300],
-                      "location_type": str(lead.get("location_type") or "")[:80]},
+                      "location_type": str(lead.get("location_type") or "")[:80],
+                      # This row is stamped with the journey's own city_code no matter what the point
+                      # says, so the row has to carry whether anybody ever checked the region.  An
+                      # unconfirmed identity must not be able to pose as a place verified to be here
+                      # (see test_a_promoted_lead_says_on_the_row_whether_its_region_was_ever_checked).
+                      "region_status": str(lead.get("region_status") or "UNKNOWN").upper()},
             distance_m=None,
             cost_evidence={},
         )

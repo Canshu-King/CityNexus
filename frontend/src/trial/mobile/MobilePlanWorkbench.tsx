@@ -4,16 +4,21 @@ import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, typ
 import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
+import { missingFactsSentence } from "./departureGaps";
 import "./MobilePlanWorkbench.css";
 
 type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null; departure: JourneyDepartureRead | null; seat: JourneyMemberSeatRead | null };
 type WriteAction = "generate" | "select" | "start" | "brief" | "facts";
+type GapRow = { kind?: string; title?: string; resolution?: string };
 
 function failureText(error: unknown): string {
   if (error instanceof CityNexusApiError) {
-    const body = error.body as { reason_code?: string; error?: { reason_code?: string }; detail?: { reason_code?: string } } | null;
+    const body = error.body as { reason_code?: string; error?: { reason_code?: string }; detail?: { reason_code?: string }; details?: { unresolved_facts?: unknown } } | null;
     const reason = body?.reason_code ?? body?.error?.reason_code ?? body?.detail?.reason_code;
-    if (reason === "UNRESOLVED_ACTIVITY_FACTS") return "地点的营业时间还没核实。回到探索，查看来源或换一个地点。";
+    if (reason === "UNRESOLVED_ACTIVITY_FACTS") {
+      const rows = Array.isArray(body?.details?.unresolved_facts) ? body.details.unresolved_facts as GapRow[] : [];
+      return rows.length ? `${missingFactsSentence(rows)}回到探索或出发待办处理它。` : "地点的营业时间、票价或转场资料还没核实。";
+    }
     if (reason === "PLACE_COST_UNVERIFIED") return "地点费用还没核实。回到探索查看来源后继续。";
     if (reason === "PLACES_NOT_IN_CATALOG") return "地点列表有更新，请重新选择地点。";
     if (error.status === 401 || error.status === 403) return "当前账号无法读取这份行程，请重新进入行程。";
@@ -23,15 +28,12 @@ function failureText(error: unknown): string {
   return "暂时没能读取最新结果，点击刷新方案再继续。";
 }
 
-// The server already names why a saved schedule cannot be chosen; the screen should say that, not a
-// hand-written list of everything that could ever be missing.
+// The server already names why a saved schedule cannot be chosen; the screen says that, and never a
+// hand-written guess at what could be missing.
 function selectionBlocker(plan: PlanVersion): string {
   if (plan.explanation?.compose_source !== "SELECTED_GOAL_DRAFT") return "地点信息有更新，请重新生成方案。";
-  const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as { kind?: string; title?: string }[] : [];
-  const names = [...new Set(rows.filter((row) => row?.kind === "SOURCE_IDENTITY" || row?.kind === "PLACE_REQUIRED")
-    .map((row) => String(row.title || "").trim()).filter(Boolean))];
-  if (names.length) return `这几处还没定下具体地点：${names.slice(0, 2).join("、")}。按「和 Agent 补齐出发资料」让它去找。`;
-  return "相邻几站之间还没有可用的转场路线。";
+  const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as GapRow[] : [];
+  return missingFactsSentence(rows);
 }
 
 function dateKey(value: string | undefined, timeZone: string): string | null {  if (!value || !Number.isFinite(Date.parse(value))) return null;

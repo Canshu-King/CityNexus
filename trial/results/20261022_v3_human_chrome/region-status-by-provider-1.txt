@@ -1,0 +1,6 @@
+DBS_SCANNED 22
+provider   region_status   leads
+amap       MATCHED         851
+photon     UNKNOWN         126
+TOTAL_MATCHED 851 TOTAL_UNKNOWN_OR_ABSENT 126
+NOTE region_status is written by app/region_matching.py public_region_status (lines 49-72), which answers UNKNOWN when the label or an address field is absent; it never uses coordinates.

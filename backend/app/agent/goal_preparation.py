@@ -31,6 +31,14 @@ from app.traveler_principal import member_has_capability, resolve_journey_member
 router = APIRouter()
 PATH = "/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan"
 
+# The four answers a to-do line can honestly give a traveller.  Names of operations, not sentences:
+# the screen owns the wording (frontend/src/trial/mobile/departureGaps.ts is the single writer),
+# and a code is only offered when the door it points at exists on this card.
+ASK_AGENT_TO_FIND_PLACE = "ASK_AGENT_TO_FIND_PLACE"
+ASK_AGENT_FOR_PLACE_FACT = "ASK_AGENT_FOR_PLACE_FACT"
+ASK_AGENT_TO_MEASURE_HOP = "ASK_AGENT_TO_MEASURE_HOP"
+PRICE_HELD_BY_TRAVELLER = "PRICE_HELD_BY_TRAVELLER"
+
 
 class SlotTime(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -52,6 +60,7 @@ class PreparationGap(BaseModel):
     kind: str
     place_id: str | None
     status: Literal["UNKNOWN"]
+    resolution: str
 
 
 class PreparationResult(BaseModel):
@@ -183,7 +192,24 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                 if re.match(r"^https?://", url):
                     metadata["source_urls"] = [url]
             for kind in missing:
-                gaps.append({"sequence_no": number, "title": slot["title"], "kind": kind, "place_id": source_id or None, "status": "UNKNOWN"})
+                # A to-do line has to say what the traveller can do about it, not only what is
+                # missing.  Three of these roads end at the one real button on this card
+                # (「和 Agent 补齐出发资料」 asks for the营业、费用与转场 facts item by item); a price
+                # the traveller holds themselves ends with them, because measured across this
+                # journey's own city no wired source answers admission price
+                # (trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt:
+                # 72 amap rows in the city, 0 of them carrying cost evidence).
+                if place is None:
+                    resolution = ASK_AGENT_TO_FIND_PLACE
+                elif kind == "ADMISSION_PRICE":
+                    resolution = PRICE_HELD_BY_TRAVELLER
+                elif kind == "TRANSFER_ROUTE":
+                    resolution = ASK_AGENT_TO_MEASURE_HOP
+                else:
+                    resolution = ASK_AGENT_FOR_PLACE_FACT
+                gaps.append({"sequence_no": number, "title": slot["title"], "kind": kind,
+                             "place_id": source_id or None, "status": "UNKNOWN",
+                             "resolution": resolution})
             total += cost or 0
             rows.append((slot, place, start, end, cost, metadata))
         version = int(session.scalar(select(func.max(PlanVersion.version_no)).where(PlanVersion.journey_id == journey.id)) or 0) + 1

@@ -2217,7 +2217,7 @@ export interface GoalPreparationResult {
   journey_id: string; task_id: string; draft_revision: number; plan_version_id: string;
   status: "CANDIDATE"; selected: false; activated: false; slots_count: number;
   mobility_frozen: boolean;
-  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN" }>;
+  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN"; resolution?: string }>;
 }
 export interface GoalResearchLead {
   id: string; name: string; category: string; latitude: number; longitude: number;
