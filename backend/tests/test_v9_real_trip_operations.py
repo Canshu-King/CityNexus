@@ -4,6 +4,7 @@ import importlib.util
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -250,7 +251,7 @@ def test_v9_generic_city_graph_unknown_cost_and_expiry_gates() -> None:
     assert "STAY_QUOTE_EXPIRED" in expired.text
 
 
-def test_v9_ambiguous_import_provider_truth_and_coordinate_round_trip() -> None:
+def test_v9_ambiguous_import_provider_truth_and_coordinate_round_trip(monkeypatch) -> None:
     _, journey_id = _create_trip()
     draft = client.post(
         f"/api/v1/journeys/{journey_id}/inbox/import",
@@ -263,7 +264,30 @@ def test_v9_ambiguous_import_provider_truth_and_coordinate_round_trip() -> None:
 
     providers = client.get("/api/v1/providers/v9")
     assert providers.status_code == 200
-    assert providers.json()["amap"]["status"] == "NOT_CONFIGURED"
+    # This line used to read `status == "NOT_CONFIGURED"` straight off whatever the machine happened
+    # to have in its environment.  That green was the defect itself: the door looked only at the bare
+    # `AMAP_WEB_KEY` while config.py names the secret `CITYNEXUS_AMAP_WEB_KEY`, so a stack whose Agent
+    # research leg really did route told the traveller the provider was absent.  1b87caf27a made the
+    # door read the key the Agent reads, which is what this screen exists to tell the truth about, and
+    # the ambient assertion turned red here because this developer machine now carries a live key.
+    # The claim is kept and made machine-independent: the door is pinned to each state and must answer
+    # both honestly, naming the missing key in one and never printing the secret in the other.
+    amap_module = importlib.import_module("app.integrations.china.amap")
+    monkeypatch.delenv("AMAP_WEB_KEY", raising=False)
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key=None))
+    without_key = client.get("/api/v1/providers/v9").json()
+    assert without_key["amap"]["status"] == "NOT_CONFIGURED"
+    assert without_key["amap"]["provenance"] == "UNAVAILABLE"
+    assert without_key["amap"]["reason"] == "AMAP_WEB_KEY is absent"
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key="settings-name-key"))
+    with_settings_key = client.get("/api/v1/providers/v9")
+    assert with_settings_key.json()["amap"]["status"] == "READY"
+    assert "settings-name-key" not in with_settings_key.text
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key=None))
+    monkeypatch.setenv("AMAP_WEB_KEY", "bare-name-key")
+    with_bare_key = client.get("/api/v1/providers/v9")
+    assert with_bare_key.json()["amap"]["status"] == "READY"
+    assert "bare-name-key" not in with_bare_key.text
     assert providers.json()["transit_realtime"]["absence_semantics"] == "UNKNOWN_REALTIME"
     assert provider_for_region("CN-TIANJIN") == "amap-web-service"
     assert provider_for_region("US-NYC") == "global-provider-mesh"
