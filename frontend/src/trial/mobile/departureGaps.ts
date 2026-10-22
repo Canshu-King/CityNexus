@@ -6,7 +6,50 @@
 // allowed to name (goal_preparation.py writes a `resolution` code; a code appears here only when the
 // button it points at exists on that card).
 
-export type GapRow = { kind?: string; title?: string; resolution?: string; place_id?: string | null };
+export type GapRow = { kind?: string; title?: string; resolution?: string; place_id?: string | null;
+  detail?: { verdict?: string; reason_code?: string; source_text?: string } | null };
+
+// What the venue's own source sentence says about the day in the plan.  Four answers, and the one that
+// is not "open" quotes the sentence it came from, because a bare 当天不开放 is exactly the kind of claim
+// a traveller cannot check for themselves.
+export const OPENING_LABELS: Record<string, string> = {
+  OPEN_ON_DATE: "来源写这天开放",
+  CLOSED_ON_DATE: "来源说这天闭馆",
+  TIME_OUTSIDE_WINDOW: "到达时间在来源写的开门时间之外",
+  DATE_SPECIFIC_UNKNOWN: "那天来源没给可靠答案",
+};
+
+export type OpeningCheck = { sequence_no: number; title: string; verdict: string; reason_code?: string | null;
+  window?: number[] | null; defers_to_notice?: boolean; source_text?: string | null };
+
+const clockText = (minutes: number | undefined | null): string | null => {
+  if (typeof minutes !== "number" || !Number.isFinite(minutes) || minutes < 0) return null;
+  const hour = Math.floor(minutes / 60);
+  // 24:00 is a closing bound the provider really writes (「周一至周日 00:00-24:00」 for an open street);
+  // dropping it here would leave the card saying "来源写这天开放" with no hours, next to a source
+  // sentence on the same screen that states them.
+  if (hour > 24) return null;
+  return `${String(hour).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+};
+
+// Which half of "we don't know" it is, said differently, because the server read the difference out of
+// the source sentence and the traveller can act on one and not the other.
+const REASON_LABELS: Record<string, string> = {
+  SOURCE_SEASON_NOT_STATED_FOR_THIS_DAY: "来源只写了其他时段的营业时间",
+  SOURCE_DEFERS_TO_NOTICE_FOR_A_HOLIDAY: "这天是节假日，来源说以官方通知为准",
+  NO_WINDOW_STATED: "来源没写具体时间",
+};
+
+export function openingSentence(row: OpeningCheck): string {
+  const byReason = REASON_LABELS[String(row.reason_code ?? "")];
+  const label = byReason ?? OPENING_LABELS[String(row.verdict)] ?? "这一处当天的开放情况没有读出来";
+  const low = Array.isArray(row.window) ? clockText(row.window[0]) : null;
+  const high = Array.isArray(row.window) ? clockText(row.window[1]) : null;
+  const hours = low && high ? `（来源写的时段 ${low}—${high}）` : "";
+  const hedge = row.defers_to_notice && !String(label).includes("官方通知") ? "；来源另写「以官方通知为准」" : "";
+  return `${label}${hours}${hedge}`;
+}
+
 
 export const GAP_LABELS: Record<string, string> = {
   SOURCE_IDENTITY: "地点资料接入",
@@ -14,9 +57,12 @@ export const GAP_LABELS: Record<string, string> = {
   OPENING_HOURS: "营业时间",
   ADMISSION_PRICE: "票价",
   TRANSFER_ROUTE: "转场路线",
+  DATE_SPECIFIC_OPENING: "当天是否开放",
 };
 
 const ASK_FOR_PLACE = "ASK_AGENT_TO_FIND_PLACE";
+const ASK_TO_MOVE_HOUR = "ASK_AGENT_TO_MOVE_HOUR";
+const ASK_TO_REPLAN_DAY = "ASK_AGENT_TO_REPLAN_THE_DAY";
 const ASK_FOR_FACT = "ASK_AGENT_FOR_PLACE_FACT";
 const ASK_FOR_ROUTE = "ASK_AGENT_TO_MEASURE_HOP";
 const PRICE_BY_TRAVELLER = "PRICE_HELD_BY_TRAVELLER";
@@ -29,6 +75,8 @@ const GAP_ACTION_LABELS: Record<string, string> = {
   [ASK_FOR_FACT]: "让 Agent 向来源再要这一项",
   [ASK_FOR_ROUTE]: "让 Agent 量这一段路",
   [PRICE_BY_TRAVELLER]: "没有来源给出这一项的价格",
+  [ASK_TO_MOVE_HOUR]: "让 Agent 把这一处挪到开门时间内",
+  [ASK_TO_REPLAN_DAY]: "让 Agent 换一天或换一处",
 };
 
 export function gapAction(row: GapRow): string {

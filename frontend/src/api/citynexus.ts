@@ -2248,7 +2248,10 @@ export interface GoalPreparationResult {
   known_subtotal_minor?: number;
   mobility_frozen: boolean;
   price_unknown_accepted?: { plan_version_id: string; unknown_place_ids: string[]; accepted_at: string; known_subtotal_minor: number; currency: string };
-  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN"; resolution?: string }>;
+  gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN";
+    resolution?: string; detail?: { verdict?: string; reason_code?: string; source_text?: string } | null }>;
+  opening_checks?: Array<{ sequence_no: number; title: string; verdict: string; reason_code?: string | null;
+    window?: number[] | null; defers_to_notice?: boolean; source_text?: string | null }>;
 }
 export interface GoalResearchLead {
   id: string; name: string; category: string; latitude: number; longitude: number;

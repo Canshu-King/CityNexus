@@ -19,6 +19,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.agent.goal_tasks import DRAFT_CHANGED_RELOAD, DRAFT_RESEARCH_RUNNING, _require_task, refuse_draft_edit
+from app.agent import goal_opening_date
 from app.agent.goal_artifacts import goal_research_lead
 from app.commerce.idempotency import canonical_request_signature
 from app.concurrency_guards import journey_write_lock
@@ -38,6 +39,10 @@ ASK_AGENT_TO_FIND_PLACE = "ASK_AGENT_TO_FIND_PLACE"
 ASK_AGENT_FOR_PLACE_FACT = "ASK_AGENT_FOR_PLACE_FACT"
 ASK_AGENT_TO_MEASURE_HOP = "ASK_AGENT_TO_MEASURE_HOP"
 PRICE_HELD_BY_TRAVELLER = "PRICE_HELD_BY_TRAVELLER"
+# Two more roads for the same date question: the source serves the day but not the hour, or it serves
+# neither and the traveller has to move the visit.
+ASK_AGENT_TO_MOVE_HOUR = "ASK_AGENT_TO_MOVE_HOUR"
+ASK_AGENT_TO_REPLAN_THE_DAY = "ASK_AGENT_TO_REPLAN_THE_DAY"
 
 
 class SlotTime(BaseModel):
@@ -61,6 +66,19 @@ class PreparationGap(BaseModel):
     place_id: str | None
     status: Literal["UNKNOWN"]
     resolution: str
+    detail: dict | None = None
+
+
+class OpeningCheck(BaseModel):
+    """What one confirmed stop's own source says about the day the plan puts the traveller there."""
+
+    sequence_no: int
+    title: str
+    verdict: str
+    reason_code: str | None
+    window: list[int] | None = None
+    defers_to_notice: bool = False
+    source_text: str | None = None
 
 
 class PreparationResult(BaseModel):
@@ -81,6 +99,8 @@ class PreparationResult(BaseModel):
     # What the sources actually gave, in minor units, so the card can put 已知费用 ¥X beside the places
     # nobody answered.  Unknown prices are not inside it and nothing here turns them into 0.
     known_subtotal_minor: int = 0
+    # One line per placed stop: 当天开放 / 当天来源说闭馆 / 到达时间在开门时间之外 / 那天没有可靠答案.
+    opening_checks: list[OpeningCheck] = []
     idempotency_replay: bool = False
 
 
@@ -123,6 +143,7 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
         known = set(task.get("candidate_place_ids") or [])
         now = datetime.now(timezone.utc)
         rows, bands, gaps, total = [], [], [], 0
+        checks: list[dict] = []
         previous_end = None
         previous_placed: tuple[str, str] | None = None
         for number, stamp in enumerate(body.schedule, 1):
@@ -155,6 +176,8 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                 if place is not None and place.city_code != journey.city_code:
                     raise HTTPException(409, "PLACE_NOT_IN_JOURNEY_CITY")
             missing = []
+            on_date: dict | None = None
+            date_ask = ASK_AGENT_FOR_PLACE_FACT
             if place is None:
                 # One line, one ask.  A band with no venue has no opening window and no ticket to
                 # check, so listing 营业时间 and 门票价格 next to it asked the traveller for facts about
@@ -166,6 +189,26 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                     missing.append("OPENING_HOURS")
                 if _place_verified_cost(place) is None:
                     missing.append("ADMISSION_PRICE")
+                # The same source sentence read against the day the traveller is actually there, and the
+                # hour the plan puts them at the door.  An interval list that says "every day" is not
+                # evidence about a Monday, so this never inherits that flattening.
+                if _place_window(place) is not None:
+                    # Only ask the date question when there is a sentence to ask it of: with no opening
+                    # fact at all the 营业时间 row above already names the one thing to do, and a second
+                    # row about the same absence is noise on the traveller's list.
+                    on_date = goal_opening_date.verdict_for_date(
+                        json.loads(place.opening_hours_json or "{}"), date, arrival=start.isoformat())
+                if on_date is not None:
+                    checks.append({"sequence_no": number, "title": slot["title"],
+                                   "verdict": on_date["verdict"], "reason_code": on_date["reason_code"],
+                                   "window": list(on_date["window"]) if on_date.get("window") else None,
+                                   "defers_to_notice": bool(on_date.get("defers_to_notice")),
+                                   "source_text": str(on_date.get("source_text") or "")[:200]})
+                if on_date is not None and on_date["verdict"] != goal_opening_date.OPEN_ON_DATE:
+                    missing.append("DATE_SPECIFIC_OPENING")
+                    date_ask = {goal_opening_date.CLOSED_ON_DATE: ASK_AGENT_TO_REPLAN_THE_DAY,
+                                goal_opening_date.TIME_OUTSIDE_WINDOW: ASK_AGENT_TO_MOVE_HOUR}.get(
+                                    str(on_date["verdict"]), ASK_AGENT_FOR_PLACE_FACT)
             cost = _place_verified_cost(place) if place else None
             hop: dict | None = None
             if source_id and previous_placed is not None and previous_placed[1] != source_id:
@@ -194,6 +237,14 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                 metadata["transfer_route"] = {key: hop.get(key) for key in
                     ("from_place_id", "to_place_id", "from_name", "to_name", "provider",
                      "distance_m", "duration_seconds", "captured_at", "source_url")}
+            if on_date is not None:
+                # Carried on the row so the card can quote the sentence this verdict came from, with the
+                # day and window it was read against: a label without its source is what the sprint asks
+                # to stop shipping.
+                metadata["opening_on_date"] = {"verdict": on_date["verdict"], "reason_code": on_date["reason_code"],
+                                               "window": on_date["window"], "weekday": on_date["weekday"],
+                                               "defers_to_notice": on_date["defers_to_notice"],
+                                               "source_text": str(on_date.get("source_text") or "")[:200]}
             if place:
                 metadata["cost_status"] = "KNOWN" if cost is not None else "UNKNOWN"
                 metadata["cost_evidence"] = json.loads(place.metadata_json or "{}").get("cost_evidence", metadata["cost_evidence"])
@@ -228,6 +279,8 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                     resolution = PRICE_HELD_BY_TRAVELLER
                 elif kind == "TRANSFER_ROUTE":
                     resolution = ASK_AGENT_TO_MEASURE_HOP
+                elif kind == "DATE_SPECIFIC_OPENING":
+                    resolution = date_ask
                 else:
                     resolution = ASK_AGENT_FOR_PLACE_FACT
                 gaps.append({"sequence_no": number, "title": slot["title"], "kind": kind,
@@ -237,7 +290,12 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                              # provider id would not survive the place being re-researched under a second
                              # source, and nothing else in the plan reads that spelling.
                              "place_id": (place.id if place is not None else None) or source_id or None,
-                             "status": "UNKNOWN", "resolution": resolution})
+                             "status": "UNKNOWN", "resolution": resolution,
+                             # Only the day question carries its own evidence text: 「当天没核实到开放」
+                             # without the provider's sentence is a label nobody can check.
+                             "detail": ({"verdict": on_date["verdict"], "reason_code": on_date["reason_code"],
+                                         "source_text": str(on_date.get("source_text") or "")[:200]}
+                                        if kind == "DATE_SPECIFIC_OPENING" and on_date is not None else None)})
             total += cost or 0
             rows.append((slot, place, start, end, cost, metadata))
             if source_id:
@@ -261,7 +319,7 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
         answer = {"journey_id": journey.id, "task_id": mission.id, "draft_revision": body.expected_revision,
                   "plan_version_id": plan.id, "status": "CANDIDATE", "selected": False, "activated": False,
                   "slots_count": len(rows), "unrouted_count": len(bands), "gaps": gaps,
-                  "known_subtotal_minor": total, "mobility_frozen": False}
+                  "known_subtotal_minor": total, "mobility_frozen": False, "opening_checks": checks}
         task["prepared_plan"] = {"result": answer, "schedule": [row.model_dump() for row in body.schedule]}
         mission.intent_json = json.dumps(intent, ensure_ascii=False)
         session.add(IdempotencyKey(key=key, operation="goal.prepare", request_hash=signature, response_status=201,

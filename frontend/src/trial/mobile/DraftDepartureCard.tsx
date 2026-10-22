@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, GAP_LABELS, bandSentence, gapAction, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
+import { ASK_AGENT_BUTTON, GAP_LABELS, bandSentence, gapAction, openingSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -150,6 +150,12 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">{routesBusy ? "正在核实转场…" : routes?.frozen ? "重新核实转场" : "核实并冻结今天的转场"}</button>
     </p>}
     {result && (result.unrouted_count ?? 0) > 0 && <p className="rev-v3-band-note" data-testid="rev-v3-band-note">{bandSentence(result.unrouted_count ?? 0)}</p>}
+    {(result?.opening_checks ?? []).length > 0 && <ul className="rev-v3-opening" data-testid="rev-v3-opening" aria-label="每一处当天的开放核实">
+      {(result?.opening_checks ?? []).map((row) => <li key={row.sequence_no}>
+        <strong>{row.title}</strong><span data-testid="rev-v3-opening-verdict">{openingSentence(row)}</span>
+        {row.verdict !== "OPEN_ON_DATE" && row.source_text && <small>来源原文：{row.source_text}</small>}
+      </li>)}
+    </ul>}
     {result && priceIds.length > 0 && <div className="rev-v3-price-state" data-testid="rev-v3-price-state">
       {price ? <p>{priceAcceptedSentence(price.count, price.knownMinor)}{price.selectable === false ? "这一版还需要把待办逐项补完才能选用。" : ""}</p>
         : <>
