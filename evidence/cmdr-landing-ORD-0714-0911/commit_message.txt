@@ -1,0 +1,23 @@
+fix(copy): put the narrowed wave 25 back on LF and name the line-ending self-inflicted wound
+
+The previous commit on this branch (83b0874756bf25edc61c876175c2d3cb46196918) rewrote
+V8Experience.tsx and LocaleContext.tsx with Path.write_text, which on Windows turns every
+newline into CRLF.  The tip blobs carry zero CR bytes, so the landing gate's on-screen codes
+arm -- which judges only the lines a candidate ADDS -- got a diff in which the entire file
+counts as added, and answered with 45 uppercase tokens this wave never touched ("TRAVEL",
+"AUTONOMOUS" and the rest of the pre-existing dictionary).  The refusal was correct, and the
+cause was mine, not the gate's.
+
+Both files were restored from a8ae9fa6ee2ec7868f46dbd9b93d45dcde4b9d66 and re-applied with
+write_bytes plus a post-write CR assertion.  Eight sentences moved into the dictionary and
+seven call sites re-read them: the two sealed-demo refusals, the three stay-search states
+(waiting note / failed / empty), the plan-choice hint, the candidate-preview note, and
+"nothing scheduled".  Each dictionary value is byte-identical to the literal it replaces in
+both languages, so what a traveller reads does not change; only the number of writers does.
+
+The hero strip is left alone.  It really does put server mode codes where a traveller reads
+words, and that is a debt of its own -- so it becomes a named order rather than being
+smuggled past this gate by a wave that does not fix it.
+
+Verified in a tree that has node_modules: tsc -p tsconfig.typecheck.json --noEmit exit 0 with
+no output, vite build exit 0.
