@@ -885,7 +885,7 @@ export function RevolutionFirstLook() {
     setCandidateForJourney(null);
     setJourney(next);
     setActiveTab("trips");
-    setNotice("Journey 已启动。前往「行程」提交需求或查看动态。");
+    setNotice("行程已开始，可以在「我的旅程」继续调整。");
   };
 
   useEffect(() => {
