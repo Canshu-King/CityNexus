@@ -448,12 +448,12 @@ USER_VERIFIED 仍是 PENDING，本机窗口不等于主人手里的手机。
 
 **失败也要在屏上有名字。** 以前只要任务不再是 WORKING，对话框那行状态就整条消失，"没答上来"被显示成
 "还在想"。现在 FAILED_RECOVERABLE 也出一行：walk-70 读到「Agent 上一轮没有答完，这次的服务暂时不可用。
-你可以再说一次，或先继续调整日程，等它能答时再问。」（`walk-70-log.txt:50`；代码在
+你可以再说一次，或先继续调整日程，等它能答时再问。」（`walk-70-log.txt:49`；代码在
 `a566ec3678aa892b08c9b41508ab7b9405bef86f`）。
 
 **这一趟真的走到了出发。** walk-72：`STEP_13_SELECT_BUTTONS=1 VISIBLE=true`（`walk-72-log.txt:63`）→
 「可以确认出发」「方案 1 已选用」→「旅程已开始」→ 刷新一次仍是「旅程已开始 · 方案 1 正在使用」
-（`:66`、`:69`、`:71`）。库里的对账在 `departure-loop-readback-1.txt`：journey
+（`:65`、`:68`、`:70`）。库里的对账在 `departure-loop-readback-1.txt`：journey
 2413b283-0c0c-40ca-8342-a6866dfec838 状态 ACTIVE，active_plan 3ca37cf4 状态 ACTIVE，六项安排全部
 place=bound 且 opening=OPEN_ON_DATE，冻进这版的转场事实 5 条 LIVE_PROVIDER_CAPTURE
 （32／58／20／19／50 分钟，snapshot baadcc09），门序是 23:25:55 prepare（草案第 2 版）→
@@ -465,6 +465,24 @@ plan.committed_by_traveler → 23:28:54 journey.started；这一趟的时间窗�
 （seq 50 save_draft_itinerary、59 discover_places、63 save_draft_variants），随后冻结拿到 5/5、票价确认完，
 门就开了；按钮那一句在 23:26:31 问出去、23:28:17 答回来，**答完之后草案没有再改版**（其后没有
 TASK_DRAFT_UPDATED）。所以这一笔只能说：问得出、答得上、路没断；不能说"是这一按把行程补齐的"。
+
+**超时这件事有库里的名字，不是我从屏上那句话推的。** 第一份 readback 把 after_json 打了省略号，
+只能说 MODEL_FAILED；补的一把尺只取旅客那句失败话涉及的两个字段，现读六行全是
+reason_code=MODEL_TIMEOUT（`trial/results/20261022_v3_human_chrome/ask-reason-readback-1.txt:2` 起六行，
+`ask-reason-readback-1.txt:9` 是这库里出现过的事件类型清单）。所以"天花板太矮"这一条是库里的判语，
+屏上那行「上一轮没有答完」只是它的翻译。
+
+**下一刀已经在屏上量出来了：问句会把刚核实的转场再要一遍。** walk-72 先按了「核实并冻结今天的转场」，
+卡片当场给出「转场已核实 5/5（其中 1 段是跨夜衔接） · 已冻结进这版方案」（`walk-72-log.txt:33`），
+可是同一张还开着的卡片上，「和 Agent 补齐出发资料」按钮上方仍是「还有 5 项要主动向来源要」
+（`walk-72-log.txt:39`），写进对话框的句子还在逐段要那五段路的用时（`walk-72-log.txt:45`）；
+等这轮答完、卡片重新打开，才变成「屏上的出发待办都齐了，可以直接选用这份方案」（`walk-72-log.txt:60`）。
+服务端本来就做了这件事——冻结成功后把存档答复里的 TRANSFER_ROUTE 行删掉
+（`backend/app/agent/goal_route_freeze.py:240`），所以刷新之后是对的；坏的是卡片自己那份内存里的清单：
+`frontend/src/trial/mobile/DraftDepartureCard.tsx:103` 只把冻结结果放进 routes，没有把 result 里已经
+核实的转场行去掉，而 `frontend/src/trial/mobile/DraftDepartureCard.tsx:65` 的 askable 读的就是那一份。
+Agent 老老实实又量了一遍，答「五项都有来源答案，没有缺项」——多花一轮模型、多叫一次高德，
+而且屏上那句话此刻已经是假的。
 
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
