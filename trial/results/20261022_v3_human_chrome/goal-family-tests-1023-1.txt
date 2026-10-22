@@ -1,0 +1,8 @@
+CMD_1 pytest tests/test_goal_preparation.py tests/test_qoder_goal_place_identity_r1.py -q
+18 passed, 4 warnings in 3.40s
+CMD_2 pytest tests -k 'goal or amap or preparation or place_identity or departure' -q
+1 failed, 211 passed, 2293 deselected, 4 warnings in 14.31s
+CMD_3 pytest that_file_after_reverting_three_files_to_e4d800d6cb
+2 failed, 4 warnings in 3.26s
+CMD_4 npx tsc -p tsconfig.typecheck.json --noEmit
+0 error lines (grep -c 'error TS' on the captured output)
