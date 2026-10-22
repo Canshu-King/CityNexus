@@ -123,11 +123,20 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
             if source_id and place is None and (lead is None or lead.get("region_status") == "CONFLICT"):
                 raise HTTPException(422, "PLACE_NOT_IN_GOAL_TASK_SCOPE")
             if place is None and lead and lead.get("region_status") == "MATCHED":
-                provider, separator, external_id = source_id.partition(":")
-                if separator and provider == lead.get("provider"):
-                    # Bind an already held identity by exact provider key, never a name match.
-                    place = session.scalar(select(Place).where(Place.provider_key == provider,
-                        Place.external_id == external_id, Place.city_code == journey.city_code))
+                # The research step leaves a canonical row behind for every live lead it kept; binding
+                # through that id is the shortest honest path. The provider-key lookup stays as the arm
+                # for a task whose lead was recorded before that identity existed.
+                canonical = str(lead.get("canonical_place_id") or "")
+                place = session.get(Place, canonical) if canonical else None
+                if place is None:
+                    provider, separator, external_id = source_id.partition(":")
+                    if separator and provider == lead.get("provider"):
+                        # Bind an already held identity by exact provider key, never a name match.
+                        place = session.scalar(select(Place).where(Place.provider_key == provider,
+                            Place.external_id.in_([external_id, f"{provider}:{external_id}"]),
+                            Place.city_code == journey.city_code))
+                if place is not None and place.city_code != journey.city_code:
+                    raise HTTPException(409, "PLACE_NOT_IN_JOURNEY_CITY")
             missing = []
             if place is None:
                 missing.append("SOURCE_IDENTITY" if source_id else "PLACE_REQUIRED")

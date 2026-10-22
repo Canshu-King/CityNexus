@@ -68,7 +68,7 @@
 - `HUMAN_BROWSER_USED = YES`
 - `NOVICE_FIRST_CLICK = PASS`（首屏一句话即可提交；第一次按「发送」的死键已修，见 `20261022_V3_SEND_GATE_ON_SCREEN.md:1`；「目的地」仍要再填一次，这是下一个待改点）
 - `AGENT_PLAN_VERSIONS_ON_SCREEN = PASS`（旅客一句话要三版，屏上出现 A／B／C 三张对比卡与三个 tab，按下 B 的「选用这份安排」后服务端草案版本 1 → 2、日程换成那一版，刷新仍在；改前同一句话只有散文、两个计数都是零。逐项读数与成因见第七节）
-- `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL`（同一 Journey 上已走到「已有阶段性成果 · 2 天 6 项安排」，见 `20261022_v3_human_chrome/walk-06-log.txt:6`；SELECTED/ACTIVE 仍在走。今晚两处新事实：出发面板只在「我的旅程」这一页，地图/日程/对话三页各读一次都是 `preparation=0`，只有 trips 页 `preparation=1 card_visible=true`（`walk-29-log.txt:2` 与 `:14`）；而上一代带真地点之前，一份正式候选已经存进服务器，屏上仍写「等待正式计划 1 份正式候选方案」而 `rev-plan-select` 不出现（`walk-22-log.txt:63` 与 `:64`），出发待办点名「具体地点 · 营业时间 · 票价」。**今晚这一代带着真高德地点重走，同一句话仍然不出现**：`SELECT_BUTTONS=0`（`walk-34-log.txt:19`），服务端对拍给出名字——四格 `SOURCE_IDENTITY`、两格 `PLACE_REQUIRED`，同库 `places` 表 0 行（`walk-34-server-readback.txt:71`、`:78`、`:94`），成因与既有落库门的接法写在第七节）
+- `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL（两道门都有名字，见第八节）`（同一 Journey 上已走到「已有阶段性成果 · 2 天 6 项安排」，见 `20261022_v3_human_chrome/walk-06-log.txt:6`；SELECTED/ACTIVE 仍在走。今晚两处新事实：出发面板只在「我的旅程」这一页，地图/日程/对话三页各读一次都是 `preparation=0`，只有 trips 页 `preparation=1 card_visible=true`（`walk-29-log.txt:2` 与 `:14`）；而上一代带真地点之前，一份正式候选已经存进服务器，屏上仍写「等待正式计划 1 份正式候选方案」而 `rev-plan-select` 不出现（`walk-22-log.txt:63` 与 `:64`），出发待办点名「具体地点 · 营业时间 · 票价」。**廿二日夜里带着真高德地点重走，同一句话仍然不出现**：`SELECT_BUTTONS=0`（`walk-34-log.txt:19`），服务端对拍给出名字——四格 `SOURCE_IDENTITY`、两格 `PLACE_REQUIRED`，同库 `places` 表 0 行（`walk-34-server-readback.txt:71`、`:78`、`:94`），成因与既有落库门的接法写在第七节。第八节把这一格修掉了：同一句 `SELECT_BUTTONS` 仍是 0，但缺口名单里 `SOURCE_IDENTITY`／`PLACE_REQUIRED` 整批消失、日程格子换成正式地点 id、同库 40 行正式地点（`walk-36-log.txt:19`、`walk-36-server-readback.txt:36` 与 `:50`），剩下的是「手工候选不冻转场证据」这条已写进响应合同的边界（`goal_preparation.py:67`）与 ORD-0708 待回的营业时间那一格（`services.py:783`）
 - `AGENT_RESEARCH_GROUNDED = PASS（地名与身份）/ NO（照片）`：屏上「现实地图 4 处地点」`walk-31-log.txt:3`，同一屏「OpenStreetMap 地图地点 0 处 · 高德地点 4 处」与「查看更多地点（24）」`walk-31-log.txt:4`；草案格子里带供应方地点 id（服务端对拍 `walk-22-server-readback.txt:5` 起四行 `place_id= amap:B000A8UIN8` 等）。照片仍是没有：屏上相册 `PHOTO_IMGS=0 FALLBACK_TILES=4`（`walk-31-log.txt:5`），原因是这台机器此刻取不到 Wikimedia 系（直连 TLS 握手超时、走唯一活着的代理口 7892 是 `SSL UNEXPECTED_EOF`＝门户拦截），而产品规则禁止按名字模糊配异地照片，所以屏上是中性占位「先看看这个地点」而不是假图
 - `AGENT_NATURAL_LANGUAGE_HALF_DAY_EDIT = PASS`（旅客一句「11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动」之后，屏上回执 `walk-26-log.txt:32` 出现 `日程：版本 1 → 2`，同一屏第五条变成 `下午 · 什刹海边咖啡馆坐着（萤火虫咖啡 后海店）`（`:39`），`EDIT_CHANGED_SCHEDULE=true`（`:40`）。此前两代同一句话都是 Agent 说「已改」而日程不动，成因与修法见 `20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md` 第七节）
 - `RELOAD_RECOVERY = PASS`（**Agent 改过之后**刷新仍然在：`walk-26-log.txt:42` `AFTER_RELOAD_SLOTS=5 SAME_AS_AFTER_EDIT=true`；更早那一次手动改半天的刷新记录仍在 `walk-07-log.txt:4`，两者不是同一件事）
@@ -113,3 +113,30 @@
 
 屏上那句提示本身也有一处对不上：它把「转场路线」列为选用的前提，而 `services.py:742` 的判据只看 `SOURCE_IDENTITY`／`PLACE_REQUIRED` 两类——营业时间、票价、转场路线都不参与否决。这句话要么改成点名真正拦路的那几格，要么把可点的下一步给出来；本轮先如实记下，改动随落库门那一刀一起做。
 
+
+## 八、廿二日廿二时半：研究这一路开始写正式地点表，出发待办的名字变了
+
+改的因由就是第七节那条 `SOURCE_IDENTITY`：V3 的 Agent 研究只把供应方结果当任务内观测，而那份库的 `places` 表 0 行；同一产品的 recovery discovery 早就在调 `materialize_candidates` 落正式行（`backend/app/agent/gateway.py:1854`，候选里带 `materialized_place_id`）。所以这一刀不是新造能力，是把 Agent 研究接上既有那道落库门（新增 `backend/app/agent/goal_place_identity.py`），并把正式 id 交回任务（`backend/app/agent/goal_artifacts.py:309`、`:390`、`backend/app/agent/goal_amap.py:132`）；准备那扇门仍然只做绑定、不做落库（`backend/app/agent/goal_preparation.py:125` 起），模块头那句「No provider, Place promotion … runs through this door」没有改。
+
+第一次坐下（`walk-35-log.txt`）在 4 次 `discover_places` 之后被模型腿掐断：服务端记 `failure=MODEL_TIMEOUT`、`task_status=FAILED_RECOVERABLE`（`walk-35-server-readback.txt:3`），同一库 `CANONICAL_PLACE_ROWS_IN_THIS_DB=32`（`:23`）——昨夜同一趟这里是 0。屏上「已核对的正式地点（32）」这一格在更早几代根本不出现（计数为 0 时那整块 `<details>` 不渲染，`frontend/src/trial/mobile/WorkspaceActions.tsx:614`）。
+
+第二次坐下没有重开旅程，仍在那一个标签页里按屏上给出的那颗按钮：「旅行研究 · 可以重试」＋「继续研究」（`walk-36-log.txt:8`）。按下去 80 秒后日程出现 5 格（`:10`），回执仍是服务端算的那三行（`:12`）。关键读数：
+
+| 量 | 改前 | 改后 |
+| --- | --- | --- |
+| 日程格子里的地点 id | `amap:B000A8UIN8` 这类供应方 id，背后 0 行正式地点（`walk-34-log.txt:7`、`walk-34-server-readback.txt:94`） | `real-place-62c2e60619da82efebfdea8c` 等 5 枚正式 id（`walk-36-log.txt:19`） |
+| 屏上「已核对的正式地点」 | 不出现（0） | 与「公开来源发现的地点」并列出现，计数 40（`walk-36-log.txt:11`） |
+| 出发待办的点名 | 「地点资料接入 · 营业时间 · 票价」「具体地点 · 营业时间 · 票价 …」（`walk-34-log.txt:15`） | 只剩「营业时间 · 票价」「营业时间 · 票价 · 转场路线」（`walk-36-log.txt:23`），「地点资料接入／具体地点」两类整批消失 |
+| 服务端同一候选的缺口 | 四格 `SOURCE_IDENTITY` ＋两格 `PLACE_REQUIRED`（`walk-34-server-readback.txt:71`、`:78`） | 第一格从 `OPENING_HOURS`／`ADMISSION_PRICE` 起，且 `place_id=real-place-…`（`walk-36-server-readback.txt:36`）；同库 `CANONICAL_PLACE_ROWS_IN_THIS_DB=40`（`:50`） |
+| 「选用这份方案」 | 不出现 | **仍然不出现**：`SELECT_BUTTONS=0`（`walk-36-log.txt:26`） |
+
+最后一行不是这一刀没修好，而是剩下的两道门各有名字，都不在这次的改动范围里：
+
+- `services.py:573` 的 `_plan_staleness`：草案候选的 `mobility_evidence_json` 没有 `snapshot_id` 就判 `STALE_RECOMPOSE_REQUIRED: no frozen provider evidence`。而 `goal_preparation.py:67` 把响应契约里的 `mobility_frozen` 写死成 `Literal[False]`、`:187` 照此返回——「保存候选但不冻转场证据」是已定的合同边界（等「候选提交而不应用」那一刀），不是这晚漏掉的实现。
+- `services.py:783`：`authority_state=PROVISIONAL_UNRESOLVED_FACTS` 时，用到的地点只要还没有落地的到访事实（营业时间）就仍判不可选用。这正是 ORD-0708 要回的那个符号；代码里已有的 R86 承认门只覆盖票价、明确不覆盖营业时间。
+
+屏上那句话这一代改成从服务端给的名单里点名（`frontend/src/trial/mobile/MobilePlanWorkbench.tsx:28` 的 `selectionBlocker`）：地点没定就点名是哪几处并指向屏上已有的「和 Agent 补齐出发资料」，都定了才说转场路线；不再手写一份「地点资料和转场路线」的清单。实测读到「相邻几站之间还没有可用的转场路线。」（`walk-36-log.txt:25`），与服务端原因同一件事。
+
+护栏：`backend/tests/test_qoder_goal_place_identity_r1.py` 四格——高德 GCJ-02 线索只落一行、`coordinate_system=WGS84` 而 `source_coordinate_system=GCJ02`、存下的数字是换算过的、营业时间与票价仍然是未知；OSM 形制线索按自己的对象号归档；CONFLICT／非 live／没有类别／没有坐标四种线索一律不落（并数了 `places` 行数不变）；以及旅客确认过的排期绑上正式地点后缺口只剩营业时间与票价、`activities[0].place_id` 就是那枚正式 id，而 `selectable` 仍为 `false` 并把原因写在注释里，防止下一次有人把它当"已经能选了"。`pytest -q` 同代读数：identity＋preparation＋variants＋receipt 四支文件 36 passed。整支 `-k "goal or qoder"` 有 32 failed／7 errors，逐条对照过：把这四个改动文件从工作树里摘走再跑同样的三枚文件，13 failed／14 passed 一字不差（`test_qoder_current_plan_is_named.py`、`test_qoder_live_replans_endpoint.py`、`test_qoder_ord0434_share_grants.py`），所以那批红是本枝既有状态，不是这一刀改出来的。`npm run typecheck` 干净。
+
+仪表自己的两处交代：`walk-36-log.txt:1` 先报了一次 `NO_TAB_WITH_A_LIVE_CREDENTIAL`——那是我这把尺写错了，它拿 `GET .../agent/goal-tasks` 验凭据，而那条路只吃 POST、返回 405；换成 `GET /api/v1/journeys/{id}` 才认出现有的标签页是活的（`:2` 起读到 `journey_read_http=200`）。这个请求只用来挑对标签页，产品动作全是点击。另外 `human-201/202` 两帧因渲染线程 10 秒没答而没落地（两行 `SHOT_FAILED … no frame within 10s`），只有 `human-203-plan-workbench-after-identity-fix.png` 有像素；文字读数不受影响。

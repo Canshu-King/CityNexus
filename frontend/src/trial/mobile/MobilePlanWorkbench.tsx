@@ -23,8 +23,18 @@ function failureText(error: unknown): string {
   return "暂时没能读取最新结果，点击刷新方案再继续。";
 }
 
-function dateKey(value: string | undefined, timeZone: string): string | null {
-  if (!value || !Number.isFinite(Date.parse(value))) return null;
+// The server already names why a saved schedule cannot be chosen; the screen should say that, not a
+// hand-written list of everything that could ever be missing.
+function selectionBlocker(plan: PlanVersion): string {
+  if (plan.explanation?.compose_source !== "SELECTED_GOAL_DRAFT") return "地点信息有更新，请重新生成方案。";
+  const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as { kind?: string; title?: string }[] : [];
+  const names = [...new Set(rows.filter((row) => row?.kind === "SOURCE_IDENTITY" || row?.kind === "PLACE_REQUIRED")
+    .map((row) => String(row.title || "").trim()).filter(Boolean))];
+  if (names.length) return `这几处还没定下具体地点：${names.slice(0, 2).join("、")}。按「和 Agent 补齐出发资料」让它去找。`;
+  return "相邻几站之间还没有可用的转场路线。";
+}
+
+function dateKey(value: string | undefined, timeZone: string): string | null {  if (!value || !Number.isFinite(Date.parse(value))) return null;
   try {
     const parts = new Intl.DateTimeFormat("en", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(value));
     const part = (name: string) => parts.find((item) => item.type === name)?.value;
@@ -296,7 +306,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     {plans.map((plan) => <article key={plan.id} className="rev-plan-option" data-testid="rev-plan-option" data-current={plan.is_current === true}>
       <div className="rev-plan-option-heading"><h3>方案 {plan.version_no}</h3>{plan.is_current && <span><Check size={15} aria-hidden="true" />{current?.journey.status === "ACTIVE" ? "正在使用" : "已选用"}</span>}</div>
       {current && <PlanSchedule plan={plan} journey={current.journey} />}
-      {plan.stale ? <p className="rev-plan-gap">{plan.explanation?.compose_source === "SELECTED_GOAL_DRAFT" ? "安排已保存，完成地点资料和转场路线后即可选用。" : "地点信息有更新，请重新生成方案。"}</p> : plan.selectable !== false && plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
+      {plan.stale ? <p className="rev-plan-gap">{selectionBlocker(plan)}</p> : plan.selectable !== false && plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
     </article>)}
     {canStart && <div className="rev-plan-start"><p>已选好方案。确认后开始正式行程。</p><button type="button" disabled={locked} onClick={() => void write("start")} data-testid="rev-plan-start">{busy === "start" ? "正在启动…" : "确认方案，开始行程"}</button></div>}
   </section>;

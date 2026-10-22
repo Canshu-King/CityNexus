@@ -12,6 +12,7 @@ from fastapi import HTTPException
 
 from app.core.config import settings
 from app.db.models import ProviderCall
+from app.agent.goal_place_identity import attach_canonical_places
 from app.integrations.china.amap_provider import AmapClient
 from app.integrations.china.amap import wgs84_to_gcj02
 
@@ -128,6 +129,7 @@ def discover_amap_goal_places(session, journey, task: dict, *, query: str, publi
             operation = "goal_amap_search"
         result = _receipt(session, operation, {"query": query, "adcode": region["adcode"], "center_place_id": center.get("id") if center else None, "limit": limit}, raw)
         places = _store_places(task, result, region)
+        attach_canonical_places(session, journey, task, places)
         return {**base, **result, "places": places, "provider_provenance": "LIVE_PROVIDER" if result.get("status") in {"RESULTS", "NO_RESULTS", "SUCCESS"} else "UNVERIFIED"}
     finally:
         client.close()

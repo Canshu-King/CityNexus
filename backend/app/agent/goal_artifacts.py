@@ -14,6 +14,7 @@ from fastapi import HTTPException
 
 from app.core.config import settings
 from app.db.models import ProviderCall
+from app.agent.goal_place_identity import attach_canonical_places
 from app.integrations.discovery.real_city import PhotonCityGeocoder, NominatimGeocoder, OverpassPOIProvider, _resolver_city_label
 from app.integrations.provider_config import ExternalProviderSettings, trust_environment_for_public_providers
 from app.region_matching import public_address as _public_address, public_address_from_tags as _public_address_from_tags
@@ -305,6 +306,7 @@ def discover_goal_places(session, journey, task: dict, *, query: str, public_act
         known_areas = {p["id"]: p for p in task.get("research_areas") or []}
         known_areas.update({p["id"]: p for p in areas})
         task["research_areas"] = list(known_areas.values())[:20]
+        attach_canonical_places(session, journey, task, places)
         result.update(status="RESULTS" if places or areas else "NO_RESULTS", places=places, areas=areas)
     except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, IndexError, RuntimeError):
         task[f"{source}_unavailable"] = True
@@ -385,6 +387,7 @@ def discover_nearby_goal_places(session, journey, task: dict, *, center_place_id
         existing = {p["id"]: p for p in task.get("research_places") or []}
         existing.update({p["id"]: p for p in places})
         task["research_places"] = list(existing.values())[:80]
+        attach_canonical_places(session, journey, task, places)
         result.update(status="RESULTS" if places else "NO_RESULTS", places=places, provider_provenance="LIVE_PROVIDER")
     except (httpx.HTTPError, ValueError, TypeError, KeyError, AttributeError, RuntimeError) as error:
         attempts = getattr(error, "provider_attempts", [])
