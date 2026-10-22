@@ -415,6 +415,13 @@ class AmapClient:
                 continue
             lon, lat = location
             place_adcode = _adcode(row.get("adcode")) if row.get("adcode") else None
+            # Both POI calls already ask AMap for its business block (``show_fields=business`` above),
+            # and this projection used to keep none of it -- so every researched place reached the
+            # departure door with an empty opening-hours envelope, and the door said "营业时间" was
+            # missing.  Measured live 2026-10-23: 天坛公园 answers 「周一至周日 06:30-22:00 最晚进入21:00 …」
+            # and 故宫博物院 answers a seasonal sentence that also names its Monday closure.
+            business = row.get("business") if isinstance(row.get("business"), dict) else {}
+            opening_text = _text(business.get("opentime_week") or business.get("opentime_today"), maximum=400)
             places.append(
                 {
                     "external_id": f"amap:{provider_id}",
@@ -433,6 +440,7 @@ class AmapClient:
                     "latitude": lat,
                     "longitude": lon,
                     "coordinate_system": "GCJ02",
+                    "opening_hours_text": opening_text,
                 }
             )
         return places

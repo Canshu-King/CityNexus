@@ -1,0 +1,3 @@
+PLACES 72 TALLY {"VERIFIED_PROVIDER": 53, "UNKNOWN": 19}
+GROUNDED 中国国家博物馆 | intervals 2 | first {"close": "17:00", "days": ["*"], "open": "09:00"} | weekday_coverage UNRESOLVED | closure_notes ["周一全天关闭(法定节假日除外)"]
+      raw: 周一全天关闭(法定节假日除外)；11月1日至次年5月31日周二至周日09:00-17:00(16:00停止入馆)；6月1日至10月31日周二至周日09:00-17:30(16:30停止入馆)

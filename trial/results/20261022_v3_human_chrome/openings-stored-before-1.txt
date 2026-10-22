@@ -1,0 +1,10 @@
+human5 (walked on the stack before the opening-hours carry-through): places=179 empty_opening=0 verified_provider_opening=0
+    故宫博物院 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+    故宫博物院检票处 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+    故宫博物院-午门 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+    故宫博物院-东北角楼 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+human4 (the first walked journey): places=84 empty_opening=0 verified_provider_opening=0
+    故宫博物院 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+    故宫博物院-午门 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+    故宫博物院-文华殿 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}
+    故宫博物院检票处 opening_hours_json= {"intervals": [], "raw": null, "status": "UNKNOWN"}

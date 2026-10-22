@@ -90,7 +90,11 @@ def attach_canonical_places(session, journey: Journey, task: dict, leads: list[d
             latitude=stored_latitude,
             longitude=stored_longitude,
             tags=tuple(sorted({category, "goal_research"})),
-            opening_hours={},
+            # Whatever AMap answered for this POI is carried, unchanged in meaning: an envelope with a
+            # provider sentence and a parsed interval, or an empty one when the provider said nothing.
+            # This used to be a literal {}, which is how a place the traveller is actually going to kept
+            # coming back as 「营业时间 · 待核实」 on the departure card.
+            opening_hours=dict(lead.get("opening_hours") or {}),
             metadata={"source_urls": [url] if url.startswith("http") else [],
                       "public_address": str(lead.get("public_address") or "")[:300],
                       "location_type": str(lead.get("location_type") or "")[:80]},

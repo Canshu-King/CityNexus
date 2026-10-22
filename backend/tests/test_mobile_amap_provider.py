@@ -104,12 +104,54 @@ def test_search_uses_exact_adcode_and_keeps_provider_gcj02_coordinates() -> None
         "latitude": 25.710456,
         "longitude": 116.756123,
         "coordinate_system": "GCJ02",
+        # This POI carries no business block, so the sentence stays None: an absent provider answer is
+        # recorded as absent, never as an opening time.
+        "opening_hours_text": None,
     }
     query = parse_qs(urlparse(str(calls[0].url)).query)
     assert query["region"] == ["350825"]
     assert query["city_limit"] == ["true"]
     assert query["page_size"] == ["8"]
     assert len(calls) == 1
+
+
+def test_search_carries_the_provider_own_opening_hours_sentence() -> None:
+    """``show_fields=business`` was already requested; the projection used to throw the answer away.
+
+    The sentence below is the shape measured live from AMap on 2026-10-23 for 天坛公园 and 天坛公园售票处
+    (trial/results/20261022_v3_human_chrome/amap-opentime-values-1.txt).  Carrying it verbatim is the
+    whole point: the departure door reads an opening fact only if somebody brought the fact home.
+    """
+    calls: list[httpx.Request] = []
+    client = _client(
+        {
+            "status": "1",
+            "pois": [
+                {
+                    "id": "B000A81CB2", "name": "天坛公园", "type": "风景名胜", "address": "天坛里",
+                    "pname": "北京市", "cityname": "北京市", "adname": "东城区", "adcode": "110101",
+                    "citycode": "010", "location": "116.410829,39.881913",
+                    "business": {"opentime_week": "周一至周日 06:30-22:00 最晚进入21:00", "keytag": "5A景区"},
+                },
+                {
+                    "id": "B0FFI0TMCV", "name": "天坛公园售票处", "type": "售票处", "address": "天坛路",
+                    "pname": "北京市", "cityname": "北京市", "adname": "东城区", "adcode": "110101",
+                    "citycode": "010", "location": "116.410000,39.882000",
+                    "business": {"opentime_today": "08:30-20:30"},
+                },
+            ],
+        },
+        calls=calls,
+    )
+    try:
+        result = client.search("天坛", "北京市", adcode="110101", limit=8)
+    finally:
+        client.close()
+
+    assert parse_qs(urlparse(str(calls[0].url)).query)["show_fields"] == ["business"]
+    assert result["places"][0]["opening_hours_text"] == "周一至周日 06:30-22:00 最晚进入21:00"
+    # A POI that only answers for today still counts as an answer, and nothing here invents a week.
+    assert result["places"][1]["opening_hours_text"] == "08:30-20:30"
 
 
 def test_search_marks_conflicts_and_unknowns_and_matches_parent_admin_level() -> None:

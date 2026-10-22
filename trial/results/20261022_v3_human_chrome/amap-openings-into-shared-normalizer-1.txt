@@ -1,0 +1,7 @@
+天坛公园 => {"status": "NORMALIZED_VALID", "intervals": [{"open": "06:30", "close": "22:00", "days": ["*"]}, {"open": "08:00", "close": "17:00", "days": ["*"]}, {"open": "06:00", "close": "22:00", "days": ["*"]},
+天坛公园售票处 => {"status": "NORMALIZED_VALID", "intervals": [{"open": "08:30", "close": "20:30", "days": ["*"]}], "open": "08:30", "close": "20:30"}
+故宫博物院 => {"status": "NORMALIZED_VALID", "intervals": [{"open": "08:30", "close": "17:00", "days": ["*"]}, {"open": "08:30", "close": "16:30", "days": ["*"]}], "open": "08:30", "close": "17:00"}
+颐和园 => {"status": "NORMALIZED_VALID", "intervals": [{"open": "06:30", "close": "19:00", "days": ["*"]}, {"open": "06:00", "close": "20:00", "days": ["*"]}], "open": "06:30", "close": "19:00"}
+颐和园博物馆 => {"status": "NORMALIZED_VALID", "intervals": [{"open": "08:00", "close": "18:00", "days": ["*"]}, {"open": "08:30", "close": "17:00", "days": ["*"]}], "open": "08:00", "close": "18:00"}
+只有废话 => {"status": "RAW_UNPARSED", "intervals": [], "open": null, "close": null}
+空 => {"status": "UNKNOWN", "intervals": [], "open": null, "close": null}

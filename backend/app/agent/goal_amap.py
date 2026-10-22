@@ -15,6 +15,7 @@ from app.db.models import ProviderCall
 from app.agent.goal_place_identity import attach_canonical_places
 from app.integrations.china.amap_provider import AmapClient
 from app.integrations.china.amap import wgs84_to_gcj02
+from app.integrations.discovery.real_city import normalize_opening_hours
 
 
 def _now() -> str:
@@ -69,6 +70,39 @@ def _region(session, journey, task: dict, client: AmapClient) -> dict:
     return task["amap_region"]
 
 
+CLOSURE_MARKS = ("关闭", "不开放", "休息", "暂停营业")
+
+
+def _amap_opening_envelope(value: object, source_url: str) -> dict:
+    """Turn AMap's own opening sentence into the fact envelope the departure door reads.
+
+    The parsing is the one the product already has (``normalize_opening_hours``): it refuses to read
+    unknown text as all-day opening and answers ``RAW_UNPARSED`` for a sentence with no clock in it, so
+    nothing here can invent an opening time.  Two things are added, both about honesty rather than
+    coverage.  The status names the provider as the source -- this is AMap's aggregate, not the venue's
+    own page.  And the day mapping is marked unresolved with the provider's closure sentences kept
+    beside it, because AMap writes 「周二至周日 08:30-17:00 … 周一全天关闭」 in prose whose intervals the
+    shared parser flattens to "every day", and a traveller must not be told 故宫 opens on a Monday.
+    """
+    text = str(value or "").strip()[:400]
+    if not text:
+        return {"status": "UNKNOWN", "raw": None, "intervals": []}
+    normalized = normalize_opening_hours(text)
+    if normalized.get("status") not in {"NORMALIZED_VALID", "CLOSED"}:
+        return {"status": "RAW_UNPARSED", "raw": text, "intervals": []}
+    envelope = dict(normalized)
+    envelope.update({
+        "status": "VERIFIED_PROVIDER",
+        "source": "amap_business_opentime",
+        "source_url": source_url or None,
+        "raw": text,
+        "weekday_coverage": "UNRESOLVED",
+        "closure_notes": [part.strip()[:160] for part in re.split(r"[；;，,]", text)
+                          if any(mark in part for mark in CLOSURE_MARKS)][:4],
+    })
+    return envelope
+
+
 def _store_places(task: dict, result: dict, region: dict) -> list[dict]:
     places = []
     for item in result.get("places", []):
@@ -99,6 +133,12 @@ def _store_places(task: dict, result: dict, region: dict) -> list[dict]:
             "captured_at": item.get("captured_at") or _now(),
             "opening_status": "UNKNOWN", "cost_status": "UNKNOWN",
         })
+        # AMap's own opening sentence, carried through the shared parser -- the helper's note says what
+        # this does and does not claim.  A place whose sentence cannot be read stays UNKNOWN, so the
+        # departure door keeps naming that gap instead of being handed an invented all-day opening.
+        places[-1]["opening_hours"] = _amap_opening_envelope(
+            item.get("opening_hours_text"), str(places[-1].get("source_url") or ""))
+        places[-1]["opening_status"] = str(places[-1]["opening_hours"].get("status") or "UNKNOWN")
     existing = {item["id"]: item for item in task.get("research_places", [])}
     existing.update({item["id"]: item for item in places})
     task["research_places"] = list(existing.values())[-80:]
