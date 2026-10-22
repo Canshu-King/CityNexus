@@ -95,9 +95,30 @@ def test_non_displayable_media_has_an_ordinary_fallback(change):
     assert safe["blocked_itinerary"] is False
 
 
+def test_wikimedia_owns_two_image_hosts_and_licences_are_still_required():
+    """Commons hands back its thumbnails on thumb.wikimedia.org; refusing that host lost every photo.
+
+    Measured 2026-10-22 with the product's own chain: the 南锣鼓巷 answer carried a real author, a
+    ``CC BY 2.0`` licence, a Commons file page and an upload.wikimedia.org file -- and was thrown away
+    with ATTRIBUTION_OR_LICENSE_UNAVAILABLE only because its thumbnail lived on Wikimedia's own
+    ``thumb`` host. The same arm keeps the refusal for a look-alike host, so the rule stays a rule.
+    """
+    returned = media_result()
+    returned["media"]["thumb_url"] = "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Nanluogu.jpg"
+    kept = goal_media.displayable_media(returned, LEAD["id"])
+    assert kept["media"] is not None, kept
+    assert kept.get("reason_code") != "ATTRIBUTION_OR_LICENSE_UNAVAILABLE"
+
+    lookalike = media_result()
+    lookalike["media"]["thumb_url"] = "https://thumb.wikimedia.org.evil.invalid/x.jpg"
+    refused = goal_media.displayable_media(lookalike, LEAD["id"])
+    assert refused["status"] == "NO_PERMISSION" and refused["media"] is None
+
+
 @pytest.mark.parametrize("bound", [True, False])
 def test_osm_object_binds_wikidata_instead_of_trusting_a_matching_name(monkeypatch, bound):
     seen = []
+
     def answer(request):
         seen.append(str(request.url))
         if request.url.host == "www.openstreetmap.org":

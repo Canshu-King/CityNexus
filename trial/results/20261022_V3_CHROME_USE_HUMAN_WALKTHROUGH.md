@@ -69,7 +69,7 @@
 - `NOVICE_FIRST_CLICK = PASS`（首屏一句话即可提交；第一次按「发送」的死键已修，见 `20261022_V3_SEND_GATE_ON_SCREEN.md:1`；「目的地」仍要再填一次，这是下一个待改点）
 - `AGENT_PLAN_VERSIONS_ON_SCREEN = PASS`（旅客一句话要三版，屏上出现 A／B／C 三张对比卡与三个 tab，按下 B 的「选用这份安排」后服务端草案版本 1 → 2、日程换成那一版，刷新仍在；改前同一句话只有散文、两个计数都是零。逐项读数与成因见第七节）
 - `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL（两道门都有名字，见第八节）`（同一 Journey 上已走到「已有阶段性成果 · 2 天 6 项安排」，见 `20261022_v3_human_chrome/walk-06-log.txt:6`；SELECTED/ACTIVE 仍在走。今晚两处新事实：出发面板只在「我的旅程」这一页，地图/日程/对话三页各读一次都是 `preparation=0`，只有 trips 页 `preparation=1 card_visible=true`（`walk-29-log.txt:2` 与 `:14`）；而上一代带真地点之前，一份正式候选已经存进服务器，屏上仍写「等待正式计划 1 份正式候选方案」而 `rev-plan-select` 不出现（`walk-22-log.txt:63` 与 `:64`），出发待办点名「具体地点 · 营业时间 · 票价」。**廿二日夜里带着真高德地点重走，同一句话仍然不出现**：`SELECT_BUTTONS=0`（`walk-34-log.txt:19`），服务端对拍给出名字——四格 `SOURCE_IDENTITY`、两格 `PLACE_REQUIRED`，同库 `places` 表 0 行（`walk-34-server-readback.txt:71`、`:78`、`:94`），成因与既有落库门的接法写在第七节。第八节把这一格修掉了：同一句 `SELECT_BUTTONS` 仍是 0，但缺口名单里 `SOURCE_IDENTITY`／`PLACE_REQUIRED` 整批消失、日程格子换成正式地点 id、同库 40 行正式地点（`walk-36-log.txt:19`、`walk-36-server-readback.txt:36` 与 `:50`），剩下的是「手工候选不冻转场证据」这条已写进响应合同的边界（`goal_preparation.py:67`）与 ORD-0708 待回的营业时间那一格（`services.py:783`）
-- `AGENT_RESEARCH_GROUNDED = PASS（地名与身份）/ NO（照片）`：屏上「现实地图 4 处地点」`walk-31-log.txt:3`，同一屏「OpenStreetMap 地图地点 0 处 · 高德地点 4 处」与「查看更多地点（24）」`walk-31-log.txt:4`；草案格子里带供应方地点 id（服务端对拍 `walk-22-server-readback.txt:5` 起四行 `place_id= amap:B000A8UIN8` 等）。照片仍是没有：屏上相册 `PHOTO_IMGS=0 FALLBACK_TILES=4`（`walk-31-log.txt:5`），原因是这台机器此刻取不到 Wikimedia 系（直连 TLS 握手超时、走唯一活着的代理口 7892 是 `SSL UNEXPECTED_EOF`＝门户拦截），而产品规则禁止按名字模糊配异地照片，所以屏上是中性占位「先看看这个地点」而不是假图
+- `AGENT_RESEARCH_GROUNDED = PASS（地名、身份与照片）`：屏上「现实地图 4 处地点」`walk-31-log.txt:3`，同一屏「OpenStreetMap 地图地点 0 处 · 高德地点 4 处」与「查看更多地点（24）」`walk-31-log.txt:4`；草案格子里带供应方地点 id（服务端对拍 `walk-22-server-readback.txt:5` 起四行 `place_id= amap:B000A8UIN8` 等）。当时照片仍是没有：屏上相册 `PHOTO_IMGS=0 FALLBACK_TILES=4`（`walk-31-log.txt:5`），原因是这台机器此刻取不到 Wikimedia 系（直连 TLS 握手超时、走当时那条代理口是 `SSL UNEXPECTED_EOF`＝门户拦截），而产品规则禁止按名字模糊配异地照片，所以屏上是中性占位「先看看这个地点」而不是假图。**这一格廿二日十时四十三分已经在屏上过了**：路（代理口今天可达）与闸（我们自己写死的缩略图域名把合规照片丢掉）分开量、分开修，之后相册里是三张带署名与许可的真图（`walk-39-log.txt:13`、`:18`、`:19`），逐跳读数与"仍然没有照片的那两格为什么没有"写在第十节。
 - `AGENT_NATURAL_LANGUAGE_HALF_DAY_EDIT = PASS`（旅客一句「11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动」之后，屏上回执 `walk-26-log.txt:32` 出现 `日程：版本 1 → 2`，同一屏第五条变成 `下午 · 什刹海边咖啡馆坐着（萤火虫咖啡 后海店）`（`:39`），`EDIT_CHANGED_SCHEDULE=true`（`:40`）。此前两代同一句话都是 Agent 说「已改」而日程不动，成因与修法见 `20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md` 第七节）
 - `RELOAD_RECOVERY = PASS`（**Agent 改过之后**刷新仍然在：`walk-26-log.txt:42` `AFTER_RELOAD_SLOTS=5 SAME_AS_AFTER_EDIT=true`；更早那一次手动改半天的刷新记录仍在 `walk-07-log.txt:4`，两者不是同一件事）
 - `VIEWPORT_PASS = 390×844 / 430×932 / 1366×900 三档均无横向溢出且「发送」在视口内`（`walk-07-log.txt:13`、`:15`、`:17`）
@@ -154,3 +154,26 @@
 顺带这一趟也是身份那一刀的二次印证：卡片能与草案在「地点」这一维对上，靠的正是双方都带同一枚 `real-place-…` 正式 id。
 
 自己把屏弄坏过一次，如实记在这里：第一版改动里 `.map()` 的括号少关了一层，dev server 的 `vite-error-overlay` 直接盖在旅客屏幕上，走查里表现为「对话」那格点不动（`AGENT_LAYER_ERR`、`SEND_ERR`），而页面文字仍读得出五格日程——只看文字读数会误判成"产品又卡住了"。抓出来的是 hit-test：`agent_tab.hit_test = "VITE-ERROR-OVERLAY."`，同批像素 `human-205-probe-page-0.png`。修好后 `overlay=absent`、`agentTabHit=self`，`npm run typecheck` 干净。教训写进仪器：**每次改完前端，先 hit-test 顶层元素并读 overlay 节点，再谈屏上文字**。
+
+
+## 十、十时四十三分：屏上终于有真照片了——丢掉它的原因不是网络，是我们自己的域名白名单
+
+旅客最早那句「一张照片都没有」到这里才有完整答案，而且它是两件事，分开量了才敢分开设责任：
+
+- 先修路。产品的公开来源客户端本来就尊重环境代理（`backend/app/integrations/provider_config.py:49` 默认 `auto`），而之前每一次起栈我都把代理变量剥掉了。换成只让 Wikimedia 两台主机走本机已在监听的代理口（`_boot_human_stack_r3.ps1`；高德／Photon／Overpass 仍走直连），用产品自己的 httpx 与产品自己的 UA 复测：Commons API 与一张缩略图都回 `http_status=200`（缩略图为 image/jpeg，四万余字节），同一时刻直连两侧仍是 ConnectTimeout。
+- 再修闸。路通了屏上仍然是占位（`walk-38-log.txt:13` `GALLERY_IMGS=[]`、`:18` `PHOTO_IMGS=0`）。拿产品自己的媒体链一跳一跳打才看见真相：南锣鼓巷那一趟已经带回真作者 `Francisco Anzola`、真许可 `CC BY 2.0`、真 Commons 文件页与 `upload.wikimedia.org` 原图，`displayable_media` 却仍判 `NO_PERMISSION / ATTRIBUTION_OR_LICENSE_UNAVAILABLE`。逐条比对该判据的六个条件，唯一不通过的是缩略图主机名——Commons 现在把缩略图发在 `thumb.wikimedia.org`，而白名单里只写着 `upload.wikimedia.org`（`backend/app/agent/goal_media.py:44` 起）。合规的照片是被我们自己写死的域名丢掉的。
+
+改法只动域名白名单：图片接受 Wikimedia 自己这两台主机，来源页仍只认 `commons.wikimedia.org`，许可、作者、`can_show`、"不得是客户端传入的 URL" 这些条件一个都没松；反例臂把主机写成 `thumb.wikimedia.org.evil.invalid` 照样拒（`backend/tests/test_goal_place_media.py` 新增一臂，该文件 11 passed）。另外按实测把这一跳的预算从五秒抬到八秒：改动前落库的回执里有一条正好死在 5047 ms（旧上限五秒），屏上因此只剩占位。
+
+同机同流程重走的读数（`walk-39-log.txt`）：
+
+| 量 | 改前（`walk-38-log.txt`） | 改后（`walk-39-log.txt`） |
+| --- | --- | --- |
+| 相册里的图片元素 | `GALLERY_IMGS=[]`（`:13`） | 三张真图，src 为 `thumb.wikimedia.org/…Forbidden_City_Beijing_Shenwumen_Gate.JPG/960px-…` 与 `…Nanluogu_Xiang_(6230757826).jpg/960px-…`，自然尺寸 960×720（`:13`） |
+| 第一张是否真的看得见 | `FIRST_PHOTO_VISIBLE=false PHOTO_IMGS=0`（`:18`） | `FIRST_PHOTO_VISIBLE=true PHOTO_IMGS=3`（`:18`） |
+| 屏上署名与许可 | 只有「先看看这个地点」 | 「故宫博物院 来源实景 · 封面裁切 user:kallgan · CC BY-SA 3.0」「南锣鼓巷 … Francisco Anzola · CC BY 2.0」「什刹海 … FANG Chen · CC BY-SA 2.0」（`:15`、`:19`） |
+| 地图层顶部引用 | 无照片可引 | 「故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0」（`:20`） |
+| 同一库媒体回执 | 一格 `NO_PERMISSION/ATTRIBUTION_OR_LICENSE_UNAVAILABLE`、两格 `UNAVAILABLE`（含死在 5047 ms 那格） | 三格 `REAL_POI_PHOTO` 带图、两格 `NO_IMAGE/ENTITY_NOT_FOUND`，最长一跳 3110 ms |
+| 像素 | `human-206-photo-strip-with-wikimedia-route.png` 214,562 字节（占位） | 同名文件 614,854 字节，另有 `human-207-map-layer-after-photo-route.png`（真图，含顶部署名条） |
+
+仍然没好的部分照实写：这趟六个地点里有两个服务端确实找不到对应实体（`NO_IMAGE/ENTITY_NOT_FOUND`），屏上那两格仍是中性占位——不是被闸丢掉，而是没有可核实的来源照片，而产品规则本来就不允许按名字去配异地同名地标。另外照片能否出现，取决于这台机器有没有一条能出校园的口：那是我起这台隔离测试栈时给它设的环境，不是产品默认，用户自己的设备仍需各自可达——这一点已写进外发汇报，不当已验。
