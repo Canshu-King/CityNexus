@@ -7974,6 +7974,27 @@ def read_shared_journey(
 # this person do" in one sentence) and :133 (an invitation has a lifetime).  The member-state words
 # are prefixed because bare EXPIRED and WITHDRAWN already mean something to accommodation offers
 # (`app/stay_mobility.py:1963`).
+def _role_capabilities(session: Session, role: str) -> set[str]:
+    """What a role may do, read out of `journey_role_capabilities` and not out of this function.
+
+    Brought across from Qoder's capability line with the consent and departure-commit doors that use
+    it (that line's `collective_consent.py` names this pair next to `_member_state`).  It is the same
+    table the shipped `app.traveler_principal.member_has_capability` reads, so the roster projection
+    and the door cannot drift onto two different capability lists: one of the ported spec's arms
+    presses exactly that.
+
+    The door asks the table `MEMBER_MANAGE`: if operations narrow the table, the doors follow it the
+    same instant.  A hardcoded `role in {"OWNER", "ADMIN"}` here would have kept working after such
+    a change and said something untrue about the product.
+    """
+
+    return set(
+        session.scalars(
+            select(JourneyRoleCapability.capability).where(JourneyRoleCapability.role == role)
+        ).all()
+    )
+
+
 def _member_state(member: JourneyMemberModel, now: datetime) -> str:
     if member.removed_at:
         return "MEMBER_WITHDRAWN"
@@ -28090,3 +28111,12 @@ app.include_router(departure_read_router)
 
 from app.agent.goal_preparation import router as goal_preparation_router
 app.include_router(goal_preparation_router)
+
+# Qoder's mutation half, brought across file by file onto this line -- not the whole branch:
+# the signed departure commit, and the collective-consent gate that decides when a proposal may
+# update the shared plan.  Both keep their own path; neither is mounted behind the read router.
+from app.collective_consent import router as collective_consent_router
+app.include_router(collective_consent_router)
+
+from app.departure_commit import router as departure_commit_router
+app.include_router(departure_commit_router)
