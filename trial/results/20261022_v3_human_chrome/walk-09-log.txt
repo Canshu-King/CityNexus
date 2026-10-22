@@ -191,3 +191,5 @@ SHOT human-42-draft-and-receipt-on-screen.png
   API_358 200 GET /journeys/76f73f26-6e3b-420e-9bbc-7d7863b785e6/agent/goal-tasks/1fdc3cd8-7e89-4e32-be52-a440596ed8d2
 API_ROWS_TOTAL=378
 WALK9A_END 2026-10-22T10:20:58.119Z
+WALK9A_FATAL browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9333 Call log: [2m - <ws preparing> retrieving websocket url from http://127.0.0.1:9333[22m
+WALK9A_END 2026-10-22T10:39:51.611Z

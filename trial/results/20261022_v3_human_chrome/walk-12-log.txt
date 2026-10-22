@@ -1,0 +1,2 @@
+WALK10B_FATAL browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9333 Call log: [2m - <ws preparing> retrieving websocket url from http://127.0.0.1:9333[22m
+WALK10B_END 2026-10-22T10:48:16.401Z

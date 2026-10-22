@@ -1,0 +1,43 @@
+CHROME not listening; launching the isolated test profile (no personal tabs)
+CHROME_UP after 1s
+WALK12_START 2026-10-22T11:05:46.598Z tool=real Chrome over CDP url=http://127.0.0.1:14371/revolution viewport=414x900 one_sitting=true
+STORAGE_RESET leftover_journey=none leftover_bearer=absent
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+DAYS_READBACK 2
+PARTY_READBACK 2 BUDGET_READBACK 1000
+JOURNEY_ID f198dac0-a950-4de3-ba00-4f01981ca43a bearer=present
+CONSENT_STRIP_INLINE=true SEND_DISABLED_BEFORE_CONSENT=true
+SEND_ENABLED_AFTER_GRANTING=true
+SHOT human-80-consent-inline-on-first-visit.png
+SENT_FIRST_GOAL_AT 2026-10-22T11:06:34.070Z
+POLL_3 t=30s busy=true choices=0
+WALK12_FATAL page.waitForTimeout: Target page, context or browser has been closed
+WALK12_END 2026-10-22T11:07:22.944Z
+CHROME not listening; launching the isolated test profile (no personal tabs)
+CHROME_UP after 1s
+WALK12_START 2026-10-22T11:12:08.437Z tool=chrome over CDP binary=C:/Program Files/Google/Chrome/Application/chrome.exe url=http://127.0.0.1:14371/revolution viewport=414x900 one_sitting=true
+STORAGE_RESET leftover_journey={"id":"f198dac0-a950-4de3-ba00-4f01981ca43a","cityCode":"CN-RV-56D81AB leftover_bearer=absent
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+DAYS_READBACK 2
+PARTY_READBACK 2 BUDGET_READBACK 1000
+JOURNEY_ID c6a373c7-071a-41f5-8ee7-a4ae259006d6 bearer=present
+CONSENT_STRIP_INLINE=true SEND_DISABLED_BEFORE_CONSENT=true
+SEND_ENABLED_AFTER_GRANTING=true
+SHOT human-80-consent-inline-on-first-visit.png
+SENT_FIRST_GOAL_AT 2026-10-22T11:12:56.576Z
+POLL_3 t=30s busy=true choices=0
+WALK12_FATAL page.waitForTimeout: Target page, context or browser has been closed
+WALK12_END 2026-10-22T11:13:40.583Z
+CHROME already listening on 9333
+WALK12_START 2026-10-22T11:15:10.196Z tool=chrome over CDP binary=C:/Program Files/Google/Chrome/Application/chrome.exe url=http://127.0.0.1:14371/revolution viewport=414x900 one_sitting=true
+STORAGE_RESET leftover_journey={"id":"c6a373c7-071a-41f5-8ee7-a4ae259006d6","cityCode":"CN-RV-608DC25 leftover_bearer=absent
+FIRST_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+DAYS_READBACK 2
+PARTY_READBACK 2 BUDGET_READBACK 1000
+JOURNEY_ID 4ac5db3c-899e-4ce0-a177-acf74ae36601 bearer=present
+CONSENT_STRIP_INLINE=true SEND_DISABLED_BEFORE_CONSENT=true
+SEND_ENABLED_AFTER_GRANTING=true
+SHOT human-80-consent-inline-on-first-visit.png
+SENT_FIRST_GOAL_AT 2026-10-22T11:15:58.097Z
+WALK12_FATAL page.waitForTimeout: Target page, context or browser has been closed
+WALK12_END 2026-10-22T11:15:59.771Z

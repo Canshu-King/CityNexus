@@ -1,0 +1,14 @@
+DEPART_START 2026-10-22T12:42:35.407Z journey=4987634b-6f3d-4a24-8ab3-4d6c1a5bad13 local_status=DRAFT bearer=present
+BUTTONS_BEFORE [{"text":"换地区 ›","visible":true,"disabled":false},{"text":"地图","visible":true,"disabled":false},{"text":"日程","visible":true,"disabled":false},{"text":"对话","visible":true,"disabled":false},{"text":"查看其他研究（23）","visible":true,"disabled":false},{"text":"查看对应安排","visible":true,"disabled":false},{"text":"查看对应安排","visible":true,"disabled":false},{"text":"查看对应安排","visible":true,"disabled":false},{"text":"查看对应安排","visible":true,"disabled":false},{"text":"查看更多地点（24）","visible":true,"disabled":false},{"text":"手动探索地点","visible":true,"disabled":false},{"text":"改这句，然后交给 Agent →","visible":true,"disabled":false},{"text":"探索","visible":true,"disabled":false},{"text":"我的旅程","visible":true,"disabled":false},{"text":"我的","visible":true,"disabled":false},{"text":"⚙","visible":true,"disabled":false},{"text":"发送 ↑","visible":true,"disabled":false}]
+SHOT human-170-before-departure.png
+PREPARATION_PRESENT=0 VISIBLE=false
+CARD_VISIBLE=false
+WORKBENCH (missing)
+GATE_NOW (no departure status)
+SELECT_COUNT=0 SELECT_VISIBLE=false
+START_VISIBLE=false
+LOCAL_JOURNEY_STATUS DRAFT id=4987634b-6f3d-4a24-8ab3-4d6c1a5bad13
+GATE_FINAL (no departure status)
+TIMELINE_TAB 日程
+SHOT human-174-final.png
+DEPART_END 2026-10-22T12:44:13.809Z

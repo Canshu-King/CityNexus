@@ -1,0 +1,14 @@
+DEPART_START 2026-10-22T12:57:13.493Z journey=4987634b-6f3d-4a24-8ab3-4d6c1a5bad13 local_status=DRAFT bearer=present
+BUTTONS_BEFORE [{"text":"换地区 ›","visible":true,"disabled":false},{"text":"地图","visible":true,"disabled":false},{"text":"日程","visible":true,"disabled":false},{"text":"对话","visible":true,"disabled":false},{"text":"Day 1 11-02","visible":true,"disabled":false},{"text":"Day 2 11-03","visible":true,"disabled":false},{"text":"＋ 添加安排","visible":true,"disabled":false},{"text":"检查草案保存状态","visible":true,"disabled":false},{"text":"保存为正式候选方案","visible":true,"disabled":true},{"text":"和 Agent 补齐出发资料","visible":true,"disabled":false},{"text":"刷新方案","visible":true,"disabled":false},{"text":"准备出发","visible":true,"disabled":false},{"text":"行程守护","visible":true,"disabled":false},{"text":"同行决策","visible":true,"disabled":false},{"text":"去发现地点 →","visible":true,"disabled":false},{"text":"探索","visible":true,"disabled":false},{"text":"我的旅程","visible":true,"disabled":false},{"text":"我的","visible":true,"disabled":false},{"text":"⚙","visible":true,"disabled":false},{"text":"发送 ↑","visible":true,"disabled":false}]
+SHOT human-170-before-departure.png
+PREPARATION_PRESENT=1 VISIBLE=true
+CARD_VISIBLE=false
+WORKBENCH 
+GATE_NOW 
+SELECT_COUNT=0 SELECT_VISIBLE=false
+START_VISIBLE=false
+LOCAL_JOURNEY_STATUS DRAFT id=4987634b-6f3d-4a24-8ab3-4d6c1a5bad13
+GATE_FINAL 
+TIMELINE_TAB 日程
+SHOT human-174-final.png
+DEPART_END 2026-10-22T12:57:30.337Z
