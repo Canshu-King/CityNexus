@@ -3,7 +3,7 @@ import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscover
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
-import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse } from "../api/citynexus";
+import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse, type SessionDraftJourney } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
 import { MissionCockpit } from "./mobile/MissionCockpit";
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
@@ -376,6 +376,12 @@ export function RevolutionFirstLook() {
   const [tripInterests, setTripInterests] = useState<string[]>([]);
   const [tripEnergy, setTripEnergy] = useState<TripEnergy>("easy");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
+  // The trips the server says this traveller has, for the cases a locally kept pointer cannot
+  // cover: a new device, a cleared browser, or the same person coming back a week later.  Until
+  // this existed, 我的旅程 could only ever show a journey this very browser had opened, and a
+  // traveller with a real saved trip was told to go and explore again.
+  const [savedTrips, setSavedTrips] = useState<SessionDraftJourney[]>([]);
+  const tripLookup = useRef(0);
   const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
   const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -882,6 +888,42 @@ export function RevolutionFirstLook() {
     setNotice("Journey 已启动。前往「行程」提交需求或查看动态。");
   };
 
+  useEffect(() => {
+    const bearer = readTravelerBearer();
+    if (activeTab !== "trips" || journey || !bearer) { setSavedTrips([]); return; }
+    const serial = ++tripLookup.current;
+    cityNexusApi.listSessionDraftJourneys()
+      .then((rows) => {
+        if (serial !== tripLookup.current || readTravelerBearer() !== bearer) return;
+        setSavedTrips(Array.isArray(rows) ? rows.filter((row) => row && typeof row.id === "string") : []);
+      })
+      .catch(() => { if (serial === tripLookup.current) setSavedTrips([]); });
+  }, [activeTab, journey]);
+
+  const resumeSavedTrip = async (tripId: string) => {
+    const bearer = readTravelerBearer(), identity = readTravelerIdentity();
+    if (!bearer || !identity || startWriteBlockedRef.current) return;
+    const serial = ++tripLookup.current;
+    try {
+      const saved = await cityNexusApi.getJourney(tripId);
+      if (serial !== tripLookup.current || readTravelerBearer() !== bearer) return;
+      // The server already authorizes this read for the bearer; the check here keeps a list that
+      // went stale between two taps from opening somebody else's trip under this traveller's nose.
+      if (saved.id !== tripId || saved.traveler_id !== identity.travelerId) return;
+      const next: TrialJourney = {
+        id: saved.id, cityCode: saved.city_code, cityName: saved.title,
+        status: saved.status === "ACTIVE" ? "ACTIVE" : "DRAFT", ownerTravelerId: identity.travelerId,
+      };
+      setRecentJourneys(rememberJourney(next));
+      localStorage.setItem("citynexus.v8.journey_id", next.id);
+      setCandidateForJourney(null);
+      setError(null);
+      setJourney(next);
+    } catch {
+      if (serial === tripLookup.current && readTravelerBearer() === bearer) setError("这趟行程暂时打不开，稍后再试一次。");
+    }
+  };
+
   const goSummary = (state: string) => {
     switch (state) {
       case "NOT_STARTED": return "已保存，等待你出发";
@@ -1151,6 +1193,17 @@ export function RevolutionFirstLook() {
             <section className="rev-mobile-panel" data-testid="rev-mobile-empty-trips">
               <span className="rev-firstlook-eyebrow">TRIPS</span>
               <h2>行程</h2>
+              {savedTrips.length > 0 && (
+                <ul className="rev-saved-trips" data-testid="rev-saved-trips">
+                  {savedTrips.map((item) => (
+                    <li key={item.id}>
+                      <span>{item.status === "ACTIVE" ? "在路上" : "还没出发"}</span>
+                      <button type="button" data-testid="rev-trip-resume"
+                        onClick={() => void resumeSavedTrip(item.id)}>继续这趟</button>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <p>开始探索一个地区后，你保存的路线和出发进度会显示在这里。</p>
               <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
                 开始探索 →

@@ -2861,6 +2861,9 @@ export interface JourneyDepartureRead {
   selected_plan: { plan_version_id: string; activities_count: number } | null;
   candidates: Array<{ plan_version_id: string; version_no: number; activities_count: number }>;
 }
+// What `GET /api/v1/journeys/session/recent-drafts` answers for the bearer: three fields, read
+// off the route that already exists on this tree (`backend/app/main.py:7513`).
+export interface SessionDraftJourney { id: string; city_code: string; status: string }
 export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
 
 // What the commit door answers (`backend/app/departure_commit.py:251`). `journey` is the same record
@@ -2944,6 +2947,14 @@ export const cityNexusApi = {
   },
   getJourney(journeyId: string): Promise<JourneyRecord> {
     return requestJson<JourneyRecord>("/journeys/" + journeyId, { headers: travelerAuthHeaders() });
+  },
+  // The trips this signed traveller left behind, scoped by the server rather than by a filter this
+  // screen writes for itself: `GET /api/v1/journeys` on this tree is deliberately not per-traveller
+  // (`backend/app/main.py:7540`), so it is the wrong door for one person's own list and would turn
+  // the screen into a window onto other people's trips.  This door answers with the bearer's rows.
+  listSessionDraftJourneys(): Promise<SessionDraftJourney[]> {
+    return requestJson<SessionDraftJourney[]>("/journeys/session/recent-drafts",
+      { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   listJourneyPlans(journeyId: string): Promise<PlanVersion[]> {
