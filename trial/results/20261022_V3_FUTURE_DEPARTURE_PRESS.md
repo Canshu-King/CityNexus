@@ -20,3 +20,5 @@
 - 造这趟行程用的是演示库里唯一有地点目录的城市码（`CNX-DEMO`），所以「三方案、按半天改、局部刷新」这类真内容还没验；换真城市要先把候选侧的地点供给接上。
 - 多人：这枝只给 OWNER 发 `JOURNEY_UPDATE`，非发起人座位按这一按仍被方案门原话挡回；2/3、3/3 的裁语没下来之前，确认轮在真库里凑不出第二个应答者。
 - 上一棒在这屏控制台看到过一次 409 的读取，这一棒没再抓到，仍未查名，留给下一棒。
+
+原始读数一件没有加工，逐行落在这个目录里：`20261022_V3_FUTURE_DEPARTURE_PRESS_RECEIPT.txt`（`JOURNEY_CREATED`、`GENERATE`、`BROWSER :: HTTP_WRITES`、`DB_JOURNEY_AFTER_PRESS`、`DB_AUDITS_AFTER_PRESS` 各占一行）。

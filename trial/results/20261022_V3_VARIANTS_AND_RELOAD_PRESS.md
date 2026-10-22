@@ -16,3 +16,5 @@
 - 这三版都来自演示库唯一有地点目录的城市码 `CNX-DEMO`；真城市的候选供给（来源线索 → 身份映射 → 媒体）还没接上，所以「换地点、补资料、比价」这类内容今天仍然算未验。
 - 一次 `GET .../bootstrap-shortlist` 回 409 是设计里的具名拒绝（这趟行程不是从探索流建的），不是崩溃；屏上也没因此吓人。
 - 手机真机仍未做，`USER_VERIFIED` 继续 PENDING；供应商一次没调，UNKNOWN 仍是 UNKNOWN。
+
+原始读数一件没有加工，逐行落在这个目录里：`20261022_V3_VARIANTS_AND_RELOAD_PRESS_RECEIPT.txt`（`GENERATE` 那行是三版 CANDIDATE 的返回，`SELECT_BUTTONS`、`GATE_AFTER_COMMIT`、`AFTER_RELOAD_GATE`、`DB_PLANS_AFTER_PRESS` 各占一行）。
