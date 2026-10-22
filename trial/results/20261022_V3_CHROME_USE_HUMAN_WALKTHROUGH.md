@@ -360,3 +360,63 @@ plan.committed_by_traveler、journey.started）。
 
 仍未通过、也没被我说成通过的：出发日期那一天的营业时间核实（第 3 棒）、关掉浏览器后重新登录找回旧行程
 （P1，本轮只验到同一登录态下刷新保留）、以及"真机由主人亲手点一遍"——USER_VERIFIED 仍是 PENDING。
+
+（上面这一句里的第一项已经在第十九节变为"已核实"；第二、三项仍未通过，原话保留不改写。）
+
+## 十九、第 3 棒：营业时间按旅客真正到的那一天核实（walk-63 是 BEFORE，walk-64／65 是 AFTER，2026-10-23 05:22—05:55）
+
+**先量 BEFORE。** walk-63 用「12 月 7 日到 12 月 8 日」出发（12 月 7 日确实是周一），屏上出发待办上方
+逐行写着当天的开放情况（`trial/results/20261022_v3_human_chrome/walk-63-log.txt:30`），其中两行是
+「天安门广场 → 故宫博物院 来源说这天闭馆；来源另写「以官方通知为准」 来源原文：…周一全天关闭…」与
+「什刹海 / 南锣鼓巷 收尾 那天来源没给可靠答案 来源原文：周一至周日 00:00-24:00」。
+库里对回来的同一件事在 `walk63-opening-readback.txt:9` 与 `:11`：故宫 verdict CLOSED_ON_DATE，
+什刹海 verdict DATE_SPECIFIC_UNKNOWN、reason_code WEEKDAY_NOT_STATED。
+故宫那句是对的；什刹海那行是假的——来源原文自己写着"周一至周日"，理由码却说"没写星期几"。
+
+**三个缺陷，都是量出来的，不是猜的。** 一：分句只切「；」，而高德真发的句子用「，」连接，于是
+「淡季11月1日至3月31日 …15:30停止检票，周一全天关闭」整段落进同一子句，子句里带"关闭"两字，
+淡季的日期区间就被登记成全年性闭馆区间——后果是 12 月 3 日（周四）去故宫也被判 CLOSED_ON_DATE。
+二：`00:00-24:00` 的 24:00 被当非法时刻丢掉，全天开放的街因此变成"没人答过"。
+三：理由码与屏幕上紧挨着贴的那句来源原文互相打脸。
+`D:/moodle/_cmdr_v3_port_1022/_opening_reader_ab_r1.py` 把前两条规则装回去、拿同一批真句子跑两遍，
+读数在 `trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt`：周四那一栏 old 是
+CLOSED_ON_DATE／new 是 OPEN_ON_DATE 且引用 16:30（淡季自己的界），周一那一栏两列都还是 CLOSED_ON_DATE
+——来源说闭馆的日子，修完仍旧说闭馆，这不是把门放松。
+
+**改完之后屏上是什么样。** walk-65 用同一批地点、12 月 3 日（周四）出发，`walk-65-log.txt:29` 里是
+「天安门广场 + 故宫博物院 来源写这天开放（来源写的时段 08:30—16:30）；来源另写「以官方通知为准」」
+「前门大街·大栅栏 来源写这天开放（来源写的时段 00:00—24:00）」「南锣鼓巷（胡同文化收尾） 来源写这天开放
+（来源写的时段 00:00—24:00）」；库里同一批行在 `walk64-65-opening-readback.txt:16`、`:19`、`:22`，
+window 分别是 [510, 990]、[0, 1440]、[0, 1440]，verdict 全是 OPEN_ON_DATE。
+反向那半边同样重要：周四这两趟屏上「当天是否开放」这类待办一条都没有（`walk-64-log.txt:30`、
+`walk-65-log.txt:29` 的出发待办只剩票价与转场两类），说明这扇门不是逢不确定就拦人；真被来源判了闭馆的
+日子才拦，并且给出可点的出口——walk-63 同一屏下一段就是「当天是否开放：让 Agent 换一天或换一处」。
+
+**新增的判据分家。** 除既有四档结论外，理由码现在分得开「来源只写了其他时段的营业时间」
+（SOURCE_SEASON_NOT_STATED_FOR_THIS_DAY）、「这天是节假日，来源说以官方通知为准」
+（SOURCE_DEFERS_TO_NOTICE_FOR_A_HOLIDAY，只认元旦／劳动节／国庆三个不动的日子，春节端午中秋跟着农历走，
+没有存过的字段就不猜）、「来源没写具体时间」、「没有到达时刻可比」。卡片按理由各写各的一句话，
+不再把所有未知都写成同一句"没给可靠答案"。
+
+**门禁与去环境化。** 四枚 goal 测试文件 `39 passed`（`backend/tests/test_qoder_goal_opening_date_r1.py`、
+`backend/tests/test_goal_preparation.py`、`backend/tests/test_goal_route_freeze.py`、
+`backend/tests/test_qoder_goal_place_identity_r1.py`），前端
+`node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit` 退出码 0。
+碰可行性那组子集的红集合现与登记的基线逐枚同代（先前 73 枚 → 现在 72 枚），多出来的那枚
+`backend/tests/test_v9_real_trip_operations.py::test_v9_ambiguous_import_provider_truth_and_coordinate_round_trip`
+不是产品回归：它过去断言的是"这台机器环境里恰好没有高德 key"，而那枚绿正是上一笔修掉的 bug
+（状态门只读裸名 `AMAP_WEB_KEY`，config.py 却把密钥叫 `CITYNEXUS_AMAP_WEB_KEY`）。按仓库里既有的形制
+把门钉到两种状态上验，带 key 与不带 key 两种环境各跑一遍都绿，没有削弱任何断言。
+契约文件 `contracts/openapi.yaml` 三扇 goal 门改成与运行时同形：prepare-plan 与 freeze-routes 补上
+`unrouted_count`、`known_subtotal_minor`、`opening_checks`、`overnight`、`spans_night`，
+accept-unknown-price 的键名去掉多写的一层 `/api/v1` 前缀并改回全文档一致的 `$ref` 形制。
+
+**产品代（`git ls-remote` 现读回同一枚尖）。** `fea251f323ec90d81cfbde47908140267a9fa567` 第 3 棒本体、
+`e225cca41d63a6c9f94bb0aa95f785e6449ad320` 状态门断言去环境化、
+`f57b6ab6f829a2ac2b16daeee9878fbcb2367468` 契约对表。现场栈：后端 60206／前端 14406／独立库
+citynexus_v3_human12_1022.db（起法 `_boot_human_stack_r10.ps1`，它只打印 amap_key_present=True，不打印 key）。
+
+**还没好在哪。** 选用按钮在这两趟仍是 0（`walk-64-log.txt:40`、`walk-65-log.txt:39`），挡着的是"没有确定
+地点的那几段时间"和"高德没给回执的那一两段转场"，不是营业核实——这一步要不要放行仍在等 ORD-0708
+与跨夜衔接、无地点时段那两条甲／乙裁语；关掉浏览器后重新登录找回旧行程（P1）没动；
+USER_VERIFIED 仍是 PENDING，本机窗口不等于主人手里的手机。

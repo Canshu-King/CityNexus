@@ -1,0 +1,30 @@
+Opening-hours reader, both columns from the same provider sentence read out of the walked rows.
+old = clauses split only on ； and a 24:00 bound rejected (reconstruction of the two rules as
+       they behaved before fea251f323ec90d81cfbde47908140267a9fa567)
+new = what the branch ships now
+departure dates tested: 2026-12-03 (Thursday, winter) and 2026-12-07 (Monday, the walked day)
+the window column carries the closing bound the card quotes, so 16:30 against 17:00 is the
+difference between measuring the winter sentence and measuring the summer one
+scope limit: only those two rules are put back, so the reason_code column is the shipped
+wording -- the walked Monday row recorded WEEKDAY_NOT_STATED for 什刹海 where this table's
+old column can only say NO_WINDOW_STATED; the verdict column is what the comparison is about
+
+== Thursday 09:00 ==
+venue                      old verdict            old reason / window                  new verdict            new reason / window                 
+八达岭长城（缆车上下，少爬坡）            OPEN_ON_DATE           - / 17:30                            OPEN_ON_DATE           - / 17:30                           
+颐和园（园林主体+昆明湖游船）            OPEN_ON_DATE           - / 19:00                            OPEN_ON_DATE           - / 19:00                           
+前门大街 / 大栅栏 散步吃饭            OPEN_ON_DATE           - / 22:00                            OPEN_ON_DATE           - / 22:00                           
+天安门广场 → 故宫博物院              CLOSED_ON_DATE         SOURCE_SAYS_CLOSED_ON_THIS_DAY / -   OPEN_ON_DATE           - / 16:30                           
+景山公园 → 北海公园（相邻，北海游船）       OPEN_ON_DATE           - / 20:00                            OPEN_ON_DATE           - / 20:00                           
+什刹海 / 南锣鼓巷 收尾              DATE_SPECIFIC_UNKNOWN  NO_WINDOW_STATED / -                 OPEN_ON_DATE           - / 24:00                           
+
+== Monday 09:00 ==
+venue                      old verdict            old reason / window                  new verdict            new reason / window                 
+八达岭长城（缆车上下，少爬坡）            OPEN_ON_DATE           - / 17:30                            OPEN_ON_DATE           - / 17:30                           
+颐和园（园林主体+昆明湖游船）            OPEN_ON_DATE           - / 19:00                            OPEN_ON_DATE           - / 19:00                           
+前门大街 / 大栅栏 散步吃饭            OPEN_ON_DATE           - / 22:00                            OPEN_ON_DATE           - / 22:00                           
+天安门广场 → 故宫博物院              CLOSED_ON_DATE         SOURCE_SAYS_CLOSED_ON_THIS_DAY / -   CLOSED_ON_DATE         SOURCE_SAYS_CLOSED_ON_THIS_DAY / -  
+景山公园 → 北海公园（相邻，北海游船）       OPEN_ON_DATE           - / 20:00                            OPEN_ON_DATE           - / 20:00                           
+什刹海 / 南锣鼓巷 收尾              DATE_SPECIFIC_UNKNOWN  NO_WINDOW_STATED / -                 OPEN_ON_DATE           - / 24:00                           
+
+venues_read=6

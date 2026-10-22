@@ -103,3 +103,25 @@ plan.committed_by_traveler、journey.started 各一。
   freeze-routes 两段还没写上新字段（unrouted_count、known_subtotal_minor、overnight、spans_night），
   这条对表尺 `tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface` 在本枝
   仍因 `_IncludedRouter` 红着（backend/tests/test_contract.py:73），我没为了让它绿而改断言。
+
+## 第 3 棒之后：上面四条里有一条动了，两条没动，一条是我自己写坏的（2026-10-23 05:55 现场读数）
+
+第一条（营业时间按出发日期核实）已开：`backend/app/agent/goal_opening_date.py` 把来源原句按子句读，
+对着旅客真正到的那一天和到站那一刻给四档结论，屏上逐行写「来源写这天开放（来源写的时段 08:30—16:30）」
+或「来源说这天闭馆；来源另写「以官方通知为准」 来源原文：…」，待办里跟着给可点的出口
+（「让 Agent 换一天或换一处」／「让 Agent 挪个时间」／「让 Agent 向来源再要这一项」）。
+现场两趟同一批地点、只差出发日：周一那趟（walk-63）故宫按来源判闭馆、并列出待办；周四那趟（walk-65）
+六处全部 OPEN、当天是否开放这一类待办 0 条。逐格读数与两侧对拍表在
+`trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt`，屏上原文行号在
+`walk-63-log.txt:30` 与 `walk-65-log.txt:29`。产品代 `fea251f323ec90d81cfbde47908140267a9fa567`。
+
+第四条（契约）里"我自己写坏的"那一半也修了：accept-unknown-price 当时被带上了多一层 `/api/v1` 前缀、
+并且把 schema 内联进去，而这份文档的形制是相对 `servers: http://localhost:8000/api/v1` 写路径、用
+`#/components/schemas` 引 schema——那样一条永远对不上真路由。`f57b6ab6f829a2ac2b16daeee9878fbcb2367468`
+把三扇门重写成同形制，并补上 `unrouted_count`、`known_subtotal_minor`、`opening_checks`、`overnight`、
+`spans_night` 与 OpeningCheck／RouteEdge／FreezeRoutesResult／UnknownPrice 三组模型；改后实测：
+三扇门各自只文档化运行时真提供的那一个 POST，文档里存在而运行时没有的键为 0。
+`test_contract.py:73` 那枚 `_IncludedRouter` 的红照旧不动，它是仓库里既有的事，不在这笔的授权面里。
+
+没动的两条还是没动：真机由主人亲手点（USER_VERIFIED 仍 PENDING）；「同行决策」牌子底下依旧没有门
+（`journeys` 表仍无同行人数这一列）。这两条要的是裁语与手，不是我再写一层代码。
