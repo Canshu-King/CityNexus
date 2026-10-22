@@ -70,7 +70,7 @@ import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
 import { MyTripsEntry } from "../features/trip/MyTripsEntry";
-import { useDemoScene } from "../lib/sceneClock";
+import { basisWord, useDemoScene } from "../lib/sceneClock";
 import { SharedJourneyScreen } from "../features/shared/SharedJourneyPanel";
 import { SharedPosterScreen } from "../features/poster/SharedPosterScreen";
 import { POSTER_SHARE_FORM } from "../features/poster/posterShare";
@@ -634,7 +634,9 @@ function dateInZone(
   } catch {
     // The zone could not be used, so this reading is the DEVICE clock.  Saying so is the whole
     // point: a moment that silently switches zones is a moment the reader cannot place.
-    return date(value, locale) + (locale === "zh-CN" ? " · 本设备时间" : " · this device's time");
+    // ORD-0712: `hub.deviceTime` already says this sentence in both languages; the shell used to
+    // write its own copy of it, which is how the two could drift apart.
+    return date(value, locale) + " · " + dictionaryText(locale, "hub.deviceTime");
   }
 }
 
@@ -3523,14 +3525,12 @@ function Hub({
           >
             {(() => {
               if (!usingDeviceClock) {
-                const basis =
-                  stage.scene?.basis === "CURSOR"
-                    ? zh
-                      ? "执行游标"
-                      : "execution cursor"
-                    : zh
-                      ? "行程起点"
-                      : "journey start";
+                // ORD-0712: `basisWord()` in `lib/sceneClock.ts` is the one writer of the basis
+                // words (it also names "the server gave no basis" for a basis that is missing, which
+                // this file used to guess as "journey start").  The sentence itself lives in the
+                // dictionary now, with the four parts passed in as slots, so the wording a phone
+                // renders is the wording the specs read.
+                const basis = basisWord(stage.scene?.basis ?? null, zh);
                 /* ORD-0208 1: this sentence had three defects measured on a phone -- the internal
                    enum (`游标状态 ABSENT_FALLBACK`) printed as prose, the instant shown as bare UTC
                    (`2026-09-21T02:00:00+00:00`) to someone just told the trip runs on China Standard
@@ -3538,37 +3538,29 @@ function Hub({
                    A non-VALID cursor is now the plain sentence the order suggests; the enum stays in
                    the `data-cursor-status` attribute, where it is inspectable without being prose. */
                 const cursorNote =
-                  cursorStatus && cursorStatus !== "VALID"
-                    ? zh
-                      ? "。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读"
-                      : ". The server gave no execution cursor for this minute, so this screen reads time by the journey's window"
-                    : "";
+                  cursorStatus && cursorStatus !== "VALID" ? t("clock.cursorNote.absent") : "";
                 const stationNote = useProjection
-                  ? zh
-                    ? " · 现在/接下来由服务器的执行投影给出"
-                    : " · now/next come from the server's execution projection"
+                  ? t("clock.stationNote.projection")
                   : cursorStatus === "STALE"
-                    ? zh
-                      ? " · 服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标"
-                      : " · the server does not trust its own cursor, so this screen reads the stations by time window, not by cursor"
-                    : zh
-                      ? " · 服务器的执行投影还没到，这一屏没有按游标定位"
-                      : " · the server's execution projection has not arrived, so no station is claimed from the cursor";
-                return zh
-                  ? `“现在”取自服务器场景（${basis}${cursorNote}）：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`
-                  : `"now" comes from the server's scenario (${basis}${cursorNote}): ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`;
+                    ? t("clock.stationNote.stale")
+                    : t("clock.stationNote.pending");
+                return t("clock.scenario.sentence", {
+                  basis,
+                  cursorNote,
+                  instant: dateInZone(
+                    stageInstant ?? undefined,
+                    locale,
+                    data.journey.timezone || "UTC",
+                  ),
+                  stationNote,
+                });
               }
-              if (stage.phase === "loading")
-                return zh
-                  ? "还在读服务器场景，这一屏用的是这台设备自己的时间"
-                  : "The scenario is still being read; this screen uses this device's own time";
+              if (stage.phase === "loading") return t("clock.scenario.loading");
               if (stage.phase === "unavailable")
-                return zh
-                  ? `读不到服务器场景（${stage.reason ?? "未知"}），这一屏用的是这台设备自己的时间`
-                  : `The scenario could not be read (${stage.reason ?? "unknown"}); this screen uses this device's own time`;
-              return zh
-                ? "台上没有场景，这一屏用的是这台设备自己的时间"
-                : "There is no scenario on stage; this screen uses this device's own time";
+                return t("clock.scenario.unreadable", {
+                  reason: stage.reason ?? t("clock.reason.unknown"),
+                });
+              return t("clock.scenario.none");
             })()}
           </small>
         </article>
