@@ -76,6 +76,14 @@ class Settings:
         if item.strip()
     )
     hermes_native_binary: str | None = os.getenv("CITYNEXUS_HERMES_BINARY") or None
+    # A model turn of the goal-task loop carries the journey context and the whole tool schema, so
+    # it needs longer than any provider probe. This used to be borrowed from
+    # `impact_timeout_seconds` (ten seconds), and measured on a real browser run every such turn
+    # died as `MODEL_TIMEOUT` with zero steps written -- the traveller pressed 发送 and got nothing.
+    # The Agent's own clock, so turning the impact knob down cannot mute the assistant.
+    agent_model_timeout_seconds: float = float(
+        os.getenv("CITYNEXUS_AGENT_MODEL_TIMEOUT_SECONDS", "90")
+    )
     hermes_native_proven: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_PROVEN") or None
     hermes_native_api_url: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_API_URL") or None
     hermes_api_server_key: str | None = os.getenv("CITYNEXUS_HERMES_API_SERVER_KEY") or None
