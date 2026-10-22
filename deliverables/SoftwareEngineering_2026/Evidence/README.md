@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `609aaf04e6 2026-10-23 docs(coursework): independent R2 audit of capacity, deadline semantics, evidence and presentation`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `4bba9d2e54 2026-10-23 coursework(R3): executable capacity, full lateness, readable briefing, evidence integrity`
 Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
@@ -135,6 +135,7 @@ The round-2 print named Briefing_One_Page.pdf is gone from the tree - it was twe
 * `Evidence/STATUS_AND_OVERDUE.md` - four date clocks, the full lateness table, the per-person per-week capacity table.
 * `Evidence/PLAN_RECONCILIATION.md` - static pass against the engine, row by row, with the offset accounted for.
 * `Evidence/R3_RESULT.md` - what was fixed and what is still not proven.
+* `Evidence/CLASSROOM_20261023_README.md` - the noon demonstration sheet: what to open in which order, the recorded open/move/edit/save/reopen results from `se_classroom_demo_r1.py`, and the fallback previews if Office will not start.
 * `Microsoft_Project/CityNexus_Plan_Recovery.mpp` - open work only, scheduled from the status date; finishes 2026-11-04 against the 2026-11-06 contract date.
 * `Presentation/CityNexus_SE2026_Briefing_Deck.vsdx` and its previews.
 * Generators: `se_plan_status_r1.py`, `se_project_recovery_r1.py`, `se_deck_r1.py`, `se_project_snapshot_r2.py`, `se_evidence_reconcile_r1.py`, `se_docs_r3_section_r1.py`.

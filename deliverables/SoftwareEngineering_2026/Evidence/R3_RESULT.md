@@ -1,6 +1,6 @@
 # CityNexus 软件工程 2026 - 第三轮交付结果 (R3_RESULT)
 
-生成 2026-10-23 01:52。计划文件 `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` sha256 `4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41`；重计划文件 `CityNexus_Plan_Recovery.mpp` sha256 `ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7`。
+生成 2026-10-23 02:12。计划文件 `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` sha256 `4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41`；重计划文件 `CityNexus_Plan_Recovery.mpp` sha256 `ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7`。
 
 本轮只动课程交付的生成器、证据文件与展示资产：没有改 CityNexus 主产品代码，没有碰 Codex Revolution 分支，没有跑无关的历史全量回归。R2 已被独立验收的 Visio 自定义属性、Agent 核心流程与 Project 全量依赖三项修复按原样保留，并重新通过各自的门。
 
