@@ -66,13 +66,14 @@
 
 - `CHROME_USE_CONNECTED = YES（读与点）/ NO（截图）`，`BROWSER_FALLBACK_USED` 已注明原因
 - `HUMAN_BROWSER_USED = YES`
-- `NOVICE_FIRST_CLICK = PASS`（首屏一句话即可提交，见第二节；「目的地」仍要再填一次，这是下一个待改点）
-- `SAME_JOURNEY_GOAL_TO_ACTIVE = BLOCKED`（这一轮只走到「Agent 输入框已握着同一句话」，尚未在同一 Journey 上走到 SELECTED/ACTIVE）
-- `AGENT_RESEARCH_GROUNDED = BLOCKED`（公开地名来源今天网络不通；屏上 `0 处地点`，`UNKNOWN` 未被改写）
-- `AGENT_NATURAL_LANGUAGE_HALF_DAY_EDIT = NOT_ATTEMPTED`（本轮没做；此前那格是**旅客手动**在日程编辑器改的，两者不得混报）
-- `RELOAD_RECOVERY = PASS（上一棒，手动改半天之后刷新仍在）`
+- `NOVICE_FIRST_CLICK = PASS`（首屏一句话即可提交；第一次按「发送」的死键已修，见 `20261022_V3_SEND_GATE_ON_SCREEN.md:1`；「目的地」仍要再填一次，这是下一个待改点）
+- `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL`（同一 Journey 上已走到「已有阶段性成果 · 2 天 6 项安排」，见 `20261022_v3_human_chrome/walk-06-log.txt:6`；SELECTED/ACTIVE 仍在走）
+- `AGENT_RESEARCH_GROUNDED = PARTIAL`（Agent 真调用工具、事件与服务端记录在案，但公开地点来源今天不通，屏上仍是 `0 处地点`，营业时间/票价/照片仍是 `UNKNOWN`）
+- `AGENT_NATURAL_LANGUAGE_HALF_DAY_EDIT = DEFECT_FOUND`（旅客一句话之后 Agent 说「已改」而日程没动，见 `20261022_V3_CLAIM_VS_WRITTEN_DRAFT.md:1`；回执机制已落码，屏幕从此按服务器版本号说话）
+- `RELOAD_RECOVERY = PASS`（同一标签页刷新后同一 Journey、六项安排仍在，`walk-07-log.txt:4`）
+- `VIEWPORT_PASS = 390×844 / 430×932 / 1366×900 三档均无横向溢出且「发送」在视口内`（`walk-07-log.txt:13`、`:15`、`:17`）
 - `GUARDIAN_COLLECTIVE = NOT_ATTEMPTED`
-- `PRODUCT_FIX_SHA = 见本文件所在提交`；BEFORE/AFTER 截图见第四节
+- `PRODUCT_FIX_SHA = 376b9914a7576bc69ffa56c13f167bf5f54aa6ee、0563305f8133dd146c234a1c092b8ab95da2f8cc`；BEFORE/AFTER 截图在 `20261022_v3_human_chrome/`
 - `USER_VERIFIED = PENDING`（本机 Chrome 窗口不是手机在手里的点击）
 
 ## 六、十步以内试玩说明（给第一次打开的人）
@@ -84,6 +85,6 @@
 5. 想改人数或预算，点开「更多偏好」。
 6. 按「继续规划 →」。
 7. 屏幕下方已经放着你刚才那句话，想改就点在里面改。
-8. 按右下角「发送 ↑」，Agent 开始研究并会问你问题。
-9. 它给选项时按选项回答；想看每天安排就点「日程」，想看地点就点「地图」。
-10. 安排满意后，在「日程」里按「准备出发」，再按「选用这份方案」。
+8. 第一次用要先勾输入框下面那两行「本次允许」——勾完「发送 ↑」才会亮起来，不勾的话那一行会一直在那儿等你。
+9. 按「发送 ↑」，Agent 开始研究并会问你问题；它给选项时按选项回答。
+10. 想让它别再问、先出安排，就按「按讨论的方向开始研究」；之后点「日程」看每天安排，一句话告诉它你想改哪半天，回复下面那行「日程：版本 …」会告诉你它到底改没改成。
