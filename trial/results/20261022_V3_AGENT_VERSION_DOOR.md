@@ -11,3 +11,11 @@
 我自己的仪表错在哪：它在看到 `NEEDS_DECISION` 之后就去改草案，没等第二个回合真正起走再落定，所以正好把手工编辑压在 `WORKING` 上。已改成「先等回合起走、再等它落定，若仍撞上版本门就按提示刷新后重试一次」，成功读数在 `20261022_V3_AGENT_HALFDAY_*`。
 
 不宣称的事：这一趟没有把半天改动写进去（`revision` 仍是 0），也没有调任何地点供应商；屏上出现的什刹海、鼓楼、恭王府是模型给的话，没有落成地点行，营业时间与票价仍是 `UNKNOWN`。
+
+## 更正（同日十五时）：那句屏上原话说的不是版本门
+
+上面第三段把屏上那句话当成了「版本门」的读数。现在能测出服务器那一刻真正答的是什么了，两个理由码的对照在 `20261022_V3_AGENT_DRAFT_DOOR_BEFORE_FIX_RECEIPT.txt:7`（版本旧）与 `20261022_V3_AGENT_DRAFT_DOOR_BEFORE_FIX_RECEIPT.txt:10`（这一轮还在跑）：同一枚 `409` 下，`CONFLICT` 是唯一的码，区别只在 `error.message` 里，而那一代信封还没有 `reason_code`（`20261022_V3_AGENT_DRAFT_DOOR_BEFORE_FIX_RECEIPT.txt:7` 列出的键里没有它）。
+
+浏览器读不到 `error.message`：`frontend/src/api/citynexus.ts:2792` 把异常的句子拼成「CityNexus API <状态码>: <路径>」，而 `21d646b837b9a0fc604465a570a2fd70468ec2e2` 那枚 `frontend/src/trial/mobile/GoalDraftEditor.tsx` 第 83 行的判断是 `includes("DRAFT_CHANGED_RELOAD") || includes("409")`——前半句永远假，后半句把每一枚 `409` 都收进版本门那句话。所以上一段引的屏上原话是真的，但**它归错了因**：按这一趟的时序（第二个回合还在跑）服务器答的应是「这一轮还在跑」，而屏上让旅客去点「刷新任务」。
+
+已改：两扇门现在都带 `reason_code`（`backend/app/agent/goal_tasks.py:436`），屏上按它分句（`frontend/src/trial/mobile/GoalDraftEditor.tsx:10`，两枚理由各自的句子在 `:16` 与 `:17`）。改前的读数 `20261022_V3_AGENT_DRAFT_DOOR_BEFORE_FIX_RECEIPT.txt:10`，改后的读数 `20261022_V3_AGENT_DRAFT_DOOR_AFTER_FIX_RECEIPT.txt:10`。本文其余部分——被拒、编辑留在页面上、没有覆盖别人的写——不受影响。

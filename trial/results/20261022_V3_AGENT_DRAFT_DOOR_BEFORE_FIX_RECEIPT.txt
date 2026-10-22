@@ -1,0 +1,12 @@
+BACKEND_READY :: db=D:/moodle/_cmdr_v3_live_1022\citynexus_v3_agent9_1022.db port=60124
+MODEL_ON_THE_GATEWAY :: {"model": "cn:hy3", "credits": "x0.00", "endpoint": "local gateway on 127.0.0.1 (loopback)"}
+TRAVELER_MINTED :: {"http_status": 201, "id_prefix": "62833683"}
+JOURNEY_CREATED :: {"http_status": 201, "status": "DRAFT", "city_code": "CN-BEIJING"}
+TASK_CREATED :: {"http_status": 201, "task_status": "ACCEPTED", "revision": 0}
+ARM_A_FIRST_SAVE :: {"http_status": 200, "revision": 1}
+ARM_A_STALE_REVISION_REFUSAL :: {"http_status": 409, "top_level_keys": ["error"], "error_keys": ["code", "details", "error_receipt_id", "message", "message_key", "trace_id"], "code": "CONFLICT", "message": "DRAFT_CHANGED_RELOAD"}
+ARM_B_TASK_STATUS_SEEN :: ACCEPTED
+ARM_B_TASK_STATUS_SEEN :: WORKING
+ARM_B_SAVE_WHILE_WORKING :: {"http_status": 409, "top_level_keys": ["error"], "error_keys": ["code", "details", "error_receipt_id", "message", "message_key", "trace_id"], "code": "CONFLICT", "message": "DRAFT_RESEARCH_RUNNING"}
+ARM_B_RUN_ANSWER :: {"http_status": 200, "top_level_keys": ["assistant_summary", "budget", "candidate_place_ids", "consent", "conversation", "created_at", "draft_artifact", "draft_variants", "failure_code", "goal", "interaction_mode", "journey_id", "latest_run_id", "mode", "pending_question", "prepared_plan", "research_areas", "research_places", "research_routes", "source_observation_ids", "started_at", "status", "task_id", "updated_at", "usage"], "error_keys": [], "status": "NEEDS_DECISION"}
+ARM_B_TASK_AFTER_RUN :: {"status": "NEEDS_DECISION", "revision": 1, "slots": 1}

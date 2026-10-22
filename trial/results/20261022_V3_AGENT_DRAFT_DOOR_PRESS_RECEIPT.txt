@@ -1,0 +1,25 @@
+BACKEND_READY :: db=D:/moodle/_cmdr_v3_live_1022\citynexus_v3_agent10_1022.db
+MODEL_ON_THE_GATEWAY :: {"model": "cn:hy3", "credits": "x0.00", "endpoint": "local gateway on 127.0.0.1 (loopback)"}
+DEMO_RESET_FOR_CATALOGUE :: {"status": 200, "traveler_id": "11111111-1111-4111-8111-111111111111"}
+HEALTH_AI_FIELD :: enabled
+AGENT_RUNTIME_STATUS :: {"status": 200, "body": {"runtime_identity": "HERMES_COMPAT_ENDPOINT", "native_binary_detected": false, "native_mcp_proven": false, "mcp_server": "citynexus-v2", "deepseek_configured": true, "hermes_compat_configured": true, "ai_state": "CONFIGURED_UNVERIFIED", "hermes_native_gateway": {"configured": false, "reachable": false, "runs": false, "events": false, "approval": false, "stop": false, "ready": false, "profile": "citynexus", "provider": null, "model": null}}}
+VITE_READY :: http_status=200
+BROWSER :: SENT_GOAL :: 想慢慢逛北京的古迹和胡同小吃，一天别太赶。
+BROWSER :: FIRST_TURN_SETTLED :: {"http_status":200,"status":"NEEDS_DECISION","revision":0,"reason_code":null}
+BROWSER :: ARM_R_PAGE_DIRTY :: 修改还没有保存到服务器。
+BROWSER :: ARM_R_OTHER_WRITER_RUN_STARTED :: 200
+BROWSER :: ARM_R_SERVER_SAW :: {"http_status":409,"code":"CONFLICT","reason_code":"DRAFT_RESEARCH_RUNNING"}
+BROWSER :: ARM_R_SCREEN :: Agent 正在跑这一轮，等它结束再保存。你的改动还在这个页面。
+BROWSER :: ARM_R_TASK_STATUS :: {"http_status":200,"status":"PARTIAL_READY","revision":0,"reason_code":null}
+BROWSER :: ARM_V_TURN_SETTLED :: {"http_status":200,"status":"PARTIAL_READY","revision":0,"reason_code":null}
+BROWSER :: ARM_V_OTHER_WRITER_SAVED :: {"http_status":200,"status":"PARTIAL_READY","revision":1,"reason_code":null,"expected":0}
+BROWSER :: ARM_V_SERVER_SAW :: {"http_status":409,"code":"CONFLICT","reason_code":"DRAFT_CHANGED_RELOAD"}
+BROWSER :: ARM_V_SCREEN :: 服务器的草案版本发生了变化。你的编辑仍在当前页面，请先确认新内容，再点上方「刷新任务」。
+BROWSER :: REFUSALS_SEEN :: [{"http_status":409,"code":"CONFLICT","reason_code":"DRAFT_RESEARCH_RUNNING"},{"http_status":409,"code":"CONFLICT","reason_code":"DRAFT_CHANGED_RELOAD"}]
+BROWSER :: ANY_4XX :: ["422 /api/v1/journeys/null/agent/goal-tasks/null","409 /api/v1/journeys/59ee6ee9-46b5-43b7-b7eb-8a7bb3ba570c/agent/goal-tasks/4b0c75ec-2862-494a-b5cc-a9c8515d882d/dr","409 /api/v1/journeys/59ee6ee9-46b5-43b7-b7eb-8a7bb3ba570c/agent/goal-tasks/4b0c75ec-2862-494a-b5cc-a9c8515d882d/dr"]
+DB_JOURNEY :: {"id": "59ee6ee9-46b5-43b7-b7eb-8a7bb3ba570c", "city_code": "CN-RV-EB343198D3B9", "status": "DRAFT", "title": "北京 · 2日行程", "start_at": "2026-11-02T09:00:00+08:00"}
+DB_MISSIONS :: [["4b0c75ec", "想慢慢逛北京的古迹和胡同小吃，一天别太赶。", "PARTIAL_READY", "none", "none", null]]
+DB_AGENT_RUNS :: [["ba717e35", "hermes", "cn:hy3", "PARTIAL", "{\"code\":\"TRAVELER_INPUT_REQUIRED\",\"status\":\"NEEDS_DECISION\"}", "TRAVELER_INPUT_REQUIRED", 10.4], ["0731e2c6", "hermes", "cn:hy3", "COMPLETED", "{\"code\":\"SUMMARY_READY\",\"status\":\"PARTIAL_READY\"}", null, 5.8]]
+DB_AGENT_RUN_STEPS_BY_TOOL :: [["ask_traveler", 1, "COMPLETED"]]
+DB_DRAFT_IN_ROW :: {"column": null, "revision": null, "days": 0, "slots": 0}
+SCREENSHOTS :: D:/moodle/_cmdr_v3_port_1022\v3_agent10_consent.png | D:/moodle/_cmdr_v3_port_1022\v3_agent10_question.png | D:/moodle/_cmdr_v3_port_1022\v3_agent10_draft.png | D:/moodle/_cmdr_v3_port_1022\v3_agent10_edited.png
