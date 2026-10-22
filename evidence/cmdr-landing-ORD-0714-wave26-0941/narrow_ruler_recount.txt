@@ -1,0 +1,8 @@
+OLD 2f9fc88d22 files=164 hits=117
+NEW af8ad6a1c3 files=164 hits=116
+DELTA 1 (old-new)
+CLEARED_FILES 1
+CLEARED 1 frontend/src/app/V8Experience.tsx
+STILL_TOP 17 files=110
+STILL 18 frontend/src/features/stay/HotelsPanel.tsx
+STILL 14 frontend/src/features/stay/StayExplorer.tsx
