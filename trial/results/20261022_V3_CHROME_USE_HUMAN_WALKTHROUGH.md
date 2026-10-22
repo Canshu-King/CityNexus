@@ -238,9 +238,9 @@
 
 **读数。** 这台活标签页的凭证、身份、指针、行程 id 全都在（`identity_pointer_r1.mjs` 现读 `wanted_present: true`、`session_id` 与 `pointer_owner` 同一枚）。用 `exact_routes_r2.mjs` 照抄壳自己发的那两条请求、带这台标签页自己的 bearer 重放：`/journeys/{id}/map-places` 与 `/journeys/{id}/agent/goal-tasks/{task_id}` 两回都是 `http_status=401`（`trial/results/20261022_v3_human_chrome/walk-46-log.txt` 的 `MAP_PLACES_HTTP_STATUS` 行）。**凭证过期了。**
 
-**为什么屏上看不出来。** `frontend/src/trial/mobile/MissionCockpit.tsx:182` 起那三枚读取全部 `.catch(() => null)`，401 被吞成 null，`dataState` 于是落到 "partial"——地图格说「地点研究会在这里汇合」，工作轨迹说「提交目标后，这里显示实际工作进度」，抬头说「等待第一个目标」。同一屏的「准备出发」卡片却早就写着「当前账号无法读取这份行程，请重新进入行程。」同一代代码里三处撒谎、一处诚实。
+**为什么屏上看不出来。** 三枚读取全部 `.catch(() => null)`（改前那代在 `frontend/src/trial/mobile/MissionCockpit.tsx:193` 起），401 被吞成 null，`dataState` 于是落到 "partial"——地图格说「地点研究会在这里汇合」，工作轨迹说「提交目标后，这里显示实际工作进度」，抬头说「等待第一个目标」。同一屏的「准备出发」卡片却早就写着「当前账号无法读取这份行程，请重新进入行程。」同一代代码里三处撒谎、一处诚实。
 
-**改法。** 把"被服务器拒了"和"还没有东西"分开：只有 `CityNexusApiError` 且状态是 401 或 403 才置 `accessLost`（`frontend/src/trial/mobile/MissionCockpit.tsx:181`），三处文案各改一句。不加自动重试、不动鉴权，也**不承诺"重新登录就能回来"**——这台壳里没有可点的重新登录入口，而新会话是否仍拥有这趟行程今晚未验，所以只说「这趟行程还在，只是这台设备当前读不到它。」这一句的可依据是今晚从库里读到的那趟行程与它的三十五格研究地点。
+**改法。** 把"被服务器拒了"和"还没有东西"分开：只有 `CityNexusApiError` 且状态是 401 或 403 才置 `accessLost`（现尖 `frontend/src/trial/mobile/MissionCockpit.tsx:187`），三处文案各改一句。不加自动重试、不动鉴权，也**不承诺"重新登录就能回来"**——这台壳里没有可点的重新登录入口，而新会话是否仍拥有这趟行程今晚未验，所以只说「这趟行程还在，只是这台设备当前读不到它。」这一句的可依据是今晚从库里读到的那趟行程与它的三十五格研究地点。
 
 **真机对照。** 改前：`human-224-tile-cleared-invitation.png`（0 处地点 + 「地点研究会在这里汇合」）。改后：`human-227-expired-credential-honest-state.png`，同屏三处分别读成「登录已过期」「这次登录已经过期 / 这趟行程还在，只是这台设备当前读不到它。」「这次登录已经过期，读不到工作记录。」（`trial/results/20261022_v3_human_chrome/walk-46-log.txt` 的 `SCREEN` 行）。`npm run typecheck` 干净。
 
