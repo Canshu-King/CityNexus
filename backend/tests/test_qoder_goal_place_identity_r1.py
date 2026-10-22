@@ -52,8 +52,11 @@ def test_a_live_amap_lead_becomes_one_canonical_row_and_the_lead_says_which(sign
     assert list(attached) == ["amap:TESTFIXTURE01"]
     assert lead.get("canonical_place_id") == attached["amap:TESTFIXTURE01"]
     with SessionLocal() as session:
-        rows = session.scalars(select(Place).where(Place.provider_key == "amap")).all()
-        assert len(rows) == 1, [row.external_id for row in rows]
+        # Count this provider object, not every Amap row in a shared test database: another fixture
+        # legitimately holds one, and "rows for this object" is the claim actually being made.
+        rows = session.scalars(select(Place).where(Place.provider_key == "amap",
+            Place.external_id.in_(["amap:TESTFIXTURE01", "TESTFIXTURE01"]))).all()
+        assert [row.external_id for row in rows] == ["amap:TESTFIXTURE01"], [row.external_id for row in rows]
         row = rows[0]
         # The shared table's own convention: the provider key is kept and the object id is prefixed
         # with it, so the same provider object cannot be filed twice under two spellings.
