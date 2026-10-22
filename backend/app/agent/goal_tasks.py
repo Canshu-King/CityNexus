@@ -1405,6 +1405,7 @@ def resume_goal_task(
     research_failed = False
     assistant_summary: str | None = None
     draft_delivery_reminded = False
+    edit_write_reminded = False
     try:
         while task["budget"].get("unlimited") or int(task["usage"]["model_turns"]) < int(task["budget"]["max_model_turns"]):
             journey, member = _require_owner_scope(session, journey, member, require_draft=True)
@@ -1517,6 +1518,20 @@ def resume_goal_task(
                         "Grounded research is available but no editable draft was saved. "
                         "Use save_draft_itinerary now for a useful partial draft from those task-owned IDs. "
                         "Keep missing prices/hours unknown. Do not ask the traveler to click again."})
+                    continue
+                # A reply that describes a change to a saved schedule without moving its revision is
+                # the failure the traveller cannot see for themselves, so the server asks once for the
+                # write (or one concrete question) before the round is allowed to end.
+                revision_moved = (task.get("draft_artifact") or {}).get("revision") != draft_revision_before_round
+                if (task.get("interaction_mode") != "DISCUSS" and has_draft and not revision_moved
+                        and remaining and tool_remaining and not edit_write_reminded):
+                    edit_write_reminded = True
+                    messages.append({"role": "system", "content":
+                        "This round ended without moving the saved draft. If the traveler asked for a change to a "
+                        "day or half-day, call replace_draft_slots now and apply exactly that, keeping every other slot. "
+                        "If the request is ambiguous, call ask_traveler with one concrete question instead. "
+                        "If nothing needed changing, answer in one short sentence and stop. "
+                        "Never describe a change as made when no draft tool returned a receipt."})
                     continue
                 assistant_summary = str(message.get("content") or "").strip()[:2000] or None
                 mission = session.get(JourneyMission, mission.id)

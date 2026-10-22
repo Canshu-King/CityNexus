@@ -28,7 +28,13 @@ for (const width of [390, 430, 1366, 1566]) {
       consent: { model: true, online_research: true },
       budget: { max_model_turns: 24, max_tool_calls: 48 },
       usage: { model_turns: 3, tool_calls: 2 },
-      tool_steps: [], research_places: [], conversation: [],
+      tool_steps: [], research_places: [],
+      conversation: [
+        { role: "assistant", text: "**已把第二天下午改成湖边散步**\n- 上午：博物馆\n- 下午：湖边", message_id: "fixture-claim", at: "2026-10-21T09:00:00+08:00",
+          draft_revision_before: 3, draft_revision_after: 3 },
+        { role: "assistant", text: "已重排第二天", message_id: "fixture-write", at: "2026-10-21T09:10:00+08:00",
+          draft_revision_before: 2, draft_revision_after: 3 },
+      ],
       draft_artifact: {
         revision: 3, status: "DRAFT",
         days: [{ date: "2026-10-21", slots: [{ title: "冠豸山风景区", place_id: point.candidate_id, time_of_day: "morning", notes: "缓慢步行" }] }],
@@ -139,9 +145,28 @@ for (const width of [390, 430, 1366, 1566]) {
     await page.getByRole("button", { name: "对话设置", exact: true }).click();
     await expect(settings).toBeVisible();
     await expect(settings.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）")).toBeChecked();
-    await settings.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").uncheck();
+    // Revoking moves that row back beside 发送 — it is the row that blocks the button — so this
+    // follows the row to its new home instead of acting on the element that just moved.
+    await settings.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）").click();
+    const strip = page.getByTestId("rev-mission-consent-strip");
+    await expect(strip).toBeVisible();
+    await expect(strip.getByLabel("本次允许 AI 处理旅行目标（可能产生费用）")).not.toBeChecked();
+    await expect(strip.getByLabel("本次允许查询公开地图和地点来源")).toBeChecked();
     await settings.getByRole("button", { name: "关闭对话设置" }).click();
     await expect(settings).toBeHidden();
     await expect(input).toHaveValue("先保留这句未发送的修改");
+
+    // A sentence and a schedule change are different facts. The screen says which one happened using
+    // the two draft revisions the server stored with the reply, and it renders the model's markdown
+    // as lines rather than as literal asterisks and dashes.
+    await page.getByTestId("rev-mission-layer-agent").click();
+    await expect(page.locator(".rev-agent-message-receipt")).toHaveText([
+      "这条回复没有改动日程（版本 3）",
+      "日程：版本 2 → 3",
+    ]);
+    const firstReply = page.locator(".rev-agent-message-body").first();
+    await expect(firstReply.locator("p").first()).toHaveText("已把第二天下午改成湖边散步");
+    await expect(firstReply).not.toContainText("**");
+    await expect(firstReply).not.toContainText("- 上午");
   });
 }
