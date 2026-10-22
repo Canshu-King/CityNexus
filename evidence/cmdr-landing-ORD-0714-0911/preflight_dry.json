@@ -1,0 +1,171 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-10-22T09:06:02+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "a8ae9fa6ee2ec7868f46dbd9b93d45dcde4b9d66",
+ "candidate_ref": "refs/heads/review/cmdr-0705a-amap-leg-cache-r1",
+ "candidate_tip": "2f9fc88d22658fea9f80f69218aa3fcdc301f692",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "a8ae9fa6ee2ec7868f46dbd9b93d45dcde4b9d66",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "117e2b62601bf14095de57e7bb64066250967d22",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_catalog_hydration.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "25 passed, 2 warnings in 3.57s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_090351",
+  "blob_equality": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "da3b89b6d28018e30bf11fb38ee837f59aaec157",
+    "export_blob": "da3b89b6d28018e30bf11fb38ee837f59aaec157",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "6d0c9cd10076ec9322d6bf2f43b3527c43360a3f",
+    "export_blob": "6d0c9cd10076ec9322d6bf2f43b3527c43360a3f",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 2085,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_route_gap_验路工_0559_r1.py::test_route_gap_hermes_run_unknown_run_returns_the_error_envelope",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "2085 tests collected in 7.84s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "25 tests collected in 2.89s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_catalog_hydration.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "25 passed, 2 warnings in 3.53s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "e2ea5ce64ca67bb476006766db27b0612789dd36",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 6,
+   "cand_cells": 6,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "dict_keys": {
+   "exit": 0,
+   "verdict": "PASS",
+   "tip_missing": "1",
+   "called_in_view": "270",
+   "new_missing": []
+  },
+  "screen_code": {
+   "exit": 0,
+   "judged": 2,
+   "refuse": 0,
+   "tokens": []
+  },
+  "surface_contract": {
+   "arm_blob": "603544c5772cb7632f7c16f091c49ab1f964485d",
+   "exit": 0,
+   "verdict": "NO_CSS_IN_VIEW",
+   "css_files_in_view": "0",
+   "added_css_lines": "0",
+   "new_hatch_rows": "0",
+   "ruler_status": "MATCH",
+   "violations": [],
+   "disclosed_slip": null
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-D_GRpjC0.js",
+    "/assets/index-DQ1SiW5y.css"
+   ],
+   "live_tree": "117e2b62601bf14095de57e7bb64066250967d22",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_2f9fc88_info.json",
+   "build_tail": [
+    "\u001b[33m[plugin vite:reporter] ",
+    "src/features/agent/AgentComposer.tsx, D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_2f9fc88/frontend/src/features/agent/CopilotDock.tsx, dynamic import will not move module into another chunk.",
+    "\u001b[39m",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ],
+   "error_lines": []
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "dry run: candidate 2f9fc88d22 is ff-able onto a8ae9fa6ee, intersection 0, gate [\"25 passed, 2 warnings in 3.57s\"]",
+ "derived_result": null
+}
