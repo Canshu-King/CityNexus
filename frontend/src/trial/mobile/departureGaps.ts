@@ -113,6 +113,11 @@ export function agentAskPrompt(rows: GapRow[], priceAccepted: boolean): string {
     + "并且直接告诉我哪一项来源还是没有答案，不要把没答的当成确定的。";
 }
 
+// Why the ask needs a second press and says so.  The chat dock sends only after the traveller's own
+// model consent, so a button that claimed to have asked already would be a lie about something the
+// traveller has not agreed to yet; the card therefore hands the sentence over and names the key.
+export const ASK_HANDED_OFF = "已写进底部的对话框，按「发送 ↑」就能让 Agent 去查这几项。";
+
 // The count the card shows right above that button, so the traveller knows whether pressing it can
 // still move anything.
 export function pendingCountSentence(count: number): string {
