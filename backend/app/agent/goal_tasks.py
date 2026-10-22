@@ -1398,6 +1398,10 @@ def resume_goal_task(
     if task["budget"].get("unlimited"):
         messages.append({"role": "system", "content": "There is no cumulative model/tool quota for this task. Finish the requested result naturally; ask_traveler when a meaningful choice is needed. Respect pause/cancel and do not repeat failed identical queries."})
     gateway = AgentToolGateway(session, bound_run_id=run.id, allow_live_discovery=False)
+    # The draft revision at the moment this round starts. An assistant sentence can claim anything;
+    # the pair stored with it below is what the screen shows, so a reply that did not move the
+    # schedule cannot be read as one that did.
+    draft_revision_before_round = (task.get("draft_artifact") or {}).get("revision")
     research_failed = False
     assistant_summary: str | None = None
     draft_delivery_reminded = False
@@ -1443,7 +1447,9 @@ def resume_goal_task(
                         ("Use replace_draft_slots only for requested changes to a date/time block; use save_draft_variants for requested comparisons. " if editing_existing_draft else "Use save_draft_itinerary if no useful partial draft has been saved yet. ") +
                         "If the requested result is already saved, summarize it without rewriting unrelated arrangements. " +
                         "With no verified places, save specific research todos or generic activity suggestions without Place IDs. "
-                        "Leave all missing facts unknown. Do not request another external search."})
+                        "Leave all missing facts unknown. Do not request another external search. "
+                        "Write the closing message for a traveller: plain sentences, no markdown symbols, and never paste an "
+                        "internal code name such as a status or reason code — name the missing fact instead."})
                 message = agent._complete(messages)
             except Exception as exc:
                 # Do not persist provider messages, URLs, tokens, or exception text.
@@ -1518,7 +1524,14 @@ def resume_goal_task(
                 intent[_TASK_KEY]["assistant_summary"] = assistant_summary
                 if assistant_summary:
                     transcript = list(intent[_TASK_KEY].get("conversation") or [])
-                    transcript.append({"role": "assistant", "text": assistant_summary, "message_id": str(uuid4()), "at": _now()})
+                    transcript.append({
+                        "role": "assistant",
+                        "text": assistant_summary,
+                        "message_id": str(uuid4()),
+                        "at": _now(),
+                        "draft_revision_before": draft_revision_before_round,
+                        "draft_revision_after": (intent[_TASK_KEY].get("draft_artifact") or {}).get("revision"),
+                    })
                     intent[_TASK_KEY]["conversation"] = transcript
                 _finish_run(
                     session,

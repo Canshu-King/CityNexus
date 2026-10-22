@@ -36,7 +36,10 @@ def ask_question(task: dict, args: dict) -> dict:
     task["pending_question"] = question
     task["assistant_summary"] = question["question"]
     transcript = list(task.get("conversation") or [])
+    # A question never moves the schedule, so both halves of the receipt carry the current revision.
+    revision = (task.get("draft_artifact") or {}).get("revision")
     transcript.append({"role": "assistant", "text": question["question"], "message_id": question["id"],
-        "at": datetime.now(timezone.utc).isoformat()})
+        "at": datetime.now(timezone.utc).isoformat(),
+        "draft_revision_before": revision, "draft_revision_after": revision})
     task["conversation"] = transcript
     return {"status": "WAITING_FOR_TRAVELER", "options": question["options"]}

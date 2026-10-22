@@ -169,6 +169,13 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     await expect(bar).toBeVisible();
     await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
     await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
+    // The manual geocoder is folded behind an explicit choice now, so this pins both halves: the
+    // fold is on screen, the control only appears once the traveller opens it — and opening it
+    // still submits nothing upstream.
+    const secondary = page.getByTestId("rev-quick-area-secondary");
+    await expect(secondary).toBeVisible();
+    await expect(page.getByTestId("rev-quick-find-city")).toBeHidden();
+    await secondary.locator("> summary").click();
     await expect(page.getByTestId("rev-quick-find-city")).toBeVisible();
     await expect(page.getByTestId("rev-mission-cockpit")).toBeVisible();
     await expect(page.locator("dialog[open]")).toHaveCount(0);
@@ -357,6 +364,8 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     }));
 
     await page.goto("/revolution");
+    // Manual place search is folded behind an explicit choice now, so the traveller opens it first.
+    await page.getByTestId("rev-quick-area-secondary").locator("> summary").click();
     await page.getByTestId("rev-quick-find-city").click();
     await page.getByText("连城县, 龙岩市").click();
     await page.getByTestId("rev-quick-use-approx-center").click();
@@ -416,6 +425,7 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     });
 
     await page.goto("/revolution");
+    await page.getByTestId("rev-quick-area-secondary").locator("> summary").click();
     await page.getByTestId("rev-quick-find-city").click();
     await page.getByText("连城县, 龙岩市").click();
     await expect(page.getByTestId("rev-quick-use-approx-center")).toBeVisible();

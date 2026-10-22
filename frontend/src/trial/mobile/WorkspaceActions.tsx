@@ -181,6 +181,35 @@ function ResearchLeads({ items, area = false }: { items: GoalResearchLead[]; are
   </li>)}</ul>;
 }
 
+/**
+ * The model writes its answer as markdown, and this screen has no markdown renderer: 「**待核查项**」
+ * and 「- Day1 上午…」 used to land as literal asterisks and dashes inside one long paragraph. The
+ * words are the Agent's and stay untouched — only the line structure is read.
+ */
+function AgentMessageBody({ text }: { text: string }) {
+  const lines = text.split("\n").map((raw) => {
+    const trimmed = raw.trim();
+    return { item: /^[-*]\s+/.test(trimmed), text: trimmed.replace(/^[-*]\s+/, "").replace(/\*+/g, "").trim() };
+  }).filter((line) => line.text.length > 0);
+  return <div className="rev-agent-message-body">
+    {lines.map((line, index) => <p className={line.item ? "is-item" : undefined} key={index}>{line.text}</p>)}
+  </div>;
+}
+
+/**
+ * Whether this reply actually moved the schedule, read off the two revisions the server stored with
+ * it. A sentence can say anything; the version numbers come from the draft on disk, so "已改" that
+ * did not write shows up as 没有改动日程 instead of being believed.
+ */
+function draftReceipt(item: { draft_revision_before?: number | null; draft_revision_after?: number | null }) {
+  const before = item.draft_revision_before;
+  const after = item.draft_revision_after;
+  if (typeof after !== "number") return null;
+  if (typeof before !== "number") return "这一轮保存了第一版日程（版本 " + after + "）";
+  if (after === before) return "这条回复没有改动日程（版本 " + after + "）";
+  return "日程：版本 " + before + " → " + after;
+}
+
 export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, dialogueActive = true, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
   embedded?: boolean; chatDockVisible?: boolean; dialogueActive?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
@@ -516,7 +545,8 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           {conversation.length > 0 && <div className="rev-agent-conversation" role="log" aria-label="与 Agent 的真实对话">
             {conversation.map((item) => <div className={"rev-agent-message is-" + item.role} key={item.message_id}>
               <span>{item.role === "user" ? "你" : "CityNexus Agent"}</span>
-              <p>{item.text}</p>
+              <AgentMessageBody text={item.text} />
+              {item.role === "assistant" && draftReceipt(item) && <small className="rev-agent-message-receipt">{draftReceipt(item)}</small>}
             </div>)}
             {visibleTask && !conversation.some((item) => item.role === "assistant") &&
               (visibleTask.draft_artifact?.days ?? []).some((day) => day.slots.length > 0) &&

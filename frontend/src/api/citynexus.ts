@@ -2267,7 +2267,8 @@ export interface DraftGoalTask {
   mode: "GOAL_PLANNING";
   status: string;
   goal: string;
-  conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string }>;
+  conversation?: Array<{ role: "user" | "assistant"; text: string; message_id: string; at: string;
+    draft_revision_before?: number | null; draft_revision_after?: number | null }>;
   consent: { model?: boolean; online_research?: boolean };
   budget: { max_model_turns?: number; max_tool_calls?: number; unlimited?: boolean };
   interaction_mode?: "DISCUSS" | "RESEARCH";

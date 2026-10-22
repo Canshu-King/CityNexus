@@ -105,9 +105,6 @@ export function CityPicker({
 
   const pane = (
     <div className="rev-quick-pane" data-testid="rev-quick-area">
-      {/* A traveller who arrives with a sentence already written should not have to find the manual
-          geocoder first: the Agent action leads, and picking an area by hand stays below it. */}
-      {leadWithAgent ? agentPrompt : null}
       <h3 className="rev-quick-area-title">先选一个地区</h3>
       <p className="rev-quick-area-intro">使用所选区域搜索附近地点。</p>
       <label htmlFor="rev-quick-search">城市或地区</label>
@@ -250,17 +247,22 @@ export function CityPicker({
         />
         <button type="button" onClick={onApplyMapLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
       </details>
-      {leadWithAgent ? null : agentPrompt}
     </div>
   );
 
-  // When the traveller's own sentence is already waiting for the Agent, choosing an area by hand is
-  // a side road: it should not wear the loudest button on the screen.
-  if (!secondary) return pane;
+  // Folding the manual area search away must never fold the Agent prompt away with it: the prompt is
+  // the main road, so it always stays outside the <details>.
+  const promptFirst = leadWithAgent ? agentPrompt : null;
+  const promptLast = leadWithAgent ? null : agentPrompt;
+  if (!secondary) return <>{promptFirst}{pane}{promptLast}</>;
   return (
-    <details className="rev-quick-secondary" data-testid="rev-quick-area-secondary">
-      <summary>我想自己先挑地点（可选）</summary>
-      {pane}
-    </details>
+    <>
+      {promptFirst}
+      <details className="rev-quick-secondary" data-testid="rev-quick-area-secondary">
+        <summary>我想自己先挑地点（可选）</summary>
+        {pane}
+      </details>
+      {promptLast}
+    </>
   );
 }
