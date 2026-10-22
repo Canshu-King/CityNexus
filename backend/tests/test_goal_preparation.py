@@ -28,7 +28,10 @@ def test_preserves_task_dates_and_slots_without_promoting_unknowns(prepared_scop
     assert result.status_code == 201, result.text
     data = result.json()
     assert data["draft_revision"] == 1 and data["selected"] is False and data["activated"] is False
-    assert {gap["kind"] for gap in data["gaps"]} == {"PLACE_REQUIRED","OPENING_HOURS","ADMISSION_PRICE"}
+    # One ask per row.  A band with no venue has no opening window and no ticket to check, so the
+    # 营业时间/门票价格 lines it used to carry asked the traveller about a place that does not exist yet;
+    # they come back as their own rows once a place is bound (goal_preparation.py, the `missing` block).
+    assert {gap["kind"] for gap in data["gaps"]} == {"PLACE_REQUIRED"}
     replay = client.post(path,headers=headers,json=body)
     assert replay.json()["plan_version_id"] == data["plan_version_id"] and replay.json()["idempotency_replay"] is True
     plans = client.get(f"/api/v1/journeys/{jid}/plans",headers=headers).json()

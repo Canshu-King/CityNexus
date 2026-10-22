@@ -4,7 +4,7 @@ import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, typ
 import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { missingFactsSentence } from "./departureGaps";
+import { bandSentence, missingFactsSentence } from "./departureGaps";
 import "./MobilePlanWorkbench.css";
 
 type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null; departure: JourneyDepartureRead | null; seat: JourneyMemberSeatRead | null };
@@ -88,6 +88,13 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
   const scheduledDays = [...days.keys()].filter((day) => day !== "日期待确认").length;
   const missingDays = requestedDays && requestedDays > scheduledDays ? requestedDays - scheduledDays : 0;
   const unknownCosts = plan.activities.filter((item) => !["KNOWN_FREE", "KNOWN_PAID"].includes(item.cost_status ?? "")).length;
+  // Times the traveller confirmed that have no venue yet.  The row stays on the plan -- it is part of
+  // the day they agreed to -- and declares itself unroutable (metadata.routing = NOT_ROUTED, written at
+  // backend/app/agent/goal_preparation.py), so the platform neither invents a route to it nor blames
+  // the traveller for a location it never had.  Measured on the walked candidate: as an ordinary
+  // location-less row it answered LOCATION_MISSING plus MOBILITY_CONTEXT_MISSING and no button could
+  // act on that (trial/results/20261022_v3_human_chrome/selection-gate-replay-1.txt).
+  const bands = plan.activities.filter((item) => item.activity_type === "FREE_TIME");
   const knownTotal = plan.total_cost_status === "KNOWN" && unknownCosts === 0;
   const total = plan.total_cost && Number.isFinite(plan.total_cost.amount_minor)
     ? formatMinorMoney(plan.total_cost.amount_minor, plan.total_cost.currency, "zh-CN") : null;
@@ -105,11 +112,12 @@ function PlanSchedule({ plan, journey }: { plan: PlanVersion; journey: JourneyRe
         {activities.map((activity) => <li key={activity.id}>
           <div className="rev-plan-time"><Clock3 size={14} aria-hidden="true" />{timeText(activity.start_at, timeZone)}—{timeText(activity.end_at, timeZone)}</div>
           <strong><MapPin size={15} aria-hidden="true" />{activity.title}</strong>
-          <div className="rev-plan-activity-facts"><span>{activityCost(activity)}</span>{activity.travel_from_prev_min > 0 && <span>转场预留 {activity.travel_from_prev_min} 分钟</span>}</div>
+          <div className="rev-plan-activity-facts"><span>{activityCost(activity)}</span>{activity.travel_from_prev_min > 0 && <span>转场预留 {activity.travel_from_prev_min} 分钟</span>}{!activity.place_id && <span data-testid="rev-plan-band-tag">地点待定 · 没有算进转场</span>}</div>
           {sourceLinks(activity).map((url, index) => <a key={url} href={url} target="_blank" rel="noreferrer">查看地点来源{index ? ` ${index + 1}` : ""} ↗</a>)}
         </li>)}
       </ol>
     </section>)}
+    {bands.length > 0 && <p className="rev-plan-gap" data-testid="rev-plan-band-note">{bandSentence(bands.length)}</p>}
     {plan.activities.length === 0 && <p>这份方案还没有活动安排。</p>}
   </>;
 }

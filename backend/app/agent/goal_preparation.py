@@ -74,6 +74,13 @@ class PreparationResult(BaseModel):
     slots_count: int
     gaps: list[PreparationGap]
     mobility_frozen: Literal[False]
+    # Bands the traveller confirmed but nobody has placed yet.  They stay on the plan as notes and in
+    # the to-do list; they are not written as routed activities (see the band branch below, whose
+    # reason is a measured selection-gate failure, not a style preference).
+    unrouted_count: int = 0
+    # What the sources actually gave, in minor units, so the card can put 已知费用 ¥X beside the places
+    # nobody answered.  Unknown prices are not inside it and nothing here turns them into 0.
+    known_subtotal_minor: int = 0
     idempotency_replay: bool = False
 
 
@@ -115,8 +122,9 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
         window_start, window_end = datetime.fromisoformat(journey.start_at), datetime.fromisoformat(journey.end_at)
         known = set(task.get("candidate_place_ids") or [])
         now = datetime.now(timezone.utc)
-        rows, gaps, total = [], [], 0
+        rows, bands, gaps, total = [], [], [], 0
         previous_end = None
+        previous_placed: tuple[str, str] | None = None
         for number, stamp in enumerate(body.schedule, 1):
             date, slot = slots[(stamp.day_index, stamp.slot_index)]
             start = datetime.fromisoformat(f"{date}T{stamp.start_time}").replace(tzinfo=zone)
@@ -148,27 +156,32 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                     raise HTTPException(409, "PLACE_NOT_IN_JOURNEY_CITY")
             missing = []
             if place is None:
+                # One line, one ask.  A band with no venue has no opening window and no ticket to
+                # check, so listing 营业时间 and 门票价格 next to it asked the traveller for facts about
+                # a place that does not exist yet -- three to-do rows where only 「让 Agent 找这一处」 is
+                # actionable.  Once a place is bound, its own unknowns appear as their own rows.
                 missing.append("SOURCE_IDENTITY" if source_id else "PLACE_REQUIRED")
-            if place is None or _place_window(place) is None:
-                missing.append("OPENING_HOURS")
+            else:
+                if _place_window(place) is None:
+                    missing.append("OPENING_HOURS")
+                if _place_verified_cost(place) is None:
+                    missing.append("ADMISSION_PRICE")
             cost = _place_verified_cost(place) if place else None
-            if cost is None:
-                missing.append("ADMISSION_PRICE")
             hop: dict | None = None
-            if number > 1 and slots[indices[number - 2]][0] == date:
-                # This line used to append TRANSFER_ROUTE unconditionally for every same-day pair, so
-                # the traveller's to-do complained about hops the Agent had already had AMap route.
-                # Measured in the walked journey (trial/results/20261022_v3_human_chrome/
-                # research-routes-in-walked-journey-1.txt): five same-day hops, four of them carrying a
-                # real provider route (3385 m / 2708 s and friends), and the screen named all five as
-                # missing.  The routes the task acquired live in task["research_routes"]
-                # (backend/app/agent/goal_amap.py:210), keyed by these very place ids, so the to-do can
-                # now point at the hop that genuinely has no evidence -- and nothing here changes
-                # whether a candidate is selectable, which services.py decides elsewhere.
-                previous_slot = slots[indices[number - 2]][1]
-                previous_source = str(previous_slot.get("place_id") or "")
+            if source_id and previous_placed is not None and previous_placed[1] != source_id:
+                # The hop the traveller is asked about is the hop the *server* will check when they
+                # press 选用: the previous stop that actually has a place, whoever it follows.  Two
+                # shapes made the old same-day/previous-slot rule wrong.  (1) A band with no venue --
+                # 「19:00 晚餐及自由活动」 -- sat between two stops, and the old rule asked for a hop
+                # into it, a hop nothing can route.  (2) The next morning's first stop is checked
+                # against the previous day's last one (backend/app/replanning/feasibility.py:966 pairs
+                # the plan as one chain), and a candidate that never froze that fact is refused at
+                # selection with MOBILITY_DATA_UNAVAILABLE -- measured on the walked journey's own
+                # saved candidate: trial/results/20261022_v3_human_chrome/selection-gate-replay-1.txt.
+                # So the to-do names it when the Agent has no receipt for it, instead of leaving the
+                # traveller with a code and no button.
                 hop = next((row for row in task.get("research_routes") or []
-                            if isinstance(row, dict) and row.get("from_place_id") == previous_source
+                            if isinstance(row, dict) and row.get("from_place_id") == previous_placed[1]
                             and row.get("to_place_id") == source_id), None)
                 if hop is None:
                     missing.append("TRANSFER_ROUTE")
@@ -191,6 +204,16 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                 url = str(lead.get("source_url") or "")
                 if re.match(r"^https?://", url):
                     metadata["source_urls"] = [url]
+            if place is None:
+                # A band the traveller confirmed that has no venue yet -- 「19:00 晚餐及自由活动」.  It
+                # stays in the plan as a row they can see and act on, and declares itself unroutable so
+                # the feasibility chain is not asked to place it (app/replanning/feasibility.py reads
+                # this marker).  Measured on the walked candidate: as an ordinary location-less row it
+                # produced LOCATION_MISSING for itself and MOBILITY_CONTEXT_MISSING for the pair it sat
+                # in (trial/results/20261022_v3_human_chrome/selection-gate-replay-1.txt), a refusal no
+                # button could answer.
+                metadata["routing"] = "NOT_ROUTED"
+                bands.append({"title": slot["title"], "start_at": start.isoformat()})
             for kind in missing:
                 # A to-do line has to say what the traveller can do about it, not only what is
                 # missing.  Three of these roads end at the one real button on this card
@@ -208,10 +231,17 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
                 else:
                     resolution = ASK_AGENT_FOR_PLACE_FACT
                 gaps.append({"sequence_no": number, "title": slot["title"], "kind": kind,
-                             "place_id": source_id or None, "status": "UNKNOWN",
-                             "resolution": resolution})
+                             # The identity a traveller's decision has to bind to is the canonical Place
+                             # row the plan itself uses (backend/app/db/models.py Activity.place_id), not
+                             # the spelling the provider handed over.  A consent receipt that named the
+                             # provider id would not survive the place being re-researched under a second
+                             # source, and nothing else in the plan reads that spelling.
+                             "place_id": (place.id if place is not None else None) or source_id or None,
+                             "status": "UNKNOWN", "resolution": resolution})
             total += cost or 0
             rows.append((slot, place, start, end, cost, metadata))
+            if source_id:
+                previous_placed = (date, source_id)
         version = int(session.scalar(select(func.max(PlanVersion.version_no)).where(PlanVersion.journey_id == journey.id)) or 0) + 1
         plan = PlanVersion(id=str(uuid4()), journey_id=journey.id, version_no=version,
                            planning_mode=journey.planning_mode, status="CANDIDATE", source="MANUAL",
@@ -224,13 +254,14 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
         session.flush()
         for number, (slot, place, start, end, cost, metadata) in enumerate(rows, 1):
             session.add(Activity(id=str(uuid4()), plan_version_id=plan.id, sequence_no=number,
-                                 activity_type="SIGHTSEE", title=slot["title"], place_id=place.id if place else None,
+                                 activity_type="SIGHTSEE" if place is not None else "FREE_TIME", title=slot["title"], place_id=place.id if place else None,
                                  start_at=start.isoformat(), end_at=end.isoformat(), travel_from_prev_min=0,
                                  estimated_cost_minor=cost or 0, currency=journey.budget_currency, status="PLANNED", locked=False,
                                  metadata_json=json.dumps(metadata, ensure_ascii=False), created_at=now.isoformat(), updated_at=now.isoformat()))
         answer = {"journey_id": journey.id, "task_id": mission.id, "draft_revision": body.expected_revision,
                   "plan_version_id": plan.id, "status": "CANDIDATE", "selected": False, "activated": False,
-                  "slots_count": len(rows), "gaps": gaps, "mobility_frozen": False}
+                  "slots_count": len(rows), "unrouted_count": len(bands), "gaps": gaps,
+                  "known_subtotal_minor": total, "mobility_frozen": False}
         task["prepared_plan"] = {"result": answer, "schedule": [row.model_dump() for row in body.schedule]}
         mission.intent_json = json.dumps(intent, ensure_ascii=False)
         session.add(IdempotencyKey(key=key, operation="goal.prepare", request_hash=signature, response_status=201,

@@ -1,0 +1,99 @@
+dbs_scanned=23
+db=citynexus_v3_human9_1022.db
+  plan=dbc556ee-f390-415c-ae9e-511eb34bc7cf v1 status=CANDIDATE snapshot_id=None
+  activities=8 facts_in_snapshot=0 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=1
+  missing_pairs=[('real-place-00d9e27cd4cc6c7b28b6509e', 'real-place-62c2e60619da82efebfdea8c'), ('real-place-07848c0fded7dc8455e31c80', 'real-place-efa346b30a447afad223af11'), ('real-place-519a9aa24230d0710177c399', 'real-place-bd287d26c72e48b47da3df8b'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80'), ('real-place-afb7104f7fa78f7b7be05c16', 'real-place-519a9aa24230d0710177c399')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x5
+
+db=citynexus_v3_human9_1022.db
+  plan=97386b09-f0d1-442f-969f-e71fd1e73737 v1 status=CANDIDATE snapshot_id=None
+  activities=6 facts_in_snapshot=0 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=1
+  missing_pairs=[('real-place-00ec9ebf746fa4691d4e3851', 'real-place-35a65d98032eaf11889f4131'), ('real-place-07848c0fded7dc8455e31c80', 'real-place-00ec9ebf746fa4691d4e3851'), ('real-place-35a65d98032eaf11889f4131', 'real-place-519a9aa24230d0710177c399'), ('real-place-519a9aa24230d0710177c399', 'real-place-7dedaa1dad5d721bc00ba0f7'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x5
+
+db=citynexus_v3_human9_1022.db
+  plan=12004067-62b9-44f3-9106-bd1ac904d71e v1 status=CANDIDATE snapshot_id=None
+  activities=8 facts_in_snapshot=0 pairs_demanded(excl self)=7 self_pairs=0 cross_day_pairs=1
+  missing_pairs=[('real-place-00d9e27cd4cc6c7b28b6509e', 'real-place-62c2e60619da82efebfdea8c'), ('real-place-07848c0fded7dc8455e31c80', 'real-place-efa346b30a447afad223af11'), ('real-place-519a9aa24230d0710177c399', 'real-place-2d77b38668bfbef255f5ff46'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80'), ('real-place-7dedaa1dad5d721bc00ba0f7', 'real-place-e76f0237c0983227fcc73fc6'), ('real-place-e76f0237c0983227fcc73fc6', 'real-place-519a9aa24230d0710177c399'), ('real-place-efa346b30a447afad223af11', 'real-place-7dedaa1dad5d721bc00ba0f7')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x7
+
+db=citynexus_v3_human9_1022.db
+  plan=0bca0257-2680-4f67-b8e8-0cf074259191 v1 status=CANDIDATE snapshot_id=None
+  activities=8 facts_in_snapshot=0 pairs_demanded(excl self)=4 self_pairs=0 cross_day_pairs=0
+  missing_pairs=[('real-place-00d9e27cd4cc6c7b28b6509e', 'real-place-62c2e60619da82efebfdea8c'), ('real-place-07848c0fded7dc8455e31c80', 'real-place-dc53719dde41c9cb48b7b9b6'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80'), ('real-place-e76f0237c0983227fcc73fc6', 'real-place-519a9aa24230d0710177c399')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x4
+
+db=citynexus_v3_human8_1022.db
+  plan=4d992f11-f206-4045-ba1f-4c8de885d4fe v1 status=CANDIDATE snapshot_id=None
+  activities=7 facts_in_snapshot=0 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=1
+  missing_pairs=[('real-place-00d9e27cd4cc6c7b28b6509e', 'real-place-62c2e60619da82efebfdea8c'), ('real-place-07848c0fded7dc8455e31c80', 'real-place-2d77b38668bfbef255f5ff46'), ('real-place-2d77b38668bfbef255f5ff46', 'real-place-dc53719dde41c9cb48b7b9b6'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80'), ('real-place-dc53719dde41c9cb48b7b9b6', 'real-place-7dedaa1dad5d721bc00ba0f7')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x5
+
+db=citynexus_v3_human7_1022.db
+  plan=00b15e24-af2c-4eb7-b937-aa60a9f2029a v1 status=CANDIDATE snapshot_id=None
+  activities=7 facts_in_snapshot=0 pairs_demanded(excl self)=6 self_pairs=0 cross_day_pairs=1
+  missing_pairs=[('real-place-00d9e27cd4cc6c7b28b6509e', 'real-place-62c2e60619da82efebfdea8c'), ('real-place-00ec9ebf746fa4691d4e3851', 'real-place-35a65d98032eaf11889f4131'), ('real-place-07848c0fded7dc8455e31c80', 'real-place-00ec9ebf746fa4691d4e3851'), ('real-place-35a65d98032eaf11889f4131', 'real-place-519a9aa24230d0710177c399'), ('real-place-519a9aa24230d0710177c399', 'real-place-00ec9ebf746fa4691d4e3851'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x6
+
+db=citynexus_v3_beijing_1022.db
+  plan=58715e34-5e1d-57ce-bcee-0ae72a0e6384 v1 status=CANDIDATE snapshot_id=76b63621-1f60-4c24-8de7-491c95548b8c
+  activities=6 facts_in_snapshot=56 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_beijing_1022.db
+  plan=a09fd278-cf18-5249-a7d4-0efaecc568e3 v2 status=CANDIDATE snapshot_id=76b63621-1f60-4c24-8de7-491c95548b8c
+  activities=4 facts_in_snapshot=56 pairs_demanded(excl self)=3 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_beijing_1022.db
+  plan=defdc80d-71a7-58a4-a171-1a872dddc5a3 v3 status=ACTIVE snapshot_id=76b63621-1f60-4c24-8de7-491c95548b8c
+  activities=5 facts_in_snapshot=56 pairs_demanded(excl self)=4 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_variants_1022.db
+  plan=e897ab26-7bc1-567c-8ccb-4e35d7176ff8 v1 status=CANDIDATE snapshot_id=529d6a9b-ed22-4dd6-aceb-59e374eab5fe
+  activities=6 facts_in_snapshot=56 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_variants_1022.db
+  plan=430f9ce9-0fb1-5136-a6bc-52dfbdc1bfdb v2 status=CANDIDATE snapshot_id=529d6a9b-ed22-4dd6-aceb-59e374eab5fe
+  activities=6 facts_in_snapshot=56 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_variants_1022.db
+  plan=867ae20a-1d9e-5d38-99db-12a3aefee391 v3 status=SELECTED snapshot_id=529d6a9b-ed22-4dd6-aceb-59e374eab5fe
+  activities=6 facts_in_snapshot=56 pairs_demanded(excl self)=5 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_human10_1022.db
+  plan=36ee2357-4f87-46e7-bbbe-1d34a5ac2b3e v1 status=CANDIDATE snapshot_id=ad4a4346-080f-4df8-b0a1-5270a1e103e2
+  activities=8 facts_in_snapshot=3 pairs_demanded(excl self)=3 self_pairs=0 cross_day_pairs=0
+  missing_pairs=NONE
+  self_pair_detail=NONE
+  would_gate_say=SELECTABLE-AS-FAR-AS-MOBILITY
+
+db=citynexus_v3_human3_1022.db
+  plan=17ad2a0b-9b8e-43a5-944c-c134e6a486f1 v1 status=CANDIDATE snapshot_id=None
+  activities=5 facts_in_snapshot=0 pairs_demanded(excl self)=4 self_pairs=0 cross_day_pairs=1
+  missing_pairs=[('real-place-519a9aa24230d0710177c399', 'real-place-da82de3d33e3cc8491b9f374'), ('real-place-5caaae59412cee013d133aef', 'real-place-efa346b30a447afad223af11'), ('real-place-62c2e60619da82efebfdea8c', 'real-place-5caaae59412cee013d133aef'), ('real-place-efa346b30a447afad223af11', 'real-place-519a9aa24230d0710177c399')]
+  self_pair_detail=NONE
+  would_gate_say=MOBILITY_DATA_UNAVAILABLE x4
+

@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult } from "../../api/citynexus";
+import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, GAP_LABELS, gapAction } from "./departureGaps";
+import { ASK_AGENT_BUTTON, GAP_LABELS, bandSentence, gapAction, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
+
+type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
+
+function storedPriceState(result: GoalPreparationResult | null | undefined): PriceState | null {
+  const stored = result?.price_unknown_accepted;
+  if (!stored || !result) return null;
+  return { count: stored.unknown_place_ids.length, knownMinor: stored.known_subtotal_minor,
+    confirmedAt: stored.accepted_at, selectable: null, blocker: null };
+}
 
 function scheduleFor(task: DraftGoalTask): GoalPreparationSchedule[] {
   if (task.prepared_plan && task.prepared_plan.result.draft_revision === task.draft_artifact?.revision) return task.prepared_plan.schedule;
@@ -26,12 +35,15 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const [result, setResult] = useState<GoalPreparationResult | null>(() => task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null);
   const [routes, setRoutes] = useState<GoalRouteFreezeResult | null>(null);
   const [routesBusy, setRoutesBusy] = useState(false);
+  const [price, setPrice] = useState<PriceState | null>(() => storedPriceState(task.prepared_plan?.result));
+  const [priceBusy, setPriceBusy] = useState(false);
   const routeKey = useRef<string | null>(null);
+  const priceKey = useRef<string | null>(null);
   const requestKey = useRef<string | null>(null);
   const inFlight = useRef(false);
   const scope = useRef(0);
-  useEffect(() => { scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null); setMessage(""); requestKey.current = null; routeKey.current = null; setRoutes(null); }, [task.task_id, task.draft_artifact?.revision]);
-  useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setRoutes(null); setMessage(""); setConfirmed(false); }), []);
+  useEffect(() => { const stored = task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null; scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(stored); setPrice(storedPriceState(stored)); setMessage(""); requestKey.current = null; routeKey.current = null; setRoutes(null); priceKey.current = null; }, [task.task_id, task.draft_artifact?.revision]);
+  useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setRoutes(null); setPrice(null); setMessage(""); setConfirmed(false); }), []);
   const days = task.draft_artifact?.days ?? [];
   if (!schedule.length) return null;
   type GapRow = GoalPreparationResult["gaps"][number];
@@ -41,9 +53,13 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     if (!group.rows.some((item) => item.kind === gap.kind)) group.rows.push(gap);
     pending.set(gap.sequence_no, group);
   }
+  // The traveller is asked to accept exactly the places the server lists as unanswered, and no others.
+  const priceIds = unknownPricePlaceIds(result?.gaps ?? []);
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
     setConfirmed(false); setResult(null); requestKey.current = null; setRoutes(null); routeKey.current = null;
+    // A saved candidate the traveller has not made again cannot keep their earlier word about prices.
+    setPrice(null); priceKey.current = null;
   };
   const prepare = async () => {
     if (!confirmed || inFlight.current || task.status === "WORKING" || !task.draft_artifact) return;
@@ -83,6 +99,31 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       setMessage(error instanceof Error && error.message ? error.message : "转场没能核实，时间仍留在这里，可以重试。");
     } finally { inFlight.current = false; setRoutesBusy(false); }
   };
+  const acceptPrice = async () => {
+    if (!result || inFlight.current || task.status === "WORKING") return;
+    const ids = unknownPricePlaceIds(result.gaps);
+    if (!ids.length) return;
+    const token = readTravelerBearer(), epoch = scope.current;
+    if (!token) return;
+    inFlight.current = true; setPriceBusy(true); setMessage("");
+    priceKey.current ??= crypto.randomUUID();
+    try {
+      const answer: GoalPriceConsentResult = await cityNexusApi.acceptUnknownPrice(
+        result.journey_id, result.task_id, result.plan_version_id, ids, priceKey.current);
+      if (epoch !== scope.current || token !== readTravelerBearer()) return;
+      if (answer.plan_version_id !== result.plan_version_id || answer.task_id !== result.task_id
+          || answer.journey_id !== result.journey_id || answer.accepted !== true
+          || answer.unknown_cost_included !== false) {
+        throw new Error("这份费用确认不属于当前方案。");
+      }
+      setPrice({ count: answer.unknown_count, knownMinor: answer.known_subtotal_minor,
+        confirmedAt: answer.confirmed_at, selectable: answer.selectable_after, blocker: answer.blocker_after });
+      window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: result.journey_id }));
+    } catch (error) {
+      if (epoch !== scope.current || token !== readTravelerBearer()) return;
+      setMessage(error instanceof Error && error.message ? error.message : "这次没能记下你的确认，可以重试。");
+    } finally { inFlight.current = false; setPriceBusy(false); }
+  };
 
   return <section className="rev-v3-departure" aria-label="当前草案的出发准备">
     <h3>从这份安排继续</h3>
@@ -104,9 +145,19 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     </details>
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
-      {routes ? `转场已核实 ${routes.verified}/${routes.total}${routes.frozen ? " · 已冻结进这版方案" : routes.total ? ` · 还差 ${routes.total - routes.verified} 段` : " · 这版方案里没有当天相邻的两站"}` : "当天的转场还没有向高德核实过。"}
+      {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0)
+        : "当天的转场还没有向高德核实过。"}
       <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">{routesBusy ? "正在核实转场…" : routes?.frozen ? "重新核实转场" : "核实并冻结今天的转场"}</button>
     </p>}
+    {result && (result.unrouted_count ?? 0) > 0 && <p className="rev-v3-band-note" data-testid="rev-v3-band-note">{bandSentence(result.unrouted_count ?? 0)}</p>}
+    {result && priceIds.length > 0 && <div className="rev-v3-price-state" data-testid="rev-v3-price-state">
+      {price ? <p>{priceAcceptedSentence(price.count, price.knownMinor)}{price.selectable === false ? "这一版还需要把待办逐项补完才能选用。" : ""}</p>
+        : <>
+          <p>{priceUnknownSentence(result.known_subtotal_minor ?? 0, priceIds.length)}</p>
+          <button type="button" disabled={priceBusy || task.status === "WORKING"} onClick={() => void acceptPrice()} data-testid="rev-v3-accept-price">{priceBusy ? "正在记下你的确认…" : PRICE_CONSENT_BUTTON}</button>
+          <button type="button" onClick={() => onDiscuss(PRICE_SWAP_PROMPT)} data-testid="rev-v3-swap-price">{PRICE_SWAP_BUTTON}</button>
+        </>}
+    </div>}
     {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, group]) => <li key={sequence}><strong>{group.title}</strong>{group.rows.map(gap => <span key={String(gap.kind)}>{GAP_LABELS[String(gap.kind)] ?? "资料"}：{gapAction(gap)}</span>)}</li>)}</ul></>}
     <button type="button" onClick={() => onDiscuss("继续讨论当前选好的草案，保留所有日期和地点。逐项告诉我出发前缺哪些营业、费用或转场资料，并给我处理选择，先不要改行程。")}>{ASK_AGENT_BUTTON}</button>
   </section>;

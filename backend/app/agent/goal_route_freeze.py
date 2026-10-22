@@ -67,6 +67,7 @@ class RouteEdge(BaseModel):
     status: str
     minutes: int | None
     distance_m: int | None
+    spans_night: bool = False
     provider: str | None
     source_url: str | None
     captured_at: str | None
@@ -80,6 +81,9 @@ class FreezeRoutesResult(BaseModel):
     edges: list[RouteEdge]
     verified: int
     total: int
+    # Hops that carry the traveller across a night, counted so the card can name them separately
+    # instead of presenting an overnight link as a walk the traveller takes that afternoon.
+    overnight: int = 0
     frozen: bool
     mobility_snapshot_id: str | None
     reason_code: str | None
@@ -100,10 +104,23 @@ def _same_day(previous: Activity, current: Activity) -> bool:
 
 
 def used_edges(session: Session, plan: PlanVersion) -> list[tuple[Activity, Activity]]:
+    """Every hop the selection gate will ask about, in the order the traveller meets them.
+
+    Two rules, both read off the consumer rather than invented here:
+
+    * the plan is one chain -- `app/replanning/feasibility.py:966` pairs consecutive activities whatever
+      date they fall on, so the first stop of the morning is checked against the last stop of the day
+      before it.  A hop that spans a night is still a hop the gate demands, so it is measured and then
+      labelled as such for the screen;
+    * a place is not a hop from itself.  Consecutive stops at the same venue need no route, and the
+      two capture doors in the product already refuse to route such a pair
+      (`app/main.py:22876`, `app/integrations/mobility/runtime.py:121`).
+    """
     rows = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan.id)
                                .order_by(Activity.sequence_no)))
-    return [(previous, current) for previous, current in zip(rows, rows[1:])
-            if _same_day(previous, current) and previous.place_id and current.place_id]
+    placed = [row for row in rows if row.place_id]
+    return [(previous, current) for previous, current in zip(placed, placed[1:])
+            if previous.place_id != current.place_id]
 
 
 def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | None:
@@ -177,7 +194,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
             facts.append((origin.id, destination.id, route))
         edges.append({"from_place_id": origin.id, "to_place_id": destination.id,
                       "from_name": origin.name, "to_name": destination.name, "status": status,
-                      "minutes": minutes,
+                      "minutes": minutes, "spans_night": not _same_day(origin_row, destination_row),
                       "distance_m": route.get("distance_m") if route else None,
                       "provider": route.get("provider") if route else None,
                       "source_url": route.get("source_url") if route else None,
@@ -185,11 +202,12 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
                       "reason_code": None if route else ("AMAP_NOT_CONFIGURED" if not settings.amap_web_key
                                                          else "PROVIDER_ROUTE_UNAVAILABLE")})
     verified = len([row for row in edges if row["status"] != UNAVAILABLE])
+    overnight = len([row for row in edges if row["spans_night"]])
     frozen = bool(edges) and verified == len(edges)
     snapshot_id: str | None = None
     reason: str | None = None
     if not edges:
-        reason = "NO_SAME_DAY_EDGES"
+        reason = "NO_ROUTED_EDGES"
     elif frozen:
         try:
             capture = capture_mobility_snapshot(
@@ -220,13 +238,17 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
             stored = (task.get("prepared_plan") or {}).get("result")
             if isinstance(stored, dict):
                 stored["gaps"] = [row for row in (stored.get("gaps") or []) if row.get("kind") != "TRANSFER_ROUTE"]
+                # The saved answer is what the card re-reads after a refresh.  Leaving
+                # mobility_frozen=false there once the hops are frozen would make the screen lie.
+                stored["mobility_frozen"] = True
+                stored["mobility_snapshot_id"] = snapshot.snapshot_id
     elif verified:
         reason = "ROUTE_PARTIALLY_VERIFIED"
     else:
         reason = "ROUTE_UNAVAILABLE"
     return {"journey_id": journey.id, "task_id": task_id, "plan_version_id": plan.id,
-            "edges": edges, "verified": verified, "total": len(edges), "frozen": frozen,
-            "mobility_snapshot_id": snapshot_id, "reason_code": reason}
+            "edges": edges, "verified": verified, "total": len(edges), "overnight": overnight,
+            "frozen": frozen, "mobility_snapshot_id": snapshot_id, "reason_code": reason}
 
 
 @router.post(PATH, response_model=FreezeRoutesResult)

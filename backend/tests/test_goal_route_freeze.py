@@ -17,7 +17,7 @@ from uuid import uuid4
 from test_bootstrap_place_facts import enabled_settings, signed_place  # noqa: F401  (fixtures are imported on purpose)
 from app.agent import goal_route_freeze
 from app.agent.goal_place_identity import attach_canonical_places
-from app.db.models import Journey, JourneyMission, PlanVersion
+from app.db.models import Activity, IdempotencyKey, Journey, JourneyMission, Place, PlanVersion
 from app.db.session import SessionLocal
 from sqlalchemy import select
 
@@ -167,6 +167,75 @@ def test_the_same_key_replays_without_writing_twice(signed_place, monkeypatch):
         assert len(rows) == 1, [row.key for row in rows]
 
 
+def test_a_traveller_who_accepted_the_unknown_price_can_select_and_start(signed_place, monkeypatch):
+    """The whole door, end to end: freeze the walked hops, accept the price nobody answered, choose it.
+
+    This is what the walked screens never reached (trial/results/20261022_v3_human_chrome/walk-61-log.txt:34
+    reads SELECT_BUTTONS 0): selecting refuses a candidate with no frozen evidence and one whose used
+    places have unresolved facts.  The evidence is real here -- the stored AMap receipt -- and the price
+    stays what it is, unknown; only the traveller's own recorded decision changes the cost arm, so the
+    arm that is not about money has to still be satisfied for the button to work.  That is the point of
+    the arm: an accepted price must not smuggle an unverified opening window past the same gate.
+    """
+    client, owner, outsider, journey_id, *_ = signed_place
+    _no_live_answer(monkeypatch)
+    task_id = _task(client, owner, journey_id)
+    root, plan_id, ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+    _store_route(task_id, TOWER["id"], PARK["id"])
+    with SessionLocal() as session:
+        # Both places are asked about the same way a provider row would be: opening window verified by
+        # the source, price left unknown.  Nothing here invents a price.
+        for place_id in ids.values():
+            place = session.get(Place, place_id)
+            place.opening_hours_json = json.dumps({"status": "VERIFIED_PROVIDER",
+                                                   "intervals": [{"open": "09:00", "close": "17:00"}]})
+            session.commit()
+    assert _freeze(client, owner, root, task_id, plan_id).json()["frozen"] is True
+
+    with SessionLocal() as session:
+        gaps = [row for row in json.loads(session.get(PlanVersion, plan_id).explanation_json)["unresolved_facts"]
+                if row.get("kind") == "ADMISSION_PRICE"]
+        claimed = sorted({str(row["place_id"]) for row in gaps})
+    accepted = client.post(root + f"/agent/goal-tasks/{task_id}/plans/{plan_id}/accept-unknown-price",
+                           headers={**owner, "Idempotency-Key": str(uuid4())},
+                           json={"unknown_place_ids": claimed})
+    assert accepted.status_code == 200, accepted.text
+    answer = accepted.json()
+    assert answer["unknown_cost_included"] is False and answer["authority_state"] == "COST_UNKNOWN_ACCEPTED", answer
+    # The same set of places, not the same sequence: the server lists them in the order the candidate
+    # walks them, and what the receipt has to match is which places the traveller accepted for.
+    assert sorted(answer["unknown_place_ids"]) == claimed and answer["mobility_snapshot_id"], answer
+    assert answer["selectable_after"] is True, answer
+
+    selected = client.post(f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select", headers=owner)
+    assert selected.status_code == 200, selected.text
+    assert selected.json().get("active_plan_version_id") == plan_id or plan_id in json.dumps(selected.json())
+    started = client.post(f"/api/v1/journeys/{journey_id}/start", headers=owner)
+    assert started.status_code == 200, started.text
+    # `/start` answers with the execution projection, not the journey row, so the state the traveller
+    # reaches is read the way the screen reads it: the journey itself, and the database behind it.
+    readback = client.get(f"/api/v1/journeys/{journey_id}", headers=owner)
+    assert readback.status_code == 200, readback.text
+    assert readback.json().get("status") == "ACTIVE", {"status": readback.json().get("status"),
+                                                       "projection_keys": sorted(started.json())}
+    with SessionLocal() as session:
+        assert session.get(Journey, journey_id).status == "ACTIVE"
+        assert session.get(PlanVersion, plan_id).status == "ACTIVE"
+
+
+def test_accepting_a_price_that_is_not_unknown_is_refused(signed_place, monkeypatch):
+    client, owner, outsider, journey_id, *_ = signed_place
+    _no_live_answer(monkeypatch)
+    task_id = _task(client, owner, journey_id)
+    root, plan_id, ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+    refused = client.post(root + f"/agent/goal-tasks/{task_id}/plans/{plan_id}/accept-unknown-price",
+                          headers={**owner, "Idempotency-Key": str(uuid4())},
+                          json={"unknown_place_ids": [ids[TOWER["id"]], "not-a-place-on-this-plan"]})
+    assert refused.status_code in {409, 422}, refused.text
+    with SessionLocal() as session:
+        assert json.loads(session.get(PlanVersion, plan_id).explanation_json).get("authority_state") ==             "PROVISIONAL_UNRESOLVED_FACTS"
+
+
 def test_a_stranger_cannot_free_evidence_onto_another_travelers_plan(signed_place, monkeypatch):
     client, owner, outsider, journey_id, *_ = signed_place
     _no_live_answer(monkeypatch)
@@ -176,3 +245,193 @@ def test_a_stranger_cannot_free_evidence_onto_another_travelers_plan(signed_plac
     assert refused.status_code in {401, 403}, refused.text
     with SessionLocal() as session:
         assert session.get(PlanVersion, plan_id).mobility_snapshot_id is None
+
+
+GATE = {"id": "amap:TESTFIX-FREEZE-GATE", "provider": "amap", "provider_object_id": "TESTFIX-FREEZE-GATE",
+        "name": "TEST_FIXTURE 城门", "category": "landmark", "latitude": 39.95, "longitude": 116.40,
+        "coordinate_system": "GCJ02", "provider_provenance": "LIVE_PROVIDER", "region_status": "MATCHED"}
+RESTO = {"id": "amap:TESTFIX-FREEZE-RESTO", "provider": "amap", "provider_object_id": "TESTFIX-FREEZE-RESTO",
+         "name": "TEST_FIXTURE 小馆", "category": "restaurant", "latitude": 39.925, "longitude": 116.395,
+         "coordinate_system": "GCJ02", "provider_provenance": "LIVE_PROVIDER", "region_status": "MATCHED"}
+
+
+def test_a_two_day_plan_with_a_free_evening_reaches_active(signed_place, monkeypatch):
+    """The walked story, in one arm: two days, a band with no venue, and an overnight link.
+
+    Measured on the candidate the screen actually saved (trial/results/20261022_v3_human_chrome/
+    selection-gate-replay-1.txt): the gate read the plan as one chain and answered
+    ``LOCATION_MISSING`` for each of the three venue-less bands it had been handed as activities, plus
+    ``MOBILITY_CONTEXT_MISSING`` for the pairs they sat in -- a refusal no button could act on.  A band
+    the traveller confirmed but nobody placed is a note on the day, not a stop to route to.  And the
+    first morning stop is checked against the previous day's last one, so an overnight link has to be
+    measured like any other hop, and named as one.
+    """
+    client, owner, outsider, journey_id, *_ = signed_place
+    _no_live_answer(monkeypatch)
+    task_id = _task(client, owner, journey_id)
+    root = f"/api/v1/journeys/{journey_id}"
+    with SessionLocal() as session:
+        trip = session.get(Journey, journey_id)
+        trip.start_at = "2026-11-02T08:00:00+08:00"
+        trip.end_at = "2026-11-03T22:00:00+08:00"
+        session.commit()
+    draft = client.put(root + f"/agent/goal-tasks/{task_id}/draft", headers=owner, json={"expected_revision": 0,
+        "days": [{"date": "2026-11-02", "slots": [
+            {"title": "TEST_FIXTURE 上午塔", "time_of_day": "morning", "notes": ""},
+            {"title": "TEST_FIXTURE 街边午饭", "time_of_day": "flexible", "notes": "还没有定地方"},
+            {"title": "TEST_FIXTURE 下午湖", "time_of_day": "afternoon", "notes": ""}]},
+            {"date": "2026-11-03", "slots": [{"title": "TEST_FIXTURE 第二天城门", "time_of_day": "morning",
+                                             "notes": ""}]}]})
+    assert draft.status_code == 200, draft.text
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        mission = session.get(JourneyMission, task_id)
+        intent = json.loads(mission.intent_json)
+        task = intent["goal_task"]
+        leads = [dict(TOWER), dict(PARK), dict(GATE)]
+        assert len(attach_canonical_places(session, journey, task, leads)) == 3
+        ids = {lead["id"]: lead["canonical_place_id"] for lead in leads}
+        days = task["draft_artifact"]["days"]
+        days[0]["slots"][0]["place_id"] = TOWER["id"]
+        days[0]["slots"][2]["place_id"] = PARK["id"]
+        days[1]["slots"][0]["place_id"] = GATE["id"]
+        # The lunch band carries no place at all -- that is the shape the traveller's screen leaves it
+        # in when the Agent has not found a venue yet (``place_id`` stays None,
+        # backend/app/agent/goal_artifacts.py:219).
+        days[0]["slots"][1].pop("place_id", None)
+        task["research_places"] = leads
+        task["candidate_place_ids"] = list(ids.values())
+        mission.intent_json = json.dumps(intent, ensure_ascii=False)
+        session.commit()
+    result = client.post(root + f"/agent/goal-tasks/{task_id}/prepare-plan",
+                         headers={**owner, "Idempotency-Key": str(uuid4())},
+                         json={"expected_revision": 1, "schedule": [
+                             {"day_index": 0, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"},
+                             {"day_index": 0, "slot_index": 1, "start_time": "12:00", "end_time": "13:00"},
+                             {"day_index": 0, "slot_index": 2, "start_time": "14:00", "end_time": "15:00"},
+                             {"day_index": 1, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"}]})
+    assert result.status_code == 201, result.text
+    plan_id = result.json()["plan_version_id"]
+    assert result.json()["slots_count"] == 4 and result.json()["unrouted_count"] == 1, result.json()
+
+    with SessionLocal() as session:
+        rows = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan_id)
+                                    .order_by(Activity.sequence_no)))
+        # Every stretch the traveller confirmed is still on the plan.  The lunch band is a row too -- it
+        # is not quietly deleted to make a gate pass -- but it declares itself unroutable, and that
+        # declaration is what the feasibility chain reads instead of demanding a location for it.
+        assert [row.sequence_no for row in rows] == [1, 2, 3, 4]
+        by_title = {row.title: row for row in rows}
+        band = by_title["TEST_FIXTURE 街边午饭"]
+        assert band.place_id is None and band.activity_type == "FREE_TIME"
+        assert json.loads(band.metadata_json)["routing"] == "NOT_ROUTED"
+        assert all(row.place_id for row in rows if row.title != band.title)
+        explanation = json.loads(session.get(PlanVersion, plan_id).explanation_json)
+        # The hop asked about after 下午湖 is the next morning's 城门: the chain runs across the night.
+        assert [row.get("kind") for row in explanation["unresolved_facts"]].count("TRANSFER_ROUTE") == 2
+        assert [gap["kind"] for gap in explanation["unresolved_facts"] if gap["kind"] == "PLACE_REQUIRED"] ==             ["PLACE_REQUIRED"]
+
+    _store_route(task_id, TOWER["id"], PARK["id"])
+    _store_route(task_id, PARK["id"], GATE["id"], minutes=31)
+    frozen = _freeze(client, owner, root, task_id, plan_id).json()
+    assert frozen["verified"] == 2 and frozen["total"] == 2 and frozen["frozen"] is True, frozen
+    assert frozen["overnight"] == 1, frozen
+    assert [row["spans_night"] for row in frozen["edges"]] == [False, True], frozen["edges"]
+
+    with SessionLocal() as session:
+        for place_id in ids.values():
+            place = session.get(Place, place_id)
+            place.opening_hours_json = json.dumps({"status": "VERIFIED_PROVIDER",
+                                                   "intervals": [{"open": "09:00", "close": "17:00"}]})
+            session.commit()
+        unknown = sorted({str(row["place_id"]) for row in
+                          json.loads(session.get(PlanVersion, plan_id).explanation_json)["unresolved_facts"]
+                          if row.get("kind") == "ADMISSION_PRICE"})
+    accepted = client.post(root + f"/agent/goal-tasks/{task_id}/plans/{plan_id}/accept-unknown-price",
+                           headers={**owner, "Idempotency-Key": str(uuid4())},
+                           json={"unknown_place_ids": unknown})
+    assert accepted.status_code == 200, accepted.text
+    answer = accepted.json()
+    # Accepting the price does not place the lunch band: the one thing left is a venue, and the gate
+    # says so by name instead of by a routing code nobody can act on.
+    assert answer["selectable_after"] is False and answer["blocker_after"] == "UNRESOLVED_ACTIVITY_FACTS", answer
+    refused = client.post(f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select", headers=owner)
+    assert refused.status_code == 409, refused.text
+    details = refused.json()["error"]["details"] or {}
+    remaining = [row["kind"] for row in details.get("unresolved_facts") or []]
+    # Accepting the price does not pretend the price became known -- those rows stay -- but it is no
+    # longer what stands between this plan and departure.  The band with no venue is.
+    assert "PLACE_REQUIRED" in remaining and "TRANSFER_ROUTE" not in remaining, refused.text
+
+    # 「让 Agent 找这一处」 -- the Agent comes back with a real place for the band, the traveller
+    # confirms the schedule again, and the same three doors run a second time.  This is the whole
+    # product loop the walked screens never completed.
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        mission = session.get(JourneyMission, task_id)
+        intent = json.loads(mission.intent_json)
+        task = intent["goal_task"]
+        lead = dict(RESTO)
+        assert attach_canonical_places(session, journey, task, [lead])
+        ids[lead["id"]] = lead["canonical_place_id"]
+        task["research_places"].append(lead)
+        task["candidate_place_ids"] = list(ids.values())
+        mission.intent_json = json.dumps(intent, ensure_ascii=False)
+        session.commit()
+    placed = client.put(root + f"/agent/goal-tasks/{task_id}/draft", headers=owner, json={"expected_revision": 1,
+        "days": [{"date": "2026-11-02", "slots": [
+            {"title": "TEST_FIXTURE 上午塔", "time_of_day": "morning", "notes": "", "place_id": TOWER["id"]},
+            {"title": "TEST_FIXTURE 街边午饭", "time_of_day": "flexible", "notes": "", "place_id": RESTO["id"]},
+            {"title": "TEST_FIXTURE 下午湖", "time_of_day": "afternoon", "notes": "", "place_id": PARK["id"]}]},
+            {"date": "2026-11-03", "slots": [{"title": "TEST_FIXTURE 第二天城门", "time_of_day": "morning",
+                                             "notes": "", "place_id": GATE["id"]}]}]})
+    assert placed.status_code == 200, placed.text
+    with SessionLocal() as session:
+        place = session.get(Place, ids[RESTO["id"]])
+        place.opening_hours_json = json.dumps({"status": "VERIFIED_PROVIDER",
+                                               "intervals": [{"open": "11:00", "close": "21:00"}]})
+        session.commit()
+    second = client.post(root + f"/agent/goal-tasks/{task_id}/prepare-plan",
+                         headers={**owner, "Idempotency-Key": str(uuid4())},
+                         json={"expected_revision": 2, "schedule": [
+                             {"day_index": 0, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"},
+                             {"day_index": 0, "slot_index": 1, "start_time": "12:00", "end_time": "13:00"},
+                             {"day_index": 0, "slot_index": 2, "start_time": "14:00", "end_time": "15:00"},
+                             {"day_index": 1, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"}]})
+    assert second.status_code == 201, second.text
+    plan_two = second.json()["plan_version_id"]
+    assert second.json()["slots_count"] == 4 and second.json()["unrouted_count"] == 0, second.json()
+
+    # The band became a stop, so it split one hop into two: the chain the gate reads grew with it.
+    _store_route(task_id, TOWER["id"], RESTO["id"], minutes=12)
+    _store_route(task_id, RESTO["id"], PARK["id"], minutes=9)
+    frozen_two = _freeze(client, owner, root, task_id, plan_two).json()
+    assert frozen_two["verified"] == 3 and frozen_two["total"] == 3 and frozen_two["overnight"] == 1, frozen_two
+
+    with SessionLocal() as session:
+        unknown_two = sorted({str(row["place_id"]) for row in
+                              json.loads(session.get(PlanVersion, plan_two).explanation_json)["unresolved_facts"]
+                              if row.get("kind") == "ADMISSION_PRICE"})
+        assert set(unknown_two) == set(ids.values()), (unknown_two, ids)
+    accepted_two = client.post(root + f"/agent/goal-tasks/{task_id}/plans/{plan_two}/accept-unknown-price",
+                               headers={**owner, "Idempotency-Key": str(uuid4())},
+                               json={"unknown_place_ids": unknown_two})
+    assert accepted_two.status_code == 200, accepted_two.text
+    assert accepted_two.json()["selectable_after"] is True, accepted_two.json()
+
+    assert client.post(f"/api/v1/journeys/{journey_id}/plans/{plan_two}/select",
+                       headers=owner).status_code == 200
+    started = client.post(f"/api/v1/journeys/{journey_id}/start", headers=owner)
+    assert started.status_code == 200, started.text
+    readback = client.get(f"/api/v1/journeys/{journey_id}", headers=owner)
+    assert readback.json().get("status") == "ACTIVE", {"status": readback.json().get("status"),
+                                                       "start_keys": sorted(started.json())}
+    with SessionLocal() as session:
+        # The candidate that carried the band keeps it after the traveller departs the one that does
+        # not: nothing was quietly rewritten to make the gate pass.
+        first = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan_id)))
+        assert len(first) == 4 and len([row for row in first if row.place_id is None]) == 1
+        second_rows = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan_two)))
+        assert len(second_rows) == 4 and all(row.place_id for row in second_rows)
+        assert session.get(PlanVersion, plan_two).status == "ACTIVE"
+        assert session.get(Journey, journey_id).status == "ACTIVE"

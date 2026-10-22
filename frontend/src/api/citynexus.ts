@@ -2219,18 +2219,35 @@ export interface GoalRouteEdge {
   status: "REUSED_PROVIDER_RECEIPT" | "MEASURED_NOW" | "ROUTE_UNAVAILABLE";
   minutes: number | null; distance_m: number | null; provider: string | null;
   source_url: string | null; captured_at: string | null; reason_code: string | null;
+  // The link runs to the next calendar day, so the card names it instead of counting it as today's walk.
+  spans_night?: boolean;
 }
 
 export interface GoalRouteFreezeResult {
   journey_id: string; task_id: string; plan_version_id: string; edges: GoalRouteEdge[];
   verified: number; total: number; frozen: boolean; mobility_snapshot_id: string | null;
+  overnight?: number;
   reason_code: string | null; idempotency_replay?: boolean;
+}
+
+// One traveller's recorded decision about prices no source answered. The count and the id list come
+// back from the server, and `unknown_cost_included: false` is the part the screen must never drop:
+// accepting is not buying, and it is not a budget that holds.
+export interface GoalPriceConsentResult {
+  journey_id: string; task_id: string; plan_version_id: string; accepted: boolean;
+  unknown_place_ids: string[]; unknown_count: number; known_subtotal_minor: number;
+  currency: string; unknown_cost_included: false; authority_state: string;
+  mobility_snapshot_id: string | null; selectable_after: boolean; blocker_after: string | null;
+  confirmed_at: string; idempotency_replay?: boolean;
 }
 
 export interface GoalPreparationResult {
   journey_id: string; task_id: string; draft_revision: number; plan_version_id: string;
   status: "CANDIDATE"; selected: false; activated: false; slots_count: number;
+  unrouted_count?: number;
+  known_subtotal_minor?: number;
   mobility_frozen: boolean;
+  price_unknown_accepted?: { plan_version_id: string; unknown_place_ids: string[]; accepted_at: string; known_subtotal_minor: number; currency: string };
   gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN"; resolution?: string }>;
 }
 export interface GoalResearchLead {
@@ -3245,6 +3262,16 @@ export const cityNexusApi = {
       "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
         + "/plans/" + encodeURIComponent(planVersionId) + "/freeze-routes",
       { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey } },
+    );
+  },
+
+  acceptUnknownPrice(journeyId: string, taskId: string, planVersionId: string, unknownPlaceIds: string[],
+                     idempotencyKey: string): Promise<GoalPriceConsentResult> {
+    return requestJson<GoalPriceConsentResult>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/plans/" + encodeURIComponent(planVersionId) + "/accept-unknown-price",
+      { method: "POST", body: JSON.stringify({ unknown_place_ids: unknownPlaceIds }),
+        headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey } },
     );
   },
 
