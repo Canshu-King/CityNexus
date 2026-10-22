@@ -1,0 +1,12 @@
+tip=2f9fc88d22658fea9f80f69218aa3fcdc301f692 old=a8ae9fa6ee2ec7868f46dbd9b93d45dcde4b9d66
+dictionary rows read at tip: en=1364 zh=1364
+shell bytes read: old=224263 tip=223294
+demo.notAStage                   old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+demo.noSealedJourney             old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+hub.stayWaitingNote              old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+hub.stayFailed                   old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+hub.stayEmpty                    old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+today.nothingScheduled           old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+itinerary.choosePlanHint         old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+itinerary.candidatePreviewNote   old-shell-inline=(1,1) tip-shell-inline=(0,0) key-at-old-tip=False OK
+VERDICT ALL 8 KEYS MOVED BYTE-IDENTICALLY, SINGLE WRITER
