@@ -318,20 +318,14 @@ export function notFoundCauseWords(
 function verdictWords(row: DestinationReading, zh: boolean, t: (key: string) => string): string {
   if (!row.answered) {
     return row.failure
-      ? zh
-        ? "这一轮没读到服务器的判定（读不到不等于服务器说不知道）"
-        : "no server verdict was read this round (a failed read is not the server saying it does not know)"
-      : zh
-        ? "还没问过服务器"
-        : "the server has not been asked yet";
+      ? t("trial.verdict.unreadThisRound")
+      : t("trial.verdict.notAskedYet");
   }
   if (row.capability === "READY") {
     return t("setup.theServerSaysThisDestinationCanBePlannedNow");
   }
   if (row.reason_code === "NO_CANONICAL_IDENTITY") {
-    return zh
-      ? "服务器的词表和目录里都没有这个名字，要它联网解析才有答案"
-      : "nothing the server consults names this spelling; it would have to resolve it over the network";
+    return t("trial.verdict.unresolvedSpelling");
   }
   if (row.capability === "UNKNOWN_RETRYABLE") {
     return t("setup.itWasAskedAndNothingAnsweredThisRound");
@@ -963,9 +957,7 @@ export function JourneyTrialSetup({
           <p className="v8-kicker">{t("trial.kicker")}</p>
           <h1>{t("setup.createATrip")}</h1>
           <p className="v8-lede">
-            {zh
-              ? "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
-              : "Three steps. Pick a destination, tell us how you like to travel, and let CityNexus handle the rest."}
+            {t("trial.lede.threeSteps")}
           </p>
         </div>
         <button
@@ -1376,11 +1368,7 @@ export function JourneyTrialSetup({
               rows={3}
               value={draft.specialRequirements ?? ""}
               onChange={(event) => update("specialRequirements", event.target.value)}
-              placeholder={
-                zh
-                  ? "例如：我妈妈坐轮椅；每天走路不超过 3000 米"
-                  : "e.g. my mother uses a wheelchair; no more than 3 km walking a day"
-              }
+              placeholder={t("trial.special.placeholder")}
             />
           </label>
         </div>
@@ -1400,7 +1388,7 @@ export function JourneyTrialSetup({
                   row to wrap over three lines on a 390px phone. The caution itself stays. */}
               {unrecognizedCity && (
                 <dd className="trial-city-warning" data-testid="review-city-warning">
-                  {zh ? "未识别 · 按中立口径规划" : "not recognised · planned on the neutral basis"}
+                  {t("trial.review.unrecognizedCity")}
                 </dd>
               )}
             </div>
@@ -1481,9 +1469,7 @@ export function JourneyTrialSetup({
           <strong>
             {journeyCreated
               ? t("setup.stepFailedStaySearchOnly")
-              : zh
-                ? "这一步没有成功，行程还没有创建。"
-                : "This step did not complete — no journey was created."}
+              : t("trial.create.stepFailedNoJourney")}
           </strong>
           {message ? <span>{message}</span> : null}
           {/* ORD-0353: the phone gate counted zero <details> blocks on this failure, which left the
@@ -1506,9 +1492,7 @@ export function JourneyTrialSetup({
                  same reading as "no answer arrived", and naming a contract field with a value this
                  screen did not measure is the invention Q68 forbids. */
               <span className="trial-technical-none" data-testid="create-technical-none">
-                {zh
-                  ? "这一屏没有量到可陈列的回读字段，因此也没有可复述的编号。"
-                  : "This screen measured no displayable answer fields, so there is no number to recite either."}
+                {t("trial.create.nothingMeasured")}
               </span>
             )}
           </details>
@@ -1593,9 +1577,7 @@ export function JourneyTrialSetup({
             </b>
           </p>
           <p className="trial-wait-note">
-            {zh
-              ? "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。"
-              : "A cold city's first search measured about two minutes. The server reports nothing until it finishes, so this is measured seconds — not an invented number."}
+            {t("trial.wait.whySeconds")}
           </p>
           {onStopWaiting && (
             <button
@@ -1608,9 +1590,7 @@ export function JourneyTrialSetup({
             </button>
           )}
           <p className="trial-wait-hint">
-            {zh
-              ? "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。"
-              : "Stopping the wait only closes this view: the server keeps going, and nothing you typed is lost."}
+            {t("trial.wait.stopOnlyClosesView")}
           </p>
         </div>
       )}
