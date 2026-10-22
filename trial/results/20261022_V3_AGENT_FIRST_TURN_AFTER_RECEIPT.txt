@@ -1,0 +1,6 @@
+PARTIAL :: the press was stopped on purpose at 14:13 to switch to the driver that answers the Agent with its own choice buttons; these rows were already committed
+JOURNEYS :: [["cc2534c9", "CN-RV-936BDCF8E003", "DRAFT", "北京 · 2日行程", "2026-11-02T09:00:00+08:00"], ["22222222", "CNX-DEMO", "DRAFT", "One Day in Nexus City", "2026-10-10T09:00:00+08:00"]]
+MISSIONS :: [["c2358bcd", "想慢慢逛北京的古迹和胡同小吃，一天别太赶，第二天下午想轻松一点。", "NEEDS_DECISION", "TRAVELER_INPUT_REQUIRED"]]
+RUNS :: [["95945bc4", "hermes", "cn:hy3", "PARTIAL", "{\"code\":\"TRAVELER_INPUT_REQUIRED\",\"status\":\"NEEDS_DECISION\"}", 31.1]]
+STEPS :: [["95945bc4-b011-439e-aaa3-872624e4a9b7", 1, "ask_traveler", "COMPLETED", "{}"]]
+AUDITS :: [["agent.goal_task.event", "AI_AGENT"], ["agent.goal_task.event", "TRAVELER"], ["journey.created", "system"], ["traveler.created", "system"]]
