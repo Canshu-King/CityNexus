@@ -1,0 +1,135 @@
+arm codes-on-screen r4 | ref=182da121d020465737eab441562785723f116168 base=a8ae9fa6ee files_judged=2 refuse=81 info=53 require_name=False only_added=True corpus=-1
+REFUSE frontend/src/app/V8Experience.tsx:1665 (entry :1665) token=AUTONOMOUS named_by=this_file_names_it in rendered | mode: "AUTONOMOUS",
+REFUSE frontend/src/app/V8Experience.tsx:1696 (entry :1696) token=STRUCTURED_JSON named_by=unqualified in rendered | artifact_type: "STRUCTURED_JSON",
+REFUSE frontend/src/app/V8Experience.tsx:3072 (entry :3072) token=COMPLETED named_by=unqualified in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+REFUSE frontend/src/app/V8Experience.tsx:3072 (entry :3072) token=SKIPPED named_by=unqualified in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+REFUSE frontend/src/app/V8Experience.tsx:3072 (entry :3072) token=CANCELLED named_by=this_file_names_it in rendered | !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+REFUSE frontend/src/app/V8Experience.tsx:3499 (entry :3499) token=UNKNOWN named_by=this_file_names_it in rendered | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+REFUSE frontend/src/app/V8Experience.tsx:3510 (entry :3510) token=SCENE_WINDOW named_by=unqualified in rendered | "SCENE_WINDOW"
+REFUSE frontend/src/app/V8Experience.tsx:3996 (entry :3996) token=UNKNOWN named_by=this_file_names_it in rendered | data-cursor-status={cursorStatus ?? "UNKNOWN"}
+REFUSE frontend/src/app/V8Experience.tsx:4499 (entry :4499) token=CONFIRMED named_by=unqualified in rendered | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+REFUSE frontend/src/app/V8Experience.tsx:4499 (entry :4499) token=FULFILLED named_by=unqualified in rendered | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+REFUSE frontend/src/app/V8Experience.tsx:4499 (entry :4499) token=COMPLETED named_by=unqualified in rendered | const SERVER_CONFIRMED_STATES = new Set(["CONFIRMED", "FULFILLED", "COMPLETED"]);
+REFUSE frontend/src/app/V8Experience.tsx:4609 (entry :4609) token=UNSTATED named_by=unqualified in rendered | data-monetary-status={item.monetary_value_status ?? "UNSTATED"}
+REFUSE frontend/src/app/V8Experience.tsx:5179 (entry :5179) token=ADVISORY named_by=this_file_names_it in rendered | <b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>
+REFUSE frontend/src/app/V8Experience.tsx:5335 (entry :5335) token=XIAMEN named_by=unqualified in rendered | 厦门: "XIAMEN",
+REFUSE frontend/src/app/V8Experience.tsx:5336 (entry :5336) token=BEIJING named_by=unqualified in rendered | 北京: "BEIJING",
+REFUSE frontend/src/app/V8Experience.tsx:5337 (entry :5337) token=SHANGHAI named_by=unqualified in rendered | 上海: "SHANGHAI",
+REFUSE frontend/src/app/V8Experience.tsx:5338 (entry :5338) token=TIANJIN named_by=unqualified in rendered | 天津: "TIANJIN",
+REFUSE frontend/src/app/V8Experience.tsx:5339 (entry :5339) token=FUZHOU named_by=unqualified in rendered | 福州: "FUZHOU",
+REFUSE frontend/src/app/V8Experience.tsx:5340 (entry :5340) token=GUANGZHOU named_by=unqualified in rendered | 广州: "GUANGZHOU",
+REFUSE frontend/src/app/V8Experience.tsx:5341 (entry :5341) token=SHENZHEN named_by=unqualified in rendered | 深圳: "SHENZHEN",
+REFUSE frontend/src/app/V8Experience.tsx:5342 (entry :5342) token=CHENGDU named_by=unqualified in rendered | 成都: "CHENGDU",
+REFUSE frontend/src/app/V8Experience.tsx:5343 (entry :5343) token=HANGZHOU named_by=unqualified in rendered | 杭州: "HANGZHOU",
+REFUSE frontend/src/app/V8Experience.tsx:5345 (entry :5345) token=SINGAPORE named_by=unqualified in rendered | 新加坡: "SINGAPORE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:126 (entry :126) token=TRAVEL named_by=unqualified in rendered | "nav.groupTravel": "TRAVEL",
+REFUSE frontend/src/i18n/LocaleContext.tsx:127 (entry :127) token=SYSTEM named_by=unqualified in rendered | "nav.groupSystem": "SYSTEM",
+REFUSE frontend/src/i18n/LocaleContext.tsx:376 (entry :376) token=SELECTED named_by=unqualified in rendered | "studio.selectedStay": "SELECTED STAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:378 (entry :378) token=SELECTED named_by=unqualified in rendered | "studio.noStaySelected": "NO STAY SELECTED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:438 (entry :438) token=AWAITING named_by=unqualified in rendered | "live.awaitingPlanUpper": "AWAITING PLAN",
+REFUSE frontend/src/i18n/LocaleContext.tsx:449 (entry :449) token=NAVIGATE named_by=unqualified in rendered | "live.navigate": "NAVIGATE →",
+REFUSE frontend/src/i18n/LocaleContext.tsx:453 (entry :453) token=EVIDENCE named_by=unqualified in rendered | "live.evidence": "EVIDENCE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:455 (entry :455) token=EVIDENCE named_by=unqualified in rendered | "live.routeEvidence": "ROUTE EVIDENCE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:493 (entry :493) token=PREVIEW named_by=unqualified in rendered | "bookings.stayPreview": "STAY PREVIEW",
+REFUSE frontend/src/i18n/LocaleContext.tsx:510 (entry :510) token=CONFIRMATION named_by=unqualified in rendered | "bookings.importKicker": "IMPORT CONFIRMATION",
+REFUSE frontend/src/i18n/LocaleContext.tsx:510 (entry :510) token=IMPORT named_by=unqualified in rendered | "bookings.importKicker": "IMPORT CONFIRMATION",
+REFUSE frontend/src/i18n/LocaleContext.tsx:525 (entry :525) token=OFFLINE named_by=unqualified in rendered | "offline.readOnly": "OFFLINE · READ ONLY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:526 (entry :526) token=SNAPSHOT named_by=unqualified in rendered | "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:539 (entry :539) token=CURRENT named_by=unqualified in rendered | "me.currentMode": "CURRENT MODE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:544 (entry :544) token=AUTHORIZED named_by=unqualified in rendered | "me.preAuthorized": "PRE-AUTHORIZED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:550 (entry :550) token=CONTEXT named_by=unqualified in rendered | "me.tripContext": "TRIP CONTEXT",
+REFUSE frontend/src/i18n/LocaleContext.tsx:612 (entry :612) token=SIMULATION named_by=unqualified in rendered | "agent.simulationOnly": "SIMULATION ONLY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:686 (entry :686) token=REPLAY named_by=unqualified in rendered | "discovery.sealedReplayReady": "SEALED REAL REPLAY READY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:686 (entry :686) token=SEALED named_by=unqualified in rendered | "discovery.sealedReplayReady": "SEALED REAL REPLAY READY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:687 (entry :687) token=PROVIDER named_by=unqualified in rendered | "discovery.liveProvider": "LIVE PROVIDER MODE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:688 (entry :688) token=REPLAY named_by=unqualified in rendered | "discovery.demoReplay": "DEMO REPLAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:689 (entry :689) token=PROVIDERS named_by=unqualified in rendered | "discovery.liveProviderMode": "LIVE PROVIDERS",
+REFUSE frontend/src/i18n/LocaleContext.tsx:690 (entry :690) token=DISCOVERY named_by=unqualified in rendered | "discovery.brand": "CN / DISCOVERY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:715 (entry :715) token=PROVENANCE named_by=unqualified in rendered | "discovery.provenance": "PROVENANCE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:716 (entry :716) token=REPLAY named_by=unqualified in rendered | "discovery.sealedReal": "SEALED REAL REPLAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:716 (entry :716) token=SEALED named_by=unqualified in rendered | "discovery.sealedReal": "SEALED REAL REPLAY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:719 (entry :719) token=MOBILITY named_by=unqualified in rendered | "discovery.mobility": "MOBILITY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:723 (entry :723) token=GROUNDING named_by=unqualified in rendered | "discovery.grounding": "GROUNDING",
+REFUSE frontend/src/i18n/LocaleContext.tsx:724 (entry :724) token=GROUNDED named_by=unqualified in rendered | "discovery.fullyGrounded": "FULLY GROUNDED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:725 (entry :725) token=DEGRADED named_by=unqualified in rendered | "discovery.mixedDegraded": "MIXED / DEGRADED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:727 (entry :727) token=FEASIBILITY named_by=unqualified in rendered | "discovery.feasibility": "FEASIBILITY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:730 (entry :730) token=PLANVERSION named_by=unqualified in rendered | "discovery.planversion": "PLANVERSION",
+REFUSE frontend/src/i18n/LocaleContext.tsx:807 (entry :807) token=STATUS named_by=unqualified in rendered | "exec.liveStatus": "LIVE STATUS",
+REFUSE frontend/src/i18n/LocaleContext.tsx:813 (entry :813) token=CURRENT named_by=unqualified in rendered | "exec.currentStep": "CURRENT STEP",
+REFUSE frontend/src/i18n/LocaleContext.tsx:817 (entry :817) token=OFFLINE named_by=unqualified in rendered | "exec.offline": "OFFLINE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:825 (entry :825) token=AUTHORITATIVE named_by=unqualified in rendered | "exec.authoritativeJourney": "AUTHORITATIVE JOURNEY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:825 (entry :825) token=JOURNEY named_by=unqualified in rendered | "exec.authoritativeJourney": "AUTHORITATIVE JOURNEY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:835 (entry :835) token=STARTED named_by=unqualified in rendered | "exec.notStarted": "NOT STARTED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:839 (entry :839) token=EN_ROUTE named_by=unqualified in rendered | "exec.markEnRoute": "Mark EN_ROUTE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:840 (entry :840) token=ARRIVED named_by=unqualified in rendered | "exec.markArrived": "Mark ARRIVED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:841 (entry :841) token=IN_PROGRESS named_by=unqualified in rendered | "exec.markInProgress": "Mark IN_PROGRESS",
+REFUSE frontend/src/i18n/LocaleContext.tsx:842 (entry :842) token=COMPLETED named_by=unqualified in rendered | "exec.markCompleted": "Mark COMPLETED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:854 (entry :854) token=JOURNEY named_by=unqualified in rendered | "exec.liveJourneyPrefix": "LIVE JOURNEY ·",
+REFUSE frontend/src/i18n/LocaleContext.tsx:923 (entry :923) token=MF8102 named_by=unqualified in rendered | "inbox.manualTitleHint": "e.g. Xiamen Airlines MF8102",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1039 (entry :1039) token=POLICY named_by=unqualified in rendered | "intel.policy": "POLICY",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1043 (entry :1043) token=ACTION named_by=unqualified in rendered | "intel.postActionGate": "POST-ACTION GATE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1046 (entry :1046) token=COMMITMENT named_by=unqualified in rendered | "intel.commitment": "COMMITMENT",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1080 (entry :1080) token=EVIDENCE named_by=unqualified in rendered | "stay.rateEvidence": "RATE EVIDENCE",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1108 (entry :1108) token=ACCEPT named_by=unqualified in rendered | "studio.v12Kicker": "TRIP STUDIO · DRAFT THEN ACCEPT",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1108 (entry :1108) token=STUDIO named_by=unqualified in rendered | "studio.v12Kicker": "TRIP STUDIO · DRAFT THEN ACCEPT",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1169 (entry :1169) token=NOTIFICATIONS named_by=unqualified in rendered | "push.kicker": "NOTIFICATIONS",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1320 (entry :1320) token=CHANGED named_by=unqualified in rendered | "v14.kicker": "V14 · REALITY CHANGED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1320 (entry :1320) token=REALITY named_by=unqualified in rendered | "v14.kicker": "V14 · REALITY CHANGED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1324 (entry :1324) token=CHANGED named_by=unqualified in rendered | "v14.kickerChanged": "CHANGED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1325 (entry :1325) token=PROTECTED named_by=unqualified in rendered | "v14.kickerProtected": "PROTECTED",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1341 (entry :1341) token=DEGRADED named_by=unqualified in rendered | "v14.gateDegraded": "DEGRADED · confirmation",
+REFUSE frontend/src/i18n/LocaleContext.tsx:1342 (entry :1342) token=PASSED named_by=unqualified in rendered | "v14.gatePassed": "PASSED · provider facts frozen",
+REFUSE frontend/src/i18n/LocaleContext.tsx:2493 (entry :2493) token=MF8102 named_by=unqualified in rendered | "inbox.manualTitleHint": "例如：厦门航空 MF8102",
+INFO   frontend/src/app/V8Experience.tsx:68 slug=traveler-twin
+INFO   frontend/src/app/V8Experience.tsx:1856 slug=failure-choose-journey
+INFO   frontend/src/app/V8Experience.tsx:1865 slug=failure-sign-in
+INFO   frontend/src/app/V8Experience.tsx:1876 slug=failure-retry-later
+INFO   frontend/src/app/V8Experience.tsx:1886 slug=failure-view-current-state
+INFO   frontend/src/app/V8Experience.tsx:1896 slug=failure-read-cached
+INFO   frontend/src/app/V8Experience.tsx:1904 slug=failure-retry
+INFO   frontend/src/app/V8Experience.tsx:2562 slug=drawer-entry
+INFO   frontend/src/app/V8Experience.tsx:2708 slug=trips-tab
+INFO   frontend/src/app/V8Experience.tsx:2713 slug=trips-tab
+INFO   frontend/src/app/V8Experience.tsx:2740 slug=trips-tab
+INFO   frontend/src/app/V8Experience.tsx:3169 slug=today-advisory
+INFO   frontend/src/app/V8Experience.tsx:4407 slug=map-stop
+INFO   frontend/src/app/V8Experience.tsx:4410 slug=map-stop
+INFO   frontend/src/app/V8Experience.tsx:4846 slug=booking-state
+INFO   frontend/src/i18n/LocaleContext.tsx:35 slug=re-ask
+INFO   frontend/src/i18n/LocaleContext.tsx:138 slug=read-only
+INFO   frontend/src/i18n/LocaleContext.tsx:158 slug=day-by-day
+INFO   frontend/src/i18n/LocaleContext.tsx:162 slug=server-side
+INFO   frontend/src/i18n/LocaleContext.tsx:262 slug=leave-now
+INFO   frontend/src/i18n/LocaleContext.tsx:278 slug=evidence-backed
+INFO   frontend/src/i18n/LocaleContext.tsx:319 slug=weather-aware
+INFO   frontend/src/i18n/LocaleContext.tsx:369 slug=multi-day
+INFO   frontend/src/i18n/LocaleContext.tsx:403 slug=multi-day
+INFO   frontend/src/i18n/LocaleContext.tsx:410 slug=leave-by
+INFO   frontend/src/i18n/LocaleContext.tsx:467 slug=re-asks
+INFO   frontend/src/i18n/LocaleContext.tsx:468 slug=re-ask
+INFO   frontend/src/i18n/LocaleContext.tsx:568 slug=what-if
+INFO   frontend/src/i18n/LocaleContext.tsx:587 slug=what-if
+INFO   frontend/src/i18n/LocaleContext.tsx:659 slug=read-back
+INFO   frontend/src/i18n/LocaleContext.tsx:661 slug=read-back
+INFO   frontend/src/i18n/LocaleContext.tsx:667 slug=read-back
+INFO   frontend/src/i18n/LocaleContext.tsx:692 slug=server-known
+INFO   frontend/src/i18n/LocaleContext.tsx:721 slug=fact-level
+INFO   frontend/src/i18n/LocaleContext.tsx:735 slug=provider-grounded
+INFO   frontend/src/i18n/LocaleContext.tsx:746 slug=rain-friendly
+INFO   frontend/src/i18n/LocaleContext.tsx:782 slug=mid-run
+INFO   frontend/src/i18n/LocaleContext.tsx:885 slug=auto-apply
+INFO   frontend/src/i18n/LocaleContext.tsx:907 slug=share-grant
+INFO   frontend/src/i18n/LocaleContext.tsx:1004 slug=policy-gated
+INFO   frontend/src/i18n/LocaleContext.tsx:1005 slug=auto-accept
+INFO   frontend/src/i18n/LocaleContext.tsx:1042 slug=pre-authorized
+INFO   frontend/src/i18n/LocaleContext.tsx:1165 slug=in-app
+INFO   frontend/src/i18n/LocaleContext.tsx:1167 slug=policy-bound
+INFO   frontend/src/i18n/LocaleContext.tsx:1231 slug=link-readable
+INFO   frontend/src/i18n/LocaleContext.tsx:1251 slug=re-syncing
+INFO   frontend/src/i18n/LocaleContext.tsx:1335 slug=auto-accept
+INFO   frontend/src/i18n/LocaleContext.tsx:1458 slug=whole-day
+INFO   frontend/src/i18n/LocaleContext.tsx:1471 slug=straight-line
+INFO   frontend/src/i18n/LocaleContext.tsx:1557 slug=sign-in
+INFO   frontend/src/i18n/LocaleContext.tsx:1562 slug=read-only
+INFO   frontend/src/i18n/LocaleContext.tsx:2567 slug=policy-gated
+INFO   frontend/src/i18n/LocaleContext.tsx:2568 slug=auto-accept
