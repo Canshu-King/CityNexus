@@ -47,6 +47,10 @@
 
 `walk-05-log.txt:8` 那一次 `uncheck()` 超时是量具的问题：勾选框在屏幕上是可点的（`walk-05-log.txt:14` 的 `PROBE` 里 `rowReachable=true`、`elementAtCentre=INPUT.`），改点整行文字就成功了（`walk-05-log.txt:16`）。没有把这次超时说成产品缺陷。
 
+## 另一条断点：换个窗口打开，自己的行程不见了
+
+同一份 profile 重新起一个浏览器进程（不是刷新），屏幕上回到「你的下一趟旅行，从一句话开始」的创建表单（`trial/results/20261022_v3_human_chrome/walk-04-log-superseded-instrument-fault.txt:3`），`SAME_JOURNEY_OPENED=false`、底部输入条也不在（同文件 `:4` 与 `:6`）；可浏览器本地仍然记着那趟行程的编号（同文件 `:2`）。原因是旅行者凭据放在 sessionStorage：同一标签页刷新还在，换窗口/换进程就没了，而首屏没有任何一句「你有一趟未完成的旅行，回来继续」。这条本轮没修，下一刀要么把入口做出来，要么把话说清楚。
+
 ## 还没验的
 
 - 前端 e2e 整套没跑：`playwright.config.ts` 默认用系统 Python 起后端（`ImportError: StrEnum`）。本轮读到 `playwrightEnv.ts:81` 与 `:133` 支持 `CITYNEXUS_PYTHON` 覆盖，下一刀用真解释器跑 `revolution-workspace-actions.spec.ts`、`revolution-visual-travel.spec.ts`、`revolution-mobile-shell.spec.ts` 三枚受影响 spec，读数写在这里，跑不通就标 `NOT_MEASURED`
