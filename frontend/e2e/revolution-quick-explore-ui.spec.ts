@@ -85,7 +85,7 @@ test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the 
 
   await page.goto("/revolution");
   await expect(page.getByTestId("rev-quick-explore")).toBeVisible();
-  await expect(page.getByTestId("rev-quick-area")).toContainText(/服务器当前选择的公开地名服务|点击后使用演示地点数据/);
+  await expect(page.getByTestId("rev-quick-area")).not.toContainText(/服务器当前选择的公开地名服务|点击后使用演示地点数据/);
   await expect(page.getByTestId("rev-quick-area")).not.toContainText("TEST_PROVIDER");
   await expect(page.getByTestId("rev-quick-area")).not.toContainText("Nominatim");
   const cityButton = page.getByTestId("rev-quick-find-city");
@@ -99,7 +99,7 @@ test("TEST_FIXTURE city and AI pending labels preserve consent and disclose the 
   await expect(aiButton).toHaveText("问问 AI →");
   releaseCitySearch();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
-  await expect(page.getByTestId("rev-quick-area")).toContainText("本次地名搜索服务：Photon。");
+  await expect(page.getByTestId("rev-quick-area")).toContainText("刚才的地名来自 Photon。");
   await expect(cityButton).toBeEnabled();
   await expect(cityButton).toHaveText("查找位置 →");
 

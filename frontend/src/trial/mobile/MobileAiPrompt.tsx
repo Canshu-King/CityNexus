@@ -96,6 +96,7 @@ export function MobileAiPrompt({
     event.preventDefault();
     onSubmit();
   };
+  const hasGoal = value.trim().length >= 4;
   const promptRows = Math.min(12, Math.max(2, value.split("\n").reduce(
     (rows, line) => rows + Math.max(1, Math.ceil(line.length / 16)),
     0,
@@ -104,7 +105,7 @@ export function MobileAiPrompt({
   return (
     <section className="rev-quick-ai" data-testid="rev-quick-ai-guide">
       <div className="rev-quick-ai-title">
-        <strong>想让 AI 帮你想玩法？</strong>
+        <strong>{hasGoal ? "你的想法已经写好了" : "想让 AI 帮你想玩法？"}</strong>
         <small>{checking ? "正在连接 AI…" : configured ? "可请求 AI 建议" : "AI 建议暂不可用 · 可手动选地点"}</small>
       </div>
       <form onSubmit={submit}>
@@ -124,8 +125,7 @@ export function MobileAiPrompt({
             type="submit"
             disabled={busy || checking || !configured || value.trim().length < 4}
             data-testid="rev-quick-consult-ai"
-          >{requestPending ? "正在请教 AI…" : checking && !busy ? "正在连接 AI…" : "问问 AI →"}</button>
-          <span>先打开研究任务，确认模型与公开查询预算后开始。</span>
+          >{requestPending ? "正在请教 AI…" : checking && !busy ? "正在连接 AI…" : hasGoal ? "让 Agent 从这句话开始 →" : "问问 AI →"}</button>
         </div>
       </form>
       {advice && (

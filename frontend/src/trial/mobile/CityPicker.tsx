@@ -18,6 +18,8 @@ type CityPickerProps = {
   mapLink: string;
   aiGoal: string;
   showAiPrompt?: boolean;
+  leadWithAgent: boolean;
+  secondary?: boolean;
   agentConfigured: boolean;
   agentChecking?: boolean;
   aiAdvice: MobileAiAdvice | null;
@@ -52,6 +54,8 @@ export function CityPicker({
   mapLink,
   aiGoal,
   showAiPrompt = true,
+  leadWithAgent,
+  secondary = false,
   agentConfigured,
   agentChecking = false,
   aiAdvice,
@@ -85,8 +89,25 @@ export function CityPicker({
     return () => window.cancelAnimationFrame(frame);
   }, [mapFallbackOpen]);
 
-  return (
+  const agentPrompt = showAiPrompt ? <MobileAiPrompt
+    value={aiGoal}
+    busy={busy}
+    requestPending={aiRequestPending}
+    configured={agentConfigured}
+    checking={agentChecking}
+    advice={aiAdvice}
+    onChange={onAiGoalChange}
+    onSubmit={() => {
+      setPendingAction("ai-request");
+      onAskAi();
+    }}
+  /> : null;
+
+  const pane = (
     <div className="rev-quick-pane" data-testid="rev-quick-area">
+      {/* A traveller who arrives with a sentence already written should not have to find the manual
+          geocoder first: the Agent action leads, and picking an area by hand stays below it. */}
+      {leadWithAgent ? agentPrompt : null}
       <h3 className="rev-quick-area-title">先选一个地区</h3>
       <p className="rev-quick-area-intro">使用所选区域搜索附近地点。</p>
       <label htmlFor="rev-quick-search">城市或地区</label>
@@ -111,17 +132,17 @@ export function CityPicker({
           {cityLookupPending ? "查询中…" : "查找位置 →"}
         </button>
       </div>
-      <p className="rev-quick-disclosure">
-        {cityProviderKey === "nominatim"
-          ? "本次地名搜索服务：Nominatim。"
-          : cityProviderKey === "photon"
-            ? "本次地名搜索服务：Photon。"
-            : cityProviderKey === null
-              ? "本次查询未调用地名服务。"
-              : sampleProviderMode
-                ? "点击后使用演示地点数据。"
-                : "点击后将地名发送至服务器当前选择的公开地名服务。"}
-      </p>
+      {cityProviderKey !== undefined && (
+        <p className="rev-quick-disclosure">
+          {cityProviderKey === "nominatim"
+            ? "刚才的地名来自 Nominatim。"
+            : cityProviderKey === "photon"
+              ? "刚才的地名来自 Photon。"
+              : cityProviderKey === null
+                ? "这次没有调用地名服务。"
+                : "刚才用的是演示地点数据。"}
+        </p>
+      )}
       {photonFallbackAvailable && !sampleProviderMode && (
         <div className="rev-quick-photon-fallback" data-testid="rev-quick-photon-fallback">
           <p className="rev-quick-disclosure">
@@ -229,19 +250,17 @@ export function CityPicker({
         />
         <button type="button" onClick={onApplyMapLink} data-testid="rev-quick-apply-map-link">使用这个公开地图位置</button>
       </details>
-      {showAiPrompt && <MobileAiPrompt
-        value={aiGoal}
-        busy={busy}
-        requestPending={aiRequestPending}
-        configured={agentConfigured}
-        checking={agentChecking}
-        advice={aiAdvice}
-        onChange={onAiGoalChange}
-        onSubmit={() => {
-          setPendingAction("ai-request");
-          onAskAi();
-        }}
-      />}
+      {leadWithAgent ? null : agentPrompt}
     </div>
+  );
+
+  // When the traveller's own sentence is already waiting for the Agent, choosing an area by hand is
+  // a side road: it should not wear the loudest button on the screen.
+  if (!secondary) return pane;
+  return (
+    <details className="rev-quick-secondary" data-testid="rev-quick-area-secondary">
+      <summary>我想自己先挑地点（可选）</summary>
+      {pane}
+    </details>
   );
 }
