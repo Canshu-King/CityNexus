@@ -1,0 +1,39 @@
+journeys=1
+journey=014bc3ff-86c4-4254-a343-e4046d06c3f1 status=ACTIVE city=CN-RV-17DB361D4419 window=2026-12-03T09:00:00+08:00..2026-12-04T21:00:00+08:00 budget=60000 CNY active_plan=87211ad3-3194-46c5-b9ed-92b250effc1f
+plan_versions=1
+  plan=87211ad3 v1 status=ACTIVE snapshot=63410f5c-8241-4ecf-910d-84d143d0a0eb total_minor=0 compose_source=SELECTED_GOAL_DRAFT authority_state=COST_UNKNOWN_ACCEPTED cost_unknown_policy=USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED unresolved_kinds=['ADMISSION_PRICE'] accepted_ids=['real-place-62c2e60619da82efebfdea8c', 'real-place-07848c0fded7dc8455e31c80', 'real-place-519a9aa24230d0710177c399', 'real-place-bd287d26c72e48b47da3df8b']
+    cost_summary known_subtotal=0 unknown_count=4 unknown_cost_included=False total_is_not_free=True accepted_by=927da98f
+activities=4
+  plan=87211ad3 seq=1 type=SIGHTSEE place=real-place-62c2e60619da82efebfdea8c 09:00-10:00 routing=None candidate=real-place-62c2e60619da82efebfdea8c gaps=['ADMISSION_PRICE']
+  plan=87211ad3 seq=2 type=SIGHTSEE place=real-place-07848c0fded7dc8455e31c80 14:00-15:00 routing=None candidate=real-place-07848c0fded7dc8455e31c80 gaps=['ADMISSION_PRICE', 'TRANSFER_ROUTE']
+  plan=87211ad3 seq=3 type=SIGHTSEE place=real-place-519a9aa24230d0710177c399 09:00-10:00 routing=None candidate=real-place-519a9aa24230d0710177c399 gaps=['ADMISSION_PRICE', 'TRANSFER_ROUTE']
+  plan=87211ad3 seq=4 type=SIGHTSEE place=real-place-bd287d26c72e48b47da3df8b 14:00-15:00 routing=None candidate=real-place-bd287d26c72e48b47da3df8b gaps=['ADMISSION_PRICE', 'TRANSFER_ROUTE']
+amap_provider_call_groups=3
+  goal_amap_district / amap-web-service rows=1
+  goal_amap_search / amap-web-service rows=8
+  goal_amap_walking / amap-web-service rows=3
+amap_provider_calls_total=12
+walking_receipt_sample operation=goal_amap_walking request_fields=['coordinate_system', 'from_place_id', 'to_place_id'] response_status=ROUTE_READY distance_m=None duration_s=None steps=0
+  (no key value printed: request_json holds only the ids and the CRS this door declared)
+plans_with_frozen_evidence=1
+  plan=87211ad3 snapshot=63410f5c-8241-4ecf-910d-84d143d0a0eb provider=amap_walking captured_at=2026-10-22T21:06:03.956367+00:00 facts=3
+    real-place-07848c0fded -> real-place-519a9aa2423 minutes=230 distance_m=None provenance=LIVE_PROVIDER_CAPTURE quality=LIVE_PROVIDER_CAPTURE time_basis=PROVIDER_CAPTURED_AT
+    real-place-519a9aa2423 -> real-place-bd287d26c72 minutes=44 distance_m=None provenance=LIVE_PROVIDER_CAPTURE quality=LIVE_PROVIDER_CAPTURE time_basis=PROVIDER_CAPTURED_AT
+    real-place-62c2e60619d -> real-place-07848c0fded minutes=20 distance_m=None provenance=LIVE_PROVIDER_CAPTURE quality=LIVE_PROVIDER_CAPTURE time_basis=PROVIDER_CAPTURED_AT
+idempotency_keys_groups=6
+  goal.freeze-routes rows=1
+  goal.prepare rows=1
+  goal.price-accept rows=1
+  revolution.start.journey rows=1
+  revolution.start.traveler rows=1
+audit_events unreadable no such table: audit_events
+
+audit_logs_groups_total=11
+note: the table is audit_logs, not audit_events (the probe guessed wrong and said so).
+  agent.goal_task.event rows=62
+  goal.draft.prepared rows=1
+  goal.price.unknown.accepted rows=1
+  goal.routes.frozen rows=1
+  journey.started rows=1
+  plan.committed_by_traveler rows=1
+  plan.selected rows=1

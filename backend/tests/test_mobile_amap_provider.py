@@ -405,3 +405,33 @@ def test_httpcore_protocol_child_logger_redacts_key_query(caplog) -> None:
     assert "private-test-value" not in caplog.text
     assert "[redacted]" in caplog.text
 
+
+
+def test_the_status_door_reads_the_key_the_agent_leg_reads(monkeypatch) -> None:
+    """``/providers/v9`` must not call AMap unconfigured while the Agent is calling it configured.
+
+    Measured on the stack booted for the 2026-10-23 departure walk: the status said
+    ``NOT_CONFIGURED / AMAP_WEB_KEY is absent`` in the same process whose Agent research leg was routing
+    real Beijing places, because config.py names the secret ``CITYNEXUS_AMAP_WEB_KEY`` and this module
+    had been reading the bare ``AMAP_WEB_KEY``.
+    """
+
+    from types import SimpleNamespace
+
+    from app.integrations.china import amap as amap_module
+
+    monkeypatch.delenv("AMAP_WEB_KEY", raising=False)
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key="settings-name-key"))
+    ready = amap_module.amap_status()
+    assert ready.status == "READY" and ready.provenance == "LIVE" and ready.reason is None, ready
+
+    monkeypatch.setattr(amap_module, "settings", SimpleNamespace(amap_web_key=None))
+    monkeypatch.setenv("AMAP_WEB_KEY", "bare-name-key")
+    assert amap_module.amap_status().status == "READY", "the older spelling must keep working"
+
+    monkeypatch.delenv("AMAP_WEB_KEY", raising=False)
+    absent = amap_module.amap_status()
+    assert absent.status == "NOT_CONFIGURED" and absent.provenance == "UNAVAILABLE", absent
+    assert absent.reason and "key" in absent.reason.lower()
+    # A refusal never carries the secret, whichever name supplied it.
+    assert "settings-name-key" not in str(absent) and "bare-name-key" not in str(absent)

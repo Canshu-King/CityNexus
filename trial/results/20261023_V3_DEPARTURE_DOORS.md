@@ -55,3 +55,51 @@
 | 选用按钮 | 一次都没出现（SELECT_BUTTONS 0） | `trial/results/20261022_v3_human_chrome/walk-55-log.txt:34`、`walk-57-log.txt:31` |
 
 结论：一句话到"正式候选方案"已经是真人可走通的；**候选到出发**这两道门（票价策略与冻结证据）需要上面甲／乙的点名，加上一次跨契约的施工。我不把这两道门说成已开，也不靠改断言让屏上出现按钮。
+
+
+## 第 1、2 棒施工后：同一趟真人旅行已经走到 ACTIVE（2026-10-23 05:10 现场读数）
+
+产品 SHA：`17857bb115af8b7330ae7cb5a61744967ba9e07b`（第 2 棒＋两处链形缺陷）与
+`1b87caf27a2035fbdc43323e6206b35958c35bd7`（来源状态与契约文件）。隔离栈 r9：后端 60196、前端 14396、
+独立库 `citynexus_v3_human11_1022.db`；走查日志 `trial/results/20261022_v3_human_chrome/walk-62-log.txt`，
+逐帧截图前缀 `walk62-*.png`，屏幕之外的持久化回读
+`trial/results/20261022_v3_human_chrome/walk62-departure-readback-1.txt`。
+
+真人从首页输入一句话开始，屏幕逐字读到的（不是接口造出来的）：
+
+| 门 | 屏上文字 | 出处 |
+| --- | --- | --- |
+| 保存候选 | 「已保存 4 项正式安排。下方可以查看日程和出发待办。」 | walk-62-log.txt:28 |
+| 转场核实前 | 「当天的转场还没有向高德核实过。」＋按钮「核实并冻结今天的转场」 | walk-62-log.txt:31 |
+| 转场核实后 | 「转场已核实 3/3（其中 1 段是跨夜衔接） · 已冻结进这版方案」 | walk-62-log.txt:32 |
+| 票价未知 | 「还没有来源给过确定的费用；另有 4 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。」 | walk-62-log.txt:34 |
+| 本人确认后 | 「按你的确认保存：这 4 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。」 | walk-62-log.txt:36 |
+| 选用 | 按钮「选用这份方案」第一次真的出现并被点下（SELECT_BUTTONS=1 VISIBLE=true） | walk-62-log.txt:39 |
+| 选用后 | 「可以确认出发」「方案 1 已选用」＋按钮「确认方案，开始行程」 | walk-62-log.txt:41 |
+| 出发后 | 「旅程已开始」，刷新后仍是「旅程已开始 · 方案 1 正在使用」 | walk-62-log.txt:44、:46 |
+
+库里同一代读回来的（只读探针，不改一个字节）：journey `014bc3ff-86c4-4254-a343-e4046d06c3f1` 状态
+ACTIVE、active_plan `87211ad3-3194-46c5-b9ed-92b250effc1f`；这版方案 snapshot
+`63410f5c-8241-4ecf-910d-84d143d0a0eb`，authority_state `COST_UNKNOWN_ACCEPTED` 配
+`USER_ACCEPTS_UNKNOWN_PRICE_NOT_INCLUDED`，cost_summary 里 unknown_count 四、
+unknown_cost_included=False、total_is_not_free=True、known_subtotal 零；三条冻结事实全部
+`LIVE_PROVIDER_CAPTURE` ＋ `PROVIDER_CAPTURED_AT`（20、44、230 分钟）；高德 ProviderCall 共十二条
+（district 一、search 八、walking 三）；幂等键 goal.prepare／goal.freeze-routes／goal.price-accept 各一；
+审计 goal.draft.prepared、goal.routes.frozen、goal.price.unknown.accepted、plan.selected、
+plan.committed_by_traveler、journey.started 各一。
+
+那 230 分钟值得说清楚：它是高德对「前一天最后一站→第二天第一站」给的**真实步行回执**，不是编的数；
+正因为跨夜不会有人这样走，屏上才单独标「其中 1 段是跨夜衔接」，而不是把它混进当天转场。
+下一步该给它多模式来源（地铁／打车），这是 P1 第 1 项，不是把这条事实藏起来。
+
+## 还没开、也没说成开了的门
+
+- 营业时间按出发日期核实（第 3 棒）：这次四站的营业事实仍未核实，屏上「出发待办」逐行写着找谁要；
+  这版方案能选用的原因不是营业已确定，而是它的四站都绑到了正式地点行、且已核实的部分不为未知背书。
+- 刷新后的**凭证过期与重新登录找回**：本轮只做到「同一登录状态下刷新保留」，P1 那条真入口仍未通过。
+- `journeys` 表根本没有同行人数这一列（探针读到 no such column: party_size），所以「同行决策」那块牌子
+  底下要挂什么，仍然等甲／乙点名，不能靠前端猜。
+- 契约文件 `contracts/openapi.yaml` 现在收了 accept-unknown-price 这道门；同一份文件里 prepare-plan 与
+  freeze-routes 两段还没写上新字段（unrouted_count、known_subtotal_minor、overnight、spans_night），
+  这条对表尺 `tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface` 在本枝
+  仍因 `_IncludedRouter` 红着（backend/tests/test_contract.py:73），我没为了让它绿而改断言。

@@ -335,3 +335,28 @@ hit0 是天坛建筑群，它的文档里从来没有「天坛公园」这个名
 **交付档按裁语要求的四类分开记。** `REAL_BROWSER`＝真人视角走的是本机外部 Chrome/Edge 经 CDP 9335 驱动的真实页面（非预置 API 状态）；`CHROME_USE_SCREENSHOT`＝`walk56-12-departure-after-save.png`、`walk56-13-workbench.png`、`walk57-12-departure-after-save.png`、`walk57-13-workbench.png`（390 宽；430 宽那一档要在选用门真打开之后再补，见下）；`LIVE_PROVIDER`＝高德营业时间与实景照片是当场真调回来的（探针文件里带 http 状态与 provider 字段），票价一栏没有；`USER_VERIFIED`＝**仍是 PENDING**，本机窗口不等于手机在手里的点击。产品代 `6fcbee8845bacd9787815a1e6e420d8ae012e629`（`git ls-remote` 现读回同一枚）。
 
 **还没好在哪，说清楚。** 选用按钮一次都没按到（三趟的 `STEP_13_SELECT_BUTTONS` 都是 0：`walk-55-log.txt:34`、`walk-56-log.txt:30`、`walk-57-log.txt:31`），因为票价没有可核来源、移动证据没人冻；同行决策那块牌子底下依旧没有门；"关掉浏览器再回来找回行程"仍未实现；这些都不靠改断言换绿。
+
+
+## 十八、第 1、2 棒之后：真人一趟走到「旅程已开始」（walk-62，2026-10-23 05:01—05:07）
+
+同一位首次打开的旅客、同一台隔离 Chrome、同一个标签页，从首页一句话到出发，全程只按屏上有的按钮。
+后端 60196／前端 14396／独立库 citynexus_v3_human11_1022.db；逐帧截图 `walk62-*.png`，读数在
+`trial/results/20261022_v3_human_chrome/walk-62-log.txt`，屏幕之外的持久化对账在
+`trial/results/20261022_v3_human_chrome/walk62-departure-readback-1.txt`。
+
+屏上先后出现的话（逐字）：「已保存 4 项正式安排。下方可以查看日程和出发待办。」→
+「当天的转场还没有向高德核实过。」（按钮「核实并冻结今天的转场」）→「转场已核实 3/3（其中 1 段是跨夜衔接） ·
+已冻结进这版方案」→「还没有来源给过确定的费用；另有 4 处门票没有来源，预算里没有把它们算作 0 元，实际花费可能超出预算。」
+（按钮「票价没有来源，我接受先不计入预算」「让 Agent 换成价格明确的地点」）→
+「按你的确认保存：这 4 处门票仍未核实，没有已核实的费用，出发前请自己留意现场票价。」→
+「选用这份方案」（第一次真的出现并且被点下）→「可以确认出发」「方案 1 已选用」→「确认方案，开始行程」→
+「旅程已开始」；刷新一次后仍是「旅程已开始 · 方案 1 正在使用」。
+
+库里对回来的是同一件事：journey 014bc3ff-86c4-4254-a343-e4046d06c3f1 状态 ACTIVE，active_plan
+87211ad3-3194-46c5-b9ed-92b250effc1f，snapshot 63410f5c-8241-4ecf-910d-84d143d0a0eb，三条
+LIVE_PROVIDER_CAPTURE 的步行事实（20／44／230 分钟），十二次高德 ProviderCall（district 1、search 8、
+walking 3），幂等键与审计各就位（goal.prepare、goal.freeze-routes、goal.price-accept、plan.selected、
+plan.committed_by_traveler、journey.started）。
+
+仍未通过、也没被我说成通过的：出发日期那一天的营业时间核实（第 3 棒）、关掉浏览器后重新登录找回旧行程
+（P1，本轮只验到同一登录态下刷新保留）、以及"真机由主人亲手点一遍"——USER_VERIFIED 仍是 PENDING。
