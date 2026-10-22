@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `fdbb4ff988 2026-10-23 coursework(R3-classroom): live drive test of Visio and Project, noon demonstration sheet`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `13f7d1842c 2026-10-23 coursework(R3-classroom): milestone screenshot, converged reports and package`
 Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
@@ -92,11 +92,11 @@ It is fixed, the reader now carries a self-test that the build refuses to run wi
 
 | deck preview | bytes |
 |---|---|
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.png` | 62077 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png` | 62077 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png` | 45044 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png` | 84690 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png` | 64648 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.png` | 62071 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png` | 62071 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png` | 45037 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png` | 84665 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png` | 64640 |
 
 ### Project screenshots, and how they were taken
 
@@ -129,7 +129,7 @@ The round-2 print named Briefing_One_Page.pdf is gone from the tree - it was twe
 | `Microsoft_Project/Resource_Sheet.pdf` | 3 | 147059 |
 | `Microsoft_Project/Tracking_Gantt.pdf` | 15 | 601735 |
 | `Microsoft_Project/WBS_View.pdf` | 6 | 196387 |
-| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf` | 4 | 49423 |
+| `Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf` | 4 | 49420 |
 
 ### New files this round
 

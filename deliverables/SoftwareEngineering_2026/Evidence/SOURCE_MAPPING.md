@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1105 |
+| Commits on this branch | `git rev-list --count HEAD` | 1106 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1014), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1015), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
