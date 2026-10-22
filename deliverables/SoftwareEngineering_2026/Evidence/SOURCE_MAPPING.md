@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1097 |
+| Commits on this branch | `git rev-list --count HEAD` | 1099 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1008), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1010), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -138,7 +138,7 @@ choice rather than a fact and is marked provisional in its own Notes field.
 | `Microsoft_Project/WBS_View.pdf` | 194261 | `516636ab8fb0f35b` |
 | `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `e936d77beabcebf0` |
 | `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `8a264cdbf73171eb` |
-| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 380928 | `1f221e45bdbeffeb` |
+| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 380928 | `ef005c12bec6ee94` |
 | `Microsoft_Project/previews/Calendar.png` | 200761 | `44d5e6a4bcaef4b3` |
 | `Microsoft_Project/previews/Gantt_Chart.png` | 159451 | `c1524868dc31f521` |
 | `Microsoft_Project/previews/Network_Diagram.png` | 178837 | `e4de5486dbb6753b` |

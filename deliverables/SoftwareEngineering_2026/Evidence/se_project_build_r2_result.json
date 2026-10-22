@@ -1073,14 +1073,16 @@
  "publication": {
   "published": true,
   "bytes": 380928,
-  "sha256": "0351f1ae60c84f12b75071729d8a587e631d7c06192d6b884486a743b76a03ea",
-  "stagedSha256": "0351f1ae60c84f12b75071729d8a587e631d7c06192d6b884486a743b76a03ea",
+  "sha256": "d51641bbdeade0aa9b139d5fb18c3b08c9361a5f8dbec59e0f6aa68940a0246a",
+  "stagedSha256": "d51641bbdeade0aa9b139d5fb18c3b08c9361a5f8dbec59e0f6aa68940a0246a",
   "identicalToStaged": true,
   "shippedRows": 65,
   "shippedLinksRead": 122,
   "shippedLinkViolations": 0,
   "shippedCost": 36202.0,
-  "shippedFinish": "2026-10-24"
+  "shippedFinish": "2026-10-24",
+  "sha256AfterVerification": "ef005c12bec6ee948174b93102d29858c380689abe2e0cd2d334fee7377ff070",
+  "rewrittenByVerificationOpen": true
  },
  "first_pass": {
   "tasks": 65,

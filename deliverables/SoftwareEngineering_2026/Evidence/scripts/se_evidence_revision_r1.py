@@ -219,6 +219,17 @@ A("")
 for x in late2:
     A("  * %s" % x)
 A("")
+A("""One measured quirk to save you a false alarm: opening a `.mpp` in Project
+rewrites the file even when nothing is saved, so its sha256 changes the moment
+anyone looks at it in the application. The build therefore records both digests -
+`publication.sha256` (%s) at the instant of publishing and
+`publication.sha256AfterVerification` (%s) after its own verification open - and
+the manifest, this document and the review brief all carry the bytes as shipped.
+If you open the plan in Project and re-hash it you will get a third value; that
+is Project's behaviour, not a discrepancy in the package."""
+  % (str(_pub2.get("sha256", ""))[:16],
+     str(_pub2.get("sha256AfterVerification", ""))[:16]))
+A("")
 
 A("## 2. Visio per-shape source metadata")
 A("")

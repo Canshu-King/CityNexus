@@ -94,7 +94,7 @@ process:
 | critical path computed by the engine | 4 rows |
 | dates set by the assignment brief | 6 met, 0 breached, 0 internal targets missed |
 | save, close, reopen in a new process, every field of every row | 0 field differences |
-| published copy | published yes, 380928 bytes, sha256 0351f1ae60c84f12; re-read 65 rows, 122 dependency records, 0 violations |
+| published copy | published yes, 380928 bytes, sha256 ef005c12bec6ee94; re-read 65 rows, 122 dependency records, 0 violations |
 
 **Why the link-type test is built this way.** `TaskDependency.Lag` accepts a
 write on this install and then ignores it, and `TaskMoveToStatusDate` returns

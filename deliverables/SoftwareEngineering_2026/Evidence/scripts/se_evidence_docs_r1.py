@@ -520,7 +520,9 @@ neither confirmed nor denied from this repository - only from the course record.
            dlsoft=len(_dl.get("internalTargetsMissed", [])),
            drift=_r2.get("reopen_drift_count", "not recorded"),
            pubbed="yes" if _pub.get("published") else "NO",
-           pubbytes=_pub.get("bytes", 0), pubsha=str(_pub.get("sha256", ""))[:16],
+           pubbytes=_pub.get("bytes", 0),
+           pubsha=str(_pub.get("sha256AfterVerification")
+                      or _pub.get("sha256", ""))[:16],
            shiprows=_pub.get("shippedRows", 0),
            shiplinks=_pub.get("shippedLinksRead", 0),
            shipviol=_pub.get("shippedLinkViolations", 0),

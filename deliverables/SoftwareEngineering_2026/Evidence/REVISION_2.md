@@ -4,12 +4,12 @@ Written 2026-10-22. The review it answers is `REVIEW_BRIEF.md` in this folder. E
 
 | shipped artefact | bytes | sha256/16 |
 |---|---|---|
-| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 380928 | `1f221e45bdbeffeb` |
+| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 380928 | `ef005c12bec6ee94` |
 | `Visio/01_CityNexus_System_Architecture.vsdx` | 62156 | `b94a41c63a2e0657` |
 | `Visio/02_CityNexus_User_Journey.vsdx` | 62748 | `11d874ce8c55a30e` |
 | `Visio/03_CityNexus_Agent_Workflow.vsdx` | 66525 | `bc75ea424ebf706e` |
 | `Visio/04_CityNexus_Use_Case.vsdx` | 84933 | `d93deb6288092631` |
-| `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf` | 45708 | `933e9493344af28e` |
+| `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf` | 45716 | `9261f4a19ccd89d9` |
 
 ## 1. Microsoft Project scheduling
 
@@ -48,6 +48,15 @@ The static checker (`se_plan_cpm_r1.py`) runs before Project is started and refu
   * OVERDUE (left visible on purpose): 9.4  Physical phone and PWA shadow 0%, planned finish 2026-10-07, status date 2026-10-22
   * OVERDUE (left visible on purpose): 9.6  Final regression re-run and d 0%, planned finish 2026-10-03, status date 2026-10-22
   * OVERDUE (left visible on purpose): 10.1  Part 1: ten-slide report wit 0%, planned finish 2026-09-30, status date 2026-10-22
+
+One measured quirk to save you a false alarm: opening a `.mpp` in Project
+rewrites the file even when nothing is saved, so its sha256 changes the moment
+anyone looks at it in the application. The build therefore records both digests -
+`publication.sha256` (d51641bbdeade0aa) at the instant of publishing and
+`publication.sha256AfterVerification` (ef005c12bec6ee94) after its own verification open - and
+the manifest, this document and the review brief all carry the bytes as shipped.
+If you open the plan in Project and re-hash it you will get a third value; that
+is Project's behaviour, not a discrepancy in the package.
 
 ## 2. Visio per-shape source metadata
 

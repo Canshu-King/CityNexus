@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `ddccfc7ad6 2026-10-22 璇剧▼浜や粯锛氬�栭儴妫�鏌ュ寘锛圧EVIEW_BRIEF + MANIFEST锛�+ 鍥涘紶鍥炬暣浣撻噸鐢熸垚閲嶉獙鏀�`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `1571850fad 2026-10-22 璇剧▼浜や粯淇�璁�浜屾敹灏撅細娓呮帀涓�椤垫眹鎶ュ浘閬楃暀鐨� debug gate 鎶ュ憡锛岄噸鍑� MANIFEST 涓庢��鏌ュ寘`
 Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
