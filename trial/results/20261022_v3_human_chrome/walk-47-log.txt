@@ -1,0 +1,35 @@
+PLAYBOOK_START 2026-10-22T17:03:14.317Z walking the ten steps and shooting each one
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认 overlay=absent
+SHOT playbook-01-home-one-sentence.png bytes=125511
+STEP_02 days=2
+STEP_02 party=2 budget=500
+SHOT playbook-02-one-sentence-and-dates.png bytes=142683
+STEP_03 C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待第一个目标 地图 日程 对话 现实地图 0 处地点 地点研究会在这里汇合 找到有坐标的地点后，点击图钉查看来源。 手动探索地点 旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。 CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交
+SHOT playbook-03-goal-in-the-dock.png bytes=173635
+STEP_04 sent_at 2026-10-22T17:03:29.384Z
+SHOT playbook-04-consent-and-send.png bytes=148703
+SETTLED t=6min
+STEP_05 choices=4 first=经典必打卡 故宫、天安门、八达岭长城、颐和园等必去地标，行程紧凑
+SHOT playbook-05-agent-asks-you-answers.png bytes=167137
+SETTLED t=3min
+WAIT_60s busy=true
+SETTLED t=15min
+STEP_06 {"imgs":1,"tiles":6,"ask":["先看看这个地点","先看看这个地点","先看看这个地点"]}
+SHOT playbook-06-map-with-real-photos.png bytes=374509
+STEP_07 {"ask":["先看看这个地点","先看看这个地点"],"texts":["天安门广场来源实景 · 封面裁切N509FZ · CC BY-SA ","还没核实到具体是哪个地点八达岭长城查看对应安排","还没核实到具体是哪个地点天坛公园查看对应安排","照片来源暂时没答上南锣鼓巷正在查看","先看看这个地点王府井步行街查看对应安排","先看看这个地点什刹海查看对应安排"]}
+SHOT playbook-07-ask-for-a-photo.png bytes=136166
+WAIT_60s busy=true
+SETTLED t=13min
+PLAYBOOK_R2_START 2026-10-22T17:08:58.080Z steps eight to eleven on the live journey
+SETTLED t=8min
+STEP_08 {"cards":3,"visible":1,"tabs":["A · 轻松少走版","B · 省钱版","C · 本地特色版"],"chosen":[],"slots":6}
+SHOT playbook-08-three-versions-to-pick.png bytes=186668
+STEP_09 {"cards":3,"visible":1,"tabs":["A · 轻松少走版","B · 省钱版","C · 本地特色版"],"chosen":["已选为当前行程"],"slots":6}
+SHOT playbook-09-chosen-version-on-schedule.png bytes=210803
+STEP_10 after reload slots=6 {"cards":3,"visible":1,"tabs":["A · 轻松少走版","B · 省钱版","C · 本地特色版"],"chosen":["已选为当前行程"],"slots":6}
+STEP_10_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待你的决定 地图 日程 对话 按天调整行程 6 项安排 · 2 天 挑一份更合适的安排 选用后可以继续调整每天的安排。 A · 轻松少走版 B · 省钱版 C · 本地特色版 A 轻松少走版 直通车/打车为主，砍掉南锣鼓巷长走与天坛绕路；日均步数最少，适合不想太累、重舒适的人。 地点 5 路线
+SHOT playbook-10-still-there-after-reload.png bytes=209998
+GUARDIAN_ERR
+STEP_11_guardian C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待你的决定 地图 日程 对话 你的旅行搭档 等待你的决定 已整理 2 天 · 6 项安排 地点、地图、日程都会随研究更新。用屏幕底部的输入框继续调整。 一起商量安排 刷新任务 2 天 · 2 人 · 旅行需求已从服务器读取 你 先别问太多，按我说的直接安排。 CityNexus Agent 北
+SHOT playbook-11-guardian-quiet.png bytes=181955
+PLAYBOOK_R2_END 2026-10-22T17:10:24.183Z
