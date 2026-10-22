@@ -1,0 +1,8 @@
+PLACES_IN_DB 84
+PROBE 八达岭长城 gcj=(40.358922, 116.020372) converted_wgs84=(40.357615, 116.014137)
+   STORED id=real-place-e76f0237c0983227fcc73fc6 name=八达岭长城 system=WGS84 external=amap:B000A45467 provider=amap point=(40.354892, 116.010579) distance_from_probe_m=426.5
+PROBE 天坛公园 gcj=(39.882125, 116.406911) converted_wgs84=(39.880722, 116.400671)
+   STORED id=real-place-dc53719dde41c9cb48b7b9b6 name=天坛公园 system=WGS84 external=amap:B000A81CB2 provider=amap point=(39.880510, 116.404589) distance_from_probe_m=334.6
+PROBE 南锣鼓巷 gcj=(39.9376, 116.4032) converted_wgs84=(39.936195, 116.396953)
+   STORED id=real-place-efa346b30a447afad223af11 name=南锣鼓巷 system=WGS84 external=amap:B0FFFAH7I9 provider=amap point=(39.935778, 116.396147) distance_from_probe_m=82.8
+   STORED id=real-place-12d0681d2ff906666a391a61 name=南锣鼓巷 system=WGS84 external=amap:B0FFGQ9HJA provider=amap point=(39.936015, 116.396904) distance_from_probe_m=20.5

@@ -1,0 +1,15 @@
+### before (walk-42, the stack that had the old media leg)
+    source walk-42-log.txt:7
+    rendered: 还没核实到具体是哪个地点天坛公园正在查看
+    has_img=False
+### after (walk-48, fresh first-time walk on the fixed stack)
+    source walk-48-log.txt:27
+    tiles=8
+    ROW picture=True ask=- answer=- text=故宫博物院来源实景 · 封面裁切user:kallgan · CC BY-SA 3.0查看对应安排
+    ROW picture=True ask=- answer=- text=天安门广场来源实景 · 封面裁切N509FZ · CC BY-SA 4.0查看对应安排
+    ROW picture=True ask=- answer=- text=景山公园来源实景 · 封面裁切N509FZ · CC BY-SA 4.0查看对应安排
+    ROW picture=False ask=- answer=没查到可核实的实景照片 text=没查到可核实的实景照片天坛公园正在查看
+    ROW picture=False ask=先看看这个地点 answer=- text=先看看这个地点慕田峪长城查看对应安排
+    ROW picture=False ask=先看看这个地点 answer=- text=先看看这个地点颐和园查看对应安排
+    ROW picture=False ask=先看看这个地点 answer=- text=先看看这个地点前门大街查看对应安排
+    ROW picture=False ask=先看看这个地点 answer=- text=先看看这个地点南锣鼓巷查看对应安排
