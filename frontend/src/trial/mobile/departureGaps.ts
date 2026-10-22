@@ -83,6 +83,43 @@ export function gapAction(row: GapRow): string {
   return GAP_ACTION_LABELS[String(row.resolution || "")] ?? "让 Agent 继续补这一项";
 }
 
+// What the traveller actually says when they press 「和 Agent 补齐出发资料」.  This is the second
+// writer over the same server resolutions, in the traveller's own imperative rather than the card's
+// third-person label, and it is deliberately not one generic sentence: the button used to send
+// 「逐项告诉我出发前缺哪些…先不要改行程」, which asked the Agent for a report of what the screen
+// already shows and forbade the one thing the label promises.  The ask now names each open item the
+// server listed, keeps everything else untouched, and re-prepares afterwards.
+const ASK_VERBS: Record<string, (title: string) => string> = {
+  [ASK_FOR_PLACE]: (title) => `「${title}」还没有确定地点，请在正式地点表里找一处定下来`,
+  [ASK_FOR_ROUTE]: (title) => `「${title}」前面那一段路还没核实过，请量一次并告诉我几分钟`,
+  [ASK_TO_MOVE_HOUR]: (title) => `「${title}」的到达时间不在来源写的时段里，请把这一处挪进去`,
+  [ASK_TO_REPLAN_DAY]: (title) => `「${title}」来源说那天闭馆，请换一天或换一处`,
+  [ASK_FOR_FACT]: (title) => `「${title}」的来源没给可靠答案，请再向来源要一次`,
+};
+
+export function agentAskPrompt(rows: GapRow[], priceAccepted: boolean): string {
+  const asks = rows.map((row) => {
+    const verb = ASK_VERBS[String(row.resolution || "")];
+    return verb ? verb(String(row.title || "").trim() || "这一处") : null;
+  }).filter((line): line is string => Boolean(line));
+  const unique = [...new Set(asks)];
+  const keepQuiet = priceAccepted
+    ? "票价这一项我已经确认先不计入预算，不用再问。" : "";
+  if (!unique.length) {
+    return `屏上出发待办已经没有可问的了，${priceAccepted ? "票价也确认过了，" : ""}这份方案可以直接选用。`;
+  }
+  return `出发前还缺这几项，请逐项去来源补齐：${unique.join("；")}。${keepQuiet}`
+    + "只改上面点名的这几处安排，其它日期和其它安排都保持不变；补齐后按同样的时间重新准备一份方案，"
+    + "并且直接告诉我哪一项来源还是没有答案，不要把没答的当成确定的。";
+}
+
+// The count the card shows right above that button, so the traveller knows whether pressing it can
+// still move anything.
+export function pendingCountSentence(count: number): string {
+  if (count <= 0) return "屏上的出发待办都齐了，可以直接选用这份方案。";
+  return `还有 ${count} 项要主动向来源要，按下面这一个按钮逐项去补。`;
+}
+
 function labelsIn(rows: GapRow[]): string[] {
   const present = new Set(rows.map((row) => String(row.kind || "")));
   return Object.keys(GAP_LABELS).filter((kind) => present.has(kind)).map((kind) => {

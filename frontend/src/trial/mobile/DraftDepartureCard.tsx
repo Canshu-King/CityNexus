@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, GAP_LABELS, bandSentence, gapAction, openingSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
+
+// Before anything is saved there is no server gap list to name, so the ask asks for the one thing that
+// is true at that moment: make the plan first, then say what is missing.
+const UNSAVED_ASK = "还没保存候选方案。请先按上面确认的时间准备一份正式候选方案，再逐项告诉我出发前还缺哪些资料。";
 
 function storedPriceState(result: GoalPreparationResult | null | undefined): PriceState | null {
   const stored = result?.price_unknown_accepted;
@@ -55,6 +59,10 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   }
   // The traveller is asked to accept exactly the places the server lists as unanswered, and no others.
   const priceIds = unknownPricePlaceIds(result?.gaps ?? []);
+  // What the ask button can still ask for: the server's own gap list, minus the price rows this
+  // traveller already confirmed to keep out of the budget.  A row nobody can answer is not a reason to
+  // hide the button -- it is the sentence the button sends.
+  const askable = (result?.gaps ?? []).filter((gap) => !(price && String(gap.kind) === "ADMISSION_PRICE"));
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
     setConfirmed(false); setResult(null); requestKey.current = null; setRoutes(null); routeKey.current = null;
@@ -165,6 +173,8 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         </>}
     </div>}
     {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, group]) => <li key={sequence}><strong>{group.title}</strong>{group.rows.map(gap => <span key={String(gap.kind)}>{GAP_LABELS[String(gap.kind)] ?? "资料"}：{gapAction(gap)}</span>)}</li>)}</ul></>}
-    <button type="button" onClick={() => onDiscuss("继续讨论当前选好的草案，保留所有日期和地点。逐项告诉我出发前缺哪些营业、费用或转场资料，并给我处理选择，先不要改行程。")}>{ASK_AGENT_BUTTON}</button>
+    {result && <p className="rev-v3-band-note" data-testid="rev-v3-ask-count">{pendingCountSentence(askable.length)}</p>}
+    {!result && <button type="button" onClick={() => onDiscuss(UNSAVED_ASK)}>{ASK_AGENT_BUTTON}</button>}
+    {result && askable.length > 0 && <button type="button" data-testid="rev-v3-ask-agent" onClick={() => onDiscuss(agentAskPrompt(askable, Boolean(price)))}>{ASK_AGENT_BUTTON}</button>}
   </section>;
 }
