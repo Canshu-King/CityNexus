@@ -1,0 +1,38 @@
+[   2.3s] read from the plan: 11 phase rollups, 13 milestones, 2 critical leaves
+[   2.3s]    1    1  Coursework initiation and project selection             2026-09-07..2026-09-10  99%    48.0h  $960
+[   2.3s]    2    2  Requirements engineering                                2026-09-09..2026-10-22  81%   116.0h  $2320
+[   2.3s]    3    3  System design and architecture                          2026-09-16..2026-09-23  99%   104.0h  $2080
+[   2.3s]    4    4  Backend platform and data layer                         2026-09-16..2026-10-24  83%   400.0h  $8000
+[   2.3s]    5    5  Map and place data integration                          2026-09-16..2026-09-29  69%   128.0h  $2560
+[   2.3s]    6    6  AI agent and Hermes capability                          2026-09-16..2026-10-08  82%   160.0h  $3212
+[   2.3s]    7    7  Frontend UI and interaction                             2026-09-16..2026-10-02  99%   160.0h  $3206
+[   2.3s]    8    8  Integration and consolidation                           2026-09-16..2026-09-24  75%    48.0h  $966
+[   2.3s]    9    9  Verification and defect management                      2026-09-24..2026-10-22  58%   344.0h  $6898
+[   2.3s]    10   10  Coursework deliverables and reporting                  2026-09-23..2026-10-24  52%   284.0h  $5680
+[   2.3s]    11   11  Final acceptance, documentation and delivery           2026-10-19..2026-10-24  75%    16.0h  $320
+[   2.3s]    1.4  M1  Topic and scope agreed                                 finish=2026-09-09 deadline=
+[   2.3s]    2.4  M2  Requirements baseline drafted                          finish=2026-09-16 deadline=
+[   2.3s]    3.4  M3  Architecture design complete                           finish=2026-09-23 deadline=
+[   2.3s]    4.6  M4  Core backend running end to end                        finish=2026-10-06 deadline=
+[   2.3s]    5.5  M5  Provider mesh integrated behind one interface          finish=2026-09-29 deadline=
+[   2.3s]    6.6  M6  Agent surface proven against a live model              finish=2026-10-06 deadline=
+[   2.3s]    7.4  M7  Frontend running against the real backend              finish=2026-10-02 deadline=
+[   2.3s]    8.3  M8  Integration line stable                                finish=2026-09-24 deadline=
+[   2.3s]    9.7  M9  System test complete                                   finish=2026-10-07 deadline=2026-11-02
+[   2.3s]    10.5 M10  Part 1 deadline (recorded as missed)                  finish=2026-09-30 deadline=2026-10-02
+[   2.3s]    10.6 M11  Mid-term review                                       finish=2026-10-17 deadline=2026-10-22
+[   2.3s]    10.7 M12  Part 2 submission deadline                            finish=2026-10-24 deadline=2026-11-06
+[   2.3s]    11.3 M13  Final coursework delivery                             finish=2026-10-24 deadline=2026-11-06
+[   6.2s] briefing rows: 24; date mismatches against the plan: none
+[   6.4s] FilePageSetupPage scale=60 paper=67 refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=60 paper=None refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=50 paper=67 refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=50 paper=None refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=42 paper=67 refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=42 paper=None refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=34 paper=67 refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupPage scale=34 paper=None refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Prog
+[   6.4s] FilePageSetupView refused: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '参数值无效。', 'C:\\Program Files\\Microsoft
+[   6.4s] page setup applied: None
+[   8.3s] wrote D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\Briefing_One_Page.pdf (450065 bytes, 12 pages)
+[   8.3s] BRIEF INCOMPLETE

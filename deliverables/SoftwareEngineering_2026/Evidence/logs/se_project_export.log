@@ -1,0 +1,32 @@
+[   0.7s] opening D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\CityNexus_Software_Engineering_Plan.mpp
+[   1.4s] project CityNexus_Software_Engineering_Plan.mpp: 63 tasks, finish 2026-11-05, cost 1278.3
+[   1.4s] candidate views: 15
+[   1.5s]    ViewApply OK   甘特图
+[   1.6s]    ViewApply OK   跟踪甘特图
+[   1.8s]    ViewApply OK   详细甘特图
+[   1.9s]    ViewApply OK   网络图
+[   2.6s]    ViewApply OK   关系图
+[   2.7s]    ViewApply OK   任务工作表
+[   2.9s]    ViewApply OK   资源工作表
+[   2.9s]    ViewApply MISS 时间表                (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“时间表”视图已经不存在。', 'C
+[   3.0s]    ViewApply OK   日历
+[   3.0s]    ViewApply MISS 任务使用情况             (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“任务使用情况”视图已经不存在。',
+[   3.0s]    ViewApply MISS 资源使用情况             (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“资源使用情况”视图已经不存在。',
+[   3.2s]    ViewApply OK   包含日程表的甘特图
+[   3.2s]    ViewApply MISS 里程碑日期图             (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“里程碑日期图”视图已经不存在。',
+[   3.2s]    ViewApply MISS 资源计划表              (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“资源计划表”视图已经不存在。', 
+[   3.2s]    ViewApply MISS 任务板                (-2147352567, '发生意外。', (1004, 'Microsoft Project', '此方法出现意外错误。', 'C:\\
+[   3.2s] views this install accepts: ['甘特图', '跟踪甘特图', '详细甘特图', '网络图', '关系图', '任务工作表', '资源工作表', '日历', '包含日程表的甘特图']
+[   3.3s]   -> on view '甘特图'
+[   5.3s] exported Gantt_Chart          <- 甘特图            775484 bytes
+[   5.3s]   -> on view '网络图'
+[   6.1s] exported Network_Diagram      <- 网络图            150871 bytes
+[   6.3s]   -> on view '任务工作表'
+[   7.0s] exported WBS_View             <- 任务工作表          194261 bytes
+[   7.1s]   -> on view '资源工作表'
+[   7.5s] exported Resource_Sheet       <- 资源工作表          126924 bytes
+[   7.5s] SKIP Milestone_Timeline   (no matching view)
+[   7.7s]   -> on view '跟踪甘特图'
+[   9.0s] exported Tracking_Gantt       <- 跟踪甘特图          543591 bytes
+[   9.0s] TimelineExport failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“时间表”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[   9.3s] EXPORT DONE: 5 views

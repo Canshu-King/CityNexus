@@ -6,8 +6,8 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: `review/se-coursework-deliverables-r1` at `b8cdb49c9e 2026-10-22 璇剧▼浜や粯锛歏isio 鍥涘紶绯荤粺璁捐�″浘 + Microsoft Project 寮�鍙戣�″垝锛堝師鐢� .vsdx / .mpp锛�`
-Repository root: `D:\moodle\CityNexus`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `ddccfc7ad6 2026-10-22 璇剧▼浜や粯锛氬�栭儴妫�鏌ュ寘锛圧EVIEW_BRIEF + MANIFEST锛�+ 鍥涘紶鍥炬暣浣撻噸鐢熸垚閲嶉獙鏀�`
+Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
 
@@ -21,6 +21,8 @@ Repository root: `D:\moodle\CityNexus`
 | 6 | `Microsoft_Project/Gantt_Chart.pdf` and `previews/Gantt_Chart.png` | The same plan as a picture for a slide. |
 | 7 | `Microsoft_Project/Milestone_Timeline.pdf` | The thirteen milestones on a line. |
 | 8 | `Microsoft_Project/Resource_Sheet.pdf` | Who is assigned and what the work costs - the one item in Part 2 that is easy to leave out. |
+| 9 | `Briefing/CityNexus_Plan_Briefing_A3.pdf` | The whole plan on one A3 landscape page for a tablet: eleven phase bars, thirteen milestones, the status date, and the figures Project computed. |
+| 10 | `Evidence/REVISION_2.md` | What an independent review found in the first revision, what changed, and what is still open. |
 
 Open the `.vsdx` files in Visio and the `.mpp` in Project; the PDFs and PNGs in
 `previews/` are for slides and for anyone who does not have Office.
@@ -31,20 +33,29 @@ Open the `.vsdx` files in Visio and the `.mpp` in Project; the PDFs and PNGs in
 Visio/                 4 native .vsdx drawings
   previews/            PNG + PDF of each, plus the per-drawing gate report
   specs/               the JSON that describes each drawing
-Microsoft_Project/     the native .mpp, the milestone view, 6 view PDFs
+Microsoft_Project/     the native .mpp, the briefing and milestone views, PDFs
   previews/            full-window PNG of each Project view
+Briefing/              one A3 landscape page derived from the plan's own dates
+  previews/            PNG + PDF + the layout gate report for that page
 Evidence/              README, SOURCE_MAPPING, AUTOMATION_VERIFICATION,
-                       result JSON, and every script that produced the above
+                       REVISION_2, result JSON, and every script that produced
+                       the above
 ```
 
 ## Honest limits, stated up front
 
-* Part 1 of the coursework was due **2026-10-02** and was not submitted. That
-  row sits in the plan at 0% rather than being back-dated.
-* The brief requires a **group of three** with a named responsibility each. No
-  second or third member exists anywhere in the repository, so two resources
-  are placeholders at zero cost and the task that would resolve them is at 0%.
-* Resource rates are **coursework planning estimates**, not payroll.
+* Part 1 of the coursework was due **2026-10-02**. Whether it was uploaded to
+  the course platform cannot be seen from this repository, so the plan says
+  exactly that and leaves the row at 0% rather than back-dating it; the course
+  record has to settle it.
+* The brief requires a **group of three** with a named responsibility each. The
+  three members are named (Yang Jianbin 0802240329, Wang Jiarui 0802240322,
+  Wang Xinyue 0802240324), but git carries a single commit identity because the
+  automation lanes committed through the owner's account, so the split of duties
+  in the plan is a proposal for the report, not a measured history.
+* Resource rates are **coursework planning estimates**, not payroll. The two
+  compute lanes are material resources so that they cost without accruing
+  labour hours.
 * No baseline was saved into the `.mpp`, because there is no original approved
   plan to save as one.
 * The two documents that need a human - the customer-approved requirement

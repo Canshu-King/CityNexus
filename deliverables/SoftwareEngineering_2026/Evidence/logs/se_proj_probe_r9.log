@@ -1,0 +1,39 @@
+[  1.3s] === work resource created the right way
+[  1.3s] r1.Type = 0 (work)                             OK  None
+[  1.3s] r1.GetField(pjResourceType)                    OK  '工时'
+[  1.3s] r1.MaxUnits = 1.0                              OK  None
+[  1.3s] r1.MaxUnits read                               OK  1.0
+[  1.3s] r1.StandardRate = 20                           OK  None
+[  1.3s] r1.OvertimeRate = 30                           OK  None
+[  1.3s] r1.GetField(maxUnits)                          OK  '100%'
+[  1.3s] r2.Type = 0                                    OK  None
+[  1.3s] r2.MaxUnits = 0.5                              OK  None
+[  1.3s] r2.StandardRate = 20                           OK  None
+[  1.3s] === A1 2d, one work resource at 1.0 units
+[  1.5s] A1 assign                                      OK  <COMObject Add>
+[  1.5s]   A1 after assign      Work=16 工时 Cost=320.00 pct=0 AWork=0.0 Rem=960.0 assigns=[(1.0, 960.0, 320.0)]
+[  1.6s]   A1 pct=100           Work=16 工时 Cost=320.00 pct=100 AWork=960.0 Rem=0.0 assigns=[(1.0, 960.0, 320.0)]
+[  1.6s] A1 actual dates                                OK  ('2026-09-07 08:00', '2026-09-08 17:00')
+[  1.6s] === A2 2d at 50 percent
+[  1.7s] A2 assign                                      OK  <COMObject Add>
+[  1.8s]   A2                   Work=8 工时 Cost=160.00 pct=50 AWork=240.0 Rem=240.0 assigns=[(0.5, 480.0, 160.0)]
+[  1.8s] === A3 4d with two resources 0.5 + 0.5
+[  1.9s] A3 assign 1                                    OK  <COMObject Add>
+[  1.9s] A3 assign 2                                    OK  <COMObject Add>
+[  2.0s]   A3                   Work=32 工时 Cost=640.00 pct=0 AWork=0.0 Rem=1920.0 assigns=[(0.5, 960.0, 320.0), (0.5, 960.0, 320.0)]
+[  2.0s] === A4 explicit work hours on a work resource
+[  2.1s] A4 assign                                      OK  <COMObject Add>
+[  2.2s] A4 Work = '20h' after assign                   OK  None
+[  2.2s]   A4                   Work=20 工时 Cost=400.00 pct=0 AWork=0.0 Rem=1200.0 assigns=[(1.0, 1200.0, 400.0)]
+[  2.2s] A4 Duration after                              OK  '2.5 个工作日'
+[  2.2s] === A5 material resource for AI compute (cost per use, no hours)
+[  2.3s] r5.Type = 1 (material)                         OK  None
+[  2.3s] r5.StdRate = 6                                 OK  None
+[  2.3s] r5.CostPerUse = 12                             OK  None
+[  2.4s] A5 assign material                             OK  <COMObject Add>
+[  2.5s]   A5                   Work=0 工时 Cost=18.00 pct=0 AWork=0.0 Rem=0.0 assigns=[(1.0, 1.0, 18.0)]
+[  2.5s] === totals
+[  2.5s] prj.Work                                       OK  '16 工时'
+[  2.5s] prj.Cost                                       OK  1538.0
+[  2.6s] rows                                           OK  [('A1', '16 工时', 320.0), ('A2', '8 工时', 160.0), ('A3', '32 工时', 640.0), ('A4', '20 工时', 400.0), ('A5', '0 工时', 18.0)]
+[  2.9s] probe done (no save)

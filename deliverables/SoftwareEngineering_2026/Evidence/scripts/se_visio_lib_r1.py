@@ -131,8 +131,24 @@ class Builder:
         self.shapes = {}
         self.stencils = {}
         self.node_ids = {}
+        self.cur = spec
+        self.spec_nodes = spec.get('nodes', [])
+        self.spec_edges = spec.get('edges', [])
+        self.spec_bands = spec.get('bands', [])
         self.edge_ids = {}
         self.edge_labels = []
+        self.prop_writes = {}
+        # Chrome (legend, note blocks, footnotes, parked connector labels) is
+        # drawn outside the node grid, so the layout gate has to know where it
+        # landed: two of the shipped diagrams had a note block sitting on top of
+        # the legend and a parked label dumped in a far corner.
+        self.chrome = []
+        self.parked = []
+        self.band_strips = []
+        self.chrome_by_page = {}
+        self._rowcache = {}
+        self.page_no = 1
+        self.prop_failures = []
         self.edge_count = 0
 
     # ---------------------------------------------------------------- lifecycle
@@ -208,8 +224,15 @@ class Builder:
         return PAGE_H - y_top - h / 2.0
 
     def _wrap(self, text, width_in, size_pt):
-        """Greedy word wrap sized so the text cannot overflow the box."""
-        cpl = max(6, int(width_in * 72.0 / (size_pt * 0.52)))
+        """Greedy word wrap sized so the text cannot overflow the box.
+
+        The wrap uses a deliberately wider per-character estimate (0.58) than the
+        audit rule (0.52): breaking the line one word earlier is free, while a
+        line that the checker measures as too long is a visible defect. The two
+        estimates disagreeing by design is what keeps the drawn text inside the
+        shape it belongs to.
+        """
+        cpl = max(6, int(width_in * 72.0 / (size_pt * 0.58)))
         lines = []
         for para in str(text).split("\n"):
             lines.extend(textwrap.wrap(para, cpl) or [""])
@@ -233,6 +256,10 @@ class Builder:
                            size=b.get("labelSize", 9.5), bold=True, color="#2A3B4F",
                            align="0")
             t.BringToFront()
+            self.band_strips.append({"band": b.get("label", "")[:28],
+                                     "x": b["x"], "y": b["y"],
+                                     "w": min(w, 8.6 + 0.28),
+                                     "h": b.get("labelSize", 9.5) / 72.0 * 1.6 + 0.09})
         sh.SendToBack()
         return sh
 
@@ -308,22 +335,26 @@ class Builder:
 
         main = n["text"]
         sub = n.get("src")
+        # a briefing sheet needs smaller type in narrow columns than a design
+        # drawing does, so a node may carry its own body size
+        bs = float(n.get("size") or self.body_size)
         eff_w = (w - 0.14) * TEXT_FACTOR.get(kind, 1.0)
-        lines = self._wrap(main, eff_w, self.body_size)
+        lines = self._wrap(main, eff_w, bs)
         txt = "\n".join(lines)
         n_body_lines = len(lines)
+        slines = []
         if sub:
-            slines = self._wrap(sub, w - 0.12, self.sub_size)
+            slines = self._wrap(sub, eff_w, self.sub_size)
             txt = txt + "\n" + "\n".join(slines)
         sh.Text = txt
-        self._cell(sh, "Char.Size", "%gpt" % self.body_size)
+        self._cell(sh, "Char.Size", "%gpt" % bs)
         self._cell(sh, "Char.Font", '="%s"' % BODY_FONT)
         if sub:
             try:
                 ch = sh.Characters
                 ch.Begin = 1
                 ch.End = len(txt) - len("\n".join(slines)) - 1
-                ch.Size = self.body_size
+                ch.Size = bs
                 try:
                     ch.Style = 1
                 except Exception:
@@ -338,64 +369,137 @@ class Builder:
             except Exception as exc:
                 self.notes.append("per-run font sizing skipped on %s (%s)"
                                   % (n["id"], type(exc).__name__))
-        needed = n_body_lines * (self.body_size * 1.40 / 72.0) + 0.10
+        needed = n_body_lines * (bs * 1.40 / 72.0) + 0.10
         if sub:
             needed += len(slines) * (self.sub_size * 1.40 / 72.0)
+        if not main.strip():
+            # a marker shape carries no text, so there is nothing to overflow;
+            # measuring an empty string against a narrow box produced a false
+            # "usable -0.03in" failure on the briefing sheet
+            needed = 0.0
         if needed > h + 1e-6:
             self.problems.append("text overflow: node %s needs %.2fin > box %.2fin"
                                  % (n["id"], needed, h))
-        widest = max([len(l) for l in lines] or [0])
-        est_w = widest * (self.body_size * 0.52 / 72.0)
-        if est_w > eff_w:
+        widest = max([len(l) for l in lines] or [0]) if main.strip() else 0
+        est_w = widest * (bs * 0.52 / 72.0)
+        if main.strip() and est_w > eff_w:
             self.problems.append("text width overflow: node %s needs %.2fin > usable "
                                  "%.2fin (%s box %.2fin)"
                                  % (n["id"], est_w, eff_w, kind, w))
+        # the small second line is drawn inside the same box, so it has to clear
+        # the same walls; the first version only measured the body text and every
+        # citation line in the shipped drawings overflowed its shape
+        if slines and main.strip():
+            ws = max(len(l) for l in slines)
+            est_ws = ws * (self.sub_size * 0.52 / 72.0)
+            if est_ws > eff_w:
+                self.problems.append(
+                    "citation width overflow: node %s needs %.2fin for %r > usable "
+                    "%.2fin (box %.2fin); shorten the citation or widen the shape"
+                    % (n["id"], est_ws, max(slines, key=len), eff_w, w))
 
         if sub:
             try:
                 self._prop(sh, "SourceRef", sub)
             except Exception:
                 pass
+        try:
+            # belt and braces: if a label is still a hair too wide for its shape,
+            # let Visio shrink it rather than let ink cross the border
+            self._cell(sh, "ShrinkAutoFit", "1")
+        except Exception as exc:
+            self.notes.append("ShrinkAutoFit skipped on %s (%s)"
+                              % (n["id"], type(exc).__name__))
         self._prop(sh, "State", n.get("state", "verified"))
         self._prop(sh, "NodeId", n["id"])
         sh.BringToFront()
         self.shapes[n["id"]] = sh
-        self.node_ids[n["id"]] = sh.ID
+        # a spec id may legitimately appear on more than one sheet (a parent use
+        # case repeated on the detail page), so the audit map keeps every
+        # occurrence instead of letting the last page overwrite the first.
+        self.node_ids.setdefault(n["id"], []).append([self.page_no, sh.ID])
         return sh
 
+    def _cellstr(self, cell):
+        for attr in ("String", "StrV", "ResultStr"):
+            try:
+                v = getattr(cell, attr)
+            except Exception:
+                continue
+            if isinstance(v, str):
+                return v
+        return None
+
+    def _prop_row(self, sh, name):
+        """Numeric index of the Shape Data row named `name`, or None."""
+        cache = self._rowcache.setdefault(sh.ID, {})
+        if name in cache:
+            return cache[name]
+        try:
+            sec = sh.SectionSRC(243)
+            n = sec.Count
+        except Exception:
+            return None
+        for i in range(n):
+            try:
+                row = sec.Row(i)
+                nm = getattr(row, "NameString", None) or getattr(row, "Name", None)
+            except Exception:
+                continue
+            if nm == name:
+                cache[name] = i
+                return i
+        return None
+
     def _prop(self, sh, name, value):
-        """Store a machine-readable custom property so the drawing can be audited
-        shape by shape inside Visio. Non-fatal: a refused row is a note, not a red."""
+        """Write Shape Data through the qualified cell name and read it back.
+
+        AddNamedRow creates the row; CellsU("Prop.<name>.<cell>") addresses it
+        by name because CellsSRC's Row and Column arguments are I4 here. The
+        value is read back before returning, so a property that did not land is
+        a gate failure rather than a note.
+        """
+        value = str(value)
+        path = "Prop.%s" % name
         try:
             if not sh.SectionExists(243, 0):
                 sh.AddSection(243)
-            sec = sh.SectionSRC(243)
+            if self._prop_row(sh, name) is None:
+                made = None
+                for tag in (-1, 0):
+                    try:
+                        made = sh.AddNamedRow(243, name, tag)
+                        break
+                    except Exception:
+                        continue
+                if made is None and self._prop_row(sh, name) is None:
+                    raise AssertionError("could not create row %r" % name)
+            sh.CellsU(path + ".Label").FormulaU = '"%s"' % name
+            sh.CellsU(path + ".Prompt").FormulaU = '"%s"' % name
+            sh.CellsU(path + ".Type").FormulaU = "0"
+            sh.CellsU(path + ".Value").FormulaU = '"%s"' % value.replace('"', "'")
+            cell = sh.CellsU(path + ".Value")
+            got = None
             try:
-                n = sec.Count
-            except Exception:
-                n = 0
-            have = []
-            try:
-                have = [sec.RowName(i) for i in range(n)]
-            except Exception:
-                have = []
-            if name not in have:
-                sec.AddRow(1)
-                try:
-                    sec.RowName(sec.Count - 1, name)
-                except Exception:
-                    sec.RowName(n, name)
-            row = name
-            try:
-                sh.CellsSRC(243, row, "Label").FormulaU = '"%s"' % name
-                sh.CellsSRC(243, row, "Type").FormulaU = "0"
+                f = cell.FormulaU
+                if isinstance(f, str):
+                    got = f[1:-1] if len(f) >= 2 and f[0] == '"' and f[-1] == '"' else f
             except Exception:
                 pass
-            sh.CellsSRC(243, row, "Value").FormulaU = '"%s"' % str(value).replace('"', "'")
+            if got is None:
+                try:
+                    got = cell.ResultStrU("")
+                except Exception:
+                    pass
+            if got != value:
+                raise AssertionError("read back %r, expected %r" % (got, value))
+            self.prop_writes.setdefault((self.page_no, sh.ID), {})[name] = got
             return True
         except Exception as exc:
-            self.notes.append("custom property %s skipped (%s)"
-                              % (name, type(exc).__name__))
+            self.prop_failures.append(
+                "shape %s (id %s) property %s: %s: %s"
+                % (getattr(sh, "Name", "?"), getattr(sh, "ID", "?"), name,
+                   type(exc).__name__, str(exc)[:140]))
             return False
 
     # ---------------------------------------------------------------- edges
@@ -436,26 +540,43 @@ class Builder:
         elif e.get("route") == "orthogonal":
             self._cell(con, "ConLineRouteExt", "2")
         if e.get("label"):
-            con.Text = e["label"]
-            self._cell(con, "Char.Size", "%gpt" % e.get("labelSize", 7.0))
-            self._cell(con, "Char.Color", _rgb("#334D66"))
-            self._cell(con, "HideTextLine", "0")
-            try:
-                bx = (con.Cells("BeginX").ResultIU + con.Cells("EndX").ResultIU) / 2.0
-                by = (con.Cells("BeginY").ResultIU + con.Cells("EndY").ResultIU) / 2.0
-                lab = self._text(bx - 0.55, PAGE_H - by - 0.02, 1.10, e["label"],
-                                 size=e.get("labelSize", 7.0), color="#334D66")
+            size = e.get("labelSize", 7.0)
+            txt = e["label"]
+            one = min(1.60, max(0.62, len(txt) * size * 0.52 / 72.0))
+            row = size / 72.0 * 1.6
+            spot = None
+            # a wide single line first; if the corridors are that tight, take a
+            # narrower box and let the text wrap over two or three rows instead
+            for w, h in ((one, row), (max(0.62, one * 0.62), row * 2),
+                         (0.62, row * 3)):
+                spot = self._park_spot(e, w, h)
+                if spot:
+                    w_used, h_used = w, h
+                    break
+            if spot is None:
+                self.problems.append("no clear place for the label %r on %s->%s; "
+                                     "the text would sit on a shape or run off the page"
+                                     % (txt, e["from"], e["to"]))
+            else:
+                px, py = spot
+                lab = self._text(px, py, w_used, txt, size=size, color="#334D66")
                 self._cell(lab, "FillForegnd", _rgb("#FFFFFF"))
                 self._cell(lab, "FillPattern", "1")
-                self._cell(lab, "FillForegndTrans", "0.55")
-                con.Text = ""
-                self._cell(con, "HideText", "1")
+                self._cell(lab, "FillForegndTrans", "0.35")
+                self.parked.append({"kind": "label", "x": px, "y": py,
+                                    "w": w_used, "h": h_used,
+                                    "for": "%s->%s" % (e["from"], e["to"])})
                 self.edge_labels.append(lab.ID)
-            except Exception as exc:
-                self.notes.append("parked label skipped on %s->%s (%s)"
-                                  % (e["from"], e["to"], type(exc).__name__))
+            self._cell(con, "Char.Size", "%gpt" % size)
+            self._cell(con, "Char.Color", _rgb("#334D66"))
+            con.Text = ""
+            try:
+                self._cell(con, "HideText", "1")
+            except Exception:
+                pass
         self._prop(con, "FlowEdge", "%s->%s" % (e["from"], e["to"]))
-        self.edge_ids["%s->%s" % (e["from"], e["to"])] = con.ID
+        self.edge_ids.setdefault("%s->%s" % (e["from"], e["to"]), []).append(
+            [self.page_no, con.ID])
         if e.get("src"):
             self._prop(con, "SourceRef", e["src"])
         self.edge_count += 1
@@ -463,13 +584,79 @@ class Builder:
 
     # ---------------------------------------------------------------- frame
     def add_title_block(self):
-        self._text(0.35, 0.22, 11.0, self.spec["title"], size=TITLE_SIZE,
-                   bold=True, color="#12263F")
-        self._text(0.35, 0.62, 11.6, self.spec.get("subtitle", ""),
-                   size=SUBTITLE_SIZE, color="#3C5068")
-        self._text(9.5, 0.26, 6.7, "%s\n%s" % (self.spec.get("docid", ""),
-                                              self.spec.get("revline", "")),
-                   size=8.0, color="#3C5068")
+        cur = self.cur
+        self._text(0.35, 0.22, 11.0, cur.get("title", self.spec["title"]),
+                   size=TITLE_SIZE, bold=True, color="#12263F", align="0")
+        self._text(0.35, 0.62, 11.6, cur.get("subtitle", self.spec.get("subtitle", "")),
+                   size=SUBTITLE_SIZE, color="#3C5068", align="0")
+        self._text(9.5, 0.26, 6.7, "%s\n%s" % (
+            cur.get("docid", self.spec.get("docid", "")),
+            cur.get("revline", self.spec.get("revline", ""))),
+            size=8.0, color="#3C5068", align="0")
+
+    def _node_rect(self, nid):
+        for n in self.spec_nodes:
+            if n["id"] == nid:
+                return n
+        return None
+
+    @staticmethod
+    def _hit(a, b):
+        return (a["x"] < b["x"] + b["w"] and b["x"] < a["x"] + a["w"]
+                and a["y"] < b["y"] + b["h"] and b["y"] < a["y"] + a["h"])
+
+    def _park_spot(self, e, w, h):
+        """Where a connector's text can lie without covering anything.
+
+        The first version took the connector's own endpoints, which are still
+        0,0 at that moment in a build, so labels were dumped in the corner of
+        the sheet. Candidates are now generated from the two shapes the edge
+        joins and rejected against every other shape, band label and note block
+        on the page; if nothing is clear the build fails instead of shipping
+        unreadable text.
+        """
+        a = self._node_rect(e["from"])
+        b = self._node_rect(e["to"])
+        if not a or not b:
+            return None
+        ax, ay = a["x"] + a["w"] / 2.0, a["y"] + a["h"] / 2.0
+        bx, by = b["x"] + b["w"] / 2.0, b["y"] + b["h"] / 2.0
+        blockers = [n for n in self.spec_nodes
+                    if n["id"] not in (e["from"], e["to"])]
+        others = list(self.chrome) + list(self.parked) + list(self.band_strips)
+        # first pass keeps the label clear of its own two shapes as well; if the
+        # link is too short for that, the second pass lets it touch an endpoint but
+        # still not cover anything else on the sheet
+        for strict in (True, False):
+            avoid = blockers + ([a, b] if strict else [])
+            spot = self._spot_scan(ax, ay, bx, by, w, h, avoid, others)
+            if spot:
+                return spot
+        return None
+
+    def _spot_scan(self, ax, ay, bx, by, w, h, avoid, others):
+        # walk the line from one shape to the other, and at each stop try the
+        # corridor positions around it; the wider the nudge range, the more
+        # likely a label finds a gap between two rows instead of sitting on one
+        for frac in (0.5, 0.38, 0.62, 0.28, 0.72, 0.18, 0.82, 0.1, 0.9):
+            cx = ax + (bx - ax) * frac
+            cy = ay + (by - ay) * frac
+            for dy in (0.0, -0.13, 0.13, -0.26, 0.26, -0.40, 0.40, -0.55, 0.55,
+                       -0.70, 0.70, -0.88, 0.88):
+                for dx in (0.0, -0.30, 0.30, -0.60, 0.60, -0.95, 0.95):
+                    x = cx - w / 2.0 + dx
+                    y = cy - h / 2.0 + dy
+                    if x < 0.18 or y < 0.18:
+                        continue
+                    if x + w > PAGE_W - 0.18 or y + h > PAGE_H - 0.18:
+                        continue
+                    box = {"x": x, "y": y, "w": w, "h": h}
+                    if any(self._hit(box, n) for n in avoid):
+                        continue
+                    if any(self._hit(box, c) for c in others):
+                        continue
+                    return x, y
+        return None
 
     def add_legend(self, items, origin):
         x, y = origin
@@ -488,6 +675,9 @@ class Builder:
             self._text(x + 0.42, cy - 0.02, it.get("w", 3.4), it["text"], size=7.2,
                        color="#22323F")
             cy += 0.235
+        self.chrome.append({"kind": "legend", "x": x, "y": y - 0.06,
+                            "w": 0.42 + max([it.get("w", 3.4) for it in items] or [3.4]),
+                            "h": (cy - y) + 0.10})
         return cy
 
     def add_footnotes(self, lines, origin, width=15.8):
@@ -496,11 +686,19 @@ class Builder:
             self._text(origin[0], y, width, ln, size=6.6, color="#4C5A66",
                        align="0")
             y += 0.155
+        self.chrome.append({"kind": "footnotes", "x": origin[0], "y": origin[1] - 0.05,
+                            "w": width, "h": (y - origin[1]) + 0.05})
         return y
 
     def add_notes(self, lines, origin, width, size):
         x, y = origin
-        h = 0.155 * len(lines) + 0.22
+        # the block's height has to count the lines the text actually wraps into,
+        # otherwise the note claims to be four rows tall, prints seven, and lands
+        # on whatever sits below it
+        rows = sum(max(1, len(self._wrap(ln, width, size))) for ln in lines)
+        h = rows * (size * 1.30 / 72.0) + 0.24
+        self.chrome.append({"kind": "notes", "x": x - 0.08, "y": y,
+                            "w": width + 0.16, "h": h})
         bg = self.page.DrawRectangle(x - 0.08, self._flip_y(y, h) - h / 2.0,
                                     x + width + 0.08, self._flip_y(y, h) + h / 2.0)
         self._cell(bg, "FillForegnd", _rgb("#FBFCFE"))
@@ -519,21 +717,70 @@ class Builder:
         return cy
 
     # ---------------------------------------------------------------- checks
+    def rule_chrome(self):
+        """Legend, note blocks, footnotes and parked connector labels are not spec
+        nodes, so the node overlap rule never looked at them - which is how a note
+        block ended up printed over the legend. Everything drawn outside the grid
+        must sit inside the sheet, off the shapes, and off each other, and no shape
+        may sit under a band's own title."""
+        bad = []
+        rects = []
+        for c in list(self.chrome) + list(self.parked):
+            rects.append((c, "%s %s" % (c["kind"], c.get("for", c.get("name", "")))))
+        for c, who in rects:
+            if c["x"] < 0 or c["y"] < 0 or c["x"] + c["w"] > PAGE_W or \
+                    c["y"] + c["h"] > PAGE_H:
+                bad.append("chrome %s runs off the sheet (%.2f,%.2f %.2fx%.2f)"
+                           % (who, c["x"], c["y"], c["w"], c["h"]))
+            # a connector's own label may lie across its own two shapes - that is
+            # what a label on a short link looks like - but never a third one
+            own = set((c.get("for") or "").split("->")) if c.get("for") else set()
+            for n in self.spec_nodes:
+                if n["id"] in own:
+                    continue
+                if self._hit(c, n):
+                    bad.append("chrome %s covers node %s" % (who, n["id"]))
+        for i in range(len(rects)):
+            for j in range(i + 1, len(rects)):
+                a, wa = rects[i]
+                b, wb = rects[j]
+                if self._hit(a, b):
+                    bad.append("chrome %s overlaps chrome %s" % (wa, wb))
+        for s in self.band_strips:
+            for n in self.spec_nodes:
+                if self._hit(s, n):
+                    bad.append("band title %r is covered by node %s - the row would "
+                               "read as an unlabelled block"
+                               % (s["band"], n["id"]))
+        # a panel with nothing in it reads as an unfinished box
+        for b in self.spec_bands:
+            if not b.get("label"):
+                continue
+            inner = [n for n in self.spec_nodes
+                     if n["x"] >= b["x"] - 0.01 and n["y"] >= b["y"] - 0.01
+                     and n["x"] + n["w"] <= b["x"] + b["w"] + 0.01
+                     and n["y"] + n["h"] <= b["y"] + b["h"] + 0.01]
+            covered_by_chrome = [c for c in rects if self._hit(b, dict(c[0]))]
+            if not inner and not covered_by_chrome:
+                bad.append("band %r holds no shape and no note - it would print as "
+                           "an empty dashed box" % b["label"][:40])
+        return bad
+
     def gate(self):
         """Refuse to publish a diagram that fails its own layout/semantics rules."""
         bad = []
-        ids = [n["id"] for n in self.spec["nodes"]]
+        ids = [n["id"] for n in self.spec_nodes]
         if len(set(ids)) != len(ids):
             bad.append("duplicate node ids")
-        for n in self.spec["nodes"]:
+        for n in self.spec_nodes:
             if n["x"] < 0 or n["y"] < 0 or n["x"] + n["w"] > PAGE_W or n["y"] + n["h"] > PAGE_H:
                 bad.append("node %s outside page bounds" % n["id"])
         # real overlap between non-band nodes
-        rects = [(n["id"], n["x"], n["y"], n["w"], n["h"]) for n in self.spec["nodes"]]
+        rects = [(n["id"], n["x"], n["y"], n["w"], n["h"]) for n in self.spec_nodes]
         for i in range(len(rects)):
             for j in range(i + 1, len(rects)):
                 a, b = rects[i], rects[j]
-                if a[0] in _nolabel(self.spec) or b[0] in _nolabel(self.spec):
+                if a[0] in _nolabel(self) or b[0] in _nolabel(self):
                     continue
                 ox = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
                 oy = min(a[2] + a[4], b[2] + b[4]) - max(a[2], b[2])
@@ -542,13 +789,18 @@ class Builder:
         ins = {k: 0 for k in ids}
         outs = {k: 0 for k in ids}
         labels = {}
-        for e in self.spec["edges"]:
+        for e in self.spec_edges:
             outs[e["from"]] += 1
             ins[e["to"]] += 1
             labels.setdefault((e["from"], e["to"]), []).append(e.get("label", ""))
-        for n in self.spec["nodes"]:
+        for n in self.spec_nodes:
             role = n.get("role")
             if role in ("note", "container"):
+                continue
+            if self.cur.get("barsOnly"):
+                # a bar chart sheet has no connectors by design: every shape is a
+                # span of dates, so the flow rules (orphan, start/end, decision
+                # branches) do not apply and would refuse a legitimate view
                 continue
             if ins[n["id"]] == 0 and outs[n["id"]] == 0:
                 bad.append("orphan node %s has no connection at all" % n["id"])
@@ -562,28 +814,49 @@ class Builder:
                 k = outs[n["id"]]
                 if k < 2:
                     bad.append("decision %s has only %d outgoing branch(es)" % (n["id"], k))
-                outs_labels = [e.get("label") for e in self.spec["edges"] if e["from"] == n["id"]]
+                outs_labels = [e.get("label") for e in self.spec_edges if e["from"] == n["id"]]
                 if any(not l for l in outs_labels):
                     bad.append("decision %s has an unlabelled branch" % n["id"])
-        if self.spec.get("edgeRule", "shortHop") == "shortHop":
+        if getattr(self, "cur", self.spec).get("edgeRule", "shortHop") == "shortHop":
             bad.extend(self.rule_short_hop())
-        glued_expected = 2 * len(self.spec["edges"])
+        bad.extend(self.rule_chrome())
+        glued_expected = 2 * len(self.spec_edges)
         actual = self.page.Connects.Count
         if actual != glued_expected:
             bad.append("glue count: expected %d got %d" % (glued_expected, actual))
+        # Every node owes NodeId + State, plus SourceRef when the spec cites a
+        # source for it; every connector owes FlowEdge, plus SourceRef when the
+        # spec anchors the edge. On the design drawings every node carries a
+        # citation, so this is 3 per node there; a bar-chart sheet legitimately
+        # has markers with nothing to cite.
+        want_props = (sum(3 if (n.get("src") or "").strip() else 2
+                          for n in self.spec_nodes)
+                      + len(self.spec_edges)
+                      + sum(1 for e in self.spec_edges if e.get("src")))
+        got_props = sum(len(v) for k, v in self.prop_writes.items()
+                        if k[0] == self.page_no)
+        for f in self.prop_failures:
+            bad.append("shape data write failed: " + f)
+        if got_props < want_props:
+            bad.append("shape data written on this page: %d of %d expected "
+                       "(3 per node + 1 per connector); the drawing would ship "
+                       "without machine-readable source anchors"
+                       % (got_props, want_props))
         if self.problems:
             bad.extend(self.problems)
-        return {"edges": len(self.spec["edges"]), "nodes": len(ids),
+        return {"edges": len(self.spec_edges), "nodes": len(ids),
                 "shapeIds": self.node_ids, "edgeIds": self.edge_ids,
                 "connects": actual, "expectedConnects": glued_expected,
                 "failures": bad, "notes": self.notes,
-                "styleIssues": self.style_issues[:40]}
+                "styleIssues": self.style_issues[:40],
+                "propsWritten": got_props, "propsExpected": want_props,
+                "propFailures": self.prop_failures[:20]}
 
 
     def rows(self):
         """Group band rectangles into rows by vertical overlap, then map each
         node id to the row it sits in."""
-        bands = self.spec.get("bands", [])
+        bands = self.spec_bands
         ivs = sorted([(b["y"], b["y"] + b["h"], i) for i, b in enumerate(bands)])
         groups = []
         for lo, hi, i in ivs:
@@ -615,10 +888,10 @@ class Builder:
             for bi in set(g["members"]):
                 band_of[bi] = ri
         node_row = {}
-        for n in self.spec["nodes"]:
+        for n in self.spec_nodes:
             cy = n["y"] + n["h"] / 2.0
             best, bestd = None, 1e9
-            for bi, b in enumerate(self.spec.get("bands", [])):
+            for bi, b in enumerate(self.spec_bands):
                 if b["y"] - 0.02 <= cy <= b["y"] + b["h"] + 0.02:
                     d = min(abs(cy - b["y"]), abs(cy - (b["y"] + b["h"])))
                     if d < bestd:
@@ -629,8 +902,8 @@ class Builder:
     def rule_short_hop(self):
         bad = []
         _rows, nrow = self.rows()
-        byid = dict((n["id"], n) for n in self.spec["nodes"])
-        for e in self.spec["edges"]:
+        byid = dict((n["id"], n) for n in self.spec_nodes)
+        for e in self.spec_edges:
             a, z = e["from"], e["to"]
             na, nz = byid[a], byid[z]
             ra, rz = nrow[a], nrow[z]
@@ -648,7 +921,7 @@ class Builder:
                 lo, hi = sorted((min(ax0, ax1), min(zx0, zx1))), sorted((max(ax0, ax1), max(zx0, zx1)))
                 x_lo = min(ax0, zx0)
                 x_hi = max(ax1, zx1)
-                for m in self.spec["nodes"]:
+                for m in self.spec_nodes:
                     if m["id"] in (a, z) or nrow[m["id"]] != ra:
                         continue
                     mx0, mx1 = m["x"], m["x"] + m["w"]
@@ -661,54 +934,153 @@ class Builder:
         return bad
 
     # ---------------------------------------------------------------- publish
+    def sheets(self):
+        sp = self.spec
+        if sp.get("sheets"):
+            out = []
+            for sh in sp["sheets"]:
+                d = dict(sh)
+                # document-wide settings are inherited unless the page overrides
+                for k in ("edgeRule", "overlapExempt", "bodySize", "subSize",
+                          "title", "subtitle", "docid", "revline"):
+                    if k not in d and k in sp:
+                        d[k] = sp[k]
+                out.append(d)
+            return out
+        one = dict((k, v) for k, v in sp.items() if k != "sheets")
+        one["name"] = sp.get("pageName", "Page-1")
+        return [one]
+
+    def _page_setup(self, pg):
+        for cell, formula in (("PrintPageOrientation", "1"),
+                              ("PageWidth", "420mm"),
+                              ("PageHeight", "297mm"),
+                              ("RoutingStyle", "1"),
+                              ("ConLineJumpCode", "6"),
+                              ("ConLineJumpStyle", "0"),
+                              ("ConLineJumpSize", "0.09in"),
+                              ("WrappingStyle", "1"),
+                              ("WrappingDirection", "1")):
+            self._cell(pg.PageSheet, cell, formula)
+
+    def _fill_sheet(self, sh, idx):
+        self.cur = sh
+        self.page = self.doc.Pages.Item(idx + 1)
+        self.page_no = idx + 1
+        self.chrome = []
+        self.parked = []
+        self.band_strips = []
+        self.spec_nodes = sh["nodes"]
+        self.spec_edges = sh["edges"]
+        self.spec_bands = sh.get("bands", [])
+        self.add_title_block()
+        for band in self.spec_bands:
+            self.add_band(band)
+        for n in self.spec_nodes:
+            self.add_node(n)
+        for e in self.spec_edges:
+            self.add_edge(e)
+        if sh.get("legend"):
+            self.add_legend(sh["legend"], sh["legendOrigin"])
+        if sh.get("footnotes"):
+            self.add_footnotes(sh["footnotes"], sh["footnoteOrigin"])
+        if sh.get("notes"):
+            self.add_notes(sh["notes"], sh.get("notesOrigin", (0.46, 7.9)),
+                           sh.get("notesWidth", 9.0), sh.get("notesSize", 6.4))
+        self.chrome_by_page[self.page_no] = (list(self.chrome), list(self.parked),
+                                             list(self.band_strips))
+
     def build(self):
         self.start()
         try:
-            self.add_title_block()
-            for b in self.spec.get("bands", []):
-                self.add_band(b)
-            for n in self.spec["nodes"]:
-                self.add_node(n)
-            for e in self.spec["edges"]:
-                self.add_edge(e)
-            if self.spec.get("legend"):
-                self.add_legend(self.spec["legend"], self.spec["legendOrigin"])
-            if self.spec.get("footnotes"):
-                self.add_footnotes(self.spec["footnotes"], self.spec["footnoteOrigin"])
-            if self.spec.get("notes"):
-                self.add_notes(self.spec["notes"], self.spec.get("notesOrigin", (0.46, 7.9)),
-                               self.spec.get("notesWidth", 9.0),
-                               self.spec.get("notesSize", 6.4))
-            report = self.gate()
-            json.dump(report, open(self.out["gate"], "w", encoding="utf-8"),
-                      indent=1, ensure_ascii=False)
-            if report["failures"]:
-                # a failing diagram still gets a debug preview so the layout can be
-                # fixed by eye - but no file is written into the deliverable folder
-                for suffix, cell in (("png", "debugPng"), ("pdf", "debugPdf")):
-                    path = self.out.get(cell)
-                    if not path:
-                        continue
-                    try:
-                        os.makedirs(os.path.dirname(path), exist_ok=True)
-                        if suffix == "png":
-                            self.page.Export(path)
-                        else:
-                            self.doc.ExportAsFixedFormat(1, path, 1, 0)
-                    except Exception as exc:
-                        self.notes.append("debug %s export failed: %s" % (suffix, type(exc).__name__))
-                raise GateError("%d layout/semantics failure(s); first: %s"
-                                % (len(report["failures"]), report["failures"][0]))
-            self.doc.SaveAs(self.out["vsdx"])
-            self.page.Export(self.out["png"])
-            self.doc.ExportAsFixedFormat(1, self.out["pdf"], 1, 0)
-            return report
+            sheets = self.sheets()
+            self.page.Name = sheets[0].get("name", "Page-1")
+            self._page_setup(self.page)
+            for sh in sheets[1:]:
+                pg = self.doc.Pages.Add()
+                pg.Name = sh.get("name", "Page")
+                self._page_setup(pg)
+            for idx, sh in enumerate(sheets):
+                self._fill_sheet(sh, idx)
+            return self._publish(sheets)
         finally:
             self.finish()
 
+    def _publish(self, sheets):
+        rep = self.gate_all(sheets)
+        # A failed run must not leave a fresh gate report next to an older .vsdx:
+        # the proof would then audit the shipped drawing against numbers that
+        # describe a drawing that was never written.
+        target = self.out["gate"]
+        if rep["failures"]:
+            target = os.path.join(os.path.dirname(self.out["gate"]), "..", "debug",
+                                  os.path.basename(self.out["gate"]))
+        try:
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            json.dump(rep, open(target, "w", encoding="utf-8"),
+                      indent=1, ensure_ascii=False)
+        except Exception as exc:
+            self.notes.append("gate report write failed: %s" % type(exc).__name__)
+        if rep["failures"]:
+            for key in ("debugPng", "debugPdf"):
+                path = self.out.get(key)
+                if not path:
+                    continue
+                try:
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    if key == "debugPng":
+                        self.doc.Pages.Item(1).Export(path)
+                    else:
+                        self.doc.ExportAsFixedFormat(1, path, 1, 0)
+                except Exception as exc:
+                    self.notes.append("debug %s export failed: %s"
+                                      % (key, type(exc).__name__))
+            raise GateError("%d layout/semantics failure(s); first: %s"
+                            % (len(rep["failures"]), rep["failures"][0]))
+        self.doc.SaveAs(self.out["vsdx"])
+        stem = os.path.splitext(self.out["png"])[0]
+        for i in range(1, self.doc.Pages.Count + 1):
+            pg = self.doc.Pages.Item(i)
+            suffix = "" if self.doc.Pages.Count == 1 else "_p%d" % i
+            pg.Export(stem + suffix + ".png")
+        self.doc.ExportAsFixedFormat(1, self.out["pdf"], 1, 0)
+        return rep
 
-def _nolabel(spec):
-    return set(spec.get("overlapExempt", []))
+    def gate_all(self, sheets):
+        merged = {"failures": [], "notes": [], "styleIssues": [], "pages": [],
+                  "propFailures": []}
+        keep = (self.spec_nodes, self.spec_edges, self.spec_bands, self.cur, self.page)
+        ids, eids = dict(self.node_ids), dict(self.edge_ids)
+        for idx, sh in enumerate(sheets):
+            self.page = self.doc.Pages.Item(idx + 1)
+            self.page_no = idx + 1            # the prop census is filtered by page
+            (self.chrome, self.parked, self.band_strips) = \
+                self.chrome_by_page.get(self.page_no, ([], [], []))
+            self.cur = sh
+            self.spec_nodes, self.spec_edges = sh["nodes"], sh["edges"]
+            self.spec_bands = sh.get("bands", [])
+            one = self.gate()
+            merged["failures"] += ["[page %s] %s" % (self.page.Name, f)
+                                   for f in one["failures"]]
+            merged["propFailures"] += one.get("propFailures", [])
+            merged["pages"].append({"name": self.page.Name,
+                                    "nodes": one["nodes"], "edges": one["edges"],
+                                    "connects": one["connects"],
+                                    "expectedConnects": one["expectedConnects"],
+                                    "propsWritten": one.get("propsWritten"),
+                                    "propsExpected": one.get("propsExpected")})
+            merged["notes"] += one.get("notes", [])
+            merged["styleIssues"] += one.get("styleIssues", [])
+        (self.spec_nodes, self.spec_edges, self.spec_bands, self.cur,
+         self.page) = keep
+        merged["shapeIds"], merged["edgeIds"] = ids, eids
+        for k in ("nodes", "edges", "connects", "expectedConnects",
+                  "propsWritten", "propsExpected"):
+            merged[k] = sum((p.get(k) or 0) for p in merged["pages"])
+        return merged
+
+def _nolabel(builder):
+    return set(builder.cur.get("overlapExempt", []))
 
 
 def build_diagram(spec, out_dir, log):

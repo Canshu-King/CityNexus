@@ -1,0 +1,67 @@
+[   2.2s] project CityNexus_Software_Engineering_Plan.mpp  rows=63  start=2026-09-04 01:00:00+00:00  finish=2026-11-05 16:00:00+00:00  statusDate=2026-10-22 01:00:00+00:00
+[   2.3s] --- task 2 1.1  Read the assignment brief and fix the d
+[   2.3s]   PercentComplete                  0
+[   2.3s]   ActualStart                      'NA'
+[   2.3s]   ActualFinish                     'NA'
+[   2.3s]   ActualWork                       0.0
+[   2.3s]   RemainingWork                    0.0
+[   2.3s]   Work                             0.0
+[   2.3s]   Cost                             40.00000000000001
+[   2.3s]   Deadline                         'NA'
+[   2.3s]   ConstraintType                   0
+[   2.3s]   Milestone                        False
+[   2.3s]   Critical                         False
+[   2.3s]   TotalSlack                       19140
+[   2.3s]   Start/Finish                     ('2026-09-04 08:00:00+00:00', '2026-09-04 17:00:00+00:00')
+[   2.3s]   TaskDependencies.Count           1
+[   2.3s]   dep[0] From/To/Type/Lag          ('1.1  Read the assign', '1.2  Select the proj', 1, 0)
+[   2.3s] --- task 3 1.2  Select the project: smart city traveler
+[   2.3s]   PercentComplete                  0
+[   2.3s]   ActualStart                      'NA'
+[   2.3s]   ActualFinish                     'NA'
+[   2.4s]   ActualWork                       0.0
+[   2.4s]   RemainingWork                    0.0
+[   2.4s]   Work                             0.0
+[   2.4s]   Cost                             40.00000000000001
+[   2.4s]   Deadline                         'NA'
+[   2.4s]   ConstraintType                   0
+[   2.4s]   Milestone                        False
+[   2.4s]   Critical                         False
+[   2.4s]   TotalSlack                       19140
+[   2.4s]   Start/Finish                     ('2026-09-07 08:00:00+00:00', '2026-09-07 17:00:00+00:00')
+[   2.4s]   TaskDependencies.Count           2
+[   2.4s]   dep[0] From/To/Type/Lag          ('1.1  Read the assign', '1.2  Select the proj', 1, 0)
+[   2.4s] --- task 4 1.3  Confirm the group of three and each mem
+[   2.4s]   PercentComplete                  0
+[   2.4s]   ActualStart                      'NA'
+[   2.4s]   ActualFinish                     'NA'
+[   2.4s]   ActualWork                       0.0
+[   2.4s]   RemainingWork                    0.0
+[   2.4s]   Work                             0.0
+[   2.4s]   Cost                             40.00000000000001
+[   2.4s]   Deadline                         'NA'
+[   2.4s]   ConstraintType                   0
+[   2.4s]   Milestone                        False
+[   2.4s]   Critical                         False
+[   2.4s]   TotalSlack                       19140
+[   2.4s]   Start/Finish                     ('2026-09-08 08:00:00+00:00', '2026-09-10 17:00:00+00:00')
+[   2.4s]   TaskDependencies.Count           1
+[   2.5s]   dep[0] From/To/Type/Lag          ('1.2  Select the proj', '1.3  Confirm the gro', 1, 0)
+[   2.5s] === field / custom column probes
+[   2.5s] FieldIndices('Text1')              ERROR AttributeError: <unknown>.FieldIndices
+[   2.5s] FieldIndices('Text 1')             ERROR AttributeError: <unknown>.FieldIndices
+[   2.5s] FieldDefinitions.Count             ERROR AttributeError: <unknown>.FieldDefinitions
+[   2.5s] FieldDefinitions.Add(Text1)        ERROR AttributeError: <unknown>.FieldDefinitions
+[   2.5s] constants pfFinishToStart          ERROR AttributeError: pfFinishToStart
+[   2.5s] constants pfStartToStart           ERROR AttributeError: pfStartToStart
+[   2.5s] constants pfFinishToFinish         ERROR AttributeError: pfFinishToFinish
+[   2.5s] constants pfStartToFinish          ERROR AttributeError: pfStartToFinish
+[   2.5s] constraint asSoonAsPossible        ERROR AttributeError: asSoonAsPossible
+[   2.5s] prjDeadlineDisplay?                ERROR AttributeError: <unknown>.DeadelinesPresent
+[   2.5s] Baselines saved (BaselineStart of row1) 'NA'
+[   2.5s] Calendar.Standard.WorkWeeks?       '标准'
+[   2.5s] MinutesPerDay                      ERROR AttributeError: <unknown>.MinutePerDay
+[   2.5s] HoursPerDay?                       None
+[   2.5s] WeekStartDay                       ERROR AttributeError: <unknown>.WeekStartDay
+[   2.5s] DefaultStandardRate display        ERROR AttributeError: <unknown>.DefaultStandardRate
+[   3.0s] probe done (file not saved)

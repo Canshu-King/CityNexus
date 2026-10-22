@@ -40,7 +40,9 @@ def edge(a, b, label="", state="verified", **kw):
     return d
 
 
-REVISION = "Rev A · generated 2026-10-22 · source tree D:\\moodle\\CityNexus @ review/boli-party-occupancy-scope-r1"
+REVISION = ("Rev A - generated 2026-10-22 - source tree CityNexus @ "
+            "review/boli-party-occupancy-scope-r1, "
+            "github.com/Canshu-King/CityNexus")
 
 STATE_LEGEND = [
     {"state": "verified", "text": "Implemented + evidence (test / published commit)"},
@@ -125,8 +127,8 @@ def spec_architecture():
         "Entry: intent + context" + chr(10) + "8 intents over a server-built context; semantic envelope decides what the model may conclude",
         "main.py:14190-14228, 13593 ; semantic_compiler.py:123,229", 0, 1, R4Y + 0.40, 0.90)
     put("ag_loop", "subprocess", "verified",
-        "Mission, plan, tool loop" + chr(10) + "compile_mission, build_mission_plan, run(max_steps=12); DeepSeekJourneyAgent",
-        "agent/mission.py:231,384 ; mission_plan.py:74 ; runtime.py:62,336", 1, 1, R4Y + 0.40, 0.90)
+        "Mission, plan, tool loop" + chr(10) + "compile_mission, build_mission_plan, run(max_steps=12)",
+        "agent/mission.py:231,384 ; runtime.py:62,336", 1, 1, R4Y + 0.40, 0.90)
     put("ag_gw", "process", "verified",
         "Tool gateway" + chr(10) + "allowlist of 11 tools, audit write, idempotency, then ALLOW_AUTO / REQUIRE_CONFIRMATION / DENY",
         "agent/gateway.py:357-398, 59, 71, 338-347", 2, 1, R4Y + 0.40, 0.90)
@@ -158,11 +160,11 @@ def spec_architecture():
         "SQLite citynexus.db" + chr(10) + "WAL, foreign keys ON, write deadline and busy timeout",
         "db/session.py:70-88 ; config.py:10, 96-98", 3, 1, R5Y + 0.44, 0.90)
     put("db_state", "database", "data",
-        "Journey truth" + chr(10) + "journeys, plan_versions, activities, commitments, events, journey_twins, replan_proposals",
-        "models.py:175, 511, 535, 578, 712, 761, 782", 4, 1, R5Y + 0.44, 0.90)
+        "Journey truth" + chr(10) + "journeys, plan_versions, activities, commitments",
+        "models.py:175, 511, 535, 578, 712", 4, 1, R5Y + 0.44, 0.90)
     put("db_agent", "database", "data",
-        "Agent state and audit" + chr(10) + "journey_missions, agent_runs, agent_run_steps, action_approvals, audit_logs, idempotency_keys",
-        "models.py:212, 254, 271, 692, 562, 677", 5, 1, R5Y + 0.44, 0.90)
+        "Agent state and audit" + chr(10) + "agent_runs, agent_run_steps, approvals, audit_logs",
+        "models.py:254, 271, 562, 677", 5, 1, R5Y + 0.44, 0.90)
 
     edges = [
         edge("cli_traveler", "fe_copilot", "", "verified"),
@@ -301,7 +303,7 @@ def spec_user_journey():
     put("a_loop", "subprocess", "verified", "Mission, plan, loop of 12",
         "agent/mission.py:384 ; runtime.py:336", "L4", 6)
     put("a_gate", "decision", "verified", "Truth, money, C4?",
-        "agent/gateway.py:338-347 ; tool_catalog.py:20-22", "L4", 7)
+        "agent/gateway.py:338-347", "L4", 7)
 
     put("p_mock", "extdata", "verified", "Mock providers (default)",
         ".env.example:18-31 ; config.py:79-81", "L5", 2)
@@ -367,7 +369,7 @@ def spec_user_journey():
         "nodes": nodes,
         "edges": edges,
         "legend": STATE_LEGEND + [{"state": "user", "text": "The traveler's own step"}],
-        "legendOrigin": (12.62, 1.02),
+        "legendOrigin": (12.62, 9.46),
         "notes": [
             "HOW TO READ THIS: follow one column at a time. A step in the traveler lane is what you see; the lanes below it are what the product does while you wait.",
             "EVERY BRANCH CLOSES. The two diamonds in the traveler lane and the one in the agent lane each have a labelled YES and NO, and both outcomes lead somewhere; the only terminal shape is the one on the right.",
@@ -382,100 +384,117 @@ def spec_user_journey():
 
 
 # ==========================================================================  03
-ACOLS = 9
-ACW = 11.88 / ACOLS
-AROWS = [1.02, 1.96, 2.90, 3.84, 4.78, 5.72]
-
-
+# Redrawn against gateway.py as measured on 2026-10-22:
+#   dispatch()  :358 allowlist test -> :359 raise HTTPException(404)
+#                 -> :377 record_audit -> :397 commit -> :398 handler
+#   so an unknown tool name is refused BEFORE any audit row is written.
+#   request_replan() :559 evaluate_action -> :576 _read_idempotent -> :626
+#                 record_audit -> :645 _write_idempotent   (policy first)
+#   accept_replan()  :680 evaluate_action -> :695 _read_idempotent -> :799
+#                 record_audit -> :824 _write_idempotent
+#   read handlers  :421 / :437 / :482 / :497 return ALLOW_AUTO with no policy call
+#   typed handlers :1041-1053, :1178, :1238, :1286 raise domain guards
+#                 (409 / 422 / 404); request_commitment_change audits at :1363
+# There is therefore no single universal door order and the drawing says so.
 def spec_agent_workflow():
+    lanes = [("A", "REQUEST AND MODEL BOUNDARY", 1.00, 1.34),
+             ("B", "AGENT RUNTIME (backend/app/agent/runtime.py)", 2.44, 1.34),
+             ("C", "GATEWAY ENTRY (gateway.py dispatch)", 3.88, 1.34),
+             ("D", "HANDLER-SPECIFIC DOORS", 5.32, 1.34),
+             ("E", "DOMAIN SERVICES AND PERSISTED STATE", 6.76, 1.34),
+             ("F", "TRAVELER SEES AND DECIDES", 8.20, 1.34)]
+    bands = [band(0.40, y, 12.10, h, "%s   %s" % (k, t), "laneband", dash="2", labelSize=8.0)
+             for k, t, y, h in lanes]
+    ly = dict((k, (y, h)) for k, t, y, h in lanes)
     nodes, edges = [], []
+    LC = 7
+    cw = 11.88 / LC
 
-    def put(id_, kind, state, text, src, col, row, role=None, h=0.82):
-        bw = ACW - 0.13
-        geom = {"x": round(0.46 + col * ACW + (ACW - bw) / 2.0, 3),
-                "y": round(AROWS[row] + 0.30, 3), "w": round(bw, 3), "h": h}
+    def put(id_, kind, state, text, src, lane, col, role=None, h=0.82):
+        y, lh = ly[lane]
+        bw = cw - 0.13
+        geom = {"x": round(0.46 + col * cw + (cw - bw) / 2.0, 3),
+                "y": round(y + 0.34 + (lh - 0.34 - h) / 2.0, 3), "w": round(bw, 3), "h": h}
         d = node(id_, kind, state, text, src, geom)
         if role:
             d["role"] = role
         nodes.append(d)
 
     put("a_start", "terminator", "agent", "A request arrives",
-        "main.py:14169, 1367", 0, 0, role="start")
-    put("a_ctx", "process", "verified", "Trusted context assembled",
-        "main.py:13593 _copilot_context()", 1, 0)
-    put("a_avail", "decision", "verified", "AI up?",
-        "config.py:14 ai_enabled ; agent/ai_availability.py", 2, 0)
+        "main.py:14169, 1367", "A", 0, role="start")
+    put("a_ctx", "process", "verified", "Trusted context built server-side",
+        "main.py:13593", "A", 1)
+    put("a_avail", "decision", "verified", "AI up?", "config.py:14 ; ai_availability.py",
+        "A", 2)
     put("a_int", "process", "verified", "Classify into one of 8 intents",
-        "main.py:14190-14228", 3, 0)
+        "main.py:14190-14228", "A", 3)
     put("a_env", "process", "verified", "Semantic envelope and policy",
-        "ai/semantic_compiler.py:123, 229", 4, 0)
-    put("a_mis", "process", "verified", "JourneyMission persisted",
-        "agent/mission.py:231, 384", 5, 0)
-    put("a_step", "process", "verified", "AgentRun opened",
-        "agent/runtime.py:238 ; models.py:254", 6, 0)
-    put("a_budget", "decision", "verified", "Step < 12?",
-        "agent/runtime.py:336 run(max_steps=12)", 7, 0)
-    put("a_def", "process", "verified", "Tool catalogue offered",
-        "agent/runtime.py:62", 8, 0)
-
-    put("a_choice", "decision", "verified", "Model wants a tool?",
-        "agent/runtime.py:395-420", 8, 1)
-    put("a_gw", "process", "verified", "gateway.dispatch(name, request)",
-        "agent/gateway.py:357", 7, 1)
-    put("a_allow", "decision", "verified", "On allowlist?",
-        "agent/gateway.py:358", 6, 1)
-    put("a_deny", "process", "verified", "Refused 404, still audited",
-        "gateway.py:359, 377-393", 5, 1)
-    put("a_idem", "process", "verified", "Idempotent: repeat the receipt",
-        "gateway.py:59, 71 ; models.py:677", 4, 1)
-    put("a_auth", "decision", "verified", "Authorization",
-        "gateway.py:338-347", 3, 1)
-    put("a_kind", "decision", "verified", "Read / plan / money / C4?",
-        "tool_catalog.py:20-22", 2, 1)
+        "semantic_compiler.py:123, 229", "A", 4)
     put("a_fall", "process", "built", "Deterministic fallback, no model turn",
-        "main.py:13722 ; ai_availability.py", 1, 1)
+        "main.py:13722 ; ai_availability.py", "A", 2, h=0.0)
+    nodes.pop()  # fallback belongs one row lower, redrawn below
+    put("a_fall", "rect", "built", "Deterministic fallback, no model turn, availability worded NOT_CONFIGURED or DISABLED_BY_OPS",
+        "main.py:13722 ; ai_availability.py", "A", 5, h=0.82)
+    put("pv_ai", "extdata", "external", "DeepSeek Responses API",
+        "responses.py:244 ; config.py:14-30", "A", 6)
 
-    put("a_result", "process", "verified", "Result analysed and stored",
-        "agent/runtime.py:238", 5, 2)
-    put("a_exec", "process", "verified", "Handler runs against domain services",
-        "agent/gateway.py:400+", 4, 2)
-    put("a_confirm", "process", "built", "Held for your confirmation",
-        "gateway.py:343 ; main.py:2081", 3, 2)
-    put("a_fail", "decision", "verified", "Provider failed?",
-        "agent/runtime.py:660", 6, 2)
-    put("a_degrade", "process", "verified", "Degraded run recorded",
-        "runtime.py:660 ; AGENT_RUNTIME_ARCHITECTURE.md:12-15", 7, 2)
+    put("a_mis", "process", "verified", "Mission and plan compiled",
+        "mission.py:231,384 ; mission_plan.py:74", "B", 0)
+    put("a_run", "process", "verified", "AgentRun opened",
+        "runtime.py:238 ; models.py:254", "B", 1)
+    put("a_budget", "decision", "verified", "Step < 12?", "runtime.py:336", "B", 2)
+    put("a_offer", "process", "verified", "Tool catalogue offered to the model",
+        "runtime.py:62", "B", 3)
+    put("a_choice", "decision", "verified", "Model wants a tool?", "runtime.py:395-420", "B", 4)
+    put("a_result", "process", "verified", "Result analysed, run payload persisted",
+        "runtime.py:238", "B", 5)
+    put("a_fail", "decision", "verified", "Provider failed?", "runtime.py:660", "B", 6)
 
-    put("a_prop", "process", "verified", "Replan proposal produced",
-        "main.py:10923 ; models.py:782", 5, 3)
-    put("a_show", "process", "verified", "Shown in the feed and the rail",
-        "main.py:10125, 1099, 2032", 4, 3)
+    put("a_gw", "process", "verified", "dispatch(tool_name, request)",
+        "gateway.py:357", "C", 1)
+    put("a_allow", "decision", "verified", "On the allowlist?", "gateway.py:358", "C", 2)
+    put("a_404", "rect", "verified", "HTTP 404 raised at gateway.py:359, which is BEFORE record_audit at :377 - an unknown tool name leaves no audit row from this door",
+        "gateway.py:358-359 vs :377", "C", 3, h=1.04)
+    put("a_audit", "process", "verified", "Only now: audit the request and commit",
+        "gateway.py:377-397", "C", 4)
+    put("a_family", "decision", "verified", "Which handler family?",
+        "gateway.py:360-372", "C", 5)
+    put("a_more", "decision", "verified", "More work?", "runtime.py:336", "C", 6)
+
+    put("a_read", "process", "verified", "Read handlers answer ALLOW_AUTO with no policy call",
+        "gateway.py:421, 437, 482, 497", "D", 0, h=0.9)
+    put("a_auth", "process", "verified", "Replan pair: evaluate_action policy FIRST",
+        "gateway.py:559, 680", "D", 1, h=0.9)
+    put("a_idem", "process", "verified", "then the idempotency replay check",
+        "gateway.py:576, 695", "D", 2, h=0.9)
+    put("a_guard", "process", "built", "Typed actions: per-handler domain guards 409 / 422 / 404",
+        "gateway.py:1041-1053, 1178, 1238, 1286", "D", 3, h=0.9)
+    put("a_confirm", "process", "built", "REQUIRE_CONFIRMATION: approval held, not applied yet",
+        "gateway.py:341-347, 720, 748 ; main.py:2081", "D", 4, h=0.9)
+    put("a_write", "process", "verified", "effect, then audit, then the idempotent receipt",
+        "gateway.py:626, 645, 799, 824, 1363", "D", 5, h=0.9)
+    put("a_note", "rect", "planned", "There is no single door order to claim: policy precedes idempotency in the replan pair, reads skip both, typed actions use their own guards",
+        "measured per handler 2026-10-22", "D", 6, h=1.04)
+    nodes[-1]["role"] = "note"
+
+    put("a_exec", "process", "verified", "Domain service performs it",
+        "main.py:10923, 13097 ; app/replanning", "E", 1)
+    put("d_runs", "database", "data", "agent_runs and agent_run_steps",
+        "models.py:254, 271", "E", 2)
+    put("d_audit", "database", "data", "audit_logs, actor_type AI_AGENT",
+        "models.py:562 ; gateway.py:377", "E", 3)
+    put("d_idem", "database", "data", "idempotency_keys", "models.py:677", "E", 4)
+    put("a_prop", "process", "verified", "Replan proposal produced, never applied silently",
+        "main.py:10923 ; models.py:782", "E", 5)
+    put("a_degrade", "process", "verified", "Degraded or skipped run recorded; journey truth unchanged",
+        "runtime.py:660 ; AGENT_RUNTIME_ARCHITECTURE.md:12-15", "E", 6, h=0.9)
+
+    put("a_show", "process", "verified", "Feed, timeline and rail show it",
+        "main.py:10125, 1099, 2032", "F", 2)
     put("a_fb", "rect", "user", "You accept, reject, or keep talking",
-        "main.py:13097, 13569", 3, 3)
-    put("a_more", "decision", "verified", "More work?",
-        "agent/runtime.py:336", 2, 3)
+        "main.py:13097, 13569", "F", 4)
     put("a_stop", "terminator", "agent", "Run closed and readable",
-        "main.py:929, 1099", 1, 3, role="end")
-
-    nodes.append(node("t_list", "rect", "verified",
-                      "THE 11 TOOLS THIS BUILD EXPOSES   tool_catalog.py:26-59" + chr(10)
-                      + "read-only: inspect_journey, inspect_twin, list_replans, search_city_services" + chr(10)
-                      + "plan-shaping: request_replan, accept_replan" + chr(10)
-                      + "typed actions: replace_activity, reschedule_activity, create_booking, cancel_refundable_booking, request_commitment_change" + chr(10)
-                      + "MCP surfaces: V1 six tools (server.py:157-207), V2 eleven (server.py:404-549)",
-                      "tool_catalog.py:26-59",
-                      {"x": 12.52, "y": 1.32, "w": 3.62, "h": 2.60}, size=6.4))
-    nodes[-1]["role"] = "note"
-    nodes.append(node("not_list", "rect", "planned",
-                      "WHAT IS STILL MISSING" + chr(10)
-                      + "native Hermes binary absent, runtime identity still DIRECT (BLOCKERS.md:9-12)" + chr(10)
-                      + "live Valhalla URL not configured, so the travel matrix stays mocked (BLOCKERS.md:13-14)" + chr(10)
-                      + "no real payment or refund instrument registered (AGENT_TOOL_CATALOG.md:16-18)" + chr(10)
-                      + "impact resolver default disabled (config.py:33)" + chr(10)
-                      + "physical phone and PWA shadow trial not performed (CURRENT_STATUS.md:4)",
-                      "BLOCKERS.md:9-16 ; AGENT_TOOL_CATALOG.md:16-18",
-                      {"x": 12.52, "y": 4.10, "w": 3.62, "h": 2.60}, size=6.4))
-    nodes[-1]["role"] = "note"
+        "main.py:929, 1099", "F", 6, role="end")
 
     edges = [
         edge("a_start", "a_ctx", "", "agent"),
@@ -484,25 +503,31 @@ def spec_agent_workflow():
         edge("a_avail", "a_fall", "NO", "built"),
         edge("a_fall", "a_show", "plain answer", "built"),
         edge("a_int", "a_env", "", "verified"),
+        edge("a_int", "pv_ai", "model turn", "verified"),
         edge("a_env", "a_mis", "", "verified"),
-        edge("a_mis", "a_step", "", "verified"),
-        edge("a_step", "a_budget", "", "verified"),
-        edge("a_budget", "a_def", "YES", "verified"),
-        edge("a_budget", "a_degrade", "NO, budget spent", "verified"),
-        edge("a_def", "a_choice", "", "verified"),
+        edge("a_mis", "a_run", "", "verified"),
+        edge("a_run", "a_budget", "", "verified"),
+        edge("a_budget", "a_offer", "YES", "verified"),
+        edge("a_offer", "a_choice", "", "verified"),
         edge("a_choice", "a_gw", "YES", "verified"),
         edge("a_choice", "a_result", "NO, final answer", "verified"),
         edge("a_gw", "a_allow", "", "verified"),
-        edge("a_allow", "a_idem", "YES", "verified"),
-        edge("a_allow", "a_deny", "NO", "verified"),
-        edge("a_deny", "a_result", "refusal recorded", "verified"),
-        edge("a_idem", "a_auth", "", "verified"),
-        edge("a_auth", "a_kind", "ALLOW_AUTO", "verified"),
-        edge("a_auth", "a_confirm", "REQUIRE_CONFIRMATION", "built"),
-        edge("a_auth", "a_deny", "DENY", "verified"),
-        edge("a_kind", "a_exec", "read or plan", "verified"),
-        edge("a_kind", "a_confirm", "money or C4", "built"),
-        edge("a_confirm", "a_exec", "after you approve", "built"),
+        edge("a_allow", "a_404", "NO", "verified"),
+        edge("a_allow", "a_audit", "YES", "verified"),
+        edge("a_audit", "a_family", "", "verified"),
+        edge("a_family", "a_read", "read", "verified"),
+        edge("a_family", "a_auth", "replan pair", "verified"),
+        edge("a_family", "a_guard", "typed action", "built"),
+        edge("a_auth", "a_idem", "policy first", "verified"),
+        edge("a_idem", "a_confirm", "", "verified"),
+        edge("a_confirm", "a_write", "allowed or approved", "built"),
+        edge("a_guard", "a_write", "guards passed", "built"),
+        edge("a_read", "a_result", "ALLOW_AUTO", "verified"),
+        edge("a_write", "a_exec", "", "verified"),
+        edge("a_exec", "d_runs", "steps recorded", "verified"),
+        edge("a_exec", "a_prop", "if it changes the plan", "verified"),
+        edge("a_write", "d_audit", "audit row", "verified"),
+        edge("a_write", "d_idem", "receipt", "verified"),
         edge("a_exec", "a_result", "", "verified"),
         edge("a_result", "a_fail", "", "verified"),
         edge("a_fail", "a_degrade", "YES", "verified"),
@@ -513,122 +538,131 @@ def spec_agent_workflow():
         edge("a_fb", "a_more", "", "verified"),
         edge("a_more", "a_ctx", "keep going", "verified"),
         edge("a_more", "a_stop", "NO", "verified"),
+        edge("a_budget", "a_degrade", "NO, spent", "verified"),
+        edge("a_404", "a_fail", "call failed", "verified"),
     ]
 
-    bands = [band(0.40, 0.94, 12.10, 1.02, "REQUEST, INTENT AND THE STEP BUDGET", "laneband",
-                  dash="2", labelSize=8.0),
-             band(0.40, 1.88, 12.10, 1.02, "THE GATEWAY DECIDES WHAT AN AGENT MAY DO", "laneband",
-                  dash="2", labelSize=8.0),
-             band(0.40, 2.82, 12.10, 1.02, "EXECUTION, CONFIRMATION AND FAILURE HANDLING", "laneband",
-                  dash="2", labelSize=8.0),
-             band(0.40, 3.76, 12.10, 1.02, "WHAT COMES BACK TO YOU", "laneband", dash="2",
-                  labelSize=8.0),
-             band(12.44, 1.24, 3.78, 2.76, "PROVEN CAPABILITY", "band", labelSize=8.0),
-             band(12.44, 4.02, 3.78, 2.76, "HONEST GAP LIST", "planned", labelSize=8.0)]
+    panels = [
+        band(12.44, 1.00, 3.78, 3.10, "PROVEN CAPABILITY", "band", labelSize=8.0),
+        band(12.44, 4.28, 3.78, 3.10, "HONEST GAP LIST", "planned", labelSize=8.0),
+    ]
+    nodes.append(node("t_list", "rect", "verified",
+                      "THE 11 TOOLS THIS BUILD EXPOSES   tool_catalog.py:26-59" + chr(10)
+                      + "read-only: inspect_journey, inspect_twin, list_replans, search_city_services" + chr(10)
+                      + "plan-shaping: request_replan, accept_replan" + chr(10)
+                      + "typed: replace_activity, reschedule_activity, create_booking, cancel_refundable_booking, request_commitment_change" + chr(10)
+                      + "MCP: V1 six tools server.py:157-207, V2 eleven server.py:404-549",
+                      "tool_catalog.py:26-59",
+                      {"x": 12.52, "y": 1.34, "w": 3.62, "h": 2.62}, size=6.4))
+    nodes[-1]["role"] = "note"
+    nodes.append(node("not_list", "rect", "planned",
+                      "WHAT IS STILL MISSING" + chr(10)
+                      + "native Hermes binary absent, runtime identity still DIRECT (BLOCKERS.md:9-12)" + chr(10)
+                      + "live Valhalla URL not configured, travel matrix stays mocked (BLOCKERS.md:13-14)" + chr(10)
+                      + "no real payment or refund instrument registered (AGENT_TOOL_CATALOG.md:16-18)" + chr(10)
+                      + "impact resolver default disabled (config.py:33)" + chr(10)
+                      + "physical phone and PWA shadow trial not performed (CURRENT_STATUS.md:4)",
+                      "BLOCKERS.md:9-16 ; AGENT_TOOL_CATALOG.md:16-18",
+                      {"x": 12.52, "y": 4.62, "w": 3.62, "h": 2.62}, size=6.4))
+    nodes[-1]["role"] = "note"
 
     return {
         "file": "03_CityNexus_Agent_Workflow.vsdx",
         "pageName": "Agent Workflow",
         "edgeRule": "none",
         "title": "CityNexus   |   AI Agent Autonomy and Tool-Calling Workflow",
-        "subtitle": ("The path from a sentence to an action, and the three places where the system is allowed to say no. "
-                     "Reads are free; plan changes become proposals; anything touching money or a protected commitment "
-                     "waits for the traveler. A failed provider is recorded as a degraded run instead of quietly rewriting "
-                     "the journey."),
-        "docid": "CNX-SE-VIS-03   Agent workflow (tool loop and authorization gates)",
+        "subtitle": ("Six lanes, drawn against gateway.py as measured on 2026-10-22. The point is not that the agent is "
+                     "smart but that it is bounded: an unknown tool is refused before anything is written, reads answer "
+                     "without a policy call, the replan pair runs policy then idempotency, and typed actions carry their "
+                     "own domain guards. A failed provider becomes a recorded degraded run, never a quiet rewrite."),
+        "docid": "CNX-SE-VIS-03   Agent workflow (measured handler paths)",
         "revline": REVISION,
         "bodySize": 6.8,
         "subSize": 5.0,
-        "bands": bands,
+        "bands": bands + panels,
         "nodes": nodes,
         "edges": edges,
         "legend": [
-            {"state": "verified", "text": "Implemented + evidence"},
-            {"state": "built", "text": "Implemented, not proven on the line"},
+            {"state": "verified", "text": "Read in the source and cited line by line"},
+            {"state": "built", "text": "Present but not proven on the current line"},
             {"state": "planned", "text": "Missing or future work"},
             {"state": "agent", "text": "Agent-owned step"},
             {"state": "user", "text": "Human in the loop"},
+            {"state": "external", "text": "Model boundary"},
+            {"state": "data", "text": "Persisted state"},
         ],
-        "legendOrigin": (0.46, 6.90),
+        "legendOrigin": (0.46, 9.66),
         "notes": [
-            "WHY THIS IS THE DIAGRAM TO PRESENT: an information page answers a question; this loop is what makes CityNexus an agent application. The model never writes journey state itself - agent/runtime.py:336 asks, agent/gateway.py:357 decides, and a domain service performs.",
-            "THREE DOORS, NOT ONE. allowlist (gateway.py:358) then idempotency (gateway.py:59, 71) then authorization (gateway.py:338-347). The PLAN_ONLY boundary is enforced server-side, so a request body claiming to be Hermes cannot widen it.",
-            "max_steps=12 is a real bound in runtime.py:336; a run that spends it is reported as degraded, not retried invisibly.",
-            "The two panels on the right are part of the model, not decoration: the coursework asks to separate what the code does today from what is planned, and claiming a closed automation loop here would be false.",
+            "CORRECTION MADE IN THIS VERSION: an earlier draft drew one universal door order (allowlist, then idempotency, then authorization) and said an unknown tool was still audited. Neither is what the code does. dispatch() raises the 404 at gateway.py:359 and only reaches record_audit at :377 for a tool that passed the allowlist; and in request_replan the policy decision at :559 comes BEFORE the idempotency lookup at :576.",
+            "So the diagram now separates the three handler families, because they genuinely differ: read handlers return ALLOW_AUTO with no policy call (:421, :437, :482, :497); the replan pair runs policy then idempotency then effect then audit then receipt (:559, :576, :626, :645 and :680, :695, :799, :824); the typed actions raise their own domain guards (:1041-1053, :1178, :1238, :1286) and request_commitment_change audits at :1363.",
+            "max_steps=12 is a real bound at runtime.py:336; spending it is reported as a degraded run rather than retried invisibly.",
+            "The right-hand panels belong in the model. The coursework asks to separate what the code does today from what is planned, and claiming a closed automation loop here would be false.",
         ],
-        "notesOrigin": (0.46, 6.20),
-        "notesWidth": 11.7,
-        "notesSize": 6.8,
+        "notesOrigin": (4.98, 9.70),
+        "notesWidth": 11.0,
+        "notesSize": 6.4,
     }
 
 
 # ==========================================================================  04
+# Split into two pages of the SAME .vsdx: a readable overview for the marker,
+# and the included-detail page that carries all 14 «include» relationships.
 def spec_use_case():
-    nodes, edges, bands = [], [], [
-        band(2.24, 0.98, 8.44, 8.14,
-             "CITYNEXUS   -   Smart City Traveler System   (system boundary)", "band",
-             labelSize=8.6),
-    ]
+    common = dict(
+        file="04_CityNexus_Use_Case.vsdx",
+        title="CityNexus   |   UML Use Case Model",
+        docid="CNX-SE-VIS-04   UML use case diagram (2 pages)",
+        revline=REVISION,
+        bodySize=7.4,
+        subSize=5.4,
+    )
 
-    UC = [("UC-01", "UC-01 Manage Account and Preferences", "verified"),
-          ("UC-02", "UC-02 Create and Configure Journey", "verified"),
-          ("UC-03", "UC-03 Manage Journey Commitments", "verified"),
-          ("UC-04", "UC-04 Generate and Select Journey Plan", "verified"),
-          ("UC-05", "UC-05 Discover and Recommend City Services", "verified"),
-          ("UC-06", "UC-06 Book and Order City Services", "built"),
-          ("UC-07", "UC-07 Make Secure Payment", "planned"),
-          ("UC-08", "UC-08 Execute Journey", "verified"),
-          ("UC-09", "UC-09 Detect and Assess Journey Events", "built"),
-          ("UC-10", "UC-10 Replan Disrupted Journey", "verified"),
-          ("UC-11", "UC-11 Use AI Journey Copilot", "verified"),
-          ("UC-12", "UC-12 Review Journey History and Changes", "verified"),
-          ("UC-13", "UC-13 Administer Platform and Providers", "built")]
-    xs = [2.40, 4.52, 6.64, 8.76]
-    ys = [1.40, 2.52, 3.64, 4.76]
+    UC = [("UC-01", "Manage Account and Preferences", "verified"),
+          ("UC-02", "Create and Configure Journey", "verified"),
+          ("UC-03", "Manage Journey Commitments", "verified"),
+          ("UC-04", "Generate and Select Journey Plan", "verified"),
+          ("UC-05", "Discover and Recommend City Services", "verified"),
+          ("UC-06", "Book and Order City Services", "built"),
+          ("UC-07", "Make Secure Payment", "planned"),
+          ("UC-08", "Execute Journey", "verified"),
+          ("UC-09", "Detect and Assess Journey Events", "built"),
+          ("UC-10", "Replan Disrupted Journey", "verified"),
+          ("UC-11", "Use AI Journey Copilot", "verified"),
+          ("UC-12", "Review Journey History and Changes", "verified"),
+          ("UC-13", "Administer Platform and Providers", "built")]
+    state = dict((k, v) for k, _t, v in UC)
+
+    # ---------------- page 1: overview
+    boundary = band(2.30, 0.96, 8.30, 6.30,
+                    "CITYNEXUS   -   Smart City Traveler System   (system boundary)",
+                    "band", labelSize=8.6)
+    p1_nodes, p1_edges = [], []
+    xs = [2.46, 4.58, 6.70, 8.82]
+    ys = [1.42, 2.66, 3.90, 5.14]
+    pos = {}
     for i, (id_, t, st) in enumerate(UC):
         r, c = divmod(i, 4)
         if id_ == "UC-13":
             r, c = 3, 1
-        nodes.append(node(id_, "usecase", st, t,
-                          "use-cases/use-cases.yaml  %s" % id_,
-                          {"x": xs[c], "y": ys[r], "w": 2.00, "h": 0.86}))
-
-    clusters = [("UC-04", [("UC-04.1", "Retrieve City Data"), ("UC-04.2", "Build Planning Constraints"),
-                           ("UC-04.3", "Generate Candidate Plans"), ("UC-04.4", "Validate and Score Plans")], 2.40),
-                ("UC-05", [("UC-05.1", "Retrieve Real Places"), ("UC-05.2", "Apply Context Constraints"),
-                           ("UC-05.3", "Rank Candidates"), ("UC-05.4", "Explain Recommendation")], 4.52),
-                ("UC-10", [("UC-10.1", "Analyse Impact"), ("UC-10.2", "Determine Replan Scope"),
-                           ("UC-10.3", "Generate Legal Plans"), ("UC-10.4", "Score Candidate Plans"),
-                           ("UC-10.5", "Compare Plan Versions"), ("UC-10.6", "Explain Replanning")], 6.64)]
-    for parent, items, cx in clusters:
-        for k, (sid, name) in enumerate(items):
-            col, rr = k % 2, k // 2
-            nodes.append(node("sub_" + sid, "usecase", "built",
-                              "%s %s" % (sid.replace("UC-", ""), name),
-                              "use-cases.yaml detailUseCases of %s" % parent,
-                              {"x": round(cx + col * 1.04, 3),
-                               "y": round(5.90 + rr * 0.94, 3), "w": 1.02, "h": 0.88}))
-            edges.append(edge(parent, "sub_" + sid, "include", "built", kind="include",
-                              labelSize=5.6,
-                              src="use-cases.yaml:17 relationships type=include"))
-
-    nodes.append(node("A Traveler", "actor", "user", "Traveler",
-                      "use-cases.yaml:13 ACT-TRAVELER",
-                      {"x": 0.52, "y": 2.40, "w": 1.30, "h": 1.10}))
-    nodes.append(node("A Admin", "actor", "user", "Administrator",
-                      "use-cases.yaml:17 ACT-ADMIN",
-                      {"x": 0.52, "y": 6.80, "w": 1.30, "h": 1.10}))
-    nodes.append(node("A Ctx", "actor", "built", "Context Event Provider",
-                      "use-cases.yaml:45 ACT-CONTEXT, primary of UC-09",
-                      {"x": 11.02, "y": 6.80, "w": 1.30, "h": 1.10}))
-
-    ext = [("A Auth", "Authentication Service", 1.06), ("A AI", "AI Provider", 1.92),
-           ("A City", "City Data Provider", 2.78), ("A Mob", "Mobility Provider", 3.64),
-           ("A Book", "Booking Provider", 4.46), ("A Pay", "Payment Gateway", 5.32)]
-    for id_, t, y in ext:
-        nodes.append(node(id_, "rect", "external", t, "use-cases.yaml:21-41",
-                          {"x": 12.72, "y": y, "w": 1.62, "h": 0.72}))
-
+        pos[id_] = (xs[c] + 1.00, ys[r] + 0.44)
+        p1_nodes.append(node(id_, "usecase", st, "%s  %s" % (id_, t),
+                             "use-cases/use-cases.yaml  %s" % id_,
+                             {"x": xs[c], "y": ys[r], "w": 2.00, "h": 0.88}))
+    p1_nodes.append(node("A Traveler", "actor", "user", "Traveler",
+                         "use-cases.yaml:13 ACT-TRAVELER",
+                         {"x": 0.56, "y": 2.70, "w": 1.30, "h": 1.14}))
+    p1_nodes.append(node("A Admin", "actor", "user", "Administrator",
+                         "use-cases.yaml:17 ACTOR-ADMIN",
+                         {"x": 0.56, "y": 5.10, "w": 1.30, "h": 1.14}))
+    p1_nodes.append(node("A Ctx", "actor", "built", "Context Event Provider",
+                         "use-cases.yaml:45 ACT-CONTEXT",
+                         {"x": 11.06, "y": 3.60, "w": 1.30, "h": 1.14}))
+    EXT = [("A Auth", "Authentication Service", 1.02), ("A AI", "AI Provider", 1.98),
+           ("A City", "City Data Provider", 2.94), ("A Mob", "Mobility Provider", 3.90),
+           ("A Book", "Booking Provider", 4.86), ("A Pay", "Payment Gateway", 5.82)]
+    for id_, t, y in EXT:
+        p1_nodes.append(node(id_, "rect", "external", t, "use-cases.yaml:21-41",
+                             {"x": 12.74, "y": y, "w": 1.60, "h": 0.78}))
     assoc = {
         "A Traveler": ["UC-01", "UC-02", "UC-03", "UC-04", "UC-05", "UC-06", "UC-07",
                        "UC-08", "UC-10", "UC-11", "UC-12"],
@@ -643,53 +677,99 @@ def spec_use_case():
     }
     for a, targets in assoc.items():
         for t in targets:
-            st = "verified"
-            for id_, _tt, s2 in UC:
-                if id_ == t:
-                    st = s2
-            edges.append(edge(a, t, "", st, kind="assoc", endArrow="0", arrowSize="0",
-                              src="use-cases.yaml primaryActor / supportingActors"))
+            p1_edges.append(edge(a, t, "", state[t], kind="assoc", endArrow="0",
+                                 arrowSize="0",
+                                 src="use-cases.yaml primaryActor / supportingActors"))
     for src_, dst_, cond in (("UC-07", "UC-06", "extend [payment required]"),
                              ("UC-09", "UC-08", "extend [event detected]"),
                              ("UC-10", "UC-09", "extend [replan required]")):
-        edges.append(edge(src_, dst_, cond, "planned" if src_ == "UC-07" else "built",
-                          kind="extend", labelSize=5.8,
-                          src="use-cases.yaml:17 relationships type=extend"))
+        p1_edges.append(edge(src_, dst_, cond, "planned" if src_ == "UC-07" else "built",
+                             kind="extend", labelSize=6.0,
+                             src="use-cases.yaml:17 relationships type=extend"))
 
-    return {
-        "file": "04_CityNexus_Use_Case.vsdx",
-        "pageName": "Use Case Diagram",
-        "edgeRule": "none",
-        "title": "CityNexus   |   UML Use Case Model",
-        "subtitle": ("Thirteen top-level business use cases with exactly the actors the specification names: one traveler, "
-                     "one administrator, one event source and six external systems. Included detail is drawn for the three "
-                     "use cases whose decomposition is part of the Part 2 documentation scope; extend arrows point at the "
-                     "base use case, as UML requires."),
-        "docid": "CNX-SE-VIS-04   UML use case diagram",
-        "revline": REVISION,
-        "bodySize": 6.8,
-        "subSize": 5.0,
-        "bands": bands,
-        "nodes": nodes,
-        "edges": edges,
+    sheet1 = {
+        "name": "Use Case Overview",
+        "subtitle": ("Page 1 of 2 - the scope in one readable picture: 13 business use cases and the nine actors the "
+                     "specification names. The «include» decomposition is on page 2 so this page stays legible."),
+        "nodes": p1_nodes, "edges": p1_edges, "bands": [boundary],
         "legend": [
-            {"state": "verified", "text": "Use case implemented + evidence"},
+            {"state": "verified", "text": "Implemented + evidence"},
             {"state": "built", "text": "Implemented, not proven on the line"},
             {"state": "planned", "text": "Specified, no real implementation"},
             {"state": "user", "text": "Human actor"},
             {"state": "external", "text": "<<external system>>"},
         ],
-        "legendOrigin": (12.62, 1.02),
+        "legendOrigin": (0.46, 7.44),
         "notes": [
-            "SOURCE OF EVERY NAME AND ARROW: use-cases/use-cases.yaml version 0.1.0, status baseline-candidate - 13 top-level use cases, 14 detail use cases, 9 actors, 17 relationships (14 include and 3 extend). Nothing here is invented for the picture.",
-            "UC-07 Make Secure Payment is drawn dashed on purpose. The requirement baseline contains it, but no real payment instrument is registered: the code ships mock-payment only and AGENT_TOOL_CATALOG.md:16-18 states that payment capture and refund are not registered.",
-            "The internal planning solver is deliberately not an actor (use-cases.yaml modelNotes), and the AI provider may suggest, extract or explain but never owns feasibility or persistence authority.",
-            "All requirements are still status proposed: the customer agreement the coursework asks for is a separate deliverable, so this model is a baseline candidate rather than an approved scope.",
+            "Source: use-cases/use-cases.yaml v0.1.0, status baseline-candidate. 13 top-level use cases, 9 actors, 17 relationships (14 include, 3 extend). Every arrow on this page is one of those relationships or a primary/supporting actor link listed against a use case.",
+            "UC-07 Make Secure Payment is dashed because no real payment instrument is registered: the code ships mock-payment only and AGENT_TOOL_CATALOG.md:16-18 says capture and refund are not registered.",
+            "The internal planning solver is deliberately not an actor (use-cases.yaml modelNotes), and the AI provider may suggest or explain but never owns feasibility or persistence authority.",
+            "All requirements are still status proposed: the customer agreement the coursework asks for is separate, so this is a baseline candidate, not approved scope.",
         ],
-        "notesOrigin": (0.46, 8.62),
-        "notesWidth": 11.7,
-        "notesSize": 6.8,
+        "notesOrigin": (0.46, 9.30),
+        "notesWidth": 11.9,
+        "notesSize": 6.6,
     }
+
+    # ---------------- page 2: included detail
+    p2_nodes, p2_edges = [], []
+    clusters = [
+        ("UC-04", "Generate and Select Journey Plan",
+         [("UC-04.1", "Retrieve City Data"), ("UC-04.2", "Build Planning Constraints"),
+          ("UC-04.3", "Generate Candidate Plans"), ("UC-04.4", "Validate and Score Plans")]),
+        ("UC-05", "Discover and Recommend City Services",
+         [("UC-05.1", "Retrieve Real Places"), ("UC-05.2", "Apply Context Constraints"),
+          ("UC-05.3", "Rank Candidates"), ("UC-05.4", "Explain Recommendation")]),
+        ("UC-10", "Replan Disrupted Journey",
+         [("UC-10.1", "Analyse Impact"), ("UC-10.2", "Determine Replan Scope"),
+          ("UC-10.3", "Generate Legal Plans"), ("UC-10.4", "Score Candidate Plans"),
+          ("UC-10.5", "Compare Plan Versions"), ("UC-10.6", "Explain Replanning")]),
+    ]
+    for ci, (parent, ptitle, items) in enumerate(clusters):
+        cx = 0.50 + ci * 5.32
+        p2_nodes.append(band(cx - 0.08, 1.06, 5.10, 6.10,
+                             "%s  %s   -   included capability" % (parent, ptitle),
+                             "band", labelSize=8.0) | {"isBand": True})
+        p2_nodes.append(node(parent, "usecase", state[parent], "%s  %s" % (parent, ptitle),
+                             "use-cases.yaml %s" % parent,
+                             {"x": cx + 1.05, "y": 1.52, "w": 2.90, "h": 0.86}))
+        for k, (sid, name) in enumerate(items):
+            col, rr = k % 2, k // 2
+            p2_nodes.append(node("sub_" + sid, "usecase", "built",
+                                 "%s  %s" % (sid, name),
+                                 "use-cases.yaml detailUseCases of %s" % parent,
+                                 {"x": round(cx + 0.10 + col * 2.50, 3),
+                                  "y": round(2.86 + rr * 1.06, 3), "w": 2.36, "h": 0.86}))
+            p2_edges.append(edge(parent, "sub_" + sid, "include", "built", kind="include",
+                                 labelSize=6.0,
+                                 src="use-cases.yaml:17 relationships type=include"))
+    # bands must go in the bands list, not the node list
+    p2_bands = [x for x in p2_nodes if x.get("isBand")]
+    for x in p2_bands:
+        x.pop("isBand", None)
+    p2_nodes = [x for x in p2_nodes if "label" not in x]
+
+    sheet2 = {
+        "name": "Included Detail",
+        "subtitle": ("Page 2 of 2 - the fourteen «include» relationships from use-cases.yaml, grouped under the three "
+                     "use cases whose decomposition is part of the Part 2 documentation scope. Keeping them off page 1 "
+                     "is what makes page 1 readable."),
+        "nodes": p2_nodes, "edges": p2_edges, "bands": p2_bands,
+        "legend": [{"state": "verified", "text": "Parent use case, implemented"},
+                   {"state": "built", "text": "Included sub-use case"}],
+        "legendOrigin": (0.46, 7.40),
+        "notes": [
+            "These fourteen are documentation-scope detail, not extra business scope: use-cases.yaml modelNotes says UC-04.x, UC-05.x and UC-10.x are focused Part 2 detail use cases used for UML detail.",
+            "Each arrow is one of the 14 include entries in the relationships block of the same file, so the count on this page is checkable against the YAML.",
+        ],
+        "notesOrigin": (0.46, 8.60),
+        "notesWidth": 15.6,
+        "notesSize": 6.6,
+    }
+
+    common["sheets"] = [sheet1, sheet2]
+    common["edgeRule"] = "none"
+    return common
 
 
 ALL = [spec_architecture, spec_user_journey, spec_agent_workflow, spec_use_case]

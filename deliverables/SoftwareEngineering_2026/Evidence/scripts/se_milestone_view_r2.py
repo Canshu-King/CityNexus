@@ -72,6 +72,17 @@ if os.path.exists(MS_MPP):
 mp.FileNew()
 q = mp.ActiveProject
 q.Name = "CityNexus milestone timeline"
+for prop, val in (("Author", "CityNexus coursework build"),
+                  ("Company", "TUTE - Software Engineering module 2026"),
+                  ("Manager", "CityNexus coursework build"),
+                  ("Title", "CityNexus milestone timeline"),
+                  ("Subject", "Software Engineering 2026 Part 2"),
+                  ("Keywords", "CityNexus; milestones; coursework"),
+                  ("Comments", "Derived from CityNexus_Software_Engineering_Plan.mpp")):
+    try:
+        setattr(q, prop, val)
+    except Exception as exc:
+        log("  summary property %s refused: %s" % (prop, type(exc).__name__))
 q.ProjectStart = D.strptime(found[0]["finish"] + " 09:00", "%Y-%m-%d %H:%M")
 try:
     q.CurrencySymbol = "$"
