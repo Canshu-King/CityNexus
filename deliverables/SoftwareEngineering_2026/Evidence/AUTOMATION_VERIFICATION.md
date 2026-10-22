@@ -1,6 +1,6 @@
 # Automation verification
 
-Written 2026-10-22. Every number below was read back out of the produced files or
+Written 2026-10-23. Every number below was read back out of the produced files or
 out of Visio / Project themselves, not typed from memory. The scripts that did
 it are in `Evidence/scripts/`; their raw logs are in `Evidence/logs/`.
 
@@ -88,13 +88,13 @@ process:
 | no link contradicts the dates Project computed | 0 violations |
 | no row carries a constraint (a forced date would override the links) | 0 constrained rows; earliest scheduled start 2026-09-07 |
 | percentages land and completed work is booked on or before the status date | 24 rows booked, 0 at 100% without actuals |
-| work hours and cost correspond | 1808 labour hours, 0 rows where hours or cost disagree with duration x units x rate |
+| work hours and cost correspond | 221 labour hours, 0 rows where hours or cost disagree with duration x units x rate |
 | compute lanes priced without inventing hours | 7 material assignments priced, 0 carrying hours |
 | each declared link TYPE demonstrably drives a date, then returns | declared FF, FS, SS, shown live FF, FS, SS, restored cleanly: True |
 | critical path computed by the engine | 4 rows |
 | dates set by the assignment brief | 6 met, 0 breached, 0 internal targets missed |
 | save, close, reopen in a new process, every field of every row | 0 field differences |
-| published copy | published yes, 380928 bytes, sha256 ef005c12bec6ee94 at that instant (note below); re-read 65 rows, 122 dependency records, 0 violations |
+| published copy | published yes, 386048 bytes, sha256 4cd35d0725c2c5d3 at that instant (note below); re-read 65 rows, 122 dependency records, 0 violations |
 
 Note on file digests: opening a `.mpp` in Project rewrites it, so the sha256 in
 the table above is the bytes at that instant. `MANIFEST.sha256` and the review
@@ -125,7 +125,7 @@ predecessors.
 original plan exists; there is none, so `BaselineSave` was deliberately not
 called rather than used to manufacture a history.
 
-**What the plan admits about itself.** 4 rows are late against the status
+**What the plan admits about itself.** 6 rows are late against the status
 date and stay late. Project's Move-to-Status-Date is inert through COM on this
 install, and stretching those windows to hide the lateness would be a false
 statement about the project. Part 1 is one of them, and its submission can be
@@ -140,8 +140,8 @@ neither confirmed nor denied from this repository - only from the course record.
 | resources | 5 - three named students as work resources, two compute lanes as material resources |
 | project start | 2026-09-07 |
 | status date | 2026-10-22 |
-| project finish | 2026-10-24 |
-| total cost | 36202.0 |
+| project finish | 2026-10-23 |
+| total cost | 4460.688 |
 | critical path | 4 rows |
 | link types used | FF, FS, SS |
 
@@ -153,17 +153,17 @@ neither confirmed nor denied from this repository - only from the course record.
 | 5 of the applied FS links contradicted their own dates | forced `Start` on milestones set constraint type 4 (SNET), which overrides the schedule | 0 constrained rows, 0 link violations, read back from `Task.TaskDependencies` |
 | history, dependency and deadline were one thing | a date field carried all three | percentage carries history, links carry dependency, `Deadline` carries the contract date |
 | per-shape source metadata read back empty | Shape Data written with a cell path that never stored anything | NodeId / State / SourceRef written through `AddNamedRow` + `Prop.<name>.Value` and read back per shape: 01 93/93; 02 118/118; 03 157/157; 04 211/211 |
-| cost did not correspond to hours | resources created with `Type = 1`, which on this install is MATERIAL, so Work stayed 0 and cost was one unit times the rate | students are work resources (`Type = 0`), so Project derives Work from duration x units x 8h; 1808 hours priced against the rates, 0 mismatches |
+| cost did not correspond to hours | resources created with `Type = 1`, which on this install is MATERIAL, so Work stayed 0 and cost was one unit times the rate | students are work resources (`Type = 0`), so Project derives Work from duration x units x 8h; 221 hours priced against the rates, 0 mismatches |
 | progress was not in the file | `PercentComplete` written before the assignment, which silently reads back 0 | assignments first, then percentage, and every row's percentage is read back and asserted |
 | the agent diagram claimed a universal gateway order | one door drawn for every handler, unknown tools shown as audited | three handler families drawn separately, with the measured line numbers, and the correction named on the sheet |
 | the use-case sheet was one dense page | 39 shapes on one page | two pages in the same editable file: overview and include detail |
-| no tablet-readable plan view | 21-page Gantt PDFs only | `Briefing/CityNexus_Plan_Briefing_A3.vsdx/.pdf/.png`, one A3 landscape page drawn from the plan's own computed dates |
+| no tablet-readable plan view | 21-page Gantt PDFs only | `Briefing/CityNexus_Plan_Briefing_A3.vsdx` and `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf`, one A3 landscape page drawn from the plan's own computed dates |
 | members unknown, Part 1 asserted never submitted | placeholder resources at zero and a claim the repository cannot support | three named members with work resources and hours; Part 1 now says what is true: not verifiable from this repository, awaiting the course record |
-| `Briefing_One_Page.pdf` | - | 450065 |
 | `Detailed_Gantt.pdf` | 详细甘特图 | 454510 |
 | `Gantt_Chart.pdf` | 甘特图 | 842537 |
-| `Milestone_Timeline.pdf` | - | 369660 |
+| `Milestone_Timeline.pdf` | - | 369858 |
 | `Network_Diagram.pdf` | 网络图 | 171583 |
+| `Plan_Briefing_Print.pdf` | - | 450530 |
 | `Resource_Sheet.pdf` | 资源工作表 | 147059 |
 | `Tracking_Gantt.pdf` | 跟踪甘特图 | 601735 |
 | `WBS_View.pdf` | 任务工作表 | 196387 |

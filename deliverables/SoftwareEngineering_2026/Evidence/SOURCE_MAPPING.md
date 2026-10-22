@@ -3,7 +3,7 @@
 Every shape and every plan row traces to something that exists. This is the
 table to open when a marker asks "where did you get that from?".
 
-## Measured from the tree, at generation time (2026-10-22)
+## Measured from the tree, at generation time (2026-10-23)
 
 | Fact used in the drawings | How it was measured | Value |
 |---|---|---|
@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1100 |
+| Commits on this branch | `git rev-list --count HEAD` | 1102 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1011), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1012), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -82,19 +82,19 @@ the deployment defaults in `core/config.py`.
 | 11 Delivery | this Evidence folder |
 
 Milestone dates are taken from dated artefacts in the tree, not chosen freely:
-* `M1  Topic and scope agreed` -> 2026-09-09
-* `M2  Requirements baseline drafted` -> 2026-09-16
-* `M3  Architecture design complete` -> 2026-09-23
-* `M4  Core backend running end to end` -> 2026-10-06
-* `M5  Provider mesh integrated behind one interface` -> 2026-09-29
-* `M6  Agent surface proven against a live model` -> 2026-10-06
-* `M7  Frontend running against the real backend` -> 2026-10-02
-* `M8  Integration line stable` -> 2026-09-24
-* `M9  System test complete` -> 2026-10-07
-* `M10  Part 1 deadline (recorded as missed)` -> 2026-09-30
-* `M11  Mid-term review` -> 2026-10-17
-* `M12  Part 2 submission deadline` -> 2026-10-24
-* `M13  Final coursework delivery` -> 2026-10-24
+* `M1  Topic and scope agreed` -> 2026-09-08
+* `M2  Requirements baseline drafted` -> 2026-09-15
+* `M3  Architecture design complete` -> 2026-09-22
+* `M4  Core backend running end to end` -> 2026-10-05
+* `M5  Provider mesh integrated behind one interface` -> 2026-09-28
+* `M6  Agent surface proven against a live model` -> 2026-10-05
+* `M7  Frontend running against the real backend` -> 2026-10-01
+* `M8  Integration line stable` -> 2026-09-23
+* `M9  System test ready (plan target)` -> 2026-10-06
+* `M10  Part 1 course deadline (contract 2026-10-02, missed)` -> 2026-09-29
+* `M11  Mid-term review (held today)` -> 2026-10-16
+* `M12  Part 2 course deadline (contract 2026-11-06)` -> 2026-10-23
+* `M13  Coursework delivery (plan)` -> 2026-10-23
 
 The one deliberate exception is M9 (system test complete), which is a plan
 choice rather than a fact and is marked provisional in its own Notes field.
@@ -128,20 +128,21 @@ choice rather than a fact and is marked provisional in its own Notes field.
 
 | file | bytes | sha256/16 |
 |---|---|---|
-| `Microsoft_Project/Briefing_One_Page.pdf` | 450065 | `29d388ab04e156be` |
 | `Microsoft_Project/Detailed_Gantt.pdf` | 454510 | `99449d41b60a65e0` |
 | `Microsoft_Project/Gantt_Chart.pdf` | 842537 | `c8ecfc8663316dc1` |
-| `Microsoft_Project/Milestone_Timeline.pdf` | 369660 | `fcbb7954ae76d2ff` |
+| `Microsoft_Project/Milestone_Timeline.pdf` | 369858 | `a51c1ed0612e676d` |
 | `Microsoft_Project/Network_Diagram.pdf` | 171583 | `b393c185c450df50` |
+| `Microsoft_Project/Plan_Briefing_Print.pdf` | 450530 | `095fc85c78749ad4` |
 | `Microsoft_Project/Resource_Sheet.pdf` | 147059 | `62f778f5d40380bc` |
 | `Microsoft_Project/Tracking_Gantt.pdf` | 601735 | `9cb7e893f2f77e8a` |
 | `Microsoft_Project/WBS_View.pdf` | 196387 | `54e10c5b0aa2291f` |
-| `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `f72a25b9c131ac95` |
-| `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `8a264cdbf73171eb` |
-| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 517120 | `4add419bd2f33ef1` |
-| `Microsoft_Project/previews/Calendar.png` | 305890 | `9d22ae42bf3c878c` |
-| `Microsoft_Project/previews/Gantt_Chart.png` | 237847 | `7a300cf041be8b33` |
-| `Microsoft_Project/previews/Network_Diagram.png` | 198188 | `3b65c7f44b14eb13` |
-| `Microsoft_Project/previews/Resource_Sheet.png` | 224045 | `597479ef661ac820` |
-| `Microsoft_Project/previews/Tracking_Gantt.png` | 268064 | `d980f57d6b64b3a2` |
-| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 258762 | `c6f18bdfa7f3a9e5` |
+| `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `70dd9939e3d9a6c7` |
+| `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `9959eeb22ffdd08b` |
+| `Microsoft_Project/CityNexus_Plan_Recovery.mpp` | 289792 | `ec3e1a5c7b2b25b8` |
+| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 386048 | `4cd35d0725c2c5d3` |
+| `Microsoft_Project/previews/Calendar.png` | 309398 | `85174fd58ee51322` |
+| `Microsoft_Project/previews/Gantt_Chart.png` | 227347 | `7ae19f04a2814124` |
+| `Microsoft_Project/previews/Network_Diagram.png` | 189475 | `961a3e9b9ac06179` |
+| `Microsoft_Project/previews/Resource_Sheet.png` | 190809 | `bdae2ad9ac47fc68` |
+| `Microsoft_Project/previews/Tracking_Gantt.png` | 327675 | `7dc2cf334b591780` |
+| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 310899 | `be7025d452b83b9c` |

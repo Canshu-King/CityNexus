@@ -1,0 +1,201 @@
+{
+ "generatedAt": "2026-10-23 01:52",
+ "planSha256": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41",
+ "recoverySha256": "ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7",
+ "files": [
+  {
+   "file": "Evidence/se_deck_result.json",
+   "generator": "se_deck_r1.py",
+   "bytes": 16198,
+   "sha256_16": "78e3e56cc8d486c0",
+   "written": "2026-10-23 01:44",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_evidence_reconcile_result.json",
+   "generator": "se_evidence_reconcile_r1.py",
+   "bytes": 9549,
+   "sha256_16": "7e98703a37e6e154",
+   "written": "2026-10-23 01:43",
+   "inPackage": true,
+   "sourceDigestClaims": [
+    "planSha256_12: 4cd35d0725c2 (current)"
+   ]
+  },
+  {
+   "file": "Evidence/se_evidence_revision_result.json",
+   "generator": "se_evidence_revision_r1.py",
+   "bytes": 733,
+   "sha256_16": "85e363d17b0556c8",
+   "written": "2026-10-22 18:53",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_milestone_view_result.json",
+   "generator": "se_milestone_view_r2.py",
+   "bytes": 3197,
+   "sha256_16": "47b9935077c1ae37",
+   "written": "2026-10-23 01:38",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_plan_cpm_r2.json",
+   "generator": "se_plan_cpm_r1.py",
+   "bytes": 20470,
+   "sha256_16": "8107d4ce6bd60f49",
+   "written": "2026-10-23 01:38",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_plan_status_result.json",
+   "generator": "se_plan_status_r1.py",
+   "bytes": 34937,
+   "sha256_16": "a02394b57b3102a1",
+   "written": "2026-10-23 01:38",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_project_brief_result.json",
+   "generator": "se_project_brief_r1.py",
+   "bytes": 4503,
+   "sha256_16": "cac7104936156fe3",
+   "written": "2026-10-23 01:41",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_project_build_r2_result.json",
+   "generator": "se_project_build_r2.py",
+   "bytes": 128853,
+   "sha256_16": "7e9b4ebd5b223a0f",
+   "written": "2026-10-23 01:37",
+   "inPackage": true,
+   "sourceDigestClaims": [
+    "publication.sha256AfterVerification: 4cd35d0725c2c5d3 (current)"
+   ]
+  },
+  {
+   "file": "Evidence/se_project_export_r2_result.json",
+   "generator": "se_project_export_r2.py",
+   "bytes": 788,
+   "sha256_16": "7cee8ac240861887",
+   "written": "2026-10-22 18:47",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_project_recovery_result.json",
+   "generator": "se_project_recovery_r1.py",
+   "bytes": 2145,
+   "sha256_16": "5e1374a19d451b09",
+   "written": "2026-10-23 01:38",
+   "inPackage": true,
+   "sourceDigestClaims": [
+    "sourcePlanSha256: 4cd35d0725c2c5d3 (current)"
+   ]
+  },
+  {
+   "file": "Evidence/se_project_snapshot_r2_result.json",
+   "generator": "se_project_snapshot_r2.py",
+   "bytes": 5325,
+   "sha256_16": "c9eedb23e7c6b1f0",
+   "written": "2026-10-23 01:44",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_review_package_r2_result.json",
+   "generator": "se_review_package_r2.py",
+   "bytes": 1398,
+   "sha256_16": "8d5a323a99f65dd2",
+   "written": "2026-10-23 01:52",
+   "inPackage": false,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_visio_build_result.json",
+   "generator": "se_visio_build_r1.py",
+   "bytes": 61641,
+   "sha256_16": "f1c94e98f239a49f",
+   "written": "2026-10-22 18:50",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_visio_plan_brief_result.json",
+   "generator": "se_visio_plan_brief_r1.py",
+   "bytes": 8379,
+   "sha256_16": "f00d0f87197b7d95",
+   "written": "2026-10-22 18:51",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  },
+  {
+   "file": "Evidence/se_visio_proof_result.json",
+   "generator": "se_visio_proof_r2.py",
+   "bytes": 10248,
+   "sha256_16": "61ebbbba022af9a8",
+   "written": "2026-10-22 18:50",
+   "inPackage": true,
+   "sourceDigestClaims": []
+  }
+ ],
+ "facts": [
+  {
+   "fact": "links declared",
+   "values": {
+    "se_project_build_r2_result.json": 61,
+    "se_plan_cpm_r2.json": 61
+   },
+   "agree": true
+  },
+  {
+   "fact": "links violating date order",
+   "values": {
+    "se_project_build_r2_result.json": 0,
+    "se_plan_cpm_r2.json": 0
+   },
+   "agree": true
+  },
+  {
+   "fact": "M13 coursework delivery date (engine)",
+   "values": {
+    "se_project_build_r2_result.json": "2026-10-23",
+    "se_milestone_view_result.json": "2026-10-23"
+   },
+   "agree": true
+  },
+  {
+   "fact": "late rows at the status date (engine dates)",
+   "values": {
+    "se_plan_status_result.json": 14,
+    "se_project_build_r2_result.json": 14
+   },
+   "agree": true
+  },
+  {
+   "fact": "student hours",
+   "values": {
+    "se_project_build_r2_result.json": 220.9,
+    "se_plan_status_result.json": 220.9
+   },
+   "agree": true
+  },
+  {
+   "fact": "over-allocated person-weeks",
+   "values": {
+    "se_project_build_r2_result.json": 0,
+    "se_plan_status_result.json": 0
+   },
+   "agree": true
+  }
+ ],
+ "citedPaths": 54,
+ "missingCitations": [],
+ "stale": []
+}

@@ -38,7 +38,7 @@ import time
 D = datetime.datetime
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from se_timeutil_r1 import dstr                        # noqa: E402
+from se_timeutil_r1 import dstr, selftest as timeutil_selftest   # noqa: E402
 import se_plan_cpm_r1 as cpm                            # noqa: E402
 from se_project_plan_r2 import PLAN, RESOURCES, PROJECT  # noqa: E402
 
@@ -74,9 +74,17 @@ def date_only(s):
 
 # ============================================================ 0. pre-flight
 def preflight():
+    # The date reader is the measuring stick for every finish, deadline and
+    # status-date comparison in this build, so it is tested before anything is
+    # read: an off-by-one there silently moves tasks in and out of "late".
+    tu = timeutil_selftest()
+    if tu:
+        raise SystemExit("se_timeutil_r1 selftest FAILED, refusing to build: %s"
+                         % "; ".join(tu))
+    log("date reader selftest: pass (17:00 finish reads as the same calendar day)")
     status = dd(PROJECT["status_date"]).date()
     start = dd(PROJECT["start"]).date()
-    res = cpm.check(PLAN, start, status, HOURS_PER_DAY)
+    res = cpm.check(PLAN, start, status, HOURS_PER_DAY, RESOURCES)
     log("pre-flight: %d links, %d violated, %d structural problems"
         % (res["links_total"], len(res["violations"]), len(res["problems"])))
     for v in res["problems"]:
@@ -176,8 +184,15 @@ def build():
         got = str(res.GetField(PJ_RES_TYPE))
         log("resource #%d %-52s type=%s (%s)" % (res.ID, rname[:52], want_type, got))
         if r["rtype"] == "work":
-            res.MaxUnits = float(r["max_units"])   # only valid on a work resource
-            log("   MaxUnits readback=%r" % (res.MaxUnits,))
+            # MaxUnits is the availability ceiling, not 100%: a student on this
+            # module is modelled at avail_week hours out of a 40 h week. The
+            # number is an assumption to be confirmed by each member and it is
+            # the yardstick the overallocation census is measured against.
+            cap = float(r.get("avail_week", r.get("max_units", 1.0) * 40.0)) / 40.0
+            res.MaxUnits = cap                     # only valid on a work resource
+            r["max_units"] = cap
+            log("   MaxUnits readback=%r (= %.0f h/week)" % (res.MaxUnits,
+                                                             cap * 40.0))
         for prop, val in (("StandardRate", r["std"]),
                           ("Initials", r["initials"])):
             try:
@@ -197,6 +212,7 @@ def build():
         res.Notes = r["note"]
         res_ids[r["key"]] = res.ID
         res_meta[res.ID] = {"key": r["key"], "rtype": r["rtype"], "rate": r["std"],
+                            "avail_week": float(r.get("avail_week", 0.0)),
                             "name": rname}
         log("   rate=%s readback=%s maxUnits=%s" % (r["std"], res.StandardRate,
                                                     getattr(res, "MaxUnits", "?")))
@@ -240,7 +256,10 @@ def build():
     # --- deadline (display only), notes --------------------------------------
     for k, row, t in rows:
         if row.get("deadline"):
-            t.Deadline = dd(row["deadline"])
+            # a bare date lands at 00:00, which is outside the working day; the
+            # build already learned that writing a midnight Start puts the row a
+            # day early, so the deadline is written inside working hours too
+            t.Deadline = dd(row["deadline"] + " 09:00")
             log("  deadline %s -> %s (constraint stays %s)"
                 % (k, dstr(t.Deadline), t.ConstraintType))
         n = notes_for(row)
@@ -248,8 +267,29 @@ def build():
             t.Notes = n
 
     # --- assignments FIRST, then percent (measured order) --------------------
-    assigned = []
+    # Student effort is stated in hours (EFF) and turned into assignment units
+    # against the row's real working-day span, so the Work Microsoft Project
+    # computes equals the stated human effort rather than being an artefact of
+    # duration x 100%. Compute lanes are material: they carry units and cost,
+    # never hours.
+    mp.CalculateAll()
+    assigned, eff_reported = [], {}
     for k, row, t in rows:
+        wd = round(t.Duration / (60.0 * HOURS_PER_DAY))
+        for person, hours in sorted((row.get("eff") or {}).items()):
+            if person not in res_ids:
+                raise SystemExit("task %s states effort for unknown resource %r"
+                                 % (k, person))
+            if wd <= 0:
+                raise SystemExit("task %s has no working days to carry %s h"
+                                 % (k, hours))
+            # truncate, never round up: Project derives Work from the units it
+            # is given, so rounding up would book more student hours than the
+            # effort table states
+            units = float(int(hours / (wd * HOURS_PER_DAY) * 10000.0)) / 10000.0
+            t.Assignments.Add(t.ID, res_ids[person], units)
+            assigned.append((k, person, units))
+            eff_reported[k] = eff_reported.get(k, 0.0) + float(hours)
         for rkey, units in (row.get("assign") or []):
             if rkey not in res_ids:
                 raise SystemExit("task %s assigns unknown resource %r" % (k, rkey))
@@ -270,8 +310,10 @@ def build():
         else:
             pct_bad.append("%s asked %s%% reads %s%%" % (k, want, got))
     mp.CalculateAll()
-    log("assignments: %d; percentages confirmed by readback: %d; refused: %s"
-        % (len(assigned), pct_ok, pct_bad or "none"))
+    log("assignments: %d (%d student, %d lane); stated student effort total %.1f h; "
+        "percentages confirmed by readback: %d; refused: %s"
+        % (len(assigned), len(eff_reported), len(assigned) - len(eff_reported),
+           sum(eff_reported.values()), pct_ok, pct_bad or "none"))
     if pct_bad:
         raise SystemExit("percent-complete did not land, which is the revision 1 "
                          "defect: %s" % pct_bad[0])
@@ -296,8 +338,16 @@ def read_all(mp, p, res_meta):
         try:
             for k in range(1, t.Assignments.Count + 1):
                 a = t.Assignments.Item(k)
-                assigns.append({"res": a.ResourceID, "units": a.Units,
-                                "work": a.Work, "cost": a.Cost})
+                row = {"res": a.ResourceID, "units": a.Units,
+                       "work": a.Work, "cost": a.Cost}
+                for prop in ("start", "finish", "overallocated"):
+                    try:
+                        v = getattr(a, {"start": "Start", "finish": "Finish",
+                                        "overallocated": "Overallocated"}[prop])
+                        row[prop] = dstr(v) if prop != "overallocated" else bool(v)
+                    except Exception:
+                        row[prop] = None
+                assigns.append(row)
         except Exception as exc:
             assigns.append({"error": type(exc).__name__})
         rows[t.ID] = {
@@ -669,6 +719,89 @@ def roll_forward(mp, p, rows, ids, status_date, log_fn=log):
     return rec
 
 
+def audit_capacity(rows, ids, res_meta, static, log_fn=log):
+    """The capacity gate, read back out of Project rather than asserted.
+
+    For every work resource this walks the assignments Project itself holds,
+    spreads each assignment's Work across the working days of its own
+    Start..Finish span, and compares the weekly sum with that person's declared
+    availability. It also asks Project whether it considers the resource
+    overallocated. Both must come back clean, otherwise the plan is arithmetically
+    pretty and impossible to execute - which is what the review caught in R2.
+    """
+    avail = {}
+    for rid, meta in res_meta.items():
+        if meta["rtype"] != "work":
+            continue
+        avail[meta["key"]] = meta.get("avail_week", 0.0)
+    weekly, flagged, work_hours = {}, [], 0.0
+    contrib = {}
+    for t in rows.values():
+        for a in t["assigns"]:
+            meta = res_meta.get(a.get("res"))
+            if not meta or meta["rtype"] != "work":
+                continue
+            hrs = (a.get("work") or 0) / 60.0
+            work_hours += hrs
+            s, f = date_only(a.get("start") or t["start"]), \
+                date_only(a.get("finish") or t["finish"])
+            d, n = s, 0
+            while d <= f:
+                if d.weekday() < 5:
+                    n += 1
+                d += datetime.timedelta(days=1)
+            if not n:
+                continue
+            d = s
+            while d <= f:
+                if d.weekday() < 5:
+                    iso = tuple(d.isocalendar()[:2])
+                    key = (meta["key"], iso)
+                    weekly[key] = weekly.get(key, 0.0) + hrs / n
+                    contrib.setdefault(key, []).append((t["wbs"], hrs / n))
+                d += datetime.timedelta(days=1)
+            if a.get("overallocated"):
+                flagged.append("%s / %s assignment flagged overallocated"
+                               % (t["name"][:28], meta["key"]))
+    table, over = [], []
+    for (rkey, iso), hrs in sorted(weekly.items(), key=lambda kv: (kv[0][0],
+                                                                   kv[0][1])):
+        cap = avail.get(rkey, 0.0)
+        # 0.25 h absorbs the unit quantisation above; it is not room to overrun
+        excess = round(max(0.0, hrs - cap - 0.25), 1)
+        table.append({"resource": rkey, "isoWeek": "%d-W%02d" % iso,
+                      "availableHours": round(cap, 1),
+                      "assignedHours": round(hrs, 1),
+                      "overallocatedHours": excess})
+        if excess > 0.0:
+            # name the rows that landed there, or the refusal tells you the week
+            # is impossible without saying which estimate to change
+            who = sorted(contrib.get((rkey, iso), []), key=lambda x: -x[1])
+            over.append("%s %s: Project books %.1f h against %.1f h available; "
+                        "landed from %s"
+                        % (rkey, "%d-W%02d" % iso, hrs, cap,
+                           ", ".join("%s %.1f h" % (w, h) for w, h in who[:8])))
+    static_cap = (static.get("capacity") or {})
+    for rkey in sorted(avail):
+        srow = next((r for r in static_cap.get("weekly", [])
+                     if r["resource"] == rkey), None)
+        peak_static = max([r["assignedHours"] for r in static_cap.get("weekly", [])
+                           if r["resource"] == rkey] or [0])
+        peak_live = max([r["assignedHours"] for r in table
+                         if r["resource"] == rkey] or [0])
+        log_fn("   capacity %-8s available %4.1f h/wk | static peak %5.1f h (%d "
+               "person-weeks) | Project peak %5.1f h"
+               % (rkey, avail[rkey], peak_static,
+                  len(static_cap.get("weekly", [])), peak_live))
+    log_fn("capacity census: %.1f student hours in the file, %d person-weeks over "
+           "availability, %d assignments flagged by Project"
+           % (work_hours, len(over), len(flagged)))
+    for o in over[:10]:
+        log_fn("   OVERALLOCATION %s" % o)
+    return {"studentHours": round(work_hours, 1), "weekly": table,
+            "overallocated": over + flagged, "availabilityPerWeek": avail}
+
+
 # ============================================================ 4. main
 def main():
     static = preflight()
@@ -687,6 +820,7 @@ def main():
         % (ca["earliest_start"], dstr(p.ProjectStart)))
     pa = audit_progress(r1, ids, status_date)
     coa = audit_costs(r1, ids, res_meta, res_ids, assigned)
+    capa = audit_capacity(r1, ids, res_meta, static)
     flags = dict((k, {"statutory": bool(row.get("statutory")),
                       "breach_is_fact": bool(row.get("breach_is_fact"))})
                  for k, row, _t in rows)
@@ -714,6 +848,9 @@ def main():
         bad.append("work/cost does not match the estimate")
     if coa["compute_only_rows_without_zero_hours"]:
         bad.append("a row staffed only by compute lanes carries labour hours")
+    if capa["overallocated"]:
+        bad.append("the plan over-allocates a student against declared "
+                   "availability: %s" % capa["overallocated"][:4])
     if [b for b in da["breached"] if not b["recordedFact"]]:
         bad.append("a date set by the assignment brief is breached by the schedule: %s"
                    % [b["key"] for b in da["breached"] if not b["recordedFact"]])
@@ -729,7 +866,8 @@ def main():
         except Exception:
             pass
         json.dump({"refused": bad, "links": la, "constraints": ca,
-                   "progress": pa, "costs": coa, "proof": proof},
+                   "progress": pa, "costs": coa, "proof": proof,
+                   "capacity": capa, "staticCapacity": static.get("capacity")},
                   open(os.path.join(HERE, "se_project_build_r2_result.json"), "w",
                        encoding="utf-8"), indent=1, ensure_ascii=False, default=str)
         _lf.close()
@@ -758,6 +896,7 @@ def main():
     ca2 = audit_constraints(r2, ids)
     pa2 = audit_progress(r2, ids, status_date)
     coa2 = audit_costs(r2, ids, res_meta, res_ids, assigned)
+    cap2 = audit_capacity(r2, ids, res_meta, static)
     da2 = audit_deadlines(r2, ids, flags)
     cp2 = critical_path(r2)
     snap2 = {"tasks": p2.Tasks.Count, "resources": p2.Resources.Count,
@@ -789,6 +928,9 @@ def main():
         "progressBookedByStatusDate": not pa2["not_booked"] and
         not [x for x in pa2["history_problems"] if not x.startswith("OVERDUE")],
         "costMatchesHours": not coa2["problems"],
+        "noStudentOverallocation": not cap2["overallocated"],
+        "effortWithinCapacity": cap2["studentHours"] <= sum(
+            w["availableHours"] for w in cap2["weekly"]),
         "criticalPathComputed": cp2["count"] > 0,
         "linkTypesLive": bool(proof.get("allTypesLive")),
         "perturbationRestored": not [v for v in proof.values()
@@ -859,6 +1001,7 @@ def main():
 
     result = {"static_preflight": static, "links": la2, "constraints": ca2,
               "progress": pa2, "costs": coa2, "deadlines": da2,
+              "capacity": cap2,
               "status_date": str(status_date), "reopen_drift_count": len(drift),
               "status_roll": roll,
               "critical_path": cp2, "link_proof": proof, "publication": ship_proof,

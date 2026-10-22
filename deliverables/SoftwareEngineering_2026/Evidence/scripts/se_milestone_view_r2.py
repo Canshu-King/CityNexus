@@ -43,6 +43,12 @@ try:
     mp.DisplayAlerts = 0
 except Exception:
     pass
+# A plain open lets Project rewrite the container on close even with nothing
+# edited, so the shipped plan is held read-only for this read and its digest is
+# compared afterwards; FileClose() without an argument can raise a save prompt.
+import stat
+os.chmod(MPP, stat.S_IREAD)
+plan_before = hashlib.sha256(open(MPP, "rb").read()).hexdigest()
 mp.FileOpen(MPP)
 p = mp.ActiveProject
 found = []
@@ -96,10 +102,13 @@ for f in found:
     except Exception:
         pass
     t.Duration = "0d"
-    t.Start = D.strptime(f["finish"], "%Y-%m-%d")
+    # 00:00 is outside the working day, and Project moves a milestone written at
+    # midnight back to the previous working minute: every row came out one day
+    # early against the plan it was copied from. Write it inside working hours.
+    t.Start = D.strptime(f["finish"] + " 09:00", "%Y-%m-%d %H:%M")
     if f["deadline"] and f["deadline"] != "NaT":
         try:
-            t.Deadline = D.strptime(f["deadline"], "%Y-%m-%d")
+            t.Deadline = D.strptime(f["deadline"] + " 09:00", "%Y-%m-%d %H:%M")
         except Exception:
             pass
     t.Notes = ("Copied from CityNexus_Software_Engineering_Plan.mpp by "
@@ -136,8 +145,14 @@ try:
     q.Saved = True
 except Exception:
     pass
-mp.FileClose()
+mp.FileCloseEx(0)
 mp.Quit()
+os.chmod(MPP, stat.S_IWRITE)
+plan_after = hashlib.sha256(open(MPP, "rb").read()).hexdigest()
+log("plan digest %s before, %s after (%s)" % (plan_before[:16], plan_after[:16],
+                                              "held" if plan_after == plan_before
+                                              else "CHANGED BY A READ"))
+ok = ok and plan_after == plan_before
 if ok:
     log("wrote Milestone_Timeline.pdf %d bytes %s from view %r"
         % (os.path.getsize(path),

@@ -586,7 +586,6 @@
    "9.3 50% done, planned to finish 2026-10-02, status date 2026-10-22",
    "9.4 0% done, planned to finish 2026-10-08, status date 2026-10-22",
    "9.6 0% done, planned to finish 2026-10-06, status date 2026-10-22",
-   "10.1 0% done, planned to finish 2026-10-02, status date 2026-10-22",
    "10.2 70% done, planned to finish 2026-10-21, status date 2026-10-22"
   ],
   "milestones_without_date": [],
@@ -616,11 +615,217 @@
    "M12",
    "M13"
   ],
-  "estimated_hours_total": 1808.0,
+  "estimated_hours_total": 221.0,
   "estimated_hours_by_resource": {
-   "yang": 756.0,
-   "wangjr": 448.0,
-   "wangxy": 604.0
+   "yang": 78.0,
+   "wangjr": 75.0,
+   "wangxy": 68.0
+  },
+  "compute_hours_note": "material lanes; priced, never counted as student hours",
+  "capacity": {
+   "students": {
+    "yang": {
+     "availWeek": 20.0
+    },
+    "wangjr": {
+     "availWeek": 20.0
+    },
+    "wangxy": {
+     "availWeek": 20.0
+    }
+   },
+   "weekly": [
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W37",
+     "availableHours": 20.0,
+     "assignedHours": 2.0,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W38",
+     "availableHours": 20.0,
+     "assignedHours": 5.8,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W39",
+     "availableHours": 20.0,
+     "assignedHours": 18.5,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W40",
+     "availableHours": 20.0,
+     "assignedHours": 17.2,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W41",
+     "availableHours": 20.0,
+     "assignedHours": 10.3,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W42",
+     "availableHours": 20.0,
+     "assignedHours": 6.1,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W43",
+     "availableHours": 20.0,
+     "assignedHours": 10.8,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangjr",
+     "isoWeek": "2026-W44",
+     "availableHours": 20.0,
+     "assignedHours": 4.3,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W37",
+     "availableHours": 20.0,
+     "assignedHours": 2.0,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W38",
+     "availableHours": 20.0,
+     "assignedHours": 3.7,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W39",
+     "availableHours": 20.0,
+     "assignedHours": 18.1,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W40",
+     "availableHours": 20.0,
+     "assignedHours": 19.5,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W41",
+     "availableHours": 20.0,
+     "assignedHours": 12.8,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W42",
+     "availableHours": 20.0,
+     "assignedHours": 2.8,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W43",
+     "availableHours": 20.0,
+     "assignedHours": 6.1,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "wangxy",
+     "isoWeek": "2026-W44",
+     "availableHours": 20.0,
+     "assignedHours": 3.0,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W37",
+     "availableHours": 20.0,
+     "assignedHours": 15.6,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W38",
+     "availableHours": 20.0,
+     "assignedHours": 14.5,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W39",
+     "availableHours": 20.0,
+     "assignedHours": 17.2,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W40",
+     "availableHours": 20.0,
+     "assignedHours": 7.4,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W41",
+     "availableHours": 20.0,
+     "assignedHours": 1.7,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W42",
+     "availableHours": 20.0,
+     "assignedHours": 2.3,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W43",
+     "availableHours": 20.0,
+     "assignedHours": 13.7,
+     "overallocatedHours": 0.0
+    },
+    {
+     "resource": "yang",
+     "isoWeek": "2026-W44",
+     "availableHours": 20.0,
+     "assignedHours": 5.7,
+     "overallocatedHours": 0.0
+    }
+   ],
+   "totals": {
+    "yang": {
+     "assignedHours": 78.0,
+     "weeksScheduled": 8,
+     "availableHours": 160.0,
+     "utilisationPct": 48.8
+    },
+    "wangjr": {
+     "assignedHours": 75.0,
+     "weeksScheduled": 8,
+     "availableHours": 160.0,
+     "utilisationPct": 46.9
+    },
+    "wangxy": {
+     "assignedHours": 68.0,
+     "weeksScheduled": 8,
+     "availableHours": 160.0,
+     "utilisationPct": 42.5
+    }
+   },
+   "overallocated": [],
+   "computeHoursPriced": 528.0
   },
   "dates": {
    "1.1": [
@@ -861,28 +1066,30 @@
  "progress": {
   "booked_complete": 24,
   "in_progress": [
-   "4.5  Commerce, guardian and autopi 40%, finish 2026-10-24, remaining 67.2",
-   "5.2  Context providers: Open-Meteo 70%, finish 2026-09-19, remaining 7.2",
-   "6.5  Native Hermes runtime 20%, finish 2026-10-08, remaining 0.0",
-   "8.2  Backport the frontend onto th 50%, finish 2026-09-24, remaining 0.0",
-   "9.1  Backend regression suite 85%, finish 2026-10-22, remaining 12.0",
-   "9.2  Frontend end-to-end suite 60%, finish 2026-10-22, remaining 64.0",
-   "9.3  Close the four P0 defects fro 50%, finish 2026-10-01, remaining 20.0",
-   "10.2  Mid-term review pack: archit 70%, finish 2026-10-17, remaining 39.6",
-   "10.3  Part 2: project plan with WB 80%, finish 2026-10-23, remaining 6.4",
-   "10.4  Part 2: detailed requirement 40%, finish 2026-10-24, remaining 36.0",
-   "11.2  Publish the deliverables to  50%, finish 2026-10-21, remaining 4.0"
+   "4.5  Commerce, guardian and autopi 40%, finish 2026-10-23, remaining 3.0",
+   "5.2  Context providers: Open-Meteo 70%, finish 2026-09-18, remaining 0.9",
+   "6.5  Native Hermes runtime 20%, finish 2026-10-07, remaining 1.6",
+   "8.2  Backport the frontend onto th 50%, finish 2026-09-23, remaining 1.5",
+   "9.1  Backend regression suite 85%, finish 2026-10-21, remaining 1.0",
+   "9.2  Frontend end-to-end suite 60%, finish 2026-10-21, remaining 2.8",
+   "9.3  Close the four P0 defects fro 50%, finish 2026-09-30, remaining 3.0",
+   "10.2  Mid-term review pack: archit 70%, finish 2026-10-16, remaining 3.9",
+   "10.3  Part 2: project plan with WB 80%, finish 2026-10-22, remaining 1.2",
+   "10.4  Part 2: detailed requirement 40%, finish 2026-10-23, remaining 6.6",
+   "11.2  Publish the deliverables to  50%, finish 2026-10-20, remaining 1.0"
   ],
   "history_problems": [
-   "OVERDUE (left visible on purpose): 5.3  Mobility: Valhalla routing be 0%, planned finish 2026-09-22, status date 2026-10-22",
-   "OVERDUE (left visible on purpose): 9.4  Physical phone and PWA shadow 0%, planned finish 2026-10-07, status date 2026-10-22",
-   "OVERDUE (left visible on purpose): 9.6  Final regression re-run and d 0%, planned finish 2026-10-03, status date 2026-10-22",
-   "OVERDUE (left visible on purpose): 10.1  Part 1: ten-slide report wit 0%, planned finish 2026-09-30, status date 2026-10-22"
+   "OVERDUE (left visible on purpose): 2.4  Get the requirement baseline  0%, planned finish 2026-10-21, status date 2026-10-22",
+   "OVERDUE (left visible on purpose): 5.3  Mobility: Valhalla routing be 0%, planned finish 2026-09-21, status date 2026-10-22",
+   "OVERDUE (left visible on purpose): 9.4  Physical phone and PWA shadow 0%, planned finish 2026-10-06, status date 2026-10-22",
+   "OVERDUE (left visible on purpose): 9.5  Verification evidence pack an 0%, planned finish 2026-10-21, status date 2026-10-22",
+   "OVERDUE (left visible on purpose): 9.6  Final regression re-run and d 0%, planned finish 2026-10-02, status date 2026-10-22",
+   "OVERDUE (left visible on purpose): 10.1  Part 1: ten-slide report wit 0%, planned finish 2026-09-29, status date 2026-10-22"
   ],
   "not_booked": []
  },
  "costs": {
-  "labour_hours": 1808.0,
+  "labour_hours": 220.93439999999995,
   "problems": [],
   "computePricedAssignments": 7,
   "compute_only_rows_without_zero_hours": []
@@ -891,9 +1098,9 @@
   "met": [
    {
     "key": "M9",
-    "name": "M9  System test complete",
+    "name": "M9  System test ready (plan target)",
     "deadline": "2026-11-02",
-    "finish": "2026-10-07",
+    "finish": "2026-10-06",
     "statutory": false,
     "recordedFact": false
    },
@@ -901,45 +1108,203 @@
     "key": "10.1",
     "name": "10.1  Part 1: ten-slide report with the Visio model and task allocation",
     "deadline": "2026-10-02",
-    "finish": "2026-09-30",
+    "finish": "2026-09-29",
     "statutory": true,
-    "recordedFact": false
+    "recordedFact": true
    },
    {
     "key": "M10",
-    "name": "M10  Part 1 deadline (recorded as missed)",
+    "name": "M10  Part 1 course deadline (contract 2026-10-02, missed)",
     "deadline": "2026-10-02",
-    "finish": "2026-09-30",
+    "finish": "2026-09-29",
     "statutory": true,
     "recordedFact": true
    },
    {
     "key": "M11",
-    "name": "M11  Mid-term review",
+    "name": "M11  Mid-term review (held today)",
     "deadline": "2026-10-22",
-    "finish": "2026-10-17",
+    "finish": "2026-10-16",
     "statutory": false,
     "recordedFact": false
    },
    {
     "key": "M12",
-    "name": "M12  Part 2 submission deadline",
+    "name": "M12  Part 2 course deadline (contract 2026-11-06)",
     "deadline": "2026-11-06",
-    "finish": "2026-10-24",
+    "finish": "2026-10-23",
     "statutory": true,
     "recordedFact": false
    },
    {
     "key": "M13",
-    "name": "M13  Final coursework delivery",
+    "name": "M13  Coursework delivery (plan)",
     "deadline": "2026-11-06",
-    "finish": "2026-10-24",
+    "finish": "2026-10-23",
     "statutory": true,
     "recordedFact": false
    }
   ],
   "breached": [],
   "internalTargetsMissed": []
+ },
+ "capacity": {
+  "studentHours": 220.9,
+  "weekly": [
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W37",
+    "availableHours": 20.0,
+    "assignedHours": 2.0,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W38",
+    "availableHours": 20.0,
+    "assignedHours": 17.2,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W39",
+    "availableHours": 20.0,
+    "assignedHours": 14.2,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W40",
+    "availableHours": 20.0,
+    "assignedHours": 16.4,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W41",
+    "availableHours": 20.0,
+    "assignedHours": 6.7,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W42",
+    "availableHours": 20.0,
+    "assignedHours": 6.1,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 12.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W37",
+    "availableHours": 20.0,
+    "assignedHours": 2.0,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W38",
+    "availableHours": 20.0,
+    "assignedHours": 11.1,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W39",
+    "availableHours": 20.0,
+    "assignedHours": 19.6,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W40",
+    "availableHours": 20.0,
+    "assignedHours": 17.6,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W41",
+    "availableHours": 20.0,
+    "assignedHours": 7.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W42",
+    "availableHours": 20.0,
+    "assignedHours": 2.8,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 7.6,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W37",
+    "availableHours": 20.0,
+    "assignedHours": 19.9,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W38",
+    "availableHours": 20.0,
+    "assignedHours": 18.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W39",
+    "availableHours": 20.0,
+    "assignedHours": 13.2,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W40",
+    "availableHours": 20.0,
+    "assignedHours": 4.0,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W41",
+    "availableHours": 20.0,
+    "assignedHours": 2.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W42",
+    "availableHours": 20.0,
+    "assignedHours": 2.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 18.0,
+    "overallocatedHours": 0.0
+   }
+  ],
+  "overallocated": [],
+  "availabilityPerWeek": {
+   "yang": 20.0,
+   "wangjr": 20.0,
+   "wangxy": 20.0
+  }
  },
  "status_date": "2026-10-22",
  "reopen_drift_count": 0,
@@ -949,20 +1314,20 @@
   "refused": null,
   "args": "{'MoveCompleted': False, 'MoveIncomplete': True}",
   "open_rows_still_before_status_date": [
-   "2.4 2026-10-19..2026-10-22 at 0%",
-   "5.2 2026-09-16..2026-09-19 at 70%",
-   "5.3 2026-09-16..2026-09-22 at 0%",
-   "6.5 2026-09-30..2026-10-08 at 20%",
-   "8.2 2026-09-16..2026-09-24 at 50%",
-   "9.1 2026-09-24..2026-10-22 at 85%",
-   "9.2 2026-09-24..2026-10-22 at 60%",
-   "9.3 2026-09-24..2026-10-01 at 50%",
-   "9.4 2026-10-01..2026-10-07 at 0%",
-   "9.5 2026-10-19..2026-10-22 at 0%",
-   "9.6 2026-10-01..2026-10-03 at 0%",
-   "10.1 2026-09-23..2026-09-30 at 0%",
-   "10.2 2026-10-02..2026-10-17 at 70%",
-   "11.2 2026-10-20..2026-10-21 at 50%"
+   "2.4 2026-10-19..2026-10-21 at 0%",
+   "5.2 2026-09-16..2026-09-18 at 70%",
+   "5.3 2026-09-16..2026-09-21 at 0%",
+   "6.5 2026-09-30..2026-10-07 at 20%",
+   "8.2 2026-09-16..2026-09-23 at 50%",
+   "9.1 2026-09-24..2026-10-21 at 85%",
+   "9.2 2026-09-24..2026-10-21 at 60%",
+   "9.3 2026-09-24..2026-09-30 at 50%",
+   "9.4 2026-10-01..2026-10-06 at 0%",
+   "9.5 2026-10-19..2026-10-21 at 0%",
+   "9.6 2026-10-01..2026-10-02 at 0%",
+   "10.1 2026-09-23..2026-09-29 at 0%",
+   "10.2 2026-10-02..2026-10-16 at 70%",
+   "11.2 2026-10-20..2026-10-20 at 50%"
   ]
  },
  "critical_path": {
@@ -970,8 +1335,8 @@
   "rows": [
    "4.5  Commerce, guardian and autopilot",
    "10.4  Part 2: detailed requirement specification w",
-   "M12  Part 2 submission deadline",
-   "M13  Final coursework delivery"
+   "M12  Part 2 course deadline (contract 2026-11-06)",
+   "M13  Coursework delivery (plan)"
   ],
   "by_wbs": [
    "4.5",
@@ -990,7 +1355,7 @@
     {
      "key": "10.3",
      "via": "FS",
-     "before": "2026-10-23",
+     "before": "2026-10-22",
      "after": "2026-11-02"
     }
    ],
@@ -1013,8 +1378,8 @@
     {
      "key": "9.5",
      "via": "FF",
-     "before": "2026-10-22",
-     "after": "2026-11-05"
+     "before": "2026-10-21",
+     "after": "2026-11-04"
     }
    ],
    "notRestored": [],
@@ -1042,14 +1407,14 @@
     {
      "key": "9.4",
      "via": "FS",
-     "before": "2026-10-07",
-     "after": "2026-10-21"
+     "before": "2026-10-06",
+     "after": "2026-10-20"
     },
     {
      "key": "9.6",
      "via": "SS",
-     "before": "2026-10-03",
-     "after": "2026-10-17"
+     "before": "2026-10-02",
+     "after": "2026-10-16"
     }
    ],
    "notRestored": [],
@@ -1072,31 +1437,31 @@
  },
  "publication": {
   "published": true,
-  "bytes": 380928,
-  "sha256": "d51641bbdeade0aa9b139d5fb18c3b08c9361a5f8dbec59e0f6aa68940a0246a",
-  "stagedSha256": "d51641bbdeade0aa9b139d5fb18c3b08c9361a5f8dbec59e0f6aa68940a0246a",
+  "bytes": 386048,
+  "sha256": "2487d51048a6e4a975d6855d4e7adc4f475aab54d2638130b870ba161cea52e4",
+  "stagedSha256": "2487d51048a6e4a975d6855d4e7adc4f475aab54d2638130b870ba161cea52e4",
   "identicalToStaged": true,
   "shippedRows": 65,
   "shippedLinksRead": 122,
   "shippedLinkViolations": 0,
-  "shippedCost": 36202.0,
-  "shippedFinish": "2026-10-24",
-  "sha256AfterVerification": "ef005c12bec6ee948174b93102d29858c380689abe2e0cd2d334fee7377ff070",
+  "shippedCost": 4460.688,
+  "shippedFinish": "2026-10-23",
+  "sha256AfterVerification": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41",
   "rewrittenByVerificationOpen": true
  },
  "first_pass": {
   "tasks": 65,
   "resources": 5,
-  "cost": 36202.0,
-  "finish": "2026-10-24",
+  "cost": 4460.688,
+  "finish": "2026-10-23",
   "start": "2026-09-07",
   "critical": 4
  },
  "reopen_pass": {
   "tasks": 65,
   "resources": 5,
-  "cost": 36202.0,
-  "finish": "2026-10-24",
+  "cost": 4460.688,
+  "finish": "2026-10-23",
   "critical": 4
  },
  "checks": {
@@ -1105,6 +1470,8 @@
   "nothingConstrained": true,
   "progressBookedByStatusDate": true,
   "costMatchesHours": true,
+  "noStudentOverallocation": true,
+  "effortWithinCapacity": true,
   "criticalPathComputed": true,
   "linkTypesLive": true,
   "perturbationRestored": true,
@@ -1123,18 +1490,18 @@
    "duration": 1440,
    "durationText": "3 个工作日",
    "start": "2026-09-07",
-   "finish": "2026-09-10",
+   "finish": "2026-09-09",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
+   "work": 660.0,
+   "actualWork": 660.0,
    "remainingWork": 0.0,
-   "cost": 960.0000000000001,
-   "actualCost": 960.0000000000001,
+   "cost": 220.0,
+   "actualCost": 220.0,
    "actualStart": "2026-09-07",
-   "actualFinish": "2026-09-10",
+   "actualFinish": "2026-09-09",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1154,18 +1521,18 @@
    "duration": 480,
    "durationText": "1 个工作日",
    "start": "2026-09-07",
-   "finish": "2026-09-08",
+   "finish": "2026-09-07",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 480.0,
-   "actualWork": 480.0,
+   "work": 180.0,
+   "actualWork": 180.0,
    "remainingWork": 0.0,
-   "cost": 160.00000000000003,
-   "actualCost": 160.00000000000003,
+   "cost": 60.0,
+   "actualCost": 60.0,
    "actualStart": "2026-09-07",
-   "actualFinish": "2026-09-08",
+   "actualFinish": "2026-09-07",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1184,9 +1551,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.375,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-09-07",
+     "finish": "2026-09-07",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: Brief PDF read in full on 2026-10-22; both weights, both dates and the"
@@ -1202,18 +1572,18 @@
    "duration": 480,
    "durationText": "1 个工作日",
    "start": "2026-09-08",
-   "finish": "2026-09-09",
+   "finish": "2026-09-08",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 480.0,
-   "actualWork": 480.0,
+   "work": 120.0,
+   "actualWork": 120.0,
    "remainingWork": 0.0,
-   "cost": 160.00000000000003,
-   "actualCost": 160.00000000000003,
+   "cost": 40.00000000000001,
+   "actualCost": 40.00000000000001,
    "actualStart": "2026-09-08",
-   "actualFinish": "2026-09-09",
+   "actualFinish": "2026-09-08",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1250,9 +1620,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.25,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-09-08",
+     "finish": "2026-09-08",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: Brief item 11 'A smart city traveler system'; use-cases.yaml metadata "
@@ -1268,18 +1641,18 @@
    "duration": 960,
    "durationText": "2 个工作日",
    "start": "2026-09-08",
-   "finish": "2026-09-10",
+   "finish": "2026-09-09",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 120.00000000000001,
+   "actualCost": 120.00000000000001,
    "actualStart": "2026-09-08",
-   "actualFinish": "2026-09-10",
+   "actualFinish": "2026-09-09",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1298,21 +1671,30 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 960.0,
-     "cost": 320.00000000000006
+     "units": 0.125,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-09-08",
+     "finish": "2026-09-09",
+     "overallocated": false
     },
     {
      "res": 2,
-     "units": 0.5,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.125,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-09-08",
+     "finish": "2026-09-09",
+     "overallocated": false
     },
     {
      "res": 3,
-     "units": 0.5,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.125,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-09-08",
+     "finish": "2026-09-09",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: MEMBERSHIP IS EVIDENCED BY THE OWNER'S STATEMENT, NOT BY THE REPOSITOR"
@@ -1327,8 +1709,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-09-09",
-   "finish": "2026-09-09",
+   "start": "2026-09-08",
+   "finish": "2026-09-08",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -1338,8 +1720,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-09-09",
-   "actualFinish": "2026-09-09",
+   "actualStart": "2026-09-08",
+   "actualFinish": "2026-09-08",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1378,16 +1760,16 @@
    "duration": 14880,
    "durationText": "31 个工作日",
    "start": "2026-09-09",
-   "finish": "2026-10-22",
+   "finish": "2026-10-21",
    "slack": 960,
    "critical": false,
    "pct": 81,
-   "pctWork": 90,
-   "work": 6960.0,
-   "actualWork": 6240.0,
-   "remainingWork": 720.0,
-   "cost": 2320.0,
-   "actualCost": 2080.0,
+   "pctWork": 83,
+   "work": 1379.904,
+   "actualWork": 1140.0,
+   "remainingWork": 239.904,
+   "cost": 459.968,
+   "actualCost": 380.0,
    "actualStart": "2026-09-09",
    "actualFinish": "",
    "deadline": "",
@@ -1409,18 +1791,18 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-09",
-   "finish": "2026-09-15",
+   "finish": "2026-09-14",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 240.0,
+   "actualWork": 240.0,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 80.00000000000001,
+   "actualCost": 80.00000000000001,
    "actualStart": "2026-09-09",
-   "actualFinish": "2026-09-15",
+   "actualFinish": "2026-09-14",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1448,9 +1830,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.125,
+     "work": 240.0,
+     "cost": 80.00000000000001,
+     "start": "2026-09-09",
+     "finish": "2026-09-14",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: requirements.yaml sources field cites ARCH/LIB/WEB across 138 entries;"
@@ -1466,18 +1851,18 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-09",
-   "finish": "2026-09-16",
+   "finish": "2026-09-15",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2400.0,
-   "actualWork": 2400.0,
+   "work": 540.0,
+   "actualWork": 540.0,
    "remainingWork": 0.0,
-   "cost": 800.0,
-   "actualCost": 800.0,
+   "cost": 180.0,
+   "actualCost": 180.0,
    "actualStart": "2026-09-09",
-   "actualFinish": "2026-09-16",
+   "actualFinish": "2026-09-15",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1514,9 +1899,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.225,
+     "work": 540.0,
+     "cost": 180.0,
+     "start": "2026-09-09",
+     "finish": "2026-09-15",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: requirements/requirements.yaml v0.3.0 counted on 2026-10-22: 8 + 61 + "
@@ -1532,18 +1920,18 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-09",
-   "finish": "2026-09-15",
+   "finish": "2026-09-14",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 120.0,
+   "actualCost": 120.0,
    "actualStart": "2026-09-09",
-   "actualFinish": "2026-09-15",
+   "actualFinish": "2026-09-14",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1571,9 +1959,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.1875,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-09",
+     "finish": "2026-09-14",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: domain-model/citynexus-core-domain-model-v0.4.2.yaml; use-cases/use-ca"
@@ -1588,8 +1979,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-09-16",
-   "finish": "2026-09-16",
+   "start": "2026-09-15",
+   "finish": "2026-09-15",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -1599,8 +1990,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-16",
+   "actualStart": "2026-09-15",
+   "actualFinish": "2026-09-15",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1648,15 +2039,15 @@
    "duration": 1440,
    "durationText": "3 个工作日",
    "start": "2026-10-19",
-   "finish": "2026-10-22",
+   "finish": "2026-10-21",
    "slack": 960,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
-   "work": 720.0,
+   "work": 239.904,
    "actualWork": 0.0,
-   "remainingWork": 720.0,
-   "cost": 240.0,
+   "remainingWork": 239.904,
+   "cost": 79.968,
    "actualCost": 0.0,
    "actualStart": "",
    "actualFinish": "",
@@ -1668,7 +2059,7 @@
     {
      "from": 60,
      "to": 11,
-     "from_name": "M11  Mid-term review",
+     "from_name": "M11  Mid-term review (held today)",
      "to_name": "2.4  Get the requirement baseline agreed with the teacher as customer",
      "type_raw": 1,
      "type": "FS",
@@ -1678,9 +2069,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 0.5,
-     "work": 720.0,
-     "cost": 240.0
+     "units": 0.1666,
+     "work": 239.904,
+     "cost": 79.968,
+     "start": "2026-10-19",
+     "finish": "2026-10-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: NOT DONE AS OF THE STATUS DATE and re-planned into the remaining windo"
@@ -1696,18 +2090,18 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-23",
+   "finish": "2026-09-22",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 6240.0,
-   "actualWork": 6240.0,
+   "work": 1379.712,
+   "actualWork": 1379.712,
    "remainingWork": 0.0,
-   "cost": 2080.0,
-   "actualCost": 2080.0,
+   "cost": 459.9040000000001,
+   "actualCost": 459.9040000000001,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-23",
+   "actualFinish": "2026-09-22",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1727,18 +2121,18 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-23",
+   "finish": "2026-09-22",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2400.0,
-   "actualWork": 2400.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 800.0,
-   "actualCost": 800.0,
+   "cost": 120.0,
+   "actualCost": 120.0,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-23",
+   "actualFinish": "2026-09-22",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1784,9 +2178,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.15,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-22",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: AGENT_RUNTIME_ARCHITECTURE.md (V3) and contracts/AGENT_RUNTIME_ARCHITE"
@@ -1802,18 +2199,18 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-22",
+   "finish": "2026-09-21",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 419.904,
+   "actualWork": 419.904,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 139.96800000000002,
+   "actualCost": 139.96800000000002,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-22",
+   "actualFinish": "2026-09-21",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1850,9 +2247,21 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.125,
+     "work": 240.0,
+     "cost": 80.00000000000001,
+     "start": "2026-09-16",
+     "finish": "2026-09-21",
+     "overallocated": false
+    },
+    {
+     "res": 2,
+     "units": 0.0937,
+     "work": 179.904,
+     "cost": 59.968,
+     "start": "2026-09-16",
+     "finish": "2026-09-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: contracts/openapi.yaml; AGENT_TOOL_CATALOG.md; backend/app/agent/tool_"
@@ -1868,18 +2277,18 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-22",
+   "finish": "2026-09-21",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 599.808,
+   "actualWork": 599.808,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 199.93600000000004,
+   "actualCost": 199.93600000000004,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-22",
+   "actualFinish": "2026-09-21",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1907,9 +2316,21 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.2187,
+     "work": 419.904,
+     "cost": 139.96800000000002,
+     "start": "2026-09-16",
+     "finish": "2026-09-21",
+     "overallocated": false
+    },
+    {
+     "res": 3,
+     "units": 0.0937,
+     "work": 179.904,
+     "cost": 59.968,
+     "start": "2026-09-16",
+     "finish": "2026-09-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: visio/CityNexus_Visio_Model_Baseline_v1.0.4_RC5.vsdx in git (first com"
@@ -1924,8 +2345,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-09-23",
-   "finish": "2026-09-23",
+   "start": "2026-09-22",
+   "finish": "2026-09-22",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -1935,8 +2356,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-09-23",
-   "actualFinish": "2026-09-23",
+   "actualStart": "2026-09-22",
+   "actualFinish": "2026-09-22",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -1993,16 +2414,16 @@
    "duration": 13440,
    "durationText": "28 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-10-24",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 83,
-   "pctWork": 83,
-   "work": 24000.0,
-   "actualWork": 19968.0,
-   "remainingWork": 4032.0,
-   "cost": 8000.0,
-   "actualCost": 6656.0,
+   "pctWork": 86,
+   "work": 1318.944,
+   "actualWork": 1139.1168,
+   "remainingWork": 179.8272,
+   "cost": 439.648,
+   "actualCost": 379.70560000000006,
    "actualStart": "2026-09-16",
    "actualFinish": "",
    "deadline": "",
@@ -2024,18 +2445,18 @@
    "duration": 4800,
    "durationText": "10 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-30",
+   "finish": "2026-09-29",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 4800.0,
-   "actualWork": 4800.0,
+   "work": 180.0,
+   "actualWork": 180.0,
    "remainingWork": 0.0,
-   "cost": 1600.0,
-   "actualCost": 1600.0,
+   "cost": 60.0,
+   "actualCost": 60.0,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-30",
+   "actualFinish": "2026-09-29",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2090,9 +2511,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 4800.0,
-     "cost": 1600.0
+     "units": 0.0375,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-29",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: backend/app/main.py: 175 @app decorators counted 2026-10-22, 14,569 li"
@@ -2108,18 +2532,18 @@
    "duration": 3840,
    "durationText": "8 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-26",
+   "finish": "2026-09-25",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 3840.0,
-   "actualWork": 3840.0,
+   "work": 239.616,
+   "actualWork": 239.616,
    "remainingWork": 0.0,
-   "cost": 1280.0000000000002,
-   "actualCost": 1280.0000000000002,
+   "cost": 79.87200000000001,
+   "actualCost": 79.87200000000001,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-26",
+   "actualFinish": "2026-09-25",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2147,9 +2571,21 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 3840.0,
-     "cost": 1280.0000000000002
+     "units": 0.0312,
+     "work": 119.808,
+     "cost": 39.93600000000001,
+     "start": "2026-09-16",
+     "finish": "2026-09-25",
+     "overallocated": false
+    },
+    {
+     "res": 2,
+     "units": 0.0312,
+     "work": 119.808,
+     "cost": 39.93600000000001,
+     "start": "2026-09-16",
+     "finish": "2026-09-25",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: backend/app/db/models.py: 60 __tablename__ declarations; idempotency_k"
@@ -2165,18 +2601,18 @@
    "duration": 5760,
    "durationText": "12 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-10-02",
+   "finish": "2026-10-01",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 5760.0,
-   "actualWork": 5760.0,
+   "work": 239.616,
+   "actualWork": 239.616,
    "remainingWork": 0.0,
-   "cost": 1920.0,
-   "actualCost": 1920.0,
+   "cost": 79.87200000000001,
+   "actualCost": 79.87200000000001,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-10-02",
+   "actualFinish": "2026-10-01",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2213,9 +2649,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 5760.0,
-     "cost": 1920.0
+     "units": 0.0416,
+     "work": 239.616,
+     "cost": 79.87200000000001,
+     "start": "2026-09-16",
+     "finish": "2026-10-01",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: main.py:3136, 7369, 7790, 10923, 13097, 13569; backend/app/replanning;"
@@ -2231,18 +2670,18 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-28",
-   "finish": "2026-10-06",
+   "finish": "2026-10-05",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 960.0,
-   "actualCost": 960.0,
+   "cost": 120.0,
+   "actualCost": 120.0,
    "actualStart": "2026-09-28",
-   "actualFinish": "2026-10-06",
+   "actualFinish": "2026-10-05",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2279,9 +2718,12 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 2880.0,
-     "cost": 960.0
+     "units": 0.125,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-28",
+     "finish": "2026-10-05",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: main.py:9846, 2761, 2568; models.py:95, 121; ORD-0355 keeps stay budge"
@@ -2297,16 +2739,16 @@
    "duration": 6720,
    "durationText": "14 个工作日",
    "start": "2026-10-06",
-   "finish": "2026-10-24",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 40,
    "pctWork": 40,
-   "work": 6720.0,
-   "actualWork": 2688.0,
-   "remainingWork": 4032.0,
-   "cost": 2240.0,
-   "actualCost": 896.0,
+   "work": 299.712,
+   "actualWork": 119.8848,
+   "remainingWork": 179.8272,
+   "cost": 99.90400000000001,
+   "actualCost": 39.961600000000004,
    "actualStart": "2026-10-06",
    "actualFinish": "",
    "deadline": "",
@@ -2326,10 +2768,13 @@
    ],
    "assigns": [
     {
-     "res": 1,
-     "units": 1.0,
-     "work": 6720.0,
-     "cost": 2240.0
+     "res": 2,
+     "units": 0.0446,
+     "work": 299.712,
+     "cost": 99.90400000000001,
+     "start": "2026-10-06",
+     "finish": "2026-10-23",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: PARTIAL: endpoints exist (main.py:14404, 1599, 1772) but payment is mo"
@@ -2344,8 +2789,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-06",
-   "finish": "2026-10-06",
+   "start": "2026-10-05",
+   "finish": "2026-10-05",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -2355,8 +2800,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-10-06",
-   "actualFinish": "2026-10-06",
+   "actualStart": "2026-10-05",
+   "actualFinish": "2026-10-05",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2395,16 +2840,16 @@
    "duration": 4320,
    "durationText": "9 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-29",
+   "finish": "2026-09-28",
    "slack": 9120,
    "critical": false,
    "pct": 69,
-   "pctWork": 69,
-   "work": 7680.0,
-   "actualWork": 5328.0,
-   "remainingWork": 2352.0,
-   "cost": 2560.0,
-   "actualCost": 1776.0,
+   "pctWork": 67,
+   "work": 899.904,
+   "actualWork": 605.904,
+   "remainingWork": 294.0,
+   "cost": 299.968,
+   "actualCost": 201.968,
    "actualStart": "2026-09-16",
    "actualFinish": "",
    "deadline": "",
@@ -2426,18 +2871,18 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-23",
+   "finish": "2026-09-22",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2400.0,
-   "actualWork": 2400.0,
+   "work": 300.0,
+   "actualWork": 300.0,
    "remainingWork": 0.0,
-   "cost": 800.0,
-   "actualCost": 800.0,
+   "cost": 100.0,
+   "actualCost": 100.0,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-23",
+   "actualFinish": "2026-09-22",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2474,9 +2919,12 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.125,
+     "work": 300.0,
+     "cost": 100.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-22",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: integrations/discovery/photon.py:20-27; discovery/real_city.py:617, 68"
@@ -2492,16 +2940,16 @@
    "duration": 1440,
    "durationText": "3 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-19",
+   "finish": "2026-09-18",
    "slack": 12000,
    "critical": false,
    "pct": 70,
    "pctWork": 70,
-   "work": 1440.0,
-   "actualWork": 1007.9999999999999,
-   "remainingWork": 432.0000000000001,
-   "cost": 480.0,
-   "actualCost": 335.99999999999994,
+   "work": 180.0,
+   "actualWork": 125.99999999999999,
+   "remainingWork": 54.000000000000014,
+   "cost": 60.0,
+   "actualCost": 41.99999999999999,
    "actualStart": "2026-09-16",
    "actualFinish": "",
    "deadline": "",
@@ -2540,9 +2988,12 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 1440.0,
-     "cost": 480.0
+     "units": 0.125,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-18",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: integrations/context/open_meteo.py:29-36 wired; the provider is off un"
@@ -2558,15 +3009,15 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-22",
+   "finish": "2026-09-21",
    "slack": 11520,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
-   "work": 1920.0,
+   "work": 240.0,
    "actualWork": 0.0,
-   "remainingWork": 1920.0,
-   "cost": 640.0000000000001,
+   "remainingWork": 240.0,
+   "cost": 80.00000000000001,
    "actualCost": 0.0,
    "actualStart": "",
    "actualFinish": "",
@@ -2588,9 +3039,12 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.125,
+     "work": 240.0,
+     "cost": 80.00000000000001,
+     "start": "2026-09-16",
+     "finish": "2026-09-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: NOT WORKING: BLOCKERS.md:13-14 records live Valhalla as skipped becaus"
@@ -2606,18 +3060,18 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-23",
-   "finish": "2026-09-29",
+   "finish": "2026-09-28",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 179.904,
+   "actualWork": 179.904,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 59.968,
+   "actualCost": 59.968,
    "actualStart": "2026-09-23",
-   "actualFinish": "2026-09-29",
+   "actualFinish": "2026-09-28",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2645,9 +3099,12 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.0937,
+     "work": 179.904,
+     "cost": 59.968,
+     "start": "2026-09-23",
+     "finish": "2026-09-28",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: .env.example:18-31 and integrations/mock/providers.py:13; config.py:79"
@@ -2662,8 +3119,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-09-29",
-   "finish": "2026-09-29",
+   "start": "2026-09-28",
+   "finish": "2026-09-28",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -2673,8 +3130,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-09-29",
-   "actualFinish": "2026-09-29",
+   "actualStart": "2026-09-28",
+   "actualFinish": "2026-09-28",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2713,16 +3170,16 @@
    "duration": 7680,
    "durationText": "16 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-10-08",
+   "finish": "2026-10-07",
    "slack": 5760,
    "critical": false,
    "pct": 82,
-   "pctWork": 100,
-   "work": 9600.0,
-   "actualWork": 9600.0,
-   "remainingWork": 0.0,
-   "cost": 3212.0,
-   "actualCost": 3207.2,
+   "pctWork": 93,
+   "work": 1319.616,
+   "actualWork": 1223.7696,
+   "remainingWork": 95.84639999999999,
+   "cost": 451.87199999999996,
+   "actualCost": 415.1232,
    "actualStart": "2026-09-16",
    "actualFinish": "",
    "deadline": "",
@@ -2744,18 +3201,18 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-23",
+   "finish": "2026-09-22",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2400.0,
-   "actualWork": 2400.0,
+   "work": 300.0,
+   "actualWork": 300.0,
    "remainingWork": 0.0,
-   "cost": 800.0,
-   "actualCost": 800.0,
+   "cost": 100.0,
+   "actualCost": 100.0,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-23",
+   "actualFinish": "2026-09-22",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2783,9 +3240,12 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.125,
+     "work": 300.0,
+     "cost": 100.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-22",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: main.py:14190-14228 (8 intents) and main.py:13593 _copilot_context()."
@@ -2801,18 +3261,18 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-23",
-   "finish": "2026-10-01",
+   "finish": "2026-09-30",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
+   "work": 299.808,
+   "actualWork": 299.808,
    "remainingWork": 0.0,
-   "cost": 966.0,
-   "actualCost": 966.0,
+   "cost": 105.936,
+   "actualCost": 105.936,
    "actualStart": "2026-09-23",
-   "actualFinish": "2026-10-01",
+   "actualFinish": "2026-09-30",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2840,15 +3300,21 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 2880.0,
-     "cost": 960.0
+     "units": 0.1041,
+     "work": 299.808,
+     "cost": 99.936,
+     "start": "2026-09-23",
+     "finish": "2026-09-30",
+     "overallocated": false
     },
     {
      "res": 4,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.0
+     "cost": 6.0,
+     "start": "2026-09-23",
+     "finish": "2026-09-30",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: agent/mission.py:231, 384; mission_plan.py:74; runtime.py:62, 336 run("
@@ -2864,18 +3330,18 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-23",
-   "finish": "2026-09-30",
+   "finish": "2026-09-29",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2400.0,
-   "actualWork": 2400.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 800.0,
-   "actualCost": 800.0,
+   "cost": 120.0,
+   "actualCost": 120.0,
    "actualStart": "2026-09-23",
-   "actualFinish": "2026-09-30",
+   "actualFinish": "2026-09-29",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2903,9 +3369,12 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.15,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-23",
+     "finish": "2026-09-29",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: agent/gateway.py:357-398, 59, 71, 338-347; approval boundary main.py:2"
@@ -2921,18 +3390,18 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-09-30",
-   "finish": "2026-10-06",
+   "finish": "2026-10-05",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 1920.0,
-   "actualWork": 1920.0,
+   "work": 240.0,
+   "actualWork": 240.0,
    "remainingWork": 0.0,
-   "cost": 640.0000000000001,
-   "actualCost": 640.0000000000001,
+   "cost": 80.00000000000001,
+   "actualCost": 80.00000000000001,
    "actualStart": "2026-09-30",
-   "actualFinish": "2026-10-06",
+   "actualFinish": "2026-10-05",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -2969,9 +3438,12 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.125,
+     "work": 240.0,
+     "cost": 80.00000000000001,
+     "start": "2026-09-30",
+     "finish": "2026-10-05",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: tool_catalog.py:26-59; agent-mcp/citynexus_mcp/server.py:128 (V1 six) "
@@ -2987,16 +3459,16 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-30",
-   "finish": "2026-10-08",
+   "finish": "2026-10-07",
    "slack": 5760,
    "critical": false,
    "pct": 20,
    "pctWork": 20,
-   "work": 0.0,
-   "actualWork": 0.0,
-   "remainingWork": 0.0,
-   "cost": 6.000000000000001,
-   "actualCost": 1.2000000000000002,
+   "work": 119.808,
+   "actualWork": 23.9616,
+   "remainingWork": 95.84639999999999,
+   "cost": 45.93600000000001,
+   "actualCost": 9.1872,
    "actualStart": "2026-09-30",
    "actualFinish": "",
    "deadline": "",
@@ -3016,10 +3488,22 @@
    ],
    "assigns": [
     {
+     "res": 3,
+     "units": 0.0416,
+     "work": 119.808,
+     "cost": 39.93600000000001,
+     "start": "2026-09-30",
+     "finish": "2026-10-07",
+     "overallocated": false
+    },
+    {
      "res": 5,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.000000000000001
+     "cost": 6.000000000000001,
+     "start": "2026-09-30",
+     "finish": "2026-10-07",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: PARTIAL AND UNPROVEN: integrations/hermes/native_client.py:34, 71, 132"
@@ -3034,8 +3518,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-06",
-   "finish": "2026-10-06",
+   "start": "2026-10-05",
+   "finish": "2026-10-05",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -3045,8 +3529,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-10-06",
-   "actualFinish": "2026-10-06",
+   "actualStart": "2026-10-05",
+   "actualFinish": "2026-10-05",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3076,18 +3560,18 @@
    "duration": 5760,
    "durationText": "12 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-10-02",
+   "finish": "2026-10-01",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 9600.0,
-   "actualWork": 9600.0,
+   "work": 959.712,
+   "actualWork": 959.712,
    "remainingWork": 0.0,
-   "cost": 3206.0,
-   "actualCost": 3206.0,
+   "cost": 325.904,
+   "actualCost": 325.904,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-10-02",
+   "actualFinish": "2026-10-01",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3107,18 +3591,18 @@
    "duration": 3840,
    "durationText": "8 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-26",
+   "finish": "2026-09-25",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 3840.0,
-   "actualWork": 3840.0,
+   "work": 299.904,
+   "actualWork": 299.904,
    "remainingWork": 0.0,
-   "cost": 1280.0000000000002,
-   "actualCost": 1280.0000000000002,
+   "cost": 99.96800000000002,
+   "actualCost": 99.96800000000002,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-26",
+   "actualFinish": "2026-09-25",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3146,9 +3630,12 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 3840.0,
-     "cost": 1280.0000000000002
+     "units": 0.0781,
+     "work": 299.904,
+     "cost": 99.96800000000002,
+     "start": "2026-09-16",
+     "finish": "2026-09-25",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: frontend/src/app/V8Experience.tsx; routes/v8Routes.ts:1-33.\rOBSERVED ("
@@ -3164,18 +3651,18 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-24",
+   "finish": "2026-09-23",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
+   "work": 299.808,
+   "actualWork": 299.808,
    "remainingWork": 0.0,
-   "cost": 960.0,
-   "actualCost": 960.0,
+   "cost": 99.936,
+   "actualCost": 99.936,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-24",
+   "actualFinish": "2026-09-23",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3212,9 +3699,12 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 2880.0,
-     "cost": 960.0
+     "units": 0.1041,
+     "work": 299.808,
+     "cost": 99.936,
+     "start": "2026-09-16",
+     "finish": "2026-09-23",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: components/JourneyMap.tsx; features/planning/PlanComparison.tsx; main."
@@ -3230,18 +3720,18 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-24",
-   "finish": "2026-10-02",
+   "finish": "2026-10-01",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 966.0,
-   "actualCost": 966.0,
+   "cost": 126.0,
+   "actualCost": 126.0,
    "actualStart": "2026-09-24",
-   "actualFinish": "2026-10-02",
+   "actualFinish": "2026-10-01",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3269,15 +3759,21 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 2880.0,
-     "cost": 960.0
+     "units": 0.125,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-24",
+     "finish": "2026-10-01",
+     "overallocated": false
     },
     {
      "res": 4,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.0
+     "cost": 6.0,
+     "start": "2026-09-24",
+     "finish": "2026-10-01",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: features/agent/CopilotDock.tsx, AgentRunRail.tsx; features/checkin/che"
@@ -3292,8 +3788,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-02",
-   "finish": "2026-10-02",
+   "start": "2026-10-01",
+   "finish": "2026-10-01",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -3303,8 +3799,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-10-02",
-   "actualFinish": "2026-10-02",
+   "actualStart": "2026-10-01",
+   "actualFinish": "2026-10-01",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3343,16 +3839,16 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-24",
+   "finish": "2026-09-23",
    "slack": 10560,
    "critical": false,
    "pct": 75,
-   "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
-   "remainingWork": 0.0,
-   "cost": 966.0,
-   "actualCost": 963.0,
+   "pctWork": 83,
+   "work": 540.0,
+   "actualWork": 450.0,
+   "remainingWork": 90.0,
+   "cost": 186.0,
+   "actualCost": 153.0,
    "actualStart": "2026-09-16",
    "actualFinish": "",
    "deadline": "",
@@ -3374,18 +3870,18 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-24",
+   "finish": "2026-09-23",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 2880.0,
-   "actualWork": 2880.0,
+   "work": 360.0,
+   "actualWork": 360.0,
    "remainingWork": 0.0,
-   "cost": 960.0,
-   "actualCost": 960.0,
+   "cost": 120.0,
+   "actualCost": 120.0,
    "actualStart": "2026-09-16",
-   "actualFinish": "2026-09-24",
+   "actualFinish": "2026-09-23",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3422,9 +3918,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 2880.0,
-     "cost": 960.0
+     "units": 0.125,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-23",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: _qoder_integration_20260919 line and the four-leg landing loop of 2026"
@@ -3440,16 +3939,16 @@
    "duration": 2880,
    "durationText": "6 个工作日",
    "start": "2026-09-16",
-   "finish": "2026-09-24",
+   "finish": "2026-09-23",
    "slack": 10560,
    "critical": false,
    "pct": 50,
    "pctWork": 50,
-   "work": 0.0,
-   "actualWork": 0.0,
-   "remainingWork": 0.0,
-   "cost": 6.0,
-   "actualCost": 3.0,
+   "work": 180.0,
+   "actualWork": 90.0,
+   "remainingWork": 90.0,
+   "cost": 66.0,
+   "actualCost": 33.0,
    "actualStart": "2026-09-16",
    "actualFinish": "",
    "deadline": "",
@@ -3469,10 +3968,22 @@
    ],
    "assigns": [
     {
+     "res": 3,
+     "units": 0.0625,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-23",
+     "overallocated": false
+    },
+    {
      "res": 5,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.0
+     "cost": 6.0,
+     "start": "2026-09-16",
+     "finish": "2026-09-23",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: PARTIAL: ORD-0245 measured the payload growing from 16 to 26 keys; 11 "
@@ -3487,8 +3998,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-09-24",
-   "finish": "2026-09-24",
+   "start": "2026-09-23",
+   "finish": "2026-09-23",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -3498,8 +4009,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-09-24",
-   "actualFinish": "2026-09-24",
+   "actualStart": "2026-09-23",
+   "actualFinish": "2026-09-23",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -3538,16 +4049,16 @@
    "duration": 9600,
    "durationText": "20 个工作日",
    "start": "2026-09-24",
-   "finish": "2026-10-22",
+   "finish": "2026-10-21",
    "slack": 960,
    "critical": false,
    "pct": 58,
-   "pctWork": 53,
-   "work": 20640.0,
-   "actualWork": 11040.0,
-   "remainingWork": 9600.0,
-   "cost": 6898.0,
-   "actualCost": 3688.7,
+   "pctWork": 39,
+   "work": 2038.944,
+   "actualWork": 788.304,
+   "remainingWork": 1250.64,
+   "cost": 697.648,
+   "actualCost": 271.468,
    "actualStart": "2026-09-24",
    "actualFinish": "",
    "deadline": "",
@@ -3569,16 +4080,16 @@
    "duration": 9600,
    "durationText": "20 个工作日",
    "start": "2026-09-24",
-   "finish": "2026-10-22",
+   "finish": "2026-10-21",
    "slack": 960,
    "critical": false,
    "pct": 85,
    "pctWork": 85,
-   "work": 4800.0,
-   "actualWork": 4080.0,
-   "remainingWork": 720.0,
-   "cost": 1606.0,
-   "actualCost": 1365.1,
+   "work": 419.52,
+   "actualWork": 356.592,
+   "remainingWork": 62.928,
+   "cost": 145.84000000000003,
+   "actualCost": 123.96400000000001,
    "actualStart": "2026-09-24",
    "actualFinish": "",
    "deadline": "",
@@ -3617,15 +4128,21 @@
    "assigns": [
     {
      "res": 2,
-     "units": 0.5,
-     "work": 4800.0,
-     "cost": 1600.0
+     "units": 0.0437,
+     "work": 419.52,
+     "cost": 139.84000000000003,
+     "start": "2026-09-24",
+     "finish": "2026-10-21",
+     "overallocated": false
     },
     {
      "res": 4,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.0
+     "cost": 6.0,
+     "start": "2026-09-24",
+     "finish": "2026-10-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: 242 backend test modules counted 2026-10-22. The 2026-10-13 report mea"
@@ -3641,16 +4158,16 @@
    "duration": 9600,
    "durationText": "20 个工作日",
    "start": "2026-09-24",
-   "finish": "2026-10-22",
+   "finish": "2026-10-21",
    "slack": 960,
    "critical": false,
    "pct": 60,
    "pctWork": 60,
-   "work": 9600.0,
-   "actualWork": 5760.0,
-   "remainingWork": 3840.0,
-   "cost": 3206.0,
-   "actualCost": 1923.6,
+   "work": 419.52,
+   "actualWork": 251.712,
+   "remainingWork": 167.808,
+   "cost": 145.84,
+   "actualCost": 87.50399999999999,
    "actualStart": "2026-09-24",
    "actualFinish": "",
    "deadline": "",
@@ -3688,16 +4205,31 @@
    ],
    "assigns": [
     {
+     "res": 2,
+     "units": 0.0187,
+     "work": 179.52,
+     "cost": 59.84,
+     "start": "2026-09-24",
+     "finish": "2026-10-21",
+     "overallocated": false
+    },
+    {
      "res": 3,
-     "units": 1.0,
-     "work": 9600.0,
-     "cost": 3200.0
+     "units": 0.025,
+     "work": 240.0,
+     "cost": 80.0,
+     "start": "2026-09-24",
+     "finish": "2026-10-21",
+     "overallocated": false
     },
     {
      "res": 4,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.0
+     "cost": 6.0,
+     "start": "2026-09-24",
+     "finish": "2026-10-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: 184 e2e specs counted 2026-10-22; the authoritative-mode gate needs a "
@@ -3713,16 +4245,16 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-24",
-   "finish": "2026-10-01",
+   "finish": "2026-09-30",
    "slack": 6240,
    "critical": false,
    "pct": 50,
    "pctWork": 50,
-   "work": 2400.0,
-   "actualWork": 1200.0,
-   "remainingWork": 1200.0,
-   "cost": 800.0,
-   "actualCost": 400.0,
+   "work": 360.0,
+   "actualWork": 180.0,
+   "remainingWork": 180.0,
+   "cost": 120.0,
+   "actualCost": 60.0,
    "actualStart": "2026-09-24",
    "actualFinish": "",
    "deadline": "",
@@ -3752,9 +4284,12 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.15,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-09-24",
+     "finish": "2026-09-30",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: BUG_REPORT_20260913.md:4 lists P0 x4 and P1 x3; Bug-001 (MockMobilityP"
@@ -3770,15 +4305,15 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-10-01",
-   "finish": "2026-10-07",
+   "finish": "2026-10-06",
    "slack": 6240,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
-   "work": 1920.0,
+   "work": 299.904,
    "actualWork": 0.0,
-   "remainingWork": 1920.0,
-   "cost": 640.0000000000001,
+   "remainingWork": 299.904,
+   "cost": 99.96800000000002,
    "actualCost": 0.0,
    "actualStart": "",
    "actualFinish": "",
@@ -3809,7 +4344,7 @@
      "from": 50,
      "to": 53,
      "from_name": "9.4  Physical phone and PWA shadow trial",
-     "to_name": "M9  System test complete",
+     "to_name": "M9  System test ready (plan target)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -3818,9 +4353,12 @@
    "assigns": [
     {
      "res": 3,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0000000000001
+     "units": 0.1562,
+     "work": 299.904,
+     "cost": 99.96800000000002,
+     "start": "2026-10-01",
+     "finish": "2026-10-06",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: NOT PERFORMED: CURRENT_STATUS.md:4 says SHADOW_TRIAL_CODE_READY_PENDIN"
@@ -3836,15 +4374,15 @@
    "duration": 1440,
    "durationText": "3 个工作日",
    "start": "2026-10-19",
-   "finish": "2026-10-22",
+   "finish": "2026-10-21",
    "slack": 960,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
-   "work": 1440.0,
+   "work": 360.0,
    "actualWork": 0.0,
-   "remainingWork": 1440.0,
-   "cost": 480.0,
+   "remainingWork": 360.0,
+   "cost": 120.0,
    "actualCost": 0.0,
    "actualStart": "",
    "actualFinish": "",
@@ -3875,9 +4413,21 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 1440.0,
-     "cost": 480.0
+     "units": 0.125,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-10-19",
+     "finish": "2026-10-21",
+     "overallocated": false
+    },
+    {
+     "res": 2,
+     "units": 0.125,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-10-19",
+     "finish": "2026-10-21",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: PARTIAL AND OPEN: this build writes Evidence/AUTOMATION_VERIFICATION.m"
@@ -3893,15 +4443,15 @@
    "duration": 960,
    "durationText": "2 个工作日",
    "start": "2026-10-01",
-   "finish": "2026-10-03",
+   "finish": "2026-10-02",
    "slack": 7200,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
-   "work": 480.0,
+   "work": 180.0,
    "actualWork": 0.0,
-   "remainingWork": 480.0,
-   "cost": 166.0,
+   "remainingWork": 180.0,
+   "cost": 66.0,
    "actualCost": 0.0,
    "actualStart": "",
    "actualFinish": "",
@@ -3923,7 +4473,7 @@
      "from": 52,
      "to": 53,
      "from_name": "9.6  Final regression re-run and defect count for the report",
-     "to_name": "M9  System test complete",
+     "to_name": "M9  System test ready (plan target)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -3932,22 +4482,28 @@
    "assigns": [
     {
      "res": 2,
-     "units": 0.5,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.1875,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-10-01",
+     "finish": "2026-10-02",
+     "overallocated": false
     },
     {
      "res": 4,
      "units": 1.0,
      "work": 1.0,
-     "cost": 6.0
+     "cost": 6.0,
+     "start": "2026-10-01",
+     "finish": "2026-10-02",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: NOT RUN: the Part 2 report has to quote one final pass/fail count take"
   },
   {
    "id": 53,
-   "name": "M9  System test complete",
+   "name": "M9  System test ready (plan target)",
    "wbs": "9.7",
    "summary": false,
    "outline": 2,
@@ -3955,8 +4511,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-07",
-   "finish": "2026-10-07",
+   "start": "2026-10-06",
+   "finish": "2026-10-06",
    "slack": 6240,
    "critical": false,
    "pct": 0,
@@ -3977,7 +4533,7 @@
      "from": 50,
      "to": 53,
      "from_name": "9.4  Physical phone and PWA shadow trial",
-     "to_name": "M9  System test complete",
+     "to_name": "M9  System test ready (plan target)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -3986,7 +4542,7 @@
      "from": 52,
      "to": 53,
      "from_name": "9.6  Final regression re-run and defect count for the report",
-     "to_name": "M9  System test complete",
+     "to_name": "M9  System test ready (plan target)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4006,16 +4562,16 @@
    "duration": 11040,
    "durationText": "23 个工作日",
    "start": "2026-09-23",
-   "finish": "2026-10-24",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 52,
-   "pctWork": 50,
-   "work": 17040.0,
-   "actualWork": 8520.0,
-   "remainingWork": 8520.0,
-   "cost": 5680.0,
-   "actualCost": 2840.0,
+   "pctWork": 47,
+   "work": 2339.328,
+   "actualWork": 1097.5296,
+   "remainingWork": 1241.7984,
+   "cost": 779.7760000000001,
+   "actualCost": 365.8432000000001,
    "actualStart": "2026-09-23",
    "actualFinish": "",
    "deadline": "",
@@ -4037,15 +4593,15 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-09-23",
-   "finish": "2026-09-30",
-   "slack": 900,
+   "finish": "2026-09-29",
+   "slack": 960,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
-   "work": 3600.0,
+   "work": 540.0,
    "actualWork": 0.0,
-   "remainingWork": 3600.0,
-   "cost": 1200.0,
+   "remainingWork": 540.0,
+   "cost": 180.0,
    "actualCost": 0.0,
    "actualStart": "",
    "actualFinish": "",
@@ -4067,7 +4623,7 @@
      "from": 55,
      "to": 59,
      "from_name": "10.1  Part 1: ten-slide report with the Visio model and task allocation",
-     "to_name": "M10  Part 1 deadline (recorded as missed)",
+     "to_name": "M10  Part 1 course deadline (contract 2026-10-02, missed)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4076,21 +4632,30 @@
    "assigns": [
     {
      "res": 1,
-     "units": 0.5,
-     "work": 1200.0,
-     "cost": 400.0
+     "units": 0.1,
+     "work": 240.0,
+     "cost": 80.00000000000001,
+     "start": "2026-09-23",
+     "finish": "2026-09-29",
+     "overallocated": false
     },
     {
      "res": 2,
-     "units": 0.5,
-     "work": 1200.0,
-     "cost": 400.0
+     "units": 0.075,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-09-23",
+     "finish": "2026-09-29",
+     "overallocated": false
     },
     {
      "res": 3,
-     "units": 0.5,
-     "work": 1200.0,
-     "cost": 400.0
+     "units": 0.05,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-09-23",
+     "finish": "2026-09-29",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: SUBMISSION STATE IS NOT VERIFIABLE FROM THIS REPOSITORY. The brief set"
@@ -4106,16 +4671,16 @@
    "duration": 5280,
    "durationText": "11 个工作日",
    "start": "2026-10-02",
-   "finish": "2026-10-17",
+   "finish": "2026-10-16",
    "slack": 1536,
    "critical": false,
    "pct": 70,
    "pctWork": 70,
-   "work": 7919.999999999999,
-   "actualWork": 5543.999999999999,
-   "remainingWork": 2376.0,
-   "cost": 2640.0,
-   "actualCost": 1847.9999999999998,
+   "work": 779.3280000000001,
+   "actualWork": 545.5296000000001,
+   "remainingWork": 233.79840000000002,
+   "cost": 259.77600000000007,
+   "actualCost": 181.84320000000002,
    "actualStart": "2026-10-02",
    "actualFinish": "",
    "deadline": "",
@@ -4145,7 +4710,7 @@
      "from": 56,
      "to": 60,
      "from_name": "10.2  Mid-term review pack: architecture, journey, agent loop, use cases",
-     "to_name": "M11  Mid-term review",
+     "to_name": "M11  Mid-term review (held today)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4163,21 +4728,30 @@
    "assigns": [
     {
      "res": 1,
-     "units": 0.5,
-     "work": 2640.0,
-     "cost": 880.0
+     "units": 0.0568,
+     "work": 299.904,
+     "cost": 99.96800000000002,
+     "start": "2026-10-02",
+     "finish": "2026-10-16",
+     "overallocated": false
     },
     {
      "res": 2,
-     "units": 0.5,
-     "work": 2640.0,
-     "cost": 880.0
+     "units": 0.0454,
+     "work": 239.71200000000002,
+     "cost": 79.90400000000001,
+     "start": "2026-10-02",
+     "finish": "2026-10-16",
+     "overallocated": false
     },
     {
      "res": 3,
-     "units": 0.5,
-     "work": 2640.0,
-     "cost": 880.0
+     "units": 0.0454,
+     "work": 239.71200000000002,
+     "cost": 79.90400000000001,
+     "start": "2026-10-02",
+     "finish": "2026-10-16",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: The four Visio drawings and this plan were produced on 2026-10-22 and "
@@ -4193,16 +4767,16 @@
    "duration": 1920,
    "durationText": "4 个工作日",
    "start": "2026-10-19",
-   "finish": "2026-10-23",
+   "finish": "2026-10-22",
    "slack": 480,
    "critical": false,
    "pct": 80,
    "pctWork": 80,
-   "work": 1920.0,
-   "actualWork": 1536.0,
-   "remainingWork": 384.0,
-   "cost": 640.0,
-   "actualCost": 512.0,
+   "work": 360.0,
+   "actualWork": 288.0,
+   "remainingWork": 72.0,
+   "cost": 120.0,
+   "actualCost": 96.0,
    "actualStart": "2026-10-19",
    "actualFinish": "",
    "deadline": "",
@@ -4232,9 +4806,12 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 1920.0,
-     "cost": 640.0
+     "units": 0.1875,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-10-19",
+     "finish": "2026-10-22",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: this .mpp, its exported views and the Evidence/ folder, 2026-10-22."
@@ -4250,16 +4827,16 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-10-19",
-   "finish": "2026-10-24",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 40,
    "pctWork": 40,
-   "work": 3600.0,
-   "actualWork": 1440.0,
-   "remainingWork": 2160.0,
-   "cost": 1200.0,
-   "actualCost": 480.00000000000006,
+   "work": 660.0,
+   "actualWork": 264.0,
+   "remainingWork": 396.0,
+   "cost": 220.0,
+   "actualCost": 88.0,
    "actualStart": "2026-10-19",
    "actualFinish": "",
    "deadline": "",
@@ -4280,7 +4857,7 @@
      "from": 58,
      "to": 61,
      "from_name": "10.4  Part 2: detailed requirement specification write-up",
-     "to_name": "M12  Part 2 submission deadline",
+     "to_name": "M12  Part 2 course deadline (contract 2026-11-06)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4289,22 +4866,28 @@
    "assigns": [
     {
      "res": 2,
-     "units": 1.0,
-     "work": 2400.0,
-     "cost": 800.0
+     "units": 0.15,
+     "work": 360.0,
+     "cost": 120.0,
+     "start": "2026-10-19",
+     "finish": "2026-10-23",
+     "overallocated": false
     },
     {
      "res": 3,
-     "units": 0.5,
-     "work": 1200.0,
-     "cost": 400.0
+     "units": 0.125,
+     "work": 300.0,
+     "cost": 100.0,
+     "start": "2026-10-19",
+     "finish": "2026-10-23",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: 138 requirements and 27 use cases exist as YAML with acceptance criter"
   },
   {
    "id": 59,
-   "name": "M10  Part 1 deadline (recorded as missed)",
+   "name": "M10  Part 1 course deadline (contract 2026-10-02, missed)",
    "wbs": "10.5",
    "summary": false,
    "outline": 2,
@@ -4312,9 +4895,9 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-09-30",
-   "finish": "2026-09-30",
-   "slack": 900,
+   "start": "2026-09-29",
+   "finish": "2026-09-29",
+   "slack": 960,
    "critical": false,
    "pct": 0,
    "pctWork": 0,
@@ -4334,7 +4917,7 @@
      "from": 55,
      "to": 59,
      "from_name": "10.1  Part 1: ten-slide report with the Visio model and task allocation",
-     "to_name": "M10  Part 1 deadline (recorded as missed)",
+     "to_name": "M10  Part 1 course deadline (contract 2026-10-02, missed)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4345,7 +4928,7 @@
   },
   {
    "id": 60,
-   "name": "M11  Mid-term review",
+   "name": "M11  Mid-term review (held today)",
    "wbs": "10.6",
    "summary": false,
    "outline": 2,
@@ -4353,8 +4936,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-17",
-   "finish": "2026-10-17",
+   "start": "2026-10-16",
+   "finish": "2026-10-16",
    "slack": 0,
    "critical": false,
    "pct": 100,
@@ -4364,8 +4947,8 @@
    "remainingWork": 0.0,
    "cost": 0.0,
    "actualCost": 0.0,
-   "actualStart": "2026-10-17",
-   "actualFinish": "2026-10-17",
+   "actualStart": "2026-10-16",
+   "actualFinish": "2026-10-16",
    "deadline": "2026-10-22",
    "constraint": 0,
    "constraintDate": "",
@@ -4375,7 +4958,7 @@
      "from": 56,
      "to": 60,
      "from_name": "10.2  Mid-term review pack: architecture, journey, agent loop, use cases",
-     "to_name": "M11  Mid-term review",
+     "to_name": "M11  Mid-term review (held today)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4383,7 +4966,7 @@
     {
      "from": 60,
      "to": 11,
-     "from_name": "M11  Mid-term review",
+     "from_name": "M11  Mid-term review (held today)",
      "to_name": "2.4  Get the requirement baseline agreed with the teacher as customer",
      "type_raw": 1,
      "type": "FS",
@@ -4395,7 +4978,7 @@
   },
   {
    "id": 61,
-   "name": "M12  Part 2 submission deadline",
+   "name": "M12  Part 2 course deadline (contract 2026-11-06)",
    "wbs": "10.7",
    "summary": false,
    "outline": 2,
@@ -4403,8 +4986,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-24",
-   "finish": "2026-10-24",
+   "start": "2026-10-23",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 0,
@@ -4425,7 +5008,7 @@
      "from": 58,
      "to": 61,
      "from_name": "10.4  Part 2: detailed requirement specification write-up",
-     "to_name": "M12  Part 2 submission deadline",
+     "to_name": "M12  Part 2 course deadline (contract 2026-11-06)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4433,8 +5016,8 @@
     {
      "from": 61,
      "to": 65,
-     "from_name": "M12  Part 2 submission deadline",
-     "to_name": "M13  Final coursework delivery",
+     "from_name": "M12  Part 2 course deadline (contract 2026-11-06)",
+     "to_name": "M13  Coursework delivery (plan)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4454,16 +5037,16 @@
    "duration": 2400,
    "durationText": "5 个工作日",
    "start": "2026-10-19",
-   "finish": "2026-10-24",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 75,
-   "pctWork": 75,
-   "work": 960.0,
-   "actualWork": 720.0,
-   "remainingWork": 240.0,
-   "cost": 320.00000000000006,
-   "actualCost": 240.00000000000003,
+   "pctWork": 86,
+   "work": 420.0,
+   "actualWork": 360.0,
+   "remainingWork": 60.0,
+   "cost": 140.0,
+   "actualCost": 120.0,
    "actualStart": "2026-10-19",
    "actualFinish": "",
    "deadline": "",
@@ -4485,18 +5068,18 @@
    "duration": 480,
    "durationText": "1 个工作日",
    "start": "2026-10-19",
-   "finish": "2026-10-20",
+   "finish": "2026-10-19",
    "slack": 0,
    "critical": false,
    "pct": 100,
    "pctWork": 100,
-   "work": 480.0,
-   "actualWork": 480.0,
+   "work": 300.0,
+   "actualWork": 300.0,
    "remainingWork": 0.0,
-   "cost": 160.00000000000003,
-   "actualCost": 160.00000000000003,
+   "cost": 100.0,
+   "actualCost": 100.0,
    "actualStart": "2026-10-19",
-   "actualFinish": "2026-10-20",
+   "actualFinish": "2026-10-19",
    "deadline": "",
    "constraint": 0,
    "constraintDate": "",
@@ -4524,9 +5107,21 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.375,
+     "work": 180.0,
+     "cost": 60.0,
+     "start": "2026-10-19",
+     "finish": "2026-10-19",
+     "overallocated": false
+    },
+    {
+     "res": 3,
+     "units": 0.25,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-10-19",
+     "finish": "2026-10-19",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: deliverables/SoftwareEngineering_2026/Evidence/ written by this build,"
@@ -4542,16 +5137,16 @@
    "duration": 480,
    "durationText": "1 个工作日",
    "start": "2026-10-20",
-   "finish": "2026-10-21",
+   "finish": "2026-10-20",
    "slack": 1440,
    "critical": false,
    "pct": 50,
    "pctWork": 50,
-   "work": 480.0,
-   "actualWork": 240.0,
-   "remainingWork": 240.0,
-   "cost": 160.00000000000003,
-   "actualCost": 80.00000000000001,
+   "work": 120.0,
+   "actualWork": 60.0,
+   "remainingWork": 60.0,
+   "cost": 40.00000000000001,
+   "actualCost": 20.000000000000004,
    "actualStart": "2026-10-20",
    "actualFinish": "",
    "deadline": "",
@@ -4572,7 +5167,7 @@
      "from": 64,
      "to": 65,
      "from_name": "11.2  Publish the deliverables to the repository",
-     "to_name": "M13  Final coursework delivery",
+     "to_name": "M13  Coursework delivery (plan)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4581,16 +5176,19 @@
    "assigns": [
     {
      "res": 1,
-     "units": 1.0,
-     "work": 480.0,
-     "cost": 160.00000000000003
+     "units": 0.25,
+     "work": 120.0,
+     "cost": 40.00000000000001,
+     "start": "2026-10-20",
+     "finish": "2026-10-20",
+     "overallocated": false
     }
    ],
    "notes": "EVIDENCE: Commit and push are attempted by this build and the result is read bac"
   },
   {
    "id": 65,
-   "name": "M13  Final coursework delivery",
+   "name": "M13  Coursework delivery (plan)",
    "wbs": "11.3",
    "summary": false,
    "outline": 2,
@@ -4598,8 +5196,8 @@
    "milestone": true,
    "duration": 0,
    "durationText": "0 个工作日",
-   "start": "2026-10-24",
-   "finish": "2026-10-24",
+   "start": "2026-10-23",
+   "finish": "2026-10-23",
    "slack": 0,
    "critical": true,
    "pct": 0,
@@ -4620,7 +5218,7 @@
      "from": 64,
      "to": 65,
      "from_name": "11.2  Publish the deliverables to the repository",
-     "to_name": "M13  Final coursework delivery",
+     "to_name": "M13  Coursework delivery (plan)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4628,8 +5226,8 @@
     {
      "from": 61,
      "to": 65,
-     "from_name": "M12  Part 2 submission deadline",
-     "to_name": "M13  Final coursework delivery",
+     "from_name": "M12  Part 2 course deadline (contract 2026-11-06)",
+     "to_name": "M13  Coursework delivery (plan)",
      "type_raw": 1,
      "type": "FS",
      "lag": 0
@@ -4644,30 +5242,35 @@
    "key": "yang",
    "rtype": "work",
    "rate": 20.0,
+   "avail_week": 20.0,
    "name": "Yang Jianbin 0802240329 - requirements /  architecture /  integration"
   },
   "2": {
    "key": "wangjr",
    "rtype": "work",
    "rate": 20.0,
+   "avail_week": 20.0,
    "name": "Wang Jiarui 0802240322 - data integration /  backend scopes /  testing"
   },
   "3": {
    "key": "wangxy",
    "rtype": "work",
    "rate": 20.0,
+   "avail_week": 20.0,
    "name": "Wang Xinyue 0802240324 - frontend /  agent surface /  SRS writing"
   },
   "4": {
    "key": "qoder",
    "rtype": "material",
    "rate": 6.0,
+   "avail_week": 0.0,
    "name": "Qoder agent lanes - automated build and test compute"
   },
   "5": {
    "key": "codex",
    "rtype": "material",
    "rate": 6.0,
+   "avail_week": 0.0,
    "name": "Codex co-development - compute"
   }
  },
@@ -4675,117 +5278,132 @@
   [
    "1.1",
    "yang",
-   1.0
+   0.375
   ],
   [
    "1.2",
    "yang",
-   1.0
-  ],
-  [
-   "1.3",
-   "yang",
-   1.0
+   0.25
   ],
   [
    "1.3",
    "wangjr",
-   0.5
+   0.125
   ],
   [
    "1.3",
    "wangxy",
-   0.5
+   0.125
+  ],
+  [
+   "1.3",
+   "yang",
+   0.125
   ],
   [
    "2.1",
    "yang",
-   1.0
+   0.125
   ],
   [
    "2.2",
    "yang",
-   1.0
+   0.225
   ],
   [
    "2.3",
    "yang",
-   1.0
+   0.1875
   ],
   [
    "2.4",
    "yang",
-   0.5
+   0.1666
   ],
   [
    "3.1",
    "yang",
-   1.0
+   0.15
+  ],
+  [
+   "3.2",
+   "wangjr",
+   0.0937
   ],
   [
    "3.2",
    "yang",
-   1.0
+   0.125
   ],
   [
    "3.3",
    "wangjr",
-   1.0
+   0.2187
+  ],
+  [
+   "3.3",
+   "wangxy",
+   0.0937
   ],
   [
    "4.1",
    "yang",
-   1.0
+   0.0375
+  ],
+  [
+   "4.2",
+   "wangjr",
+   0.0312
   ],
   [
    "4.2",
    "yang",
-   1.0
+   0.0312
   ],
   [
    "4.3",
    "yang",
-   1.0
+   0.0416
   ],
   [
    "4.4",
    "wangjr",
-   1.0
+   0.125
   ],
   [
    "4.5",
-   "yang",
-   1.0
+   "wangjr",
+   0.0446
   ],
   [
    "5.1",
    "wangjr",
-   1.0
+   0.125
   ],
   [
    "5.2",
    "wangjr",
-   1.0
+   0.125
   ],
   [
    "5.3",
    "wangjr",
-   1.0
+   0.125
   ],
   [
    "5.4",
    "wangjr",
-   1.0
+   0.0937
   ],
   [
    "6.1",
    "wangxy",
-   1.0
+   0.125
   ],
   [
    "6.2",
    "wangxy",
-   1.0
+   0.1041
   ],
   [
    "6.2",
@@ -4795,12 +5413,17 @@
   [
    "6.3",
    "wangxy",
-   1.0
+   0.15
   ],
   [
    "6.4",
    "wangxy",
-   1.0
+   0.125
+  ],
+  [
+   "6.5",
+   "wangxy",
+   0.0416
   ],
   [
    "6.5",
@@ -4810,17 +5433,17 @@
   [
    "7.1",
    "wangxy",
-   1.0
+   0.0781
   ],
   [
    "7.2",
    "wangxy",
-   1.0
+   0.1041
   ],
   [
    "7.3",
    "wangxy",
-   1.0
+   0.125
   ],
   [
    "7.3",
@@ -4830,7 +5453,12 @@
   [
    "8.1",
    "yang",
-   1.0
+   0.125
+  ],
+  [
+   "8.2",
+   "wangxy",
+   0.0625
   ],
   [
    "8.2",
@@ -4839,18 +5467,23 @@
   ],
   [
    "9.1",
+   "wangjr",
+   0.0437
+  ],
+  [
+   "9.1",
    "qoder",
    1.0
   ],
   [
-   "9.1",
+   "9.2",
    "wangjr",
-   0.5
+   0.0187
   ],
   [
    "9.2",
    "wangxy",
-   1.0
+   0.025
   ],
   [
    "9.2",
@@ -4860,17 +5493,27 @@
   [
    "9.3",
    "wangjr",
-   1.0
+   0.15
   ],
   [
    "9.4",
    "wangxy",
-   1.0
+   0.1562
+  ],
+  [
+   "9.5",
+   "wangjr",
+   0.125
   ],
   [
    "9.5",
    "yang",
-   1.0
+   0.125
+  ],
+  [
+   "9.6",
+   "wangjr",
+   0.1875
   ],
   [
    "9.6",
@@ -4878,64 +5521,64 @@
    1.0
   ],
   [
-   "9.6",
-   "wangjr",
-   0.5
-  ],
-  [
-   "10.1",
-   "yang",
-   0.5
-  ],
-  [
    "10.1",
    "wangjr",
-   0.5
+   0.075
   ],
   [
    "10.1",
    "wangxy",
-   0.5
+   0.05
   ],
   [
-   "10.2",
+   "10.1",
    "yang",
-   0.5
+   0.1
   ],
   [
    "10.2",
    "wangjr",
-   0.5
+   0.0454
   ],
   [
    "10.2",
    "wangxy",
-   0.5
+   0.0454
+  ],
+  [
+   "10.2",
+   "yang",
+   0.0568
   ],
   [
    "10.3",
    "yang",
-   1.0
+   0.1875
   ],
   [
    "10.4",
    "wangjr",
-   1.0
+   0.15
   ],
   [
    "10.4",
    "wangxy",
-   0.5
+   0.125
+  ],
+  [
+   "11.1",
+   "wangxy",
+   0.25
   ],
   [
    "11.1",
    "yang",
-   1.0
+   0.375
   ],
   [
    "11.2",
    "yang",
-   1.0
+   0.25
   ]
  ]
 }

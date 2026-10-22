@@ -1,0 +1,93 @@
+{
+ "rows": 19,
+ "openTasks": 16,
+ "milestones": 3,
+ "links": {
+  "read": 28,
+  "declared": 14,
+  "missing": [],
+  "violations": []
+ },
+ "capacity": {
+  "weekly": [
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 4.6,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W44",
+    "availableHours": 20.0,
+    "assignedHours": 17.8,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W45",
+    "availableHours": 20.0,
+    "assignedHours": 4.5,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 1.7,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W44",
+    "availableHours": 20.0,
+    "assignedHours": 11.5,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W45",
+    "availableHours": 20.0,
+    "assignedHours": 2.6,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 2.2,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W44",
+    "availableHours": 20.0,
+    "assignedHours": 6.5,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W45",
+    "availableHours": 20.0,
+    "assignedHours": 2.0,
+    "overallocatedHours": 0.0
+   }
+  ],
+  "overallocated": []
+ },
+ "deadlinesBreached": [],
+ "critical": [
+  "4.5  Commerce, guardian and autopilot",
+  "9.1  Backend regression suite",
+  "9.2  Frontend end-to-end suite",
+  "9.3  Close the four P0 defects from the bug report",
+  "9.4  Physical phone and PWA shadow trial",
+  "M9  System test ready (plan target)"
+ ],
+ "finish": "2026-11-04",
+ "cost": 1099.552,
+ "bytes": 289792,
+ "sha256": "ec3e1a5c7b2b25b8063b17120a3c07f6c3b0c95a2abf70cdf392af79a6d6ada7",
+ "sourcePlanSha256": "4cd35d0725c2c5d3ab26cff11925015a4fa78fd52610abcb8ca0ce4918277e41"
+}

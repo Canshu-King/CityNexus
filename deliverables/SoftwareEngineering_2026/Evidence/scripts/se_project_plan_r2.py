@@ -37,7 +37,7 @@ PLAN = [
     # ------------------------------------------------------------ 1 initiation
     dict(kind="sum", name="1  Coursework initiation and project selection"),
     dict(kind="task", name="1.1  Read the assignment brief and fix the deliverable scope",
-         dur="1d", pct=100, units=1.0, assign=[("yang", 1.0)],
+         dur="1d", pct=100, units=1.0, assign=[],
          links=[],
          obs=dict(date="2026-10-22", basis="this reading",
                   cite="Software Engineering - Assignment Coursework 2026.pdf read in "
@@ -47,7 +47,7 @@ PLAN = [
          ev="Brief PDF read in full on 2026-10-22; both weights, both dates and the "
             "ten-slide limit are quoted from it."),
     dict(kind="task", name="1.2  Select the project: smart city traveler system",
-         dur="1d", pct=100, units=1.0, assign=[("yang", 1.0)], links=["1.1FS"],
+         dur="1d", pct=100, units=1.0, assign=[], links=["1.1FS"],
          obs=dict(date="2026-09-05", basis="commit",
                   cite="096d857a4f 2026-09-05T01:07:10+0800 chore(domain): freeze "
                        "CityNexus domain model v0.4.1 RC2 - first commit on any ref"),
@@ -56,7 +56,7 @@ PLAN = [
             "same night with the domain model and requirements baseline."),
     dict(kind="task", name="1.3  Confirm the group of three and each member's responsibility",
          dur="2d", pct=100, units=1.5, links=["1.2SS"],
-         assign=[("yang", 1.0), ("wangjr", 0.5), ("wangxy", 0.5)],
+         assign=[],
          obs=dict(date="2026-10-22", basis="stated by the project owner",
                   cite="Yang Jianbin 0802240329, Wang Jiarui 0802240322, Wang Xinyue "
                        "0802240324 - named to this build on 2026-10-22"),
@@ -75,11 +75,11 @@ PLAN = [
     # ------------------------------------------------------ 2 requirements
     dict(kind="sum", name="2  Requirements engineering"),
     dict(kind="task", name="2.1  Research the software needed, library and online",
-         dur="4d", pct=100, units=1.0, assign=[("yang", 1.0)], links=["M1FS"],
+         dur="4d", pct=100, units=1.0, assign=[], links=["M1FS"],
          ev="requirements.yaml sources field cites ARCH/LIB/WEB across 138 entries; "
             "the coursework reading pack sits in '02 Software Engineering/'."),
     dict(kind="task", name="2.2  Write the requirement baseline: 8 goals, 61 functional, 24 rules, 16 NFR, 14 security, 15 integration",
-         dur="5d", pct=100, units=1.0, links=["2.1SS"], assign=[("yang", 1.0)],
+         dur="5d", pct=100, units=1.0, links=["2.1SS"], assign=[],
          obs=dict(date="2026-09-05", basis="commit",
                   cite="072e84f0bd 2026-09-05T02:02:39+0800 feat(requirements): "
                        "establish CityNexus requirements baseline v0.3"),
@@ -88,7 +88,7 @@ PLAN = [
             "traceability. First committed 2026-09-05; the coursework gap analysis "
             "carrying the 2026-09-12 date is a document date, not a commit date."),
     dict(kind="task", name="2.3  Domain model and use case specification",
-         dur="4d", pct=100, units=1.0, links=["2.2SS"], assign=[("yang", 1.0)],
+         dur="4d", pct=100, units=1.0, links=["2.2SS"], assign=[],
          obs=dict(date="2026-09-05", basis="commit", cite="d5236d9022 domain model "
                   "v0.4.2 RC3 2026-09-05T02:02:32+0800"),
          ev="domain-model/citynexus-core-domain-model-v0.4.2.yaml; use-cases/"
@@ -102,7 +102,7 @@ PLAN = [
          ev="Two clocks: the documents say 2026-09-12, the repository first holds them "
             "on 2026-09-19. The baseline itself was committed 2026-09-05."),
     dict(kind="task", name="2.4  Get the requirement baseline agreed with the teacher as customer",
-         dur="3d", pct=0, units=0.5, links=["M11FS"], assign=[("yang", 0.5)],
+         dur="3d", pct=0, units=0.5, links=["M11FS"], assign=[],
          tentative=True,
          ev="NOT DONE AS OF THE STATUS DATE and re-planned into the remaining window: "
             "every requirement and use case still carries status baseline-candidate / "
@@ -112,7 +112,7 @@ PLAN = [
     # ------------------------------------------------------ 3 design
     dict(kind="sum", name="3  System design and architecture"),
     dict(kind="task", name="3.1  Layered architecture and agent runtime design",
-         dur="5d", pct=100, units=1.0, links=["M2FS"], assign=[("yang", 1.0)],
+         dur="5d", pct=100, units=1.0, links=["M2FS"], assign=[],
          obs=dict(date="2026-09-15", basis="document",
                   cite="CURRENT_STATUS.md dated 2026-09-15 closes the V19.2.1 design "
                        "round; AGENT_RUNTIME_ARCHITECTURE.md first appears in git on "
@@ -121,14 +121,14 @@ PLAN = [
             "ARCHITECTURE.md; the file keeps being revised through the whole build, "
             "so this row is the first design round, not a one-off document."),
     dict(kind="task", name="3.2  Interface contracts: OpenAPI and tool catalogues",
-         dur="4d", pct=100, units=1.0, links=["3.1SS"], assign=[("yang", 1.0)],
+         dur="4d", pct=100, units=1.0, links=["3.1SS"], assign=[],
          obs=dict(date="2026-09-19", basis="commit", cite="contracts/ first commit "
                   "2026-09-19, last 2026-10-21"),
          ev="contracts/openapi.yaml; AGENT_TOOL_CATALOG.md; backend/app/agent/"
             "tool_catalog.py:26-59."),
     dict(kind="task", name="3.3  Microsoft Visio system model for the report",
          dur="4d", pct=100, units=1.0, links=["3.2SS"],
-         assign=[("wangjr", 1.0)],
+         assign=[],
          obs=dict(date="2026-10-22", basis="this build",
                   cite="the four .vsdx in deliverables/SoftwareEngineering_2026/Visio, "
                        "generated and proved on 2026-10-22"),
@@ -144,28 +144,28 @@ PLAN = [
     # ------------------------------------------------------ 4 backend
     dict(kind="sum", name="4  Backend platform and data layer"),
     dict(kind="task", name="4.1  FastAPI service and the /api/v1 surface",
-         dur="10d", pct=100, units=1.0, links=["3.1SS"], assign=[("yang", 1.0)],
+         dur="10d", pct=100, units=1.0, links=["3.1SS"], assign=[],
          obs=dict(date="2026-09-19", basis="commit",
                   cite="backend/app/main.py 2026-09-19 .. 2026-10-22, 526 commits"),
          ev="backend/app/main.py: 175 @app decorators counted 2026-10-22, 14,569 lines."),
     dict(kind="task", name="4.2  SQLAlchemy schema, 60 tables, idempotency and audit",
-         dur="8d", pct=100, units=1.0, links=["4.1SS"], assign=[("yang", 1.0)],
+         dur="8d", pct=100, units=1.0, links=["4.1SS"], assign=[],
          obs=dict(date="2026-09-19", basis="commit", cite="backend/app/db/models.py "
                   "2026-09-19 .. 2026-10-20, 116 commits"),
          ev="backend/app/db/models.py: 60 __tablename__ declarations; idempotency_keys "
             "models.py:677; audit_logs models.py:562."),
     dict(kind="task", name="4.3  Journey lifecycle, plan generation and replanning",
-         dur="12d", pct=100, units=1.0, links=["4.1SS"], assign=[("yang", 1.0)],
+         dur="12d", pct=100, units=1.0, links=["4.1SS"], assign=[],
          obs=dict(date="2026-09-19", basis="commit", cite="backend/app/replanning "
                   "2026-09-19 .. 2026-10-22, 42 commits"),
          ev="main.py:3136, 7369, 7790, 10923, 13097, 13569; backend/app/replanning; "
             "tests under backend/tests."),
     dict(kind="task", name="4.4  Twin, capability and preference scopes",
-         dur="6d", pct=100, units=1.0, links=["4.2FS"], assign=[("wangjr", 1.0)],
+         dur="6d", pct=100, units=1.0, links=["4.2FS"], assign=[],
          ev="main.py:9846, 2761, 2568; models.py:95, 121; ORD-0355 keeps stay budget "
             "declared rather than invented (models.py:824)."),
     dict(kind="task", name="4.5  Commerce, guardian and autopilot",
-         dur="14d", pct=40, units=1.0, links=["4.4FS"], assign=[("yang", 1.0)],
+         dur="14d", pct=40, units=1.0, links=["4.4FS"], assign=[],
          ev="PARTIAL: endpoints exist (main.py:14404, 1599, 1772) but payment is "
             "mock-payment only and the impact resolver defaults to disabled "
             "(config.py:33); BUG_REPORT_20260913 still lists four P0 items."),
@@ -182,21 +182,21 @@ PLAN = [
     # ------------------------------------------------------ 5 providers
     dict(kind="sum", name="5  Map and place data integration"),
     dict(kind="task", name="5.1  Geocoding and POI: Photon, Nominatim, Overpass",
-         dur="5d", pct=100, units=1.0, links=["4.1SS"], assign=[("wangjr", 1.0)],
+         dur="5d", pct=100, units=1.0, links=["4.1SS"], assign=[],
          ev="integrations/discovery/photon.py:20-27; discovery/real_city.py:617, "
             "684-688 with three Overpass mirrors."),
     dict(kind="task", name="5.2  Context providers: Open-Meteo weather and time",
-         dur="3d", pct=70, units=1.0, links=["5.1SS"], assign=[("wangjr", 1.0)],
+         dur="3d", pct=70, units=1.0, links=["5.1SS"], assign=[],
          ev="integrations/context/open_meteo.py:29-36 wired; the provider is off "
             "unless opted in, so it is not counted as proven."),
     dict(kind="task", name="5.3  Mobility: Valhalla routing behind a live URL",
-         dur="4d", pct=0, units=1.0, links=["5.2SS"], assign=[("wangjr", 1.0)],
+         dur="4d", pct=0, units=1.0, links=["5.2SS"], assign=[],
          tentative=True,
          ev="NOT WORKING: BLOCKERS.md:13-14 records live Valhalla as skipped because no "
             "URL is configured; the travel matrix stays mocked. Kept at 0% and inside "
             "the window it was planned for, so the lateness stays visible."),
     dict(kind="task", name="5.4  Deterministic mock provider set as the shipped default",
-         dur="4d", pct=100, units=1.0, links=["5.1FS"], assign=[("wangjr", 1.0)],
+         dur="4d", pct=100, units=1.0, links=["5.1FS"], assign=[],
          ev=".env.example:18-31 and integrations/mock/providers.py:13; config.py:79-81 "
             "keeps real-city mode at replay."),
     dict(kind="ms", pct=100, name="M5  Provider mesh integrated behind one interface",
@@ -209,22 +209,22 @@ PLAN = [
     # ------------------------------------------------------ 6 agent
     dict(kind="sum", name="6  AI agent and Hermes capability"),
     dict(kind="task", name="6.1  Intent classification and trusted context assembly",
-         dur="5d", pct=100, units=1.0, links=["4.3SS"], assign=[("wangxy", 1.0)],
+         dur="5d", pct=100, units=1.0, links=["4.3SS"], assign=[],
          ev="main.py:14190-14228 (8 intents) and main.py:13593 _copilot_context()."),
     dict(kind="task", name="6.2  Mission compile, mission plan and the twelve-step tool loop",
          dur="6d", pct=100, units=1.0, links=["6.1FS"],
-         assign=[("wangxy", 1.0), ("qoder", 1.0)],
+         assign=[("qoder", 1.0)],
          ev="agent/mission.py:231, 384; mission_plan.py:74; runtime.py:62, 336 "
             "run(max_steps=12)."),
     dict(kind="task", name="6.3  Tool gateway: allowlist, audit, idempotency, authorization",
-         dur="5d", pct=100, units=1.0, links=["6.2SS"], assign=[("wangxy", 1.0)],
+         dur="5d", pct=100, units=1.0, links=["6.2SS"], assign=[],
          obs=dict(date="2026-09-19", basis="commit", cite="backend/app/agent/gateway.py "
                   "2026-09-19 .. 2026-10-20, 103 commits"),
          ev="agent/gateway.py:357-398, 59, 71, 338-347; approval boundary main.py:2081. "
             "The order the code actually runs is what diagram 03 now draws: allowlist "
             "test at :358, 404 raise at :359, record_audit at :377."),
     dict(kind="task", name="6.4  Eleven tools and the MCP V1 / V2 surfaces",
-         dur="4d", pct=100, units=1.0, links=["6.3FS"], assign=[("wangxy", 1.0)],
+         dur="4d", pct=100, units=1.0, links=["6.3FS"], assign=[],
          ev="tool_catalog.py:26-59; agent-mcp/citynexus_mcp/server.py:128 (V1 six) and "
             ":378 (V2 eleven); agent-mcp/tests."),
     dict(kind="task", name="6.5  Native Hermes runtime",
@@ -242,18 +242,18 @@ PLAN = [
     # ------------------------------------------------------ 7 frontend
     dict(kind="sum", name="7  Frontend UI and interaction"),
     dict(kind="task", name="7.1  V8Experience shell and the fifteen routed panels",
-         dur="8d", pct=100, units=1.0, links=["4.1SS"], assign=[("wangxy", 1.0)],
+         dur="8d", pct=100, units=1.0, links=["4.1SS"], assign=[],
          obs=dict(date="2026-09-19", basis="commit",
                   cite="frontend/src/app/V8Experience.tsx 2026-09-19 .. 2026-10-22, "
                        "342 commits"),
          ev="frontend/src/app/V8Experience.tsx; routes/v8Routes.ts:1-33."),
     dict(kind="task", name="7.2  MapLibre map, plan comparison and Trip Studio",
-         dur="6d", pct=100, units=1.0, links=["7.1SS"], assign=[("wangxy", 1.0)],
+         dur="6d", pct=100, units=1.0, links=["7.1SS"], assign=[],
          ev="components/JourneyMap.tsx; features/planning/PlanComparison.tsx; "
             "main.py:10525 route evidence."),
     dict(kind="task", name="7.3  Copilot dock, agent rail, check-ins and collections",
          dur="6d", pct=100, units=1.0, links=["7.2FS"],
-         assign=[("wangxy", 1.0), ("qoder", 1.0)],
+         assign=[("qoder", 1.0)],
          ev="features/agent/CopilotDock.tsx, AgentRunRail.tsx; features/checkin/"
             "checkins.ts:14; features/collections/collections.ts:16."),
     dict(kind="ms", pct=100, name="M7  Frontend running against the real backend", links=["7.3FS"],
@@ -266,7 +266,7 @@ PLAN = [
     # ------------------------------------------------------ 8 integration
     dict(kind="sum", name="8  Integration and consolidation"),
     dict(kind="task", name="8.1  Authoritative integration line and landing gate",
-         dur="6d", pct=100, units=1.0, links=["7.2SS"], assign=[("yang", 1.0)],
+         dur="6d", pct=100, units=1.0, links=["7.2SS"], assign=[],
          obs=dict(date="2026-10-08", basis="commit",
                   cite="the four-leg landing loop first full run 2026-10-08; 40 pending "
                        "branches cleared that day"),
@@ -284,28 +284,28 @@ PLAN = [
     dict(kind="sum", name="9  Verification and defect management"),
     dict(kind="task", name="9.1  Backend regression suite",
          dur="20d", pct=85, units=1.0, links=["M8SS"],
-         assign=[("qoder", 1.0), ("wangjr", 0.5)],
+         assign=[("qoder", 1.0)],
          ev="242 backend test modules counted 2026-10-22. The 2026-10-13 report measured "
             "1887 passed / 45 failed on the tip: not green, so not 100%."),
     dict(kind="task", name="9.2  Frontend end-to-end suite",
          dur="20d", pct=60, units=1.0, links=["9.1SS"],
-         assign=[("wangxy", 1.0), ("qoder", 1.0)],
+         assign=[("qoder", 1.0)],
          ev="184 e2e specs counted 2026-10-22; the authoritative-mode gate needs a "
             "per-run database and a fresh journey seed, which is recorded as a known "
             "limit."),
     dict(kind="task", name="9.3  Close the four P0 defects from the bug report",
-         dur="5d", pct=50, units=1.0, links=["9.2SS"], assign=[("wangjr", 1.0)],
+         dur="5d", pct=50, units=1.0, links=["9.2SS"], assign=[],
          ev="BUG_REPORT_20260913.md:4 lists P0 x4 and P1 x3; Bug-001 "
             "(MockMobilityProvider on by default) and Bug-002 (ICS all-day timezone) "
             "are still named there."),
     dict(kind="task", name="9.4  Physical phone and PWA shadow trial",
-         dur="4d", pct=0, units=1.0, links=["9.3FS"], assign=[("wangxy", 1.0)],
+         dur="4d", pct=0, units=1.0, links=["9.3FS"], assign=[],
          tentative=True,
          ev="NOT PERFORMED: CURRENT_STATUS.md:4 says SHADOW_TRIAL_CODE_READY_PENDING_"
             "PHYSICAL_DEVICE and TEST_RESULTS.md:10 records it as not performed."),
     dict(kind="task", name="9.5  Verification evidence pack and defect triage report",
          dur="3d", pct=0, units=1.0, links=["9.1FF", "9.2FF"],
-         assign=[("yang", 1.0)],
+         assign=[],
          ev="PARTIAL AND OPEN: this build writes Evidence/AUTOMATION_VERIFICATION.md "
             "plus the proof-run result files, but the triage report for the four P0 "
             "items in BUG_REPORT_20260913.md is not assembled, so the row stays at 0%. "
@@ -313,14 +313,14 @@ PLAN = [
             "when they are, not three days after them."),
     dict(kind="task", name="9.6  Final regression re-run and defect count for the report",
          dur="2d", pct=0, units=1.0, links=["9.4SS"],
-         assign=[("qoder", 1.0), ("wangjr", 0.5)],
+         assign=[("qoder", 1.0)],
          tentative=True,
          ev="NOT RUN: the Part 2 report has to quote one final pass/fail count taken "
             "after the shadow trial, and no such run exists yet; the last measured "
             "figure is 1887 passed / 45 failed on the 2026-10-13 tip. It starts with "
             "the shadow trial rather than after it, because the same machine session "
             "covers both."),
-    dict(kind="ms", name="M9  System test complete", links=["9.4FS", "9.6FS"],
+    dict(kind="ms", name="M9  System test ready (plan target)", links=["9.4FS", "9.6FS"],
          deadline="2026-11-02", tentative=True,
          ev="PLANNED, not evidenced: the 2026-11-02 target is set so that the Part 2 "
             "deadline on 2026-11-06 still has working days of contingency. It is a "
@@ -330,8 +330,8 @@ PLAN = [
     # ------------------------------------------------------ 10 coursework output
     dict(kind="sum", name="10  Coursework deliverables and reporting"),
     dict(kind="task", name="10.1  Part 1: ten-slide report with the Visio model and task allocation",
-         dur="5d", pct=0, units=1.5, links=["M3FS"],
-         assign=[("yang", 0.5), ("wangjr", 0.5), ("wangxy", 0.5)],
+         dur="5d", pct=0, units=1.5, links=["M3FS"], breach_is_fact=True,
+         assign=[],
          deadline="2026-10-02",
          statutory=True,
          ev="SUBMISSION STATE IS NOT VERIFIABLE FROM THIS REPOSITORY. The brief set the "
@@ -342,28 +342,28 @@ PLAN = [
             "Recorded at 0% rather than back-dated."),
     dict(kind="task", name="10.2  Mid-term review pack: architecture, journey, agent loop, use cases",
          dur="11d", pct=70, units=1.5, links=["M7FS"],
-         assign=[("yang", 0.5), ("wangjr", 0.5), ("wangxy", 0.5)],
+         assign=[],
          ev="The four Visio drawings and this plan were produced on 2026-10-22 and each "
             "passed its own proof run; the slides themselves are still to be assembled."),
     dict(kind="task", name="10.3  Part 2: project plan with WBS, links, resources and costs",
-         dur="4d", pct=80, units=1.0, links=["10.2FS"], assign=[("yang", 1.0)],
+         dur="4d", pct=80, units=1.0, links=["10.2FS"], assign=[],
          ev="this .mpp, its exported views and the Evidence/ folder, 2026-10-22."),
     dict(kind="task", name="10.4  Part 2: detailed requirement specification write-up",
          dur="5d", pct=40, units=1.5, links=["10.3SS"],
-         assign=[("wangjr", 1.0), ("wangxy", 0.5)],
+         assign=[],
          ev="138 requirements and 27 use cases exist as YAML with acceptance criteria; "
             "the prose document for submission is not assembled."),
-    dict(kind="ms", name="M10  Part 1 deadline (recorded as missed)", links=["10.1FS"],
+    dict(kind="ms", name="M10  Part 1 course deadline (contract 2026-10-02, missed)", links=["10.1FS"],
          deadline="2026-10-02", breach_is_fact=True,
          statutory=True,
          ev="Brief page 1: no later than midnight Friday 2 October 2026. Kept in the "
             "plan as a missed statutory date, shown by Project's deadline arrow against "
             "a row that was never booked complete."),
-    dict(kind="ms", pct=100, name="M11  Mid-term review", links=["10.2FS"], deadline="2026-10-22",
+    dict(kind="ms", pct=100, name="M11  Mid-term review (held today)", links=["10.2FS"], deadline="2026-10-22",
          obs=dict(date="2026-10-22", basis="this build", cite="date this pack was "
                   "generated"),
          ev="Today. The deliverables in this package are what the review looks at."),
-    dict(kind="ms", name="M12  Part 2 submission deadline", links=["10.4FS"],
+    dict(kind="ms", name="M12  Part 2 course deadline (contract 2026-11-06)", links=["10.4FS"],
          deadline="2026-11-06",
          statutory=True,
          ev="Brief page 2: no later than midnight Friday 6 November 2026. A Deadline, so "
@@ -372,15 +372,15 @@ PLAN = [
     # ------------------------------------------------------ 11 acceptance
     dict(kind="sum", name="11  Final acceptance, documentation and delivery"),
     dict(kind="task", name="11.1  Evidence pack: source mapping and automation verification",
-         dur="1d", pct=100, units=1.0, links=["10.2FS"], assign=[("yang", 1.0)],
+         dur="1d", pct=100, units=1.0, links=["10.2FS"], assign=[],
          ev="deliverables/SoftwareEngineering_2026/Evidence/ written by this build, with "
             "the proof-run result files beside it."),
     dict(kind="task", name="11.2  Publish the deliverables to the repository",
-         dur="1d", pct=50, units=1.0, links=["11.1FS"], assign=[("yang", 1.0)],
+         dur="1d", pct=50, units=1.0, links=["11.1FS"], assign=[],
          ev="Commit and push are attempted by this build and the result is read back "
             "from git, not assumed: the published SHA and the branch are recorded in "
             "AUTOMATION_VERIFICATION.md."),
-    dict(kind="ms", name="M13  Final coursework delivery", links=["11.2FS", "M12FS"],
+    dict(kind="ms", name="M13  Coursework delivery (plan)", links=["11.2FS", "M12FS"],
          deadline="2026-11-06",
          statutory=True,
          ev="Same statutory date as M12, kept as its own acceptance gate: the work is "
@@ -388,23 +388,75 @@ PLAN = [
             "locally."),
 ]
 
+
+# ---------------------------------------------------------------------------
+# Student effort, in hours, per person per row. R2 derived hours from
+# duration x units, which produced 1,808 h of student labour against a
+# three-person capacity of about 840 h - arithmetically fine, impossible to
+# execute. R3 states the human effort directly and Microsoft Project derives
+# assignment units so that Work equals these numbers exactly.
+#
+# Why the numbers are small: the repository's own evidence is that code
+# production ran through the automation lanes (single commit identity, 15,047
+# commits across refs in six weeks). What the students did is specify, decide,
+# review and write. Compute lanes are material resources below and are never
+# counted as student hours.
+#
+# Availability assumption, to be confirmed by each member: 20 h per week per
+# student while the module runs (RESOURCES[].avail_week). Over the nine
+# scheduled weeks that is 180 h each, 540 h for the group.
+EFF = {
+    "1.1": {"yang": 3}, "1.2": {"yang": 2}, "1.3": {"yang": 2, "wangjr": 2, "wangxy": 2},
+    "2.1": {"yang": 4}, "2.2": {"yang": 9}, "2.3": {"yang": 6}, "2.4": {"yang": 4},
+    "3.1": {"yang": 6}, "3.2": {"yang": 4, "wangjr": 3}, "3.3": {"wangjr": 7, "wangxy": 3},
+    "4.1": {"yang": 3}, "4.2": {"yang": 2, "wangjr": 2}, "4.3": {"yang": 4}, "4.4": {"wangjr": 6},
+    "4.5": {"wangjr": 5},
+    "5.1": {"wangjr": 5}, "5.2": {"wangjr": 3}, "5.3": {"wangjr": 4}, "5.4": {"wangjr": 3},
+    "6.1": {"wangxy": 5}, "6.2": {"wangxy": 5}, "6.3": {"wangxy": 6}, "6.4": {"wangxy": 4},
+    "6.5": {"wangxy": 2},
+    "7.1": {"wangxy": 5}, "7.2": {"wangxy": 5}, "7.3": {"wangxy": 6},
+    "8.1": {"yang": 6}, "8.2": {"wangxy": 3},
+    "9.1": {"wangjr": 7}, "9.2": {"wangxy": 4, "wangjr": 3}, "9.3": {"wangjr": 6}, "9.4": {"wangxy": 5},
+    "9.5": {"yang": 3, "wangjr": 3}, "9.6": {"wangjr": 3},
+    "10.1": {"yang": 4, "wangjr": 3, "wangxy": 2},
+    "10.2": {"yang": 5, "wangjr": 4, "wangxy": 4},
+    "10.3": {"yang": 6}, "10.4": {"wangjr": 6, "wangxy": 5},
+    "11.1": {"yang": 3, "wangxy": 2}, "11.2": {"yang": 2},
+}
+# rows whose effort is deliberately NOT booked as student hours: the machine work
+LANES_ONLY = {}
+
+# attach the effort table to the rows so every consumer reads one source
+def _attach_eff():
+    import re as _re
+    for _r in PLAN:
+        if _r.get("kind") != "task":
+            continue
+        _k = _re.match(r"^(\d+(?:\.\d+)?)\s", _r["name"]).group(1)
+        if _k in EFF:
+            _r["eff"] = EFF[_k]
+        elif _k not in LANES_ONLY:
+            raise AssertionError("row %s has no student effort stated" % _k)
+_attach_eff()
+
+
 RESOURCES = [
     dict(key="yang", name="Yang Jianbin 0802240329 - requirements, architecture, integration",
-         initials="YJB", rtype="work", max_units=1.0, std=20.0, ovt=30.0,
+         initials="YJB", rtype="work", max_units=1.0, avail_week=20.0, std=20.0, ovt=30.0,
          note="MEMBER 1 OF 3, named to this build on 2026-10-22. Identity in git: "
               "Canshu-King / yjianbin419@gmail.com, 1006 of 1095 commits on the reviewed "
               "branch, and the signature line of CityNexus_进度汇报_2026-10-13.md. "
               "STANDARD RATE IS A COURSEWORK PLANNING RATE FOR AN UNEVALUATED STUDENT "
               "TEAM, NOT A PAYROLL FIGURE; the hours behind it are the schedule's own."),
     dict(key="wangjr", name="Wang Jiarui 0802240322 - data integration, backend scopes, testing",
-         initials="WJR", rtype="work", max_units=1.0, std=20.0, ovt=30.0,
+         initials="WJR", rtype="work", max_units=1.0, avail_week=20.0, std=20.0, ovt=30.0,
          note="MEMBER 2 OF 3, named to this build on 2026-10-22. NOT SEPARATELY "
               "EVIDENCED IN GIT: the reviewed branch carries one commit identity, "
               "because the automation lanes committed through it. The responsibility "
               "split is the plan's proposal for the report and is marked to be "
               "confirmed. RATE IS A PLANNING RATE, NOT A WAGE."),
     dict(key="wangxy", name="Wang Xinyue 0802240324 - frontend, agent surface, SRS writing",
-         initials="WXY", rtype="work", max_units=1.0, std=20.0, ovt=30.0,
+         initials="WXY", rtype="work", max_units=1.0, avail_week=20.0, std=20.0, ovt=30.0,
          note="MEMBER 3 OF 3, named to this build on 2026-10-22. See the note on member "
               "2 about git evidence. RATE IS A PLANNING RATE, NOT A WAGE."),
     dict(key="qoder", name="Qoder agent lanes - automated build and test compute",

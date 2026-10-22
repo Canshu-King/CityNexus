@@ -1,8 +1,8 @@
 # CityNexus 软件工程 2026 · 修订二交付包（复审简报）
 
-生成 2026-10-22 · 仓库 `CityNexus` · 分支 `review/se-coursework-deliverables-r1` · 打包时分支头 `21aa16e68ad1951588739993d338f11dac9a1bab`。
-包内 **136** 个文件（不含 `MANIFEST.sha256` 自身——清单不能给自己的摘要签名）。
-逐文件 sha256 见 `MANIFEST.sha256`；压缩包 sha256 `见 Evidence/se_review_package_r2_result.json：清单不能给自己的摘要签名，所以压缩包摘要在打包结果文件里`。
+生成 2026-10-23 · 仓库 `CityNexus` · 分支 `review/se-coursework-deliverables-r1` · 打包时分支头 `609aaf04e6b1d62f68e72d48a534d13bbc79aee8`。
+包内 **173** 个文件（不含 `MANIFEST.sha256` 自身——清单不能给自己的摘要签名）。
+逐文件 sha256 见 `MANIFEST.sha256`；压缩包 sha256 `zip 不能自证：压缩包自身的 sha256 记在包外的 `Evidence/R3_RESULT.md` 与提交信息里，包内只放逐文件清单`。
 
 ## 0. 这一版是冲着谁的
 
@@ -22,13 +22,13 @@
 | 逐形状自定义属性读回 | 579 / 579 | 同上 → shapeData.propsOk / expected |
 | 打开-改字-存-关-重开-读回 全通过 | 4 / 4 | 同上 → checks |
 | 版面闸门失败项（重叠/越界/文字出框/图例被压） | 0 | `Visio/previews/*.gate.json` → failures |
-| Project 原生计划 | `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`，sha256 `4add419bd2f33ef1` | Project 直接打开 |
+| Project 原生计划 | `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`，sha256 `4cd35d0725c2c5d3` | Project 直接打开 |
 | 行数 | 65（摘要 11 / 明细 54，含里程碑 13） | 看 WBS 列 |
 | 声明依赖 / 引擎读回 | 61 / 122 条依赖记录 | `Task.TaskDependencies`，脚本已逐条比对 |
 | 违反日期顺序的依赖 | 0 | 同上 |
 | 被钉住日期的行（约束≠ASAP） | 0 | 约束列应为空 |
 | 关键路径 | 4 行（引擎算出） | 勾 Critical 列 |
-| 人力工时 / 总成本 | 1808 h / $36202 | 工时=工期×投入×8h，成本由 Project 自己乘费率 |
+| 人力工时 / 总成本 | 221 h / $4461 | 工时=工期×投入×8h，成本由 Project 自己乘费率 |
 | 工时或成本与估算不符的行 | 0 | 逐行对 duration×units×rate |
 | 截止日 | 6 满足 / 0 违反（课程硬日期） / 0 内部目标未达 | Deadline 列 |
 | 关闭后由新进程重开，逐字段比对 | 0 处差异 | 行/日期/百分比/工时/成本/约束/实际/关键/WBS |
@@ -57,12 +57,12 @@
 | 项 | 状态 | 依据 |
 |---|---|---|
 | Part 1（2026-10-02 截止） | **本仓库无法证实也无法证伪**；行仍为 0%，等课程记录 | 仓库内无该 .pptx；但这不等于没交 |
-| 迟开的工作 | 4 行相对状态日已迟，**保持迟到**，没有挪日期 | Project 的 Move-to-Status-Date 在本机 COM 无效 |
+| 迟开的工作 | 6 行相对状态日已迟，**保持迟到**，没有挪日期 | Project 的 Move-to-Status-Date 在本机 COM 无效 |
 | 三人分工 | 成员已实名，但 git 只有一个提交身份，分工是**计划提案** | `git log --format=%an` |
 | 费率 | 课程规划估算，非工资；两条算力车道是材料资源（只花钱不计工时） | 资源备注 |
 | 基准计划 | **故意没存**：没有可信原始计划 | 未调用 `BaselineSave` |
 | 拖动母版形状看连线跟随 | **未证明**：内置模具位置保护 | moveProof 缺席即未证 |
-| Project 分页设置 | **无法脚本化**：`FilePageSetupPage` 各形参均报参数无效 | `Evidence/logs/se_brief_r2.log` |
+| Project 分页设置 | **无法脚本化**：`FilePageSetupPage` 各形参均报参数无效 | `Evidence/logs/se_project_brief.log` |
 | 真实支付 / Hermes 原生 / live Valhalla / 真机影子测试 | 未实现或未验证，图上黄/灰虚线 | `BLOCKERS.md:9-16` 等 |
 
 ## 4. 请专门挑这六处
@@ -70,7 +70,7 @@
 1. **里程碑日期不单调**（M8 早于 M4）：这是并行流的真实形状，还是我链接画错了？
 2. **百分比是否可辩护**：凡 100% 都有测试或提交证据吗？重点看 `9.1 后端回归 85%`、
    `4.5 商务与守护 40%`、`8.2 前端回移 50%`。
-3. **工时是否可信**：1808 工时摊到三人七周，是否偏高或偏低？
+3. **工时是否可信**：221 工时摊到三人七周，是否偏高或偏低？
 4. **Agent 图的三族处理器**：读→无策略、replan 对→策略先于幂等、typed→各自守卫，
    与 `gateway.py` 现在的行号是否仍然一致？
 5. **一页汇报图**：把计划压到 11 条相位条 + 13 个里程碑，是否已经丢失了老师判断所需的信息？

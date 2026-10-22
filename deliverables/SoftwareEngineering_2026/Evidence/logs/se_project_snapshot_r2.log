@@ -1,0 +1,39 @@
+[   0.0s] DPI awareness set to per-monitor
+[   0.2s] plan sha256 before the run 4cd35d0725c2c5d3
+[   0.2s] plan set read-only on disk
+[   0.6s] no pre-existing WINPROJ.EXE
+[   1.5s] read-only open refused (com_error), opening normally and never saving
+[   2.3s] opened CityNexus_Software_Engineering_Plan.mpp (65 tasks, 5 resources), Project says ReadOnly=True
+[   2.3s] Project windows: ['CityNexus_Software_Engineering_Plan.mpp [只读]']
+[   2.3s] Project main window 'Project Professional - CityNexus_Software_Engineering_Plan.m' pid 3640
+[   2.4s]   Gantt_Chart: ViewWhole refused (AttributeError), captured at the current scale
+[   2.5s]   Gantt_Chart tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[   4.8s]   Gantt_Chart      2578x1558  colours 1669  ink 0.165
+[   4.9s]   SetForegroundWindow failed (error), trying SwitchToThisWindow
+[   5.9s]   cross-check PrintWindow vs screen: mean abs diff 11.75 over 0-255, occluders while grabbing 10
+[   5.9s]   cross-check not decisive: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 个页面 - 个人 - sat on top while grabbing
+[   5.9s]   kept Gantt_Chart (227347 bytes, 10 windows above it: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 )
+[   6.1s]   Tracking_Gantt: ViewWhole refused (AttributeError), captured at the current scale
+[   6.2s]   Tracking_Gantt tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[   8.4s]   Tracking_Gantt   2578x1558  colours 1555  ink 0.198
+[   8.4s]   kept Tracking_Gantt (327675 bytes, 10 windows above it: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 )
+[   9.1s]   Network_Diagram: ViewWhole refused (AttributeError), captured at the current scale
+[   9.2s]   Network_Diagram tuned: ColumnBestFit refused (com_error); Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  11.4s]   Network_Diagram  2578x1558  colours 1098  ink 0.189
+[  11.4s]   kept Network_Diagram (189475 bytes, 10 windows above it: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 )
+[  11.6s]   WBS_Task_Sheet: ViewWhole refused (AttributeError), captured at the current scale
+[  11.7s]   WBS_Task_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  13.9s]   WBS_Task_Sheet   2578x1558  colours 1248  ink 0.192
+[  13.9s]   kept WBS_Task_Sheet (310899 bytes, 10 windows above it: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 )
+[  14.3s]   Resource_Sheet: ViewWhole refused (AttributeError), captured at the current scale
+[  14.3s]   Resource_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  16.6s]   Resource_Sheet   2578x1558  colours 1149  ink 0.163
+[  16.7s]   kept Resource_Sheet (190809 bytes, 10 windows above it: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 )
+[  16.7s]   ViewApply 任务使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“任务使用情况”视图已经不存在。', 'C:\\Prog
+[  16.7s]   ViewApply 资源使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“资源使用情况”视图已经不存在。', 'C:\\Prog
+[  16.9s]   Calendar: ViewWhole refused (AttributeError), captured at the current scale
+[  16.9s]   Calendar tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  19.0s]   Calendar         2578x1558  colours 2295  ink 0.402
+[  19.1s]   kept Calendar (309398 bytes, 10 windows above it: ['ChatGPT - HRPD - Google Chrome', 'fullsystem_qoder_r1 - 文件资源管理器', 'Qoder', 'CityNexus Trip Operations 和另外 1 )
+[  19.5s] plan sha256 after the run 4cd35d0725c2c5d3; Office lock files left: none
+[  19.5s] SNAPSHOT R2 DONE: 6 images, file unchanged, cross-check not decisive

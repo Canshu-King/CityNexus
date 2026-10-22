@@ -154,7 +154,7 @@ Remote: github.com/Canshu-King/CityNexus
 | 6 | `Microsoft_Project/Gantt_Chart.pdf` and `previews/Gantt_Chart.png` | The same plan as a picture for a slide. |
 | 7 | `Microsoft_Project/Milestone_Timeline.pdf` | The thirteen milestones on a line. |
 | 8 | `Microsoft_Project/Resource_Sheet.pdf` | Who is assigned and what the work costs - the one item in Part 2 that is easy to leave out. |
-| 9 | `Briefing/CityNexus_Plan_Briefing_A3.pdf` | The whole plan on one A3 landscape page for a tablet: eleven phase bars, thirteen milestones, the status date, and the figures Project computed. |
+| 9 | `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf` | The whole plan on one A3 landscape page for a tablet: eleven phase bars, thirteen milestones, the status date, and the figures Project computed. |
 | 10 | `Evidence/REVISION_2.md` | What an independent review found in the first revision, what changed, and what is still open. |
 
 Open the `.vsdx` files in Visio and the `.mpp` in Project; the PDFs and PNGs in
@@ -332,6 +332,10 @@ for f in sorted(glob.glob(os.path.join(MSP, "previews", "*.png"))):
            % (os.path.basename(f), size(f), sha(f)))
 
 open(os.path.join(EVI, "SOURCE_MAPPING.md"), "w", encoding="utf-8").write(sm)
+# The round-3 section is its own module: it measures the deck, the screenshots and
+# the PDFs from disk, so nothing in it is remembered prose.
+import se_docs_r3_section_r1                                  # noqa: E402
+readme += se_docs_r3_section_r1.build()
 open(os.path.join(EVI, "README.md"), "w", encoding="utf-8").write(readme)
 print("README.md %d bytes, SOURCE_MAPPING.md %d bytes"
       % (size(os.path.join(EVI, "README.md")), size(os.path.join(EVI, "SOURCE_MAPPING.md"))))
@@ -554,7 +558,7 @@ av += """
 | progress was not in the file | `PercentComplete` written before the assignment, which silently reads back 0 | assignments first, then percentage, and every row's percentage is read back and asserted |
 | the agent diagram claimed a universal gateway order | one door drawn for every handler, unknown tools shown as audited | three handler families drawn separately, with the measured line numbers, and the correction named on the sheet |
 | the use-case sheet was one dense page | 39 shapes on one page | two pages in the same editable file: overview and include detail |
-| no tablet-readable plan view | 21-page Gantt PDFs only | `Briefing/CityNexus_Plan_Briefing_A3.vsdx/.pdf/.png`, one A3 landscape page drawn from the plan's own computed dates |
+| no tablet-readable plan view | 21-page Gantt PDFs only | `Briefing/CityNexus_Plan_Briefing_A3.vsdx` and `Briefing/previews/CityNexus_Plan_Briefing_A3.pdf`, one A3 landscape page drawn from the plan's own computed dates |
 | members unknown, Part 1 asserted never submitted | placeholder resources at zero and a claim the repository cannot support | three named members with work resources and hours; Part 1 now says what is true: not verifiable from this repository, awaiting the course record |
 """.format(decl=_link.get("declared", 0),
            propsum="; ".join("%s %d/%d" % (r["file"][:2],
