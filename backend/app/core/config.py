@@ -81,8 +81,15 @@ class Settings:
     # `impact_timeout_seconds` (ten seconds), and measured on a real browser run every such turn
     # died as `MODEL_TIMEOUT` with zero steps written -- the traveller pressed 发送 and got nothing.
     # The Agent's own clock, so turning the impact knob down cannot mute the assistant.
+    #
+    # Ninety seconds was itself too tight, measured on the departure card's ask (walk-68 through
+    # walk-71, one story, four presses of the same gap list): the turn came back once at 80 seconds
+    # and timed out three times at the ninety-second ceiling, each timeout landing on the traveller's
+    # screen as a failed run. Asking the Agent to look up six arrangements is the heaviest turn this
+    # loop makes, so the ceiling moves to three minutes -- the failure is now reported on screen
+    # (frontend/src/trial/mobile/WorkspaceActions.tsx:668), which is what made the rate measurable.
     agent_model_timeout_seconds: float = float(
-        os.getenv("CITYNEXUS_AGENT_MODEL_TIMEOUT_SECONDS", "90")
+        os.getenv("CITYNEXUS_AGENT_MODEL_TIMEOUT_SECONDS", "180")
     )
     hermes_native_proven: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_PROVEN") or None
     hermes_native_api_url: str | None = os.getenv("CITYNEXUS_HERMES_NATIVE_API_URL") or None
