@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HANDED_OFF, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -41,7 +41,6 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const [routesBusy, setRoutesBusy] = useState(false);
   const [price, setPrice] = useState<PriceState | null>(() => storedPriceState(task.prepared_plan?.result));
   const [priceBusy, setPriceBusy] = useState(false);
-  const [asked, setAsked] = useState(false);
   const routeKey = useRef<string | null>(null);
   const priceKey = useRef<string | null>(null);
   const requestKey = useRef<string | null>(null);
@@ -170,13 +169,13 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         : <>
           <p>{priceUnknownSentence(result.known_subtotal_minor ?? 0, priceIds.length)}</p>
           <button type="button" disabled={priceBusy || task.status === "WORKING"} onClick={() => void acceptPrice()} data-testid="rev-v3-accept-price">{priceBusy ? "正在记下你的确认…" : PRICE_CONSENT_BUTTON}</button>
-          <button type="button" onClick={() => { setAsked(true); onDiscuss(PRICE_SWAP_PROMPT); }} data-testid="rev-v3-swap-price">{PRICE_SWAP_BUTTON}</button>
+          <button type="button" onClick={() => onDiscuss(PRICE_SWAP_PROMPT)} data-testid="rev-v3-swap-price">{PRICE_SWAP_BUTTON}</button>
         </>}
     </div>}
     {pending.size > 0 && <><h4>出发待办</h4><ul>{[...pending].map(([sequence, group]) => <li key={sequence}><strong>{group.title}</strong>{group.rows.map(gap => <span key={String(gap.kind)}>{GAP_LABELS[String(gap.kind)] ?? "资料"}：{gapAction(gap)}</span>)}</li>)}</ul></>}
     {result && <p className="rev-v3-band-note" data-testid="rev-v3-ask-count">{pendingCountSentence(askable.length)}</p>}
-    {!result && <button type="button" data-testid="rev-v3-ask-agent" onClick={() => { setAsked(true); onDiscuss(UNSAVED_ASK); }}>{ASK_AGENT_BUTTON}</button>}
-    {result && askable.length > 0 && <button type="button" data-testid="rev-v3-ask-agent" onClick={() => { setAsked(true); onDiscuss(agentAskPrompt(askable, Boolean(price))); }}>{ASK_AGENT_BUTTON}</button>}
-    {asked && <p role="status" className="rev-v3-band-note" data-testid="rev-v3-ask-hint">{ASK_HANDED_OFF}</p>}
+    {(result ? askable.length > 0 : true) && <p className="rev-v3-band-note" data-testid="rev-v3-ask-how">{ASK_HOW_IT_WORKS}</p>}
+    {!result && <button type="button" data-testid="rev-v3-ask-agent" onClick={() => onDiscuss(UNSAVED_ASK)}>{ASK_AGENT_BUTTON}</button>}
+    {result && askable.length > 0 && <button type="button" data-testid="rev-v3-ask-agent" onClick={() => onDiscuss(agentAskPrompt(askable, Boolean(price)))}>{ASK_AGENT_BUTTON}</button>}
   </section>;
 }

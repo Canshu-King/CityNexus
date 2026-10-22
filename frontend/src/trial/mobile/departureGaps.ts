@@ -117,10 +117,12 @@ export function agentAskPrompt(rows: GapRow[], priceAccepted: boolean): string {
     + "哪项来源还是没有答案，就直接说哪项没有，不要把没答的当成确定的。";
 }
 
-// Why the ask needs a second press and says so.  The chat dock sends only after the traveller's own
-// model consent, so a button that claimed to have asked already would be a lie about something the
-// traveller has not agreed to yet; the card therefore hands the sentence over and names the key.
-export const ASK_HANDED_OFF = "已写进底部的对话框，按「发送 ↑」就能让 Agent 去查这几项。";
+// Why the ask needs a second press, said before the press instead of after.  The chat dock sends only
+// once the traveller's own model consent stands, so a button claiming to have asked already would report
+// an agreement that has not been given; and a line rendered only after the press is not trustworthy
+// either -- the press itself remounts this card (the cockpit refetches the task), which walk-66 and
+// walk-69 both measured as the note never appearing.  So it stands next to the button permanently.
+export const ASK_HOW_IT_WORKS = "按这一个按钮会把上面这些项写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。";
 
 // The count the card shows right above that button, so the traveller knows whether pressing it can
 // still move anything.
