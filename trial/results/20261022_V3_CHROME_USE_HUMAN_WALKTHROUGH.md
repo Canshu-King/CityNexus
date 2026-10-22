@@ -140,3 +140,17 @@
 护栏：`backend/tests/test_qoder_goal_place_identity_r1.py` 四格——高德 GCJ-02 线索只落一行、`coordinate_system=WGS84` 而 `source_coordinate_system=GCJ02`、存下的数字是换算过的、营业时间与票价仍然是未知；OSM 形制线索按自己的对象号归档；CONFLICT／非 live／没有类别／没有坐标四种线索一律不落（并数了 `places` 行数不变）；以及旅客确认过的排期绑上正式地点后缺口只剩营业时间与票价、`activities[0].place_id` 就是那枚正式 id，而 `selectable` 仍为 `false` 并把原因写在注释里，防止下一次有人把它当"已经能选了"。`pytest -q` 同代读数：identity＋preparation＋variants＋receipt 四支文件 36 passed。整支 `-k "goal or qoder"` 有 32 failed／7 errors，逐条对照过：把这四个改动文件从工作树里摘走再跑同样的三枚文件，13 failed／14 passed 一字不差（`test_qoder_current_plan_is_named.py`、`test_qoder_live_replans_endpoint.py`、`test_qoder_ord0434_share_grants.py`），所以那批红是本枝既有状态，不是这一刀改出来的。`npm run typecheck` 干净。
 
 仪表自己的两处交代：`walk-36-log.txt:1` 先报了一次 `NO_TAB_WITH_A_LIVE_CREDENTIAL`——那是我这把尺写错了，它拿 `GET .../agent/goal-tasks` 验凭据，而那条路只吃 POST、返回 405；换成 `GET /api/v1/journeys/{id}` 才认出现有的标签页是活的（`:2` 起读到 `journey_read_http=200`）。这个请求只用来挑对标签页，产品动作全是点击。另外 `human-201/202` 两帧因渲染线程 10 秒没答而没落地（两行 `SHOT_FAILED … no frame within 10s`），只有 `human-203-plan-workbench-after-identity-fix.png` 有像素；文字读数不受影响。
+
+## 九、九时半：卡片要能说出「哪一版是我现在用的」，以及我自己把屏弄坏过一次
+
+读数在先（`walk-33-log.txt:14`）：旅客按下 B 版「选用这份安排」之后，服务端草案已从版本 1 走到 2、日程也换成那一版，屏上三张卡片却仍然各写着「选用这份安排」——因为卡片拿自己那份文档与存回来的草案逐字比 JSON，而草案是经过服务端规范化（补地点 id、补备注字段）才回来的，两边永远不相等。旅客看不出自己在用哪一版。
+
+改成按「哪一天、哪半段、哪个地点」这三件事比（`frontend/src/trial/mobile/GoalDraftVariants.tsx:15` 起的 `draftSignature`）：备注与来源字段不参与「是不是这一版」的判断。同一 Journey 的活标签页里再说一次「按轻松少走、省钱、本地特色三种想法各出一版，让我三选一」，110 秒后三张卡出来，按下 B：
+
+- 按之前 `CHOOSE_LABELS_BEFORE ["选用这份安排","选用这份安排","选用这份安排"]`（`walk-37-log.txt:7`）
+- 按之后 `CHOOSE_LABELS_AFTER ["选用这份安排","已选为当前行程","选用这份安排"]`，`CARDS_MARKED_CHOSEN=1`，`SCHEDULE_CHANGED=true`（`:10`、`:11`、`:12`）
+- 像素：`human-204-chosen-version-marked-on-screen.png`（第一次没截到，重试第二次落地）
+
+顺带这一趟也是身份那一刀的二次印证：卡片能与草案在「地点」这一维对上，靠的正是双方都带同一枚 `real-place-…` 正式 id。
+
+自己把屏弄坏过一次，如实记在这里：第一版改动里 `.map()` 的括号少关了一层，dev server 的 `vite-error-overlay` 直接盖在旅客屏幕上，走查里表现为「对话」那格点不动（`AGENT_LAYER_ERR`、`SEND_ERR`），而页面文字仍读得出五格日程——只看文字读数会误判成"产品又卡住了"。抓出来的是 hit-test：`agent_tab.hit_test = "VITE-ERROR-OVERLAY."`，同批像素 `human-205-probe-page-0.png`。修好后 `overlay=absent`、`agentTabHit=self`，`npm run typecheck` 干净。教训写进仪器：**每次改完前端，先 hit-test 顶层元素并读 overlay 节点，再谈屏上文字**。

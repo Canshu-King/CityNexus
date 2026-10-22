@@ -10,6 +10,12 @@ const PERIOD: Record<string, string> = {
   flexible: "时间灵活",
 };
 
+// What a version actually is: which day, which half-day, which place. Everything else on a saved
+// draft (notes, provenance fields the server fills in) is not part of the choice.
+const draftSignature = (artifact: GoalDraftArtifact) => JSON.stringify(
+  artifact.days.map((day) => [day.date, day.slots.map((slot) => [slot.time_of_day, slot.title.trim(), slot.place_id || ""])]),
+);
+
 type Props = {
   variants: GoalDraftVariant[];
   current?: GoalDraftArtifact | null;
@@ -55,7 +61,11 @@ export function GoalDraftVariants({ variants, current, disabled = false, onChoos
       <div className="rev-goal-variants-list">
         {variants.map((variant, index) => {
           const expanded = expandedId === variant.id;
-          const chosen = Boolean(current && JSON.stringify(current.days) === JSON.stringify(variant.artifact.days));
+          // The saved draft comes back through the server's own normaliser, which fills in fields the
+          // version card never carried. Comparing the two documents verbatim made every card keep
+          // 「选用这份安排」 after one was chosen, so the traveller could not see which version the
+          // schedule is on. The plan itself is the per-day list of period, place and title.
+          const chosen = Boolean(current && draftSignature(current) === draftSignature(variant.artifact));
           const choosingThis = choosingId === variant.id;
           const unknowns = variant.unknown_summary.map((item) => item.trim().slice(0, 180)).filter(Boolean);
           const detailId = `rev-goal-variant-details-${index}`;
