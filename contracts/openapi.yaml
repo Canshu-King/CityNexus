@@ -52,7 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorEnvelope'
+                $ref: '#/components/schemas/HTTPValidationError'
   /journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/freeze-routes:
     post:
       summary: Freeze Plan Routes
@@ -93,153 +93,14 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  journey_id:
-                    type: string
-                    title: Journey Id
-                  task_id:
-                    type: string
-                    title: Task Id
-                  plan_version_id:
-                    type: string
-                    title: Plan Version Id
-                  edges:
-                    items:
-                      properties:
-                        from_place_id:
-                          type: string
-                          title: From Place Id
-                        to_place_id:
-                          type: string
-                          title: To Place Id
-                        from_name:
-                          type: string
-                          title: From Name
-                        to_name:
-                          type: string
-                          title: To Name
-                        status:
-                          type: string
-                          title: Status
-                        minutes:
-                          anyOf:
-                          - type: integer
-                          - type: 'null'
-                          title: Minutes
-                        distance_m:
-                          anyOf:
-                          - type: integer
-                          - type: 'null'
-                          title: Distance M
-                        provider:
-                          anyOf:
-                          - type: string
-                          - type: 'null'
-                          title: Provider
-                        source_url:
-                          anyOf:
-                          - type: string
-                          - type: 'null'
-                          title: Source Url
-                        captured_at:
-                          anyOf:
-                          - type: string
-                          - type: 'null'
-                          title: Captured At
-                        reason_code:
-                          anyOf:
-                          - type: string
-                          - type: 'null'
-                          title: Reason Code
-                      type: object
-                      required:
-                      - from_place_id
-                      - to_place_id
-                      - from_name
-                      - to_name
-                      - status
-                      - minutes
-                      - distance_m
-                      - provider
-                      - source_url
-                      - captured_at
-                      - reason_code
-                      title: RouteEdge
-                    type: array
-                    title: Edges
-                  verified:
-                    type: integer
-                    title: Verified
-                  total:
-                    type: integer
-                    title: Total
-                  frozen:
-                    type: boolean
-                    title: Frozen
-                  mobility_snapshot_id:
-                    anyOf:
-                    - type: string
-                    - type: 'null'
-                    title: Mobility Snapshot Id
-                  reason_code:
-                    anyOf:
-                    - type: string
-                    - type: 'null'
-                    title: Reason Code
-                  idempotency_replay:
-                    type: boolean
-                    title: Idempotency Replay
-                    default: false
-                type: object
-                required:
-                - journey_id
-                - task_id
-                - plan_version_id
-                - edges
-                - verified
-                - total
-                - frozen
-                - mobility_snapshot_id
-                - reason_code
-                title: FreezeRoutesResult
+                $ref: '#/components/schemas/FreezeRoutesResult'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                properties:
-                  detail:
-                    items:
-                      properties:
-                        loc:
-                          items:
-                            anyOf:
-                            - type: string
-                            - type: integer
-                          type: array
-                          title: Location
-                        msg:
-                          type: string
-                          title: Message
-                        type:
-                          type: string
-                          title: Error Type
-                        input:
-                          title: Input
-                        ctx:
-                          type: object
-                          title: Context
-                      type: object
-                      required:
-                      - loc
-                      - msg
-                      - type
-                      title: ValidationError
-                    type: array
-                    title: Detail
-                type: object
-                title: HTTPValidationError
-  /api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/accept-unknown-price:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/accept-unknown-price:
     post:
       summary: Accept Unknown Price Route
       operationId: accept_unknown_price_route_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__accept_unknown_price_post
@@ -278,132 +139,20 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              title: UnknownPriceRequest
-              properties:
-                unknown_place_ids:
-                  items:
-                    type: string
-                  type: array
-                  maxItems: 64
-                  minItems: 1
-                  title: Unknown Place Ids
-              additionalProperties: false
-              required:
-              - unknown_place_ids
+              $ref: '#/components/schemas/UnknownPriceRequest'
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                type: object
-                title: UnknownPriceResult
-                properties:
-                  journey_id:
-                    type: string
-                    title: Journey Id
-                  task_id:
-                    type: string
-                    title: Task Id
-                  plan_version_id:
-                    type: string
-                    title: Plan Version Id
-                  accepted:
-                    type: boolean
-                    title: Accepted
-                  unknown_place_ids:
-                    items:
-                      type: string
-                    type: array
-                    title: Unknown Place Ids
-                  unknown_count:
-                    type: integer
-                    title: Unknown Count
-                  known_subtotal_minor:
-                    type: integer
-                    title: Known Subtotal Minor
-                  currency:
-                    type: string
-                    title: Currency
-                  unknown_cost_included:
-                    type: boolean
-                    title: Unknown Cost Included
-                  authority_state:
-                    type: string
-                    title: Authority State
-                  mobility_snapshot_id:
-                    anyOf:
-                    - type: string
-                    - type: 'null'
-                    title: Mobility Snapshot Id
-                  selectable_after:
-                    type: boolean
-                    title: Selectable After
-                  blocker_after:
-                    anyOf:
-                    - type: string
-                    - type: 'null'
-                    title: Blocker After
-                  confirmed_at:
-                    type: string
-                    title: Confirmed At
-                  idempotency_replay:
-                    type: boolean
-                    title: Idempotency Replay
-                    default: false
-                required:
-                - journey_id
-                - task_id
-                - plan_version_id
-                - accepted
-                - unknown_place_ids
-                - unknown_count
-                - known_subtotal_minor
-                - currency
-                - unknown_cost_included
-                - authority_state
-                - mobility_snapshot_id
-                - selectable_after
-                - blocker_after
-                - confirmed_at
+                $ref: '#/components/schemas/UnknownPriceResult'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
-                type: object
-                title: HTTPValidationError
-                properties:
-                  detail:
-                    items:
-                      type: object
-                      title: ValidationError
-                      properties:
-                        loc:
-                          items:
-                            anyOf:
-                            - type: string
-                            - type: integer
-                          type: array
-                          title: Location
-                        msg:
-                          type: string
-                          title: Message
-                        type:
-                          type: string
-                          title: Error Type
-                        input:
-                          title: Input
-                        ctx:
-                          type: object
-                          title: Context
-                      required:
-                      - loc
-                      - msg
-                      - type
-                    type: array
-                    title: Detail
+                $ref: '#/components/schemas/HTTPValidationError'
   /health:
     get:
       operationId: getHealth
@@ -3014,6 +2763,15 @@ components:
           type: string
           const: UNKNOWN
           title: Status
+        resolution:
+          type: string
+          title: Resolution
+        detail:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Detail
       type: object
       required:
       - sequence_no
@@ -3021,6 +2779,7 @@ components:
       - kind
       - place_id
       - status
+      - resolution
       title: PreparationGap
     PreparationResult:
       properties:
@@ -3060,6 +2819,20 @@ components:
           type: boolean
           const: false
           title: Mobility Frozen
+        unrouted_count:
+          type: integer
+          title: Unrouted Count
+          default: 0
+        known_subtotal_minor:
+          type: integer
+          title: Known Subtotal Minor
+          default: 0
+        opening_checks:
+          items:
+            $ref: '#/components/schemas/OpeningCheck'
+          type: array
+          title: Opening Checks
+          default: []
         idempotency_replay:
           type: boolean
           title: Idempotency Replay
@@ -4070,3 +3843,284 @@ components:
         recommendations:
           type: array
           items: {type: object, additionalProperties: true}
+    FreezeRoutesResult:
+      properties:
+        journey_id:
+          type: string
+          title: Journey Id
+        task_id:
+          type: string
+          title: Task Id
+        plan_version_id:
+          type: string
+          title: Plan Version Id
+        edges:
+          items:
+            $ref: '#/components/schemas/RouteEdge'
+          type: array
+          title: Edges
+        verified:
+          type: integer
+          title: Verified
+        total:
+          type: integer
+          title: Total
+        overnight:
+          type: integer
+          title: Overnight
+          default: 0
+        frozen:
+          type: boolean
+          title: Frozen
+        mobility_snapshot_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mobility Snapshot Id
+        reason_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason Code
+        idempotency_replay:
+          type: boolean
+          title: Idempotency Replay
+          default: false
+      type: object
+      required:
+      - journey_id
+      - task_id
+      - plan_version_id
+      - edges
+      - verified
+      - total
+      - frozen
+      - mobility_snapshot_id
+      - reason_code
+      title: FreezeRoutesResult
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    OpeningCheck:
+      properties:
+        sequence_no:
+          type: integer
+          title: Sequence No
+        title:
+          type: string
+          title: Title
+        verdict:
+          type: string
+          title: Verdict
+        reason_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason Code
+        window:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Window
+        defers_to_notice:
+          type: boolean
+          title: Defers To Notice
+          default: false
+        source_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Text
+      type: object
+      required:
+      - sequence_no
+      - title
+      - verdict
+      - reason_code
+      title: OpeningCheck
+      description: What one confirmed stop's own source says about the day the plan puts
+        the traveller there.
+    RouteEdge:
+      properties:
+        from_place_id:
+          type: string
+          title: From Place Id
+        to_place_id:
+          type: string
+          title: To Place Id
+        from_name:
+          type: string
+          title: From Name
+        to_name:
+          type: string
+          title: To Name
+        status:
+          type: string
+          title: Status
+        minutes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Minutes
+        distance_m:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Distance M
+        spans_night:
+          type: boolean
+          title: Spans Night
+          default: false
+        provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        captured_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Captured At
+        reason_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason Code
+      type: object
+      required:
+      - from_place_id
+      - to_place_id
+      - from_name
+      - to_name
+      - status
+      - minutes
+      - distance_m
+      - provider
+      - source_url
+      - captured_at
+      - reason_code
+      title: RouteEdge
+    UnknownPriceRequest:
+      properties:
+        unknown_place_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 64
+          minItems: 1
+          title: Unknown Place Ids
+      additionalProperties: false
+      type: object
+      required:
+      - unknown_place_ids
+      title: UnknownPriceRequest
+    UnknownPriceResult:
+      properties:
+        journey_id:
+          type: string
+          title: Journey Id
+        task_id:
+          type: string
+          title: Task Id
+        plan_version_id:
+          type: string
+          title: Plan Version Id
+        accepted:
+          type: boolean
+          title: Accepted
+        unknown_place_ids:
+          items:
+            type: string
+          type: array
+          title: Unknown Place Ids
+        unknown_count:
+          type: integer
+          title: Unknown Count
+        known_subtotal_minor:
+          type: integer
+          title: Known Subtotal Minor
+        currency:
+          type: string
+          title: Currency
+        unknown_cost_included:
+          type: boolean
+          title: Unknown Cost Included
+        authority_state:
+          type: string
+          title: Authority State
+        mobility_snapshot_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mobility Snapshot Id
+        selectable_after:
+          type: boolean
+          title: Selectable After
+        blocker_after:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Blocker After
+        confirmed_at:
+          type: string
+          title: Confirmed At
+        idempotency_replay:
+          type: boolean
+          title: Idempotency Replay
+          default: false
+      type: object
+      required:
+      - journey_id
+      - task_id
+      - plan_version_id
+      - accepted
+      - unknown_place_ids
+      - unknown_count
+      - known_subtotal_minor
+      - currency
+      - unknown_cost_included
+      - authority_state
+      - mobility_snapshot_id
+      - selectable_after
+      - blocker_after
+      - confirmed_at
+      title: UnknownPriceResult
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
