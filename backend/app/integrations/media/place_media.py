@@ -11,6 +11,7 @@ import json
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from time import monotonic
 from typing import Any, Mapping, Sequence
 
 import httpx
@@ -319,6 +320,31 @@ class WikimediaMediaProvider:
                 return rows[0]
         return {}
 
+    def _binds(self, document: dict[str, Any], label: str) -> bool:
+        """The one rule that turns a search hit into *this* task's place.
+
+        The entity's own coordinates have to sit within 800 m of the point the provider gave us, and
+        the entity's own labels have to contain this POI's name.  Nothing here reads the search hit's
+        label: a fuzzy search echoes back whatever was typed, so trusting it would let any near-miss
+        "prove" itself.
+        """
+        if not self._source_point:
+            return False
+        import math
+
+        def same_name(value: str) -> bool:
+            normalize = lambda text: re.sub(r"[\s·（）()]+", "", text).casefold()
+            return normalize(value) == normalize(label)
+        for coordinate in document["coordinates"]:
+            lat, lon = coordinate.get("latitude"), coordinate.get("longitude")
+            if not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)):
+                continue
+            distance = math.hypot((lat-self._source_point[0])*111_000,
+                (lon-self._source_point[1])*111_000*math.cos(math.radians(lat)))
+            if distance <= 800 and any(same_name(value) for value in document["labels"]):
+                return True
+        return False
+
     async def search(self, *, place_id: str, label: str, region: str | None,
                      wikidata_id: str | None, provider_object_id: str | None = None
                      ) -> tuple[PlaceMedia | None, dict[str, Any]]:
@@ -333,11 +359,36 @@ class WikimediaMediaProvider:
                     return None, {"source": self.provider_key, "attempted": True,
                                   "outcome": STATUS_NO_MEDIA, "reason_code": "ENTITY_NOT_FOUND",
                                   "captured_at": started}
-                qid = str(candidates[0].get("id") or "")
-                entity_label = candidates[0].get("label") or _plain(
-                    ((candidates[0].get("display") or {}).get("label") or {}).get("value"))
-                description = candidates[0].get("description")
-            document = await self._entity(qid)
+                # Only the first hit used to be looked at.  Measured 2026-10-22: 天坛公园's own entity is
+                # the *second* hit (its label says 天坛公园, its coordinate is 309 m away), while the first
+                # is the temple complex, whose document never names the park -- so the traveller was told
+                # "还没核实到具体是哪个地点" when the answer was one row further down.  Every hit is now
+                # judged by the same rule, and the first document stays as the fallback so an unbound
+                # lookup still reports the reason it always did.  Bounded by hits and by time: the whole
+                # chain has ten seconds, and a refusal must not cost the traveller a timeout.
+                deadline = monotonic() + 5.0
+                document: dict[str, Any] | None = None
+                for hit in candidates[:5]:
+                    candidate_qid = str(hit.get("id") or "")
+                    if not candidate_qid:
+                        continue
+                    candidate = await self._entity(candidate_qid)
+                    if document is None:
+                        qid, document = candidate_qid, candidate
+                    if self._binds(candidate, label):
+                        qid, document = candidate_qid, candidate
+                        break
+                    if monotonic() > deadline:
+                        break
+                # A hit list whose rows carry no entity id is "we could not find this place", not a
+                # crash.  Left unhandled, the None below reaches a subscript and the traveller's receipt
+                # reads UNAVAILABLE_TypeError -- a number that blames our own code for a provider answer.
+                if document is None:
+                    return None, {"source": self.provider_key, "attempted": True,
+                                  "outcome": STATUS_NO_MEDIA, "reason_code": "ENTITY_NOT_FOUND",
+                                  "captured_at": started}
+            else:
+                document = await self._entity(qid)
             files = document["files"]
             # The entity document is the authority here, never the search hit: a fuzzy search returns
             # the label we typed back to us, and trusting it would let any near-miss "prove" itself.
@@ -348,21 +399,7 @@ class WikimediaMediaProvider:
             region_qid: str | None = None
             district: str | None = None
             district_qid: str | None = None
-            arm = "source_id" if wikidata_id else None
-            if arm is None and self._source_point:
-                import math
-                def same_name(value: str) -> bool:
-                    normalize = lambda text: re.sub(r"[\s·（）()]+", "", text).casefold()
-                    return normalize(value) == normalize(label)
-                for coordinate in document["coordinates"]:
-                    lat, lon = coordinate.get("latitude"), coordinate.get("longitude")
-                    if not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)):
-                        continue
-                    distance = math.hypot((lat-self._source_point[0])*111_000,
-                        (lon-self._source_point[1])*111_000*math.cos(math.radians(lat)))
-                    if distance <= 800 and any(same_name(value) for value in document["labels"]):
-                        arm = "coordinates"
-                        break
+            arm = "source_id" if wikidata_id else ("coordinates" if self._binds(document, label) else None)
             # A region substring or an identical name alone cannot bind a task's POI.
             if arm is None:
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
@@ -376,13 +413,19 @@ class WikimediaMediaProvider:
             district_qid = node.get("qid") or None
             district_matches_region = (district_qid == region_qid) if (district_qid and region_qid) else None
             if not files:
+                # The arm above is the proof that this place *was* identified, so the receipt says so.
+                # Measured 2026-10-22: 天坛公园 answered PROPERTY_EMPTY while the stored receipt read
+                # UNBOUND -- two different answers to "did you find the place", and an auditor cannot
+                # tell from that pair whether the photo is missing or the place never was.
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
-                              "outcome": STATUS_NO_MEDIA, "reason_code": "PROPERTY_EMPTY",
-                              "captured_at": started}
+                    "outcome": STATUS_NO_MEDIA, "reason_code": "PROPERTY_EMPTY",
+                    "identity_status": "BOUND_" + CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
+                    "captured_at": started}
             info = await self._file_info(files[0])
             if not info.get("url"):
                 return None, {"source": self.provider_key, "attempted": True, "qid": qid,
                               "outcome": STATUS_NO_MEDIA, "reason_code": "FILE_WITHDRAWN",
+                              "identity_status": "BOUND_" + CONFIDENCE_BY_ARM.get(arm or "", "UNKNOWN"),
                               "captured_at": started}
             meta = info.get("extmetadata") or {}
             license_name = _plain(meta.get("LicenseShortName")) or _plain(meta.get("License"))

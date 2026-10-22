@@ -1,0 +1,20 @@
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+..\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED backend\tests\test_goal_place_media.py::test_media_leg_looks_past_the_first_search_hit_when_it_does_not_bind
+FAILED backend\tests\test_goal_place_media.py::test_bound_place_without_a_picture_says_so_instead_of_claiming_to_be_unbound
+2 failed, 1 passed, 11 deselected, 4 warnings in 2.16s

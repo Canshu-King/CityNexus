@@ -1,0 +1,4 @@
+EGRESS {"HTTPS_PROXY": "http://127.0.0.1:7892", "HTTP_PROXY": "http://127.0.0.1:7892", "NO_PROXY": "localhost,127.0.0.1,::1,.qoder.sh,qoder.sh,qoder.com"}
+CASE {"place": "八达岭长城", "status": "NO_IMAGE", "reason": "MEDIA_IDENTITY_UNBOUND", "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null, "thumb_host": "", "gate_keeps": false}
+CASE {"place": "天坛公园", "status": "NO_IMAGE", "reason": "PROPERTY_EMPTY", "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null, "thumb_host": "", "gate_keeps": false}
+CASE {"place": "南锣鼓巷", "status": "REAL_POI_PHOTO", "reason": null, "identity": "BOUND_SOURCE_COORDINATE_MATCH", "wikidata": null, "file": "Nanluogu Xiang", "author": "Francisco Anzola", "license": "CC BY 2.0", "thumb_host": "thumb.wikimedia.org", "gate_keeps": true}

@@ -148,6 +148,133 @@ def test_osm_object_binds_wikidata_instead_of_trusting_a_matching_name(monkeypat
         assert not any("commons.wikimedia.org" in url for url in seen)
 
 
+def test_media_leg_looks_past_the_first_search_hit_when_it_does_not_bind(monkeypatch):
+    """Measured 2026-10-22: 天坛公园's own entity is the *second* Wikidata hit.
+
+    Reading only the first hit made the screen say "还没核实到具体是哪个地点" about a place the search had
+    already identified one row down.  Trying further hits must not weaken the rule -- each hit is still
+    bound by its own document's label and coordinates, so a hit whose document disagrees stays unbound.
+    """
+    park = {"id": "amap:TESTFIXTUREMEDIA2", "name": "TEST_FIXTURE 公园", "provider": "amap",
+            "provider_provenance": "LIVE_PROVIDER", "latitude": 31.2, "longitude": 121.4,
+            "coordinate_system": "WGS84", "region_status": "MATCHED",
+            "source_url": "https://uri.amap.com/marker?position=121.4%2C31.2&name=TEST_FIXTURE"}
+    seen = []
+    file_titles = []
+
+    def answer(request):
+        seen.append(str(request.url))
+        if request.url.params.get("action") == "wbsearchentities":
+            return httpx.Response(200, json={"search": [{"id": "Q111", "label": "TEST_FIXTURE 公园"},
+                                                        {"id": "Q222", "label": "TEST_FIXTURE 公园"}]})
+        if request.url.params.get("action") == "query":
+            file_titles.append(str(request.url.params.get("titles")))
+        if request.url.path.endswith("Q111.json"):
+            return httpx.Response(200, json={"entities": {"Q111": {
+                "labels": {"zh": {"value": "TEST_FIXTURE 别的名字"}},
+                "claims": {"P625": [{"mainsnak": {"datavalue": {"value": {"latitude": 31.9, "longitude": 121.4}}}}],
+                           "P18": [{"mainsnak": {"datavalue": {"value": "Far.jpg"}}}]}}}})
+        if request.url.path.endswith("Q222.json"):
+            return httpx.Response(200, json={"entities": {"Q222": {
+                "labels": {"zh": {"value": "TEST_FIXTURE 公园"}},
+                "claims": {"P625": [{"mainsnak": {"datavalue": {"value": {"latitude": 31.20001, "longitude": 121.4}}}}],
+                           "P18": [{"mainsnak": {"datavalue": {"value": "Test.jpg"}}}]}}}})
+        return httpx.Response(200, json={"query": {"pages": {"1": {"imageinfo": [{
+            "url": "https://upload.wikimedia.org/test.jpg",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Test.jpg",
+            "extmetadata": {"Artist": {"value": "<b>TEST_FIXTURE 作者</b>"},
+                            "LicenseShortName": {"value": "CC BY-SA 4.0"}}}]}}}})
+
+    real = httpx.AsyncClient
+    monkeypatch.setattr(goal_media.httpx, "AsyncClient", lambda **kwargs: real(
+        transport=httpx.MockTransport(answer), **kwargs))
+    result = asyncio.run(goal_media._collect(park, "TEST_FIXTURE 城市"))
+    assert any("Q111.json" in url for url in seen), "the first hit must still be read"
+    assert any("Q222.json" in url for url in seen), "an unbound first hit must not end the lookup"
+    assert file_titles == ["File:Test.jpg"], file_titles
+    assert result["status"] == "REAL_POI_PHOTO"
+    assert result["media"] and result["media"]["can_show"] and result["media"]["author"] == "TEST_FIXTURE 作者"
+
+
+def test_media_leg_stays_unbound_when_no_search_hit_binds(monkeypatch):
+    """The extra lookups may change *which* entity is chosen, never what counts as proof."""
+    park = {"id": "amap:TESTFIXTUREMEDIA3", "name": "TEST_FIXTURE 公园", "provider": "amap",
+            "provider_provenance": "LIVE_PROVIDER", "latitude": 31.2, "longitude": 121.4,
+            "coordinate_system": "WGS84", "region_status": "MATCHED",
+            "source_url": "https://uri.amap.com/marker?position=121.4%2C31.2&name=TEST_FIXTURE"}
+    seen = []
+
+    def answer(request):
+        seen.append(str(request.url))
+        if request.url.params.get("action") == "wbsearchentities":
+            return httpx.Response(200, json={"search": [{"id": "Q111", "label": "TEST_FIXTURE 公园"},
+                                                        {"id": "Q222", "label": "TEST_FIXTURE 公园"}]})
+        if request.url.path.endswith("Q111.json"):
+            return httpx.Response(200, json={"entities": {"Q111": {
+                "labels": {"zh": {"value": "TEST_FIXTURE 别的名字"}},
+                "claims": {"P625": [{"mainsnak": {"datavalue": {"value": {"latitude": 31.9, "longitude": 121.4}}}}],
+                           "P18": [{"mainsnak": {"datavalue": {"value": "Far.jpg"}}}]}}}})
+        if request.url.path.endswith("Q222.json"):
+            return httpx.Response(200, json={"entities": {"Q222": {
+                "labels": {"zh": {"value": "TEST_FIXTURE 停车场"}},
+                "claims": {"P625": [{"mainsnak": {"datavalue": {"value": {"latitude": 31.20001, "longitude": 121.4}}}}],
+                           "P18": [{"mainsnak": {"datavalue": {"value": "Car.jpg"}}}]}}}})
+        return httpx.Response(200, json={"query": {"pages": {"1": {"imageinfo": [{
+            "url": "https://upload.wikimedia.org/test.jpg",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Test.jpg",
+            "extmetadata": {"Artist": {"value": "<b>TEST_FIXTURE 作者</b>"},
+                            "LicenseShortName": {"value": "CC BY-SA 4.0"}}}]}}}})
+
+    real = httpx.AsyncClient
+    monkeypatch.setattr(goal_media.httpx, "AsyncClient", lambda **kwargs: real(
+        transport=httpx.MockTransport(answer), **kwargs))
+    result = asyncio.run(goal_media._collect(park, "TEST_FIXTURE 城市"))
+    assert result["status"] == "NO_IMAGE" and result["reason_code"] == "MEDIA_IDENTITY_UNBOUND"
+    assert result["media"] is None
+    assert result["identity_status"] == "UNBOUND", result["identity_status"]
+    assert not any("commons.wikimedia.org" in url for url in seen), "an unbound place never asks for a file"
+
+
+def test_bound_place_without_a_picture_says_so_instead_of_claiming_to_be_unbound(monkeypatch):
+    """天坛公园, measured 2026-10-22: the entity is found, Commons simply has no image on it.
+
+    Before the hit-ranking fix this place was reported as "not yet identified" (MEDIA_IDENTITY_UNBOUND)
+    because only the first search hit was read.  Now it binds -- and the receipt must keep the two
+    answers separate: ``PROPERTY_EMPTY`` for "this place, no picture", and it must stop asserting an
+    unbound identity, because an auditor cannot tell those two sentences apart afterwards.
+    """
+    park = {"id": "amap:TESTFIXTUREMEDIA4", "name": "TEST_FIXTURE 公园", "provider": "amap",
+            "provider_provenance": "LIVE_PROVIDER", "latitude": 31.2, "longitude": 121.4,
+            "coordinate_system": "WGS84", "region_status": "MATCHED",
+            "source_url": "https://uri.amap.com/marker?position=121.4%2C31.2&name=TEST_FIXTURE"}
+    seen = []
+
+    def answer(request):
+        seen.append(str(request.url))
+        if request.url.params.get("action") == "wbsearchentities":
+            return httpx.Response(200, json={"search": [{"id": "Q111", "label": "TEST_FIXTURE 公园"},
+                                                        {"id": "Q222", "label": "TEST_FIXTURE 公园"}]})
+        if request.url.path.endswith("Q111.json"):
+            return httpx.Response(200, json={"entities": {"Q111": {
+                "labels": {"zh": {"value": "TEST_FIXTURE 别的名字"}},
+                "claims": {"P625": [{"mainsnak": {"datavalue": {"value": {"latitude": 31.9, "longitude": 121.4}}}}],
+                           "P18": [{"mainsnak": {"datavalue": {"value": "Far.jpg"}}}]}}}})
+        if request.url.path.endswith("Q222.json"):
+            return httpx.Response(200, json={"entities": {"Q222": {
+                "labels": {"zh": {"value": "TEST_FIXTURE 公园"}},
+                "claims": {"P625": [{"mainsnak": {"datavalue": {"value": {"latitude": 31.20001, "longitude": 121.4}}}}]}}}})
+        return httpx.Response(200, json={"query": {"pages": {}}})
+
+    real = httpx.AsyncClient
+    monkeypatch.setattr(goal_media.httpx, "AsyncClient", lambda **kwargs: real(
+        transport=httpx.MockTransport(answer), **kwargs))
+    result = asyncio.run(goal_media._collect(park, "TEST_FIXTURE 城市"))
+    assert result["status"] == "NO_IMAGE" and result["reason_code"] == "PROPERTY_EMPTY", result
+    assert result["media"] is None
+    assert result["identity_status"] == "BOUND_SOURCE_COORDINATE_MATCH", result["identity_status"]
+    assert result["source_wikidata_id"] is None, "the OSM-derived id stays the OSM-derived id"
+
+
 def test_model_can_select_the_media_tool_under_the_existing_task_budget(goal_scope, monkeypatch):
     from app.agent import goal_tasks
     from test_goal_tasks import _create
