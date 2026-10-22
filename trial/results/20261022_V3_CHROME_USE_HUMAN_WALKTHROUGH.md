@@ -420,3 +420,53 @@ citynexus_v3_human12_1022.db（起法 `_boot_human_stack_r10.ps1`，它只打印
 地点的那几段时间"和"高德没给回执的那一两段转场"，不是营业核实——这一步要不要放行仍在等 ORD-0708
 与跨夜衔接、无地点时段那两条甲／乙裁语；关掉浏览器后重新登录找回旧行程（P1）没动；
 USER_VERIFIED 仍是 PENDING，本机窗口不等于主人手里的手机。
+
+## 二十、「和 Agent 补齐出发资料」这一按，量了七趟才说清它做了什么（walk-66…walk-72，2026-10-23 06:04—07:29）
+
+**先承认这枚按钮原先是空的。** 屏上写「和 Agent 补齐出发资料」，代码发出去的却是同一句通用话术：
+「逐项告诉我出发前缺哪些营业、费用或转场资料…先不要改行程。」——让 Agent 复述屏幕已经列出的清单，
+还禁止它做按钮自己承诺的那件事。现在这句话按服务端给的缺口逐条拼（一笔一动作：找一处定下来／量这一段路／
+挪个时间／换一天），并且不再要求 Agent 去按旅客自己的保存门（`frontend/src/trial/mobile/departureGaps.ts`，
+产品代 `09343c5331519782afc0b32abe69b11dafd2317a`）。
+
+**屏上量到的，逐条给行号。** `walk-69-log.txt:40` 与 `:59` 读到同一行说明：「按这一个按钮会把上面这些项
+写进底部的对话框，再按「发送 ↑」才交给 Agent 去查。」它是静态的：按下按钮会让这枚卡片重挂载，
+写在组件状态里的"已交给你了"会在同一瞬间被吃掉（walk-66 与 walk-68 的 `STEP_12D_HINT (unreadable)`
+就是这么来的），所以话要说在按之前（`a0a755d3c2858f67bff4e0b909feb5acd4556593`）。
+`walk-68-log.txt:45` 对话框里确实收到 307—353 字的逐项问句，`:46` 「发送 ↑」可见且可用，
+`:48` 送出后 8 秒会话里出现旅客这一条。
+
+**Agent 答不答，是这晚真正的门。** 同一句问话按了四次的读数：walk-68 在 22:31:22 记为 MODEL_TIMEOUT
+（run eac20d51，模型那一轮跑到 90 秒撞上天花板）；walk-69 按下后 80 秒多出一条新的 Agent 回合
+（`walk-69-log.txt:48`，TURNS_BEFORE=3 → TURNS_AFTER=4）；walk-70、walk-71 又各超时一次。
+四次只答一次，说明天花板本身太矮，不是接线坏了：把 Agent 自己那一轮的时钟从 90 秒提到 180 秒
+（`backend/app/core/config.py`，`c87b40ff5e5011cef3c4ebedb13554e80e5fb027`）。那三枚臂不用改就仍然绿——
+它们钉的是"客户端用的是 Agent 自己的设置、impact 旋钮管不着它、设得再小也留五秒地板"，
+没有钉住出厂值；`3 passed` 现读。提到 180 之后的第一次（walk-72）：新回合在 112 秒出现
+（`walk-72-log.txt:49`），服务端那一轮从 23:26:31 的 USER_MESSAGE_ADDED 跑到 23:28:17 才收——
+**106 秒，在旧的 90 秒下它必然还是 MODEL_TIMEOUT**，这就是这一笔改动的直接证据。
+
+**失败也要在屏上有名字。** 以前只要任务不再是 WORKING，对话框那行状态就整条消失，"没答上来"被显示成
+"还在想"。现在 FAILED_RECOVERABLE 也出一行：walk-70 读到「Agent 上一轮没有答完，这次的服务暂时不可用。
+你可以再说一次，或先继续调整日程，等它能答时再问。」（`walk-70-log.txt:50`；代码在
+`a566ec3678aa892b08c9b41508ab7b9405bef86f`）。
+
+**这一趟真的走到了出发。** walk-72：`STEP_13_SELECT_BUTTONS=1 VISIBLE=true`（`walk-72-log.txt:63`）→
+「可以确认出发」「方案 1 已选用」→「旅程已开始」→ 刷新一次仍是「旅程已开始 · 方案 1 正在使用」
+（`:66`、`:69`、`:71`）。库里的对账在 `departure-loop-readback-1.txt`：journey
+2413b283-0c0c-40ca-8342-a6866dfec838 状态 ACTIVE，active_plan 3ca37cf4 状态 ACTIVE，六项安排全部
+place=bound 且 opening=OPEN_ON_DATE，冻进这版的转场事实 5 条 LIVE_PROVIDER_CAPTURE
+（32／58／20／19／50 分钟，snapshot baadcc09），门序是 23:25:55 prepare（草案第 2 版）→
+23:26:00 freeze frozen=true 5/5 → 23:26:09 票价确认 → 23:28:47 plan.selected 与
+plan.committed_by_traveler → 23:28:54 journey.started；这一趟的时间窗里高德被叫十六次
+（district 1、search 10、walking 5），另有五张 Commons 实景。
+
+**不抢功。** 这次真正让选用门打开的，是 Agent 在**按这枚按钮之前**就把六段时间都绑到了正式地点行
+（seq 50 save_draft_itinerary、59 discover_places、63 save_draft_variants），随后冻结拿到 5/5、票价确认完，
+门就开了；按钮那一句在 23:26:31 问出去、23:28:17 答回来，**答完之后草案没有再改版**（其后没有
+TASK_DRAFT_UPDATED）。所以这一笔只能说：问得出、答得上、路没断；不能说"是这一按把行程补齐的"。
+
+**仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
+「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
+（P1）没动；USER_VERIFIED 仍是 PENDING。现场栈换到 r11：后端 60216／前端 14416／独立库
+citynexus_v3_human13_1022.db（`_boot_human_stack_r11.ps1` 仍只打印 amap_key_present=True）。

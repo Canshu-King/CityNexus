@@ -1,0 +1,86 @@
+read from citynexus_v3_human13_1022.db with the sqlite backup API (the running stack keeps its WAL)
+
+journey 2413b283-0c0c-40ca-8342-a6866dfec838 status ACTIVE start 2026-12-03T09:00 active_plan 3ca37cf4-eaa1-402b-b5cd-9d2cb9e16e78 created 2026-10-22T23:20:24.619818+00:00
+
+plan 3ca37cf4 version 1 status ACTIVE source MANUAL snapshot baadcc09 frozen_facts 5 captured 2026-10-22T23:26:00
+      hop -00ec9eb -> -dc53719 minutes 32 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+      hop -07848c0 -> -00ec9eb minutes 58 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+      hop -62c2e60 -> -07848c0 minutes 20 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+      hop -71842af -> -00ec9eb minutes 19 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+      hop -dc53719 -> -71842af minutes 50 quality LIVE_PROVIDER_CAPTURE cost CITYNEXUS_COST_ESTIMATE
+   seq 1 天安门广场 → 故宫博物院                  SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 2 景山公园（神武门直达，省走）                 SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 3 前门大街/大栅栏 逛吃歇脚                  SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 4 天坛公园                           SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 5 老舍茶馆(前门店) 喝茶休息                 SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   seq 6 前门 简餐返程                        SIGHTSEE  place=bound opening=OPEN_ON_DATE          routing=-
+   activities=6 bound_to_a_place=6
+
+mission 379c1857 status PARTIAL_READY started 2026-10-22T23:20:30 completed 2026-10-22T23:28:17 draft_revision=None plan_id=-
+   stored prepare-plan answer: slots=6 unrouted=0 known_subtotal=0 opening_checks=6 price_accepted=True
+
+goal-task event trail (audit_logs.action='agent.goal_task.event', newest 30):
+   2026-10-22T23:22:01 seq 48 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:23:20 seq 49 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:23:20 seq 50 TOOL_STARTED status WORKING tool save_draft_itinerary reason -
+   2026-10-22T23:23:20 seq 51 TOOL_COMPLETED status WORKING tool save_draft_itinerary reason -
+   2026-10-22T23:23:20 seq 52 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:23:32 seq 53 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:23:32 seq 54 TASK_PARTIAL_READY status PARTIAL_READY tool - reason SUMMARY_READY
+   2026-10-22T23:23:47 seq 55 USER_MESSAGE_ADDED status RESUMABLE tool - reason -
+   2026-10-22T23:23:47 seq 56 RUN_STARTED status WORKING tool - reason -
+   2026-10-22T23:23:47 seq 57 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:24:39 seq 58 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:24:39 seq 59 TOOL_STARTED status WORKING tool discover_places reason -
+   2026-10-22T23:24:39 seq 60 TOOL_COMPLETED status WORKING tool discover_places reason -
+   2026-10-22T23:24:39 seq 61 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:25:07 seq 62 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:25:07 seq 63 TOOL_STARTED status WORKING tool save_draft_variants reason -
+   2026-10-22T23:25:07 seq 64 TOOL_COMPLETED status WORKING tool save_draft_variants reason -
+   2026-10-22T23:25:07 seq 65 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:25:22 seq 66 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:25:22 seq 67 TASK_PARTIAL_READY status PARTIAL_READY tool - reason SUMMARY_READY
+   2026-10-22T23:25:32 seq 68 TASK_DRAFT_UPDATED status PARTIAL_READY tool - reason -
+   2026-10-22T23:26:31 seq 69 USER_MESSAGE_ADDED status RESUMABLE tool - reason -
+   2026-10-22T23:26:31 seq 70 RUN_STARTED status WORKING tool - reason -
+   2026-10-22T23:26:31 seq 71 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:27:27 seq 72 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:27:27 seq 73 TOOL_STARTED status WORKING tool inspect_journey reason -
+   2026-10-22T23:27:27 seq 74 TOOL_COMPLETED status WORKING tool inspect_journey reason -
+   2026-10-22T23:27:27 seq 75 MODEL_TURN_STARTED status WORKING tool - reason -
+   2026-10-22T23:28:17 seq 76 MODEL_TURN_COMPLETED status WORKING tool - reason -
+   2026-10-22T23:28:17 seq 77 TASK_PARTIAL_READY status PARTIAL_READY tool - reason SUMMARY_READY
+
+the traveller's own doors, in server order (audit rows whose action names a goal/plan/journey step):
+   2026-10-22T23:25:55 goal.draft.prepared              {"draft_revision": 2, "plan_version_id": "3ca37cf4-eaa1-402b-b5cd-9d2cb9e16e78"}
+   2026-10-22T23:26:00 goal.routes.frozen               {"plan_version_id": "3ca37cf4-eaa1-402b-b5cd-9d2cb9e16e78", "frozen": true, "verified": 5, "total": 5, "mobility_snapshot_id": "baadcc09-99f0-48fc-b877-d504c0e074be"}
+   2026-10-22T23:26:09 goal.price.unknown.accepted      {"plan_version_id": "3ca37cf4-eaa1-402b-b5cd-9d2cb9e16e78", "unknown_count": 5}
+   2026-10-22T23:28:47 plan.selected                    {"plan_status": "SELECTED"}
+   2026-10-22T23:28:47 plan.committed_by_traveler       {"plan_status": "SELECTED", "committed_plan_version_id": "3ca37cf4-eaa1-402b-b5cd-9d2cb9e16e78"}
+   2026-10-22T23:28:54 journey.started                  {"status": "ACTIVE"}
+
+AMap provider calls made since this journey was created (provider_calls carries no journey column, so this is a time window, not a per-journey claim):
+   amap-web-service goal_amap_district 1  (2026-10-22T23:21:20 → 2026-10-22T23:21:20)
+   amap-web-service goal_amap_search 10  (2026-10-22T23:21:20 → 2026-10-22T23:24:39)
+   amap-web-service goal_amap_walking 5  (2026-10-22T23:25:59 → 2026-10-22T23:26:00)
+   wikimedia-commons goal_place_media 5  (2026-10-22T23:21:23 → 2026-10-22T23:23:25)
+
+audit trail for this journey (action, rows):
+   agent.goal_task.event 77
+   agent_tool_requested 2
+   goal.draft.prepared 1
+   goal.price.unknown.accepted 1
+   goal.routes.frozen 1
+   journey.created 1
+   journey.outcome.recorded 1
+   journey.started 1
+   plan.committed_by_traveler 1
+   plan.selected 1
+
+idempotency keys by operation, and the ones whose stored answer names this journey:
+   goal.freeze-routes total=1 naming_this_journey=1
+   goal.prepare total=1 naming_this_journey=1
+   goal.price-accept total=1 naming_this_journey=1
+   journey.departure.commit total=1 naming_this_journey=1
+   revolution.start.journey total=1 naming_this_journey=1
+   revolution.start.traveler total=1 naming_this_journey=0
