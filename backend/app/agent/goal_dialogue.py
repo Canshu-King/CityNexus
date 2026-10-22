@@ -21,7 +21,8 @@ def plain_traveller_text(value: str) -> str:
 # 其余安排原封不动」 and then asks what to refine next. When the saved schedule did not move in that
 # same round, the sentence and the schedule disagree, and only one of them is the traveller's next
 # action. These are the words that tell the server the message is reporting a change it claims is done.
-_CLAIMED_CHANGE_MARKS = ("已改", "改成", "换成", "已把", "替换", "已更新", "原封不动", "其余都不动", "其他都不动", "不动")
+_CLAIMED_CHANGE_MARKS = ("已改", "改成", "换成", "已把", "替换", "已更新", "原封不动", "其余都不动", "其他都不动", "不动",
+                         "已按", "已调整")
 
 
 def claims_written_change(text: str) -> bool:

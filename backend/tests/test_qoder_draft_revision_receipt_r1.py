@@ -493,3 +493,86 @@ def test_a_plain_question_without_a_claim_is_left_alone(goal_scope, monkeypatch)
     assert restored["pending_question"]["question"] == "TEST_FIXTURE 第二天上午想去人少的园子还是寺院？"
     assert restored["draft_artifact"]["revision"] == 1
 
+
+
+def _seed_two_slot_draft(goal_scope, monkeypatch, goal_tasks_agent):
+    """Put a saved draft on the task so the follow-up rounds have something to edit."""
+    session, journey, member = goal_scope
+    created = _create(session, journey, member, max_model_turns=8, max_tool_calls=8,
+                      online_research_consent=True)
+
+    class SeedDraft:
+        provider_key = model_key = "TEST_FIXTURE"
+        _owns_client = False
+        turn = 0
+
+        def _complete(self, messages):
+            self.turn += 1
+            if self.turn == 1:
+                return {"tool_calls": [{"id": "m-search", "function": {
+                    "name": "discover_places", "arguments": json.dumps({"query": "TEST_FIXTURE 古迹"})}}]}
+            if self.turn == 2:
+                return {"tool_calls": [{"id": "m-write", "function": {
+                    "name": "save_draft_itinerary", "arguments": json.dumps({"days": [{
+                        "date": "2026-11-01", "slots": [
+                            {"title": "TEST_FIXTURE 湖边散步", "time_of_day": "afternoon",
+                             "place_id": "photon:node/123", "notes": "待核实"},
+                            {"title": "TEST_FIXTURE 故宫一带", "time_of_day": "morning",
+                             "notes": "地点待核实"}]}]})}}]}
+            return {"content": "TEST_FIXTURE 草稿已存"}
+
+    def fixture_discovery(_session, _journey, task, **args):
+        place = {"id": "photon:node/123", "name": "TEST_FIXTURE 古迹", "source_url": "https://www.openstreetmap.org/node/123"}
+        task["research_places"] = [place]
+        return {"tool": "discover_places", "status": "RESULTS", "places": [place], "http_status": 200}
+
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: SeedDraft())
+    monkeypatch.setattr(goal_tasks_agent, "discover_goal_places", fixture_discovery)
+    goal_tasks_agent.resume_goal_task(session, journey, member, created["task_id"])
+    session.expire_all()
+    seeded = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+    assert seeded["draft_artifact"]["revision"] == 1
+    return session, journey, member, created
+
+
+class TextOnly:
+    provider_key = model_key = "TEST_FIXTURE"
+    _owns_client = False
+
+    def _complete(self, messages):
+        return {"content": "TEST_FIXTURE 好"}
+
+    _tool_allowlist = frozenset()
+
+
+def test_a_typed_edit_request_is_not_left_in_discussion_mode(goal_scope, monkeypatch):
+    """The chat dock labels every typed follow-up DISCUSS, and discussion may not touch the schedule.
+
+    Measured on a real Edge journey: the traveller wrote 「11 月 3 日下午…改成什刹海边一家咖啡馆坐着，
+    其他安排都别动」 and the Agent answered 「已按你最新要求调整…」 in 20 seconds. The stored round was
+    still interaction_mode=DISCUSS, whose own instruction says do not change or save an itinerary -- so
+    the only thing left for the model to do was to say it.
+    """
+    session, journey, member, created = _seed_two_slot_draft(goal_scope, monkeypatch, goal_tasks_agent)
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: TextOnly())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动。",
+        message_id=str(uuid4()), interaction_mode="DISCUSS",
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+    assert restored["interaction_mode"] == "RESEARCH"
+
+
+def test_a_typed_question_about_the_trip_stays_a_discussion(goal_scope, monkeypatch):
+    """The flip must follow the instruction, not any sentence that happens to mention a day."""
+    session, journey, member, created = _seed_two_slot_draft(goal_scope, monkeypatch, goal_tasks_agent)
+    monkeypatch.setattr(goal_tasks_agent, "_new_goal_agent", lambda *_: TextOnly())
+    goal_tasks_agent.resume_goal_task(
+        session, journey, member, created["task_id"],
+        user_message="第二天下午一般几点天黑？", message_id=str(uuid4()), interaction_mode="DISCUSS",
+    )
+    session.expire_all()
+    restored = goal_tasks_agent.read_goal_task(session, journey, member, created["task_id"])
+    assert restored["interaction_mode"] == "DISCUSS"

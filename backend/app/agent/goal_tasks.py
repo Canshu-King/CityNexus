@@ -1224,6 +1224,14 @@ def resume_goal_task(
     if interaction_mode is not None:
         if interaction_mode not in {"DISCUSS", "RESEARCH"}:
             raise HTTPException(422, "INTERACTION_MODE_INVALID")
+        # The chat dock labels every typed follow-up as DISCUSS, and discussion is not allowed to change
+        # or save an itinerary. A traveller who types 「下午改成咖啡馆坐着，其他都别动」 into that box is
+        # giving an instruction about a schedule that already exists, so the round runs as an execution
+        # round. Left in DISCUSS the Agent can only talk -- which is exactly when it starts saying the
+        # change has been made.
+        if (interaction_mode == "DISCUSS" and normalized_message and asks_for_schedule_change(normalized_message)
+                and any(day.get("slots") for day in ((task.get("draft_artifact") or {}).get("days") or []))):
+            interaction_mode = "RESEARCH"
         task["interaction_mode"] = interaction_mode
     task["pending_question"] = None
     task["budget"] = budget
