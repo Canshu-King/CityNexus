@@ -86,10 +86,42 @@ def normalise_role(value: Any) -> str:
     return role if role in ANCHOR_ROLES else ""
 
 
+# Rows written before ``anchor_role`` existed stated their node in
+# ``semantic_node_key`` instead.  These four values are the only keys that carry
+# that meaning: they are exactly the structural node keys the planner
+# materialises, and a booking/order policy stores a real place or service key
+# there, never one of them.
+LEGACY_ROLE_BY_NODE_KEY = {
+    "arrival-anchor": ARRIVAL_ROLE,
+    "anchor:arrival": ARRIVAL_ROLE,
+    "departure-anchor": DEPARTURE_ROLE,
+    "anchor:departure": DEPARTURE_ROLE,
+}
+
+
+def anchor_role_from_policy(policy: Mapping[str, Any]) -> str:
+    """The reservation role a persisted policy states, legacy rows included.
+
+    ``anchor_role`` is the first and authoritative statement.  Only when a row
+    predates it may ``semantic_node_key`` answer, and only with one of the four
+    structural node keys - which is what lets a pre-``anchor_role`` ARRIVAL
+    commitment reach the structural anchor identity that generation, the C4
+    constraint and replanning all compare against, instead of being read as a
+    booking.  Anything else, including every booking/order policy, resolves to
+    ``""`` and stays on the ``activity_id`` protection path.
+    """
+
+    role = normalise_role(policy.get("anchor_role"))
+    if role:
+        return role
+    node = str(policy.get("semantic_node_key") or "").strip().lower()
+    return LEGACY_ROLE_BY_NODE_KEY.get(node, "")
+
+
 def is_reservation_anchor(policy: Mapping[str, Any]) -> bool:
     """True when this C4 policy is a reservation anchor (not a booking anchor)."""
 
-    return bool(normalise_role(policy.get("anchor_role")))
+    return bool(anchor_role_from_policy(policy))
 
 
 def time_boundary_for(role: str) -> str:
@@ -163,7 +195,7 @@ def anchor_claim_identity(
     vocabulary invented here.
     """
 
-    role = normalise_role(policy.get("anchor_role"))
+    role = anchor_role_from_policy(policy)
     if not role:
         return None
     if role in (ARRIVAL_ROLE, DEPARTURE_ROLE):
@@ -183,7 +215,7 @@ def anchor_identity_from_policy(
 ) -> AnchorIdentity:
     """Build the canonical identity view from a persisted Commitment policy."""
 
-    role = normalise_role(policy.get("anchor_role"))
+    role = anchor_role_from_policy(policy)
     semantic_key = str(policy.get("semantic_key") or "").strip()
     if not semantic_key:
         semantic_key = str(policy.get("semantic_node_key") or "").strip()

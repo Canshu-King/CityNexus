@@ -27,6 +27,7 @@ from app.planning.anchors import (
     DEPARTURE_ROLE,
     MID_TRIP_ROLE,
     STRUCTURAL_ANCHOR_KEYS,
+    anchor_role_from_policy,
     normalise_role,
     structural_external_id,
     structural_place_id,
@@ -149,7 +150,7 @@ def resolve_plan_anchors(
     unresolved: list[str] = []
     for commitment in active_c4_commitments(session, journey):
         policy = _load(commitment.policy_json, {})
-        role = normalise_role(policy.get("anchor_role"))
+        role = anchor_role_from_policy(policy)
         if not role:
             # A booking/order C4 anchor binds a concrete Activity, not a
             # planner node; it is protected through activity_id instead.

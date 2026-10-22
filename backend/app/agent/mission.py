@@ -84,6 +84,60 @@ def _text(value: str) -> str:
     return value.casefold()
 
 
+_INDOOR_NEGATIONS = (
+    "不要室内",
+    "不去室内",
+    "不选室内",
+    "不用室内",
+    "别去室内",
+    "no indoor",
+    "avoid indoor",
+    "not indoor",
+)
+
+
+def _indoor_rain_preferences(value: str) -> tuple[bool, bool]:
+    """Split "室内只在下雨时用" from "我们就要室内"，返回（条件备份，无条件偏好）。
+
+    Why a traveller's sentence has to be read clause by clause: the indoor request is either a
+    standing preference or a rain contingency, and only the wording says which.  Reading both as the
+    same thing turned "若午后下雨给室内备选" into a journey-wide indoor preference the traveller never
+    declared -- and that preference then reached the planner as a capability, not as a maybe.
+    """
+
+    conditional_tokens = (
+        "若",
+        "如果",
+        "假如",
+        "要是",
+        "万一",
+        "下雨时",
+        "雨天时",
+        "才用",
+        "才选",
+        "才改",
+        "就改",
+        "only if it rains",
+        "if it rains",
+        "when it rains",
+        "in case of rain",
+    )
+    conditional_backup = False
+    plain_indoor = False
+    for clause in re.split(r"[，,；;。.!?？\n]+", value):
+        if not any(token in clause for token in ("室内", "indoor")):
+            continue
+        if any(token in clause for token in _INDOOR_NEGATIONS):
+            continue
+        rain = any(token in clause for token in ("下雨", "雨天", "淋雨", "rain"))
+        conditional = any(token in clause for token in conditional_tokens)
+        if rain and conditional:
+            conditional_backup = True
+        else:
+            plain_indoor = True
+    return conditional_backup, plain_indoor
+
+
 def _parse_number(value: str) -> float:
     """Parse Arabic or ordinary Chinese cardinal numbers without locale guessing."""
 
@@ -239,6 +293,12 @@ def compile_mission(
     objectives: set[str] = set()
     preferences: dict[str, Any] = {}
     capabilities = extract_capabilities_from_text(command, scope="JOURNEY")
+    indoor_backup_if_raining, indoor_without_weather_condition = _indoor_rain_preferences(normalized)
+    if indoor_backup_if_raining and not indoor_without_weather_condition:
+        # A rain contingency is not a standing indoor preference, so it must not travel onward as one.
+        capabilities = tuple(
+            item for item in capabilities if str(item.get("code")) != "INDOOR_PREFERRED"
+        )
     if capabilities:
         objectives.add("CAPABILITY_AWARE")
         preferences["capabilities"] = [dict(item) for item in capabilities]
@@ -246,7 +306,12 @@ def compile_mission(
     if rhythm is not None:
         objectives.add("RESPECT_DAY_RHYTHM")
         preferences["day_rhythm"] = rhythm.as_dict()
-    if any(token in normalized for token in ("淋雨", "下雨", "室内", "indoor", "rain")):
+    if indoor_backup_if_raining:
+        preferences["indoor_backup_if_raining"] = True
+    if indoor_without_weather_condition or (
+        not indoor_backup_if_raining
+        and any(token in normalized for token in ("淋雨", "下雨", "rain"))
+    ):
         objectives.add("PREFER_INDOOR")
         preferences["indoor"] = True
     if any(token in normalized for token in ("户外", "室外", "公园", "outdoor", "park")):

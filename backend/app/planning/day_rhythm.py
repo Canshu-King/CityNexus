@@ -105,6 +105,21 @@ def extract_day_rhythm(text: str) -> DayRhythm | None:
     if not text or not text.strip():
         return None
     lowered = text.casefold()
+    noon_wake = any(
+        item in lowered
+        for item in (
+            "睡到中午",
+            "睡到正午",
+            "中午才起",
+            "中午起床",
+            "中午起",
+            "中午醒",
+            "正午才起",
+            "正午起床",
+            "正午起",
+            "正午醒",
+        )
+    )
     wake, wake_evidence = _parse_clock(
         (
             re.compile(rf"({_CLOCK})\s*点\s*(?:才|多)?\s*(?:起|醒|起床|睡醒)"),
@@ -120,12 +135,34 @@ def extract_day_rhythm(text: str) -> DayRhythm | None:
         text,
     )
     late_bed = any(item in lowered for item in ("很晚才睡", "折腾到很晚", "睡得很晚", "熬夜", "夜猫子", "stay up late", "late nights", "night owl", "sleep late"))
-    late_wake = any(item in lowered for item in ("起得很晚", "睡到中午", "中午才起", "睡到自然醒", "不爱早起", "不想早起", "sleep in", "lie in", "sleep until noon", "not a morning person", "no early mornings"))
+    late_wake = noon_wake or any(
+        item in lowered
+        for item in (
+            "起得很晚",
+            "睡到自然醒",
+            "不爱早起",
+            "不想早起",
+            "sleep in",
+            "lie in",
+            "sleep until noon",
+            "not a morning person",
+            "no early mornings",
+        )
+    )
+    noon_wake_applied = wake is None and noon_wake
+    if noon_wake_applied:
+        wake = 12 * 60
     evidence = [item for item in (wake_evidence, bed_evidence) if item]
     if late_bed:
         evidence.append("late-night sleep")
     if late_wake:
         evidence.append("late wake")
+    if noon_wake_applied:
+        # Codex's version attached this token whenever the phrase appeared, so a traveller who said
+        # "nine o'clock, though at weekends I sleep until noon" got an evidence line claiming a noon
+        # wake while the number it explains is 09:00.  Evidence may name the phrase, but it may not
+        # contradict the number it is the reason for -- so this token now travels with the decision.
+        evidence.append("wake until noon")
     if wake is None and (late_wake or late_bed):
         wake = 10 * 60 + 30
     if bed is None and (late_bed or late_wake):
@@ -134,7 +171,24 @@ def extract_day_rhythm(text: str) -> DayRhythm | None:
         return None
     skip_breakfast = any(item in lowered for item in ("早餐不用", "不用订早餐", "不吃早餐", "不用早餐", "跳过早餐", "no breakfast", "skip breakfast"))
     brunch = any(item in lowered for item in ("早午餐", "brunch"))
-    late_night = any(item in lowered for item in ("夜宵", "夜市", "夜生活", "晚上还想出去", "夜游", "late night", "nightlife", "night market", "supper"))
+    late_night = any(
+        item in lowered
+        for item in (
+            "夜宵",
+            "夜市",
+            "夜生活",
+            "晚上还想出去",
+            "夜游",
+            "活动到凌晨",
+            "玩到凌晨",
+            "活动到天亮",
+            "玩到天亮",
+            "late night",
+            "nightlife",
+            "night market",
+            "supper",
+        )
+    )
     if wake is None:
         wake = (bed + (24 * 60 - DEFAULT_BED_MINUTE) + DEFAULT_WAKE_MINUTE) % (24 * 60)
     if bed is None:

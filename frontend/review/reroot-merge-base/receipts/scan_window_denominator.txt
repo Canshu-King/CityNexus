@@ -1,0 +1,9 @@
+落地扫描这一拍自己数出来的分母（逐行取自落档原件 live_checks/_disjoint_scan_last.txt，取于 2026-10-21 06:47:03）
+落档首行（第 1 行）round 10 取数 2026-10-21 06:32:07tip a9719623d8df
+分母第 1 层（第 2 行）GHOST 剔除 1567 枚（远端已无此枝或对象已换代），前六枚：['0269-0273-reparent-dcae1bc', '0269-reparent-c79e2b4', '0274-b2c-b', '0274-b2c-c', '0278-0253-on-45b0a5e', '0278-0253-on-5c4608ce']
+分母第 2 层（第 3 行）review refs=827 | already contained in tip=460 | unmerged candidates=367
+分母第 3 层（第 5 行）CACHE 祖先判定：缓存命中已包含 460 条，命中未包含 367 条，本拍真算 367 条，预算内未决 0 条（预算 700 秒）｜另有 0 条缓存里记的是旧尖，尖换代 ⇒ 那批天然作废、重算不是缓存坏了
+窗口分类（第 6 行）clean candidates: 1 | dict-only admissible: 1 | intersecting (need rebase): 148
+窗口与未算（第 7 行）SIEVE 枚举 827 枚（含 fetch+祖先 16 秒）| 本轮细算 150 枚 deferred=217 orphan=0 zero-file=0
+窗口大小的出处 live_checks/_disjoint_scan_r1.py:25（CNX_SCAN_LIMIT 默认 150）
+读法：转达那句「要并枝 148」是这一拍 150 枚窗口里的分类数，未算的那批同拍就写在同一行里（deferred），它不是全队待办总数。

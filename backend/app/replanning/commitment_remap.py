@@ -38,6 +38,7 @@ from datetime import datetime
 from typing import Any, Iterable, Sequence
 
 from app.db.models import Activity
+from app.planning.anchors import anchor_role_from_policy, time_boundary_for
 
 
 class RemapConflict(RuntimeError):
@@ -104,9 +105,11 @@ def commitment_identity(
         ]
     )
     scheduled = str(policy.get("scheduled_start_at") or "") or None
-    boundary = (
-        "END" if str(policy.get("anchor_role") or "").upper() == "DEPARTURE" else "START"
-    )
+    # One role reader for every door that asks.  A row written before ``anchor_role``
+    # existed states its node in ``semantic_node_key``; reading the boundary straight
+    # off ``anchor_role`` made such a departure anchor constrain the wrong end of its
+    # activity, which is the opposite claim to the one the traveller confirmed.
+    boundary = time_boundary_for(anchor_role_from_policy(policy))
     return CommitmentIdentity(
         strong=strong, generic=generic, scheduled_at=scheduled, boundary=boundary
     )
