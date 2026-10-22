@@ -68,23 +68,23 @@ RECEIPT_LINES=["这条回复没有改动日程（版本 0）","这条回复没�
 
 ### A. 回执记的是"这一轮开始时"的版本
 
-`backend/app/agent/goal_dialogue.py:39` 的 `ask_question` 现在接第三个参数，`backend/app/agent/goal_tasks.py:1629`
+`backend/app/agent/goal_dialogue.py:86` 的 `ask_question` 现在接第三个参数，`backend/app/agent/goal_tasks.py:1655`
 那一处调用把本轮开始时的 `draft_revision_before_round` 递进去（同一个变量也是文字回复那条路径一直在用的）。
 于是一轮里"保存了草案 + 以问题收尾"，屏上回执是「日程：版本 0 → 1」。
 
 ### B. 旅客面前不许有 JSON 信封尾巴
 
-`backend/app/agent/goal_dialogue.py:15` 新增 `plain_traveller_text`：只吃**句尾**的 ASCII 信封符号
-（`"` `}` `]` `,` 与它们之间的空白），其他一律不动；两个门口都用它——问题正文与选项（`:24` `:31` `:32`），
-以及纯文字回复（`backend/app/agent/goal_tasks.py:1536`）。旅客自己写的字不改（`plain_traveller_text` 只处理
+`backend/app/agent/goal_dialogue.py:16` 新增 `plain_traveller_text`：只吃**句尾**的 ASCII 信封符号
+（`"` `}` `]` `,` 与它们之间的空白），其他一律不动；两个门口都用它——问题正文与选项（`:67`、`:68`、`:78`、`:79`），
+以及纯文字回复（`backend/app/agent/goal_tasks.py:1544`）。旅客自己写的字不改（`plain_traveller_text` 只处理
 助手侧输出）。若一句话去掉尾巴后是空的，`validate_question` 照旧以 `TRAVELER_QUESTION_INVALID` 拒掉，
 不把空壳放到屏上。
 
-测试读数（现读命令与解释器见第五节）：`backend/tests/test_qoder_draft_revision_receipt_r1.py` 六条全过
-（`6 passed in 1.44s`），新增两条分别是「一轮保存草案后以问题收尾 → `rev 0->1` 且屏上没有 `"}]`」与
+测试读数（现读命令与解释器见第五节）：`backend/tests/test_qoder_draft_revision_receipt_r1.py` 十一档全过
+（`11 passed in 1.45s`），新增两条分别是「一轮保存草案后以问题收尾 → `rev 0->1` 且屏上没有 `"}]`」与
 「信封尾巴规则只咬句尾、放过正常中文句子（含 `预算 ¥500/人`、`什刹海（后海）`）」。目标族回归：
 `test_goal_dialogue.py test_goal_tasks.py test_goal_task_routes.py test_goal_draft_patch.py
-test_goal_preparation.py test_goal_artifacts.py` → `45 passed`。
+test_goal_preparation.py test_goal_artifacts.py` → 连上面那套一起 `56 passed in 5.79s`。
 
 ---
 
@@ -175,7 +175,7 @@ Edge 那一趟（`walk-20-log.txt`）拿到的读数把第二处的修法照出�
 （`walk-20-server-readback.txt:1` 与 `:2`）。
 
 改法：把这一下检查从"回合结束时"前移到"`ask_traveler` 被真正执行之前"
-（`backend/app/agent/goal_tasks.py:1597`，识别词表在 `backend/app/agent/goal_dialogue.py:24`），
+（`backend/app/agent/goal_tasks.py:1605`，识别词表在 `backend/app/agent/goal_dialogue.py:24`），
 命中"话说已经改了但本轮版本没动"时，**不发出这个问题**，只用一回合已经批准过的模型轮要求它二选一：
 要么现在用 `replace_draft_slots` 把旅客点名的那半天改掉，要么重新问一个不宣称已改的问题。
 这条腿不写工具事件、不计工具次数，所以不会在 Agent 工作过程里留下一次假动作。
@@ -183,7 +183,7 @@ Edge 那一趟（`walk-20-log.txt`）拿到的读数把第二处的修法照出�
 `test_a_question_that_reports_a_change_that_never_happened_is_sent_back_once`（宣称已改 → 被退回一轮 →
 草案真的出现「TEST_FIXTURE 什刹海边咖啡馆坐着」，版本 1 → 2）与
 `test_a_plain_question_without_a_claim_is_left_alone`（只是提问、没宣称改过 → 一次到位，
-不多花一轮，屏上仍是 `NEEDS_DECISION`）。整个文件现读 `8 passed in 1.69s`。
+不多花一轮，屏上仍是 `NEEDS_DECISION`）。整个文件现读 `11 passed in 1.45s`。
 
 
 
@@ -201,3 +201,29 @@ PYTHONIOENCODING=utf-8 D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest \
 # 走查仪表（真实浏览器，CDP 9333，一趟一口气）
 cd D:/moodle/_cmdr_v3_port_1022 && node human_walk_r12.mjs
 ```
+
+---
+
+## 八、最后一处：输入框打出来的"改半天"当时根本不允许改
+
+`walk-26` 之前那两代（`walk-22`、`walk-23`）同一句话仍然不动日程，服务端对拍给出的不是借口而是状态：
+那一轮 `status=NEEDS_DECISION`、`mode DISCUSS`、二十秒就结束（`walk-22-server-readback.txt:1`）。
+原因在客户端一句话的默认值上：底部输入框每发一条都带 `interaction_mode=DISCUSS`
+（`frontend/src/trial/mobile/WorkspaceActions.tsx:447`），而讨论轮的系统指令原文是
+"Do not search, change or save an itinerary in discussion mode"——一个被明令不许动日程的模型，
+面对一句改动指令，只剩"说它已经做完了"这一条路可走。
+
+改法只在服务端一处：旅客自己打出的句子如果是指向某一天的改动（改动动词 + 时间词），
+而这个任务确实已经有保存的日程，这一轮就按执行轮跑；只问问题的一句话仍然留在讨论轮
+（`backend/app/agent/goal_tasks.py:1232`，两张词表在 `backend/app/agent/goal_dialogue.py:37` 与 `:38`）。
+两档新测试钉住这条分界：「打字的改半天不再被留在讨论模式」与「关于行程的一句提问仍然是讨论」。
+
+屏上结果（真实浏览器窗口、真人点击、同一 Journey、带真地点的那一代）：
+
+- 回执行 `["这条回复没有改动日程（版本 0）","日程：版本 0 → 1","日程：版本 1 → 2"]` — `walk-26-log.txt:32`
+- 第五条安排变成「下午 · 什刹海边咖啡馆坐着（萤火虫咖啡 后海店）」 — `walk-26-log.txt:39`
+- `EDIT_CHANGED_SCHEDULE=true` — `walk-26-log.txt:40`
+- 刷新之后仍然是那五条 — `walk-26-log.txt:42`
+
+仍未走通：A/B/C 对比卡（`walk-26-log.txt:50` 两个计数都是零）；
+「选用这份方案」在唯一有它的那一页上仍然不出现（`walk-22-log.txt:63`）。
