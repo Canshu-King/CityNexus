@@ -1,0 +1,10 @@
+today.stopsToday n=1 | en: 1 stop today | zh: 今天还有 1 项安排
+today.stopsToday n=2 | en: 2 stops today | zh: 今天还有 2 项安排
+today.stopsToday n=3 | en: 3 stops today | zh: 今天还有 3 项安排
+today.stopsAfterThis n=1 | en: 1 stop after this | zh: 后面还有 1 站
+today.stopsAfterThis n=2 | en: 2 stops after this | zh: 后面还有 2 站
+today.stopsAfterThis n=3 | en: 3 stops after this | zh: 后面还有 3 站
+today.tripEndsNextStop n=1 | en: This trip ends at the next stop | zh: 这一趟到下一站就结束了
+today.tripEndsNextStop n=2 | en: This trip ends at the next stop | zh: 这一趟到下一站就结束了
+today.tripEndsNextStop n=3 | en: This trip ends at the next stop | zh: 这一趟到下一站就结束了
+VERDICT 三行都展开干净，英文单数走 1 stop、复数走 N stops，中文三档只差数字
