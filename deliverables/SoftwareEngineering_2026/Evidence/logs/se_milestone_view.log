@@ -1,30 +1,30 @@
-[   1.8s] milestones read from the plan: 13
-[   1.8s]    1.4    M1  Topic and scope agreed                               finish=2026-09-05 deadline=2026-09-05
-[   1.8s]    2.5    M2  Requirements baseline drafted                        finish=2026-09-12 deadline=2026-09-12
-[   1.8s]    3.4    M3  Architecture design complete                         finish=2026-09-15 deadline=2026-09-15
-[   1.8s]    4.6    M4  Core backend running end to end                      finish=2026-09-14 deadline=2026-09-13
-[   1.8s]    5.5    M5  Provider mesh integrated behind one interface        finish=2026-09-21 deadline=2026-09-21
-[   1.8s]    6.6    M6  Agent surface proven against a live model            finish=2026-09-23 deadline=2026-09-23
-[   1.8s]    7.4    M7  Frontend running against the real backend            finish=2026-10-13 deadline=2026-10-13
-[   1.8s]    8.3    M8  Integration line stable                              finish=2026-10-08 deadline=2026-10-08
-[   1.8s]    9.5    M9  System test complete                                 finish=2026-11-02 deadline=2026-11-02
-[   1.8s]    10.5   M10  Part 1 deadline (missed)                            finish=2026-10-02 deadline=2026-10-02
-[   1.8s]    10.6   M11  Mid-term review                                     finish=2026-10-22 deadline=2026-10-22
-[   1.8s]    10.7   M12  Part 2 submission deadline                          finish=2026-11-06 deadline=2026-11-06
-[   1.8s]    11.3   M13  Final coursework delivery                           finish=2026-11-06 deadline=2026-11-06
-[   4.7s] timeline file rows: 13
-[   4.7s]    M1  Topic and scope agreed                               2026-09-05
-[   4.7s]    M2  Requirements baseline drafted                        2026-09-12
-[   4.7s]    M3  Architecture design complete                         2026-09-15
-[   4.7s]    M4  Core backend running end to end                      2026-09-14
-[   4.7s]    M5  Provider mesh integrated behind one interface        2026-09-21
-[   4.7s]    M6  Agent surface proven against a live model            2026-09-23
-[   4.7s]    M7  Frontend running against the real backend            2026-10-13
-[   4.7s]    M8  Integration line stable                              2026-10-08
-[   4.7s]    M9  System test complete                                 2026-11-02
-[   4.7s]    M10  Part 1 deadline (missed)                            2026-10-02
-[   4.7s]    M11  Mid-term review                                     2026-10-22
-[   4.7s]    M12  Part 2 submission deadline                          2026-11-06
-[   4.7s]    M13  Final coursework delivery                           2026-11-06
-[   4.7s] date mismatches against the plan: none
-[   6.4s] wrote Milestone_Timeline.pdf 385816 bytes d68438d3c06509d2 from view '甘特图'
+[   2.5s] milestones read from the plan: 13
+[   2.5s]    1.4    M1  Topic and scope agreed                               finish=2026-09-09 deadline=
+[   2.5s]    2.4    M2  Requirements baseline drafted                        finish=2026-09-16 deadline=
+[   2.5s]    3.4    M3  Architecture design complete                         finish=2026-09-23 deadline=
+[   2.5s]    4.6    M4  Core backend running end to end                      finish=2026-10-06 deadline=
+[   2.5s]    5.5    M5  Provider mesh integrated behind one interface        finish=2026-09-29 deadline=
+[   2.5s]    6.6    M6  Agent surface proven against a live model            finish=2026-10-06 deadline=
+[   2.5s]    7.4    M7  Frontend running against the real backend            finish=2026-10-02 deadline=
+[   2.5s]    8.3    M8  Integration line stable                              finish=2026-09-24 deadline=
+[   2.5s]    9.7    M9  System test complete                                 finish=2026-10-07 deadline=2026-11-02
+[   2.5s]    10.5   M10  Part 1 deadline (recorded as missed)                finish=2026-09-30 deadline=2026-10-02
+[   2.5s]    10.6   M11  Mid-term review                                     finish=2026-10-17 deadline=2026-10-22
+[   2.5s]    10.7   M12  Part 2 submission deadline                          finish=2026-10-24 deadline=2026-11-06
+[   2.5s]    11.3   M13  Final coursework delivery                           finish=2026-10-24 deadline=2026-11-06
+[   5.6s] timeline file rows: 13
+[   5.6s]    M1  Topic and scope agreed                               2026-09-09
+[   5.6s]    M2  Requirements baseline drafted                        2026-09-16
+[   5.6s]    M3  Architecture design complete                         2026-09-23
+[   5.6s]    M4  Core backend running end to end                      2026-10-06
+[   5.6s]    M5  Provider mesh integrated behind one interface        2026-09-29
+[   5.6s]    M6  Agent surface proven against a live model            2026-10-06
+[   5.6s]    M7  Frontend running against the real backend            2026-10-02
+[   5.6s]    M8  Integration line stable                              2026-09-24
+[   5.6s]    M9  System test complete                                 2026-10-07
+[   5.6s]    M10  Part 1 deadline (recorded as missed)                2026-09-30
+[   5.6s]    M11  Mid-term review                                     2026-10-17
+[   5.6s]    M12  Part 2 submission deadline                          2026-10-24
+[   5.6s]    M13  Final coursework delivery                           2026-10-24
+[   5.6s] date mismatches against the plan: none
+[   7.6s] wrote Milestone_Timeline.pdf 369660 bytes fcbb7954ae76d2ff from view '甘特图'

@@ -1,5 +1,5 @@
 {
- "started": "2026-10-22 18:29:25",
+ "started": "2026-10-22 18:49:25",
  "diagrams": [
   {
    "file": "01_CityNexus_System_Architecture.vsdx",
@@ -933,7 +933,7 @@
     "propsExpected": 118
    },
    "sizes": {
-    "vsdx": 62741,
+    "vsdx": 62742,
     "png": 138386,
     "pdf": 45109,
     "debugPng": 138596,
@@ -1591,7 +1591,7 @@
     "propsExpected": 157
    },
    "sizes": {
-    "vsdx": 66520,
+    "vsdx": 66521,
     "png": 211852,
     "pdf": 51291,
     "debugPng": 211771,
@@ -2394,8 +2394,8 @@
     "propsExpected": 211
    },
    "sizes": {
-    "vsdx": 84906,
-    "png": 277656,
+    "vsdx": 84907,
+    "png": 178603,
     "pdf": 53112,
     "debugPng": 179226,
     "debugPdf": 53054

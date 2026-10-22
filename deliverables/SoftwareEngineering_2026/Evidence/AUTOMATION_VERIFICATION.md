@@ -94,7 +94,13 @@ process:
 | critical path computed by the engine | 4 rows |
 | dates set by the assignment brief | 6 met, 0 breached, 0 internal targets missed |
 | save, close, reopen in a new process, every field of every row | 0 field differences |
-| published copy | published yes, 380928 bytes, sha256 ef005c12bec6ee94; re-read 65 rows, 122 dependency records, 0 violations |
+| published copy | published yes, 380928 bytes, sha256 ef005c12bec6ee94 at that instant (note below); re-read 65 rows, 122 dependency records, 0 violations |
+
+Note on file digests: opening a `.mpp` in Project rewrites it, so the sha256 in
+the table above is the bytes at that instant. `MANIFEST.sha256` and the review
+brief are written after every Project session closes, so they carry the bytes as
+packaged; re-hashing after opening the file gives a different value, which is
+Project behaviour and not a mismatch in the delivery.
 
 **Why the link-type test is built this way.** `TaskDependency.Lag` accepts a
 write on this install and then ignores it, and `TaskMoveToStatusDate` returns
@@ -154,13 +160,13 @@ neither confirmed nor denied from this repository - only from the course record.
 | no tablet-readable plan view | 21-page Gantt PDFs only | `Briefing/CityNexus_Plan_Briefing_A3.vsdx/.pdf/.png`, one A3 landscape page drawn from the plan's own computed dates |
 | members unknown, Part 1 asserted never submitted | placeholder resources at zero and a claim the repository cannot support | three named members with work resources and hours; Part 1 now says what is true: not verifiable from this repository, awaiting the course record |
 | `Briefing_One_Page.pdf` | - | 450065 |
-| `Detailed_Gantt.pdf` | 详细甘特图 | 468403 |
-| `Gantt_Chart.pdf` | 甘特图 | 775484 |
-| `Milestone_Timeline.pdf` | - | 385816 |
-| `Network_Diagram.pdf` | 网络图 | 150871 |
-| `Resource_Sheet.pdf` | 资源工作表 | 126924 |
-| `Tracking_Gantt.pdf` | 跟踪甘特图 | 543591 |
-| `WBS_View.pdf` | 任务工作表 | 194261 |
+| `Detailed_Gantt.pdf` | 详细甘特图 | 454510 |
+| `Gantt_Chart.pdf` | 甘特图 | 842537 |
+| `Milestone_Timeline.pdf` | - | 369660 |
+| `Network_Diagram.pdf` | 网络图 | 171583 |
+| `Resource_Sheet.pdf` | 资源工作表 | 147059 |
+| `Tracking_Gantt.pdf` | 跟踪甘特图 | 601735 |
+| `WBS_View.pdf` | 任务工作表 | 196387 |
 
 `Milestone_Timeline.pdf` deserves an honest footnote. Project's
 `DocumentExport` renders a view's table and chart panes and **not** the
@@ -183,12 +189,12 @@ PDF exports so nobody mistakes one for the other:
 
 | file | view | bytes |
 |---|---|---|
-| `Microsoft_Project/previews/Gantt_Chart.png` | 甘特图 | 159451 |
-| `Microsoft_Project/previews/Tracking_Gantt.png` | 跟踪甘特图 | 247812 |
-| `Microsoft_Project/previews/Network_Diagram.png` | 网络图 | 178837 |
-| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 任务工作表 | 237177 |
-| `Microsoft_Project/previews/Resource_Sheet.png` | 资源工作表 | 127135 |
-| `Microsoft_Project/previews/Calendar.png` | 日历 | 200761 |
+| `Microsoft_Project/previews/Gantt_Chart.png` | 甘特图 | 237847 |
+| `Microsoft_Project/previews/Tracking_Gantt.png` | 跟踪甘特图 | 268064 |
+| `Microsoft_Project/previews/Network_Diagram.png` | 网络图 | 198188 |
+| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 任务工作表 | 258762 |
+| `Microsoft_Project/previews/Resource_Sheet.png` | 资源工作表 | 224045 |
+| `Microsoft_Project/previews/Calendar.png` | 日历 | 305890 |
 
 ## Reproducing any of this
 

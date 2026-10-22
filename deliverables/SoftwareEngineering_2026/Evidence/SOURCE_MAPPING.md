@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1099 |
+| Commits on this branch | `git rev-list --count HEAD` | 1100 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1010), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1011), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -82,19 +82,19 @@ the deployment defaults in `core/config.py`.
 | 11 Delivery | this Evidence folder |
 
 Milestone dates are taken from dated artefacts in the tree, not chosen freely:
-* `M1  Topic and scope agreed` -> 2026-09-05
-* `M2  Requirements baseline drafted` -> 2026-09-12
-* `M3  Architecture design complete` -> 2026-09-15
-* `M4  Core backend running end to end` -> 2026-09-14
-* `M5  Provider mesh integrated behind one interface` -> 2026-09-21
-* `M6  Agent surface proven against a live model` -> 2026-09-23
-* `M7  Frontend running against the real backend` -> 2026-10-13
-* `M8  Integration line stable` -> 2026-10-08
-* `M9  System test complete` -> 2026-11-02
-* `M10  Part 1 deadline (missed)` -> 2026-10-02
-* `M11  Mid-term review` -> 2026-10-22
-* `M12  Part 2 submission deadline` -> 2026-11-06
-* `M13  Final coursework delivery` -> 2026-11-06
+* `M1  Topic and scope agreed` -> 2026-09-09
+* `M2  Requirements baseline drafted` -> 2026-09-16
+* `M3  Architecture design complete` -> 2026-09-23
+* `M4  Core backend running end to end` -> 2026-10-06
+* `M5  Provider mesh integrated behind one interface` -> 2026-09-29
+* `M6  Agent surface proven against a live model` -> 2026-10-06
+* `M7  Frontend running against the real backend` -> 2026-10-02
+* `M8  Integration line stable` -> 2026-09-24
+* `M9  System test complete` -> 2026-10-07
+* `M10  Part 1 deadline (recorded as missed)` -> 2026-09-30
+* `M11  Mid-term review` -> 2026-10-17
+* `M12  Part 2 submission deadline` -> 2026-10-24
+* `M13  Final coursework delivery` -> 2026-10-24
 
 The one deliberate exception is M9 (system test complete), which is a plan
 choice rather than a fact and is marked provisional in its own Notes field.
@@ -105,22 +105,22 @@ choice rather than a fact and is marked provisional in its own Notes field.
 
 | file | bytes | sha256/16 |
 |---|---|---|
-| `Visio/01_CityNexus_System_Architecture.vsdx` | 62156 | `b94a41c63a2e0657` |
-| `Visio/02_CityNexus_User_Journey.vsdx` | 62748 | `11d874ce8c55a30e` |
-| `Visio/03_CityNexus_Agent_Workflow.vsdx` | 66525 | `bc75ea424ebf706e` |
-| `Visio/04_CityNexus_Use_Case.vsdx` | 84933 | `d93deb6288092631` |
+| `Visio/01_CityNexus_System_Architecture.vsdx` | 62156 | `2869450c0f1d4e2d` |
+| `Visio/02_CityNexus_User_Journey.vsdx` | 62749 | `d9c88139e7d82304` |
+| `Visio/03_CityNexus_Agent_Workflow.vsdx` | 66526 | `3f7c57410bf6abfd` |
+| `Visio/04_CityNexus_Use_Case.vsdx` | 84933 | `6d77427c4c085ca6` |
 | `Visio/previews/01_CityNexus_System_Architecture.gate.json` | 7395 | `5402dc267d90c06f` |
-| `Visio/previews/01_CityNexus_System_Architecture.pdf` | 48522 | `fcd96436a010f210` |
+| `Visio/previews/01_CityNexus_System_Architecture.pdf` | 48522 | `5e3749b68fc000e8` |
 | `Visio/previews/01_CityNexus_System_Architecture.png` | 137597 | `44a46327dc95c208` |
 | `Visio/previews/02_CityNexus_User_Journey.gate.json` | 8715 | `c283b9e226eefd23` |
-| `Visio/previews/02_CityNexus_User_Journey.pdf` | 45109 | `cee6b879ed5d67a4` |
+| `Visio/previews/02_CityNexus_User_Journey.pdf` | 45109 | `7ebd1d5526198a94` |
 | `Visio/previews/02_CityNexus_User_Journey.png` | 138386 | `4d200bc7bcb48302` |
 | `Visio/previews/03_CityNexus_Agent_Workflow.gate.json` | 10997 | `7eb26c02ba8da043` |
-| `Visio/previews/03_CityNexus_Agent_Workflow.pdf` | 51291 | `72bc50018e0ac1fd` |
+| `Visio/previews/03_CityNexus_Agent_Workflow.pdf` | 51291 | `ade5be2e723b6582` |
 | `Visio/previews/03_CityNexus_Agent_Workflow.png` | 211852 | `dc2f95b0b3c04232` |
 | `Visio/previews/04_CityNexus_Use_Case.gate.json` | 17039 | `3673fa0aa322dbcd` |
-| `Visio/previews/04_CityNexus_Use_Case.pdf` | 53112 | `7d4d235d87f31bd6` |
-| `Visio/previews/04_CityNexus_Use_Case.png` | 277656 | `cda743b15a367a1d` |
+| `Visio/previews/04_CityNexus_Use_Case.pdf` | 53112 | `f72929fadf44290a` |
+| `Visio/previews/04_CityNexus_Use_Case.png` | 178603 | `6ed02dbdf39c345e` |
 | `Visio/previews/04_CityNexus_Use_Case_p1.png` | 178603 | `6ed02dbdf39c345e` |
 | `Visio/previews/04_CityNexus_Use_Case_p2.png` | 109974 | `a5b04adf63e2f0eb` |
 
@@ -129,19 +129,19 @@ choice rather than a fact and is marked provisional in its own Notes field.
 | file | bytes | sha256/16 |
 |---|---|---|
 | `Microsoft_Project/Briefing_One_Page.pdf` | 450065 | `29d388ab04e156be` |
-| `Microsoft_Project/Detailed_Gantt.pdf` | 468403 | `a9a19ff6c5d924ea` |
-| `Microsoft_Project/Gantt_Chart.pdf` | 775484 | `a09996fa0a0dffcf` |
-| `Microsoft_Project/Milestone_Timeline.pdf` | 385816 | `d68438d3c06509d2` |
-| `Microsoft_Project/Network_Diagram.pdf` | 150871 | `502bddf072097645` |
-| `Microsoft_Project/Resource_Sheet.pdf` | 126924 | `f1fa63ee58758f91` |
-| `Microsoft_Project/Tracking_Gantt.pdf` | 543591 | `49405b51c5e0fd57` |
-| `Microsoft_Project/WBS_View.pdf` | 194261 | `516636ab8fb0f35b` |
-| `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `e936d77beabcebf0` |
+| `Microsoft_Project/Detailed_Gantt.pdf` | 454510 | `99449d41b60a65e0` |
+| `Microsoft_Project/Gantt_Chart.pdf` | 842537 | `c8ecfc8663316dc1` |
+| `Microsoft_Project/Milestone_Timeline.pdf` | 369660 | `fcbb7954ae76d2ff` |
+| `Microsoft_Project/Network_Diagram.pdf` | 171583 | `b393c185c450df50` |
+| `Microsoft_Project/Resource_Sheet.pdf` | 147059 | `62f778f5d40380bc` |
+| `Microsoft_Project/Tracking_Gantt.pdf` | 601735 | `9cb7e893f2f77e8a` |
+| `Microsoft_Project/WBS_View.pdf` | 196387 | `54e10c5b0aa2291f` |
+| `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `f72a25b9c131ac95` |
 | `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `8a264cdbf73171eb` |
-| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 380928 | `ef005c12bec6ee94` |
-| `Microsoft_Project/previews/Calendar.png` | 200761 | `44d5e6a4bcaef4b3` |
-| `Microsoft_Project/previews/Gantt_Chart.png` | 159451 | `c1524868dc31f521` |
-| `Microsoft_Project/previews/Network_Diagram.png` | 178837 | `e4de5486dbb6753b` |
-| `Microsoft_Project/previews/Resource_Sheet.png` | 127135 | `324ca42dacfaff2f` |
-| `Microsoft_Project/previews/Tracking_Gantt.png` | 247812 | `2944194351ecd717` |
-| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 237177 | `8e94fa4e28ca80c7` |
+| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 517120 | `4add419bd2f33ef1` |
+| `Microsoft_Project/previews/Calendar.png` | 305890 | `9d22ae42bf3c878c` |
+| `Microsoft_Project/previews/Gantt_Chart.png` | 237847 | `7a300cf041be8b33` |
+| `Microsoft_Project/previews/Network_Diagram.png` | 198188 | `3b65c7f44b14eb13` |
+| `Microsoft_Project/previews/Resource_Sheet.png` | 224045 | `597479ef661ac820` |
+| `Microsoft_Project/previews/Tracking_Gantt.png` | 268064 | `d980f57d6b64b3a2` |
+| `Microsoft_Project/previews/WBS_Task_Sheet.png` | 258762 | `c6f18bdfa7f3a9e5` |

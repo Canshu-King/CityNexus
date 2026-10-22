@@ -4,7 +4,7 @@
   "steps": {
    "open": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295722155584>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898634092096>"
    },
    "census": {
     "ok": true,
@@ -52,15 +52,15 @@
    },
    "reopen1": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295722160720>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898634097232>"
    },
    "findAfterReopen": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728658784>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639956320>"
    },
    "markerAfterReopen": {
     "ok": true,
-    "value": "PROOF-EDIT 183036"
+    "value": "PROOF-EDIT 185031"
    },
    "restore": {
     "ok": true,
@@ -76,7 +76,7 @@
    },
    "reopen2": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728658880>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639956416>"
    },
    "connectsAfter": {
     "ok": true,
@@ -84,7 +84,7 @@
    },
    "findFinal": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728662048>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639959584>"
    },
    "textFinal": {
     "ok": true,
@@ -129,7 +129,7 @@
   "steps": {
    "open": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728661952>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639959488>"
    },
    "census": {
     "ok": true,
@@ -177,15 +177,15 @@
    },
    "reopen1": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728658400>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639955936>"
    },
    "findAfterReopen": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728658832>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639956368>"
    },
    "markerAfterReopen": {
     "ok": true,
-    "value": "PROOF-EDIT 183039"
+    "value": "PROOF-EDIT 185035"
    },
    "restore": {
     "ok": true,
@@ -201,7 +201,7 @@
    },
    "reopen2": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728658352>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639955888>"
    },
    "connectsAfter": {
     "ok": true,
@@ -209,7 +209,7 @@
    },
    "findFinal": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728658880>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639956416>"
    },
    "textFinal": {
     "ok": true,
@@ -254,7 +254,7 @@
   "steps": {
    "open": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728662048>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639959584>"
    },
    "census": {
     "ok": true,
@@ -302,15 +302,15 @@
    },
    "reopen1": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728663488>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639961024>"
    },
    "findAfterReopen": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728668384>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639965920>"
    },
    "markerAfterReopen": {
     "ok": true,
-    "value": "PROOF-EDIT 183043"
+    "value": "PROOF-EDIT 185039"
    },
    "restore": {
     "ok": true,
@@ -326,7 +326,7 @@
    },
    "reopen2": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728658640>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639956176>"
    },
    "connectsAfter": {
     "ok": true,
@@ -334,7 +334,7 @@
    },
    "findFinal": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728663440>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639960976>"
    },
    "textFinal": {
     "ok": true,
@@ -379,7 +379,7 @@
   "steps": {
    "open": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728658880>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639956416>"
    },
    "census": {
     "ok": true,
@@ -429,15 +429,15 @@
    },
    "reopen1": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728204160>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639485312>"
    },
    "findAfterReopen": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728194416>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639475568>"
    },
    "markerAfterReopen": {
     "ok": true,
-    "value": "PROOF-EDIT 183048"
+    "value": "PROOF-EDIT 185044"
    },
    "restore": {
     "ok": true,
@@ -453,7 +453,7 @@
    },
    "reopen2": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2295728204208>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x1898639485360>"
    },
    "connectsAfter": {
     "ok": true,
@@ -461,7 +461,7 @@
    },
    "findFinal": {
     "ok": true,
-    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2295728197776>"
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x1898639478928>"
    },
    "textFinal": {
     "ok": true,
