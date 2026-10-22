@@ -139,6 +139,7 @@ A("| 备用 | 文件 |")
 A("|---|---|")
 for f in ("Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf",
           "Microsoft_Project/previews/Gantt_Chart.png",
+          "Microsoft_Project/previews/Milestone_Timeline.png",
           "Microsoft_Project/previews/Network_Diagram.png",
           "Microsoft_Project/previews/WBS_Task_Sheet.png",
           "Microsoft_Project/Plan_Briefing_Print.pdf",

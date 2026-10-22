@@ -1,6 +1,6 @@
 # 课堂展示单 - 2026-10-23 12:00 +08:00
 
-生成 2026-10-23 02:12。这份文件只回答一个问题：**中午怎么在真机上把 Visio 和 Project 演示完，以及哪些话不能说。**
+生成 2026-10-23 02:14。这份文件只回答一个问题：**中午怎么在真机上把 Visio 和 Project 演示完，以及哪些话不能说。**
 
 ## 0. 现场先说清楚的三件事
 
@@ -104,7 +104,8 @@ start "" "D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Pr
 | 备用 | 文件 |
 |---|---|
 | Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf | 存在，49423 字节，sha256 `4d9a3c4ae1d4e53a` |
-| Microsoft_Project/previews/Gantt_Chart.png | 存在，227347 字节，sha256 `7ae19f04a2814124` |
+| Microsoft_Project/previews/Gantt_Chart.png | 存在，225387 字节，sha256 `f01dc3684255936e` |
+| Microsoft_Project/previews/Milestone_Timeline.png | 存在，203766 字节，sha256 `c8a809eb8140c521` |
 | Microsoft_Project/previews/Network_Diagram.png | 存在，189475 字节，sha256 `961a3e9b9ac06179` |
 | Microsoft_Project/previews/WBS_Task_Sheet.png | 存在，310899 字节，sha256 `be7025d452b83b9c` |
 | Microsoft_Project/Plan_Briefing_Print.pdf | 存在，450530 字节，sha256 `095fc85c78749ad4` |

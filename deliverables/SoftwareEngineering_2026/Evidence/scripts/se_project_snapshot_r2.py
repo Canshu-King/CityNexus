@@ -175,12 +175,16 @@ def _frame_matches(h, stem):
     return (h, t, cls.value or "?", win32process.GetWindowThreadProcessId(h)[1])
 
 
-def project_window():
-    """The frame belonging to THIS automation object's process, by pid."""
+def project_window(stem=None):
+    """The frame belonging to THIS automation object's process, by pid.
+
+    The stem is configurable because the same helpers photograph the milestone
+    file too, and Office titles the frame after whichever document is open.
+    """
     hits = []
 
     def cb(h, _l):
-        m = _frame_matches(h, STEM)
+        m = _frame_matches(h, stem or STEM)
         if m and (not WINPID or m[3] in WINPID):
             hits.append((m[0], m[1]))
         return True
@@ -398,10 +402,62 @@ for idx, (tag, vname) in enumerate(VIEWS):
     log("  kept %s (%d bytes, %d windows above it: %s)"
         % (tag, entry["bytes"], len(occ), str(occ)[:110]))
 
+# The demonstration sheet asks for a milestone picture as well, and the milestone
+# file is the one that shows all thirteen dates at once, so it is photographed the
+# same way: read-only, PrintWindow, blank-frame test.
+MILE = os.path.join(OUT, "CityNexus_Milestone_View.mpp")
 try:
     mp.FileCloseEx(0)
 except Exception as exc:
     log("FileCloseEx: %s" % type(exc).__name__)
+if os.path.exists(MILE):
+    os.chmod(MPP, stat.S_IWRITE)
+    os.chmod(MILE, stat.S_IREAD)
+    mile_before = sha(MILE)
+    try:
+        mp.FileOpen(MILE)
+        time.sleep(1.5)
+        for tag, vname in (("Milestone_Timeline", "甘特图"),):
+            try:
+                mp.ViewApply(vname)
+            except Exception as exc:
+                log("  milestone ViewApply failed: %s" % str(exc)[:60])
+            try:
+                mp.ColumnBestFit()
+            except Exception:
+                pass
+            time.sleep(1.4)
+            wins = project_window(os.path.splitext(os.path.basename(MILE))[0])
+            h = wins[0][0] if wins else None
+            if not wins:
+                log("  no window titled after the milestone file; capture skipped "
+                    "rather than photographing the plan window twice")
+            if h:
+                img, pw_ok = grab_window(h)
+                stats = check(img, tag)
+                path = os.path.join(PICS, tag + ".png")
+                img.save(path)
+                made[tag] = {"view": vname, "png": os.path.basename(path),
+                             "bytes": os.path.getsize(path),
+                             "windowTitle": wins[0][1],
+                             "printWindowReturned": pw_ok,
+                             "source": os.path.basename(MILE),
+                             "sha256": sha(path)[:16]}
+                made[tag].update(stats)
+                log("  kept %s from %s" % (tag, os.path.basename(MILE)))
+        mp.FileCloseEx(0)
+    except Exception as exc:
+        log("  milestone capture failed: %s %s" % (type(exc).__name__,
+                                                   str(exc)[:80]))
+    os.chmod(MILE, stat.S_IWRITE)
+    mile_after = sha(MILE)
+    log("milestone file digest %s -> %s (%s)"
+        % (mile_before[:16], mile_after[:16],
+           "held" if mile_after == mile_before else "CHANGED"))
+    mile_held = mile_after == mile_before
+else:
+    mile_held = True
+    log("no milestone view file to photograph")
 try:
     mp.Quit()
 except Exception:
@@ -415,6 +471,7 @@ locks = [os.path.basename(f) for f in
 log("plan sha256 after the run %s; Office lock files left: %s"
     % (after[:16], locks or "none"))
 json.dump({"views": made, "sha256Before": before, "sha256After": after,
+           "milestoneHeld": mile_held,
            "readOnly": True, "lockFilesLeft": locks,
            "screenCrossCheck": bool(cross_checked),
            "method": "PrintWindow(PW_RENDERFULLCONTENT)"},
@@ -424,8 +481,9 @@ if after != before:
     raise SystemExit("the shipped .mpp changed during a read-only capture run")
 if locks:
     raise SystemExit("Office lock files would be packaged: %s" % locks)
-if len(made) < 6:
+if len(made) < 7:
     raise SystemExit("only %d views captured" % len(made))
-log("SNAPSHOT R2 DONE: %d images, file unchanged, cross-check %s"
+log("SNAPSHOT R2 DONE: %d images (plan + milestone), file unchanged, "
+    "cross-check %s"
     % (len(made), "passed" if cross_checked else "not decisive"))
 sys.exit(0)

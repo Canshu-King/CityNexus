@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1104 |
+| Commits on this branch | `git rev-list --count HEAD` | 1105 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1013), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1014), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -141,7 +141,8 @@ choice rather than a fact and is marked provisional in its own Notes field.
 | `Microsoft_Project/CityNexus_Plan_Recovery.mpp` | 289792 | `ec3e1a5c7b2b25b8` |
 | `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 386048 | `4cd35d0725c2c5d3` |
 | `Microsoft_Project/previews/Calendar.png` | 309398 | `85174fd58ee51322` |
-| `Microsoft_Project/previews/Gantt_Chart.png` | 227347 | `7ae19f04a2814124` |
+| `Microsoft_Project/previews/Gantt_Chart.png` | 225387 | `f01dc3684255936e` |
+| `Microsoft_Project/previews/Milestone_Timeline.png` | 203766 | `c8a809eb8140c521` |
 | `Microsoft_Project/previews/Network_Diagram.png` | 189475 | `961a3e9b9ac06179` |
 | `Microsoft_Project/previews/Resource_Sheet.png` | 190809 | `bdae2ad9ac47fc68` |
 | `Microsoft_Project/previews/Tracking_Gantt.png` | 327675 | `7dc2cf334b591780` |

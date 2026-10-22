@@ -6,7 +6,7 @@ automation. Nothing in here is a screenshot pretending to be a source file:
 the four `.vsdx` and the `.mpp` are the native documents and they open,
 edit and re-save in the real applications.
 
-Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `4bba9d2e54 2026-10-23 coursework(R3): executable capacity, full lateness, readable briefing, evidence integrity`
+Source tree: CityNexus, branch `review/se-coursework-deliverables-r1` at `fdbb4ff988 2026-10-23 coursework(R3-classroom): live drive test of Visio and Project, noon demonstration sheet`
 Remote: github.com/Canshu-King/CityNexus
 
 ## What to show, in what order
@@ -104,12 +104,13 @@ Method PrintWindow(PW_RENDERFULLCONTENT). The plan was opened **read-only at the
 
 | view | file | pixels | ink fraction | windows overlapping it |
 |---|---|---|---|---|
-| 日历 | `Calendar.png` | 2578x1558 | 0.4018 | 10 |
-| 甘特图 | `Gantt_Chart.png` | 2578x1558 | 0.1651 | 10 |
-| 网络图 | `Network_Diagram.png` | 2578x1558 | 0.1886 | 10 |
-| 资源工作表 | `Resource_Sheet.png` | 2578x1558 | 0.1632 | 10 |
-| 跟踪甘特图 | `Tracking_Gantt.png` | 2578x1558 | 0.1981 | 10 |
-| 任务工作表 | `WBS_Task_Sheet.png` | 2578x1558 | 0.1925 | 10 |
+| 日历 | `Calendar.png` | 2578x1558 | 0.4018 | 7 |
+| 甘特图 | `Gantt_Chart.png` | 2578x1558 | 0.1651 | 7 |
+| 甘特图 | `Milestone_Timeline.png` | 2578x1558 | 0.1602 | 0 |
+| 网络图 | `Network_Diagram.png` | 2578x1558 | 0.1886 | 7 |
+| 资源工作表 | `Resource_Sheet.png` | 2578x1558 | 0.1632 | 7 |
+| 跟踪甘特图 | `Tracking_Gantt.png` | 2578x1558 | 0.1981 | 7 |
+| 任务工作表 | `WBS_Task_Sheet.png` | 2578x1558 | 0.1925 | 7 |
 
 The last column is the honest part: other windows really are on top of Project on this desktop while the capture runs, which is exactly why the screen-rectangle grab of round 2 was wrong. `PrintWindow` renders the target window into its own device context, so the image is Project's pixels regardless of z-order, and each file was also looked at by eye.
 
