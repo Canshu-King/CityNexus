@@ -1,0 +1,17 @@
+[   0.7s] === proof 01_CityNexus_System_Architecture.vsdx
+[   4.9s]   -> 01_CityNexus_System_Architecture.vsdx  {"allEdgesGlued": true, "markerRoundTrip": true, "textRestored": true, "connectionsSurvived": true}
+[   4.9s]      glue: 24/24 edges proven to both endpoints; missing=[]
+[   4.9s]      move: {"edge": "cli_traveler->fe_copilot", "blocked": "com_error (position protected by the master)"}
+[   4.9s] === proof 02_CityNexus_User_Journey.vsdx
+[   8.6s]   -> 02_CityNexus_User_Journey.vsdx  {"allEdgesGlued": true, "markerRoundTrip": true, "textRestored": true, "connectionsSurvived": true}
+[   8.6s]      glue: 34/34 edges proven to both endpoints; missing=[]
+[   8.6s]      move: {"edge": "start->j1", "blocked": "com_error (position protected by the master)"}
+[   8.6s] === proof 03_CityNexus_Agent_Workflow.vsdx
+[  12.1s]   -> 03_CityNexus_Agent_Workflow.vsdx  {"allEdgesGlued": true, "markerRoundTrip": true, "textRestored": true, "connectionsSurvived": true}
+[  12.1s]      glue: 35/35 edges proven to both endpoints; missing=[]
+[  12.1s]      move: {"edge": "a_start->a_ctx", "blocked": "com_error (position protected by the master)"}
+[  12.1s] === proof 04_CityNexus_Use_Case.vsdx
+[  16.3s]   -> 04_CityNexus_Use_Case.vsdx  {"allEdgesGlued": true, "markerRoundTrip": true, "textRestored": true, "connectionsSurvived": true}
+[  16.3s]      glue: 47/47 edges proven to both endpoints; missing=[]
+[  16.3s]      move: {"edge": "UC-04->sub_UC-04.1", "blocked": "com_error (position protected by the master)"}
+[  16.3s] PROOF DONE: 4/4 ok; failed=[]

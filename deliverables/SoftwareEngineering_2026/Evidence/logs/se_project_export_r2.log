@@ -1,0 +1,10 @@
+[   1.0s] open CityNexus_Software_Engineering_Plan.mpp: 63 tasks, 5 resources, finish 2026-11-06, cost 1278.3
+[   1.0s] skipping FilePageSetup (modal dialog risk); exports will be multi-page
+[   2.3s] views available: ['甘特图', '跟踪甘特图', '详细甘特图', '网络图', '任务工作表', '资源工作表', '日历', '包含日程表的甘特图']
+[   4.2s] exported Gantt_Chart        <- 甘特图          775484  a09996fa0a0dffcf
+[   5.5s] exported Tracking_Gantt     <- 跟踪甘特图        543591  49405b51c5e0fd57
+[   6.4s] exported Network_Diagram    <- 网络图          150871  502bddf072097645
+[   7.2s] exported WBS_View           <- 任务工作表        194261  516636ab8fb0f35b
+[   7.8s] exported Resource_Sheet     <- 资源工作表        126924  f1fa63ee58758f91
+[   9.2s] exported Detailed_Gantt     <- 详细甘特图        468403  a9a19ff6c5d924ea
+[   9.5s] DONE. views=6 duplicates=none

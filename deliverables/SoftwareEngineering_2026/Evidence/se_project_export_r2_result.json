@@ -1,0 +1,37 @@
+{
+ "views": {
+  "Gantt_Chart": {
+   "view": "甘特图",
+   "bytes": 775484,
+   "sha": "a09996fa0a0dffcf"
+  },
+  "Tracking_Gantt": {
+   "view": "跟踪甘特图",
+   "bytes": 543591,
+   "sha": "49405b51c5e0fd57"
+  },
+  "Network_Diagram": {
+   "view": "网络图",
+   "bytes": 150871,
+   "sha": "502bddf072097645"
+  },
+  "WBS_View": {
+   "view": "任务工作表",
+   "bytes": 194261,
+   "sha": "516636ab8fb0f35b"
+  },
+  "Resource_Sheet": {
+   "view": "资源工作表",
+   "bytes": 126924,
+   "sha": "f1fa63ee58758f91"
+  },
+  "Detailed_Gantt": {
+   "view": "详细甘特图",
+   "bytes": 468403,
+   "sha": "a9a19ff6c5d924ea"
+  }
+ },
+ "pageSetup": "not attempted - FilePageSetup() opens a modal dialog",
+ "milestoneCopy": null,
+ "duplicateExports": []
+}

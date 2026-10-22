@@ -1,0 +1,46 @@
+[   0.0s] static: 11 summary groups, 39 leaf tasks, 13 milestones, 5 resources
+[   0.7s] Microsoft Project version 16.0
+[   1.1s] new project: 项目1
+[   1.2s] ProjectStart = 2026-09-04 01:00:00+00:00
+[   1.3s] (currency CurrencyPosition refused: AttributeError)
+[   1.3s]   resource Yang Jianbin - requirements .OvertimeRate refused (com_error); kept the default
+[   1.3s]   resource Yang Jianbin - requirements .MaxUnits refused (com_error); kept the default
+[   1.3s] resource #1 Yang Jianbin - requirements / architecture / integration   std=40.0 readback=$40.00
+[   1.4s]   resource Qoder agent lanes - automate.OvertimeRate refused (com_error); kept the default
+[   1.4s]   resource Qoder agent lanes - automate.MaxUnits refused (com_error); kept the default
+[   1.4s] resource #2 Qoder agent lanes - automated build and tests              std=6.0 readback=$6.00
+[   1.4s]   resource Codex - parallel co-developm.OvertimeRate refused (com_error); kept the default
+[   1.4s]   resource Codex - parallel co-developm.MaxUnits refused (com_error); kept the default
+[   1.4s] resource #3 Codex - parallel co-development                            std=6.0 readback=$6.00
+[   1.4s]   resource Group member 2 - NAME TO BE .OvertimeRate refused (com_error); kept the default
+[   1.4s]   resource Group member 2 - NAME TO BE .MaxUnits refused (com_error); kept the default
+[   1.4s] resource #4 Group member 2 - NAME TO BE SUPPLIED                       std=0.0 readback=$0.00
+[   1.4s]   resource Group member 3 - NAME TO BE .OvertimeRate refused (com_error); kept the default
+[   1.4s]   resource Group member 3 - NAME TO BE .MaxUnits refused (com_error); kept the default
+[   1.4s] resource #5 Group member 3 - NAME TO BE SUPPLIED                       std=0.0 readback=$0.00
+[  12.7s] links applied on 38 rows; 13 rows are pinned milestones
+[  12.7s]    pinned: M1 (deadline 2026-09-05 pinned)
+[  12.7s]    pinned: M2 (deadline 2026-09-12 pinned)
+[  12.7s]    pinned: M3 (deadline 2026-09-15 pinned)
+[  12.7s]    pinned: M4 (deadline 2026-09-13 pinned)
+[  12.7s]    pinned: M5 (deadline 2026-09-21 pinned)
+[  12.7s]    pinned: M6 (deadline 2026-09-23 pinned)
+[  12.7s]    pinned: M7 (deadline 2026-10-13 pinned)
+[  12.7s]    pinned: M8 (deadline 2026-10-08 pinned)
+[  12.7s]    pinned: M9 (deadline 2026-11-02 pinned)
+[  12.7s]    pinned: M10 (deadline 2026-10-02 pinned)
+[  12.7s]    pinned: M11 (deadline 2026-10-22 pinned)
+[  12.7s]    pinned: M12 (deadline 2026-11-06 pinned)
+[  12.7s]    pinned: M13 (deadline 2026-11-06 pinned)
+[  16.4s] assignments created: 39
+[  17.7s] audit: 63 rows, 52 leaves, 39 assignments, cost 1278.3, finish 2026-11-06
+[  17.7s]   still manually scheduled: none
+[  17.7s]   critical path rows: 28
+[  17.7s]   milestones: 13
+[  17.7s]   rows without a predecessor: ['1.1  Read the assignment brief and fix t']
+[  17.8s] recalc test: [1.2  Select the project: smart city traveler] --FS--> [1.3  Confirm the group of three and each mem]
+[  18.8s] recalc proof: {"before": {"driverId": 3, "driver": "1.2  Select the project: smart city traveler system", "driverDur": 480, "driverFinish": "2026-09-08", "followerId": 4, "follower": "1.3  Confirm the group of three and each member's responsibility", "followerStart": "2026-09-08", "followerFinish": "2026-09-11", "basis": "FS(start==predecessor finish)"}, "after": {"driverFinish": "2026-10-10", "followerStart": "2026-10-12", "followerFinish": "2026-10-15"}, "scheduleMoves": true, "restored": {"driverFinish": "2026-09-08", "followerStart": "2026-09-08"}, "restoredCleanly": true, "criticalCount": 28, "critical
+[  18.9s] saved D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\CityNexus_Software_Engineering_Plan.mpp (360448 bytes)
+[  29.8s] reopened: 63 rows, 52 leaves, 39 assignments, cost 1278.3, finish 2026-11-06, critical 28
+[  29.8s] reopen checks: {"sameRowCount": true, "sameLeafCount": true, "sameAssignmentCount": true, "sameCost": true, "sameFinish": true, "criticalComputed": true, "nothingLeftManual": true, "recalcMovesSchedule": true, "recalcRestoredCleanly": true}
+[  30.1s] BUILD OK; failed checks: none

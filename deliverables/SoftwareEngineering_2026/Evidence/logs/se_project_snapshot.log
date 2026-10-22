@@ -1,0 +1,23 @@
+[   1.0s] opened CityNexus_Software_Engineering_Plan.mpp (63 tasks)
+[   2.0s] milestones placed on the plan's Timeline pane: 13
+[   2.0s] TimelineViewToggle ok
+[   2.0s] plan saved with the timeline populated
+[   2.2s]   zoom not adjustable (AttributeError); captured at the current scale
+[   3.4s]   foreground failed: error
+[   4.5s]   captured Gantt_Chart      2062x1246  159451 bytes
+[   4.6s]   zoom not adjustable (AttributeError); captured at the current scale
+[   5.8s]   foreground failed: error
+[   7.0s]   captured Tracking_Gantt   2062x1246  247812 bytes
+[   7.3s]   zoom not adjustable (AttributeError); captured at the current scale
+[   8.6s]   foreground failed: error
+[   9.7s]   captured Network_Diagram  2062x1246  178837 bytes
+[   9.8s]   zoom not adjustable (AttributeError); captured at the current scale
+[  11.0s]   foreground failed: error
+[  12.1s]   captured WBS_Task_Sheet   2062x1246  237177 bytes
+[  12.2s]   zoom not adjustable (AttributeError); captured at the current scale
+[  13.4s]   foreground failed: error
+[  14.5s]   captured Resource_Sheet   2062x1246  127135 bytes
+[  14.6s]   zoom not adjustable (AttributeError); captured at the current scale
+[  15.8s]   foreground failed: error
+[  16.9s]   captured Calendar         2062x1246  200761 bytes
+[  17.2s] SNAPSHOT DONE: 6 images

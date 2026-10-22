@@ -1,0 +1,6058 @@
+[
+ {
+  "file": "01_CityNexus_System_Architecture.vsdx",
+  "steps": {
+   "open": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060309215168>"
+   },
+   "index": {
+    "ok": true,
+    "value": {
+     "Sheet.269": {
+      "id": 269,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313022176>"
+     },
+     "Sheet.16": {
+      "id": 16,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313026496>"
+     },
+     "Sheet.14": {
+      "id": 14,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313031200>"
+     },
+     "Sheet.12": {
+      "id": 12,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889104>"
+     },
+     "Sheet.10": {
+      "id": 10,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889200>"
+     },
+     "Sheet.8": {
+      "id": 8,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889296>"
+     },
+     "Sheet.6": {
+      "id": 6,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889392>"
+     },
+     "Sheet.4": {
+      "id": 4,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889488>"
+     },
+     "Sheet.1": {
+      "id": 1,
+      "master": null,
+      "text": "CityNexus - Smart City Traveler System   |   System Architecture",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889584>"
+     },
+     "Sheet.2": {
+      "id": 2,
+      "master": null,
+      "text": "How the product actually runs. A traveler request enters the React shell, is served by one FastAPI monolith, and may be reasoned about by an AI agent that owns no domain truth: every agent mutation passes an allowlist, an audit write and an authorization decision before a deterministic solver touches journey state.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889680>"
+     },
+     "Sheet.3": {
+      "id": 3,
+      "master": null,
+      "text": "CNX-SE-VIS-01   System architecture (layered)\nRev A · generated 2026-10-22 · source tree D:\\moodle\\CityNexus @ review/boli-party-occupancy-scope-r1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889776>"
+     },
+     "Sheet.5": {
+      "id": 5,
+      "master": null,
+      "text": "1   USERS & CLIENT SURFACE",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889872>"
+     },
+     "Sheet.7": {
+      "id": 7,
+      "master": null,
+      "text": "2   FRONTEND   React 19 + TypeScript 5.8 + Vite 7 + PWA   (frontend/src)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889968>"
+     },
+     "Sheet.9": {
+      "id": 9,
+      "master": null,
+      "text": "3   BACKEND HTTP SURFACE   one FastAPI monolith, 175 endpoints under /api/v1   (backend/app/main.py, 14,569 lines)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890064>"
+     },
+     "Sheet.11": {
+      "id": 11,
+      "master": null,
+      "text": "4a   AI AGENT & HERMES PLANE   the agent owns no domain truth   (backend/app/agent)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890160>"
+     },
+     "Sheet.13": {
+      "id": 13,
+      "master": null,
+      "text": "4b   DOMAIN SERVICES   deterministic solver, business facts, journey state machine",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890256>"
+     },
+     "Sheet.15": {
+      "id": 15,
+      "master": null,
+      "text": "5a   PROVIDERS & INTEGRATIONS   9 clients; the deterministic mocks are the shipped default",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890352>"
+     },
+     "Sheet.17": {
+      "id": 17,
+      "master": null,
+      "text": "5b   PERSISTENCE, AUDIT & OPERATIONAL STATE   SQLAlchemy + SQLite (WAL), 60 tables",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890448>"
+     },
+     "矩形": {
+      "id": 18,
+      "master": "矩形",
+      "text": "Traveler - phone, tablet landscape, desktop browser; installable PWA\nfrontend/src/main.tsx:38",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890544>"
+     },
+     "矩形.19": {
+      "id": 19,
+      "master": "矩形",
+      "text": "Administrator - platform, provider health and policy console\nuse-cases/use-cases.yaml:17",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890640>"
+     },
+     "圆角矩形": {
+      "id": 20,
+      "master": "圆角矩形",
+      "text": "CopilotDock + AgentComposer\nthe natural-language input box\nfeatures/agent/CopilotDock.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890736>"
+     },
+     "圆角矩形.21": {
+      "id": 21,
+      "master": "圆角矩形",
+      "text": "AgentRunRail + feed\nshows the agent working state\nfeatures/agent/AgentRunRail.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893184>"
+     },
+     "圆角矩形.22": {
+      "id": 22,
+      "master": "圆角矩形",
+      "text": "V8Experience shell\noffline snapshot, execution clock, wallet\napp/V8Experience.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893280>"
+     },
+     "圆角矩形.23": {
+      "id": 23,
+      "master": "圆角矩形",
+      "text": "Plan comparison + Trip Studio\naccept or reject what the agent proposes\nfeatures/planning/PlanComparison.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893376>"
+     },
+     "圆角矩形.24": {
+      "id": 24,
+      "master": "圆角矩形",
+      "text": "JourneyMap\nMapLibre 5.24, OpenFreeMap style,\nprovenance badges\ncomponents/JourneyMap.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893472>"
+     },
+     "圆角矩形.25": {
+      "id": 25,
+      "master": "圆角矩形",
+      "text": "15 routed panels\nhub, live, map, studio, stay, discover,\nagent, twin, footprints, access\nroutes/v8Routes.ts:1-33",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893568>"
+     },
+     "应用程序服务器": {
+      "id": 26,
+      "master": "应用程序服务器",
+      "text": "Agent surface\n/copilot/messages, /agent/commands, /agent/tools/{name}, /agent/approvals/{id}/approve,\n/agent-feed\nmain.py:14169, 1367, 1246, 2081, 10125",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893664>"
+     },
+     "应用程序服务器.84": {
+      "id": 84,
+      "master": "应用程序服务器",
+      "text": "Shared transport\njourneys, plans, places, replans, check-ins, collections, share, bookings - 175 endpoints\nmain.py:3136, 7369, 7328, 10923, 4296, 14404",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893760>"
+     },
+     "应用程序服务器.142": {
+      "id": 142,
+      "master": "应用程序服务器",
+      "text": "Data & ops surface\n/experience, /twin, /route-evidence, SSE /operations/stream, OpenAPI, server-owned agent\nidentity\nmain.py:5473, 9846, 10525, 1982 ; contracts/openapi.yaml",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893856>"
+     },
+     "流程": {
+      "id": 200,
+      "master": "流程",
+      "text": "Entry: intent + context\n8 intents over a server-built context;\nsemantic envelope decides what the model\nmay conclude\nmain.py:14190-14228, 13593 ; semantic_compiler.py:123,229",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893952>"
+     },
+     "子流程": {
+      "id": 201,
+      "master": "子流程",
+      "text": "Mission, plan, tool loop\ncompile_mission, build_mission_plan,\nrun(max_steps=12); DeepSeekJourneyAgent\nagent/mission.py:231,384 ; mission_plan.py:74 ;\nruntime.py:62,336",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894048>"
+     },
+     "流程.202": {
+      "id": 202,
+      "master": "流程",
+      "text": "Tool gateway\nallowlist of 11 tools, audit write,\nidempotency, then ALLOW_AUTO /\nREQUIRE_CONFIRMATION / DENY\nagent/gateway.py:357-398, 59, 71, 338-347",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894144>"
+     },
+     "流程.203": {
+      "id": 203,
+      "master": "流程",
+      "text": "Journeys, plans, replans\nlifecycle, deterministic seeded solver,\nproposal-only replanning, accept / reject\nmain.py:3136, 7369, 7790, 10923, 13097 ; app/replanning",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894240>"
+     },
+     "流程.204": {
+      "id": 204,
+      "master": "流程",
+      "text": "Twin, capability, preference\nthree preference scopes; declared-not-\ninvented budget and party size\nmain.py:9846, 2761, 2568 ; models.py:95,121,824",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894336>"
+     },
+     "流程.205": {
+      "id": 205,
+      "master": "流程",
+      "text": "Places, city services, commerce, guardian\nreal-city discovery, catalog hydration,\nbookings and commitments, autopilot\nmain.py:7328, 5558, 5572, 14404, 1599 ;\ndiscovery/real_city.py",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894432>"
+     },
+     "外部数据": {
+      "id": 206,
+      "master": "外部数据",
+      "text": "DeepSeek Responses API\nchat, vision, web search;\nai_enabled defaults to false\nintegrations/ai/responses.py:244 ; config.py:14-30",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894528>"
+     },
+     "数据": {
+      "id": 207,
+      "master": "数据",
+      "text": "Shipped default provider set\nmock city / mobility / booking /\npayment; real-city mode=replay\n.env.example:18-31 ; config.py:79-81 ;\nintegrations/mock/providers.py:13",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894624>"
+     },
+     "外部数据.208": {
+      "id": 208,
+      "master": "外部数据",
+      "text": "Photon, Nominatim, Overpass\ngeocode, POI, weather; Valhalla\nlive URL not set\nphoton.py:20 ; real_city.py:617 ; BLOCKERS.md:13",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894720>"
+     },
+     "数据库": {
+      "id": 209,
+      "master": "数据库",
+      "text": "SQLite citynexus.db\nWAL, foreign keys ON, write\ndeadline and busy timeout\ndb/session.py:70-88 ; config.py:10, 96-98",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894816>"
+     },
+     "数据库.210": {
+      "id": 210,
+      "master": "数据库",
+      "text": "Journey truth\njourneys, plan_versions,\nactivities, commitments, events,\njourney_twins, replan_proposals\nmodels.py:175, 511, 535, 578, 712, 761, 782",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894912>"
+     },
+     "数据库.211": {
+      "id": 211,
+      "master": "数据库",
+      "text": "Agent state and audit\njourney_missions, agent_runs,\nagent_run_steps, action_approvals,\naudit_logs, idempotency_keys\nmodels.py:212, 254, 271, 692, 562, 677",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895008>"
+     },
+     "动态连接线": {
+      "id": 212,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895104>"
+     },
+     "Sheet.213": {
+      "id": 213,
+      "master": null,
+      "text": "types a request",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895200>"
+     },
+     "动态连接线.214": {
+      "id": 214,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895296>"
+     },
+     "Sheet.215": {
+      "id": 215,
+      "master": null,
+      "text": "watches the agent",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895392>"
+     },
+     "动态连接线.216": {
+      "id": 216,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895488>"
+     },
+     "Sheet.217": {
+      "id": 217,
+      "master": null,
+      "text": "HTTPS + PWA",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895584>"
+     },
+     "动态连接线.218": {
+      "id": 218,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895680>"
+     },
+     "Sheet.219": {
+      "id": 219,
+      "master": null,
+      "text": "console panels",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895776>"
+     },
+     "动态连接线.220": {
+      "id": 220,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895872>"
+     },
+     "Sheet.221": {
+      "id": 221,
+      "master": null,
+      "text": "POST /copilot/messages",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895968>"
+     },
+     "动态连接线.222": {
+      "id": 222,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896064>"
+     },
+     "Sheet.223": {
+      "id": 223,
+      "master": null,
+      "text": "GET /agent-feed",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896160>"
+     },
+     "动态连接线.224": {
+      "id": 224,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896256>"
+     },
+     "Sheet.225": {
+      "id": 225,
+      "master": null,
+      "text": "journey CRUD",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896352>"
+     },
+     "动态连接线.226": {
+      "id": 226,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896448>"
+     },
+     "Sheet.227": {
+      "id": 227,
+      "master": null,
+      "text": "accept / reject",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896544>"
+     },
+     "动态连接线.228": {
+      "id": 228,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896640>"
+     },
+     "Sheet.229": {
+      "id": 229,
+      "master": null,
+      "text": "route evidence",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896736>"
+     },
+     "动态连接线.230": {
+      "id": 230,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896832>"
+     },
+     "Sheet.231": {
+      "id": 231,
+      "master": null,
+      "text": "experience + twin",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896928>"
+     },
+     "动态连接线.232": {
+      "id": 232,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897024>"
+     },
+     "动态连接线.233": {
+      "id": 233,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897120>"
+     },
+     "动态连接线.234": {
+      "id": 234,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897216>"
+     },
+     "动态连接线.235": {
+      "id": 235,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897312>"
+     },
+     "动态连接线.236": {
+      "id": 236,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897408>"
+     },
+     "动态连接线.237": {
+      "id": 237,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897504>"
+     },
+     "动态连接线.238": {
+      "id": 238,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897600>"
+     },
+     "Sheet.239": {
+      "id": 239,
+      "master": null,
+      "text": "tool call",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897696>"
+     },
+     "动态连接线.240": {
+      "id": 240,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897792>"
+     },
+     "Sheet.241": {
+      "id": 241,
+      "master": null,
+      "text": "request_replan / accept_replan",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897888>"
+     },
+     "动态连接线.242": {
+      "id": 242,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897984>"
+     },
+     "Sheet.243": {
+      "id": 243,
+      "master": null,
+      "text": "model turn",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898080>"
+     },
+     "动态连接线.244": {
+      "id": 244,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898176>"
+     },
+     "Sheet.245": {
+      "id": 245,
+      "master": null,
+      "text": "reads through the provider interface",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898272>"
+     },
+     "动态连接线.246": {
+      "id": 246,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898368>"
+     },
+     "Sheet.247": {
+      "id": 247,
+      "master": null,
+      "text": "search_city_services",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898464>"
+     },
+     "动态连接线.248": {
+      "id": 248,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898560>"
+     },
+     "Sheet.249": {
+      "id": 249,
+      "master": null,
+      "text": "ORM",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898656>"
+     },
+     "动态连接线.250": {
+      "id": 250,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898752>"
+     },
+     "Sheet.251": {
+      "id": 251,
+      "master": null,
+      "text": "twin + versions",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898848>"
+     },
+     "动态连接线.252": {
+      "id": 252,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898944>"
+     },
+     "Sheet.253": {
+      "id": 253,
+      "master": null,
+      "text": "typed actions + audit",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899040>"
+     },
+     "Sheet.254": {
+      "id": 254,
+      "master": null,
+      "text": "Legend",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899136>"
+     },
+     "Sheet.255": {
+      "id": 255,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899232>"
+     },
+     "Sheet.256": {
+      "id": 256,
+      "master": null,
+      "text": "Implemented + evidence (test / published commit)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899328>"
+     },
+     "Sheet.257": {
+      "id": 257,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899424>"
+     },
+     "Sheet.258": {
+      "id": 258,
+      "master": null,
+      "text": "Implemented, not yet proven on the line",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899520>"
+     },
+     "Sheet.259": {
+      "id": 259,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899616>"
+     },
+     "Sheet.260": {
+      "id": 260,
+      "master": null,
+      "text": "Documented intent - no implementation here",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899712>"
+     },
+     "Sheet.261": {
+      "id": 261,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899808>"
+     },
+     "Sheet.262": {
+      "id": 262,
+      "master": null,
+      "text": "External provider / third-party boundary",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899904>"
+     },
+     "Sheet.263": {
+      "id": 263,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900000>"
+     },
+     "Sheet.264": {
+      "id": 264,
+      "master": null,
+      "text": "Persistence, audit and operational state",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900096>"
+     },
+     "Sheet.265": {
+      "id": 265,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900192>"
+     },
+     "Sheet.266": {
+      "id": 266,
+      "master": null,
+      "text": "Human actor / client surface",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900288>"
+     },
+     "Sheet.267": {
+      "id": 267,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900384>"
+     },
+     "Sheet.268": {
+      "id": 268,
+      "master": null,
+      "text": "Agent control plane",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900480>"
+     },
+     "Sheet.270": {
+      "id": 270,
+      "master": null,
+      "text": "THE 11 TOOLS THE GATEWAY ACTUALLY EXPOSES  (backend/app/agent/tool_catalog.py:26-59)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900576>"
+     },
+     "Sheet.271": {
+      "id": 271,
+      "master": null,
+      "text": "read-only:  inspect_journey, inspect_twin, list_replans, search_city_services",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900672>"
+     },
+     "Sheet.272": {
+      "id": 272,
+      "master": null,
+      "text": "plan-shaping:  request_replan, accept_replan",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900768>"
+     },
+     "Sheet.273": {
+      "id": 273,
+      "master": null,
+      "text": "typed actions:  replace_activity, reschedule_activity, create_booking, cancel_refundable_booking, request_commitment_change",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900864>"
+     },
+     "Sheet.274": {
+      "id": 274,
+      "master": null,
+      "text": "NOT AN AUTOMATION CLOSURE:  native Hermes binary absent and runtime identity still DIRECT (BLOCKERS.md:9-12); live Valhalla URL not configured (BLOCKERS.md:13); no real payment instrument",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900960>"
+     },
+     "Sheet.275": {
+      "id": 275,
+      "master": null,
+      "text": "registered (AGENT_TOOL_CATALOG.md:16-18); impact resolver default disabled (config.py:33); physical phone / PWA shadow trial not performed (CURRENT_STATUS.md:4).",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901056>"
+     },
+     "Sheet.276": {
+      "id": 276,
+      "master": null,
+      "text": "COUNTS, taken from this tree on 2026-10-22:  175 = @app.get|post|patch|put|delete decorators in backend/app/main.py;  60 = __tablename__ declarations in backend/app/db/models.py;  14,569 = lines",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901152>"
+     },
+     "Sheet.277": {
+      "id": 277,
+      "master": null,
+      "text": "of main.py;  242 backend test modules, 184 frontend e2e specs.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901248>"
+     },
+     "Sheet.278": {
+      "id": 278,
+      "master": null,
+      "text": "DEFAULTS:  CITYNEXUS_AI_ENABLED=false, CITYNEXUS_REAL_CITY_ENABLED=false, real-city mode=replay, impact provider=disabled (core/config.py:14, 79-81, 33) - the picture describes wiring present in",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901344>"
+     },
+     "Sheet.279": {
+      "id": 279,
+      "master": null,
+      "text": "code, not a claim that every provider is live in a given deployment.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901440>"
+     },
+     "Sheet.280": {
+      "id": 280,
+      "master": null,
+      "text": "AUDIT:  every shape carries its code anchor as a small second line and stores the same anchor in the custom property SourceRef, so the drawing can be checked shape by shape inside Visio.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901536>"
+     }
+    }
+   },
+   "connects0": {
+    "ok": true,
+    "value": 48
+   },
+   "glueAudit": {
+    "ok": true,
+    "value": {
+     "expected": 24,
+     "proven": 24,
+     "missing": []
+    }
+   },
+   "moveProof": {
+    "ok": true,
+    "value": {
+     "edge": "cli_traveler->fe_copilot",
+     "blocked": "com_error (position protected by the master)"
+    }
+   },
+   "writeMarker": {
+    "ok": true,
+    "value": null
+   },
+   "save1": {
+    "ok": true,
+    "value": 0
+   },
+   "close1": {
+    "ok": true,
+    "value": null
+   },
+   "reopen1": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060340903792>"
+   },
+   "findAfterReopen": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901776>"
+   },
+   "markerAfterReopen": {
+    "ok": true,
+    "value": "PROOF-EDIT 105532"
+   },
+   "restore": {
+    "ok": true,
+    "value": null
+   },
+   "save2": {
+    "ok": true,
+    "value": 0
+   },
+   "close2": {
+    "ok": true,
+    "value": null
+   },
+   "reopen2": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060340901680>"
+   },
+   "connectsAfter": {
+    "ok": true,
+    "value": 48
+   },
+   "findFinal": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340902976>"
+   },
+   "textFinal": {
+    "ok": true,
+    "value": "Traveler - phone, tablet landscape, desktop browser; installable PWA\nfrontend/src/main.tsx:38"
+   },
+   "close3": {
+    "ok": true,
+    "value": null
+   }
+  },
+  "ok": true,
+  "checks": {
+   "allEdgesGlued": true,
+   "markerRoundTrip": true,
+   "textRestored": true,
+   "connectionsSurvived": true
+  },
+  "glue": {
+   "expected": 24,
+   "proven": 24,
+   "missing": []
+  }
+ },
+ {
+  "file": "02_CityNexus_User_Journey.vsdx",
+  "steps": {
+   "open": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060340902880>"
+   },
+   "index": {
+    "ok": true,
+    "value": {
+     "Sheet.117": {
+      "id": 117,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313020496>"
+     },
+     "Sheet.12": {
+      "id": 12,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903072>"
+     },
+     "Sheet.10": {
+      "id": 10,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903168>"
+     },
+     "Sheet.8": {
+      "id": 8,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903264>"
+     },
+     "Sheet.6": {
+      "id": 6,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903360>"
+     },
+     "Sheet.4": {
+      "id": 4,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903456>"
+     },
+     "Sheet.1": {
+      "id": 1,
+      "master": null,
+      "text": "CityNexus   |   End-to-end User Journey",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903552>"
+     },
+     "Sheet.2": {
+      "id": 2,
+      "master": null,
+      "text": "Five swim lanes follow the real call path, from opening the app to the footprint after the trip. The traveler never loses control: an agent may answer a question silently, but anything that changes the plan is written as a proposal and waits for an explicit approval.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903504>"
+     },
+     "Sheet.3": {
+      "id": 3,
+      "master": null,
+      "text": "CNX-SE-VIS-02   User journey (cross-functional flowchart)\nRev A · generated 2026-10-22 · source tree D:\\moodle\\CityNexus @ review/boli-party-occupancy-scope-r1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903696>"
+     },
+     "Sheet.5": {
+      "id": 5,
+      "master": null,
+      "text": "L1   TRAVELER",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273664>"
+     },
+     "Sheet.7": {
+      "id": 7,
+      "master": null,
+      "text": "L2   FRONTEND   React / V8Experience",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264544>"
+     },
+     "Sheet.9": {
+      "id": 9,
+      "master": null,
+      "text": "L3   BACKEND API   FastAPI /api/v1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264640>"
+     },
+     "Sheet.11": {
+      "id": 11,
+      "master": null,
+      "text": "L4   AI AGENT   mission, tool loop, approval",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264736>"
+     },
+     "Sheet.13": {
+      "id": 13,
+      "master": null,
+      "text": "L5   DATA & PROVIDERS",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264832>"
+     },
+     "开始/结束": {
+      "id": 14,
+      "master": "开始/结束",
+      "text": "Open CityNexus\nfrontend/src/main.tsx:38",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264928>"
+     },
+     "矩形": {
+      "id": 15,
+      "master": "矩形",
+      "text": "Destination, dates,\nneeds\nmain.py:3136 POST /journeys",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265024>"
+     },
+     "判定": {
+      "id": 16,
+      "master": "判定",
+      "text": "City OK?\nmain.py:5558\n/destinations/capability",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265120>"
+     },
+     "矩形.17": {
+      "id": 17,
+      "master": "矩形",
+      "text": "Read the plan and the\nmap\nfeatures/planning/PlanComparison\n.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265216>"
+     },
+     "判定.18": {
+      "id": 18,
+      "master": "判定",
+      "text": "Happy with\nit?\nfeatures/agent/CopilotDock.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265312>"
+     },
+     "判定.19": {
+      "id": 19,
+      "master": "判定",
+      "text": "Travelling?\nmain.py:9294 POST\n/journeys/{id}/start",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265408>"
+     },
+     "开始/结束.20": {
+      "id": 20,
+      "master": "开始/结束",
+      "text": "Trip recorded\nmain.py:10019 GET\n/journeys/{id}/history",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265504>"
+     },
+     "流程": {
+      "id": 21,
+      "master": "流程",
+      "text": "Three-step wizard\nroutes/v8Routes.ts:1-33",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265600>"
+     },
+     "流程.22": {
+      "id": 22,
+      "master": "流程",
+      "text": "Map and plan cards\ncomponents/JourneyMap.tsx:1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265696>"
+     },
+     "流程.23": {
+      "id": 23,
+      "master": "流程",
+      "text": "Copilot box sends the\nask\ncitynexus.ts:935 POST\n/copilot/messages",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265792>"
+     },
+     "流程.24": {
+      "id": 24,
+      "master": "流程",
+      "text": "Agent rail shows\nprogress\nmain.py:10125 GET /agent-feed",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265888>"
+     },
+     "流程.25": {
+      "id": 25,
+      "master": "流程",
+      "text": "Today screen, server\nclock\nmain.py:5473, 6723",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265984>"
+     },
+     "流程.26": {
+      "id": 26,
+      "master": "流程",
+      "text": "History and footprints\nfeatures/checkin/checkins.ts:148",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266080>"
+     },
+     "流程.27": {
+      "id": 27,
+      "master": "流程",
+      "text": "Create the journey row\nmain.py:3136",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266176>"
+     },
+     "流程.28": {
+      "id": 28,
+      "master": "流程",
+      "text": "What can this city do?\nmain.py:5558",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266272>"
+     },
+     "流程.29": {
+      "id": 29,
+      "master": "流程",
+      "text": "Store plan versions\nmain.py:7369, 7759",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266368>"
+     },
+     "流程.30": {
+      "id": 30,
+      "master": "流程",
+      "text": "Approve / reject a\nproposal\nmain.py:13097, 13569, 2081",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266464>"
+     },
+     "流程.31": {
+      "id": 31,
+      "master": "流程",
+      "text": "Start the journey\nmain.py:9294",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266560>"
+     },
+     "流程.32": {
+      "id": 32,
+      "master": "流程",
+      "text": "Activity events depart,\narrive, begin, complete,\nskip\nmain.py:9424-9519",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266656>"
+     },
+     "流程.33": {
+      "id": 33,
+      "master": "流程",
+      "text": "Replan proposal only\nmain.py:10923 POST /replans",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266752>"
+     },
+     "流程.34": {
+      "id": 34,
+      "master": "流程",
+      "text": "Classify intent, build\ncontext\nmain.py:14190-14228, 13593",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266848>"
+     },
+     "子流程": {
+      "id": 35,
+      "master": "子流程",
+      "text": "Mission, plan, loop\nof 12\nagent/mission.py:384 ;\nruntime.py:336",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266944>"
+     },
+     "判定.36": {
+      "id": 36,
+      "master": "判定",
+      "text": "Truth,\nmoney, C4?\nagent/gateway.py:338-347 ;\ntool_catalog.py:20-22",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267040>"
+     },
+     "外部数据": {
+      "id": 37,
+      "master": "外部数据",
+      "text": "Mock providers\n(default)\n.env.example:18-31 ;\nconfig.py:79-81",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267136>"
+     },
+     "外部数据.38": {
+      "id": 38,
+      "master": "外部数据",
+      "text": "Photon / Nominatim\n/ Overpass\ndiscovery/photon.py:20 ;\nreal_city.py:617",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267232>"
+     },
+     "数据库": {
+      "id": 39,
+      "master": "数据库",
+      "text": "replan_proposals +\nversion\nmodels.py:782, 511",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267328>"
+     },
+     "数据库.40": {
+      "id": 40,
+      "master": "数据库",
+      "text": "journeys, events,\ncheck-ins\nmodels.py:175, 712, 1324, 562",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267424>"
+     },
+     "数据库.41": {
+      "id": 41,
+      "master": "数据库",
+      "text": "agent_runs and\nagent_run_steps\nmodels.py:254, 271",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267520>"
+     },
+     "动态连接线": {
+      "id": 42,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267616>"
+     },
+     "动态连接线.43": {
+      "id": 43,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267712>"
+     },
+     "Sheet.44": {
+      "id": 44,
+      "master": null,
+      "text": "submits",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267808>"
+     },
+     "动态连接线.45": {
+      "id": 45,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267904>"
+     },
+     "Sheet.46": {
+      "id": 46,
+      "master": null,
+      "text": "HTTP",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268000>"
+     },
+     "动态连接线.47": {
+      "id": 47,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268096>"
+     },
+     "动态连接线.48": {
+      "id": 48,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268192>"
+     },
+     "Sheet.49": {
+      "id": 49,
+      "master": null,
+      "text": "answers",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268288>"
+     },
+     "动态连接线.50": {
+      "id": 50,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268384>"
+     },
+     "Sheet.51": {
+      "id": 51,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268480>"
+     },
+     "动态连接线.52": {
+      "id": 52,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268576>"
+     },
+     "Sheet.53": {
+      "id": 53,
+      "master": null,
+      "text": "NO, another city",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268672>"
+     },
+     "动态连接线.54": {
+      "id": 54,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268768>"
+     },
+     "Sheet.55": {
+      "id": 55,
+      "master": null,
+      "text": "place lookup",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268864>"
+     },
+     "动态连接线.56": {
+      "id": 56,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268960>"
+     },
+     "Sheet.57": {
+      "id": 57,
+      "master": null,
+      "text": "fallback data",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269056>"
+     },
+     "动态连接线.58": {
+      "id": 58,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269152>"
+     },
+     "Sheet.59": {
+      "id": 59,
+      "master": null,
+      "text": "geometry",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269248>"
+     },
+     "动态连接线.60": {
+      "id": 60,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269344>"
+     },
+     "Sheet.61": {
+      "id": 61,
+      "master": null,
+      "text": "plans",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269440>"
+     },
+     "动态连接线.62": {
+      "id": 62,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269536>"
+     },
+     "Sheet.63": {
+      "id": 63,
+      "master": null,
+      "text": "shown",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269632>"
+     },
+     "动态连接线.64": {
+      "id": 64,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269728>"
+     },
+     "动态连接线.65": {
+      "id": 65,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269824>"
+     },
+     "Sheet.66": {
+      "id": 66,
+      "master": null,
+      "text": "NO, ask for a change",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269920>"
+     },
+     "动态连接线.67": {
+      "id": 67,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270016>"
+     },
+     "Sheet.68": {
+      "id": 68,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270112>"
+     },
+     "动态连接线.69": {
+      "id": 69,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270208>"
+     },
+     "Sheet.70": {
+      "id": 70,
+      "master": null,
+      "text": "message",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270304>"
+     },
+     "动态连接线.71": {
+      "id": 71,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270400>"
+     },
+     "动态连接线.72": {
+      "id": 72,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270496>"
+     },
+     "动态连接线.73": {
+      "id": 73,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270592>"
+     },
+     "Sheet.74": {
+      "id": 74,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270688>"
+     },
+     "动态连接线.75": {
+      "id": 75,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270784>"
+     },
+     "Sheet.76": {
+      "id": 76,
+      "master": null,
+      "text": "NO, read-only answer",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270880>"
+     },
+     "动态连接线.77": {
+      "id": 77,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270976>"
+     },
+     "Sheet.78": {
+      "id": 78,
+      "master": null,
+      "text": "persisted",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271072>"
+     },
+     "动态连接线.79": {
+      "id": 79,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271168>"
+     },
+     "Sheet.80": {
+      "id": 80,
+      "master": null,
+      "text": "new version to review",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271264>"
+     },
+     "动态连接线.81": {
+      "id": 81,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271360>"
+     },
+     "Sheet.82": {
+      "id": 82,
+      "master": null,
+      "text": "updated result",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271456>"
+     },
+     "动态连接线.83": {
+      "id": 83,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271552>"
+     },
+     "Sheet.84": {
+      "id": 84,
+      "master": null,
+      "text": "each step recorded",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271648>"
+     },
+     "动态连接线.85": {
+      "id": 85,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271744>"
+     },
+     "Sheet.86": {
+      "id": 86,
+      "master": null,
+      "text": "awaits you",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271840>"
+     },
+     "动态连接线.87": {
+      "id": 87,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271936>"
+     },
+     "Sheet.88": {
+      "id": 88,
+      "master": null,
+      "text": "decided",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272032>"
+     },
+     "动态连接线.89": {
+      "id": 89,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272128>"
+     },
+     "Sheet.90": {
+      "id": 90,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272224>"
+     },
+     "动态连接线.91": {
+      "id": 91,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272320>"
+     },
+     "Sheet.92": {
+      "id": 92,
+      "master": null,
+      "text": "NO, review only",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272416>"
+     },
+     "动态连接线.93": {
+      "id": 93,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272512>"
+     },
+     "Sheet.94": {
+      "id": 94,
+      "master": null,
+      "text": "live screen",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272608>"
+     },
+     "动态连接线.95": {
+      "id": 95,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272704>"
+     },
+     "Sheet.96": {
+      "id": 96,
+      "master": null,
+      "text": "on the ground",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272800>"
+     },
+     "动态连接线.97": {
+      "id": 97,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272896>"
+     },
+     "Sheet.98": {
+      "id": 98,
+      "master": null,
+      "text": "events written",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272992>"
+     },
+     "动态连接线.99": {
+      "id": 99,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273088>"
+     },
+     "Sheet.100": {
+      "id": 100,
+      "master": null,
+      "text": "disruption reported",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273184>"
+     },
+     "动态连接线.101": {
+      "id": 101,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273280>"
+     },
+     "Sheet.102": {
+      "id": 102,
+      "master": null,
+      "text": "trip finished",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273376>"
+     },
+     "动态连接线.103": {
+      "id": 103,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273472>"
+     },
+     "Sheet.104": {
+      "id": 104,
+      "master": null,
+      "text": "Legend",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273568>"
+     },
+     "Sheet.105": {
+      "id": 105,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273760>"
+     },
+     "Sheet.106": {
+      "id": 106,
+      "master": null,
+      "text": "Implemented + evidence (test / published commit)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273712>"
+     },
+     "Sheet.107": {
+      "id": 107,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341274432>"
+     },
+     "Sheet.108": {
+      "id": 108,
+      "master": null,
+      "text": "Implemented, not yet proven on the line",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341274528>"
+     },
+     "Sheet.109": {
+      "id": 109,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341275920>"
+     },
+     "Sheet.110": {
+      "id": 110,
+      "master": null,
+      "text": "Documented intent - no implementation here",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276016>"
+     },
+     "Sheet.111": {
+      "id": 111,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276112>"
+     },
+     "Sheet.112": {
+      "id": 112,
+      "master": null,
+      "text": "External provider / third-party boundary",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276208>"
+     },
+     "Sheet.113": {
+      "id": 113,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276304>"
+     },
+     "Sheet.114": {
+      "id": 114,
+      "master": null,
+      "text": "Persistence, audit and operational state",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276400>"
+     },
+     "Sheet.115": {
+      "id": 115,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276496>"
+     },
+     "Sheet.116": {
+      "id": 116,
+      "master": null,
+      "text": "The traveler's own step",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276592>"
+     },
+     "Sheet.118": {
+      "id": 118,
+      "master": null,
+      "text": "HOW TO READ THIS: follow one column at a time. A step in the traveler lane is what you see; the lanes below it are what the product does while you wait.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276688>"
+     },
+     "Sheet.119": {
+      "id": 119,
+      "master": null,
+      "text": "EVERY BRANCH CLOSES. The two diamonds in the traveler lane and the one in the agent lane each have a labelled YES and NO, and both outcomes lead somewhere; the only terminal shape is the one on the right.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276784>"
+     },
+     "Sheet.120": {
+      "id": 120,
+      "master": null,
+      "text": "PARTY SIZE AND STAY BUDGET ARE DELIBERATELY LEFT BLANK at first: the journey record keeps three states instead of inventing a value, and a plan that needs a budget you never declared says so (models.py:824 stay_budget_declared; ORD-0355).",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276880>"
+     },
+     "Sheet.121": {
+      "id": 121,
+      "master": null,
+      "text": "ACTIVITY EVENTS (depart, arrive, begin, complete, skip) are wired and reachable, but their real-world timestamps are still recorded as non-blocking debt, which is why that shape is amber (KNOWN_NONBLOCKING_DEBT.md).",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276976>"
+     },
+     "Sheet.122": {
+      "id": 122,
+      "master": null,
+      "text": "The loop back from the agent lane to the map is the point of the product: a change you approve becomes a new plan version, not an edited-over screen.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277072>"
+     }
+    }
+   },
+   "connects0": {
+    "ok": true,
+    "value": 68
+   },
+   "glueAudit": {
+    "ok": true,
+    "value": {
+     "expected": 34,
+     "proven": 34,
+     "missing": []
+    }
+   },
+   "moveProof": {
+    "ok": true,
+    "value": {
+     "edge": "start->j1",
+     "blocked": "com_error (position protected by the master)"
+    }
+   },
+   "writeMarker": {
+    "ok": true,
+    "value": null
+   },
+   "save1": {
+    "ok": true,
+    "value": 0
+   },
+   "close1": {
+    "ok": true,
+    "value": null
+   },
+   "reopen1": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060313026544>"
+   },
+   "findAfterReopen": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313031248>"
+   },
+   "markerAfterReopen": {
+    "ok": true,
+    "value": "PROOF-EDIT 105536"
+   },
+   "restore": {
+    "ok": true,
+    "value": null
+   },
+   "save2": {
+    "ok": true,
+    "value": 0
+   },
+   "close2": {
+    "ok": true,
+    "value": null
+   },
+   "reopen2": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060313022176>"
+   },
+   "connectsAfter": {
+    "ok": true,
+    "value": 68
+   },
+   "findFinal": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901776>"
+   },
+   "textFinal": {
+    "ok": true,
+    "value": "Open CityNexus\nfrontend/src/main.tsx:38"
+   },
+   "close3": {
+    "ok": true,
+    "value": null
+   }
+  },
+  "ok": true,
+  "checks": {
+   "allEdgesGlued": true,
+   "markerRoundTrip": true,
+   "textRestored": true,
+   "connectionsSurvived": true
+  },
+  "glue": {
+   "expected": 34,
+   "proven": 34,
+   "missing": []
+  }
+ },
+ {
+  "file": "03_CityNexus_Agent_Workflow.vsdx",
+  "steps": {
+   "open": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060340902976>"
+   },
+   "index": {
+    "ok": true,
+    "value": {
+     "Sheet.112": {
+      "id": 112,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313026496>"
+     },
+     "Sheet.14": {
+      "id": 14,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901680>"
+     },
+     "Sheet.12": {
+      "id": 12,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903792>"
+     },
+     "Sheet.10": {
+      "id": 10,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890544>"
+     },
+     "Sheet.8": {
+      "id": 8,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889104>"
+     },
+     "Sheet.6": {
+      "id": 6,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901440>"
+     },
+     "Sheet.4": {
+      "id": 4,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901536>"
+     },
+     "Sheet.1": {
+      "id": 1,
+      "master": null,
+      "text": "CityNexus   |   AI Agent Autonomy and Tool-Calling Workflow",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901344>"
+     },
+     "Sheet.2": {
+      "id": 2,
+      "master": null,
+      "text": "The path from a sentence to an action, and the three places where the system is allowed to say no. Reads are free; plan changes become proposals; anything touching money or a protected commitment waits for the traveler. A failed provider is recorded as a degraded run instead of quietly rewriting the journey.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901248>"
+     },
+     "Sheet.3": {
+      "id": 3,
+      "master": null,
+      "text": "CNX-SE-VIS-03   Agent workflow (tool loop and authorization gates)\nRev A · generated 2026-10-22 · source tree D:\\moodle\\CityNexus @ review/boli-party-occupancy-scope-r1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901152>"
+     },
+     "Sheet.5": {
+      "id": 5,
+      "master": null,
+      "text": "REQUEST, INTENT AND THE STEP BUDGET",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901056>"
+     },
+     "Sheet.7": {
+      "id": 7,
+      "master": null,
+      "text": "THE GATEWAY DECIDES WHAT AN AGENT MAY DO",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900960>"
+     },
+     "Sheet.9": {
+      "id": 9,
+      "master": null,
+      "text": "EXECUTION, CONFIRMATION AND FAILURE HANDLING",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900864>"
+     },
+     "Sheet.11": {
+      "id": 11,
+      "master": null,
+      "text": "WHAT COMES BACK TO YOU",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900768>"
+     },
+     "Sheet.13": {
+      "id": 13,
+      "master": null,
+      "text": "PROVEN CAPABILITY",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900672>"
+     },
+     "Sheet.15": {
+      "id": 15,
+      "master": null,
+      "text": "HONEST GAP LIST",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900576>"
+     },
+     "开始/结束": {
+      "id": 16,
+      "master": "开始/结束",
+      "text": "A request\narrives\nmain.py:14169, 1367",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900480>"
+     },
+     "流程": {
+      "id": 17,
+      "master": "流程",
+      "text": "Trusted context\nassembled\nmain.py:13593\n_copilot_context()",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900384>"
+     },
+     "判定": {
+      "id": 18,
+      "master": "判定",
+      "text": "AI up?\nconfig.py:14 ai_enabled ;\nagent/ai_availability.py",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900288>"
+     },
+     "流程.19": {
+      "id": 19,
+      "master": "流程",
+      "text": "Classify into one of\n8 intents\nmain.py:14190-14228",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900192>"
+     },
+     "流程.20": {
+      "id": 20,
+      "master": "流程",
+      "text": "Semantic envelope and\npolicy\nai/semantic_compiler.py:123,\n229",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900096>"
+     },
+     "流程.21": {
+      "id": 21,
+      "master": "流程",
+      "text": "JourneyMission\npersisted\nagent/mission.py:231, 384",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900000>"
+     },
+     "流程.22": {
+      "id": 22,
+      "master": "流程",
+      "text": "AgentRun opened\nagent/runtime.py:238 ;\nmodels.py:254",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899904>"
+     },
+     "判定.23": {
+      "id": 23,
+      "master": "判定",
+      "text": "Step <\n12?\nagent/runtime.py:336\nrun(max_steps=12)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899808>"
+     },
+     "流程.24": {
+      "id": 24,
+      "master": "流程",
+      "text": "Tool catalogue\noffered\nagent/runtime.py:62",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899712>"
+     },
+     "判定.25": {
+      "id": 25,
+      "master": "判定",
+      "text": "Model\nwants a\ntool?\nagent/runtime.py:395-420",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899616>"
+     },
+     "流程.26": {
+      "id": 26,
+      "master": "流程",
+      "text": "gateway.dispatch(name\n, request)\nagent/gateway.py:357",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899520>"
+     },
+     "判定.27": {
+      "id": 27,
+      "master": "判定",
+      "text": "On allowl\nist?\nagent/gateway.py:358",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899424>"
+     },
+     "流程.28": {
+      "id": 28,
+      "master": "流程",
+      "text": "Refused 404, still\naudited\ngateway.py:359, 377-393",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899328>"
+     },
+     "流程.29": {
+      "id": 29,
+      "master": "流程",
+      "text": "Idempotent: repeat\nthe receipt\ngateway.py:59, 71 ;\nmodels.py:677",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899232>"
+     },
+     "判定.30": {
+      "id": 30,
+      "master": "判定",
+      "text": "Authoriza\ntion\ngateway.py:338-347",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899136>"
+     },
+     "判定.31": {
+      "id": 31,
+      "master": "判定",
+      "text": "Read /\nplan /\nmoney /\nC4?\ntool_catalog.py:20-22",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340899040>"
+     },
+     "流程.32": {
+      "id": 32,
+      "master": "流程",
+      "text": "Deterministic\nfallback, no model\nturn\nmain.py:13722 ;\nai_availability.py",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898944>"
+     },
+     "流程.33": {
+      "id": 33,
+      "master": "流程",
+      "text": "Result analysed and\nstored\nagent/runtime.py:238",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898848>"
+     },
+     "流程.34": {
+      "id": 34,
+      "master": "流程",
+      "text": "Handler runs against\ndomain services\nagent/gateway.py:400+",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898752>"
+     },
+     "流程.35": {
+      "id": 35,
+      "master": "流程",
+      "text": "Held for your\nconfirmation\ngateway.py:343 ; main.py:2081",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898656>"
+     },
+     "判定.36": {
+      "id": 36,
+      "master": "判定",
+      "text": "Provider\nfailed?\nagent/runtime.py:660",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898560>"
+     },
+     "流程.37": {
+      "id": 37,
+      "master": "流程",
+      "text": "Degraded run recorded\nruntime.py:660 ; AGENT_RUNTIM\nE_ARCHITECTURE.md:12-15",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898464>"
+     },
+     "流程.38": {
+      "id": 38,
+      "master": "流程",
+      "text": "Replan proposal\nproduced\nmain.py:10923 ; models.py:782",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898368>"
+     },
+     "流程.39": {
+      "id": 39,
+      "master": "流程",
+      "text": "Shown in the feed and\nthe rail\nmain.py:10125, 1099, 2032",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898272>"
+     },
+     "矩形": {
+      "id": 40,
+      "master": "矩形",
+      "text": "You accept, reject,\nor keep talking\nmain.py:13097, 13569",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898176>"
+     },
+     "判定.41": {
+      "id": 41,
+      "master": "判定",
+      "text": "More\nwork?\nagent/runtime.py:336",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340898080>"
+     },
+     "开始/结束.42": {
+      "id": 42,
+      "master": "开始/结束",
+      "text": "Run closed and\nreadable\nmain.py:929, 1099",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897984>"
+     },
+     "矩形.43": {
+      "id": 43,
+      "master": "矩形",
+      "text": "THE 11 TOOLS THIS BUILD EXPOSES   tool_catalog.py:26-59\nread-only: inspect_journey, inspect_twin, list_replans,\nsearch_city_services\nplan-shaping: request_replan, accept_replan\ntyped actions: replace_activity, reschedule_activity, create_booking,\ncancel_refundable_booking, request_commitment_change\nMCP surfaces: V1 six tools (server.py:157-207), V2 eleven\n(server.py:404-549)\ntool_catalog.py:26-59",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897888>"
+     },
+     "矩形.44": {
+      "id": 44,
+      "master": "矩形",
+      "text": "WHAT IS STILL MISSING\nnative Hermes binary absent, runtime identity still DIRECT\n(BLOCKERS.md:9-12)\nlive Valhalla URL not configured, so the travel matrix stays mocked\n(BLOCKERS.md:13-14)\nno real payment or refund instrument registered\n(AGENT_TOOL_CATALOG.md:16-18)\nimpact resolver default disabled (config.py:33)\nphysical phone and PWA shadow trial not performed\n(CURRENT_STATUS.md:4)\nBLOCKERS.md:9-16 ; AGENT_TOOL_CATALOG.md:16-18",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897792>"
+     },
+     "动态连接线": {
+      "id": 45,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897696>"
+     },
+     "动态连接线.46": {
+      "id": 46,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897600>"
+     },
+     "动态连接线.47": {
+      "id": 47,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897504>"
+     },
+     "Sheet.48": {
+      "id": 48,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897408>"
+     },
+     "动态连接线.49": {
+      "id": 49,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897312>"
+     },
+     "Sheet.50": {
+      "id": 50,
+      "master": null,
+      "text": "NO",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897216>"
+     },
+     "动态连接线.51": {
+      "id": 51,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897120>"
+     },
+     "Sheet.52": {
+      "id": 52,
+      "master": null,
+      "text": "plain answer",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340897024>"
+     },
+     "动态连接线.53": {
+      "id": 53,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896928>"
+     },
+     "动态连接线.54": {
+      "id": 54,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896832>"
+     },
+     "动态连接线.55": {
+      "id": 55,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896736>"
+     },
+     "动态连接线.56": {
+      "id": 56,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896640>"
+     },
+     "动态连接线.57": {
+      "id": 57,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896544>"
+     },
+     "Sheet.58": {
+      "id": 58,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896448>"
+     },
+     "动态连接线.59": {
+      "id": 59,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896352>"
+     },
+     "Sheet.60": {
+      "id": 60,
+      "master": null,
+      "text": "NO, budget spent",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896256>"
+     },
+     "动态连接线.61": {
+      "id": 61,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896160>"
+     },
+     "动态连接线.62": {
+      "id": 62,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340896064>"
+     },
+     "Sheet.63": {
+      "id": 63,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895968>"
+     },
+     "动态连接线.64": {
+      "id": 64,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895872>"
+     },
+     "Sheet.65": {
+      "id": 65,
+      "master": null,
+      "text": "NO, final answer",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895776>"
+     },
+     "动态连接线.66": {
+      "id": 66,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895680>"
+     },
+     "动态连接线.67": {
+      "id": 67,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895584>"
+     },
+     "Sheet.68": {
+      "id": 68,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895488>"
+     },
+     "动态连接线.69": {
+      "id": 69,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895392>"
+     },
+     "Sheet.70": {
+      "id": 70,
+      "master": null,
+      "text": "NO",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895296>"
+     },
+     "动态连接线.71": {
+      "id": 71,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895200>"
+     },
+     "Sheet.72": {
+      "id": 72,
+      "master": null,
+      "text": "refusal recorded",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895104>"
+     },
+     "动态连接线.73": {
+      "id": 73,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340895008>"
+     },
+     "动态连接线.74": {
+      "id": 74,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894912>"
+     },
+     "Sheet.75": {
+      "id": 75,
+      "master": null,
+      "text": "ALLOW_AUTO",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894816>"
+     },
+     "动态连接线.76": {
+      "id": 76,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894720>"
+     },
+     "Sheet.77": {
+      "id": 77,
+      "master": null,
+      "text": "REQUIRE_CONFIRMATION",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894624>"
+     },
+     "动态连接线.78": {
+      "id": 78,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894528>"
+     },
+     "Sheet.79": {
+      "id": 79,
+      "master": null,
+      "text": "DENY",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894432>"
+     },
+     "动态连接线.80": {
+      "id": 80,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894336>"
+     },
+     "Sheet.81": {
+      "id": 81,
+      "master": null,
+      "text": "read or plan",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894240>"
+     },
+     "动态连接线.82": {
+      "id": 82,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894144>"
+     },
+     "Sheet.83": {
+      "id": 83,
+      "master": null,
+      "text": "money or C4",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340894048>"
+     },
+     "动态连接线.84": {
+      "id": 84,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893952>"
+     },
+     "Sheet.85": {
+      "id": 85,
+      "master": null,
+      "text": "after you approve",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893856>"
+     },
+     "动态连接线.86": {
+      "id": 86,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893760>"
+     },
+     "动态连接线.87": {
+      "id": 87,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893664>"
+     },
+     "动态连接线.88": {
+      "id": 88,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893568>"
+     },
+     "Sheet.89": {
+      "id": 89,
+      "master": null,
+      "text": "YES",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893472>"
+     },
+     "动态连接线.90": {
+      "id": 90,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893376>"
+     },
+     "Sheet.91": {
+      "id": 91,
+      "master": null,
+      "text": "NO",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893280>"
+     },
+     "动态连接线.92": {
+      "id": 92,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340893184>"
+     },
+     "Sheet.93": {
+      "id": 93,
+      "master": null,
+      "text": "truth untouched",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890736>"
+     },
+     "动态连接线.94": {
+      "id": 94,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890640>"
+     },
+     "动态连接线.95": {
+      "id": 95,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890448>"
+     },
+     "动态连接线.96": {
+      "id": 96,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890352>"
+     },
+     "动态连接线.97": {
+      "id": 97,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890256>"
+     },
+     "Sheet.98": {
+      "id": 98,
+      "master": null,
+      "text": "keep going",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890160>"
+     },
+     "动态连接线.99": {
+      "id": 99,
+      "master": "动态连接线",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340890064>"
+     },
+     "Sheet.100": {
+      "id": 100,
+      "master": null,
+      "text": "NO",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889968>"
+     },
+     "Sheet.101": {
+      "id": 101,
+      "master": null,
+      "text": "Legend",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889872>"
+     },
+     "Sheet.102": {
+      "id": 102,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889776>"
+     },
+     "Sheet.103": {
+      "id": 103,
+      "master": null,
+      "text": "Implemented + evidence",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889680>"
+     },
+     "Sheet.104": {
+      "id": 104,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889584>"
+     },
+     "Sheet.105": {
+      "id": 105,
+      "master": null,
+      "text": "Implemented, not proven on the line",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889488>"
+     },
+     "Sheet.106": {
+      "id": 106,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889200>"
+     },
+     "Sheet.107": {
+      "id": 107,
+      "master": null,
+      "text": "Missing or future work",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889296>"
+     },
+     "Sheet.108": {
+      "id": 108,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340889392>"
+     },
+     "Sheet.109": {
+      "id": 109,
+      "master": null,
+      "text": "Agent-owned step",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277216>"
+     },
+     "Sheet.110": {
+      "id": 110,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277312>"
+     },
+     "Sheet.111": {
+      "id": 111,
+      "master": null,
+      "text": "Human in the loop",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277408>"
+     },
+     "Sheet.113": {
+      "id": 113,
+      "master": null,
+      "text": "WHY THIS IS THE DIAGRAM TO PRESENT: an information page answers a question; this loop is what makes CityNexus an agent application. The model never writes journey state itself - agent/runtime.py:336 asks, agent/gateway.py:357 decides, and",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277504>"
+     },
+     "Sheet.114": {
+      "id": 114,
+      "master": null,
+      "text": "a domain service performs.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277600>"
+     },
+     "Sheet.115": {
+      "id": 115,
+      "master": null,
+      "text": "THREE DOORS, NOT ONE. allowlist (gateway.py:358) then idempotency (gateway.py:59, 71) then authorization (gateway.py:338-347). The PLAN_ONLY boundary is enforced server-side, so a request body claiming to be Hermes cannot widen it.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277696>"
+     },
+     "Sheet.116": {
+      "id": 116,
+      "master": null,
+      "text": "max_steps=12 is a real bound in runtime.py:336; a run that spends it is reported as degraded, not retried invisibly.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277792>"
+     },
+     "Sheet.117": {
+      "id": 117,
+      "master": null,
+      "text": "The two panels on the right are part of the model, not decoration: the coursework asks to separate what the code does today from what is planned, and claiming a closed automation loop here would be false.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277888>"
+     }
+    }
+   },
+   "connects0": {
+    "ok": true,
+    "value": 70
+   },
+   "glueAudit": {
+    "ok": true,
+    "value": {
+     "expected": 35,
+     "proven": 35,
+     "missing": []
+    }
+   },
+   "moveProof": {
+    "ok": true,
+    "value": {
+     "edge": "a_start->a_ctx",
+     "blocked": "com_error (position protected by the master)"
+    }
+   },
+   "writeMarker": {
+    "ok": true,
+    "value": null
+   },
+   "save1": {
+    "ok": true,
+    "value": 0
+   },
+   "close1": {
+    "ok": true,
+    "value": null
+   },
+   "reopen1": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060309215744>"
+   },
+   "findAfterReopen": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903888>"
+   },
+   "markerAfterReopen": {
+    "ok": true,
+    "value": "PROOF-EDIT 105540"
+   },
+   "restore": {
+    "ok": true,
+    "value": null
+   },
+   "save2": {
+    "ok": true,
+    "value": 0
+   },
+   "close2": {
+    "ok": true,
+    "value": null
+   },
+   "reopen2": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060313020544>"
+   },
+   "connectsAfter": {
+    "ok": true,
+    "value": 70
+   },
+   "findFinal": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060313022176>"
+   },
+   "textFinal": {
+    "ok": true,
+    "value": "A request\narrives\nmain.py:14169, 1367"
+   },
+   "close3": {
+    "ok": true,
+    "value": null
+   }
+  },
+  "ok": true,
+  "checks": {
+   "allEdgesGlued": true,
+   "markerRoundTrip": true,
+   "textRestored": true,
+   "connectionsSurvived": true
+  },
+  "glue": {
+   "expected": 35,
+   "proven": 35,
+   "missing": []
+  }
+ },
+ {
+  "file": "04_CityNexus_Use_Case.vsdx",
+  "steps": {
+   "open": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060313020592>"
+   },
+   "index": {
+    "ok": true,
+    "value": {
+     "Sheet.305": {
+      "id": 305,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340902880>"
+     },
+     "Sheet.4": {
+      "id": 4,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340901776>"
+     },
+     "Sheet.1": {
+      "id": 1,
+      "master": null,
+      "text": "CityNexus   |   UML Use Case Model",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903840>"
+     },
+     "Sheet.2": {
+      "id": 2,
+      "master": null,
+      "text": "Thirteen top-level business use cases with exactly the actors the specification names: one traveler, one administrator, one event source and six external systems. Included detail is drawn for the three use cases whose decomposition is part of the Part 2 documentation scope; extend arrows point at the base use case, as UML requires.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903648>"
+     },
+     "Sheet.3": {
+      "id": 3,
+      "master": null,
+      "text": "CNX-SE-VIS-04   UML use case diagram\nRev A · generated 2026-10-22 · source tree D:\\moodle\\CityNexus @ review/boli-party-occupancy-scope-r1",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903600>"
+     },
+     "Sheet.5": {
+      "id": 5,
+      "master": null,
+      "text": "CITYNEXUS   -   Smart City Traveler System   (system boundary)",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903408>"
+     },
+     "用例": {
+      "id": 6,
+      "master": "用例",
+      "text": "UC-01 Manage Account and\nPreferences\nuse-cases/use-cases.yaml  UC-01",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903312>"
+     },
+     "用例.7": {
+      "id": 7,
+      "master": "用例",
+      "text": "UC-02 Create and\nConfigure Journey\nuse-cases/use-cases.yaml  UC-02",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903120>"
+     },
+     "用例.8": {
+      "id": 8,
+      "master": "用例",
+      "text": "UC-03 Manage Journey\nCommitments\nuse-cases/use-cases.yaml  UC-03",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903216>"
+     },
+     "用例.9": {
+      "id": 9,
+      "master": "用例",
+      "text": "UC-04 Generate and Select\nJourney Plan\nuse-cases/use-cases.yaml  UC-04",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264928>"
+     },
+     "用例.10": {
+      "id": 10,
+      "master": "用例",
+      "text": "UC-05 Discover and\nRecommend City Services\nuse-cases/use-cases.yaml  UC-05",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277120>"
+     },
+     "用例.11": {
+      "id": 11,
+      "master": "用例",
+      "text": "UC-06 Book and Order City\nServices\nuse-cases/use-cases.yaml  UC-06",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277024>"
+     },
+     "用例.12": {
+      "id": 12,
+      "master": "用例",
+      "text": "UC-07 Make Secure Payment\nuse-cases/use-cases.yaml  UC-07",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276928>"
+     },
+     "用例.13": {
+      "id": 13,
+      "master": "用例",
+      "text": "UC-08 Execute Journey\nuse-cases/use-cases.yaml  UC-08",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276832>"
+     },
+     "用例.14": {
+      "id": 14,
+      "master": "用例",
+      "text": "UC-09 Detect and Assess\nJourney Events\nuse-cases/use-cases.yaml  UC-09",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276736>"
+     },
+     "用例.15": {
+      "id": 15,
+      "master": "用例",
+      "text": "UC-10 Replan Disrupted\nJourney\nuse-cases/use-cases.yaml  UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276640>"
+     },
+     "用例.16": {
+      "id": 16,
+      "master": "用例",
+      "text": "UC-11 Use AI Journey\nCopilot\nuse-cases/use-cases.yaml  UC-11",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276544>"
+     },
+     "用例.17": {
+      "id": 17,
+      "master": "用例",
+      "text": "UC-12 Review Journey\nHistory and Changes\nuse-cases/use-cases.yaml  UC-12",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276448>"
+     },
+     "用例.18": {
+      "id": 18,
+      "master": "用例",
+      "text": "UC-13 Administer Platform\nand Providers\nuse-cases/use-cases.yaml  UC-13",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276352>"
+     },
+     "用例.19": {
+      "id": 19,
+      "master": "用例",
+      "text": "04.1\nRetrieve\nCity Data\nuse-cases.yaml\ndetailUseCases of UC-04",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276256>"
+     },
+     "用例.20": {
+      "id": 20,
+      "master": "用例",
+      "text": "04.2 Build\nPlanning\nConstraints\nuse-cases.yaml\ndetailUseCases of UC-04",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276160>"
+     },
+     "用例.21": {
+      "id": 21,
+      "master": "用例",
+      "text": "04.3\nGenerate\nCandidate\nPlans\nuse-cases.yaml\ndetailUseCases of UC-04",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341276064>"
+     },
+     "用例.22": {
+      "id": 22,
+      "master": "用例",
+      "text": "04.4\nValidate and\nScore Plans\nuse-cases.yaml\ndetailUseCases of UC-04",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341275968>"
+     },
+     "用例.23": {
+      "id": 23,
+      "master": "用例",
+      "text": "05.1\nRetrieve\nReal Places\nuse-cases.yaml\ndetailUseCases of UC-05",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341275872>"
+     },
+     "用例.24": {
+      "id": 24,
+      "master": "用例",
+      "text": "05.2 Apply\nContext\nConstraints\nuse-cases.yaml\ndetailUseCases of UC-05",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341274480>"
+     },
+     "用例.25": {
+      "id": 25,
+      "master": "用例",
+      "text": "05.3 Rank\nCandidates\nuse-cases.yaml\ndetailUseCases of UC-05",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273856>"
+     },
+     "用例.26": {
+      "id": 26,
+      "master": "用例",
+      "text": "05.4 Explain\nRecommendati\non\nuse-cases.yaml\ndetailUseCases of UC-05",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273520>"
+     },
+     "用例.27": {
+      "id": 27,
+      "master": "用例",
+      "text": "10.1 Analyse\nImpact\nuse-cases.yaml\ndetailUseCases of UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273424>"
+     },
+     "用例.28": {
+      "id": 28,
+      "master": "用例",
+      "text": "10.2\nDetermine\nReplan Scope\nuse-cases.yaml\ndetailUseCases of UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273328>"
+     },
+     "用例.29": {
+      "id": 29,
+      "master": "用例",
+      "text": "10.3\nGenerate\nLegal Plans\nuse-cases.yaml\ndetailUseCases of UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273232>"
+     },
+     "用例.30": {
+      "id": 30,
+      "master": "用例",
+      "text": "10.4 Score\nCandidate\nPlans\nuse-cases.yaml\ndetailUseCases of UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273136>"
+     },
+     "用例.31": {
+      "id": 31,
+      "master": "用例",
+      "text": "10.5 Compare\nPlan\nVersions\nuse-cases.yaml\ndetailUseCases of UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273040>"
+     },
+     "用例.32": {
+      "id": 32,
+      "master": "用例",
+      "text": "10.6 Explain\nReplanning\nuse-cases.yaml\ndetailUseCases of UC-10",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272944>"
+     },
+     "参与者": {
+      "id": 33,
+      "master": "参与者",
+      "text": "Traveler\nuse-cases.yaml:13 ACT-TRAVELER",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272848>"
+     },
+     "参与者.34": {
+      "id": 34,
+      "master": "参与者",
+      "text": "Administrator\nuse-cases.yaml:17 ACT-ADMIN",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272752>"
+     },
+     "参与者.35": {
+      "id": 35,
+      "master": "参与者",
+      "text": "Context Event\nProvider\nuse-cases.yaml:45 ACT-CONTEXT,\nprimary of UC-09",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272656>"
+     },
+     "矩形": {
+      "id": 36,
+      "master": "矩形",
+      "text": "Authentication Service\nuse-cases.yaml:21-41",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272560>"
+     },
+     "矩形.37": {
+      "id": 37,
+      "master": "矩形",
+      "text": "AI Provider\nuse-cases.yaml:21-41",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272464>"
+     },
+     "矩形.38": {
+      "id": 38,
+      "master": "矩形",
+      "text": "City Data Provider\nuse-cases.yaml:21-41",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272368>"
+     },
+     "矩形.39": {
+      "id": 39,
+      "master": "矩形",
+      "text": "Mobility Provider\nuse-cases.yaml:21-41",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272272>"
+     },
+     "矩形.40": {
+      "id": 40,
+      "master": "矩形",
+      "text": "Booking Provider\nuse-cases.yaml:21-41",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272176>"
+     },
+     "矩形.41": {
+      "id": 41,
+      "master": "矩形",
+      "text": "Payment Gateway\nuse-cases.yaml:21-41",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341272080>"
+     },
+     "包含": {
+      "id": 42,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271984>"
+     },
+     "Sheet.47": {
+      "id": 47,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271888>"
+     },
+     "包含.48": {
+      "id": 48,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271792>"
+     },
+     "Sheet.53": {
+      "id": 53,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271696>"
+     },
+     "包含.54": {
+      "id": 54,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271600>"
+     },
+     "Sheet.59": {
+      "id": 59,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271504>"
+     },
+     "包含.60": {
+      "id": 60,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271408>"
+     },
+     "Sheet.65": {
+      "id": 65,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271312>"
+     },
+     "包含.66": {
+      "id": 66,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271216>"
+     },
+     "Sheet.71": {
+      "id": 71,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271120>"
+     },
+     "包含.72": {
+      "id": 72,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341271024>"
+     },
+     "Sheet.77": {
+      "id": 77,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270928>"
+     },
+     "包含.78": {
+      "id": 78,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270832>"
+     },
+     "Sheet.83": {
+      "id": 83,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270736>"
+     },
+     "包含.84": {
+      "id": 84,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270640>"
+     },
+     "Sheet.89": {
+      "id": 89,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270544>"
+     },
+     "包含.90": {
+      "id": 90,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270448>"
+     },
+     "Sheet.95": {
+      "id": 95,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270352>"
+     },
+     "包含.96": {
+      "id": 96,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270256>"
+     },
+     "Sheet.101": {
+      "id": 101,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270160>"
+     },
+     "包含.102": {
+      "id": 102,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341270064>"
+     },
+     "Sheet.107": {
+      "id": 107,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269968>"
+     },
+     "包含.108": {
+      "id": 108,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269872>"
+     },
+     "Sheet.113": {
+      "id": 113,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269776>"
+     },
+     "包含.114": {
+      "id": 114,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269680>"
+     },
+     "Sheet.119": {
+      "id": 119,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269584>"
+     },
+     "包含.120": {
+      "id": 120,
+      "master": "包含",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269488>"
+     },
+     "Sheet.125": {
+      "id": 125,
+      "master": null,
+      "text": "include",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269392>"
+     },
+     "关联": {
+      "id": 126,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269296>"
+     },
+     "关联.131": {
+      "id": 131,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269200>"
+     },
+     "关联.136": {
+      "id": 136,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269104>"
+     },
+     "关联.141": {
+      "id": 141,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341269008>"
+     },
+     "关联.146": {
+      "id": 146,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268912>"
+     },
+     "关联.151": {
+      "id": 151,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268816>"
+     },
+     "关联.156": {
+      "id": 156,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268720>"
+     },
+     "关联.161": {
+      "id": 161,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268624>"
+     },
+     "关联.166": {
+      "id": 166,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268528>"
+     },
+     "关联.171": {
+      "id": 171,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268432>"
+     },
+     "关联.176": {
+      "id": 176,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268336>"
+     },
+     "关联.181": {
+      "id": 181,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268240>"
+     },
+     "关联.186": {
+      "id": 186,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268144>"
+     },
+     "关联.191": {
+      "id": 191,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341268048>"
+     },
+     "关联.196": {
+      "id": 196,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267952>"
+     },
+     "关联.201": {
+      "id": 201,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267856>"
+     },
+     "关联.206": {
+      "id": 206,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267760>"
+     },
+     "关联.211": {
+      "id": 211,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267664>"
+     },
+     "关联.216": {
+      "id": 216,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267568>"
+     },
+     "关联.221": {
+      "id": 221,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267472>"
+     },
+     "关联.226": {
+      "id": 226,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267376>"
+     },
+     "关联.231": {
+      "id": 231,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267280>"
+     },
+     "关联.236": {
+      "id": 236,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267184>"
+     },
+     "关联.241": {
+      "id": 241,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341267088>"
+     },
+     "关联.246": {
+      "id": 246,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266992>"
+     },
+     "关联.251": {
+      "id": 251,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266896>"
+     },
+     "关联.256": {
+      "id": 256,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266800>"
+     },
+     "关联.261": {
+      "id": 261,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266704>"
+     },
+     "关联.266": {
+      "id": 266,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266608>"
+     },
+     "关联.271": {
+      "id": 271,
+      "master": "关联",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266512>"
+     },
+     "扩展": {
+      "id": 276,
+      "master": "扩展",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266416>"
+     },
+     "Sheet.281": {
+      "id": 281,
+      "master": null,
+      "text": "extend [payment required]",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266320>"
+     },
+     "扩展.282": {
+      "id": 282,
+      "master": "扩展",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266224>"
+     },
+     "Sheet.287": {
+      "id": 287,
+      "master": null,
+      "text": "extend [event detected]",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266128>"
+     },
+     "扩展.288": {
+      "id": 288,
+      "master": "扩展",
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341266032>"
+     },
+     "Sheet.293": {
+      "id": 293,
+      "master": null,
+      "text": "extend [replan required]",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265936>"
+     },
+     "Sheet.294": {
+      "id": 294,
+      "master": null,
+      "text": "Legend",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265840>"
+     },
+     "Sheet.295": {
+      "id": 295,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265744>"
+     },
+     "Sheet.296": {
+      "id": 296,
+      "master": null,
+      "text": "Use case implemented + evidence",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265648>"
+     },
+     "Sheet.297": {
+      "id": 297,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265552>"
+     },
+     "Sheet.298": {
+      "id": 298,
+      "master": null,
+      "text": "Implemented, not proven on the line",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265456>"
+     },
+     "Sheet.299": {
+      "id": 299,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265360>"
+     },
+     "Sheet.300": {
+      "id": 300,
+      "master": null,
+      "text": "Specified, no real implementation",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265264>"
+     },
+     "Sheet.301": {
+      "id": 301,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265168>"
+     },
+     "Sheet.302": {
+      "id": 302,
+      "master": null,
+      "text": "Human actor",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341265072>"
+     },
+     "Sheet.303": {
+      "id": 303,
+      "master": null,
+      "text": "",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264976>"
+     },
+     "Sheet.304": {
+      "id": 304,
+      "master": null,
+      "text": "<<external system>>",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264880>"
+     },
+     "Sheet.306": {
+      "id": 306,
+      "master": null,
+      "text": "SOURCE OF EVERY NAME AND ARROW: use-cases/use-cases.yaml version 0.1.0, status baseline-candidate - 13 top-level use cases, 14 detail use cases, 9 actors, 17 relationships (14 include and 3 extend). Nothing here is invented for the",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264688>"
+     },
+     "Sheet.307": {
+      "id": 307,
+      "master": null,
+      "text": "picture.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264496>"
+     },
+     "Sheet.308": {
+      "id": 308,
+      "master": null,
+      "text": "UC-07 Make Secure Payment is drawn dashed on purpose. The requirement baseline contains it, but no real payment instrument is registered: the code ships mock-payment only and AGENT_TOOL_CATALOG.md:16-18 states that payment capture and",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264640>"
+     },
+     "Sheet.309": {
+      "id": 309,
+      "master": null,
+      "text": "refund are not registered.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341264544>"
+     },
+     "Sheet.310": {
+      "id": 310,
+      "master": null,
+      "text": "The internal planning solver is deliberately not an actor (use-cases.yaml modelNotes), and the AI provider may suggest, extract or explain but never owns feasibility or persistence authority.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341273664>"
+     },
+     "Sheet.311": {
+      "id": 311,
+      "master": null,
+      "text": "All requirements are still status proposed: the customer agreement the coursework asks for is a separate deliverable, so this model is a baseline candidate rather than an approved scope.",
+      "props": {
+       "NodeId": null,
+       "State": null,
+       "SourceRef": null,
+       "FlowEdge": null
+      },
+      "shape": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060341277984>"
+     }
+    }
+   },
+   "connects0": {
+    "ok": true,
+    "value": 94
+   },
+   "glueAudit": {
+    "ok": true,
+    "value": {
+     "expected": 47,
+     "proven": 47,
+     "missing": []
+    }
+   },
+   "moveProof": {
+    "ok": true,
+    "value": {
+     "edge": "UC-04->sub_UC-04.1",
+     "blocked": "com_error (position protected by the master)"
+    }
+   },
+   "writeMarker": {
+    "ok": true,
+    "value": null
+   },
+   "save1": {
+    "ok": true,
+    "value": 0
+   },
+   "close1": {
+    "ok": true,
+    "value": null
+   },
+   "reopen1": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060313022224>"
+   },
+   "findAfterReopen": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340900480>"
+   },
+   "markerAfterReopen": {
+    "ok": true,
+    "value": "PROOF-EDIT 105544"
+   },
+   "restore": {
+    "ok": true,
+    "value": null
+   },
+   "save2": {
+    "ok": true,
+    "value": 0
+   },
+   "close2": {
+    "ok": true,
+    "value": null
+   },
+   "reopen2": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2060309215744>"
+   },
+   "connectsAfter": {
+    "ok": true,
+    "value": 94
+   },
+   "findFinal": {
+    "ok": true,
+    "value": "<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVShape instance at 0x2060340903888>"
+   },
+   "textFinal": {
+    "ok": true,
+    "value": "UC-01 Manage Account and\nPreferences\nuse-cases/use-cases.yaml  UC-01"
+   },
+   "close3": {
+    "ok": true,
+    "value": null
+   }
+  },
+  "ok": true,
+  "checks": {
+   "allEdgesGlued": true,
+   "markerRoundTrip": true,
+   "textRestored": true,
+   "connectionsSurvived": true
+  },
+  "glue": {
+   "expected": 47,
+   "proven": 47,
+   "missing": []
+  }
+ }
+]
