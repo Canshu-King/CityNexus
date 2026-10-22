@@ -1187,7 +1187,6 @@ export function RevolutionFirstLook() {
                   用新行程继续
                 </button>
               )}
-              <p className="rev-mobile-truth">下一步：挑选真实地点。</p>
             </section>
           ) : activeTab === "trips" ? (
             <section className="rev-mobile-panel" data-testid="rev-mobile-empty-trips">
@@ -1395,7 +1394,6 @@ export function RevolutionFirstLook() {
                 <div className="rev-mobile-account-line">
                   <span>行程状态</span><strong>{journey.status === "ACTIVE" ? "已正式启动" : "私人探索草稿"}</strong>
                 </div>
-                <p>进度属于当前行程；地点来源见卡片，到达由你确认。</p>
                 <button type="button" className="rev-mobile-secondary" onClick={() => switchCity()}>探索其他地区</button>
                 <details className="rev-discovery-details">
                   <summary>关于技术来源与旧版界面</summary>
