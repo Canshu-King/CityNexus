@@ -1,0 +1,9 @@
+blob PlanComparison.tsx -> 0587fb8ba61d OK
+blob JourneyTrialSetup.tsx -> ff4eb18a8d09 OK
+blob LocaleContext.tsx -> e35d1c7ac2bb OK
+ruler recount: files read 164 | af8ad6a1c3=116 01d6f8fc81=96 delta=20
+  PlanComparison.tsx: 10 -> 0
+  JourneyTrialSetup.tsx: 10 -> 0
+dictionary rows at base: en=1617 zh=1520 | new keys at candidate: 20
+keys proven moved byte-identically: 20 of 20
+VERDICT RECOMPUTED OK
