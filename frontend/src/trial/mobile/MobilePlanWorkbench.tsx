@@ -116,6 +116,11 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   const [candidateIds, setCandidateIds] = useState<string[]>([]);
   const epoch = useRef(0);
   const writeLock = useRef(false);
+  // One key per candidate version, held for as long as this screen holds the traveller's token.
+  // An accidental second press therefore replays the door's stored answer instead of asking for a
+  // second decision, and a press the door refused stored no receipt -- the retry on the same key is
+  // exactly what the traveller needs to be able to do (backend/app/departure_commit.py:261).
+  const commitKeys = useRef<Map<string, string>>(new Map());
   const current = snapshot?.bearer === readTravelerBearer() && snapshot?.journey.id === journeyId ? snapshot : null;
 
   const refresh = useCallback(async () => {
@@ -146,6 +151,12 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     setMessage(null);
     setCostAck(false);
     setCandidateIds([]);
+    // A different traveller is a different hand on the door, so the key a previous traveller
+    // pressed with is not offered up.  This is hygiene, not the safety boundary: the receipt row
+    // is keyed by operation plus the sent key (`backend/app/departure_commit.py:166`) while the
+    // signature guarding it carries the traveller (`backend/app/departure_commit.py:160`), and the
+    // seat is checked before either (`backend/app/departure_read.py:143`).
+    commitKeys.current = new Map();
     setBearer(token);
   }), []);
   useEffect(() => {
@@ -173,7 +184,17 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
         if (current.input) await cityNexusApi.generateFromDiscovery(journeyId, candidateIds, crypto.randomUUID());
         else await cityNexusApi.generatePlans(journeyId, 1, { placeIds: [placeId!], allowSinglePlace: true, allowUnknownCost: true, idempotencyKey: crypto.randomUUID() });
       } else if (action === "select" && plan) {
-        await cityNexusApi.selectPlan(journeyId, plan.id);
+        // The commit door, not the bare select route: same transition (the door calls the shipped
+        // plan door in-process), but this press carries an `Idempotency-Key` and lets the server say
+        // who committed it -- so a traveller who taps twice gets one decision, and a screen never
+        // has to guess whether the plan actually moved.
+        const key = commitKeys.current.get(plan.id) ?? crypto.randomUUID();
+        commitKeys.current.set(plan.id, key);
+        const committed = await cityNexusApi.commitJourneyDeparture(journeyId, plan.id, key);
+        if (!stillCurrent()) return;
+        if (committed.journey_id !== journeyId || committed.plan_version_id !== plan.id) {
+          throw new Error("Departure commit response mismatch");
+        }
       } else if (action === "start") {
         const started = await cityNexusApi.startJourney(journeyId);
         if (!stillCurrent()) return;

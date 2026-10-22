@@ -114,6 +114,27 @@ test(`TEST_FIXTURE mobile plan review requires separate select and start, and su
         }],
       }]);
     }
+    if (path.endsWith("/departure/commit") && req.method() === "POST") {
+      // 选用这份方案 now presses the commit door.  The key is the point of the press, so the
+      // spec fails if the client ever sends this without one: a tap and a half would become two
+      // decisions (`backend/app/departure_commit.py:156`).
+      expect(req.headers().authorization).toBe("Bearer TEST_FIXTURE_PLAN_OWNER");
+      const sent = req.postDataJSON() as { plan_version_id?: string };
+      expect(sent.plan_version_id).toBe(planId);
+      const key = req.headers()["idempotency-key"];
+      expect(typeof key).toBe("string");
+      expect(String(key).length).toBeGreaterThan(8);
+      selected = true;
+      return respond({ journey_id: journeyId, plan_version_id: planId,
+        committed_by: "TEST_FIXTURE_PLAN_TRAVELER",
+        seat: { traveler_id: "TEST_FIXTURE_PLAN_TRAVELER", seat_kind: "OWNER", role: "OWNER",
+          member_id: null, member_state: "MEMBER_IN_FORCE", expires_at: null, in_force: true },
+        idempotency_key: String(key), decision_action: "plan.committed_by_traveler",
+        committed_at: "2026-10-22T04:00:00Z",
+        journey: { id: journeyId, status: "PLANNED", active_plan_version_id: planId } });
+    }
+    // The bare select route stays stubbed because it is still the transition the commit door
+    // calls server-side (`backend/app/main.py:18029`); the browser no longer presses it.
     if (path.endsWith(`/plans/${planId}/select`) && req.method() === "POST") {
       expect(req.headers().authorization).toBe("Bearer TEST_FIXTURE_PLAN_OWNER");
       selected = true;

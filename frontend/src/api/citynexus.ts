@@ -2863,6 +2863,18 @@ export interface JourneyDepartureRead {
 }
 export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
 
+// What the commit door answers (`backend/app/departure_commit.py:251`). `journey` is the same record
+// the journey read gives, because the transition is the shipped plan door's own
+// (`backend/app/main.py:18029`); `idempotency_replay` only ever arrives on a second press with the
+// same key, and it is the door saying "this is the answer you already got".
+export interface JourneyDepartureCommit {
+  journey_id: string; plan_version_id: string; committed_by: string;
+  seat: { traveler_id: string; seat_kind: string; role: string | null; member_id: string | null;
+    member_state: string; expires_at: string | null; in_force: boolean };
+  idempotency_key: string; decision_action: string; committed_at: string;
+  idempotency_replay?: true; journey: JourneyRecord;
+}
+
 export const cityNexusApi = {
   resetDemo(): Promise<DemoIds> {
     return requestJson<DemoIds>("/demo/reset", { method: "POST" });
@@ -2915,6 +2927,17 @@ export const cityNexusApi = {
 
   getJourneyDeparture(journeyId: string): Promise<JourneyDepartureRead> {
     return requestJson<JourneyDepartureRead>("/journeys/" + journeyId + "/departure", { headers: travelerAuthHeaders(), cache: "no-store" });
+  },
+  // The signed commit door (`backend/app/departure_commit.py:128`): one traveller's own press, one
+  // decision, and a key that lets the same traveller press again without making a second plan
+  // selection.  The keys below are read off the answer the door actually builds
+  // (`backend/app/departure_commit.py:251`), not off a wish list.
+  commitJourneyDeparture(journeyId: string, planVersionId: string, idempotencyKey: string): Promise<JourneyDepartureCommit> {
+    return requestJson<JourneyDepartureCommit>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/departure/commit",
+      { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
+        body: JSON.stringify({ plan_version_id: planVersionId }) },
+    );
   },
   getJourneyMemberSeat(journeyId: string): Promise<JourneyMemberSeatRead> {
     return requestJson<JourneyMemberSeatRead>("/journeys/" + journeyId + "/members/me", { headers: travelerAuthHeaders(), cache: "no-store" });

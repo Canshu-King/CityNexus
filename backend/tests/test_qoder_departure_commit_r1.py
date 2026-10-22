@@ -370,6 +370,36 @@ def test_the_same_key_for_a_different_plan_version_is_a_named_conflict(seeded, m
     assert _status_of(seeded, seeded.ids["plan_committable"]) == "SELECTED"
 
 
+def test_another_traveller_cannot_spend_the_key_someone_else_already_used(seeded, monkeypatch):
+    """A key belongs to the hand that pressed, and the seat is asked before the key.
+
+    The receipt row is keyed by the operation plus whatever key the traveller sent
+    (`backend/app/departure_commit.py:166`), while the signature that protects it carries the
+    traveller (`backend/app/departure_commit.py:160`).  A second traveller arriving with the first
+    traveller's key must therefore neither get that answer replayed nor consume it.  On this line
+    the refusal lands even earlier than both, at the seat
+    (`backend/app/departure_read.py:143`) -- which is what this arm measures: the stranger is
+    turned away with the read door's own word, the owner's receipt keeps its signature, and the
+    stranger is never told anything about the plan version they were trying to name.
+    """
+    client = _app(seeded, monkeypatch)
+    ids = seeded.ids
+    key = _key()
+    first = _commit(client, ids["journey"], ids["plan_committable"], ids["owner"], idempotency_key=key)
+    assert first.status_code == 200, first.text
+    receipts = _rows(seeded, IdempotencyKey, operation=departure_commit.COMMIT_OPERATION)
+    assert len(receipts) == 1, receipts
+
+    stranger = _commit(client, ids["journey"], ids["plan_committable"], ids["stranger"],
+                     idempotency_key=key)
+    assert stranger.status_code == 403, stranger.text
+    assert stranger.json()["error"]["reason_code"] == departure_read.REASON_MEMBER_REQUIRED
+    kept = _rows(seeded, IdempotencyKey, operation=departure_commit.COMMIT_OPERATION)
+    assert [row.request_hash for row in kept] == [row.request_hash for row in receipts], (
+        [row.request_hash for row in kept], [row.request_hash for row in receipts])
+    assert ids["plan_committable"] not in json.dumps(stranger.json()), stranger.text
+
+
 # ------------------------------------------------------------------ what it actually does
 def test_the_commit_moves_the_same_rows_the_select_door_moves_and_says_who_did_it(seeded, monkeypatch):
     """The traveller the shipped capability table lets update the journey is the one who commits it."""
