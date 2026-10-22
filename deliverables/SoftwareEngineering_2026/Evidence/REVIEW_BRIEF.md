@@ -1,6 +1,6 @@
 # CityNexus 软件工程 2026 · 修订二交付包（复审简报）
 
-生成 2026-10-22 · 仓库 `CityNexus` · 分支 `review/se-coursework-deliverables-r1` · 打包时分支头 `917b502d42dfa6fea3f47e1f76a55552a18da992`。
+生成 2026-10-22 · 仓库 `CityNexus` · 分支 `review/se-coursework-deliverables-r1` · 打包时分支头 `21aa16e68ad1951588739993d338f11dac9a1bab`。
 包内 **136** 个文件（不含 `MANIFEST.sha256` 自身——清单不能给自己的摘要签名）。
 逐文件 sha256 见 `MANIFEST.sha256`；压缩包 sha256 `见 Evidence/se_review_package_r2_result.json：清单不能给自己的摘要签名，所以压缩包摘要在打包结果文件里`。
 
@@ -22,7 +22,7 @@
 | 逐形状自定义属性读回 | 579 / 579 | 同上 → shapeData.propsOk / expected |
 | 打开-改字-存-关-重开-读回 全通过 | 4 / 4 | 同上 → checks |
 | 版面闸门失败项（重叠/越界/文字出框/图例被压） | 0 | `Visio/previews/*.gate.json` → failures |
-| Project 原生计划 | `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`，sha256 `1f221e45bdbeffeb` | Project 直接打开 |
+| Project 原生计划 | `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`，sha256 `4add419bd2f33ef1` | Project 直接打开 |
 | 行数 | 65（摘要 11 / 明细 54，含里程碑 13） | 看 WBS 列 |
 | 声明依赖 / 引擎读回 | 61 / 122 条依赖记录 | `Task.TaskDependencies`，脚本已逐条比对 |
 | 违反日期顺序的依赖 | 0 | 同上 |

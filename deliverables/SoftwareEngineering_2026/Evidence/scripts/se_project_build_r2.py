@@ -841,6 +841,19 @@ def main():
                                     ship_proof["shippedFinish"]))
         mp3.FileCloseEx(0)
         mp3.Quit(0)
+        # Measured: opening a .mpp lets Project rewrite it even when nothing is
+        # saved, so the digest taken before this verification open is already
+        # stale afterwards. Record both and say so, instead of publishing one
+        # number that no longer matches the file on disk.
+        after = sha(shipped)
+        ship_proof["sha256AfterVerification"] = after
+        ship_proof["rewrittenByVerificationOpen"] = (after != ship_proof["sha256"])
+        log("shipped file digest after the verification open: %s (was %s; changed: %s)"
+            % (after[:16], str(ship_proof["sha256"])[:16],
+               ship_proof["rewrittenByVerificationOpen"]))
+        if after != ship_proof["sha256"]:
+            log("   the manifest and every evidence document must carry the "
+                "AFTER digest - they are written after this run")
         if la3["violations"] or la3["missing"] or not ship_proof["identicalToStaged"]:
             failed.append("the published copy did not read back clean")
 

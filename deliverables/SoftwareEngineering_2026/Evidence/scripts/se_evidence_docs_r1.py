@@ -456,7 +456,13 @@ process:
 | critical path computed by the engine | {critn} rows |
 | dates set by the assignment brief | {dlmet} met, {dlbreach} breached, {dlsoft} internal targets missed |
 | save, close, reopen in a new process, every field of every row | {drift} field differences |
-| published copy | published {pubbed}, {pubbytes} bytes, sha256 {pubsha}; re-read {shiprows} rows, {shiplinks} dependency records, {shipviol} violations |
+| published copy | published {pubbed}, {pubbytes} bytes, sha256 {pubsha} at that instant (note below); re-read {shiprows} rows, {shiplinks} dependency records, {shipviol} violations |
+
+Note on file digests: opening a `.mpp` in Project rewrites it, so the sha256 in
+the table above is the bytes at that instant. `MANIFEST.sha256` and the review
+brief are written after every Project session closes, so they carry the bytes as
+packaged; re-hashing after opening the file gives a different value, which is
+Project behaviour and not a mismatch in the delivery.
 
 **Why the link-type test is built this way.** `TaskDependency.Lag` accepts a
 write on this install and then ignores it, and `TaskMoveToStatusDate` returns
@@ -520,7 +526,9 @@ neither confirmed nor denied from this repository - only from the course record.
            dlsoft=len(_dl.get("internalTargetsMissed", [])),
            drift=_r2.get("reopen_drift_count", "not recorded"),
            pubbed="yes" if _pub.get("published") else "NO",
-           pubbytes=_pub.get("bytes", 0), pubsha=str(_pub.get("sha256", ""))[:16],
+           pubbytes=_pub.get("bytes", 0),
+           pubsha=str(_pub.get("sha256AfterVerification")
+                      or _pub.get("sha256", ""))[:16],
            shiprows=_pub.get("shippedRows", 0),
            shiplinks=_pub.get("shippedLinksRead", 0),
            shipviol=_pub.get("shippedLinkViolations", 0),

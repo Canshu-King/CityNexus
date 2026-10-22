@@ -1043,6 +1043,12 @@ class Builder:
             pg = self.doc.Pages.Item(i)
             suffix = "" if self.doc.Pages.Count == 1 else "_p%d" % i
             pg.Export(stem + suffix + ".png")
+        if self.doc.Pages.Count > 1:
+            # a multi-page drawing used to leave the plain-stem PNG behind as an
+            # orphan of the single-page era, so a reader following the README's
+            # "previews/<name>.png" got the old picture. Write that name too, as
+            # page 1, so every referenced file is current.
+            self.doc.Pages.Item(1).Export(stem + ".png")
         self.doc.ExportAsFixedFormat(1, self.out["pdf"], 1, 0)
         return rep
 

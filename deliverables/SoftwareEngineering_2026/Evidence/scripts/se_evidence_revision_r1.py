@@ -219,6 +219,21 @@ A("")
 for x in late2:
     A("  * %s" % x)
 A("")
+A("""One measured quirk, so a re-hash does not look like a defect: opening a `.mpp`
+in Project rewrites the file even when nothing is saved, so a digest of it is only
+true for the instant it was taken. The build records its own two - %s at the
+moment of publishing, %s after its verification open. The artefact table at the
+top of this document, `MANIFEST.sha256` and `REVIEW_BRIEF.md` are all written
+after every Project session has closed and after the view exports have run, so
+they agree with each other and with the bytes inside the package (%s). If you
+open the plan in Project and re-hash it, you will get a fourth value; that is
+Project's behaviour, not a discrepancy - the package's own integrity is proved
+by extracting it and re-hashing every member against the manifest, which is what
+`se_review_package_r2.py` does before it reports success."""
+  % (str(_pub2.get("sha256", ""))[:16],
+     str(_pub2.get("sha256AfterVerification", ""))[:16],
+     sha(MPP)))
+A("")
 
 A("## 2. Visio per-shape source metadata")
 A("")
