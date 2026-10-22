@@ -410,6 +410,12 @@ export function RevolutionFirstLook() {
   const canCheckCurrentStartDrafts = startWriteStatus?.phase === "journey" &&
     Boolean(startWriteStatus.cityCode && (startRecoveryIdentity?.bearer || readTravelerBearer()));
 
+  // A local pointer is not proof that this session owns the Journey, so it never navigates and never
+  // claims progress.  It only stops the trips panel from saying "you have nothing" while the device
+  // still names a trip: measured 2026-10-22, localStorage held 北京's pointer, sessionStorage held no
+  // bearer, and the panel told the traveller to go and start exploring.
+  const deviceJourneyHint = briefBearer ? null : (readLegacyJourneyPointer()?.cityName ?? null);
+
   useEffect(() => subscribeTravelerBearer((token) => { setServerBrief(null); setBriefBearer(token); }), []);
   useEffect(() => {
     let cancelled = false;
@@ -1203,7 +1209,9 @@ export function RevolutionFirstLook() {
                   ))}
                 </ul>
               )}
-              <p>开始探索一个地区后，你保存的路线和出发进度会显示在这里。</p>
+              <p>{deviceJourneyHint
+                ? `这台设备上还留着「${deviceJourneyHint}」这趟行程，这次打开没有登录到它，所以读不到进度。`
+                : "开始探索一个地区后，你保存的路线和出发进度会显示在这里。"}</p>
               <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
                 开始探索 →
               </button>

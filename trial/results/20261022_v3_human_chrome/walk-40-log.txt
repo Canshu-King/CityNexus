@@ -1,0 +1,27 @@
+WALK40_START 2026-10-22T16:10:51.442Z resume the walk-39 journey and open the door the app leaves shut
+STORED {"citynexus.revolution.firstlook.journey":"{\"id\":\"3f7f18fd-bd6b-4ed7-918a-f4008065872f\",\"cityCode\":\"CN-","citynexus.revolution.firstlook.recent-journeys":"[{\"id\":\"3f7f18fd-bd6b-4ed7-918a-f4008065872f\",\"cityCode\":\"CN"}
+LANDING C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+STRIP_BEFORE []
+SHOT human-208-photo-strip-before-click.png attempt=1 bytes=83532
+TARGET_ABSENT no placeholder tile for 天坛公园 in the first eight cards
+WALK40_END 2026-10-22T16:10:59.907Z
+WALK40B_START 2026-10-22T16:12:22.493Z returning-traveller geometry on the landing screen
+LANDING_GEOMETRY {
+ "viewport": [
+  414,
+  900
+ ],
+ "recent_block_present": false,
+ "recent_box": null,
+ "recent_text": "",
+ "buttons": [],
+ "doc_scroll_height": 1091,
+ "landing_text": "C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认"
+}
+SHOT human-210-returning-traveller-landing.png bytes=125511
+WALK40B_END 2026-10-22T16:12:28.114Z
+WALK40C_START 2026-10-22T16:15:51.687Z trips panel wording after the honest-state change
+OVERLAY absent
+TRIPS_PANEL {"present":true,"text":"TRIPS 行程 这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。 开始探索 → AI 服务 AI 建议可试 选好地点并确认行程后，Agent 就会开始工作。","topmost_at_panel":"rev-firstlook-eyebrow","start_button":true}
+SHOT human-213-trips-panel-honest-state.png bytes=86830
+WALK40C_END 2026-10-22T16:15:59.491Z

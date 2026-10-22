@@ -182,3 +182,17 @@
 - 屏上相册第四格「天坛公园」（`walk-39-log.txt:17`）在库里根本没有对应的媒体回执：这台库的 `goal_place_media` 只有五格，都不叫天坛。也就是说媒体腿是跟着研究批次跑的，草案最后入选的格子不保证都被跑过——旅客看到的"占位"里，有一部分不是"没有照片"，而是"还没替这一格去找过照片"。这一条今天只做到"有名字"，没有改。
 
 另外照片能否出现，取决于这台机器有没有一条能出校园的口：那是我起这台隔离测试栈时给它设的环境，不是产品默认，用户自己的设备仍需各自可达——这一点已写进外发汇报，不当已验。
+
+## 十一、十一点五十五分：重开浏览器的旅客，屏上正在对他说假话
+
+想回去补测上一节那格「天坛公园」，才发现回不去。仪器 `place_media_click_r1.mjs` 用同一个隔离配置页重开应用，本机 localStorage 里明明还写着这趟行程（`walk-40-log.txt:2`，`citynexus.revolution.firstlook.journey` 与 `…recent-journeys` 都在），屏上却是一台全新的应用：相册格数为零（`:4`），找不到那张占位卡（`:6`）。而底部「我的旅程」那一屏的原话是「开始探索一个地区后，你保存的路线和出发进度会显示在这里。」——这台设备上有路线，这句话仍然这么说。
+
+先把"是不是藏在屏幕外"量掉，再谈改：`returning_traveller_r1.mjs` 读渲染几何，`rev-recent-journeys` 这块 DOM **根本不存在**（`walk-40-log.txt:14` `recent_block_present: false`），不是折叠、不是在视口外。现场再补一刀存储读数：新标签页里 `bearer=false`、`readTravelerIdentity()=null`，而这两个值都存在 sessionStorage（`frontend/src/lib/travelerSession.ts:30`）；`loadRecentJourneys()` 第一句就是「没有身份就返回空表」（`frontend/src/trial/RevolutionFirstLook.tsx:282`），于是本机那条指针永远读不出来。这就是「重开浏览器找不到旧行程」的根因，两条腿都对上了。
+
+今天改的是**不说假话**，只此一件：没有凭证、而本机留着行程指针时，行程面板改口说「这台设备上还留着「北京」这趟行程，这次打开没有登录到它，所以读不到进度。」（改后屏读 `walk-40-log.txt:25`，图 `human-213-trips-panel-honest-state.png`；`npm run typecheck` 干净，`rev-mobile-empty-start` 那颗按钮仍在原位、e2e 那条断言未动）。有凭证时原句不变。
+
+鉴权一行没动，也不该由我动：把 bearer 挪进 localStorage 就是「持久凭证」那条路，与「带证据的找回流程」并列挂在 Issue #42 的待裁清单上，等号令者点哪一条。要点名的是：即使屏上看得见，也还进不去——服务端按 bearer 判归属，新会话拿到的新凭证并不拥有这趟旧行程，所以"看得见"只解决撒谎，不解决回去。
+
+仪器自报一处：第一支 `place_media_click_r1.mjs` 里我随手写了"点『我的旅程』、点『北京』"的找回动作，却没有断言它是否真的进了那趟行程，于是 `STRIP_BEFORE=[]` 被我先读成"相册空了"。真相是压根没进去。第二支仪器改成先量 DOM 在不在、再量在不在视口，才拿到 `recent_block_present: false` 这枚有用的读数。
+
+`RETURNING_TRAVELLER_SEES_HONEST_STATE = PASS（屏上不再说"你没有行程"）`；`RETURNING_TRAVELLER_CAN_REOPEN_OLD_JOURNEY = BLOCKED（等 #280 两条路裁一条）`。
