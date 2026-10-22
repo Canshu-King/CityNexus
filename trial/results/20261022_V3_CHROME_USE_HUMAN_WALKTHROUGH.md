@@ -73,7 +73,7 @@
 - `AGENT_NATURAL_LANGUAGE_HALF_DAY_EDIT = PASS`（旅客一句「11 月 3 日下午不去湖边走路了，改成什刹海边一家咖啡馆坐着，其他安排都别动」之后，屏上回执 `walk-26-log.txt:32` 出现 `日程：版本 1 → 2`，同一屏第五条变成 `下午 · 什刹海边咖啡馆坐着（萤火虫咖啡 后海店）`（`:39`），`EDIT_CHANGED_SCHEDULE=true`（`:40`）。此前两代同一句话都是 Agent 说「已改」而日程不动，成因与修法见 `20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md` 第七节）
 - `RELOAD_RECOVERY = PASS`（**Agent 改过之后**刷新仍然在：`walk-26-log.txt:42` `AFTER_RELOAD_SLOTS=5 SAME_AS_AFTER_EDIT=true`；更早那一次手动改半天的刷新记录仍在 `walk-07-log.txt:4`，两者不是同一件事）
 - `VIEWPORT_PASS = 390×844 / 430×932 / 1366×900 三档均无横向溢出且「发送」在视口内`（`walk-07-log.txt:13`、`:15`、`:17`）
-- `GUARDIAN_COLLECTIVE = NOT_ATTEMPTED`
+- `GUARDIAN_COLLECTIVE = PARTIAL（守护那一半已按开并验到"安静不编造"，同行决策的门不存在——见第十三节）`
 - `PRODUCT_FIX_SHA = 376b9914a7576bc69ffa56c13f167bf5f54aa6ee、0563305f8133dd146c234a1c092b8ab95da2f8cc、36939dd9ad8ec0791eda71f36ac150403bf27a30、ae7f51c6284ba1dcbe5e35c2d032c123cf2506f0`；BEFORE/AFTER 截图在 `20261022_v3_human_chrome/`
 - `USER_VERIFIED = PENDING`（本机窗口不是手机在手里的点击）
 
@@ -209,3 +209,16 @@
 真机复测（`tile_honest_state_r1.mjs`，同一台活标签页刷新后走一遍）：改前那句「先看看这个地点」只是一个 `<span>`；改后它是一颗真按钮，读数行写着 `ask_button=先看看这个地点`（`walk-42-log.txt:5`）。按下之后三秒，同一格换成 `还没核实到具体是哪个地点 天坛公园 正在查看`（`walk-42-log.txt:7`，结论行 `walk-42-log.txt:10`），图 `human-217-tile-reloaded-invitation-is-a-button.png` 与 `human-218-tile-after-press-honest-answer.png`。`npm run typecheck` 干净；`e2e/revolution-visual-travel.spec.ts:93` 那条断言走的是 `url` 存在而加载失败那支，本次未动。
 
 没解决的两件，照实说：其一，第四格右边缘在 414 宽的视口外（现读 `box.x=244 width=205`，右边界 449），旅客要先横向滑一下才按得到——这次没有改相册的排布。其二，`MEDIA_IDENTITY_UNBOUND` 的根子在"这个高德 POI 没有绑到 Wikidata/OSM 实体"，那是数据侧的事（与 #282 的地点身份同一条线），不是把文案改花就能好。
+
+## 十三、十二点三十八分：行程守护按得开、也确实安静；「同行决策」那块牌子底下没有对应的门
+
+验收单第七步要走到"下一站／地图导航／行程守护"，并要求没有真实风险时安静显示、不许编造天气事件。这一格今晚在活标签页上真按了一次（`guardian_screen_r1.mjs`）：
+
+- 入口是真按钮、可命中：`trial/results/20261022_v3_human_chrome/walk-43-log.txt:3` 读 `hit_is_button: true`、`hit_topmost: "BUTTON."`，滚动后可见盒位 `x=173 y=343 w=134 h=78`。
+- 打开后屏上原文：「行程守护 检查记录与处理进展 行程守护还没有检查记录 当前没有运行中的守护检查」（`trial/results/20261022_v3_human_chrome/walk-43-log.txt:6`，图 `human-220-guardian-panel-open.png`）。**没有编造的风险，也没有把"没检查过"伪装成"检查过且没事"**——这一半判 PASS。
+
+同一排还有两块牌子。`frontend/src/trial/mobile/MissionCockpit.tsx:329` 与 `:331` 里，「准备出发」和「同行决策」挂的是同一个 `onTrip` 处理器：两块牌子去同一个地方。真按「同行决策」（`collective_screen_r1.mjs`，命中读数 `walk-43-log.txt:12`）之后，屏上出现的只有 `rev-mission-consent-strip` 那两条 AI 授权开关（`walk-43-log.txt:15`）。成员与权限那块面板（`frontend/src/features/access/AccessPanel.tsx`）只注册在另一套壳的面板表里（`frontend/src/app/v8PanelRegistry.tsx:324`），这台移动壳没有任何入口指向它。
+
+所以验收单里"多人流程需三个独立本人登录点击"那一半，今晚不是"没测"，而是**这台壳上没有可点的门**：`GUARDIAN_COLLECTIVE = PARTIAL（守护 PASS；同行决策 BLOCKED——入口与「准备出发」同指针，壳内无成员面）`。两条可选路交给号令者，我不擅自造功能：甲＝把「同行决策」指到已有的成员/权限面板（要在移动壳注册一枚入口，属接线不属新能力）；乙＝这台单旅客会话里不摆这块牌子，等真有三个人再上。
+
+仪器自报：`guardian_screen_r1.mjs` 第一趟在 `page.evaluate` 里用了只在 node 侧存在的 `flat()`，当场崩在 `ReferenceError`，日志里留下一条没有 END 的 `WALK43_START`（`walk-43-log.txt:1`）。今晚第三次踩同一个坑（前一次是 `tile_shape_probe_r1.mjs`），教训写死：**送进页面里跑的函数，只能带页面里存在的东西**。

@@ -1,0 +1,18 @@
+WALK43_START 2026-10-22T16:37:56.350Z the 行程守护 entry on the live screen
+WALK43_START 2026-10-22T16:38:14.972Z the 行程守护 entry on the live screen
+ENTRY {"text":"行程守护","box":{"x":173,"y":343,"w":134,"h":78},"hit_is_button":true,"hit_topmost":"BUTTON."}
+SHOT_RETRY no frame
+SHOT human-219-guardian-entry-on-screen.png bytes=158118
+PANEL {"present":true,"in_viewport":true,"box":{"x":30,"y":433,"h":107},"text":"行程守护 检查记录与处理进展 行程守护还没有检查记录 当前没有运行中的守护检查"}
+SHOT_RETRY no frame
+SHOT human-220-guardian-panel-open.png bytes=150292
+COLLECTIVE_CONTROLS [{"tag":"DIV","testid":"revolution-first-look","text":"C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想"},{"tag":"SECTION","testid":"rev-mission-cockpit","text":"北京 把想去变成出发。 换地区 › 故宫博物院实景（封面裁切） · "},{"tag":"DIV","testid":"rev-mission-agent-pane","text":"你的旅行搭档等待你的决定已整理 2 天 · 4 项安排地点、地图、日"},{"tag":"ARTICLE","testid":"rev-mission-timeline-pane","text":"按天调整行程 4 项安排 · 2 天 你的旅行草案 草案允许信息未知"},{"tag":"BUTTON","testid":"","text":"同行决策"},{"tag":"SECTION","testid":"rev-mobile-screen-trips","text":"YOUR TRIP我的行程还没有保存的私人路线。探索时挑选两个真实地"},{"tag":"SECTION","testid":"rev-draft-agent-activity","text":"AI 助手AI 工作动态AI 服务AI 建议可试本次行程暂无运行记录"},{"tag":"BUTTON","testid":"rev-quick-ai-short-walk-preference","text":"加上偏好：低体力同行 · 少步行"}]
+WALK43_END 2026-10-22T16:38:57.463Z
+WALK43B_START 2026-10-22T16:39:13.139Z the 同行决策 door, pressed by hand
+ENTRY {"box":{"x":316,"y":343,"w":134,"h":78},"hit_is_button":true,"hit_topmost":"BUTTON."}
+SHOT_RETRY no frame
+SHOT human-221-collective-entry-on-screen.png bytes=150292
+COLLECTIVE_PANEL {"dialog_found":true,"testids":["rev-mission-consent-strip"],"text":"本次允许 AI 处理旅行目标（可能产生费用）本次允许查询公开地图和地点来源"}
+SHOT_RETRY no frame
+SHOT human-222-collective-panel-open.png bytes=610626
+WALK43B_END 2026-10-22T16:39:55.351Z
