@@ -1,0 +1,18 @@
+fix(copy): the hero's three counted sentences read the dictionary, and the count noun reads plural.ts
+
+ORD-0714 wave 26.  The one place that decides English singular vs plural (`frontend/src/lib/plural.ts`,
+landed by ORD-0433) already exists, but the hero strip still concatenated the number and the word by
+hand: `${todayStops.length} stops today`.  At n=1 that renders "1 stops today".  This is the one byte
+that changes on purpose, and it is written here rather than left for someone to find: through the
+dictionary line `{n} {plural:stop} today` the same slot now renders "1 stop today", and "3 stops today"
+is unchanged.  Chinese carries no plural marker, so the Chinese arm cannot move by construction -- the
+three Chinese lines are the old literals, byte for byte, with `{n}` in the place the number already sat.
+
+Both dictionary blocks gained the same three keys (`today.stopsToday`, `today.stopsAfterThis`,
+`today.tripEndsNextStop`) and the shell kept its comment about what an empty calendar day is allowed to
+claim, so the contradiction ORD-0338's review named ("暂无安排" beside a real later stop) stays fixed.
+
+Verified before committing, in a tree that has node_modules: `tsc -p tsconfig.typecheck.json --noEmit`
+exit 0 with no output; `vite build` exit 0; and the three dictionary lines run through the real
+`expandPluralMarkers` for n=1/2/3 in both languages (`cmdr_wave26_plural_check_1022a.cjs`).
+Files were written with write_bytes and re-read with a CR assertion -- the wave-25 lesson.
