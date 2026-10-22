@@ -5,7 +5,7 @@
  "title": "CityNexus   |   End-to-end User Journey",
  "subtitle": "Five swim lanes follow the real call path, from opening the app to the footprint after the trip. The traveler never loses control: an agent may answer a question silently, but anything that changes the plan is written as a proposal and waits for an explicit approval.",
  "docid": "CNX-SE-VIS-02   User journey (cross-functional flowchart)",
- "revline": "Rev A · generated 2026-10-22 · source tree D:\\moodle\\CityNexus @ review/boli-party-occupancy-scope-r1",
+ "revline": "Rev A - generated 2026-10-22 - source tree CityNexus @ review/boli-party-occupancy-scope-r1, github.com/Canshu-King/CityNexus",
  "bodySize": 7.0,
  "subSize": 5.2,
  "bands": [
@@ -315,7 +315,7 @@
    "kind": "decision",
    "state": "verified",
    "text": "Truth, money, C4?",
-   "src": "agent/gateway.py:338-347 ; tool_catalog.py:20-22",
+   "src": "agent/gateway.py:338-347",
    "x": 10.92,
    "y": 5.75,
    "w": 1.355,
@@ -611,7 +611,7 @@
  ],
  "legendOrigin": [
   12.62,
-  1.02
+  9.46
  ],
  "notes": [
   "HOW TO READ THIS: follow one column at a time. A step in the traveler lane is what you see; the lanes below it are what the product does while you wait.",

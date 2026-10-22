@@ -1,0 +1,24 @@
+[  1.3s] start=2026-09-06 16:00:00+00:00 status=2026-10-21 16:00:00+00:00
+[  1.9s] as entered               anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  1.9s] === A) OptionsCalculation was measured to hang the session (modal), skipped here
+[  1.9s] === B) TaskMoveToStatusDate argument forms
+[  1.9s] TaskMoveToStatusDate(MoveCompleted=False MoveIncomplete=True) OK   True
+[  1.9s]   -> MoveCompleted=False MoveIncomplete=True anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  1.9s] TaskMoveToStatusDate(both True)                      OK   True
+[  1.9s]   -> both True           anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  1.9s] TaskMoveToStatusDate(ints 0/3)                       OK   True
+[  2.0s]   -> ints 0/3            anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  2.0s] TaskMoveToStatusDate(ints 2/3)                       OK   True
+[  2.0s]   -> ints 2/3            anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  2.0s] TaskMoveToStatusDate(no args)                        OK   True
+[  2.0s]   -> no args             anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  2.0s] === C) does a status date in the past change anything by itself
+[  2.0s] StatusDate back to 2026-09-15                        OK   None
+[  2.1s] status 09-15             anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  2.1s] StatusDate to 2026-10-22                             OK   None
+[  2.1s] status 10-22 again       anchor 2026-09-07..2026-09-07 | half 2026-09-08..2026-09-21 (50% rem 40.0) | zero 2026-09-22..2026-09-28 (0%)
+[  2.1s] === D) ReportDaysAfterStatus / critical path options
+[  2.1s] prj.ReportDaysAfterStatus?                           OK   'absent'
+[  2.1s] mp.MoveCompletedTasksToStatus?                       OK   'absent'
+[  2.1s] project finish: 2026-09-28 17:00:00+00:00
+[  2.7s] probe done (no save)

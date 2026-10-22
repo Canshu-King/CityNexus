@@ -1,0 +1,73 @@
+[   0.0s] pre-flight: 61 links, 0 violated, 0 structural problems
+[   0.0s]    pre-flight deadline: M10 deadline 2026-10-02 but scheduled finish 2026-10-05  [recorded fact: this date was really missed]
+[   0.0s]    pre-flight late: 5.2 70% done, planned to finish 2026-09-22, status date 2026-10-22
+[   0.0s]    pre-flight late: 5.3 0% done, planned to finish 2026-09-23, status date 2026-10-22
+[   0.0s]    pre-flight late: 6.5 20% done, planned to finish 2026-10-09, status date 2026-10-22
+[   0.0s]    pre-flight late: 8.2 50% done, planned to finish 2026-09-25, status date 2026-10-22
+[   0.0s]    pre-flight late: 9.3 50% done, planned to finish 2026-10-02, status date 2026-10-22
+[   0.0s]    pre-flight late: 9.4 0% done, planned to finish 2026-10-08, status date 2026-10-22
+[   0.0s]    pre-flight late: 9.6 0% done, planned to finish 2026-10-06, status date 2026-10-22
+[   0.0s]    pre-flight late: 10.1 0% done, planned to finish 2026-10-02, status date 2026-10-22
+[   0.0s]    pre-flight late: 10.2 70% done, planned to finish 2026-10-21, status date 2026-10-22
+[   0.0s]    pre-flight overdue: 5.3 0% complete, planned 2026-09-18..2026-09-23 - overdue as of the status date (left visible, not re-dated)
+[   0.0s]    pre-flight overdue: 9.4 0% complete, planned 2026-10-05..2026-10-08 - overdue as of the status date (left visible, not re-dated)
+[   0.0s]    pre-flight overdue: 9.6 0% complete, planned 2026-10-05..2026-10-06 - overdue as of the status date (left visible, not re-dated)
+[   0.0s]    pre-flight overdue: 10.1 0% complete, planned 2026-09-28..2026-10-02 - overdue as of the status date (left visible, not re-dated)
+[   0.0s] static forward pass: project finish 2026-10-30, chain 1.1 -> 1.2 -> M1 -> 2.1 -> 2.2 -> M2 -> 3.1 -> 4.1 -> 7.1 -> 7.2 -> 7.3 -> M7 -> 10.2 -> 10.3 -> 10.4 -> M12 -> M13
+[   0.9s] Microsoft Project version 16.0
+[   1.4s] ProjectStart = 2026-09-07 01:00:00+00:00
+[   1.5s] StatusDate = 2026-10-22 01:00:00+00:00
+[   1.6s] resource #1 Yang Jianbin 0802240329 - requirements /  architectu type=0 (工时)
+[   1.6s]    MaxUnits readback=1.0
+[   1.6s]    rate=20.0 readback=$20.00/工时 maxUnits=1.0
+[   1.6s] resource #2 Wang Jiarui 0802240322 - data integration /  backend type=0 (工时)
+[   1.6s]    MaxUnits readback=1.0
+[   1.7s]    rate=20.0 readback=$20.00/工时 maxUnits=1.0
+[   1.7s] resource #3 Wang Xinyue 0802240324 - frontend /  agent surface / type=0 (工时)
+[   1.7s]    MaxUnits readback=1.0
+[   1.7s]    rate=20.0 readback=$20.00/工时 maxUnits=1.0
+[   1.7s] resource #4 Qoder agent lanes - automated build and test compute type=1 (材料)
+[   1.7s]    rate=6.0 readback=$6.00 maxUnits=
+[   1.7s] resource #5 Codex co-development - compute                       type=1 (材料)
+[   1.7s]    rate=6.0 readback=$6.00 maxUnits=
+[  14.7s] links written from the spec: 61 across 65 successor rows; refusals: none
+[  15.7s]   deadline M9 -> 2026-11-02 (constraint stays 0)
+[  15.7s]   deadline 10.1 -> 2026-10-02 (constraint stays 0)
+[  15.8s]   deadline M10 -> 2026-10-02 (constraint stays 0)
+[  15.9s]   deadline M11 -> 2026-10-22 (constraint stays 0)
+[  16.0s]   deadline M12 -> 2026-11-06 (constraint stays 0)
+[  16.1s]   deadline M13 -> 2026-11-06 (constraint stays 0)
+[  20.3s] assignments: 53; percentages confirmed by readback: 50; refused: none
+[  26.7s] move-to-status-date: 0 rows re-planned by the engine; 14 open rows still scheduled to finish before 2026-10-22
+[  26.7s]    STILL PAST 2.4 2026-10-19..2026-10-22 at 0%
+[  26.7s]    STILL PAST 5.2 2026-09-16..2026-09-19 at 70%
+[  26.7s]    STILL PAST 5.3 2026-09-16..2026-09-22 at 0%
+[  26.7s]    STILL PAST 6.5 2026-09-30..2026-10-08 at 20%
+[  26.7s]    STILL PAST 8.2 2026-09-16..2026-09-24 at 50%
+[  26.7s]    STILL PAST 9.1 2026-09-24..2026-10-22 at 85%
+[  26.7s]    STILL PAST 9.2 2026-09-24..2026-10-22 at 60%
+[  26.7s]    STILL PAST 9.3 2026-09-24..2026-10-01 at 50%
+[  32.4s] link audit: 122 dependency records read from the engine for 61 declared links; 0 missing, 0 type-mismatched, 0 violating date order
+[  32.4s] constraint audit: rows with a constraint other than ASAP: none
+[  32.4s] earliest scheduled start: 2026-09-07 (project start 2026-09-07)
+[  32.4s] progress audit: 24 rows booked complete on or before the status date; 11 in progress; 4 problems
+[  32.4s] cost audit: 1808.0 labour hours in the file; 0 rows where hours or cost do not match the estimate; 7 compute-lane assignments priced without hours; compute-only rows carrying hours: 0
+[  32.4s] deadline audit: 6 met, 0 breached on brief dates, 0 internal targets missed (-)
+[  32.4s] critical path: 4 rows, first few ['4.5  Commerce, guardian and autopilot', '10.4  Part 2: detailed requirement specification w', 'M12  Part 2 submission deadline', 'M13  Final coursework delivery']
+[  32.8s]   startChain: poking 10.2 (11d) moved start of [] and finish of ['10.3/FS']; restore clean=True
+[  33.3s]   finishChain: poking 9.1 (20d) moved start of ['9.5/FF'] and finish of ['9.5/FF']; restore clean=True
+[  33.7s]   ssChain: poking 9.3 (5d) moved start of ['9.4/FS', '9.6/SS'] and finish of ['9.4/FS', '9.6/SS']; restore clean=True
+[  33.7s]   link types declared ['FF', 'FS', 'SS'], demonstrated live ['FF', 'FS', 'SS']
+[  33.7s] before save: {'tasks': 65, 'resources': 5, 'cost': 36202.0, 'finish': '2026-10-24', 'start': '2026-09-07', 'critical': 4}
+[  33.8s] saved D:\moodle\live_checks\stage_mpp\CityNexus_Software_Engineering_Plan.mpp (393216 bytes)
+[  50.3s] link audit: 122 dependency records read from the engine for 61 declared links; 0 missing, 0 type-mismatched, 0 violating date order
+[  50.3s] progress audit: 24 rows booked complete on or before the status date; 11 in progress; 4 problems
+[  50.3s] cost audit: 1808.0 labour hours in the file; 0 rows where hours or cost do not match the estimate; 7 compute-lane assignments priced without hours; compute-only rows carrying hours: 0
+[  50.3s] deadline audit: 6 met, 0 breached on brief dates, 0 internal targets missed (-)
+[  50.3s] reopened: {'tasks': 65, 'resources': 5, 'cost': 36202.0, 'finish': '2026-10-24', 'critical': 4}
+[  50.3s] reopen drift: 0 field differences
+[  50.3s] CHECKS: {"allDeclaredLinksExist": true, "noLinkViolatesDateOrder": true, "nothingConstrained": true, "progressBookedByStatusDate": true, "costMatchesHours": true, "criticalPathComputed": true, "linkTypesLive": true, "perturbationRestored": true, "reopenIdentical": true, "briefDatesHeld": true}
+[  50.6s] published D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\CityNexus_Software_Engineering_Plan.mpp (380928 bytes, sha256 0351f1ae60c84f12, identical to staged: True)
+[  68.0s] link audit: 122 dependency records read from the engine for 61 declared links; 0 missing, 0 type-mismatched, 0 violating date order
+[  68.0s] shipped file reads back: 65 rows, 122 dependency records, 0 violations, cost 36202.0, finish 2026-10-24
+[  68.4s] BUILD OK; failed checks: none

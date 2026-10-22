@@ -1,0 +1,19 @@
+[   1.9s] milestones in the file: 13
+[   2.0s]   placed M1     via TaskOnTimeline(task)
+[   2.1s]   placed M2     via TaskOnTimeline(task)
+[   2.1s]   placed M3     via TaskOnTimeline(task)
+[   2.1s]   placed M4     via TaskOnTimeline(task)
+[   2.1s]   placed M5     via TaskOnTimeline(task)
+[   2.2s]   placed M6     via TaskOnTimeline(task)
+[   2.2s]   placed M7     via TaskOnTimeline(task)
+[   2.2s]   placed M8     via TaskOnTimeline(task)
+[   2.2s]   placed M9     via TaskOnTimeline(task)
+[   2.2s]   placed M10    via TaskOnTimeline(task)
+[   2.2s]   placed M11    via TaskOnTimeline(task)
+[   2.2s]   placed M12    via TaskOnTimeline(task)
+[   2.3s]   placed M13    via TaskOnTimeline(task)
+[   2.3s] placed 13/13 milestones on the timeline; failures: []
+[   2.3s] TimelineShow failed: MSProject.Application.TimelineShow
+[   2.3s] TimelineViewToggle succeeded
+[   2.4s] timeline exported from view '包含日程表的甘特图'
+[   4.5s] wrote D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\Milestone_Timeline.pdf (775484 bytes)

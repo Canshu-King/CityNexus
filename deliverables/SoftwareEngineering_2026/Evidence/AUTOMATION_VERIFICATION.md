@@ -52,8 +52,8 @@ Then `se_visio_proof_r1.py` re-opened each saved file from disk and checked:
 |---|---|---|---|---|---|---|
 | `01_CityNexus_System_Architecture.vsdx` | 23 | 24 | 24 / 24 | marker written and read back: True | True | PASS |
 | `02_CityNexus_User_Journey.vsdx` | 28 | 34 | 34 / 34 | marker written and read back: True | True | PASS |
-| `03_CityNexus_Agent_Workflow.vsdx` | 29 | 35 | 35 / 35 | marker written and read back: True | True | PASS |
-| `04_CityNexus_Use_Case.vsdx` | 36 | 47 | 47 / 47 | marker written and read back: True | True | PASS |
+| `03_CityNexus_Agent_Workflow.vsdx` | 38 | 43 | 43 / 43 | marker written and read back: True | True | PASS |
+| `04_CityNexus_Use_Case.vsdx` | 39 | 47 | 47 / 47 | marker written and read back: True | True | PASS |
 
 The glue audit is not a pixel check: the builder recorded the `Shape.ID` of
 every node and every connector into the gate report, and the proof walks
@@ -69,54 +69,91 @@ COM on those shapes. The same test *did* pass earlier on shapes created with
 so the glue is live; what is unproven is moving a master-based shape
 programmatically. In Visio itself those shapes drag normally.
 
-## Microsoft Project: what was executed
 
-`se_project_build_r1.py` created the plan, and refuses to call itself finished
-without these nine checks, run again after a full close and reopen in a **new
-process**:
+## Microsoft Project: what was executed, revision 2
+
+The first revision failed an independent review on dependency semantics. This is
+what the shipped plan does now, with every number read out of
+`se_project_build_r2_result.json`, which the same run that wrote the `.mpp`
+wrote.
+
+`se_project_build_r2.py` refuses to publish unless every gate below passes, and
+the gates are run again against the **published file** in a fresh Project
+process:
 
 | check | result |
 |---|---|
-| no circular dependency (topological sort of the spec, before Project starts) | pass |
-| leaf task count inside the 20-45 range the brief asks for | 52 leaves |
-| milestone count at least 7 categories | 13 milestones |
-| every task auto scheduled (field 1280 read back) | pass - nothing left manual |
-| changing one duration moves its successor | True |
-| the schedule returns to its original dates afterwards | True |
-| critical path computed by Project, not asserted | 28 rows |
-| resources carry rates and an assignment produces cost | total cost 1278.3 |
-| save, close, reopen in a fresh process: rows, leaves, assignments, cost, finish | {"sameRowCount": true, "sameLeafCount": true, "sameAssignmentCount": true, "sameCost": true, "sameFinish": true, "criticalComputed": true, "nothingLeftManual": true, "recalcMovesSchedule": true, "recalcRestoredCleanly": true} |
+| static pre-flight, before Project is even started: cycles, unknown rows, self links, SF links, every declared link tested as a date inequality | 0 violated of 61 declared, 0 structural problems |
+| every declared dependency present in the file, read back through `Task.TaskDependencies` | 122 dependency records for 61 declared links, 0 missing |
+| no link contradicts the dates Project computed | 0 violations |
+| no row carries a constraint (a forced date would override the links) | 0 constrained rows; earliest scheduled start 2026-09-07 |
+| percentages land and completed work is booked on or before the status date | 24 rows booked, 0 at 100% without actuals |
+| work hours and cost correspond | 1808 labour hours, 0 rows where hours or cost disagree with duration x units x rate |
+| compute lanes priced without inventing hours | 7 material assignments priced, 0 carrying hours |
+| each declared link TYPE demonstrably drives a date, then returns | declared FF, FS, SS, shown live FF, FS, SS, restored cleanly: True |
+| critical path computed by the engine | 4 rows |
+| dates set by the assignment brief | 6 met, 0 breached, 0 internal targets missed |
+| save, close, reopen in a new process, every field of every row | 0 field differences |
+| published copy | published yes, 380928 bytes, sha256 0351f1ae60c84f12; re-read 65 rows, 122 dependency records, 0 violations |
 
-The recalculation test is the one that matters for "is this a real schedule".
-It took `1.2  Select the project: smart city traveler system`, grew its
-duration, and watched `1.3  Confirm the group of three` move; then restored it
-and confirmed the dates came back. A Gantt drawn by hand cannot pass that.
+**Why the link-type test is built this way.** `TaskDependency.Lag` accepts a
+write on this install and then ignores it, and `TaskMoveToStatusDate` returns
+True while moving nothing - both measured, in `logs/se_proj_probe_r5.log`,
+`logs/se_proj_probe_r10.log` and the build log. So liveness is proven the way a
+planner tests a schedule: lengthen one open row by ten working days and watch
+which descendants move, and in which field. An FS or SS edge must drag its
+successor's start; an FF edge must drag the finish. The duration then goes back
+and every date has to return to what it was.
+
+**Three clocks, three mechanisms.** Historical fact is carried by the percentage
+(Project books the completed part itself, and the audit reads `ActualFinish`
+back); the observed date and the basis it comes from are written into the row's
+Notes; the contract dates live in the `Deadline` field, which Project displays
+but does not obey. Nothing in the file has a forced start any more. The first
+revision typed dates into the thirteen milestones, which was measured to set
+constraint type 4 on each of them - that is how its links came to contradict its
+own calendar, and why twelve of its rows appeared to finish before their
+predecessors.
 
 **No baseline was saved.** The brief allows a baseline only where a credible
 original plan exists; there is none, so `BaselineSave` was deliberately not
 called rather than used to manufacture a history.
 
-Percent-complete values were entered only where the tree carries evidence.
-Two rows sit at zero percent because the work was genuinely not done: the group of three
-was never recorded anywhere, and Part 1 was never submitted.
+**What the plan admits about itself.** 4 rows are late against the status
+date and stay late. Project's Move-to-Status-Date is inert through COM on this
+install, and stretching those windows to hide the lateness would be a false
+statement about the project. Part 1 is one of them, and its submission can be
+neither confirmed nor denied from this repository - only from the course record.
 
 ### Plan, as Project computed it
 
 | | |
 |---|---|
-| rows | 63 (11 summary groups, 52 leaf rows including milestones) |
+| rows | 65 (11 summary groups, 54 leaf rows including milestones) |
 | milestones | 13 |
-| resources | 5, with standard rates and one assignment each where the work is real |
-| project start | 2026-09-04 |
-| project finish | 2026-11-06 |
-| total cost | 1278.3 |
-| critical path | 28 rows |
-| rows with no predecessor | ['1.1  Read the assignment brief and fix t'] |
+| resources | 5 - three named students as work resources, two compute lanes as material resources |
+| project start | 2026-09-07 |
+| status date | 2026-10-22 |
+| project finish | 2026-10-24 |
+| total cost | 36202.0 |
+| critical path | 4 rows |
+| link types used | FF, FS, SS |
 
-### Views exported from the shipped .mpp
+### What the review found, and what this revision changed
 
-| PDF | Project view | bytes |
+| review finding | revision 1 | shipped now |
 |---|---|---|
+| 13 milestone predecessor links were skipped by the builder | the builder `continue`d past any milestone carrying a date, so none of the 13 links was written | every declared link is written, including all milestone links; 61 in the plan |
+| 5 of the applied FS links contradicted their own dates | forced `Start` on milestones set constraint type 4 (SNET), which overrides the schedule | 0 constrained rows, 0 link violations, read back from `Task.TaskDependencies` |
+| history, dependency and deadline were one thing | a date field carried all three | percentage carries history, links carry dependency, `Deadline` carries the contract date |
+| per-shape source metadata read back empty | Shape Data written with a cell path that never stored anything | NodeId / State / SourceRef written through `AddNamedRow` + `Prop.<name>.Value` and read back per shape: 01 93/93; 02 118/118; 03 157/157; 04 211/211 |
+| cost did not correspond to hours | resources created with `Type = 1`, which on this install is MATERIAL, so Work stayed 0 and cost was one unit times the rate | students are work resources (`Type = 0`), so Project derives Work from duration x units x 8h; 1808 hours priced against the rates, 0 mismatches |
+| progress was not in the file | `PercentComplete` written before the assignment, which silently reads back 0 | assignments first, then percentage, and every row's percentage is read back and asserted |
+| the agent diagram claimed a universal gateway order | one door drawn for every handler, unknown tools shown as audited | three handler families drawn separately, with the measured line numbers, and the correction named on the sheet |
+| the use-case sheet was one dense page | 39 shapes on one page | two pages in the same editable file: overview and include detail |
+| no tablet-readable plan view | 21-page Gantt PDFs only | `Briefing/CityNexus_Plan_Briefing_A3.vsdx/.pdf/.png`, one A3 landscape page drawn from the plan's own computed dates |
+| members unknown, Part 1 asserted never submitted | placeholder resources at zero and a claim the repository cannot support | three named members with work resources and hours; Part 1 now says what is true: not verifiable from this repository, awaiting the course record |
+| `Briefing_One_Page.pdf` | - | 450065 |
 | `Detailed_Gantt.pdf` | 详细甘特图 | 468403 |
 | `Gantt_Chart.pdf` | 甘特图 | 775484 |
 | `Milestone_Timeline.pdf` | - | 385816 |

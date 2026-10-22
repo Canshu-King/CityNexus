@@ -18,9 +18,9 @@ table to open when a marker asks "where did you get that from?".
 | Actors | same file | 9 |
 | include / extend relationships | same file | 14 include, 3 extend |
 | Agent tools | `backend/app/agent/tool_catalog.py:26-59` | 11 (6 V1 + 5 typed) |
-| Commits on this branch | `git rev-list --count HEAD` | 1096 |
+| Commits on this branch | `git rev-list --count HEAD` | 1097 |
 | First commit anywhere in the repo | `git log --all --date=short` | 2026-09-05 |
-| Top authors | `git log --format=%an` | 浠撻紶鐜� (1007), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
+| Top authors | `git log --format=%an` | 浠撻紶鐜� (1008), qoder-ai-lane (23), cff87c64 (13), lane-82f55d8a (9), lane-5a53846b (8) |
 
 ## The four Visio drawings
 
@@ -28,8 +28,8 @@ table to open when a marker asks "where did you get that from?".
 |---|---|---|---|
 | `01_CityNexus_System_Architecture.vsdx` | 23 | 24 | a code anchor in its caption and in the custom property `SourceRef` |
 | `02_CityNexus_User_Journey.vsdx` | 28 | 34 | a code anchor in its caption and in the custom property `SourceRef` |
-| `03_CityNexus_Agent_Workflow.vsdx` | 29 | 35 | a code anchor in its caption and in the custom property `SourceRef` |
-| `04_CityNexus_Use_Case.vsdx` | 36 | 47 | a code anchor in its caption and in the custom property `SourceRef` |
+| `03_CityNexus_Agent_Workflow.vsdx` | 38 | 43 | a code anchor in its caption and in the custom property `SourceRef` |
+| `04_CityNexus_Use_Case.vsdx` | 39 | 47 | a code anchor in its caption and in the custom property `SourceRef` |
 
 Anchors cited inside the drawings, by layer:
 
@@ -105,27 +105,30 @@ choice rather than a fact and is marked provisional in its own Notes field.
 
 | file | bytes | sha256/16 |
 |---|---|---|
-| `Visio/01_CityNexus_System_Architecture.vsdx` | 57842 | `556aef240320a841` |
-| `Visio/02_CityNexus_User_Journey.vsdx` | 58340 | `6ef27997ce75038a` |
-| `Visio/03_CityNexus_Agent_Workflow.vsdx` | 47949 | `0a6ccdc46b057dd0` |
-| `Visio/04_CityNexus_Use_Case.vsdx` | 84061 | `c9c0ace7eab3961d` |
-| `Visio/previews/01_CityNexus_System_Architecture.gate.json` | 9907 | `4c514f8a540127a6` |
-| `Visio/previews/01_CityNexus_System_Architecture.pdf` | 50297 | `b817ad00db06ae00` |
-| `Visio/previews/01_CityNexus_System_Architecture.png` | 147009 | `5f106c41234413ee` |
-| `Visio/previews/02_CityNexus_User_Journey.gate.json` | 12664 | `bc5195bb111edb5d` |
-| `Visio/previews/02_CityNexus_User_Journey.pdf` | 46380 | `9aa7ffab98937e8f` |
-| `Visio/previews/02_CityNexus_User_Journey.png` | 134675 | `603eee56bb819e0c` |
-| `Visio/previews/03_CityNexus_Agent_Workflow.gate.json` | 12547 | `6f2f4cb1903e64c2` |
-| `Visio/previews/03_CityNexus_Agent_Workflow.pdf` | 46235 | `a55d8e69b964a785` |
-| `Visio/previews/03_CityNexus_Agent_Workflow.png` | 144205 | `2a0ea2e57539fa78` |
-| `Visio/previews/04_CityNexus_Use_Case.gate.json` | 18586 | `751ef58b20043172` |
-| `Visio/previews/04_CityNexus_Use_Case.pdf` | 52267 | `1294964d7c700c9f` |
+| `Visio/01_CityNexus_System_Architecture.vsdx` | 62156 | `b94a41c63a2e0657` |
+| `Visio/02_CityNexus_User_Journey.vsdx` | 62748 | `11d874ce8c55a30e` |
+| `Visio/03_CityNexus_Agent_Workflow.vsdx` | 66525 | `bc75ea424ebf706e` |
+| `Visio/04_CityNexus_Use_Case.vsdx` | 84933 | `d93deb6288092631` |
+| `Visio/previews/01_CityNexus_System_Architecture.gate.json` | 7395 | `5402dc267d90c06f` |
+| `Visio/previews/01_CityNexus_System_Architecture.pdf` | 48522 | `fcd96436a010f210` |
+| `Visio/previews/01_CityNexus_System_Architecture.png` | 137597 | `44a46327dc95c208` |
+| `Visio/previews/02_CityNexus_User_Journey.gate.json` | 8715 | `c283b9e226eefd23` |
+| `Visio/previews/02_CityNexus_User_Journey.pdf` | 45109 | `cee6b879ed5d67a4` |
+| `Visio/previews/02_CityNexus_User_Journey.png` | 138386 | `4d200bc7bcb48302` |
+| `Visio/previews/03_CityNexus_Agent_Workflow.gate.json` | 10997 | `7eb26c02ba8da043` |
+| `Visio/previews/03_CityNexus_Agent_Workflow.pdf` | 51291 | `72bc50018e0ac1fd` |
+| `Visio/previews/03_CityNexus_Agent_Workflow.png` | 211852 | `dc2f95b0b3c04232` |
+| `Visio/previews/04_CityNexus_Use_Case.gate.json` | 17039 | `3673fa0aa322dbcd` |
+| `Visio/previews/04_CityNexus_Use_Case.pdf` | 53112 | `7d4d235d87f31bd6` |
 | `Visio/previews/04_CityNexus_Use_Case.png` | 277656 | `cda743b15a367a1d` |
+| `Visio/previews/04_CityNexus_Use_Case_p1.png` | 178603 | `6ed02dbdf39c345e` |
+| `Visio/previews/04_CityNexus_Use_Case_p2.png` | 109974 | `a5b04adf63e2f0eb` |
 
 **Microsoft Project**
 
 | file | bytes | sha256/16 |
 |---|---|---|
+| `Microsoft_Project/Briefing_One_Page.pdf` | 450065 | `29d388ab04e156be` |
 | `Microsoft_Project/Detailed_Gantt.pdf` | 468403 | `a9a19ff6c5d924ea` |
 | `Microsoft_Project/Gantt_Chart.pdf` | 775484 | `a09996fa0a0dffcf` |
 | `Microsoft_Project/Milestone_Timeline.pdf` | 385816 | `d68438d3c06509d2` |
@@ -134,7 +137,8 @@ choice rather than a fact and is marked provisional in its own Notes field.
 | `Microsoft_Project/Tracking_Gantt.pdf` | 543591 | `49405b51c5e0fd57` |
 | `Microsoft_Project/WBS_View.pdf` | 194261 | `516636ab8fb0f35b` |
 | `Microsoft_Project/CityNexus_Milestone_View.mpp` | 253952 | `e936d77beabcebf0` |
-| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 485888 | `04c5478c9bcb2a3a` |
+| `Microsoft_Project/CityNexus_Plan_Briefing.mpp` | 272896 | `8a264cdbf73171eb` |
+| `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` | 380928 | `1f221e45bdbeffeb` |
 | `Microsoft_Project/previews/Calendar.png` | 200761 | `44d5e6a4bcaef4b3` |
 | `Microsoft_Project/previews/Gantt_Chart.png` | 159451 | `c1524868dc31f521` |
 | `Microsoft_Project/previews/Network_Diagram.png` | 178837 | `e4de5486dbb6753b` |

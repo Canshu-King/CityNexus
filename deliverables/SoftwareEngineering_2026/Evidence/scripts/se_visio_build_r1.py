@@ -51,8 +51,12 @@ def main(only=None, proof=False):
         }
         for d in (os.path.dirname(paths["vsdx"]), os.path.dirname(paths["png"])):
             os.makedirs(d, exist_ok=True)
-        log("=== %s : nodes=%d edges=%d bands=%d" % (spec["file"], len(spec["nodes"]),
-                                                    len(spec["edges"]), len(spec.get("bands", []))))
+        sheets = spec.get("sheets") or [spec]
+        log("=== %s : pages=%d nodes=%d edges=%d bands=%d" % (
+            spec["file"], len(sheets),
+            sum(len(sh.get("nodes", [])) for sh in sheets),
+            sum(len(sh.get("edges", [])) for sh in sheets),
+            sum(len(sh.get("bands", [])) for sh in sheets)))
         b = Builder(spec, paths, log)
         try:
             rep = b.build()
