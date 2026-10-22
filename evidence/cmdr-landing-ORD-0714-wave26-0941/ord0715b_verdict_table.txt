@@ -1,0 +1,88 @@
+==== SimulationPanel.tsx  共 28 处
+     UNCLASSIFIED             14
+     SET_OR_ARRAY_PREDICATE   9
+     JSX_OR_COPY_STRING       4
+     OBJECT_DEFAULT           1
+==== spendFacts.ts  共 21 处
+     JSX_OR_COPY_STRING       11
+     UNCLASSIFIED             5
+     OBJECT_DEFAULT           3
+     SET_OR_ARRAY_PREDICATE   2
+==== pendingPlaceWrites.ts  共 19 处
+     OBJECT_DEFAULT           17
+     JSX_OR_COPY_STRING       2
+==== posterShare.ts  共 14 处
+     OBJECT_DEFAULT           9
+     TYPE_OR_KEY_POSITION     3
+     JSX_OR_COPY_STRING       2
+==== shareGrantRead.ts  共 11 处
+     JSX_OR_COPY_STRING       5
+     TYPE_OR_KEY_POSITION     4
+     UNCLASSIFIED             2
+==== JourneyInboxWorkbench.tsx  共 10 处
+     JSX_OR_COPY_STRING       6
+     SET_OR_ARRAY_PREDICATE   2
+     OBJECT_DEFAULT           1
+     UNCLASSIFIED             1
+
+TOTAL over the six files: 103 处，其中需要人判的（可能被念出或未归类）：52
+CLASS TALLY overall
+  OBJECT_DEFAULT           31
+  JSX_OR_COPY_STRING       30
+  UNCLASSIFIED             22
+  SET_OR_ARRAY_PREDICATE   13
+  TYPE_OR_KEY_POSITION     7
+
+---- 需要人判的那几行（原文现读） ----
+SimulationPanel.tsx:206 | NO_SCENARIO | zh: "台上没有场景：服务器回的是 NO_SCENARIO。先在产品里建一趟行程，或按下面的重置播一个演示场景。",
+SimulationPanel.tsx:207 | NO_SCENARIO | en: "There is no scenario on stage (the server answered NO_SCENARIO). Create a trip in the produ
+SimulationPanel.tsx:222 | UNKNOWN | zh: `这趟还没有开始执行（服务器说行程状态是 ${scene.scene?.journeyStatus ?? categoryLabel("UNKNOWN", zh)}）。先按上面「开始执
+SimulationPanel.tsx:235 | ACTIVE | zh: "这趟还没有 ACTIVE 计划（服务器没返回计划版本），重规划需要它。",
+SimulationPanel.tsx:236 | ACTIVE | en: "No ACTIVE plan on this journey (the server returned no plan version), and a replan needs on
+SimulationPanel.tsx:339 | PLANNED | zh: `服务器说这趟已经不在计划阶段（行程状态 ${journeyStatus}），而硬承诺只能建在还没开始的行程上：这时按下去，服务器对清单上每个活动都回同一句“booking requi
+SimulationPanel.tsx:340 | PLANNED | en: `The server says this journey is past the planning stage (status ${journeyStatus}), and a ha
+SimulationPanel.tsx:441 | UNKNOWN | zh: `服务器重新播了场景（行程 ${shortId(result.journey_id)}），但推进到可执行状态被挡在「${refused.step}」（${refused.refused
+SimulationPanel.tsx:446 | UNKNOWN | zh: `服务器重新播了场景并走完真实流水线：行程 ${shortId(result.journey_id)} · 状态 ${advance.journeyStatus ?? category
+SimulationPanel.tsx:472 | UNKNOWN | : `服务器已把计划放上舞台：状态 ${report.journeyStatus ?? categoryLabel("UNKNOWN", zh)} · 计划 ${shortId(report.
+SimulationPanel.tsx:543 | UNKNOWN | : `服务器说这趟开始执行了：状态 ${report.journeyStatus ?? categoryLabel("UNKNOWN", zh)} · 用时 ${report.advance?
+SimulationPanel.tsx:660 | ACTIVE | zh: `服务器已接受 ${shortId(accepted.proposal.id)}，新 ACTIVE 计划 ${shortId(accepted.twin.active_plan_ver
+SimulationPanel.tsx:661 | ACTIVE | en: `The server accepted ${shortId(accepted.proposal.id)}; new ACTIVE plan ${shortId(accepted.tw
+SimulationPanel.tsx:702 | OUTAGE | zh: `服务器把信号夹具设为 OUTAGE${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}。这只影
+SimulationPanel.tsx:703 | OUTAGE | en: `The server set the signal fixture to OUTAGE${fixture?.state ? t("simulation.now", { state: 
+SimulationPanel.tsx:718 | NORMAL | zh: `服务器把信号夹具设回 NORMAL${fixture?.state ? t("simulation.now", { state: fixture.state }) : ""}。`,
+SimulationPanel.tsx:719 | NORMAL | en: `The server returned the fixture to NORMAL${fixture?.state ? t("simulation.now", { state: fi
+SimulationPanel.tsx:1097 | STAGE_LIVE | : `Simulation stage (${dotState === "STAGE_LIVE" ? "a scenario is on stage" : "no scenario yet"}
+spendFacts.ts:108 | BOOKING | "BOOKING",
+spendFacts.ts:121 | ESTIMATED | if (status === "KNOWN") return "ESTIMATED";
+spendFacts.ts:122 | ESTIMATED | if (status === "ESTIMATED") return "ESTIMATED";
+spendFacts.ts:123 | UNNAMED | return "UNNAMED";
+spendFacts.ts:127 | CONFIRMED | if (status === "CONFIRMED" && priceStatus === "KNOWN") return "CONFIRMED";
+spendFacts.ts:128 | CONFIRMED | if (status === "CONFIRMED" && priceStatus === "FREE_KNOWN") return "CONFIRMED";
+spendFacts.ts:129 | ESTIMATED | if (priceStatus === "ESTIMATED") return "ESTIMATED";
+spendFacts.ts:130 | UNNAMED | return "UNNAMED";
+spendFacts.ts:135 | CONFIRMED | return "CONFIRMED";
+spendFacts.ts:137 | ESTIMATED | if (valueStatus === "ESTIMATED") return "ESTIMATED";
+spendFacts.ts:138 | UNNAMED | if (LIVE_COMMITMENT_STATES.has(status) && ANCHORED_LEVELS.has(level)) return "UNNAMED";
+spendFacts.ts:139 | UNNAMED | return "UNNAMED";
+spendFacts.ts:199 | STAY_OPTION | id: `STAY_OPTION:${chosen.id}`,
+spendFacts.ts:201 | UNNAMED | strength: typeof total === "number" ? "ESTIMATED" : "UNNAMED",
+spendFacts.ts:214 | RESERVATION | id: `RESERVATION:${reservation.id}`,
+spendFacts.ts:238 | COMMITMENT | id: `COMMITMENT:${commitment.id}`,
+pendingPlaceWrites.ts:125 | NO_PLAN | return { family: "NO_PLAN", rejection_code: "V13_DISCOVERY_COMPOSE_EMPTY" };
+pendingPlaceWrites.ts:125 | V13_DISCOVERY_COMPOSE_EMPTY | return { family: "NO_PLAN", rejection_code: "V13_DISCOVERY_COMPOSE_EMPTY" };
+posterShare.ts:120 | REFUSED | return { state: "REFUSED", http_status: read.http_status, detail: "" };
+posterShare.ts:122 | ANSWERED | return { state: "ANSWERED", rows: read.rows, http_status: read.http_status };
+shareGrantRead.ts:60 | READ_FAILED | | { kind: "READ_FAILED" };
+shareGrantRead.ts:79 | NOT_ANSWERED | if (ABSENT_STATUSES.has(response.status)) return { state: "NOT_ANSWERED", http_status: response.
+shareGrantRead.ts:82 | ANSWERED | return { state: "ANSWERED", http_status: response.status, rows: Array.isArray(rows) ? rows : [] 
+shareGrantRead.ts:100 | READ_FAILED | export function claimFromRead(read: GrantRead | { state: "READ_FAILED" }): CopyClaim {
+shareGrantRead.ts:101 | READ_FAILED | if (read.state === "READ_FAILED") return { kind: "READ_FAILED" };
+shareGrantRead.ts:102 | NOT_ANSWERED | if (read.state === "NOT_ANSWERED") return { kind: "NOT_ANSWERED", httpStatus: read.http_status }
+shareGrantRead.ts:108 | REVOKED | return { kind: "REVOKED", revokedAt: rows[0]?.revoked_at ?? null };
+JourneyInboxWorkbench.tsx:639 | NEEDS_REVIEW | const decision = draft?.smart_intake?.decision ?? "NEEDS_REVIEW";
+JourneyInboxWorkbench.tsx:697 | FLIGHT | { value: "FLIGHT", label: t("inbox.typeFlight") },
+JourneyInboxWorkbench.tsx:701 | RESERVATION | { value: "RESERVATION", label: t("inbox.typeReservation") },
+JourneyInboxWorkbench.tsx:967 | UNKNOWN | { value: "UNKNOWN", label: t("inbox.roleUnknown") },
+JourneyInboxWorkbench.tsx:968 | ARRIVAL | { value: "ARRIVAL", label: t("inbox.roleArrival") },
+JourneyInboxWorkbench.tsx:969 | MID_TRIP | { value: "MID_TRIP", label: t("inbox.roleMidTrip") },
+JourneyInboxWorkbench.tsx:970 | DEPARTURE | { value: "DEPARTURE", label: t("inbox.roleDeparture") },
