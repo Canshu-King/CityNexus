@@ -88,10 +88,18 @@ function PhotoCard({ photo, result, place, selected, scheduled, onSelect }: {
   const author = media?.author || photo?.author;
   const license = media?.license || photo?.licenseLabel;
   const licenseUrl = media?.terms_url || photo?.licenseHref;
+  // The tile used to invite 「先看看这个地点」 with no control behind it: a tap on the picture area did
+  // nothing (measured 2026-10-22 -- 72 s of waiting after such a tap, no request reached the server).
+  // The lookup does exist, hanging off the small meta button, so the invitation is now that control,
+  // and once the source has answered the tile says which answer came back instead of staying neutral.
+  const answer = url ? null : !result ? null : result.status === "UNAVAILABLE" ? "照片来源暂时没答上"
+    : result.reason_code === "MEDIA_IDENTITY_UNBOUND" ? "还没核实到具体是哪个地点" : "没查到可核实的实景照片";
   return <article className={"cn-place-photo" + (selected ? " is-selected" : "") + (!url ? " is-placeholder" : "")}
     data-place-id={place.candidate_id} data-photo-origin={media ? "runtime" : photo ? "curated" : "none"}>
     {broken || !url
-      ? <div className="cn-place-photo-fallback">{url ? <ImageOff size={24} /> : <MapPin size={28} />}<span>{url ? "照片暂时无法加载" : "先看看这个地点"}</span></div>
+      ? <div className="cn-place-photo-fallback">{url ? <ImageOff size={24} /> : <MapPin size={28} />}
+        {url || answer ? <span>{url ? "照片暂时无法加载" : answer}</span>
+          : <button type="button" onClick={() => onSelect?.(place.candidate_id)}>先看看这个地点</button>}</div>
       : <img src={url} alt={place.name + "实景照片"} loading="lazy" decoding="async" onError={() => setBroken(true)} />}
     <div className="cn-place-photo-meta">
       <strong>{photo?.label || place.name}</strong>

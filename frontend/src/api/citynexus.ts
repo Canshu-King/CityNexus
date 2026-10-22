@@ -2258,6 +2258,7 @@ export interface GoalPlaceMedia {
 export interface GoalPlaceMediaResult {
   candidate_id: string; journey_id: string; task_id: string; place_id: string;
   status: string; media: GoalPlaceMedia | null; cache_hit?: boolean;
+  reason_code?: string | null;
   source_reference?: string | null; source_wikidata_id?: string | null;
 }
 
