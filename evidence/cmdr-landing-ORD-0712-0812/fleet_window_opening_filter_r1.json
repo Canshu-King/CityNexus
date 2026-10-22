@@ -1,0 +1,1004 @@
+{
+ "schema": "CNX_CMDR_FLEET_KEEPALIVE_V1",
+ "at": "2026-10-22 07:50:49",
+ "min_working": 8,
+ "work_min": 15,
+ "lanes_total": 107,
+ "working": 1,
+ "idle": 106,
+ "short_by": 7,
+ "excluded_not_this_project": 1,
+ "excluded_quota": 0,
+ "excluded_unsigned": 61,
+ "to_wake": [],
+ "to_wake_window": [
+  "0afdb49b-ad2a-4c61-b70f-5b4dfc08b753",
+  "d6fe0f95-1e47-4bcb-b206-83309526ad8c",
+  "ead969d4-3219-41b3-95f2-321cba28912f",
+  "e766b154-8934-4ac6-b98e-940fd7ea78eb",
+  "cab9a956-ce57-44f0-a23e-c6603aca8b46",
+  "69fc2e65-1151-493e-aa0b-b3955284335b",
+  "da46954a-7659-4708-ad4a-c1b4474be85a",
+  "d38640a3-d327-432c-9ee7-819d5dbf1844",
+  "a17c509b-268d-4df0-8f73-53bd0a68faf9",
+  "cc40e6a7-d924-41d8-aec3-f178f08204ab",
+  "8183aabe-a811-4a45-b2f0-2781ac0a0cf3",
+  "3e3c1e02-fd55-4775-b238-82101120d34b",
+  "422c8eba-9ff7-4b87-ad45-8d9f479167cb",
+  "73727cf2-5a4b-416e-93b8-e4493fe66023",
+  "8bba3a84-96ba-44a8-9151-12a140f1660e",
+  "8b516aa6-20c5-46ac-8d90-7c3af22c7070",
+  "daa56d7a-1683-4144-a5f7-8dd7dcc500b6",
+  "19a4f5f2-a01c-4c70-9f65-16dff0749ca6",
+  "38dfd436-4897-49ba-a076-d1467ecf1f34",
+  "fa408a9e-4d49-4448-9aea-c0462c977c11",
+  "9620f46a-8508-4da9-a282-f14cc046b130"
+ ],
+ "window_pool_all": 106,
+ "window_pool_this_project": 105,
+ "excluded_foreign_opening": 1,
+ "registered_agents": 0,
+ "idle_registered": 0,
+ "idle_unregistered": 0,
+ "unreachable_by_bus": 7,
+ "idle_detail": [
+  {
+   "id": "d9e2c9ae-265d-45c5-acc7-191e6a695bb8",
+   "age_min": 32116.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（lane id `S2-he",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "e4f3490f-a55f-4fcb-b7af-227e41018656",
+   "age_min": 32083.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "【CMDR 新工单 ORD-0370 · 把组件里自己造句的硬兜底收进 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "df90a7d5-36cf-4933-9256-7d0980f9af13",
+   "age_min": 32049.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "8e5245f0-488a-48d6-ab17-96c204e1f0fd",
+   "age_min": 29131.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "【CMDR 新工单 ORD-0369 · 手机端 Replan 真链路端",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "cff87c64-eb8b-4ce6-b362-deec5628c49b",
+   "age_min": 20385.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "5a53846b-8814-45e5-a408-cfa8c134855d",
+   "age_min": 20379.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的新车道（并行开发会话），工单 **ORD",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1ba48dbf-4cc2-4add-8dc1-5f73b372b61c",
+   "age_min": 20379.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "82f55d8a-93fa-46e8-be8b-708a65d63a33",
+   "age_min": 20379.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "89f2e2d6-d370-461f-ac76-fd2e5cc6444b",
+   "age_min": 20374.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "6a150e1e-eede-4f29-bbd9-364e7ec69082",
+   "age_min": 20364.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的第二条新车道（并行开发会话），工单 **",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "45d25bfb-3cb3-43e5-b9cc-edc10faa04a3",
+   "age_min": 20339.1,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 的一条新车道（并行开发会话），号令者实例 A（",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "7251f8c5-fe2f-4773-b73a-41d51466b5a8",
+   "age_min": 19841.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 后端契约补口。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "6cef14f4-2cf5-48b1-a4dc-4280e73941c0",
+   "age_min": 19835.1,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 空态动作收口。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "01d66562-42a8-48b8-936d-d05be2804933",
+   "age_min": 19831.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·木工**（并行开发会话）。工",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "c920f48d-b0b5-4938-a0a7-55d73bd4e14b",
+   "age_min": 19816.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 行程页深链。今",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "6162d33f-e4a2-4bfb-92da-ff527e4a9973",
+   "age_min": 19815.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Loading",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "61978340-58b8-4a93-ac8f-acdf3e03effa",
+   "age_min": 19802.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Journey",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "dead2180-9f17-4269-95b8-82e548e94e8a",
+   "age_min": 19784.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Footer ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "e8c65892-460c-42b4-9eb3-a44fddcc8705",
+   "age_min": 19769.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Setting",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "420ecb08-741a-4266-bea6-3685d9bf7161",
+   "age_min": 19768.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·钢筋工**（并行开发会话）。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "5ceecfc5-08a6-46ce-874d-54859932d493",
+   "age_min": 19767.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Button ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "b608abb7-db63-467e-8265-94e6ff1133c7",
+   "age_min": 19763.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·玻璃工**（并行开发会话）。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "9acf317e-d8e7-4965-8097-35db320845c6",
+   "age_min": 19761.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 RadioCh",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1f541e1f-56c5-4780-9463-abbdeaa632b7",
+   "age_min": 19760.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 错误码国际化。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "cb172072-e983-476d-b0d3-43a5e0abbad0",
+   "age_min": 19758.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 地图标注合规。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "4998fb8f-55e9-4c33-9a09-44a3e9828305",
+   "age_min": 19753.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 设置页权限管理",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "c7e16a07-845b-4fdc-aa7d-1a60bae55b56",
+   "age_min": 19746.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 搜索历史管理。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1ff6b102-61a9-499c-98fe-3997defbfdb3",
+   "age_min": 19746.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Stepper",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "7cafabaa-c42a-4794-8082-ffd87032fc6d",
+   "age_min": 19746.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 表单验证优化。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "b3be4b9a-9710-4d4f-80a3-de1f74e176d8",
+   "age_min": 19746.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 ModalDi",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "14b6da5e-f958-4656-8d58-c7b5c5ce0621",
+   "age_min": 19739.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 离线模式提示。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d5186590-1f04-40f8-89d3-c7819621e5ad",
+   "age_min": 19382.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·瓦工**（并行开发会话）。工",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "4dc823e5-8c4e-4b9f-aeb9-88b4d0d9b64e",
+   "age_min": 19375.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Switch ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "48c29b0c-edc4-40b6-b420-9b4639590cea",
+   "age_min": 19368.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 抽屉导航收口。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "c32b5e47-edf0-4afe-9d1a-422da0f44fd4",
+   "age_min": 19362.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名「票夹卡片标题」",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "9567aa13-d9c0-4417-8dcb-5d73ce31fa26",
+   "age_min": 19346.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·管工**（并行开发会话）。你",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "effbd621-cd3a-49df-9e90-75c826f9d202",
+   "age_min": 19343.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名「地图标注接线」",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "a53bd98e-aa45-406e-87d1-3131d087848e",
+   "age_min": 19340.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 EmptySt",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d8b37d51-0839-4919-a58b-43b22b3cab50",
+   "age_min": 19340.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 错误文案一致性",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "750be8b9-03d0-4bc6-b50f-0073009fc106",
+   "age_min": 19339.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名「POI 导入入",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "22c05237-7f97-4f5b-b1e8-c844f402c47e",
+   "age_min": 19336.1,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·电工**（并行开发会话）。你",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d12e6482-016c-4cb2-9091-af0bc3bffd37",
+   "age_min": 19333.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·油工**（并行开发会话）。工",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "7604b044-ef9f-4fb0-ade4-3b297803f46a",
+   "age_min": 19333.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Hub 页优化",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "5a499147-b6af-4f9f-8b8a-f8791aca45f0",
+   "age_min": 19284.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Tab 页切换",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "30439bb1-2cb4-4c55-9ab5-220ad3d42502",
+   "age_min": 17761.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Form 表单",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "ca810615-ed74-4529-ad7b-d90adc88bcd3",
+   "age_min": 17758.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Select ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1e269e48-5ad0-463c-9687-93b274c1b179",
+   "age_min": 17752.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 卡片布局优化。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "e63455da-d41c-4ff0-9318-456f5d692b17",
+   "age_min": 17749.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 搜索框优化。今",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d81220a4-09b9-4dc1-a00c-47fafef17311",
+   "age_min": 17746.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Input 输",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "6a773af1-8113-462b-b26a-e1a90dc87e3e",
+   "age_min": 17744.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的新车道（并行开发会话），工单 **ORD",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "440ec978-61ed-4d7c-82b9-7811fae9cfc8",
+   "age_min": 17743.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 I18N_细节",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "8f4bafea-01c5-43da-9163-83159bd16808",
+   "age_min": 17737.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Tooltip",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "a76cdfe0-7e83-4104-b44d-558a20e6c0d9",
+   "age_min": 17724.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Sidebar",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "fff356ed-8e90-4909-8c65-efc3b7027242",
+   "age_min": 17716.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的**新车道·架子工**（并行开发会话）。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "c40ac393-e293-44a5-8d15-c336097a9d0a",
+   "age_min": 17715.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 链接样式优化。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "df9235b5-5920-45f5-be7c-b46b849f320b",
+   "age_min": 17714.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 进度条 Pro",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "6f3c6d11-0ca4-4983-af2f-923531061c0d",
+   "age_min": 17701.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 底栏安全区。今",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "f218d193-b89b-4994-b989-0e426ef09445",
+   "age_min": 17679.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名「长瓦工」。第一",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "f805be83-d243-49d8-8691-46dd12a5ac2f",
+   "age_min": 17677.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名「短瓦工」。第一",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "14f801c9-8c7c-4c4d-a052-6f27a54bdebe",
+   "age_min": 17668.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名「小锤工」。第一",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "21d37003-e8d3-47e8-b5ab-6248b47a122f",
+   "age_min": 16896.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「量尺工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1750a051-1c0c-4f08-a9fd-a09cbcdaef38",
+   "age_min": 16896.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「双数工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "86932a58-f375-42fc-9a73-00c50fb1a370",
+   "age_min": 16896.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「撬板工」（这条会话的标题就是第一句话的截断，所以花名写在这里",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "96d91b27-6586-4225-bbd7-4f4ab5ce4e3f",
+   "age_min": 16867.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「比价工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "fd699429-d2ab-476e-9af9-4d59914c4d47",
+   "age_min": 16862.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「对表工」（会话标题就是第一句话的截断，花名写在这里）。现在 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "30be9f86-47cf-4485-b0fe-f4c7aa00cb3f",
+   "age_min": 16854.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「预防工」（会话标题就是第一句话的截断，花名写在这里）。现在 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "dbfb8d36-9984-4a1b-b57c-0a5354f2b82b",
+   "age_min": 16849.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「抽屉工」。现在 09:1x，目标：11:00 前把代码改进权",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "9c6686c1-7894-4a19-9dd4-646d70b517fc",
+   "age_min": 16846.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「提案工」（会话标题就是第一句话的截断，花名写在这里）。现在 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1247c039-7482-4c2a-84c1-7c909875aabd",
+   "age_min": 16840.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「量名词」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "dd9f55e6-205a-46dc-a26e-e40927471717",
+   "age_min": 16721.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「快刀工」。现在 09:1x，你的目标只有一个：在 11:00",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "46798eb2-281d-4a17-ac0f-dd8cad79ab79",
+   "age_min": 16695.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「路牌工乙」（会话标题就是第一句话的截断，花名写在这里）。现在",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "cf78dcce-1e24-481e-bc94-b78cf93e6ee5",
+   "age_min": 16690.1,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「抬秤工」（这条会话的标题就是第一句话的截断，所以花名写在这里",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "486393f6-f81d-4e3d-81da-49327b08c6ff",
+   "age_min": 16677.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「打卡工」。现在 09:1x，目标：11:00 前把代码改进权",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "332ffba9-cb30-4c07-9c1c-05b55e48549d",
+   "age_min": 16651.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「快钉工」。现在 09:1x，目标只有一个：11:00 前把代",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "be336b54-2b6c-43ba-8bf4-ebe10362f56c",
+   "age_min": 16645.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「旅馆工」。现在 09:1x，目标：11:00 前把代码改进权",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "564f173c-5af6-4dc1-9345-6ecf7106f580",
+   "age_min": 16633.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Table 表",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "06bd23b8-20e5-4425-a8bf-0b53596459f3",
+   "age_min": 16243.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 Modal 弹",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "5f4d94c4-f021-4d59-96c1-97da6af7666a",
+   "age_min": 16224.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「活明细」（会话标题就是第一句话的截断，花名写在这里）。现在 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "ac2ec46c-bb56-4858-b9b7-462894939e85",
+   "age_min": 16084.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的车道工人（农民工），花名 徽章 Badg",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "8677ccfe-d385-4752-9c68-1de36f17c7a8",
+   "age_min": 15928.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「铁盒工」。现在 09:1x，目标：11:00 前把代码改进权",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d7fdc191-f246-4987-8d7e-6043730555d4",
+   "age_min": 15831.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「起手工」（会话标题就是第一句话的截断，花名写在这里）。现在 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "4fe6e20b-a05f-45db-bd1b-372b5a498188",
+   "age_min": 15051.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「住宿工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "1ebf693d-6690-44a3-b969-ed70c892877e",
+   "age_min": 15049.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「快锥工」。现在 09:1x，目标只有一个：11:00 前把代",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "c2e22d6c-163d-42ee-a8c4-ac1949f6adda",
+   "age_min": 15043.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「补栏工」（这条会话的标题就是第一句话的截断，所以花名写在这里",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "9620f46a-8508-4da9-a282-f14cc046b130",
+   "age_min": 14977.8,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「快剪工」。现在 09:1x，目标只有一个：11:00 前把代",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "fa408a9e-4d49-4448-9aea-c0462c977c11",
+   "age_min": 14869.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「大柜工」（会话标题就是第一句话的截断，花名写在这里）。现在 ",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "38dfd436-4897-49ba-a076-d1467ecf1f34",
+   "age_min": 14868.0,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「备城工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "19a4f5f2-a01c-4c70-9f65-16dff0749ca6",
+   "age_min": 14866.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「路牌工甲」（会话标题就是第一句话的截断，花名写在这里）。现在",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "daa56d7a-1683-4144-a5f7-8dd7dcc500b6",
+   "age_min": 14863.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「门牌号」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "8b516aa6-20c5-46ac-8d90-7c3af22c7070",
+   "age_min": 14859.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「验路工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "8bba3a84-96ba-44a8-9151-12a140f1660e",
+   "age_min": 12695.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「加闸工」。现在 09:35，目标：11:00 前把一处量具改",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "73727cf2-5a4b-416e-93b8-e4493fe66023",
+   "age_min": 12129.7,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「盘务工」，本会话只做 ORD-0634。先读账本 CITYN",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "422c8eba-9ff7-4b87-ad45-8d9f479167cb",
+   "age_min": 12129.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「接尖工」——本会话只做 ORD-0590。\n\n背景：主人令将",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "3e3c1e02-fd55-4775-b238-82101120d34b",
+   "age_min": 12079.1,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「续线工」（本会话第一条话就是标题，派单按这个名字认你）。你是",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "8183aabe-a811-4a45-b2f0-2781ac0a0cf3",
+   "age_min": 12072.5,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「地图工」——本会话只做 ORD-0589。\n\n背景：主人令将",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "cc40e6a7-d924-41d8-aec3-f178f08204ab",
+   "age_min": 12069.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「归档工」——本会话只做 ORD-0588。\n\n背景：主人令将",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "a17c509b-268d-4df0-8f73-53bd0a68faf9",
+   "age_min": 12069.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「键盘工」（会话标题就是第一句话的截断，花名写在这里）。\n\n项",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d38640a3-d327-432c-9ee7-819d5dbf1844",
+   "age_min": 12068.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「屏工」（会话标题就是第一句话的截断，花名写在这里）。现在 0",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "da46954a-7659-4708-ad4a-c1b4474be85a",
+   "age_min": 1587.6,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "69fc2e65-1151-493e-aa0b-b3955284335b",
+   "age_min": 1488.9,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「扫街工」（会话标题就是第一句话的截断，派单按这个名字认你）。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "cab9a956-ce57-44f0-a23e-c6603aca8b46",
+   "age_min": 1462.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「补图工」（会话标题就是第一句话的截断，派单按这个名字认你）。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "e766b154-8934-4ac6-b98e-940fd7ea78eb",
+   "age_min": 1459.1,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的一条新车道（并行开发会话），工单 **O",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "ead969d4-3219-41b3-95f2-321cba28912f",
+   "age_min": 1447.3,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「脉搏工」（会话标题就是第一句话的截断，派单按这个名字认你）。",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "d6fe0f95-1e47-4bcb-b206-83309526ad8c",
+   "age_min": 1442.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「排工」（会话标题就是第一句话的截断，派单按这个名字认你）。本",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "0afdb49b-ad2a-4c61-b70f-5b4dfc08b753",
+   "age_min": 1431.2,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你是 CityNexus 项目的新车道（并行开发会话），工单 **ORD",
+   "open_cn": true,
+   "working": false
+  },
+  {
+   "id": "4256ed1f-cd3a-41fc-b968-7912f0b59323",
+   "age_min": 1428.4,
+   "cwd": "D:\\moodle",
+   "sig": true,
+   "sig_head": "你的花名是「守门工」（会话标题就是第一句话的截断，派单按这个名字认你）。",
+   "open_cn": false,
+   "working": false
+  }
+ ],
+ "foreign_ids": [
+  "24553b38-2a96-45a5-a494-a1cdc5a16682"
+ ],
+ "quota_ids": []
+}
