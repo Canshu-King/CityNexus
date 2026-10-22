@@ -179,7 +179,7 @@ def schedule(rows, by_key, start, working=True):
     return dates
 
 
-def check(plan, start, status_date, hours_per_day=8.0):
+def check(plan, start, status_date, hours_per_day=8.0, resources=None):
     rows, by_key, problems = flatten(plan)
     order, cycles = topo(rows, by_key)
     if cycles:
@@ -270,7 +270,7 @@ def check(plan, start, status_date, hours_per_day=8.0):
     for e in rows:
         if e["kind"] != "task":
             continue
-        if not (e.get("assign") or []):
+        if not (e.get("assign") or []) and not (e.get("eff") or {}):
             no_owner.append(e["key"])
         if not e.get("dur"):
             no_dur.append(e["key"])
@@ -322,16 +322,79 @@ def check(plan, start, status_date, hours_per_day=8.0):
         cur = best[1] if best else None
     chain.reverse()
 
-    total_hours = 0.0
-    per_res = {}
+    # ---- resource capacity census -----------------------------------------
+    # The review's point: a plan can be arithmetically correct and still be
+    # impossible to execute. Hours are spread over the working days each row
+    # actually occupies, then summed per person per ISO week and compared with
+    # the availability that person's role claims. Compute lanes are material
+    # resources and are counted separately, never as student labour.
+    students = dict((r["key"], r) for r in (resources or [])
+                    if r.get("rtype") == "work")
+    compute = dict((r["key"], r) for r in (resources or [])
+                   if r.get("rtype") != "work")
+    weekly = {}
+    compute_hours = 0.0
+    per_person_total = {}
     for e in tasks:
-        n = parse_days(e["dur"])
+        s, f = dates[e["key"]]
+        wd = 0
+        d = s
+        while d <= f:
+            if is_wd(d):
+                wd += 1
+            d += datetime.timedelta(days=1)
+        # student hours come from the stated effort table; assignment units are
+        # derived from it at build time so Project's Work equals it exactly
+        eff = e.get("eff") or {}
+        for rkey, hrs in eff.items():
+            per_person_total[rkey] = per_person_total.get(rkey, 0.0) + float(hrs)
+            if not wd:
+                continue
+            d = s
+            while d <= f:
+                if is_wd(d):
+                    iso = tuple(d.isocalendar()[:2])
+                    weekly[(rkey, iso)] = weekly.get((rkey, iso), 0.0) + \
+                        float(hrs) / wd
+                d += datetime.timedelta(days=1)
         for rkey, units in (e.get("assign") or []):
-            hrs = n * hours_per_day * float(units)
-            if rkey in ("qoder", "codex"):
-                continue                       # material: cost, no labour hours
-            total_hours += hrs
-            per_res[rkey] = per_res.get(rkey, 0.0) + hrs
+            hrs = wd * hours_per_day * float(units)
+            per_person_total[rkey] = per_person_total.get(rkey, 0.0) + hrs
+            if rkey in students:
+                continue          # a work resource here would double-count EFF
+            compute_hours += hrs
+    over, capacity_table = [], []
+    for (rkey, iso), hrs in sorted(weekly.items(),
+                                   key=lambda kv: (kv[0][0], kv[0][1])):
+        avail = float(students.get(rkey, {}).get("avail_week", 0.0))
+        if avail <= 0:
+            continue
+        excess = round(max(0.0, hrs - avail), 1)
+        capacity_table.append({"resource": rkey, "isoWeek": "%d-W%02d" % iso,
+                               "availableHours": round(avail, 1),
+                               "assignedHours": round(hrs, 1),
+                               "overallocatedHours": excess})
+        if excess > 0.01:
+            over.append("%s %s: assigned %.1f h > available %.1f h (over %.1f h)"
+                        % (rkey, "%d-W%02d" % iso, hrs, avail, excess))
+    totals = {}
+    for rkey, st in students.items():
+        wk_keys = sorted([k for (rk, k) in weekly if rk == rkey])
+        span = 1
+        if len(wk_keys) >= 1:
+            a0 = datetime.date.fromisocalendar(wk_keys[0][0], wk_keys[0][1], 1)
+            a1 = datetime.date.fromisocalendar(wk_keys[-1][0], wk_keys[-1][1], 1)
+            span = (a1 - a0).days // 7 + 1
+        assigned = round(per_person_total.get(rkey, 0.0), 1)
+        available = round(float(st.get("avail_week", 0)) * span, 1)
+        totals[rkey] = {"assignedHours": assigned, "weeksScheduled": span,
+                        "availableHours": available,
+                        "utilisationPct": round(100.0 * assigned / available, 1)
+                        if available else 0.0}
+        if assigned > available + 0.5:
+            over.append("%s total: %.1f h assigned against %.1f h available across "
+                        "the %d scheduled weeks" % (rkey, assigned, available, span))
+    total_hours = round(sum(per_person_total.get(k, 0.0) for k in students), 1)
 
     return {
         "problems": problems,
@@ -350,7 +413,15 @@ def check(plan, start, status_date, hours_per_day=8.0):
         "project_finish": str(finish_date),
         "critical_chain": chain,
         "estimated_hours_total": total_hours,
-        "estimated_hours_by_resource": per_res,
+        "estimated_hours_by_resource": dict(
+            (k, round(v, 1)) for k, v in per_person_total.items() if k in students),
+        "compute_hours_note": "material lanes; priced, never counted as student hours",
+        "capacity": {"students": {k: {"availWeek": float(v.get("avail_week", 0))}
+                                  for k, v in students.items()},
+                     "weekly": capacity_table,
+                     "totals": totals,
+                     "overallocated": over,
+                     "computeHoursPriced": round(compute_hours, 1)},
         "dates": dict((k, (str(v[0]), str(v[1]))) for k, v in dates.items()),
     }
 
@@ -382,8 +453,23 @@ def report(res, out=None):
     for v in res.get("late_at_status_date", []):
         a("   LATE %s" % v)
     a("census : %s" % res["census"])
-    a("estimated hours : %.1f total %s" % (res["estimated_hours_total"],
-                                           res["estimated_hours_by_resource"]))
+    cap = res.get("capacity", {})
+    a("student hours by person : %s" % res["estimated_hours_by_resource"])
+    a("per-person totals vs availability :")
+    for k, v in (cap.get("totals") or {}).items():
+        a("   %-8s assigned %6.1f h / available %6.1f h over %d scheduled week(s)"
+          % (k, v["assignedHours"], v["availableHours"], v["weeksScheduled"]))
+    a("OVERALLOCATED person-weeks : %d" % len(cap.get("overallocated", [])))
+    for v in cap.get("overallocated", [])[:14]:
+        a("   OVER %s" % v)
+    worst = sorted(cap.get("weekly", []),
+                   key=lambda r: -r["overallocatedHours"])[:8]
+    a("hottest person-weeks (assigned / available / over) :")
+    for r in worst:
+        a("   %-8s %-9s %5.1f / %5.1f / %5.1f" % (r["resource"], r["isoWeek"],
+                                                  r["assignedHours"],
+                                                  r["availableHours"],
+                                                  r["overallocatedHours"]))
     a("project finish (static forward pass) : %s" % res["project_finish"])
     a("critical chain : %s" % " -> ".join(res["critical_chain"]))
     text = "\n".join(lines)
@@ -397,7 +483,8 @@ if __name__ == "__main__":
     import sys
     sys.path.insert(0, r"D:\moodle\live_checks")
     from se_project_plan_r2 import PLAN
-    res = check(PLAN, D(2026, 9, 7), D(2026, 10, 22))
+    from se_project_plan_r2 import RESOURCES
+    res = check(PLAN, D(2026, 9, 7), D(2026, 10, 22), resources=RESOURCES)
     print(report(res, r"D:\moodle\live_checks\se_plan_cpm_r2.txt"))
     json.dump(res, open(r"D:\moodle\live_checks\se_plan_cpm_r2.json", "w",
                         encoding="utf-8"), indent=1, ensure_ascii=False, default=str)

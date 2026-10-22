@@ -84,6 +84,7 @@ PALETTE = {
     "user":      ("#FFFFFF", "#3A4A5A"),
     "band":      ("#F7F9FC", "#C3CEDD"),
     "laneband":  ("#EEF3FA", "#9FB3CC"),
+    "foot":      ("#FFFFFF", "#B9C4D0"),
     "title":     ("#1F3A5F", "#1F3A5F"),
 }
 BODY_FONT = "Segoe UI"
@@ -148,6 +149,11 @@ class Builder:
         self.chrome_by_page = {}
         self._rowcache = {}
         self.page_no = 1
+        # a deck sheet is 16:9, a design drawing is A3 landscape: the bounds and
+        # the wrap widths must follow the sheet that is actually being drawn
+        self.PW = float(spec.get("pageW", PAGE_W))
+        self.PH = float(spec.get("pageH", PAGE_H))
+        self.min_body = float(spec.get("minBodySize", 0))
         self.prop_failures = []
         self.edge_count = 0
 
@@ -167,8 +173,8 @@ class Builder:
         self.page = self.doc.Pages.Item(1)
         self.page.Name = self.spec.get("pageName", "Page-1")
         for cell, formula in (("PrintPageOrientation", "1"),
-                              ("PageWidth", "420mm"),
-                              ("PageHeight", "297mm"),
+                              ("PageWidth", "%gin" % self.PW),
+                              ("PageHeight", "%gin" % self.PH),
                               ("PrintFitLayerPages", "0")):
             self._cell(self.page.PageSheet, cell, formula)
         for key, fname in STENCILS.items():
@@ -221,7 +227,7 @@ class Builder:
         return None
 
     def _flip_y(self, y_top, h):
-        return PAGE_H - y_top - h / 2.0
+        return self.PH - y_top - h / 2.0
 
     def _wrap(self, text, width_in, size_pt):
         """Greedy word wrap sized so the text cannot overflow the box.
@@ -585,11 +591,21 @@ class Builder:
     # ---------------------------------------------------------------- frame
     def add_title_block(self):
         cur = self.cur
-        self._text(0.35, 0.22, 11.0, cur.get("title", self.spec["title"]),
+        # The header geometry was written for the A3 engineering sheets; the 16:9
+        # briefing sheets are narrower, so a fixed 9.5in x 6.7in id block would
+        # hang off the right edge and the audit would never see it (title text is
+        # chrome, not a node). Derive both halves from the page width instead.
+        if self.PW > 14.0:
+            tw, sw, dx, dw = 11.0, 11.6, 9.5, 6.7
+        else:
+            tw, sw, dx, dw = self.PW - 4.6, self.PW - 4.0, self.PW - 4.35, 4.0
+        self._text(0.35, 0.22, tw, cur.get("title", self.spec["title"]),
                    size=TITLE_SIZE, bold=True, color="#12263F", align="0")
-        self._text(0.35, 0.62, 11.6, cur.get("subtitle", self.spec.get("subtitle", "")),
-                   size=SUBTITLE_SIZE, color="#3C5068", align="0")
-        self._text(9.5, 0.26, 6.7, "%s\n%s" % (
+        self._text(0.35, 0.62, sw, cur.get("subtitle", self.spec.get("subtitle", "")),
+                   size=float(cur.get("subtitleSize",
+                                      self.spec.get("subtitleSize", SUBTITLE_SIZE))),
+                   color="#3C5068", align="0")
+        self._text(dx, 0.26, dw, "%s\n%s" % (
             cur.get("docid", self.spec.get("docid", "")),
             cur.get("revline", self.spec.get("revline", ""))),
             size=8.0, color="#3C5068", align="0")
@@ -648,7 +664,7 @@ class Builder:
                     y = cy - h / 2.0 + dy
                     if x < 0.18 or y < 0.18:
                         continue
-                    if x + w > PAGE_W - 0.18 or y + h > PAGE_H - 0.18:
+                    if x + w > self.PW - 0.18 or y + h > self.PH - 0.18:
                         continue
                     box = {"x": x, "y": y, "w": w, "h": h}
                     if any(self._hit(box, n) for n in avoid):
@@ -728,8 +744,8 @@ class Builder:
         for c in list(self.chrome) + list(self.parked):
             rects.append((c, "%s %s" % (c["kind"], c.get("for", c.get("name", "")))))
         for c, who in rects:
-            if c["x"] < 0 or c["y"] < 0 or c["x"] + c["w"] > PAGE_W or \
-                    c["y"] + c["h"] > PAGE_H:
+            if c["x"] < 0 or c["y"] < 0 or c["x"] + c["w"] > self.PW or \
+                    c["y"] + c["h"] > self.PH:
                 bad.append("chrome %s runs off the sheet (%.2f,%.2f %.2fx%.2f)"
                            % (who, c["x"], c["y"], c["w"], c["h"]))
             # a connector's own label may lie across its own two shapes - that is
@@ -773,7 +789,7 @@ class Builder:
         if len(set(ids)) != len(ids):
             bad.append("duplicate node ids")
         for n in self.spec_nodes:
-            if n["x"] < 0 or n["y"] < 0 or n["x"] + n["w"] > PAGE_W or n["y"] + n["h"] > PAGE_H:
+            if n["x"] < 0 or n["y"] < 0 or n["x"] + n["w"] > self.PW or                     n["y"] + n["h"] > self.PH:
                 bad.append("node %s outside page bounds" % n["id"])
         # real overlap between non-band nodes
         rects = [(n["id"], n["x"], n["y"], n["w"], n["h"]) for n in self.spec_nodes]
@@ -794,8 +810,15 @@ class Builder:
             ins[e["to"]] += 1
             labels.setdefault((e["from"], e["to"]), []).append(e.get("label", ""))
         for n in self.spec_nodes:
+            # a deck sheet is read from across a room or on a tablet: text below
+            # the declared body size is a defect even when it fits the box
+            if self.min_body and float(n.get("size") or self.body_size) <                     self.min_body and (n.get("text") or "").strip() and                     n.get("role") not in ("foot",):
+                bad.append("node %s is set in %gpt, below the %gpt floor this sheet "
+                           "declares - it will not read on a tablet"
+                           % (n["id"], float(n.get("size") or self.body_size),
+                              self.min_body))
             role = n.get("role")
-            if role in ("note", "container"):
+            if role in ("note", "container", "foot"):
                 continue
             if self.cur.get("barsOnly"):
                 # a bar chart sheet has no connectors by design: every shape is a
@@ -942,7 +965,7 @@ class Builder:
                 d = dict(sh)
                 # document-wide settings are inherited unless the page overrides
                 for k in ("edgeRule", "overlapExempt", "bodySize", "subSize",
-                          "title", "subtitle", "docid", "revline"):
+                          "title", "subtitle", "docid", "revline", "minBodySize"):
                     if k not in d and k in sp:
                         d[k] = sp[k]
                 out.append(d)
@@ -953,8 +976,8 @@ class Builder:
 
     def _page_setup(self, pg):
         for cell, formula in (("PrintPageOrientation", "1"),
-                              ("PageWidth", "420mm"),
-                              ("PageHeight", "297mm"),
+                              ("PageWidth", "%gin" % self.PW),
+                              ("PageHeight", "%gin" % self.PH),
                               ("RoutingStyle", "1"),
                               ("ConLineJumpCode", "6"),
                               ("ConLineJumpStyle", "0"),

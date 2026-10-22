@@ -1,0 +1,9 @@
+[   0.0s] open rows carried into the recovery plan: 17
+[   4.6s] recovery rows: 16 open tasks + 3 dated milestones
+[   7.8s]    missing detail: -
+[   7.8s] recovery links: 28 read, 14 declared-open, 0 missing, 0 violating
+[   8.4s] recovery capacity: 9 person-weeks, 0 over-allocated
+[   8.4s] recovery deadlines: 0 breached (brief dates)
+[   8.9s] recovery critical rows: 6; project finish 2026-11-04; cost 1099.55
+[   9.1s] saved D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\CityNexus_Plan_Recovery.mpp (294912 bytes, sha256 94d50d406372282f)
+[  19.1s] reopened recovery file: 19 rows, finish 2026-11-04, cost 1099.55

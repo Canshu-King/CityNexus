@@ -94,7 +94,7 @@ gate_fail_total = sum(len(d.get("failures", [])) for d in
                       [json.load(open(f, encoding="utf-8")) for f in
                        glob.glob(os.path.join(DEL, "Visio", "previews", "*.gate.json"))])
 late = [x for x in _prog.get("history_problems", []) if x.startswith("OVERDUE")]
-NAME = "CityNexus_SE2026_review_r2_%s.zip" % (HEAD_BEFORE[:9] or "nohead")
+NAME = "CityNexus_SE2026_review_r3_%s.zip" % (HEAD_BEFORE[:9] or "nohead")
 ZIP = os.path.join(OUTDIR, NAME)
 
 os.makedirs(os.path.join(DEL, "Evidence", "scripts"), exist_ok=True)
@@ -111,7 +111,17 @@ for name in ("se_visio_build_result.json", "se_visio_proof_result.json",
              "se_project_build_r2_result.json", "se_project_build_result.json",
              "se_visio_plan_brief_result.json", "se_evidence_revision_result.json",
              "se_plan_cpm_r2.json", "se_milestone_view_result.json",
-             "se_project_export_r2_result.json"):
+             "se_project_export_r2_result.json",
+             # round 2 named three files the package did not contain; every
+             # generator result now travels with the delivery, and
+             # se_evidence_index_r1.py checks that each cited path resolves
+             "se_project_snapshot_result.json",
+             "se_project_snapshot_r2_result.json", "se_project_brief_result.json",
+             "se_project_recovery_result.json", "se_plan_status_result.json",
+             "se_deck_result.json", "se_evidence_reconcile_result.json"):
+# se_review_package_r2_result.json is deliberately NOT copied in: it carries the
+# digest of the zip that would contain it, so any copy inside the package is by
+# construction one generation old - which is the defect round 2 was reported for.
     if os.path.exists(os.path.join(HERE, name)):
         shutil.copyfile(os.path.join(HERE, name),
                         os.path.join(DEL, "Evidence", name))
@@ -181,7 +191,7 @@ brief = """# CityNexus 软件工程 2026 · 修订二交付包（复审简报）
 | 费率 | 课程规划估算，非工资；两条算力车道是材料资源（只花钱不计工时） | 资源备注 |
 | 基准计划 | **故意没存**：没有可信原始计划 | 未调用 `BaselineSave` |
 | 拖动母版形状看连线跟随 | **未证明**：内置模具位置保护 | moveProof 缺席即未证 |
-| Project 分页设置 | **无法脚本化**：`FilePageSetupPage` 各形参均报参数无效 | `Evidence/logs/se_brief_r2.log` |
+| Project 分页设置 | **无法脚本化**：`FilePageSetupPage` 各形参均报参数无效 | `Evidence/logs/se_project_brief.log` |
 | 真实支付 / Hermes 原生 / live Valhalla / 真机影子测试 | 未实现或未验证，图上黄/灰虚线 | `BLOCKERS.md:9-16` 等 |
 
 ## 4. 请专门挑这六处
@@ -236,7 +246,8 @@ python se_review_package_r2.py          # 本文件 + MANIFEST + 压缩包 + 往
     "nfiles": 1 + len([1 for r, _d, fs in os.walk(DEL) for f in fs
                        if not os.path.relpath(os.path.join(r, f), DEL)
                        .endswith("MANIFEST.sha256")]),  # +1 = this brief
-    "zipsha": "见 Evidence/se_review_package_r2_result.json：清单不能给自己的摘要签名，所以压缩包摘要在打包结果文件里",
+    "zipsha": ("zip 不能自证：压缩包自身的 sha256 记在包外的 "
+               "`Evidence/R3_RESULT.md` 与提交信息里，包内只放逐文件清单"),
     "nvsdx": len(glob.glob(os.path.join(DEL, "Visio", "*.vsdx"))),
     "npages": spec_totals["pages"], "nodes": spec_totals["nodes"],
     "edges": spec_totals["edges"], "bands": spec_totals["bands"],
