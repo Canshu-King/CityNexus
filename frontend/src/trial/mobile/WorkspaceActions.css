@@ -102,11 +102,8 @@
 }
 .rev-mission-chat-row button:disabled { opacity: .48; cursor: default; }
 .rev-mission-chat-dock > p { margin: 0; color: #66748a; font-size: 10px; line-height: 1.45; }
-.rev-mission-chat-dock .rev-mission-chat-allow {
-  display: inline-flex; align-items: center; gap: 8px; margin: 1px 0;
-  font-size: 11px; color: #4d5c72;
-}
-.rev-mission-chat-allow input { width: 16px; height: 16px; accent-color: #14765c; }
+.rev-mission-chat-dock .rev-mission-chat-consent { grid-column: 1 / -1; display: grid; gap: 6px; margin-top: 2px; }
+.rev-mission-chat-dock .rev-mission-chat-consent .rev-workspace-consent { min-height: 44px; padding: 10px 11px; font-size: 13px; line-height: 1.45; }
 .rev-mission-chat-row :is(textarea,button):focus-visible { outline: 3px solid #a9b7ef; outline-offset: 2px; }
 @media (max-width: 600px) {
   .rev-mission-chat-dock { width: calc(100vw - 16px); padding: 10px 11px 7px; border-radius: 14px; }

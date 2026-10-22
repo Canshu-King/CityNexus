@@ -459,12 +459,23 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
     else void startNewTask();
   };
 
+  // The two per-trip permissions decide whether 发送 can do anything, so until they are granted they
+  // sit with the button they unlock: behind the ⚙ glyph a first-time traveller presses 发送, sees
+  // nothing happen and has no way to know the screen is waiting for a tick. Once both are granted the
+  // same rows move into 对话设置, where they stay revocable without crowding the composer.
+  const bothGranted = modelConsent && onlineResearchConsent;
+  const consentRows = (
+    <div className="rev-mission-chat-consent" data-testid="rev-mission-consent-strip">
+      <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
+      <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />本次允许查询公开地图和地点来源</label>
+    </div>
+  );
+
   const permissionSettings = (
-<details className="rev-agent-research-settings" open={embedded || !visibleTask}>
-            <summary>{modelConsent ? "AI 与地点来源 · 已连接" : "AI 与地点来源"}</summary>
+    <details className="rev-agent-research-settings" open={embedded || !visibleTask}>
+            <summary>加上时间与偏好</summary>
             <div className="rev-agent-research-settings-body">
-              <label className="rev-workspace-consent"><input type="checkbox" checked={modelConsent} disabled={busy} onChange={(event) => setModelConsent(event.target.checked)} />本次允许 AI 处理旅行目标（可能产生费用）</label>
-              <label className="rev-workspace-consent"><input type="checkbox" checked={onlineResearchConsent} disabled={busy} onChange={(event) => setOnlineResearchConsent(event.target.checked)} />本次允许查询公开地图和地点来源</label>
+              {bothGranted ? consentRows : null}
               <TravelGoalPreferences value={question} busy={busy} onChange={(value) => { followupMessageId.current = null; setQuestion(value); }} />
 
             </div>
@@ -530,6 +541,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               按讨论的方向开始研究
             </button>}
           <div ref={conversationAnchor} style={{ height: 1, scrollMarginBottom: 180 }} />
+          {!embedded && !bothGranted && consentRows}
           {!embedded && permissionSettings}
           {!embedded && <form className="rev-agent-nonmodal-form" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
             <label htmlFor="rev-workspace-question">{visibleTask ? "继续和这位 Agent 说话" : COPY.question}</label>
@@ -609,6 +621,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         <button ref={settingsButton} type="button" className="rev-mission-settings-toggle" aria-label="对话设置"
           aria-expanded={settingsOpen} aria-controls="rev-mission-settings" onClick={() => setSettingsOpen(value => !value)}>⚙</button>
         <label htmlFor="rev-mission-chat-input">{visibleTask ? "继续和当前 Agent 对话" : "告诉 CityNexus 你的旅行目标"}</label>
+        {bothGranted ? null : consentRows}
         <div className="rev-mission-chat-row">
           <textarea ref={composer} id="rev-mission-chat-input" value={question} rows={Math.min(4, Math.max(1, question.split("\n").length))} maxLength={2000}
             disabled={busy} onChange={(event) => { followupMessageId.current = null; setQuestion(event.target.value); }}
@@ -618,7 +631,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
           </button>
         </div>
         <section id="rev-mission-settings" className="rev-mission-settings-panel" hidden={!settingsOpen} aria-label="对话设置">
-          <header><strong>连接与公开地点来源</strong><button type="button" aria-label="关闭对话设置"
+          <header><strong>加上时间与偏好</strong><button type="button" aria-label="关闭对话设置"
             onClick={() => { setSettingsOpen(false); settingsButton.current?.focus(); }}>×</button></header>
           {permissionSettings}
         </section>
