@@ -3359,7 +3359,7 @@ function Hub({
             data-testid="hub-plan-with-ai"
             onClick={onPlanWithAi}
           >
-            {locale.startsWith("zh") ? "AI 帮我规划" : "Plan my trip with AI"}
+            {t("itinerary.planWithAi")}
           </button>
           <button
             type="button"
@@ -3585,9 +3585,7 @@ function Hub({
           <strong data-testid="today-stay">
             {chosenStay
               ? chosenStay.stay.property_name
-              : zh
-                ? "还没有选定"
-                : "Not chosen yet"}
+              : t("me.stayNotChosen")}
           </strong>
         </div>
         <div className="cn-strip-item">
@@ -4874,9 +4872,7 @@ function Bookings({
                     ? "待确认 · 服务器未确认"
                     : "Pending · the server has not confirmed it"
                   : item.commitment_id
-                    ? zh
-                      ? "已确认 · 受保护"
-                      : "Confirmed · protected"
+                    ? t("detail.confirmedProtected")
                     : zh
                       ? "已确认 · 未成承诺"
                       : "Confirmed · no commitment"}
@@ -5091,11 +5087,7 @@ function Me({
         <div>
           <p className="v8-kicker">{t("my.kicker")}</p>
           <h1>{t("my.title")}</h1>
-          <p className="v8-lede">
-            {zh
-              ? "这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。"
-              : "The facts of this trip: party, budget, stay and confirmed bookings."}
-          </p>
+          <p className="v8-lede">{t("me.lede")}</p>
         </div>
       </div>
 
