@@ -77,6 +77,14 @@
 - `PRODUCT_FIX_SHA` 前四枚（十七～十八时那三刀）：376b9914a7576bc69ffa56c13f167bf5f54aa6ee、0563305f8133dd146c234a1c092b8ab95da2f8cc、36939dd9ad8ec0791eda71f36ac150403bf27a30、ae7f51c6284ba1dcbe5e35c2d032c123cf2506f0。廿二日深夜到廿三日凌晨再加八枚：3e8238ab1b（打字要版本→屏上出卡）、3d1b1407a5（研究线索落进正式地点表）、d2f842b06a（选用被挡时屏上说对话）、53b4080414（合规照片被自家域名丢掉）、2e0925f67f（那枚断言的分母改严）、b6137777bb（行程面板不再说“你没有行程”）、861ca462b6（相册占位格做成真控件并写出答案）、a7eba46539（凭证过期不再被说成“你还没开始”）。BEFORE/AFTER 截图都在 `20261022_v3_human_chrome/`
 - `USER_VERIFIED = PENDING`（本机窗口不是手机在手里的点击）
 
+**门禁增量（一点三十三分，行号全部现读）。**
+
+- `AGENT_RESEARCH_GROUNDED`：照片那格**说的那句话**也进了屏。天坛公园从 `还没核实到具体是哪个地点` 变成 `没查到可核实的实景照片`（`trial/results/20261022_v3_human_chrome/walk-42-log.txt:7` 与 `trial/results/20261022_v3_human_chrome/walk-48-log.txt:27`），成因、两臂对照与"为什么八达岭照实不动"见第十六节。
+- `SAME_JOURNEY_GOAL_TO_ACTIVE = PARTIAL（今晚往前挪实了一格：正式候选方案存进去了）`。同一句话、首用旅客从零走一遍：改前那代按下保存，屏上是 `这次未能保存，时间仍留在这里，可以重试。`（`trial/results/20261022_v3_human_chrome/walk-51-log.txt:25`），工作台数到 `等待正式计划 0 份正式候选方案`（`trial/results/20261022_v3_human_chrome/walk-51-log.txt:28`）。带上"高德早就答过的营业时间，是我们自己半路丢掉的"这一刀（`f11f28adbb`）之后，同一句变成 `已保存 7 项正式安排。下方可以查看日程和出发待办。`（`trial/results/20261022_v3_human_chrome/walk-53-log.txt:29`），工作台读到 `等待正式计划 1 份正式候选方案`（`trial/results/20261022_v3_human_chrome/walk-53-log.txt:32`），出发待办里营业时间那一项不见了，只剩供应商确实没答的票价与真正没被路由的那一跳。SELECTED／ACTIVE 今晚仍未拿到：`trial/results/20261022_v3_human_chrome/walk-53-log.txt:33` 读的是 `SELECT_BUTTONS=0`。
+- `PRODUCT_FIX_SHA` 再加三枚：`6946f98bdc`（媒体腿不再只看第一条搜索命中）、`f11f28adbb`（把高德答过的营业时间搬回正式地点表）、`b514d2dd02`（已经被路由过的那一跳不再算缺口）。远端尖以 `git ls-remote` 现读为准，写这行时是 `b514d2dd02`。
+- 整套后端在这枚尖上的读数是 `188 failed, 2289 passed`（`trial/results/20261022_v3_human_chrome/backend-suite-certificate-1.txt:9`）。**没有具名基线红集合，这一行既不能读成"无回归"也不能读成"回归"**；今晚产品码只碰 `place_media.py`、`amap_provider.py`、`goal_amap.py`、`goal_place_identity.py`、`goal_preparation.py` 五枚。追到底的一枚红是测试直接调用端点函数、FastAPI 没注入会话（`backend/tests/test_qoder_mobility_evidence_sources.py:160` → `backend/app/main.py:1006`），属这份快照既有形状。
+- 教程的两处字面误报已改：`trial/results/20261022_V3_TEN_STEP_PLAYBOOK.md:3` 的「真机」改成「真实桌面浏览器的手机视口」并明写没有物理手机被摸过；`trial/results/20261022_V3_TEN_STEP_PLAYBOOK.md:43` 的「关掉再开」改成「刷新之后」，并明写关闭浏览器再打开暂时不保证找回。
+
 ## 六、十步以内试玩说明（给第一次打开的人）
 
 图文单页另交在 `20261022_V3_TEN_STEP_PLAYBOOK.md`（每一步配一张真机截图，图名在 `20261022_v3_human_chrome/playbook-*.png`，走查读数在 `walk-47-log.txt`）。下面保留纯文字版。
@@ -293,3 +301,37 @@ hit0 是天坛建筑群，它的文档里从来没有「天坛公园」这个名
 **测试。** `tests/test_goal_place_media.py` 现在 14 条通过；同一文件里两枚新臂在**改前的产品代码**上是红的（`media-fix-before-arm-1.txt:18` 起三行：`2 failed, 1 passed`），改后绿；那枚对照臂（`tests/test_goal_place_media.py:199`，钉"多问几条命中也不许放松绑定证据"）两代都过——它管的就是别把闸改松。相关面复跑 `tests/test_goal_*.py` 加身份与地点事实两枚文件：120 条通过。产品码 `6946f98bdc466b093ee1a224c8c6bca541836eff` 已推到 `rescue/v3-final-departure-20261022`（`git ls-remote` 回读同一枚）。
 
 **屏上的"改后"读数怎么取，以及为什么不能就地重开。** 这句话是前端按 `reason_code` 挑的（`frontend/src/trial/mobile/PlacePhotoGallery.tsx:96`），所以要把上表走到屏上必须让后端加载新代码；而起栈脚本一启动就删自己的 SQLite（`_cmdr_v3_port_1022/_cmdr_v3_serve_human_r1.py:34`），重开会把上面那些读数依赖的 human4 库抹掉。所以另起一栈：`_boot_human_stack_r4.ps1` 用 60182／14382 与一枚空的 human5 库，旧栈与旧库一个字没动，新旅客从零走一遍（`gallery_recheck_r1.mjs`，逐格读渲染文字，记在 `walk-48-log.txt`），结果写在第十七节。
+
+
+## 十七、三点十三分之前：把"出发待办"每一行改成能说清找谁的一句话
+
+**这一节按册廿二日廿三裁语（Issue #42 的评论 id 6347562966，2026-10-22T17:56:21Z）来做。** 裁语里那句被落在实处的话是：「在"出发待办"每项明确显示**谁是阻塞原因／可点什么操作**」；被如实记下的边界是：拿不到合法证据就**如实 BLOCKED 并给下一有效动作**，不许为绿绕开服务端权威。
+
+**先摊开一个已经错了很久的句子。** 方案屏（`frontend/src/trial/mobile/MobilePlanWorkbench.tsx`）在所有地点身份都定好、但方案仍不可选时，只会说一句话：「相邻几站之间还没有可用的转场路线。」它不看服务器给的原因。册廿二日廿三时在同一个栈上重走的三趟把这处抓给了屏幕：
+
+- `trial/results/20261022_v3_human_chrome/walk-57-log.txt:28` —— 出发待办六行，缺的是「票价」和四段「转场路线」，没有一行说地点没定；
+- `trial/results/20261022_v3_human_chrome/walk-57-log.txt:30` —— 屏下那句现在是「这版方案还缺：票价、转场路线。出发待办逐处写着找谁要。」；改前同一屏在同一条件下说的是转场路线那一套（上一代读数是 `trial/results/20261022_v3_human_chrome/walk-55-log.txt:33`，那时身份缺口还在，句子恰好蒙对了一半）。
+
+**改法是一句话只有一个写者。** 新建 `frontend/src/trial/mobile/departureGaps.ts` 作唯一写者：缺项名（具体地点／营业时间／票价／转场路线）＋每项对应的操作句子；出发待办那张卡（`frontend/src/trial/mobile/DraftDepartureCard.tsx`）和方案屏都从它取词，屏幕不再自己想象缺什么。操作句子只允许指向这张卡上真实存在的那个按钮，所以「让 Agent 量这一段路」「让 Agent 找这一处」背后都是屏上按得到的「和 Agent 补齐出发资料」；票价那条不许假装有按钮，只说「没有来源给出这一项的价格」。
+
+**谁阻塞是服务端算的，不是前端猜的。** `backend/app/agent/goal_preparation.py` 每行缺口现在多带一个 `resolution` 码：没地点→`ASK_AGENT_TO_FIND_PLACE`，有地点但来源没答→`ASK_AGENT_FOR_PLACE_FACT`，这段路没量过→`ASK_AGENT_TO_MEASURE_HOP`，票价无人答→`PRICE_HELD_BY_TRAVELLER`。值级断言在 `backend/tests/test_goal_preparation.py::test_every_to_do_line_names_who_holds_the_answer`；方案读回里同一批码也要能看见（同一测试的尾部断言）。
+
+**边界读数（为什么还不能点到 SELECTED→ACTIVE）。** 只读取器 `trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt` 直接调用产品自己的判据，把走查那一趟的候选摊开：
+
+- `departure-price-evidence-probe-1.txt:6` —— `plan_authority_blocker` 给出的阻塞名是 `UNRESOLVED_ACTIVITY_FACTS`，不是"缺身份"；
+- 同一文件第 7 到 12 行（六处已定地点）：每一条都是 `opening_status=VERIFIED_PROVIDER`、`blocks_opening=false`，唯 `blocks_cost=true`；`:13` 是那条没有地点的（就近晚餐、早休，`NO_PLACE_ROW`）；
+- `departure-price-evidence-probe-1.txt:16` —— 这座城市在高德来的 72 条地点里，营业时间已知 56 条，**票价已知 0 条**；`:17` 两样都齐的地点 0 条。
+
+也就是说营业时间那一栏已被真实供应商证据填上（册廿二日廿二时那一刀的效果，屏上也验到），剩下咬死选用门的是"票价没有来源可核"。高德答不出的东西我不会替它填；`show_fields=business` 回来的 `cost` 只出现在餐馆类 POI（`trial/results/20261022_v3_human_chrome/amap-business-fields-1.txt:38` 的 119.00），把它当门票价是造假，所以这一栏留着不接。第二道门在 `backend/app/main.py:18120`：候选没有冻结的移动证据就 409，而这条草案路径本来就不负责冻证据（`backend/app/agent/goal_preparation.py:76` 的 `mobility_frozen` 写死 `False`，落库处 `:233`）——要用既有机器把 Agent 已经真调高德量到的步行段冻成快照，是下一刀，已按裁语立在待办而不是停在"等裁语"。
+
+**同一份裁语要的 UNKNOWN-region 回归也做了，做法与理由都要摊开。** 先把收紧的那一版写出来跑红：两条线索（一条 `region_status=UNKNOWN`，一条根本没有这个字段）都被当成正式地点落库，并盖上本次行程的 city_code——洞是真的。但同一批现读数据反对"直接拒绝"：`trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt` 数完今晚 22 个 canary 库，`amap/MATCHED` 851 条、`photon/UNKNOWN` 126 条，而 `app/region_matching.py:57` 与 `:67` 说明 UNKNOWN 只代表"字段不在或比不了"，不代表"异地"。一刀切会让真人已经拿到的地点退回缺口。所以这刀落的是**披露**：`backend/app/agent/goal_place_identity.py` 写进行踪的 metadata 里带 `region_status`，钉在 `backend/tests/test_qoder_goal_place_identity_r1.py::test_a_promoted_lead_says_on_the_row_whether_its_region_was_ever_checked`（先红后绿：改前那条断言读不到这个字段）。要不要让"没核过地区"的地点失去选用资格，仍是一条需要点名的裁语，我不替权威改语义。
+
+**两枚字面过头的说明也按裁语改了。** `trial/results/20261022_V3_TEN_STEP_PLAYBOOK.md:3` 现在写"真实桌面浏览器的手机视口……**不是物理手机硬件**"；`:43` 的第 10 步改为「刷新之后，选过的那版还在」，`:45` 明写关掉浏览器再打开暂时不能保证找回这趟行程（凭证存在标签页自己的会话里）。
+
+**测试读数（现取现算）。** 解释器 `D:\moodle\CityNexus\.venv\Scripts\python.exe`；`-m pytest tests/test_goal_preparation.py tests/test_qoder_goal_place_identity_r1.py -q`＝18 条通过；放宽到 `-k "goal or amap or preparation or place_identity or departure"`＝211 条通过、2 格红。那两格红不是我今晚造成的，用同一条命令做了对照：把 `goal_place_identity.py`、`goal_amap.py`、`amap_provider.py` 退回册廿二日廿三时第一刀之前的代（`e4d800d6cb`）再跑，仍是同样 2 格红——名字是 `tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select` 的 ARRIVAL／DEPARTURE 两参，拒绝码 `UNRESOLVED_ACTIVITY_FACTS` 且 `unresolved_facts` 为空数组。前端整树 `npx tsc -p tsconfig.typecheck.json --noEmit`＝0 处错误（先跑过 `tsconfig.check.json` 那一版，发现它只圈五枚文件、对我改的文件是假绿，已换全树）。
+
+**量具自曝两处，不遮掩。** 其一：走查脚本的截图名当时写死 `walk55-*`，所以册廿三日零点五十六那一趟把前一趟的画面就地盖掉了，日志 `walk-56-log.txt` 与图 `walk55-*.png` 是同代、和文件名不同代；事后把图另存为 `walk56-*.png` 并对拍（`md5sum` 同名两枚逐位相同），但 `walk56-09-chosen.png` 其实是前一趟那帧（脚本只在按钮出现时才拍那一张，没重写）。从册廿三日十一分那一趟起，截图名改成随 `WALK_SHOT_PREFIX` 走（`walk57-*.png` 与 `walk-57-log.txt` 同代）。其二：我在仓库根留过一枚 0 字节的 `departure_full_walk_r3.mjs` 空壳，已删；正身在 `D:/moodle/_cmdr_v3_port_1022`，`node --check` 通过。
+
+**交付档按裁语要求的四类分开记。** `REAL_BROWSER`＝真人视角走的是本机外部 Chrome/Edge 经 CDP 9335 驱动的真实页面（非预置 API 状态）；`CHROME_USE_SCREENSHOT`＝`walk56-12-departure-after-save.png`、`walk56-13-workbench.png`、`walk57-12-departure-after-save.png`、`walk57-13-workbench.png`（390 宽；430 宽那一档要在选用门真打开之后再补，见下）；`LIVE_PROVIDER`＝高德营业时间与实景照片是当场真调回来的（探针文件里带 http 状态与 provider 字段），票价一栏没有；`USER_VERIFIED`＝**仍是 PENDING**，本机窗口不等于手机在手里的点击。产品代 `6fcbee8845bacd9787815a1e6e420d8ae012e629`（`git ls-remote` 现读回同一枚）。
+
+**还没好在哪，说清楚。** 选用按钮一次都没按到（三趟的 `STEP_13_SELECT_BUTTONS` 都是 0：`walk-55-log.txt:34`、`walk-56-log.txt:30`、`walk-57-log.txt:31`），因为票价没有可核来源、移动证据没人冻；同行决策那块牌子底下依旧没有门；"关掉浏览器再回来找回行程"仍未实现；这些都不靠改断言换绿。
