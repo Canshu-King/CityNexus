@@ -33,6 +33,11 @@ function failureText(error: unknown): string {
 // message, so it is chosen by the server's own `stale` flag rather than by which path wrote the plan.
 function selectionBlocker(plan: PlanVersion): string {
   const rows = Array.isArray(plan.explanation?.unresolved_facts) ? plan.explanation.unresolved_facts as GapRow[] : [];
+  // A plan that has its walking evidence and merely needs re-drawing is the "regenerate" case.  A plan
+  // with no evidence is not out of date -- it was never given the facts selection asks for, and reading
+  // it as "地点信息有更新" sent the traveller to the wrong door (measured: every candidate saved from an
+  // Agent draft is stale for exactly this reason, app/services.py:584).
+  if (plan.stale && plan.mobility_snapshot_id) return "地点信息有更新，请重新生成方案。";
   return missingFactsSentence(rows, Boolean(plan.mobility_snapshot_id));
 }
 
@@ -308,7 +313,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     {plans.map((plan) => <article key={plan.id} className="rev-plan-option" data-testid="rev-plan-option" data-current={plan.is_current === true}>
       <div className="rev-plan-option-heading"><h3>方案 {plan.version_no}</h3>{plan.is_current && <span><Check size={15} aria-hidden="true" />{current?.journey.status === "ACTIVE" ? "正在使用" : "已选用"}</span>}</div>
       {current && <PlanSchedule plan={plan} journey={current.journey} />}
-      {plan.stale ? <p className="rev-plan-gap">地点信息有更新，请重新生成方案。</p> : plan.selectable === false ? <p className="rev-plan-gap">{selectionBlocker(plan)}</p> : plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
+      {plan.stale || plan.selectable === false ? <p className="rev-plan-gap">{selectionBlocker(plan)}</p> : plan.status === "CANDIDATE" && current?.journey.status !== "ACTIVE" && <button type="button" disabled={locked} onClick={() => void write("select", plan)} data-testid="rev-plan-select">{busy === "select" ? "正在选用…" : "选用这份方案"}</button>}
     </article>)}
     {canStart && <div className="rev-plan-start"><p>已选好方案。确认后开始正式行程。</p><button type="button" disabled={locked} onClick={() => void write("start")} data-testid="rev-plan-start">{busy === "start" ? "正在启动…" : "确认方案，开始行程"}</button></div>}
   </section>;

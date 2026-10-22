@@ -24,6 +24,19 @@
 - 附带一道要裁的语义：选用时可行性门把**每一对相邻活动**都当一跳检查，包括隔夜那对（`backend/app/replanning/feasibility.py:973` 到 `:980`，失败码 `INSUFFICIENT_TRAVEL_GAP`）。Agent 的路线工具只会步行量法，隔夜两站之间的"步行时长"在真实行程里没有意义。要么按日切段（同日才查），要么让这跳由别的模式量。这条与门三一起裁。
 - 现读的分母：走通的那几趟里，同一天相邻跳数为 5（`trial/results/20261022_v3_human_chrome/research-routes-in-walked-journey-1.txt`），Agent 当时量到 4 跳；册廿三日十一分的另一趟（`trial/results/20261022_v3_human_chrome/walk-57-log.txt:28`）里待办还写着 4 段「转场路线：让 Agent 量这一段路」，说明这一趟模型没去量。
 
+## 门三之后 · 一件事实在册廿三日十九点五十分补上
+
+只读取器把刚保存的三份草案候选逐条过产品自己的判据（`backend/app/services.py:573` 起的 `_plan_staleness` 与 `plan_authority_blocker`），现读结果：三份全都 `stale=True`，原因是
+`STALE_RECOMPOSE_REQUIRED: no frozen provider evidence`（这句话在 `backend/app/services.py:584`），
+`mobility_snapshot=None`，`blocker=UNRESOLVED_ACTIVITY_FACTS`，`active_plan_version_id` 为 None。
+
+这条读数是修屏上句子的依据：草案候选从写下那一刻起就没有冻结证据，因此它不是"过期"，把屏上那句改成
+「地点信息有更新，请重新生成方案。」会把真人支到错误的门上——让人去重新生成一份同样没有证据的候选。
+屏上现在按载荷本身说话：只有真带着 `mobility_snapshot_id` 又标记为过期的方案才说"重新生成"，其余说清缺哪几项、并补一句「这份候选里没有冻结的步行时间。」
+（`frontend/src/trial/mobile/MobilePlanWorkbench.tsx` 与 `frontend/src/trial/mobile/departureGaps.ts`）。
+
+同一件事也说明门三与门二其实是同一道门的两半：证据齐了才谈得上"过期"，而证据的来源（Agent 量过的跳、可核的票价）现在一个都没有接线。
+
 ## 屏上现在能做到哪一步（三趟真机走查的同代读数）
 
 | 步骤 | 屏上文字 | 出处 |
