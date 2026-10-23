@@ -1,0 +1,22 @@
+..F..........                                                            [100%]
+================================== FAILURES ===================================
+_ test_the_provider_says_a_far_hop_is_out_of_its_range_and_the_transport_door_answers _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014558789700>
+
+    def test_the_provider_says_a_far_hop_is_out_of_its_range_and_the_transport_door_answers(monkeypatch) -> None:
+        # 20803 OVER_DIRECTION_RANGE, measured on 王府井步行街 -> 八达岭长城 while the transit door gave five
+        # routes for the same pair (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2 and :4).
+        # It refused the hop, not the caller, so it opens the second door.
+        row, calls, _session = _run(monkeypatch, walk=_refusal_walk("AMAP_OUT_OF_PROVIDER_RANGE"),
+                                    transit=TRANSIT_OK, task={"amap_region": {"citycode": "010"}})
+>       assert [entry[0] for entry in calls] == ["walking", "transit"]
+E       AssertionError: assert ['walking'] == ['walking', 'transit']
+E         
+E         Right contains one more item: 'transit'
+E         Use -v to get more diff
+
+tests\test_qoder_goal_transit_leg_r1.py:108: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_goal_transit_leg_r1.py::test_the_provider_says_a_far_hop_is_out_of_its_range_and_the_transport_door_answers
+1 failed, 12 passed in 0.89s

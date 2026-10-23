@@ -235,6 +235,13 @@ const HOP_REFUSAL_SENTENCES: Record<string, string> = {
   AMAP_NOT_CONFIGURED: "这台服务还没有配置高德查询。",
   AMAP_NO_ROUTE: "高德说这一段没有步行路线，公共交通也没答上来。",
   AMAP_PROVIDER_REJECTED: "高德说这一段没有步行路线，公共交通也没答上来。",
+  // The provider has its own words for a pair it will not route at all -- infocode 20803
+  // OVER_DIRECTION_RANGE, measured on 什刹海/王府井 one side of 八达岭 while the same door answered an
+  // 800 m hop in the city at the same minute
+  // (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2 against :3).  A hop that far is a
+  // planning fact the traveller can act on -- they can move the stop or take the bus -- so it is not
+  // folded into the generic "no walking route" sentence.
+  AMAP_OUT_OF_PROVIDER_RANGE: "这一段超出地图服务能规划的范围，公共交通也没给出路线；把这一站挪近一点或换成坐车，就能核实。",
 };
 
 const HOP_REFUSAL_FALLBACK = "地图服务没有回答这一段。";

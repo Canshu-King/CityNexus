@@ -1,0 +1,4 @@
+amap_key_present=True run_at=2026-10-23T12:24:34+08:00
+walk 王府井->八达岭 :: {"infocode": "20803", "info": "OVER_DIRECTION_RANGE", "status": "0", "count": null, "route_present": false, "steps": 0}
+walk 故宫->景山 (control) :: {"infocode": "10000", "info": "OK", "status": "1", "count": "1", "route_present": true, "steps": 9}
+transit 王府井->八达岭 :: {"infocode": "10000", "info": "OK", "status": "1", "count": "5", "route_present": true, "steps": 0}

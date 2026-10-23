@@ -56,6 +56,15 @@ _INFOCODE_REASON_CODES = {
     "10041": "AMAP_SERVICE_PERMISSION_DENIED",
     "20011": "AMAP_SERVICE_PERMISSION_DENIED",
     "40002": "AMAP_SERVICE_PERMISSION_DENIED",
+    # The provider's own words for "this pair is beyond what I will route".  Measured, not inferred:
+    # walking 王府井步行街 -> 八达岭长城 (about 45 km) comes back infocode 20803 OVER_DIRECTION_RANGE,
+    # an 800 m hop in the same city comes back OK at the same minute, and the transit door answers that
+    # very same pair with five routes
+    # (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2, :3 and :4, read 2026-10-23
+    # 12:24 +08).  Until now 20803 fell into the catch-all AMAP_PROVIDER_REJECTED, so the traveller was
+    # told 这一段没有步行路线 -- a weaker sentence than the one the source actually said, and a sentence
+    # that hides the reason a bus answer exists for the same pair.
+    "20803": "AMAP_OUT_OF_PROVIDER_RANGE",
 }
 
 

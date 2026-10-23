@@ -99,6 +99,16 @@ def test_a_hop_nobody_walks_is_asked_of_the_transport_door_and_named_for_it(monk
     assert row["id"] == str(session.rows[1].id) != str(session.rows[0].id)
 
 
+def test_the_provider_says_a_far_hop_is_out_of_its_range_and_the_transport_door_answers(monkeypatch) -> None:
+    # 20803 OVER_DIRECTION_RANGE, measured on 王府井步行街 -> 八达岭长城 while the transit door gave five
+    # routes for the same pair (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2 and :4).
+    # It refused the hop, not the caller, so it opens the second door.
+    row, calls, _session = _run(monkeypatch, walk=_refusal_walk("AMAP_OUT_OF_PROVIDER_RANGE"),
+                                transit=TRANSIT_OK, task={"amap_region": {"citycode": "010"}})
+    assert [entry[0] for entry in calls] == ["walking", "transit"]
+    assert row is not None and row["mode"] == "TRANSIT"
+
+
 def test_the_hour_asked_is_the_hour_the_traveller_arrives(monkeypatch) -> None:
     row, calls, _session = _run(monkeypatch, walk=WALK_REFUSED, transit=TRANSIT_OK,
                                 task={"amap_region": {"citycode": "010"}})

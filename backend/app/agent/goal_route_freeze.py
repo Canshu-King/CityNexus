@@ -154,7 +154,14 @@ def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | N
 # own walk hit AMAP_QUOTA_EXCEEDED at 00:16 and needed a minute to recover).  So the transit arm opens
 # for the refusals below and for nothing else.
 
-_TRANSIT_ANSWERABLE_REFUSALS = frozenset({"AMAP_NO_ROUTE", "AMAP_PROVIDER_REJECTED"})
+_TRANSIT_ANSWERABLE_REFUSALS = frozenset({"AMAP_NO_ROUTE", "AMAP_PROVIDER_REJECTED",
+                                          # "This pair is outside the range I route" -- the provider's own
+                                          # infocode 20803, measured on 王府井步行街 -> 八达岭长城 while
+                                          # the transit door answered it with five routes
+                                          # (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2
+                                          # against :4).  It names the hop, so it belongs with the content
+                                          # refusals, not with the access ones.
+                                          "AMAP_OUT_OF_PROVIDER_RANGE"})
 
 
 def _refusal_key(origin: Place, destination: Place) -> str:

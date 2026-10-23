@@ -379,6 +379,10 @@ def test_provider_infocodes_map_to_stable_key_quota_and_permission_codes() -> No
         "10001": "AMAP_INVALID_KEY",
         "10003": "AMAP_QUOTA_EXCEEDED",
         "10012": "AMAP_SERVICE_PERMISSION_DENIED",
+        # Measured, not guessed: walking 王府井步行街 -> 八达岭长城 answered this code while an 800 m
+        # hop in the same city answered OK at the same minute
+        # (trial/results/20261022_v3_human_chrome/amap-quota-vs-qps-1.txt:2 and :3).
+        "20803": "AMAP_OUT_OF_PROVIDER_RANGE",
         "77777": "AMAP_PROVIDER_REJECTED",
     }
     for infocode, expected_code in cases.items():
