@@ -39,7 +39,36 @@
 | 用户确认方案 | 确认门：Idempotency-Key + 授权；未确认只留提案 | `backend/app/agent/gateway.py:41`、`:358` |
 | 保存并留下审计 | 域服务写入 + audit + receipt；SQLite 60 张表 | `backend/app/db/models.py:562`（audit_logs） |
 
-## 三、图上出现过的每个数字是怎么来的
+## 三、Teacher_03 的中文任务名对照（16 行）
+
+老师看到的任务名是中文，计划基准里是英文。**同一行的展示名**，不是新任务：
+日期、工期、完成度、工时、成本全部照抄原行，英文原名与 WBS 写进该行备注，
+重开后按中文名逐行匹配核对（每名恰好一行、日期相同）。
+
+| # | 图上中文名 | 计划基准原行名 | WBS |
+|---|---|---|---|
+| 1 | 选题与开题 | 1  Coursework initiation and project selection | 1 |
+| 2 | 需求工程 | 2  Requirements engineering | 2 |
+| 3 | 系统设计与架构 | 3  System design and architecture | 3 |
+| 4 | 后端平台与数据层 | 4  Backend platform and data layer | 4 |
+| 5 | 地图与地点数据接入 | 5  Map and place data integration | 5 |
+| 6 | AI Agent 与 Hermes 能力 | 6  AI agent and Hermes capability | 6 |
+| 7 | 前端界面与交互 | 7  Frontend UI and interaction | 7 |
+| 8 | 集成与联调 | 8  Integration and consolidation | 8 |
+| 9 | 验证与缺陷管理 | 9  Verification and defect management | 9 |
+| 10 | 课程交付物与汇报 | 10  Coursework deliverables and reporting | 10 |
+| 11 | 最终验收、文档与交付 | 11  Final acceptance, documentation and delivery | 11 |
+| 12 | M10 Part 1 截止 10-02（已错过） | M10  Part 1 course deadline (contract 2026-10-02, missed) | 10.5 |
+| 13 | M9 系统测试就绪（计划目标） | M9  System test ready (plan target) | 9.7 |
+| 14 | M11 中期师生检查 10-23 中午 | M11  Mid-term teacher review (scheduled 2026-10-23 noon) | 10.6 |
+| 15 | M12 Part 2 截止 11-06 | M12  Part 2 course deadline (contract 2026-11-06) | 10.7 |
+| 16 | M13 课程交付完成（计划） | M13  Coursework delivery (plan) | 11.3 |
+
+里程碑的**截止日**（Deadline 字段）与计划日不同，这是刻意的：M10 行日期 9-29、
+合同截止 10-02、状态"已错过"；M12 行日期 10-23、合同截止 11-06。两者都显示在任务表里，
+语义分层写在 `Evidence/STATUS_AND_OVERDUE.md`。
+
+## 四、图上出现过的每个数字是怎么来的
 
 | 数字 | 命令（在工作树根目录执行） | 2026-10-23 实测 |
 |---|---|---|
@@ -53,7 +82,7 @@
 同一批数字在 `Evidence/SOURCE_MAPPING.md` 里有一份覆盖全部四张取证图的总表；
 本表只覆盖课堂版这两张。
 
-## 四、要看"带行号的取证版"去哪里
+## 五、要看"带行号的取证版"去哪里
 
 | 课堂版 | 取证版（每个框正文里带 `文件:行号`） |
 |---|---|
