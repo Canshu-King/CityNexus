@@ -1125,3 +1125,31 @@ walk-97 没走到选用那道门，walk-98 这一趟草案保存顺当（`walk-9
 还缺的是一张屏。walk-99 用一条能瞄准它的走法去补：把旅客自己那一行的时间改成凌晨三到四点（真输入框、同一天、不塞数据），
 再按一次选用——量具那一格是 `departure_full_walk_r22.mjs` 的 `STEP_13A_PROVE_CLOSED`。
 USER_VERIFIED 仍是 PENDING。
+
+## 廿四、两点二十分：把四个标签页逐个点名之后，两件事第一次有了屏上证词
+
+**先承认尺不够。** 同一个自动化 profile 里四趟走查各留一个标签页，读数取"最后一个页面"根本说不清那是谁的屏。
+补了一把只点名的尺：`trial/human_walk/tab_provenance_r1.mjs`，逐页打印该页自己的 localStorage 指针、
+这一页有没有凭证、屏上第一句是什么（读数 `trial/results/20261022_v3_human_chrome/tab-provenance-1.txt:1` 起，共四页）。
+
+**证词一：「旧行程无法恢复，原记录仍保存在服务器。」确实会出现在屏上，而且旁边就有一条出路。**
+`trial/results/20261022_v3_human_chrome/tab-provenance-1.txt:13` 那一页 `HAS_WIZARD=true HAS_NO_RESTORE=true`，
+图证 `trial/results/20261022_v3_human_chrome/walk99-stalled-screen.png`：向导下方一条红带写着那句，
+再下面一颗蓝按钮「用新行程继续」。
+这条不是假话也不是死路——它说的是"当前这个登录读不到那趟"，并给了下一步；
+它同时是前面那棒交的 P1（凭证在 sessionStorage，换标签页就没有登录态）第一次拿到屏上照片。
+成因仍归到 `frontend/src/trial/RevolutionFirstLook.tsx:496` 的所有者核对（不是那条 409 读，见第廿二节末）。
+
+**证词二：这一晚模型把一份草案想了七八分钟，而我的走查预算是六分钟。**
+walk-99 的流水停在 `WAIT_360s busy=false`（`trial/results/20261022_v3_human_chrome/walk-99-log.txt:13`）之后被我停掉；
+停掉之后两分钟去点名，同一个 journey（`8d8d596d-…`）那一页 `DRAFT_SLOTS=8`、屏上写「已有阶段性成果 已整理 2 天 · 8 项安排」
+（`trial/results/20261022_v3_human_chrome/tab-provenance-1.txt:10`）。也就是说门后头是通的，只是慢；
+**慢不是产品说谎，但我的仪表等不到它**：下一趟这类走查要把研究那一段的等待放到十分钟以上，
+或者在服务端仍被 `200` 轮询时别报 `busy=false`（这是量具的话，不是产品结论，所以先记不修）。
+
+**PLACE_CLOSED 的屏上 AFTER 仍然欠着。** 我试过不重跑一趟、直接在还活着的草案页上把那一行改成凌晨三点再按门，
+尺是 `trial/human_walk/press_the_door_r1.mjs`；两分钟之间那一页的八格草案已经不见了（四页现读 slots 全为零，
+`trial/results/20261022_v3_human_chrome/press-the-door-1.txt:1` 起），脚本按规矩报 `NO_TAB_WITH_DRAFT` 就停手
+（同文件 `:5`），没有去伪造状态。所以这一格现在手上是：闸那一行的形状、真模块在浏览器里的逐臂读数、
+walk-94 那张 BEFORE 图；一张 AFTER 图留给下一趟。
+USER_VERIFIED 仍是 PENDING。
