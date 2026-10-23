@@ -10,10 +10,8 @@
  */
 
 export type SimulationStageCopyKey =
-  | "noScenarioOnStage"
   | "cursorStillReading"
   | "executingButCursorEmpty"
-  | "noActivePlanForReplan"
   | "activityStatusStillReading"
   | "cursorOffPlanList"
   | "cityStillReading"
@@ -37,10 +35,8 @@ export type SimulationStageCopyKey =
   | "previousActionStillRunning";
 
 const COPY: Record<SimulationStageCopyKey, { zh: string; en: string }> = {
-  noScenarioOnStage: { zh: "台上没有场景：服务器回的是 NO_SCENARIO。先在产品里建一趟行程，或按下面的重置播一个演示场景。", en: "There is no scenario on stage (the server answered NO_SCENARIO). Create a trip in the product, or re-seed one below." },
   cursorStillReading: { zh: "服务器游标还在读，读完才知道有没有可推进的活动。", en: "The server cursor is still being read." },
   executingButCursorEmpty: { zh: "服务器说这趟在执行中，但游标是空的（没有任何活动在进行），所以这一步没有可推进的位置。", en: "The server says the journey is executing but the cursor is empty (no activity is in progress), so there is no position to advance from." },
-  noActivePlanForReplan: { zh: "这趟还没有 ACTIVE 计划（服务器没返回计划版本），重规划需要它。", en: "No ACTIVE plan on this journey (the server returned no plan version), and a replan needs one." },
   activityStatusStillReading: { zh: "还在读这份计划里当前活动的状态。", en: "The current activity's status is still being read." },
   cursorOffPlanList: { zh: "服务器给的当前活动不在这份计划的清单里，所以没有可执行的下一步。", en: "The cursor points at an activity that is not on this plan, so there is no next step to offer." },
   cityStillReading: { zh: "还在读这趟行程属于哪座城。", en: "The journey's city is still being read." },
@@ -75,3 +71,10 @@ export function simulationStageCopy(locale: string, key: SimulationStageCopyKey)
   const arms = COPY[key];
   return locale.startsWith("zh") ? arms.zh : arms.en;
 }
+
+/* Two of the 25 static bilingual pairs measured in SimulationPanel.tsx stayed inline: the sentences
+ * that name the server's own enums NO_SCENARIO and ACTIVE.  codes_on_screen_gate_r4 refuses a
+ * *newly written* rendered line carrying a raw server enum, and rewording those two would change
+ * what a traveller reads -- a copy ruling this lane does not take on its own.  The gate's verdict
+ * and both sentences are recorded in the ledger block for this cell (lane 1d64acf5).
+ */

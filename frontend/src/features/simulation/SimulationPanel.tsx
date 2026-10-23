@@ -204,7 +204,8 @@ export function SimulationPanel({
   const noJourney =
     !notReady && !journeyId
       ? {
-          ...simulationStagePair("noScenarioOnStage"),
+          zh: "台上没有场景：服务器回的是 NO_SCENARIO。先在产品里建一趟行程，或按下面的重置播一个演示场景。",
+          en: "There is no scenario on stage (the server answered NO_SCENARIO). Create a trip in the product, or re-seed one below.",
         }
       : null;
   const cursorless = twin.isPending
@@ -230,7 +231,8 @@ export function SimulationPanel({
       ? noJourney
       : !twin.data?.active_plan_version_id
         ? {
-            ...simulationStagePair("noActivePlanForReplan"),
+            zh: "这趟还没有 ACTIVE 计划（服务器没返回计划版本），重规划需要它。",
+            en: "No ACTIVE plan on this journey (the server returned no plan version), and a replan needs one.",
           }
         : null;
 

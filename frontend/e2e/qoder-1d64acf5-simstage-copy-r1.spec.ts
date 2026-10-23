@@ -7,32 +7,32 @@ import type { SimulationStageCopyKey } from "../src/i18n/simulationStageCopy";
 
 /* 模拟舞台内联双语迁移的反控臂（车道 1d64acf5）。
  *
- * 这 25 句「按钮名 / 这一步为什么按不动」原先成对写死在 `SimulationPanel.tsx` 里，屏上按
- * `locale.startsWith("zh")` 挑一臂。本单把字面量搬进本车道自己的字典
- * `src/i18n/simulationStageCopy.ts`，一个字母都没改，选择逻辑也仍留在组件里。
+ * 本格测得 `SimulationPanel.tsx` 里有 25 枚「静态中英对」，搬进本车道字典
+ * `src/i18n/simulationStageCopy.ts` 的是其中 23 枚，字面量一个都没改，选臂的
+ * `locale.startsWith("zh")` 规则也仍留在组件里。剩下 2 枚原样不动：屏读代码门
+ * `codes_on_screen_gate_r4.py` 拒绝**候选新写的**渲染行里出现服务器枚举原名
+ * （父提 :206 的 NO_SCENARIO、父提 :235 的 ACTIVE），要给它们换成人话就改动屏上的字，
+ * 那是文案裁语，不由本车道单方定；下面第 5 条把这两枚的分母钉住，不让它们被忘掉。
  *
  * 为什么这枚臂会真的咬：
  *   1) 它**调用**字典函数取词，不是比对字符串是否存在——表里任何一条被删或被改，那一行就红；
- *   2) 它同时回读组件源码，要求这 25 句不再以 `zh: "…",` 成对内联形状出现在
- *      `SimulationPanel.tsx` 里——把改动 revert（词表回到组件内），第 4、5、6 条就红；
+ *   2) 它回读组件源码，要求这 23 句不再以 `zh: "…",` 成对内联形状出现——把改动 revert 就红；
  *   3) 分母写死在表里：少一枚 `EXPECTED.length` 先红，不会出现「零条断言也算过」。
  *
- * 第 4 条为什么只钉「成对内联形状」而不是「文件里不许出现这句话」：本臂第一次真跑就抓到
- * rowReplan 那句「请求重规划」仍以被引用的形式嵌在两句带插值的长文案里（同文件 :334 与 :374，
- * 形如 请用下面「请求重规划」）。那两枚是**带 ${} 插值的另一族**，不在本格 25 枚的分母里；
- * 它们把按钮名硬写在散文里，名字一改就会说假话——这一格不扩半径，只把这个耦合点名记下来。
+ * 本臂第一次真跑就红过一次，成因现读、不藏：`rowReplan` 那句「请求重规划」只有五个字，它
+ * 仍以被引用的形式嵌在两句带插值的长文案里（同文件 :334 与 :374，形如 请用下面「请求重规划」）。
+ * 那两枚属带 `${}` 插值的另一族，不在本格 25 枚的分母里；它们把按钮名硬写进散文，名字一改
+ * 就会说假话。本格不扩半径，只把这个耦合点名记下来。
  */
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FRONTEND = resolve(HERE, "..");
 const PANEL = join(FRONTEND, "src", "features", "simulation", "SimulationPanel.tsx");
 
-/** 键名 -> 迁移前屏上就有的那两句，逐字抄自父提的组件源码，不许改。 */
+/** 键名 -> 迁移前屏上就有的那两句，逐字取自父提的组件源码，不许改。 */
 const EXPECTED: Array<{ key: SimulationStageCopyKey; zh: string; en: string }> = [
-  { key: "noScenarioOnStage", zh: "台上没有场景：服务器回的是 NO_SCENARIO。先在产品里建一趟行程，或按下面的重置播一个演示场景。", en: "There is no scenario on stage (the server answered NO_SCENARIO). Create a trip in the product, or re-seed one below." },
   { key: "cursorStillReading", zh: "服务器游标还在读，读完才知道有没有可推进的活动。", en: "The server cursor is still being read." },
   { key: "executingButCursorEmpty", zh: "服务器说这趟在执行中，但游标是空的（没有任何活动在进行），所以这一步没有可推进的位置。", en: "The server says the journey is executing but the cursor is empty (no activity is in progress), so there is no position to advance from." },
-  { key: "noActivePlanForReplan", zh: "这趟还没有 ACTIVE 计划（服务器没返回计划版本），重规划需要它。", en: "No ACTIVE plan on this journey (the server returned no plan version), and a replan needs one." },
   { key: "activityStatusStillReading", zh: "还在读这份计划里当前活动的状态。", en: "The current activity's status is still being read." },
   { key: "cursorOffPlanList", zh: "服务器给的当前活动不在这份计划的清单里，所以没有可执行的下一步。", en: "The cursor points at an activity that is not on this plan, so there is no next step to offer." },
   { key: "cityStillReading", zh: "还在读这趟行程属于哪座城。", en: "The journey's city is still being read." },
@@ -56,9 +56,12 @@ const EXPECTED: Array<{ key: SimulationStageCopyKey; zh: string; en: string }> =
   { key: "previousActionStillRunning", zh: "上一个动作还没回来。", en: "The previous action is still running." },
 ];
 
-const panel = readFileSync(PANEL, "utf-8");test("分母：这 25 枚是这一格的完整清单，且两臂都非空", () => {
-  expect(EXPECTED.length).toBe(25);
-  expect(new Set(EXPECTED.map((x) => x.key)).size).toBe(25);
+const panel = readFileSync(PANEL, "utf-8");
+const INLINE_SHAPE = /^\s*(?:zh|en): "/gm;
+
+test("分母：这 23 枚是这一格搬走的完整清单，且两臂都非空", () => {
+  expect(EXPECTED.length).toBe(23);
+  expect(new Set(EXPECTED.map((x) => x.key)).size).toBe(23);
   for (const x of EXPECTED) {
     const arms = simulationStagePair(x.key);
     expect(arms.zh.length).toBeGreaterThan(0);
@@ -82,21 +85,27 @@ test("选臂规则没动：zh 前缀取中文，其余一律取英文", () => {
   }
 });
 
-test("反控：这 25 句不再以内联成对的形状留在组件源码里", () => {
+test("反控：这 23 句不再以内联成对的形状留在组件源码里", () => {
   for (const x of EXPECTED) {
     expect(panel.includes(`zh: "${x.zh}",`)).toBe(false);
     expect(panel.includes(`en: "${x.en}",`)).toBe(false);
   }
 });
 
-test("反控：组件里已经没有静态中英对内形状", () => {
-  expect(panel.match(/^\s*zh: "/gm)).toBeNull();
+test("反控：组件里剩下的成对内联形状就是被门拒的那两枚，没多也没少", () => {
+  expect(panel.match(INLINE_SHAPE)).not.toBeNull();
+  expect((panel.match(INLINE_SHAPE) ?? []).length).toBe(4);
+  const left = panel.match(/^\s*(zh|en): "(.*)",$/gm) ?? [];
+  for (const line of left) {
+    const text = line.replace(/^\s*(zh|en): "/, "").replace(/",$/, "");
+    expect(EXPECTED.some((x) => x.zh === text || x.en === text)).toBe(false);
+  }
 });
 
 test("组件确实改成走字典通道（不是删掉了事）", () => {
   expect(panel.includes('import { simulationStagePair } from "../../i18n/simulationStageCopy";')).toBe(true);
   const calls = panel.match(/\.\.\.simulationStagePair\("([A-Za-z0-9_]+)"\)/g) ?? [];
-  expect(calls.length).toBe(25);
+  expect(calls.length).toBe(23);
   for (const x of EXPECTED) {
     expect(calls.filter((c) => c.includes(`"${x.key}"`)).length).toBe(1);
   }
