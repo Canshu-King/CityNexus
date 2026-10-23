@@ -1,0 +1,7 @@
+现取现读 2026-10-22 09:35（权威现尖 2f9fc88d22658fea9f80f69218aa3fcdc301f692）
+命令1: awk 'NR<=260 && /扫街工/ {print NR": |" $0}' D:/moodle/CITYNEXUS_AGENT_CONTROL.md | wc -l
+结果: 0
+命令2: git -C D:/moodle/CityNexus show 2f9fc88d22658fea9f80f69218aa3fcdc301f692:frontend/src/styles.css > scratch_tip/styles.css
+结果: 规则级尺在这份现尖文件上报的命中条数 = 规则数(含命中)=186 命中条数=221 解析出的规则总数=968
+命令3: 同一把尺在我枝尖那份上（对照）
+规则数(含命中)=199 命中条数=239 解析出的规则总数=1008

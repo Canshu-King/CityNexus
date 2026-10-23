@@ -1,0 +1,22 @@
+=== 三枚面板源码里的类名数: 109 ===
+=== styles.css 里这一屏走得到的逃逸口: 5 枚，分布在 4 条规则 ===
+
+[v8-boundary-card]  出处: features/discovery/RealCityDiscoveryPanel.tsx:580
+   SEL .v8-boundary-card   (命中的分支: .v8-boundary-card)
+      styles.css:181   浅底字面量                  background       = #f6f3ff  [#f6f3ff L=0.909]
+   SEL .v8-boundary-card p   (命中的分支: .v8-boundary-card p)
+      styles.css:181   深字字面量                  color            = #786d99  [#786d99 L=0.172]
+
+[v8-message]  出处: features/discovery/RealCityDiscoveryPanel.tsx:398, features/discovery/RealCityDiscoveryPanel.tsx:561
+   SEL .v8-message   (命中的分支: .v8-message)
+      styles.css:183   深字字面量                  color            = #8e5f32  [#8e5f32 L=0.142]
+      styles.css:183   浅底字面量                  background       = #fffaf4  [#fffaf4 L=0.962]
+
+[v8-status-pill]  出处: features/discovery/RealCityDiscoveryPanel.tsx:422
+   SEL .v8-status-pill.violet   (命中的分支: .v8-status-pill.violet)
+      styles.css:175   浅底字面量                  background       = #f3efff  [#f3efff L=0.880]
+
+=== 负对照：有同名类、但整条分支不在这一屏上的规则（本单不收，逐枚列名）===
+   收了没? NO  SEL .v8-booking-card.selected   缺的类名: v8-booking-card   命中行: 340
+   收了没? NO  SEL .v8-selected-label.neutral   缺的类名: neutral   命中行: 340,340
+   收了没? NO  SEL .v15-copilot-suggestions .v8-outline-button   缺的类名: v15-copilot-suggestions   命中行: 548

@@ -1,0 +1,161 @@
+WP-A 城市探索屏 · 表面字面量清扫（styles.css 六枚物理行，12 处声明）
+
+基线枝：review/cmdr-pulse-pass1-1016 尖 5918ccfe4aae037b86b1ff90eea866ed01706dfb
+（必须坐在脉搏层上：--cn-elev-* / --cn-on-elev-* 这一对契约令牌只在 cn-pulse.css 里声明，
+ 权威尖 eeb8b8d2 上没有这对令牌，映射无处可取。）
+
+屏的边界（可核对，不是形容词）：app/v8PanelRegistry.tsx 里 `when: (s) => s.route === "discover"`
+注册了三枚面板——DestinationPreparationPanel、RealCityDiscoveryPanel、CollectionPanel。
+本单只收「这三枚面板源码里出现的类名，且整条逗号分支的类名全在屏内」的规则；
+分支里有屏外类名的一律不收，负对照逐枚列在尺的输出里：
+  .v8-booking-card.selected            缺 v8-booking-card      （票夹，不是这屏）
+  .v8-selected-label.neutral           缺 neutral              （只在 app/V8Experience.tsx:4630 出现）
+  .v15-copilot-suggestions .v8-outline-button  缺 v15-copilot-suggestions（Copilot 停靠坞）
+
+量具：_cmdr_escape_hatch_scan_r2.py 原样（判据＝WCAG 相对亮度，浅底>0.72 / 深字<0.22 / var() 死兜底）
+      + 我自己写的规则级副本 _saojie_rule_scan_r1.py（同一套阈值，逐条对拍：两把尺在改前都报 265 枚）。
+改前 styles.css 265 枚 / 全树 284 枚；改后 styles.css 253 枚 / 全树 272 枚；这一屏 17 枚 → 5 枚。
+
+逐枚（行号未动：全部是同行等值替换，行数保持 1962，所以前后可以按行直接比）
+
+styles.css:175 .v8-status-pill
+  background: #effaf5（L=0.933 浅底字面量）→ var(--cn-elev-1)
+  color: var(--v8-green) → var(--cn-success-text)      ← 配套，见下面「墨也换了两枚」
+  亮色观感：底从淡绿纸换成契约白纸 elev-1（#ffffff），实测这枚小牌的字/底比 4.12→6.96；
+  #effaf5 与 #ffffff 的相对亮度差 0.067，在同一张白卡（.v8-trip-hero 的 --v8-panel）上
+  原本就只有一层几乎不可辨的绿味，换成契约纸后那层绿味由墨色（#17672f 深一档的绿）承担。
+  暗色：styles.css 的这一枚本来被 design-tokens.css:833 的 `!important` 覆盖，
+  改前改后暗色渲染逐字相同（底 rgba(48,209,88,.16)／字 #7bd88f），所以暗色不可能被我改坏。
+
+styles.css:175 .v8-status-pill.violet
+  不收，交裁语。它的墨 --v8-violet(#8063d7) 只在 styles.css:127 的 :root 定义过一次，
+  design-tokens.css 没有给它暗色值 ⇒ 是个主题常量。单独换纸的现读结果：
+  elev-1 亮 4.48／暗 3.79，elev-2 亮 4.42／暗 3.37——两档都比现状（亮 3.97／暗 3.97）在暗色更低。
+  也就是「把纸收进契约」会让它更看不清。这枚要先有一枚随主题走的紫（WP-C 的 §8 四字段那类），
+  不是我这一屏能定的颜色，所以留着不动，逐枚报出来。
+
+styles.css:179 .v8-evidence-label   ← 四把门里唯一被现读量成红的两格就在这枚上
+  border: 1px solid #dcefe7 → 1px solid var(--cn-rule)   ← 配套，理由见下
+  color: var(--v8-green) → var(--cn-success-text)        ← 配套
+  background: #f7fcfa（L=0.963 浅底字面量）→ var(--cn-elev-1)
+  现读（review/ord0509/run/collections.*.json，qoder-ord0509-contrast-screens）：
+    亮 text-contrast 4.24 → 消失；暗 text-contrast 1.95 → 消失；暗 light-surface 1 格 → 消失。
+    计算值：亮 6.96／暗 8.42，门槛 4.5。
+  亮色观感：#f7fcfa→#ffffff 差 0.037 亮度，仍是一张白纸上的绿色小牌；描边由淡绿发丝
+  变成契约发丝（亮色合成后约 #e6e5e4），与它坐着的白卡之间的界线还在，只是不再是绿的。
+  为什么连 border 也动：这把尺看不见 `border:` 简写（它只读 color/fill/border-color/background），
+  #dcefe7 是一枚为 #f7fcfa 那张纸调的淡绿；纸进了契约而边留在亮色，暗色里就是一圈发光的白边——
+  那是我这个改动自己造出来的新缺陷，所以按同一条判据手工收进来。
+
+styles.css:179 .v8-stay-card
+  background: #fff → var(--cn-elev-1)
+  亮色观感：#fff 与 --cn-elev-1 在亮色就是同一个字节 #ffffff，亮色逐像素不变。
+  暗色：原来是一块白卡坐在黑底上（暗色合成后自身亮度 1.000 > 0.82，正是 light-surface
+  那判据抓的东西；填充对底 21.00），现在回到 elev-1。卡内 p 的 #818c9d 是一枚主题常量
+  （L=0.259，这把尺不报它），它在白纸上是 3.40、在 elev-1 暗纸上是 5.00 —— 亮色那一档我没动
+  （它本来就低于 4.5，归下一屏的墨色清扫），暗色因为纸回了契约而变好。
+  这枚没有 !important 兜着，所以是真生效。
+
+styles.css:179 .v8-selected-label
+  background: #effaf5 → var(--cn-elev-1)；color: var(--v8-green) → var(--cn-success-text)
+  同 .v8-status-pill 的一对，差别只在它没有 design-tokens 的 !important 兜着，
+  所以暗色是真的从 1.89（绿字坐在淡绿纸上）变成 8.42。现读：亮 4.12→6.96。
+
+styles.css:179 .v8-stay-impact b, .v8-stay-impact em
+  color: #68758a（L=0.175 深字字面量）→ var(--cn-on-elev-1-muted)
+  background: #f3f4f7（L=0.905 浅底字面量）→ var(--cn-elev-2)
+  亮色观感：小牌由冷灰蓝纸+冷灰蓝墨（4.24）变成暖白纸+暖灰墨（6.37）；同一张卡上的
+  「次要标签」家族里，--cn-elev-2/#605e5a 就是契约给「纸上次级文字」的那一对。
+  暗色：4.24→6.83，且 light-surface 那格不再成立。
+  design-tokens.css:843 的 !important 只管 em 一支，所以 b 一支的暗色这次是真的换了。
+
+styles.css:179 .v8-stay-impact em
+  background: #eff1ff（L=0.885）→ var(--cn-elev-3)；color: var(--cn-accent-text) → var(--cn-link)
+  层级不许倒：兄弟 b 现在是 elev-2，em 是「强调」那一枚，所以取 ladder 上更高一档的 elev-3
+  （暗 #323235 比 elev-2 的 #262628 更抬起），没有把它压回白纸。
+  为什么连墨也动：纸进契约后 --cn-accent-text 在暗色只剩 3.50（<4.5）。--cn-link 在亮色
+  就是 --cn-accent-text 的同一个值（#0a5cd6，design-tokens.css:40 写的是 var(--cn-accent-text)），
+  亮色逐字不变；暗色它是专门给暗纸准备的浅一档蓝（#4da3ff），比 3.50→4.87。
+  暗色渲染本身还被 design-tokens.css:843 的 !important（accent 实底 + canvas 字）压着，
+  所以这枚的暗色观感本次不变，变的只有亮色那张淡紫纸→白纸。
+
+styles.css:181 .v8-intel-facts > div
+  background: #fff → var(--cn-elev-1)；亮色逐字节相同（#ffffff→#ffffff），只收暗色那块白纸
+  （暗色 light-surface 成立，填充对底 21.00）。卡内 small 的 #8691a0（L=0.279，这尺不报它）
+  由白纸上 3.20 变成 elev-1 上 5.32；b 支的 --v8-green 本来就跟着主题走。
+
+styles.css:181 .v8-twin-card, .v8-boundary-card
+  background: #fff → var(--cn-elev-1)；同上，亮色不变。
+  共享说明：这一条分支的 .v8-twin-card 属于旅行孪生面板（features/traveler-twin/TwinPanel.tsx），
+  它和 .v8-boundary-card 同一条声明，摘不开；它拿到的也是「亮色逐字不变／暗色回契约」。
+  孪生卡内的两枚主题常量小字一并变好：p 的 #8b95a3 3.03→5.61，small 的 #9aa3b0 2.55→6.68。
+  .v8-boundary-card 自己的 #f6f3ff 在它之后覆盖，所以这条改动对 boundary-card 的渲染没有生效。
+
+styles.css:181 .v8-boundary-card / .v8-boundary-card p
+  不收，交裁语，理由与 .v8-status-pill.violet 同一条：它的墨 --v8-violet 是主题常量。
+  而且这两支必须一起看——若只把 p 的 #786d99 换成主题墨，纸还是字面量淡紫，
+  暗色就变成「浅墨坐在纸上」的正负反转，比现在更糟（§2 第 1 条）。
+  现状现读：span/ p 支 4.10（本来就低于 4.5），换 elev-1 后暗色 3.79。
+
+styles.css:183 .v8-message
+  不收，交裁语。#8e5f32 + #fffaf4 + border #f0d1b5 是三枚一组自洽的琥珀通知条
+  （底和墨都是字面量，主题一翻它们一起翻，所以暗色没有正负反转，只有 light-surface 一格）。
+  按 WP-A 的映射只能把它整组换成白纸+次级墨（现读 5.28→6.37/6.83，两档都过），
+  但那等于取消这屏唯一的「这是条通知」的颜色语义，而且 .v8-message 被 7 枚组件共用
+  （含 app/V8Experience.tsx）。它需要的是「通知底色/通知墨」成对令牌，不是 elevation 纸。
+
+styles.css:189 与 styles.css:349 .v8-lede（两处，同一条声明）
+  color: #5f6c80（L=0.147 深字字面量）→ var(--cn-on-elev-0-muted)
+  这枚只有墨是字面量，底跟着主题走（脉搏层 cn-pulse.css 把壳坐到 --cn-paper #f7f5f2 = elev-0）。
+  亮色：#5f6c80（冷灰蓝）→ #5d5b57（暖灰），比 4.89→6.22；同一块纸上的次要说明文字，
+  脉搏层已经把纸换成暖纸，墨留在冷灰就是「纸暖墨冷」的错位，这次对齐。
+  暗色：3.94（低于 4.5）→ 10.08；实际渲染还被 design-tokens.css:855 的 !important 压着，
+  所以暗色本次不变，兜底摘掉后才归令牌说。
+  两行都改：349 在 189 之后，只改 189 等于没改。
+
+styles.css:1490 .role-alert
+  color: #b03a3a（L=0.126 深字字面量）→ var(--cn-danger)
+  这枚没有自己的底（底继承），所以「配对的墨」就是危险色的主题令牌。
+  亮色：#b03a3a→#d70015，比 5.49→4.94（仍在 4.5 上），红得更亮一点、更饱和一点——
+  这是唯一一枚亮色肉眼能看出差别的，我把它单独报出来供点单时否掉。
+  暗色：3.51→6.16；同样被 design-tokens.css:925 的 !important（#ff6961）压着，本次渲染不变。
+  共用说明：.role-alert 还被 LiveRecovery / HotelsPanel / V8Experience 用着（各条现读见回执）。
+
+墨也换了两枚（超出「只换字面量」的四枚，逐枚点名）
+  .v8-status-pill / .v8-evidence-label / .v8-selected-label：--v8-green → --cn-success-text
+  .v8-stay-impact em：--cn-accent-text → --cn-link
+  理由只有一条可核对的判据：把它们坐在 elev-1/elev-3 上的现读比值摆出来——
+  只换纸不换墨时，前三枚是 4.40/4.40/4.40（都差 0.1 才到 4.5 地板，仍然红），
+  em 那枚在暗色是 3.50；换成配对的「文字」令牌后是 6.96/6.96/6.96 与 4.87，全部在门槛上。
+  --cn-success 是标记色、--cn-success-text 才是文字色（design-tokens.css:48 与 :49 就是分开的两枚），
+  所以这不是改配色，是把用错的那一格拿回来。如果号令者认为这四枚必须原样留着，
+  请点回，我就只交纸的那一半，并且把「亮色那三格仍差 0.1」如实报成未修。
+
+两臂对表（_saojie_evidence_diff_r1.py，逻辑逐字抄号令者的 _cmdr_evidence_diff_r1.py，
+只把 TIP/HERE 指到我的树；格子身份仍是 sel|ratio|text 三段，kind 只在打印时附注，不进身份）
+  合计：修好 2 格，新开 0 格。
+    修好的 → span.v8-evidence-label|1.95|Sealed real replay   [text-contrast] collections.dark
+    修好的 → span.v8-evidence-label|4.24|Sealed real replay   [text-contrast] collections.light
+  其余 9 份带比值的证据文件（contrast-audit desktop 20 格 / mobile 10 格、plan-ai 4 格、
+  mobile-drawer 6/6、poster-days 4/3、recycle-bin 1/1）两臂逐枚相同，一格没动。
+  分母照实报：两臂各收 70 份证据 JSON，其中 11 份有「选择器＋比值」形状的格子，
+  另外 59 份是别单的形状（无 selector/ratio），对表按尺的定义跳过——不是我筛掉的。
+  另有一条两臂对表看不见的读数（那把尺的 contrast=0 在 `ratio or contrast` 里被当假值丢掉，
+  所以 light-surface 格永远进不了对表——这是尺的既有限制，我按现读单独摊）：
+    collections.dark  violations 4 → 2，by_kind 里 light-surface 1 → 0、text-contrast 1 → 0
+    collections.light violations 3 → 2，by_kind 里 text-contrast 1 → 0
+    decorative_warnings（发丝边计数）亮 5→4、暗 4→3——是 .v8-evidence-label 那圈边
+    从 alpha=1.0 的 #dcefe7 换成 alpha=0.10 的 --cn-rule 之后掉的，与上面 border 那枚对上。
+  四把门两臂退出码逐把相同：theme-contract rc=0（6 passed／6 passed）、
+  contrast-audit rc=1（2 failed 3 passed／2 failed 3 passed）、
+  ord0509 rc=1（10 failed 2 passed／10 failed 2 passed）、plan-ai rc=0（4 passed／4 passed）。
+  也就是说：本单没有把任何一格现成的红变成新的红，也没有改变任何一格的成败。
+
+硬约束回读：DOM 与 data-testid 零改动（只动 CSS 值）；没改任何人的断言；没有 skip；
+没有新夹具；四把门都是真跑（--collect-only 0 次）；review/evidence 与 review/ord0509 的
+产物在对表取完之后 git checkout -- review/ 丢弃，已发布的证据一个字节没改；
+受保护端口 :8000/:4781/:4782/:8693 与 _preview.db 未碰，demo/reset 未执行；
+本枝只用 4530/8530 与 4510/8510 两口，跑前都 netstat | grep LISTENING 断言过空闲。
+
+口径：演示链是号令者私有副本，本单没有用它；两臂都是我自己的隔离树 + run_spec.py
+起的 fresh _run<N>.db（前端 :4510/:4530，后端 = 前端+4000），ai=disabled。

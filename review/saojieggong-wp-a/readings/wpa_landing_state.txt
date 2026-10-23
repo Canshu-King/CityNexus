@@ -1,0 +1,11 @@
+现读时刻 2026-10-16 12:19
+权威线 refs/heads/mirror/integration-frontend-apple-pass1 现尖 = 818685d17eac94b4ff6cbb47825f83eeef31654f
+简报写的基线 eeb8b8d2 已不是现尖；我的枝基 5918ccfe 已落进现尖：
+  merge-base --is-ancestor 5918ccfe..818685d17eac94b4ff6cbb47825f83eeef31654f 为真（脉搏层第一至第七拍已入账）
+merge-base(现尖, 我的提交) = 5918ccfe4aae037b86b1ff90eea866ed01706dfb
+现尖比我交的枝多 2 拍：
+  818685d17e 10-16 12:06 WP-H 甲类两枚真缺陷：海报关闭控件 + 拂晓档眉标（现读现修，两臂对表新开红 0）
+  f942774c46 10-16 03:29 脉搏层第八、九拍 · 两处自造回归现读现撤（只改 cn-pulse.css）
+这两拍碰 frontend/src/styles.css 了吗：
+  (上面空＝一行也没碰)
+git merge-tree --write-tree 现尖 + 我的提交：rc=0，输出里 CONFLICT 行数 0

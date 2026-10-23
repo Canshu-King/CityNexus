@@ -1,0 +1,461 @@
+{
+ "arm": "control",
+ "started": "2026-10-16T06:27:03.347Z",
+ "scenes": [
+  {
+   "vp": "phone",
+   "theme": "light",
+   "content": {
+    "theme_attr": "light",
+    "url": "/v8/bookings",
+    "booking_cards": 2,
+    "booking_cards_selected": 0,
+    "booking_states": 1,
+    "booking_states_safe": 1,
+    "booking_icons": 2,
+    "selected_labels": 2,
+    "no_payment": 1,
+    "inbox_aside": 1,
+    "inbox_label": 1,
+    "inbox_textarea": 1,
+    "body_head": "菜单 / 旅行票夹 亮色 EN DE 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 未选择住宿 这趟行程目前还没有可选的住宿。 到「住宿选择」里找一间可订的房 预订 · 受保护锚点 · 生效中 · 模拟承诺 服务器没有给这项承诺的名字 10月10日 15:30 → 10月10日 16:30 ¥120.00 技术详情 时间已锁定 导入预订 结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行"
+   },
+   "text_nodes_measured": 56,
+   "fails": 5,
+   "fail_rows": [
+    {
+     "sel": "p.",
+     "text": "这趟行程目前还没有可选的住宿。",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.",
+     "text": "10月10日 15:30 → 10月10日 16:30",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 4.12,
+     "need": 4.5,
+     "fg": "rgb(36,138,61)",
+     "bg": "rgb(239,250,245)"
+    },
+    {
+     "sel": "b.",
+     "text": "权限始终明确",
+     "ratio": 4.23,
+     "need": 4.5,
+     "fg": "rgb(36,138,61)",
+     "bg": "rgb(246,252,249)"
+    },
+    {
+     "sel": "span.",
+     "text": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+     "ratio": 3.45,
+     "need": 4.5,
+     "fg": "rgb(114,141,131)",
+     "bg": "rgb(246,252,249)"
+    }
+   ],
+   "on_booking": [
+    {
+     "sel": "span.v8-selected-label",
+     "text": "住宿证据",
+     "ratio": 6.96,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(23,103,47)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-selected-label",
+     "text": "预订 · 受保护锚点 · 生效中 · 模拟承诺",
+     "ratio": 6.96,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(23,103,47)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 4.12,
+     "need": 4.5,
+     "pass": false,
+     "fg": "rgb(36,138,61)",
+     "bg": "rgb(239,250,245)"
+    }
+   ]
+  },
+  {
+   "vp": "phone",
+   "theme": "dark",
+   "content": {
+    "theme_attr": "dark",
+    "url": "/v8/bookings",
+    "booking_cards": 2,
+    "booking_cards_selected": 0,
+    "booking_states": 1,
+    "booking_states_safe": 1,
+    "booking_icons": 2,
+    "selected_labels": 2,
+    "no_payment": 1,
+    "inbox_aside": 1,
+    "inbox_label": 1,
+    "inbox_textarea": 1,
+    "body_head": "菜单 / 旅行票夹 暗色 EN DE 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 未选择住宿 这趟行程目前还没有可选的住宿。 到「住宿选择」里找一间可订的房 预订 · 受保护锚点 · 生效中 · 模拟承诺 服务器没有给这项承诺的名字 10月10日 15:30 → 10月10日 16:30 ¥120.00 技术详情 时间已锁定 导入预订 结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行"
+   },
+   "text_nodes_measured": 56,
+   "fails": 10,
+   "fail_rows": [
+    {
+     "sel": "h2.",
+     "text": "未选择住宿",
+     "ratio": 1.09,
+     "need": 3,
+     "fg": "rgb(245,245,247)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.",
+     "text": "这趟行程目前还没有可选的住宿。",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "button.v8-quiet-button",
+     "text": "到「住宿选择」里找一间可订的房",
+     "ratio": 3.65,
+     "need": 4.5,
+     "fg": "rgb(10,132,255)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "h2.",
+     "text": "服务器没有给这项承诺的名字",
+     "ratio": 1.09,
+     "need": 3,
+     "fg": "rgb(245,245,247)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.",
+     "text": "10月10日 15:30 → 10月10日 16:30",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 1.89,
+     "need": 4.5,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(239,250,245)"
+    },
+    {
+     "sel": "span.v8-kicker",
+     "text": "导入预订",
+     "ratio": 2.08,
+     "need": 4.5,
+     "fg": "rgb(180,179,184)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.v8-lede",
+     "text": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。",
+     "ratio": 2.21,
+     "need": 4.5,
+     "fg": "rgb(174,174,178)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "b.",
+     "text": "权限始终明确",
+     "ratio": 1.95,
+     "need": 4.5,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(246,252,249)"
+    },
+    {
+     "sel": "span.",
+     "text": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+     "ratio": 3.45,
+     "need": 4.5,
+     "fg": "rgb(114,141,131)",
+     "bg": "rgb(246,252,249)"
+    }
+   ],
+   "on_booking": [
+    {
+     "sel": "span.v8-selected-label",
+     "text": "住宿证据",
+     "ratio": 8.42,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(28,28,30)"
+    },
+    {
+     "sel": "span.v8-selected-label",
+     "text": "预订 · 受保护锚点 · 生效中 · 模拟承诺",
+     "ratio": 8.42,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(28,28,30)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 1.89,
+     "need": 4.5,
+     "pass": false,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(239,250,245)"
+    }
+   ]
+  },
+  {
+   "vp": "desk",
+   "theme": "light",
+   "content": {
+    "theme_attr": "light",
+    "url": "/v8/bookings",
+    "booking_cards": 2,
+    "booking_cards_selected": 0,
+    "booking_states": 1,
+    "booking_states_safe": 1,
+    "booking_icons": 2,
+    "selected_labels": 2,
+    "no_payment": 1,
+    "inbox_aside": 1,
+    "inbox_label": 1,
+    "inbox_textarea": 1,
+    "body_head": "CN CityNexus 行程智能 工作区 行程运营 今日 今天 实时行程 地图 规划 行程工作台 住宿选择 城市探索 导入地点 出行 旅行票夹 足迹 Copilot 系统 恢复与执行 智能守护 旅行者画像 回收站 成员与权限 收起侧边栏 行程事实已同步 0 个方案 · 5 种模式 DE Demo 1 位旅行者 ••• 行程 / 旅行票夹 行程事实就绪 亮色 EN ◌ DE 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 未选"
+   },
+   "text_nodes_measured": 91,
+   "fails": 5,
+   "fail_rows": [
+    {
+     "sel": "p.",
+     "text": "这趟行程目前还没有可选的住宿。",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.",
+     "text": "10月10日 15:30 → 10月10日 16:30",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 4.12,
+     "need": 4.5,
+     "fg": "rgb(36,138,61)",
+     "bg": "rgb(239,250,245)"
+    },
+    {
+     "sel": "b.",
+     "text": "权限始终明确",
+     "ratio": 4.23,
+     "need": 4.5,
+     "fg": "rgb(36,138,61)",
+     "bg": "rgb(246,252,249)"
+    },
+    {
+     "sel": "span.",
+     "text": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+     "ratio": 3.45,
+     "need": 4.5,
+     "fg": "rgb(114,141,131)",
+     "bg": "rgb(246,252,249)"
+    }
+   ],
+   "on_booking": [
+    {
+     "sel": "span.v8-selected-label",
+     "text": "住宿证据",
+     "ratio": 6.96,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(23,103,47)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-selected-label",
+     "text": "预订 · 受保护锚点 · 生效中 · 模拟承诺",
+     "ratio": 6.96,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(23,103,47)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 4.12,
+     "need": 4.5,
+     "pass": false,
+     "fg": "rgb(36,138,61)",
+     "bg": "rgb(239,250,245)"
+    }
+   ]
+  },
+  {
+   "vp": "desk",
+   "theme": "dark",
+   "content": {
+    "theme_attr": "dark",
+    "url": "/v8/bookings",
+    "booking_cards": 2,
+    "booking_cards_selected": 0,
+    "booking_states": 1,
+    "booking_states_safe": 1,
+    "booking_icons": 2,
+    "selected_labels": 2,
+    "no_payment": 1,
+    "inbox_aside": 1,
+    "inbox_label": 1,
+    "inbox_textarea": 1,
+    "body_head": "CN CityNexus 行程智能 工作区 行程运营 今日 今天 实时行程 地图 规划 行程工作台 住宿选择 城市探索 导入地点 出行 旅行票夹 足迹 Copilot 系统 恢复与执行 智能守护 旅行者画像 回收站 成员与权限 收起侧边栏 行程事实已同步 0 个方案 · 5 种模式 DE Demo 1 位旅行者 ••• 行程 / 旅行票夹 行程事实就绪 暗色 EN ◌ DE 行程收件箱 · 旅行票夹 你的真实预订，受保护。 粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。 住宿证据 未选"
+   },
+   "text_nodes_measured": 91,
+   "fails": 10,
+   "fail_rows": [
+    {
+     "sel": "h2.",
+     "text": "未选择住宿",
+     "ratio": 1.09,
+     "need": 3,
+     "fg": "rgb(245,245,247)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.",
+     "text": "这趟行程目前还没有可选的住宿。",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "button.v8-quiet-button",
+     "text": "到「住宿选择」里找一间可订的房",
+     "ratio": 3.65,
+     "need": 4.5,
+     "fg": "rgb(10,132,255)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "h2.",
+     "text": "服务器没有给这项承诺的名字",
+     "ratio": 1.09,
+     "need": 3,
+     "fg": "rgb(245,245,247)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.",
+     "text": "10月10日 15:30 → 10月10日 16:30",
+     "ratio": 3.08,
+     "need": 4.5,
+     "fg": "rgb(137,148,163)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 1.89,
+     "need": 4.5,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(239,250,245)"
+    },
+    {
+     "sel": "span.v8-kicker",
+     "text": "导入预订",
+     "ratio": 2.08,
+     "need": 4.5,
+     "fg": "rgb(180,179,184)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "p.v8-lede",
+     "text": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。",
+     "ratio": 2.21,
+     "need": 4.5,
+     "fg": "rgb(174,174,178)",
+     "bg": "rgb(255,255,255)"
+    },
+    {
+     "sel": "b.",
+     "text": "权限始终明确",
+     "ratio": 1.95,
+     "need": 4.5,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(246,252,249)"
+    },
+    {
+     "sel": "span.",
+     "text": "导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。",
+     "ratio": 3.45,
+     "need": 4.5,
+     "fg": "rgb(114,141,131)",
+     "bg": "rgb(246,252,249)"
+    }
+   ],
+   "on_booking": [
+    {
+     "sel": "span.v8-selected-label",
+     "text": "住宿证据",
+     "ratio": 8.42,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(28,28,30)"
+    },
+    {
+     "sel": "span.v8-selected-label",
+     "text": "预订 · 受保护锚点 · 生效中 · 模拟承诺",
+     "ratio": 8.42,
+     "need": 4.5,
+     "pass": true,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(28,28,30)"
+    },
+    {
+     "sel": "span.v8-booking-state",
+     "text": "时间已锁定",
+     "ratio": 1.89,
+     "need": 4.5,
+     "pass": false,
+     "fg": "rgb(48,209,88)",
+     "bg": "rgb(239,250,245)"
+    }
+   ]
+  }
+ ],
+ "errors": [],
+ "totals": {
+  "fails": 30,
+  "nodes": 294,
+  "booking_cards": 8,
+  "inbox_aside": 4
+ }
+}

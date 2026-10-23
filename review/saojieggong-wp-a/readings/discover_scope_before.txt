@@ -1,0 +1,59 @@
+=== 三枚面板源码里的类名数: 109 ===
+=== styles.css 里这一屏走得到的逃逸口: 17 枚，分布在 15 条规则 ===
+
+[role-alert]  出处: features/discovery/DestinationPreparationPanel.tsx:440, features/discovery/DestinationPreparationPanel.tsx:635
+   SEL .role-alert   (命中的分支: .role-alert)
+      styles.css:1490  深字字面量                  color            = #b03a3a  [#b03a3a L=0.126]
+
+[v8-boundary-card]  出处: features/discovery/RealCityDiscoveryPanel.tsx:580
+   SEL .v8-twin-card, .v8-boundary-card   (命中的分支: .v8-boundary-card)
+      styles.css:181   浅底字面量                  background       = #fff  [#fff L=1.000]
+   SEL .v8-boundary-card   (命中的分支: .v8-boundary-card)
+      styles.css:181   浅底字面量                  background       = #f6f3ff  [#f6f3ff L=0.909]
+   SEL .v8-boundary-card p   (命中的分支: .v8-boundary-card p)
+      styles.css:181   深字字面量                  color            = #786d99  [#786d99 L=0.172]
+
+[v8-evidence-label]  出处: features/discovery/RealCityDiscoveryPanel.tsx:367
+   SEL .v8-evidence-label   (命中的分支: .v8-evidence-label)
+      styles.css:179   浅底字面量                  background       = #f7fcfa  [#f7fcfa L=0.963]
+
+[v8-intel-facts]  出处: features/discovery/RealCityDiscoveryPanel.tsx:428
+   SEL .v8-intel-facts > div   (命中的分支: .v8-intel-facts > div)
+      styles.css:181   浅底字面量                  background       = #fff  [#fff L=1.000]
+
+[v8-lede]  出处: features/discovery/DestinationPreparationPanel.tsx:409, features/discovery/RealCityDiscoveryPanel.tsx:365
+   SEL .v8-lede   (命中的分支: .v8-lede)
+      styles.css:189   深字字面量                  color            = #5f6c80  [#5f6c80 L=0.147]
+   SEL .v8-lede   (命中的分支: .v8-lede)
+      styles.css:349   深字字面量                  color            = #5f6c80  [#5f6c80 L=0.147]
+
+[v8-message]  出处: features/discovery/RealCityDiscoveryPanel.tsx:398, features/discovery/RealCityDiscoveryPanel.tsx:561
+   SEL .v8-message   (命中的分支: .v8-message)
+      styles.css:183   深字字面量                  color            = #8e5f32  [#8e5f32 L=0.142]
+      styles.css:183   浅底字面量                  background       = #fffaf4  [#fffaf4 L=0.962]
+
+[v8-selected-label]  出处: features/discovery/RealCityDiscoveryPanel.tsx:518
+   SEL .v8-selected-label   (命中的分支: .v8-selected-label)
+      styles.css:179   浅底字面量                  background       = #effaf5  [#effaf5 L=0.933]
+
+[v8-status-pill]  出处: features/discovery/RealCityDiscoveryPanel.tsx:422
+   SEL .v8-status-pill   (命中的分支: .v8-status-pill)
+      styles.css:175   浅底字面量                  background       = #effaf5  [#effaf5 L=0.933]
+   SEL .v8-status-pill.violet   (命中的分支: .v8-status-pill.violet)
+      styles.css:175   浅底字面量                  background       = #f3efff  [#f3efff L=0.880]
+
+[v8-stay-card]  出处: features/discovery/RealCityDiscoveryPanel.tsx:499, features/discovery/RealCityDiscoveryPanel.tsx:499
+   SEL .v8-stay-card   (命中的分支: .v8-stay-card)
+      styles.css:179   浅底字面量                  background       = #fff  [#fff L=1.000]
+
+[v8-stay-impact]  出处: features/discovery/RealCityDiscoveryPanel.tsx:527
+   SEL .v8-stay-impact b, .v8-stay-impact em   (命中的分支: .v8-stay-impact b)
+      styles.css:179   深字字面量                  color            = #68758a  [#68758a L=0.175]
+      styles.css:179   浅底字面量                  background       = #f3f4f7  [#f3f4f7 L=0.905]
+   SEL .v8-stay-impact em   (命中的分支: .v8-stay-impact em)
+      styles.css:179   浅底字面量                  background       = #eff1ff  [#eff1ff L=0.885]
+
+=== 负对照：有同名类、但整条分支不在这一屏上的规则（本单不收，逐枚列名）===
+   收了没? NO  SEL .v8-booking-card.selected   缺的类名: v8-booking-card   命中行: 340
+   收了没? NO  SEL .v8-selected-label.neutral   缺的类名: neutral   命中行: 340,340
+   收了没? NO  SEL .v15-copilot-suggestions .v8-outline-button   缺的类名: v15-copilot-suggestions   命中行: 548

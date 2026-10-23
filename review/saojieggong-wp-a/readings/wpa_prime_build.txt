@@ -1,0 +1,4 @@
+tsc_exit=0 lines=0
+vite_exit=0
+[2mdist/[22m[35massets/index-DuiR0LzS.css       [39m[1m[2m  262.96 kB[22m[1m[22m[2m │ gzip:  44.47 kB[22m
+[32m✓ built in 11.00s[39m

@@ -1,0 +1,67 @@
+case                   scheme    textC    fillC    req  txtOK  state litSurf
+status-pill            light      4.12     1.07    4.5    RED     ok      -
+status-pill            dark       1.89    15.93    4.5    RED     ok    RED
+status-pill=FIX        light      6.96     1.00    4.5     ok     ok      -
+status-pill=FIX        dark       8.42     1.00    4.5     ok     ok      -
+selected-label         light      4.12     1.07    4.5    RED     ok      -
+selected-label         dark       1.89    15.93    4.5    RED     ok    RED
+selected-label=FIX     light      6.96     1.00    4.5     ok     ok      -
+selected-label=FIX     dark       8.42     1.00    4.5     ok     ok      -
+status-pill=bgonly     light      4.40     1.00    4.5    RED     ok      -
+status-pill=bgonly     dark       8.42     1.00    4.5     ok     ok      -
+selected-label=bgonly  light      4.40     1.00    4.5    RED     ok      -
+selected-label=bgonly  dark       8.42     1.00    4.5     ok     ok      -
+evidence-label         light      4.24     1.04    4.5    RED     ok      -
+evidence-label         dark       1.95    16.41    4.5    RED     ok    RED
+ev-label=bgonly        light      4.40     1.00    4.5    RED     ok      -
+ev-label=bgonly        dark       8.42     1.00    4.5     ok     ok      -
+ev-label=FIX           light      6.96     1.00    4.5     ok     ok      -
+ev-label=FIX           dark       8.42     1.00    4.5     ok     ok      -
+sel-label-neutral      light      4.20     1.11    4.5    RED     ok      -
+sel-label-neutral      dark       4.20     1.11    4.5    RED     ok    RED
+sel-label-neu=FIX      light      6.37     1.02    4.5     ok     ok      -
+sel-label-neu=FIX      dark       6.83     1.13    4.5     ok     ok      -
+stay-impact b/em       light      4.24     1.10    4.5    RED     ok      -
+stay-impact b/em       dark       4.24     1.10    4.5    RED     ok    RED
+stay-imp=FIX           light      6.37     1.02    4.5     ok     ok      -
+stay-imp=FIX           dark       6.83     1.13    4.5     ok     ok      -
+stay-impact em         light      5.32     1.12    4.5     ok     ok      -
+stay-impact em         dark       3.25     1.12    4.5    RED     ok    RED
+em-on-elev-1           light      5.97     1.00    4.5     ok     ok      -
+em-on-elev-1           dark       4.66     1.00    4.5     ok     ok      -
+em-on-elev-2           light      5.88     1.02    4.5     ok     ok      -
+em-on-elev-2           dark       4.14     1.13    4.5    RED     ok      -
+em-on-elev-3           light      5.97     1.00    4.5     ok     ok      -
+em-on-elev-3           dark       3.50     1.33    4.5    RED     ok      -
+em-on-elev-3-link      light      5.97     1.00    4.5     ok     ok      -
+em-on-elev-3-link      dark       4.87     1.33    4.5     ok     ok      -
+intel-facts div        light     16.83     1.09    4.5     ok     ok      -
+intel-facts div        dark       1.09    21.00    4.5    RED     ok    RED
+intel-facts=FIX        light     16.83     1.09    4.5     ok     ok      -
+intel-facts=FIX        dark      15.63     1.23    4.5     ok     ok      -
+twin/boundary          light     16.83     1.09    4.5     ok     ok      -
+twin/boundary          dark       1.09    21.00    4.5    RED     ok    RED
+twin/bound=FIX         light     16.83     1.09    4.5     ok     ok      -
+twin/bound=FIX         dark      15.63     1.23    4.5     ok     ok      -
+boundary-card          light      4.10     1.01    4.5    RED     ok      -
+boundary-card          dark       4.10    19.18    4.5    RED     ok    RED
+bc-on-elev-1           light      4.48     1.09    4.5    RED     ok      -
+bc-on-elev-1           dark       3.79     1.23    4.5    RED     ok      -
+bc-on-elev-2           light      4.42     1.07    4.5    RED     ok      -
+bc-on-elev-2           dark       3.37     1.39    4.5    RED     ok      -
+status-pill violet     light      3.97     1.13    4.5    RED     ok      -
+status-pill violet     dark       3.97    15.07    4.5    RED     ok    RED
+violet-on-elev-1       light      4.48     1.00    4.5    RED     ok      -
+violet-on-elev-1       dark       3.79     1.00    4.5    RED     ok      -
+lede                   light      4.89     1.00    4.5     ok     ok      -
+lede                   dark       3.94     1.00    4.5    RED     ok      -
+lede=FIX               light      6.22     1.00    4.5     ok     ok      -
+lede=FIX               dark      10.08     1.00    4.5     ok     ok      -
+role-alert             light      5.49     1.00    4.5     ok     ok      -
+role-alert             dark       3.51     1.00    4.5    RED     ok      -
+role-alert=FIX         light      4.94     1.00    4.5     ok     ok      -
+role-alert=FIX         dark       6.16     1.00    4.5     ok     ok      -
+message                light      5.28     1.05    4.5     ok     ok      -
+message                dark       5.28    20.23    4.5     ok     ok    RED
+msg=naive              light      6.37     1.07    4.5     ok     ok      -
+msg=naive              dark       7.25     1.39    4.5     ok     ok      -

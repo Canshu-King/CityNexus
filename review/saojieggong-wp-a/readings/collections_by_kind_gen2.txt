@@ -1,0 +1,8 @@
+control collections.light run_id=run125354 scanned=193 violations=3 by_kind={'text-contrast': 1, 'unclassified-control': 2} decorative=5
+control collections.dark run_id=run125354 scanned=193 violations=4 by_kind={'light-surface': 1, 'text-contrast': 1, 'unclassified-control': 2} decorative=4
+control poster-days.light violations=3 by_kind={'unclassified-control': 3}
+control poster-days.dark violations=3 by_kind={'unclassified-control': 3}
+armA collections.light run_id=run125555 scanned=193 violations=2 by_kind={'unclassified-control': 2} decorative=4
+armA collections.dark run_id=run125555 scanned=193 violations=2 by_kind={'unclassified-control': 2} decorative=3
+armA poster-days.light violations=3 by_kind={'unclassified-control': 3}
+armA poster-days.dark violations=3 by_kind={'unclassified-control': 3}
