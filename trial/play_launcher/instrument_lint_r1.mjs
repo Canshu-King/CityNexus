@@ -17,13 +17,16 @@ const HOST_ONLY = ["flat", "say", "now"];
 const files = fs.readdirSync(ROOT).filter((name) => name.endsWith(".mjs"));
 let offenders = 0;
 
-const bodyOf = (text, start) => {
-  const open = text.indexOf("{", start);
+const callTextOf = (text, start) => {
+  // Paren-balance the whole .evaluate(...) call instead of grabbing the next "{": the first cut used the next
+  // brace, so a concise arrow body (page.evaluate(() => cond ? "PRESENT" : "absent")) swallowed the following
+  // function's block and reported a fault that was not there.  A ruler with false reds is worse than none.
+  const open = text.indexOf("(", start);
   if (open < 0) return null;
   let depth = 0;
   for (let index = open; index < text.length; index += 1) {
-    if (text[index] === "{") depth += 1;
-    else if (text[index] === "}") {
+    if (text[index] === "(") depth += 1;
+    else if (text[index] === ")") {
       depth -= 1;
       if (depth === 0) return text.slice(open, index + 1);
     }
@@ -39,7 +42,7 @@ for (const name of files) {
     const at = text.indexOf(".evaluate(", cursor);
     if (at < 0) break;
     cursor = at + 4;
-    const body = bodyOf(text, at);
+    const body = callTextOf(text, at);
     if (!body) continue;
     for (const helper of HOST_ONLY) {
       const used = new RegExp(`(?<![A-Za-z0-9_$.])${helper}\\(`).test(body);
