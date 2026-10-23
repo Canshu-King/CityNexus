@@ -111,6 +111,22 @@ def _store_receipt(session: Session, *, scoped_key: str, signature: str,
     )
 
 
+def _infeasible_failures(detail: str) -> list[str]:
+    """Split the gate's own rows out of its sentence; nothing here is invented.
+
+    The shape is written upstream ("PlanVersion <id> is infeasible: " + ", ".join(gate.failures)), and
+    each row is a code, optionally with the pair it is about
+    (app/replanning/feasibility.py:1013 appends INSUFFICIENT_TRAVEL_GAP:<origin>|<destination>).  A detail
+    without that prefix yields no rows, so a screen falls back to its own generic sentence rather than
+    guessing at a cause.
+    """
+    position = detail.find(_INFEASIBLE_PREFIX)
+    if position < 0:
+        return []
+    tail = detail[position + len(_INFEASIBLE_PREFIX):].lstrip(": ")
+    return [row.strip() for row in tail.split(",") if row.strip()]
+
+
 def _refuse_transition(exc: HTTPException) -> HTTPException:
     """Re-shape the transition's refusal into the house envelope, keeping its sentence."""
     detail = str(exc.detail)
@@ -118,7 +134,13 @@ def _refuse_transition(exc: HTTPException) -> HTTPException:
         return _refuse(exc.status_code, detail, GATE_STALE_EVIDENCE,
                        {"detail": detail, "gate": GATE_STALE_EVIDENCE})
     if _INFEASIBLE_PREFIX in detail:
-        return _refuse(exc.status_code, detail, "PLAN_INFEASIBLE", {"detail": detail})
+        # The reason_code was already on the wire here, and the plan screen ignored it: a traveller who
+        # pressed 选用这份方案 was told 这些地点暂时排不成可用方案。回到探索补充或更换地点, which points at
+        # the exploration list when the real refusal was 两段安排之间赶路时间不够 -- the thing to move is a
+        # time on their own card (trial/results/20261022_v3_human_chrome/walk-84-log.txt:73 against :74).
+        # The sentence stays exactly as it was; the gate's rows are added beside it as data.
+        return _refuse(exc.status_code, detail, "PLAN_INFEASIBLE",
+                       {"detail": detail, "failures": _infeasible_failures(detail)})
     if detail == _CANDIDATE_ONLY:
         return _refuse(exc.status_code, detail, REASON_NOT_COMMITTABLE,
                        {"accepted_statuses": ["CANDIDATE", "SELECTED"]})

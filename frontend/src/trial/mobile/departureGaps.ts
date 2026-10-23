@@ -259,6 +259,44 @@ export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[
   return named;
 }
 
+// Why a plan that saved fine still cannot be chosen, said in the traveller's words, with the door that
+// actually fixes it.
+//
+// The departure gate answers with codes and internal place ids -- it appends
+// `INSUFFICIENT_TRAVEL_GAP:<origin>|<destination>` (backend/app/replanning/feasibility.py:1013) -- and the
+// plan screen translated any 422 into 「这些地点暂时排不成可用方案。回到探索补充或更换地点。」 That sentence
+// sends a person to the exploration list when the thing to change is the gap between two of their own
+// rows: measured on walk-84, the refusal was 赶路时间不够 (:73) and the screen said 换地点 (:74), and the
+// traveller had nothing left to press.
+const INFEASIBLE_SENTENCES: Record<string, string> = {
+  INSUFFICIENT_TRAVEL_GAP: "两段安排之间留的赶路时间不够",
+  MOBILITY_DATA_UNAVAILABLE: "有一段路还没有可用的实测资料",
+  MOBILITY_DATA_INVALID: "有一段路的实测资料对不上",
+};
+
+export function infeasibleAtDepartureSentence(failures: unknown): string {
+  const rows = Array.isArray(failures) ? failures.map((row) => String(row)) : [];
+  // No rows means the envelope did not carry the gate's list, and this screen will not guess at a cause
+  // it was not given: an empty answer tells the caller to keep its own generic sentence.
+  if (!rows.length) return "";
+  const counts = new Map<string, number>();
+  const others: string[] = [];
+  for (const row of rows) {
+    const code = row.split(":")[0];
+    if (INFEASIBLE_SENTENCES[code]) counts.set(code, (counts.get(code) ?? 0) + 1);
+    else if (!others.includes(code)) others.push(code);
+  }
+  const named = [...counts].map(([code, count]) => `${INFEASIBLE_SENTENCES[code]}（${count} 段）`);
+  const head = named.length
+    ? `这版方案排不下：${named.join("；")}。`
+    : `这版方案排不下（${others.join("、")}）。`;
+  const fix = counts.has("INSUFFICIENT_TRAVEL_GAP")
+    ? "在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"
+    : "";
+  const tail = named.length && others.length ? `另有 ${others.length} 类原因：${others.join("、")}。` : "";
+  return head + fix + tail;
+}
+
 // Facts the traveller has already decided themselves are not things a plan still 还缺.
 //
 // Why this exists: the traveller can press 「票价没有来源，我接受先不计入预算」 on the departure card, the

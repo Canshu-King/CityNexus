@@ -4,7 +4,7 @@ import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, typ
 import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { bandSentence, missingFactsSentence, priceConsentNote, unsettledFactRows } from "./departureGaps";
+import { bandSentence, infeasibleAtDepartureSentence, missingFactsSentence, priceConsentNote, unsettledFactRows } from "./departureGaps";
 import "./MobilePlanWorkbench.css";
 
 type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null; departure: JourneyDepartureRead | null; seat: JourneyMemberSeatRead | null };
@@ -13,8 +13,16 @@ type GapRow = { kind?: string; title?: string; resolution?: string };
 
 function failureText(error: unknown): string {
   if (error instanceof CityNexusApiError) {
-    const body = error.body as { reason_code?: string; error?: { reason_code?: string }; detail?: { reason_code?: string }; details?: { unresolved_facts?: unknown } } | null;
+    const body = error.body as { reason_code?: string; error?: { reason_code?: string; details?: { unresolved_facts?: unknown; failures?: unknown } }; detail?: { reason_code?: string }; details?: { unresolved_facts?: unknown; failures?: unknown } } | null;
     const reason = body?.reason_code ?? body?.error?.reason_code ?? body?.detail?.reason_code;
+    // The last door before a journey goes live.  Its reason_code has been on the wire for a while, but
+    // nothing read it, so any refusal came out as the generic 422 sentence below and pointed at the
+    // exploration list.  Now the gate's own rows decide the wording, and an answer without rows still
+    // falls through to that generic sentence rather than inventing a cause (backend/app/departure_commit.py:114).
+    if (reason === "PLAN_INFEASIBLE") {
+      const named = infeasibleAtDepartureSentence(body?.error?.details?.failures ?? body?.details?.failures);
+      if (named) return named;
+    }
     if (reason === "UNRESOLVED_ACTIVITY_FACTS") {
       const rows = Array.isArray(body?.details?.unresolved_facts) ? body.details.unresolved_facts as GapRow[] : [];
       return rows.length ? `${missingFactsSentence(rows)}回到探索或出发待办处理它。` : "地点的营业时间、票价或转场资料还没核实。";

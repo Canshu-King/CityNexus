@@ -503,6 +503,12 @@ def test_a_plan_the_gate_refuses_arrives_as_a_named_infeasible_refusal_not_a_cra
     body = refused.json()["error"]
     assert body["reason_code"] == "PLAN_INFEASIBLE"
     assert "is infeasible" in body["message"] and "LOCATION_MISSING" in body["message"], body
+    # The gate's rows travel beside the sentence, so a screen can name what to move instead of sending
+    # the traveller to the exploration list (walk-84 measured exactly that misdirection:
+    # trial/results/20261022_v3_human_chrome/walk-84-log.txt:73 against :74).
+    failures = body["details"]["failures"]
+    assert failures and all(row.startswith("LOCATION_MISSING") for row in failures), failures
+    assert not any("PlanVersion" in row for row in failures), failures
     assert _status_of(seeded, seeded.ids["plan_infeasible"]) == "CANDIDATE"
     assert _rows(seeded, AuditLog, action=departure_commit.COMMIT_ACTION) == []
     assert _rows(seeded, IdempotencyKey) == []
