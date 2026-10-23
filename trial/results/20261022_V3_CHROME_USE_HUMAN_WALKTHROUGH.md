@@ -1486,3 +1486,14 @@ localStorage 里是 `citynexus.revolution.firstlook.journey`、`…recent-journe
 凭据闸 `_staged_secret_gate_r2.py --selftest` → `cases=8 wrong=0`（四支致命臂都咬，四种正常写法不误伤）。
 USER_VERIFIED 仍是 PENDING：双击那两枚 .bat 是我在这台机器上跑的，主人在自己电脑（或平板）上真点一次之前，
 这一栏不勾。
+
+### 更正本节上面那把 lint 的命中数（追加，不删原文）
+
+上面写 `instrument_lint_r1` 报出"六枚命中"，其中两枚是这把尺第一版自己的假红：它按"下一个 `{`"取函数体，
+把 `page.evaluate(() => cond ? "PRESENT" : "absent")` 这类简写箭头体之后别人的代码也算了进来。
+改成按括号配平取整段 `.evaluate(...)` 调用之后（`instrument_lint_r1.mjs` 的 `callTextOf`），
+`tile_honest_state_r1.mjs` 与 `shortlist_initiator_r1.mjs` 变成 `ok`，真命中是**四枚文件、六处**：
+`first_tap_layers_r1.mjs:62`、`first_tap_layers_r2.mjs:39`、`dock_recovery_probe_r1.mjs:31,65,147`、
+`place_media_click_r1.mjs:69`（在 `:64` 那个 evaluate 体内）。最后那一处是潜伏的：那次运行读到
+`STRIP_BEFORE []`（`walk-40-log.txt:4`，那一屏本来就没渲染出卡片），`.map()` 没执行到所以没炸，
+已发布读数不受影响，但这把尺只要真遇到有卡片的屏就会崩——用之前先修。
