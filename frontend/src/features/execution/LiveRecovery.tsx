@@ -621,6 +621,18 @@ export function LiveRecovery({
   // cannot honour yields null, and the render below says so instead of pointing at
   // whatever happens to be first.
   const liveNow = nowId ? (activities.find((a) => a.id === nowId) ?? null) : null;
+  // A journey can be ACTIVE on the server long before its first stop: confirming a plan dated 5 December
+  // in October makes the status true and the moment false.  This card had two states (running, done), so
+  // a trip six weeks away announced itself as 正在进行 / 现在的行程 / 下一站 -- read on screen by walk-89
+  // (trial/results/20261022_v3_human_chrome/walk89-17-active-pane.png).
+  const firstStartMs = activities
+    .map((activity) => Date.parse(String(activity.start_at ?? activity.starts_at ?? "")))
+    .filter((moment) => Number.isFinite(moment))
+    .sort((left, right) => left - right)[0] ?? null;
+  const journeyNotStarted = firstStartMs !== null && firstStartMs > Date.now();
+  const firstStartLabel = firstStartMs === null ? "" : new Intl.DateTimeFormat(locale, {
+    month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false,
+  }).format(new Date(firstStartMs));
   // Recent events that were already handled still deserve an explanation.
   const handled = proposals.filter((p) => p.status === "ACCEPTED").slice(0, 1);
 
@@ -929,16 +941,22 @@ export function LiveRecovery({
               ? zh
                 ? "已完成"
                 : "Completed"
-              : zh
-                ? "正在进行"
-                : "In progress"}
+              : journeyNotStarted
+                ? zh
+                  ? "还没出发"
+                  : "Not started"
+                : zh
+                  ? "正在进行"
+                  : "In progress"}
           </p>
           <h1>
             {journeyCompleted
               ? t("live.completedTitle")
-              : zh
-                ? "现在的行程"
-                : "Your trip right now"}
+              : journeyNotStarted
+                ? (zh ? "这一趟的安排" : "Your upcoming plan")
+                : zh
+                  ? "现在的行程"
+                  : "Your trip right now"}
           </h1>
           <p
             className="v8-lede"
@@ -948,7 +966,11 @@ export function LiveRecovery({
           >
             {journeyCompleted
               ? t("live.completedAdvisory")
-              : liveNow
+              : liveNow && journeyNotStarted
+                ? (zh
+                  ? `第一站：${String(liveNow.title ?? "")}${firstStartLabel ? ` · ${firstStartLabel}` : ""}`
+                  : `First stop: ${String(liveNow.title ?? "")}${firstStartLabel ? ` · ${firstStartLabel}` : ""}`)
+                : liveNow
                   ? zh
                     ? `下一站：${String(liveNow.title ?? "")}`
                     : `Next: ${String(liveNow.title ?? "")}`
