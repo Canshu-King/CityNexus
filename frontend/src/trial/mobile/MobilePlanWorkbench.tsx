@@ -4,7 +4,7 @@ import { CityNexusApiError, cityNexusApi, type Activity, type JourneyRecord, typ
 import { TravelBriefPreview } from "./TravelBriefPreview";
 import { formatMinorMoney } from "../../lib/money";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { bandSentence, missingFactsSentence } from "./departureGaps";
+import { bandSentence, missingFactsSentence, priceConsentNote, unsettledFactRows } from "./departureGaps";
 import "./MobilePlanWorkbench.css";
 
 type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion[]; input: TravelPlanningInput | null; departure: JourneyDepartureRead | null; seat: JourneyMemberSeatRead | null };
@@ -38,7 +38,12 @@ function selectionBlocker(plan: PlanVersion): string {
   // it as "地点信息有更新" sent the traveller to the wrong door (measured: every candidate saved from an
   // Agent draft is stale for exactly this reason, app/services.py:584).
   if (plan.stale && plan.mobility_snapshot_id) return "地点信息有更新，请重新生成方案。";
-  return missingFactsSentence(rows, Boolean(plan.mobility_snapshot_id));
+  // A price the traveller already accepted is not something this plan still lacks: the server stopped
+  // blocking on it, so the screen must stop asking for it in the same breath that the card above says
+  // 按你的确认保存 (measured on walk-80, walk-82 and walk-83, where STEP_13 still read 还缺：票价).
+  // Every other gap stays named, and the 选用 button remains the server's to give.
+  return missingFactsSentence(unsettledFactRows(rows, plan.explanation), Boolean(plan.mobility_snapshot_id))
+    + priceConsentNote(plan.explanation);
 }
 
 function dateKey(value: string | undefined, timeZone: string): string | null {  if (!value || !Number.isFinite(Date.parse(value))) return null;

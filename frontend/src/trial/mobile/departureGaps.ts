@@ -259,6 +259,36 @@ export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[
   return named;
 }
 
+// Facts the traveller has already decided themselves are not things a plan still 还缺.
+//
+// Why this exists: the traveller can press 「票价没有来源，我接受先不计入预算」 on the departure card, the
+// server records it on the plan (backend/app/agent/goal_price_consent.py:143) and its own selection rule
+// honours it (backend/app/services.py:771), yet the plan screen went on listing 票价 among
+// 「这版方案还缺：…」 -- measured on walk-80, walk-82 and walk-83, where the workbench line still read
+// 「费用待确认 … 这版方案还缺：票价」 while the card above it had already said 按你的确认保存.  The screen was
+// asking the traveller to undo a decision they had just made.
+//
+// Nothing here decides whether the plan can be chosen.  The list loses only the kind the traveller
+// settled; every other gap stays, and the button remains the server's to give.
+export function priceConsentGiven(explanation?: Record<string, unknown> | null): boolean {
+  return String((explanation ?? {}).authority_state || "") === "COST_UNKNOWN_ACCEPTED";
+}
+
+export function unsettledFactRows(rows: GapRow[], explanation?: Record<string, unknown> | null): GapRow[] {
+  if (!priceConsentGiven(explanation)) return rows;
+  return rows.filter((row) => String(row.kind || "") !== "ADMISSION_PRICE");
+}
+
+export function priceConsentNote(explanation?: Record<string, unknown> | null): string {
+  if (!priceConsentGiven(explanation)) return "";
+  const summary = (explanation ?? {}).cost_summary;
+  const count = summary && typeof summary === "object"
+    ? Number((summary as Record<string, unknown>).unknown_item_count) : Number.NaN;
+  return Number.isFinite(count) && count > 0
+    ? `票价这一项你已经确认先不计入预算（${count} 处没有来源）。`
+    : "票价这一项你已经确认先不计入预算。";
+}
+
 // Which of the four time rules refused this save, in the traveller's words, with the row named.
 //
 // Why this exists: the door checked four conditions and answered with one code
