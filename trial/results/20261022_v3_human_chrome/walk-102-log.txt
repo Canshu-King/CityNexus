@@ -1,0 +1,133 @@
+WALK55_START 2026-10-23T19:00:48.725Z http://127.0.0.1:14496/revolution
+STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规划 → 探索 我
+STEP_02 days=2
+STEP_02A_PREFILLED party=1 budget=500
+STEP_02 party=2 budget=600
+ASK GET /journeys/1a2f4474-accc-4740-960f-5a753a0b5c67/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+STEP_03 sent_at 2026-10-23T19:01:09.748Z
+SETTLED ticks=4 elapsed_s=40
+STEP_04 choices=4 first=经典必打卡 故宫、天坛、颐和园、长城等经典地标一网打尽
+SETTLED ticks=2 elapsed_s=20
+STEP_04B_START_RESEARCH pressed=true
+WAIT_60s busy=true
+WAIT_120s busy=true
+WAIT_180s busy=false
+WAIT_240s busy=false
+WAIT_300s busy=false
+WAIT_360s busy=false
+WAIT_420s busy=false
+WAIT_480s busy=false
+WAIT_540s busy=false
+WAIT_600s busy=false
+WAIT_660s busy=false
+WAIT_720s busy=false
+WAIT_780s busy=false
+WAIT_840s busy=false
+WAIT_900s busy=false
+WAIT_960s busy=false
+SETTLE_TIMEOUT pattern=正在推进|正在研究
+STEP_05_DRAFT slots=0
+LAYER rev-mission-layer-map attempt=1 clicked=true
+STEP_06_MAP [{"text":"照片来源暂时没答上 故宫博物院 在地图中查看","picture":false,"ask":[],"answer":["照片来源暂时没答上"]},{"text":"照片来源暂时没答上 故宫博物院-午门 在地图中查看","picture":false,"ask":[],"answer":["照片来源暂时没答上"]},{"text":"照片来源暂时没答上 故宫博物院-文华殿 在地图中查看","picture":false,"ask":[],"answer":["照片来源暂时没答上"]},{"text":"先看看这个地点 故宫博物院检票处 在地图中查看","picture":false,"ask":["先看看这个地点"],"answer":[]},{"text":"先看看这个地点 故宫博物院-西南角楼 在地图中查看","picture":false,"ask":["先看看这个地点"],"answer":[]},{"text":"先看看这个地点 故宫博物院-端门 在地图中查看","picture":false,"ask":["先看看这个地点"],"answer":[]}]
+SHOT walk102-06-map-strip.png bytes=232426
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+STEP_07 variants_sent_at 2026-10-23T19:18:22.409Z
+WAIT_60s busy=true
+WAIT_120s busy=true
+WAIT_180s busy=true
+SETTLED ticks=22 elapsed_s=220
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_08_VARIANTS {"cards":0,"tabs":[],"chosen":[],"selectButtons":0,"slots":0}
+SHOT walk102-08-three-versions.png bytes=164505
+STEP_09_choose_visible=false picked_card=-1
+ASK GET /journeys/1a2f4474-accc-4740-960f-5a753a0b5c67/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_10_AFTER_RELOAD {"cards":0,"tabs":[],"chosen":[],"selectButtons":0,"slots":0} screen=C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待你的决定 地图 日程 对话 按天调整行程 0 项安排 · 2 天 你的旅行草案 草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。 Day 1 12-30 Day 2 12-31 
+SHOT walk102-10-after-reload.png bytes=155832
+DEPARTURE_NOT_ON_TIMELINE trying 我的旅程
+STEP_11_DEPARTURE_VISIBLE=false
+STEP_11_CARD (unreadable)
+STEP_12A_STAMPS_BEFORE []
+STEP_12A_GAP_KEPT rows=0 (WALK_KEEP_GAP=1: 这一趟不改时间，要走到出发之后)
+TICK_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+SAVE_ERR locator.click: Timeout 8000ms exceeded. Call log: [2m - wai
+STEP_12_SAVE_STATUS (none after 56s)
+STEP_12A2_NO_NAMED_ROW round=1 status=(unreadable)
+STEP_12_CARD_AFTER (unreadable)
+SHOT walk102-12-departure-after-save.png bytes=324813
+STEP_12B_ROUTE_BEFORE (unreadable)
+FREEZE_ERR_1 locator.click: Timeout 8000ms exceeded. Call log: [2m - waiting for g
+STEP_12B_ROUND_1 BAND (unreadable)
+STEP_12B_ROUND_1 ASK_COUNT (unreadable)
+STEP_12B_ROUND_1 TODO_ROUTE_LINES=0 FROZEN=false
+SHOT walk102-12b-round-1.png bytes=324813
+FREEZE_ERR_2 locator.click: Timeout 8000ms exceeded. Call log: [2m - waiting for g
+STEP_12B_ROUND_2 BAND (unreadable)
+STEP_12B_ROUND_2 ASK_COUNT (unreadable)
+STEP_12B_ROUND_2 TODO_ROUTE_LINES=0 FROZEN=false
+SHOT walk102-12b-round-2.png bytes=310244
+FREEZE_ERR_3 locator.click: Timeout 8000ms exceeded. Call log: [2m - waiting for g
+STEP_12B_ROUND_3 BAND (unreadable)
+STEP_12B_ROUND_3 ASK_COUNT (unreadable)
+STEP_12B_ROUND_3 TODO_ROUTE_LINES=0 FROZEN=false
+SHOT walk102-12b-round-3.png bytes=310244
+STEP_12B_ROUTE_AFTER (unreadable)
+STEP_12B3_HOP_REFUSALS []
+SHOT walk102-12b2-before-reload.png bytes=310244
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+REOPEN_ERR_12B2 locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+STEP_12B2_DEPARTURE_VISIBLE=false
+STEP_12B2_ROUTE_STATE_AFTER_RELOAD (unreadable)
+STEP_12B3_HOP_REFUSALS_AFTER_RELOAD []
+LAYER_BLOCKED rev-mission-layer-agent attempt=1 {"present":false}
+LAYER rev-mission-layer-agent attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=2 {"present":false}
+LAYER rev-mission-layer-agent attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=3 {"present":false}
+LAYER rev-mission-layer-agent attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=4 {"present":false}
+LAYER rev-mission-layer-agent attempt=4 clicked=false
+STEP_12B3_DRAWER_TITLE (none)
+STEP_12B3_DRAWER_ROWS []
+STEP_12B3_DRAWER_TRANSIT_LABELED=0 WALK_LABELED=0
+STEP_12B3_DRAWER_LINK_MODES []
+STEP_12B3_DRAWER_RAW_SECONDS=0 READABLE_UNITS=0 LINE_NAMES []
+STEP_12B3_PANEL_ROUTE_LINES [] RAW=0 CLOSED_READ=0 OPEN_READ=0
+SHOT walk102-12b4-agent-drawer.png bytes=92219
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+STEP_12B2_ASK_COUNT (unreadable)
+STEP_12B2_TODO_ROUTE_LINES=0 TODO_PLACE_LINES=0
+SHOT walk102-12b3-after-reload.png bytes=92219
+SHOT walk102-12b-routes-verified.png bytes=92219
+STEP_12C_PRICE_BEFORE (unreadable)
+STEP_12C_PRICE_AFTER (no accept door on this card)
+STEP_12D_ASK_COUNT (unreadable)
+STEP_12D_ASK_HOW_BEFORE_PRESS (unreadable)
+LAYER_BLOCKED rev-mission-layer-agent attempt=1 {"present":false}
+LAYER rev-mission-layer-agent attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=2 {"present":false}
+LAYER rev-mission-layer-agent attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=3 {"present":false}
+LAYER rev-mission-layer-agent attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=4 {"present":false}
+LAYER rev-mission-layer-agent attempt=4 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false

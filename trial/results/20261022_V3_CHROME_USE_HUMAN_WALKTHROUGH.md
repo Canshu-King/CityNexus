@@ -1156,3 +1156,77 @@ walk-99 的流水停在 `WAIT_360s busy=false`（`trial/results/20261022_v3_huma
 （同文件 `:5`），没有去伪造状态。所以这一格现在手上是：闸那一行的形状、真模块在浏览器里的逐臂读数、
 walk-94 那张 BEFORE 图；一张 AFTER 图留给下一趟。
 USER_VERIFIED 仍是 PENDING。
+
+## 廿五、凌晨两点四十二到三点三十一：三趟连着停在同一件事上，而这一回屏上说的是真话（walk-101／102／103）
+
+**三趟同一形状。** walk-101 在 02:42:09 起步（`trial/results/20261022_v3_human_chrome/walk-101-log.txt:1`），
+02:42:25 发出目标（同文件 `:7`），02:42 档按了「开始研究」（同文件 `:10`），从 `:11` 起连续十五拍都是
+`busy=false`；walk-102 在 03:00:48 起步（`walk-102-log.txt:1`），03:01:09 发目标（`:7`）、按了同一个键（`:11`），
+最后 `SETTLE_TIMEOUT`（`:28`）并且 `STEP_05_DRAFT slots=0`（`:29`）。走查到这里就只能说"草案没来"，
+说不出为什么——那一句得由库里的 run 行来答。
+
+**成因钉到秒。** 只读 sqlite（`mode=ro`，不写、不 reset、不调供应商）把这两趟 journey 的 run 行摊在
+`trial/results/20261022_v3_human_chrome/agent_runs_503_pair_1024.txt`（七行 run 在 `:8`—`:14`，
+下面 `:19` 起的每一格都由那七行现算）：
+
+- walk-101 那一趟两条 `FAILED_EXTERNAL / MODEL_HTTP_503`（`:8`、`:9`），第二条只在第一条失败后 5 秒起
+  （`:25` 那行把它认成"自动重跑候选"），此后没有任何 run 自己再起来；最后一条 503 止于 18:44:24，
+  到下一个 run 建档之间 **920 秒＝15 分 20 秒**（`:21`）。
+- walk-102 同一形状：一条 503（`:13`、`:22`），静默 **842 秒＝14 分 2 秒**（`:24`）。
+- 两趟合计 3 条 `MODEL_HTTP_503`（`:26`）。
+- 把静默打破的都是**仪表自己发的第二句话**：walk-101 在 18:59:44.695 发（`walk-101-log.txt:33`），
+  库里那条 run 建档于 18:59:45.022（`agent_runs_503_pair_1024.txt:10`），38 秒后答
+  `PARTIAL / TRAVELER_INPUT_REQUIRED`（`:20`）；walk-102 在 19:18:22.409 发（`walk-102-log.txt:34`），
+  那条 run 建档于 19:18:22.848（`:14`），213 秒后答同一码（`:23`）。
+
+**这里要更正我自己的一个假设。** 前面几节我把"按了开始研究之后十几分钟屏上没动静"当成一条待建的产品缺陷
+（哑巴等待）。r23 把等待循环里每一分钟的底栏原文打出来（读屏腿 `trial/human_walk/departure_full_walk_r23.mjs:109`，
+打印腿 `:111`），walk-103 在 03:25:46 起步、03:26 又赶上同一条 503，于是屏上第一次留下了整段证词：
+
+> Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。
+
+（`trial/results/20261022_v3_human_chrome/walk-103-log.txt:15`、`:17`、`:19`，一分钟一条）。
+写这句话的码在 `frontend/src/trial/mobile/WorkspaceActions.tsx:676`——它只在任务态是
+`FAILED_RECOVERABLE`（或请求本身报错）时才渲染那条 `p[role=status]`。**所以"哑巴等待"不成立，这个状态
+产品说的是实话**；walk-101／102 当时看不出它说实话，是因为我那时打的只有 `busy=false`，那是一把吞掉答案的尺，
+不是屏上没字。
+
+**还差半格：门按得动吗。** r23 那一列写错了正则——它找 `/重试|可以继续/`，而这一屏的字面是「继续研究」
+（`WorkspaceActions.tsx:644` 在 `RESUMABLE`／`FAILED_RECOVERABLE` 时渲染那颗按钮），所以 walk-103 里那一列
+必然是假阴性。我另起一把**只读**的尺 `trial/human_walk/resume_affordance_probe_r1.mjs`（不点、不输入、
+不动 storage，免得碰坏同一浏览器里正在跑的 walk-103），现读 walk-103 那一页：
+按钮 `visible=true disabled=false`，渲染盒 313×46 在 y≈1104（`trial/results/20261022_v3_human_chrome/resume-affordance-1.txt:4`）。
+也就是说这一格现在是"话说了、门也在、而且没被锁住"；**唯一没测的是按下去真能不能救回来**——那一次要真按，
+我等 walk-103 自己走完它的十六分钟再去按，好让这趟流水保持成一条纯粹的 stall 记录，别把我按的那一下混进仪表的读数里。
+r24 把两条腿都装好了（原文 `trial/human_walk/departure_full_walk_r24.mjs:113`，出声 `:117`），
+r23 冻住不动，因为 walk-103 的每格读数都得能对着它引。
+
+**自报一次工具错，和它造成的污染。** 我想给当时还活着的遗留标签页补一张"现在屏上写什么"，
+起探针写成了 `PROBE_SHOT=… PROBE_LOG=… node 甲.mjs 2>/dev/null || node 乙.mjs`：
+变量前缀只贴给了第一个命令（那个命令其实根本不存在），落到 `||` 后面的乙拿到的是默认值——
+于是那六行读数被**追加进了已经发过坐标的** `stalled-research-screen-1.txt`（它原本 5 行），
+图也落在默认名 `stalled-screen-r2.png`。处置：六行原样搬进
+`trial/results/20261022_v3_human_chrome/leftover-tab-screen-1.txt`，`stalled-research-screen-1.txt`
+按 HEAD 的字节恢复（现在 `git status` 对它没有 M），图改名为 `leftover-tab-screen-1.png`，
+改名前后同一枚 sha256 `3c8a211350402418d033165cbe3057d6b599e47e7598a23aeb0750979754611e`。
+这张图能证什么、不能证什么，写清楚：它是 14496 那一栈上五页里"取最后一页"的屏
+（`leftover-tab-screen-1.txt:2` 列了五页同址），页上存的旅行目标是「12 月 30 日在北京市区玩一天，人均预算 500」，
+和 walk-101／102 那两趟的故事（12 月 3 日、八达岭）不是同一趟，所以我**不拿它说 503 的事**，
+只用它记一件小事：没人操作时那一页底栏只写「继续和当前 Agent 对话」（`:6`），草案槽为零（`:5`）。
+
+**栈的坐标这次必须写全，否则下一棒会找错端口。** 今晚能被引的走查都跑在
+web `14496` + backend `60296` + canary 库 `D:/moodle/_cmdr_v3_live_1022/citynexus_v3_human21_1022.db`
+（WAL 在 03:22 仍在写）；同一台机器上另有一栈在 `14436` 也在听（父进程是同一枚 serve 脚本的另一个实例），
+而仪表的默认 `WALK_BASE` 仍写着 14436（`departure_full_walk_r23.mjs:40`）——walk-103 是显式指到 14496 才跑的。
+
+**这一树里有别人的未提交改动，我没动它。** `frontend/src/trial/RevolutionFirstLook.tsx` 与 `.css`
+正被别人改（把旅客目标句里的「三个人／人均 300」解析进人数与预算）。我既没回退也没替它提交。
+它对我自己的走查有一处可见影响：`STEP_02A_PREFILLED` 现在读得出 `party=1 budget=800`
+（`walk-101-log.txt:4`）／`party=1 budget=500`（`walk-102-log.txt:4`），但仪表紧接着在 `STEP_02`
+覆盖成 2 人 600，所以读数没被它带跑。另有一条约束我自己守住：vite 是热更新的，
+别人的改动会在走查中途生效，所以 walk-103 跑完之前我不碰 `frontend/src`。
+
+**欠的还欠着。** PLACE_CLOSED 的屏上 AFTER 图：walk-103 是带着 `WALK_PROVE_CLOSED=1` 跑的
+（那一腿先把折叠掉的时间块按 `<summary>` 点开再填，`departure_full_walk_r23.mjs:489` 起），
+但模型还在 503 里的话这趟就到不了那道门；我不拿模块臂的读数冒充屏上 AFTER。
+USER_VERIFIED 仍是 PENDING。

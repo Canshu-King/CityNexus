@@ -1,0 +1,10 @@
+TABS ["http://127.0.0.1:14496/revolution","http://127.0.0.1:14496/revolution","http://127.0.0.1:14496/revolution","http://127.0.0.1:14496/revolution","http://127.0.0.1:14496/revolution","http://127.0.0.1:14496/revolution"]
+TAB_0 url=http://127.0.0.1:14496/revolution
+TAB_0 DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。
+TAB_0 RESUME_BUTTON visible=true disabled=false box={"x":43.06208038330078,"y":1104.53857421875,"width":313.3389205932617,"height":46.392578125}
+TAB_0 CONSENT_NEARBY ⚙
+TAB_1 IRRELEVANT C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 已有阶段性成果 
+TAB_2 IRRELEVANT C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 
+TAB_3 IRRELEVANT C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待你的决定 地
+TAB_4 IRRELEVANT C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 
+TAB_5 IRRELEVANT C CityNexus 你的智能旅行伙伴 AI 建议可试 TRIPS 行程 还没出发继续这趟 开始探索一个地区后，你保存
