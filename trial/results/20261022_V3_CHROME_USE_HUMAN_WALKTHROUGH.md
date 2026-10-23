@@ -1554,3 +1554,28 @@ USER_VERIFIED 仍是 PENDING：双击那两枚 .bat 是我在这台机器上跑�
 USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、Actions 运行 0 次。
 下一刀按裁语顺序：P0-4（少走路偏好下用真公共交通替换长步行 +「根据路线重新安排」），
 以及 walk-108 那件 `freeze-routes` 三连 500 而屏上不说（`#310`）。
+
+### 更正与补账（六点二十分，仍在这一节里）
+
+**先撤一句。** 上面「恢复用同一枚 journey_id/task_id，没有新建 Journey，没有第二次供应商调用的痕迹」那句里，后半截没有证据资格：那是把"端点账"当成"供应商账"了。下面换成两本分开现读的账。
+
+**端点那本**（`_cmdr_v3_port_1022/uvicorn_dead_canary.log` 现读重算）：与 goal-task 有关的 POST 共 **7** 条 = 建 Task 1 条（`201`）+ `run` 1 条 + `resume` 5 条（这 6 条都是 `200`）；`distinct journeys=1`、`distinct tasks=1`（`1c7b5dcf-fc95-…`）。第廿九节末尾写的「共 6 条」只数了 `run|resume`，漏了建 Task 那一条 `201`，以这条为准。
+
+**库里那本**（`D:/moodle/_cmdr_v3_live_1022/citynexus_v3_dead_1024.db`，`mode=ro` 现读，未写）：`journeys` 1 行（建于 `22:03:38`，早于任何一次按下）、`journey_missions` 1 行、`agent_runs` **6** 行且 6 行的 `mission_id` 全是同一枚 `1c7b5dcf…`。⇒「**不新建 Journey、不新建 Task**」这一件是服务端记录支持的，不只是日志：
+
+| run | status | reason | 耗时（秒，由 `completed_at - created_at` 现算） |
+| --- | --- | --- | --- |
+| `09120da8` | FAILED_EXTERNAL | MODEL_EXTERNAL_ERROR | 2.05 |
+| `336f5229` | FAILED_EXTERNAL | MODEL_EXTERNAL_ERROR | 2.05 |
+| `292558c8`（轮 A 那一按） | FAILED_EXTERNAL | MODEL_EXTERNAL_ERROR | 2.11 |
+| `b134944c`（轮 B 那一按） | COMPLETED | —（`SUMMARY_READY`） | 35.62 |
+| `1615ee0d`（发消息） | FAILED_EXTERNAL | MODEL_EXTERNAL_ERROR | 2.17 |
+| `beb79d4c`（轮 C 那一按） | FAILED_EXTERNAL | MODEL_EXTERNAL_ERROR | 2.11 |
+
+**但"供应商调用没重复"这一条不成立**，所以撤掉。`agent_run_steps` 共 6 行，**全部**挂在那枚成功的 `b134944c` 上（`discover_places`×3、`search_city_services`、`inspect_journey`、`save_draft_itinerary`），5 枚失败的 run 各留 **0** 步。⇒ 按一次「重试这一轮」= 模型把这一整轮从头再跑一遍；**轮次身份复用了，活儿没有复用**。另：`provider_calls` 表 0 行（模型那一枚 run 明明 `COMPLETED`，所以这本账根本不记 chat 这条路）⇒ 它不能当扣费分母，我也就不拿它说"没重复扣费"。
+
+**于是剩两枚形状缺口，点名等裁，我不自己改后端语义**：
+1. `backend/app/agent/goal_tasks.py:1372` 写死 `recovery_epoch_id=None`。全仓 6 处 `AgentRun(...)` 里只有 goal-task 这一支不带 recovery epoch（`backend/app/agent/guardian.py:498`、`backend/app/agent/runtime.py:1072`、`backend/app/main.py:6003` 都传 `recovery_epoch.id`）。⇒ 服务端里"这一行是同一轮的恢复"**没有任何落盘记号**，事后只能靠 `mission_id` 相同反推。
+2. 底栏「重试这一轮」的请求体里**没有 `message_id`**（`frontend/src/trial/mobile/WorkspaceActions.tsx:427`–`:430`）；发消息那一支有，而且专意为重试留着复用（`:467`–`:468` 取 `followupMessageId.current`，`:477`–`:478` 的注释写明"服务端确认之前不清"）。⇒ 连按两下的保护现在只在页面里（`:420` 的 `writeBusy.current` 闸），**线上没有幂等键**。裁语 P0-2 里"与原幂等键"这一件按字面还没做到，挂 `#312`。
+
+**还有一处行号写歪**：轮 C 那行里"发一句真消息"的证据应在 `trial/results/20261022_v3_human_chrome/dock-recovery-5.txt:8`（`SENT at 22:10:26.502Z`），我写成了 `:11`，那一行是 `SHOT`。另外 `dock-recovery-3.txt:19` 与 `dock-recovery-5.txt:15` 打印的 `same_task=false` 是我那把尺的**假否**：它拿 `BASELINE_TASK` 比，而这两趟探针自己没抓到基线（`:9`、`:12` 都是 `undefined`）。真凭据是请求对里两边相同的 `task` 字段（`walk-109-log.txt:14` 的 `run` 与 `dock-recovery-3.txt:11`–`:19` 的 `resume` 都是 `1c7b5dcf`），不是我那枚旗标。
