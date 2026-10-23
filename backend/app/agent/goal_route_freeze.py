@@ -186,9 +186,34 @@ def _refusal_reason(task: dict, origin: Place, destination: Place) -> str | None
     return str(value) if value else None
 
 
+def _arrival_moment(value: datetime | str | None) -> datetime | None:
+    """Read the hour the plan stores, whatever shape the caller handed over.
+
+    Why this exists at all: `Activity.start_at` is a text column (`app/db/models.py`), and this door is
+    called with exactly that value (`freeze_routes` passes `destination_row.start_at`).  The first version
+    of the public-transport arm called `arrival.strftime` on it, so the traveller's own button answered
+    `500` with `AttributeError: 'str' object has no attribute 'strftime'` the moment a hop reached that
+    arm -- `trial/results/20261022_v3_human_chrome/walk-78-log.txt:41`, traceback at
+    `trial/results/20261022_v3_human_chrome/walk-78-freeze-traceback-1.txt:98`.  My unit arms did not catch
+    it because they handed in a real datetime: a friendlier fixture than the product.
+
+    An unreadable hour is asked as *no* hour rather than invented: the provider then answers for whatever
+    it defaults to, and the row says so, instead of the plan claiming a departure time nobody wrote down.
+    """
+    if isinstance(value, datetime):
+        return value
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text)
+    except ValueError:
+        return None
+
+
 def _transit_leg(session: Session, task: dict, origin: Place, destination: Place,
                  start: tuple[float, float], end: tuple[float, float],
-                 arrival: datetime | None) -> dict | None:
+                 arrival: datetime | str | None) -> dict | None:
     """The hop nobody walks: asked of the public-transport door, at the hour the traveller arrives.
 
     Why this exists: `client.walking` is the only measurement this door ever made, so a hop that is too
@@ -215,8 +240,9 @@ def _transit_leg(session: Session, task: dict, origin: Place, destination: Place
     city_code = str((task.get("amap_region") or {}).get("citycode") or "").strip()
     if not city_code:
         return None
-    date_text = arrival.strftime("%Y-%m-%d") if arrival is not None else None
-    time_text = arrival.strftime("%H:%M") if arrival is not None else None
+    moment = _arrival_moment(arrival)
+    date_text = moment.strftime("%Y-%m-%d") if moment is not None else None
+    time_text = moment.strftime("%H:%M") if moment is not None else None
     with _client() as transit_client:
         receipt = _receipt(session, "goal_amap_transit",
                            {"from_place_id": origin.id, "to_place_id": destination.id,
@@ -232,7 +258,7 @@ def _transit_leg(session: Session, task: dict, origin: Place, destination: Place
 
 
 def _measure_now(session: Session, task: dict, origin: Place, destination: Place,
-                 arrival: datetime | None = None) -> dict | None:
+                 arrival: datetime | str | None = None) -> dict | None:
     """Ask the same AMap client the Agent uses, through the same receipt writer.
 
     GCJ-02 is what the provider speaks and WGS-84 is what the row stores

@@ -691,8 +691,29 @@ READY、`:83` 只给裸名也要 READY、`:88` 两个都不给才许说 NOT_CONF
 重跑：四条点名臂全红、对照臂仍绿（`4 failed, 1 passed`），所以这几条断言咬的是新增的事实。
 整套收集 2554 条，今晚相关五枚文件 38 条通过，`tsc` 退出码零。
 
-**AFTER 的屏幕读数**：走查 walk-78（r14 栈：后端 :60246 / 前端 :14446 / 独立库
-citynexus_v3_human16_1022.db）此刻正在跑；它证明到哪儿写哪儿，没证明到的不写成通过。
+**AFTER 的屏幕读数（walk-78，r14 栈：后端 :60246 / 前端 :14446 / 独立库 citynexus_v3_human16_1022.db）。**
+同一句话重走一遍，保存这一格过了：屏上「已保存 6 项正式安排。下方可以查看日程和出发待办。」
+（`trial/results/20261022_v3_human_chrome/walk-78-log.txt:37`，图证 `walk78-12-departure-after-save.png`），
+三份备选也真出现了（A 轻松少走版 / B 省钱版 / C 本地特色版，同文件 `:27`）。
+**同一趟又量出我上一刀带出来的新洞**：按「核实并冻结今天的转场」回来的是
+`HTTP_500 …/freeze-routes`（同文件 `:41`，`:47`、`:53` 是旅客又按了两次）。
+栈上的栈顶写着真因：`AttributeError: 'str' object has no attribute 'strftime'`
+（`trial/results/20261022_v3_human_chrome/walk-78-freeze-traceback-1.txt:95`、`:98`）——
+`Activity.start_at` 是文本列（`backend/app/db/models.py:1483` 那一列），冻结口把它原样递给
+公共交通那条臂去 `strftime`。也就是说：**只要有一段真的走不动，那一版方案就 500**，
+而我昨天写的四条臂全都递的是真 datetime——夹具比产品客气，所以没抓到。
+
+**补这一刀：读计划里存的小时，按它本来的形状读。** `_arrival_moment`
+（`backend/app/agent/goal_route_freeze.py:189`）接受 datetime、ISO 文本或空，读不出来的文本
+**按"没有小时"问**而不是编一个（供应方就按它自己的默认答，行里也这么记）；
+`_transit_leg` 与 `_measure_now` 的入参类型同时放宽成 `datetime | str | None`。
+两条回归臂钉的就是当时飞出去的形状：`arrival="2026-12-04T11:00:00+08:00"` 必须问到
+`("transit", "010", "2026-12-04", "11:00")`，`arrival="昨天下午"` 必须问到不带小时的一次
+（`backend/tests/test_qoder_goal_transit_leg_r1.py:115`、`:123`）。
+把 `_arrival_moment` 换回"原样返回"，这两条臂立刻红在
+`goal_route_freeze.py:244 AttributeError`，其余十条仍绿（`2 failed, 10 passed`）——
+所以它们钉的是那次崩溃。这一枚修完，屏上的正向读数在 walk-79（r15：后端 :60256 / 前端 :14456），
+量到没量到都会写在这里。
 
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程

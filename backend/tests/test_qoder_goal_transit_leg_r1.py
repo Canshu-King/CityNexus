@@ -106,6 +106,27 @@ def test_the_hour_asked_is_the_hour_the_traveller_arrives(monkeypatch) -> None:
     assert calls[1] == ("transit", "010", "2026-12-04", "03:20")
 
 
+# The plan does not store a datetime: `Activity.start_at` is a text column, and `freeze_routes` hands this
+# arm exactly that string (backend/app/agent/goal_route_freeze.py:339).  The first version of the
+# public-transport arm called `.strftime` on it and the traveller's own button answered 500 --
+# trial/results/20261022_v3_human_chrome/walk-78-log.txt:41 with the traceback at
+# trial/results/20261022_v3_human_chrome/walk-78-freeze-traceback-1.txt:98.  These two arms are the
+# regression: the shape that arrived over the wire, not the shape a fixture would like.
+def test_the_hour_the_plan_stores_is_text_and_still_asks_at_that_hour(monkeypatch) -> None:
+    row, calls, _session = _run(monkeypatch, walk=WALK_REFUSED, transit=TRANSIT_OK,
+                                task={"amap_region": {"citycode": "010"}},
+                                arrival="2026-12-04T11:00:00+08:00")
+    assert row is not None
+    assert calls[1] == ("transit", "010", "2026-12-04", "11:00")
+
+
+def test_unreadable_arrival_text_asks_without_inventing_an_hour(monkeypatch) -> None:
+    row, calls, _session = _run(monkeypatch, walk=WALK_REFUSED, transit=TRANSIT_OK,
+                                task={"amap_region": {"citycode": "010"}}, arrival="昨天下午")
+    assert row is not None
+    assert calls[1] == ("transit", "010", None, None)
+
+
 def test_a_hop_with_no_arrival_hour_is_asked_without_inventing_one(monkeypatch) -> None:
     row, calls, _session = _run(monkeypatch, walk=WALK_REFUSED, transit=TRANSIT_OK,
                                 task={"amap_region": {"citycode": "010"}}, arrival=None)
