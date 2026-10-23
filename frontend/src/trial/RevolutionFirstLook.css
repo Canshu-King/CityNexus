@@ -133,6 +133,8 @@
 .rev-trip-interest-options label { display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 9px 11px; border: 1px solid #527767; border-radius: 999px; color: #e8ffeb; font-size: 13px; cursor: pointer; }
 .rev-trip-interest-options input { accent-color: #c8f56e; width: 17px; height: 17px; margin: 0; }
 .rev-trip-ai-line { margin: -8px 0 0; color: #496458; font-size: 12px; line-height: 1.6; }
+/* The destination is a required field the browser blocks silently, so the form says what is still missing. */
+.rev-trip-destination-hint { margin: 6px 0 0; color: #7a4a12; font-size: 12px; line-height: 1.6; }
 .rev-trip-submit { min-height: 56px; padding: 14px 22px; border: 1px solid #d9ff97; border-radius: 16px; background: var(--rev-accent); color: #082318; font-size: 16px; font-weight: 800; cursor: pointer; }
 .rev-trip-submit:disabled { cursor: wait; opacity: .66; }
 .rev-firstlook-error {

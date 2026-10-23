@@ -1091,6 +1091,9 @@ export function RevolutionFirstLook() {
                     data-testid="rev-firstlook-city"
                   />
                 </div>
+                {!cityName.trim() && <p className="rev-trip-destination-hint" role="status" data-testid="rev-trip-destination-hint">
+                  还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。
+                </p>}
                 <details className="rev-v3-trip-dates"><summary>日期与天数</summary><div className="rev-trip-request-grid">
                   <label>
                     出发日期
