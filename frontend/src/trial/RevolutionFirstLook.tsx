@@ -365,6 +365,36 @@ function DraftAgentActivity({
   );
 }
 
+const GOAL_CN_NUM: Record<string, number> = {
+  一: 1,
+  二: 2,
+  两: 2,
+  三: 3,
+  四: 4,
+  五: 5,
+  六: 6,
+  七: 7,
+  八: 8,
+  九: 9,
+  十: 10,
+};
+
+function readPartyFromGoal(text: string): number | null {
+  const match = text.match(/([一二两三四五六七八九十\d]+)\s*(?:个)?人/);
+  if (!match) return null;
+  const raw = match[1];
+  const value = /^\d+$/.test(raw) ? Number(raw) : GOAL_CN_NUM[raw];
+  if (!value) return null;
+  return Math.min(20, Math.max(1, value));
+}
+
+function readPerPersonBudgetFromGoal(text: string): number | null {
+  const match = text.match(/(?:人均|每人|平均每人)[^\d]{0,4}(\d{2,6})/);
+  if (!match) return null;
+  const value = Number(match[1]);
+  return Number.isFinite(value) ? value : null;
+}
+
 export function RevolutionFirstLook() {
   const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "");
   const [startDate, setStartDate] = useState(() => localDateAfter(1));
@@ -373,6 +403,17 @@ export function RevolutionFirstLook() {
   const [budgetYuan, setBudgetYuan] = useState("1000");
   const [planningMode, setPlanningMode] = useState<TripPlanningMode>("balanced");
   const [tripGoal, setTripGoal] = useState("");
+  const partyEdited = useRef(false);
+  const budgetEdited = useRef(false);
+  const applyNumbersFromGoal = (text: string) => {
+    const party = readPartyFromGoal(text);
+    const perPerson = readPerPersonBudgetFromGoal(text);
+    if (party !== null && !partyEdited.current) setPartySize(party);
+    if (perPerson !== null && !budgetEdited.current) {
+      const people = party ?? partySize;
+      setBudgetYuan(String(perPerson * Math.max(1, people)));
+    }
+  };
   const [tripInterests, setTripInterests] = useState<string[]>([]);
   const [tripEnergy, setTripEnergy] = useState<TripEnergy>("easy");
   const [journey, setJourney] = useState<TrialJourney | null>(loadRecentJourney);
@@ -1028,7 +1069,11 @@ export function RevolutionFirstLook() {
                       maxLength={240}
                       rows={3}
                       disabled={busy || startWriteBlocked}
-                      onChange={(event) => setTripGoal(event.target.value)}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        setTripGoal(value);
+                        applyNumbersFromGoal(value);
+                      }}
                       placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
                       data-testid="rev-trip-goal"
                     />
@@ -1090,7 +1135,10 @@ export function RevolutionFirstLook() {
                           value={partySize}
                           required
                           disabled={busy || startWriteBlocked}
-                          onChange={(event) => setPartySize(Number(event.target.value))}
+                          onChange={(event) => {
+                            partyEdited.current = true;
+                            setPartySize(Number(event.target.value));
+                          }}
                           data-testid="rev-trip-party-size"
                         />
                       </label>
@@ -1104,7 +1152,10 @@ export function RevolutionFirstLook() {
                           value={budgetYuan}
                           required
                           disabled={busy || startWriteBlocked}
-                          onChange={(event) => setBudgetYuan(event.target.value)}
+                          onChange={(event) => {
+                            budgetEdited.current = true;
+                            setBudgetYuan(event.target.value);
+                          }}
                           data-testid="rev-trip-budget"
                         />
                       </label>

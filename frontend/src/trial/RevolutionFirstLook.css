@@ -252,3 +252,42 @@
 }
 .rev-firstlook-operator-intro a { color: #135b35; font-weight: 700; }
 .rev-firstlook-operator-intro p { line-height: 1.7; }
+
+/* Phone geometry (measured 390×844, 2026-10-23): the submit button sat 55px under the
+   fixed bottom nav, and the chat dock covered the primary action in the quick-explore
+   pane. Keep the submit above the nav and let the page scroll clear of the dock. */
+@media (max-width: 640px) {
+  .rev-mobile-v1 .rev-firstlook-content {
+    padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  /* keep the first screen's main action above the fixed nav without covering the
+     date card: tighten the hero rhythm so the button lands above 768px */
+  .rev-mobile-v1 .rev-firstlook-hero {
+    padding-top: 18px !important;
+  }
+  .rev-mobile-v1 .rev-firstlook-hero h1 {
+    margin: 4px 0 4px !important;
+  }
+  .rev-mobile-v1 .rev-firstlook-hero form {
+    margin-top: 14px !important;
+  }
+  .rev-mobile-v1 .rev-trip-request-form {
+    gap: 10px;
+  }
+  .rev-mobile-v1 .rev-trip-request-form > textarea {
+    min-height: 76px !important;
+  }
+  .rev-mobile-v1 .rev-trip-request-form .rev-trip-submit {
+    position: sticky;
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    z-index: 31;
+    box-shadow: 0 8px 24px rgba(2, 16, 10, 0.45);
+  }
+}
+@supports selector(:has(*)) {
+  @media (max-width: 640px) {
+    body:has(.rev-mission-chat-dock) .rev-firstlook-content {
+      padding-bottom: calc(340px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+  }
+}
