@@ -140,6 +140,12 @@
 .rev-mission-chat-row textarea { font-size: 16px; min-height: 48px; padding: 11px; resize: none; }
 .rev-mission-chat-row button { min-height: 48px; width: 66px; }
 .rev-mission-chat-dock > p { grid-column: 1 / -1; font-size: 12px; white-space: normal; }
+.rev-mission-dock-recovery { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.rev-mission-dock-recovery button {
+  min-height: 44px; padding: 7px 8px; border: 1px solid #0e6a55; border-radius: 11px;
+  background: #eaf5ef; color: #0d4433; cursor: pointer; font: inherit; font-weight: 740; font-size: 13px; line-height: 1.35;
+}
+.rev-mission-dock-recovery button:disabled { opacity: .48; cursor: default; }
 .rev-mission-settings-panel {
   position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
   max-height: min(65dvh, 520px); overflow-y: auto; overscroll-behavior: contain;

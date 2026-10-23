@@ -300,7 +300,7 @@ export function MissionCockpit({
         {journeyStatus === "ACTIVE" ? <p>当前行程的助手动态在「执行与待办」里。</p> :
           <div className="cn-mission-agent-disclosure">
             <h3>一起商量安排</h3>
-            <WorkspaceActions embedded chatDockVisible={true} dialogueActive={layer === "agent"} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onTaskChange={receiveTask} />
+            <WorkspaceActions embedded chatDockVisible={true} dialogueActive={layer === "agent"} panel="assistant" goalRequest={goalRequest} onClose={() => undefined} onBrowseFound={() => selectLayer("map")} onTaskChange={receiveTask} />
           </div>}
       </div>
       <div ref={spatial} className="cn-mission-spatial" aria-label="地图与日程画布">

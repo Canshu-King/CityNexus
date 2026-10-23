@@ -218,9 +218,10 @@ function draftReceipt(item: { draft_revision_before?: number | null; draft_revis
   return "日程：版本 " + before + " → " + after;
 }
 
-export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, dialogueActive = true, onTaskChange }: { panel: WorkspacePanel;
+export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false, chatDockVisible = false, dialogueActive = true, onBrowseFound, onTaskChange }: { panel: WorkspacePanel;
   goalRequest?: { journeyId: string; goal: string } | null; onClose: () => void;
-  embedded?: boolean; chatDockVisible?: boolean; dialogueActive?: boolean; onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
+  embedded?: boolean; chatDockVisible?: boolean; dialogueActive?: boolean; onBrowseFound?: () => void;
+  onTaskChange?: (task: DraftGoalTask, events: DraftGoalTaskEvent[]) => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -255,6 +256,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
   const visible = snapshot && sameContext(snapshot.context, context) ? snapshot : null;
   const visibleTask = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.value : null;
   const visibleEvents = goalTaskSnapshot && sameContext(goalTaskSnapshot.context, context) ? goalTaskSnapshot.events : [];
+  const resumableTask = Boolean(visibleTask && ["RESUMABLE", "FAILED_RECOVERABLE"].includes(visibleTask.status));
   const conversationAnchor = useRef<HTMLDivElement>(null);
   const lastMessageId = visibleTask?.conversation?.at(-1)?.message_id;
   useEffect(() => {
@@ -641,7 +643,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
               void refreshGoalTask(actor, value.task_id).catch(() => undefined);
             }} />}
           {visibleTask.status === "WORKING" && <button type="button" className="rev-workspace-secondary" onClick={() => void cancelTask()}>取消任务</button>}
-          {["RESUMABLE", "FAILED_RECOVERABLE"].includes(visibleTask.status) &&
+          {resumableTask &&
             <button type="button" disabled={!aiReady || busy || !modelConsent} onClick={() => void resumeTask()}>继续研究</button>}
 
         </section>}
@@ -676,6 +678,14 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         {(busy || visibleTask?.status === "WORKING" || visibleTask?.status === "FAILED_RECOVERABLE" || requestError) && <p role="status" data-testid="rev-dock-status">{busy || visibleTask?.status === "WORKING"
           ? "Agent 正在处理，请稍后继续发消息。已有地图与日程仍可查看。"
           : (requestError || "Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。")}</p>}
+        {resumableTask && <div className="rev-mission-dock-recovery" data-testid="rev-dock-recovery">
+          {/* A stalled round used to be recoverable only from the panel below the fold, so the fixed dock
+              left the traveller a sentence with nothing to press. */}
+          <button type="button" data-testid="rev-dock-retry-round" disabled={!aiReady || busy || !modelConsent}
+            onClick={() => void resumeTask()}>重试这一轮</button>
+          {onBrowseFound && <button type="button" data-testid="rev-dock-browse-found"
+            onClick={() => onBrowseFound()}>先浏览已找到的地点</button>}
+        </div>}
       </form>, document.body)}
   </>;
   return createPortal(<dialog ref={dialog} className="rev-workspace-dialog" aria-labelledby="rev-workspace-heading"
