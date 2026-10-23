@@ -18,6 +18,7 @@ page; the engine flips Y into Visio's bottom-left system.
 from __future__ import annotations
 
 import json
+import re
 import os
 import textwrap
 import time
@@ -88,6 +89,7 @@ PALETTE = {
     "title":     ("#1F3A5F", "#1F3A5F"),
 }
 BODY_FONT = "Segoe UI"
+CJK_FONT = "Microsoft YaHei"
 BODY_SIZE = 9.0
 SUB_SIZE = 6.0
 TITLE_SIZE = 17.0
@@ -146,6 +148,10 @@ class Builder:
         self.chrome = []
         self.parked = []
         self.band_strips = []
+        # where the ink of each node's text actually lies inside its box, so a
+        # connector label can be allowed to bridge a border strip without ever
+        # being allowed to print over a word
+        self.node_text_rects = {}
         self.chrome_by_page = {}
         self._rowcache = {}
         self.page_no = 1
@@ -229,6 +235,26 @@ class Builder:
     def _flip_y(self, y_top, h):
         return self.PH - y_top - h / 2.0
 
+    @staticmethod
+    def _wunit(ch):
+        """Width of one glyph in em.
+
+        0.58 em for everything was a Latin-only assumption: a Chinese glyph is
+        close to a full em, so a 12-字 label was measured as if it needed the
+        room of 12 Latin letters and every Chinese box overflowed while the gate
+        still reported it as fitting.
+        """
+        o = ord(ch)
+        if (0x2E80 <= o <= 0x9FFF or 0x3000 <= o <= 0x303F
+                or 0xFF00 <= o <= 0xFFEF or 0xAC00 <= o <= 0xD7AF):
+            return 1.02
+        if ch in " ,.;:()[]{}|/-+&%$#'\"":
+            return 0.42
+        return 0.58
+
+    def text_width_in(self, text, size_pt):
+        return sum(self._wunit(c) for c in str(text)) * size_pt / 72.0
+
     def _wrap(self, text, width_in, size_pt):
         """Greedy word wrap sized so the text cannot overflow the box.
 
@@ -238,11 +264,36 @@ class Builder:
         estimates disagreeing by design is what keeps the drawn text inside the
         shape it belongs to.
         """
-        cpl = max(6, int(width_in * 72.0 / (size_pt * 0.58)))
+        avail = max(0.30, width_in)
         lines = []
         for para in str(text).split("\n"):
-            lines.extend(textwrap.wrap(para, cpl) or [""])
-        return lines
+            cur = ""
+            for tok in [c for c in re.split(r"(?<=[ \t])|(?<=[，。、；：])"
+                                      "|(?=[，。、；：])", para) if c]:
+                if self.text_width_in(tok, size_pt) > avail:
+                    # a token wider than the box (a Chinese run has no spaces to
+                    # break at) is split one glyph at a time
+                    if cur:
+                        lines.append(cur.strip())
+                        cur = ""
+                    while tok:
+                        take = 0
+                        while (take < len(tok) and self.text_width_in(
+                                tok[:take + 1], size_pt) <= avail):
+                            take += 1
+                        take = max(1, take)
+                        lines.append(tok[:take])
+                        tok = tok[take:]
+                    continue
+                if not cur:
+                    cur = tok
+                elif self.text_width_in(cur + tok, size_pt) <= avail:
+                    cur += tok
+                else:
+                    lines.append(cur.strip())
+                    cur = tok
+            lines.append(cur.strip())
+        return [l for l in lines if l] or [""]
 
     # ---------------------------------------------------------------- nodes
     def add_band(self, b):
@@ -341,6 +392,10 @@ class Builder:
 
         main = n["text"]
         sub = n.get("src")
+        # hideSrc: the reference stays in Shape Data and is not drawn, so a
+        # classroom sheet can carry the same provenance without a file path on
+        # the projected image
+        drawn = None if n.get("hideSrc") else sub
         # a briefing sheet needs smaller type in narrow columns than a design
         # drawing does, so a node may carry its own body size
         bs = float(n.get("size") or self.body_size)
@@ -349,13 +404,13 @@ class Builder:
         txt = "\n".join(lines)
         n_body_lines = len(lines)
         slines = []
-        if sub:
-            slines = self._wrap(sub, eff_w, self.sub_size)
+        if drawn:
+            slines = self._wrap(drawn, eff_w, self.sub_size)
             txt = txt + "\n" + "\n".join(slines)
         sh.Text = txt
         self._cell(sh, "Char.Size", "%gpt" % bs)
-        self._cell(sh, "Char.Font", '="%s"' % BODY_FONT)
-        if sub:
+        self._cell(sh, "Char.Font", '="%s"' % (self.spec.get("font") or BODY_FONT))
+        if drawn:
             try:
                 ch = sh.Characters
                 ch.Begin = 1
@@ -376,18 +431,22 @@ class Builder:
                 self.notes.append("per-run font sizing skipped on %s (%s)"
                                   % (n["id"], type(exc).__name__))
         needed = n_body_lines * (bs * 1.40 / 72.0) + 0.10
-        if sub:
+        if drawn:
             needed += len(slines) * (self.sub_size * 1.40 / 72.0)
         if not main.strip():
             # a marker shape carries no text, so there is nothing to overflow;
             # measuring an empty string against a narrow box produced a false
             # "usable -0.03in" failure on the briefing sheet
             needed = 0.0
+        elif n.get("hideSrc"):
+            # the citation is stored, not drawn, so only the body needs room
+            needed = n_body_lines * (bs * 1.40 / 72.0) + 0.10
         if needed > h + 1e-6:
             self.problems.append("text overflow: node %s needs %.2fin > box %.2fin"
                                  % (n["id"], needed, h))
-        widest = max([len(l) for l in lines] or [0]) if main.strip() else 0
-        est_w = widest * (bs * 0.52 / 72.0)
+        widest = max([self.text_width_in(l, bs) for l in lines] or [0.0]) \
+            if main.strip() else 0.0
+        est_w = widest
         if main.strip() and est_w > eff_w:
             self.problems.append("text width overflow: node %s needs %.2fin > usable "
                                  "%.2fin (%s box %.2fin)"
@@ -395,7 +454,7 @@ class Builder:
         # the small second line is drawn inside the same box, so it has to clear
         # the same walls; the first version only measured the body text and every
         # citation line in the shipped drawings overflowed its shape
-        if slines and main.strip():
+        if drawn and slines and main.strip():
             ws = max(len(l) for l in slines)
             est_ws = ws * (self.sub_size * 0.52 / 72.0)
             if est_ws > eff_w:
@@ -403,6 +462,20 @@ class Builder:
                     "citation width overflow: node %s needs %.2fin for %r > usable "
                     "%.2fin (box %.2fin); shorten the citation or widen the shape"
                     % (n["id"], est_ws, max(slines, key=len), eff_w, w))
+
+        # The ink is centred inside the box (VerticalAlign=1, paragraph centre),
+        # so its rectangle is derivable: this is what lets a connector label
+        # cross a shape's border strip while the gate still refuses to let it
+        # print over a word.
+        if main.strip():
+            ink_h = n_body_lines * (bs * 1.40 / 72.0)
+            if drawn and slines:
+                ink_h += len(slines) * (self.sub_size * 1.40 / 72.0)
+            ink_w = est_w + 0.06
+            self.node_text_rects[n["id"]] = {
+                "x": n["x"] + max(0.0, (w - ink_w) / 2.0),
+                "y": n["y"] + max(0.0, (h - ink_h) / 2.0),
+                "w": min(w, ink_w), "h": min(h, ink_h)}
 
         if sub:
             try:
@@ -545,17 +618,28 @@ class Builder:
             self._cell(con, "ConLineRouteExt", "1")
         elif e.get("route") == "orthogonal":
             self._cell(con, "ConLineRouteExt", "2")
+        # On a teaching sheet a label that has to sit on top of its own box is
+        # the exact defect the teacher complained about (the 否 that printed over
+        # "需要修改吗？"), so `labelStrict` drops the loose second pass and lets
+        # the build fail instead. The engineering drawings keep the old behaviour.
+        strict_passes = (True, False) if not self.spec.get("labelStrict") else (True,)
         if e.get("label"):
             size = e.get("labelSize", 7.0)
             txt = e["label"]
             one = min(1.60, max(0.62, len(txt) * size * 0.52 / 72.0))
+            if self.spec.get("labelStrict"):
+                # the 0.52 em above is a Latin estimate: a Chinese connector
+                # label is nearly twice as wide per glyph, so the white backing
+                # came out narrower than the text and the extra glyphs spilled
+                # onto the neighbouring box
+                one = min(2.60, max(0.62, self.text_width_in(txt, size) + 0.14))
             row = size / 72.0 * 1.6
             spot = None
             # a wide single line first; if the corridors are that tight, take a
             # narrower box and let the text wrap over two or three rows instead
             for w, h in ((one, row), (max(0.62, one * 0.62), row * 2),
                          (0.62, row * 3)):
-                spot = self._park_spot(e, w, h)
+                spot = self._park_spot(e, w, h, strict_passes)
                 if spot:
                     w_used, h_used = w, h
                     break
@@ -621,7 +705,7 @@ class Builder:
         return (a["x"] < b["x"] + b["w"] and b["x"] < a["x"] + a["w"]
                 and a["y"] < b["y"] + b["h"] and b["y"] < a["y"] + a["h"])
 
-    def _park_spot(self, e, w, h):
+    def _park_spot(self, e, w, h, strict_passes=(True, False)):
         """Where a connector's text can lie without covering anything.
 
         The first version took the connector's own endpoints, which are still
@@ -643,7 +727,24 @@ class Builder:
         # first pass keeps the label clear of its own two shapes as well; if the
         # link is too short for that, the second pass lets it touch an endpoint but
         # still not cover anything else on the sheet
-        for strict in (True, False):
+        if self.spec.get("labelStrict"):
+            # A Chinese label is wider than the corridor between two adjacent
+            # boxes (用户确认后 measures 1.13in against a 0.55in gap on the
+            # overview sheet), so "stay off both shapes" pushed it a whole row
+            # away from its own line and the reader could not tell which arrow
+            # it belonged to. On a teaching sheet the thing that must never be
+            # covered is a word, not a border, so try the positions on the line
+            # first - avoiding every shape's ink - and only then fall back to a
+            # spot that clears both shapes entirely. A label that may cover its
+            # own two shapes' words is never offered: that is the exact defect
+            # (「否」 printed over 「需要修改吗？」) labelStrict exists to stop.
+            ink = [self.node_text_rects.get(n["id"]) or n for n in self.spec_nodes]
+            for avoid in (ink, blockers + [a, b]):
+                spot = self._spot_scan(ax, ay, bx, by, w, h, avoid, others)
+                if spot:
+                    return spot
+            return None
+        for strict in strict_passes:
             avoid = blockers + ([a, b] if strict else [])
             spot = self._spot_scan(ax, ay, bx, by, w, h, avoid, others)
             if spot:
@@ -727,7 +828,13 @@ class Builder:
         for ln in lines:
             wrapped = self._wrap(ln, width, size)
             for wl in wrapped:
-                self._text(x, cy, width, wl, size=size, color="#33424F", align="0")
+                # one shape per row, as wide as its own ink. The paragraph
+                # alignment cell cannot be reached under this binding (the gate
+                # logs "paragraph alignment skipped" for every text box on the
+                # sheet), and a full-width box centres each row - which is what
+                # made the note block read as right-aligned ragged text.
+                self._text(x, cy, max(0.2, self.text_width_in(wl, size)), wl,
+                           size=size, color="#33424F", align="0")
                 cy += size * 1.30 / 72.0
             cy += 0.03
         return cy
@@ -756,6 +863,18 @@ class Builder:
                     continue
                 if self._hit(c, n):
                     bad.append("chrome %s covers node %s" % (who, n["id"]))
+        if self.spec.get("labelStrict"):
+            # the parking pass below is allowed to bridge a border strip, so the
+            # invariant has to be stated where it can fail the build: on a
+            # teaching sheet no label may print over a word - that is the exact
+            # defect (「否」 over 「需要修改吗？」) that labelStrict was born for
+            for c, who in rects:
+                if c["kind"] != "label":
+                    continue
+                for nid, ink in sorted(self.node_text_rects.items()):
+                    if self._hit(c, ink):
+                        bad.append("label %s prints over the text of node %s"
+                                   % (who, nid))
         for i in range(len(rects)):
             for j in range(i + 1, len(rects)):
                 a, wa = rects[i]
@@ -993,6 +1112,7 @@ class Builder:
         self.chrome = []
         self.parked = []
         self.band_strips = []
+        self.node_text_rects = {}
         self.spec_nodes = sh["nodes"]
         self.spec_edges = sh["edges"]
         self.spec_bands = sh.get("bands", [])
