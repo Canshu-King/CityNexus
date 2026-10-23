@@ -163,17 +163,11 @@ export function PlanComparison({
               ? `部分价格未知（${knownCount}/${stops.length}）`
               : `Partly unknown (${knownCount}/${stops.length})`
             : !costKnown
-            ? zh
-              ? "花费未知"
-              : "Cost unknown"
+              ? t("plan.compare.costUnknown")
             : band.key === "within"
-              ? zh
-                ? "预算内"
-                : "Within budget"
+              ? t("plan.compare.withinBudget")
               : band.key === "near"
-                ? zh
-                  ? "接近预算上限"
-                  : "Near your limit"
+                ? t("plan.compare.nearLimit")
                 : zh
                   ? `超预算 ${money(Math.abs(band.deltaMinor), currency, zh)}`
                   : `Over by ${money(Math.abs(band.deltaMinor), currency, zh)}`;
@@ -197,7 +191,7 @@ export function PlanComparison({
 
               <dl>
                 <div>
-                  <dt>{zh ? "总花费" : "Total cost"}</dt>
+                  <dt>{t("plan.compare.totalCost")}</dt>
                   <dd>
                     {allPricesKnown
                       ? money(costMinor, plan.total_cost?.currency ?? currency, zh)
@@ -205,18 +199,16 @@ export function PlanComparison({
                         ? zh
                           ? `至少 ${money(costMinor, plan.total_cost?.currency ?? currency, zh)}`
                           : `At least ${money(costMinor, plan.total_cost?.currency ?? currency, zh)}`
-                        : zh
-                          ? "暂无价格"
-                          : "Price unknown"}
+                        : t("plan.compare.priceUnknown")}
                   </dd>
                 </div>
                 <div>
-                  <dt>{zh ? "活动数" : "Stops"}</dt>
+                  <dt>{t("plan.compare.stops")}</dt>
                   <dd>{(plan.activities ?? []).length}</dd>
                 </div>
                 {walk != null && (
                   <div>
-                    <dt>{zh ? "步行" : "Walking"}</dt>
+                    <dt>{t("plan.compare.walking")}</dt>
                     <dd>
                       {walk >= 60
                         ? zh
@@ -232,7 +224,7 @@ export function PlanComparison({
 
               {highlights.length > 0 && (
                 <p className="plan-cmp-highlights">
-                  {zh ? "亮点：" : "Highlights: "}
+                  {t("plan.compare.highlights")}
                   {highlights.join(" · ")}
                 </p>
               )}
@@ -253,12 +245,8 @@ export function PlanComparison({
                 onClick={() => void choose(plan.id)}
               >
                 {busyId === plan.id
-                  ? zh
-                    ? "采用中…"
-                    : "Choosing…"
-                  : zh
-                    ? "采用这个方案"
-                    : "Choose this plan"}
+                  ? t("plan.compare.choosing")
+                  : t("plan.compare.choose")}
               </button>
             </article>
           );

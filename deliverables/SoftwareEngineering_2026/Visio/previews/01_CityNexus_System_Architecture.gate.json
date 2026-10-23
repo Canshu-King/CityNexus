@@ -1,0 +1,405 @@
+{
+ "failures": [],
+ "notes": [
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "per-run font sizing skipped on cli_traveler (AttributeError)",
+  "per-run font sizing skipped on cli_admin (AttributeError)",
+  "per-run font sizing skipped on fe_copilot (AttributeError)",
+  "per-run font sizing skipped on fe_rail (AttributeError)",
+  "per-run font sizing skipped on fe_shell (AttributeError)",
+  "per-run font sizing skipped on fe_plan (AttributeError)",
+  "per-run font sizing skipped on fe_map (AttributeError)",
+  "per-run font sizing skipped on fe_routes (AttributeError)",
+  "per-run font sizing skipped on api_agent (AttributeError)",
+  "per-run font sizing skipped on api_shared (AttributeError)",
+  "per-run font sizing skipped on api_data (AttributeError)",
+  "per-run font sizing skipped on ag_entry (AttributeError)",
+  "per-run font sizing skipped on ag_loop (AttributeError)",
+  "per-run font sizing skipped on ag_gw (AttributeError)",
+  "per-run font sizing skipped on ds_journey (AttributeError)",
+  "per-run font sizing skipped on ds_twin (AttributeError)",
+  "per-run font sizing skipped on ds_place (AttributeError)",
+  "per-run font sizing skipped on pv_ai (AttributeError)",
+  "per-run font sizing skipped on pv_mock (AttributeError)",
+  "per-run font sizing skipped on pv_geo (AttributeError)",
+  "per-run font sizing skipped on db_core (AttributeError)",
+  "per-run font sizing skipped on db_state (AttributeError)",
+  "per-run font sizing skipped on db_agent (AttributeError)",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped"
+ ],
+ "styleIssues": [
+  "cell PrintFitLayerPages <- '0' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error"
+ ],
+ "pages": [
+  {
+   "name": "System Architecture",
+   "nodes": 23,
+   "edges": 24,
+   "connects": 48,
+   "expectedConnects": 48,
+   "propsWritten": 93,
+   "propsExpected": 93
+  }
+ ],
+ "propFailures": [],
+ "shapeIds": {
+  "cli_traveler": [
+   [
+    1,
+    18
+   ]
+  ],
+  "cli_admin": [
+   [
+    1,
+    19
+   ]
+  ],
+  "fe_copilot": [
+   [
+    1,
+    20
+   ]
+  ],
+  "fe_rail": [
+   [
+    1,
+    21
+   ]
+  ],
+  "fe_shell": [
+   [
+    1,
+    22
+   ]
+  ],
+  "fe_plan": [
+   [
+    1,
+    23
+   ]
+  ],
+  "fe_map": [
+   [
+    1,
+    24
+   ]
+  ],
+  "fe_routes": [
+   [
+    1,
+    25
+   ]
+  ],
+  "api_agent": [
+   [
+    1,
+    26
+   ]
+  ],
+  "api_shared": [
+   [
+    1,
+    27
+   ]
+  ],
+  "api_data": [
+   [
+    1,
+    28
+   ]
+  ],
+  "ag_entry": [
+   [
+    1,
+    29
+   ]
+  ],
+  "ag_loop": [
+   [
+    1,
+    30
+   ]
+  ],
+  "ag_gw": [
+   [
+    1,
+    31
+   ]
+  ],
+  "ds_journey": [
+   [
+    1,
+    32
+   ]
+  ],
+  "ds_twin": [
+   [
+    1,
+    33
+   ]
+  ],
+  "ds_place": [
+   [
+    1,
+    34
+   ]
+  ],
+  "pv_ai": [
+   [
+    1,
+    35
+   ]
+  ],
+  "pv_mock": [
+   [
+    1,
+    36
+   ]
+  ],
+  "pv_geo": [
+   [
+    1,
+    37
+   ]
+  ],
+  "db_core": [
+   [
+    1,
+    38
+   ]
+  ],
+  "db_state": [
+   [
+    1,
+    39
+   ]
+  ],
+  "db_agent": [
+   [
+    1,
+    40
+   ]
+  ]
+ },
+ "edgeIds": {
+  "cli_traveler->fe_copilot": [
+   [
+    1,
+    41
+   ]
+  ],
+  "cli_traveler->fe_rail": [
+   [
+    1,
+    42
+   ]
+  ],
+  "cli_admin->fe_shell": [
+   [
+    1,
+    43
+   ]
+  ],
+  "cli_admin->fe_plan": [
+   [
+    1,
+    45
+   ]
+  ],
+  "fe_copilot->api_agent": [
+   [
+    1,
+    47
+   ]
+  ],
+  "fe_rail->api_agent": [
+   [
+    1,
+    49
+   ]
+  ],
+  "fe_shell->api_shared": [
+   [
+    1,
+    50
+   ]
+  ],
+  "fe_plan->api_shared": [
+   [
+    1,
+    52
+   ]
+  ],
+  "fe_map->api_data": [
+   [
+    1,
+    54
+   ]
+  ],
+  "fe_routes->api_data": [
+   [
+    1,
+    56
+   ]
+  ],
+  "api_agent->ag_entry": [
+   [
+    1,
+    58
+   ]
+  ],
+  "api_shared->ag_loop": [
+   [
+    1,
+    59
+   ]
+  ],
+  "api_shared->ds_journey": [
+   [
+    1,
+    60
+   ]
+  ],
+  "api_data->ds_twin": [
+   [
+    1,
+    61
+   ]
+  ],
+  "api_data->ds_place": [
+   [
+    1,
+    62
+   ]
+  ],
+  "ag_entry->ag_loop": [
+   [
+    1,
+    63
+   ]
+  ],
+  "ag_loop->ag_gw": [
+   [
+    1,
+    64
+   ]
+  ],
+  "ag_gw->ds_journey": [
+   [
+    1,
+    66
+   ]
+  ],
+  "ag_entry->pv_ai": [
+   [
+    1,
+    68
+   ]
+  ],
+  "ag_loop->pv_mock": [
+   [
+    1,
+    70
+   ]
+  ],
+  "ag_gw->pv_geo": [
+   [
+    1,
+    71
+   ]
+  ],
+  "ds_journey->db_core": [
+   [
+    1,
+    72
+   ]
+  ],
+  "ds_twin->db_state": [
+   [
+    1,
+    74
+   ]
+  ],
+  "ds_place->db_agent": [
+   [
+    1,
+    76
+   ]
+  ]
+ },
+ "nodes": 23,
+ "edges": 24,
+ "connects": 48,
+ "expectedConnects": 48,
+ "propsWritten": 93,
+ "propsExpected": 93
+}

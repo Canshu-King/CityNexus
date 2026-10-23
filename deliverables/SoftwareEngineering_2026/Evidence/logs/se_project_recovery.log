@@ -1,0 +1,10 @@
+[   0.0s] open rows carried into the recovery plan: 17
+[   4.4s] recovery scheduled events kept out of the work plan: [{"key": "M11", "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)", "date": "2026-10-23", "pack": "10.2", "packFinish": "2026-10-28", "note": "the pack the review looks at is the package delivered on 2026
+[   4.4s] recovery rows: 16 open tasks + 3 dated milestones
+[   7.7s]    missing detail: -
+[   7.7s] recovery links: 28 read, 14 declared-open, 0 missing, 0 violating
+[   8.1s] recovery capacity: 9 person-weeks, 0 over-allocated
+[   8.1s] recovery deadlines: 0 breached (brief dates)
+[   8.4s] recovery critical rows: 6; project finish 2026-11-04; cost 1099.55
+[   8.6s] saved D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\CityNexus_Plan_Recovery.mpp (294912 bytes, sha256 1edf8b7fdc45e672)
+[  18.2s] reopened recovery file: 19 rows, finish 2026-11-04, cost 1099.55

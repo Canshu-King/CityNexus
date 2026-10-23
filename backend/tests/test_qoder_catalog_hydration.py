@@ -134,6 +134,86 @@ def _wait_terminal(operation_id: str, seconds: float = 15.0) -> dict:
 
 
 # --------------------------------------------------------------------------------------
+# the harness's own resource, waited on instead of gambled on (ORD-0703 甲)
+# --------------------------------------------------------------------------------------
+#: The two stalls this file deliberately imposes on a worker, copied from where they are set
+#: (`test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage` and
+#: `test_an_abandon_whose_own_write_never_landed_still_closes_the_job`).  Both are bounded on
+#: purpose, which is what makes the wait below finishable rather than hopeful.
+HARNESS_STALL_BOUNDS_S = (6.0, 10.0)
+#: How long this job may sit in `QUEUED` before the door calls it a failure instead of waiting.
+#: The worker pool is process-wide and only `_MAX_WORKERS` slots deep, and a slot can still be held
+#: by a job that started under an earlier test - including one whose row the next fixture already
+#: deleted, which is why the signal here is "did a worker pick *this* job up" rather than "is the
+#: queue empty".  A held slot is also what the store's own lock wait looks like from in here, so the
+#: bound sits above that wait rather than below it: paying it costs a green run nothing, and a red
+#: now names the resource instead of shrugging.
+START_BUDGET_S = 30.0
+
+
+def _open_operations_besides(exclude: str | None) -> list[tuple[str, str]]:
+    """Rows the store still counts as work in flight, minus the one I am about to start."""
+
+    with SessionLocal() as session:
+        rows = session.execute(
+            select(CatalogHydrationOperation.id, CatalogHydrationOperation.status).where(
+                CatalogHydrationOperation.status.in_(hydration_module.OPEN_STATUSES)
+            )
+        ).all()
+    return [(str(row_id), str(status)) for row_id, status in rows if row_id != exclude]
+
+
+def _pool_scene(open_rows: list[tuple[str, str]]) -> str:
+    """What the pool was doing at the moment the gate said no - the red has to name its cause.
+
+    A setup gate that only says "这条门什么都没测" forces the next reader to reproduce the race to
+    learn whether the product failed or the harness starved itself.  These are the two facts that
+    separate those answers, read at the moment of failure.
+    """
+
+    workers = sorted(
+        thread.name for thread in threading.enumerate()
+        if thread.name.startswith("catalog-hydration")
+    )
+    return (
+        f"现场：池宽={getattr(hydration_module, '_MAX_WORKERS', '?')}"
+        f"｜未终态作业={open_rows or '无'}"
+        f"｜工作线程={workers or '还没建起来'}"
+        f"｜本文件自设的停顿上界={HARNESS_STALL_BOUNDS_S} 秒"
+    )
+
+
+def _await_a_worker_for(operation_id: str) -> str:
+    """Wait for the product's own dispatch, then hand back the status the stage gate bets on.
+
+    `QUEUED` means the row is durable and no thread has taken it yet - a property of this process's
+    two-slot pool, not of the code under test.  The gates that follow measure what a *running* job
+    does, so letting them start while the pool is still busy is exactly what turned them into a
+    stopwatch gamble (measured as a rotating red whose failing arm cost roughly four times the
+    passing one: `cmdr_ord0702b_hydration_solo_1022a.txt:3` against
+    `cmdr_ord0702b_hydration_solo_1022a.txt:2`).
+
+    This waits on state the product itself publishes for this operation, so it cannot be satisfied
+    by a deleted row from somebody else's test, and it stays silent when the pool is free.
+    """
+
+    deadline = time.monotonic() + START_BUDGET_S
+    body: dict = {}
+    while time.monotonic() < deadline:
+        poll = client.get(f"{HYDRATIONS}/{operation_id}")
+        assert poll.status_code == 200, poll.text
+        body = poll.json()
+        if body.get("status") != hydration_module.QUEUED:
+            return str(body.get("status"))
+        time.sleep(0.05)
+    raise AssertionError(
+        "SETUP 失败：这枚作业一直没人接手（仍是 QUEUED），本进程的 worker 池被别的作业占着，"
+        "下面按阶段判的闸测不到产品；" + _pool_scene(_open_operations_besides(operation_id))
+        + f"｜最后读到的状态={str(body)[:160]}"
+    )
+
+
+# --------------------------------------------------------------------------------------
 # §6 ordering, measured rather than asserted in prose
 # --------------------------------------------------------------------------------------
 def test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage(seeded, monkeypatch) -> None:
@@ -160,7 +240,14 @@ def test_the_job_never_holds_the_sqlite_writer_across_its_slow_stage(seeded, mon
     accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
     assert accepted.status_code in (200, 202), accepted.text
     operation_id = accepted.json()["operation_id"]
-    assert inside_stage.wait(timeout=10.0), "期望：作业确实走到了评估这一步；实际：10 秒内没进来"
+    # This door occupies a worker on purpose, so it first waits until a worker has actually taken
+    # this job; the ten-second bet below is left exactly as it was, because relaxing the bet would
+    # be the wrong fix - the thing to wait for is the pool, not the clock.
+    _await_a_worker_for(operation_id)
+    assert inside_stage.wait(timeout=10.0), (
+        "期望：作业确实走到了评估这一步；实际：10 秒内没进来；"
+        + _pool_scene(_open_operations_besides(operation_id))
+    )
 
     waited: list[float] = []
     failure: list[str] = []
@@ -490,26 +577,59 @@ def test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandone
     survey), and the process-local abandonment registry is forced to say "no request here" - which is
     exactly the cross-process case `PROCESS_LOCAL_ONLY` admits.  The terminal write must then resolve
     into the named abandoned branch rather than raising on a transition the table forbids.
+
+    ORD-0703 丙 names what this door used to confuse.  It pressed the HTTP entrance first and only
+    then put the injection in place, so a worker that ran the whole stage machine before the patch
+    landed closed the job as `COMPLETED` - and a destination the catalogue already holds needs no
+    supply work, so that worker could win the race.  The job is therefore staged with
+    `start_worker=False`, the injection goes in, and only then is the product's own `dispatch`
+    called - the rule the sibling door `test_an_abandon_whose_own_write_never_landed_still_closes_the_job`
+    already follows.  The receipt under `_wait_terminal` is the other half: if the injection ever
+    stops happening the door names that instead of judging somebody else's terminal state.  What the
+    re-shape stops measuring is the HTTP acceptance leg, still covered by
+    `test_a_destination_the_provider_resolves_reaches_the_terminal_write_too`.
     """
 
-    accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
-    operation_id = accepted.json()["operation_id"]
+    with SessionLocal() as staging:
+        row, reused = hydration_module.submit_operation(
+            staging, "Beijing", start_worker=False
+        )
+    assert reused is False, (
+        f"SETUP 失败：Beijing 上已经有一枚开着的作业（{row.id}），"
+        "注入会打在别人那枚上，这条门测不到自己的终态写入"
+    )
+    operation_id = str(row.id)
     original_survey = hydration_module._survey
+    injected: list[str] = []
 
     def racing_survey(session, canonical_destination_id):
-        moved = hydration_module.mark(
-            session,
-            operation_id,
-            hydration_module.ABANDON_REQUESTED,
-            from_statuses=(hydration_module.RUNNING,),
-            abandon_requested_at=hydration_module.now_iso(),
-        )
+        # ORD-0703 乙: this writer must not ride the worker's own transaction.  Marking through the
+        # session the worker is holding let any later rollback of *its* erase the "abandon from
+        # elsewhere" the door is trying to create -- which is why the door went red about once every
+        # dozen whole-file runs.  A separate session commits it, the way another process would.
+        with SessionLocal() as other:
+            moved = hydration_module.mark(
+                other,
+                operation_id,
+                hydration_module.ABANDON_REQUESTED,
+                from_statuses=(hydration_module.RUNNING,),
+                abandon_requested_at=hydration_module.now_iso(),
+            )
         assert moved is True, "SETUP 失败：竞态注入没改成 ABANDON_REQUESTED，这条门什么都没测"
+        injected.append(operation_id)
         return original_survey(session, canonical_destination_id)
 
     monkeypatch.setattr(hydration_module, "_survey", racing_survey)
     monkeypatch.setattr(hydration_module, "abandonment_requested", lambda _oid: False)
+    hydration_module.dispatch(operation_id)
+    # Waiting on the product's own dispatch rather than on a stopwatch: a full two-slot pool would
+    # otherwise turn this door into the same rotating red `_await_a_worker_for` was written for.
+    _await_a_worker_for(operation_id)
     terminal = _wait_terminal(operation_id)
+    assert injected, (
+        f"SETUP 失败：注入一次也没发生（0 次），终态 {terminal['status']} / "
+        f"outcome={terminal.get('outcome')} 不是这条门测的那件事"
+    )
     assert terminal["status"] == "ABANDONED", (
         f"期望：被别处放弃的作业终态只能是 ABANDONED，且 worker 不抛；实际："
         f"{terminal['status']} / outcome={terminal.get('outcome')} / "
@@ -519,6 +639,124 @@ def test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandone
         f"期望：放弃了就不要把结果写出去；实际：{str(terminal['result'])[:160]}"
     )
     assert terminal["outcome"] == hydration_module.OUTCOME_ABANDONED, terminal
+
+
+# --------------------------------------------------------------------------------------
+# ORD-0703 丙: why 乙's injection had to leave the worker's own session (the store's half)
+# --------------------------------------------------------------------------------------
+
+
+def _staged_job(query: str, *, status: str) -> str:
+    """One job in the store, reached through the product's own entrance, with no worker at all.
+
+    `start_worker=False` is what makes the two doors below deterministic: no thread can move the
+    row between my writes, so every state change in them is one I named and committed.
+    """
+
+    with SessionLocal() as session:
+        row, reused = hydration_module.submit_operation(session, query, start_worker=False)
+        assert reused is False, f"SETUP 失败：{query} 上已经有一枚开着的作业，舞台不是干净的"
+        operation_id = str(row.id)
+        if status != hydration_module.QUEUED:
+            moved = hydration_module.mark(
+                session, operation_id, status, from_statuses=(hydration_module.QUEUED,)
+            )
+            assert moved is True, (
+                f"SETUP 失败：把作业 {operation_id} 推到 {status} 没匹配到行，后面断的是空气"
+            )
+    return operation_id
+
+
+def test_a_committed_abandon_by_another_writer_survives_a_read_only_rollback(
+    seeded,
+) -> None:
+    """The guarantee 乙 leans on: a decision another writer COMMITTED is not this session's to erase.
+
+    ORD-0703 乙 moved the race injection out of the worker's session and the flake went away, which
+    is an observation about behaviour, not a statement of what the store promises.  This door says
+    the promise: a session that only ever read the row - the way a worker reads it at a stage
+    boundary - can open a transaction, watch another writer commit `ABANDON_REQUESTED` underneath
+    it, roll back, and the committed decision is still the row's state afterwards.  Both writes the
+    worker side does here are committed in a closed transaction, so the rollback has no uncommitted
+    work of its own to lose either.
+
+    No product byte is involved: `mark` is the same call the endpoints make, and the rolled-back
+    session is the same `SessionLocal` the worker uses.
+    """
+
+    operation_id = _staged_job(UNSEEN_COUNTY, status=hydration_module.RUNNING)
+
+    worker = SessionLocal()
+    try:
+        seen = hydration_module.read_operation(worker, operation_id)
+        assert seen is not None and str(seen.status) == hydration_module.RUNNING, (
+            f"SETUP 失败：工人那侧读到的不是 RUNNING，而是 {seen and seen.status}；"
+            "后面的回滚就没东西可擦"
+        )
+        with SessionLocal() as other:
+            moved = hydration_module.mark(
+                other,
+                operation_id,
+                hydration_module.ABANDON_REQUESTED,
+                from_statuses=(hydration_module.RUNNING,),
+                abandon_requested_at=hydration_module.now_iso(),
+            )
+        assert moved is True, "SETUP 失败：另一枚写者没把行改成 ABANDON_REQUESTED，这条门什么都没测"
+        worker.rollback()
+    finally:
+        worker.close()
+
+    with SessionLocal() as reader:
+        after = hydration_module.read_operation(reader, operation_id)
+    assert after is not None, f"回滚之后作业 {operation_id} 整行没了"
+    assert str(after.status) == hydration_module.ABANDON_REQUESTED, (
+        f"期望：别处提交的决定，工人那侧一次只读事务的回滚擦不掉（这就是乙把注入挪出 worker session "
+        f"之后不再闪红的根因）；实际：{after.status} / outcome={after.outcome}"
+    )
+
+
+def test_an_uncommitted_abandon_in_the_workers_own_session_is_erased_by_its_rollback(
+    seeded,
+) -> None:
+    """The counterpart, measured rather than asserted: the OLD injection shape was not a race at all.
+
+    Same store, same calls, one difference - the `ABANDON_REQUESTED` is written through the session
+    that then rolls back, and it is not committed.  A worker that died on its own bookkeeping (or on
+    `_terminate`'s deliberate `session.rollback()` branch) took the traveller's request with it, so
+    the row went back to `RUNNING` and the terminal write resolved as if nobody had asked anything.
+    This is the shape 乙 replaced, and it is the reason the injection must not ride the worker's
+    transaction; without this door the fix reads as superstition.
+    """
+
+    operation_id = _staged_job(UNSEEN_COUNTY, status=hydration_module.RUNNING)
+
+    worker = SessionLocal()
+    try:
+        moved = hydration_module.mark(
+            worker,
+            operation_id,
+            hydration_module.ABANDON_REQUESTED,
+            from_statuses=(hydration_module.RUNNING,),
+            commit=False,
+            abandon_requested_at=hydration_module.now_iso(),
+        )
+        assert moved is True, "SETUP 失败：同事务内的 UPDATE 都没匹配到行，这条门什么都没测"
+        inside = hydration_module.read_operation(worker, operation_id)
+        assert str(inside.status) == hydration_module.ABANDON_REQUESTED, (
+            f"SETUP 失败：本会话读不到自己未提交的写入（{inside.status}），"
+            "那这条门断的就不是回滚"
+        )
+        worker.rollback()
+    finally:
+        worker.close()
+
+    with SessionLocal() as reader:
+        after = hydration_module.read_operation(reader, operation_id)
+    assert after is not None, f"回滚之后作业 {operation_id} 整行没了"
+    assert str(after.status) == hydration_module.RUNNING, (
+        f"期望：未提交、且由同一枚会话回滚的放弃请求必须回到 RUNNING —— 这正是旧写法把注入擦掉的"
+        f"形状；实际：{after.status} / outcome={after.outcome}"
+    )
 
 
 def test_an_abandon_whose_own_write_never_landed_still_closes_the_job(seeded, monkeypatch) -> None:
@@ -535,8 +773,6 @@ def test_an_abandon_whose_own_write_never_landed_still_closes_the_job(seeded, mo
 
     inside_survey = threading.Event()
     released = threading.Event()
-    accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
-    operation_id = accepted.json()["operation_id"]
     original_survey = hydration_module._survey
 
     def pausing_survey(session, canonical_destination_id):
@@ -553,9 +789,22 @@ def test_an_abandon_whose_own_write_never_landed_still_closes_the_job(seeded, mo
             raise hydration_module.TransitionRefused("simulated: the store refused this write")
         return original_mark(session, oid, to_status, **kw)
 
+    # The two stalls are put in place BEFORE the press, and the press is then waited on for a worker
+    # rather than for a stopwatch.  This is the same reasoning the file already uses on its sibling
+    # door ("the schedule is now pinned instead of raced"): as written before this change, the patch
+    # could lose the race with its own worker, and a job that could not even be picked up - the pool
+    # is process-wide and `_MAX_WORKERS` slots deep, and the row the previous test left can be gone
+    # from the table while its thread still holds a slot - read as "这条门什么都没测".  The
+    # ten-second bet below is untouched, so this cannot be mistaken for relaxing a gate for a green.
     monkeypatch.setattr(hydration_module, "_survey", pausing_survey)
     monkeypatch.setattr(hydration_module, "mark", refusing_mark)
-    assert inside_survey.wait(timeout=10.0), "SETUP 失败：worker 没进到 survey 阶段，这条门什么都没测"
+    accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
+    operation_id = accepted.json()["operation_id"]
+    _await_a_worker_for(operation_id)
+    assert inside_survey.wait(timeout=10.0), (
+        "SETUP 失败：worker 没进到 survey 阶段，这条门什么都没测；"
+        + _pool_scene(_open_operations_besides(operation_id))
+    )
     abandoned = client.post(f"{HYDRATIONS}/{operation_id}/abandon")
     assert abandoned.status_code == 200, abandoned.text
     assert abandoned.json()["recorded_status"] == "RUNNING", (

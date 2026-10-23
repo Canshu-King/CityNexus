@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
 from app.core.phase_timing import phase
+from app.integrations.china.amap import web_key as amap_web_key
 from app.anywhere_capability import (
     CAPABILITY_STATES,
     REASON_COVERAGE_INCOMPLETE,
@@ -1980,7 +1981,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             },
             "mobility": {
                 "amap": {
-                    "status": "READY" if os.getenv("AMAP_WEB_KEY") else "NOT_CONFIGURED",
+                    "status": "READY" if amap_web_key() else "NOT_CONFIGURED",
                     "captured_fallback": "READY"
                     if city_fixture(journey.city_code)
                     else "UNAVAILABLE_FOR_CITY",

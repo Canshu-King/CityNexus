@@ -373,7 +373,22 @@ paths:
                   # against the old shape neither breaks on it nor is promised the field.
                   ai_state:
                     type: string
-                    enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+                    enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED, PROVIDER_ANSWERED]
+                  # ORD-0697: also additive and nullable.  `ai_state` on its own could not tell a
+                  # server that had just served real answers from one that had never reached the
+                  # provider, because the vocabulary had no word for "answered".  This names which
+                  # door answered, which model identifier went out, what came back and how many
+                  # times.  It carries no credential value and no request body.
+                  ai_last_call:
+                    type: [object, "null"]
+                    properties:
+                      provider_key: {type: string}
+                      model_key: {type: [string, "null"]}
+                      outcome: {type: string, enum: [ANSWERED, REFUSED]}
+                      status_code: {type: [integer, "null"]}
+                      observed_at: {type: string}
+                      answers: {type: integer}
+                      refusals: {type: integer}
                   hermes_native_gateway: {type: object}
   /agent/hermes/capabilities:
     get:
@@ -3009,9 +3024,10 @@ components:
         ai: {type: string, enum: [available, unavailable, disabled]}
         # ORD-0359: additive. `ai` keeps its two words for existing clients; `ai_state` names the
         # reason, which `ai` cannot do because it folds three different facts into one string.
+        # ORD-0697: the same fifth word `/agent/runtime-status` answers with, one set in both doors.
         ai_state:
           type: string
-          enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+          enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED, PROVIDER_ANSWERED]
     TravelerSession:
       # ORD-0685: the signed principal behind a request. `traveler_id` is the server's own
       # identity for the person -- it is never read from a request body, and a caller who

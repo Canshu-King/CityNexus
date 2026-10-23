@@ -1,0 +1,792 @@
+{
+ "failures": [],
+ "notes": [
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "per-run font sizing skipped on UC-01 (AttributeError)",
+  "per-run font sizing skipped on UC-02 (AttributeError)",
+  "per-run font sizing skipped on UC-03 (AttributeError)",
+  "per-run font sizing skipped on UC-04 (AttributeError)",
+  "per-run font sizing skipped on UC-05 (AttributeError)",
+  "per-run font sizing skipped on UC-06 (AttributeError)",
+  "per-run font sizing skipped on UC-07 (AttributeError)",
+  "per-run font sizing skipped on UC-08 (AttributeError)",
+  "per-run font sizing skipped on UC-09 (AttributeError)",
+  "per-run font sizing skipped on UC-10 (AttributeError)",
+  "per-run font sizing skipped on UC-11 (AttributeError)",
+  "per-run font sizing skipped on UC-12 (AttributeError)",
+  "per-run font sizing skipped on UC-13 (AttributeError)",
+  "per-run font sizing skipped on A Traveler (AttributeError)",
+  "per-run font sizing skipped on A Admin (AttributeError)",
+  "per-run font sizing skipped on A Ctx (AttributeError)",
+  "per-run font sizing skipped on A Auth (AttributeError)",
+  "per-run font sizing skipped on A AI (AttributeError)",
+  "per-run font sizing skipped on A City (AttributeError)",
+  "per-run font sizing skipped on A Mob (AttributeError)",
+  "per-run font sizing skipped on A Book (AttributeError)",
+  "per-run font sizing skipped on A Pay (AttributeError)",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "per-run font sizing skipped on UC-04 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.1 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.2 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.3 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.4 (AttributeError)",
+  "per-run font sizing skipped on UC-05 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.1 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.2 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.3 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.4 (AttributeError)",
+  "per-run font sizing skipped on UC-10 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.1 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.2 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.3 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.4 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.5 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.6 (AttributeError)",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "per-run font sizing skipped on UC-01 (AttributeError)",
+  "per-run font sizing skipped on UC-02 (AttributeError)",
+  "per-run font sizing skipped on UC-03 (AttributeError)",
+  "per-run font sizing skipped on UC-04 (AttributeError)",
+  "per-run font sizing skipped on UC-05 (AttributeError)",
+  "per-run font sizing skipped on UC-06 (AttributeError)",
+  "per-run font sizing skipped on UC-07 (AttributeError)",
+  "per-run font sizing skipped on UC-08 (AttributeError)",
+  "per-run font sizing skipped on UC-09 (AttributeError)",
+  "per-run font sizing skipped on UC-10 (AttributeError)",
+  "per-run font sizing skipped on UC-11 (AttributeError)",
+  "per-run font sizing skipped on UC-12 (AttributeError)",
+  "per-run font sizing skipped on UC-13 (AttributeError)",
+  "per-run font sizing skipped on A Traveler (AttributeError)",
+  "per-run font sizing skipped on A Admin (AttributeError)",
+  "per-run font sizing skipped on A Ctx (AttributeError)",
+  "per-run font sizing skipped on A Auth (AttributeError)",
+  "per-run font sizing skipped on A AI (AttributeError)",
+  "per-run font sizing skipped on A City (AttributeError)",
+  "per-run font sizing skipped on A Mob (AttributeError)",
+  "per-run font sizing skipped on A Book (AttributeError)",
+  "per-run font sizing skipped on A Pay (AttributeError)",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "per-run font sizing skipped on UC-04 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.1 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.2 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.3 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-04.4 (AttributeError)",
+  "per-run font sizing skipped on UC-05 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.1 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.2 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.3 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-05.4 (AttributeError)",
+  "per-run font sizing skipped on UC-10 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.1 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.2 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.3 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.4 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.5 (AttributeError)",
+  "per-run font sizing skipped on sub_UC-10.6 (AttributeError)",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped"
+ ],
+ "styleIssues": [
+  "cell PrintFitLayerPages <- '0' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell LinePattern <- '1' failed: com_error",
+  "cell EndArrow <- '0' failed: com_error",
+  "cell BeginArrow <- '0' failed: com_error",
+  "cell LinePattern <- '1' failed: com_error",
+  "cell EndArrow <- '0' failed: com_error",
+  "cell BeginArrow <- '0' failed: com_error",
+  "cell LinePattern <- '1' failed: com_error",
+  "cell EndArrow <- '0' failed: com_error",
+  "cell BeginArrow <- '0' failed: com_error",
+  "cell PrintFitLayerPages <- '0' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell LinePattern <- '1' failed: com_error",
+  "cell EndArrow <- '0' failed: com_error",
+  "cell BeginArrow <- '0' failed: com_error",
+  "cell LinePattern <- '1' failed: com_error",
+  "cell EndArrow <- '0' failed: com_error",
+  "cell BeginArrow <- '0' failed: com_error",
+  "cell LinePattern <- '1' failed: com_error",
+  "cell EndArrow <- '0' failed: com_error",
+  "cell BeginArrow <- '0' failed: com_error"
+ ],
+ "pages": [
+  {
+   "name": "Use Case Overview",
+   "nodes": 22,
+   "edges": 33,
+   "connects": 66,
+   "expectedConnects": 66,
+   "propsWritten": 132,
+   "propsExpected": 132
+  },
+  {
+   "name": "Included Detail",
+   "nodes": 17,
+   "edges": 14,
+   "connects": 28,
+   "expectedConnects": 28,
+   "propsWritten": 79,
+   "propsExpected": 79
+  }
+ ],
+ "propFailures": [],
+ "shapeIds": {
+  "UC-01": [
+   [
+    1,
+    6
+   ]
+  ],
+  "UC-02": [
+   [
+    1,
+    7
+   ]
+  ],
+  "UC-03": [
+   [
+    1,
+    8
+   ]
+  ],
+  "UC-04": [
+   [
+    1,
+    9
+   ],
+   [
+    2,
+    10
+   ]
+  ],
+  "UC-05": [
+   [
+    1,
+    10
+   ],
+   [
+    2,
+    15
+   ]
+  ],
+  "UC-06": [
+   [
+    1,
+    11
+   ]
+  ],
+  "UC-07": [
+   [
+    1,
+    12
+   ]
+  ],
+  "UC-08": [
+   [
+    1,
+    13
+   ]
+  ],
+  "UC-09": [
+   [
+    1,
+    14
+   ]
+  ],
+  "UC-10": [
+   [
+    1,
+    15
+   ],
+   [
+    2,
+    20
+   ]
+  ],
+  "UC-11": [
+   [
+    1,
+    16
+   ]
+  ],
+  "UC-12": [
+   [
+    1,
+    17
+   ]
+  ],
+  "UC-13": [
+   [
+    1,
+    18
+   ]
+  ],
+  "A Traveler": [
+   [
+    1,
+    19
+   ]
+  ],
+  "A Admin": [
+   [
+    1,
+    20
+   ]
+  ],
+  "A Ctx": [
+   [
+    1,
+    21
+   ]
+  ],
+  "A Auth": [
+   [
+    1,
+    22
+   ]
+  ],
+  "A AI": [
+   [
+    1,
+    23
+   ]
+  ],
+  "A City": [
+   [
+    1,
+    24
+   ]
+  ],
+  "A Mob": [
+   [
+    1,
+    25
+   ]
+  ],
+  "A Book": [
+   [
+    1,
+    26
+   ]
+  ],
+  "A Pay": [
+   [
+    1,
+    27
+   ]
+  ],
+  "sub_UC-04.1": [
+   [
+    2,
+    11
+   ]
+  ],
+  "sub_UC-04.2": [
+   [
+    2,
+    12
+   ]
+  ],
+  "sub_UC-04.3": [
+   [
+    2,
+    13
+   ]
+  ],
+  "sub_UC-04.4": [
+   [
+    2,
+    14
+   ]
+  ],
+  "sub_UC-05.1": [
+   [
+    2,
+    16
+   ]
+  ],
+  "sub_UC-05.2": [
+   [
+    2,
+    17
+   ]
+  ],
+  "sub_UC-05.3": [
+   [
+    2,
+    18
+   ]
+  ],
+  "sub_UC-05.4": [
+   [
+    2,
+    19
+   ]
+  ],
+  "sub_UC-10.1": [
+   [
+    2,
+    21
+   ]
+  ],
+  "sub_UC-10.2": [
+   [
+    2,
+    22
+   ]
+  ],
+  "sub_UC-10.3": [
+   [
+    2,
+    23
+   ]
+  ],
+  "sub_UC-10.4": [
+   [
+    2,
+    24
+   ]
+  ],
+  "sub_UC-10.5": [
+   [
+    2,
+    25
+   ]
+  ],
+  "sub_UC-10.6": [
+   [
+    2,
+    26
+   ]
+  ]
+ },
+ "edgeIds": {
+  "A Traveler->UC-01": [
+   [
+    1,
+    28
+   ]
+  ],
+  "A Traveler->UC-02": [
+   [
+    1,
+    33
+   ]
+  ],
+  "A Traveler->UC-03": [
+   [
+    1,
+    38
+   ]
+  ],
+  "A Traveler->UC-04": [
+   [
+    1,
+    43
+   ]
+  ],
+  "A Traveler->UC-05": [
+   [
+    1,
+    48
+   ]
+  ],
+  "A Traveler->UC-06": [
+   [
+    1,
+    53
+   ]
+  ],
+  "A Traveler->UC-07": [
+   [
+    1,
+    58
+   ]
+  ],
+  "A Traveler->UC-08": [
+   [
+    1,
+    63
+   ]
+  ],
+  "A Traveler->UC-10": [
+   [
+    1,
+    68
+   ]
+  ],
+  "A Traveler->UC-11": [
+   [
+    1,
+    73
+   ]
+  ],
+  "A Traveler->UC-12": [
+   [
+    1,
+    78
+   ]
+  ],
+  "A Admin->UC-13": [
+   [
+    1,
+    83
+   ]
+  ],
+  "A Ctx->UC-09": [
+   [
+    1,
+    88
+   ]
+  ],
+  "A Auth->UC-01": [
+   [
+    1,
+    93
+   ]
+  ],
+  "A Auth->UC-07": [
+   [
+    1,
+    98
+   ]
+  ],
+  "A AI->UC-01": [
+   [
+    1,
+    103
+   ]
+  ],
+  "A AI->UC-02": [
+   [
+    1,
+    108
+   ]
+  ],
+  "A AI->UC-05": [
+   [
+    1,
+    113
+   ]
+  ],
+  "A AI->UC-10": [
+   [
+    1,
+    118
+   ]
+  ],
+  "A AI->UC-11": [
+   [
+    1,
+    123
+   ]
+  ],
+  "A City->UC-04": [
+   [
+    1,
+    128
+   ]
+  ],
+  "A City->UC-05": [
+   [
+    1,
+    133
+   ]
+  ],
+  "A City->UC-10": [
+   [
+    1,
+    138
+   ]
+  ],
+  "A Mob->UC-04": [
+   [
+    1,
+    143
+   ]
+  ],
+  "A Mob->UC-08": [
+   [
+    1,
+    148
+   ]
+  ],
+  "A Mob->UC-10": [
+   [
+    1,
+    153
+   ]
+  ],
+  "A Book->UC-03": [
+   [
+    1,
+    158
+   ]
+  ],
+  "A Book->UC-06": [
+   [
+    1,
+    163
+   ]
+  ],
+  "A Pay->UC-03": [
+   [
+    1,
+    168
+   ]
+  ],
+  "A Pay->UC-07": [
+   [
+    1,
+    173
+   ]
+  ],
+  "UC-07->UC-06": [
+   [
+    1,
+    178
+   ]
+  ],
+  "UC-09->UC-08": [
+   [
+    1,
+    184
+   ]
+  ],
+  "UC-10->UC-09": [
+   [
+    1,
+    190
+   ]
+  ],
+  "UC-04->sub_UC-04.1": [
+   [
+    2,
+    27
+   ]
+  ],
+  "UC-04->sub_UC-04.2": [
+   [
+    2,
+    33
+   ]
+  ],
+  "UC-04->sub_UC-04.3": [
+   [
+    2,
+    39
+   ]
+  ],
+  "UC-04->sub_UC-04.4": [
+   [
+    2,
+    45
+   ]
+  ],
+  "UC-05->sub_UC-05.1": [
+   [
+    2,
+    51
+   ]
+  ],
+  "UC-05->sub_UC-05.2": [
+   [
+    2,
+    57
+   ]
+  ],
+  "UC-05->sub_UC-05.3": [
+   [
+    2,
+    63
+   ]
+  ],
+  "UC-05->sub_UC-05.4": [
+   [
+    2,
+    69
+   ]
+  ],
+  "UC-10->sub_UC-10.1": [
+   [
+    2,
+    75
+   ]
+  ],
+  "UC-10->sub_UC-10.2": [
+   [
+    2,
+    81
+   ]
+  ],
+  "UC-10->sub_UC-10.3": [
+   [
+    2,
+    87
+   ]
+  ],
+  "UC-10->sub_UC-10.4": [
+   [
+    2,
+    93
+   ]
+  ],
+  "UC-10->sub_UC-10.5": [
+   [
+    2,
+    99
+   ]
+  ],
+  "UC-10->sub_UC-10.6": [
+   [
+    2,
+    105
+   ]
+  ]
+ },
+ "nodes": 39,
+ "edges": 47,
+ "connects": 94,
+ "expectedConnects": 94,
+ "propsWritten": 211,
+ "propsExpected": 211
+}

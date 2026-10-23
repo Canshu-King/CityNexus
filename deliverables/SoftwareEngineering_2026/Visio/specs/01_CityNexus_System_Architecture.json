@@ -1,0 +1,533 @@
+{
+ "file": "01_CityNexus_System_Architecture.vsdx",
+ "pageName": "System Architecture",
+ "title": "CityNexus - Smart City Traveler System   |   System Architecture",
+ "subtitle": "How the product actually runs. A traveler request enters the React shell, is served by one FastAPI monolith, and may be reasoned about by an AI agent that owns no domain truth: every agent mutation passes an allowlist, an audit write and an authorization decision before a deterministic solver touches journey state.",
+ "docid": "CNX-SE-VIS-01   System architecture (layered)",
+ "revline": "Rev A - generated 2026-10-22 - source tree CityNexus @ review/boli-party-occupancy-scope-r1, github.com/Canshu-King/CityNexus",
+ "bodySize": 7.4,
+ "subSize": 5.6,
+ "bands": [
+  {
+   "x": 0.36,
+   "y": 0.9,
+   "w": 16.14,
+   "h": 1.0,
+   "label": "1   USERS & CLIENT SURFACE",
+   "state": "band",
+   "labelSide": "top",
+   "labelSize": 9.0
+  },
+  {
+   "x": 0.36,
+   "y": 2.0,
+   "w": 16.14,
+   "h": 1.22,
+   "label": "2   FRONTEND   React 19 + TypeScript 5.8 + Vite 7 + PWA   (frontend/src)",
+   "state": "band",
+   "labelSide": "top",
+   "labelSize": 9.0
+  },
+  {
+   "x": 0.36,
+   "y": 3.3,
+   "w": 16.14,
+   "h": 1.1,
+   "label": "3   BACKEND HTTP SURFACE   one FastAPI monolith, 175 endpoints under /api/v1   (backend/app/main.py, 14,569 lines)",
+   "state": "band",
+   "labelSide": "top",
+   "labelSize": 9.0
+  },
+  {
+   "x": 0.36,
+   "y": 4.48,
+   "w": 7.86,
+   "h": 1.42,
+   "label": "4a   AI AGENT & HERMES PLANE   the agent owns no domain truth   (backend/app/agent)",
+   "state": "agent",
+   "labelSide": "top",
+   "labelSize": 9.0
+  },
+  {
+   "x": 8.28,
+   "y": 4.48,
+   "w": 7.86,
+   "h": 1.42,
+   "label": "4b   DOMAIN SERVICES   deterministic solver, business facts, journey state machine",
+   "state": "band",
+   "labelSide": "top",
+   "labelSize": 9.0
+  },
+  {
+   "x": 0.36,
+   "y": 6.0,
+   "w": 7.86,
+   "h": 1.52,
+   "label": "5a   PROVIDERS & INTEGRATIONS   9 clients; the deterministic mocks are the shipped default",
+   "state": "band",
+   "labelSide": "top",
+   "labelSize": 9.0
+  },
+  {
+   "x": 8.28,
+   "y": 6.0,
+   "w": 7.86,
+   "h": 1.52,
+   "label": "5b   PERSISTENCE, AUDIT & OPERATIONAL STATE   SQLAlchemy + SQLite (WAL), 60 tables",
+   "state": "band",
+   "labelSide": "top",
+   "labelSize": 9.0
+  }
+ ],
+ "nodes": [
+  {
+   "id": "cli_traveler",
+   "kind": "rect",
+   "state": "user",
+   "text": "Traveler\nphone, tablet landscape, desktop browser",
+   "src": "frontend/src/main.tsx:38",
+   "x": 0.49,
+   "w": 5.1,
+   "y": 1.22,
+   "h": 0.56
+  },
+  {
+   "id": "cli_admin",
+   "kind": "rect",
+   "state": "user",
+   "text": "Administrator\nplatform and provider console",
+   "src": "use-cases/use-cases.yaml:17",
+   "x": 5.73,
+   "w": 5.1,
+   "y": 1.22,
+   "h": 0.56
+  },
+  {
+   "id": "fe_copilot",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "CopilotDock + AgentComposer\nthe natural-language input box",
+   "src": "features/agent/CopilotDock.tsx:1",
+   "x": 0.49,
+   "w": 2.48,
+   "y": 2.38,
+   "h": 0.74
+  },
+  {
+   "id": "fe_rail",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "AgentRunRail + feed\nshows the agent working state",
+   "src": "features/agent/AgentRunRail.tsx:1",
+   "x": 3.11,
+   "w": 2.48,
+   "y": 2.38,
+   "h": 0.74
+  },
+  {
+   "id": "fe_shell",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "V8Experience shell\noffline snapshot, execution clock, wallet",
+   "src": "app/V8Experience.tsx:1",
+   "x": 5.73,
+   "w": 2.48,
+   "y": 2.38,
+   "h": 0.74
+  },
+  {
+   "id": "fe_plan",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "Plan comparison + Trip Studio\naccept or reject what the agent proposes",
+   "src": "features/planning/PlanComparison.tsx:1",
+   "x": 8.35,
+   "w": 2.48,
+   "y": 2.38,
+   "h": 0.74
+  },
+  {
+   "id": "fe_map",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "JourneyMap\nMapLibre 5.24, OpenFreeMap style, provenance badges",
+   "src": "components/JourneyMap.tsx:1",
+   "x": 10.97,
+   "w": 2.48,
+   "y": 2.38,
+   "h": 0.74
+  },
+  {
+   "id": "fe_routes",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "15 routed panels\nhub, live, map, studio, stay, discover, agent, twin, footprints, access",
+   "src": "routes/v8Routes.ts:1-33",
+   "x": 13.59,
+   "w": 2.48,
+   "y": 2.38,
+   "h": 0.74
+  },
+  {
+   "id": "api_agent",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "Agent surface\n/copilot/messages, /agent/commands, /agent/tools/{name}, /approvals/{id}/approve, /agent-feed; the MCP V1 and V2 surfaces reach the same gateway",
+   "src": "main.py:14169, 1367, 1246, 2081, 10125",
+   "x": 0.49,
+   "w": 5.1,
+   "y": 3.6399999999999997,
+   "h": 0.66
+  },
+  {
+   "id": "api_shared",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "Shared transport\njourneys, plans, places, replans, check-ins, collections, share, bookings - 175 endpoints",
+   "src": "main.py:3136, 7369, 7328, 10923, 4296, 14404",
+   "x": 5.73,
+   "w": 5.1,
+   "y": 3.6399999999999997,
+   "h": 0.66
+  },
+  {
+   "id": "api_data",
+   "kind": "roundrect",
+   "state": "verified",
+   "text": "Data & ops surface\n/experience, /twin, /route-evidence, SSE /operations/stream, OpenAPI, server-owned agent identity",
+   "src": "main.py:5473, 9846, 10525, 1982 ; contracts/openapi.yaml",
+   "x": 10.97,
+   "w": 5.1,
+   "y": 3.6399999999999997,
+   "h": 0.66
+  },
+  {
+   "id": "ag_entry",
+   "kind": "process",
+   "state": "verified",
+   "text": "Entry: intent + context\n8 intents over a server-built context; semantic envelope decides what the model may conclude",
+   "src": "main.py:14190-14228, 13593 ; semantic_compiler.py:123,229",
+   "x": 0.49,
+   "w": 2.48,
+   "y": 4.880000000000001,
+   "h": 0.9
+  },
+  {
+   "id": "ag_loop",
+   "kind": "subprocess",
+   "state": "verified",
+   "text": "Mission, plan, tool loop\ncompile_mission, build_mission_plan, run(max_steps=12)",
+   "src": "agent/mission.py:231,384 ; runtime.py:62,336",
+   "x": 3.11,
+   "w": 2.48,
+   "y": 4.880000000000001,
+   "h": 0.9
+  },
+  {
+   "id": "ag_gw",
+   "kind": "process",
+   "state": "verified",
+   "text": "Tool gateway\nallowlist of 11 tools, audit write, idempotency, then ALLOW_AUTO / REQUIRE_CONFIRMATION / DENY",
+   "src": "agent/gateway.py:357-398, 59, 71, 338-347",
+   "x": 5.73,
+   "w": 2.48,
+   "y": 4.880000000000001,
+   "h": 0.9
+  },
+  {
+   "id": "ds_journey",
+   "kind": "process",
+   "state": "verified",
+   "text": "Journeys, plans, replans\nlifecycle, deterministic seeded solver, proposal-only replanning, accept / reject",
+   "src": "main.py:3136, 7369, 7790, 10923, 13097 ; app/replanning",
+   "x": 8.35,
+   "w": 2.48,
+   "y": 4.880000000000001,
+   "h": 0.9
+  },
+  {
+   "id": "ds_twin",
+   "kind": "process",
+   "state": "verified",
+   "text": "Twin, capability, preference\nthree preference scopes; declared-not-invented budget and party size",
+   "src": "main.py:9846, 2761, 2568 ; models.py:95,121,824",
+   "x": 10.97,
+   "w": 2.48,
+   "y": 4.880000000000001,
+   "h": 0.9
+  },
+  {
+   "id": "ds_place",
+   "kind": "process",
+   "state": "verified",
+   "text": "Places, city services, commerce, guardian\nreal-city discovery, catalog hydration, bookings and commitments, autopilot",
+   "src": "main.py:7328, 5558, 5572, 14404, 1599 ; discovery/real_city.py",
+   "x": 13.59,
+   "w": 2.48,
+   "y": 4.880000000000001,
+   "h": 0.9
+  },
+  {
+   "id": "pv_ai",
+   "kind": "extdata",
+   "state": "external",
+   "text": "DeepSeek Responses API\nchat, vision, web search; ai_enabled defaults to false",
+   "src": "integrations/ai/responses.py:244 ; config.py:14-30",
+   "x": 0.49,
+   "w": 2.48,
+   "y": 6.44,
+   "h": 0.9
+  },
+  {
+   "id": "pv_mock",
+   "kind": "data",
+   "state": "verified",
+   "text": "Shipped default provider set\nmock city / mobility / booking / payment; real-city mode=replay",
+   "src": ".env.example:18-31 ; config.py:79-81 ; integrations/mock/providers.py:13",
+   "x": 3.11,
+   "w": 2.48,
+   "y": 6.44,
+   "h": 0.9
+  },
+  {
+   "id": "pv_geo",
+   "kind": "extdata",
+   "state": "external",
+   "text": "Photon, Nominatim, Overpass\ngeocode, POI, weather; Valhalla live URL not set",
+   "src": "photon.py:20 ; real_city.py:617 ; BLOCKERS.md:13",
+   "x": 5.73,
+   "w": 2.48,
+   "y": 6.44,
+   "h": 0.9
+  },
+  {
+   "id": "db_core",
+   "kind": "database",
+   "state": "data",
+   "text": "SQLite citynexus.db\nWAL, foreign keys ON, write deadline and busy timeout",
+   "src": "db/session.py:70-88 ; config.py:10, 96-98",
+   "x": 8.35,
+   "w": 2.48,
+   "y": 6.44,
+   "h": 0.9
+  },
+  {
+   "id": "db_state",
+   "kind": "database",
+   "state": "data",
+   "text": "Journey truth\njourneys, plan_versions, activities, commitments",
+   "src": "models.py:175, 511, 535, 578, 712",
+   "x": 10.97,
+   "w": 2.48,
+   "y": 6.44,
+   "h": 0.9
+  },
+  {
+   "id": "db_agent",
+   "kind": "database",
+   "state": "data",
+   "text": "Agent state and audit\nagent_runs, agent_run_steps, approvals, audit_logs",
+   "src": "models.py:254, 271, 562, 677",
+   "x": 13.59,
+   "w": 2.48,
+   "y": 6.44,
+   "h": 0.9
+  }
+ ],
+ "edges": [
+  {
+   "from": "cli_traveler",
+   "to": "fe_copilot",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "cli_traveler",
+   "to": "fe_rail",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "cli_admin",
+   "to": "fe_shell",
+   "label": "HTTPS + PWA",
+   "state": "verified"
+  },
+  {
+   "from": "cli_admin",
+   "to": "fe_plan",
+   "label": "console panels",
+   "state": "built"
+  },
+  {
+   "from": "fe_copilot",
+   "to": "api_agent",
+   "label": "POST /copilot/messages",
+   "state": "verified"
+  },
+  {
+   "from": "fe_rail",
+   "to": "api_agent",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "fe_shell",
+   "to": "api_shared",
+   "label": "journey CRUD",
+   "state": "verified"
+  },
+  {
+   "from": "fe_plan",
+   "to": "api_shared",
+   "label": "accept / reject",
+   "state": "verified"
+  },
+  {
+   "from": "fe_map",
+   "to": "api_data",
+   "label": "route evidence",
+   "state": "verified"
+  },
+  {
+   "from": "fe_routes",
+   "to": "api_data",
+   "label": "experience + twin",
+   "state": "verified"
+  },
+  {
+   "from": "api_agent",
+   "to": "ag_entry",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "api_shared",
+   "to": "ag_loop",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "api_shared",
+   "to": "ds_journey",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "api_data",
+   "to": "ds_twin",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "api_data",
+   "to": "ds_place",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "ag_entry",
+   "to": "ag_loop",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "ag_loop",
+   "to": "ag_gw",
+   "label": "tool call",
+   "state": "verified"
+  },
+  {
+   "from": "ag_gw",
+   "to": "ds_journey",
+   "label": "request_replan / accept_replan",
+   "state": "verified"
+  },
+  {
+   "from": "ag_entry",
+   "to": "pv_ai",
+   "label": "model turn",
+   "state": "verified"
+  },
+  {
+   "from": "ag_loop",
+   "to": "pv_mock",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "ag_gw",
+   "to": "pv_geo",
+   "label": "",
+   "state": "verified"
+  },
+  {
+   "from": "ds_journey",
+   "to": "db_core",
+   "label": "ORM",
+   "state": "verified"
+  },
+  {
+   "from": "ds_twin",
+   "to": "db_state",
+   "label": "twin + versions",
+   "state": "verified"
+  },
+  {
+   "from": "ds_place",
+   "to": "db_agent",
+   "label": "",
+   "state": "built"
+  }
+ ],
+ "legend": [
+  {
+   "state": "verified",
+   "text": "Implemented + evidence (test / published commit)"
+  },
+  {
+   "state": "built",
+   "text": "Implemented, not yet proven on the line"
+  },
+  {
+   "state": "planned",
+   "text": "Documented intent - no implementation here"
+  },
+  {
+   "state": "external",
+   "text": "External provider / third-party boundary"
+  },
+  {
+   "state": "data",
+   "text": "Persistence, audit and operational state"
+  },
+  {
+   "state": "user",
+   "text": "Human actor / client surface"
+  },
+  {
+   "state": "agent",
+   "text": "Agent control plane"
+  }
+ ],
+ "legendOrigin": [
+  0.46,
+  7.86
+ ],
+ "notes": [
+  "THE 11 TOOLS THE GATEWAY ACTUALLY EXPOSES  (backend/app/agent/tool_catalog.py:26-59)",
+  "read-only:  inspect_journey, inspect_twin, list_replans, search_city_services",
+  "plan-shaping:  request_replan, accept_replan",
+  "typed actions:  replace_activity, reschedule_activity, create_booking, cancel_refundable_booking, request_commitment_change",
+  "NOT AN AUTOMATION CLOSURE:  native Hermes binary absent and runtime identity still DIRECT (BLOCKERS.md:9-12); live Valhalla URL not configured (BLOCKERS.md:13); no real payment instrument registered (AGENT_TOOL_CATALOG.md:16-18); impact resolver default disabled (config.py:33); physical phone / PWA shadow trial not performed (CURRENT_STATUS.md:4).",
+  "COUNTS, taken from this tree on 2026-10-22:  175 = @app.get|post|patch|put|delete decorators in backend/app/main.py;  60 = __tablename__ declarations in backend/app/db/models.py;  14,569 = lines of main.py;  242 backend test modules, 184 frontend e2e specs.",
+  "DEFAULTS:  CITYNEXUS_AI_ENABLED=false, CITYNEXUS_REAL_CITY_ENABLED=false, real-city mode=replay, impact provider=disabled (core/config.py:14, 79-81, 33) - the picture describes wiring present in code, not a claim that every provider is live in a given deployment.",
+  "AUDIT:  every shape carries its code anchor as a small second line and stores the same anchor in the custom property SourceRef, so the drawing can be checked shape by shape inside Visio."
+ ],
+ "notesOrigin": [
+  7.1,
+  7.86
+ ],
+ "notesWidth": 9.0,
+ "notesSize": 6.4
+}

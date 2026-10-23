@@ -1,0 +1,115 @@
+[   0.1s] ################ VISIO ################
+[   0.8s] OK   Dispatch Visio -> <comobj>
+[   1.5s] OK   Documents.Add -> <comobj>
+[   1.6s] OK   A3 landscape -> [None, None, None]
+[   2.2s] OK   stencil FLOW -> ['流程', '判定', '子流程', '开始/结束', '文档', '数据', '数据库', '外部数据', '自定义 1', '自定义 2', '自定义 3', '自定义 4', '页面内引用', '跨页引用', '动态连接线']
+[   3.1s] OK   stencil BASIC -> ['矩形', '正方形', '圆形', '椭圆形', '直角三角形', '三角形', '旋转三角形', '五边形', '六边形', '七边形', '八边形', '十边形', '圆柱形', '平行四边形', '梯形', '菱形', '十字形', 'V 形', '立方体', '水滴', '半圆', '半圆.56', '圆锥', '倒圆锥', '棱锥', '尖的椭圆形', '漏斗', '齿轮', '四角星', '五角星', '六角星', '七角星', '十六角星', '二十四角星', '三十二角星', '圆角矩形', '剪去单角的矩形', '剪去同侧角的矩形', '剪去对角的矩形', '单圆角矩形', '同侧圆角矩形', '对角圆角矩形', '剪去单圆角矩形', '剪去角的矩形', '圆角的矩形', '剪去角的和圆角矩形', '框架', '框架角', 'L 形状', '斜纹', '徽章', '环
+[   3.6s] OK   stencil UML -> ['参与者', '用例', '子系统', '关联', '依赖关系', '归纳', '包含', '扩展']
+[   4.0s] OK   stencil CFF -> ['泳道', '分隔符', '泳道 (垂直)', '分隔符(垂直)', 'CFF 容器', '泳道列表', '阶段列表']
+[   5.0s] OK   stencil CONN -> ['动态连接线', '直线-弧线连接线', '曲线连接 1', '曲线连接 2', '双树枝直角', '多树枝直角', '侧边到侧边 1', '侧边到侧边 2', '侧面', '底部到顶部 1', '底部到顶部 2', '顶部或底部', '侧边到侧边固定 1', '侧边到侧边固定 2', '顶部/底部到侧边', '底部到顶部固定 1', '底部到顶部固定 2', '侧边到顶部/底部', '底部到侧边 1', '底部到侧边 2', '底部到侧边 3', '侧边到顶部', '直角循环', '通用连接线', '布局连接线', '直线-曲线连接线', '直线连接线', '波浪连接线 1', '波浪连接线 2', '双树枝斜角', '多树枝斜角', '曲线连接 3', '有向线 1', '有向线 2', '一对多', '弯折的连接线', '流导向符 1', '流导向符 2', '控制传递', '跨线
+[   5.6s] OK   stencil SRV -> ['服务器', '文件服务器', '电子邮件服务器', 'Web 服务器', '代理服务器', '实时通信服务器', '电子商务服务器', '数据库服务器', '内容管理服务器', 'FTP 服务器', '流化媒体服务器', '管理服务器', '目录服务器', '打印服务器', '移动信息服务器', '应用程序服务器', '动态连接线']
+[   5.7s] OK   drop -> term <- master='开始/结束' shape='开始/结束' id=1 w=0.98 h=0.39 connSec=-1
+[   5.7s] OK   drop -> proc <- master='流程' shape='流程' id=2 w=0.98 h=0.59 connSec=-1
+[   5.7s] OK   drop -> dec <- master='判定' shape='判定' id=3 w=0.98 h=0.59 connSec=-1
+[   5.8s] OK   drop -> data <- master='数据' shape='数据' id=4 w=0.98 h=0.59 connSec=-1
+[   5.8s] OK   drop -> db <- master='数据库' shape='数据库' id=5 w=0.98 h=0.59 connSec=-1
+[   5.9s] OK   drop -> ext <- master='外部数据' shape='外部数据' id=6 w=0.98 h=0.59 connSec=-1
+[   6.0s] OK   drop -> cyl <- master='圆柱形' shape='圆柱形' id=7 w=1.18 h=1.18 connSec=-1
+[   6.0s] OK   drop -> rect <- master='矩形' shape='矩形' id=9 w=1.57 h=1.18 connSec=-1
+[   6.2s] OK   drop -> roundrect <- master='圆角矩形' shape='圆角矩形' id=10 w=1.57 h=1.18 connSec=-1
+[   6.3s] OK   drop -> actor <- master='参与者' shape='参与者' id=11 w=0.47 h=0.98 connSec=0
+[   6.3s] OK   drop -> uc <- master='用例' shape='用例' id=12 w=1.57 h=0.47 connSec=0
+[   6.4s] OK   drop -> sys <- master='子系统' shape='子系统' id=13 w=1.97 h=2.95 connSec=-1
+[   6.5s] OK   drop -> web <- master='服务器' shape='服务器' id=18 w=0.71 h=0.98 connSec=-1
+[   6.5s] --- UML relationships: include / extend / dependency / association ---
+[   6.6s] OK   drop rel -> incl ok name=包含
+[   6.6s] OK   drop rel -> ext_rel ok name=扩展
+[   6.7s] OK   drop rel -> dep ok name=依赖关系
+[   6.7s] OK   drop rel -> assoc ok name=关联
+[   6.7s] --- CFF pool/lane ---
+[   6.8s] OK   drop cff -> pool ok w=4.92 h=3.94 name=泳道列表
+[   6.8s] OK   drop cff -> lane ok w=4.92 h=1.18 name=泳道
+[   7.0s] OK   drop cff -> phase ok w=3.94 h=5.91 name=阶段列表
+[   7.0s] --- glued dynamic connectors ---
+[   7.2s] OK   glue -> term->proc conn='动态连接线' beginShape=readfail:AttributeError endShape=readfail:AttributeError connects=2
+[   7.4s] OK   glue -> proc->dec conn='动态连接线.59' beginShape=readfail:AttributeError endShape=readfail:AttributeError connects=4
+[   7.5s] OK   glue -> dec->data conn='动态连接线.60' beginShape=readfail:AttributeError endShape=readfail:AttributeError connects=6
+[   7.7s] OK   glue -> dec->db conn='动态连接线.61' beginShape=readfail:AttributeError endShape=readfail:AttributeError connects=8
+[   7.9s] OK   glue -> web->uc conn='动态连接线.62' beginShape=readfail:AttributeError endShape=readfail:AttributeError connects=10
+[   7.9s] --- does the connector follow a moved shape? ---
+[   7.9s] OK   record pin -> 2.5
+[   7.9s] OK   move term -> None
+[   7.9s] OK   beginx after move -> 4.5
+[   7.9s] FAIL style connector -> com_error: (-2147352567, '发生意外。', (0, '服务器 - 3D  [只读] - Visio Professional', '\n\n意外的文件尾。', None, 0, -2032466967), None)
+[   7.9s] OK   reset move -> None
+[   7.9s] --- text formatting on a master shape ---
+[   7.9s] OK   multi-line text + font -> (None, None, 'PROCESS')
+[   7.9s] OK   add second line -> (None, 'line one\rgline two')
+[   7.9s] --- page 2 in the same document ---
+[   7.9s] FAIL Pages.Add -> AttributeError: '<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVPages instance at 0x2859855688608>' object has no attribute 'AddAfter'
+[   7.9s] OK   count -> 1
+[   7.9s]   pages now=1
+[   8.1s] OK   save -> 0
+[   8.5s] OK   export png -> 50302
+[   8.9s] OK   export pdf -> 33421
+[   9.1s] OK   close quit -> (None, None)
+[   9.1s] ################ PROJECT ################
+[   9.8s] OK   Dispatch Project -> <comobj>
+[   9.9s] OK   visible -> None
+[   9.9s] OK   alerts -> None
+[  10.3s] OK   FileNew -> True
+[  10.3s] OK   ActiveProject -> <comobj>
+[  10.4s] OK   ProjectStart -> None
+[  10.4s] OK   views count -> 3
+[  10.4s] OK   view names -> ['包含日程表的甘特图', '甘特图', '日程表']
+[  10.4s] P1 ALL VIEW NAMES (3): ['包含日程表的甘特图', '甘特图', '日程表']
+[  10.4s] P2/P3 scheduling mode - leaf dependency test
+[  10.5s] OK   add A -> <comobj>
+[  10.5s] OK   add B -> <comobj>
+[  10.6s] OK   A dur 3d -> None
+[  10.6s] OK   B dur 2d -> None
+[  10.6s] OK   B pred A -> None
+[  10.7s] OK   calc -> True
+[  10.7s]   A=2026-09-04 01:00:00+00:00..2026-09-08 09:00:00+00:00  B=2026-09-08 09:00:00+00:00..2026-09-10 09:00:00+00:00
+[  10.7s] OK   A dur 3d->8d -> None
+[  10.7s] OK   calc2 -> True
+[  10.7s]   after: A=2026-09-04 01:00:00+00:00..2026-09-15 09:00:00+00:00  B=2026-09-08 09:00:00+00:00..2026-09-10 09:00:00+00:00   (B must shift if auto)
+[  10.7s] P2 field scan for a scheduling-mode field
+[  11.3s]   fields whose NAME mentions schedule: []
+[  11.3s]   fields whose VALUE looks like manual/auto: [(1280, '?', '手动计划')]
+[  11.4s] FAIL SetField(1280)->自动 -> com_error: (-2147352567, '发生意外。', (0, None, '从列表中选择“自动排定计划”或“手动排定计划”。', None, 0, -2146827187), None)
+[  11.4s] OK   calc3 -> True
+[  11.4s]   after SetField loop: A=2026-09-04 01:00:00+00:00..2026-09-15 09:00:00+00:00 B=2026-09-08 09:00:00+00:00..2026-09-10 09:00:00+00:00
+[  11.4s] OK   A dur 8d->13d -> None
+[  11.4s] OK   calc4 -> True
+[  11.4s]   decisive: A=2026-09-04 01:00:00+00:00..2026-09-22 09:00:00+00:00 B=2026-09-08 09:00:00+00:00..2026-09-10 09:00:00+00:00
+[  11.4s] P5 resource rates
+[  11.4s] OK   res add -> <comobj>
+[  11.4s] OK   rate direct StandardRate -> None
+[  11.5s] OK   rate PayRates.Add -> <comobj>
+[  11.5s] OK   res type work -> None
+[  11.5s] OK   res accrue prorated -> None
+[  11.5s] FAIL res maxunits -> com_error: (-2147352567, '发生意外。', (0, None, '参数值无效。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM', 131074, -2146827187), None)
+[  11.5s] OK   std -> ¥0.00
+[  11.5s] OK   cpu -> 0.0
+[  11.5s] OK   pr -> ¥0.00
+[  11.5s]   readback StdRate=¥0.00 CostPerUse=0.0 PayRate1Std=¥0.00
+[  11.5s] P4 assignment + cost
+[  11.5s] FAIL p.Assignments.Add(A,R) -> AttributeError: <unknown>.Assignments
+[  11.5s] FAIL work -> AttributeError: Property 'Add.RegularWork' can not be set.
+[  11.5s] OK   calc5 -> True
+[  11.5s] OK   w -> 0.0
+[  11.5s] OK   rw -> 0.0
+[  11.5s] OK   cost -> 0.0
+[  11.5s] OK   rcost -> 0.0
+[  11.5s] OK   pcost -> 0.0
+[  11.5s] FAIL ac -> AttributeError: <unknown>.Assignments
+[  11.5s]   A.Work=0.0 A.RegularWork=0.0 A.Cost=0.0 ; R1.Cost=0.0 ; projCost=0.0 ; assns=None
+[  11.5s] P6 export views to PDF
+[  11.5s]   resolved: [('Gantt', '包含日程表的甘特图')]
+[  11.6s] OK   ViewApply Gantt -> True
+[  12.7s] OK   DocumentExport Gantt -> 163144
+[  12.8s] OK   SaveAs mpp -> None
+[  13.2s] OK   quit -> (True, None)
+[  13.2s] ################ DONE ################
+[  13.2s] artifacts: v6.mpp=236544, v6.pdf=33421, v6.png=50302, v6.vsdx=89921, v6_Gantt.pdf=163144

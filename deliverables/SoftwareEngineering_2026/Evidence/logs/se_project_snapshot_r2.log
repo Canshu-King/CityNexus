@@ -1,0 +1,42 @@
+[   0.0s] DPI awareness set to per-monitor
+[   0.1s] plan sha256 before the run 6398e58f9b4cd3b3
+[   0.1s] plan set read-only on disk
+[   0.5s] no pre-existing WINPROJ.EXE
+[   1.7s] read-only open refused (com_error), opening normally and never saving
+[   2.9s] opened CityNexus_Software_Engineering_Plan.mpp (65 tasks, 5 resources), Project says ReadOnly=True
+[   2.9s] Project windows: ['CityNexus_Software_Engineering_Plan.mpp [只读]']
+[   2.9s] Project main window 'Project Professional - CityNexus_Software_Engineering_Plan.m' pid 55984
+[   3.0s]   Gantt_Chart: ViewWhole refused (AttributeError), captured at the current scale
+[   3.3s]   Gantt_Chart tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[   5.7s]   Gantt_Chart      3414x2350  colours 1308  ink 0.135
+[   5.8s]   SetForegroundWindow failed (error), trying SwitchToThisWindow
+[   6.9s]   cross-check PrintWindow vs screen: mean abs diff 13.76 over 0-255, occluders while grabbing 11
+[   6.9s]   cross-check not decisive: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeG sat on top while grabbing
+[   6.9s]   kept Gantt_Chart (339826 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[   7.1s]   Tracking_Gantt: ViewWhole refused (AttributeError), captured at the current scale
+[   7.3s]   Tracking_Gantt tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[   9.5s]   Tracking_Gantt   3414x2350  colours 1320  ink 0.168
+[   9.6s]   kept Tracking_Gantt (511477 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  10.5s]   Network_Diagram: ViewWhole refused (AttributeError), captured at the current scale
+[  10.5s]   Network_Diagram tuned: ColumnBestFit refused (com_error); Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  12.7s]   Network_Diagram  3414x2350  colours 1145  ink 0.156
+[  12.8s]   kept Network_Diagram (290112 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  13.2s]   WBS_Task_Sheet: ViewWhole refused (AttributeError), captured at the current scale
+[  13.4s]   WBS_Task_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  15.6s]   WBS_Task_Sheet   3414x2350  colours 1233  ink 0.163
+[  15.8s]   kept WBS_Task_Sheet (484575 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  16.1s]   Resource_Sheet: ViewWhole refused (AttributeError), captured at the current scale
+[  16.1s]   Resource_Sheet tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  18.4s]   Resource_Sheet   3414x2350  colours 1177  ink 0.132
+[  18.4s]   kept Resource_Sheet (255697 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  18.4s]   ViewApply 任务使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“任务使用情况”视图已经不存在。', 'C:\\Prog
+[  18.4s]   ViewApply 资源使用情况 failed: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“资源使用情况”视图已经不存在。', 'C:\\Prog
+[  18.6s]   Calendar: ViewWhole refused (AttributeError), captured at the current scale
+[  18.6s]   Calendar tuned: ColumnBestFit; Zoom refused (AttributeError/TypeError); Timescale refused (com_error)
+[  20.9s]   Calendar         3414x2350  colours 2411  ink 0.404
+[  21.0s]   kept Calendar (491670 bytes, 11 windows above it: ['GitHub项目推荐 - Google Chrome', 'EdgeGuide_System_Wiring.pdf - WPS Office', 'D:\\moodle\\hrpd\\edgegui...em_Wir)
+[  24.6s]   Milestone_Timeline 3414x2350  colours 1234  ink 0.130
+[  24.7s]   kept Milestone_Timeline from CityNexus_Milestone_View.mpp
+[  24.7s] milestone file digest d1def47164e694c0 -> d1def47164e694c0 (held)
+[  24.9s] plan sha256 after the run 6398e58f9b4cd3b3; Office lock files left: none
+[  24.9s] SNAPSHOT R2 DONE: 7 images (plan + milestone), file unchanged, cross-check not decisive

@@ -1,0 +1,83 @@
+[   0.1s] date reader selftest: pass (17:00 finish reads as the same calendar day)
+[   0.1s] pre-flight: 61 links, 0 violated, 0 structural problems
+[   0.1s]    pre-flight deadline: M10 deadline 2026-10-02 but scheduled finish 2026-10-05  [recorded fact: this date was really missed]
+[   0.1s]    pre-flight late: 5.2 70% done, planned to finish 2026-09-22, status date 2026-10-22
+[   0.1s]    pre-flight late: 5.3 0% done, planned to finish 2026-09-23, status date 2026-10-22
+[   0.1s]    pre-flight late: 6.5 20% done, planned to finish 2026-10-09, status date 2026-10-22
+[   0.1s]    pre-flight late: 8.2 50% done, planned to finish 2026-09-25, status date 2026-10-22
+[   0.1s]    pre-flight late: 9.3 50% done, planned to finish 2026-10-02, status date 2026-10-22
+[   0.1s]    pre-flight late: 9.4 0% done, planned to finish 2026-10-08, status date 2026-10-22
+[   0.1s]    pre-flight late: 9.6 0% done, planned to finish 2026-10-06, status date 2026-10-22
+[   0.1s]    pre-flight late: 10.2 70% done, planned to finish 2026-10-21, status date 2026-10-22
+[   0.1s]    pre-flight overdue: 5.3 0% complete, planned 2026-09-18..2026-09-23 - overdue as of the status date (left visible, not re-dated)
+[   0.1s]    pre-flight overdue: 9.4 0% complete, planned 2026-10-05..2026-10-08 - overdue as of the status date (left visible, not re-dated)
+[   0.1s]    pre-flight overdue: 9.6 0% complete, planned 2026-10-05..2026-10-06 - overdue as of the status date (left visible, not re-dated)
+[   0.1s]    pre-flight overdue: 10.1 0% complete, planned 2026-09-28..2026-10-02 - overdue as of the status date (left visible, not re-dated)
+[   0.1s] static forward pass: project finish 2026-10-30, chain 1.1 -> 1.2 -> M1 -> 2.1 -> 2.2 -> M2 -> 3.1 -> 4.1 -> 7.1 -> 7.2 -> 7.3 -> M7 -> 10.2 -> 10.3 -> 10.4 -> M12 -> M13
+[   0.8s] Microsoft Project version 16.0
+[   1.2s] ProjectStart = 2026-09-07 01:00:00+00:00
+[   1.2s] StatusDate = 2026-10-22 01:00:00+00:00
+[   1.3s] resource #1 Yang Jianbin 0802240329 - requirements /  architectu type=0 (工时)
+[   1.3s]    MaxUnits readback=0.5 (= 20 h/week)
+[   1.4s]    rate=20.0 readback=$20.00/工时 maxUnits=0.5
+[   1.4s] resource #2 Wang Jiarui 0802240322 - data integration /  backend type=0 (工时)
+[   1.4s]    MaxUnits readback=0.5 (= 20 h/week)
+[   1.4s]    rate=20.0 readback=$20.00/工时 maxUnits=0.5
+[   1.4s] resource #3 Wang Xinyue 0802240324 - frontend /  agent surface / type=0 (工时)
+[   1.4s]    MaxUnits readback=0.5 (= 20 h/week)
+[   1.4s]    rate=20.0 readback=$20.00/工时 maxUnits=0.5
+[   1.4s] resource #4 Qoder agent lanes - automated build and test compute type=1 (材料)
+[   1.4s]    rate=6.0 readback=$6.00 maxUnits=
+[   1.5s] resource #5 Codex co-development - compute                       type=1 (材料)
+[   1.5s]    rate=6.0 readback=$6.00 maxUnits=
+[  15.2s] links written from the spec: 61 across 65 successor rows; refusals: none
+[  16.7s]   deadline M9 -> 2026-11-02 (constraint stays 0)
+[  16.8s]   deadline 10.1 -> 2026-10-02 (constraint stays 0)
+[  17.0s]   deadline M10 -> 2026-10-02 (constraint stays 0)
+[  17.0s]   deadline M11 -> 2026-10-23 (constraint stays 0)
+[  17.1s]   deadline M12 -> 2026-11-06 (constraint stays 0)
+[  17.3s]   deadline M13 -> 2026-11-06 (constraint stays 0)
+[  23.4s] assignments: 61 (41 student, 20 lane); stated student effort total 221.0 h; percentages confirmed by readback: 50; refused: none
+[  29.5s] move-to-status-date: 0 rows re-planned by the engine; 14 open rows still scheduled to finish before 2026-10-22
+[  29.5s]    STILL PAST 2.4 2026-10-19..2026-10-21 at 0%
+[  29.5s]    STILL PAST 5.2 2026-09-16..2026-09-18 at 70%
+[  29.5s]    STILL PAST 5.3 2026-09-16..2026-09-21 at 0%
+[  29.5s]    STILL PAST 6.5 2026-09-30..2026-10-07 at 20%
+[  29.5s]    STILL PAST 8.2 2026-09-16..2026-09-23 at 50%
+[  29.5s]    STILL PAST 9.1 2026-09-24..2026-10-21 at 85%
+[  29.5s]    STILL PAST 9.2 2026-09-24..2026-10-21 at 60%
+[  29.5s]    STILL PAST 9.3 2026-09-24..2026-09-30 at 50%
+[  35.3s] link audit: 122 dependency records read from the engine for 61 declared links; 0 missing, 0 type-mismatched, 0 violating date order
+[  35.3s] constraint audit: rows with a constraint other than ASAP: none
+[  35.3s] earliest scheduled start: 2026-09-07 (project start 2026-09-07)
+[  35.3s] progress audit: 24 rows booked complete on or before the status date; 11 in progress; 6 problems
+[  35.3s] cost audit: 220.9 labour hours in the file; 0 rows where hours or cost do not match the estimate; 7 compute-lane assignments priced without hours; compute-only rows carrying hours: 0
+[  35.3s]    capacity wangjr   available 20.0 h/wk | static peak  18.5 h (24 person-weeks) | Project peak  17.2 h
+[  35.3s]    capacity wangxy   available 20.0 h/wk | static peak  19.5 h (24 person-weeks) | Project peak  19.6 h
+[  35.3s]    capacity yang     available 20.0 h/wk | static peak  17.2 h (24 person-weeks) | Project peak  19.9 h
+[  35.3s] capacity census: 220.9 student hours in the file, 0 person-weeks over availability, 0 assignments flagged by Project
+[  35.3s] deadline audit: 6 met, 0 breached on brief dates, 0 internal targets missed (-)
+[  35.3s] critical path: 4 rows, first few ['4.5  Commerce, guardian and autopilot', '10.4  Part 2: detailed requirement specification w', 'M12  Part 2 course deadline (contract 2026-11-06)', 'M13  Coursework delivery (plan)']
+[  35.8s]   startChain: poking 10.2 (11d) moved start of ['2.4/FS'] and finish of ['10.3/FS', '2.4/FS']; restore clean=True
+[  36.3s]   finishChain: poking 9.1 (20d) moved start of ['9.5/FF'] and finish of ['9.5/FF']; restore clean=True
+[  36.6s]   ssChain: poking 9.3 (5d) moved start of ['9.4/FS', '9.6/SS'] and finish of ['9.4/FS', '9.6/SS']; restore clean=True
+[  36.6s]   link types declared ['FF', 'FS', 'SS'], demonstrated live ['FF', 'FS', 'SS']
+[  36.6s] before save: {'tasks': 65, 'resources': 5, 'cost': 4460.688, 'finish': '2026-10-23', 'start': '2026-09-07', 'critical': 4}
+[  36.7s] saved D:\moodle\live_checks\stage_mpp\CityNexus_Software_Engineering_Plan.mpp (393216 bytes)
+[  52.6s] link audit: 122 dependency records read from the engine for 61 declared links; 0 missing, 0 type-mismatched, 0 violating date order
+[  52.6s] progress audit: 24 rows booked complete on or before the status date; 11 in progress; 6 problems
+[  52.6s] cost audit: 220.9 labour hours in the file; 0 rows where hours or cost do not match the estimate; 7 compute-lane assignments priced without hours; compute-only rows carrying hours: 0
+[  52.6s]    capacity wangjr   available 20.0 h/wk | static peak  18.5 h (24 person-weeks) | Project peak  17.2 h
+[  52.6s]    capacity wangxy   available 20.0 h/wk | static peak  19.5 h (24 person-weeks) | Project peak  19.6 h
+[  52.6s]    capacity yang     available 20.0 h/wk | static peak  17.2 h (24 person-weeks) | Project peak  19.9 h
+[  52.6s] capacity census: 220.9 student hours in the file, 0 person-weeks over availability, 0 assignments flagged by Project
+[  52.6s] deadline audit: 6 met, 0 breached on brief dates, 0 internal targets missed (-)
+[  52.6s] reopened: {'tasks': 65, 'resources': 5, 'cost': 4460.688, 'finish': '2026-10-23', 'critical': 4}
+[  52.6s] reopen drift: 0 field differences
+[  52.6s] CHECKS: {"allDeclaredLinksExist": true, "noLinkViolatesDateOrder": true, "nothingConstrained": true, "progressBookedByStatusDate": true, "costMatchesHours": true, "noStudentOverallocation": true, "effortWithinCapacity": true, "criticalPathComputed": true, "linkTypesLive": true, "perturbationRestored": true, "reopenIdentical": true, "briefDatesHeld": true}
+[  52.9s] published D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Microsoft_Project\CityNexus_Software_Engineering_Plan.mpp (386048 bytes, sha256 07cb9c3959129723, identical to staged: True)
+[  68.4s] link audit: 122 dependency records read from the engine for 61 declared links; 0 missing, 0 type-mismatched, 0 violating date order
+[  68.4s] shipped file reads back: 65 rows, 122 dependency records, 0 violations, cost 4460.688, finish 2026-10-23
+[  68.7s] shipped file digest after the verification open: 6398e58f9b4cd3b3 (was 07cb9c3959129723; changed: True)
+[  68.7s]    the manifest and every evidence document must carry the AFTER digest - they are written after this run
+[  68.7s] BUILD OK; failed checks: none

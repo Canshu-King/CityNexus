@@ -70,7 +70,7 @@ import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
 import { MyTripsEntry } from "../features/trip/MyTripsEntry";
-import { useDemoScene } from "../lib/sceneClock";
+import { basisWord, useDemoScene } from "../lib/sceneClock";
 import { SharedJourneyScreen } from "../features/shared/SharedJourneyPanel";
 import { SharedPosterScreen } from "../features/poster/SharedPosterScreen";
 import { POSTER_SHARE_FORM } from "../features/poster/posterShare";
@@ -634,7 +634,14 @@ function dateInZone(
   } catch {
     // The zone could not be used, so this reading is the DEVICE clock.  Saying so is the whole
     // point: a moment that silently switches zones is a moment the reader cannot place.
-    return date(value, locale) + (locale === "zh-CN" ? " · 本设备时间" : " · this device's time");
+    // ORD-0712: `hub.deviceTime` already says this sentence in both languages; the shell used to
+    // write its own copy of it, which is how the two could drift apart.  Which arm to read is still
+    // decided here -- the same decision the formatter one line above makes -- but the words are not.
+    return (
+      date(value, locale) +
+      " · " +
+      dictionaryText(locale === "zh-CN" ? "zh-CN" : "en", "hub.deviceTime")
+    );
   }
 }
 
@@ -1261,12 +1268,8 @@ export function V8Experience() {
         /* Fail closed, with the reason the server gave: no silent POST fallback. */
         setSealedDemoUnavailable(
           !scene.demo_mode
-            ? locale === "zh-CN"
-              ? "这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。"
-              : "This deployment is not a demo stage (demo_mode=false), so there is no sealed demo to enter."
-            : locale === "zh-CN"
-              ? "服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。"
-              : "The server currently names no usable sealed demo journey, so this entry is closed. Try again later, or create your own trip.",
+            ? t("demo.notAStage")
+            : t("demo.noSealedJourney"),
         );
         return;
       }
@@ -3093,9 +3096,7 @@ function Hub({
                 </span>
               </strong>
               <span>
-                {zh
-                  ? "服务器不会中途汇报进度，这里只有真实等待时间。第一次搜索一个城市可能要一两分钟。"
-                  : "The server reports nothing until it finishes, so this is measured waiting time. A city's first search can take a minute or two."}
+                {t("hub.stayWaitingNote")}
               </span>
             </div>
           )}
@@ -3107,9 +3108,7 @@ function Hub({
               role="alert"
             >
               <strong>
-                {zh
-                  ? "住宿搜索失败了，行程本身还在。"
-                  : "The stay search failed — your trip is untouched."}
+                {t("hub.stayFailed")}
               </strong>
               <button
                 type="button"
@@ -3133,9 +3132,7 @@ function Hub({
               role="status"
             >
               <strong>
-                {zh
-                  ? "这次没找到可推荐的住宿"
-                  : "No stay options came back this time"}
+                {t("hub.stayEmpty")}
               </strong>
               <p>{stayOutcomeLine(stayOutcome, zh)}</p>
               <div className="hub-stay-empty-actions">
@@ -3352,7 +3349,7 @@ function Hub({
             data-testid="hub-plan-with-ai"
             onClick={onPlanWithAi}
           >
-            {locale.startsWith("zh") ? "AI 帮我规划" : "Plan my trip with AI"}
+            {t("itinerary.planWithAi")}
           </button>
           <button
             type="button"
@@ -3467,26 +3464,18 @@ function Hub({
             <strong className="cn-hero-next-row">
               {nextUp
                 ? `${heroClock ?? ""} ${nextUp.title}`.trim()
-                : zh
-                  ? "还没有安排"
-                  : "Nothing scheduled"}
+                : t("today.nothingScheduled")}
             </strong>
             {nextUp ? (
               <small className="cn-hero-meta">
                 {todayStops.length
-                  ? zh
-                    ? `今天还有 ${todayStops.length} 项安排`
-                    : `${todayStops.length} stops today`
+                  ? t("today.stopsToday", { n: todayStops.length })
                   : /* An empty calendar day says nothing about whether further stops exist -- only
                        the server's sequence does.  "暂无安排" beside a real later stop was the same
                        contradiction in a smaller font. */
                     remainingAfterNext > 0
-                      ? zh
-                        ? `后面还有 ${remainingAfterNext} 站`
-                        : `${remainingAfterNext} stops after this`
-                      : zh
-                        ? "这一趟到下一站就结束了"
-                        : "This trip ends at the next stop"}
+                      ? t("today.stopsAfterThis", { n: remainingAfterNext })
+                      : t("today.tripEndsNextStop")}
               </small>
             ) : null}
           </div>
@@ -3523,14 +3512,12 @@ function Hub({
           >
             {(() => {
               if (!usingDeviceClock) {
-                const basis =
-                  stage.scene?.basis === "CURSOR"
-                    ? zh
-                      ? "执行游标"
-                      : "execution cursor"
-                    : zh
-                      ? "行程起点"
-                      : "journey start";
+                // ORD-0712: `basisWord()` in `lib/sceneClock.ts` is the one writer of the basis
+                // words (it also names "the server gave no basis" for a basis that is missing, which
+                // this file used to guess as "journey start").  The sentence itself lives in the
+                // dictionary now, with the four parts passed in as slots, so the wording a phone
+                // renders is the wording the specs read.
+                const basis = basisWord(stage.scene?.basis ?? null, zh);
                 /* ORD-0208 1: this sentence had three defects measured on a phone -- the internal
                    enum (`游标状态 ABSENT_FALLBACK`) printed as prose, the instant shown as bare UTC
                    (`2026-09-21T02:00:00+00:00`) to someone just told the trip runs on China Standard
@@ -3538,37 +3525,29 @@ function Hub({
                    A non-VALID cursor is now the plain sentence the order suggests; the enum stays in
                    the `data-cursor-status` attribute, where it is inspectable without being prose. */
                 const cursorNote =
-                  cursorStatus && cursorStatus !== "VALID"
-                    ? zh
-                      ? "。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读"
-                      : ". The server gave no execution cursor for this minute, so this screen reads time by the journey's window"
-                    : "";
+                  cursorStatus && cursorStatus !== "VALID" ? t("clock.cursorNote.absent") : "";
                 const stationNote = useProjection
-                  ? zh
-                    ? " · 现在/接下来由服务器的执行投影给出"
-                    : " · now/next come from the server's execution projection"
+                  ? t("clock.stationNote.projection")
                   : cursorStatus === "STALE"
-                    ? zh
-                      ? " · 服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标"
-                      : " · the server does not trust its own cursor, so this screen reads the stations by time window, not by cursor"
-                    : zh
-                      ? " · 服务器的执行投影还没到，这一屏没有按游标定位"
-                      : " · the server's execution projection has not arrived, so no station is claimed from the cursor";
-                return zh
-                  ? `“现在”取自服务器场景（${basis}${cursorNote}）：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`
-                  : `"now" comes from the server's scenario (${basis}${cursorNote}): ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`;
+                    ? t("clock.stationNote.stale")
+                    : t("clock.stationNote.pending");
+                return t("clock.scenario.sentence", {
+                  basis,
+                  cursorNote,
+                  instant: dateInZone(
+                    stageInstant ?? undefined,
+                    locale,
+                    data.journey.timezone || "UTC",
+                  ),
+                  stationNote,
+                });
               }
-              if (stage.phase === "loading")
-                return zh
-                  ? "还在读服务器场景，这一屏用的是这台设备自己的时间"
-                  : "The scenario is still being read; this screen uses this device's own time";
+              if (stage.phase === "loading") return t("clock.scenario.loading");
               if (stage.phase === "unavailable")
-                return zh
-                  ? `读不到服务器场景（${stage.reason ?? "未知"}），这一屏用的是这台设备自己的时间`
-                  : `The scenario could not be read (${stage.reason ?? "unknown"}); this screen uses this device's own time`;
-              return zh
-                ? "台上没有场景，这一屏用的是这台设备自己的时间"
-                : "There is no scenario on stage; this screen uses this device's own time";
+                return t("clock.scenario.unreadable", {
+                  reason: stage.reason ?? t("clock.reason.unknown"),
+                });
+              return t("clock.scenario.none");
             })()}
           </small>
         </article>
@@ -3588,9 +3567,7 @@ function Hub({
           <strong data-testid="today-stay">
             {chosenStay
               ? chosenStay.stay.property_name
-              : zh
-                ? "还没有选定"
-                : "Not chosen yet"}
+              : t("me.stayNotChosen")}
           </strong>
         </div>
         <div className="cn-strip-item">
@@ -3630,9 +3607,7 @@ function Hub({
         <div className="v8-empty-state" data-testid="hub-glance-empty">
           <b>{t("hub.nothingToPreview")}</b>
           <p>
-            {zh
-              ? "选定方案后，这里会显示每天的安排。"
-              : "Choose a plan and the day-by-day plan appears here."}
+            {t("itinerary.choosePlanHint")}
           </p>
         </div>
       )}
@@ -3727,9 +3702,7 @@ function Studio({
         <div className="v8-days-column">
           {!chosen && selected && (
             <p className="v8-muted" data-testid="studio-preview-caveat">
-              {locale.startsWith("zh")
-                ? "以下只是候选方案的预览，你还没有采用它。"
-                : "This is a preview of a candidate option - you have not chosen a plan yet."}
+              {t("itinerary.candidatePreviewNote")}
             </p>
           )}
           {selected?.days.map((day) => (
@@ -4877,9 +4850,7 @@ function Bookings({
                     ? "待确认 · 服务器未确认"
                     : "Pending · the server has not confirmed it"
                   : item.commitment_id
-                    ? zh
-                      ? "已确认 · 受保护"
-                      : "Confirmed · protected"
+                    ? t("detail.confirmedProtected")
                     : zh
                       ? "已确认 · 未成承诺"
                       : "Confirmed · no commitment"}
@@ -5094,11 +5065,7 @@ function Me({
         <div>
           <p className="v8-kicker">{t("my.kicker")}</p>
           <h1>{t("my.title")}</h1>
-          <p className="v8-lede">
-            {zh
-              ? "这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。"
-              : "The facts of this trip: party, budget, stay and confirmed bookings."}
-          </p>
+          <p className="v8-lede">{t("me.lede")}</p>
         </div>
       </div>
 

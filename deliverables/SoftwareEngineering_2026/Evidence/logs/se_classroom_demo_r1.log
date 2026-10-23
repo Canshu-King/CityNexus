@@ -1,0 +1,58 @@
+[   0.0s] copies made for the drive test: 2
+[   0.7s] no orphaned VISIO/WINPROJ processes
+[   1.4s] Visio reports version 16.0 build ?
+[   2.6s]    open                   01_CityNexus_System_ -> 01_CityNexus_System_Architecture.vsdx
+[   5.0s]    pinX                   01_CityNexus_System_ -> 1.73
+[   5.0s]    glued connectors       01_CityNexus_System_ -> 2
+[   5.1s]    move +0.75in           01_CityNexus_System_ -> 0.75
+[   5.2s]    pinX after             01_CityNexus_System_ -> 2.48
+[   6.5s]    connector follows the dragged shape: True (glued ends [{'id': 41, 'ends': [(0.49, 10.19), (0.563, 9.237)], 'onShape': True}, {'id': 47, 'ends': [(0.563, 8.643), (0.587, 7.953)], 'onShape': True}] -> [{'id': 41, 'ends': [(0.49, 10.19), (1.313, 9.237)], 'onShape': True}, {'id': 47, 'ends': [(1.313, 8.643), (0.587, 7.953)], 'onShape': True}], shape now at 2.48 half-width 1.24, glue records 2 -> 2)
+[   6.5s]    edit text              01_CityNexus_System_ -> True
+[   6.5s]    text reads back        01_CityNexus_System_ -> True
+[   6.7s]    save the copy          01_CityNexus_System_ -> saved
+[   6.8s]    close                  01_CityNexus_System_ -> closed
+[   7.4s]    reopen the copy        01_CityNexus_System_ -> 01_CityNexus_System_Architecture.vsdx
+[   7.6s]    move persisted         01_CityNexus_System_ -> True
+[   7.6s]    text persisted         01_CityNexus_System_ -> True
+[   7.6s]    close again            01_CityNexus_System_ -> closed
+[   7.6s]  01_CityNexus_System_Architecture.vsdx drive test: PASS (original byte-identical: True)
+[   8.3s]    open                   03_CityNexus_Agent_W -> 03_CityNexus_Agent_Workflow.vsdx
+[  11.1s]    pinX                   03_CityNexus_Agent_W -> 1.3085
+[  11.1s]    glued connectors       03_CityNexus_Agent_W -> 1
+[  11.2s]    move +0.75in           03_CityNexus_Agent_W -> 0.75
+[  11.2s]    pinX after             03_CityNexus_Agent_W -> 2.0585
+[  13.1s]    connector follows the dragged shape: True (glued ends [{'id': 58, 'ends': [(2.092, 9.85), (2.222, 9.85)], 'onShape': True}] -> [{'id': 58, 'ends': [(2.058, 10.26), (3.006, 10.26)], 'onShape': True}], shape now at 2.06 half-width 0.78, glue records 1 -> 1)
+[  13.1s]    edit text              03_CityNexus_Agent_W -> True
+[  13.1s]    text reads back        03_CityNexus_Agent_W -> True
+[  13.3s]    save the copy          03_CityNexus_Agent_W -> saved
+[  13.4s]    close                  03_CityNexus_Agent_W -> closed
+[  14.1s]    reopen the copy        03_CityNexus_Agent_W -> 03_CityNexus_Agent_Workflow.vsdx
+[  14.3s]    move persisted         03_CityNexus_Agent_W -> True
+[  14.3s]    text persisted         03_CityNexus_Agent_W -> True
+[  14.4s]    close again            03_CityNexus_Agent_W -> closed
+[  14.4s]  03_CityNexus_Agent_Workflow.vsdx drive test: PASS (original byte-identical: True)
+[  15.4s] Project reports version 16.0
+[  16.2s]    open the copy            True
+[  16.4s]    rows                     65
+[  17.4s]    links read back          122
+[  17.6s]    switch to WBS / 任务工作表    True
+[  17.8s]    switch to Gantt          True
+[  18.0s]    switch to Network        True
+[  19.0s]    switch to Tracking Gantt True
+[  19.4s]    switch to Resource Sheet True
+[  19.5s]    switch to Calendar       True
+[  19.7s]    edit a note              True
+[  19.7s]    note reads back          True
+[  19.9s]    save the copy            True
+[  20.0s]    close                    True
+[  20.4s]    reopen the copy          True
+[  20.9s]    note survived            True
+[  21.8s]    links survived           122
+[  22.3s]    milestone view file opens opened
+[  22.4s]    milestone rows           13
+[  23.1s]    close milestone view     True
+[  23.1s]    close the copy           True
+[  23.5s]    shipped digests held: plan=True milestones=True
+[  23.5s]  Project drive test: PASS (shipped .mpp byte-identical: True)
+[  23.5s] wrote se_classroom_demo_result.json
+[  23.5s] CLASSROOM DEMO CHECK OK

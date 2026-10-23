@@ -370,15 +370,17 @@ export interface AgentCommandResponse {
   run: AgentRun;
 }
 
-/* ORD-0387: the four words `backend/app/agent/ai_availability.py` produces and nowhere else.
-   `(string & {})` keeps them as the listed choices without claiming a fifth can never arrive --
+/* ORD-0387: the words `backend/app/agent/ai_availability.py` produces and nowhere else - five since
+   ORD-0697 added `PROVIDER_ANSWERED`, the answer half of `PROVIDER_REFUSED`.
+   `(string & {})` keeps them as the listed choices without claiming a sixth can never arrive --
    an unlisted word must fall through to "the server said something we do not name", not be
    silently typed as known. */
 export type AiStateWord =
   | "CONFIGURED_UNVERIFIED"
   | "NOT_CONFIGURED"
   | "DISABLED_BY_OPS"
-  | "PROVIDER_REFUSED";
+  | "PROVIDER_REFUSED"
+  | "PROVIDER_ANSWERED";
 
 export interface AgentRuntimeStatus {
   runtime_identity:
@@ -395,6 +397,17 @@ export interface AgentRuntimeStatus {
   /* ORD-0359 keeps this out of the contract's `required`, so absence is a real answer here:
      an older server, or one that never learned the field, and this client must not invent one. */
   ai_state?: AiStateWord | (string & {});
+  /* ORD-0697: what this server last watched the provider do, or null when it never has.  Nullable
+     in the contract, so absence here means "not answered yet", never "answered". */
+  ai_last_call?: {
+    provider_key?: string;
+    model_key?: string | null;
+    outcome?: "ANSWERED" | "REFUSED" | (string & {});
+    status_code?: number | null;
+    observed_at?: string;
+    answers?: number;
+    refusals?: number;
+  } | null;
   hermes_native_gateway?: {
     configured: boolean;
     reachable: boolean;
