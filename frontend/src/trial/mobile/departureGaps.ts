@@ -198,3 +198,11 @@ export function routeSentence(verified: number, total: number, frozen: boolean, 
   return frozen ? `转场已核实 ${verified}/${total}${tail} · 已冻结进这版方案`
     : `转场已核实 ${verified}/${total}${tail}，还没有冻结进这版方案。`;
 }
+
+// After a reload this card holds only the stored answer: `routes` is null again, while the plan itself
+// still carries the frozen facts and the stored answer still says mobility_frozen=true
+// (backend/app/agent/goal_route_freeze.py:243).  Telling a traveller then that nothing was ever verified
+// sends them to redo work the plan already holds -- which is what the screen actually did after the
+// reload measured in walk-74.  No count is claimed here, because the stored answer keeps the flag and
+// not the verified/total pair; the numbers come back as soon as the door is pressed again.
+export const FROZEN_ROUTE_SENTENCE = "转场已经核实并冻结进这版方案。";

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -167,8 +167,10 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
       {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0)
-        : "当天的转场还没有向高德核实过。"}
-      <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">{routesBusy ? "正在核实转场…" : routes?.frozen ? "重新核实转场" : "核实并冻结今天的转场"}</button>
+        : result.mobility_frozen ? FROZEN_ROUTE_SENTENCE : "当天的转场还没有向高德核实过。"}
+      <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">
+        {routesBusy ? "正在核实转场…" : (routes ? routes.frozen : result.mobility_frozen) ? "重新核实转场" : "核实并冻结今天的转场"}
+      </button>
     </p>}
     {result && (result.unrouted_count ?? 0) > 0 && <p className="rev-v3-band-note" data-testid="rev-v3-band-note">{bandSentence(result.unrouted_count ?? 0)}</p>}
     {(result?.opening_checks ?? []).length > 0 && <ul className="rev-v3-opening" data-testid="rev-v3-opening" aria-label="每一处当天的开放核实">

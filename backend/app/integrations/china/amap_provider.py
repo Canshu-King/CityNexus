@@ -17,6 +17,11 @@ import httpx
 
 AMAP_BASE_URL = "https://restapi.amap.com"
 _ADCODE_RE = re.compile(r"^[0-9]{6}$")
+# The transit endpoint wants AMap's telephone-style city code ("010" for Beijing), which is a different
+# thing from the six-digit adcode a place search returns; the two are not interchangeable.
+_CITY_CODE_RE = re.compile(r"^[0-9]{3,4}$")
+_DATE_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
+_TIME_RE = re.compile(r"^([01][0-9]|2[0-3]):[0-5][0-9]$")
 _KEY_QUERY_RE = re.compile(r"(?i)([?&]key=)[^&\s]+")
 _MAX_RESULTS = 25
 _MIN_RADIUS_M = 100
@@ -365,6 +370,109 @@ class AmapClient:
             "path": {"type": "LineString", "coordinates": coordinates, "coordinate_system": "GCJ02"},
             "coordinate_system": "GCJ02",
             "adcode": normalized_adcode,
+        }
+        return {**_base_result("ok", None, http_status), "route": route}
+
+    def transit(
+        self,
+        origin: tuple[float, float],
+        destination: tuple[float, float],
+        city_code: str,
+        *,
+        departure_date: str | None = None,
+        departure_time: str | None = None,
+    ) -> dict[str, Any]:
+        """Return AMap's public-transport answer for GCJ-02 (latitude, longitude) pairs.
+
+        Why this sits next to `walking`: the hop a traveller cannot walk is the one that closes a day and
+        opens the next, and a walking minute for it is a number for a trip nobody actually makes.  Two
+        facts were measured on the live service before this method was written, and both are encoded here
+        (trial/results/20261022_v3_human_chrome/amap-transit-night-3.txt): a departure hour is honoured
+        only as a `date`+`time` pair -- `departure_time` returned the daytime answer unchanged -- and the
+        provider's own `nightflag` reads 0 even on a night line, so this method keeps that field as sent
+        and never turns it into a claim.  A half-specified departure is therefore refused rather than
+        quietly dropped, because a daytime answer to a night question is exactly the failure this exists
+        to avoid.
+
+        No geometry is returned.  Nothing in the product draws a transit polyline yet, and a half-parsed
+        one would look on the map like a route the provider never showed us.
+        """
+        origin_pair = _coordinate_pair(origin)
+        destination_pair = _coordinate_pair(destination)
+        if origin_pair is None or destination_pair is None:
+            return {**_base_result("error", "AMAP_INVALID_COORDINATE", None), "route": None}
+        normalized_city = _text(city_code, maximum=8)
+        if normalized_city is None or not _CITY_CODE_RE.fullmatch(normalized_city):
+            return {**_base_result("error", "AMAP_INVALID_CITY_CODE", None), "route": None}
+        date_text = _text(departure_date, maximum=10) if departure_date is not None else None
+        time_text = _text(departure_time, maximum=5) if departure_time is not None else None
+        if (date_text is None) != (time_text is None):
+            return {**_base_result("error", "AMAP_INVALID_DEPARTURE", None), "route": None}
+        if date_text is not None and not _DATE_RE.fullmatch(date_text):
+            return {**_base_result("error", "AMAP_INVALID_DEPARTURE", None), "route": None}
+        if time_text is not None and not _TIME_RE.fullmatch(time_text):
+            return {**_base_result("error", "AMAP_INVALID_DEPARTURE", None), "route": None}
+        origin_lat, origin_lon = origin_pair
+        destination_lat, destination_lon = destination_pair
+        params: dict[str, Any] = {
+            "origin": f"{origin_lon:.6f},{origin_lat:.6f}",
+            "destination": f"{destination_lon:.6f},{destination_lat:.6f}",
+            "city1": normalized_city,
+            "city2": normalized_city,
+            "show_fields": "cost",
+        }
+        if date_text is not None and time_text is not None:
+            params["date"] = date_text
+            params["time"] = time_text
+        payload, http_status, error = self._request("/v5/direction/transit/integrated", params)
+        if error:
+            return {**_base_result("error", error, http_status), "route": None}
+        route_data = payload.get("route")
+        transits = route_data.get("transits") if isinstance(route_data, dict) else None
+        if not isinstance(transits, list) or not transits or not isinstance(transits[0], dict):
+            return {**_base_result("error", "AMAP_NO_ROUTE", http_status), "route": None}
+        selected = transits[0]
+        distance = _nonnegative_int(selected.get("distance"))
+        cost = selected.get("cost")
+        duration_value = cost.get("duration") if isinstance(cost, dict) else None
+        if duration_value is None:
+            duration_value = selected.get("duration")
+        duration = _nonnegative_int(duration_value)
+        if distance is None or duration is None:
+            return {**_base_result("error", "AMAP_INVALID_RESPONSE", http_status), "route": None}
+        lines: list[str] = []
+        segments = selected.get("segments")
+        for segment in segments if isinstance(segments, list) else []:
+            if not isinstance(segment, dict):
+                continue
+            bus = segment.get("bus")
+            buslines = bus.get("buslines") if isinstance(bus, dict) else None
+            for line in buslines if isinstance(buslines, list) else []:
+                name = _text(line.get("name"), maximum=120) if isinstance(line, dict) else None
+                if name and name not in lines:
+                    lines.append(name)
+        fare: int | None = None
+        fare_text = cost.get("transit_fee") if isinstance(cost, dict) else None
+        if fare_text not in (None, ""):
+            try:
+                fare = int(round(float(str(fare_text)) * 100))
+            except (TypeError, ValueError):
+                fare = None
+        route = {
+            "provider_key": self.provider_key,
+            "mode": "TRANSIT",
+            "distance_m": distance,
+            "duration_seconds": duration,
+            "duration_min": math.ceil(duration / 60),
+            "origin": self._point(*origin_pair),
+            "destination": self._point(*destination_pair),
+            "lines": lines,
+            "walking_distance_m": _nonnegative_int(selected.get("walking_distance")),
+            "fare_minor": fare,
+            "nightflag": selected.get("nightflag"),
+            "requested_departure": {"date": date_text, "time": time_text} if date_text and time_text else None,
+            "coordinate_system": "GCJ02",
+            "city_code": normalized_city,
         }
         return {**_base_result("ok", None, http_status), "route": route}
 

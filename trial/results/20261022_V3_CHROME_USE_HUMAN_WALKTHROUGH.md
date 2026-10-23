@@ -509,16 +509,49 @@ Agent 老老实实又量了一遍，答「五项都有来源答案，没有缺�
 （`frontend/src/trial/RevolutionFirstLook.tsx:911` 先读 bearer 与 identity，缺一个就直接返回），
 所以这一步不是把按钮接上就完事——它等的是那条"可信会话怎么续"的裁语，我不越过去。
 
-**跨夜那一段的公共交通：来源能答，但参数要用对。** 高德 v5 的 transit 口对北京真给了答案
-（`trial/results/20261022_v3_human_chrome/amap-transit-capability-1.txt:8` 起：`route.transits`，
+**跨夜那一段的公共交通：来源能答，但"夜间钟点"这一条还没站住（勘误在前）。** 高德 v5 的 transit 口对
+北京真给了答案（`trial/results/20261022_v3_human_chrome/amap-transit-capability-1.txt:8` 起：`route.transits`，
 每条带 `cost.duration`、`cost.transit_fee`、`nightflag`、`segments[].bus.buslines`），
-同一段路步行三十二分钟、公共交通约四十一分钟、票价 3 元。要"夜里几点出发"的答案，
-`departure_time` 是无效的：三种写法回来的仍是白天那四条（`amap-transit-night-3.txt:1` 到 `:6`），
-换成 `date` + `time` 才真的换了一批答案——出现了夜7路与夜2路（`amap-transit-night-3.txt:7` 与 `:8`）。
-顺带一条反面事实：`nightflag` 在夜7路那一条上仍然是 0，所以它不能当"夜间有服务"的凭据，
-能信的只有请求里带的日期钟点和它回的行名。下一刀按这个做：跨夜那一段用到达日的真实钟点去问
-transit，把线路名字一起冻进事实、写在卡片上，问不到夜间班次就照实说问不到，
-不把白天的地铁答案端给半夜的旅客。
+同一段路步行三十二分钟、公共交通约四十一分钟、票价 3 元。上一段写的"换成 `date` + `time` 才真的换了一批
+答案"只成立了一次：23:57 那一趟确实换出了夜7路与夜2路（`amap-transit-night-3.txt:7` 与 `:8`），
+可 00:16 用同一对参数再问一次，回来的又是白天的地铁答案
+（`trial/results/20261022_v3_human_chrome/amap-transit-method-live-1.txt:5` 与 `:6`：
+`lines` 里是「地铁8号线(朱辛庄--瀛海)」、`duration_min` 四十二、`requested_departure` 确实是
+`2026-12-04 03:00`）。一次正、一次反，所以这条结论现在只能写成"未定"，不能拿去做产品判据；
+能站住的只有两条：
+`departure_time` 三种写法都测过、都不改答案（`amap-transit-night-3.txt:3` 与 `:5`，
+再跑一遍仍然一样：`amap-transit-night-3-repeat.txt:3` 与 `:5`），
+以及 `nightflag` 在夜7路那一条上仍是 0、不能当"夜间有服务"的凭据（`amap-transit-night-3.txt:8`）。
+这一臂的客户端已经落地（`backend/app/integrations/china/amap_provider.py` 的 `transit`，
+八枚臂在 `backend/tests/test_qoder_amap_transit_provider_r1.py`），
+它对半套出发时间与"拿 adcode 当 city code"两种误用在离开发之前就先拒
+（真机回执 `amap-transit-method-live-1.txt:8` 与 `:9`），也不把 nightflag 翻译成主张；
+freeze 与卡片要等夜间班次能复现之后再挂上去。
+另外记一笔现场事实：00:16 那趟第四枚请求撞到过 `AMAP_QUOTA_EXCEEDED`，隔一分钟再问就恢复了——
+walk-73 那"两段没有来源回答"很可能就是这个配额窗口，不是产品坏了。
+
+**刷新一次，卡片就把刚冻好的事忘了（同一趟 walk-74 量的）。** 冻结成功后库里全对：
+plan e84a4116 带 snapshot f41a179a、冻进 3 条事实（`departure-loop-readback-2.txt:5`），
+审计里 `frozen": true, "verified": 3, "total": 3`（`departure-loop-readback-2.txt:54`），
+存档答复的 gap 只剩票价与未定地点两类。可是卡片重开之后，横幅读回来的是
+「当天的转场还没有向高德核实过。 核实并冻结今天的转场」（`walk-74-log.txt:60`）——
+因为冻结结果只存在这张卡的内存里，回落到了一句写死的话。现在回落先看方案自己怎么说：
+`result.mobility_frozen` 为真时改口为「转场已经核实并冻结进这版方案。」
+（句子唯一写者 `frontend/src/trial/mobile/departureGaps.ts:208`，渲染点
+`frontend/src/trial/mobile/DraftDepartureCard.tsx:170`），按钮也从「核实并冻结今天的转场」变成
+「重新核实转场」。这一句不报几比几，因为存档答复里只有那个真值，没有 verified/total 那一对——
+再按一次门，数字会回来。walk-75 正在按"冻结→刷新→重开→读"这条新加的臂去验它
+（`departure_full_walk_r11`，读数是 `STEP_12B2_ROUTE_STATE_AFTER_RELOAD`）。
+
+**这一刀的正向读数已经拿到（walk-74）。** 同一张没关过的卡片：按「核实并冻结今天的转场」之前，
+出发待办里逐条列着三行「转场路线：让 Agent 量这一段路」（`walk-74-log.txt:28`）；
+按下去横幅给出「转场已核实 3/3（其中 1 段是跨夜衔接） · 已冻结进这版方案」（`walk-74-log.txt:31`），
+紧接着同一张卡片上「转场路线」的行数是零、按钮上方变成「还有 6 项」（`walk-74-log.txt:32` 与 `:33`）；
+再确认票价之后，交接给对话框的句子只剩两处「还没有确定地点」，整句两百零四字（`walk-74-log.txt:42` 与 `:48`）——
+修之前这里会连着把那三段已经冻住的路再要一遍。
+这一趟没能出发，也是对的：还有两段时间没有确定地点（库里 `place=none`、`routing=NOT_ROUTED`，
+`departure-loop-readback-2.txt:13` 与 `:14`），选用门保持关着（`walk-74-log.txt:64`）。
+"没有确定地点的时段要不要放行"仍是等裁语的那一条，我没有替旅客决定。
 
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程

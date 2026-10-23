@@ -1,0 +1,9 @@
+amap_key_present=True
+--- daytime, no departure asked: status=ok reason=None http=200
+   {"mode": "TRANSIT", "duration_min": 42, "duration_seconds": 2481, "distance_m": 3852, "walking_distance_m": 1892, "fare_minor": 300, "nightflag": "0", "lines": ["地铁8号线(朱辛庄--瀛海)"], "requested_departure": null, "city_code": "010"}
+   geometry_returned=False (by design)
+--- night, date+time pair: status=ok reason=None http=200
+   {"mode": "TRANSIT", "duration_min": 42, "duration_seconds": 2481, "distance_m": 3852, "walking_distance_m": 1892, "fare_minor": 300, "nightflag": "0", "lines": ["地铁8号线(朱辛庄--瀛海)"], "requested_departure": {"date": "2026-12-04", "time": "03:00"}, "city_code": "010"}
+   geometry_returned=False (by design)
+--- half-specified departure: status=error reason=AMAP_INVALID_DEPARTURE http=None
+--- adcode where a city code is required: status=error reason=AMAP_INVALID_CITY_CODE http=None
