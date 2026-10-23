@@ -27,6 +27,19 @@ const TASK_STATUS: Record<string, string> = {
   NEEDS_DECISION: "等你决定", RESUMABLE: "可以继续", FAILED_RECOVERABLE: "可以重试",
   CANCELLED: "已取消", COMPLETED: "已完成",
 };
+
+// PARTIAL_READY means "this turn stopped and the next word is the traveller's", not "there are results".
+// Measured on the screen walk-76 left open: two model turns completed, no source was ever queried, the
+// draft still had zero schedule lines, and the panel header read 旅行研究 · 已有阶段成果
+// (trial/results/20261022_v3_human_chrome/research-head-before.txt:1).  A traveller who believes that
+// headline will wait instead of acting, which is how a stalled Agent looks like progress.  The two
+// counts below are the same fields the panel already draws, so nothing here is inferred.
+function researchHeadline(task: DraftGoalTask): string {
+  const label = TASK_STATUS[task.status] ?? task.status;
+  if (task.status !== "PARTIAL_READY") return label;
+  const slots = (task.draft_artifact?.days ?? []).reduce((count, day) => count + day.slots.length, 0);
+  return (task.research_places ?? []).length || slots ? label : "这一轮还没有查到来源";
+}
 const TOOL_NAME: Record<string, string> = {
   ask_traveler: "与你商量安排", research_place_media: "查找地点照片",
   inspect_journey: "读取行程", read_guardian_stream: "查看行程守护记录", save_draft_variants: "比较旅行备选", search_city_services: "搜索城市地点",
@@ -585,7 +598,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
         </>}
         {requestError && <p role="alert">{requestError}</p>}
         {visibleTask && <section aria-label="Agent 任务" className="rev-workspace-answer">
-          <h3>旅行研究 · {TASK_STATUS[visibleTask.status] ?? visibleTask.status}</h3>
+          <h3>旅行研究 · {researchHeadline(visibleTask)}</h3>
 
           {visibleTask.assistant_summary && <details><summary>本轮研究摘要</summary><p>{visibleTask.assistant_summary}</p></details>}
           {visibleTask.failure_code && !["TRAVELER_INPUT_REQUIRED", "MODEL_BUDGET_EXHAUSTED", "TOOL_BUDGET_EXHAUSTED"].includes(visibleTask.failure_code) && <p>这次有一部分还没完成，你可以继续告诉我想怎么调整。</p>}

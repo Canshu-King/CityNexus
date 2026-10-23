@@ -1,0 +1,5 @@
+HEADLINE 旅行研究 · 已有阶段成果
+DRAFT_SLOTS=0
+PANE_HAS_CLAIMED_RESULTS=true PANE_SAYS_NOTHING_QUERIED=false
+PANE_TAIL=旅行研究 · 已有阶段成果 本轮研究摘要 Agent 真实工作过程 · 已记录 14 条事件 工具结果 · 1 次
+BUTTONS ["ON:换地区 ›","ON:rev-mission-layer-map","ON:rev-mission-layer-timeline","ON:rev-mission-layer-agent","ON:刷新任务","ON:按讨论的方向开始研究","ON:rev-quick-ask-ai-shortcut","ON:rev-quick-find-city","ON:rev-quick-apply-map-link","ON:rev-mobile-tab-explore","ON:rev-mobile-tab-trips","ON:rev-mobile-tab-me","ON:⚙","OFF:发送 ↑"]
