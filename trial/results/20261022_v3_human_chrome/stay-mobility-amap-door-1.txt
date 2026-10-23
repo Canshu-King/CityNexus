@@ -1,0 +1,6 @@
+BEFORE, read off the stack that ran walk-74 and walk-75 (the process still holds the pre-fix module: uvicorn was started without --reload, and it was deliberately NOT restarted because its serve script deletes its SQLite file at start -- the walked journeys live only there).
+GET /api/v1/journeys/23a13e84-f169-404f-83e4-942cc49cc2ec/stay-mobility/providers
+http_status=200 at 2026-10-23T08:31:34+08:00
+amap cell = {"status": "NOT_CONFIGURED", "captured_fallback": "UNAVAILABLE_FOR_CITY", "coordinate_crs": "GCJ02 at provider boundary; canonical domain WGS84"}
+The same stack answered goal.routes.frozen frozen=true 3/3 for this journey (trial/results/20261022_v3_human_chrome/departure-loop-readback-2.txt:54), so the Agent really did route while this surface said NOT_CONFIGURED.
+AFTER is not read off a live process: the four arms in backend/tests/test_qoder_stay_mobility_amap_door_r1.py go through the real ASGI app and the real route, and the mutant check put the old one-name read back and watched the settings-name arm go red (1 failed) before restoring the file byte-identical.

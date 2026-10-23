@@ -104,6 +104,7 @@ class AccommodationProvider(Protocol):
     ) -> tuple[AccommodationOfferDraft, ...]: ...
 
 
+from app.integrations.china.amap import amap_status
 from app.integrations.stay_osm import OsmAccommodationProvider
 
 
@@ -2082,7 +2083,12 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             },
             "mobility": {
                 "amap": {
-                    "status": "READY" if os.getenv("AMAP_WEB_KEY") else "NOT_CONFIGURED",
+                    # One door, the same one the Agent's research leg and /providers/v9 answer from
+                    # (backend/app/integrations/china/amap.py:59 reads both live spellings of the key).
+                    # This surface used to read only the bare name, so on a stack configured as
+                    # CITYNEXUS_AMAP_WEB_KEY -- which is how the walked stacks are booted -- it answered
+                    # NOT_CONFIGURED while the Agent underneath was routing for real.
+                    "status": amap_status().status,
                     "captured_fallback": "READY"
                     if city_fixture(journey.city_code)
                     else "UNAVAILABLE_FOR_CITY",

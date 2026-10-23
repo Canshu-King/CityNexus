@@ -553,6 +553,33 @@ plan e84a4116 带 snapshot f41a179a、冻进 3 条事实（`departure-loop-readb
 `departure-loop-readback-2.txt:13` 与 `:14`），选用门保持关着（`walk-74-log.txt:64`）。
 "没有确定地点的时段要不要放行"仍是等裁语的那一条，我没有替旅客决定。
 
+**walk-75 是刷新那一读的负对照（这次是"没冻成"的那一半）。** 同一枚门这一趟回来的是
+「转场已核实 2/5（其中 1 段是跨夜衔接），还有 3 段没有来源回答。」，连按三回都是同一个二比五
+（`walk-75-log.txt:31`、`:35`、`:39`），所以什么都没冻；刷新重开之后横幅仍是
+「当天的转场还没有向高德核实过。」（`walk-75-log.txt:50`）、待办里「转场路线」还是五行
+（`:52`）——这一句此时是真的，新加的那道回落没有把它说成已冻结。
+这也说明正向那一读（冻成之后刷新，横幅要改口）还欠着：walk-74 冻成了但那一趟还没这一步，
+walk-75 有了这一步却没冻成。两张图各自能证到哪一步也写清楚：
+`walk74-12b-round-1.png` 里能直接读到「转场已核实 3/3（其中 1 段是跨夜衔接） · 已冻结进这版方案」、
+按钮已经变成「重新核实转场」、下面每一站只剩「来源写这天开放」而没有「转场路线」那一行；
+`walk75-12b3-after-reload.png` 拍到的是刷新之后卡片上面那一层（按天调整行程 / 挑一份更合适的安排），
+横幅那一格以日志文字为准，不要拿这张图当它的图证。
+
+**第三枚"状态门只读一个名字"的口子也补了。**
+`GET /api/v1/journeys/{id}/stay-mobility/providers` 里的 amap 那一格，先前是
+`os.getenv("AMAP_WEB_KEY")` 一个裸名定生死，而现场栈是按 `CITYNEXUS_AMAP_WEB_KEY` 起的
+（起法脚本 `_boot_human_stack_r11.ps1:24`）。当场从那个还在跑的进程读回来的就是这句假话：
+`http_status=200`、`"status": "NOT_CONFIGURED"`（`stay-mobility-amap-door-1.txt:3` 与 `:4`），
+而同一个进程在三分钟前刚给这趟行程冻进三条真实回执（`departure-loop-readback-2.txt:54`）。
+现在那一格改问同一扇门（`backend/app/stay_mobility.py:2091` 走 `amap_status()`，
+两种拼法都认的读法在 `backend/app/integrations/china/amap.py:59`）。
+四枚臂从真路由走：`backend/tests/test_qoder_stay_mobility_amap_door_r1.py:77` 只给设置里那个名字也要
+READY、`:83` 只给裸名也要 READY、`:88` 两个都不给才许说 NOT_CONFIGURED、
+`:93` 两枚配法都不许把值带出响应。反控也做了：把那行旧读法装回去，`:77` 那一枚立刻红（1 failed），
+再把文件按字节还原（restored_byte_identical True）。
+**AFTER 不是从活进程读的**——那个 serve 脚本一启动就删自己的库，walk-74/75 的行程只在那份文件里，
+所以没有重启它；正向读数来自走真 ASGI 应用的这四枚臂，这一点写在这里，不含糊过去。
+
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
 （P1）没动；USER_VERIFIED 仍是 PENDING。现场栈换到 r11：后端 60216／前端 14416／独立库
