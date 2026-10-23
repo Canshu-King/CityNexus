@@ -101,6 +101,19 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         throw new Error("这份转场结果不属于当前方案。");
       }
       setRoutes(answer);
+      // A frozen hop makes the 转场路线 line for it a lie, and the server already knows that: on a
+      // successful freeze it drops every TRANSFER_ROUTE row from the stored answer
+      // (backend/app/agent/goal_route_freeze.py:240), so a refresh is correct.  This card holds its own
+      // copy of that same answer, and without the same drop it keeps asking the Agent to measure
+      // segments it just measured -- read on one and the same open card at walk-72-log.txt:33 ("5/5")
+      // against :39 ("还有 5 项") and :45 (the five segments named again).  Only TRANSFER_ROUTE rows go;
+      // identity, opening and price rows stay, because a frozen walk proves none of those, and a partly
+      // verified day (frozen=false) keeps every row it had.
+      if (answer.frozen) {
+        setResult((current) => current
+          ? { ...current, gaps: current.gaps.filter((gap) => String(gap.kind) !== "TRANSFER_ROUTE") }
+          : current);
+      }
       window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: result.journey_id }));
     } catch (error) {
       if (epoch !== scope.current || token !== readTravelerBearer()) return;

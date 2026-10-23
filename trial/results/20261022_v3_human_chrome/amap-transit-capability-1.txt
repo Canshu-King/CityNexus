@@ -1,0 +1,20 @@
+amap_key_present=True
+search 前门大街: status=ok reason=None n=3
+   picked name=前门大街 address=前门西河沿街1号 location=116.403895,39.896152 keys={adcode, address, category, city, citycode, coordinate_system, district, external_id, latitude, longitude, name, opening_hours_text, provider_id, provider_key, province, region_status, requested_adcode}
+search 天坛公园: status=ok reason=None n=3
+   picked name=天坛公园 address=天坛东里甲1号 location=116.410829,39.881913 keys={adcode, address, category, city, citycode, coordinate_system, district, external_id, latitude, longitude, name, opening_hours_text, provider_id, provider_key, province, region_status, requested_adcode}
+pair gcj02 origin=39.896152,116.403895 destination=39.881913,116.410829
+walking: status=ok reason=None mode=WALK duration_min=32 distance_m=2372 route_keys={adcode, coordinate_system, destination, distance_m, duration_min, duration_seconds, mode, origin, path, provider_key}
+transit: http=200 error=None
+   top_keys={count, info, infocode, route, status} infocode=10000 info=OK
+   route_keys={cost, destination, distance, origin, transits}
+   transits=list[4]{cost, distance, nightflag, segments, walking_distance}
+   transit[0]_keys={cost, distance, nightflag, segments, walking_distance}
+   transit[0].cost={"duration": "2481", "transit_fee": "3.0"} duration=None distance=3852 nightflag=0 date=None cost_duration=2481
+   transit[0].segments=list[2]{bus, walking}
+   segment[0]_keys={bus, walking}
+   segment[0].bus_keys={buslines} names=null
+   segment[0].walking_keys={cost, destination, distance, origin, steps} names=null
+   segment[0].duration=None start_location=None
+   paths=NoneType (transit is expected under route.transits, not route.paths)
+answer_time=None

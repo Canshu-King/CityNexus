@@ -484,6 +484,42 @@ reason_code=MODEL_TIMEOUT（`trial/results/20261022_v3_human_chrome/ask-reason-r
 Agent 老老实实又量了一遍，答「五项都有来源答案，没有缺项」——多花一轮模型、多叫一次高德，
 而且屏上那句话此刻已经是假的。
 
+**这一刀的负对照已经在屏上了（walk-73）。** 同一枚「核实并冻结今天的转场」，这一趟回来的是
+「转场已核实 3/5（其中 1 段是跨夜衔接），还有 2 段没有来源回答。」（`walk-73-log.txt:33`）——
+部分核实不写快照（`backend/app/agent/goal_route_freeze.py:206` 只在每一段都拿到回执时才认 frozen），
+所以这一版方案仍然一条转场事实都没有，卡片保留全部五行待办是对的
+（`walk-73-log.txt:39` 仍是「还有 5 项」，`walk-73-log.txt:40` 那句交接提示也还在），
+选用门照旧不给按：`walk-73-log.txt:63` 读到 `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`，
+卡片上写的是「这一版还需要把待办逐项补完才能选用」（`walk-73-log.txt:37`）。
+同一趟还独立重复了一次上一笔的时钟结论：问句八秒进服务器、一百二十八秒答回来、轮次四到五
+（`walk-73-log.txt:49`）——一百二十八秒在旧的九十秒下必然还是 MODEL_TIMEOUT。
+正向那一读（冻结真成功时，不重开卡片就该少掉五行）由 walk-74 补，仪表已经改成"像人一样再按一次"：
+`departure_full_walk_r10` 现在最多按三回，每回之间把横幅、按钮上方那句、以及待办里
+「转场路线」的行数一起读下来。
+
+**"回不来"那扇门，今天用一个新标签页量清楚了。** 同一台机器、同一个浏览器、同一个 origin，
+新开一页落在「探索」上（`trial/results/20261022_v3_human_chrome/tripsdoor-1-log.txt:3` 只有
+`rev-firstlook-start` 与三枚 dock 键），本地确实还留着那趟行程的指针
+（同文件 `:4` 列出了 `citynexus.revolution.firstlook.journey` 与 `recent-journeys`），
+「我的旅程」面板说的是实话——「这台设备上还留着「北京」这趟行程，这次打开没有登录到它，
+所以读不到进度。」（`:7`）——但它给的按钮只有一个「开始探索 →」（`:8`），
+按角色去找 继续/打开/查看/恢复/找回 这一类入口，屏上是零个（`:10` `OPENERS=0`）。
+「我的」那一格也没有登录的门（`frontend/src/trial/RevolutionFirstLook.tsx:1227` 只写着
+「开始探索后，这里会显示你的地区和助手状态。」）。代码里那枚「继续这趟」是要凭据的
+（`frontend/src/trial/RevolutionFirstLook.tsx:911` 先读 bearer 与 identity，缺一个就直接返回），
+所以这一步不是把按钮接上就完事——它等的是那条"可信会话怎么续"的裁语，我不越过去。
+
+**跨夜那一段的公共交通：来源能答，但参数要用对。** 高德 v5 的 transit 口对北京真给了答案
+（`trial/results/20261022_v3_human_chrome/amap-transit-capability-1.txt:8` 起：`route.transits`，
+每条带 `cost.duration`、`cost.transit_fee`、`nightflag`、`segments[].bus.buslines`），
+同一段路步行三十二分钟、公共交通约四十一分钟、票价 3 元。要"夜里几点出发"的答案，
+`departure_time` 是无效的：三种写法回来的仍是白天那四条（`amap-transit-night-3.txt:1` 到 `:6`），
+换成 `date` + `time` 才真的换了一批答案——出现了夜7路与夜2路（`amap-transit-night-3.txt:7` 与 `:8`）。
+顺带一条反面事实：`nightflag` 在夜7路那一条上仍然是 0，所以它不能当"夜间有服务"的凭据，
+能信的只有请求里带的日期钟点和它回的行名。下一刀按这个做：跨夜那一段用到达日的真实钟点去问
+transit，把线路名字一起冻进事实、写在卡片上，问不到夜间班次就照实说问不到，
+不把白天的地铁答案端给半夜的旅客。
+
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
 （P1）没动；USER_VERIFIED 仍是 PENDING。现场栈换到 r11：后端 60216／前端 14416／独立库
