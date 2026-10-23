@@ -1615,3 +1615,71 @@ USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、A
 
 第卅节的第三条回执：comment id `6375945629`（`https://github.com/Canshu-King/CityNexus/pull/43#issuecomment-6375945629`）。
 本节（第卅一）的勘误帖：comment id `6376180461`（同 PR 下 `#issuecomment-6376180461`）。两枚都是发后按 id 回读、尾行逐字相符；勘误走新帖，旧帖一字未改。
+
+
+## 卅三、七点零分到七点零五分：给「赶路时间不够」这句话接上一个真能按的东西（P0-4 前半）
+
+第卅一节末尾说过：公交那扇门是活的，缺的是旅客屏幕上没有任何东西用它。这一节把这条补齐到**能在屏上按**，
+并且把自己先前写在账本里的两枚行号更正掉。
+
+### 新的那扇门只读不写
+
+`backend/app/agent/goal_travel_gaps.py:38` 定义了 `GET /api/v1/journeys/…/plans/…/travel-gaps`，
+计算在 `:103`：把这版方案自己的 Activity 行按 sequence_no 排开，读它自己的 `mobility_evidence_json` 里那几枚
+冻结事实（`origin_key`/`destination_key` 用的是规范 Place 行 id——`goal_route_freeze.py:371` 写进去的就是
+`origin.id`/`destination.id`），逐对相邻停留比 **量到的分钟** 与 **留下的空档**，短多少就把那一格（以及同一天
+它之后的每一格）往后挪多少；一天挪到超过 `22:00` 就不提议，只说原因（`:156` `DAY_WOULD_RUN_PAST_22:00`），
+跨夜那一短格也只报原因（`OVERNIGHT_HOP_NEEDS_DECISION`），因为把晚上推后接不上第二天。
+**这里没有 Idempotency-Key，因为它一行都不写**：端点在 `journey_write_lock` 之外，测试里直接拿库前后对照钉住
+（下面第 2 枚臂）。
+
+为什么不放在浏览器里算：冻结**答案**里的 `edges` 用的是供应商候选 id（`goal_route_freeze.py:200` 的 `_candidate_id_for`），
+而计划行与证据事实用的是规范行 id——两套 id 只在服务端能合法合起来，硬让前端按 id join 会一声不响地配上零条
+（这正是 10-19 记下的那类病）。
+
+### 契约也跟着走了
+
+`backend/tests/test_contract.py` 的 `test_openapi_runtime_method_parity_includes_v7_surface` 比的是
+"运行时路径集合 == contracts/openapi.yaml 路径集合"，所以新门必须写进契约。插入用的是
+`_cmdr_v3_port_1022/_contract_add_travel_gaps_r1.py`（只把那一枚 path 与它引用的三枚 schema 按原文件的缩进层级
+插进去，不重排整本文件——`contracts/openapi.yaml:196`、`:2220` 这些行号被别人逐字引用过）。
+现读：文件从 **4141** 行变成 **4306** 行，paths 从 **157** 条变成 **158** 条。
+
+**顺带把一枚早就存在的红说清，不记在自己头上**：这枚 parity 臂在本机现读时 `runtime=287 条 / contract=172 条`，
+两边各自多出一批彼此无关的路径（只在运行时那侧的有 `journey-membership-invitations/respond`、
+`journeys/session/recent-drafts`、`…/agent/goal-tasks` 本体等，只在契约那侧的有 `…/place-media`、
+`…/accept-unknown-price`、`…/freeze-routes`、`…/prepare-plan`、`/departure`、`/journeys/{id}/members/me`）。
+⇒ **这条红不是我这次加的**（我这一枚只让两侧各多同一条），它是"main.py 尾部 include 的那批路由不被那把尺看见"
+的老问题；修法要么是让尺读 `app.openapi()` 而不是 `app.routes`，要么把那批 include 提前，两者都超出今晚这一刀，
+所以只点名不动。
+
+### 三枚臂（`backend/tests/test_goal_travel_gaps.py`，现读行号 :40 / :54 / :81）
+
+1. `:40` 空档够的那一格：报 `planned_gap=240 required=27 short_by=0`，`rows=[]`，`reason_code=None`；
+2. `:54` 把同一天两格捏紧到 0 空档，冻住之后：`rows` 恰好把「下午湖」从 10:00–11:00 提议成 **10:27–11:27**
+   （`extra_minutes=27`、`direct_cause=true`），并且同一枚臂**在 GET 之前/之后把 Activity 的 start_at/end_at 逐行对照**，
+   断言一字未动，还断言 `plan.status=CANDIDATE`、`journey.active_plan_version_id is None`；
+3. `:81` 没冻过的候选：`frozen=false`、`reason_code=MOBILITY_NOT_FROZEN`、`rows=[]`。
+
+跑法与读数：`backend/` 下 `D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_goal_travel_gaps.py -p no:cacheprovider`
+⇒ `3 passed`；同一次里 `tests/test_goal_route_freeze.py` ⇒ `9 passed`（我给那把共用的
+`_draft_with_canonical_places` 加了一个可选 `schedule` 参数，七枚旧臂没受影响）。
+前端两道闸：`npm run typecheck`（`tsconfig.check.json`）⇒ rc 0、无输出（`tsc_travel_gaps_2.txt`）；
+`npm run build` ⇒ rc 0，产物到 PWA 那一步（`build_travel_gaps_1.txt`）。
+
+### 屏幕上那一块
+
+`frontend/src/api/citynexus.ts:3308` 加 `travelGaps(...)`；`DraftDepartureCard.tsx:264`–`:271` 是那一块
+（`rev-v3-travel-gaps` / 短空档逐行 / `rev-v3-replan`＝「根据路线重新安排」/ `rev-v3-replan-diff` /
+`rev-v3-replan-apply`＝「按这一版安排」）；句子都在 `departureGaps.ts:469`–`:501`（该文件现读 501 行） 那一族里（一句一写者）。
+**应用那一按走的还是旅客自己那条保存路**（`prepareGoalDraft` 带新的 `Idempotency-Key`），服务端因此必然
+回 `selected:false, activated:false`——生效的那一版不会在背后被改；422 那扇门一步都没绕，被它挡下时屏上仍是
+`scheduleRefusalSentence` 那句点名哪一行的话。**两枚内联字面**（h4 的「量回来的路上时间」与按下的「正在保存这一版…」）
+跟这枚文件里既有的 `正在核实转场…`、`出发待办` 是同一形制，没有另起一套。
+
+### 更正我自己入账的那两枚行号（10-24 06:43 那块账）
+
+那块账写的是 `backend/tests/test_goal_route_freeze.py:34`（把测量换成不答那一行）与两枚新臂 `:494`/`:518`。
+现读是 **:35 / :495 / :519**——差一行，原因是我随后在同一枚文件顶部加了 `from types import SimpleNamespace`
+一行，把后面所有行号都往下推了一格。**入账时读的是那一刻的行号，写完又动了那枚文件**，这就是"行号必须现读"
+这条纪律的正确用法：要么写完不再动，要么写完再读一遍。已在下面的 live 走查块之后随新块一并更正。
