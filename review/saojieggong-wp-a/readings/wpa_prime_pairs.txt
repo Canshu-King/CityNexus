@@ -1,0 +1,39 @@
+枚                                        主题          改前比      改后比     门槛 改后达标     暗色白纸      
+styles.css:268 .v9-inbox 的纸/正文墨          light     16.83    16.83    4.5 ok       -         
+styles.css:268 .v9-inbox 的纸/正文墨          dark      15.63    15.63    4.5 ok       -         
+styles.css:269 .v9-inbox label           light      4.48     6.47    4.5 ok       -         
+styles.css:269 .v9-inbox label           dark       3.80     7.69    4.5 ok       -         
+styles.css:340 .v8-booking-card 的纸/标题    light     16.83    16.83    4.5 ok       -         
+styles.css:340 .v8-booking-card 的纸/标题    dark      15.63    15.63    4.5 ok       -         
+styles.css:340 .v8-booking-card p        light      3.08     6.47    4.5 ok       -         
+styles.css:340 .v8-booking-card p        dark       3.08     7.69    4.5 ok       -         
+styles.css:340 .v8-booking-card.selected light     16.30    16.58    4.5 ok       -         
+styles.css:340 .v8-booking-card.selected dark       1.05    13.87    4.5 ok       -         
+styles.css:340 .v8-booking-icon          light      4.26     4.75    4.5 ok       -         
+styles.css:340 .v8-booking-icon          dark       3.22     4.14    4.5 RED      -         
+styles.css:340 .v8-booking-icon.muted    light      3.62     6.37    4.5 ok       -         
+styles.css:340 .v8-booking-icon.muted    dark       3.62     6.83    4.5 ok       -         
+styles.css:340 .v8-booking-state 琥珀      light      4.56     6.37    4.5 ok       -         
+styles.css:340 .v8-booking-state 琥珀      dark       4.56     6.83    4.5 ok       -         
+styles.css:340 .v8-booking-state.safe    light      4.12     4.33    4.5 RED      -         
+styles.css:340 .v8-booking-state.safe    dark       1.89     7.47    4.5 ok       -         
+styles.css:340 .v8-selected-label.neutral light      4.20     6.37    4.5 ok       -         
+styles.css:340 .v8-selected-label.neutral dark       4.20     6.83    4.5 ok       -         
+styles.css:340 .v8-no-payment            light      6.18    16.58    4.5 ok       -         
+styles.css:340 .v8-no-payment            dark       6.18    13.87    4.5 ok       -         
+
+改前比 = 该枚在它当前主题下的 墨/底 现读；改后比 = 换成契约对之后的现读；门槛取 _qoderContrastScan 的 4.5（10px 非 large text）。
+'暗色白纸'一列是 _qoderContrastScan.ts:121 的 light-surface 判据（暗色下自身合成亮度 > 0.82）。
+两条如实记下的取舍：
+  1) .v8-booking-card p 的 #8994a3 在亮色只有 3.08（本就低于 4.5，这把逃逸口尺不报它，L=0.29），
+     本单把它收进 --cn-on-elev-1-muted 之后亮色 6.47 / 暗色 7.69（见上面第 8、9 行）；这是配套改动，不是字面量映射的必需。
+  2) .v8-booking-state 的琥珀墨 #8e6b34 若只换纸不换墨，暗色合成后 2.97 < 4.5，
+     所以墨一并换成契约次级墨；语义琥珀由它那一侧的 --cn-on-elev-2-warn 恢复（现尖无此令牌）。
+
+补算两枚（上面把非文字枚当成文字枚套了 4.5，这里按各自该用的地板重取）：
+  .v8-booking-icon（svg 图形，非文字，地板 3:1）            light  改前  4.26 → 改后  4.75   地板 3.0  ok
+  .v8-booking-icon（svg 图形，非文字，地板 3:1）            dark   改前  3.22 → 改后  4.14   地板 3.0  ok
+  .v8-booking-state.safe 换文字档绿                   light  改前  4.12 → 改后  6.85   地板 4.5  ok
+  .v8-booking-state.safe 换文字档绿                   dark   改前  1.89 → 改后  7.47   地板 4.5  ok
+  .v8-no-payment b 换文字档绿                         light  改前  4.23 → 改后  6.85   地板 4.5  ok
+  .v8-no-payment b 换文字档绿                         dark   改前  1.95 → 改后  7.47   地板 4.5  ok

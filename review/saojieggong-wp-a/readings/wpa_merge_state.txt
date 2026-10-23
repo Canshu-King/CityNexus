@@ -1,0 +1,11 @@
+并尖现读 2026-10-16 12:41（tree=review/扫街工-wp-a）
+merge head = 0274a5f95bfc309ac978eb15cbf6de2cab01b1e9
+git cat-file -t = commit
+并尖前 behind=0 ahead=2
+merge 带进来的文件（git show --stat 第二行起）：
+ frontend/src/cn-pulse.css                    | 39 ++++++++++------------------
+ frontend/src/features/poster/trip-poster.css |  9 +++++--
+ 2 files changed, 21 insertions(+), 27 deletions(-)
+styles.css 在 merge 带进来的清单里吗：0（0＝没有，我那 12 处原样在）
+并尖后这一屏走得到的逃逸口（同一条尺 _saojie_discover_classes_r1.py 重跑）：见 discover_scope_after.txt:2 —— 5 条 / 4 条规则，其中 5 条是上一件第七节点名不收的紫三支与琥珀两枚
+工作树：0 行改动（0＝干净，已发布证据未被我的门覆盖）

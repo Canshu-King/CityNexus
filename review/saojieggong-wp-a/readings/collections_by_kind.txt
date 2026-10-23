@@ -1,0 +1,4 @@
+control collections.light run_id=run092689 scanned=193 violations=3 by_kind={'text-contrast': 1, 'unclassified-control': 2} decorative=5
+control collections.dark run_id=run092689 scanned=193 violations=4 by_kind={'light-surface': 1, 'text-contrast': 1, 'unclassified-control': 2} decorative=4
+armA collections.light run_id=run123330 scanned=193 violations=2 by_kind={'unclassified-control': 2} decorative=4
+armA collections.dark run_id=run123330 scanned=193 violations=2 by_kind={'unclassified-control': 2} decorative=3

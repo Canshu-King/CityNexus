@@ -1,0 +1,92 @@
+run_id=run132376 port=4560/8560 target=e2e/qoder-contrast-audit.spec.ts
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    live/desktop/dark: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    live/desktop/dark: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/dark: unclassified-control [data-testid="live-update-location"] "Update location"
+    live/desktop/dark: unclassified-control [data-testid="live-report-rain"] "Report rain"
+    today/desktop/light: unclassified-control [data-testid="hub-plan-with-ai"] "Plan my trip with AI"
+    today/desktop/light: unclassified-control [data-testid="journey-link-copy"] "Copy journey link"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Museum"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    today/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    today/desktop/light: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Arrival"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Check in · Haihe Riverside Hotel"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Overnight · Haihe Riverside Hotel"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Five Great Avenues"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Museum"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Tianjin Eye"
+    live/desktop/light: unclassified-control [data-testid="v8-map-stop-label"] "Departure"
+    live/desktop/light: unclassified-control [data-testid="map-viewport-reset"] ""
+    live/desktop/light: unclassified-control [data-testid="live-update-location"] "Update location"
+    live/desktop/light: unclassified-control [data-testid="live-report-rain"] "Report rain"
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 38
+
+    - Array []
+    + Array [
+    +   "today/desktop/dark: unclassified-control [data-testid=\"hub-plan-with-ai\"] \"Plan my trip with AI\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"journey-link-copy\"] \"Copy journey link\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "today/desktop/dark: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Check in · Haihe Riverside Hotel\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Overnight · Haihe Riverside Hotel\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"live-update-location\"] \"Update location\"",
+    +   "live/desktop/dark: unclassified-control [data-testid=\"live-report-rain\"] \"Report rain\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"hub-plan-with-ai\"] \"Plan my trip with AI\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"journey-link-copy\"] \"Copy journey link\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "today/desktop/light: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Arrival\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Check in · Haihe Riverside Hotel\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Overnight · Haihe Riverside Hotel\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Five Great Avenues\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Museum\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Tianjin Eye\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"v8-map-stop-label\"] \"Departure\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"map-viewport-reset\"] \"\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"live-update-location\"] \"Update location\"",
+    +   "live/desktop/light: unclassified-control [data-testid=\"live-report-rain\"] \"Report rain\"",
+    + ]
+
+      209 |       console.log(summarise(reports));
+      210 |       const all = reports.flatMap((r) => r.violations.map((v) => `${r.screen}: ${v.kind} ${v.selector} "${v.text}"`));
+    > 211 |       expect(all, `contrast violations (${vp.name}):\n${all.slice(0, 40).join("\n")}`).toEqual([]);
+          |                                                                                        ^
+      212 |     });
+      213 |
+      214 |     test(`focus indicators clear 3:1 on Today/Live, light + dark (${vp.name})`, async ({ page }) => {
+        at D:\moodle\_cmdr_saojieggong_1016\tree\frontend\e2e\qoder-contrast-audit.spec.ts:211:88
+
+    Error Context: test-results\qoder-contrast-audit-Qoder-5688e-ay-Live-light-dark-desktop--chromium\error-context.md
+
+  2 failed
+    [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile) 
+    [chromium] › e2e\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (desktop) 
+  3 passed (52.1s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4560 backend=:8560 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run132376.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run132376 frontend=:4560 -> backend=:8560 ai=disabled db=_run132376.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4560 backend=:8560 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run132376.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4560 backend=:8560 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run132376.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4560 backend=:8560 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run132376.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4560 backend=:8560 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run132376.db ai=disabled reuseExistingServer=false
+exit=1 log=D:/moodle/_cmdr_saojieggong_1016/tree/review/run-run132376.log

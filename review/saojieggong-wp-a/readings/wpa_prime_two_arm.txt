@@ -1,0 +1,35 @@
+对照臂 红格 30 枚 / 实臂 红格 0 枚
+节点：对照 294 枚 / 实臂 294 枚；卡片：对照 8 / 实臂 8；收件栏：对照 4 / 实臂 4
+
+  消除 → desk/dark b.                                 权限始终明确                   1.95
+  消除 → desk/dark button.v8-quiet-button             到「住宿选择」里找一间可订的房          3.65
+  消除 → desk/dark h2.                                服务器没有给这项承诺的名字            1.09
+  消除 → desk/dark h2.                                未选择住宿                    1.09
+  消除 → desk/dark p.                                 10月10日 15:30 → 10月10日 16 3.08
+  消除 → desk/dark p.                                 这趟行程目前还没有可选的住宿。          3.08
+  消除 → desk/dark p.v8-lede                          结构化导入在这里：展开下方「高级」粘贴 JSON 2.21
+  消除 → desk/dark span.                              导入已确认的预订即受保护。任何支付、取消或不可逆 3.45
+  消除 → desk/dark span.v8-booking-state              时间已锁定                    1.89
+  消除 → desk/dark span.v8-kicker                     导入预订                     2.08
+  消除 → desk/light b.                                 权限始终明确                   4.23
+  消除 → desk/light p.                                 10月10日 15:30 → 10月10日 16 3.08
+  消除 → desk/light p.                                 这趟行程目前还没有可选的住宿。          3.08
+  消除 → desk/light span.                              导入已确认的预订即受保护。任何支付、取消或不可逆 3.45
+  消除 → desk/light span.v8-booking-state              时间已锁定                    4.12
+  消除 → phone/dark b.                                 权限始终明确                   1.95
+  消除 → phone/dark button.v8-quiet-button             到「住宿选择」里找一间可订的房          3.65
+  消除 → phone/dark h2.                                服务器没有给这项承诺的名字            1.09
+  消除 → phone/dark h2.                                未选择住宿                    1.09
+  消除 → phone/dark p.                                 10月10日 15:30 → 10月10日 16 3.08
+  消除 → phone/dark p.                                 这趟行程目前还没有可选的住宿。          3.08
+  消除 → phone/dark p.v8-lede                          结构化导入在这里：展开下方「高级」粘贴 JSON 2.21
+  消除 → phone/dark span.                              导入已确认的预订即受保护。任何支付、取消或不可逆 3.45
+  消除 → phone/dark span.v8-booking-state              时间已锁定                    1.89
+  消除 → phone/dark span.v8-kicker                     导入预订                     2.08
+  消除 → phone/light b.                                 权限始终明确                   4.23
+  消除 → phone/light p.                                 10月10日 15:30 → 10月10日 16 3.08
+  消除 → phone/light p.                                 这趟行程目前还没有可选的住宿。          3.08
+  消除 → phone/light span.                              导入已确认的预订即受保护。任何支付、取消或不可逆 3.45
+  消除 → phone/light span.v8-booking-state              时间已锁定                    4.12
+
+合计：消除 30 枚，位移变好 0 枚，位移变坏 0 枚，新开 0 枚

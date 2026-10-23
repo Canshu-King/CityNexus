@@ -1,0 +1,237 @@
+SEL  .v8-lede
+   :173   max-width: 650px
+   :173   margin: 13px 0 0
+   :173   color: var(--v8-muted)
+   :173   font-size: var(--cn-fs-meta)
+   :173   line-height: 1.65
+SEL  .v8-primary, .v8-outline-button, .v8-quiet-button, .v8-text-button, .v8-rain-button
+   :174   display: inline-flex
+   :174   align-items: center
+   :174   justify-content: center
+   :174   gap: 8px
+   :174   width: auto
+   :174   margin: 0
+   :174   cursor: pointer
+SEL  .v8-outline-button
+   :174   min-height: 40px
+   :174   padding: 0 14px
+   :174   border: 1px solid var(--cn-control-border)
+   :174   border-radius: var(--cn-r-8)
+   :174   color: var(--cn-link)
+   :174   background: var(--cn-elev-1)
+   :174   font-size: var(--cn-fs-body)
+   :174   font-weight: 700
+SEL  .v8-status-pill
+   :175   display: inline-flex
+   :175   align-items: center
+   :175   gap: 5px
+   :175   padding: var(--cn-s-6) 9px
+   :175   border-radius: var(--cn-r-pill)
+   :175   color: var(--v8-green)
+   :175   background: #effaf5
+   :175   font-size: 10px
+   :175   font-weight: 800
+   :175   letter-spacing: .05em
+   :175   text-transform: uppercase
+SEL  .v8-status-pill.violet
+   :175   color: var(--v8-violet)
+   :175   background: #f3efff
+SEL  .v8-aside-heading span, .v8-detail-panel > div span, .v8-intel-facts span
+   :178   color: #9aa4b3
+   :178   font-size: 9px
+   :178   font-weight: 800
+   :178   letter-spacing: .12em
+SEL  .v8-evidence-label
+   :179   align-self: center
+   :179   padding: 8px var(--cn-s-10)
+   :179   border: 1px solid #dcefe7
+   :179   border-radius: var(--cn-r-8)
+   :179   color: var(--v8-green)
+   :179   background: #f7fcfa
+   :179   font-size: 10px
+   :179   font-weight: 800
+   :179   letter-spacing: .08em
+SEL  .v8-stay-card
+   :179   display: flex
+   :179   gap: 16px
+   :179   padding: 13px
+   :179   border: 1px solid var(--v8-line)
+   :179   border-radius: var(--cn-r-12)
+   :179   background: #fff
+   :179   cursor: pointer
+SEL  .v8-stay-card.selected
+   :179   border-color: #8490e9
+   :179   box-shadow: 0 0 0 2px #e8eaff
+SEL  .v8-stay-card h3
+   :179   margin: 0
+   :179   font-size: 15px
+   :179   letter-spacing: -.02em
+SEL  .v8-stay-card p
+   :179   margin: 8px 0 15px
+   :179   color: #818c9d
+   :179   font-size: 11px
+SEL  .v8-selected-label
+   :179   padding: var(--cn-s-4) 7px
+   :179   border-radius: var(--cn-r-4)
+   :179   color: var(--v8-green)
+   :179   background: #effaf5
+   :179   font-size: 9px
+   :179   font-weight: 800
+SEL  .v8-stay-impact
+   :179   display: flex
+   :179   align-items: center
+   :179   gap: 8px
+   :179   margin-top: 16px
+   :179   color: #9aa4b3
+   :179   font-size: 9px
+SEL  .v8-stay-impact b, .v8-stay-impact em
+   :179   padding: var(--cn-s-4) var(--cn-s-6)
+   :179   border-radius: var(--cn-r-4)
+   :179   color: #68758a
+   :179   background: #f3f4f7
+   :179   font-size: 9px
+   :179   font-style: normal
+   :179   font-weight: 600
+SEL  .v8-stay-impact em
+   :179   color: var(--cn-accent-text)
+   :179   background: #eff1ff
+   :179   font-weight: 800
+SEL  .v8-intel-facts
+   :181   display: grid
+   :181   gap: 12px
+SEL  .v8-intel-facts > div
+   :181   padding: 19px
+   :181   border: 1px solid var(--v8-line)
+   :181   border-radius: var(--cn-r-12)
+   :181   background: #fff
+SEL  .v8-intel-facts b, .v8-intel-facts small
+   :181   display: block
+SEL  .v8-intel-facts b
+   :181   margin: var(--cn-s-10) 0 5px
+   :181   color: var(--v8-green)
+   :181   font-size: 18px
+SEL  .v8-intel-facts small
+   :181   color: #8691a0
+   :181   font-size: 10px
+   :181   line-height: 1.45
+SEL  .v8-twin-card, .v8-boundary-card
+   :181   padding: 24px
+   :181   border: 1px solid var(--v8-line)
+   :181   border-radius: var(--cn-r-12)
+   :181   background: #fff
+SEL  .v8-twin-card h2
+   :181   margin: 23px 0 7px
+   :181   font-size: 19px
+SEL  .v8-twin-card p
+   :181   margin: 0
+   :181   color: #8b95a3
+   :181   font-size: 11px
+SEL  .v8-twin-card small
+   :181   color: #9aa3b0
+   :181   font-size: 10px
+SEL  .v8-boundary-card
+   :181   color: var(--v8-violet)
+   :181   background: #f6f3ff
+SEL  .v8-boundary-card svg
+   :181   width: 21px
+   :181   height: 21px
+SEL  .v8-boundary-card b, .v8-boundary-card p, .v8-boundary-card span
+   :181   display: block
+SEL  .v8-boundary-card b
+   :181   margin-top: 18px
+   :181   color: var(--v8-ink)
+   :181   font-size: var(--cn-fs-meta)
+SEL  .v8-boundary-card p
+   :181   color: #786d99
+   :181   font-size: 12px
+   :181   line-height: 1.6
+SEL  .v8-boundary-card span
+   :181   color: var(--v8-violet)
+   :181   font-size: 10px
+   :181   font-weight: 750
+SEL  .v8-message
+   :183   display: flex
+   :183   align-items: center
+   :183   justify-content: space-between
+   :183   gap: 16px
+   :183   margin: 18px 46px -7px
+   :183   padding: 11px 14px
+   :183   border: 1px solid #f0d1b5
+   :183   border-radius: var(--cn-r-8)
+   :183   color: #8e5f32
+   :183   background: #fffaf4
+   :183   font-size: 11px
+SEL  .v8-message button
+   :183   width: auto
+   :183   margin: 0
+   :183   padding: 0
+   :183   border: 0
+   :183   color: inherit
+   :183   background: transparent
+   :183   cursor: pointer
+   :183   font-size: 10px
+   :183   font-weight: 800
+SEL  .v8-message
+   :184   margin-left: 26px
+   :184   margin-right: 26px
+SEL  .v8-intel-facts
+   :184   grid-template-columns: repeat(3, 1fr)
+SEL  .v8-boundary-card
+   :184   grid-column: 1 / -1
+SEL  .v8-message
+   :185   margin: 13px 17px -5px
+SEL  .v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button
+   :185   margin-top: 18px
+SEL  .v8-lede
+   :185   font-size: 13px
+SEL  .v8-day-row, .v8-twin-grid, .v8-intel-facts
+   :185   grid-template-columns: 1fr
+SEL  .v8-stay-card
+   :185   gap: var(--cn-s-10)
+SEL  .v8-stay-card h3
+   :185   font-size: 13px
+SEL  .v8-stay-impact
+   :185   flex-wrap: wrap
+SEL  .v8-lede
+   :189   color: #5f6c80
+SEL  .v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button
+   :282   min-height: var(--cn-touch-min)
+SEL  .v8-selected-label.neutral
+   :340   color: #68758a
+   :340   background: #f1f3f6
+SEL  .v8-agent-composer-card
+   :341   display: grid
+   :341   grid-template-columns: .8fr 1.2fr
+   :341   gap: 24px
+   :341   padding: 27px
+   :341   border-radius: var(--cn-r-16)
+   :341   color: #fff
+   :341   background: #172945
+   :341   box-shadow: 0 14px 30px #14233b22
+SEL  .v8-agent-composer-card
+   :345   grid-template-columns: 1fr
+   :345   gap: 18px
+   :345   padding: 20px
+SEL  .v8-lede
+   :349   color: #5f6c80
+SEL  .v15-copilot-suggestions .v8-outline-button
+   :548   min-height: 32px
+   :548   padding: 0 var(--cn-s-10)
+   :548   color: #c5d2e8
+   :548   border-color: #526b94
+   :548   background: transparent
+   :548   font-size: 10px
+SEL  .v8-primary-button[aria-disabled="true"], .v8-outline-button[aria-disabled="true"]
+   :784   opacity: 0.45
+   :785   cursor: not-allowed
+SEL  .v8-outline-button:disabled
+   :788   opacity: 0.45
+   :789   cursor: not-allowed
+SEL  .role-alert
+   :1490  margin: var(--cn-s-10) 0 0
+   :1490  font-size: 12px
+   :1490  color: #b03a3a
+SEL  .plan-ai-actions .v8-outline-button
+   :1953  color: var(--v8-ink)
+   :1954  font-size: var(--cn-fs-body)
+   :1955  font-weight: 600

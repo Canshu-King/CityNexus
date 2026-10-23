@@ -1,0 +1,61 @@
+# 两枚 skill 给的判据 × 我在 WP-A 城市探索屏做过的决定（扫街工 · 2026-10-16 · 补 CMDR-DELIVER-0700 第 71 行要求的回执件）
+# 调用形制：Skill tool_use，参数 skill="ui-ux-pro-max-skill:ui-ux-pro-max" 与 skill="frontend-design:frontend-design"
+# 脚本实跑：C:/Users/仓鼠王/.qoder/plugins/cache/qoder-marketplace/ui-ux-pro-max-skill/2.6.2/.claude/skills/ui-ux-pro-max/scripts/search.py
+#   第一次：--domain style "dark mode color token pairing"（回了 6 条风格档，其中可核对的数值判据只有清单里的）
+#   第二次：--domain ux "semantic status color success error contrast dark mode"（回了 3 条：4.5:1、不许只用颜色、正文要够暗）
+# 说明：两枚 skill 的设计推荐（配色/字体/风格档）按简报 §0 当假设不当结论——这一拍实测它们回的
+#       "OLED 深黑禁白底 / Cyberpunk 霓虹" 一类对本产品不成立；下面只取它们给的**数值与结构判据**。
+
+判据 1（ui-ux §6 color-accessible-pairs / §1 color-contrast）：文字对底 ≥4.5:1（AA），大字 3:1，AAA 是 7:1。
+判据 2（ui-ux §8 contrast-feedback）：错误色与成功色作为状态文字时同样要 ≥4.5:1——即"状态"不许停在 4.40。
+判据 3（ui-ux §6 color-dark-mode）：暗色要用**减饱和/提亮的同族变体**，不是把亮色反过来，且暗色要**单独测**。
+判据 4（ui-ux §6 color-semantic + §5 visual-hierarchy）：组件里不许写裸 hex；层级由 尺寸/间距/对比 建立，
+        "not color alone"。
+判据 5（ui-ux §1 color-not-only + §6 color-not-decorative-only）：功能色（红=错、绿=成）必须有图标或文字
+        一起承担语义，颜色只能当冗余线索。
+判据 6（ui-ux §4 elevation-consistent）：elevation/阴影尺度是给 **cards/sheets/modals** 的一致性用的，
+        "avoid random shadow values"——它不是行内小标签的强调手段。
+判据 7（frontend-design「Let each element do exactly one job」+「structure should encode something true,
+        not decorate」）：一枚标签只做一个工作；把"我是通知/我是强调"压在颜色这一个载体上就是让它兼两份工。
+判据 8（frontend-design「If the brief pins down a visual direction, follow it exactly」）：简报已经点名的
+        方向（脉搏层的成对契约令牌、零 !important、DOM 不动）优先于 skill 自己的偏好。
+
+逐枚对照我的决定：
+
+D1 三处状态小标签的墨 --v8-green(=--cn-success) → --cn-success-text（styles.css:175、:179）
+   判据 2 直接支持：状态文字停在 4.40 就是没到 AA。判据 3 支持"文字色另有一档"（暗色 #30d158 是减饱和提亮档）。
+   结论：不改，判据与我原本的理由同向；我原先只有比值、没有"状态色也要 4.5"这条命名判据，现在补上。
+
+D2 .role-alert 的墨 #b03a3a → --cn-danger（styles.css:1490）
+   判据 3 支持：暗色取 #ff453a 那档而不是把砖红反过来；判据 5 支持：这枚旁边就是 role="alert" 的文字。
+   代价被判据 2 卡住的只有一格——亮色 4.94 距 AAA 7:1 很远，但 AA 4.5 过。
+   结论：不改。
+
+D3 .v8-evidence-label 的边 #dcefe7 → --cn-rule（styles.css:179）
+   判据 3 的"边框/分隔要在两个主题都可见"（Light/Dark 表：Border and divider visibility）支持；
+   判据 6 反对我为了"看得见"把它抬成 control-border（那枚是控件专用，这条不是控件）。
+   结论：不改，用 --cn-rule 而不是 --cn-control-border 是对的。
+
+D4 .v8-stay-impact em 抬到 --cn-elev-3 来表达"这一枚是强调"（styles.css:179）
+   ★ 判据 6 + 判据 4 + 判据 7 三条联合否决：elevation 尺度是给卡片/面板的一致性用的，行内 9px 小标签
+     抬一档等于把卡片层级语言用在标签上；层级应由 字重/字号/对比 承担（这枚本来就有 800 vs 兄弟的 600）。
+   现读（同一条尺，纸×墨六格）：--cn-link 在 elev-2 上亮 5.88、暗 5.75（都在 4.5 上），
+     在 elev-3 上亮 5.97、暗 4.87。也就是说**回退到与兄弟同档的 elev-2 不损失任何一格对比度**。
+   结论：这一处判据改了我的决定——em 应该留在 --cn-elev-2，强调由字重 800 与蓝色承担，不靠抬纸。
+   我没有擅自重开这一格：号令者已在 ahead=1 的枝上取过干跑读数（CMDR-RULING-0702 第 4 行），
+   再加一枚内容提交会让那枚读数指向不同的 diff。改法一行、数已在手，等你点。
+
+D5 .v8-message 琥珀通知条整组不修、.v8-status-pill.violet 与 .v8-boundary-card 三支不修，挂给 WP-C
+   判据 3 支持紫那三支"只换纸修不好"（主题常量违反"暗色要单独有变体"）；
+   判据 7 + 判据 5 给琥珀条指出第三条路：先让"我是通知"有一个非颜色的载体（图标/前缀词/左标记），
+   纸再进契约——而不是在"留一块白"和"取消颜色身份"之间二选一。
+   结论：不改（仍不修），但把 WP-C 那一单的要求写得更具体：新增的不是"通知底色令牌"一枚，
+   而是「通知底色＋通知墨＋非颜色载体」三件，缺第三件就还是靠颜色单独承担语义。
+
+D6 只改 CSS 值、不动 DOM/testid/别人的断言
+   判据 8：简报点名的方向优先，skill 关于"补图标"的建议不许由我替这一屏实现。
+   结论：不改。
+
+顺带一条与我的单无关但被判据 3/清单撞到的观察（只报不修）：ui-ux 的 Dark Mode(OLED) 清单写
+"No white (#FFFFFF) background"与"avoid pure #000000"，而脉搏层的 --cn-elev-0 在暗色就是 #000000
+（frontend/src/cn-pulse.css:142）。那是号令者那一层的取舍，不在我这一屏的射程，也不该我改。

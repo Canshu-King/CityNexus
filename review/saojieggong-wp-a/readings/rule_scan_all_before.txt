@@ -1,0 +1,486 @@
+SEL :root
+   styles.css:1     深字字面量                  color            = #172033   [#172033 L=0.015]
+   styles.css:1     浅底字面量                  background       = #f4f7fb   [#f4f7fb L=0.927]
+SEL .eyebrow
+   styles.css:4     深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .status
+   styles.css:6     浅底字面量                  background       = #d9f7e6   [#d9f7e6 L=0.870]
+   styles.css:6     深字字面量                  color            = #12653a   [#12653a L=0.097]
+SEL .muted-status
+   styles.css:7     浅底字面量                  background       = #fff3d6   [#fff3d6 L=0.902]
+   styles.css:7     深字字面量                  color            = #7b5610   [#7b5610 L=0.109]
+SEL .map-card, .evidence-card, .replan-card
+   styles.css:9     浅底关键字                  background       = white   [white L=1.000]
+SEL .map-canvas
+   styles.css:12    浅底字面量                  background       = linear-gradient(145deg, #edf5ff, #f7fbff)   [#edf5ff L=0.905]
+   styles.css:12    浅底字面量                  background       = linear-gradient(145deg, #edf5ff, #f7fbff)   [#f7fbff L=0.960]
+SEL .map-fallback
+   styles.css:15    深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .map-legend
+   styles.css:20    深字字面量                  color            = #172033   [#172033 L=0.015]
+SEL .provider-ready
+   styles.css:25    深字字面量                  color            = #12653a   [#12653a L=0.097]
+SEL .v8-runtime-card
+   styles.css:33    浅底字面量                  background       = #f8faff   [#f8faff L=0.955]
+   styles.css:34    深字字面量                  color            = #172033   [#172033 L=0.015]
+SEL .v8-runtime-card small
+   styles.css:44    深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .upcoming-list
+   styles.css:45    浅底字面量                  background       = #f5f7fc   [#f5f7fc L=0.930]
+SEL .upcoming-list span
+   styles.css:46    深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .timeline-card
+   styles.css:48    浅底关键字                  background       = white   [white L=1.000]
+SEL .timeline-item
+   styles.css:50    浅底字面量                  background       = #eef1f7   [#eef1f7 L=0.878]
+   styles.css:50    深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .timeline-item.active
+   styles.css:51    浅底字面量                  background       = #e5eaff   [#e5eaff L=0.827]
+   styles.css:51    深字字面量                  color            = #3247b6   [#3247b6 L=0.086]
+SEL .timeline-item.protected
+   styles.css:52    浅底字面量                  background       = #d9f7e6   [#d9f7e6 L=0.870]
+   styles.css:52    深字字面量                  color            = #12653a   [#12653a L=0.097]
+SEL .candidate
+   styles.css:54    浅底字面量                  background       = #eef1ff   [#eef1ff L=0.883]
+SEL .candidate-families span
+   styles.css:56    深字字面量                  color            = #3247b6   [#3247b6 L=0.086]
+SEL .note
+   styles.css:60    深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .workflow-state
+   styles.css:62    深字字面量                  color            = #5d6b85   [#5d6b85 L=0.145]
+SEL .error-note
+   styles.css:63    深字字面量                  color            = #a53b32   [#a53b32 L=0.114]
+SEL .family-chip
+   styles.css:64    浅底字面量                  background       = #f5f7fc   [#f5f7fc L=0.930]
+   styles.css:64    深字字面量                  color            = #3247b6   [#3247b6 L=0.086]
+SEL .guardian-card
+   styles.css:102   浅底字面量                  background       = linear-gradient(135deg, #fff, #edf9f5)   [#fff L=1.000]
+   styles.css:102   浅底字面量                  background       = linear-gradient(135deg, #fff, #edf9f5)   [#edf9f5 L=0.923]
+SEL .guardian-summary
+   styles.css:106   深字字面量                  color            = #39544b   [#39544b L=0.077]
+SEL .provenance-lanes span
+   styles.css:110   浅底字面量                  background       = #fff   [#fff L=1.000]
+   styles.css:110   深字字面量                  color            = #48665c   [#48665c L=0.117]
+SEL .provenance-lanes b
+   styles.css:111   深字字面量                  color            = #123e30   [#123e30 L=0.038]
+SEL .guardian-trace li
+   styles.css:114   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .guardian-trace code
+   styles.css:115   深字字面量                  color            = #234b3d   [#234b3d L=0.057]
+SEL .v8-sidebar
+   styles.css:130   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-nav button
+   styles.css:142   深字字面量                  color            = #758196   [#758196 L=0.217]
+SEL .v8-nav button:hover, .v8-nav button.active
+   styles.css:145   浅底字面量                  background       = #f1f3ff   [#f1f3ff L=0.900]
+SEL .v8-topbar
+   styles.css:167   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-runtime
+   styles.css:170   深字字面量                  color            = #738093   [#738093 L=0.212]
+SEL .v8-rain-button
+   styles.css:174   浅底字面量                  background       = #fffaf4   [#fffaf4 L=0.962]
+SEL .v8-status-pill
+   styles.css:175   浅底字面量                  background       = #effaf5   [#effaf5 L=0.933]
+SEL .v8-status-pill.violet
+   styles.css:175   浅底字面量                  background       = #f3efff   [#f3efff L=0.880]
+SEL .anchor-line
+   styles.css:175   浅底字面量                  background       = #dfe3ea   [#dfe3ea L=0.766]
+SEL .v8-map-panel
+   styles.css:176   浅底字面量                  background       = #dfeae8   [#dfeae8 L=0.804]
+SEL .v8-map-caption
+   styles.css:176   深字字面量                  color            = #31465f   [#31465f L=0.059]
+SEL .v8-day-card
+   styles.css:177   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-day-card p
+   styles.css:177   深字字面量                  color            = #6c7889   [#6c7889 L=0.184]
+SEL .mode-mark
+   styles.css:177   浅底字面量                  background       = #eff1ff   [#eff1ff L=0.885]
+SEL .v8-day-detail
+   styles.css:178   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-day-detail-title > span
+   styles.css:178   浅底字面量                  background       = #eef0ff   [#eef0ff L=0.877]
+SEL .v8-activity
+   styles.css:178   深字字面量                  color            = #68758a   [#68758a L=0.175]
+SEL .v8-studio-aside, .v8-next-card, .v8-comparison
+   styles.css:178   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-hotel-thumb
+   styles.css:178   浅底字面量                  background       = #eef0ff   [#eef0ff L=0.877]
+SEL .v8-hotel-thumb.large span
+   styles.css:178   深字字面量                  color            = #6b74ae   [#6b74ae L=0.187]
+SEL .v8-feasibility
+   styles.css:178   浅底字面量                  background       = #effaf5   [#effaf5 L=0.933]
+SEL .v8-evidence-label
+   styles.css:179   浅底字面量                  background       = #f7fcfa   [#f7fcfa L=0.963]
+SEL .v8-stay-card
+   styles.css:179   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-selected-label
+   styles.css:179   浅底字面量                  background       = #effaf5   [#effaf5 L=0.933]
+SEL .v8-stay-impact b, .v8-stay-impact em
+   styles.css:179   深字字面量                  color            = #68758a   [#68758a L=0.175]
+   styles.css:179   浅底字面量                  background       = #f3f4f7   [#f3f4f7 L=0.905]
+SEL .v8-stay-impact em
+   styles.css:179   浅底字面量                  background       = #eff1ff   [#eff1ff L=0.885]
+SEL .v8-detail-panel
+   styles.css:179   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-live-now
+   styles.css:180   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-mode-chooser
+   styles.css:180   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-mode-chips button
+   styles.css:180   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-mode-chips button.active
+   styles.css:180   浅底字面量                  background       = #eff1ff   [#eff1ff L=0.885]
+SEL .v8-next-card
+   styles.css:180   浅底字面量                  background       = #f5fbf7   [#f5fbf7 L=0.951]
+SEL .v8-intel-facts > div
+   styles.css:181   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-twin-card, .v8-boundary-card
+   styles.css:181   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-strength
+   styles.css:181   浅底字面量                  background       = #e9ebf1   [#e9ebf1 L=0.831]
+SEL .v8-strength b
+   styles.css:181   深字字面量                  color            = #68758a   [#68758a L=0.175]
+SEL .v8-boundary-card
+   styles.css:181   浅底字面量                  background       = #f6f3ff   [#f6f3ff L=0.909]
+SEL .v8-boundary-card p
+   styles.css:181   深字字面量                  color            = #786d99   [#786d99 L=0.172]
+SEL .v8-message
+   styles.css:183   深字字面量                  color            = #8e5f32   [#8e5f32 L=0.142]
+   styles.css:183   浅底字面量                  background       = #fffaf4   [#fffaf4 L=0.962]
+SEL .v8-lede
+   styles.css:189   深字字面量                  color            = #5f6c80   [#5f6c80 L=0.147]
+SEL .v8-rain-button
+   styles.css:190   深字字面量                  color            = #8a4f1d   [#8a4f1d L=0.111]
+SEL .v8-live-label
+   styles.css:191   深字字面量                  color            = #a83d36   [#a83d36 L=0.119]
+SEL .v8-live-now p
+   styles.css:192   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v8-live-now > strong
+   styles.css:193   深字字面量                  color            = #5e6877   [#5e6877 L=0.136]
+SEL .v8-mode-chooser span
+   styles.css:194   深字字面量                  color            = #5d6b7d   [#5d6b7d L=0.143]
+SEL .v8-mode-chips button
+   styles.css:195   深字字面量                  color            = #5e6b7d   [#5e6b7d L=0.144]
+SEL .v8-next-card > span
+   styles.css:196   深字字面量                  color            = #125f45   [#125f45 L=0.087]
+SEL .v8-next-card p
+   styles.css:197   深字字面量                  color            = #567064   [#567064 L=0.145]
+SEL .v8-eta > span
+   styles.css:198   深字字面量                  color            = #53616f   [#53616f L=0.115]
+SEL .v9-evidence-summary > small
+   styles.css:199   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v12-authoritative-panel
+   styles.css:202   浅底字面量(rgba)            background       = linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250,.9))   [rgba(255,255,255,.96) L=1.000]
+   styles.css:202   浅底字面量(rgba)            background       = linear-gradient(145deg, rgba(255,255,255,.96), rgba(242,247,250,.9))   [rgba(242,247,250,.9) L=0.923]
+SEL .v12-state-kicker
+   styles.css:205   深字字面量                  color            = #55716e   [#55716e L=0.149]
+SEL .v12-state-card
+   styles.css:207   浅底字面量                  background       = #f6faf8   [#f6faf8 L=0.947]
+SEL .v12-state-card.next
+   styles.css:208   浅底字面量                  background       = #f8f8fc   [#f8f8fc L=0.941]
+SEL .v12-state-card small
+   styles.css:210   深字字面量                  color            = #71808b   [#71808b L=0.208]
+SEL .v12-state-value
+   styles.css:211   浅底字面量                  background       = #dff4e8   [#dff4e8 L=0.862]
+   styles.css:211   深字字面量                  color            = #236345   [#236345 L=0.097]
+SEL .v12-state-card.next .v12-state-value
+   styles.css:212   浅底字面量                  background       = #e7e6fb   [#e7e6fb L=0.805]
+   styles.css:212   深字字面量                  color            = #4f4a82   [#4f4a82 L=0.082]
+SEL .v12-activity-row
+   styles.css:215   深字字面量                  color            = #566672   [#566672 L=0.127]
+SEL .v12-activity-row.current
+   styles.css:216   深字字面量                  color            = #1b4140   [#1b4140 L=0.044]
+SEL .v12-activity-index
+   styles.css:217   浅底字面量                  background       = #e7eef0   [#e7eef0 L=0.844]
+SEL .state-completed, .state-skipped
+   styles.css:220   深字字面量                  color            = #5d7c69   [#5d7c69 L=0.178]
+SEL .state-en_route, .state-arrived, .state-in_progress, .state-active
+   styles.css:221   深字字面量                  color            = #3f6f92   [#3f6f92 L=0.145]
+SEL .v12-story-grid
+   styles.css:223   浅底字面量                  background       = #edf2f3   [#edf2f3 L=0.880]
+SEL .v12-leg-chip, .v12-edge-status, .v12-offline-banner
+   styles.css:224   深字字面量                  color            = #55716e   [#55716e L=0.149]
+   styles.css:224   浅底字面量                  background       = #f5fbf8   [#f5fbf8 L=0.952]
+SEL .v12-commitment-card, .v12-agent-action, .v12-impact-card, .v12-risk-banner
+   styles.css:226   深字字面量                  color            = #334c5a   [#334c5a L=0.066]
+   styles.css:226   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v12-commitment-card svg, .v12-agent-action svg
+   styles.css:227   深字字面量                  color            = #26715d   [#26715d L=0.130]
+SEL .v12-commitment-card small, .v12-agent-action small, .v12-impact-card small, .v12-risk-banner span
+   styles.css:229   深字字面量                  color            = #75838b   [#75838b L=0.219]
+SEL .v12-impact-card.passed
+   styles.css:230   浅底字面量                  background       = #f5fbf7   [#f5fbf7 L=0.951]
+SEL .v12-impact-card.blocked, .v12-risk-banner.risk-critical
+   styles.css:230   浅底字面量                  background       = #fff7f5   [#fff7f5 L=0.944]
+SEL .v12-impact-card.blocked svg, .v12-risk-banner svg
+   styles.css:230   深字字面量                  color            = #b04c3e   [#b04c3e L=0.147]
+SEL .v12-risk-banner.risk-safe
+   styles.css:231   浅底字面量                  background       = #f5fbf7   [#f5fbf7 L=0.951]
+SEL .v12-trip-studio
+   styles.css:232   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v12-studio-meta span
+   styles.css:234   浅底字面量                  background       = #f1f5f5   [#f1f5f5 L=0.906]
+   styles.css:234   深字字面量                  color            = #57706e   [#57706e L=0.147]
+SEL .v12-studio-legend
+   styles.css:235   深字字面量                  color            = #75838b   [#75838b L=0.219]
+SEL .v12-studio-error
+   styles.css:238   深字字面量                  color            = #a64038   [#a64038 L=0.121]
+SEL .v12-studio-success
+   styles.css:238   深字字面量                  color            = #26715d   [#26715d L=0.130]
+SEL .v8-mobile-nav button
+   styles.css:241   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v9-language
+   styles.css:264   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v9-risk
+   styles.css:266   深字字面量                  color            = #416b5b   [#416b5b L=0.124]
+SEL .v9-risk b
+   styles.css:266   深字字面量                  color            = #b44f33   [#b44f33 L=0.155]
+SEL .v9-inbox
+   styles.css:268   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v9-inbox label
+   styles.css:269   深字字面量                  color            = #6c7889   [#6c7889 L=0.184]
+SEL .v9-offline
+   styles.css:272   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v9-offline > p, .v9-offline > small
+   styles.css:274   深字字面量                  color            = #6c7889   [#6c7889 L=0.184]
+SEL .v12-offline-now-next article
+   styles.css:278   浅底字面量                  background       = #f7fbf9   [#f7fbf9 L=0.956]
+SEL .v12-offline-now-next article span
+   styles.css:279   深字字面量                  color            = #51756b   [#51756b L=0.155]
+SEL .v8-compare-button
+   styles.css:295   浅底字面量                  background       = #f8f9ff   [#f8f9ff L=0.949]
+SEL .v8-mobility-sheet
+   styles.css:302   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-mode-option
+   styles.css:332   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-mode-option.active
+   styles.css:332   浅底字面量                  background       = #f2f3ff   [#f2f3ff L=0.902]
+SEL .v8-mode-option:disabled
+   styles.css:332   浅底字面量                  background       = #f5f6f8   [#f5f6f8 L=0.921]
+SEL .v8-mode-option span
+   styles.css:332   深字字面量                  color            = #718095   [#718095 L=0.211]
+SEL .v8-booking-card
+   styles.css:340   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-booking-card.selected
+   styles.css:340   浅底字面量                  background       = #fbfbff   [#fbfbff L=0.967]
+SEL .v8-booking-icon
+   styles.css:340   浅底字面量                  background       = #eef0ff   [#eef0ff L=0.877]
+SEL .v8-booking-icon.muted
+   styles.css:340   深字字面量                  color            = #718095   [#718095 L=0.211]
+   styles.css:340   浅底字面量                  background       = #f1f3f6   [#f1f3f6 L=0.895]
+SEL .v8-booking-state
+   styles.css:340   深字字面量                  color            = #8e6b34   [#8e6b34 L=0.165]
+   styles.css:340   浅底字面量                  background       = #fff6e8   [#fff6e8 L=0.930]
+SEL .v8-booking-state.safe
+   styles.css:340   浅底字面量                  background       = #effaf5   [#effaf5 L=0.933]
+SEL .v8-selected-label.neutral
+   styles.css:340   深字字面量                  color            = #68758a   [#68758a L=0.175]
+   styles.css:340   浅底字面量                  background       = #f1f3f6   [#f1f3f6 L=0.895]
+SEL .v8-no-payment
+   styles.css:340   深字字面量                  color            = #46655a   [#46655a L=0.113]
+   styles.css:340   浅底字面量                  background       = #f6fcf9   [#f6fcf9 L=0.961]
+SEL .v8-agent-progress
+   styles.css:341   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-me-card
+   styles.css:342   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-me-card ul
+   styles.css:342   深字字面量                  color            = #667487   [#667487 L=0.171]
+SEL .v8-lede
+   styles.css:349   深字字面量                  color            = #5f6c80   [#5f6c80 L=0.147]
+SEL .v8-rain-button
+   styles.css:350   深字字面量                  color            = #8a4f1d   [#8a4f1d L=0.111]
+SEL .v8-live-label
+   styles.css:351   深字字面量                  color            = #a83d36   [#a83d36 L=0.119]
+SEL .v8-live-now p
+   styles.css:352   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v8-live-now > strong
+   styles.css:353   深字字面量                  color            = #5e6877   [#5e6877 L=0.136]
+SEL .v8-mode-chooser span
+   styles.css:354   深字字面量                  color            = #5d6b7d   [#5d6b7d L=0.143]
+SEL .v8-mode-chips button
+   styles.css:355   深字字面量                  color            = #5e6b7d   [#5e6b7d L=0.144]
+SEL .v8-mode-chips button.active
+   styles.css:356   深字字面量                  color            = #3f4db8   [#3f4db8 L=0.098]
+SEL .v8-next-card > span
+   styles.css:357   深字字面量                  color            = #125f45   [#125f45 L=0.087]
+SEL .v8-next-card p
+   styles.css:358   深字字面量                  color            = #567064   [#567064 L=0.145]
+SEL .v8-eta > span
+   styles.css:359   深字字面量                  color            = #53616f   [#53616f L=0.115]
+SEL .v9-risk b
+   styles.css:360   深字字面量                  color            = #8f3c2d   [#8f3c2d L=0.093]
+SEL .v9-evidence-summary > small
+   styles.css:361   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v8-mobile-nav button
+   styles.css:362   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v9-evidence-summary > small
+   styles.css:364   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v8-sidebar-toggle
+   styles.css:401   深字字面量                  color            = var(--cn-ink-secondary, #758196)   [#758196 L=0.217]
+   styles.css:401   深字兜底 --cn-ink-secondary color            = var(--cn-ink-secondary, #758196)   [#758196 L=0.217]
+   styles.css:401   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-sidebar-toggle:hover
+   styles.css:402   浅底字面量                  background       = #f7f8ff   [#f7f8ff L=0.941]
+SEL .cn-copilot-edge
+   styles.css:442   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .cn-copilot-panel
+   styles.css:445   浅底字面量                  background       = #f9fbfd   [#f9fbfd L=0.962]
+SEL .cn-copilot-head small
+   styles.css:450   深字字面量                  color            = #758196   [#758196 L=0.217]
+SEL .cn-copilot-close
+   styles.css:451   深字字面量                  color            = #68758a   [#68758a L=0.175]
+SEL .cn-copilot-runtime
+   styles.css:452   深字字面量                  color            = #667489   [#667489 L=0.171]
+   styles.css:452   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .cn-copilot-empty
+   styles.css:454   深字字面量                  color            = #6b778a   [#6b778a L=0.182]
+SEL .cn-copilot-bubble
+   styles.css:455   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .cn-copilot-bubble.user
+   styles.css:456   浅底字面量                  background       = #f4f5ff   [#f4f5ff L=0.918]
+SEL .cn-copilot-bubble p
+   styles.css:458   深字字面量                  color            = #526078   [#526078 L=0.115]
+SEL .cn-copilot-chip
+   styles.css:459   深字字面量                  color            = #5b55a8   [#5b55a8 L=0.115]
+   styles.css:459   浅底字面量                  background       = #eeeaff   [#eeeaff L=0.842]
+SEL .cn-copilot-form textarea
+   styles.css:462   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .cn-copilot-error
+   styles.css:464   深字字面量                  color            = #9a3f37   [#9a3f37 L=0.107]
+SEL .cn-agent-step-mark
+   styles.css:467   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .cn-agent-step.failed .cn-agent-step-mark
+   styles.css:471   深字字面量                  border-color     = #b2473e   [#b2473e L=0.143]
+SEL .cn-agent-step b
+   styles.css:473   深字字面量                  color            = #56647a   [#56647a L=0.125]
+SEL .cn-native-mission
+   styles.css:475   浅底字面量                  background       = #f4f7fb   [#f4f7fb L=0.927]
+SEL .cn-native-mission-head small
+   styles.css:480   深字字面量                  color            = #738197   [#738197 L=0.216]
+SEL .cn-native-status
+   styles.css:481   深字字面量                  color            = #53627b   [#53627b L=0.120]
+   styles.css:481   浅底字面量                  background       = #e7edf5   [#e7edf5 L=0.841]
+SEL .cn-native-status.active
+   styles.css:482   深字字面量                  color            = #4c579d   [#4c579d L=0.108]
+   styles.css:482   浅底字面量                  background       = #e9eaff   [#e9eaff L=0.834]
+SEL .cn-native-status.terminal
+   styles.css:483   深字字面量                  color            = #4c7d63   [#4c7d63 L=0.171]
+   styles.css:483   浅底字面量                  background       = #e6f3eb   [#e6f3eb L=0.869]
+SEL .cn-copilot-observability
+   styles.css:484   深字字面量                  color            = #738197   [#738197 L=0.216]
+SEL .cn-copilot-observability b
+   styles.css:486   深字字面量                  color            = #5b6880   [#5b6880 L=0.137]
+SEL .cn-copilot-observability code
+   styles.css:487   深字字面量                  color            = #5564a4   [#5564a4 L=0.137]
+SEL .cn-agent-raw code
+   styles.css:491   深字字面量                  color            = #67748a   [#67748a L=0.172]
+SEL .cn-native-empty
+   styles.css:492   深字字面量                  color            = #748198   [#748198 L=0.217]
+SEL .cn-native-plan summary
+   styles.css:494   深字字面量                  color            = #596781   [#596781 L=0.134]
+SEL .cn-native-plan ol
+   styles.css:495   深字字面量                  color            = #68768c   [#68768c L=0.178]
+SEL .cn-native-plan li small
+   styles.css:497   深字字面量                  color            = #a26c37   [#a26c37 L=0.187]
+SEL .cn-native-proposal b
+   styles.css:499   深字字面量                  color            = #596781   [#596781 L=0.134]
+SEL .cn-copilot-approval
+   styles.css:502   浅底字面量                  background       = #fffaf0   [#fffaf0 L=0.959]
+SEL .cn-copilot-approval b
+   styles.css:503   深字字面量                  color            = #8d632b   [#8d632b L=0.148]
+SEL .cn-copilot-approval span
+   styles.css:504   深字字面量                  color            = #816f54   [#816f54 L=0.167]
+SEL .cn-copilot-action-state, .cn-copilot-stream-state
+   styles.css:507   深字字面量                  color            = #5e6d83   [#5e6d83 L=0.150]
+SEL .cn-copilot-stop
+   styles.css:508   深字字面量                  color            = #99483d   [#99483d L=0.117]
+   styles.css:508   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .cn-copilot-stop:hover
+   styles.css:509   浅底字面量                  background       = #fff4f1   [#fff4f1 L=0.923]
+SEL .v8-capability-list li
+   styles.css:513   浅底字面量                  background       = #fafbfc   [#fafbfc L=0.963]
+SEL .v8-alert-pop
+   styles.css:540   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v8-alert-pop article span
+   styles.css:545   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v8-alert-pop .v8-muted
+   styles.css:547   深字字面量                  color            = #5d6878   [#5d6878 L=0.136]
+SEL .v15-copilot-suggestions .v8-outline-button
+   styles.css:548   深字字面量                  border-color     = #526b94   [#526b94 L=0.144]
+SEL .v15-copilot-message
+   styles.css:548   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .v15-copilot-message.user
+   styles.css:548   浅底字面量                  background       = #f6f7ff   [#f6f7ff L=0.933]
+SEL .v15-copilot-message p
+   styles.css:548   深字字面量                  color            = #536176   [#536176 L=0.117]
+SEL .v15-what-if
+   styles.css:548   浅底字面量                  background       = #faf9ff   [#faf9ff L=0.953]
+SEL .v15-what-if-head span
+   styles.css:548   深字字面量                  color            = #6f56b6   [#6f56b6 L=0.134]
+   styles.css:548   浅底字面量                  background       = #eee9ff   [#eee9ff L=0.837]
+SEL .v15-what-if-grid div
+   styles.css:548   浅底字面量                  background       = #fff   [#fff L=1.000]
+SEL .trial-steps li.active .trial-step-dot
+   styles.css:591   深字字面量                  border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:591   深字兜底 --v8-accent       border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+SEL .trial-steps li.done .trial-step-dot
+   styles.css:596   深字字面量                  color            = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:596   深字兜底 --v8-accent       color            = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:597   深字字面量                  border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:597   深字兜底 --v8-accent       border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+SEL .trial-chips button.active
+   styles.css:661   深字字面量                  border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:661   深字兜底 --v8-accent       border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+SEL .trip-week-strip button.active, .trip-day-strip button.active
+   styles.css:1248  深字字面量                  border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:1248  深字兜底 --v8-accent       border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+SEL .trip-stop.protected
+   styles.css:1269  浅底字面量                  background       = #eefaf2   [#eefaf2 L=0.930]
+SEL .trip-stop.disrupted
+   styles.css:1276  浅底字面量                  background       = #fff6ee   [#fff6ee L=0.933]
+SEL .trip-stop-protected
+   styles.css:1308  深字字面量                  color            = #1c7a4a   [#1c7a4a L=0.147]
+SEL .trip-stop-disrupted
+   styles.css:1312  深字字面量                  color            = #b45309   [#b45309 L=0.159]
+SEL .trip-stop-current
+   styles.css:1316  深字字面量                  color            = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:1316  深字兜底 --v8-accent       color            = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+SEL .plan-cmp-card
+   styles.css:1349  浅底字面量                  background       = var(--v8-surface, #fff)   [#fff L=1.000]
+   styles.css:1349  浅底兜底 --v8-surface      background       = var(--v8-surface, #fff)   [#fff L=1.000]
+SEL .plan-cmp-band.within
+   styles.css:1367  浅底字面量                  background       = #e8f6ee   [#e8f6ee L=0.892]
+   styles.css:1368  深字字面量                  color            = #1c7a4a   [#1c7a4a L=0.147]
+SEL .plan-cmp-band.near
+   styles.css:1371  浅底字面量                  background       = #fdf3e2   [#fdf3e2 L=0.905]
+   styles.css:1372  深字字面量                  color            = #97652a   [#97652a L=0.161]
+SEL .plan-cmp-band.over
+   styles.css:1375  浅底字面量                  background       = #fdeaea   [#fdeaea L=0.857]
+   styles.css:1376  深字字面量                  color            = #b03a3a   [#b03a3a L=0.126]
+SEL .plan-cmp-why
+   styles.css:1401  深字字面量                  color            = #b03a3a   [#b03a3a L=0.126]
+SEL .plan-cmp-error
+   styles.css:1406  深字字面量                  color            = #b03a3a   [#b03a3a L=0.126]
+SEL .hotel-card
+   styles.css:1480  浅底字面量                  background       = var(--v8-surface, #fff)   [#fff L=1.000]
+   styles.css:1480  浅底兜底 --v8-surface      background       = var(--v8-surface, #fff)   [#fff L=1.000]
+SEL .hotel-card.chosen
+   styles.css:1483  深字字面量                  border-color     = #1c7a4a   [#1c7a4a L=0.147]
+SEL .role-alert
+   styles.css:1490  深字字面量                  color            = #b03a3a   [#b03a3a L=0.126]
+SEL .live-disruption
+   styles.css:1502  浅底字面量                  background       = #fff6ee   [#fff6ee L=0.933]
+SEL .live-proposal
+   styles.css:1503  浅底字面量                  background       = #eef4ff   [#eef4ff L=0.901]
+SEL .live-handled
+   styles.css:1514  浅底字面量                  background       = #e8f6ee   [#e8f6ee L=0.892]
+SEL .inbox-entry-tabs button.active
+   styles.css:1596  深字字面量                  border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+   styles.css:1596  深字兜底 --v8-accent       border-color     = var(--v8-accent, #0f766e)   [#0f766e L=0.142]
+SEL .today-actions strong.green
+   styles.css:1674  深字字面量                  color            = #1c7a4a   [#1c7a4a L=0.147]
+SEL .today-actions strong.warn
+   styles.css:1675  深字字面量                  color            = #b45309   [#b45309 L=0.159]
+SEL .inbox-advanced-raw dd
+   styles.css:1700  深字字面量                  color            = #4c5872   [#4c5872 L=0.097]
+规则数(含命中)=220 命中条数=265 解析出的规则总数=1008

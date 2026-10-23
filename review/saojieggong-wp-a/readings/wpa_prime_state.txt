@@ -1,0 +1,9 @@
+WP-A′ 票夹现场读数落盘 2026-10-16 14:37（枝尖现取，不依赖当前 checkout）
+枝尖（本地与远端逐字相同）= 8ae1be6b68583102e6b0d939f7013ab61e1d77da
+cat-file -t = commit
+父＝并尖后的合并头 28f4b81f1c40d5cd9e9c8a57ed6b0e4acd767ec4
+本笔文件数与行数： 1 file changed, 4 insertions(+), 4 deletions(-)
+改动的物理行＝4 行（268/269/270/340；diffstat 4 插 4 删对得上），-U0 的 hunk 起点是 268 与 340 两处
+屏尺：改前 14 枚 / 改后 0 枚
+全树：改前 272 → 改后 258；styles.css：253 → 239
+取景器负对照：卡片两臂同 8、收件栏两臂同 4、节点两臂同 294（wpa_prime_two_arm.txt:3）

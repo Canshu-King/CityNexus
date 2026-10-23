@@ -1,0 +1,6 @@
+.v8-stay-impact em 的三档纸 × 两档墨，门槛 4.5（10px 不算 large text）
+  已交的：墨 --cn-link 纸 --cn-elev-3   亮 5.97 / 暗 4.87   (wpa_pair_ratios.txt:36、:37)
+  判据 6 主张的：墨 --cn-link 纸 --cn-elev-2（与兄弟同档）  亮 5.88 / 暗 5.75
+  只换纸不换墨：墨 --cn-accent-text 纸 --cn-elev-2        亮 5.88 / 暗 4.14  ← 暗色不达
+  兄弟那枚 .v8-stay-impact b 的纸墨：--cn-on-elev-1-muted × --cn-elev-2  亮 6.37 / 暗 6.83
+  结论：回退一档不损失任何一格对比度（5.88/5.75 都在 4.5 上），层级改由字重 800 与色相承担

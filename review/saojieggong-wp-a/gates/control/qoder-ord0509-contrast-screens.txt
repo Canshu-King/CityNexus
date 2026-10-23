@@ -1,0 +1,92 @@
+run_id=run092689 port=4510/8510 target=e2e/qoder-ord0509-contrast-screens.spec.ts
+    +     "testId": "v8-drawer-entry-bookings",
+    +     "text": "",
+    +   },
+    +   Object {
+    +     "background": "rgba(0, 0, 0, 0)",
+    +     "bold": false,
+    +     "color": "rgb(174, 174, 178)",
+    +     "contrast": 0,
+    +     "fontSizePx": 13,
+    +     "kind": "unclassified-control",
+    +     "required": 3,
+    +     "selector": "[data-testid=\"v8-drawer-entry-footprints\"]",
+    +     "testId": "v8-drawer-entry-footprints",
+    +     "text": "",
+    +   },
+    +   Object {
+    +     "background": "rgba(0, 0, 0, 0)",
+    +     "bold": false,
+    +     "color": "rgb(174, 174, 178)",
+    +     "contrast": 0,
+    +     "fontSizePx": 13,
+    +     "kind": "unclassified-control",
+    +     "required": 3,
+    +     "selector": "[data-testid=\"v8-drawer-entry-agent\"]",
+    +     "testId": "v8-drawer-entry-agent",
+    +     "text": "",
+    +   },
+    +   Object {
+    +     "background": "rgba(0, 0, 0, 0)",
+    +     "bold": false,
+    +     "color": "rgb(174, 174, 178)",
+    +     "contrast": 0,
+    +     "fontSizePx": 13,
+    +     "kind": "unclassified-control",
+    +     "required": 3,
+    +     "selector": "[data-testid=\"v8-drawer-entry-authoritative\"]",
+    +     "testId": "v8-drawer-entry-authoritative",
+    +     "text": "",
+    +   },
+    +   Object {
+    +     "background": "rgb(28, 28, 30)",
+    +     "bold": false,
+    +     "color": "rgba(255, 255, 255, 0.1)",
+    +     "contrast": 1.23,
+    +     "fontSizePx": 13.3333,
+    +     "kind": "unclassified-control",
+    +     "required": 3,
+    +     "selector": "[data-testid=\"sim-ball\"]",
+    +     "testId": "sim-ball",
+    +     "text": "",
+    +   },
+    + ]
+
+      188 |       });
+      189 |       expect(scan.rows, `${screen.key}/${scheme}: `
+    > 190 |         + JSON.stringify(scan.rows.slice(0, 5))).toEqual([]);
+          |                                                  ^
+      191 |     });
+      192 |   }
+      193 | }
+        at D:\moodle\_cmdr_saojieggong_1016\tree\frontend\e2e\qoder-ord0509-contrast-screens.spec.ts:190:50
+
+    Error Context: test-results\qoder-ord0509-contrast-scr-48032-09-mobile-drawer-under-dark-chromium\error-context.md
+
+  10 failed
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 collections under light 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 collections under dark 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 recycle-bin under light 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 recycle-bin under dark 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 poster-days under light 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 poster-days under dark 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 share-receiving under light 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 share-receiving under dark 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 mobile-drawer under light 
+    [chromium] › e2e\qoder-ord0509-contrast-screens.spec.ts:171:5 › ORD-0509 mobile-drawer under dark 
+  2 passed (39.9s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run092689 frontend=:4510 -> backend=:8510 ai=disabled db=_run092689.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4510 backend=:8510 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run092689.db ai=disabled reuseExistingServer=false
+exit=1 log=D:/moodle/_cmdr_saojieggong_1016/tree/review/run-run092689.log

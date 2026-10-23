@@ -1,0 +1,14 @@
+=== view/evidence/contrast-audit/contrast-audit-desktop.json 原尖 20 格 / 我这侧 20 格
+=== eview/evidence/contrast-audit/contrast-audit-mobile.json 原尖 10 格 / 我这侧 10 格
+=== review/evidence/ui-overnight/plan-ai-contrast.json       原尖  4 格 / 我这侧  4 格
+=== review/ord0509/run/collections.dark.json                 原尖  3 格 / 我这侧  2 格
+     修好的 → span.v8-evidence-label|1.95|Sealed real replay  [text-contrast]
+=== review/ord0509/run/collections.light.json                原尖  3 格 / 我这侧  2 格
+     修好的 → span.v8-evidence-label|4.24|Sealed real replay  [text-contrast]
+=== review/ord0509/run/mobile-drawer.dark.json               原尖  6 格 / 我这侧  6 格
+=== review/ord0509/run/mobile-drawer.light.json              原尖  6 格 / 我这侧  6 格
+=== review/ord0509/run/poster-days.dark.json                 原尖  2 格 / 我这侧  2 格
+=== review/ord0509/run/poster-days.light.json                原尖  2 格 / 我这侧  2 格
+=== review/ord0509/run/recycle-bin.dark.json                 原尖  1 格 / 我这侧  1 格
+=== review/ord0509/run/recycle-bin.light.json                原尖  1 格 / 我这侧  1 格
+合计：修好 2 格，新开 0 格

@@ -1,0 +1,17 @@
+run_id=run125404 port=4540/8540 target=e2e/qoder-plan-ai-contrast.spec.ts
+
+Running 4 tests using 1 worker
+
+[qoder-real-seed] journey=5bb87cfe-0136-486e-9a65-2baec49ed567 options=4 chosen=6ece40e6-27de-4bb3-92c0-d30e746a5432 (Haihe Riverside Hotel)
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (8.0s)
+  ok 2 [chromium] › e2e\qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › light: sheet and textarea clear AA (3.8s)
+  ok 3 [chromium] › e2e\qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › dark: sheet and textarea clear AA (3.7s)
+  ok 4 [chromium] › e2e\qoder-plan-ai-contrast.spec.ts:141:1 › no .plan-ai-* rule pairs a literal light fill with an inherited foreground (11ms)
+
+  4 passed (25.3s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4540 backend=:8540 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run125404.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run125404 frontend=:4540 -> backend=:8540 ai=disabled db=_run125404.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4540 backend=:8540 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run125404.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4540 backend=:8540 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run125404.db ai=disabled reuseExistingServer=false
+exit=0 log=D:/moodle/_cmdr_saojieggong_1016/tree/review/run-run125404.log

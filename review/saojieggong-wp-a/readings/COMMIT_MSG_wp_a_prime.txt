@@ -1,0 +1,120 @@
+WP-A′ 票夹（行程收件箱）屏 · 表面字面量清扫（styles.css 三枚物理行，14 枚字面量 + 6 枚配套）
+
+基线：权威现尖 f27c3dfe11f9b80fac478fba353192abf7c31d7c 并进本枝之后的合并头（CMDR-RULING-0702 第 2 条形制，禁 rebase）
+单：CMDR-ORDER-0711（账本点名两处根因：styles.css:340 的 .v8-booking-card 白底配主题墨暗档 1.09、styles.css:268 的 aside.v9-inbox 白底）
+
+屏的边界（可核对）：frontend/src/app/V8Experience.tsx 里 4400-4740 这一段是票夹/收件箱面板，
+它带到的类名 = {v8-booking-grid, v8-booking-card(.selected), v8-booking-icon(.muted), v8-booking-state(.safe),
+v8-selected-label(.neutral), v8-no-payment, v9-inbox(+label/textarea), v8-kicker, v8-lede, v8-advanced,
+role-alert, v8-quiet-button, v8-primary}。规则级尺只收「整条逗号分支的类名全在这屏上」的规则，
+改前 14 枚字面量分布在 11 条规则，改后 0 枚。
+负对照逐枚：.v8-me-card（我的页，不在这屏）、.v8-booking-card 的媒体查询分支（无颜色声明）。
+
+逐枚（行号未动：全是同行等值替换，styles.css 行数保持 1962，两把尺可按行直接对表）
+
+styles.css:268 .v9-inbox
+  background: #fff（L=1.000 浅底字面量）→ var(--cn-elev-1)
+  亮色观感：#fff 与 --cn-elev-1 在亮色是同一个字节 #ffffff（frontend/src/cn-pulse.css:70），逐像素不变；
+  暗色原来是 #1c1c1e 纸面上的一块白纸，现读合成亮度 1.000 > 0.82 正是 _qoderContrastScan.ts:121 抓的 light-surface。
+  与 脉搏工 那一侧的选择同档：它把这张纸收在 frontend/src/cn-pulse.css:962 的 var(--cn-elev-1)，两边逐字相同。
+
+styles.css:269 .v9-inbox label
+  color: #6c7889（L=0.184 深字字面量）→ var(--cn-on-elev-1-muted)
+  现读：亮 4.48 → 6.47、暗 3.80 → 7.69（门槛 4.5，11px/750 不算 large text）。亮色由冷灰蓝转暖灰，
+  与它下面那张契约纸同一族（cn-pulse.css:82 是亮值、:153 是暗值）。
+
+styles.css:270 .v9-inbox textarea
+  border: 1px solid #cfd5df → 1px solid var(--cn-control-border)
+  这一枚那把逃逸口尺看不见（它只读 background/color/fill/border-color，不读 border 简写），
+  但简报 §2 第 3 条是硬判据：描边控件的可辨性只有那条边，必须 ≥3:1。#cfd5df 在这张纸上约 1.5，
+  换 --cn-control-border 后亮 3.63 / 暗 3.33+（design-tokens.css:96 与 :212）。
+  现读：#cfd5df 对这张纸亮色 1.48（暗色改前也是 1.48，因为纸本身就是字面量白），
+  换 --cn-control-border 后亮 3.63 / 暗 4.10（design-tokens.css:96 与 :212），过 3:1 那条地板。
+  这枚 textarea 无 data-testid 也无 data-contrast-role，所以四把门量不到它，它进不了对表——
+  我按判据改，并把量不到这件事写在这里，不假装是门验过的。
+
+styles.css:340 .v8-booking-card
+  background: #fff → var(--cn-elev-1)。亮色同一个字节；暗色收掉 CMDR-ORDER-0711 点名的根因，
+  现读：卡上 h2「未选择住宿」「服务器没有给这项承诺的名字」两格 1.09 → 消失，
+  票夹取景器对照臂 30 格 → 实臂 0 格（四档同数，节点 294 枚两臂一致）。
+
+styles.css:340 .v8-booking-card p
+  color: #8994a3 → var(--cn-on-elev-1-muted)
+  配套：这枚 L=0.29，那把尺不报它，但它在白纸上现读只有 3.08（低于 4.5），是取景器量到的真红格
+  （「10月10日 15:30 → …」与「这趟行程目前还没有可选的住宿。」两档各一次）。
+  只换纸不换它，暗色仍是 3.08 附近；换成契约次级墨后亮 6.47 / 暗 7.69。
+
+styles.css:340 .v8-booking-card.selected
+  background: #fbfbff（L=0.967）→ var(--cn-elev-2)；border-color: #b8c0f1 不动
+  亮色 #fbfbff→#fffdfa 差 0.005 亮度，选中态仍与未选中的 elev-1 拉开一档，层级不倒。
+  边为什么不动、以及它为什么仍然是一处缺陷：#b8c0f1 对换后的纸现读亮 1.75 / 暗 8.52 ——
+  暗色高亮（选中态本来就该跳出来），亮色几乎看不见。这个不对称是改前就有的（改前对 #fbfbff 也是 1.75 档），
+  不是我造出来的，但它过不了 WCAG 1.4.11 那条形（标识状态所需的视觉信息 ≥3:1）。
+  它不是浅底/深字那两类字面量，改它属于给选中态换色相，所以我把它报成待裁的一条而不顺手改：
+  最小改法是把这条边交给 var(--cn-accent)（我现算亮 4.75 / 暗 4.14，两档都过 3:1），代价是亮色出现一枚明显更蓝的框。
+
+styles.css:340 .v8-booking-icon
+  background: #eef0ff（L=0.877）→ var(--cn-elev-2)，与 脉搏工 在 cn-pulse.css:927 的档逐字相同。
+  墨留 var(--v8-indigo)：这枚里面只有 svg，是图形不是文字，地板取 3:1；现读亮 4.26→4.75、暗 3.22→4.14，两档都在 3:1 上。
+
+styles.css:340 .v8-booking-icon.muted
+  color: #718095（L=0.211）→ var(--cn-on-elev-1-muted)；background: #f1f3f6 → var(--cn-elev-2)
+  与 cn-pulse.css:928 的档相同。现读 3.62 → 亮 6.37 / 暗 6.83。
+
+styles.css:340 .v8-booking-state
+  color: #8e6b34（L=0.165）→ var(--cn-on-elev-1-muted)；background: #fff6e8 → var(--cn-elev-2)
+  墨为什么一起走：只换纸时它在暗色合成后是 2.97（<4.5），那等于我用一个红格换一个红格。
+  语义琥珀的代价与去处：真正的"待确认"色相应由 --cn-on-elev-2-warn 承担，那枚令牌只在 脉搏工 的
+  WP-C 枝里有（它的 cn-pulse.css:102/#8a4b06 与 :181/#ffb35c），现尖没有（我两边都现读过才敢这么说）。
+  所以本单在根上给中性次级墨，落地 WP-C 之后由它的覆盖把色相恢复；这不是我替它决定配色。
+
+styles.css:340 .v8-booking-state.safe
+  background: #effaf5（L=0.933）→ var(--cn-elev-2)；color: var(--v8-green) → var(--cn-success-text)
+  现读 亮 4.12→6.85、暗 1.89→7.47。判据是 ui-ux 的 contrast-feedback（状态色作文字同样要 4.5）：
+  --cn-success 是标记色、--cn-success-text 才是文字色（design-tokens.css:48 与 :49 本来就是两枚）。
+
+styles.css:340 .v8-selected-label.neutral
+  color: #68758a → var(--cn-on-elev-1-muted)；background: #f1f3f6 → var(--cn-elev-2)
+  这枚只在票夹出现（frontend/src/app/V8Experience.tsx:4631），上一屏我按负对照没收它，这一屏它在我的面上。
+
+styles.css:340 .v8-no-payment（底/墨/边三枚一组）
+  background: #f6fcf9 → var(--cn-elev-2)；color: #46655a → var(--cn-on-elev-2)；
+  border: 1px solid #dcefe7 → var(--cn-rule)
+  三条一起改的理由和上一屏 .v8-evidence-label 那条相同：纸进契约而边留在亮色值，暗色会出现一圈发光边。
+  档与 cn-pulse.css:949 的 --cn-elev-2 / --cn-rule 逐字相同。
+  b 支 var(--v8-green) → var(--cn-success-text)（4.23→6.85 / 1.95→7.47），span 支 #728d83 →
+  var(--cn-on-elev-1-muted)（现读 3.45 是取景器量到的真红格，换后亮 6.37 / 暗 6.83）。
+
+摘哪一边、留哪一边（CMDR-ORDER-0711 要的那句）
+  摘我这边：纸与边（elev-1 / elev-2 / --cn-rule / --cn-control-border）全部落在根上，
+  而且与 脉搏工 在 cn-pulse.css 里选的档逐字相同 —— 两边同档之后，它那五段覆盖里的
+  background:/border: 半句就成了纯冗余，可以在 WP-C 落地时撤掉；撤与不撤渲染结果不变，
+  这一点我这侧已经用取景器两臂证过（30 → 0，新开 0）。
+  留它那边：成对语义墨 --cn-on-elev-2-warn / -safe、字号地板 max(--cn-fs-kicker-min, 0.6875rem) 与
+  tabular-nums、卡片 --cn-lift-1 阴影 —— 这些是 WP-C 的射程也不是现尖上有的令牌，我在根上复制一枚
+  同义令牌只会让两处将来必须再对一次。
+  一处必须报的矛盾（不在我权限内）：我在上一屏把 styles.css:179 的 .v8-selected-label 基础墨定成
+  --cn-success-text（绿），而 cn-pulse.css:940-943 把它覆盖成 --cn-on-elev-1-muted（灰）。
+  WP-C 落地那天这枚标签会变灰。它自己在 918 行的注释写「色相保留，因为待确认/已确认是这个产品的真话」，
+  但那三行给的恰恰是无色相的次级墨 —— 谁留谁撤请裁，我不改别人的层，也不替它解释。
+
+证据（全部现读，落盘在 D:/moodle/_cmdr_saojieggong_1016/）
+  票夹取景器 tools/capture_bookings_r1.cjs：判据函数逐字抄号令者的 capture_r1.cjs（简报 §4 点名的共享量具），
+  只把取景改成 /v8/bookings，并加 content（这屏真渲染了什么）与 bg/fg 两枚不参与判据的记录字段。
+  负对照写在尺里：卡片数或收件栏数为零就退 7 拒绝报数 —— 两臂实测 booking_cards 8 / inbox_aside 4 同数。
+  私有栈 tools/run_bookings_stack_r1.py：:4720 与 :4721（后端各加 4000），跑前 netstat 只认 LISTENING 判空闲，
+  起来后从盘上抽 6 条 .v8-booking/.v9-inbox 规则逐条在服务响应里找，6/6 命中才承认"服务的是我这棵树"；
+  数据＝D:/moodle/_cmdr_demo_1013/demo.db 的只读副本，简报 §6 写明这条链是取景条件不是产品事实。
+  两臂逐格对表 tools/probe_two_arm_diff_r1.py：格子身份故意不含比值（号令者那把尺把 sel|ratio|text 当身份，
+  同一格从 1.09 变 6.47 会记成"修好一格 + 新开一格"），改成分层判：消除 / 位移变好 / 位移变坏 / 新开。
+  读数：对照臂 30 枚红 → 实臂 0 枚；消除 30、位移 0、新开 0；节点两臂同 294 枚。
+  一处身份弱点如实报：尺的选择器字段是"标签名 + 第一个类名"，票夹里有几枚节点没有类名，
+  在表里塌成 h2./p./span./b.，靠文本字段区分；我没有为了让它唯一去改 DOM。
+  四把对比度门两臂逐把、tsc --noEmit 与 vite build（本单：tsc 退出码 0 输出 0 行，
+  vite build 退出码 0、11.00 秒、css 262.96 kB）另附。
+
+硬约束回读：DOM 与 data-testid 零改动；没改任何人的断言；没有 skip；没有为绿造夹具（取景器是判据函数
+逐字抄来的共享量具，数据是你那条演示链的只读副本）；没有 --collect-only；demo/reset 0 次；
+受保护端口 :8000/:4781/:4782/:8693 与共享库 _preview.db 一字未碰；权威线移动 0 次；
+force-push 0 次；rebase 已发布枝 0 次；review/evidence 与 review/ord0509 的产物取完对表后
+git checkout -- review/ 复原，已发布证据未改一字节。

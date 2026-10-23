@@ -1,0 +1,19 @@
+run_id=run125465 port=4550/8550 target=e2e/qoder-theme-contract.spec.ts
+
+Running 6 tests using 1 worker
+
+[qoder-real-seed] journey=31df05db-f239-40d6-b996-ec05c848f97e options=4 chosen=ff12abac-d873-41bc-bd30-ed4671ab6dbf (Haihe Riverside Hotel)
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (6.1s)
+  ok 2 [chromium] › e2e\qoder-theme-contract.spec.ts:108:3 › Ruling ④ the theme root contract › theme-system-default-follows-the-os (5.8s)
+  ok 3 [chromium] › e2e\qoder-theme-contract.spec.ts:128:3 › Ruling ④ the theme root contract › theme-choice-persists-and-overrides-the-os (7.4s)
+  ok 4 [chromium] › e2e\qoder-theme-contract.spec.ts:163:3 › Ruling ④ the theme root contract › theme-control-cycles-all-three-choices (5.9s)
+  ok 5 [chromium] › e2e\qoder-theme-contract.spec.ts:259:3 › Ruling ④ the theme root contract › theme-pinned-dark-legible-on-light-os (4.3s)
+  ok 6 [chromium] › e2e\qoder-theme-contract.spec.ts:290:3 › Ruling ④ the theme root contract › theme-root-attribute-is-the-only-dark-switch (16ms)
+
+  6 passed (38.0s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4550 backend=:8550 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run125465.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run125465 frontend=:4550 -> backend=:8550 ai=disabled db=_run125465.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4550 backend=:8550 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run125465.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4550 backend=:8550 db=sqlite:///D:/moodle/_cmdr_saojieggong_1016/tree/review/evidence/_run125465.db ai=disabled reuseExistingServer=false
+exit=0 log=D:/moodle/_cmdr_saojieggong_1016/tree/review/run-run125465.log
