@@ -408,6 +408,26 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         reason = "ROUTE_PARTIALLY_VERIFIED"
     else:
         reason = "ROUTE_UNAVAILABLE"
+    # What this door just answered is also what the card has to say after the traveller reloads the page.
+    # The frozen case already rewrites the stored answer above; a partial one used to write nothing, so
+    # someone who pressed 核实并冻结今天的转场, watched three hops get measured, and refreshed came back to
+    # 「当天的转场还没有向高德核实过」 with the refusal list empty -- measured on walk-83, where the band
+    # read 转场已核实 3/4 at trial/results/20261022_v3_human_chrome/walk-83-log.txt:34 and the same card
+    # after the reload read nothing at :54 (:55 for the emptied list).  This records the attempt: the
+    # counts and the hops nobody answered.  `mobility_frozen` is untouched, so a half-measured plan still
+    # cannot be described as frozen, and no new number is invented -- every field here came from `edges`.
+    if edges:
+        stored = (task.get("prepared_plan") or {}).get("result")
+        if isinstance(stored, dict):
+            stored["route_attempt"] = {
+                "verified": verified, "total": len(edges), "overnight": overnight,
+                "transit": len([row for row in edges if row.get("mode") == "TRANSIT"]),
+                "frozen": frozen, "reason_code": reason,
+                "unanswered": [{"from_name": row["from_name"], "to_name": row["to_name"],
+                                "reason_code": row.get("reason_code")}
+                               for row in edges if row["status"] == UNAVAILABLE][:32],
+                "answered_at": datetime.now(timezone.utc).isoformat(),
+            }
     return {"journey_id": journey.id, "task_id": task_id, "plan_version_id": plan.id,
             "edges": edges, "verified": verified, "total": len(edges), "overnight": overnight,
             "transit": len([row for row in edges if row.get("mode") == "TRANSIT"]),
