@@ -166,7 +166,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     </details>
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
-      {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0)
+      {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0, routes.transit ?? 0)
         : result.mobility_frozen ? FROZEN_ROUTE_SENTENCE : "当天的转场还没有向高德核实过。"}
       <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">
         {routesBusy ? "正在核实转场…" : (routes ? routes.frozen : result.mobility_frozen) ? "重新核实转场" : "核实并冻结今天的转场"}

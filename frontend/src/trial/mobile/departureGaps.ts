@@ -190,10 +190,15 @@ export function priceAcceptedSentence(unknownCount: number, knownMinor: number):
 }
 
 // The walked hops, as the card reports them. An overnight link is measured for real but the traveller
-// does not make it that afternoon, so it is named apart instead of inflating "today's" count.
-export function routeSentence(verified: number, total: number, frozen: boolean, overnight: number): string {
+// does not make it that afternoon, so it is named apart instead of inflating "today's" count.  A hop the
+// walking door could not answer is now measured as public transport, and that too is named apart: a bus
+// minute shown as footsteps would send a traveller walking somewhere they were never told to walk.
+export function routeSentence(verified: number, total: number, frozen: boolean, overnight: number,
+  transit = 0): string {
   if (!total) return "这版方案里没有相邻两站之间的转场要核实。";
-  const tail = overnight > 0 ? `（其中 ${overnight} 段是跨夜衔接）` : "";
+  const parts = [overnight > 0 ? `${overnight} 段是跨夜衔接` : "",
+    transit > 0 ? `${transit} 段按公共交通核实` : ""].filter(Boolean);
+  const tail = parts.length ? `（其中 ${parts.join("，")}）` : "";
   if (verified < total) return `转场已核实 ${verified}/${total}${tail}，还有 ${total - verified} 段没有来源回答。`;
   return frozen ? `转场已核实 ${verified}/${total}${tail} · 已冻结进这版方案`
     : `转场已核实 ${verified}/${total}${tail}，还没有冻结进这版方案。`;

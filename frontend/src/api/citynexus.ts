@@ -2221,12 +2221,17 @@ export interface GoalRouteEdge {
   source_url: string | null; captured_at: string | null; reason_code: string | null;
   // The link runs to the next calendar day, so the card names it instead of counting it as today's walk.
   spans_night?: boolean;
+  // Which door answered this hop. A far link or a cross-night one is not a walk, and the card says so
+  // with the lines the provider named rather than dressing a bus ride up as footsteps.
+  mode?: "WALK" | "TRANSIT" | null;
+  lines?: string[];
 }
 
 export interface GoalRouteFreezeResult {
   journey_id: string; task_id: string; plan_version_id: string; edges: GoalRouteEdge[];
   verified: number; total: number; frozen: boolean; mobility_snapshot_id: string | null;
   overnight?: number;
+  transit?: number;
   reason_code: string | null; idempotency_replay?: boolean;
 }
 

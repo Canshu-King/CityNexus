@@ -68,6 +68,10 @@ class RouteEdge(BaseModel):
     minutes: int | None
     distance_m: int | None
     spans_night: bool = False
+    # Which door answered this hop.  WALK is what this door ever asked for until the public-transport
+    # leg landed; a TRANSIT hop is named as such so the card never presents a bus ride as a walk.
+    mode: str | None = None
+    lines: list[str] = []
     provider: str | None
     source_url: str | None
     captured_at: str | None
@@ -84,6 +88,8 @@ class FreezeRoutesResult(BaseModel):
     # Hops that carry the traveller across a night, counted so the card can name them separately
     # instead of presenting an overnight link as a walk the traveller takes that afternoon.
     overnight: int = 0
+    # Hops answered by the public-transport door rather than the walking one.
+    transit: int = 0
     frozen: bool
     mobility_snapshot_id: str | None
     reason_code: str | None
@@ -133,13 +139,55 @@ def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | N
     return None
 
 
-def _measure_now(session: Session, task: dict, origin: Place, destination: Place) -> dict | None:
+def _transit_leg(session: Session, task: dict, origin: Place, destination: Place,
+                 start: tuple[float, float], end: tuple[float, float],
+                 arrival: datetime | None) -> dict | None:
+    """The hop nobody walks: asked of the public-transport door, at the hour the traveller arrives.
+
+    Why this exists: `client.walking` is the only measurement this door ever made, so a hop that is too
+    far to walk -- or the link that closes one day and opens the next -- came back with no answer at all,
+    and a candidate holding such a hop could never freeze, never be selected and never be departed.  The
+    live readings behind this are in trial/results/20261022_v3_human_chrome/amap-transit-capability-1.txt
+    (the same 前门大街 to 天坛公园 pair: 32 walking minutes, and a public-transport answer of about 41
+    minutes naming 地铁8号线 with a 3.00 fare).
+
+    What is deliberately not claimed here: the provider's own `nightflag` came back 0 even on a night
+    line (amap-transit-night-3.txt:8), and asking for a night hour produced the night lines once and the
+    daytime answer on a re-run (amap-transit-method-live-1.txt:6), so the hour is sent as the traveller's
+    plan states it and the answer is stored as what the provider said to that request -- not as a promise
+    that the line runs at that hour.
+    """
+    city_code = str((task.get("amap_region") or {}).get("citycode") or "").strip()
+    if not city_code:
+        return None
+    date_text = arrival.strftime("%Y-%m-%d") if arrival is not None else None
+    time_text = arrival.strftime("%H:%M") if arrival is not None else None
+    with _client() as transit_client:
+        receipt = _receipt(session, "goal_amap_transit",
+                           {"from_place_id": origin.id, "to_place_id": destination.id,
+                            "coordinate_system": "GCJ02", "city_code": city_code,
+                            "departure_date": date_text, "departure_time": time_text},
+                           transit_client.transit(start, end, city_code,
+                                                  departure_date=date_text, departure_time=time_text))
+    if receipt.get("status") != "ROUTE_READY" or not isinstance(receipt.get("route"), dict):
+        return None
+    route = dict(receipt["route"])
+    route["provider_call_id"] = receipt.get("provider_call_id")
+    return route
+
+
+def _measure_now(session: Session, task: dict, origin: Place, destination: Place,
+                 arrival: datetime | None = None) -> dict | None:
     """Ask the same AMap client the Agent uses, through the same receipt writer.
 
     GCJ-02 is what the provider speaks and WGS-84 is what the row stores
     (`app/db/models.py`, Arbitration R4): the stored point is converted on the way out and the returned
     row keeps both the provider coordinate claim and the public source url, so the frozen fact is
     traceable to a call rather than to a string.
+
+    A walking answer wins when there is one.  When the walking door has no answer, the same hop is asked
+    of the public-transport door once (`_transit_leg`), because "no answer" and "not a walking trip" used
+    to be the same screen state and only one of them is the traveller's problem.
     """
     if not settings.amap_web_key:
         return None
@@ -150,16 +198,25 @@ def _measure_now(session: Session, task: dict, origin: Place, destination: Place
                            {"from_place_id": origin.id, "to_place_id": destination.id,
                             "coordinate_system": "GCJ02"}, client.walking(start, end))
     route = receipt.get("route")
+    mode = "WALK"
+    call_id = receipt.get("provider_call_id")
     if receipt.get("status") != "ROUTE_READY" or not isinstance(route, dict):
-        return None
-    row = {"id": receipt.get("provider_call_id") or str(uuid4()),
+        route = _transit_leg(session, task, origin, destination, start, end, arrival)
+        mode = "TRANSIT"
+        if route is None:
+            return None
+        # The row's identity is the call that produced it.  Carrying the walking call's id onto a
+        # transit answer would point the traceable receipt at a request that never answered.
+        call_id = route.get("provider_call_id")
+    row = {"id": call_id or str(uuid4()),
            "from_place_id": _candidate_id_for(task, origin), "to_place_id": _candidate_id_for(task, destination),
            "from_name": origin.name, "to_name": destination.name, "provider": "amap",
            "coordinate_system": "GCJ02", "distance_m": route.get("distance_m"),
            "duration_seconds": route.get("duration_seconds"), "captured_at": datetime.now(timezone.utc).isoformat(),
+           "mode": mode, "lines": list(route.get("lines") or []),
            "source_url": "https://uri.amap.com/navigation?" + urlencode(
                {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
-                "mode": "walk", "coordinate": "gaode", "callnative": "0"})}
+                "mode": "walk" if mode == "WALK" else "bus", "coordinate": "gaode", "callnative": "0"})}
     task.setdefault("research_routes", []).append(row)
     task["research_routes"] = task["research_routes"][-16:]
     return row
@@ -187,7 +244,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         route = _stored_route(task, origin_key, destination_key)
         status = REUSED
         if route is None:
-            route = _measure_now(session, task, origin, destination)
+            route = _measure_now(session, task, origin, destination, arrival=destination_row.start_at)
             status = MEASURED if route is not None else UNAVAILABLE
         minutes = None if route is None else max(1, int(round(float(route["duration_seconds"]) / 60.0)))
         if route is not None:
@@ -195,6 +252,11 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         edges.append({"from_place_id": origin.id, "to_place_id": destination.id,
                       "from_name": origin.name, "to_name": destination.name, "status": status,
                       "minutes": minutes, "spans_night": not _same_day(origin_row, destination_row),
+                      # A row written by the Agent's own research leg carries no mode, and the only thing
+                      # that ever wrote one there is the walking door -- so an absent mode means WALK,
+                      # which is a fact about this code, not a guess about the provider.
+                      "mode": (route.get("mode") or "WALK") if route is not None else None,
+                      "lines": list(route.get("lines") or []) if route is not None else [],
                       "distance_m": route.get("distance_m") if route else None,
                       "provider": route.get("provider") if route else None,
                       "source_url": route.get("source_url") if route else None,
@@ -248,6 +310,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         reason = "ROUTE_UNAVAILABLE"
     return {"journey_id": journey.id, "task_id": task_id, "plan_version_id": plan.id,
             "edges": edges, "verified": verified, "total": len(edges), "overnight": overnight,
+            "transit": len([row for row in edges if row.get("mode") == "TRANSIT"]),
             "frozen": frozen, "mobility_snapshot_id": snapshot_id, "reason_code": reason}
 
 
