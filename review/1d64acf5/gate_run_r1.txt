@@ -1,0 +1,24 @@
+arm codes-on-screen r4 | ref=bab04cb03b6444ff4e2a08deeeec519df8408c6e base=8d990d4698 files_judged=2 refuse=0 info=23 require_name=True only_added=True corpus=1558
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:2 slug=react-dom
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:3 slug=react-query
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:117 slug=sim-stage-plan
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:127 slug=sim-replans
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:180 slug=authoritative-twin
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:183 slug=sim-stage-plan
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:186 slug=sim-replans
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:208 slug=re-seed
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:281 slug=sim-stage-journey
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:287 slug=sim-stage-city-services
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:292 slug=sim-stage-bookable
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:434 slug=re-seeded
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:439 slug=re-seeded
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:571 slug=server-side
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:602 slug=sim-replans
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:849 slug=sim-reason
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:863 slug=sim-action
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:897 slug=sim-blocked
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:910 slug=cn-sim-refusal
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:953 slug=mobile-nav
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:953 slug=cn-copilot-dock
+INFO   frontend/src/features/simulation/SimulationPanel.tsx:953 slug=trial-sticky-cta
+INFO   frontend/src/i18n/simulationStageCopy.ts:46 slug=re-seeding
