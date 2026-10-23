@@ -11,7 +11,7 @@ type PlanSnapshot = { bearer: string; journey: JourneyRecord; plans: PlanVersion
 type WriteAction = "generate" | "select" | "start" | "brief" | "facts";
 type GapRow = { kind?: string; title?: string; resolution?: string };
 
-function failureText(error: unknown): string {
+function failureText(error: unknown, titleOf?: (placeId: string) => string | null): string {
   if (error instanceof CityNexusApiError) {
     const body = error.body as { reason_code?: string; error?: { reason_code?: string; details?: { unresolved_facts?: unknown; failures?: unknown } }; detail?: { reason_code?: string }; details?: { unresolved_facts?: unknown; failures?: unknown } } | null;
     const reason = body?.reason_code ?? body?.error?.reason_code ?? body?.detail?.reason_code;
@@ -20,7 +20,7 @@ function failureText(error: unknown): string {
     // exploration list.  Now the gate's own rows decide the wording, and an answer without rows still
     // falls through to that generic sentence rather than inventing a cause (backend/app/departure_commit.py:114).
     if (reason === "PLAN_INFEASIBLE") {
-      const named = infeasibleAtDepartureSentence(body?.error?.details?.failures ?? body?.details?.failures);
+      const named = infeasibleAtDepartureSentence(body?.error?.details?.failures ?? body?.details?.failures, titleOf);
       if (named) return named;
     }
     if (reason === "UNRESOLVED_ACTIVITY_FACTS") {
@@ -34,6 +34,16 @@ function failureText(error: unknown): string {
     if (error.status === 422) return "这些地点暂时排不成可用方案。回到探索补充或更换地点。";
   }
   return "暂时没能读取最新结果，点击刷新方案再继续。";
+}
+
+// The feasibility gate names a place by id; the plans this screen already holds carry that same id next to
+// the title the traveller sees, so the refusal can say which place without asking the server again.
+function placeTitleFrom(snapshot: PlanSnapshot | null, placeId: string): string | null {
+  for (const plan of snapshot?.plans ?? []) {
+    const hit = (plan.activities ?? []).find((row) => row.place_id === placeId);
+    if (hit?.title) return String(hit.title);
+  }
+  return null;
 }
 
 // The server already names why a saved schedule cannot be chosen; the screen says that, and never a
@@ -243,7 +253,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     } catch (error) {
       if (!stillCurrent()) return;
       setNeedsRefresh(true);
-      setMessage(failureText(error));
+      setMessage(failureText(error, (placeId) => placeTitleFrom(snapshot, placeId)));
     } finally {
       writeLock.current = false;
       setBusy(null);

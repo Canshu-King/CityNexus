@@ -281,27 +281,58 @@ const INFEASIBLE_SENTENCES: Record<string, string> = {
   MOBILITY_DATA_INVALID: "有一段路的实测资料对不上",
 };
 
-export function infeasibleAtDepartureSentence(failures: unknown): string {
+// The gate writes a place id after the colon (`PLACE_CLOSED:<place_id>`,
+// backend/app/replanning/feasibility.py:872), and PLACE_CLOSED means this row's own time falls outside the
+// hours that place answers with -- not that the place is gone.  Showing the traveller the code named nothing
+// they could act on (measured on walk-94, where the screen read 「这版方案排不下（PLACE_CLOSED）。」 while the
+// refusal was about 八达岭长城), so the id is joined to the title already on this same screen.
+const PLACE_ROW_REASONS: Record<string, { said: string; unnamed: string; fix: string }> = {
+  PLACE_CLOSED: {
+    said: "在你排的这段时间不开放",
+    unnamed: "有一处安排在你排的这段时间不开放",
+    fix: "把这一项挪到它的开放时间，或在探索里换一个地点，再按一次「选用这份方案」。",
+  },
+};
+
+export function infeasibleAtDepartureSentence(failures: unknown, titleOf?: (placeId: string) => string | null): string {
   const rows = Array.isArray(failures) ? failures.map((row) => String(row)) : [];
   // No rows means the envelope did not carry the gate's list, and this screen will not guess at a cause
   // it was not given: an empty answer tells the caller to keep its own generic sentence.
   if (!rows.length) return "";
   const counts = new Map<string, number>();
+  const placeLabels = new Map<string, string[]>();
   const others: string[] = [];
   for (const row of rows) {
-    const code = row.split(":")[0];
+    const [code, id] = row.split(":");
     if (INFEASIBLE_SENTENCES[code]) counts.set(code, (counts.get(code) ?? 0) + 1);
+    else if (PLACE_ROW_REASONS[code]) {
+      const title = (id && titleOf?.(id)) || "";
+      const label = title ? `${title}${PLACE_ROW_REASONS[code].said}` : PLACE_ROW_REASONS[code].unnamed;
+      const list = placeLabels.get(code) ?? [];
+      if (!list.includes(label)) list.push(label);
+      placeLabels.set(code, list);
+    }
     else if (!others.includes(code)) others.push(code);
   }
   const named = [...counts].map(([code, count]) => `${INFEASIBLE_SENTENCES[code]}（${count} 段）`);
+  for (const [code, labels] of placeLabels) {
+    named.push(labels.slice(0, 3).join("；") + (labels.length > 3 ? `；另有 ${labels.length - 3} 处同样` : ""));
+    void code;
+  }
   const head = named.length
     ? `这版方案排不下：${named.join("；")}。`
     : `这版方案排不下（${others.join("、")}）。`;
-  const fix = counts.has("INSUFFICIENT_TRAVEL_GAP")
-    ? "在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。"
-    : "";
+  // Both doors can be refused in one answer, and each is fixed at a different place; naming two causes and
+  // then pointing at one of them leaves the traveller to guess which half the sentence was about.
+  const fixes: string[] = [];
+  if (counts.has("INSUFFICIENT_TRAVEL_GAP")) {
+    fixes.push("在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。");
+  }
+  if (placeLabels.get("PLACE_CLOSED")) {
+    fixes.push(PLACE_ROW_REASONS.PLACE_CLOSED.fix);
+  }
   const tail = named.length && others.length ? `另有 ${others.length} 类原因：${others.join("、")}。` : "";
-  return head + fix + tail;
+  return head + fixes.join("") + tail;
 }
 
 // Facts the traveller has already decided themselves are not things a plan still 还缺.
