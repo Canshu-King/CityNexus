@@ -1610,3 +1610,8 @@ USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、A
 ### 这一段对 P0-4 的意义
 
 公交那扇门是**活的**：`_transit_leg` 会问 `/v5/direction/transit/integrated`，回来的行制带着 `lines`、`walking_distance_m`、`fare_minor`、`nightflag`（`backend/app/integrations/china/amap_provider.py:477-492`），而冻结账上的那一格会把 `mode` 记成 `TRANSIT`。所以 P0-4 缺的不是能力，是**旅客那一侧没有任何东西用它**：`grep -rn -E "重新安排|按路线|路线重排|rearrange" frontend/src` 只命中 `frontend/src/main.tsx:57` 一句演示用的目标文本，没有 onClick——连"死牌子"都算不上，是根本没这块牌子。下一刀就做这一件：把长步行那一格与它的公交对照摆到屏幕上，给一个真的「根据路线重新安排」，写进**同一 revision 的显式 diff**，不自动改生效 PlanVersion，也不跳 422 那道可行性门。
+
+### 外发记录（同一节，逐枚 id 回读过尾行）
+
+第卅节的第三条回执：comment id `6375945629`（`https://github.com/Canshu-King/CityNexus/pull/43#issuecomment-6375945629`）。
+本节（第卅一）的勘误帖：comment id `6376180461`（同 PR 下 `#issuecomment-6376180461`）。两枚都是发后按 id 回读、尾行逐字相符；勘误走新帖，旧帖一字未改。
