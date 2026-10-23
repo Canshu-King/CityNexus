@@ -196,7 +196,13 @@ for md in sorted(glob.glob(os.path.join(DEL, "**", "*.md"), recursive=True)):
             # material and must not be edited into agreement
             "CLASSROOM_20261023_NOON_PRIORITY.md",
             "CLASSROOM_QODER_CONTINUOUS_UNTIL_NOON_20261023.md",
-            "CLASSROOM_R3_LAST_MILE_20261023.md"):
+            "CLASSROOM_R3_LAST_MILE_20261023.md",
+            # received 2026-10-23: it names the classroom preview it asks for as
+            # `Classroom/Teacher_01_System_Overview.png`; the artefact was built at
+            # `Classroom/previews/Teacher_01_System_Overview.png`. Quoted material
+            # is not edited into agreement, and moving the file to satisfy the
+            # citation would just relocate the same mismatch.
+            "TEACHER_READABILITY_CORRECTION_20261023.md"):
         EXCLUDED_DOCS.append(base)
         continue
     text = open(md, encoding="utf-8", errors="replace").read()
