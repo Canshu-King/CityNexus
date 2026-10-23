@@ -794,6 +794,43 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 而且 r16 跑的是改动前的后端（uvicorn 不带 --reload，`goal_route_freeze.py` 与客户端都得重起才生效），
 这一格判 PARTIAL，留给下一棒起重栈再量。
 
+**walk-84 第一次把这条路走到「选用」那一下（r17：后端 `:60276` / 前端 `:14476` / 库 human19）。**
+这一趟的读数按顺序都是绿的：横幅「转场已核实 5/5（其中 1 段是跨夜衔接，1 段按公共交通核实） · 已冻结进这版方案」
+（`walk-84-log.txt:34`）；抽屉五行里有一行是坐车的，`TRANSIT_LABELED=1 WALK_LABELED=4`（`:50`），深链方式
+`["walk","walk","bus","walk","walk"]`（`:51`），换乘线名照实列出来（`:52`），并且这一版**冻上了**——刷新之后卡片仍说
+「转场已经核实并冻结进这版方案。」（`:45`，这是 walk-74 之后一直欠着的那一格的正向读数）。
+票那一格按完是「按你的确认保存：这 6 处门票仍未核实…」（`:62`），待办清到零：
+「屏上的出发待办都齐了，可以直接选用这份方案。」（`:64`）。然后 `STEP_13_SELECT_BUTTONS=1 VISIBLE=true`（`:71`）——
+**「选用这份方案」这颗按钮第一次在屏上按得到**（walk-79、80、82、83 量的都是 `=0`）。
+
+**按下去撞到的是最后一道门，而这一道门说的是错的那间屋子。** 旅客按了「选用这份方案」，
+服务端回 HTTP 422：`PlanVersion … is infeasible: INSUFFICIENT_TRAVEL_GAP:real-place-e76f…|real-place-519a…`
+（`walk-84-log.txt:73`）——两段安排之间留的赶路时间不够。屏上却是那句通用话：
+「这些地点暂时排不成可用方案。回到探索补充或更换地点。」（`:74`），
+于是出发那颗按钮也不会出现（`:76` `STEP_15_START_VISIBLE=false`，`:77` 把同一句话再说一遍）。
+这句话把人支去探索页换地点，可真正要挪的是出发待办里某一行的开始时间。
+读代码读到的事实是：**理由码一直就在这条回信里**（`backend/app/departure_commit.py:114` 把这句拒绝整型化成
+`PLAN_INFEASIBLE`），只是没有读者；而闸自己那几行 `CODE:origin|destination` 只活在那句 message 里。
+落点：闸的逐行原因跟着回信一起交出去（同文件的 `failures`，取自 `app/replanning/feasibility.py:1013` 那种行形制，
+拆不出来就是空表）；屏上那句改成说得出下一步的
+「这版方案排不下：两段安排之间留的赶路时间不够（N 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。」
+（`frontend/src/trial/mobile/departureGaps.ts` 的 `infeasibleAtDepartureSentence`，读者在
+`frontend/src/trial/mobile/MobilePlanWorkbench.tsx:22`）。**没有行就交空句、保留原来那句通用的**——闸没点名的原因，屏幕不许自己编。
+读数：闸内七格正反对照（含 walk-84 那一条真读数）在 `trial/results/20261022_v3_human_chrome/infeasible-sentence-read-1.txt:3`；
+后端那一格的回信钉在 `backend/tests/test_qoder_departure_commit_r1.py:509` 三行断言上，整套 `23 passed`；
+类型闸绿 `trial/results/20261022_v3_human_chrome/tsc-infeasible-sentence-1.txt:2`。
+屏上这一句要等 walk-85（r18：后端 `:60286` / 前端 `:14486` / 库 human20）去量——量得到就是那句新话，
+量不到（这一版的时刻排得开）就直接走到「确认方案，开始行程」，两种都是真读数。
+
+**顺手把"冻上一半"这件事也记了下来，但屏幕那半还没接。** walk-83 那次 3/4 刷新后卡片说「还没有核实过」，
+是因为只有冻结成功的版本会回写那条存着的答复（`backend/app/agent/goal_route_freeze.py` 里 `mobility_frozen` 那一写），
+按了一半的这一次什么都不写。现在每次按都把结果记进任务里：核实了几段、几段是跨夜、几段走的公共交通、
+没人答的是哪几段各自为什么（`backend/app/agent/goal_route_freeze.py:419` 起），`mobility_frozen` 不动，
+所以半张脸仍然不能读成"已冻结"。卡片那半（读回来并复用同一句横幅）还没接，这一格不算完成；
+钉它的两条臂在 `backend/tests/test_qoder_route_attempt_remembered_r1.py:59` 与 `:87`，
+整套 `22 passed`（`trial/results/20261022_v3_human_chrome/route-attempt-suite-1.txt:30`），
+突变把那段写入改成不写，两格一起红（`trial/results/20261022_v3_human_chrome/route-attempt-mutant-1.txt:80` 与 `:81`）。
+
 **顺手量到一枚不是我带来的雷（记在这里，等归属）。**
 `backend/tests/test_goal_route_freeze.py:141` 那枚断言要求没测到的那一格写
 `PROVIDER_ROUTE_UNAVAILABLE`，但它**只在环境里有高德键时才成立**：把
