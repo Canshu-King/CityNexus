@@ -1,0 +1,5 @@
+工作树里那枚非本棒改动的存证（不是我的写集，未提交，不认领作者）
+现读时间 2026-10-24 01:37 +08；git status --porcelain 两行 M：frontend/src/trial/RevolutionFirstLook.tsx / .css
+屏上唯一一条相关读数：walk-95 第 4 行 STEP_02A_PREFILLED party=1 budget=800（仪表改这两栏之前读的；旅客句中有「人均预算 800」，未写人数）
+未测：CSS 那一半的视觉；「旅客手动改过就不再覆盖」那一支；两栏在窄屏是否仍按得到
+同目录 worktree_slice_RevolutionFirstLook_1024.patch 是这两枚文件的 git diff 全文，供写它的人自行取回

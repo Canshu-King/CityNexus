@@ -1055,3 +1055,40 @@ kicker 那一格 `:475`、第二标签页那一拍 `:491`、向导预读那一�
 上一代（产出 walk-90／93 读数的那版）留在 `trial/human_walk/departure_full_walk_r19.mjs:442`，
 两版对同一格的读法差别就是这一节上面写的那件事。拷贝里逐枚查过不含高德键（键长 32，15 枚命中 0 枚）。
 USER_VERIFIED 仍是 PENDING。
+
+## 廿二、一点二十分到三十六分：r20 那把尺自己走了一趟（walk-94 停在营业时间，walk-95 走到「旅程已开始」）
+
+**kicker 那一格现在由仪表读出来了。** walk-95 同一趟里连着三行：`STEP_19_LIVE_KICKER 还没出发`
+（`trial/results/20261022_v3_human_chrome/walk-95-log.txt:95`）、`STEP_19_LIVE_TITLE 这一趟的安排`（`:96`）、
+`STEP_19_LIVE_NEXT 第一站：天安门广场（看广场/拍照） · 12月30日 09:00`（`:97`）。
+上一节里"证词只来自像素"那句话就此了结：像素与渲染文字两处都有，且互相一致。
+
+**那枚 409 的发起人与动词，由浏览器自己署名。** walk-95 的 `:49` 是 ASK 行（GET，栈里最深的应用帧是
+`getBootstrapShortlist`，再外面那一帧是 `RevolutionQuickExplore.tsx` 的挂载 effect），`:50` 是同一请求的
+`HTTP_409 GET`。三趟旧流水里那条没有动词的行就此更正：**它是读，不是写**；
+它的 catch 只在 401／403 那两支说话（`frontend/src/trial/RevolutionQuickExplore.tsx:375`），
+所以屏上一个字都不多——是一发注定不答的白问，不是一句假话。
+我先前在交块里怀疑过另一处：`frontend/src/trial/RevolutionFirstLook.tsx:502` 拿这条读当成员证明，
+若它可达，已出发的行程就会被判「旧行程无法恢复」（`:515`）。**这一条我自己读闸否掉了**：
+登录时 `:727` 就成对写入凭证与旅行者 id（`frontend/src/lib/travelerSession.ts:45`），
+`:491` 那句"主人与身份一致就早退"每次都命中；真到主人不一致那一支，`:496` 的所有者核对先抛，走不到那条读。
+⇒ 那枚 409 与"新标签页找不到旧行程"无关。
+
+**新标签页那一拍读到的，是这张屏自己。** walk-95 的 STEP_20 在同一浏览器再开一个标签页、直接进
+`http://127.0.0.1:14496/revolution`：屏上是首屏向导「你的下一趟旅行，从一句话开始」，
+`SECOND_TAB_HAS_PLAN=false`、`NO_RESTORE=false`（`:99`、`:100`，图证 `walk95-20-second-tab.png`）。
+成因与第廿一节之前那棒交的一致：凭证在 sessionStorage（`frontend/src/lib/travelerSession.ts:17`），
+换标签页就没有登录态。这一屏没有说谎（它确实是一趟新的），但旅客刚出发完的那趟在这里回不去——
+那两条待裁路径仍等号令者点头，我不擅自把凭证搬到 localStorage。
+
+**walk-94 停在营业时间那道闸，且屏上说清了是哪一处。** 按「选用这份方案」之后门回 422
+`PLACE_CLOSED:real-place-20210b1b2ba3a1b8e6f762d8`（`walk-94-log.txt:94`），
+方案屏那一行写「这版方案排不下（PLACE_CLOSED）。」（`:95`），出发那一按这一版不存在（`:97` `STEP_15_START_VISIBLE=false`）。
+这是第卅八笔那一刀在起作用，不是新洞；同一位旅客换一条宽松点的说法就走通了（walk-95 走到 `:86` 的「旅程已开始」）。
+
+**工作树里那枚不是我这一棒写的改动，现在有一条屏上读数。** walk-95 `:4` 的 `STEP_02A_PREFILLED party=1 budget=800`
+是在仪表动手改这两栏之前读的：旅客那句"人均预算 800"确实落进了预算栏，"两天"没写人数所以人数仍是 1。
+它的 CSS 那一半与"旅客手动改过就不再覆盖"那一支我都没测过，所以我不替它提交；
+两枚文件的现状按 `git diff` 存成 `trial/human_walk/worktree_slice_RevolutionFirstLook_1024.patch` 随本提交可取回，
+连同 `trial/human_walk/worktree_slice_reading_1024.txt` 那一条读数，交给写它的人自己交块。
+USER_VERIFIED 仍是 PENDING。
