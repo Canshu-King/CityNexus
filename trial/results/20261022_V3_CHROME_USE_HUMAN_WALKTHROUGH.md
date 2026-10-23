@@ -890,6 +890,21 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 仪表 `D:/moodle/_cmdr_v3_port_1022/departure_full_walk_r17.mjs` 已经把"旅客自己把两段之间压成零间隔"
 那一步装好了（`STEP_12A_*`），但它要在高德还有额度的时候跑才算得到那颗按钮。
 
+**walk-87 把最后一道门那句新话读到了屏上（r19，同一台栈；这次由旅客自己把两段压成零间隔）。**
+仪表 `departure_full_walk_r17.mjs` 多了 `STEP_12A_*`：把第二项的开始时间填成第一项的结束时间
+（`walk-87-log.txt:45` 是改之前读到的原值，`:46` 改之后 `zero_gap_written=true`），
+其余一律不动——这一步是真人在真输入框里改的，不是往库里塞状态。
+之后的链条一次走完：横幅「转场已核实 5/5（其中 1 段是跨夜衔接，1 段按公共交通核实） · 已冻结进这版方案」（`:51`）
+→ 刷新之后仍是「转场已经核实并冻结进这版方案。」（`:62`）→ 抽屉里那段坐车的又出现了
+（`:67` `TRANSIT_LABELED=1 WALK_LABELED=8`，`:68` 深链方式里那一枚 `bus`）
+→ 票按旅客自己的决定记下（`:79`）→ 「选用这份方案」按得到（`:88`）
+→ 门回 HTTP 422 `INSUFFICIENT_TRAVEL_GAP`（`:90`）→ **屏上那句是**
+「这版方案排不下：两段安排之间留的赶路时间不够（2 段）。在出发待办里把后一项的开始时间挪晚，
+或把前一项的结束时间挪早，再按一次「选用这份方案」。」（`:91`，图证 `walk87-14-after-select.png`）
+——段数取自闸自己的行，下一步指名道姓，不再把人支去探索页换地点。
+「确认方案，开始行程」这一版不出现（`:93` `STEP_15_START_VISIBLE=false`），因为这一版确实被拒了：
+这是那道门的规则，不是这刀带来的洞。**至此今天没有剩余 PARTIAL 在这条路上。**
+
 **同一族的第二枚：`test_v13_1_2_structural_anchor_integrity.py` 那两格红，用"同一条命令在两个尖上各跑一次"证明不是我带来的。**
 `test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]` 与
 `[DEPARTURE-departure-anchor]` 两格红在 `select` 那一步：409 `UNRESOLVED_ACTIVITY_FACTS`，
