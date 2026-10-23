@@ -1140,12 +1140,15 @@ USER_VERIFIED 仍是 PENDING。
 它同时是前面那棒交的 P1（凭证在 sessionStorage，换标签页就没有登录态）第一次拿到屏上照片。
 成因仍归到 `frontend/src/trial/RevolutionFirstLook.tsx:496` 的所有者核对（不是那条 409 读，见第廿二节末）。
 
-**证词二：这一晚模型把一份草案想了七八分钟，而我的走查预算是六分钟。**
+**证词二：这一晚模型把一份草案想了七八分钟，而我在第六分半亲手把走查停掉了。**
 walk-99 的流水停在 `WAIT_360s busy=false`（`trial/results/20261022_v3_human_chrome/walk-99-log.txt:13`）之后被我停掉；
 停掉之后两分钟去点名，同一个 journey（`8d8d596d-…`）那一页 `DRAFT_SLOTS=8`、屏上写「已有阶段性成果 已整理 2 天 · 8 项安排」
-（`trial/results/20261022_v3_human_chrome/tab-provenance-1.txt:10`）。也就是说门后头是通的，只是慢；
-**慢不是产品说谎，但我的仪表等不到它**：下一趟这类走查要把研究那一段的等待放到十分钟以上，
-或者在服务端仍被 `200` 轮询时别报 `busy=false`（这是量具的话，不是产品结论，所以先记不修）。
+（`trial/results/20261022_v3_human_chrome/tab-provenance-1.txt:10`）。也就是说门后头是通的，只是慢。
+**这里更正我自己写歪的一句**（也写进了第五十三笔，所以另发一条勘误）：我原本写"仪表等不到它、下一趟要把等待放到十分钟以上"——
+不对，那一格的预算本来就是十六分钟（`trial/human_walk/departure_full_walk_r22.mjs:201` 的 `settle(16, …)`，一分钟六拍、每拍十秒），
+草案在第七到第八分钟之间到了，**是我不耐烦停的手，不是尺短**（那一格在 `trial/human_walk/departure_full_walk_r22.mjs:201`）。
+标签页这件事也先纠正自己一句：仪表本来就在收尾关掉自己开的页（`trial/human_walk/departure_full_walk_r22.mjs:574`），
+留下的三个 14496 页正是我**中途 kill 掉的那三趟**（96／97／99）——泄漏的成因是我停手，不是仪表不关。
 
 **PLACE_CLOSED 的屏上 AFTER 仍然欠着。** 我试过不重跑一趟、直接在还活着的草案页上把那一行改成凌晨三点再按门，
 尺是 `trial/human_walk/press_the_door_r1.mjs`；两分钟之间那一页的八格草案已经不见了（四页现读 slots 全为零，
