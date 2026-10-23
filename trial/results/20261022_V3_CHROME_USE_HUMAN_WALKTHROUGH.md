@@ -859,6 +859,20 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 今天的三趟里要么全冻上（walk-84）要么一项都没答（walk-85 的 0 份候选），判 PARTIAL，
 类型闸绿 `trial/results/20261022_v3_human_chrome/tsc-remembered-state-1.txt:2`。
 
+**同一天里另外两格红，也在今天写集之外，成因各自有名。**
+`tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface` 红在
+`AttributeError: '_IncludedRouter' object has no attribute 'path'`（`backend/tests/test_contract.py:73`）：
+这台环境的 FastAPI 是 0.141.1，`include_router` 的包装对象不再暴露 `.path`，而那枚测试是直接遍历
+`app.routes` 读 `route.path` 写的——同一枚坑我写在 departure-commit 测试的说明里（
+`backend/tests/test_qoder_departure_commit_r1.py:534`）。
+`tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table`
+红在 `assert 3 == 0`（`backend/tests/test_qoder_ord0332_error_receipt.py:207`）：它要的是"库里不存在回执表"，
+读到的是共享测试库里已经有三张相关表。
+两枚都在单独运行时同样红（`trial/results/20261022_v3_human_chrome/contract-band-after-details-1.txt:71` 与 `:72`），
+今天写集（`git diff --name-only 4dedfb2f..HEAD`）里不含这两枚测试、不含 `app/main.py`、不含 `app/core/audit.py`——
+这三枚文件最后一次被改动是 `d9a74cdff5`（10-20）与 `17857bb115`，都在今天的区间之前。
+同样，我没有为了让带子绿而去动它们的断言。
+
 **同一族的第二枚：`test_v13_1_2_structural_anchor_integrity.py` 那两格红，用"同一条命令在两个尖上各跑一次"证明不是我带来的。**
 `test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]` 与
 `[DEPARTURE-departure-anchor]` 两格红在 `select` 那一步：409 `UNRESOLVED_ACTIVITY_FACTS`，

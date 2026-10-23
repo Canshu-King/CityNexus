@@ -1,0 +1,73 @@
+...F......F..                                                            [100%]
+================================== FAILURES ===================================
+___________ test_openapi_runtime_method_parity_includes_v7_surface ____________
+
+    def test_openapi_runtime_method_parity_includes_v7_surface():
+        spec = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))
+        runtime = {
+            (route.path, method.lower())
+            for route in app.routes
+>           if route.path.startswith("/api/v1")
+               ^^^^^^^^^^
+            for method in getattr(route, "methods", set())
+        }
+E       AttributeError: '_IncludedRouter' object has no attribute 'path'
+
+tests\test_contract.py:73: AttributeError
+_ test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table _
+
+caplog = <_pytest.logging.LogCaptureFixture object at 0x0000028CF3641E80>
+
+    def test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table(caplog) -> None:
+        jid = _journey_ids(1)[0]
+        with caplog.at_level(logging.WARNING, logger="app.main"):
+            mine = _envelope(_past_budget_503(jid))[FIELD_SENT]
+        assert any(mine in r.getMessage() for r in caplog.records), [r.getMessage() for r in caplog.records][-3:]
+        assert any("route=POST" in r.getMessage() and "status=503" in r.getMessage() for r in caplog.records)
+        probe = make_engine(settings.database_url)
+        try:
+            with probe.connect() as conn:
+                tables = int(conn.exec_driver_sql(
+                    "SELECT count(*) FROM sqlite_master WHERE type='table' AND name LIKE '%receipt%'"
+                ).scalar() or 0)
+        finally:
+            probe.dispose()
+>       assert tables == 0, "回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失"
+E       AssertionError: 回执不落库是设计：失败的写会回滚，同事务存的号会跟着一起消失
+E       assert 3 == 0
+
+tests\test_qoder_ord0332_error_receipt.py:207: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  app.main:main.py:800 error_receipt_id=CNX-B5VTRH3W code=SERVER_WRITE_DEADLINE_EXCEEDED status=503 route=POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/outcomes trace_id=908ea08c-3ebf-47e8-a2cc-98204c7b49b2
+============================== warnings summary ===============================
+app\main.py:726
+  D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:726: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface
+FAILED tests/test_qoder_ord0332_error_receipt.py::test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table
+2 failed, 11 passed, 4 warnings in 13.34s
