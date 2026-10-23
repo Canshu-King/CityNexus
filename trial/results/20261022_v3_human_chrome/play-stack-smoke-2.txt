@@ -1,0 +1,6 @@
+FIRST_SCREEN {"h1":"你的下一趟旅行，从一句话开始。","goalPlaceholder":"例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。","submit":"继续规划 →","submitBox":{"y":700,"bottom":756,"viewport_h":844,"centre":[188,728],"covered":false,"topmost":"rev-trip-submit"}}
+SHOT play-stack-1-first-screen.png
+AFTER_TYPING {"party":"1","budget":"800","chip":"想怎么玩？12 月 3 日到 12 月 4 日在北京玩两天，人均预算 800，不要太赶。目的地日期与天数出发日期游玩天数更多偏好同行 1 人 · 预算 ¥800同行人数总预算（元）行程节奏松紧适中优先省钱多看看新地方按时间安排活动强度轻松少走适中节奏充实安排感兴趣的内容当地美食夜"}
+AFTER_PRESS "继续规划 →" {"url":"http://127.0.0.1:14461/revolution","heading":"你的下一趟旅行，从一句话开始。","body":"C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥800 继续规划 → 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认","tabs":0,"dock":false,"pointer":""}
+SHOT play-stack-2-after-press.png
+NOTE 只开了一个新标签页、输入一句话、按了屏上那枚提交键；数据落在 play 专用 canary 库里

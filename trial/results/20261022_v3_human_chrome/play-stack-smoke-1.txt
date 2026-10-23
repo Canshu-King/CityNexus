@@ -1,0 +1,2 @@
+SMOKE_FAILED page.evaluate: ReferenceError: flat is not defined at eval (eval at evaluate (:311:30), <anonymous>:2:57) at UtilityScript.evaluate (<anonymous>:313:16) at Util
+NOTE 只开了一个新标签页、输入一句话、按了屏上那枚提交键；数据落在 play 专用 canary 库里

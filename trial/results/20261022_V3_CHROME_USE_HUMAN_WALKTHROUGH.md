@@ -1416,3 +1416,73 @@ localStorage 里是 `citynexus.revolution.firstlook.journey`、`…recent-journe
 我为 r1 的自相矛盾找出现场的取证尺）。门禁面：`tsc_after_dock_recovery.txt`（`typecheck_rc=0`）、
 `build_after_dock_recovery.txt`（`build_rc=0`）。USER_VERIFIED 仍是 PENDING——这一屏是我在自动化 Edge 里按的，
 不是主人在真手机上按的。
+
+## 廿九、五点三十一到五点五十六：把主人可以自己双击的试玩交出去，然后被自己的截图抓到一个假修好
+
+### 先更正第廿八节的两处，往回认账
+
+1. 我在第廿八节写 r1 读成 `ABSENT` 的真因是"刷新还没落定时的 execution context destroyed"——**那是猜的，猜错了**。
+   机械证据：新加的 `trial/human_walk/instrument_lint_r1.mjs` 扫本目录 154 枚 `.mjs`，报出六枚命中同一形制：
+   `page.evaluate` 里调了只存在于 Node 侧的 `flat()`／`say()`，页面里没这个名字 ⇒ 抛 ReferenceError ⇒ 被
+   `.catch(() => null)` 或 `!present` 读成"屏上没有"。`first_tap_layers_r1.mjs:62`、`dock_recovery_probe_r1.mjs:31,65,147`、
+   `first_tap_layers_r2.mjs:39`、`place_media_click_r1.mjs:64`、`shortlist_initiator_r1.mjs:61`、`tile_honest_state_r1.mjs:59`。
+2. 因此第廿八节里"当时唯一那页 `mark=null`，取不到驾驶舱"也要改口：**那页没死，是我的尺坏了**。
+   `dock_recovery_probe_r2.mjs` 把 `markOf` 的报错原样打印（`evaluate_error`）之后同一枚标签页读出
+   `tabs=3 dock=true`。第廿六节关于 CDP 掉线那一段不变（那次是真的掉了，`netstat` 现读为空）。
+
+### 一键试玩：三个 .bat 加一支预检，主人不碰命令行
+
+交付面（仓库内 `trial/play_launcher/` 留底，可双击的那三枚放在 `D:\moodle\`）：
+`citynexus-play.bat`（预检 → 起服务 → 等 READY → 打开浏览器 → 打地址与三步玩法）、
+`citynexus-play-server.bat`（服务本体，关窗口即停）、`citynexus-play-lan.bat`（同一 WiFi 的平板可访问）。
+`.bat` 全部纯 ASCII（`non_ascii=0`，中文只在 `citynexus_play_preflight_r1.py` 里，控制台靠 `chcp 65001` 显示）。
+启动器 `_cmdr_v3_serve_human_r1.py` 加了三个开关：`HUMAN_TAG`（日志与 READY 各自分文件，不再互相截断）、
+`HUMAN_KEEP_DB`（试玩库跨次保留，测试档仍按老行为清空）、`HUMAN_LAN`（只有页面绑 `0.0.0.0`，API 仍只听 127.0.0.1）。
+
+真跑两遍，正反各一次：
+- **反例**：服务在跑时再双击 ⇒ 预检拒绝并说人话「后端端口 60361 已被占用：先关掉上一把试玩窗口…」，
+  退出码 1，没有第二个服务被起来（`api=200 page=200` 是那一把的，端口号一致）。
+- **正例**：端口空时双击 ⇒ `api=200`、`page=200`、READY 里 `db_kept=True web_bind=127.0.0.1`。
+  停的时候用 `_play_tree_r1.ps1` 先只报表（`MATCHES 1 of cmd_rows 17`，命中的是 `cmd /K citynexus-play-server.bat`，
+  **故意不按脚本名匹配**：值守那把 human 栈跑的是同一支 py，按名字杀会把他人在用的栈一起带走），
+  再 `-Kill` 杀这一棵子树；杀完 `60361/14461` 为空，而 `14436/14496/60296` 三条 LISTENING 仍在——负对照过了。
+
+### 冷开首屏走了一遍真人路径，第一次的"修好了"是假的
+
+`play_stack_smoke_r2.mjs`（日志 `play-stack-smoke-4.txt`、`play-stack-smoke-5.txt`）在 390×844 冷开：
+读屏 → 输入「12 月 3 日到 12 月 4 日在北京玩两天，人均预算 800，不要太赶。」→ 按「继续规划 →」→
+填「北京」→ 再按一次。第一次跑（r1）我按完就写"什么都没发生"，其实屏上出现的是浏览器原生气泡
+「请填写此字段。」落在「目的地」上（`play-stack2/3-2-empty-city-press.png`）：**句子里写了北京，
+而这一版应用从不从句子读城市**——那是我自己的仪表少走一步，不是产品静默。
+
+于是加了首屏那一行提示（`RevolutionFirstLook.tsx` 目的地那一行下面，`RevolutionFirstLook.css:137`）：
+「还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。」
+**第一版把它放在提交键之前，结果被那枚 sticky 的「继续规划 →」压在下面看不见**——DOM 里读得到、屏幕上读不到，
+是看自己的截图才发现的（`play-stack3-2-empty-city-press.png` 里那一行不存在）。挪到目的地正下方之后，
+截图里那行棕色提示在（`play-stack3-1-goal-typed.png`），填了城市之后它按条件消失（`AFTER_CITY hint="(no hint node)"`）。
+
+读数分两把，别混：
+- **第一次真建行程**（`play-stack-smoke-4.txt`）：空城市那一按之后 `pointer=(none)`、屏仍是首屏（`:4`）——没有偷偷建行程；
+  填「北京」再按 ⇒ `tabs=3 dock=true`、标题「北京把想去变成出发。」、指针
+  `{"id":"924aebd0-eccb-4200-bc65-54728aa4fa27",…`、`bearer=present_in_sessionStorage(value not printed)`（`:7`）。
+- **挪完提示之后复跑**（`play-stack-smoke-5.txt`）：冷开那行提示在（`:1`）、填城市之后 `(no hint node)`（`:6`）。
+  这一把的 `:4` 里 `pointer={"id":"924aebd0-eccb…` **不能**再当"没建行程"的证据——指针是按源留下的上一趟行程，
+  它只说明没换成新 id；"没建"这一半以上一把（`:4` 的 `(none)`）为准。
+**从冷开到 Agent 的输入区，旅客的显式动作是：写一句话、写城市名、按一次键。**
+
+派生数字的读数一并留着（`goal-numbers-1.txt`）：冷开 `同行人数=1 总预算=1000`；
+「带爸妈三人…人均预算 400」→ `3 / 1200`；「两个人，人均 650」→ `2 / 1300`；
+「帮我安排五天，人均 1200」→ `2 / 2400`；改成「随便逛逛。」→ 仍显示 `2 / 2400`。
+**最后一格是待裁的语义**（改写整句之后旧派生值留着算不算替旅客编数字），我在 PR #43 的回执里点名请裁，
+没有自己定。
+
+### 仪表谱系与门禁（本节新增）
+
+`first_tap_layers_r1 → r2 → r3`、`play_stack_smoke_r1 → r2`（r1 少走"填目的地"这一步）、
+`dock_recovery_probe_r1 → r2`（r1 把 evaluate 报错咽成 null）、`instrument_lint_r1`（六枚命中，含三枚我今晚用过的）、
+`_storage_keys_r1`、`_tab_shape_conflict_r1`、`_play_tree_r1.ps1`、`citynexus_play_preflight_r1.py`。
+门禁：`tsc_after_dock_recovery.txt`／`build_after_dock_recovery.txt`（各 `rc=0`）、
+`tsc_after_destination_hint.txt`（`typecheck_rc=0`）、`tsc_after_hint_move.txt`（`typecheck_rc=0`）、
+凭据闸 `_staged_secret_gate_r2.py --selftest` → `cases=8 wrong=0`（四支致命臂都咬，四种正常写法不误伤）。
+USER_VERIFIED 仍是 PENDING：双击那两枚 .bat 是我在这台机器上跑的，主人在自己电脑（或平板）上真点一次之前，
+这一栏不勾。
