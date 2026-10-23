@@ -583,8 +583,10 @@
   .rev-mobile-v1 .cn-mission-head .cn-mission-state { font-size: 11px; margin: 0; }
   .rev-mobile-v1 .cn-mission-media-credit { bottom: 5px; right: 9px; font-size: 9px; }
   .rev-mobile-v1 .cn-mission-layer-tabs {
-    position: sticky; top: 0; z-index: 12; padding: 8px 0; margin: 0;
-    background: #f5f8f6; scroll-margin-top: 0; gap: 5px;
+    /* The header is sticky at top:0 with z-index 20; sticking this row at top:0 too put all three buttons under
+       it, where the page brand block swallowed the tap (layer-tab-hittest-3.txt before/after readings). */
+    position: sticky; top: var(--rev-fl-header-h, 66px); z-index: 12; padding: 8px 0; margin: 0;
+    background: #f5f8f6; scroll-margin-top: calc(var(--rev-fl-header-h, 66px) + 8px); gap: 5px;
   }
   .rev-mobile-v1 .cn-mission-layer-tabs button { min-height: 46px; font-size: 14px; font-weight: 700; border-radius: 12px; }
   .rev-mobile-v1 .cn-mission-grid { gap: 0; }
