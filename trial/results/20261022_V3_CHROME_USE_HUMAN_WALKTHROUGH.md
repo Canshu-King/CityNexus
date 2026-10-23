@@ -941,8 +941,15 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 「颐和园 → 圆明园遗址公园：地图服务今天的查询次数已经用完，稍后再核实这一段」
 （同文件 `:52`），于是「选用这份方案」这一版根本不存在（同文件 `:98` `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`）。
 
-那句话是假的，证据在自家回执里：那一拍 `provider_calls` 五行 `goal_amap_walking` 挤在同一秒内
-（18:14:29.448／.559／.694／.782／.884），四行 SUCCESS、一行 FAILURE——一天的额度不会这样发牌。
+那句话是假的，证据在自家回执里：那一拍现读 `provider_calls`，五行 `goal_amap_walking` 挤在同一秒内，
+四行 SUCCESS、一行 FAILURE——一天的额度不会这样发牌。
+**但那几行现在取不回来了**：现场栈的启动脚本每次都先删自己的 canary 库
+（`D:/moodle/_cmdr_v3_port_1022/_cmdr_v3_serve_human_r1.py:34` 那句 `os.remove(DB)`），
+我为了加载新代码重启它，顺手把 walk-88 那几分钟的回执也删掉了。所以这一格剩下的凭据是
+walk-88 屏上那两句原话（`walk-88-log.txt:39`、`:52`）、我重启前抄下的那次现读（就是上面那句），
+以及下面两枚 burst 文件；重启之后改的量具是
+`D:/moodle/_cmdr_v3_port_1022/_restart_human_stack_r20.ps1:15` 起——重启前先把库存一份
+`*.before_<时刻>`，不再让"看下一屏"以丢掉上一屏的回执为代价。
 拿同一枚键、同一对城内坐标复现：连发八次，前三次 OK，第 4/5/6 次返回
 `infocode=10021 CUQPS_HAS_EXCEEDED_THE_LIMIT`，停一秒再问就又是 OK
 （`trial/results/20261022_v3_human_chrome/amap-burst-infocode-1.txt:2` 对 `:3`，
@@ -970,8 +977,10 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 「选用这份方案」看得见也按得下（`:79` `STEP_13_SELECT_BUTTONS=1 VISIBLE=true`），
 按下去是「可以确认出发 6 项正式安排 方案 1 已选用」（`:81`），
 再按「确认方案，开始行程」屏上变成「旅程已开始 6 项正式安排 方案 1 正在使用」（`:83`、`:84`）。
-重试这一格确实发生了：`provider_calls` 现读 10:46:05.206 那行 `goal_amap_walking FAILURE reason=AMAP_RATE_LIMITED`，
-10:46:06.315 同一对地点 SUCCESS——间隔 1.11 秒，正是那一次再问。
+重试这一格确实发生了：`provider_calls` 现读那一行 `goal_amap_walking FAILURE reason=AMAP_RATE_LIMITED`
+与它下面一行的 SUCCESS 已经落成文件
+（`trial/results/20261022_v3_human_chrome/provider-call-receipts-1023.txt:7` 对 `:8`，
+跑法 `D:/moodle/_cmdr_v3_port_1022/_provider_call_windows_r1.py:1` 起），间隔 1.11 秒，正是那一次再问。
 出发之后那一节换名字叫「执行与待办」，屏上仍留着 12 个时间输入、12 个按钮、6 条链接（`:89`、`:90`），
 刷新之后这一节还在（`:95`）。
 

@@ -1,0 +1,9 @@
+goal_amap_walking receipts, read from the running stack's own table, oldest first
+window A: the freeze that walk-88 reported as 4/5 (one second, five calls)
+window B: the freeze after the rate-limit split (one hop refused, then answered)
+B 10:46:04.847 SUCCESS None route=yes
+B 10:46:04.977 SUCCESS None route=yes
+B 10:46:05.096 SUCCESS None route=yes
+B 10:46:05.206 FAILURE AMAP_RATE_LIMITED route=no
+B 10:46:06.315 SUCCESS None route=yes
+B 10:46:06.444 SUCCESS None route=yes
