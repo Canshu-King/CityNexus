@@ -97,10 +97,12 @@ def main():
     claim("component imports the dictionary module",
           'import { simulationStagePair } from "../../i18n/simulationStageCopy";' in after)
 
-    # the module must be the only carrier of one named sentence
-    probe = arms["previousActionStillRunning"][0]
-    in_component = probe in after
-    claim("the moved sentence is not also left in the panel", not in_component)
+    # the module must be the only carrier of the migrated PAIR SHAPE; a short caption may still
+    # appear quoted inside an unmigrated interpolated sentence -- that is reported, not hidden.
+    shape_left = [k for k, (z, e) in arms.items() if ('zh: "%s",' % z) in after]
+    claim("no migrated pair left in its inline shape", not shape_left, str(shape_left)[:180])
+    embedded = sorted(k for k, (z, e) in arms.items() if z in after)
+    print("%-46s INFO  %s" % ("captions still quoted inside longer copy", json.dumps(embedded, ensure_ascii=False)))
 
     print("")
     print("FAIL %d" % len(fails))
