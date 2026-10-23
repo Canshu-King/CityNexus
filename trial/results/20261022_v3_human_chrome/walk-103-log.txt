@@ -17,3 +17,156 @@ WAIT_120s busy=false
 WAIT_120s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
 WAIT_180s busy=false
 WAIT_180s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_240s busy=false
+WAIT_240s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_300s busy=false
+WAIT_300s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_360s busy=false
+WAIT_360s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_420s busy=false
+WAIT_420s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_480s busy=false
+WAIT_480s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_540s busy=false
+WAIT_540s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_600s busy=false
+WAIT_600s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_660s busy=false
+WAIT_660s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_720s busy=false
+WAIT_720s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_780s busy=false
+WAIT_780s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_840s busy=false
+WAIT_840s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_900s busy=false
+WAIT_900s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+WAIT_960s busy=false
+WAIT_960s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 RETRY_AFFORDANCE=true
+SETTLE_TIMEOUT pattern=正在推进|正在研究
+STEP_05_DRAFT slots=0
+LAYER rev-mission-layer-map attempt=1 clicked=true
+STEP_06_MAP []
+SHOT walk103-06-map-strip.png bytes=256904
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+STEP_07 variants_sent_at 2026-10-23T19:44:27.420Z
+SETTLED ticks=6 elapsed_s=60
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":true,"box":{"x":140,"y":20,"w":120,"h":46},"hit_test":"div.rev-firstlook-brand","covers_it":true,"dock":{"top":746,"bottom":823},"overlap_with_dock":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER rev-mission-layer-timeline attempt=2 clicked=true
+STEP_08_VARIANTS {"cards":0,"tabs":[],"chosen":[],"selectButtons":0,"slots":0}
+SHOT walk103-08-three-versions.png bytes=141954
+STEP_09_choose_visible=false picked_card=-1
+ASK GET /journeys/80fa5b58-b72d-4d78-a6e4-9256649496a7/bootstrap-shortlist via readDeadline.ts:32#fetchWithReadDeadline <- citynexus.ts:33#requestJsonInner <- citynexus.ts:18#requestJson <- citynexus.ts:591#getBootstrapShortlist <- RevolutionQuickExplore.tsx:285#anon <- react-dom_client.js:20317#react_stack_bottom_frame <- react-dom_client.js:1133#runWithFiberInDEV <- react-dom_client.js:9773#commitHookEffectListMount
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+STEP_10_AFTER_RELOAD {"cards":0,"tabs":[],"chosen":[],"selectButtons":0,"slots":0} screen=C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待你的决定 地图 日程 对话 按天调整行程 0 项安排 · 2 天 你的旅行草案 草案允许信息未知。点击某条安排展开修改；不需要一项一项补完营业时间、票价才能保存。 Day 1 12-03 Day 2 12-04 
+SHOT walk103-10-after-reload.png bytes=158523
+DEPARTURE_NOT_ON_TIMELINE trying 我的旅程
+STEP_11_DEPARTURE_VISIBLE=false
+STEP_11_CARD (unreadable)
+STEP_12A_STAMPS_BEFORE []
+STEP_12A_NOT_ENOUGH_FIELDS=0
+TICK_ERR locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+SAVE_ERR locator.click: Timeout 8000ms exceeded. Call log: [2m - wai
+STEP_12_SAVE_STATUS (none after 56s)
+STEP_12A2_NO_NAMED_ROW round=1 status=(unreadable)
+STEP_12_CARD_AFTER (unreadable)
+SHOT walk103-12-departure-after-save.png bytes=327110
+STEP_12B_ROUTE_BEFORE (unreadable)
+FREEZE_ERR_1 locator.click: Timeout 8000ms exceeded. Call log: [2m - waiting for g
+STEP_12B_ROUND_1 BAND (unreadable)
+STEP_12B_ROUND_1 ASK_COUNT (unreadable)
+STEP_12B_ROUND_1 TODO_ROUTE_LINES=0 FROZEN=false
+SHOT walk103-12b-round-1.png bytes=327110
+FREEZE_ERR_2 locator.click: Timeout 8000ms exceeded. Call log: [2m - waiting for g
+STEP_12B_ROUND_2 BAND (unreadable)
+STEP_12B_ROUND_2 ASK_COUNT (unreadable)
+STEP_12B_ROUND_2 TODO_ROUTE_LINES=0 FROZEN=false
+SHOT walk103-12b-round-2.png bytes=327110
+FREEZE_ERR_3 locator.click: Timeout 8000ms exceeded. Call log: [2m - waiting for g
+STEP_12B_ROUND_3 BAND (unreadable)
+STEP_12B_ROUND_3 ASK_COUNT (unreadable)
+STEP_12B_ROUND_3 TODO_ROUTE_LINES=0 FROZEN=false
+SHOT walk103-12b-round-3.png bytes=310190
+STEP_12B_ROUTE_AFTER (unreadable)
+STEP_12B3_HOP_REFUSALS []
+SHOT walk103-12b2-before-reload.png bytes=310190
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+REOPEN_ERR_12B2 locator.click: Timeout 6000ms exceeded. Call log: [2m - wai
+STEP_12B2_DEPARTURE_VISIBLE=false
+STEP_12B2_ROUTE_STATE_AFTER_RELOAD (unreadable)
+STEP_12B3_HOP_REFUSALS_AFTER_RELOAD []
+LAYER_BLOCKED rev-mission-layer-agent attempt=1 {"present":false}
+LAYER rev-mission-layer-agent attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=2 {"present":false}
+LAYER rev-mission-layer-agent attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=3 {"present":false}
+LAYER rev-mission-layer-agent attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=4 {"present":false}
+LAYER rev-mission-layer-agent attempt=4 clicked=false
+STEP_12B3_DRAWER_TITLE (none)
+STEP_12B3_DRAWER_ROWS []
+STEP_12B3_DRAWER_TRANSIT_LABELED=0 WALK_LABELED=0
+STEP_12B3_DRAWER_LINK_MODES []
+STEP_12B3_DRAWER_RAW_SECONDS=0 READABLE_UNITS=0 LINE_NAMES []
+STEP_12B3_PANEL_ROUTE_LINES [] RAW=0 CLOSED_READ=0 OPEN_READ=0
+SHOT walk103-12b4-agent-drawer.png bytes=92219
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+STEP_12B2_ASK_COUNT (unreadable)
+STEP_12B2_TODO_ROUTE_LINES=0 TODO_PLACE_LINES=0
+SHOT walk103-12b3-after-reload.png bytes=92219
+SHOT walk103-12b-routes-verified.png bytes=92219
+STEP_12C_PRICE_BEFORE (unreadable)
+STEP_12C_PRICE_AFTER (no accept door on this card)
+STEP_12D_ASK_COUNT (unreadable)
+STEP_12D_ASK_HOW_BEFORE_PRESS (unreadable)
+LAYER_BLOCKED rev-mission-layer-agent attempt=1 {"present":false}
+LAYER rev-mission-layer-agent attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=2 {"present":false}
+LAYER rev-mission-layer-agent attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=3 {"present":false}
+LAYER rev-mission-layer-agent attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-agent attempt=4 {"present":false}
+LAYER rev-mission-layer-agent attempt=4 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+STEP_12D_ASK_BUTTON=0
+STEP_12D_ASK_BUTTON_NOT_SHOWN (nothing left to ask, or no saved plan)
+PROVE_CLOSED_OPEN_ERR locator.click: Timeout 6000ms exceeded. Call log: 
+PROVE_CLOSED_START_ERR locator.fill: Timeout 8000ms exceeded. Call log: 
+PROVE_CLOSED_END_ERR locator.fill: Timeout 8000ms exceeded. Call log: 
+PROVE_CLOSED_WRITTEN first_two=[]
+PROVE_CLOSED_SAVE_ERR locator.click: Timeout 8000ms exceeded. Call log: 
+STEP_13A_PROVE_CLOSED row_one=->03:00 status=(unreadable)
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+STEP_13_WORKBENCH (unreadable)
+STEP_13_SELECT_BUTTONS=0 VISIBLE=false
+SHOT walk103-13-workbench.png bytes=92219
+WALK_END 2026-10-23T19:59:56.065Z

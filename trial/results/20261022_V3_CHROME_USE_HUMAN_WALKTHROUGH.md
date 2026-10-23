@@ -1230,3 +1230,49 @@ web `14496` + backend `60296` + canary 库 `D:/moodle/_cmdr_v3_live_1022/citynex
 （那一腿先把折叠掉的时间块按 `<summary>` 点开再填，`departure_full_walk_r23.mjs:489` 起），
 但模型还在 503 里的话这趟就到不了那道门；我不拿模块臂的读数冒充屏上 AFTER。
 USER_VERIFIED 仍是 PENDING。
+
+## 廿六、三点二十五到三点五十八：一趟把十六分钟的等待读满，另一趟真的走到了「选用」门口（walk-103／104）
+
+**walk-103 是"等待"这一格的完整记录。** 03:25:46 起步（`trial/results/20261022_v3_human_chrome/walk-103-log.txt:1`，
+journey `80fa5b58`），03:26 按「开始研究」（`:13`），03:43 报 `SETTLE_TIMEOUT`（`:46`）、草案槽为零（`:47`）。
+中间十七拍底栏原文全部落档（`:15` 起，每六十秒一条，打印腿 `trial/human_walk/departure_full_walk_r23.mjs:111`），
+内容都是同一句「Agent 上一轮没有答完，这次的服务暂时不可用…」。库里那条草案 run 建档于 19:28:19.452977，
+41.3 秒后以 `FAILED_EXTERNAL / MODEL_HTTP_503` 收队（`trial/results/20261022_v3_human_chrome/agent_runs_503_pair_1024.txt:32`，
+现算的行在 `:34`），也就是说这十六分钟里屏幕一直在说同一句实话。第廿五节据此撤回的"哑巴等待"，这一趟是它的正面证据。
+
+**walk-104 是今晚第一趟走到门口的。** 03:50:07 起步（`walk-104-log.txt:1`，journey `a4b03db8`），
+按下研究之后六十秒草案就到位：`STEP_05_DRAFT slots=6`（`:13`），图层日程里也读到六格（`STEP_08_VARIANTS …"slots":6`，`:29`）。
+仪表接着按旅客的做法把两行时间写成首尾相接（`STEP_12A_STAMPS_BEFORE/AFTER`，`:38`／`:39`），保存成功
+（`已保存 6 项正式安排`，`:41`），出发待办说「屏上的出发待办都齐了，可以直接选用这份方案。」（`:76`），
+选用按钮在世且可见（`STEP_13_SELECT_BUTTONS=1 VISIBLE=true`，`:87`）。真按下去之后服务端拒绝，
+`HTTP_422 POST /journeys/a4b03db8-…/departure/commit … is infeasible: INSUFFICIEN…`（`:90`），
+而屏上把它翻成了旅客看得懂的一句：「这版方案排不下：两段安排之间留的赶路时间不够（1 段）。」
+（`STEP_14_AFTER_SELECT`，`:91`）。**这是第廿九刀那句拒绝语在真服务器上的第二次屏上证词，这一次还带着「（1 段）」这个数。**
+被拒之后「确认出发」不在（`STEP_15_START_VISIBLE=false`，`:93`）——方案不可行当然不该让人出发，我不把这条记成缺陷。
+
+**PLACE_CLOSED 的 AFTER 图仍欠着，但欠的原因这一回读准了。** `WALK_PROVE_CLOSED=1` 那一臂把第一行真写成了
+03:00–04:00（`PROVE_CLOSED_WRITTEN first_two=["03:00","04:00"]`，`:82`——walk-100 那次是全失败，这次写进去了），
+可是随后「保存为正式候选方案」那颗按钮八秒内没按到（`PROVE_CLOSED_SAVE_ERR`，`:83`），状态行读不到东西（`:84`）。
+所以下一问不是"闸不点名"，而是**改完时间之后，保存的出口还在不在**——这是旅客真会撞上的动作，
+要先用尺读出"按钮在不在、可不可按、卡片上写着什么"，再决定是不是产品刀。现在不写结论。
+
+**图层切换键被自家品牌条压住，三处实测。**
+`walk-103-log.txt:54`：日程键在世、盒 `x=140 y=20 w=120 h=46`，但它中心命中的元素是 `div.rev-firstlook-brand`
+（`covers_it=true`），第一下没按动、第二下才成；`walk-104-log.txt:14` 同一形状里地图键（盒 `x=14 y=20`）
+命中的是 `small`（品牌条里那行小字）；`walk-104-log.txt:26` 日程键再次被 `div.rev-firstlook-brand` 压住。
+要说清分母：walk-103 后面 `:94` 起那一串 `LAYER_BLOCKED` 全是 `present:false`——那是切到「我的旅程」那一面，
+本来就没有这三枚图层键，**不能算压住**。下一把尺已经备好：`trial/human_walk/layer_tab_hittest_r2.mjs`
+在"原样"与"scrollIntoView 之后"两种情形、三档宽度下逐枚现读中心命中元素（r1 只测原样，测不到仪表真会踩的那一步）。
+
+**现场事故，如实记。** 03:58 两趟收尾之后，CDP `127.0.0.1:9335` 不再应答（`netstat` 里那条 LISTENING 没了），
+我用 `trial/human_walk/_restart_edge_cdp_r1.ps1` 把项目自己的自动化 Edge（独立 profile，不是主人的浏览器）起了回来
+（`edge_processes_found=0 → cdp_ready=True → page_targets=1`）。代价是那几个遗留标签页连同 walk-103／104 的页面一起消失，
+所以第廿五节里那张遗留页的图（`leftover-tab-screen-1.png`）现在无法再复现同一个页面。
+**成因我没有证明**：同样是 `browser.close()` 的只读探针这一晚反复用过多次都没掉，这一次是两趟几乎同时收尾才掉——
+我只写"掉了、我起了、受影响的是遗留页"，不写"是 close 杀的"。
+
+**仪表自己也被更正了一次。** r25 那条答复臂（`trial/human_walk/departure_full_walk_r25.mjs`）在这两趟都没触发——
+walk-104 的草案六十秒就到了（`:13`）。我原先在文件头写的因果是"Agent 问而不拟，所以走查走不到门"，
+实测站不住：真正杀掉草案的是 `MODEL_HTTP_503`，`TRAVELER_INPUT_REQUIRED` 是澄清那一步，不是不拟。
+注释已改成这个读法，臂本身留着——它只在草案真的没来时替旅客答一句，那是人会做的事。
+USER_VERIFIED 仍是 PENDING。
