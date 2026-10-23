@@ -1,0 +1,7 @@
+PROBE_START 2026-10-23T17:18:17.236Z url=http://127.0.0.1:14426/revolution
+LOCAL_KEYS {"citynexus.revolution.goal-task.1f6b909d-0141-4aa7-8760-2348b5b0a63c.cd485fff-9bb3-4acb-be95-16601ef86e24":"25d366be-68fb-4d0b-aa57-afc2bc113812","citynexus.revolution.firstlook.journey":"{\"id\":\"cd485fff-9bb3-4acb-be95-16601ef86e24\",\"cityCode\":\"CN-RV-96CAC0EE13C5\",\"cityName\":\"北京\",\"status\":\"DRAFT\",\"ownerTrav","citynexus.revolution.firstlook.recent-journeys":"[{\"id\":\"cd485fff-9bb3-4acb-be95-16601ef86e24\",\"cityCode\":\"CN-RV-96CAC0EE13C5\",\"cityName\":\"北京\",\"status\":\"DRAFT\",\"ownerTra"}
+ASK GET /journeys/cd485fff-9bb3-4acb-be95-16601ef86e24/bootstrap-shortlist initiator=script | readDeadline.ts:32 fetchWithReadDeadline <- citynexus.ts?t=1792739559917:33 requestJsonInner <- citynexus.ts?t=1792739559917:18 requestJson <- citynexus.ts?t=1792739559917:591 getBootstrapShortlist
+ANSWER 401 /journeys/cd485fff-9bb3-4acb-be95-16601ef86e24/bootstrap-shortlist
+SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 登录已过期 地图 日程 对话 按天调整行程 0 项安排 · 0 天 Agent 会把暂定安排和待查事项逐步保存到这里。 准备出发 · 正式计划与待办 TRAVEL PLAN 你的行程方案 刷新方案 当前账号无法读取这份行程，请重新进入行程。 准备出发 行程守护 同行决策 YOUR TRIP 我的行程 还没有保存的私人路线。探索时挑选两个真实地点，就会在这里看到它们。 去发现地点 → AI 助手 AI 工作动态 AI 服务 AI 建议可试 本次行程 暂无运行记录 选定真实地点后，在上方确认正式行程。 正式行程开始且 AI 可用时，实际工作记录会显示在这里。 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认
+SCREEN_HAS_NO_RESTORE_TEXT=false
+PROBE_DONE 2026-10-23T17:18:32.439Z

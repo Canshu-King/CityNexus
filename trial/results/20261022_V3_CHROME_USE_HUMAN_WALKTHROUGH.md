@@ -988,3 +988,70 @@ walk-88 屏上那两句原话（`walk-88-log.txt:39`、`:52`）、我重启前�
 （「现实地图6 处地点查看其他研究（66）…」），因为仪表用 `.cn-mission-card` 的 first() 抓标题，
 同一屏有几张同类的卡——那是量具的selector不准，不是一条产品结论；「出发之后标题写什么」仍待重测。
 USER_VERIFIED 仍是 PENDING：以上全部量在桌面 Chrome 的手机形窄视口，你手机上没按过。
+
+## 廿一、一点二十分：出发之后、日期还没到，那一屏以前管三周后叫"下一站"（walk-90 是 BEFORE，walk-93 是 AFTER，2026-10-24 00:33—01:09）
+
+**屏上那句假话。** walk-90 走到「旅程已开始」之后，执行那一节的标题是「现在的行程」，
+下面一行是「下一站：天安门广场 → 故宫博物院（午门进）」（`trial/results/20261022_v3_human_chrome/walk-90-log.txt:89`、`:90`），
+而同一块屏自己列出的第一格是 12 月 12 日 09:00 的天安门广场（同文件 `:81`），量的人是 10 月 23 日。
+旅客读到"下一站"和"现在的行程"，以为这趟正在跑；日期就在它上面两行，语气却对不上。
+
+**这一刀改在读的那一侧，不造新事实。** `frontend/src/features/execution/LiveRecovery.tsx:628`、`:629`
+从这份方案真正带回来的活动里取最早的那个开始时刻（`start_at`，`starts_at` 只作同义兜底），
+`:632` 判 `journeyNotStarted = 那个时刻 > 现在`；于是同一张卡有三种语气而不是两种：
+`:946` 「还没出发」、`:956` 「这一趟的安排」、`:971` 「第一站：某处 · 12月30日 09:00」，
+原来那两句「正在进行」（`:949`）与「现在的行程」（`:958`）只在真的到了时间之后才说。
+
+**AFTER 是真机上读的。** walk-93 是同一台现场栈（前端 `:14496`，两趟流水第 1 行各自可查）、
+同一条真人路径：标题「这一趟的安排」（`trial/results/20261022_v3_human_chrome/walk-93-log.txt:88`）、
+第二行「第一站：天安门广场 · 12月30日 09:00」（`:89`）。两趟的日期不同（12 月 12 日对 12 月 30 日），
+状态同类：ACTIVE 且第一格在未来。
+
+**kicker 那一格：是我的量具不准，不是产品没做。** 两趟的 `STEP_19_LIVE_KICKER` 都印 "(unreadable)"
+（`walk-90-log.txt:88`、`walk-93-log.txt:87`），原因是仪表在整张卡里找 `.v8-kicker`，而卡上有十几枚同名节点
+（`:939`、`:988`、`:993`、`:1035`、`:1509`…），Playwright 的严格模式直接拒绝而不是取第一枚。
+所以「还没出发」这一句的证词来自像素：`trial/results/20261022_v3_human_chrome/walk93-19-live-card.png`
+里它就印在标题上方一行。r20 已把那一格改成只取页头那枚（并把页头滚进画面）。
+
+**顺手把自己排错的证据归位。** 那枚 `walk93-19-live-card.png` 一开始并不是 walk-93 的：它的字节与
+`walk90-17-active-pane.png` 逐位相同（sha256 前八位 `26c199cb`），mtime 也落在 walk-90 的时间窗里，
+成因是 r19 那版仪表把这一拍的截图名写成了不带前缀、不带扩展名的裸名。现在各自回到各自那趟
+（walk-90 的叫 `walk90-19-live-card.png`），walk-93 真正的第 19 拍是 `walk93-19-live-card.png`，
+而它的字节与 `walk93-17-active-pane.png` 相同（`93a0f868…`）——那一拍页面没滚动，两帧本来就是同一张图。
+所以这一格的产品证词只有一份像素，不是两份独立的。
+
+**中间那两趟没走通，原因都不是这一刀。** walk-91 停在 422 `INSUFFICIENT_TRAVEL_GAP`
+（`walk-91-log.txt:77`），因为它按的是旅客自己没挪过的时间，屏上按行点名——那是那道闸的规则；
+walk-92 的「选用这份方案」这一版不存在（`walk-92-log.txt:90` `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`），
+因为还有一格「灵活休整」没定地点（`:61` `STEP_12B2_TODO_PLACE_LINES=2`，方案屏 `:89` 写「等待正式计划」）。
+两趟都是门自己的规则，不是新洞。
+
+**跟着三趟一起出现的那枚 409，我先前把它写成了 POST——错。** 拒它的那行在
+`backend/app/execution/bootstrap_discovery.py:3324`， enclosing 的是 `list_bootstrap_shortlist_items`（`:3312`），
+读者是 `backend/app/main.py:4474` 那条 **GET**；发起者现在由 Chrome 自己的 initiator 栈署名：
+`frontend/src/trial/RevolutionQuickExplore.tsx:358` 那个挂载 effect（walk-94 流水第 5 行的 ASK 栈把它写成
+`RevolutionQuickExplore.tsx:285#anon <- … <- commitHookEffectListMount`，那是 vite 变换后的行号，函数名对得上）。
+它的 `.catch` 只对 401／403 说话（`:375`），409 落进无人接管的分支 ⇒ **屏上一个字都不多**，
+所以这一枚是一发白费的请求，不是一句假话；要修也是"别去问一条注定不答的问题"那一类清洁活。
+真正还要盯的是另一处：`frontend/src/trial/RevolutionFirstLook.tsx:502` 把同一条读当成"这个登录者确实是这趟成员"的证明，
+而 PlanVersion 之后它必然 409，那条 catch 会写「旧行程无法恢复，原记录仍保存在服务器。」（`:515`）。
+walk-94 的 STEP_20 用同一浏览器的第二个标签页真开一次已出发的行程——读数没回来之前这一格不下结论。
+
+**没测的，写清楚。** 这一格没有前端单测可挂：`frontend/src` 下 `*.test.ts`／`*.test.tsx` 现读 0 枚，
+前端只有 playwright 那 206 枚 spec 这一条路；而 spec 里也从未断言过「现在的行程／下一站／正在进行」
+（`frontend/e2e/*.ts` 现读 0 命中），所以这刀没有"改坏会被谁咬住"的钉，只有真机屏读这一份证词。
+要不要为它开一张带夹具的 spec，是代次的活，等号令者点头。
+
+**工作树里有一枚不是我写的未提交改动，代次要认它。** `frontend/src/trial/RevolutionFirstLook.tsx`（+57 行：
+把旅客自己那句话里的"两个人""人均 800"读进同行与预算两栏，旅客手动改过就不再覆盖）与同名 `.css`（+39 行）
+在本棒之外被改过（现读 `git status --porcelain` 两行 M，mtime 10-23 17:17 与 10-24 00:31），我没碰它、也没替谁提交它。
+现场 `:14496` 是 vite dev，读的是工作树 ⇒ walk-90…93 的屏上都含着它。这一句是为了下次对代次时不必再猜。
+
+**量具从这一节起在仓库里了。** 以前每一棒引用的仪表路径都是 `D:/moodle/_cmdr_v3_port_1022/…`，
+那是本机目录，GitHub 上取不回来——引用形制上等于没给坐标。现在这一晚用过的仪表都进了
+`trial/human_walk/`（15 枚，随本提交可 `git cat-file`），往后按仓库路径引：
+发起者探针 `trial/human_walk/shortlist_initiator_r1.mjs:1`、走查 r20 的 ASK 腿 `trial/human_walk/departure_full_walk_r20.mjs:57`、
+kicker 那一格 `:475`、第二标签页那一拍 `:491`、向导预读那一格 `:169`；
+上一代（产出 walk-90／93 读数的那版）留在 `trial/human_walk/departure_full_walk_r19.mjs:442`，
+两版对同一格的读法差别就是这一节上面写的那件事。拷贝里逐枚查过不含高德键（键长 32，15 枚命中 0 枚）。
+USER_VERIFIED 仍是 PENDING。
