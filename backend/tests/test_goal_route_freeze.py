@@ -12,6 +12,7 @@ network: an edge that comes out verified here can only have been verified from a
 
 import json
 from datetime import datetime, timezone
+from types import SimpleNamespace
 from uuid import uuid4
 
 from test_bootstrap_place_facts import enabled_settings, signed_place  # noqa: F401  (fixtures are imported on purpose)
@@ -435,3 +436,100 @@ def test_a_two_day_plan_with_a_free_evening_reaches_active(signed_place, monkeyp
         assert len(second_rows) == 4 and all(row.place_id for row in second_rows)
         assert session.get(PlanVersion, plan_two).status == "ACTIVE"
         assert session.get(Journey, journey_id).status == "ACTIVE"
+
+
+class _TransitAnswersWhenWalkingRefuses:
+    """The walking door says it has no route for this pair; the transit door answers.
+
+    Only the provider is faked here.  `_measure_now`, `_transit_leg` and `_arrival_moment` all run for
+    real, because the crash this arm pins lived in exactly that code: `Activity.start_at` is a text
+    column, the freeze door hands that text straight in, and the first version of the transit arm
+    called `strftime` on it -- the traveller's own button answered 500 twice over
+    (trial/results/20261022_v3_human_chrome/walk-78-log.txt:41 and, on a backend process that had not
+    been restarted onto the fix, walk-108-log.txt:40).  The rest of this file stubs `_measure_now`
+    itself (see its module docstring), so no arm here ever reached that line.
+    """
+
+    def __init__(self):
+        self.transit_calls: list[dict] = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        return False
+
+    def walking(self, start, end):
+        return {"status": "error", "reason_code": "AMAP_NO_ROUTE", "http_status": 200, "elapsed_ms": 1}
+
+    def transit(self, start, end, city_code, departure_date=None, departure_time=None):
+        self.transit_calls.append({"city_code": city_code, "departure_date": departure_date,
+                                   "departure_time": departure_time})
+        return {"status": "ok", "http_status": 200, "elapsed_ms": 2, "route": {
+            "provider_key": "amap-web-service", "mode": "TRANSIT", "distance_m": 6120,
+            "duration_seconds": 2460, "duration_min": 41, "lines": ["地铁8号线"],
+            "walking_distance_m": 640, "fare_minor": 300, "nightflag": 0,
+            "coordinate_system": "GCJ02", "city_code": city_code}}
+
+
+def _task_with_a_city(client, owner, journey_id, task_id, citycode="TESTFIX010"):
+    """The city code the research leg would have stored, so the transit door has something to ask with."""
+    with SessionLocal() as session:
+        mission = session.get(JourneyMission, task_id)
+        intent = json.loads(mission.intent_json)
+        intent["goal_task"]["amap_region"] = {"citycode": citycode, "query": "TEST_FIXTURE", "status": "RESOLVED"}
+        mission.intent_json = json.dumps(intent, ensure_ascii=False)
+        session.commit()
+
+
+def _same_day_hop_without_a_stored_receipt(signed_place, monkeypatch, client, owner, journey_id, task_id):
+    monkeypatch.setattr(goal_route_freeze, "settings", SimpleNamespace(amap_web_key="TESTFIX"))
+    fake = _TransitAnswersWhenWalkingRefuses()
+    monkeypatch.setattr(goal_route_freeze, "_client", lambda: fake)
+    _task_with_a_city(client, owner, journey_id, task_id)
+    root, plan_id, _ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+    return fake, root, plan_id
+
+
+def test_the_hour_the_plan_stores_as_text_is_asked_of_the_transit_door(signed_place, monkeypatch):
+    client, owner, _outsider, journey_id, *_ = signed_place
+    task_id = _task(client, owner, journey_id)
+    fake, root, plan_id = _same_day_hop_without_a_stored_receipt(
+        signed_place, monkeypatch, client, owner, journey_id, task_id)
+
+    with SessionLocal() as session:
+        stored = session.scalars(select(Activity).where(Activity.plan_version_id == plan_id)).all()
+        hour_row = [row for row in stored if str(row.title).endswith("下午湖")][0]
+        assert isinstance(hour_row.start_at, str), type(hour_row.start_at)
+        moment = datetime.fromisoformat(hour_row.start_at)
+
+    answer = _freeze(client, owner, root, task_id, plan_id)
+    assert answer.status_code == 200, answer.text
+    body = answer.json()
+    assert [row["status"] for row in body["edges"]] == [goal_route_freeze.MEASURED], body["edges"]
+    assert body["edges"][0]["mode"] == "TRANSIT", body["edges"]
+    assert body["edges"][0]["lines"] == ["地铁8号线"], body["edges"]
+    assert body["frozen"] is True, body
+    assert fake.transit_calls == [{"city_code": "TESTFIX010",
+                                   "departure_date": moment.strftime("%Y-%m-%d"),
+                                   "departure_time": moment.strftime("%H:%M")}], fake.transit_calls
+
+
+def test_an_hour_nobody_wrote_down_is_asked_as_no_hour_at_all(signed_place, monkeypatch):
+    """A slot with no hour written down is asked of the provider with no hour, not with an invented one."""
+    client, owner, _outsider, journey_id, *_ = signed_place
+    task_id = _task(client, owner, journey_id)
+    fake, root, plan_id = _same_day_hop_without_a_stored_receipt(
+        signed_place, monkeypatch, client, owner, journey_id, task_id)
+
+    with SessionLocal() as session:
+        for row in session.scalars(select(Activity).where(Activity.plan_version_id == plan_id)):
+            if str(row.title).endswith("下午湖"):
+                row.start_at = ""
+        session.commit()
+
+    answer = _freeze(client, owner, root, task_id, plan_id)
+    assert answer.status_code == 200, answer.text
+    assert fake.transit_calls == [{"city_code": "TESTFIX010", "departure_date": None,
+                                   "departure_time": None}], fake.transit_calls
+    assert answer.json()["edges"][0]["mode"] == "TRANSIT", answer.json()["edges"]

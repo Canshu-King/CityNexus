@@ -1581,3 +1581,32 @@ USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、A
 **还有一处行号写歪**：轮 C 那行里"发一句真消息"的证据应在 `trial/results/20261022_v3_human_chrome/dock-recovery-5.txt:8`（`SENT at 22:10:26.502Z`），我写成了 `:11`，那一行是 `SHOT`。另外 `dock-recovery-3.txt:19` 与 `dock-recovery-5.txt:15` 打印的 `same_task=false` 是我那把尺的**假否**：它拿 `BASELINE_TASK` 比，而这两趟探针自己没抓到基线（`:9`、`:12` 都是 `undefined`）。真凭据是请求对里两边相同的 `task` 字段（`walk-109-log.txt:14` 的 `run` 与 `dock-recovery-3.txt:11`–`:19` 的 `resume` 都是 `1c7b5dcf`），不是我那枚旗标。
 
 **再补一条我自己的假象（上面那段谱系里第 1536 行）**：我写了「`r4`（按下第二枚键之前重新读一次坐标）」，**但 `trial/human_walk/dock_recovery_probe_r4.mjs` 从来没有存在过**——`git log --all --diff-filter=A` 对它零命中，目录里只有 `r1`/`r2`/`r3`/`r5` 四枚。"按下第二枚键之前重读坐标"这条修法是真的，它在 **`r5`** 里（`trial/human_walk/dock_recovery_probe_r5.mjs:163` 打印 `BEFORE_BROWSE`，读数落在 `trial/results/20261022_v3_human_chrome/dock-recovery-5.txt:18`），`RECOV_ORIGIN` 那条点名规则也在同一枚（`:43`–`:49`）。谱系应该是 **四把**（`r1`→`r2`→`r3`→`r5`），我把修法的名字记成了一枚不存在的文件。这是给工具记账时的臆造，不是产品的缺陷，所以只改文档、不改代码。
+
+
+## 卅一、六点三十六分：walk-108 那三下 500 不是产品的，是我自己那把没重启的后端——但它暴露了一个真的空白
+
+### 先撤 `#310` 的定性
+
+`walk-108-log.txt:40 :46 :52` 那三条 `HTTP_500 POST …/plans/7f7a5b11-…/freeze-routes` 我当成"产品崩了而屏上不说"。 traceback 在共享日志里（`_cmdr_v3_port_1022/uvicorn_human_canary.log:2002` 起）：
+
+`File "…/backend/app/agent/goal_route_freeze.py", line 416, in freeze_plan_routes` → `:313 in freeze_routes` → `:266 in _measure_now` → `:218 in _transit_leg` → `AttributeError: 'str' object has no attribute 'strftime'`。
+
+把这四个行号对着两个版本比一遍（现读）：`git show edcca35e83^:backend/app/agent/goal_route_freeze.py` 的 `:218` 正是 `date_text = arrival.strftime("%Y-%m-%d")…`，`:266/:313/:416` 也正是那三级调用；而**现尖同一枚文件**的 `:218` 是 `if not text:`、`:255` 才是 `moment = _arrival_moment(arrival)`。修那一次的提交是 `edcca35e83`（提交时间 10-23 11:10，标题就叫"The freeze door stopped crashing on the hour the plan stores as text"），walk-108 是 10-24 04:58 跑的——**晚了将近十七小时**。⇒ 那三下 500 打在**一个从 11:10 之前起、一直没重启的后端进程**上（这把栈是 `--reload` 关掉跑的）。按裁语"别把自家工具坏说成产品缺陷"，`#310` 的产品定性撤销；它剩下的两半是真的：
+
+1. **共享栈的代次**：那把 human 栈（`14436/14496/60296`）不是我的进程，我不能擅自重启（重启会重发 `CITYNEXUS_TRAVELER_AUTH_SECRET`，作废别人的旅客凭证——正是 P0-3 还没修的那件事）。所以这条只能报给主人/号令者一句话：**human 栈的后端比权威线旧，需要一次由持有人点头的重启**。
+2. **屏上确实没说**：三次 500 期间屏幕仍是 `STEP_12B_ROUND_n TODO_ROUTE_LINES=4 FROZEN=false`（`trial/results/20261022_v3_human_chrome/walk-108-log.txt:44 :50 :56`，而三条 `HTTP_500` 自身在 `:40 :46 :52`），最后 `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`（同文件 `:106`），一句实话都没有。这一半与 500 从哪来无关，仍然挂着（归 `#310` 改名为「非 2xx 的实话」）。
+
+### 真的空白：那扇门从来没被任何测试走过
+
+`backend/tests/test_goal_route_freeze.py:9-10` 明写"每一支都把 live 测量换成不答"——它指的是 `:34` 那句 `monkeypatch.setattr(goal_route_freeze, "_measure_now", lambda *a, **k: None)`。也就是说 `_measure_now`、`_transit_leg`、`_arrival_moment` **整条测量腿在测试里一次都没执行过**，旅客按钮真按下去的那段代码无人看守；那个 `strftime` 崩溃能连续咬到 walk-78 与 walk-108，正是这个原因。
+
+补两枚臂（只假供应商，产品代码全真跑）：
+`test_the_hour_the_plan_stores_as_text_is_asked_of_the_transit_door`——把 `_client` 换成"步行门答 AMAP_NO_ROUTE、公交门答一条 41 分钟的地铁 8 号线"，从库里读那一格 `Activity.start_at`（`backend/app/db/models.py:1483` 是 `Mapped[str]`，文本列，证实了成因），断言它作为 `departure_date/departure_time` 到了公交门上、`edges[0]` 是 `MEASURED_NOW` + `mode=TRANSIT`、`frozen=true`。
+`test_an_hour_nobody_wrote_down_is_asked_as_no_hour_at_all`——把那一格清空，断言问供应商时 `departure_date` 与 `departure_time` 都是 `None`，而不是替旅客编一个钟点。
+顺带学到一条：那一列上有 `CHECK (end_at > start_at)`，所以"把钟点写成中文"这种形状**根本存不进去**；能存进去的"没写钟点"就是空串，臂按这个形状写。
+
+跑（`D:/moodle/CityNexus/.venv/Scripts/python.exe`，`backend/` 下，`-p no:cacheprovider`）：两枚新臂 `2 passed`，整枚文件 `9 passed`。**尺会咬的证据**：把 `_transit_leg` 改回修复前那一形（直接 `arrival.strftime`）再跑，两枚都 `2 failed`，报错正是旅客那回那句话——`AttributeError: 'str' object has no attribute 'strftime'`（现读落在 `goal_route_freeze.py:255`）。改完已 `git checkout --` 还原，`git status` 对那枚文件为空。
+
+### 这一段对 P0-4 的意义
+
+公交那扇门是**活的**：`_transit_leg` 会问 `/v5/direction/transit/integrated`，回来的行制带着 `lines`、`walking_distance_m`、`fare_minor`、`nightflag`（`backend/app/integrations/china/amap_provider.py:477-492`），而冻结账上的那一格会把 `mode` 记成 `TRANSIT`。所以 P0-4 缺的不是能力，是**旅客那一侧没有任何东西用它**：`grep -rn -E "重新安排|按路线|路线重排|rearrange" frontend/src` 只命中 `frontend/src/main.tsx:57` 一句演示用的目标文本，没有 onClick——连"死牌子"都算不上，是根本没这块牌子。下一刀就做这一件：把长步行那一格与它的公交对照摆到屏幕上，给一个真的「根据路线重新安排」，写进**同一 revision 的显式 diff**，不自动改生效 PlanVersion，也不跳 422 那道可行性门。
