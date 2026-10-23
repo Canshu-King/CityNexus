@@ -1,0 +1,237 @@
+/*
+ * WP-D — 底图没到时的图版 / the plate the journey map paints when the basemap did not arrive.
+ *
+ * Its own stylesheet, imported last by `main.tsx`, for the two reasons every other feature-local
+ * stylesheet in this project exists (`features/checkin/footprint.css:1-16` states them): several lanes
+ * land rules in `styles.css` at once, and a rule that takes everything from the token layer needs no
+ * dark block of its own — the theme flip moves the surface and its ink together.
+ *
+ * The direction, stated once so a later reader can argue with the choice rather than guess it: this is
+ * a surveyor's blank plate, not an alert. The route and the pins are real and stay on the glass; what
+ * is missing is the ground under them, so the plate says what refused, quotes the panel's own stop
+ * count as the proof the trip survived, and gives two exits. The one deliberate flourish is the
+ * ordinal square in the stop list: a number set on a hatched cell, because a number is exactly what a
+ * pin still owns when the basemap it stood on is gone. Nothing here paints a placeholder tile — a local
+ * stand-in would be the map claiming a basemap it never got.
+ *
+ * Three constraints the geometry obeys, each measured on this lane's own run:
+ *  1. it starts BELOW the named viewport control. That control's box reads top 368 / height 36 against
+ *     a panel top of 343 (390x844), so its lower edge is 61 px into the panel; a plate at `--cn-s-12`
+ *     stood on it with 1,194 px² of overlap, which is what the arm at the end of this file now refuses.
+ *  2. it never moves the panel, only covers part of it, because `qoder-live-structure` bounds the
+ *     panel's own height;
+ *  3. it stays short. The camera is given 153 px on this panel (pins measured at relative 59..187 of a
+ *     392 px panel, the bottom 139 px band already reserved ground), so a closed plate that reads 72-90
+ *     px is what leaves the journey frameable below it; `max-height` bounds only the open state, and the
+ *     stop list scrolls inside it rather than pushing the plate over the caption.
+ *
+ * And the rule this panel already lives by, restated because the plate is the third surface to be
+ * tempted by it: an informational overlay must not win a drag (`styles.css:245-254`, ORD-0134 ②). The
+ * plate is paper. Only its controls take the pointer.
+ */
+
+.v8-map-panel .v8-map-degraded {
+  position: absolute;
+  top: calc(var(--cn-s-40) + var(--cn-s-32));
+  right: var(--cn-s-8);
+  left: var(--cn-s-8);
+  z-index: 5;
+  display: grid;
+  gap: var(--cn-s-6);
+  max-height: 168px;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px solid var(--cn-control-border);
+  border-left: 3px solid var(--cn-warning);
+  border-radius: var(--cn-r-card);
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-1);
+  box-shadow: var(--cn-shadow-card);
+  pointer-events: none;
+}
+
+/* The shipped ORD-0037 sentence: kept in the document, its class and test identity intact, still
+   `role="status"` so it is still announced -- and not painted. This is the one place where the plate
+   spends a claim rather than a pixel, so it is spelled out in `MapPanel.tsx` next to the element.
+   Clipping to 1 px (rather than `display:none`) is what keeps it in the accessibility tree, and it is
+   what makes `qoder-map-ord0403-*.spec.ts:213`'s measurement of `.v8-map-tile-notice` against the named
+   control come out 0, which is the arm that was red whenever the two bands shared ground. */
+.v8-map-panel .v8-map-degraded .v8-map-tile-notice {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The plate's one visible sentence. `--cn-fs-caption` is 13 px, the smallest size this token layer
+   treats as legal for real text (`design-tokens.css:754-757` names 10-11 px captions as the failing
+   case), and the ink is the paper's paired primary, so it is 16.9:1 light and 15.1:1 dark -- the two
+   numbers that let this line be read as a headline rather than as fine print. */
+.v8-map-panel .v8-map-degraded-headline {
+  font-size: var(--cn-fs-caption);
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.v8-map-panel .v8-map-degraded-actions {
+  display: flex;
+  flex-wrap: wrap;
+  /* Row-gap 16, column-gap 8. The 8 px is the floor the interface guide states for two touchables
+     (`--domain web "safe-areas touch targets"`, Touch Spacing), but these buttons carry a hit box that
+     is 44 px tall around a 32 px paint -- 6 px of that reach above and below the paint. At 320 px the
+     row wraps, and with a plain 8 px row-gap the two rows' hit boxes overlapped by 4 px: a press aimed
+     at the gap could land on the button you did not mean. 16 px leaves the extension 6 px clear. */
+  gap: var(--cn-s-16) var(--cn-s-8);
+  pointer-events: none;
+}
+
+.v8-map-panel .v8-map-degraded-btn {
+  /* `width:auto` is not decoration: `styles.css` carries a bare `button { width:100% }`, and an override
+     that only sets `display` still inherits the full block (measured on the footprint panel's retry,
+     `features/checkin/footprint.css:9-13`). */
+  width: auto;
+  /* The visible box is 32 px because that is what the one control this panel already ships measures
+     (`map-controls.css:28`, and 36 px with its padding on screen) — a 44 px box here would push the
+     plate's text out of its own height budget. The HIT box is 44 px, extended outward rather than
+     inward, so it costs no layout and cannot overlap its neighbour (8 px of gap between them). That is
+     the same trick the shell's quiet buttons were given for the same reason; the floor is honoured where
+     a finger lands, not where paint is. */
+  min-height: var(--cn-s-32);
+  margin: 0;
+  padding: var(--cn-s-4) var(--cn-s-12);
+  border: 1px solid var(--cn-accent-solid);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-accent-solid);
+  color: var(--cn-always-on-accent-solid);
+  font: inherit;
+  font-size: var(--cn-fs-caption);
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+  transition: background-color var(--cn-t-press) var(--cn-ease-standard);
+}
+
+.v8-map-panel .v8-map-degraded-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: var(--cn-touch-min);
+  transform: translateY(-50%);
+}
+
+/* The second exit is a different kind of thing — it changes what the plate shows, not what the network
+   is asked — so it is painted as an outline, not as a second primary. Against the plate's own paper
+   `--cn-control-border` is 3.63:1 light and 4.10:1 dark, which is the boundary the contrast gate reads
+   for a control (`_qoderContrastScan.ts`, `control-boundary`). */
+.v8-map-panel .v8-map-degraded-btn--quiet {
+  border-color: var(--cn-control-border);
+  background: transparent;
+  color: var(--cn-on-elev-1);
+}
+
+.v8-map-panel .v8-map-degraded-btn:active {
+  transform: scale(0.98);
+}
+
+.v8-map-panel .v8-map-degraded-btn:focus-visible {
+  outline: 2px solid var(--cn-accent-text);
+  outline-offset: 2px;
+}
+
+/* The counter, in the muted ink of THIS paper and never the warning hue: `--cn-warning` #b06000 measures
+   4.6:1 on white but under 4.5:1 on the elevation fill, so a hue-as-text reading would pass one
+   screenshot and fail the other — the failure this token layer exists to kill. The hue is carried by the
+   plate's left rule, which is decoration and not the only carrier of meaning, the same division
+   `.trial-create-error` (`design-tokens.css:1203-1219`) makes. */
+.v8-map-panel .v8-map-degraded-retried {
+  margin: 0;
+  color: var(--cn-on-elev-1-muted);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+}
+
+/* The tile-independent view. It scrolls, so it does take the pointer — a list a finger cannot move is a
+   picture of a list — and it is only ever rendered after the traveller asked for it, so the plate the
+   gates measure at rest is the compact one above. */
+.v8-map-panel .v8-map-degraded-stops-wrap {
+  max-height: 76px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid var(--cn-hairline);
+  padding-top: var(--cn-s-4);
+  pointer-events: auto;
+}
+
+.v8-map-panel .v8-map-degraded-stops {
+  /* `styles.css` indents bare lists into prose columns; this is a register, not an outline. */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--cn-s-2);
+}
+
+.v8-map-panel .v8-map-degraded-stop {
+  display: flex;
+  align-items: baseline;
+  gap: var(--cn-s-8);
+  color: var(--cn-on-elev-1);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+}
+
+/* The signature: the number the pin still owns, set on a hatched cell. The hatch is built from this
+   plate's own ink at 14%, so it travels with the theme instead of being painted twice, and it reads as
+   "ground that is not there" — the opposite of a fake basemap. Tabular figures so a column of numbers
+   keeps its own edge. */
+.v8-map-panel .v8-map-degraded-ordinal {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--cn-control-border);
+  border-radius: var(--cn-r-4);
+  background-color: var(--cn-elev-2);
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--cn-on-elev-1) 14%, transparent) 0 2px,
+    transparent 2px 5px
+  );
+  color: var(--cn-on-elev-2);
+  font-size: var(--cn-fs-caption);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.v8-map-panel .v8-map-degraded-stop-word {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.v8-map-panel .v8-map-degraded-stop[data-current="true"] .v8-map-degraded-stop-word {
+  font-weight: 700;
+}
+
+/* Nothing here may animate an arrival: an opacity-0 first frame reads as "not present" to a Playwright
+   visibility assertion (`FRONTEND_PULSE_BRIEF_r1.md` §2.4). Press feedback is the only motion, and it is
+   off when the traveller asks for less. */
+@media (prefers-reduced-motion: reduce) {
+  .v8-map-panel .v8-map-degraded-btn {
+    transition: none;
+  }
+  .v8-map-panel .v8-map-degraded-btn:active {
+    transform: none;
+  }
+}

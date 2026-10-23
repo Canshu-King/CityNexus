@@ -38,6 +38,22 @@ class Settings:
     # local development; the request body's agent_id is never authoritative.
     agent_token: str | None = os.getenv("CITYNEXUS_AGENT_TOKEN") or None
     agent_principal_id: str = os.getenv("CITYNEXUS_AGENT_PRINCIPAL_ID", "citynexus-local-agent")
+    # ORD-0685: the traveller principal's signing secret.  Empty means the door refuses every
+    # caller (503, named) rather than accepting an identity it cannot verify; it is never
+    # defaulted to a literal, because a default secret is a public secret.
+    traveler_auth_secret: str | None = os.getenv("CITYNEXUS_TRAVELER_AUTH_SECRET") or None
+    traveler_auth_ttl_seconds: int = int(
+        os.getenv("CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS", "900")
+    )
+    # GPT P0-SEC (Issue #31): once this build CAN verify a traveller, dropping the `Authorization`
+    # header must not be a way to step outside that check.  Anonymous reads of private trips are
+    # therefore refused by default whenever a signing secret is configured.  A demo or public
+    # preview that genuinely needs anonymous reads opts back in **by name**, in its own local
+    # configuration -- not by the accident of "nobody carried a token today".
+    traveler_auth_allow_anonymous_private: bool = (
+        os.getenv("CITYNEXUS_TRAVELER_AUTH_ALLOW_ANONYMOUS_PRIVATE", "").strip().lower()
+        in {"1", "true", "yes"}
+    )
     agent_allowed_traveler_ids: tuple[str, ...] = tuple(
         item.strip()
         for item in os.getenv("CITYNEXUS_AGENT_ALLOWED_TRAVELER_IDS", "").split(",")

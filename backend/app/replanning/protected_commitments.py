@@ -10,8 +10,8 @@ from app.planning.anchors import (
     LOCATION_UNRESOLVED,
     STRUCTURAL_ANCHOR_KEYS,
     anchor_identity_from_policy,
+    anchor_role_from_policy,
     is_structural_key,
-    normalise_role,
     structural_place_id,
 )
 
@@ -43,13 +43,13 @@ def active_c4_hard_constraints(commitments: Iterable[Any]) -> list[dict[str, Any
             raise ValueError("C4 commitment policy is invalid JSON") from exc
         scheduled_start = policy.get("scheduled_start_at")
         if not scheduled_start:
-            if not normalise_role(policy.get("anchor_role")):
+            if not anchor_role_from_policy(policy):
                 # Booking/order anchors are bound to a concrete Activity, not a
                 # relative schedule; they are protected through activity_id.
                 continue
             raise ValueError("C4 commitment lacks a stable time anchor")
 
-        role = normalise_role(policy.get("anchor_role"))
+        role = anchor_role_from_policy(policy)
         raw_key = str(policy.get("semantic_key") or "").strip()
         legacy_key = str(policy.get("semantic_node_key") or "").strip()
         semantic_key = raw_key or legacy_key

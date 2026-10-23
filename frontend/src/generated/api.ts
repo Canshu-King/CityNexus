@@ -2830,7 +2830,7 @@ export interface components {
             /** @enum {string} */
             ai: "available" | "unavailable" | "disabled";
             /** @enum {string} */
-            ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
+            ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED" | "PROVIDER_ANSWERED";
         };
         ErrorEnvelope: {
             error: {
@@ -3735,6 +3735,9 @@ export interface components {
             successful_place_ids: string[];
             failed_place_ids: string[];
             degraded: boolean;
+            used_timezone: string | null;
+            timezone_honoured: boolean;
+            attribution_skipped_reason_codes: string[];
             snapshots: {
                 [key: string]: unknown;
             }[];
@@ -4418,7 +4421,17 @@ export interface operations {
                         deepseek_configured: boolean;
                         hermes_compat_configured: boolean;
                         /** @enum {string} */
-                        ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
+                        ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED" | "PROVIDER_ANSWERED";
+                        ai_last_call?: {
+                            provider_key?: string;
+                            model_key?: string | null;
+                            /** @enum {string} */
+                            outcome?: "ANSWERED" | "REFUSED";
+                            status_code?: number | null;
+                            observed_at?: string;
+                            answers?: number;
+                            refusals?: number;
+                        } | null;
                         hermes_native_gateway?: Record<string, never>;
                     };
                 };

@@ -1,0 +1,275 @@
+{
+  "generatedAt": "2026-10-18T03:47:34.586Z",
+  "shots": [
+    {
+      "id": "01",
+      "file": "01-city.png",
+      "headline": "① 先说要去的城市",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "trial-city",
+          "action": "填城市",
+          "box": {
+            "x": 41,
+            "y": 325.3125,
+            "width": 308,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(29, 29, 31)",
+            "paintedText": "北京",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "file": "02-anchors.png",
+      "headline": "② 再填抵达和离开",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "trial-arrival",
+          "action": "从哪儿到",
+          "box": {
+            "x": 41,
+            "y": 630.5,
+            "width": 308,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(29, 29, 31)",
+            "paintedText": "北京南站",
+            "fadedBy": []
+          }
+        },
+        {
+          "testId": "trial-departure",
+          "action": "从哪儿走",
+          "box": {
+            "x": 41,
+            "y": 706.5,
+            "width": 308,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(29, 29, 31)",
+            "paintedText": "大兴国际机场",
+            "fadedBy": []
+          }
+        },
+        {
+          "testId": "trial-next",
+          "action": "点这里",
+          "box": {
+            "x": 20,
+            "y": 788,
+            "width": 350,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(255, 255, 255)",
+            "paintedText": "下一步",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "file": "03-confirm.png",
+      "headline": "③ 核对无误，点这里创建",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "trial-create",
+          "action": "点这里创建",
+          "box": {
+            "x": 82.46875,
+            "y": 788,
+            "width": 287.53125,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(255, 255, 255)",
+            "paintedText": "确认创建",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "file": "04-today.png",
+      "headline": "④ 点这里看 AI 做过什么",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "hub-ai-work",
+          "action": "点这里看 AI",
+          "box": {
+            "x": 17,
+            "y": 402.3125,
+            "width": 82.96875,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(10, 92, 214)",
+            "paintedText": "AI 工作动态",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "file": "05-ai-panel.png",
+      "headline": "⑤ 这里只写服务器确证过的事",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "note": "测试环境 AI 未启用；当前没有真实运行",
+      "targets": [
+        {
+          "testId": "agent-work-no-run",
+          "action": "暂无真实运行",
+          "box": {
+            "x": 30,
+            "y": 605.75,
+            "width": 330,
+            "height": 54
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(93, 91, 87)",
+            "paintedText": "暂无真实运行这一格不推断：服务器没有确证过一次运行之前，这里就照实说没有，不摆步",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "file": "06-trip-entry.png",
+      "headline": "⑥ 行程页也有同一颗入口",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "trip-ai-work",
+          "action": "点这里",
+          "box": {
+            "x": 17,
+            "y": 334.75,
+            "width": 82.96875,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(10, 92, 214)",
+            "paintedText": "AI 工作动态",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "file": "07-trip-panel.png",
+      "headline": "⑦ 不确定就点这里再查",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "agent-work-retry",
+          "action": "再查一次",
+          "box": {
+            "x": 298,
+            "y": 399.75,
+            "width": 64,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(10, 92, 214)",
+            "paintedText": "再查一次",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "file": "08-stay-retry.png",
+      "headline": "⑧ 查不到时点这里重试",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "targets": [
+        {
+          "testId": "hub-stay-retry",
+          "action": "点这里重试",
+          "box": {
+            "x": 36,
+            "y": 293.015625,
+            "width": 321,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(10, 92, 214)",
+            "paintedText": "再查一次",
+            "fadedBy": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "file": "09-my-trips.png",
+      "headline": "⑨ 点这里回到已有的一趟",
+      "viewportWidth": 390,
+      "paintedKeys": [],
+      "note": "这一格只列服务器认给你这个人的行程；换手机或重新登录之后，先从这一步回去。",
+      "targets": [
+        {
+          "testId": "my-trips-open",
+          "action": "打开这趟",
+          "box": {
+            "x": 314,
+            "y": 646,
+            "width": 48,
+            "height": 44
+          },
+          "paint": {
+            "opacity": "1",
+            "visibility": "visible",
+            "color": "rgb(10, 92, 214)",
+            "paintedText": "打开这趟",
+            "fadedBy": []
+          }
+        }
+      ]
+    }
+  ]
+}

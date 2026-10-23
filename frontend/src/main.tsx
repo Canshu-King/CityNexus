@@ -52,6 +52,9 @@ import "./cn-pulse-actions.css";
 /* Chrome fixes load after both: the topbar squeeze is a flex-shrink bug, and the
    fix has to win against `styles.css` by order, not by `!important`. */
 import "./cn-pulse-chrome.css";
+/* The map surface's own plate, after the pulse layer so the paired `--cn-elev-*` / `--cn-on-elev-*`
+   tokens it reads are already declared by the time its rules are parsed. */
+import "./cn-pulse-map.css";
 
 /* Resolve the theme root contract before the first paint.  The stylesheets key their dark
    tables off `:root[data-theme]`, so the attribute must exist by the time anything is

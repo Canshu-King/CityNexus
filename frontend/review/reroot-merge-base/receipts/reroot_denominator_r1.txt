@@ -1,0 +1,33 @@
+分母读数取于 2026-10-17 19:48:28｜现尖 24835743deccd15b8d014e26c836cc46a5365993｜该枝历史可达提交数 109｜根数 2
+点名册原文首行 待并枝回话读数 2026-10-17 19:29:01 取（原件 _disjoint_scan_last.txt，7 分前落档）｜clean 2｜要并枝 146｜列出主人 19 位
+根 | 48c23b29ea06a7286844d25e8c8aef0d1440a850|2026-10-13 06:52|ORD-0635: union of the 12 yielding branches' i18n keys lands o
+根 | 0cf83ec149f9ba399c3fde7ecabff8a1bf3a6bb5|2026-10-13 06:13|ORD-0644 落两枚产品模块：fact_acquisition 与 replanning/proposal_lifecy
+逐枝（合并基准 = 现尖 24835743decc）
+枝 1 | refs/heads/review/pinggong-0679-r1 | 本地有对象=True | 有共同祖先=True | 已在现尖世系内=False | merge-tree rc=0 | 首段成因=
+枝 2 | refs/heads/review/wenangong-0407-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 3 | refs/heads/review/xuxiangong-0685-c-r1 | 本地有对象=None | 有共同祖先=None | 已在现尖世系内=None | merge-tree rc=None | 首段成因=
+枝 4 | refs/heads/review/住宿工-0576-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 5 | refs/heads/review/住宿工-0570-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 6 | refs/heads/review/加闸工-0576-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 7 | refs/heads/review/备城工-0570-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 8 | refs/heads/review/备城工-0557-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 9 | refs/heads/review/大柜工-0569-dict-r1 | 本地有对象=None | 有共同祖先=None | 已在现尖世系内=None | merge-tree rc=None | 首段成因=
+枝 10 | refs/heads/review/大柜工-0558-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 11 | refs/heads/review/大柜工-0557-dict-r2 | 本地有对象=None | 有共同祖先=None | 已在现尖世系内=None | merge-tree rc=None | 首段成因=
+枝 12 | refs/heads/review/快刀工-0557-r3 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 13 | refs/heads/review/快刀工-0557-dict-r3 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 14 | refs/heads/review/快刀工-0557-dict-r2 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 15 | refs/heads/review/快剪工-0573-r2 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 16 | refs/heads/review/快钉工-0557-walk-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 17 | refs/heads/review/快钉工-0557-r3 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 18 | refs/heads/review/快钉工-0557-dict-r3 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 19 | refs/heads/review/快锥工-0576-dict-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 20 | refs/heads/review/快锥工-0557-liverecovery-dict-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 21 | refs/heads/review/旅馆工-0557-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 22 | refs/heads/review/旅馆工-0557-dict-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 23 | refs/heads/review/盘务工-0680-r14-r1 | 本地有对象=True | 有共同祖先=True | 已在现尖世系内=False | merge-tree rc=1 | 首段成因=
+枝 24 | refs/heads/review/起手工-0572-r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 25 | stranded -r1 | 本地有对象=True | 有共同祖先=False | 已在现尖世系内=False | merge-tree rc=128 | 首段成因=fatal: refusing to merge unrelated histories
+枝 26 | re-issued -r2 | 本地有对象=True | 有共同祖先=True | 已在现尖世系内=True | merge-tree rc=0 | 首段成因=
+合计 26 枝：可测 23 枝，merge-tree 非零 21 枝，其中成因是无共同祖先 20 枝
+尺的判语原文 _disjoint_scan_r1.py:190:dirty.append((ref, sha, len(lset), ["merge-tree 判有冲突"]))

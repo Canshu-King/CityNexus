@@ -1,0 +1,13 @@
+[   0.0s] plan of record sha256/16 6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee (read-only source, must not change)
+[   0.0s] phase rows carrying predecessors in the plan of record: 0 of 11 -> no phase network exists to copy
+[   0.0s] rows for the classroom file: 11 phases + 5 dated milestones (M10@2026-10-02 M9@2026-11-02 M11@2026-10-23 M12@2026-11-06 M13@2026-11-06)
+[   1.8s] ProjectStart = 2026-09-07
+[   1.8s] StatusDate = 2026-10-22
+[   5.5s] Table('摘要') refused: TypeError
+[   5.5s] Table('Summary') refused: TypeError
+[   5.6s] ColumnBestFit applied
+[   5.9s] timeline pane toggled off twice (back to hidden)
+[   6.2s] saved D:\moodle\CityNexus\deliverables\SoftwareEngineering_2026\Classroom\Teacher_03_Project_Overview.mpp (278528 bytes)
+[   7.3s] read back: {"rows": 16, "phases": 11, "milestones": 5, "linkRecords": 0, "start": "2026-09-07", "finish": "2026-10-23", "cost": 0.0, "work": 0.0, "critical": 3, "datesAgree": true, "dateDrift": [], "constraintTypes": {"0": 1, "4": 15}, "noResourceAssignments": true, "table": "unreadable: AttributeError"}
+[   7.8s] plan of record unchanged: True
+[   7.8s] TEACHER PROJECT OK: 16 rows, 0 link records, finish 2026-10-23

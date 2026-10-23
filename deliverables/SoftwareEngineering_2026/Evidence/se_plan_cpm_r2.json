@@ -1,0 +1,1047 @@
+{
+ "problems": [],
+ "violations": [],
+ "links_total": 61,
+ "links": [
+  {
+   "pred": "1.1",
+   "succ": "1.2",
+   "type": "FS",
+   "pred_finish": "2026-09-07",
+   "succ_start": "2026-09-08",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "1.2",
+   "succ": "1.3",
+   "type": "SS",
+   "pred_finish": "2026-09-08",
+   "succ_start": "2026-09-08",
+   "holds": true,
+   "date_gap_days": 0
+  },
+  {
+   "pred": "1.2",
+   "succ": "M1",
+   "type": "FS",
+   "pred_finish": "2026-09-08",
+   "succ_start": "2026-09-09",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "M1",
+   "succ": "2.1",
+   "type": "FS",
+   "pred_finish": "2026-09-09",
+   "succ_start": "2026-09-10",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "2.1",
+   "succ": "2.2",
+   "type": "SS",
+   "pred_finish": "2026-09-15",
+   "succ_start": "2026-09-10",
+   "holds": true,
+   "date_gap_days": -5
+  },
+  {
+   "pred": "2.2",
+   "succ": "2.3",
+   "type": "SS",
+   "pred_finish": "2026-09-16",
+   "succ_start": "2026-09-10",
+   "holds": true,
+   "date_gap_days": -6
+  },
+  {
+   "pred": "2.2",
+   "succ": "M2",
+   "type": "FS",
+   "pred_finish": "2026-09-16",
+   "succ_start": "2026-09-17",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "2.3",
+   "succ": "M2",
+   "type": "FS",
+   "pred_finish": "2026-09-15",
+   "succ_start": "2026-09-17",
+   "holds": true,
+   "date_gap_days": 2
+  },
+  {
+   "pred": "M11",
+   "succ": "2.4",
+   "type": "FS",
+   "pred_finish": "2026-10-22",
+   "succ_start": "2026-10-23",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "M2",
+   "succ": "3.1",
+   "type": "FS",
+   "pred_finish": "2026-09-17",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "3.1",
+   "succ": "3.2",
+   "type": "SS",
+   "pred_finish": "2026-09-24",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -6
+  },
+  {
+   "pred": "3.2",
+   "succ": "3.3",
+   "type": "SS",
+   "pred_finish": "2026-09-23",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -5
+  },
+  {
+   "pred": "3.1",
+   "succ": "M3",
+   "type": "FS",
+   "pred_finish": "2026-09-24",
+   "succ_start": "2026-09-25",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "3.2",
+   "succ": "M3",
+   "type": "FS",
+   "pred_finish": "2026-09-23",
+   "succ_start": "2026-09-25",
+   "holds": true,
+   "date_gap_days": 2
+  },
+  {
+   "pred": "3.3",
+   "succ": "M3",
+   "type": "FS",
+   "pred_finish": "2026-09-23",
+   "succ_start": "2026-09-25",
+   "holds": true,
+   "date_gap_days": 2
+  },
+  {
+   "pred": "3.1",
+   "succ": "4.1",
+   "type": "SS",
+   "pred_finish": "2026-09-24",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -6
+  },
+  {
+   "pred": "4.1",
+   "succ": "4.2",
+   "type": "SS",
+   "pred_finish": "2026-10-01",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -13
+  },
+  {
+   "pred": "4.1",
+   "succ": "4.3",
+   "type": "SS",
+   "pred_finish": "2026-10-01",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -13
+  },
+  {
+   "pred": "4.2",
+   "succ": "4.4",
+   "type": "FS",
+   "pred_finish": "2026-09-29",
+   "succ_start": "2026-09-30",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "4.4",
+   "succ": "4.5",
+   "type": "FS",
+   "pred_finish": "2026-10-07",
+   "succ_start": "2026-10-08",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "4.3",
+   "succ": "M4",
+   "type": "FS",
+   "pred_finish": "2026-10-05",
+   "succ_start": "2026-10-08",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "4.4",
+   "succ": "M4",
+   "type": "FS",
+   "pred_finish": "2026-10-07",
+   "succ_start": "2026-10-08",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "4.1",
+   "succ": "5.1",
+   "type": "SS",
+   "pred_finish": "2026-10-01",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -13
+  },
+  {
+   "pred": "5.1",
+   "succ": "5.2",
+   "type": "SS",
+   "pred_finish": "2026-09-24",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -6
+  },
+  {
+   "pred": "5.2",
+   "succ": "5.3",
+   "type": "SS",
+   "pred_finish": "2026-09-22",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -4
+  },
+  {
+   "pred": "5.1",
+   "succ": "5.4",
+   "type": "FS",
+   "pred_finish": "2026-09-24",
+   "succ_start": "2026-09-25",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "5.2",
+   "succ": "M5",
+   "type": "FS",
+   "pred_finish": "2026-09-22",
+   "succ_start": "2026-10-01",
+   "holds": true,
+   "date_gap_days": 9
+  },
+  {
+   "pred": "5.4",
+   "succ": "M5",
+   "type": "FS",
+   "pred_finish": "2026-09-30",
+   "succ_start": "2026-10-01",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "4.3",
+   "succ": "6.1",
+   "type": "SS",
+   "pred_finish": "2026-10-05",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -17
+  },
+  {
+   "pred": "6.1",
+   "succ": "6.2",
+   "type": "FS",
+   "pred_finish": "2026-09-24",
+   "succ_start": "2026-09-25",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "6.2",
+   "succ": "6.3",
+   "type": "SS",
+   "pred_finish": "2026-10-02",
+   "succ_start": "2026-09-25",
+   "holds": true,
+   "date_gap_days": -7
+  },
+  {
+   "pred": "6.3",
+   "succ": "6.4",
+   "type": "FS",
+   "pred_finish": "2026-10-01",
+   "succ_start": "2026-10-02",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "6.4",
+   "succ": "6.5",
+   "type": "SS",
+   "pred_finish": "2026-10-07",
+   "succ_start": "2026-10-02",
+   "holds": true,
+   "date_gap_days": -5
+  },
+  {
+   "pred": "6.4",
+   "succ": "M6",
+   "type": "FS",
+   "pred_finish": "2026-10-07",
+   "succ_start": "2026-10-08",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "4.1",
+   "succ": "7.1",
+   "type": "SS",
+   "pred_finish": "2026-10-01",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -13
+  },
+  {
+   "pred": "7.1",
+   "succ": "7.2",
+   "type": "SS",
+   "pred_finish": "2026-09-29",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -11
+  },
+  {
+   "pred": "7.2",
+   "succ": "7.3",
+   "type": "FS",
+   "pred_finish": "2026-09-25",
+   "succ_start": "2026-09-28",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "7.3",
+   "succ": "M7",
+   "type": "FS",
+   "pred_finish": "2026-10-05",
+   "succ_start": "2026-10-06",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "7.2",
+   "succ": "8.1",
+   "type": "SS",
+   "pred_finish": "2026-09-25",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -7
+  },
+  {
+   "pred": "8.1",
+   "succ": "8.2",
+   "type": "SS",
+   "pred_finish": "2026-09-25",
+   "succ_start": "2026-09-18",
+   "holds": true,
+   "date_gap_days": -7
+  },
+  {
+   "pred": "8.1",
+   "succ": "M8",
+   "type": "FS",
+   "pred_finish": "2026-09-25",
+   "succ_start": "2026-09-28",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "M8",
+   "succ": "9.1",
+   "type": "SS",
+   "pred_finish": "2026-09-28",
+   "succ_start": "2026-09-28",
+   "holds": true,
+   "date_gap_days": 0
+  },
+  {
+   "pred": "9.1",
+   "succ": "9.2",
+   "type": "SS",
+   "pred_finish": "2026-10-23",
+   "succ_start": "2026-09-28",
+   "holds": true,
+   "date_gap_days": -25
+  },
+  {
+   "pred": "9.2",
+   "succ": "9.3",
+   "type": "SS",
+   "pred_finish": "2026-10-23",
+   "succ_start": "2026-09-28",
+   "holds": true,
+   "date_gap_days": -25
+  },
+  {
+   "pred": "9.3",
+   "succ": "9.4",
+   "type": "FS",
+   "pred_finish": "2026-10-02",
+   "succ_start": "2026-10-05",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "9.1",
+   "succ": "9.5",
+   "type": "FF",
+   "pred_finish": "2026-10-23",
+   "succ_start": "2026-10-21",
+   "holds": true,
+   "date_gap_days": 0
+  },
+  {
+   "pred": "9.2",
+   "succ": "9.5",
+   "type": "FF",
+   "pred_finish": "2026-10-23",
+   "succ_start": "2026-10-21",
+   "holds": true,
+   "date_gap_days": 0
+  },
+  {
+   "pred": "9.4",
+   "succ": "9.6",
+   "type": "SS",
+   "pred_finish": "2026-10-08",
+   "succ_start": "2026-10-05",
+   "holds": true,
+   "date_gap_days": -3
+  },
+  {
+   "pred": "9.4",
+   "succ": "M9",
+   "type": "FS",
+   "pred_finish": "2026-10-08",
+   "succ_start": "2026-10-09",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "9.6",
+   "succ": "M9",
+   "type": "FS",
+   "pred_finish": "2026-10-06",
+   "succ_start": "2026-10-09",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "M3",
+   "succ": "10.1",
+   "type": "FS",
+   "pred_finish": "2026-09-25",
+   "succ_start": "2026-09-28",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "M7",
+   "succ": "10.2",
+   "type": "FS",
+   "pred_finish": "2026-10-06",
+   "succ_start": "2026-10-07",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "10.2",
+   "succ": "10.3",
+   "type": "FS",
+   "pred_finish": "2026-10-21",
+   "succ_start": "2026-10-22",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "10.3",
+   "succ": "10.4",
+   "type": "SS",
+   "pred_finish": "2026-10-27",
+   "succ_start": "2026-10-22",
+   "holds": true,
+   "date_gap_days": -5
+  },
+  {
+   "pred": "10.1",
+   "succ": "M10",
+   "type": "FS",
+   "pred_finish": "2026-10-02",
+   "succ_start": "2026-10-05",
+   "holds": true,
+   "date_gap_days": 3
+  },
+  {
+   "pred": "10.2",
+   "succ": "M11",
+   "type": "FS",
+   "pred_finish": "2026-10-21",
+   "succ_start": "2026-10-22",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "10.4",
+   "succ": "M12",
+   "type": "FS",
+   "pred_finish": "2026-10-28",
+   "succ_start": "2026-10-29",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "10.2",
+   "succ": "11.1",
+   "type": "FS",
+   "pred_finish": "2026-10-21",
+   "succ_start": "2026-10-22",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "11.1",
+   "succ": "11.2",
+   "type": "FS",
+   "pred_finish": "2026-10-22",
+   "succ_start": "2026-10-23",
+   "holds": true,
+   "date_gap_days": 1
+  },
+  {
+   "pred": "11.2",
+   "succ": "M13",
+   "type": "FS",
+   "pred_finish": "2026-10-23",
+   "succ_start": "2026-10-30",
+   "holds": true,
+   "date_gap_days": 7
+  },
+  {
+   "pred": "M12",
+   "succ": "M13",
+   "type": "FS",
+   "pred_finish": "2026-10-29",
+   "succ_start": "2026-10-30",
+   "holds": true,
+   "date_gap_days": 1
+  }
+ ],
+ "history_after_status_date": [],
+ "overdue_not_started": [
+  "5.3 0% complete, planned 2026-09-18..2026-09-23 - overdue as of the status date (left visible, not re-dated)",
+  "9.4 0% complete, planned 2026-10-05..2026-10-08 - overdue as of the status date (left visible, not re-dated)",
+  "9.6 0% complete, planned 2026-10-05..2026-10-06 - overdue as of the status date (left visible, not re-dated)",
+  "10.1 0% complete, planned 2026-09-28..2026-10-02 - overdue as of the status date (left visible, not re-dated)"
+ ],
+ "in_progress": [
+  "4.5 40% - remaining work rolls past 2026-10-22",
+  "5.2 70% - remaining work rolls past 2026-10-22",
+  "6.5 20% - remaining work rolls past 2026-10-22",
+  "8.2 50% - remaining work rolls past 2026-10-22",
+  "9.1 85% - remaining work rolls past 2026-10-22",
+  "9.2 60% - remaining work rolls past 2026-10-22",
+  "9.3 50% - remaining work rolls past 2026-10-22",
+  "10.2 70% - remaining work rolls past 2026-10-22",
+  "10.3 80% - remaining work rolls past 2026-10-22",
+  "10.4 40% - remaining work rolls past 2026-10-22",
+  "11.2 50% - remaining work rolls past 2026-10-22"
+ ],
+ "deadline_breaches": [
+  "M10 deadline 2026-10-02 but scheduled finish 2026-10-05  [recorded fact: this date was really missed]"
+ ],
+ "internal_target_breaches": [],
+ "late_at_status_date": [
+  "5.2 70% done, planned to finish 2026-09-22, status date 2026-10-22",
+  "5.3 0% done, planned to finish 2026-09-23, status date 2026-10-22",
+  "6.5 20% done, planned to finish 2026-10-09, status date 2026-10-22",
+  "8.2 50% done, planned to finish 2026-09-25, status date 2026-10-22",
+  "9.3 50% done, planned to finish 2026-10-02, status date 2026-10-22",
+  "9.4 0% done, planned to finish 2026-10-08, status date 2026-10-22",
+  "9.6 0% done, planned to finish 2026-10-06, status date 2026-10-22",
+  "10.2 70% done, planned to finish 2026-10-21, status date 2026-10-22"
+ ],
+ "milestones_without_date": [],
+ "census": {
+  "summaries": 11,
+  "tasks": 41,
+  "milestones": 13,
+  "leaves": 54
+ },
+ "project_finish": "2026-10-30",
+ "critical_chain": [
+  "1.1",
+  "1.2",
+  "M1",
+  "2.1",
+  "2.2",
+  "M2",
+  "3.1",
+  "4.1",
+  "7.1",
+  "7.2",
+  "7.3",
+  "M7",
+  "10.2",
+  "10.3",
+  "10.4",
+  "M12",
+  "M13"
+ ],
+ "estimated_hours_total": 221.0,
+ "estimated_hours_by_resource": {
+  "yang": 78.0,
+  "wangjr": 75.0,
+  "wangxy": 68.0
+ },
+ "compute_hours_note": "material lanes; priced, never counted as student hours",
+ "capacity": {
+  "students": {
+   "yang": {
+    "availWeek": 20.0
+   },
+   "wangjr": {
+    "availWeek": 20.0
+   },
+   "wangxy": {
+    "availWeek": 20.0
+   }
+  },
+  "weekly": [
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W37",
+    "availableHours": 20.0,
+    "assignedHours": 2.0,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W38",
+    "availableHours": 20.0,
+    "assignedHours": 5.8,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W39",
+    "availableHours": 20.0,
+    "assignedHours": 18.5,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W40",
+    "availableHours": 20.0,
+    "assignedHours": 17.2,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W41",
+    "availableHours": 20.0,
+    "assignedHours": 10.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W42",
+    "availableHours": 20.0,
+    "assignedHours": 6.1,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 10.8,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangjr",
+    "isoWeek": "2026-W44",
+    "availableHours": 20.0,
+    "assignedHours": 4.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W37",
+    "availableHours": 20.0,
+    "assignedHours": 2.0,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W38",
+    "availableHours": 20.0,
+    "assignedHours": 3.7,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W39",
+    "availableHours": 20.0,
+    "assignedHours": 18.1,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W40",
+    "availableHours": 20.0,
+    "assignedHours": 19.5,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W41",
+    "availableHours": 20.0,
+    "assignedHours": 12.8,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W42",
+    "availableHours": 20.0,
+    "assignedHours": 2.8,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 6.1,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "wangxy",
+    "isoWeek": "2026-W44",
+    "availableHours": 20.0,
+    "assignedHours": 3.0,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W37",
+    "availableHours": 20.0,
+    "assignedHours": 15.6,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W38",
+    "availableHours": 20.0,
+    "assignedHours": 14.5,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W39",
+    "availableHours": 20.0,
+    "assignedHours": 17.2,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W40",
+    "availableHours": 20.0,
+    "assignedHours": 7.4,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W41",
+    "availableHours": 20.0,
+    "assignedHours": 1.7,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W42",
+    "availableHours": 20.0,
+    "assignedHours": 2.3,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W43",
+    "availableHours": 20.0,
+    "assignedHours": 13.7,
+    "overallocatedHours": 0.0
+   },
+   {
+    "resource": "yang",
+    "isoWeek": "2026-W44",
+    "availableHours": 20.0,
+    "assignedHours": 5.7,
+    "overallocatedHours": 0.0
+   }
+  ],
+  "totals": {
+   "yang": {
+    "assignedHours": 78.0,
+    "weeksScheduled": 8,
+    "availableHours": 160.0,
+    "utilisationPct": 48.8
+   },
+   "wangjr": {
+    "assignedHours": 75.0,
+    "weeksScheduled": 8,
+    "availableHours": 160.0,
+    "utilisationPct": 46.9
+   },
+   "wangxy": {
+    "assignedHours": 68.0,
+    "weeksScheduled": 8,
+    "availableHours": 160.0,
+    "utilisationPct": 42.5
+   }
+  },
+  "overallocated": [],
+  "computeHoursPriced": 528.0
+ },
+ "dates": {
+  "1.1": [
+   "2026-09-07",
+   "2026-09-07"
+  ],
+  "1.2": [
+   "2026-09-08",
+   "2026-09-08"
+  ],
+  "1.3": [
+   "2026-09-08",
+   "2026-09-09"
+  ],
+  "M1": [
+   "2026-09-09",
+   "2026-09-09"
+  ],
+  "2.1": [
+   "2026-09-10",
+   "2026-09-15"
+  ],
+  "2.2": [
+   "2026-09-10",
+   "2026-09-16"
+  ],
+  "2.3": [
+   "2026-09-10",
+   "2026-09-15"
+  ],
+  "M2": [
+   "2026-09-17",
+   "2026-09-17"
+  ],
+  "3.1": [
+   "2026-09-18",
+   "2026-09-24"
+  ],
+  "4.1": [
+   "2026-09-18",
+   "2026-10-01"
+  ],
+  "7.1": [
+   "2026-09-18",
+   "2026-09-29"
+  ],
+  "7.2": [
+   "2026-09-18",
+   "2026-09-25"
+  ],
+  "7.3": [
+   "2026-09-28",
+   "2026-10-05"
+  ],
+  "M7": [
+   "2026-10-06",
+   "2026-10-06"
+  ],
+  "10.2": [
+   "2026-10-07",
+   "2026-10-21"
+  ],
+  "M11": [
+   "2026-10-22",
+   "2026-10-22"
+  ],
+  "2.4": [
+   "2026-10-23",
+   "2026-10-27"
+  ],
+  "3.2": [
+   "2026-09-18",
+   "2026-09-23"
+  ],
+  "3.3": [
+   "2026-09-18",
+   "2026-09-23"
+  ],
+  "M3": [
+   "2026-09-25",
+   "2026-09-25"
+  ],
+  "4.2": [
+   "2026-09-18",
+   "2026-09-29"
+  ],
+  "4.3": [
+   "2026-09-18",
+   "2026-10-05"
+  ],
+  "4.4": [
+   "2026-09-30",
+   "2026-10-07"
+  ],
+  "4.5": [
+   "2026-10-08",
+   "2026-10-27"
+  ],
+  "M4": [
+   "2026-10-08",
+   "2026-10-08"
+  ],
+  "5.1": [
+   "2026-09-18",
+   "2026-09-24"
+  ],
+  "5.2": [
+   "2026-09-18",
+   "2026-09-22"
+  ],
+  "5.3": [
+   "2026-09-18",
+   "2026-09-23"
+  ],
+  "5.4": [
+   "2026-09-25",
+   "2026-09-30"
+  ],
+  "M5": [
+   "2026-10-01",
+   "2026-10-01"
+  ],
+  "6.1": [
+   "2026-09-18",
+   "2026-09-24"
+  ],
+  "6.2": [
+   "2026-09-25",
+   "2026-10-02"
+  ],
+  "6.3": [
+   "2026-09-25",
+   "2026-10-01"
+  ],
+  "6.4": [
+   "2026-10-02",
+   "2026-10-07"
+  ],
+  "6.5": [
+   "2026-10-02",
+   "2026-10-09"
+  ],
+  "M6": [
+   "2026-10-08",
+   "2026-10-08"
+  ],
+  "8.1": [
+   "2026-09-18",
+   "2026-09-25"
+  ],
+  "8.2": [
+   "2026-09-18",
+   "2026-09-25"
+  ],
+  "M8": [
+   "2026-09-28",
+   "2026-09-28"
+  ],
+  "9.1": [
+   "2026-09-28",
+   "2026-10-23"
+  ],
+  "9.2": [
+   "2026-09-28",
+   "2026-10-23"
+  ],
+  "9.3": [
+   "2026-09-28",
+   "2026-10-02"
+  ],
+  "9.4": [
+   "2026-10-05",
+   "2026-10-08"
+  ],
+  "9.5": [
+   "2026-10-21",
+   "2026-10-23"
+  ],
+  "9.6": [
+   "2026-10-05",
+   "2026-10-06"
+  ],
+  "M9": [
+   "2026-10-09",
+   "2026-10-09"
+  ],
+  "10.1": [
+   "2026-09-28",
+   "2026-10-02"
+  ],
+  "10.3": [
+   "2026-10-22",
+   "2026-10-27"
+  ],
+  "10.4": [
+   "2026-10-22",
+   "2026-10-28"
+  ],
+  "M10": [
+   "2026-10-05",
+   "2026-10-05"
+  ],
+  "M12": [
+   "2026-10-29",
+   "2026-10-29"
+  ],
+  "11.1": [
+   "2026-10-22",
+   "2026-10-22"
+  ],
+  "11.2": [
+   "2026-10-23",
+   "2026-10-23"
+  ],
+  "M13": [
+   "2026-10-30",
+   "2026-10-30"
+  ]
+ }
+}

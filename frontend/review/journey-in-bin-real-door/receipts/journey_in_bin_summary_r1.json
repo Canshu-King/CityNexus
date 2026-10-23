@@ -1,0 +1,72 @@
+{
+ "taken_at_local": "2026-10-04T14:13:31+0800",
+ "measured_generation": "6246876a3b9171f5c2d6ec948f43b35605262bee",
+ "front": 4997,
+ "api": 8795,
+ "entry_asset": "/assets/index-DUhOk9ks.js",
+ "entry_served_bytes": 1621925,
+ "entry_served_sha1": "e70af9719dbb7be7d167852978279ad12bd4db6b",
+ "every_proof": true,
+ "arms": [
+  {
+   "file": "readings/b-zh-CN.json",
+   "locale": "zh-CN",
+   "verdict": "REACHED",
+   "withdraw_status": 204,
+   "in_bin_after_withdrawal": true,
+   "read_door_while_binned": 200,
+   "stops_mounted": 6,
+   "controls_mounted": 6,
+   "tapped_stop": "Old Town Gate",
+   "door_status": 409,
+   "door_reason_code": "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+   "door_message": "This trip is in the recycle bin. 找回 it before stamping or reading its footprints.",
+   "painted_notice": "这趟行程在回收站里，先把它找回来才谈得上打卡或读足迹。",
+   "painted_equals_table_row": true,
+   "notices_count": 1,
+   "uuid_on_glass": false,
+   "undelete_status": 200,
+   "checks_failed": []
+  },
+  {
+   "file": "readings/b-en.json",
+   "locale": "en",
+   "verdict": "REACHED",
+   "withdraw_status": 204,
+   "in_bin_after_withdrawal": true,
+   "read_door_while_binned": 200,
+   "stops_mounted": 6,
+   "controls_mounted": 6,
+   "tapped_stop": "Old Town Gate",
+   "door_status": 409,
+   "door_reason_code": "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+   "door_message": "This trip is in the recycle bin. 找回 it before stamping or reading its footprints.",
+   "painted_notice": "This trip is in the recycle bin; bring it back before stamping or reading its footprints.",
+   "painted_equals_table_row": true,
+   "notices_count": 1,
+   "uuid_on_glass": false,
+   "undelete_status": 200,
+   "checks_failed": []
+  }
+ ],
+ "arms_reached": 2,
+ "painted_equals_table_rows": 2,
+ "door_named_the_code_times": 2,
+ "store_after_the_run": {
+  "file": "run/day31_bin_probe.db",
+  "marker_city": "CNX-DAY31-BIN",
+  "read_journey_status": 200,
+  "recycle_bin_status": 200,
+  "recycle_bin_rows": 0,
+  "journey_in_bin": false,
+  "checkin_rows": 0,
+  "baseline_recycle_bin_rows": 0,
+  "baseline_read_journey_status": 200,
+  "back_to_baseline": true
+ },
+ "product_facts_measured_not_claimed": {
+  "read_door_still_answers_while_binned": true,
+  "itinerary_still_mounts_stops_while_binned": true,
+  "server_message_carries_a_cjk_word_in_english_prose": true
+ }
+}

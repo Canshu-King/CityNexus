@@ -1,0 +1,140 @@
+{
+ "failures": [],
+ "notes": [
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped"
+ ],
+ "styleIssues": [
+  "cell PrintFitLayerPages <- '0' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error"
+ ],
+ "pages": [
+  {
+   "name": "系统总览",
+   "nodes": 8,
+   "edges": 7,
+   "connects": 14,
+   "expectedConnects": 14,
+   "propsWritten": 31,
+   "propsExpected": 31
+  }
+ ],
+ "propFailures": [],
+ "shapeIds": {
+  "t1n1": [
+   [
+    1,
+    4
+   ]
+  ],
+  "t1n2": [
+   [
+    1,
+    5
+   ]
+  ],
+  "t1n3": [
+   [
+    1,
+    6
+   ]
+  ],
+  "t1n4": [
+   [
+    1,
+    7
+   ]
+  ],
+  "t1n5": [
+   [
+    1,
+    8
+   ]
+  ],
+  "t1n6": [
+   [
+    1,
+    9
+   ]
+  ],
+  "t1n7": [
+   [
+    1,
+    10
+   ]
+  ],
+  "t1n8": [
+   [
+    1,
+    11
+   ]
+  ]
+ },
+ "edgeIds": {
+  "t1n1->t1n2": [
+   [
+    1,
+    12
+   ]
+  ],
+  "t1n2->t1n3": [
+   [
+    1,
+    13
+   ]
+  ],
+  "t1n3->t1n4": [
+   [
+    1,
+    14
+   ]
+  ],
+  "t1n4->t1n5": [
+   [
+    1,
+    15
+   ]
+  ],
+  "t1n5->t1n6": [
+   [
+    1,
+    16
+   ]
+  ],
+  "t1n6->t1n7": [
+   [
+    1,
+    17
+   ]
+  ],
+  "t1n7->t1n8": [
+   [
+    1,
+    18
+   ]
+  ]
+ },
+ "nodes": 8,
+ "edges": 7,
+ "connects": 14,
+ "expectedConnects": 14,
+ "propsWritten": 31,
+ "propsExpected": 31
+}

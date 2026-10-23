@@ -1,0 +1,371 @@
+{
+ "measured_at": "2026-10-21 04:07:27",
+ "live_tip": "90ea70e43ba4919d2a30fa30bbcce4ba178b5a2c",
+ "relay_head_line": 127,
+ "relay_head": "待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·10-21 03 时现读）",
+ "scan_line": "这一拍扫描：清洁候选 2 条、要并枝 147 条（同一拍落档的原件 live_checks/_stale_branch_state_1010.txt:1）",
+ "rows": 25,
+ "counts": {
+  "ghost": 3,
+  "no_base": 0,
+  "clean": 10,
+  "conflict": 12,
+  "in_line": 0,
+  "nothing_owed": 7
+ },
+ "detail": [
+  {
+   "line": 137,
+   "owner": "pinggong",
+   "ref": "refs/heads/review/pinggong-0679-r1",
+   "claimed_collisions": "main.py、test_r14_terminal_disruption_recovery.py",
+   "exists_on_remote": true,
+   "sha": "8865a2aabe21b0e108262190df23473d92e8dae9",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 2,
+   "absent_at_tip": 2,
+   "absent_product_paths": [
+    "review/pinggong-0679/lineage_close_r1.txt",
+    "review/pinggong-0679/tip_verify_r1.txt"
+   ]
+  },
+  {
+   "line": 139,
+   "owner": "wenangong",
+   "ref": "refs/heads/review/wenangong-0407-r1",
+   "claimed_collisions": "LocaleContext.tsx、main.tsx",
+   "exists_on_remote": true,
+   "sha": "629575f2c276694086c0c400fbc0a8b224dfa2cc",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 3,
+   "absent_at_tip": 1,
+   "absent_product_paths": [
+    "review/wenangong/main_none_recorded_arm_r1.py"
+   ]
+  },
+  {
+   "line": 141,
+   "owner": "wenangong",
+   "ref": "refs/heads/review/wenangong-0554-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": true,
+   "sha": "ea55e8307abd1def61cccd4aa8a31b3450ce5786",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 1,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 143,
+   "owner": "xuxiangong",
+   "ref": "refs/heads/review/xuxiangong-0685-c-r1",
+   "claimed_collisions": "main.py、services.py、stay_mobility.py",
+   "exists_on_remote": false,
+   "bucket": "ghost：远端读不到这枚枝"
+  },
+  {
+   "line": 145,
+   "owner": "住宿工",
+   "ref": "refs/heads/review/住宿工-0576-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": true,
+   "sha": "c9770b83e795b6598fcf7ca4d665175566bcd8e5",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 2,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 147,
+   "owner": "住宿工",
+   "ref": "refs/heads/review/住宿工-0570-r1",
+   "claimed_collisions": "LocaleContext.tsx、displayVocabulary.ts",
+   "exists_on_remote": true,
+   "sha": "bef30c4b1cc37ebede046031ed087d4bf0960cd7",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 2,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 149,
+   "owner": "修复地图停靠点显名",
+   "ref": "refs/heads/review/修复地图停靠点显名-desktop-sidebar-union-r1",
+   "claimed_collisions": "V8Experience.tsx",
+   "exists_on_remote": false,
+   "bucket": "ghost：远端读不到这枚枝"
+  },
+  {
+   "line": 151,
+   "owner": "加闸工",
+   "ref": "refs/heads/review/加闸工-0576-r1",
+   "claimed_collisions": "TripItinerary.tsx、LocaleContext.tsx",
+   "exists_on_remote": true,
+   "sha": "c0a5c334565997e335ccba06773e7990d3f9f1e3",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 4,
+   "absent_at_tip": 4,
+   "absent_product_paths": [
+    "review/jiazagong-0576/gates_r2.txt",
+    "review/jiazagong-0576/lang_check_branch.txt",
+    "review/jiazagong-0576/tiers_after.txt",
+    "review/jiazagong-0576/tiers_before.txt"
+   ]
+  },
+  {
+   "line": 153,
+   "owner": "大柜工",
+   "ref": "refs/heads/review/大柜工-0569-dict-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": false,
+   "bucket": "ghost：远端读不到这枚枝"
+  },
+  {
+   "line": 155,
+   "owner": "大柜工",
+   "ref": "refs/heads/review/大柜工-0558-r1",
+   "claimed_collisions": "catalogueReadback.ts",
+   "exists_on_remote": true,
+   "sha": "58f1ee66ee962d302af220f597b38ab34161a192",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 1,
+   "absent_at_tip": 1,
+   "absent_product_paths": [
+    "review/dagui0558/gates_after_merge_r1.txt"
+   ]
+  },
+  {
+   "line": 157,
+   "owner": "快刀工",
+   "ref": "refs/heads/review/快刀工-0557-r3",
+   "claimed_collisions": "PlanComparison.tsx、LocaleContext.tsx",
+   "exists_on_remote": true,
+   "sha": "aa94bb011ec968a301e0b6d2423d63cc59e827d8",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 1,
+   "absent_at_tip": 1,
+   "absent_product_paths": [
+    "review/kuaidao/ord0557_b3_gates_r1.txt"
+   ]
+  },
+  {
+   "line": 159,
+   "owner": "快刀工",
+   "ref": "refs/heads/review/快刀工-0557-dict-r3",
+   "claimed_collisions": "字典同侧键闸",
+   "exists_on_remote": true,
+   "sha": "0148013389f2f96c64875956ec2c407853ed5b04",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 1,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 161,
+   "owner": "快刀工",
+   "ref": "refs/heads/review/快刀工-0557-dict-r2",
+   "claimed_collisions": "test_route_gap_lupaigongyi_0559_r1.py、LiveRecovery.tsx、JourneyInboxWorkbench.tsx",
+   "exists_on_remote": true,
+   "sha": "7797e13579f3e4df85e204f757078837b411c4ea",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 37,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 163,
+   "owner": "快剪工",
+   "ref": "refs/heads/review/快剪工-0573-r2",
+   "claimed_collisions": "JourneyTrialSetup.tsx、LocaleContext.tsx",
+   "exists_on_remote": true,
+   "sha": "62b0167242ad09aa17f32f6922c13159f8bdbcfd",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 16,
+   "absent_at_tip": 14,
+   "absent_product_paths": [
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/apply_0573_r1.py\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/apply_r1_readout.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/dict_parity_r1.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/dict_parity_r2.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/dict_parity_r3.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/rename_check_r1.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/text_identity_r1.py\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/text_identity_r1.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/text_identity_r2.py\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/text_identity_r2.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/text_identity_r3_run.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/typecheck_full_r1.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/typecheck_full_r2.txt\"",
+    "\"review/\\351\\227\\250\\347\\211\\214\\345\\217\\267-0573/typecheck_full_r3.txt\""
+   ]
+  },
+  {
+   "line": 165,
+   "owner": "快钉工",
+   "ref": "refs/heads/review/快钉工-0557-walk-r1",
+   "claimed_collisions": "字典同侧键闸",
+   "exists_on_remote": true,
+   "sha": "4859bb8913d361bc4af40ca46cb6d95e033b578a",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 1,
+   "absent_at_tip": 1,
+   "absent_product_paths": []
+  },
+  {
+   "line": 167,
+   "owner": "快钉工",
+   "ref": "refs/heads/review/快钉工-0557-r3",
+   "claimed_collisions": "字典同侧键闸",
+   "exists_on_remote": true,
+   "sha": "957edfb862c5881b4721631f8103ef6eac398997",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 3,
+   "absent_at_tip": 3,
+   "absent_product_paths": [
+    "review/kuaidinggong-0557r3/gates_readout_r1.txt",
+    "review/kuaidinggong-0557r3/instrument_r1.py",
+    "review/kuaidinggong-0557r3/screen_text_readout_r1.txt"
+   ]
+  },
+  {
+   "line": 169,
+   "owner": "快钉工",
+   "ref": "refs/heads/review/快钉工-0557-dict-r3",
+   "claimed_collisions": "字典同侧键闸",
+   "exists_on_remote": true,
+   "sha": "a4b2128287f636ff07021a2766d65341ac328b6f",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 19,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 171,
+   "owner": "快锥工",
+   "ref": "refs/heads/review/快锥工-0576-dict-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": true,
+   "sha": "8d33874d4e13f46a2486c877e990f911a076b434",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 9,
+   "absent_at_tip": 7,
+   "absent_product_paths": [
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/byte_proof_r1.py\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/byte_proof_r1.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/census_r2_base_0d0eca62ef.json\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/census_r2_head_b2a7f93717.json\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/gate_r4_candidate.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/gates_r1.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/typecheck_full_r1.txt\""
+   ]
+  },
+  {
+   "line": 173,
+   "owner": "快锥工",
+   "ref": "refs/heads/review/快锥工-0557-liverecovery-dict-r1",
+   "claimed_collisions": "字典同侧键闸",
+   "exists_on_remote": true,
+   "sha": "7da922f0ea20b9b6a4e8c4fa7f22a0d3927e8d91",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 1,
+   "absent_at_tip": 1,
+   "absent_product_paths": [
+    "review/kuaizhuigong/lr2/parity_r2.txt"
+   ]
+  },
+  {
+   "line": 175,
+   "owner": "盘务工",
+   "ref": "refs/heads/review/盘务工-0680-r14-r1",
+   "claimed_collisions": "main.py、test_r14_terminal_disruption_recovery.py",
+   "exists_on_remote": true,
+   "sha": "1e2460111aae57d2aeb21b76b4151ea991f6fc31",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 2,
+   "absent_at_tip": 0,
+   "absent_product_paths": []
+  },
+  {
+   "line": 177,
+   "owner": "起手工",
+   "ref": "refs/heads/review/起手工-0572-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": true,
+   "sha": "e0a786c07b66576ebc72c47c6130804bb24e54e2",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 3,
+   "absent_at_tip": 2,
+   "absent_product_paths": [
+    "frontend/src/i18n/locales/agent.ts",
+    "frontend/src/i18n/locales/me.ts"
+   ]
+  },
+  {
+   "line": 179,
+   "owner": "路牌工甲",
+   "ref": "refs/heads/review/路牌工甲-0585-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": true,
+   "sha": "6d09c91c9bc17372fa826967c6d79b064329a6ef",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 1,
+   "absent_at_tip": 1,
+   "absent_product_paths": [
+    "review/lupaigongjia-0585/merge_tree_0585_r1.txt"
+   ]
+  },
+  {
+   "line": 181,
+   "owner": "路牌工甲",
+   "ref": "refs/heads/review/路牌工甲-0576-r1",
+   "claimed_collisions": "merge-tree",
+   "exists_on_remote": true,
+   "sha": "03d3dbd183155f2bb579055a8a76cebddd97676b",
+   "bucket": "有共同祖先但真有冲突",
+   "writeset": 2,
+   "absent_at_tip": 2,
+   "absent_product_paths": [
+    "review/lupaigongjia-0576/gates_0576_r1.txt",
+    "review/lupaigongjia-0576/remaining_0576_r1.txt"
+   ]
+  },
+  {
+   "line": 183,
+   "owner": "路牌工甲",
+   "ref": "refs/heads/review/路牌工甲-0557-r1",
+   "claimed_collisions": "字典同侧键闸",
+   "exists_on_remote": true,
+   "sha": "1efe3e55db9de72babc558bc8850e780c82777b4",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 2,
+   "absent_at_tip": 2,
+   "absent_product_paths": [
+    "review/lupaigongjia-0557/one_file_ternary_count_r2.py",
+    "review/lupaigongjia-0557/readout_0557_r1.md"
+   ]
+  },
+  {
+   "line": 185,
+   "owner": "验路工",
+   "ref": "refs/heads/review/验路工-0576-r2",
+   "claimed_collisions": "census_r2_tip_8890f22fe3.json\"、census_text_tip_8890f22fe3.txt\"、LocaleContext.tsx",
+   "exists_on_remote": true,
+   "sha": "7a14d90ad6e78f279037b70284745199768b4d90",
+   "bucket": "有共同祖先且能干净合并",
+   "writeset": 10,
+   "absent_at_tip": 10,
+   "absent_product_paths": [
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/byte_proof_r7.py\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/byte_proof_r7.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/byte_proof_r7_negative.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/census_r2_head_a0cae40ddf.json\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/census_r2_tip_8890f22fe3.json\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/census_text_head_a0cae40ddf.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/census_text_tip_8890f22fe3.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/gate_r4_candidate_r7.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/gates_r7.txt\"",
+    "\"review/\\351\\252\\214\\350\\267\\257\\345\\267\\245-0576/typecheck_full_r7.txt\""
+   ]
+  }
+ ]
+}

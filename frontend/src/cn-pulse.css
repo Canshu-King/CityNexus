@@ -217,6 +217,17 @@
 [data-pulse-phase="dusk"] { --cn-pulse-dot: #ff9f0a; --cn-pulse-ink: #8a4b06; }
 [data-pulse-phase="night"] { --cn-pulse-dot: #7a88c8; --cn-pulse-ink: var(--cn-on-elev-0-muted); }
 
+/* 拂晓与黄昏这两档原来只写了亮档那一手：墨色是字面量，翻到暗档不跟着翻。
+   实测（八格仪表 `_cmdr_phase_pixel_r1.cjs` 真像素，与产品里那把对比尺在拂晓窗口各读一次，
+   两枚仪表给出同一个数）：暗档拂晓的眉标是 2.24、暗档黄昏是 3.09，判据是 4.5；
+   亮档四格与暗档昼/夜两格都过。
+   这里补的是「暗档另写一手」——与 `map-selection.css:220` 的成对做法同一种，
+   并且不新增任何颜色字面量：拂晓借 --cn-danger、黄昏借 --cn-warning，
+   这两枚本来就是随主题翻的成对令牌（design-tokens.css:51 与 :209、:50 与 :208）。
+   点色 --cn-pulse-dot 不动：它是状态指示，不是正文墨。 */
+:root[data-theme="dark"] [data-pulse-phase="dawn"] { --cn-pulse-ink: var(--cn-danger); }
+:root[data-theme="dark"] [data-pulse-phase="dusk"] { --cn-pulse-ink: var(--cn-warning); }
+
 .v8-page[data-pulse-phase] .v8-page-intro .v8-kicker {
   color: var(--cn-pulse-ink, var(--cn-on-elev-0-muted));
 }
@@ -381,9 +392,7 @@ code {
    Scoped to the shells that were measured as the ghost cards, so no rule here
    is a global `section` hammer. */
 
-.plan-ranking,
-.collections-panel,
-.poi-import-panel {
+.plan-ranking {
   background: var(--cn-elev-1);
   border: 1px solid var(--cn-rule);
   border-radius: var(--cn-r-16, 16px);
@@ -496,16 +505,9 @@ code {
 /* 丁 「1 位旅行者」这类计数：10px/2.80 太小了，而且它是行程事实不是脚注。
       字号上到 kicker 地板，数字用等宽位。 */
 .v8-user small,
-.v8-user-meta,
-.hub-party-size {
-  font-size: max(var(--cn-fs-kicker-min), 0.6875rem);
-  color: var(--cn-on-elev-0-muted);
-  font-variant-numeric: tabular-nums lining-nums;
-}
 
 /* 丁 空态的下一步提示：同一族次级墨，实测 3.62:1，一起收进契约。 */
-.cn-pending-empty-next,
-.v8-empty-hint {
+.cn-pending-empty-next {
   color: var(--cn-on-elev-1-muted);
   font-size: var(--cn-fs-body-min);
   line-height: var(--cn-lh-body);

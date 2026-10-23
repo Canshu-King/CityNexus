@@ -1,0 +1,12 @@
+[   0.1s] source CityNexus_Software_Engineering_Plan.mpp sha256/16 6398e58f9b4cd3b3 (must be unchanged at the end)
+[   0.1s] source CityNexus_Milestone_View.mpp sha256/16 d1def47164e694c0 (must be unchanged at the end)
+[   0.2s] chart-area ink of the preview the audit rejected: 0.0244 (this is the number the new frames have to beat)
+[   1.2s] Project version 16.0
+[   1.2s] display copy CityNexus_Plan_Classroom.mpp from CityNexus_Software_Engineering_Plan.mpp
+[   5.7s]   Gantt_Visible_print.pdf: 85 printed pages, best is page 1 with chart ink 0.0584
+[   5.7s]   re-picked page 1 of Gantt_Visible_print.pdf (chart ink 0.0584)
+[   5.7s] display copy CityNexus_Milestones_Classroom.mpp from CityNexus_Milestone_View.mpp
+[   6.3s]   Milestones_Visible_print.pdf: 12 printed pages, best is page 1 with chart ink 0.0536
+[   6.3s]   re-picked page 1 of Milestones_Visible_print.pdf (chart ink 0.0536)
+[   6.4s] shipped plan and milestone files unchanged
+[   6.4s] CLASSROOM VIEW OK: 2 display copies, 2 screenshots

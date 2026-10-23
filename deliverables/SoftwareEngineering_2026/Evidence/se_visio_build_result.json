@@ -1,0 +1,2597 @@
+{
+ "started": "2026-10-22 18:49:25",
+ "diagrams": [
+  {
+   "file": "01_CityNexus_System_Architecture.vsdx",
+   "status": "BUILT",
+   "gate": {
+    "failures": [],
+    "notes": [
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on cli_traveler (AttributeError)",
+     "per-run font sizing skipped on cli_admin (AttributeError)",
+     "per-run font sizing skipped on fe_copilot (AttributeError)",
+     "per-run font sizing skipped on fe_rail (AttributeError)",
+     "per-run font sizing skipped on fe_shell (AttributeError)",
+     "per-run font sizing skipped on fe_plan (AttributeError)",
+     "per-run font sizing skipped on fe_map (AttributeError)",
+     "per-run font sizing skipped on fe_routes (AttributeError)",
+     "per-run font sizing skipped on api_agent (AttributeError)",
+     "per-run font sizing skipped on api_shared (AttributeError)",
+     "per-run font sizing skipped on api_data (AttributeError)",
+     "per-run font sizing skipped on ag_entry (AttributeError)",
+     "per-run font sizing skipped on ag_loop (AttributeError)",
+     "per-run font sizing skipped on ag_gw (AttributeError)",
+     "per-run font sizing skipped on ds_journey (AttributeError)",
+     "per-run font sizing skipped on ds_twin (AttributeError)",
+     "per-run font sizing skipped on ds_place (AttributeError)",
+     "per-run font sizing skipped on pv_ai (AttributeError)",
+     "per-run font sizing skipped on pv_mock (AttributeError)",
+     "per-run font sizing skipped on pv_geo (AttributeError)",
+     "per-run font sizing skipped on db_core (AttributeError)",
+     "per-run font sizing skipped on db_state (AttributeError)",
+     "per-run font sizing skipped on db_agent (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped"
+    ],
+    "styleIssues": [
+     "cell PrintFitLayerPages <- '0' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error"
+    ],
+    "pages": [
+     {
+      "name": "System Architecture",
+      "nodes": 23,
+      "edges": 24,
+      "connects": 48,
+      "expectedConnects": 48,
+      "propsWritten": 93,
+      "propsExpected": 93
+     }
+    ],
+    "propFailures": [],
+    "shapeIds": {
+     "cli_traveler": [
+      [
+       1,
+       18
+      ]
+     ],
+     "cli_admin": [
+      [
+       1,
+       19
+      ]
+     ],
+     "fe_copilot": [
+      [
+       1,
+       20
+      ]
+     ],
+     "fe_rail": [
+      [
+       1,
+       21
+      ]
+     ],
+     "fe_shell": [
+      [
+       1,
+       22
+      ]
+     ],
+     "fe_plan": [
+      [
+       1,
+       23
+      ]
+     ],
+     "fe_map": [
+      [
+       1,
+       24
+      ]
+     ],
+     "fe_routes": [
+      [
+       1,
+       25
+      ]
+     ],
+     "api_agent": [
+      [
+       1,
+       26
+      ]
+     ],
+     "api_shared": [
+      [
+       1,
+       27
+      ]
+     ],
+     "api_data": [
+      [
+       1,
+       28
+      ]
+     ],
+     "ag_entry": [
+      [
+       1,
+       29
+      ]
+     ],
+     "ag_loop": [
+      [
+       1,
+       30
+      ]
+     ],
+     "ag_gw": [
+      [
+       1,
+       31
+      ]
+     ],
+     "ds_journey": [
+      [
+       1,
+       32
+      ]
+     ],
+     "ds_twin": [
+      [
+       1,
+       33
+      ]
+     ],
+     "ds_place": [
+      [
+       1,
+       34
+      ]
+     ],
+     "pv_ai": [
+      [
+       1,
+       35
+      ]
+     ],
+     "pv_mock": [
+      [
+       1,
+       36
+      ]
+     ],
+     "pv_geo": [
+      [
+       1,
+       37
+      ]
+     ],
+     "db_core": [
+      [
+       1,
+       38
+      ]
+     ],
+     "db_state": [
+      [
+       1,
+       39
+      ]
+     ],
+     "db_agent": [
+      [
+       1,
+       40
+      ]
+     ]
+    },
+    "edgeIds": {
+     "cli_traveler->fe_copilot": [
+      [
+       1,
+       41
+      ]
+     ],
+     "cli_traveler->fe_rail": [
+      [
+       1,
+       42
+      ]
+     ],
+     "cli_admin->fe_shell": [
+      [
+       1,
+       43
+      ]
+     ],
+     "cli_admin->fe_plan": [
+      [
+       1,
+       45
+      ]
+     ],
+     "fe_copilot->api_agent": [
+      [
+       1,
+       47
+      ]
+     ],
+     "fe_rail->api_agent": [
+      [
+       1,
+       49
+      ]
+     ],
+     "fe_shell->api_shared": [
+      [
+       1,
+       50
+      ]
+     ],
+     "fe_plan->api_shared": [
+      [
+       1,
+       52
+      ]
+     ],
+     "fe_map->api_data": [
+      [
+       1,
+       54
+      ]
+     ],
+     "fe_routes->api_data": [
+      [
+       1,
+       56
+      ]
+     ],
+     "api_agent->ag_entry": [
+      [
+       1,
+       58
+      ]
+     ],
+     "api_shared->ag_loop": [
+      [
+       1,
+       59
+      ]
+     ],
+     "api_shared->ds_journey": [
+      [
+       1,
+       60
+      ]
+     ],
+     "api_data->ds_twin": [
+      [
+       1,
+       61
+      ]
+     ],
+     "api_data->ds_place": [
+      [
+       1,
+       62
+      ]
+     ],
+     "ag_entry->ag_loop": [
+      [
+       1,
+       63
+      ]
+     ],
+     "ag_loop->ag_gw": [
+      [
+       1,
+       64
+      ]
+     ],
+     "ag_gw->ds_journey": [
+      [
+       1,
+       66
+      ]
+     ],
+     "ag_entry->pv_ai": [
+      [
+       1,
+       68
+      ]
+     ],
+     "ag_loop->pv_mock": [
+      [
+       1,
+       70
+      ]
+     ],
+     "ag_gw->pv_geo": [
+      [
+       1,
+       71
+      ]
+     ],
+     "ds_journey->db_core": [
+      [
+       1,
+       72
+      ]
+     ],
+     "ds_twin->db_state": [
+      [
+       1,
+       74
+      ]
+     ],
+     "ds_place->db_agent": [
+      [
+       1,
+       76
+      ]
+     ]
+    },
+    "nodes": 23,
+    "edges": 24,
+    "connects": 48,
+    "expectedConnects": 48,
+    "propsWritten": 93,
+    "propsExpected": 93
+   },
+   "sizes": {
+    "vsdx": 62151,
+    "png": 137597,
+    "pdf": 48522,
+    "debugPng": 139287,
+    "debugPdf": 48815
+   }
+  },
+  {
+   "file": "02_CityNexus_User_Journey.vsdx",
+   "status": "BUILT",
+   "gate": {
+    "failures": [],
+    "notes": [
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on start (AttributeError)",
+     "per-run font sizing skipped on j1 (AttributeError)",
+     "per-run font sizing skipped on d_city (AttributeError)",
+     "per-run font sizing skipped on j2 (AttributeError)",
+     "per-run font sizing skipped on d_ok (AttributeError)",
+     "per-run font sizing skipped on d_exec (AttributeError)",
+     "per-run font sizing skipped on end (AttributeError)",
+     "per-run font sizing skipped on f_wiz (AttributeError)",
+     "per-run font sizing skipped on f_map (AttributeError)",
+     "per-run font sizing skipped on f_cop (AttributeError)",
+     "per-run font sizing skipped on f_rail (AttributeError)",
+     "per-run font sizing skipped on f_today (AttributeError)",
+     "per-run font sizing skipped on f_hist (AttributeError)",
+     "per-run font sizing skipped on b_create (AttributeError)",
+     "per-run font sizing skipped on b_cap (AttributeError)",
+     "per-run font sizing skipped on b_gen (AttributeError)",
+     "per-run font sizing skipped on b_appr (AttributeError)",
+     "per-run font sizing skipped on b_start (AttributeError)",
+     "per-run font sizing skipped on b_evt (AttributeError)",
+     "per-run font sizing skipped on a_prop (AttributeError)",
+     "per-run font sizing skipped on a_int (AttributeError)",
+     "per-run font sizing skipped on a_loop (AttributeError)",
+     "per-run font sizing skipped on a_gate (AttributeError)",
+     "per-run font sizing skipped on p_mock (AttributeError)",
+     "per-run font sizing skipped on p_geo (AttributeError)",
+     "per-run font sizing skipped on d_rep (AttributeError)",
+     "per-run font sizing skipped on d_db (AttributeError)",
+     "per-run font sizing skipped on d_aud (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped"
+    ],
+    "styleIssues": [
+     "cell PrintFitLayerPages <- '0' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error"
+    ],
+    "pages": [
+     {
+      "name": "User Journey",
+      "nodes": 28,
+      "edges": 34,
+      "connects": 68,
+      "expectedConnects": 68,
+      "propsWritten": 118,
+      "propsExpected": 118
+     }
+    ],
+    "propFailures": [],
+    "shapeIds": {
+     "start": [
+      [
+       1,
+       14
+      ]
+     ],
+     "j1": [
+      [
+       1,
+       15
+      ]
+     ],
+     "d_city": [
+      [
+       1,
+       16
+      ]
+     ],
+     "j2": [
+      [
+       1,
+       17
+      ]
+     ],
+     "d_ok": [
+      [
+       1,
+       18
+      ]
+     ],
+     "d_exec": [
+      [
+       1,
+       19
+      ]
+     ],
+     "end": [
+      [
+       1,
+       20
+      ]
+     ],
+     "f_wiz": [
+      [
+       1,
+       21
+      ]
+     ],
+     "f_map": [
+      [
+       1,
+       22
+      ]
+     ],
+     "f_cop": [
+      [
+       1,
+       23
+      ]
+     ],
+     "f_rail": [
+      [
+       1,
+       24
+      ]
+     ],
+     "f_today": [
+      [
+       1,
+       25
+      ]
+     ],
+     "f_hist": [
+      [
+       1,
+       26
+      ]
+     ],
+     "b_create": [
+      [
+       1,
+       27
+      ]
+     ],
+     "b_cap": [
+      [
+       1,
+       28
+      ]
+     ],
+     "b_gen": [
+      [
+       1,
+       29
+      ]
+     ],
+     "b_appr": [
+      [
+       1,
+       30
+      ]
+     ],
+     "b_start": [
+      [
+       1,
+       31
+      ]
+     ],
+     "b_evt": [
+      [
+       1,
+       32
+      ]
+     ],
+     "a_prop": [
+      [
+       1,
+       33
+      ]
+     ],
+     "a_int": [
+      [
+       1,
+       34
+      ]
+     ],
+     "a_loop": [
+      [
+       1,
+       35
+      ]
+     ],
+     "a_gate": [
+      [
+       1,
+       36
+      ]
+     ],
+     "p_mock": [
+      [
+       1,
+       37
+      ]
+     ],
+     "p_geo": [
+      [
+       1,
+       38
+      ]
+     ],
+     "d_rep": [
+      [
+       1,
+       39
+      ]
+     ],
+     "d_db": [
+      [
+       1,
+       40
+      ]
+     ],
+     "d_aud": [
+      [
+       1,
+       41
+      ]
+     ]
+    },
+    "edgeIds": {
+     "start->j1": [
+      [
+       1,
+       42
+      ]
+     ],
+     "j1->f_wiz": [
+      [
+       1,
+       43
+      ]
+     ],
+     "f_wiz->b_create": [
+      [
+       1,
+       45
+      ]
+     ],
+     "b_create->b_cap": [
+      [
+       1,
+       47
+      ]
+     ],
+     "b_cap->d_city": [
+      [
+       1,
+       48
+      ]
+     ],
+     "d_city->b_gen": [
+      [
+       1,
+       50
+      ]
+     ],
+     "d_city->j1": [
+      [
+       1,
+       52
+      ]
+     ],
+     "b_gen->p_geo": [
+      [
+       1,
+       54
+      ]
+     ],
+     "b_gen->p_mock": [
+      [
+       1,
+       56
+      ]
+     ],
+     "p_geo->f_map": [
+      [
+       1,
+       58
+      ]
+     ],
+     "b_gen->f_map": [
+      [
+       1,
+       60
+      ]
+     ],
+     "f_map->j2": [
+      [
+       1,
+       62
+      ]
+     ],
+     "j2->d_ok": [
+      [
+       1,
+       64
+      ]
+     ],
+     "d_ok->f_cop": [
+      [
+       1,
+       65
+      ]
+     ],
+     "d_ok->d_exec": [
+      [
+       1,
+       67
+      ]
+     ],
+     "f_cop->a_int": [
+      [
+       1,
+       69
+      ]
+     ],
+     "a_int->a_loop": [
+      [
+       1,
+       71
+      ]
+     ],
+     "a_loop->a_gate": [
+      [
+       1,
+       72
+      ]
+     ],
+     "a_gate->a_prop": [
+      [
+       1,
+       73
+      ]
+     ],
+     "a_gate->f_rail": [
+      [
+       1,
+       75
+      ]
+     ],
+     "a_prop->d_rep": [
+      [
+       1,
+       77
+      ]
+     ],
+     "a_prop->f_map": [
+      [
+       1,
+       79
+      ]
+     ],
+     "f_rail->j2": [
+      [
+       1,
+       81
+      ]
+     ],
+     "a_loop->d_aud": [
+      [
+       1,
+       83
+      ]
+     ],
+     "d_rep->b_appr": [
+      [
+       1,
+       85
+      ]
+     ],
+     "b_appr->d_exec": [
+      [
+       1,
+       87
+      ]
+     ],
+     "d_exec->b_start": [
+      [
+       1,
+       89
+      ]
+     ],
+     "d_exec->f_hist": [
+      [
+       1,
+       91
+      ]
+     ],
+     "b_start->f_today": [
+      [
+       1,
+       93
+      ]
+     ],
+     "f_today->b_evt": [
+      [
+       1,
+       95
+      ]
+     ],
+     "b_evt->d_db": [
+      [
+       1,
+       97
+      ]
+     ],
+     "b_evt->a_int": [
+      [
+       1,
+       99
+      ]
+     ],
+     "b_evt->end": [
+      [
+       1,
+       101
+      ]
+     ],
+     "f_hist->end": [
+      [
+       1,
+       103
+      ]
+     ]
+    },
+    "nodes": 28,
+    "edges": 34,
+    "connects": 68,
+    "expectedConnects": 68,
+    "propsWritten": 118,
+    "propsExpected": 118
+   },
+   "sizes": {
+    "vsdx": 62742,
+    "png": 138386,
+    "pdf": 45109,
+    "debugPng": 138596,
+    "debugPdf": 45185
+   }
+  },
+  {
+   "file": "03_CityNexus_Agent_Workflow.vsdx",
+   "status": "BUILT",
+   "gate": {
+    "failures": [],
+    "notes": [
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on a_start (AttributeError)",
+     "per-run font sizing skipped on a_ctx (AttributeError)",
+     "per-run font sizing skipped on a_avail (AttributeError)",
+     "per-run font sizing skipped on a_int (AttributeError)",
+     "per-run font sizing skipped on a_env (AttributeError)",
+     "per-run font sizing skipped on a_fall (AttributeError)",
+     "per-run font sizing skipped on pv_ai (AttributeError)",
+     "per-run font sizing skipped on a_mis (AttributeError)",
+     "per-run font sizing skipped on a_run (AttributeError)",
+     "per-run font sizing skipped on a_budget (AttributeError)",
+     "per-run font sizing skipped on a_offer (AttributeError)",
+     "per-run font sizing skipped on a_choice (AttributeError)",
+     "per-run font sizing skipped on a_result (AttributeError)",
+     "per-run font sizing skipped on a_fail (AttributeError)",
+     "per-run font sizing skipped on a_gw (AttributeError)",
+     "per-run font sizing skipped on a_allow (AttributeError)",
+     "per-run font sizing skipped on a_404 (AttributeError)",
+     "per-run font sizing skipped on a_audit (AttributeError)",
+     "per-run font sizing skipped on a_family (AttributeError)",
+     "per-run font sizing skipped on a_more (AttributeError)",
+     "per-run font sizing skipped on a_read (AttributeError)",
+     "per-run font sizing skipped on a_auth (AttributeError)",
+     "per-run font sizing skipped on a_idem (AttributeError)",
+     "per-run font sizing skipped on a_guard (AttributeError)",
+     "per-run font sizing skipped on a_confirm (AttributeError)",
+     "per-run font sizing skipped on a_write (AttributeError)",
+     "per-run font sizing skipped on a_note (AttributeError)",
+     "per-run font sizing skipped on a_exec (AttributeError)",
+     "per-run font sizing skipped on d_runs (AttributeError)",
+     "per-run font sizing skipped on d_audit (AttributeError)",
+     "per-run font sizing skipped on d_idem (AttributeError)",
+     "per-run font sizing skipped on a_prop (AttributeError)",
+     "per-run font sizing skipped on a_degrade (AttributeError)",
+     "per-run font sizing skipped on a_show (AttributeError)",
+     "per-run font sizing skipped on a_fb (AttributeError)",
+     "per-run font sizing skipped on a_stop (AttributeError)",
+     "per-run font sizing skipped on t_list (AttributeError)",
+     "per-run font sizing skipped on not_list (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped"
+    ],
+    "styleIssues": [
+     "cell PrintFitLayerPages <- '0' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error"
+    ],
+    "pages": [
+     {
+      "name": "Agent Workflow",
+      "nodes": 38,
+      "edges": 43,
+      "connects": 86,
+      "expectedConnects": 86,
+      "propsWritten": 157,
+      "propsExpected": 157
+     }
+    ],
+    "propFailures": [],
+    "shapeIds": {
+     "a_start": [
+      [
+       1,
+       20
+      ]
+     ],
+     "a_ctx": [
+      [
+       1,
+       21
+      ]
+     ],
+     "a_avail": [
+      [
+       1,
+       22
+      ]
+     ],
+     "a_int": [
+      [
+       1,
+       23
+      ]
+     ],
+     "a_env": [
+      [
+       1,
+       24
+      ]
+     ],
+     "a_fall": [
+      [
+       1,
+       25
+      ]
+     ],
+     "pv_ai": [
+      [
+       1,
+       26
+      ]
+     ],
+     "a_mis": [
+      [
+       1,
+       27
+      ]
+     ],
+     "a_run": [
+      [
+       1,
+       28
+      ]
+     ],
+     "a_budget": [
+      [
+       1,
+       29
+      ]
+     ],
+     "a_offer": [
+      [
+       1,
+       30
+      ]
+     ],
+     "a_choice": [
+      [
+       1,
+       31
+      ]
+     ],
+     "a_result": [
+      [
+       1,
+       32
+      ]
+     ],
+     "a_fail": [
+      [
+       1,
+       33
+      ]
+     ],
+     "a_gw": [
+      [
+       1,
+       34
+      ]
+     ],
+     "a_allow": [
+      [
+       1,
+       35
+      ]
+     ],
+     "a_404": [
+      [
+       1,
+       36
+      ]
+     ],
+     "a_audit": [
+      [
+       1,
+       37
+      ]
+     ],
+     "a_family": [
+      [
+       1,
+       38
+      ]
+     ],
+     "a_more": [
+      [
+       1,
+       39
+      ]
+     ],
+     "a_read": [
+      [
+       1,
+       40
+      ]
+     ],
+     "a_auth": [
+      [
+       1,
+       41
+      ]
+     ],
+     "a_idem": [
+      [
+       1,
+       42
+      ]
+     ],
+     "a_guard": [
+      [
+       1,
+       43
+      ]
+     ],
+     "a_confirm": [
+      [
+       1,
+       44
+      ]
+     ],
+     "a_write": [
+      [
+       1,
+       45
+      ]
+     ],
+     "a_note": [
+      [
+       1,
+       46
+      ]
+     ],
+     "a_exec": [
+      [
+       1,
+       47
+      ]
+     ],
+     "d_runs": [
+      [
+       1,
+       48
+      ]
+     ],
+     "d_audit": [
+      [
+       1,
+       49
+      ]
+     ],
+     "d_idem": [
+      [
+       1,
+       50
+      ]
+     ],
+     "a_prop": [
+      [
+       1,
+       51
+      ]
+     ],
+     "a_degrade": [
+      [
+       1,
+       52
+      ]
+     ],
+     "a_show": [
+      [
+       1,
+       53
+      ]
+     ],
+     "a_fb": [
+      [
+       1,
+       54
+      ]
+     ],
+     "a_stop": [
+      [
+       1,
+       55
+      ]
+     ],
+     "t_list": [
+      [
+       1,
+       56
+      ]
+     ],
+     "not_list": [
+      [
+       1,
+       57
+      ]
+     ]
+    },
+    "edgeIds": {
+     "a_start->a_ctx": [
+      [
+       1,
+       58
+      ]
+     ],
+     "a_ctx->a_avail": [
+      [
+       1,
+       59
+      ]
+     ],
+     "a_avail->a_int": [
+      [
+       1,
+       60
+      ]
+     ],
+     "a_avail->a_fall": [
+      [
+       1,
+       62
+      ]
+     ],
+     "a_fall->a_show": [
+      [
+       1,
+       64
+      ]
+     ],
+     "a_int->a_env": [
+      [
+       1,
+       66
+      ]
+     ],
+     "a_int->pv_ai": [
+      [
+       1,
+       67
+      ]
+     ],
+     "a_env->a_mis": [
+      [
+       1,
+       69
+      ]
+     ],
+     "a_mis->a_run": [
+      [
+       1,
+       70
+      ]
+     ],
+     "a_run->a_budget": [
+      [
+       1,
+       71
+      ]
+     ],
+     "a_budget->a_offer": [
+      [
+       1,
+       72
+      ]
+     ],
+     "a_offer->a_choice": [
+      [
+       1,
+       74
+      ]
+     ],
+     "a_choice->a_gw": [
+      [
+       1,
+       75
+      ]
+     ],
+     "a_choice->a_result": [
+      [
+       1,
+       77
+      ]
+     ],
+     "a_gw->a_allow": [
+      [
+       1,
+       79
+      ]
+     ],
+     "a_allow->a_404": [
+      [
+       1,
+       80
+      ]
+     ],
+     "a_allow->a_audit": [
+      [
+       1,
+       82
+      ]
+     ],
+     "a_audit->a_family": [
+      [
+       1,
+       84
+      ]
+     ],
+     "a_family->a_read": [
+      [
+       1,
+       85
+      ]
+     ],
+     "a_family->a_auth": [
+      [
+       1,
+       87
+      ]
+     ],
+     "a_family->a_guard": [
+      [
+       1,
+       89
+      ]
+     ],
+     "a_auth->a_idem": [
+      [
+       1,
+       91
+      ]
+     ],
+     "a_idem->a_confirm": [
+      [
+       1,
+       93
+      ]
+     ],
+     "a_confirm->a_write": [
+      [
+       1,
+       94
+      ]
+     ],
+     "a_guard->a_write": [
+      [
+       1,
+       96
+      ]
+     ],
+     "a_read->a_result": [
+      [
+       1,
+       98
+      ]
+     ],
+     "a_write->a_exec": [
+      [
+       1,
+       100
+      ]
+     ],
+     "a_exec->d_runs": [
+      [
+       1,
+       101
+      ]
+     ],
+     "a_exec->a_prop": [
+      [
+       1,
+       103
+      ]
+     ],
+     "a_write->d_audit": [
+      [
+       1,
+       105
+      ]
+     ],
+     "a_write->d_idem": [
+      [
+       1,
+       107
+      ]
+     ],
+     "a_exec->a_result": [
+      [
+       1,
+       109
+      ]
+     ],
+     "a_result->a_fail": [
+      [
+       1,
+       110
+      ]
+     ],
+     "a_fail->a_degrade": [
+      [
+       1,
+       111
+      ]
+     ],
+     "a_fail->a_prop": [
+      [
+       1,
+       113
+      ]
+     ],
+     "a_degrade->a_show": [
+      [
+       1,
+       115
+      ]
+     ],
+     "a_prop->a_show": [
+      [
+       1,
+       117
+      ]
+     ],
+     "a_show->a_fb": [
+      [
+       1,
+       118
+      ]
+     ],
+     "a_fb->a_more": [
+      [
+       1,
+       119
+      ]
+     ],
+     "a_more->a_ctx": [
+      [
+       1,
+       120
+      ]
+     ],
+     "a_more->a_stop": [
+      [
+       1,
+       122
+      ]
+     ],
+     "a_budget->a_degrade": [
+      [
+       1,
+       124
+      ]
+     ],
+     "a_404->a_fail": [
+      [
+       1,
+       126
+      ]
+     ]
+    },
+    "nodes": 38,
+    "edges": 43,
+    "connects": 86,
+    "expectedConnects": 86,
+    "propsWritten": 157,
+    "propsExpected": 157
+   },
+   "sizes": {
+    "vsdx": 66521,
+    "png": 211852,
+    "pdf": 51291,
+    "debugPng": 211771,
+    "debugPdf": 51131
+   }
+  },
+  {
+   "file": "04_CityNexus_Use_Case.vsdx",
+   "status": "BUILT",
+   "gate": {
+    "failures": [],
+    "notes": [
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on UC-01 (AttributeError)",
+     "per-run font sizing skipped on UC-02 (AttributeError)",
+     "per-run font sizing skipped on UC-03 (AttributeError)",
+     "per-run font sizing skipped on UC-04 (AttributeError)",
+     "per-run font sizing skipped on UC-05 (AttributeError)",
+     "per-run font sizing skipped on UC-06 (AttributeError)",
+     "per-run font sizing skipped on UC-07 (AttributeError)",
+     "per-run font sizing skipped on UC-08 (AttributeError)",
+     "per-run font sizing skipped on UC-09 (AttributeError)",
+     "per-run font sizing skipped on UC-10 (AttributeError)",
+     "per-run font sizing skipped on UC-11 (AttributeError)",
+     "per-run font sizing skipped on UC-12 (AttributeError)",
+     "per-run font sizing skipped on UC-13 (AttributeError)",
+     "per-run font sizing skipped on A Traveler (AttributeError)",
+     "per-run font sizing skipped on A Admin (AttributeError)",
+     "per-run font sizing skipped on A Ctx (AttributeError)",
+     "per-run font sizing skipped on A Auth (AttributeError)",
+     "per-run font sizing skipped on A AI (AttributeError)",
+     "per-run font sizing skipped on A City (AttributeError)",
+     "per-run font sizing skipped on A Mob (AttributeError)",
+     "per-run font sizing skipped on A Book (AttributeError)",
+     "per-run font sizing skipped on A Pay (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on UC-04 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.1 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.2 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.3 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.4 (AttributeError)",
+     "per-run font sizing skipped on UC-05 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.1 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.2 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.3 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.4 (AttributeError)",
+     "per-run font sizing skipped on UC-10 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.1 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.2 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.3 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.4 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.5 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.6 (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on UC-01 (AttributeError)",
+     "per-run font sizing skipped on UC-02 (AttributeError)",
+     "per-run font sizing skipped on UC-03 (AttributeError)",
+     "per-run font sizing skipped on UC-04 (AttributeError)",
+     "per-run font sizing skipped on UC-05 (AttributeError)",
+     "per-run font sizing skipped on UC-06 (AttributeError)",
+     "per-run font sizing skipped on UC-07 (AttributeError)",
+     "per-run font sizing skipped on UC-08 (AttributeError)",
+     "per-run font sizing skipped on UC-09 (AttributeError)",
+     "per-run font sizing skipped on UC-10 (AttributeError)",
+     "per-run font sizing skipped on UC-11 (AttributeError)",
+     "per-run font sizing skipped on UC-12 (AttributeError)",
+     "per-run font sizing skipped on UC-13 (AttributeError)",
+     "per-run font sizing skipped on A Traveler (AttributeError)",
+     "per-run font sizing skipped on A Admin (AttributeError)",
+     "per-run font sizing skipped on A Ctx (AttributeError)",
+     "per-run font sizing skipped on A Auth (AttributeError)",
+     "per-run font sizing skipped on A AI (AttributeError)",
+     "per-run font sizing skipped on A City (AttributeError)",
+     "per-run font sizing skipped on A Mob (AttributeError)",
+     "per-run font sizing skipped on A Book (AttributeError)",
+     "per-run font sizing skipped on A Pay (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "per-run font sizing skipped on UC-04 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.1 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.2 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.3 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-04.4 (AttributeError)",
+     "per-run font sizing skipped on UC-05 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.1 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.2 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.3 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-05.4 (AttributeError)",
+     "per-run font sizing skipped on UC-10 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.1 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.2 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.3 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.4 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.5 (AttributeError)",
+     "per-run font sizing skipped on sub_UC-10.6 (AttributeError)",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped",
+     "paragraph alignment skipped"
+    ],
+    "styleIssues": [
+     "cell PrintFitLayerPages <- '0' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell LinePattern <- '1' failed: com_error",
+     "cell EndArrow <- '0' failed: com_error",
+     "cell BeginArrow <- '0' failed: com_error",
+     "cell LinePattern <- '1' failed: com_error",
+     "cell EndArrow <- '0' failed: com_error",
+     "cell BeginArrow <- '0' failed: com_error",
+     "cell LinePattern <- '1' failed: com_error",
+     "cell EndArrow <- '0' failed: com_error",
+     "cell BeginArrow <- '0' failed: com_error",
+     "cell PrintFitLayerPages <- '0' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell RoutingStyle <- '1' failed: com_error",
+     "cell ConLineJumpSize <- '0.09in' failed: com_error",
+     "cell WrappingStyle <- '1' failed: com_error",
+     "cell WrappingDirection <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell ShrinkAutoFit <- '1' failed: com_error",
+     "cell LinePattern <- '1' failed: com_error",
+     "cell EndArrow <- '0' failed: com_error",
+     "cell BeginArrow <- '0' failed: com_error",
+     "cell LinePattern <- '1' failed: com_error",
+     "cell EndArrow <- '0' failed: com_error",
+     "cell BeginArrow <- '0' failed: com_error",
+     "cell LinePattern <- '1' failed: com_error",
+     "cell EndArrow <- '0' failed: com_error",
+     "cell BeginArrow <- '0' failed: com_error"
+    ],
+    "pages": [
+     {
+      "name": "Use Case Overview",
+      "nodes": 22,
+      "edges": 33,
+      "connects": 66,
+      "expectedConnects": 66,
+      "propsWritten": 132,
+      "propsExpected": 132
+     },
+     {
+      "name": "Included Detail",
+      "nodes": 17,
+      "edges": 14,
+      "connects": 28,
+      "expectedConnects": 28,
+      "propsWritten": 79,
+      "propsExpected": 79
+     }
+    ],
+    "propFailures": [],
+    "shapeIds": {
+     "UC-01": [
+      [
+       1,
+       6
+      ]
+     ],
+     "UC-02": [
+      [
+       1,
+       7
+      ]
+     ],
+     "UC-03": [
+      [
+       1,
+       8
+      ]
+     ],
+     "UC-04": [
+      [
+       1,
+       9
+      ],
+      [
+       2,
+       10
+      ]
+     ],
+     "UC-05": [
+      [
+       1,
+       10
+      ],
+      [
+       2,
+       15
+      ]
+     ],
+     "UC-06": [
+      [
+       1,
+       11
+      ]
+     ],
+     "UC-07": [
+      [
+       1,
+       12
+      ]
+     ],
+     "UC-08": [
+      [
+       1,
+       13
+      ]
+     ],
+     "UC-09": [
+      [
+       1,
+       14
+      ]
+     ],
+     "UC-10": [
+      [
+       1,
+       15
+      ],
+      [
+       2,
+       20
+      ]
+     ],
+     "UC-11": [
+      [
+       1,
+       16
+      ]
+     ],
+     "UC-12": [
+      [
+       1,
+       17
+      ]
+     ],
+     "UC-13": [
+      [
+       1,
+       18
+      ]
+     ],
+     "A Traveler": [
+      [
+       1,
+       19
+      ]
+     ],
+     "A Admin": [
+      [
+       1,
+       20
+      ]
+     ],
+     "A Ctx": [
+      [
+       1,
+       21
+      ]
+     ],
+     "A Auth": [
+      [
+       1,
+       22
+      ]
+     ],
+     "A AI": [
+      [
+       1,
+       23
+      ]
+     ],
+     "A City": [
+      [
+       1,
+       24
+      ]
+     ],
+     "A Mob": [
+      [
+       1,
+       25
+      ]
+     ],
+     "A Book": [
+      [
+       1,
+       26
+      ]
+     ],
+     "A Pay": [
+      [
+       1,
+       27
+      ]
+     ],
+     "sub_UC-04.1": [
+      [
+       2,
+       11
+      ]
+     ],
+     "sub_UC-04.2": [
+      [
+       2,
+       12
+      ]
+     ],
+     "sub_UC-04.3": [
+      [
+       2,
+       13
+      ]
+     ],
+     "sub_UC-04.4": [
+      [
+       2,
+       14
+      ]
+     ],
+     "sub_UC-05.1": [
+      [
+       2,
+       16
+      ]
+     ],
+     "sub_UC-05.2": [
+      [
+       2,
+       17
+      ]
+     ],
+     "sub_UC-05.3": [
+      [
+       2,
+       18
+      ]
+     ],
+     "sub_UC-05.4": [
+      [
+       2,
+       19
+      ]
+     ],
+     "sub_UC-10.1": [
+      [
+       2,
+       21
+      ]
+     ],
+     "sub_UC-10.2": [
+      [
+       2,
+       22
+      ]
+     ],
+     "sub_UC-10.3": [
+      [
+       2,
+       23
+      ]
+     ],
+     "sub_UC-10.4": [
+      [
+       2,
+       24
+      ]
+     ],
+     "sub_UC-10.5": [
+      [
+       2,
+       25
+      ]
+     ],
+     "sub_UC-10.6": [
+      [
+       2,
+       26
+      ]
+     ]
+    },
+    "edgeIds": {
+     "A Traveler->UC-01": [
+      [
+       1,
+       28
+      ]
+     ],
+     "A Traveler->UC-02": [
+      [
+       1,
+       33
+      ]
+     ],
+     "A Traveler->UC-03": [
+      [
+       1,
+       38
+      ]
+     ],
+     "A Traveler->UC-04": [
+      [
+       1,
+       43
+      ]
+     ],
+     "A Traveler->UC-05": [
+      [
+       1,
+       48
+      ]
+     ],
+     "A Traveler->UC-06": [
+      [
+       1,
+       53
+      ]
+     ],
+     "A Traveler->UC-07": [
+      [
+       1,
+       58
+      ]
+     ],
+     "A Traveler->UC-08": [
+      [
+       1,
+       63
+      ]
+     ],
+     "A Traveler->UC-10": [
+      [
+       1,
+       68
+      ]
+     ],
+     "A Traveler->UC-11": [
+      [
+       1,
+       73
+      ]
+     ],
+     "A Traveler->UC-12": [
+      [
+       1,
+       78
+      ]
+     ],
+     "A Admin->UC-13": [
+      [
+       1,
+       83
+      ]
+     ],
+     "A Ctx->UC-09": [
+      [
+       1,
+       88
+      ]
+     ],
+     "A Auth->UC-01": [
+      [
+       1,
+       93
+      ]
+     ],
+     "A Auth->UC-07": [
+      [
+       1,
+       98
+      ]
+     ],
+     "A AI->UC-01": [
+      [
+       1,
+       103
+      ]
+     ],
+     "A AI->UC-02": [
+      [
+       1,
+       108
+      ]
+     ],
+     "A AI->UC-05": [
+      [
+       1,
+       113
+      ]
+     ],
+     "A AI->UC-10": [
+      [
+       1,
+       118
+      ]
+     ],
+     "A AI->UC-11": [
+      [
+       1,
+       123
+      ]
+     ],
+     "A City->UC-04": [
+      [
+       1,
+       128
+      ]
+     ],
+     "A City->UC-05": [
+      [
+       1,
+       133
+      ]
+     ],
+     "A City->UC-10": [
+      [
+       1,
+       138
+      ]
+     ],
+     "A Mob->UC-04": [
+      [
+       1,
+       143
+      ]
+     ],
+     "A Mob->UC-08": [
+      [
+       1,
+       148
+      ]
+     ],
+     "A Mob->UC-10": [
+      [
+       1,
+       153
+      ]
+     ],
+     "A Book->UC-03": [
+      [
+       1,
+       158
+      ]
+     ],
+     "A Book->UC-06": [
+      [
+       1,
+       163
+      ]
+     ],
+     "A Pay->UC-03": [
+      [
+       1,
+       168
+      ]
+     ],
+     "A Pay->UC-07": [
+      [
+       1,
+       173
+      ]
+     ],
+     "UC-07->UC-06": [
+      [
+       1,
+       178
+      ]
+     ],
+     "UC-09->UC-08": [
+      [
+       1,
+       184
+      ]
+     ],
+     "UC-10->UC-09": [
+      [
+       1,
+       190
+      ]
+     ],
+     "UC-04->sub_UC-04.1": [
+      [
+       2,
+       27
+      ]
+     ],
+     "UC-04->sub_UC-04.2": [
+      [
+       2,
+       33
+      ]
+     ],
+     "UC-04->sub_UC-04.3": [
+      [
+       2,
+       39
+      ]
+     ],
+     "UC-04->sub_UC-04.4": [
+      [
+       2,
+       45
+      ]
+     ],
+     "UC-05->sub_UC-05.1": [
+      [
+       2,
+       51
+      ]
+     ],
+     "UC-05->sub_UC-05.2": [
+      [
+       2,
+       57
+      ]
+     ],
+     "UC-05->sub_UC-05.3": [
+      [
+       2,
+       63
+      ]
+     ],
+     "UC-05->sub_UC-05.4": [
+      [
+       2,
+       69
+      ]
+     ],
+     "UC-10->sub_UC-10.1": [
+      [
+       2,
+       75
+      ]
+     ],
+     "UC-10->sub_UC-10.2": [
+      [
+       2,
+       81
+      ]
+     ],
+     "UC-10->sub_UC-10.3": [
+      [
+       2,
+       87
+      ]
+     ],
+     "UC-10->sub_UC-10.4": [
+      [
+       2,
+       93
+      ]
+     ],
+     "UC-10->sub_UC-10.5": [
+      [
+       2,
+       99
+      ]
+     ],
+     "UC-10->sub_UC-10.6": [
+      [
+       2,
+       105
+      ]
+     ]
+    },
+    "nodes": 39,
+    "edges": 47,
+    "connects": 94,
+    "expectedConnects": 94,
+    "propsWritten": 211,
+    "propsExpected": 211
+   },
+   "sizes": {
+    "vsdx": 84907,
+    "png": 178603,
+    "pdf": 53112,
+    "debugPng": 179226,
+    "debugPdf": 53054
+   }
+  }
+ ],
+ "proof": null,
+ "styleIssues": {
+  "01_CityNexus_System_Architecture.vsdx": [
+   "cell PrintFitLayerPages <- '0' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error"
+  ],
+  "02_CityNexus_User_Journey.vsdx": [
+   "cell PrintFitLayerPages <- '0' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error"
+  ],
+  "03_CityNexus_Agent_Workflow.vsdx": [
+   "cell PrintFitLayerPages <- '0' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error"
+  ],
+  "04_CityNexus_Use_Case.vsdx": [
+   "cell PrintFitLayerPages <- '0' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell LinePattern <- '1' failed: com_error",
+   "cell EndArrow <- '0' failed: com_error",
+   "cell BeginArrow <- '0' failed: com_error",
+   "cell LinePattern <- '1' failed: com_error",
+   "cell EndArrow <- '0' failed: com_error",
+   "cell BeginArrow <- '0' failed: com_error",
+   "cell LinePattern <- '1' failed: com_error",
+   "cell EndArrow <- '0' failed: com_error",
+   "cell BeginArrow <- '0' failed: com_error",
+   "cell PrintFitLayerPages <- '0' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell RoutingStyle <- '1' failed: com_error",
+   "cell ConLineJumpSize <- '0.09in' failed: com_error",
+   "cell WrappingStyle <- '1' failed: com_error",
+   "cell WrappingDirection <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell ShrinkAutoFit <- '1' failed: com_error",
+   "cell LinePattern <- '1' failed: com_error",
+   "cell EndArrow <- '0' failed: com_error",
+   "cell BeginArrow <- '0' failed: com_error",
+   "cell LinePattern <- '1' failed: com_error",
+   "cell EndArrow <- '0' failed: com_error",
+   "cell BeginArrow <- '0' failed: com_error",
+   "cell LinePattern <- '1' failed: com_error",
+   "cell EndArrow <- '0' failed: com_error",
+   "cell BeginArrow <- '0' failed: com_error"
+  ]
+ }
+}

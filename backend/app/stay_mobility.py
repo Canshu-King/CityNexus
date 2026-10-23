@@ -13,10 +13,12 @@ from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
 from app.core.phase_timing import phase
+from app.integrations.china.amap import web_key as amap_web_key
 from app.anywhere_capability import (
     CAPABILITY_STATES,
     REASON_COVERAGE_INCOMPLETE,
@@ -212,20 +214,41 @@ def stay_budget_body(context: JourneyTripContext) -> dict[str, Any]:
 
 
 def _operations_context(session: Session, journey: Journey) -> JourneyOperationsContext:
+    """The one operations-context row this journey has, created if this is the first ask.
+
+    The `session.get` check alone is not enough any more.  Since Issue #31 B the optional stay
+    search runs *beside* the reads the shell makes after creation, instead of being awaited in
+    front of them, and two of those paths could both see `None` and both insert -- which came back
+    as `UNIQUE constraint failed: journey_operations_contexts.journey_id` and a 500 on
+    `/experience`, i.e. a trip page that intermittently refuses to open.  A savepoint makes the
+    insert race-safe without rolling back anything else this request has written.
+    """
+
     row = session.get(JourneyOperationsContext, journey.id)
     if row is None:
         now = _now()
-        row = JourneyOperationsContext(
-            journey_id=journey.id,
-            baggage_present=False,
-            baggage_size_class="NONE",
-            luggage_drop_required=False,
-            constraints_json="{}",
-            created_at=now,
-            updated_at=now,
-        )
-        session.add(row)
-        session.flush()
+        try:
+            with session.begin_nested():
+                session.add(
+                    JourneyOperationsContext(
+                        journey_id=journey.id,
+                        baggage_present=False,
+                        baggage_size_class="NONE",
+                        luggage_drop_required=False,
+                        constraints_json="{}",
+                        created_at=now,
+                        updated_at=now,
+                    )
+                )
+                session.flush()
+        except IntegrityError:
+            # Somebody else won the race a moment ago; their row is the one to use.
+            session.expire_all()
+            row = session.get(JourneyOperationsContext, journey.id)
+            if row is None:
+                raise
+        else:
+            row = session.get(JourneyOperationsContext, journey.id)
     return row
 
 
@@ -1958,7 +1981,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             },
             "mobility": {
                 "amap": {
-                    "status": "READY" if os.getenv("AMAP_WEB_KEY") else "NOT_CONFIGURED",
+                    "status": "READY" if amap_web_key() else "NOT_CONFIGURED",
                     "captured_fallback": "READY"
                     if city_fixture(journey.city_code)
                     else "UNAVAILABLE_FOR_CITY",

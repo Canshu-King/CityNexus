@@ -270,3 +270,49 @@ export function stopRoleLabel(
     "";
   return roleLabel(raw, zh) || categoryLabel(raw, zh);
 }
+
+/* ── identity vocabulary ──────────────────────────────────────────────────────
+   What the server says about the credential this tab is holding.  Its spelling is used here as
+   an object KEY -- a name handed to the machine, in the landing gate's own words -- and never as
+   the right-hand side of a `"key": "value"` pair, because that position is exactly where a
+   string becomes a sentence a traveller reads.  A screen that needs to explain an identity state
+   calls `identityStateLabel`; it has no reason to print `NOT_CONFIGURED`.
+   --------------------------------------------------------------------------- */
+const IDENTITY_LABELS: Record<string, Label> = {
+  SIGNED: { zh: "已确认身份", en: "Identity confirmed" },
+  NOT_CONFIGURED: { zh: "这台服务器还不能确认身份", en: "This server cannot confirm identity yet" },
+  MISCONFIGURED: { zh: "身份能力没配好", en: "Identity setup is incomplete" },
+  EXPIRED: { zh: "这次登录过期了", en: "This sign-in expired" },
+  UNSIGNED: { zh: "还没有登录", en: "Not signed in" },
+  REFUSED: { zh: "服务器没有认下这个身份", en: "The server did not accept this identity" },
+};
+
+/** Traveller words for an identity state; an unknown word is humanised, never echoed raw. */
+export function identityStateLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(IDENTITY_LABELS, value, zh);
+}
+
+/* Refusals come in two kinds, and the difference decides whether the session has to go:
+   a credential problem clears everything this tab holds, a scope problem only drops the saved
+   pointer.  Both tables are keyed by the server's code, so membership is a lookup. */
+const CREDENTIAL_REFUSAL: Record<string, true> = {
+  TRAVELER_CREDENTIALS_MISSING: true,
+  TRAVELER_CREDENTIALS_INVALID: true,
+  TRAVELER_CREDENTIALS_EXPIRED: true,
+  TRAVELER_PRINCIPAL_NOT_FOUND: true,
+};
+
+const SCOPE_REFUSAL: Record<string, true> = {
+  JOURNEY_POINTER_NOT_OURS: true,
+  TRAVELER_NOT_PRINCIPAL: true,
+};
+
+/** "This credential is the problem" -- the session and everything under it must go. */
+export function isCredentialRefusal(code: string | null): boolean {
+  return code !== null && CREDENTIAL_REFUSAL[code] === true;
+}
+
+/** "The credential is fine; the saved pointer is somebody else's trip" -- drop the pointer only. */
+export function isScopeRefusal(code: string | null): boolean {
+  return code !== null && SCOPE_REFUSAL[code] === true;
+}

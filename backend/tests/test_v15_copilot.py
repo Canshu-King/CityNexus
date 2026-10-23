@@ -145,7 +145,14 @@ def test_v15_what_if_explains_that_authoritative_selection_is_required():
     assert response.status_code == 200
     body = response.json()
     assert body["what_if"]["status"] == "NOT_SIMULATABLE_FROM_CURRENT_EVIDENCE"
-    assert "已选的权威 PlanVersion" in body["message"]
+    # The three facts this cell has always guarded -- nothing is selected, nothing was changed, and
+    # the traveller is pointed at the screen where they can act -- now pinned without requiring the
+    # column name `PlanVersion` to appear in a sentence addressed to a traveller.
+    message = body["message"]
+    assert "还没有选定方案" in message
+    assert "没有改动行程" in message
+    assert "住宿" in message
+    assert "PlanVersion" not in message
 
 
 def test_v15_only_current_disruption_creates_event():

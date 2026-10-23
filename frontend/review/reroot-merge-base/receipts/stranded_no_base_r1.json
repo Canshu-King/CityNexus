@@ -1,0 +1,328 @@
+{
+ "measured_at": "2026-10-21 03:16:27",
+ "live_tip": "ee324aad6ff8149926b18eda45b3958f52cad38a",
+ "heads": 2323,
+ "seconds": 193,
+ "stranded_count": 43,
+ "no_local_object_count": 0,
+ "owners_ranked": [
+  [
+   "0278",
+   5
+  ],
+  [
+   "ord0261",
+   4
+  ],
+  [
+   "0280",
+   3
+  ],
+  [
+   "ord0272",
+   3
+  ],
+  [
+   "ord0296",
+   3
+  ],
+  [
+   "0269",
+   2
+  ],
+  [
+   "0274",
+   2
+  ],
+  [
+   "0281",
+   2
+  ],
+  [
+   "ord0253",
+   2
+  ],
+  [
+   "ord0287",
+   2
+  ],
+  [
+   "0292",
+   1
+  ],
+  [
+   "0302",
+   1
+  ],
+  [
+   "credential",
+   1
+  ],
+  [
+   "emptystate",
+   1
+  ],
+  [
+   "hub",
+   1
+  ],
+  [
+   "journey",
+   1
+  ],
+  [
+   "map",
+   1
+  ],
+  [
+   "offline",
+   1
+  ],
+  [
+   "ord0262",
+   1
+  ],
+  [
+   "ord0263",
+   1
+  ],
+  [
+   "ord0268",
+   1
+  ],
+  [
+   "ord0310",
+   1
+  ],
+  [
+   "search",
+   1
+  ],
+  [
+   "searchbox",
+   1
+  ],
+  [
+   "settings",
+   1
+  ]
+ ],
+ "stranded_refs": [
+  {
+   "ref": "refs/heads/review/0269-0273-reparent-dcae1bc",
+   "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "owner": "0269"
+  },
+  {
+   "ref": "refs/heads/review/0269-reparent-c79e2b4",
+   "sha": "5f319c0239b66efc18eeaf4b375772e6be936da1",
+   "owner": "0269"
+  },
+  {
+   "ref": "refs/heads/review/0274-b2c-b",
+   "sha": "853c54944a0b7ea2c7111867915566171650c564",
+   "owner": "0274"
+  },
+  {
+   "ref": "refs/heads/review/0274-b2c-c",
+   "sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+   "owner": "0274"
+  },
+  {
+   "ref": "refs/heads/review/0278-0253-on-45b0a5e",
+   "sha": "0671704546f9c9ea1d1b57627b059124c7800803",
+   "owner": "0278"
+  },
+  {
+   "ref": "refs/heads/review/0278-0253-on-5c4608ce",
+   "sha": "9023e023c9e8612d2e51cef78ebda6af5d69556f",
+   "owner": "0278"
+  },
+  {
+   "ref": "refs/heads/review/0278-0253-on-6d041dcc",
+   "sha": "833c413f9f2adb0f017eec0b4c944fc36f325975",
+   "owner": "0278"
+  },
+  {
+   "ref": "refs/heads/review/0278-0253-on-90d29a17",
+   "sha": "f035caeca53765a5c652fab200f66fa04a57bb0d",
+   "owner": "0278"
+  },
+  {
+   "ref": "refs/heads/review/0278-on-0269-rebased",
+   "sha": "e7cf57986b5afd8137ba6f8255f337d19f41f19c",
+   "owner": "0278"
+  },
+  {
+   "ref": "refs/heads/review/0280-attribution-label",
+   "sha": "48827a9d6402aaabffc5ff47b1540407fafed620",
+   "owner": "0280"
+  },
+  {
+   "ref": "refs/heads/review/0280-attribution-label-r2",
+   "sha": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+   "owner": "0280"
+  },
+  {
+   "ref": "refs/heads/review/0280-attribution-label-r3",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "owner": "0280"
+  },
+  {
+   "ref": "refs/heads/review/0281-write-deadline-keyed-b",
+   "sha": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+   "owner": "0281"
+  },
+  {
+   "ref": "refs/heads/review/0281-write-deadline-keyed-b2",
+   "sha": "64d14b205263ec03fd4810b1b0877418495b87b0",
+   "owner": "0281"
+  },
+  {
+   "ref": "refs/heads/review/0292-arm-receipt-tooling",
+   "sha": "954f61ac9c20d2e28e992a316b5ddcb1bbae0bc9",
+   "owner": "0292"
+  },
+  {
+   "ref": "refs/heads/review/0302-unreadable-server-body-b",
+   "sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "owner": "0302"
+  },
+  {
+   "ref": "refs/heads/review/credential-literals-gate",
+   "sha": "9cdaf6c8374fb951178a5c6c48fb33701465d6cc",
+   "owner": "credential"
+  },
+  {
+   "ref": "refs/heads/review/emptystate-multipage-r1",
+   "sha": "5b4c76f74cc93eee48896a1bd065db362b15ca7d",
+   "owner": "emptystate"
+  },
+  {
+   "ref": "refs/heads/review/hub-reorganize-r1",
+   "sha": "17ae7b67625ffb8fd64d6989afbce61d4fb1af7d",
+   "owner": "hub"
+  },
+  {
+   "ref": "refs/heads/review/journey-detail-reorganize-r1",
+   "sha": "f2d5d76339935c43dbd0e19e9c374a7448fb98f2",
+   "owner": "journey"
+  },
+  {
+   "ref": "refs/heads/review/map-label-compliance-r1",
+   "sha": "7d70e5a2e722a39ae7385b4d38dc3d780e571d5c",
+   "owner": "map"
+  },
+  {
+   "ref": "refs/heads/review/offline-hints-r1",
+   "sha": "355afcfec0db2391b03ed95459988ff04632a726",
+   "owner": "offline"
+  },
+  {
+   "ref": "refs/heads/review/ord0253-f-server-half",
+   "sha": "a4a452c08889eea3fb2d61bcc0068a6ff8c4366e",
+   "owner": "ord0253"
+  },
+  {
+   "ref": "refs/heads/review/ord0253-phaseab-f",
+   "sha": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+   "owner": "ord0253"
+  },
+  {
+   "ref": "refs/heads/review/ord0261-0264-gate-v2",
+   "sha": "e3b0b47f918cbdc33b91ed3876b6b471a3bf3b66",
+   "owner": "ord0261"
+  },
+  {
+   "ref": "refs/heads/review/ord0261-0264-gate-v2clean",
+   "sha": "171c0fb41b36a79782e80ca5033a93e527b73e27",
+   "owner": "ord0261"
+  },
+  {
+   "ref": "refs/heads/review/ord0261-0264-landing-clean-rebased",
+   "sha": "d2665e25855aeb265329266831983de42321697d",
+   "owner": "ord0261"
+  },
+  {
+   "ref": "refs/heads/review/ord0261-0264-landing-rebased",
+   "sha": "2f3bab7fa4a412725f09c87ab7314781d7cdd8eb",
+   "owner": "ord0261"
+  },
+  {
+   "ref": "refs/heads/review/ord0262-narrow-f",
+   "sha": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e",
+   "owner": "ord0262"
+  },
+  {
+   "ref": "refs/heads/review/ord0263-landing-2b49e3ca",
+   "sha": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+   "owner": "ord0263"
+  },
+  {
+   "ref": "refs/heads/review/ord0268-landing-1f44408",
+   "sha": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+   "owner": "ord0268"
+  },
+  {
+   "ref": "refs/heads/review/ord0272-continuation-corrected",
+   "sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "owner": "ord0272"
+  },
+  {
+   "ref": "refs/heads/review/ord0272-continuation-f",
+   "sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "owner": "ord0272"
+  },
+  {
+   "ref": "refs/heads/review/ord0272-k8-f",
+   "sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "owner": "ord0272"
+  },
+  {
+   "ref": "refs/heads/review/ord0287-k8-carrier-f",
+   "sha": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+   "owner": "ord0287"
+  },
+  {
+   "ref": "refs/heads/review/ord0287-recut-commander",
+   "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+   "owner": "ord0287"
+  },
+  {
+   "ref": "refs/heads/review/ord0296-write-deadline-f",
+   "sha": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "owner": "ord0296"
+  },
+  {
+   "ref": "refs/heads/review/ord0296-write-deadline-f-r2",
+   "sha": "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+   "owner": "ord0296"
+  },
+  {
+   "ref": "refs/heads/review/ord0296-write-deadline-f-r3",
+   "sha": "fd8eaf3644b66b44c44ce3178a7babac2bf561c0",
+   "owner": "ord0296"
+  },
+  {
+   "ref": "refs/heads/review/ord0310-keyless-deadline-d",
+   "sha": "b025432ded0381d83ebf36b85202a345bede2fcb",
+   "owner": "ord0310"
+  },
+  {
+   "ref": "refs/heads/review/search-hist-manage-r1",
+   "sha": "02066fefa1aac70f0f40d900ecfca30b68fb83d6",
+   "owner": "search"
+  },
+  {
+   "ref": "refs/heads/review/searchbox-improve-r1",
+   "sha": "f684d6206a4b79e668e51222ea47422a92a9e1a9",
+   "owner": "searchbox"
+  },
+  {
+   "ref": "refs/heads/review/settings-groups-r1",
+   "sha": "d55b9243902806ccbe8d1a27c03fa333651db595",
+   "owner": "settings"
+  }
+ ],
+ "no_local_object_refs": []
+}

@@ -162,8 +162,69 @@ paths:
           description: Created
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/Traveler'}
+              # `TravelerSessionAnswer`, not plain `Traveler`: this answer carries the credential
+              # and the window it is valid for.  `Cache-Control: private, no-store`.
+              schema: {$ref: '#/components/schemas/TravelerSessionAnswer'}
         '422': {$ref: '#/components/responses/ValidationError'}
+  /travelers/session:
+    get:
+      operationId: getTravelerSession
+      # ORD-0685: the only door that answers "who is the traveller this request speaks for".
+      # It verifies a signed bearer token; it never mints one and never guesses a traveller.
+      responses:
+        '200':
+          description: The authenticated traveller principal
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerSession'}
+        '401':
+          description: >-
+            No signed traveller credentials, or they are expired, invalid, or name a traveller who
+            no longer exists. The body is the shared error envelope; `error.reason_code` names
+            which of those it was (TRAVELER_CREDENTIALS_MISSING / _INVALID / _EXPIRED /
+            TRAVELER_PRINCIPAL_NOT_FOUND).
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '503':
+          description: >-
+            The verifier has no usable secret configured (TRAVELER_AUTH_NOT_CONFIGURED). The door
+            refuses rather than accepting an identity it cannot verify.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /travelers/session/refresh:
+    post:
+      operationId: refreshTravelerSession
+      # Issue #33 Q1: slide the session forward without asking the person to do anything. The door
+      # takes no identity parameter at all -- it re-signs for whoever the presented credential
+      # already proves, which is why a body naming a traveller is refused before anything is signed.
+      responses:
+        '200':
+          description: The same traveller, a later window
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TravelerSessionRefresh'}
+        '400':
+          description: >-
+            The body claimed an identity (`traveler_id` / `sub` / `id`). A refreshed session is
+            signed for the credential on the request, not for an id handed in a body
+            (`error.reason_code` = TRAVELER_NOT_PRINCIPAL).
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '401':
+          description: >-
+            Same four named refusals as `GET /travelers/session`: missing / invalid / expired
+            credentials, or a principal that no longer exists.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '503':
+          description: The verifier has no usable secret (TRAVELER_AUTH_NOT_CONFIGURED).
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /travelers/{traveler_id}:
     parameters:
       - {$ref: '#/components/parameters/TravelerId'}
@@ -312,7 +373,22 @@ paths:
                   # against the old shape neither breaks on it nor is promised the field.
                   ai_state:
                     type: string
-                    enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+                    enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED, PROVIDER_ANSWERED]
+                  # ORD-0697: also additive and nullable.  `ai_state` on its own could not tell a
+                  # server that had just served real answers from one that had never reached the
+                  # provider, because the vocabulary had no word for "answered".  This names which
+                  # door answered, which model identifier went out, what came back and how many
+                  # times.  It carries no credential value and no request body.
+                  ai_last_call:
+                    type: [object, "null"]
+                    properties:
+                      provider_key: {type: string}
+                      model_key: {type: [string, "null"]}
+                      outcome: {type: string, enum: [ANSWERED, REFUSED]}
+                      status_code: {type: [integer, "null"]}
+                      observed_at: {type: string}
+                      answers: {type: integer}
+                      refusals: {type: integer}
                   hermes_native_gateway: {type: object}
   /agent/hermes/capabilities:
     get:
@@ -2948,9 +3024,37 @@ components:
         ai: {type: string, enum: [available, unavailable, disabled]}
         # ORD-0359: additive. `ai` keeps its two words for existing clients; `ai_state` names the
         # reason, which `ai` cannot do because it folds three different facts into one string.
+        # ORD-0697: the same fifth word `/agent/runtime-status` answers with, one set in both doors.
         ai_state:
           type: string
-          enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+          enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED, PROVIDER_ANSWERED]
+    TravelerSession:
+      # ORD-0685: the signed principal behind a request. `traveler_id` is the server's own
+      # identity for the person -- it is never read from a request body, and a caller who
+      # presents no verifiable token gets a named 401 instead of somebody else's identity.
+      type: object
+      required: [traveler_id, auth_method, expires_at]
+      properties:
+        traveler_id: {type: string, format: uuid}
+        auth_method: {type: string, const: SIGNED_HMAC_BEARER}
+        expires_at:
+          type: integer
+          description: Unix seconds at which the presented token stops being accepted
+    TravelerSessionRefresh:
+      # Issue #33 Q1: the principal answer plus the credential it was renewed into.
+      # `renewed_from_expires_at` is the window the *presented* token had, so a client can tell a
+      # renewal from a re-login and keep the person where they were instead of bouncing them to the
+      # wizard.  `Cache-Control: private, no-store`.
+      allOf:
+        - {$ref: '#/components/schemas/TravelerSession'}
+        - type: object
+          required: [session_state, access_token, renewed_from_expires_at]
+          properties:
+            session_state: {type: string, const: SIGNED}
+            access_token: {type: string, description: "the freshly signed credential for this same traveller"}
+            renewed_from_expires_at:
+              type: [integer, 'null']
+              description: unix seconds the presented credential was due; null when it carried none
     ErrorEnvelope:
       type: object
       required: [error]
@@ -3027,6 +3131,20 @@ components:
             id: {type: string, format: uuid}
             created_at: {type: string, format: date-time}
             updated_at: {type: string, format: date-time}
+    TravelerSessionAnswer:
+      # ORD-0687 / Issue #33 Q1: `POST /travelers` is the one door that both creates the person and
+      # hands this tab a credential it can be recognised by.  The credential and its window travel
+      # together -- a token without `expires_at` leaves the client unable to tell a session that is
+      # about to lapse from one that is not, and it will not refresh what it cannot measure.
+      # `GET /travelers/{traveler_id}` answers with plain `Traveler`: no token, no window.
+      allOf:
+        - {$ref: '#/components/schemas/Traveler'}
+        - type: object
+          required: [access_token, session_state, expires_at]
+          properties:
+            access_token: {type: [string, 'null'], description: "null whenever this build cannot sign; the reason is in `session_state`, never in a silent absence"}
+            session_state: {type: string, description: "SIGNED | UNSIGNED | MISCONFIGURED -- `signing_state()` verbatim"}
+            expires_at: {type: [integer, 'null'], description: "unix seconds this credential stops being accepted; null exactly when `access_token` is null"}
     PreferenceInput:
       type: object
       required: [category, key, value, weight]
@@ -3982,12 +4100,18 @@ components:
         - attributions
         - event_ids
         - created_event_ids
+        - used_timezone
+        - timezone_honoured
+        - attribution_skipped_reason_codes
       properties:
         provider: {type: string, const: open-meteo}
         queried_place_ids: {type: array, items: {type: string}}
         successful_place_ids: {type: array, items: {type: string}}
         failed_place_ids: {type: array, items: {type: string}}
         degraded: {type: boolean}
+        used_timezone: {type: [string, 'null']}
+        timezone_honoured: {type: boolean}
+        attribution_skipped_reason_codes: {type: array, items: {type: string}}
         snapshots: {type: array, items: {type: object, additionalProperties: true}}
         attributions: {type: array, items: {type: object, additionalProperties: true}}
         event_ids: {type: array, items: {type: string, format: uuid}}
@@ -4158,6 +4282,10 @@ components:
                 proposed_changes: {type: array, items: {type: object, additionalProperties: true}}
                 provenance: {type: object, additionalProperties: true}
                 explanation: {type: string}
+                explanation_code:
+                  type: string
+                  enum: [NO_TARGET_SIMULATED, PROTECTED_OR_LOCKED_TOUCHED, NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED, ABSORBS_WITHIN_OBSERVED_WINDOW, PROVIDER_BACKED_ALTERNATIVE_REQUIRED, HYPOTHETICAL_WEATHER_OR_CLOSURE]
+                  description: Names which preview branch produced `explanation`, so a reader-facing surface can answer in the reader's language instead of echoing server prose.
                 next_action: {type: [string, "null"]}
             - type: "null"
         event: {type: [object, "null"], additionalProperties: true}

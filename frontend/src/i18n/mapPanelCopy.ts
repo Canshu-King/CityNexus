@@ -44,15 +44,32 @@ export type MapCopyKey =
   /* ORD-0497 -- the footprint arms. Named per read, never per traveller: the empty sentence says
      what THIS read brought back, because "还没有足迹" would be a claim about the person rather than
      about the door. */
-  | "footprintStamped"
-  | "footprintNone"
+  | "footprintStampedCount"
+  | "footprintSolidMeans"
+  | "footprintHollowMeans"
+  | "footprintNoneRead"
+  | "footprintNoneDrawn"
   | "footprintRefused"
-  | "footprintUnreachable"
+  | "footprintUnreachableRead"
+  | "footprintUnreachableDrawn"
+  | "footprintUnreachableSilence"
   | "footprintAsking"
   | "footprintNotAsked"
   | "footprintBadgeAria"
   | "footprintFilterLabel"
-  | "footprintFilterClear";
+  | "footprintFilterClear"
+  /* WP-D — the basemap degradation surface. `tileNotice` was already honest about the fact ("底图未加载")
+     but it was the whole of the answer: nothing named WHICH host refused, nothing said the trip itself
+     survived, and there was no exit. The keys below are the three things a traveller needs from a failed
+     basemap -- the cause, the evidence that nothing was lost, and the way to act. Named separately from
+     `tileNotice` because that sentence is quoted verbatim on the accepted line and stays byte-identical.
+     Register follows the house rule (an English "could not" pairs with a Chinese 「没能」, never 「失败」). */
+  | "degradedHeadline"
+  | "degradedHeadlineNoStops"
+  | "degradedRetried"
+  | "degradedRetry"
+  | "degradedStopsOpen"
+  | "degradedStopsClose";
 
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
@@ -82,8 +99,8 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      about a remedy the screen cannot offer. The opening clause is verbatim as before, because
      `e2e/qoder-today-follows-the-stage.spec.ts` reads it to keep the attention band and the map from
      contradicting each other; what was dropped is the promise, which is the part with no door. */
-  noLocationBody: { zh: "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
-            en: "This trip has no trustworthy coordinates yet. This build has no door to add an activity location (NOT_AVAILABLE)." },
+  noLocationBody: { zh: "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有。",
+            en: "This trip has no trustworthy coordinates yet. This build has no door to add an activity location." },
   tileNotice: { zh: "底图未加载，显示的是路线示意。",
             en: "Basemap did not load — showing the route diagram only." },
   gestureHint: { zh: "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
@@ -122,21 +139,41 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      3. `%s` carries only the server's own count. The day under a pin is that same row's
         `stamped_at`, rendered date-only -- see `formatStampDay` for the glass rule that forbids a
         clock here. */
-  footprintStamped: {
-    zh: "这台服务器这次交回 %s 枚足迹：实心图钉是它记下的站，钉下的日期就是那一枚的时间；空心的是这次没有印的站。",
-    en: "This server handed back %s footprints on this read: solid pins are the stops it recorded, and the day under a pin is that stamp's; hollow pins are the stops it returned no stamp for.",
+  footprintStampedCount: {
+    zh: "服务器这次交回 %s 枚足迹",
+    en: "This read returned %s footprints",
   },
-  footprintNone: {
-    zh: "这台服务器这次没有交回任何足迹，所以这一趟在图上的站全部画成空心。",
-    en: "This server returned no footprint on this read, so every stop of this trip is painted hollow.",
+  footprintSolidMeans: {
+    zh: "实心图钉是它记下的站，钉下的日期就是那一枚的时间",
+    en: "a solid pin is a stop it recorded, dated at that stamp",
+  },
+  footprintHollowMeans: {
+    zh: "空心的是这次没有印的站",
+    en: "a hollow pin is a stop it returned no stamp for",
+  },
+  footprintNoneRead: {
+    zh: "服务器这次没有交回任何足迹",
+    en: "This read returned no footprint",
+  },
+  footprintNoneDrawn: {
+    zh: "图上的站全部画成空心",
+    en: "every stop of this trip is drawn hollow",
   },
   footprintRefused: {
     zh: "服务器这次没收下这个读取请求，所以图上不区分到过的站与没到过的站。",
     en: "The server would not take this read, so the map draws no distinction between stamped and unstamped stops.",
   },
-  footprintUnreachable: {
-    zh: "这次没有问到服务器，所以图上不区分到过的站与没到过的站——这一片的画法不替服务器说话。",
-    en: "This read never reached the server, so the map draws no distinction — nothing painted here speaks for the server.",
+  footprintUnreachableRead: {
+    zh: "这次没有问到服务器",
+    en: "This read never reached the server",
+  },
+  footprintUnreachableDrawn: {
+    zh: "图上不区分到过的站与没到过的站",
+    en: "the map draws no distinction between stamped and unstamped stops",
+  },
+  footprintUnreachableSilence: {
+    zh: "这一片的画法不替服务器说话",
+    en: "nothing painted here speaks for the server",
   },
   footprintAsking: { zh: "正在向服务器问这一趟的足迹…", en: "Asking the server for this trip's footprints…" },
   footprintNotAsked: {
@@ -150,6 +187,33 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      filter is already on tells the traveller nothing about what the next press gives back. */
   footprintFilterLabel: { zh: "只看打过", en: "Stamped only" },
   footprintFilterClear: { zh: "看全部站", en: "Show every stop" },
+  /* WP-D. ONE line, because the panel leaves the camera 153 px of glass (measured: the pins occupy
+     relative 59..187 of a 392 px panel, the bottom 139 px is the caption band and the named control the
+     top 61 px). A plate that spent two rows on its own prose covered seven of the nine pins it was
+     standing in front of; one row, plus a reframe that tells the camera the rest, leaves the journey
+     whole. It therefore carries the three things that cannot be deferred -- what did not arrive, that
+     the trip is not what failed, and how many stops are still plotted -- and the detail goes into the
+     list, which is the same claim made row by row.
+     The tile host is NOT spelled out here: it is already permanently on the glass on the ORD-A
+     attribution line, and it rides in `data-cnx-basemap-host` for the gates. A second copy of the host
+     in this sentence is what pushed the English arm past the plate's height budget. */
+  degradedHeadline: {
+    zh: "底图没接上（网络或瓦片源）：%s 个站照常画着",
+    en: "No basemap (network or tiles): %s stops still plotted.",
+  },
+  /* The arm the counted sentence cannot speak: a journey with route geometry and no located stop is not
+     a trip whose stops are "still plotted", and saying it anyway would be the plate inventing a comfort
+     the data did not hand it. */
+  degradedHeadlineNoStops: {
+    zh: "底图没接上（网络或瓦片源）：这一趟没有带位置的站",
+    en: "No basemap (network or tiles): no located stop to plot.",
+  },
+  degradedRetried: { zh: "已再取过 %s 次，仍没接上。", en: "Reloaded %s times — still no answer." },
+  /* Two arms per control, in the direction of what the press does (ORD-0403's rule for a state-bearing
+     control). Short on purpose: they share their line with the plate's one sentence. */
+  degradedRetry: { zh: "再取底图", en: "Reload" },
+  degradedStopsOpen: { zh: "站点清单", en: "Stops" },
+  degradedStopsClose: { zh: "收起清单", en: "Hide" },
 };
 
 /** Same locale rule the component used inline: anything starting with zh takes the Chinese arm. */

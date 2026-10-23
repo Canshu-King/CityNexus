@@ -11,6 +11,7 @@ import {
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { AgentRunRail, type AgentRailStep } from "./AgentRunRail";
 import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failureAttribution";
+import { dropLegacyDiskCopies, recallTimeline, recallTranscript, rememberTimeline, rememberTranscript } from "../../lib/agentSessionCache";
 
 
 type Message = { role: "user" | "assistant"; text: string; response?: CopilotResponse };
@@ -78,15 +79,13 @@ function eventKey(event: NativeRuntimeEvent) {
   ].join("|");
 }
 
-function readStoredEvents(journeyId: string, runId: string): NativeRuntimeEvent[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(`citynexus.native-hermes.timeline.${journeyId}.${runId}`);
-    const value = raw ? JSON.parse(raw) : [];
-    return Array.isArray(value) ? (value as NativeRuntimeEvent[]).slice(-250) : [];
-  } catch {
-    return [];
-  }
+function storedEvents(journeyId: string, runId: string): NativeRuntimeEvent[] {
+  /* Issue #27：这一份以前躺在 `citynexus.native-hermes.timeline.<journeyId>.<runId>` 里。
+   * 键上只有行程与跑号，没有查看者 —— 而这台部署的前端没有"当前签名查看者是谁"的接口，
+   * 所以任何"绑身份的本地缓存"都会拿自报值冒充权威，工单明令不许。改成只活在本页内存：
+   * 关面板、切路由仍不丢（那正是原注释要保的事），换人刷新即空，服务器审计时间线是权威。 */
+  dropLegacyDiskCopies(journeyId, runId);
+  return (recallTimeline(journeyId, runId) as NativeRuntimeEvent[] | null) ?? [];
 }
 
 function mergeEvents(...groups: Array<NativeRuntimeEvent[] | undefined>) {
@@ -167,37 +166,36 @@ export function NativeMissionTimeline({
   const t = useT();
   const zh = locale === "zh-CN";
   const [events, setEvents] = useState<NativeRuntimeEvent[]>(() =>
-    mergeEvents(run.initial_events, readStoredEvents(data.journey.id, run.run_id)),
+    mergeEvents(run.initial_events, storedEvents(data.journey.id, run.run_id)),
   );
   const [runState, setRunState] = useState(run.status);
   const [actionState, setActionState] = useState<string | null>(null);
   const [actionFacts, setActionFacts] = useState<string | null>(null);
   const [streamError, setStreamError] = useState<string | null>(null);
+  /* Issue #27：审计时间线取不到时必须说出来。原来那个 `.catch(() => {})` 把 403 咽了下去，
+   * 于是屏幕停在"正在核对行程事实"上 —— 那是把"被拒绝"报成"还在分析"。 */
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyFacts, setHistoryFacts] = useState<string | null>(null);
 
   const appendEvents = useCallback((incoming: NativeRuntimeEvent[]) => {
     setEvents((current) => mergeEvents(current, incoming));
   }, []);
 
-  // A closed panel or route unmount does not discard the mission timeline.
-  // This is only a local UI cache; authoritative history is the server audit
-  // timeline fetched below.
+  // A closed panel or route unmount does not discard the mission timeline --
+  // but since Issue #27 that "not discard" lives in this page's memory only.
+  // Nothing replayable is left on disk for the next traveller to inherit, and
+  // the server audit timeline fetched below stays authoritative.
   useEffect(() => {
-    setEvents(mergeEvents(run.initial_events, readStoredEvents(data.journey.id, run.run_id)));
+    setEvents(mergeEvents(run.initial_events, storedEvents(data.journey.id, run.run_id)));
     setRunState(run.status);
     setActionState(null);
     setStreamError(null);
+    setHistoryError(null);
+    setHistoryFacts(null);
   }, [data.journey.id, run.run_id]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(
-        `citynexus.native-hermes.timeline.${data.journey.id}.${run.run_id}`,
-        JSON.stringify(events.slice(-250)),
-      );
-    } catch {
-      // Local storage is an enhancement only; server audit history remains authoritative.
-    }
+    rememberTimeline(data.journey.id, run.run_id, events);
   }, [data.journey.id, events, run.run_id]);
 
   useEffect(() => {
@@ -207,13 +205,19 @@ export function NativeMissionTimeline({
       .then((payload) => {
         if (!cancelled) appendEvents(payload.events);
       })
-      .catch(() => {
-        // A freshly-created run may not have emitted an event yet.
+      .catch((cause) => {
+        if (cancelled) return;
+        /* 一次刚创建的跑可能还没有事件，那是 200 空表，不会走到这里。走到这里的就是
+         * "服务器没替这一趟背书"：401/403/404/断网都算，按 ORD-0326 那一套归类说给人听。 */
+        const attribution: Attribution = classifyReadFailure(cause);
+        setHistoryFacts(attribution.telemetry);
+        /* 兜底那句绝不能是"正在核对事实"：那正是这条要修的错报。 */
+        setHistoryError(copyFor(attribution, zh).body ?? t("copilot.stream.unavailable"));
       });
     return () => {
       cancelled = true;
     };
-  }, [appendEvents, data.journey.id, run.run_id]);
+  }, [appendEvents, data.journey.id, run.run_id, t, zh]);
 
   useEffect(() => {
     const url = run.events_url;
@@ -275,7 +279,13 @@ export function NativeMissionTimeline({
         .then((payload) => {
           if (!cancelled && typeof payload.status === "string") setRunState(payload.status);
         })
-        .catch(() => undefined);
+        .catch((cause) => {
+          if (cancelled) return;
+          /* 跑的状态也拿不到时，同一句可恢复的说明覆盖这里：屏上不能再摆出"还在跑"的样子。 */
+          const attribution: Attribution = classifyReadFailure(cause);
+          setHistoryFacts((current) => current ?? attribution.telemetry);
+          setHistoryError((current) => current ?? copyFor(attribution, zh).body ?? t("copilot.stream.unavailable"));
+        });
     };
     poll();
     const timer = window.setInterval(poll, 3000);
@@ -391,22 +401,42 @@ export function NativeMissionTimeline({
     <section className={`cn-native-mission ${compact ? "compact" : ""}`} data-testid="native-hermes-timeline">
       <header className="cn-native-mission-head">
         <div>
-          <b>{t("copilot.mission.workingOnRequest")}</b>
-          <small>
-            {executed
-              ? t("copilot.mission.ranAgainstFacts")
-              : t("copilot.mission.checkingFacts")}
-          </small>
+          {/* Issue #27 的另一半：被拒绝之后，块头也不能再写「正在为你处理 / 已按你的行程事实执行」。
+           * 那一列工具行属于这位查看者自己这一趟，留着是对的；错的是块头替服务器宣布还在跑。
+           * 用的是两本书里都已有的句子，不新造词表键。 */}
+          <b>{historyError ? t("copilot.stream.unavailable") : t("copilot.mission.workingOnRequest")}</b>
+          {historyError ? null : (
+            <small>
+              {executed
+                ? t("copilot.mission.ranAgainstFacts")
+                : t("copilot.mission.checkingFacts")}
+            </small>
+          )}
         </div>
       </header>
 
       {steps.length ? (
         <AgentRunRail steps={steps} />
       ) : (
-        <p className="cn-native-empty">
-          {t("copilot.mission.checkingFacts")}
+        /* Issue #27：没有一行可显示时，原来无论服务器答什么都写"正在核对行程事实"。
+         * 现在被拒绝就说被拒绝 —— 一句可恢复的话，而不是把 403 演成还在分析。 */
+        <p
+          className="cn-native-empty"
+          {...(historyError ? { "data-testid": "agent-history-error" } : {})}
+        >
+          {historyError ?? t("copilot.mission.checkingFacts")}
         </p>
       )}
+
+      {historyError && steps.length > 0 ? (
+        <p
+          className="v8-message error"
+          data-testid="agent-history-error"
+          data-attribution={historyFacts ?? ""}
+        >
+          {historyError}
+        </p>
+      ) : null}
 
       <details className="cn-native-plan" data-testid="native-hermes-observability">
         <summary>{t("agent.obsAdvancedDetail")}</summary>
@@ -584,6 +614,9 @@ export function CopilotDock({
   // R6: the dock must never cover a sheet, a drawer, or a Live proposal.  The
   // selectors are the real high-priority surfaces; while any is present the
   // dock collapses to its edge button and restores itself afterwards.
+  //
+  // 「AI 工作动态」的那块面板是同一类：390x844 上现读到面板占 17,473 起 356x398，而药丸停在
+  // 336,634 的 44x44 —— 正好压在面板自己的说明行上。它不是弹层，所以以前没人把它算进 R6。
   const [yieldToSurface, setYieldToSurface] = useState(false);
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -592,6 +625,7 @@ export function CopilotDock({
       ".v8-sheet-backdrop",
       ".v8-drawer-backdrop",
       '[data-testid="live-proposal"]',
+      '[data-testid="agent-work-feed"]',
     ].join(",");
     const sync = () => setYieldToSurface(Boolean(document.querySelector(HIGH_PRIORITY)));
     sync();
@@ -601,7 +635,12 @@ export function CopilotDock({
   }, []);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
-  const [messages, setMessages] = useState<Message[]>(() => readStoredMessages(data.journey.id));
+  const [messages, setMessages] = useState<Message[]>(() => {
+    /* Issue #27：与 `AgentComposer` 同一把键、同一个毛病 —— 只绑行程号，换人不换行程就会
+     * 把上一位的问答（连 `agent_run` 与它的事件）播回来。改成只认本页内存。 */
+    dropLegacyDiskCopies(data.journey.id);
+    return (recallTranscript(data.journey.id) as Message[] | null) ?? [];
+  });
   const [error, setError] = useState<string | null>(null);
   const [sendFacts, setSendFacts] = useState<string | null>(null);
   // Whether execution was observed against the Journey.  The internal
@@ -617,14 +656,7 @@ export function CopilotDock({
   const localeCode = locale === "zh-CN" ? "zh" : "en";
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(
-        `citynexus.copilot.history.${data.journey.id}`,
-        JSON.stringify(messages.slice(-50)),
-      );
-    } catch {
-      // Local persistence is best effort.
-    }
+    rememberTranscript(data.journey.id, messages);
   }, [data.journey.id, messages]);
 
   const send = async () => {
@@ -940,18 +972,4 @@ export function CopilotDock({
       )}
     </aside>
   );
-}
-
-function readStoredMessages(journeyId: string): Message[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(`citynexus.copilot.history.${journeyId}`);
-    const value = raw ? JSON.parse(raw) : [];
-    if (!Array.isArray(value)) return [];
-    return value.filter((item): item is Message =>
-      item && (item.role === "user" || item.role === "assistant") && typeof item.text === "string",
-    ).slice(-50);
-  } catch {
-    return [];
-  }
 }

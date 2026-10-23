@@ -1,0 +1,134 @@
+[   0.0s] ############ VISIO ############
+[   1.0s] OK   Dispatch Visio -> <comobj>
+[   1.0s] Version=16.0 Visible=True
+[   2.2s] OK   Documents.Add -> <comobj>
+[   2.3s] OK   Pages.Item(1) -> <comobj>
+[   2.4s] OK   Cells(PrintPageOrientation) -> None
+[   2.4s] OK   Cells(PageWidth) -> None
+[   2.4s] OK   Cells(PageHeight) -> None
+[   2.4s] FAIL Cells(PrintColors) -> com_error: (-2147352567, '发生意外。', (0, '绘图1 - Visio Professional', '\n\n意外的文件尾。', None, 0, -2032466967), None)
+[   2.4s] FAIL Cells(PrintGridPrint) -> com_error: (-2147352567, '发生意外。', (0, '绘图1 - Visio Professional', '\n\n意外的文件尾。', None, 0, -2032466967), None)
+[   2.4s] FAIL Cells(PrintDocumentPrint) -> com_error: (-2147352567, '发生意外。', (0, '绘图1 - Visio Professional', '\n\n意外的文件尾。', None, 0, -2032466967), None)
+[   2.5s] OK   read page size -> PageWidth=16.54 PageHeight=11.69 in
+[   3.0s] OK   stencil BASFLO_M.VSSX -> count=15 names=['流程', '判定', '子流程', '开始/结束', '文档', '数据', '数据库', '外部数据', '自定义 1', '自定义 2', '自定义 3', '自定义 4', '页面内引用', '跨页引用', '动态连接线']
+[   4.0s] OK   stencil BASIC_M.VSSX -> count=58 names=['矩形', '正方形', '圆形', '椭圆形', '直角三角形', '三角形', '旋转三角形', '五边形', '六边形', '七边形', '八边形', '十边形', '圆柱形', '平行四边形', '梯形', '菱形', '十字形', 'V 形', '立方体', '水滴', '半圆', '半圆.56', '圆锥', '倒圆锥', '棱锥', '尖的椭圆形', '漏斗', '齿轮', '四角星', '五角星', '六角星', '七角星', '十六角星', '二十四角星', '三十二角星', '圆角矩形', '剪去单角的矩形', '剪去同侧角的矩形', '剪去对角的矩形', '单圆角矩形', '同侧圆角矩形', '对角圆角矩形', '剪去单圆角矩形', '剪去角的矩形', '圆角的矩形', '剪去角的和圆角矩形', '框架', '框架角', 'L 形状', '斜纹', '徽章', '环形', '无符号', '中心拖动圆形', '左圆括号', '右圆括号', '左括号', '右括号']
+[   4.3s] OK   stencil UUSEME_M.VSSX -> count=8 names=['参与者', '用例', '子系统', '关联', '依赖关系', '归纳', '包含', '扩展']
+[   4.4s] OK   stencil XFUNC_M.VSSX -> count=7 names=['泳道', '分隔符', '泳道 (垂直)', '分隔符(垂直)', 'CFF 容器', '泳道列表', '阶段列表']
+[   5.6s] OK   stencil CONNEC_M.VSSX -> count=69 names=['动态连接线', '直线-弧线连接线', '曲线连接 1', '曲线连接 2', '双树枝直角', '多树枝直角', '侧边到侧边 1', '侧边到侧边 2', '侧面', '底部到顶部 1', '底部到顶部 2', '顶部或底部', '侧边到侧边固定 1', '侧边到侧边固定 2', '顶部/底部到侧边', '底部到顶部固定 1', '底部到顶部固定 2', '侧边到顶部/底部', '底部到侧边 1', '底部到侧边 2', '底部到侧边 3', '侧边到顶部', '直角循环', '通用连接线', '布局连接线', '直线-曲线连接线', '直线连接线', '波浪连接线 1', '波浪连接线 2', '双树枝斜角', '多树枝斜角', '曲线连接 3', '有向线 1', '有向线 2', '一对多', '弯折的连接线', '流导向符 1', '流导向符 2', '控制传递', '跨线', '可变箭头 1', '一维单向箭头', '一维双向箭头', '一维开放端箭头', '肘形 1', '肘形 2', '空心连接 1', '空心连接 2', '空心连接 3', '点式线', '中间带箭头的直线', '弧形箭头', '点箭头线', '中间带箭头的点式线', '单箭头', '双箭头线', '侧边 - 侧边', '侧边 - 顶部/底部', '底部 - 顶部', '顶部/底部 - 侧边', '双线', '双线肘形', '四线', '四线肘形', '通信链路 1', '通信链路 2', '总线', '以太网', '星形']
+[   6.1s] OK   stencil SERVER_M.VSSX -> count=17 names=['服务器', '文件服务器', '电子邮件服务器', 'Web 服务器', '代理服务器', '实时通信服务器', '电子商务服务器', '数据库服务器', '内容管理服务器', 'FTP 服务器', '流化媒体服务器', '管理服务器', '目录服务器', '打印服务器', '移动信息服务器', '应用程序服务器', '动态连接线']
+[   6.1s] OK   stencil FLOWCHT_M.VSSX -> FILE MISSING
+[   6.2s] OK   stencil GENERAL_M.VSSX -> count=2 names=['幻灯片片段', 'StencilResult 母版']
+[   6.5s] OK   stencil OBJREL_M.VSSX -> count=10 names=['实体', '关系', '视图', '父表与类别', '类别', '类别与子表', '表继承', '类型', '类型继承', '动态连接线']
+[   6.9s] OK   stencil GANTT_M.VSSX -> count=18 names=['甘特图框架', '列', '行', '任务栏', '里程碑', '链接线', '标题', '图例', '8pt 的文本块', '10pt 的文本块', '12pt 的文本块', '水平标注', '直角水平', '动态连接线', '非工作时间', '文本输入', '主要比例单元格', '次要比例单元格']
+[   7.6s] OK   stencil TIMELN_M.VSSX -> count=27 names=['块状时间线', '线形时间线', '圆柱形日程表', '线形里程碑', '菱形里程碑', '针形里程碑', '方括号间隔', '花括号间隔', '块状间隔', '“今日”标记', '双三角形里程碑', 'X 形里程碑', '三角形里程碑', '正方形里程碑', '圆形里程碑', '展开的日程表', '经过的时间', '同步里程碑', '同步间隔', '动态连接线', '括号间隔 1', '括号间隔 2', '规则日程表', '分段式日程表', '圆柱形里程碑', '圆柱形间隔', '间歇']
+[   7.7s] OK   Drop process -> no master for BASFLO_M.VSSX ('process',)
+[   7.8s] OK   Drop decision -> no master for BASFLO_M.VSSX ('decision',)
+[   7.9s] OK   Drop terminator -> no master for BASFLO_M.VSSX ('terminator',)
+[   8.1s] OK   Drop data -> no master for BASFLO_M.VSSX ('data',)
+[   8.1s] OK   Drop uml actor -> no master for UUSEME_M.VSSX ('actor',)
+[   8.1s] OK   Drop uml usecase -> no master for UUSEME_M.VSSX ('use case',)
+[   8.4s] OK   Drop cylinder/db -> no master for BASIC_M.VSSX ('cylinder',)
+[   8.5s] FAIL DrawRectangle band -> TypeError: 'tuple' object is not callable
+[   8.5s] shapes on page now = 1
+[   8.5s] OK   Shapes.Count -> 1
+[   8.5s] FAIL AutoConnect -> com_error: (-2147352567, '发生意外。', (0, '绘图1 - Visio Professional', '\n\n无效的工作表标识符。', None, 0, -2032465756), None)
+[   8.6s] FAIL DropConnected -> com_error: (-2147352567, '发生意外。', (0, '绘图1 - Visio Professional', '\n\n参数无效。', None, 0, -2032465751), None)
+[   8.7s] OK   Drop(ConnectorToolDataObject) -> 动态连接线
+[   8.7s] OK   page.Connects.Count -> 0
+[   8.8s] OK   set font/size on shape -> (None, None, 5.0)
+[   8.8s] FAIL shape master name roundtrip -> AttributeError: 'NoneType' object has no attribute 'Name'
+[   8.9s] OK   SaveAs -> 0
+[   8.9s] vsdx exists=True size=17078
+[   9.4s] OK   page.Export PNG -> 4394
+[   9.8s] OK   ExportAsFixedFormat PDF -> 13364
+[  12.9s] OK   close+quit -> (None, None)
+[  14.9s] --- reopen cycle ---
+[  15.6s] OK   relaunch -> <comobj>
+[  17.6s] OK   Open -> <comobj>
+[  17.6s] FAIL read back -> AttributeError: '<win32com.gen_py.Microsoft Visio 16.0 Type Library.IVDocument instance at 0x2296797564304>' object has no attribute 'PageCount'
+[  17.7s] OK   edit+save -> (None, 0)
+[  20.9s] OK   close+quit2 -> (None, None)
+[  22.6s] OK   relaunch3 -> <comobj>
+[  24.5s] OK   Open3 -> <comobj>
+[  24.5s] OK   verify -> text='EDITED-4' connects=0
+[  26.9s] OK   final close -> (None, None)
+[  26.9s] ############ PROJECT ############
+[  27.7s] OK   Dispatch MSProject -> <comobj>
+[  27.8s] Version=16.0 Visible=False
+[  27.8s] OK   Visible=True -> None
+[  27.8s] OK   DisplayAlerts=0 -> None
+[  28.2s] OK   FileNew -> True
+[  28.3s] OK   ActiveProject -> <comobj>
+[  28.3s] Name=项目1 ProjectStart=2026-10-22 08:00:00+00:00 Finish=2026-10-22 08:00:00+00:00
+[  28.4s] OK   ProjectStart set -> None
+[  28.4s] OK   set FictitiousCurrentDate/StatusDate -> None
+[  28.4s] FAIL app.DefaultTaskScheduled -> AttributeError: Property 'MSProject.Application.DefaultTaskScheduled' can not be set.
+[  28.4s] FAIL app.DefaultFixedCostAccrual -> AttributeError: Property 'MSProject.Application.DefaultFixedCostAccrual' can not be set.
+[  28.4s] FAIL app.DefaultTaskType -> AttributeError: Property 'MSProject.Application.DefaultTaskType' can not be set.
+[  28.4s] FAIL app.Settings.DefaultTaskScheduled -> AttributeError: MSProject.Application.Settings
+[  28.5s] OK   Add '1 PHASE' -> <comobj>
+[  28.5s] OK   Add '1.1 TASK' -> <comobj>
+[  28.6s] OK   Add MS -> <comobj>
+[  28.6s] OK   t2 Duration -> None
+[  28.7s] OK   t3 Duration 0d -> None
+[  28.7s] OK   t2 OutlineLevel 2 -> None
+[  28.9s] OK   t3 OutlineLevel 2 -> None
+[  28.9s] OK   t2 Start -> None
+[  28.9s] FAIL t2 Predecessors '1FS' -> com_error: (-2147352567, '发生意外。', (0, None, '无法将摘要任务链接到它本身的子任务之一。', None, 0, -2146827187), None)
+[  28.9s] OK   t3 Predecessors '2FS' -> None
+[  29.0s] OK   t3 Deadline -> None
+[  29.0s] OK   t2 PercentComplete 40 -> None
+[  29.0s] OK   t2 Notes -> None
+[  29.1s] FAIL t2 TaskText -> AttributeError: Property 'Add.TaskText5' can not be set.
+[  29.1s] t2: WBS=1.1 Start=2026-09-07 01:00:00+00:00 Finish=2026-09-11 09:00:00+00:00 Duration=2400
+[  29.1s] t2 manual fields: Scheduled=<AttributeError> ScheduledStart=2026-09-07 08:00:00+00:00
+[  29.1s] t3: Milestone=True WBS=1.2 Finish=2026-09-11 09:00:00+00:00
+[  29.1s] OK   CalculateAll -> True
+[  29.1s] Critical t1=True t2=True t3=True StartSlack t2=0
+[  29.1s] OK   Resources.Add -> <comobj>
+[  29.1s] OK   res.StandardRate -> None
+[  29.1s] OK   res.OvertimeRate -> None
+[  29.2s] OK   res.CostPerUse -> None
+[  29.2s] FAIL res.PeakUnits -> AttributeError: Property 'Add.PeakUnits' can not be set.
+[  29.2s] OK   res.Initials -> None
+[  29.2s] OK   res.Type -> None
+[  29.2s] OK   res.AccrueAt -> None
+[  29.2s] res readback: StdRate=¥0.00 CostPerUse=0.0 Type=1 StandardRatePerTimeUnits=<AttributeError>
+[  29.2s] OK   res.CostRateTables -> 5
+[  29.2s] OK   res.Fields(stdrate) -> 
+[  29.2s] FAIL t2.Assignments.Add -> com_error: (-2147352567, '发生意外。', (0, None, '参数值无效。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM', 131074, -2146827187), None)
+[  29.2s] FAIL mp.AssignResource -> AttributeError: MSProject.Application.AssignResource
+[  29.2s] OK   CalculateAll2 -> True
+[  29.2s] t2 assignments=<COMObject <unknown>> cost=0.0 work=0.0 ; project cost=0.0
+[  29.2s] res cost=0.0 work=0.0
+[  29.3s] OK   BaselineSave -> True
+[  29.3s] t2 BaselineStart=NA BaselineFinish=NA
+[  29.4s] OK   SaveAs mpp -> None
+[  29.4s] mpp exists=True size=245760
+[  29.4s] FAIL ViewApply Gantt Chart -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Gantt Chart”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Network Diagram -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Network Diagram”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Task Sheet -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Task Sheet”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Resource Sheet -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Resource Sheet”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Timeline -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Timeline”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Calendar -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Calendar”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Task Usage -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Task Usage”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL ViewApply Critical -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Critical”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL DocumentExport PDF (FileType=0) -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Gantt Chart”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL DocumentExport PNG (FileType=2) -> com_error: (-2147352567, '发生意外。', (1101, 'Microsoft Project', '“Gantt Chart”视图已经不存在。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131074, 0), None)
+[  29.4s] FAIL TimelineExport -> com_error: (-2147352567, '发生意外。', (1100, 'Microsoft Project', '在此情况下无法使用此方法。', 'C:\\Program Files\\Microsoft Office\\root\\Office16\\VBAPJ.CHM\x00', 131073, 0), None)
+[  29.8s] OK   close+quit -> (True, None)
+[  31.8s] --- mpp reopen cycle ---
+[  38.3s] OK   relaunch mp -> <comobj>
+[  38.4s] OK   visible+alerts -> (None, None)
+[  39.0s] OK   FileOpen -> True
+[  39.0s] OK   ActiveProject2 -> <comobj>
+[  39.1s] reopen tasks=<COMObject <unknown>> resources=<COMObject <unknown>> cost=0.0 start=2026-09-04 01:00:00+00:00
+[  39.2s] reopen t2 name=1.1 PROBE TASK dur=2400 pred= wbs=1.1 assignments=0
+[  39.2s] before: t2 finish=2026-09-11 09:00:00+00:00 t3 finish=2026-09-11 09:00:00+00:00
+[  39.3s] OK   change t2 duration 5d->15d -> None
+[  39.3s] OK   recalc -> True
+[  39.3s] after : t2 finish=2026-09-25 09:00:00+00:00 t3 finish=2026-09-11 09:00:00+00:00 (dates must have moved)
+[  39.3s] FAIL save2 -> AttributeError: <unknown>.Save
+[  39.7s] OK   quit2 -> (True, None)
+[  39.7s] ############ DONE ############
+[  39.7s] artifacts: p4.mpp=240128, p4.pdf=13364, p4.png=4394, p4.vsdx=17149

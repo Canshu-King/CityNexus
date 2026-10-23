@@ -1,0 +1,124 @@
+/* Issue #31 C：「AI 工作动态」这一格。
+ *
+ * 只新造必要的形状，颜色与字号一律取既有令牌——`design-tokens.css` 与暗档对比度闸是别的
+ * 车道在改的（同一文件里那些裸十六进制就是被拦下来的原因之一），这里不加新的裸色，
+ * 也就不新增一档需要在暗档里重新证明的对比。轨迹条本体（`cn-agent-rail` / `cn-agent-step`）
+ * 复用 `AgentRunRail` 已有的样式，这里只包外层与那排事实。
+ */
+
+.cn-agent-work {
+  display: grid;
+  gap: var(--cn-s-8, 8px);
+  margin: var(--cn-s-12, 12px) 0 0;
+  padding: var(--cn-s-12, 12px);
+  border: 1px solid var(--cn-rule-strong);
+  border-radius: var(--cn-r-lg, 14px);
+  background: var(--cn-elev-1);
+  color: var(--cn-on-elev-0);
+}
+
+.cn-agent-work.compact {
+  padding: var(--cn-s-8, 8px) var(--cn-s-10, 10px);
+}
+
+.cn-agent-work-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--cn-s-8, 8px);
+}
+
+.cn-agent-work-head b {
+  display: block;
+  font-size: var(--cn-fs-body-min, 15px);
+  font-weight: 700;
+  color: var(--cn-on-elev-0);
+}
+
+.cn-agent-work-head small {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--cn-fs-caption, 13px);
+  color: var(--cn-on-elev-0-muted);
+}
+
+.cn-agent-work-state,
+.cn-agent-work-empty {
+  margin: 0;
+  font-size: var(--cn-fs-caption, 13px);
+  color: var(--cn-on-elev-0-muted);
+}
+
+.cn-agent-work-empty b {
+  display: block;
+  font-size: var(--cn-fs-body-min, 15px);
+  color: var(--cn-on-elev-0);
+}
+
+.cn-agent-work-empty small {
+  display: block;
+  margin-top: 4px;
+}
+
+/* 四格事实：一行两列，窄档不横着溢出（390 那一档是主人手机的实际宽度）。 */
+.cn-agent-work-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--cn-s-6, 6px) var(--cn-s-10, 10px);
+  margin: 0;
+}
+
+.cn-agent-work-facts > div {
+  min-width: 0;
+}
+
+.cn-agent-work-facts dt {
+  font-size: var(--cn-fs-micro, 11px);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--cn-on-elev-0-muted);
+}
+
+.cn-agent-work-facts dd {
+  margin: 2px 0 0;
+  font-size: var(--cn-fs-caption, 13px);
+  color: var(--cn-on-elev-0);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 720px) {
+  .cn-agent-work-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* 面板头部那一排：右边那颗「再查一次」在 390 那一档被左边的标题挤成两行
+ * （教程第 ⑦ 张实拍就是这个样子）。标题可以换行，按钮不能——它是这一屏要点的动作。 */
+.cn-agent-work-head > div {
+  min-width: 0;
+}
+
+.cn-agent-work-head > button {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* 行程系统动态那一行：`<b>` 与 `<span>` 之间 JSX 不会留空格，屏上就粘成
+ * 「行程已创建10/18 02:26」。用 flex 的 gap 分开，不往 JSX 里塞占位空格。 */
+.cn-agent-work-trip li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--cn-s-8, 8px);
+}
+
+/* 那颗悬浮的 Copilot 药丸在面板打开时会 `yield-to-surface` 缩成边条，但**缩成边条仍然压着这一格**：
+ * 390x844 现读——面板 17,473 起 356x398，让位后的边条 215,706 的 165x54，两盒在视口里相交。
+ * 手机宽下"面板之外"没有可停的位置，所以这一块打开时请它整枚离开这一屏（面板自己有开关，
+ * 关掉后药丸回来）。`data-agent-work-surface` 由 `AgentWorkFeedPanel` 挂载/卸载时记数写入。
+ *
+ * 这一段以前只写着"让位由产品自己管"，而 e2e 那格比包围盒的式子里有一处把 `panelBox.height`
+ * 写成了 `dockBox.height` —— 于是它一直绿着。07:40 现读拆穿，判语已改回真高度。 */
+html[data-agent-work-surface] .cn-copilot-dock {
+  display: none;
+}

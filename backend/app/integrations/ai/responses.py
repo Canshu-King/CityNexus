@@ -14,6 +14,12 @@ from typing import Any
 
 import httpx
 
+from app.agent.ai_availability import record_provider_answer, record_provider_refusal
+
+# ORD-0697: what this door is called in the availability witness.  One provider path; the
+# Hermes-compatible tool loop reports itself as `hermes` in `agent/orchestrator.py`.
+PROVIDER_KEY = "deepseek_responses"
+
 
 class DeepSeekResponsesError(RuntimeError):
     """The configured Responses endpoint could not produce a usable result."""
@@ -315,6 +321,15 @@ class DeepSeekResponsesClient:
                 envelope = response.json()
                 if not isinstance(envelope, dict):
                     raise TypeError("DeepSeek Responses envelope is not an object")
+                # ORD-0697: this is the arm that watched.  A parsed 2xx envelope is what lets
+                # `/health` and `/agent/runtime-status` say PROVIDER_ANSWERED instead of hiding
+                # behind CONFIGURED_UNVERIFIED after nine real answers.  Model id and status only -
+                # never the key, never the body.
+                record_provider_answer(
+                    provider_key=PROVIDER_KEY,
+                    model_key=self.model,
+                    status_code=response.status_code,
+                )
             except httpx.HTTPStatusError as exc:
                 provider_code = None
                 try:
@@ -325,6 +340,11 @@ class DeepSeekResponsesClient:
                 except (TypeError, ValueError):
                     pass
                 status_code = exc.response.status_code
+                # The refusal half of the same witness.  Until now `PROVIDER_REFUSED` had no caller
+                # anywhere in the production tree, so the word could only be reached by a test.
+                record_provider_refusal(
+                    provider_key=PROVIDER_KEY, model_key=self.model, status_code=status_code
+                )
                 suffix = f" status={status_code}"
                 if provider_code:
                     suffix += f" code={provider_code}"

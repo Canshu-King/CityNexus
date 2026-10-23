@@ -1,0 +1,35 @@
+{
+ "taken_at_local": "2026-10-04T05:22:29+0800",
+ "built_from_sha": "6246876a3b9171f5c2d6ec948f43b35605262bee",
+ "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_day31e766/frontend/dist",
+ "front": 4997,
+ "front_http_status": 200,
+ "front_pid": [
+  63516
+ ],
+ "api": 8795,
+ "entry_asset": "/assets/index-DUhOk9ks.js",
+ "entry_served_bytes": 1621925,
+ "entry_disk_bytes": 1621925,
+ "entry_served_sha1": "e70af9719dbb7be7d167852978279ad12bd4db6b",
+ "entry_disk_sha1": "e70af9719dbb7be7d167852978279ad12bd4db6b",
+ "entry_bytes_equal": true,
+ "index_matches_disk": true,
+ "marker_city": "CNX-DAY31-BIN",
+ "marker_rows_own": 1,
+ "marker_rows_others": {
+  "CNX-DAY24-ZH": 0,
+  "CNX-DAY24-EN": 0,
+  "CNX-DAY24-FAKE": 0,
+  "CNX-DAY25-MUT": 0,
+  "CNX-DAY26-REAL": 0
+ },
+ "scene_journey_id": "22222222-2222-4222-8222-222222222222",
+ "scene_journey_status": "ACTIVE",
+ "baseline_read_journey_status": 200,
+ "baseline_recycle_bin_rows": 0,
+ "baseline_journey_in_bin": false,
+ "front_command_line_proof": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_static_api_proxy_r1.py --dist D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_day31e766\\frontend\\dist --port 4997 --api 8795",
+ "command_line_names_this_dist": true,
+ "every_proof": true
+}

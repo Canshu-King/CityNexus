@@ -11,6 +11,35 @@ import "../../map-attribution.css";
 import "../../map-selection.css";
 import "../../map-stop-labels.css";
 
+/* WP-D: the basemap's address, written once. Two surfaces need it now -- the style document that asks
+   for tiles, and the retry that asks the same server again -- and two literals would be two chances to
+   name a host this panel never actually called. */
+const BASEMAP_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+/* Named twice on purpose -- the URL above and this host -- and tied to each other by measurement rather
+   than by a parse the reader has to trust: `e2e/qoder-butugong-wpd-basemap-degraded.spec.ts` compares
+   this attribute against the host of every tile request the arm actually made. If the two literals ever
+   disagree, that arm goes red; a `slice()` of the URL would only agree with itself. */
+const BASEMAP_HOST = "tile.openstreetmap.org";
+
+/**
+ * WP-D: the one rule for "the word this stop may be called by on the glass", shared by the pin and by
+ * the degraded stop list.
+ *
+ * ORD-0512 chose the field and ORD-0415 decided what of it may be painted; that rule already lived here
+ * as three lines inside the build effect. It is lifted into a function because the list has to say the
+ * SAME word as the pin it stands for -- a second copy is how a pin and its own row can end up
+ * disagreeing about one stop, and the gates that judge forbidden words off the glass read both.
+ */
+export function stopGlassWord(
+  point: { title?: string; place_name?: string | null },
+  index: number,
+): string {
+  const label = stopLabel(point);
+  if (label) return label.text;
+  const hadAName = `${point.place_name ?? ""}${point.title ?? ""}`.trim().length > 0;
+  return hadAName ? String(index + 1) : (point.title ?? "");
+}
+
 /**
  * ORD-0394: the one rule for "does this activity have a place on the map".
  *
@@ -217,6 +246,17 @@ export function MapPanel({
      canvas underneath, which is exactly what reads as "the map is just a picture".
      The fallback stays, but it is now named. */
   const [tilesUnavailable, setTilesUnavailable] = useState(false);
+  /* WP-D: two facts the degradation surface speaks that the flag alone cannot carry.
+     `basemapRetries` is what the traveller has already asked for, so a second and third failed attempt
+     reads as "still no answer" rather than as a screen that never moved; it is cleared by the same arm
+     that clears the flag, because a count of a basemap that has since drawn is a claim about a failure
+     that no longer exists.
+     `degradedStopsOpen` is the tile-independent view, and it is off by default: the plate's height comes
+     straight out of the glass the pins and their names are placed on (`.v8-map-degraded` is reserved
+     ground in `applyLabels`), so an always-open list would push names off the map for a traveller who
+     never asked for a list. */
+  const [basemapRetries, setBasemapRetries] = useState(0);
+  const [degradedStopsOpen, setDegradedStopsOpen] = useState(false);
   /* ORD-0403: one control, and the control carries its own state. `targetRef` is the point the
      camera was last asked to frame — the whole journey, or a single selected stop — and
      `viewportState` says whether the camera is still on it. It is recomputed from the camera on
@@ -388,7 +428,7 @@ export function MapPanel({
         sources: {
           "open-street-map": {
             type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tiles: [BASEMAP_TILE_URL],
             tileSize: 256,
             attribution: t("mapComp.attribution"),
           },
@@ -498,7 +538,10 @@ export function MapPanel({
         if (source === "open-street-map" && !basemapTileDrawn()) setTilesUnavailable(true);
       });
       mapInstance.on("idle", () => {
-        if (basemapTileDrawn()) setTilesUnavailable(false);
+        if (basemapTileDrawn()) {
+          setTilesUnavailable(false);
+          setBasemapRetries(0);
+        }
       });
       map = mapInstance;
       mapRef.current = mapInstance;
@@ -518,21 +561,16 @@ export function MapPanel({
     labelNodes.current = [];
     markerEls.current = [];
     points.forEach((point, index) => {
-      /* ORD-0512 chose the field; ORD-0415 decides what of that field may reach the glass. One call
-         feeds both surfaces a stop has, because the accepted map gates read a marker's `aria-label`
-         as part of the judged corpus (`qoder-map-ord0403-*.spec.ts`, `qoder-map-ord0412-*.spec.ts`):
-         cutting the chip alone would leave the clock or the price on the announcement for the same
-         pin. A stop whose every candidate word is forbidden gets its painted ordinal as the
-         accessible name -- the number the pin already shows -- and never a word this rule rejects. */
+      /* ORD-0512 chose the field; ORD-0415 decides what of that field may reach the glass, and the
+         accepted map gates read a marker's `aria-label` as part of the judged corpus
+         (`qoder-map-ord0403-*.spec.ts`, `qoder-map-ord0412-*.spec.ts`). The rule itself is in
+         `stopGlassWord` above, because the degraded stop list has to name a stop exactly as its pin
+         does -- two copies of this sentence is how the two would drift apart. */
       const label = stopLabel(point);
       const marker = document.createElement("div");
       marker.className = `v9-map-marker ${point.role === "STAY" ? "stay" : ""} ${point.protected ? "protected" : ""} ${point.current ? "current" : ""} ${point.disrupted ? "disrupted" : ""}`;
       marker.textContent = String(index + 1);
-      const hadAName = `${point.place_name ?? ""}${point.title ?? ""}`.trim().length > 0;
-      marker.setAttribute(
-        "aria-label",
-        label ? label.text : hadAName ? String(index + 1) : point.title,
-      );
+      marker.setAttribute("aria-label", stopGlassWord(point, index));
       /* ORD-0390: a marker used to be a painted dot — `aria-label` for a screen reader and nothing
          else.  It is now a real button that selects the stop it stands for, and `aria-pressed`
          carries the shared selection so the state is readable without a class-name convention.
@@ -651,11 +689,37 @@ export function MapPanel({
       const safetyGap = 16;
       /* The same call the reset button re-runs, kept as a closure so "back to the journey's view"
          reframes exactly what the first fit framed — same padding, same maxZoom — instead of
-         inventing a second definition of the journey's view somewhere else. */
-      const fitToJourney = () =>
-        mapInstance.fitBounds(bounds, {
+         inventing a second definition of the journey's view somewhere else.
+         WP-D: the TOP edge is measured when the call runs rather than captured here, because the bottom
+         band is already painted when the map is built and the degraded plate is not — it arrives with
+         a tile error, after the first fit. A height frozen at build time let the plate stand on every
+         stop name: measured on this lane's own run, names shown on the glass fell from five to zero the
+         moment the plate appeared. Reading it at call time means the same closure frames the journey
+         into whatever ground the panel has actually left free. */
+      const fitToJourney = () => {
+        const plate = host.current?.parentElement?.querySelector(
+          ".v8-map-degraded",
+        ) as HTMLElement | null;
+        const plateHeight = plate?.getBoundingClientRect().height ?? 0;
+        /* The plate is only paid for when the camera can still be given glass to frame into. This panel
+           reserves 42 px on the sides, 42 + the bottom band + 16 at the foot, so once the plate is taller
+           than what is left there is no honest answer to give — maplibre crams the journey in anyway and
+           the pins end up under the plate (measured: 8 of 9 under a 180 px plate). Ignoring a plate that
+           does not fit keeps the framing the traveller was promised; the plate's own height budget is
+           enforced in `cn-pulse-map.css` so this arm is the backstop and not the plan. */
+        const canvasHeight = host.current?.getBoundingClientRect().height ?? 0;
+        const roomForPlate =
+          plateHeight > 0 &&
+          canvasHeight -
+            (side + plateHeight + safetyGap) -
+            (side + overlayHeight + safetyGap) >=
+          40;
+        return mapInstance.fitBounds(bounds, {
           padding: {
-            top: side,
+            /* Exactly `side` when there is no plate. Writing `side + 0 + safetyGap` for the empty case
+               looked harmless and moved the untouched tip's camera from zoom 9.446 to 9.277 -- the
+               two-arm table caught it as a change on a screen where nothing was supposed to change. */
+            top: roomForPlate ? side + plateHeight + safetyGap : side,
             right: side,
             bottom: side + overlayHeight + safetyGap,
             left: side,
@@ -663,6 +727,7 @@ export function MapPanel({
           maxZoom: 13,
           duration: reducedMotion ? 0 : 650,
         });
+      };
       refitRef.current = () => {
         refitPending = true;
         fitToJourney();
@@ -818,6 +883,10 @@ export function MapPanel({
           ".v8-map-overlay-stack",
           ".v8-map-caption",
           ".v8-map-tile-notice",
+          /* WP-D: the degraded plate is the widest thing this panel has ever painted over the glass, so
+             it is reserved ground the same way the notice it contains is. Left out of this list a stop
+             name would legally land under 「底图没能加载」, and no gate would notice. */
+          ".v8-map-degraded",
           "[data-testid='v8-map-gesture-hint']",
           "[data-testid='map-viewport-reset']",
         ].join(", "),
@@ -872,10 +941,13 @@ export function MapPanel({
   applyLabelsRef.current = applyLabels;
   /* Re-fit, never rebuild. A pick changes which name outranks the others, a language change makes
      every word longer or shorter, and a footprint read can add a date badge the labels have to live
-     with — none of those is a reason to move the camera. */
+     with — none of those is a reason to move the camera.
+     WP-D adds the two states that change the glass without changing the data: the plate arriving, and
+     the stop list opening inside it. Both are ground the placement pass has to be told about, and a
+     stale pass is how a name ends up painted underneath a surface that is standing on it. */
   useEffect(() => {
     applyLabelsRef.current();
-  }, [selectedActivityId, points, locale, footprints, onlyStamped]);
+  }, [selectedActivityId, points, locale, footprints, onlyStamped, tilesUnavailable, degradedStopsOpen]);
   /* Re-paint, never rebuild: the read can arrive after the map, the switch can flip at any moment,
      and a language change changes the badge's words. None of those is a reason to reset the camera,
      which is why this is a separate effect on the same refs ORD-0390 established. */
@@ -905,6 +977,40 @@ export function MapPanel({
       duration: reducedMotion ? 0 : 450,
     });
   }, [selectedActivityId, points]);
+  /* WP-D: when the plate arrives, the journey is reframed into the ground that is left.
+   *
+   * Reframing on ARRIVAL only. When the tiles come back the plate leaves the map more glass than it had,
+   * so nothing is occluded and the camera stays wherever the traveller put it — moving it to reclaim
+   * space nobody asked about would be the panel spending the user's view on its own cleanup.
+   * `refitRef` is the same closure the named control presses, so this is the journey's view by one
+   * definition rather than a second one invented for the failure path. */
+  useEffect(() => {
+    if (tilesUnavailable) refitRef.current?.();
+  }, [tilesUnavailable]);
+
+  /* WP-D: what 「再取底图」 does, and what it deliberately does not do.
+   *
+   * maplibre's `Source.setTiles` runs `setSourceProperty`, which re-creates the tile set and reloads the
+   * source (`load(true)` in `maplibre-gl` 5.24) — the public way to ask the same server again without
+   * tearing the map down, and therefore without throwing away the camera the traveller just panned or
+   * zoomed. Rebuilding instead would also work, and would cost the traveller their view for a retry they
+   * asked to be about the basemap only.
+   *
+   * The URL is passed UNCHANGED on purpose. A cache-busting query would make every retry miss the browser
+   * cache and re-hit a shared public tile server for bytes it may already hold; the retry is meant to
+   * re-open the network path, not to multiply traffic.
+   *
+   * The count only moves when a reload was actually issued. Counting a press that found no source would
+   * put 「已经再取过 N 次」 on the glass for an attempt that never left the page. */
+  const retryBasemap = () => {
+    const source = mapRef.current?.getSource("open-street-map") as
+      | { setTiles?: (tiles: string[]) => void }
+      | undefined;
+    if (!source?.setTiles) return;
+    setBasemapRetries((n) => n + 1);
+    source.setTiles([BASEMAP_TILE_URL]);
+  };
+
   if (noLocation) {
     return (
       <div
@@ -944,13 +1050,105 @@ export function MapPanel({
         }}
       />
       {tilesUnavailable && (
-        /* Requirement 3 of ORD-0037: the flat canvas behind the raster tiles is the
-           right degradation, but saying nothing is what made the panel read as a
-           picture someone had drawn rather than a map that failed to fetch one. */
+        /* WP-D. Requirement 3 of ORD-0037 named the defect this block still answers: the flat canvas
+           behind the raster tiles is the right degradation, but saying nothing is what made the panel
+           read as a picture someone had drawn. The one-line notice did say that much, and it is kept
+           byte-for-byte (`tileNotice`, and its class and test identity, which
+           `e2e/qoder-map-ord0403-*.spec.ts:213` measures and `e2e/qoder-0512-*.spec.ts:711` borrows) —
+           what it could not do is answer the three questions a traveller actually has standing in front
+           of a blank map: WHAT refused, WHETHER the trip survived, and WHAT to do now.
+           So this is a surface, not a toast: the cause names the class that failed (network or tile
+           source) and the tile host rides in `data-cnx-basemap-host` beside the permanent ORD-A
+           attribution line that already names it on the glass; the evidence quotes the panel's own
+           `points.length` (the same array that painted the pins, so the sentence cannot be true while
+           the stops it counts are missing); and the two exits are a retry that asks that host again and
+           a stop list that needs no tiles at all.
+           No placeholder tile is painted anywhere — a local stand-in would be the map claiming to have
+           loaded a basemap it never got, which is the defect this order exists to remove.
+           `NOT_AVAILABLE` is the tier word `data-cnx-activity-entry` already uses on this component's
+           empty state, not a new vocabulary; the human sentence above carries the specifics. */
+        <div
+          className="v8-map-degraded"
+          data-testid="v8-map-degraded"
+          data-cnx-basemap="NOT_AVAILABLE"
+          data-cnx-basemap-host={BASEMAP_HOST}
+          data-cnx-basemap-retries={basemapRetries}
+          data-cnx-basemap-stops={points.length}
+        >
+          {/* The shipped ORD-0037 sentence stays in the document, keeps its class, its test identity and
+              its `role="status"`, and is no longer painted. That is a real decision and it is worth the
+              words: this panel leaves the camera 153 px of glass (pins measured at relative 59..187 of a
+              392 px panel, the bottom 139 px already the caption band, the top 61 px the named control),
+              and with both sentences drawn the plate measured 113 px tall and stood on seven of the nine
+              pins. The headline below says what this line says -- the basemap is not there, the journey
+              still is -- and this line still answers a screen reader, so no traveller is left without the
+              sentence; the ones who read it get it in a plate that does not eat the map. */}
           <p className="v8-map-tile-notice" data-testid="v8-map-tile-notice" role="status">
             {mapCopy(locale, "tileNotice")}
           </p>
-        )}
+          <b className="v8-map-degraded-headline">
+            {points.length > 0
+              ? mapCopy(locale, "degradedHeadline").replace("%s", String(points.length))
+              : mapCopy(locale, "degradedHeadlineNoStops")}
+          </b>
+          {/* One row for the two exits, sharing the headline's line where the width allows. Their bottom
+              edge has to stay above the canvas's vertical centre, where four accepted map gates put a
+              finger (`qoder-map-gesture-ownership`, `qoder-map-interaction`, `qoder-map-ord0403`,
+              `qoder-0512` all drag there). */}
+          <div className="v8-map-degraded-actions">
+            <button
+              type="button"
+              className="v8-map-degraded-btn"
+              data-testid="v8-map-degraded-retry"
+              data-contrast-role="control"
+              onClick={retryBasemap}
+            >
+              {mapCopy(locale, "degradedRetry")}
+            </button>
+            {points.length > 0 && (
+              <button
+                type="button"
+                className="v8-map-degraded-btn v8-map-degraded-btn--quiet"
+                data-testid="v8-map-degraded-stops-toggle"
+                data-contrast-role="control"
+                aria-expanded={degradedStopsOpen}
+                onClick={() => setDegradedStopsOpen((open) => !open)}
+              >
+                {mapCopy(locale, degradedStopsOpen ? "degradedStopsClose" : "degradedStopsOpen")}
+              </button>
+            )}
+          </div>
+          {basemapRetries > 0 && (
+            <p className="v8-map-degraded-retried">
+              {mapCopy(locale, "degradedRetried").replace("%s", String(basemapRetries))}
+            </p>
+          )}
+          {/* The tile-independent view. It is a press away rather than permanent because its height comes
+              straight out of the same 153 px: a list always open would bury the journey the plate is
+              standing in front of, and the traveller who opens it has chosen the text for a moment.
+              The rows ARE the pins, in the same order under the same numbers -- `stopGlassWord` is the
+              shared rule, so a row cannot name a stop its own pin is not allowed to name. They read and
+              do not navigate: this panel's pins are already the pickable surface, and a second set of
+              pickable rows would be a second selection owner on one screen (ORD-0390: a stop is picked
+              in exactly one place). */}
+          {degradedStopsOpen && (
+            <div className="v8-map-degraded-stops-wrap">
+              <ol className="v8-map-degraded-stops">
+                {points.map((point, index) => (
+                  <li
+                    key={point.id ?? `stay-${index}`}
+                    className="v8-map-degraded-stop"
+                    data-current={String(point.current)}
+                  >
+                    <span className="v8-map-degraded-ordinal">{index + 1}</span>
+                    <span className="v8-map-degraded-stop-word">{stopGlassWord(point, index)}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </div>
+      )}
       {/* ORD-A: the caption and the gesture bubble used to be positioned independently
           (`.v8-map-caption` bottom:12px, `.v8-map-gesture-hint` bottom:calc(40px + safe-area)), which
           was fine while the caption was one line. Adding the basemap notice made it two, and the

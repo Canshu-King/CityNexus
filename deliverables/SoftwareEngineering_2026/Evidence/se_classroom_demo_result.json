@@ -1,0 +1,398 @@
+{
+ "started": "2026-10-23 04:41:43",
+ "visio": [
+  {
+   "file": "01_CityNexus_System_Architecture.vsdx",
+   "steps": [
+    {
+     "step": "open",
+     "value": "01_CityNexus_System_Architecture.vsdx",
+     "ok": true
+    },
+    {
+     "step": "pinX",
+     "value": "1.73",
+     "ok": true
+    },
+    {
+     "step": "glued connectors",
+     "value": "2",
+     "ok": true
+    },
+    {
+     "step": "move +0.75in",
+     "value": "0.75",
+     "ok": true
+    },
+    {
+     "step": "pinX after",
+     "value": "2.48",
+     "ok": true
+    },
+    {
+     "step": "edit text",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "text reads back",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "save the copy",
+     "value": "saved",
+     "ok": true
+    },
+    {
+     "step": "close",
+     "value": "closed",
+     "ok": true
+    },
+    {
+     "step": "reopen the copy",
+     "value": "01_CityNexus_System_Architecture.vsdx",
+     "ok": true
+    },
+    {
+     "step": "move persisted",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "text persisted",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "close again",
+     "value": "closed",
+     "ok": true
+    }
+   ],
+   "originalUnchanged": true,
+   "shape": {
+    "name": "圆角矩形",
+    "id": 20,
+    "text": "CopilotDock + AgentComposer\nthe natural-language input box\nf"
+   },
+   "endsBefore": [
+    {
+     "id": 41,
+     "ends": [
+      [
+       0.49,
+       10.19
+      ],
+      [
+       0.563,
+       9.237
+      ]
+     ],
+     "onShape": true
+    },
+    {
+     "id": 47,
+     "ends": [
+      [
+       0.563,
+       8.643
+      ],
+      [
+       0.587,
+       7.953
+      ]
+     ],
+     "onShape": true
+    }
+   ],
+   "movedBy": 0.75,
+   "endsAfter": [
+    {
+     "id": 41,
+     "ends": [
+      [
+       0.49,
+       10.19
+      ],
+      [
+       1.313,
+       9.237
+      ]
+     ],
+     "onShape": true
+    },
+    {
+     "id": 47,
+     "ends": [
+      [
+       1.313,
+       8.643
+      ],
+      [
+       0.587,
+       7.953
+      ]
+     ],
+     "onShape": true
+    }
+   ],
+   "boxAfter": [
+    1.24,
+    3.72,
+    8.57,
+    13.41
+   ],
+   "gluedEndOnShape": [
+    true,
+    true
+   ],
+   "glueRecordsAfter": 2,
+   "glueRecordsBefore": 2,
+   "connectorFollowed": true,
+   "ok": true
+  },
+  {
+   "file": "03_CityNexus_Agent_Workflow.vsdx",
+   "steps": [
+    {
+     "step": "open",
+     "value": "03_CityNexus_Agent_Workflow.vsdx",
+     "ok": true
+    },
+    {
+     "step": "pinX",
+     "value": "1.3085",
+     "ok": true
+    },
+    {
+     "step": "glued connectors",
+     "value": "1",
+     "ok": true
+    },
+    {
+     "step": "move +0.75in",
+     "value": "0.75",
+     "ok": true
+    },
+    {
+     "step": "pinX after",
+     "value": "2.0585",
+     "ok": true
+    },
+    {
+     "step": "edit text",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "text reads back",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "save the copy",
+     "value": "saved",
+     "ok": true
+    },
+    {
+     "step": "close",
+     "value": "closed",
+     "ok": true
+    },
+    {
+     "step": "reopen the copy",
+     "value": "03_CityNexus_Agent_Workflow.vsdx",
+     "ok": true
+    },
+    {
+     "step": "move persisted",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "text persisted",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "close again",
+     "value": "closed",
+     "ok": true
+    }
+   ],
+   "originalUnchanged": true,
+   "shape": {
+    "name": "开始/结束",
+    "id": 20,
+    "text": "A request arrives\nmain.py:14169, 1367"
+   },
+   "endsBefore": [
+    {
+     "id": 58,
+     "ends": [
+      [
+       2.092,
+       9.85
+      ],
+      [
+       2.222,
+       9.85
+      ]
+     ],
+     "onShape": true
+    }
+   ],
+   "movedBy": 0.75,
+   "endsAfter": [
+    {
+     "id": 58,
+     "ends": [
+      [
+       2.058,
+       10.26
+      ],
+      [
+       3.006,
+       10.26
+      ]
+     ],
+     "onShape": true
+    }
+   ],
+   "boxAfter": [
+    1.275,
+    2.842,
+    9.44,
+    14.775
+   ],
+   "gluedEndOnShape": [
+    true
+   ],
+   "glueRecordsAfter": 1,
+   "glueRecordsBefore": 1,
+   "connectorFollowed": true,
+   "ok": true
+  }
+ ],
+ "project": [
+  {
+   "file": "demo_plan.mpp",
+   "steps": [
+    {
+     "step": "open the copy",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "rows",
+     "value": "65",
+     "ok": true
+    },
+    {
+     "step": "links read back",
+     "value": "122",
+     "ok": true
+    },
+    {
+     "step": "switch to WBS / 任务工作表",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "switch to Gantt",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "switch to Network",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "switch to Tracking Gantt",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "switch to Resource Sheet",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "switch to Calendar",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "edit a note",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "note reads back",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "save the copy",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "close",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "reopen the copy",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "note survived",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "links survived",
+     "value": "122",
+     "ok": true
+    },
+    {
+     "step": "milestone view file opens",
+     "value": "opened",
+     "ok": true
+    },
+    {
+     "step": "milestone rows",
+     "value": "13",
+     "ok": true
+    },
+    {
+     "step": "close milestone view",
+     "value": "True",
+     "ok": true
+    },
+    {
+     "step": "close the copy",
+     "value": "True",
+     "ok": true
+    }
+   ],
+   "planUnchanged": true,
+   "milestoneUnchanged": true,
+   "originalUnchanged": true,
+   "ok": true
+  }
+ ],
+ "shipped": {
+  "planSha256": "6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee",
+  "milestoneSha256": "d1def47164e694c07da5d4cb0ef2d95eaacc274f7e564f48be4bebc5ef683efb",
+  "planUnchanged": true
+ },
+ "visioVersion": "16.0 build ?",
+ "projectVersion": "16.0",
+ "visioAllPass": true,
+ "projectAllPass": true
+}

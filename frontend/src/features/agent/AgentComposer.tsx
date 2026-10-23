@@ -7,6 +7,7 @@ import { formatWhen } from "../../lib/formatWhen";
 import { NativeMissionTimeline } from "./CopilotDock";
 import { classifyReadFailure, copyFor } from "../../lib/failureAttribution";
 import type { Attribution } from "../../lib/failureAttribution";
+import { dropLegacyDiskCopies, recallTranscript, rememberTranscript } from "../../lib/agentSessionCache";
 
 
 type CopilotMessage = {
@@ -55,7 +56,14 @@ export function AgentComposer({
   const t = useT();
   const { locale } = useLocale();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<CopilotMessage[]>(() => readStoredMessages(data.journey.id));
+  const [messages, setMessages] = useState<CopilotMessage[]>(() => {
+    /* Issue #27：这一段以前从 `citynexus.copilot.history.<journeyId>` 播回来，
+     * 而那把键只绑行程号 —— 行程是成员共用的，所以同一台手机上换个人就会先看到上一位
+     * 的问答与 `agent_run`。现在只认本页内存（见 `lib/agentSessionCache.ts`），
+     * 并把这台设备上那份旧副本抹掉。 */
+    dropLegacyDiskCopies(data.journey.id);
+    return (recallTranscript(data.journey.id) as CopilotMessage[] | null) ?? [];
+  });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   /* ORD-0326: what the request actually answered, as the existing channel measured it. */
@@ -69,14 +77,9 @@ export function AgentComposer({
     return null;
   }, [messages]);
   useEffect(() => {
-    try {
-      window.localStorage.setItem(
-        `citynexus.copilot.history.${data.journey.id}`,
-        JSON.stringify(messages.slice(-50)),
-      );
-    } catch {
-      // The server timeline is authoritative when local storage is unavailable.
-    }
+    /* 只留内存：面板关掉、路由切走都还在（这本来就是那份缓存存在的理由），
+     * 但刷新与换人都不会再把上一位的问答带回来。服务器时间线才是权威。 */
+    rememberTranscript(data.journey.id, messages);
   }, [data.journey.id, messages]);
   const suggestions = useMemo(
     () => [t("agent.suggestionExplain"), t("agent.suggestionWhatIf"), t("agent.suggestionDiscover")],
@@ -164,7 +167,7 @@ export function AgentComposer({
           />
           <div className="v8-agent-toolbar">
             <span>
-              {t("agent.journeyPrefix")} {data.journey.title}
+              {data.journey.title}
             </span>
             <button
               className="v8-primary"
@@ -301,20 +304,6 @@ export function AgentComposer({
       </div>
     </section>
   );
-}
-
-function readStoredMessages(journeyId: string): CopilotMessage[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(`citynexus.copilot.history.${journeyId}`);
-    const value = raw ? JSON.parse(raw) : [];
-    if (!Array.isArray(value)) return [];
-    return value.filter((item): item is CopilotMessage =>
-      item && (item.role === "user" || item.role === "assistant") && typeof item.text === "string",
-    ).slice(-50);
-  } catch {
-    return [];
-  }
 }
 
 function formatMetric(

@@ -1,0 +1,204 @@
+{
+ "views": {
+  "Gantt_Chart": {
+   "view": "甘特图",
+   "png": "Gantt_Chart.png",
+   "bytes": 339826,
+   "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
+   "printWindowReturned": true,
+   "occludedBy": [
+    "GitHub项目推荐 - Google Chrome",
+    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+    "fullsystem_qoder_r1 - 文件资源管理器",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+    "moodle - 文件资源管理器",
+    "Windows 输入体验",
+    "Armoury Crate",
+    "命令面板",
+    "PowerToys Quick Access (Preview)",
+    "Program Manager"
+   ],
+   "sha256": "fa25166f0fb8f364",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 1308,
+   "inkFraction": 0.1347,
+   "crossCheck": {
+    "occluders": [
+     "GitHub项目推荐 - Google Chrome",
+     "EdgeGuide_System_Wiring.pdf - WPS Office",
+     "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+     "fullsystem_qoder_r1 - 文件资源管理器",
+     "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+     "moodle - 文件资源管理器",
+     "Windows 输入体验",
+     "Armoury Crate",
+     "命令面板",
+     "PowerToys Quick Access (Preview)",
+     "Program Manager"
+    ],
+    "meanAbsDiff": 13.76
+   }
+  },
+  "Tracking_Gantt": {
+   "view": "跟踪甘特图",
+   "png": "Tracking_Gantt.png",
+   "bytes": 511477,
+   "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
+   "printWindowReturned": true,
+   "occludedBy": [
+    "GitHub项目推荐 - Google Chrome",
+    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+    "fullsystem_qoder_r1 - 文件资源管理器",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+    "moodle - 文件资源管理器",
+    "Windows 输入体验",
+    "Armoury Crate",
+    "命令面板",
+    "PowerToys Quick Access (Preview)",
+    "Program Manager"
+   ],
+   "sha256": "753ff0289f9adf03",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 1320,
+   "inkFraction": 0.1676
+  },
+  "Network_Diagram": {
+   "view": "网络图",
+   "png": "Network_Diagram.png",
+   "bytes": 290112,
+   "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
+   "printWindowReturned": true,
+   "occludedBy": [
+    "GitHub项目推荐 - Google Chrome",
+    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+    "fullsystem_qoder_r1 - 文件资源管理器",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+    "moodle - 文件资源管理器",
+    "Windows 输入体验",
+    "Armoury Crate",
+    "命令面板",
+    "PowerToys Quick Access (Preview)",
+    "Program Manager"
+   ],
+   "sha256": "6021906c888c40fe",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 1145,
+   "inkFraction": 0.1558
+  },
+  "WBS_Task_Sheet": {
+   "view": "任务工作表",
+   "png": "WBS_Task_Sheet.png",
+   "bytes": 484575,
+   "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
+   "printWindowReturned": true,
+   "occludedBy": [
+    "GitHub项目推荐 - Google Chrome",
+    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+    "fullsystem_qoder_r1 - 文件资源管理器",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+    "moodle - 文件资源管理器",
+    "Windows 输入体验",
+    "Armoury Crate",
+    "命令面板",
+    "PowerToys Quick Access (Preview)",
+    "Program Manager"
+   ],
+   "sha256": "f692a09bcf838299",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 1233,
+   "inkFraction": 0.1626
+  },
+  "Resource_Sheet": {
+   "view": "资源工作表",
+   "png": "Resource_Sheet.png",
+   "bytes": 255697,
+   "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
+   "printWindowReturned": true,
+   "occludedBy": [
+    "GitHub项目推荐 - Google Chrome",
+    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+    "fullsystem_qoder_r1 - 文件资源管理器",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+    "moodle - 文件资源管理器",
+    "Windows 输入体验",
+    "Armoury Crate",
+    "命令面板",
+    "PowerToys Quick Access (Preview)",
+    "Program Manager"
+   ],
+   "sha256": "1c8dfe4b9582c4d0",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 1177,
+   "inkFraction": 0.132
+  },
+  "Calendar": {
+   "view": "日历",
+   "png": "Calendar.png",
+   "bytes": 491670,
+   "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp [只读]",
+   "printWindowReturned": true,
+   "occludedBy": [
+    "GitHub项目推荐 - Google Chrome",
+    "EdgeGuide_System_Wiring.pdf - WPS Office",
+    "D:\\moodle\\hrpd\\edgegui...em_Wiring\\EdgeGuide_System_Wiring.p",
+    "fullsystem_qoder_r1 - 文件资源管理器",
+    "CityNexus Trip Operations 和另外 3 个页面 - 个人 - Microsoft​ Edge",
+    "moodle - 文件资源管理器",
+    "Windows 输入体验",
+    "Armoury Crate",
+    "命令面板",
+    "PowerToys Quick Access (Preview)",
+    "Program Manager"
+   ],
+   "sha256": "aad8217129b2d073",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 2411,
+   "inkFraction": 0.4043
+  },
+  "Milestone_Timeline": {
+   "view": "甘特图",
+   "png": "Milestone_Timeline.png",
+   "bytes": 293526,
+   "windowTitle": "Project Professional - CityNexus_Milestone_View.mpp [只读]",
+   "printWindowReturned": true,
+   "source": "CityNexus_Milestone_View.mpp",
+   "sha256": "ccbce7847ae160a4",
+   "px": [
+    3414,
+    2350
+   ],
+   "colours": 1234,
+   "inkFraction": 0.13
+  }
+ },
+ "sha256Before": "6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee",
+ "sha256After": "6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee",
+ "milestoneHeld": true,
+ "readOnly": true,
+ "lockFilesLeft": [],
+ "screenCrossCheck": false,
+ "method": "PrintWindow(PW_RENDERFULLCONTENT)"
+}

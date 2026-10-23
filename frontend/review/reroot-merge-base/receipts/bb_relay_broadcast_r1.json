@@ -1,0 +1,351 @@
+{
+ "bb_broadcast_count": 53,
+ "bb_first": "2026-10-10 17:32",
+ "bb_last": "2026-10-21 02:19",
+ "ledger_copy_count": 20,
+ "ledger_copy_latest_line": 28805,
+ "rows": [
+  {
+   "ts": 1791624774.7850196,
+   "topic": "stale-branch-通播:modal+住宿工+大柜工+对表工+快刀工+快剪工+快锥工+抬秤工+撬板工+旅馆工+比价工+补栏工+起手工+路牌工乙+量尺工+铁盒工+键盘工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791624784.7672899,
+   "topic": "stale-branch-通播:预防工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791624855.6413465,
+   "topic": "stale-branch-补件:撞车文件逐枝补齐（上一封只给了枝名）",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791628381.3328636,
+   "topic": "stale-branch-通播:wenangong+屏工+快钉工+路牌工甲",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791629432.5945766,
+   "topic": "stale-branch-通播:抽屉工+量名词+门牌号",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791632729.0840755,
+   "topic": "stale-branch-通播:备城工+验路工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791646097.8229046,
+   "topic": "stale-branch-通播:活明细",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791647868.6880643,
+   "topic": "stale-branch-通播:modal+住宿工+大柜工+对表工+快刀工+快剪工+快锥工+旅馆工+补栏工+路牌工乙+铁盒工+键盘工+预防工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791648761.5077531,
+   "topic": "stale-branch-通播:比价工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791650681.2760036,
+   "topic": "stale-branch-通播:wenangong+屏工+快钉工+路牌工甲",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791651653.3828347,
+   "topic": "stale-branch-通播:抽屉工+量名词+门牌号",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791654357.786577,
+   "topic": "stale-branch-通播:备城工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791656008.6236184,
+   "topic": "stale-branch-通播:抬秤工+撬板工+量尺工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791664138.3432944,
+   "topic": "stale-branch-通播:起手工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791668129.8116515,
+   "topic": "stale-branch-通播:活明细",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791670590.7686837,
+   "topic": "stale-branch-通播:modal+住宿工+大柜工+快刀工+快锥工+旅馆工+路牌工乙+铁盒工+键盘工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791673127.8291223,
+   "topic": "stale-branch-通播:wenangong+屏工+快钉工+路牌工甲+预防工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791676959.1351671,
+   "topic": "stale-branch-通播:备城工+抽屉工+量名词+门牌号",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791716884.0969539,
+   "topic": "stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+屏工+快刀工+快钉工+快锥工+抽屉工+旅馆工+起手工+路牌工乙+路牌工甲+量名词+铁",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791718368.2077034,
+   "topic": "stale-branch-通播:对表工+比价工+活明细",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791720668.7387235,
+   "topic": "stale-branch-通播:抬秤工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791727462.382169,
+   "topic": "stale-branch-通播:加闸工+快剪工+验路工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791737403.9958994,
+   "topic": "stale-branch-通播:撬板工+量尺工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791738793.4117973,
+   "topic": "stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+快刀工+快锥工+抽屉工+旅馆工+起手工+路牌工乙+路牌工甲+量名词+键盘工+门牌号+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791740121.0095007,
+   "topic": "stale-branch-通播:对表工+比价工+活明细",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791742774.2852027,
+   "topic": "stale-branch-通播:抬秤工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791749401.9375112,
+   "topic": "stale-branch-通播:快剪工+验路工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791761420.7308435,
+   "topic": "stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+快刀工+快锥工+抽屉工+撬板工+旅馆工+起手工+路牌工乙+路牌工甲+量名词+量尺工+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791764952.9413097,
+   "topic": "stale-branch-通播:对表工+抬秤工+比价工+活明细",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791784046.4455872,
+   "topic": "stale-branch-通播:modal+wenangong+住宿工+备城工+大柜工+快刀工+快剪工+快锥工+抽屉工+撬板工+旅馆工+起手工+路牌工乙+路牌工甲+量名词+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791806924.7111373,
+   "topic": "stale-branch-通播:wenangong+住宿工+备城工+大柜工+对表工+快刀工+快剪工+快锥工+抬秤工+抽屉工+撬板工+旅馆工+比价工+活明细+起手工+路牌工乙",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791829940.2627385,
+   "topic": "stale-branch-通播:wenangong+住宿工+备城工+大柜工+对表工+快刀工+快剪工+快锥工+抽屉工+旅馆工+比价工+活明细+起手工+路牌工乙+路牌工甲+量名",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791848505.3820539,
+   "topic": "stale-branch-通播:加闸工+快钉工+铁盒工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791852421.3467228,
+   "topic": "stale-branch-通播:wenangong+住宿工+备城工+大柜工+快刀工+快剪工+快锥工+旅馆工+起手工+路牌工乙+路牌工甲+量名词+键盘工+门牌号+验路工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791880580.1611083,
+   "topic": "stale-branch-通播:wenangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+起手工+路牌工乙+路牌工甲+量名词+铁盒工+键盘",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791883354.8198247,
+   "topic": "stale-branch-通播:pinggong+盘务工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791887247.841065,
+   "topic": "stale-branch-通播:xuxiangong",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791903466.351235,
+   "topic": "stale-branch-通播:wenangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+起手工+路牌工甲+铁盒工+键盘工+门牌号+验路工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791907668.429534,
+   "topic": "stale-branch-通播:pinggong+盘务工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791908996.2744896,
+   "topic": "stale-branch-通播:xuxiangong",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791925294.9913633,
+   "topic": "stale-branch-通播:wenangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+起手工+路牌工甲+铁盒工+键盘工+门牌号+验路工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791930674.5015633,
+   "topic": "stale-branch-通播:pinggong+xuxiangong+盘务工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1791953593.1421828,
+   "topic": "stale-branch-通播:pinggong+wenangong+xuxiangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+盘务工+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792122208.2620733,
+   "topic": "stale-branch-通播:pinggong+wenangong+xuxiangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+盘务工+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792127925.380943,
+   "topic": "stale-branch-通播:pinggong+wenangong+xuxiangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+扫街工+旅馆工+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792167095.633104,
+   "topic": "stale-branch-通播:pinggong+wenangong+xuxiangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+盘务工+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792253063.0882332,
+   "topic": "stale-branch-通播:pinggong+wenangong+xuxiangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工+旅馆工+盘务工+",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792273653.2194793,
+   "topic": "stale-branch-通播:修复地图停靠点显名",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792282718.7438211,
+   "topic": "stale-branch-通播:a68b0631+pinggong+wenangong+xuxiangong+住宿工+加闸工+备城工+大柜工+快刀工+快剪工+快钉工+快锥工",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792304482.0036354,
+   "topic": "stale-branch-通播:a68b0631+pinggong+wenangong+xuxiangong+住宿工+修复地图停靠点显名+加闸工+备城工+大柜工+快刀工+快",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792391046.4420774,
+   "topic": "stale-branch-通播:a68b0631+pinggong+wenangong+xuxiangong+住宿工+修复地图停靠点显名+加闸工+备城工+大柜工+快刀工+快",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792426188.7325673,
+   "topic": "stale-branch-通播:a68b0631+pinggong+wenangong+xuxiangong+住宿工+修复地图停靠点显名+加闸工+备城工+大柜工+快刀工+快",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  },
+  {
+   "ts": 1792520392.7251847,
+   "topic": "stale-branch-通播:a68b0631+pinggong+wenangong+xuxiangong+住宿工+修复地图停靠点显名+加闸工+备城工+大柜工+快刀工+快",
+   "from": "qoder:42d1a6fa",
+   "to": "*"
+  }
+ ],
+ "ledger_copy_newest_line": 901,
+ "ledger_copy_newest_head": "待并枝回话·账本副本（BB 通播到不了的那几扇，值守落这块·本轮 若干 位主人·10-18 20 时现读）",
+ "ledger_copy_all_match_lines": [
+  901,
+  1022,
+  1742,
+  2036,
+  2434,
+  3015,
+  3512,
+  4459,
+  5874,
+  6483,
+  7730,
+  10162,
+  10839,
+  11199,
+  14104,
+  16307,
+  17509,
+  21502,
+  21672,
+  28805
+ ]
+}

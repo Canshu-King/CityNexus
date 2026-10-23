@@ -208,11 +208,6 @@ select.cnx-select {
   white-space: nowrap;
 }
 
-.cnx-select__empty {
-  margin: 8px 4px;
-  font-size: 13px;
-  opacity: 0.85;
-}
 
 .cnx-select__count {
   margin: 0 4px;

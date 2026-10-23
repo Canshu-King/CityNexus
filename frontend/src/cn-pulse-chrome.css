@@ -53,3 +53,22 @@
 [data-testid="topbar-theme"] {
   min-width: max-content;
 }
+
+/* 第三例，同一族病：flex 行里的中日韩文本没有 `min-width` 纪律时，会被压到自己的
+   min-content（一个字宽）。今天已经咬过三处——顶栏 runtime、WP-B 的动作行网格轨道
+   （排工在 681–899 实测「打开行程工作台」38.33 像素宽、四个行盒），以及这里：
+   页首 `.v8-page-intro` 在 681 到 899 之间是 `display:flex`（`styles.css:173`），
+   右侧动作行不肯让，左侧标题列就被压扁。现读 681 档：h1 只剩 127 像素宽、断两行，
+   导语 127 像素宽、断成六个行盒；660 档（块级布局）是 626 像素一行，760 档 206 像素一行。
+   收法不是给标题列硬塞 `min-width`（那会把溢出推到页面上），而是承认这一带放不下两列：
+   把已有的「单列堆叠」从 680 以下延到 899，超过 900 才恢复两列（`cn-pulse.css` 的
+   两列网格从 900 起，实测 840 档仍是 flex：标题列被压到 286 像素、导语断三行）。
+   零 `!important`，靠载入序赢。 */
+@media (min-width: 681px) and (max-width: 899px) {
+  .v8-page .v8-page-intro {
+    display: block;
+  }
+  .v8-page .v8-page-intro .v8-hub-actions {
+    margin-top: var(--cn-s-12, 12px);
+  }
+}

@@ -1,0 +1,206 @@
+{
+ "phases": [
+  {
+   "name": "1  Coursework initiation and project selection",
+   "start": "2026-09-07",
+   "finish": "2026-09-09",
+   "pct": 100,
+   "wbs": "1",
+   "work": 11.0,
+   "cost": 220.0
+  },
+  {
+   "name": "2  Requirements engineering",
+   "start": "2026-09-09",
+   "finish": "2026-10-21",
+   "pct": 81,
+   "wbs": "2",
+   "work": 23.0,
+   "cost": 459.97
+  },
+  {
+   "name": "3  System design and architecture",
+   "start": "2026-09-16",
+   "finish": "2026-09-22",
+   "pct": 100,
+   "wbs": "3",
+   "work": 23.0,
+   "cost": 459.9
+  },
+  {
+   "name": "4  Backend platform and data layer",
+   "start": "2026-09-16",
+   "finish": "2026-10-23",
+   "pct": 83,
+   "wbs": "4",
+   "work": 22.0,
+   "cost": 439.65
+  },
+  {
+   "name": "5  Map and place data integration",
+   "start": "2026-09-16",
+   "finish": "2026-09-28",
+   "pct": 69,
+   "wbs": "5",
+   "work": 15.0,
+   "cost": 299.97
+  },
+  {
+   "name": "6  AI agent and Hermes capability",
+   "start": "2026-09-16",
+   "finish": "2026-10-07",
+   "pct": 82,
+   "wbs": "6",
+   "work": 22.0,
+   "cost": 451.87
+  },
+  {
+   "name": "7  Frontend UI and interaction",
+   "start": "2026-09-16",
+   "finish": "2026-10-01",
+   "pct": 100,
+   "wbs": "7",
+   "work": 16.0,
+   "cost": 325.9
+  },
+  {
+   "name": "8  Integration and consolidation",
+   "start": "2026-09-16",
+   "finish": "2026-09-23",
+   "pct": 75,
+   "wbs": "8",
+   "work": 9.0,
+   "cost": 186.0
+  },
+  {
+   "name": "9  Verification and defect management",
+   "start": "2026-09-24",
+   "finish": "2026-10-21",
+   "pct": 58,
+   "wbs": "9",
+   "work": 34.0,
+   "cost": 697.65
+  },
+  {
+   "name": "10  Coursework deliverables and reporting",
+   "start": "2026-09-23",
+   "finish": "2026-10-23",
+   "pct": 52,
+   "wbs": "10",
+   "work": 39.0,
+   "cost": 779.78
+  },
+  {
+   "name": "11  Final acceptance, documentation and delivery",
+   "start": "2026-10-19",
+   "finish": "2026-10-23",
+   "pct": 75,
+   "wbs": "11",
+   "work": 7.0,
+   "cost": 140.0
+  }
+ ],
+ "milestones": [
+  {
+   "name": "M1  Topic and scope agreed",
+   "finish": "2026-09-08",
+   "deadline": "",
+   "wbs": "1.4"
+  },
+  {
+   "name": "M2  Requirements baseline drafted",
+   "finish": "2026-09-15",
+   "deadline": "",
+   "wbs": "2.4"
+  },
+  {
+   "name": "M3  Architecture design complete",
+   "finish": "2026-09-22",
+   "deadline": "",
+   "wbs": "3.4"
+  },
+  {
+   "name": "M4  Core backend running end to end",
+   "finish": "2026-10-05",
+   "deadline": "",
+   "wbs": "4.6"
+  },
+  {
+   "name": "M5  Provider mesh integrated behind one interface",
+   "finish": "2026-09-28",
+   "deadline": "",
+   "wbs": "5.5"
+  },
+  {
+   "name": "M6  Agent surface proven against a live model",
+   "finish": "2026-10-05",
+   "deadline": "",
+   "wbs": "6.6"
+  },
+  {
+   "name": "M7  Frontend running against the real backend",
+   "finish": "2026-10-01",
+   "deadline": "",
+   "wbs": "7.4"
+  },
+  {
+   "name": "M8  Integration line stable",
+   "finish": "2026-09-23",
+   "deadline": "",
+   "wbs": "8.3"
+  },
+  {
+   "name": "M9  System test ready (plan target)",
+   "finish": "2026-10-06",
+   "deadline": "2026-11-02",
+   "wbs": "9.7"
+  },
+  {
+   "name": "M10  Part 1 course deadline (contract 2026-10-02, missed)",
+   "finish": "2026-09-29",
+   "deadline": "2026-10-02",
+   "wbs": "10.5"
+  },
+  {
+   "name": "M11  Mid-term teacher review (scheduled 2026-10-23 noon)",
+   "finish": "2026-10-16",
+   "deadline": "2026-10-23",
+   "wbs": "10.6"
+  },
+  {
+   "name": "M12  Part 2 course deadline (contract 2026-11-06)",
+   "finish": "2026-10-23",
+   "deadline": "2026-11-06",
+   "wbs": "10.7"
+  },
+  {
+   "name": "M13  Coursework delivery (plan)",
+   "finish": "2026-10-23",
+   "deadline": "2026-11-06",
+   "wbs": "11.3"
+  }
+ ],
+ "criticalLeaves": [
+  {
+   "name": "4.5  Commerce, guardian and autopilot",
+   "start": "2026-10-06",
+   "finish": "2026-10-23",
+   "wbs": "4.5"
+  },
+  {
+   "name": "10.4  Part 2: detailed requirement specification write-up",
+   "start": "2026-10-19",
+   "finish": "2026-10-23",
+   "wbs": "10.4"
+  }
+ ],
+ "briefRows": 24,
+ "mismatches": [],
+ "view": "甘特图",
+ "pageSetup": null,
+ "pdf": "D:\\moodle\\CityNexus\\deliverables\\SoftwareEngineering_2026\\Microsoft_Project\\Plan_Briefing_Print.pdf",
+ "pdfBytes": 450847,
+ "pdfPages": 12,
+ "planReadOnlyHeld": true,
+ "pdfSha256": "50d174e434c01739bf8454d255bea80c1139fff0d9789d10125b6dd80739ac52"
+}

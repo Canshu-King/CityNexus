@@ -127,19 +127,22 @@ same trap ORD-0435 measured at 272 px of control inside a 358 px card.
    escapes its card gets clipped by the day list's own overflow, and a clipped control reads as a
    control that does nothing.  Sizes are the token scale, and the entry keeps a full-height hit box so
    a 390 px row can actually land a tap on it (the ORD-0338 lesson: laid out is not hittable). */
+/* 这一组以前全是字面量白底配主题墨：`<html data-theme="dark">` 一翻，收藏入口、
+   抽屉、书架行就变成"白块浮在黑纸上"（门里 `light-surface` 那一档就是量这个的）。
+   现在每一层纸都取 `--cn-elev-*`，字色取配对的 `--cn-on-elev-*`，主题翻转时两半一起移。 */
 .cn-collect { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cn-s-6); margin-top: var(--cn-s-6); }
-.cn-collect__entry { flex: none; padding: 7px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: #fff; color: var(--v8-indigo); font-size: 11px; font-weight: 700; }
-.cn-collect__entry:disabled { color: #98a2b3; background: #f4f6f8; }
-.cn-collect__state { flex: 1 1 100%; margin: 0; color: #6b7688; font-size: 11px; line-height: 1.45; }
-.cn-collect__picker { flex: 1 1 100%; display: grid; gap: var(--cn-s-6); padding: var(--cn-s-10); border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: #fbfcfe; }
-.cn-collect__picker-title { margin: 0; color: var(--v8-ink); font-size: 12px; font-weight: 800; }
+.cn-collect__entry { flex: none; padding: 7px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: var(--cn-elev-1); color: var(--cn-link); font-size: 11px; font-weight: 700; }
+.cn-collect__entry:disabled { color: var(--cn-on-elev-1-tertiary); background: var(--cn-elev-2); }
+.cn-collect__state { flex: 1 1 100%; margin: 0; color: var(--cn-on-elev-1-muted); font-size: 11px; line-height: 1.45; }
+.cn-collect__picker { flex: 1 1 100%; display: grid; gap: var(--cn-s-6); padding: var(--cn-s-10); border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: var(--cn-elev-2); }
+.cn-collect__picker-title { margin: 0; color: var(--cn-on-elev-2); font-size: 12px; font-weight: 800; }
 .cn-collect__shelves { display: grid; gap: var(--cn-s-6); margin: 0; padding: 0; list-style: none; }
-.cn-collect__shelf { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: var(--cn-s-6); width: 100%; padding: 9px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: #fff; color: var(--v8-ink); font-size: 12px; text-align: left; }
+.cn-collect__shelf { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: var(--cn-s-6); width: 100%; padding: 9px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: var(--cn-elev-1); color: var(--cn-on-elev-1); font-size: 12px; text-align: left; }
 .cn-collect__shelf:disabled { opacity: .55; }
 .cn-collect__shelf-name { grid-column: 1; min-width: 0; font-weight: 700; }
 /* The name is what the traveller is choosing.  It used to share one flex line with the count and
    the already-held mark and ellipsis to 「周…」 on a 390 px row, which is a picker that cannot say
    which shelf it writes to; the name gets its own row and is allowed to wrap. */
-.cn-collect__shelf-count { grid-column: 2; grid-row: 1; justify-self: end; color: #7c8797; font-size: 10px; }
+.cn-collect__shelf-count { grid-column: 2; grid-row: 1; justify-self: end; color: var(--cn-on-elev-1-muted); font-size: 10px; }
 .cn-collect__held { grid-column: 1 / -1; color: var(--v8-green); font-size: 10px; font-weight: 700; }
-.cn-collect__dismiss { justify-self: start; padding: 7px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: #fff; color: #56617a; font-size: 11px; }
+.cn-collect__dismiss { justify-self: start; padding: 7px 11px; border: 1px solid var(--v8-line); border-radius: var(--cn-r-8); background: var(--cn-elev-1); color: var(--cn-on-elev-1-muted); font-size: 11px; }

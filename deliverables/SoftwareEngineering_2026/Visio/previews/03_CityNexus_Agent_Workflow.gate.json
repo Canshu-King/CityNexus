@@ -1,0 +1,647 @@
+{
+ "failures": [],
+ "notes": [
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "per-run font sizing skipped on a_start (AttributeError)",
+  "per-run font sizing skipped on a_ctx (AttributeError)",
+  "per-run font sizing skipped on a_avail (AttributeError)",
+  "per-run font sizing skipped on a_int (AttributeError)",
+  "per-run font sizing skipped on a_env (AttributeError)",
+  "per-run font sizing skipped on a_fall (AttributeError)",
+  "per-run font sizing skipped on pv_ai (AttributeError)",
+  "per-run font sizing skipped on a_mis (AttributeError)",
+  "per-run font sizing skipped on a_run (AttributeError)",
+  "per-run font sizing skipped on a_budget (AttributeError)",
+  "per-run font sizing skipped on a_offer (AttributeError)",
+  "per-run font sizing skipped on a_choice (AttributeError)",
+  "per-run font sizing skipped on a_result (AttributeError)",
+  "per-run font sizing skipped on a_fail (AttributeError)",
+  "per-run font sizing skipped on a_gw (AttributeError)",
+  "per-run font sizing skipped on a_allow (AttributeError)",
+  "per-run font sizing skipped on a_404 (AttributeError)",
+  "per-run font sizing skipped on a_audit (AttributeError)",
+  "per-run font sizing skipped on a_family (AttributeError)",
+  "per-run font sizing skipped on a_more (AttributeError)",
+  "per-run font sizing skipped on a_read (AttributeError)",
+  "per-run font sizing skipped on a_auth (AttributeError)",
+  "per-run font sizing skipped on a_idem (AttributeError)",
+  "per-run font sizing skipped on a_guard (AttributeError)",
+  "per-run font sizing skipped on a_confirm (AttributeError)",
+  "per-run font sizing skipped on a_write (AttributeError)",
+  "per-run font sizing skipped on a_note (AttributeError)",
+  "per-run font sizing skipped on a_exec (AttributeError)",
+  "per-run font sizing skipped on d_runs (AttributeError)",
+  "per-run font sizing skipped on d_audit (AttributeError)",
+  "per-run font sizing skipped on d_idem (AttributeError)",
+  "per-run font sizing skipped on a_prop (AttributeError)",
+  "per-run font sizing skipped on a_degrade (AttributeError)",
+  "per-run font sizing skipped on a_show (AttributeError)",
+  "per-run font sizing skipped on a_fb (AttributeError)",
+  "per-run font sizing skipped on a_stop (AttributeError)",
+  "per-run font sizing skipped on t_list (AttributeError)",
+  "per-run font sizing skipped on not_list (AttributeError)",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped",
+  "paragraph alignment skipped"
+ ],
+ "styleIssues": [
+  "cell PrintFitLayerPages <- '0' failed: com_error",
+  "cell RoutingStyle <- '1' failed: com_error",
+  "cell ConLineJumpSize <- '0.09in' failed: com_error",
+  "cell WrappingStyle <- '1' failed: com_error",
+  "cell WrappingDirection <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error",
+  "cell ShrinkAutoFit <- '1' failed: com_error"
+ ],
+ "pages": [
+  {
+   "name": "Agent Workflow",
+   "nodes": 38,
+   "edges": 43,
+   "connects": 86,
+   "expectedConnects": 86,
+   "propsWritten": 157,
+   "propsExpected": 157
+  }
+ ],
+ "propFailures": [],
+ "shapeIds": {
+  "a_start": [
+   [
+    1,
+    20
+   ]
+  ],
+  "a_ctx": [
+   [
+    1,
+    21
+   ]
+  ],
+  "a_avail": [
+   [
+    1,
+    22
+   ]
+  ],
+  "a_int": [
+   [
+    1,
+    23
+   ]
+  ],
+  "a_env": [
+   [
+    1,
+    24
+   ]
+  ],
+  "a_fall": [
+   [
+    1,
+    25
+   ]
+  ],
+  "pv_ai": [
+   [
+    1,
+    26
+   ]
+  ],
+  "a_mis": [
+   [
+    1,
+    27
+   ]
+  ],
+  "a_run": [
+   [
+    1,
+    28
+   ]
+  ],
+  "a_budget": [
+   [
+    1,
+    29
+   ]
+  ],
+  "a_offer": [
+   [
+    1,
+    30
+   ]
+  ],
+  "a_choice": [
+   [
+    1,
+    31
+   ]
+  ],
+  "a_result": [
+   [
+    1,
+    32
+   ]
+  ],
+  "a_fail": [
+   [
+    1,
+    33
+   ]
+  ],
+  "a_gw": [
+   [
+    1,
+    34
+   ]
+  ],
+  "a_allow": [
+   [
+    1,
+    35
+   ]
+  ],
+  "a_404": [
+   [
+    1,
+    36
+   ]
+  ],
+  "a_audit": [
+   [
+    1,
+    37
+   ]
+  ],
+  "a_family": [
+   [
+    1,
+    38
+   ]
+  ],
+  "a_more": [
+   [
+    1,
+    39
+   ]
+  ],
+  "a_read": [
+   [
+    1,
+    40
+   ]
+  ],
+  "a_auth": [
+   [
+    1,
+    41
+   ]
+  ],
+  "a_idem": [
+   [
+    1,
+    42
+   ]
+  ],
+  "a_guard": [
+   [
+    1,
+    43
+   ]
+  ],
+  "a_confirm": [
+   [
+    1,
+    44
+   ]
+  ],
+  "a_write": [
+   [
+    1,
+    45
+   ]
+  ],
+  "a_note": [
+   [
+    1,
+    46
+   ]
+  ],
+  "a_exec": [
+   [
+    1,
+    47
+   ]
+  ],
+  "d_runs": [
+   [
+    1,
+    48
+   ]
+  ],
+  "d_audit": [
+   [
+    1,
+    49
+   ]
+  ],
+  "d_idem": [
+   [
+    1,
+    50
+   ]
+  ],
+  "a_prop": [
+   [
+    1,
+    51
+   ]
+  ],
+  "a_degrade": [
+   [
+    1,
+    52
+   ]
+  ],
+  "a_show": [
+   [
+    1,
+    53
+   ]
+  ],
+  "a_fb": [
+   [
+    1,
+    54
+   ]
+  ],
+  "a_stop": [
+   [
+    1,
+    55
+   ]
+  ],
+  "t_list": [
+   [
+    1,
+    56
+   ]
+  ],
+  "not_list": [
+   [
+    1,
+    57
+   ]
+  ]
+ },
+ "edgeIds": {
+  "a_start->a_ctx": [
+   [
+    1,
+    58
+   ]
+  ],
+  "a_ctx->a_avail": [
+   [
+    1,
+    59
+   ]
+  ],
+  "a_avail->a_int": [
+   [
+    1,
+    60
+   ]
+  ],
+  "a_avail->a_fall": [
+   [
+    1,
+    62
+   ]
+  ],
+  "a_fall->a_show": [
+   [
+    1,
+    64
+   ]
+  ],
+  "a_int->a_env": [
+   [
+    1,
+    66
+   ]
+  ],
+  "a_int->pv_ai": [
+   [
+    1,
+    67
+   ]
+  ],
+  "a_env->a_mis": [
+   [
+    1,
+    69
+   ]
+  ],
+  "a_mis->a_run": [
+   [
+    1,
+    70
+   ]
+  ],
+  "a_run->a_budget": [
+   [
+    1,
+    71
+   ]
+  ],
+  "a_budget->a_offer": [
+   [
+    1,
+    72
+   ]
+  ],
+  "a_offer->a_choice": [
+   [
+    1,
+    74
+   ]
+  ],
+  "a_choice->a_gw": [
+   [
+    1,
+    75
+   ]
+  ],
+  "a_choice->a_result": [
+   [
+    1,
+    77
+   ]
+  ],
+  "a_gw->a_allow": [
+   [
+    1,
+    79
+   ]
+  ],
+  "a_allow->a_404": [
+   [
+    1,
+    80
+   ]
+  ],
+  "a_allow->a_audit": [
+   [
+    1,
+    82
+   ]
+  ],
+  "a_audit->a_family": [
+   [
+    1,
+    84
+   ]
+  ],
+  "a_family->a_read": [
+   [
+    1,
+    85
+   ]
+  ],
+  "a_family->a_auth": [
+   [
+    1,
+    87
+   ]
+  ],
+  "a_family->a_guard": [
+   [
+    1,
+    89
+   ]
+  ],
+  "a_auth->a_idem": [
+   [
+    1,
+    91
+   ]
+  ],
+  "a_idem->a_confirm": [
+   [
+    1,
+    93
+   ]
+  ],
+  "a_confirm->a_write": [
+   [
+    1,
+    94
+   ]
+  ],
+  "a_guard->a_write": [
+   [
+    1,
+    96
+   ]
+  ],
+  "a_read->a_result": [
+   [
+    1,
+    98
+   ]
+  ],
+  "a_write->a_exec": [
+   [
+    1,
+    100
+   ]
+  ],
+  "a_exec->d_runs": [
+   [
+    1,
+    101
+   ]
+  ],
+  "a_exec->a_prop": [
+   [
+    1,
+    103
+   ]
+  ],
+  "a_write->d_audit": [
+   [
+    1,
+    105
+   ]
+  ],
+  "a_write->d_idem": [
+   [
+    1,
+    107
+   ]
+  ],
+  "a_exec->a_result": [
+   [
+    1,
+    109
+   ]
+  ],
+  "a_result->a_fail": [
+   [
+    1,
+    110
+   ]
+  ],
+  "a_fail->a_degrade": [
+   [
+    1,
+    111
+   ]
+  ],
+  "a_fail->a_prop": [
+   [
+    1,
+    113
+   ]
+  ],
+  "a_degrade->a_show": [
+   [
+    1,
+    115
+   ]
+  ],
+  "a_prop->a_show": [
+   [
+    1,
+    117
+   ]
+  ],
+  "a_show->a_fb": [
+   [
+    1,
+    118
+   ]
+  ],
+  "a_fb->a_more": [
+   [
+    1,
+    119
+   ]
+  ],
+  "a_more->a_ctx": [
+   [
+    1,
+    120
+   ]
+  ],
+  "a_more->a_stop": [
+   [
+    1,
+    122
+   ]
+  ],
+  "a_budget->a_degrade": [
+   [
+    1,
+    124
+   ]
+  ],
+  "a_404->a_fail": [
+   [
+    1,
+    126
+   ]
+  ]
+ },
+ "nodes": 38,
+ "edges": 43,
+ "connects": 86,
+ "expectedConnects": 86,
+ "propsWritten": 157,
+ "propsExpected": 157
+}

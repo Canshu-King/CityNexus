@@ -10,29 +10,9 @@ import {
   useWebObservations,
 } from "../../api/v10Execution";
 import { useLocale, useT } from "../../i18n/LocaleContext";
-import { clockZoneLabel } from "../../lib/displayVocabulary";
+import { clockZoneCaption } from "../../lib/clockZone";
 import { liveActivityWindow } from "../../lib/executionWindow";
 import type { V8Data } from "../../app/v8Types";
-
-/**
- * A zone name this runtime can actually format in.
- *
- * `Intl` throws on anything it does not recognise, and the server's timezone field is a string, not
- * a proven IANA name. An unusable value therefore falls back to `undefined`, which leaves the call
- * on the device zone -- the honest reading of "we were not told a zone", and strictly better than a
- * panel that crashes over a typo in one field.
- */
-function renderableZone(value: unknown): string | undefined {
-  if (typeof value !== "string") return undefined;
-  const name = value.trim();
-  if (!name) return undefined;
-  try {
-    new Intl.DateTimeFormat("en-GB", { timeZone: name });
-    return name;
-  } catch {
-    return undefined;
-  }
-}
 
 type Props = {
   journeyId: string;
@@ -50,7 +30,7 @@ export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
   const clock = useExecutionClock(journeyId);
   const web = useWebObservations(journeyId);
   const now = clock.data ? new Date(clock.data.now) : null;
-  const clockZone = renderableZone(clock.data?.timezone);
+  const clockZone = clockZoneCaption(clock.data, locale === "zh-CN");
   const window = liveActivityWindow(plan);
   // Four facts, four answers.  The old pair of branches keyed off "does a cursor exist",
   // which made a stale cursor read as "in progress" and a finished journey read as
@@ -92,12 +72,18 @@ export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
                      the label claims, so number and label are one fact. An empty locale array would
                      hand the *shape* of that number to the device as well -- digits and separator from
                      one place, the words under them from the traveller's chosen language -- so the
-                     locale is named the same way the rest of this family names it. */
-                  timeZone: clockZone,
+                     locale is named the same way the rest of this family names it.
+
+                     The zone is the server's `used_timezone`, not the journey's requested one: when
+                     the request could not be granted the server says so, and this screen renders the
+                     moment where it actually is rather than where the journey hoped it would be. */
+                  timeZone: clockZone.zone,
                 })
               : "—"}
           </strong>
-          <small>{clock.data ? clockZoneLabel(clock.data.timezone, locale) : t("exec.execClock")}</small>
+          <small>
+            {clock.data ? clockZone.label : t("exec.execClock")}
+          </small>
         </div>
         <div className="v10-metric">
           <Activity size={17} aria-hidden="true" />

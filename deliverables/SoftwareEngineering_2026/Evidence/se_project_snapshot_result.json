@@ -1,0 +1,62 @@
+{
+ "Gantt_Chart": {
+  "view": "甘特图",
+  "png": "Gantt_Chart.png",
+  "bytes": 237847,
+  "size": [
+   2062,
+   1246
+  ],
+  "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp"
+ },
+ "Tracking_Gantt": {
+  "view": "跟踪甘特图",
+  "png": "Tracking_Gantt.png",
+  "bytes": 268064,
+  "size": [
+   2062,
+   1246
+  ],
+  "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp"
+ },
+ "Network_Diagram": {
+  "view": "网络图",
+  "png": "Network_Diagram.png",
+  "bytes": 198188,
+  "size": [
+   2062,
+   1246
+  ],
+  "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp"
+ },
+ "WBS_Task_Sheet": {
+  "view": "任务工作表",
+  "png": "WBS_Task_Sheet.png",
+  "bytes": 258762,
+  "size": [
+   2062,
+   1246
+  ],
+  "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp"
+ },
+ "Resource_Sheet": {
+  "view": "资源工作表",
+  "png": "Resource_Sheet.png",
+  "bytes": 224045,
+  "size": [
+   2062,
+   1246
+  ],
+  "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp"
+ },
+ "Calendar": {
+  "view": "日历",
+  "png": "Calendar.png",
+  "bytes": 305890,
+  "size": [
+   2062,
+   1246
+  ],
+  "windowTitle": "Project Professional - CityNexus_Software_Engineering_Plan.mpp"
+ }
+}

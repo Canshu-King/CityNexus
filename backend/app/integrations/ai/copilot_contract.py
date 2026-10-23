@@ -618,6 +618,22 @@ def _select_what_if_activity(
     )
 
 
+# Every branch a what-if preview can stop on names itself here. The reader-language layer
+# (`_copilot_answer` in app/main.py) translates exactly this vocabulary; a code outside it is a bug in
+# whichever side added the branch, and the shared test fails on the mismatch instead of shipping an
+# empty bubble or an English sentence to a reader who asked in Chinese.
+WHAT_IF_EXPLANATION_CODES = frozenset(
+    {
+        "NO_TARGET_SIMULATED",
+        "PROTECTED_OR_LOCKED_TOUCHED",
+        "NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED",
+        "ABSORBS_WITHIN_OBSERVED_WINDOW",
+        "PROVIDER_BACKED_ALTERNATIVE_REQUIRED",
+        "HYPOTHETICAL_WEATHER_OR_CLOSURE",
+    }
+)
+
+
 def simulate_what_if(message: str, context: Mapping[str, Any]) -> dict[str, Any]:
     """Build a preview from selected-plan facts without writing any state."""
 
@@ -658,6 +674,7 @@ def simulate_what_if(message: str, context: Mapping[str, Any]) -> dict[str, Any]
             "live_evidence_required": plan is None,
         },
         "explanation": "This preview does not change the selected plan, JourneyTwin, commitments, bookings, or payments.",
+        "explanation_code": "NO_TARGET_SIMULATED",
         "next_action": None,
     }
     if plan is None:
@@ -684,6 +701,7 @@ def simulate_what_if(message: str, context: Mapping[str, Any]) -> dict[str, Any]
             base["feasibility"] = "BLOCKED"
             base["protected_commitments"]["preserved"] = False
             base["explanation"] = "The requested extension touches a protected or locked activity; no change was applied."
+            base["explanation_code"] = "PROTECTED_OR_LOCKED_TOUCHED"
             base["provenance"]["live_evidence_required"] = False
             return base
         target_end = _parse_datetime(str(target.get("end_at") or ""))
@@ -703,12 +721,14 @@ def simulate_what_if(message: str, context: Mapping[str, Any]) -> dict[str, Any]
                 base["feasibility"] = "BLOCKED"
                 base["protected_commitments"]["preserved"] = False
                 base["explanation"] = "The extension would consume the next protected commitment window."
+                base["explanation_code"] = "NEXT_PROTECTED_WINDOW_WOULD_BE_CONSUMED"
                 return base
         base["status"] = "SIMULATED"
         base["feasibility"] = "PASS"
         base["after"]["schedule_drift_min"] = duration
         base["provenance"]["live_evidence_required"] = False
         base["explanation"] = "The selected activity can absorb this extension within the currently observed commitment window. Apply it only through an explicit replan request."
+        base["explanation_code"] = "ABSORBS_WITHIN_OBSERVED_WINDOW"
         base["next_action"] = "REQUEST_REPLAN"
         return base
 
@@ -723,6 +743,7 @@ def simulate_what_if(message: str, context: Mapping[str, Any]) -> dict[str, Any]
             base["after"]["walking_min"] = None
             base["deltas"]["walking_min"] = None
         base["explanation"] = "A provider-backed alternative is required to prove the requested cost, walking, or indoor change; this read-only preview does not invent one."
+        base["explanation_code"] = "PROVIDER_BACKED_ALTERNATIVE_REQUIRED"
         return base
 
     if parameters["weather_or_closure"]:
@@ -730,6 +751,7 @@ def simulate_what_if(message: str, context: Mapping[str, Any]) -> dict[str, Any]
         base["next_action"] = "REQUEST_REPLAN"
         base["provenance"]["live_evidence_required"] = True
         base["explanation"] = "This is a hypothetical weather or closure scenario only. It is not recorded as a real event; an explicit replan can capture current provider evidence."
+        base["explanation_code"] = "HYPOTHETICAL_WEATHER_OR_CLOSURE"
         return base
 
     return base

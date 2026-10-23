@@ -291,7 +291,7 @@
 
 /* Typography rhythm on the surfaces the app already renders. */
 .v8-page { background: var(--cn-canvas); }
-.v8-page h1, .v8-hero-title { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
+.v8-page h1 { font-size: var(--cn-fs-display); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.02em; }
 .v8-page h2, .v8-section-title { font-size: var(--cn-fs-title); font-weight: 700; line-height: var(--cn-lh-tight); letter-spacing: -0.015em; }
 
 /* Unify card material: solid content, restrained depth (no atmosphere floating), one corner.
@@ -436,9 +436,7 @@
 /* Restrained press + hover feedback (transform only, no rotate / big shadow). */
 .v8-page button:not(.cn-no-motion):active,
 .v8-page [role="button"]:active,
-.v8-page a.v8-cta:active { transform: scale(0.985); transition: transform var(--cn-t-press) var(--cn-ease-standard); }
 .v8-page button:not(.cn-no-motion),
-.v8-page a.v8-cta,
 .v8-page .v8-card { transition: transform var(--cn-t-hover) var(--cn-ease-standard), box-shadow var(--cn-t-hover) var(--cn-ease-standard); }
 @media (hover: hover) {
   .v8-page .v8-card:hover { transform: translateY(-1px); box-shadow: var(--cn-shadow-raised); }
@@ -507,12 +505,12 @@
 .v10-evidence-row:active b { color: var(--cn-link-active); }
 
 /* Touch targets >=44px on primary controls. */
-.v8-page button, .v8-page a.v8-cta, .v8-nav button { min-height: 44px; }
+.v8-page button, .v8-nav button { min-height: 44px; }
 
 @media (prefers-reduced-motion: reduce) {
   .v8-page,
   .v8-page > *,
-  .v8-page button, .v8-page a.v8-cta, .v8-page .v8-card {
+  .v8-page button, .v8-page .v8-card {
     animation: none !important;
     transition: none !important;
     transform: none !important;
@@ -588,7 +586,6 @@
   min-height: 50px;
 }
 /* The whole card reveals once; do not stagger its Now/Next/CTA children. */
-.cn-now-next-hero.cn-hero-stagger > * { animation: none; }
 
 /* Stay / anchors step down into a compact secondary strip beneath the hero. */
 .cn-hero-strip {
@@ -616,7 +613,12 @@
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  /* 原来这里是 `white-space: nowrap`：首屏时间带在窄屏上把句尾吃掉——
+     07:24 现读：320 档中文藏 10%、英文藏 24%，360 档英文仍藏 12%。
+     被吃掉的正是「行程时区 / journey time zone」那半句，而全屏只有这一处说它（逐枚比对：
+     同一枚完整串在 DOM 里再出现 0 次）。改成允许换行：宽屏放得下就不折，窄屏折第二行也不丢字。
+     省略号仍留着——真出现单个超长不可断的词时，还是按原设计截。 */
+  white-space: normal;
 }
 
 .cn-attention-band {
@@ -811,8 +813,31 @@
     color: #fff !important;
   }
 
-  /* 4. Content cards / rows that kept a light fill inside .v8-page. */
-  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-rain-button, :root[data-theme="dark"] .v8-page .v8-map-panel {
+  /* 4. Content cards / rows that kept a light fill inside .v8-page.
+     07:52 两主题对拍（_cmdr_dark_pair_scan_r1.cjs，只比浏览器最后算出来的那一手）抓到两枚漏在这组之外的：
+     `.v8-me-card`（「我的」那五张卡）与 `.v8-agent-progress`（Copilot 那屏的进度块）——
+     它们在暗档仍是 rgb(255,255,255) 白底，而卡片自己的 color 已经是暗档墨 rgb(245,245,247)，
+     于是白底配白字，比值 1.09：那两屏的文字在暗档下是看不见的。补进同一组，不新造判据。
+     08:31 同一把合成尺又在「行程票夹」抓到同一族：`.trip-stop.protected` 的浅绿底 #eefaf2
+     （`frontend/src/styles.css:1268`）配上从 `.v8-page` 继承来的近白墨，比值 1.02。
+     它和 `.v8-next-card` 是同一种东西（浅绿语义卡），所以走这一组已有的那一手，不自创第二套。
+     12:0x 十七屏普查（子 Agent 跑尺、我自己另取三屏复算，两处读数一致）在同一族里又抓到
+     三枚一直没进这组的容器：`section.v12-trip-studio`（权威行程那屏的方案卡与版本历史，
+     暗档仍是 rgb(255,255,255)，墨 rgb(245,245,247) → 1.09 一族 36 条）、
+     `aside.v8-studio-aside`（行程工作台侧栏，同是 #fff → 9 条）、
+     `article.v12-state-card`（.now #f6faf8 / .next #f8f8fc → 3 条）。
+     判据没有新增：这三枚都是 `closest('.v8-page')` 为真、自己的 color 已是暗档墨，
+     与上面三例同一形状，所以并入本组而不是另起一套。
+     13:0x 第三型，也是这一组第一次抓不到的那一型：`section.v12-authoritative-panel`
+     （`frontend/src/styles.css:201`）的浅色不写在 background-color 上，而写在一层 145 度的
+     浅渐变 background-image 上（那两枚色标的字面量留在它自己那一行里，不在这里重述——
+     上一版我把它们抄进了注释，被出厂的 surface-contract 尺按"新增浅底字面量"拒了一次）。
+     合成尺只沿 backgroundColor 爬链，于是把 `.v8-page` 的黑底当成它的底，替这张卡判了绿；
+     真相反证是手机暗档 412 那张截图（`shots/phone_dark_authoritative_1246.png`）。
+     换了一把会把 background-image 色标也压进底色的尺重测十七屏，这一屏在暗档两档宽度上
+     各暴露六条，其中 `h2`「从方案到边缘的单一真相」1.02（`grad_scan_17keys_1280_390.json:1`）。
+     修法仍是这一组既有那一手：组里的 `background` 是简写，会把那层渐变一起重置掉。 */
+  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-map-panel, :root[data-theme="dark"] .v8-page .v8-me-card, :root[data-theme="dark"] .v8-page .v8-agent-progress, :root[data-theme="dark"] .v8-page .trip-stop.protected, :root[data-theme="dark"] .v8-page .v12-trip-studio, :root[data-theme="dark"] .v8-page .v8-studio-aside, :root[data-theme="dark"] .v8-page .v12-state-card, :root[data-theme="dark"] .v8-page .v12-authoritative-panel {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
@@ -899,8 +924,6 @@
   :root[data-theme="dark"] .v8-product-shell .v8-user small { color: var(--cn-ink-secondary) !important; }
 
   /* Today hero attention status: was a hard-coded green/amber. */
-  :root[data-theme="dark"] .v8-page .today-actions strong.green { color: #7bd88f !important; }
-  :root[data-theme="dark"] .v8-page .today-actions strong.warn { color: var(--cn-warning) !important; }
 
   /* Live next-card green accents: hard-coded dark-on-light greens now sit on a
      dark card surface, so they fall below AA. */
@@ -915,6 +938,70 @@
     border-color: rgba(255, 159, 10, 0.34) !important;
     color: var(--cn-ink) !important;
   }
+  /* Trips wallet stop cards (08:31 composited census, six screens x two themes x
+     two widths, 1820 readings): `.trip-stop.disrupted` carries the very same
+     hard-coded #fff6ee (frontend/src/styles.css:1275) as `.live-disruption`
+     above, but unlike that one it never got a dark counterpart, so the ink it
+     inherits from .v8-page sat on a warm near-white fill at ratio 1.02 -- the
+     time, the place name, the duration and the 详情 button were all invisible
+     in dark. Same light fill, same semantic, so the dark pair is copied from
+     the rule right above it rather than invented here.
+     The two label colours then have to follow, or this change would have moved
+     the defect instead of removing it: light side stays as-is (#1c7a4a on the
+     tint measures 4.98, #b45309 on the tint 4.70, both AA), dark side goes to
+     the paired semantic tokens the theme already carries (#30d158 on the dark
+     surface = 8.42, #ff9f0a on the amber wash = 6.64). Note `--cn-warning` is
+     NOT used on the light side: its light value #b06000 measures 4.35 on that
+     tint, which would be worse than the literal it replaces. */
+  :root[data-theme="dark"] .v8-page .trip-stop.disrupted {
+    background: rgba(255, 159, 10, 0.12) !important;
+    border-color: rgba(255, 159, 10, 0.34) !important;
+    color: var(--cn-ink) !important;
+  }
+  :root[data-theme="dark"] .v8-page .trip-stop-protected { color: var(--cn-success) !important; }
+  :root[data-theme="dark"] .v8-page .trip-stop-disrupted { color: var(--cn-warning) !important; }
+
+  /* 12:0x 同一族的第二型：语义洗色块在暗档仍是浅底。`div.v8-feasibility`
+     （`frontend/src/styles.css:178`）底 #effaf5、字 `--v8-green`，暗档里那行约束结论
+     量到 1.89、说明行 3.12。修法照 `.trip-stop.disrupted` 已经落地的那一手：底色取
+     这条语义自己那枚色值（暗档 #30d158）压成 0.12 的洗色，不新造色值；文字侧跟着走
+     厂内已有的 `--cn-success` 与 `--cn-ink-secondary`，因为不动它们的话这次改动只是把
+     缺陷挪个位置。 */
+  :root[data-theme="dark"] .v8-page .v8-feasibility {
+    background: rgba(48, 209, 88, 0.12) !important;
+    color: var(--cn-success) !important;
+  }
+  :root[data-theme="dark"] .v8-page .v8-feasibility small { color: var(--cn-ink-secondary) !important; }
+
+  /* 上面那组把容器换成暗档底之后，容器里两枚"本来就只比及格线高一点"的死灰会掉下去：
+     `.v8-activity` 的 #68758a 从 4.67（白卡）掉到 3.65，`.v12-state-kicker` 的 #55716e 从
+     5.02 / 4.99 掉到 3.22 —— 两臂逐行对表抓出来的，不是我推测的（`contrast_diff_1215.json:1`）。
+     这正是本厂那条注释写着的坑："不动它们的话这次改动只是把缺陷挪个位置"。
+     亮档这两枚今天是过的，所以只补暗档这一手，亮档一字不动；`--cn-ink-secondary`
+     在暗档底上是 7.4 左右，与 `.v8-me-card p` 那次同一枚 token。
+     `.v8-activity` 里的 `i`（图标）与 `em`（PROTECTED 小标）各自有 color 声明，
+     继承不到这条，语义色不会被抹平。 */
+  :root[data-theme="dark"] .v8-page .v8-activity { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-page .v12-state-kicker { color: var(--cn-ink-secondary) !important; }
+
+  /* 13:3x 同一族的第四型（第三十四笔那把新尺量出来的，见 `styles.css:214`）：
+     活动列表那一行的死灰在暗档只有 3.54，亮档同一枚是 5.8 左右、本来就及格，
+     所以只补暗档；那一行的「当前」态整块浅洗色在暗档里是一行亮块，
+     底色换成厂内已有的那一枚高亮 token（暗档发丝线用的就是它），墨跟着走暗档主墨——
+     它自己的深青墨在浅洗色上是及格的，换了底就必须跟着换，否则这一行会从"看得见"
+     变成"更看不见"。序号小圆片自己没有 color，跟着行一起继承。
+     状态蓝那几枚（`.state-*`）不在这一笔里：它要的是暗档第二档蓝，是色值决定，属裁语。 */
+  :root[data-theme="dark"] .v8-page .v12-activity-row:not(.current) { color: var(--cn-ink-secondary) !important; }
+  /* 序号小圆片自己没有 color，跟着行继承；它在两档里都是浅底，暗档就必须换底，
+     否则"行"改暗而"片"还亮着，片上那枚数字会从 5.05 掉到 1.88（这是第二臂量出来的，不是猜的）。
+     底取厂内那枚暗向洗色 token，字取暗档主墨。
+     「当前」那一行自己的浅洗色这一笔不动：它上面的深青墨在浅底上是及格的，
+     "暗档里该不该有一行亮块"是口味与层级问题，属裁语，不混进这一笔。 */
+  :root[data-theme="dark"] .v8-page .v12-activity-index {
+    background: var(--cn-tint-black-40) !important;
+    color: var(--cn-ink) !important;
+  }
+
   :root[data-theme="dark"] .v8-page .live-proposal {
     background: var(--cn-surface) !important;
     border-color: var(--cn-hairline) !important;
@@ -982,8 +1069,7 @@
 .v8-page .v9-language {
   color: var(--cn-ink);
 }
-.v9-language,
-.v8-home-language {
+.v9-language {
   border-color: var(--cn-control-border);
 }
 
@@ -1210,11 +1296,25 @@ button[data-testid^="mode-"],
    Two hardcoded greys fail AA as body text: .v8-day-card p at #6c7889 is
    4.48:1 on white and 3.8:1 on the dark surface, and the DAY n / meta row at
    #9aa4b3 is 2.52:1. Both take the ink-secondary token, which clears 4.5:1 in
-   either scheme while staying visually subordinate to the stop name. */
+   either scheme while staying visually subordinate to the stop name.
+   08:50 same judgement, one more member: `.v8-me-card p` carries a hard-coded
+   #7e8999 (frontend/src/styles.css:339) that measures 3.54:1 on the white card
+   in light and 4.8:1 in dark; on the ink-secondary token it becomes 5.07:1 and
+   7.69:1. The literal stays where it is and is overridden here, exactly as the
+   day-card greys were. Two sibling #7e8999 sites (.v9-inbox small,
+   .v9-offline article span) were left alone on purpose: a two-theme, two-width
+   sweep of all six screens never rendered them, so any claim about them would
+   be unverified.
+   12:1x 十七屏普查里第三枚：`.v12-state-card small` 的 #71808b
+   （`frontend/src/styles.css:209`）在白绿卡 #f8f8fc 上是 3.84、在暗档底上是 4.18，
+   两档都不及格，所以进这条两档共用的规则，而不是另开一条暗档补丁。
+   出处 `contrast_diff_1215.json:1`。 */
 .v8-day-card p,
 .v8-day-card span,
 .v8-day-card small,
-.v8-day-detail-title small {
+.v8-day-detail-title small,
+.v8-me-card p,
+.v12-state-card small {
   color: var(--cn-ink-secondary);
 }
 
@@ -1493,7 +1593,7 @@ dd.trial-city-warning {
   min-height: 30px;
   display: inline-flex;
   align-items: center;
-  color: var(--v8-accent);
+  color: var(--cn-accent-text);
   font-weight: 700;
   cursor: pointer;
 }
