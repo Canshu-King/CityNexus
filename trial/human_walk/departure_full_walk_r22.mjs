@@ -479,10 +479,17 @@ if (await ask.first().isVisible().catch(() => false)) {
 // real input, on the same date, nothing seeded -- a window no listed opening can contain -- saves again, and
 // presses the door.  The reading that comes back is the product's, not the instrument's.
 if (process.env.WALK_PROVE_CLOSED === "1") {
+  // walk-100 ran this arm and every fill timed out: by now the card has collapsed its own time block
+  // (「已确认时间 · 查看或调整」), so the inputs are not in the DOM until a person opens it again.
+  await departure.locator("summary").filter({ hasText: /查看或调整|确认每天的时间/ }).first().click({ timeout: 6000 })
+    .catch((e) => say(`PROVE_CLOSED_OPEN_ERR ${flat(e.message).slice(0, 50)}`));
+  await page.waitForTimeout(1500);
   const closedFields = departure.locator('input[type="time"]');
   const firstStart = await closedFields.first().inputValue().catch(() => "");
   await closedFields.first().fill("03:00").catch((e) => say(`PROVE_CLOSED_START_ERR ${flat(e.message).slice(0, 50)}`));
   await closedFields.nth(1).fill("04:00").catch((e) => say(`PROVE_CLOSED_END_ERR ${flat(e.message).slice(0, 50)}`));
+  const written = await closedFields.evaluateAll((nodes) => nodes.slice(0, 2).map((n) => n.value)).catch(() => []);
+  say(`PROVE_CLOSED_WRITTEN first_two=${JSON.stringify(written)}`);
   await page.waitForTimeout(1200);
   await departure.getByRole("button", { name: /保存为正式候选方案/ }).first().click({ timeout: 8000 })
     .catch((e) => say(`PROVE_CLOSED_SAVE_ERR ${flat(e.message).slice(0, 50)}`));
