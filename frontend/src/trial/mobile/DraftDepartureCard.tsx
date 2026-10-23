@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, CityNexusApiError, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, hopSentences, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -85,9 +85,11 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   // traveller already confirmed to keep out of the budget.  A row nobody can answer is not a reason to
   // hide the button -- it is the sentence the button sends.
   const askable = (result?.gaps ?? []).filter((gap) => !(price && String(gap.kind) === "ADMISSION_PRICE"));
-  // Which hops the map refused, and what it said when it refused.  Only a freeze answer this session
-  // holds the per-hop rows, so a card that has not pressed the door yet shows nothing here.
-  const hopRefusals = routes ? unansweredHopSentences(routes.edges) : [];
+  // Which hops the map refused, and what it said when it refused.  A freeze answer this session holds
+  // carries the per-hop rows; after a refresh the same rows come back from the task's stored attempt,
+  // because the work the traveller paid for is still in the record.
+  const hopRefusals = routes ? unansweredHopSentences(routes.edges)
+    : hopSentences(result?.route_attempt?.unanswered ?? []);
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
     setConfirmed(false); setResult(null); requestKey.current = null; setRoutes(null); routeKey.current = null;
@@ -198,9 +200,14 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
       {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0, routes.transit ?? 0)
-        : result.mobility_frozen ? FROZEN_ROUTE_SENTENCE : "当天的转场还没有向高德核实过。"}
+        : result.route_attempt && !result.route_attempt.frozen
+          ? routeSentence(result.route_attempt.verified, result.route_attempt.total, false,
+            result.route_attempt.overnight ?? 0, result.route_attempt.transit ?? 0)
+          : result.mobility_frozen ? FROZEN_ROUTE_SENTENCE : "当天的转场还没有向高德核实过。"}
       <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">
-        {routesBusy ? "正在核实转场…" : (routes ? routes.frozen : result.mobility_frozen) ? "重新核实转场" : "核实并冻结今天的转场"}
+        {routesBusy ? "正在核实转场…"
+          : (routes ? routes.frozen : result.route_attempt ? result.route_attempt.frozen : result.mobility_frozen)
+            ? "重新核实转场" : "核实并冻结今天的转场"}
       </button>
     </p>}
     {hopRefusals.length > 0 && <ul className="rev-v3-hop-refusals" data-testid="rev-v3-hop-refusals" aria-label="哪几段没有回答">

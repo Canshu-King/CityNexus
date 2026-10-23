@@ -246,8 +246,7 @@ const HOP_REFUSAL_SENTENCES: Record<string, string> = {
 
 const HOP_REFUSAL_FALLBACK = "地图服务没有回答这一段。";
 
-export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[] {
-  const unanswered = (edges || []).filter((row) => row && row.status === "ROUTE_UNAVAILABLE");
+export function hopSentences(unanswered: RouteHopRow[], limit = 3): string[] {
   const named = unanswered.slice(0, limit).map((row) => {
     const reason = HOP_REFUSAL_SENTENCES[String(row.reason_code || "")] || HOP_REFUSAL_FALLBACK;
     const from = String(row.from_name || "").trim();
@@ -257,6 +256,10 @@ export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[
   const rest = unanswered.length - named.length;
   if (rest > 0) named.push(`另有 ${rest} 段同样没有回答。`);
   return named;
+}
+
+export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[] {
+  return hopSentences((edges || []).filter((row) => row && row.status === "ROUTE_UNAVAILABLE"), limit);
 }
 
 // Why a plan that saved fine still cannot be chosen, said in the traveller's words, with the door that
@@ -342,10 +345,10 @@ export type ScheduleRefusalRow = {
 };
 
 const SCHEDULE_RULE_SENTENCES: Record<string, string> = {
-  ITEM_END_NOT_AFTER_ITEM_START: "结束时间不晚于开始时间",
-  ITEM_STARTS_BEFORE_PREVIOUS_ITEM_END: "开始时间排在上一项结束之前",
-  ITEM_STARTS_BEFORE_JOURNEY_START: "开始时间早于这趟旅行的开始",
-  ITEM_ENDS_AFTER_JOURNEY_END: "结束时间超出了这趟旅行的结束",
+  end_not_after_start: "结束时间不晚于开始时间",
+  overlaps_previous_item: "开始时间排在上一项结束之前",
+  before_journey_start: "开始时间早于这趟旅行的开始",
+  after_journey_end: "结束时间超出了这趟旅行的结束",
 };
 
 export function scheduleRefusalSentence(row: ScheduleRefusalRow | null | undefined): string {
@@ -353,7 +356,11 @@ export function scheduleRefusalSentence(row: ScheduleRefusalRow | null | undefin
   const title = String(row.title || "").trim();
   const what = SCHEDULE_RULE_SENTENCES[String(row.rule || "")] || "这一项的时间对不上这趟行程";
   const span = row.start_time && row.end_time ? ` ${row.start_time}–${row.end_time}` : "";
-  const after = row.previous_end_time ? `（上一项到 ${row.previous_end_time} 才结束）` : "";
+  // Only the overlap rule is about the row before this one.  walk-85 measured the other kind
+  // (details.rule="after_journey_end", trial/results/20261022_v3_human_chrome/walk-85-log.txt:36) coming
+  // out with 「上一项到 20:00 才结束」 attached, which pointed at a row that had done nothing wrong.
+  const after = row.rule === "overlaps_previous_item" && row.previous_end_time
+    ? `（上一项到 ${row.previous_end_time} 才结束）` : "";
   return `第 ${row.sequence_no} 项${title ? `「${title}」` : ""}${span}：${what}${after}。改这一项的时间再保存，其余不用动。`;
 }
 

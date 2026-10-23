@@ -831,6 +831,34 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 整套 `22 passed`（`trial/results/20261022_v3_human_chrome/route-attempt-suite-1.txt:30`），
 突变把那段写入改成不写，两格一起红（`trial/results/20261022_v3_human_chrome/route-attempt-mutant-1.txt:80` 与 `:81`）。
 
+**walk-85（r18：后端 `:60286` / 前端 `:14486` / 库 human20）量到两件事，一好一坏。**
+好的：模型这一次给的三版里根本没有长城那天（`walk-85-log.txt:25`、`:26`、`:27` 三张卡片的自述里都没有八达岭），
+按卡片文字挑的那条腿因此 `picked_card=-1`（`:28`），退回第一张 —— 这一趟没有远距离跳转，
+公共交通那一行自然不出现（`:66` `TRANSIT_LABELED=0`），但抽屉里四行仍然是人读得懂的
+「步行 · 1.4 公里 · 约 19 分钟」（`:65`）。
+更要紧的是保存被拒那一格在真机上按出来了：10 项排到第 9 项时服务端回
+`details.rule="after_journey_end"`（`:36`），屏上那句是
+「第 9 项「国家游泳中心（水立方）」 21:00–22:00：这一项的时间对不上这趟行程（上一项到 20:00 才结束）。」
+（`:37`）——点名点对了，**但原因说错了、还冤枉了上一项**：这条规则是"超出这趟旅行的结束"，
+跟 20:00 结束的那一项无关。
+坏的（同一个根）：这句之所以落到兜底话术，是因为屏幕按 `reason_code` 那一族的词（`ITEM_ENDS_AFTER_JOURNEY_END`）
+建了表，而信封里带过来的是 `details.rule` 那一族的词（`after_journey_end`）——`backend/app/agent/goal_preparation.py:33`
+两张词表是同一件事的两种写法，读者拿错了那一本。
+落点：句子按 `rule` 自己的写法认四条规则，并且只有"排在上一项之前"这一条才提上一项
+（`frontend/src/trial/mobile/departureGaps.ts` 的 `SCHEDULE_RULE_SENTENCES` 与 `scheduleRefusalSentence`）；
+五种输入的正反读数落在 `trial/results/20261022_v3_human_chrome/remembered-state-read-1.txt:2`，
+真读数那一行现在变成「第 9 项「国家游泳中心（水立方）」 21:00–22:00：结束时间超出了这趟旅行的结束。改这一项的时间再保存，其余不用动。」；
+对不认识的规则仍走兜底那句，不编原因。
+
+**"冻上一半"这一次真的能读回来了。** 上一笔只把每次按的结果记进任务，卡片那半还没接；
+现在刷新之后横幅复用同一把读者（`frontend/src/trial/mobile/DraftDepartureCard.tsx:203`），
+分段拒答清单也一起读回来（同文件 `:91`，读者在 `departureGaps.ts` 的 `hopSentences`），
+按钮该说"重新核实"就再说"重新核实"。两种情形的读数在同一份文件里：
+`remembered-state-read-1.txt:7`（「转场已核实 3/4（其中 1 段是跨夜衔接，1 段按公共交通核实），还有 1 段没有来源回答。」）
+与 `:9`（四段全核到、但没冻上时那句）。**这一格的屏上读数还欠着**：它要一次真按出一半答案一半没答的走查，
+今天的三趟里要么全冻上（walk-84）要么一项都没答（walk-85 的 0 份候选），判 PARTIAL，
+类型闸绿 `trial/results/20261022_v3_human_chrome/tsc-remembered-state-1.txt:2`。
+
 **顺手量到一枚不是我带来的雷（记在这里，等归属）。**
 `backend/tests/test_goal_route_freeze.py:141` 那枚断言要求没测到的那一格写
 `PROVIDER_ROUTE_UNAVAILABLE`，但它**只在环境里有高德键时才成立**：把

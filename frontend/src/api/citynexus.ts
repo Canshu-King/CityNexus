@@ -2252,6 +2252,12 @@ export interface GoalPreparationResult {
   unrouted_count?: number;
   known_subtotal_minor?: number;
   mobility_frozen: boolean;
+  // The last time this card pressed 核实并冻结今天的转场, whatever that door answered -- including a half
+  // measured set.  backend/app/agent/goal_route_freeze.py writes it so a refresh cannot erase work the
+  // traveller already paid for (trial/results/20261022_v3_human_chrome/walk-83-log.txt:34 against :54).
+  route_attempt?: { verified: number; total: number; overnight: number; transit: number; frozen: boolean;
+    reason_code?: string | null; answered_at: string;
+    unanswered: Array<{ from_name?: string | null; to_name?: string | null; reason_code?: string | null }> };
   price_unknown_accepted?: { plan_version_id: string; unknown_place_ids: string[]; accepted_at: string; known_subtotal_minor: number; currency: string };
   gaps: Array<{ sequence_no: number; title: string; kind: string; place_id: string | null; status: "UNKNOWN";
     resolution?: string; detail?: { verdict?: string; reason_code?: string; source_text?: string } | null }>;
