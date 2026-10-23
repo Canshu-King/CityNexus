@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -63,6 +63,9 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   // traveller already confirmed to keep out of the budget.  A row nobody can answer is not a reason to
   // hide the button -- it is the sentence the button sends.
   const askable = (result?.gaps ?? []).filter((gap) => !(price && String(gap.kind) === "ADMISSION_PRICE"));
+  // Which hops the map refused, and what it said when it refused.  Only a freeze answer this session
+  // holds the per-hop rows, so a card that has not pressed the door yet shows nothing here.
+  const hopRefusals = routes ? unansweredHopSentences(routes.edges) : [];
   const change = (index: number, field: "start_time" | "end_time", value: string) => {
     setSchedule(items => items.map((item, i) => i === index ? { ...item, [field]: value } : item));
     setConfirmed(false); setResult(null); requestKey.current = null; setRoutes(null); routeKey.current = null;
@@ -103,7 +106,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       setRoutes(answer);
       // A frozen hop makes the 转场路线 line for it a lie, and the server already knows that: on a
       // successful freeze it drops every TRANSFER_ROUTE row from the stored answer
-      // (backend/app/agent/goal_route_freeze.py:240), so a refresh is correct.  This card holds its own
+      // (backend/app/agent/goal_route_freeze.py:369), so a refresh is correct.  This card holds its own
       // copy of that same answer, and without the same drop it keeps asking the Agent to measure
       // segments it just measured -- read on one and the same open card at walk-72-log.txt:33 ("5/5")
       // against :39 ("还有 5 项") and :45 (the five segments named again).  Only TRANSFER_ROUTE rows go;
@@ -172,6 +175,9 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         {routesBusy ? "正在核实转场…" : (routes ? routes.frozen : result.mobility_frozen) ? "重新核实转场" : "核实并冻结今天的转场"}
       </button>
     </p>}
+    {hopRefusals.length > 0 && <ul className="rev-v3-hop-refusals" data-testid="rev-v3-hop-refusals" aria-label="哪几段没有回答">
+      {hopRefusals.map((line) => <li key={line} data-testid="rev-v3-hop-refusal">{line}</li>)}
+    </ul>}
     {result && (result.unrouted_count ?? 0) > 0 && <p className="rev-v3-band-note" data-testid="rev-v3-band-note">{bandSentence(result.unrouted_count ?? 0)}</p>}
     {(result?.opening_checks ?? []).length > 0 && <ul className="rev-v3-opening" data-testid="rev-v3-opening" aria-label="每一处当天的开放核实">
       {(result?.opening_checks ?? []).map((row) => <li key={row.sequence_no}>

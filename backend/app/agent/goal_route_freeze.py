@@ -6,8 +6,8 @@ Why this door exists: selecting a plan reads two things the Agent's draft never 
 "STALE_RECOMPOSE_REQUIRED: no frozen provider evidence". Measured on the walked database
 (trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt) every candidate saved from
 an Agent draft hit both, so the traveller could save eight real places and still be given no button.
-The preparation door states this itself: `backend/app/agent/goal_preparation.py:76` returns
-`mobility_frozen: False`, and `:233` writes that literal.
+The preparation door states this itself: `backend/app/agent/goal_preparation.py:76` declares
+`mobility_frozen: Literal[False]`, and `:322` writes that literal into every prepared answer.
 
 What this adds is a bridge, not a second source of truth:
 
@@ -139,6 +139,53 @@ def _stored_route(task: dict, origin_key: str, destination_key: str) -> dict | N
     return None
 
 
+# Two refusals look the same on the traveller's screen and are not the same thing at all.
+#
+# A *content* refusal means the provider took the question and answered that it has no walking route for
+# that pair -- measured live: 八达岭长城 -> 故宫 and 雁栖湖 -> 故宫 both come back rejected at http 200
+# (trial/results/20261022_v3_human_chrome/amap-transit-within-city-1.txt:3 and :5) while the
+# public-transport door answers those same hops: 78,050 m in 180 min naming 919路 and 5路, and 73,750 m in
+# 192 min naming H1路, 916路快车 and 604路 (同文件 :6 and :7).  That is the hop this second door exists
+# for.
+#
+# An *access* refusal -- no key, a key the service rejects, a denied permission, an exhausted quota, a
+# transport failure -- says nothing about the hop.  Asking the second door after it cannot produce a
+# route, and it spends a request against the very limit that just refused the first one (this session's
+# own walk hit AMAP_QUOTA_EXCEEDED at 00:16 and needed a minute to recover).  So the transit arm opens
+# for the refusals below and for nothing else.
+
+_TRANSIT_ANSWERABLE_REFUSALS = frozenset({"AMAP_NO_ROUTE", "AMAP_PROVIDER_REJECTED"})
+
+
+def _refusal_key(origin: Place, destination: Place) -> str:
+    return f"{origin.id}->{destination.id}"
+
+
+def _record_refusal(task: dict, origin: Place, destination: Place, reason: str) -> None:
+    """Keep which door refused, and why, beside the task that asked it."""
+    refusals = task.setdefault("route_refusals", {})
+    if not isinstance(refusals, dict):
+        refusals = {}
+        task["route_refusals"] = refusals
+    refusals[_refusal_key(origin, destination)] = reason
+    for stale in list(refusals)[: max(0, len(refusals) - 32)]:
+        refusals.pop(stale, None)
+
+
+def _refusal_reason(task: dict, origin: Place, destination: Place) -> str | None:
+    """The reason the provider itself gave for this hop, when it gave one.
+
+    Why this matters for the traveller: until now every unanswered hop read PROVIDER_ROUTE_UNAVAILABLE,
+    which makes "this city has no route between these two places" and "the map service is out of quota"
+    the same sentence.  The provider distinguishes them, so the product can too.
+    """
+    refusals = task.get("route_refusals")
+    if not isinstance(refusals, dict):
+        return None
+    value = refusals.get(_refusal_key(origin, destination))
+    return str(value) if value else None
+
+
 def _transit_leg(session: Session, task: dict, origin: Place, destination: Place,
                  start: tuple[float, float], end: tuple[float, float],
                  arrival: datetime | None) -> dict | None:
@@ -156,6 +203,14 @@ def _transit_leg(session: Session, task: dict, origin: Place, destination: Place
     daytime answer on a re-run (amap-transit-method-live-1.txt:6), so the hour is sent as the traveller's
     plan states it and the answer is stored as what the provider said to that request -- not as a promise
     that the line runs at that hour.
+
+    Why one city code is sent for both ends, and why that is not a bug to come back and "fix": a hop that
+    really crosses cities answers the same way either way -- 北京南站 -> 天津站 measures 117,275 m with
+    city1=city2=010 (trial/results/20261022_v3_human_chrome/amap-transit-crosscity-1.txt:3) and 117,275 m
+    again with city1=010 city2=022 (同文件 :4).  And a V3 plan cannot contain such a hop today: every
+    researched place is stamped with the journey's own city (app/agent/goal_place_identity.py:101) and the
+    gateway refuses a place from another city (app/agent/gateway.py:1594).  The hops this arm actually
+    serves are the within-city ones nobody walks -- 八达岭长城 back to 故宫, say.
     """
     city_code = str((task.get("amap_region") or {}).get("citycode") or "").strip()
     if not city_code:
@@ -185,9 +240,12 @@ def _measure_now(session: Session, task: dict, origin: Place, destination: Place
     row keeps both the provider coordinate claim and the public source url, so the frozen fact is
     traceable to a call rather than to a string.
 
-    A walking answer wins when there is one.  When the walking door has no answer, the same hop is asked
-    of the public-transport door once (`_transit_leg`), because "no answer" and "not a walking trip" used
-    to be the same screen state and only one of them is the traveller's problem.
+    A walking answer wins when there is one.  When the walking door answers that it has no walking route,
+    the same hop is asked of the public-transport door once (`_transit_leg`), because "no answer" and "not
+    a walking trip" used to be the same screen state and only one of them is the traveller's problem.  A
+    walking refusal that is about *access* rather than about the map -- no key, a rejected key, a denied
+    permission, an exhausted quota, a transport failure -- does not open that second door: see
+    `_TRANSIT_ANSWERABLE_REFUSALS` above for the measurements that separate the two.
     """
     if not settings.amap_web_key:
         return None
@@ -201,9 +259,17 @@ def _measure_now(session: Session, task: dict, origin: Place, destination: Place
     mode = "WALK"
     call_id = receipt.get("provider_call_id")
     if receipt.get("status") != "ROUTE_READY" or not isinstance(route, dict):
+        walking_reason = str(receipt.get("reason_code") or "AMAP_PROVIDER_REJECTED")
+        if walking_reason not in _TRANSIT_ANSWERABLE_REFUSALS:
+            _record_refusal(task, origin, destination, walking_reason)
+            return None
         route = _transit_leg(session, task, origin, destination, start, end, arrival)
         mode = "TRANSIT"
         if route is None:
+            # Both doors answered this hop and neither of them had a route.  That is the provider's own
+            # statement, so it is what the traveller is told -- not the blanket code that used to cover
+            # "the map service is out of quota" too.
+            _record_refusal(task, origin, destination, walking_reason)
             return None
         # The row's identity is the call that produced it.  Carrying the walking call's id onto a
         # transit answer would point the traceable receipt at a request that never answered.
@@ -261,8 +327,9 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
                       "provider": route.get("provider") if route else None,
                       "source_url": route.get("source_url") if route else None,
                       "captured_at": route.get("captured_at") if route else None,
-                      "reason_code": None if route else ("AMAP_NOT_CONFIGURED" if not settings.amap_web_key
-                                                         else "PROVIDER_ROUTE_UNAVAILABLE")})
+                      "reason_code": None if route else (_refusal_reason(task, origin, destination)
+                                                         or ("AMAP_NOT_CONFIGURED" if not settings.amap_web_key
+                                                             else "PROVIDER_ROUTE_UNAVAILABLE"))})
     verified = len([row for row in edges if row["status"] != UNAVAILABLE])
     overnight = len([row for row in edges if row["spans_night"]])
     frozen = bool(edges) and verified == len(edges)

@@ -206,8 +206,48 @@ export function routeSentence(verified: number, total: number, frozen: boolean, 
 
 // After a reload this card holds only the stored answer: `routes` is null again, while the plan itself
 // still carries the frozen facts and the stored answer still says mobility_frozen=true
-// (backend/app/agent/goal_route_freeze.py:243).  Telling a traveller then that nothing was ever verified
+// (backend/app/agent/goal_route_freeze.py:372).  Telling a traveller then that nothing was ever verified
 // sends them to redo work the plan already holds -- which is what the screen actually did after the
 // reload measured in walk-74.  No count is claimed here, because the stored answer keeps the flag and
 // not the verified/total pair; the numbers come back as soon as the door is pressed again.
 export const FROZEN_ROUTE_SENTENCE = "转场已经核实并冻结进这版方案。";
+
+// One hop the map would not answer, in the traveller's words.
+//
+// Why this exists: the band above says 「还有 N 段没有来源回答」 and stops, and the freeze answer already
+// carries a `reason_code` per hop that no screen read (grep of src/ for PROVIDER_ROUTE_UNAVAILABLE and
+// AMAP_NOT_CONFIGURED returns zero lines).  Two very different situations were therefore printed as the
+// same sentence: the provider answered "I have no route for this pair" (measured for 八达岭长城 → 故宫 and
+// 雁栖湖 → 故宫, trial/results/20261022_v3_human_chrome/amap-transit-within-city-1.txt:3 and :5), and the
+// provider refused to talk at all -- a spent quota, a rejected key, no key on the server.  The first is
+// the traveller's planning problem; the second is theirs to fix, and the traveller should be told to come
+// back later rather than to change the plan.
+export type RouteHopRow = {
+  from_name?: string | null; to_name?: string | null;
+  status?: string | null; reason_code?: string | null;
+};
+
+const HOP_REFUSAL_SENTENCES: Record<string, string> = {
+  AMAP_QUOTA_EXCEEDED: "地图服务今天的查询次数已经用完，稍后再核实这一段。",
+  AMAP_HTTP_ERROR: "地图服务没有响应，稍后再核实这一段。",
+  AMAP_INVALID_KEY: "这台服务的高德查询凭证不可用，需要运维处理。",
+  AMAP_SERVICE_PERMISSION_DENIED: "这台服务的高德凭证没有开通路线查询，需要运维处理。",
+  AMAP_NOT_CONFIGURED: "这台服务还没有配置高德查询。",
+  AMAP_NO_ROUTE: "高德说这一段没有步行路线，公共交通也没答上来。",
+  AMAP_PROVIDER_REJECTED: "高德说这一段没有步行路线，公共交通也没答上来。",
+};
+
+const HOP_REFUSAL_FALLBACK = "地图服务没有回答这一段。";
+
+export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[] {
+  const unanswered = (edges || []).filter((row) => row && row.status === "ROUTE_UNAVAILABLE");
+  const named = unanswered.slice(0, limit).map((row) => {
+    const reason = HOP_REFUSAL_SENTENCES[String(row.reason_code || "")] || HOP_REFUSAL_FALLBACK;
+    const from = String(row.from_name || "").trim();
+    const to = String(row.to_name || "").trim();
+    return from && to ? `${from} → ${to}：${reason}` : reason;
+  });
+  const rest = unanswered.length - named.length;
+  if (rest > 0) named.push(`另有 ${rest} 段同样没有回答。`);
+  return named;
+}

@@ -478,15 +478,15 @@ reason_code=MODEL_TIMEOUT（`trial/results/20261022_v3_human_chrome/ask-reason-r
 （`walk-72-log.txt:39`），写进对话框的句子还在逐段要那五段路的用时（`walk-72-log.txt:45`）；
 等这轮答完、卡片重新打开，才变成「屏上的出发待办都齐了，可以直接选用这份方案」（`walk-72-log.txt:60`）。
 服务端本来就做了这件事——冻结成功后把存档答复里的 TRANSFER_ROUTE 行删掉
-（`backend/app/agent/goal_route_freeze.py:240`），所以刷新之后是对的；坏的是卡片自己那份内存里的清单：
-`frontend/src/trial/mobile/DraftDepartureCard.tsx:103` 只把冻结结果放进 routes，没有把 result 里已经
+（`backend/app/agent/goal_route_freeze.py:369`），所以刷新之后是对的；坏的是卡片自己那份内存里的清单：
+`frontend/src/trial/mobile/DraftDepartureCard.tsx:106` 只把冻结结果放进 routes，没有把 result 里已经
 核实的转场行去掉，而 `frontend/src/trial/mobile/DraftDepartureCard.tsx:65` 的 askable 读的就是那一份。
 Agent 老老实实又量了一遍，答「五项都有来源答案，没有缺项」——多花一轮模型、多叫一次高德，
 而且屏上那句话此刻已经是假的。
 
 **这一刀的负对照已经在屏上了（walk-73）。** 同一枚「核实并冻结今天的转场」，这一趟回来的是
 「转场已核实 3/5（其中 1 段是跨夜衔接），还有 2 段没有来源回答。」（`walk-73-log.txt:33`）——
-部分核实不写快照（`backend/app/agent/goal_route_freeze.py:206` 只在每一段都拿到回执时才认 frozen），
+部分核实不写快照（`backend/app/agent/goal_route_freeze.py:335` 只在每一段都拿到回执时才认 frozen），
 所以这一版方案仍然一条转场事实都没有，卡片保留全部五行待办是对的
 （`walk-73-log.txt:39` 仍是「还有 5 项」，`walk-73-log.txt:40` 那句交接提示也还在），
 选用门照旧不给按：`walk-73-log.txt:63` 读到 `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`，
@@ -602,6 +602,52 @@ READY、`:83` 只给裸名也要 READY、`:88` 两个都不给才许说 NOT_CONF
 （同文件 `:6`，事件构成在 `:5`）——它读了一遍行程，没查任何来源。
 旅客看到的是"它在问我"，系统却不知道它在等，于是既没有可点的选项也没有"等你回答"的状态。
 这一条我先记下来，不动鉴权也不动模型：能落的是把"句子里在提问、任务里没登记"这种不一致量成一条闸。
+
+**公共交通那一刀写完之后，我先去量它到底能不能被旅客碰到——结果推翻了我自己准备改的东西。**
+我原来的假设是「跨市那一程送进去的 city1=city2 是错的」，于是先跑现网：北京南站→天津站
+步行口直接拒（`trial/results/20261022_v3_human_chrome/amap-transit-crosscity-1.txt:2`），
+但同一程按现在的写法（city1=city2=010）答得出 117,275 米、68 分钟、票价 5450 分（同文件 `:3`），
+换成 city1=010 city2=022 距离一模一样（同文件 `:4`）——**假设被证伪，那一处不改**，
+并且把这条读数写进 `_transit_leg` 的说明里（`backend/app/agent/goal_route_freeze.py:207` 起），
+免得下一位又"修"它。更要紧的是：V3 的方案根本装不下跨市那一程——研究到的地点一律按行程自己的城市
+盖章（`backend/app/agent/goal_place_identity.py:101`），异市的点会被网关直接 404
+（`backend/app/agent/gateway.py:1594`）。所以这一刀真正服务的旅客是同市但走不动的那一位。
+同市有没有走不动的程？量了：八达岭长城→故宫、雁栖湖→故宫都被步行口以 http 200 拒掉
+（`amap-transit-within-city-1.txt:3`、`:5`），而公共交通口答得出——78,050 米 / 180 分钟 / 1700 分，
+线路逐字是 919路、919路快车、5路；雁栖湖那程 73,750 米 / 192 分钟，H1路、916路快车、604路
+（同文件 `:6`、`:7`）。这一刀从此不是没人碰得到的死代码。
+
+**顺手量出下一个要裁的问题：走得到，不代表走得动。** 明十三陵→故宫步行口是答的：
+47,717 米、637 分钟（`amap-transit-within-city-1.txt:4`）——十小时二十五分。现在的规则是
+"步行有答案就用步行"，于是这一程会作为步行事实冻进方案。要改的是产品口径（要么给这种程同时问一次
+公交、要么定一条门槛），门槛数字该由谁定我不擅自定，先摆在这里等裁语。
+
+**答不上的那一格，现在说得出是谁答不上了。** 以前每一段没来源的转场只可能写两种码
+（没配键／其余一律 `PROVIDER_ROUTE_UNAVAILABLE`，兜底那行现在在
+`backend/app/agent/goal_route_freeze.py:332`），于是"高德说这两地之间没有路线"和
+"高德今天的查询次数用完了/键不对"在屏上是同一句话；而这两件事旅客能做的完全不同
+（前者改方案，后者等一会儿）。现在冻结口按供应方自己的理由码记账
+（`_record_refusal` `backend/app/agent/goal_route_freeze.py:164`，读回 `_refusal_reason` `:175`），
+并且**只在"内容性拒绝"时才去敲第二扇门**：`AMAP_NO_ROUTE`／`AMAP_PROVIDER_REJECTED` 才开，
+配额用尽、键无效、权限没开、HTTP 失败、坐标不合法一律不开
+（闸在 `backend/app/agent/goal_route_freeze.py:157`；本会话 00:16 真撞过一次
+`AMAP_QUOTA_EXCEEDED`，那种时候再问第二遍只是把已经花光的额度再花一遍）。
+屏上这一格也不再是一句总数：卡片按段列出
+（`frontend/src/trial/mobile/departureGaps.ts:242` 的 `unansweredHopSentences`，渲染在
+`frontend/src/trial/mobile/DraftDepartureCard.tsx:178`），最多三行再补一句"另有 N 段同样没有回答"；
+研究抽屉同时按各行自己的方式标注（标题改「高德转场路线」
+`frontend/src/trial/mobile/WorkspaceActions.tsx:176`，逐行"公共交通／步行" `:179`，
+公交那行把线路名带上 `:180`），客户端类型补上 `mode`/`lines`
+（`frontend/src/api/citynexus.ts:2286` 起）。以前抽屉里把所有路线一律写成"步行"，
+八达岭那程 180 分钟的公交就是这样被说成脚步声的。
+
+**四条臂加一次突变检验。** `backend/tests/test_qoder_goal_transit_leg_r1.py` 新增：五种访问性拒绝
+都不许敲第二扇门；被拒的那一段按供应方原话记账（并且成对存，别的配对读不到）；
+两扇门都拒时记的是步行口的 `AMAP_NO_ROUTE`；账本封顶三十二对。
+把这枚闸放宽成"配额也用公交再问一次"后，第一条臂立刻红（`MUTANT_KILLED -- AMAP_QUOTA_EXCEEDED`），
+所以它是会咬的，不是装饰。整套收集 2549 条，今晚这四枚文件 29 条通过，前端 `tsc` 退出码零。
+**还没有在屏上证过的**：上面这两处屏面句子（分段拒答清单、按方式标注）都要走一次真机才敢算通过——
+屏幕读数在 walk-77，那趟要把八达岭这种走不动的程真排进方案里。
 
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程

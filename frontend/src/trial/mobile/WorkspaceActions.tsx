@@ -120,7 +120,9 @@ function taskStepText(result: Record<string, unknown>): string {
   const route = result.route && typeof result.route === "object" ? result.route as Record<string, unknown> : null;
   if (route && typeof route.distance_m === "number" && Number.isFinite(route.distance_m) && route.distance_m >= 0
     && typeof route.duration_seconds === "number" && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0) {
-    return `步行路线 · ${route.distance_m} 米 · ${route.duration_seconds} 秒`;
+    // The row says which door answered it, so the panel says the same thing back.  Naming every route a
+    // walk is how a 180-minute bus ride from 八达岭长城 appeared as footsteps.
+    return `${route.mode === "TRANSIT" ? "公共交通路线" : "步行路线"} · ${route.distance_m} 米 · ${route.duration_seconds} 秒`;
   }
   if (result.status === "CACHED_ONLY") return Array.isArray(result.cached_references) && result.cached_references.length
     ? `已读取 ${result.cached_references.length} 条已有地点来源` : "已读取已有地点资料";
@@ -171,10 +173,12 @@ function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
     && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0
     && typeof route.source_url === "string" && isSafeAmapNavigationUrl(route.source_url));
   if (!routes.length) return null;
-  return <details className="rev-agent-research-drawer"><summary>高德步行路线（{routes.length}）</summary>
+  return <details className="rev-agent-research-drawer"><summary>高德转场路线（{routes.length}）</summary>
     <ul className="rev-workspace-task-places">{routes.map((route) => <li key={route.id} data-testid="rev-amap-research-route">
       <strong>{route.from_name} → {route.to_name}</strong>
-      <span>步行 · {route.distance_m} 米 · {route.duration_seconds} 秒</span>
+      <span>{route.mode === "TRANSIT" ? "公共交通" : "步行"} · {route.distance_m} 米 · {route.duration_seconds} 秒</span>
+      {route.mode === "TRANSIT" && (route.lines ?? []).length > 0
+        && <small data-testid="rev-amap-research-lines">{route.lines!.slice(0, 3).join(" · ")}</small>}
       <a href={route.source_url} target="_blank" rel="noopener noreferrer">在高德地图查看路线 ↗</a>
     </li>)}</ul>
   </details>;

@@ -2283,6 +2283,11 @@ export interface GoalResearchRoute {
   duration_seconds: number;
   captured_at: string;
   source_url: string;
+  // Which door answered.  A row written by the public-transport leg names the bus or metro lines it
+  // used; a row with no mode came from the walking door, which is the only thing that ever wrote one
+  // here before that leg existed (backend/app/agent/goal_route_freeze.py).
+  mode?: "WALK" | "TRANSIT" | null;
+  lines?: string[];
 }
 export interface GoalDraftVariant {
   id: string; title: string; comparison: string; artifact: GoalDraftArtifact;

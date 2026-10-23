@@ -125,3 +125,55 @@ def test_when_neither_door_answers_the_hop_stays_unanswered(monkeypatch) -> None
     assert row is None
     assert [entry[0] for entry in calls] == ["walking", "transit"]
     assert [recorded.status for recorded in session.rows] == ["FAILURE", "FAILURE"]
+
+
+# The refusals below are the ones a second door cannot fix.  Measured on the live service, the walking
+# engine refuses 八达岭长城 -> 故宫 and 雁栖湖 -> 故宫 with a content refusal at http 200 and the transport
+# engine answers both (trial/results/20261022_v3_human_chrome/amap-transit-within-city-1.txt:3, :5, :6,
+# :7), while a spent quota or a rejected key answers nothing about any hop at all.
+ACCESS_REFUSALS = ["AMAP_QUOTA_EXCEEDED", "AMAP_INVALID_KEY", "AMAP_SERVICE_PERMISSION_DENIED",
+                   "AMAP_HTTP_ERROR", "AMAP_INVALID_COORDINATE"]
+
+
+def _refusal_walk(reason: str) -> dict:
+    return {"status": "error", "reason_code": reason, "route": None}
+
+
+def test_an_access_refusal_does_not_open_the_transport_door(monkeypatch) -> None:
+    for reason in ACCESS_REFUSALS:
+        row, calls, _session = _run(monkeypatch, walk=_refusal_walk(reason), transit=TRANSIT_OK,
+                                    task={"amap_region": {"citycode": "010"}})
+        assert row is None, reason
+        assert [entry[0] for entry in calls] == ["walking"], reason
+        assert calls[0][0] == "walking"
+
+
+def test_a_refused_hop_keeps_the_reason_the_provider_gave(monkeypatch) -> None:
+    task = {"amap_region": {"citycode": "010"}}
+    row, _calls, _session = _run(monkeypatch, walk=_refusal_walk("AMAP_QUOTA_EXCEEDED"),
+                                 transit=TRANSIT_OK, task=task)
+    assert row is None
+    # The pair is keyed by the two place rows, so the freeze can name this hop without asking again.
+    assert module._refusal_reason(task, SimpleNamespace(id="place-origin"),
+                                  SimpleNamespace(id="place-destination")) == "AMAP_QUOTA_EXCEEDED"
+    assert module._refusal_reason(task, SimpleNamespace(id="place-origin"),
+                                  SimpleNamespace(id="place-somewhere-else")) is None
+
+
+def test_a_hop_both_doors_refused_is_not_blamed_on_the_travellers_map(monkeypatch) -> None:
+    task = {"amap_region": {"citycode": "010"}}
+    row, _calls, _session = _run(monkeypatch, walk=WALK_REFUSED, transit=TRANSIT_REFUSED, task=task)
+    assert row is None
+    assert module._refusal_reason(task, SimpleNamespace(id="place-origin"),
+                                  SimpleNamespace(id="place-destination")) == "AMAP_NO_ROUTE"
+
+
+def test_the_refusal_bookkeeping_stays_bounded(monkeypatch) -> None:
+    task: dict = {"amap_region": {"citycode": "010"}}
+    origin = SimpleNamespace(id="place-origin", name="前门大街", external_id="amap:B001",
+                             latitude=39.896152, longitude=116.403895)
+    for index in range(40):
+        destination = SimpleNamespace(id=f"place-{index}", name="天坛公园", external_id=f"amap:B{index:03d}",
+                                      latitude=39.88, longitude=116.41)
+        module._record_refusal(task, origin, destination, "AMAP_QUOTA_EXCEEDED")
+    assert len(task["route_refusals"]) <= 32

@@ -1,0 +1,7 @@
+amap_key_present=True
+run_at_local=2026-10-23T09:23:03+08:00 coordinate_system=GCJ02 city1=city2=010
+WALK 八达岭长城 -> 故宫 :: status=error reason=AMAP_PROVIDER_REJECTED http=200
+WALK 明十三陵 -> 故宫 :: status=ok mode=WALK distance_m=47717 duration_min=637 fare=None lines=
+WALK 雁栖湖 -> 故宫 :: status=error reason=AMAP_PROVIDER_REJECTED http=200
+BUS  八达岭长城 -> 故宫 :: status=ok mode=TRANSIT distance_m=78050 duration_min=180 fare=1700 lines=919路(地铁北土城站--樾熙府小区) / 919路快车(京张路口北--德胜门西) / 5路(祁家豁子--菜户营桥)
+BUS  雁栖湖 -> 故宫 :: status=ok mode=TRANSIT distance_m=73750 duration_min=192 fare=1700 lines=H1路(灵慧山景区--于家园) / 916路快车(怀柔汽车站--东直门枢纽站) / 604路(来广营北--金庄)
