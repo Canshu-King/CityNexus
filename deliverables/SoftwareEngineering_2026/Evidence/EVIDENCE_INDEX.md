@@ -1,6 +1,6 @@
 # CityNexus SE2026 - evidence index
 
-Generated 2026-10-23 18:25 by `live_checks/se_evidence_index_r1.py`. This page exists because round 2 shipped an evidence file from an older generation than the plan it described, and pointed a reader at two files that were not in the package. Both are now checked by machine.
+Generated 2026-10-24 02:46 by `live_checks/se_evidence_index_r1.py`. This page exists because round 2 shipped an evidence file from an older generation than the plan it described, and pointed a reader at two files that were not in the package. Both are now checked by machine.
 
 Shipped plan: `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`, sha256 `6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee`.
 
@@ -21,7 +21,7 @@ Recovery plan: `Microsoft_Project/CityNexus_Plan_Recovery.mpp`, sha256 `7e4f561a
 | `Evidence/se_project_export_r2_result.json` | 788 | `7cee8ac240861887` | `se_project_export_r2.py` | 2026-10-22 18:47 | not a plan-derived file |
 | `Evidence/se_project_recovery_result.json` | 2523 | `cc5f815b4a8ad191` | `se_project_recovery_r1.py` | 2026-10-23 04:37 | sourcePlanSha256: 6398e58f9b4cd3b3 (current) |
 | `Evidence/se_project_snapshot_r2_result.json` | 6461 | `999d9007902aaf29` | `se_project_snapshot_r2.py` | 2026-10-23 04:38 | not a plan-derived file |
-| `Evidence/se_review_package_r2_result.json` | 1528 | `bff98d7724eba566` | `se_review_package_r2.py` | 2026-10-23 13:24 | not a plan-derived file |
+| `Evidence/se_review_package_r2_result.json` | 1723 | `288abb3c6c8dd010` | `se_review_package_r2.py` | 2026-10-23 18:26 | not a plan-derived file |
 | `Evidence/se_visio_build_result.json` | 61641 | `f1c94e98f239a49f` | `se_visio_build_r1.py` | 2026-10-22 18:50 | not a plan-derived file |
 | `Evidence/se_visio_plan_brief_result.json` | 8379 | `f00d0f87197b7d95` | `se_visio_plan_brief_r1.py` | 2026-10-22 18:51 | not a plan-derived file |
 | `Evidence/se_visio_proof_result.json` | 10248 | `61ebbbba022af9a8` | `se_visio_proof_r2.py` | 2026-10-22 18:50 | not a plan-derived file |

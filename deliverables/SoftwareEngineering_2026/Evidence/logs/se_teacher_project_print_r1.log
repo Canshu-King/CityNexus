@@ -1,16 +1,8 @@
-[   5.1s] DocumentExport -> Teacher_03_Project_Overview_print.pdf (436557 bytes)
-[   5.5s] classroom .mpp digest cb06dcb4b7e23a6f -> cb06dcb4b7e23a6f (unchanged=True)
-[   5.8s] Project printed 12 page(s)
-[   5.9s]   page 1: 1638x1158 chart ink 0.0611
-[   6.0s]   page 2: 1638x1158 chart ink 0.0592
-[   6.1s]   page 3: 1638x1158 chart ink 0.0499
-[   6.1s]   page 4: 1638x1158 chart ink 0.0508
-[   6.2s]   page 5: 1638x1158 chart ink 0.0739
-[   6.2s]   page 6: 1638x1158 chart ink 0.0796
-[   6.3s]   page 7: 1638x1158 chart ink 0.0349
-[   6.3s]   page 8: 1638x1158 chart ink 0.0344
-[   6.4s]   page 9: 1638x1158 chart ink 0.0551
-[   6.5s]   page 10: 1638x1158 chart ink 0.0553
-[   6.5s]   page 11: 1638x1158 chart ink 0.0397
-[   6.6s]   page 12: 1638x1158 chart ink 0.0378
-[   6.6s] KEPT page 1 of 12 -> Classroom/previews/Teacher_03_Project_Overview_bars.png (chart ink 0.0611, sha16 3e0fb12798c39484)
+[   7.1s] DocumentExport -> Teacher_03_Project_Overview_print.pdf (194117 bytes)
+[   7.7s] classroom .mpp digest 5a570e79f9b363f0 -> 5a570e79f9b363f0 (unchanged=True)
+[   8.1s] Project printed 4 page(s)
+[   8.2s]   page 1: 1638x1158 chart ink 0.0880
+[   8.3s]   page 2: 1638x1158 chart ink 0.0595
+[   8.4s]   page 3: 1638x1158 chart ink 0.0911
+[   8.4s]   page 4: 1638x1158 chart ink 0.0382
+[   8.4s] KEPT page 1 of 4 -> Classroom/previews/Teacher_03_Project_Overview_bars.png (chart ink 0.0880, sha16 12fff80c38663962)

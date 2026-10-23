@@ -84,6 +84,33 @@ def mnum(name):
 plan_before = sha(PLAN_MPP)
 log("plan of record sha256/16 %s (read-only source, must not change)" % plan_before)
 
+# 屏幕上的名字。原来的行名是英文，在 130 px 宽的任务名列里折成四五行，
+# 十行就占满整屏，甘特条被挤到看不见——用户点名的"密密麻麻"就是这个。
+# 中文名只是同一行的展示名：日期、工期、完成度、工时、成本全部照抄原行，
+# 英文原名与 WBS 一起写进该行备注，逐行核对时仍能一一对上。
+NAME_ZH = {
+    "1": "选题与开题",
+    "2": "需求工程",
+    "3": "系统设计与架构",
+    "4": "后端平台与数据层",
+    "5": "地图与地点数据接入",
+    "6": "AI Agent 与 Hermes 能力",
+    "7": "前端界面与交互",
+    "8": "集成与联调",
+    "9": "验证与缺陷管理",
+    "10": "课程交付物与汇报",
+    "11": "最终验收、文档与交付",
+    "9.7": "M9  系统测试就绪（计划目标）",
+    "10.5": "M10  Part 1 截止 10-02（已错过）",
+    "10.6": "M11  中期师生检查 10-23 中午",
+    "10.7": "M12  Part 2 截止 11-06",
+    "11.3": "M13  课程交付完成（计划）",
+}
+
+
+def zh(wbs, r):
+    return NAME_ZH.get(str(wbs)) or r["name"]
+
 prj = json.load(open(os.path.join(HERE, "se_project_build_r2_result.json"),
                      encoding="utf-8"))
 rows = dict((r["wbs"], r) for r in prj["rows"])
@@ -167,7 +194,7 @@ p.Notes = ("课堂演示用文件。11 个阶段行 + 5 个带截止日期的里
 ids = {}
 made = []
 for wbs, r in phases:
-    t = p.Tasks.Add(r["name"])
+    t = p.Tasks.Add(zh(wbs, r))
     try:
         t.SetField(1280, 0)
     except Exception:
@@ -175,7 +202,7 @@ for wbs, r in phases:
     ids[wbs] = t.ID
     made.append((wbs, t, r))
 for wbs, r in milestones:
-    t = p.Tasks.Add(r["name"])
+    t = p.Tasks.Add(zh(wbs, r))
     try:
         t.SetField(1280, 0)
     except Exception:
@@ -199,14 +226,14 @@ for wbs, t, r in made:
             t.Deadline = dd(r["deadline"] + " 09:00")
         except Exception:
             pass
-    t.Notes = ("课堂演示行。数据来自已核对的 "
+    t.Notes = ("课堂演示行（原计划 WBS %s，原名 %r）。数据来自已核对的 "
                "CityNexus_Software_Engineering_Plan.mpp 中同一行的引擎计算值："
                "开始 %s、完成 %s、完成度 %d%%、工时 %.1f h、成本 $%.2f。"
                "该阶段下每一笔任务、依赖与资源分配都在原计划里，本文件只是把它折成一行；"
                "本行日期是按原计划钉住的约束（不是重新排出来的），所以这里不画依赖箭头，"
                "也不要在本文件里读关键路径。"
-               % (r["start"], r["finish"], int(r["pct"]), float(r.get("work") or 0.0),
-                  float(r.get("cost") or 0.0)))
+               % (wbs, r["name"], r["start"], r["finish"], int(r["pct"]),
+                  float(r.get("work") or 0.0), float(r.get("cost") or 0.0)))
 mp.CalculateAll()
 
 # view state that the object model does expose, and that matters on screen
@@ -220,14 +247,15 @@ except Exception as exc:
 # the first screen and onto 12 printed pages. The Summary table is the built-in
 # narrow one; if this install does not have that name it raises and the run says
 # so instead of shipping a silently unchanged view.
-for tname in ("摘要", "Summary"):
+for tname in ("摘要", "Summary", "Entry", "项"):
     try:
-        mp.Table(tname)
-        log("Table(%r) applied -> active table %r" % (
+        mp.TableApply(tname)
+        log("TableApply(%r) applied -> active table %r" % (
             tname, str(mp.ActiveWindow.Table)))
         break
     except Exception as exc:
-        log("Table(%r) refused: %s" % (tname, type(exc).__name__))
+        log("TableApply(%r) refused: %s %s"
+            % (tname, type(exc).__name__, str(exc).splitlines()[0][:60]))
 try:
     mp.ColumnBestFit()
     log("ColumnBestFit applied")
@@ -248,6 +276,18 @@ try:
     log("timeline pane toggled off twice (back to hidden)")
 except Exception as exc:
     log("TimelineViewToggle: %s" % type(exc).__name__)
+# 首屏最要命的不是滚动条，是刻度：日刻度下两个月的工期要 1600 px，
+# 图表半屏只有 700 px，所以无论滚到哪儿都只能看见十几天。缩到周／月档位后
+# 整段 2026-09-07..11-06 落在一屏里，滚动位置就不再重要。ZoomOut 在这台机器上
+# 只改档位（不改百分比），所以按档位估次数，效果由照片判定。
+for i in range(3):
+    try:
+        mp.ZoomOut()
+        log("ZoomOut %d applied" % (i + 1))
+    except Exception as exc:
+        log("ZoomOut %d refused: %s %s"
+            % (i + 1, type(exc).__name__, str(exc).splitlines()[0][:60]))
+        break
 try:
     mp.FileSaveAs(OUT_MPP)
     log("saved %s (%d bytes)" % (OUT_MPP, os.path.getsize(OUT_MPP)))
@@ -272,7 +312,7 @@ for t in vis:
     by_name.setdefault(str(t.Name), []).append(t)
 drift, links_back, constraints = [], 0, {}
 for wbs, _t0, r in made:
-    same = by_name.get(str(r["name"])) or []
+    same = by_name.get(str(zh(wbs, r))) or []
     if len(same) != 1:
         drift.append("%s: %d rows carry this name in the saved file"
                      % (wbs, len(same)))

@@ -9,17 +9,17 @@
 [   0.0s]   se_project_build_r2_result.json          129195 B  760f54dbfabc605d  publication.sha256AfterVerification: 6398e58f9b4cd3b3 (current)
 [   0.0s]   se_project_export_r2_result.json            788 B  7cee8ac240861887  -
 [   0.0s]   se_project_recovery_result.json            2523 B  cc5f815b4a8ad191  sourcePlanSha256: 6398e58f9b4cd3b3 (current)
-[   0.0s]   se_project_snapshot_r2_result.json         6461 B  999d9007902aaf29  -
-[   0.0s]   se_review_package_r2_result.json           1528 B  bff98d7724eba566  -
-[   0.0s]   se_visio_build_result.json                61641 B  f1c94e98f239a49f  -
-[   0.0s]   se_visio_plan_brief_result.json            8379 B  f00d0f87197b7d95  -
-[   0.0s]   se_visio_proof_result.json                10248 B  61ebbbba022af9a8  -
-[   0.0s]   fact links declared                     ['61'] AGREE
-[   0.0s]   fact links violating date order         ['0'] AGREE
-[   0.0s]   fact M13 coursework delivery date (engine) ['2026-10-23'] AGREE
-[   0.0s]   fact late rows at the status date (engine dates) ['14'] AGREE
-[   0.0s]   fact student hours                      ['220.9'] AGREE
-[   0.0s]   fact over-allocated person-weeks        ['0'] AGREE
-[   0.0s] cited paths: 76, unresolvable: 0
-[   0.0s] wrote Evidence/EVIDENCE_INDEX.md (51 lines)
-[   0.0s] EVIDENCE INDEX OK
+[   0.1s]   se_project_snapshot_r2_result.json         6461 B  999d9007902aaf29  -
+[   0.1s]   se_review_package_r2_result.json           1723 B  288abb3c6c8dd010  -
+[   0.1s]   se_visio_build_result.json                61641 B  f1c94e98f239a49f  -
+[   0.1s]   se_visio_plan_brief_result.json            8379 B  f00d0f87197b7d95  -
+[   0.1s]   se_visio_proof_result.json                10248 B  61ebbbba022af9a8  -
+[   0.1s]   fact links declared                     ['61'] AGREE
+[   0.1s]   fact links violating date order         ['0'] AGREE
+[   0.1s]   fact M13 coursework delivery date (engine) ['2026-10-23'] AGREE
+[   0.1s]   fact late rows at the status date (engine dates) ['14'] AGREE
+[   0.1s]   fact student hours                      ['220.9'] AGREE
+[   0.1s]   fact over-allocated person-weeks        ['0'] AGREE
+[   0.2s] cited paths: 76, unresolvable: 0
+[   0.2s] wrote Evidence/EVIDENCE_INDEX.md (51 lines)
+[   0.2s] EVIDENCE INDEX OK

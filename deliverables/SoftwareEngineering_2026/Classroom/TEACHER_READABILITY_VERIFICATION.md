@@ -11,7 +11,11 @@
 |---|---|---|---|
 | `Classroom/Teacher_01_System_Overview.vsdx` | 25,926 | `35fb97e137f8958b` | 8 框 7 线，一页 16:9，微软雅黑，正文 18pt／标题 26pt |
 | `Classroom/Teacher_02_Agent_User_Flow.vsdx` | 29,574 | `3806e4efd8d81d72` | 9 框 8 线，一个判定菱形 + 是／否两条出口 |
-| `Classroom/Teacher_03_Project_Overview.mpp` | 276,480 | `cb06dcb4b7e23a6f` | 11 个阶段行 + 5 个带截止日期的里程碑，无资源分配 |
+| `Classroom/Teacher_03_Project_Overview.mpp` | 281,088 | `5a570e79f9b363f0` | 11 个**中文**阶段行 + 5 个带日期的里程碑，无资源分配，时间刻度存成 50% |
+
+> Project 的 `.mpp` 容器**每次打开都会重写**（不保存也重写），所以不同时刻读到的
+> 字节数与摘要会变；上表是本轮最后一次关闭后、提交前的那一刻。内容的判据不是摘要，
+> 是下面第五节第 7 条那两件事：16 行日期逐行等于计划基准，以及重开后窗口仍是 74 天。
 
 原版技术交付（4 张带源码坐标的取证图、65 行计划基准）**一个字节都没动**：
 计划基准 `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp` 的摘要
@@ -23,9 +27,9 @@
 |---|---|---|
 | `live_checks/se_teacher_diagrams_r1.py` | 出片 + 版面闸（重叠、溢出、页界、标签可落位） | T01/T02 各 `0 failures`；目标文件被别的 Visio 实例占用时**拒绝出片**并说明原因 |
 | `live_checks/se_visio_cross_check_r1.py` | 读回真文件，逐条连线量交叉／穿形／出界，并核对摘要未变 | T01 `connectors=7 crossings=0 throughShapes=0 offPage=0 unchanged=True`；T02 `connectors=8 crossings=0 … unchanged=True` |
-| `live_checks/se_teacher_project_r1.py` | 建 .mpp 后重开，逐行对账日期 | `rows=16 datesAgree=true dateDrift=[] noResourceAssignments=true linkRecords=0 constraintTypes={"0":1,"4":15}` |
-| `live_checks/se_teacher_eye_r1.py` | **真开软件**：只读打开→最大化→`PrintWindow(PW_RENDERFULLCONTENT)`→量墨量 | 三张 2578×1558 窗口照片；画面主体墨量 T01 0.4035、T02 0.3441、T03 0.0558（图表半 0.0402／表格半 0.0997）；三个文件摘要开前开后相等 |
-| `live_checks/se_teacher_project_print_r1.py` | 让 Project 自己打印，取第 1 页 | 12 页，第 1 页起点 2026-09-07，图表墨量 0.0611（上一轮被拒基线 0.0244） |
+| `live_checks/se_teacher_project_r1.py` | 建 .mpp 后重开，逐行对账日期 | `rows=16 datesAgree=true dateDrift=[] noResourceAssignments=true linkRecords=0 constraintTypes={"0":1,"4":15}`；任务名换成中文后按**中文名**逐行匹配，仍要求每名恰好一行 |
+| `live_checks/se_teacher_eye_r1.py` | **真开软件**：只读打开→最大化→`PrintWindow(PW_RENDERFULLCONTENT)`→量墨量 | 三张 2578×1558 窗口照片；画面主体墨量 T01 0.4035、T02 0.3441、T03 0.0725（图表半 0.0413／表格半 0.1175，比上一版 0.0558 高，因为 16 行中文全在一屏）；三个文件摘要开前开后相等 |
+| `live_checks/se_teacher_project_print_r1.py` | 让 Project 自己打印，取第 1 页 | 4 页（刻度变宽后从 12 页降到 4 页），第 1 页起点 2026-09-07，图表墨量 **0.0880**（上一版 0.0611，被拒基线 0.0244） |
 
 窗口照片就是文件名 `_window.png`，在 `Classroom/previews/`。
 
@@ -46,7 +50,7 @@
 | 任务书要求 | 状态 | 依据 |
 |---|---|---|
 | 两张简洁中文原生 Visio 图 | 达成 | 两个 `.vsdx`，原生形状（Drawing/Flow 母版），Shape 数 24／27 |
-| 一份首屏能看清甘特条的原生 Project 文件 | **部分达成** | 文件是真的、16 行、日期逐行等于基准；但首屏停在"今天"附近，需要拖一次滚动条（第五节第 1 条） |
+| 一份首屏能看清甘特条的原生 Project 文件 | **达成（有一处已知瑕疵）** | 打开即见 16 行中文任务名、**6 条甘特条**（需求／后端／AI Agent／验证／交付物／最终验收）、**4 个里程碑**（10/6、10/16、10/23、10/23）；窗口 2026-10-06→12-19 已存进文件，重开仍是 74 天。九月的三段与 M10 仍需拖一格滚动条（第五节第 1 条）；两个日期列各差一个汉字宽（第五节第 7 条） |
 | 每框 ≤18 个汉字 | 达成 | 最多 13 字（「保存行程与状态／写入并留审计」，去掉换行与标点计数） |
 | 正文 ≥16pt、标题 ≥22pt | 达成 | 节点正文 18pt、标题 26pt；连线标签 14pt、脚注 12–12.5pt（不是正文） |
 | 箭头不得穿过文字 | 达成 | 交叉实测 0；标签有白色底板（`FillPattern=1`、`FillForegndTrans=0.35`），放大核对过笔画 |
@@ -56,15 +60,24 @@
 
 ## 五、现在还不行的地方（不粉饰）
 
-1. **Project 首屏的横向滚动存不进文件。** 逐条实测过的路：
-   `TimescaleStart/TimescaleFinish` 赋值报 type mismatch；`TimescaleEdit` 18 组参数全拒；
-   `ViewWhole`、`SplitBestFit`、`GoTo`、`Window.Scroll`、`TaskScrollTo`、`SelectTaskRow` 不存在；
-   `mp.Table("摘要")` 抛 TypeError、`ActiveWindow.Table` 抛 AttributeError（想换窄表让图表多占屏）；
-   `TimelineShowHide` com_error；`ZoomTimescale` 曾把进程挂住 15 分钟（不再调用）。
-   键盘那条也试了：取到前台（`GetForegroundWindow()` 核对为真）后发 Ctrl+Home，
-   图表左半墨量 0.0332 → 0.0332，画面没动。
-   **处置**：把"拖一下图表下方那根横向滚动条"写成现场一步（`TEACHER_DEMO_START_HERE.md`），
-   并附上 Project 自己打印的第 1 页作为不依赖手动的证据。
+1. **Project 首屏的"从哪里开始"由状态日决定，改不了；能改的是"一屏装多少天"。**
+   两条要分开说，上一版把这两条混成了一条，写错了原因：
+   - **起点**：`TimescaleStart/TimescaleFinish` 可读不可写——字符串 `2026-09-01`、
+     `2026/9/1`、整数 `46272`、以及更早试过的 datetime 与 `pywintypes.Time` 全部
+     `类型不匹配`。`TimescaleEdit` 18 组参数全拒，`ViewWhole`/`SplitBestFit`/`GoTo`/
+     `Window.Scroll`/`TaskScrollTo`/`SelectTaskRow` 不存在（本轮又逐一 `hasattr` 复核过），
+     `TimescaleStart` 是唯一读得到的锚点：重开时它落在 2026-10-15，也就是状态日
+     （2026-10-22）往回 7 天。九月的条因此永远在左边。
+   - **宽度**：`ZoomIn()`/`ZoomOut()` **在 COM 里是有效的**（上一版写"只改档位、画面没动"
+     是错的，那次没把窗口调到前台）。逐档读回：8 → 38 → 119 → 278 → 860 天。
+     真正好用的是时间刻度对话框里的**大小（%）**：100%→60% 使窗口从 38 天变 63 天，
+     50% 变 **74 天**；`Ctrl+S` 保存后重开仍是 74 天（38→74 的两次读数见第五节第 7 条）。
+   - **处置**：把 50% 存进文件（已做），首屏因此从 5 条横条变成 6 条；九月三段与 M10
+     仍需拖一格滚动条，作为现场一步写在 `TEACHER_DEMO_START_HERE.md`，并附 Project
+     自己打印的第 1 页作为不依赖手动的证据。
+   - **一个坑要记住**：时间刻度对话框是模态的。它开着的时候 `GetActiveObject` 返回的对象
+     连 `ActiveProject` 都会抛 `AttributeError`，`Ctrl+S` 也进不去——我为此白丢过一次保存，
+     最后是 `Esc` 关掉对话框再 `FileSave()` 才落盘。
 2. **这份 .mpp 的工时／成本合计是 0。** 没有资源分配是刻意的（分配列正是上次被点名的
    "密密麻麻"），代价是 Project 算不出 Work/Cost。真实数字在每行的"备注"里和计划基准里。
 3. **这份 .mpp 不画依赖箭头。** 实测：11 个阶段行在原计划里前驱全为空，
@@ -79,6 +92,19 @@
    上一版的"门禁 0 failures"把这些全吞了——现在它们被记进 `styleIssues`/`notes` 并在此点名。
 6. **"门禁 0 failures"不等于合格。** 本轮三处缺陷在测量项（交叉／穿形／出界）已经是 0 的时候
    依然存在，是看屏幕看出来的。任何一次"绿了"都只说明那把尺没覆盖到。
+7. **两个日期列各差一个汉字宽，单行行高下「日」会被切掉。**
+   放大截图核对：`完成时间` 列显示 `2026年10月2`（实际是 21 日），换行行高够时「日」会
+   落到第二行，单行的行（如第 1 行）就只剩前面几位。逐条试过的路：`ColumnBestFit()`
+   单独调用与先 `SelectAll()` 再调用都不按值加宽（它按列头算）；本机没有
+   `ColumnWidth`/`SetColumnWidth`，`ColumnEdit` 只弹交互对话框。
+   **处置**：不加宽——加宽 34 px 会把第 6 条横条挤出首屏，而这条横条正是任务书要的
+   「六条以上」；改为在讲稿里写明"上课前把那两列往右拖一格"，并说明数字本身没变
+   （每行备注、计划基准、`Evidence/STATUS_AND_OVERDUE.md` 都是完整日期）。
+8. **中文任务名是展示名，映射必须可查。** 11 个阶段 + 5 个里程碑的中文名与计划行一一对应，
+   英文原名与 WBS 写进该行备注（`原计划 WBS 10.5，原名 'M10  Part 1 course deadline…'`），
+   映射表在 `Teacher_Source_Map.md`；日期／完成度／工时／成本照抄
+   `se_project_build_r2_result.json` 同一行的引擎计算值，重开后按中文名逐行匹配，
+   要求每个名字恰好一行且日期相同（`datesAgree=true`、`dateDrift=[]`）。
 
 ## 六、复现
 
