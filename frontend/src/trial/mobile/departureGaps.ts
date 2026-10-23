@@ -251,3 +251,33 @@ export function unansweredHopSentences(edges: RouteHopRow[], limit = 3): string[
   if (rest > 0) named.push(`另有 ${rest} 段同样没有回答。`);
   return named;
 }
+
+// Which of the four time rules refused this save, in the traveller's words, with the row named.
+//
+// Why this exists: the door checked four conditions and answered with one code
+// (backend/app/agent/goal_preparation.py:194 attaches the rule and the row now), and the card's own
+// branch for that code looked at `error.message`, which the client fills with "CityNexus API 422:
+// /journeys/…" (frontend/src/api/citynexus.ts:2838) -- so the branch could never fire and every
+// refusal came out as 「这次未能保存，时间仍留在这里，可以重试。」 Measured on walk-77, where the row that
+// actually broke was the seventh: trial/results/20261022_v3_human_chrome/walk-77-log.txt:33 against
+// trial/results/20261022_v3_human_chrome/walk-77-window-readback-1.txt:11.
+export type ScheduleRefusalRow = {
+  rule?: string; sequence_no?: number; title?: string; date?: string;
+  start_time?: string; end_time?: string; previous_end_time?: string | null;
+};
+
+const SCHEDULE_RULE_SENTENCES: Record<string, string> = {
+  ITEM_END_NOT_AFTER_ITEM_START: "结束时间不晚于开始时间",
+  ITEM_STARTS_BEFORE_PREVIOUS_ITEM_END: "开始时间排在上一项结束之前",
+  ITEM_STARTS_BEFORE_JOURNEY_START: "开始时间早于这趟旅行的开始",
+  ITEM_ENDS_AFTER_JOURNEY_END: "结束时间超出了这趟旅行的结束",
+};
+
+export function scheduleRefusalSentence(row: ScheduleRefusalRow | null | undefined): string {
+  if (!row || typeof row.sequence_no !== "number") return "";
+  const title = String(row.title || "").trim();
+  const what = SCHEDULE_RULE_SENTENCES[String(row.rule || "")] || "这一项的时间对不上这趟行程";
+  const span = row.start_time && row.end_time ? ` ${row.start_time}–${row.end_time}` : "";
+  const after = row.previous_end_time ? `（上一项到 ${row.previous_end_time} 才结束）` : "";
+  return `第 ${row.sequence_no} 项${title ? `「${title}」` : ""}${span}：${what}${after}。改这一项的时间再保存，其余不用动。`;
+}

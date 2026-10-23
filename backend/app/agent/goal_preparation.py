@@ -29,6 +29,40 @@ from app.db.session import get_session
 from app.services import _place_verified_cost, _place_window
 from app.traveler_principal import member_has_capability, resolve_journey_member_principal
 
+# Four different things are meant by one code today, and the traveller is told to retry.
+SCHEDULE_ROW_RULES = {
+    "end_not_after_start": "ITEM_END_NOT_AFTER_ITEM_START",
+    "overlaps_previous_item": "ITEM_STARTS_BEFORE_PREVIOUS_ITEM_END",
+    "before_journey_start": "ITEM_STARTS_BEFORE_JOURNEY_START",
+    "after_journey_end": "ITEM_ENDS_AFTER_JOURNEY_END",
+}
+
+
+def refuse_schedule_row(*, rule: str, sequence_no: int, title: str, date: str, start_time: str,
+                        end_time: str, previous_end_time: str | None,
+                        journey_start_at: str, journey_end_at: str) -> HTTPException:
+    """Name the row that broke a time rule instead of refusing the whole schedule in one word.
+
+    Measured on the walked screen: the card seeds each row's hour from the row's own time-of-day bucket
+    (frontend/src/trial/mobile/DraftDepartureCard.tsx:25), so a draft whose buckets are out of order --
+    八达岭 morning, 颐和园 afternoon, 天坛 flexible -- arrives as 09:00, 14:00, 11:00 and the door refuses
+    the third row (trial/results/20261022_v3_human_chrome/walk-77-window-readback-1.txt:11, with the
+    refusal itself at trial/results/20261022_v3_human_chrome/walk-77-log.txt:32).  The screen then said
+    「这次未能保存，时间仍留在这里，可以重试。」 -- and a retry of the same numbers cannot succeed.
+
+    `message` keeps its old verbatim value so no existing reader breaks; the rule, the row's position, its
+    title and both times ride as the optional attributes the one envelope already supports
+    (app/main.py:884).
+    """
+    refused = HTTPException(422, "SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY")
+    refused.reason_code = SCHEDULE_ROW_RULES.get(rule, "SCHEDULE_TIME_RULE_REFUSED")  # type: ignore[attr-defined]
+    refused.error_details = {  # type: ignore[attr-defined]
+        "rule": rule, "sequence_no": sequence_no, "title": title[:80], "date": date,
+        "start_time": start_time, "end_time": end_time, "previous_end_time": previous_end_time,
+        "journey_start_at": journey_start_at, "journey_end_at": journey_end_at,
+    }
+    return refused
+
 router = APIRouter()
 PATH = "/api/v1/journeys/{journey_id}/agent/goal-tasks/{task_id}/prepare-plan"
 
@@ -151,7 +185,17 @@ def prepare_plan(journey_id: UUID, task_id: UUID, body: PrepareDraft,
             start = datetime.fromisoformat(f"{date}T{stamp.start_time}").replace(tzinfo=zone)
             end = datetime.fromisoformat(f"{date}T{stamp.end_time}").replace(tzinfo=zone)
             if end <= start or (previous_end and start < previous_end) or start < window_start or end > window_end:
-                raise HTTPException(422, "SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY")
+                # The same four conditions as before, in the same order -- only now the answer says which
+                # one and for which row, so a screen can point at the item instead of saying "retry".
+                rule = ("end_not_after_start" if end <= start else
+                        "overlaps_previous_item" if previous_end and start < previous_end else
+                        "before_journey_start" if start < window_start else
+                        "after_journey_end")
+                raise refuse_schedule_row(
+                    rule=rule, sequence_no=number, title=str(slot.get("title") or ""), date=str(date),
+                    start_time=stamp.start_time, end_time=stamp.end_time,
+                    previous_end_time=previous_end.strftime("%H:%M") if previous_end else None,
+                    journey_start_at=window_start.isoformat(), journey_end_at=window_end.isoformat())
             previous_end = end
             source_id = str(slot.get("place_id") or "")
             place = session.get(Place, source_id) if source_id in known else None

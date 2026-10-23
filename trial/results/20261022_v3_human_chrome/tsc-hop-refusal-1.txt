@@ -1,0 +1,4 @@
+cwd=D:\moodle\_cmdr_rescue_v3_1022\frontend
+command=node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit
+tsc_exit_code=0
+tsc_output_lines=0

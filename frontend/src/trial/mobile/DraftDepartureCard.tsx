@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { cityNexusApi, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
+import { cityNexusApi, CityNexusApiError, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -16,16 +16,38 @@ function storedPriceState(result: GoalPreparationResult | null | undefined): Pri
     confirmedAt: stored.accepted_at, selectable: null, blocker: null };
 }
 
+function refusalRow(error: unknown): ScheduleRefusalRow | null {
+  // The client's Error message is "CityNexus API 422: /journeys/..." (frontend/src/api/citynexus.ts:2838),
+  // so matching on it could never see which rule refused -- that is why every failed save read as
+  // "可以重试".  The server's own envelope is on the error object, and the row it names lives there.
+  if (!(error instanceof CityNexusApiError)) return null;
+  const envelope = (error.body ?? {}) as { error?: { details?: unknown } };
+  const details = envelope.error?.details;
+  return details && typeof details === "object" ? details as ScheduleRefusalRow : null;
+}
+
 function scheduleFor(task: DraftGoalTask): GoalPreparationSchedule[] {
   if (task.prepared_plan && task.prepared_plan.result.draft_revision === task.draft_artifact?.revision) return task.prepared_plan.schedule;
   return (task.draft_artifact?.days ?? []).flatMap((day, di) => {
     const used = new Map<string, number>();
+    // The door refuses a row that starts before the row above it ends
+    // (backend/app/agent/goal_preparation.py:194), and these seeded hours are what the traveller is shown
+    // and what gets sent.  Per-bucket hours alone went backwards -- 八达岭 morning 09:00, 颐和园 afternoon
+    // 14:00, 天坛 flexible 11:00 -- so the card was handing the save a contradiction of its own making
+    // (trial/results/20261022_v3_human_chrome/walk-77-window-readback-1.txt:11).  A seeded hour now never
+    // starts before the previous row finishes.
+    let previousEnd = 0;
     return day.slots.flatMap((slot, si) => {
       if (!slot.title.trim()) return [];
       const start = { morning: 9, afternoon: 14, evening: 19, flexible: 11 }[slot.time_of_day];
       const offset = used.get(slot.time_of_day) ?? 0;
       used.set(slot.time_of_day, offset + 1);
-      const hour = Math.min(22, start + offset * 2);
+      // A bucket the table does not know would make the hour NaN, and NaN:00 is not a time -- guard the
+      // arithmetic so a row we cannot place still gets a usable, non-backwards hour instead of poisoning
+      // every row after it.
+      const wanted = Number.isFinite(start) ? start + offset * 2 : previousEnd;
+      const hour = Math.min(22, Math.max(previousEnd, wanted));
+      previousEnd = hour + 1;
       return [{ day_index: di, slot_index: si, start_time: `${String(hour).padStart(2, "0")}:00`, end_time: `${String(hour + 1).padStart(2, "0")}:00` }];
     });
   });
@@ -87,8 +109,14 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: task.journey_id }));
     } catch (error) {
       if (epoch !== scope.current || token !== readTravelerBearer()) return;
-      const detail = error instanceof Error ? error.message : "";
-      setMessage(detail.includes("DRAFT_CHANGED") ? "草案已更新，请刷新任务后再确认时间。" : detail.includes("SCHEDULE") ? "请调整时间：各项安排按顺序衔接，并放在这趟旅行的日期内。" : "这次未能保存，时间仍留在这里，可以重试。");
+      const named = scheduleRefusalSentence(refusalRow(error));
+      const detail = `${(error instanceof CityNexusApiError && typeof (error.body as { error?: { message?: string } } | undefined)?.error?.message === "string"
+        ? (error.body as { error: { message: string } }).error.message : "")} `
+        + `${error instanceof Error ? error.message : ""}`;
+      // With the row named, "可以重试" would be the wrong instruction: the same numbers refuse again.
+      setMessage(named || (detail.includes("DRAFT_CHANGED") ? "草案已更新，请刷新任务后再确认时间。"
+        : detail.includes("SCHEDULE") ? "请调整时间：各项安排按顺序衔接，并放在这趟旅行的日期内。"
+          : "这次未能保存，时间仍留在这里，可以重试。"));
     } finally { inFlight.current = false; setBusy(false); }
   };
   const verifyRoutes = async () => {

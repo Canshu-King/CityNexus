@@ -649,6 +649,51 @@ READY、`:83` 只给裸名也要 READY、`:88` 两个都不给才许说 NOT_CONF
 **还没有在屏上证过的**：上面这两处屏面句子（分段拒答清单、按方式标注）都要走一次真机才敢算通过——
 屏幕读数在 walk-77，那趟要把八达岭这种走不动的程真排进方案里。
 
+**walk-77（新栈 r13）把第一趟真人走查挡在了更早的一格：保存被拒，屏上只说"可以重试"。**
+这一趟 Agent 真查了（正式地点 56 处、草案 7 行、地图层能看到故宫的实景封面），
+但按「保存为正式候选方案」时服务端回 422
+`SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY`（`trial/results/20261022_v3_human_chrome/walk-77-log.txt:32`），
+屏上只剩「这次未能保存，时间仍留在这里，可以重试。」（同文件 `:33`），
+方案屏因此是「0 份正式候选方案、选用门不可见」（同文件 `:92-93`）。
+为什么会撞：卡片按每行的时段桶自己生成时间（`frontend/src/trial/mobile/DraftDepartureCard.tsx:42`），
+而草案的桶序是 上午→下午→flexible，于是发出去的是 09:00、14:00、11:00——
+第三行排在第二行结束之前（`trial/results/20261022_v3_human_chrome/walk-77-window-readback-1.txt:11`）。
+这一格不用只看日志：`walk77-12-departure-after-save.png` 里三行时间就摆在屏上——
+颐和园 14:00–15:00 之后是 天坛公园 **11:00–12:00**，勾着「按以上时间准备方案」，
+下面那句就是「这次未能保存，时间仍留在这里，可以重试。」
+读数本身还纠正了我一次误判：第一版取数只复制了 .db 而没带 `-wal`，读到的是旧快照（修订零、零行），与当时屏上的 7 行矛盾；
+带上 WAL（`walk-77-window-readback-1.txt:1` 记的就是这次带上的 `-wal` 字节数）才读到真草案。
+
+**这一刀改了三层，都带读数。**
+
+- 服务端：四条时间规则仍是一个码，但答案现在写清是哪条、哪一项——
+  `backend/app/agent/goal_preparation.py:194` 通过 `refuse_schedule_row`（`:41`）附上
+  `reason_code`（`ITEM_STARTS_BEFORE_PREVIOUS_ITEM_END` 等四枚）与 `details`
+  （第几项、标题、两个时间、上一项到几点、行程窗口两端）。`message` 逐字不变，
+  所以现有读者不受影响；契约不改形制：这一路的 422 在 `contracts/openapi.yaml:50` 是
+  FastAPI 生成的 `ValidationError` 壳，envelope 的 reason_code/details 本来就走生成体外
+  （同文件 `:700`、`:816` 那些手写理由码是另一类路径）。
+- 客户端的真相：卡片那句"请调整时间…"分支永远点不亮——它匹配的是 `error.message`，
+  而客户端把 message 填成 `CityNexus API 422: /journeys/…`
+  （`frontend/src/api/citynexus.ts:2838`，grep 本目录 src/e2e/contracts 里 `SCHEDULE_OVERLAP`
+  除服务端那一处外零命中）。现在卡片直接读服务端信封（`refusalRow`
+  `frontend/src/trial/mobile/DraftDepartureCard.tsx:19`），并把那一项点名：
+  「第 7 项「天坛公园」 11:00–12:00：开始时间排在上一项结束之前（上一项到 15:00 才结束）。
+  改这一项的时间再保存，其余不用动。」（句子写在一处：
+  `frontend/src/trial/mobile/departureGaps.ts:276`）
+- 卡片不再自己制造矛盾：排到时间只会往后走，不会倒退
+  （`frontend/src/trial/mobile/DraftDepartureCard.tsx:39`），并且未知时段桶不再把
+  NaN 传给后端（同文件 `:48`）。
+
+**闸。** `backend/tests/test_qoder_schedule_refusal_names_the_row_r1.py` 五枚臂：四条规则各自点名
+（含"上一项到 15:00"这类细节），加一枚对照臂证明按顺序的时间照样 201 保存
+（顺带读出真实缺口种类是 `PLACE_REQUIRED`，不是我猜的名词）。把 `refuse_schedule_row` 静音成旧答案后
+重跑：四条点名臂全红、对照臂仍绿（`4 failed, 1 passed`），所以这几条断言咬的是新增的事实。
+整套收集 2554 条，今晚相关五枚文件 38 条通过，`tsc` 退出码零。
+
+**AFTER 的屏幕读数**：走查 walk-78（r14 栈：后端 :60246 / 前端 :14446 / 独立库
+citynexus_v3_human16_1022.db）此刻正在跑；它证明到哪儿写哪儿，没证明到的不写成通过。
+
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
 （P1）没动；USER_VERIFIED 仍是 PENDING。现场栈换到 r11：后端 60216／前端 14416／独立库
