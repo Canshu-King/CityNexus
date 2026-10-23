@@ -35,7 +35,7 @@ def _no_live_answer(monkeypatch):
     monkeypatch.setattr(goal_route_freeze, "_measure_now", lambda *args, **kwargs: None)
 
 
-def _draft_with_canonical_places(client, owner, journey_id, task_id):
+def _draft_with_canonical_places(client, owner, journey_id, task_id, schedule=None):
     """The screen's own path: research -> canonical row -> confirmed schedule -> saved candidate."""
     root = f"/api/v1/journeys/{journey_id}"
     with SessionLocal() as session:
@@ -65,9 +65,10 @@ def _draft_with_canonical_places(client, owner, journey_id, task_id):
         task["candidate_place_ids"] = list(ids.values())
         mission.intent_json = json.dumps(intent, ensure_ascii=False)
         session.commit()
-    schedule = [{"day_index": 0, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"},
-                {"day_index": 0, "slot_index": 1, "start_time": "14:00", "end_time": "15:00"},
-                {"day_index": 1, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"}]
+    if schedule is None:
+        schedule = [{"day_index": 0, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"},
+                    {"day_index": 0, "slot_index": 1, "start_time": "14:00", "end_time": "15:00"},
+                    {"day_index": 1, "slot_index": 0, "start_time": "09:00", "end_time": "10:00"}]
     result = client.post(root + f"/agent/goal-tasks/{task_id}/prepare-plan",
                          headers={**owner, "Idempotency-Key": str(uuid4())},
                          json={"expected_revision": 1, "schedule": schedule})

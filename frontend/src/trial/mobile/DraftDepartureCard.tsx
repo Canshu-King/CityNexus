@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { cityNexusApi, CityNexusApiError, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalPriceConsentResult } from "../../api/citynexus";
+import { cityNexusApi, CityNexusApiError, type DraftGoalTask, type GoalPreparationSchedule, type GoalPreparationResult, type GoalRouteFreezeResult, type GoalTravelGapAnswer, type GoalPriceConsentResult } from "../../api/citynexus";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
-import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, hopSentences, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
+import { ASK_AGENT_BUTTON, agentAskPrompt, ASK_HOW_IT_WORKS, FROZEN_ROUTE_SENTENCE, GAP_LABELS, bandSentence, gapAction, hopSentences, openingSentence, pendingCountSentence, priceAcceptedSentence, PRICE_CONSENT_BUTTON, priceUnknownSentence, PRICE_SWAP_BUTTON, PRICE_SWAP_PROMPT, REPLAN_APPLY_BUTTON, REPLAN_BUTTON, REPLAN_NEEDS_FREEZE_SENTENCE, gapShortfallSentence, replanAppliedSentence, replanDiffSentence, replanRefusalSentence, routeSentence, scheduleRefusalSentence, type ScheduleRefusalRow, unknownPricePlaceIds, unansweredHopSentences } from "./departureGaps";
 
 type PriceState = { count: number; knownMinor: number; confirmedAt: string; selectable: boolean | null; blocker: string | null };
 
@@ -61,6 +61,8 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const [result, setResult] = useState<GoalPreparationResult | null>(() => task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null);
   const [routes, setRoutes] = useState<GoalRouteFreezeResult | null>(null);
   const [routesBusy, setRoutesBusy] = useState(false);
+  const [gaps, setGaps] = useState<GoalTravelGapAnswer | null>(null);
+  const [planShown, setPlanShown] = useState(false);
   const [price, setPrice] = useState<PriceState | null>(() => storedPriceState(task.prepared_plan?.result));
   const [priceBusy, setPriceBusy] = useState(false);
   const routeKey = useRef<string | null>(null);
@@ -68,8 +70,18 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const requestKey = useRef<string | null>(null);
   const inFlight = useRef(false);
   const scope = useRef(0);
-  useEffect(() => { const stored = task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null; scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(stored); setPrice(storedPriceState(stored)); setMessage(""); requestKey.current = null; routeKey.current = null; setRoutes(null); priceKey.current = null; }, [task.task_id, task.draft_artifact?.revision]);
-  useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setRoutes(null); setPrice(null); setMessage(""); setConfirmed(false); }), []);
+  useEffect(() => { const stored = task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null; scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(stored); setPrice(storedPriceState(stored)); setMessage(""); requestKey.current = null; routeKey.current = null; setRoutes(null); setGaps(null); setPlanShown(false); priceKey.current = null; }, [task.task_id, task.draft_artifact?.revision]);
+  useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setRoutes(null); setGaps(null); setPlanShown(false); setPrice(null); setMessage(""); setConfirmed(false); }), []);
+  // A reload that lands on a plan whose hops are already measured still owes the traveller the answer
+  // they paid for: which of their own hours those minutes do not fit.
+  const frozenPlanId = result?.mobility_frozen ? result.plan_version_id : null;
+  useEffect(() => {
+    if (!frozenPlanId || !result || !readTravelerBearer()) return;
+    const epoch = scope.current, journeyId = result.journey_id, taskId = result.task_id;
+    void cityNexusApi.travelGaps(journeyId, taskId, frozenPlanId)
+      .then((answer) => { if (epoch === scope.current && answer.plan_version_id === frozenPlanId) setGaps(answer); })
+      .catch(() => { /* the freeze receipt above stands on its own; this is the reading of it */ });
+  }, [frozenPlanId, result]);
   const days = task.draft_artifact?.days ?? [];
   if (!schedule.length) return null;
   type GapRow = GoalPreparationResult["gaps"][number];
@@ -121,6 +133,36 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
           : "这次未能保存，时间仍留在这里，可以重试。"));
     } finally { inFlight.current = false; setBusy(false); }
   };
+  const applyReplan = async () => {
+    if (!result || !gaps?.rows.length || inFlight.current || task.status === "WORKING" || !task.draft_artifact) return;
+    const token = readTravelerBearer(), epoch = scope.current;
+    if (!token) return;
+    const merged = schedule.map((stamp) => {
+      const moved = gaps.rows.find((row) => row.day_index === stamp.day_index && row.slot_index === stamp.slot_index);
+      return moved ? { ...stamp, start_time: moved.proposed_start, end_time: moved.proposed_end } : stamp;
+    });
+    inFlight.current = true; setBusy(true); setMessage("");
+    // A different body must not replay the key the previous save used, or the door answers 409 and
+    // says nothing about why.
+    const key = crypto.randomUUID();
+    try {
+      const answer = await cityNexusApi.prepareGoalDraft(task.journey_id, task.task_id,
+        task.draft_artifact.revision, merged, key);
+      if (epoch !== scope.current || token !== readTravelerBearer()) return;
+      if (answer.journey_id !== task.journey_id || answer.task_id !== task.task_id
+          || answer.draft_revision !== task.draft_artifact.revision
+          || answer.selected !== false || answer.activated !== false) throw new Error("IDENTITY_MISMATCH");
+      setSchedule(merged); setConfirmed(true); setResult(answer); setRoutes(null); setGaps(null);
+      setPlanShown(false); setPrice(null); priceKey.current = null; routeKey.current = null; requestKey.current = key;
+      setMessage(replanAppliedSentence(gaps.rows.length) + REPLAN_NEEDS_FREEZE_SENTENCE);
+      window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: task.journey_id }));
+    } catch (error) {
+      if (epoch !== scope.current || token !== readTravelerBearer()) return;
+      const named = scheduleRefusalSentence(refusalRow(error));
+      setMessage(named || "这一版没能保存，原来的时间还在这里。");
+    } finally { inFlight.current = false; setBusy(false); }
+  };
+
   const verifyRoutes = async () => {
     if (!result || inFlight.current || task.status === "WORKING") return;
     const token = readTravelerBearer(), epoch = scope.current;
@@ -134,6 +176,12 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         throw new Error("这份转场结果不属于当前方案。");
       }
       setRoutes(answer);
+      // The measured minutes only become usable once they are read back against the hours the
+      // traveller chose; this door writes nothing, so a failure here must not look like a failed
+      // freeze -- the freeze receipt above is already on the screen and stands on its own.
+      try {
+        setGaps(await cityNexusApi.travelGaps(result.journey_id, result.task_id, result.plan_version_id));
+      } catch { setGaps(null); }
       // A frozen hop makes the 转场路线 line for it a lie, and the server already knows that: on a
       // successful freeze it drops every TRANSFER_ROUTE row from the stored answer
       // (backend/app/agent/goal_route_freeze.py:369), so a refresh is correct.  This card holds its own
@@ -213,6 +261,15 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     {hopRefusals.length > 0 && <ul className="rev-v3-hop-refusals" data-testid="rev-v3-hop-refusals" aria-label="哪几段没有回答">
       {hopRefusals.map((line) => <li key={line} data-testid="rev-v3-hop-refusal">{line}</li>)}
     </ul>}
+    {gaps && (gaps.rows.length > 0 || Boolean(gaps.reason_code)) && <div className="rev-v3-travel-gaps" data-testid="rev-v3-travel-gaps">
+      <h4>量回来的路上时间</h4>
+      <ul data-testid="rev-v3-gap-shortfalls">{gaps.hops.filter((hop) => hop.short_by_minutes > 0)
+        .map((hop) => <li key={`${hop.origin_title}->${hop.destination_title}`} data-testid="rev-v3-gap-shortfall">{gapShortfallSentence(hop)}</li>)}</ul>
+      {gaps.reason_code && replanRefusalSentence(gaps.reason_code) && <p data-testid="rev-v3-replan-refusal">{replanRefusalSentence(gaps.reason_code)}</p>}
+      {gaps.rows.length > 0 && !planShown && <button type="button" data-testid="rev-v3-replan" onClick={() => setPlanShown(true)}>{REPLAN_BUTTON}</button>}
+      {planShown && <ul data-testid="rev-v3-replan-diff">{gaps.rows.map((row) => <li key={`${row.day_index}:${row.slot_index}`}>{replanDiffSentence(row)}</li>)}</ul>}
+      {planShown && <button type="button" data-testid="rev-v3-replan-apply" disabled={busy || task.status === "WORKING"} onClick={() => void applyReplan()}>{busy ? "正在保存这一版…" : REPLAN_APPLY_BUTTON}</button>}
+    </div>}
     {result && (result.unrouted_count ?? 0) > 0 && <p className="rev-v3-band-note" data-testid="rev-v3-band-note">{bandSentence(result.unrouted_count ?? 0)}</p>}
     {(result?.opening_checks ?? []).length > 0 && <ul className="rev-v3-opening" data-testid="rev-v3-opening" aria-label="每一处当天的开放核实">
       {(result?.opening_checks ?? []).map((row) => <li key={row.sequence_no}>

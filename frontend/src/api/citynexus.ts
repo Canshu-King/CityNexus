@@ -2235,6 +2235,27 @@ export interface GoalRouteFreezeResult {
   reason_code: string | null; idempotency_replay?: boolean;
 }
 
+// The measured minutes of each hop read against the gap the traveller left for it, plus the smallest
+// re-arrangement that fits.  This one asks for nothing and changes nothing: applying the rows is the
+// traveller's own press of the same 保存为正式候选方案 door, which writes a new CANDIDATE version.
+export interface GoalTravelGapHop {
+  origin_title: string; destination_title: string;
+  planned_gap_minutes: number | null; required_minutes: number | null; short_by_minutes: number;
+  spans_night: boolean; provider?: string | null; reason_code?: string | null;
+}
+
+export interface GoalTravelGapRow {
+  day_index: number; slot_index: number; title: string;
+  planned_start: string; planned_end: string; proposed_start: string; proposed_end: string;
+  extra_minutes: number; direct_cause: boolean;
+}
+
+export interface GoalTravelGapAnswer {
+  journey_id: string; task_id: string; plan_version_id: string;
+  frozen: boolean; hops: GoalTravelGapHop[]; rows: GoalTravelGapRow[];
+  reason_code: string | null;
+}
+
 // One traveller's recorded decision about prices no source answered. The count and the id list come
 // back from the server, and `unknown_cost_included: false` is the part the screen must never drop:
 // accepting is not buying, and it is not a budget that holds.
@@ -3281,6 +3302,14 @@ export const cityNexusApi = {
       "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
         + "/plans/" + encodeURIComponent(planVersionId) + "/freeze-routes",
       { method: "POST", headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey } },
+    );
+  },
+
+  travelGaps(journeyId: string, taskId: string, planVersionId: string): Promise<GoalTravelGapAnswer> {
+    return requestJson<GoalTravelGapAnswer>(
+      "/journeys/" + encodeURIComponent(journeyId) + "/agent/goal-tasks/" + encodeURIComponent(taskId)
+        + "/plans/" + encodeURIComponent(planVersionId) + "/travel-gaps",
+      { method: "GET", headers: { ...travelerAuthHeaders() } },
     );
   },
 

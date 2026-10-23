@@ -448,3 +448,54 @@ export function isSafeAmapNavigationUrl(value: string | undefined | null, mode?:
       && url.searchParams.get("coordinate") === "gaode";
   } catch { return false; }
 }
+
+// The hop the measured minutes do not fit, and the one action that follows from saying so.
+//
+// The departure gate already refuses 「两段安排之间留的赶路时间不够」 (app/replanning/feasibility.py:1013)
+// and left the traveller a sentence with nothing to press.  These rows come from the plan's own frozen
+// facts read through backend/app/agent/goal_travel_gaps.py, so the minutes quoted here are the same
+// minutes the gate will hold the plan to -- not an estimate made in the browser.
+export type GapHopRow = {
+  origin_title: string; destination_title: string;
+  planned_gap_minutes: number | null; required_minutes: number | null;
+  short_by_minutes: number; spans_night: boolean; reason_code?: string | null;
+};
+
+export type GapPlanRow = {
+  title: string; planned_start: string; planned_end: string;
+  proposed_start: string; proposed_end: string; extra_minutes: number; direct_cause: boolean;
+};
+
+export const REPLAN_BUTTON = "根据路线重新安排";
+export const REPLAN_APPLY_BUTTON = "按这一版安排";
+
+export function gapShortfallSentence(hop: GapHopRow): string {
+  const from = hop.origin_title || "上一处";
+  const to = hop.destination_title || "下一处";
+  if (hop.planned_gap_minutes === null || hop.required_minutes === null) {
+    return `${from} → ${to}：这一转量到了时间，但那两处的钟点读不出来。`;
+  }
+  return `${from} → ${to}：这一段路上要 ${hop.required_minutes} 分钟，中间只留了 ${hop.planned_gap_minutes} 分钟。`;
+}
+
+export function replanDiffSentence(row: GapPlanRow): string {
+  const cause = row.direct_cause ? "因为上一转" : "跟着顺移";
+  return `${row.title}：${row.planned_start}–${row.planned_end} 改成 ${row.proposed_start}–${row.proposed_end}，`
+    + `往后 ${row.extra_minutes} 分钟（${cause}）。`;
+}
+
+const REPLAN_REFUSAL_SENTENCES: Record<string, string> = {
+  "DAY_WOULD_RUN_PAST_22:00": "往后挪就要排到晚上十点之后，这一天放不下更多时间；要改的是这天排几处，不是钟点。",
+  OVERNIGHT_HOP_NEEDS_DECISION: "跨夜的这一转，把晚上推后也接不上；要先定这一晚在哪结束。",
+  SCHEDULE_ALIGNMENT_UNVERIFIED: "这一版的行序和保存的时间对不上，先刷新任务再试。",
+};
+
+export function replanRefusalSentence(reason: string | null | undefined): string | null {
+  return REPLAN_REFUSAL_SENTENCES[String(reason || "")] ?? null;
+}
+
+export function replanAppliedSentence(count: number): string {
+  return `已按路线把 ${count} 处往后排，这是一份新的候选方案；生效的那一份没有变。`;
+}
+
+export const REPLAN_NEEDS_FREEZE_SENTENCE = "新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。";

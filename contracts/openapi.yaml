@@ -53,6 +53,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/travel-gaps:
+    get:
+      summary: Read Travel Gaps
+      description: Ask what the measured hops demand.  Nothing here opens a write lock, because nothing writes.
+      operationId: read_travel_gaps_api_v1_journeys__journey_id__agent_goal_tasks__task_id__plans__plan_version_id__travel_gaps_get
+      parameters:
+      - name: journey_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Journey Id
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      - name: plan_version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Plan Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelGapAnswer'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /journeys/{journey_id}/agent/goal-tasks/{task_id}/plans/{plan_version_id}/freeze-routes:
     post:
       summary: Freeze Plan Routes
@@ -3843,6 +3883,131 @@ components:
         recommendations:
           type: array
           items: {type: object, additionalProperties: true}
+    TravelGapAnswer:
+      properties:
+        journey_id:
+          type: string
+          title: Journey Id
+        task_id:
+          type: string
+          title: Task Id
+        plan_version_id:
+          type: string
+          title: Plan Version Id
+        frozen:
+          type: boolean
+          title: Frozen
+        hops:
+          items:
+            $ref: '#/components/schemas/TravelGapHop'
+          type: array
+          title: Hops
+        rows:
+          items:
+            $ref: '#/components/schemas/TravelGapRow'
+          type: array
+          title: Rows
+        reason_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason Code
+      additionalProperties: false
+      type: object
+      required:
+      - journey_id
+      - task_id
+      - plan_version_id
+      - frozen
+      - hops
+      - rows
+      title: TravelGapAnswer
+    TravelGapHop:
+      properties:
+        origin_title:
+          type: string
+          title: Origin Title
+        destination_title:
+          type: string
+          title: Destination Title
+        planned_gap_minutes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Planned Gap Minutes
+        required_minutes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Required Minutes
+        short_by_minutes:
+          type: integer
+          title: Short By Minutes
+        spans_night:
+          type: boolean
+          title: Spans Night
+        provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+        reason_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason Code
+      additionalProperties: false
+      type: object
+      required:
+      - origin_title
+      - destination_title
+      - planned_gap_minutes
+      - required_minutes
+      - short_by_minutes
+      - spans_night
+      title: TravelGapHop
+    TravelGapRow:
+      properties:
+        day_index:
+          type: integer
+          title: Day Index
+        slot_index:
+          type: integer
+          title: Slot Index
+        title:
+          type: string
+          title: Title
+        planned_start:
+          type: string
+          title: Planned Start
+        planned_end:
+          type: string
+          title: Planned End
+        proposed_start:
+          type: string
+          title: Proposed Start
+        proposed_end:
+          type: string
+          title: Proposed End
+        extra_minutes:
+          type: integer
+          title: Extra Minutes
+        direct_cause:
+          type: boolean
+          title: Direct Cause
+      additionalProperties: false
+      type: object
+      required:
+      - day_index
+      - slot_index
+      - title
+      - planned_start
+      - planned_end
+      - proposed_start
+      - proposed_end
+      - extra_minutes
+      - direct_cause
+      title: TravelGapRow
     FreezeRoutesResult:
       properties:
         journey_id:

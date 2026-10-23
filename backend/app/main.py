@@ -28115,6 +28115,9 @@ app.include_router(goal_preparation_router)
 from app.agent.goal_route_freeze import router as goal_route_freeze_router
 app.include_router(goal_route_freeze_router)
 
+from app.agent.goal_travel_gaps import router as goal_travel_gaps_router
+app.include_router(goal_travel_gaps_router)
+
 from app.agent.goal_price_consent import router as goal_price_consent_router
 app.include_router(goal_price_consent_router)
 
