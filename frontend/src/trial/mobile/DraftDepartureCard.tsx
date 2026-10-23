@@ -247,10 +247,10 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     </details>
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
-      {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0, routes.transit ?? 0)
+      {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0, routes.transit ?? 0, routes.reason_code)
         : result.route_attempt && !result.route_attempt.frozen
           ? routeSentence(result.route_attempt.verified, result.route_attempt.total, false,
-            result.route_attempt.overnight ?? 0, result.route_attempt.transit ?? 0)
+            result.route_attempt.overnight ?? 0, result.route_attempt.transit ?? 0, result.route_attempt.reason_code ?? null)
           : result.mobility_frozen ? FROZEN_ROUTE_SENTENCE : "当天的转场还没有向高德核实过。"}
       <button type="button" disabled={routesBusy} onClick={() => void verifyRoutes()} data-testid="rev-v3-freeze-routes">
         {routesBusy ? "正在核实转场…"
@@ -261,7 +261,8 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
     {hopRefusals.length > 0 && <ul className="rev-v3-hop-refusals" data-testid="rev-v3-hop-refusals" aria-label="哪几段没有回答">
       {hopRefusals.map((line) => <li key={line} data-testid="rev-v3-hop-refusal">{line}</li>)}
     </ul>}
-    {gaps && (gaps.rows.length > 0 || Boolean(gaps.reason_code)) && <div className="rev-v3-travel-gaps" data-testid="rev-v3-travel-gaps">
+    {gaps && (gaps.rows.length > 0 || gaps.hops.some((hop) => hop.short_by_minutes > 0)
+      || Boolean(replanRefusalSentence(gaps.reason_code))) && <div className="rev-v3-travel-gaps" data-testid="rev-v3-travel-gaps">
       <h4>量回来的路上时间</h4>
       <ul data-testid="rev-v3-gap-shortfalls">{gaps.hops.filter((hop) => hop.short_by_minutes > 0)
         .map((hop) => <li key={`${hop.origin_title}->${hop.destination_title}`} data-testid="rev-v3-gap-shortfall">{gapShortfallSentence(hop)}</li>)}</ul>

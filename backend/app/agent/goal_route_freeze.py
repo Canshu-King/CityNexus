@@ -386,7 +386,16 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
     snapshot_id: str | None = None
     reason: str | None = None
     if not edges:
-        reason = "NO_ROUTED_EDGES"
+        rows_of_plan = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan.id)))
+        placed_rows = [row for row in rows_of_plan if row.place_id]
+        # "Nothing to route" and "nothing is a place yet" reach the same empty edge list, and only one of
+        # them is the traveller's planning problem.  Measured on a phone walk where six saved arrangements
+        # carried no canonical place at all (`places` had no rows and all six `Activity.place_id` were null,
+        # trial/results/20261022_v3_human_chrome/replan-probe-2-log.txt:14-22 read with
+        # trial/human_walk/candidate_place_binding_probe_r1.py) while the card said
+        # 「这版方案里没有相邻两站之间的转场要核实」 -- a sentence that sent the traveller to look for a
+        # missing hop instead of the missing places.
+        reason = "NO_PLACED_STOPS" if len(rows_of_plan) > 1 and len(placed_rows) < 2 else "NO_ROUTED_EDGES"
     elif frozen:
         try:
             capture = capture_mobility_snapshot(

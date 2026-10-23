@@ -1,0 +1,43 @@
+CANDIDATE_0 {"url":"http://127.0.0.1:14472/revolution","mark":{"tabs":3,"dock":true,"slots":6,"departure":true,"pointer":"{\"id\":\"3ce1946f-2674","status":""}}
+PROBE2_START 2026-10-23T23:14:53.954Z http://127.0.0.1:14472 mark={"tabs":3,"dock":true,"slots":6,"departure":true,"pointer":"{\"id\":\"3ce1946f-2674","status":""}
+LAYER rev-mission-layer-agent attempt=1 clicked=true
+DRAFT_SLOTS=6
+VARIANT_CARDS=0
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+DEPARTURE_VISIBLE=true
+WINDOWS_BEFORE ["09:00","10:00","11:00","12:00","14:00","15:00","09:00","10:00","14:00","15:00","15:00","16:00"]
+TIGHTENED row=2 window=10:00-10:45
+TIGHTENED row=3 window=10:45-11:30
+TIGHTENED row=4 window=11:30-12:15
+WINDOWS_AFTER ["09:00","10:00","10:00","10:45","10:45","11:30","11:30","12:15","14:00","15:00","15:00","16:00"]
+AFTER_SAVE_STATUS 已保存 6 项正式安排。下方可以查看日程和出发待办。
+SHOT replan-probe2-01-saved.png bytes=66618
+ROUTE_BEFORE 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+FREEZE_PRESS round=1 {"testId":"rev-v3-freeze-routes","present":true,"probe":{"text":"核实并冻结今天的转场","centre":[189,412],"disabled":false,"covers_it":false,"topmost":"BUTTON","in_viewport":true},"pressed":true,"at":"2026-10-23T23:15:07.387Z"}
+FREEZE_ROUND_1 BAND 这版方案里没有相邻两站之间的转场要核实。 核实并冻结今天的转场 TODO_ROUTE_LINES=0
+FREEZE_PRESS round=2 {"testId":"rev-v3-freeze-routes","present":true,"probe":{"text":"核实并冻结今天的转场","centre":[189,368],"disabled":false,"covers_it":false,"topmost":"BUTTON","in_viewport":true},"pressed":true,"at":"2026-10-23T23:15:23.036Z"}
+FREEZE_ROUND_2 BAND 这版方案里没有相邻两站之间的转场要核实。 核实并冻结今天的转场 TODO_ROUTE_LINES=0
+FREEZE_PRESS round=3 {"testId":"rev-v3-freeze-routes","present":true,"probe":{"text":"核实并冻结今天的转场","centre":[189,368],"disabled":false,"covers_it":false,"topmost":"BUTTON","in_viewport":true},"pressed":true,"at":"2026-10-23T23:15:38.708Z"}
+FREEZE_ROUND_3 BAND 这版方案里没有相邻两站之间的转场要核实。 核实并冻结今天的转场 TODO_ROUTE_LINES=0
+SHOT replan-probe2-02-frozen.png bytes=62075
+GAPS_PRESENT=true
+GAPS_BLOCK_TEXT 量回来的路上时间
+SHORTFALL_LINES []
+REPLAN_REFUSAL (unreadable)
+SHOT replan-probe2-03-gaps.png bytes=62075
+REPLAN_TAP {"testId":"rev-v3-replan","present":false}
+DIFF_LINES []
+SHOT replan-probe2-04-diff.png bytes=62075
+APPLY_TAP {"testId":"rev-v3-replan-apply","present":false}
+AFTER_APPLY_STATUS (unreadable)
+AFTER_APPLY_WINDOWS ["09:00","10:00","10:00","10:45","10:45","11:30","11:30","12:15","14:00","15:00","15:00","16:00"]
+WINDOWS_BEFORE_APPLY ["09:00","10:00","10:00","10:45","10:45","11:30","11:30","12:15","14:00","15:00","15:00","16:00"]
+SHOT replan-probe2-05-after-apply.png bytes=62066
+LAYER rev-mission-layer-timeline attempt=1 clicked=true
+RELOAD_DEPARTURE_VISIBLE=true
+RELOAD_ROUTE 当天的转场还没有向高德核实过。 核实并冻结今天的转场
+RELOAD_GAPS_PRESENT=false
+SHOT replan-probe2-06-after-reload.png bytes=66578
+WIRE [{"at":"2026-10-23T23:14:56.664Z","method":"POST","status":201,"what":"/journeys/<id>/agent/goal-tasks/<id>/prepare-plan"},{"at":"2026-10-23T23:15:07.410Z","method":"POST","status":200,"what":"urneys/<id>/agent/goal-tasks/<id>/plans/<id>/freeze-routes"},{"at":"2026-10-23T23:15:07.419Z","method":"GET","status":200,"what":"journeys/<id>/agent/goal-tasks/<id>/plans/<id>/travel-gaps"},{"at":"2026-10-23T23:15:23.043Z","method":"POST","status":200,"what":"urneys/<id>/agent/goal-tasks/<id>/plans/<id>/freeze-routes"},{"at":"2026-10-23T23:15:23.054Z","method":"GET","status":200,"what":"journeys/<id>/agent/goal-tasks/<id>/plans/<id>/travel-gaps"},{"at":"2026-10-23T23:15:38.715Z","method":"POST","status":200,"what":"urneys/<id>/agent/goal-tasks/<id>/plans/<id>/freeze-routes"},{"at":"2026-10-23T23:15:38.724Z","method":"GET","status":200,"what":"journeys/<id>/agent/goal-tasks/<id>/plans/<id>/travel-gaps"}]
+NOTE writes are the traveller's own: answering the Agent, typing hours, 保存为正式候选方案, 核实并冻结, and the two presses 根据路线重新安排 / 按这一版安排
+DONE tab left open

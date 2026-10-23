@@ -35,7 +35,7 @@ def _no_live_answer(monkeypatch):
     monkeypatch.setattr(goal_route_freeze, "_measure_now", lambda *args, **kwargs: None)
 
 
-def _draft_with_canonical_places(client, owner, journey_id, task_id, schedule=None):
+def _draft_with_canonical_places(client, owner, journey_id, task_id, schedule=None, bind=True):
     """The screen's own path: research -> canonical row -> confirmed schedule -> saved candidate."""
     root = f"/api/v1/journeys/{journey_id}"
     with SessionLocal() as session:
@@ -534,3 +534,50 @@ def test_an_hour_nobody_wrote_down_is_asked_as_no_hour_at_all(signed_place, monk
     assert fake.transit_calls == [{"city_code": "TESTFIX010", "departure_date": None,
                                    "departure_time": None}], fake.transit_calls
     assert answer.json()["edges"][0]["mode"] == "TRANSIT", answer.json()["edges"]
+
+
+def _freeze_reason(client, owner, root, task_id, plan_id):
+    answer = _freeze(client, owner, root, task_id, plan_id)
+    assert answer.status_code == 200, answer.text
+    body = answer.json()
+    assert (body["total"], body["frozen"]) == (0, False), body
+    return body
+
+
+def _set_places(plan_id, values):
+    """Arrange the row state the phone had reached; the door's reading, not the drafting, is the subject.
+
+    On the walk the six saved arrangements carried no canonical place at all
+    (trial/human_walk/candidate_place_binding_probe_r1.py over
+    trial/results/20261022_v3_human_chrome/replan-probe-2-log.txt), which the test fixture cannot reach
+    through the drafting door -- there the title is resolved to a ``real-place-`` row.  So the state is
+    written here, and what is asserted is only which of the two empty answers the door gives.
+    """
+    with SessionLocal() as session:
+        rows = list(session.scalars(select(Activity).where(Activity.plan_version_id == plan_id)
+                                    .order_by(Activity.sequence_no)))
+        assert len(rows) >= len(values)
+        for row, value in zip(rows, values):
+            row.place_id = value
+        session.commit()
+
+
+def test_a_candidate_whose_stops_are_not_places_says_that_instead_of_denying_hops(signed_place, monkeypatch):
+    client, owner, _outsider, journey_id, *_ = signed_place
+    _no_live_answer(monkeypatch)
+    task_id = _task(client, owner, journey_id)
+    root, plan_id, _ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+    _set_places(plan_id, [None, None, None])
+
+    body = _freeze_reason(client, owner, root, task_id, plan_id)
+    assert body["reason_code"] == "NO_PLACED_STOPS", body
+    assert body["verified"] == 0, body
+
+    # The other empty answer keeps its own word: two consecutive stops at one venue are not a routing
+    # question at all, and the door already says so elsewhere (app/agent/goal_route_freeze.py:used_edges).
+    same_place = _ids
+    second_task = _task(client, owner, journey_id)
+    _root2, plan2, ids2 = _draft_with_canonical_places(client, owner, journey_id, second_task)
+    assert len(set(same_place.values())) == 2 and len(set(ids2.values())) == 2
+    _set_places(plan2, [ids2[TOWER["id"]], ids2[TOWER["id"]], ids2[TOWER["id"]]])
+    assert _freeze_reason(client, owner, root, second_task, plan2)["reason_code"] == "NO_ROUTED_EDGES"

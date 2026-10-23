@@ -194,8 +194,11 @@ export function priceAcceptedSentence(unknownCount: number, knownMinor: number):
 // walking door could not answer is now measured as public transport, and that too is named apart: a bus
 // minute shown as footsteps would send a traveller walking somewhere they were never told to walk.
 export function routeSentence(verified: number, total: number, frozen: boolean, overnight: number,
-  transit = 0): string {
-  if (!total) return "这版方案里没有相邻两站之间的转场要核实。";
+  transit = 0, reasonCode?: string | null): string {
+  // An empty edge list has two very different causes, and only one of them is "this plan has no hops".
+  if (!total) return reasonCode === "NO_PLACED_STOPS"
+    ? "这几处还没有被认成正式地点，所以没有可以量转场的两站。先在对话里让我把地点补认出来。"
+    : "这版方案里没有相邻两站之间的转场要核实。";
   const parts = [overnight > 0 ? `${overnight} 段是跨夜衔接` : "",
     transit > 0 ? `${transit} 段按公共交通核实` : ""].filter(Boolean);
   const tail = parts.length ? `（其中 ${parts.join("，")}）` : "";

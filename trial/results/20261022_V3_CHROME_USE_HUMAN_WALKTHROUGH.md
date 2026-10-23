@@ -1683,3 +1683,14 @@ USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、A
 现读是 **:35 / :495 / :519**——差一行，原因是我随后在同一枚文件顶部加了 `from types import SimpleNamespace`
 一行，把后面所有行号都往下推了一格。**入账时读的是那一刻的行号，写完又动了那枚文件**，这就是"行号必须现读"
 这条纪律的正确用法：要么写完不再动，要么写完再读一遍。已在下面的 live 走查块之后随新块一并更正。
+
+### 补一条我这两晚用错的那把尺的口径（同一节）
+
+`trial/human_walk/instrument_lint_r1.mjs:15` 的 `ROOT` 默认值是 `D:/moodle/_cmdr_v3_port_1022`（镜像那侧），
+只有把目录当第一个参数传进去才会扫 `trial/human_walk`。我前面几处写"全目录 `files=157 offenders=4`"扫的都是**镜像**，
+不是我这晚真正改仪表的那棵树——"全目录"这个说法因此不成立，得写明是哪一棵。现读两棵：
+镜像 `files=157 offenders=4`（`trial/human_walk/instrument_lint_r1.mjs` 对它默认那一步的输出），
+`node trial/human_walk/instrument_lint_r1.mjs D:/moodle/_cmdr_rescue_v3_1022/trial/human_walk` ⇒ `files=44 offenders=3`；
+今晚新加的两枚（`replan_walk_r1.mjs`、`replan_probe_r2.mjs`）在两棵里都是 `ok`。
+那三/四枚红是第廿九、卅一节列过的旧账（`dock_recovery_probe_r1`、`first_tap_layers_r1`、`first_tap_layers_r2`，
+镜像那侧另含潜伏的 `place_media_click_r1`），不是新引入的。
