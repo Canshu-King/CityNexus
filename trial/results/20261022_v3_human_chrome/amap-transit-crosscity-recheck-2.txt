@@ -1,0 +1,6 @@
+amap_key_present=True
+A walking 北京南站->天津站 :: status=error  reason=AMAP_PROVIDER_REJECTED  http=200
+B transit city1=city2=010 (as shipped) :: status=ok  reason=None  http=200  mode=TRANSIT  distance_m=117275  duration_min=68  fare=5450
+C transit city1=010 city2=022 :: http=200 error=None count=2 distance_m=117275 duration_s=None walking_m= nightflag=
+D district keywords=120100 :: status=ok reason=None count=17 天津城区/120100/022/city | 宝坻区/120115/022/district | 静海区/120118/022/district | 蓟州区/120119/022/district
+E district keywords=天津 (city level) :: 天津城区/120100/022 | 天津城区/120100/022

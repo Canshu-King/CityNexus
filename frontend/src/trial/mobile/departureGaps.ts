@@ -281,3 +281,53 @@ export function scheduleRefusalSentence(row: ScheduleRefusalRow | null | undefin
   const after = row.previous_end_time ? `（上一项到 ${row.previous_end_time} 才结束）` : "";
   return `第 ${row.sequence_no} 项${title ? `「${title}」` : ""}${span}：${what}${after}。改这一项的时间再保存，其余不用动。`;
 }
+
+// Reading one verified transfer the way a traveller reads it.
+//
+// Why this exists: the drawer on walk-80 listed 「八达岭长城 → 颐和园 · 步行 · 52185 米 · 41748 秒」
+// (trial/results/20261022_v3_human_chrome/walk-80-log.txt:61).  Both numbers are what the provider
+// returned, and neither is usable: nobody pictures 41748 seconds, and a 52 km hop printed under the
+// word 步行 is the sentence that makes a first-time user close the app.  The raw values stay in the
+// row (and in the title attribute, so the reading can still be checked against them); only the
+// wording a person sees changes here.
+export function humanDistance(meters: number | undefined | null): string {
+  if (typeof meters !== "number" || !Number.isFinite(meters) || meters < 0) return "";
+  if (meters < 1000) return `${Math.round(meters)} 米`;
+  return `${(meters / 1000).toFixed(1)} 公里`;
+}
+
+export function humanDuration(seconds: number | undefined | null): string {
+  if (typeof seconds !== "number" || !Number.isFinite(seconds) || seconds < 0) return "";
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 1) return "不到 1 分钟";
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (!hours) return `约 ${minutes} 分钟`;
+  return rest ? `约 ${hours} 小时 ${rest} 分` : `约 ${hours} 小时`;
+}
+
+// Which AMap deep link a row is allowed to carry.
+//
+// Why the mode is part of the check: the freeze door writes the transport it actually measured into
+// the link (backend/app/agent/goal_route_freeze.py:309 builds mode=walk for a walking row and mode=bus
+// for a transit one), while the drawer used to require mode=walk for every row
+// (WorkspaceActions.tsx:161 as committed in 4dedfb2f, before this change).  So a transit answer was
+// dropped from the list as an unsafe link: walk-80 read 「1 段按公共交通核实」 in the band and
+// TRANSIT_LABELED=0 in the drawer it opens right after (trial/results/20261022_v3_human_chrome/walk-80-log.txt:39
+// against :62).  The traveller was told a segment was verified by bus and then shown five walks.
+const AMAP_NAVIGATION_PREFIX = "https://uri.amap.com/navigation?";
+const AMAP_LINK_MODES: Record<string, string> = { WALK: "walk", TRANSIT: "bus" };
+
+export function isSafeAmapNavigationUrl(value: string | undefined | null, mode?: string | null): boolean {
+  if (typeof value !== "string" || !value.startsWith(AMAP_NAVIGATION_PREFIX)) return false;
+  // A row written before the freeze door recorded a mode is a walking row -- the same reading the
+  // panel uses (goal_route_freeze.py puts WALK on the row when the walking door answered).
+  const expected = AMAP_LINK_MODES[String(mode || "WALK")];
+  if (!expected) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "uri.amap.com" && url.pathname === "/navigation"
+      && !url.username && !url.password && url.searchParams.get("mode") === expected
+      && url.searchParams.get("coordinate") === "gaode";
+  } catch { return false; }
+}

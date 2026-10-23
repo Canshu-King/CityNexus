@@ -6,6 +6,7 @@ import { WorkspaceMap } from "./WorkspaceMap";
 import { TravelGoalPreferences } from "./MobileAiPrompt";
 import { GoalDraftEditor } from "./GoalDraftEditor";
 import { isAreaGoalResearchLead, splitGoalResearch } from "./goalResearch";
+import { humanDistance, humanDuration, isSafeAmapNavigationUrl } from "./departureGaps";
 import type { GoalResearchLead } from "../../api/citynexus";
 import "./WorkspaceActions.css";
 
@@ -121,8 +122,9 @@ function taskStepText(result: Record<string, unknown>): string {
   if (route && typeof route.distance_m === "number" && Number.isFinite(route.distance_m) && route.distance_m >= 0
     && typeof route.duration_seconds === "number" && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0) {
     // The row says which door answered it, so the panel says the same thing back.  Naming every route a
-    // walk is how a 180-minute bus ride from 八达岭长城 appeared as footsteps.
-    return `${route.mode === "TRANSIT" ? "公共交通路线" : "步行路线"} · ${route.distance_m} 米 · ${route.duration_seconds} 秒`;
+    // walk is how a 180-minute bus ride from 八达岭长城 appeared as footsteps.  The drawer below uses the
+    // same two readers, so a segment never reads as "52185 米" in one place and "52.2 公里" in another.
+    return `${route.mode === "TRANSIT" ? "公共交通路线" : "步行路线"} · ${humanDistance(route.distance_m)} · ${humanDuration(route.duration_seconds)}`;
   }
   if (result.status === "CACHED_ONLY") return Array.isArray(result.cached_references) && result.cached_references.length
     ? `已读取 ${result.cached_references.length} 条已有地点来源` : "已读取已有地点资料";
@@ -140,7 +142,6 @@ function taskStepText(result: Record<string, unknown>): string {
 }
 
 const AMAP_MARKER_URL = /^https:\/\/uri\.amap\.com\/marker(?:\?.*)?$/;
-const AMAP_NAVIGATION_URL = /^https:\/\/uri\.amap\.com\/navigation\?/;
 const ADMIN_ADDRESS_KEYS = ["province", "city", "district", "county", "township", "town"] as const;
 
 function shortAdministrativeAddress(address?: Record<string, string>): string {
@@ -153,16 +154,6 @@ function isAmapLead(place: GoalResearchLead): boolean {
   return typeof place.provider === "string" && place.provider.toLowerCase() === "amap";
 }
 
-function isSafeAmapNavigationUrl(value: string): boolean {
-  if (!AMAP_NAVIGATION_URL.test(value)) return false;
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === "uri.amap.com" && url.pathname === "/navigation"
-      && !url.username && !url.password && url.searchParams.get("mode") === "walk"
-      && url.searchParams.get("coordinate") === "gaode";
-  } catch { return false; }
-}
-
 function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
   const routes = items.filter((route) => route.provider === "amap" && route.coordinate_system === "GCJ02"
     && typeof route.id === "string" && !!route.id && typeof route.from_place_id === "string" && !!route.from_place_id
@@ -171,12 +162,12 @@ function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
     && typeof route.to_name === "string" && !!route.to_name.trim()
     && Number.isFinite(route.distance_m) && route.distance_m >= 0
     && Number.isFinite(route.duration_seconds) && route.duration_seconds >= 0
-    && typeof route.source_url === "string" && isSafeAmapNavigationUrl(route.source_url));
+    && isSafeAmapNavigationUrl(route.source_url, route.mode));
   if (!routes.length) return null;
   return <details className="rev-agent-research-drawer"><summary>高德转场路线（{routes.length}）</summary>
     <ul className="rev-workspace-task-places">{routes.map((route) => <li key={route.id} data-testid="rev-amap-research-route">
       <strong>{route.from_name} → {route.to_name}</strong>
-      <span>{route.mode === "TRANSIT" ? "公共交通" : "步行"} · {route.distance_m} 米 · {route.duration_seconds} 秒</span>
+      <span title={`${route.distance_m} 米 · ${route.duration_seconds} 秒`}>{route.mode === "TRANSIT" ? "公共交通" : "步行"} · {humanDistance(route.distance_m)} · {humanDuration(route.duration_seconds)}</span>
       {route.mode === "TRANSIT" && (route.lines ?? []).length > 0
         && <small data-testid="rev-amap-research-lines">{route.lines!.slice(0, 3).join(" · ")}</small>}
       <a href={route.source_url} target="_blank" rel="noopener noreferrer">在高德地图查看路线 ↗</a>
