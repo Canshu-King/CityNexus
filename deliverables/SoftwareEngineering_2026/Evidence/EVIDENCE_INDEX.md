@@ -1,6 +1,6 @@
 # CityNexus SE2026 - evidence index
 
-Generated 2026-10-23 04:47 by `live_checks/se_evidence_index_r1.py`. This page exists because round 2 shipped an evidence file from an older generation than the plan it described, and pointed a reader at two files that were not in the package. Both are now checked by machine.
+Generated 2026-10-23 13:24 by `live_checks/se_evidence_index_r1.py`. This page exists because round 2 shipped an evidence file from an older generation than the plan it described, and pointed a reader at two files that were not in the package. Both are now checked by machine.
 
 Shipped plan: `Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp`, sha256 `6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee`.
 
@@ -21,7 +21,7 @@ Recovery plan: `Microsoft_Project/CityNexus_Plan_Recovery.mpp`, sha256 `7e4f561a
 | `Evidence/se_project_export_r2_result.json` | 788 | `7cee8ac240861887` | `se_project_export_r2.py` | 2026-10-22 18:47 | not a plan-derived file |
 | `Evidence/se_project_recovery_result.json` | 2523 | `cc5f815b4a8ad191` | `se_project_recovery_r1.py` | 2026-10-23 04:37 | sourcePlanSha256: 6398e58f9b4cd3b3 (current) |
 | `Evidence/se_project_snapshot_r2_result.json` | 6461 | `999d9007902aaf29` | `se_project_snapshot_r2.py` | 2026-10-23 04:38 | not a plan-derived file |
-| `Evidence/se_review_package_r2_result.json` | 1528 | `9a1e1c7d5a6e5314` | `se_review_package_r2.py` | 2026-10-23 04:47 | not a plan-derived file |
+| `Evidence/se_review_package_r2_result.json` | 1528 | `bff98d7724eba566` | `se_review_package_r2.py` | 2026-10-23 13:24 | not a plan-derived file |
 | `Evidence/se_visio_build_result.json` | 61641 | `f1c94e98f239a49f` | `se_visio_build_r1.py` | 2026-10-22 18:50 | not a plan-derived file |
 | `Evidence/se_visio_plan_brief_result.json` | 8379 | `f00d0f87197b7d95` | `se_visio_plan_brief_r1.py` | 2026-10-22 18:51 | not a plan-derived file |
 | `Evidence/se_visio_proof_result.json` | 10248 | `61ebbbba022af9a8` | `se_visio_proof_r2.py` | 2026-10-22 18:50 | not a plan-derived file |
@@ -43,7 +43,7 @@ A claimed digest that does not start with the digest of the file on disk is stal
 
 ## Cited paths
 
-67 relative paths are cited by the markdown in this delivery. Unresolvable: **0**.
+68 relative paths are cited by the markdown in this delivery. Unresolvable: **0**.
 
 Documents excluded from the citation check, by name: `CLASSROOM_20261023_NOON_PRIORITY.md`, `CLASSROOM_QODER_CONTINUOUS_UNTIL_NOON_20261023.md`, `CLASSROOM_R3_LAST_MILE_20261023.md`, `EVIDENCE_INDEX.md`, `INDEPENDENT_R2_REVIEW_20261022.md`, `R3_RESULT.md`. Two kinds: received external reviews and instruction notes, which are quoted as they arrived and are not allowed to be edited into agreement; and this report plus `R3_RESULT.md`, which name the findings they are checking, so scanning them would make the checker cite itself.
 
