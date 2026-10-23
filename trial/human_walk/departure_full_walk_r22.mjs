@@ -473,6 +473,25 @@ if (await ask.first().isVisible().catch(() => false)) {
 } else {
   say("STEP_12D_ASK_BUTTON_NOT_SHOWN (nothing left to ask, or no saved plan)");
 }
+// r22 arm: PLACE_CLOSED is the one refusal whose arrival depends on what the model happened to schedule --
+// four walks produced it once (walk-94) and cannot be aimed at it.  With WALK_PROVE_CLOSED=1 the instrument
+// does what a traveller with a night-owl idea would do: moves its own first row to three in the morning in a
+// real input, on the same date, nothing seeded -- a window no listed opening can contain -- saves again, and
+// presses the door.  The reading that comes back is the product's, not the instrument's.
+if (process.env.WALK_PROVE_CLOSED === "1") {
+  const closedFields = departure.locator('input[type="time"]');
+  const firstStart = await closedFields.first().inputValue().catch(() => "");
+  await closedFields.first().fill("03:00").catch((e) => say(`PROVE_CLOSED_START_ERR ${flat(e.message).slice(0, 50)}`));
+  await closedFields.nth(1).fill("04:00").catch((e) => say(`PROVE_CLOSED_END_ERR ${flat(e.message).slice(0, 50)}`));
+  await page.waitForTimeout(1200);
+  await departure.getByRole("button", { name: /保存为正式候选方案/ }).first().click({ timeout: 8000 })
+    .catch((e) => say(`PROVE_CLOSED_SAVE_ERR ${flat(e.message).slice(0, 50)}`));
+  await page.waitForTimeout(10000);
+  const closedStatus = await read(page.locator(".rev-v3-departure p[role=status]").first(), 200);
+  say(`STEP_13A_PROVE_CLOSED row_one=${firstStart}->03:00 status=${closedStatus.slice(0, 150)}`);
+  await layerTo("rev-mission-layer-timeline");
+  await page.waitForTimeout(1500);
+}
 say(`STEP_13_WORKBENCH ${await read(page.locator('[data-testid="rev-plan-workbench"]').first(), 700)}`);
 const select = page.getByTestId("rev-plan-select");
 say(`STEP_13_SELECT_BUTTONS=${await select.count().catch(() => -1)} VISIBLE=${await select.first().isVisible().catch(() => false)}`);

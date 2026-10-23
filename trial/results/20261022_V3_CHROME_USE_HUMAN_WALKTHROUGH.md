@@ -1113,7 +1113,15 @@ walk-97 立刻见效：`STEP_04B_START_RESEARCH pressed=true`（`trial/results/2
 （`STEP_12A2_ROUND_*`，动作仍落在真输入框里）。
 
 **PLACE_CLOSED 的 AFTER 还欠着。** 第廿二节那一刀（点名是哪一处不开放）在 walk-94 有 BEFORE、在真机上还没有 AFTER：
-walk-97 没走到选用那道门，walk-98 正在按同一句话重跑。在那之前这一格只有两样东西：
-闸那一行的形状（`PLACE_CLOSED:<place_id>`，`backend/app/replanning/feasibility.py:872`）
-与浏览器里真模块的逐臂读数（`trial/human_walk/infeasible_sentence_arms_r1.mjs`）——够用，但不是一张屏。
+walk-97 没走到选用那道门，walk-98 这一趟草案保存顺当（`walk-98-log.txt:39` 的「已保存 6 项正式安排」），
+但走到方案屏时那一版仍不给选用按钮（`:97` `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`），
+所以那道门这一趟没被按到。**这不是产品不肯说，是它这次没理由拒绝。**
+已经拿到的是浏览器里真模块的逐臂读数（`trial/human_walk/infeasible_sentence_arms_r1.mjs`，读数
+`trial/results/20261022_v3_human_chrome/infeasible-sentence-arms-1.txt:1` 起）：认得地点时是
+「这版方案排不下：八达岭长城（一日往返）在你排的这段时间不开放。把这一项挪到它的开放时间…」，
+取不到名字时是「有一处安排在你排的这段时间不开放。」，两类同时被拒时两句下一步都给，
+不认识的码仍原样露出（`SOMETHING_NEW` 那一臂），空表那一臂回空串让上层保留自己的通用句；
+`PLACE_CLOSED` 这个字在四臂里出现零次（同文件 `:9`）。
+还缺的是一张屏。walk-99 用一条能瞄准它的走法去补：把旅客自己那一行的时间改成凌晨三到四点（真输入框、同一天、不塞数据），
+再按一次选用——量具那一格是 `departure_full_walk_r22.mjs` 的 `STEP_13A_PROVE_CLOSED`。
 USER_VERIFIED 仍是 PENDING。
