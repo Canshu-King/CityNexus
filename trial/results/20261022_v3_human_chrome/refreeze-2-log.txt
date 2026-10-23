@@ -1,0 +1,13 @@
+PAGES=4
+PAGE http://127.0.0.1:14381/revolution card=false dock=1 stored_journey=true
+PAGE http://127.0.0.1:14381/revolution card=false dock=1 stored_journey=true
+PAGE http://127.0.0.1:14382/revolution card=false dock=1 stored_journey=true
+PAGE http://127.0.0.1:14386/revolution card=false dock=1 stored_journey=true
+BEGIN 2026-10-23T00:10:47.802Z
+DEPARTURE_VISIBLE=false
+CARD_BEFORE (unreadable)
+ASK_COUNT_BEFORE (unreadable)
+SHOT refreeze2-01-before.png bytes=431469
+ATTEMPT_1 FREEZE_BUTTON_NOT_SHOWN
+ASK_COMPOSER_NO_BUTTON (nothing left to ask; the stale sentence cannot be produced)
+CARD_END (unreadable)

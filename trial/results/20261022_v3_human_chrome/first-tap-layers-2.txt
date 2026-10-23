@@ -1,0 +1,26 @@
+CANDIDATE_0 url=http://127.0.0.1:14436/revolution state={"found":3,"viewportH":783,"scrollY":4871,"rowY":-153,"rowBottom":-107,"pointer":""}
+JOURNEY_POINTER_CANARY 
+SHAPE 360x780 ARM cold_top where=on_screen state={"found":3,"viewportH":780,"scrollY":0,"rowY":299,"rowBottom":345,"pointer":""}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[65,322] after_pressed=true RESULT=HIT
+SHOT firsttap2-360x780-cold_top-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[173,112] after_pressed=true RESULT=HIT
+SHOT firsttap2-360x780-cold_top-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[280,112] after_pressed=true RESULT=HIT
+SHOT firsttap2-360x780-cold_top-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[65,104] after_pressed=true RESULT=HIT
+SHOT firsttap2-360x780-cold_top-map.png
+FIRST_TAP_SUCCESS=3/3 shape=360x780 arm=cold_top (only where=on_screen counted)
+JOURNEY_KEPT same pointer=
+SHAPE 360x780 ARM after_scroll where=above_viewport state={"found":3,"viewportH":780,"scrollY":1488,"rowY":-181,"rowBottom":-135,"pointer":""}
+NOT_TAPPED 360x780/after_scroll -- 键不在这一屏 visible 范围内；这一档不计进 FIRST_TAP，也不许写成人能点中
+SHAPE 390x844 ARM cold_top where=on_screen state={"found":3,"viewportH":844,"scrollY":0,"rowY":299,"rowBottom":345,"pointer":""}
+TAP rev-mission-layer-map first_press=true covers_it=false topmost=rev-mission-layer-map centre=[70,322] after_pressed=true RESULT=HIT
+SHOT firsttap2-390x844-cold_top-map.png
+TAP rev-mission-layer-timeline first_press=true covers_it=false topmost=rev-mission-layer-timeline centre=[188,112] after_pressed=true RESULT=HIT
+SHOT firsttap2-390x844-cold_top-timeline.png
+TAP rev-mission-layer-agent first_press=true covers_it=false topmost=rev-mission-layer-agent centre=[305,112] after_pressed=true RESULT=HIT
+SHOT firsttap2-390x844-cold_top-agent.png
+TAP rev-mission-layer-map first_press=false covers_it=false topmost=rev-mission-layer-map centre=[70,104] after_pressed=true RESULT=HIT
+SHOT firsttap2-390x844-cold_top-map.png
+FIRST_TAP_SUCCESS=3/3 shape=390x844 arm=cold_top (only where=on_screen counted)
+JOURNEY_KEPT same pointer=

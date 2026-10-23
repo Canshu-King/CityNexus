@@ -51,7 +51,8 @@ for (const shape of shapes) {
   }
   await page.waitForTimeout(1200);
   const label = shape[0] === 0 ? `current ${page.viewportSize()?.width ?? "?"}x${page.viewportSize()?.height ?? "?"}` : `${shape[0]}x${shape[1]}`;
-  for (const mode of ["as_is", "after_scroll_into_view"]) {
+  const modes = process.env.HIT_SCROLL === "0" ? ["as_is"] : ["as_is", "after_scroll_into_view"];
+  for (const mode of modes) {
     for (const testId of tabs) {
       if (mode === "after_scroll_into_view") {
         // The walkthrough calls scrollIntoViewIfNeeded() before pressing, which is exactly the moment walk-103

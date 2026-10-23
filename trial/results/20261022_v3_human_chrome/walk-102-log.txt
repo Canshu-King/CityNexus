@@ -131,3 +131,25 @@ LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
 LAYER rev-mission-layer-timeline attempt=2 clicked=false
 LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
 LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+STEP_12D_ASK_BUTTON=0
+STEP_12D_ASK_BUTTON_NOT_SHOWN (nothing left to ask, or no saved plan)
+PROVE_CLOSED_OPEN_ERR locator.click: Timeout 6000ms exceeded. Call log: 
+PROVE_CLOSED_START_ERR locator.fill: Timeout 8000ms exceeded. Call log: 
+PROVE_CLOSED_END_ERR locator.fill: Timeout 8000ms exceeded. Call log: 
+PROVE_CLOSED_WRITTEN first_two=[]
+PROVE_CLOSED_SAVE_ERR locator.click: Timeout 8000ms exceeded. Call log: 
+STEP_13A_PROVE_CLOSED row_one=->03:00 status=(unreadable)
+LAYER_BLOCKED rev-mission-layer-timeline attempt=1 {"present":false}
+LAYER rev-mission-layer-timeline attempt=1 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=2 {"present":false}
+LAYER rev-mission-layer-timeline attempt=2 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=3 {"present":false}
+LAYER rev-mission-layer-timeline attempt=3 clicked=false
+LAYER_BLOCKED rev-mission-layer-timeline attempt=4 {"present":false}
+LAYER rev-mission-layer-timeline attempt=4 clicked=false
+STEP_13_WORKBENCH (unreadable)
+STEP_13_SELECT_BUTTONS=0 VISIBLE=false
+SHOT walk102-13-workbench.png bytes=92219
+WALK_END 2026-10-23T19:36:16.343Z

@@ -1276,3 +1276,143 @@ walk-104 的草案六十秒就到了（`:13`）。我原先在文件头写的因
 实测站不住：真正杀掉草案的是 `MODEL_HTTP_503`，`TRAVELER_INPUT_REQUIRED` 是澄清那一步，不是不拟。
 注释已改成这个读法，臂本身留着——它只在草案真的没来时替旅客答一句，那是人会做的事。
 USER_VERIFIED 仍是 PENDING。
+
+## 廿七、凌晨四点到四点四十六：把压在品牌条底下的那一排键挪开，再回头看挪开之后旅客第一下点到没点到（walk-105／106／107，落地 65fa73ee）
+
+**这一节先记账面事实，不预判。** 三趟都在同一枚 canary 栈（origin `127.0.0.1:14496`，跑批端口那台后端）上走，
+读的全是渲染文字，截图名与日志行号一一对得上。
+
+walk-105 走到「选用」之前停住：刷新之后三张版本卡仍在、7 个槽位仍在，但 `selectButtons=0`
+（`trial/results/20261022_v3_human_chrome/walk-105-log.txt:39`）。我当场把这件事写成了「按钮按不动」，
+读源码之后要更正：`DraftDepartureCard.tsx:197` 那个「保存为正式候选方案」的 disabled 条件是
+`!confirmed || busy || Boolean(result)`，而 `:95` 的 `change()` 在任何一次时间改动后都会把 `confirmed` 复位；
+屏上那一句「保留已选地点和日期，先确认每天的时间。」（`:184`）就是这个门的读者。
+**缺的是「确认每天的时间」这一按，不是产品少一条路**——这一点是仪表少走了半步， walk-107 补上后同一步就过了。
+
+walk-106 把这一趟真正走到的地方拍了出来：
+- `walk-106-log.txt:38` 第一轮保存之后点名行仍空（`STEP_12A2_NO_NAMED_ROW round=1`）；
+- `:85` 我把第 1 项挪成 `09:00→03:00`（故意早于行程开始）之后，屏上第一次点名了是哪一项：
+  「第 1 项「天安门广场 → 故宫博物院」 03:00–04:00：开始时间早于这趟旅行的开始。改这一项的时间再保存，其余不用动。」；
+- `:88` 那一刻「选用这份方案」=1 枚且 VISIBLE=true，`:89` 是它的照片 `walk106-13-workbench.png`（180705 字节）。
+
+walk-107 是这一晚走得最远的一趟：`walk-107-log.txt:43` 六个时间格按零间隔写完（`zero_gap_written=true`），
+`:44` 屏上回读「已保存 6 项正式安排」，`:51` 转场冻结成 `TODO_ROUTE_LINES=0 FROZEN=true`，
+`:49` 与 `:54` 两处带子都读回「转场已核实 5/5（其中 1 段是跨夜衔接，1 段按公共交通核实） · 已冻结进这版方案」，
+`:99` 按「选用」拿到 `HTTP_422`，`:100` 屏上把它译成了人话：
+「这版方案排不下：两段安排之间留的赶路时间不够（3 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。」
+`:101` 是这句话的照片 `walk107-14-after-select.png`（160519 字节）。**这一句仍然没点名是哪三段**——那件事我没修，只在单子上留着。
+
+**图层键被压那一件，修的是几何不是层级。** `layer-tab-hittest-3.txt:3-8` 是修前：两种情形、三枚键的
+`covers_it` 全为 true（行盒在 `y=20`，中心点命中的是页头品牌块）。修法是给页头高度一个唯一出处
+（`RevolutionMobileV1.css:9` 声明 `--rev-fl-header-h: 66px`，`:460` 在 680 以下改 `61px`；`:31`／`:467` 用它当
+`min-height`），再让那一排键自己停在这条边下面（`MissionCockpit.css:588-590`：`top: var(--rev-fl-header-h)` 与
+配套 `scroll-margin-top`）。**z-index 一枚也没抬。** 落地是 `65fa73ee`（10-24 04:29），
+同一笔里 `tsc_after_sticky_fix.txt` 与 `build_after_sticky_fix.txt` 各自记了退出码。
+
+修后读数我保留了一条没修干净的尾巴，如实写在这：`layer-tab-hittest-3.txt:12-14`（as_is）仍是 `covers_it=true`，
+只有 `:15-17`（scrollIntoView 之后）才全部 `covers_it=false`。两次的起始滚动位置本来就不同（修前 `scrollY=843`、
+修后 `scrollY=279`），所以这不是一组受控对照，只能说「让键进视口这条路是通的」；
+旅客**不滚动**时第一下点不点得中，交给本节下面那条仪表按三档形状逐档判。
+
+**仪表自己坏了三次，三次都改仪表，没改屏。**
+1. r23 那条重试探针用 `/重试|可以继续/`，而这屏真写的字是「继续研究」——它永远不可能命中（r23 冻结不改，
+   r24 起逐字读真标签并读 `isDisabled()`，理由写在 r24 的文件头）。
+2. 命中尺 r1／r2 靠 localStorage 里的行程指针挑标签页；`_tab_probe_r4.mjs` 证明指针是**按源**共享的，
+   同一枚指针同时属于两页（一页有驾驶舱、一页只有欢迎屏）。r3 改成只认「这一页有没有三枚图层键」，数不对就
+   `REFUSE qualifying_tabs≠1`。
+3. `press_resume_r2.mjs` 沿用同一挑法，所以先修再按。它一次也没按下去：`press-resume-2.txt:4`
+   `REFUSE_TO_PRESS qualifying_tabs=0`——当时两页都不在可重试态。**这一条不是产品缺陷，是我不能凭"按钮存在"就写"旅客按得到"。**
+
+现场另一件事：04:4x 这一趟收尾时 CDP `9335` 仍在应答（`netstat` 现读一条 LISTENING），第廿六节写的那次掉线没有重演。
+
+USER_VERIFIED 仍是 PENDING：这些点击是我在自动化 Edge 里以旅客视角按的，不是主人在真手机上按的。
+
+## 廿八、凌晨四点三十一的裁语之后：先交真正产品码，再把「第一下就点中」量成六个档 3/3（walk-108，P0-1／P0-2 这一刀）
+
+04:31 我从 GitHub 读到新裁语（PR #43 评论 id `6374145024`，北京时间 04:28 那一版）。它要的顺序很直白：
+**下一笔 commit 必须动真产品码，不能再只写 walk-105～walk-130。** 这一节就按那个顺序交。
+
+### P0-1「第一次就点中」量到了六个档，但我自己的仪表先坏了两回
+
+`first_tap_layers_r1.mjs`（日志 `first-tap-layers-1.txt`）把三档形状全部读成 `ABSENT`，而同一次运行里
+`markOf` 说那一排键存在。这不是屏上没键，是仪表吞了自己的报错：`probe()` 出错时返回 `{error}`，
+而我判的是 `!before.present`——刷新还没落定时的 "execution context destroyed" 被读成了"这个按钮不存在"。
+**吞掉「为什么失败」的尺比哑尺更坏**，这条我以前记过，这次咬在我自己新建的尺上。r1 冻住不改。
+
+`first_tap_layers_r2.mjs` 修了报错通道，却在另一半撒了谎：它在 `page.evaluate` 里面调了 `flat()`——
+那是 Node 侧的函数，页面里没有，抛出的 ReferenceError 又被我自己的 try/catch 咽成空串，于是
+`JOURNEY_KEPT same` 比的是两枚空字符串（`first-tap-layers-2.txt:13` 等六行 `pointer=` 后面是空的）。
+**「同一个 Journey 没丢」这一半在那次运行里根本没有读数**，所以 r2 的 3/3 我不用它作证。
+
+`first_tap_layers_r3.mjs`（`first-tap-layers-3.txt`，本机字节 sha256 前八位 `dcfac164`）才是这一档的读数，
+它开局就把空指针当作 REFUSE 条件，不给"同"字的机会：
+
+| 形状 | 档 | 那一排键在哪 | FIRST_TAP_SUCCESS | Journey 指针 |
+| --- | --- | --- | --- | --- |
+| 360x780 | cold_top | `rowY=299`（视口内） | 3/3（`:12`） | same（`:13`） |
+| 360x780 | after_scroll | `scrollY=600` 后 sticky 在 `y=81—127` | 3/3（`:23`） | same（`:24`） |
+| 390x844 | cold_top | `rowY=299` | 3/3（`:34`） | same（`:35`） |
+| 390x844 | after_scroll | sticky `y=81—127` | 3/3（`:45`） | same（`:46`） |
+| 430x932 | cold_top | `rowY=299` | 3/3（`:56`） | same（`:57`） |
+| 430x932 | after_scroll | sticky `y=81—127` | 3/3（`:67`） | same（`:68`） |
+
+逐行统计（从那张日志现读重算，不是抄表）：`TAP` 行 24 枚，`RESULT=HIT` 24 枚，`RESULT_MISS` 0 枚，
+`covers_it=true` 0 枚，`TAP_ERROR`／`TAP_ABSENT` 0 枚。指针逐枚是
+`{"id":"0d83a51a-…`（canary 行程，只取前若干位，不含凭证）。
+按键用的是元素自己中心的真鼠标点击（`page.mouse.click(centre)`），没有 `force`、没有 DOM 注入。
+这一档的答案：**三档形状 × 首屏与页内滚动之后，地图→日程→对话各按第一下都点中，返回也在**，同一趟没换。
+
+### P0-2 恢复入口搬进了固定输入区
+
+改的是三处产品码：
+- `frontend/src/trial/mobile/WorkspaceActions.tsx:221`／`:223` 新增 `onBrowseFound`；
+- `:259` 把「这一轮还能不能续」做成一枚判据 `resumableTask`（`RESUMABLE` 或 `FAILED_RECOVERABLE`），
+  `:646` 原来那枚「继续研究」改用它，`:681-687` 在固定底栏里、紧挨着那句实话的下面，给出两条明路：
+  **「重试这一轮」**（仍走 `resumeTask()`）与**「先浏览已找到的地点」**；
+- `frontend/src/trial/mobile/MissionCockpit.tsx:303` 把「先浏览」接到 `selectLayer("map")`——
+  地图那一层就是旅客已经找到的地点（walk-107 的 `walk-107-log.txt:23` 那排卡片就在那里），
+  卡片上的「查看对应安排」再把他带到日程；
+- 版式 `frontend/src/trial/mobile/WorkspaceActions.css:143-148`（`grid-column: 1 / -1`，两枚键各占半行，
+  最小命中高度 44px，禁用态留可见差别）。
+
+**复用同一轮、不新建 Journey** 这件事我没有靠嘴说，读的是浏览器自己发出去的请求行：
+`walk-108-log.txt:108` 那行 `GOAL_TASK_CALLS` 解析出来是 4 条、`distinct task=1`（`2995277a…`）、
+1 条 `/run` + 3 条 `/resume`、四条 `http_status=200`。
+契约面也说清：`frontend/src/api/citynexus.ts:3253-3259` 的 resume 打的是
+`POST /journeys/<id>/agent/goal-tasks/<task_id>/resume`，这条路上**没有** `Idempotency-Key` 头
+（那是 `:3271-3274` 的 prepare-plan 才有）；Agent 那一侧的去重靠 body 里的 `message_id`
+（`WorkspaceActions.tsx:474` 把 `message_id` 放进 body，`:477-478` 那句注释：响应没确认之前不清 `message_id`，重试就不会偷偷重查一遍），
+服务端另一条护栏是 `backend/app/agent/goal_tasks.py:1303-1309` 的 `GOAL_TASK_ALREADY_RUNNING`（409）。
+
+**没做到的那半，我按事实写：「重试这一轮」今夜还没有被真的按下过。** 底栏那一行只在服务端把这一轮判成
+可续时才渲染（`:681` 的 `resumableTask`），而 walk-108 全程没出现这个态——
+`walk-108-log.txt:11` 那行 `DOCK_RECOVERY_ROW=false`（同时 `PANEL_RESUME=false`）是现场读数。
+服务端能进这个态的两条真路径写在这里供核对：`goal_tasks.py:1337-1343`（`AgentRuntimeUnavailable` →
+`FAILED_RECOVERABLE`／`MODEL_RUNTIME_UNAVAILABLE`）与 `:1281-1283`（`MODEL_BUDGET_EXHAUSTED` → `RESUMABLE`，
+但试航界面发的是 `unlimited_research: true`，所以预算那支在这一面上不会触发）。
+`dock_recovery_probe_r1.mjs` 只跑了一次就拒按：`dock-recovery-1.txt:2` 写的是 `qualifying_tabs=0`
+（当时唯一那页 `mark=null`，取不到驾驶舱）；同一族的更早一次拒按是 `press-resume-2.txt:4`。**我没有伪造这个态**——不注入 storage、不打断点、不改成
+"等待预算 16 分钟"。等待预算实测是三次各 180 秒（`WorkspaceActions.tsx:388`／`:425`／`:469`）。
+
+### walk-108 撞上一件我以前没见过的新东西：转场冻结按下去 500，而屏上不说
+
+`walk-108-log.txt:40`、`:46`、`:52` 三条 `POST …/plans/7f7a5b11…/freeze-routes` 全部 `HTTP_500`，
+而旅客那侧的带子一直是原句「当天的转场还没有向高德核实过。 核实并冻结今天的转场」，
+`STEP_12B_ROUND_1 TODO_ROUTE_LINES=4 FROZEN=false`（`:44`，连按三轮都停在这里：`:44`／`:50`／`:56`）。走到 `:106` 时
+`STEP_13_SELECT_BUTTONS=0 VISIBLE=false`——**同一扇门在 walk-107 还是 422 加一句人话，这一趟连门都没给**。
+服务端炸了而界面上没有任何实话，这和 P0-2 是同族缺陷（不许无声等待），我另开了一格单子跟。
+
+### P0-3 的身份面：先把门摸清楚，不假装能恢复
+
+`_storage_keys_r1.mjs` 现读（origin `http://127.0.0.1:14436`）：sessionStorage 里是
+`citynexus.traveler.bearer`、`citynexus.traveler.session-id`、`citynexus.revolution.v3.space`；
+localStorage 里是 `citynexus.revolution.firstlook.journey`、`…recent-journeys` 与
+`citynexus.revolution.goal-task.<member>.<journey>`。也就是说**凭证按标签页、指针按源**，
+冷开的标签页拿不到凭证——这正是裁语说的那道门还没有建。这一刀我没动鉴权，也不在这儿宣布"公开可玩"。
+
+**仪表谱系（本次新增）**：`first_tap_layers_r1` → `r2` → `r3`，`departure_full_walk_r28` → `r29`
+（r29 把「继续研究」与「重试这一轮」分开读，因为产品现在写两个都命中旧正则的标签），
+`dock_recovery_probe_r1`（挑不出唯一活标签页就 REFUSE），`_storage_keys_r1`、`_tab_shape_conflict_r1`（后者是
+我为 r1 的自相矛盾找出现场的取证尺）。门禁面：`tsc_after_dock_recovery.txt`（`typecheck_rc=0`）、
+`build_after_dock_recovery.txt`（`build_rc=0`）。USER_VERIFIED 仍是 PENDING——这一屏是我在自动化 Edge 里按的，
+不是主人在真手机上按的。

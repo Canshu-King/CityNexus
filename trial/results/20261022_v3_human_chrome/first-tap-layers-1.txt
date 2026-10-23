@@ -1,0 +1,31 @@
+CANDIDATE_0 url=http://127.0.0.1:14436/revolution mark={"tabs":3,"dock":true,"shape":"494x783","scrollY":0,"pointer":"{\"id\":\"0"}
+JOURNEY_POINTER {"id":"0 (canary id, first 8 chars)
+SHAPE 360x780 ARM cold VIA reload mark={"tabs":3,"dock":true,"shape":"360x780","scrollY":0,"pointer":"{\"id\":\"0"}
+TAP 地图 rev-mission-layer-map ABSENT
+TAP 日程 rev-mission-layer-timeline ABSENT
+TAP 对话 rev-mission-layer-agent ABSENT
+TAP 返回 rev-mission-layer-map ABSENT
+FIRST_TAP_SUCCESS=0/3 shape=360x780 arm=cold
+JOURNEY_KEPT same pointer={"id":"0
+SHAPE 360x780 ARM scrolled VIA reload mark={"tabs":3,"dock":true,"shape":"360x780","scrollY":520,"pointer":"{\"id\":\"0"}
+TAP 地图 rev-mission-layer-map ABSENT
+TAP 日程 rev-mission-layer-timeline ABSENT
+TAP 对话 rev-mission-layer-agent ABSENT
+TAP 返回 rev-mission-layer-map ABSENT
+FIRST_TAP_SUCCESS=0/3 shape=360x780 arm=scrolled
+JOURNEY_KEPT same pointer={"id":"0
+SHAPE 390x844 ARM cold VIA reload mark={"tabs":3,"dock":true,"shape":"390x844","scrollY":1900,"pointer":"{\"id\":\"0"}
+TAP 地图 rev-mission-layer-map ABSENT
+TAP 日程 rev-mission-layer-timeline ABSENT
+TAP 对话 rev-mission-layer-agent ABSENT
+TAP 返回 rev-mission-layer-map ABSENT
+FIRST_TAP_SUCCESS=0/3 shape=390x844 arm=cold
+JOURNEY_KEPT same pointer={"id":"0
+SHAPE 390x844 ARM scrolled VIA reload mark={"tabs":3,"dock":true,"shape":"390x844","scrollY":5047,"pointer":"{\"id\":\"0"}
+TAP 地图 rev-mission-layer-map ABSENT
+TAP 日程 rev-mission-layer-timeline ABSENT
+TAP 对话 rev-mission-layer-agent ABSENT
+TAP 返回 rev-mission-layer-map ABSENT
+FIRST_TAP_SUCCESS=0/3 shape=390x844 arm=scrolled
+JOURNEY_KEPT same pointer={"id":"0
+SHAPE 430x932 ARM cold VIA reload mark={"tabs":3,"dock":true,"shape":"430x932","scrollY":3432,"pointer":"{\"id\":\"0"}

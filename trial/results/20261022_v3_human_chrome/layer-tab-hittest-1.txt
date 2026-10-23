@@ -1,1 +1,4 @@
 NO_TAB_FOR_JOURNEY 1a2f4474 -- refusing to measure someone else's screen
+SHAPE current ?x? as_is rev-mission-layer-map {"present":false}
+SHAPE current ?x? as_is rev-mission-layer-timeline {"present":false}
+SHAPE current ?x? as_is rev-mission-layer-agent {"present":false}

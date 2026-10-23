@@ -1,0 +1,4 @@
+TABS 2 at 2026-10-23T20:19:24.037Z
+TAB url=http://127.0.0.1:14496/revolution pointer={"id":"6498b977-9842-4a48-baf9-36b229a374d7","cityCode":"CN- dock=true resume_button=false journey_match=true QUALIFIES=false
+TAB url=http://127.0.0.1:14496/revolution pointer={"id":"6498b977-9842-4a48-baf9-36b229a374d7","cityCode":"CN- dock=false resume_button=false journey_match=true QUALIFIES=false
+REFUSE_TO_PRESS qualifying_tabs=0 -- 要么没人处于可重试态，要么有两个页面都说自己是这一趟，按错就污染别人的走查
