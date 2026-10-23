@@ -1,0 +1,7 @@
+amap_key_present=True run_at=2026-10-23T18:35:00+08:00 pair=王府井->故宫
+BURST_6 [{"label": "burst_01", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}, {"label": "burst_02", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}, {"label": "burst_03", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}, {"label": "burst_04", "status": "0", "infocode": "10021", "info": "CUQPS_HAS_EXCEEDED_THE_LIMIT", "route_present": false}, {"label": "burst_05", "status": "0", "infocode": "10021", "info": "CUQPS_HAS_EXCEEDED_THE_LIMIT", "route_present": false}, {"label": "burst_06", "status": "0", "infocode": "10021", "info": "CUQPS_HAS_EXCEEDED_THE_LIMIT", "route_present": false}]
+RETRY_AT_1s {"label": "at_1s", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}
+RETRY_AT_3s {"label": "at_3s", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}
+RETRY_AT_6s {"label": "at_6s", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}
+RETRY_AT_11s {"label": "at_11s", "status": "1", "infocode": "10000", "info": "OK", "route_present": true}
+refused_in_burst=3

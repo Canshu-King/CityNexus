@@ -29,6 +29,7 @@ What this adds is a bridge, not a second source of truth:
 from __future__ import annotations
 
 import json
+import time
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode
 from uuid import UUID, uuid4
@@ -163,6 +164,10 @@ _TRANSIT_ANSWERABLE_REFUSALS = frozenset({"AMAP_NO_ROUTE", "AMAP_PROVIDER_REJECT
                                           # refusals, not with the access ones.
                                           "AMAP_OUT_OF_PROVIDER_RANGE"})
 
+# One pause before a rate-limited hop is asked a second time, in seconds.  The provider's own recovery
+# was measured at one second (trial/results/20261022_v3_human_chrome/amap-burst-infocode-2.txt:3).
+_RATE_LIMITED_RETRY_AFTER_S = 1.0
+
 
 def _refusal_key(origin: Place, destination: Place) -> str:
     return f"{origin.id}->{destination.id}"
@@ -288,6 +293,18 @@ def _measure_now(session: Session, task: dict, origin: Place, destination: Place
         receipt = _receipt(session, "goal_amap_walking",
                            {"from_place_id": origin.id, "to_place_id": destination.id,
                             "coordinate_system": "GCJ02"}, client.walking(start, end))
+    if str(receipt.get("reason_code") or "") == "AMAP_RATE_LIMITED":
+        # "Too many at once" is a moment, not a verdict, and this freeze asks every hop in one go.
+        # Measured: six back-to-back walking calls on one city pair refused three of them with infocode
+        # 10021 CUQPS_HAS_EXCEEDED_THE_LIMIT, and the same hop answered a route one second later
+        # (trial/results/20261022_v3_human_chrome/amap-burst-infocode-2.txt:2 against :3).  So the hop is
+        # asked again after that pause -- once.  A retry loop would spend the traveller's daily allowance
+        # on our own burst, and a hop that refuses twice is reported as refused.
+        time.sleep(_RATE_LIMITED_RETRY_AFTER_S)
+        with _client() as client:
+            receipt = _receipt(session, "goal_amap_walking",
+                               {"from_place_id": origin.id, "to_place_id": destination.id,
+                                "coordinate_system": "GCJ02"}, client.walking(start, end))
     route = receipt.get("route")
     mode = "WALK"
     call_id = receipt.get("provider_call_id")

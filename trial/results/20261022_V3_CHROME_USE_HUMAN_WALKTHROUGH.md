@@ -927,6 +927,55 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
-（P1）没动；USER_VERIFIED 仍是 PENDING。现场栈现读更正为 r16：后端 `:60266`／前端 `:14466`／独立库
-citynexus_v3_human18_1022.db（`D:/moodle/_cmdr_v3_port_1022/_boot_human_stack_r16.ps1:11`、`:12`、`:13`，仍只打印 amap_key_present=True；
-这句替掉上一段里那句 r11／human13 的旧写法——那是 walk-79 之前抄下的，落 walk-80 时没跟着改）。
+（P1）没动；USER_VERIFIED 仍是 PENDING。现场栈现读更正为 r19 起、经
+`D:/moodle/_cmdr_v3_port_1022/_restart_human_stack_r20.ps1:6` 重启后端一次：后端 `:60296`／前端 `:14496`
+／独立库 citynexus_v3_human21_1022.db（`D:/moodle/_cmdr_v3_port_1022/_boot_human_stack_r19.ps1:13`、`:14`、`:15`，
+仍只打印 amap_key_present=True；这句替掉上一段里那句 r11／human13 与 r16／human18 的旧写法——
+那两次都是走查之间没跟着改的抄件）。
+
+**一句被高德自己推翻的话，和它挡住的那一次出发。** walk-88 是这一串里第一次走到「选用」门前却按不下去的走查：
+旅客自己不动时间（仪表 `D:/moodle/_cmdr_v3_port_1022/departure_full_walk_r18.mjs:232` 那格
+`STEP_12A_GAP_KEPT`，读数 `trial/results/20261022_v3_human_chrome/walk-88-log.txt:34`），
+卡片却报「转场已核实 4/5（其中 1 段是跨夜衔接），还有 1 段没有来源回答」
+（`trial/results/20261022_v3_human_chrome/walk-88-log.txt:39`），分段拒答那一行写的是
+「颐和园 → 圆明园遗址公园：地图服务今天的查询次数已经用完，稍后再核实这一段」
+（同文件 `:52`），于是「选用这份方案」这一版根本不存在（同文件 `:98` `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`）。
+
+那句话是假的，证据在自家回执里：那一拍 `provider_calls` 五行 `goal_amap_walking` 挤在同一秒内
+（18:14:29.448／.559／.694／.782／.884），四行 SUCCESS、一行 FAILURE——一天的额度不会这样发牌。
+拿同一枚键、同一对城内坐标复现：连发八次，前三次 OK，第 4/5/6 次返回
+`infocode=10021 CUQPS_HAS_EXCEEDED_THE_LIMIT`，停一秒再问就又是 OK
+（`trial/results/20261022_v3_human_chrome/amap-burst-infocode-1.txt:2` 对 `:3`，
+`trial/results/20261022_v3_human_chrome/amap-burst-infocode-2.txt:2` 对 `:3`）。
+10021 是**并发**限制，不是**当日**额度；把它和日额度混成同一个理由码
+（`backend/app/integrations/china/amap_provider.py` 旧表把 10003/10004/10021 一律写成 `AMAP_QUOTA_EXCEEDED`），
+屏上就长出一句「今天的查询次数已经用完」——旅客听进去的是「今天没了」，于是这一趟到此为止。
+
+**这一刀改了三格，都在写的那一侧。**
+`backend/app/integrations/china/amap_provider.py:58`、`:59` 把 10004／10021 分给新的
+`AMAP_RATE_LIMITED`，日额度那几枚留在原码；
+`frontend/src/trial/mobile/departureGaps.ts:235` 给它一句自己的话：
+「地图服务一次被问得太急，过几秒再核实这一段。」——不再冒认「今天」；
+`backend/app/agent/goal_route_freeze.py:296` 在遇到这一码时停 `_RATE_LIMITED_RETRY_AFTER_S`
+（`:169` 定 1.0 秒，取自上面那次实测）**只再问一次**，第二次仍拒就照实记成拒答，不循环、不替旅客烧额度。
+回归：`backend/tests/test_qoder_amap_rate_limit_r1.py`（三枚：拒一次后第二次答上→冻上；两次都拒→记拒且只问两次；
+日额度→一次问完且不开公共交通那扇门），`backend/tests/test_mobile_amap_provider.py:386`、`:387` 钉住分码，
+`backend/tests/test_qoder_goal_transit_leg_r1.py:170`、`:185` 钉住「这一码仍属访问类、不开第二扇门，但会被再问一次」。
+四枚文件一起跑：`36 passed`（`test_goal_route_freeze.py`＋上面三枚）。
+变异反控：把 `:296` 的判断词换成 `AMAP_QUOTA_EXCEEDED` 重跑，三枚全红——这尺会咬。
+
+**改完之后同一台栈、同一条路走通到「旅程已开始」。** walk-89（重启后端之后）：
+「转场已核实 5/5（其中 1 段是跨夜衔接） · 已冻结进这版方案」（`walk-89-log.txt:42`）、
+分段拒答那一格是空的（`:48` `STEP_12B3_HOP_REFUSALS []`），
+「选用这份方案」看得见也按得下（`:79` `STEP_13_SELECT_BUTTONS=1 VISIBLE=true`），
+按下去是「可以确认出发 6 项正式安排 方案 1 已选用」（`:81`），
+再按「确认方案，开始行程」屏上变成「旅程已开始 6 项正式安排 方案 1 正在使用」（`:83`、`:84`）。
+重试这一格确实发生了：`provider_calls` 现读 10:46:05.206 那行 `goal_amap_walking FAILURE reason=AMAP_RATE_LIMITED`，
+10:46:06.315 同一对地点 SUCCESS——间隔 1.11 秒，正是那一次再问。
+出发之后那一节换名字叫「执行与待办」，屏上仍留着 12 个时间输入、12 个按钮、6 条链接（`:89`、`:90`），
+刷新之后这一节还在（`:95`）。
+
+**这一格没量干净，写下来。** `:96` 那句 `STEP_18_AFTER_RELOAD_HEADLINE` 取到的是地图卡的文字
+（「现实地图6 处地点查看其他研究（66）…」），因为仪表用 `.cn-mission-card` 的 first() 抓标题，
+同一屏有几张同类的卡——那是量具的selector不准，不是一条产品结论；「出发之后标题写什么」仍待重测。
+USER_VERIFIED 仍是 PENDING：以上全部量在桌面 Chrome 的手机形窄视口，你手机上没按过。

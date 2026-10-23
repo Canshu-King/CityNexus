@@ -38,18 +38,25 @@ _INFOCODE_REASON_CODES = {
     "10013": "AMAP_INVALID_KEY",
     # Daily, per-minute, IP, service, account and purchased-plan quota limits.
     "10003": "AMAP_QUOTA_EXCEEDED",
-    "10004": "AMAP_QUOTA_EXCEEDED",
     "10010": "AMAP_QUOTA_EXCEEDED",
     "10014": "AMAP_QUOTA_EXCEEDED",
     "10015": "AMAP_QUOTA_EXCEEDED",
     "10019": "AMAP_QUOTA_EXCEEDED",
     "10020": "AMAP_QUOTA_EXCEEDED",
-    "10021": "AMAP_QUOTA_EXCEEDED",
     "10029": "AMAP_QUOTA_EXCEEDED",
     "10044": "AMAP_QUOTA_EXCEEDED",
     "10045": "AMAP_QUOTA_EXCEEDED",
     "40000": "AMAP_QUOTA_EXCEEDED",
     "40003": "AMAP_QUOTA_EXCEEDED",
+    # Asked too often at once, not out of today's allowance.  Measured, not read off the docs: eight
+    # walking calls fired back to back on one short city pair -- the first three answered OK, the next
+    # three came back infocode 10021 CUQPS_HAS_EXCEEDED_THE_LIMIT, and a single call four seconds later
+    # answered OK again (trial/results/20261022_v3_human_chrome/amap-burst-infocode-1.txt:2 against :3).
+    # Telling a traveller "今天的查询次数已经用完" about this sends them to the wrong door: nothing is
+    # spent, and waiting a moment is enough.  10004 is the provider's other too-fast code
+    # (ACCESS_TOO_FREQUENTLY); it has not been reproduced here, but it names the same condition.
+    "10004": "AMAP_RATE_LIMITED",
+    "10021": "AMAP_RATE_LIMITED",
     # Missing, insufficient, expired, or geographically unavailable service.
     "10002": "AMAP_SERVICE_PERMISSION_DENIED",
     "10012": "AMAP_SERVICE_PERMISSION_DENIED",

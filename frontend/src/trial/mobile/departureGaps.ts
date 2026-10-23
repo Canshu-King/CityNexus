@@ -229,6 +229,10 @@ export type RouteHopRow = {
 
 const HOP_REFUSAL_SENTENCES: Record<string, string> = {
   AMAP_QUOTA_EXCEEDED: "地图服务今天的查询次数已经用完，稍后再核实这一段。",
+  // Asked too often at once: nothing is spent, and a moment is enough.  Measured with eight back-to-back
+  // calls, three refused and the next one OK four seconds later
+  // (trial/results/20261022_v3_human_chrome/amap-burst-infocode-1.txt:2 against :3).
+  AMAP_RATE_LIMITED: "地图服务一次被问得太急，过几秒再核实这一段。",
   AMAP_HTTP_ERROR: "地图服务没有响应，稍后再核实这一段。",
   AMAP_INVALID_KEY: "这台服务的高德查询凭证不可用，需要运维处理。",
   AMAP_SERVICE_PERMISSION_DENIED: "这台服务的高德凭证没有开通路线查询，需要运维处理。",

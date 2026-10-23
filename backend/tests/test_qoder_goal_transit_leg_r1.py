@@ -163,7 +163,11 @@ def test_when_neither_door_answers_the_hop_stays_unanswered(monkeypatch) -> None
 # engine answers both (trial/results/20261022_v3_human_chrome/amap-transit-within-city-1.txt:3, :5, :6,
 # :7), while a spent quota or a rejected key answers nothing about any hop at all.
 ACCESS_REFUSALS = ["AMAP_QUOTA_EXCEEDED", "AMAP_INVALID_KEY", "AMAP_SERVICE_PERMISSION_DENIED",
-                   "AMAP_HTTP_ERROR", "AMAP_INVALID_COORDINATE"]
+                   "AMAP_HTTP_ERROR", "AMAP_INVALID_COORDINATE",
+                   # Asked too often at once: the second door is the same door a moment later, and
+                   # reaching for it spends the very limit that just refused.  Measured with a burst of
+                   # eight walking calls (trial/results/20261022_v3_human_chrome/amap-burst-infocode-1.txt:2).
+                   "AMAP_RATE_LIMITED"]
 
 
 def _refusal_walk(reason: str) -> dict:
@@ -175,7 +179,11 @@ def test_an_access_refusal_does_not_open_the_transport_door(monkeypatch) -> None
         row, calls, _session = _run(monkeypatch, walk=_refusal_walk(reason), transit=TRANSIT_OK,
                                     task={"amap_region": {"citycode": "010"}})
         assert row is None, reason
-        assert [entry[0] for entry in calls] == ["walking"], reason
+        # A momentary "too many at once" is asked again after one pause -- measured to recover in a second
+        # (trial/results/20261022_v3_human_chrome/amap-burst-infocode-2.txt:3).  Every other access
+        # refusal is asked once.  Neither kind reaches the transport door.
+        expected_asks = 2 if reason == "AMAP_RATE_LIMITED" else 1
+        assert [entry[0] for entry in calls] == ["walking"] * expected_asks, reason
         assert calls[0][0] == "walking"
 
 
