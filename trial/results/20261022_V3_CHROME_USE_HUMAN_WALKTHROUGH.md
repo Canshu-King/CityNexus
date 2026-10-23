@@ -1092,3 +1092,28 @@ USER_VERIFIED 仍是 PENDING。
 两枚文件的现状按 `git diff` 存成 `trial/human_walk/worktree_slice_RevolutionFirstLook_1024.patch` 随本提交可取回，
 连同 `trial/human_walk/worktree_slice_reading_1024.txt` 那一条读数，交给写它的人自己交块。
 USER_VERIFIED 仍是 PENDING。
+
+## 廿三、两点前后：两趟各自撞上一件我以前没见过的东西，一件是屏说对了、一件是我按不动
+
+**walk-96：那一趟是我自己弄丢的，不是产品不肯走。** 流水到 `STEP_04 choices=3` 之后是
+`START_RESEARCH_ERR locator.click: Timeout 8000ms exceeded`（`trial/results/20261022_v3_human_chrome/walk-96-log.txt:10`），
+后面四拍 `WAIT_*s busy=false` 是在等一份永远不会出现的草案。成因在仪表自己：那一按以前是**一次单击、八秒超时、不留任何诊断**，
+而页面上同类的大按钮早就有"滚进画面→命中测试→重试三回"的走法（`layerTo`）。
+r21 把同一套走法给了它（`trial/human_walk/departure_full_walk_r21.mjs:188` 起），
+walk-97 立刻见效：`STEP_04B_START_RESEARCH pressed=true`（`trial/results/20261022_v3_human_chrome/walk-97-log.txt:11`）。
+
+**walk-97：这一次是屏说对了，是我按不动。** 那趟 Agent 把升旗排进草案、又把「水立方夜景（免费外景）」放在 21:00–22:00，
+保存那一按的门回 422 `SCHEDULE_OVERLAP_OR_OUTSIDE_JOURNEY`（`walk-97-log.txt:38`），
+而屏上给旅客的那句话是：**「第 8 项「水立方夜景（免费外景）」 21:00–22:00：结束时间超出了这趟旅行的结束。改这一项的时间再保存，其余不用动。」**（`:41`）
+——哪一项、现在写的是几点、错在超出这趟的结束、下一步只改这一项，四件事齐了，这正是前面两刀要的形状，
+在新撞见的第三条拒绝路径上原样成立。
+我没有照它做：这一趟开了 `WALK_KEEP_GAP=1`（"旅客自己不动时间"），于是仪表不会去改那一行，
+草案就没保存成候选，后面每一格读成 "(unreadable)"（`:42`、`:44`、`:45`），我在 `:90` 停掉了它。
+**这是量具缺一只手，不是产品的洞**：r22 补上了——读屏上点名的那一行、把它整行提前一小时、再按一次保存，最多三轮
+（`STEP_12A2_ROUND_*`，动作仍落在真输入框里）。
+
+**PLACE_CLOSED 的 AFTER 还欠着。** 第廿二节那一刀（点名是哪一处不开放）在 walk-94 有 BEFORE、在真机上还没有 AFTER：
+walk-97 没走到选用那道门，walk-98 正在按同一句话重跑。在那之前这一格只有两样东西：
+闸那一行的形状（`PLACE_CLOSED:<place_id>`，`backend/app/replanning/feasibility.py:872`）
+与浏览器里真模块的逐臂读数（`trial/human_walk/infeasible_sentence_arms_r1.mjs`）——够用，但不是一张屏。
+USER_VERIFIED 仍是 PENDING。
