@@ -1,0 +1,12 @@
+
+Running 6 tests using 1 worker
+
+  ok 1 e2e\qoder-1d64acf5-simstage-copy-r1.spec.ts:62:1 › 分母：这 23 枚是这一格搬走的完整清单，且两臂都非空 (13ms)
+  ok 2 e2e\qoder-1d64acf5-simstage-copy-r1.spec.ts:72:1 › 字典两侧都答得出，且逐字等于迁移前屏上那两句 (11ms)
+  ok 3 e2e\qoder-1d64acf5-simstage-copy-r1.spec.ts:79:1 › 选臂规则没动：zh 前缀取中文，其余一律取英文 (17ms)
+  ok 4 e2e\qoder-1d64acf5-simstage-copy-r1.spec.ts:88:1 › 反控：这 23 句不再以内联成对的形状留在组件源码里 (7ms)
+  ok 5 e2e\qoder-1d64acf5-simstage-copy-r1.spec.ts:95:1 › 反控：组件里剩下的成对内联形状就是被门拒的那两枚，没多也没少 (3ms)
+  ok 6 e2e\qoder-1d64acf5-simstage-copy-r1.spec.ts:105:1 › 组件确实改成走字典通道（不是删掉了事） (5ms)
+
+  6 passed (572ms)
+spec_rc=0

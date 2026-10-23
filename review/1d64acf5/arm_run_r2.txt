@@ -1,0 +1,16 @@
+measured denominator: parent carried 25 inline pairs HELD count=25
+dictionary carries 23 keys                           HELD count=23
+component names 23 dictionary keys                   HELD count=23
+component names each key once                        HELD distinct=23
+every key it names exists in the dictionary          HELD []
+parent minus the two blocked pairs leaves 23         HELD count=23
+every word byte-equal to the line it came from       HELD []
+the two refused pairs are still inline, byte-identical HELD inline_now=2
+exactly the two refused pairs remain inline          HELD count=2
+locale rule still selects the Chinese arm            HELD 
+anything-not-zh takes the English arm                HELD 
+component imports the dictionary module              HELD 
+captions still quoted inside longer copy             INFO  ["rowReplan"]
+
+FAIL 0
+arm_rc=0

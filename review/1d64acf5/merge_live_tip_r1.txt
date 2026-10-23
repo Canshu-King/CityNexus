@@ -1,0 +1,511 @@
+Merge made by the 'ort' strategy.
+ .gitignore                                         |    7 +
+ backend/app/agent/ai_availability.py               |  146 +-
+ backend/app/agent/mission.py                       |   67 +-
+ backend/app/agent/orchestrator.py                  |   17 +
+ backend/app/agent/runtime_identity.py              |   31 +-
+ backend/app/integrations/ai/responses.py           |   20 +
+ backend/app/integrations/china/amap.py             |  273 +-
+ backend/app/integrations/mobility/amap_http.py     |  346 ++
+ backend/app/integrations/mobility/runtime.py       |   60 +-
+ backend/app/main.py                                |    9 +-
+ backend/app/planning/anchor_schedule.py            |    3 +-
+ backend/app/planning/anchors.py                    |   38 +-
+ backend/app/planning/day_rhythm.py                 |   58 +-
+ backend/app/replanning/commitment_remap.py         |    9 +-
+ backend/app/replanning/protected_commitments.py    |    6 +-
+ backend/app/stay_mobility.py                       |    3 +-
+ backend/tests/conftest.py                          |   24 +
+ backend/tests/test_day_rhythm.py                   |   52 +
+ .../tests/test_qoder_amap_mobility_adapter_r1.py   |  662 +++
+ backend/tests/test_qoder_catalog_hydration.py      |  275 +-
+ .../test_qoder_conditional_rain_mission_r1.py      |   88 +
+ .../tests/test_qoder_day_rhythm_noon_wake_r1.py    |  117 +
+ ...test_qoder_ord0697_provider_answered_witness.py |  293 +
+ .../tests/test_qoder_ord0700_legacy_anchor_role.py |  119 +
+ .../tests/test_qoder_ord0701_amap_key_env_names.py |  127 +
+ .../test_qoder_ord0702_remap_legacy_boundary.py    |  109 +
+ contracts/openapi.yaml                             |   20 +-
+ .../Briefing/CityNexus_Plan_Briefing_A3.vsdx       |  Bin 0 -> 41607 bytes
+ .../previews/CityNexus_Plan_Briefing_A3.gate.json  |  593 +++
+ .../previews/CityNexus_Plan_Briefing_A3.pdf        |  Bin 0 -> 45713 bytes
+ .../previews/CityNexus_Plan_Briefing_A3.png        |  Bin 0 -> 133724 bytes
+ .../Classroom/CHECKPOINT.md                        |   44 +
+ .../Classroom/CityNexus_Milestones_Classroom.mpp   |  Bin 0 -> 256000 bytes
+ .../Classroom/CityNexus_Plan_Classroom.mpp         |  Bin 0 -> 376320 bytes
+ .../Classroom/TEACHER_DEMO_START_HERE.md           |   58 +
+ .../Classroom/TEACHER_READABILITY_VERIFICATION.md  |  102 +
+ .../Classroom/Teacher_01_System_Overview.vsdx      |  Bin 0 -> 25926 bytes
+ .../Classroom/Teacher_02_Agent_User_Flow.vsdx      |  Bin 0 -> 29574 bytes
+ .../Classroom/Teacher_03_Project_Overview.mpp      |  Bin 0 -> 276480 bytes
+ .../Classroom/Teacher_Source_Map.md                |   65 +
+ .../Classroom/previews/Gantt_Visible.png           |  Bin 0 -> 340737 bytes
+ .../Classroom/previews/Gantt_Visible_print.pdf     |  Bin 0 -> 2307738 bytes
+ .../Classroom/previews/Gantt_Visible_print.png     |  Bin 0 -> 173315 bytes
+ .../Classroom/previews/Milestones_Visible.png      |  Bin 0 -> 296869 bytes
+ .../previews/Milestones_Visible_print.pdf          |  Bin 0 -> 441348 bytes
+ .../previews/Milestones_Visible_print.png          |  Bin 0 -> 172105 bytes
+ .../previews/Teacher_01_System_Overview.gate.json  |  140 +
+ .../previews/Teacher_01_System_Overview.pdf        |  Bin 0 -> 70023 bytes
+ .../previews/Teacher_01_System_Overview.png        |  Bin 0 -> 77121 bytes
+ .../previews/Teacher_01_System_Overview_window.png |  Bin 0 -> 304578 bytes
+ .../previews/Teacher_02_Agent_User_Flow.gate.json  |  154 +
+ .../previews/Teacher_02_Agent_User_Flow.pdf        |  Bin 0 -> 61998 bytes
+ .../previews/Teacher_02_Agent_User_Flow.png        |  Bin 0 -> 70257 bytes
+ .../previews/Teacher_02_Agent_User_Flow_window.png |  Bin 0 -> 293404 bytes
+ .../previews/Teacher_03_Project_Overview_bars.png  |  Bin 0 -> 194978 bytes
+ .../previews/Teacher_03_Project_Overview_print.pdf |  Bin 0 -> 436557 bytes
+ .../Teacher_03_Project_Overview_window.png         |  Bin 0 -> 213768 bytes
+ ...274\224\347\244\272\351\241\272\345\272\217.md" |   85 +
+ .../Evidence/AUTOMATION_VERIFICATION.md            |  233 +
+ .../Evidence/CLASSROOM_20261023_NOON_PRIORITY.md   |   36 +
+ .../Evidence/CLASSROOM_20261023_README.md          |  127 +
+ .../CLASSROOM_CONTINUOUS_EXECUTION_RESULT.md       |   20 +
+ .../Evidence/CLASSROOM_FINAL_VERIFICATION.md       |   87 +
+ ...ASSROOM_QODER_CONTINUOUS_UNTIL_NOON_20261023.md |   83 +
+ .../Evidence/CLASSROOM_R3_LAST_MILE_20261023.md    |   19 +
+ .../Evidence/EVIDENCE_INDEX.json                   |  201 +
+ .../Evidence/EVIDENCE_INDEX.md                     |   51 +
+ .../Evidence/INDEPENDENT_R2_REVIEW_20261022.md     |   53 +
+ .../Evidence/PLAN_RECONCILIATION.md                |   77 +
+ .../SoftwareEngineering_2026/Evidence/R3_RESULT.md |   87 +
+ .../SoftwareEngineering_2026/Evidence/README.md    |  142 +
+ .../Evidence/REVIEW_BRIEF.md                       |  113 +
+ .../Evidence/REVISION_2.md                         |  134 +
+ .../Evidence/SOURCE_MAPPING.md                     |  149 +
+ .../Evidence/STATUS_AND_OVERDUE.md                 |  104 +
+ .../TEACHER_READABILITY_CORRECTION_20261023.md     |   49 +
+ .../Evidence/logs/se_classroom_demo_r1.log         |   58 +
+ .../Evidence/logs/se_classroom_fit_r1.log          |    8 +
+ .../Evidence/logs/se_classroom_package_r1.log      |    3 +
+ .../Evidence/logs/se_classroom_readiness_r1.log    |   17 +
+ .../Evidence/logs/se_classroom_scroll_r1.log       |    4 +
+ .../Evidence/logs/se_classroom_view_r1.log         |   12 +
+ .../Evidence/logs/se_deck_r1.log                   |    9 +
+ .../Evidence/logs/se_evidence_index_r1.log         |   25 +
+ .../Evidence/logs/se_evidence_reconcile_r1.log     |   12 +
+ .../Evidence/logs/se_milestone_timeline.log        |   19 +
+ .../Evidence/logs/se_milestone_view.log            |   31 +
+ .../Evidence/logs/se_plan_cpm_r2.txt               |   39 +
+ .../Evidence/logs/se_probe_r2.log                  |    3 +
+ .../Evidence/logs/se_probe_r3.log                  |    2 +
+ .../Evidence/logs/se_probe_r4.log                  |  134 +
+ .../Evidence/logs/se_probe_r5.log                  |    4 +
+ .../Evidence/logs/se_probe_r6.log                  |  115 +
+ .../Evidence/logs/se_probe_r7.log                  |  101 +
+ .../Evidence/logs/se_proj_probe_r10.log            |   24 +
+ .../Evidence/logs/se_proj_probe_r4.log             |   67 +
+ .../Evidence/logs/se_proj_probe_r5.log             |   61 +
+ .../Evidence/logs/se_proj_probe_r6.log             |   58 +
+ .../Evidence/logs/se_proj_probe_r7.log             |   14 +
+ .../Evidence/logs/se_proj_probe_r8.log             |   34 +
+ .../Evidence/logs/se_proj_probe_r9.log             |   39 +
+ .../Evidence/logs/se_project_brief.log             |   40 +
+ .../Evidence/logs/se_project_build.log             |   46 +
+ .../Evidence/logs/se_project_build_r2.log          |   83 +
+ .../Evidence/logs/se_project_export.log            |   32 +
+ .../Evidence/logs/se_project_export_r2.log         |   10 +
+ .../Evidence/logs/se_project_recovery.log          |   10 +
+ .../Evidence/logs/se_project_snapshot.log          |   23 +
+ .../Evidence/logs/se_project_snapshot_r2.log       |   42 +
+ .../Evidence/logs/se_teacher_diagrams_r1.log       |    3 +
+ .../Evidence/logs/se_teacher_eye_r1.log            |   10 +
+ .../Evidence/logs/se_teacher_project_print_r1.log  |   16 +
+ .../Evidence/logs/se_teacher_project_r1.log        |   13 +
+ .../Evidence/logs/se_visio_plan_brief.log          |    3 +
+ .../Evidence/logs/se_visio_proof.log               |   18 +
+ .../scripts/01_CityNexus_System_Architecture.json  |  533 ++
+ .../scripts/02_CityNexus_User_Journey.json         |  629 +++
+ .../scripts/03_CityNexus_Agent_Workflow.json       |  654 +++
+ .../Evidence/scripts/04_CityNexus_Use_Case.json    |  914 ++++
+ .../Evidence/scripts/se_classroom_demo_r1.py       |  453 ++
+ .../Evidence/scripts/se_classroom_fit_r1.py        |  253 +
+ .../Evidence/scripts/se_classroom_package_r1.py    |  334 ++
+ .../Evidence/scripts/se_classroom_readiness_r1.py  |  184 +
+ .../Evidence/scripts/se_classroom_readme_r1.py     |  182 +
+ .../Evidence/scripts/se_classroom_runbook_r1.py    |  194 +
+ .../Evidence/scripts/se_classroom_scroll_r1.py     |  165 +
+ .../Evidence/scripts/se_classroom_view_r1.py       |  406 ++
+ .../Evidence/scripts/se_deck_r1.py                 |  429 ++
+ .../Evidence/scripts/se_diag_dispatch_r1.py        |   32 +
+ .../Evidence/scripts/se_docs_r3_section_r1.py      |  176 +
+ .../Evidence/scripts/se_evidence_docs_r1.py        |  645 +++
+ .../Evidence/scripts/se_evidence_index_r1.py       |  342 ++
+ .../Evidence/scripts/se_evidence_r3_result_r1.py   |  251 +
+ .../Evidence/scripts/se_evidence_reconcile_r1.py   |  335 ++
+ .../Evidence/scripts/se_evidence_revision_r1.py    |  403 ++
+ .../Evidence/scripts/se_milestone_timeline_r1.py   |  118 +
+ .../Evidence/scripts/se_milestone_view_r1.py       |  109 +
+ .../Evidence/scripts/se_milestone_view_r2.py       |  165 +
+ .../Evidence/scripts/se_patch_engine_r2.py         |   87 +
+ .../Evidence/scripts/se_patch_pageid.py            |  205 +
+ .../Evidence/scripts/se_patch_r3.py                |  194 +
+ .../Evidence/scripts/se_patch_r4.py                |   96 +
+ .../Evidence/scripts/se_patch_spec01_r1.py         |  186 +
+ .../Evidence/scripts/se_patch_specs_proof.py       |  138 +
+ .../Evidence/scripts/se_patch_visio_r5.py          |  277 +
+ .../Evidence/scripts/se_patch_visio_r6.py          |   86 +
+ .../Evidence/scripts/se_patch_visio_r7.py          |   73 +
+ .../Evidence/scripts/se_patch_visio_r8.py          |   76 +
+ .../Evidence/scripts/se_pdf_dump_r1.py             |   16 +
+ .../Evidence/scripts/se_plan_cpm_r1.py             |  490 ++
+ .../Evidence/scripts/se_plan_status_r1.py          |  267 +
+ .../Evidence/scripts/se_probe_props_r1.py          |   61 +
+ .../Evidence/scripts/se_probe_r3.py                |  292 +
+ .../Evidence/scripts/se_probe_r4.py                |  279 +
+ .../Evidence/scripts/se_probe_r5.py                |  274 +
+ .../Evidence/scripts/se_probe_r6.py                |  275 +
+ .../Evidence/scripts/se_probe_r7.py                |  196 +
+ .../Evidence/scripts/se_probe_visio_r2.py          |  220 +
+ .../Evidence/scripts/se_proj_probe_r10.py          |  118 +
+ .../Evidence/scripts/se_proj_probe_r4.py           |  110 +
+ .../Evidence/scripts/se_proj_probe_r5.py           |  152 +
+ .../Evidence/scripts/se_proj_probe_r6.py           |  166 +
+ .../Evidence/scripts/se_proj_probe_r7.py           |  173 +
+ .../Evidence/scripts/se_proj_probe_r8.py           |  148 +
+ .../Evidence/scripts/se_proj_probe_r9.py           |  145 +
+ .../Evidence/scripts/se_project_brief_r1.py        |  280 +
+ .../Evidence/scripts/se_project_build_r1.py        |  506 ++
+ .../Evidence/scripts/se_project_build_r2.py        | 1021 ++++
+ .../Evidence/scripts/se_project_export_r1.py       |  120 +
+ .../Evidence/scripts/se_project_export_r2.py       |  135 +
+ .../Evidence/scripts/se_project_plan_r1.py         |  335 ++
+ .../Evidence/scripts/se_project_plan_r2.py         |  530 ++
+ .../Evidence/scripts/se_project_recovery_r1.py     |  347 ++
+ .../Evidence/scripts/se_project_snapshot_r1.py     |  167 +
+ .../Evidence/scripts/se_project_snapshot_r2.py     |  489 ++
+ .../Evidence/scripts/se_recheck_r1.py              |  149 +
+ .../Evidence/scripts/se_review_package_r1.py       |  265 +
+ .../Evidence/scripts/se_review_package_r2.py       |  351 ++
+ .../Evidence/scripts/se_teacher_diagrams_r1.py     |  268 +
+ .../Evidence/scripts/se_teacher_eye_r1.py          |  274 +
+ .../scripts/se_teacher_project_print_r1.py         |  129 +
+ .../Evidence/scripts/se_teacher_project_r1.py      |  339 ++
+ .../Evidence/scripts/se_timeutil_r1.py             |   86 +
+ .../Evidence/scripts/se_visio_build_r1.py          |  216 +
+ .../Evidence/scripts/se_visio_cross_check_r1.py    |  270 +
+ .../Evidence/scripts/se_visio_lib_r1.py            | 1256 +++++
+ .../Evidence/scripts/se_visio_plan_brief_r1.py     |  244 +
+ .../Evidence/scripts/se_visio_proof_r1.py          |  356 ++
+ .../Evidence/scripts/se_visio_proof_r2.py          |  364 ++
+ .../Evidence/scripts/se_visio_specs_r1.py          |  788 +++
+ .../Evidence/scripts/se_win_list_r1.py             |   27 +
+ .../Evidence/se_classroom_demo_result.json         |  398 ++
+ .../Evidence/se_deck_result.json                   |  677 +++
+ .../Evidence/se_evidence_reconcile_result.json     |  329 ++
+ .../Evidence/se_evidence_revision_result.json      |   37 +
+ .../Evidence/se_milestone_view_result.json         |  153 +
+ .../Evidence/se_plan_cpm_r2.json                   | 1047 ++++
+ .../Evidence/se_plan_status_result.json            | 1036 ++++
+ .../Evidence/se_project_brief_result.json          |  206 +
+ .../Evidence/se_project_build_r2_result.json       | 5597 ++++++++++++++++++++
+ .../Evidence/se_project_build_result.json          | 1356 +++++
+ .../Evidence/se_project_export_r2_result.json      |   37 +
+ .../Evidence/se_project_recovery_result.json       |  103 +
+ .../Evidence/se_project_snapshot_r2_result.json    |  204 +
+ .../Evidence/se_project_snapshot_result.json       |   62 +
+ .../Evidence/se_visio_build_result.json            | 2597 +++++++++
+ .../Evidence/se_visio_plan_brief_result.json       |  593 +++
+ .../Evidence/se_visio_proof_result.json            |  504 ++
+ .../SoftwareEngineering_2026/MANIFEST.sha256       |  232 +
+ .../Microsoft_Project/CityNexus_Milestone_View.mpp |  Bin 0 -> 253952 bytes
+ .../Microsoft_Project/CityNexus_Plan_Briefing.mpp  |  Bin 0 -> 272896 bytes
+ .../Microsoft_Project/CityNexus_Plan_Recovery.mpp  |  Bin 0 -> 289792 bytes
+ .../CityNexus_Software_Engineering_Plan.mpp        |  Bin 0 -> 386048 bytes
+ .../Microsoft_Project/Detailed_Gantt.pdf           |  Bin 0 -> 454510 bytes
+ .../Microsoft_Project/Gantt_Chart.pdf              |  Bin 0 -> 842537 bytes
+ .../Microsoft_Project/Milestone_Timeline.pdf       |  Bin 0 -> 441384 bytes
+ .../Microsoft_Project/Network_Diagram.pdf          |  Bin 0 -> 171583 bytes
+ .../Microsoft_Project/Plan_Briefing_Print.pdf      |  Bin 0 -> 450847 bytes
+ .../Microsoft_Project/Resource_Sheet.pdf           |  Bin 0 -> 147059 bytes
+ .../Microsoft_Project/Tracking_Gantt.pdf           |  Bin 0 -> 601735 bytes
+ .../Microsoft_Project/WBS_View.pdf                 |  Bin 0 -> 196387 bytes
+ .../Microsoft_Project/previews/Calendar.png        |  Bin 0 -> 491670 bytes
+ .../Microsoft_Project/previews/Gantt_Chart.png     |  Bin 0 -> 339826 bytes
+ .../previews/Milestone_Timeline.png                |  Bin 0 -> 293526 bytes
+ .../Microsoft_Project/previews/Network_Diagram.png |  Bin 0 -> 290112 bytes
+ .../Microsoft_Project/previews/Resource_Sheet.png  |  Bin 0 -> 255697 bytes
+ .../Microsoft_Project/previews/Tracking_Gantt.png  |  Bin 0 -> 511477 bytes
+ .../Microsoft_Project/previews/WBS_Task_Sheet.png  |  Bin 0 -> 484575 bytes
+ .../CityNexus_SE2026_Briefing_Deck.vsdx            |  Bin 0 -> 39779 bytes
+ .../CityNexus_SE2026_Briefing_Deck.gate.json       |  668 +++
+ .../previews/CityNexus_SE2026_Briefing_Deck.pdf    |  Bin 0 -> 49448 bytes
+ .../previews/CityNexus_SE2026_Briefing_Deck.png    |  Bin 0 -> 77299 bytes
+ .../previews/CityNexus_SE2026_Briefing_Deck_p1.png |  Bin 0 -> 77299 bytes
+ .../previews/CityNexus_SE2026_Briefing_Deck_p2.png |  Bin 0 -> 56471 bytes
+ .../previews/CityNexus_SE2026_Briefing_Deck_p3.png |  Bin 0 -> 105235 bytes
+ .../previews/CityNexus_SE2026_Briefing_Deck_p4.png |  Bin 0 -> 81069 bytes
+ .../Visio/01_CityNexus_System_Architecture.vsdx    |  Bin 0 -> 62156 bytes
+ .../Visio/02_CityNexus_User_Journey.vsdx           |  Bin 0 -> 62749 bytes
+ .../Visio/03_CityNexus_Agent_Workflow.vsdx         |  Bin 0 -> 66526 bytes
+ .../Visio/04_CityNexus_Use_Case.vsdx               |  Bin 0 -> 84933 bytes
+ .../01_CityNexus_System_Architecture.gate.json     |  405 ++
+ .../previews/01_CityNexus_System_Architecture.pdf  |  Bin 0 -> 48522 bytes
+ .../previews/01_CityNexus_System_Architecture.png  |  Bin 0 -> 137597 bytes
+ .../previews/02_CityNexus_User_Journey.gate.json   |  512 ++
+ .../Visio/previews/02_CityNexus_User_Journey.pdf   |  Bin 0 -> 45109 bytes
+ .../Visio/previews/02_CityNexus_User_Journey.png   |  Bin 0 -> 138386 bytes
+ .../previews/03_CityNexus_Agent_Workflow.gate.json |  647 +++
+ .../Visio/previews/03_CityNexus_Agent_Workflow.pdf |  Bin 0 -> 51291 bytes
+ .../Visio/previews/03_CityNexus_Agent_Workflow.png |  Bin 0 -> 211852 bytes
+ .../Visio/previews/04_CityNexus_Use_Case.gate.json |  792 +++
+ .../Visio/previews/04_CityNexus_Use_Case.pdf       |  Bin 0 -> 53112 bytes
+ .../Visio/previews/04_CityNexus_Use_Case.png       |  Bin 0 -> 178603 bytes
+ .../Visio/previews/04_CityNexus_Use_Case_p1.png    |  Bin 0 -> 178603 bytes
+ .../Visio/previews/04_CityNexus_Use_Case_p2.png    |  Bin 0 -> 109974 bytes
+ .../specs/01_CityNexus_System_Architecture.json    |  533 ++
+ .../Visio/specs/02_CityNexus_User_Journey.json     |  629 +++
+ .../Visio/specs/03_CityNexus_Agent_Workflow.json   |  832 +++
+ .../Visio/specs/04_CityNexus_Use_Case.json         | 1015 ++++
+ ...02a-keyless-deadline-still-asks-compose.spec.ts |  293 +
+ frontend/src/api/citynexus.ts                      |   19 +-
+ frontend/src/app/V8Experience.tsx                  |  131 +-
+ .../features/discovery/prepAbandonSurveyCopy.ts    |    4 +-
+ frontend/src/features/planning/PlanComparison.tsx  |   32 +-
+ frontend/src/features/planning/PlanWithAiSheet.tsx |   11 +-
+ frontend/src/features/planning/aiGenerationRun.ts  |   76 +-
+ frontend/src/features/setup/JourneyTrialSetup.tsx  |   40 +-
+ frontend/src/generated/api.ts                      |   14 +-
+ frontend/src/i18n/LocaleContext.tsx                |  170 +-
+ 268 files changed, 50927 insertions(+), 309 deletions(-)
+ create mode 100644 backend/app/integrations/mobility/amap_http.py
+ create mode 100644 backend/tests/test_day_rhythm.py
+ create mode 100644 backend/tests/test_qoder_amap_mobility_adapter_r1.py
+ create mode 100644 backend/tests/test_qoder_conditional_rain_mission_r1.py
+ create mode 100644 backend/tests/test_qoder_day_rhythm_noon_wake_r1.py
+ create mode 100644 backend/tests/test_qoder_ord0697_provider_answered_witness.py
+ create mode 100644 backend/tests/test_qoder_ord0700_legacy_anchor_role.py
+ create mode 100644 backend/tests/test_qoder_ord0701_amap_key_env_names.py
+ create mode 100644 backend/tests/test_qoder_ord0702_remap_legacy_boundary.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Briefing/CityNexus_Plan_Briefing_A3.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Briefing/previews/CityNexus_Plan_Briefing_A3.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Briefing/previews/CityNexus_Plan_Briefing_A3.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Briefing/previews/CityNexus_Plan_Briefing_A3.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/CHECKPOINT.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/CityNexus_Milestones_Classroom.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/CityNexus_Plan_Classroom.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/TEACHER_DEMO_START_HERE.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/TEACHER_READABILITY_VERIFICATION.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/Teacher_01_System_Overview.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/Teacher_02_Agent_User_Flow.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/Teacher_03_Project_Overview.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/Teacher_Source_Map.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Gantt_Visible.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Gantt_Visible_print.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Gantt_Visible_print.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Milestones_Visible.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Milestones_Visible_print.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Milestones_Visible_print.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_01_System_Overview.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_01_System_Overview.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_01_System_Overview.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_01_System_Overview_window.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_02_Agent_User_Flow.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_02_Agent_User_Flow.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_02_Agent_User_Flow.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_02_Agent_User_Flow_window.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_03_Project_Overview_bars.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_03_Project_Overview_print.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Classroom/previews/Teacher_03_Project_Overview_window.png
+ create mode 100644 "deliverables/SoftwareEngineering_2026/Classroom/\350\257\276\345\240\202\346\274\224\347\244\272\351\241\272\345\272\217.md"
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/AUTOMATION_VERIFICATION.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/CLASSROOM_20261023_NOON_PRIORITY.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/CLASSROOM_20261023_README.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/CLASSROOM_CONTINUOUS_EXECUTION_RESULT.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/CLASSROOM_FINAL_VERIFICATION.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/CLASSROOM_QODER_CONTINUOUS_UNTIL_NOON_20261023.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/CLASSROOM_R3_LAST_MILE_20261023.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/EVIDENCE_INDEX.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/EVIDENCE_INDEX.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/INDEPENDENT_R2_REVIEW_20261022.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/PLAN_RECONCILIATION.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/R3_RESULT.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/README.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/REVIEW_BRIEF.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/REVISION_2.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/SOURCE_MAPPING.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/STATUS_AND_OVERDUE.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/TEACHER_READABILITY_CORRECTION_20261023.md
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_classroom_demo_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_classroom_fit_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_classroom_package_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_classroom_readiness_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_classroom_scroll_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_classroom_view_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_deck_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_evidence_index_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_evidence_reconcile_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_milestone_timeline.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_milestone_view.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_plan_cpm_r2.txt
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_probe_r2.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_probe_r3.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_probe_r4.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_probe_r5.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_probe_r6.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_probe_r7.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r10.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r4.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r5.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r6.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r7.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r8.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_proj_probe_r9.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_brief.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_build.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_build_r2.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_export.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_export_r2.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_recovery.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_snapshot.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_project_snapshot_r2.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_teacher_diagrams_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_teacher_eye_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_teacher_project_print_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_teacher_project_r1.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_visio_plan_brief.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/logs/se_visio_proof.log
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/01_CityNexus_System_Architecture.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/02_CityNexus_User_Journey.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/03_CityNexus_Agent_Workflow.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/04_CityNexus_Use_Case.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_demo_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_fit_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_package_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_readiness_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_readme_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_runbook_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_scroll_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_classroom_view_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_deck_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_diag_dispatch_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_docs_r3_section_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_evidence_docs_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_evidence_index_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_evidence_r3_result_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_evidence_reconcile_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_evidence_revision_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_milestone_timeline_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_milestone_view_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_milestone_view_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_engine_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_pageid.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_r3.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_r4.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_spec01_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_specs_proof.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_visio_r5.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_visio_r6.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_visio_r7.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_patch_visio_r8.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_pdf_dump_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_plan_cpm_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_plan_status_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_props_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_r3.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_r4.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_r5.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_r6.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_r7.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_probe_visio_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r10.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r4.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r5.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r6.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r7.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r8.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_proj_probe_r9.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_brief_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_build_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_build_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_export_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_export_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_plan_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_plan_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_recovery_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_snapshot_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_project_snapshot_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_recheck_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_review_package_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_review_package_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_teacher_diagrams_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_teacher_eye_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_teacher_project_print_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_teacher_project_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_timeutil_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_build_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_cross_check_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_lib_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_plan_brief_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_proof_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_proof_r2.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_visio_specs_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/scripts/se_win_list_r1.py
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_classroom_demo_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_deck_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_evidence_reconcile_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_evidence_revision_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_milestone_view_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_plan_cpm_r2.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_plan_status_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_brief_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_build_r2_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_build_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_export_r2_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_recovery_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_snapshot_r2_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_project_snapshot_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_visio_build_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_visio_plan_brief_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Evidence/se_visio_proof_result.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/MANIFEST.sha256
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/CityNexus_Milestone_View.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/CityNexus_Plan_Briefing.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/CityNexus_Plan_Recovery.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/CityNexus_Software_Engineering_Plan.mpp
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Detailed_Gantt.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Gantt_Chart.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Milestone_Timeline.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Network_Diagram.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Plan_Briefing_Print.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Resource_Sheet.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/Tracking_Gantt.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/WBS_View.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/Calendar.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/Gantt_Chart.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/Milestone_Timeline.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/Network_Diagram.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/Resource_Sheet.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/Tracking_Gantt.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Microsoft_Project/previews/WBS_Task_Sheet.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/CityNexus_SE2026_Briefing_Deck.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck_p1.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck_p2.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck_p3.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Presentation/previews/CityNexus_SE2026_Briefing_Deck_p4.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/01_CityNexus_System_Architecture.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/02_CityNexus_User_Journey.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/03_CityNexus_Agent_Workflow.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/04_CityNexus_Use_Case.vsdx
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/01_CityNexus_System_Architecture.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/01_CityNexus_System_Architecture.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/01_CityNexus_System_Architecture.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/02_CityNexus_User_Journey.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/02_CityNexus_User_Journey.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/02_CityNexus_User_Journey.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/03_CityNexus_Agent_Workflow.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/03_CityNexus_Agent_Workflow.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/03_CityNexus_Agent_Workflow.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/04_CityNexus_Use_Case.gate.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/04_CityNexus_Use_Case.pdf
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/04_CityNexus_Use_Case.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/04_CityNexus_Use_Case_p1.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/previews/04_CityNexus_Use_Case_p2.png
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/specs/01_CityNexus_System_Architecture.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/specs/02_CityNexus_User_Journey.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/specs/03_CityNexus_Agent_Workflow.json
+ create mode 100644 deliverables/SoftwareEngineering_2026/Visio/specs/04_CityNexus_Use_Case.json
+ create mode 100644 frontend/e2e/qoder-ord0702a-keyless-deadline-still-asks-compose.spec.ts
