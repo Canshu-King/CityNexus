@@ -859,6 +859,18 @@ walk-82 那句"查询次数已经用完"到底是限流还是范围？2026-10-23
 今天的三趟里要么全冻上（walk-84）要么一项都没答（walk-85 的 0 份候选），判 PARTIAL，
 类型闸绿 `trial/results/20261022_v3_human_chrome/tsc-remembered-state-1.txt:2`。
 
+**同一族的第二枚：`test_v13_1_2_structural_anchor_integrity.py` 那两格红，用"同一条命令在两个尖上各跑一次"证明不是我带来的。**
+`test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor]` 与
+`[DEPARTURE-departure-anchor]` 两格红在 `select` 那一步：409 `UNRESOLVED_ACTIVITY_FACTS`，
+而 details 里的 `unresolved_facts` 是空表（`backend/tests/test_v13_1_2_structural_anchor_integrity.py:97`）。
+两条反查都做了：把 `CITYNEXUS_AMAP_WEB_KEY` 与 `AMAP_WEB_KEY` 从环境里去掉再跑，仍然两格红；
+在同一枚解释器、同一条命令下，今天开工前的那个尖 `4dedfb2f92e22890b309dc22df1ddc4371bbc8a0`
+（临时只读工作树，用完即删）也是同样两格红、同样三格绿。
+今天的写集里没有 `plan_authority_blocker`、没有 v12 compose、没有锚那套代码
+（`git diff --name-only 4dedfb2f..HEAD` 只有转场冻结、供应商理由码、departure_commit 明细与前端读者）。
+对照读数记在 `trial/results/20261022_v3_human_chrome/anchor-integrity-red-at-both-tips-1.txt:3` 与 `:4`。
+我没有动别人的断言换绿：这两格要么由写它的人定口径，要么单开一张修复单。
+
 **顺手量到一枚不是我带来的雷（记在这里，等归属）。**
 `backend/tests/test_goal_route_freeze.py:141` 那枚断言要求没测到的那一格写
 `PROVIDER_ROUTE_UNAVAILABLE`，但它**只在环境里有高德键时才成立**：把

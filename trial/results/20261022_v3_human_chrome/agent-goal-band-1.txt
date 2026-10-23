@@ -1,0 +1,80 @@
+........................................................................ [ 28%]
+........................................................................ [ 56%]
+........................................................................ [ 84%]
+.................................F.......                                [100%]
+================================== FAILURES ===================================
+_ test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor] _
+
+role = 'DEPARTURE', expected_suffix = 'departure-anchor'
+
+    @pytest.mark.parametrize(
+        ("role", "expected_suffix"),
+        [("ARRIVAL", "arrival-anchor"), ("DEPARTURE", "departure-anchor")],
+    )
+    def test_structural_reservation_survives_v9_identity_then_v12_compose_and_select(
+        role: str, expected_suffix: str
+    ) -> None:
+        client = TestClient(app)
+        journey_id, place_ids, _legacy_commitment_id = _journey_with_inputs()
+    
+        confirmed = _import_confirm(
+            client,
+            journey_id,
+            role=role,
+            ref=f"V1312-{role}",
+        )
+        assert confirmed.status_code == 200, confirmed.text
+        payload = confirmed.json()
+        commitment = payload["commitment"]
+        assert commitment["policy"]["anchor_role"] == role
+        assert commitment["policy"]["semantic_node_key"] == expected_suffix
+        assert commitment["policy"]["semantic_key"]
+    
+        composed = client.post(
+            f"/api/v1/journeys/{journey_id}/plans/authoritative-compose",
+            json={
+                "place_ids": place_ids,
+                "candidate_count": 1,
+                "reservation_id": payload["reservation"]["id"],
+            },
+        )
+        assert composed.status_code == 201, composed.text
+        plan = composed.json()["top_k"][0]
+        selected = client.post(f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select")
+>       assert selected.status_code == 200, selected.text
+E       AssertionError: {"error":{"code":"CONFLICT","message":"PlanVersion e50c7579-a3b4-4874-b3aa-dcb646f2793e is not authoritative: UNRESOLVED_ACTIVITY_FACTS","message_key":"request.conflict","trace_id":"f368bda0-6cac-4156-9a04-86390339bf2b","details":{"plan_id":"e50c7579-a3b4-4874-b3aa-dcb646f2793e","unresolved_facts":[],"used_place_ids":["v12:13860f57-dc9c-4620-9605-1c0b1da9a3ff:arrival-anchor","v12:13860f57-dc9c-4620-9605-1c0b1da9a3ff:check-in","v12-test-place-0","v12-test-place-3","v12:13860f57-dc9c-4620-9605-1c0b1da9a3ff:stay-night-1","v12-test-place-1","v12-test-place-4","v12:13860f57-dc9c-4620-9605-1c0b1da9a3ff:stay-night-2","v12-test-place-2","v12-test-place-5","v12:13860f57-dc9c-4620-9605-1c0b1da9a3ff:check-out","v12:13860f57-dc9c-4620-9605-1c0b1da9a3ff:departure-anchor"]},"reason_code":"UNRESOLVED_ACTIVITY_FACTS","error_receipt_id":"CNX-PZER42QG"}}
+E       assert 409 == 200
+E        +  where 409 = <Response [409 Conflict]>.status_code
+
+tests\test_v13_1_2_structural_anchor_integrity.py:97: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+app\main.py:726
+  D:\moodle\_cmdr_rescue_v3_1022\backend\app\main.py:726: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_v13_1_2_structural_anchor_integrity.py::test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[DEPARTURE-departure-anchor]
+1 failed, 256 passed, 2302 deselected, 4 warnings in 32.52s

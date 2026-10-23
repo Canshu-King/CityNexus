@@ -1,0 +1,6 @@
+same-command comparison, interpreter D:/moodle/CityNexus/.venv/Scripts/python.exe 3.12.14, cwd <tree>/backend
+command: python -m pytest tests/test_v13_1_2_structural_anchor_integrity.py -q
+at 83865b15f653793829ab9638ca99f4f799aaeea6 (today's tip): 2 failed, 3 passed
+at 4dedfb2f92e22890b309dc22df1ddc4371bbc8a0 (before today's work): 2 failed, 3 passed
+the two: test_structural_reservation_survives_v9_identity_then_v12_compose_and_select[ARRIVAL-arrival-anchor] and [DEPARTURE-departure-anchor]
+also red with CITYNEXUS_AMAP_WEB_KEY removed, so it is not the key's env dependence
