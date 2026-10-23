@@ -733,6 +733,14 @@ READY、`:83` 只给裸名也要 READY、`:88` 两个都不给才许说 NOT_CONF
 选用门仍按不下（`:92` `STEP_13_SELECT_BUTTONS=0 VISIBLE=false`）——
 卡住的位置从"存不下"变成了"费用还没确认"，这是两件事，后者仍开着。
 
+**顺手量到一枚不是我带来的雷（记在这里，等归属）。**
+`backend/tests/test_goal_route_freeze.py:141` 那枚断言要求没测到的那一格写
+`PROVIDER_ROUTE_UNAVAILABLE`，但它**只在环境里有高德键时才成立**：把
+`CITYNEXUS_AMAP_WEB_KEY` 从环境里去掉重跑同一枚，它红在 `AMAP_NOT_CONFIGURED`
+（读数 `trial/results/20261022_v3_human_chrome/route-freeze-needs-amap-key-1.txt:4`，
+那个兜底分支在 `backend/app/agent/goal_route_freeze.py:358`，今晚之前就是这个形状）。
+我没有改别人的断言换绿：要么这枚测试自己把键控住（monkeypatch settings），要么由写它的人定口径。
+
 **仍未通过、也没被我说成通过的。** 模型超时没被消灭，只是不再被藏起来——更重的问句仍会撞 180 秒。
 「同行决策」那块牌子底下依旧没有门（`journeys` 表仍无同行人数那一列）；关掉浏览器重新登录找回旧行程
 （P1）没动；USER_VERIFIED 仍是 PENDING。现场栈换到 r11：后端 60216／前端 14416／独立库

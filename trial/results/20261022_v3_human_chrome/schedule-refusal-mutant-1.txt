@@ -1,0 +1,4 @@
+cwd=D:\moodle\_cmdr_rescue_v3_1022\backend
+command=-m pytest tests/test_qoder_schedule_refusal_names_the_row_r1.py -q -p mute_schedule_refusal_plugin
+exit_code=1
+summary=4 failed, 1 passed, 4 warnings in 1.59s

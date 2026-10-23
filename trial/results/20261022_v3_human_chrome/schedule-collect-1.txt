@@ -1,0 +1,4 @@
+cwd=D:\moodle\_cmdr_rescue_v3_1022\backend
+command=-m pytest tests --collect-only -q
+exit_code=0
+summary=2556 tests collected in 3.62s
