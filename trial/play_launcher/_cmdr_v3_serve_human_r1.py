@@ -60,7 +60,9 @@ env.update({
     "CITYNEXUS_DEEPSEEK_API_URL": "http://127.0.0.1:7864/v1/responses",
     "CITYNEXUS_DEEPSEEK_REASONING_EFFORT": "low",
     "CITYNEXUS_DEEPSEEK_WEB_SEARCH": "false",
-    "CITYNEXUS_HERMES_API_URL": GATEWAY_CHAT_URL,
+    # HUMAN_MODEL_URL lets a second, isolated stack point the assistant leg somewhere else -- used to
+    # watch the product meet a genuinely failing model endpoint without touching the shared gateway.
+    "CITYNEXUS_HERMES_API_URL": os.environ.get("HUMAN_MODEL_URL") or GATEWAY_CHAT_URL,
     "CITYNEXUS_HERMES_API_KEY": gateway_key(),
     "CITYNEXUS_HERMES_MODEL": MODEL,
     "PYTHONPATH": os.path.join(ROOT, "backend"),

@@ -1497,3 +1497,60 @@ USER_VERIFIED 仍是 PENDING：双击那两枚 .bat 是我在这台机器上跑�
 `place_media_click_r1.mjs:69`（在 `:64` 那个 evaluate 体内）。最后那一处是潜伏的：那次运行读到
 `STRIP_BEFORE []`（`walk-40-log.txt:4`，那一屏本来就没渲染出卡片），`.map()` 没执行到所以没炸，
 已发布读数不受影响，但这把尺只要真遇到有卡片的屏就会崩——用之前先修。
+
+## 三十、六点零八到六点十一：把「重试这一轮」真按了三次——一次诚实失败、一次真恢复、一次换到地图
+
+第廿九节留了一句没做到的话（"重试这一轮还没被真按下"）。这一节把它做完，并且把怎么做到的写清楚，
+因为**这一态在共享栈上今夜没有自然发生**，我没有伪造屏，也没有改共享服务。
+
+### 隔离出来的那一把（披露）
+
+`trial/human_walk/_cmdr_v3_serve_human_r1.py` 加了 `HUMAN_MODEL_URL` 开关之后，我用它起了**另一把**试玩栈：
+`HUMAN_TAG=dead`、专用库 `citynexus_v3_dead_1024.db`、端口 `14462/60362`，模型口指向
+`http://127.0.0.1:59999/v1/chat/completions`——一开始那个端口上**什么都没有人听**。
+共享的那把（`14436/14496/60296`）全程没被碰，最后 `netstat` 现读三条 LISTENING 仍在。
+后来又写了 `model_port_relay_r1.py`：一个只搬字节的 TCP 转发器（`59999 → 7863`，不缓存、不合成任何回答，
+只打印计数），用来在**同一个进程、同一枚会话**里把"没人听"切成"真网关在答"。
+为什么非要这样：这把启动器每次起都会重发一枚 `CITYNEXUS_TRAVELER_AUTH_SECRET`，
+重启后端就等于把旅客的凭证作废（那正是 P0-3 缺的门），也就丢掉了正在被检验的那一枚 Task。
+
+### 三次真按下，读数各在哪一行
+
+| 轮 | 谁按的 | 时刻（UTC） | 屏上/线上读数 |
+| --- | --- | --- | --- |
+| A | `departure_full_walk_r29`（walk-109） | `22:05:05` | `walk-109-log.txt:12` 命中尺：`centre=[103,792] disabled=false covers_it=false in_viewport=true`；`:14` `PRESSED_DOCK_RETRY baseline_task=…kind=run,task=1c7b5dcf` |
+| B | `dock_recovery_probe_r3`（转发器开） | `22:08:57` | `dock-recovery-3.txt:10` 按下，`:19` `RESUME_RECEIPT kind=resume task=1c7b5dcf status=200 ended=22:09:33`（36 秒后模型真答了），`:21` `AFTER_RETRY_ROW row=null` —— **那一行随失败态一起消失** |
+| C | `dock_recovery_probe_r5`（转发器又关） | `22:10:31` | `dock-recovery-5.txt:11` 发一句真消息 → `:9` 五秒后行回来；`:13` 按下、`:15` `resume … status=200 ended=22:10:33`（2.2 秒诚实失败）；`:19` `BROWSE_RESULT mapPressed=true agentPressed=false` —— 第二枚键把旅客送到了地图那一层 |
+
+线上账（`_cmdr_v3_port_1022/uvicorn_dead_canary.log` 现读重算）：
+`/agent/goal-tasks/<id>/run|resume` 共 6 条，`1 条 run + 5 条 resume`，
+`distinct journeys=1 distinct tasks=1`（`1c7b5dcf…`），六条 `http_status` 都是 200——
+**200 说的是这个端点答了话，不是模型成功了**：轮 A/C 的响应体里那一轮是 `FAILED_RECOVERABLE`，轮 B 才是真答案。
+截图三张：`walk109-dock-recovery.png`（底栏里那句实话 + 两枚键都在固定输入区里）、
+`dock-recovery-2-after-retry.png`（按下之后）、`dock-recovery4-after-browse.png`（地图键高亮、内容换层）。
+
+### 仪表谱系（这一段逼出来的四把）
+
+`dock_recovery_probe_r1`（把 evaluate 报错咽成 `null`）→ `r2`（报错原样打印 `evaluate_error`）→
+`r3`（挑页规则改成"同一源里只许一枚"，并允许不同源各走各的——它跑出了轮 B）→
+`r4`（按下第二枚键之前**重新读一次坐标**：r3 在轮 B 里用的是按下重试之前的旧坐标，重试成功后那一行已经消失，
+旧点落在别的东西上，`dock-recovery-3.txt:22` 读出 `mapPressed=false` 是**我的点的不是屏的**）→
+`r5`（必须由操作者点名 `RECOV_ORIGIN`，否则不按；它跑出了轮 C）。
+`instrument_lint_r1.mjs` 对这四把都是 `ok`，全目录仍是 `files=157 offenders=4`（那四枚是第廿九节列过的旧账，
+其中 `place_media_click_r1` 是潜伏、不是已发布读数）。
+
+### 裁语要的那三件，现在能答两件半
+
+1. 「Agent 503 ≠ 整趟罢工」：**做到了可点的程度**——失败态下底栏里有两条明路，且都真按过；
+   恢复用同一枚 `journey_id/task_id`，没有新建 Journey，没有第二次供应商调用的痕迹（六条线上账只有那一枚 Task）。
+2. 「快速、可见地失败」：这一轮的失败是**秒级**（轮 C 2.2 秒）而不是十五分钟；屏上那句
+   「Agent 上一轮没有答完，这次的服务暂时不可用…」与两枚键同时在场。
+   还差的半件：真·上游 503（`MODEL_HTTP_503`）今夜只在共享栈的 02:42—03:04 窗口出现过，
+   我这一轮的失败是传输层拒绝（`reason` 会不同），所以"503 这一枚码字在真网关上被点过"仍挂着——
+   共享栈上自然出现时我会用同一把 r5 补，不去改网关。
+3. 「模型不可用时已授权的确定性内容仍可看可改」：轮 C 的 `先浏览已找到的地点` 就是这一件——
+   在失败态没解除的情况下按下去，地图那一层高亮、内容换层，行程指针没变。
+
+USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、Actions 运行 0 次。
+下一刀按裁语顺序：P0-4（少走路偏好下用真公共交通替换长步行 +「根据路线重新安排」），
+以及 walk-108 那件 `freeze-routes` 三连 500 而屏上不说（`#310`）。

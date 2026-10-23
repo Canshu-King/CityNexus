@@ -32,6 +32,7 @@
  *   /agent/goal-tasks/<id>/run|resume call with the task id that went on the wire -- so "the same round resumed"
  *   is a recorded request pair, not a claim about a DOM label.
  *
+ * Nothing is seeded and no API shortcut is used: the goal is typed, the consent chips are tapped, the
  * send key is pressed, the Agent's own question is answered by clicking one of its choices, research is
  * started by its own button, and every reading below is rendered text.
  */
