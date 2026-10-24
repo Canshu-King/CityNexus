@@ -10,6 +10,7 @@ import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
 import { MobileHermesRun } from "./mobile/MobileHermesRun";
 import { MobileCompatAgentActivity } from "./mobile/MobileCompatAgentActivity";
 import { fetchWithReadDeadline, READ_DEADLINE_MS, ReadDeadlineMissed } from "../lib/readDeadline";
+import { cityNamedIn } from "../features/setup/JourneyTrialSetup";
 import {
   CLIENT_WRITE_DEADLINE_MS,
   CLIENT_WRITE_DEADLINE_SECONDS,
@@ -405,6 +406,10 @@ export function RevolutionFirstLook() {
   const [tripGoal, setTripGoal] = useState("");
   const partyEdited = useRef(false);
   const budgetEdited = useRef(false);
+  // Which city this screen put there by itself, so the next sentence may replace that value but never a
+  // city the traveller typed; a box the person wrote in is theirs from then on.
+  const cityEdited = useRef(false);
+  const autoFilledCity = useRef<string | null>(null);
   const applyNumbersFromGoal = (text: string) => {
     const party = readPartyFromGoal(text);
     const perPerson = readPerPersonBudgetFromGoal(text);
@@ -412,6 +417,18 @@ export function RevolutionFirstLook() {
     if (perPerson !== null && !budgetEdited.current) {
       const people = party ?? partySize;
       setBudgetYuan(String(perPerson * Math.max(1, people)));
+    }
+    const city = cityNamedIn(text);
+    if (cityEdited.current) return;
+    if (city && (cityName.trim() === "" || cityName === autoFilledCity.current)) {
+      autoFilledCity.current = city;
+      setCityName(city);
+    } else if (!city && cityName === autoFilledCity.current && autoFilledCity.current !== null) {
+      // The sentence stopped naming exactly one place (「北京玩两天」 grew a 「…再去厦门」), so the box this
+      // screen filled by itself goes back to being the traveller's to write -- leaving the earlier guess
+      // standing would be a value the sentence no longer says.
+      autoFilledCity.current = null;
+      setCityName("");
     }
   };
   const [tripInterests, setTripInterests] = useState<string[]>([]);
@@ -1087,12 +1104,15 @@ export function RevolutionFirstLook() {
                       required
                     disabled={busy || startWriteBlocked}
                     placeholder="例如：连城、厦门、杭州"
-                    onChange={(event) => setCityName(event.target.value)}
+                    onChange={(event) => {
+                      cityEdited.current = true;
+                      setCityName(event.target.value);
+                    }}
                     data-testid="rev-firstlook-city"
                   />
                 </div>
                 {!cityName.trim() && <p className="rev-trip-destination-hint" role="status" data-testid="rev-trip-destination-hint">
-                  还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。
+                  还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
                 </p>}
                 <details className="rev-v3-trip-dates"><summary>日期与天数</summary><div className="rev-trip-request-grid">
                   <label>

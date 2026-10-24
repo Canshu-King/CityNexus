@@ -172,6 +172,27 @@ const SUPPORTED_CITIES = {
 };
 
 /**
+ * The one spelling in this table that a sentence names, or null.
+ *
+ * Asked of `CITY_FACTS` itself -- the table `applyCity` already fills a basis from -- because a second
+ * city vocabulary would be a second writer for the same names and would drift the first one.
+ * Two answers are refused rather than resolved: 「从北京去厦门」 names two places and this field holds
+ * one journey, so the box stays the traveller's to write.
+ *
+ * Finding a spelling here says nothing about whether the server can serve that city -- ORD-0346 measured
+ * that apart at `GET /destinations/capability`, where three of the eleven Chinese spellings get no
+ * identity at all.  This only ever fills a box the traveller can still see and change.
+ */
+export function cityNamedIn(text: string): string | null {
+  const haystack = text.toLowerCase();
+  const hits = Object.keys(CITY_FACTS).filter((name) => (
+    /^[\x00-\x7F]+$/.test(name)
+      ? new RegExp(`(^|[^a-z])${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^a-z]|$)`).test(haystack)
+      : haystack.includes(name)));
+  return hits.length === 1 ? hits[0] : null;
+}
+
+/**
  * ORD-0346: what the server actually said about each spelling this screen offers.
  *
  * `CITY_FACTS` is a spelling table -- it records which names `applyCity` can fill a basis from -- and

@@ -1,0 +1,10 @@
+ARM A_one_city_in_sentence city_value="北京" hint_visible=false hint_text=
+ARM B_two_cities_refuse_to_guess city_value="" hint_visible=true hint_text=还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
+ARM C_human_typed_first city_value="杭州" hint_visible=false hint_text=
+ARM_D press label="继续规划 →" centre=188,728 topmost=rev-firstlook-start
+ARM_D after_press first_screen_forms=0 error_text=""
+ARM_D screen_headline C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 旅行插画 等待第一个目标 地图 日程 对话 现实地图 0 处地点 地点研究会在这里汇合 找到有坐标的地点后，点击图钉查看来源。 手动探索地点 旅行目标已建立。Agent 可以接手研究，地图与日程会随着成果逐步更新。 CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交给 Agent。 改这句，然后交给 Ag
+ARM D_first_press_after_sentence city_value="(absent)" hint_visible=false hint_text=
+ARM_E after_first_half city_value="北京"
+ARM E_sentence_grows_ambiguous city_value="" hint_visible=true hint_text=还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
+PROBE_DONE
