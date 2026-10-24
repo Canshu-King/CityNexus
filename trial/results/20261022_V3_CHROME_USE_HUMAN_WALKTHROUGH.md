@@ -2031,3 +2031,24 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **哪些已发布的读数受影响。** 只这一句措辞。第卅九节里的数都还成立：`10:00–12:00 → 11:18–13:18`、往后 `78 分钟`、`6.0 公里`、按完之后正文才出现 `11:18`，以及那个两层判语（这条动作不重跑研究、因此不重读也不冲掉上限；若日后改成重跑研究，十二句话的窗口会静默丢掉上限）都不变。
 
 **这一改顺带留下一个真问题（不判缺陷）。** 旅客是在**日程页**按下「按这一版安排」的，而解释"这一跳为什么改成公共交通"的那句话只在**对话页**能看到；日程页上看不到。要不要把这条披露也放到日程页，属于产品口径，我不替它定。
+
+
+## 四十一、把第 600 行之后那八处裸文件名也补掉，并交代两支探针为什么现在才入库（第 304 号令的尾巴）
+
+**这一节补的是第卅八节自己留下的尾巴。** 那一节写「收紧面第 600 行之后的八处没逐条补……要连后期一起补，我下一格接着做」。现在做掉。
+
+**八处逐条对拍（每条给出处，判语按三种病分）。**
+- 第 1093 行引 `trial/human_walk/worktree_slice_reading_1024.txt` → 补成 `trial/human_walk/worktree_slice_reading_1024.txt:3`（那一条读数就在这行）。判：只缺行号。
+- 第 1119 行引 `trial/human_walk/infeasible_sentence_arms_r1.mjs` 说「逐臂读数」→ **引错载体**：探针本身不产出读数，读数在它的输出 `trial/results/20261022_v3_human_chrome/infeasible-sentence-arms-1.txt:1` 起（每一臂一行原话）。判：指歪，改指输出。
+- 第 1154 行引 `trial/human_walk/press_the_door_r1.mjs` 当「尺」→ 补成 `trial/human_walk/press_the_door_r1.mjs:31`（它打印 `CANDIDATE … slots=` 的那一行）。判：只缺行号。
+- 第 1207 行引 `stalled-research-screen-1.txt` 说「追加进了原本 5 行的它」→ 补成 `trial/results/20261022_v3_human_chrome/stalled-research-screen-1.txt:5`（原本最后一行；追加从第 6 行起）。判：只缺行号。
+- 第 1347 行引 `first-tap-layers-3.txt` 说三档都过 → 补成 `trial/results/20261022_v3_human_chrome/first-tap-layers-3.txt:67`（`FIRST_TAP_SUCCESS=3/3`）。判：只缺行号。
+- 第 1473 行引 `goal-numbers-1.txt` 说「冷开 `同行人数=1 总预算=1000`」→ **指歪**：这份文件里没有这两个值，它记的是 `party":"2","budget":"2400"`（`trial/results/20261022_v3_human_chrome/goal-numbers-1.txt:5`）。那句「冷开 1 / 1000」在这份文件里取不回，等于一处引注指向了不装这条读数的文件。
+- 第 1758 行引 `dock_clearance_probe_r1.mjs` 说「量到底栏 645~767＋77、199 像素的带、padding 170」→ 读数不在探针源码里，在它的输出 `trial/results/20261022_v3_human_chrome/dock-clearance-probe-1-log.txt:2`（`AT_MAX_SCROLL` 那一行同时带 dock 盒与滚动量）。判：指歪，改指输出。
+- 第 1926 行引 `model_503_dock_press-1.txt` 当整段回执的落点 → 补成 `trial/results/20261022_v3_human_chrome/model_503_dock_press-1.txt:7`（第一条 `FAILED_EXTERNAL | MODEL_HTTP_503`）。
+
+**合计：八处里五处只缺行号，三处指歪（第 1119、1473、1758 行）。** 加上第卅八节的两处指歪，这份文档的引注里目前共数出五处「指向的文件不装那条读数」——它们全都出现在同一类东西上：**探针与它的输出混着用**（源码当读数引），或**同一族的另一份产物**（1/1000 与 2/2400）。
+
+**两支探针为什么现在才入库。** 第卅八节写「要补的话得先把探针里的会话读取那几行核一遍」，核完了：`collective_screen_r1.mjs` 只在 `:16` 用 `Boolean(...)` 判断有没有 bearer，不打印；`identity_pointer_r1.mjs` 原来在 `:14` 会打印 bearer 的前十二位（`bearer_head`），**这一行在入库时被我换成了 `bearer_present: Boolean(...)`**——所以树里这份比仓库外那份少一个会吐凭据片段的字段，这一点必须写明，否则将来有人拿树里的跑，会以为它"本来就只读存在性"。
+
+**改了什么。** 只追加这一节；两支探针入库（其中一支删掉 bearer 片段那行）；未改任何旧正文与旧读数。产品文件零改动。
