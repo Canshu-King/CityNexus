@@ -40,6 +40,9 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
   const host = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
   const travellerMarker = useRef<import("maplibre-gl").Marker | null>(null);
+  // MapLibre is imported lazily, so the simulated position can arrive before the map object
+  // exists.  Without this flag the marker effect ran once against a null map and never again.
+  const [mapReady, setMapReady] = useState(false);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);
   const amapPoints = useMemo(() => candidates.filter((point) => isAmapPoint(point)
     && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT"
@@ -88,7 +91,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       });
       map.addControl(new lib.NavigationControl({ showCompass: false }), "top-right");
       map.on("error", () => { if (!disposed) setFailed(true); });
-      mapRef.current = map;
+      mapRef.current = map; setMapReady(true);
       const bounds = new lib.LngLatBounds();
       points.forEach((point, index) => {
         const element = document.createElement("button");
@@ -111,7 +114,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       if (points.length > 1) map.fitBounds(bounds, { padding: 50, maxZoom: 15, duration: 0 });
       observer = new ResizeObserver(() => map?.resize()); observer.observe(host.current);
     }).catch(() => { if (!disposed) setFailed(true); });
-    return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); travellerMarker.current?.remove(); travellerMarker.current = null; mapRef.current = null; map?.remove(); };
+    return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); travellerMarker.current?.remove(); travellerMarker.current = null; mapRef.current = null; setMapReady(false); map?.remove(); };
   }, [allowed, points, onSelect]);
   // The simulated traveller is a second marker, kept apart from the numbered pins: it is the
   // only thing on this map that moves, and its coordinates come from the sandbox clock, not
@@ -119,7 +122,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
   useEffect(() => {
     const draw = traveller && (!traveller.coordinate_system || traveller.coordinate_system === "WGS84")
       && Number.isFinite(traveller.latitude) && Number.isFinite(traveller.longitude);
-    if (!allowed || !draw) { travellerMarker.current?.remove(); travellerMarker.current = null; return; }
+    if (!allowed || !mapReady || !draw) { travellerMarker.current?.remove(); travellerMarker.current = null; return; }
     void import("maplibre-gl").then(({ default: lib }) => {
       if (!mapRef.current || !traveller) return;
       if (!travellerMarker.current) {
@@ -133,8 +136,11 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       } else {
         travellerMarker.current.setLngLat([traveller.longitude, traveller.latitude]);
       }
+      // A moving simulated traveller that sits outside the framed pins is invisible on a phone;
+      // following it is what makes the demo's blue dot findable without panning by hand.
+      mapRef.current.easeTo({ center: [traveller.longitude, traveller.latitude], duration: 300 });
     });
-  }, [allowed, traveller?.latitude, traveller?.longitude, traveller?.label, traveller?.coordinate_system]);
+  }, [allowed, mapReady, traveller?.latitude, traveller?.longitude, traveller?.label, traveller?.coordinate_system]);
   return <section aria-label="当前行程地图">
     <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
     {traveller && <p data-testid="rev-map-traveller-state">模拟旅客：{traveller.label} · {traveller.latitude.toFixed(4)}, {traveller.longitude.toFixed(4)}（{traveller.coordinate_system ?? "WGS84"}，模拟位置，不是物理 GPS）</p>}

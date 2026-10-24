@@ -2514,3 +2514,5 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 蓝点代码已落且类型检查通过，但**没有蓝点的真栈截图**：本轮为修后端重启了演示栈，标签页的会话随新 secret 失效，`/revolution` 的旅程视野读不到这趟 ACTIVE 行程，地图（`WorkspaceMap`）没有渲染到屏上。时钟卡的「模拟旅客」文字行证明了坐标已从服务器到达前端，但「蓝点画在地图上」这一步的屏证还欠着。补齐办法：在一个可读的会话里打开同一趟 ACTIVE 行程，点「加载地图」后截图；不需要重做数据。
 
 **红线自查。** 模拟时间只写 `simulation_clocks`，没有改 OS 时间、令牌 TTL 或供应商采集时间；模拟位置标 `SCENARIO_SIMULATED_LOCATION`、不写 `LocationObservation`、不声称物理到场；推进活动走的是既有的 `SIMULATED_STATE_TRANSITION` 真相（端点默认 kind 就是它），没有伪造 `DEVICE_ATTESTED`；`reset` 仍被面板拒绝（这是既有设计）。
+
+**蓝点补证（夹具，2026-10-25 06:18）。** 真栈会话仍不可读，于是用可重复的 UI 夹具把这一步补上：`frontend/e2e/revolution-sim-traveller.spec.ts` 以真实 OpenStreetMap 底图渲染同一屏（行程 ACTIVE、地图层、两枚编号钉），mock 的时钟返回模拟旅客坐标；断言屏上「模拟旅客：TEST ONLY 故宫 · 39.9201, 116.4012（WGS84，模拟位置，不是物理 GPS）」并且 `[data-testid='rev-map-traveller']` **可见**（1 passed，4.1s；`trial/results/20261022_v3_human_chrome/fixture-sim-traveller-7.txt`）。截图 `sim-traveller-fixture-390.png` 里蓝点与编号钉是两种不同标记。顺带修了两个真问题：地图对象晚于时钟读数时蓝点永不绘制（加 `mapReady` 触发），以及旅客走出两枚钉的取景框后手机上看不见（地图改为跟随旅客）。真栈那张蓝点截图仍欠——这一段只把「蓝点能画在对的位置」证到，不冒充真栈。

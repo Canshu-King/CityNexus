@@ -1,0 +1,6 @@
+
+Running 1 test using 1 worker
+
+  ok 1 [mobile-ui-chromium-fixture] › e2e\revolution-sim-traveller.spec.ts:72:3 › Classroom sandbox traveller fixture › the simulated traveller reaches the map as its own marker (6.4s)
+
+  1 passed (9.2s)
