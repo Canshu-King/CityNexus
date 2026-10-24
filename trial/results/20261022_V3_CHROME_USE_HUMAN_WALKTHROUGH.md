@@ -1790,3 +1790,73 @@ walk-110（07:2x，代 `369ab5a7…`）把六项时间写进卡片、保存、�
   回退我这次 include 一样红）。
 - PR #43 仍是 Draft、Actions 运行 0 次，因此这一批**不得称"正式交付"**；USER_VERIFIED 仍 PENDING，
   要主人自己拿真手机走一遍这两按。
+
+## 卅五、P0-4 的另一半：旅客写下的步行上限真的读到了，超上限的长步行换成真公共交通（walk-113，代 `1b81f66291d3470974894b140e5c742f05d338b5`）
+
+裁语（PR #43 评论 6374145024，2026-10-24 04:28 北京）要求的是：低步行偏好下把长步行换成真公共交通，并只给一个真动作
+「根据路线重新安排」，在同一 revision 上给出显式 diff；不许静默改动生效的 PlanVersion；不许绕过 422 那道门。
+
+**看见什么**（第一屏那句话，逐字进库）：`北京玩两天，两个人。每段步行不超过1公里，远的请改坐地铁并写明线路和站名。`
+落在 `journey_intents.source_text`，同一次读取里 `capabilities_json` 仍是 `[]`——所以上限必须从话里现读，
+而不是等有人先把它结构化。词面能读出 `MAX_WALKING_PER_LEG_M` 的 `HARD max_m=1000`，读数在
+`trial/results/20261022_v3_human_chrome/caps_walk_extract-1.txt`；没有数字的「少走路」读不出上限，这条尺也一起钉了。
+
+**第一下按哪**：出发卡片里的 `核实并冻结今天的转场`（`[data-testid="rev-v3-freeze-routes"]`），真鼠标点在它自己的中心，
+点前先用 `document.elementFromPoint` 证明没有被固定底栏压住。
+**实际发生什么**（屏上原文，`walk-113-log.txt:57`）：
+
+`转场已核实 4/4（其中 1 段是跨夜衔接，4 段按公共交通核实，其中 2 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案`
+
+同一刻库里的答案（不是屏上文字，是另读的一份）：`verified=4, total=4, overnight=1, transit=4, replaced_long_walks=2,
+over_cap_walks=0, walking_cap_m=1000, frozen=true, unanswered=[], answered_at=2026-10-24T01:16:21.478369+00:00`。
+`plan_versions.mobility_evidence_json` 四条事实逐条读回（站名对 `places` 现取）：
+`天安门广场→故宫博物院` 由原来的步行 3385 米换成 `TRANSIT 6006 米 · 78 分钟`（内含步行 3326 米），
+`故宫博物院→前门大街` 由步行 3512 米换成 `TRANSIT 5181 米 · 56 分钟`（内含步行 2501 米），
+另外两段本来就是公共交通（`74940 米 · 224 分钟`、`88327 米 · 252 分钟`）。
+这两段就是那句 diff 的全部内容：换掉的是旅客说过不肯走的两段，换乘的是高德给的那一段的答案，没有一段被悄悄改写。
+
+**改了什么码**（这一代的落点，行号现读）：读上限 `backend/app/agent/goal_route_freeze.py:366`（`_walking_cap_m`，
+先读 `journey_intents.capabilities_json`，再读 `source_text` 与本任务里旅客说过的话，走 `app/capabilities.py:605`
+那把唯一的提取尺）；判超标 `:436`（`_over_cap_walk`，缺 mode 按 WALK 处理是本文件的事实不是猜的）；
+换乘车 `:449`（`_replace_long_walk`，交通门没有答案时保留步行事实并标 `over_cap_m`，证据不为迁就上限而被丢掉）；
+统计入答案 `:593` 与 `:603-604`。冻结那一步写 mode 与步行距离的那扇门在
+`backend/app/integrations/mobility/snapshot_capture.py:222-225`，逐跳答案来自 `backend/app/agent/goal_mobility.py:66`
+的 `pair_details`；判这份证据的尺在 `backend/app/replanning/feasibility.py:497-500`（读 mode 与 walking_distance，
+且只在 WALK 那一跳把整段距离当步行）与 `:918`、`:927-930`（判超限）。
+句子在 `frontend/src/trial/mobile/departureGaps.ts:205-209`，接线在
+`frontend/src/trial/mobile/DraftDepartureCard.tsx:265-271`。
+
+**这一按查出来的新缺陷（已改，另代验）**：卡片上面说换了 2 段，同一屏下面的「高德转场路线」抽屉却仍把那两段列成
+`步行 · 3.4 公里`／`步行 · 3.5 公里`（`walk-113-log.txt:68`，同文件 `:69` 记 `TRANSIT_LABELED=2 WALK_LABELED=2`，
+`:71` 记两条线路名）——抽屉读的是 Agent 研究到的那一行，不是这次冻上的那一行。旅客要的改动在他还能打开的地方看不见，
+就是"静默改动"。修法：冻上的那一行把结论写回研究行（`goal_route_freeze.py:412` `_mark_frozen_hop`，调用点 `:499`），
+抽屉再各说一句（`frontend/src/trial/mobile/WorkspaceActions.tsx:157` 与渲染点 `:189`，testid `rev-amap-research-frozen`）。
+两句话的措辞是（数字由各跳自己的读数填；屏上原文见下面「再按」）：换成交通的那段说
+「超过你写的〈上限〉，这版按公共交通核实 〈冻上的距离〉 · 〈冻上的时长〉（〈线路〉）」，
+交通门没答案的那段说「超过你写的〈上限〉，公共交通没有答案，这版仍按步行核实」。
+钉它的三条臂在 `backend/tests/test_goal_route_freeze.py:708-709`（换乘）、`:752`（交通没答案仍步行）、
+以及「少走路」那条负对照——没有数字就不许在研究行上盖任何章。
+
+**自测与突变**：`backend/tests/test_goal_route_freeze.py` = `13 passed`；把 `_mark_frozen_hop` 的匹配条件改成恒假后
+`2 failed, 11 passed`（两条正臂各咬一次，负对照仍绿），再按原字节还原并复跑 `13 passed`。
+前端 `npm run typecheck` 退出码 0。凭据门 `trial/play_launcher/_staged_secret_gate_r2.py` 提交前自测 6/6、
+`text_files=4 added_lines_scanned=70 value_line_hits=0 key_anywhere_hits=0 VERDICT=PASS`；高德键只从 User 级环境变量进进程，
+本文与回执都不含键值，深链只有坐标与站名。
+
+**再按（walk-114，同一枚故事、同一个端口 `14522`、同一份库 `citynexus_v3_cap2_1024.db`，代码换成
+`7fef3503c969a0bc689c80ba29b1b4fbdb14532d`）**：这一趟走出 6 段转场，卡片句子（`walk-114-log.txt:48`）：
+`转场已核实 6/6（其中 1 段是跨夜衔接，6 段按公共交通核实，其中 5 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案`
+抽屉那六行现在每行各带自己的话（`:59`），例如 `天安门广场 → 故宫博物院` 那行读
+「步行 · 3.4 公里 · 约 45 分钟」＋「超过你写的1 公里，这版按公共交通核实 6.0 公里 · 约 1 小时 17 分（地铁8号线(瀛海--朱辛庄)）」，
+`八达岭长城 → 颐和园` 那行读「步行 · 52.2 公里 · 约 11 小时 36 分」＋「超过你写的1 公里，这版按公共交通核实 71.5 公里 · 约 3 小时 19 分（877路(八达岭长城--地铁北土城站) · 地铁10号线外环(车道沟--车道沟)）」；
+六行里带这句的是 5 行，本来就是公共交通的那一行（`前门大街 → 八达岭长城`）没有多挂——这条负路这次的证据在屏上，测试里没有单独的臂。
+截图 `walk114-12b4-agent-drawer.png`（178844 字节）。换代前那两张留着对照：
+`walk113-12b-routes-verified.png`（124236 字节，带句子的卡片）、`walk113-12b4-agent-drawer.png`（175012 字节，抽屉里那四行还没带这句话的样子）。
+两件不粉的事：量具那行 `:60` 记 `TRANSIT_LABELED=6 WALK_LABELED=5`，两个数同时非零是因为一行文字里如今既有「步行」又有「公共交通」，
+是这把尺的字面匹配跟不上，不是屏上自相矛盾；还有那行「在高德地图查看路线 ↗」的深链仍是它自己那次步行的链接
+（`:61` 记 `walk,walk,walk,bus,walk,walk`），即旅客按下去看到的是研究到的那一步的步行路线，而句子说的是这版冻的是公共交通——
+要不要把链接也换成冻上的那一条，交给号令者裁。
+
+**还没到"完成"的部分**：PR #43 仍是 Draft、Actions 运行 0 次，所以这批不能称正式交付；USER_VERIFIED 仍 PENDING，
+要主人自己在真手机上按那两下；抽屉那两行的屏上证词要等 walk-114 的读数；上限只在"本次冻结"里生效，
+生效后的方案再被重新安排时是否重读那句话，是另一格，尚未量。
