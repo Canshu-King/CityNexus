@@ -161,6 +161,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
   const [message, setMessage] = useState<string | null>(null);
   const [costAck, setCostAck] = useState(false);
   const [needsRefresh, setNeedsRefresh] = useState(false);
+  const [selectBlocked, setSelectBlocked] = useState(false);
   const [candidateIds, setCandidateIds] = useState<string[]>([]);
   const epoch = useRef(0);
   const writeLock = useRef(false);
@@ -227,6 +228,7 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     writeLock.current = true;
     setBusy(action);
     setMessage(null);
+    setSelectBlocked(false);
     try {
       if (action === "generate") {
         if (current.input) await cityNexusApi.generateFromDiscovery(journeyId, candidateIds, crypto.randomUUID());
@@ -253,6 +255,10 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
     } catch (error) {
       if (!stillCurrent()) return;
       setNeedsRefresh(true);
+      // Only a refusal about this plan's layout gets the re-arrange handoff: an expired or
+      // unauthorised session (401/403) is not something 根据路线重新安排 can answer.
+      setSelectBlocked(action === "select" && error instanceof CityNexusApiError
+        && (error.status === 409 || error.status === 422));
       setMessage(failureText(error, (placeId) => placeTitleFrom(snapshot, placeId)));
     } finally {
       writeLock.current = false;
@@ -328,6 +334,8 @@ export function MobilePlanWorkbench({ journeyId, placeId, visible, onStarted, on
       {current.seat?.may_confirm_departure === false && <small>请由行程发起人确认出发。</small>}
     </section>}
     {message && <p role="alert" className="rev-plan-message">{message}</p>}
+    {selectBlocked && <button type="button" className="rev-plan-replan" data-testid="rev-plan-replan"
+      onClick={() => window.dispatchEvent(new CustomEvent("citynexus:replan-requested", { detail: journeyId }))}>根据路线重新安排</button>}
     {loading && !current && <p role="status">正在读取你的行程方案…</p>}
     {!fromAgentDraft && current?.input && current.journey.status === "DRAFT" && <TravelBriefPreview key={`${journeyId}:${bearer}`} input={current.input} selected={candidateIds} onSelect={setCandidateIds} onSave={saveBrief} onRefreshFacts={refreshPlaceFacts} disabled={locked} />}
     {!fromAgentDraft && current && plans.length === 0 && <p>{current.input ? "从想去清单里挑选地点，再生成日程。" : "先选一个已核实的地点，再把它排进日程。"}</p>}

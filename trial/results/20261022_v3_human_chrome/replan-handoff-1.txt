@@ -1,0 +1,8 @@
+TAB {"found":true,"x":239.9276351928711,"y":566.5320625305176}
+BEFORE {"cards":[],"message":"当前账号无法读取这份行程，请重新进入行程。","handoff":null,"diff":null,"apply":null,"status":["当前展示的是已保存版本。","当前账号无法读取这份行程，请重新进入行程。"],"scrollY":0}
+PRESS_SELECT {"found":false,"why":"no card 2"}
+AFTER_SELECT {"cards":[],"message":"当前账号无法读取这份行程，请重新进入行程。","handoff":null,"diff":null,"apply":null,"status":["当前展示的是已保存版本。","当前账号无法读取这份行程，请重新进入行程。"],"scrollY":0}
+SHOT_REFUSED {"bytes":196056}
+PRESS_HANDOFF {"found":false}
+AFTER_HANDOFF {"cards":[],"message":"当前账号无法读取这份行程，请重新进入行程。","handoff":null,"diff":null,"apply":null,"status":["当前展示的是已保存版本。","当前账号无法读取这份行程，请重新进入行程。"],"scrollY":0}
+SHOT_HANDOFF {"bytes":196056}

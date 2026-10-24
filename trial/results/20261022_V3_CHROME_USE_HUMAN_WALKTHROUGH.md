@@ -2462,3 +2462,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **再按。** 真栈再按一次，屏上出现上述整句（`catalog-sentence-1.txt:2`，截图 `catalog-sentence-390.png`），并且卡片的另一行已能说 `屏上的出发待办都齐了，可以直接选用这份方案。`
 
 **回归。** `revolution-draft-preparation.spec.ts` 增加第二按的 422 夹具：断言 `54 个真实地点` 与 `继续用上面这份草案候选就可以`。390/430 两形制 **2 passed**（`fixture-draft-r3.txt`）；`npm run typecheck` **rc=0**（`typecheck-generate-4.txt`）。
+
+## 六十九、选用被拒时，「根据路线重新安排」长在拒绝旁边
+
+**看见什么。** 方案二选用被服务端拒绝：「这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次『选用这份方案』。」拒绝句在「你的行程方案」里，而它点名的「根据路线重新安排」在下面的出发准备卡里——旅客得跨两段屏去找同一个动作。
+
+**改码。** `frontend/src/trial/mobile/MobilePlanWorkbench.tsx` 在**选用**被 409/422 拒绝时渲染 `data-testid="rev-plan-replan"`（文案与准备卡一致），点击派发 `citynexus:replan-requested`。`frontend/src/trial/mobile/DraftDepartureCard.tsx` 监听该事件：准备卡里已有重排按钮时滚过去并按下它（只展开差异，不写库）；没有时先走一次转场核实。401/403 不给这个按钮——会话失效不是重排能答的。
+
+**回归（夹具）。** `frontend/e2e/revolution-draft-preparation.spec.ts` 的第二次选用现在返回真实的 `409 PLAN_INFEASIBLE`，随后断言 `rev-plan-replan` 可见、按下后 `rev-v3-replan-diff` 可见（不产生第二次写）。390/430 两形制 **2 passed**（`trial/results/20261022_v3_human_chrome/fixture-draft-handoff-2.txt:7`）。
+
+**真栈没有复验（如实记）。** 准备复验时，旧会话已失效：裸读行程仍是 200，而 `/operator` 与 `/travelers/session` 都是 401「traveler credentials are expired or invalid」（`trial/results/20261022_v3_human_chrome/_session_probe_r1.txt:4`），屏上说「当前账号无法读取这份行程」。这正是第六十六节测过的「库在、会话不在」，与服务端每次启动轮换签名一致；本轮不把它伪装成重排按钮的失败。恢复真栈需要重启并重新建立会话（旧 Journey 的成员身份无法由新会话取得），已排为下一步。

@@ -251,6 +251,20 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       setMessage(error instanceof Error && error.message ? error.message : "转场没能核实，时间仍留在这里，可以重试。");
     } finally { inFlight.current = false; setRoutesBusy(false); }
   };
+  // The plan workbench refuses 选用 for its own reason (measured on the live card: "两段安排之间
+  // 留的赶路时间不够（1 段）") and the re-arrange control lives down here, inside this card.
+  // Making the traveller hunt for it across two sections is the same defect as the dock covering
+  // the button: the refusal's own next step must be reachable from the refusal.  The workbench
+  // dispatches this event; this card reveals the diff (显示差异), it does not write anything.
+  useEffect(() => {
+    const revealReplan = () => {
+      if (!replan.current) { void verifyRoutes(); return; }
+      replan.current.scrollIntoView({ block: "center" });
+      replan.current.click();
+    };
+    window.addEventListener("citynexus:replan-requested", revealReplan);
+    return () => window.removeEventListener("citynexus:replan-requested", revealReplan);
+  }, [result]);
   const acceptPrice = async () => {
     if (!result || inFlight.current || task.status === "WORKING") return;
     const ids = unknownPricePlaceIds(result.gaps);
