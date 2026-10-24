@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
@@ -397,6 +397,10 @@ function readPerPersonBudgetFromGoal(text: string): number | null {
 }
 
 export function RevolutionFirstLook() {
+  const [collectiveState, setCollectiveState] = useState<string | null>(null);
+  const receiveOperator = useCallback((operator: { collective?: { state?: string } } | null) => {
+    setCollectiveState(operator?.collective?.state ?? null);
+  }, []);
   const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "");
   const [startDate, setStartDate] = useState(() => localDateAfter(1));
   const [durationDays, setDurationDays] = useState(2);
@@ -1328,7 +1332,8 @@ export function RevolutionFirstLook() {
                   <MobileHermesRun globalComposer journeyId={journey.id} visible={activeTab !== "me"} />
                 </section> : null}
                 executionDecisions={journey.status === "ACTIVE"
-                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" /> : null}
+                  ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" onOperator={receiveOperator} /> : null}
+                collectiveState={collectiveState}
                 onExplore={() => {
                   if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
                   document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -165,6 +165,7 @@ export function LiveRecovery({
   handledEventIds = [],
   onRefreshLocation,
   onAccepted,
+  onOperator,
 }: {
   journeyId: string;
   journeyStatus?: string | null;
@@ -173,6 +174,7 @@ export function LiveRecovery({
   /** Captures one user-requested foreground location and returns its server observation id. */
   onRefreshLocation?: () => Promise<string | null>;
   onAccepted?: () => void;
+  onOperator?: (operator: JourneyOperatorProjection | null) => void;
 }) {
   const { locale } = useLocale();
   const t = useT();
@@ -188,6 +190,7 @@ export function LiveRecovery({
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [operator, setOperator] = useState<JourneyOperatorProjection | null>(null);
+  useEffect(() => { onOperator?.(operator); }, [operator, onOperator]);
   const [transitReroute, setTransitReroute] = useState<InTransitRerouteResult | null>(null);
   const [groupRoute, setGroupRoute] = useState<GroupRendezvousRouteResult | null>(null);
   const [groupRecoveryResult, setGroupRecoveryResult] = useState<GroupRecoveryPlanResult | null>(null);

@@ -34,6 +34,7 @@ type Props = {
   preparation?: (fromAgentDraft: boolean) => ReactNode;
   executionAgent?: ReactNode;
   executionDecisions?: ReactNode;
+  collectiveState?: string | null;
 };
 
 type DataState = "loading" | "ready" | "partial" | "unavailable";
@@ -94,7 +95,7 @@ function eventLabel(event: DraftGoalTaskEvent): string {
 }
 
 export function MissionCockpit({
-  journeyId, cityName, goal, journeyStatus, visible = true, space = "explore", preparation, agentStatus, agentAvailable, onExplore, onTrip, onChangeCity, executionAgent, executionDecisions,
+  journeyId, cityName, goal, journeyStatus, visible = true, space = "explore", preparation, agentStatus, agentAvailable, onExplore, onTrip, onChangeCity, executionAgent, executionDecisions, collectiveState,
 }: Props) {
   const [command, setCommand] = useState(goal);
   const [task, setTask] = useState<DraftGoalTask | null>(null);
@@ -340,7 +341,7 @@ export function MissionCockpit({
           <div className="cn-mission-capability-grid">
             <button type="button" onClick={onTrip}><Route size={18} /><strong>准备出发</strong></button>
             <button type="button" aria-expanded={guardianOpen} onClick={() => setGuardianOpen((value) => !value)}><ShieldCheck size={18} /><strong>行程守护</strong></button>
-            <button type="button" onClick={onTrip}><Users size={18} /><strong>同行决策</strong></button>
+            <button type="button" disabled={collectiveState === "SINGLE_TRAVELLER"} onClick={collectiveState === "SINGLE_TRAVELLER" ? undefined : onTrip}><Users size={18} /><strong>{collectiveState === "SINGLE_TRAVELLER" ? "添加同行者后使用" : "同行决策"}</strong></button>
           </div>
           <GuardianRealityPanel journeyId={journeyId} visible={visible && guardianOpen} active={journeyStatus === "ACTIVE"} />
         </article>

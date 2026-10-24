@@ -2240,3 +2240,17 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 屏证：`trial/results/20261022_v3_human_chrome/p1b-draft-subtitle-390.png`——同一屏上，副标题说「时间可以稍后调整」，下面是「▶ 编辑行程时间（可选）」与折叠层外的保存按钮。
 
 回归：两档单跑过；整套夹具 **50 passed / 0 failed，8.8 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-11-p1b.log`）；整树类型检查 rc=0。
+
+## 五十三、P1 第二刀（单人半支）：单人旅程的「同行决策」不再把人送去一般行程页
+
+**改前。** 驾驶舱第三格写着「同行决策」，按下去只调用 `onTrip`——送到一般行程页，那里没有成员面；单人旅程按了这一格什么也没发生。
+
+**改后。** 行程页现在把 `operator.collective.state` 报给驾驶舱（`frontend/src/features/execution/LiveRecovery.tsx:193` 把投影往上送；`frontend/src/trial/RevolutionFirstLook.tsx:400` 起做一次中转，`:1336` 传进驾驶舱）。驾驶舱在 `SINGLE_TRAVELLER` 时把这一格禁用并改写为「添加同行者后使用」（`frontend/src/trial/mobile/MissionCockpit.tsx:344`）——**如实说这块牌子现在没有门，而不是假装有**。
+
+**屏证。** `trial/results/20261022_v3_human_chrome/p1b-single-traveller-tile-390.png`：ACTIVE 行程页上，「准备出发」「行程守护」旁边第三格是灰的「添加同行者后使用」。
+
+**门。** 夹具读屏断言这一格可见且禁用（`frontend/e2e/revolution-mobile-shell.spec.ts:612` 起），三档视口都跑；这条断言只有在表单中继真的把 `SINGLE_TRAVELLER` 送到驾驶舱时才成立。
+
+**没做的。** 多人 3/3 那半支（真实三名成员各自授权、2/3 不生效）仍等 `#284` 的裁语与成员数据面；这一刀没有碰同意门，也没有把单人文案当多人实现。
+
+**回归。** 整树类型检查 rc=0；整套夹具 **50 passed / 0 failed，11.5 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-12-p1c.log`），ACTIVE 那条新门也在其中。
