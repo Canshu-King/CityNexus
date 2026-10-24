@@ -1,0 +1,7 @@
+question screen
+1 waiting_screen=trial/results/20261022_v3_human_chrome/play-v3-ask-1.txt:13 four options and no research button
+2 fix=frontend/src/trial/mobile/WorkspaceActions.tsx:595 hide the research control while a question waits
+3 gate=frontend/e2e/revolution-dialogue.spec.ts:60 asserts the control is absent, then still checks the RESEARCH press
+4 shot=trial/results/20261022_v3_human_chrome/play-v3-ask-1.png
+5 spec=trial/results/20261022_v3_human_chrome/ask-choice-spec-1.log three viewports passed
+6 typecheck=trial/results/20261022_v3_human_chrome/typecheck-ask1-1.log rc zero
