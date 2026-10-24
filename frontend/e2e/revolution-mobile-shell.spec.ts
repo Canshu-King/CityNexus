@@ -94,15 +94,34 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     const destinationBounds = await page.getByTestId("rev-firstlook-city").boundingBox();
     expect(destinationBounds?.height ?? 999).toBeLessThanOrEqual(64);
     await page.screenshot({ path: testInfo.outputPath("mobile-welcome-TEST-FIXTURE.png"), fullPage: true });
+    // Ruling acceptance #1: the Agent entry (goal box) and its one submit are both on the first screen.
+    for (const testId of ["rev-trip-goal", "rev-firstlook-start"]) {
+      const box = await page.getByTestId(testId).boundingBox();
+      expect(box && box.y + box.height <= 844).toBe(true);
+    }
     const nav = page.getByTestId("rev-mobile-bottom-nav");
     await expect(nav).toBeVisible();
+    const tabDestinations: Array<[string, string]> = [
+      ["rev-mobile-tab-trips", "rev-mobile-empty-trips"],
+      ["rev-mobile-tab-me", "rev-mobile-empty-me"],
+      ["rev-mobile-tab-explore", "rev-mobile-welcome"],
+    ];
+    for (const [tabId, screenId] of tabDestinations) {
+      await page.evaluate(() => window.scrollTo(0, 0));
+      const tab = page.getByTestId(tabId);
+      const box = await tab.boundingBox();
+      expect(box).not.toBeNull();
+      const centreTestId = await page.evaluate(({ x, y }) => {
+        const hit = document.elementFromPoint(x, y);
+        return hit ? hit.closest("[data-testid]")?.getAttribute("data-testid") ?? null : null;
+      }, { x: (box?.x ?? 0) + (box?.width ?? 0) / 2, y: (box?.y ?? 0) + (box?.height ?? 0) / 2 });
+      expect(centreTestId).toBe(tabId);
+      await tab.click();
+      await expect(tab).toHaveAttribute("aria-current", "page");
+      await expect(page.getByTestId(screenId)).toBeVisible();
+    }
     await page.getByTestId("rev-mobile-tab-trips").click();
-    await expect(page.getByTestId("rev-mobile-empty-trips")).toBeVisible();
     await page.getByTestId("rev-mobile-empty-start").click();
-    await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
-    await page.getByTestId("rev-mobile-tab-me").click();
-    await expect(page.getByTestId("rev-mobile-empty-me")).toBeVisible();
-    await page.getByTestId("rev-mobile-tab-explore").click();
     await expect(page.getByTestId("rev-mobile-welcome")).toBeVisible();
     expect(providerOrAiPosts).toBe(0);
     const fits = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2);
