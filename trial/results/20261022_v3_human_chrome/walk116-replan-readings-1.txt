@@ -1,0 +1,20 @@
+source=walk-116, isolated stack http://127.0.0.1:14522/revolution, DB citynexus_v3_cap2_1024.db
+rule=each line below is a reading actually taken on that screen; the capture channel and time are written on the line
+READ_1 2026-10-24T06:25:18Z channel=console(evaluate) tab=0 screen=日程 after pressing 准备出发
+READ_1_TEXT 天安门广场 → 故宫博物院 步行 · 3.4 公里 · 约 45 分钟 超过你写的1 公里，这版按公共交通核实 6.0 公里 · 约 1 小时 17 分（地铁8号线(瀛海--朱辛庄)）
+READ_1_TEXT2 故宫博物院 → 八达岭长城 公共交通 · 68.0 公里 · 约 3 小时 24 分 地铁8号线(瀛海--朱辛庄) · 877路(地铁北土城站--八达岭长城)
+READ_1_TEXT3 天安门广场 → 故宫博物院：这一段路上要 78 分钟，中间只留了 0 分钟。
+READ_1_BUTTONS 重新核实转场 | 根据路线重新安排 | 和 Agent 补齐出发资料 | 刷新方案 | 准备出发
+READ_1_TIMES 09:00—10:00 | 10:00—12:00  (11:18 absent from the rendered body)
+READ_2 2026-10-24T06:26:06Z channel=walk-116-log.txt:119 gate=centre_hit true disabled false
+READ_3 2026-10-24T06:26:13Z channel=walk-116-log.txt:121 after pressing 根据路线重新安排
+READ_3_TEXT 故宫博物院：10:00–12:00 改成 11:18–13:18，往后 78 分钟（因为上一转）。
+READ_3_BUTTON 按这一版安排
+READ_4 2026-10-24T06:26:38Z channel=walk-116-log.txt:124 after pressing 按这一版安排
+READ_4_TEXT 11:18—13:18 now present in the rendered body; 根据路线重新安排 no longer among the buttons
+READ_4_DOM frozen-row node count=1, rendered size=0 (not visible); text still 超过你写的1 公里，这版按公共交通核实 6.0 公里
+READ_5 2026-10-24T06:29:00Z channel=walk-116-log.txt:127 after pressing 准备出发 again
+READ_5_TEXT rows_visible=[] cap_visible=false has_replan_btn=false around_gugong=(absent)
+NOTE the pre-press drawer text above was read through the console on that tab; it was not streamed into walk-116-log.txt,
+NOTE which is why this file exists. It is a transcript of that read, not a reconstruction: the same sentence also survives
+NOTE in the post-apply DOM at walk-116-log.txt:124.
