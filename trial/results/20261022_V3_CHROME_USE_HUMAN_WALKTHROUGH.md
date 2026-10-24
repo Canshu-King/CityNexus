@@ -2070,4 +2070,4 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **没做到的。** 只量了「上游仍坏」这一臂——**没有量「上游恢复后按它能不能真的救回来」**：那要另起一套指向真模型口的栈，成本和一次完整研究相当，这一节不装作量过。
 
-**一处险情要交代（我自己的量具，不是产品）。** `trial/play_launcher/_cmdr_v3_serve_human_r1.py` 的 `HUMAN_DB` 默认值是 `citynexus_v3_human_1022.db`，而它在启动时会 `os.remove(DB)`（除非 `HUMAN_KEEP_DB=1`）。我第一次起测试栈没写 `HUMAN_DB`，它当场去删**主人那套正在用的库**，只因文件被占用才报 `PermissionError` 活下来。**任何人复用这个启动器都必须显式给 `HUMAN_DB`**；否则主人那套栈一旦停着，库就被删了。这条写在这里，也写进第 302 号令的回执。
+**一处险情要交代（我自己的量具，不是产品）。** `trial/play_launcher/_cmdr_v3_serve_human_r1.py:25` 的 `HUMAN_DB` 默认值是 `citynexus_v3_human_1022.db`，而它在启动时会 `os.remove(DB)`（`trial/play_launcher/_cmdr_v3_serve_human_r1.py:40`，除非 `HUMAN_KEEP_DB=1`）。我第一次起测试栈没写 `HUMAN_DB`，它当场去删**主人那套正在用的库**，只因文件被占用才报 `PermissionError` 活下来。**任何人复用这个启动器都必须显式给 `HUMAN_DB`**；否则主人那套栈一旦停着，库就被删了。这条写在这里，也写进第 302 号令的回执。
