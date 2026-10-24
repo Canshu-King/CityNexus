@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscoveryPanel";
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
@@ -74,6 +74,80 @@ function addDaysToDateInput(value: string, days: number): string {
   const [year, month, day] = value.split("-").map(Number);
   const next = new Date(Date.UTC(year, month - 1, day + days));
   return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
+}
+
+export type GoalDateRange = { startDate: string; days: number; phrase: string; past: boolean };
+
+function twoDigits(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+function isoDate(year: number, month: number, day: number): string | null {
+  if (!Number.isInteger(month) || month < 1 || month > 12 || !Number.isInteger(day) || day < 1 || day > 31) return null;
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return `${year}-${twoDigits(month)}-${twoDigits(day)}`;
+}
+
+/**
+ * Read an explicit two-ended date range out of the traveller's own sentence.
+ *
+ * Only ranges are read (12月3日到12月4日 / 12/3-12/4 / 2026年12月3日至4日): a sentence that
+ * names one day, a weekday, or 下周末 is left alone, because guessing there would write dates
+ * the person never said. A range that already passed is reported as past so the screen can ask
+ * instead of silently moving it into next year.
+ */
+export function readDateRangeFromGoal(text: string, now = new Date()): GoalDateRange | null {
+  const source = String(text ?? "").replace(/\s+/g, " ").trim();
+  if (!source) return null;
+  let startParts: { year: number | null; month: number; day: number } | null = null;
+  let endParts: { year: number | null; month: number | null; day: number } | null = null;
+  let phrase = "";
+  const cn = source.match(/(?:(\d{4})\s*年\s*)?(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]?\s*(?:到|至|—|–|-|~|～)\s*(?:(\d{4})\s*年\s*)?(?:(\d{1,2})\s*月\s*)?(\d{1,2})\s*[日号]?/);
+  if (cn) {
+    startParts = { year: cn[1] ? Number(cn[1]) : null, month: Number(cn[2]), day: Number(cn[3]) };
+    endParts = { year: cn[4] ? Number(cn[4]) : null, month: cn[5] ? Number(cn[5]) : null, day: Number(cn[6]) };
+    phrase = cn[0].trim();
+  } else {
+    const slash = source.match(/(?:(\d{4})[/.])?(\d{1,2})[/.](\d{1,2})\s*(?:到|至|—|–|-|~|～)\s*(?:(\d{4})[/.])?(\d{1,2})[/.](\d{1,2})/);
+    if (slash) {
+      startParts = { year: slash[1] ? Number(slash[1]) : null, month: Number(slash[2]), day: Number(slash[3]) };
+      endParts = { year: slash[4] ? Number(slash[4]) : null, month: Number(slash[5]), day: Number(slash[6]) };
+      phrase = slash[0].trim();
+    }
+  }
+  if (!startParts || !endParts) return null;
+  const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  let startYear = startParts.year ?? now.getFullYear();
+  let startIso = isoDate(startYear, startParts.month, startParts.day);
+  if (!startIso) return null;
+  if (startParts.year === null && Date.parse(startIso + "T00:00:00Z") < today.getTime()) {
+    startYear += 1;
+    startIso = isoDate(startYear, startParts.month, startParts.day);
+    if (!startIso) return null;
+  }
+  let endMonth = endParts.month ?? startParts.month;
+  let endYear = endParts.year ?? startYear;
+  let endIso = isoDate(endYear, endMonth, endParts.day);
+  if (!endIso && endParts.month === null && endParts.day < startParts.day) {
+    endMonth = startParts.month + 1;
+    if (endMonth > 12) { endMonth -= 12; endYear += 1; }
+    endIso = isoDate(endYear, endMonth, endParts.day);
+  }
+  if (!endIso) return null;
+  if (endIso < startIso && endParts.year === null) {
+    endIso = isoDate(endYear + 1, endMonth, endParts.day);
+    if (!endIso) return null;
+  }
+  if (endIso < startIso) return null;
+  const days = Math.round((Date.parse(endIso + "T00:00:00Z") - Date.parse(startIso + "T00:00:00Z")) / 86_400_000) + 1;
+  if (days < 1 || days > 14) return null;
+  return {
+    startDate: startIso,
+    days,
+    phrase: phrase || `${startParts.month}月${startParts.day}日 至 ${endParts.day}日`,
+    past: Date.parse(endIso + "T00:00:00Z") < today.getTime(),
+  };
 }
 
 function tripBriefGoal(goal: string, interests: string[], energy: TripEnergy): string {
@@ -408,6 +482,15 @@ export function RevolutionFirstLook() {
   const [budgetYuan, setBudgetYuan] = useState("1000");
   const [planningMode, setPlanningMode] = useState<TripPlanningMode>("balanced");
   const [tripGoal, setTripGoal] = useState("");
+  // The sentence and the form must not carry two different sets of dates: an unedited form takes
+  // the dates the sentence names, and a hand-edited form stops the submit until the person picks.
+  const [datesEdited, setDatesEdited] = useState(false);
+  const [dateChoice, setDateChoice] = useState<"text" | "form" | null>(null);
+  const goalDateRange = useMemo(() => readDateRangeFromGoal(tripGoal), [tripGoal]);
+  const formEndDate = addDaysToDateInput(startDate, Math.max(1, durationDays) - 1);
+  const goalEndDate = goalDateRange ? addDaysToDateInput(goalDateRange.startDate, goalDateRange.days - 1) : null;
+  const goalDatesConflict = Boolean(goalDateRange && !goalDateRange.past &&
+    (startDate !== goalDateRange.startDate || formEndDate !== goalEndDate));
   const partyEdited = useRef(false);
   const budgetEdited = useRef(false);
   // Which city this screen put there by itself, so the next sentence may replace that value but never a
@@ -647,6 +730,13 @@ export function RevolutionFirstLook() {
     }
   };
 
+  useEffect(() => {
+    if (!goalDateRange || goalDateRange.past) return;
+    if (datesEdited || dateChoice === "form") return;
+    setStartDate(goalDateRange.startDate);
+    setDurationDays(goalDateRange.days);
+  }, [goalDateRange, datesEdited, dateChoice]);
+
   const start = async (cityNameOverride?: string, options: { freshSession?: boolean } = {}) => {
     const savedWrite = readStartWriteState();
     if (startRequestInFlightRef.current || startWriteBlockedRef.current || savedWrite) {
@@ -668,6 +758,10 @@ export function RevolutionFirstLook() {
     }
     if (!Number.isInteger(durationDays) || durationDays < 1 || durationDays > 14) {
       setError("游玩天数请选 1 至 14 天。");
+      return;
+    }
+    if (goalDateRange && !goalDateRange.past && goalDatesConflict && dateChoice === null) {
+      setError(`你写的是 ${goalDateRange.phrase}，表单里是 ${startDate} 起 ${durationDays} 天。先选一个日期再提交。`);
       return;
     }
     if (!Number.isInteger(partySize) || partySize < 1 || partySize > 20) {
@@ -1099,6 +1193,29 @@ export function RevolutionFirstLook() {
                       placeholder="例如：带爸妈轻松逛两天，少走路，晚上想吃当地特色。"
                       data-testid="rev-trip-goal"
                     />
+                  {goalDateRange && !goalDateRange.past && !goalDatesConflict && (
+                    <p className="rev-trip-date-source" data-testid="rev-firstlook-dates-source">
+                      按你写的日期：{goalDateRange.startDate} 至 {goalEndDate}（{goalDateRange.days} 天，可在下面改）
+                    </p>
+                  )}
+                  {goalDateRange?.past && (
+                    <p className="rev-trip-date-source" role="alert" data-testid="rev-firstlook-dates-past">
+                      你写的日期已经过去：{goalDateRange.phrase}。请把出发日期改成今天或之后。
+                    </p>
+                  )}
+                  {goalDatesConflict && (
+                    <div className="rev-trip-date-choice" data-testid="rev-firstlook-dates-conflict">
+                      <p>你写的是 {goalDateRange?.phrase}，表单里是 {startDate} 起 {durationDays} 天。以哪一个为准？</p>
+                      <button type="button" data-testid="rev-firstlook-dates-use-text" onClick={() => {
+                        if (!goalDateRange) return;
+                        setDatesEdited(false); setDateChoice("text"); setStartDate(goalDateRange.startDate);
+                        setDurationDays(goalDateRange.days); setError(null);
+                      }}>以文字日期为准（{goalDateRange?.startDate} 起 {goalDateRange?.days} 天）</button>
+                      <button type="button" data-testid="rev-firstlook-dates-use-form" onClick={() => {
+                        setDatesEdited(true); setDateChoice("form"); setError(null);
+                      }}>以手选日期为准（{startDate} 起 {durationDays} 天）</button>
+                    </div>
+                  )}
                 <label className="rev-trip-destination-label" htmlFor="rev-firstlook-city">目的地</label>
                 <div className="rev-firstlook-form-row">
                   <input
@@ -1119,7 +1236,8 @@ export function RevolutionFirstLook() {
                 {!cityName.trim() && <p className="rev-trip-destination-hint" role="status" data-testid="rev-trip-destination-hint">
                   还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
                 </p>}
-                <details className="rev-v3-trip-dates"><summary>日期与天数</summary><div className="rev-trip-request-grid">
+                <details className="rev-v3-trip-dates" open={goalDatesConflict || undefined}><summary>日期与天数</summary>
+                  <div className="rev-trip-request-grid">
                   <label>
                     出发日期
                     <input
@@ -1128,7 +1246,7 @@ export function RevolutionFirstLook() {
                       value={startDate}
                       required
                       disabled={busy || startWriteBlocked}
-                      onChange={(event) => setStartDate(event.target.value)}
+                      onChange={(event) => { setDatesEdited(true); setDateChoice(null); setStartDate(event.target.value); }}
                       data-testid="rev-trip-start-date"
                     />
                   </label>
@@ -1141,7 +1259,7 @@ export function RevolutionFirstLook() {
                       value={durationDays}
                       required
                       disabled={busy || startWriteBlocked}
-                      onChange={(event) => setDurationDays(Number(event.target.value))}
+                      onChange={(event) => { setDatesEdited(true); setDateChoice(null); setDurationDays(Number(event.target.value)); }}
                       data-testid="rev-trip-duration"
                     />
                   </label>

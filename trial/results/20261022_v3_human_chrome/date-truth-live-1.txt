@@ -1,0 +1,10 @@
+OPEN 2026-10-24T19:50:01.823Z 391DF3C1C6027545520E70BFC6EDC7F0
+BEFORE_TYPE {"start":"2026-10-26","days":"2","source":null}
+TYPE_GOAL {"typed":50}
+AFTER_TYPE {"start":"2026-12-03","days":"2","source":"按你写的日期：2026-12-03 至 2026-12-04（2 天，可在下面改）","city":"北京","conflict":false}
+SHOT_FORM {"bytes":98848}
+START {"found":true,"x":239.93287658691406,"y":488.03480339050293,"hit_is_self":true}
+POINTER {"id":"2d9cda98-f506-478d-94ee-1def684ad5f9","city":"北京","status":"DRAFT"}
+JOURNEY {"status":200,"id":"2d9cda98-f506-478d-94ee-1def684ad5f9","start_at":"2026-12-03T09:00:00+08:00","end_at":"2026-12-04T21:00:00+08:00","title":"北京 · 2日行程","intent_goal":null}
+SHOT_JOURNEY {"bytes":137255}
+END 2026-10-24T19:50:13.252Z

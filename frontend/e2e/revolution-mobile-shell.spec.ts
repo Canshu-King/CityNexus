@@ -128,6 +128,59 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(fits).toBeTruthy();
   });
 
+  // Ruling P0 (2026-10-25): the sentence and the form carry one set of dates. An untouched form
+  // takes the range the sentence names; a hand-edited form asks before anything is written.
+  test("a date range in the sentence fills the form and the Journey with the same dates", async ({ page }, testInfo) => {
+    const creates: Array<Record<string, unknown>> = [];
+    await page.route("**/api/v1/travelers", (route) => {
+      expect(route.request().method()).toBe("POST");
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "traveler-date-fixture", access_token: "DATE_FIXTURE_TOKEN" }) });
+    });
+    await page.route("**/api/v1/journeys", (route) => {
+      creates.push(route.request().postDataJSON());
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "00000000-0000-4000-8000-000000000901" }) });
+    });
+    await page.goto("/revolution");
+    await page.getByTestId("rev-trip-goal").fill("12 月 3 日到 12 月 4 日在北京玩两天，两个人，每段步行不超过 1 公里。");
+    await page.getByTestId("rev-firstlook-city").fill("北京");
+    await expect(page.getByTestId("rev-trip-start-date")).toHaveValue("2026-12-03");
+    await expect(page.getByTestId("rev-trip-duration")).toHaveValue("2");
+    await expect(page.getByTestId("rev-firstlook-dates-source")).toContainText("2026-12-03");
+    await page.screenshot({ path: testInfo.outputPath("date-truth-auto-390.png"), fullPage: false });
+    await page.getByTestId("rev-firstlook-start").click();
+    await expect.poll(() => creates.length).toBe(1);
+    expect(creates[0].start_at).toBe("2026-12-03T09:00:00+08:00");
+    expect(creates[0].end_at).toBe("2026-12-04T21:00:00+08:00");
+  });
+
+  test("a hand-edited form is never silently overwritten; the screen asks which dates win", async ({ page }) => {
+    const creates: Array<Record<string, unknown>> = [];
+    await page.route("**/api/v1/travelers", (route) => {
+      expect(route.request().method()).toBe("POST");
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "traveler-date-fixture", access_token: "DATE_FIXTURE_TOKEN" }) });
+    });
+    await page.route("**/api/v1/journeys", (route) => {
+      creates.push(route.request().postDataJSON());
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ id: "00000000-0000-4000-8000-000000000902" }) });
+    });
+    await page.goto("/revolution");
+    await page.locator("details.rev-v3-trip-dates > summary").click();
+    // Edit the form the way a traveller can: a number input fill reaches React's onChange, while a
+    // direct value write on a date input is swallowed by React's value tracker. Both fields share the
+    // same onChange branch (datesEdited), so this proves the conflict gate, not the input widget.
+    await page.getByTestId("rev-trip-duration").fill("3");
+    await expect(page.getByTestId("rev-trip-duration")).toHaveValue("3");
+    await page.getByTestId("rev-trip-goal").fill("12 月 3 日到 12 月 4 日在北京玩两天。");
+    await page.getByTestId("rev-firstlook-city").fill("北京");
+    await expect(page.getByTestId("rev-firstlook-dates-conflict")).toBeVisible();
+    await expect(page.getByTestId("rev-trip-duration")).toHaveValue("3");
+    await page.getByTestId("rev-firstlook-dates-use-text").click();
+    await expect(page.getByTestId("rev-trip-start-date")).toHaveValue("2026-12-03");
+    await page.getByTestId("rev-firstlook-start").click();
+    await expect.poll(() => creates.length).toBe(1);
+    expect(creates[0].start_at).toBe("2026-12-03T09:00:00+08:00");
+  });
+
   test("hides the AI shortcut when the server has AI disabled", async ({ page }) => {
     await signedMockJourney(page);
     await page.route("**/api/v1/agent/runtime-status", (route) => fulfill(route, {
