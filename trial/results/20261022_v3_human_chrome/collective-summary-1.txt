@@ -1,0 +1,13 @@
+multi-member collective door
+1 tile=frontend/src/trial/mobile/MissionCockpit.tsx:344 three states: single disabled text, multi shows answered/required counts, default text
+2 jump=frontend/src/trial/mobile/MissionCockpit.tsx:346 onTrip then scroll the real collective card to the centre on the next frame
+3 kicker=frontend/src/features/execution/LiveRecovery.tsx:1582 now reads 同行者 in zh instead of Shared trip
+4 relay=frontend/src/trial/RevolutionFirstLook.tsx:400 keeps required_count and response_count; :1336 passes the object down
+5 backend_shape=backend/app/operator_projection.py:464 collective is collective_operator_projection; its counts are built at backend/app/collective_operator.py:363
+6 gate=frontend/e2e/revolution-mobile-shell.spec.ts:689 WAITING_FOR_MEMBERS required 3 answered 2 viewer b can answer clarification c1
+7 screen_tile=trial/results/20261022_v3_human_chrome/multi-collective-tile-390.png
+8 screen_card=trial/results/20261022_v3_human_chrome/multi-collective-card-390.png
+9 answer=POST missions/m1/collective-clarification/b body clarification_id c1 proposal_id p1 then on-screen 已记录你的选择，正在等待其他成员。
+10 suite=52 passed 0 failed 12.6m rc=0 => fixture-suite-p1d-1.log
+11 typecheck_rc=0 => typecheck-p1d-2.log
+12 single_gate=frontend/e2e/revolution-mobile-shell.spec.ts:637 still green inside the same suite

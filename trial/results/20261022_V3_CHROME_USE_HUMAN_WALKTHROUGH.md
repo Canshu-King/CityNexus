@@ -2288,3 +2288,19 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **边界（写明）。** 这一刀不制造真的 503：任务以「上一轮 503 失败后的状态」载入，重试的响应由夹具回 `RESUMABLE`。它证的是**失败后的底栏状态与两枚动作**，不是模型恢复的质量；真 503 的走查在 walk-117 已有（原 task 上重发、48 毫秒新 run）。
 
 **回归（如实写）。** 整树类型检查 rc=0。整套夹具（现五十一条）本轮 **50 passed / 1 failed**：红的是 `place-card-facts` 在 `reload` 后没读到「已恢复上次找到的地点」那句——同一条单独复跑 **10.4 秒过**（`trial/results/20261022_v3_human_chrome/accept2-cardfacts-rerun.log`），与今晚低内存下几次渲染等待同形；所以只记序列/环境红，不当绿证，也不归给这把门。
+
+## 五十七、P1 第二刀（多人半支）：多人旅程的「同行决策」先写清几分之几已答，按下去落在真卡上
+
+**改前。** 第三格只写「同行决策」，按下去只是 `onTrip` 送到一般行程页；多人旅程里真正的群体卡在行程页更深处，应到几人、几人已答一概不知；卡头还是英文 `Shared trip`。
+
+**改后。** `/operator` 的 `collective` 整只（含 `required_count`、`response_count`）从行程页上行到首屏，再传进驾驶舱（`frontend/src/features/execution/LiveRecovery.tsx:193` 送出、`frontend/src/trial/RevolutionFirstLook.tsx:400` 保存、同文件 `:1336` 传入）。牌子三态（`frontend/src/trial/mobile/MissionCockpit.tsx:344`）：单人＝灰的「添加同行者后使用」；多人＝「同行决策（2/3 已答）」；其余＝「同行决策」。点击先照常切到行程页，再在下一帧把 `[data-testid="journey-operator-collective"]` 滚到屏心（同文件 `:346`）。卡头 `Shared trip` 在中文环境改为「同行者」（`frontend/src/features/execution/LiveRecovery.tsx:1582`）。
+
+**真栈形状对得上。** 后端 `/operator` 顶层的 `collective` 就是 `collective_operator_projection` 的产物（`backend/app/operator_projection.py:464`），两个计数由成员名单与已答集合算出（`backend/app/collective_operator.py:363`）；前端读的字段名与它逐字相同，不是为夹具造的形状。
+
+**门量什么。** 新用例（`frontend/e2e/revolution-mobile-shell.spec.ts:689`）让 `/operator` 返回 `WAITING_FOR_MEMBERS`、应到三人已答两人、查看者 b 可作答、澄清 c1、选项「按甲的时间／按乙的时间」。断言：牌上写「同行决策（2/3 已答）」且可点；卡内写「2/3 已回答」「丙 · 等待中」；按牌后卡片整体落在 390×844 内、中心命中卡体；按「按甲的时间」发出 `POST /missions/m1/collective-clarification/b`，体是 `{clarification_id:"c1",proposal_id:"p1"}`，屏上回「已记录你的选择，正在等待其他成员。」
+
+**屏证。** `trial/results/20261022_v3_human_chrome/multi-collective-tile-390.png`（牌与卡片同屏）、`multi-collective-card-390.png`（卡内三人状态与两枚选项）。
+
+**边界（写明）。** 「3/3 才生效」这条规则在服务端（三人 consent 轮的真 socket 读数在 #217/#218）；这一刀没有改同意门，也没有放宽它。这条门证的是「多人时牌子如实写人数、按下去落在真卡、成员的选择真发到服务端并回显」，不是三名真人跨账号验证。单人门（同文件 `:637`）仍在同一套里跑。
+
+**回归。** 整树类型检查 rc=0（`trial/results/20261022_v3_human_chrome/typecheck-p1d-2.log`）；整套夹具 **52 passed / 0 failed，12.6 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-suite-p1d-1.log`）——这是本支第一次五十二条全绿，多人门与 503 门同套。

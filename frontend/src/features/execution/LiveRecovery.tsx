@@ -1579,7 +1579,7 @@ export function LiveRecovery({
         )}
         {operator?.collective && operator.collective.state !== "SINGLE_TRAVELLER" && (
           <div className="journey-operator-collective" data-testid="journey-operator-collective">
-            <span className="v8-kicker">Shared trip</span>
+            <span className="v8-kicker">{zh ? "同行者" : "Shared trip"}</span>
             <strong>
               {operator.collective.state === "MEDIATING"
                 ? (zh ? "大家的选择不同，CityNexus 正在寻找兼顾彼此的方案。" : "Your choices differ. CityNexus is looking for a compromise that protects everyone.")

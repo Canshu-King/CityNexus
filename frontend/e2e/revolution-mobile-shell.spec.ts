@@ -685,3 +685,84 @@ test.describe("Revolution Mobile-First UI fixture", () => {
     expect(fits).toBeTruthy();
   });
 });
+
+test("TEST_FIXTURE a multi-member trip's 同行决策 tile jumps to the real collective card", async ({ page }, testInfo) => {
+  await page.addInitScript((id) => {
+    window.sessionStorage.setItem("citynexus.traveler.bearer", "TEST_ONLY_SIGNED_FIXTURE_TOKEN");
+    window.sessionStorage.setItem("citynexus.traveler.session-id", "fixture-traveler-118");
+    window.localStorage.setItem("citynexus.locale", "zh-CN");
+    window.localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+      id, cityCode: "CN-RV-TEST", cityName: "连城", status: "ACTIVE", ownerTravelerId: "fixture-traveler-118",
+    }));
+  }, journeyId);
+  await page.route("**/api/v1/**", (route) => fulfill(route, {}));
+  await page.route("**/api/v1/travelers/session", (route) => fulfill(route, { traveler_id: "fixture-traveler-118" }));
+  await page.route("**/api/v1/agent/runtime-status", (route) => fulfill(route, {
+    runtime_identity: "HERMES_NATIVE_MCP",
+    hermes_native_gateway: { configured: true, reachable: true, ready: true, runs: true, events: true },
+    hermes_compat_configured: false,
+    ai_state: "CONFIGURED_UNVERIFIED",
+  }));
+  await page.route(`${prefix}/bootstrap-shortlist`, (route) => fulfill(route, { journey_id: journeyId, items: [], resume: null, pocket_walk: null }));
+  await page.route(`${prefix}/operator`, (route) => fulfill(route, {
+    journey_id: journeyId, state: "ACTIVE", headline: "TEST_FIXTURE 同行决定", enabled: true,
+    standing_mission_id: "m1", autonomy: "PLAN_ONLY", incident: null, decision: null, approval: null, brain: null,
+    collective: {
+      state: "WAITING_FOR_MEMBERS", mission_id: "m1", required_count: 3, response_count: 2,
+      clarification_id: "c1", viewer_member_id: "b",
+      viewer_has_responded: false, viewer_can_respond: true,
+      members: [
+        { member_id: "a", display_name: "甲", role: "OWNER", responded: true, is_viewer: true },
+        { member_id: "b", display_name: "乙", role: "MEMBER", responded: true, is_viewer: false },
+        { member_id: "c", display_name: "丙", role: "MEMBER", responded: false, is_viewer: false },
+      ],
+      options: [{ proposal_id: "p1", label: "按甲的时间" }, { proposal_id: "p2", label: "按乙的时间" }],
+    },
+    discovery: { state: "IDLE", attempt_count: 0, max_attempts: 1, raw_candidate_count: 0, materialized_place_count: 0 },
+    timeline: [], operator: { watching: true, will_continue_after_approval: false },
+  }));
+  await page.route(`${prefix}/experience`, (route) => fulfill(route, {
+    active_plan: { id: "test-plan", status: "ACTIVE", activities: [], legs: [], disruptions: [] },
+    recovery: null, experience_flags: { needs_review: false, recovery_required: false, staleness: false },
+  }));
+  await page.route(`${prefix}/twin`, (route) => fulfill(route, { id: "test-twin", context: {} }));
+  await page.route(`${prefix}/plans`, (route) => fulfill(route, []));
+  await page.route(`${prefix}/replans`, (route) => fulfill(route, []));
+  await page.route(`${prefix}/guardian/pulse/latest`, (route) => fulfill(route, { pulse: null }));
+  await page.route(`${prefix}/launch-setup`, (route) => fulfill(route, {}));
+  await page.route(`${prefix}/guardian/autopilot/status`, (route) => fulfill(route, { enrollment: { enabled: false }, watch: null, readiness: null }));
+  await page.route(`${prefix}/agent/hermes/latest-run`, (route) => fulfill(route, { journey_id: journeyId, run: null }));
+  let answerBody: Record<string, unknown> | null = null;
+  await page.route(`${prefix}/missions/m1/collective-clarification/b`, async (route) => {
+    expect(route.request().method()).toBe("POST");
+    answerBody = route.request().postDataJSON();
+    return fulfill(route, { status: "RECORDED" });
+  });
+
+  await page.goto("/revolution");
+  await page.getByTestId("rev-mobile-tab-trips").click();
+  await page.getByTestId("rev-mission-layer-timeline").click();
+  const tile = page.getByRole("button", { name: "同行决策（2/3 已答）" });
+  await expect(tile).toBeVisible();
+  await expect(tile).toBeEnabled();
+  const card = page.locator('[data-testid="journey-operator-collective"]');
+  await expect(card).toBeVisible();
+  await expect(card).toContainText("2/3 已回答");
+  await expect(card).toContainText("丙 · 等待中");
+  await page.screenshot({ path: testInfo.outputPath("multi-collective-tile-390.png") });
+  await tile.click();
+  await page.waitForTimeout(300);
+  const cardBox = await card.boundingBox();
+  expect(cardBox && cardBox.y >= 0 && cardBox.y + cardBox.height <= 844).toBe(true);
+  const centreInside = await card.evaluate((node) => {
+    const box = node.getBoundingClientRect();
+    const hit = document.elementFromPoint(box.x + box.width / 2, box.y + Math.min(box.height / 2, 40));
+    return hit ? node.contains(hit) : false;
+  });
+  expect(centreInside).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath("multi-collective-card-390.png") });
+  await page.getByRole("button", { name: "按甲的时间" }).click();
+  await expect.poll(() => answerBody).not.toBeNull();
+  expect(answerBody).toEqual({ clarification_id: "c1", proposal_id: "p1" });
+  await expect(page.getByText("已记录你的选择，正在等待其他成员。", { exact: true })).toBeVisible();
+});

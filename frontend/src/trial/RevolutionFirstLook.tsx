@@ -397,9 +397,9 @@ function readPerPersonBudgetFromGoal(text: string): number | null {
 }
 
 export function RevolutionFirstLook() {
-  const [collectiveState, setCollectiveState] = useState<string | null>(null);
-  const receiveOperator = useCallback((operator: { collective?: { state?: string } } | null) => {
-    setCollectiveState(operator?.collective?.state ?? null);
+  const [collective, setCollective] = useState<{ state?: string; required_count?: number; response_count?: number } | null>(null);
+  const receiveOperator = useCallback((operator: { collective?: { state?: string; required_count?: number; response_count?: number } } | null) => {
+    setCollective(operator?.collective ?? null);
   }, []);
   const [cityName, setCityName] = useState(() => readStartWriteState()?.cityName ?? "");
   const [startDate, setStartDate] = useState(() => localDateAfter(1));
@@ -1333,7 +1333,7 @@ export function RevolutionFirstLook() {
                 </section> : null}
                 executionDecisions={journey.status === "ACTIVE"
                   ? <LiveRecovery journeyId={journey.id} journeyStatus="ACTIVE" onOperator={receiveOperator} /> : null}
-                collectiveState={collectiveState}
+                collective={collective}
                 onExplore={() => {
                   if (journey.status === "ACTIVE") { navigateMobile("trips"); return; }
                   document.querySelector(".rev-firstlook-real-ui")?.scrollIntoView({ behavior: "smooth", block: "start" });
