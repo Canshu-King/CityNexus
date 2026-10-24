@@ -2145,3 +2145,21 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **所以交付状态要这么写。** 不是"本枝没跑过 CI"，而是"本枝的 push 不触发 CI；我手动跑了一次，编译门（Python 解析／TS 全量检查／Vite 生产构建）在现尖上绿；浏览器夹具臂未跑"。PR #43 仍是 Draft、USER_VERIFIED 仍 PENDING 这两条不变。
 
 **要不要把它变成每次推送都跑。** 那只要在 `revolution-trial-ux-smoke.yml` 的 `push.branches` 里加上本枝名（一行）。这是花 Actions 额度的决定，我不擅自加；要加，请说一声，我加上并等它自己跑一次给你看。
+
+
+## 四十七、那条本枝从来不跑的夹具门，我在本机跑了一遍：五十条里四十一过、九条红（还没定性成产品缺陷）
+
+**为什么跑它。** 第四十六节读清楚：CI 里「Mobile UI real Chromium fixture smoke」三格被 `if:` 锁在别的枝名上，本枝永远不会跑。它跑的命令是 `npx playwright test --config playwright.mobile-trial.config.ts`，而这套配置是**自包含**的：自带 dev server（端口 `14273`）、`VITE_REV_TRIAL_MODE=sample`、不碰真 API（`frontend/playwright.mobile-trial.config.ts:5` 起）。所以我在本机照同一条命令跑了一遍（尖 `0058649c98`）。
+
+**读到什么。** 五十条、单 worker、耗时五分整：**`41 passed / 9 failed`**（读数在 `trial/results/20261022_v3_human_chrome/mobile-fixture-1.txt:3`，九条失败的首个报错逐条在 `:6` 起）。
+
+**九条红分三种形状（逐条各有出处，见上面那份清单）。**
+- **选择器撞车（三条，同一 spec 的三档视口）**：`frontend/e2e/revolution-source-media.spec.ts:3` 在 390／430／1566 三档都报 `strict mode violation`——`.cn-place-photo[data-place-id="photon:W/12344"]` 一次匹配到不止一个元素。最像"同一张图如今在屏上出现两处"，也就是**夹具的旧选择器跟不上现在的 DOM**，不是谁报错。
+- **点不到（三条）**：`frontend/e2e/revolution-place-card-facts.spec.ts:56` 与 `:121`、`frontend/e2e/revolution-mobile-hermes-transparency.spec.ts:250` 都卡在 `locator.click / fill` 四十五秒超时——要么目标被别的东西盖住、要么这一刻它不在屏上。
+- **读数对不上（三条）**：`frontend/e2e/revolution-amap-research-ui.spec.ts:11` 期望 `650 米 · 480 秒`，收到的整段只有「本轮研究摘要 TEST_FIXTURE 已整理路线线索……」；`frontend/e2e/revolution-mobile-plan-workbench.spec.ts:76` 两档在断言「已选用」「可以确认出发」附近做深比较失败。
+
+**一条必须写明的环境前提。** 这一趟 `127.0.0.1:8000` 上没有后端（vite 日志里一串 `ECONNREFUSED /api/v1/journeys/…`）。配置本来就是按"没有真 API"设计的，但**我不能因此把这九条一律归给环境**——那正是"带排除项的探针去查它排除的那一类"。所以这一节只报读数与形状，**不下产品缺陷的判语**。
+
+**这件事的意义（比九条本身重要）。** 它证明了我上一节那句提醒是对的：**CI 变绿只覆盖"编译门"，不代表夹具门绿**。这条夹具在本枝从来没跑过，现在有了第一份真实读数：四十一过、九条红、形状三分。
+
+**下一步（要人点头或我自己接着干）。** 九条逐条定性需要看 trace 与断言上下文，是一张新单子的量；我建议从三条"选择器撞车"先做——那三条最容易判（看同一张 `data-place-id` 的图是否真在屏上出现两处），也最可能是夹具过期而不是产品坏了。
