@@ -2559,3 +2559,5 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **红线自查。** 高德键只从进程环境读，未打印、未写入任何文件；seed/mock 地点不进真 provider；`HARD_FEASIBLE_QUALITIES` 白名单未放宽；没有伪造 AgentRun 或 PlanVersion；canary 用 `sqlite3.backup` 从 play 库复制，play 栈的库与端口未改。
 
+**证据对拍更正（23:20）。** 上文「修后 gap 只剩新邻接」的原始读数被随后那次 201 运行覆盖了同一输出文件。为留下对照，我在同一 canary 上把高德键置空重跑同一请求：`BASELINE_PAIRS` 是基础计划自己的两段，`GAP_PAIRS` 只剩 `天安门→289888…` 与 `天安门→天坛`（都不在基础计划里），`BASELINE_PAIR_STILL_REFUSED=false`（`sim-replan-merge-2.txt`）；有高德时的 201 版本另存为 `sim-replan-merge-1-201.txt`。
+
