@@ -1,4 +1,30 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### V3 第五十九交块：一键试玩的两处断点——启动器指向旧副本，就绪判定等错进程
+
+一、断点与改法
+- 双击的启动脚本原先指向另一份服务副本，那份没有打开真检索；现在两枚 bat 都指向启动器自己身边的那一份（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:4`、`trial/results/20261022_v3_human_chrome/play-summary-1.txt:5`）。
+- 真检索只在环境里已有高德键时才打开（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:6`）。
+- 就绪判定原先拿启动进程的进程号比对监听进程号；虚拟环境会再启动一次解释器，两者不同，于是空等；现在只看端口有人在听且健康检查通过（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:7`）。
+
+二、实测
+- 重起后四十秒内写出就绪，真检索为 live，网页绑定到局域网（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:1`）；预检打印本机地址与三步玩法（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:2`）；后端对高德答 READY 与 LIVE（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:3`）。
+
+三、单页
+- 新的八步单页，六格有图，第八格只有文字并写明研究未跑完（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:8`）。
+- 旧十步页顶部标注作废并指向新页（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:9`）。
+
+四、真栈走查
+- 一到五步都是真指针点击（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:10`）；研究三分钟后仍在推进（`trial/results/20261022_v3_human_chrome/play-summary-1.txt:11`）。
+
+五、边界
+- 桌面窗口，不是手机；研究跑完与选用方案那一格仍未拍到；主人自己按一遍仍待验。
+
+六、尖与状态
+- PR #43 仍 Draft；USER_VERIFIED 仍 PENDING；提交尖（`git cat-file -t` 现读 commit）`c0f91801224bf6c8dff9f5d3ffbc84e0669d7add`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### V3 第五十八交块：有方案的行程重认证后回不来——一个冲突码被当成了拒绝
 
 一、现场
