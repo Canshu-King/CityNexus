@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Activity, Clock3, RefreshCw, ShieldCheck } from "lucide-react";
 import { cityNexusApi, type GuardianStream } from "../../api/citynexus";
+import type { ReplanProposal } from "../../contracts/replan";
 import { readTravelerBearer, subscribeTravelerBearer } from "../../lib/travelerSession";
 import "./GuardianRealityPanel.css";
 
@@ -139,6 +140,24 @@ function triggerEntries(snapshot: GuardianStream): StreamEntry[] {
   return snapshot.stream.filter(({ observation }) => ids.has(observation.id));
 }
 
+/** What this proposal changes, in the traveller's own words; counts stand in for missing names. */
+function pendingProposalSentence(proposal: ReplanProposal, titles: Record<string, string>): string {
+  const parts: string[] = [];
+  const removed = proposal.diff.removed.map((key) => titles[key]).filter((value): value is string => Boolean(value));
+  if (proposal.diff.removed.length > 0) {
+    parts.push(removed.length > 0 ? `移除${removed.join("、")}` : `移除 ${proposal.diff.removed.length} 站`);
+  }
+  const added = proposal.diff.added.map((key) => titles[key]).filter((value): value is string => Boolean(value));
+  if (proposal.diff.added.length > 0) {
+    parts.push(added.length > 0 ? `加入${added.join("、")}` : `加入 ${proposal.diff.added.length} 站`);
+  }
+  const travel = proposal.diff.travel_delta_min;
+  if (typeof travel === "number" && travel !== 0) {
+    parts.push(travel < 0 ? `路上少 ${Math.abs(travel)} 分钟` : `路上多 ${travel} 分钟`);
+  }
+  return parts.length > 0 ? `${parts.join("；")}。` : "这一版调整了行程安排。";
+}
+
 export function GuardianRealityPanel({
   journeyId,
   visible = false,
@@ -201,6 +220,67 @@ export function GuardianRealityPanel({
     const timer = window.setTimeout(() => setIdentityRevision((revision) => revision + 1), 10_000);
     return () => window.clearTimeout(timer);
   }, [visible, active, requestState, identityRevision]);
+
+  const [proposal, setProposal] = useState<{ value: ReplanProposal; titles: Record<string, string> } | null>(null);
+  const [proposalState, setProposalState] = useState<"idle" | "loading" | "ready" | "acting" | "done" | "error">("idle");
+  const [proposalNote, setProposalNote] = useState("");
+
+  useEffect(() => {
+    if (!visible || requestState !== "ready" || !readTravelerBearer()) return;
+    if (proposal !== null || proposalState === "acting" || proposalState === "done") return;
+    let cancelled = false;
+    setProposalState("loading");
+    void cityNexusApi.listReplans(journeyId).then(async (items) => {
+      const candidate = items.find((item) => item.status === "PRESENTED");
+      if (!candidate) {
+        if (!cancelled) setProposalState("idle");
+        return;
+      }
+      let titles: Record<string, string> = {};
+      try {
+        const plan = await cityNexusApi.getPlan(candidate.base_plan_version_id);
+        titles = Object.fromEntries(plan.activities.map((activity) => [
+          activity.place_id ?? activity.city_service_id ?? activity.title,
+          activity.title,
+        ]));
+      } catch {
+        titles = {};
+      }
+      if (!cancelled) {
+        setProposal({ value: candidate, titles });
+        setProposalState("ready");
+      }
+    }).catch(() => {
+      if (!cancelled) {
+        setProposalState("error");
+        setProposalNote("这次没能读到调整方案，可以稍后刷新。");
+      }
+    });
+    return () => { cancelled = true; };
+  }, [journeyId, visible, requestState, proposal, proposalState]);
+
+  const settleProposal = async (decision: "accept" | "reject") => {
+    if (!proposal || proposalState === "acting") return;
+    setProposalState("acting");
+    setProposalNote("");
+    try {
+      if (decision === "accept") {
+        await cityNexusApi.acceptReplan(proposal.value.id, `guardian-accept-${proposal.value.id.slice(0, 8)}`);
+      } else {
+        await cityNexusApi.rejectReplan(proposal.value.id, `guardian-reject-${proposal.value.id.slice(0, 8)}`);
+      }
+      setProposal(null);
+      setProposalState("done");
+      setProposalNote(decision === "accept" ? "行程已按这份调整更新。" : "已保留原来的安排。");
+      window.dispatchEvent(new CustomEvent("citynexus:mission-refresh"));
+      setIdentityRevision((revision) => revision + 1);
+    } catch {
+      setProposalState("error");
+      setProposalNote(decision === "accept"
+        ? "这次没能更新行程，可以再试一次。"
+        : "这次没能记下你的选择，可以再试一次。");
+    }
+  };
 
   if (!visible) return null;
 
@@ -281,6 +361,24 @@ export function GuardianRealityPanel({
                 )}
               </div>
             </section>
+          )}
+
+          {proposal && (
+            <section className="rev-guardian-proposal" data-testid="rev-guardian-proposal" aria-label="调整建议">
+              <strong>找到一份可行的调整</strong>
+              <p data-testid="rev-guardian-proposal-diff">{pendingProposalSentence(proposal.value, proposal.titles)}</p>
+              <div className="rev-guardian-proposal-actions">
+                <button type="button" data-testid="rev-guardian-accept-replan"
+                  disabled={proposalState === "acting"} onClick={() => void settleProposal("accept")}>
+                  {proposalState === "acting" ? "正在更新行程…" : "接受这份调整"}
+                </button>
+                <button type="button" data-testid="rev-guardian-reject-replan"
+                  disabled={proposalState === "acting"} onClick={() => void settleProposal("reject")}>暂不调整</button>
+              </div>
+            </section>
+          )}
+          {proposalNote && (
+            <p className="rev-guardian-proposal-note" role="status" data-testid="rev-guardian-proposal-note">{proposalNote}</p>
           )}
 
           {hasRecords && (

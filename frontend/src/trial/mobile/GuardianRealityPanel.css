@@ -114,3 +114,33 @@
   display: grid; place-items: center; border: 1px solid #d5e5da; border-radius: 12px;
   background: #fff; color: #287449; cursor: pointer;
 }
+
+.rev-mobile-v1 .rev-guardian-proposal {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 12px;
+  border: 1px solid #e8d3a8;
+  border-radius: 12px;
+  background: #fffaf0;
+  color: #4a3a1c;
+}
+.rev-mobile-v1 .rev-guardian-proposal > strong { font-size: 14px; }
+.rev-mobile-v1 .rev-guardian-proposal > p { margin: 0; font-size: 13px; line-height: 1.55; }
+.rev-mobile-v1 .rev-guardian-proposal-actions { display: flex; gap: 8px; }
+.rev-mobile-v1 .rev-guardian-proposal-actions button {
+  flex: 1;
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid #c9a55a;
+  background: #fff;
+  color: #4a3a1c;
+  font-size: 13px;
+}
+.rev-mobile-v1 .rev-guardian-proposal-actions button[data-testid="rev-guardian-accept-replan"] {
+  background: #b7791f;
+  border-color: #b7791f;
+  color: #fff;
+}
+.rev-mobile-v1 .rev-guardian-proposal-actions button:disabled { opacity: 0.55; }
+.rev-mobile-v1 .rev-guardian-proposal-note { margin: 8px 0 0; color: #5d6f62; font-size: 12px; }

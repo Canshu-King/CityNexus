@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import sqlite3
 import urllib.error
 import urllib.request
@@ -27,6 +28,8 @@ def note(value: str) -> None:
 def call(method: str, path: str, body: dict | None = None, timeout: int = 240) -> tuple[int, dict]:
     data = json.dumps(body).encode("utf-8") if body is not None else None
     request = urllib.request.Request(API + path, data=data, method=method)
+    if os.environ.get("SIM_TOKEN"):
+        request.add_header("Authorization", "Bearer " + os.environ["SIM_TOKEN"])
     if data is not None:
         request.add_header("Content-Type", "application/json")
     try:

@@ -4913,20 +4913,21 @@ export const cityNexusApi = {
   },
 
   listReplans(journeyId: string): Promise<ReplanProposal[]> {
-    return requestJson<ReplanProposal[]>("/journeys/" + journeyId + "/replans");
+    return requestJson<ReplanProposal[]>("/journeys/" + journeyId + "/replans",
+      { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   acceptReplan(proposalId: string, idempotencyKey: string): Promise<AcceptReplanResponse> {
     return requestJson<AcceptReplanResponse>("/replans/" + proposalId + "/accept", {
       method: "POST",
-      headers: { "Idempotency-Key": idempotencyKey },
+      headers: { ...travelerAuthHeaders(), "Idempotency-Key": idempotencyKey },
     });
   },
 
   rejectReplan(proposalId: string, idempotencyKey?: string): Promise<ReplanProposal> {
     return requestJson<ReplanProposal>("/replans/" + proposalId + "/reject", {
       method: "POST",
-      headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
+      headers: { ...travelerAuthHeaders(), ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}) },
     });
   },
 };
