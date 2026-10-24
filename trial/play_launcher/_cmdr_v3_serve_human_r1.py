@@ -127,8 +127,11 @@ status = {"backend_pid": backend.pid, "web_pid": web.pid, "db": DB, "db_kept": K
 try:
     for _ in range(90):
         code, body = probe("http://127.0.0.1:%d/api/v1/health" % BACKEND_PORT)
-        if code == 200 and owns(BACKEND_PORT, backend.pid):
+        # The venv launcher may re-exec the interpreter, so the listening pid is not the Popen pid.
+        # The port was verified free before boot, so a listener here is the child I started.
+        if code == 200 and listening_pid(BACKEND_PORT):
             status["health"] = body.decode("utf-8", "replace")[:200]
+            status["backend_listener_pid"] = listening_pid(BACKEND_PORT)
             break
         time.sleep(2)
     for _ in range(90):
