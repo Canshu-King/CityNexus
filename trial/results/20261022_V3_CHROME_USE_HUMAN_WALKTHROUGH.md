@@ -2232,3 +2232,11 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 三次整套的失败点各不相同，但形状一样：四十五秒到点时，用例正卡在某个真实的等待上（一次是 390 档 `page.reload` 等 load，一次是另一条在 `goto` 后等「我的旅程」标签）。给同一步加读数再连跑，reload 实测 `13678`／`17393`／`18897` 毫秒——有限，不是死锁；整套顺序下前序步骤已经吃掉约半分钟。
 
 处置：整套夹具的预算从四十五秒改到九十秒（`frontend/playwright.mobile-trial.config.ts:11`，注释写明来由）；没有改任何断言，也没有改产品代码。默认配置重跑：**50 passed / 0 failed，9.0 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-10-default90.log`）。这条读数因此从「49/50 的红」改判为**量具预算问题**，不再列为产品缺陷；`#323` 关。
+
+## 五十二、P1 收尾：出发卡那句「先确认每天的时间」与折叠后的时间区对齐
+
+第五十节把十二个时间输入收进了默认收起的「编辑行程时间（可选）」，但卡片副标题仍写「保留已选地点和日期，先确认每天的时间」——折叠之后这句话在指一个已经看不见的控件。改成「保留已选地点和日期；时间可以稍后调整。」（`frontend/src/trial/mobile/DraftDepartureCard.tsx:247`），并在出发夹具里加一条屏上断言（`frontend/e2e/revolution-draft-preparation.spec.ts:56`）。
+
+屏证：`trial/results/20261022_v3_human_chrome/p1b-draft-subtitle-390.png`——同一屏上，副标题说「时间可以稍后调整」，下面是「▶ 编辑行程时间（可选）」与折叠层外的保存按钮。
+
+回归：两档单跑过；整套夹具 **50 passed / 0 failed，8.8 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-11-p1b.log`）；整树类型检查 rc=0。

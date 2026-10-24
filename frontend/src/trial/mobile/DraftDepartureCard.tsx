@@ -244,7 +244,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
 
   return <section className="rev-v3-departure" aria-label="当前草案的出发准备">
     <h3>从这份安排继续</h3>
-    <p>{result ? `${result.slots_count} 项安排已保存，刷新也能找回。` : "保留已选地点和日期，先确认每天的时间。"}</p>
+    <p>{result ? `${result.slots_count} 项安排已保存，刷新也能找回。` : "保留已选地点和日期；时间可以稍后调整。"}</p>
     <details><summary>{result ? "已确认时间 · 查看或调整" : "编辑行程时间（可选）"}</summary>
     <fieldset disabled={busy || task.status === "WORKING"}>
       {schedule.map((stamp, index) => {

@@ -53,6 +53,7 @@ for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates 
   await page.getByTestId("rev-mobile-tab-trips").click();
   const card=page.getByRole("region",{name:"当前草案的出发准备"});
   await expect(card).toBeVisible();
+  await expect(card).toContainText("时间可以稍后调整");
   const save=card.getByRole("button",{name:"保存为正式候选方案"});
   await expect(save).toBeDisabled();
   // P1: the twelve time inputs start folded; the save control stays outside the disclosure.
