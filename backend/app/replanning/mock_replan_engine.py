@@ -126,7 +126,11 @@ _COORD_QUANTUM = 5
 #: Conservative ground distance (metres) within which two different-provider rows
 #: that share a venue name are treated as possibly the same physical venue and
 #: downgraded DIFFERENT -> AMBIGUOUS (V3-4).  Proximity alone is never SAME.
-_NEAR_VENUE_METERS = 60.0
+#: A large venue routinely has one provider entry at its gate and another at its
+#: centre: the two 「故宫博物院」 rows differ by roughly 110 m, and offering the
+#: second as a "replacement" for the closed first changes nothing the traveller
+#: can see.  A chain branch 500 m away is still DIFFERENT (V3-4 keeps that case).
+_NEAR_VENUE_METERS = 250.0
 
 
 #: ``<namespace>:<object-type>/<object-id>`` — a provider-scoped reference such
@@ -386,9 +390,24 @@ def should_exclude_replacement_candidate(candidate: Any, reference: Any) -> bool
     from the venue the traveller just lost), is excluded — so a closed venue can
     never reappear as its own replacement under a wrapper or cross-provider id.
     Only a clean ``DIFFERENT`` verdict lets a candidate through.
+
+    A second, category-independent test catches the duplicate-entry case the
+    identity contract deliberately leaves DIFFERENT: two providers name the same
+    venue but classify it in different vocabularies (AMap's semicolon industry
+    string vs Overpass's ``museum``).  Same normalized name inside the near
+    radius is not a replacement the traveller can see, whatever the categories say.
     """
 
-    return compare_physical_venue(candidate, reference) != DIFFERENT
+    if compare_physical_venue(candidate, reference) != DIFFERENT:
+        return True
+    candidate_identity = physical_venue_identity(candidate)
+    reference_identity = physical_venue_identity(reference)
+    if candidate_identity is None or reference_identity is None:
+        return False
+    name = candidate_identity.normalized_name
+    return bool(name) and name == reference_identity.normalized_name and _near_coordinates(
+        candidate_identity.coordinates, reference_identity.coordinates
+    )
 
 
 def choose_closure_replacement(
