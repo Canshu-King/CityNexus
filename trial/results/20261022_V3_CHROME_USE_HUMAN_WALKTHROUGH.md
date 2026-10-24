@@ -2548,7 +2548,7 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **真读数（隔离 canary，复制自 play 库；原件未动）。**
 - 直打 replan 前后对拍：修前唯一的 gap 是基础计划自己的边「天安门广场 → 故宫博物院」，`fact_quality=SYNTHETIC_DEFAULT`；修后 gap 只剩两条**新邻接**，`BASELINE_PAIR_STILL_REFUSED=false`（`sim-replan-merge-1.txt` 的 `GAP_PAIRS` / `VERDICT`）。
 - 高德接入后同一请求 201：快照里 `天安门→289888…` 47 分钟、`天安门→故宫` 46 分钟，均为 `LIVE_PROVIDER_CAPTURE`；`provider_capabilities.baseline_reuse.reused_pairs=1`（同文件 `BODY`）。
-- Agent 路径：`pulse` → run `3c6ed277…`，206 秒，`PARTIAL / PROPOSAL_PRESENTED`；`request_replan` 工具 **COMPLETED**，产出两个 PRESENTED 提案（`sim-mission-4.txt`）。
+- Agent 路径（观测，未留存）：23:00 那次 `pulse` → run `3c6ed277…`，206 秒，`PARTIAL / PROPOSAL_PRESENTED`；`request_replan` 工具 **COMPLETED**，产出两个 PRESENTED 提案。**这份输出随后被一次超时运行覆盖（`sim-mission-4.txt` 只剩前四行），按证据纪律本段不当作文件读数。** 提案本身由直打端点在 `sim-replan-merge-1-201.txt` 复核。
 - 接受：200；Journey 的 active plan `e74a5edb…` → `8bae3c8b…`（version 3），旧版 `SUPERSEDED`，另一份提案 `INVALIDATED`（`sim-replan-accept-1.txt` 的 `ACTIVE_MOVED` / `PLAN`）。
 - 屏上（Playwright，390×844，真产品路径：本地行程指针 + 签名 bearer）：打开「行程守护」，提案卡文案「移除故宫博物院；加入 1 站；路上多 12 分钟。」；按「接受这份调整」→ 状态句「行程已按这份调整更新。」，提案卡消失（`guardian-walk-6.txt`；截图 `guardian-proposal-390-r6.png`、`guardian-accepted-390.png`）。
 
