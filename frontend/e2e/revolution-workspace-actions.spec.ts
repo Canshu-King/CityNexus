@@ -166,7 +166,9 @@ for (const width of [390, 430, 1366]) {
     await dialog.getByRole("button", { name: "＋ 添加安排" }).first().click();
     await dialog.getByRole("button", { name: "保存草案", exact: true }).click();
     await expect(dialog).toContainText("草案已保存");
+    const reloadStarted = Date.now();
     await page.reload();
+    console.log(`RELOAD_MS width=${width} ms=${Date.now() - reloadStarted}`);
     await page.getByTestId("rev-mobile-tab-trips").click();
     await page.getByTestId("rev-mission-layer-agent").click();
     const restoredDialog = page.getByTestId("rev-mission-cockpit");

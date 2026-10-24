@@ -2226,3 +2226,9 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 - P1 另一半「同行决策」单人应写「添加同行者后使用」、多人 3/3 才生效，仍等 #284 的裁语；这一节没动它。
 
 **回归。** `npm run typecheck:all` rc=0。整套夹具跑了两次，两次都是 **49 passed / 1 failed**，红的是同一条 `frontend/e2e/revolution-workspace-actions.spec.ts:116` 的 390 档：卡在 `page.reload` 等 load 超时，不是断言。同一条单独跑 7.1 秒过、整个 workspace-actions 文件 7/7 过、visual-travel＋workspace-actions 两个文件 11/11 过；所以这条红只在「五十条连跑」的序列里出现，**不归因于这一刀**，也不拿它当绿证。
+
+## 五十一、整轮 49/50 那条红是预算不够，不是页面卡死
+
+三次整套的失败点各不相同，但形状一样：四十五秒到点时，用例正卡在某个真实的等待上（一次是 390 档 `page.reload` 等 load，一次是另一条在 `goto` 后等「我的旅程」标签）。给同一步加读数再连跑，reload 实测 `13678`／`17393`／`18897` 毫秒——有限，不是死锁；整套顺序下前序步骤已经吃掉约半分钟。
+
+处置：整套夹具的预算从四十五秒改到九十秒（`frontend/playwright.mobile-trial.config.ts:11`，注释写明来由）；没有改任何断言，也没有改产品代码。默认配置重跑：**50 passed / 0 failed，9.0 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-10-default90.log`）。这条读数因此从「49/50 的红」改判为**量具预算问题**，不再列为产品缺陷；`#323` 关。
