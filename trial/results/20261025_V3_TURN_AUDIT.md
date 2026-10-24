@@ -1,6 +1,6 @@
 # 2026-10-25 夜班交付审计（rescue/v3-final-departure-20261022）
 
-分支尖 `492a6dee57fcf3c75ab2c5a1912e42214ccde499`（本地 `git rev-parse` 与 `git ls-remote` 两读一致）。PR #43 仍 Draft；USER_VERIFIED = PENDING。
+写这份审计时的分支尖 `492a6dee57fcf3c75ab2c5a1912e42214ccde499`（本地与远端两读一致）；审计文件自身的提交会让尖再前移一格，**以 PR head 的现读为准**。PR #43 仍 Draft；USER_VERIFIED = PENDING。
 
 ## 一、本班九个提交
 
