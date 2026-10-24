@@ -2534,3 +2534,5 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **红线。** 事件由 `CitySignalFixture` 经服务器信号管线写出，不由前端 INSERT；Guardian 的升级依赖真实常设任务；Agent 是真实模型与真实工具；模拟时间只影响行程时间戳，`provider_captured_at` 仍是现实 UTC。
 
 **更精确的缺段（直接打 replan 端点，2026-10-25 06:35）。** 用同一事件与模型找到的三个候选地点调用 `POST /journeys/<id>/replans`，422 的 `details.gaps` 只有**一段**：`天安门广场 → 故宫博物院`，`reason_code=FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE`、`fact_quality=SYNTHETIC_DEFAULT`（`sim-replan-probe-1.txt`）。这推翻了「候选地点没有数据」这个笼统说法：真正不硬的是**基础计划自己的一段**——它是夹具常数，而 `_replan_estimate` 在缺/不合格时的补捕没有把这一段换成真实测量（捕获失败后按 `known_refusal` 抛出）。修复点因此在冻结/补捕链路，不在候选发现。
+
+**补捕失败的根因（06:37 读码）。** `capture_runtime_mobility_snapshot` 的硬捕获（`require_explicit_facts=True`）只走 live provider（`CITYNEXUS_LIVE_VALHALLA_URL` → Valhalla），而演示栈没有配 Valhalla；高德只接在 goal 路线冻结链（`goal_amap_transit` / `goal_amap_walking`）。所以 replan 对「天安门→故宫」的硬捕获必然失败，退回既有的 mock 常数并按 `MobilityEvidenceNotHardEligible` 拒绝。**这不是候选地点没数据，也不是 replan 逻辑写错，而是两条 provider 链没有会合。** 下一步二选一：① 给 mobility runtime 接一个高德适配器；② 让 replan 直接消费 goal 链已冻结的高德事实作为运行时补充证据。两条都不需要放宽「不合成常数」的红线。
