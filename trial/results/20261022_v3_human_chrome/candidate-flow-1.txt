@@ -1,0 +1,86 @@
+OPEN 2026-10-24T21:35:44.238Z 7E1631DC44B94A1160CE6142B315D5B6
+SHOT_BEFORE {"bytes":85240}
+TYPE {"typed":50}
+FORM {"start":"2026-12-03","days":"2","source":"按你写的日期：2026-12-03 至 2026-12-04（2 天，可在下面改）"}
+SHOT_AFTER {"bytes":98848}
+START {"found":true,"x":239.93287658691406,"y":488.03480339050293,"hit_is_self":true}
+SEND {"found":true,"x":437.5891227722168,"y":465.8766632080078,"hit_is_self":true}
+POLL0 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL1 {"question":true,"options":["经典地标打卡 故宫、天坛、颐和园等必看景点。名气最大，但园区内步行会偏多，我会用","胡同文化慢游 什刹海、南锣鼓巷、雍和宫一带。节奏最轻松，胡同里慢走慢逛，最贴合“"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE1 {"found":true,"x":239.93287658691406,"y":291.84667587280273,"hit_is_self":true}
+POLL2 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL3 {"question":true,"options":["不加长城，专注市区 纯市区经典（天安门/故宫/景山/天坛/颐和园），地铁衔接，步","加一天长城 某一天排长城（如八达岭，地铁+接驳可达），其余市区经典；地标最全但通"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE3 {"found":true,"x":239.93287658691406,"y":292.06689071655273,"hit_is_self":true}
+POLL4 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL5 {"question":true,"options":["故宫核心圈+天坛 Day1 天安门—故宫—景山—北海；Day2 天坛—前门大栅栏","加颐和园 Day1 故宫—景山—北海；Day2 地铁去颐和园，园内可乘电瓶车/游"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE5 {"found":true,"x":239.93287658691406,"y":292.0983543395996,"hit_is_self":true}
+POLL6 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL7 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL8 {"question":true,"options":["经典分两天（推荐） Day1 天安门+故宫中轴线+景山俯瞰；Day2 天坛+前门","故宫一天半+天坛半日 Day1 全天故宫核心圈；Day2 上午天坛、下午自由活动"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE8 {"found":true,"x":239.93287658691406,"y":291.83617782592773,"hit_is_self":true}
+POLL9 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL10 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL11 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL12 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL13 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL14 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL15 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL16 {"question":true,"options":["仅故宫+天安门广场 最经典皇家中线，节奏最轻松，体力留给第二天","故宫+景山公园 逛完故宫登景山，俯瞰紫禁城全景，步行约 500 米"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE16 {"found":true,"x":239.93287658691406,"y":291.6998596191406,"hit_is_self":true}
+POLL17 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL18 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL19 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL20 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL21 {"question":false,"options":[],"running":false,"candidates":false,"select":false,"research":true}
+RESEARCH21 {"found":true,"x":239.93287658691406,"y":292.24517250061035,"hit_is_self":true}
+POLL22 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL23 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL24 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL25 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL26 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL27 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL28 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL29 {"question":true,"options":["A｜国家自然博物馆 天坛西门外约250米，步行即达，室内博物馆、两人慢慢看不累，","B｜前门大街+大栅栏 乘地铁过去，老北京商业街，逛吃买，经典地标感强，但比A多一"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE29 {"found":true,"x":239.93287658691406,"y":292.03542709350586,"hit_is_self":true}
+POLL30 {"question":true,"options":["上午天坛→下午自然博物馆 天坛上午逛，午饭后步行去自然博物馆，约14:00前入馆","天坛晚出→自然博物馆压轴 天坛放慢节奏到中午，自然博物馆放在15:00-16:0"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE30 {"found":true,"x":239.93287658691406,"y":292.25564193725586,"hit_is_self":true}
+POLL31 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL32 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL33 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL34 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL35 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL36 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL37 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL38 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL39 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL40 {"question":true,"options":["南门进—西门出—步行到博物馆 天坛南门进，沿中轴北行逛圜丘→回音壁→祈年殿，从西","东门进—坐地铁到博物馆 天坛东门进，看斋宫/古柏区，从天坛东门站坐地铁5号线换到"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE40 {"found":true,"x":239.93287658691406,"y":291.8047294616699,"hit_is_self":true}
+POLL41 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL42 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL43 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL44 {"question":true,"options":["前门大街收尾（推荐） 看完自然博物馆，坐地铁/步行到前门大街吃晚饭、轻松逛老字号","博物馆后直接回 第二天保持极简：天坛+自然博物馆后直接回，不另加景点，最省脚力。"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE44 {"found":true,"x":239.93287658691406,"y":292.0249443054199,"hit_is_self":true}
+POLL45 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL46 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL47 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL48 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL49 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL50 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL51 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL52 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL53 {"question":true,"options":["轻松版（不赶升旗） 上午 9–10 点慢慢逛广场、看城楼外观，再进故宫。最省力，","看升旗版（需早起） 清晨约 7:30 到广场看升国旗（12月约此时），更震撼但需"],"running":false,"candidates":false,"select":false,"research":false}
+CHOOSE53 {"found":true,"x":239.93287658691406,"y":292.2451591491699,"hit_is_self":true}
+POLL54 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL55 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL56 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL57 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL58 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+POLL59 {"question":false,"options":[],"running":true,"candidates":false,"select":false,"research":false}
+CANDIDATE_REACHED false
+SHOT_CANDIDATE_390 {"bytes":79863}
+PREP {"found":false}
+PREP390 {"candidates":false,"select":false}
+SHOT_PREP_390 {"bytes":79863}
+PREP430 {"candidates":false,"select":false}
+SHOT_PREP_430 {"bytes":88034}
+END 2026-10-24T21:46:40.515Z
