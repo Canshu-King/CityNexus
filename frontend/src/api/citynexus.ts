@@ -2956,7 +2956,7 @@ export interface JourneyDepartureRead {
 }
 // What `GET /api/v1/journeys/session/recent-drafts` answers for the bearer: three fields, read
 // off the route that already exists on this tree (`backend/app/main.py:7513`).
-export interface SessionDraftJourney { id: string; city_code: string; status: string }
+export interface SessionDraftJourney { id: string; city_code: string; status: string; title?: string }
 export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
 
 // What the commit door answers (`backend/app/departure_commit.py:251`). `journey` is the same record

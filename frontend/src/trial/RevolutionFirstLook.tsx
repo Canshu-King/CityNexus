@@ -1399,7 +1399,7 @@ export function RevolutionFirstLook() {
                 <ul className="rev-saved-trips" data-testid="rev-saved-trips">
                   {savedTrips.map((item) => (
                     <li key={item.id}>
-                      <span>{item.status === "ACTIVE" ? "在路上" : "还没出发"}</span>
+                      <span>{item.title ?? (item.status === "ACTIVE" ? "在路上" : "还没出发")}</span>
                       <button type="button" data-testid="rev-trip-resume"
                         onClick={() => void resumeSavedTrip(item.id)}>继续这趟</button>
                     </li>

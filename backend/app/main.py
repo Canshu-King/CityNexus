@@ -7576,7 +7576,12 @@ def list_recent_signed_draft_journeys(
     response: Response,
     session: Session = Depends(get_session),
 ):
-    """Return a small private recovery window for the signed traveler's DRAFT journeys."""
+    """The signed traveller's own unfinished journeys, newest first.
+
+    A restarted browser still holds only its bearer.  A DRAFT-only window left an
+    ACTIVE journey unreachable without its id (the 「库在会话不在」 gap), so this
+    door also returns journeys the traveller has already started.
+    """
     from app.traveler_principal import resolve_traveler_principal
 
     principal = resolve_traveler_principal(request, session)
@@ -7586,13 +7591,16 @@ def list_recent_signed_draft_journeys(
         select(Journey)
         .where(
             Journey.traveler_id == principal.traveler_id,
-            Journey.status == "DRAFT",
+            Journey.status.in_(("DRAFT", "ACTIVE")),
             Journey.deleted_at.is_(None),
         )
-        .order_by(Journey.created_at.desc(), Journey.id.desc())
+        .order_by(Journey.updated_at.desc(), Journey.id.desc())
         .limit(5)
     ).all()
-    return [{"id": item.id, "city_code": item.city_code, "status": item.status} for item in items]
+    return [
+        {"id": item.id, "city_code": item.city_code, "status": item.status, "title": item.title}
+        for item in items
+    ]
 
 
 @app.get("/api/v1/journeys", response_model=list[JourneySchema])
