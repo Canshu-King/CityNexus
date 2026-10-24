@@ -2071,3 +2071,26 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **没做到的。** 只量了「上游仍坏」这一臂——**没有量「上游恢复后按它能不能真的救回来」**：那要另起一套指向真模型口的栈，成本和一次完整研究相当，这一节不装作量过。
 
 **一处险情要交代（我自己的量具，不是产品）。** `trial/play_launcher/_cmdr_v3_serve_human_r1.py:25` 的 `HUMAN_DB` 默认值是 `citynexus_v3_human_1022.db`，而它在启动时会 `os.remove(DB)`（`trial/play_launcher/_cmdr_v3_serve_human_r1.py:40`，除非 `HUMAN_KEEP_DB=1`）。我第一次起测试栈没写 `HUMAN_DB`，它当场去删**主人那套正在用的库**，只因文件被占用才报 `PermissionError` 活下来。**任何人复用这个启动器都必须显式给 `HUMAN_DB`**；否则主人那套栈一旦停着，库就被删了。这条写在这里，也写进第 302 号令的回执。
+
+
+## 四十三、一键试玩这条路今天到底是什么样：从没被跑过、第一步卡在「问邮箱」、每次启动都是新库（第 309 号令的前半）
+
+**先说结论。** 主人那条 `trial/OPEN_REVOLUTION.cmd` 指向的一键路径，今天**不是一键**：选 1/2 之后它要一个邮箱，给不出就走不下去。而这条路径在本机**一次都没被跑过**——`C:\Users\<me>\AppData\Local\CityNexus\Revolution\` 在我动手之前不存在一个目录。这一节把两副面孔都量下来。
+
+**量之前的状态。** 运行目录 0 个（`ls -d .../Revolution/*/` 空）；`py -3.13` 在（`3.13.13`，所以解释器那一步不是卡点）；`start_revolution.ps1` 的 `-CheckOnly -Mode Explore` 现读「当前目录没有匹配此模式的运行实例」。
+
+**第一副面孔：不给邮箱，它死在第一问。** 非交互跑同一条命令，输出末尾是 `EOFError: EOF when reading a line`，接着 `Revolution launcher exited with code 1`。门槛在 `trial/try_revolution.py:303`：只要没带 `--sample`，它先打印六行说明，然后从环境变量 `CITYNEXUS_NOMINATIM_CONTACT_EMAIL` 取联系邮箱，取不到就在第 312 行 `input()` 问；第 313–314 行是一道格式校验，输错或空着就抛「A valid contact email is required for LIVE search」。而 `trial/start_revolution.ps1:113` 组参数时**从不带 `--sample`、也不设这个环境变量**，所以交互双击的人一定会被问到；不输入就没有下一步。
+
+**第二副面孔：给了邮箱，它整条是通的。** 我用一个**保留域占位**（`@invalid.example`，RFC 2606 保留、永远不可路由）把它拉起来，**没有发出任何一次检索**（邮箱只进 User-Agent，检索才会用到）。结果：
+- 服务起来：页 `http://127.0.0.1:14334/revolution`，运行目录 `...\CityNexus\Revolution\de72509c4a52-20261024-182715-d6e8ea`，库 `_revolution_hands_on_20261024_182741.db`；
+- 真 Chrome 打开：`http_status=200`，标题 `CityNexus Trip Operations`，首屏渲染出 `AI 暂未开启`、`还差目的地：请在这里写城市名，例如北京。…`、`继续规划 →`（截图 `trial/results/20261022_v3_human_chrome/onclick-first-screen.png`，112104 字节）。
+- 收摊：前端/后端端口都回落（`14334`/`18503`/`18501` 现读无监听）。**末尾那句 `exit code 1` 是我这一侧造成的**——非交互下最后那句「Press Enter to stop」读到 EOF，交互双击的人按回车是正常退出，不是产品故障。
+
+**顺手量到的一条副作用（与第 280 号令同一个病）。** 一键脚本每次都给 `--runtime-dir` 造一个带时间戳与 guid 的新目录（`trial/start_revolution.ps1:115`），而 `trial/try_revolution.py:347` 在 `--fresh` 下把库名也带上时间戳；`--resume-database` 这条路存在（`trial/try_revolution.py:295`），可一键脚本从不传它。所以：**今天双击一次，昨天那趟行程就看不到了**——不是"找回"坏了，是根本没指向旧库。
+
+**要主人拍一下的一件事（我不替他定）。** 那个邮箱是他的身份、要发给 Nominatim，属于他的口径。三条路选一条：
+1. 他给一个专用邮箱，我把它写进用户级环境变量 `CITYNEXUS_NOMINATIM_CONTACT_EMAIL`——之后双击不再问；
+2. 首次问一次、写到本机小配置里记住——仍是他自己的邮箱，但只问一次；
+3. 默认走 `--sample` 离线样例，页面上明说"离线样例"，真检索改由一个开关打开。
+
+**这一节没做的。** 没在 Explore 模式下真发过一次检索（那会把占位邮箱带给第三方）；没量 AI 模式（`-Agent`）那条；也没动 `OPEN_REVOLUTION.cmd` / `start_revolution.ps1` 一个字节——产品与启动器文件都零改动。

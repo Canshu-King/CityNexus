@@ -1,0 +1,11 @@
+source=trial/start_revolution.ps1 -NoBrowser -Mode Explore, run twice on 2026-10-24
+RUN_1 no CITYNEXUS_NOMINATIM_CONTACT_EMAIL, stdin closed
+EOFError: EOF when reading a line
+Revolution launcher exited with code 1
+RUN_2 CITYNEXUS_NOMINATIM_CONTACT_EMAIL=trial-check@invalid.example (reserved domain, no provider call made)
+DB: C:/Users/<me>/AppData/Local/CityNexus/Revolution/de72509c4a52-20261024-182715-d6e8ea/_revolution_hands_on_20261024_182741.db
+Then on phone visit: http://localhost:14334/revolution
+Keep this terminal open while trying the UI.
+PAGE http_status=200 title=CityNexus Trip Operations first_screen=AI 暂未开启 + 继续规划 →
+SHOT trial/results/20261022_v3_human_chrome/onclick-first-screen.png bytes=112104
+TEARDOWN ports 14334/18503/18501 no longer listening (read after the pipeline ended)
