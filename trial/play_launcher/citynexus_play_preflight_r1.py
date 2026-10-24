@@ -60,7 +60,11 @@ def main():
     if not os.path.exists(os.path.join(ROOT, "frontend", "node_modules", "vite", "bin", "vite.js")):
         problems.append("前端依赖没装：先在该机执行 npm ci（在 %s\\frontend 里）" % ROOT)
     if not (os.environ.get("CITYNEXUS_AMAP_WEB_KEY") or "").strip():
-        say("提示：这台机器的环境变量里没有高德键（只查了在不在，没读值）。没有它，转场核实会老实写 AMAP_NOT_CONFIGURED，其余功能照玩。")
+        say("提示：这台机器的环境变量里没有高德键（只查了在不在，没读值）。没有它，这一台就不向任何来源检索地点："
+            "Agent 找不出真的地点，草案里每处都写「让 Agent 找这一处」，出发卡的转场核实会老实说这几处还没被认成正式地点。"
+            "地图与日程仍可玩；要看到转场核实与「根据路线重新安排」，请把 CITYNEXUS_AMAP_WEB_KEY 放进用户级环境变量后重开。")
+    else:
+        say("检索已开：这一台会拿你的高德键向真来源查地点与转场（只读环境变量，不打印、不落盘）。")
     code = None
     try:
         with urllib.request.urlopen(GATEWAY, timeout=4) as response:

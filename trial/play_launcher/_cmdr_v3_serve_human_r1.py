@@ -48,7 +48,16 @@ def gateway_key():
 
 
 env = dict(os.environ)
+# The Agent's place research is gated by real_city_enabled / real_city_mode (backend/app/core/config.py:106-107).
+# A stack booted without them answers every 查找 with PROVIDER_DISABLED / REAL_CITY_DISABLED, so the traveller's
+# 「让 Agent 找这一处」 can never bind a place and the departure card has no pair of stops left to measure --
+# measured on walk-110: six discover_places calls, all disabled, and the saved draft carried zero places.
+# Real research is turned on only when the traveller's own provider key is already in the environment; the key
+# is never printed, never read into a receipt, and never written to a file.
+AMAP_PRESENT = bool((os.environ.get("CITYNEXUS_AMAP_WEB_KEY") or "").strip())
 env.update({
+    "CITYNEXUS_REAL_CITY_ENABLED": "true" if AMAP_PRESENT else "false",
+    "CITYNEXUS_REAL_CITY_MODE": "live" if AMAP_PRESENT else "replay",
     "CITYNEXUS_DATABASE_URL": "sqlite:///" + DB.replace("\\", "/"),
     "CITYNEXUS_TRAVELER_AUTH_SECRET": secrets.token_hex(32),
     "CITYNEXUS_DEMO_MODE": "true",
@@ -113,6 +122,7 @@ web = subprocess.Popen(
     stdout=open(os.path.join(OUT, "vite_%s_canary.log" % TAG), "wb"), stderr=subprocess.STDOUT)
 
 status = {"backend_pid": backend.pid, "web_pid": web.pid, "db": DB, "db_kept": KEEP_DB, "web_bind": BIND,
+          "real_city": "live" if AMAP_PRESENT else "disabled:no_provider_key_in_environment",
           "url": "http://127.0.0.1:%d/revolution" % WEB_PORT, "api_port": BACKEND_PORT}
 try:
     for _ in range(90):

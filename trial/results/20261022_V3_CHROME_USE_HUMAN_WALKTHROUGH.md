@@ -1694,3 +1694,99 @@ USER_VERIFIED 仍是 PENDING（这三下都是我按的）；PR 仍是 Draft、A
 今晚新加的两枚（`replan_walk_r1.mjs`、`replan_probe_r2.mjs`）在两棵里都是 `ok`。
 那三/四枚红是第廿九、卅一节列过的旧账（`dock_recovery_probe_r1`、`first_tap_layers_r1`、`first_tap_layers_r2`，
 镜像那侧另含潜伏的 `place_media_click_r1`），不是新引入的。
+
+## 卅四、P0-4 走到真机屏幕上：先卡住它的不是产品，是我自己的启动器（walk-110 / walk-111 / replan-probe 4~7，2026-10-24 07:2x~08:2x）
+
+裁语要的形状是「看见什么 → 第一下按哪 → 实际发生什么 → 改码 → 再按 → 截图＋去密回执」。这一节按那个形状写，
+并先交代隔离面：全部读数来自我自己的一枚栈（`HUMAN_TAG=city`，页面 14492／API 60392，库
+`D:/moodle/_cmdr_v3_live_1022/citynexus_v3_city_1024.db`，旅客密钥每次启动随机，主人那台共享 human 栈没动过、
+也没重启过）。真检索会打真高德：键只从进程环境读入（`in_process_env=True`，长度 32，值从未打印、未写入任何文件），
+回执里没有凭据。
+
+### 一、第一次按到底发生了什么：产品说的是实话，但这条路本来走不通
+
+walk-110（07:2x，代 `369ab5a7…`）把六项时间写进卡片、保存、按下「核实并冻结今天的转场」，屏上出现的就是
+`departureGaps.ts` 那条新句子（三连按都是同一句，`walk-110-log.txt:70~86`）：
+
+> 这几处还没有被认成正式地点，所以没有可以量转场的两站。先在对话里让我把地点补认出来。
+
+按「和 Agent 补齐出发资料」→「发送 ↑」之后，Agent 自己在对话层回答（`walk-110-log.txt:112`）：
+
+> 我已尝试在对话里调取行程/正式地点表来逐项补齐这 6 处的地点，但当前这个对话窗口的调取被拦截
+> （返回"需要决策 / 不允许"），而查询可核验地点、补来源、存草稿这些操作都属于独立工作台……
+
+只读取证（`trial/human_walk/binding_forensic_r2.py`，`sqlite3 …?mode=ro`，只打工具名／状态／计数／id 前缀）摊开那 16 步：
+
+| 读数 | 值 | 从哪读 |
+| --- | --- | --- |
+| 这一趟的任务 | `2ffc318a` status=PARTIAL_READY draft_rev=1，六项里绑上正式地点的=0，research_places=0，candidate_place_ids=0 | `trial/human_walk/binding_forensic_r2.py:28` 打印的 `MISSIONS_ON_JOURNEY=1` 与 TASK 行 |
+| 检索问了几次 | 六次 `discover_places`（amap／photon／nominatim 都问了）＋两次 `search_city_services` | 同一取证脚本的 RUN_STEPS=16 段 |
+| 每次答什么 | `status=PROVIDER_DISABLED` `reason_code=REAL_CITY_DISABLED`，place_count 全部 0 | 同上 |
+| 对话层那一次 | `discover_places` 答 `status=NEEDS_DECISION` `reason_code=TOOL_NOT_ALLOWED` | 同上（最后一行） |
+
+所以 #314 的上游半件是两件事，不是一件：
+
+1. `backend/app/core/config.py:106-107` 的默认是 `CITYNEXUS_REAL_CITY_ENABLED=false`／`MODE=replay`，
+   而我交付的启动器 `trial/play_launcher/_cmdr_v3_serve_human_r1.py` 从没设过这两枚环境变量（只有
+   `trial/human_walk/_boot_human_stack_r19.ps1:22-23` 设过）。默认关 ⇒ `app/agent/goal_artifacts.py:219`
+   那种「把 slot 绑到 research 线索」的门根本没有线索可绑 ⇒ 草案六项 place_id 全 None ⇒ freeze 只能答
+   `NO_PLACED_STOPS`。**主人双击 `citynexus-play.bat` 开的那一趟会死在同一处**，所以 #309 我从
+   completed 收回成 in_progress，这条写在下面第三节。
+2. 讨论（DISCUSS）那一轮的工具面不含检索：`app/agent/goal_tasks.py:1328` 的白名单在没有 online 工具时只留
+   `inspect_journey/save_draft_variants/read_guardian_stream/save_draft_itinerary/replace_draft_slots`。
+   于是出发卡那句「让 Agent 找这一处」写进对话框、发出去之后，结构上就没人能回答它——Agent 只是老实转述了这道闸。
+   这一条不是我能替裁的：要么把「补地点」这一按送到研究轮，要么出发卡别再把它当可得的操作。已作为事实交号令者。
+
+### 二、开了真检索之后，同一条路自己通了（walk-111，同代代码，只有栈的配置不同）
+
+改完启动器（`_cmdr_v3_serve_human_r1.py:51-60` 的判定与 `:125` 的回执字段）重启一枚新栈，ready 文件里
+`real_city = live`。walk-111 全程同一个人走法、同一枚 r29 仪表：
+
+- 第一下按「核实并冻结今天的转场」就冻结成功：`转场已核实 5/5（其中 1 段是跨夜衔接） · 已冻结进这版方案`
+  （`walk-111-log.txt` 的 `STEP_12B_FROZEN_ON_ROUND=1`）；刷新之后卡片仍认账：`转场已经核实并冻结进这版方案。`
+- 抽屉里是五条真路线（`STEP_12D_PANE_HEADLINE`）：天安门广场→故宫博物院 步行 3.4 公里／约 45 分；
+  故宫博物院→景山公园 1.4 公里／19 分；景山公园→南锣鼓巷 2.0 公里／26 分；
+  **南锣鼓巷→颐和园 16.2 公里／约 3 小时 36 分；颐和园→簋街 17.6 公里／约 3 小时 55 分**——
+  这两段就是裁语要「用真公共交通替换长步行」的那一段现场，量具与句子都在，替换那一刀仍欠着（#308 第二节）。
+
+### 三、P0-4 那一个动作，第一次按就到了（probe-4 → probe-7 是同一条链的四次实测）
+
+| 次 | 第一下按哪 | 实际发生什么 |
+| --- | --- | --- |
+| probe-4 | 按「核实并冻结」→ 卡片答 5/5；按「根据路线重新安排」（中心 189,574，topmost=BUTTON） | 逐行差异出来了：`故宫博物院：10:00–10:45 改成 10:46–11:31，往后 46 分钟（因为上一转）；景山公园：… 11:31–12:16（跟着顺移）；南锣鼓巷：… 12:16–13:01` |
+| probe-4 | 按「按这一版安排」（中心 189,718） | **没按到**：命中测试读出 `topmost=TEXTAREA`（固定底栏盖住了它），线上也没有第二次 prepare-plan（WIRE 只有 4 条，最后一条是 GET travel-gaps）。截图 `replan-probe4-04-diff.png`／`replan-probe4-05-after-apply.png` |
+| probe-5／6 | 只补了「差异出现后把确认键带到中间」这一处 ⇒ 上一按钮（重新安排）自己又被底栏压住（`topmost=TEXTAREA`，差异没出现） | 失败复现两次，量具没骗人：`dock_clearance_probe_r1.mjs` 在同一屏量到底栏占 844 高的视口里 645~767＋77 的下沿＝**199 像素的带**，而 `.rev-firstlook-content` 的 `padding-bottom` 实测 170 像素 |
+| probe-7 | 第一下按「根据路线重新安排」（中心 189,412，`covers_it=false topmost=BUTTON`）；第一下按「按这一版安排」（同一位置，`topmost=BUTTON`） | 线上出现 **POST prepare-plan = 201**（00:08:45），卡片答：`已按路线把 3 处往后排，这是一份新的候选方案；生效的那一份没有变。新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。`；六个时间框读回 `10:46–11:31 / 11:31–12:16 / 12:16–13:01`；刷新后那一版老实说「当天的转场还没有向高德核实过」。截图 `replan-probe7-04-diff.png`／`replan-probe7-05-after-apply.png`／`replan-probe7-06-after-reload.png` |
+
+改码（`frontend/src/trial/mobile/DraftDepartureCard.tsx`）：`:72` 与 `:73` 两枚按钮各自的 ref，`:92` 差异出现时把确认键带到屏中央，
+`:198` 「核实并冻结」的答案回来时把下一枚要按的键带到屏中央（注释里写着 199 像素那条实测带与两次失败的日志名），
+`:285`／`:287` 把 ref 接上去。这不算新特性：P0-1 定的标准就是「第一下就按到」，而这两枚键都是旅客自己上一按唤出来的。
+`npx tsc -p tsconfig.check.json --noEmit` rc=0，`npx vite build` rc=0（6.69s / 5.84s 两次）。
+
+启动器与预检（同一批交付面）：`_cmdr_v3_serve_human_r1.py:57` 只在环境里已有高德键时才打开真检索（键值不打印、不落盘），
+`:125` 把 `real_city` 写进 ready 回执；`citynexus_play_preflight_r1.py:63-67` 把「没有键会损失什么」说清楚，
+不再用一句「其余功能照玩」盖住「Agent 找不出地点、转场没得量」这件事。
+
+### 四、#315 这一刀：compose 那两扇门不再把内部码端给旅客
+
+`backend/app/main.py:921`（`PLAN_FIT_REJECTIONS`）／`:932`（`PLAN_FIT_MESSAGE_KEYS`）／`:940`（`plan_fit_rejection`）
+新增一域，两处原本写 `raise HTTPException(422, str(exc))` 的门（`:5067` AI 检索那一条、`:18015` authoritative-compose）
+改走这一扇门。四枚命名码里必须包含 `V13_DISCOVERY_NO_FEASIBLE_PLACE_SET` 与 `V13_DISCOVERY_COMPOSE_EMPTY`
+（`main.py:4977`／`:4986` 自己抛的），否则这次修改会把它们从 422 退成 500——那是回归，不是修好。
+句子里不含 `V13_` 也不含地点 id；`reason_code` 才是那个名字的合法落点（ORD-0101），`details` 只带 `{"reason": code}`。
+`TEMPORAL_REJECTIONS` 与其枚举反控（`tests/test_qoder_journey_window_boundary.py:280`）保持原样没动，那域没被我稀释。
+
+臂：`tests/test_qoder_rejection_message_keys.py:265`（两枚码各自得到句子＋自己的键，且整份 body 里找不到那枚地点 uuid）、
+`:285`（无名 ValueError 仍 500，且原话不泄漏进响应）、`:297`（两表同域、形状合规、不与 temporal 键撞）。
+`13 passed`（原 10 条＋这 3 条）。突变已做：把两扇门改回 `HTTPException(422, str(exc))` 再跑这两条 ⇒ `2 failed`
+（`assert body["reason_code"] == code` 与 `assert answer.status_code == 500` 各咬一次），随后按原字节还原（`raise plan_fit_rejection` 计数回到 2）。
+邻域复跑 `tests/test_qoder_journey_window_boundary.py tests/test_day_rhythm.py tests/test_goal_travel_gaps.py tests/test_goal_route_freeze.py`
+= `24 passed`。
+
+诚实的余下部分：
+- 中文字典条目不在这棵救援树里（`journey.days_out_of_bounds` 也只在 `main.py:911` 与两枚测试里出现），
+  所以这四枚新键现在只有服务端一侧；译稿与「键有读者」那把尺仍归主人那条权威线，我把它当未完事项，不当已完成。
+- `test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface` 仍与我无关地红（实测 runtime 287 vs 契约 172；
+  回退我这次 include 一样红）。
+- PR #43 仍是 Draft、Actions 运行 0 次，因此这一批**不得称"正式交付"**；USER_VERIFIED 仍 PENDING，
+  要主人自己拿真手机走一遍这两按。

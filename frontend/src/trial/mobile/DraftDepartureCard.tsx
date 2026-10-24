@@ -69,6 +69,8 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const priceKey = useRef<string | null>(null);
   const requestKey = useRef<string | null>(null);
   const inFlight = useRef(false);
+  const proposal = useRef<HTMLButtonElement | null>(null);
+  const replan = useRef<HTMLButtonElement | null>(null);
   const scope = useRef(0);
   useEffect(() => { const stored = task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null; scope.current += 1; setSchedule(scheduleFor(task)); setConfirmed(false); setResult(stored); setPrice(storedPriceState(stored)); setMessage(""); requestKey.current = null; routeKey.current = null; setRoutes(null); setGaps(null); setPlanShown(false); priceKey.current = null; }, [task.task_id, task.draft_artifact?.revision]);
   useEffect(() => subscribeTravelerBearer(() => { scope.current += 1; setResult(null); setRoutes(null); setGaps(null); setPlanShown(false); setPrice(null); setMessage(""); setConfirmed(false); }), []);
@@ -82,6 +84,12 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       .then((answer) => { if (epoch === scope.current && answer.plan_version_id === frozenPlanId) setGaps(answer); })
       .catch(() => { /* the freeze receipt above stands on its own; this is the reading of it */ });
   }, [frozenPlanId, result]);
+  // The chat dock is fixed over the bottom of the screen, so the confirm button this card reveals can
+  // land underneath it: measured 2026-10-24 at 390x844, the composer's textarea covered the centre of
+  // 「按这一版安排」 and the traveller's first press opened the keyboard instead of saving (replan-probe-4
+  // log: covers_it=true topmost=TEXTAREA, and no second prepare-plan went on the wire).  Revealing the
+  // button is what the traveller's own press asked for, so the reveal has to clear the dock.
+  useEffect(() => { if (planShown) proposal.current?.scrollIntoView({ block: "center" }); }, [planShown]);
   const days = task.draft_artifact?.days ?? [];
   if (!schedule.length) return null;
   type GapRow = GoalPreparationResult["gaps"][number];
@@ -181,6 +189,13 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       // freeze -- the freeze receipt above is already on the screen and stands on its own.
       try {
         setGaps(await cityNexusApi.travelGaps(result.journey_id, result.task_id, result.plan_version_id));
+        // The answer to this press carries the next press, and the chat dock sits over the bottom of the
+        // screen (its band measured 199px of an 844px viewport).  Left where it is, 根据路线重新安排 can
+        // land under the dock and the traveller's next tap opens the keyboard instead -- measured twice
+        // on 2026-10-24 (replan-probe-5-log.txt / replan-probe-6-log.txt: centre [189,718],
+        // topmost TEXTAREA, no diff rendered).  Bringing the answer to the person who asked for it is
+        // this card's job, not theirs.
+        window.requestAnimationFrame(() => replan.current?.scrollIntoView({ block: "center" }));
       } catch { setGaps(null); }
       // A frozen hop makes the 转场路线 line for it a lie, and the server already knows that: on a
       // successful freeze it drops every TRANSFER_ROUTE row from the stored answer
@@ -267,9 +282,9 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       <ul data-testid="rev-v3-gap-shortfalls">{gaps.hops.filter((hop) => hop.short_by_minutes > 0)
         .map((hop) => <li key={`${hop.origin_title}->${hop.destination_title}`} data-testid="rev-v3-gap-shortfall">{gapShortfallSentence(hop)}</li>)}</ul>
       {gaps.reason_code && replanRefusalSentence(gaps.reason_code) && <p data-testid="rev-v3-replan-refusal">{replanRefusalSentence(gaps.reason_code)}</p>}
-      {gaps.rows.length > 0 && !planShown && <button type="button" data-testid="rev-v3-replan" onClick={() => setPlanShown(true)}>{REPLAN_BUTTON}</button>}
+      {gaps.rows.length > 0 && !planShown && <button type="button" ref={replan} data-testid="rev-v3-replan" onClick={() => setPlanShown(true)}>{REPLAN_BUTTON}</button>}
       {planShown && <ul data-testid="rev-v3-replan-diff">{gaps.rows.map((row) => <li key={`${row.day_index}:${row.slot_index}`}>{replanDiffSentence(row)}</li>)}</ul>}
-      {planShown && <button type="button" data-testid="rev-v3-replan-apply" disabled={busy || task.status === "WORKING"} onClick={() => void applyReplan()}>{busy ? "正在保存这一版…" : REPLAN_APPLY_BUTTON}</button>}
+      {planShown && <button type="button" ref={proposal} data-testid="rev-v3-replan-apply" disabled={busy || task.status === "WORKING"} onClick={() => void applyReplan()}>{busy ? "正在保存这一版…" : REPLAN_APPLY_BUTTON}</button>}
     </div>}
     {result && (result.unrouted_count ?? 0) > 0 && <p className="rev-v3-band-note" data-testid="rev-v3-band-note">{bandSentence(result.unrouted_count ?? 0)}</p>}
     {(result?.opening_checks ?? []).length > 0 && <ul className="rev-v3-opening" data-testid="rev-v3-opening" aria-label="每一处当天的开放核实">

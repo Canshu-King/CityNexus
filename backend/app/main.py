@@ -912,6 +912,49 @@ TEMPORAL_MESSAGE_KEYS = {
     "V13_INVALID_ANCHOR_WINDOW": "journey.anchor_order",
 }
 
+# The compose doors (`/authoritative-compose`, the AI discovery route) reach the planner's own
+# refusals, and until now answered them with `HTTPException(422, str(exc))`.  A phone therefore
+# rendered the internal string -- `V13_PLACE_CLOSED:6f0c2f…` -- as the traveller's sentence, with a
+# place id nobody can read and no key a screen could translate.  These are domain rules like the
+# journey window is, so they get the same shape: a named code, a message a person can act on, and a
+# key of its own.
+PLAN_FIT_REJECTIONS = {
+    "V13_PLACE_CLOSED": "The source records one of these places as closed, so this version cannot be "
+        "arranged around it. Replace that stop, or choose another day.",
+    "V13_OPENING_STATUS_UNKNOWN": "One of these places has no opening hours on record, so this "
+        "version cannot be timed around it. Fill its hours in from a source, or replace that stop.",
+    "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET": "Too few places were gathered to arrange a day around. "
+        "Confirm another place and run it again.",
+    "V13_DISCOVERY_COMPOSE_EMPTY": "The places that were gathered did not fit a complete day, so no "
+        "candidate was written. Try a shorter list of places, or different dates.",
+}
+
+PLAN_FIT_MESSAGE_KEYS = {
+    "V13_PLACE_CLOSED": "plan.place_closed",
+    "V13_OPENING_STATUS_UNKNOWN": "plan.opening_hours_not_recorded",
+    "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET": "plan.discovery_place_set_incomplete",
+    "V13_DISCOVERY_COMPOSE_EMPTY": "plan.discovery_compose_empty",
+}
+
+
+def plan_fit_rejection(exc: ValueError) -> HTTPException:
+    """Turn one of the planner's named refusals into the answer a traveller can read.
+
+    A `ValueError` whose name is not one of these is a bug: it is re-raised here, so it keeps its 500
+    instead of arriving dressed up as a client error -- the same rule `temporal_rejection` above holds.
+    The place id the planner appends stays out of the body; the card that offered the save already
+    names the stop, and an id is not something a person on a phone can act on.
+    """
+
+    code = str(exc).partition(":")[0]
+    if code not in PLAN_FIT_REJECTIONS:
+        raise exc
+    answer = HTTPException(422, PLAN_FIT_REJECTIONS[code])
+    answer.reason_code = code
+    answer.message_key = PLAN_FIT_MESSAGE_KEYS[code]
+    answer.error_details = {"reason": code}
+    return answer
+
 
 @app.exception_handler(WriteDeadlineExceeded)
 def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONResponse:
@@ -5021,7 +5064,7 @@ def run_real_city_intelligence(
         raise HTTPException(502, f"DeepSeek discovery failed: {exc}") from exc
     except ValueError as exc:
         session.rollback()
-        raise HTTPException(422, str(exc)) from exc
+        raise plan_fit_rejection(exc) from exc
 
 
 @app.get("/api/v1/journeys/{journey_id}/operations/stream")
@@ -17969,7 +18012,7 @@ def authoritative_compose_journey(
         )
     except ValueError as exc:
         session.rollback()
-        raise HTTPException(422, str(exc)) from exc
+        raise plan_fit_rejection(exc) from exc
     return {
         "optimizer": result.optimizer_kind,
         "complete_plan_count": len(result.plans),
