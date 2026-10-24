@@ -57,6 +57,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   const [schedule, setSchedule] = useState(() => scheduleFor(task));
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [message, setMessage] = useState("");
   const [result, setResult] = useState<GoalPreparationResult | null>(() => task.prepared_plan?.result.draft_revision === task.draft_artifact?.revision ? task.prepared_plan?.result ?? null : null);
   const [routes, setRoutes] = useState<GoalRouteFreezeResult | null>(null);
@@ -140,6 +141,40 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
         : detail.includes("SCHEDULE") ? "请调整时间：各项安排按顺序衔接，并放在这趟旅行的日期内。"
           : "这次未能保存，时间仍留在这里，可以重试。"));
     } finally { inFlight.current = false; setBusy(false); }
+  };
+
+  // The saved arrangements are not a PlanVersion. Formal candidates only exist after
+  // plans/generate; this button is that door, and it says so before the traveller presses it.
+  const generateCandidates = async () => {
+    if (!result || generating) return;
+    setGenerating(true);
+    setMessage("");
+    try {
+      const generated = await cityNexusApi.generatePlans(task.journey_id, 3);
+      setMessage(`已生成 ${generated.length} 份正式候选方案；在上方「你的行程方案」里查看并选用。`);
+      window.dispatchEvent(new CustomEvent("citynexus:plans-updated", { detail: task.journey_id }));
+    } catch (error) {
+      const failure = error instanceof CityNexusApiError
+        ? (error.body as { error?: { message?: string; reason_code?: string; details?: { places_in_catalog?: number } } } | undefined)?.error
+        : undefined;
+      const detail = `${typeof failure?.message === "string" ? failure.message : ""} ${error instanceof Error ? error.message : ""}`;
+      const catalogSize = failure?.details?.places_in_catalog;
+      // CATALOG_INSUFFICIENT is not "try again": this city's real rows are missing the facts a
+      // strict candidate needs, so the door cannot open no matter how many times it is pressed.
+      // The traveller can still continue with the draft candidate above, and that is what the
+      // sentence has to say (measured on the live Beijing catalog: 54 places, 0 with verified
+      // admission cost, 422 CATALOG_INSUFFICIENT).
+      const catalogSentence = typeof catalogSize === "number" && catalogSize > 0
+        ? `这版安排用的是 ${catalogSize} 个真实地点，但还没有一处同时具备正式候选要的开放时间与票价来源，所以严格候选排不出来。继续用上面这份草案候选就可以：先确认费用、核实转场，再选用。`
+        : "这个城市还没有可用的真实地点，先在对话里补一处，再生成正式候选。";
+      setMessage(failure?.reason_code === "CATALOG_EMPTY" ? catalogSentence
+        : failure?.reason_code === "CATALOG_INSUFFICIENT" ? catalogSentence
+          : detail.includes("NO_PLACED_STOPS") ? "这版方案还没有被认成正式地点的两站，先在对话里补认地点。"
+            : detail.includes("PLACE_CLOSED") ? "这版方案里有地点在当天不开放，先换一处再生成。"
+              : "这次没能生成正式候选，安排仍留在这里，可以重试。");
+    } finally {
+      setGenerating(false);
+    }
   };
   const applyReplan = async () => {
     if (!result || !gaps?.rows.length || inFlight.current || task.status === "WORKING" || !task.draft_artifact) return;
@@ -262,6 +297,9 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
       <label><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)} />按以上时间准备方案</label>
       <button type="button" disabled={!confirmed || busy || Boolean(result)} onClick={() => void prepare()}>{busy ? "正在保存安排…" : result ? "安排已保存" : "保存为正式候选方案"}</button>
     </fieldset>
+    {result && <div className="rev-v3-generate-plans">
+      <button type="button" data-testid="rev-v3-generate-plans" disabled={generating} onClick={() => void generateCandidates()}>{generating ? "正在生成正式候选…" : "生成正式候选方案"}</button>
+    </div>}
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
       {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0, routes.transit ?? 0,

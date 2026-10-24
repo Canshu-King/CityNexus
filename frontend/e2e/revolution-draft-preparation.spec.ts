@@ -9,7 +9,7 @@ for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates 
     localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({id:jid, ownerTravelerId:"VARIANT_FIXTURE_OWNER",cityCode:"TEST_FIXTURE",cityName:"TEST_FIXTURE",status:"DRAFT"}));
     localStorage.setItem(`citynexus.revolution.goal-task.VARIANT_FIXTURE_OWNER.${jid}`,tid);
   },{jid,tid});
-  let puts = 0; let prepares = 0; let plans: unknown[] = [];
+  let puts = 0; let prepares = 0; let plans: unknown[] = []; const generates: Record<string, unknown>[] = []; let generateCalls = 0;
   const task = {task_id:tid, journey_id:jid, status:"PARTIAL_READY",goal:"TEST_FIXTURE 两日",mode:"GOAL_PLANNING",consent:{model:true,online_research:true},budget:{max_model_turns:24,max_tool_calls:48},usage:{model_turns:4,tool_calls:3},tool_steps:[],research_places:[],conversation:[],
     draft_artifact:{revision:4,status:"DRAFT",days:[{date:"2026-10-21",slots:[{title:"TEST_FIXTURE 原草案",time_of_day:"afternoon",notes:""}]}]},
     draft_variants:[{id:"relaxed",title:"轻松慢逛",comparison:"使用附近两处来源地点，减少移动",source_place_ids:["amap:fixture-a"],route_ids:[],unknown_summary:["营业与票价待查"],artifact:{revision:1,status:"DRAFT",days:[{date:"2026-10-21",slots:[{title:"TEST_FIXTURE 轻松文化行程",time_of_day:"afternoon",notes:"营业待查",place_id:"amap:fixture-a"}]}]}}]};
@@ -38,6 +38,21 @@ for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates 
       plans=[{id:"plan-fixture",journey_id:jid,status:"CANDIDATE",version_no:1,selectable:false,stale:true,explanation:{compose_source:"SELECTED_GOAL_DRAFT"},total_cost:{amount_minor:0,currency:"CNY"},total_cost_status:"PARTIAL_UNKNOWN",activities:[{id:"activity-fixture",sequence_no:1,title:"TEST_FIXTURE 原草案",start_at:"2026-10-21T14:00:00+08:00",end_at:"2026-10-21T16:00:00+08:00",cost_status:"UNKNOWN",estimated_cost:{amount_minor:0,currency:"CNY"},travel_from_prev_min:0,metadata:{}}]}];
       const result = {journey_id:jid,task_id:tid,draft_revision:4,plan_version_id:"plan-fixture",status:"CANDIDATE",selected:false,activated:false,slots_count:1,mobility_frozen:false,gaps:[{sequence_no:1,title:"TEST_FIXTURE 原草案",kind:"OPENING_HOURS",status:"UNKNOWN",place_id:null}]};
       Object.assign(task,{prepared_plan:{result,schedule:body.schedule}});return reply(result);
+    }
+    if(path===`${root}/plans/generate`){
+      expect(route.request().method()).toBe("POST");
+      expect(route.request().headers().authorization).toBe("Bearer VARIANT_TEST_FIXTURE_TOKEN");
+      generates.push(route.request().postDataJSON());
+      generateCalls += 1;
+      if (generateCalls === 2) {
+        return route.fulfill({ status: 422, contentType: "application/json", body: JSON.stringify({
+          error: { code: "VALIDATION_ERROR", message: "No feasible plan candidates satisfy the journey constraints",
+            reason_code: "CATALOG_INSUFFICIENT", details: { places_in_catalog: 54, day_sequences_available: 0 } } }) });
+      }
+      plans = [1, 2, 3].map((n) => ({ id: `plan-generated-${n}`, journey_id: jid, status: "CANDIDATE", version_no: n + 1,
+        selectable: false, stale: false, explanation: { compose_source: "SELECTED_GOAL_DRAFT" },
+        total_cost: { amount_minor: 0, currency: "CNY" }, total_cost_status: "PARTIAL_UNKNOWN", activities: [] }));
+      return route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify(plans) });
     }
     if(path===`${root}/agent/goal-tasks/${tid}`)return reply(task);
     if(path===`${root}/agent/goal-tasks/${tid}/events`)return reply({task_id:tid,events:[],next_cursor:null});
@@ -76,5 +91,19 @@ for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates 
   await expect(page.getByTestId("rev-plan-option")).toContainText("TEST_FIXTURE 原草案");
   await expect(page.getByRole("region",{name:"当前草案的出发准备"})).toContainText("1 项安排已保存，刷新也能找回。");
   expect(puts).toBe(0);expect(prepares).toBe(1);
+  // The saved arrangements are not candidates: the generate door must exist, ask plans/generate
+  // for three candidates, and make the workbench show them without a reload.
+  await expect(card.getByTestId("rev-v3-generate-plans")).toBeEnabled();
+  await card.getByTestId("rev-v3-generate-plans").click();
+  await expect.poll(() => generates.length).toBe(1);
+  expect(generates[0].candidate_count).toBe(3);
+  await expect(card).toContainText("已生成 3 份正式候选方案");
+  await expect(workbench.getByTestId("rev-plan-option")).toHaveCount(3);
+  // A catalogue shortfall is not a retryable accident: the screen must name the city's size and
+  // point back to the draft candidate, not show a generic "try again".
+  await card.getByTestId("rev-v3-generate-plans").click();
+  await expect.poll(() => generateCalls).toBe(2);
+  await expect(card).toContainText("54 个真实地点");
+  await expect(card).toContainText("继续用上面这份草案候选就可以");
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
 });
