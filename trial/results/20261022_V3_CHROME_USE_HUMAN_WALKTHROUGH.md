@@ -2532,3 +2532,5 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 ② Agent 第二次尝试改用 `generate_plans`，给出的 `planning_mode` 是 `recovery_replacement_for_closed_forbidden_city`，不在枚举里，被 schema 正确拒绝；工具层没有归一，于是耗尽步数（`Agent reached the configured tool-step limit`）。
 
 **红线。** 事件由 `CitySignalFixture` 经服务器信号管线写出，不由前端 INSERT；Guardian 的升级依赖真实常设任务；Agent 是真实模型与真实工具；模拟时间只影响行程时间戳，`provider_captured_at` 仍是现实 UTC。
+
+**更精确的缺段（直接打 replan 端点，2026-10-25 06:35）。** 用同一事件与模型找到的三个候选地点调用 `POST /journeys/<id>/replans`，422 的 `details.gaps` 只有**一段**：`天安门广场 → 故宫博物院`，`reason_code=FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE`、`fact_quality=SYNTHETIC_DEFAULT`（`sim-replan-probe-1.txt`）。这推翻了「候选地点没有数据」这个笼统说法：真正不硬的是**基础计划自己的一段**——它是夹具常数，而 `_replan_estimate` 在缺/不合格时的补捕没有把这一段换成真实测量（捕获失败后按 `known_refusal` 抛出）。修复点因此在冻结/补捕链路，不在候选发现。
