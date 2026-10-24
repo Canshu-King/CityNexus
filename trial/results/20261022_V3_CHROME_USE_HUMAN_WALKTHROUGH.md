@@ -2254,3 +2254,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **没做的。** 多人 3/3 那半支（真实三名成员各自授权、2/3 不生效）仍等 `#284` 的裁语与成员数据面；这一刀没有碰同意门，也没有把单人文案当多人实现。
 
 **回归。** 整树类型检查 rc=0；整套夹具 **50 passed / 0 failed，11.5 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-12-p1c.log`），ACTIVE 那条新门也在其中。
+
+## 五十四、P1 第三刀：ACTIVE 首屏先给「旅行本身」，技术面板退到它后面
+
+裁语 P1 第一条是「先让人看到旅行本身，技术轨迹折叠」。改前，ACTIVE 的「执行与待办」先铺三块技术面板（工作动态、行程助手连接状态、Hermes 运行），真正的行程头「Your trip right now / 下一站」在首屏以下。现在调换渲染顺序：`executionDecisions`（LiveRecovery，含下一站/路线/出发准备）在前，`executionAgent`（技术面板）在后（`frontend/src/trial/mobile/MissionCockpit.tsx:327`）。
+
+屏证：`trial/results/20261022_v3_human_chrome/p1c-trip-first-390.png`——390×844 首屏里，「执行与待办」下第一块就是行程头，助手面板在其后；改前的同一屏见 `p1a-after-active-trips.png`（第一块是「CITYNEXUS · 工作动态 / 行程助手」）。
+
+门：ACTIVE 夹具读两个盒子的纵坐标，要求 `live-next` 在 `rev-mobile-compat-agent` 之上、且落在首屏 844 内（`frontend/e2e/revolution-mobile-shell.spec.ts:612` 起）。这比"两块都在 DOM 里"更严：顺序反了或行程头被挤出首屏都会红。
+
+边界：只调顺序，没有删任何技术面板，也没有改产品数据；折叠 12 个时间输入与平台名前两刀已交。回归：整树类型检查 rc=0；整套夹具 **50 passed / 0 failed，9.4 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-rerun-13-p1d.log`）。

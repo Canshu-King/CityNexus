@@ -324,7 +324,7 @@ export function MissionCockpit({
         </article>
         <article className="cn-mission-card cn-mission-timeline-pane" data-testid="rev-mission-timeline-pane">
           <div className="cn-mission-section-heading"><CalendarDays size={18} /><strong>{journeyStatus === "ACTIVE" ? "执行与待办" : "按天调整行程"}</strong></div>
-          {journeyStatus === "ACTIVE" ? <>{executionAgent}{executionDecisions}</> : <>
+          {journeyStatus === "ACTIVE" ? <>{executionDecisions}{executionAgent}</> : <>
           <p>{draftSlots.length} 项安排 · {draftDays.length} 天</p>
           <GoalDraftVariants key={task?.task_id ?? journeyId} variants={task?.draft_variants ?? []} current={task?.draft_artifact}
             disabled={task?.status === "WORKING"} onChoose={chooseDraft} />

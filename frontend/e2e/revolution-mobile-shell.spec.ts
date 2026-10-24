@@ -608,6 +608,12 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       throw new Error("Mobile shell mounted its error boundary: " + (pageErrors.join(" | ") || "no pageerror captured"));
     }
     await page.getByTestId("rev-mobile-tab-trips").click();
+    // P1: the traveller's next stop comes before the Agent's technical panels, and inside the first screen.
+    const nextBox = await page.getByTestId("live-next").boundingBox();
+    const agentBox = await page.getByTestId("rev-mobile-compat-agent").boundingBox();
+    expect(nextBox && agentBox && nextBox.y < agentBox.y).toBe(true);
+    expect((nextBox?.y ?? 9999) < 844).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath("active-trips-trip-first-390.png") });
     // A single-traveller trip has no co-decision door; the tile says why instead of opening one.
     await expect(page.getByRole("button", { name: "添加同行者后使用" })).toBeVisible();
     await expect(page.getByRole("button", { name: "添加同行者后使用" })).toBeDisabled();
