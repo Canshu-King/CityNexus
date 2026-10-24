@@ -1,0 +1,4 @@
+GENERATE {"found":true,"x":195.302001953125,"y":411.9074897766113,"disabled":false}
+HITS [{"req":"POST","url":"http://127.0.0.1:14461/api/v1/journeys/8ba03b8e-1461-4da4-9943-826cbea089fe/plans/generate","post":"{\"candidate_count\":3}"},{"requestId":"38656.18561","status":422,"url":"http://127.0.0.1:14461/api/v1/journeys/8ba03b8e-1461-4da4-9943-826cbea089fe/plans/generate"}]
+BODY 422 {"error":{"code":"VALIDATION_ERROR","message":"No feasible plan candidates satisfy the journey constraints","message_key":"request.invalid","trace_id":"468718f3-5907-4d64-ad14-23318d84c3b3","details":{"city_code":"CN-RV-0AD8D3549E8D","places_in_catalog":54,"city_services_in_catalog":32,"day_sequences_available":0,"requested_candidates":3,"candidate_rejections":[]},"reason_code":"CATALOG_INSUFFICIENT","error_receipt_id":"CNX-RGCHQAHH"}}
+STATUS ["当前展示的是已保存版本。","这次没能生成正式候选，安排仍留在这里，可以重试。"]

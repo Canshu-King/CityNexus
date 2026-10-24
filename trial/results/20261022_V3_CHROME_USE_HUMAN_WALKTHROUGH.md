@@ -2424,3 +2424,41 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **顺带的安全观察。** 裸 `/journeys/:id` 对失效令牌仍 200（行程元数据可读）。这不是本次改动引入的，但应单列评估是否收紧到成员级；已记任务，不擅动。
 
 **回归。** 无产品字节改动。
+
+## 六十七、从一句话走到「已选用」：转场、票价、重排三道门各按一次
+
+**看见什么。** 同一趟 Journey（`8ba03b8e-1461-4da4-9943-826cbea089fe`，北京 12/3–12/4，五天前一句话建立）在准备卡上已有草案候选，但工作台不给「选用这份方案」：卡片写着「这版方案还缺：具体地点（返回酒店休息）、票价、转场路线」。
+
+**第一下按哪。** 按卡片自己的指路走，而不是直接改库：
+
+1. 「核实并冻结今天的转场」→ 屏上 `转场已核实 4/4（其中 1 段是跨夜衔接，4 段按公共交通核实，其中 4 段超过1 公里，已换成公共交通核实） · 已冻结进这版方案`（`prep-actions-1.txt:2`）。
+2. 「票价没有来源，我接受先不计入预算」→ 屏上 `按你的确认保存：这 5 处门票仍未核实…`（同文件 `:5`）。
+3. 「刷新方案」→ 缺项从三条降到一条：`这版方案还缺：具体地点（返回酒店休息）`（`_refresh_plans_r1.txt:3`）。
+
+**「具体地点」没有绑地点的入口。** 草案编辑器对每条安排只给时段/安排名/备注/移除；`返回酒店休息` 是 Agent 生成的休整段（`activity_type=FREE_TIME`，`place_id=null`），却在 `unresolved_facts` 里被记成 `PLACE_REQUIRED`（库读：该 plan 的 explanation 第 6 条）。而 `plan_authority_blocker` 对 `SELECTED_GOAL_DRAFT` 一看到 `PLACE_REQUIRED` 就挡选用。于是这条休整段只能删，或被 Agent 补地点——**屏上没有给后者一个能按的动作**（`rev-v3-ask-agent` 会把请求写进对话框，但那次没有发出）。本次按用户能做的做了：Day 2 打开该段 →「移除这项安排」→「保存草案」→ 屏上 `草案已保存到这趟旅行，刷新页面也可以找回。`（`drop-band-1.txt:8`）。
+
+**重排不是静默改。** 新候选（方案 2，5 项）第一次选用被拒：`这版方案排不下：两段安排之间留的赶路时间不够（1 段）。在出发待办里把后一项的开始时间挪晚，或把前一项的结束时间挪早，再按一次「选用这份方案」。` 卡片同时给出量回来的原因：`天安门广场 → 故宫博物院：这一段路上要 78 分钟，中间只留了 60 分钟。`
+
+按「根据路线重新安排」→ 屏上出现显式差异：`故宫博物院：11:00–12:00 改成 11:18–12:18，往后 18 分钟（因为上一转）。前门大街·大栅栏：19:00–20:00 改成 19:18–20:18，往后 18 分钟（跟着顺移）。`（`replan-select-1.txt:2`，截图 `replan-select-390-diff.png`）→ 按「按这一版安排」→ 生成方案 3，屏上明说 `生效的那一份没有变。新的一版还没有核实转场`。
+
+**实际发生什么。** 冻结方案 3 的转场 → 确认票价 →「刷新方案」→ 点方案 3 的「选用这份方案」→ 卡片变 `方案 3 已选用`，随后出现 `已选好方案。确认后开始正式行程。` 与「确认方案，开始行程」。刷新页面后仍是 `方案 3 已选用`（`replan-select-1.txt` 的 `AFTER_RELOAD`；截图 `walk-final-390.png` / `walk-final-430.png`）。
+
+**形制修正（量具）。** 此前几张「390」截图实际是 737×900（浏览器窗口 494 CSS × DPR 1.49），因为 `Emulation.setDeviceMetricsOverride` 返回成功却未改视口。改用 Playwright 连同一 CDP `setViewportSize`，并回读 `innerWidth/innerHeight/dpr`：390×844、430×932、DPR≈1，两枚截图尺寸与之一致（`pw-capture-selected-4.txt`）。这是量具的错，不是产品的。
+
+**结论。** `SAVED_PLAN=YES`：真实地点 → 草案候选 → 费用确认与转场冻结 → 显式重排 → 选用 → 刷新保留，全在屏上完成。
+
+## 六十八、真城「生成正式候选」必失败时说清为什么：54 个真实地点，没有一处同时具备开放时间与票价来源
+
+**看见什么。** 准备卡新增的「生成正式候选方案」在 live 城市被点后，屏上原来只有一句 `这次没能生成正式候选，安排仍留在这里，可以重试。` 这句话把「重试也不会成功」说成了「重试就好」。
+
+**网络读到的真因。** 同一按的 `POST /api/v1/journeys/<id>/plans/generate` 返回 **422**：`reason_code=CATALOG_INSUFFICIENT`，`details={places_in_catalog:54, city_services_in_catalog:32, day_sequences_available:0, requested_candidates:3, candidate_rejections:[]}`（`_net_generate_r3.txt:3`）。
+
+**库里的分母。** 该城 54 个 place：`opening_hours` 有窗口的 28 个（`VERIFIED_PROVIDER`），`cost_evidence` 为 `UNKNOWN`/`amount_minor=null` 的 54 个——严格候选的构造器要求「可参观分类 + 有自己的开放窗口 + 有可核票价」三件同时成立，实测 0 个（`_db_places_probe` 读数，见本段日志）。这不是「再点一次」能变的。
+
+**改码。** `DraftDepartureCard.tsx` 的 catch 现在读 `body.error.reason_code` 与 `details.places_in_catalog`，对 `CATALOG_INSUFFICIENT` / `CATALOG_EMPTY` 输出同一句事实+下一步，而不是通用重试句：
+
+> 这版安排用的是 54 个真实地点，但还没有一处同时具备正式候选要的开放时间与票价来源，所以严格候选排不出来。继续用上面这份草案候选就可以：先确认费用、核实转场，再选用。
+
+**再按。** 真栈再按一次，屏上出现上述整句（`catalog-sentence-1.txt:2`，截图 `catalog-sentence-390.png`），并且卡片的另一行已能说 `屏上的出发待办都齐了，可以直接选用这份方案。`
+
+**回归。** `revolution-draft-preparation.spec.ts` 增加第二按的 422 夹具：断言 `54 个真实地点` 与 `继续用上面这份草案候选就可以`。390/430 两形制 **2 passed**（`fixture-draft-r3.txt`）；`npm run typecheck` **rc=0**（`typecheck-generate-4.txt`）。

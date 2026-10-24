@@ -1,0 +1,12 @@
+TAB {"found":true,"x":239.9276351928711,"y":566.5320625305176,"disabled":false}
+AT_TRIPS {"dayTabs":["Day 1 12-03","Day 2 12-04"],"band":"晚上 · 返回酒店休息点击编辑","band_open":false,"draft_status":["当前展示的是已保存版本。"],"has_prep":true,"save":"检查草案保存状态"}
+SHOT_TRIPS {"bytes":203537}
+DAY2 {"found":true,"x":346.81207275390625,"y":291.8309497833252}
+OPEN_BAND {"found":true,"x":239.93288040161133,"y":291.90959548950195}
+REMOVE {"found":true,"x":239.93288040161133,"y":292.0354194641113}
+AFTER_REMOVE {"dayTabs":["Day 1 12-03","Day 2 12-04"],"band":null,"band_open":null,"draft_status":["修改还没有保存到服务器。"],"has_prep":true,"save":"保存草案"}
+SHOT_REMOVED {"bytes":75749}
+SAVE {"found":true,"x":239.93288040161133,"y":292.02495193481445,"disabled":false}
+POLL0 {"save":"检查草案保存状态","status":["草案已保存到这趟旅行，刷新页面也可以找回。"],"band":null}
+FINAL {"dayTabs":["Day 1 12-03","Day 2 12-04"],"band":null,"band_open":null,"draft_status":["草案已保存到这趟旅行，刷新页面也可以找回。"],"has_prep":false,"save":"检查草案保存状态"}
+END 2026-10-24T21:06:45.467Z

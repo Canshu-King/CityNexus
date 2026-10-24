@@ -1,0 +1,11 @@
+ASK {"found":true,"x":239.93287658691406,"y":292.00395584106445,"disabled":false,"hit_is_self":true}
+COMPOSED {"input":"地铁1号线天安门东站(D/C口)出，步行约990米（高德实测）穿过广场到中心。开放05:00–20:30。"}
+SHOT_COMPOSED {"bytes":144108}
+SEND {"found":true,"x":437.5891227722168,"y":465.8766632080078,"disabled":false,"hit_is_self":true}
+POLL0 {"running":true,"question":false,"options":0,"has_place_required":false,"select":false}
+POLL1 {"running":true,"question":false,"options":0,"has_place_required":false,"select":false}
+POLL2 {"running":false,"question":false,"options":0,"has_place_required":false,"select":false}
+POLL3 {"running":false,"question":false,"options":0,"has_place_required":false,"select":false}
+FINAL {"input":"地铁1号线天安门东站(D/C口)出，步行约990米（高德实测）穿过广场到中心。开放05:00–20:30。","running":false,"question":false,"option_count":0,"slots":0,"has_place_required":false,"select":false,"tail":"向开始研究 旅行研究 · 已有阶段成果 本轮研究摘要 Agent 真实工作过程 · 已记录 100 条事件 工具结果 · 29 次 高德转场路线（13） 已核对的正式地点（54） 公开来源发现的地点（54） CITYNEXUS / EXPLORE 想去哪儿逛逛？ 你的想法已经写好了，可以改，改完交给 Agent。 改这句，然后交给 Agent → 1. 选地方 2. 选兴趣 3. 看结果 4. 去散步 我想自己先挑地点（可选） 技术信息 高级功能：地图坐标、分享与技术详情 探索 我的旅程 我的 CityNexus · 地点来源见卡片，到达状态由你确认 ⚙ 继续和当前 Agent 对话 发送 ↑"}
+SHOT_FINAL {"bytes":103715}
+END 2026-10-24T21:05:43.802Z
