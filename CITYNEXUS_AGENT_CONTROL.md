@@ -1,4 +1,26 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### V3 第六十交块：有问题在等时，研究大按钮不再压住四个选项
+
+一、现场
+- 真栈上四十秒出现四个方向选项；同屏另有一颗整宽主按钮，点它只会再问一题（`trial/results/20261022_v3_human_chrome/ask-summary-1.txt:1`）。
+- 同一趟行程十五分钟里跑了六轮，每轮末步都是提问；一次保存草案因日期越界失败后被重试。
+
+二、改法
+- 有待答问题时不再渲染那颗按钮（`trial/results/20261022_v3_human_chrome/ask-summary-1.txt:2`）；选项卡与输入框保留，答完之后按钮回来。
+
+三、门与屏证
+- 询问时断言按钮不在，答完之后仍断言研究模式（`trial/results/20261022_v3_human_chrome/ask-summary-1.txt:3`）；屏证一张（`trial/results/20261022_v3_human_chrome/ask-summary-1.txt:4`）；夹具三档全过（`trial/results/20261022_v3_human_chrome/ask-summary-1.txt:5`）。
+
+四、回归（如实写）
+- 类型检查 rc 为零（`trial/results/20261022_v3_human_chrome/ask-summary-1.txt:6`）；整套本轮未复跑。
+
+五、边界与尖
+- 只改显隐；多轮问答是产品设计（先问再答），本块不碰。
+- PR #43 仍 Draft；USER_VERIFIED 仍 PENDING；提交尖（`git cat-file -t` 现读 commit）`80a3b96712a771a6431dbdee26bbf4fda16651fe`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### V3 第五十九交块：一键试玩的两处断点——启动器指向旧副本，就绪判定等错进程
 
 一、断点与改法
