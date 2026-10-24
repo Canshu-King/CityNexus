@@ -581,3 +581,122 @@ def test_a_candidate_whose_stops_are_not_places_says_that_instead_of_denying_hop
     assert len(set(same_place.values())) == 2 and len(set(ids2.values())) == 2
     _set_places(plan2, [ids2[TOWER["id"]], ids2[TOWER["id"]], ids2[TOWER["id"]]])
     assert _freeze_reason(client, owner, root, second_task, plan2)["reason_code"] == "NO_ROUTED_EDGES"
+
+
+class _LongWalkAndShortTransit:
+    """The walking door answers -- with a hop further than the traveller said they would walk.
+
+    Only the provider is faked.  `_measure_now`, `_over_cap_walk`, `_replace_long_walk` and `_transit_leg`
+    run for real, so what is under test is the substitution itself, not a stub's return value.
+    """
+
+    def __init__(self, walk_m=16200, transit_answers=True):
+        self.walk_m = walk_m
+        self.transit_answers = transit_answers
+        self.walking_calls = 0
+        self.transit_calls = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        return False
+
+    def walking(self, start, end):
+        self.walking_calls += 1
+        return {"status": "ok", "http_status": 200, "elapsed_ms": 2, "route": {
+            "provider_key": "amap-web-service", "mode": "WALK", "distance_m": self.walk_m,
+            "duration_seconds": 12960, "duration_min": 216, "lines": [], "coordinate_system": "GCJ02"}}
+
+    def transit(self, start, end, city_code, departure_date=None, departure_time=None):
+        self.transit_calls.append({"city_code": city_code, "departure_date": departure_date,
+                                   "departure_time": departure_time})
+        if not self.transit_answers:
+            return {"status": "error", "reason_code": "AMAP_NO_TRANSIT_ROUTE", "http_status": 200, "elapsed_ms": 1}
+        return {"status": "ok", "http_status": 200, "elapsed_ms": 2, "route": {
+            "provider_key": "amap-web-service", "mode": "TRANSIT", "distance_m": 6120,
+            "duration_seconds": 2460, "duration_min": 41, "lines": ["地铁8号线"],
+            "walking_distance_m": 640, "fare_minor": 300, "nightflag": 0,
+            "coordinate_system": "GCJ02", "city_code": city_code}}
+
+
+def _words_of_the_traveller(task_id, goal):
+    """Put the traveller's own sentence where the door reads it, as the task's own goal text."""
+    with SessionLocal() as session:
+        mission = session.get(JourneyMission, task_id)
+        intent = json.loads(mission.intent_json)
+        intent["goal_task"]["goal"] = goal
+        mission.intent_json = json.dumps(intent, ensure_ascii=False)
+        session.commit()
+
+
+def _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id, goal, **fake_kwargs):
+    monkeypatch.setattr(goal_route_freeze, "settings", SimpleNamespace(amap_web_key="TESTFIX"))
+    fake = _LongWalkAndShortTransit(**fake_kwargs)
+    monkeypatch.setattr(goal_route_freeze, "_client", lambda: fake)
+    _task_with_a_city(client, owner, journey_id, task_id)
+    root, plan_id, _ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
+    _words_of_the_traveller(task_id, goal)
+    return fake, root, plan_id
+
+
+def test_the_travellers_walking_limit_moves_a_long_hop_to_the_transit_door(signed_place, monkeypatch):
+    """「每段步行不超过1公里」 is a cap the product already knows how to read; the freeze door just never asked.
+
+    Measured on the phone: the drawer carried 16.2 公里 and 17.6 公里 hops as 步行 with the traveller having
+    asked to walk less (trial/results/20261022_v3_human_chrome/walk-111-log.txt, STEP_12D_PANE_HEADLINE),
+    and the phrasings that do carry a number are in
+    trial/results/20261022_v3_human_chrome/caps_walk_extract-1.txt.
+    """
+    client, owner, _outsider, journey_id, *_ = signed_place
+    task_id = _task(client, owner, journey_id)
+    fake, root, plan_id = _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id,
+                                  "TEST_FIXTURE 塔与湖两日，每段步行不超过1公里")
+
+    body = _freeze(client, owner, root, task_id, plan_id).json()
+    edge = body["edges"][0]
+    assert fake.walking_calls == 1 and len(fake.transit_calls) == 1, (fake.walking_calls, fake.transit_calls)
+    assert (edge["mode"], edge["status"]) == ("TRANSIT", goal_route_freeze.MEASURED), edge
+    assert (edge["replaced_walk_m"], edge["walking_cap_m"], edge["over_cap_m"]) == (16200, 1000, None), edge
+    assert edge["minutes"] == 41 and edge["lines"] == ["地铁8号线"], edge
+    assert (body["frozen"], body["transit"], body["replaced_long_walks"], body["over_cap_walks"]) == (
+        True, 1, 1, 0), body
+    with SessionLocal() as session:
+        evidence = json.loads(session.get(PlanVersion, plan_id).mobility_evidence_json)
+        # What got frozen is the transport answer, not the walk it replaced: 41 minutes on the bus,
+        # not the 216 the walking door measured.  The snapshot's own `mode` field is deliberately not
+        # asserted -- `app/integrations/mobility/snapshot_capture.py:202` reads mode off the provider
+        # object and never fills `distance_m` / `walking_distance_m`, so a per-hop mode does not reach a
+        # frozen fact yet.  That gap is the reason the walking cap cannot be judged from a V3 snapshot
+        # (app/replanning/feasibility.py:497 needs those fields), and it is filed as its own ticket
+        # rather than written into this arm as if it were correct.
+        assert [fact["minutes"] for fact in evidence["facts"]] == [41], evidence["facts"]
+
+
+def test_a_preference_with_no_number_invents_no_cap_and_sends_no_second_call(signed_place, monkeypatch):
+    """「少走路」 has no metres in it, so the hop stays the walk the provider measured -- no extra spend."""
+    client, owner, _outsider, journey_id, *_ = signed_place
+    task_id = _task(client, owner, journey_id)
+    fake, root, plan_id = _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id,
+                                  "TEST_FIXTURE 塔与湖两日，少走路")
+
+    body = _freeze(client, owner, root, task_id, plan_id).json()
+    edge = body["edges"][0]
+    assert fake.walking_calls == 1 and fake.transit_calls == [], (fake.walking_calls, fake.transit_calls)
+    assert edge["mode"] == "WALK" and edge["replaced_walk_m"] is None, edge
+    assert (body["replaced_long_walks"], body["walking_cap_m"]) == (0, None), body
+
+
+def test_when_the_transport_door_has_no_answer_the_walk_stays_and_says_it_was_too_far(
+        signed_place, monkeypatch):
+    """Evidence the provider gave is not thrown away to satisfy a limit; the card has to say it was exceeded."""
+    client, owner, _outsider, journey_id, *_ = signed_place
+    task_id = _task(client, owner, journey_id)
+    fake, root, plan_id = _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id,
+                                   "TEST_FIXTURE 塔与湖两日，每段步行不超过1公里", transit_answers=False)
+
+    body = _freeze(client, owner, root, task_id, plan_id).json()
+    edge = body["edges"][0]
+    assert len(fake.transit_calls) == 1 and edge["mode"] == "WALK", (fake.transit_calls, edge)
+    assert (edge["distance_m"], edge["over_cap_m"], edge["replaced_walk_m"]) == (16200, 16200, None), edge
+    assert (body["frozen"], body["replaced_long_walks"], body["over_cap_walks"]) == (True, 0, 1), body

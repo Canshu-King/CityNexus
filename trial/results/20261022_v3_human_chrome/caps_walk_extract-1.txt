@@ -1,0 +1,9 @@
+# 2026-10-24 08:32 (+08) measured on this tree with D:/moodle/CityNexus/.venv (CPython 3.12.14)
+# phrase => walking rows the product's own extractor produces (code, severity, params)
+每段步行不超过1公里 => [('MAX_WALKING_PER_LEG_M', 'HARD', {'max_m': 1000})]
+单段步行不超过 800 米 => [('MAX_WALKING_PER_LEG_M', 'HARD', {'max_m': 800})]
+一天走路不超过3公里 => [('MAX_WALKING_PER_LEG_M', 'HARD', {'max_m': 3000})]
+少走路 => [('MAX_WALKING_PER_LEG_M', 'STRONG', {'needs_clarification': True})]
+轻松一点，少走点路 => [('MAX_WALKING_PER_LEG_M', 'STRONG', {'needs_clarification': True})]
+步行不超过800米 => [('MAX_WALKING_PER_LEG_M', 'STRONG', {'needs_clarification': True})]
+每天步行不超过2公里 => no walking row

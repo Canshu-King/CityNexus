@@ -194,13 +194,19 @@ export function priceAcceptedSentence(unknownCount: number, knownMinor: number):
 // walking door could not answer is now measured as public transport, and that too is named apart: a bus
 // minute shown as footsteps would send a traveller walking somewhere they were never told to walk.
 export function routeSentence(verified: number, total: number, frozen: boolean, overnight: number,
-  transit = 0, reasonCode?: string | null): string {
+  transit = 0, reasonCode?: string | null, replaced = 0, overCap = 0, capMeters?: number | null): string {
   // An empty edge list has two very different causes, and only one of them is "this plan has no hops".
   if (!total) return reasonCode === "NO_PLACED_STOPS"
     ? "这几处还没有被认成正式地点，所以没有可以量转场的两站。先在对话里让我把地点补认出来。"
     : "这版方案里没有相邻两站之间的转场要核实。";
+  // A hop the traveller said they would not walk is not quietly counted as a walk: the limit they wrote,
+  // how many hops it moved, and how many stayed over it are each named, because the difference between
+  // those two is whether the day is on a bus or on foot.
+  const capText = capMeters ? `${(capMeters / 1000).toFixed(capMeters % 1000 ? 1 : 0)} 公里` : "你写的上限";
   const parts = [overnight > 0 ? `${overnight} 段是跨夜衔接` : "",
-    transit > 0 ? `${transit} 段按公共交通核实` : ""].filter(Boolean);
+    transit > 0 ? `${transit} 段按公共交通核实` : "",
+    replaced > 0 ? `其中 ${replaced} 段超过${capText}，已换成公共交通核实` : "",
+    overCap > 0 ? `另有 ${overCap} 段公共交通没有答案，仍按步行核实，超过${capText}` : ""].filter(Boolean);
   const tail = parts.length ? `（其中 ${parts.join("，")}）` : "";
   if (verified < total) return `转场已核实 ${verified}/${total}${tail}，还有 ${total - verified} 段没有来源回答。`;
   return frozen ? `转场已核实 ${verified}/${total}${tail} · 已冻结进这版方案`

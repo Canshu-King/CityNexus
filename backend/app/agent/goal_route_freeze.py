@@ -45,6 +45,7 @@ from app.agent.goal_tasks import _require_task
 from app.commerce.idempotency import canonical_request_signature
 from app.concurrency_guards import journey_write_lock
 from app.core.audit import record_audit
+from app.capabilities import extract_capabilities_from_text
 from app.core.config import settings
 from app.db.models import Activity, IdempotencyKey, Journey, Place, PlanVersion
 from app.db.session import get_session
@@ -73,6 +74,11 @@ class RouteEdge(BaseModel):
     # leg landed; a TRANSIT hop is named as such so the card never presents a bus ride as a walk.
     mode: str | None = None
     lines: list[str] = []
+    # A hop the traveller's own walking limit replaced with public transport carries the walk it
+    # replaces; a hop that stayed a walk beyond the limit carries `over_cap_m` instead.
+    replaced_walk_m: int | None = None
+    walking_cap_m: int | None = None
+    over_cap_m: int | None = None
     provider: str | None
     source_url: str | None
     captured_at: str | None
@@ -91,6 +97,11 @@ class FreezeRoutesResult(BaseModel):
     overnight: int = 0
     # Hops answered by the public-transport door rather than the walking one.
     transit: int = 0
+    # Hops the traveller's own per-hop walking limit moved off the walking door, the hops that stayed
+    # over the limit because the transport door had no answer, and the limit itself (None = never stated).
+    replaced_long_walks: int = 0
+    over_cap_walks: int = 0
+    walking_cap_m: int | None = None
     frozen: bool
     mobility_snapshot_id: str | None
     reason_code: str | None
@@ -346,10 +357,78 @@ def _candidate_id_for(task: dict, place: Place) -> str:
     return f"{provider}:{tail}" if separator else str(place.external_id or "")
 
 
+WALKING_CAP_CODE = "MAX_WALKING_PER_LEG_M"
+
+
+def _walking_cap_m(task: dict) -> int | None:
+    """The traveller's own per-hop walking limit, read out of the traveller's own words.
+
+    `app/capabilities.py:605` is the product's one extractor and the mission path already asks it
+    (`app/agent/mission.py:294`); the goal-task path never did, so 「每段步行不超过1公里」 reached the map
+    door as prose only. Measured here: that phrase yields `HARD {'max_m': 1000}` while 「少走路」 and
+    「轻松一点，少走点路」 yield `needs_clarification` with no number (trial/results/20261022_v3_human_chrome/caps_walk_extract-1.txt), and
+    walk-111's drawer froze 16.2 公里 and 17.6 公里 hops as 步行
+    (trial/results/20261022_v3_human_chrome/walk-111-log.txt, the STEP_12D_PANE_HEADLINE line).
+    A clause without a number is not a cap, so nothing here invents one.
+    """
+    words = " ".join([str(task.get("goal") or "")]
+                     + [str(row.get("text") or "") for row in (task.get("conversation") or [])[-12:]
+                        if isinstance(row, dict) and row.get("role") == "user"])
+    for row in extract_capabilities_from_text(words, scope="JOURNEY"):
+        if str(row.get("code")) != WALKING_CAP_CODE:
+            continue
+        try:
+            value = int((row.get("params") or {})["max_m"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        return value if value > 0 else None
+    return None
+
+
+def _over_cap_walk(row: dict | None, cap_m: int | None) -> bool:
+    """A walking answer the traveller said they would not take. An absent mode is WALK here, and that is
+    a fact about this code (only the walking door ever wrote these rows before the transit leg landed)."""
+    if row is None or cap_m is None:
+        return False
+    if str(row.get("mode") or "WALK").upper() != "WALK":
+        return False
+    try:
+        return int(row.get("distance_m") or 0) > cap_m
+    except (TypeError, ValueError):
+        return False
+
+
+def _replace_long_walk(session: Session, task: dict, origin: Place, destination: Place,
+                       walked: dict, cap_m: int, arrival: datetime | str | None) -> dict | None:
+    """Ask the public-transport door for that hop, once, and keep whichever answer the provider gives.
+
+    If transit has no answer the walking fact stays -- evidence the provider gave is not discarded to
+    please a limit -- and the hop is marked `over_cap_m` so the card can say the limit was exceeded
+    instead of letting the traveller discover a 16-kilometre walk at the bus stop.
+    """
+    start = wgs84_to_gcj02(float(origin.latitude), float(origin.longitude))
+    end = wgs84_to_gcj02(float(destination.latitude), float(destination.longitude))
+    transit = _transit_leg(session, task, origin, destination, start, end, arrival)
+    if transit is None:
+        return {**walked, "over_cap_m": int(walked.get("distance_m") or 0)}
+    walk_m = int(walked.get("distance_m") or 0)
+    return {"id": transit.get("provider_call_id") or str(uuid4()),
+            "from_place_id": walked.get("from_place_id"), "to_place_id": walked.get("to_place_id"),
+            "from_name": origin.name, "to_name": destination.name, "provider": "amap",
+            "coordinate_system": "GCJ02", "distance_m": transit.get("distance_m"),
+            "duration_seconds": transit.get("duration_seconds"),
+            "captured_at": datetime.now(timezone.utc).isoformat(), "mode": "TRANSIT",
+            "lines": list(transit.get("lines") or []), "replaced_walk_m": walk_m, "walking_cap_m": cap_m,
+            "source_url": "https://uri.amap.com/navigation?" + urlencode(
+                {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
+                 "mode": "bus", "coordinate": "gaode", "callnative": "0"})}
+
+
 def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVersion, task_id: str) -> dict:
     """Verify every walked edge, then freeze the whole set or nothing."""
     edges: list[dict] = []
     facts: list[tuple[str, str, dict]] = []
+    cap_m = _walking_cap_m(task)
     for origin_row, destination_row in used_edges(session, plan):
         origin = session.get(Place, str(origin_row.place_id))
         destination = session.get(Place, str(destination_row.place_id))
@@ -362,6 +441,12 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
         if route is None:
             route = _measure_now(session, task, origin, destination, arrival=destination_row.start_at)
             status = MEASURED if route is not None else UNAVAILABLE
+        if _over_cap_walk(route, cap_m):
+            # Whether the number came from the Agent's own research row or from a call this press made,
+            # the traveller's limit is read the same way, so a reused long walk is replaced too.
+            route = _replace_long_walk(session, task, origin, destination, route, cap_m,
+                                       destination_row.start_at)
+            status = MEASURED
         minutes = None if route is None else max(1, int(round(float(route["duration_seconds"]) / 60.0)))
         if route is not None:
             facts.append((origin.id, destination.id, route))
@@ -372,6 +457,11 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
                       # that ever wrote one there is the walking door -- so an absent mode means WALK,
                       # which is a fact about this code, not a guess about the provider.
                       "mode": (route.get("mode") or "WALK") if route is not None else None,
+                      # Set when this hop was walked further than the traveller's own limit and the
+                      # transport door answered: the walk it replaces, and the limit it replaced for.
+                      "replaced_walk_m": route.get("replaced_walk_m") if route else None,
+                      "walking_cap_m": route.get("walking_cap_m") if route else None,
+                      "over_cap_m": route.get("over_cap_m") if route else None,
                       "lines": list(route.get("lines") or []) if route is not None else [],
                       "distance_m": route.get("distance_m") if route else None,
                       "provider": route.get("provider") if route else None,
@@ -382,6 +472,8 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
                                                              else "PROVIDER_ROUTE_UNAVAILABLE"))})
     verified = len([row for row in edges if row["status"] != UNAVAILABLE])
     overnight = len([row for row in edges if row["spans_night"]])
+    replaced = len([row for row in edges if row.get("replaced_walk_m")])
+    over_cap = len([row for row in edges if row.get("over_cap_m")])
     frozen = bool(edges) and verified == len(edges)
     snapshot_id: str | None = None
     reason: str | None = None
@@ -448,6 +540,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
             stored["route_attempt"] = {
                 "verified": verified, "total": len(edges), "overnight": overnight,
                 "transit": len([row for row in edges if row.get("mode") == "TRANSIT"]),
+                "replaced_long_walks": replaced, "over_cap_walks": over_cap, "walking_cap_m": cap_m,
                 "frozen": frozen, "reason_code": reason,
                 "unanswered": [{"from_name": row["from_name"], "to_name": row["to_name"],
                                 "reason_code": row.get("reason_code")}
@@ -457,6 +550,8 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
     return {"journey_id": journey.id, "task_id": task_id, "plan_version_id": plan.id,
             "edges": edges, "verified": verified, "total": len(edges), "overnight": overnight,
             "transit": len([row for row in edges if row.get("mode") == "TRANSIT"]),
+            "replaced_long_walks": replaced, "over_cap_walks": over_cap,
+            "walking_cap_m": cap_m,
             "frozen": frozen, "mobility_snapshot_id": snapshot_id, "reason_code": reason}
 
 

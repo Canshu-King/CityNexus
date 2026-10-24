@@ -2225,6 +2225,12 @@ export interface GoalRouteEdge {
   // with the lines the provider named rather than dressing a bus ride up as footsteps.
   mode?: "WALK" | "TRANSIT" | null;
   lines?: string[];
+  // The traveller's own per-hop walking limit, and what this door did about it: `replaced_walk_m` is the
+  // walk that the transport answer stands in for, `over_cap_m` is a walk that stayed because the
+  // transport door had no answer. (backend/app/agent/goal_route_freeze.py:388 and :401)
+  replaced_walk_m?: number | null;
+  walking_cap_m?: number | null;
+  over_cap_m?: number | null;
 }
 
 export interface GoalRouteFreezeResult {
@@ -2232,6 +2238,11 @@ export interface GoalRouteFreezeResult {
   verified: number; total: number; frozen: boolean; mobility_snapshot_id: string | null;
   overnight?: number;
   transit?: number;
+  // Hops the walking limit moved onto the transport door, hops still over it, and the limit itself
+  // (absent when the traveller never wrote a number).
+  replaced_long_walks?: number;
+  over_cap_walks?: number;
+  walking_cap_m?: number | null;
   reason_code: string | null; idempotency_replay?: boolean;
 }
 
@@ -2277,6 +2288,7 @@ export interface GoalPreparationResult {
   // measured set.  backend/app/agent/goal_route_freeze.py writes it so a refresh cannot erase work the
   // traveller already paid for (trial/results/20261022_v3_human_chrome/walk-83-log.txt:34 against :54).
   route_attempt?: { verified: number; total: number; overnight: number; transit: number; frozen: boolean;
+    replaced_long_walks?: number; over_cap_walks?: number; walking_cap_m?: number | null;
     reason_code?: string | null; answered_at: string;
     unanswered: Array<{ from_name?: string | null; to_name?: string | null; reason_code?: string | null }> };
   price_unknown_accepted?: { plan_version_id: string; unknown_place_ids: string[]; accepted_at: string; known_subtotal_minor: number; currency: string };

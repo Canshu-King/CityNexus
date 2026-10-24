@@ -4038,6 +4038,19 @@ components:
           type: integer
           title: Transit
           default: 0
+        replaced_long_walks:
+          type: integer
+          title: Replaced Long Walks
+          default: 0
+        over_cap_walks:
+          type: integer
+          title: Over Cap Walks
+          default: 0
+        walking_cap_m:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Walking Cap M
         frozen:
           type: boolean
           title: Frozen
@@ -4159,6 +4172,21 @@ components:
           type: array
           title: Lines
           default: []
+        replaced_walk_m:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Replaced Walk M
+        walking_cap_m:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Walking Cap M
+        over_cap_m:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Over Cap M
         provider:
           anyOf:
           - type: string
