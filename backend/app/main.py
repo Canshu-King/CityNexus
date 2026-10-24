@@ -22509,6 +22509,8 @@ def generate_replan(
     request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
+    *,
+    trusted_agent: bool = False,
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
@@ -25270,7 +25272,11 @@ def accept_replan(
     session: Session = Depends(get_session),
 ):
     proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
-    if settings.traveler_auth_secret:
+    # The Guardian's own tool call reaches this door from inside the process, holding an ACTIVE
+    # standing mission and a bounded autonomy envelope; there is no HTTP Request to authenticate.
+    # Without this leg the tool raised TypeError (missing 'request') and every proposal died as
+    # TOOL_ERROR before a plan could be drawn (measured 2026-10-25 on the classroom journey).
+    if settings.traveler_auth_secret and not trusted_agent:
         journey = require(session, Journey, str(proposal.journey_id), "Journey")
         from app.traveler_principal import member_has_capability, resolve_journey_member_principal
 

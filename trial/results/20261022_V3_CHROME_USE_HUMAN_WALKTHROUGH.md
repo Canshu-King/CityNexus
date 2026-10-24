@@ -2516,3 +2516,19 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **红线自查。** 模拟时间只写 `simulation_clocks`，没有改 OS 时间、令牌 TTL 或供应商采集时间；模拟位置标 `SCENARIO_SIMULATED_LOCATION`、不写 `LocationObservation`、不声称物理到场；推进活动走的是既有的 `SIMULATED_STATE_TRANSITION` 真相（端点默认 kind 就是它），没有伪造 `DEVICE_ATTESTED`；`reset` 仍被面板拒绝（这是既有设计）。
 
 **蓝点补证（夹具，2026-10-25 06:18）。** 真栈会话仍不可读，于是用可重复的 UI 夹具把这一步补上：`frontend/e2e/revolution-sim-traveller.spec.ts` 以真实 OpenStreetMap 底图渲染同一屏（行程 ACTIVE、地图层、两枚编号钉），mock 的时钟返回模拟旅客坐标；断言屏上「模拟旅客：TEST ONLY 故宫 · 39.9201, 116.4012（WGS84，模拟位置，不是物理 GPS）」并且 `[data-testid='rev-map-traveller']` **可见**（1 passed，4.1s；`trial/results/20261022_v3_human_chrome/fixture-sim-traveller-7.txt`）。截图 `sim-traveller-fixture-390.png` 里蓝点与编号钉是两种不同标记。顺带修了两个真问题：地图对象晚于时钟读数时蓝点永不绘制（加 `mapReady` 触发），以及旅客走出两枚钉的取景框后手机上看不见（地图改为跟随旅客）。真栈那张蓝点截图仍欠——这一段只把「蓝点能画在对的位置」证到，不冒充真栈。
+
+## 七十三、时空沙盒第二刀（PARTIAL）：闭馆被 Guardian 真实检测并启动 Agent，提案卡在两个具名缺陷
+
+**升级条件被量清。** 同一趟 ACTIVE 行程，没有 standing mission 时 pulse 判 `WATCH / MISSION_REQUIRED`（「有中断，但没有常设任务定义自治包络」）；`PUT /journeys/<id>/guardian/mission` 以 `EXECUTE_WITHIN_BOUNDS` 建立常设任务后再 pulse，判 `RECOVERY_REQUIRED` 并启动真实 AgentRun（`sim-closure-1.txt` 与 `sim-mission-1.txt`）。
+
+**事件是真的、时间是模拟的。** 对下一站天坛注入 `DISRUPTED`（fixture revision 1）后 pulse，服务器自己写出一条 `CLOSURE / MAJOR / DETECTED` 事件，`occurred_at` 是本趟行程的模拟日期 `2026-12-04T08:57:00+08:00`，payload 带 `fixture_revision`、`incident_fingerprint`、真实采集时刻（`sim-closure-1.txt` 的 `EVENT`）。
+
+**Agent 真跑。** 第一次 run `c186a76f…`：hermes / `cn:hy3`，耗时 201 秒，末态 `PARTIAL / PROPOSAL_PRESENTED`；但它其实**没有提案**——工具第 6 步 `request_replan` 抛 `generate_replan() missing 1 required positional argument: 'request'`（HTTP 422），第 7 步同请求被判 `NO_PROGRESS`（`sim-mission-1.txt` 的 `STEP` 行；证据文件由第一版探针写出，后半段的列名错误不影响这些步骤读数）。
+
+**修掉那一刀。** `generate_replan` 是 FastAPI 路由，内部用 `request` 做成员鉴权；Guardian 的工具调用在进程内、没有 HTTP Request。现在它接受 `trusted_agent=True`（只在有 ACTIVE 常设任务与自主包络的进程内路径上），`gateway.request_replan` 传 `request=None, trusted_agent=True`。重启后对**当前站**重新注入一场闭馆（新 incident fingerprint，避开已消费的上一份），新 run `3cde783f…` 跑了 192 秒，`request_replan` 不再报缺参数，而是进入业务：`MOBILITY_DATA_UNAVAILABLE`（422）（`sim-mission-2.txt` / `sim-mission-3.txt` 的 `STEP` 行）。
+
+**剩两个具名阻塞（不是黑箱）。**
+① replan 的候选可行性门只从**已冻结证据**里逐段取事实（`_trip_studio_fact` 取不到就记 `MOBILITY_DATA_UNAVAILABLE`），而替换地点产生的新邻接从未被捕获；`_replan_estimate` 里那次「缺了就真捕一次」的补捕没有覆盖到这道候选门。
+② Agent 第二次尝试改用 `generate_plans`，给出的 `planning_mode` 是 `recovery_replacement_for_closed_forbidden_city`，不在枚举里，被 schema 正确拒绝；工具层没有归一，于是耗尽步数（`Agent reached the configured tool-step limit`）。
+
+**红线。** 事件由 `CitySignalFixture` 经服务器信号管线写出，不由前端 INSERT；Guardian 的升级依赖真实常设任务；Agent 是真实模型与真实工具；模拟时间只影响行程时间戳，`provider_captured_at` 仍是现实 UTC。

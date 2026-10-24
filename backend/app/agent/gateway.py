@@ -2244,8 +2244,10 @@ class AgentToolGateway:
                     protected_activity_ids=protected_activity_ids,
                     place_ids=request.place_ids,
                 ),
+                request=None,
                 idempotency_key=inner_key,
                 session=self.session,
+                trusted_agent=True,
             )
         finally:
             if previous_epoch_context is None:
