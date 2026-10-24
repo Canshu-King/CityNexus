@@ -74,6 +74,9 @@ test("named place search waits for explicit submission and keeps the public area
     expected_recipient: "Photon TEST_FIXTURE", capability_state: "TEST_CAPABLE", provider_grade: "TEST_PROVIDER",
     external_request_allowed: true, test_only: true,
   }));
+  // The restore leg proves membership with the operator read (2026-10-25). Without this mock the
+  // pointer restore treats the 404 as a refusal and the exploration screen never renders.
+  await page.route(`${root}/operator`, (route) => json(route, { journey_id: journey, state: "OFF" }));
   await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
     journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
   }));
@@ -146,6 +149,8 @@ test("place cards show grounded hours and costs while preserving provenance and 
     expected_recipient: "TEST_PROVIDER", capability_state: "TEST_CAPABLE", provider_grade: "TEST_PROVIDER",
     external_request_allowed: true, test_only: true,
   }));
+  // Same membership proof as above: the operator read must answer 200 or the restore is refused.
+  await page.route(`${root}/operator`, (route) => json(route, { journey_id: journey, state: "OFF" }));
   await page.route(`${root}/bootstrap-shortlist`, (route) => json(route, {
     journey_id: journey, limit: 3, items: [], resume: null, pocket_walk: null,
   }));

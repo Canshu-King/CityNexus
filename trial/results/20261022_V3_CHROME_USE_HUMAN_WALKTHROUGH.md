@@ -2372,3 +2372,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **产品侧（未改字节，待裁）。** 首屏提交时若话里的日期与所选日期不一致，应就地解决（采用话里的日期，或先问一次），而不是把冲突留到研究方向去。这一条改的是产品语义，列出等裁。
 
 **证据。** `play-v3-choose-1.txt:4`（第二轮选项）、同文件 `:8`（文本提问与按钮回来）、`play-v3-research-1.png` / `play-v3-research-1.txt:22`（研究跑过但停在日期问题）。
+
+## 六十三、恢复腿换成 operator 之后，地点卡夹具要先给 operator 一个 200
+
+**现象。** 本班修好恢复腿（§五十八）后第一次整套（53 条）：`revolution-place-card-facts` 前两条各超 90 秒，卡在 `rev-quick-area-secondary` 的 summary——那一屏根本没渲染。两条夹具都设了指针与 bearer、没有 session-id，因此走恢复腿；新代码读 `/operator`，夹具没 mock 该路由，vite 代理把它打到没人监听的后端 → 前端判定「旧行程无法恢复」→ 停在欢迎屏。这是**产品修复带来的夹具副作用**，不是产品回退。
+
+**改法。** 两条用例的 mock 集各加一条 `**/journeys/<id>/operator` → 200，并注明这是恢复腿的成员证明（`frontend/e2e/revolution-place-card-facts.spec.ts:79`、同文件 `:153`）。
+
+**验证。** 单跑该 spec **3 passed**（`cardfacts-operator-mock-1.log`，17.1 秒；修前两条各超 90 秒）。整套第二次（53 条）**52 passed / 1 failed，14.8 分钟**（`fixture-suite-post4-2.log`）：红的是 `revolution-workspace-actions.spec.ts:170` 的 390 档 `page.reload` 等 load 超时；单跑该 spec **8 passed**（`workspace-actions-rerun-1.log`，32.4 秒），与历史上「长序列末尾 reload 慢」同形——记环境/序列红，不当绿证。
+
+**口径。** 本班整套两条读数要连着看：第一次 53 条里 51 过 2 红（都是上述 operator 缺 mock），补 mock 后第二次 53 条里 52 过 1 红（reload 超时，单跑过）。整套尚未出现一次「53 条全绿」，不写全绿。

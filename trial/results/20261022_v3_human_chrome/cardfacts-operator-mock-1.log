@@ -1,0 +1,7 @@
+
+Running 3 tests using 1 worker
+
+[1/3] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:56:1 › named place search waits for explicit submission and keeps the public area
+[2/3] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:125:1 › place cards show grounded hours and costs while preserving provenance and OSM links
+[3/3] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:267:1 › trip place facts refresh requires one-time consent and never repeats a recorded attempt
+  3 passed (17.1s)

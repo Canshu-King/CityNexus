@@ -1,0 +1,21 @@
+
+Running 8 tests using 1 worker
+
+[1/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 390, persists its trace, and does not run on open
+[mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 390, persists its trace, and does not run on open
+RELOAD_MS width=390 ms=814
+
+[2/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 430, persists its trace, and does not run on open
+[mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 430, persists its trace, and does not run on open
+RELOAD_MS width=430 ms=900
+
+[3/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 1366, persists its trace, and does not run on open
+[mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 1366, persists its trace, and does not run on open
+RELOAD_MS width=1366 ms=1060
+
+[4/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:188:1 › TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved places
+[5/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:205:1 › TEST_FIXTURE identity change clears the open private assistant immediately
+[6/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:224:1 › TEST_FIXTURE cached public source is readable without starting a new research request
+[7/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:238:1 › TEST_FIXTURE map focuses draft references and separates regions from venues
+[8/8] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:275:1 › TEST_FIXTURE a 503-failed round is resumable from the fixed dock on the same task
+  8 passed (32.4s)
