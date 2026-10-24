@@ -9,3 +9,5 @@ read_3 pressing it returned HTTP 401 on .../plans/59b0c5e9-.../freeze-route; scr
 read_4 diff vocabulary is time shifts only: replanDiffSentence emits "<title>：<start>–<end> 改成 ... 往后 N 分钟" (frontend/src/trial/mobile/departureGaps.ts:490-493); the refusal for DAY_WOULD_RUN_PAST_22:00 tells the traveller to change how many places that day (:497). Changing a place or cutting an item is not in this action's vocabulary.
 fix the post-apply sentence no longer quotes an absent label and names the guaranteed missing step (select the new revision first): frontend/src/trial/mobile/departureGaps.ts:510
 fix_proof served_module=http://127.0.0.1:14522/src/trial/mobile/departureGaps.ts contains the new sentence; screen proof of the new sentence still pending because the message is state set at press time and the stack's token has since expired
+suite_after=50 passed 0 failed duration=8.5m rc=0 => fixture-rerun-3.log
+typecheck_after=rc=0 => typecheck-replan-copy-1.log
