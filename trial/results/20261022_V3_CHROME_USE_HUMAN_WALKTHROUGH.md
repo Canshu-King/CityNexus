@@ -2471,4 +2471,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **回归（夹具）。** `frontend/e2e/revolution-draft-preparation.spec.ts` 的第二次选用现在返回真实的 `409 PLAN_INFEASIBLE`，随后断言 `rev-plan-replan` 可见、按下后 `rev-v3-replan-diff` 可见（不产生第二次写）。390/430 两形制 **2 passed**（`trial/results/20261022_v3_human_chrome/fixture-draft-handoff-2.txt:7`）。
 
-**真栈没有复验（如实记）。** 准备复验时，旧会话已失效：裸读行程仍是 200，而 `/operator` 与 `/travelers/session` 都是 401「traveler credentials are expired or invalid」（`trial/results/20261022_v3_human_chrome/_session_probe_r1.txt:4`），屏上说「当前账号无法读取这份行程」。这正是第六十六节测过的「库在、会话不在」，与服务端每次启动轮换签名一致；本轮不把它伪装成重排按钮的失败。恢复真栈需要重启并重新建立会话（旧 Journey 的成员身份无法由新会话取得），已排为下一步。
+**真栈没有复验（如实记）。** 准备复验时，旧会话已失效：裸读行程仍是 200，而 `/operator` 与 `/travelers/session` 都是 401「traveler credentials are expired or invalid」（`trial/results/20261022_v3_human_chrome/_session_probe_r1.txt:4`），屏上说「当前账号无法读取这份行程」。**归因更正：** 令牌不是被新 secret 作废，而是满了一小时的 TTL——这趟令牌 20:20 签发（Journey `created_at`），21:29 已过期；后端默认 `CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS=3600`（`backend/app/core/config.py:51`），且过期分支报的是 expired 而不是 invalid（`backend/app/traveler_principal.py:117`），说明签名仍对。第六十六节测的是另一种：重启时 secret 轮换，那会报 invalid。两者都会让 `/operator` 401，但成因不同。本轮不把它伪装成重排按钮的失败；恢复真栈需要重新建立会话，已排为下一步。
+
+
+## 七十、演示栈的会话只有一小时：把 TTL 提到十二小时（演示基础设施，不是产品契约）
+
+**看见什么。** 第六十九节准备复验时，屏上「当前账号无法读取这份行程」。量出来的不是签名轮换，而是**一小时 TTL 到期**：`backend/app/core/config.py:51` 的默认值是 `3600`，而令牌的 `expired` 分支与 `invalid` 分支在 `backend/app/traveler_principal.py:117` 分开报，这一页报的是 expired，签名仍对。
+
+**为什么这会影响课堂与真机。** 一次完整走查包括研究、冻结四段转场、确认票价、重排与选用，早已超过一小时；老师在第二节演示到一半就会撞上「读不到」。这不是「再认证」能解的——产品还没有续期入口。
+
+**改法（只在 play 启动器）。** `trial/play_launcher/_cmdr_v3_serve_human_r1.py` 给子进程设 `CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS`，默认 `43200`（十二小时），可用 `HUMAN_AUTH_TTL_SECONDS` 覆盖。生产语义不变：长令牌不是再认证，真正的恢复仍要持久签名与主动再认证（第六十六节）。

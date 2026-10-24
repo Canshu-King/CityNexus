@@ -60,6 +60,11 @@ env.update({
     "CITYNEXUS_REAL_CITY_MODE": "live" if AMAP_PRESENT else "replay",
     "CITYNEXUS_DATABASE_URL": "sqlite:///" + DB.replace("\\", "/"),
     "CITYNEXUS_TRAVELER_AUTH_SECRET": secrets.token_hex(32),
+    # The product default is one hour (backend/app/core/config.py:51).  A classroom walk-through
+    # that researches, freezes transfers and re-arranges can outlive that, and the card would then
+    # answer "当前账号无法读取这份行程" mid-journey.  This is the play stack only; production still
+    # needs a designed re-authentication, not a longer token.
+    "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": os.environ.get("HUMAN_AUTH_TTL_SECONDS", "43200"),
     "CITYNEXUS_DEMO_MODE": "true",
     "CITYNEXUS_DEMO_RESET_TOKEN": secrets.token_hex(16),
     "CITYNEXUS_AI_ENABLED": "true",
