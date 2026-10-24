@@ -592,7 +592,7 @@ export function WorkspaceActions({ panel, goalRequest, onClose, embedded = false
             </button>)}
             <small>也可以在下方直接说你的想法。</small>
           </section>}
-          {visibleTask && visibleTask.status !== "WORKING" && visibleTask.status !== "CANCELLED" &&
+          {visibleTask && !visibleTask.pending_question && visibleTask.status !== "WORKING" && visibleTask.status !== "CANCELLED" &&
             <button type="button" className="rev-agent-start-research" disabled={busy || !modelConsent || !aiReady}
               onClick={() => { followupMessageId.current = null; void sendFollowup(question.trim() || "按我们讨论的方向开始研究，遇到重要取舍先给我选择。", "RESEARCH"); }}>
               按讨论的方向开始研究

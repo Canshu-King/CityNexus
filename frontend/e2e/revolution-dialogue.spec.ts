@@ -57,6 +57,10 @@ for (const width of [390, 430, 1366]) test(`TEST_FIXTURE discuss, choose, explic
   await input.fill("我不想一直走路，先和我商量一下。");
   await page.getByRole("button", { name: "发送 ↑", exact: true }).click();
   await expect(page.getByRole("region", { name: "Agent 请你选择" })).toBeVisible();
+  // While a question waits, the big "start research" control must not compete with the options:
+  // pressing it re-runs the turn and asks the same question again (measured on the play stack,
+  // six runs from one traveller pressing it instead of choosing).
+  await expect(page.getByRole("button", { name: "按讨论的方向开始研究", exact: true })).toHaveCount(0);
   expect(writes[0].interaction_mode).toBe("DISCUSS");
   await page.getByRole("button", { name: "江边休息 少走路，留更多休息时间" }).click();
   await expect(page.getByRole("log", { name: "与 Agent 的真实对话" })).toContainText("好的，先按江边休息来讨论");
