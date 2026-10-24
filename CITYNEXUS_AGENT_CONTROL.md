@@ -1,4 +1,35 @@
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### V3 第五十八交块：有方案的行程重认证后回不来——一个冲突码被当成了拒绝
+
+一、现场
+- 修复前，令牌与行程读都正常，首屏仍写「旧行程无法恢复」（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:1`）。
+
+二、六个读数
+- 本人：会话读正常（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:2`）、行程读正常（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:3`）、短名单读回冲突且码为「方案已存在」（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:4`）、行程助手读正常（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:5`）。
+- 另一名旅行者：直接读行程也回正常，所以它不是成员证明（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:6`）；行程助手读被拒，它才是（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:7`）。
+
+三、根因与改法
+- 恢复腿原先把短名单读当成员证明；这条行程已有方案，它必然回冲突；失败又一律写成同一句（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:9`）。
+- 改用行程助手读作成员证明（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:8`）。
+
+四、门与屏证
+- 新门把短名单 mock 成真冲突，仍要求恢复（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:10`）。
+- 修复后真栈恢复成功（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:11`），再进准备卡（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:12`）。
+
+五、环境披露
+- 隔离副本库（上一轮 canary 的复制），后端与前端各用独立端口；令牌由同一受信测试进程按签发器说明生成、一小时有效，只写浏览器自己的会话存储 bearer 键；没有 DOM 注入、没有伪造成功数据，未碰真库与在跑服务。
+
+六、回归（如实写）
+- 恢复夹具五条全过（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:13`）；类型检查 rc 为零（`trial/results/20261022_v3_human_chrome/recover-summary-1.txt:14`）。
+- 整套本轮未复跑，本块只记夹具与真栈两证。
+
+七、边界与尖
+- 未补「再认证」本身；缺安全再认证仍如实 BLOCKED。
+- PR #43 仍 Draft；USER_VERIFIED 仍 PENDING；提交尖（`git cat-file -t` 现读 commit）`525c89eb7554d9fe1052a7aa3082ee3cb55e5127`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### V3 第五十七交块：多人「同行决策」先写清几分之几已答，按下去落在真卡
 
 一、改了什么
