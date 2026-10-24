@@ -47,7 +47,7 @@ from app.concurrency_guards import journey_write_lock
 from app.core.audit import record_audit
 from app.capabilities import extract_capabilities_from_text
 from app.core.config import settings
-from app.db.models import Activity, IdempotencyKey, Journey, Place, PlanVersion
+from app.db.models import Activity, IdempotencyKey, Journey, JourneyIntent, Place, PlanVersion
 from app.db.session import get_session
 from app.integrations.china.amap import wgs84_to_gcj02
 from app.integrations.mobility.snapshot_capture import MobilitySnapshotCaptureError, capture_mobility_snapshot
@@ -341,6 +341,9 @@ def _measure_now(session: Session, task: dict, origin: Place, destination: Place
            "coordinate_system": "GCJ02", "distance_m": route.get("distance_m"),
            "duration_seconds": route.get("duration_seconds"), "captured_at": datetime.now(timezone.utc).isoformat(),
            "mode": mode, "lines": list(route.get("lines") or []),
+           # The footsteps inside a transport answer are what let a walking limit be judged from the
+           # frozen fact rather than from a re-measurement (app/replanning/feasibility.py:497).
+           "walking_distance_m": route.get("walking_distance_m"),
            "source_url": "https://uri.amap.com/navigation?" + urlencode(
                {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
                 "mode": "walk" if mode == "WALK" else "bus", "coordinate": "gaode", "callnative": "0"})}
@@ -360,30 +363,51 @@ def _candidate_id_for(task: dict, place: Place) -> str:
 WALKING_CAP_CODE = "MAX_WALKING_PER_LEG_M"
 
 
-def _walking_cap_m(task: dict) -> int | None:
-    """The traveller's own per-hop walking limit, read out of the traveller's own words.
+def _walking_cap_m(session: Session, journey: Journey, task: dict) -> int | None:
+    """The traveller's own per-hop walking limit, read from where their words are kept.
 
-    `app/capabilities.py:605` is the product's one extractor and the mission path already asks it
-    (`app/agent/mission.py:294`); the goal-task path never did, so 「每段步行不超过1公里」 reached the map
-    door as prose only. Measured here: that phrase yields `HARD {'max_m': 1000}` while 「少走路」 and
-    「轻松一点，少走点路」 yield `needs_clarification` with no number (trial/results/20261022_v3_human_chrome/caps_walk_extract-1.txt), and
-    walk-111's drawer froze 16.2 公里 and 17.6 公里 hops as 步行
-    (trial/results/20261022_v3_human_chrome/walk-111-log.txt, the STEP_12D_PANE_HEADLINE line).
-    A clause without a number is not a cap, so nothing here invents one.
+    Two places, in this order, because both are real and they are not the same one:
+
+    * a journey intent that already carries the structured row (`journey_intents.capabilities_json`) --
+      the product parsed it at intake and this door must not re-guess what is recorded;
+    * otherwise the words themselves: that intent's `source_text` plus what the traveller typed into
+      this task, run through the one extractor the mission path also uses
+      (`app/capabilities.py:605`, called from `app/agent/mission.py:294`).
+
+    Measured on the walked database: the first-screen goal sentence lives in `journey_intents.source_text`
+    while `capabilities_json` is still `[]`, and the goal task carries no goal key at all -- so a reader
+    that only looked at the task finds nothing, which is the difference between a limit that exists and
+    one that ever reaches the map door. 「每段步行不超过1公里」 yields `HARD {'max_m': 1000}` while
+    「少走路」 yields a clarification with no number
+    (trial/results/20261022_v3_human_chrome/caps_walk_extract-1.txt); a clause without a number is not
+    a cap, so nothing here invents one.
     """
-    words = " ".join([str(task.get("goal") or "")]
-                     + [str(row.get("text") or "") for row in (task.get("conversation") or [])[-12:]
-                        if isinstance(row, dict) and row.get("role") == "user"])
-    for row in extract_capabilities_from_text(words, scope="JOURNEY"):
+
+    def _limit(params) -> int | None:
+        try:
+            value = int((params or {})["max_m"])
+        except (AttributeError, KeyError, TypeError, ValueError):
+            return None
+        return value if value > 0 else None
+
+    words = [str(row.get("text") or "") for row in (task.get("conversation") or [])[-12:]
+             if isinstance(row, dict) and row.get("role") == "user"]
+    for intent in session.scalars(select(JourneyIntent).where(
+            JourneyIntent.journey_id == journey.id, JourneyIntent.superseded_at.is_(None))):
+        for item in json.loads(intent.capabilities_json or "[]"):
+            if isinstance(item, dict) and str(item.get("code")) == WALKING_CAP_CODE:
+                limit = _limit(item.get("params"))
+                if limit is not None:
+                    return limit
+        if str(intent.source_text or "").strip():
+            words.append(str(intent.source_text))
+    for row in extract_capabilities_from_text(" ".join(words), scope="JOURNEY"):
         if str(row.get("code")) != WALKING_CAP_CODE:
             continue
-        try:
-            value = int((row.get("params") or {})["max_m"])
-        except (KeyError, TypeError, ValueError):
-            continue
-        return value if value > 0 else None
+        limit = _limit(row.get("params"))
+        if limit is not None:
+            return limit
     return None
-
 
 def _over_cap_walk(row: dict | None, cap_m: int | None) -> bool:
     """A walking answer the traveller said they would not take. An absent mode is WALK here, and that is
@@ -419,6 +443,7 @@ def _replace_long_walk(session: Session, task: dict, origin: Place, destination:
             "duration_seconds": transit.get("duration_seconds"),
             "captured_at": datetime.now(timezone.utc).isoformat(), "mode": "TRANSIT",
             "lines": list(transit.get("lines") or []), "replaced_walk_m": walk_m, "walking_cap_m": cap_m,
+            "walking_distance_m": transit.get("walking_distance_m"),
             "source_url": "https://uri.amap.com/navigation?" + urlencode(
                 {"from": f"{start[1]},{start[0]},{origin.name}", "to": f"{end[1]},{end[0]},{destination.name}",
                  "mode": "bus", "coordinate": "gaode", "callnative": "0"})}
@@ -428,7 +453,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
     """Verify every walked edge, then freeze the whole set or nothing."""
     edges: list[dict] = []
     facts: list[tuple[str, str, dict]] = []
-    cap_m = _walking_cap_m(task)
+    cap_m = _walking_cap_m(session, journey, task)
     for origin_row, destination_row in used_edges(session, plan):
         origin = session.get(Place, str(origin_row.place_id))
         destination = session.get(Place, str(destination_row.place_id))

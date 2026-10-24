@@ -18,7 +18,8 @@ from uuid import uuid4
 from test_bootstrap_place_facts import enabled_settings, signed_place  # noqa: F401  (fixtures are imported on purpose)
 from app.agent import goal_route_freeze
 from app.agent.goal_place_identity import attach_canonical_places
-from app.db.models import Activity, IdempotencyKey, Journey, JourneyMission, Place, PlanVersion
+from app.db.models import (Activity, IdempotencyKey, Journey, JourneyIntent, JourneyMission,
+                           Place, PlanVersion)
 from app.db.session import SessionLocal
 from sqlalchemy import select
 
@@ -620,23 +621,44 @@ class _LongWalkAndShortTransit:
             "coordinate_system": "GCJ02", "city_code": city_code}}
 
 
-def _words_of_the_traveller(task_id, goal):
-    """Put the traveller's own sentence where the door reads it, as the task's own goal text."""
+def _words_of_the_traveller(task_id, goal, *, where="intent"):
+    """Put the traveller's own sentence where a real traveller's sentence actually lands.
+
+    `where="intent"` is the first-screen goal: `journey_intents.source_text`, which is the only column of
+    the walked database that held the cap sentence (its `capabilities_json` was still `[]`).
+    `where="conversation"` is a message typed into the dock on the same task.
+    """
     with SessionLocal() as session:
         mission = session.get(JourneyMission, task_id)
-        intent = json.loads(mission.intent_json)
-        intent["goal_task"]["goal"] = goal
-        mission.intent_json = json.dumps(intent, ensure_ascii=False)
+        if where == "intent":
+            row = session.scalars(select(JourneyIntent).where(
+                JourneyIntent.journey_id == mission.journey_id)).first()
+            if row is None:
+                journey = session.get(Journey, mission.journey_id)
+                session.add(JourneyIntent(id=str(uuid4()), journey_id=journey.id,
+                                          created_by_traveler_id=journey.traveler_id,
+                                          source_text=goal, intent_kind="TRIP_GOAL",
+                                          semantic_fingerprint=str(uuid4()),
+                                          created_at=datetime.now(timezone.utc).isoformat(),
+                                          updated_at=datetime.now(timezone.utc).isoformat()))
+            else:
+                row.source_text = goal
+        else:
+            intent = json.loads(mission.intent_json)
+            intent["goal_task"].setdefault("conversation", []).append({"role": "user", "text": goal})
+            mission.intent_json = json.dumps(intent, ensure_ascii=False)
+            session.add(mission)
         session.commit()
 
 
-def _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id, goal, **fake_kwargs):
+def _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id, goal, *,
+             where="intent", **fake_kwargs):
     monkeypatch.setattr(goal_route_freeze, "settings", SimpleNamespace(amap_web_key="TESTFIX"))
     fake = _LongWalkAndShortTransit(**fake_kwargs)
     monkeypatch.setattr(goal_route_freeze, "_client", lambda: fake)
     _task_with_a_city(client, owner, journey_id, task_id)
     root, plan_id, _ids = _draft_with_canonical_places(client, owner, journey_id, task_id)
-    _words_of_the_traveller(task_id, goal)
+    _words_of_the_traveller(task_id, goal, where=where)
     return fake, root, plan_id
 
 
@@ -664,13 +686,13 @@ def test_the_travellers_walking_limit_moves_a_long_hop_to_the_transit_door(signe
     with SessionLocal() as session:
         evidence = json.loads(session.get(PlanVersion, plan_id).mobility_evidence_json)
         # What got frozen is the transport answer, not the walk it replaced: 41 minutes on the bus,
-        # not the 216 the walking door measured.  The snapshot's own `mode` field is deliberately not
-        # asserted -- `app/integrations/mobility/snapshot_capture.py:202` reads mode off the provider
-        # object and never fills `distance_m` / `walking_distance_m`, so a per-hop mode does not reach a
-        # frozen fact yet.  That gap is the reason the walking cap cannot be judged from a V3 snapshot
-        # (app/replanning/feasibility.py:497 needs those fields), and it is filed as its own ticket
-        # rather than written into this arm as if it were correct.
+        # not the 216 the walking door measured, and the fact itself says it was ridden with 640 m of
+        # footsteps in it.  Those last fields are what let the traveller's own limit be judged at the
+        # feasibility door instead of answered with NEEDS_LIVE_EVIDENCE
+        # (app/replanning/feasibility.py:497 reads exactly these three).
         assert [fact["minutes"] for fact in evidence["facts"]] == [41], evidence["facts"]
+        assert [(fact["mode"], fact["distance_m"], fact["walking_distance_m"])
+                for fact in evidence["facts"]] == [("TRANSIT", 6120, 640)], evidence["facts"]
 
 
 def test_a_preference_with_no_number_invents_no_cap_and_sends_no_second_call(signed_place, monkeypatch):
@@ -678,13 +700,21 @@ def test_a_preference_with_no_number_invents_no_cap_and_sends_no_second_call(sig
     client, owner, _outsider, journey_id, *_ = signed_place
     task_id = _task(client, owner, journey_id)
     fake, root, plan_id = _cap_arm(signed_place, monkeypatch, client, owner, journey_id, task_id,
-                                  "TEST_FIXTURE 塔与湖两日，少走路")
+                                  "TEST_FIXTURE 塔与湖两日，少走路", where="conversation")
 
     body = _freeze(client, owner, root, task_id, plan_id).json()
     edge = body["edges"][0]
     assert fake.walking_calls == 1 and fake.transit_calls == [], (fake.walking_calls, fake.transit_calls)
     assert edge["mode"] == "WALK" and edge["replaced_walk_m"] is None, edge
     assert (body["replaced_long_walks"], body["walking_cap_m"]) == (0, None), body
+    with SessionLocal() as session:
+        stored = json.loads(session.get(PlanVersion, plan_id).mobility_evidence_json)
+    # A walk stays a walk in the frozen fact.  The provider answers a walk with one distance and no
+    # separate footstep count, and the reader's rule is that a WALK leg's own distance *is* the walking
+    # distance (app/replanning/feasibility.py:499) -- so what the fact has to carry is the mode and that
+    # distance, which is exactly what the traveller's limit then judges.
+    assert [(fact["mode"], fact["walking_distance_m"], fact["distance_m"])
+            for fact in stored["facts"]] == [("WALK", None, 16200)], stored["facts"]
 
 
 def test_when_the_transport_door_has_no_answer_the_walk_stays_and_says_it_was_too_far(

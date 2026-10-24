@@ -62,3 +62,20 @@ class StoredAmapWalkingRoutes:
     def fact_quality(self, origin_key: str, destination_key: str) -> str:
         self._lookup(origin_key, destination_key)
         return LIVE_PROVIDER_CAPTURE
+
+    def pair_details(self, origin_key: str, destination_key: str) -> dict[str, Any]:
+        """What this hop's own measurement says beyond minutes.
+
+        A row written before the transport door existed carries no mode, and the only door that ever
+        wrote one is the walking one -- so an absent mode means WALK.  That is a fact about this code,
+        not a guess about the provider (the same reading the freeze door documents at
+        backend/app/agent/goal_route_freeze.py:464).
+        """
+        route = self._lookup(origin_key, destination_key)
+
+        def _whole(value):
+            return int(value) if isinstance(value, (int, float)) and math.isfinite(float(value)) else None
+
+        return {"mode": str(route.get("mode") or "WALK").upper(), "distance_m": _whole(route.get("distance_m")),
+                "walking_distance_m": _whole(route.get("walking_distance_m")),
+                "walking_min": _whole(route.get("walking_min"))}
