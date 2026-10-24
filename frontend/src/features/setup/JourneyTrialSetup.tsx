@@ -183,12 +183,30 @@ const SUPPORTED_CITIES = {
  * that apart at `GET /destinations/capability`, where three of the eleven Chinese spellings get no
  * identity at all.  This only ever fills a box the traveller can still see and change.
  */
+/**
+ * The words that put a Chinese place name in focus.  「大厦门」 is not 厦门, so a spelling counts only at the
+ * start of the sentence, after punctuation, or after one of these; inside another CJK run it does not count.
+ * The asymmetry is deliberate: a missed read costs the traveller one keystroke in a box they can see, while a
+ * false read writes a city nobody named into the field that decides whose places get fetched.
+ */
+const CITY_LEAD_INS = "去到在从来往和与或请带经";
+
+function namesChineseCity(haystack: string, name: string): boolean {
+  let at = haystack.indexOf(name);
+  while (at !== -1) {
+    const before = at === 0 ? "" : haystack.charAt(at - 1);
+    if (!/[\u4e00-\u9fff]/.test(before) || CITY_LEAD_INS.includes(before)) return true;
+    at = haystack.indexOf(name, at + name.length);
+  }
+  return false;
+}
+
 export function cityNamedIn(text: string): string | null {
   const haystack = text.toLowerCase();
   const hits = Object.keys(CITY_FACTS).filter((name) => (
     /^[\x00-\x7F]+$/.test(name)
       ? new RegExp(`(^|[^a-z])${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^a-z]|$)`).test(haystack)
-      : haystack.includes(name)));
+      : namesChineseCity(haystack, name)));
   return hits.length === 1 ? hits[0] : null;
 }
 

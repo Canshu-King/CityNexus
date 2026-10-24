@@ -1860,3 +1860,50 @@ over_cap_walks=0, walking_cap_m=1000, frozen=true, unanswered=[], answered_at=20
 **还没到"完成"的部分**：PR #43 仍是 Draft、Actions 运行 0 次，所以这批不能称正式交付；USER_VERIFIED 仍 PENDING，
 要主人自己在真手机上按那两下；抽屉那两行的屏上证词要等 walk-114 的读数；上限只在"本次冻结"里生效，
 生效后的方案再被重新安排时是否重读那句话，是另一格，尚未量。
+
+## 卅六、首屏那道墙：写了「北京」却还要再写一遍目的地（walk 之外的单独探针，代 `664e3b4c761663a37ca4072e53746d1be4ce7e72`）
+
+主人报的那句「写了北京仍要被问目的地」这次量到底了。
+
+**看见什么（改之前）**：第一屏的话里写「北京玩两天」，下面「目的地」仍是空的，提示写着
+「还差目的地：我没有从这句话里替你定下城市，请先在「目的地」写城市名。」
+**这句话不成立**：这一屏从话里只认两样东西——人数（`frontend/src/trial/RevolutionFirstLook.tsx:382`）与人均预算（`:391`），
+没有任何一行代码在这一屏把话里的城市搬进那格；而真正挡住去路的是 `:637-641`：那个框为空就 `setError` 后 `return`。
+也就是说屏上声明了一次从未发生的尝试，却把实际的门槛藏在别处。
+
+**改了什么**：让这一屏用它自己那张拼写表去认城市（`frontend/src/features/setup/JourneyTrialSetup.tsx:186`
+`cityNamedIn`，读的就是 `applyCity` 已经在用的 `CITY_FACTS`，不另造第二份词表），
+填进去的那一格由这一屏记着（`RevolutionFirstLook.tsx:411` `cityEdited`、`:412` `autoFilledCity`、调用点 `:421`）：
+旅客一旦自己动过这个框就再也不碰它；话从"一个城市"变成"两个城市"时，把我们填的那格退回空着，
+不留一个话里已经说不成立的值。提示改成说真话的那句（`:1115`）。
+认出一个拼写**不等于**服务端能供这座城市——ORD-0346 早在 `GET /destinations/capability` 上量过三枚中文拼写连身份都没有，
+这里只是把框填上，人还能看见、还能改。
+
+**再按（七臂，都是冷起页面真点真读，`trial/results/20261022_v3_human_chrome/city_prefill-1.txt`）**：
+- 甲臂 只写话不碰框：`city_value="北京" hint_visible=false`（`:1`）——墙没了；
+- 乙臂 话里两个城市：`city_value="" hint_visible=true`（`:2`）——不猜；
+- 丙臂 先手写「杭州」再写带「北京」的话：`city_value="杭州"`（`:3`）——不覆盖人；
+- 丁臂 甲臂之后真按第一下：按钮「继续规划 →」中心命中它自己（`topmost=rev-firstlook-start`，`:4`），
+  按完 `first_screen_forms=0`、无报错（`:5`），屏头读到 `… 北京 把想去变成出发。… 等待第一个目标`（`:6`）——
+  行程带着「北京」建起来了，这就是主人那一下本来该发生的事；
+- 戊臂 先写「北京玩两天」（`:8` 读到北京已填），再把话补成「北京玩两天，再去厦门」：`city_value=""`（`:9`）——填过的格子退回去；
+- 己臂 这一臂是量出来的反例：先按子串匹配时「去大厦门滩玩两天」会把格子填成「厦门」
+  （上一代同一臂的读数已入库：`city_prefill-leadin-before-1.txt:1` 记 `city_value="厦门" hint_visible=false`），
+  那不是旅客说过的城市；加上引导字之后同一句话读到 `city_value="" hint_visible=true`（`:10`）——不认；
+- 庚臂 引导字放行的一侧：「12 号到厦门玩两天」读到 `city_value="厦门"`（`:11`）——认。
+截图 `city_prefill-1-shot.png`（48963 字节，七臂走完的那一屏）。量具 `trial/human_walk/city_prefill_probe_r1.mjs`。
+中文那一路的规矩写在 `JourneyTrialSetup.tsx:192`（引导字表）与 `:194`（`namesChineseCity`：句首、标点之后、或引导字之后才算），
+入口仍是 `:204` 的 `cityNamedIn`；不对称的理由写在那段注释里：漏认只是让旅客多敲一次他看得见的格子，
+错认是把一个没人说过的城市写进决定"取哪座城的地点"的那一格。
+
+**自测**：`npm run typecheck`（`tsc -p tsconfig.check.json --noEmit`）退出码 0；
+凭据门 `trial/play_launcher/_staged_secret_gate_r2.py` 提交前 `selftest cases=6 misses=0`、
+`added_lines_scanned=151 value_line_hits=0 key_anywhere_hits=0 VERDICT=PASS`。
+
+**这代没做到的**：五臂都在 390×844 一档形状上量的，P0-1 那六档形状没有重走（改的是行为不是布局，但这是推断不是读数）；
+V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，服务端建行程时该字段仍是必填（`:637-641` 的门槛没拆，只是不再让旅客重复写）；
+拉丁拼写靠词边界匹配（`(^|[^a-z])name([^a-z]|$)`），中文靠引导字，所以「想飞北京」这种不以句首、标点或引导字开头的写法会**漏认**——
+漏认的代价是旅客自己写一次那一格（就是改之前的样子），认错的代价已经由己臂那条路堵住；引导字表只有十一个字，
+它是不是够，要更多真句子才能判，这次没有那份分母。
+
+**仍不是正式交付**：PR #43 仍是 Draft、Actions 一次也没跑过；USER_VERIFIED 仍 PENDING，要主人自己在真手机上按这一下。

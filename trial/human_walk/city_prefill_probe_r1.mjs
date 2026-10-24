@@ -90,6 +90,19 @@ const say = (m) => { lines.push(m); console.log(m); };
     async () => page.waitForTimeout(400),
   ]);
 
+  // Arm F is the negative control for Chinese substring matching: 大厦门 is not a city in this table, but it
+  // contains 厦门, so the box would fill with a place the traveller never named.  Reading it, not guessing.
+  await arm('F_substring_of_a_longer_word', [
+    async () => goal.fill('去大厦门滩玩两天'),
+    async () => page.waitForTimeout(400),
+  ]);
+
+  // Arm G is the other side of the same rule: a lead-in character makes the spelling count.
+  await arm('G_lead_in_counts', [
+    async () => goal.fill('12 号到厦门玩两天'),
+    async () => page.waitForTimeout(400),
+  ]);
+
   await page.screenshot({ path: OUT.replace(/\.txt$/, '-shot.png') });
   await page.close();
   fs.writeFileSync(OUT, lines.join('\n') + '\n');

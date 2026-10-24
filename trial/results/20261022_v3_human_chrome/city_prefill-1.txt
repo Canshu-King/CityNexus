@@ -7,4 +7,6 @@ ARM_D screen_headline C CityNexus 你的智能旅行伙伴 AI 建议可试 北�
 ARM D_first_press_after_sentence city_value="(absent)" hint_visible=false hint_text=
 ARM_E after_first_half city_value="北京"
 ARM E_sentence_grows_ambiguous city_value="" hint_visible=true hint_text=还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
+ARM F_substring_of_a_longer_word city_value="" hint_visible=true hint_text=还差目的地：请在这里写城市名，例如北京。这句话里若只出现一个城市，上面已经替你填好；出现两个就没得猜。
+ARM G_lead_in_counts city_value="厦门" hint_visible=false hint_text=
 PROBE_DONE
