@@ -2581,3 +2581,15 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **红线。** 列表按 bearer 的 principal 过滤，不认识的人看不到别人的行程；只读、不写库；没有为演示预置任何 localStorage。
 
+## 七十七、课堂门：一键入口与 18 秒彩排
+
+**老师的入口。** 全新浏览器没有 bearer、也没有本地行程指针。`GET /api/v1/demo/session` 只在演示模式存在，按**先 ACTIVE 后 DRAFT** 选最近一趟未完成行程并签发同一个签名 bearer（`backend/app/main.py:6266`）；「我的旅程」里出现「课堂演示：进入示例行程」（`frontend/src/trial/RevolutionFirstLook.tsx:1428`），点它就走 `enterDemoJourney`（`frontend/src/trial/RevolutionFirstLook.tsx:1091`）。
+
+**彩排（430×932，全新浏览器，无 token 无指针）。** 打开 `4.4s` → 我的旅程 `5.8s` → 课堂演示入口 `9.3s` → 行程守护 `11.9s` → 提案卡「移除故宫博物院；路上少 66 分钟。」（`classroom-rehearsal-2.txt:7`）→ 按接受 `12.1s` → 重载后第一站「天坛公园 · 12月3日 09:00」（`classroom-rehearsal-2.txt:10`），总耗时 `18.1s`（`classroom-rehearsal-2.txt:13`）。运行手册 `trial/results/20261025_CLASSROOM_DEMO_RUNBOOK.md`。
+
+**跑偏过一次，已修。** 第一版入口把 DRAFT 与 ACTIVE 混在一起按 `updated_at` 取最新，结果选中了草稿（草稿的时间戳比已出发行程新），彩排停在空行程。改成两段查询、ACTIVE 优先后才走通；这条口子同样让「一键演示」在真实使用中会进错行程，不是只在探针里。
+
+**短回执字段（现读）。** `DEMO_READY=1` / `WINDOWS_START=start_classroom_demo.bat` / `TABLET_OPEN=http://10.15.5.23:14492/revolution`（平板未实测）/ `AGENT_QA=direct-replan-only` / `REAL_POI=1` / `SAVED_PLAN=1` / `RESTART_SESSION=1` / `FALLBACK_SCREENSHOT=guardian-proposal-390-r8.png`。
+
+**仍欠。** 平板实物没有点过；手机屏同时有旧恢复面板的两张裸 id 方案卡；连签名 bearer 也没有时，主动再认证仍没有产品入口（#332 只解决了「库在、本地指针不在」）。
+
