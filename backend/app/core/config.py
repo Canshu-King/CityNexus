@@ -51,6 +51,11 @@ class Settings:
     traveler_auth_ttl_seconds: int = int(
         os.getenv("CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS", "3600")
     )
+    # Classroom sandbox, first cut: off unless the play stack turns it on.  With it off both
+    # simulation-clock routes answer 404, so a production deploy cannot reach them at all.
+    simulation_enabled: bool = (
+        os.getenv("CITYNEXUS_SIMULATION_ENABLED", "false").lower() == "true"
+    )
     live_valhalla_url: str | None = os.getenv("CITYNEXUS_LIVE_VALHALLA_URL") or None
     # Remote Valhalla emulators must opt into test provenance explicitly. The
     # adapter independently marks loopback and reserved test hosts as test.

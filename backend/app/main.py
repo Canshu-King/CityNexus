@@ -193,6 +193,9 @@ from app.db.models import (
 from app.db.models import (
     Booking as BookingModel,
 )
+from pydantic import BaseModel as _SimulationBaseModel
+from app.db.models import SimulationClock
+
 from app.recovery_epoch import (
     RECOVERY_EPOCH_SUPERSEDED,
     RecoveryEpochSuperseded,
@@ -6403,7 +6406,11 @@ def demo_prepare_scenario(session: Session = Depends(get_session)):
     }
 
 @app.post("/api/v1/demo/start-scenario")
-def demo_start_scenario(session: Session = Depends(get_session)):
+def demo_start_scenario(
+    request: Request,
+    journey_id: UUID | None = None,
+    session: Session = Depends(get_session),
+):
     """Start the seeded journey, through `/start` and with all of its gates intact.
 
     The second stage of the demo: reset leaves the journey PLANNED with a selected plan so
@@ -6423,9 +6430,17 @@ def demo_start_scenario(session: Session = Depends(get_session)):
             message_key="demo.start_disabled",
         )
     with SessionLocal() as scene_session:
-        journey = scene_session.scalar(
-            select(Journey).where(Journey.active_plan_version_id.is_not(None))
-        ) or scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        # A classroom tab shows one journey and must start that one.  Without the id this
+        # route used to pick any journey with a plan, so the clock card and the start could
+        # describe two different trips (measured 2026-10-25: the card read journey A while the
+        # gate judged journey B).
+        journey = (
+            scene_session.get(Journey, str(journey_id))
+            if journey_id is not None
+            else scene_session.scalar(
+                select(Journey).where(Journey.active_plan_version_id.is_not(None))
+            ) or scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        )
         if journey is None:
             return error(
                 "DEMO_SCENARIO_MISSING",
@@ -6436,7 +6451,9 @@ def demo_start_scenario(session: Session = Depends(get_session)):
             )
         journey_id = journey.id
         try:
-            twin = start_journey(UUID(journey_id), scene_session)
+            twin = start_journey(
+                UUID(journey_id), None, scene_session, trusted_demo=True  # type: ignore[arg-type]
+            )
             scene_session.commit()
         except HTTPException as exc:
             scene_session.rollback()
@@ -19924,8 +19941,14 @@ def start_journey(
     journey_id: UUID,
     request: Request,
     session: Session = Depends(get_session),
+    *,
+    trusted_demo: bool = False,
 ):
-    if settings.traveler_auth_secret:
+    # `trusted_demo` exists for /demo/start-scenario only: that door already requires
+    # CITYNEXUS_DEMO_MODE and is served on the loopback classroom stack, and it used to pass its
+    # own Session in this request slot (AttributeError 'Session' has no headers).  A real
+    # traveller request never sets it.
+    if settings.traveler_auth_secret and not trusted_demo:
         from app.traveler_principal import (
             member_has_capability,
             resolve_journey_member_principal,
@@ -21271,6 +21294,98 @@ def demo_scene(session: Session = Depends(get_session)):
         "all_actual_edges_hard_eligible": coverage["all_actual_edges_hard_eligible"],
         "plan_version_id": str(plan.id) if plan is not None else None,
     }
+
+
+def _simulation_clock_payload(
+    session: Session, journey: Journey, row: SimulationClock | None
+) -> dict[str, Any]:
+    activity = (
+        session.get(Activity, journey.current_activity_id)
+        if journey.current_activity_id
+        else None
+    )
+    place = (
+        session.get(Place, activity.place_id)
+        if activity is not None and activity.place_id
+        else None
+    )
+    plan = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
+    )
+    return {
+        "journey_id": journey.id,
+        "virtual_now": row.virtual_now if row is not None else journey.start_at,
+        "version": row.version if row is not None else 0,
+        "persisted": row is not None,
+        "basis": "PERSISTED_SIMULATION_CLOCK" if row is not None else "JOURNEY_START",
+        "journey_status": journey.status,
+        "plan_version_id": plan.id if plan is not None else None,
+        "current_activity_id": activity.id if activity is not None else None,
+        "current_activity_title": activity.title if activity is not None else None,
+        "current_activity_status": activity.status if activity is not None else None,
+        "traveller": (
+            {
+                "latitude": place.latitude,
+                "longitude": place.longitude,
+                "coordinate_system": place.coordinate_system or "WGS84",
+                "label": place.name,
+                "source": "SCENARIO_SIMULATED_LOCATION",
+            }
+            if place is not None
+            else None
+        ),
+    }
+
+
+def _require_simulation_enabled() -> None:
+    if not settings.simulation_enabled:
+        raise HTTPException(404, "SIMULATION_DISABLED")
+
+
+class SimulationClockAdvance(_SimulationBaseModel):
+    minutes: int
+    expected_version: int | None = None
+
+
+@app.get("/api/v1/demo/simulation-clock/{journey_id}")
+def get_simulation_clock(journey_id: UUID, session: Session = Depends(get_session)):
+    _require_simulation_enabled()
+    journey = require(session, Journey, str(journey_id), "Journey")
+    return _simulation_clock_payload(
+        session, journey, session.get(SimulationClock, journey.id)
+    )
+
+
+@app.post("/api/v1/demo/simulation-clock/{journey_id}/advance")
+def advance_simulation_clock(
+    journey_id: UUID,
+    payload: SimulationClockAdvance,
+    session: Session = Depends(get_session),
+):
+    _require_simulation_enabled()
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if not 1 <= payload.minutes <= 1440:
+        raise HTTPException(422, "SIMULATION_CLOCK_MINUTES_OUT_OF_RANGE")
+    row = session.get(SimulationClock, journey.id)
+    current_version = row.version if row is not None else 0
+    if payload.expected_version is not None and payload.expected_version != current_version:
+        raise HTTPException(409, "SIMULATION_CLOCK_VERSION_STALE")
+    base = datetime.fromisoformat(row.virtual_now if row is not None else journey.start_at)
+    advanced = base + timedelta(minutes=payload.minutes)
+    stamp = execution_clock.now().astimezone(timezone.utc).isoformat()
+    if row is None:
+        row = SimulationClock(
+            journey_id=journey.id, virtual_now=advanced.isoformat(), version=1, updated_at=stamp
+        )
+        session.add(row)
+    else:
+        row.virtual_now = advanced.isoformat()
+        row.version = current_version + 1
+        row.updated_at = stamp
+    session.commit()
+    return _simulation_clock_payload(session, journey, row)
 
 
 @app.get("/api/v1/journeys/{journey_id}/twin", response_model=JourneyTwinSchema)

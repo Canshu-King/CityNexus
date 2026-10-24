@@ -768,6 +768,15 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             # shortlist identities and an optional human walking budget.  The
             # public coordinates and source facts remain on the signed
             # shortlist rows and are never duplicated here.
+            if not _table_exists(connection, "simulation_clocks"):
+                connection.exec_driver_sql(
+                    """CREATE TABLE simulation_clocks (
+                    journey_id TEXT PRIMARY KEY REFERENCES journeys(id) ON DELETE CASCADE,
+                    virtual_now TEXT NOT NULL,
+                    version INTEGER NOT NULL DEFAULT 0,
+                    updated_at TEXT NOT NULL
+                )"""
+                )
             if not _table_exists(connection, "member_draft_pocket_walks"):
                 connection.exec_driver_sql(
                     """CREATE TABLE member_draft_pocket_walks (

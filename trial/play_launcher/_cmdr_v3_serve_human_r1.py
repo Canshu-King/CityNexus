@@ -66,6 +66,9 @@ env.update({
     # needs a designed re-authentication, not a longer token.
     "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": os.environ.get("HUMAN_AUTH_TTL_SECONDS", "43200"),
     "CITYNEXUS_DEMO_MODE": "true",
+    # Classroom sandbox, first cut: the clock routes exist only when this is on, and this
+    # launcher is the only writer of that flag.
+    "CITYNEXUS_SIMULATION_ENABLED": os.environ.get("HUMAN_SIMULATION", "true"),
     "CITYNEXUS_DEMO_RESET_TOKEN": secrets.token_hex(16),
     "CITYNEXUS_AI_ENABLED": "true",
     "CITYNEXUS_AI_PROVIDER": "deepseek",

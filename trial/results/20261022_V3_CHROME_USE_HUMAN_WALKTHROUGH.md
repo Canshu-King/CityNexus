@@ -2495,3 +2495,22 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **终屏。** 勾「按以上时间准备方案」→ 保存（三项正式安排）→ 核实并冻结转场 → 确认票价 → 刷新 → 点「选用这份方案」→ 卡片变「方案 2 已选用 · 3 项安排」，刷新后仍是它（`prep-to-select-3.txt` 的 `AFTER_SELECT` / `AFTER_RELOAD`；真尺寸截图 `walk2-final-390.png`、`walk2-final-430.png`，Playwright 回读 `innerWidth/Height = 390×844 / 430×932`，见 `pw-capture-selected2-4.txt:1`）。
 
 **这一节暴露、留给设计的两个问题（不改产品，交裁语）。** ① 冷研究超过十分钟与课堂三到五分钟冲突：要么允许课上先用一份标为 `PREPARED_BASELINE` 的基线计划、Agent 在后台继续研究，要么把演示目标改成「先看草案、再等 Agent」并明确时长；② 研究未完成会落下「（研究中）」这种没有地点的占位行，旅客唯一的出路是删掉它——产品应把这类行标成「还没有地点」并给一个「等 Agent 补」或「这一项不需要地点」的动作。
+
+## 七十二、时空沙盒第一刀（PARTIAL）：持久模拟时钟、开始与下一站、模拟旅客坐标
+
+**做了什么（产品字节）。**
+① 新表 `simulation_clocks`，一行一条 journey（`backend/app/db/models.py` 末尾；建表在 `backend/app/db/session.py` 的幂等 bootstrap 里）。
+② `CITYNEXUS_SIMULATION_ENABLED` 默认 **false**（`backend/app/core/config.py`；实测 `Settings().simulation_enabled` 为 False）。关着时两条模拟路由都回 404。
+③ `GET /api/v1/demo/simulation-clock/{journey_id}` 与 `POST …/advance`（minutes + `expected_version` 乐观锁）。第一次读回落到 `JOURNEY_START`，尚未持久；推进后 `persisted=true`、version+1，旧 version 重放回 409。
+④ 课堂面板（浮球）顶部新增模拟时钟卡：模拟旅行时间、现实演示时间、当前站、模拟旅客坐标、`+30 分钟 / +1 小时 / 刷新时间`，常驻水印「课堂时空模拟｜不是实际定位或真实灾情」。
+⑤ `demo/start-scenario` 现在接受显式 `journey_id`（面板传当前行程），并修掉一个既有 bug：它把 SQLAlchemy `Session` 传进了 `start_journey` 的 `request` 位，导致 500 `'Session' object has no attribute 'headers'`。演示模式下的成员鉴权用显式 `trusted_demo` 才放行，真实旅客请求不带它。
+⑥ 地图：`WorkspaceMap` 新增 `traveller` 蓝点（MapLibre marker，`data-testid="rev-map-traveller"`，只画 WGS84；GCJ02 不转换就只显示文字状态），`MissionCockpit` 在 journey ACTIVE 时每八秒读一次时钟。
+
+**真机读数（同一个新会话）。**
+- 时钟：面板首读 `模拟旅行时间 12/03 10:00 · 服务器记在第 1 版 · 刷新仍在`；按「+1 小时」→ `11:00 · 第 2 版`；刷新页面再开面板 → 仍 `11:00 · 第 2 版`（`trial/results/20261022_v3_human_chrome/sim-clock-walk-1.txt` 的 `VERDICT`，截图 `sim-clock-390-before/after/reload.png`）。
+- 开始与下一站：按「开始执行（真实 /start）」→ `行程已开始 · 状态 ACTIVE`；随后四次真实转移依次被服务器接受：出发（活动原状态 ACTIVE）→ 到达（EN_ROUTE）→ 开始（ARRIVED）→ 完成（IN_PROGRESS），游标从 `50240807…` 移到 `5b60b374…`；刷新后时钟卡显示 `当前站：故宫博物院（ACTIVE）` 与 `模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置）`（`sim-clock-next-1.txt`，截图 `sim-clock-390-started/next/next-reload.png`）。
+
+**为什么是 PARTIAL。**
+蓝点代码已落且类型检查通过，但**没有蓝点的真栈截图**：本轮为修后端重启了演示栈，标签页的会话随新 secret 失效，`/revolution` 的旅程视野读不到这趟 ACTIVE 行程，地图（`WorkspaceMap`）没有渲染到屏上。时钟卡的「模拟旅客」文字行证明了坐标已从服务器到达前端，但「蓝点画在地图上」这一步的屏证还欠着。补齐办法：在一个可读的会话里打开同一趟 ACTIVE 行程，点「加载地图」后截图；不需要重做数据。
+
+**红线自查。** 模拟时间只写 `simulation_clocks`，没有改 OS 时间、令牌 TTL 或供应商采集时间；模拟位置标 `SCENARIO_SIMULATED_LOCATION`、不写 `LocationObservation`、不声称物理到场；推进活动走的是既有的 `SIMULATED_STATE_TRANSITION` 真相（端点默认 kind 就是它），没有伪造 `DEVICE_ATTESTED`；`reset` 仍被面板拒绝（这是既有设计）。

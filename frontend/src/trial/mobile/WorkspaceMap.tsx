@@ -33,10 +33,13 @@ function shortAdministrativeAddress(address?: Record<string, string>): string {
     .slice(0, 3).join(" · ");
 }
 
-export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedId }: {
+export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedId, traveller }: {
   candidates: WorkspaceMapPoint[]; allowed: boolean; onAllow: () => void; onSelect?: (id: string) => void; selectedId?: string | null;
+  traveller?: { latitude: number; longitude: number; label: string; coordinate_system?: string } | null;
 }) {
   const host = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<import("maplibre-gl").Map | null>(null);
+  const travellerMarker = useRef<import("maplibre-gl").Marker | null>(null);
   const points = useMemo(() => candidates.filter(validPoint), [candidates]);
   const amapPoints = useMemo(() => candidates.filter((point) => isAmapPoint(point)
     && point.region_status !== "CONFLICT" && point.selection_state !== "REGION_CONFLICT"
@@ -85,6 +88,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       });
       map.addControl(new lib.NavigationControl({ showCompass: false }), "top-right");
       map.on("error", () => { if (!disposed) setFailed(true); });
+      mapRef.current = map;
       const bounds = new lib.LngLatBounds();
       points.forEach((point, index) => {
         const element = document.createElement("button");
@@ -107,10 +111,33 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       if (points.length > 1) map.fitBounds(bounds, { padding: 50, maxZoom: 15, duration: 0 });
       observer = new ResizeObserver(() => map?.resize()); observer.observe(host.current);
     }).catch(() => { if (!disposed) setFailed(true); });
-    return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); map?.remove(); };
+    return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); travellerMarker.current?.remove(); travellerMarker.current = null; mapRef.current = null; map?.remove(); };
   }, [allowed, points, onSelect]);
+  // The simulated traveller is a second marker, kept apart from the numbered pins: it is the
+  // only thing on this map that moves, and its coordinates come from the sandbox clock, not
+  // from any device location.  GCJ02 is not converted here; it is only drawn as WGS84.
+  useEffect(() => {
+    const draw = traveller && (!traveller.coordinate_system || traveller.coordinate_system === "WGS84")
+      && Number.isFinite(traveller.latitude) && Number.isFinite(traveller.longitude);
+    if (!allowed || !draw) { travellerMarker.current?.remove(); travellerMarker.current = null; return; }
+    void import("maplibre-gl").then(({ default: lib }) => {
+      if (!mapRef.current || !traveller) return;
+      if (!travellerMarker.current) {
+        const element = document.createElement("div");
+        element.className = "rev-workspace-map-traveller";
+        element.dataset.testid = "rev-map-traveller";
+        element.title = `模拟旅客：${traveller.label}（模拟位置）`;
+        element.setAttribute("aria-label", `模拟旅客位置：${traveller.label}`);
+        travellerMarker.current = new lib.Marker({ element })
+          .setLngLat([traveller.longitude, traveller.latitude]).addTo(mapRef.current);
+      } else {
+        travellerMarker.current.setLngLat([traveller.longitude, traveller.latitude]);
+      }
+    });
+  }, [allowed, traveller?.latitude, traveller?.longitude, traveller?.label, traveller?.coordinate_system]);
   return <section aria-label="当前行程地图">
     <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
+    {traveller && <p data-testid="rev-map-traveller-state">模拟旅客：{traveller.label} · {traveller.latitude.toFixed(4)}, {traveller.longitude.toFixed(4)}（{traveller.coordinate_system ?? "WGS84"}，模拟位置，不是物理 GPS）</p>}
     {!points.length && !amapPoints.length && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
     {points.length > 0 && <>
       {!allowed ? <div className="rev-workspace-map-consent">

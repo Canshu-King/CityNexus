@@ -101,6 +101,24 @@ export function MissionCockpit({
   const [task, setTask] = useState<DraftGoalTask | null>(null);
   const [events, setEvents] = useState<DraftGoalTaskEvent[]>([]);
   const [places, setPlaces] = useState<WorkspaceMapPoint[]>([]);
+  // Classroom sandbox, first cut: the map's blue dot is the served simulated location, never
+  // the browser's geolocation.  It is polled only while the journey is executing.
+  const [simTraveller, setSimTraveller] = useState<{ latitude: number; longitude: number; label: string; coordinate_system?: string } | null>(null);
+  useEffect(() => {
+    if (!journeyId || journeyStatus !== "ACTIVE") { setSimTraveller(null); return; }
+    let alive = true;
+    const read = () => {
+      void fetch(`/api/v1/demo/simulation-clock/${journeyId}`, { headers: { Accept: "application/json" } })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((body: { traveller?: { latitude: number; longitude: number; label: string; coordinate_system?: string } | null } | null) => {
+          if (alive) setSimTraveller(body?.traveller ?? null);
+        })
+        .catch(() => { /* pins stand on their own when the sandbox is off */ });
+    };
+    read();
+    const timer = window.setInterval(read, 8000);
+    return () => { alive = false; window.clearInterval(timer); };
+  }, [journeyId, journeyStatus]);
   const [dataState, setDataState] = useState<DataState>("loading");
   const [accessLost, setAccessLost] = useState(false);
   const [refresh, setRefresh] = useState(0);
@@ -312,7 +330,7 @@ export function MissionCockpit({
           </button>}
           <PlacePhotoGallery cityName={cityName} places={allMapPoints} mediaById={mediaById} priorityIds={photoPriorityIds} selectedId={focusedPlaceId} scheduledIds={draftPlaceIds} onSelect={focusPlace} />
           {selectedResearch && <p role="status">正在查看：{selectedResearch.name}{draftPlaceIds.has(selectedResearch.candidate_id) ? " · 已排入日程" : " · 尚未排入日程"}</p>}
-          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} />
+          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} traveller={simTraveller} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>{accessLost ? "这次登录已经过期" : "地点研究会在这里汇合"}</strong><span>{accessLost ? "这趟行程还在，只是这台设备当前读不到它。" : "找到有坐标的地点后，点击图钉查看来源。"}</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
           <details className="cn-mission-activity" aria-label="Agent 工作轨迹"><summary>查看 Agent 工作过程</summary>
