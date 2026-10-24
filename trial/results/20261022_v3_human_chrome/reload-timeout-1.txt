@@ -1,10 +1,10 @@
 #323 the full-suite red is a per-test budget, not a reload hang
-run5/run6 (default 45s): 49 passed / 1 failed both times; the red is revolution-workspace-actions.spec.ts:116 at 390, "page.reload" waiting for load
-run7 (--timeout=90000): 50 passed / 0 failed, 10.2m, rc=0 => fixture-rerun-7-timeout90.log
-run8 (instrumented, 90000): RELOAD_MS width=390 ms=13678 ; width=430 ms=17393 => fixture-rerun-8-reloadms.log
-reading: in full-suite order the steps before the reload take about 30s, the reload itself is finite (13.7/17.4s); the 45s test budget clipped the 390 case mid-reload
-fix: test.setTimeout(90_000) for this spec only, with the measured reason in a comment
-run9 (default config, per-test budget) = PENDING
-run9 (default 45s, per-test 90s on workspace): 49 passed 1 failed; a DIFFERENT test (mobile-plan-workbench.spec.ts:76 390) hit 45s waiting for the trips tab after goto => run9
+run5/run6 (45s): 49 passed / 1 failed both times; the red was revolution-workspace-actions.spec.ts:116 at 390, "page.reload" waiting for load
+run7 (CLI --timeout=90000): 50 passed / 0 failed, 10.2m, rc=0 => fixture-rerun-7-timeout90.log
+run8 (instrumented, 90s): RELOAD_MS width=390 ms=13678 ; width=430 ms=17393 => fixture-rerun-8-reloadms.log
+run9 (45s config, per-test 90s only on workspace): 49 passed / 1 failed; a DIFFERENT test (mobile-plan-workbench.spec.ts:76 at 390) hit 45s waiting for the trips tab after goto
 run10 (config timeout 90_000): 50 passed / 0 failed, 9.0m, rc=0 ; RELOAD_MS width=390 ms=18897 ; width=430 ms=19864 => fixture-rerun-10-default90.log
-conclusion: at 45s three different tests were clipped across runs; at 90s two consecutive full runs pass. The instrument was under-budgeted, not the product.
+cause: at 45s three different tests were clipped across runs while waiting on real steps; the reloads themselves are finite (13.7/17.4/18.9s)
+fix: the suite's timeout is 90s (frontend/playwright.mobile-trial.config.ts:11, reason in a comment); no assertion and no product code changed
+typecheck_after: rc=0 => typecheck-budget-1.log
+boundary: fixture-only; PR #43 stays Draft; USER_VERIFIED stays PENDING
