@@ -2138,6 +2138,9 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 - **真正卡编译的三步两次全绿**：`Parse local trial Python without network model calls`、`Full TypeScript check`、`Vite production build`；
 - 三格两次都是 **skipped**：`Install Chromium for isolated mobile UI fixtures`、`Mobile UI real Chromium fixture smoke (NO live API or Agent)`、`Upload labeled fixture screenshots and browser traces`——浏览器夹具那一臂没跑（工作流里它是条件步），所以**这一绿不等于"手机 UI 夹具也过了"**。
 - 本枝按枝过滤的 `total_count` 从 0 变成 2（`trial/results/20261022_v3_human_chrome/ci-runs-1.txt:16` 记第一跑之后的那个 1）。
+- 第三次补在**现尖** `161a42ea98b8…` 上：`latest_run=40089651482 … status=completed conclusion=success`，枝上 total 变三（`trial/results/20261022_v3_human_chrome/ci-tip.txt:1`）。所以"现尖绿"这句现在站得住。
+
+**夹具那三格为什么不跑（读工作流本身）。** 三格都带 `if:`，条件是 `github.ref` 必须是 `design/revolution-mobile-first-v1` 或 `fix/revolution-…` 这几枝之一（`.github/workflows/revolution-trial-ux-smoke.yml:45`、`:49`、`:53`）。也就是说：**即便把本枝加进 `push.branches`，这三格仍然会 skip**；要跑得同时把本枝名加进那三行 `if:`。这一点写清楚，免得将来有人以为"加了 push 就等于夹具也跑了"。
 
 **所以交付状态要这么写。** 不是"本枝没跑过 CI"，而是"本枝的 push 不触发 CI；我手动跑了一次，编译门（Python 解析／TS 全量检查／Vite 生产构建）在现尖上绿；浏览器夹具臂未跑"。PR #43 仍是 Draft、USER_VERIFIED 仍 PENDING 这两条不变。
 
