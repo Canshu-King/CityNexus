@@ -245,7 +245,7 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
   return <section className="rev-v3-departure" aria-label="当前草案的出发准备">
     <h3>从这份安排继续</h3>
     <p>{result ? `${result.slots_count} 项安排已保存，刷新也能找回。` : "保留已选地点和日期，先确认每天的时间。"}</p>
-    <details open={!result}><summary>{result ? "已确认时间 · 查看或调整" : "确认每天的时间"}</summary>
+    <details><summary>{result ? "已确认时间 · 查看或调整" : "编辑行程时间（可选）"}</summary>
     <fieldset disabled={busy || task.status === "WORKING"}>
       {schedule.map((stamp, index) => {
         const day = days[stamp.day_index], slot = day?.slots[stamp.slot_index];
@@ -256,10 +256,12 @@ export function DraftDepartureCard({ task, onDiscuss }: { task: DraftGoalTask; o
           <label>结束<input type="time" aria-label={`${slot.title}结束时间`} value={stamp.end_time} onChange={event => change(index, "end_time", event.target.value)} /></label></div>
         </div>;
       })}
+    </fieldset>
+    </details>
+    <fieldset disabled={busy || task.status === "WORKING"}>
       <label><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)} />按以上时间准备方案</label>
       <button type="button" disabled={!confirmed || busy || Boolean(result)} onClick={() => void prepare()}>{busy ? "正在保存安排…" : result ? "安排已保存" : "保存为正式候选方案"}</button>
     </fieldset>
-    </details>
     {message && <p role="status">{message}</p>}
     {result && <p className="rev-v3-route-state" data-testid="rev-v3-route-state">
       {routes ? routeSentence(routes.verified, routes.total, routes.frozen, routes.overnight ?? 0, routes.transit ?? 0,

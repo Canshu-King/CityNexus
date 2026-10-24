@@ -1,0 +1,115 @@
+
+Running 50 tests using 1 worker
+
+[1/50] [mobile-ui-chromium-fixture] › e2e\revolution-amap-research-ui.spec.ts:11:1 › TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and walking route
+[2/50] [mobile-ui-chromium-fixture] › e2e\revolution-dialogue.spec.ts:3:39 › TEST_FIXTURE discuss, choose, explicitly research without quotas at 390
+[3/50] [mobile-ui-chromium-fixture] › e2e\revolution-dialogue.spec.ts:3:39 › TEST_FIXTURE discuss, choose, explicitly research without quotas at 430
+[4/50] [mobile-ui-chromium-fixture] › e2e\revolution-dialogue.spec.ts:3:39 › TEST_FIXTURE discuss, choose, explicitly research without quotas at 1366
+[5/50] [mobile-ui-chromium-fixture] › e2e\revolution-draft-preparation.spec.ts:4:33 › TEST_FIXTURE prepare selected draft dates and restore at 390
+[6/50] [mobile-ui-chromium-fixture] › e2e\revolution-draft-preparation.spec.ts:4:33 › TEST_FIXTURE prepare selected draft dates and restore at 430
+[7/50] [mobile-ui-chromium-fixture] › e2e\revolution-draft-variants.spec.ts:4:33 › TEST_FIXTURE choose a sourced draft variant and restore at 390
+[8/50] [mobile-ui-chromium-fixture] › e2e\revolution-draft-variants.spec.ts:4:33 › TEST_FIXTURE choose a sourced draft variant and restore at 430
+[9/50] [mobile-ui-chromium-fixture] › e2e\revolution-guardian-stream.spec.ts:71:1 › TEST_FIXTURE Guardian panel reads on open, shows linked progress, and clears on identity change
+[10/50] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:27:3 › Revolution signed-session recovery UI regression › a stale Journey's 403 offers one-tap restart without deleting its server record
+[11/50] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:93:3 › Revolution signed-session recovery UI regression › failed signed-session lookup keeps the current bearer and offers a fresh-session recovery
+[WebServer] 20:42:35 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 20:42:35 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 20:42:35 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[12/50] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:138:3 › Revolution signed-session recovery UI regression › one signed traveler starts and reopens Journeys in multiple cities
+[13/50] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:203:3 › Revolution signed-session recovery UI regression › legacy bearer-only session restores a Journey after server membership proof
+[WebServer] 20:42:39 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 20:42:39 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 20:42:39 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[14/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:221:1 › TEST_FIXTURE running trace shows server state, timestamp, and tool identity without reasoning summary
+[15/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:250:1 › TEST_FIXTURE DRAFT activity entry only reads signed plans without starting a run or provider lookup
+[16/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:349:1 › TEST_FIXTURE pending approval opens the existing Journey authorization area
+[17/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:382:1 › TEST_FIXTURE completed trace retains the start and end events
+[18/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:412:1 › TEST_FIXTURE tool failures show only a recognized stable error code
+[19/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-hermes-transparency.spec.ts:455:1 › TEST_FIXTURE failed trace keeps start and failure milestones in a long event list
+[20/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:7:1 › TEST_FIXTURE saved server brief and two-place multiday preview 390
+[21/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:7:1 › TEST_FIXTURE saved server brief and two-place multiday preview 430
+[22/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 390
+[23/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-plan-workbench.spec.ts:76:1 › TEST_FIXTURE mobile plan review requires separate select and start, and survives refresh 430
+[24/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:78:3 › Revolution Mobile-First UI fixture › an unstarted visitor can reach all three mobile tabs
+[25/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:112:3 › Revolution Mobile-First UI fixture › hides the AI shortcut when the server has AI disabled
+[26/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:126:3 › Revolution Mobile-First UI fixture › does not call AI disabled while the local runtime check is still loading
+[27/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:159:3 › Revolution Mobile-First UI fixture › three bottom tabs are tappable without submitting requests
+[28/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:201:3 › Revolution Mobile-First UI fixture › ACTIVE Journey shows signed Operator status and actions
+[29/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:288:3 › Revolution Mobile-First UI fixture › public place cards show provenance, uncertainty and a source link using TEST_PROVIDER data
+[30/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:395:3 › Revolution Mobile-First UI fixture › map tiles are opt-in, touch places a pin, and the approximate-area action remains available
+[31/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:458:3 › Revolution Mobile-First UI fixture › trip tab displays a saved TEST fixture itinerary
+[32/50] [mobile-ui-chromium-fixture] › e2e\revolution-mobile-shell.spec.ts:469:3 › Revolution Mobile-First UI fixture › ACTIVE mobile shows the signed Hermes run and returned tool events
+[33/50] [mobile-ui-chromium-fixture] › e2e\revolution-night-out-rest-preferences.spec.ts:21:1 › 390x844 TEST_FIXTURE late-night couple can edit time, walking, and rain conflicts before submitting
+[34/50] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:56:1 › named place search waits for explicit submission and keeps the public area
+[35/50] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:122:1 › place cards show grounded hours and costs while preserving provenance and OSM links
+[36/50] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:262:1 › trip place facts refresh requires one-time consent and never repeats a recorded attempt
+[37/50] [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 390
+[38/50] [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 430
+[39/50] [mobile-ui-chromium-fixture] › e2e\revolution-source-media.spec.ts:3:39 › TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at 1566
+[40/50] [mobile-ui-chromium-fixture] › e2e\revolution-visual-travel.spec.ts:8:3 › TEST_FIXTURE: visual travel cards, grounded photos, map preview and persistent chat at 390
+[41/50] [mobile-ui-chromium-fixture] › e2e\revolution-visual-travel.spec.ts:8:3 › TEST_FIXTURE: visual travel cards, grounded photos, map preview and persistent chat at 430
+[42/50] [mobile-ui-chromium-fixture] › e2e\revolution-visual-travel.spec.ts:8:3 › TEST_FIXTURE: visual travel cards, grounded photos, map preview and persistent chat at 1366
+[43/50] [mobile-ui-chromium-fixture] › e2e\revolution-visual-travel.spec.ts:8:3 › TEST_FIXTURE: visual travel cards, grounded photos, map preview and persistent chat at 1566
+[44/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 390, persists its trace, and does not run on open
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 390, persists its trace, and does not run on open 
+
+    Test timeout of 45000ms exceeded.
+
+    Error: page.reload: Test timeout of 45000ms exceeded.
+    Call log:
+      - waiting for navigation until "load"
+        - navigated to "http://127.0.0.1:14273/revolution"
+
+
+      167 |     await dialog.getByRole("button", { name: "保存草案", exact: true }).click();
+      168 |     await expect(dialog).toContainText("草案已保存");
+    > 169 |     await page.reload();
+          |                ^
+      170 |     await page.getByTestId("rev-mobile-tab-trips").click();
+      171 |     await page.getByTestId("rev-mission-layer-agent").click();
+      172 |     const restoredDialog = page.getByTestId("rev-mission-cockpit");
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-workspace-actions.spec.ts:169:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-workspace-actio-66e35-ce-and-does-not-run-on-open-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-workspace-actio-66e35-ce-and-does-not-run-on-open-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-workspace-actio-66e35-ce-and-does-not-run-on-open-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-workspace-actio-66e35-ce-and-does-not-run-on-open-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[45/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 430, persists its trace, and does not run on open
+[46/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 1366, persists its trace, and does not run on open
+[47/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:186:1 › TEST_FIXTURE unknown hours and unavailable AI do not hide the map's saved places
+[48/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:203:1 › TEST_FIXTURE identity change clears the open private assistant immediately
+[49/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:222:1 › TEST_FIXTURE cached public source is readable without starting a new research request
+[50/50] [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:236:1 › TEST_FIXTURE map focuses draft references and separates regions from venues
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-workspace-actions.spec.ts:116:3 › TEST_FIXTURE goal task starts from Trips at 390, persists its trace, and does not run on open 
+  49 passed (5.7m)
+suite_rc=1

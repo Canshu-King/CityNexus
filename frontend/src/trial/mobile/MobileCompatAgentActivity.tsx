@@ -22,7 +22,7 @@ function isTerminal(status: string) {
 }
 
 function stateLabel(run: MobileCompatAgentRun | null, configured: boolean, aiDisabled: boolean) {
-  if (!run) return aiDisabled ? "AI 暂未开启" : configured ? "AI 当前没有执行中的任务" : "WB2API 尚未连接";
+  if (!run) return aiDisabled ? "AI 暂未开启" : configured ? "AI 当前没有执行中的任务" : "AI 尚未连接";
   if (run.status === "RUNNING") return "AI 正在检查行程";
   if (run.status === "FAILED_EXTERNAL") return "AI 请求失败";
   if (run.status === "PARTIAL") return "行程检查未完成";
@@ -173,7 +173,7 @@ export function MobileCompatAgentActivity({
       <div className="rev-mobile-compat-agent-head">
         <span className="rev-mobile-compat-agent-icon" aria-hidden="true"><Activity size={18} /></span>
         <div className="rev-mobile-compat-agent-title">
-          <span>WB2API · 行程助手</span>
+          <span>行程助手</span>
           <strong role="status">
             {loadState === "unauthorized" ? "请重新进入行程" : loadState === "offline" ? "服务连接失败" : loadState === "loading" ? "正在读取记录" : stateLabel(run, snapshot?.configured === true, aiDisabled)}
           </strong>
@@ -181,7 +181,7 @@ export function MobileCompatAgentActivity({
       </div>
       {loadState === "ready" && snapshot?.configured && !aiDisabled && (
         <div className="rev-mobile-compat-agent-controls">
-          <span>点击后将本行程信息发送给 WB2API</span>
+          <span>点击后把这趟行程的信息交给助手</span>
           <button type="button" onClick={() => void startRun()} disabled={sending || Boolean(run && !isTerminal(run.status)) || loadState !== "ready"} data-testid="rev-mobile-compat-agent-start">
             {sending ? <CircleDashed size={15} aria-hidden="true" /> : <Send size={15} aria-hidden="true" />}
             {sending ? "正在请求" : "检查行程"}
@@ -194,6 +194,7 @@ export function MobileCompatAgentActivity({
         </p>
       )}
       {message && <p className="rev-mobile-compat-agent-message" role="alert"><CircleAlert size={15} aria-hidden="true" />{message}</p>}
+      <details className="rev-mobile-compat-agent-tech"><summary>高级信息</summary><span>WB2API · 行程助手通道</span></details>
       {run && (
         <div className="rev-mobile-compat-agent-detail">
           <button type="button" className="rev-mobile-compat-agent-toggle" aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>

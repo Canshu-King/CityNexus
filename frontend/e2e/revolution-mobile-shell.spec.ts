@@ -608,6 +608,14 @@ test.describe("Revolution Mobile-First UI fixture", () => {
       throw new Error("Mobile shell mounted its error boundary: " + (pageErrors.join(" | ") || "no pageerror captured"));
     }
     await page.getByTestId("rev-mobile-tab-trips").click();
+    await page.screenshot({ path: testInfo.outputPath("active-trips-390x844.png") });
+    await page.screenshot({ path: testInfo.outputPath("active-trips-full-390x844.png"), fullPage: true });
+    // P1: the journey's own words first; the platforms' names live inside a closed disclosure.
+    await expect(page.getByTestId("journey-operator-advanced")).not.toHaveAttribute("open", "");
+    await expect(page.getByText("Journey Operator", { exact: true })).not.toBeVisible();
+    await expect(page.getByText("Planning brain", { exact: true })).not.toBeVisible();
+    await expect(page.getByText("WB2API · 行程助手通道", { exact: true })).not.toBeVisible();
+    await expect(page.getByTestId("rev-mobile-compat-agent")).toContainText("行程助手");
     await expect.poll(() => latestRunReads).toBe(1);
     await expect(page.getByTestId("rev-mobile-hermes-empty-state")).toContainText("暂无助手运行记录");
     await page.getByTestId("rev-mobile-hermes-submit").click();

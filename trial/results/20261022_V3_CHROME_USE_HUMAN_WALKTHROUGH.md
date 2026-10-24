@@ -2204,3 +2204,25 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **证据边界。** 运行中的栈已经下发新句子（`http://127.0.0.1:14522/src/trial/mobile/departureGaps.ts` 现读含新句）；但**我没在屏上看见它**——这句在按下那一刻拼进消息状态，而那台栈的会话已过期（401）。所以这一刀判 **PARTIAL**：文案源码与下发已证，屏上证词待下一次完整「重排 → 应用」时补。P0-4 的验收结论不动。
 
 **回归。** `npm run typecheck:all` rc=0；整套夹具 `npx playwright test --config playwright.mobile-trial.config.ts` **50 passed / 0 failed（8.5 分钟，rc=0）**（`trial/results/20261022_v3_human_chrome/fixture-rerun-3.log`）。
+
+## 五十、P1 第一刀：ACTIVE 屏先讲旅行，内部平台名收进「高级信息」
+
+**裁语原文（PR #43 评论）要求。** ACTIVE 后屏上主要是「下一站、路线、我的 Agent、行程守护」；把 `WB2API`／`JOURNEY OPERATOR`／`PLANNING BRAIN` 以及十二个时间编辑控件收进可展开的「高级信息／编辑行程」，不是删证据。
+
+**看见什么（before）。** 隔离 Chrome 的 ACTIVE 夹具在 390×844 上，行程页第一屏写着「WB2API · 行程助手／服务连接失败」，没有任何「高级信息」入口（`trial/results/20261022_v3_human_chrome/p1a-before-active-trips.png`）。
+
+**改了什么（产品代码三处）。**
+- `frontend/src/features/execution/LiveRecovery.tsx:988`：面板抬头改成「行程助手／Trip assistant」，`Journey Operator` 收进紧跟着的 `<details data-testid="journey-operator-advanced">高级信息</details>`。
+- 同文件 `:1565`：「Planning brain」抬头改成「Agent 计划／Agent plan」，同样的 `Planning brain` 收进 `journey-brain-advanced`。
+- `frontend/src/trial/mobile/MobileCompatAgentActivity.tsx:25`、`:176`、`:184`：`WB2API 尚未连接` → `AI 尚未连接`、标题 `WB2API · 行程助手` → `行程助手`、说明句去掉供应商名；`WB2API` 这一串留在卡片末尾的 `<details>高级信息</details>` 里。源码新增那一行在该文件的 `:197` 一带。
+- `frontend/src/trial/mobile/DraftDepartureCard.tsx:248` 起：十二个时间输入收进默认收起的 `<details>`（摘要「编辑行程时间（可选）」，已保存时「已确认时间 · 查看或调整」）；**「按以上时间准备方案」与「保存为正式候选方案」移到折叠层外面**，主按钮不再跟着藏起来。
+
+**再按（after）。** 同一夹具同一视口：卡片抬头变成「行程助手」，下方多了一行「▸ 高级信息」；整页截图里 `TRIP ASSISTANT ▸ Advanced`、`AGENT PLAN ▸ Advanced` 取代了原来的英文平台名（`p1a-after-active-trips.png`、`p1a-after-active-trips-full.png`）。
+
+**门。** 在 `frontend/e2e/revolution-mobile-shell.spec.ts:614` 起加了四条断言：高级信息默认收起、`Journey Operator`／`Planning brain`／`WB2API · 行程助手通道` 三串都不可见、助手卡上写着「行程助手」。负对照：把三处产品代码退回上一版再跑，rc=1；恢复后 rc=0（`trial/results/20261022_v3_human_chrome/p1a-gate-negative-1.log`、`p1a-gate-restored-1.log`）。
+
+**没证的与没做的。**
+- 十二个时间输入的「默认收起」已有屏证：`revolution-draft-preparation` 夹具在 390 宽下滚到出发卡，屏上只剩「▶ 编辑行程时间（可选）」与外面的保存按钮（`trial/results/20261022_v3_human_chrome/p1a-draft-schedule-folded-390.png`）；夹具先断言时间输入不可见、再点开折叠、再填时间，两档都过。
+- P1 另一半「同行决策」单人应写「添加同行者后使用」、多人 3/3 才生效，仍等 #284 的裁语；这一节没动它。
+
+**回归。** `npm run typecheck:all` rc=0。整套夹具跑了两次，两次都是 **49 passed / 1 failed**，红的是同一条 `frontend/e2e/revolution-workspace-actions.spec.ts:116` 的 390 档：卡在 `page.reload` 等 load 超时，不是断言。同一条单独跑 7.1 秒过、整个 workspace-actions 文件 7/7 过、visual-travel＋workspace-actions 两个文件 11/11 过；所以这条红只在「五十条连跑」的序列里出现，**不归因于这一刀**，也不拿它当绿证。

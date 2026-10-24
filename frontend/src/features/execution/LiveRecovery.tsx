@@ -985,7 +985,8 @@ export function LiveRecovery({
 
       <section className="journey-operator-card" data-testid="journey-operator" aria-live="polite">
         <div className="journey-operator-heading">
-          <p className="v8-kicker">Journey Operator</p>
+          <p className="v8-kicker">{zh ? "行程助手" : "Trip assistant"}</p>
+          <details className="v8-advanced-name" data-testid="journey-operator-advanced"><summary>{zh ? "高级信息" : "Advanced"}</summary><span>Journey Operator</span></details>
           <strong>{operator?.headline ?? (zh ? "把这趟行程交给 CityNexus" : "Let CityNexus take care of this trip")}</strong>
         </div>
         {operator?.attention && (
@@ -1561,7 +1562,8 @@ export function LiveRecovery({
         )}
         {operator?.brain && (
           <div className="journey-operator-brain" data-testid="journey-operator-brain">
-            <span className="v8-kicker">Planning brain</span>
+            <span className="v8-kicker">{zh ? "Agent 计划" : "Agent plan"}</span>
+            <details className="v8-advanced-name" data-testid="journey-brain-advanced"><summary>{zh ? "高级信息" : "Advanced"}</summary><span>Planning brain</span></details>
             <strong>{operator.brain.headline}</strong>
             {operator.brain.recovery_resume.pending && (
               <span>

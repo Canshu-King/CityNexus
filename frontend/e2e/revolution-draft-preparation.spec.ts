@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 const jid = "00000000-0000-4000-8000-000000000981";
 const tid = "00000000-0000-4000-8000-000000000982";
-for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates and restore at ${width}`, async ({ page }) => {
+for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates and restore at ${width}`, async ({ page }, testInfo) => {
   await page.setViewportSize({width, height: 932});
   await page.addInitScript(({jid,tid}) => {
     sessionStorage.setItem("citynexus.traveler.bearer", "VARIANT_TEST_FIXTURE_TOKEN");
@@ -55,6 +55,12 @@ for (const width of [390, 430]) test(`TEST_FIXTURE prepare selected draft dates 
   await expect(card).toBeVisible();
   const save=card.getByRole("button",{name:"保存为正式候选方案"});
   await expect(save).toBeDisabled();
+  // P1: the twelve time inputs start folded; the save control stays outside the disclosure.
+  await expect(card.getByLabel("TEST_FIXTURE 原草案结束时间")).not.toBeVisible();
+  await card.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: testInfo.outputPath(`draft-schedule-folded-${width}.png`) });
+  await card.getByText("编辑行程时间（可选）", { exact: true }).click();
+  await expect(card.getByLabel("TEST_FIXTURE 原草案结束时间")).toBeVisible();
   await card.getByLabel("TEST_FIXTURE 原草案结束时间").fill("16:00");
   await card.getByLabel("按以上时间准备方案").check();
   await save.click();
