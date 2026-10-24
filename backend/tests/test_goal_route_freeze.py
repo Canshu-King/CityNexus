@@ -91,6 +91,13 @@ def _store_route(task_id, origin_id, destination_id, *, minutes=27):
         session.commit()
 
 
+def _research_rows(task_id):
+    """The rows the drawer under 「高德转场路线」 lists, read back from where they are stored."""
+    with SessionLocal() as session:
+        return json.loads(session.get(JourneyMission, task_id).intent_json)["goal_task"].get(
+            "research_routes") or []
+
+
 def _freeze(client, headers, root, task_id, plan_id, key=None):
     return client.post(root + f"/agent/goal-tasks/{task_id}/plans/{plan_id}/freeze-routes",
                        headers={**headers, "Idempotency-Key": key or str(uuid4())})
@@ -693,6 +700,13 @@ def test_the_travellers_walking_limit_moves_a_long_hop_to_the_transit_door(signe
         assert [fact["minutes"] for fact in evidence["facts"]] == [41], evidence["facts"]
         assert [(fact["mode"], fact["distance_m"], fact["walking_distance_m"])
                 for fact in evidence["facts"]] == [("TRANSIT", 6120, 640)], evidence["facts"]
+    # The drawer lists what the walking door measured, so the replacement has to be written on that row
+    # too -- otherwise the same hop reads 步行 16.2 公里 under 「高德转场路线」 while the band above it says
+    # 已换成公共交通核实 (measured on the real screen: walk-113-log.txt:68 against the band at :57).
+    hop = [row for row in _research_rows(task_id) if row.get("from_name") == "TEST_FIXTURE 塔"]
+    assert len(hop) == 1, _research_rows(task_id)
+    assert (hop[0]["mode"], hop[0]["frozen_mode"], hop[0]["walking_cap_m"]) == ("WALK", "TRANSIT", 1000), hop[0]
+    assert (hop[0]["frozen_minutes"], hop[0]["frozen_lines"]) == (41, ["地铁8号线"]), hop[0]
 
 
 def test_a_preference_with_no_number_invents_no_cap_and_sends_no_second_call(signed_place, monkeypatch):
@@ -715,6 +729,9 @@ def test_a_preference_with_no_number_invents_no_cap_and_sends_no_second_call(sig
     # distance, which is exactly what the traveller's limit then judges.
     assert [(fact["mode"], fact["walking_distance_m"], fact["distance_m"])
             for fact in stored["facts"]] == [("WALK", None, 16200)], stored["facts"]
+    # And the drawer's row is left exactly as the provider answered it: no limit, no frozen marker.
+    hop = [row for row in _research_rows(task_id) if row.get("from_name") == "TEST_FIXTURE 塔"]
+    assert "walking_cap_m" not in hop[0] and "frozen_mode" not in hop[0], hop[0]
 
 
 def test_when_the_transport_door_has_no_answer_the_walk_stays_and_says_it_was_too_far(
@@ -730,3 +747,6 @@ def test_when_the_transport_door_has_no_answer_the_walk_stays_and_says_it_was_to
     assert len(fake.transit_calls) == 1 and edge["mode"] == "WALK", (fake.transit_calls, edge)
     assert (edge["distance_m"], edge["over_cap_m"], edge["replaced_walk_m"]) == (16200, 16200, None), edge
     assert (body["frozen"], body["replaced_long_walks"], body["over_cap_walks"]) == (True, 0, 1), body
+    # The walk is still on the card, and the card says it went over the limit the traveller wrote.
+    hop = [row for row in _research_rows(task_id) if row.get("from_name") == "TEST_FIXTURE 塔"]
+    assert (hop[0]["mode"], hop[0]["frozen_mode"], hop[0]["walking_cap_m"]) == ("WALK", "WALK", 1000), hop[0]

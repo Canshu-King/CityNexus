@@ -2327,6 +2327,14 @@ export interface GoalResearchRoute {
   // here before that leg existed (backend/app/agent/goal_route_freeze.py).
   mode?: "WALK" | "TRANSIT" | null;
   lines?: string[];
+  // What this version of the plan froze for this hop, once the traveller's own walking limit touched it.
+  // The row above stays what the Agent measured; these fields say whether the plan rode instead of walked
+  // (backend/app/agent/goal_route_freeze.py `_mark_frozen_hop`).
+  walking_cap_m?: number | null;
+  frozen_mode?: "WALK" | "TRANSIT" | null;
+  frozen_distance_m?: number | null;
+  frozen_minutes?: number | null;
+  frozen_lines?: string[];
 }
 export interface GoalDraftVariant {
   id: string; title: string; comparison: string; artifact: GoalDraftArtifact;

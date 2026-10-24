@@ -154,6 +154,22 @@ function isAmapLead(place: GoalResearchLead): boolean {
   return typeof place.provider === "string" && place.provider.toLowerCase() === "amap";
 }
 
+function frozenHopLine(route: GoalResearchRoute): string | null {
+  // A hop the traveller's own walking limit moved onto a bus: the row stays what the walking door
+  // measured, and this line says what this version of the plan froze instead.  Both halves are one
+  // sentence each because the two outcomes are different -- transport answered, or it did not.
+  const cap = typeof route.walking_cap_m === "number" && route.walking_cap_m > 0 ? route.walking_cap_m : null;
+  if (cap === null) return null;
+  const capText = `${(cap / 1000).toFixed(cap % 1000 ? 1 : 0)} 公里`;
+  if (route.frozen_mode === "TRANSIT" && route.mode !== "TRANSIT") {
+    const when = typeof route.frozen_minutes === "number" ? ` · ${humanDuration(route.frozen_minutes * 60)}` : "";
+    const lines = (route.frozen_lines ?? []).slice(0, 2).join(" · ");
+    return `超过你写的${capText}，这版按公共交通核实${typeof route.frozen_distance_m === "number"
+      ? ` ${humanDistance(route.frozen_distance_m)}${when}` : ""}${lines ? `（${lines}）` : ""}`;
+  }
+  return route.frozen_mode === "WALK" ? `超过你写的${capText}，公共交通没有答案，这版仍按步行核实` : null;
+}
+
 function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
   const routes = items.filter((route) => route.provider === "amap" && route.coordinate_system === "GCJ02"
     && typeof route.id === "string" && !!route.id && typeof route.from_place_id === "string" && !!route.from_place_id
@@ -170,6 +186,7 @@ function ResearchRoutes({ items }: { items: GoalResearchRoute[] }) {
       <span title={`${route.distance_m} 米 · ${route.duration_seconds} 秒`}>{route.mode === "TRANSIT" ? "公共交通" : "步行"} · {humanDistance(route.distance_m)} · {humanDuration(route.duration_seconds)}</span>
       {route.mode === "TRANSIT" && (route.lines ?? []).length > 0
         && <small data-testid="rev-amap-research-lines">{route.lines!.slice(0, 3).join(" · ")}</small>}
+      {frozenHopLine(route) && <small data-testid="rev-amap-research-frozen">{frozenHopLine(route)}</small>}
       <a href={route.source_url} target="_blank" rel="noopener noreferrer">在高德地图查看路线 ↗</a>
     </li>)}</ul>
   </details>;

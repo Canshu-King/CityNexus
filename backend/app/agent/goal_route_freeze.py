@@ -409,6 +409,30 @@ def _walking_cap_m(session: Session, journey: Journey, task: dict) -> int | None
             return limit
     return None
 
+def _mark_frozen_hop(task: dict, origin: Place, destination: Place, route: dict, cap_m: int) -> None:
+    """Say on the researched row what this version of the plan actually froze for that hop.
+
+    The drawer under 「高德转场路线」 lists what the Agent measured, so when the traveller's own walking
+    limit moves a hop onto a bus, that list goes on saying 步行 · 3.4 公里 while the band above it says 已换成
+    公共交通核实 -- measured on walk-113, where the drawer rows read WALK 3385 m / WALK 3512 m
+    (trial/results/20261022_v3_human_chrome/walk-113-log.txt:68) against a stored attempt of
+    `transit=4, replaced_long_walks=2, walking_cap_m=1000`.  A change the traveller asked for has to be
+    visible where they can still open the thing it changed.  Nothing is invented here: every field is read
+    off the row this press froze, and a hop with no researched row is left alone rather than given one.
+    """
+    origin_key = _candidate_id_for(task, origin)
+    destination_key = _candidate_id_for(task, destination)
+    seconds = route.get("duration_seconds")
+    fields = {"walking_cap_m": int(cap_m), "frozen_mode": route.get("mode") or "WALK",
+              "frozen_distance_m": route.get("distance_m"),
+              "frozen_minutes": None if seconds is None else max(1, int(round(float(seconds) / 60.0))),
+              "frozen_lines": list(route.get("lines") or [])}
+    for row in task.get("research_routes") or []:
+        if isinstance(row, dict) and str(row.get("from_place_id")) == origin_key \
+                and str(row.get("to_place_id")) == destination_key:
+            row.update(fields)
+
+
 def _over_cap_walk(row: dict | None, cap_m: int | None) -> bool:
     """A walking answer the traveller said they would not take. An absent mode is WALK here, and that is
     a fact about this code (only the walking door ever wrote these rows before the transit leg landed)."""
@@ -472,6 +496,7 @@ def freeze_routes(session: Session, journey: Journey, task: dict, plan: PlanVers
             route = _replace_long_walk(session, task, origin, destination, route, cap_m,
                                        destination_row.start_at)
             status = MEASURED
+            _mark_frozen_hop(task, origin, destination, route, cap_m)
         minutes = None if route is None else max(1, int(round(float(route["duration_seconds"]) / 60.0)))
         if route is not None:
             facts.append((origin.id, destination.id, route))
