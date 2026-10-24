@@ -526,6 +526,7 @@ export function RevolutionFirstLook() {
   // this existed, 我的旅程 could only ever show a journey this very browser had opened, and a
   // traveller with a real saved trip was told to go and explore again.
   const [savedTrips, setSavedTrips] = useState<SessionDraftJourney[]>([]);
+  const [demoBusy, setDemoBusy] = useState(false);
   const tripLookup = useRef(0);
   const [recentJourneys, setRecentJourneys] = useState<TrialJourney[]>(loadRecentJourneys);
   const [explorationTitle, setExplorationTitle] = useState<{ journeyId: string; label: string } | null>(null);
@@ -1087,6 +1088,20 @@ export function RevolutionFirstLook() {
     }
   };
 
+  const enterDemoJourney = async () => {
+    if (demoBusy) return;
+    setDemoBusy(true);
+    try {
+      const answer = await cityNexusApi.demoSession();
+      storeTravelerIdentity(answer.access_token, answer.traveler_id);
+      await resumeSavedTrip(answer.journey_id);
+    } catch {
+      setError("示例行程还没准备好，请让演示机先启动。");
+    } finally {
+      setDemoBusy(false);
+    }
+  };
+
   const goSummary = (state: string) => {
     switch (state) {
       case "NOT_STARTED": return "已保存，等待你出发";
@@ -1409,6 +1424,12 @@ export function RevolutionFirstLook() {
               <p>{deviceJourneyHint
                 ? `这台设备上还留着「${deviceJourneyHint}」这趟行程，这次打开没有登录到它，所以读不到进度。`
                 : "开始探索一个地区后，你保存的路线和出发进度会显示在这里。"}</p>
+              {!briefBearer && (
+                <button type="button" data-testid="rev-demo-session" disabled={demoBusy}
+                  onClick={() => void enterDemoJourney()}>
+                  {demoBusy ? "正在进入示例行程…" : "课堂演示：进入示例行程"}
+                </button>
+              )}
               <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
                 开始探索 →
               </button>

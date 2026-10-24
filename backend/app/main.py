@@ -6262,6 +6262,52 @@ def demo_mode_enabled() -> bool:
     return bool(settings.demo_mode)
 
 
+@app.get("/api/v1/demo/session")
+def demo_session(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    """One-click classroom entry: a signed session for the newest unfinished journey.
+
+    Only exists while the process runs as a stage (``CITYNEXUS_DEMO_MODE=true``).  It exists so a
+    teacher on a fresh browser can enter the prepared journey without seeding a cookie or a local
+    pointer; it never creates a journey and never writes.  The token is the same signed bearer a
+    normal session uses, and every later call is authorised by it.
+    """
+    if not demo_mode_enabled():
+        raise HTTPException(404, "Not found")
+    if not settings.traveler_auth_secret:
+        raise HTTPException(503, "traveler auth is not configured")
+    from app.traveler_principal import issue_traveler_token
+
+    # A started journey is the scene; drafts only stand in when none has started.
+    # Ordering the mixed set by `updated_at` alone picked a draft whose timestamp
+    # was newer than the started journey's (measured 2026-10-25 23:43).
+    journey = session.scalars(
+        select(Journey)
+        .where(Journey.deleted_at.is_(None), Journey.status == "ACTIVE")
+        .order_by(Journey.updated_at.desc(), Journey.id.desc())
+        .limit(1)
+    ).first()
+    if journey is None:
+        journey = session.scalars(
+            select(Journey)
+            .where(Journey.deleted_at.is_(None), Journey.status == "DRAFT")
+            .order_by(Journey.updated_at.desc(), Journey.id.desc())
+            .limit(1)
+        ).first()
+    if journey is None:
+        raise HTTPException(404, "DEMO_JOURNEY_NOT_PREPARED")
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    return {
+        "access_token": issue_traveler_token(str(journey.traveler_id)),
+        "traveler_id": str(journey.traveler_id),
+        "journey_id": journey.id,
+        "journey_title": journey.title,
+    }
+
+
 # ORD-0389: the second half of the door.  `demo_mode` alone meant any caller who reached a
 # deployment running with CITYNEXUS_DEMO_MODE=true -- which is exactly how the shared preview is
 # started (D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_backend.bat) -- so the switch that

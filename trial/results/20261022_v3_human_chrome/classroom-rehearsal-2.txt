@@ -1,0 +1,14 @@
+STEP open t=4.4s
+STEP trips t=5.8s
+STEP demo-entry t=9.3s
+ENTERED true
+STEP guardian t=11.9s
+PROPOSAL_VISIBLE true
+PROPOSAL_TEXT "移除故宫博物院；路上少 66 分钟。"
+STEP accept t=12.1s
+RELOAD_BODY_LEN 1684
+AFTER_FIRST_STOP "天坛公园 · 12月3日 09:00"
+AFTER_NOW "天坛公园"
+STEP after-reload t=18.1s
+TOTAL_S 18.1
+ERRORS []
