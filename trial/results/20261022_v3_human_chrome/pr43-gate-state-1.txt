@@ -1,0 +1,5 @@
+PR43 draft=True state=open head_sha=080d6b8220bcf168608c14cba1cc463514a9864e
+ACTIONS_BRANCH_FILTERED total_count=0 branch=rescue/v3-final-departure-20261022
+ACTIONS_REPO_WIDE total_count=361 (no branch filter -- these belong to other branches)
+WORKFLOWS_DEFINED total_count=5
+NOTE the two Actions numbers answer different questions; quoting either one as the other is a defect
