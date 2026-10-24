@@ -1,0 +1,13 @@
+STEP1_URL http://127.0.0.1:14491/revolution
+STEP1_TEXT "C\nCityNexus\n你的智能旅行伙伴\nAI 建议可试\n北京\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：故宫博物院 · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：故宫博物院\n接下来：天坛公园\n已找到准确路线 · 约 78 分钟\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：故宫博物院（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 19:31\nAGENT 计划\n高级信息\nPlanning AI is ready.\nOPEN-WORLD RECOVERY\n已知选择不够，我正在附近寻找新的可能性。\n照看这趟行程\nI found new places to check\nDetected: Closure\nWorking on a recovery\nI’m looking for more recovery options nearby\nI found new places to check\n正在处理行程变化\n发现真实变化，正在进入恢复流程。\n06:31\n你将从哪里出发？\nCityNexus 需要一个明确的起点，才能估算何时出发。\n也可以选择一个已验证的地点作为计划起点。\n下一站准备情况\n故宫博物院\n基本准备好了 · 仍有实时信息未确认。\n路线尚未准备好。\n发生了什么\n有一处地点临时关闭 · 受影响：故宫博物院\n有一处地点临时关闭 · 受影响：天坛公园\n方案 A · 推荐怎么改\n\nReality-aware recovery proposal\n\n已确认预订和到达/离开安排已保留。\n\n移出\nreal-place-62c2e60619da82efebfdea8c\n接受新方案\n仅调整今天\n稍后提醒\nCITYNEXUS · 工作动态\n行程照看未开启\n未启用\n\n开启后会留意行程变化。\n\n查看最近工作记录\n行程助手\nAI 当前没有执行中的任务\n点击后把这趟行程的信息交给助手\n检查行程\n高级信息\nCITYNEXUS · AI 助手\n让助手检查当前行程\n\n暂无助手运行记录。\n\n准备出发\n行程守护\n添加同行者后使用\n行程已经启动\n\n实时进度、变更建议和 Agent 审批现在都在「行程」里。\n\n查看当前行程 →\n探索\n我的旅程\n我的"
+GUARDIAN_BUTTON 1
+PROPOSAL_VISIBLE true
+PROPOSAL_TEXT "找到一份可行的调整\n\n移除故宫博物院；路上少 66 分钟。\n\n接受这份调整\n暂不调整"
+DIFF_TEXT "移除故宫博物院；路上少 66 分钟。"
+ACCEPT_BUTTON "接受这份调整"
+AFTER_NOTE ""
+AFTER_PROPOSAL_VISIBLE false
+AFTER_TEXT "C\nCityNexus\n你的智能旅行伙伴\nAI 建议可试\n北京\n旅途正在继续。\n换地区 ›\n旅行插画\n行程执行中\n地图\n执行与待办\n执行与待办\n\n还没出发\n\n这一趟的安排\n\n第一站：天坛公园 · 12月3日 09:00\n\n行程助手\n\n高级信息\nJourney Operator is off.\n今天的行程\n现在：天坛公园\n已找到准确路线 · 约 54 分钟\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n兴趣（可选）\n随便看看\n咖啡 / 美食\n文化\n自然\n查找附近体验\n直接搜索真实附近地点（需同意）\n你: 尚未分享位置\n集合点：天坛公园（来自当前行程安排）\n显示同行者的粗略位置；浏览器定位供路线参考。\n同时看着后面的行程\nI’m watching the rest of your journey.\n未来 0 个行程点 · 看到 19:31\nAGENT 计划\n高级信息\nPlanning AI is ready.\nOPEN-WORLD RECOVERY\n已知选择不够，我正在附近寻找新的可能性。\n外部事务\nSandbox 预订已确认，继续照看行程。\n0 / 0 项已完成 · LAB_SANDBOX_PROVIDER\n照看这趟行程\nDetected: Closure\nWorking on a recovery\nI’m looking for more recovery options nearby\nI found new places to check\nPlan updated\n正在处理行程变化\n发现真实变化，正在进入恢复流程。\n06:31\n你将从哪里出发？\nCityNexus 需要一个明确的起点，才能估算何时出发。\n也可以选择一个已验证的地点作为计划起点。\n下一站准备情况\n天坛公园\n基本准备好了 · 仍有实时信息未确认。\n路线尚未准备好。\n发生了什么\n有一处地点临时关闭\n\n当前没有需要你决定的调整。\n\nCITYNEXUS · 工作动态\n行程照"
+AFTER_FIRST_STOP "天坛公园 · 12月3日 09:00"
+AFTER_TODAY "\n现在：天坛公园\n已找到准确路线 · 约 54 分钟\n我出发了\n同行者位置\n这趟行程目前只有你一位有效成员。\n附近有什么可以顺路玩？\n点击后读取一次当前位置。推荐仅你可见，距离以直线计算。\n个人时间偏好\n15 分钟\n30 分钟\n45 分钟\n"
+ERRORS []

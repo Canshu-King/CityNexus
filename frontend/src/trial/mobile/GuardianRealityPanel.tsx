@@ -274,6 +274,12 @@ export function GuardianRealityPanel({
       setProposalNote(decision === "accept" ? "行程已按这份调整更新。" : "已保留原来的安排。");
       window.dispatchEvent(new CustomEvent("citynexus:mission-refresh"));
       setIdentityRevision((revision) => revision + 1);
+      if (decision === "accept") {
+        // The plan this screen was built from no longer exists; reload so every
+        // panel (including LiveRecovery's itinerary line) reads the new active
+        // plan instead of leaving the traveller on a stale first stop.
+        window.setTimeout(() => window.location.reload(), 1200);
+      }
     } catch {
       setProposalState("error");
       setProposalNote(decision === "accept"
