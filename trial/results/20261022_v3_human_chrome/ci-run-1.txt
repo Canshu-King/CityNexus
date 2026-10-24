@@ -1,0 +1,11 @@
+run=40088944598 workflow=revolution-trial-ux-smoke.yml name=Revolution trial UX compile gate
+event=workflow_dispatch branch=rescue/v3-final-departure-20261022 head_sha=3d8f0938b693a7bfeb9e78c3978ed0db707fb558
+status=completed conclusion=success job=trial-build steps=15
+step=success Parse local trial Python without network model calls
+step=success Full TypeScript check
+step=success Vite production build
+step=skipped Install Chromium for isolated mobile UI fixtures
+step=skipped Mobile UI real Chromium fixture smoke (NO live API or Agent)
+step=skipped Upload labeled fixture screenshots and browser traces
+branch_filtered_total_count_before=0 after=1
+why_zero_before=the three workflows' push filters list other branch names (r30/r32/trial-first-look/fix-*/design/revolution-mobile-first-v1), so pushes to this branch never trigger; workflow_dispatch was the only way in

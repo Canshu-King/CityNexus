@@ -2127,3 +2127,18 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 - **判语：这颗键为什么禁用，我没量出来。** 最像的解释是"候选已经生成、没有待存的新改动"，但那是猜，不写成结论。
 
 **所以这一格留下的。** P0-4 的"不静默改生效版"多了一句屏证；"换地点／砍一项"两种差异形状**仍然没量过**——要逼出它们得造出"地点在当天不开放"或"必须少一项"的冲突，而当前这份行程里没有这种冲突。第 319 号令只把后半句留着，不假装做完。
+
+
+## 四十六、本枝自己的 compile gate 在现尖上跑通了：「Actions 0 次」这句 caveat 从此要改写
+
+**先说旧话哪里不对。** 这批回执里我一直写「本枝 Actions 运行 total_count=0 ⇒ 不得称正式交付」。那是对的读数，但**原因是触发条件**：本枝 `.github/workflows/` 里确实有三个工作流（`r30-narrow.yml`、`r32-narrow.yml`、`revolution-trial-ux-smoke.yml`），可它们的 `push` 过滤只写了**别的枝名**（`gpt/revolution-r30-…`、`gpt/revolution-r32-…`、`trial/revolution-first-look-…` 等），本枝 `rescue/v3-final-departure-20261022` 一个都不在里面；所以往本枝推多少次都不会触发，只有 `workflow_dispatch` 能进。
+
+**这一格做了什么。** 用 `workflow_dispatch` 把 `revolution-trial-ux-smoke.yml` 在本枝现尖上手动跑了一次（`http_status=204` 受理）。结果（`trial/results/20261022_v3_human_chrome/ci-run-1.txt:1` 起逐条）：
+- `run=40088944598`，`head_sha=3d8f0938b693a7bfeb9e78c3978ed0db707fb558`（就是本枝现尖），`status=completed conclusion=success`，job `trial-build` 十五步；
+- **真正卡编译的那三步全绿**：`Parse local trial Python without network model calls`、`Full TypeScript check`、`Vite production build`；
+- 三格是 **skipped**：`Install Chromium for isolated mobile UI fixtures`、`Mobile UI real Chromium fixture smoke (NO live API or Agent)`、`Upload labeled fixture screenshots and browser traces`——浏览器夹具那一臂这次没跑（工作流里它是条件步），所以**这一绿不等于"手机 UI 夹具也过了"**。
+- 本枝按枝过滤的 `total_count` 从 0 变成 1。
+
+**所以交付状态要这么写。** 不是"本枝没跑过 CI"，而是"本枝的 push 不触发 CI；我手动跑了一次，编译门（Python 解析／TS 全量检查／Vite 生产构建）在现尖上绿；浏览器夹具臂未跑"。PR #43 仍是 Draft、USER_VERIFIED 仍 PENDING 这两条不变。
+
+**要不要把它变成每次推送都跑。** 那只要在 `revolution-trial-ux-smoke.yml` 的 `push.branches` 里加上本枝名（一行）。这是花 Actions 额度的决定，我不擅自加；要加，请说一声，我加上并等它自己跑一次给你看。
