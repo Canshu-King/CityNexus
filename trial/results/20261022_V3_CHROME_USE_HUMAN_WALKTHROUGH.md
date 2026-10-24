@@ -2186,3 +2186,21 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **整套复跑。** 同一条命令 `npx playwright test --config playwright.mobile-trial.config.ts`：**50 passed / 0 failed**（`trial/results/20261022_v3_human_chrome/fixture-rerun-2.log`）；整树类型检查 `npm run typecheck:all` 绿（`trial/results/20261022_v3_human_chrome/typecheck-after-fixtures-1.log`）。
 
 **边界。** 本次改动＝五枚夹具 ＋ 一枚产品 CSS；没碰接口、契约、鉴权、数据。PR #43 仍 Draft；USER_VERIFIED 仍 PENDING。夹具三格在 CI 里仍被 `if:` 锁在别的枝名上，所以这份读数只在「本机同一条命令」意义上成立，不是 CI 绿证。
+
+## 四十九、#319 残余：「按这一版安排」之后那句话，指着一个当时不在屏上的按钮
+
+**查了什么。** P0-4 只量过「应用前后的时间位移」。今天在同一隔离栈（页面 `14522`、库 `citynexus_v3_cap2_1024.db`）上补量四件事：应用之后那句上限说明还在不在屏上、屏上有没有它点名的按钮、另外两种差异形状（换地点／砍一项）会不会出现、再核实一次能不能读到披露。
+
+**四条读数。**
+- **说明句在 DOM 里，但渲染成 0×0。** 应用之后，「超过你写的1 公里，这版按公共交通核实 6.0 公里…」仍在 DOM；它的宽高都是零，所在抽屉「高德转场路线（2）」本身高度也是零（`trial/results/20261022_v3_human_chrome/replan-disclosure-read-1.txt:2`）。屏幕正文里也搜不到「已换成公共交通核实」（`trial/results/20261022_v3_human_chrome/replan-band-read-1.txt:1`）。
+- **当时屏上没有冻结/核实控件。** 出发卡写着「已按路线把 1 处往后排，这是一份新的候选方案；生效的那一份没有变。新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。」；而在那一刻，135 个可点元素里没有一个匹配「冻结／核实转场」（`replan-select-freeze-read-1.txt` 的 `S0` 行 `freeze:[]`）。**话里点名的按钮不在屏上。**
+- **刷新后同一行程页有一个「重新核实转场」**：361×44、中心命中是它自己（`replan-freeze-controls-scan-1.txt` 同一轮 `P1`）。所以控件并非永远不存在，是**这句话引用的标签与那一屏实际用的标签对不上**，且应用后那一刻它还没出现。
+- **再按一次撞上会话过期**：`HTTP 401`（`…/plans/59b0c5e9-…/freeze-route`），屏上「当前账号无法读取这份行程，请重新进入行程。」（`replan-refreeze-read-1.txt` 的 `P3`）。这是栈从凌晨跑到现在的会话事实，**不当产品判语**；「再核实之后的上限披露」这条屏读因此仍缺。
+
+**另外两种形状的答案：不在这个动作的词表里。** 该动作给出的差异只有时间位移（`frontend/src/trial/mobile/departureGaps.ts:490` 起：「某处：10:00–12:00 改成 11:18–13:18，往后 78 分钟」）；一天排不下时给的是拒绝句「要改的是这天排几处，不是钟点」（`:497`）。**它不会静默换地点或砍一项**——这两件事不是没量，是这个动作根本不做。
+
+**改了什么。** 一句话：`REPLAN_NEEDS_FREEZE_SENTENCE` 改成「新的一版还没有核实转场；先选用这一版，再核实并冻结转场。」（`frontend/src/trial/mobile/departureGaps.ts:510`）。依据是代码保证的：应用后新版本一定不是生效版本（`frontend/src/trial/mobile/DraftDepartureCard.tsx:161` 要求 `selected === false`），而屏上确实有「选用这份安排」。不再引用当时不在屏上的按钮标签，也不跳过「先选用」这一步。
+
+**证据边界。** 运行中的栈已经下发新句子（`http://127.0.0.1:14522/src/trial/mobile/departureGaps.ts` 现读含新句）；但**我没在屏上看见它**——这句在按下那一刻拼进消息状态，而那台栈的会话已过期（401）。所以这一刀判 **PARTIAL**：文案源码与下发已证，屏上证词待下一次完整「重排 → 应用」时补。P0-4 的验收结论不动。
+
+**回归。** `npm run typecheck:all` rc=0；整套夹具 `npx playwright test --config playwright.mobile-trial.config.ts` **50 passed / 0 failed（8.5 分钟，rc=0）**（`trial/results/20261022_v3_human_chrome/fixture-rerun-3.log`）。

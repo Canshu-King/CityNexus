@@ -507,4 +507,4 @@ export function replanAppliedSentence(count: number): string {
   return `已按路线把 ${count} 处往后排，这是一份新的候选方案；生效的那一份没有变。`;
 }
 
-export const REPLAN_NEEDS_FREEZE_SENTENCE = "新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。";
+export const REPLAN_NEEDS_FREEZE_SENTENCE = "新的一版还没有核实转场；先选用这一版，再核实并冻结转场。";

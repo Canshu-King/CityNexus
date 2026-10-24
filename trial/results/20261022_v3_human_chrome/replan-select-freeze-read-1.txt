@@ -1,0 +1,6 @@
+# TRANSCRIPT, not a live artifact: the probe below printed S0/S1 to stdout at 2026-10-24T12:14:08Z
+# and then the Node process died on a libuv assertion before writing its own file.  The two lines are
+# copied verbatim from that stdout; the live readings that survived are replan-disclosure-read-1.txt,
+# replan-band-read-1.txt and replan-freeze-controls-scan-1.txt.
+S0 {"picks":[{"i":0,"text":"B省钱版花费优先：夜游以免费逛街+小吃为主，长城高铁往返性价比高，水关长城可作更便宜备选；门票/交通按需自费。地点 4路线 12 天查看每天安排与待查事项202","disabled":false},{"i":1,"text":"C本地特色版京味主线：前门老字号+南锣鼓巷胡同群（帽儿胡同四合院、可园等），保留天安门与长城两大地标，最有北京味。地点 4路线 12 天查看每天安排与待查事项2","disabled":false}],"freeze":[],"message":"已按路线把 1 处往后排，这是一份新的候选方案；生效的那一份没有变。新的一版还没有核实转场，下面可以再按一次「核实并冻结今天的转场」。"}
+S1 {"found":true,"label":"选用这份安排","disabled":false,"box":{"x":0,"y":0},"centre_hit":false,"topmost":"HEADER"}
