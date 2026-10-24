@@ -518,9 +518,10 @@ export function RevolutionFirstLook() {
         if (!session.traveler_id || (pointer.ownerTravelerId && pointer.ownerTravelerId !== session.traveler_id)) {
           throw new Error("Journey owner does not match the signed traveler");
         }
-        // A pointer is only a local navigation hint. The authenticated server
-        // read proves the current signed traveler is a member before restoring it.
-        await cityNexusApi.getBootstrapShortlist(pointer.id);
+        // A pointer is only a local navigation hint. The authenticated operator read proves the
+        // current signed traveler is a member before restoring it; bootstrap-shortlist cannot serve
+        // as that proof because it answers 409 once a PlanVersion already exists.
+        await cityNexusApi.getJourneyOperator(pointer.id);
         if (cancelled || readTravelerBearer() !== bearer) return;
         const restored: TrialJourney = { ...pointer, ownerTravelerId: session.traveler_id };
         storeTravelerIdentity(bearer, session.traveler_id);

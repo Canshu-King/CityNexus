@@ -1,0 +1,133 @@
+
+Running 5 tests using 1 worker
+
+[1/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:27:3 › Revolution signed-session recovery UI regression › a stale Journey's 403 offers one-tap restart without deleting its server record
+[WebServer] 00:47:25 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:25 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:25 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:25 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/bootstrap-shortlist
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:26 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:26 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:26 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[2/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:93:3 › Revolution signed-session recovery UI regression › failed signed-session lookup keeps the current bearer and offers a fresh-session recovery
+[3/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:138:3 › Revolution signed-session recovery UI regression › one signed traveler starts and reopens Journeys in multiple cities
+[WebServer] 00:47:28 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:28 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:28 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:28 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:28 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:28 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000118/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:29 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:29 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+[WebServer] 00:47:29 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000117/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[4/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:203:3 › Revolution signed-session recovery UI regression › legacy bearer-only session restores a Journey after server membership proof
+[WebServer] 00:47:30 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:30 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:30 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:30 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000119/bootstrap-shortlist
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[5/5] [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:241:3 › Revolution signed-session recovery UI regression › a Journey that already has a PlanVersion still restores, because a 409 shortlist is not a denial
+[WebServer] 00:47:31 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000120
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:31 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000120/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+[WebServer] 00:47:31 [vite] http proxy error: /api/v1/journeys/00000000-0000-4000-8000-000000000120/map-places
+[WebServer] Error: connect ECONNREFUSED 127.0.0.1:8000
+[WebServer]     at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1645:16)
+
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:241:3 › Revolution signed-session recovery UI regression › a Journey that already has a PlanVersion still restores, because a 409 shortlist is not a denial 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      269 |     await expect(page.getByTestId("rev-mission-cockpit").getByRole("heading", { level: 2, name: "北京", exact: true })).toBeVisible();
+      270 |     await expect(page.getByText("旧行程无法恢复，原记录仍保存在服务器。")).toHaveCount(0);
+    > 271 |     expect(operatorRead).toBe(true);
+          |                          ^
+      272 |   });
+      273 | });
+      274 |
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-human-session-recovery.spec.ts:271:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-human-session-r-de0e1-9-shortlist-is-not-a-denial-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-human-session-r-de0e1-9-shortlist-is-not-a-denial-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-human-session-r-de0e1-9-shortlist-is-not-a-denial-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-human-session-r-de0e1-9-shortlist-is-not-a-denial-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-human-session-recovery.spec.ts:241:3 › Revolution signed-session recovery UI regression › a Journey that already has a PlanVersion still restores, because a 409 shortlist is not a denial 
+  4 passed (11.6s)

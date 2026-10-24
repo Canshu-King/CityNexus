@@ -2304,3 +2304,21 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **边界（写明）。** 「3/3 才生效」这条规则在服务端（三人 consent 轮的真 socket 读数在 #217/#218）；这一刀没有改同意门，也没有放宽它。这条门证的是「多人时牌子如实写人数、按下去落在真卡、成员的选择真发到服务端并回显」，不是三名真人跨账号验证。单人门（同文件 `:637`）仍在同一套里跑。
 
 **回归。** 整树类型检查 rc=0（`trial/results/20261022_v3_human_chrome/typecheck-p1d-2.log`）；整套夹具 **52 passed / 0 failed，12.6 分钟，rc=0**（`trial/results/20261022_v3_human_chrome/fixture-suite-p1d-1.log`）——这是本支第一次五十二条全绿，多人门与 503 门同套。
+
+## 五十八、找回旧行程的那条腿，被一个 409 判成「无法恢复」
+
+**现场。** 在 cap2 库的隔离副本上重开行程页：令牌由服务器签发、`/api/v1/travelers/session` 与 `/api/v1/journeys/<id>` 都回 200，但首屏仍写「旧行程无法恢复，原记录仍保存在服务器。」（`trial/results/20261022_v3_human_chrome/cap3-recover-before-1.txt:4`）。
+
+**根因（六个读数，一个文件）。** 恢复腿把 `bootstrap-shortlist` 当成员资格证明。对这条已有 PlanVersion 的行程，它回 **409**（`cap3-api-reads-1.txt:4`，码 `bootstrap.bootstrap_plan_already_exists`）；而前端把这条腿的任何失败都写成同一句「无法恢复」（`frontend/src/trial/RevolutionFirstLook.tsx:537`）。于是**凡已有方案的行程，重认证后都回不来**——与 P0-3「关浏览器再认证后可找回原 Journey」正面对撞。
+
+**为什么不能直接读 `/journeys/<id>`。** 我拿另一名旅行者的令牌直读同一条行程，它也回 **200**（`cap3-api-reads-1.txt:6`）——那个端点不是授权腿。成员级端点里 `/operator` 对非成员回 **403**（`cap3-api-reads-1.txt:7`），对本人回 **200**（`cap3-api-reads-1.txt:5`）；恢复只需要证明「是成员」，用最小的这一条。
+
+**改后。** 校验腿换成 `getJourneyOperator`（`frontend/src/trial/RevolutionFirstLook.tsx:524`），注释写明 409 的理由。夹具三态：旧 bearer 无配对的恢复（mock operator 200）、非成员 403 仍走「重新开始探索」、以及新增「有 PlanVersion 时 409 不是拒绝」（`frontend/e2e/revolution-human-session-recovery.spec.ts:241`）——那条把 shortlist mock 成真 409，断言行程仍恢复且屏上不出现失败句。
+
+**真栈前后屏证。** 修复前：`cap3-recover-before-1.txt`（失败句）；修复后：`cap3-recover-after-1.txt`（行程恢复，explore 屏出现「北京」与需求原文），再点「准备出发」进到准备卡（`cap3-prep-1.png`，屏上「1 份正式候选方案」「选用这份方案」与需求原文都在）。
+
+**测试环境披露。** 这是 cap2 库的副本（`citynexus_v3_cap3_1025.db`），后端 60532、前端 14532，两个独立端口；令牌由同一受信测试进程按 `issue_traveler_token` 的 R28 说明签发（一小时有效），只写进浏览器自己的 `sessionStorage` bearer 键，与真人登录取到的形状相同；没有 DOM 注入，没有伪造成功数据，也没有碰用户真库与在跑的服务。
+
+**边界。** 这一刀不补「再认证」本身（缺安全再认证仍如实 BLOCKED）；它修的是「已经有合法令牌时，通道被 409 误判」这一格。
+
+**回归。** 类型检查 rc=0（`typecheck-recover-1.log`）；恢复夹具 **5 passed**（`recovery-spec-2.log`）。第一次 **1 failed** 是我把「已配对指针」的情形写进了需要走服务器校验的用例（`recovery-spec-1.log`），改的是测试输入形状（去掉指针里的 owner），不是断言。整套本轮未复跑，这一条只记夹具与真栈两证。

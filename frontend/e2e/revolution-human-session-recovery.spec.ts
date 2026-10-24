@@ -44,7 +44,7 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     });
     await page.route(`**/api/v1/journeys/${oldJourneyId}/bootstrap-discovery/readiness`,
       (r) => json(r, 403, { detail: "JOURNEY_MEMBER_REQUIRED" }));
-    await page.route(`**/api/v1/journeys/${oldJourneyId}/bootstrap-shortlist`,
+    await page.route(`**/api/v1/journeys/${oldJourneyId}/operator`,
       (r) => json(r, 403, { detail: "JOURNEY_MEMBER_REQUIRED" }));
 
     await page.goto("/revolution");
@@ -216,10 +216,10 @@ test.describe("Revolution signed-session recovery UI regression", () => {
       await json(route, 200, { traveler_id: "traveler-legacy" });
     });
     let membershipRead = false;
-    await page.route(`**/api/v1/journeys/${migratedJourneyId}/bootstrap-shortlist`, async (route) => {
+    await page.route(`**/api/v1/journeys/${migratedJourneyId}/operator`, async (route) => {
       expect(route.request().headers()["authorization"]).toBe("Bearer LEGACY_BEARER_FIXTURE");
       membershipRead = true;
-      await json(route, 200, { journey_id: migratedJourneyId, items: [], pocket_walk: null });
+      await json(route, 200, { journey_id: migratedJourneyId, state: "OFF" });
     });
     await page.route(`**/api/v1/journeys/${migratedJourneyId}/bootstrap-discovery/readiness`, (r) =>
       json(r, 200, { journey_id: migratedJourneyId, status: "BLOCKED", reason_code: "TEST_OFFLINE" }));
@@ -236,5 +236,38 @@ test.describe("Revolution signed-session recovery UI regression", () => {
     expect(membershipRead).toBe(true);
     expect(state.travelerId).toBe("traveler-legacy");
     expect(state.pointer).toMatchObject({ id: migratedJourneyId, ownerTravelerId: "traveler-legacy" });
+  });
+
+  test("a Journey that already has a PlanVersion still restores, because a 409 shortlist is not a denial", async ({ page }) => {
+    const plannedJourneyId = "00000000-0000-4000-8000-000000000120";
+    await page.addInitScript(({ id }) => {
+      sessionStorage.setItem("citynexus.traveler.bearer", "PLANNED_BEARER_FIXTURE");
+      sessionStorage.setItem("citynexus.traveler.session-id", "traveler-planned");
+      localStorage.setItem("citynexus.revolution.firstlook.journey", JSON.stringify({
+        id, cityCode: "CN-RV-BJ", cityName: "北京", status: "DRAFT",
+      }));
+    }, { id: plannedJourneyId });
+    await page.route("**/api/v1/agent/runtime-status", (r) => json(r, 200, {
+      runtime_identity: "UNAVAILABLE", hermes_compat_configured: false, ai_state: "DISABLED",
+    }));
+    await page.route("**/api/v1/travelers/session", (route) => json(route, 200, { traveler_id: "traveler-planned" }));
+    let operatorRead = false;
+    await page.route(`**/api/v1/journeys/${plannedJourneyId}/operator`, async (route) => {
+      expect(route.request().headers()["authorization"]).toBe("Bearer PLANNED_BEARER_FIXTURE");
+      operatorRead = true;
+      await json(route, 200, { journey_id: plannedJourneyId, state: "OFF" });
+    });
+    // The real endpoint answers this way once a PlanVersion exists; it must never be the
+    // membership proof, or every planned Journey becomes unrestorable.
+    await page.route(`**/api/v1/journeys/${plannedJourneyId}/bootstrap-shortlist`, (r) =>
+      json(r, 409, { error: { code: "CONFLICT", message: "a shortlist is unavailable after a PlanVersion exists" } }));
+    await page.route(`**/api/v1/journeys/${plannedJourneyId}/bootstrap-discovery/readiness`, (r) =>
+      json(r, 200, { journey_id: plannedJourneyId, status: "BLOCKED", reason_code: "TEST_OFFLINE" }));
+
+    await page.goto("/revolution");
+    await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
+    await expect(page.getByTestId("rev-mission-cockpit").getByRole("heading", { level: 2, name: "北京", exact: true })).toBeVisible();
+    await expect(page.getByText("旧行程无法恢复，原记录仍保存在服务器。")).toHaveCount(0);
+    expect(operatorRead).toBe(true);
   });
 });
