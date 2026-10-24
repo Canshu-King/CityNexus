@@ -1,0 +1,10 @@
+source=trial/start_revolution.ps1 after the 2026-10-24 patch (asks once, remembers locally)
+RUN_3 fed one email on stdin ("trial-check@invalid.example", RFC 2606 reserved; no provider call made)
+RUN_3_FILE %LOCALAPPDATA%\CityNexus\trial-contact-email.txt written with exactly that value (read back, then deleted by me)
+RUN_3_ADDR Starting isolated services at http://127.0.0.1:14334/revolution
+RUN_4 second launch, no email on stdin at all
+RUN_4_PROMPTS 0 occurrences of the prompt string in the launcher output
+RUN_4_ADDR Starting isolated services at http://127.0.0.1:14336/revolution
+TORN_DOWN both runs stopped their listeners (14334/14336/18503/18505 no longer listening)
+CLEANUP both runtime dirs deleted; the placeholder config file deleted, so the owner's first double-click still asks once for his own address
+PARSE PowerShell Parser::ParseFile reports PARSE_OK on the patched script

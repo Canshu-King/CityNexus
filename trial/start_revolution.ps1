@@ -94,6 +94,31 @@ if ($CheckOnly) {
     exit 2
 }
 
+# 一键启动只问一次：把联系邮箱记在本机（不进代码库、不进行程库），之后双击不再问。
+$contactFile = Join-Path $env:LOCALAPPDATA 'CityNexus\trial-contact-email.txt'
+if (-not $env:CITYNEXUS_NOMINATIM_CONTACT_EMAIL -and (Test-Path $contactFile)) {
+    $env:CITYNEXUS_NOMINATIM_CONTACT_EMAIL = (Get-Content -Raw -Path $contactFile).Trim()
+}
+if (-not $env:CITYNEXUS_NOMINATIM_CONTACT_EMAIL) {
+    Write-Host ''
+    Write-Host 'Nominatim（开放街图的地名服务）要求在请求头里带一个能联系到你的邮箱。'
+    Write-Host '它只会出现在发给 Nominatim 的 User-Agent 里；本机会记住，下次不再问。'
+    for ($try = 1; $try -le 3; $try++) {
+        $contactAnswer = (Read-Host '联系邮箱').Trim()
+        if ($contactAnswer -match '^[^@\s]+@[^@\s]+\.[^@\s]+$') {
+            $env:CITYNEXUS_NOMINATIM_CONTACT_EMAIL = $contactAnswer
+            New-Item -ItemType Directory -Force -Path (Split-Path -Parent $contactFile) | Out-Null
+            Set-Content -Path $contactFile -Value $contactAnswer -NoNewline
+            Write-Host "已记住这个邮箱（下次不再问）：$contactFile"
+            break
+        }
+        Write-Host '这不是一个有效邮箱，请再输一次。'
+    }
+    if (-not $env:CITYNEXUS_NOMINATIM_CONTACT_EMAIL) {
+        throw '需要有效邮箱才能开始真实检索；也可以直接运行 trial\try_revolution.py --sample 走离线样例。'
+    }
+}
+
 $foundPair = $false
 for ($offset = 0; $offset -lt 40; $offset++) {
     $candidateFront = 14332 + (2 * $offset)

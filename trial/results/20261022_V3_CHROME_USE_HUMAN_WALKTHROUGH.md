@@ -2094,3 +2094,20 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 3. 默认走 `--sample` 离线样例，页面上明说"离线样例"，真检索改由一个开关打开。
 
 **这一节没做的。** 没在 Explore 模式下真发过一次检索（那会把占位邮箱带给第三方）；没量 AI 模式（`-Agent`）那条；也没动 `OPEN_REVOLUTION.cmd` / `start_revolution.ps1` 一个字节——产品与启动器文件都零改动。
+
+
+## 四十四、一键路上的那道「问邮箱」改成了「只问一次、本机记住」（乙案；甲/丙仍等你一句话）
+
+**为什么先动这一刀。** 第 309 号令的实测（第四十三节）说清了两件事：这条路从没被跑过；它今天卡在「Nominatim 联系邮箱」这一问上。问你选甲/乙/丙时你不在电脑前，我就按**最可逆**的那条先做——**乙：第一次问一次，答完记在本机，以后不再问**。邮箱仍是你自己填，我没有替你编一个地址。
+
+**改了什么（一处，就在启动脚本里）。** `trial/start_revolution.ps1:97` 在「这不是 CheckOnly、且要真起服务」之后加了一段：先看环境变量 `CITYNEXUS_NOMINATIM_CONTACT_EMAIL`，没有就读 `%LOCALAPPDATA%\CityNexus\trial-contact-email.txt`；再没有就问一次（最多三遍），格式过了才写进那个文件并导出给子进程；三遍都不对就明确报错并提示可以走 `--sample` 离线。**只改这一个文件，产品代码零改动**；`trial/try_revolution.py` 一个字节没动。
+
+**怎么验的（两次真跑，都收干净了）。**
+- 第一次：把 `trial-check@invalid.example`（保留域，永远不可路由）喂给那只问句 ⇒ 文件里原样写下了这个值（回读确认），服务起在 `http://127.0.0.1:14334/revolution`（文件那一行 `trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:3`、地址那一行 `trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:4`）。
+- 第二次：**什么都不喂** ⇒ 输出里那条问句出现 **0 次**，服务直接起在 `http://127.0.0.1:14336/revolution`（问句计数 `trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:6`、地址 `trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:7`）。这就是乙案要的效果。
+- 收摊：两次的端口都回落（`trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:8`）；两个运行目录与我写下的占位配置**全部删掉**（`trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:9`）——所以你第一次双击时，它仍会为**你的**地址问那一次，不会悄悄用我的假地址。
+- 语法：PowerShell 的 `Parser::ParseFile` 报了 `PARSE_OK`（`trial/results/20261022_v3_human_chrome/onclick-email-remember-1.txt:10`）。
+
+**甲与丙还留着。** 你若想「一次都不问」就给我一个专用邮箱（甲，我把它写进用户级环境变量，连那一次问句都省掉）；若想「谁都不问、默认离线」就是丙。两样都只需要你一句话，改起来各是十几行。
+
+**没做到的。** 没在真实检索里用过这个邮箱（发出去就等于把一个假联系地址给了 OpenStreetMap，我不做）；`-Agent` 那条、以及「第二次启动能不能接着上一次的行程」都没在这次里量——后者是第四十三节记下的另一个病（每次新库），要不要改成默认续用同一个库，也要你一句话。
