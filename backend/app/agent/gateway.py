@@ -2217,7 +2217,7 @@ class AgentToolGateway:
             upgraded.update(collective_proposal_receipt(self.session, journey, cached_rows))
             return upgraded
 
-        from app.main import generate_replan
+        from app.main import _generate_replan_impl
 
         # Agent tool calls may omit the optional bounded search width.  Keep
         # the request deterministic instead of passing None into the public
@@ -2235,7 +2235,7 @@ class AgentToolGateway:
         if self.bound_run_id:
             self.session.info["source_agent_run_id"] = self.bound_run_id
         try:
-            generated = generate_replan(
+            generated = _generate_replan_impl(
                 UUID(journey.id),
                 ReplanGenerateRequest(
                     trigger_event_id=request.trigger_event_id,

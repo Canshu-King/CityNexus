@@ -22422,6 +22422,60 @@ def _mobility_gap_from(exc: MobilityDataUnavailable) -> dict[str, Any]:
     )
 
 
+def _reuse_measured_baseline_mobility(
+    *,
+    event_type: str,
+    captured: MobilitySnapshotCaptureResult,
+    base_evidence: dict[str, Any],
+    operation_seed: str,
+) -> MobilitySnapshotCaptureResult:
+    """Keep the selected plan's own measured legs when the route itself is unchanged.
+
+    A closure or weather event changes whether a place is usable, not how long it
+    takes to get to the places that remain.  The runtime capture still runs (it
+    may know a newer provider number), but when it has no live adapter for a pair
+    the selected plan already measured, the capture's mock blanket constant must
+    not replace that measurement.  New adjacencies are untouched: they still need
+    the runtime provider, so this helper never invents a leg.
+    """
+
+    if event_type not in {"CLOSURE", "WEATHER"}:
+        return captured
+    baseline = MobilitySnapshot.from_evidence(base_evidence)
+    captured_facts = captured.snapshot.facts
+    reusable = {
+        pair: fact
+        for pair, fact in baseline.facts.items()
+        if fact.fact_quality in HARD_FEASIBLE_QUALITIES
+        and (
+            pair not in captured_facts
+            or captured_facts[pair].fact_quality not in HARD_FEASIBLE_QUALITIES
+        )
+    }
+    if not reusable:
+        return captured
+    merged_capabilities = dict(captured.snapshot.provider_capabilities)
+    merged_capabilities["baseline_reuse"] = {
+        "source_snapshot_id": baseline.snapshot_id,
+        "reused_pairs": len(reusable),
+        "reason": "CLOSURE_OR_WEATHER_KEEPS_MEASURED_ROUTE",
+    }
+    return MobilitySnapshotCaptureResult(
+        snapshot=MobilitySnapshot(
+            facts={**captured_facts, **reusable},
+            source_provider_key=captured.snapshot.source_provider_key,
+            captured_at=captured.snapshot.captured_at,
+            degraded=captured.snapshot.degraded,
+            snapshot_id="replan-baseline-merged-"
+            + hashlib.sha256(f"{operation_seed}:{baseline.snapshot_id}".encode("utf-8")).hexdigest()[:32],
+            operation_key=f"replan:{operation_seed}:baseline-merged",
+            provider_capabilities=merged_capabilities,
+        ),
+        failed_primary_pairs=captured.failed_primary_pairs,
+        fallback_pairs=tuple(pair for pair in captured.fallback_pairs if pair not in reusable),
+    )
+
+
 def _replan_estimate(
     session: Session,
     journey: Journey,
@@ -22509,8 +22563,28 @@ def generate_replan(
     request: Request,
     idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
+):
+    # The route never lets a caller claim the in-process trust leg: a query
+    # argument such as ?trusted_agent=true would otherwise skip the bearer check.
+    # The Guardian's own tool call enters through _generate_replan_impl below.
+    return _generate_replan_impl(
+        journey_id,
+        body,
+        request,
+        idempotency_key,
+        session,
+        trusted_agent=False,
+    )
+
+
+def _generate_replan_impl(
+    journey_id: UUID,
+    body: ReplanGenerateRequest,
+    request: Request | None,
+    idempotency_key: str | None,
+    session: Session,
     *,
-    trusted_agent: bool = False,
+    trusted_agent: bool,
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
@@ -23387,6 +23461,12 @@ def generate_replan(
                 failed_primary_pairs=captured.failed_primary_pairs,
                 fallback_pairs=captured.fallback_pairs,
             )
+    mobility_capture = _reuse_measured_baseline_mobility(
+        event_type=trigger_event.event_type,
+        captured=mobility_capture,
+        base_evidence=frozen_v12_evidence,
+        operation_seed=str(trigger_id),
+    )
     mobility = mobility_capture.snapshot
     mobility_degraded_providers = (mobility.source_provider_key,) if mobility.degraded else ()
     if mobility.degraded:
@@ -25272,11 +25352,9 @@ def accept_replan(
     session: Session = Depends(get_session),
 ):
     proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
-    # The Guardian's own tool call reaches this door from inside the process, holding an ACTIVE
-    # standing mission and a bounded autonomy envelope; there is no HTTP Request to authenticate.
-    # Without this leg the tool raised TypeError (missing 'request') and every proposal died as
-    # TOOL_ERROR before a plan could be drawn (measured 2026-10-25 on the classroom journey).
-    if settings.traveler_auth_secret and not trusted_agent:
+    # The Guardian's tool call enters the in-process door (_accept_replan_impl) directly, so this
+    # HTTP route always authenticates a bearer principal.
+    if settings.traveler_auth_secret:
         journey = require(session, Journey, str(proposal.journey_id), "Journey")
         from app.traveler_principal import member_has_capability, resolve_journey_member_principal
 
