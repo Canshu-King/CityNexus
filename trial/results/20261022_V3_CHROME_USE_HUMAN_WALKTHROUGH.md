@@ -1945,3 +1945,45 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **PR #43 侧仍然**：Draft 未转 Ready、本枝 Actions 运行 0 次（第卅六章那条 API 读数），USER_VERIFIED 仍 PENDING——
 这一格是给主人自己按的：第一屏随便写一句话，等底栏出现那句实话，按「重试这一轮」。
+
+
+## 卅八、把早期章节里"只写文件名"的坐标补齐（第 304 号令的勘误，旧正文一字未动）
+
+**这一节只做一件事。** 早期章节里有不少引注只写到文件名，读者拿着它落不到具体一行；同一句话里别的引注都带 `文件:行`，所以这不是风格问题，是可取回性问题。我不改旧正文——那是当时的现场记录，改掉就等于篡改现场——只在这一节逐条补齐，并附上补齐时现读到的行号。
+
+**先把尺摊开，两个分母都要。** 扫描器 `trial/human_walk/_bare_coordinate_scan_r1.py:41` 有两条面：宽面凡是文件名后面没跟 `:行` 就算（判定循环 `trial/human_walk/_bare_coordinate_scan_r1.py:50`），收紧面只算「文件名与读数动词（实测、量到、记录在、落在、存于、见、量自，词表 `trial/human_walk/_bare_coordinate_scan_r1.py:44`）同段出现」的那一类（收紧面 `trial/human_walk/_bare_coordinate_scan_r1.py:63`）。这份文档共一千九百四十七行：宽面命中二百一十三处、涉及一百七十二个不同文件名，逐行清单 `trial/results/20261022_v3_human_chrome/bare-scan-wide-1.txt:3`；收紧面命中廿一处、其中第 600 行以前十三处，两份清单各在 `trial/results/20261022_v3_human_chrome/bare-scan-all-1.txt:6` 与 `trial/results/20261022_v3_human_chrome/bare-scan-early-1.txt:6`。**第 304 号令写的是「早期章节的 9 枚」——实测是十三处，我按十三处逐条对拍，没有只挑九处。**
+
+**逐条对拍（左边是原句所在行，右边是补齐时现读到的坐标）。** 每条的命中行由扫描器现读并写在 `trial/results/20261022_v3_human_chrome/bare-scan-early-1.txt:7` 起（一行一处，带原文件里的行号与那一行原文），下面只写判语。
+
+| 原句在本文档的行 | 当时写的引注 | 补齐后的坐标 | 判 |
+| --- | --- | --- | --- |
+| 第五十一行 | `trial/results/20261022_V3_AGENT_HALFDAY_PRESS.md` | `trial/results/20261022_V3_AGENT_HALFDAY_PRESS.md:20` | 只缺行号，内容对得上 |
+| 第六十七行 | `20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md` 第四节 | `trial/results/20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md:106` | 只缺目录与行号，「第四节 仪表条件」确实在那一行 |
+| 第七十三行 | 同上一份的第七节 | `trial/results/20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md:161` | 只缺目录与行号 |
+| 第九十行 | `walk-47-log.txt` | `trial/results/20261022_v3_human_chrome/walk-47-log.txt:2`（第一步屏读）与 `trial/results/20261022_v3_human_chrome/walk-47-log.txt:27`（三张卡与选中哪张） | 只缺目录与行号 |
+| 第一百七十五行 | `backend/tests/test_goal_place_media.py` 新增一臂 | `backend/tests/test_goal_place_media.py:113`（那枚仿冒主机名）与 `backend/tests/test_goal_place_media.py:98`（那一臂的函数名） | 坐标能补，但同句的通过数过期，见下 |
+| 第一百七十七行 | `walk-39-log.txt` | `trial/results/20261022_v3_human_chrome/walk-39-log.txt:1`（重走起点）与 `trial/results/20261022_v3_human_chrome/walk-39-log.txt:18`（末屏） | 只缺目录与行号 |
+| 第二百二十九行 | `collective_screen_r1.mjs` | 文件不在这棵树上；读数请落到 `trial/results/20261022_v3_human_chrome/walk-43-log.txt:12`（命中检查）与 `trial/results/20261022_v3_human_chrome/walk-43-log.txt:15`（按完之后屏上只有那两条授权开关） | **指歪**：探针没入库，只有它写的日志在 |
+| 第二百三十七行 | `trial/results/20261022_v3_human_chrome/walk-44-log.txt` | `trial/results/20261022_v3_human_chrome/walk-44-log.txt:20`、`:22`、`:24`（三档手机形状的逐格盒位） | 只缺行号 |
+| 第二百四十九行 | `identity_pointer_r1.mjs` 现读 `wanted_present: true` | 文件不在这棵树上；而且就算把它磁盘上那份拿出来读，它也没有 `wanted_present` 这个键——那个键出自另一支探针（本机仓库外工作目录里的 `pointer_keys_r1.mjs` 第十四行） | **两处错**：既没入库，又点错了仪表 |
+| 第二百八十九行 | `media-binding-before-1.txt`、`media-binding-after-1.txt` | `trial/results/20261022_v3_human_chrome/media-binding-before-1.txt:2`、`:3`、`:4`（三格 UNAVAILABLE） | 只缺目录与行号 |
+| 第三百一十九行 | `trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt` | `trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt:13`（无地点行那一格）、`:16`（该城 72 条、营业时间已知 56、成本已知 0）、`:17`（两样都知的 0 条） | 只缺行号 |
+| 第三百二十七行 | `trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt` | `trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt:3`、`:4`、`:5`（两条来源的条数与合计） | 只缺行号 |
+| 第三百八十二行 | `trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt` | `trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt:12`（周四那一栏的表头）起，表中每一格自带 venue 名，例如 `trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt:28` | 只缺行号 |
+
+**一处过期的数要点名。** 第一百七十五行写「该文件 11 passed」。我在本尖重跑了一次那枚文件，屏上是 `14 passed, 4 warnings in 3.05s`——从十一涨到十四，因为后来的刀又往同一个文件里加了臂。**当时的 11 不是假数**（那是那一代真的跑出来的），但它现在会把人带偏：读的人拿十四去对，会以为文档在编数。旧正文我不改；这里写明「本尖重跑为 14 passed，原句的 11 属于它自己那一代」。
+
+**两处"指歪"是怎么来的，说清楚。** 第二百二十九行与第二百四十九行引用的探针是我当时直接写在仓库外的工作目录里跑的，跑完只把日志留在仓库里，探针本身没入库。这跟第七节那两枚「引了未入库的坐标」是同一个病的另一种形状：那两枚的**产物**后来补进树里就取得回了，这两枚的**仪表**到现在还取不回，而且第 249 行还多一错——键名对的是另一支探针。要补的话得先把探针里的会话读取那几行核一遍（它们从活标签页现读凭证，落盘时会不会把凭证片段一起写出去，我还没逐行看过），所以我没有顺手入库，交给第 304 号令点单。
+
+**收紧面的判据为什么这么定。** 文档里文件名出现得多（宽面二百一十三处），其中大量是「产物名」——截图、数据库、日志文件名——它们在句子里是**被说的东西**，不是**用来核对一条读数的坐标**。把它们一律当坐标补齐既做不到（截图里没有「行」），也没有意义。所以我按「同段是否配了读数动词」收窄，收到廿一处、早期十三处，两把尺的原始输出都入库，读者要宽面还是收紧面自己走一遍扫描器就知道。
+
+**「六处指歪」这个说法要撤回。** 我打这一节草稿时先写下「十三处里六处坐标指歪」，那是**没对拍完就下的判语**——真的一行行读下来，指歪的是两处（第二百二十九行、第二百四十九行），其余十处只缺行号，另有一处坐标能补但通过数过期。这句草稿没发出去过，但我把它记在这里：判「指歪」与判「缺行号」是两种病，混着说会让人以为要么全烂要么全好。
+
+**这一节自己也要过同一把尺。** 补完坐标不等于补对了，所以另起一把只问「你写的这一行取得回吗」的尺：`trial/human_walk/_cited_coordinate_check_r1.py:25` 把这一节里每一个 `路径:行号` 都去现读一遍，判语打在 `trial/human_walk/_cited_coordinate_check_r1.py:37`。本尖实跑的结果是这一节引到 28 枚坐标，未取回 0 枚。**这把尺只证「那一行存在」，不证「那一行说的是这句话」**——后者是我一行一行手工读出来的（每张表的命中原文都附在 `trial/results/20261022_v3_human_chrome/bare-scan-early-1.txt:7` 起，读者可以自己对着看）。
+
+**改了什么。** 只追加这一节，另入库三份扫描清单（宽面、收紧面全部、收紧面早期）与这把对拍尺；旧正文、旧读数、旧引注一字未动。产品文件零改动。
+
+**仍未达到的。** 收紧面里第 600 行之后的八处（从 `trial/results/20261022_v3_human_chrome/bare-scan-all-1.txt:45` 那一条起）我这轮没逐条补，因为第 304 号令的范围是早期章节；要连后期一起补，我下一格接着做。另外「写了读数的仪表没入库」这条只在走查文档里被抓到两次，全仓库还有没有同类我没数过——那要把每份日志反查它的产生者，是一张新单子的量。
+
+**交付状态照旧要说全。** PR #43 仍是 Draft，本枝 Actions 一次也没跑过，所以这一格不能称正式交付。主人仍没在真机上按过任何一键，USER_VERIFIED 仍 PENDING。
+

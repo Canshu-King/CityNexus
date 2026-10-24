@@ -1,0 +1,44 @@
+doc=trial/results/20261022_V3_CHROME_USE_HUMAN_WALKTHROUGH.md
+doc_scanned_at_commit=a499ed2e2f7e3433fd1e9e1355ca48cde8c1f5cf
+rule=文件名紧跟在实数读数之后，且引注所在行 < 600
+rules=wide trial/human_walk/_bare_coordinate_scan_r1.py:50 | token shape trial/human_walk/_bare_coordinate_scan_r1.py:41 | verb table trial/human_walk/_bare_coordinate_scan_r1.py:44 | scoped trial/human_walk/_bare_coordinate_scan_r1.py:63
+scanner=trial/human_walk/_bare_coordinate_scan_r1.py:124
+count=13
+DOC:51 TOKEN trial/results/20261022_V3_AGENT_HALFDAY_PRESS.md -> trial/results/20261022_V3_AGENT_HALFDAY_PRESS.md  (1 行命中，逐行列出)
+   line 20 | - 这一格是**旅客自己动手**改半天。让 Agent 自己改半天（“把第二天下午换成……”这一句直接落到草案）仍未验：这四轮里模型一直在问，没有自己产出 slot——它没有地点可排（这趟行程是旅客一句话建的，城市码是私有键 `CN-RV-…`，规范地名在结构化 brief 里，见 `backend
+DOC:67 TOKEN 20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md -> trial/results/20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md  (1 行命中，逐行列出)
+   line 106 | ## 四、仪表条件（如实记下，不当成产品结论）
+DOC:73 TOKEN 20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md -> trial/results/20261022_V3_RETURNING_TRAVELER_AND_RECEIPT_SHAPE.md  (2 行命中，逐行列出)
+   line 161 | ## 七、屏上那句"按你说的改"到底改了没有（第三处缺陷与修法）
+   line 157 | `AGENT_RESEARCH_GROUNDED = BLOCKED` 的**原因句**作废，结论本身要等第七节那一趟真走一遍才能重判。
+DOC:90 TOKEN walk-47-log.txt -> trial/results/20261022_v3_human_chrome/walk-47-log.txt  (2 行命中，逐行列出)
+   line 27 | STEP_09 {"cards":3,"visible":1,"tabs":["A · 轻松少走版","B · 省钱版","C · 本地特色版"],"chosen":["已选为当前行程"],"slots":6}
+   line 2 | STEP_01 C CityNexus 你的智能旅行伙伴 AI 建议可试 CITYNEXUS / YOUR TRIP 你的下一趟旅行， 从一句话开始。 说说想去哪儿、和谁一起、想怎样度过。我们一起把想法变成行程。 想怎么玩？ 目的地 日期与天数 更多偏好 同行 1 人 · 预算 ¥1,000 继续规
+DOC:175 TOKEN backend/tests/test_goal_place_media.py -> backend/tests/test_goal_place_media.py  (1 行命中，逐行列出)
+   line 113 | lookalike["media"]["thumb_url"] = "https://thumb.wikimedia.org.evil.invalid/x.jpg"
+DOC:177 TOKEN walk-39-log.txt -> trial/results/20261022_v3_human_chrome/walk-39-log.txt  (3 行命中，逐行列出)
+   line 1 | WALK23_START 2026-10-22T15:43:25.763Z url=http://127.0.0.1:14381/revolution the photo strip, wikimedia routed through the local proxy port
+   line 20 | WALK23_END 2026-10-22T15:46:15.507Z
+   line 18 | FINAL_SCREEN C CityNexus 你的智能旅行伙伴 AI 建议可试 北京 把想去变成出发。 换地区 › 故宫博物院实景（封面裁切） · user:kallgan / CC BY-SA 3.0 等待你的决定 地图 日程 对话 现实地图 4 处地点 查看其他研究（31） 先看看这些地方 
+DOC:229 TOKEN collective_screen_r1.mjs -> FILE NOT FOUND IN THIS TREE
+DOC:237 TOKEN trial/results/20261022_v3_human_chrome/walk-44-log.txt -> trial/results/20261022_v3_human_chrome/walk-44-log.txt  (0 行命中；下列其最后三行供判读)
+   line 24 | SHAPE_430x932 {"viewport":[430,932],"track_box":{"x":30,"w":356},"scroll":{"scrollWidth":858,"clientWidth":356,"scrollable":502,"scrollLeft":1},"cards
+   line 25 | SHOT human-223-strip-430x932.png bytes=673598
+   line 26 | WALK44_END 2026-10-22T16:46:43.800Z
+DOC:249 TOKEN identity_pointer_r1.mjs -> FILE NOT FOUND IN THIS TREE
+DOC:289 TOKEN media-binding-before-1.txt -> trial/results/20261022_v3_human_chrome/media-binding-before-1.txt  (3 行命中，逐行列出)
+   line 2 | CASE {"place": "八达岭长城", "status": "UNAVAILABLE", "reason": null, "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null,
+   line 3 | CASE {"place": "天坛公园", "status": "UNAVAILABLE", "reason": null, "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null, 
+   line 4 | CASE {"place": "南锣鼓巷", "status": "UNAVAILABLE", "reason": null, "identity": "UNBOUND", "wikidata": null, "file": null, "author": "", "license": null, 
+DOC:319 TOKEN trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt -> trial/results/20261022_v3_human_chrome/departure-price-evidence-probe-1.txt  (0 行命中；下列其最后三行供判读)
+   line 15 | CATALOG_PLACES_IN_CN-RV-2E8CE2493CDF 72
+   line 16 | PROVIDER {"provider_key": "amap", "rows": 72, "opening_known": 56, "cost_known": 0}
+   line 17 | PLACES_WITH_BOTH_FACTS_KNOWN_IN_CN-RV-2E8CE2493CDF 0
+DOC:327 TOKEN trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt -> trial/results/20261022_v3_human_chrome/region-status-by-provider-1.txt  (0 行命中；下列其最后三行供判读)
+   line 4 | photon     UNKNOWN         126
+   line 5 | TOTAL_MATCHED 851 TOTAL_UNKNOWN_OR_ABSENT 126
+   line 6 | NOTE region_status is written by app/region_matching.py public_region_status (lines 49-72), which answers UNKNOWN when the label or an address field i
+DOC:382 TOKEN trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt -> trial/results/20261022_v3_human_chrome/opening-reader-ab-1.txt  (0 行命中；下列其最后三行供判读)
+   line 28 | 什刹海 / 南锣鼓巷 收尾              DATE_SPECIFIC_UNKNOWN  NO_WINDOW_STATED / -                 OPEN_ON_DATE           - / 24:00
+   line 29 | 
+   line 30 | venues_read=6
