@@ -2561,3 +2561,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **证据对拍更正（23:20）。** 上文「修后 gap 只剩新邻接」的原始读数被随后那次 201 运行覆盖了同一输出文件。为留下对照，我在同一 canary 上把高德键置空重跑同一请求：`BASELINE_PAIRS` 是基础计划自己的两段，`GAP_PAIRS` 只剩 `天安门→289888…` 与 `天安门→天坛`（都不在基础计划里），`BASELINE_PAIR_STILL_REFUSED=false`（`sim-replan-merge-2.txt`）；有高德时的 201 版本另存为 `sim-replan-merge-1-201.txt`。
 
+## 七十五、同名替代已排除：提案变成「移除故宫博物院；路上少 66 分钟」
+
+**根因两层。** ① 被移除的 `real-place-62c2e6…` 与替代 `real-place-289888…` 同名「故宫博物院」、相距约 110 米，但 category 词表完全不同（高德的行业分号串 vs Overpass 的 `museum`）；物理身份比较把「category 冲突」当作不 corroborate，于是判 DIFFERENT 放行。② 同一请求其实生成了两条提案：F0（换同名条目）与 F1（纯移除），手机面板取列表里的第一条 PRESENTED，恰好拿到 F0。
+
+**修法（产品字节）。** `should_exclude_replacement_candidate` 增加一条与 category 无关的判据：归一化名称相同且落在近址半径内即排除；`_NEAR_VENUE_METERS` 由六十米改为二百五十米，刚好覆盖一个大场馆的两个 provider 条目，而 500 米外的同名连锁分店仍判 DIFFERENT（既有测试不动）。补齐三格单测：同名近址不同词表→排除、同名 500 米→放行、异名同址→放行；连同身份合同、replan 端点、高德适配器、基线复用的用例共八十二条通过。
+
+**真读数。** 修后同一 replan 只返回一条提案，`F1_OPTIONAL_REMOVAL`、`added` 为空（`sim-replan-merge-3.txt:11` 的 `BODY`；判定行 `sim-replan-merge-3.txt:12`）。手机屏上卡片读作「移除故宫博物院；路上少 66 分钟。」（`guardian-walk-8.txt:6`），按「接受这份调整」后出「行程已按这份调整更新。」（`guardian-walk-8.txt:8`），新 active plan 只剩天安门广场与天坛公园两站（canary 库回读；截图 `guardian-proposal-390-r8.png`、`guardian-accepted-390-r8.png`）。
+
+**仍欠两处（不改口径）。** 手机屏同时有 `LiveRecovery` 的两张裸 id 方案卡；接受后它的「第一站」文字不当场重拉（重开页面按新 plan 显示）。
+
