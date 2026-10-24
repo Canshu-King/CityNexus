@@ -1,0 +1,25 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:121:1 › place cards show grounded hours and costs while preserving provenance and OSM links
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:121:1 › place cards show grounded hours and costs while preserving provenance and OSM links 
+
+    Test timeout of 45000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-place-card-fact-761ad-ng-provenance-and-OSM-links-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-place-card-facts.spec.ts:121:1 › place cards show grounded hours and costs while preserving provenance and OSM links 

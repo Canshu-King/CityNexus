@@ -96,6 +96,7 @@ test("named place search waits for explicit submission and keeps the public area
     });
   });
   await page.goto("/revolution");
+  await page.getByTestId("rev-quick-area-secondary").locator("summary").first().click();
   await page.getByTestId("rev-quick-find-city").click();
   await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();
   await page.getByTestId("rev-quick-use-approx-center").click();
@@ -208,6 +209,7 @@ test("place cards show grounded hours and costs while preserving provenance and 
   });
 
   await page.goto("/revolution");
+  await page.getByTestId("rev-quick-area-secondary").locator("summary").first().click();
   await page.getByTestId("rev-quick-find-city").click();
   await expect(page.getByTestId("rev-quick-city-results")).toBeVisible();
   await page.getByRole("button", { name: /连城县.*2.5公里/ }).click();

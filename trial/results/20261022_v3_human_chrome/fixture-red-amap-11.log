@@ -1,0 +1,46 @@
+
+Running 1 test using 1 worker
+
+[1/1] [mobile-ui-chromium-fixture] › e2e\revolution-amap-research-ui.spec.ts:11:1 › TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and walking route
+  1) [mobile-ui-chromium-fixture] › e2e\revolution-amap-research-ui.spec.ts:11:1 › TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and walking route 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('rev-mission-cockpit').getByRole('region', { name: 'Agent 任务', exact: true })
+    Expected substring: "650 米 · 480 秒"
+    Received string:    "旅行研究 · 已有阶段成果本轮研究摘要TEST_FIXTURE 已整理路线线索。Agent 真实工作过程 · 已记录 1 条事件按时间显示模型轮次、工具结果和恢复进度。#1工具返回结果 · 查询步行路线 · 第1轮工具结果 · 1 次查询步行路线步行路线 · 650 米 · 约 8 分钟高德转场路线（1）TEST_FIXTURE 起点 → TEST_FIXTURE 终点步行 · 650 米 · 约 8 分钟在高德地图查看路线 ↗待核实来源（2）TEST_FIXTURE 连城县地点营业、费用待查福建省 · 龙岩市 · 连城县地区归属待核实在高德地图打开 ↗TEST_FIXTURE 未归属 OSM 线索营业、费用待查地区归属待核实查看地点来源 ↗其他地区候选（1）TEST_FIXTURE 明确冲突线索营业、费用待查查看地点来源 ↗"
+    Timeout: 9000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('rev-mission-cockpit').getByRole('region', { name: 'Agent 任务', exact: true }) with timeout 9000ms
+      - waiting for getByTestId('rev-mission-cockpit').getByRole('region', { name: 'Agent 任务', exact: true })
+        21 × locator resolved to <section aria-label="Agent 任务" class="rev-workspace-answer">…</section>
+           - unexpected value "旅行研究 · 已有阶段成果本轮研究摘要TEST_FIXTURE 已整理路线线索。Agent 真实工作过程 · 已记录 1 条事件按时间显示模型轮次、工具结果和恢复进度。#1工具返回结果 · 查询步行路线 · 第1轮工具结果 · 1 次查询步行路线步行路线 · 650 米 · 约 8 分钟高德转场路线（1）TEST_FIXTURE 起点 → TEST_FIXTURE 终点步行 · 650 米 · 约 8 分钟在高德地图查看路线 ↗待核实来源（2）TEST_FIXTURE 连城县地点营业、费用待查福建省 · 龙岩市 · 连城县地区归属待核实在高德地图打开 ↗TEST_FIXTURE 未归属 OSM 线索营业、费用待查地区归属待核实查看地点来源 ↗其他地区候选（1）TEST_FIXTURE 明确冲突线索营业、费用待查查看地点来源 ↗"
+
+
+      135 |   await expect(taskRegion).toContainText("查询步行路线");
+      136 |   await taskRegion.getByText("工具结果 · 1 次").click();
+    > 137 |   await expect(taskRegion).toContainText("650 米 · 480 秒");
+          |                            ^
+      138 |   await taskRegion.locator("details").filter({ hasText: "待核实来源（2）" }).locator("summary").click();
+      139 |   await expect(taskRegion.getByRole("link", { name: "在高德地图打开 ↗" })).toHaveAttribute("href", markerUrl);
+      140 |   await taskRegion.getByText("高德步行路线（1）").click();
+        at D:\moodle\_cmdr_rescue_v3_1022\frontend\e2e\revolution-amap-research-ui.spec.ts:137:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-amap-research-u-add7b-ir-source-and-walking-route-mobile-ui-chromium-fixture\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: mobile-ui-results\revolution-amap-research-u-add7b-ir-source-and-walking-route-mobile-ui-chromium-fixture\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    mobile-ui-results\revolution-amap-research-u-add7b-ir-source-and-walking-route-mobile-ui-chromium-fixture\trace.zip
+    Usage:
+
+        npx playwright show-trace mobile-ui-results\revolution-amap-research-u-add7b-ir-source-and-walking-route-mobile-ui-chromium-fixture\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [mobile-ui-chromium-fixture] › e2e\revolution-amap-research-ui.spec.ts:11:1 › TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and walking route 

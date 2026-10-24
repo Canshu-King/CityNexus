@@ -166,14 +166,14 @@ test(`TEST_FIXTURE mobile plan review requires separate select and start, and su
   await page.getByTestId("rev-plan-select").click();
   await expect(workbench).toContainText("已选用");
   await expect(page.getByTestId("rev-v3-server-departure")).toContainText("可以确认出发");
-  expect(writes).toEqual([`/api/v1/journeys/${journeyId}/plans/${planId}/select`]);
+  expect(writes).toEqual([`/api/v1/journeys/${journeyId}/departure/commit`]);
   await page.reload();
   await page.getByTestId("rev-mobile-tab-trips").click();
   await expect(workbench).toContainText("已选用");
   await expect(page.getByTestId("rev-plan-start")).toBeVisible();
   await page.getByTestId("rev-plan-start").click();
   await expect(workbench).toContainText("正在使用");
-  expect(writes).toEqual([`/api/v1/journeys/${journeyId}/plans/${planId}/select`, `/api/v1/journeys/${journeyId}/start`]);
+  expect(writes).toEqual([`/api/v1/journeys/${journeyId}/departure/commit`, `/api/v1/journeys/${journeyId}/start`]);
   await page.evaluate(() => {
     sessionStorage.setItem("citynexus.traveler.bearer", "TEST_FIXTURE_OTHER_MEMBER");
     window.dispatchEvent(new CustomEvent("citynexus.traveler.bearer.changed"));

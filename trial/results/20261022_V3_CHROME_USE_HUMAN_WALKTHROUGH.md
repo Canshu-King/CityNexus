@@ -2163,3 +2163,26 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **这件事的意义（比九条本身重要）。** 它证明了我上一节那句提醒是对的：**CI 变绿只覆盖"编译门"，不代表夹具门绿**。这条夹具在本枝从来没跑过，现在有了第一份真实读数：四十一过、九条红、形状三分。
 
 **下一步（要人点头或我自己接着干）。** 九条逐条定性需要看 trace 与断言上下文，是一张新单子的量；我建议从三条"选择器撞车"先做——那三条最容易判（看同一张 `data-place-id` 的图是否真在屏上出现两处），也最可能是夹具过期而不是产品坏了。
+
+## 四十八、九条夹具红逐条定性：九条都是夹具过期；顺手量出并修掉一枚「邀请控件按不到」
+
+**定性不是看报错猜。** 逐条重跑单条 spec、用 JSON 报告取出完整 `Call log`，再回源码与提交历史对时间线。九条红分成四类，四类都指向同一件事：**夹具写在产品改动之前**。
+
+| 形状 | 条数 | 夹具坐标 | 产品侧何时改的 |
+| --- | --- | --- | --- |
+| 折叠 | 3 | `frontend/e2e/revolution-place-card-facts.spec.ts:99`、`:212`、`frontend/e2e/revolution-mobile-hermes-transparency.spec.ts:315` | 10-22 `2ac535e19c` 在 Mission 模式把手动选区收进 `<details data-testid="rev-quick-area-secondary">`（`frontend/src/trial/mobile/CityPicker.tsx:261`，由 `frontend/src/trial/RevolutionQuickExplore.tsx:929` 的 `secondary={missionMode}` 打开） |
+| 同卡第二枚按钮 | 3 | `frontend/e2e/revolution-source-media.spec.ts:3` 的三档 | 10-22 占位卡加了「先看看这个地点」（`frontend/src/trial/mobile/PlacePhotoGallery.tsx:102`），meta 条另有「在地图中查看」（`:111`），无限定 `getByRole("button")` 撞车 |
+| 文案人化 | 1 | `frontend/e2e/revolution-amap-research-ui.spec.ts:11` | 10-23 `7225b36f07`：读数改用 `humanDistance`/`humanDuration`（`frontend/src/trial/mobile/WorkspaceActions.tsx:186`），抽屉标题改成「高德转场路线」（`:183`） |
+| 选用走提交门 | 2 | `frontend/e2e/revolution-mobile-plan-workbench.spec.ts:169`、`:176` | 产品早已改成 `POST /departure/commit`（`frontend/src/trial/mobile/MobilePlanWorkbench.tsx:234`、`:241`）；夹具自己给它写过桩（`:117` 起）却忘了改期望——半更新状态 |
+
+**夹具怎么改的。** 只改夹具、不改断言的意图：折叠三条先点开折叠；媒体三条点名那枚邀请按钮；文案一条按屏上现值（「650 米 · 约 8 分钟」）断言，距离与时长都还在；提交门两条把期望写路由换成 `departure/commit`；启动流程里 `/start` 那条不动。五枚夹具文件合计 9 行新增、6 行替换。
+
+**顺手量出的一枚真缺陷（产品代码，不是夹具）。** 把邀请按钮设成点击目标后，Playwright 反复报「被别的元素挡住」。按坐标量（390 宽）：
+- 改前：按钮盒 `205×16`（y=482），卡片的 meta 条从 y=485 起、`z-index:1`、高 94；按钮中心的 `elementFromPoint` 命中 `<strong>`（地点名）——**屏上写着「先看看这个地点」，中心却按在地点名的文字上**。
+- 这与 `frontend/src/trial/mobile/PlacePhotoGallery.tsx:91` 的注释（「The tile used to invite … with no control behind it」）是同一类毛病换了个位置：控件有了，按不到。
+- 改后（`frontend/src/trial/mobile/PlacePhotoGallery.css:57` 给 fallback 留 112px 下内边距，`:69` 给按钮 `min-height:44px` 与实底）：按钮盒 `177×44`，中心命中按钮本身；三档视口同一断言全过。屏证 `trial/results/20261022_v3_human_chrome/media-invitation-390-after.png`。
+- 这条量具留在夹具里（`frontend/e2e/revolution-source-media.spec.ts:85` 起）：滚到卡上 → 量高度 ≥44 → 量中心命中必须是按钮本身 → 用真实指针按下去。以后谁再把邀请盖住，这条会红。
+
+**整套复跑。** 同一条命令 `npx playwright test --config playwright.mobile-trial.config.ts`：**50 passed / 0 failed**（`trial/results/20261022_v3_human_chrome/fixture-rerun-2.log`）；整树类型检查 `npm run typecheck:all` 绿（`trial/results/20261022_v3_human_chrome/typecheck-after-fixtures-1.log`）。
+
+**边界。** 本次改动＝五枚夹具 ＋ 一枚产品 CSS；没碰接口、契约、鉴权、数据。PR #43 仍 Draft；USER_VERIFIED 仍 PENDING。夹具三格在 CI 里仍被 `if:` 锁在别的枝名上，所以这份读数只在「本机同一条命令」意义上成立，不是 CI 绿证。

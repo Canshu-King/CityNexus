@@ -61,17 +61,21 @@
   flex-direction: column;
   gap: 8px;
   height: 100%;
+  box-sizing: border-box;
+  padding: 0 14px 112px;
   font-size: 12px;
   color: #5a7176;
 }
 .rev-mobile-v1 .cn-place-photo-fallback button {
-  background: none;
-  border: 0;
-  padding: 0;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #ffffff70;
+  border-radius: 10px;
+  background: #183e40;
+  color: #fff;
   font: inherit;
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
 }
 .rev-mobile-v1 .cn-place-photo-meta {

@@ -312,6 +312,7 @@ test("TEST_FIXTURE DRAFT activity entry only reads signed plans without starting
 
   await page.goto("/revolution");
   await expect(page.getByTestId("rev-mobile-screen-explore")).toBeVisible();
+  await page.getByTestId("rev-quick-area-secondary").locator("summary").first().click();
   const activityEntry = page.getByTestId("rev-mission-layer-agent");
   await expect(activityEntry).toContainText("对话");
   await expect(page.getByTestId("revolution-agent-runtime")).toContainText("AI 暂未开启");

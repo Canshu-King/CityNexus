@@ -134,12 +134,12 @@ test("TEST_FIXTURE Amap GCJ02 leads stay off OSM tiles and show their source and
   const taskRegion = cockpit.getByRole("region", { name: "Agent 任务", exact: true });
   await expect(taskRegion).toContainText("查询步行路线");
   await taskRegion.getByText("工具结果 · 1 次").click();
-  await expect(taskRegion).toContainText("650 米 · 480 秒");
+  await expect(taskRegion).toContainText("650 米 · 约 8 分钟");
   await taskRegion.locator("details").filter({ hasText: "待核实来源（2）" }).locator("summary").click();
   await expect(taskRegion.getByRole("link", { name: "在高德地图打开 ↗" })).toHaveAttribute("href", markerUrl);
-  await taskRegion.getByText("高德步行路线（1）").click();
+  await taskRegion.getByText("高德转场路线（1）").click();
   await expect(taskRegion.getByTestId("rev-amap-research-route")).toContainText("TEST_FIXTURE 起点 → TEST_FIXTURE 终点");
-  await expect(taskRegion.getByTestId("rev-amap-research-route")).toContainText("650 米 · 480 秒");
+  await expect(taskRegion.getByTestId("rev-amap-research-route")).toContainText("650 米 · 约 8 分钟");
   await expect(taskRegion.getByRole("link", { name: "在高德地图查看路线 ↗" })).toHaveAttribute("href", navigationUrl);
 
   if (await page.getByTestId("rev-mission-layer-map").isVisible()) await page.getByTestId("rev-mission-layer-map").click();

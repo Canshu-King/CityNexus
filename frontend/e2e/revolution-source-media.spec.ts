@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-for (const width of [390, 430, 1566]) test(`TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at ${width}`, async ({ page }) => {
+for (const width of [390, 430, 1566]) test(`TEST_FIXTURE non-Liancheng source media, fallback and day/map focus at ${width}`, async ({ page }, testInfo) => {
   await page.setViewportSize({ width, height: 932 });
   const jid = "00000000-0000-4000-8000-000000000971";
   const tid = "00000000-0000-4000-8000-000000000972";
@@ -82,7 +82,18 @@ for (const width of [390, 430, 1566]) test(`TEST_FIXTURE non-Liancheng source me
     }
   }
   expect(reads).toHaveLength(3);
-  await cockpit.locator(`.cn-place-photo[data-place-id="${points[3].id}"]`).getByRole("button").click();
+  const invitation = cockpit.locator(`.cn-place-photo[data-place-id="${points[3].id}"]`).getByRole("button", { name: "先看看这个地点" });
+  await invitation.evaluate((button) => button.scrollIntoView({ block: "center", inline: "center" }));
+  await page.evaluate(() => new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done()))));
+  const invitationBox = await invitation.boundingBox();
+  expect(invitationBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+  const invitationHit = await invitation.evaluate((button) => {
+    const box = button.getBoundingClientRect();
+    return document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2) === button;
+  });
+  expect(invitationHit).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath(`media-invitation-${width}.png`) });
+  await page.mouse.click(invitationBox!.x + invitationBox!.width / 2, invitationBox!.y + invitationBox!.height / 2);
   await expect.poll(() => reads.length).toBe(4);
   expect(writes).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
