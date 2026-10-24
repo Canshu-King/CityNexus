@@ -1899,11 +1899,15 @@ over_cap_walks=0, walking_cap_m=1000, frozen=true, unanswered=[], answered_at=20
 **自测**：`npm run typecheck`（`tsc -p tsconfig.check.json --noEmit`）退出码 0；
 凭据门 `trial/play_launcher/_staged_secret_gate_r2.py` 提交前 `selftest cases=6 misses=0`、
 `added_lines_scanned=151 value_line_hits=0 key_anywhere_hits=0 VERDICT=PASS`。
+突变已做（同一把探针，同一台隔离栈）：把引导字表清空成 `""` 再跑七臂 ⇒ 庚臂由 `city_value="厦门"` 变成
+`city_value=""`（读数入库：`city_prefill-leadin-mutant-1.txt:2`），而甲臂仍是 `北京`（`:1`，句首那条短路不看引导字）——
+说明引导字这张表真的是庚臂那条路的承重墙；随后按原字节还原（`:192` 那行读回原表），并把被突变盖掉的两件读数
+（`city_prefill-1.txt`、`city_prefill-1-shot.png`）从入库版复原，复原后庚臂再读回 `厦门`。
 
 **这代没做到的**：五臂都在 390×844 一档形状上量的，P0-1 那六档形状没有重走（改的是行为不是布局，但这是推断不是读数）；
 V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，服务端建行程时该字段仍是必填（`:637-641` 的门槛没拆，只是不再让旅客重复写）；
 拉丁拼写靠词边界匹配（`(^|[^a-z])name([^a-z]|$)`），中文靠引导字，所以「想飞北京」这种不以句首、标点或引导字开头的写法会**漏认**——
-漏认的代价是旅客自己写一次那一格（就是改之前的样子），认错的代价已经由己臂那条路堵住；引导字表只有十一个字，
+漏认的代价是旅客自己写一次那一格（就是改之前的样子），认错的代价已经由己臂那条路堵住；引导字表实测十二个字，
 它是不是够，要更多真句子才能判，这次没有那份分母。
 
 **仍不是正式交付**：PR #43 仍是 Draft、Actions 一次也没跑过；USER_VERIFIED 仍 PENDING，要主人自己在真手机上按这一下。
