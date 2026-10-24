@@ -23,3 +23,7 @@ RESUME_AFTER {"has_resume":true,"buttons":["换地区 ›","地图","日程","�
 SHOT walk117-resume-pressed.png bytes=172022
 WAIT_240s busy=false
 WAIT_240s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 PANEL_RESUME=true PANEL_DISABLED=false DOCK_RECOVERY_ROW=true
+WAIT_300s busy=false
+WAIT_300s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 PANEL_RESUME=true PANEL_DISABLED=false DOCK_RECOVERY_ROW=true
+WAIT_360s busy=false
+WAIT_360s DOCK Agent 上一轮没有答完，这次的服务暂时不可用。你可以再说一次，或先继续调整日程，等它能答时再问。 PANEL_RESUME=true PANEL_DISABLED=false DOCK_RECOVERY_ROW=true
