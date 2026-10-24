@@ -2536,3 +2536,26 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 **更精确的缺段（直接打 replan 端点，2026-10-25 06:35）。** 用同一事件与模型找到的三个候选地点调用 `POST /journeys/<id>/replans`，422 的 `details.gaps` 只有**一段**：`天安门广场 → 故宫博物院`，`reason_code=FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE`、`fact_quality=SYNTHETIC_DEFAULT`（`sim-replan-probe-1.txt`）。这推翻了「候选地点没有数据」这个笼统说法：真正不硬的是**基础计划自己的一段**——它是夹具常数，而 `_replan_estimate` 在缺/不合格时的补捕没有把这一段换成真实测量（捕获失败后按 `known_refusal` 抛出）。修复点因此在冻结/补捕链路，不在候选发现。
 
 **补捕失败的根因（06:37 读码）。** `capture_runtime_mobility_snapshot` 的硬捕获（`require_explicit_facts=True`）只走 live provider（`CITYNEXUS_LIVE_VALHALLA_URL` → Valhalla），而演示栈没有配 Valhalla；高德只接在 goal 路线冻结链（`goal_amap_transit` / `goal_amap_walking`）。所以 replan 对「天安门→故宫」的硬捕获必然失败，退回既有的 mock 常数并按 `MobilityEvidenceNotHardEligible` 拒绝。**这不是候选地点没数据，也不是 replan 逻辑写错，而是两条 provider 链没有会合。** 下一步二选一：① 给 mobility runtime 接一个高德适配器；② 让 replan 直接消费 goal 链已冻结的高德事实作为运行时补充证据。两条都不需要放宽「不合成常数」的红线。
+
+## 七十四、时空沙盒第二刀收口（后端 PASS · 屏上按得到 · 一个具名产品缺口）
+
+**做了什么（产品字节）。**
+① `_reuse_measured_baseline_mobility`（`backend/app/main.py`）：CLOSURE / WEATHER 不改路况，运行时捕获没测到的 pair 用选定计划自己已冻结、且质量合格的事实补上；运行时确实测到新数时仍以新数为准；新邻接不给任何常数。
+② 新高德步行适配器 `backend/app/integrations/mobility/amap_http.py`，`runtime.capture_runtime_mobility_snapshot` 在未配 Valhalla 时用它做 primary（硬捕获无 mock fallback）。适配器只接受真来源地点（`REAL_PLACE_SOURCES`），seed/mock 城市里的虚构 Place 一律拒绝，避免「给假地点量出真路线」。
+③ 信任腿不再挂在 HTTP 签名上：`generate_replan` 路由只做转发，进程内的 Guardian 走 `_generate_replan_impl(..., trusted_agent=True)`；`accept_replan` 路由删掉了对一个从未存在的参数的引用（带 secret 的栈上它本来会 500）。
+④ 手机「行程守护」面板在就绪后读本趟的 replan 列表，显示「移除 X；路上少 N 分钟」，并给「接受这份调整 / 暂不调整」两个按钮；接受走 `POST /replans/:id/accept`，成功后派发 `citynexus:mission-refresh`。
+
+**真读数（隔离 canary，复制自 play 库；原件未动）。**
+- 直打 replan 前后对拍：修前唯一的 gap 是基础计划自己的边「天安门广场 → 故宫博物院」，`fact_quality=SYNTHETIC_DEFAULT`；修后 gap 只剩两条**新邻接**，`BASELINE_PAIR_STILL_REFUSED=false`（`sim-replan-merge-1.txt` 的 `GAP_PAIRS` / `VERDICT`）。
+- 高德接入后同一请求 201：快照里 `天安门→289888…` 47 分钟、`天安门→故宫` 46 分钟，均为 `LIVE_PROVIDER_CAPTURE`；`provider_capabilities.baseline_reuse.reused_pairs=1`（同文件 `BODY`）。
+- Agent 路径：`pulse` → run `3c6ed277…`，206 秒，`PARTIAL / PROPOSAL_PRESENTED`；`request_replan` 工具 **COMPLETED**，产出两个 PRESENTED 提案（`sim-mission-4.txt`）。
+- 接受：200；Journey 的 active plan `e74a5edb…` → `8bae3c8b…`（version 3），旧版 `SUPERSEDED`，另一份提案 `INVALIDATED`（`sim-replan-accept-1.txt` 的 `ACTIVE_MOVED` / `PLAN`）。
+- 屏上（Playwright，390×844，真产品路径：本地行程指针 + 签名 bearer）：打开「行程守护」，提案卡文案「移除故宫博物院；加入 1 站；路上多 12 分钟。」；按「接受这份调整」→ 状态句「行程已按这份调整更新。」，提案卡消失（`guardian-walk-6.txt`；截图 `guardian-proposal-390-r6.png`、`guardian-accepted-390.png`）。
+
+**三个具名缺口（不冒充 PASS）。**
+1. **同名替代**：本次被替换的 `real-place-62c2e6…` 与替代 `real-place-289888…` 都叫「故宫博物院」，是同一处宫城的两个 OSM 条目；plan 的 place_id 变了，但旅客在屏上看到的第一站文字没有变化。演示需要一个真正不同的替代（如中国国家博物馆）。修法：候选池排除与被关闭地点同名或近距的条目，并把「同一地点」的判据写进候选回执。
+2. **两套入口**：同一屏上既有 `LiveRecovery` 的两张「方案 A/B」卡（带裸 place id 与英文标题），也有守护面板的新卡。下一刀收敛为一处。
+3. **当场不重拉**：接受后 `LiveRecovery` 的「第一站」仍显示旧文字；重开页面按新 plan 显示。面板自己的状态句与提案消失是即时的。
+
+**红线自查。** 高德键只从进程环境读，未打印、未写入任何文件；seed/mock 地点不进真 provider；`HARD_FEASIBLE_QUALITIES` 白名单未放宽；没有伪造 AgentRun 或 PlanVersion；canary 用 `sqlite3.backup` 从 play 库复制，play 栈的库与端口未改。
+
