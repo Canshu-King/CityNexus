@@ -1,5 +1,13 @@
 # 合入 Codex 分支之后的验证顺序（课堂栈）
 
+
+## 合入前的冲突预检（2026-10-25 晚现读）
+
+- merge-base 是 `9d4d2a853a727e05bcc76f27a1d5cfbf4e90e041`。
+- Codex 侧改动面：`backend/app/simulation`、`backend/app/agent`、`backend/app`、`backend/tests`、`backend/db`、`docs/revolution`、`trial/tasks`、`trial/results`、`AGENTS.md`。
+- 两侧唯一交集是 `AGENTS.md`，而两边对它的改动**逐字相同**（同一个 blob `ac79edfa54`），所以合并没有文本冲突面。
+- 真正的风险是语义：Journey-read ACL 收紧后，匿名或失效令牌的读会从 200 变 401/403，而课堂的刷新恢复依赖本地 bearer；演示会话绑定 presenter 上下文后，旧后端的 `SESSION` 门会变成 `PAIRING`（启动器与前端已适配）。所以阶段 A 与阶段 C 的探针必须在合入后的真栈重跑，不能拿旧后端读数充数。
+
 前提：Codex 的 `codex/sandbox-execution-security-20261025`（PR #48）合入 rescue 分支后，课堂栈后端才具备票门（`/demo/pairing`）与模拟执行端点（`SimulationRun`）。下面每一步都标了「今天的证据」，标明它已在隔离栈或旧后端验过的是什么；合入后要在 14492 上重验的那一步会写「重验」。
 
 ## 阶段 A：课堂主链（合入当天先跑，约三分钟）
