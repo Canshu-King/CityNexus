@@ -65,6 +65,23 @@ def get(url: str, timeout: int = 8, bearer: str = "") -> tuple[int, dict]:
         return 0, {}
 
 
+def pairing_door() -> str:
+    """Which entry door this backend serves: a pairing ticket or the older open demo session."""
+    request = urllib.request.Request(
+        API + "/api/v1/demo/pairing", data=b"{}", method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=8) as answer:
+            return "PAIRING" if answer.status in (201, 400, 422) else "http=%s" % answer.status
+    except urllib.error.HTTPError as error:
+        if error.code == 403:
+            return "PAIRING"
+        return "SESSION" if error.code in (404, 405) else "http=%s" % error.code
+    except Exception:  # noqa: BLE001
+        return "UNKNOWN"
+
+
 health_status, health = get(API + "/api/v1/health")
 web_status, _ = get(WEB + "/revolution")
 lan_status, _ = get(LAN + "/revolution")
@@ -123,7 +140,7 @@ print(json.dumps({
     "CLOCK_HTTP": clock_status,
     "CLOCK": clock.get("virtual_now"),
     "CLOCK_VERSION": clock.get("version"),
-    "SIM_CONSOLE": sim_console,
+    "ENTRY_DOOR": pairing_door(), "SIM_CONSOLE": sim_console,
     "TABLET_OPEN": "http://%s:14492/revolution (tablet: UNVERIFIED)" % lan_ipv4(),
     "AGENT_QA": "direct-replan-only",
     "REAL_POI": True,
