@@ -220,3 +220,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - `PAUSED_FOR_ACCEPTANCE` 时面板先读 `/runs/{id}/progress`：若没有 `PRESENTED` 提案、`guardian_runs[].proposal_id` 也空，**不显示「继续模拟」**，改显示「守护没有交出可接受的提案…请重启课堂演示（双击启动器）」。
 - 390px 屏证（死锁副本 probe23）：`acceptance-note-70.txt`、`classroom-clock-run-70-acceptance.png`；`RESUME_BUTTONS 0`。
 - 有提案时仍显示「继续模拟」（resume 门不变）；投影缺 `proposal_id` 是 #47 的 bug，修复后这段判断会自动走回有提案分支。
+
+### 02:15 resume 门已验证（夹具：事件已解决）
+
+- 副本：run RUNNING → 注入 CLOSURE → `PAUSED_FOR_GUARDIAN`；把 pending event 置 `RESOLVED`（一行，夹具披露）→ `POST /runs/{id}/resume` **200**，status `RUNNING`、sequence 2。
+- 回执 `resume-after-resolved-69.txt`。至此 P0-2 的 `/runs`、`/advance`、`/scenes`、`/guardian`、`/resume` 五动作都有读数；生产里 resume 要先由守护或接受把事件解决（死锁见 #47）。

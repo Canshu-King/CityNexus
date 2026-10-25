@@ -131,6 +131,15 @@ def main() -> int:
                  "proposal-accept-68.txt",
                  "accept http=%s；plan %s → %s" % (
                      (accept.get("accept") or {}).get("http"), before_plan, after_plan)))
+    resume = json_file("resume-after-resolved-69.txt")
+    rows.append(("resume 门（夹具）",
+                 "绿" if (resume.get("resume") or {}).get("http") == 200
+                 and (resume.get("after") or {}).get("status") == "RUNNING" else "红",
+                 "resume-after-resolved-69.txt",
+                 "resume http=%s，after=%s（事件先在副本里 RESOLVED，%s 行）" % (
+                     (resume.get("resume") or {}).get("http"),
+                     (resume.get("after") or {}).get("status"),
+                     resume.get("resolved_rows"))))
     rows.append(("死锁屏提示",
                  "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
                  "acceptance-note-70.txt",

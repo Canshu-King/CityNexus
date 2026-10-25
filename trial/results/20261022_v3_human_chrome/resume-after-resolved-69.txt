@@ -1,0 +1,25 @@
+{
+  "fixture": "event marked RESOLVED in a copy to reach the resume door",
+  "activity": "5b60b374-8d3b-40fb-be9f-ada33e650bb8",
+  "before": {
+    "sequence": 0,
+    "status": "RUNNING"
+  },
+  "scene": {
+    "http": 200,
+    "status": "PAUSED_FOR_GUARDIAN",
+    "error": null
+  },
+  "pending_event": "ddf64044-f6be-403d-bbb3-69aff7b94d35",
+  "resolved_rows": 1,
+  "resume": {
+    "http": 200,
+    "status": "RUNNING",
+    "sequence": 2,
+    "error": null
+  },
+  "after": {
+    "sequence": 2,
+    "status": "RUNNING"
+  }
+}
