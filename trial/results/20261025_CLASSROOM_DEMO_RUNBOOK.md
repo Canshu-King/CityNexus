@@ -165,3 +165,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 合并后端 + 课堂库副本（源库未写）：先用当前 sequence 推进（第 6 → 7 步、12/04 09:00），再用旧 sequence 推进 → `409 SIMULATION_SEQUENCE_STALE`；经旧 `/demo/simulation-clock/{journey}/advance` → `409 USE_SIMULATION_RUN_ADVANCE`，run 不动（仍第 7 步）。
 - 回执 `single-state-chain-65.txt`；探针 `_single_state_chain_r1.py`。这与 UI 里那条竞态 409 相互印证。
+
+### 票门一次性与无 key 拒绝（22:00，课堂库只读副本）
+
+- 发票 201 → 首次兑换 200（拿到 token）→ **同一票二次兑换 401 `DEMO_PAIRING_INVALID_OR_EXPIRED`**；伪造四十三字符票 401 同码；不带 presenter key 发票 403 `DEMO_PRESENTER_REQUIRED`。
+- 回执 `pairing-replay-66.txt`；探针 `_pairing_replay_r1.py`。源库未写。
