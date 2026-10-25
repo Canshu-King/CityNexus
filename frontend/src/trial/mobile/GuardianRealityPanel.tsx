@@ -285,6 +285,9 @@ export function GuardianRealityPanel({
     try {
       if (decision === "accept") {
         await cityNexusApi.acceptReplan(proposal.value.id, `guardian-accept-${proposal.value.id.slice(0, 8)}`);
+        // The accepted plan replaces the page; without this the viewport stays near where the
+        // card sat and the first-stop change happens thousands of pixels above the screen.
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
       } else {
         await cityNexusApi.rejectReplan(proposal.value.id, `guardian-reject-${proposal.value.id.slice(0, 8)}`);
       }
