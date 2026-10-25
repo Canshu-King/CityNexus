@@ -272,7 +272,7 @@ def next_due_seconds(session, *, now: datetime | None = None) -> float | None:
     return min(waits) if waits else None
 
 
-def pulse_journey(session, journey: Journey) -> dict[str, Any]:
+def _pulse_journey_in_context(session, journey: Journey) -> dict[str, Any]:
     """Persist one sensing -> Guardian evaluation cycle."""
 
     from app.agent.journey_intent import expire_journey_intents
@@ -708,3 +708,14 @@ def autorun_status() -> dict[str, Any]:
 
 if settings.guardian_autorun:
     start_autorun()
+
+
+
+def pulse_journey(session, journey: Journey) -> dict[str, Any]:
+    from app.simulation.clock import journey_business_time
+    from app.simulation.models import SimulationRun
+    run = session.scalar(select(SimulationRun).where(SimulationRun.journey_id == journey.id)) if settings.simulation_enabled else None
+    if run is not None and run.status != "RUNNING":
+        return {"status":"SIMULATION_PAUSED", "run_id":run.id, "simulation_status":run.status}
+    with journey_business_time(session, journey.id):
+        return _pulse_journey_in_context(session, journey)

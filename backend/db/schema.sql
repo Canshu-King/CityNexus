@@ -1952,3 +1952,31 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_shared_stop_coplanning_one_unbound_active_g
     WHERE active_slot = 1;
 CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_promotion
     ON shared_stop_coplanning_grants(promotion_id, decision_epoch);
+
+
+CREATE TABLE IF NOT EXISTS simulation_runs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL UNIQUE REFERENCES journeys(id),
+    actor_id TEXT NOT NULL REFERENCES travelers(id),
+    city_code TEXT NOT NULL,
+    seed INTEGER NOT NULL,
+    timezone TEXT NOT NULL,
+    virtual_now TEXT NOT NULL,
+    sequence INTEGER NOT NULL DEFAULT 0 CHECK(sequence >= 0),
+    status TEXT NOT NULL,
+    state_json TEXT NOT NULL DEFAULT '{}',
+    history_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS simulation_commands (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id),
+    run_id TEXT NOT NULL REFERENCES simulation_runs(id),
+    actor_id TEXT NOT NULL REFERENCES travelers(id),
+    idempotency_key TEXT NOT NULL,
+    request_sha256 TEXT NOT NULL,
+    result_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(journey_id, actor_id, idempotency_key)
+);

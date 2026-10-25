@@ -761,6 +761,9 @@ class AgentToolGateway:
         return tool_catalog_v2()
 
     def dispatch(self, tool_name: str, request: AgentToolCall) -> dict[str, Any]:
+        from app.simulation.clock import simulation_scope_active
+        if simulation_scope_active() and tool_name in _MEDIATION_ACTIVE_REALITY_MUTATIONS:
+            raise HTTPException(403, "SIMULATION_REQUIRES_SIGNED_PLAN_ACCEPTANCE")
         if tool_name not in RUNTIME_MCP_ALLOWLIST_V2:
             raise HTTPException(404, "Agent tool is not in the CityNexus allowlist")
         handlers = {

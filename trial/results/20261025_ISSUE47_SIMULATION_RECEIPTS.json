@@ -1,0 +1,313 @@
+{
+  "evidence_grade": "TEST_FIXTURE",
+  "live_provider_calls": 0,
+  "live_model_calls": 0,
+  "runs": [
+    {
+      "evidence_grade": "TEST_FIXTURE",
+      "seed": 17,
+      "initial": {
+        "run_id": "95bf5c8a-d190-4227-a88f-dc3f5a0076de",
+        "journey_id": "e93a8c99-9843-4034-ab55-3b9ad50aaf8f",
+        "city_code": "CN-BJ",
+        "seed": 17,
+        "virtual_now": "2026-12-03T09:00:00+08:00",
+        "timezone": "Asia/Shanghai",
+        "sequence": 0,
+        "status": "RUNNING",
+        "state": {
+          "completed_activity_ids": [],
+          "location": null,
+          "plan_version_id": "cf6710b2-0bb7-4112-8a47-445f1f6f8502",
+          "provider_snapshot_refs": [
+            {
+              "captured_at": null,
+              "fact_qualities": [],
+              "plan_version_id": "cf6710b2-0bb7-4112-8a47-445f1f6f8502",
+              "provenance": "UNKNOWN",
+              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "snapshot_id": null
+            }
+          ],
+          "suggested_scene": "SCHEDULE_DELAY"
+        },
+        "history": [
+          {
+            "event": "SIM_STARTED",
+            "recorded_at": "2026-10-25T07:10:20.672240+00:00",
+            "sequence": 0,
+            "virtual_now": "2026-12-03T09:00:00+08:00"
+          }
+        ],
+        "execution_truth": "SIMULATED_STATE_TRANSITION",
+        "updated_at": "2026-10-25T07:10:20.672240+00:00"
+      },
+      "final": {
+        "run_id": "95bf5c8a-d190-4227-a88f-dc3f5a0076de",
+        "journey_id": "e93a8c99-9843-4034-ab55-3b9ad50aaf8f",
+        "city_code": "CN-BJ",
+        "seed": 17,
+        "virtual_now": "2026-12-04T10:30:00+08:00",
+        "timezone": "Asia/Shanghai",
+        "sequence": 8,
+        "status": "SIMULATED_COMPLETED",
+        "state": {
+          "completed_activity_ids": [
+            "a92f41ff-89ef-496e-ac5b-ea7e1ee3d64d",
+            "a46abc28-3585-4918-be55-177bd041c320"
+          ],
+          "location": {
+            "captured_virtual_at": "2026-12-04T09:30:00+08:00",
+            "classification": "SCENARIO_SIMULATED_LOCATION",
+            "coordinate_system": "WGS84",
+            "latitude": 39.809999999999995,
+            "longitude": 116.41000000000001,
+            "place_id": "da9ff7c1-091f-4695-bdba-ff7c9c34558e",
+            "recorded_at": "2026-10-25T07:10:20.775071+00:00",
+            "source": "SIMULATED_GPS"
+          },
+          "plan_version_id": "cf6710b2-0bb7-4112-8a47-445f1f6f8502",
+          "provider_snapshot_refs": [
+            {
+              "captured_at": null,
+              "fact_qualities": [],
+              "plan_version_id": "cf6710b2-0bb7-4112-8a47-445f1f6f8502",
+              "provenance": "UNKNOWN",
+              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "snapshot_id": null
+            }
+          ],
+          "suggested_scene": "SCHEDULE_DELAY"
+        },
+        "history": [
+          {
+            "event": "SIM_STARTED",
+            "recorded_at": "2026-10-25T07:10:20.672240+00:00",
+            "sequence": 0,
+            "virtual_now": "2026-12-03T09:00:00+08:00"
+          },
+          {
+            "activity_id": "a92f41ff-89ef-496e-ac5b-ea7e1ee3d64d",
+            "event": "SIM_DEPARTURE",
+            "recorded_at": "2026-10-25T07:10:20.694239+00:00",
+            "sequence": 1,
+            "virtual_now": "2026-12-03T09:20:00+08:00"
+          },
+          {
+            "activity_id": "a92f41ff-89ef-496e-ac5b-ea7e1ee3d64d",
+            "event": "SIM_ARRIVAL",
+            "recorded_at": "2026-10-25T07:10:20.712336+00:00",
+            "sequence": 2,
+            "virtual_now": "2026-12-03T09:30:00+08:00"
+          },
+          {
+            "activity_id": "a92f41ff-89ef-496e-ac5b-ea7e1ee3d64d",
+            "event": "SIM_EXPERIENCE",
+            "recorded_at": "2026-10-25T07:10:20.727336+00:00",
+            "sequence": 3,
+            "virtual_now": "2026-12-03T09:30:00+08:00"
+          },
+          {
+            "activity_id": "a92f41ff-89ef-496e-ac5b-ea7e1ee3d64d",
+            "event": "SIM_ACTIVITY_COMPLETED",
+            "recorded_at": "2026-10-25T07:10:20.743065+00:00",
+            "sequence": 4,
+            "virtual_now": "2026-12-03T10:30:00+08:00"
+          },
+          {
+            "activity_id": "a46abc28-3585-4918-be55-177bd041c320",
+            "event": "SIM_DEPARTURE",
+            "recorded_at": "2026-10-25T07:10:20.759082+00:00",
+            "sequence": 5,
+            "virtual_now": "2026-12-04T09:20:00+08:00"
+          },
+          {
+            "activity_id": "a46abc28-3585-4918-be55-177bd041c320",
+            "event": "SIM_ARRIVAL",
+            "recorded_at": "2026-10-25T07:10:20.775071+00:00",
+            "sequence": 6,
+            "virtual_now": "2026-12-04T09:30:00+08:00"
+          },
+          {
+            "activity_id": "a46abc28-3585-4918-be55-177bd041c320",
+            "event": "SIM_EXPERIENCE",
+            "recorded_at": "2026-10-25T07:10:20.790072+00:00",
+            "sequence": 7,
+            "virtual_now": "2026-12-04T09:30:00+08:00"
+          },
+          {
+            "activity_id": "a46abc28-3585-4918-be55-177bd041c320",
+            "event": "SIM_ACTIVITY_COMPLETED",
+            "recorded_at": "2026-10-25T07:10:20.804075+00:00",
+            "sequence": 8,
+            "virtual_now": "2026-12-04T10:30:00+08:00"
+          },
+          {
+            "event": "SIMULATED_COMPLETED",
+            "recorded_at": "2026-10-25T07:10:20.805071+00:00",
+            "sequence": 8,
+            "virtual_now": "2026-12-04T10:30:00+08:00"
+          }
+        ],
+        "execution_truth": "SIMULATED_STATE_TRANSITION",
+        "updated_at": "2026-10-25T07:10:20.805071+00:00"
+      },
+      "http_replay_checked": true,
+      "fresh_session_readback_checked": true,
+      "live_model_calls": 0
+    },
+    {
+      "evidence_grade": "TEST_FIXTURE",
+      "seed": 409,
+      "initial": {
+        "run_id": "49b4d0ec-0d42-4720-9676-dcb7e18181f0",
+        "journey_id": "81517929-aa8d-46a5-9fb8-02fafb6f64ab",
+        "city_code": "CN-BJ",
+        "seed": 409,
+        "virtual_now": "2026-12-03T09:00:00+08:00",
+        "timezone": "Asia/Shanghai",
+        "sequence": 0,
+        "status": "RUNNING",
+        "state": {
+          "completed_activity_ids": [],
+          "location": null,
+          "plan_version_id": "23419c2b-5ecb-4446-8ec6-7d9a3da437f3",
+          "provider_snapshot_refs": [
+            {
+              "captured_at": null,
+              "fact_qualities": [],
+              "plan_version_id": "23419c2b-5ecb-4446-8ec6-7d9a3da437f3",
+              "provenance": "UNKNOWN",
+              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "snapshot_id": null
+            }
+          ],
+          "suggested_scene": "SCHEDULE_DELAY"
+        },
+        "history": [
+          {
+            "event": "SIM_STARTED",
+            "recorded_at": "2026-10-25T07:10:21.222816+00:00",
+            "sequence": 0,
+            "virtual_now": "2026-12-03T09:00:00+08:00"
+          }
+        ],
+        "execution_truth": "SIMULATED_STATE_TRANSITION",
+        "updated_at": "2026-10-25T07:10:21.222816+00:00"
+      },
+      "final": {
+        "run_id": "49b4d0ec-0d42-4720-9676-dcb7e18181f0",
+        "journey_id": "81517929-aa8d-46a5-9fb8-02fafb6f64ab",
+        "city_code": "CN-BJ",
+        "seed": 409,
+        "virtual_now": "2026-12-04T10:30:00+08:00",
+        "timezone": "Asia/Shanghai",
+        "sequence": 8,
+        "status": "SIMULATED_COMPLETED",
+        "state": {
+          "completed_activity_ids": [
+            "fe94ecd7-ab5b-4e91-9abb-61b1b58b205f",
+            "69059534-1365-4ecb-a4f6-1b1ac8fcf2b0"
+          ],
+          "location": {
+            "captured_virtual_at": "2026-12-04T09:30:00+08:00",
+            "classification": "SCENARIO_SIMULATED_LOCATION",
+            "coordinate_system": "WGS84",
+            "latitude": 39.809999999999995,
+            "longitude": 116.41000000000001,
+            "place_id": "9b1cadd5-b2c8-4f90-a178-45b55874e67b",
+            "recorded_at": "2026-10-25T07:10:21.323542+00:00",
+            "source": "SIMULATED_GPS"
+          },
+          "plan_version_id": "23419c2b-5ecb-4446-8ec6-7d9a3da437f3",
+          "provider_snapshot_refs": [
+            {
+              "captured_at": null,
+              "fact_qualities": [],
+              "plan_version_id": "23419c2b-5ecb-4446-8ec6-7d9a3da437f3",
+              "provenance": "UNKNOWN",
+              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "snapshot_id": null
+            }
+          ],
+          "suggested_scene": "SCHEDULE_DELAY"
+        },
+        "history": [
+          {
+            "event": "SIM_STARTED",
+            "recorded_at": "2026-10-25T07:10:21.222816+00:00",
+            "sequence": 0,
+            "virtual_now": "2026-12-03T09:00:00+08:00"
+          },
+          {
+            "activity_id": "fe94ecd7-ab5b-4e91-9abb-61b1b58b205f",
+            "event": "SIM_DEPARTURE",
+            "recorded_at": "2026-10-25T07:10:21.243823+00:00",
+            "sequence": 1,
+            "virtual_now": "2026-12-03T09:20:00+08:00"
+          },
+          {
+            "activity_id": "fe94ecd7-ab5b-4e91-9abb-61b1b58b205f",
+            "event": "SIM_ARRIVAL",
+            "recorded_at": "2026-10-25T07:10:21.260441+00:00",
+            "sequence": 2,
+            "virtual_now": "2026-12-03T09:30:00+08:00"
+          },
+          {
+            "activity_id": "fe94ecd7-ab5b-4e91-9abb-61b1b58b205f",
+            "event": "SIM_EXPERIENCE",
+            "recorded_at": "2026-10-25T07:10:21.276081+00:00",
+            "sequence": 3,
+            "virtual_now": "2026-12-03T09:30:00+08:00"
+          },
+          {
+            "activity_id": "fe94ecd7-ab5b-4e91-9abb-61b1b58b205f",
+            "event": "SIM_ACTIVITY_COMPLETED",
+            "recorded_at": "2026-10-25T07:10:21.291461+00:00",
+            "sequence": 4,
+            "virtual_now": "2026-12-03T10:30:00+08:00"
+          },
+          {
+            "activity_id": "69059534-1365-4ecb-a4f6-1b1ac8fcf2b0",
+            "event": "SIM_DEPARTURE",
+            "recorded_at": "2026-10-25T07:10:21.306543+00:00",
+            "sequence": 5,
+            "virtual_now": "2026-12-04T09:20:00+08:00"
+          },
+          {
+            "activity_id": "69059534-1365-4ecb-a4f6-1b1ac8fcf2b0",
+            "event": "SIM_ARRIVAL",
+            "recorded_at": "2026-10-25T07:10:21.322548+00:00",
+            "sequence": 6,
+            "virtual_now": "2026-12-04T09:30:00+08:00"
+          },
+          {
+            "activity_id": "69059534-1365-4ecb-a4f6-1b1ac8fcf2b0",
+            "event": "SIM_EXPERIENCE",
+            "recorded_at": "2026-10-25T07:10:21.338549+00:00",
+            "sequence": 7,
+            "virtual_now": "2026-12-04T09:30:00+08:00"
+          },
+          {
+            "activity_id": "69059534-1365-4ecb-a4f6-1b1ac8fcf2b0",
+            "event": "SIM_ACTIVITY_COMPLETED",
+            "recorded_at": "2026-10-25T07:10:21.354553+00:00",
+            "sequence": 8,
+            "virtual_now": "2026-12-04T10:30:00+08:00"
+          },
+          {
+            "event": "SIMULATED_COMPLETED",
+            "recorded_at": "2026-10-25T07:10:21.354553+00:00",
+            "sequence": 8,
+            "virtual_now": "2026-12-04T10:30:00+08:00"
+          }
+        ],
+        "execution_truth": "SIMULATED_STATE_TRANSITION",
+        "updated_at": "2026-10-25T07:10:21.354553+00:00"
+      },
+      "http_replay_checked": true,
+      "fresh_session_readback_checked": true,
+      "live_model_calls": 0
+    }
+  ]
+}

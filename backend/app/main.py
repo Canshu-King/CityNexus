@@ -21415,13 +21415,13 @@ def _require_simulation_enabled() -> None:
 
 class SimulationClockAdvance(_SimulationBaseModel):
     minutes: int
-    expected_version: int | None = None
+    expected_version: int
 
 
 @app.get("/api/v1/demo/simulation-clock/{journey_id}")
 def get_simulation_clock(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
-    _authorize_private_journey_read(request, response, session, journey_id)
     _require_simulation_enabled()
+    _authorize_private_journey_read(request, response, session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     return _simulation_clock_payload(
         session, journey, session.get(SimulationClock, journey.id)
@@ -21435,6 +21435,7 @@ def advance_simulation_clock(
     payload: SimulationClockAdvance,
     session: Session = Depends(get_session),
 ):
+    _require_simulation_enabled()
     from app.demo_access import require_demo_database
     from app.traveler_principal import resolve_journey_member_principal, member_has_capability
     _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
@@ -21442,6 +21443,9 @@ def advance_simulation_clock(
         raise HTTPException(403, "JOURNEY_EXECUTION_UPDATE_REQUIRED")
     require_demo_database(session)
     _require_simulation_enabled()
+    from app.simulation.models import SimulationRun
+    if session.scalar(select(SimulationRun).where(SimulationRun.journey_id == str(journey_id))):
+        raise HTTPException(409, "USE_SIMULATION_RUN_ADVANCE")
     journey = require(session, Journey, str(journey_id), "Journey")
     if not 1 <= payload.minutes <= 1440:
         raise HTTPException(422, "SIMULATION_CLOCK_MINUTES_OUT_OF_RANGE")
@@ -28452,3 +28456,18 @@ app.include_router(collective_consent_router)
 
 from app.departure_commit import router as departure_commit_router
 app.include_router(departure_commit_router)
+
+
+from app.simulation.api import router as simulation_router
+app.include_router(simulation_router)
+
+
+@app.middleware("http")
+async def persisted_simulation_business_clock(request: Request, call_next):
+    from app.simulation.clock import journey_business_time
+    match = re.match(r"^/api/v1/journeys/([0-9a-fA-F-]{36})(?:/|$)", request.url.path)
+    if not match or not settings.simulation_enabled:
+        return await call_next(request)
+    with SessionLocal() as clock_session:
+        with journey_business_time(clock_session, match.group(1)):
+            return await call_next(request)
