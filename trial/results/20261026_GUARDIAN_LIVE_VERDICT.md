@@ -176,6 +176,12 @@
 - 改为：「守护模型这次已经判失败，模拟状态还在收尾；先等一会儿并点『刷新读数』。超过一分钟还没转，再重启课堂演示（双击启动器）。」`AGENT_UNRESOLVED` 那句同批改成同一口径。
 - 验证（披露：只写课堂演示库）：注入一条 mission／agent_run（FAILED_EXTERNAL）／guardian_run（trigger=当前 pending）并把 run 置 `GUARDIAN_RUNNING`；屏上 `LAG_NOTE 1`、文本逐字命中、可见且在视口（`classroom-guardian-lag-note-133.png`）；随后删除这三行、run 回到 `PAUSED_FOR_GUARDIAN`，无残留、无 console 错误。
 
+### 第十四次（`guardian-lag-note-134.txt`，07:02）——AGENT_UNRESOLVED 那一句的屏证
+
+- 用同一台夹具把 agent 行改成 `PARTIAL`（不是 `FAILED_EXTERNAL`），run 仍 `GUARDIAN_RUNNING`；屏上 `LAG_NOTE 1` 显示「守护没有解出可执行的调整，模拟状态还在收尾；先等一会儿并点『刷新读数』。超过一分钟还没转，再重启课堂演示（双击启动器）。」可见且在视口（`classroom-guardian-lag-note-134.png`）。
+- 随后删除夹具三行并把 run 放回 `PAUSED_FOR_GUARDIAN`，无 console 错误。
+- `DEMO_PRESENTER_REQUIRED` 那句仍**不可达**（课堂上控制台写操作都带当前票的权限；没有“有 traveler 无 presenter”的真实路径），所以不硬造，保留为未屏证项。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。

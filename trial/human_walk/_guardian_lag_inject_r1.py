@@ -33,7 +33,7 @@ def copy_row(db, table, source, changes):
     )
 
 
-def inject() -> dict:
+def inject(mode: str = "external") -> dict:
     db = sqlite3.connect(DB)
     db.row_factory = sqlite3.Row
     run = db.execute(
@@ -63,7 +63,8 @@ def inject() -> dict:
         "reasoning_summary": MARKER,
     })
     copy_row(db, "agent_runs", agent, {
-        "id": agent_id, "mission_id": mission_id, "status": "FAILED_EXTERNAL",
+        "id": agent_id, "mission_id": mission_id,
+        "status": "PARTIAL" if mode == "unresolved" else "FAILED_EXTERNAL",
         "failure_reason": MARKER,
     })
     copy_row(db, "guardian_runs", guardian, {
@@ -95,7 +96,7 @@ def restore(ids: dict) -> None:
 if __name__ == "__main__":
     action = sys.argv[1] if len(sys.argv) > 1 else "inject"
     if action == "inject":
-        print(json.dumps(inject(), ensure_ascii=False))
+        print(json.dumps(inject(sys.argv[2] if len(sys.argv) > 2 else "external"), ensure_ascii=False))
     elif action == "restore":
         restore(json.loads(sys.argv[2]))
         print("RESTORED")

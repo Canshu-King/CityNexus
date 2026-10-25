@@ -4,8 +4,10 @@ import fs from "node:fs";
 
 const BASE = "http://127.0.0.1:14492";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
-const OUT = DIR + "/guardian-lag-note-133.txt";
-const SHOT = DIR + "/classroom-guardian-lag-note-133.png";
+const OUT = DIR + "/guardian-lag-note-" + (process.env.GSUFFIX || "133") + ".txt";
+const SHOT = DIR + "/classroom-guardian-lag-note-" + (process.env.GSUFFIX || "133") + ".png";
+const MODE = process.env.GMODE || "external";
+const TESTID = MODE === "unresolved" ? "rev-presenter-guardian-unresolved" : "rev-presenter-guardian-failed";
 const HELPER = "D:/moodle/_cmdr_rescue_v3_1022/trial/human_walk/_guardian_lag_inject_r1.py";
 const NL = String.fromCharCode(10);
 const lines = [];
@@ -36,10 +38,10 @@ await page.waitForTimeout(2600);
 if (!(await press("闭馆"))) note("NO_CLOSURE");
 await page.waitForTimeout(3000);
 
-const injected = JSON.parse(execFileSync("python", [HELPER, "inject"], { encoding: "utf-8" }).trim());
+const injected = JSON.parse(execFileSync("python", [HELPER, "inject", MODE], { encoding: "utf-8" }).trim());
 note(`INJECTED ${JSON.stringify(injected)}`);
 await page.waitForTimeout(13000);
-const failed = page.locator('[data-testid="rev-presenter-guardian-failed"]').first();
+const failed = page.locator(`[data-testid="${TESTID}"]`).first();
 const count = await failed.count();
 const detail = count ? await failed.evaluate((node) => {
   const box = node.getBoundingClientRect();

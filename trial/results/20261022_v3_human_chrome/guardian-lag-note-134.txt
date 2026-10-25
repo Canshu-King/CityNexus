@@ -1,0 +1,4 @@
+INJECTED {"mission":"e1d94576-17b2-4159-96e5-f9110367e182","agent":"9a57485f-fbee-4b6d-bb6a-89f002ee8bb0","guardian":"2c7117e5-20a4-4ff5-88e6-3582415a8a75","pending":"d5d52b45-8957-449f-ba52-eb3ea11daa81"}
+LAG_NOTE 1 {"text":"守护没有解出可执行的调整，模拟状态还在收尾；先等一会儿并点「刷新读数」。超过一分钟还没转，再重启课堂演示（双击启动器）。","visible":true,"inViewport":true}
+RESTORE RESTORED
+ERRORS []
