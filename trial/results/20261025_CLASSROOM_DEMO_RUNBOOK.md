@@ -236,3 +236,5 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 之前任何一次 `refresh` 抛错（例如代理返回非 JSON）都会把 `hidden` 置真，控制台永久消失；progress 载荷坏掉时还会把 `acceptanceHasProposal` 置假、藏掉「继续模拟」。
 - 现在：tick 的 catch 不再隐藏面板（只有两个端点都 404/405 才隐藏）；progress 坏载荷保留上一次读数。正常路径用 r58 复跑确认无回归（+30 → 09:30/10:00、到下一站 12:18 第 6 步、刷新同步、`ERRORS []`）。
+
+- 02:21 已用真拦截复测：把 `.../runs/*/progress` 与 `/api/v1/plans/*` 改成 `502 text/html` 持续十三秒（跨一次十秒轮询），控制台仍在（`PRESENTER_VISIBLE 1`）、状态与推进提示都在、`ERRORS []`（`console-blip-71.txt`、`classroom-console-blip-71.png`）。
