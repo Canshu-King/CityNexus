@@ -1,0 +1,7 @@
+PRESSES 2
+CLOCK_AT_END "模拟时间：12/04 09:00 · 服务器第 1 版"
+DONE_LINE "· 不是实际到场"
+NEXT_DISABLED true
+REENTRY_BANNER "课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。"
+REENTRY_BANNER_COUNT 1
+ERRORS []
