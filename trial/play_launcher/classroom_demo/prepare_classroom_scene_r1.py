@@ -173,6 +173,8 @@ def restart_backend() -> None:
         "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": "43200",
         "CITYNEXUS_DEMO_MODE": "true",
         "CITYNEXUS_DEMO_RESET_TOKEN": SECRET[:16],
+        # Codex's presenter boundary checks this before issuing a classroom session.
+        "CITYNEXUS_DEMO_DATABASE_PATH": DST,
         "CITYNEXUS_SIMULATION_ENABLED": "true",
         "CITYNEXUS_AI_ENABLED": "true",
         "CITYNEXUS_AI_PROVIDER": "deepseek",

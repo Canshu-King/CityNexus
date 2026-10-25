@@ -2795,3 +2795,19 @@ Codex 的分支（`codex/sandbox-execution-security-20261025`，`1dc083f5ca`）�
 
 边界：`/plans` 与 `/guardian/*` 目前不在 Codex 的收紧列表里，但我也一并带了 token——不改变读取结果，只是让合入后不会突然断。
 
+## 九十五、Codex 的 presenter 闸与「平板直接进课堂」相撞：先记事实，不擅自改他的边界
+
+Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene` 加了 `require_demo_presenter`，只有两种请求能通过：`X-CityNexus-Presenter-Key` 与 `CITYNEXUS_DEMO_PRESENTER_KEY` 常量时间相等（配置值 ≥32 字符），或请求来自 loopback（且 Origin 也是 loopback 或为空）。
+
+我们今天的课堂链是**平板直接打开 LAN 地址、点「课堂演示：进入示例行程」**——请求来源是 `10.12.x.x`（平板），不是 loopback，也没有 presenter key；合入后会被 403 `DEMO_PRESENTER_REQUIRED`。电脑自己的浏览器不受影响。
+
+三条可选路径（**未动他的代码，等裁**）：
+
+| 档 | 做法 | 代价 |
+| --- | --- | --- |
+| 甲 | 演示只在电脑浏览器上跑，平板只当观众 | 不改边界，最安全；失去「老师在平板上亲手点」 |
+| 乙 | 电脑端预签 presenter key，写进平板打开的那条链接 | key 落在 URL 里，LAN 内可见 |
+| 丙 | 给 LAN 内的演示会话开一个受时限、受 run 约束的豁免 | 要改 Codex 的边界，归他 |
+
+已做的准备：`prepare_classroom_scene_r1.py` 现在把 `CITYNEXUS_DEMO_DATABASE_PATH` 指到演示副本，满足 `require_demo_database` 的隔离检查（不改判定，只是让演示库被认出来）。
+
