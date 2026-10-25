@@ -3013,3 +3013,11 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 恢复后自检：`DEMO_READY=true`、行程 ACTIVE、方案在、提案在等、时钟停在 09:00、控制台仍是 `NOT_DEPLOYED`（这一支后端没有模拟执行端点，属预期）。
 
 屏证：`classroom-guardian-note-35-note-waiting.png`（隔离栈上控制台的守护提示，本轮改过的文案）。
+
+## 一百一十五、投影形状下按「行程守护」像没反应：卡片在折叠线下、按钮又被输入条压住
+
+电脑投影按 1280×900 实测：进入课堂后按「行程守护」，卡片盒落在 y≈999、视口只有 900，老师第一眼看不到任何变化；把卡片滚进视口后，它又只露出底边，固定输入条正好压在「接受这份调整」上。成因是原代码只在手机形状（≤899px）才滚卡片，桌面默认「右列已在视野内」——这条假设在今天的页面上已经不成立。
+
+改法：所有形状都把卡片滚到视口中间（`frontend/src/trial/mobile/GuardianRealityPanel.tsx:265`），手机行为不变。
+
+修复后同一支探针：卡片 y≈369、在首屏内（`trial/results/20261022_v3_human_chrome/classroom-desktop-card-36.txt:1`、`:2`），接受按钮盒 231×44 且命中测试打到自己（`:5`、`:6`），零页面错误（`:10`）。屏证：`classroom-desktop-card-36-after.png`（修复后）与 `classroom-desktop-card-36-before.png`（修复前，卡片只露一角）。

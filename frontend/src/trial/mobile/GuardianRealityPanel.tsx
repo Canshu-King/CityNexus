@@ -259,12 +259,10 @@ export function GuardianRealityPanel({
         // The card can sit below the fold on a phone; bring it into view once so
         // pressing 行程守护 actually shows the decision instead of its heading.
         window.requestAnimationFrame(() => {
-          // On the desktop the panel sits in a right-hand column that is already in view;
-          // scrolling the whole page to center the card pushes the map pane off-screen and
-          // leaves a large blank. Only the phone layout needs the scroll.
-          if (window.matchMedia("(max-width: 899px)").matches) {
-            proposalRef.current?.scrollIntoView({ block: "center" });
-          }
+          // Measured on a 1280×900 projector: the card lands a hundred pixels below the fold,
+          // and the fixed composer covers its buttons once it only just enters view. Centre it
+          // on every shape so the accept button is not sitting under the composer.
+          proposalRef.current?.scrollIntoView({ block: "center" });
         });
       }
     }).catch(() => {
