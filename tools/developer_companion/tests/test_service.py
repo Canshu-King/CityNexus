@@ -64,6 +64,14 @@ class UncommittedExecutor(FixtureExecutor):
         return {"status": "idle"}
 
 
+class CancelDuringInitializeExecutor(FixtureExecutor):
+    def initialize(self, **kwargs):
+        (self.cwd.parent / "cancel.requested").touch()
+        return {"name":"test-double"}
+    def run_turn(self, **kwargs):
+        raise AssertionError("Cancelled task must not request a model turn")
+
+
 class CompanionTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -180,6 +188,24 @@ class CompanionTests(unittest.TestCase):
         actual = redact(value)
         for secret in ("local-test-value", "another-value", "private-value"):
             self.assertNotIn(secret, actual)
+
+    def test_default_real_executor_does_not_fall_back_to_host_when_container_missing(self):
+        companion = DeveloperCompanion(source_checkout=self.source, state_dir=self.state)
+        task = companion.create_task("Must stay isolated", self.source, OWNER, allowed_paths=["calculator.py"])
+        with patch("tools.developer_companion.service.dsh_runtime", side_effect=AssertionError("host fallback forbidden")):
+            result = companion.run_task(task["task_id"], OWNER, provider="configured", model="cn:deepseek-v4.1-flash")
+        self.assertEqual(result["status"], "BLOCKED_EXTERNAL_AGENT")
+        self.assertEqual(result["error_code"], "CONTAINER_CONFIGURATION_REQUIRED")
+        self.assertEqual(result["isolation"], "CONTAINER_NOT_STARTED")
+        self.assertNotIn("executor_pid", result)
+        self.assertEqual(git(Path(result["checkout"]), "status", "--porcelain"), "")
+
+    def test_cancel_during_initialization_prevents_the_first_model_request(self):
+        companion=self.companion(CancelDuringInitializeExecutor)
+        task=companion.create_task("Cancel before the model turn",self.source,OWNER)
+        result=companion.run_task(task["task_id"],OWNER,provider="fixture",model="fixture")
+        self.assertEqual(result["status"],"CANCELLED")
+        self.assertEqual(result["tool_calls"],0)
 
 
 if __name__ == "__main__":

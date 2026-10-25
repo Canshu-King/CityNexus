@@ -1,0 +1,59 @@
+{
+  "step": "ISSUE51_CONTAINER_AND_CREDENTIAL_BROKER",
+  "base_product_commit": "3d783049fa2da1232fbd545bf09298f9fcf49f51",
+  "scope": "tools/developer_companion only; product backend/frontend unchanged",
+  "tests": {
+    "discovered": 25,
+    "passed": 24,
+    "skipped": 1,
+    "exit_code": 0,
+    "evidence": "HOST_CONTROL_PLANE_AND_TEST_UPSTREAM",
+    "skipped_reason": "OS account cannot create symlinks; not claimed as tested",
+    "log_sha256": "b0f48a8b6303a253922f2e8a4f817e449b06ab1fd800e2ddae5b87539208bde2"
+  },
+  "syntax_checks": {
+    "node_entry": 0,
+    "node_mailbox_proxy": 0,
+    "profile_yaml": "PARSED"
+  },
+  "engine_preflight": {
+    "checked_at_epoch": 1792937498.6795194,
+    "stage": "CONTAINER_ENGINE_PREFLIGHT",
+    "worker_started": false,
+    "credential_read": false,
+    "live_model_requests": 0,
+    "container_read_escape_probe": "NOT_RUN",
+    "container_image_build": "NOT_RUN",
+    "local_upstream_test": "TEST_UPSTREAM_ONLY",
+    "status": "BLOCKED_EXTERNAL_AGENT",
+    "error_code": "CONTAINER_ENGINE_UNAVAILABLE",
+    "docker_observation": "Normal startup and restart failed. Docker logs report sailor-ingest.sock AF_UNIX bind address in use; no stale file was present. No volumes, images, data-root mapping or databases changed."
+  },
+  "live_container_acceptance": "NOT_RUN",
+  "container_image_build": "NOT_RUN",
+  "live_dsh_requests_this_step": 0,
+  "new_browser_acceptance": "NOT_RUN",
+  "public_or_traveler_api_exposure": false,
+  "legacy_local_mode": "EXPLICIT_OWNER_CLI_ONLY",
+  "defaults": "container; isolation failure never falls back to host",
+  "source_sha256": {
+    "tools/developer_companion/container_entry.mjs": "d65bc0d4032f406af32627a9b319c3eaa06a976c3800c06da5df03d04d0ab38c",
+    "tools/developer_companion/container_profile.yml": "c275835b1c925dc532065c836708c52131b23dae9fce463eaf62df910f30a54d",
+    "tools/developer_companion/container_requirements.txt": "0c59b9e54e29ec0aca66ef202f5fd1f7decea3a8ed5f54837a1a127dc092cf13",
+    "tools/developer_companion/container_runtime.py": "4e6320d2b671d420a9f411376662c96589584a69851ccd72cf45ebdac54d2eff",
+    "tools/developer_companion/demo_fix.py": "6be1258f43a6a59983633b798979a94ce90914b2ee9c4628c3182cfe710d714e",
+    "tools/developer_companion/Dockerfile": "30d2c56f0c3694e8e50878bb58ba5ebcd9c8d7d9cd6b946cd41c0a23ad952807",
+    "tools/developer_companion/dsh_sdk.py": "9f54c54e3b4d24f6b503c55f88b95451cbd06d3c9f05f5054a612da9779a5fe3",
+    "tools/developer_companion/mailbox_proxy.mjs": "40ffec8bd3ca1107c0465f92ffd77143511b72be6b6ce6d36d41cd214f1fec42",
+    "tools/developer_companion/process_scope.py": "979edc28a60e5c4209bada9dd150863625ff8900a956e98357928540af920ecd",
+    "tools/developer_companion/README.md": "e00c933b1119b0cdc761ad0d4383c810ebf4dcf46618d5dfa71dd691090f1f3e",
+    "tools/developer_companion/runtime.py": "74f7d30ded04cb323eecde920a39f59f7c7bdcd9c6260bbab27e51057443af58",
+    "tools/developer_companion/service.py": "7163ebb58e93fe7a53bcc0f5e663c3d9a989856a74ce2a718606924de8618b35",
+    "tools/developer_companion/__main__.py": "bb4ff99f18e9b7cc6980d2ed1d1b073bceefd756a216e95b660078bfcd28a4d7",
+    "tools/developer_companion/tests/guardian_browser_stage.py": "18609a198c8d95a9e84dae41c0b6db14d00b6257abd9a822867daa07b3c4bdf5",
+    "tools/developer_companion/tests/test_container_runtime.py": "d4dd2ffa975a91d4e37ecf4511775f9b5ccc34c2f436e4ff49a1d64aa0b1ea4e",
+    "tools/developer_companion/tests/test_dsh_sdk.py": "4036d9cc1a5d5667ef6b672caafe4090b31c670e50f5eda84a2bb13347bb5e3d",
+    "tools/developer_companion/tests/test_process_scope.py": "b39f767fafb34e0e2256118c817436b34b8ce8e51fcda5d3b5621923e9a657b7",
+    "tools/developer_companion/tests/test_service.py": "efe6cc55cfa4954411e124a0c688419b631786874604fa4b9f64bf819b09099f"
+  }
+}

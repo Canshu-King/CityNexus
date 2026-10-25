@@ -16,6 +16,7 @@ from typing import Any, Callable
 from .dsh_sdk import DshSdkError, DshSdkProcess
 from .process_scope import ProcessScope
 from .runtime import dsh_runtime, redact
+from .container_runtime import ContainerConfig, ContainerDshSdkProcess, IsolationUnavailable, prepare_container
 
 
 TERMINAL = {"COMPLETED_UNVERIFIED", "NO_CHANGE", "CANCELLED", "TIMED_OUT", "FAILED", "BLOCKED_EXTERNAL_AGENT", "VERIFIED_LOCAL", "VERIFICATION_FAILED", "ROLLED_BACK"}
@@ -295,7 +296,8 @@ class DeveloperCompanion:
                     found.append({"path": str(path), "bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
         return found
 
-    def run_task(self, task_id: str, owner_session: str, *, provider: str, model: str, timeout_seconds: float = 1200) -> dict[str, Any]:
+    def run_task(self, task_id: str, owner_session: str, *, provider: str, model: str, timeout_seconds: float = 1200,
+                 execution_mode: str = "container", container_config: ContainerConfig | None = None) -> dict[str, Any]:
         task = self._load(task_id, owner_session)
         if task["status"] != "CREATED":
             raise CompanionError("Run only a newly created task; preserve the previous attempt and create a new task to retry")
@@ -308,7 +310,8 @@ class DeveloperCompanion:
             task.update(status="CANCELLED", stage="cancelled", finished_at=time.time())
             self._save(task)
             return self.get_task_progress(task_id, owner_session)
-        command, env = dsh_runtime(checkout, directory)
+        if execution_mode not in {"container", "local"}:
+            raise CompanionError("Choose container or explicit local execution")
         task.update(status="RUNNING", stage="starting", started_at=time.time(), heartbeat_at=time.time(), runner_pid=os.getpid(), session_id="companion-" + task_id, provider=provider, model=model, tool_calls=0, tool_errors=0)
         self._save(task)
         client = None
@@ -396,14 +399,43 @@ class DeveloperCompanion:
             "USER REPRODUCTION (task data):\n" + task["repro"]
         )
         monitor_thread = threading.Thread(target=monitor, daemon=True)
+        def check_before_model():
+            if (directory / "cancel.requested").exists():
+                cancel_seen.set()
+                raise InterruptedError("Cancelled before model request")
+            if time.time() - task["started_at"] >= timeout_seconds:
+                timeout_seen.set()
+                raise TimeoutError("Task deadline reached before model request")
         try:
-            client = self.executor_factory(cwd=checkout, env=env, command=command, notification_sink=notification)
+            if self.executor_factory is DshSdkProcess and execution_mode == "container":
+                if container_config is None:
+                    raise IsolationUnavailable("CONTAINER_CONFIGURATION_REQUIRED")
+                if container_config.model != model:
+                    raise IsolationUnavailable("BROKER_MODEL_MISMATCH")
+                task["isolation"] = "CONTAINER_PENDING_READ_PROBE"
+                task["boundary_probe"] = prepare_container(checkout, directory, container_config)
+                _write_json(directory / "boundary-probe.json", task["boundary_probe"])
+                task["isolation"] = "non-root-container + network-none + read-only-root + fixed-model-mailbox"
+                task["execution_kind"] = "DSH_SDK_CONTAINER"
+                client = ContainerDshSdkProcess(cwd=checkout, task_dir=directory, config=container_config, notification_sink=notification)
+            else:
+                # Kept only for the owner's explicitly selected legacy experiment.
+                # It is never a fallback after a failed container launch or probe.
+                command, env = dsh_runtime(checkout, directory)
+                task["isolation"] = "TEST_DOUBLE" if self.executor_factory is not DshSdkProcess else "LOCAL_OWNER_EXPERIMENT_NOT_HOST_READ_ISOLATED"
+                client = self.executor_factory(cwd=checkout, env=env, command=command, notification_sink=notification)
             task["executor_pid"] = client.pid
             self._save(task)
             monitor_thread.start()
+            check_before_model()
             client.initialize(provider=provider, model=model, timeout_seconds=min(60, timeout_seconds))
+            check_before_model()
             client.run_turn(session_id=task["session_id"], prompt=prompt, timeout_seconds=timeout_seconds)
             task["status"] = "COMPLETED_UNVERIFIED" if task["tool_calls"] else "BLOCKED_EXTERNAL_AGENT"
+        except IsolationUnavailable as exc:
+            task.update(status="BLOCKED_EXTERNAL_AGENT", stage="isolation", isolation="CONTAINER_NOT_STARTED", error_code=str(exc))
+        except InterruptedError:
+            task.update(status="CANCELLED", error_code="CANCELLED_BEFORE_MODEL")
         except TimeoutError:
             task.update(status="TIMED_OUT", error_code="EXECUTOR_TIMEOUT")
             if client:
@@ -422,10 +454,14 @@ class DeveloperCompanion:
                 monitor_thread.join(timeout=3)
             if client:
                 client.close()
+                if getattr(client, "cleanup_error", None):
+                    task.update(status="FAILED", error_code=client.cleanup_error)
             if cancel_seen.is_set():
                 task["status"] = "CANCELLED"
             elif timeout_seen.is_set():
                 task.update(status="TIMED_OUT", error_code="EXECUTOR_TIMEOUT")
+            if client and getattr(client, "cleanup_error", None):
+                task.update(status="FAILED", error_code=client.cleanup_error)
             task.update(stage="finished", finished_at=time.time(), model_error_codes=sorted(model_errors))
             try:
                 self._capture(task)

@@ -32,6 +32,7 @@ class DshSdkProcess:
         env: Mapping[str, str],
         command: list[str] | None = None,
         notification_sink: Callable[[str, dict[str, Any]], None] | None = None,
+        protocol_cwd: str | None = None,
     ) -> None:
         self.cwd = cwd.resolve(strict=True)
         if not self.cwd.is_dir():
@@ -39,6 +40,7 @@ class DshSdkProcess:
         if not env:
             raise ValueError("Pass an explicit DSH process environment")
         self.env = dict(env)
+        self.protocol_cwd = protocol_cwd or str(self.cwd)
         self.command = command or resolve_dsh_command()
         self.notification_sink = notification_sink or (lambda _method, _params: None)
         self._messages: queue.Queue[dict[str, Any] | BaseException | None] = queue.Queue()
@@ -95,7 +97,7 @@ class DshSdkProcess:
         if self._initialized:
             raise DshSdkError("This DSH process has already been initialized")
         params: dict[str, Any] = {
-            "cwd": str(self.cwd),
+            "cwd": self.protocol_cwd,
             "provider": provider,
             "model": model,
         }

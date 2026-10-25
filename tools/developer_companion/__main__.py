@@ -7,6 +7,22 @@ import sys
 from pathlib import Path
 
 from .service import CompanionError, DeveloperCompanion
+from .container_runtime import ContainerConfig
+
+
+def execution_arguments(parser):
+    parser.add_argument("--execution-mode", choices=["container", "local"], default="container")
+    parser.add_argument("--image", help="Explicitly built local sha256 image ID; never pulled by a task")
+    parser.add_argument("--broker-endpoint", help="Trusted host gateway base URL ending in /v1")
+    parser.add_argument("--broker-key-file", type=Path, help="Host-only raw key file outside the checkout; never mounted")
+
+
+def container_configuration(args):
+    if args.execution_mode == "local":
+        return None
+    if not (args.image and args.broker_endpoint and args.broker_key_file):
+        return None
+    return ContainerConfig(args.image, args.broker_endpoint, args.broker_key_file, args.model)
 
 
 def main() -> int:
@@ -25,6 +41,7 @@ def main() -> int:
             command.add_argument("--provider", required=True)
             command.add_argument("--model", required=True)
             command.add_argument("--timeout", type=float, default=1200)
+            execution_arguments(command)
         elif name == "verify":
             command.add_argument("--commands-file", type=Path, required=True, help="Developer-selected JSON array of argv arrays")
             command.add_argument("--timeout", type=float, default=300)
@@ -37,7 +54,8 @@ def main() -> int:
         if args.action == "create-task":
             result = companion.create_task(args.repro_file.read_text(encoding="utf-8"), args.source, owner, allowed_paths=args.allowed_paths)
         elif args.action == "run":
-            result = companion.run_task(args.task_id, owner, provider=args.provider, model=args.model, timeout_seconds=args.timeout)
+            result = companion.run_task(args.task_id, owner, provider=args.provider, model=args.model, timeout_seconds=args.timeout,
+                                        execution_mode=args.execution_mode, container_config=container_configuration(args))
         elif args.action == "verify":
             result = companion.verify_task(args.task_id, owner, json.loads(args.commands_file.read_text(encoding="utf-8")), timeout_seconds=args.timeout)
         elif args.action == "rollback":

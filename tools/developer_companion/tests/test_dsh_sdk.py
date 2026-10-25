@@ -17,7 +17,7 @@ for line in sys.stdin:
     method = request.get("method")
     request_id = request.get("id")
     if method == "initialize":
-        result = {"serverInfo": {"name": "deepseek-harness-sdk-runtime", "version": "0.0.1"}}
+        result = {"serverInfo": {"name": "deepseek-harness-sdk-runtime", "version": "0.0.1", "cwd": request["params"]["cwd"]}}
         print(json.dumps({"jsonrpc": "2.0", "id": request_id, "result": result}), flush=True)
     elif method == "session/prompt":
         session_id = request["params"]["sessionId"]
@@ -60,6 +60,12 @@ class DshSdkProcessTests(unittest.TestCase):
         with self.make_process(events) as client:
             with self.assertRaisesRegex(RuntimeError, "Initialize DSH"):
                 client.run_turn(session_id="task-1", prompt="run", timeout_seconds=1)
+
+    def test_container_protocol_cwd_is_distinct_from_host_process_cwd(self):
+        env = {"PATH": os.environ.get("PATH", ""), "PYTHONUTF8": "1", "SYSTEMROOT": os.environ.get("SYSTEMROOT", "")}
+        with DshSdkProcess(cwd=Path.cwd(), env=env, command=[sys.executable,"-u","-c",SERVER], protocol_cwd="/workspace") as client:
+            server=client.initialize(provider="fixture",model="fixture")
+            self.assertEqual(server["cwd"],"/workspace")
 
 
 if __name__ == "__main__":

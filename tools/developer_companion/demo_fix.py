@@ -7,6 +7,7 @@ import secrets
 from pathlib import Path
 
 from .service import DeveloperCompanion
+from .__main__ import execution_arguments, container_configuration
 
 
 def main() -> int:
@@ -17,6 +18,7 @@ def main() -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument("--repro-file", type=Path)
     parser.add_argument("--timeout", type=float, default=1200)
+    execution_arguments(parser)
     args = parser.parse_args()
     args.state_dir.mkdir(parents=True, mode=0o700, exist_ok=True)
     owner_path = args.state_dir / ".owner-session"
@@ -29,7 +31,8 @@ def main() -> int:
     companion = DeveloperCompanion(source_checkout=args.source, state_dir=args.state_dir)
     task = companion.create_task(repro, args.source, owner)
     print(json.dumps({"created": task}, ensure_ascii=False), flush=True)
-    result = companion.run_task(task["task_id"], owner, provider=args.provider, model=args.model, timeout_seconds=args.timeout)
+    result = companion.run_task(task["task_id"], owner, provider=args.provider, model=args.model, timeout_seconds=args.timeout,
+                                execution_mode=args.execution_mode, container_config=container_configuration(args))
     print(json.dumps({"result": result, "artifacts": companion.get_preview_or_test_artifacts(task["task_id"], owner)}, ensure_ascii=False, indent=2))
     return 0 if result["status"] in {"COMPLETED_UNVERIFIED", "NO_CHANGE"} else 1
 

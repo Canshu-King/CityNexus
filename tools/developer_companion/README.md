@@ -2,15 +2,33 @@
 
 本机开发者通过命令创建源码修复任务。执行器使用现有 DeepSeek Harness 的 `sdk` profile；不需要 Codex CLI。它与旅行者 API、Journey Agent 工具目录和课堂页面分开启动。
 
+## 当前执行模式
+
+`run` / `demo_fix` 默认使用 `container`。没有镜像/代理配置、引擎不可用或读取探针失败时，任务返回 `BLOCKED_EXTERNAL_AGENT` 和具体错误码，不会退回宿主运行。当前机器 Docker 引擎尚未恢复，因此镜像构建、容器内 DSH 和读取逃逸探针仍未实测；不能把下面的配置当成隔离已验收。
+
+容器启动代码采用非 root UID 10001、只读根目录、无外部网络、移除 capabilities。挂载只包含该任务 checkout、只读 `.git` 指针/私有任务 Git 和通信目录；不挂宿主 home、用户数据库、Docker socket 或供应商 key 文件。读取探针先实际尝试宿主 canary/凭据路径、根目录写入和外部网络，未通过不启模型。
+
+上游 key 只由宿主代理读取。容器内 DSH 使用本地 HTTP → 文件通信 → 宿主固定 Chat Completions 路由；代理不接受任意 URL、额外请求头、模型切换或重定向。容器内 Git 元数据只读，提交仍由控制面捕获。
+
+引擎恢复后，开发者先显式构建镜像，再使用其不可变 ID；任务本身不拉镜像：
+
+```powershell
+docker build -t citynexus-companion:r1 tools/developer_companion
+$image = docker image inspect citynexus-companion:r1 --format '{{.Id}}'
+python -m tools.developer_companion.demo_fix --source . --state-dir "$env:USERPROFILE/cn51/tasks" --provider workbuddy2api --model cn:deepseek-v4.1-flash --image $image --broker-endpoint http://127.0.0.1:PORT/v1 --broker-key-file PATH_TO_OWNER_RAW_KEY_FILE
+```
+
+`PORT` 和 key 文件由主人本机选择。key 文件必须在源码 checkout 之外，只含原始 key；不会挂载进容器、放进进程参数、写入进度或提交。该初版镜像只登记 `cn:deepseek-v4.1-flash`，其他模型需要另行准备镜像路由。
+
 ## 一条命令执行
 
 在本仓库根目录运行。`--provider` / `--model` 使用本机 DSH 已登记的路由；下面是本次机器实际配置的路由名，不包含密钥。
 
 ```powershell
-python -m tools.developer_companion.demo_fix --source . --state-dir "$env:USERPROFILE/cn51/tasks" --provider workbuddy2api --model cn:deepseek-v4.1-flash
+python -m tools.developer_companion.demo_fix --source . --state-dir "$env:USERPROFILE/cn51/tasks" --execution-mode local --provider workbuddy2api --model cn:deepseek-v4.1-flash
 ```
 
-默认复现描述是“接受重规划后 Guardian 仍显示问题未解决”。使用 `--repro-file path/to/repro.txt` 提供其他明确故障。执行器首先验证当前基线；故障已经修复时保留源码，记录可复核的结果。
+上例是首轮已经实测的 **主人本机实验模式**，必须显式选择 `local`；它没有宿主读取隔离，不可连接游客或共享 UI。默认复现描述是“接受重规划后 Guardian 仍显示问题未解决”。使用 `--repro-file path/to/repro.txt` 提供其他明确故障。执行器首先验证当前基线；故障已经修复时保留源码，记录可复核的结果。
 
 `demo_fix` 在状态目录创建本机 owner-session 文件，每个任务保存其带盐哈希。命令先打印 task ID / 原始 SHA / 独立 checkout，随后运行 DSH。默认任务超时 1200 秒；`--timeout` 可调整。任务没有研究轮数限制。
 
@@ -75,7 +93,7 @@ python -m tools.developer_companion --source $source --state-dir $taskState --ow
 
 DSH 普通工具使用 `workspace-write`，额外权限请求没有自动批准。父执行器在 Windows Job Object / POSIX process group 中运行；正常退出、停止和超时都回收其子进程。Windows 已有实际父进程先退出、子进程仍运行、关闭 Job 后子进程退出的自动测试。
 
-当前进程身份仍是启动命令的本机用户。Job Object 负责进程回收，不能代替独立 OS 用户或主机读取隔离；这部分 Issue #51 的严格执行身份要求尚未交付。源码中的分支限制和本地路径检查也不是面向恶意源码的完整沙箱。此边界在任务 `isolation` 字段中记录。
+显式 `local` 模式的进程身份仍是启动命令的本机用户。Job Object 负责进程回收，不能代替主机读取隔离。新增容器模式必须通过启动前探针，其真实内核边界与容器 DSH 仍待引擎恢复实测；Issue #51 的严格执行身份要求仍未验收。此边界在任务 `isolation` 字段中记录。
 
 DSH 从自己的凭据 seam 解析已有路由；桥接器不读取或复制凭据文件。默认 `deepseek-official` 没有 Key 不代表其他已配置路由不可用。本次已通过 `workbuddy2api` 路由实际调用代码工具。ACP profile 在本机 alpha 版本的新会话阶段返回内部错误，因此本实现使用经过实测的 SDK 通道。
 
