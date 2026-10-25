@@ -1,5 +1,5 @@
 STEP open t=3.8s
-STEP trips t=4.8s
+STEP trips t=4.9s
 STEP demo t=8.1s
 STEP guardian t=10.3s
 PROPOSAL_TEXT "移除故宫博物院；路上少 66 分钟。"

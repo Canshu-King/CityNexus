@@ -6,10 +6,12 @@ never prints a token, never writes anything, and does not change the scene.
 """
 from __future__ import annotations
 
+import io
 import json
 import os
 import socket
 import sqlite3
+import time
 import urllib.error
 import urllib.request
 
@@ -30,6 +32,20 @@ def lan_ipv4() -> str:
 
 
 LAN = "http://%s:14492" % lan_ipv4()
+
+SESSION_FILE = os.path.join(CANARY, ".demo_presenter_session.json")
+
+
+def presenter_session() -> dict | None:
+    """A short-lived presenter bearer written by the launcher after it redeems a ticket."""
+    try:
+        with io.open(SESSION_FILE, encoding="utf-8") as handle:
+            data = json.load(handle)
+        if data.get("access_token") and int(data.get("expires_at") or 0) > time.time() + 5:
+            return data
+    except (OSError, ValueError, TypeError):
+        pass
+    return None
 
 
 def get(url: str, timeout: int = 8, bearer: str = "") -> tuple[int, dict]:
@@ -52,10 +68,18 @@ def get(url: str, timeout: int = 8, bearer: str = "") -> tuple[int, dict]:
 health_status, health = get(API + "/api/v1/health")
 web_status, _ = get(WEB + "/revolution")
 lan_status, _ = get(LAN + "/revolution")
-session_status, session = get(API + "/api/v1/demo/session")
+presenter = presenter_session()
+if presenter:
+    session_status, session = 200, {"journey_id": presenter.get("journey_id")}
+    token = str(presenter.get("access_token") or "")
+else:
+    session_status, session = get(API + "/api/v1/demo/session")
+    token = str(session.get("access_token") or "")
 journey_id = str(session.get("journey_id") or "")
-clock_status, clock = get(API + "/api/v1/demo/simulation-clock/" + journey_id) if journey_id else (0, {})
-token = str(session.get("access_token") or "")
+clock_status, clock = (
+    get(API + "/api/v1/demo/simulation-clock/" + journey_id, bearer=token)
+    if journey_id else (0, {})
+)
 sim_status, sim_body = (
     get(API + "/api/v1/journeys/" + journey_id + "/simulation/runs/current", bearer=token)
     if journey_id and token else (0, {})

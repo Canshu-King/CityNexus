@@ -1,6 +1,12 @@
 import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_modules/playwright/index.mjs";
 import fs from "node:fs";
 const BASE = "http://127.0.0.1:14492";
+const TICKET_FILE = "D:/moodle/_cmdr_v3_live_1022/.demo_pairing_ticket";
+let pairing = "";
+try {
+  const raw = JSON.parse(fs.readFileSync(TICKET_FILE, "utf8"));
+  if (raw.ticket && Number(raw.expires_at) * 1000 > Date.now()) pairing = String(raw.ticket);
+} catch { /* no ticket file: the old entry still signs a session locally */ }
 const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
 const NL = String.fromCharCode(10);
 const lines = [];
@@ -15,10 +21,16 @@ await ctx.addInitScript(() => {
 const page = await ctx.newPage();
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e).slice(0, 160)));
-await page.goto(BASE + "/revolution", { waitUntil: "networkidle", timeout: 45000 }).catch(() => {});
+await page.goto(BASE + "/revolution" + (pairing ? "#pair=" + encodeURIComponent(pairing) : ""), { waitUntil: "networkidle", timeout: 45000 }).catch(() => {});
 await page.waitForTimeout(1200); mark("open");
-await page.locator('[data-testid="rev-mobile-tab-trips"]').click(); await page.waitForTimeout(1000); mark("trips");
-await page.locator('[data-testid="rev-demo-session"]').click(); await page.waitForTimeout(3200); mark("demo");
+if (pairing) {
+  // The ticketed link redeems itself on arrival; the entry button is not used.
+  await page.waitForTimeout(4200);
+} else {
+  await page.locator('[data-testid="rev-mobile-tab-trips"]').click(); await page.waitForTimeout(1000); mark("trips");
+  await page.locator('[data-testid="rev-demo-session"]').click(); await page.waitForTimeout(3200);
+}
+mark("demo");
 await page.getByRole("button", { name: /行程守护/ }).first().click(); await page.waitForTimeout(2200); mark("guardian");
 const card = page.locator('[data-testid="rev-guardian-proposal"]');
 note("PROPOSAL_TEXT " + JSON.stringify(await page.locator('[data-testid="rev-guardian-proposal-diff"]').innerText().catch(() => "")));

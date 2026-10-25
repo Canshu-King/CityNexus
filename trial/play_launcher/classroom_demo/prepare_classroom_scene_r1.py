@@ -270,13 +270,17 @@ def issue_pairing() -> str | None:
 
 def write_presenter_session() -> bool:
     """A second ticket redeemed into a short-lived presenter bearer for the self-check."""
+    session_path = os.path.join(CANARY, ".demo_presenter_session.json")
     ticket = issue_pairing()
     if not ticket:
+        if os.path.exists(session_path):
+            os.remove(session_path)
         return False
     status, answer = call("POST", "/api/v1/demo/pairing/redeem", {"ticket": ticket})
     if status != 200 or not answer.get("access_token"):
+        if os.path.exists(session_path):
+            os.remove(session_path)
         return False
-    session_path = os.path.join(CANARY, ".demo_presenter_session.json")
     with io.open(session_path, "w", encoding="utf-8") as handle:
         json.dump({
             "access_token": answer["access_token"],
@@ -286,8 +290,23 @@ def write_presenter_session() -> bool:
     return True
 
 
+def write_rehearsal_ticket() -> bool:
+    """A short-lived ticket for the rehearsal probe; the launcher's printed link keeps its own."""
+    path = os.path.join(CANARY, ".demo_pairing_ticket")
+    ticket = issue_pairing()
+    if not ticket:
+        if os.path.exists(path):
+            os.remove(path)
+        return False
+    with io.open(path, "w", encoding="utf-8") as handle:
+        json.dump({"ticket": ticket, "journey_id": JOURNEY,
+                   "expires_at": int(time.time()) + 120}, handle)
+    return True
+
+
 PAIRING = issue_pairing()
 PRESENTER_SESSION = write_presenter_session()
+REHEARSAL_TICKET = write_rehearsal_ticket()
 LINK = "http://%s:14492/revolution%s" % (
     lan_ipv4(), ("#pair=" + PAIRING) if PAIRING else "",
 )
@@ -322,6 +341,7 @@ print(json.dumps({
     "TABLET_OPEN": LINK,
     "PAIRING": "OK" if PAIRING else "UNSUPPORTED",
     "PRESENTER_SESSION": PRESENTER_SESSION,
+    "REHEARSAL_TICKET": REHEARSAL_TICKET,
     "AGENT_QA": "direct-replan-only (agent path verified separately)",
     "REAL_POI": True,
     "SAVED_PLAN": bool(journey and journey["active_plan_version_id"]),
