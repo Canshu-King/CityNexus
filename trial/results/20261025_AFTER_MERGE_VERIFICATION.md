@@ -44,12 +44,12 @@
 2. ✅ 自检：`ENTRY_DOOR=PAIRING`、`SIM_CONSOLE=AVAILABLE:*`；票过期后 `DEMO_READY=false` 但 `STACK_HEALTHY=true`（22:17 拍 `SESSION=NEEDS_TICKET SIM_CONSOLE=NEED_TICKET`）。
 3. ✅ `after_merge_check_r1.py` 已跑且 `all_green=true`（22:31）：启动器改发三张票、每支探针各兑一张；`ticketed_entry`/`projector_card`/`lan_path` 三支 rc 0，`ENTRY_DOOR=PAIRING`、`SIM_CONSOLE=AVAILABLE:NOT_STARTED`。回执 `after-merge-check.txt`。同时修了 r36/r27 的票门入口与 r27 的旧菜单导航（一张票只能用一次，三支共用在旧脚本里必然失败）。
 4. ✅ `rehearse_classroom.bat` 的手机流程已在票门下跑通（02:16，25.1 秒、`ERRORS []`）：带票直达行程屏 → 守护提案「移除故宫博物院；路上少 66 分钟」在视口内 → 接受后第一站变天坛公园 → 刷新时钟 10:00 → 蓝点天坛（WGS84 模拟位置）。回执 `classroom-rehearsal-14.txt`；跑完已用启动器恢复开场（09:00、无 run、新票）。
-5. ⚠️ 旧探针 `_classroom_presenter_start_r24.mjs` / `_event_card_r25.mjs` 未按原样重跑；改用 `_clock_run_ui_r58.mjs` 在 14492 真栈验了开演/+30/到下一站（`clock-run-ui-1.txt`、`clock-run-lan-63.txt`）。
-6. ✅ 两日闭环：真栈 loopback 两次到站完成（`clock-two-day-classroom-62.txt`），API 走二十步到 `SIMULATED_COMPLETED`（`walk-to-completion-1.txt`）。
+5. ⚠️ 旧探针 `_classroom_presenter_start_r24.mjs` / `_event_card_r25.mjs` 未按原样重跑；改用 `_clock_run_ui_r58.mjs` 在 14492 真栈验了开演/+30/到下一站（`clock-run-ui-1.txt`、`clock-run-lan-63.txt`），合入 PR #54 后又复跑一次（`clock-run-ui-77.txt`）。
+6. ✅ 两日闭环：旧真栈 `clock-two-day-classroom-62.txt`；合入 PR #54 后 390 与 1024 各复跑一次（`clock-two-day-merge54-84.txt`、`clock-two-day-tablet-merge54-85.txt`），都到 12/04 10:00 完成、三键禁用、`ERRORS []`。
 7. ⚠️ 第 7 条已不适用：时钟条不再「变灰让位」，而是**接手推进**同一 run（P0-2 的接线），控制台只留事件/守护/恢复与刷新。
-8. ⚠️ 慢网与守护旧探针未重跑；守护在副本实测 120 秒未返回、停在 `GUARDIAN_RUNNING`（`guardian-unavailable-67.txt`），终态由单测覆盖。
+8. ⚠️ 慢网旧探针 r40/r35 未按原样重跑；慢网由 r71 覆盖（502 HTML 持续 13 秒，控制台仍可见）。守护链合入后现场：r83 接受当前事件提案 → 事件 RESOLVED → resume RUNNING；r92 接受后计划换成少一站并走到完成（`guardian-accept-flow-83.txt`、`guardian-plan-applied-92.txt`）；AI 关闭在隔离副本 503 / 0.01 秒（`ai-off-guardian-86.txt`）。
 9. ✅ 刷新恢复：r58/r63 刷新后同一步（真栈 loopback 与 LAN）。
 10. ✅ 已复测（带 run 的 COMPLETED 副本，01:59）：票门进入后仍是封存红条 + 行程空态，时钟条与控制台都不渲染（`clock-completed-60.txt`、`classroom-clock-run-60-completed.png`）。完成态并非「控件凭空消失」，而是入口本来就回到封存视图；把时钟条的 ACTIVE 条件放宽没有意义，未改代码。`/demo/session` 换草稿的口径仍在 #47。
 11. ⏳ 平板实物：`USER_VERIFIED` 仍 PENDING。
 
-**结论**：阶段 A 的第 3、4 步未跑，阶段 B 的第 5、8 步以新探针替代或未跑；其余已重验。未跑的步骤不得按绿计。
+**结论（03:57 更新）**：阶段 A 的 3、4 已跑并全绿；阶段 B 第 5 步由 r58 真栈替代（含合入后的 77 号）、第 6 步由合入后的 84/85 覆盖、第 8 步由 r71 与 r83/r92 覆盖；r24/r25/r40/r35 仍未按原样重跑，这些步骤不以原探针名计绿。
