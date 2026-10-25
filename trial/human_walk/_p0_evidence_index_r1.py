@@ -169,6 +169,20 @@ def main() -> int:
                  "%s；活动=%s；%s" % (
                      plan92_screen.get("virtual"), plan92_titles,
                      plan92_screen.get("history")[-120:] if plan92_screen.get("history") else "")))
+    plan93 = lines_of("guardian-plan-applied-tablet-93.txt")
+    plan93_after = line_json(plan93, "PLAN_AFTER_NEXT") or []
+    plan93_titles = [item.get("title") for item in plan93_after]
+    plan93_run = line_json(plan93, "AFTER_NEXT")
+    plan93_screen = line_json(plan93, "SCREEN_AFTER_NEXT")
+    rows.append(("平板整链：入口→守护→接受→完成（1024×768）",
+                 "绿" if plan93_run.get("status") == "SIMULATED_COMPLETED"
+                 and bool(plan93_titles)
+                 and "故宫" not in plan93_titles
+                 and "天坛公园" in plan93_titles
+                 and "ERRORS []" in plan93 else "红",
+                 "guardian-plan-applied-tablet-93.txt, classroom-plan-applied-tablet-93.png",
+                 "%s；%s；活动=%s" % (
+                     find(plan93, "ELAPSED_S"), plan93_screen.get("virtual"), plan93_titles)))
     panel90 = line_json(lines_of("guardian-panel-live-90.txt"), "PANEL_SCREEN")
     panel91_lines = lines_of("guardian-panel-live-91.txt")
     panel91 = line_json(panel91_lines, "PANEL_SCREEN")

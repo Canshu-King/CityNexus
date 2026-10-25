@@ -2,8 +2,8 @@ import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_m
 import fs from "node:fs";
 
 const BASE = "http://127.0.0.1:14492";
-const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/guardian-plan-applied-92.txt";
-const SHOT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/classroom-plan-applied-92.png";
+const OUT = process.env.PAIR_OUT || "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/guardian-plan-applied-92.txt";
+const SHOT = process.env.PAIR_SHOT || "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/classroom-plan-applied-92.png";
 const TICKET_FILE = "D:/moodle/_cmdr_v3_live_1022/.demo_pairing_ticket";
 const NL = String.fromCharCode(10);
 const lines = [];
@@ -13,7 +13,9 @@ const tickets = (raw.tickets && raw.tickets.length ? raw.tickets : [raw.ticket])
 const ticket = process.env.PAIR_TICKET || tickets[0];
 
 const browser = await chromium.launch({ headless: true });
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+const W = Number(process.env.PAIR_W || 390);
+const H = Number(process.env.PAIR_H || 844);
+const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const page = await ctx.newPage();
 const errors = [];
 page.on("pageerror", (error) => errors.push(String(error).slice(0, 160)));
@@ -70,6 +72,7 @@ async function planTitles(planId) {
   }, planId);
 }
 
+const started = Date.now();
 await page.goto(`${BASE}/revolution#pair=${encodeURIComponent(ticket)}`, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(5200);
 const jump = page.locator('[data-testid="rev-jump-clock"]').first();
@@ -141,5 +144,6 @@ note(`AFTER_NEXT ${JSON.stringify(after)}`);
 note(`SCREEN_AFTER_NEXT ${JSON.stringify(await screen())}`);
 note(`PLAN_AFTER_NEXT ${JSON.stringify(await planTitles(after.plan_id))}`);
 await shot(SHOT);
+note(`ELAPSED_S ${Math.round((Date.now() - started) / 1000)}`);
 note(`ERRORS ${JSON.stringify(errors.slice(0, 3))}`);
 await browser.close();
