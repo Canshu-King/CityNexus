@@ -54,6 +54,10 @@ body {"source_task_id": "1690b9ed-9d00-4c49-986e-85cbd7b3554d"}
 
 （POI 从 56 变 40 是因为绑定后按 110000 前缀过滤，只剩北京的行，40 仍高于门槛五。）
 
+## 再往后一件
+
+已真调一次 `freeze-routes`（200，两条公交段 MEASURED_NOW），但城市池 routes 仍 0：冻结出的 TRANSIT 事实 `route_geometry=[]`，而预检只认带折线的路线。读数与两条解决路写在 `20261026_CITY_POOL_ROUTE_SHAPE_GAP.md`。
+
 ## 下一张数据单
 
 现在挡在「可用三座」前面的只剩一样：**三条带几何的真捕获路线**。它来自 `plan_versions.mobility_evidence_json` 里 `fact_quality=LIVE_PROVIDER_CAPTURE`、未降级、有 `route_geometry`、有 `captured_at` 的事实，不是手写表。  
