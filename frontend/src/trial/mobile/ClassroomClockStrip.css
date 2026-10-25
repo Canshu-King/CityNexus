@@ -7,6 +7,9 @@
   border-radius: 12px;
   background: #f4f8fd;
   color: #2b3d52;
+  /* The console jump lands here; the brand header and the sticky layer tabs both
+     sit above the scroll target and would otherwise cover the "virtual time" line. */
+  scroll-margin-top: calc(var(--rev-fl-header-h, 66px) + 70px);
 }
 .rev-classroom-clock > strong { font-size: 12px; font-weight: 600; color: #52657d; }
 .rev-classroom-clock > span { font-size: 13px; line-height: 1.5; }

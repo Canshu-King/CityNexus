@@ -30,6 +30,7 @@
 | 死锁屏提示 | 绿 | acceptance-note-70.txt | ACCEPTANCE_NOTE "守护没有交出可接受的提案（进度里看不到提案 id）；这条模拟解不开，请重启课堂演示（双击启动器）。" |
 | 慢网 502 HTML 控制台不消失（合入后） | 绿 | console-blip-97.txt, classroom-console-blip-97.png | PRESENTER_BEFORE "模拟进行中 · 12-03 09:00"；PRESENTER_AFTER "模拟进行中 · 12-03 09:00"；ROUTES_BROKEN progress+plans=502-html |
 | 完成态重进（合入后，独立副本） | 绿 | completed-reentry-98.txt, classroom-completed-reentry-98.png | banner=这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。；clock=0，presenter=0，entry=0 |
+| 时钟跳转让位（竖屏 768 + 三视口） | 绿 | tablet-portrait-105.txt, jump-clock-106.txt, classroom-tablet-portrait-105.png | 竖屏 clock.top=136 hitSelf=True；三视口 clockTop=[131, 136, 136] |
 | 双屏同一 run 同步（390 + 1280） | 绿 | two-screen-sync-102.txt, classroom-two-screen-102.png | 投影初始=模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中；平板+30=模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中；投影同步=模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中 |
 | 无票根地址的课堂入口文案 | 绿 | entry-no-ticket-99.txt, classroom-entry-no-ticket-99.png | SESSION_BUTTON 1；BANNER_AFTER "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。" |
 | 合入后一键核对 | 绿 | after-merge-check.txt | ENTRY_DOOR=PAIRING，SIM_CONSOLE=AVAILABLE:NOT_STARTED，all_green=True，tickets=3 |

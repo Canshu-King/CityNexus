@@ -320,6 +320,20 @@ def main() -> int:
     projector_initial = line_json(sync102, "PROJECTOR_INITIAL")
     projector_synced = line_json(sync102, "PROJECTOR_SYNCED")
     phone_plus = line_json(sync102, "PHONE_AFTER_PLUS")
+    portrait = lines_of("tablet-portrait-105.txt")
+    portrait_after = line_json(portrait, "AFTER_JUMP")
+    portrait_clock = portrait_after.get("clock") or {}
+    jump106 = lines_of("jump-clock-106.txt")
+    jumps = [line_json(jump106, key) for key in ("PHONE_AFTER", "TABLET_AFTER", "PROJECTOR_AFTER")]
+    jump_tops = [item.get("clockTop") for item in jumps]
+    rows.append(("时钟跳转让位（竖屏 768 + 三视口）",
+                 "绿" if (portrait_clock.get("top") or 0) >= 120
+                 and portrait_clock.get("hitSelf") is True
+                 and all(isinstance(top, int) and top >= 120 for top in jump_tops)
+                 and "ERRORS []" in portrait else "红",
+                 "tablet-portrait-105.txt, jump-clock-106.txt, classroom-tablet-portrait-105.png",
+                 "竖屏 clock.top=%s hitSelf=%s；三视口 clockTop=%s" % (
+                     portrait_clock.get("top"), portrait_clock.get("hitSelf"), jump_tops)))
     rows.append(("双屏同一 run 同步（390 + 1280）",
                  "绿" if "09:30" in (projector_synced.get("virtual") or "")
                  and projector_synced.get("virtual") == phone_plus.get("virtual")
