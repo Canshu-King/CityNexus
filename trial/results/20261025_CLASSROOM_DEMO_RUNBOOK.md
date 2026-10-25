@@ -8,7 +8,7 @@
    它会：把演示库重置成有「北京 · 2日行程」的初始场景 → 起后端 `127.0.0.1:60391` → 起前端 `0.0.0.0:14492` → 预生成一张待接受的调整卡。窗口不要关。
    > 已实测（10-25 01:00）：同一份 bat 真跑到 `DEMO_READY=true`，replan 回 201，提案 PRESENTED。窗口最后会打印平板地址那两行；只看到 `The classroom stack did NOT start` 就是没起来，把窗口里最后一段报错原文留着。
 2. 平板连与电脑**同一 WiFi**（地址随 WiFi 重连而变，不要照抄旧值）。
-3. 平板浏览器打开启动器最后打印的那行 `Tablet address`（本次为 `http://192.168.160.209:14492/revolution`）。
+3. 平板浏览器打开启动器最后打印的那行 `Tablet address`（本次为 `http://10.12.35.143:14492/revolution`）。
    > 这个地址只在教室 WiFi 内用；不要把 14492 映射到公网或做内网穿透——演示栈的匿名读面还没收紧（Codex 在 Issue #47 处理）。
 
 > 打不开时先看电脑浏览器同一地址；仍打不开就重跑第 1 步（会重置场景）。
@@ -47,14 +47,14 @@
 - 事件行写「模拟供应商信号 · 课堂注入，非景区官方公告」：闭馆是课堂注入的场景，不是景区真发了公告。
 - 「当前恢复第 3 轮」是库里真实历史轮次（前两轮已被取代），不是杜撰的数字。
 - 地图瓦片首次加载要等 1–2 秒；蓝点可能先出现、底图后到，别在这半秒里下「地图坏了」的结论。
-- 电脑现在连的是手机热点「Redmi K50 Ultra 8」（WLAN 类别 Public，Node 的入站规则正好覆盖 Public）；平板要连**同一个热点**。热点熄屏/省电会断线，平板打不开时先看电脑自己的浏览器；还不行就让电脑开移动热点，或换同一路由的 WiFi 后重跑第 1 步拿新地址。
+- 电脑现在连的是校园网「TUTE-Student」（WLAN 类别 Public，Node 的入站规则覆盖 Public）；平板要连**同一个校园网并完成认证**。校园网可能有终端隔离或夜间断网：平板打不开时先看电脑自己的浏览器，再退回手机热点（电脑连热点后重跑第 1 步拿新地址）。
 
 ## 短回执（来自 `prepare_classroom_scene_r1.py` 的现读）
 
 ```text
 DEMO_READY=1
 WINDOWS_START=start_classroom_demo.bat
-TABLET_OPEN=http://192.168.160.209:14492/revolution   (tablet: UNVERIFIED；以启动器现读为准)
+TABLET_OPEN=http://10.12.35.143:14492/revolution   (tablet: UNVERIFIED；以启动器现读为准)
 AGENT_QA=direct-replan-only (agent path verified separately)
 REAL_POI=1
 SAVED_PLAN=1

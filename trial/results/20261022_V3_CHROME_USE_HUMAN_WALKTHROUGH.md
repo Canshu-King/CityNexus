@@ -2742,3 +2742,14 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 边界：这一行随 `source_agent_run_id` 切换，不会把规则引擎说成模型、也不会把模型说成规则引擎；「真模型跑一趟」的第二刀仍待接。
 
+## 九十、真 Guardian pulse 跑了 230 秒：模型确实被调用，但这一次没有出提案
+
+任务书第二刀要求「真实模型得出带证据的提案」。对演示栈打了一次真实的 `POST /journeys/{id}/guardian/pulse`（`backend/app/main.py:2748` → `pulse_journey`），读数在 `guardian-pulse-1.txt`：
+
+- 调用本身 200、耗时 230.4 秒；
+- 库里多了一枚 `GuardianPulse`（4→5）和一 `AgentRun`（34→35），后者 `provider_key=hermes`、`model_key=cn:glm-5.3-flash`、`status=PARTIAL`、`outcome=UNRESOLVED`；
+- `replan_proposals` 仍是 1 条、最新提案 `source_agent_run_id` 为空——这一次模型跑完没有落出新提案；
+- pulse 的 `result_json` 里没有 `agent_runtime` 字段（该字段只在 Guardian 走到 Agent 提议分支时才写）。
+
+结论：Agent 链路不是假的（真调了 Hermes），但这条路径今天要 230 秒且以 UNRESOLVED 收尾，不能当 5 分钟课堂的主链；课堂主链仍是「预生成提案 + 真实接受」，屏上已写明「规则引擎生成 · 不是大模型现场推理」。第二刀的真模型提案仍待解（模型侧 UNRESOLVED 的成因要单独查，不在本次演示范围）。
+
