@@ -225,3 +225,9 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 副本：run RUNNING → 注入 CLOSURE → `PAUSED_FOR_GUARDIAN`；把 pending event 置 `RESOLVED`（一行，夹具披露）→ `POST /runs/{id}/resume` **200**，status `RUNNING`、sequence 2。
 - 回执 `resume-after-resolved-69.txt`。至此 P0-2 的 `/runs`、`/advance`、`/scenes`、`/guardian`、`/resume` 五动作都有读数；生产里 resume 要先由守护或接受把事件解决（死锁见 #47）。
+
+### 02:16 票门彩排通过（阶段 A 第 4 步）
+
+- 带票直达 → 守护提案「移除故宫博物院；路上少 66 分钟」（卡片在视口内，y=384 h=162）→ 接受 → 第一站变天坛公园 → 刷新后时钟 10:00 → 蓝点天坛（39.8805, 116.4046，WGS84 模拟位置）；25.1 秒、无 console 错误（`classroom-rehearsal-14.txt`）。
+- 彩排会消费提案并改计划；跑完已用启动器恢复开场（`CLOCK=09:00`、`SIM_CONSOLE=NOT_STARTED`、新票、`DEMO_READY=true`）。
+- 这也印证速查卡第 8 条：守护支线只需「看提案 + 接受」，不需要按「交给守护助手」。
