@@ -238,3 +238,9 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 现在：tick 的 catch 不再隐藏面板（只有两个端点都 404/405 才隐藏）；progress 坏载荷保留上一次读数。正常路径用 r58 复跑确认无回归（+30 → 09:30/10:00、到下一站 12:18 第 6 步、刷新同步、`ERRORS []`）。
 
 - 02:21 已用真拦截复测：把 `.../runs/*/progress` 与 `/api/v1/plans/*` 改成 `502 text/html` 持续十三秒（跨一次十秒轮询），控制台仍在（`PRESENTER_VISIBLE 1`）、状态与推进提示都在、`ERRORS []`（`console-blip-71.txt`、`classroom-console-blip-71.png`）。
+
+### 02:23 平板视口的两日链（1024×768）
+
+- 夹具栈在 1024×768 走完：两次「到下一站」到 `12/04 10:00` 完成、三键禁用，无 console 错误；回执 `tablet-two-day-72.txt`、截图 `classroom-tablet-two-day-72.png`。
+- 顺带抓到夹具自己的一个 bug：它把 `PAIR_OUT` 写死覆盖外部传入，导致这次回执落到手机版文件、把 r58 的手机回执顶掉（已从 git 恢复）；改成 `setdefault`。
+- 这仍不是主人亲手点，`USER_VERIFIED` 保持 PENDING。

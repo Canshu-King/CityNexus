@@ -142,7 +142,7 @@ def main() -> int:
         env["PAIR_TICKET"] = ticket["ticket"]
         env["PAIR_JOURNEY"] = JOURNEY
         env["PAIR_BASE"] = "http://127.0.0.1:14495"
-        env["PAIR_OUT"] = OUT
+        env.setdefault("PAIR_OUT", OUT)
         frontend = subprocess.Popen(
             [NODE, "node_modules/vite/bin/vite.js", "--port", "14495", "--strictPort", "--host", "0.0.0.0"],
             cwd=FRONTEND, env={**os.environ, "CITYNEXUS_BACKEND_PORT": "60400"},

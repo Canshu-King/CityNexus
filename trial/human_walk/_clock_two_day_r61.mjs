@@ -10,7 +10,10 @@ const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL
 const clean = (value) => String(value || "").replace(/\s+/g, " ").trim();
 
 const browser = await chromium.launch({ headless: true });
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+const W = Number(process.env.PAIR_W || 390);
+const H = Number(process.env.PAIR_H || 844);
+const SHOT = process.env.PAIR_SHOT || "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/classroom-clock-run-61-finish.png";
+const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const page = await ctx.newPage();
 const errors = [];
 page.on("pageerror", (error) => errors.push(String(error).slice(0, 160)));
@@ -47,7 +50,7 @@ for (let press = 1; press <= 8; press += 1) {
   if (/模拟行程已完成/.test(text)) break;
 }
 await clock.first().scrollIntoViewIfNeeded().catch(() => {});
-await page.screenshot({ path: "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/classroom-clock-run-61-finish.png", fullPage: false });
+await page.screenshot({ path: SHOT, fullPage: false });
 note(`FINAL ${JSON.stringify(await readClock())}`);
 note(`DONE_LINE ${JSON.stringify(clean(await page.locator('[data-testid="rev-clock-done"]').first().innerText().catch(() => "")))}`);
 for (const id of ["rev-clock-plus30", "rev-clock-plus60", "rev-clock-next"]) {
