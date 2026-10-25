@@ -42,7 +42,7 @@
 
 1. ✅ 启动器已重启（21:24），票门后端起在 60391、前端 14492。
 2. ✅ 自检：`ENTRY_DOOR=PAIRING`、`SIM_CONSOLE=AVAILABLE:*`；票过期后 `DEMO_READY=false` 但 `STACK_HEALTHY=true`（22:17 拍 `SESSION=NEEDS_TICKET SIM_CONSOLE=NEED_TICKET`）。
-3. ⚠️ `after_merge_check_r1.py` **未跑**：它要读启动器留下的票，而那张票已被 r61/r63 用完；票门分支仍未用它验。
+3. ✅ `after_merge_check_r1.py` 已跑且 `all_green=true`（22:31）：启动器改发三张票、每支探针各兑一张；`ticketed_entry`/`projector_card`/`lan_path` 三支 rc 0，`ENTRY_DOOR=PAIRING`、`SIM_CONSOLE=AVAILABLE:NOT_STARTED`。回执 `after-merge-check.txt`。同时修了 r36/r27 的票门入口与 r27 的旧菜单导航（一张票只能用一次，三支共用在旧脚本里必然失败）。
 4. ⚠️ `rehearse_classroom.bat` 手机彩排**未在票门下重跑**。
 5. ⚠️ 旧探针 `_classroom_presenter_start_r24.mjs` / `_event_card_r25.mjs` 未按原样重跑；改用 `_clock_run_ui_r58.mjs` 在 14492 真栈验了开演/+30/到下一站（`clock-run-ui-1.txt`、`clock-run-lan-63.txt`）。
 6. ✅ 两日闭环：真栈 loopback 两次到站完成（`clock-two-day-classroom-62.txt`），API 走二十步到 `SIMULATED_COMPLETED`（`walk-to-completion-1.txt`）。

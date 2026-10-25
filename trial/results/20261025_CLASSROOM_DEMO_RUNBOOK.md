@@ -180,3 +180,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 首屏三卡的第一枚原固定写「准备出发」，在已出发的旅程上会让人以为还没走；现按状态显示「行程进行中」「行程已结束」，只有未出发才叫「准备出发」（`data-testid=rev-open-trip`）。
 - 390px 屏证 `classroom-clock-run-58-b.png`。
+
+### 22:31 合入后一键核对已修好并全绿
+
+- 启动器现在一次发三张票（`.demo_pairing_ticket` 的 `tickets` 数组），`after_merge_check_r1.py` 每支探针各兑一张；`ticketed_entry`/`projector_card`/`lan_path` 三支 rc 0，`all_green=true`。
+- 顺带修了两支旧探针的票门入口（r36 用 env 票、r27 加 `#pair=` 并跳过旧菜单导航）——一张票只能用一次，三支共用在旧脚本里必然失败。

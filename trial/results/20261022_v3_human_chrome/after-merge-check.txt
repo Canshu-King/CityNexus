@@ -1,1 +1,1 @@
-{"ENTRY_DOOR": "SESSION", "DEMO_READY": true, "SIM_CONSOLE": "NOT_DEPLOYED", "RAN": false, "WHY": "ticket door not deployed; the probes below assume a pairing ticket"}
+{"ENTRY_DOOR": "PAIRING", "DEMO_READY": true, "SIM_CONSOLE": "AVAILABLE:NOT_STARTED", "ticket_file": true, "tickets": 3, "RAN": true, "probes": [{"probe": "ticketed_entry", "rc": 0, "stderr": ""}, {"probe": "projector_card", "rc": 0, "stderr": ""}, {"probe": "lan_path", "rc": 0, "stderr": ""}], "all_green": true}

@@ -2,10 +2,10 @@ import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_m
 import fs from "node:fs";
 const BASE = "http://127.0.0.1:14492";
 const TICKET_FILE = "D:/moodle/_cmdr_v3_live_1022/.demo_pairing_ticket";
-let pairing = "";
+let pairing = String(process.env.PAIR_TICKET || "");
 try {
   const raw = JSON.parse(fs.readFileSync(TICKET_FILE, "utf8"));
-  if (raw.ticket && Number(raw.expires_at) * 1000 > Date.now()) pairing = String(raw.ticket);
+  if (!pairing && raw.ticket && Number(raw.expires_at) * 1000 > Date.now()) pairing = String(raw.ticket);
 } catch { /* old backend: the entry signs a session locally */ }
 const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
 const NL = String.fromCharCode(10);

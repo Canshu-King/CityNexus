@@ -52,26 +52,28 @@ def main() -> int:
         print(json.dumps(receipt, ensure_ascii=False))
         return 0
 
-    ticket = ""
+    tickets: list[str] = []
     try:
         raw = json.loads(open(TICKET_FILE, encoding="utf-8").read())
         import time
-        if raw.get("ticket") and float(raw.get("expires_at", 0)) > time.time():
-            ticket = str(raw["ticket"])
+        if float(raw.get("expires_at", 0)) > time.time():
+            values = raw.get("tickets") or ([raw["ticket"]] if raw.get("ticket") else [])
+            tickets = [str(value) for value in values if value]
     except Exception:
-        ticket = ""
-    receipt["ticket_file"] = bool(ticket)
+        tickets = []
+    receipt["ticket_file"] = bool(tickets)
+    receipt["tickets"] = len(tickets)
 
     env = dict(os.environ)
     env["SIM_BASE"] = "http://127.0.0.1:14492"
     results = []
-    for name, probe in PROBES:
-        if name == "ticketed_entry" and not ticket:
+    for index, (name, probe) in enumerate(PROBES):
+        if not tickets:
             results.append({"probe": name, "rc": -1, "note": "no live ticket file; rerun the launcher"})
             continue
         probe_env = dict(env)
-        if name == "ticketed_entry":
-            probe_env["PAIR_TICKET"] = ticket
+        # One ticket per probe: a pairing ticket redeems exactly once.
+        probe_env["PAIR_TICKET"] = tickets[index] if index < len(tickets) else ""
         run = subprocess.run([NODE, os.path.join(ROOT, "trial/human_walk", probe)],
                              capture_output=True, text=True, timeout=300, env=probe_env)
         results.append({"probe": name, "rc": run.returncode,

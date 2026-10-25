@@ -1,6 +1,7 @@
 import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_modules/playwright/index.mjs";
 import fs from "node:fs";
 const BASE = process.env.SIM_BASE || "http://10.12.35.143:14492";
+const TICKET = String(process.env.PAIR_TICKET || "");
 const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
 const NL = String.fromCharCode(10);
 const lines = [];
@@ -18,12 +19,18 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(String(e).slice(0, 160)));
 note(`BASE ${BASE}`);
 
-await page.goto(BASE + "/revolution", { waitUntil: "networkidle", timeout: 45000 }).catch((e) => note(`GOTO_ERROR ${String(e).slice(0, 120)}`));
+await page.goto(BASE + "/revolution" + (TICKET ? "#pair=" + encodeURIComponent(TICKET) : ""), { waitUntil: "networkidle", timeout: 45000 }).catch((e) => note(`GOTO_ERROR ${String(e).slice(0, 120)}`));
 await page.waitForTimeout(1400); mark("open");
-await page.locator('[data-testid="rev-mobile-tab-trips"]').click();
-await page.waitForTimeout(1000); mark("trips");
-await page.locator('[data-testid="rev-demo-session"]').click();
-await page.waitForTimeout(3600); mark("demo");
+if (TICKET) {
+  // The pairing ticket lands directly on the journey screen; the old menu path
+  // (trips tab -> sample journey) no longer exists behind that door.
+  await page.waitForTimeout(3800); mark("ticket_entry");
+} else {
+  await page.locator('[data-testid="rev-mobile-tab-trips"]').click();
+  await page.waitForTimeout(1000); mark("trips");
+  await page.locator('[data-testid="rev-demo-session"]').click();
+  await page.waitForTimeout(3600); mark("demo");
+}
 
 const clock = page.locator('[data-testid="rev-classroom-clock"]');
 note(`CLOCK_VISIBLE ${await clock.isVisible().catch(() => false)}`);

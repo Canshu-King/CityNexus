@@ -291,15 +291,15 @@ def write_presenter_session() -> bool:
 
 
 def write_rehearsal_ticket() -> bool:
-    """A short-lived ticket for the rehearsal probe; the launcher's printed link keeps its own."""
+    """Three short-lived tickets: one per read-only probe, each redeemable once."""
     path = os.path.join(CANARY, ".demo_pairing_ticket")
-    ticket = issue_pairing()
-    if not ticket:
+    tickets = [ticket for ticket in (issue_pairing() for _ in range(3)) if ticket]
+    if not tickets:
         if os.path.exists(path):
             os.remove(path)
         return False
     with io.open(path, "w", encoding="utf-8") as handle:
-        json.dump({"ticket": ticket, "journey_id": JOURNEY,
+        json.dump({"tickets": tickets, "ticket": tickets[0], "journey_id": JOURNEY,
                    "expires_at": int(time.time()) + 120}, handle)
     return True
 
