@@ -31,6 +31,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
   const [clock, setClock] = useState<ClockPayload | null>(null);
   const [busy, setBusy] = useState(false);
   const [wallClock, setWallClock] = useState(() => new Date());
+  const [stopNote, setStopNote] = useState<string | null>(null);
 
   const read = useCallback(async () => {
     try {
@@ -74,6 +75,41 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     }
   };
 
+  const advanceStop = async () => {
+    if (busy) return;
+    setBusy(true);
+    setStopNote("正在推进…");
+    try {
+      const twinResponse = await fetch(`/api/v1/journeys/${journeyId}/twin`, { headers: { Accept: "application/json" } });
+      const twin = twinResponse.ok ? (await twinResponse.json() as { current_activity_id?: string | null }) : null;
+      const activityId = twin?.current_activity_id;
+      if (!activityId) {
+        setStopNote("没有正在进行的活动");
+        return;
+      }
+      // The classroom taps the same state machine a traveller would, but declares
+      // SIMULATED_STATE_TRANSITION so nothing here claims physical presence.
+      const steps = ["depart", "arrive", "begin", "complete"] as const;
+      let lastStatus = 0;
+      let completed = false;
+      for (const step of steps) {
+        const response = await fetch(`/api/v1/journeys/${journeyId}/activities/${activityId}/${step}`, {
+          method: "POST",
+          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify({ truth_kind: "SIMULATED_STATE_TRANSITION" }),
+        });
+        lastStatus = response.status;
+        if (step === "complete") completed = response.ok;
+      }
+      await read();
+      setStopNote(completed ? "已按模拟执行走到下一站" : `推进未完成（最后一次 http_status=${lastStatus}）`);
+    } catch {
+      setStopNote("推进请求没有完成");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (!visible || !clock) return null;
   return (
     <section className="rev-classroom-clock" data-testid="rev-classroom-clock" aria-label="课堂时空模拟">
@@ -84,7 +120,9 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
       <div className="rev-classroom-clock-actions">
         <button type="button" disabled={busy} data-testid="rev-clock-plus30" onClick={() => void advance(30)}>+30 分钟</button>
         <button type="button" disabled={busy} data-testid="rev-clock-plus60" onClick={() => void advance(60)}>+1 小时</button>
+        <button type="button" disabled={busy} data-testid="rev-clock-next" onClick={() => void advanceStop()}>到下一站</button>
       </div>
+      {stopNote && <span data-testid="rev-clock-next-note">{stopNote}</span>}
     </section>
   );
 }

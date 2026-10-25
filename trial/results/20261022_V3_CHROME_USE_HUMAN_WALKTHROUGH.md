@@ -2720,3 +2720,13 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 边界：只改标注与显示，不动后端投影；Codex 在 Issue #47 做 Journey 读权限与持久 SimulationRun，我不碰 `main.py` 那两块。
 
+## 八十八、任务书第一刀的「下一站」：真点击、四拍状态机、刷新仍在
+
+任务书第一刀要求「真浏览器点 Day1 起点→下一站（刷新仍在）」，并用 SIMULATED_STATE_TRANSITION。仓库里已有 `POST /journeys/{id}/activities/{aid}/depart|arrive|begin|complete`，不带 attestation 时后端默认写 `SIMULATED_STATE_TRANSITION`（`backend/app/main.py:20131`）。缺的是屏上一个能按的入口。
+
+在课堂时钟条加了「到下一站」（`frontend/src/trial/mobile/ClassroomClockStrip.tsx`）：读 twin 的当前活动，按 depart→arrive→begin→complete 四拍依次 POST，body 显式 `{"truth_kind":"SIMULATED_STATE_TRANSITION"}`；最后一拍的结果如实写在按钮下方，失败也照写。
+
+430×932 真视口点击（`classroom-next-stop-8.txt`）：四拍全部 200（`POSTS` 行），按钮下方写「已按模拟执行走到下一站」，时钟条「当前站：故宫博物院」变成「天坛公园」，`page.reload()` 后仍是「天坛公园」，页面错误 0 条；截图 `rehearsal8-next-stop.png`。库侧核对：故宫与天安门两条活动 `execution_truth.kind=SIMULATED_STATE_TRANSITION`、`actor_type=SIMULATION`，天坛为当前 ACTIVE——没有把课堂点击写成 DEVICE_ATTESTED 或 OPERATOR_CONFIRMED。
+
+边界：这一刀只走到「第 1 天两个站之间」；「下一天」、随机城市与两套 seed 仍归后续刀；后端持久 SimulationRun 归 Codex 的 Issue #47，我不动那两块。
+
