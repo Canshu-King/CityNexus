@@ -2753,3 +2753,11 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 结论：Agent 链路不是假的（真调了 Hermes），但这条路径今天要 230 秒且以 UNRESOLVED 收尾，不能当 5 分钟课堂的主链；课堂主链仍是「预生成提案 + 真实接受」，屏上已写明「规则引擎生成 · 不是大模型现场推理」。第二刀的真模型提案仍待解（模型侧 UNRESOLVED 的成因要单独查，不在本次演示范围）。
 
+## 九十一、Agent 卡先说清要等：230 秒的实测换成屏上一句话
+
+九十那次真 pulse 花了 230.4 秒才 UNRESOLVED。屏上的 Agent 卡此前只写「暂无助手运行记录。」，老师点「检查行程」会以为很快就有结果。现在改成「暂无助手运行记录。现场模型可能要几分钟，赶时间请直接用上面的调整卡。」（`frontend/src/trial/mobile/MobileHermesRun.tsx:408`）。
+
+屏读（`classroom-agent-wait-12.txt`）：`AGENT_HINT` 就是这句、提案仍在、页面错误 0 条；类型检查 rc=0（`typecheck-agent-wait-1.txt:5`）。截图 `rehearsal12-agent-wait.png`。
+
+边界：这句话只做预期管理，不缩短 Agent 的 230 秒路径；真模型提案仍待第二刀。
+
