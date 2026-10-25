@@ -49,7 +49,7 @@ const ERROR_TEXT: Record<string, string> = {
   SIMULATION_SCENE_ACTIVITY_INVALID: "只能给当前或之后的一站注入事件。",
   SIMULATION_SCENE_ALREADY_APPLIED: "这件事已经注入过。",
   USE_SIMULATION_RUN_ADVANCE: "这个行程已经由模拟执行接管，请用这块控制台推进。",
-  DEMO_PRESENTER_REQUIRED: "这台设备不是演示主机，控制台只在本机可用。",
+  DEMO_PRESENTER_REQUIRED: "这块控制台只认启动器签发的课堂票；请用启动器窗口里的地址重新打开。",
   JOURNEY_EXECUTION_UPDATE_REQUIRED: "当前会话没有推进执行的权限。",
 };
 
@@ -300,7 +300,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             disabled={busy}
             onClick={() => act(
               () => simulationApi.guardian(journeyId, run.run_id, run.sequence),
-              "守护会重新分析这一起事件；接上模型时实测要四分钟左右。请别重复按。",
+              "守护会重新分析这一起事件；通常要 3–6 分钟。请别重复按。",
             )}
           >
             再请一次守护
@@ -379,7 +379,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
 
       {run?.status === "PAUSED_REQUIRES_MISSION" && (
         <p className="rev-presenter-note" data-testid="rev-presenter-mission-note">
-          这趟行程还没有守护任务，模拟停在这里；先到「行程守护」建一个任务，再回来刷新。
+          这起事件需要一条守护任务才能继续；课堂里没有建任务的入口，请重启课堂演示（双击启动器）。
         </p>
       )}
 
