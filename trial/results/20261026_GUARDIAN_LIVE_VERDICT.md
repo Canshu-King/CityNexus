@@ -73,11 +73,11 @@
 - 点一下，**5 秒内**：pending 事件变 `RESOLVED`，提案 `cad2a52e` 变 `ACCEPTED`；「继续模拟」出现（`RESUME_BUTTON 1`）。
 - 点「继续模拟」→ run 回到 `RUNNING`（sequence 3）。
 - 全程无 console 错误（`ERRORS []`）。
-- 观察一句：`run.state.plan_version_id` 仍是启动时的 `e74a5edb`，接受后模拟的站点引用没有随之换到新计划；这与「事件已 RESOLVED、提案已 ACCEPTED」并存。是否需要让 run 换计划引用，请 Codex 按契约裁定，不据此宣称缺陷。
+- 计划引用（已查代码，不是待裁）：暂停期间 `run.state.plan_version_id` 仍是启动计划；`backend/app/simulation/runtime.py:320` 在下一次 advance 末尾把它同步到 `journey.active_plan_version_id`，并在检测到变化时写 `SIM_PLAN_CHANGED`（`runtime.py:235`）。所以下一次「到下一站」会按新计划走。
 - 截图文件：`guardian-accept-flow-83-before-accept.png`、`-after-accept.png`、`-resumed.png`、`-scene.png`、`-after-guardian.png`。
 
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
-- 仍待 Codex 答复：Guardian 屏的「接受这份调整」应与哪个提案实体对齐；模型失败后 run 的转态为何一次 >338 秒、一次约 187 秒；接受后 run 的计划引用是否应更新。
+- 仍待 Codex 答复：Guardian 屏的「接受这份调整」应与哪个提案实体对齐；模型失败后 run 的转态为何一次 >338 秒、一次约 187 秒。（计划引用一项已查代码：下一次 advance 会同步，见上。）
 - 平板亲手点仍 `USER_VERIFIED=PENDING`。
