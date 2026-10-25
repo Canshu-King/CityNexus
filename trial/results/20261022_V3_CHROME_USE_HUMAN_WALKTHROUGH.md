@@ -2603,3 +2603,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **仍欠。** 平板实物未点；守护卡需要滚动一屏才看到（截图里在「当前恢复第 3 轮」下方），演示时可以先滚到卡片再讲。
 
+## 七十九、课堂屏收干净：一张动作卡、出发后不再有准备块、卡片自己滚进来
+
+**三处改动。** ① ≤899px 隐藏桌面恢复面板的方案卡（`frontend/src/styles.css:1993`），手机只剩「行程守护」这一张动作卡；桌面两处都在。② 「准备出发 · 正式计划与待办」只在未出发时渲染（`frontend/src/trial/mobile/MissionCockpit.tsx` 的 `space === "journey" && journeyStatus !== "ACTIVE"`），已出发的行程执行屏不再出现方案工作台那句「这份方案现在还不能选用。」。③ 提案卡加载完成后自动滚到视口中央（`frontend/src/trial/mobile/GuardianRealityPanel.tsx` 的 `proposalRef`），老师点「行程守护」不用再手滚。
+
+**真读数。** 390×844：桌面方案卡总数一 枚、可见 0 枚（`proposal-surfaces-390x844.txt:3`），守护卡可见；1280×900 两者都可见。已出发屏：`HAS_PREPARATION false`、`HAS_CANNOT_SELECT false`、`HAS_GUARDIAN true`（`after-departure-clean-1.txt`）。自动滚动：不做任何手动滚动，提案卡 `y=353.6 h=137.1`、在视口内、`scrollY=2856`（`guardian-autoscroll-1.txt`）。
+
+**彩排回归。** 改动后同一路径再走一遍：16.7 秒（入口 `2.9s` → 守护 `10.5s` → 接受 `10.6s` → 重载后第一站「天坛公园 · 12月3日 09:00」`16.7s`），零页面错误（`classroom-rehearsal-2.txt`）。
+
+**场景。** 已用 `prepare_classroom_scene_r1.py` 重置，`DEMO_READY=1`，一张新提案待接受；平板实物仍未点。
+
