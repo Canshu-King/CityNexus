@@ -88,6 +88,15 @@ def main() -> int:
                  "绿" if any("模拟行程已完成" in line for line in two_day) else "红",
                  "clock-two-day-classroom-62.txt, classroom-clock-run-62-live-classroom.png",
                  "%s；%s" % (find(two_day, "FINAL"), png("classroom-clock-run-62-live-classroom.png"))))
+    two_day_merge = lines_of("clock-two-day-merge54-84.txt")
+    rows.append(("P0-2 两日闭环（合入 PR #54 后真栈）",
+                 "绿" if "模拟行程已完成" in find(two_day_merge, "FINAL")
+                 and "ERRORS []" in two_day_merge
+                 and "REV-CLOCK-NEXT_DISABLED true" in two_day_merge else "红",
+                 "clock-two-day-merge54-84.txt, classroom-two-day-merge54-84.png",
+                 "%s；%s；%s" % (
+                     find(two_day_merge, "START"), find(two_day_merge, "FINAL"),
+                     png("classroom-two-day-merge54-84.png"))))
     rows.append(("P0-2 LAN 平板等价路径",
                  "绿" if "ERRORS []" in lan and "执行第" in find(lan, "AFTER_NEXT") else "红",
                  "clock-run-lan-63.txt, classroom-clock-run-63-c.png",

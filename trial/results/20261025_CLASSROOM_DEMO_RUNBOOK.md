@@ -266,3 +266,13 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 聊天坞：手机 390 仍是 `dock=flex` 且时钟键 `hit=true`；平板 1024 是 `dock=none` 且时钟键 `hit=true`；两视口无 console 错误（`live-dock-75.txt`、`classroom-live-phone-75.png`、`classroom-live-tablet-75.png`）。
 - 页面因入口条增高约 25px（手机 docHeight 4686、平板 5074），时钟条位置随之下移；跳转按钮仍一步到位。
 - 回归后已重置开场：`CLOCK=2026-12-03T09:00:00+08:00`、`CLOCK_VERSION=0`、`SIM_CONSOLE=AVAILABLE:NOT_STARTED`、`ENTRY_DOOR=PAIRING`。
+
+### 03:22 守护链在真栈闭环（PR #54 合入后）
+
+- 合入 Codex 的 PR #54（merge `cedeaf2800`），CI 范围 82 passed；课堂栈重启后三探针 all_green。
+- 现场四次失败/成功轮之后，第五次（`guardian-accept-flow-83.txt`）：开演 → 闭馆 → 交给守护助手（模型约 3 分钟）→ `PAUSED_FOR_ACCEPTANCE` 且进度里有当前事件提案 → 控制台「接受这次事件的调整」→ **5 秒内**事件 `RESOLVED`、提案 `ACCEPTED` → 「继续模拟」→ `RUNNING` sequence 3；无 console 错误。
+- 控制台现在的三个门分开写：有提案才显示接受；事件未落定不显示继续；模型失败/未解出/未配置各给一句原因（`rev-presenter-guardian-failed` / `-unresolved` / `-unconfigured`）。
+- 模型失败后 run 的转态仍不稳定（一次 >338 秒停在 `GUARDIAN_RUNNING`、一次约 187 秒转 `PAUSED_MODEL_UNAVAILABLE`）；守护屏的接受路径仍可能指向旧事件提案。这两条与「接受后 run 的计划引用是否更新」已写进 PR #54 评论 6402087085，等 Codex 回。
+- 老师现场口径已同步到速查卡第 7、8 条：可以点「交给守护助手」，按控制台给出的接受/继续走；守护屏的「接受这份调整」不在课堂主线用。
+- 合入后两日主线也复跑：`clock-two-day-merge54-84.txt`，开演 09:00 第 0 步 → 12/03 15:00 第 4 步 → 12/04 10:00 第 8 步完成，三键禁用、完成提示「不是实际到场」、无 console 错误；跑完已重置开场。
+- 回执：`20261026_GUARDIAN_LIVE_VERDICT.md`；提交 `419e892a40`、`0aab8594fc`。

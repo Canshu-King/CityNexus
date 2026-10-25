@@ -8,6 +8,7 @@
 | P0-2 时钟条接同一 run（屏上） | 绿 | clock-run-ui-1.txt | PLUS30_1_TEXT "模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中"；AFTER_NEXT "模拟时间：12/03 12:18 · 执行第 6 步 · 模拟进行中"；ERRORS [] |
 | P0-2 时钟条三键复跑（入口落位后） | 绿 | clock-run-ui-77.txt | PLUS30_1_TEXT "模拟时间：12/03 09:30 · 执行第 1 步 · 模拟进行中"；AFTER_NEXT "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"；RELOAD_SAME_STEP true |
 | P0-2 两日闭环（真栈） | 绿 | clock-two-day-classroom-62.txt, classroom-clock-run-62-live-classroom.png | FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-clock-run-62-live-classroom.png (58862 bytes) |
+| P0-2 两日闭环（合入 PR #54 后真栈） | 绿 | clock-two-day-merge54-84.txt, classroom-two-day-merge54-84.png | START "模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中"；FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-two-day-merge54-84.png (58638 bytes) |
 | P0-2 LAN 平板等价路径 | 绿 | clock-run-lan-63.txt, classroom-clock-run-63-c.png | AFTER_NEXT "模拟时间：12/03 15:00 · 执行第 6 步 · 模拟进行中"；classroom-clock-run-63-c.png (63854 bytes) |
 | P0-2 场景→守护→缺任务 | 绿 | clock-scene-guardian-59.txt | AFTER_SCENE "等待守护决策 · 12-03 09:00"；AFTER_GUARDIAN "缺少守护任务 · 12-03 09:00" |
 | P0-2 单一状态链（CAS + 旧门） | 绿 | single-state-chain-65.txt | stale=409（SIMULATION_SEQUENCE_STALE）；legacy=409（USE_SIMULATION_RUN_ADVANCE） |
