@@ -1,6 +1,6 @@
 import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_modules/playwright/index.mjs";
 import fs from "node:fs";
-const BASE = "http://127.0.0.1:14493";
+const BASE = process.env.SIM_BASE || "http://127.0.0.1:14493";
 const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
 const NL = String.fromCharCode(10);
 const lines = [];

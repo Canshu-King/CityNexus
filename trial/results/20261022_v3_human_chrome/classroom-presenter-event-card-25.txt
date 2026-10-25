@@ -7,7 +7,7 @@ AFTER_CLOSURE 等待守护决策 · 12-03 09:00
 BUTTONS_PAUSED ["交给守护助手","刷新读数"]
 HISTORY_PAUSED ["开演 · 12-03 09:00","注入事件 · 12-03 09:00"]
 SLOW_NOTE count=1 守护正在分析，通常要二三十秒；状态会自己变，请别重复按。
-GUARDIAN_SETTLED round=6 现场模型不可用，已暂停 · 12-03 09:00
+GUARDIAN_SETTLED round=4 现场模型不可用，已暂停 · 12-03 09:00
 AFTER_GUARDIAN 现场模型不可用，已暂停 · 12-03 09:00
 BUTTONS_GUARDIAN ["事件处理完了，继续模拟","刷新读数"]
 MODEL_NOTE count=1
