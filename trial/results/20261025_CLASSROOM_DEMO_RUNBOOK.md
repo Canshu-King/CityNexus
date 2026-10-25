@@ -160,3 +160,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 课堂真栈当前 run：`7911eaee-0985-4816-af86-29eed5059c02`（journey `2e9cd67d`、city `CN-RV-3507014DDE2C`、seed 17、sequence 6、RUNNING、12/03 15:00）。这就是 LAN 探针 `clock-run-lan-63.txt` 第 6 步驱动的那一条。
 - loopback 两日验收（`clock-two-day-classroom-62.txt`）走完在启动器重置前的另一条 run 上，那条的 id 已被重置覆盖、未留读数——不冒充。
 - 读数：`run-id-classroom-64.txt`。
+
+### 单一状态链实测（21:57，课堂库只读副本）
+
+- 合并后端 + 课堂库副本（源库未写）：先用当前 sequence 推进（第 6 → 7 步、12/04 09:00），再用旧 sequence 推进 → `409 SIMULATION_SEQUENCE_STALE`；经旧 `/demo/simulation-clock/{journey}/advance` → `409 USE_SIMULATION_RUN_ADVANCE`，run 不动（仍第 7 步）。
+- 回执 `single-state-chain-65.txt`；探针 `_single_state_chain_r1.py`。这与 UI 里那条竞态 409 相互印证。

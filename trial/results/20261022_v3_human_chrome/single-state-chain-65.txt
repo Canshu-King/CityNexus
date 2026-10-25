@@ -1,0 +1,32 @@
+{
+  "source": "read-only copy of the live classroom DB",
+  "journey": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+  "current": {
+    "sequence": 6,
+    "status": "RUNNING",
+    "virtual_now": "2026-12-03T15:00:00+08:00"
+  },
+  "advance_current": {
+    "http": 200,
+    "sequence": 7,
+    "status": "RUNNING",
+    "error": null
+  },
+  "advance_stale_sequence": {
+    "http": 409,
+    "error": "SIMULATION_SEQUENCE_STALE"
+  },
+  "legacy_clock": {
+    "http": 200,
+    "version": 8,
+    "virtual_now": "2026-12-04T09:00:00+08:00"
+  },
+  "legacy_advance": {
+    "http": 409,
+    "error": "USE_SIMULATION_RUN_ADVANCE"
+  },
+  "run_unchanged_by_legacy": {
+    "sequence": 7,
+    "virtual_now": "2026-12-04T09:00:00+08:00"
+  }
+}
