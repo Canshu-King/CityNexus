@@ -6280,6 +6280,8 @@ def demo_session(
     if not settings.traveler_auth_secret:
         raise HTTPException(503, "traveler auth is not configured")
     from app.traveler_principal import issue_traveler_token
+    from app.demo_access import require_demo_presenter
+    require_demo_presenter(request, session)
 
     # A started journey is the scene; drafts only stand in when none has started.
     # Ordering the mixed set by `updated_at` alone picked a draft whose timestamp
@@ -7830,8 +7832,16 @@ def list_recycle_bin_journeys(session: Session = Depends(get_session)):
     return [recycle_bin_entry_schema(item) for item in items]
 
 
+def _authorize_private_journey_read(request, response, session, journey_id):
+    from app.traveler_principal import require_journey_read
+    require_journey_read(request, session, str(journey_id))
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
+    response.headers["Vary"] = "Authorization, X-CityNexus-Traveler-Token"
+
+
 @app.get("/api/v1/journeys/{journey_id}")
-def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
+def get_journey(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     return journey_schema(require(session, Journey, str(journey_id), "Journey"))
 
 
@@ -10323,7 +10333,8 @@ def list_journey_role_rules(journey_id: UUID, session: Session = Depends(get_ses
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")
-def get_journey_experience(journey_id: UUID, session: Session = Depends(get_session)):
+def get_journey_experience(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     payload = experience_payload(session, journey)
     # Surface the durable recovery state (and, if the plan is still ACTIVE,
@@ -21226,7 +21237,7 @@ def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> d
 
 
 @app.get("/api/v1/demo/scene")
-def demo_scene(session: Session = Depends(get_session)):
+def demo_scene(request: Request, response: Response, session: Session = Depends(get_session)):
     """Which day the stage is set on, from the server - the one read gap Simulation needs.
 
     Everything else about walking a scenario already exists (complete/skip/events/replan/
@@ -21241,6 +21252,10 @@ def demo_scene(session: Session = Depends(get_session)):
     unknown scene reported as "today" is the unknown-as-known failure this project keeps
     being charged for.
     """
+
+    from app.demo_access import require_demo_presenter
+    require_demo_presenter(request, session)
+    response.headers["Cache-Control"] = "private, no-store, max-age=0"
 
     # The scenario on stage is the journey an ACTIVE plan points at, and failing that the most
     # recently seeded journey - deliberately not an `ACTIVE|PLANNED` status filter, because the
@@ -21404,7 +21419,8 @@ class SimulationClockAdvance(_SimulationBaseModel):
 
 
 @app.get("/api/v1/demo/simulation-clock/{journey_id}")
-def get_simulation_clock(journey_id: UUID, session: Session = Depends(get_session)):
+def get_simulation_clock(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     _require_simulation_enabled()
     journey = require(session, Journey, str(journey_id), "Journey")
     return _simulation_clock_payload(
@@ -21415,9 +21431,16 @@ def get_simulation_clock(journey_id: UUID, session: Session = Depends(get_sessio
 @app.post("/api/v1/demo/simulation-clock/{journey_id}/advance")
 def advance_simulation_clock(
     journey_id: UUID,
+    request: Request,
     payload: SimulationClockAdvance,
     session: Session = Depends(get_session),
 ):
+    from app.demo_access import require_demo_database
+    from app.traveler_principal import resolve_journey_member_principal, member_has_capability
+    _principal, member = resolve_journey_member_principal(request, session, journey_id=str(journey_id))
+    if not member_has_capability(session, member, "JOURNEY_EXECUTION_UPDATE"):
+        raise HTTPException(403, "JOURNEY_EXECUTION_UPDATE_REQUIRED")
+    require_demo_database(session)
     _require_simulation_enabled()
     journey = require(session, Journey, str(journey_id), "Journey")
     if not 1 <= payload.minutes <= 1440:
@@ -21445,9 +21468,12 @@ def advance_simulation_clock(
 @app.get("/api/v1/journeys/{journey_id}/twin", response_model=JourneyTwinSchema)
 def get_journey_twin(
     journey_id: UUID,
+    request: Request,
+    response: Response,
     now: datetime | None = Query(default=None),
     session: Session = Depends(get_session),
 ):
+    _authorize_private_journey_read(request, response, session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     # ORD-0058's flagged static inference, settled by measurement instead of assumption: a
     # `?now=` without an offset arrives naive while the projection compares it against
@@ -21569,7 +21595,8 @@ def create_journey_event(
 
 
 @app.get("/api/v1/journeys/{journey_id}/events", response_model=list[EventSchema])
-def list_journey_events(journey_id: UUID, session: Session = Depends(get_session)):
+def list_journey_events(journey_id: UUID, request: Request, response: Response, session: Session = Depends(get_session)):
+    _authorize_private_journey_read(request, response, session, journey_id)
     require(session, Journey, str(journey_id), "Journey")
     items = session.scalars(
         select(EventModel)

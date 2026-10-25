@@ -93,6 +93,8 @@ def resolve_traveler_principal(
     token = _bearer_token(request)
     if token is None:
         raise HTTPException(401, "authenticated traveler credentials are required")
+    if not token.isascii() or len(token) > 8192:
+        raise HTTPException(401, "traveler credentials are invalid")
     try:
         body, signature = token.split(".", 1)
     except ValueError as exc:
@@ -177,3 +179,12 @@ def member_has_capability(
         )
         is not None
     )
+
+
+def require_journey_read(request: Request, session: Session, journey_id: str):
+    principal, member = resolve_journey_member_principal(
+        request, session, journey_id=journey_id
+    )
+    if not member_has_capability(session, member, "JOURNEY_READ"):
+        raise HTTPException(403, "Journey member role does not have JOURNEY_READ authority")
+    return principal, member
