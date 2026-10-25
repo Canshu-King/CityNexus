@@ -1,0 +1,1 @@
+{"ENTRY_DOOR": "SESSION", "DEMO_READY": true, "SIM_CONSOLE": "NOT_DEPLOYED", "RAN": false, "WHY": "ticket door not deployed; the probes below assume a pairing ticket"}
