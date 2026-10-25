@@ -104,3 +104,16 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 4. **接受**：「它没有直接改行程，它在等我按下接受。按下后，第一站真的变成天坛，路线上也少了一段步行。」
 5. **时钟与地图**：「课堂时空模拟把时间推进一小时、把旅客位置画在真实地图上；水印一直提示这不是实际定位或真实灾情。」
 6. **收束**：「场景是模拟的，但处理是真的：信号进服务器、提案由服务器算出、只有我按下接受才改行程，三步都在服务器上记账。」
+
+## 2026-10-25 晚：时钟条接真实模拟执行（`391f2cd5db` + `2130cbf675`）
+
+- **LAN 票门阴性**：隔离栈（Codex 后端 `60400` + Vite `0.0.0.0:14495` 反代）从 LAN 请求 `/api/v1/demo/session`，直连 / 经代理 / 带 LAN Origin 三档全 `403 DEMO_PRESENTER_REQUIRED`，未发 token。回执 `presenter-proxy-bypass-1.txt`。UI 不搬 presenter key。
+- **时钟条接 run**：run 存在时「+30 分钟」「+1 小时」发 `advance(minutes)`；「到下一站」循环 `advance` 直到本站完成或暂停；点前先读 `/runs/current`（避免刚开演时误发旧时钟，实测会 `http_status=409`）。旧时钟/旧活动 mutation 在 run 存在时完全不发。
+- **两面板同步**：控制台 10 秒轮询 + 时钟条派发 `citynexus:simulation-run`；`PAUSED_REQUIRES_MISSION` 下不再显示服务端会拒的「继续模拟」。
+- **390px 屏证**（夹具栈，见下）：
+  - `clock-run-ui-1.txt`：09:00 第 0 步 → +30 → 09:30 第 1 步 → +30 → 10:00 第 2 步 → 到下一站 → 12:18 第 6 步；刷新同一步。
+  - `clock-two-day-61.txt`：连按「到下一站」五次走完两日：10:00 → 12:18 → 20:18 → 次日 10:00 → 次日 15:00 `SIMULATED_COMPLETED`；三按钮禁用；屏上「模拟行程已完成 · 不是实际到场」。
+  - `clock-scene-guardian-59.txt`：注入「下雨」→「等待守护决策」；「交给守护助手」→「缺少守护任务」；不再出现死按钮。
+  - `clock-completed-60.txt`：历史已完成行程入口仍显示封存红条、无时钟条（完成态入口问题归 #47）。
+- **夹具披露**：课堂库的 PLANNED 行程真实 `/start` 被 `PLACE_UNAVAILABLE` 拒；为验证 UI 接线，只在**复制库**把该行程/方案/首站置 ACTIVE（`_clock_run_fixture_r1.py` 首行写明），`runs/advance/scenes/guardian` 全是浏览器按钮发出的真 HTTP 调用。**不能拿这套夹具替代「新 run 从课堂开演」的证据。**
+- **仍阻塞课堂开演**：`cities` = 1 城、POI 56、routes 0、`BLOCKED`（缺 `VERIFIED_CITY_ADCODE_REQUIRED` + `AT_LEAST_3_CAPTURED_ROUTES_REQUIRED`），`required_city_count=3`。等 Codex #47 的「先 1 城同 run Day2」口径；在那之前课堂仍用本机投屏 + 独立演示库。

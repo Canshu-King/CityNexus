@@ -48,3 +48,18 @@
 - 恢复开局：`D:\moodle\_cmdr_v3_port_1022\start_classroom_demo.bat`（或直接跑 `prepare_classroom_scene_r1.py`）。
 - 恢复后自检：`classroom_demo_selfcheck_r1.py`，看到 `DEMO_READY=true`、`JOURNEY_STATUS=ACTIVE`、`PROPOSAL_WAITING` 有 id、`CLOCK` 为开场。
 - 值守日志：`D:/moodle/_cmdr_v3_live_1022/classroom_watch.log`（每十五分钟一拍；演练时段出现 ALERT 属正常）。
+
+## 2026-10-25 13:00 新增
+
+| 探针 | 改场景？ | 说明 |
+|---|---|---|
+| `_presenter_proxy_bypass_r1.py` | 否（隔离栈） | LAN 经 Vite 代理请求 `/demo/session`，三档全 403 |
+| `_simulation_run_api_probe_r1.py` | 否（复制库） | 读 cities/run 形状；start 被原生 journey 状态拒 |
+| `_activate_and_run_r1.py` | 否（复制库） | 真实 `/start` → `PLACE_UNAVAILABLE` 读数 |
+| `_advance_error_r1.py` | 否（复制库） | 单次 advance 的 409 body |
+| `_clock_run_fixture_r1.py` | **是（复制库）** | 参数化夹具：`CLOCK_JOURNEY`、`CLOCK_MUTATE=0` 只读、`CLOCK_PROBE` 换探针 |
+| `_walk_to_completion_r1.py` | **是（复制库）** | API 连走 20 步到 `SIMULATED_COMPLETED` |
+| `_clock_run_ui_r58.mjs` | 否（夹具栈） | 390px：+30/+1h/到下一站/刷新 |
+| `_clock_scene_guardian_r59.mjs` | 否（夹具栈） | 场景注入 → 守护 → 缺任务 |
+| `_clock_completed_r60.mjs` | 否（只读副本） | 历史完成态入口：封存条、无时钟 |
+| `_clock_two_day_r61.mjs` | 否（夹具栈） | 390px 连按到两日完成 |
