@@ -1,0 +1,6 @@
+RUN_OWNED 1
+rev-open-trip {"box":{"x":576,"y":350,"w":198,"h":68},"hit":true,"top":"BUTTON.","inViewport":true}
+rev-clock-plus30 {"box":{"x":589,"y":640,"w":121,"h":44},"hit":true,"top":"BUTTON.","inViewport":true}
+rev-clock-plus60 {"box":{"x":718,"y":640,"w":121,"h":44},"hit":true,"top":"BUTTON.","inViewport":true}
+rev-clock-next {"box":{"x":847,"y":640,"w":121,"h":44},"hit":true,"top":"BUTTON.","inViewport":true}
+ERRORS []

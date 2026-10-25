@@ -4,7 +4,9 @@
   --os-muted: #74887d;
   --os-line: #e1eae4;
   --os-glow: #14765c;
-  margin: 10px 0 36px;
+  /* Leave room under the last card for the fixed chat bar: at 1024x768 the clock
+     strip's keys sat under it and a finger hit the textarea instead. */
+  margin: 10px 0 150px;
   color: var(--os-ink);
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
 }
@@ -25,7 +27,7 @@
   background:
     radial-gradient(circle at 94% 14%, rgba(166, 178, 255, .45), transparent 30%),
     radial-gradient(circle at 7% 112%, rgba(77, 156, 168, .22), transparent 46%),
-    linear-gradient(122deg, #064739 0%, #0d6652 74%, #2d8c6b 100%);
+    linear-gradient(122deg, var(--rx-brand-deep) 0%, #0d6652 74%, #2d8c6b 100%);
   color: #fff;
   position: relative;
 }
@@ -53,7 +55,7 @@
 .rev-mobile-v1 .cn-mission-head h2 {
   margin: 13px 0 10px;
   font-size: clamp(25px, 3.4vw, 35px) !important;
-  letter-spacing: -.045em;
+  letter-spacing: 0;
   line-height: 1.24;
   font-weight: 760;
   color: #fff !important;
@@ -116,7 +118,7 @@
   gap: 9px;
   color: #205a48;
   font-size: 14px;
-  letter-spacing: -.015em;
+  letter-spacing: 0;
 }
 .rev-mobile-v1 .cn-mission-section-heading svg { color: var(--os-glow); }
 .rev-mobile-v1 .cn-mission-section-heading strong { font-weight: 760; }
@@ -164,7 +166,7 @@
   border: 0;
   border-radius: 12px;
   padding: 11px 14px;
-  background: #0e6a55 !important;
+  background: var(--rx-brand) !important;
   color: #fff !important;
   font-size: 13px;
   font-weight: 730;
@@ -189,7 +191,7 @@
 .rev-mobile-v1 .cn-mission-plan-metric strong {
   color: #1b2442;
   font-size: 23px;
-  letter-spacing: -.06em;
+  letter-spacing: 0;
 }
 .rev-mobile-v1 .cn-mission-mini-dot {
   margin: 0 7px;
@@ -524,7 +526,7 @@
 .rev-mobile-v1 .cn-mission-agent-glance > strong {
   font-size: 20px;
   line-height: 1.42;
-  letter-spacing: -.03em;
+  letter-spacing: 0;
   color: #1b3640;
 }
 .rev-mobile-v1 .cn-mission-agent-glance > p {

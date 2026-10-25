@@ -244,3 +244,10 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 夹具栈在 1024×768 走完：两次「到下一站」到 `12/04 10:00` 完成、三键禁用，无 console 错误；回执 `tablet-two-day-72.txt`、截图 `classroom-tablet-two-day-72.png`。
 - 顺带抓到夹具自己的一个 bug：它把 `PAIR_OUT` 写死覆盖外部传入，导致这次回执落到手机版文件、把 r58 的手机回执顶掉（已从 git 恢复）；改成 `setdefault`。
 - 这仍不是主人亲手点，`USER_VERIFIED` 保持 PENDING。
+
+### 02:30 平板形状的命中缺陷已修（1024×768）
+
+- 量到的缺陷：平板下时钟条三键在 y=640，`elementFromPoint` 命中 `TEXTAREA`——被固定在 `bottom:77px` 的 `.rev-mission-chat-dock` 与底部导航压住，手指点会打进输入框。
+- 修法：`@media (min-width: 768px) { body:has([data-testid="rev-classroom-clock"]) .rev-mission-chat-dock { display: none } }`——只在课堂屏的平板形状隐藏聊天 dock，手机保持原样。
+- 复测：`rev-open-trip`、`+30 分钟`、`+1 小时`、`到下一站` 四枚 `hit=true`、`inViewport=true`、`ERRORS []`（`tablet-hit-73.txt`、`classroom-tablet-hit-73.png`）；390 手机 r58 复跑无回归。
+- 代价：课堂平板上没有页面级聊天 dock（助手输入框随之隐藏）；课堂主线用时钟条与调整卡。

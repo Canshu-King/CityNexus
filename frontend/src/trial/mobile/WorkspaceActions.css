@@ -1,29 +1,29 @@
 .rev-mobile-v1 .rev-mobile-bottom-nav.rev-workspace-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .rev-mobile-v1 .rev-workspace-nav .rev-mobile-nav-button { min-width: 0; width: auto; min-height: 52px; }
 .rev-workspace-nav .rev-mobile-nav-label { white-space: nowrap; font-size: 11px; }
-.rev-workspace-dialog { box-sizing: border-box; width: min(960px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid #cadbd2; border-radius: 20px; background: #fffdf8; color: #183c30; overflow: auto; }
+.rev-workspace-dialog { box-sizing: border-box; width: min(960px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid #cadbd2; border-radius: 20px; background: var(--rx-paper-warm); color: var(--rx-ink-deep); overflow: auto; }
 .rev-workspace-dialog::backdrop { background: #122d2580; }
-.rev-workspace-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: #fffdf8; border-bottom: 1px solid #dce5dc; }
+.rev-workspace-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: var(--rx-paper-warm); border-bottom: 1px solid var(--rx-line-strong); }
 .rev-workspace-top h2 { font-size: 22px; margin: 0; }
 .rev-workspace-body { padding: 16px 20px 28px; line-height: 1.65; overflow-wrap: anywhere; }
-.rev-workspace-dialog button { min-height: 44px; border: 0; border-radius: 12px; padding: 10px 16px; background: #245f48; color: white; font: inherit; cursor: pointer; }
+.rev-workspace-dialog button { min-height: 44px; border: 0; border-radius: 12px; padding: 10px 16px; background: var(--rx-pine); color: white; font: inherit; cursor: pointer; }
 .rev-workspace-dialog button:disabled { opacity: .55; cursor: default; }
-.rev-workspace-dialog .rev-workspace-secondary { background: #eaf2ed; color: #245f48; }
-.rev-workspace-top button { min-width: 44px; font-size: 24px; background: transparent; color: #183c30; }
+.rev-workspace-dialog .rev-workspace-secondary { background: #eaf2ed; color: var(--rx-pine); }
+.rev-workspace-top button { min-width: 44px; font-size: 24px; background: transparent; color: var(--rx-ink-deep); }
 .rev-workspace-dialog form { display: grid; gap: 10px; }
 .rev-workspace-consent { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #edf3ef; }
-.rev-workspace-consent input { width: 20px; height: 20px; flex: 0 0 auto; margin: 2px 0 0; accent-color: #245f48; }
-.rev-workspace-dialog textarea { box-sizing: border-box; width: 100%; min-height: 110px; resize: vertical; font: inherit; padding: 12px; border: 1px solid #a6beb0; border-radius: 12px; background: white; color: #183c30; }
+.rev-workspace-consent input { width: 20px; height: 20px; flex: 0 0 auto; margin: 2px 0 0; accent-color: var(--rx-pine); }
+.rev-workspace-dialog textarea { box-sizing: border-box; width: 100%; min-height: 110px; resize: vertical; font: inherit; padding: 12px; border: 1px solid #a6beb0; border-radius: 12px; background: white; color: var(--rx-ink-deep); }
 .rev-workspace-dialog :is(button, textarea):focus-visible { outline: 3px solid #b36b24; outline-offset: 2px; }
-.rev-workspace-caption { font-size: 13px; color: #53695e; }
+.rev-workspace-caption { font-size: 13px; color: var(--rx-muted); }
 .rev-workspace-answer { padding: 16px; margin-top: 16px; border: 1px solid #b8d8c6; border-radius: 14px; background: #eef8f0; }
 .rev-workspace-answer h3 { margin-top: 0; }
 .rev-workspace-task-steps, .rev-workspace-task-events { padding-left: 22px; }
 .rev-workspace-task-steps li, .rev-workspace-task-events li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #d8e6dc; }
 .rev-workspace-task-places { display: grid; gap: 8px; padding: 0; list-style: none; }
 .rev-workspace-task-places li { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid #cadbd2; border-radius: 12px; background: white; }
-.rev-workspace-task-places span { color: #53695e; font-size: 13px; }
-.rev-workspace-task-events { color: #53695e; font-size: 13px; }
+.rev-workspace-task-places span { color: var(--rx-muted); font-size: 13px; }
+.rev-workspace-task-events { color: var(--rx-muted); font-size: 13px; }
 .rev-goal-draft { display: grid; gap: .75rem; margin-top: 1rem; }
 .rev-goal-draft fieldset { border: 1px solid #d6e2d8; border-radius: 12px; padding: .8rem; min-width: 0; }
 .rev-goal-draft-slot { display: grid; gap: .5rem; margin-bottom: .8rem; }
@@ -52,7 +52,7 @@
 .rev-goal-draft-slot > summary span { color: #668174; margin-left: auto; font-size: 12px; }
 .rev-goal-draft-slot-fields { display: grid; gap: 10px; padding: 12px; border-top: 1px solid #e1eae2; }
 .rev-goal-draft-slot-fields label { display: grid; gap: 5px; }
-.rev-goal-draft-actions { position: sticky; bottom: 0; z-index: 2; padding: 12px; border-radius: 12px; border: 1px solid #d2e3d5; background: #f7fbf8; box-shadow: 0 -2px 12px #16392718; }
+.rev-goal-draft-actions { position: sticky; bottom: 0; z-index: 2; padding: 12px; border-radius: 12px; border: 1px solid #d2e3d5; background: var(--rx-paper); box-shadow: 0 -2px 12px #16392718; }
 .rev-goal-draft-actions > button { display: block; width: 100%; }
 .rev-goal-draft-actions > p { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: #24533e; }
 .rev-goal-draft-actions > p[role="alert"] { color: #943b20; }
@@ -101,7 +101,7 @@
 }
 .rev-mission-chat-row button {
   width: 72px; min-width: 44px; max-width: 80px; box-sizing: border-box; min-height: 45px; margin: 0;
-  background: #0e6a55; color: #fff; border: 0; border-radius: 11px; padding: 8px 12px;
+  background: var(--rx-brand); color: #fff; border: 0; border-radius: 11px; padding: 8px 12px;
   cursor: pointer; font: inherit; font-weight: 740; font-size: 13px;
 }
 .rev-mission-chat-row button:disabled { opacity: .48; cursor: default; }
@@ -121,7 +121,7 @@
 .rev-mission-chat-dock .rev-quick-ai-preferences { display: grid; gap: 6px; }
 .rev-mission-chat-dock .rev-quick-ai-preferences button {
   width: 100%; min-height: 44px; border: 1px solid #d9e5df; border-radius: 10px;
-  padding: 8px 10px; background: #f7fbf8; color: #365b47; text-align: left;
+  padding: 8px 10px; background: var(--rx-paper); color: #365b47; text-align: left;
   font: inherit; font-size: 11px; line-height: 1.5; cursor: pointer;
 }
 .rev-mission-chat-dock .rev-quick-ai-preferences button[aria-pressed="true"] { background: #e9f4ed; border-color: #96c6a5; }
@@ -142,7 +142,7 @@
 .rev-mission-chat-dock > p { grid-column: 1 / -1; font-size: 12px; white-space: normal; }
 .rev-mission-dock-recovery { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 .rev-mission-dock-recovery button {
-  min-height: 44px; padding: 7px 8px; border: 1px solid #0e6a55; border-radius: 11px;
+  min-height: 44px; padding: 7px 8px; border: 1px solid var(--rx-brand); border-radius: 11px;
   background: #eaf5ef; color: #0d4433; cursor: pointer; font: inherit; font-weight: 740; font-size: 13px; line-height: 1.35;
 }
 .rev-mission-dock-recovery button:disabled { opacity: .48; cursor: default; }
@@ -177,3 +177,11 @@
 .rev-agent-choices small { font-size: 13px; color: #567365; }
 .rev-agent-start-research { margin: 12px 0; min-height: 48px; }
 .rev-agent-message p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; font-size: 16px; }
+
+
+/* At tablet width the fixed chat dock sits exactly on the classroom clock's keys
+   (measured: 1024x768, elementFromPoint hit the dock textarea). The classroom
+   advances with the clock keys, so the dock steps aside there. */
+@media (min-width: 768px) {
+  body:has([data-testid="rev-classroom-clock"]) .rev-mission-chat-dock { display: none; }
+}
