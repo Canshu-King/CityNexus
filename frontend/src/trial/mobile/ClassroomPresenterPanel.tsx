@@ -251,14 +251,16 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             推进用上面的「课堂时空模拟」三个键；这里只管事件、守护和恢复。
           </span>
         )}
+        {run?.status === "GUARDIAN_RUNNING" && (guardianOutcome?.code ?? "UNKNOWN") === "UNKNOWN" && (
+          <p className="rev-presenter-note" data-testid="rev-presenter-guardian-wait">
+            守护正在让模型生成调整，实测约四分半；这段时间可以照常讲解，不用重复按。
+          </p>
+        )}
         {run?.status === "PAUSED_FOR_GUARDIAN" && (
           <button
             type="button"
             disabled={busy}
-            onClick={() => act(
-              () => simulationApi.guardian(journeyId, run.run_id, run.sequence),
-              "守护正在分析：接上模型时实测要四分钟左右；没接模型会一直停在等待。请别重复按。",
-            )}
+            onClick={() => act(() => simulationApi.guardian(journeyId, run.run_id, run.sequence))}
           >
             交给守护助手
           </button>

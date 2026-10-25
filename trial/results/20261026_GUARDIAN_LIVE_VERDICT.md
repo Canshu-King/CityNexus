@@ -138,6 +138,12 @@
 - 整条主线 288 秒（4 分 48 秒），守护占 259 秒，其余七步合计 29 秒。详细表在 `20261026_CLASSROOM_TIMED_PATH.md`。
 - 附带事实：接受后 `guardian_outcome` 变 `AGENT_UNRESOLVED`（`progress.py:163-167` 的 `guardian.status=PARTIAL` 分支），而这一步实际已经交出提案并被接受；屏上被完成态遮住，API 读者会误判。归 Codex。
 
+### 第九次（`guardian-wait-110.txt`，05:23–05:28）——守护等待期给一句可预期的话
+
+- `GUARDIAN_RUNNING` 且 `guardian_outcome` 还是 `UNKNOWN` 时，控制台现在写：「守护正在让模型生成调整，实测约四分半；这段时间可以照常讲解，不用重复按。」（`rev-presenter-guardian-wait`）
+- 第一次复测（`classroom-guardian-wait-110.png` 前一版）发现**两句并存**：点击时的 slowNote 也写着「…没接模型会一直停在等待。请别重复按。」——一句话两个写者。删掉 slowNote 后复测：`WAIT_NOTE 1`（visible、inViewport），`OLD_SENTENCE_COUNT 0`。
+- 12 秒后 run 仍 `GUARDIAN_RUNNING`，无 console 错误。截图 `classroom-guardian-wait-110.png` 只剩一句。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
