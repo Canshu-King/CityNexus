@@ -2805,9 +2805,11 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 | 档 | 做法 | 代价 |
 | --- | --- | --- |
-| 甲 | 演示只在电脑浏览器上跑，平板只当观众 | 不改边界，最安全；失去「老师在平板上亲手点」 |
+| 甲 | 演示只在电脑浏览器上用 `http://127.0.0.1:14492`（loopback）跑，平板只当观众 | 不改边界，最安全；失去「老师在平板上亲手点」，且电脑也不能再用 LAN 地址 |
 | 乙 | 电脑端预签 presenter key，写进平板打开的那条链接 | key 落在 URL 里，LAN 内可见 |
 | 丙 | 给 LAN 内的演示会话开一个受时限、受 run 约束的豁免 | 要改 Codex 的边界，归他 |
+
+注意：合入后连**电脑自己**用 `10.12.35.143` 打开也会 403——只有 `127.0.0.1` 算 loopback。这条不是猜测，是 `require_demo_presenter` 的判定读出来的。
 
 已做的准备：`prepare_classroom_scene_r1.py` 现在把 `CITYNEXUS_DEMO_DATABASE_PATH` 指到演示副本，满足 `require_demo_database` 的隔离检查（不改判定，只是让演示库被认出来）。
 
