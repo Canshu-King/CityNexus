@@ -385,3 +385,42 @@ manifest 现在自带 `run`（runId / 权威栈标记 / 那趟后端的库路径
    `accessDoors.ts` 119 行且**没有任何写函数**、roster 相关 grep 命中 **0**）——前端那半是新建子系统，不是一枚 diff。
    按「80% 投功能」我打算先开工两枚写门 + 门上测试，前端另立一刀；等他定优先级。
 
+## 9. Amap 两条腿（B 地点发现 / C 路线）接上后的现读数（2026-10-26）
+
+这两腿是同一枚产品提交 `0214d16706`（14 文件 / +2418 / −80，`git show --stat 0214d16706` 现读）。
+B 此前只有「收集线索」的库、没有门，所以界面永远看不见真实世界的店；现在有门、能落库、能被既有目录读回。
+C 此前只有 adapter、运行时从不选它；现在融合运行时只在「中国城市 + 有 key + 没配 Valhalla」三件事同时成立时选它，
+任何一条不成立都一个字不改旧行为。两条腿拒绝时都走 fail-closed：B 的未知域进 `unknown_fields`、不编坐标；
+C 的 hard 捕获不落 mock 兜底。
+
+| 尺 | 数（本趟现读） | 这一行钉住的是 |
+|---|---|---|
+| 自带测试 | **53 passed / 4.69s / RC=0**；逐文件 21 + 7 + 14 + 6 + 5 | 五枚文件一起跑绿，不是单跑绿 |
+| B 发现 | `amap-web-service:ANSWERED:rows=5`；Photon `SKIPPED`；5 条线索 5 条有坐标 | 高德先答且答满 5 条；全球地理编码器根本没被问 |
+| B 落库 | 持久化 **5** 行；`provider_key=amap-web-service`、存 `WGS84`、源 `GCJ02` | 坐标换到系统帧，来源帧没丢 |
+| B 幂等 | 同一查询再发现一次：**5** 条，库仍 **5** 行 | provider item 就是身份，重复发现不添行 |
+| B 读回 | `GET /api/v1/places?city_code=CN-TIANJIN&q=天津博物馆` ⇒ **3** 行（另 2 座馆名不含该子串） | 既有目录门不改一行就能看见新行 |
+| C 活跑（hard） | `provider_key=amap-web-service`、`minutes=6`、`fact_quality=LIVE_PROVIDER_CAPTURE`、`time_basis=AMAP_ROUTE_CAPTURED_AT`、`mode=WALK`、几何 **19** 点、`degraded=False`、fallback **0** | 这几枚字段就是硬可行性闸读的那些；分钟数是服务当次回答（同一对点上趟读 5，不是常量） |
+| C 供给面 | `/api/v1/providers/v9` ⇒ `status=READY`、`provenance=LIVE`、`coordinate_crs=GCJ02` | 前端状态角标读的就是这里 |
+| 区域守卫 | `is_amap_region("CN-12-01")=False`、`("天津市")=True`、`("120000")=True`；门上 `422 AMAP_REGION_UNUSABLE`，测试断言 provider 构造次数 **0** | 2026-10-25 实测：`region=CN-12-01&citylimit=true` 仍 `status=1` 并答了山东 POI（adcode 370321）——它会静默答错省，不会拒 |
+| 密钥面 | 新增行里真 key 出现 **0** 次；唯一 32 位十六进制是测试里的伪造 `0123…`；`backend/.env` 在 `.gitignore:14`，未暂存 | 「不把 key 写进树」是扫出来的，不是承诺 |
+| 一键复跑 | `python review/ord0701/amap_legs_proof_r1.py` ⇒ `ORD0701_PROOF=PASS` / RC=0 | 本表 B/C 两段数就是这条命令的 stdout（要进程环境里有 key，脚本只打印前三字符） |
+
+**别当成已完成（这段是给明天手机演示看的）**：
+
+1. **B 门还没有前端调用者**：`places/discover` 在 `frontend/src` 命中 **0**；建行程仍走
+   `GET /api/v1/places?city_code=`（`frontend/src/app/V8Experience.tsx:1202-1206`），真实城目录空时停在那条 early return。
+   要让老师/学生在手机上看见「高德把真实博物馆拉进来」，还需要一次 UI 接缝；本轮没接。
+2. **C 的证明是脚本直调产品函数**，不是 HTTP 门。旅行者可见的 plan/replan 路径本轮没在 390×844 上点过；
+   这枚证明的是「引擎真供给、闸门真读它」，不是「屏上已经显示高德分钟数」。
+3. **契约面 0 命中**：`contracts/openapi.yaml` 与 `frontend/src/generated/api.ts` 都没有这扇门，
+   生成客户端不认识 `POST /api/v1/places/discover`；要进契约得另开一刀（与切片 4 的契约刀同一处）。
+4. **融合树仍有两枚文件预存红**：`tests/test_qoder_live_replans_endpoint.py` + `tests/test_qoder_mobility_evidence_sources.py`
+   ⇒ **5 failed / 7 errors**（本轮复跑 7.64s，同数），来源是 demo-stage 的 `409 DEMO_START_REFUSED`；
+   此前用单变量 A/B（把 `runtime.py` 暂存起来再跑同两枚文件）证明与这两腿无关。
+5. **演示树是另一棵树**：`D:/moodle/CityNexus`（CNX-DEMO 布景）不在本枝上。明天下午若跑的是那棵，
+   这两腿不会出现；要出现只有两条路：把本枝合过去，或在融合树上演示。演示前必须先拍板，否则台上会演成「进步看不见」。
+6. **§0 那一格「远端：没推」在本节推送之后作废**：本节与 `review/ord0701/amap_legs_proof_r1.py` 一起推上
+   `origin/fusion/qoder-import-20261014`（不 force、未开 PR；开 PR 需号令者另点头）。远端尖与本地是否同 sha
+   用 `git ls-remote --heads origin fusion/qoder-import-20261014` 与 `git rev-parse HEAD` 现读，下一枚 docs 提交会把 sha 钉回 §0。
+
