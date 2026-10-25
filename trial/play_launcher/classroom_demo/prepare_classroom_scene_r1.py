@@ -48,7 +48,7 @@ def gateway_key() -> str:
 
 
 def call(method: str, path: str, body: dict | None = None, token: str | None = None,
-         key: str | None = None) -> tuple[int, dict]:
+         key: str | None = None, idempotency: str | None = None) -> tuple[int, dict]:
     data = json.dumps(body).encode("utf-8") if body is not None else None
     request = urllib.request.Request(f"http://127.0.0.1:{PORT}{path}", data=data, method=method)
     if data is not None:
@@ -57,6 +57,8 @@ def call(method: str, path: str, body: dict | None = None, token: str | None = N
         request.add_header("Authorization", "Bearer " + token)
     if key:
         request.add_header("X-CityNexus-Presenter-Key", key)
+    if idempotency:
+        request.add_header("Idempotency-Key", idempotency)
     try:
         with urllib.request.urlopen(request, timeout=240) as answer:
             raw = answer.read().decode("utf-8")
@@ -260,6 +262,47 @@ FRONTEND_UP = ensure_frontend()
 TOKEN = issue_token()
 
 
+def bind_city_identity() -> str:
+    """Copying the play database drops the journey's city binding, so bind it once per start.
+
+    Only a goal task whose region already resolved to a six-digit adcode can bind; anything
+    else is reported as a code, never invented. A re-bind of the same adcode is idempotent.
+    """
+    readonly = sqlite3.connect("file:" + DST + "?mode=ro", uri=True)
+    readonly.row_factory = sqlite3.Row
+    try:
+        row = readonly.execute(
+            "select id, intent_json from journey_missions where journey_id=? "
+            "and requested_autonomy='PLAN_ONLY' and trigger_event_id is null "
+            "order by created_at desc limit 1",
+            (JOURNEY,),
+        ).fetchone()
+    finally:
+        readonly.close()
+    if row is None:
+        return "NO_GOAL_TASK"
+    try:
+        task = json.loads(row["intent_json"] or "{}").get("goal_task") or {}
+        region = task.get("amap_region") or {}
+        if region.get("status") != "RESOLVED" or not region.get("adcode"):
+            return "NO_RESOLVED_REGION"
+        status, answer = call(
+            "POST", "/api/v1/journeys/%s/simulation/city-identity" % JOURNEY,
+            {"source_task_id": row["id"]}, token=TOKEN, key=PRESENTER_KEY,
+            idempotency="classroom-city-identity",
+        )
+    except Exception:
+        return "ERROR"
+    if status == 200 and isinstance(answer, dict):
+        return "BOUND:" + str(answer.get("provider_city_adcode"))
+    if isinstance(answer, dict) and isinstance(answer.get("detail"), list) and answer["detail"]:
+        first = answer["detail"][0] or {}
+        loc = ".".join(str(part) for part in (first.get("loc") or []))
+        return "http=%s:%s:%s" % (status, loc, str(first.get("msg"))[:60])
+    code = answer.get("error", {}).get("code") if isinstance(answer, dict) else ""
+    return "http=%s:%s" % (status, code or "")
+
+
 def issue_pairing() -> str | None:
     """One-use presenter ticket; older backends answer 404 and the link stays plain."""
     status, answer = call(
@@ -304,6 +347,7 @@ def write_rehearsal_ticket() -> bool:
     return True
 
 
+CITY_IDENTITY = bind_city_identity()
 PAIRING = issue_pairing()
 PRESENTER_SESSION = write_presenter_session()
 REHEARSAL_TICKET = write_rehearsal_ticket()
@@ -340,6 +384,7 @@ print(json.dumps({
     "FRONTEND_UP": FRONTEND_UP,
     "TABLET_OPEN": LINK,
     "PAIRING": "OK" if PAIRING else "UNSUPPORTED",
+    "CITY_IDENTITY": CITY_IDENTITY,
     "PRESENTER_SESSION": PRESENTER_SESSION,
     "REHEARSAL_TICKET": REHEARSAL_TICKET,
     "AGENT_QA": "direct-replan-only (agent path verified separately)",

@@ -66,3 +66,15 @@ body {"source_task_id": "1690b9ed-9d00-4c49-986e-85cbd7b3554d"}
 ## 边界
 
 本件只读库、只读代码；没有改后端树，没有写课堂库那一刻的状态。绑定动作在 r107 结束后单独执行并单独回执。
+
+## 启动器已自动绑定（05:12 落地）
+
+课堂库每次开场都从 play 库复制，`simulation_city_identities` 也随之清空。现在 `prepare_classroom_scene_r1.py` 在后端起好、traveler token 就绪后，用同一枚 goal task 自动调一次这扇门（幂等键 `classroom-city-identity`），输出多一个字段：
+
+```
+"CITY_IDENTITY": "BOUND:110000"
+```
+
+同一场随后读 `GET /simulation/cities?seed=17`：`status=BLOCKED`、`missing=['AT_LEAST_3_CAPTURED_ROUTES_REQUIRED']`、`provider_city_adcode=110000`、`poi=40`、`routes=0`。没有 goal task 或地区未解析时只写 `NO_GOAL_TASK` / `NO_RESOLVED_REGION`，不编造。
+
+这一步只补「身份在位」，不碰路线缺口；路线那条见 `20261026_CITY_POOL_ROUTE_SHAPE_GAP.md`。
