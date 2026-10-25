@@ -3133,7 +3133,7 @@ export const cityNexusApi = {
   },
 
   getPlan(planId: string): Promise<PlanVersion> {
-    return requestJson<PlanVersion>("/plans/" + planId);
+    return requestJson<PlanVersion>("/plans/" + planId, { headers: travelerAuthHeaders(), cache: "no-store" });
   },
 
   createBooking(journeyId: string, activityId: string): Promise<Booking> {
@@ -3186,7 +3186,10 @@ export const cityNexusApi = {
 
   getTwin(journeyId: string, now?: string): Promise<JourneyTwin> {
     const suffix = now ? "?now=" + encodeURIComponent(now) : "";
-    return requestJson<JourneyTwin>("/journeys/" + journeyId + "/twin" + suffix);
+    return requestJson<JourneyTwin>("/journeys/" + journeyId + "/twin" + suffix, {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   getAgentFeed(journeyId: string, limit = 100): Promise<AgentFeedResponse> {

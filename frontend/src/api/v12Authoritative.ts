@@ -49,7 +49,10 @@ export function useAuthoritativeTwin(journeyId: string | null) {
   return useQuery({
     queryKey: ["v12-authoritative-twin", journeyId],
     enabled: Boolean(journeyId),
-    queryFn: () => request<JourneyTwin>(`/journeys/${journeyId}/twin`),
+    queryFn: () => request<JourneyTwin>(`/journeys/${journeyId}/twin`, {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    }),
     refetchInterval: 15_000,
   });
 }

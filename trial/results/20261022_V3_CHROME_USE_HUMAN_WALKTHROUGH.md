@@ -2785,3 +2785,13 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 与热点时的 18.2 秒差的是探针这次在地图段多等 4 秒（等底图），流程步骤一致。截图 `rehearsal14-final.png`、`rehearsal14-guardian.png`。
 
+## 九十四、给 Codex 的读鉴权先铺路：演示的六条读请求全部带 Bearer
+
+Codex 的分支（`codex/sandbox-execution-security-20261025`，`1dc083f5ca`）把 `GET /journeys/{id}`、`/experience`、`/twin`、`/demo/simulation-clock/{id}` 收成签名读，`advance` 还要成员的执行能力。我们课堂屏上有六条这样的读还是匿名的（时钟条两条、`MissionCockpit` 的时钟探测、`V14PreventivePanel` 与 `HotelsPanel` 的 experience、`SimulationClockCard` 的读与推进），另有 `getTwin`/`getPlan` 两个 API 封装没带 bearer；合入后会 401。
+
+这一刀把六处 fetch 与两个 API 都改成带 `travelerAuthHeaders()`（token 本来就在 sessionStorage，demo-session 已发）；当前后端不校验时多余的 Authorization 头无害。
+
+430×932 真视口（`classroom-token-read-15.txt`）：时钟读、`+1 小时`、twin、plans 全部 `200 auth=true`，提案仍在，页面错误 0 条；类型检查 rc=0（`typecheck-signed-reads-1.txt:5`）。
+
+边界：`/plans` 与 `/guardian/*` 目前不在 Codex 的收紧列表里，但我也一并带了 token——不改变读取结果，只是让合入后不会突然断。
+

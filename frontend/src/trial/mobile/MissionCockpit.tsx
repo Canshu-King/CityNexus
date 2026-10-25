@@ -6,7 +6,7 @@ import {
 import {
   cityNexusApi, CityNexusApiError, type DraftGoalTask, type DraftGoalTaskEvent, type GoalDraftArtifact,
 } from "../../api/citynexus";
-import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer } from "../../lib/travelerSession";
+import { readTravelerBearer, readTravelerIdentity, subscribeTravelerBearer, travelerAuthHeaders } from "../../lib/travelerSession";
 import { WorkspaceMap, type WorkspaceMapPoint } from "./WorkspaceMap";
 import { WorkspaceActions } from "./WorkspaceActions";
 import { GoalDraftEditor } from "./GoalDraftEditor";
@@ -109,7 +109,7 @@ export function MissionCockpit({
     if (!journeyId || journeyStatus !== "ACTIVE") { setSimTraveller(null); return; }
     let alive = true;
     const read = () => {
-      void fetch(`/api/v1/demo/simulation-clock/${journeyId}`, { headers: { Accept: "application/json" } })
+      void fetch(`/api/v1/demo/simulation-clock/${journeyId}`, { headers: { Accept: "application/json", ...travelerAuthHeaders() } })
         .then((response) => (response.ok ? response.json() : null))
         .then((body: { traveller?: { latitude: number; longitude: number; label: string; coordinate_system?: string } | null } | null) => {
           if (alive) setSimTraveller(body?.traveller ?? null);

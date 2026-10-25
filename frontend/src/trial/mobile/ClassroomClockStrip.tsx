@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { travelerAuthHeaders } from "../../lib/travelerSession";
 import "./ClassroomClockStrip.css";
 
 /**
@@ -36,7 +37,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
   const read = useCallback(async () => {
     try {
       const response = await fetch(`/api/v1/demo/simulation-clock/${journeyId}`, {
-        headers: { Accept: "application/json" },
+        headers: { Accept: "application/json", ...travelerAuthHeaders() },
       });
       setClock(response.ok ? (await response.json() as ClockPayload) : null);
     } catch {
@@ -63,7 +64,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     try {
       const response = await fetch(`/api/v1/demo/simulation-clock/${journeyId}/advance`, {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        headers: { Accept: "application/json", "Content-Type": "application/json", ...travelerAuthHeaders() },
         body: JSON.stringify({ minutes, expected_version: clock.version }),
       });
       if (response.ok) setClock(await response.json() as ClockPayload);
@@ -80,7 +81,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     setBusy(true);
     setStopNote("正在推进…");
     try {
-      const twinResponse = await fetch(`/api/v1/journeys/${journeyId}/twin`, { headers: { Accept: "application/json" } });
+      const twinResponse = await fetch(`/api/v1/journeys/${journeyId}/twin`, { headers: { Accept: "application/json", ...travelerAuthHeaders() } });
       const twin = twinResponse.ok ? (await twinResponse.json() as { current_activity_id?: string | null }) : null;
       const activityId = twin?.current_activity_id;
       if (!activityId) {
@@ -95,7 +96,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
       for (const step of steps) {
         const response = await fetch(`/api/v1/journeys/${journeyId}/activities/${activityId}/${step}`, {
           method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          headers: { Accept: "application/json", "Content-Type": "application/json", ...travelerAuthHeaders() },
           body: JSON.stringify({ truth_kind: "SIMULATED_STATE_TRANSITION" }),
         });
         lastStatus = response.status;
@@ -103,12 +104,12 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
       }
       let aligned = "";
       if (completed) {
-        const twinAfterResponse = await fetch(`/api/v1/journeys/${journeyId}/twin`, { headers: { Accept: "application/json" } });
+        const twinAfterResponse = await fetch(`/api/v1/journeys/${journeyId}/twin`, { headers: { Accept: "application/json", ...travelerAuthHeaders() } });
         const twinAfter = twinAfterResponse.ok
           ? (await twinAfterResponse.json() as { current_activity_id?: string | null; active_plan_version_id?: string | null })
           : null;
         if (twinAfter?.active_plan_version_id && twinAfter.current_activity_id) {
-          const planResponse = await fetch(`/api/v1/plans/${twinAfter.active_plan_version_id}`, { headers: { Accept: "application/json" } });
+          const planResponse = await fetch(`/api/v1/plans/${twinAfter.active_plan_version_id}`, { headers: { Accept: "application/json", ...travelerAuthHeaders() } });
           if (planResponse.ok) {
             const plan = await planResponse.json() as { activities?: Array<{ id?: string; start_at?: string }> };
             const stop = (plan.activities ?? []).find((activity) => activity.id === twinAfter.current_activity_id);
@@ -119,7 +120,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
             if (Number.isFinite(stopMs) && Number.isFinite(clockMs) && stopMs > clockMs) {
               const advanced = await fetch(`/api/v1/demo/simulation-clock/${journeyId}/advance`, {
                 method: "POST",
-                headers: { Accept: "application/json", "Content-Type": "application/json" },
+                headers: { Accept: "application/json", "Content-Type": "application/json", ...travelerAuthHeaders() },
                 body: JSON.stringify({ minutes: Math.ceil((stopMs - clockMs) / 60000), expected_version: clock.version }),
               });
               if (advanced.ok) {

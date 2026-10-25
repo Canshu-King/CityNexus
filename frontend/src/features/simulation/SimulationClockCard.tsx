@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { travelerAuthHeaders } from "../../lib/travelerSession";
 
 /**
  * Classroom sandbox clock (first cut).  The virtual time lives on the server
@@ -42,7 +43,7 @@ export function SimulationClockCard({ journeyId, zh }: { journeyId: string | nul
   const read = useCallback(async () => {
     if (!journeyId) return;
     try {
-      const response = await fetch(`/api/v1/demo/simulation-clock/${journeyId}`, { headers: { Accept: "application/json" } });
+      const response = await fetch(`/api/v1/demo/simulation-clock/${journeyId}`, { headers: { Accept: "application/json", ...travelerAuthHeaders() } });
       if (!response.ok) {
         setClock(null);
         setError(response.status === 404 ? (zh ? "这个栈没有开课堂模拟（服务器门禁为关）。" : "Simulation is off on this stack.") : `HTTP ${response.status}`);
@@ -64,7 +65,7 @@ export function SimulationClockCard({ journeyId, zh }: { journeyId: string | nul
     try {
       const response = await fetch(`/api/v1/demo/simulation-clock/${journeyId}/advance`, {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        headers: { Accept: "application/json", "Content-Type": "application/json", ...travelerAuthHeaders() },
         body: JSON.stringify({ minutes, expected_version: clock.version }),
       });
       const body = await response.json().catch(() => ({}));
