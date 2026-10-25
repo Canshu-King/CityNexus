@@ -18,3 +18,9 @@ python -m pytest tests/test_issue49_guardian_scene_binding.py tests/test_issue49
 ```
 
 执行库 C:/Users/仓鼠王/cn51/classroom-20261026-qa/scene-binding-verified.db，JUnit 同目录 scene-binding-verified.xml。测试包含声明的模型替身，无真实外部请求。本次尚未重启课堂服务或完成页面的 Guardian→新提案→接受→resume 联调。其他工人的日期约束及 UI 未提交改动保留。
+
+## 事件选择入口增量
+
+request_replan 对带 server_owned_recovery_context 的恢复子任务，缺省事件使用服务器绑定事件；模型显式指定冲突事件返回 409 RECOVERY_TRIGGER_SCOPE_MISMATCH。普通任务仍使用原事件选择逻辑。补丁由现有 Luna Max 工人交付，根会话独立验证。
+
+工具绑定新测试、既有缓存升级、旧缓存兼容与场景绑定回归：25 passed，exit0，19.94 秒；JUnit 为同 QA 目录 replan-trigger-verified.xml。首次测试发现旧缓存 SimpleNamespace 夹具缺当前序列化必需的四个谱系字段，已补 None，原缓存顺序、状态、幂等和越界断言未改。GitHub focused workflow 已加入这两份缓存回归。此轮无模型/provider 请求，尚不代表现场提案接受完成。
