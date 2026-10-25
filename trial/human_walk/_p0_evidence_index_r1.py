@@ -182,20 +182,25 @@ def main() -> int:
     note70 = lines_of("acceptance-note-70.txt")
     g_progress = guard.get("progress") or {}
     g_runs = g_progress.get("guardian_runs") or []
-    rows.append(("守护暂停（#47 P0）",
-                 "红（缺陷，已报）" if (guard.get("guardian") or {}).get("http") == 200
-                 and (guard.get("after") or {}).get("status") == "PAUSED_FOR_ACCEPTANCE" else "待核",
-                 "guardian-unavailable-67.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md",
-                 "guardian http=%s，after=%s；progress proposal_id=%s，proposals=%s" % (
+    flow83 = lines_of("guardian-accept-flow-83.txt")
+    flow83_ok = any("pending=RESOLVED" in line for line in flow83) \
+        and '"status":"RUNNING"' in find(flow83, "AFTER_RESUME_PROGRESS") \
+        and "ERRORS []" in flow83
+    rows.append(("守护暂停（历史缺陷，#54 已修）",
+                 "历史红·已修" if (guard.get("guardian") or {}).get("http") == 200
+                 and (guard.get("after") or {}).get("status") == "PAUSED_FOR_ACCEPTANCE"
+                 and flow83_ok else "待核",
+                 "guardian-unavailable-67.txt, guardian-accept-flow-83.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md",
+                 "旧读数：guardian http=%s，after=%s；修复后：%s" % (
                      (guard.get("guardian") or {}).get("http"),
                      (guard.get("after") or {}).get("status"),
-                     (g_runs[0] or {}).get("proposal_id") if g_runs else None,
-                     len(g_progress.get("proposals") or []))))
-    rows.append(("AI 开关不拦调用（#47 P0）",
-                 "红（缺陷，已报）" if guard.get("ai_enabled") is False and g_runs else "待核",
-                 "guardian-unavailable-67.txt",
-                 "ai_enabled=%s；guardian_runs=%s；agent_runs 读数见报告" % (
-                     guard.get("ai_enabled"), len(g_runs))))
+                     find(flow83, "AFTER_RESUME"))))
+    rows.append(("AI 开关不拦调用（历史缺陷，#54 已修）",
+                 "历史红·已修" if guard.get("ai_enabled") is False and g_runs and ai_ok else "待核",
+                 "guardian-unavailable-67.txt, ai-off-guardian-86.txt",
+                 "旧读数：ai_enabled=%s，guardian_runs=%s；修复后：guardian http=%s，elapsed_s=%s" % (
+                     guard.get("ai_enabled"), len(g_runs),
+                     ai_guardian.get("status"), ai_guardian.get("elapsed_s"))))
     before_plan = ((accept.get("journey") or {}).get("before") or {}).get("plan")
     after_plan = ((accept.get("journey") or {}).get("after") or {}).get("plan")
     rows.append(("接受调整支线",

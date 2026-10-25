@@ -16,8 +16,8 @@
 | 守护 AI 开关（隔离副本） | 绿 | ai-off-guardian-86.txt, trial/human_walk/_ai_off_guardian_r1.py | guardian http=503，elapsed_s=0.01，SIMULATION_AI_DISABLED；sequence_unchanged=True；guardian_runs=0；missing=['AI_DISABLED'] |
 | 接受调整后模拟换计划（r92） | 绿 | guardian-plan-applied-92.txt, classroom-plan-applied-92.png | 模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园']；守护已接手 · 12-03 09:00守护已接手 · 12-03 09:00推进 · 12-03 09:00游览 · 12-04 09:00完成一站 · 12-04 10:00两日走完 · 12-04 10:00 |
 | 守护屏当前事件提案（r91） | 绿 | guardian-panel-live-90.txt, guardian-panel-live-91.txt, guardian-panel-live-91-panel.png | r90 origin=规则引擎生成 · 不是大模型现场推理；r91 origin=Agent 生成 · 服务器留有运行记录；proposal=移除故宫博物院；路上少 66 分钟。 |
-| 守护暂停（#47 P0） | 红（缺陷，已报） | guardian-unavailable-67.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md | guardian http=200，after=PAUSED_FOR_ACCEPTANCE；progress proposal_id=None，proposals=0 |
-| AI 开关不拦调用（#47 P0） | 红（缺陷，已报） | guardian-unavailable-67.txt | ai_enabled=False；guardian_runs=1；agent_runs 读数见报告 |
+| 守护暂停（历史缺陷，#54 已修） | 历史红·已修 | guardian-unavailable-67.txt, guardian-accept-flow-83.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md | 旧读数：guardian http=200，after=PAUSED_FOR_ACCEPTANCE；修复后：AFTER_RESUME {"run":"模拟进行中 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null,"guardianFailed":false,"guardianUnresolved":false} |
+| AI 开关不拦调用（历史缺陷，#54 已修） | 历史红·已修 | guardian-unavailable-67.txt, ai-off-guardian-86.txt | 旧读数：ai_enabled=False，guardian_runs=1；修复后：guardian http=503，elapsed_s=0.01 |
 | 接受调整支线 | 绿 | proposal-accept-68.txt | accept http=200；plan e74a5edb-3f6d-40c3-910c-52e449619d40 → f84adc05-fb3b-4721-9c21-4db3bab96c28 |
 | resume 门（夹具） | 绿 | resume-after-resolved-69.txt | resume http=200，after=RUNNING（事件先在副本里 RESOLVED，1 行） |
 | 平板视口两日（合入 PR #54 后，1024×768） | 绿 | clock-two-day-tablet-merge54-85.txt, classroom-two-day-tablet-merge54-85.png | START "模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中"；FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-two-day-tablet-merge54-85.png (136596 bytes) |
