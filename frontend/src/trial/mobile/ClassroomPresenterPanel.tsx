@@ -16,7 +16,7 @@ const STATUS_TEXT: Record<string, string> = {
   GUARDIAN_RUNNING: "守护正在分析",
   PAUSED_FOR_ACCEPTANCE: "等待接受调整",
   PAUSED_MODEL_UNAVAILABLE: "现场模型不可用，已暂停",
-  PAUSED_REQUIRES_MISSION: "需要补行程任务",
+  PAUSED_REQUIRES_MISSION: "缺少守护任务",
   SIMULATED_COMPLETED: "模拟行程已完成",
 };
 
@@ -109,13 +109,29 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
   }, [journeyId]);
 
   useEffect(() => {
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<SimulationRun>).detail;
+      if (detail?.run_id) setRun(detail);
+    };
+    window.addEventListener("citynexus:simulation-run", listener);
+    return () => window.removeEventListener("citynexus:simulation-run", listener);
+  }, []);
+
+  useEffect(() => {
     if (!visible) return;
     let cancelled = false;
-    void refresh().catch(() => {
-      if (!cancelled) setHidden(true);
-    });
+    const tick = () => {
+      void refresh().catch(() => {
+        if (!cancelled) setHidden(true);
+      });
+    };
+    tick();
+    // The clock strip on the same screen advances the same run; without polling this
+    // panel would keep showing the hour it saw on mount while the strip moves on.
+    const timer = window.setInterval(tick, 10_000);
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, [visible, refresh]);
 
@@ -206,7 +222,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             继续模拟
           </button>
         )}
-        {(run?.status === "PAUSED_MODEL_UNAVAILABLE" || run?.status === "PAUSED_REQUIRES_MISSION") && (
+        {run?.status === "PAUSED_MODEL_UNAVAILABLE" && (
           <button type="button" disabled={busy} onClick={() => act(() => simulationApi.resume(journeyId, run.run_id, run.sequence))}>
             事件处理完了，继续模拟
           </button>
@@ -239,6 +255,12 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
       {run?.status === "PAUSED_MODEL_UNAVAILABLE" && (
         <p className="rev-presenter-note" data-testid="rev-presenter-model-note">
           现场模型没有接上；同一起事件要在下方守护屏上处理，处理完再按上面的继续。
+        </p>
+      )}
+
+      {run?.status === "PAUSED_REQUIRES_MISSION" && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-mission-note">
+          这趟行程还没有守护任务，模拟停在这里；先到「行程守护」建一个任务，再回来刷新。
         </p>
       )}
 

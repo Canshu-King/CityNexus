@@ -1,0 +1,31 @@
+{
+  "pairing_status": 201,
+  "redeem_status": 200,
+  "redeem_journey": "8ba03b8e-1461-4da4-9943-826cbea089fe",
+  "journey_before": {
+    "status": 200,
+    "journey_status": "PLANNED",
+    "plan": "89aa0453-88e5-4d8c-8513-c3a4bc352a84"
+  },
+  "start_status": 409,
+  "start": {
+    "code": "CONFLICT",
+    "message": "START_BLOCKED_INFEASIBLE: PLACE_UNAVAILABLE:real-place-00d9e27cd4cc6c7b28b6509e, PLACE_UNAVAILABLE:real-place-00ec9ebf746fa4691d4e3851, PLACE_UNAVAILABLE:real-place-62c2e60619da82efebfdea8c, PLACE_UNAVAILABLE:real-place-dc53719dde41c9cb48b7b9b6"
+  },
+  "run_status": 409,
+  "run": {
+    "code": "CONFLICT"
+  },
+  "advance_walk": [],
+  "current_status": 200,
+  "current": {
+    "run_id": null,
+    "journey_id": "8ba03b8e-1461-4da4-9943-826cbea089fe",
+    "status": "NOT_STARTED"
+  },
+  "legacy_clock": {
+    "status": 200,
+    "version": 0,
+    "virtual_now": "2026-12-03T09:00:00+08:00"
+  }
+}

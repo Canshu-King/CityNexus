@@ -1,0 +1,38 @@
+{
+  "current_status": 200,
+  "current": {
+    "run_id": "812e3b0c-1ad9-49e5-83ca-794adabccb2e",
+    "sequence": 0,
+    "status": "RUNNING",
+    "virtual_now": "2026-12-03T09:00:00+08:00"
+  },
+  "advance_status": 409,
+  "advance_body": {
+    "error": {
+      "code": "CONFLICT",
+      "message": "activity is not the current activity",
+      "message_key": "request.conflict",
+      "trace_id": "ee85e875-4d05-45a0-bb69-cae198d6edda",
+      "details": null,
+      "error_receipt_id": "CNX-ES29M2WY"
+    }
+  },
+  "progress_status": 200,
+  "progress": {
+    "status": "RUNNING",
+    "sequence": 0,
+    "virtual_now": "2026-12-03T09:00:00+08:00",
+    "readiness": {
+      "model_credentials_configured": true,
+      "standing_mission_id": null,
+      "pending_event_id": null,
+      "missing": [
+        "STANDING_MISSION_REQUIRED",
+        "OPEN_SCENE_EVENT_REQUIRED",
+        "RUN_NOT_AWAITING_GUARDIAN"
+      ],
+      "model_consent_required": true,
+      "network_checked": false
+    }
+  }
+}
