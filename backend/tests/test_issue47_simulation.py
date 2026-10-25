@@ -113,7 +113,9 @@ def sim(stack, monkeypatch):  # noqa: F811 -- pytest injects the imported fixtur
     journey.current_activity_id = ids["activities"][0]
     s.commit()
     db.close()
-    headers = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(ids["owner"])}
+    presenter = uuid4().hex + uuid4().hex
+    monkeypatch.setenv("CITYNEXUS_DEMO_PRESENTER_KEY", presenter)
+    headers = {"Authorization": "Bearer " + traveler_principal.issue_traveler_token(ids["owner"]), "X-CityNexus-Presenter-Key": presenter}
     base_url = "/api/v1/journeys/" + ids["journey"] + "/simulation/runs"
 
     def post(url, body, key=None, as_headers=None):

@@ -198,6 +198,9 @@ def start_run(session, journey, actor, seed):
 
 
 def _transition(session, journey, run, row, status, actor_id):
+    from app.execution.activity_state import require_simulated_transition
+
+    require_simulated_transition(session, journey, row, status)
     meta = json.loads(row.metadata_json or "{}")
     append_execution_truth(
         meta,
@@ -289,6 +292,14 @@ def advance(session, journey, run, *, minutes=None, actor_id=None):
                 state["completed_activity_ids"] = list(
                     dict.fromkeys([*state["completed_activity_ids"], row.id])
                 )
+                remaining = [
+                    item
+                    for item in rows
+                    if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                ]
+                if remaining:
+                    remaining[0].status = "ACTIVE"
+                    journey.current_activity_id = remaining[0].id
             now, progressed = effective, True
             if target is None:
                 break

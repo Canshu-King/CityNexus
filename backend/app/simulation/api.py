@@ -10,12 +10,13 @@ from sqlalchemy.orm import Session
 
 from app.concurrency_guards import journey_write_lock
 from app.core.config import settings
-from app.db.models import Event, Journey
+from app.db.models import Event, Journey, JourneyMember
 from app.db.session import get_session
 from app.demo_access import require_demo_database, require_demo_presenter
 from app.simulation import runtime as rt
 from app.simulation.models import SimulationRun, SimulationCommand
 from app.simulation.clock import journey_business_time
+from app.simulation.city_catalog import bind_identity, publish_city
 from app.traveler_principal import require_journey_read, member_has_capability
 
 router = APIRouter(prefix="/api/v1/journeys/{journey_id}/simulation", tags=["simulation"])
@@ -52,6 +53,52 @@ class Resume(Input):
     expected_sequence: int = Field(ge=0)
 
 
+class CityIdentity(Input):
+    source_task_id: UUID
+
+
+class PublishCity(Input):
+    publish_public_facts: Literal[True]
+
+
+@router.post("/city-identity")
+def bind_city(
+    journey_id: UUID,
+    body: CityIdentity,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        key_value(idempotency_key)
+        member = session.scalar(
+            select(JourneyMember).where(
+                JourneyMember.journey_id == journey.id,
+                JourneyMember.traveler_id == principal.traveler_id,
+            )
+        )
+        result = bind_identity(session, journey, member, body.source_task_id)
+        session.commit()
+        return result
+
+
+@router.post("/cities/publish")
+def publish(
+    journey_id: UUID,
+    body: PublishCity,
+    request: Request,
+    idempotency_key: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    with journey_write_lock(str(journey_id)):
+        journey, principal = access(session, journey_id, request, write=True)
+        key_value(idempotency_key)
+        result = publish_city(session, journey, principal.traveler_id)
+        session.commit()
+        return result
+
+
 def access(session, journey_id, request, *, write=False):
     if not settings.simulation_enabled:
         raise HTTPException(404, "SIMULATION_DISABLED")
@@ -60,7 +107,7 @@ def access(session, journey_id, request, *, write=False):
         raise HTTPException(403, "JOURNEY_EXECUTION_UPDATE_REQUIRED")
     require_demo_database(session)
     if write:
-        require_demo_presenter(request, session)
+        require_demo_presenter(request, session, journey_id=journey_id)
     journey = session.get(Journey, str(journey_id))
     if journey is None:
         raise HTTPException(404, "Journey not found")

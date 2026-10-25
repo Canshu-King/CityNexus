@@ -4,7 +4,6 @@ import hashlib
 import json
 import math
 import random
-import re
 from datetime import datetime, timezone
 
 from sqlalchemy import select
@@ -14,7 +13,14 @@ from app.traveler_principal import _member_is_in_force, member_has_capability
 from app.replanning.provider_snapshots import MobilitySnapshot
 
 
-def cities_for(session, actor_id, seed):
+def cities_for(session, actor_id, seed, *, journey_ids=None, include_public=True):
+    from app.simulation.city_catalog import (
+        SimulationCityIdentity,
+        SimulationPublicCitySnapshot,
+        acquired_amap_places,
+        city_contains,
+    )
+
     allowed = {
         seat.journey_id
         for seat in session.scalars(
@@ -22,6 +28,14 @@ def cities_for(session, actor_id, seed):
         )
         if _member_is_in_force(seat) and member_has_capability(session, seat, "JOURNEY_READ")
     }
+    if journey_ids is not None:
+        allowed &= set(journey_ids)
+    bindings = {
+        session.get(Journey, jid).city_code: session.get(SimulationCityIdentity, jid)
+        for jid in sorted(allowed)
+        if session.get(Journey, jid)
+    }
+    amap_sources = acquired_amap_places(session)
     cities = {}
     places = {}
     for lead in session.scalars(
@@ -29,6 +43,16 @@ def cities_for(session, actor_id, seed):
     ):
         meta = json.loads(lead.metadata_json or "{}")
         if meta.get("discovery_mode") != "live" or not lead.materialized_place_id:
+            continue
+        binding = bindings.get(lead.city_code)
+        source = (
+            amap_sources.get(lead.external_id.removeprefix("amap:"))
+            if lead.provider_key == "amap"
+            else None
+        )
+        if binding and (
+            source is None or not city_contains(binding.provider_adcode, source["adcode"])
+        ):
             continue
         place = session.get(Place, lead.materialized_place_id)
         if (
@@ -100,7 +124,8 @@ def cities_for(session, actor_id, seed):
         poi = list(bucket["poi"].values())
         routes = list(bucket["routes"].values())
         missing = []
-        if not re.fullmatch(r"(?:CN-)?[0-9]{6}", name):
+        binding = bindings.get(name)
+        if binding is None:
             missing.append("VERIFIED_CITY_ADCODE_REQUIRED")
         if len(poi) < 5:
             missing.append("AT_LEAST_5_ACQUIRED_POI_REQUIRED")
@@ -109,13 +134,27 @@ def cities_for(session, actor_id, seed):
         results.append(
             {
                 "city_code": name,
+                "provider_city_adcode": binding.provider_adcode if binding else None,
                 "status": "ELIGIBLE_CAPTURED_SNAPSHOT" if not missing else "BLOCKED",
                 "missing": missing,
                 "poi": poi,
                 "routes": routes,
             }
         )
-    eligible = [item["city_code"] for item in results if not item["missing"]]
+    if include_public:
+        for row in session.scalars(select(SimulationPublicCitySnapshot)):
+            public = json.loads(row.snapshot_json)
+            results.append(
+                {
+                    **public,
+                    "city_code": None,
+                    "status": "ELIGIBLE_CAPTURED_SNAPSHOT",
+                    "missing": [],
+                    "catalog": "EXPLICITLY_PUBLISHED_PUBLIC",
+                    "snapshot_sha256": row.snapshot_sha256,
+                }
+            )
+    eligible = sorted({item["provider_city_adcode"] for item in results if not item["missing"]})
     return {
         "seed": seed,
         "status": "READY" if len(eligible) >= 3 else "BLOCKED",
@@ -123,6 +162,9 @@ def cities_for(session, actor_id, seed):
         "eligible_city_count": len(eligible),
         "cities": results,
         "selected_city_code": random.Random(seed).choice(eligible) if len(eligible) >= 3 else None,
+        "selected_provider_adcode": random.Random(seed).choice(eligible)
+        if len(eligible) >= 3
+        else None,
         "missing": [] if len(eligible) >= 3 else ["THREE_ACQUIRED_CITIES_REQUIRED"],
         "provider_requests": 0,
     }

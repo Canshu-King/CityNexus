@@ -7652,20 +7652,16 @@ def list_recent_signed_draft_journeys(
 
 
 @app.get("/api/v1/journeys", response_model=list[JourneySchema])
-def list_journeys(session: Session = Depends(get_session)):
-    """Every trip on this server that a traveller has not put in the recycle bin.
+def list_journeys(request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import readable_journey_ids
+    allowed = readable_journey_ids(request, session)
+    response.headers["Cache-Control"] = "private, no-store"
+    # Return only undeleted Journeys this signed in-force member may read.
 
-    ORD-0383 slice 1 keeps this door to one rule - `deleted_at IS NULL` - so it has no
-    pagination, no per-traveller scope and no bin listing; those are the next slices' orders.
-    A deleted trip stays readable at `GET /api/v1/journeys/{journey_id}` and behind it at the
-    sub-resource doors: the query below is the only place on this tree that filters the column,
-    and no other module under `backend/app` reads it.  Slice 1 removes a trip from the list,
-    not from the store, and the row is what a recycle bin will have to show.
-    """
 
     items = session.scalars(
         select(Journey)
-        .where(Journey.deleted_at.is_(None))
+        .where(Journey.deleted_at.is_(None), Journey.id.in_(allowed))
         .order_by(Journey.created_at, Journey.id)
     ).all()
     return [journey_schema(item) for item in items]
@@ -7805,28 +7801,16 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
 
 
 @app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])
-def list_recycle_bin_journeys(session: Session = Depends(get_session)):
-    """ORD-0402 slice 1: the trips that are in the recycle bin, each with its own deletion moment.
+def list_recycle_bin_journeys(request: Request, response: Response, session: Session = Depends(get_session)):
+    from app.traveler_principal import readable_journey_ids
+    allowed = readable_journey_ids(request, session)
+    response.headers["Cache-Control"] = "private, no-store"
+    # Return only deleted Journeys this signed in-force member may read.
 
-    This is a second door. `GET /api/v1/journeys` (above) keeps its promise of answering only the
-    rows with `deleted_at IS NULL`, so nothing here changes what a client of that door sees, and a
-    screen does not have to notice an absence to know a trip was dropped - each row below carries
-    `deleted_at` as stored and `bin_state` = `IN_RECYCLE_BIN`, derived from that same column
-    rather than from the row's absence anywhere.
-
-    This version is the whole bin: no pagination, no per-traveller scope, no filter parameters,
-    no date window.  The order says to write that plainly instead of hinting at a filter, so it is
-    written here and in the contract, and the list is ordered by `deleted_at` newest first because
-    a bin screen reads most naturally that way - that is an ordering, not a subset.
-
-    Read-only.  There is no permanent-delete door on this server (that would be a separate verb
-    with its own confirmation), so nothing here may promise one, and the rows stay addressable at
-    `GET /api/v1/journeys/{journey_id}` until 找回 clears the column.
-    """
 
     items = session.scalars(
         select(Journey)
-        .where(Journey.deleted_at.is_not(None))
+        .where(Journey.deleted_at.is_not(None), Journey.id.in_(allowed))
         .order_by(Journey.deleted_at.desc(), Journey.id)
     ).all()
     return [recycle_bin_entry_schema(item) for item in items]
@@ -20276,19 +20260,12 @@ def _transition_activity_state(
     attestation: ExecutionTruthAttestation | None,
     session: Session,
 ):
-    allowed_predecessors = {
-        "EN_ROUTE": {"ACTIVE", "NOT_STARTED"},
-        "ARRIVED": {"EN_ROUTE"},
-        "IN_PROGRESS": {"ARRIVED"},
-    }
+    from app.simulation.native_bridge import require_native_execution_unmanaged
+    from app.execution.activity_state import require_subject, require_transition, require_departure_route
+    require_native_execution_unmanaged(session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
-    if journey.status != "ACTIVE" or not journey.active_plan_version_id:
-        raise HTTPException(409, "journey must be ACTIVE")
     activity = session.get(Activity, str(activity_id))
-    if activity is None or activity.plan_version_id != journey.active_plan_version_id:
-        raise HTTPException(409, "activity is not on the active plan")
-    if journey.current_activity_id != activity.id:
-        raise HTTPException(409, "activity is not the current activity")
+    require_subject(journey, activity)
     applied_followthrough = active_group_recovery_spend(session, journey)
     followthrough_snapshot = (
         applied_followthrough[2] if applied_followthrough else None
@@ -20384,29 +20361,9 @@ def _transition_activity_state(
             session.commit()
             return _twin_snapshot(session, journey)
 
-    predecessors = allowed_predecessors.get(target_state, set())
-    if activity.status not in predecessors:
-        expected = ", ".join(sorted(predecessors)) or "none"
-        raise HTTPException(
-            409,
-            f"INVALID_ACTIVITY_TRANSITION:{activity.status}->{target_state}; expected={expected}",
-        )
+    require_transition(activity, target_state)
     if target_state == "EN_ROUTE":
-        metadata = _json_object(activity.metadata_json)
-        override = metadata.get("execution_mobility_override")
-        if override:
-            snapshot_payload = override.get("snapshot") if isinstance(override, dict) else None
-            actual_edge = override.get("actual_edge") if isinstance(override, dict) else None
-            try:
-                snapshot = MobilitySnapshot.from_evidence(snapshot_payload or {})
-                origin_key = str((actual_edge or {}).get("origin_key") or "")
-                destination_key = str((actual_edge or {}).get("destination_key") or "")
-                snapshot.hard_minutes(origin_key, destination_key)
-                fact = snapshot.facts[(origin_key, destination_key)]
-                if fact.fact_quality != "LIVE_PROVIDER_CAPTURE":
-                    raise KeyError("execution override is not live provider truth")
-            except (KeyError, TypeError, ValueError):
-                raise HTTPException(409, "DEPART_BLOCKED_MISSING_LIVE_EXECUTION_MOBILITY")
+        require_departure_route(activity)
     metadata = json.loads(activity.metadata_json or "{}")
     captured_at = execution_clock.now().astimezone(timezone.utc).isoformat()
     truth = _resolve_execution_truth_attestation(
@@ -20690,6 +20647,8 @@ def complete_activity(
     payload: ExecutionTruthAttestation | None = None,
     session: Session = Depends(get_session),
 ):
+    from app.simulation.native_bridge import require_native_execution_unmanaged
+    require_native_execution_unmanaged(session, journey_id)
     journey = require(session, Journey, str(journey_id), "Journey")
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
@@ -20843,6 +20802,8 @@ def _skip_current_activity(
     clarification_id: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Skip exactly the current activity and preserve the real route truth."""
+    from app.simulation.native_bridge import require_native_execution_unmanaged
+    require_native_execution_unmanaged(session, journey.id)
     if journey.status != "ACTIVE" or not journey.active_plan_version_id:
         raise HTTPException(409, "journey must be ACTIVE")
     if activity.plan_version_id != journey.active_plan_version_id:
@@ -28471,3 +28432,7 @@ async def persisted_simulation_business_clock(request: Request, call_next):
     with SessionLocal() as clock_session:
         with journey_business_time(clock_session, match.group(1)):
             return await call_next(request)
+
+
+from app.demo_pairing import router as demo_pairing_router
+app.include_router(demo_pairing_router)

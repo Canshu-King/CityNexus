@@ -1,10 +1,9 @@
 """Explicit database and presenter boundary for classroom credentials."""
 
 import hmac
-import ipaddress
+import hashlib
 import os
 from pathlib import Path
-from urllib.parse import urlsplit
 
 from fastapi import HTTPException, Request
 from sqlalchemy.orm import Session
@@ -21,27 +20,36 @@ def require_demo_database(session: Session) -> None:
         raise HTTPException(503, "DEMO_DATABASE_NOT_ISOLATED")
     expected = Path(declared)
     actual = Path(url.database).resolve()
-    if (not expected.is_absolute() or expected.resolve() != actual
-            or actual.name.lower() in {"citynexus.db", "_live.db"}):
+    if (
+        not expected.is_absolute()
+        or expected.resolve() != actual
+        or actual.name.lower() in {"citynexus.db", "_live.db"}
+    ):
         raise HTTPException(503, "DEMO_DATABASE_NOT_ISOLATED")
 
 
-def _loopback(host: str | None) -> bool:
-    try:
-        return bool(host and ipaddress.ip_address(host).is_loopback)
-    except ValueError:
-        return host == "localhost"
+def database_binding(session: Session) -> str:
+    path = os.path.normcase(str(Path(session.get_bind().url.database).resolve()))
+    return hashlib.sha256(path.encode()).hexdigest()
 
 
-def require_demo_presenter(request: Request, session: Session) -> None:
+def require_demo_presenter(
+    request: Request, session: Session, *, journey_id: str | None = None
+) -> None:
     require_demo_database(session)
     configured = os.getenv("CITYNEXUS_DEMO_PRESENTER_KEY", "")
     supplied = request.headers.get("X-CityNexus-Presenter-Key", "")
-    if len(configured) >= 32 and hmac.compare_digest(supplied, configured):
+    if len(configured) >= 32 and supplied.isascii() and hmac.compare_digest(supplied, configured):
         return
-    # Forwarded headers never establish local access. Reject cross-origin browser probes.
-    origin = request.headers.get("Origin")
-    if (request.client and _loopback(request.client.host)
-            and (not origin or _loopback(urlsplit(origin).hostname))):
-        return
+    if journey_id is not None:
+        from app.traveler_principal import resolve_traveler_principal
+
+        try:
+            principal = resolve_traveler_principal(request, session)
+            if principal.demo_presenter_journey_id == str(
+                journey_id
+            ) and principal.demo_database_sha256 == database_binding(session):
+                return
+        except HTTPException:
+            pass
     raise HTTPException(403, "DEMO_PRESENTER_REQUIRED")

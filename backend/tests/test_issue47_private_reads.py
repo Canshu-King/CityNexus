@@ -37,7 +37,7 @@ def stack(tmp_path, monkeypatch):
         monkeypatch.setattr(mod, 'settings', configured)
     app = FastAPI()
     for route in main.app.routes:
-        if getattr(route, 'path', '') in ['/api/v1/journeys/{journey_id}', '/api/v1/journeys/{journey_id}/events', '/api/v1/journeys/{journey_id}/twin', '/api/v1/journeys/{journey_id}/experience', '/api/v1/demo/session', '/api/v1/demo/scene']:
+        if getattr(route, 'path', '') in ['/api/v1/journeys/{journey_id}', '/api/v1/journeys/{journey_id}/events', '/api/v1/journeys/{journey_id}/twin', '/api/v1/journeys/{journey_id}/experience', '/api/v1/demo/session', '/api/v1/demo/scene', '/api/v1/journeys', '/api/v1/recycle-bin/journeys']:
             app.add_api_route(route.path, route.endpoint, methods=list(route.methods), response_model=route.response_model)
     def db():
         with factory() as s:
@@ -87,5 +87,5 @@ def test_loopback_does_not_trust_forwarded_headers_or_foreign_origin(stack, monk
     monkeypatch.setenv('CITYNEXUS_DEMO_DATABASE_PATH', str(path.resolve()))
     assert client.get('/api/v1/demo/session', headers={'X-Forwarded-For':'127.0.0.1'}).status_code == 403
     local = TestClient(client.app, client=('127.0.0.1', 30000))
-    assert local.get('/api/v1/demo/session').status_code == 200
+    assert local.get('/api/v1/demo/session').status_code == 403
     assert local.get('/api/v1/demo/session', headers={'Origin':'https://other.example'}).status_code == 403

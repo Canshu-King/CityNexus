@@ -7,8 +7,8 @@
 - `CITYNEXUS_SIMULATION_ENABLED=true`，`CITYNEXUS_DEMO_MODE=true`，非 production。
 - `CITYNEXUS_DEMO_DATABASE_PATH` 必须是当前 SQLite 的绝对路径；不接受默认 `citynexus.db` 或 `_live.db`。
 - 读取需有效成员 bearer 与 `JOURNEY_READ`；写入还需 `JOURNEY_EXECUTION_UPDATE`。
-- 写入须由直接 loopback 请求，或携带服务端配置的 `X-CityNexus-Presenter-Key`（`CITYNEXUS_DEMO_PRESENTER_KEY` 至少 32 字符）。不要在共享前端源码中嵌入此值。
-- `GET /api/v1/demo/session` 也遵守上述隔离数据库及讲台访问约束。本机可沿用原入口。
+- 写入须携带配对后绑定本 Journey/本数据库的短期主持人 bearer，或服务端配置的 `X-CityNexus-Presenter-Key`（`CITYNEXUS_DEMO_PRESENTER_KEY` 至少 32 字符）。不要在共享前端源码中嵌入此值。
+- `GET /api/v1/demo/session` 也遵守上述隔离数据库及讲台访问约束。本机和代理请求同样需要讲台授权；无 key 返回 403。
 
 ## 接口
 
@@ -52,3 +52,16 @@ Guardian 响应只转投持久化的运行 ID、状态和提案 ID；服务端�
 独立 SQLite/签名 HTTP fixture 覆盖两个 seed 的两日完整执行、刷新读取、幂等、CAS 双击、升级保留数据、场景不重复、模型失败暂停、禁止规则冒充 Agent 和签名接受门。未使用 Qoder 现场数据库、密钥、端口或前端。
 
 Qoder 需补现有 `citynexus.ts` 的 `listEvents`、`getJourneyTwin` 请求 bearer，并核对 `/experience` 调用方；`getJourney` 已有 bearer。将以上 API 接入其现有 Presenter 后，再进行真实 Chrome / 三城来源 / 真模型闭环验收。
+
+
+## 2026-10-25 外审修复增量
+
+**代理身份**：删除 loopback 豁免。前端代理到 localhost 不再授予凭据发行权限。操作者用讲台 key 调用 `POST /api/v1/demo/pairing {journey_id}`，返回 120 秒单次票据；浏览器将票据放入 `POST /api/v1/demo/pairing/redeem {ticket}`，获得 900 秒签名会话，其中主持人权限仅对票据指定的 Journey 和该隔离数据库有效；浏览器用此 bearer 控制模拟，无需取得讲台 key。票据只存 SHA256，原子单次消费，兑换按真实 peer 每分钟限 20 次。共享前端不携带讲台 key，票据不用 URL query。已有签名读取保持 bearer。
+
+**单一执行链**：run 存在后原生 depart/arrive/begin/complete/skip 写入返回 `USE_SIMULATION_RUN_ADVANCE` 409。模拟器与原生 HTTP 复用 `execution/activity_state.py` 的 Journey/Plan/cursor/转换前置条件和出发路线证据检查；模拟到场无法替代多人 recovery rendezvous 的本人认证到场。原生签名 proposal 接受接口仍保留，下一次模拟推进读取新的权威 PlanVersion。
+
+**城市 ID**：`POST /simulation/city-identity {source_task_id}`（该前缀仍为对应 Journey），读取本人已有 GoalTask 的 AMap resolved region，必须匹配持久 ProviderCall 的行政区结果；返回 `internal_city_code` 与独立 `provider_city_adcode`、来源收据和哈希。保留 CN-RV 内部码，不从字符串猜城市。仅 city 级来源和四个直辖市 province 级来源可进入城市池；区县不计作另一座城市。
+
+**公用快照**：`POST /simulation/cities/publish {publish_public_facts:true}` 在 key + 签名执行权限下，显式发布当前 Journey 已验证的公开地点/路线字段。必须已有城市身份、5 POI、3 路线；POI 的 AMap 原始搜索收据 adcode 要与绑定城市一致。目录不会复制 Journey/Plan/member/task 身份。发布以内容哈希幂等；私有行程资料不会自动进入池。`GET /simulation/cities?seed=17` 合并本人可读资料与显式公用快照，以去重后的 provider adcode 计算三城和抽样；`selected_provider_adcode` 为明确新字段，旧 `selected_city_code` 同值。
+
+城市映射和发布是按资源身份/内容哈希幂等的操作；携带 Idempotency-Key，无需 run 的 expected_sequence。它们不会触发供应商查询。新增 schema 随常规 ensure_schema 升级；Qoder 对接前需升级其隔离课堂 DB。
