@@ -3130,3 +3130,9 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 明天课前自走一遍用的是 `rehearse_classroom.bat`（运行副本，CRLF），今天一直手动调它里面的三步、没验过 bat 本身。这次直接双击路径跑：`[1/3]` 准备场景（`DEMO_READY=true`、新提案生成）、`[2/3]` 手机流程、`[3/3]` 恢复开局，最后打印「Rehearsal passed; the scene is back at 09:00 with one waiting proposal.」。
 
 手机流程那次读数：提案在视口、接受后天坛、时钟到十点、26.5 秒零错误（`trial/results/20261022_v3_human_chrome/classroom-rehearsal-14.txt:7`、`:9`、`:12`、`:17`、`:18`）。恢复后自检 `DEMO_READY=true`、提案在等（`eccf1dcc`）。所以老师课前那条路不需要我在旁边敲命令。
+
+## 一百三十、老师会双击的两支 bat 都端到端验过
+
+上一节是彩排 bat；这次把开演 bat `start_classroom_demo.bat` 也直接跑了一遍：它调准备脚本、打印 `DEMO_READY=true` 与新提案，再打出两行给老师看的指示（「Open the tablet address…」「On the phone: My trips - Classroom demo - Enter sample journey」）。随后自检：后端 200、页面本机与局域网都 200、行程 ACTIVE、提案在等（`8ffe1f7b`）。
+
+两支 bat 都用 `DEMO_NO_PAUSE=1` 跑的逻辑（双击时最后会停住等按键，属正常）。明天老师第一步和课前自走这两条路都不再是纸面。
