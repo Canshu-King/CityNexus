@@ -201,3 +201,9 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 用带 run 的 COMPLETED 副本复测：票门进入后是封存红条 + 行程空态，**时钟条与控制台都不渲染**（`clock-completed-60.txt`、`classroom-clock-run-60-completed.png`）。
 - 所以老师点完第二次「到下一站」当下仍看得到完成态；刷新或重进才回封存页。给时钟条放宽 ACTIVE 条件不会改变这一点，未改代码。
+
+### 02:05 接受调整支线的真读数（副本，无模型）
+
+- 启动器留下的 1 条 `PRESENTED` 提案（`b00c1d49`，提议方案 `f84adc05`）→ `POST /replans/{id}/accept` 200 → journey 的 `active_plan_version_id` 从 `e74a5edb` 换成 `f84adc05`，提案状态变 `ACCEPTED`。
+- run 若已开演，下次 `advance` 会因 `state.plan_version_id` 与 journey 不一致追加一次 `SIM_PLAN_CHANGED` 并继续用新方案（`backend/app/simulation/runtime.py` 的设计），不中断。
+- 回执 `proposal-accept-68.txt`；探针 `_proposal_accept_r1.py`。
