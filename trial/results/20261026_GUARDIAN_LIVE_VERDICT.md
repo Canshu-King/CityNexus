@@ -39,13 +39,20 @@
 - 「事件处理完了，继续模拟」按钮存在，点击 → 409（事件 `c11955f1` 仍 `DETECTED`）——**又一处死按钮**。
 - `guardian_outcome` 已带 `EXTERNAL_FAILED / MODEL_REQUEST_FAILED`，但旧屏没有消费它。
 
+### AI 关闭（隔离副本，`ai-off-guardian-86.txt`）
+
+- 在 60410 起独立后端，DB 为课堂库副本 `canary_ai_off_1026.db`，`CITYNEXUS_AI_ENABLED=false`；课堂栈 60391/14492 未动。
+- 开演 201 / `RUNNING` seq 0 → 闭馆 200 / `PAUSED_FOR_GUARDIAN` seq 1 → guardian **503，0.01 秒**，message `SIMULATION_AI_DISABLED`。
+- run 仍 `PAUSED_FOR_GUARDIAN`、sequence 1 不变；progress `guardian_runs=0`、`ai_enabled=false`、`missing` 含 `AI_DISABLED`；服务端日志 0 traceback。
+- 结论：开关在消耗 sequence、创建运行之前生效（这是现场读数，不只是替身测试）。
+
 ## 三、结论（按归属）
 
 **已修好（可证）**
 
 - WP01 签名测试从 7 红到 0 红（22 → 82 passed）。
 - Guardian 提案绑定当前事件：第三次现场 `47aa3925` 的 `trigger_event_id` 与 run pending 一致。
-- AI 关闭快速 503 的代码路径与替身测试已交；现场未单独关 AI 复验。
+- AI 关闭快速 503 已在**隔离副本**现场验证（见下节）。
 
 **仍未闭环（Issue #47 保持开放）**
 

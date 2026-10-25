@@ -45,6 +45,17 @@ def find(lines: list[str], prefix: str) -> str:
     return "MISSING"
 
 
+def line_json(lines: list[str], label: str) -> dict:
+    prefix = label + " "
+    for line in lines:
+        if line.startswith(prefix):
+            try:
+                return json.loads(line[len(prefix):])
+            except ValueError:
+                return {}
+    return {}
+
+
 def newest(pattern: str) -> str:
     found = sorted(glob.glob(os.path.join(OUT_DIR, pattern)))
     return found[-1] if found else ""
@@ -122,6 +133,28 @@ def main() -> int:
                      cities.get("required_city_count"),
                      ",".join((cities.get("cities") or [{}])[0].get("missing") or []))))
     guard = json_file("guardian-unavailable-67.txt")
+    ai_off = lines_of("ai-off-guardian-86.txt")
+    ai_guardian = line_json(ai_off, "GUARDIAN")
+    ai_current = line_json(ai_off, "CURRENT_AFTER")
+    ai_progress = line_json(ai_off, "PROGRESS")
+    ai_verdict = line_json(ai_off, "VERDICT")
+    ai_ok = (
+        ai_guardian.get("status") == 503
+        and ai_guardian.get("error_message") == "SIMULATION_AI_DISABLED"
+        and ai_current.get("sequence_unchanged") is True
+        and ai_current.get("run_status") == "PAUSED_FOR_GUARDIAN"
+        and ai_progress.get("guardian_runs") == 0
+        and ai_progress.get("ai_enabled") is False
+        and "AI_DISABLED" in (ai_progress.get("missing") or [])
+        and ai_verdict.get("ai_switch_stops_guardian") is True
+    )
+    rows.append(("守护 AI 开关（隔离副本）",
+                 "绿" if ai_ok else "红",
+                 "ai-off-guardian-86.txt, trial/human_walk/_ai_off_guardian_r1.py",
+                 "guardian http=%s，elapsed_s=%s，%s；sequence_unchanged=%s；guardian_runs=%s；missing=%s" % (
+                     ai_guardian.get("status"), ai_guardian.get("elapsed_s"),
+                     ai_guardian.get("error_message"), ai_current.get("sequence_unchanged"),
+                     ai_progress.get("guardian_runs"), ai_progress.get("missing"))))
     accept = json_file("proposal-accept-68.txt")
     note70 = lines_of("acceptance-note-70.txt")
     g_progress = guard.get("progress") or {}

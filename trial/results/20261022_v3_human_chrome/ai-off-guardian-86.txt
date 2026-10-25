@@ -1,0 +1,11 @@
+CANARY {"activity_id": "5b60b374-8d3b-40fb-be9f-ada33e650bb8", "bytes": 3833856, "db": "canary_ai_off_1026.db", "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71"}
+HEALTH {"ready": true}
+PAIRING {"error": null, "has_ticket": true, "status": 201}
+REDEEM {"error": null, "has_token": true, "status": 200}
+START {"error": null, "sequence": 0, "state": "RUNNING", "status": 201}
+SCENE {"error": null, "sequence": 1, "state": "PAUSED_FOR_GUARDIAN", "status": 200}
+GUARDIAN {"elapsed_s": 0.01, "error_code": "REQUEST_ERROR", "error_message": "SIMULATION_AI_DISABLED", "state": null, "status": 503}
+CURRENT_AFTER {"run_status": "PAUSED_FOR_GUARDIAN", "sequence": 1, "sequence_unchanged": true, "status": 200}
+PROGRESS {"ai_enabled": false, "guardian_outcome": {"code": "UNKNOWN"}, "guardian_runs": 0, "missing": ["AI_DISABLED"], "status": 200}
+VERDICT {"ai_switch_stops_guardian": true, "guardian_http": 503}
+SERVER_LOG {"tracebacks": 0}
