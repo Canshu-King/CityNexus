@@ -132,3 +132,19 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - **390px 真栈两日**：屏上「开演」创建 run → 两次「到下一站」：`12/03 15:00 第 4 步` → `12/04 10:00 第 8 步 SIMULATED_COMPLETED`，三按钮禁用，无 console 错误。回执 `clock-two-day-classroom-62.txt`，截图 `classroom-clock-run-62-live-classroom.png`。
 - **入口链接**：启动器打印的平板链接是**一次性票、120 秒有效**；过期就再双击启动器（会重置演示库并打印新链接）。
 - **平板 `USER_VERIFIED` 仍 PENDING**（等主人亲自点）。
+
+### 城市池与「1 城同 run Day2」的真相（21:28）
+
+- 课堂真栈 `GET .../simulation/cities?seed=17` = 1 城（CN-RV-3507014DDE2C）、POI 56、routes 0、`BLOCKED`（缺城市身份/捕获路线），`required_city_count=3`（`cities-classroom-62.txt`）。
+- **但这不挡开演**：`POST /simulation/runs` 只看 journey/plan 是否 ACTIVE，两日已走完。也就是说号令者要的「先 1 城同 run Day2」已经在课堂真栈成立；池子那行只是提示。
+- 因此控制台文案是「可用 0 座，标准要 3 座；这趟演示用行程自己的城市，仍可开演」。
+
+## 平板验收（五分钟，给主人）
+
+1. 电脑双击 `start_classroom_demo.bat`，等窗口打印「Classroom ready」和平板地址。
+2. 平板连同一 Wi-Fi，浏览器打开那行地址（**2 分钟内有效**；过期就再双击启动器）。
+3. 滑到「课堂时空模拟」：应看到「模拟时间：12/03 09:00 · 服务器第 N 版」。
+4. 滑到「课堂控制台 · 模拟执行」，点「开演（模拟两日）」；时钟条应变为「执行第 0 步 · 模拟进行中」。
+5. 点「到下一站」两次：第一次到 12/03 15:00（第 4 步），第二次到 12/04 10:00「模拟行程已完成」。
+6. 点「刷新读数」，历史里应出现「两日走完」。
+7. 三格回执：开演后、第一次到站、完成态（截屏即可）。
