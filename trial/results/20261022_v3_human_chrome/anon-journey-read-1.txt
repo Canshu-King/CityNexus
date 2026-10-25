@@ -1,0 +1,8 @@
+ANON /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71   http_status=200 type=dict keys=["active_plan_version_id", "budget", "city_code", "current_activity_id", "end_at", "id", "planning_mode", "start_at", "status", "timezone", "title", "traveler_id"] count=None
+ANON /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/plans http_status=401 type=none keys=[] count=None
+ANON /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/events http_status=200 type=list keys=[] count=2
+ANON /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/members/me http_status=401 type=none keys=[] count=None
+ANON /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/twin http_status=200 type=dict keys=["active_plan_version_id", "context", "current_activity_id", "journey_id", "latest_event_id", "projection_status", "snapshot_at", "upcoming_commitments"] count=None
+ANON /api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/experience http_status=200 type=dict keys=["active_plan", "experience_flags", "journey", "mobility_facts", "offers", "options", "provider_mesh", "recovery", "selected_option_id", "traveler_twin", "trip"] count=None
+BAD_TOKEN journey http_status=200
+VERDICT {"journey_anonymous": 200, "plans_anonymous": 401, "experience_anonymous": 200}

@@ -2654,3 +2654,20 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **读法。** 18.3 秒是「只按按钮」的时间；讲给同学听另算，整段仍在 3–5 分钟以内。平板实物仍未点。
 
+## 八十四、匿名能读到什么：把 #333 的裁语材料量齐
+
+代码注释写明匿名 `GET /journeys/{id}` 服务手机演示链与全部 e2e 走查，「收紧是白天裁语」。这一轮把「如果收紧，收紧面有多大」量成事实（`anon-journey-read-1.txt`）：
+
+| 路由 | 无令牌 | 读到的形状 |
+| --- | --- | --- |
+| `GET /journeys/{id}` | 200 | 12 个字段，含 `traveler_id`、`budget`、`title`、起止时间、`active_plan_version_id` |
+| `GET /journeys/{id}/plans` | 401 | — |
+| `GET /journeys/{id}/members/me` | 401 | — |
+| `GET /journeys/{id}/events` | 200 | 2 条事件 |
+| `GET /journeys/{id}/twin` | 200 | 8 个键，含 `context`、`upcoming_commitments` |
+| `GET /journeys/{id}/experience` | 200 | 11 个键，含 `active_plan`、`mobility_facts`、`recovery`、`traveler_twin`、`trip` |
+
+另外：带一个明显无效的 bearer 读 `journey` 仍回 200（令牌被忽略，不是「验证失败但放行基本行」）。所以 #333 的真正范围是「journey / events / twin / experience 四条匿名读」，不止 journey 一行；而最敏感的不是基本行，是 `experience` 里的计划、恢复与双胞胎投影。
+
+**可裁的三档最小收紧面**（都不动写路径）：① 只收 `experience`；② 收 `experience` + `twin`；③ 四条全收（手机演示链与 e2e 需要同步改带 bearer，工作量最大）。未动代码，等裁。
+
