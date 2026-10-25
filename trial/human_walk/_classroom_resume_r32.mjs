@@ -27,7 +27,7 @@ const presenterState = async () => {
   };
 };
 const entryError = async () =>
-  (await page.locator('[data-testid="rev-demo-error"]').innerText().catch(() => "")).replace(/\s+/g, " ").trim();
+  (await page.locator('[data-testid="rev-demo-error-banner"]').innerText().catch(() => "")).replace(/\s+/g, " ").trim();
 
 await page.goto(`${BASE}/revolution#pair=${encodeURIComponent(TICKET)}`, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(4500);

@@ -557,6 +557,9 @@ export function RevolutionFirstLook() {
   const startRequestInFlightRef = useRef(false);
   const startWriteBlockedRef = useRef(startWriteStatus !== null);
   const [error, setError] = useState<string | null>(null);
+  // Entry failures (expired ticket, sealed trip, unprepared scene) must survive the
+  // tab switch they trigger, so they live above the per-tab content.
+  const [demoEntryError, setDemoEntryError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [legacyRestoreFailed, setLegacyRestoreFailed] = useState(false);
   const [candidateForJourney, setCandidateForJourney] = useState<string | null>(null);
@@ -1106,7 +1109,8 @@ export function RevolutionFirstLook() {
   };
 
   const showEntryError = (message: string) => {
-    setError(message);
+    setDemoEntryError(message);
+    setError(null);
     setActiveTab("trips");
   };
 
@@ -1156,6 +1160,7 @@ export function RevolutionFirstLook() {
         showEntryError("课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。");
         return;
       }
+      setDemoEntryError(null);
       await resumeSavedTrip(journeyId);
     } catch {
       showEntryError("示例行程还没准备好，请让演示机先启动。");
@@ -1201,6 +1206,11 @@ export function RevolutionFirstLook() {
 
   return (
     <div className="rev-firstlook rev-mobile-v1 rev-v3" data-testid="revolution-first-look">
+      {demoEntryError && (
+        <div className="rev-firstlook-error rev-firstlook-entry-error" role="alert" data-testid="rev-demo-error-banner">
+          {demoEntryError}
+        </div>
+      )}
       <header className="rev-firstlook-header">
         <div className="rev-firstlook-brand">
           <span className="rev-firstlook-mark" aria-hidden="true">C</span>

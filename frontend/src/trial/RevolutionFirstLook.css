@@ -145,6 +145,16 @@
   color: #fff;
   max-width: 780px;
 }
+.rev-firstlook-entry-error {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  max-width: 1160px;
+  margin: 0 auto 8px;
+  padding: 14px clamp(18px, 5vw, 56px);
+  border-width: 0 0 1px;
+  border-radius: 0;
+}
 .rev-firstlook-cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); max-width: 930px; gap: 13px; margin-top: 58px; }
 .rev-firstlook-cards article {
   min-height: 146px;
