@@ -14,11 +14,11 @@
 | 尺 | 数 |
 |---|---|
 | 分支 | `fusion/qoder-import-20261014` |
-| 产品尖 / 现读尖 | 最后一枚带产品改动的尖 **`41fbb9c731`**；其后全是 docs 与量具提交（**取值这一行时 5 枚**，`git rev-list --count 41fbb9c731..HEAD` 现读）。**改这张表的那枚提交本身会让枚数多一枚、把表里的「现读」作废**——那正是 §7 第 5 次的形状，所以你重跑看到尖号与枚数不同是预期内的，只有产品面那几个数不受影响（同数与否也由命令现读，见下两行） |
-| 超出融合基线 `594f9a4e75` 的提交 | 取这行时 **48**（`git rev-list --count 594f9a4e75..HEAD`），分两段现读：`594f9a4e75..f9abba3fde` **37** 枚（切片 1 与切片 2，其中词典枝 4 枚）、`f9abba3fde..HEAD` **11** 枚（切片 3 的产品与词典 6 枚 + 其后的 docs 与量具 5 枚，逐枚点名用 `git log --oneline f9abba3fde..HEAD`） |
-| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **30 文件 / +10074 / −33**（docs 与量具那几枚提交不碰产品面，所以它与上一版同数——同数本身是现读出来的，不是假设） |
-| 含证据面（再加 `frontend/e2e reports review fusion`） | **66 文件 / +13785 / −41**（上一版是 `65 / +13694 / −41`；多的那一枚文件、那 91 行就是 `bb_letter_precheck_r1.py` 自身。这一枚每次加提交都会动，所以它只作为「现读」报，不作为基线报） |
-| 远端 | **没推**。`git ls-remote` 现读三枚 fusion 尖仍是 `594f9a4e75a973a1ebd82beeafe5ecf3d9fc5c66` |
+| 产品尖 / 现读尖 | 最后一枚带产品改动的尖 **`0214d16706`**（Amap B/C 两腿，见 §9）；其后是 §9 的 docs 提交 **`aa1a4b90ab`**。下表其余行的枚数是在 `aa1a4b90ab` 上取的，**改这张表的那枚提交本身会让枚数多一枚、把表里的「现读」作废**——那正是 §7 第 5 次的形状，所以你重跑看到尖号与枚数不同是预期内的，只有产品面那几个数不受影响（同数与否也由命令现读，见下两行） |
+| 超出融合基线 `594f9a4e75` 的提交 | 取这行时 **51**（`git rev-list --count 594f9a4e75..HEAD`，在 `aa1a4b90ab` 上取），分三段现读：`594f9a4e75..f9abba3fde` **37** 枚（切片 1 与切片 2）、`f9abba3fde..58f987f444` **12** 枚（切片 3 与后续 docs/量具）、`58f987f444..HEAD` **2** 枚（Amap 产品 1 + §9 docs 1；本枚提交后为 3，逐枚点名用 `git log --oneline 58f987f444..HEAD`） |
+| 产品代码面 diff（pathspec `backend/app backend/tests frontend/src`，**不含 `frontend/e2e`**） | **42 文件 / +12492 / −113**（在 `aa1a4b90ab` 上按该 pathspec 现读；Amap 那枚产品提交自己的 stat 是 14 文件 / +2418 / −80，`git show --stat 0214d16706`） |
+| 含证据面（再加 `frontend/e2e reports review fusion`） | **79 文件 / +16433 / −121**（同一枚 `aa1a4b90ab` 上现读，路径七段一次取；这条会随每次 docs/量具提交而动，所以只作为「现读」报，不作为基线报） |
+| 远端 | **已推**：§9 那枚提交推上后 `origin/fusion/qoder-import-20261014` = `aa1a4b90ab8bdc6c6987afffb5c0f0fc94dd1c79`（当时 `git ls-remote --heads` 与 `git rev-parse HEAD` 同 sha 现读；不 force、**未开 PR**，开 PR 需号令者另点头）。**本行所在的 docs 提交再推一次会让远端尖前进一枚**，所以现读要用 `git ls-remote --heads origin fusion/qoder-import-20261014`，不要把这串 sha 当常量。上一版此处写「没推」时三枚远端 fusion 尖仍是 `594f9a4e75a…` |
 | 落地面（与「绿不绿」是两回事） | `git merge-base --is-ancestor 594f9a4e75 HEAD` ⇒ **YES**，本尖是基线的后代、不是入账工 12:53 通播里那种「不相交」枝；codex 车道枝 `fusion/codex-journey-20261014` 超基线 **0** 枚 ⇒ 现在合并的冲突面只有我这批纯插入的插入点本身 |
 | 号令者的字典规矩（「字典单独一枝、一杖最多三枚键」） | 动 `LocaleContext.tsx` 的提交 **8** 枚，逐枚新增**不同键**数是 **3,3,3,3,3,3,1,1** ⇒ 全部 ≤3，且每枚只进一个命名空间（`calendar.` 三枚 / `poiImport.` 三枚 / `nav.import` 与 `checkin.title` 各一枚）。逐枚审计在 `slice3_gates_r1.py::dictionary_branch_audit`（打印 `DICTIONARY_BRANCH_COMMITS 8 / KEYS_ADDED_TOTAL 20 / OVER_3_KEYS 0 / DICT_BRANCH_READER_SELF_CHECK PASS`），它按提交 diff 现算而不是按我数过；反向对照 `--run-control dictclass` 见 §1 表那一行 |
 
@@ -420,7 +420,7 @@ C 的 hard 捕获不落 mock 兜底。
    此前用单变量 A/B（把 `runtime.py` 暂存起来再跑同两枚文件）证明与这两腿无关。
 5. **演示树是另一棵树**：`D:/moodle/CityNexus`（CNX-DEMO 布景）不在本枝上。明天下午若跑的是那棵，
    这两腿不会出现；要出现只有两条路：把本枝合过去，或在融合树上演示。演示前必须先拍板，否则台上会演成「进步看不见」。
-6. **§0 那一格「远端：没推」在本节推送之后作废**：本节与 `review/ord0701/amap_legs_proof_r1.py` 一起推上
-   `origin/fusion/qoder-import-20261014`（不 force、未开 PR；开 PR 需号令者另点头）。远端尖与本地是否同 sha
-   用 `git ls-remote --heads origin fusion/qoder-import-20261014` 与 `git rev-parse HEAD` 现读，下一枚 docs 提交会把 sha 钉回 §0。
+6. **§0 那一格「远端：没推」已被本节的推送取代**：本节与 `review/ord0701/amap_legs_proof_r1.py` 一起推上
+   `origin/fusion/qoder-import-20261014`（不 force、未开 PR；开 PR 需号令者另点头），推送后在 `aa1a4b90ab` 读到远端与本地同 sha；
+   随后那枚把 §0 改为现读值的 docs 提交会再让它前进一枚。远端尖永远用 `git ls-remote --heads origin fusion/qoder-import-20261014` 现读。
 
