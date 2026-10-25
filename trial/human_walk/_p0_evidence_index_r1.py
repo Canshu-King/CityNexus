@@ -398,6 +398,12 @@ def main() -> int:
                  "guardian-wait-110.txt, classroom-guardian-wait-110.png",
                  "%s；%s" % (find(wait110, "WAIT_NOTE"),
                              find(wait110, "OLD_SENTENCE_COUNT"))))
+    pair119 = lines_of("pairing-replay-119.txt")
+    rows.append(("票门重兑与伪造票（真栈复验）",
+                 "绿" if "VERDICT GREEN" in "\n".join(pair119) else "红",
+                 "pairing-replay-119.txt",
+                 "%s；%s；%s" % (find(pair119, "FIRST"), find(pair119, "SECOND"),
+                                 find(pair119, "FORGED"))))
     rows.append(("无票根地址的课堂入口文案",
                  "绿" if "一次性配对链接" in find(entry99, "BANNER_AFTER")
                  and "SESSION_BUTTON 1" in entry99
