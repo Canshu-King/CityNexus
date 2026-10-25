@@ -3069,7 +3069,10 @@ export const cityNexusApi = {
   },
 
   listEvents(journeyId: string): Promise<EventRecord[]> {
-    return requestJson<EventRecord[]>("/journeys/" + journeyId + "/events");
+    return requestJson<EventRecord[]>("/journeys/" + journeyId + "/events", {
+      headers: travelerAuthHeaders(),
+      cache: "no-store",
+    });
   },
 
   getAgentPolicy(travelerId: string): Promise<AgentPolicy> {
@@ -4879,6 +4882,7 @@ export const cityNexusApi = {
   ): Promise<EventRecord> {
     return requestJson<EventRecord>("/journeys/" + journeyId + "/events", {
       method: "POST",
+      headers: travelerAuthHeaders(),
       body: JSON.stringify({
         event_type: "CLOSURE",
         severity: "MAJOR",
@@ -4899,6 +4903,7 @@ export const cityNexusApi = {
   ): Promise<EventRecord> {
     return requestJson<EventRecord>("/journeys/" + journeyId + "/events", {
       method: "POST",
+      headers: travelerAuthHeaders(),
       body: JSON.stringify({
         event_type: eventType,
         severity,

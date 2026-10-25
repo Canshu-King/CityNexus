@@ -2795,6 +2795,8 @@ Codex 的分支（`codex/sandbox-execution-security-20261025`，`1dc083f5ca`）�
 
 边界：`/plans` 与 `/guardian/*` 目前不在 Codex 的收紧列表里，但我也一并带了 token——不改变读取结果，只是让合入后不会突然断。
 
+Codex 的契约还点名了两处（`docs/revolution/SIMULATION_RUN_API_20261025.md`）：`listEvents` 与两处写事件补 bearer（`frontend/src/api/citynexus.ts:3071`），V8 的 `v8Request` 统一带 token（`frontend/src/app/V8Experience.tsx:277`）。回归仍进入正常场景、无错误、无空安排（`classroom-guard-regression-18.txt` 复跑字节不变），类型检查 rc=0（`typecheck-events-auth-1.txt:5`）。
+
 ## 九十五、Codex 的 presenter 闸与「平板直接进课堂」相撞：先记事实，不擅自改他的边界
 
 Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene` 加了 `require_demo_presenter`，只有两种请求能通过：`X-CityNexus-Presenter-Key` 与 `CITYNEXUS_DEMO_PRESENTER_KEY` 常量时间相等（配置值 ≥32 字符），或请求来自 loopback（且 Origin 也是 loopback 或为空）。
