@@ -8,6 +8,7 @@ writes ALERT and leaves the decision to the operator.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import time
@@ -44,6 +45,7 @@ def beat() -> str:
         "CLOCK=%s" % (clock[:19] or "-"),
         "PROPOSAL=%s" % (proposal[:8] or "-"),
         "AI=%s" % state.get("AI_STATE"),
+        "DISK_D=%.2f" % (shutil.disk_usage("D:/")[2] / 1024 ** 3),
     ])
     return ("OK " if healthy else "ALERT ") + fields
 
