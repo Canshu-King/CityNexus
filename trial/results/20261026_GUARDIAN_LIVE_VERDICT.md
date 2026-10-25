@@ -113,9 +113,28 @@
 - 代码侧确认（`backend/app/simulation/api.py:340-405`）：守护请求是**同步**执行的，`run.status` 在 `scan_guardian` 返回后才写；所谓「停在 GUARDIAN_RUNNING 338 秒」只能是请求尚未返回，而不是转态逻辑丢失。`guardian_run.status=PARTIAL` 本身不等于失败——`progress.py:150` 先看有没有匹配当前事件的 PRESENTED 提案，有就判 `PROPOSAL_READY`。
 - 本轮新增前端出口：`PAUSED_MODEL_UNAVAILABLE`、事件未落定、非 `MODEL_NOT_CONFIGURED`、且没有可接受提案时，显示「再请一次守护」，调同一个 `guardian` 端点（后端 `api.py:318-323` 明确允许在 `PAUSED_MODEL_UNAVAILABLE` 重试）。**这一按本轮没有现场点过**：本轮是成功态，按钮按条件不出现；失败态现场仍待下一轮抓，届时才把 `rev-presenter-guardian-retry` 记为已验。
 
+### 第七次（`guardian-retry-108.txt`，05:00–05:03）——失败态的「再请一次守护」真按到了
+
+环境：隔离栈后端 60400 / 前端 14495，库是课堂库的 **sqlite backup 副本** `citynexus_v3_guardian_retry_1026.db`。课堂库与 60391/14492 全程没写。
+
+故障注入（明确披露，是失败 setup、不是伪造成功）：副本里复制一条 CLOSURE 事件并把 `run.state.pending_event_id` 指向它、run 置 `PAUSED_MODEL_UNAVAILABLE`、旧提案置 `INVALIDATED`、旧 guardian_run 的 `proposal_id` 清空；第三次另把该事件补进 `run.history_json` 的 `SIM_SCENE_INJECTED`（否则进度投影认不出 pending）。
+
+读数：
+
+- 进入时：`PAUSED_MODEL_UNAVAILABLE`、无提案、`pending=fa724437…`、`outcome=UNKNOWN`。
+- 按钮：`RETRY_BUTTON 1`；命中自测 `visible=true, inViewport=true, hitSelf=true, disabled=false`，文本「再请一次守护」。
+- 点一下：`sequence 2→3`、`GUARDIAN_RUNNING`；**18 秒**后回 `PAUSED_MODEL_UNAVAILABLE`。
+- 这一轮 `outcome={"code":"EXTERNAL_FAILED","error_code":"MODEL_REQUEST_FAILED"}`；`guardian_runs` 最新一条 `{"status":"PARTIAL","action":"RETRYABLE_FAILURE"}`，`proposal_id` 为空。
+- 屏上（`guardian-retry-108-after.png`）：「再请一次守护」仍在，提示变为「现场模型这次请求失败了，没有交出建议。可以再请一次守护；连续失败就重启课堂演示（双击启动器）。」——这正是本轮新加的分支，**不再**说「刷新不会继续」，也不再把老师支到没有对应提案的守护屏。
+- 无 console 错误（`ERRORS []`）。
+
+同一条路前一晚连跑两轮（未补 history 的注入）：按钮同样一次命中、点击后同样 17.7 秒回失败；但进度投影认不出那个不在 history 的 pending，`guardian_runs` 过滤为空、`outcome=UNKNOWN`，屏上仍是旧文案。这说明：**第三轮的「补 history」不是为了让按钮出现，而是为了让进度投影与真实注入保持同一形状**。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
 - Guardian 屏接受已现场闭环（r100），该项不再等裁语；仍待 Codex：模型失败后 run 的转态为何一次 >338 秒、一次约 187 秒。（计划引用一项已查代码：下一次 advance 会同步，见上。）
-- 第六次补上了成功轮的耗时基准（193 秒）与「同步调用、返回即转态」的代码事实；失败态的「再请一次守护」待抓。
+- 第六次补上了成功轮的耗时基准（193 秒）与「同步调用、返回即转态」的代码事实。
+- 第七次：失败态的「再请一次守护」按钮与文案都在真后端上按过（18 秒回 RETRYABLE_FAILURE，按钮仍在）；`RETRYABLE_FAILURE` 是可重试，不是终态。
+- 仍待 Codex 一枚事实：`guardian_outcome` 只给 `EXTERNAL_FAILED/AGENT_UNRESOLVED/MODEL_NOT_CONFIGURED/UNKNOWN`，**没有 RETRYABLE_FAILURE 这个码**；前端只能从 `guardian_runs[].action_status` 读它。是否要把它升为一等码，归 Codex 定。
 - 平板亲手点仍 `USER_VERIFIED=PENDING`。

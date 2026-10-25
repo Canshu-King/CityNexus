@@ -84,6 +84,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
   const [slowNote, setSlowNote] = useState<string | null>(null);
   const [acceptanceHasProposal, setAcceptanceHasProposal] = useState(false);
   const [guardianOutcome, setGuardianOutcome] = useState<{ code?: string; error_code?: string } | null>(null);
+  const [guardianRetryable, setGuardianRetryable] = useState(false);
   const [simulationProposal, setSimulationProposal] = useState<{ id: string } | null>(null);
   const [pendingResolved, setPendingResolved] = useState(false);
 
@@ -111,7 +112,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
           try {
             const progress = await progressResponse.json() as {
               proposals?: Array<{ id?: string; status?: string }>;
-              guardian_runs?: Array<{ proposal_id?: string | null }>;
+              guardian_runs?: Array<{ proposal_id?: string | null; action_status?: string }>;
               guardian_outcome?: { code?: string; error_code?: string } | null;
               readiness?: { pending_event_id?: string | null };
               events?: Array<{ id?: string; status?: string }>;
@@ -123,6 +124,11 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             // The projection knows why an attempt produced no proposal; without it the
             // console says "analysing" forever after a failed model request.
             setGuardianOutcome(progress.guardian_outcome ?? null);
+            // RETRYABLE_FAILURE is the backend's "no usable proposal this time"; the
+            // console must not tell the teacher to restart while the retry door is open.
+            setGuardianRetryable(
+              (progress.guardian_runs ?? []).some((item) => item.action_status === "RETRYABLE_FAILURE"),
+            );
             const presented = (progress.proposals ?? []).find(
               (item) => item.status === "PRESENTED" && typeof item.id === "string",
             );
@@ -362,7 +368,9 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
       {run?.status === "PAUSED_MODEL_UNAVAILABLE" && (
         <p className="rev-presenter-note" data-testid="rev-presenter-model-note">
           {guardianOutcome?.code === "EXTERNAL_FAILED"
-            ? "现场模型这次请求失败了，没有交出建议。先在下方守护屏看有没有和这次事件对应的调整；没有就重启课堂演示（双击启动器）。"
+            ? "现场模型这次请求失败了，没有交出建议。可以再请一次守护；连续失败就重启课堂演示（双击启动器）。"
+            : guardianRetryable
+            ? "守护这次没有给出可用的调整；可以再请一次。连续失败就重启课堂演示（双击启动器）。"
             : "现场模型没有接上；同一起事件要在下方守护屏上处理，处理完这里才会出现继续。"}
         </p>
       )}
