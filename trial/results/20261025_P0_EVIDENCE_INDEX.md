@@ -15,6 +15,7 @@
 | AI 开关不拦调用（#47 P0） | 红（缺陷，已报） | guardian-unavailable-67.txt | ai_enabled=False；guardian_runs=1；agent_runs 读数见报告 |
 | 接受调整支线 | 绿 | proposal-accept-68.txt | accept http=200；plan e74a5edb-3f6d-40c3-910c-52e449619d40 → f84adc05-fb3b-4721-9c21-4db3bab96c28 |
 | resume 门（夹具） | 绿 | resume-after-resolved-69.txt | resume http=200，after=RUNNING（事件先在副本里 RESOLVED，1 行） |
+| 平板视口两日（1024×768） | 绿 | tablet-two-day-72.txt, classroom-tablet-two-day-72.png | FINAL "模拟时间：12/04 15:00 · 执行第 20 步 · 模拟行程已完成"；classroom-tablet-two-day-72.png (155049 bytes) |
 | 死锁屏提示 | 绿 | acceptance-note-70.txt | ACCEPTANCE_NOTE "守护没有交出可接受的提案（进度里看不到提案 id）；这条模拟解不开，请重启课堂演示（双击启动器）。" |
 | 合入后一键核对 | 绿 | after-merge-check.txt | ENTRY_DOOR=PAIRING，SIM_CONSOLE=AVAILABLE:NOT_STARTED，all_green=True，tickets=3 |
 | P0-4 平板亲手点 | PENDING | tablet-evidence-20261026-015439.txt | VERDICT=NO_EXTERNAL_CLIENT，外部请求=0，run={'id': 'e354b9da-80b7-4882-b3aa-ef295ffdd103', 'sequence': 0, 'status': 'RUNNING', 'virtual_now': '2026-12-03T09:00:00+08:00', 'updated_at': '2026-10-25T17:50:47.099158+00:00'} |

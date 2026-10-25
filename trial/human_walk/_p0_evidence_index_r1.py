@@ -140,6 +140,11 @@ def main() -> int:
                      (resume.get("resume") or {}).get("http"),
                      (resume.get("after") or {}).get("status"),
                      resume.get("resolved_rows"))))
+    tablet2 = lines_of("tablet-two-day-72.txt")
+    rows.append(("平板视口两日（1024×768）",
+                 "绿" if "模拟行程已完成" in find(tablet2, "FINAL") else "红",
+                 "tablet-two-day-72.txt, classroom-tablet-two-day-72.png",
+                 "%s；%s" % (find(tablet2, "FINAL"), png("classroom-tablet-two-day-72.png"))))
     rows.append(("死锁屏提示",
                  "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
                  "acceptance-note-70.txt",
