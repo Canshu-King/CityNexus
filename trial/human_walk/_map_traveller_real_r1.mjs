@@ -32,6 +32,7 @@ for (let i = 0; i < 20; i++) {
 note("MARKER_VISIBLE " + JSON.stringify(visible));
 note("MARKER_COUNT " + JSON.stringify(await page.locator('[data-testid="rev-map-traveller"]').count()));
 note("STATE_LINE " + JSON.stringify(await page.locator('[data-testid="rev-map-traveller-state"]').innerText().catch(() => "")));
+note("CAPTION " + JSON.stringify(await page.locator('[aria-label="当前行程地图"] p').first().innerText().catch(() => "")));
 note("ERRORS " + JSON.stringify(errors.slice(0, 6)));
 await page.locator('[data-testid="rev-map-traveller-state"]').scrollIntoViewIfNeeded().catch(() => {});
 await page.screenshot({ path: OUT + "/map-traveller-real-390.png" });

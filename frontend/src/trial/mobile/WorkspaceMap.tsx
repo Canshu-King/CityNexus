@@ -151,7 +151,9 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
     });
   }, [allowed, mapReady, traveller?.latitude, traveller?.longitude, traveller?.label, traveller?.coordinate_system]);
   return <section aria-label="当前行程地图">
-    <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
+    <p>{travellerOnMap && !points.length && !amapPoints.length
+      ? "模拟旅客 1 位 · 暂无研究地点"
+      : `OpenStreetMap 地图地点 ${points.length} 处 · 高德地点 ${amapPoints.length} 处`}</p>
     {traveller && <p data-testid="rev-map-traveller-state">模拟旅客：{traveller.label} · {traveller.latitude.toFixed(4)}, {traveller.longitude.toFixed(4)}（{traveller.coordinate_system ?? "WGS84"}，模拟位置，不是物理 GPS）</p>}
     {!points.length && !amapPoints.length && !travellerOnMap && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
     {(points.length > 0 || travellerOnMap) && <>
