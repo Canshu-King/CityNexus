@@ -2993,3 +2993,13 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 屏证：`trial/results/20261022_v3_human_chrome/classroom-entry-banner-33-sealed-trip.png`（完成态）、`classroom-entry-banner-33-bad-ticket.png`（过期票）、`classroom-entry-banner-33-no-ticket-press.png`（无票按压后）。复跑：`trial/human_walk/_entry_banner_stack_r1.py` 会重启隔离后端并只把票交给子进程环境，不打印键。
 
 边界：完成态那张票在进入时已被消费、链接里的票也被清掉，所以刷新后不再提示（票不在了，页面上也没有可再按的课堂入口）；此时老师看到的仍是一张空的行程页。要不要把「上次已封存」写进本地会话、让刷新后也看得见，留作课堂主链合入时的候选，不在本刀里假称已修。
+
+## 一百一十三、运行中刷新本来就会回控制台：我的假设被自己的对照推翻
+
+前一节把「刷新后老师掉在探索页」当成恢复逻辑的缺陷，理由是本地已配对身份会让恢复 effect 在 `frontend/src/trial/RevolutionFirstLook.tsx:616` 直接早退。我先加了一条本地指针恢复分支，探针三屏（首屏、刷新、再刷新）都读到了控制台。
+
+按纪律补负对照：把那一行早退放回去，跑同一支探针、同一份运行中库副本，读数与加分支时一模一样（`trial/results/20261022_v3_human_chrome/classroom-run-resume-34-control.txt:2`）；再用干净的现尖跑第三臂，仍是三屏都在、状态与历史一致（`classroom-run-resume-34-clean.txt:1`、`:2`、`:3`，判语在 `:4`）。
+
+所以那个分支是多余的，已经撤回（`git status` 里产品文件零改动）。前一节结尾说的「刷新后不再提示」只属于完成态：那次入口根本没让进去，本地没有可恢复的课堂指针；运行中的课堂刷新后控制台仍在，老师不会因为误触刷新丢掉演示。
+
+留下的探针与证据（可复跑，不改课堂栈）：`trial/human_walk/_classroom_run_resume_r34.mjs`、参数化起栈件 `trial/human_walk/_entry_banner_stack_r1.py`（`--source-db`/`--target-db`/`--probe`/`--tag`）。屏证：`classroom-run-resume-34-clean-before.png`、`classroom-run-resume-34-clean-after.png`。
