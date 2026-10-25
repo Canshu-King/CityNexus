@@ -1,0 +1,8 @@
+SESSION_WITHOUT_TICKET http=403
+PAIRING_OK journey=2e9cd67d-10ca-4ecd-920b-76c81a350c71 token_len=403
+CURRENT http=200 status=NOT_STARTED
+RUN status=RUNNING seq=0
+SCENE http=200 stop=故宫博物院 status=PAUSED_FOR_GUARDIAN
+GUARDIAN http=200 elapsed=251.9s status=PAUSED_FOR_ACCEPTANCE
+PROGRESS http=200 guardian_runs=1 agent_runs=1 steps=7 proposals=1 readiness={"model_credentials_configured": true, "standing_mission_id": "e2265d59-f116-4a6c-9cfd-4da3b8ec905e", "pending_event_id": "f4278146-5fbd-4ee4-b8f6-feded1e07f77"
+NO_PROPOSAL — stop here, the guardian produced nothing to accept.

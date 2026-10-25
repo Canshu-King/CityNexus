@@ -1,0 +1,11 @@
+run 63a30028-8c99-4bd9-8203-6aecc9e0db9e PAUSED_FOR_ACCEPTANCE seq 2
+proposal keys ['acceptance_audit_ids', 'id', 'proposed_plan_version_id', 'status']
+proposal 08201812-19a2-4cb4-9be0-5f82ccf266fc event None
+ACCEPT http=200 
+progress after accept proposals=1 audits=[["5c70cfce-71f8-437c-8843-103e73a536e4"]]
+RESUME http=200 status=RUNNING
+ADV 01 status=RUNNING vnow=2026-12-04T08:06:00+08:00 done=0
+ADV 02 status=RUNNING vnow=2026-12-04T09:00:00+08:00 done=0
+ADV 03 status=RUNNING vnow=2026-12-04T09:00:00+08:00 done=0
+ADV 04 status=SIMULATED_COMPLETED vnow=2026-12-04T10:00:00+08:00 done=1
+TWO_DAY_WALK_OK
