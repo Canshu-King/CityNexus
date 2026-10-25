@@ -24,3 +24,5 @@ python -m pytest tests/test_issue49_guardian_scene_binding.py tests/test_issue49
 request_replan 对带 server_owned_recovery_context 的恢复子任务，缺省事件使用服务器绑定事件；模型显式指定冲突事件返回 409 RECOVERY_TRIGGER_SCOPE_MISMATCH。普通任务仍使用原事件选择逻辑。补丁由现有 Luna Max 工人交付，根会话独立验证。
 
 工具绑定新测试、既有缓存升级、旧缓存兼容与场景绑定回归：25 passed，exit0，19.94 秒；JUnit 为同 QA 目录 replan-trigger-verified.xml。首次测试发现旧缓存 SimpleNamespace 夹具缺当前序列化必需的四个谱系字段，已补 None，原缓存顺序、状态、幂等和越界断言未改。GitHub focused workflow 已加入这两份缓存回归。此轮无模型/provider 请求，尚不代表现场提案接受完成。
+
+恢复任务的 list_replans 也只读取当前绑定事件；accept_replan 在 policy/审批/native writer 之前拒绝其它事件提案，避免先写错方案后才被 Guardian 结果校验发现。普通任务行为不变。工具绑定与现有 Agent runtime gate 回归 28 passed、exit0、7.36 秒；JUnit replan-write-gates.xml。新测试证明错误提案不会进入 policy，匹配提案继续进入原 gate；不表示测试代替实际接受签名或现场模型运行。

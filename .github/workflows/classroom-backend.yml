@@ -49,6 +49,7 @@ jobs:
           tests/test_goal_draft_patch.py
           tests/test_ord0330_cached_replan_contract_upgrade.py
           tests/test_hermes_r5_cached_replan_compatibility.py
+          tests/test_agent_runtime_gate.py
           --junitxml=classroom-results.xml
       - name: Upload fixture test results
         if: always()

@@ -1106,6 +1106,16 @@ class AgentToolGateway:
             if request.mission_id is not None
             else None
         )
+        recovery_trigger_id = self._server_owned_recovery_trigger(mission, journey)
+        if recovery_trigger_id is not None:
+            if (
+                request.trigger_event_id is not None
+                and str(request.trigger_event_id) != recovery_trigger_id
+            ):
+                raise HTTPException(409, "RECOVERY_TRIGGER_SCOPE_MISMATCH")
+            request = request.model_copy(
+                update={"trigger_event_id": UUID(recovery_trigger_id)}
+            )
         r61_context = self._r61_reground_context(mission)
         if r61_context is not None:
             expected_trigger = str(
@@ -2848,6 +2858,20 @@ class AgentToolGateway:
         journey = _require_journey(self.session, request.journey_id or UUID(proposal.journey_id))
         if proposal.journey_id != journey.id:
             raise HTTPException(403, "proposal does not belong to this Journey")
+        mission = (
+            self.session.get(JourneyMission, str(request.mission_id))
+            if request.mission_id is not None
+            else None
+        )
+        recovery_trigger_id = self._server_owned_recovery_trigger(mission, journey)
+        if recovery_trigger_id is not None:
+            if (
+                request.trigger_event_id is not None
+                and str(request.trigger_event_id) != recovery_trigger_id
+            ):
+                raise HTTPException(409, "RECOVERY_TRIGGER_SCOPE_MISMATCH")
+            if str(proposal.trigger_event_id or "") != recovery_trigger_id:
+                raise HTTPException(409, "RECOVERY_PROPOSAL_TRIGGER_MISMATCH")
         policy_row = get_or_create_policy(self.session, journey.traveler_id)
         policy = policy_from_model(policy_row)
         facts, evidence = _facts_for_accept(self.session, proposal, journey)
