@@ -184,8 +184,8 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
 
       {cities && (!run || run.status === "NOT_STARTED") && (
         <p className="rev-presenter-cities" data-testid="rev-presenter-cities">
-          随机城市池：可用 {cities.eligible_count} 座，需要 {cities.required} 座
-          {shortOfCity && missing.length > 0 && <small> · {missingText(missing)}</small>}
+          随机城市池：可用 {cities.eligible_count} 座，标准要 {cities.required} 座；这趟演示用行程自己的城市，仍可开演。
+          {shortOfCity && missing.length > 0 && <small> · 池子还差：{missingText(missing)}</small>}
         </p>
       )}
 

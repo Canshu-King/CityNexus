@@ -1,5 +1,6 @@
 CLOCK_PRESENT 1
 BEFORE "模拟时间：12/03 09:00 · 服务器第 0 版"
+CITIES "随机城市池：可用 0 座，标准要 3 座；这趟演示用行程自己的城市，仍可开演。 · 池子还差：城市身份未核实、真捕获路线不足三条"
 START_BUTTON present
 RUN_OWNED 0
 RUN_OWNED_LATE 0

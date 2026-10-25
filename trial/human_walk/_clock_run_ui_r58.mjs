@@ -49,6 +49,8 @@ await clock.first().scrollIntoViewIfNeeded().catch(() => {});
 note(`CLOCK_PRESENT ${await clock.count()}`);
 note(`BEFORE ${JSON.stringify(clean(await virtual.first().innerText().catch(() => "")))}`);
 
+note(`CITIES ${JSON.stringify(clean(await page.locator('[data-testid="rev-presenter-cities"]').first().innerText().catch(() => "")))}`);
+await shot("classroom-clock-run-58-pre.png");
 const startButton = page.getByRole("button", { name: /开演/ }).first();
 if (await startButton.count()) {
   note("START_BUTTON present");
