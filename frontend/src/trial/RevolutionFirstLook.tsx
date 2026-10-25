@@ -409,6 +409,23 @@ function freshCityCode(): string {
   return "CN-RV-" + crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
 }
 
+type PairingTicket = { ticket: string };
+let pairingAttempted = false;
+
+function readPairingTicket(): PairingTicket | null {
+  // The launcher prints a link with the single-use ticket in the fragment: fragments are
+  // never sent to the server, and the ticket dies after one redemption or two minutes.
+  const hash = window.location.hash.replace(/^#/, "");
+  if (!hash) return null;
+  const ticket = (new URLSearchParams(hash).get("pair") ?? "").trim();
+  return ticket.length >= 32 ? { ticket } : null;
+}
+
+function clearPairingTicket(): void {
+  const { pathname, search } = window.location;
+  window.history.replaceState(null, "", pathname + search);
+}
+
 function DraftAgentActivity({
   status,
   hasSelectedPlace,
@@ -1092,17 +1109,42 @@ export function RevolutionFirstLook() {
     if (demoBusy) return;
     setDemoBusy(true);
     try {
-      const answer = await cityNexusApi.demoSession();
-      storeTravelerIdentity(answer.access_token, answer.traveler_id);
-      // After the classroom trip is walked to the end, `/demo/session` falls back to a
-      // seed draft with no plan; entering it shows "0 项安排" and looks broken. Keep the
+      const pairing = readPairingTicket();
+      let accessToken: string;
+      let travelerId: string;
+      let journeyId: string;
+      if (pairing) {
+        try {
+          const answer = await cityNexusApi.redeemDemoPairing(pairing.ticket);
+          accessToken = answer.access_token;
+          travelerId = answer.traveler_id;
+          journeyId = answer.journey_id;
+        } catch {
+          setError("这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。");
+          return;
+        }
+        clearPairingTicket();
+      } else {
+        try {
+          const answer = await cityNexusApi.demoSession();
+          accessToken = answer.access_token;
+          travelerId = answer.traveler_id;
+          journeyId = answer.journey_id;
+        } catch {
+          setError("课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。");
+          return;
+        }
+      }
+      storeTravelerIdentity(accessToken, travelerId);
+      // After the classroom trip is walked to the end, the entry falls back to a seed
+      // draft with no plan; entering it shows "0 项安排" and looks broken. Keep the
       // teacher on the entry screen with the real reason instead.
-      const twin = await cityNexusApi.getTwin(answer.journey_id);
+      const twin = await cityNexusApi.getTwin(journeyId);
       if (!twin.active_plan_version_id) {
         setError("课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。");
         return;
       }
-      await resumeSavedTrip(answer.journey_id);
+      await resumeSavedTrip(journeyId);
     } catch {
       setError("示例行程还没准备好，请让演示机先启动。");
     } finally {
@@ -1127,6 +1169,16 @@ export function RevolutionFirstLook() {
     window.addEventListener("citynexus:mission-panel", revealAgent);
     return () => window.removeEventListener("citynexus:mission-panel", revealAgent);
   }, [activeTab]);
+
+  useEffect(() => {
+    // A classroom link carries the ticket; redeem it on arrival so the teacher only
+    // has to open the address the launcher printed.
+    if (pairingAttempted || !readPairingTicket()) return;
+    pairingAttempted = true;
+    void enterDemoJourney();
+    // The entry function closes over the first render's state; one attempt per page is intended.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const navigateMobile = (tab: RevolutionMobileTab) => {
     setActiveTab(tab);

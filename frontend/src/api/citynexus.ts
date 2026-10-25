@@ -2960,6 +2960,9 @@ export interface SessionDraftJourney { id: string; city_code: string; status: st
 export interface DemoSessionRead {
   access_token: string; traveler_id: string; journey_id: string; journey_title: string;
 }
+export interface DemoPairingRead extends DemoSessionRead {
+  expires_in: number;
+}
 export interface JourneyMemberSeatRead { journey_id: string; traveler_id: string; may_confirm_departure: boolean; seat: { in_force: boolean; role: string | null } }
 
 // What the commit door answers (`backend/app/departure_commit.py:251`). `journey` is the same record
@@ -3050,6 +3053,15 @@ export const cityNexusApi = {
   // the screen into a window onto other people's trips.  This door answers with the bearer's rows.
   demoSession(): Promise<DemoSessionRead> {
     return requestJson<DemoSessionRead>("/demo/session", { cache: "no-store" });
+  },
+
+  redeemDemoPairing(ticket: string): Promise<DemoPairingRead> {
+    return requestJson<DemoPairingRead>("/demo/pairing/redeem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticket }),
+      cache: "no-store",
+    });
   },
 
   listSessionDraftJourneys(): Promise<SessionDraftJourney[]> {

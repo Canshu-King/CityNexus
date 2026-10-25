@@ -34,6 +34,7 @@ PORT = 60391
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
 SHIM = r"C:/Users/仓鼠王/WorkBuddy/2026-09-15-15-47-27/wb2api/codex-shim/shim.mjs"
 SECRET = os.environ.get("MERGE_AUTH_SECRET") or secrets.token_hex(32)
+PRESENTER_KEY = secrets.token_hex(24)
 MODEL = "cn:hy3"
 JOURNEY = "2e9cd67d-10ca-4ecd-920b-76c81a350c71"
 TRAVELER = "9ac3c100-da78-4933-ba1b-cb79991fcb1e"
@@ -46,13 +47,16 @@ def gateway_key() -> str:
     return match.group(1)
 
 
-def call(method: str, path: str, body: dict | None = None, token: str | None = None) -> tuple[int, dict]:
+def call(method: str, path: str, body: dict | None = None, token: str | None = None,
+         key: str | None = None) -> tuple[int, dict]:
     data = json.dumps(body).encode("utf-8") if body is not None else None
     request = urllib.request.Request(f"http://127.0.0.1:{PORT}{path}", data=data, method=method)
     if data is not None:
         request.add_header("Content-Type", "application/json")
     if token:
         request.add_header("Authorization", "Bearer " + token)
+    if key:
+        request.add_header("X-CityNexus-Presenter-Key", key)
     try:
         with urllib.request.urlopen(request, timeout=240) as answer:
             raw = answer.read().decode("utf-8")
@@ -173,6 +177,7 @@ def restart_backend() -> None:
         "CITYNEXUS_TRAVELER_AUTH_TTL_SECONDS": "43200",
         "CITYNEXUS_DEMO_MODE": "true",
         "CITYNEXUS_DEMO_RESET_TOKEN": SECRET[:16],
+        "CITYNEXUS_DEMO_PRESENTER_KEY": PRESENTER_KEY,
         # Codex's presenter boundary checks this before issuing a classroom session.
         "CITYNEXUS_DEMO_DATABASE_PATH": DST,
         "CITYNEXUS_SIMULATION_ENABLED": "true",
@@ -254,6 +259,39 @@ restart_backend()
 FRONTEND_UP = ensure_frontend()
 TOKEN = issue_token()
 
+
+def issue_pairing() -> str | None:
+    """One-use presenter ticket; older backends answer 404 and the link stays plain."""
+    status, answer = call(
+        "POST", "/api/v1/demo/pairing", {"journey_id": JOURNEY}, token=TOKEN, key=PRESENTER_KEY,
+    )
+    return answer.get("ticket") if status == 201 else None
+
+
+def write_presenter_session() -> bool:
+    """A second ticket redeemed into a short-lived presenter bearer for the self-check."""
+    ticket = issue_pairing()
+    if not ticket:
+        return False
+    status, answer = call("POST", "/api/v1/demo/pairing/redeem", {"ticket": ticket})
+    if status != 200 or not answer.get("access_token"):
+        return False
+    session_path = os.path.join(CANARY, ".demo_presenter_session.json")
+    with io.open(session_path, "w", encoding="utf-8") as handle:
+        json.dump({
+            "access_token": answer["access_token"],
+            "journey_id": answer["journey_id"],
+            "expires_at": int(time.time()) + int(answer.get("expires_in") or 900),
+        }, handle)
+    return True
+
+
+PAIRING = issue_pairing()
+PRESENTER_SESSION = write_presenter_session()
+LINK = "http://%s:14492/revolution%s" % (
+    lan_ipv4(), ("#pair=" + PAIRING) if PAIRING else "",
+)
+
 readonly = sqlite3.connect("file:" + DST + "?mode=ro", uri=True)
 readonly.row_factory = sqlite3.Row
 journey = readonly.execute(
@@ -281,7 +319,9 @@ print(json.dumps({
     "DEMO_READY": bool(proposal),
     "WINDOWS_START": "start_classroom_demo.bat",
     "FRONTEND_UP": FRONTEND_UP,
-    "TABLET_OPEN": "http://%s:14492/revolution" % lan_ipv4(),
+    "TABLET_OPEN": LINK,
+    "PAIRING": "OK" if PAIRING else "UNSUPPORTED",
+    "PRESENTER_SESSION": PRESENTER_SESSION,
     "AGENT_QA": "direct-replan-only (agent path verified separately)",
     "REAL_POI": True,
     "SAVED_PLAN": bool(journey and journey["active_plan_version_id"]),
@@ -294,4 +334,4 @@ print(json.dumps({
     "proposal_status": proposal_status,
 }, ensure_ascii=False))
 print()
-print("Classroom ready. Tablet address (same Wi-Fi): http://%s:14492/revolution" % lan_ipv4())
+print("Classroom ready. Tablet address (same Wi-Fi): " + LINK)
