@@ -8,6 +8,7 @@ writes ALERT and leaves the decision to the operator.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -17,6 +18,7 @@ from datetime import datetime
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
 SELFCHECK = r"D:/moodle/_cmdr_rescue_v3_1022/trial/play_launcher/classroom_demo/classroom_demo_selfcheck_r1.py"
 LOG = r"D:/moodle/_cmdr_v3_live_1022/classroom_watch.log"
+ALERT = r"D:/moodle/_cmdr_v3_live_1022/classroom_ALERT.txt"
 INTERVAL_S = 900
 
 
@@ -58,6 +60,15 @@ def main() -> int:
         line = "%s %s" % (stamp, beat())
         with open(LOG, "a", encoding="utf-8", newline="\n") as handle:
             handle.write(line + "\n")
+        # A beat sits in a log nobody reads at night; an ALERT also lands in one
+        # obvious file, and a healthy beat removes it.
+        if " ALERT " in (" " + line + " "):
+            with open(ALERT, "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(line + "\n")
+                handle.write("先跑 classroom_demo_selfcheck_r1.py 看哪一项红；"
+                             "重跑 start_classroom_demo.bat 可重建场景。票过期不算 ALERT。\n")
+        elif os.path.exists(ALERT):
+            os.remove(ALERT)
         print(line, flush=True)
         time.sleep(INTERVAL_S)
 

@@ -191,3 +191,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 仪器 `_tablet_evidence_r1.py`（只读）：解析当前后端日志周期的请求，统计非 loopback 客户端与路径，并读 run 的 sequence/status；落盘 `tablet-evidence-<时间>.txt`。
 - 首跑抓到仪器自己的 bug：uvicorn 行以 `INFO:` 开头，我却用行首匹配 IP，于是 `requests=0` 与 `grep` 的 137 条打架；改成 `search` 后读数 136 条、外部 0 条。
 - 01:54 读数：`NO_EXTERNAL_CLIENT`（外部 0），run `e354b9da…` 第 0 步 RUNNING、12/03 09:00，session 文件 240 秒新旧。平板还没访问过；且「有外部请求」也只证明有设备访问，不等于主人亲手点。
+
+### 01:57 值守的夜间报警落点
+
+- watch 每拍 OK 时删除 `classroom_ALERT.txt`；ALERT 时把那一拍与处理提示写进该文件（先跑 `classroom_demo_selfcheck_r1.py` 看哪项红，重跑 `start_classroom_demo.bat` 可重建场景；票过期不算 ALERT）。日志仍逐拍追加。
+- 重启后首拍 `01:57:03 OK … SESSION=LIVE … SIM_CONSOLE=AVAILABLE:RUNNING`，ALERT 文件不存在。
