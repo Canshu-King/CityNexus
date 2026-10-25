@@ -1094,6 +1094,14 @@ export function RevolutionFirstLook() {
     try {
       const answer = await cityNexusApi.demoSession();
       storeTravelerIdentity(answer.access_token, answer.traveler_id);
+      // After the classroom trip is walked to the end, `/demo/session` falls back to a
+      // seed draft with no plan; entering it shows "0 项安排" and looks broken. Keep the
+      // teacher on the entry screen with the real reason instead.
+      const twin = await cityNexusApi.getTwin(answer.journey_id);
+      if (!twin.active_plan_version_id) {
+        setError("课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。");
+        return;
+      }
       await resumeSavedTrip(answer.journey_id);
     } catch {
       setError("示例行程还没准备好，请让演示机先启动。");
@@ -1430,6 +1438,7 @@ export function RevolutionFirstLook() {
                   {demoBusy ? "正在进入示例行程…" : "课堂演示：进入示例行程"}
                 </button>
               )}
+              {error && <p className="rev-firstlook-error" role="alert" data-testid="rev-demo-error">{error}</p>}
               <button type="button" data-testid="rev-mobile-empty-start" onClick={() => navigateMobile("explore")}>
                 开始探索 →
               </button>

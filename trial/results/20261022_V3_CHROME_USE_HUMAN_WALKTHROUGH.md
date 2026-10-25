@@ -2823,3 +2823,13 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 边界：这只是「终态的表达」；真正的 `SIMULATED_COMPLETED` 运行记录归 Codex 的 SimulationRun（`a8f9b8ed16`），未合入前不进演示。
 
+## 九十七、走完整趟后再点「课堂演示」：不再进空壳，直接说要重启
+
+实测（`classroom-after-finish-17.txt`）：行程走到 `COMPLETED` 后，「我的旅程」不再列出它，但「课堂演示：进入示例行程」按钮仍在；点它会拿到 `/demo/session` 200，却落到 seed 草稿——屏上「0 项安排 · 0 天 / 等待正式计划 / 0 份正式候选方案」，老师会以为系统坏了。
+
+`enterDemoJourney` 现在在拿到 demo 会话后先读 twin：`active_plan_version_id` 为空就不进入，显示「课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。」（`frontend/src/trial/RevolutionFirstLook.tsx:1091` 起的函数；提示渲染在入口按钮下，`rev-demo-error`）。
+
+屏读：点完后页面停在「我的旅程」，出现该句，不再出现「0 项安排」；页面错误 0 条；类型检查 rc=0（`typecheck-demo-guard-1.txt:5`）。截图 `rehearsal17-after-finish.png`。
+
+边界：`/demo/session` 的回退选择（无 ACTIVE 时选 DRAFT）仍归演示后端；这一刀只挡入口，不改后端选择。
+
