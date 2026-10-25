@@ -75,7 +75,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
   }, [visible]);
 
   const advance = async (minutes: number) => {
-    if (!clock || busy) return;
+    if (!clock || busy || journeyDone) return;
     setBusy(true);
     try {
       const response = await fetch(`/api/v1/demo/simulation-clock/${journeyId}/advance`, {
@@ -83,10 +83,16 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
         headers: { Accept: "application/json", "Content-Type": "application/json", ...travelerAuthHeaders() },
         body: JSON.stringify({ minutes, expected_version: clock.version }),
       });
-      if (response.ok) setClock(await response.json() as ClockPayload);
-      else void read();
+      if (response.ok) {
+        setClock(await response.json() as ClockPayload);
+        setStopNote(`已把模拟时间推进 ${minutes} 分钟`);
+      } else {
+        await read();
+        setStopNote(`时间没有推进（http_status=${response.status}）`);
+      }
     } catch {
-      void read();
+      await read();
+      setStopNote("时间没有推进（请求没有完成）");
     } finally {
       setBusy(false);
     }
@@ -168,8 +174,8 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
         <span data-testid="rev-clock-handoff">这趟行程已交给课堂控制台推进（模拟执行），这里的时钟按钮暂停使用。</span>
       )}
       <div className="rev-classroom-clock-actions">
-        <button type="button" disabled={busy || runOwned} data-testid="rev-clock-plus30" onClick={() => void advance(30)}>+30 分钟</button>
-        <button type="button" disabled={busy || runOwned} data-testid="rev-clock-plus60" onClick={() => void advance(60)}>+1 小时</button>
+        <button type="button" disabled={busy || journeyDone || runOwned} data-testid="rev-clock-plus30" onClick={() => void advance(30)}>+30 分钟</button>
+        <button type="button" disabled={busy || journeyDone || runOwned} data-testid="rev-clock-plus60" onClick={() => void advance(60)}>+1 小时</button>
         <button type="button" disabled={busy || journeyDone || runOwned} data-testid="rev-clock-next" onClick={() => void advanceStop()}>到下一站</button>
       </div>
       {stopNote && <span data-testid="rev-clock-next-note">{stopNote}</span>}
