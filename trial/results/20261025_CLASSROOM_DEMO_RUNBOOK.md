@@ -259,3 +259,10 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 屏上读数（`jump-clock-76.txt`，真栈、两视口、无 console 错误）：390×844 入口 `top=405`、`inView=true`、`hitSelf=true`，点击后 `clockTop=0`；1024×768 入口 `top=455`、`inView=true`、`hitSelf=true`，点击后 `clockTop=0`。截图 `classroom-jump-phone-before-76.png`、`classroom-jump-phone-76.png`、`classroom-jump-tablet-before-76.png`、`classroom-jump-tablet-76.png`。
 - 回归：课堂真栈复跑开演三键（`clock-run-ui-77.txt`）：开演 → +30 两次（09:30 第 1 步、10:00 第 2 步）→ 到下一站（15:00 第 6 步）→ 刷新同一步，`ERRORS []`；随后启动器恢复开场（`CLOCK=09:00`、`SIM_CONSOLE=NOT_STARTED`、`DEMO_READY=true`、`ENTRY_DOOR=PAIRING`）。
 - 提交 `86fed39052`（本枝），改动只含 `MissionCockpit.tsx/.css`、`RevolutionFirstLook.tsx` 的配对落页与探针/证据。
+
+### 02:44 入口落位后的平板回归
+
+- 命中：1024×768 开演后四控件 `hit=true`、`inViewport=true`、`ERRORS []`（`rev-open-trip` y=350、三键 y=640；`tablet-hit-73.txt`、`classroom-tablet-hit-73.png`）。
+- 聊天坞：手机 390 仍是 `dock=flex` 且时钟键 `hit=true`；平板 1024 是 `dock=none` 且时钟键 `hit=true`；两视口无 console 错误（`live-dock-75.txt`、`classroom-live-phone-75.png`、`classroom-live-tablet-75.png`）。
+- 页面因入口条增高约 25px（手机 docHeight 4686、平板 5074），时钟条位置随之下移；跳转按钮仍一步到位。
+- 回归后已重置开场：`CLOCK=2026-12-03T09:00:00+08:00`、`CLOCK_VERSION=0`、`SIM_CONSOLE=AVAILABLE:NOT_STARTED`、`ENTRY_DOOR=PAIRING`。
