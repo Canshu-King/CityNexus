@@ -2,3 +2,4 @@
 > typecheck
 > tsc -p tsconfig.check.json --noEmit
 
+rc=0
