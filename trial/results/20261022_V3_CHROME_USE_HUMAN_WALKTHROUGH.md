@@ -2710,3 +2710,13 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 没有抹掉的事实：「当前恢复第 3 轮」是库里真实的轮次（第 1、2 轮 SUPERSEDED、第 3 轮 OPEN），保留原样；「检查已完成」说的是检测，「正在处理」说的是恢复，两句不是同一层，现场照这个口径讲。
 
+## 八十七、屏上的「外部来源已核实」：把模拟信号标成模拟（任务书红线 4）
+
+任务书 §1 与红线 4 点名：若事件 `provenance=PROVIDER_VERIFIED` 但 `provider_key=city-signal-fixture`，UI 必须显示「模拟供应商信号」，不能说景区官方已关闭。实测演示库正是这条：`provider_key='city-signal-fixture'`、`provenance='PROVIDER_VERIFIED'`，而前端 `sourceLabel()` 把 provenance 翻成「外部来源已核实」、provider 落进 fallback「行程记录」——等于把课堂注入包装成外部已核实公告。
+
+改的是前端（`frontend/src/trial/mobile/GuardianRealityPanel.tsx` 的 `sourceLabel`）：provider 命中 `fixture|city-signal` 时直接返回「模拟供应商信号 · 课堂注入，非景区官方公告」，不再走 provenance 映射。屏读（`classroom-truth-labels-7.txt`）：`SOURCE_SIM true`、`SOURCE_VERIFIED false`、`SOURCE_LINE "模拟供应商信号 · 课堂注入，非景区官方公告"`、页面错误 0 条；截图 `rehearsal7-truth-labels.png` 上事件行写「待处理 · 模拟供应商信号 · 课堂注入，非景区官方公告 · 12/3 08:57」。
+
+同一刀给时钟条补了任务书 §2 要求的第二行：`rev-clock-wall` 显示「现实演示时间：10/25 14:51」，与「模拟时间：12/03 09:00」并排、每 30 秒刷新；这一行只用于显示，不参与任何旅程判断。
+
+边界：只改标注与显示，不动后端投影；Codex 在 Issue #47 做 Journey 读权限与持久 SimulationRun，我不碰 `main.py` 那两块。
+

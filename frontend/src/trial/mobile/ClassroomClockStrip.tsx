@@ -30,6 +30,7 @@ function stamp(value: string): string {
 export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string; visible: boolean }) {
   const [clock, setClock] = useState<ClockPayload | null>(null);
   const [busy, setBusy] = useState(false);
+  const [wallClock, setWallClock] = useState(() => new Date());
 
   const read = useCallback(async () => {
     try {
@@ -48,6 +49,12 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     const timer = window.setInterval(() => void read(), 10_000);
     return () => window.clearInterval(timer);
   }, [visible, read]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const timer = window.setInterval(() => setWallClock(new Date()), 30_000);
+    return () => window.clearInterval(timer);
+  }, [visible]);
 
   const advance = async (minutes: number) => {
     if (!clock || busy) return;
@@ -72,6 +79,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     <section className="rev-classroom-clock" data-testid="rev-classroom-clock" aria-label="课堂时空模拟">
       <strong>课堂时空模拟｜不是实际定位或真实灾情</strong>
       <span data-testid="rev-clock-virtual">模拟时间：{stamp(clock.virtual_now)} · 服务器第 {clock.version} 版</span>
+      <span data-testid="rev-clock-wall">现实演示时间：{stamp(wallClock.toISOString())}</span>
       {clock.current_activity_title && <span>当前站：{clock.current_activity_title}</span>}
       <div className="rev-classroom-clock-actions">
         <button type="button" disabled={busy} data-testid="rev-clock-plus30" onClick={() => void advance(30)}>+30 分钟</button>

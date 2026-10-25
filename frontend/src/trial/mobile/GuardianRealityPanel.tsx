@@ -129,7 +129,13 @@ function recoveryStatusLabel(status: string): string {
   return label(labels, status, "恢复状态已记录");
 }
 
+/** A fixture signal is a classroom injection, never a venue's own closure notice. */
+const SCENARIO_PROVIDER = /fixture|city-signal/i;
+
 function sourceLabel(provider: string, provenance: string): string {
+  if (SCENARIO_PROVIDER.test(provider)) {
+    return "模拟供应商信号 · 课堂注入，非景区官方公告";
+  }
   const safeProvider = providerLabels[provider.toLowerCase()] ?? "行程记录";
   const safeProvenance = label(provenanceLabels, provenance, "来源已记录");
   return `${safeProvider} · ${safeProvenance}`;
