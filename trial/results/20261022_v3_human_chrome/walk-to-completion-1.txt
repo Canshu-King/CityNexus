@@ -1,0 +1,172 @@
+{
+  "fixture": "journey/plan/first stop ACTIVE in a copy",
+  "start": {
+    "sequence": 0,
+    "status": "RUNNING",
+    "virtual_now": "2026-12-03T09:00:00+08:00",
+    "event": "SIM_STARTED"
+  },
+  "steps": [
+    {
+      "http": 200,
+      "sequence": 1,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T09:00:00+08:00",
+      "event": "SIM_DEPARTURE"
+    },
+    {
+      "http": 200,
+      "sequence": 2,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T09:00:00+08:00",
+      "event": "SIM_ARRIVAL"
+    },
+    {
+      "http": 200,
+      "sequence": 3,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T09:00:00+08:00",
+      "event": "SIM_EXPERIENCE"
+    },
+    {
+      "http": 200,
+      "sequence": 4,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T10:00:00+08:00",
+      "event": "SIM_ACTIVITY_COMPLETED"
+    },
+    {
+      "http": 200,
+      "sequence": 5,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T11:18:00+08:00",
+      "event": "SIM_DEPARTURE"
+    },
+    {
+      "http": 200,
+      "sequence": 6,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T11:18:00+08:00",
+      "event": "SIM_ARRIVAL"
+    },
+    {
+      "http": 200,
+      "sequence": 7,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T11:18:00+08:00",
+      "event": "SIM_EXPERIENCE"
+    },
+    {
+      "http": 200,
+      "sequence": 8,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T12:18:00+08:00",
+      "event": "SIM_ACTIVITY_COMPLETED"
+    },
+    {
+      "http": 200,
+      "sequence": 9,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T19:18:00+08:00",
+      "event": "SIM_DEPARTURE"
+    },
+    {
+      "http": 200,
+      "sequence": 10,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T19:18:00+08:00",
+      "event": "SIM_ARRIVAL"
+    },
+    {
+      "http": 200,
+      "sequence": 11,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T19:18:00+08:00",
+      "event": "SIM_EXPERIENCE"
+    },
+    {
+      "http": 200,
+      "sequence": 12,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T20:18:00+08:00",
+      "event": "SIM_ACTIVITY_COMPLETED"
+    },
+    {
+      "http": 200,
+      "sequence": 13,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T09:00:00+08:00",
+      "event": "SIM_DEPARTURE"
+    },
+    {
+      "http": 200,
+      "sequence": 14,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T09:00:00+08:00",
+      "event": "SIM_ARRIVAL"
+    },
+    {
+      "http": 200,
+      "sequence": 15,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T09:00:00+08:00",
+      "event": "SIM_EXPERIENCE"
+    },
+    {
+      "http": 200,
+      "sequence": 16,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T10:00:00+08:00",
+      "event": "SIM_ACTIVITY_COMPLETED"
+    },
+    {
+      "http": 200,
+      "sequence": 17,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T14:00:00+08:00",
+      "event": "SIM_DEPARTURE"
+    },
+    {
+      "http": 200,
+      "sequence": 18,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T14:00:00+08:00",
+      "event": "SIM_ARRIVAL"
+    },
+    {
+      "http": 200,
+      "sequence": 19,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-04T14:00:00+08:00",
+      "event": "SIM_EXPERIENCE"
+    },
+    {
+      "http": 200,
+      "sequence": 20,
+      "status": "SIMULATED_COMPLETED",
+      "virtual_now": "2026-12-04T15:00:00+08:00",
+      "event": "SIMULATED_COMPLETED"
+    }
+  ],
+  "final": {
+    "sequence": 20,
+    "status": "SIMULATED_COMPLETED",
+    "virtual_now": "2026-12-04T15:00:00+08:00",
+    "event": "SIMULATED_COMPLETED"
+  },
+  "progress": {
+    "status": "SIMULATED_COMPLETED",
+    "readiness": {
+      "model_credentials_configured": true,
+      "standing_mission_id": null,
+      "pending_event_id": null,
+      "missing": [
+        "STANDING_MISSION_REQUIRED",
+        "OPEN_SCENE_EVENT_REQUIRED",
+        "RUN_NOT_AWAITING_GUARDIAN"
+      ],
+      "model_consent_required": true,
+      "network_checked": false
+    }
+  }
+}

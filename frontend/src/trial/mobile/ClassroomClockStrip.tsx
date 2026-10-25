@@ -129,6 +129,39 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
     }
   };
 
+  const advanceToNextStop = async (target: SimulationRun) => {
+    if (target.status !== "RUNNING") {
+      setStopNote("模拟没有在推进：请到课堂控制台处理等待中的事件。");
+      return;
+    }
+    setBusy(true);
+    let current = target;
+    try {
+      for (let step = 0; step < 8 && current.status === "RUNNING"; step += 1) {
+        const next = await simulationApi.advance(journeyId, current.run_id, current.sequence);
+        if (!next) {
+          setStopNote("这台后端还没有模拟执行接口。");
+          return;
+        }
+        current = next;
+        setRun(next);
+        window.dispatchEvent(new CustomEvent("citynexus:simulation-run", { detail: next }));
+        const last = next.history[next.history.length - 1] as { event?: string } | undefined;
+        if (last?.event === "SIM_ACTIVITY_COMPLETED" || next.status !== "RUNNING") break;
+      }
+      setStopNote(current.status === "SIMULATED_COMPLETED"
+        ? "两日模拟已走完（不是实际到场）"
+        : current.status === "RUNNING"
+          ? `已走到下一站（第 ${current.sequence} 步）`
+          : `模拟停在「${RUN_STATUS_TEXT[current.status] ?? current.status}」，请到课堂控制台处理。`);
+    } catch (caught) {
+      setStopNote(runFailureText(caught));
+      await read();
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const advance = async (minutes: number) => {
     if (busy || pending.current) return;
     pending.current = true;
@@ -184,7 +217,7 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
   const advanceStopOnce = async () => {
     const target = run ?? await freshRun();
     if (target) {
-      await advanceRun(target);
+      await advanceToNextStop(target);
       return;
     }
     setBusy(true);
