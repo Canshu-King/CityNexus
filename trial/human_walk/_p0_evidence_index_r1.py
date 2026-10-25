@@ -57,6 +57,8 @@ def main() -> int:
     cities = json_file("cities-classroom-62.txt")
     after = json_file("after-merge-check.txt")
     ui = lines_of("clock-run-ui-1.txt")
+    ui77 = lines_of("clock-run-ui-77.txt")
+    jump = lines_of("jump-clock-76.txt")
     two_day = lines_of("clock-two-day-classroom-62.txt")
     lan = lines_of("clock-run-lan-63.txt")
     scene = lines_of("clock-scene-guardian-59.txt")
@@ -77,6 +79,11 @@ def main() -> int:
                  "绿" if "ERRORS []" in ui and "已走到下一站" in find(ui, "AFTER_NEXT_NOTE") else "红",
                  "clock-run-ui-1.txt",
                  "%s；%s；%s" % (find(ui, "PLUS30_1_TEXT"), find(ui, "AFTER_NEXT"), find(ui, "ERRORS"))))
+    rows.append(("P0-2 时钟条三键复跑（入口落位后）",
+                 "绿" if "ERRORS []" in ui77 and "已走到下一站" in find(ui77, "AFTER_NEXT_NOTE")
+                 and "RELOAD_SAME_STEP true" in ui77 else "红",
+                 "clock-run-ui-77.txt",
+                 "%s；%s；%s" % (find(ui77, "PLUS30_1_TEXT"), find(ui77, "AFTER_NEXT"), find(ui77, "RELOAD_SAME_STEP"))))
     rows.append(("P0-2 两日闭环（真栈）",
                  "绿" if any("模拟行程已完成" in line for line in two_day) else "红",
                  "clock-two-day-classroom-62.txt, classroom-clock-run-62-live-classroom.png",
@@ -152,6 +159,15 @@ def main() -> int:
                  "绿" if hit_ok else "红",
                  "tablet-hit-73.txt, classroom-tablet-hit-73.png",
                  "四枚 hit 读数见回执；USER_VERIFIED 仍 PENDING"))
+    jump_ok = all('"jump":true' in find(jump, key) and '"hitSelf":true' in find(jump, key)
+                  for key in ("PHONE_BEFORE", "TABLET_BEFORE")) and all(
+                      '"clockTop":0' in find(jump, key) for key in ("PHONE_AFTER", "TABLET_AFTER"))
+    rows.append(("P0-4 带票入口落位与首屏跳转",
+                 "绿" if jump_ok else "红",
+                 "jump-clock-76.txt, classroom-jump-phone-before-76.png, classroom-jump-tablet-before-76.png",
+                 "%s；%s；%s；%s" % (
+                     find(jump, "PHONE_BEFORE"), find(jump, "PHONE_AFTER"),
+                     find(jump, "TABLET_BEFORE"), find(jump, "TABLET_AFTER"))))
     rows.append(("死锁屏提示",
                  "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
                  "acceptance-note-70.txt",
