@@ -23,7 +23,7 @@ import time
 import urllib.request
 
 WORK = r"D:/moodle/_codex_probe_1025"
-BACKEND = WORK + "/backend"
+BACKEND = os.environ.get("PROBE_BACKEND") or (WORK + "/backend")
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
 NODE = r"C:/Program Files/nodejs/node.exe"
 PROBES = r"D:/moodle/_cmdr_rescue_v3_1022/trial/human_walk/"
@@ -36,7 +36,8 @@ def stop_isolated_backend() -> None:
     """Only the uvicorn that serves this exported tree on the spare port."""
     script = (
         "Get-CimInstance Win32_Process -Filter \"Name='python.exe'\" | "
-        "Where-Object { $_.CommandLine -like '*--port 60400*' -and $_.CommandLine -like '*_codex_probe_1025*' } | "
+        "Where-Object { $_.CommandLine -like '*--port 60400*' -and "
+        "($_.CommandLine -like '*_codex_probe_1025*' -or $_.CommandLine -like '*_cmdr_rescue_v3_1022*') } | "
         "ForEach-Object { taskkill /PID $_.ProcessId /T /F }"
     )
     subprocess.run(["powershell", "-NoProfile", "-Command", script], capture_output=True)
