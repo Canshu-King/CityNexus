@@ -1,0 +1,11 @@
+[   0.0s] source plan sha256/16 6398e58f9b4cd3b3f1a24255d50c9bb2b10569abdd747271f15d3e50eab84aee (read-only)
+[   0.0s] copied -> Teacher_03_Project_Overview_R4.mpp (386048 bytes)
+[   2.0s] before: tasks=65 summaries=11 milestones=13 links=61 assignments=61
+[   3.1s] display names written: 16
+[   3.1s] structure left untouched: the plan's 13 milestones stay where the plan puts them
+[   3.2s] timescale before zoom: 2026-10-16 -> 2026-11-16 (31 days)
+[   3.2s] zoomout 1 -> 2026-10-18 .. 2027-01-24 (98 days)
+[   3.8s] outline collapsed; level-1 rows on screen: 11
+[   3.8s] saved (557056 bytes)
+[  10.7s] read back: {"tasks": 65, "summaries": 11, "milestones": 13, "links": 61, "assignments": 61, "promotedMilestones": false, "summaryDrift": [], "milestoneDatesKept": true, "milestoneLevels": {"M1": 2, "M2": 2, "M3": 2, "M4": 2, "M5": 2, "M6": 2, "M7": 2, "M8": 2, "M9": 2, "M10": 2, "M11": 2, "M12": 2, "M13": 2}, "reopenTimescale": "unreadable: AttributeError", "level1Rows": 11, "sourcePlanUnchanged": true, "sourcePlanBytes": 386048, "sha256_16": "c21b4712002471b4", "bytes": 427008}
+[  10.7s] R4 BUILD OK: 65 tasks, 11 summaries, 13 milestones, 61 links, 61 assignments, promoted=False, level-1 rows=11
