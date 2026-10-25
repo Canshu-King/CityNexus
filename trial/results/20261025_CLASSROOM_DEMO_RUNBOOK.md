@@ -196,3 +196,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - watch 每拍 OK 时删除 `classroom_ALERT.txt`；ALERT 时把那一拍与处理提示写进该文件（先跑 `classroom_demo_selfcheck_r1.py` 看哪项红，重跑 `start_classroom_demo.bat` 可重建场景；票过期不算 ALERT）。日志仍逐拍追加。
 - 重启后首拍 `01:57:03 OK … SESSION=LIVE … SIM_CONSOLE=AVAILABLE:RUNNING`，ALERT 文件不存在。
+
+### 01:59 完成态（journey COMPLETED）的屏上行为
+
+- 用带 run 的 COMPLETED 副本复测：票门进入后是封存红条 + 行程空态，**时钟条与控制台都不渲染**（`clock-completed-60.txt`、`classroom-clock-run-60-completed.png`）。
+- 所以老师点完第二次「到下一站」当下仍看得到完成态；刷新或重进才回封存页。给时钟条放宽 ACTIVE 条件不会改变这一点，未改代码。

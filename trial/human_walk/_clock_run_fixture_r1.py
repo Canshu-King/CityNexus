@@ -26,6 +26,7 @@ SOURCE_DB = os.environ.get("CLOCK_SOURCE_DB") or (WORK + "/probe6_1025.db")
 TARGET_DB = os.environ.get("CLOCK_TARGET_DB") or (WORK + "/probe16_1025.db")
 JOURNEY = os.environ.get("CLOCK_JOURNEY") or "8ba03b8e-1461-4da4-9943-826cbea089fe"
 MUTATE = os.environ.get("CLOCK_MUTATE", "1") == "1"
+FINISH = os.environ.get("CLOCK_FINISH", "0") == "1"
 OUT = r"D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/clock-run-ui-1.txt"
 PROBE = os.environ.get("CLOCK_PROBE") or r"D:/moodle/_cmdr_rescue_v3_1022/trial/human_walk/_clock_run_ui_r58.mjs"
 OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -62,6 +63,12 @@ def copy_and_activate() -> None:
         if first:
             target.execute("UPDATE journeys SET current_activity_id=? WHERE id=?", (first[0], JOURNEY))
             target.execute("UPDATE activities SET status='ACTIVE' WHERE id=?", (first[0],))
+        if FINISH:
+            # Fixture: show the finished screen (journey + run both completed).
+            target.execute(
+                "UPDATE simulation_runs SET status='SIMULATED_COMPLETED', sequence=20, "
+                "virtual_now='2026-12-04T15:00:00+08:00' WHERE journey_id=?", (JOURNEY,))
+            target.execute("UPDATE journeys SET status='COMPLETED' WHERE id=?", (JOURNEY,))
         target.commit()
     finally:
         target.close()

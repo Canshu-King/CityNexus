@@ -49,7 +49,7 @@
 7. ⚠️ 第 7 条已不适用：时钟条不再「变灰让位」，而是**接手推进**同一 run（P0-2 的接线），控制台只留事件/守护/恢复与刷新。
 8. ⚠️ 慢网与守护旧探针未重跑；守护在副本实测 120 秒未返回、停在 `GUARDIAN_RUNNING`（`guardian-unavailable-67.txt`），终态由单测覆盖。
 9. ✅ 刷新恢复：r58/r63 刷新后同一步（真栈 loopback 与 LAN）。
-10. ⚠️ 完成态重进：只读副本仍是封存红条、无时钟条（`clock-completed-60.txt`）；`/demo/session` 换草稿的口径仍在 #47。
+10. ✅ 已复测（带 run 的 COMPLETED 副本，01:59）：票门进入后仍是封存红条 + 行程空态，时钟条与控制台都不渲染（`clock-completed-60.txt`、`classroom-clock-run-60-completed.png`）。完成态并非「控件凭空消失」，而是入口本来就回到封存视图；把时钟条的 ACTIVE 条件放宽没有意义，未改代码。`/demo/session` 换草稿的口径仍在 #47。
 11. ⏳ 平板实物：`USER_VERIFIED` 仍 PENDING。
 
 **结论**：阶段 A 的第 3、4 步未跑，阶段 B 的第 5、8 步以新探针替代或未跑；其余已重验。未跑的步骤不得按绿计。
