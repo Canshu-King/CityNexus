@@ -154,3 +154,9 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 重启启动器后，用 LAN 地址 `http://10.12.35.143:14492`（不是 127.0.0.1）加票门进入，390px：开演 → 09:30（第 1 步）→ 10:00（第 2 步）→ 到下一站 15:00（第 6 步）→ 刷新同一步；城市池文案与两块面板同步；无 console 错误。
 - 回执 `clock-run-lan-63.txt`，截图 `classroom-clock-run-63-{pre,a,b,c,d}.png`。
 - 仍缺的只有**主人亲自用平板点**（`USER_VERIFIED`）。
+
+### P0-4 证据链：同一条 run（21:40）
+
+- 课堂真栈当前 run：`7911eaee-0985-4816-af86-29eed5059c02`（journey `2e9cd67d`、city `CN-RV-3507014DDE2C`、seed 17、sequence 6、RUNNING、12/03 15:00）。这就是 LAN 探针 `clock-run-lan-63.txt` 第 6 步驱动的那一条。
+- loopback 两日验收（`clock-two-day-classroom-62.txt`）走完在启动器重置前的另一条 run 上，那条的 id 已被重置覆盖、未留读数——不冒充。
+- 读数：`run-id-classroom-64.txt`。

@@ -1,0 +1,17 @@
+{
+  "http": 200,
+  "run_id": "7911eaee-0985-4816-af86-29eed5059c02",
+  "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+  "city_code": "CN-RV-3507014DDE2C",
+  "seed": 17,
+  "sequence": 6,
+  "status": "RUNNING",
+  "virtual_now": "2026-12-03T15:00:00+08:00",
+  "history_tail": {
+    "activity_id": "5b60b374-8d3b-40fb-be9f-ada33e650bb8",
+    "event": "SIM_ACTIVITY_COMPLETED",
+    "recorded_at": "2026-10-25T13:35:35.380476+00:00",
+    "sequence": 6,
+    "virtual_now": "2026-12-03T15:00:00+08:00"
+  }
+}
