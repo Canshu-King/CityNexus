@@ -2833,3 +2833,9 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 边界：`/demo/session` 的回退选择（无 ACTIVE 时选 DRAFT）仍归演示后端；这一刀只挡入口，不改后端选择。
 
+## 九十八、守卫的回归：正常场景仍能进，只有「无方案」被挡
+
+九十七的入口守卫要读 twin 才放行，必须证明它没把正常演示挡死。同一个 430×932 视口（`classroom-guard-regression-18.txt`）：正常场景（ACTIVE + 一张 PRESENTED 提案）点「课堂演示」，进入「北京 · 2日行程」、第一站可见、无错误提示、不是 0 项安排、页面错误 0 条。截图 `rehearsal18-guard-regression.png`。
+
+结论：守卫按 `active_plan_version_id` 判断——正常场景有方案就放行，走完的行程没有方案就挡住并说原因。
+
