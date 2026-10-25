@@ -257,6 +257,7 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 之前：配对成功后仍停在「探索」页，而时钟条在页面 y≈2693（390）／2972（1024），老师要翻三屏多才找得到；页面上也没有任何指向控制台的提示。排查时确认 `MissionCockpit` 只在 `activeTab==="trips"` 时带 `space="journey"`，原先的跳转按钮因此从未渲染。
 - 现在：① 配对成功后 `setActiveTab("trips")`（只作用于票门分支）；② 首屏在图层切换键下方显示一条课堂入口「课堂演示 · 模拟时间与推进都在课堂控制台里 / 去课堂控制台 ↓」，点按滚到时钟条；③ 若时钟条还没加载，按钮会等 900ms 重试一次，仍找不到就显示「这台机器没有课堂模拟控制台」而不是死按钮；④ 标题副句改为独立一行，不再与行程名粘连（平板实测「北京 · 2日行程旅途正在继续」）。
 - 屏上读数（`jump-clock-76.txt`，真栈、两视口、无 console 错误）：390×844 入口 `top=405`、`inView=true`、`hitSelf=true`，点击后 `clockTop=0`；1024×768 入口 `top=455`、`inView=true`、`hitSelf=true`，点击后 `clockTop=0`。截图 `classroom-jump-phone-before-76.png`、`classroom-jump-phone-76.png`、`classroom-jump-tablet-before-76.png`、`classroom-jump-tablet-76.png`。
+- 03:30 又补投影 1280×900：入口条 `top=477`、`hitSelf=true`，点击后 `clockTop=0`（`jump-clock-87.txt`、`classroom-jump-projector-before-87.png`）。三档视口的判定已并入证据索引。
 - 回归：课堂真栈复跑开演三键（`clock-run-ui-77.txt`）：开演 → +30 两次（09:30 第 1 步、10:00 第 2 步）→ 到下一站（15:00 第 6 步）→ 刷新同一步，`ERRORS []`；随后启动器恢复开场（`CLOCK=09:00`、`SIM_CONSOLE=NOT_STARTED`、`DEMO_READY=true`、`ENTRY_DOOR=PAIRING`）。
 - 提交 `86fed39052`（本枝），改动只含 `MissionCockpit.tsx/.css`、`RevolutionFirstLook.tsx` 的配对落页与探针/证据。
 

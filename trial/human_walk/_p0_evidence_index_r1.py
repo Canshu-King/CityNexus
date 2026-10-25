@@ -69,7 +69,7 @@ def main() -> int:
     after = json_file("after-merge-check.txt")
     ui = lines_of("clock-run-ui-1.txt")
     ui77 = lines_of("clock-run-ui-77.txt")
-    jump = lines_of("jump-clock-76.txt")
+    jump = lines_of("jump-clock-87.txt")
     two_day = lines_of("clock-two-day-classroom-62.txt")
     lan = lines_of("clock-run-lan-63.txt")
     scene = lines_of("clock-scene-guardian-59.txt")
@@ -210,14 +210,16 @@ def main() -> int:
                  "tablet-hit-73.txt, classroom-tablet-hit-73.png",
                  "四枚 hit 读数见回执；USER_VERIFIED 仍 PENDING"))
     jump_ok = all('"jump":true' in find(jump, key) and '"hitSelf":true' in find(jump, key)
-                  for key in ("PHONE_BEFORE", "TABLET_BEFORE")) and all(
-                      '"clockTop":0' in find(jump, key) for key in ("PHONE_AFTER", "TABLET_AFTER"))
+                  for key in ("PHONE_BEFORE", "TABLET_BEFORE", "PROJECTOR_BEFORE")) and all(
+                      '"clockTop":0' in find(jump, key)
+                      for key in ("PHONE_AFTER", "TABLET_AFTER", "PROJECTOR_AFTER"))
     rows.append(("P0-4 带票入口落位与首屏跳转",
                  "绿" if jump_ok else "红",
-                 "jump-clock-76.txt, classroom-jump-phone-before-76.png, classroom-jump-tablet-before-76.png",
-                 "%s；%s；%s；%s" % (
+                 "jump-clock-87.txt, classroom-jump-phone-before-87.png, classroom-jump-tablet-before-87.png, classroom-jump-projector-before-87.png",
+                 "%s；%s；%s；%s；%s；%s" % (
                      find(jump, "PHONE_BEFORE"), find(jump, "PHONE_AFTER"),
-                     find(jump, "TABLET_BEFORE"), find(jump, "TABLET_AFTER"))))
+                     find(jump, "TABLET_BEFORE"), find(jump, "TABLET_AFTER"),
+                     find(jump, "PROJECTOR_BEFORE"), find(jump, "PROJECTOR_AFTER"))))
     rows.append(("死锁屏提示",
                  "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
                  "acceptance-note-70.txt",
