@@ -242,6 +242,7 @@ export function GuardianRealityPanel({
       // The list can hold a node from an older trip change. When a simulation run
       // is paused on an event, prefer the proposal bound to that event; otherwise
       // fall back to the newest PRESENTED node.
+      type PausedRun = { run_id?: string; state?: { pending_event_id?: string | null } | null };
       const current = await fetch(
         `/api/v1/journeys/${journeyId}/simulation/runs/current`,
         {
@@ -249,19 +250,42 @@ export function GuardianRealityPanel({
           cache: "no-store",
         },
       ).then((response) => (response.ok ? response.json() : null)).catch(() => null) as
-        | { run?: { state?: { pending_event_id?: string | null } } | null }
+        | (PausedRun & { run?: PausedRun | null })
         | null;
-      const pendingEventId = current?.run?.state?.pending_event_id ?? null;
-      const presented = items
-        .filter((item) => item.status === "PRESENTED")
-        .sort((left, right) => {
-          const leftAt = (left as { created_at?: string }).created_at ?? "";
-          const rightAt = (right as { created_at?: string }).created_at ?? "";
-          return rightAt.localeCompare(leftAt);
-        });
-      const candidate = (pendingEventId
-        ? presented.find((item) => item.trigger_event_id === pendingEventId)
-        : undefined) ?? presented[0];
+      // This endpoint answers with the bare run row, not a wrapper; accept both.
+      const run = current ? (current.run ?? current) : null;
+      const pendingEventId = run?.state?.pending_event_id ?? null;
+      let pausedProposalId: string | null = null;
+      if (run?.run_id) {
+        const progress = await fetch(
+          `/api/v1/journeys/${journeyId}/simulation/runs/${run.run_id}/progress`,
+          {
+            headers: { Accept: "application/json", Authorization: `Bearer ${readTravelerBearer()}` },
+            cache: "no-store",
+          },
+        ).then((response) => (response.ok ? response.json() : null)).catch(() => null) as
+          | { proposals?: Array<{ id?: string; status?: string }> }
+          | null;
+        pausedProposalId = (progress?.proposals ?? []).find(
+          (item) => item.status === "PRESENTED" && typeof item.id === "string",
+        )?.id ?? null;
+      }
+      const presented = items.filter((item) => item.status === "PRESENTED");
+      const candidate =
+        (pausedProposalId ? presented.find((item) => item.id === pausedProposalId) : undefined)
+        ?? (pendingEventId ? presented.find((item) => item.trigger_event_id === pendingEventId) : undefined)
+        ?? presented[0];
+      // When the paused run's own proposal is not in this list, offering another
+      // event's node would move the wrong plan. Say where the adjustment lives.
+      if (pendingEventId && !presented.some(
+        (item) => item.id === pausedProposalId || item.trigger_event_id === pendingEventId,
+      )) {
+        if (!cancelled) {
+          setProposalState("idle");
+          setProposalNote("当前模拟事件的调整在课堂控制台接受；这里没有与它对应的建议。");
+        }
+        return;
+      }
       if (!candidate) {
         if (!cancelled) setProposalState("idle");
         return;

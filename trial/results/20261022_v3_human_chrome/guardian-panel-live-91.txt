@@ -1,0 +1,67 @@
+ENTRY {"run":"尚未开演","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null,"guardianFailed":false,"guardianUnresolved":false}
+STARTED {"run":"模拟进行中 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null,"guardianFailed":false,"guardianUnresolved":false}
+START_PROGRESS {"pending_event":null,"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"fecee1ea-15bb-46da-8843-460a7bdc2696","status":"RUNNING","sequence":0,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40"},"proposals":[],"guardian_runs":[],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":null,"missing":["OPEN_SCENE_EVENT_REQUIRED","RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false},"outcome":{"code":"UNKNOWN"}}
+CLOSURE_BUTTON 1
+AFTER_SCENE {"run":"等待守护决策 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null,"guardianFailed":false,"guardianUnresolved":false}
+AFTER_SCENE_PROGRESS {"pending_event":{"id":"bc4a439f-a753-4d39-8c67-e25164040177","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"fecee1ea-15bb-46da-8843-460a7bdc2696","status":"PAUSED_FOR_GUARDIAN","sequence":1,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","event":"bc4a439f-a753-4d39-8c67-e25164040177"},"proposals":[],"guardian_runs":[],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"bc4a439f-a753-4d39-8c67-e25164040177","missing":[],"model_consent_required":true,"network_checked":false},"outcome":{"code":"UNKNOWN"}}
+GUARDIAN_BUTTON 1
+POLL 0 elapsed_s=6 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 1 elapsed_s=12 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 2 elapsed_s=18 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 3 elapsed_s=24 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 4 elapsed_s=30 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 5 elapsed_s=36 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 6 elapsed_s=42 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 7 elapsed_s=48 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 8 elapsed_s=54 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 9 elapsed_s=60 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 10 elapsed_s=66 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 11 elapsed_s=72 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 12 elapsed_s=78 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 13 elapsed_s=84 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 14 elapsed_s=90 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 15 elapsed_s=96 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 16 elapsed_s=102 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 17 elapsed_s=108 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 18 elapsed_s=115 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 19 elapsed_s=121 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 20 elapsed_s=127 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 21 elapsed_s=133 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 22 elapsed_s=139 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 23 elapsed_s=145 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 24 elapsed_s=151 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 25 elapsed_s=157 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 26 elapsed_s=163 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 27 elapsed_s=169 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 28 elapsed_s=175 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 29 elapsed_s=181 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 30 elapsed_s=187 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 31 elapsed_s=193 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 32 elapsed_s=199 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 33 elapsed_s=205 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 34 elapsed_s=211 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 35 elapsed_s=217 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 36 elapsed_s=223 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 37 elapsed_s=229 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 38 elapsed_s=235 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 39 elapsed_s=241 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 40 elapsed_s=247 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 41 elapsed_s=253 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 42 elapsed_s=259 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 43 elapsed_s=265 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 44 elapsed_s=271 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 45 elapsed_s=277 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 46 elapsed_s=283 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 47 elapsed_s=289 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 48 elapsed_s=295 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 49 elapsed_s=301 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 50 elapsed_s=307 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 51 elapsed_s=313 status=GUARDIAN_RUNNING seq=2 proposals=[] runs=[{"status":"RUNNING","proposal_id":null}] outcome={"code":"UNKNOWN"}
+POLL 52 elapsed_s=319 status=PAUSED_FOR_ACCEPTANCE seq=2 proposals=[{"id":"58282603-1d88-41ad-b8bf-93cc663ab91e","status":"PRESENTED"}] runs=[{"status":"PARTIAL","proposal_id":"58282603-1d88-41ad-b8bf-93cc663ab91e"}] outcome={"code":"PROPOSAL_READY"}
+AFTER_GUARDIAN {"run":"等待接受调整 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":null,"origin":null,"proposalNote":null,"guardianFailed":false,"guardianUnresolved":false}
+AFTER_GUARDIAN_PROGRESS {"pending_event":{"id":"bc4a439f-a753-4d39-8c67-e25164040177","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"fecee1ea-15bb-46da-8843-460a7bdc2696","status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","event":"bc4a439f-a753-4d39-8c67-e25164040177"},"proposals":[{"id":"58282603-1d88-41ad-b8bf-93cc663ab91e","status":"PRESENTED"}],"guardian_runs":[{"status":"PARTIAL","proposal_id":"58282603-1d88-41ad-b8bf-93cc663ab91e"}],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"bc4a439f-a753-4d39-8c67-e25164040177","missing":["RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false},"outcome":{"code":"PROPOSAL_READY"}}
+GUARDIAN_TAB 1
+PANEL_SCREEN {"run":"等待接受调整 · 12-03 09:00","acceptanceNote":false,"modelNote":false,"message":null,"proposal":"移除故宫博物院；路上少 66 分钟。","origin":"Agent 生成 · 服务器留有运行记录","proposalNote":null,"guardianFailed":false,"guardianUnresolved":false}
+PANEL_PROGRESS {"pending_event":{"id":"bc4a439f-a753-4d39-8c67-e25164040177","event_type":"CLOSURE","status":"DETECTED","provenance":"SIMULATED","occurred_at":"2026-12-03T09:00:00+08:00"},"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":{"id":"fecee1ea-15bb-46da-8843-460a7bdc2696","status":"PAUSED_FOR_ACCEPTANCE","sequence":2,"plan":"e74a5edb-3f6d-40c3-910c-52e449619d40","event":"bc4a439f-a753-4d39-8c67-e25164040177"},"proposals":[{"id":"58282603-1d88-41ad-b8bf-93cc663ab91e","status":"PRESENTED"}],"guardian_runs":[{"status":"PARTIAL","proposal_id":"58282603-1d88-41ad-b8bf-93cc663ab91e"}],"readiness":{"ai_enabled":true,"model_credentials_configured":true,"standing_mission_id":"e2265d59-f116-4a6c-9cfd-4da3b8ec905e","pending_event_id":"bc4a439f-a753-4d39-8c67-e25164040177","missing":["RUN_NOT_AWAITING_GUARDIAN"],"model_consent_required":true,"network_checked":false},"outcome":{"code":"PROPOSAL_READY"}}
+RESPONSES [{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/replans"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/fecee1ea-15bb-46da-8843-460a7bdc2696/progress"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/fecee1ea-15bb-46da-8843-460a7bdc2696/progress"},{"status":200,"url":"/api/v1/plans/e74a5edb-3f6d-40c3-910c-52e449619d40"},{"status":200,"url":"/api/v1/plans/e74a5edb-3f6d-40c3-910c-52e449619d40"},{"status":200,"url":"/api/v1/demo/simulation-clock/2e9cd67d-10ca-4ecd-920b-76c81a350c71"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/cities?seed=17"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/fecee1ea-15bb-46da-8843-460a7bdc2696/progress"},{"status":200,"url":"/api/v1/plans/e74a5edb-3f6d-40c3-910c-52e449619d40"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/current"},{"status":200,"url":"/api/v1/journeys/2e9cd67d-10ca-4ecd-920b-76c81a350c71/simulation/runs/fecee1ea-15bb-46da-8843-460a7bdc2696/progress"}]
+ERRORS []
