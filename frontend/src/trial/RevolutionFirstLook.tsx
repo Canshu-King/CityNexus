@@ -3,7 +3,7 @@ import { BootstrapDiscoveryPanel } from "../features/discovery/BootstrapDiscover
 import { RevolutionQuickExplore } from "./RevolutionQuickExplore";
 import { MobilePlanWorkbench } from "./mobile/MobilePlanWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
-import { cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse, type SessionDraftJourney } from "../api/citynexus";
+import { CityNexusApiError, cityNexusApi, type AgentRuntimeStatus, type BootstrapPocketWalkResponse, type SessionDraftJourney } from "../api/citynexus";
 import { RevolutionMobileNav, type RevolutionMobileTab } from "./RevolutionMobileNav";
 import { MissionCockpit } from "./mobile/MissionCockpit";
 import { AgentWorkStatus } from "./mobile/AgentWorkStatus";
@@ -485,6 +485,16 @@ function readPerPersonBudgetFromGoal(text: string): number | null {
   if (!match) return null;
   const value = Number(match[1]);
   return Number.isFinite(value) ? value : null;
+}
+
+function demoEntryFailureText(caught: unknown, forTicket: boolean): string {
+  const status = caught instanceof CityNexusApiError ? caught.status : 0;
+  // A dead or unreachable demo machine used to read as "you need a pairing link", which sends
+  // the teacher looking for the wrong thing. Only a real 403 means the ticket door is closed.
+  if (status === 0) return "演示机没有回应：请回电脑看启动器窗口，必要时重跑启动器再来。";
+  if (forTicket) return "这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。";
+  if (status === 403) return "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。";
+  return "示例行程还没准备好，请让演示机先启动。";
 }
 
 export function RevolutionFirstLook() {
@@ -1128,8 +1138,8 @@ export function RevolutionFirstLook() {
           accessToken = answer.access_token;
           travelerId = answer.traveler_id;
           journeyId = answer.journey_id;
-        } catch {
-          showEntryError("这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。");
+        } catch (caught) {
+          showEntryError(demoEntryFailureText(caught, true));
           return;
         }
         clearPairingTicket();
@@ -1139,8 +1149,8 @@ export function RevolutionFirstLook() {
           accessToken = answer.access_token;
           travelerId = answer.traveler_id;
           journeyId = answer.journey_id;
-        } catch {
-          showEntryError("课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。");
+        } catch (caught) {
+          showEntryError(demoEntryFailureText(caught, false));
           return;
         }
       }
