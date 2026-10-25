@@ -372,6 +372,32 @@ def main() -> int:
                  "转态耗时=%s 秒；末态=%s；outcome=%s" % (
                      success_seconds, final107.get("status"),
                      (final107.get("outcome") or {}).get("code"))))
+    timed109 = lines_of("classroom-timed-path-109.txt")
+    timed_final = line_json(timed109, "FINAL")
+    timed_seconds = None
+    for line in timed109:
+        if line.startswith("STEP HOP_") and "SIMULATED_COMPLETED" in line:
+            match = re.search(r"elapsed_s=([0-9.]+)", line)
+            if match:
+                timed_seconds = float(match.group(1))
+    rows.append(("课堂主线整条计时（390 真机）",
+                 "绿" if timed_final.get("status") == "SIMULATED_COMPLETED"
+                 and timed_seconds is not None and timed_seconds < 330
+                 and "ERRORS []" in timed109 else "红",
+                 "classroom-timed-path-109.txt, classroom-timed-path-109.png",
+                 "走到封存=%.1f 秒；末态=%s" % (
+                     timed_seconds if timed_seconds is not None else -1.0,
+                     timed_final.get("status"))))
+    wait110 = lines_of("guardian-wait-110.txt")
+    wait_text = "\n".join(wait110)
+    rows.append(("守护等待期只有一句话",
+                 "绿" if "WAIT_NOTE 1" in wait_text
+                 and '"visible":true' in wait_text
+                 and "OLD_SENTENCE_COUNT 0" in wait_text
+                 and "ERRORS []" in wait_text else "红",
+                 "guardian-wait-110.txt, classroom-guardian-wait-110.png",
+                 "%s；%s" % (find(wait110, "WAIT_NOTE"),
+                             find(wait110, "OLD_SENTENCE_COUNT"))))
     rows.append(("无票根地址的课堂入口文案",
                  "绿" if "一次性配对链接" in find(entry99, "BANNER_AFTER")
                  and "SESSION_BUTTON 1" in entry99
