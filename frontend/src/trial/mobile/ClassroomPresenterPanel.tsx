@@ -195,7 +195,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             disabled={busy}
             onClick={() => act(
               () => simulationApi.guardian(journeyId, run.run_id, run.sequence),
-              "守护正在分析，通常要二三十秒；状态会自己变，请别重复按。",
+              "守护正在分析：接上模型时实测要四分钟左右；没接模型会一直停在等待。请别重复按。",
             )}
           >
             交给守护助手
