@@ -1,0 +1,7 @@
+PROPOSAL_BOX {"x":726.765625,"y":999.59375,"width":496.21875,"height":162.140625}
+PROPOSAL_IN_VIEW false
+CLOCK_VISIBLE true
+CLOCK_TEXT "课堂时空模拟｜不是实际定位或真实灾情\n模拟时间：12/03 09:00 · 服务器第 0 版\n现实演示时间：10/25 15:53\n当前站：故宫博物院\n+30 分钟\n+1 小时\n到下一站"
+SIM_LABEL true
+ORIGIN_LABEL true
+ERRORS []

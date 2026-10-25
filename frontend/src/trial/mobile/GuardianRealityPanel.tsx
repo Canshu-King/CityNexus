@@ -258,7 +258,14 @@ export function GuardianRealityPanel({
         setProposalState("ready");
         // The card can sit below the fold on a phone; bring it into view once so
         // pressing 行程守护 actually shows the decision instead of its heading.
-        window.requestAnimationFrame(() => proposalRef.current?.scrollIntoView({ block: "center" }));
+        window.requestAnimationFrame(() => {
+          // On the desktop the panel sits in a right-hand column that is already in view;
+          // scrolling the whole page to center the card pushes the map pane off-screen and
+          // leaves a large blank. Only the phone layout needs the scroll.
+          if (window.matchMedia("(max-width: 899px)").matches) {
+            proposalRef.current?.scrollIntoView({ block: "center" });
+          }
+        });
       }
     }).catch(() => {
       if (!cancelled) {

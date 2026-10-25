@@ -2855,3 +2855,13 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 边界：彩排会覆盖 `classroom-rehearsal-14.txt` 与两张图（同一次探针的输出），属正常；失败时打印「did NOT finish」、退出码 1，需用 `start_classroom_demo.bat` 重置。
 
+## 一百零一、老师用电脑投影时：左侧地图钉住，不再是一大片空白
+
+1280×900 实测（`classroom-desktop-1280-20.txt`、`classroom-desktop-dump-21.txt`）：点「行程守护」后页面被滚到约 2586，左列地图被带出视口，屏幕上剩一大片空白。
+
+两处改动：`GuardianRealityPanel` 与 `MissionCockpit` 的自动滚动只在窄屏（≤899px）执行；桌面左列 `.cn-mission-map-pane` 改为 `position: sticky; top: 16px`，右侧长列滚动时地图钉在视口（`frontend/src/trial/mobile/MissionCockpit.css` 的 min-width:1000px 段）。
+
+修复后：地图面板 y=16（钉住）、时钟条与守护面板都在视口内、提案卡在 y≈1000（视口高 900，需再滚约 100px 才整张可见）；零页面错误，类型检查 rc=0（`typecheck-desktop-scroll-1.txt:5`）。截图 `rehearsal20-desktop.png`。
+
+边界：那次约 2586 的滚动源没有完全定位（两个守卫把它从 3217 降到 2586）；桌面首屏仍需轻滚才能看全提案卡，手机链不受影响（24 秒彩排仍绿）。
+

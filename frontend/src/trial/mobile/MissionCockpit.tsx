@@ -137,7 +137,11 @@ export function MissionCockpit({
     setLayer(next);
     // Phone panels remain mounted so switching never discards draft edits.
     requestAnimationFrame(() => {
-      document.querySelector(".cn-mission-layer-tabs")?.scrollIntoView({ block: "start", behavior: "auto" });
+      // Only the single-column layout needs the page scrolled to the tabs; on desktop the
+      // panes sit side by side and scrolling the page hides the map.
+      if (window.matchMedia("(max-width: 899px)").matches) {
+        document.querySelector(".cn-mission-layer-tabs")?.scrollIntoView({ block: "start", behavior: "auto" });
+      }
     });
   };
   const goalRequest = useMemo(() => commandRevision ? ({ journeyId, goal: command }) : null, [journeyId, command, commandRevision]);

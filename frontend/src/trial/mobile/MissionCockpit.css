@@ -453,6 +453,12 @@
   .rev-mobile-v1 .cn-mission-timeline-pane {
     max-height: none; overflow-y: visible;
   }
+  /* The left map column stays with the reader while the long right-hand column scrolls. */
+  .rev-mobile-v1 .cn-mission-map-pane {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+  }
 }
 .rev-mobile-v1 .cn-mission-os .rev-workspace-inline .rev-workspace-body { padding: 6px 0 0; }
 .rev-mobile-v1 .cn-mission-os .rev-workspace-inline .rev-workspace-answer {
