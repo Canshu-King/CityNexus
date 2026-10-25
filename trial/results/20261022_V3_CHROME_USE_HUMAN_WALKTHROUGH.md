@@ -2849,3 +2849,9 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 归属：这条闭环在 Guardian 执行侧（Codex 的 sandbox 分支正在做 Guardian scene handoff），**我没有改后端**，也没有把「已接受」伪装成 Guardian 的结论。演示口径：接受后以行程屏为准；若回看守护屏，说明「这是检测当时的结论，接受结果是行程本身」。
 
+## 一百、一键彩排：准备 → 走完整链 → 自动恢复
+
+明天用户会在课前自己走一遍。新增 `rehearse_classroom.bat`（两份同源）：prepare → 用 430×932 探针走「进入 → 提案 → 接受 → 跨天 → 时钟 → 蓝点」→ 再 prepare 一次恢复场景。真跑一次（`rehearse_run_1.txt`）：两段 `DEMO_READY=true`、末行「Rehearsal passed; the scene is back at 09:00 with one waiting proposal」、退出码 0；彩排本身 24.0 秒（这次地图段多等 4 秒）；恢复后自检 `JOURNEY_STATUS=ACTIVE`、新提案 `21571e09…`、`PAGE_LAN` 200（`classroom-selfcheck-12.txt:1`）。
+
+边界：彩排会覆盖 `classroom-rehearsal-14.txt` 与两张图（同一次探针的输出），属正常；失败时打印「did NOT finish」、退出码 1，需用 `start_classroom_demo.bat` 重置。
+

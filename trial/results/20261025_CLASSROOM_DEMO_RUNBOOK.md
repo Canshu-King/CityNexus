@@ -13,6 +13,8 @@
 
 > 打不开时先看电脑浏览器同一地址；仍打不开就重跑第 1 步（会重置场景）。
 >
+> **上课前想自己先走一遍**：双击 `D:\moodle\_cmdr_v3_port_1022\rehearse_classroom.bat`（入库副本 `trial/play_launcher/classroom_demo/rehearse_classroom.bat`）。它会准备场景 → 用手机视口走完整链（会消耗掉那张提案）→ 再准备一次把场景恢复到 09:00 一张待接受提案。绿色走到最后一行就是通过；彩排会重写 `classroom-rehearsal-14.txt`，属正常。
+>
 > 随时自检（不改场景、不打印任何凭据）：
 > `D:\moodle\CityNexus\.venv\Scripts\python.exe trial/play_launcher/classroom_demo/classroom_demo_selfcheck_r1.py`
 > 看到 `DEMO_READY=true`、`JOURNEY_STATUS=ACTIVE`、`PROPOSAL_WAITING` 有 id、`CLOCK` 是 09:00 即可开演。
