@@ -300,6 +300,13 @@ def main() -> int:
                  "banner=%s；clock=%s，presenter=%s，entry=%s" % (
                      reentry_screen.get("banner"), reentry_screen.get("clock"),
                      reentry_screen.get("presenter"), reentry_screen.get("entry"))))
+    entry99 = lines_of("entry-no-ticket-99.txt")
+    rows.append(("无票根地址的课堂入口文案",
+                 "绿" if "一次性配对链接" in find(entry99, "BANNER_AFTER")
+                 and "SESSION_BUTTON 1" in entry99
+                 and "ERRORS []" in entry99 else "红",
+                 "entry-no-ticket-99.txt, classroom-entry-no-ticket-99.png",
+                 "%s；%s" % (find(entry99, "SESSION_BUTTON"), find(entry99, "BANNER_AFTER"))))
     rows.append(("合入后一键核对",
                  "绿" if after.get("all_green") is True else "红",
                  "after-merge-check.txt",

@@ -1,0 +1,6 @@
+BANNER_BEFORE ""
+TRIPS_TAB 1
+SESSION_BUTTON 1
+BANNER_AFTER "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。"
+SESSION_AFTER 1
+ERRORS []
