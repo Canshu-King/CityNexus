@@ -29,7 +29,7 @@ def beat() -> str:
         state = json.loads(lines[-1])
     except Exception as error:  # noqa: BLE001
         return "ALERT selfcheck failed: %s" % str(error)[:120]
-    healthy = (
+    healthy = state.get("STACK_HEALTHY") is True if "STACK_HEALTHY" in state else (
         state.get("DEMO_READY") is True
         and state.get("BACKEND_HEALTH") == 200
         and state.get("PAGE_LAN") == 200
@@ -41,6 +41,7 @@ def beat() -> str:
         "DEMO_READY=%s" % state.get("DEMO_READY"),
         "JOURNEY=%s" % state.get("JOURNEY_STATUS"),
         "ENTRY_DOOR=%s" % state.get("ENTRY_DOOR"),
+        "SESSION=%s" % state.get("SESSION_STATE"),
         "SIM_CONSOLE=%s" % state.get("SIM_CONSOLE"),
         "CLOCK=%s" % (clock[:19] or "-"),
         "PROPOSAL=%s" % (proposal[:8] or "-"),

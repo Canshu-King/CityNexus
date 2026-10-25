@@ -75,7 +75,7 @@ def pairing_door() -> str:
         with urllib.request.urlopen(request, timeout=8) as answer:
             return "PAIRING" if answer.status in (201, 400, 422) else "http=%s" % answer.status
     except urllib.error.HTTPError as error:
-        if error.code == 403:
+        if error.code in (403, 422):
             return "PAIRING"
         return "SESSION" if error.code in (404, 405) else "http=%s" % error.code
     except Exception:  # noqa: BLE001
@@ -86,13 +86,27 @@ health_status, health = get(API + "/api/v1/health")
 web_status, _ = get(WEB + "/revolution")
 lan_status, _ = get(LAN + "/revolution")
 presenter = presenter_session()
+door = pairing_door()
 if presenter:
     session_status, session = 200, {"journey_id": presenter.get("journey_id")}
     token = str(presenter.get("access_token") or "")
+    session_state = "LIVE"
 else:
     session_status, session = get(API + "/api/v1/demo/session")
     token = str(session.get("access_token") or "")
+    # A pairing backend hands out 15-minute bearers; an expired file is not a
+    # broken stack, it only means the launcher has to print a fresh ticket.
+    session_state = "OPEN" if session_status == 200 else (
+        "NEEDS_TICKET" if door == "PAIRING" else "MISSING")
 journey_id = str(session.get("journey_id") or "")
+if not journey_id and os.path.exists(DB):
+    readonly = sqlite3.connect("file:" + DB + "?mode=ro", uri=True)
+    row = readonly.execute(
+        "select id from journeys where status='ACTIVE' order by created_at desc limit 1"
+    ).fetchone()
+    readonly.close()
+    if row is not None:
+        journey_id = row[0]
 clock_status, clock = (
     get(API + "/api/v1/demo/simulation-clock/" + journey_id, bearer=token)
     if journey_id else (0, {})
@@ -140,7 +154,10 @@ print(json.dumps({
     "CLOCK_HTTP": clock_status,
     "CLOCK": clock.get("virtual_now"),
     "CLOCK_VERSION": clock.get("version"),
-    "ENTRY_DOOR": pairing_door(), "SIM_CONSOLE": sim_console,
+    "ENTRY_DOOR": door, "SESSION_STATE": session_state,
+    "STACK_HEALTHY": bool(health_status == 200 and web_status == 200
+                          and scene.get("journey_status") in ("ACTIVE", "COMPLETED")),
+    "SIM_CONSOLE": sim_console,
     "TABLET_OPEN": "http://%s:14492/revolution (tablet: UNVERIFIED)" % lan_ipv4(),
     "AGENT_QA": "direct-replan-only",
     "REAL_POI": True,
