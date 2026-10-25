@@ -70,3 +70,14 @@
 |---|---|---|
 | `_clock_two_day_r61.mjs` | 否（夹具或真栈） | 连按「到下一站」到两日完成；`PAIR_OUT` 可改回执路径 |
 | `_clock_run_lan_r63.mjs` | 否（真栈） | LAN IP + 票门，390px：开演/+30/到下一站/刷新 |
+
+## 2026-10-26 02:18 新增
+
+| 探针 | 改场景？ | 说明 |
+|---|---|---|
+| `_p0_evidence_index_r1.py` | 否 | 从回执现读生成 P0 证据索引（缺文件写 MISSING） |
+| `_tablet_evidence_r1.py` | 否 | 统计外部客户端与 run 状态（不等于 USER_VERIFIED） |
+| `_proposal_accept_r1.py` | 否（副本） | 接受预置提案并读 plan 变化 |
+| `_resume_after_resolved_r1.py` | 否（副本） | 事件 RESOLVED 后打 resume 门（200） |
+| `_guardian_unavailable_r1.py` | 否（副本） | 守护长跑与死锁链（关掉 AI 仍调用） |
+| `_acceptance_note_r70.mjs` | 否（夹具） | 死锁态屏上提示与 `RESUME_BUTTONS 0` |
