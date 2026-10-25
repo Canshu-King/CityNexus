@@ -1145,6 +1145,10 @@ export function RevolutionFirstLook() {
           return;
         }
         clearPairingTicket();
+        // A classroom link opens straight onto the trip workspace, where the clock
+        // and presenter live. Landing on "explore" hides the console behind a tab.
+        setActiveTab("trips");
+        try { sessionStorage.setItem("citynexus.revolution.v3.space", "trips"); } catch { /* In-memory navigation remains usable. */ }
       } else {
         try {
           const answer = await cityNexusApi.demoSession();

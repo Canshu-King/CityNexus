@@ -60,7 +60,7 @@
   font-weight: 760;
   color: #fff !important;
 }
-.rev-mobile-v1 .cn-mission-head h2 span { color: #d2f0df; }
+.rev-mobile-v1 .cn-mission-head h2 span { display: block; margin-top: 2px; color: #d2f0df; font-size: .72em; }
 .rev-mobile-v1 .cn-mission-head p {
   max-width: 530px;
   margin: 0;
@@ -625,4 +625,42 @@
   }
   .rev-mobile-v1 .cn-mission-os .cn-mission-head { min-height: 112px; }
   .rev-mobile-v1 .cn-mission-head .cn-mission-state { align-self: flex-start; }
+}
+
+/* The classroom block sits far below on a real journey; this jumps to it. */
+.rev-mobile-v1 .cn-mission-jump-clock {
+  display: inline-flex;
+  align-items: center;
+  margin: 4px 0 2px;
+  padding: 9px 14px;
+  border: 1px solid #bfe3d2;
+  border-radius: 12px;
+  color: #146b50;
+  background: #f2fbf6;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 720;
+  cursor: pointer;
+}
+.rev-mobile-v1 .cn-mission-classroom-entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 4px;
+  padding: 10px 14px;
+  border: 1px solid #bfe3d2;
+  border-radius: 14px;
+  background: #f4fbf7;
+}
+.rev-mobile-v1 .cn-mission-classroom-entry > span {
+  flex: 1 1 220px;
+  color: #2b5c4a;
+  font-size: 13px;
+  font-weight: 650;
+}
+.rev-mobile-v1 .cn-mission-classroom-entry small[role="status"] {
+  flex: 1 1 100%;
+  color: #8a4b1f;
+  font-size: 12px;
 }

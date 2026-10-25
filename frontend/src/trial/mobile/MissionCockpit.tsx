@@ -132,6 +132,23 @@ export function MissionCockpit({
   const [focusedPlaceId, setFocusedPlaceId] = useState<string | null>(null);
   const [chosenDraftRevision, setChosenDraftRevision] = useState(0);
   const spatial = useRef<HTMLDivElement>(null);
+  const [clockJumpNote, setClockJumpNote] = useState<string | null>(null);
+  const jumpToClassroomClock = async () => {
+    const find = () => document.querySelector<HTMLElement>('[data-testid="rev-classroom-clock"]');
+    let target = find();
+    // The clock strip appears once the simulation read comes back; give the first
+    // tap one short retry instead of failing silently on a cold page.
+    if (!target) {
+      await new Promise((resolve) => { window.setTimeout(resolve, 900); });
+      target = find();
+    }
+    if (!target) {
+      setClockJumpNote("这台机器没有课堂模拟控制台；请双击启动器重建课堂演示。");
+      return;
+    }
+    setClockJumpNote(null);
+    target.scrollIntoView({ block: "start", behavior: "smooth" });
+  };
   const [layer, setLayer] = useState<"map" | "timeline" | "agent">(journeyStatus === "ACTIVE" ? "agent" : "map");
   useEffect(() => { setLayer(space === "journey" || journeyStatus === "ACTIVE" ? "timeline" : "map"); }, [space, journeyStatus]);
   const selectLayer = (next: "map" | "timeline" | "agent") => {
@@ -312,6 +329,13 @@ export function MissionCockpit({
       <button type="button" aria-pressed={layer === "timeline"} onClick={() => selectLayer("timeline")} data-testid="rev-mission-layer-timeline"><CalendarDays size={17} />{journeyStatus === "ACTIVE" ? "执行与待办" : "日程"}</button>
       {journeyStatus !== "ACTIVE" && <button type="button" aria-pressed={layer === "agent"} onClick={() => selectLayer("agent")} data-testid="rev-mission-layer-agent"><BrainCircuit size={17} />对话</button>}
     </div>
+    {journeyStatus === "ACTIVE" && (
+      <div className="cn-mission-classroom-entry" data-testid="rev-classroom-entry">
+        <span>课堂演示 · 模拟时间与推进都在课堂控制台里</span>
+        <button type="button" className="cn-mission-jump-clock" data-testid="rev-jump-clock" onClick={() => void jumpToClassroomClock()}>去课堂控制台 ↓</button>
+        {clockJumpNote && <small role="status" data-testid="rev-jump-clock-note">{clockJumpNote}</small>}
+      </div>
+    )}
     <div className="cn-mission-grid">
       <div className="cn-mission-agent-pane" data-testid="rev-mission-agent-pane">
         <div className="cn-mission-section-heading"><BrainCircuit size={18} /><strong>你的旅行搭档</strong></div>
