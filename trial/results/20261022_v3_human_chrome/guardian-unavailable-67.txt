@@ -1,0 +1,19 @@
+{
+  "source": "read-only copy of the live classroom DB",
+  "activity": "d98b00be-1a9f-4cc8-a355-b46bb0d5fff0",
+  "ai_enabled": false,
+  "mission": {
+    "http": 200,
+    "status": null,
+    "error": null
+  },
+  "before": {
+    "sequence": 6,
+    "status": "RUNNING"
+  },
+  "scene": {
+    "http": 200,
+    "status": "PAUSED_FOR_GUARDIAN",
+    "error": null
+  }
+}
