@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { travelerAuthHeaders } from "../../lib/travelerSession";
+import { simulationApi } from "./simulationClient";
 import "./ClassroomClockStrip.css";
 
 /**
@@ -34,22 +35,27 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
   const [wallClock, setWallClock] = useState(() => new Date());
   const [stopNote, setStopNote] = useState<string | null>(null);
   const [journeyDone, setJourneyDone] = useState(false);
+  const [runOwned, setRunOwned] = useState(false);
 
   const read = useCallback(async () => {
     try {
-      const [response, journeyResponse] = await Promise.all([
+      const [response, journeyResponse, runCurrent] = await Promise.all([
         fetch(`/api/v1/demo/simulation-clock/${journeyId}`, {
           headers: { Accept: "application/json", ...travelerAuthHeaders() },
         }),
         fetch(`/api/v1/journeys/${journeyId}`, {
           headers: { Accept: "application/json", ...travelerAuthHeaders() },
         }),
+        simulationApi.current(journeyId).catch(() => null),
       ]);
       setClock(response.ok ? (await response.json() as ClockPayload) : null);
       if (journeyResponse.ok) {
         const journey = await journeyResponse.json() as { status?: string };
         setJourneyDone(journey.status === "COMPLETED");
       }
+      // Once a SimulationRun exists the run owns the agenda; this strip must not
+      // advance the same journey through the older state machine.
+      setRunOwned(Boolean(runCurrent && runCurrent.available && runCurrent.run));
     } catch {
       setClock(null);
     }
@@ -158,10 +164,13 @@ export function ClassroomClockStrip({ journeyId, visible }: { journeyId: string;
       <span data-testid="rev-clock-wall">现实演示时间：{stamp(wallClock.toISOString())}</span>
       {clock.current_activity_title && <span>当前站：{clock.current_activity_title}</span>}
       {journeyDone && <span data-testid="rev-clock-done">模拟行程已完成 · 不是实际到场</span>}
+      {runOwned && (
+        <span data-testid="rev-clock-handoff">这趟行程已交给课堂控制台推进（模拟执行），这里的时钟按钮暂停使用。</span>
+      )}
       <div className="rev-classroom-clock-actions">
-        <button type="button" disabled={busy} data-testid="rev-clock-plus30" onClick={() => void advance(30)}>+30 分钟</button>
-        <button type="button" disabled={busy} data-testid="rev-clock-plus60" onClick={() => void advance(60)}>+1 小时</button>
-        <button type="button" disabled={busy || journeyDone} data-testid="rev-clock-next" onClick={() => void advanceStop()}>到下一站</button>
+        <button type="button" disabled={busy || runOwned} data-testid="rev-clock-plus30" onClick={() => void advance(30)}>+30 分钟</button>
+        <button type="button" disabled={busy || runOwned} data-testid="rev-clock-plus60" onClick={() => void advance(60)}>+1 小时</button>
+        <button type="button" disabled={busy || journeyDone || runOwned} data-testid="rev-clock-next" onClick={() => void advanceStop()}>到下一站</button>
       </div>
       {stopNote && <span data-testid="rev-clock-next-note">{stopNote}</span>}
     </section>

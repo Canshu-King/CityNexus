@@ -19,7 +19,9 @@ export type SimulationCity = {
 export type SimulationCities = {
   available: true;
   seed: number;
-  eligible: string[];
+  status: string;
+  required: number;
+  eligible_count: number;
   cities: SimulationCity[];
 };
 
@@ -44,6 +46,12 @@ export type SimulationCurrent =
 
 const unavailable = { available: false as const };
 
+export class SimulationError extends Error {
+  constructor(public code: string, public detail: string, public status: number) {
+    super(`${detail || code || "SIMULATION_ERROR"} http_status=${status}`);
+  }
+}
+
 function base(journeyId: string): string {
   return `/api/v1/journeys/${journeyId}/simulation`;
 }
@@ -55,7 +63,18 @@ async function call<T>(path: string, init?: RequestInit): Promise<T | null> {
     cache: "no-store",
   });
   if (response.status === 404 || response.status === 405) return null;
-  if (!response.ok) throw new Error(`simulation http_status=${response.status}`);
+  if (!response.ok) {
+    let code = "";
+    let detail = "";
+    try {
+      const body = (await response.json()) as { error?: { code?: string; message?: string } };
+      code = body.error?.code ?? "";
+      detail = body.error?.message ?? "";
+    } catch {
+      code = "";
+    }
+    throw new SimulationError(code, detail, response.status);
+  }
   return (await response.json()) as T;
 }
 
@@ -73,11 +92,22 @@ function writeInit(body: Record<string, unknown>): RequestInit {
 
 export const simulationApi = {
   async cities(journeyId: string, seed: number): Promise<SimulationCities | typeof unavailable> {
-    const body = await call<{ seed: number; eligible: string[]; results: SimulationCity[] }>(
-      `${base(journeyId)}/cities?seed=${encodeURIComponent(String(seed))}`,
-    );
+    const body = await call<{
+      seed: number;
+      status: string;
+      required_city_count: number;
+      eligible_city_count: number;
+      cities: SimulationCity[];
+    }>(`${base(journeyId)}/cities?seed=${encodeURIComponent(String(seed))}`);
     if (body === null) return unavailable;
-    return { available: true, seed: body.seed, eligible: body.eligible, cities: body.results };
+    return {
+      available: true,
+      seed: body.seed,
+      status: body.status,
+      required: body.required_city_count,
+      eligible_count: body.eligible_city_count,
+      cities: body.cities ?? [],
+    };
   },
 
   async current(journeyId: string): Promise<SimulationCurrent> {

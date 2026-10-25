@@ -1,0 +1,10 @@
+SESSION journey=2e9cd67d-10ca-4ecd-920b-76c81a350c71 title=北京 · 2日行程
+CITIES status=BLOCKED eligible=0 required=3 blocked=1
+  CITY CN-RV-3507014DDE2C BLOCKED missing=VERIFIED_CITY_ADCODE_REQUIRED,AT_LEAST_3_CAPTURED_ROUTES_REQUIRED
+CURRENT http=200 status=RUNNING
+RUN_REUSED status=RUNNING seq=0 vnow=2026-12-03T09:00:00+08:00
+ACTIVITY 5b60b374-8d3b-40fb-be9f-ada33e650bb8 故宫博物院
+SCENE http=200 status=PAUSED_FOR_GUARDIAN seq=1 vnow=2026-12-03T09:00:00+08:00
+  HISTORY [{"event": "SIM_STARTED", "recorded_at": "2026-10-25T08:06:16.011693+00:00", "sequence": 0, "virtual_now": "2026-12-03T09:00:00+08:00"}, {"environment_provenance": "SIMULATED", "event": "SIM_SCENE_INJECTED", "event_id": "54cd0ddf-2a44-4e0a-9c79-9d0ef229af19", "recorded_at": "2026-10-25T08:06:35.763966+00:00", "scene_id": "walk-closure-9358", "sequence": 1, "virtual_now": "2026-12-03T09:00:00+08:00
+GUARDIAN http=200 {"run_id": "d0cc0d29-bd12-402f-a4e7-63835940b935", "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71", "city_code": "CN-RV-3507014DDE2C", "seed": 23, "virtual_now": "2026-12-03T09:00:00+08:00", "timezone": "Asia/Shanghai", "sequence": 2, "status": "PAUSED_MODEL_UNAVAILABLE", "state": {"completed_activity_ids": [], "guardian_lease_expires_at": "2026-10-25T08:36:35.788954+00:00", "location": null, "pending_event_id": "54cd0ddf-2a44-4e0a-9c79-9d0ef229af19", "plan_version_id": "e74a5edb-3f6d-40c3-910c-52e449619d40", "provider_observation_ids": ["2bb8f1fb-fc9d-4666-8d1c-aefcfe336d7b"], "provider_snapshot_refs": [{"captured_at": "2026-10-24T21:49:32.575034+00:00", "fact_qualities": ["LIVE_PROVID
+  GUARDIAN status=PAUSED_MODEL_UNAVAILABLE seq=2 model_execution=None

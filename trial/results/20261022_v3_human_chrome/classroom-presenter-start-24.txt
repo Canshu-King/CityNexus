@@ -1,0 +1,18 @@
+PANEL count=1 visible=true
+BEFORE 模拟进行中 · 12-03 14:00
+BUTTONS_BEFORE ["走到下一阶段","快进一小时","刷新读数"]
+CLOCK_HANDOFF count=1 这趟行程已交给课堂控制台推进（模拟执行），这里的时钟按钮暂停使用。
+CLOCK_NEXT_DISABLED true
+START_SKIPPED run already exists
+AFTER_ADVANCE_1 模拟进行中 · 12-03 14:00
+AFTER_ADVANCE_2 模拟进行中 · 12-03 15:00
+AFTER_ADVANCE_3 模拟进行中 · 12-04 09:00
+AFTER_ADVANCE_4 模拟进行中 · 12-04 09:00
+AFTER_ADVANCE_5 模拟进行中 · 12-04 09:00
+AFTER_ADVANCE_6 模拟行程已完成 · 12-04 10:00
+ADVANCE_STOP round=7 status=模拟行程已完成 · 12-04 10:00
+HISTORY ["游览 · 12-04 09:00","完成一站 · 12-04 10:00","两日走完 · 12-04 10:00"]
+DONE_NOTE count=1 两日模拟走完，这趟行程已封存。再演一遍请重启课堂演示（双击启动器）。
+BUTTONS_FINAL ["刷新读数"]
+SIM_HTTP ["GET 200","GET 200","GET 200","GET 200","GET 200","GET 200","GET 200","POST 200","GET 200","GET 200","POST 200","GET 200","GET 200","POST 200","GET 200","GET 200","GET 200","POST 200","GET 200","GET 200","POST 200","GET 200","GET 200","POST 200","GET 200","GET 200"]
+ERRORS []

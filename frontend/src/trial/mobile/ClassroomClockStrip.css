@@ -21,3 +21,5 @@
   font-size: 13px;
 }
 .rev-classroom-clock-actions button:disabled { opacity: 0.55; }
+
+.rev-classroom-clock [data-testid="rev-clock-handoff"] { color: #6b5d3c; font-size: 12px; }

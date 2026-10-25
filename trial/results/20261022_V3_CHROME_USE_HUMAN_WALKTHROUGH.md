@@ -2873,3 +2873,35 @@ Codex 的 `SIMULATION_RUN_API_20261025.md` 定义 `/api/v1/journeys/{id}/simulat
 
 边界：真路径（城市池 READY、创建 run、注入事件、Guardian、SIMULATED_COMPLETED）要等 Codex 的分支合入后才能验；这一刀只证明「不合入不打扰」。
 
+## 一百零三、隔离环境里的真路径：两日能走完，城市池被数据挡住
+
+为了不拿课堂服务当试验田，把 Codex 分支（`a8f9b8ed`）的 backend 导出到 `_codex_probe_1025`，用演示库的副本（复制后补两张 simulation 表）另起后端 60395/60396，前端另起 14493。原课堂后端 60391 与前端 14492 全程未动；隔离库只做实验，不回流。
+
+真读数（`simulation-backend-walk-1.txt`）：
+
+- `GET /cities?seed=17` 回 `BLOCKED`：可用 0 座、需要 3 座；唯一城市缺「城市身份未核实」与「真捕获路线不足三条」。
+- `POST /runs` 仍回 201：城市池只用于随机选城，已有正式日程的行程能直接开演。
+- 八次 `advance` 从开演日 09:00 走到次日 10:00，`SIMULATED_COMPLETED`，两个活动完成，history 十步。
+- 注入闭馆事件 → `PAUSED_FOR_GUARDIAN`；`guardian` → 25 秒后 `PAUSED_MODEL_UNAVAILABLE`（隔离后端没有模型键，不假装跑过）。
+- 暂停时的三道门：`advance` 回 `SIMULATION_NOT_RUNNING`、`resume` 回 `SIMULATION_EVENT_REQUIRES_SIGNED_RESOLUTION`、`recover` 回 `SIMULATION_NO_INTERRUPTED_RUNTIME`，都是 409。
+
+城市池为什么永远 BLOCKED：建行程时前端给了随机身份 `CN-RV-<12 位>`（`frontend/src/trial/RevolutionFirstLook.tsx:407`），注释说「目录解析器会补上正式身份」，但后端把行程的 `city_code` 原样复制给每个地点（`backend/app/integrations/discovery/real_city.py:1617`），没有写回真 adcode 的一步；预检要求六位行政区划码。这是数据与身份链的缺口，不是预检过严。
+
+另一个边界：走完两日后，真实行程被标成 `COMPLETED`，课堂再演必须重启演示（重新准备场景）。
+
+## 一百零四、课堂控制台可操作：开演、推进、事件卡、守护，四步都过真按钮
+
+面板从只读改成可操作（`ClassroomPresenterPanel.tsx`）：未开演给「开演（模拟两日）」，进行中给「走到下一阶段」「快进一小时」，等待守护给「交给守护助手」，接受态给「继续模拟」，另有「刷新读数」。事件卡落在当前未完成的一站（`ClassroomPresenterPanel.tsx:220`），三张卡是闭馆、下雨、延误半小时，旁边写明「模拟事件，不是景区官方公告」。
+
+隔离栈上的三次真机（430×932）：
+
+- 开演与推进（`classroom-presenter-start-24.txt`）：尚未开演 → 模拟进行中 12-03 09:00 → 两次推进到 14:00；错误 0 条；六次推进后状态变「模拟行程已完成 · 12-04 10:00」，按钮只剩「刷新读数」，完成提示写明「再演一遍请重启课堂演示」。
+- 暂停与错误翻译（`classroom-presenter-live-23.txt`）：按「继续模拟」被 409 拒时，屏上写「这件事要在守护屏上按原生产品流程解决，再继续。」；历史三条是注入事件、守护已接手、守护模型不可用。
+- 事件卡与守护（`classroom-presenter-event-card-25.txt`）：给「故宫博物院」注入闭馆 → 等待守护决策；按「交给守护助手」立刻出现「守护正在分析，通常要二三十秒」，约十八秒后落到「现场模型不可用，已暂停」，并提示去下方守护屏处理。
+
+同一段行程只能有一个推进者：`SimulationRun` 存在后，时钟条把三个推进按钮全部禁用并写明已交给控制台（`ClassroomClockStrip.tsx:167`）；在我枝上 run 端点不存在，时钟条保持原样。
+
+真机暴露的两个缺陷已修：城市清单的响应键是 `cities` 而不是 `results`（`simulationClient.ts:94`）；语义错误码在 `error.message` 里、`error.code` 只是 `CONFLICT`（`simulationClient.ts:49`），面板按 message 翻译。
+
+边界：隔离后端没有模型键，所以只验到「模型不可用」这条诚实路径；真模型接管、接受提案后 `resume` 继续、三城 READY 的随机城市池都要等 Codex 合入且数据补齐后再验。平板与讲台闸的三档仍待裁。
+
