@@ -374,7 +374,7 @@ export function MissionCockpit({
                 : "同行决策"}</strong></button>
           </div>
           <ClassroomClockStrip journeyId={journeyId} visible={visible && journeyStatus === "ACTIVE"} />
-          <ClassroomPresenterPanel journeyId={journeyId} visible={visible && journeyStatus === "ACTIVE"} />
+          <ClassroomPresenterPanel journeyId={journeyId} visible={visible && (journeyStatus === "ACTIVE" || journeyStatus === "COMPLETED")} />
           <GuardianRealityPanel journeyId={journeyId} visible={visible && guardianOpen} active={journeyStatus === "ACTIVE"} />
         </article>
       </div>

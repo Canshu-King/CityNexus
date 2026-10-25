@@ -1105,6 +1105,11 @@ export function RevolutionFirstLook() {
     }
   };
 
+  const showEntryError = (message: string) => {
+    setError(message);
+    setActiveTab("trips");
+  };
+
   const enterDemoJourney = async () => {
     if (demoBusy) return;
     setDemoBusy(true);
@@ -1120,7 +1125,7 @@ export function RevolutionFirstLook() {
           travelerId = answer.traveler_id;
           journeyId = answer.journey_id;
         } catch {
-          setError("这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。");
+          showEntryError("这张课堂配对票已过期或已用过；请重新双击启动器，用窗口里新打印的地址打开。");
           return;
         }
         clearPairingTicket();
@@ -1131,22 +1136,29 @@ export function RevolutionFirstLook() {
           travelerId = answer.traveler_id;
           journeyId = answer.journey_id;
         } catch {
-          setError("课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。");
+          showEntryError("课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。");
           return;
         }
       }
       storeTravelerIdentity(accessToken, travelerId);
+      // A finished classroom trip is sealed; reopening it lands on an empty explore
+      // page that reads as data loss. Say what happened and point at the launcher.
+      const journey = await cityNexusApi.getJourney(journeyId);
+      if (journey.status === "COMPLETED") {
+        showEntryError("这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。");
+        return;
+      }
       // After the classroom trip is walked to the end, the entry falls back to a seed
       // draft with no plan; entering it shows "0 项安排" and looks broken. Keep the
       // teacher on the entry screen with the real reason instead.
       const twin = await cityNexusApi.getTwin(journeyId);
       if (!twin.active_plan_version_id) {
-        setError("课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。");
+        showEntryError("课堂演示的行程已完成或还没准备；请重启课堂演示（双击启动器）再进。");
         return;
       }
       await resumeSavedTrip(journeyId);
     } catch {
-      setError("示例行程还没准备好，请让演示机先启动。");
+      showEntryError("示例行程还没准备好，请让演示机先启动。");
     } finally {
       setDemoBusy(false);
     }

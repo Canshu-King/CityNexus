@@ -1,0 +1,7 @@
+FIRST {"present":false}
+FIRST_ERROR "这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。"
+AFTER_RELOAD {"present":false}
+RELOAD_ERROR ""
+AFTER_ENTRY_CLICK {"present":false}
+ENTRY_CLICK_ERROR ""
+ERRORS []
