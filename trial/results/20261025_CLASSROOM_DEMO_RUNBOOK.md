@@ -175,3 +175,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 控制台删掉「走到下一阶段」「快进一小时」两个按钮（与时钟条的三个键同义不同词）；RUNNING 时只留一句「推进用上面的『课堂时空模拟』三个键；这里只管事件、守护和恢复」+「刷新读数」。
 - 390px 屏证：`clock-run-ui-1.txt`（+30 → 09:30 第 1 步、+30 → 10:00 第 2 步、到下一站 → 12:18 第 6 步）+ `classroom-clock-run-58-b.png`。
+
+### 行程卡按状态改词（22:09）
+
+- 首屏三卡的第一枚原固定写「准备出发」，在已出发的旅程上会让人以为还没走；现按状态显示「行程进行中」「行程已结束」，只有未出发才叫「准备出发」（`data-testid=rev-open-trip`）。
+- 390px 屏证 `classroom-clock-run-58-b.png`。

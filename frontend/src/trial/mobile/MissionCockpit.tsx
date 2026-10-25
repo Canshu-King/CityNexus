@@ -363,7 +363,7 @@ export function MissionCockpit({
             }} /> : <p>Agent 会把暂定安排和待查事项逐步保存到这里。</p>}</>}
           {space === "journey" && journeyStatus !== "ACTIVE" && <details open className="cn-v3-preparation" data-testid="rev-v3-preparation"><summary>准备出发 · 正式计划与待办</summary>{task && <DraftDepartureCard task={task} onDiscuss={(value) => openAgent(journeyId, value)} />}{preparation?.(draftSlots.length > 0)}</details>}
           <div className="cn-mission-capability-grid">
-            <button type="button" onClick={onTrip}><Route size={18} /><strong>准备出发</strong></button>
+            <button type="button" data-testid="rev-open-trip" onClick={onTrip}><Route size={18} /><strong>{journeyStatus === "ACTIVE" ? "行程进行中" : journeyStatus === "COMPLETED" ? "行程已结束" : "准备出发"}</strong></button>
             <button type="button" aria-expanded={guardianOpen} onClick={() => setGuardianOpen((value) => !value)}><ShieldCheck size={18} /><strong>行程守护</strong></button>
             <button type="button" disabled={collective?.state === "SINGLE_TRAVELLER"} onClick={collective?.state === "SINGLE_TRAVELLER" ? undefined : () => {
               onTrip();
