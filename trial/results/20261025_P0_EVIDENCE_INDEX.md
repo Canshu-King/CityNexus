@@ -17,6 +17,7 @@
 | AI 开关不拦调用（#47 P0） | 红（缺陷，已报） | guardian-unavailable-67.txt | ai_enabled=False；guardian_runs=1；agent_runs 读数见报告 |
 | 接受调整支线 | 绿 | proposal-accept-68.txt | accept http=200；plan e74a5edb-3f6d-40c3-910c-52e449619d40 → f84adc05-fb3b-4721-9c21-4db3bab96c28 |
 | resume 门（夹具） | 绿 | resume-after-resolved-69.txt | resume http=200，after=RUNNING（事件先在副本里 RESOLVED，1 行） |
+| 平板视口两日（合入 PR #54 后，1024×768） | 绿 | clock-two-day-tablet-merge54-85.txt, classroom-two-day-tablet-merge54-85.png | START "模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中"；FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"；classroom-two-day-tablet-merge54-85.png (136596 bytes) |
 | 平板视口两日（1024×768） | 绿 | tablet-two-day-72.txt, classroom-tablet-two-day-72.png | FINAL "模拟时间：12/04 15:00 · 执行第 20 步 · 模拟行程已完成"；classroom-tablet-two-day-72.png (155049 bytes) |
 | 平板形状四控件命中（1024×768） | 绿 | tablet-hit-73.txt, classroom-tablet-hit-73.png | 四枚 hit 读数见回执；USER_VERIFIED 仍 PENDING |
 | P0-4 带票入口落位与首屏跳转 | 绿 | jump-clock-76.txt, classroom-jump-phone-before-76.png, classroom-jump-tablet-before-76.png | PHONE_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":405,"inView":true,"hitSelf":true}；PHONE_AFTER {"scrollY":3062,"clockTop":0,"clockInView":true}；TABLET_BEFORE {"scrollY":0,"jump":true,"text":"去课堂控制台 ↓","top":455,"inView":true,"hitSelf":true}；TABLET_AFTER {"scrollY":3344,"clockTop":0,"clockInView":true} |

@@ -157,6 +157,14 @@ def main() -> int:
                      (resume.get("after") or {}).get("status"),
                      resume.get("resolved_rows"))))
     tablet2 = lines_of("tablet-two-day-72.txt")
+    tablet2_merge = lines_of("clock-two-day-tablet-merge54-85.txt")
+    rows.append(("平板视口两日（合入 PR #54 后，1024×768）",
+                 "绿" if "模拟行程已完成" in find(tablet2_merge, "FINAL")
+                 and "ERRORS []" in tablet2_merge else "红",
+                 "clock-two-day-tablet-merge54-85.txt, classroom-two-day-tablet-merge54-85.png",
+                 "%s；%s；%s" % (
+                     find(tablet2_merge, "START"), find(tablet2_merge, "FINAL"),
+                     png("classroom-two-day-tablet-merge54-85.png"))))
     rows.append(("平板视口两日（1024×768）",
                  "绿" if "模拟行程已完成" in find(tablet2, "FINAL") else "红",
                  "tablet-two-day-72.txt, classroom-tablet-two-day-72.png",
