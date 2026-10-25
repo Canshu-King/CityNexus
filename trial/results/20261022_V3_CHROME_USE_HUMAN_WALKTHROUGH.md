@@ -2623,3 +2623,13 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **边界。** 地图蓝点的真栈截图仍欠（夹具证据在章节七十二）；时钟条只出现在 ACTIVE 行程，DRAFT 不显示。
 
+## 八十一、真栈蓝点补齐：没有候选点时地图也画模拟旅客
+
+**缺口。** 执行屏的地图只在「有研究候选点」时初始化（`WorkspaceMap` 的旧条件 `points.length === 0` 直接返回），而课堂演示行程没有任何研究候选，于是地图格是空的、蓝点无处可画——沙盒第一刀欠的那张真栈截图，根因在这里，不是截图没拍。
+
+**修法。** 地图初始化条件扩到「有 WGS84 模拟旅客」也成立（`frontend/src/trial/mobile/WorkspaceMap.tsx:80`、`frontend/src/trial/mobile/WorkspaceMap.tsx:85`）；没有候选点时以旅客坐标为中心、zoom 14；「先去探索查找地点」的空态只在既无候选也无旅客时显示（`frontend/src/trial/mobile/WorkspaceMap.tsx:156`）；执行屏的地图条件同步放宽（`frontend/src/trial/mobile/MissionCockpit.tsx:334`）。
+
+**真读数（390×844，演示行程，零候选点）。** 点「地图」后出现「加载地图」（`map-traveller-real-1.txt:2`）→ 按下 → 蓝点可见、DOM 一 枚（`map-traveller-real-1.txt:3`）→ 状态行「模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置，不是物理 GPS）」（`map-traveller-real-1.txt:5`）。截图 `map-traveller-real-390.png` 里蓝点落在真实 OSM 底图的故宫中央。
+
+**课堂用法。** 运行手册第 9 步已加：时钟 +1 小时后，点「地图」→「加载地图」，蓝点出现；水印与状态行都写明这是模拟位置。
+
