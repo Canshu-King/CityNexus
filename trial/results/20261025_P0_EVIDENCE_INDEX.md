@@ -13,6 +13,7 @@
 | P0-2 场景→守护→缺任务 | 绿 | clock-scene-guardian-59.txt | AFTER_SCENE "等待守护决策 · 12-03 09:00"；AFTER_GUARDIAN "缺少守护任务 · 12-03 09:00" |
 | P0-2 单一状态链（CAS + 旧门） | 绿 | single-state-chain-65.txt | stale=409（SIMULATION_SEQUENCE_STALE）；legacy=409（USE_SIMULATION_RUN_ADVANCE） |
 | P0-3 城市池 / 1 城同 run | 黄（池子 BLOCKED，但不挡开演） | cities-classroom-62.txt | 池 status=BLOCKED，eligible=0/3，missing=VERIFIED_CITY_ADCODE_REQUIRED,AT_LEAST_3_CAPTURED_ROUTES_REQUIRED |
+| 守护屏接受当前事件提案（r100） | 红 | guardian-panel-accept-100.txt, classroom-guardian-panel-accept-100.png | origin=Agent 生成 · 服务器留有运行记录；pending=None；resume=RUNNING |
 | 守护 AI 开关（隔离副本） | 绿 | ai-off-guardian-86.txt, trial/human_walk/_ai_off_guardian_r1.py | guardian http=503，elapsed_s=0.01，SIMULATION_AI_DISABLED；sequence_unchanged=True；guardian_runs=0；missing=['AI_DISABLED'] |
 | 接受调整后模拟换计划（r92） | 绿 | guardian-plan-applied-92.txt, classroom-plan-applied-92.png | 模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园']；守护已接手 · 12-03 09:00守护已接手 · 12-03 09:00推进 · 12-03 09:00游览 · 12-04 09:00完成一站 · 12-04 10:00两日走完 · 12-04 10:00 |
 | 平板整链：入口→守护→接受→完成（1024×768） | 绿 | guardian-plan-applied-tablet-93.txt, classroom-plan-applied-tablet-93.png | ELAPSED_S 227；模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园'] |

@@ -147,6 +147,19 @@ def main() -> int:
         and "AI_DISABLED" in (ai_progress.get("missing") or [])
         and ai_verdict.get("ai_switch_stops_guardian") is True
     )
+    panel100 = lines_of("guardian-panel-accept-100.txt")
+    p100_screen = line_json(panel100, "PANEL")
+    p100_after = line_json(panel100, "AFTER_ACCEPT")
+    p100_resume = line_json(panel100, "AFTER_RESUME")
+    rows.append(("守护屏接受当前事件提案（r100）",
+                 "绿" if "Agent 生成" in (p100_screen.get("origin") or "")
+                 and (p100_after.get("pending") or {}).get("status") == "RESOLVED"
+                 and p100_resume.get("status") == "RUNNING"
+                 and "ERRORS []" in panel100 else "红",
+                 "guardian-panel-accept-100.txt, classroom-guardian-panel-accept-100.png",
+                 "origin=%s；pending=%s；resume=%s" % (
+                     p100_screen.get("origin"), (p100_after.get("pending") or {}).get("status"),
+                     p100_resume.get("status"))))
     rows.append(("守护 AI 开关（隔离副本）",
                  "绿" if ai_ok else "红",
                  "ai-off-guardian-86.txt, trial/human_walk/_ai_off_guardian_r1.py",
