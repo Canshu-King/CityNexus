@@ -2865,3 +2865,11 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 边界：那次约 2586 的滚动源没有完全定位（两个守卫把它从 3217 降到 2586）；桌面首屏仍需轻滚才能看全提案卡，手机链不受影响（24 秒彩排仍绿）。
 
+## 一百零二、SimulationRun 的前端接入先落地：后端未部署时整块不出现
+
+Codex 的 `SIMULATION_RUN_API_20261025.md` 定义 `/api/v1/journeys/{id}/simulation/{cities,runs,...}`，并点名把 API 接进 Presenter。这一步先把契约客户端与只读面板落地：`simulationClient.ts`（cities/current 与 start/advance/scene/guardian/resume，写请求带 Idempotency-Key）、`ClassroomPresenterPanel`（种子、可用与被挡城市及缺项、当前 run 状态）。面板只在两个读端点至少一个可用时渲染；当前后端对该前缀回 404，所以整块不出现。
+
+实测（`classroom-presenter-hidden-22.txt`）：430×932 与 1280×900 两档，`PRESENTER_COUNT 0`、时钟条仍可见、simulation 前缀两次 404、页面错误 0 条；类型检查 rc=0（`typecheck-presenter-1.txt:5`）。
+
+边界：真路径（城市池 READY、创建 run、注入事件、Guardian、SIMULATED_COMPLETED）要等 Codex 的分支合入后才能验；这一刀只证明「不合入不打扰」。
+

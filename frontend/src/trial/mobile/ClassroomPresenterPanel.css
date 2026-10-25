@@ -1,0 +1,21 @@
+.rev-presenter {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px dashed #c8b98e;
+  border-radius: 14px;
+  background: #fbf8ee;
+  color: #3f3520;
+  font-size: 13px;
+}
+
+.rev-presenter strong {
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+
+.rev-presenter small {
+  color: #6b5d3c;
+  font-size: 12px;
+}

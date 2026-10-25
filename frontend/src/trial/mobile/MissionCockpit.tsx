@@ -14,6 +14,7 @@ import { DraftDepartureCard } from "./DraftDepartureCard";
 import { GoalDraftVariants } from "./GoalDraftVariants";
 import { GuardianRealityPanel } from "./GuardianRealityPanel";
 import { ClassroomClockStrip } from "./ClassroomClockStrip";
+import { ClassroomPresenterPanel } from "./ClassroomPresenterPanel";
 import { DestinationMedia } from "./DestinationMedia";
 import { PlacePhotoGallery } from "./PlacePhotoGallery";
 import { useSourcePlaceMedia } from "./useSourcePlaceMedia";
@@ -373,6 +374,7 @@ export function MissionCockpit({
                 : "同行决策"}</strong></button>
           </div>
           <ClassroomClockStrip journeyId={journeyId} visible={visible && journeyStatus === "ACTIVE"} />
+          <ClassroomPresenterPanel journeyId={journeyId} visible={visible && journeyStatus === "ACTIVE"} />
           <GuardianRealityPanel journeyId={journeyId} visible={visible && guardianOpen} active={journeyStatus === "ACTIVE"} />
         </article>
       </div>
