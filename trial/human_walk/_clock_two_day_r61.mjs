@@ -2,7 +2,7 @@ import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_m
 import fs from "node:fs";
 
 const BASE = process.env.PAIR_BASE || "http://127.0.0.1:14495";
-const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/clock-two-day-61.txt";
+const OUT = process.env.PAIR_OUT || "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/clock-two-day-61.txt";
 const TICKET = process.env.PAIR_TICKET || "";
 const NL = String.fromCharCode(10);
 const lines = [];
