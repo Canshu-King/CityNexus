@@ -224,6 +224,7 @@ export function GuardianRealityPanel({
   const [proposal, setProposal] = useState<{ value: ReplanProposal; titles: Record<string, string> } | null>(null);
   const [proposalState, setProposalState] = useState<"idle" | "loading" | "ready" | "acting" | "done" | "error">("idle");
   const [proposalNote, setProposalNote] = useState("");
+  const proposalRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!visible || requestState !== "ready" || !readTravelerBearer()) return;
@@ -249,6 +250,9 @@ export function GuardianRealityPanel({
       if (!cancelled) {
         setProposal({ value: candidate, titles });
         setProposalState("ready");
+        // The card can sit below the fold on a phone; bring it into view once so
+        // pressing 行程守护 actually shows the decision instead of its heading.
+        window.requestAnimationFrame(() => proposalRef.current?.scrollIntoView({ block: "center" }));
       }
     }).catch(() => {
       if (!cancelled) {
@@ -370,7 +374,7 @@ export function GuardianRealityPanel({
           )}
 
           {proposal && (
-            <section className="rev-guardian-proposal" data-testid="rev-guardian-proposal" aria-label="调整建议">
+            <section ref={proposalRef} className="rev-guardian-proposal" data-testid="rev-guardian-proposal" aria-label="调整建议">
               <strong>找到一份可行的调整</strong>
               <p data-testid="rev-guardian-proposal-diff">{pendingProposalSentence(proposal.value, proposal.titles)}</p>
               <div className="rev-guardian-proposal-actions">
