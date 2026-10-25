@@ -3021,3 +3021,7 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 改法：所有形状都把卡片滚到视口中间（`frontend/src/trial/mobile/GuardianRealityPanel.tsx:265`），手机行为不变。
 
 修复后同一支探针：卡片 y≈369、在首屏内（`trial/results/20261022_v3_human_chrome/classroom-desktop-card-36.txt:1`、`:2`），接受按钮盒 231×44 且命中测试打到自己（`:5`、`:6`），零页面错误（`:10`）。屏证：`classroom-desktop-card-36-after.png`（修复后）与 `classroom-desktop-card-36-before.png`（修复前，卡片只露一角）。
+
+补记（同一刀的第二次）：桌面修好后立刻按原流程跑手机彩排，读数却掉了——卡片 y≈924、`PROPOSAL_IN_VIEW false`。原因是进入课堂后三点二秒就按「行程守护」，第一次滚动发生在方案标题和地图还没撑开的时候，布局定长后卡片被推到折叠线下；手机探针等三点六秒再按就一直是好的，两条流程差的正是这四百毫秒。
+
+改法：同一次滚动排三次（立即、四百毫秒后、一秒后），`frontend/src/trial/mobile/GuardianRealityPanel.tsx:270` 起。再测：手机彩排在原地滚动后卡片 y≈385、在视口内（`trial/results/20261022_v3_human_chrome/classroom-rehearsal-14.txt:7`），整轮 24.4 秒零错误；单开一支只读探针在四百毫秒到三点六秒四个时刻读数都稳定在 `y≈385`、接受按钮命中自己（`classroom-phone-card-37.txt:4`、`:6`、`:7`）；桌面形状仍为首屏可见、命中自己（`classroom-desktop-card-36.txt:2`、`:5`、`:6`）。

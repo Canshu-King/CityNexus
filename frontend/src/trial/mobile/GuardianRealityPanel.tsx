@@ -261,8 +261,12 @@ export function GuardianRealityPanel({
         window.requestAnimationFrame(() => {
           // Measured on a 1280×900 projector: the card lands a hundred pixels below the fold,
           // and the fixed composer covers its buttons once it only just enters view. Centre it
-          // on every shape so the accept button is not sitting under the composer.
-          proposalRef.current?.scrollIntoView({ block: "center" });
+          // on every shape, then re-centre while the plan titles and map settle: pressing the
+          // guardian button three seconds after entry used to scroll against a shorter page.
+          const bring = () => proposalRef.current?.scrollIntoView({ block: "center" });
+          bring();
+          window.setTimeout(bring, 400);
+          window.setTimeout(bring, 1000);
         });
       }
     }).catch(() => {

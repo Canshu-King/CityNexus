@@ -1,0 +1,7 @@
+AT_400MS {"x":42,"y":384.640625,"width":346,"height":162.140625} in_view=true scrollY=2961
+AT_1200MS {"x":42,"y":384.640625,"width":346,"height":162.140625} in_view=true scrollY=2961
+AT_2200MS {"x":42,"y":384.640625,"width":346,"height":162.140625} in_view=true scrollY=2961
+AT_3600MS {"x":42,"y":384.640625,"width":346,"height":162.140625} in_view=true scrollY=2961
+VALUE_TEXT "移除故宫博物院；路上少 66 分钟。"
+ACCEPT_BOX {"x":55,"y":489.78125,"width":156,"height":44} HIT "self"
+ERRORS []
