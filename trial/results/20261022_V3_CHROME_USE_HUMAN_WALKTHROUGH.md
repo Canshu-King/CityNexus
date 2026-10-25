@@ -3052,3 +3052,11 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 改法：接受成功后把视口带回行程顶部（`frontend/src/trial/mobile/GuardianRealityPanel.tsx:290`）。修复后同一支探针：滚动为零、第一站在视口内（`:10`、`:11`、`:12`），整轮十七点五秒零错误（`:13`、`:14`）；手机彩排同步回归，二十四点一秒、第一站天坛、时钟到十点、零错误。
 
 屏证：`classroom-desktop-flow-39-1-entry.png`、`-2-card.png`、`-3b-top.png`（接受后首屏，写着天坛）。
+
+## 一百一十九、网络慢时按「行程守护」没有任何反馈：补一行「正在读取」
+
+把 `/replans` 人为延迟三秒（共拦到三次 GET），点「行程守护」后九百毫秒看屏：原先什么提示都没有，老师会以为这趟没有调整卡。补上加载行后同一时刻屏上写着「正在读取调整建议…」（`trial/results/20261022_v3_human_chrome/classroom-slow-replans-40.txt:2`）。
+
+第一版把它放在面板底部，读数虽然「可见」，实际被固定输入条压住（截图 `classroom-slow-replans-40-loading.png` 的旧版）。改为加载行自己也滚进视口（`frontend/src/trial/mobile/GuardianRealityPanel.tsx:286`、`:403`，样式 `GuardianRealityPanel.css:147`），复测：加载行盒在视口内（`classroom-slow-replans-40.txt:3`、`:4`），三秒后卡片出现、加载行消失、零错误（`:5`、`:6`、`:7`、`:9`）。
+
+手机主链回归：彩排二十四点三秒、提案在视口、第一站天坛、时钟到十点、零错误。

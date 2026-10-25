@@ -144,3 +144,4 @@
 }
 .rev-mobile-v1 .rev-guardian-proposal-actions button:disabled { opacity: 0.55; }
 .rev-mobile-v1 .rev-guardian-proposal-note { margin: 8px 0 0; color: #5d6f62; font-size: 12px; }
+.rev-guardian-proposal-loading { margin: 10px 0 0; color: #5b6b60; font-size: 13px; }

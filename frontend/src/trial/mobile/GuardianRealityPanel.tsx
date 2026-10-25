@@ -231,6 +231,7 @@ export function GuardianRealityPanel({
   const [proposalState, setProposalState] = useState<"idle" | "loading" | "ready" | "acting" | "done" | "error">("idle");
   const [proposalNote, setProposalNote] = useState("");
   const proposalRef = useRef<HTMLElement | null>(null);
+  const loadingRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
     if (!visible || requestState !== "ready" || !readTravelerBearer()) return;
@@ -277,6 +278,13 @@ export function GuardianRealityPanel({
     });
     return () => { cancelled = true; };
   }, [journeyId, visible, requestState, proposal, proposalState]);
+
+  useEffect(() => {
+    // The panel opens low in the page; without this the "reading" line sits under the composer
+    // and a slow /replans looks like a press that did nothing.
+    if (proposalState !== "loading" || proposal) return;
+    window.requestAnimationFrame(() => loadingRef.current?.scrollIntoView({ block: "center" }));
+  }, [proposalState, proposal]);
 
   const settleProposal = async (decision: "accept" | "reject") => {
     if (!proposal || proposalState === "acting") return;
@@ -391,6 +399,11 @@ export function GuardianRealityPanel({
             </section>
           )}
 
+          {proposalState === "loading" && !proposal && (
+            <p ref={loadingRef} className="rev-guardian-proposal-loading" role="status" data-testid="rev-guardian-proposal-loading">
+              正在读取调整建议…
+            </p>
+          )}
           {proposal && (
             <section ref={proposalRef} className="rev-guardian-proposal" data-testid="rev-guardian-proposal" aria-label="调整建议">
               <strong>找到一份可行的调整</strong>
