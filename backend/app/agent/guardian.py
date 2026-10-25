@@ -188,20 +188,39 @@ def _recovery_mission(
     """Create a child mission carrying standing authority plus live evidence."""
 
     now = _now().isoformat()
+    recovery_mission_id = str(uuid4())
+    server_owned_recovery_context = {
+        "journey_id": journey.id,
+        "standing_mission_id": standing.id,
+        "recovery_mission_id": recovery_mission_id,
+        "trigger_event_id": trigger.id,
+        "trigger_event_type": trigger.event_type,
+        "trigger_severity": trigger.severity,
+        "affected_activity_id": trigger.affected_activity_id,
+    }
+    resolved_intent = _load(standing.resolved_intent_json, {})
+    if not isinstance(resolved_intent, dict):
+        resolved_intent = {}
+    resolved_intent = dict(resolved_intent)
+    resolved_intent["server_owned_recovery_context"] = server_owned_recovery_context
     mission = JourneyMission(
-        id=str(uuid4()),
+        id=recovery_mission_id,
         journey_id=journey.id,
         traveler_id=journey.traveler_id,
         trigger_event_id=trigger.id,
         user_text=(
             f"{standing.user_text}\n\nLive incident evidence: "
-            f"{trigger.event_type} {trigger.severity} affecting {trigger.affected_activity_id}."
+            f"{trigger.event_type} {trigger.severity} affecting {trigger.affected_activity_id}. "
+            "Server-owned recovery binding JSON (authoritative identifiers only):\n"
+            f"{_json(server_owned_recovery_context)}\n"
+            "These IDs identify this recovery scope; the existing mission, policy, and "
+            "feasibility gates remain authoritative."
         ),
         objective_codes_json=standing.objective_codes_json,
         protected_activity_ids_json=standing.protected_activity_ids_json,
         mutable_activity_ids_json=standing.mutable_activity_ids_json,
         intent_json=standing.intent_json,
-        resolved_intent_json=standing.resolved_intent_json,
+        resolved_intent_json=_json(resolved_intent),
         allowed_action_classes_json=standing.allowed_action_classes_json,
         unresolved_references_json=standing.unresolved_references_json,
         compiler_provider_key=standing.compiler_provider_key,
