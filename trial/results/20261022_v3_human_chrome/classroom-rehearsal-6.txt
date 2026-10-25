@@ -1,0 +1,8 @@
+RECENT "最近记录：12/3 08:57"
+COUNTS "1 项变化"
+PROPOSAL "移除故宫博物院；路上少 66 分钟。"
+PROPOSAL_BOX {"x":42,"y":397.140625,"width":346,"height":137.140625}
+PROPOSAL_IN_VIEW true
+TRIGGER_TIMES ["12/03 09:00 · 服务器第 0 版"]
+WALL_VS_CLOCK {"has1025":false,"has1203":true}
+ERRORS []

@@ -11,6 +11,7 @@ teacher accepted).
 """
 from __future__ import annotations
 
+from datetime import datetime
 import io
 import json
 import os
@@ -73,6 +74,65 @@ def listening_pid(port: int) -> str | None:
     return None
 
 
+INCIDENT_LEAD = "T00:57:00+00:00"  # 08:57 at +08:00, three minutes before the 09:00 clock
+
+
+def _shift(value, delta):
+    if not value:
+        return value
+    try:
+        return (datetime.fromisoformat(str(value)) + delta).isoformat()
+    except ValueError:
+        return value
+
+
+def align_incident_to_virtual_day(target: sqlite3.Connection) -> None:
+    """Leave one opening-day incident and put its whole trail on the virtual clock.
+
+    The play database accumulated two closures from earlier rehearsals, and their
+    timestamps were real-world UTC, so the phone showed 10/25 beside a 12/03 virtual
+    clock. Keep the incident that happens on the journey's opening day, drop the rest,
+    and shift its detection (plus the guardian runs, pulses and recovery epoch that
+    trail it) by one constant offset, so every line on the phone tells the same day
+    and keeps its order.
+    """
+    row = target.execute("select start_at from journeys where id=?", (JOURNEY,)).fetchone()
+    if row is None or not row[0]:
+        return
+    day = str(row[0])[:10]
+    events = target.execute(
+        "select id, detected_at from events where journey_id=? and event_type='CLOSURE' "
+        "order by (substr(occurred_at,1,10)=?) desc, detected_at desc, id desc",
+        (JOURNEY, day),
+    ).fetchall()
+    for (event_id, _detected) in events[1:]:
+        target.execute("delete from events where id=?", (event_id,))
+    if not events:
+        return
+    event_id, detected = events[0]
+    delta = datetime.fromisoformat(day + INCIDENT_LEAD) - datetime.fromisoformat(str(detected))
+    target.execute(
+        "update events set detected_at=?, created_at=? where id=?",
+        (_shift(detected, delta), _shift(detected, delta), event_id),
+    )
+    for table, columns in (
+        ("guardian_runs", ("created_at", "completed_at")),
+        ("guardian_pulses", ("started_at", "completed_at")),
+        ("recovery_epochs", ("opened_at", "closed_at")),
+        ("recovery_discovery_attempts", ("created_at", "updated_at")),
+    ):
+        rows = target.execute(
+            "select id," + ",".join(columns) + " from " + table + " where journey_id=?",
+            (JOURNEY,),
+        ).fetchall()
+        for pk, *values in rows:
+            assignments = ",".join("%s=?" % column for column in columns)
+            target.execute(
+                "update " + table + " set " + assignments + " where id=?",
+                (*[_shift(value, delta) for value in values], pk),
+            )
+
+
 def copy_database() -> None:
     source = sqlite3.connect("file:" + SRC + "?mode=ro", uri=True)
     target = sqlite3.connect(DST)
@@ -81,6 +141,7 @@ def copy_database() -> None:
         # Every rehearsal starts at the journey's opening hour, not at whatever
         # hour the previous demonstration advanced to.
         target.execute("DELETE FROM simulation_clocks")
+        align_incident_to_virtual_day(target)
         target.commit()
     finally:
         target.close()

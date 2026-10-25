@@ -2700,3 +2700,13 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 边界不变：平板实物仍未被主人点过（`TABLET_OPEN` 只到本机浏览器 + 真视口）；演示栈的会话仍靠 `/demo/session`，产品侧「主动再认证」仍等裁语。
 
+## 八十六、守护屏上的两个年代：把公告的时间线放回虚拟时钟（只改演示副本）
+
+八十五那次彩排的截图里，同一屏上有两个年代：时钟条写「12/03 09:00」，守护记录写「最近记录 10/25 06:28」，行动块写「完成于 10/25 06:31」。屏读 `detected_at`（`backend/app/agent/guardian_stream.py:182` 直接取 `events[0].detected_at`），而副本沿用的是 play 库里调试期留下的两条 CLOSURE 与它们的 guardian 轨迹，时间戳是真实墙钟。
+
+改法只落在演示副本（`prepare_classroom_scene_r1.py` 的 `align_incident_to_virtual_day`）：保留「发生在本趟行程首日」的那 1 条公告、删掉次日的 1 条（原来屏上说「2 项变化」，其中一项是次日的重复闭馆），再按「原检测时刻 → 虚拟 12/03 08:57」这 1 个偏移量，同步平移 `events`/`guardian_runs`/`guardian_pulses`/`recovery_epochs`/`recovery_discovery_attempts` 的时间列，先后顺序不变。play 库原件只读复制，未动。
+
+重跑 bat 后的屏读（`classroom-rehearsal-6.txt`）：`RECENT "最近记录：12/3 08:57"`、`COUNTS "1 项变化"`、`WALL_VS_CLOCK {"has1025":false,"has1203":true}`、提案卡整张在视口内（`PROPOSAL_BOX` 的 y=397、高 137）、页面错误 0 条。截图 `rehearsal6-guardian.png`。
+
+没有抹掉的事实：「当前恢复第 3 轮」是库里真实的轮次（第 1、2 轮 SUPERSEDED、第 3 轮 OPEN），保留原样；「检查已完成」说的是检测，「正在处理」说的是恢复，两句不是同一层，现场照这个口径讲。
+
