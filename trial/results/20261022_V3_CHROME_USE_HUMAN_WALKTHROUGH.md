@@ -2813,3 +2813,13 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 已做的准备：`prepare_classroom_scene_r1.py` 现在把 `CITYNEXUS_DEMO_DATABASE_PATH` 指到演示副本，满足 `require_demo_database` 的隔离检查（不改判定，只是让演示库被认出来）。
 
+## 九十六、走到第 2 天终点：屏上终于有「模拟行程已完成」
+
+实测（`classroom-end-of-trip-16.txt`）：从故宫点一次「到下一站」到天坛（12/04 09:00），再点一次把天坛走完，服务端 `journey.status` 变 `COMPLETED`、`current_activity_id` 变 `null`——但屏上只剩三个按钮，没有一句「做完了」。这是任务书第三刀「到 Day2 终点、标记 SIMULATED_COMPLETED」缺的产品表达。
+
+修法：`ClassroomClockStrip` 在每次读时钟时并行读 `GET /journeys/{id}`，`status==="COMPLETED"` 时显示「模拟行程已完成 · 不是实际到场」并禁用「到下一站」（没有下一站可去）。仍不写任何「到场」，仍是模拟执行。
+
+重跑（同一探针）：第二次点击后时钟条出现该句、journey `COMPLETED`、当前站为空、页面错误 0 条；类型检查 rc=0（`typecheck-end-flag-1.txt:5`）。截图 `rehearsal16-end.png`。
+
+边界：这只是「终态的表达」；真正的 `SIMULATED_COMPLETED` 运行记录归 Codex 的 SimulationRun（`a8f9b8ed16`），未合入前不进演示。
+
