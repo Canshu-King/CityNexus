@@ -3003,3 +3003,13 @@ Codex 新分支（`6136d0a1`）把守护明确绑到本 run 注入的事件，�
 所以那个分支是多余的，已经撤回（`git status` 里产品文件零改动）。前一节结尾说的「刷新后不再提示」只属于完成态：那次入口根本没让进去，本地没有可恢复的课堂指针；运行中的课堂刷新后控制台仍在，老师不会因为误触刷新丢掉演示。
 
 留下的探针与证据（可复跑，不改课堂栈）：`trial/human_walk/_classroom_run_resume_r34.mjs`、参数化起栈件 `trial/human_walk/_entry_banner_stack_r1.py`（`--source-db`/`--target-db`/`--probe`/`--tag`）。屏证：`classroom-run-resume-34-clean-before.png`、`classroom-run-resume-34-clean-after.png`。
+
+## 一百一十四、今日改动后的课堂主链回归：重建、彩排、恢复三闸全绿
+
+前端今天动过入口错误条与控制台的守护提示，课堂栈（旧后端那一支）要重新走一遍才能说没坏。
+
+按启动器同一套步骤跑：准备场景（`DEMO_READY=true`、新票 `PAIRING=UNSUPPORTED` 说明这一支后端还没有配对端点）、手机流程彩排、再准备一次恢复开局。彩排读数：提案卡在视口内（`trial/results/20261022_v3_human_chrome/classroom-rehearsal-14.txt:7`），接受后第一站是天坛（`:9`），时钟从服务器第零版走到第一版（`:11`、`:12`），地图蓝点在 39.8805/116.4046 并标明模拟位置（`:15`），整轮 24.3 秒、页面错误为空（`:17`、`:18`）。
+
+恢复后自检：`DEMO_READY=true`、行程 ACTIVE、方案在、提案在等、时钟停在 09:00、控制台仍是 `NOT_DEPLOYED`（这一支后端没有模拟执行端点，属预期）。
+
+屏证：`classroom-guardian-note-35-note-waiting.png`（隔离栈上控制台的守护提示，本轮改过的文案）。
