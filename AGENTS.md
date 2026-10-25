@@ -1,3 +1,15 @@
+# 2026-10-25 ACTIVE OVERRIDE | Revolution V3 dual-worker relay
+
+**This section supersedes the historical 2026-10-22 Qoder-only order below where the two conflict. The user has explicitly restored Codex to production.**
+
+- **Qoder** owns the product integration branch `rescue/v3-final-departure-20261022` / PR #43, all traveller UI, classroom Presenter UI, map/clock display, launchers, Chrome walk-throughs, and final user-facing acceptance. Qoder continues to push real product fixes here. Qoder should avoid simultaneous editing of backend `main.py` Journey-read ACL and simulation runtime endpoints while Codex prepares its independent changes.
+- **Codex** owns **only** the independent backend branch `codex/sandbox-execution-security-20261025`, GitHub Issue #47. From the exact Qoder base at `9d4d2a853a727e05bcc76f27a1d5cfbf4e90e041`, Codex addresses private Journey read authorization and persistent server-side SimulationRun/time/location/Guardian execution plus eventual random-city backend eligibility. Codex must not push directly to rescue or edit Qoder's frontend and launcher files; create a narrowly scoped PR targeting rescue.
+- Codex's current full work order: `trial/tasks/20261025_CODEX_DUAL_RELAY_SIMULATION_SECURITY.md` on the codex branch and https://github.com/Canshu-King/CityNexus/issues/47. Qoder's full sandbox goal: `trial/tasks/20261025_QODER_SPACETIME_SANDBOX_FULL_JOURNEY_DEMO.md` on rescue and PR #43. Stage all shared backend API contracts in Issue #47 before modifying hot files.
+- Do not resume feature coding in old PR #23, force-push either branch, or merge unrelated old PR #35. Preserve 2026-10-22 instructions below as historical context, not a veto of Codex's new scoped assignment.
+- **Product truth:** Qoder's 18-second classroom rehearsal used a prepared proposal with a real acceptance and virtual +1h/location display. It is not random 3-city / two-day completion, nor live 18-second Agent autonomy. Demo evidence must label synthetic time/GPS/closures separately from real POI/route provider and actual Agent/tool runs.
+- **Security P0:** anonymous or invalid-token `GET /journeys/{id}`, `/events`, `/twin`, `/experience` can reveal private data on the demo stack. Codex to fix with 401/403/200 membership tests; Qoder must not expose this LAN demo as publicly secure before that fix. The demo-session bearer must be limited to an isolated demo database and presenter context.
+
+---
 # Current active work order: CityNexus Revolution V3 | Qoder sole owner | 2026-10-22
 
 **Branch scope: rescue/v3-final-departure-20261022. Qoder is the sole implementation owner for this branch, not Codex.**
