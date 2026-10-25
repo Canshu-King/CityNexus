@@ -183,6 +183,20 @@ def main() -> int:
                  "guardian-plan-applied-tablet-93.txt, classroom-plan-applied-tablet-93.png",
                  "%s；%s；活动=%s" % (
                      find(plan93, "ELAPSED_S"), plan93_screen.get("virtual"), plan93_titles)))
+    plan97 = lines_of("guardian-plan-applied-projector-97.txt")
+    plan97_after = line_json(plan97, "PLAN_AFTER_NEXT") or []
+    plan97_titles = [item.get("title") for item in plan97_after]
+    plan97_run = line_json(plan97, "AFTER_NEXT")
+    plan97_screen = line_json(plan97, "SCREEN_AFTER_NEXT")
+    rows.append(("投影整链：入口→守护→接受→完成（1280×900）",
+                 "绿" if plan97_run.get("status") == "SIMULATED_COMPLETED"
+                 and bool(plan97_titles)
+                 and "故宫" not in plan97_titles
+                 and "天坛公园" in plan97_titles
+                 and "ERRORS []" in plan97 else "红",
+                 "guardian-plan-applied-projector-97.txt, classroom-plan-applied-projector-97.png",
+                 "%s；%s；活动=%s" % (
+                     find(plan97, "ELAPSED_S"), plan97_screen.get("virtual"), plan97_titles)))
     panel90 = line_json(lines_of("guardian-panel-live-90.txt"), "PANEL_SCREEN")
     panel91_lines = lines_of("guardian-panel-live-91.txt")
     panel91 = line_json(panel91_lines, "PANEL_SCREEN")

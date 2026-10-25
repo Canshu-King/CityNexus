@@ -47,6 +47,7 @@
 - 点「继续模拟」→ `RUNNING` seq 3；点「到下一站」→ 12/04 09:00 游览天坛 → 12/04 10:00 完成，`SIMULATED_COMPLETED` seq 7，三键禁用，无 console 错误（`classroom-plan-applied-92.png`）。
 - 1024×768 平板同剧本另跑一次（`guardian-plan-applied-tablet-93.txt`，**227 秒**）：入口、开演、闭馆、守护（187 秒出提案）、接受（5 秒落定）、继续、到下一站完成全部命中；新计划同样只剩天安门+天坛，`ERRORS []`。
 - 390 手机同剧本再跑一次（`guardian-plan-applied-phone-94.txt`，281 秒）：历史里出现「计划已按守护调整」。口径说明：该 run 的 `history_json` 只有 **1 条** `SIM_PLAN_CHANGED`（sequence 4），而屏上文本连显 3 次。独立场景 r95（开场 + 4 次 +30）量到 `li_count=5`、`historyLength=5`，说明 `slice(-5)` 在真页面生效；r94 的 9 条无法在 r95 复现，保留为一次观察，不宣称缺陷，也不据此改后端。前端已把历史行的 key 从 `sequence` 换成 `index+event+time`（r94 的最近五条里存在重复 sequence，React 会复用节点）；r96 复跑仍是 5 条、无 console 错误。
+- 1280×900 投影同剧本（`guardian-plan-applied-projector-97.txt`，**271 秒**）：同样换计划并完成；历史只显示 5 条（r94 的叠加未再出现），`ERRORS []`。三档整链（390 / 1024 / 1280）至此齐全。
 - 结论：接受调整在模拟执行里真的生效；课堂可以讲「少去故宫、直接去天坛」。
 
 ### AI 关闭（隔离副本，`ai-off-guardian-86.txt`）
