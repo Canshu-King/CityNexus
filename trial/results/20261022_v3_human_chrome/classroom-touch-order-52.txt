@@ -1,0 +1,16 @@
+STEP demo t=9.5s
+STEP map-tab t=10.8s
+LOAD_BUTTON 1
+STEP map-loaded t=14.0s
+DOT_AFTER_MAP "模拟旅客：故宫博物院 · 39.9164, 116.3908（WGS84，模拟位置，不是物理 GPS）"
+STEP back-to-todo t=15.6s
+STEP guardian t=18.0s
+CARD 1 TEXT "移除故宫博物院；路上少 66 分钟。"
+ACCEPT_HIT "self"
+STEP accepted t=23.7s
+FIRST_STOP_AFTER_ACCEPT "天坛公园 · 12月3日 09:00"
+STEP reloaded t=29.0s
+FIRST_STOP_AFTER_RELOAD "天坛公园 · 12月3日 09:00"
+CLOCK_AFTER_RELOAD "模拟时间：12/03 09:00 · 服务器第 0 版"
+TOTAL_S 29.2
+ERRORS []
