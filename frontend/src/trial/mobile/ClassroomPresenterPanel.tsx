@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { travelerAuthHeaders } from "../../lib/travelerSession";
+import { cityNexusApi } from "../../api/citynexus";
 import { simulationApi, SimulationError, type SimulationCities, type SimulationRun } from "./simulationClient";
 import "./ClassroomPresenterPanel.css";
 
@@ -79,6 +80,9 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
   const [message, setMessage] = useState<string | null>(null);
   const [slowNote, setSlowNote] = useState<string | null>(null);
   const [acceptanceHasProposal, setAcceptanceHasProposal] = useState(false);
+  const [guardianOutcome, setGuardianOutcome] = useState<{ code?: string; error_code?: string } | null>(null);
+  const [simulationProposal, setSimulationProposal] = useState<{ id: string } | null>(null);
+  const [pendingResolved, setPendingResolved] = useState(false);
 
   const refresh = useCallback(async () => {
     const [nextCities, nextCurrent] = await Promise.all([
@@ -103,12 +107,29 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
         if (progressResponse?.ok) {
           try {
             const progress = await progressResponse.json() as {
-              proposals?: Array<{ status?: string }>;
+              proposals?: Array<{ id?: string; status?: string }>;
               guardian_runs?: Array<{ proposal_id?: string | null }>;
+              guardian_outcome?: { code?: string; error_code?: string } | null;
+              readiness?: { pending_event_id?: string | null };
+              events?: Array<{ id?: string; status?: string }>;
             };
             setAcceptanceHasProposal(Boolean(
               (progress.proposals ?? []).some((item) => item.status === "PRESENTED")
               || (progress.guardian_runs ?? []).some((item) => Boolean(item.proposal_id)),
+            ));
+            // The projection knows why an attempt produced no proposal; without it the
+            // console says "analysing" forever after a failed model request.
+            setGuardianOutcome(progress.guardian_outcome ?? null);
+            const presented = (progress.proposals ?? []).find(
+              (item) => item.status === "PRESENTED" && typeof item.id === "string",
+            );
+            setSimulationProposal(presented?.id ? { id: presented.id } : null);
+            const pendingId = progress.readiness?.pending_event_id ?? null;
+            const pendingEvent = (progress.events ?? []).find((item) => item.id === pendingId);
+            // Resume is refused until the pending event itself is resolved; a presented
+            // proposal alone is not a resume key.
+            setPendingResolved(Boolean(
+              pendingEvent && (pendingEvent.status === "RESOLVED" || pendingEvent.status === "IGNORED"),
             ));
           } catch {
             // Keep the last reading; one bad payload must not hide the resume key.
@@ -233,12 +254,27 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             交给守护助手
           </button>
         )}
-        {run?.status === "PAUSED_FOR_ACCEPTANCE" && acceptanceHasProposal && (
+        {run?.status === "PAUSED_FOR_ACCEPTANCE" && simulationProposal && !pendingResolved && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => act(async () => {
+              await cityNexusApi.acceptReplan(
+                simulationProposal.id,
+                `classroom-accept-${simulationProposal.id.slice(0, 8)}`,
+              );
+              return null;
+            }, "正在把这份调整写进计划；可能要几十秒，别重复按。")}
+          >
+            接受这次事件的调整
+          </button>
+        )}
+        {run?.status === "PAUSED_FOR_ACCEPTANCE" && pendingResolved && (
           <button type="button" disabled={busy} onClick={() => act(() => simulationApi.resume(journeyId, run.run_id, run.sequence))}>
             继续模拟
           </button>
         )}
-        {run?.status === "PAUSED_MODEL_UNAVAILABLE" && (
+        {run?.status === "PAUSED_MODEL_UNAVAILABLE" && pendingResolved && (
           <button type="button" disabled={busy} onClick={() => act(() => simulationApi.resume(journeyId, run.run_id, run.sequence))}>
             事件处理完了，继续模拟
           </button>
@@ -268,6 +304,36 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
         </p>
       )}
 
+      {run?.status === "GUARDIAN_RUNNING" && guardianOutcome?.code === "EXTERNAL_FAILED" && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-guardian-failed">
+          守护模型这次请求失败了，没有交出建议。刷新读数不会重试；要重来请重启课堂演示（双击启动器）。
+        </p>
+      )}
+      {run?.status === "GUARDIAN_RUNNING" && guardianOutcome?.code === "AGENT_UNRESOLVED" && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-guardian-unresolved">
+          守护没有解出可执行的调整；刷新读数不会让它继续。要重来请重启课堂演示（双击启动器）。
+        </p>
+      )}
+      {run?.status === "GUARDIAN_RUNNING" && guardianOutcome?.code === "MODEL_NOT_CONFIGURED" && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-guardian-unconfigured">
+          这台演示机没有接上守护模型，请求不会自己完成；请重启课堂演示，或让管理员配好模型。
+        </p>
+      )}
+      {run?.status === "PAUSED_FOR_ACCEPTANCE" && simulationProposal && !pendingResolved && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-acceptance-step">
+          这次事件已经有一份可接受的调整；先按上面的「接受这次事件的调整」，事件落定后才能继续。
+        </p>
+      )}
+      {run?.status === "PAUSED_FOR_ACCEPTANCE" && pendingResolved && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-resolved-note">
+          这次事件已经落定，可以继续模拟。
+        </p>
+      )}
+      {run?.status === "PAUSED_FOR_ACCEPTANCE" && acceptanceHasProposal && !simulationProposal && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-proposal-mismatch">
+          进度里记着提案编号，但看不到可接受的内容；请重启课堂演示（双击启动器）。
+        </p>
+      )}
       {run?.status === "PAUSED_FOR_ACCEPTANCE" && !acceptanceHasProposal && (
         <p className="rev-presenter-note" data-testid="rev-presenter-acceptance-note">
           守护没有交出可接受的提案（进度里看不到提案 id）；这条模拟解不开，请重启课堂演示（双击启动器）。
@@ -276,7 +342,9 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
 
       {run?.status === "PAUSED_MODEL_UNAVAILABLE" && (
         <p className="rev-presenter-note" data-testid="rev-presenter-model-note">
-          现场模型没有接上；同一起事件要在下方守护屏上处理，处理完再按上面的继续。
+          {guardianOutcome?.code === "EXTERNAL_FAILED"
+            ? "现场模型这次请求失败了，没有交出建议。先在下方守护屏看有没有和这次事件对应的调整；没有就重启课堂演示（双击启动器）。"
+            : "现场模型没有接上；同一起事件要在下方守护屏上处理，处理完这里才会出现继续。"}
         </p>
       )}
 

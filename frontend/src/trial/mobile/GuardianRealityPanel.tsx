@@ -239,7 +239,17 @@ export function GuardianRealityPanel({
     let cancelled = false;
     setProposalState("loading");
     void cityNexusApi.listReplans(journeyId).then(async (items) => {
-      const candidate = items.find((item) => item.status === "PRESENTED");
+      // The list can hold a node from an older trip change. The newest PRESENTED
+      // proposal is the one this screen should offer; accepting a stale node
+      // moves the plan the traveller is not looking at.
+      const presented = items
+        .filter((item) => item.status === "PRESENTED")
+        .sort((left, right) => {
+          const leftAt = (left as { created_at?: string }).created_at ?? "";
+          const rightAt = (right as { created_at?: string }).created_at ?? "";
+          return rightAt.localeCompare(leftAt);
+        });
+      const candidate = presented[0];
       if (!candidate) {
         if (!cancelled) setProposalState("idle");
         return;

@@ -1,0 +1,80 @@
+ENTRY jump=1 clock=1
+STARTED {"run":"模拟进行中 · 12-03 09:00","acceptanceNote":false,"message":null}
+START_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":null,"current":{"run_id":"e01af075-312e-465d-88f1-213dab972f0a","journey_id":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","city_code":"CN-RV-3507014DDE2C","seed":17,"virtual_now":"2026-12-03T09:00:00+08:00","timezone":"Asia/Shanghai","sequence":0,"status":"RUNNING","state":{"completed_activity_ids":[],"location":null,"plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provider_snapshot_refs":[{"captured_at":"2026-10-24T21:49:32.575034+00:00","fact_qualities":["LIVE_PROVIDER_CAPTURE"],"plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provenance":"CAPTURED_PROVIDER_SNAPSHOT","sha256":"58cccc36f6f6088f2b6d7ee1d7ace90944fa8816a4d84bc4afbee2143e5819a2","snapshot_id":"af19fa2d-e9bb-4222-907a-4e423eddf7e0"}],"suggested_scene":"SCHEDULE_DELAY"},"history":[{"event":"SIM_STARTED","recorded_at":"2026-10-25T18:49:08.726977+00:00","sequence":0,"virtual_now":"2026-12-03T09:00:00+08:00"}],"execution_truth":"SIMULATED_STATE_TRANSITION","updated_at":"2026-10-25T18:49:08.726977+00:00"}}
+CLOSURE_BUTTON 1
+AFTER_SCENE {"run":"等待守护决策 · 12-03 09:00","acceptanceNote":false,"message":null}
+AFTER_SCENE_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":null,"current":{"run_id":"e01af075-312e-465d-88f1-213dab972f0a","journey_id":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","city_code":"CN-RV-3507014DDE2C","seed":17,"virtual_now":"2026-12-03T09:00:00+08:00","timezone":"Asia/Shanghai","sequence":1,"status":"PAUSED_FOR_GUARDIAN","state":{"completed_activity_ids":[],"location":null,"pending_event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provider_observation_ids":["008ad419-7666-48d8-95c9-ab818149c29a"],"provider_snapshot_refs":[{"captured_at":"2026-10-24T21:49:32.575034+00:00","fact_qualities":["LIVE_PROVIDER_CAPTURE"],"plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provenance":"CAPTURED_PROVIDER_SNAPSHOT","sha256":"58cccc36f6f6088f2b6d7ee1d7ace90944fa8816a4d84bc4afbee2143e5819a2","snapshot_id":"af19fa2d-e9bb-4222-907a-4e423eddf7e0"}],"scene_ids":["closure-1792954154050"],"suggested_scene":"SCHEDULE_DELAY"},"history":[{"event":"SIM_STARTED","recorded_at":"2026-10-25T18:49:08.726977+00:00","sequence":0,"virtual_now":"2026-12-03T09:00:00+08:00"},{"environment_provenance":"SIMULATED","event":"SIM_SCENE_INJECTED","event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","recorded_at":"2026-10-25T18:49:14.067730+00:00","scene_id":"closure-1792954154050","sequence":1,"virtual_now":"2026-12-03T09:00:00+08:00"}],"execution_truth":"SIMULATED_STATE_TRANSITION","updated_at":"2026-10-25T18:49:14.067730+00:00"}}
+GUARDIAN_BUTTON 1
+POLL 0 elapsed_s=5 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 1 elapsed_s=10 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 2 elapsed_s=15 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 3 elapsed_s=20 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 4 elapsed_s=25 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 5 elapsed_s=30 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 6 elapsed_s=35 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 7 elapsed_s=40 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 8 elapsed_s=45 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 9 elapsed_s=50 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 10 elapsed_s=55 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 11 elapsed_s=60 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 12 elapsed_s=65 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 13 elapsed_s=70 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 14 elapsed_s=75 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 15 elapsed_s=80 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 16 elapsed_s=85 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 17 elapsed_s=90 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 18 elapsed_s=95 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 19 elapsed_s=100 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 20 elapsed_s=105 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 21 elapsed_s=110 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 22 elapsed_s=115 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 23 elapsed_s=120 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 24 elapsed_s=125 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 25 elapsed_s=130 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 26 elapsed_s=135 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 27 elapsed_s=140 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 28 elapsed_s=145 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 29 elapsed_s=150 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 30 elapsed_s=156 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 31 elapsed_s=161 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 32 elapsed_s=166 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 33 elapsed_s=171 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 34 elapsed_s=176 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 35 elapsed_s=181 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 36 elapsed_s=186 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 37 elapsed_s=191 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 38 elapsed_s=196 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 39 elapsed_s=201 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 40 elapsed_s=206 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 41 elapsed_s=211 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 42 elapsed_s=216 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 43 elapsed_s=221 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 44 elapsed_s=226 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 45 elapsed_s=231 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 46 elapsed_s=236 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 47 elapsed_s=241 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 48 elapsed_s=246 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 49 elapsed_s=251 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 50 elapsed_s=256 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 51 elapsed_s=261 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 52 elapsed_s=266 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 53 elapsed_s=271 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 54 elapsed_s=276 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 55 elapsed_s=281 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 56 elapsed_s=286 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 57 elapsed_s=291 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 58 elapsed_s=296 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 59 elapsed_s=301 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 60 elapsed_s=306 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 61 elapsed_s=311 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 62 elapsed_s=316 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+POLL 63 elapsed_s=321 status=NO_RUN seq=- proposals=[] runs=[] outcome=null
+AFTER_GUARDIAN {"run":"等待接受调整 · 12-03 09:00","acceptanceNote":false,"message":null}
+AFTER_GUARDIAN_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":null,"current":{"run_id":"e01af075-312e-465d-88f1-213dab972f0a","journey_id":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","city_code":"CN-RV-3507014DDE2C","seed":17,"virtual_now":"2026-12-03T09:00:00+08:00","timezone":"Asia/Shanghai","sequence":2,"status":"PAUSED_FOR_ACCEPTANCE","state":{"completed_activity_ids":[],"guardian_lease_expires_at":"2026-10-25T19:19:18.672383+00:00","location":null,"pending_event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provider_observation_ids":["008ad419-7666-48d8-95c9-ab818149c29a"],"provider_snapshot_refs":[{"captured_at":"2026-10-24T21:49:32.575034+00:00","fact_qualities":["LIVE_PROVIDER_CAPTURE"],"plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provenance":"CAPTURED_PROVIDER_SNAPSHOT","sha256":"58cccc36f6f6088f2b6d7ee1d7ace90944fa8816a4d84bc4afbee2143e5819a2","snapshot_id":"af19fa2d-e9bb-4222-907a-4e423eddf7e0"}],"scene_ids":["closure-1792954154050"],"suggested_scene":"SCHEDULE_DELAY"},"history":[{"event":"SIM_STARTED","recorded_at":"2026-10-25T18:49:08.726977+00:00","sequence":0,"virtual_now":"2026-12-03T09:00:00+08:00"},{"environment_provenance":"SIMULATED","event":"SIM_SCENE_INJECTED","event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","recorded_at":"2026-10-25T18:49:14.067730+00:00","scene_id":"closure-1792954154050","sequence":1,"virtual_now":"2026-12-03T09:00:00+08:00"},{"event":"GUARDIAN_REQUESTED","model_consent":true,"recorded_at":"2026-10-25T18:49:18.672383+00:00","sequence":2,"virtual_now":"2026-12-03T09:00:00+08:00"},{"event":"GUARDIAN_RESULT","execution_mode":"SERVER_GUARDIAN_EXECUTED","guardian":{"action_status":"PROPOSAL_PRESENTED","agent_run_id":"93a0238b-6fbe-41b3-8e8e-a4565e86e78b","id":"a6af3145-c5ff-4016-9d80-a31a7d4b8452","proposal_id":"f817465e-b4f8-4bc1-8ac0-dece8e83924d","status":"PARTIAL"},"model_execution":"RUN_REFERENCE","recorded_at":"2026-10-25T18:52:32.043672+00:00","sequence":2,"virtual_now":"2026-12-03T09:00:00+08:00"}],"execution_truth":"SIMULATED_STATE_TRANSITION","updated_at":"2026-10-25T18:52:32.043672+00:00"}}
+ACCEPT_BUTTON 1
+AFTER_ACCEPT {"run":"等待接受调整 · 12-03 09:00","acceptanceNote":false,"message":null}
+AFTER_ACCEPT_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":null,"current":{"run_id":"e01af075-312e-465d-88f1-213dab972f0a","journey_id":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","city_code":"CN-RV-3507014DDE2C","seed":17,"virtual_now":"2026-12-03T09:00:00+08:00","timezone":"Asia/Shanghai","sequence":2,"status":"PAUSED_FOR_ACCEPTANCE","state":{"completed_activity_ids":[],"guardian_lease_expires_at":"2026-10-25T19:19:18.672383+00:00","location":null,"pending_event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provider_observation_ids":["008ad419-7666-48d8-95c9-ab818149c29a"],"provider_snapshot_refs":[{"captured_at":"2026-10-24T21:49:32.575034+00:00","fact_qualities":["LIVE_PROVIDER_CAPTURE"],"plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provenance":"CAPTURED_PROVIDER_SNAPSHOT","sha256":"58cccc36f6f6088f2b6d7ee1d7ace90944fa8816a4d84bc4afbee2143e5819a2","snapshot_id":"af19fa2d-e9bb-4222-907a-4e423eddf7e0"}],"scene_ids":["closure-1792954154050"],"suggested_scene":"SCHEDULE_DELAY"},"history":[{"event":"SIM_STARTED","recorded_at":"2026-10-25T18:49:08.726977+00:00","sequence":0,"virtual_now":"2026-12-03T09:00:00+08:00"},{"environment_provenance":"SIMULATED","event":"SIM_SCENE_INJECTED","event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","recorded_at":"2026-10-25T18:49:14.067730+00:00","scene_id":"closure-1792954154050","sequence":1,"virtual_now":"2026-12-03T09:00:00+08:00"},{"event":"GUARDIAN_REQUESTED","model_consent":true,"recorded_at":"2026-10-25T18:49:18.672383+00:00","sequence":2,"virtual_now":"2026-12-03T09:00:00+08:00"},{"event":"GUARDIAN_RESULT","execution_mode":"SERVER_GUARDIAN_EXECUTED","guardian":{"action_status":"PROPOSAL_PRESENTED","agent_run_id":"93a0238b-6fbe-41b3-8e8e-a4565e86e78b","id":"a6af3145-c5ff-4016-9d80-a31a7d4b8452","proposal_id":"f817465e-b4f8-4bc1-8ac0-dece8e83924d","status":"PARTIAL"},"model_execution":"RUN_REFERENCE","recorded_at":"2026-10-25T18:52:32.043672+00:00","sequence":2,"virtual_now":"2026-12-03T09:00:00+08:00"}],"execution_truth":"SIMULATED_STATE_TRANSITION","updated_at":"2026-10-25T18:52:32.043672+00:00"}}
+RESUME_BUTTON 1
+AFTER_RESUME {"run":"等待接受调整 · 12-03 09:00","acceptanceNote":false,"message":"这件事要在守护屏上按原生产品流程解决，再继续。"}
+AFTER_RESUME_PROGRESS {"jid":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","run":null,"current":{"run_id":"e01af075-312e-465d-88f1-213dab972f0a","journey_id":"2e9cd67d-10ca-4ecd-920b-76c81a350c71","city_code":"CN-RV-3507014DDE2C","seed":17,"virtual_now":"2026-12-03T09:00:00+08:00","timezone":"Asia/Shanghai","sequence":2,"status":"PAUSED_FOR_ACCEPTANCE","state":{"completed_activity_ids":[],"guardian_lease_expires_at":"2026-10-25T19:19:18.672383+00:00","location":null,"pending_event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provider_observation_ids":["008ad419-7666-48d8-95c9-ab818149c29a"],"provider_snapshot_refs":[{"captured_at":"2026-10-24T21:49:32.575034+00:00","fact_qualities":["LIVE_PROVIDER_CAPTURE"],"plan_version_id":"e74a5edb-3f6d-40c3-910c-52e449619d40","provenance":"CAPTURED_PROVIDER_SNAPSHOT","sha256":"58cccc36f6f6088f2b6d7ee1d7ace90944fa8816a4d84bc4afbee2143e5819a2","snapshot_id":"af19fa2d-e9bb-4222-907a-4e423eddf7e0"}],"scene_ids":["closure-1792954154050"],"suggested_scene":"SCHEDULE_DELAY"},"history":[{"event":"SIM_STARTED","recorded_at":"2026-10-25T18:49:08.726977+00:00","sequence":0,"virtual_now":"2026-12-03T09:00:00+08:00"},{"environment_provenance":"SIMULATED","event":"SIM_SCENE_INJECTED","event_id":"6ae8defe-e4b4-4a4f-a5a5-77c4d8b728e3","recorded_at":"2026-10-25T18:49:14.067730+00:00","scene_id":"closure-1792954154050","sequence":1,"virtual_now":"2026-12-03T09:00:00+08:00"},{"event":"GUARDIAN_REQUESTED","model_consent":true,"recorded_at":"2026-10-25T18:49:18.672383+00:00","sequence":2,"virtual_now":"2026-12-03T09:00:00+08:00"},{"event":"GUARDIAN_RESULT","execution_mode":"SERVER_GUARDIAN_EXECUTED","guardian":{"action_status":"PROPOSAL_PRESENTED","agent_run_id":"93a0238b-6fbe-41b3-8e8e-a4565e86e78b","id":"a6af3145-c5ff-4016-9d80-a31a7d4b8452","proposal_id":"f817465e-b4f8-4bc1-8ac0-dece8e83924d","status":"PARTIAL"},"model_execution":"RUN_REFERENCE","recorded_at":"2026-10-25T18:52:32.043672+00:00","sequence":2,"virtual_now":"2026-12-03T09:00:00+08:00"}],"execution_truth":"SIMULATED_STATE_TRANSITION","updated_at":"2026-10-25T18:52:32.043672+00:00"}}
+ERRORS []
