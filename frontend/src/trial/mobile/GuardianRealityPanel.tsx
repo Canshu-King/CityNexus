@@ -239,9 +239,19 @@ export function GuardianRealityPanel({
     let cancelled = false;
     setProposalState("loading");
     void cityNexusApi.listReplans(journeyId).then(async (items) => {
-      // The list can hold a node from an older trip change. The newest PRESENTED
-      // proposal is the one this screen should offer; accepting a stale node
-      // moves the plan the traveller is not looking at.
+      // The list can hold a node from an older trip change. When a simulation run
+      // is paused on an event, prefer the proposal bound to that event; otherwise
+      // fall back to the newest PRESENTED node.
+      const current = await fetch(
+        `/api/v1/journeys/${journeyId}/simulation/runs/current`,
+        {
+          headers: { Accept: "application/json", Authorization: `Bearer ${readTravelerBearer()}` },
+          cache: "no-store",
+        },
+      ).then((response) => (response.ok ? response.json() : null)).catch(() => null) as
+        | { run?: { state?: { pending_event_id?: string | null } } | null }
+        | null;
+      const pendingEventId = current?.run?.state?.pending_event_id ?? null;
       const presented = items
         .filter((item) => item.status === "PRESENTED")
         .sort((left, right) => {
@@ -249,7 +259,9 @@ export function GuardianRealityPanel({
           const rightAt = (right as { created_at?: string }).created_at ?? "";
           return rightAt.localeCompare(leftAt);
         });
-      const candidate = presented[0];
+      const candidate = (pendingEventId
+        ? presented.find((item) => item.trigger_event_id === pendingEventId)
+        : undefined) ?? presented[0];
       if (!candidate) {
         if (!cancelled) setProposalState("idle");
         return;
