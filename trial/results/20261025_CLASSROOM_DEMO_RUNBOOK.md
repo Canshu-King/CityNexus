@@ -124,3 +124,11 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 该库的 journey 已是 ACTIVE、首站 COMPLETED、当前站 12-03 14:00、第三站次日 09:00；在副本上启动 Codex 后端（自动建表）后直接 `POST /simulation/runs` 成功（UI 点「开演」）。
 - 390px 连按两次「到下一站」走完：`12/03 15:00 第 4 步` → `12/04 10:00 第 8 步 SIMULATED_COMPLETED`；三按钮禁用。回执 `clock-two-day-livecopy-61.txt`，截图 `classroom-clock-run-61-live-finish.png`。
 - 边界：这是「已出发的现场行程」继续走完，不是「从 PLANNED 新开演」；课堂栈本体仍跑旧后端（watch 行 `SIM_CONSOLE=NOT_DEPLOYED`），Codex 后端合入并重启后才会在课堂出现这块控制台。
+
+## 2026-10-25 21:26：Codex 隐私与执行内核已合入并上课堂栈（`de06e6a7` / `5f05540`）
+
+- **合入**：codex 尖 `6136d0a1` → rescue（merge commit `de06e6a7`），零冲突；合并树后端五套 issue47/49 测试 **80 passed**，前端 `tsc` 清。
+- **部署**：用课堂启动器 `prepare_classroom_scene_r1.py` 重启（按既定行为从 play 库重置演示库）。新后端建出 simulation 五张表；`/api/v1/demo/session` 无 key → **403 `DEMO_PRESENTER_REQUIRED`**（`entry-door-62.txt`，`ENTRY_DOOR=PAIRING`）；`/health` 200。
+- **390px 真栈两日**：屏上「开演」创建 run → 两次「到下一站」：`12/03 15:00 第 4 步` → `12/04 10:00 第 8 步 SIMULATED_COMPLETED`，三按钮禁用，无 console 错误。回执 `clock-two-day-classroom-62.txt`，截图 `classroom-clock-run-62-live-classroom.png`。
+- **入口链接**：启动器打印的平板链接是**一次性票、120 秒有效**；过期就再双击启动器（会重置演示库并打印新链接）。
+- **平板 `USER_VERIFIED` 仍 PENDING**（等主人亲自点）。
