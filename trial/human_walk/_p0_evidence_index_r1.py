@@ -47,11 +47,13 @@ def find(lines: list[str], prefix: str) -> str:
 
 def line_json(lines: list[str], label: str):
     for line in lines:
-        if line.startswith(label):
-            try:
-                return json.loads(line[len(label):].strip())
-            except ValueError:
-                return {}
+        # Require the opening bracket so "AFTER_ACCEPT_POLL ..." cannot shadow "AFTER_ACCEPT {...}".
+        for separator in (" {", " ["):
+            if line.startswith(label + separator):
+                try:
+                    return json.loads(line[len(label):].strip())
+                except ValueError:
+                    return {}
     return {}
 
 
