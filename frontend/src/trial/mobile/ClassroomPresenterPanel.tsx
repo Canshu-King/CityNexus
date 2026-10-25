@@ -196,14 +196,9 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
           </button>
         )}
         {run?.status === "RUNNING" && (
-          <>
-            <button type="button" disabled={busy} onClick={() => act(() => simulationApi.advance(journeyId, run.run_id, run.sequence))}>
-              走到下一阶段
-            </button>
-            <button type="button" disabled={busy} onClick={() => act(() => simulationApi.advance(journeyId, run.run_id, run.sequence, 60))}>
-              快进一小时
-            </button>
-          </>
+          <span className="rev-presenter-hint" data-testid="rev-presenter-advance-hint">
+            推进用上面的「课堂时空模拟」三个键；这里只管事件、守护和恢复。
+          </span>
         )}
         {run?.status === "PAUSED_FOR_GUARDIAN" && (
           <button

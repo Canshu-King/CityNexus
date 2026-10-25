@@ -170,3 +170,8 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 发票 201 → 首次兑换 200（拿到 token）→ **同一票二次兑换 401 `DEMO_PAIRING_INVALID_OR_EXPIRED`**；伪造四十三字符票 401 同码；不带 presenter key 发票 403 `DEMO_PRESENTER_REQUIRED`。
 - 回执 `pairing-replay-66.txt`；探针 `_pairing_replay_r1.py`。源库未写。
+
+### 一套推进控件（22:05）
+
+- 控制台删掉「走到下一阶段」「快进一小时」两个按钮（与时钟条的三个键同义不同词）；RUNNING 时只留一句「推进用上面的『课堂时空模拟』三个键；这里只管事件、守护和恢复」+「刷新读数」。
+- 390px 屏证：`clock-run-ui-1.txt`（+30 → 09:30 第 1 步、+30 → 10:00 第 2 步、到下一站 → 12:18 第 6 步）+ `classroom-clock-run-58-b.png`。
