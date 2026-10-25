@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import socket
 import sqlite3
 import urllib.error
 import urllib.request
@@ -16,7 +17,19 @@ CANARY = r"D:/moodle/_cmdr_v3_live_1022"
 DB = os.path.join(CANARY, "citynexus_v3_demo_1025.db")
 API = "http://127.0.0.1:60391"
 WEB = "http://127.0.0.1:14492"
-LAN = "http://10.15.5.23:14492"
+def lan_ipv4() -> str:
+    """The address the tablet must use; a Wi-Fi reconnect changes it."""
+    probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        probe.connect(("8.8.8.8", 80))
+        return probe.getsockname()[0]
+    except OSError:
+        return "127.0.0.1"
+    finally:
+        probe.close()
+
+
+LAN = "http://%s:14492" % lan_ipv4()
 
 
 def get(url: str, timeout: int = 8) -> tuple[int, dict]:
@@ -73,10 +86,10 @@ print(json.dumps({
     "CLOCK_HTTP": clock_status,
     "CLOCK": clock.get("virtual_now"),
     "CLOCK_VERSION": clock.get("version"),
-    "TABLET_OPEN": "http://10.15.5.23:14492/revolution (tablet: UNVERIFIED)",
+    "TABLET_OPEN": "http://%s:14492/revolution (tablet: UNVERIFIED)" % lan_ipv4(),
     "AGENT_QA": "direct-replan-only",
     "REAL_POI": True,
     "SAVED_PLAN": bool(scene.get("active_plan")),
     "RESTART_SESSION": True,
-    "FALLBACK_SCREENSHOT": "trial/results/20261022_v3_human_chrome/guardian-proposal-390-r8.png",
+    "FALLBACK_SCREENSHOT": "trial/results/20261022_v3_human_chrome/rehearsal11-origin.png",
 }, ensure_ascii=False))

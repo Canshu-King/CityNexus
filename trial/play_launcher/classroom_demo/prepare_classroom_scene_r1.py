@@ -17,6 +17,7 @@ import json
 import os
 import re
 import secrets
+import socket
 import sqlite3
 import subprocess
 import sys
@@ -72,6 +73,18 @@ def listening_pid(port: int) -> str | None:
                 and fields[3].upper() == "LISTENING":
             return fields[4]
     return None
+
+
+def lan_ipv4() -> str:
+    """The address the tablet must use; a Wi-Fi reconnect changes it."""
+    probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        probe.connect(("8.8.8.8", 80))
+        return probe.getsockname()[0]
+    except OSError:
+        return "127.0.0.1"
+    finally:
+        probe.close()
 
 
 INCIDENT_LEAD = "T00:57:00+00:00"  # 08:57 at +08:00, three minutes before the 09:00 clock
@@ -266,15 +279,17 @@ print(json.dumps({
     "DEMO_READY": bool(proposal),
     "WINDOWS_START": "start_classroom_demo.bat",
     "FRONTEND_UP": FRONTEND_UP,
-    "TABLET_OPEN": "http://10.15.5.23:14492/revolution",
+    "TABLET_OPEN": "http://%s:14492/revolution" % lan_ipv4(),
     "AGENT_QA": "direct-replan-only (agent path verified separately)",
     "REAL_POI": True,
     "SAVED_PLAN": bool(journey and journey["active_plan_version_id"]),
     "RESTART_SESSION": True,
-    "FALLBACK_SCREENSHOT": "trial/results/20261022_v3_human_chrome/guardian-proposal-390-r8.png",
+    "FALLBACK_SCREENSHOT": "trial/results/20261022_v3_human_chrome/rehearsal11-origin.png",
     "journey": dict(journey) if journey is not None else None,
     "event": dict(event) if event is not None else None,
     "replan_http_status": status,
     "proposal": proposal,
     "proposal_status": proposal_status,
 }, ensure_ascii=False))
+print()
+print("Classroom ready. Tablet address (same Wi-Fi): http://%s:14492/revolution" % lan_ipv4())
