@@ -2671,3 +2671,32 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **可裁的三档最小收紧面**（都不动写路径）：① 只收 `experience`；② 收 `experience` + `twin`；③ 四条全收（手机演示链与 e2e 需要同步改带 bearer，工作量最大）。未动代码，等裁。
 
+## 八十五、一键启动器真跑：崩在起栈之前的那一行（已修）与 18.2 秒整链
+
+`start_classroom_demo.bat` 一直是「明天开演」的那一下，但此前只验过它调用的脚本单独跑通。这一轮用 `DEMO_NO_PAUSE=1` 真跑同一份 bat，第一次输出：
+
+```text
+File "D:\moodle\_cmdr_v3_port_1022\prepare_classroom_scene_r1.py", line 33, in <module>
+  SECRET = os.environ.get("MERGE_AUTH_SECRET") or secrets.token_hex(32)
+NameError: name 'secrets' is not defined.
+The classroom stack did NOT start. Check the messages above.
+```
+
+bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，场景没有被半截重置；但这也说明此前所有 `DEMO_READY` 读数都来自直接调脚本，不是主人明天要按的那一下。修法是补 `import secrets`（`prepare_classroom_scene_r1.py:18`，该表达式现位于第 34 行），两份同源副本一起改；重跑同一份 bat，40 秒后 `DEMO_READY=true`、replan 回 201、新提案 PRESENTED。
+
+随后 430×932 真视口彩排（`classroom-rehearsal-5.txt`、`_classroom_rehearsal_r5.mjs`）：
+
+| 时刻 | 读数 |
+| --- | --- |
+| 0.0s | 冷首屏打开 |
+| 6.8s | 课堂演示进入「北京 · 2日行程」 |
+| 9.0s | 守护卡在视口内（y=398、高 137、视口 430×932），文案「移除故宫博物院；路上少 66 分钟。」 |
+| 14.6s | 接受后刷新，第一站「天坛公园 · 12月3日 09:00」 |
+| 16.2s | 时钟 09:00 → 10:00，服务器第 0 版 → 第 1 版 |
+| 18.2s | 地图蓝点可见，状态行「天坛公园 · WGS84，模拟位置，不是物理 GPS」 |
+| 18.2s | 页面错误 0 条 |
+
+提交 `5018889433`（已 push，远端 `ls-remote` 回读同值）。之后重跑一次 bat 把现场恢复成「一张提案待接受」（`b77fa867-5793-42ef-b18e-e63358475da5`，时钟 09:00 第 0 版）；明天双击 bat 会再重建一次场景，不依赖今天的残留。
+
+边界不变：平板实物仍未被主人点过（`TABLET_OPEN` 只到本机浏览器 + 真视口）；演示栈的会话仍靠 `/demo/session`，产品侧「主动再认证」仍等裁语。
+

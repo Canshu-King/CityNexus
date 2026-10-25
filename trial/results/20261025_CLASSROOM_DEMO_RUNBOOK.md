@@ -6,6 +6,7 @@
 
 1. 双击 `D:\moodle\_cmdr_v3_port_1022\start_classroom_demo.bat`（版本库副本：`trial/play_launcher/classroom_demo/start_classroom_demo.bat`，两份同源；脚本默认每次生成随机会话密钥，不写死）。
    它会：把演示库重置成有「北京 · 2日行程」的初始场景 → 起后端 `127.0.0.1:60391` → 起前端 `0.0.0.0:14492` → 预生成一张待接受的调整卡。窗口不要关。
+   > 已实测（10-25 01:00）：同一份 bat 真跑到 `DEMO_READY=true`，replan 回 201，提案 PRESENTED。窗口最后会打印平板地址那两行；只看到 `The classroom stack did NOT start` 就是没起来，把窗口里最后一段报错原文留着。
 2. 平板连与电脑**同一 WiFi**（电脑当前 WLAN：`10.15.5.23`）。
 3. 平板浏览器打开 `http://10.15.5.23:14492/revolution`。
 
