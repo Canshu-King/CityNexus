@@ -2,7 +2,7 @@ import { chromium } from "file:///D:/moodle/_cmdr_rescue_v3_1022/frontend/node_m
 import fs from "node:fs";
 
 const BASE = "http://127.0.0.1:14492";
-const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/history-slice-95.txt";
+const OUT = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/history-slice-96.txt";
 const TICKET_FILE = "D:/moodle/_cmdr_v3_live_1022/.demo_pairing_ticket";
 const NL = String.fromCharCode(10);
 const lines = [];

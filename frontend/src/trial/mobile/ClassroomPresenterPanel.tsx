@@ -364,7 +364,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
       {run && run.history.length > 0 && (
         <ol className="rev-presenter-history" data-testid="rev-presenter-history">
           {run.history.slice(-5).map((step, index) => (
-            <li key={`${step.sequence ?? index}`}>
+            <li key={`${index}-${String(step.event)}-${shortTime(step.virtual_now)}`}>
               {EVENT_TEXT[String(step.event)] ?? "推进"} · {shortTime(step.virtual_now)}
             </li>
           ))}
