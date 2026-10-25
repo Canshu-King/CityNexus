@@ -1,0 +1,55 @@
+name: Classroom backend regression
+
+on:
+  pull_request:
+    branches: [rescue/v3-final-departure-20261022]
+    paths:
+      - backend/app/agent/**
+      - backend/app/simulation/**
+      - backend/app/planning/day_rhythm.py
+      - backend/tests/test_issue47_*.py
+      - backend/tests/test_issue49_*.py
+      - backend/tests/test_wp01_wp03.py
+      - .github/workflows/classroom-backend.yml
+  push:
+    branches: [codex/sandbox-execution-security-20261025]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: classroom-backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend test dependencies
+        run: |
+          python -m pip install uv
+          uv sync --extra dev --no-install-project
+      - name: Run isolated classroom and signed-caller regressions
+        run: >-
+          uv run --no-sync python -m pytest -q
+          tests/test_wp01_wp03.py
+          tests/test_issue49_guardian_context.py
+          tests/test_issue49_presenter_integration.py
+          --junitxml=classroom-results.xml
+      - name: Upload fixture test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: classroom-backend-fixture-results
+          path: backend/classroom-results.xml
+          if-no-files-found: ignore
+          retention-days: 7
