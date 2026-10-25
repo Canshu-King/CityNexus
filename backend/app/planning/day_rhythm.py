@@ -122,7 +122,7 @@ def extract_day_rhythm(text: str) -> DayRhythm | None:
     )
     wake, wake_evidence = _parse_clock(
         (
-            re.compile(rf"({_CLOCK})\s*点\s*(?:才|多)?\s*(?:起|醒|起床|睡醒)"),
+            re.compile(rf"({_CLOCK})\s*点\s*(?:才|多)?\s*(?:起床|睡醒|起|醒|出门|出发)"),
             re.compile(rf"(?:wake\s+up|get\s+up|waking\s+up)\s*(?:at|around|about)?\s*({_CLOCK})", re.I),
         ),
         text,
@@ -178,6 +178,8 @@ def extract_day_rhythm(text: str) -> DayRhythm | None:
             "玩到凌晨",
             "活动到天亮",
             "玩到天亮",
+            "玩到很迟",
+            "玩到很晚",
             "late night",
             "nightlife",
             "night market",

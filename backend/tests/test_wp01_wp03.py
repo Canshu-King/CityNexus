@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
@@ -8,6 +9,7 @@ from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
+from app.core.config import settings
 from app.db.models import (
     Activity,
     AuditLog,
@@ -21,6 +23,7 @@ from app.db.models import (
 from app.db.session import SessionLocal, ensure_schema, make_engine
 from app.integrations.mock.providers import MockMobilityProvider
 from app.main import app
+from app.traveler_principal import issue_traveler_token
 from app.replanning.feasibility import (
     FeasibilityActivity,
     build_context,
@@ -32,6 +35,27 @@ from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 client = TestClient(app)
 JOURNEY_ID = "22222222-2222-4222-8222-222222222222"
 TRAVELER_ID = "11111111-1111-4111-8111-111111111111"
+
+
+def traveler_headers(traveler_id: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {issue_traveler_token(traveler_id)}"}
+
+
+@pytest.fixture(autouse=True)
+def signed_test_traveler():
+    previous_secret = settings.traveler_auth_secret
+    previous_headers = dict(client.headers)
+    object.__setattr__(settings, "traveler_auth_secret", uuid4().hex + uuid4().hex)
+    try:
+        # This module's Journey requests act as the seeded owner under the configured verifier.
+        client.headers.update(traveler_headers(TRAVELER_ID))
+        yield
+    finally:
+        client.headers.clear()
+        client.headers.update(previous_headers)
+        object.__setattr__(settings, "traveler_auth_secret", previous_secret)
+
+
 LOCK_START = "2026-10-10T15:30:00+08:00"
 LOCKED_COMMITMENT = {
     "kind": "HARD",
@@ -156,9 +180,11 @@ def test_cnx_i_003_create_and_get_traveler():
     payload = {"display_name": "Taylor", "timezone": "Asia/Shanghai"}
     created = client.post("/api/v1/travelers", json=payload)
     assert created.status_code == 201
-    assert (
-        client.get(f"/api/v1/travelers/{created.json()['id']}").json()["display_name"] == "Taylor"
+    created_id = created.json()["id"]
+    traveler = client.get(
+        f"/api/v1/travelers/{created_id}", headers=traveler_headers(created_id)
     )
+    assert traveler.json()["display_name"] == "Taylor"
 
 
 def test_cnx_i_004_replace_preferences():

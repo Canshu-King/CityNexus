@@ -1,0 +1,23 @@
+{
+  "evidence": "REAL_LOCAL_CHROME_UI_AND_PERSISTED_AGENT_STEPS",
+  "guardian_context_commit": "99132080621b0152e3e6c8a6274f4901edb2e7f6",
+  "journey_id": "2e9cd67d-10ca-4ecd-920b-76c81a350c71",
+  "run_id": "5625ed72-9aff-4c87-8bb3-68d9291775e1",
+  "event_id": "7cf6f587-cec6-4c30-823a-b7cab6891c6f",
+  "agent_run_id": "a035a763-2c05-4667-83b9-2262c28e51e8",
+  "provider": "hermes",
+  "requested_model": "cn:hy3",
+  "tool_steps": [
+    {"sequence": 1, "tool": "inspect_journey", "status": "COMPLETED", "decision": "ALLOW_AUTO"},
+    {"sequence": 2, "tool": "inspect_twin", "status": "COMPLETED", "decision": "ALLOW_AUTO"},
+    {"sequence": 3, "tool": "external_model_call", "status": "FAILED_EXTERNAL"}
+  ],
+  "terminal_status": "FAILED_EXTERNAL",
+  "error_code": "MODEL_TIMEOUT",
+  "failed_attempt_elapsed_ms": 237231,
+  "new_proposal_id": null,
+  "accepted_current_scene_proposal": false,
+  "browser_input": "Chrome-use keyboard Enter on observed controls",
+  "physical_device_tested": false,
+  "frontend_worktree": "Qoder rescue with concurrent uncommitted UI changes"
+}

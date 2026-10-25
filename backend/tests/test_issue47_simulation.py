@@ -28,7 +28,7 @@ from app.simulation.models import SimulationRun, SimulationCommand
 @pytest.fixture
 def sim(stack, monkeypatch):  # noqa: F811 -- pytest injects the imported fixture
     client, ids, path = stack
-    configured = replace(main.settings, simulation_enabled=True)
+    configured = replace(main.settings, simulation_enabled=True, ai_enabled=True)
     for mod in (main, demo_access, api, clock):
         monkeypatch.setattr(mod, "settings", configured)
     monkeypatch.setenv("CITYNEXUS_DEMO_DATABASE_PATH", str(path.resolve()))

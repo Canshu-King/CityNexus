@@ -5,6 +5,8 @@ separately and reading this projection never starts a provider or model call.
 """
 
 import json
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -14,11 +16,14 @@ from app.db.models import (
     AgentRun,
     AgentRunStep,
     AuditLog,
+    Activity,
     Event,
     GuardianRun,
     JourneyMission,
     ReplanProposal,
+    PlanVersion,
 )
+from app.simulation.coverage import summarize_activity_coverage
 
 STEP_STATUSES = frozenset(
     {
@@ -84,6 +89,88 @@ def known(value, allowed):
     return value if value in allowed else "UNKNOWN"
 
 
+def _guardian_outcome(
+    *,
+    pending_event_id,
+    configured,
+    guardians,
+    agents,
+    agent_event_ids,
+    steps,
+    proposals,
+):
+    """Classify only the latest persisted Guardian attempt for this run's pending event."""
+
+    def outcome(code, error_code=None):
+        result = {"code": code}
+        if error_code is not None:
+            result["error_code"] = error_code
+        return result
+
+    if not pending_event_id:
+        return outcome("UNKNOWN")
+
+    event_guardians = [
+        guardian for guardian in guardians if guardian.trigger_event_id == pending_event_id
+    ]
+    current_guardian = event_guardians[-1] if event_guardians else None
+    event_agents = [
+        agent for agent in agents if agent_event_ids.get(agent.id) == pending_event_id
+    ]
+    current_agent = None
+    if current_guardian is not None:
+        current_agent = next(
+            (agent for agent in event_agents if agent.id == current_guardian.agent_run_id),
+            None,
+        )
+        if current_agent is None:
+            recent_attempts = [
+                agent
+                for agent in event_agents
+                if agent.created_at >= current_guardian.created_at
+            ]
+            if recent_attempts:
+                current_agent = recent_attempts[-1]
+    elif event_agents:
+        current_agent = event_agents[-1]
+
+    current_proposal = None
+    if current_guardian is not None and current_guardian.proposal_id:
+        current_proposal = next(
+            (
+                proposal
+                for proposal in proposals
+                if proposal.id == current_guardian.proposal_id
+                and proposal.journey_id == current_guardian.journey_id
+                and proposal.trigger_event_id == pending_event_id
+                and proposal.status == "PRESENTED"
+            ),
+            None,
+        )
+    if current_proposal is not None:
+        return outcome("PROPOSAL_READY")
+
+    current_steps = [
+        step for step in steps if current_agent is not None and step.run_id == current_agent.id
+    ]
+    if (
+        (current_agent is not None and current_agent.status == "FAILED_EXTERNAL")
+        or any(step.status == "FAILED_EXTERNAL" for step in current_steps)
+    ):
+        return outcome("EXTERNAL_FAILED", "MODEL_REQUEST_FAILED")
+
+    if (
+        (current_guardian is not None and current_guardian.action_status == "UNRESOLVED")
+        or (current_agent is not None and current_agent.status == "PARTIAL")
+        or (current_guardian is not None and current_guardian.status == "PARTIAL")
+    ):
+        return outcome("AGENT_UNRESOLVED")
+
+    if not configured and current_agent is None:
+        return outcome("MODEL_NOT_CONFIGURED")
+    return outcome("UNKNOWN")
+
+
 def run_progress(session, journey, run, config):
     history = json.loads(run.history_json)
     state = json.loads(run.state_json)
@@ -110,10 +197,11 @@ def run_progress(session, journey, run, config):
     )
     # A model runtime commits AgentRun before Guardian gets its final run ID.
     # The child mission's exact event binding makes those in-flight rows visible.
-    agents = (
+    agent_rows = (
         list(
-            session.scalars(
+            session.execute(
                 select(AgentRun)
+                .add_columns(JourneyMission.trigger_event_id)
                 .join(JourneyMission, JourneyMission.id == AgentRun.mission_id)
                 .where(
                     AgentRun.journey_id == journey.id,
@@ -127,6 +215,8 @@ def run_progress(session, journey, run, config):
         if event_ids
         else []
     )
+    agents = [row[0] for row in agent_rows]
+    agent_event_ids = {row[0].id: row[1] for row in agent_rows}
     agent_ids = {agent.id for agent in agents}
     steps = (
         list(
@@ -183,7 +273,18 @@ def run_progress(session, journey, run, config):
         .limit(1)
     )
     configured = bool((config.hermes_api_url and config.hermes_api_key) or config.ai_api_key)
+    guardian_outcome = _guardian_outcome(
+        pending_event_id=pending.id if pending else None,
+        configured=configured,
+        guardians=guardians,
+        agents=agents,
+        agent_event_ids=agent_event_ids,
+        steps=steps,
+        proposals=proposals,
+    )
     missing = []
+    if not config.ai_enabled:
+        missing.append("AI_DISABLED")
     if not configured:
         missing.append("MODEL_CREDENTIALS_MISSING")
     if not standing:
@@ -196,6 +297,37 @@ def run_progress(session, journey, run, config):
         "PAUSED_REQUIRES_MISSION",
     }:
         missing.append("RUN_NOT_AWAITING_GUARDIAN")
+    active_plan = session.scalar(
+        select(PlanVersion).where(
+            PlanVersion.id == journey.active_plan_version_id,
+            PlanVersion.journey_id == journey.id,
+        )
+    )
+    activities = (
+        list(session.scalars(select(Activity).where(Activity.plan_version_id == active_plan.id)))
+        if active_plan is not None
+        else []
+    )
+    zone = ZoneInfo(journey.timezone)
+    def local_date(value):
+        stamp = datetime.fromisoformat(value)
+        return (stamp.replace(tzinfo=zone) if stamp.tzinfo is None else stamp.astimezone(zone)).date()
+    first_day, last_day = local_date(journey.start_at), local_date(journey.end_at)
+    required_dates = [
+        (first_day + timedelta(days=offset)).isoformat()
+        for offset in range((last_day - first_day).days + 1)
+    ]
+    activity_coverage = {
+        "plan_version_id": active_plan.id if active_plan is not None else None,
+        "target_places_per_day": 2,
+        "target_kind": "CLASSROOM_DISPLAY_ONLY",
+        "days": summarize_activity_coverage(
+            activities,
+            state.get("completed_activity_ids", []),
+            journey_timezone=journey.timezone,
+            required_dates=required_dates,
+        ),
+    }
     return {
         "run_id": run.id,
         "journey_id": journey.id,
@@ -206,6 +338,7 @@ def run_progress(session, journey, run, config):
         "current_activity_id": journey.current_activity_id,
         "clock_policy": {"business": "PERSISTED_VIRTUAL", "security_and_audit": "WALL"},
         "readiness": {
+            "ai_enabled": config.ai_enabled,
             "model_credentials_configured": configured,
             "standing_mission_id": standing,
             "pending_event_id": pending.id if pending else None,
@@ -213,6 +346,8 @@ def run_progress(session, journey, run, config):
             "model_consent_required": True,
             "network_checked": False,
         },
+        "guardian_outcome": guardian_outcome,
+        "activity_coverage": activity_coverage,
         "events": [
             {
                 "id": e.id,
@@ -228,7 +363,8 @@ def run_progress(session, journey, run, config):
                 "id": g.id,
                 "event_id": g.trigger_event_id,
                 "status": known(
-                    g.status, {"RUNNING", "COMPLETED", "INTERRUPTED", "ABORTED", "FAILED"}
+                    g.status,
+                    {"RUNNING", "COMPLETED", "PARTIAL", "INTERRUPTED", "ABORTED", "FAILED"},
                 ),
                 "action_status": known(g.action_status, GUARDIAN_ACTIONS),
                 "agent_run_id": g.agent_run_id if g.agent_run_id in agent_ids else None,

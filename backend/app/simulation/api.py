@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.concurrency_guards import journey_write_lock
 from app.core.config import settings
-from app.db.models import Event, Journey, JourneyMember
+from app.db.models import Event, GuardianRun, Journey, JourneyMember, ReplanProposal
 from app.db.session import get_session
 from app.demo_access import require_demo_database, require_demo_presenter
 from app.simulation import runtime as rt
@@ -328,6 +328,8 @@ def guardian(
         )
         if pending.status not in {"DETECTED", "ACKNOWLEDGED"}:
             raise HTTPException(409, "SIMULATION_SCENE_EVENT_ALREADY_RESOLVED")
+        if not settings.ai_enabled:
+            raise HTTPException(503, "SIMULATION_AI_DISABLED")
         rt.claim_sequence(session, run, body.expected_sequence)
         run.status = "GUARDIAN_RUNNING"
         state = json.loads(run.state_json)
@@ -350,9 +352,27 @@ def guardian(
                 k: outcome.get(k)
                 for k in ("id", "status", "action_status", "agent_run_id", "proposal_id")
             }
+            proposal = (
+                session.get(ReplanProposal, safe["proposal_id"])
+                if safe.get("proposal_id") else None
+            )
+            proposal_matches_scene = bool(
+                proposal is not None
+                and proposal.journey_id == journey.id
+                and proposal.trigger_event_id == pending.id
+                and proposal.status == "PRESENTED"
+            )
+            if safe.get("proposal_id") and not proposal_matches_scene:
+                recorded_guardian = session.get(GuardianRun, safe.get("id")) if safe.get("id") else None
+                if recorded_guardian is not None and recorded_guardian.journey_id == journey.id:
+                    recorded_guardian.proposal_id = None
+                    recorded_guardian.action_status = "UNRESOLVED"
+                safe["proposal_id"] = None
+                safe["action_status"] = "UNRESOLVED"
+                safe["error_code"] = "GUARDIAN_PROPOSAL_EVENT_MISMATCH"
             run.status = (
                 "PAUSED_FOR_ACCEPTANCE"
-                if safe.get("proposal_id")
+                if proposal_matches_scene
                 else "PAUSED_REQUIRES_MISSION"
                 if safe.get("action_status") == "MISSION_REQUIRED"
                 else "PAUSED_MODEL_UNAVAILABLE"
