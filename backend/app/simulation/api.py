@@ -171,6 +171,21 @@ def read(
     return rt.payload(run_for(session, journey, run_id))
 
 
+@router.get("/runs/{run_id}/progress")
+def progress(
+    journey_id: UUID,
+    run_id: UUID,
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+):
+    from app.simulation.progress import run_progress
+
+    journey, _ = access(session, journey_id, request)
+    response.headers["Cache-Control"] = "private, no-store"
+    return run_progress(session, journey, run_for(session, journey, run_id), settings)
+
+
 @router.post("/runs", status_code=201)
 def start(
     journey_id: UUID,
@@ -306,6 +321,13 @@ def guardian(
             "PAUSED_REQUIRES_MISSION",
         }:
             raise HTTPException(409, "SIMULATION_GUARDIAN_NOT_PENDING")
+        from app.simulation.progress import scene_event
+
+        pending = scene_event(
+            session, journey, run, json.loads(run.state_json).get("pending_event_id")
+        )
+        if pending.status not in {"DETECTED", "ACKNOWLEDGED"}:
+            raise HTTPException(409, "SIMULATION_SCENE_EVENT_ALREADY_RESOLVED")
         rt.claim_sequence(session, run, body.expected_sequence)
         run.status = "GUARDIAN_RUNNING"
         state = json.loads(run.state_json)
@@ -320,7 +342,10 @@ def guardian(
 
         try:
             with journey_business_time(session, journey.id):
-                outcome = scan_guardian(session, journey, include_opportunity_signals=False)
+                outcome = scan_guardian(
+                    session, journey, include_opportunity_signals=False,
+                    trigger_event_id=pending.id,
+                )
             safe = {
                 k: outcome.get(k)
                 for k in ("id", "status", "action_status", "agent_run_id", "proposal_id")

@@ -25400,6 +25400,7 @@ def accept_replan(
     proposal = require(session, ReplanProposalModel, str(proposal_id), "Replan proposal")
     # The Guardian's tool call enters the in-process door (_accept_replan_impl) directly, so this
     # HTTP route always authenticates a bearer principal.
+    signed_actor_id = None
     if settings.traveler_auth_secret:
         journey = require(session, Journey, str(proposal.journey_id), "Journey")
         from app.traveler_principal import member_has_capability, resolve_journey_member_principal
@@ -25409,12 +25410,21 @@ def accept_replan(
         )
         if not member_has_capability(session, actor, "JOURNEY_UPDATE"):
             raise HTTPException(403, "Journey member role does not have JOURNEY_UPDATE authority")
+        signed_actor_id = _principal.traveler_id
     if _is_group_recovery_collective_proposal(session, proposal):
         raise HTTPException(
             409,
             "GROUP_RECOVERY_REQUIRES_AUTHENTICATED_APPLY",
         )
-    return _accept_replan_impl(proposal_id, idempotency_key, session)
+    from app.simulation.clock import journey_business_time
+
+    # This URL is keyed by proposal, so Journey-path middleware cannot scope it.
+    with journey_business_time(session, proposal.journey_id):
+        return _accept_replan_impl(
+            proposal_id, idempotency_key, session,
+            actor_type="AUTHENTICATED_TRAVELER" if signed_actor_id else "system",
+            actor_id=signed_actor_id,
+        )
 
 
 def _switch_active_plan_atomically(
