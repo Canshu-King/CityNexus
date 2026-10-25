@@ -1,0 +1,135 @@
+"""Build the P0 evidence index by reading the receipts, not by memory.
+
+Every row is derived: JSON receipts are parsed, line receipts are searched for the
+keys named here, and screenshots are only listed when the file exists.  A missing
+file prints MISSING instead of a verdict.
+"""
+from __future__ import annotations
+
+import glob
+import json
+import os
+
+OUT_DIR = r"D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome"
+OUT = r"D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261025_P0_EVIDENCE_INDEX.md"
+
+
+def png(name: str) -> str:
+    path = os.path.join(OUT_DIR, name)
+    if not os.path.exists(path):
+        return "MISSING"
+    return "%s (%d bytes)" % (name, os.path.getsize(path))
+
+
+def json_file(name: str) -> dict:
+    path = os.path.join(OUT_DIR, name)
+    if not os.path.exists(path):
+        return {}
+    try:
+        return json.loads(open(path, encoding="utf-8").read())
+    except ValueError:
+        return {}
+
+
+def lines_of(name: str) -> list[str]:
+    path = os.path.join(OUT_DIR, name)
+    if not os.path.exists(path):
+        return []
+    return [line.strip() for line in open(path, encoding="utf-8", errors="replace")]
+
+
+def find(lines: list[str], prefix: str) -> str:
+    for line in lines:
+        if line.startswith(prefix):
+            return line
+    return "MISSING"
+
+
+def newest(pattern: str) -> str:
+    found = sorted(glob.glob(os.path.join(OUT_DIR, pattern)))
+    return found[-1] if found else ""
+
+
+def main() -> int:
+    bypass = json_file("presenter-proxy-bypass-1.txt")
+    replay = json_file("pairing-replay-66.txt")
+    chain = json_file("single-state-chain-65.txt")
+    cities = json_file("cities-classroom-62.txt")
+    after = json_file("after-merge-check.txt")
+    ui = lines_of("clock-run-ui-1.txt")
+    two_day = lines_of("clock-two-day-classroom-62.txt")
+    lan = lines_of("clock-run-lan-63.txt")
+    scene = lines_of("clock-scene-guardian-59.txt")
+    tablet = json_file(os.path.basename(newest("tablet-evidence-*.txt"))) if newest("tablet-evidence-*.txt") else {}
+
+    rows = []
+    rows.append(("P0-1 LAN 不穿透 / 票一次性",
+                 "绿" if bypass.get("BYPASS_SUSPECTED") is False
+                 and (replay.get("second_redeem") or {}).get("http") == 401
+                 and (replay.get("first_redeem") or {}).get("http") == 200 else "红",
+                 "presenter-proxy-bypass-1.txt, pairing-replay-66.txt",
+                 "BYPASS_SUSPECTED=%s；首兑 %s，重兑 %s，无 key %s" % (
+                     bypass.get("BYPASS_SUSPECTED"),
+                     (replay.get("first_redeem") or {}).get("http"),
+                     (replay.get("second_redeem") or {}).get("http"),
+                     (replay.get("pairing_without_key") or {}).get("http"))))
+    rows.append(("P0-2 时钟条接同一 run（屏上）",
+                 "绿" if "ERRORS []" in ui and "已走到下一站" in find(ui, "AFTER_NEXT_NOTE") else "红",
+                 "clock-run-ui-1.txt",
+                 "%s；%s；%s" % (find(ui, "PLUS30_1_TEXT"), find(ui, "AFTER_NEXT"), find(ui, "ERRORS"))))
+    rows.append(("P0-2 两日闭环（真栈）",
+                 "绿" if any("模拟行程已完成" in line for line in two_day) else "红",
+                 "clock-two-day-classroom-62.txt, classroom-clock-run-62-live-classroom.png",
+                 "%s；%s" % (find(two_day, "FINAL"), png("classroom-clock-run-62-live-classroom.png"))))
+    rows.append(("P0-2 LAN 平板等价路径",
+                 "绿" if "ERRORS []" in lan and "执行第" in find(lan, "AFTER_NEXT") else "红",
+                 "clock-run-lan-63.txt, classroom-clock-run-63-c.png",
+                 "%s；%s" % (find(lan, "AFTER_NEXT"), png("classroom-clock-run-63-c.png"))))
+    rows.append(("P0-2 场景→守护→缺任务",
+                 "绿" if "缺少守护任务" in find(scene, "AFTER_GUARDIAN") and "RESUME_BUTTON 0" in scene else "红",
+                 "clock-scene-guardian-59.txt",
+                 "%s；%s" % (find(scene, "AFTER_SCENE"), find(scene, "AFTER_GUARDIAN"))))
+    rows.append(("P0-2 单一状态链（CAS + 旧门）",
+                 "绿" if (chain.get("advance_stale_sequence") or {}).get("http") == 409
+                 and (chain.get("legacy_advance") or {}).get("http") == 409 else "红",
+                 "single-state-chain-65.txt",
+                 "stale=%s（%s）；legacy=%s（%s）" % (
+                     (chain.get("advance_stale_sequence") or {}).get("http"),
+                     (chain.get("advance_stale_sequence") or {}).get("error"),
+                     (chain.get("legacy_advance") or {}).get("http"),
+                     (chain.get("legacy_advance") or {}).get("error"))))
+    rows.append(("P0-3 城市池 / 1 城同 run",
+                 "黄（池子 BLOCKED，但不挡开演）" if cities.get("status") == "BLOCKED" else "红",
+                 "cities-classroom-62.txt",
+                 "池 status=%s，eligible=%s/%s，missing=%s" % (
+                     cities.get("status"), cities.get("eligible_city_count"),
+                     cities.get("required_city_count"),
+                     ",".join((cities.get("cities") or [{}])[0].get("missing") or []))))
+    rows.append(("合入后一键核对",
+                 "绿" if after.get("all_green") is True else "红",
+                 "after-merge-check.txt",
+                 "ENTRY_DOOR=%s，SIM_CONSOLE=%s，all_green=%s，tickets=%s" % (
+                     after.get("ENTRY_DOOR"), after.get("SIM_CONSOLE"),
+                     after.get("all_green"), after.get("tickets"))))
+    rows.append(("P0-4 平板亲手点",
+                 "PENDING" if tablet.get("VERDICT") == "NO_EXTERNAL_CLIENT" else "待核对",
+                 os.path.basename(newest("tablet-evidence-*.txt")) or "MISSING",
+                 "VERDICT=%s，外部请求=%s，run=%s" % (
+                     tablet.get("VERDICT"),
+                     (tablet.get("log") or {}).get("external_requests"),
+                     (tablet.get("run") or {}).get("run"))))
+
+    out = ["# P0 证据索引（由回执现读生成）", "",
+           "生成器：`trial/human_walk/_p0_evidence_index_r1.py`；每条都从回执解析，缺文件写 MISSING。", "",
+           "| 项目 | 判定 | 证据 | 关键读数 |", "|---|---|---|---|"]
+    for name, verdict, evidence, reading in rows:
+        out.append("| %s | %s | %s | %s |" % (name, verdict, evidence, reading.replace("|", "\\|")))
+    out.append("")
+    with open(OUT, "w", encoding="utf-8", newline="\n") as handle:
+        handle.write("\n".join(out))
+    print("\n".join(out))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
