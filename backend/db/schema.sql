@@ -1952,3 +1952,60 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_shared_stop_coplanning_one_unbound_active_g
     WHERE active_slot = 1;
 CREATE INDEX IF NOT EXISTS idx_shared_stop_coplanning_promotion
     ON shared_stop_coplanning_grants(promotion_id, decision_epoch);
+
+
+CREATE TABLE IF NOT EXISTS simulation_runs (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL UNIQUE REFERENCES journeys(id),
+    actor_id TEXT NOT NULL REFERENCES travelers(id),
+    city_code TEXT NOT NULL,
+    seed INTEGER NOT NULL,
+    timezone TEXT NOT NULL,
+    virtual_now TEXT NOT NULL,
+    sequence INTEGER NOT NULL DEFAULT 0 CHECK(sequence >= 0),
+    status TEXT NOT NULL,
+    state_json TEXT NOT NULL DEFAULT '{}',
+    history_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS simulation_commands (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id),
+    run_id TEXT NOT NULL REFERENCES simulation_runs(id),
+    actor_id TEXT NOT NULL REFERENCES travelers(id),
+    idempotency_key TEXT NOT NULL,
+    request_sha256 TEXT NOT NULL,
+    result_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(journey_id, actor_id, idempotency_key)
+);
+
+CREATE TABLE IF NOT EXISTS demo_pairing_tickets (
+    ticket_sha256 TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id),
+    traveler_id TEXT NOT NULL REFERENCES travelers(id),
+    expires_at INTEGER NOT NULL,
+    consumed_at INTEGER
+);
+CREATE TABLE IF NOT EXISTS demo_pairing_attempts (
+    bucket TEXT PRIMARY KEY,
+    attempts INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS simulation_city_identities (
+    journey_id TEXT PRIMARY KEY REFERENCES journeys(id),
+    provider TEXT NOT NULL,
+    provider_adcode TEXT NOT NULL,
+    public_name TEXT NOT NULL,
+    source_call_id TEXT NOT NULL REFERENCES provider_calls(id),
+    source_sha256 TEXT NOT NULL,
+    bound_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS simulation_public_city_snapshots (
+    provider_adcode TEXT PRIMARY KEY,
+    snapshot_json TEXT NOT NULL,
+    snapshot_sha256 TEXT NOT NULL,
+    published_at TEXT NOT NULL,
+    published_by TEXT NOT NULL REFERENCES travelers(id)
+);

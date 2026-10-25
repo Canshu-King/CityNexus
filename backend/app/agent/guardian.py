@@ -40,6 +40,7 @@ from app.db.models import (
 )
 from app.recovery_epoch import ensure_recovery_epoch
 from app.schemas import AgentToolCall
+from app.execution.clock import execution_clock
 
 ACTIONABLE_EVENT_TYPES = frozenset(
     {"WEATHER", "CLOSURE", "TRAFFIC_DELAY", "SCHEDULE_DELAY", "OPPORTUNITY_WINDOW"}
@@ -48,6 +49,8 @@ SEVERITY_ORDER = {"CRITICAL": 4, "MAJOR": 3, "MINOR": 2, "INFO": 1}
 
 
 def _now() -> datetime:
+    # Lease expiry, model timeouts and audit occurrence use wall time.
+    # Journey phase/intent/feasibility use execution_clock within the persisted scope.
     return datetime.now(timezone.utc)
 
 
@@ -631,11 +634,12 @@ def _deterministic_recovery(
     return agent
 
 
-def scan_guardian(
+def _scan_guardian_in_context(
     session: Session,
     journey: Journey,
     *,
     include_opportunity_signals: bool = True,
+    trigger_event_id: str | None = None,
 ) -> dict[str, Any]:
     """Observe persisted journey facts and launch at most one recovery per incident state.
 
@@ -685,6 +689,10 @@ def scan_guardian(
         _ensure_opportunity_window_event(session, journey)
     mission = _standing_mission(session, journey.id)
     events = _open_events(session, journey.id)
+    if trigger_event_id is not None:
+        events = [event for event in events if event.id == trigger_event_id]
+        if not events:
+            raise HTTPException(409, "GUARDIAN_TRIGGER_EVENT_NOT_OPEN")
     actionable_events = [
         event
         for event in events
@@ -705,7 +713,7 @@ def scan_guardian(
             )
             .order_by(GuardianRun.created_at.desc(), GuardianRun.id.desc())
         )
-    if prior_mutation is not None:
+    if prior_mutation is not None and trigger_event_id is None:
         try:
             prior_created = datetime.fromisoformat(str(prior_mutation.created_at))
             has_new_signal = any(
@@ -729,6 +737,9 @@ def scan_guardian(
         journey_id=journey.id,
         recovery_epoch_id=recovery_epoch.id if recovery_epoch is not None else None,
     )
+    if trigger_event_id is not None and resume is not None and resume.event_id != trigger_event_id:
+        # Never reuse an unrelated incident's queued recovery as this scene's result.
+        raise HTTPException(409, "GUARDIAN_OTHER_EVENT_RECOVERY_PENDING")
     resume_due = bool(resume is not None and resume_is_due(resume, now=now))
     # A blocked Operator recovery is a durable queue item.  Pulses during its
     # backoff return the same Guardian lineage and never mint another run.
@@ -778,6 +789,7 @@ def scan_guardian(
             continue
     evidence = {
         "observation": {
+            "business_now": execution_clock.now(journey.timezone).isoformat(),
             "journey_status": journey.status,
             "active_plan_version_id": journey.active_plan_version_id,
             "open_event_ids": [event.id for event in events],
@@ -818,7 +830,7 @@ def scan_guardian(
             id=str(uuid4()),
             journey_id=journey.id,
             standing_mission_id=mission.id if mission else None,
-            trigger_event_id=None,
+            trigger_event_id=trigger_event_id,
             agent_run_id=None,
             proposal_id=None,
             decision=decision,
@@ -873,7 +885,8 @@ def scan_guardian(
             (enrollment := session.get(AutopilotEnrollment, journey.id)) is not None
             and enrollment.enabled
         )
-        if _is_live_context_trigger(trigger) or operator_enabled:
+        from app.simulation.clock import simulation_scope_active
+        if _is_live_context_trigger(trigger) or operator_enabled or simulation_scope_active():
             agent = session.get(AgentRun, run.agent_run_id) if run.agent_run_id else None
             steps = (
                 session.scalars(
@@ -1260,3 +1273,16 @@ def guardian_status(session: Session, journey: Journey) -> dict[str, Any]:
         "latest": guardian_payload(session, runs[0]) if runs else None,
         "runs": [guardian_payload(session, item) for item in runs],
     }
+
+
+
+def scan_guardian(
+    session: Session, journey: Journey, *, include_opportunity_signals: bool = True,
+    trigger_event_id: str | None = None,
+) -> dict[str, Any]:
+    from app.simulation.clock import journey_business_time
+    with journey_business_time(session, journey.id):
+        return _scan_guardian_in_context(
+            session, journey, include_opportunity_signals=include_opportunity_signals,
+            trigger_event_id=trigger_event_id,
+        )

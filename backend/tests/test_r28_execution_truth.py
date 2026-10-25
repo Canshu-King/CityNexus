@@ -139,7 +139,13 @@ def test_r28_plain_http_execution_is_durably_simulation_labeled() -> None:
             assert truth["evidence"]["physical_presence_claimed"] is False
             assert truth["actor_type"] == "SIMULATION"
 
-        twin = client.get(f"/api/v1/journeys/{journey_id}/twin")
+        # Private reads use the same signed owner as other Journey readers.
+        with SessionLocal() as read_session:
+            reader_id = read_session.get(Journey, journey_id).traveler_id
+        _set_secret(_TEST_SECRET)
+        _ensure_owner_member(journey_id, reader_id)
+        twin = client.get(f"/api/v1/journeys/{journey_id}/twin",
+                          headers={"Authorization": "Bearer " + issue_traveler_token(reader_id)})
         assert twin.status_code == 200, twin.text
         execution = twin.json()["context"]["execution"]
         assert execution["execution_truth"]["kind"] == "SIMULATED_STATE_TRANSITION"
