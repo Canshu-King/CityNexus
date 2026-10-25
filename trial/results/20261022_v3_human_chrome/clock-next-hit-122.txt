@@ -1,0 +1,2 @@
+COUNT 1
+PROBE {"rect":{"left":847,"top":259,"width":121,"height":44},"disabled":false,"text":"到下一站","hitTag":"BUTTON","hitTestId":"rev-clock-next","hitText":"到下一站","hitSelf":true,"viewport":{"w":1024,"h":768},"dockRect":null}

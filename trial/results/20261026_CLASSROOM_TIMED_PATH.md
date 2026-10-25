@@ -40,3 +40,11 @@ node trial/human_walk/_classroom_timed_path_r109.mjs                      # 约 
 - 控制台：「模拟行程已完成 · 12-04 10:00」，只留「刷新读数」，一句「两日模拟走完，这趟行程已封存。再演一遍请重启课堂演示（双击启动器）。」
 - 历史五条：出发 12-04 08:06、到达 12-04 09:00、游览 12-04 09:00、完成一站 12-04 10:00、两日走完 12-04 10:00。
 - 无「接受」「继续」残留按钮；无 console 错误。
+
+## 1024×768 平板横屏（两次）
+
+- **v1**（`classroom-timed-path-1024-v1.txt`）：守护 162.1 秒成功，接受 165.5 秒，继续 168.8 秒；随后探针报 `BLOCKED_BUTTON 到下一站`。
+  **不是遮挡**：同形态独立诊断（`clock-next-hit-122.txt`）读到 `rect=847,259 121×44`、`hitSelf=true`、`enabled`、`dockRect=null`。v1 的拦截是探针在状态切换那一瞬读到 `disabled=true`，已给 `press` 加三次重试。
+- **v2**（`classroom-timed-path-1024.txt`）：守护 **379.4 秒仍未转态**；这一刻 `run.status=GUARDIAN_RUNNING`，而 `guardian_outcome=EXTERNAL_FAILED / MODEL_REQUEST_FAILED`——**失败已记在 guardian/agent，run 状态还没写**，这就是「停在守护中」的机制现场。探针超时后仍去点后续（`MISS_BUTTON 继续模拟`、`BLOCKED_BUTTON 到下一站`，后者按钮 disabled），已改为「超时即停，不点后续」。
+- `FINAL` 读到 `PAUSED_FOR_ACCEPTANCE` + 提案 `69834d00` PRESENTED ⇒ 那次 scan 最后返回了。
+- 成功/转态时长档：**162.1 / 193 / 259 / 379+ 秒**；课堂预算要按「可能 6 分钟以上」写，卡片已改为 3–6 分钟。

@@ -3,8 +3,11 @@ import fs from "node:fs";
 
 const BASE = "http://127.0.0.1:14492";
 const DIR = "D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome";
-const OUT = DIR + "/classroom-timed-path-109.txt";
-const SHOT = DIR + "/classroom-timed-path-109.png";
+const SUFFIX = process.env.RS || "109";
+const WIDTH = Number(process.env.RW || 390);
+const HEIGHT = Number(process.env.RH || 844);
+const OUT = DIR + "/classroom-timed-path-" + SUFFIX + ".txt";
+const SHOT = DIR + "/classroom-timed-path-" + SUFFIX + ".png";
 const NL = String.fromCharCode(10);
 const lines = [];
 const note = (value) => { lines.push(value); fs.writeFileSync(OUT, lines.join(NL) + NL, "utf8"); };
@@ -16,7 +19,7 @@ const elapsed = () => ((Date.now() - started) / 1000).toFixed(1);
 const mark = (name, extra = "") => note(`STEP ${name} elapsed_s=${elapsed()} ${extra}`);
 
 const browser = await chromium.launch({ headless: true });
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+const ctx = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 1 });
 const page = await ctx.newPage();
 const errors = [];
 page.on("pageerror", (error) => errors.push(String(error).slice(0, 160)));
@@ -58,16 +61,21 @@ async function button(name, timeout) {
 async function press(name, timeout = 15000) {
   const target = await button(name, timeout);
   if (!target) { note(`MISS_BUTTON ${name}`); return false; }
-  await target.scrollIntoViewIfNeeded().catch(() => {});
-  await page.waitForTimeout(200);
-  const hit = await target.evaluate((node) => {
-    const box = node.getBoundingClientRect();
-    const top = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
-    return Boolean(top) && (node === top || node.contains(top)) && !node.disabled;
-  });
-  if (!hit) { note(`BLOCKED_BUTTON ${name}`); return false; }
-  await target.click({ timeout: 8000 }).catch(() => {});
-  return true;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await target.scrollIntoViewIfNeeded().catch(() => {});
+    await page.waitForTimeout(attempt === 0 ? 200 : 700);
+    const hit = await target.evaluate((node) => {
+      const box = node.getBoundingClientRect();
+      const top = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      return Boolean(top) && (node === top || node.contains(top)) && !node.disabled;
+    });
+    if (hit) {
+      await target.click({ timeout: 8000 }).catch(() => {});
+      return true;
+    }
+  }
+  note(`BLOCKED_BUTTON ${name}`);
+  return false;
 }
 
 async function waitStatus(wanted, seconds) {
@@ -101,6 +109,16 @@ if (await press("交给守护助手")) {
   note("GUARDIAN_REQUESTED");
   const p = await waitStatus(["PAUSED_FOR_ACCEPTANCE", "PAUSED_MODEL_UNAVAILABLE", "PAUSED_REQUIRES_MISSION"], 360);
   mark("GUARDIAN_RESULT", JSON.stringify(p));
+  if (p.status === "GUARDIAN_RUNNING") {
+    // A failed attempt can be recorded before the run state is written; the strip stays
+    // disabled, so nothing after this point is a fair click.
+    note("GUARDIAN_STOPPED_AT_TIMEOUT");
+    note(`FINAL ${JSON.stringify(p)}`);
+    note(`ERRORS ${JSON.stringify(errors.slice(0, 3))}`);
+    await page.screenshot({ path: SHOT, fullPage: false });
+    await browser.close();
+    process.exit(0);
+  }
   if (p.status === "PAUSED_MODEL_UNAVAILABLE") {
     if (await press("再请一次守护", 5000)) {
       note("GUARDIAN_RETRY");
@@ -123,6 +141,7 @@ if (state.status === "PAUSED_FOR_ACCEPTANCE") {
 }
 if (await press("继续模拟", 8000)) {
   const p = await waitStatus(["RUNNING"], 40);
+  await page.waitForTimeout(1200);
   mark("RESUMED", JSON.stringify({ status: p.status, seq: p.sequence }));
 }
 for (let hop = 1; hop <= 10; hop += 1) {
