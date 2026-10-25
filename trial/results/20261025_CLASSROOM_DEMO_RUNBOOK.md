@@ -18,6 +18,7 @@
 > 随时自检（不改场景、不打印任何凭据）：
 > `D:\moodle\CityNexus\.venv\Scripts\python.exe trial/play_launcher/classroom_demo/classroom_demo_selfcheck_r1.py`
 > 看到 `DEMO_READY=true`、`JOURNEY_STATUS=ACTIVE`、`PROPOSAL_WAITING` 有 id、`CLOCK` 是 09:00 即可开演。
+> 同一份输出里的 `SIM_CONSOLE` 只是情报：`NOT_DEPLOYED` 表示课堂后端还没有模拟执行端点、控制台不出现；`AVAILABLE:<状态>` 表示控制台已接上，此时时钟条会自动让位。
 
 ## 台上（实测 18 秒，可慢慢讲）
 

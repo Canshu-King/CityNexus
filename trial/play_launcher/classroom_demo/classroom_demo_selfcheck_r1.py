@@ -32,9 +32,12 @@ def lan_ipv4() -> str:
 LAN = "http://%s:14492" % lan_ipv4()
 
 
-def get(url: str, timeout: int = 8) -> tuple[int, dict]:
+def get(url: str, timeout: int = 8, bearer: str = "") -> tuple[int, dict]:
     try:
-        with urllib.request.urlopen(url, timeout=timeout) as answer:
+        request = urllib.request.Request(url)
+        if bearer:
+            request.add_header("Authorization", "Bearer " + bearer)
+        with urllib.request.urlopen(request, timeout=timeout) as answer:
             raw = answer.read().decode("utf-8", "replace")
             try:
                 return answer.status, (json.loads(raw) if raw.strip().startswith("{") else {})
@@ -52,6 +55,16 @@ lan_status, _ = get(LAN + "/revolution")
 session_status, session = get(API + "/api/v1/demo/session")
 journey_id = str(session.get("journey_id") or "")
 clock_status, clock = get(API + "/api/v1/demo/simulation-clock/" + journey_id) if journey_id else (0, {})
+token = str(session.get("access_token") or "")
+sim_status, sim_body = (
+    get(API + "/api/v1/journeys/" + journey_id + "/simulation/runs/current", bearer=token)
+    if journey_id and token else (0, {})
+)
+sim_console = (
+    "AVAILABLE:" + str(sim_body.get("status"))
+    if sim_status == 200
+    else "NOT_DEPLOYED" if sim_status == 404 else "http=%s" % sim_status
+)
 
 proposal = None
 scene = {"journey": journey_id or None, "journey_status": session.get("status")}
@@ -86,6 +99,7 @@ print(json.dumps({
     "CLOCK_HTTP": clock_status,
     "CLOCK": clock.get("virtual_now"),
     "CLOCK_VERSION": clock.get("version"),
+    "SIM_CONSOLE": sim_console,
     "TABLET_OPEN": "http://%s:14492/revolution (tablet: UNVERIFIED)" % lan_ipv4(),
     "AGENT_QA": "direct-replan-only",
     "REAL_POI": True,
