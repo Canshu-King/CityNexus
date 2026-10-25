@@ -383,6 +383,11 @@ export function GuardianRealityPanel({
             <section ref={proposalRef} className="rev-guardian-proposal" data-testid="rev-guardian-proposal" aria-label="调整建议">
               <strong>找到一份可行的调整</strong>
               <p data-testid="rev-guardian-proposal-diff">{pendingProposalSentence(proposal.value, proposal.titles)}</p>
+              <small className="rev-guardian-proposal-origin" data-testid="rev-guardian-proposal-origin">
+                {proposal.value.source_agent_run_id
+                  ? "Agent 生成 · 服务器留有运行记录"
+                  : "规则引擎生成 · 不是大模型现场推理"}
+              </small>
               <div className="rev-guardian-proposal-actions">
                 <button type="button" data-testid="rev-guardian-accept-replan"
                   disabled={proposalState === "acting"} onClick={() => void settleProposal("accept")}>

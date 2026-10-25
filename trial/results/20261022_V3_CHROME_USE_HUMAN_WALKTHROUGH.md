@@ -2732,3 +2732,13 @@ bat 的失败分支（`if errorlevel 1 goto :failed`）按预期说了真话，�
 
 同一探针再切到地图（`classroom-map-next-9.txt`）：蓝点状态行写「模拟旅客：天坛公园 · 39.8805, 116.4046（WGS84，模拟位置，不是物理 GPS）」，位置跟着当前站走，零页面错误。r9 的截图是灰底，但**不是瓦片失败**：补测 `classroom-map-load-10a.txt` 与 `classroom-map-load-10.txt` 两次分别请求 23 张与 9 张瓦片、全部 200，蓝点在、零错误；r9 只是在蓝点一出现就截图，瓦片还没画完。演示时点完「加载地图」等一两秒再讲底图。
 
+## 八十九、提案卡写清是谁给的：规则引擎，不是大模型
+
+任务书 §4 要求把 `PREPARED_BASELINE` 与 `LIVE_AGENT_GENERATED` 讲清，AGENTS.md 也要求课堂证据不得暗示「现场模型自主完成」。实测：演示库那枚提案 `source_agent_run_id` 为空，后端 replan 走 `mock_replan_engine`（`backend/app/main.py:458` 的 import，`_generate_replan_impl` 里调用），所以它不是模型现场推理出来的。
+
+前端改动：`frontend/src/contracts/replan.ts` 给 `ReplanProposal` 补 `source_agent_run_id`；`GuardianRealityPanel` 的提案卡在差异句下加一行来源（`rev-guardian-proposal-origin`）：有 `source_agent_run_id` 写「Agent 生成 · 服务器留有运行记录」，没有就写「规则引擎生成 · 不是大模型现场推理」。
+
+屏读（`classroom-proposal-origin-11.txt`）：`ORIGIN "规则引擎生成 · 不是大模型现场推理"`、`CARD true`、页面错误 0 条；类型检查 rc=0（`typecheck-origin-1.txt`）。截图 `rehearsal11-origin.png`。
+
+边界：这一行随 `source_agent_run_id` 切换，不会把规则引擎说成模型、也不会把模型说成规则引擎；「真模型跑一趟」的第二刀仍待接。
+
