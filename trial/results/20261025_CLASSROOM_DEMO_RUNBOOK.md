@@ -185,3 +185,9 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 
 - 启动器现在一次发三张票（`.demo_pairing_ticket` 的 `tickets` 数组），`after_merge_check_r1.py` 每支探针各兑一张；`ticketed_entry`/`projector_card`/`lan_path` 三支 rc 0，`all_green=true`。
 - 顺带修了两支旧探针的票门入口（r36 用 env 票、r27 加 `#pair=` 并跳过旧菜单导航）——一张票只能用一次，三支共用在旧脚本里必然失败。
+
+### 01:54 平板验收的客观读数（不等于 USER_VERIFIED）
+
+- 仪器 `_tablet_evidence_r1.py`（只读）：解析当前后端日志周期的请求，统计非 loopback 客户端与路径，并读 run 的 sequence/status；落盘 `tablet-evidence-<时间>.txt`。
+- 首跑抓到仪器自己的 bug：uvicorn 行以 `INFO:` 开头，我却用行首匹配 IP，于是 `requests=0` 与 `grep` 的 137 条打架；改成 `search` 后读数 136 条、外部 0 条。
+- 01:54 读数：`NO_EXTERNAL_CLIENT`（外部 0），run `e354b9da…` 第 0 步 RUNNING、12/03 09:00，session 文件 240 秒新旧。平板还没访问过；且「有外部请求」也只证明有设备访问，不等于主人亲手点。

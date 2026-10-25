@@ -1,0 +1,23 @@
+{
+  "session_file_age_seconds": 240,
+  "log": {
+    "exists": true,
+    "requests": 136,
+    "external_requests": 0,
+    "external_paths": {},
+    "first_external_path": "",
+    "last_external_path": ""
+  },
+  "run": {
+    "exists": true,
+    "run": {
+      "id": "e354b9da-80b7-4882-b3aa-ef295ffdd103",
+      "sequence": 0,
+      "status": "RUNNING",
+      "virtual_now": "2026-12-03T09:00:00+08:00",
+      "updated_at": "2026-10-25T17:50:47.099158+00:00"
+    }
+  },
+  "VERDICT": "NO_EXTERNAL_CLIENT",
+  "NOTE": "不等于 USER_VERIFIED：这只说明有非 loopback 客户端访问过；是否为主人的平板、是否亲手点按，仍以主人确认为准。"
+}
