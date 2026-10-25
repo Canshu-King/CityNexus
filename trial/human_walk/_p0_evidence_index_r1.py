@@ -155,6 +155,15 @@ def main() -> int:
                      ai_guardian.get("status"), ai_guardian.get("elapsed_s"),
                      ai_guardian.get("error_message"), ai_current.get("sequence_unchanged"),
                      ai_progress.get("guardian_runs"), ai_progress.get("missing"))))
+    panel90 = line_json(lines_of("guardian-panel-live-90.txt"), "PANEL_SCREEN")
+    panel91_lines = lines_of("guardian-panel-live-91.txt")
+    panel91 = line_json(panel91_lines, "PANEL_SCREEN")
+    rows.append(("守护屏当前事件提案（r91）",
+                 "绿" if "Agent 生成" in (panel91.get("origin") or "")
+                 and "ERRORS []" in panel91_lines else "红",
+                 "guardian-panel-live-90.txt, guardian-panel-live-91.txt, guardian-panel-live-91-panel.png",
+                 "r90 origin=%s；r91 origin=%s；proposal=%s" % (
+                     panel90.get("origin"), panel91.get("origin"), panel91.get("proposal"))))
     accept = json_file("proposal-accept-68.txt")
     note70 = lines_of("acceptance-note-70.txt")
     g_progress = guard.get("progress") or {}

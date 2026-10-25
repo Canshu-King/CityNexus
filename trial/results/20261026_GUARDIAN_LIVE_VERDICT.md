@@ -48,6 +48,13 @@
 
 ## 三、结论（按归属）
 
+### 守护屏提案归属（r90 → r91，现场对照）
+
+- r90（旧代码）：run 已是 `PAUSED_FOR_ACCEPTANCE`、当前事件 `bc4a439f` 有自己的模型提案；守护屏却显示「规则引擎生成 · 不是大模型现场推理」（上一次变化 `880cec4e` 的节点）。
+- 两个成因：`/simulation/runs/current` 返回的是裸 run（没有 `run` 包装），原代码读 `current.run.state` 永远为空；`/replans` 的契约里没有 `created_at`，按它排序也拿不到真正最新的节点。
+- 修法：兼容裸 run；再读该 run 的 progress，取 `PRESENTED` 提案 id，在列表里按 id 匹配；当前事件没有对应节点时，屏上写「当前模拟事件的调整在课堂控制台接受」，不再把别的事件的节点摆在接受按钮上。
+- r91（新代码）：同一现场下守护屏 `origin="Agent 生成 · 服务器留有运行记录"`，`ERRORS []`；提案卡仍在视口内（`guardian-panel-live-91-panel.png`）。
+
 **已修好（可证）**
 
 - WP01 签名测试从 7 红到 0 红（22 → 82 passed）。
