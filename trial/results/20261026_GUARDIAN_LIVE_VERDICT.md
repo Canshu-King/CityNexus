@@ -39,6 +39,14 @@
 - 「事件处理完了，继续模拟」按钮存在，点击 → 409（事件 `c11955f1` 仍 `DETECTED`）——**又一处死按钮**。
 - `guardian_outcome` 已带 `EXTERNAL_FAILED / MODEL_REQUEST_FAILED`，但旧屏没有消费它。
 
+### 第六次（`guardian-plan-applied-92.txt`，19:50–19:54）——接受后模拟真的换计划
+
+- 接受前：`plan=e74a5edb`，当前活动故宫 `5b60b374`。
+- 点「接受这次事件的调整」后 5 秒内：pending 事件 `cec1a1eb` `RESOLVED`，活动计划变成 `9a191191`，当前活动 `e01a9328`。
+- 新计划的全部活动只有两行：**天安门广场（已完成）+ 天坛公园（ACTIVE）**；故宫已被移除。
+- 点「继续模拟」→ `RUNNING` seq 3；点「到下一站」→ 12/04 09:00 游览天坛 → 12/04 10:00 完成，`SIMULATED_COMPLETED` seq 7，三键禁用，无 console 错误（`classroom-plan-applied-92.png`）。
+- 结论：接受调整在模拟执行里真的生效；课堂可以讲「少去故宫、直接去天坛」。
+
 ### AI 关闭（隔离副本，`ai-off-guardian-86.txt`）
 
 - 在 60410 起独立后端，DB 为课堂库副本 `canary_ai_off_1026.db`，`CITYNEXUS_AI_ENABLED=false`；课堂栈 60391/14492 未动。

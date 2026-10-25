@@ -14,6 +14,7 @@
 | P0-2 单一状态链（CAS + 旧门） | 绿 | single-state-chain-65.txt | stale=409（SIMULATION_SEQUENCE_STALE）；legacy=409（USE_SIMULATION_RUN_ADVANCE） |
 | P0-3 城市池 / 1 城同 run | 黄（池子 BLOCKED，但不挡开演） | cities-classroom-62.txt | 池 status=BLOCKED，eligible=0/3，missing=VERIFIED_CITY_ADCODE_REQUIRED,AT_LEAST_3_CAPTURED_ROUTES_REQUIRED |
 | 守护 AI 开关（隔离副本） | 绿 | ai-off-guardian-86.txt, trial/human_walk/_ai_off_guardian_r1.py | guardian http=503，elapsed_s=0.01，SIMULATION_AI_DISABLED；sequence_unchanged=True；guardian_runs=0；missing=['AI_DISABLED'] |
+| 接受调整后模拟换计划（r92） | 绿 | guardian-plan-applied-92.txt, classroom-plan-applied-92.png | 模拟时间：12/04 10:00 · 执行第 7 步 · 模拟行程已完成；活动=['天安门广场', '天坛公园']；守护已接手 · 12-03 09:00守护已接手 · 12-03 09:00推进 · 12-03 09:00游览 · 12-04 09:00完成一站 · 12-04 10:00两日走完 · 12-04 10:00 |
 | 守护屏当前事件提案（r91） | 绿 | guardian-panel-live-90.txt, guardian-panel-live-91.txt, guardian-panel-live-91-panel.png | r90 origin=规则引擎生成 · 不是大模型现场推理；r91 origin=Agent 生成 · 服务器留有运行记录；proposal=移除故宫博物院；路上少 66 分钟。 |
 | 守护暂停（#47 P0） | 红（缺陷，已报） | guardian-unavailable-67.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md | guardian http=200，after=PAUSED_FOR_ACCEPTANCE；progress proposal_id=None，proposals=0 |
 | AI 开关不拦调用（#47 P0） | 红（缺陷，已报） | guardian-unavailable-67.txt | ai_enabled=False；guardian_runs=1；agent_runs 读数见报告 |

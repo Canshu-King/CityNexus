@@ -45,12 +45,11 @@ def find(lines: list[str], prefix: str) -> str:
     return "MISSING"
 
 
-def line_json(lines: list[str], label: str) -> dict:
-    prefix = label + " "
+def line_json(lines: list[str], label: str):
     for line in lines:
-        if line.startswith(prefix):
+        if line.startswith(label):
             try:
-                return json.loads(line[len(prefix):])
+                return json.loads(line[len(label):].strip())
             except ValueError:
                 return {}
     return {}
@@ -155,6 +154,21 @@ def main() -> int:
                      ai_guardian.get("status"), ai_guardian.get("elapsed_s"),
                      ai_guardian.get("error_message"), ai_current.get("sequence_unchanged"),
                      ai_progress.get("guardian_runs"), ai_progress.get("missing"))))
+    plan92 = lines_of("guardian-plan-applied-92.txt")
+    plan92_after = line_json(plan92, "PLAN_AFTER_NEXT") or []
+    plan92_titles = [item.get("title") for item in plan92_after]
+    plan92_screen = line_json(plan92, "SCREEN_AFTER_NEXT")
+    plan92_run = line_json(plan92, "AFTER_NEXT")
+    rows.append(("接受调整后模拟换计划（r92）",
+                 "绿" if plan92_run.get("status") == "SIMULATED_COMPLETED"
+                 and bool(plan92_titles)
+                 and "故宫" not in plan92_titles
+                 and "天坛公园" in plan92_titles
+                 and "ERRORS []" in plan92 else "红",
+                 "guardian-plan-applied-92.txt, classroom-plan-applied-92.png",
+                 "%s；活动=%s；%s" % (
+                     plan92_screen.get("virtual"), plan92_titles,
+                     plan92_screen.get("history")[-120:] if plan92_screen.get("history") else "")))
     panel90 = line_json(lines_of("guardian-panel-live-90.txt"), "PANEL_SCREEN")
     panel91_lines = lines_of("guardian-panel-live-91.txt")
     panel91 = line_json(panel91_lines, "PANEL_SCREEN")
