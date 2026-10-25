@@ -78,6 +78,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [slowNote, setSlowNote] = useState<string | null>(null);
+  const [acceptanceHasProposal, setAcceptanceHasProposal] = useState(false);
 
   const refresh = useCallback(async () => {
     const [nextCities, nextCurrent] = await Promise.all([
@@ -92,6 +93,26 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
     setCities(nextCities.available ? nextCities : null);
     if (nextCurrent.available) {
       setRun(nextCurrent.run);
+      if (nextCurrent.run) {
+        // PAUSED_FOR_ACCEPTANCE is only resumable when a proposal is actually
+        // visible to the progress projection; otherwise the button can only 409.
+        const progressResponse = await fetch(
+          `/api/v1/journeys/${journeyId}/simulation/runs/${nextCurrent.run.run_id}/progress`,
+          { headers: { Accept: "application/json", ...travelerAuthHeaders() }, cache: "no-store" },
+        ).catch(() => null);
+        if (progressResponse?.ok) {
+          const progress = await progressResponse.json() as {
+            proposals?: Array<{ status?: string }>;
+            guardian_runs?: Array<{ proposal_id?: string | null }>;
+          };
+          setAcceptanceHasProposal(Boolean(
+            (progress.proposals ?? []).some((item) => item.status === "PRESENTED")
+            || (progress.guardian_runs ?? []).some((item) => Boolean(item.proposal_id)),
+          ));
+        } else {
+          setAcceptanceHasProposal(false);
+        }
+      }
       const planId = typeof nextCurrent.run?.state?.plan_version_id === "string"
         ? nextCurrent.run.state.plan_version_id
         : "";
@@ -212,7 +233,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             交给守护助手
           </button>
         )}
-        {run?.status === "PAUSED_FOR_ACCEPTANCE" && (
+        {run?.status === "PAUSED_FOR_ACCEPTANCE" && acceptanceHasProposal && (
           <button type="button" disabled={busy} onClick={() => act(() => simulationApi.resume(journeyId, run.run_id, run.sequence))}>
             继续模拟
           </button>
@@ -244,6 +265,12 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
       {run?.status === "SIMULATED_COMPLETED" && (
         <p className="rev-presenter-done" data-testid="rev-presenter-done">
           两日模拟走完，这趟行程已封存。再演一遍请重启课堂演示（双击启动器）。
+        </p>
+      )}
+
+      {run?.status === "PAUSED_FOR_ACCEPTANCE" && !acceptanceHasProposal && (
+        <p className="rev-presenter-note" data-testid="rev-presenter-acceptance-note">
+          守护没有交出可接受的提案（进度里看不到提案 id）；这条模拟解不开，请重启课堂演示（双击启动器）。
         </p>
       )}
 

@@ -214,3 +214,9 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 触发条件（实测）：`AI_ENABLED=false` + 三枚 key 移除、库里存在 prepare 的旧 CLOSURE 事件与 run 注入的新事件。guardian_run 绑 `d61152b8`，但产出提案绑到旧事件 `880cec4e`。
 - 现场做法：**Codex 修复前不要点「交给守护助手」**；守护支线只做「看提案 + 接受」。点了只能重启启动器（会重置库）。
 - 已报 #47（P0，四条请求 + DB 行），全文 `20261025_GUARDIAN_AI_SWITCH_REPORT.md`。
+
+### 02:10 死锁态的屏上做法（已落地）
+
+- `PAUSED_FOR_ACCEPTANCE` 时面板先读 `/runs/{id}/progress`：若没有 `PRESENTED` 提案、`guardian_runs[].proposal_id` 也空，**不显示「继续模拟」**，改显示「守护没有交出可接受的提案…请重启课堂演示（双击启动器）」。
+- 390px 屏证（死锁副本 probe23）：`acceptance-note-70.txt`、`classroom-clock-run-70-acceptance.png`；`RESUME_BUTTONS 0`。
+- 有提案时仍显示「继续模拟」（resume 门不变）；投影缺 `proposal_id` 是 #47 的 bug，修复后这段判断会自动走回有提案分支。
