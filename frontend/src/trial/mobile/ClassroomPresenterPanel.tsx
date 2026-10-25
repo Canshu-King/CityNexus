@@ -371,9 +371,9 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
         <p className="rev-presenter-note" data-testid="rev-presenter-model-note">
           {guardianOutcome?.code === "EXTERNAL_FAILED"
             ? "现场模型这次请求失败了，没有交出建议。可以再请一次守护；连续失败就重启课堂演示（双击启动器）。"
-            : guardianRetryable
+            : guardianOutcome?.code === "AGENT_UNRESOLVED" || guardianRetryable
             ? "守护这次没有给出可用的调整；可以再请一次。连续失败就重启课堂演示（双击启动器）。"
-            : "现场模型没有接上；同一起事件要在下方守护屏上处理，处理完这里才会出现继续。"}
+            : "现场模型没有接上；请重启课堂演示（双击启动器），或让管理员配好模型。"}
         </p>
       )}
 

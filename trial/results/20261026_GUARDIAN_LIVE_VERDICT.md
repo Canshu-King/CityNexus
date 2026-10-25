@@ -144,6 +144,25 @@
 - 第一次复测（`classroom-guardian-wait-110.png` 前一版）发现**两句并存**：点击时的 slowNote 也写着「…没接模型会一直停在等待。请别重复按。」——一句话两个写者。删掉 slowNote 后复测：`WAIT_NOTE 1`（visible、inViewport），`OLD_SENTENCE_COUNT 0`。
 - 12 秒后 run 仍 `GUARDIAN_RUNNING`，无 console 错误。截图 `classroom-guardian-wait-110.png` 只剩一句。
 
+### 第十次（`guardian-failed-live-128.txt`，06:11–06:16）——真栈上的失败文案说错了原因
+
+- 真栈（60391/14492）走 开演 → 闭馆 → 交给守护助手：**118.8 秒**后 `PAUSED_MODEL_UNAVAILABLE`，`outcome=AGENT_UNRESOLVED`、无提案、pending `a11c6012` 仍 DETECTED。
+- 屏上「再请一次守护」按钮存在且可点（`RETRY_UI 1`、`hitSelf=true`、`enabled`）；点一下后 `GUARDIAN_RUNNING`（seq 3），8 秒后仍在跑。
+- **但提示句错了**：`MODEL_NOTE` 是「现场模型没有接上；同一起事件要在下方守护屏上处理，处理完这里才会出现继续。」
+  - 模型显然接上了（跑满 118 秒才返回），本次是「答了但给不出可落地调整」；
+  - 守护屏此时也没有对应提案（proposals 为空），照这句话去找会落空。
+  - 成因：`PAUSED_MODEL_UNAVAILABLE` 的提示只分 `EXTERNAL_FAILED` 与 `guardianRetryable`（后者只认 `action_status=RETRYABLE_FAILURE`）两档，`AGENT_UNRESOLVED` 落进了「模型没接上」的兜底。
+- 修法（本轮已改 `ClassroomPresenterPanel.tsx`）：
+  - `AGENT_UNRESOLVED` 与 `RETRYABLE_FAILURE` 合并成一句：「守护这次没有给出可用的调整；可以再请一次。连续失败就重启课堂演示（双击启动器）。」
+  - 真「模型没接上」的兜底改成「请重启课堂演示（双击启动器），或让管理员配好模型。」——不再把老师支到没有提案的守护屏。
+
+### 第十一次（同一探针复跑，06:18–06:22）——新文案还没被触发
+
+- 改完文案后同一路径复跑：守护 **215.0 秒成功**，`PROPOSAL_READY`、提案 `7044ef3e` PRESENTED，无错误。
+- 所以新加的 `AGENT_UNRESOLVED` 分支这次**没有屏证**（成功轮不显示该提示）。`typecheck` 绿；真栈再遇到 `AGENT_UNRESOLVED` 时要读一次屏上句子，才算验过。
+- 时长档再添一档：**215 秒**（现有 118.8 / 162.1 / 193 / 215 / 259 / 379+ 秒）。
+- 注：`guardian-failed-live-128.txt` 被这次成功轮覆盖，旧失败读数已转述在上一条；探针以后应先写一行运行时刻，避免再覆盖同名证据。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
