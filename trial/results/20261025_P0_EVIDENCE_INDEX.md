@@ -37,6 +37,7 @@
 | 课堂主线整条计时（390 真机） | 绿 | classroom-timed-path-109.txt, classroom-timed-path-109.png | 走到封存=287.9 秒；末态=SIMULATED_COMPLETED |
 | 守护等待期只有一句话 | 绿 | guardian-wait-110.txt, classroom-guardian-wait-110.png | WAIT_NOTE 1 {"text":"守护正在让模型生成调整，实测约四分半；这段时间可以照常讲解，不用重复按。","visible":true,"inViewport":true}；OLD_SENTENCE_COUNT 0 |
 | 票门重兑与伪造票（真栈复验） | 绿 | pairing-replay-119.txt | FIRST 200 token=True code=None；SECOND 401 token=False code=REQUEST_ERROR；FORGED 401 token=False code=REQUEST_ERROR |
+| 断外网仍能开演与推进（390 真机） | 绿 | classroom-offline-125.txt, classroom-offline-125.png | BLOCKED_EXTERNAL_TOTAL 0；NEXT status=RUNNING#6 |
 | 无票根地址的课堂入口文案 | 绿 | entry-no-ticket-99.txt, classroom-entry-no-ticket-99.png | SESSION_BUTTON 1；BANNER_AFTER "课堂入口需要启动器签发的一次性配对链接：请双击启动器，用窗口里打印的地址打开。" |
 | 合入后一键核对 | 绿 | after-merge-check.txt | ENTRY_DOOR=PAIRING，SIM_CONSOLE=AVAILABLE:NOT_STARTED，all_green=True，tickets=3 |
 | P0-4 平板亲手点 | PENDING | tablet-evidence-20261026-015439.txt | VERDICT=NO_EXTERNAL_CLIENT，外部请求=0，run={'id': 'e354b9da-80b7-4882-b3aa-ef295ffdd103', 'sequence': 0, 'status': 'RUNNING', 'virtual_now': '2026-12-03T09:00:00+08:00', 'updated_at': '2026-10-25T17:50:47.099158+00:00'} |

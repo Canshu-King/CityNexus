@@ -1,0 +1,8 @@
+PAIR status=no_run blocked_external=0 elapsed_s=8.1
+IDENTITY true
+START status=RUNNING#0
+ADVANCE_30 status=RUNNING#1
+ADVANCE_60 status=RUNNING#2
+NEXT status=RUNNING#6
+BLOCKED_EXTERNAL_TOTAL 0
+ERRORS []

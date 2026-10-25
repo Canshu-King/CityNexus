@@ -404,6 +404,15 @@ def main() -> int:
                  "pairing-replay-119.txt",
                  "%s；%s；%s" % (find(pair119, "FIRST"), find(pair119, "SECOND"),
                                  find(pair119, "FORGED"))))
+    offline125 = "\n".join(lines_of("classroom-offline-125.txt"))
+    rows.append(("断外网仍能开演与推进（390 真机）",
+                 "绿" if "IDENTITY true" in offline125
+                 and "BLOCKED_EXTERNAL_TOTAL 0" in offline125
+                 and "NEXT status=RUNNING#" in offline125
+                 and "ERRORS []" in offline125 else "红",
+                 "classroom-offline-125.txt, classroom-offline-125.png",
+                 "%s；%s" % (find(lines_of("classroom-offline-125.txt"), "BLOCKED_EXTERNAL_TOTAL"),
+                             find(lines_of("classroom-offline-125.txt"), "NEXT"))))
     rows.append(("无票根地址的课堂入口文案",
                  "绿" if "一次性配对链接" in find(entry99, "BANNER_AFTER")
                  and "SESSION_BUTTON 1" in entry99

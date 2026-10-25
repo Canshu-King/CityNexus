@@ -48,3 +48,11 @@ node trial/human_walk/_classroom_timed_path_r109.mjs                      # 约 
 - **v2**（`classroom-timed-path-1024.txt`）：守护 **379.4 秒仍未转态**；这一刻 `run.status=GUARDIAN_RUNNING`，而 `guardian_outcome=EXTERNAL_FAILED / MODEL_REQUEST_FAILED`——**失败已记在 guardian/agent，run 状态还没写**，这就是「停在守护中」的机制现场。探针超时后仍去点后续（`MISS_BUTTON 继续模拟`、`BLOCKED_BUTTON 到下一站`，后者按钮 disabled），已改为「超时即停，不点后续」。
 - `FINAL` 读到 `PAUSED_FOR_ACCEPTANCE` + 提案 `69834d00` PRESENTED ⇒ 那次 scan 最后返回了。
 - 成功/转态时长档：**162.1 / 193 / 259 / 379+ 秒**；课堂预算要按「可能 6 分钟以上」写，卡片已改为 3–6 分钟。
+
+## 断外网也走得动（`classroom-offline-125.txt`，390 真机）
+
+用 Playwright 拦掉所有非本地域（只放行 localhost / 127.0.0.1 / 10.12.35.143，其余 `abort("internetdisconnected")`），再走课堂主线：
+
+- 配对成功、身份在位；开演 `RUNNING#0` → ＋30 `RUNNING#1` → ＋1 小时 `RUNNING#2` → 到下一站 `RUNNING#6`。
+- **外部请求被拦 0 条**；无 console 错误。屏上（`classroom-offline-125.png`）时钟条与三键照常，控制台注入按钮照常。
+- 结论：课堂的三键推进与事件注入全走本地栈，校园网断也不影响主线；只有守护那一步要靠外部模型（会失败/变慢），失败后按「再请一次/重启」两条出口。
