@@ -118,6 +118,7 @@ sim_status, sim_body = (
 sim_console = (
     "AVAILABLE:" + str(sim_body.get("status"))
     if sim_status == 200
+    else "NEED_TICKET" if sim_status == 0 and session_state == "NEEDS_TICKET"
     else "NOT_DEPLOYED" if sim_status == 404 else "http=%s" % sim_status
 )
 
