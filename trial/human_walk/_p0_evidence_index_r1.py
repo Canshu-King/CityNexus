@@ -9,6 +9,7 @@ from __future__ import annotations
 import glob
 import json
 import os
+import re
 
 OUT_DIR = r"D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome"
 OUT = r"D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261025_P0_EVIDENCE_INDEX.md"
@@ -343,6 +344,34 @@ def main() -> int:
                  "投影初始=%s；平板+30=%s；投影同步=%s" % (
                      projector_initial.get("virtual"), phone_plus.get("virtual"),
                      projector_synced.get("virtual"))))
+    retry108 = lines_of("guardian-retry-108.txt")
+    retry_hit = line_json(retry108, "RETRY_HIT")
+    retry_final = line_json(retry108, "FINAL")
+    retry_outcome = retry_final.get("outcome") or {}
+    rows.append(("守护失败后的「再请一次守护」（隔离栈真按）",
+                 "绿" if "RETRY_BUTTON 1" in retry108
+                 and retry_hit.get("hitSelf") is True
+                 and retry_hit.get("disabled") is False
+                 and retry_final.get("status") == "PAUSED_MODEL_UNAVAILABLE"
+                 and retry_outcome.get("code") in {"EXTERNAL_FAILED", "AGENT_UNRESOLVED"}
+                 and "ERRORS []" in retry108 else "红",
+                 "guardian-retry-108.txt, guardian-retry-108-after.png",
+                 "按钮=%s；命中=%s；disabled=%s；末态=%s；outcome=%s" % (
+                     find(retry108, "RETRY_BUTTON"), retry_hit.get("hitSelf"),
+                     retry_hit.get("disabled"), retry_final.get("status"),
+                     retry_outcome.get("code"))))
+    watch107 = lines_of("guardian-failure-watch-107.txt")
+    final107 = line_json(watch107, "FINAL")
+    success_match = re.search(r"elapsed_s=(\d+) status=PAUSED_FOR_ACCEPTANCE", "\n".join(watch107))
+    success_seconds = int(success_match.group(1)) if success_match else None
+    rows.append(("守护成功轮的转态耗时（同一路径）",
+                 "绿" if success_seconds is not None and success_seconds < 300
+                 and final107.get("status") == "PAUSED_FOR_ACCEPTANCE"
+                 and (final107.get("outcome") or {}).get("code") == "PROPOSAL_READY" else "红",
+                 "guardian-failure-watch-107.txt, classroom-guardian-failure-107.png",
+                 "转态耗时=%s 秒；末态=%s；outcome=%s" % (
+                     success_seconds, final107.get("status"),
+                     (final107.get("outcome") or {}).get("code"))))
     rows.append(("无票根地址的课堂入口文案",
                  "绿" if "一次性配对链接" in find(entry99, "BANNER_AFTER")
                  and "SESSION_BUTTON 1" in entry99
