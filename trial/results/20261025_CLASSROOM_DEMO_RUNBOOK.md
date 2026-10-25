@@ -207,3 +207,10 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
 - 启动器留下的 1 条 `PRESENTED` 提案（`b00c1d49`，提议方案 `f84adc05`）→ `POST /replans/{id}/accept` 200 → journey 的 `active_plan_version_id` 从 `e74a5edb` 换成 `f84adc05`，提案状态变 `ACCEPTED`。
 - run 若已开演，下次 `advance` 会因 `state.plan_version_id` 与 journey 不一致追加一次 `SIM_PLAN_CHANGED` 并继续用新方案（`backend/app/simulation/runtime.py` 的设计），不中断。
 - 回执 `proposal-accept-68.txt`；探针 `_proposal_accept_r1.py`。
+
+### 02:08 已知死锁（#47 P0）与现场临时做法
+
+- 症状：run 在 `PAUSED_FOR_ACCEPTANCE`，但 `progress.guardian_runs[0].proposal_id=null`、`proposals=[]`；两个事件都 DETECTED，`/resume` 被 `SIMULATION_EVENT_REQUIRES_SIGNED_RESOLUTION` 拦 → 按「继续模拟」无效。
+- 触发条件（实测）：`AI_ENABLED=false` + 三枚 key 移除、库里存在 prepare 的旧 CLOSURE 事件与 run 注入的新事件。guardian_run 绑 `d61152b8`，但产出提案绑到旧事件 `880cec4e`。
+- 现场做法：**Codex 修复前不要点「交给守护助手」**；守护支线只做「看提案 + 接受」。点了只能重启启动器（会重置库）。
+- 已报 #47（P0，四条请求 + DB 行），全文 `20261025_GUARDIAN_AI_SWITCH_REPORT.md`。
