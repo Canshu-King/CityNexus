@@ -37,3 +37,19 @@
 - 任一步红：先把红行原样贴回 Issue #47/PR #43，不删证据、不改文案过闸。
 - 课堂栈坏了而上不了课：重跑启动器即可重建场景；演示库在 `_cmdr_v3_live_1022`，不删。
 - 所有探针都在 `trial/human_walk/`，证据落在 `trial/results/20261022_v3_human_chrome/`；今天新增探针与工具索引见交接件「今晚新增的工具与探针」一节。
+
+## 执行结果（22:26，合入 `de06e6a7` 之后逐条对照）
+
+1. ✅ 启动器已重启（21:24），票门后端起在 60391、前端 14492。
+2. ✅ 自检：`ENTRY_DOOR=PAIRING`、`SIM_CONSOLE=AVAILABLE:*`；票过期后 `DEMO_READY=false` 但 `STACK_HEALTHY=true`（22:17 拍 `SESSION=NEEDS_TICKET SIM_CONSOLE=NEED_TICKET`）。
+3. ⚠️ `after_merge_check_r1.py` **未跑**：它要读启动器留下的票，而那张票已被 r61/r63 用完；票门分支仍未用它验。
+4. ⚠️ `rehearse_classroom.bat` 手机彩排**未在票门下重跑**。
+5. ⚠️ 旧探针 `_classroom_presenter_start_r24.mjs` / `_event_card_r25.mjs` 未按原样重跑；改用 `_clock_run_ui_r58.mjs` 在 14492 真栈验了开演/+30/到下一站（`clock-run-ui-1.txt`、`clock-run-lan-63.txt`）。
+6. ✅ 两日闭环：真栈 loopback 两次到站完成（`clock-two-day-classroom-62.txt`），API 走二十步到 `SIMULATED_COMPLETED`（`walk-to-completion-1.txt`）。
+7. ⚠️ 第 7 条已不适用：时钟条不再「变灰让位」，而是**接手推进**同一 run（P0-2 的接线），控制台只留事件/守护/恢复与刷新。
+8. ⚠️ 慢网与守护旧探针未重跑；守护在副本实测 120 秒未返回、停在 `GUARDIAN_RUNNING`（`guardian-unavailable-67.txt`），终态由单测覆盖。
+9. ✅ 刷新恢复：r58/r63 刷新后同一步（真栈 loopback 与 LAN）。
+10. ⚠️ 完成态重进：只读副本仍是封存红条、无时钟条（`clock-completed-60.txt`）；`/demo/session` 换草稿的口径仍在 #47。
+11. ⏳ 平板实物：`USER_VERIFIED` 仍 PENDING。
+
+**结论**：阶段 A 的第 3、4 步未跑，阶段 B 的第 5、8 步以新探针替代或未跑；其余已重验。未跑的步骤不得按绿计。
