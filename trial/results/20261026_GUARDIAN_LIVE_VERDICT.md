@@ -104,8 +104,18 @@
 - 独立栈（60400 后端 + 14495 前端）发新票进入该副本：屏上红条「这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。」，`clock=0`、`presenter=0`、`entry=0`、`tab=0`，无 console 错误。
 - 结论：完成态重进是封存提示，不是空白课堂屏；课堂控件不渲染。
 
+### 第六次（`guardian-failure-watch-107.txt`，04:49–04:52）——成功轮的转态时刻
+
+- 同一路径（开演 → 闭馆 → 交给守护助手），这次模型成功：**193 秒**（第 31 拍）从 `GUARDIAN_RUNNING` 转到 `PAUSED_FOR_ACCEPTANCE`。
+- 转态后 `guardian_outcome.code=PROPOSAL_READY`；`guardian_runs=[{"status":"PARTIAL","action":"PROPOSAL_PRESENTED"}]`；提案 `5b658074-6691-4db0-9bad-688bfa620853` 为 `PRESENTED`。
+- 屏上（`classroom-guardian-failure-107.png`）只有「接受这次事件的调整」「刷新读数」与「这次事件已经有一份可接受的调整」提示，**没有**「再请一次守护」——与状态条件一致。
+- 无 console 错误（`ERRORS []`）。
+- 代码侧确认（`backend/app/simulation/api.py:340-405`）：守护请求是**同步**执行的，`run.status` 在 `scan_guardian` 返回后才写；所谓「停在 GUARDIAN_RUNNING 338 秒」只能是请求尚未返回，而不是转态逻辑丢失。`guardian_run.status=PARTIAL` 本身不等于失败——`progress.py:150` 先看有没有匹配当前事件的 PRESENTED 提案，有就判 `PROPOSAL_READY`。
+- 本轮新增前端出口：`PAUSED_MODEL_UNAVAILABLE`、事件未落定、非 `MODEL_NOT_CONFIGURED`、且没有可接受提案时，显示「再请一次守护」，调同一个 `guardian` 端点（后端 `api.py:318-323` 明确允许在 `PAUSED_MODEL_UNAVAILABLE` 重试）。**这一按本轮没有现场点过**：本轮是成功态，按钮按条件不出现；失败态现场仍待下一轮抓，届时才把 `rev-presenter-guardian-retry` 记为已验。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
 - Guardian 屏接受已现场闭环（r100），该项不再等裁语；仍待 Codex：模型失败后 run 的转态为何一次 >338 秒、一次约 187 秒。（计划引用一项已查代码：下一次 advance 会同步，见上。）
+- 第六次补上了成功轮的耗时基准（193 秒）与「同步调用、返回即转态」的代码事实；失败态的「再请一次守护」待抓。
 - 平板亲手点仍 `USER_VERIFIED=PENDING`。

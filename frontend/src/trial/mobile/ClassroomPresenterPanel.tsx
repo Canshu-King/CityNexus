@@ -282,6 +282,22 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
             事件处理完了，继续模拟
           </button>
         )}
+        {run?.status === "PAUSED_MODEL_UNAVAILABLE"
+          && !pendingResolved
+          && guardianOutcome?.code !== "MODEL_NOT_CONFIGURED"
+          && !acceptanceHasProposal && (
+          <button
+            type="button"
+            data-testid="rev-presenter-guardian-retry"
+            disabled={busy}
+            onClick={() => act(
+              () => simulationApi.guardian(journeyId, run.run_id, run.sequence),
+              "守护会重新分析这一起事件；接上模型时实测要四分钟左右。请别重复按。",
+            )}
+          >
+            再请一次守护
+          </button>
+        )}
         <button type="button" disabled={busy} onClick={() => act(async () => null)}>
           刷新读数
         </button>
