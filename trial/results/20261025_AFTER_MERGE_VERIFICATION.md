@@ -49,7 +49,7 @@
 7. ⚠️ 第 7 条已不适用：时钟条不再「变灰让位」，而是**接手推进**同一 run（P0-2 的接线），控制台只留事件/守护/恢复与刷新。
 8. ⚠️ 慢网旧探针 r40/r35 未按原样重跑；慢网由 r71 覆盖（502 HTML 持续 13 秒，控制台仍可见）。守护链合入后现场：r83 接受当前事件提案 → 事件 RESOLVED → resume RUNNING；r92 接受后计划换成少一站并走到完成（`guardian-accept-flow-83.txt`、`guardian-plan-applied-92.txt`）；AI 关闭在隔离副本 503 / 0.01 秒（`ai-off-guardian-86.txt`）。
 9. ✅ 刷新恢复：r58/r63 刷新后同一步（真栈 loopback 与 LAN）。
-10. ✅ 已复测（带 run 的 COMPLETED 副本，01:59）：票门进入后仍是封存红条 + 行程空态，时钟条与控制台都不渲染（`clock-completed-60.txt`、`classroom-clock-run-60-completed.png`）。完成态并非「控件凭空消失」，而是入口本来就回到封存视图；把时钟条的 ACTIVE 条件放宽没有意义，未改代码。`/demo/session` 换草稿的口径仍在 #47。
+10. ✅ 已复测（带 run 的 COMPLETED 副本，01:59）：票门进入后仍是封存红条 + 行程空态，时钟条与控制台都不渲染（`clock-completed-60.txt`、`classroom-clock-run-60-completed.png`）。完成态并非「控件凭空消失」，而是入口本来就回到封存视图；把时钟条的 ACTIVE 条件放宽没有意义，未改代码。`/demo/session` 换草稿的口径仍在 #47。 10-26 04:29 现尖复跑：独立副本 + 独立栈（60400/14495），banner 封存、`clock/presenter/entry` 全 0（`completed-reentry-98.txt`）。
 11. ⏳ 平板实物：`USER_VERIFIED` 仍 PENDING。
 
 **结论（03:57 更新）**：阶段 A 的 3、4 已跑并全绿；阶段 B 第 5 步由 r58 真栈替代（含合入后的 77 号）、第 6 步由合入后的 84/85 覆盖、第 8 步由 r71 与 r83/r92 覆盖；r24/r25/r40/r35 仍未按原样重跑，这些步骤不以原探针名计绿。

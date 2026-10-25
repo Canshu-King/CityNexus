@@ -1,0 +1,5 @@
+BACKEND_HEALTHY true
+PAIRING {"status":201,"has_ticket":true}
+FRONTEND_UP true
+SCREEN {"banner":"这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。","clock":0,"presenter":0,"entry":0,"tab":0}
+ERRORS []

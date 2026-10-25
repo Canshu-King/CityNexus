@@ -289,6 +289,17 @@ def main() -> int:
                  "%s；%s；%s" % (
                      find(blip, "PRESENTER_BEFORE"), find(blip, "PRESENTER_AFTER"),
                      find(blip, "ROUTES_BROKEN"))))
+    reentry = lines_of("completed-reentry-98.txt")
+    reentry_screen = line_json(reentry, "SCREEN")
+    rows.append(("完成态重进（合入后，独立副本）",
+                 "绿" if "封存" in (reentry_screen.get("banner") or "")
+                 and reentry_screen.get("clock") == 0
+                 and reentry_screen.get("presenter") == 0
+                 and "ERRORS []" in reentry else "红",
+                 "completed-reentry-98.txt, classroom-completed-reentry-98.png",
+                 "banner=%s；clock=%s，presenter=%s，entry=%s" % (
+                     reentry_screen.get("banner"), reentry_screen.get("clock"),
+                     reentry_screen.get("presenter"), reentry_screen.get("entry"))))
     rows.append(("合入后一键核对",
                  "绿" if after.get("all_green") is True else "红",
                  "after-merge-check.txt",

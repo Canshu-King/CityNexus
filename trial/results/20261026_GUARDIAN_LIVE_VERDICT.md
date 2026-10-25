@@ -95,6 +95,12 @@
 - 计划引用（已查代码，不是待裁）：暂停期间 `run.state.plan_version_id` 仍是启动计划；`backend/app/simulation/runtime.py:320` 在下一次 advance 末尾把它同步到 `journey.active_plan_version_id`，并在检测到变化时写 `SIM_PLAN_CHANGED`（`runtime.py:235`）。所以下一次「到下一站」会按新计划走。
 - 截图文件：`guardian-accept-flow-83-before-accept.png`、`-after-accept.png`、`-resumed.png`、`-scene.png`、`-after-guardian.png`。
 
+### 完成态重进（现尖副本，`completed-reentry-98.txt`）
+
+- 用现尖代码把课堂两日走完，再以 **sqlite backup** 复制成独立副本。第一次用裸 `cp` 只复制主文件、漏掉 `-wal`，读回 `simulation_runs=0` 才发现拿到的是开场库；改成 backup 后读到 `RUNS (1, SIMULATED_COMPLETED)`、`JOURNEY COMPLETED`。
+- 独立栈（60400 后端 + 14495 前端）发新票进入该副本：屏上红条「这趟课堂演示已经走完并封存；再演一遍请重启课堂演示（双击启动器）。」，`clock=0`、`presenter=0`、`entry=0`、`tab=0`，无 console 错误。
+- 结论：完成态重进是封存提示，不是空白课堂屏；课堂控件不渲染。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
