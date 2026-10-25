@@ -11,6 +11,8 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db.models import CityService, Journey, LocationObservation, Place
+from app.integrations.china.amap import MODE_PATHS, routes_via_amap
+from app.integrations.mobility.amap_http import AmapHTTPMobilityProvider, AmapRouteError
 from app.integrations.mobility.snapshot_capture import (
     MobilitySnapshotCaptureError,
     MobilitySnapshotCaptureResult,
@@ -123,7 +125,10 @@ def capture_runtime_mobility_snapshot(
         place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
         strict=require_explicit_facts,
     )
-    if not settings.live_valhalla_url:
+    # A Chinese journey with an Amap key is routed here only when nobody configured Valhalla: the
+    # deployment's own router wins over a hosted country provider.
+    amap_primary = not settings.live_valhalla_url and routes_via_amap(journey.city_code)
+    if not settings.live_valhalla_url and not amap_primary:
         return capture_mobility_snapshot(
             normalized_pairs,
             primary=mock,
@@ -131,6 +136,9 @@ def capture_runtime_mobility_snapshot(
             operation_key=operation_key,
         )
 
+    # One client, one capture call, one set of fail-closed tails: a second copy of that tail is how a
+    # leg stops being protected in one of the two branches.
+    capabilities_key = "amap-web-service" if amap_primary else "valhalla"
     with httpx.Client(timeout=10.0) as client:
         requested = str(requested_mode or "WALK").upper()
         costing_by_mode = {
@@ -141,23 +149,43 @@ def capture_runtime_mobility_snapshot(
             "RIDE_HAIL": "auto",
         }
         costing = costing_by_mode.get(requested, "pedestrian")
-        primary: Any = ValhallaHTTPMobilityProvider(
-            client=client,
-            base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
-            costing=costing,
-            test_provider=settings.live_valhalla_test_provider,
-        )
-        live_auto_fallback: Any = ValhallaHTTPMobilityProvider(
-            client=client,
-            base_url=settings.live_valhalla_url,
-            place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
-            costing=(costing if requested_mode is not None else "auto"),
-            test_provider=settings.live_valhalla_test_provider,
-        )
+        if amap_primary:
+            # The Amap adapter asks for one mode per request, so the requested product mode picks it
+            # directly; RIDE_HAIL is a driving request and anything outside the four known modes keeps
+            # the walking default the adapter itself declares.
+            amap_mode = requested if requested in MODE_PATHS else (
+                "AUTO" if requested == "RIDE_HAIL" else "WALK"
+            )
+            primary: Any = AmapHTTPMobilityProvider(
+                client=client,
+                place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+                city_code=journey.city_code,
+                mode=amap_mode,
+            )
+            live_auto_fallback: Any = AmapHTTPMobilityProvider(
+                client=client,
+                place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+                city_code=journey.city_code,
+                mode="AUTO",
+            )
+        else:
+            primary = ValhallaHTTPMobilityProvider(
+                client=client,
+                base_url=settings.live_valhalla_url,
+                place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+                costing=costing,
+                test_provider=settings.live_valhalla_test_provider,
+            )
+            live_auto_fallback = ValhallaHTTPMobilityProvider(
+                client=client,
+                base_url=settings.live_valhalla_url,
+                place_lookup=lambda key: _place_lookup(session, key, journey_id=journey.id),
+                costing=(costing if requested_mode is not None else "auto"),
+                test_provider=settings.live_valhalla_test_provider,
+            )
         try:
             capabilities = primary.status_capabilities()
-        except ValhallaProviderError as exc:
+        except (ValhallaProviderError, AmapRouteError) as exc:
             capabilities = {
                 "status": "UNAVAILABLE",
                 "has_live_traffic": False,
@@ -223,7 +251,7 @@ def capture_runtime_mobility_snapshot(
             captured,
             snapshot=replace(
                 snapshot,
-                provider_capabilities={"valhalla": capabilities},
+                provider_capabilities={capabilities_key: capabilities},
             ),
         )
 

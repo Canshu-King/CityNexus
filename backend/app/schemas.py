@@ -1744,3 +1744,24 @@ class PoiImportAddResponse(BaseModel):
     already_present: list[str] = Field(default_factory=list)
     # Where the client must read back from before anything may say 已加入.
     readback_path: str
+
+
+class PlaceDiscoveryRequest(BaseModel):
+    """One live place search, in the region form the answering provider actually understands.
+
+    `region` is required and separate from `city_code` on purpose: our internal city codes
+    (`CN-TIANJIN`, `CN-12-01`) are not filters Amap accepts, and an unrecognised one is ignored
+    rather than refused -- measured 2026-10-25, `region=CN-12-01` answered with a Shandong POI.
+    The caller says where to search (a city name or 6-digit adcode, or anything for a global
+    geocoder); `city_code` says which city the discovered rows belong to.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+    query: str = Field(min_length=1, max_length=200)
+    city_code: str = Field(min_length=1, max_length=40)
+    region: str = Field(min_length=1, max_length=40)
+    limit: int = Field(default=8, ge=1, le=25)
+    # A search-as-you-type box must not write the catalogue on every keystroke; a discovery step that
+    # is about to offer "add to plan" must. The default is the writing one, which is the only one
+    # whose rows `GET /api/v1/places` can read back.
+    persist: bool = True

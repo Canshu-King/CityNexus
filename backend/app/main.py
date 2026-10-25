@@ -378,7 +378,17 @@ from app.integrations.ai.semantic_compiler import (
 from app.integrations.ai.event_targeting import resolve_event_target
 from app.integrations.ai.web_research import WebResearchProvider
 from app.integrations.hermes.native_client import HermesNativeClient, native_hermes_status
-from app.integrations.china.amap import amap_status, provider_for_region
+from app.integrations.china.amap import (
+    amap_status,
+    is_amap_region,
+    provider_for_region,
+    routes_via_amap,
+)
+from app.integrations.capability.place_discovery import persist_leads as persist_place_leads
+from app.integrations.capability.place_leads import (
+    build_sources as build_place_lead_sources,
+    collect_place_leads,
+)
 from app.integrations.context.open_meteo import OpenMeteoContextProvider
 from app.integrations.context.weather_runtime import refresh_weather_runtime
 from app.integrations.discovery.real_city import (
@@ -631,6 +641,9 @@ from app.schemas import (
 )
 from app.schemas import (
     Place as PlaceSchema,
+)
+from app.schemas import (
+    PlaceDiscoveryRequest,
 )
 from app.schemas import (
     RecycleBinJourney,
@@ -16223,6 +16236,55 @@ def search_places(
             if needle in item.name.lower() or needle in item.tags_json.lower()
         ]
     return [place_schema(item) for item in items]
+
+
+@app.post("/api/v1/places/discover", response_model=dict[str, Any])
+async def discover_places(
+    payload: PlaceDiscoveryRequest,
+    session: Session = Depends(get_session),
+):
+    """Ask the live place providers and land every located answer in the catalogue.
+
+    Amap speaks first inside China when a key is configured and the routing seam is on; the global
+    geocoder answers when Amap is not allowed to, or did not answer.  A source that refused is named
+    in `provider_readings` -- "nobody answered" is a result this door reports, not an error it hides.
+
+    The rows this writes are what `GET /api/v1/places`, the POI import resolver and the mobility
+    place lookup already read, so a discovered place is usable without those doors learning that a
+    provider answered.  A lead without a position is answered but not stored: `places.latitude` is
+    NOT NULL, and an invented coordinate would make a place nobody located routable.
+    """
+    if routes_via_amap(payload.city_code) and not is_amap_region(payload.region):
+        refused = HTTPException(
+            422,
+            f"Amap cannot filter by region {payload.region!r}; pass a Chinese city name or a "
+            "6-digit adcode",
+        )
+        refused.reason_code = "AMAP_REGION_UNUSABLE"
+        refused.error_details = {
+            "city_code": payload.city_code,
+            "region": payload.region,
+        }
+        raise refused
+    async with httpx.AsyncClient(timeout=12.0) as client:
+        sources = build_place_lead_sources(city_code=payload.city_code, client=client)
+        result = await collect_place_leads(
+            payload.query,
+            region=payload.region,
+            sources=sources,
+            limit=payload.limit,
+        )
+    persisted = (
+        persist_place_leads(session, result.leads, city_code=payload.city_code)
+        if payload.persist
+        else []
+    )
+    if persisted:
+        session.commit()
+    answer = result.as_payload()
+    answer["city_code"] = payload.city_code
+    answer["persisted"] = persisted
+    return answer
 
 
 @app.get("/api/v1/city-services")
