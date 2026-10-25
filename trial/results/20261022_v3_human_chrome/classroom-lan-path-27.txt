@@ -1,10 +1,10 @@
 BASE http://10.12.35.143:14492
-STEP open t=2.4s
-STEP trips t=3.5s
-STEP demo t=7.1s
+STEP open t=3.4s
+STEP trips t=4.4s
+STEP demo t=8.1s
 CLOCK_VISIBLE true
-CLOCK_TEXT "课堂时空模拟｜不是实际定位或真实灾情 模拟时间：12/03 09:00 · 服务器第 0 版 现实演示时间：10/25 16:48 当前站：故宫博物院 +30 分钟 +1 小时 到下一站"
-STEP guardian t=9.6s
+CLOCK_TEXT "课堂时空模拟｜不是实际定位或真实灾情 模拟时间：12/03 09:00 · 服务器第 0 版 现实演示时间：10/25 17:07 当前站：故宫博物院 +30 分钟 +1 小时 到下一站"
+STEP guardian t=10.5s
 PROPOSAL_COUNT 1
 PROPOSAL_TEXT "移除故宫博物院；路上少 66 分钟。"
 BLUE_DOT count=1
