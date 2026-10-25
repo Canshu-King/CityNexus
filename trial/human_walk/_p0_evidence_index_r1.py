@@ -145,6 +145,13 @@ def main() -> int:
                  "绿" if "模拟行程已完成" in find(tablet2, "FINAL") else "红",
                  "tablet-two-day-72.txt, classroom-tablet-two-day-72.png",
                  "%s；%s" % (find(tablet2, "FINAL"), png("classroom-tablet-two-day-72.png"))))
+    hit = lines_of("tablet-hit-73.txt")
+    hit_ok = all('"hit":true' in find(hit, key) for key in
+                 ("rev-open-trip", "rev-clock-plus30", "rev-clock-plus60", "rev-clock-next"))
+    rows.append(("平板形状四控件命中（1024×768）",
+                 "绿" if hit_ok else "红",
+                 "tablet-hit-73.txt, classroom-tablet-hit-73.png",
+                 "四枚 hit 读数见回执；USER_VERIFIED 仍 PENDING"))
     rows.append(("死锁屏提示",
                  "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
                  "acceptance-note-70.txt",
