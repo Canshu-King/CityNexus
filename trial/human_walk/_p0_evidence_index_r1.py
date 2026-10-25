@@ -280,6 +280,15 @@ def main() -> int:
                  "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
                  "acceptance-note-70.txt",
                  find(note70, "ACCEPTANCE_NOTE")[:90]))
+    blip = lines_of("console-blip-97.txt")
+    rows.append(("慢网 502 HTML 控制台不消失（合入后）",
+                 "绿" if "PRESENTER_VISIBLE 1" in blip
+                 and "ROUTES_BROKEN progress+plans=502-html" in blip
+                 and "ERRORS []" in blip else "红",
+                 "console-blip-97.txt, classroom-console-blip-97.png",
+                 "%s；%s；%s" % (
+                     find(blip, "PRESENTER_BEFORE"), find(blip, "PRESENTER_AFTER"),
+                     find(blip, "ROUTES_BROKEN"))))
     rows.append(("合入后一键核对",
                  "绿" if after.get("all_green") is True else "红",
                  "after-merge-check.txt",
