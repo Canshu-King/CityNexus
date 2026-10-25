@@ -10,6 +10,10 @@
 3. 平板浏览器打开 `http://10.15.5.23:14492/revolution`。
 
 > 打不开时先看电脑浏览器同一地址；仍打不开就重跑第 1 步（会重置场景）。
+>
+> 随时自检（不改场景、不打印任何凭据）：
+> `D:\moodle\CityNexus\.venv\Scripts\python.exe trial/play_launcher/classroom_demo/classroom_demo_selfcheck_r1.py`
+> 看到 `DEMO_READY=true`、`JOURNEY_STATUS=ACTIVE`、`PROPOSAL_WAITING` 有 id、`CLOCK` 是 09:00 即可开演。
 
 ## 台上（实测 18 秒，可慢慢讲）
 

@@ -2633,3 +2633,11 @@ V8 向导自己的城市框没碰；这一屏填的仍是"目的地"这一格，
 
 **课堂用法。** 运行手册第 9 步已加：时钟 +1 小时后，点「地图」→「加载地图」，蓝点出现；水印与状态行都写明这是模拟位置。
 
+## 八十二、课堂自检器：开演前一次读全短回执
+
+明天现场最可能的故障不是逻辑，而是栈没起、端口被占、上一场把提案消费掉。加了一个只读自检器（`trial/play_launcher/classroom_demo/classroom_demo_selfcheck_r1.py`）：依次读后端健康、本机与局域网页面、`/demo/session`、最新 PRESENTED 提案、模拟时钟，并打印短回执字段；不打印 token、不写任何文件、不改场景。
+
+现读（2026-10-25 00:35）：`DEMO_READY=true`、`BACKEND_HEALTH=200`、`PAGE_LOOPBACK=200`、`PAGE_LAN=200`、`DEMO_SESSION=200`、`JOURNEY_STATUS=ACTIVE`、`PROPOSAL_WAITING` 有 id、`CLOCK=2026-12-03T09:00:00+08:00`（第 0 版）、`AI_STATE=CONFIGURED_UNVERIFIED`、`AGENT_QA=direct-replan-only`。
+
+用法已写进运行手册第 3 步之后：看到 `DEMO_READY=true` 与一张待接受提案即可开演；平板实物仍未点。
+
