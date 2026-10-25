@@ -105,6 +105,36 @@ def main() -> int:
                      cities.get("status"), cities.get("eligible_city_count"),
                      cities.get("required_city_count"),
                      ",".join((cities.get("cities") or [{}])[0].get("missing") or []))))
+    guard = json_file("guardian-unavailable-67.txt")
+    accept = json_file("proposal-accept-68.txt")
+    note70 = lines_of("acceptance-note-70.txt")
+    g_progress = guard.get("progress") or {}
+    g_runs = g_progress.get("guardian_runs") or []
+    rows.append(("守护暂停（#47 P0）",
+                 "红（缺陷，已报）" if (guard.get("guardian") or {}).get("http") == 200
+                 and (guard.get("after") or {}).get("status") == "PAUSED_FOR_ACCEPTANCE" else "待核",
+                 "guardian-unavailable-67.txt, 20261025_GUARDIAN_AI_SWITCH_REPORT.md",
+                 "guardian http=%s，after=%s；progress proposal_id=%s，proposals=%s" % (
+                     (guard.get("guardian") or {}).get("http"),
+                     (guard.get("after") or {}).get("status"),
+                     (g_runs[0] or {}).get("proposal_id") if g_runs else None,
+                     len(g_progress.get("proposals") or []))))
+    rows.append(("AI 开关不拦调用（#47 P0）",
+                 "红（缺陷，已报）" if guard.get("ai_enabled") is False and g_runs else "待核",
+                 "guardian-unavailable-67.txt",
+                 "ai_enabled=%s；guardian_runs=%s；agent_runs 读数见报告" % (
+                     guard.get("ai_enabled"), len(g_runs))))
+    before_plan = ((accept.get("journey") or {}).get("before") or {}).get("plan")
+    after_plan = ((accept.get("journey") or {}).get("after") or {}).get("plan")
+    rows.append(("接受调整支线",
+                 "绿" if (accept.get("accept") or {}).get("http") == 200 and before_plan != after_plan else "红",
+                 "proposal-accept-68.txt",
+                 "accept http=%s；plan %s → %s" % (
+                     (accept.get("accept") or {}).get("http"), before_plan, after_plan)))
+    rows.append(("死锁屏提示",
+                 "绿" if "RESUME_BUTTONS 0" in note70 and "ACCEPTANCE_NOTE" in "".join(note70) else "红",
+                 "acceptance-note-70.txt",
+                 find(note70, "ACCEPTANCE_NOTE")[:90]))
     rows.append(("合入后一键核对",
                  "绿" if after.get("all_green") is True else "红",
                  "after-merge-check.txt",
