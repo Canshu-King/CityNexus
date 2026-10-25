@@ -2839,3 +2839,11 @@ Codex 的 `demo_access.py`（`1dc083f5ca`）给 `/demo/session` 与 `/demo/scene
 
 结论：守卫按 `active_plan_version_id` 判断——正常场景有方案就放行，走完的行程没有方案就挡住并说原因。
 
+## 九十九、接受之后回头看「行程守护」：行动块仍写「问题仍待解决」
+
+实测（`classroom-after-accept-guardian-19.txt`）：接受提案后页面刷新、第一站已变天坛、提案卡消失（正确）；但再回「行程守护」，行动块仍是「需要调整行程 / 问题仍待解决」，恢复轮次从第 3 轮变第 5 轮。
+
+这不是「接受没生效」——第一站已经变了；是 Guardian 的**行动结论**停留在检测那一刻（`action_status` 的闭环在后端 Guardian 侧），前端如实显示了旧结论。
+
+归属：这条闭环在 Guardian 执行侧（Codex 的 sandbox 分支正在做 Guardian scene handoff），**我没有改后端**，也没有把「已接受」伪装成 Guardian 的结论。演示口径：接受后以行程屏为准；若回看守护屏，说明「这是检测当时的结论，接受结果是行程本身」。
+
