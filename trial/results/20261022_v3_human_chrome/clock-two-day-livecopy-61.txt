@@ -1,0 +1,12 @@
+RUN_OWNED 1
+START "模拟时间：12/03 09:00 · 执行第 0 步 · 模拟进行中"
+PRESS_1 "模拟时间：12/03 15:00 · 执行第 4 步 · 模拟进行中"
+PRESS_1_NOTE "已走到下一站（第 4 步）"
+PRESS_2 "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"
+PRESS_2_NOTE "两日模拟已走完（不是实际到场）"
+FINAL "模拟时间：12/04 10:00 · 执行第 8 步 · 模拟行程已完成"
+DONE_LINE "模拟行程已完成 · 不是实际到场"
+REV-CLOCK-PLUS30_DISABLED true
+REV-CLOCK-PLUS60_DISABLED true
+REV-CLOCK-NEXT_DISABLED true
+ERRORS []

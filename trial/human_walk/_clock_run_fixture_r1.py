@@ -22,9 +22,10 @@ FRONTEND = r"D:/moodle/_cmdr_rescue_v3_1022/frontend"
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
 NODE = r"C:/Program Files/nodejs/node.exe"
 API = "http://127.0.0.1:60400"
-SOURCE_DB = WORK + "/probe6_1025.db"
-TARGET_DB = WORK + "/probe16_1025.db"
-JOURNEY = "8ba03b8e-1461-4da4-9943-826cbea089fe"
+SOURCE_DB = os.environ.get("CLOCK_SOURCE_DB") or (WORK + "/probe6_1025.db")
+TARGET_DB = os.environ.get("CLOCK_TARGET_DB") or (WORK + "/probe16_1025.db")
+JOURNEY = os.environ.get("CLOCK_JOURNEY") or "8ba03b8e-1461-4da4-9943-826cbea089fe"
+MUTATE = os.environ.get("CLOCK_MUTATE", "1") == "1"
 OUT = r"D:/moodle/_cmdr_rescue_v3_1022/trial/results/20261022_v3_human_chrome/clock-run-ui-1.txt"
 PROBE = os.environ.get("CLOCK_PROBE") or r"D:/moodle/_cmdr_rescue_v3_1022/trial/human_walk/_clock_run_ui_r58.mjs"
 OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -47,6 +48,9 @@ def copy_and_activate() -> None:
     target = sqlite3.connect(TARGET_DB)
     try:
         source.backup(target)
+        if not MUTATE:
+            target.commit()
+            return
         target.execute("UPDATE journeys SET status='ACTIVE' WHERE id=?", (JOURNEY,))
         target.execute(
             "UPDATE plan_versions SET status='ACTIVE' WHERE id=(SELECT active_plan_version_id FROM journeys WHERE id=?)",
@@ -116,7 +120,7 @@ def main() -> int:
     presenter_key = secrets.token_hex(24)
     backend = start_backend(presenter_key)
     frontend = None
-    receipt: dict = {"fixture": "journey status set ACTIVE in isolated copy; real /start refused with PLACE_UNAVAILABLE"}
+    receipt: dict = {"fixture": ("journey status set ACTIVE in isolated copy; real /start refused with PLACE_UNAVAILABLE" if MUTATE else "read-only copy of the finished classroom journey")}
     try:
         if not wait_healthy():
             print(json.dumps({"RAN": False, "reason": "backend not healthy"}))

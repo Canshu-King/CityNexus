@@ -117,3 +117,10 @@ FALLBACK_SCREENSHOT=trial/results/20261022_v3_human_chrome/rehearsal11-origin.pn
   - `clock-completed-60.txt`：历史已完成行程入口仍显示封存红条、无时钟条（完成态入口问题归 #47）。
 - **夹具披露**：课堂库的 PLANNED 行程真实 `/start` 被 `PLACE_UNAVAILABLE` 拒；为验证 UI 接线，只在**复制库**把该行程/方案/首站置 ACTIVE（`_clock_run_fixture_r1.py` 首行写明），`runs/advance/scenes/guardian` 全是浏览器按钮发出的真 HTTP 调用。**不能拿这套夹具替代「新 run 从课堂开演」的证据。**
 - **仍阻塞课堂开演**：`cities` = 1 城、POI 56、routes 0、`BLOCKED`（缺 `VERIFIED_CITY_ADCODE_REQUIRED` + `AT_LEAST_3_CAPTURED_ROUTES_REQUIRED`），`required_city_count=3`。等 Codex #47 的「先 1 城同 run Day2」口径；在那之前课堂仍用本机投屏 + 独立演示库。
+
+### 现场库只读副本上的两日闭环（21:08）
+
+- 源：`_cmdr_v3_live_1022/citynexus_v3_demo_1025.db`（课堂栈正在用的库）**只读复制**，源库未写。
+- 该库的 journey 已是 ACTIVE、首站 COMPLETED、当前站 12-03 14:00、第三站次日 09:00；在副本上启动 Codex 后端（自动建表）后直接 `POST /simulation/runs` 成功（UI 点「开演」）。
+- 390px 连按两次「到下一站」走完：`12/03 15:00 第 4 步` → `12/04 10:00 第 8 步 SIMULATED_COMPLETED`；三按钮禁用。回执 `clock-two-day-livecopy-61.txt`，截图 `classroom-clock-run-61-live-finish.png`。
+- 边界：这是「已出发的现场行程」继续走完，不是「从 PLANNED 新开演」；课堂栈本体仍跑旧后端（watch 行 `SIM_CONSOLE=NOT_DEPLOYED`），Codex 后端合入并重启后才会在课堂出现这块控制台。
