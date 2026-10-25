@@ -29,7 +29,10 @@ const EVENT_TEXT: Record<string, string> = {
   SIM_ACTIVITY_COMPLETED: "完成一站",
   SIM_SCENE_INJECTED: "注入事件",
   SIMULATED_COMPLETED: "两日走完",
+  SIM_PLAN_CHANGED: "计划已按守护调整",
+  SIM_RESUMED: "继续模拟",
   GUARDIAN_REQUESTED: "守护已接手",
+  GUARDIAN_RESULT: "守护已交出建议",
   GUARDIAN_UNAVAILABLE: "守护模型不可用",
 };
 
@@ -360,7 +363,7 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
 
       {run && run.history.length > 0 && (
         <ol className="rev-presenter-history" data-testid="rev-presenter-history">
-          {run.history.slice(-3).map((step, index) => (
+          {run.history.slice(-5).map((step, index) => (
             <li key={`${step.sequence ?? index}`}>
               {EVENT_TEXT[String(step.event)] ?? "推进"} · {shortTime(step.virtual_now)}
             </li>

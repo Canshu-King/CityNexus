@@ -46,6 +46,7 @@
 - 新计划的全部活动只有两行：**天安门广场（已完成）+ 天坛公园（ACTIVE）**；故宫已被移除。
 - 点「继续模拟」→ `RUNNING` seq 3；点「到下一站」→ 12/04 09:00 游览天坛 → 12/04 10:00 完成，`SIMULATED_COMPLETED` seq 7，三键禁用，无 console 错误（`classroom-plan-applied-92.png`）。
 - 1024×768 平板同剧本另跑一次（`guardian-plan-applied-tablet-93.txt`，**227 秒**）：入口、开演、闭馆、守护（187 秒出提案）、接受（5 秒落定）、继续、到下一站完成全部命中；新计划同样只剩天安门+天坛，`ERRORS []`。
+- 390 手机同剧本再跑一次（`guardian-plan-applied-phone-94.txt`，281 秒）：历史里出现「计划已按守护调整」。口径说明：该 run 的 `history_json` 只有 **1 条** `SIM_PLAN_CHANGED`（sequence 4），而屏上文本连显 3 次；疑似前端重复渲染，只记录事实，不据此宣称后端重复写入。
 - 结论：接受调整在模拟执行里真的生效；课堂可以讲「少去故宫、直接去天坛」。
 
 ### AI 关闭（隔离副本，`ai-off-guardian-86.txt`）
