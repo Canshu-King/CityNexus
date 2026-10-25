@@ -75,8 +75,14 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
   }, [previewPins]);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // A journey can be executing before any research pin exists; the simulated
+  // traveller alone is enough to give the classroom map something to show.
+  const travellerOnMap = Boolean(
+    traveller && (!traveller.coordinate_system || traveller.coordinate_system === "WGS84")
+    && Number.isFinite(traveller.latitude) && Number.isFinite(traveller.longitude),
+  );
   useEffect(() => {
-    if (!allowed || !host.current || points.length === 0) return;
+    if (!allowed || !host.current || (points.length === 0 && !travellerOnMap)) return;
     let disposed = false;
     let map: import("maplibre-gl").Map | undefined;
     let observer: ResizeObserver | undefined;
@@ -84,7 +90,10 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
     setFailed(false);
     void import("maplibre-gl").then(({ default: lib }) => {
       if (disposed || !host.current) return;
-      map = new lib.Map({ container: host.current, center: [points[0].longitude, points[0].latitude], zoom: 13,
+      const center: [number, number] = points.length
+        ? [points[0].longitude, points[0].latitude]
+        : [traveller!.longitude, traveller!.latitude];
+      map = new lib.Map({ container: host.current, center, zoom: points.length ? 13 : 14,
         style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
           tileSize: 256, attribution: "© OpenStreetMap contributors" } }, layers: [{ id: "osm", type: "raster", source: "osm" }] },
         dragRotate: false, pitchWithRotate: false, attributionControl: { compact: true },
@@ -115,7 +124,7 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
       observer = new ResizeObserver(() => map?.resize()); observer.observe(host.current);
     }).catch(() => { if (!disposed) setFailed(true); });
     return () => { disposed = true; observer?.disconnect(); markers.forEach((marker) => marker.remove()); travellerMarker.current?.remove(); travellerMarker.current = null; mapRef.current = null; setMapReady(false); map?.remove(); };
-  }, [allowed, points, onSelect]);
+  }, [allowed, points, onSelect, travellerOnMap]);
   // The simulated traveller is a second marker, kept apart from the numbered pins: it is the
   // only thing on this map that moves, and its coordinates come from the sandbox clock, not
   // from any device location.  GCJ02 is not converted here; it is only drawn as WGS84.
@@ -144,8 +153,8 @@ export function WorkspaceMap({ candidates, allowed, onAllow, onSelect, selectedI
   return <section aria-label="当前行程地图">
     <p>OpenStreetMap 地图地点 {points.length} 处 · 高德地点 {amapPoints.length} 处</p>
     {traveller && <p data-testid="rev-map-traveller-state">模拟旅客：{traveller.label} · {traveller.latitude.toFixed(4)}, {traveller.longitude.toFixed(4)}（{traveller.coordinate_system ?? "WGS84"}，模拟位置，不是物理 GPS）</p>}
-    {!points.length && !amapPoints.length && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
-    {points.length > 0 && <>
+    {!points.length && !amapPoints.length && !travellerOnMap && <p>先去探索查找地点，查到后可以从任何页打开此图。</p>}
+    {(points.length > 0 || travellerOnMap) && <>
       {!allowed ? <div className="rev-workspace-map-consent">
         <div className="rev-workspace-map-preview" aria-label="已发现地点的坐标分布预览" data-testid="rev-workspace-coordinate-preview">
           <span className="rev-workspace-preview-label">地点分布预览 · 未加载外部底图</span>

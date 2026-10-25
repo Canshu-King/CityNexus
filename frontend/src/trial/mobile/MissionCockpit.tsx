@@ -331,7 +331,7 @@ export function MissionCockpit({
           </button>}
           <PlacePhotoGallery cityName={cityName} places={allMapPoints} mediaById={mediaById} priorityIds={photoPriorityIds} selectedId={focusedPlaceId} scheduledIds={draftPlaceIds} onSelect={focusPlace} />
           {selectedResearch && <p role="status">正在查看：{selectedResearch.name}{draftPlaceIds.has(selectedResearch.candidate_id) ? " · 已排入日程" : " · 尚未排入日程"}</p>}
-          {mapPoints.length ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} traveller={simTraveller} />
+          {mapPoints.length || (journeyStatus === "ACTIVE" && simTraveller) ? <WorkspaceMap candidates={mapPoints} allowed={mapAllowed} onAllow={() => setMapAllowed(true)} onSelect={focusPlace} selectedId={focusedPlaceId} traveller={simTraveller} />
             : <div className="cn-mission-map-empty"><Navigation2 size={30} /><strong>{accessLost ? "这次登录已经过期" : "地点研究会在这里汇合"}</strong><span>{accessLost ? "这趟行程还在，只是这台设备当前读不到它。" : "找到有坐标的地点后，点击图钉查看来源。"}</span></div>}
           <div className="cn-mission-map-footer"><button type="button" onClick={onExplore}>手动探索地点 <Compass size={15} /></button></div>
           <details className="cn-mission-activity" aria-label="Agent 工作轨迹"><summary>查看 Agent 工作过程</summary>
