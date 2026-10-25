@@ -57,10 +57,20 @@
 
 - `ClassroomPresenterPanel.tsx`：消费 `guardian_outcome`（`EXTERNAL_FAILED`/`AGENT_UNRESOLVED`/`MODEL_NOT_CONFIGURED` 各给一句真话与出口）；「继续模拟」只在 pending 事件 `RESOLVED/IGNORED` 时出现；`PAUSED_FOR_ACCEPTANCE` 有当前提案时新增「接受这次事件的调整」，调 `acceptReplan(proposal.id)`（该路径后端接受时会把 trigger event 标 RESOLVED）。
 - `GuardianRealityPanel.tsx`：候选从「第一个 PRESENTED」改为「最新的 PRESENTED」，避免课堂里先展示上一次变化的提案。
-- 类型检查通过；现场复验需再走一轮模型（成功/失败都可读数，见下一份回执）。
+- 类型检查通过；现场闭环已在第五次跑证明（见下）。
+
+### 第五次（`guardian-accept-flow-83.txt`，19:18–19:22）——闭环
+
+- 模型成功；run `PAUSED_FOR_ACCEPTANCE`，pending 事件 `b6e4e0a7` `DETECTED`，进度 `proposals` 里是当前事件提案 `cad2a52e`。
+- 屏上出现新按钮「接受这次事件的调整」（`EVENT_ACCEPT_BUTTON 1`）。
+- 点一下，**5 秒内**：pending 事件变 `RESOLVED`，提案 `cad2a52e` 变 `ACCEPTED`；「继续模拟」出现（`RESUME_BUTTON 1`）。
+- 点「继续模拟」→ run 回到 `RUNNING`（sequence 3）。
+- 全程无 console 错误（`ERRORS []`）。
+- 观察一句：`run.state.plan_version_id` 仍是启动时的 `e74a5edb`，接受后模拟的站点引用没有随之换到新计划；这与「事件已 RESOLVED、提案已 ACCEPTED」并存。是否需要让 run 换计划引用，请 Codex 按契约裁定，不据此宣称缺陷。
+- 截图文件：`guardian-accept-flow-83-before-accept.png`、`-after-accept.png`、`-resumed.png`、`-scene.png`、`-after-guardian.png`。
 
 ## 四、下一步
 
-- 下一轮现场：模型成功时应出现「接受这次事件的调整」→ 事件 RESOLVED → 「继续模拟」→ `RUNNING`；模型失败时应只看到模型失败的真话，没有死按钮。
-- 若「接受这次事件的调整」返回非 2xx 或事件仍不 RESOLVED，交 Codex（接受路径与 simulation 事件桥），不自行改后端。
+- 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
+- 仍待 Codex 答复：Guardian 屏的「接受这份调整」应与哪个提案实体对齐；模型失败后 run 的转态为何一次 >338 秒、一次约 187 秒；接受后 run 的计划引用是否应更新。
 - 平板亲手点仍 `USER_VERIFIED=PENDING`。
