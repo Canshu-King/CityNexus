@@ -386,6 +386,17 @@ def _model_recovery(
         run.proposal_id = str(accept_arguments["proposal_id"])
     if run.proposal_id is not None:
         proposal = session.get(ReplanProposal, run.proposal_id)
+        if (
+            proposal is None
+            or proposal.journey_id != journey.id
+            or proposal.trigger_event_id != trigger.id
+        ):
+            evidence["rejected_proposal"] = {
+                "id": run.proposal_id,
+                "reason_code": "GUARDIAN_PROPOSAL_EVENT_MISMATCH",
+            }
+            run.proposal_id = None
+            raise AgentRuntimeUnavailable("GUARDIAN_PROPOSAL_EVENT_MISMATCH")
         if proposal is not None:
             diff = json.loads(proposal.diff_json or "{}")
             evidence["solver"] = diff.get("verified_evidence", {}).get("generator")

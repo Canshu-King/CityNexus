@@ -283,6 +283,8 @@ def run_progress(session, journey, run, config):
         proposals=proposals,
     )
     missing = []
+    if not config.ai_enabled:
+        missing.append("AI_DISABLED")
     if not configured:
         missing.append("MODEL_CREDENTIALS_MISSING")
     if not standing:
@@ -336,6 +338,7 @@ def run_progress(session, journey, run, config):
         "current_activity_id": journey.current_activity_id,
         "clock_policy": {"business": "PERSISTED_VIRTUAL", "security_and_audit": "WALL"},
         "readiness": {
+            "ai_enabled": config.ai_enabled,
             "model_credentials_configured": configured,
             "standing_mission_id": standing,
             "pending_event_id": pending.id if pending else None,
