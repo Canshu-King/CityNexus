@@ -115,10 +115,15 @@ sim_status, sim_body = (
     get(API + "/api/v1/journeys/" + journey_id + "/simulation/runs/current", bearer=token)
     if journey_id and token else (0, {})
 )
+# A launcher restart rotates the traveller secret: the saved bearer then reads 401
+# while the door and page are fine. Name that as an expired session, not "http=401".
+if clock_status == 401 and token:
+    session_state = "EXPIRED"
 sim_console = (
     "AVAILABLE:" + str(sim_body.get("status"))
     if sim_status == 200
     else "NEED_TICKET" if sim_status == 0 and session_state == "NEEDS_TICKET"
+    else "NEEDS_SESSION" if sim_status == 401 and session_state == "EXPIRED"
     else "NOT_DEPLOYED" if sim_status == 404 else "http=%s" % sim_status
 )
 
