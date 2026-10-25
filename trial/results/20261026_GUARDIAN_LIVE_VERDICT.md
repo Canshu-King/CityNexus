@@ -170,6 +170,12 @@
 - `DEMO_PRESENTER_REQUIRED` 原句「这台设备不是演示主机，控制台只在本机可用」会误导平板（平板正是演示设备）。改成「这块控制台只认启动器签发的课堂票；请用启动器窗口里的地址重新打开。」此句**尚未屏证**。
 - 重试按钮的慢提示原写「四分钟左右」，与实测 3–6 分钟不符，改为「通常要 3–6 分钟」。
 
+### 第十三次（`guardian-lag-note-133.txt`，06:48）——失败已记、状态未转时的提示
+
+- 1024 v2 与 1280 两次现场都出现过：`guardian_outcome=EXTERNAL_FAILED` 而 `run.status=GUARDIAN_RUNNING`（379 秒）。原提示写「刷新读数不会重试；要重来请重启课堂演示」，会促使老师**白重启**——实际 scan 往往马上返回、run 会自己转成可重试的 `PAUSED_MODEL_UNAVAILABLE`。
+- 改为：「守护模型这次已经判失败，模拟状态还在收尾；先等一会儿并点『刷新读数』。超过一分钟还没转，再重启课堂演示（双击启动器）。」`AGENT_UNRESOLVED` 那句同批改成同一口径。
+- 验证（披露：只写课堂演示库）：注入一条 mission／agent_run（FAILED_EXTERNAL）／guardian_run（trigger=当前 pending）并把 run 置 `GUARDIAN_RUNNING`；屏上 `LAG_NOTE 1`、文本逐字命中、可见且在视口（`classroom-guardian-lag-note-133.png`）；随后删除这三行、run 回到 `PAUSED_FOR_GUARDIAN`，无残留、无 console 错误。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。

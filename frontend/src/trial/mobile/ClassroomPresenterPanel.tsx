@@ -333,12 +333,12 @@ export function ClassroomPresenterPanel({ journeyId, visible }: { journeyId: str
 
       {run?.status === "GUARDIAN_RUNNING" && guardianOutcome?.code === "EXTERNAL_FAILED" && (
         <p className="rev-presenter-note" data-testid="rev-presenter-guardian-failed">
-          守护模型这次请求失败了，没有交出建议。刷新读数不会重试；要重来请重启课堂演示（双击启动器）。
+          守护模型这次已经判失败，模拟状态还在收尾；先等一会儿并点「刷新读数」。超过一分钟还没转，再重启课堂演示（双击启动器）。
         </p>
       )}
       {run?.status === "GUARDIAN_RUNNING" && guardianOutcome?.code === "AGENT_UNRESOLVED" && (
         <p className="rev-presenter-note" data-testid="rev-presenter-guardian-unresolved">
-          守护没有解出可执行的调整；刷新读数不会让它继续。要重来请重启课堂演示（双击启动器）。
+          守护没有解出可执行的调整，模拟状态还在收尾；先等一会儿并点「刷新读数」。超过一分钟还没转，再重启课堂演示（双击启动器）。
         </p>
       )}
       {run?.status === "GUARDIAN_RUNNING" && guardianOutcome?.code === "MODEL_NOT_CONFIGURED" && (
