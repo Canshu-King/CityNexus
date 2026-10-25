@@ -2915,3 +2915,13 @@ Codex 的 `SIMULATION_RUN_API_20261025.md` 定义 `/api/v1/journeys/{id}/simulat
 
 边界：脚本默认端口被占用时会直接退出，不杀别人的进程；它验证的是「契约与前端」这一侧，不替代 Codex 自己那套 fixture 测试。
 
+## 一百零六、真模型接管守护：能出提案，但「接受后继续」卡在事件绑定
+
+隔离栈接上本机模型网关后（密钥只进进程环境，不打印、不落文件），守护不再是「模型不可用」：`guardian` 跑了两百一十八秒，run 落到 `PAUSED_FOR_ACCEPTANCE`，历史里是一条 `GUARDIAN_RESULT`——`execution_mode=SERVER_GUARDIAN_EXECUTED`、`model_execution=RUN_REFERENCE`、`action_status=PROPOSAL_PRESENTED`，并且带持久化的 `agent_run_id` 与 `proposal_id`（`guardian-model-walk-1.txt:5`、`:9`）。这是真模型跑出来的运行引用，不是规则引擎冒充。
+
+第一次接进前端时，守护屏也拿到了同款提案（「移除故宫博物院；路上少 66 分钟」），但按「继续模拟」被 409 拒。查库：run 的 `pending_event_id` 仍是 `DETECTED`，而被接受并置为 `RESOLVED` 的是演示库带进来的另一条旧事件，两枚提案都绑在那条旧事件上。机制在两处代码里可以直接复核：`resume` 只认 run 的 pending 事件处于 `RESOLVED` 或 `IGNORED`（Codex 枝 `app/simulation/api.py` 的 `SIMULATION_EVENT_REQUIRES_SIGNED_RESOLUTION`），而接受重规划只把自己那条 `trigger_event` 置为 `RESOLVED`（Codex 枝 `app/main.py` 里 `JOURNEY_ADAPTED` 那段）。也就是说：接受解决的是「另一件事」。
+
+用干净场景（删掉演示库预置的事件与提案）再跑一次，守护这次在三百三十五秒内没有落定，界面停在「等待守护决策」（`classroom-presenter-model-loop-26.txt:8`）。真模型路径的耗时波动很大（两分半到五分半以上），课堂三到五分钟的主链不能把「现场等模型」当默认。
+
+结论与归属：真 Agent 这一环成立（有运行引用与提案）；「接受提案 → 继续模拟」要成立，后者需要把 run 注入的事件作为守护与提案的 trigger，或者让 `resume` 认「已有被接受的提案」。这是后端契约的接缝，已交 Codex；前端只负责把状态与失败原因说清楚。
+
