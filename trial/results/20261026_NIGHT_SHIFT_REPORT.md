@@ -10,7 +10,7 @@
 - 21:25 真栈两日闭环（loopback，`clock-two-day-classroom-62.txt`）；21:35 LAN 等价路径（`clock-run-lan-63.txt`）。
 - 21:57 单一状态链：stale 409 + 旧时钟门 409（`single-state-chain-65.txt`）；22:00 票重放（首兑 200、重兑 401、伪造 401、无 key 403，`pairing-replay-66.txt`）。
 - 22:02 值守首次票过期：`OK … SESSION=NEEDS_TICKET`，不假红。
-- 21:47 全量测试读数 `266 failed / 2374 passed`；21:49 旧尖对照证明 `wp01_wp03` 七红为合并引入（读 ACL 未签名），归 Codex。
+- 21:47 全量测试读数 `266 failed / 2374 passed`；21:49 旧尖对照证明 `wp01_wp03` 七红为合并引入（读 ACL 未签名），归 Codex。04:00 合入 PR #54 后全量：`261 failed / 2401 passed / 12 errors`，聚焦范围（issue47/49、wp01、day_rhythm、goal_draft_patch）**0 红**。合并前无逐条红清单，不逐条外推新红。
 - 22:05–22:10 课堂 UI：控制台只留刷新键与推进指引；行程卡按状态改词；死锁态提示。
 - **01:50 有人在本机重启并点「开演」**（不是自动化）：run `e354b9da`，随后日志 136 条请求全为 loopback、外部 0。
 - 02:05 提案接受支线：`accept` 200，plan `e74a5edb → f84adc05`（`proposal-accept-68.txt`）。
