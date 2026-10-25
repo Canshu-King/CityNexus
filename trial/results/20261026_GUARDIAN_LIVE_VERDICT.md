@@ -130,11 +130,20 @@
 
 同一条路前一晚连跑两轮（未补 history 的注入）：按钮同样一次命中、点击后同样 17.7 秒回失败；但进度投影认不出那个不在 history 的 pending，`guardian_runs` 过滤为空、`outcome=UNKNOWN`，屏上仍是旧文案。这说明：**第三轮的「补 history」不是为了让按钮出现，而是为了让进度投影与真实注入保持同一形状**。
 
+### 第八次（`classroom-timed-path-109.txt`，05:14–05:20）——整条主线计时
+
+- 390×844 真页面，每步点击前做 `elementFromPoint` 命中自测；无 console 错误。
+- 配对 9.2 秒 → 开演 14.2 秒 → ＋30 分钟 16.1 秒 → 闭馆 19.9 秒 → **守护 278.5 秒（本步 258.6 秒）** → 接受 281.8 秒 → 继续 285.1 秒 → 到下一站 287.9 秒 `SIMULATED_COMPLETED`。
+- 提案 `831b9905` 在守护返回时 PRESENTED、`outcome=PROPOSAL_READY`；接受后事件 `e180574c` RESOLVED、提案 ACCEPTED。
+- 整条主线 288 秒（4 分 48 秒），守护占 259 秒，其余七步合计 29 秒。详细表在 `20261026_CLASSROOM_TIMED_PATH.md`。
+- 附带事实：接受后 `guardian_outcome` 变 `AGENT_UNRESOLVED`（`progress.py:163-167` 的 `guardian.status=PARTIAL` 分支），而这一步实际已经交出提案并被接受；屏上被完成态遮住，API 读者会误判。归 Codex。
+
 ## 四、下一步
 
 - 已验：当前事件提案 →「接受这次事件的调整」→ 事件 `RESOLVED` →「继续模拟」→ `RUNNING`（第五次）。
 - Guardian 屏接受已现场闭环（r100），该项不再等裁语；仍待 Codex：模型失败后 run 的转态为何一次 >338 秒、一次约 187 秒。（计划引用一项已查代码：下一次 advance 会同步，见上。）
 - 第六次补上了成功轮的耗时基准（193 秒）与「同步调用、返回即转态」的代码事实。
 - 第七次：失败态的「再请一次守护」按钮与文案都在真后端上按过（18 秒回 RETRYABLE_FAILURE，按钮仍在）；`RETRYABLE_FAILURE` 是可重试，不是终态。
+- 第八次：整条课堂主线 4 分 48 秒走到封存，守护 259 秒是唯一的长等待；接受后 `outcome` 误报 `AGENT_UNRESOLVED` 已登记给 Codex。
 - 仍待 Codex 一枚事实：`guardian_outcome` 只给 `EXTERNAL_FAILED/AGENT_UNRESOLVED/MODEL_NOT_CONFIGURED/UNKNOWN`，**没有 RETRYABLE_FAILURE 这个码**；前端只能从 `guardian_runs[].action_status` 读它。是否要把它升为一等码，归 Codex 定。
 - 平板亲手点仍 `USER_VERIFIED=PENDING`。
